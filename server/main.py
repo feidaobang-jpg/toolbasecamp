@@ -1,0 +1,630 @@
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+import threading
+import time
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, List, Optional
+
+import pymysql
+from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from pydantic import BaseModel
+
+app = FastAPI(title="Tool Basecamp API")
+
+DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
+DB_PORT = int(os.environ.get("DB_PORT", "3306"))
+DB_USER = os.environ.get("DB_USER", "toolbasecamp")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "toolbasecamp")
+DB_NAME = os.environ.get("DB_NAME", "toolbasecamp")
+
+JWT_SECRET = os.environ.get("JWT_SECRET", "CHANGE_ME_IN_PRODUCTION")
+JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
+JWT_EXPIRE_DAYS = int(os.environ.get("JWT_EXPIRE_DAYS", "30"))
+
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ROLE_ADMIN = "admin"
+ROLE_USER = "user"
+
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+GUESTBOOK_PAGE_SIZE = 30
+GUESTBOOK_MAX_TEXT_LEN = 500
+GUESTBOOK_MAX_GUEST_NAME_LEN = 20
+
+GITEE_WEBHOOK_SECRET = os.environ.get("GITEE_WEBHOOK_SECRET", "")
+DEPLOY_SCRIPT = os.environ.get("DEPLOY_SCRIPT", "/opt/toolbasecamp-deploy/webhook-deploy.sh")
+DEPLOY_BRANCH = os.environ.get("GITEE_DEPLOY_BRANCH", "master")
+DEPLOY_REF = f"refs/heads/{DEPLOY_BRANCH}"
+
+_deploy_lock = threading.Lock()
+_deploy_running = False
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+security = HTTPBearer(auto_error=False)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://toolbasecamp.com",
+        "https://www.toolbasecamp.com",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+class RegisterBody(BaseModel):
+    email: str
+    password: str
+
+
+class LoginBody(BaseModel):
+    email: str
+    password: str
+
+
+class ChangePasswordBody(BaseModel):
+    old_password: str
+    new_password: str
+
+
+class GuestbookSendBody(BaseModel):
+    content: str
+    guest_name: Optional[str] = None
+
+
+def get_conn():
+    return pymysql.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME,
+        charset="utf8mb4",
+        cursorclass=pymysql.cursors.DictCursor,
+        autocommit=True,
+    )
+
+
+def ensure_tables():
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS users (
+                    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                    email VARCHAR(255) NOT NULL UNIQUE,
+                    password_hash VARCHAR(255) NOT NULL,
+                    role VARCHAR(20) NOT NULL DEFAULT 'user',
+                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                """
+            )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS guestbook_messages (
+                    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                    user_id BIGINT NULL,
+                    guest_name VARCHAR(50) NULL,
+                    content TEXT NOT NULL,
+                    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    INDEX idx_created (created_at),
+                    INDEX idx_id (id),
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                """
+            )
+    finally:
+        conn.close()
+
+
+@app.on_event("startup")
+def _startup():
+    try:
+        ensure_tables()
+    except Exception as e:
+        print(f"[startup] MySQL unavailable, auth/guestbook disabled: {e}")
+
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+def verify_password(password: str, password_hash: str) -> bool:
+    return pwd_context.verify(password, password_hash)
+
+
+def create_access_token(user_id: int, email: str) -> str:
+    now = datetime.now(timezone.utc)
+    exp = now + timedelta(days=JWT_EXPIRE_DAYS)
+    payload = {
+        "sub": str(user_id),
+        "email": email,
+        "iat": int(now.timestamp()),
+        "exp": int(exp.timestamp()),
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def decode_token(token: str) -> dict:
+    return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+
+
+def _fetch_user_by_id(user_id: int) -> Optional[dict]:
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT id, email, role, password_hash, created_at, updated_at FROM users WHERE id=%s",
+                (user_id,),
+            )
+            return cur.fetchone()
+    finally:
+        conn.close()
+
+
+def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
+    if creds is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    try:
+        payload = decode_token(creds.credentials)
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Session expired. Please log in again.")
+
+    user_id = int(payload.get("sub") or 0)
+    if user_id <= 0:
+        raise HTTPException(status_code=401, detail="Session expired. Please log in again.")
+
+    user = _fetch_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    return user
+
+
+def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:
+    if creds is None:
+        return None
+    try:
+        payload = decode_token(creds.credentials)
+    except JWTError:
+        return None
+    user_id = int(payload.get("sub") or 0)
+    if user_id <= 0:
+        return None
+    return _fetch_user_by_id(user_id)
+
+
+def is_admin(user: dict) -> bool:
+    return user.get("role") == ROLE_ADMIN or (user.get("email") or "").lower() == ADMIN_EMAIL
+
+
+def require_admin(user: dict):
+    if not is_admin(user):
+        raise HTTPException(status_code=403, detail="Admin access required")
+
+
+def _mask_email(email: str) -> str:
+    if not email or "@" not in email:
+        return email or "User"
+    local, domain = email.split("@", 1)
+    if len(local) <= 2:
+        return f"{local[0]}***@{domain}"
+    return f"{local[:2]}***@{domain}"
+
+
+def _sanitize_guest_name(name: str) -> str:
+    cleaned = re.sub(r"[\x00-\x1f\x7f]", "", (name or "").strip())
+    cleaned = cleaned[:GUESTBOOK_MAX_GUEST_NAME_LEN]
+    return cleaned or "Guest"
+
+
+def _serialize_guestbook_row(row: dict) -> dict:
+    email = row.get("email") or ""
+    user_id = row.get("user_id")
+    if user_id:
+        sender_name = _mask_email(email)
+        is_guest = False
+    else:
+        sender_name = _sanitize_guest_name(row.get("guest_name") or "Guest")
+        is_guest = True
+    created = row.get("created_at")
+    if hasattr(created, "isoformat"):
+        created = created.isoformat()
+    return {
+        "id": int(row.get("id") or 0),
+        "sender_name": sender_name,
+        "is_guest": is_guest,
+        "content": row.get("content") or "",
+        "created_at": created,
+    }
+
+
+@app.get("/health")
+def health():
+    return {"ok": True, "service": "toolbasecamp-api", "ts": int(time.time())}
+
+
+def _run_deploy_script() -> None:
+    global _deploy_running
+    try:
+        subprocess.run(
+            ["bash", DEPLOY_SCRIPT],
+            check=True,
+            timeout=900,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        print(f"[deploy] failed: {exc.stderr or exc.stdout or exc}")
+    except Exception as exc:
+        print(f"[deploy] error: {exc}")
+    finally:
+        with _deploy_lock:
+            _deploy_running = False
+
+
+@app.post("/webhook/gitee")
+async def gitee_webhook(request: Request):
+    """Gitee push webhook: git pull and deploy on server."""
+    if not GITEE_WEBHOOK_SECRET:
+        raise HTTPException(status_code=503, detail="Webhook deploy is not configured")
+
+    token = request.headers.get("X-Gitee-Token", "")
+    if token != GITEE_WEBHOOK_SECRET:
+        raise HTTPException(status_code=403, detail="Invalid webhook token")
+
+    try:
+        body: Dict[str, Any] = await request.json()
+    except Exception:
+        body = {}
+
+    ref = str(body.get("ref") or "")
+    if ref and ref != DEPLOY_REF:
+        return {"ok": True, "skipped": True, "reason": f"ignored ref {ref}"}
+
+    if not os.path.isfile(DEPLOY_SCRIPT):
+        raise HTTPException(status_code=503, detail=f"Deploy script missing: {DEPLOY_SCRIPT}")
+
+    global _deploy_running
+    with _deploy_lock:
+        if _deploy_running:
+            return {"ok": True, "deploy": "already_running"}
+        _deploy_running = True
+
+    threading.Thread(target=_run_deploy_script, daemon=True).start()
+    return {"ok": True, "deploy": "started"}
+
+
+@app.post("/auth/register")
+def register(body: RegisterBody):
+    email = (body.email or "").strip().lower()
+    password = body.password or ""
+
+    if not EMAIL_RE.match(email):
+        raise HTTPException(status_code=400, detail="Invalid email address")
+    if len(password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+
+    if email == ADMIN_EMAIL:
+        raise HTTPException(status_code=400, detail="This account cannot be registered")
+
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id FROM users WHERE email=%s", (email,))
+            if cur.fetchone():
+                raise HTTPException(status_code=400, detail="Email already registered")
+
+            pw_hash = hash_password(password)
+            cur.execute(
+                "INSERT INTO users (email, password_hash, role) VALUES (%s, %s, %s)",
+                (email, pw_hash, ROLE_USER),
+            )
+            user_id = cur.lastrowid
+    finally:
+        conn.close()
+
+    token = create_access_token(int(user_id), email)
+    return {"success": True, "token": token}
+
+
+@app.post("/auth/login")
+def login(body: LoginBody):
+    email = (body.email or "").strip().lower()
+    password = body.password or ""
+
+    if not EMAIL_RE.match(email):
+        raise HTTPException(status_code=400, detail="Invalid email address")
+
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT id, email, password_hash, role FROM users WHERE email=%s",
+                (email,),
+            )
+            user = cur.fetchone()
+    finally:
+        conn.close()
+
+    if not user or not verify_password(password, user["password_hash"]):
+        raise HTTPException(status_code=400, detail="Invalid email or password")
+
+    if email == ADMIN_EMAIL and user.get("role") != ROLE_ADMIN:
+        conn = get_conn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("UPDATE users SET role=%s WHERE email=%s", (ROLE_ADMIN, email))
+        finally:
+            conn.close()
+        user["role"] = ROLE_ADMIN
+
+    token = create_access_token(int(user["id"]), user["email"])
+    return {"success": True, "token": token}
+
+
+@app.post("/auth/change-password")
+def change_password(
+    body: ChangePasswordBody,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
+    user = get_current_user(creds)
+    old_password = body.old_password or ""
+    new_password = body.new_password or ""
+
+    if not verify_password(old_password, user["password_hash"]):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE users SET password_hash=%s WHERE id=%s",
+                (hash_password(new_password), user["id"]),
+            )
+    finally:
+        conn.close()
+
+    return {"success": True}
+
+
+@app.get("/auth/me")
+def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    user = get_current_user(creds)
+    return {
+        "success": True,
+        "user": {
+            "id": user["id"],
+            "email": user["email"],
+            "role": user["role"],
+            "created_at": user["created_at"],
+            "updated_at": user["updated_at"],
+        },
+    }
+
+
+@app.get("/guestbook/messages")
+def guestbook_list_messages(before_id: int = 0, limit: int = GUESTBOOK_PAGE_SIZE):
+    lim = max(1, min(int(limit or GUESTBOOK_PAGE_SIZE), 100))
+    rows: List[dict] = []
+    has_more = False
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            bid = max(0, int(before_id or 0))
+            if bid > 0:
+                cur.execute(
+                    """
+                    SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email
+                    FROM guestbook_messages g
+                    LEFT JOIN users u ON u.id = g.user_id
+                    WHERE g.id < %s
+                    ORDER BY g.id DESC
+                    LIMIT %s
+                    """,
+                    (bid, lim),
+                )
+            else:
+                cur.execute(
+                    """
+                    SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email
+                    FROM guestbook_messages g
+                    LEFT JOIN users u ON u.id = g.user_id
+                    ORDER BY g.id DESC
+                    LIMIT %s
+                    """,
+                    (lim,),
+                )
+            rows = cur.fetchall() or []
+            has_more = len(rows) >= lim
+    finally:
+        conn.close()
+
+    return {
+        "success": True,
+        "messages": [_serialize_guestbook_row(r) for r in rows],
+        "has_more": has_more,
+    }
+
+
+@app.post("/guestbook/messages")
+def guestbook_send_message(
+    body: GuestbookSendBody,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
+    user = get_optional_user(creds)
+    text = (body.content or "").strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    if len(text) > GUESTBOOK_MAX_TEXT_LEN:
+        raise HTTPException(status_code=400, detail=f"Message must not exceed {GUESTBOOK_MAX_TEXT_LEN} characters")
+
+    user_id = None
+    guest_name = None
+    if user:
+        user_id = user["id"]
+    else:
+        guest_name = _sanitize_guest_name(body.guest_name or "Guest")
+
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO guestbook_messages (user_id, guest_name, content) VALUES (%s, %s, %s)",
+                (user_id, guest_name, text),
+            )
+            msg_id = cur.lastrowid
+            cur.execute(
+                """
+                SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email
+                FROM guestbook_messages g
+                LEFT JOIN users u ON u.id = g.user_id
+                WHERE g.id = %s
+                """,
+                (msg_id,),
+            )
+            row = cur.fetchone()
+    finally:
+        conn.close()
+
+    return {"success": True, "message": _serialize_guestbook_row(row)}
+
+
+@app.delete("/guestbook/messages/{message_id}")
+def guestbook_delete_message(
+    message_id: int,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
+    admin = get_current_user(creds)
+    require_admin(admin)
+
+    msg_id = int(message_id or 0)
+    if msg_id <= 0:
+        raise HTTPException(status_code=400, detail="Invalid message ID")
+
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM guestbook_messages WHERE id=%s", (msg_id,))
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Message not found")
+    finally:
+        conn.close()
+
+    return {"success": True, "message": "Message deleted"}
+
+
+def _libreoffice_convert(input_path: str, output_dir: str, output_fmt: str) -> str:
+    lo_candidates = ["libreoffice", "soffice", "/usr/bin/libreoffice", "/usr/bin/soffice"]
+    lo_bin = None
+    for candidate in lo_candidates:
+        if shutil.which(candidate) or os.path.isfile(candidate):
+            lo_bin = candidate
+            break
+    if not lo_bin:
+        raise RuntimeError("LibreOffice not found. Install with: apt install -y libreoffice-writer")
+
+    cmd = [lo_bin, "--headless", "--convert-to", output_fmt, "--outdir", output_dir, input_path]
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr or result.stdout or "LibreOffice conversion failed")
+
+    base = os.path.splitext(os.path.basename(input_path))[0]
+    out_file = os.path.join(output_dir, f"{base}.{output_fmt}")
+    if not os.path.isfile(out_file):
+        matches = [f for f in os.listdir(output_dir) if f.startswith(base)]
+        if matches:
+            out_file = os.path.join(output_dir, matches[0])
+        else:
+            raise RuntimeError("Output file not found after conversion")
+    return out_file
+
+
+@app.post("/pdf-to-word")
+async def pdf_to_word(file: UploadFile = File(...)):
+    filename = (file.filename or "").lower()
+    if not filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Please upload a PDF file (.pdf)")
+
+    try:
+        from pdf2docx import Converter
+    except ImportError as exc:
+        raise HTTPException(status_code=500, detail="Missing pdf2docx dependency") from exc
+
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        in_path = os.path.join(tmp_dir, os.path.basename(file.filename))
+        out_name = os.path.splitext(os.path.basename(file.filename))[0] + ".docx"
+        out_path = os.path.join(tmp_dir, out_name)
+
+        content = await file.read()
+        with open(in_path, "wb") as handle:
+            handle.write(content)
+
+        converter = Converter(in_path)
+        converter.convert(out_path, start=0, end=None)
+        converter.close()
+
+        return FileResponse(
+            path=out_path,
+            filename=out_name,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+        raise HTTPException(status_code=500, detail=f"Conversion failed: {exc}") from exc
+
+
+@app.post("/word-to-pdf")
+async def word_to_pdf(file: UploadFile = File(...)):
+    filename = (file.filename or "").lower()
+    if not (filename.endswith(".doc") or filename.endswith(".docx")):
+        raise HTTPException(status_code=400, detail="Please upload a .doc or .docx file")
+
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        in_path = os.path.join(tmp_dir, os.path.basename(file.filename))
+        out_name = os.path.splitext(os.path.basename(file.filename))[0] + ".pdf"
+        out_path = os.path.join(tmp_dir, out_name)
+
+        content = await file.read()
+        with open(in_path, "wb") as handle:
+            handle.write(content)
+
+        converted = False
+        try:
+            from docx2pdf import convert
+
+            convert(in_path, out_path)
+            converted = os.path.isfile(out_path)
+        except Exception:
+            pass
+
+        if not converted:
+            out_path = _libreoffice_convert(in_path, tmp_dir, "pdf")
+
+        return FileResponse(path=out_path, filename=out_name, media_type="application/pdf")
+    except HTTPException:
+        raise
+    except Exception as exc:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+        raise HTTPException(status_code=500, detail=f"Conversion failed: {exc}") from exc

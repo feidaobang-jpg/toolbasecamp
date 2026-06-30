@@ -1,0 +1,17 @@
+[Unit]
+Description=Tool Basecamp API (FastAPI)
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/toolbasecamp-api
+Environment=HOST=127.0.0.1
+Environment=PORT=8001
+EnvironmentFile=-/etc/toolbasecamp-api.env
+ExecStart=/opt/toolbasecamp-api/venv/bin/python run.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,128 @@
+.tool-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-section, .output-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: none;
+    overflow-y: auto;
+}
+
+#json-input {
+    min-height: 200px;
+}
+
+.code-display {
+    min-height: auto;
+    max-height: none;
+    height: auto;
+    overflow-y: visible;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-x: hidden;
+}
+
+#java-output, #inner-classes-output {
+    min-height: auto;
+    max-height: none;
+    height: auto;
+}
+
+.button-section {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+#clear-btn {
+    background-color: #3498db;
+}
+
+#clear-btn:hover {
+    background-color: #2980b9;
+}
+
+#copy-java-btn, #copy-inner-classes-btn {
+    background-color: #3498db;
+    margin-top: 10px;
+    align-self: flex-start;
+}
+
+#copy-java-btn:hover, #copy-inner-classes-btn:hover {
+    background-color: #2980b9;
+}
+
+.options-section {
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.option {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.option input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-option input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-option label {
+    margin: 0;
+}
+
+#inner-classes-section {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+} 

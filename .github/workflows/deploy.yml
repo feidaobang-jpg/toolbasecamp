@@ -1,0 +1,60 @@
+name: Deploy Tool Basecamp
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DO_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Rsync static site
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            public/ \
+            "${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:/var/www/toolbasecamp/"
+
+      - name: Rsync API server
+        run: |
+          rsync -avz --delete --exclude venv \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            server/ \
+            "${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:/opt/toolbasecamp-api/"
+
+      - name: Rsync deploy scripts
+        run: |
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            deploy/ \
+            "${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}:/opt/toolbasecamp-deploy/"
+
+      - name: Install API deps and restart
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${{ secrets.DO_USER }}@${{ secrets.DO_HOST }}" 'bash -s' << 'REMOTE'
+          set -euo pipefail
+          apt-get install -y python3 python3-venv python3-pip libreoffice-writer >/dev/null 2>&1 || true
+          APP_DIR=/opt/toolbasecamp-api
+          mkdir -p "$APP_DIR"
+          [[ -d "$APP_DIR/venv" ]] || python3 -m venv "$APP_DIR/venv"
+          "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements.txt"
+          if [[ ! -f /etc/systemd/system/toolbasecamp-api.service ]]; then
+            cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/
+            systemctl daemon-reload && systemctl enable toolbasecamp-api
+          fi
+          bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
+          systemctl restart toolbasecamp-api
+          nginx -t && systemctl reload nginx
+          curl -sf http://127.0.0.1:8001/health
+          REMOTE

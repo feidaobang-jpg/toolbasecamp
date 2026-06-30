@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word to PDF - Tool Basecamp</title>
+  <meta name="description" content="Convert Word DOC or DOCX files to PDF online.">
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1>Word to PDF</h1>
+        <p>Convert Word documents (.doc / .docx) to PDF for easy sharing and printing</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">📂</div>
+          <div class="drop-title">Click or drag a Word file here</div>
+          <div class="drop-hint">Supports .doc and .docx up to 50 MB</div>
+          <input type="file" id="file-input" accept=".doc,.docx" style="display:none" />
+        </div>
+
+        <div class="file-info-row" id="file-info" style="display:none">
+          <span class="file-icon">📝</span>
+          <span class="file-name" id="file-name">-</span>
+          <span class="file-size" id="file-size">-</span>
+          <button class="remove-btn" id="remove-btn" title="Remove">✕</button>
+        </div>
+
+        <div class="tip-box" style="margin-top:14px">
+          <b>Note:</b> Conversion uses LibreOffice. Documents with special fonts or macros may differ slightly.
+        </div>
+
+        <div class="action-row">
+          <button class="btn-primary" id="convert-btn" disabled>
+            <span>🚀</span> Convert
+          </button>
+          <button class="btn-secondary" id="clear-btn">Clear</button>
+        </div>
+
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-label">
+            <span id="progress-status">Converting...</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="error-box" id="error-box">
+          <span>⚠️</span>
+          <span id="error-msg">Conversion failed</span>
+        </div>
+
+        <div class="result-wrap" id="result-wrap">
+          <div class="result-box">
+            <span class="result-icon">📕</span>
+            <div class="result-info">
+              <div class="result-name" id="result-name">-</div>
+              <div class="result-size" id="result-size">Done</div>
+            </div>
+            <a class="btn-download" id="download-btn" href="#" download>
+              <span>⬇️</span> Download PDF
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/common_ui.js"></script>
+  <script src="../../js/docs/word-to-pdf.js"></script>
+</body>
+</html>

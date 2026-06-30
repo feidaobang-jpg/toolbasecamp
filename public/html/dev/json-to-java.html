@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON to Java - Tool Basecamp</title>
+    <meta name="description" content="Generate Java POJO entity classes from JSON data.">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/dev/json-to-java.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar"></aside>
+        <main class="content">
+            <div class="page active">
+                <h2>JSON to Java Entity</h2>
+                <div class="tool-container">
+                    <div class="input-section">
+                        <label for="json-input">Input JSON:</label>
+                        <textarea id="json-input" rows="12" placeholder="Paste your JSON here"></textarea>
+                    </div>
+
+                    <div class="options-section">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="use-inner-classes" checked>
+                            <label for="use-inner-classes">Use inner classes</label>
+                        </div>
+                    </div>
+
+                    <div class="button-section">
+                        <button id="convert-btn">Generate Java</button>
+                        <button id="clear-btn">Clear</button>
+                    </div>
+
+                    <div class="output-section">
+                        <label for="java-output">Main entity class:</label>
+                        <pre id="java-output" class="code-display"></pre>
+                        <button class="copy-btn" data-target="java-output">Copy main class</button>
+                    </div>
+
+                    <div class="output-section" id="inner-classes-section" style="display: none;">
+                        <label for="inner-classes-output">Inner classes:</label>
+                        <pre id="inner-classes-output" class="code-display"></pre>
+                        <button class="copy-btn" data-target="inner-classes-output">Copy inner classes</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../js/common_ui.js"></script>
+    <script src="../../js/dev/json-to-java.js"></script>
+</body>
+</html>

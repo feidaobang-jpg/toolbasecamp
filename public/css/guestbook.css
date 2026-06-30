@@ -1,0 +1,98 @@
+.gb-item {
+    background: #fff;
+    border: 1px solid #f3f4f6;
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    transition: box-shadow 0.15s;
+}
+
+.gb-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.gb-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.625rem;
+}
+
+.gb-item-name {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.gb-item-name .gb-badge {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: #6b7280;
+    background: #f3f4f6;
+    border-radius: 9999px;
+    padding: 0.125rem 0.5rem;
+}
+
+.gb-item-name .gb-badge.is-user {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.gb-item-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.gb-item-content {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #374151;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#gb-status.is-error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+#gb-status.is-success {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.gb-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.gb-delete-btn {
+    border: none;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+}
+
+.gb-delete-btn:hover {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+.gb-delete-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

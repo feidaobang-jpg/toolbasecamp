@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Secrets & local env
+.env
+.env.*
+
+# Logs & runtime
+*.log
+server.log
+server.log.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Future frontend build output (if added)
+node_modules/
+dist/
+build/

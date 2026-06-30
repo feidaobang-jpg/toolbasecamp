@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Tool Basecamp</title>
+    <meta name="description" content="About Tool Basecamp — a global productivity toolkit for document conversion and developer utilities.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css">
+    <script src="js/config.js"></script>
+    <script src="js/common_ui.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
+                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
+                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">Tool Basecamp</h1>
+            </a>
+            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
+            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto">
+                <a href="index.html" class="text-sm text-gray-600 whitespace-nowrap">Home</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
+            <div class="text-center mb-10">
+                <div class="w-24 h-24 bg-blue-100 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                    <span class="text-3xl font-bold text-blue-600">TB</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">About Tool Basecamp</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    A global productivity toolkit — starting with document conversion and expanding to developer utilities.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+                <div class="p-5 bg-blue-50 rounded-xl">
+                    <i class="fas fa-file-alt text-blue-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1">Document Tools</h3>
+                    <p class="text-sm text-gray-600">PDF to Word, Word to PDF, and Images to PDF — fast and straightforward.</p>
+                </div>
+                <div class="p-5 bg-indigo-50 rounded-xl">
+                    <i class="fas fa-code text-indigo-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1">Developer Tools</h3>
+                    <p class="text-sm text-gray-600">JSON to Java entity generator and more utilities for everyday dev work.</p>
+                </div>
+                <div class="p-5 bg-green-50 rounded-xl">
+                    <i class="fas fa-shield-alt text-green-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1">Privacy-friendly</h3>
+                    <p class="text-sm text-gray-600">Client-side tools run in your browser. Server tools process files and discard them after conversion.</p>
+                </div>
+                <div class="p-5 bg-orange-50 rounded-xl">
+                    <i class="fas fa-globe text-orange-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1">Built for everyone</h3>
+                    <p class="text-sm text-gray-600">English-first, clean UI, no clutter — just tools that work.</p>
+                </div>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-gray-100 text-center">
+                <p class="text-gray-500 text-sm mb-4">Questions or feedback?</p>
+                <a href="guestbook.html" class="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700">
+                    <i class="fas fa-comment-dots"></i> Visit the guestbook
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-100 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>&copy; 2026 Tool Basecamp. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

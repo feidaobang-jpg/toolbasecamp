@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook - Tool Basecamp</title>
+    <meta name="description" content="Leave feedback, suggestions, or greetings on the Tool Basecamp guestbook.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css">
+    <link rel="stylesheet" href="css/guestbook.css">
+    <script src="js/config.js"></script>
+    <script src="js/common_ui.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
+                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
+                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">Tool Basecamp</h1>
+            </a>
+            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
+            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto">
+                <a href="index.html" class="text-sm text-gray-600 whitespace-nowrap">Home</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                <span class="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+                Guestbook
+            </h1>
+            <p class="text-gray-500 mt-2 text-sm">Share ideas, feedback, or a quick hello. No login required — sign in to post with your account name.</p>
+        </div>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+            <h2 class="text-base font-semibold text-gray-900 mb-4">Write a message</h2>
+            <div id="gb-login-hint" class="hidden mb-4 text-sm text-blue-700 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+                <i class="fas fa-user-circle mr-1"></i>
+                Posting as <span id="gb-login-name" class="font-medium"></span>
+            </div>
+            <div id="gb-guest-fields" class="mb-4">
+                <label for="gb-guest-name" class="block text-sm font-medium text-gray-700 mb-1">Display name</label>
+                <input id="gb-guest-name" type="text" maxlength="20" placeholder="Guest"
+                    class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div class="mb-4">
+                <label for="gb-content" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea id="gb-content" rows="4" maxlength="500" placeholder="Say something..."
+                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                <div class="text-right text-xs text-gray-400 mt-1"><span id="gb-char-count">0</span>/500</div>
+            </div>
+            <div id="gb-status" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+            <button id="gb-submit" type="button"
+                class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                <i class="fas fa-paper-plane"></i>
+                Post message
+            </button>
+        </section>
+
+        <section>
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-semibold text-gray-900">All messages</h2>
+            </div>
+            <div id="gb-list" class="space-y-4">
+                <div id="gb-loading" class="text-center text-gray-400 py-12">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>Loading...
+                </div>
+            </div>
+            <div id="gb-load-more-wrap" class="text-center mt-6 hidden">
+                <button id="gb-load-more" type="button"
+                    class="text-sm text-blue-600 hover:text-blue-700 font-medium px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors">
+                    Load more
+                </button>
+            </div>
+            <div id="gb-empty" class="hidden text-center text-gray-400 py-12">
+                <i class="fas fa-comment-dots text-3xl mb-3 block opacity-40"></i>
+                No messages yet — be the first!
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-100 py-8 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>&copy; 2026 Tool Basecamp. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/guestbook.js"></script>
+</body>
+</html>
