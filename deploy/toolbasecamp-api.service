@@ -1,6 +1,6 @@
 [Unit]
 Description=Tool Basecamp API (FastAPI)
-After=network.target mysql.service
+After=network.target
 
 [Service]
 Type=simple
