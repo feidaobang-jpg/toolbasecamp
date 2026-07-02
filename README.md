@@ -11,37 +11,41 @@ web-tool-global/
 └── deploy/                 # nginx, systemd, webhook scripts
 ```
 
-## Deploy methods
+## Deploy
 
-| Method | Auto? | Cost | Notes |
-|--------|-------|------|-------|
-| **Gitee Webhook** (recommended) | Yes on `git push` | Free | `deploy/setup-gitee-webhook.sh` |
-| **deploy.ps1** | Manual | Free | Windows, one-shot sync |
-| Gitee Go | Yes | Paid | Not required |
-| GitHub Actions | Yes | Free | Optional if you use GitHub |
+Push to Gitee `master` → webhook → server `git pull` + deploy.
+
+```powershell
+git add .
+git commit -m "feat: ..."
+git push origin master
+```
+
+Rollback: `git checkout <commit>` then push again (or run `webhook-deploy.sh` on server).
+
+Server deploy log:
+
+```bash
+tail -f /var/log/toolbasecamp-deploy.log
+```
 
 ---
 
-## Gitee Webhook auto deploy (free)
+## First-time setup
 
-Push to Gitee `master` → Gitee calls your server → server `git pull` + deploy.
+All server steps run in **DigitalOcean Web Console** (no local SSH required).
 
-### Step 1 — First upload (one time, from your PC)
+### Step 1 — Bootstrap server
 
-Deploy API + scripts once so the webhook endpoint exists:
+Upload `deploy/` to the server once via Web Console file paste, or clone the repo after Step 2.
 
-```powershell
-cd d:\project\composite\web-tool-global\deploy
-$env:DO_HOST = "134.209.221.228"
-$env:DO_USER = "root"
-scp -r ..\server\* "${env:DO_USER}@${env:DO_HOST}:/opt/toolbasecamp-api/"
-scp -r ..\deploy\* "${env:DO_USER}@${env:DO_HOST}:/opt/toolbasecamp-deploy/"
-ssh "${env:DO_USER}@${env:DO_HOST}" "bash /opt/toolbasecamp-deploy/install-api.sh"
+If starting from a bare droplet, run in Web Console:
+
+```bash
+bash /opt/toolbasecamp-deploy/bootstrap-server.sh
 ```
 
-Or use `.\deploy.ps1` for the static site only, then `scp` server + deploy as above.
-
-### Step 2 — Server setup (one time, SSH / Web Console)
+### Step 2 — Configure Gitee webhook deploy
 
 ```bash
 bash /opt/toolbasecamp-deploy/setup-gitee-webhook.sh
@@ -49,8 +53,8 @@ bash /opt/toolbasecamp-deploy/setup-gitee-webhook.sh
 
 The script will:
 
-1. Generate SSH deploy key `/root/.ssh/gitee_deploy`
-2. Print the **public key** — add it in Gitee: **仓库 → 管理 → 部署公钥**
+1. Generate deploy key `/root/.ssh/gitee_deploy`
+2. Print the **public key** — add in Gitee: **仓库 → 管理 → 部署公钥**
 3. Clone `git@gitee.com:zhengxiaohui/composite.git` to `/opt/composite`
 4. Write `GITEE_WEBHOOK_SECRET` to `/etc/toolbasecamp-api.env`
 5. Run the first deploy
@@ -69,22 +73,16 @@ Gitee repo **composite** → **管理 → WebHooks → 添加**：
 
 Password is sent as header `X-Gitee-Token` (handled automatically).
 
-### Step 4 — Daily workflow
-
-```powershell
-cd d:\project\composite
-git add .
-git commit -m "update toolbasecamp"
-git push origin master
-```
-
-Gitee triggers webhook → deploy runs in background. Check log on server:
+### Step 4 — API + MySQL (if not done by setup)
 
 ```bash
-tail -f /var/log/toolbasecamp-deploy.log
+bash /opt/toolbasecamp-deploy/install-api.sh
+bash /opt/toolbasecamp-deploy/install-mysql.sh
+nano /etc/toolbasecamp-api.env
+systemctl restart toolbasecamp-api
 ```
 
-### Manual deploy (fallback)
+### Manual redeploy on server
 
 ```bash
 bash /opt/toolbasecamp-deploy/webhook-deploy.sh
@@ -92,24 +90,7 @@ bash /opt/toolbasecamp-deploy/webhook-deploy.sh
 
 ---
 
-## First-time server setup
-
-### API + LibreOffice
-
-```bash
-mkdir -p /opt/toolbasecamp-api /opt/toolbasecamp-deploy /var/www/toolbasecamp
-bash /opt/toolbasecamp-deploy/install-api.sh
-```
-
-### MySQL (auth + guestbook)
-
-```bash
-bash /opt/toolbasecamp-deploy/install-mysql.sh
-nano /etc/toolbasecamp-api.env
-systemctl restart toolbasecamp-api
-```
-
-### Environment (`/etc/toolbasecamp-api.env`)
+## Environment (`/etc/toolbasecamp-api.env`)
 
 | Variable | Description |
 |----------|-------------|
@@ -121,22 +102,7 @@ systemctl restart toolbasecamp-api
 | `GITEE_DEPLOY_BRANCH` | Default `master` |
 | `DEPLOY_SCRIPT` | Default `/opt/toolbasecamp-deploy/webhook-deploy.sh` |
 
-### Nginx
-
-Use `deploy/nginx-toolbasecamp.conf` (includes `/api/` proxy).
-
----
-
-## Manual deploy from Windows
-
-```powershell
-cd web-tool-global\deploy
-$env:DO_HOST = "134.209.221.228"
-$env:DO_USER = "root"
-.\deploy.ps1
-```
-
-Note: `deploy.ps1` syncs **static files only**. For API changes use webhook deploy or `scp` server files.
+Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
 ---
 

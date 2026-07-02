@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run on server via Web Console — bootstrap before first CI deploy
+# Run on server via Web Console — bootstrap before first deploy
 set -euo pipefail
 
 echo "=== Tool Basecamp bootstrap ==="
@@ -31,4 +31,4 @@ ufw --force enable 2>/dev/null || true
 
 nginx -t && systemctl enable nginx && systemctl reload nginx
 
-echo "Bootstrap done. Push code to Gitee to trigger CI, or rsync public/ manually."
+echo "Bootstrap done. Run setup-gitee-webhook.sh, then push to Gitee to deploy."
