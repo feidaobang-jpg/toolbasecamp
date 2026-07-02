@@ -1,0 +1,93 @@
+name: Deploy Tool Basecamp
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DO_HOST: ${{ secrets.DO_HOST }}
+      DO_USER: ${{ secrets.DO_USER }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate secrets
+        run: |
+          trim() { printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
+          DO_HOST="$(trim "$DO_HOST")"
+          DO_USER="$(trim "$DO_USER")"
+          if [[ -z "$DO_HOST" || -z "$DO_USER" ]]; then
+            echo "::error::DO_HOST and DO_USER must be set (no extra blank lines)."
+            exit 1
+          fi
+          echo "DO_HOST=$DO_HOST" >> "$GITHUB_ENV"
+          echo "DO_USER=$DO_USER" >> "$GITHUB_ENV"
+          echo "Deploy target: ${DO_USER}@${DO_HOST}"
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Rsync static site
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            public/ \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
+
+      - name: Rsync API server
+        run: |
+          rsync -avz --delete --exclude venv \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            server/ \
+            "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
+
+      - name: Rsync deploy scripts
+        run: |
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            deploy/ \
+            "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-deploy/"
+
+      - name: Install API deps and restart
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" 'bash -s' << 'REMOTE'
+          set -euo pipefail
+          apt-get update -qq
+          apt-get install -y python3 python3-venv python3-pip libreoffice-writer rsync >/dev/null 2>&1 || true
+          if ! command -v mysql >/dev/null 2>&1; then
+            DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server >/dev/null 2>&1 || true
+          fi
+          systemctl start mysql 2>/dev/null || systemctl start mariadb 2>/dev/null || true
+          if [[ ! -f /etc/toolbasecamp-api.env && -f /opt/toolbasecamp-deploy/install-mysql.sh ]]; then
+            bash /opt/toolbasecamp-deploy/install-mysql.sh
+          fi
+          APP_DIR=/opt/toolbasecamp-api
+          mkdir -p "$APP_DIR"
+          [[ -d "$APP_DIR/venv" ]] || python3 -m venv "$APP_DIR/venv"
+          "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements.txt"
+          cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
+          systemctl daemon-reload
+          systemctl enable toolbasecamp-api
+          bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
+          systemctl restart toolbasecamp-api
+          nginx -t && systemctl reload nginx
+          for i in 1 2 3 4 5; do
+            if curl -sf http://127.0.0.1:8001/health; then
+              echo ""
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "=== toolbasecamp-api status ==="
+          systemctl status toolbasecamp-api --no-pager || true
+          journalctl -u toolbasecamp-api -n 40 --no-pager || true
+          exit 1
+          REMOTE

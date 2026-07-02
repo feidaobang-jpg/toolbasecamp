@@ -3,13 +3,12 @@ import re
 import shutil
 import subprocess
 import tempfile
-import threading
 import time
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
 import pymysql
-from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -38,14 +37,6 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 GUESTBOOK_PAGE_SIZE = 30
 GUESTBOOK_MAX_TEXT_LEN = 500
 GUESTBOOK_MAX_GUEST_NAME_LEN = 20
-
-GITEE_WEBHOOK_SECRET = os.environ.get("GITEE_WEBHOOK_SECRET", "")
-DEPLOY_SCRIPT = os.environ.get("DEPLOY_SCRIPT", "/opt/toolbasecamp-deploy/webhook-deploy.sh")
-DEPLOY_BRANCH = os.environ.get("GITEE_DEPLOY_BRANCH", "master")
-DEPLOY_REF = f"refs/heads/{DEPLOY_BRANCH}"
-
-_deploy_lock = threading.Lock()
-_deploy_running = False
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
@@ -257,57 +248,6 @@ def _serialize_guestbook_row(row: dict) -> dict:
 @app.get("/health")
 def health():
     return {"ok": True, "service": "toolbasecamp-api", "ts": int(time.time())}
-
-
-def _run_deploy_script() -> None:
-    global _deploy_running
-    try:
-        subprocess.run(
-            ["bash", DEPLOY_SCRIPT],
-            check=True,
-            timeout=900,
-            capture_output=True,
-            text=True,
-        )
-    except subprocess.CalledProcessError as exc:
-        print(f"[deploy] failed: {exc.stderr or exc.stdout or exc}")
-    except Exception as exc:
-        print(f"[deploy] error: {exc}")
-    finally:
-        with _deploy_lock:
-            _deploy_running = False
-
-
-@app.post("/webhook/gitee")
-async def gitee_webhook(request: Request):
-    """Gitee push webhook: git pull and deploy on server."""
-    if not GITEE_WEBHOOK_SECRET:
-        raise HTTPException(status_code=503, detail="Webhook deploy is not configured")
-
-    token = request.headers.get("X-Gitee-Token", "")
-    if token != GITEE_WEBHOOK_SECRET:
-        raise HTTPException(status_code=403, detail="Invalid webhook token")
-
-    try:
-        body: Dict[str, Any] = await request.json()
-    except Exception:
-        body = {}
-
-    ref = str(body.get("ref") or "")
-    if ref and ref != DEPLOY_REF:
-        return {"ok": True, "skipped": True, "reason": f"ignored ref {ref}"}
-
-    if not os.path.isfile(DEPLOY_SCRIPT):
-        raise HTTPException(status_code=503, detail=f"Deploy script missing: {DEPLOY_SCRIPT}")
-
-    global _deploy_running
-    with _deploy_lock:
-        if _deploy_running:
-            return {"ok": True, "deploy": "already_running"}
-        _deploy_running = True
-
-    threading.Thread(target=_run_deploy_script, daemon=True).start()
-    return {"ok": True, "deploy": "started"}
 
 
 @app.post("/auth/register")

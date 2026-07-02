@@ -1,19 +1,19 @@
-# web-tool-global (Tool Basecamp)
+# Tool Basecamp
 
 Global site: **https://toolbasecamp.com**
 
 ## Structure
 
 ```
-web-tool-global/
+toolbasecamp/
 ├── public/                 # Static site → /var/www/toolbasecamp
 ├── server/                 # FastAPI → /opt/toolbasecamp-api
-└── deploy/                 # nginx, systemd, webhook scripts
+└── deploy/                 # nginx, systemd, server scripts
 ```
 
-## Deploy
+## Deploy (GitHub Actions)
 
-Push to Gitee `master` → webhook → server `git pull` + deploy.
+Push to GitHub `master` → GitHub Actions rsync to server → restart API.
 
 ```powershell
 git add .
@@ -21,86 +21,55 @@ git commit -m "feat: ..."
 git push origin master
 ```
 
-Rollback: `git checkout <commit>` then push again (or run `webhook-deploy.sh` on server).
+GitHub push may fail from China when the network is unstable — retry later or use VPN.
 
-Server deploy log:
+Rollback: `git checkout <commit>` then push again.
 
-```bash
-tail -f /var/log/toolbasecamp-deploy.log
-```
+View deploy runs: GitHub repo → **Actions** tab.
+
+### One-time: GitHub Secrets
+
+Repo → **Settings → Secrets and variables → Actions → New repository secret**
+
+| Secret | Value |
+|--------|-------|
+| `DO_HOST` | `134.209.221.228` |
+| `DO_USER` | `root` |
+| `DO_SSH_KEY` | Private key that can SSH into the server |
+
+Add the matching **public key** to the server (`/root/.ssh/authorized_keys`) via Web Console.
+
+Manual re-run: Actions → **Deploy Tool Basecamp** → **Run workflow**.
 
 ---
 
-## First-time setup
+## First-time server setup
 
-All server steps run in **DigitalOcean Web Console** (no local SSH required).
+Run in **DigitalOcean Web Console** (no local SSH required).
 
-### Step 1 — Bootstrap server
-
-Upload `deploy/` to the server once via Web Console file paste, or clone the repo after Step 2.
-
-If starting from a bare droplet, run in Web Console:
+### Bootstrap
 
 ```bash
 bash /opt/toolbasecamp-deploy/bootstrap-server.sh
 ```
 
-### Step 2 — Configure Gitee webhook deploy
+### API + MySQL
 
 ```bash
-bash /opt/toolbasecamp-deploy/setup-gitee-webhook.sh
-```
-
-The script will:
-
-1. Generate deploy key `/root/.ssh/gitee_deploy`
-2. Print the **public key** — add in Gitee: **仓库 → 管理 → 部署公钥**
-3. Clone `git@gitee.com:zhengxiaohui/composite.git` to `/opt/composite`
-4. Write `GITEE_WEBHOOK_SECRET` to `/etc/toolbasecamp-api.env`
-5. Run the first deploy
-
-**Save the webhook password** printed at the end.
-
-### Step 3 — Gitee WebHook
-
-Gitee repo **composite** → **管理 → WebHooks → 添加**：
-
-| Field | Value |
-|-------|-------|
-| URL | `https://toolbasecamp.com/api/webhook/gitee` |
-| 密码 | `setup-gitee-webhook.sh` 输出的 Password |
-| 事件 | 勾选 **Push** |
-
-Password is sent as header `X-Gitee-Token` (handled automatically).
-
-### Step 4 — API + MySQL (if not done by setup)
-
-```bash
+mkdir -p /opt/toolbasecamp-api /opt/toolbasecamp-deploy /var/www/toolbasecamp
 bash /opt/toolbasecamp-deploy/install-api.sh
 bash /opt/toolbasecamp-deploy/install-mysql.sh
 nano /etc/toolbasecamp-api.env
 systemctl restart toolbasecamp-api
 ```
 
-### Manual redeploy on server
-
-```bash
-bash /opt/toolbasecamp-deploy/webhook-deploy.sh
-```
-
----
-
-## Environment (`/etc/toolbasecamp-api.env`)
+### Environment (`/etc/toolbasecamp-api.env`)
 
 | Variable | Description |
 |----------|-------------|
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `GITEE_WEBHOOK_SECRET` | Webhook password (from setup script) |
-| `GITEE_REPO_PATH` | Default `/opt/composite` |
-| `GITEE_DEPLOY_BRANCH` | Default `master` |
-| `DEPLOY_SCRIPT` | Default `/opt/toolbasecamp-deploy/webhook-deploy.sh` |
 
 Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
@@ -111,7 +80,6 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/health` | Health check |
-| POST | `/api/webhook/gitee` | Gitee push → deploy (secret required) |
 | POST | `/api/pdf-to-word` | PDF → DOCX |
 | POST | `/api/word-to-pdf` | DOC/DOCX → PDF |
 | POST | `/api/auth/register` | Email sign-up |
@@ -125,4 +93,3 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 - https://toolbasecamp.com
 - https://toolbasecamp.com/tool.html
 - `curl https://toolbasecamp.com/api/health`
-- After push: `tail /var/log/toolbasecamp-deploy.log` on server

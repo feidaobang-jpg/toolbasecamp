@@ -31,4 +31,4 @@ ufw --force enable 2>/dev/null || true
 
 nginx -t && systemctl enable nginx && systemctl reload nginx
 
-echo "Bootstrap done. Run setup-gitee-webhook.sh, then push to Gitee to deploy."
+echo "Bootstrap done. Push to GitHub to trigger Actions deploy."
