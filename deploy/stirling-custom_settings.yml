@@ -4,12 +4,14 @@ security:
   csrfDisabled: true
 
 system:
-  defaultLocale: en-US
+  # Empty = auto-detect UI language from browser, fallback en-US
+  defaultLocale: ""
   googlevisibility: false
   enableOnboarding: false
   enableDesktopInstallSlide: false
   showUpdate: false
   maxFileSize: 100
+  tessdataDir: /usr/share/tessdata
 
 ui:
   appName: PDF Toolkit

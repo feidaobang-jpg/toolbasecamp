@@ -7,6 +7,7 @@ STIRLING_PORT="8080"
 CONTAINER="stirling-pdf"
 DEPLOY="/opt/toolbasecamp-deploy"
 CUSTOM_SETTINGS="$DEPLOY/stirling-custom_settings.yml"
+TESSDIR="/opt/toolbasecamp-stirling/tessdata"
 
 install_docker() {
   if command -v docker >/dev/null 2>&1; then
@@ -49,7 +50,10 @@ needs_recreate() {
   env="$(docker inspect "$CONTAINER" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null || true)"
   echo "$env" | grep -qx 'SECURITY_CSRFDISABLED=true' || return 0
   echo "$env" | grep -qx 'SYSTEM_ENABLEONBOARDING=false' || return 0
-  echo "$env" | grep -qx 'SYSTEM_ENABLEDESKTOPINSTALLSLIDE=false' || return 0
+  echo "$env" | grep -q 'TESSERACT_LANGS=.*chi_sim' || return 0
+  if ! docker inspect "$CONTAINER" --format '{{json .Mounts}}' 2>/dev/null | grep -q tessdata; then
+    return 0
+  fi
   if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER"; then
     return 0
   fi
@@ -63,13 +67,14 @@ run_stirling() {
   docker run -d --name "$CONTAINER" --restart unless-stopped \
     -p "127.0.0.1:${STIRLING_PORT}:8080" \
     -v stirling-data:/configs \
+    -v "${TESSDIR}:/usr/share/tessdata" \
     -e DISABLE_ADDITIONAL_FEATURES=false \
     -e SECURITY_ENABLELOGIN=false \
     -e SECURITY_CSRFDISABLED=true \
     -e SYSTEM_ENABLEONBOARDING=false \
     -e SYSTEM_ENABLEDESKTOPINSTALLSLIDE=false \
     -e SYSTEM_GOOGLEVISIBILITY=false \
-    -e SYSTEM_DEFAULTLOCALE=en-US \
+    -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \
@@ -91,6 +96,13 @@ wait_stirling() {
 }
 
 install_docker
+
+if [[ -f "$DEPLOY/install-stirling-tessdata.sh" ]]; then
+  bash "$DEPLOY/install-stirling-tessdata.sh"
+else
+  mkdir -p "$TESSDIR"
+fi
+
 seed_custom_settings
 
 if needs_recreate; then
@@ -98,9 +110,12 @@ if needs_recreate; then
   run_stirling
   wait_stirling
 else
-  echo "Stirling-PDF already configured — restarting to apply settings file."
+  echo "Stirling-PDF already configured — restarting to apply settings."
   docker restart "$CONTAINER"
   wait_stirling
 fi
 
 seed_custom_settings
+
+echo "OCR languages:"
+docker exec "$CONTAINER" sh -c 'ls /usr/share/tessdata/*.traineddata 2>/dev/null | xargs -n1 basename' || true

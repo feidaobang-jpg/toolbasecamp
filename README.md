@@ -33,7 +33,11 @@ bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
 bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
 ```
 
-Requires **~4GB RAM**. Login disabled; CSRF off for public tool POSTs; onboarding/desktop slides disabled via env + `stirling-custom_settings.yml`.
+Requires **~4GB RAM**. Login disabled; CSRF off for public tool POSTs; onboarding/desktop slides disabled.
+
+**UI language:** `defaultLocale: ""` → browser auto-detect (zh-CN browser → Chinese UI, en → English).
+
+**OCR:** Install `eng` + `chi_sim` tessdata (`install-stirling-tessdata.sh`). OCR has no true auto-detect — for Chinese documents select **简体中文** in the OCR language dropdown (or both eng+chi_sim).
 
 ## Developer portal (dev.toolbasecamp.com)
 

@@ -18,16 +18,18 @@ else
     systemctl enable docker && systemctl start docker
   fi
   docker rm -f stirling-pdf 2>/dev/null || true
+  bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh 2>/dev/null || mkdir -p /opt/toolbasecamp-stirling/tessdata
   docker run -d --name stirling-pdf --restart unless-stopped \
     -p 127.0.0.1:8080:8080 \
     -v stirling-data:/configs \
+    -v /opt/toolbasecamp-stirling/tessdata:/usr/share/tessdata \
     -e DISABLE_ADDITIONAL_FEATURES=false \
     -e SECURITY_ENABLELOGIN=false \
     -e SECURITY_CSRFDISABLED=true \
     -e SYSTEM_ENABLEONBOARDING=false \
     -e SYSTEM_ENABLEDESKTOPINSTALLSLIDE=false \
     -e SYSTEM_GOOGLEVISIBILITY=false \
-    -e SYSTEM_DEFAULTLOCALE=en-US \
+    -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \

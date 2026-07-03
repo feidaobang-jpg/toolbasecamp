@@ -107,6 +107,7 @@ jobs:
           systemctl enable toolbasecamp-api
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
+          bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh
           bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
           systemctl restart toolbasecamp-api
