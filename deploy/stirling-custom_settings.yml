@@ -1,0 +1,16 @@
+# Stirling-PDF overrides (mounted into /configs/customConfigs/)
+security:
+  enableLogin: false
+  csrfDisabled: true
+
+system:
+  defaultLocale: en-US
+  googlevisibility: false
+  enableOnboarding: false
+  enableDesktopInstallSlide: false
+  showUpdate: false
+  maxFileSize: 100
+
+ui:
+  appName: PDF Toolkit
+  appNameNavbar: PDF Toolkit

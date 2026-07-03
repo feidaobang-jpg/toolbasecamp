@@ -33,7 +33,7 @@ bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
 bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
 ```
 
-Requires **~4GB RAM**. Login disabled, English UI.
+Requires **~4GB RAM**. Login disabled; CSRF off for public tool POSTs; onboarding/desktop slides disabled via env + `stirling-custom_settings.yml`.
 
 ## Developer portal (dev.toolbasecamp.com)
 

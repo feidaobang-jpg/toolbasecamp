@@ -21,9 +21,16 @@ else
   docker run -d --name stirling-pdf --restart unless-stopped \
     -p 127.0.0.1:8080:8080 \
     -v stirling-data:/configs \
-    -e SECURITY_ENABLELOGIN=false \
     -e DISABLE_ADDITIONAL_FEATURES=false \
+    -e SECURITY_ENABLELOGIN=false \
+    -e SECURITY_CSRFDISABLED=true \
+    -e SYSTEM_ENABLEONBOARDING=false \
+    -e SYSTEM_ENABLEDESKTOPINSTALLSLIDE=false \
+    -e SYSTEM_GOOGLEVISIBILITY=false \
     -e SYSTEM_DEFAULTLOCALE=en-US \
+    -e SYSTEM_MAXFILESIZE=100 \
+    -e UI_APPNAME="PDF Toolkit" \
+    -e UI_APPNAMENAVBAR="PDF Toolkit" \
     docker.stirlingpdf.com/stirlingtools/stirling-pdf
   for i in $(seq 1 12); do
     CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/ || echo 000)"
