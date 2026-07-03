@@ -42,8 +42,12 @@ echo "Local pdf vhost HTTPS $HTTPS_CODE"
 
 if [[ "$HTTPS_CODE" == "200" ]] && grep -qi 'stirling\|pdf' /tmp/tbc-pdf-https.html; then
   echo "OK: pdf.toolbasecamp.com → Stirling-PDF"
+elif grep -q 'Tool Basecamp' /tmp/tbc-pdf-https.html 2>/dev/null; then
+  echo "ERROR: pdf HTTPS serves main site — run certbot expand for pdf.toolbasecamp.com"
+  exit 1
 elif [[ "$CODE" == "200" ]]; then
   echo "OK: pdf HTTP works; verify HTTPS after certbot."
 else
   echo "WARNING: pdf vhost check returned HTTP $CODE / HTTPS $HTTPS_CODE"
+  exit 1
 fi
