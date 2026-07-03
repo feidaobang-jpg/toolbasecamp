@@ -30,6 +30,18 @@ Do **not** use a redirect rule, Worker, or CNAME-to-root that forwards `dev` to 
 
 Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
 
+**If dev shows the same page as the main site**, open DigitalOcean Web Console and run (type or paste one line at a time — avoid `^[[200~` paste glitches):
+
+```bash
+bash /opt/toolbasecamp-deploy/fix-dev-portal.sh
+```
+
+Or only nginx:
+
+```bash
+bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
+```
+
 ### Version pin
 
 Edit `deploy/next-tools.ref` to bump the next-tools release tag (e.g. `v1.10.3`), then push — GitHub Actions rebuilds and rsyncs the SPA.
