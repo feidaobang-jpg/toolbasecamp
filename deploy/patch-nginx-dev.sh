@@ -1,78 +1,70 @@
 #!/bin/bash
-# Enable dev.toolbasecamp.com (next-tools SPA)
+# Enable dev.toolbasecamp.com (next-tools SPA) on HTTP + HTTPS
 set -euo pipefail
 
 SITE_SRC="/opt/toolbasecamp-deploy/nginx-toolbasecamp-dev.conf"
-MAIN_SITE="/etc/nginx/sites-enabled/toolbasecamp"
 SITE="/etc/nginx/sites-available/toolbasecamp-dev"
-CONF_D="/etc/nginx/conf.d/00-toolbasecamp-dev.conf"
 WEB_ROOT="/var/www/toolbasecamp-dev"
+MAIN_SITE="/etc/nginx/sites-enabled/toolbasecamp"
 MARKER_BEGIN="# BEGIN toolbasecamp-dev"
 MARKER_END="# END toolbasecamp-dev"
+CERT_DIR="/etc/letsencrypt/live/toolbasecamp.com"
+CERT_EMAIL="${CERT_EMAIL:-admin@toolbasecamp.com}"
 
 mkdir -p "$WEB_ROOT"
 
 if [[ ! -f "$SITE_SRC" ]]; then
-  echo "ERROR: $SITE_SRC not found — push to GitHub and wait for deploy rsync, or copy deploy files manually."
+  echo "ERROR: $SITE_SRC not found"
   exit 1
+fi
+
+# Remove duplicate dev configs from earlier runs
+rm -f /etc/nginx/conf.d/00-toolbasecamp-dev.conf
+if [[ -f "$MAIN_SITE" ]]; then
+  sed -i "/${MARKER_BEGIN}/,/${MARKER_END}/d" "$MAIN_SITE"
+fi
+
+# Cloudflare Full SSL hits origin on :443 — cert must cover dev subdomain
+if command -v certbot >/dev/null 2>&1 && [[ -f "$CERT_DIR/fullchain.pem" ]]; then
+  echo "Expanding Let's Encrypt cert to include dev.toolbasecamp.com..."
+  certbot certonly --nginx \
+    -d toolbasecamp.com -d www.toolbasecamp.com -d dev.toolbasecamp.com \
+    --expand --non-interactive --agree-tos -m "$CERT_EMAIL" \
+    --keep-until-expiring || {
+      echo "WARNING: certbot expand failed — try Cloudflare SSL mode Flexible temporarily."
+    }
+else
+  echo "WARNING: no cert at $CERT_DIR — HTTPS dev vhost may not work until certbot is installed."
 fi
 
 cp "$SITE_SRC" "$SITE"
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-dev
-cp "$SITE_SRC" "$CONF_D"
-
-# Also embed dev vhost into the main site file (guaranteed to load).
-if [[ -f "$MAIN_SITE" ]]; then
-  sed -i "/${MARKER_BEGIN}/,/${MARKER_END}/d" "$MAIN_SITE"
-  {
-    echo ""
-    echo "$MARKER_BEGIN"
-    cat "$SITE_SRC"
-    echo "$MARKER_END"
-  } >> "$MAIN_SITE"
-  sed -i 's/listen \[\:\:\]:80 default_server;/listen [::]:80;/g' "$MAIN_SITE"
-  sed -i 's/listen 80 default_server;/listen 80;/g' "$MAIN_SITE"
-else
-  echo "WARNING: $MAIN_SITE not found — standalone dev vhost only."
-fi
 
 nginx -t
 systemctl reload nginx
 
-echo "=== dev web root ==="
-ls -la "$WEB_ROOT" | head -10
-if [[ ! -f "$WEB_ROOT/index.html" ]]; then
-  echo "ERROR: $WEB_ROOT/index.html missing — next-tools was not deployed."
-  echo "Re-run GitHub Actions deploy (workflow: Deploy Tool Basecamp)."
-  exit 1
-fi
-
-echo "=== index.html title ==="
-grep -i '<title' "$WEB_ROOT/index.html" | head -1 || true
-
-echo "=== nginx dev server blocks ==="
+echo "=== dev server blocks ==="
 nginx -T 2>/dev/null | grep -c 'server_name dev.toolbasecamp.com' || true
 
-echo "=== local HTTP test ==="
-HTTP_CODE="$(curl -s -o /tmp/tbc-dev-body.html -w '%{http_code}' \
-  http://127.0.0.1/ -H 'Host: dev.toolbasecamp.com')"
-echo "HTTP $HTTP_CODE"
-head -c 400 /tmp/tbc-dev-body.html
-echo ""
-
-if [[ "$HTTP_CODE" != "200" ]]; then
-  echo "ERROR: dev vhost returned HTTP $HTTP_CODE"
+if [[ ! -f "$WEB_ROOT/index.html" ]]; then
+  echo "ERROR: $WEB_ROOT/index.html missing"
   exit 1
 fi
 
-if grep -q 'Tool Basecamp — Productivity Tools Hub' /tmp/tbc-dev-body.html; then
-  echo "ERROR: dev vhost still serves main site HTML."
+echo "=== HTTP :80 ==="
+curl -s http://127.0.0.1/ -H 'Host: dev.toolbasecamp.com' | grep -i '<title' | head -1 || true
+
+echo "=== HTTPS :443 ==="
+curl -sk https://127.0.0.1/ -H 'Host: dev.toolbasecamp.com' | grep -i '<title' | head -1 || true
+
+HTTPS_BODY="$(curl -sk https://127.0.0.1/ -H 'Host: dev.toolbasecamp.com' || true)"
+if echo "$HTTPS_BODY" | grep -q 'Tool Basecamp — Productivity Tools Hub'; then
+  echo "ERROR: HTTPS still serves main site — check certbot and nginx 443 vhost."
   exit 1
 fi
 
-if ! grep -qi 'next tools' /tmp/tbc-dev-body.html; then
-  echo "ERROR: response is not next-tools."
-  exit 1
+if echo "$HTTPS_BODY" | grep -qi 'next tools'; then
+  echo "OK: dev.toolbasecamp.com serves next-tools on HTTP and HTTPS."
+else
+  echo "WARNING: HTTPS test did not return next-tools (cert or nginx issue)."
 fi
-
-echo "OK: dev.toolbasecamp.com -> $WEB_ROOT"

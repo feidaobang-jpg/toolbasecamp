@@ -26,7 +26,17 @@ In Cloudflare (or your DNS provider), add an **A record**:
 |------|------|---------|-------|
 | `dev` | A | `134.209.221.228` (same as main site) | Proxied OK |
 
-Do **not** use a redirect rule, Worker, or CNAME-to-root that forwards `dev` to the main homepage — that makes `dev.toolbasecamp.com` show the same page as toolbasecamp.com. After DNS changes, purge Cloudflare cache for `dev.toolbasecamp.com`.
+Do **not** use a redirect rule, Worker, or CNAME-to-root that forwards `dev` to the main homepage.
+
+**Root cause (common):** Cloudflare SSL is **Full** → origin is contacted on **port 443**. If only port 80 has a dev vhost, HTTPS still serves the main site (`Last-Modified` identical on both domains). Fix: expand cert + enable HTTPS dev vhost (`patch-nginx-dev.sh`), or temporarily set Cloudflare **SSL/TLS → Flexible**.
+
+**If dev shows the main site but server `curl` on :80 shows Next Tools**, purge cache will not help — fix HTTPS on the server:
+
+```bash
+bash /opt/toolbasecamp-deploy/fix-dev-portal.sh
+```
+
+Quick test without certbot: Cloudflare → **SSL/TLS** → **Overview** → **Flexible** (origin HTTP only), then hard-refresh.
 
 Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
 
