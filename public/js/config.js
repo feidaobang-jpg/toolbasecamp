@@ -5,6 +5,7 @@ const siteConfig = {
     keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
     description: 'Tool Basecamp — fast document conversion and developer utilities. PDF to Word, Word to PDF, Images to PDF, JSON to Java entity generator.',
     adminEmail: 'admin@toolbasecamp.com',
+    devPortalUrl: 'https://dev.toolbasecamp.com',
     apiBase: (function () {
         const host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') {
@@ -19,7 +20,19 @@ const siteConfig = {
     ]
 };
 
+/** Self-hosted portals (same brand, separate deploy) */
+const portalsConfig = [
+    {
+        title: 'Developer Toolkit',
+        description: '120+ browser-based developer tools — Base64, JWT, JSON, hash, regex, UUID, and more. Data stays in your browser.',
+        url: 'https://dev.toolbasecamp.com',
+        cta: 'Open Developer Toolkit',
+        meta: 'dev.toolbasecamp.com'
+    }
+];
+
 const toolsConfig = {
+    sectionTitle: 'Basecamp Tools',
     groups: [
         {
             title: 'Document Tools',
@@ -39,4 +52,5 @@ const toolsConfig = {
 };
 
 window.siteConfig = siteConfig;
+window.portalsConfig = portalsConfig;
 window.toolsConfig = toolsConfig;

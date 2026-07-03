@@ -1,0 +1,11 @@
+Tool Basecamp Developer Toolkit (dev.toolbasecamp.com)
+
+This portal is built from next-tools, a fork of it-tools:
+https://github.com/willjayyyy/next-tools
+
+Licensed under GNU General Public License v3.0 (GPL-3.0).
+Corresponding Source for the deployed version is available at:
+https://github.com/willjayyyy/next-tools
+
+Tool Basecamp site customization and deployment scripts:
+https://github.com/feidaobang-jpg/toolbasecamp

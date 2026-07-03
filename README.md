@@ -9,7 +9,32 @@ toolbasecamp/
 ├── public/                 # Static site → /var/www/toolbasecamp
 ├── server/                 # FastAPI → /opt/toolbasecamp-api
 └── deploy/                 # nginx, systemd, server scripts
+    ├── nginx-toolbasecamp-dev.conf   # dev.toolbasecamp.com
+    ├── next-tools.ref                # pinned next-tools version
+    └── dev-portal-SOURCE.txt         # GPL source attribution
 ```
+
+## Developer portal (dev.toolbasecamp.com)
+
+The **Developer Toolkit** is a self-hosted build of [next-tools](https://github.com/willjayyyy/next-tools) (GPL-3.0), deployed to `/var/www/toolbasecamp-dev` on the same server. The main site links to it via the Tools hub — no third-party tool site embeds or redirects.
+
+### DNS (one-time)
+
+In Cloudflare (or your DNS provider), add an **A record**:
+
+| Name | Type | Content |
+|------|------|---------|
+| `dev` | A | `134.209.221.228` (same as main site) |
+
+Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
+
+### Version pin
+
+Edit `deploy/next-tools.ref` to bump the next-tools release tag (e.g. `v1.10.3`), then push — GitHub Actions rebuilds and rsyncs the SPA.
+
+### GPL
+
+Deployed files include `SOURCE.txt` and `LICENSE` in the dev web root. See `deploy/dev-portal-SOURCE.txt`.
 
 ## Deploy (GitHub Actions)
 
@@ -92,4 +117,5 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
 - https://toolbasecamp.com
 - https://toolbasecamp.com/tool.html
+- https://dev.toolbasecamp.com
 - `curl https://toolbasecamp.com/api/health`

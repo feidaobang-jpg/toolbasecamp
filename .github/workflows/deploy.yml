@@ -55,6 +55,35 @@ jobs:
             deploy/ \
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-deploy/"
 
+      - name: Build next-tools dev portal
+        run: |
+          NEXT_TOOLS_REF="$(tr -d '\r\n' < deploy/next-tools.ref)"
+          echo "Building next-tools ref: ${NEXT_TOOLS_REF}"
+          git clone --depth 1 --branch "${NEXT_TOOLS_REF}" \
+            https://github.com/willjayyyy/next-tools.git /tmp/next-tools
+          cd /tmp/next-tools
+          corepack enable
+          corepack prepare pnpm@10.28.1 --activate
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Rsync dev portal
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-dev"
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            /tmp/next-tools/dist/ \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/"
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            deploy/dev-portal-SOURCE.txt \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/SOURCE.txt"
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            /tmp/next-tools/LICENSE \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/LICENSE"
+
       - name: Install API deps and restart
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
@@ -77,6 +106,7 @@ jobs:
           systemctl daemon-reload
           systemctl enable toolbasecamp-api
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
           systemctl restart toolbasecamp-api
           nginx -t && systemctl reload nginx
           for i in 1 2 3 4 5; do
