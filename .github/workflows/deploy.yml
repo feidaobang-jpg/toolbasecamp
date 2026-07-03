@@ -108,16 +108,33 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
           systemctl restart toolbasecamp-api
-          nginx -t && systemctl reload nginx
           for i in 1 2 3 4 5; do
             if curl -sf http://127.0.0.1:8001/health; then
               echo ""
-              exit 0
+              break
             fi
             sleep 2
+            if [[ "$i" -eq 5 ]]; then
+              echo "=== toolbasecamp-api status ==="
+              systemctl status toolbasecamp-api --no-pager || true
+              journalctl -u toolbasecamp-api -n 40 --no-pager || true
+              exit 1
+            fi
           done
-          echo "=== toolbasecamp-api status ==="
-          systemctl status toolbasecamp-api --no-pager || true
-          journalctl -u toolbasecamp-api -n 40 --no-pager || true
-          exit 1
           REMOTE
+
+      - name: Verify dev portal (public URL)
+        run: |
+          sleep 3
+          BODY="$(curl -sfL "https://dev.toolbasecamp.com/" | head -c 1200 || true)"
+          echo "$BODY"
+          if echo "$BODY" | grep -q 'Tool Basecamp — Productivity Tools Hub'; then
+            echo "::error:: https://dev.toolbasecamp.com still serves the main site."
+            echo "Check Cloudflare: dev should be an A record to the server IP (not a redirect/Page Rule/Worker to toolbasecamp.com)."
+            exit 1
+          fi
+          if ! echo "$BODY" | grep -qi 'next tools'; then
+            echo "::error:: https://dev.toolbasecamp.com did not return next-tools."
+            exit 1
+          fi
+          echo "Dev portal OK."

@@ -22,9 +22,11 @@ The **Developer Toolkit** is a self-hosted build of [next-tools](https://github.
 
 In Cloudflare (or your DNS provider), add an **A record**:
 
-| Name | Type | Content |
-|------|------|---------|
-| `dev` | A | `134.209.221.228` (same as main site) |
+| Name | Type | Content | Proxy |
+|------|------|---------|-------|
+| `dev` | A | `134.209.221.228` (same as main site) | Proxied OK |
+
+Do **not** use a redirect rule, Worker, or CNAME-to-root that forwards `dev` to the main homepage — that makes `dev.toolbasecamp.com` show the same page as toolbasecamp.com. After DNS changes, purge Cloudflare cache for `dev.toolbasecamp.com`.
 
 Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
 
