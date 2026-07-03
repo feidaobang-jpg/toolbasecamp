@@ -1,0 +1,9 @@
+Tool Basecamp PDF Toolkit (pdf.toolbasecamp.com)
+
+This portal runs Stirling-PDF, an open-source PDF platform:
+https://github.com/Stirling-Tools/Stirling-PDF
+
+Stirling-PDF is open-core. See the project LICENSE for details.
+
+Tool Basecamp deployment scripts:
+https://github.com/feidaobang-jpg/toolbasecamp

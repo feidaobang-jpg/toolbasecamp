@@ -10,9 +10,30 @@ toolbasecamp/
 ├── server/                 # FastAPI → /opt/toolbasecamp-api
 └── deploy/                 # nginx, systemd, server scripts
     ├── nginx-toolbasecamp-dev.conf   # dev.toolbasecamp.com
+    ├── nginx-toolbasecamp-pdf.conf   # pdf.toolbasecamp.com → Stirling-PDF
+    ├── install-stirling-pdf.sh       # Docker Stirling-PDF
     ├── next-tools.ref                # pinned next-tools version
     └── dev-portal-SOURCE.txt         # GPL source attribution
 ```
+
+## PDF portal (pdf.toolbasecamp.com)
+
+**PDF Toolkit** runs [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) in Docker on the same server (`127.0.0.1:8080`), proxied by nginx.
+
+### DNS (one-time)
+
+| Name | Type | Content | Proxy |
+|------|------|---------|-------|
+| `pdf` | A | same server IP as main site | Proxied OK |
+
+Push to GitHub → Actions runs `install-stirling-pdf.sh` + `patch-nginx-pdf.sh`. Manual:
+
+```bash
+bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
+bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+```
+
+Requires **~4GB RAM**. Login disabled, English UI.
 
 ## Developer portal (dev.toolbasecamp.com)
 
@@ -142,4 +163,5 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 - https://toolbasecamp.com
 - https://toolbasecamp.com/tool.html
 - https://dev.toolbasecamp.com
+- https://pdf.toolbasecamp.com
 - `curl https://toolbasecamp.com/api/health`

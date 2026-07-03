@@ -28,7 +28,8 @@ fi
 if command -v certbot >/dev/null 2>&1 && [[ -f "$CERT_DIR/fullchain.pem" ]]; then
   echo "Expanding Let's Encrypt cert to include dev.toolbasecamp.com..."
   certbot certonly --nginx \
-    -d toolbasecamp.com -d www.toolbasecamp.com -d dev.toolbasecamp.com \
+    -d toolbasecamp.com -d www.toolbasecamp.com \
+    -d dev.toolbasecamp.com -d pdf.toolbasecamp.com \
     --expand --non-interactive --agree-tos -m "$CERT_EMAIL" \
     --keep-until-expiring || {
       echo "WARNING: certbot expand failed — try Cloudflare SSL mode Flexible temporarily."

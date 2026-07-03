@@ -107,6 +107,8 @@ jobs:
           systemctl enable toolbasecamp-api
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
+          bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
           systemctl restart toolbasecamp-api
           for i in 1 2 3 4 5; do
             if curl -sf http://127.0.0.1:8001/health; then
@@ -144,3 +146,21 @@ jobs:
             exit 0
           fi
           echo "Dev portal OK."
+
+      - name: Verify pdf portal (public URL)
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/pdf-public.html -w '%{http_code}' \
+            'https://pdf.toolbasecamp.com/' || echo '000')"
+          echo "HTTPS $HTTP_CODE"
+          head -c 600 /tmp/pdf-public.html || true
+          echo ""
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "::warning:: pdf portal HTTPS returned $HTTP_CODE — add Cloudflare DNS: pdf A record, then re-run deploy."
+            exit 0
+          fi
+          if grep -q 'Tool Basecamp — Productivity Tools Hub' /tmp/pdf-public.html; then
+            echo "::warning:: pdf URL shows main site — check nginx 443 vhost for pdf.toolbasecamp.com."
+            exit 0
+          fi
+          echo "Pdf portal OK."
