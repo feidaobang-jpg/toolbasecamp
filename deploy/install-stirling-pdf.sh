@@ -103,6 +103,10 @@ else
   mkdir -p "$TESSDIR"
 fi
 
+if [[ -f "$DEPLOY/patch-stirling-config.sh" ]]; then
+  bash "$DEPLOY/patch-stirling-config.sh"
+fi
+
 seed_custom_settings
 
 if needs_recreate; then
