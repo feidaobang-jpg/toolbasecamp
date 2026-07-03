@@ -51,6 +51,7 @@ needs_recreate() {
   echo "$env" | grep -qx 'SECURITY_CSRFDISABLED=true' || return 0
   echo "$env" | grep -qx 'SYSTEM_ENABLEONBOARDING=false' || return 0
   echo "$env" | grep -q 'TESSERACT_LANGS=.*chi_sim' || return 0
+  echo "$env" | grep -q 'JAVA_TOOL_OPTIONS=.*Xmx2g' || return 0
   if ! docker inspect "$CONTAINER" --format '{{json .Mounts}}' 2>/dev/null | grep -q tessdata; then
     return 0
   fi
@@ -76,6 +77,7 @@ run_stirling() {
     -e SYSTEM_GOOGLEVISIBILITY=false \
     -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
+    -e JAVA_TOOL_OPTIONS="-Xms512m -Xmx2g" \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \
     "$STIRLING_IMAGE"
@@ -123,3 +125,7 @@ seed_custom_settings
 
 echo "OCR languages:"
 docker exec "$CONTAINER" sh -c 'ls /usr/share/tessdata/*.traineddata 2>/dev/null | xargs -n1 basename' || true
+
+if [[ -f "$DEPLOY/patch-stirling-ocr.sh" ]]; then
+  bash "$DEPLOY/patch-stirling-ocr.sh" "$CONTAINER"
+fi
