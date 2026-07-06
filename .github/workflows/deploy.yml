@@ -37,9 +37,12 @@ jobs:
       - name: Rsync static site
         run: |
           VER="$(git rev-parse --short HEAD)"
-          find public -type f -name '*.html' -exec sed -i \
-            -E 's|(src="[^"]*/(config|base)\.js)(\?[^"]*)?"|\1?v='"${VER}"'"|g' \
-            {} +
+          while IFS= read -r -d '' f; do
+            sed -i \
+              -e "s|js/config.js\"|js/config.js?v=${VER}\"|g" \
+              -e "s|js/base.js\"|js/base.js?v=${VER}\"|g" \
+              "$f"
+          done < <(find public -type f -name '*.html' -print0)
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
