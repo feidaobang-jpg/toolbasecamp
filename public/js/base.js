@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     renderSiteTitle();
     renderMenu();
-    renderToolBreadcrumb();
     initMenuEvents();
     initCopyButtons();
 });
@@ -59,53 +58,6 @@ function renderSiteTitle() {
 
     const logoTitleEl = document.querySelector('.logo h2');
     if (logoTitleEl) logoTitleEl.textContent = moduleTitle;
-}
-
-function renderToolBreadcrumb() {
-    const content = document.querySelector('.container .content');
-    if (!content || typeof toolsConfig === 'undefined') return;
-
-    const { groupTitle, toolTitle } = getCurrentToolContext();
-    if (!toolTitle) return;
-
-    const homeHref = resolveToolUrl((siteConfig && siteConfig.homeUrl) || 'index.html');
-    const toolsHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'tool.html');
-    const siteName = (siteConfig && siteConfig.siteName) || 'Tool Basecamp';
-
-    let bar = content.querySelector('.tool-breadcrumb');
-    if (!bar) {
-        bar = document.createElement('nav');
-        bar.className = 'tool-breadcrumb';
-        bar.setAttribute('aria-label', 'Breadcrumb');
-        const mobileBar = content.querySelector('.tool-mobile-bar');
-        if (mobileBar) {
-            mobileBar.insertAdjacentElement('afterend', bar);
-        } else {
-            content.insertBefore(bar, content.firstChild);
-        }
-    }
-
-    const parts = [
-        { label: 'Home', href: homeHref },
-        { label: 'Tools', href: toolsHref }
-    ];
-    if (groupTitle) {
-        parts.push({ label: groupTitle, href: null });
-    }
-    parts.push({ label: toolTitle, href: null });
-
-    bar.innerHTML = parts
-        .map((part, idx) => {
-            const isLast = idx === parts.length - 1;
-            const sep = isLast ? '' : '<span class="tool-breadcrumb-sep">/</span>';
-            if (part.href && !isLast) {
-                return '<a href="' + part.href + '">' + part.label + '</a>' + sep;
-            }
-            const cls = isLast ? ' tool-breadcrumb-current' : '';
-            const aria = isLast ? ' aria-current="page"' : '';
-            return '<span class="tool-breadcrumb-item' + cls + '"' + aria + '>' + part.label + '</span>' + sep;
-        })
-        .join('');
 }
 
 function renderMenu() {

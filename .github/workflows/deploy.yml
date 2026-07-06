@@ -142,8 +142,8 @@ jobs:
           HTTP_CODE="$(curl -s -o /tmp/main-base.js -w '%{http_code}' \
             'https://toolbasecamp.com/js/base.js' || echo '000')"
           echo "base.js HTTPS $HTTP_CODE"
-          if [[ "$HTTP_CODE" == "200" ]] && ! grep -q 'renderToolBreadcrumb' /tmp/main-base.js; then
-            echo "::warning:: base.js missing navigation helpers — Cloudflare may still serve stale cache; HTML uses ?v= query bust."
+          if [[ "$HTTP_CODE" == "200" ]] && ! grep -q 'sidebar-footer-nav' /tmp/main-base.js; then
+            echo "::warning:: base.js missing sidebar navigation — Cloudflare may still serve stale cache; HTML uses ?v= query bust."
           else
             echo "Main site base.js OK."
           fi

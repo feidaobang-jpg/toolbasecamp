@@ -1,38 +1,5 @@
 /* 文档工具集公共样式 */
 
-.tool-breadcrumb {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px;
-    padding: 12px 28px 0;
-    font-size: 13px;
-    color: #6b7280;
-}
-
-.tool-breadcrumb a {
-    color: #2563eb;
-    text-decoration: none;
-}
-
-.tool-breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.tool-breadcrumb-sep {
-    color: #d1d5db;
-    user-select: none;
-}
-
-.tool-breadcrumb-current {
-    color: #374151;
-    font-weight: 500;
-}
-
-.tool-breadcrumb-item {
-    color: #6b7280;
-}
-
 .tool-header {
     padding: 24px 28px 16px;
     border-bottom: 1px solid #f0f0f0;

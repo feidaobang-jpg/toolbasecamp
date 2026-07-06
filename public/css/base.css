@@ -220,12 +220,6 @@ body {
     font-size: 12px;
 }
 
-@media (max-width: 768px) {
-    .tool-breadcrumb {
-        padding: 8px 0 0;
-    }
-}
-
 /* 内容区域样式 */
 .content {
     flex: 1;
