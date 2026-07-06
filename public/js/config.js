@@ -1,12 +1,13 @@
 const siteConfig = {
-    siteName: 'Tool Basecamp',
+    siteNameKey: 'site.name',
     logoText: 'TB',
     title: 'Tools',
     homeUrl: 'index.html',
     toolsHubUrl: 'index.html',
     mainSiteOrigin: 'https://toolbasecamp.com',
-    keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
-    description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
+    descriptionKey: 'site.description',
+    keywordsKey: 'site.keywords',
+    footerKey: 'site.footer',
     adminEmail: 'admin@toolbasecamp.com',
     devPortalUrl: 'https://dev.toolbasecamp.com',
     pdfPortalUrl: 'https://pdf.toolbasecamp.com',
@@ -18,53 +19,53 @@ const siteConfig = {
         return `${window.location.origin}/api`;
     })(),
     nav: [
-        { name: 'Tools', url: 'index.html' },
-        { name: 'Guestbook', url: 'guestbook.html' },
-        { name: 'About', url: 'about.html' }
+        { nameKey: 'nav.tools', url: 'index.html' },
+        { nameKey: 'nav.guestbook', url: 'guestbook.html' },
+        { nameKey: 'nav.about', url: 'about.html' }
     ]
 };
 
 /** Self-hosted portals (same brand, separate deploy) */
 const portalsConfig = [
     {
-        title: 'PDF Toolkit',
-        description: '50+ PDF tools — merge, split, compress, OCR, convert to Word, sign, and more. Self-hosted on pdf.toolbasecamp.com.',
+        titleKey: 'portals.pdf.title',
+        descriptionKey: 'portals.pdf.description',
         url: 'https://pdf.toolbasecamp.com',
-        cta: 'Open PDF Toolkit',
+        ctaKey: 'portals.pdf.cta',
         meta: 'pdf.toolbasecamp.com',
         theme: 'pdf'
     },
     {
-        title: 'Developer Toolkit',
-        description: '120+ browser-based developer tools — Base64, JWT, JSON, hash, regex, UUID, and more. Data stays in your browser.',
+        titleKey: 'portals.dev.title',
+        descriptionKey: 'portals.dev.description',
         url: 'https://dev.toolbasecamp.com',
-        cta: 'Open Developer Toolkit',
+        ctaKey: 'portals.dev.cta',
         meta: 'dev.toolbasecamp.com',
         theme: 'dev'
     }
 ];
 
 const toolsConfig = {
-    sectionTitle: 'Basecamp Tools',
+    sectionTitleKey: 'hub.basecampTools',
     groups: [
         {
-            title: 'Media Tools',
+            titleKey: 'tools.groups.media',
             items: [
-                { title: 'Video to Images', url: 'html/media/video-to-images.html' }
+                { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]
         },
         {
-            title: 'Document Tools',
+            titleKey: 'tools.groups.document',
             items: [
-                { title: 'PDF to Word', url: 'html/docs/pdf-to-word.html' },
-                { title: 'Word to PDF', url: 'html/docs/word-to-pdf.html' },
-                { title: 'Images to PDF', url: 'html/docs/images-to-pdf.html' }
+                { titleKey: 'tools.pdfToWord.title', url: 'html/docs/pdf-to-word.html' },
+                { titleKey: 'tools.wordToPdf.title', url: 'html/docs/word-to-pdf.html' },
+                { titleKey: 'tools.imagesToPdf.title', url: 'html/docs/images-to-pdf.html' }
             ]
         },
         {
-            title: 'Developer Tools',
+            titleKey: 'tools.groups.developer',
             items: [
-                { title: 'JSON to Java', url: 'html/dev/json-to-java.html' }
+                { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' }
             ]
         }
     ]

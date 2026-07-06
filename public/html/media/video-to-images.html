@@ -14,21 +14,21 @@
     <aside class="sidebar"></aside>
     <main class="content">
       <div class="tool-header">
-        <h1>Video to Images</h1>
-        <p>Extract frames from a video clip, preview them, and download selected frames as PNG/JPEG or ZIP. All processing runs locally in your browser.</p>
+        <h1 data-i18n="tools.videoToImages.title">Video to Images</h1>
+        <p data-i18n="tools.videoToImages.desc">Extract frames from video in your browser.</p>
       </div>
 
       <div class="tool-card media-tool-card">
         <div class="drop-zone" id="drop-zone">
           <div class="drop-icon">🎬</div>
-          <div class="drop-title">Drop a video here</div>
-          <div class="drop-hint">or</div>
-          <button type="button" class="btn-primary" id="browse-btn">Choose video</button>
+          <div class="drop-title" data-i18n="tools.videoToImages.dropTitle">Drop a video here</div>
+          <div class="drop-hint" data-i18n="tools.videoToImages.dropOr">or</div>
+          <button type="button" class="btn-primary" id="browse-btn" data-i18n="tools.videoToImages.chooseVideo">Choose video</button>
           <input type="file" id="video-input" accept="video/*" hidden />
         </div>
 
         <div class="tip-box">
-          <b>Privacy:</b> Your video never leaves this device. Supported formats depend on your browser (MP4/WebM usually work).
+          <b data-i18n="tools.videoToImages.privacy">Privacy:</b> <span data-i18n="tools.videoToImages.privacyBody">Your video never leaves this device.</span>
         </div>
 
         <section class="media-section hidden" id="video-preview-section">
@@ -113,6 +113,9 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/common_ui.js"></script>

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const jsonData = jsonInput.value.trim();
             if (!jsonData) {
-                alert('Please enter JSON data');
+                alert((typeof window.t === 'function' ? window.t('tools.jsonToJava.emptyJson') : 'Please enter JSON data'));
                 return;
             }
 
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 innerClassesSection.style.display = 'none';
             }
         } catch (error) {
-            alert('JSON parse error: ' + error.message);
+            alert((typeof window.t === 'function' ? window.t('tools.jsonToJava.parseError', { message: error.message }) : ('JSON parse error: ' + error.message)));
         }
     });
 

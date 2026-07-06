@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    function tr(key, params) {
+        return (typeof window.t === 'function' ? window.t(key, params) : key);
+    }
+
     var TOKEN_KEY = 'auth_token';
     var PAGE_SIZE = 30;
 
@@ -101,7 +105,7 @@
         item.dataset.id = String(msg.id);
 
         var badgeClass = msg.is_guest ? '' : ' is-user';
-        var badgeText = msg.is_guest ? 'Guest' : 'Signed in';
+        var badgeText = msg.is_guest ? tr('guestbook.badgeGuest') : tr('guestbook.badgeUser');
 
         item.innerHTML =
             '<div class="gb-item-header">' +
@@ -180,7 +184,7 @@
             })
             .catch(function (err) {
                 hideLoading();
-                if (!append) setStatus((err && err.message) || 'Failed to load messages. Please try again.', true);
+                if (!append) setStatus(tr('guestbook.loadFailed'), true);
             })
             .finally(function () {
                 loading = false;
@@ -190,7 +194,7 @@
 
     function deleteMessage(messageId, itemEl) {
         if (deleting || !isAdmin || !messageId) return;
-        if (!window.confirm('Delete this message?')) return;
+        if (!window.confirm(tr('guestbook.deleteConfirm'))) return;
 
         deleting = true;
         var btn = itemEl && itemEl.querySelector('.gb-delete-btn');
@@ -206,10 +210,10 @@
             .then(function () {
                 if (itemEl && itemEl.parentNode) itemEl.parentNode.removeChild(itemEl);
                 updateEmptyState();
-                setStatus('Message deleted', false);
+                setStatus(tr('guestbook.deleted'), false);
             })
             .catch(function (err) {
-                setStatus((err && err.message) || 'Delete failed', true);
+                setStatus((err && err.message) || tr('guestbook.deleteFailed'), true);
                 if (btn) btn.disabled = false;
             })
             .finally(function () { deleting = false; });
@@ -219,7 +223,7 @@
         if (submitting) return;
         var content = (contentInput && contentInput.value || '').trim();
         if (!content) {
-            setStatus('Please enter a message', true);
+            setStatus(tr('guestbook.enterMessage'), true);
             return;
         }
 
@@ -229,7 +233,7 @@
 
         var body = { content: content };
         if (!loggedInUser && guestNameInput) {
-            body.guest_name = (guestNameInput.value || '').trim() || 'Guest';
+            body.guest_name = (guestNameInput.value || '').trim() || tr('guestbook.guestPlaceholder');
         }
 
         authFetch('/guestbook/messages', {
@@ -244,7 +248,7 @@
                 });
             })
             .then(function (data) {
-                setStatus('Message posted', false);
+                setStatus(tr('guestbook.posted'), false);
                 if (contentInput) contentInput.value = '';
                 if (charCountEl) charCountEl.textContent = '0';
                 if (data.message && listEl) {
@@ -254,7 +258,7 @@
                 }
             })
             .catch(function (err) {
-                setStatus((err && err.message) || 'Failed to post message', true);
+                setStatus((err && err.message) || tr('guestbook.postFailed'), true);
             })
             .finally(function () {
                 submitting = false;
@@ -326,5 +330,12 @@
     document.addEventListener('DOMContentLoaded', function () {
         bindEvents();
         initAuthState().finally(function () { loadMessages(false); });
+    });
+
+    document.addEventListener('tb:locale', function () {
+        if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);
+        if (loadMoreBtn) loadMoreBtn.textContent = tr('guestbook.loadMore');
+        if (loadingEl) loadingEl.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + tr('guestbook.loading');
+        refreshDeleteButtons();
     });
 })();

@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Tool Basecamp</title>
-    <meta name="description" content="About Tool Basecamp — a global productivity toolkit for document conversion and developer utilities.">
+    <meta name="description" content="About Tool Basecamp" data-i18n-content="site.description">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
+    <script src="js/locales/en.js"></script>
+    <script src="js/locales/zh-CN.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/config.js"></script>
     <script src="js/common_ui.js"></script>
 </head>
@@ -29,39 +32,39 @@
                 <div class="w-24 h-24 bg-blue-100 rounded-2xl mx-auto mb-6 flex items-center justify-center">
                     <span class="text-3xl font-bold text-blue-600">TB</span>
                 </div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-4">About Tool Basecamp</h1>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    A global productivity toolkit — starting with document conversion and expanding to developer utilities.
+                <h1 class="text-3xl font-bold text-gray-900 mb-4" data-i18n="about.title">About Tool Basecamp</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto" data-i18n="about.lead">
+                    A global productivity toolkit
                 </p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
                 <div class="p-5 bg-blue-50 rounded-xl">
                     <i class="fas fa-file-alt text-blue-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1">Document Tools</h3>
-                    <p class="text-sm text-gray-600">PDF to Word, Word to PDF, and Images to PDF — fast and straightforward.</p>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.documentTitle">Document Tools</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.documentDesc">PDF to Word, Word to PDF, and Images to PDF.</p>
                 </div>
                 <div class="p-5 bg-indigo-50 rounded-xl">
                     <i class="fas fa-code text-indigo-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1">Developer Tools</h3>
-                    <p class="text-sm text-gray-600">JSON to Java entity generator and more utilities for everyday dev work.</p>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.developerTitle">Developer Tools</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.developerDesc">JSON to Java entity generator and more.</p>
                 </div>
                 <div class="p-5 bg-green-50 rounded-xl">
                     <i class="fas fa-shield-alt text-green-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1">Privacy-friendly</h3>
-                    <p class="text-sm text-gray-600">Client-side tools run in your browser. Server tools process files and discard them after conversion.</p>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.privacyTitle">Privacy-friendly</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.privacyDesc">Client-side tools run in your browser.</p>
                 </div>
                 <div class="p-5 bg-orange-50 rounded-xl">
                     <i class="fas fa-globe text-orange-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1">Built for everyone</h3>
-                    <p class="text-sm text-gray-600">English-first, clean UI, no clutter — just tools that work.</p>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.builtTitle">Built for everyone</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.builtDesc">Clean UI in English and Chinese.</p>
                 </div>
             </div>
 
             <div class="mt-12 pt-8 border-t border-gray-100 text-center">
-                <p class="text-gray-500 text-sm mb-4">Questions or feedback?</p>
+                <p class="text-gray-500 text-sm mb-4" data-i18n="about.questions">Questions or feedback?</p>
                 <a href="guestbook.html" class="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700">
-                    <i class="fas fa-comment-dots"></i> Visit the guestbook
+                    <i class="fas fa-comment-dots"></i> <span data-i18n="about.visitGuestbook">Visit the guestbook</span>
                 </a>
             </div>
         </div>
@@ -69,7 +72,7 @@
 
     <footer class="bg-white border-t border-gray-100 py-8">
         <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>&copy; 2026 Tool Basecamp. All rights reserved.</p>
+            <p>&copy; 2026 <span class="site-name">Tool Basecamp</span>. <span data-i18n="site.footer">All rights reserved.</span></p>
         </div>
     </footer>
 </body>

@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
     initCopyButtons();
 });
 
+document.addEventListener('tb:locale', function () {
+    renderSiteTitle();
+    renderMenu();
+    if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);
+});
+
 function getToolRootPrefix() {
     const path = window.location.pathname || '';
     return path.includes('/html/') ? '../../' : '';
@@ -16,11 +22,15 @@ function resolveToolUrl(relativePath) {
     return base + path;
 }
 
+function tr(key) {
+    return (typeof window.t === 'function' ? window.t(key) : key);
+}
+
 function getCurrentToolContext() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase().split('?')[0];
-    let groupTitle = null;
-    let toolTitle = null;
+    let groupTitleKey = null;
+    let toolTitleKey = null;
 
     if (typeof toolsConfig !== 'undefined' && toolsConfig.groups) {
         for (const group of toolsConfig.groups) {
@@ -28,26 +38,26 @@ function getCurrentToolContext() {
             for (const item of group.items) {
                 const itemFile = item.url.toLowerCase().split('/').pop();
                 if (currentPath.endsWith(item.url.toLowerCase()) || currentPage === itemFile) {
-                    groupTitle = group.title;
-                    toolTitle = item.title;
+                    groupTitleKey = group.titleKey || null;
+                    toolTitleKey = item.titleKey || null;
                     break;
                 }
             }
-            if (toolTitle) break;
+            if (toolTitleKey) break;
         }
     }
 
-    return { groupTitle, toolTitle, currentPage };
+    return { groupTitleKey, toolTitleKey, currentPage };
 }
 
 function renderSiteTitle() {
-    const { groupTitle, toolTitle } = getCurrentToolContext();
-    const siteName = (typeof siteConfig !== 'undefined' && siteConfig.siteName) ? siteConfig.siteName : 'Tool Basecamp';
+    const { groupTitleKey, toolTitleKey } = getCurrentToolContext();
+    const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
 
-    if (toolTitle) {
-        document.title = toolTitle + ' - Tool Basecamp';
-    } else if (groupTitle) {
-        document.title = groupTitle + ' - Tool Basecamp';
+    if (toolTitleKey) {
+        document.title = tr(toolTitleKey) + ' - ' + tr('site.pageTitleSuffix');
+    } else if (groupTitleKey) {
+        document.title = tr(groupTitleKey) + ' - ' + tr('site.pageTitleSuffix');
     } else {
         document.title = siteName;
     }
@@ -63,18 +73,18 @@ function renderMenu() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const isInSubDir = currentPath.includes('/html/');
-    const { groupTitle: detectedGroupTitle, toolTitle: detectedToolTitle } = getCurrentToolContext();
+    const { groupTitleKey, toolTitleKey } = getCurrentToolContext();
 
     const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
-    const siteName = (siteConfig && siteConfig.siteName) || 'Tool Basecamp';
+    const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
 
     let menuItemsHTML = '';
-    if (typeof toolsConfig !== 'undefined' && toolsConfig.groups && detectedGroupTitle) {
+    if (typeof toolsConfig !== 'undefined' && toolsConfig.groups && groupTitleKey) {
         toolsConfig.groups.forEach(group => {
-            if (group.title !== detectedGroupTitle) return;
-            if (group.title) {
-                menuItemsHTML += '<li class="menu-group-title">' + group.title + '</li>';
+            if (group.titleKey !== groupTitleKey) return;
+            if (group.titleKey) {
+                menuItemsHTML += '<li class="menu-group-title">' + tr(group.titleKey) + '</li>';
             }
             if (Array.isArray(group.items)) {
                 group.items.forEach(item => {
@@ -82,7 +92,8 @@ function renderMenu() {
                     if (isInSubDir) linkUrl = '../../' + item.url;
                     const itemUrlLower = item.url.toLowerCase();
                     const isActive = currentPath.endsWith(itemUrlLower) || currentPage === itemUrlLower.split('/').pop();
-                    menuItemsHTML += '<li' + (isActive ? ' class="active"' : '') + '><a href="' + linkUrl + '">' + item.title + '</a></li>';
+                    const label = item.titleKey ? tr(item.titleKey) : (item.title || '');
+                    menuItemsHTML += '<li' + (isActive ? ' class="active"' : '') + '><a href="' + linkUrl + '">' + label + '</a></li>';
                 });
             }
         });
@@ -98,16 +109,16 @@ function renderMenu() {
         '</div>' +
         '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>' +
         '<div class="sidebar-footer-nav">' +
-            '<a href="' + hubHref + '">All tools</a>' +
+            '<a href="' + hubHref + '">' + tr('sidebar.allTools') + '</a>' +
         '</div>' +
         '<div class="sidebar-footer-copy">' +
             '<p>&copy; 2026 ' + siteName + '</p>' +
         '</div>';
 
-    bindToolSidebarMobile(sidebar, detectedGroupTitle, detectedToolTitle, siteName);
+    bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName);
 }
 
-function bindToolSidebarMobile(sidebar, groupTitle, toolTitle, siteName) {
+function bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName) {
     const content = document.querySelector('.container .content');
     if (!content || !sidebar) return;
 
@@ -127,10 +138,14 @@ function bindToolSidebarMobile(sidebar, groupTitle, toolTitle, siteName) {
     }
 
     const titleEl = bar.querySelector('.tool-mobile-title');
-    if (titleEl) titleEl.textContent = toolTitle || groupTitle || siteName || 'Tool Basecamp';
+    const mobileTitle = toolTitleKey ? tr(toolTitleKey) : (groupTitleKey ? tr(groupTitleKey) : siteName);
+    if (titleEl) titleEl.textContent = mobileTitle;
 
     const toolsLink = bar.querySelector('.tool-mobile-tools');
-    if (toolsLink) toolsLink.href = hubHref;
+    if (toolsLink) {
+        toolsLink.href = hubHref;
+        toolsLink.textContent = tr('sidebar.allTools');
+    }
 
     let overlay = document.getElementById('tool-sidebar-overlay');
     if (!overlay) {

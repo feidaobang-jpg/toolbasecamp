@@ -95,3 +95,44 @@
     background: #eff6ff;
     box-shadow: inset 0 0 0 1px #bfdbfe;
 }
+
+#tb-lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: 12px;
+    font-size: 13px;
+}
+
+.tb-lang-btn {
+    border: none;
+    background: none;
+    padding: 4px 6px;
+    cursor: pointer;
+    color: #6b7280;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.tb-lang-btn:hover {
+    color: #2563eb;
+}
+
+.tb-lang-btn.is-active {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.tb-lang-sep {
+    color: #d1d5db;
+    font-size: 12px;
+    user-select: none;
+}
+
+@media (max-width: 767.98px) {
+    #tb-lang-switcher {
+        margin-right: 4px;
+    }
+}

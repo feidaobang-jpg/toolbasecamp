@@ -37,9 +37,12 @@
         </main>
     </div>
 
+    <script src="js/locales/en.js"></script>
+    <script src="js/locales/zh-CN.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/config.js"></script>
     <script src="js/common_ui.js"></script>
     <script src="js/tools-hub.js"></script>
-    <script>window.onload = renderToolsHub;</script>
+    <script>window.addEventListener('load', function () { if (typeof renderToolsHub === 'function') renderToolsHub(); });</script>
 </body>
 </html>

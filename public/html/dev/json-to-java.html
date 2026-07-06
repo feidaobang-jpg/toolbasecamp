@@ -13,10 +13,10 @@
         <aside class="sidebar"></aside>
         <main class="content">
             <div class="page active">
-                <h2>JSON to Java Entity</h2>
+                <h2 data-i18n="tools.jsonToJava.title">JSON to Java</h2>
                 <div class="tool-container">
                     <div class="input-section">
-                        <label for="json-input">Input JSON:</label>
+                        <label for="json-input" data-i18n="tools.jsonToJava.inputLabel">JSON input</label>
                         <textarea id="json-input" rows="12" placeholder="Paste your JSON here"></textarea>
                     </div>
 
@@ -28,8 +28,8 @@
                     </div>
 
                     <div class="button-section">
-                        <button id="convert-btn">Generate Java</button>
-                        <button id="clear-btn">Clear</button>
+                        <button id="convert-btn" data-i18n="tools.jsonToJava.generate">Generate</button>
+                        <button id="clear-btn" data-i18n="tools.jsonToJava.clear">Clear</button>
                     </div>
 
                     <div class="output-section">
@@ -48,8 +48,11 @@
         </main>
     </div>
 
-    <script src="../../js/config.js"></script>
-    <script src="../../js/base.js"></script>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
     <script src="../../js/common_ui.js"></script>
     <script src="../../js/dev/json-to-java.js"></script>
 </body>

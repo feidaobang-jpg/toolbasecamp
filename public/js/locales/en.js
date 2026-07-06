@@ -1,0 +1,203 @@
+/**
+ * English strings for toolbasecamp.com (main site only).
+ * When adding UI text, add the same key to locales/zh-CN.js.
+ */
+window.TB_LOCALES = window.TB_LOCALES || {};
+window.TB_LOCALES.en = {
+    site: {
+        name: 'Tool Basecamp',
+        description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
+        keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
+        footer: 'All rights reserved.',
+        pageTitleSuffix: 'Tool Basecamp'
+    },
+    nav: {
+        tools: 'Tools',
+        guestbook: 'Guestbook',
+        about: 'About'
+    },
+    lang: {
+        switcher: 'Language',
+        en: 'EN',
+        zh: '中文'
+    },
+    auth: {
+        login: 'Log in',
+        signup: 'Sign up',
+        logout: 'Log out',
+        profile: 'Profile',
+        account: 'Account',
+        backHome: 'Back to home',
+        welcomeBack: 'Welcome back',
+        loginSubtitle: 'Log in to access your profile',
+        email: 'Email',
+        password: 'Password',
+        emailPlaceholder: 'you@example.com',
+        passwordPlaceholder: 'Your password',
+        loginBtn: 'Log in',
+        noAccount: "Don't have an account?",
+        hasAccount: 'Already have an account?',
+        createAccount: 'Create account',
+        registerSubtitle: 'Sign up for a Tool Basecamp account',
+        registerBtn: 'Sign up',
+        changePassword: 'Change password',
+        currentPassword: 'Current password',
+        newPassword: 'New password',
+        savePassword: 'Save password',
+        openMenu: 'Open account menu',
+        closeMenu: 'Close'
+    },
+    hub: {
+        portalsTitle: 'Portals',
+        portalsSubtitle: 'Extended tool collections hosted under Tool Basecamp.',
+        basecampTools: 'Basecamp Tools',
+        noTools: 'No tools configured.',
+        open: 'Open'
+    },
+    portals: {
+        pdf: {
+            title: 'PDF Toolkit',
+            description: '50+ PDF tools — merge, split, compress, OCR, convert to Word, sign, and more. Self-hosted on pdf.toolbasecamp.com.',
+            cta: 'Open PDF Toolkit'
+        },
+        dev: {
+            title: 'Developer Toolkit',
+            description: '120+ browser-based developer tools — Base64, JWT, JSON, hash, regex, UUID, and more. Data stays in your browser.',
+            cta: 'Open Developer Toolkit'
+        }
+    },
+    tools: {
+        groups: {
+            media: 'Media Tools',
+            document: 'Document Tools',
+            developer: 'Developer Tools'
+        },
+        videoToImages: {
+            title: 'Video to Images',
+            desc: 'Extract frames from a video clip, preview them, and download selected frames as PNG/JPEG or ZIP. All processing runs locally in your browser.',
+            dropTitle: 'Drop a video here',
+            dropOr: 'or',
+            chooseVideo: 'Choose video',
+            privacy: 'Privacy:',
+            privacyBody: 'Your video never leaves this device. Supported formats depend on your browser (MP4/WebM usually work).',
+            videoPreview: 'Video preview',
+            extractionSettings: 'Extraction settings',
+            frameInterval: 'Frame interval (ms)',
+            clipLength: 'Clip length (s)',
+            startAt: 'Start at (s)',
+            watermarkOptional: 'Watermark / background (optional)',
+            cornerToClear: 'Corner to clear',
+            topLeft: 'Top left',
+            topRight: 'Top right',
+            bottomLeft: 'Bottom left',
+            bottomRight: 'Bottom right',
+            regionSize: 'Region size',
+            bgSensitivity: 'Background sensitivity',
+            extractFrames: 'Extract frames',
+            clearCorner: 'Clear corner + background',
+            clearAll: 'Clear all',
+            extractedFrames: 'Extracted frames',
+            dedupe: 'Dedupe similar frames',
+            selectAll: 'Select all',
+            animationPreview: 'Animation preview',
+            pause: 'Pause',
+            play: 'Play',
+            saveZip: 'Save as ZIP',
+            saveImages: 'Save images'
+        },
+        pdfToWord: {
+            title: 'PDF to Word',
+            desc: 'Convert PDF files to editable Word documents (.docx) while preserving layout structure',
+            dropTitle: 'Click or drag a PDF file here',
+            dropHint: 'Supports .pdf up to 50 MB',
+            note: 'Note:',
+            noteBody: 'Complex layouts (tables, columns, special fonts) may differ slightly after conversion. Please review the output.',
+            convert: 'Convert',
+            clear: 'Clear',
+            remove: 'Remove',
+            converting: 'Converting...',
+            conversionFailed: 'Conversion failed',
+            done: 'Done',
+            downloadWord: 'Download Word'
+        },
+        wordToPdf: {
+            title: 'Word to PDF',
+            desc: 'Convert Word documents (.doc, .docx) to PDF format',
+            dropTitle: 'Click or drag a Word file here',
+            dropHint: 'Supports .doc and .docx up to 50 MB',
+            convert: 'Convert',
+            clear: 'Clear',
+            converting: 'Converting...',
+            conversionFailed: 'Conversion failed',
+            downloadPdf: 'Download PDF'
+        },
+        imagesToPdf: {
+            title: 'Images to PDF',
+            desc: 'Merge multiple images into a single PDF file in your browser',
+            dropTitle: 'Click or drag images here',
+            dropHint: 'Supports JPG, PNG, WebP — multiple files allowed',
+            merge: 'Merge to PDF',
+            clear: 'Clear',
+            downloadPdf: 'Download PDF'
+        },
+        jsonToJava: {
+            title: 'JSON to Java',
+            desc: 'Generate Java entity classes from JSON data',
+            inputLabel: 'JSON input',
+            outputLabel: 'Java output',
+            generate: 'Generate',
+            clear: 'Clear',
+            emptyJson: 'Please enter JSON data',
+            parseError: 'JSON parse error: {message}'
+        }
+    },
+    sidebar: {
+        allTools: 'All tools'
+    },
+    guestbook: {
+        title: 'Guestbook',
+        subtitle: 'Share ideas, feedback, or a quick hello. No login required — sign in to post with your account name.',
+        writeTitle: 'Write a message',
+        postingAs: 'Posting as',
+        displayName: 'Display name',
+        guestPlaceholder: 'Guest',
+        message: 'Message',
+        messagePlaceholder: 'Say something...',
+        post: 'Post message',
+        allMessages: 'All messages',
+        loading: 'Loading...',
+        loadMore: 'Load more',
+        empty: 'No messages yet — be the first!',
+        badgeGuest: 'Guest',
+        badgeUser: 'Signed in',
+        deleteConfirm: 'Delete this message?',
+        posted: 'Message posted',
+        deleted: 'Message deleted',
+        enterMessage: 'Please enter a message',
+        loadFailed: 'Failed to load messages. Please try again.',
+        postFailed: 'Failed to post message',
+        deleteFailed: 'Delete failed'
+    },
+    about: {
+        title: 'About Tool Basecamp',
+        lead: 'A global productivity toolkit — starting with document conversion and expanding to developer utilities.',
+        documentTitle: 'Document Tools',
+        documentDesc: 'PDF to Word, Word to PDF, and Images to PDF — fast and straightforward.',
+        developerTitle: 'Developer Tools',
+        developerDesc: 'JSON to Java entity generator and more utilities for everyday dev work.',
+        privacyTitle: 'Privacy-friendly',
+        privacyDesc: 'Client-side tools run in your browser. Server tools process files and discard them after conversion.',
+        builtTitle: 'Built for everyone',
+        builtDesc: 'Clean UI in English and Chinese — no clutter, just tools that work.',
+        questions: 'Questions or feedback?',
+        visitGuestbook: 'Visit the guestbook'
+    },
+    common: {
+        serviceUnavailable: 'Service unavailable',
+        serviceUnavailableBody: 'The API server is not responding. Please try again later.',
+        ok: 'OK',
+        backToTop: 'Back to top',
+        mainNav: 'Main navigation',
+        loading: 'Loading...'
+    }
+};

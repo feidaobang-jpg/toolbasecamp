@@ -16,6 +16,12 @@ toolbasecamp/
     └── dev-portal-SOURCE.txt         # GPL source attribution
 ```
 
+## Main-site i18n (toolbasecamp.com only)
+
+English + 简体中文; browser language auto-detect; header **中文 / EN** toggle. Subdomains pdf/dev keep their own i18n.
+
+**New UI on the main site must add keys to both** `public/js/locales/en.js` and `public/js/locales/zh-CN.js`. See [docs/I18N.md](docs/I18N.md).
+
 ## PDF portal (pdf.toolbasecamp.com)
 
 **PDF Toolkit** runs [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) in Docker on the same server (`127.0.0.1:8080`), proxied by nginx.

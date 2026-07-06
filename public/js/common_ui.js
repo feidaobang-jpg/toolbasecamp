@@ -2,6 +2,14 @@
  * Shared UI: navigation, auth bar, favicon, back-to-top
  */
 (function () {
+    function tr(key) {
+        return (typeof window.t === 'function' ? window.t(key) : key);
+    }
+
+    function navLabel(item) {
+        return (typeof window.tbLabel === 'function' ? window.tbLabel(item) : (item.name || ''));
+    }
+
     function getAuthBaseUrl() {
         if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) {
             return siteConfig.apiBase;
@@ -72,8 +80,8 @@
             mobileAuthSlot.innerHTML = '';
             const row = document.createElement('div');
             row.className = 'flex flex-col gap-2';
-            const a1 = createLink(loginUrl, 'Log in');
-            const a2 = createLink(registerUrl, 'Sign up');
+            const a1 = createLink(loginUrl, tr('auth.login'));
+            const a2 = createLink(registerUrl, tr('auth.signup'));
             a1.className = 'block w-full rounded-lg border border-gray-200 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50';
             a2.className = 'block w-full rounded-lg bg-blue-600 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700';
             row.appendChild(a1);
@@ -90,8 +98,8 @@
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
             userLink.className = 'flex items-center gap-2 text-sm font-medium text-gray-800';
-            userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>Profile</span>';
-            const logout = createBtn('Log out');
+            userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
+            const logout = createBtn(tr('auth.logout'));
             logout.className = 'w-full rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
             logout.addEventListener('click', () => {
                 localStorage.removeItem(tokenKey);
@@ -105,8 +113,8 @@
 
         if (!token) {
             if (wrap) {
-                wrap.appendChild(createLink(loginUrl, 'Log in'));
-                wrap.appendChild(createLink(registerUrl, 'Sign up'));
+                wrap.appendChild(createLink(loginUrl, tr('auth.login')));
+                wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
             }
             fillMobileAuthLoggedOut();
             const sidebarMeta = document.getElementById('sidebar-user-meta');
@@ -126,10 +134,10 @@
             userEl = document.createElement('a');
             userEl.href = profileUrl;
             userEl.className = 'text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-2';
-            userEl.innerHTML = '<i class="fas fa-user-circle text-lg"></i> <span>Profile</span>';
+            userEl.innerHTML = '<i class="fas fa-user-circle text-lg"></i> <span>' + tr('auth.profile') + '</span>';
             wrap.appendChild(userEl);
 
-            logoutBtn = createBtn('Log out');
+            logoutBtn = createBtn(tr('auth.logout'));
             logoutBtn.addEventListener('click', () => {
                 localStorage.removeItem(tokenKey);
                 window.location.reload();
@@ -171,8 +179,8 @@
                 localStorage.removeItem(tokenKey);
                 if (wrap && userEl && logoutBtn) {
                     wrap.innerHTML = '';
-                    wrap.appendChild(createLink(loginUrl, 'Log in'));
-                    wrap.appendChild(createLink(registerUrl, 'Sign up'));
+                    wrap.appendChild(createLink(loginUrl, tr('auth.login')));
+                    wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
                 }
                 fillMobileAuthLoggedOut();
                 const sidebarMeta = document.getElementById('sidebar-user-meta');
@@ -212,10 +220,20 @@
         if (siteConfig.logoText) {
             document.querySelectorAll('.logo-text').forEach(el => { el.textContent = siteConfig.logoText; });
         }
-        if (siteConfig.siteName) {
+        if (siteConfig.siteNameKey) {
+            document.querySelectorAll('.site-name').forEach(el => { el.textContent = tr(siteConfig.siteNameKey); });
+        } else if (siteConfig.siteName) {
             document.querySelectorAll('.site-name').forEach(el => { el.textContent = siteConfig.siteName; });
         }
-        if (siteConfig.keywords) {
+        if (siteConfig.keywordsKey) {
+            let keywordsMeta = document.querySelector('meta[name="keywords"]');
+            if (!keywordsMeta) {
+                keywordsMeta = document.createElement('meta');
+                keywordsMeta.name = 'keywords';
+                document.head.appendChild(keywordsMeta);
+            }
+            keywordsMeta.content = tr(siteConfig.keywordsKey);
+        } else if (siteConfig.keywords) {
             let keywordsMeta = document.querySelector('meta[name="keywords"]');
             if (!keywordsMeta) {
                 keywordsMeta = document.createElement('meta');
@@ -224,7 +242,15 @@
             }
             keywordsMeta.content = siteConfig.keywords;
         }
-        if (siteConfig.description) {
+        if (siteConfig.descriptionKey) {
+            let descMeta = document.querySelector('meta[name="description"]');
+            if (!descMeta) {
+                descMeta = document.createElement('meta');
+                descMeta.name = 'description';
+                document.head.appendChild(descMeta);
+            }
+            descMeta.content = tr(siteConfig.descriptionKey);
+        } else if (siteConfig.description) {
             let descMeta = document.querySelector('meta[name="description"]');
             if (!descMeta) {
                 descMeta = document.createElement('meta');
@@ -260,7 +286,7 @@
                 const link = document.createElement('a');
                 link.href = basePath + item.url;
                 if (isActive) link.className = 'is-active';
-                link.textContent = item.name;
+                link.textContent = navLabel(item);
                 const underline = document.createElement('span');
                 link.appendChild(underline);
                 nav.appendChild(link);
@@ -318,7 +344,7 @@
             const isActive = currentPage === item.url || currentPage === item.url.split('/').pop();
             const a = document.createElement('a');
             a.href = basePath + item.url;
-            a.textContent = item.name;
+            a.textContent = navLabel(item);
             a.style.cssText = 'flex-shrink:0;white-space:nowrap;border-radius:9999px;padding:6px 14px;font-size:0.875rem;font-weight:' + (isActive ? '600' : '500') + ';text-decoration:none;color:' + (isActive ? '#2563eb' : '#4b5563') + ';background:' + (isActive ? '#eff6ff' : 'transparent') + ';' + (isActive ? 'box-shadow:inset 0 0 0 1px #bfdbfe;' : '');
             scroll.appendChild(a);
         });
@@ -369,7 +395,7 @@
             btn.id = 'site-nav-menu-btn';
             btn.type = 'button';
             btn.className = 'p-2 rounded-lg text-gray-600 hover:bg-gray-100 flex-shrink-0';
-            btn.setAttribute('aria-label', 'Open account menu');
+            btn.setAttribute('aria-label', tr('auth.openMenu'));
             btn.innerHTML = '<span aria-hidden="true" style="font-size:1.35rem;line-height:1">☰</span>';
             mobileRow.insertBefore(btn, mobileRow.firstChild);
             btn.addEventListener('click', () => {
@@ -386,8 +412,8 @@
                 <div id="site-nav-backdrop" class="fixed inset-0 z-[200] bg-black/40 opacity-0 pointer-events-none transition-opacity duration-200 md:hidden"></div>
                 <div id="site-nav-panel" class="fixed inset-y-0 right-0 z-[210] flex w-[min(100vw-2rem,20rem)] max-w-full flex-col bg-white shadow-2xl transition-transform duration-200 ease-out translate-x-full md:hidden" role="dialog" aria-modal="true" aria-label="Account menu">
                     <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                        <span class="font-semibold text-gray-900">Account</span>
-                        <button type="button" id="site-nav-close" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" aria-label="Close">
+                        <span class="font-semibold text-gray-900">${tr('auth.account')}</span>
+                        <button type="button" id="site-nav-close" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" aria-label="${tr('auth.closeMenu')}">
                             <i class="fas fa-times text-lg"></i>
                         </button>
                     </div>
@@ -419,7 +445,9 @@
         const currentNav = siteConfig.nav.find(item =>
             currentPage === item.url || currentPage === item.url.split('/').pop()
         );
-        if (currentNav && siteConfig.siteName) {
+        if (currentNav && siteConfig.siteNameKey) {
+            document.title = tr(siteConfig.siteNameKey) + ' - ' + navLabel(currentNav);
+        } else if (currentNav && siteConfig.siteName) {
             document.title = `${siteConfig.siteName} - ${currentNav.name}`;
         }
     }
@@ -431,9 +459,9 @@
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;display:flex;justify-content:center;align-items:center;';
         modal.innerHTML = `
             <div style="background:white;border-radius:12px;padding:24px;max-width:480px;width:90%;">
-                <h3 style="margin:0 0 12px;font-size:20px;font-weight:600;">Service unavailable</h3>
-                <p style="color:#4b5563;line-height:1.6;margin-bottom:24px;">The API server is not responding. Please try again later.</p>
-                <button id="backend-error-close-btn" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;cursor:pointer;">OK</button>
+                <h3 style="margin:0 0 12px;font-size:20px;font-weight:600;">${tr('common.serviceUnavailable')}</h3>
+                <p style="color:#4b5563;line-height:1.6;margin-bottom:24px;">${tr('common.serviceUnavailableBody')}</p>
+                <button id="backend-error-close-btn" style="padding:10px 20px;background:#2563eb;color:white;border:none;border-radius:6px;cursor:pointer;">${tr('common.ok')}</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -457,7 +485,7 @@
         const btn = document.createElement('button');
         btn.id = 'back-to-top';
         btn.type = 'button';
-        btn.setAttribute('aria-label', 'Back to top');
+        btn.setAttribute('aria-label', tr('common.backToTop'));
         btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
         btn.style.cssText = 'position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:#2563eb;color:white;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.15);opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:50;';
         document.body.appendChild(btn);
@@ -480,6 +508,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', runMainUiInit);
+    document.addEventListener('tb:locale', function () {
+        updatePageLogo();
+        updateNavMenu();
+        updatePageTitle();
+        syncSiteMobileNavStrip();
+        renderAuthStatus();
+        if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);
+    });
     window.addEventListener('load', () => {
         initSiteMobileNav();
         refreshSiteNavMobileStripVisibility();

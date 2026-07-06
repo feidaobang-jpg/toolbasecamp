@@ -13,15 +13,15 @@
     <aside class="sidebar"></aside>
     <main class="content">
       <div class="tool-header">
-        <h1>PDF to Word</h1>
-        <p>Convert PDF files to editable Word documents (.docx) while preserving layout structure</p>
+        <h1 data-i18n="tools.pdfToWord.title">PDF to Word</h1>
+        <p data-i18n="tools.pdfToWord.desc">Convert PDF files to editable Word documents</p>
       </div>
 
       <div class="tool-card">
         <div class="drop-zone" id="drop-zone">
           <div class="drop-icon">📂</div>
-          <div class="drop-title">Click or drag a PDF file here</div>
-          <div class="drop-hint">Supports .pdf up to 50 MB</div>
+          <div class="drop-title" data-i18n="tools.pdfToWord.dropTitle">Click or drag a PDF file here</div>
+          <div class="drop-hint" data-i18n="tools.pdfToWord.dropHint">Supports .pdf up to 50 MB</div>
           <input type="file" id="file-input" accept=".pdf" style="display:none" />
         </div>
 
@@ -29,23 +29,23 @@
           <span class="file-icon">📄</span>
           <span class="file-name" id="file-name">-</span>
           <span class="file-size" id="file-size">-</span>
-          <button class="remove-btn" id="remove-btn" title="Remove">✕</button>
+          <button class="remove-btn" id="remove-btn" data-i18n-title="tools.pdfToWord.remove" title="Remove">✕</button>
         </div>
 
         <div class="tip-box" style="margin-top:14px">
-          <b>Note:</b> Complex layouts (tables, columns, special fonts) may differ slightly after conversion. Please review the output.
+          <b data-i18n="tools.pdfToWord.note">Note:</b> <span data-i18n="tools.pdfToWord.noteBody">Complex layouts may differ after conversion.</span>
         </div>
 
         <div class="action-row">
           <button class="btn-primary" id="convert-btn" disabled>
-            <span>🚀</span> Convert
+            <span>🚀</span> <span data-i18n="tools.pdfToWord.convert">Convert</span>
           </button>
-          <button class="btn-secondary" id="clear-btn">Clear</button>
+          <button class="btn-secondary" id="clear-btn" data-i18n="tools.pdfToWord.clear">Clear</button>
         </div>
 
         <div class="progress-wrap" id="progress-wrap">
           <div class="progress-label">
-            <span id="progress-status">Converting...</span>
+            <span id="progress-status" data-i18n="tools.pdfToWord.converting">Converting...</span>
             <span id="progress-percent">0%</span>
           </div>
           <div class="progress-bar-bg">
@@ -55,7 +55,7 @@
 
         <div class="error-box" id="error-box">
           <span>⚠️</span>
-          <span id="error-msg">Conversion failed</span>
+          <span id="error-msg" data-i18n="tools.pdfToWord.conversionFailed">Conversion failed</span>
         </div>
 
         <div class="result-wrap" id="result-wrap">
@@ -63,10 +63,10 @@
             <span class="result-icon">📝</span>
             <div class="result-info">
               <div class="result-name" id="result-name">-</div>
-              <div class="result-size" id="result-size">Done</div>
+              <div class="result-size" id="result-size" data-i18n="tools.pdfToWord.done">Done</div>
             </div>
             <a class="btn-download" id="download-btn" href="#" download>
-              <span>⬇️</span> Download Word
+              <span>⬇️</span> <span data-i18n="tools.pdfToWord.downloadWord">Download Word</span>
             </a>
           </div>
         </div>
@@ -74,6 +74,9 @@
     </main>
   </div>
 
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/common_ui.js"></script>

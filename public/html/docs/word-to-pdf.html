@@ -13,15 +13,15 @@
     <aside class="sidebar"></aside>
     <main class="content">
       <div class="tool-header">
-        <h1>Word to PDF</h1>
-        <p>Convert Word documents (.doc / .docx) to PDF for easy sharing and printing</p>
+        <h1 data-i18n="tools.wordToPdf.title">Word to PDF</h1>
+        <p data-i18n="tools.wordToPdf.desc">Convert Word documents to PDF</p>
       </div>
 
       <div class="tool-card">
         <div class="drop-zone" id="drop-zone">
           <div class="drop-icon">📂</div>
-          <div class="drop-title">Click or drag a Word file here</div>
-          <div class="drop-hint">Supports .doc and .docx up to 50 MB</div>
+          <div class="drop-title" data-i18n="tools.wordToPdf.dropTitle">Click or drag a Word file here</div>
+          <div class="drop-hint" data-i18n="tools.wordToPdf.dropHint">Supports .doc and .docx up to 50 MB</div>
           <input type="file" id="file-input" accept=".doc,.docx" style="display:none" />
         </div>
 
@@ -38,9 +38,9 @@
 
         <div class="action-row">
           <button class="btn-primary" id="convert-btn" disabled>
-            <span>🚀</span> Convert
+            <span>🚀</span> <span data-i18n="tools.wordToPdf.convert">Convert</span>
           </button>
-          <button class="btn-secondary" id="clear-btn">Clear</button>
+          <button class="btn-secondary" id="clear-btn" data-i18n="tools.wordToPdf.clear">Clear</button>
         </div>
 
         <div class="progress-wrap" id="progress-wrap">
@@ -74,6 +74,9 @@
     </main>
   </div>
 
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/common_ui.js"></script>
