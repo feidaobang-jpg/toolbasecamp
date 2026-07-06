@@ -78,6 +78,29 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build
 
+      - name: Setup Node 24 for CyberChef
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Build CyberChef portal
+        run: |
+          CHEF_REF="$(tr -d '\r\n' < deploy/cyberchef.ref)"
+          echo "Building CyberChef ref: ${CHEF_REF}"
+          git clone --depth 1 --branch "${CHEF_REF}" \
+            https://github.com/gchq/CyberChef.git /tmp/cyberchef
+          cd /tmp/cyberchef
+          export NODE_OPTIONS=--max_old_space_size=4096
+          npm ci
+          npm run build
+          CHEF_DIR="$(find build/prod -maxdepth 1 -type d -name 'CyberChef_*' | head -1)"
+          if [[ -z "$CHEF_DIR" || ! -f "$CHEF_DIR/index.html" ]]; then
+            echo "::error:: CyberChef build output not found"
+            ls -la build/prod || true
+            exit 1
+          fi
+          echo "CHEF_DIR=$CHEF_DIR" >> "$GITHUB_ENV"
+
       - name: Rsync dev portal
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
@@ -94,6 +117,19 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             /tmp/next-tools/LICENSE \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/LICENSE"
+
+      - name: Rsync chef portal
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-chef"
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            "/tmp/cyberchef/${CHEF_DIR}/" \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/"
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            deploy/chef-portal-SOURCE.txt \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/SOURCE.txt"
 
       - name: Install API deps and restart
         run: |
@@ -124,6 +160,11 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-stirling-config.sh
           bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-chef.sh
+          bash /opt/toolbasecamp-deploy/install-hoppscotch.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh
+          bash /opt/toolbasecamp-deploy/install-libretranslate.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           systemctl restart toolbasecamp-api
           for i in 1 2 3 4 5; do
@@ -219,3 +260,43 @@ jobs:
             exit 0
           fi
           echo "Pdf portal OK."
+
+      - name: Verify chef portal (public URL)
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/chef-public.html -w '%{http_code}' \
+            'https://chef.toolbasecamp.com/' || echo '000')"
+          echo "HTTPS $HTTP_CODE"
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "::warning:: chef portal HTTPS returned $HTTP_CODE — add Cloudflare DNS: chef A record, then re-run deploy."
+            exit 0
+          fi
+          if ! grep -qi 'cyberchef' /tmp/chef-public.html; then
+            echo "::warning:: chef URL did not return CyberChef HTML."
+            exit 0
+          fi
+          echo "Chef portal OK."
+
+      - name: Verify hoppscotch portal (public URL)
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/hop-public.html -w '%{http_code}' \
+            'https://hoppscotch.toolbasecamp.com/' || echo '000')"
+          echo "HTTPS $HTTP_CODE"
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "::warning:: hoppscotch portal HTTPS returned $HTTP_CODE — add Cloudflare DNS: hoppscotch A record, then re-run deploy."
+            exit 0
+          fi
+          echo "Hoppscotch portal OK."
+
+      - name: Verify translate portal (public URL)
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/tr-public.html -w '%{http_code}' \
+            'https://translate.toolbasecamp.com/' || echo '000')"
+          echo "HTTPS $HTTP_CODE"
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "::warning:: translate portal HTTPS returned $HTTP_CODE — add Cloudflare DNS: translate A record, then re-run deploy."
+            exit 0
+          fi
+          echo "Translate portal OK."

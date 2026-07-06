@@ -1,0 +1,3 @@
+Tool Basecamp translation portal (translate.toolbasecamp.com)
+Source: https://github.com/LibreTranslate/LibreTranslate (AGPL-3.0)
+Docker image: libretranslate/libretranslate

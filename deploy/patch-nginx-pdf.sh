@@ -12,18 +12,7 @@ if [[ ! -f "$SITE_SRC" ]]; then
   exit 1
 fi
 
-if command -v certbot >/dev/null 2>&1 && [[ -f "$CERT_DIR/fullchain.pem" ]]; then
-  echo "Expanding cert for pdf.toolbasecamp.com..."
-  certbot certonly --nginx \
-    -d toolbasecamp.com -d www.toolbasecamp.com \
-    -d dev.toolbasecamp.com -d pdf.toolbasecamp.com \
-    --expand --non-interactive --agree-tos -m "$CERT_EMAIL" \
-    --keep-until-expiring || {
-      echo "WARNING: certbot expand failed — set Cloudflare SSL to Flexible temporarily."
-    }
-else
-  echo "WARNING: cert not found at $CERT_DIR — HTTPS pdf vhost may fail until certbot runs."
-fi
+bash /opt/toolbasecamp-deploy/expand-portal-certs.sh
 
 cp "$SITE_SRC" "$SITE"
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-pdf

@@ -6,6 +6,44 @@ function renderPortals(container) {
     const tr = (k) => (typeof window.t === 'function' ? window.t(k) : k);
     const lbl = (item) => (typeof window.tbLabel === 'function' ? window.tbLabel(item) : (item.title || ''));
 
+    const portalThemes = {
+        pdf: {
+            card: 'group block bg-gradient-to-br from-rose-900 to-red-950 rounded-2xl p-6 sm:p-8 border border-rose-800 hover:border-rose-400 hover:shadow-xl transition-all duration-300 text-white',
+            label: 'text-rose-300',
+            iconWrap: 'bg-rose-600/20 text-rose-300 group-hover:bg-rose-600 group-hover:text-white',
+            cta: 'text-rose-300 group-hover:text-white',
+            icon: 'fa-file-pdf'
+        },
+        dev: {
+            card: 'group block bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 sm:p-8 border border-slate-700 hover:border-blue-400 hover:shadow-xl transition-all duration-300 text-white',
+            label: 'text-blue-300',
+            iconWrap: 'bg-blue-600/20 text-blue-300 group-hover:bg-blue-600 group-hover:text-white',
+            cta: 'text-blue-300 group-hover:text-white',
+            icon: 'fa-code'
+        },
+        chef: {
+            card: 'group block bg-gradient-to-br from-amber-900 to-orange-950 rounded-2xl p-6 sm:p-8 border border-amber-800 hover:border-amber-400 hover:shadow-xl transition-all duration-300 text-white',
+            label: 'text-amber-300',
+            iconWrap: 'bg-amber-600/20 text-amber-300 group-hover:bg-amber-600 group-hover:text-white',
+            cta: 'text-amber-300 group-hover:text-white',
+            icon: 'fa-shield-halved'
+        },
+        hoppscotch: {
+            card: 'group block bg-gradient-to-br from-emerald-900 to-teal-950 rounded-2xl p-6 sm:p-8 border border-emerald-800 hover:border-emerald-400 hover:shadow-xl transition-all duration-300 text-white',
+            label: 'text-emerald-300',
+            iconWrap: 'bg-emerald-600/20 text-emerald-300 group-hover:bg-emerald-600 group-hover:text-white',
+            cta: 'text-emerald-300 group-hover:text-white',
+            icon: 'fa-paper-plane'
+        },
+        translate: {
+            card: 'group block bg-gradient-to-br from-sky-900 to-blue-950 rounded-2xl p-6 sm:p-8 border border-sky-800 hover:border-sky-400 hover:shadow-xl transition-all duration-300 text-white',
+            label: 'text-sky-300',
+            iconWrap: 'bg-sky-600/20 text-sky-300 group-hover:bg-sky-600 group-hover:text-white',
+            cta: 'text-sky-300 group-hover:text-white',
+            icon: 'fa-language'
+        }
+    };
+
     const sectionEl = document.createElement('section');
     sectionEl.className = 'mb-10';
 
@@ -17,48 +55,30 @@ function renderPortals(container) {
     sectionEl.appendChild(headerEl);
 
     const gridEl = document.createElement('div');
-    gridEl.className = 'grid grid-cols-1 lg:grid-cols-2 gap-6';
+    gridEl.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6';
 
     portalsConfig.forEach(portal => {
-        const isPdf = portal.theme === 'pdf';
+        const theme = portalThemes[portal.theme] || portalThemes.dev;
         const card = document.createElement('a');
         card.href = portal.url || '#';
         const title = lbl(portal);
         const desc = portal.descriptionKey ? tr(portal.descriptionKey) : (portal.description || '');
         const cta = portal.ctaKey ? tr(portal.ctaKey) : (portal.cta || tr('hub.open'));
-        if (isPdf) {
-            card.className = 'group block bg-gradient-to-br from-rose-900 to-red-950 rounded-2xl p-6 sm:p-8 border border-rose-800 hover:border-rose-400 hover:shadow-xl transition-all duration-300 text-white';
-            card.innerHTML =
-                '<div class="flex items-start justify-between gap-4">' +
-                    '<div class="min-w-0">' +
-                        '<p class="text-xs uppercase tracking-wider text-rose-300 font-semibold mb-2">' + (portal.meta || '') + '</p>' +
-                        '<h3 class="text-xl sm:text-2xl font-bold mb-3">' + title + '</h3>' +
-                        '<p class="text-sm text-slate-300 leading-relaxed">' + desc + '</p>' +
-                    '</div>' +
-                    '<div class="flex-shrink-0 w-12 h-12 rounded-xl bg-rose-600/20 flex items-center justify-center text-rose-300 group-hover:bg-rose-600 group-hover:text-white transition-colors">' +
-                        '<i class="fas fa-file-pdf text-lg"></i>' +
-                    '</div>' +
+        card.className = theme.card;
+        card.innerHTML =
+            '<div class="flex items-start justify-between gap-4">' +
+                '<div class="min-w-0">' +
+                    '<p class="text-xs uppercase tracking-wider ' + theme.label + ' font-semibold mb-2">' + (portal.meta || '') + '</p>' +
+                    '<h3 class="text-xl sm:text-2xl font-bold mb-3">' + title + '</h3>' +
+                    '<p class="text-sm text-slate-300 leading-relaxed">' + desc + '</p>' +
                 '</div>' +
-                '<span class="inline-flex items-center gap-2 mt-6 text-sm font-semibold text-rose-300 group-hover:text-white transition-colors">' +
-                    cta + ' <i class="fas fa-arrow-right text-xs"></i>' +
-                '</span>';
-        } else {
-            card.className = 'group block bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 sm:p-8 border border-slate-700 hover:border-blue-400 hover:shadow-xl transition-all duration-300 text-white';
-            card.innerHTML =
-                '<div class="flex items-start justify-between gap-4">' +
-                    '<div class="min-w-0">' +
-                        '<p class="text-xs uppercase tracking-wider text-blue-300 font-semibold mb-2">' + (portal.meta || '') + '</p>' +
-                        '<h3 class="text-xl sm:text-2xl font-bold mb-3">' + title + '</h3>' +
-                        '<p class="text-sm text-slate-300 leading-relaxed">' + desc + '</p>' +
-                    '</div>' +
-                    '<div class="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-300 group-hover:bg-blue-600 group-hover:text-white transition-colors">' +
-                        '<i class="fas fa-code text-lg"></i>' +
-                    '</div>' +
+                '<div class="flex-shrink-0 w-12 h-12 rounded-xl ' + theme.iconWrap + ' flex items-center justify-center transition-colors">' +
+                    '<i class="fas ' + theme.icon + ' text-lg"></i>' +
                 '</div>' +
-                '<span class="inline-flex items-center gap-2 mt-6 text-sm font-semibold text-blue-300 group-hover:text-white transition-colors">' +
-                    cta + ' <i class="fas fa-arrow-right text-xs"></i>' +
-                '</span>';
-        }
+            '</div>' +
+            '<span class="inline-flex items-center gap-2 mt-6 text-sm font-semibold ' + theme.cta + ' transition-colors">' +
+                cta + ' <i class="fas fa-arrow-right text-xs"></i>' +
+            '</span>';
         gridEl.appendChild(card);
     });
 

@@ -1,0 +1,3 @@
+Tool Basecamp API client portal (hoppscotch.toolbasecamp.com)
+Source: https://github.com/hoppscotch/hoppscotch (MIT)
+Docker image: hoppscotch/hoppscotch — see deploy/hoppscotch.ref

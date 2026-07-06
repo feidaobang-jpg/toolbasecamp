@@ -11,6 +11,9 @@ const siteConfig = {
     adminEmail: 'admin@toolbasecamp.com',
     devPortalUrl: 'https://dev.toolbasecamp.com',
     pdfPortalUrl: 'https://pdf.toolbasecamp.com',
+    chefPortalUrl: 'https://chef.toolbasecamp.com',
+    hoppscotchPortalUrl: 'https://hoppscotch.toolbasecamp.com',
+    translatePortalUrl: 'https://translate.toolbasecamp.com',
     apiBase: (function () {
         const host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') {
@@ -42,6 +45,30 @@ const portalsConfig = [
         ctaKey: 'portals.dev.cta',
         meta: 'dev.toolbasecamp.com',
         theme: 'dev'
+    },
+    {
+        titleKey: 'portals.chef.title',
+        descriptionKey: 'portals.chef.description',
+        url: 'https://chef.toolbasecamp.com',
+        ctaKey: 'portals.chef.cta',
+        meta: 'chef.toolbasecamp.com',
+        theme: 'chef'
+    },
+    {
+        titleKey: 'portals.hoppscotch.title',
+        descriptionKey: 'portals.hoppscotch.description',
+        url: 'https://hoppscotch.toolbasecamp.com',
+        ctaKey: 'portals.hoppscotch.cta',
+        meta: 'hoppscotch.toolbasecamp.com',
+        theme: 'hoppscotch'
+    },
+    {
+        titleKey: 'portals.translate.title',
+        descriptionKey: 'portals.translate.description',
+        url: 'https://translate.toolbasecamp.com',
+        ctaKey: 'portals.translate.cta',
+        meta: 'translate.toolbasecamp.com',
+        theme: 'translate'
     }
 ];
 

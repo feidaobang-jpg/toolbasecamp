@@ -64,6 +64,21 @@ window.TB_LOCALES.en = {
             title: 'Developer Toolkit',
             description: '120+ browser-based developer tools — Base64, JWT, JSON, hash, regex, UUID, and more. Data stays in your browser.',
             cta: 'Open Developer Toolkit'
+        },
+        chef: {
+            title: 'CyberChef',
+            description: 'The cyber swiss army knife — encode, decode, encrypt, compress, and analyze data in your browser. Static build, no server processing.',
+            cta: 'Open CyberChef'
+        },
+        hoppscotch: {
+            title: 'Hoppscotch',
+            description: 'Lightweight API client for REST, GraphQL, and WebSocket — collections, environments, and history. Self-hosted for your team.',
+            cta: 'Open Hoppscotch'
+        },
+        translate: {
+            title: 'LibreTranslate',
+            description: 'Privacy-friendly machine translation (English ↔ 中文). Self-hosted; watch server memory on small VPS plans.',
+            cta: 'Open Translator'
         }
     },
     tools: {

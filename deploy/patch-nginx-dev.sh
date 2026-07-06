@@ -25,18 +25,7 @@ if [[ -f "$MAIN_SITE" ]]; then
 fi
 
 # Cloudflare Full SSL hits origin on :443 — cert must cover dev subdomain
-if command -v certbot >/dev/null 2>&1 && [[ -f "$CERT_DIR/fullchain.pem" ]]; then
-  echo "Expanding Let's Encrypt cert to include dev.toolbasecamp.com..."
-  certbot certonly --nginx \
-    -d toolbasecamp.com -d www.toolbasecamp.com \
-    -d dev.toolbasecamp.com -d pdf.toolbasecamp.com \
-    --expand --non-interactive --agree-tos -m "$CERT_EMAIL" \
-    --keep-until-expiring || {
-      echo "WARNING: certbot expand failed — try Cloudflare SSL mode Flexible temporarily."
-    }
-else
-  echo "WARNING: no cert at $CERT_DIR — HTTPS dev vhost may not work until certbot is installed."
-fi
+bash /opt/toolbasecamp-deploy/expand-portal-certs.sh
 
 cp "$SITE_SRC" "$SITE"
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-dev

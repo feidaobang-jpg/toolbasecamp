@@ -1,0 +1,3 @@
+Tool Basecamp CyberChef portal (chef.toolbasecamp.com)
+Source: https://github.com/gchq/CyberChef (Apache-2.0)
+Pinned version: see deploy/cyberchef.ref

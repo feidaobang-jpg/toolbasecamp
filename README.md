@@ -11,7 +11,13 @@ toolbasecamp/
 └── deploy/                 # nginx, systemd, server scripts
     ├── nginx-toolbasecamp-dev.conf   # dev.toolbasecamp.com
     ├── nginx-toolbasecamp-pdf.conf   # pdf.toolbasecamp.com → Stirling-PDF
+    ├── nginx-toolbasecamp-chef.conf  # chef.toolbasecamp.com → CyberChef static
+    ├── nginx-toolbasecamp-hoppscotch.conf
+    ├── nginx-toolbasecamp-translate.conf
     ├── install-stirling-pdf.sh       # Docker Stirling-PDF
+    ├── install-hoppscotch.sh         # Docker Hoppscotch + Postgres
+    ├── install-libretranslate.sh     # Docker LibreTranslate (en, zh)
+    ├── cyberchef.ref / hoppscotch.ref
     ├── next-tools.ref                # pinned next-tools version
     └── dev-portal-SOURCE.txt         # GPL source attribution
 ```
@@ -74,6 +80,34 @@ bash /opt/toolbasecamp-deploy/fix-dev-portal.sh
 Quick test without certbot: Cloudflare → **SSL/TLS** → **Overview** → **Flexible** (origin HTTP only), then hard-refresh.
 
 Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
+
+**QR code, text diff, timestamp, color converter:** already in [next-tools](https://github.com/willjayyyy/next-tools) on `dev.toolbasecamp.com` — no duplicate on the main site.
+
+## CyberChef portal (chef.toolbasecamp.com)
+
+Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), CI-built with Node 24 → `/var/www/toolbasecamp-chef`. No server-side processing.
+
+| Name | Type | Content | Proxy |
+|------|------|---------|-------|
+| `chef` | A | same server IP | Proxied OK |
+
+## Hoppscotch portal (hoppscotch.toolbasecamp.com)
+
+[Hoppscotch](https://github.com/hoppscotch/hoppscotch) Community Edition via Docker Compose (Postgres + AIO). API client for REST / GraphQL / WebSocket.
+
+| Name | Type | Content | Proxy |
+|------|------|---------|-------|
+| `hoppscotch` | A | same server IP | Proxied OK |
+
+Requires **~2GB RAM** for Postgres + app. First deploy generates `hoppscotch.env` on the server (do not commit).
+
+## LibreTranslate portal (translate.toolbasecamp.com)
+
+[LibreTranslate](https://github.com/LibreTranslate/LibreTranslate) (AGPL) in Docker on `127.0.0.1:5000`, languages **en + zh only** (`LT_LOAD_ONLY`) to limit memory (~2GB cap).
+
+| Name | Type | Content | Proxy |
+|------|------|---------|-------|
+| `translate` | A | same server IP | Proxied OK |
 
 **If dev shows the same page as the main site**, open DigitalOcean Web Console and run (type or paste one line at a time — avoid `^[[200~` paste glitches):
 
@@ -178,4 +212,7 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 - https://toolbasecamp.com/
 - https://dev.toolbasecamp.com
 - https://pdf.toolbasecamp.com
+- https://chef.toolbasecamp.com
+- https://hoppscotch.toolbasecamp.com
+- https://translate.toolbasecamp.com
 - `curl https://toolbasecamp.com/api/health`
