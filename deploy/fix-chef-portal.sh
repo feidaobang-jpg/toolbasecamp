@@ -13,12 +13,8 @@ if [[ -f "$WEB_ROOT/index.html" ]]; then
   echo "OK: $WEB_ROOT/index.html exists ($(wc -c < "$WEB_ROOT/index.html") bytes)"
   grep -i '<title' "$WEB_ROOT/index.html" | head -1 || true
 else
-  echo "ERROR: $WEB_ROOT/index.html MISSING"
-  echo "  CyberChef is built in GitHub Actions (Node 24) and rsynced here."
-  echo "  Fix: open GitHub → Actions → re-run the latest deploy on master."
-  echo "  Or check the 'Build CyberChef portal' step for build failures."
-  ls -la "$WEB_ROOT" 2>/dev/null || echo "  (directory empty or missing)"
-  exit 1
+  echo "CyberChef static files missing — installing from GitHub release..."
+  bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh
 fi
 
 echo ""

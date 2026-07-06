@@ -78,25 +78,23 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build
 
-      - name: Setup Node 24 for CyberChef
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Build CyberChef portal
+      - name: Download CyberChef release
         run: |
           CHEF_REF="$(tr -d '\r\n' < deploy/cyberchef.ref)"
-          echo "Building CyberChef ref: ${CHEF_REF}"
-          git clone --depth 1 --branch "${CHEF_REF}" \
-            https://github.com/gchq/CyberChef.git /tmp/cyberchef
-          cd /tmp/cyberchef
-          export NODE_OPTIONS=--max_old_space_size=4096
-          npm ci
-          npm run build
-          CHEF_DIR="$(find build/prod -maxdepth 1 -type d -name 'CyberChef_*' | head -1)"
+          echo "Downloading CyberChef release: ${CHEF_REF}"
+          mkdir -p /tmp/cyberchef-bundle
+          ASSET_URL="$(curl -fsSL "https://api.github.com/repos/gchq/CyberChef/releases/tags/${CHEF_REF}" \
+            | jq -r '.assets[0].browser_download_url')"
+          if [[ -z "$ASSET_URL" || "$ASSET_URL" == "null" ]]; then
+            echo "::error:: No release asset for ${CHEF_REF}"
+            exit 1
+          fi
+          curl -fsSL -o /tmp/cyberchef-bundle.zip "$ASSET_URL"
+          unzip -q /tmp/cyberchef-bundle.zip -d /tmp/cyberchef-bundle
+          CHEF_DIR="$(dirname "$(find /tmp/cyberchef-bundle -type f -name index.html | head -1)")"
           if [[ -z "$CHEF_DIR" || ! -f "$CHEF_DIR/index.html" ]]; then
-            echo "::error:: CyberChef build output not found"
-            ls -la build/prod || true
+            echo "::error:: index.html not found in release zip"
+            find /tmp/cyberchef-bundle -maxdepth 3 -type f | head -20 || true
             exit 1
           fi
           echo "CHEF_DIR=$CHEF_DIR" >> "$GITHUB_ENV"
@@ -124,7 +122,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-chef"
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
-            "/tmp/cyberchef/${CHEF_DIR}/" \
+            "${CHEF_DIR}/" \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/"
           rsync -avz \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
@@ -160,6 +158,9 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-stirling-config.sh
           bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+          if [[ ! -f /var/www/toolbasecamp-chef/index.html ]]; then
+            bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh
+          fi
           bash /opt/toolbasecamp-deploy/patch-nginx-chef.sh
           bash /opt/toolbasecamp-deploy/install-hoppscotch.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh

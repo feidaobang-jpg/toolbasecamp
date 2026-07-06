@@ -85,7 +85,7 @@ Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/
 
 ## CyberChef portal (chef.toolbasecamp.com)
 
-Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), CI-built with Node 24 → `/var/www/toolbasecamp-chef`. No server-side processing.
+Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), from the official **GitHub release zip** (pinned in `deploy/cyberchef.ref`) → `/var/www/toolbasecamp-chef`. No server-side Node build.
 
 | Name | Type | Content | Proxy |
 |------|------|---------|-------|

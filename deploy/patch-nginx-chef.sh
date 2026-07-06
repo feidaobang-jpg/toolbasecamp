@@ -6,8 +6,8 @@ SITE="/etc/nginx/sites-available/toolbasecamp-chef"
 WEB_ROOT="/var/www/toolbasecamp-chef"
 
 if [[ ! -f "$WEB_ROOT/index.html" ]]; then
-  echo "ERROR: $WEB_ROOT/index.html missing — CyberChef not deployed yet."
-  echo "Re-run GitHub Actions deploy (Build CyberChef + Rsync chef portal), then run this script again."
+  echo "ERROR: $WEB_ROOT/index.html missing — run install-cyberchef-release.sh first."
+  echo "  sudo bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh"
   ls -la "$WEB_ROOT" 2>/dev/null || true
   exit 1
 fi
