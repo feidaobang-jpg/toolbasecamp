@@ -3,7 +3,7 @@ const siteConfig = {
     logoText: 'TB',
     title: 'Tools',
     homeUrl: 'index.html',
-    toolsHubUrl: 'tool.html',
+    toolsHubUrl: 'index.html',
     mainSiteOrigin: 'https://toolbasecamp.com',
     keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
     description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
@@ -18,8 +18,7 @@ const siteConfig = {
         return `${window.location.origin}/api`;
     })(),
     nav: [
-        { name: 'Home', url: 'index.html' },
-        { name: 'Tools', url: 'tool.html' },
+        { name: 'Tools', url: 'index.html' },
         { name: 'Guestbook', url: 'guestbook.html' },
         { name: 'About', url: 'about.html' }
     ]

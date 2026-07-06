@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tool Basecamp — Productivity Tools Hub</title>
-    <meta name="description" content="Fast document conversion and developer utilities. PDF to Word, Word to PDF, Images to PDF, JSON to Java entity generator.">
-    <meta name="keywords" content="productivity tools, PDF converter, JSON to Java, developer utilities, document tools">
+    <meta name="description" content="Tool Basecamp tools hub — document conversion, media utilities, JSON to Java, and 120+ developer utilities on dev.toolbasecamp.com.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
@@ -13,85 +12,34 @@
         tailwind.config = { theme: { extend: { colors: { primary: '#2563eb' } } } };
     </script>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+<body id="top" class="bg-gray-50 text-gray-800 h-screen flex flex-col overflow-hidden">
+    <header class="bg-white border-b border-gray-100 flex-shrink-0 z-40 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
             <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
                 <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
                 <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">Tool Basecamp</h1>
             </a>
             <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto">
-                <a href="tool.html" class="text-sm text-gray-600 whitespace-nowrap">Tools</a>
-            </div>
+            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
         </div>
     </header>
 
-    <main class="flex-1">
-        <section class="bg-gradient-to-b from-blue-50 to-gray-50 py-16 md:py-24">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <p class="inline-block text-sm font-medium text-blue-600 bg-blue-100 rounded-full px-4 py-1 mb-6">toolbasecamp.com</p>
-                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">Your productivity tools basecamp</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-                    Document conversion and developer utilities — fast, simple, and privacy-friendly.
-                </p>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="tool.html" class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 transition-colors shadow-md">
-                        Browse tools
-                    </a>
-                    <a href="html/docs/pdf-to-word.html" class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-6 py-3 text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
-                        Try PDF to Word
-                    </a>
+    <div class="flex-1 flex overflow-hidden relative">
+        <main class="flex-1 flex flex-col w-0 overflow-hidden bg-gray-50">
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 scroll-smooth" id="main-content"></div>
+            <footer class="bg-white border-t border-gray-200 mt-auto">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="text-center text-sm text-gray-500">
+                        <p>&copy; 2026 <span class="site-name">Tool Basecamp</span></p>
+                    </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">Popular tools</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                    <a href="https://pdf.toolbasecamp.com" class="group bg-gradient-to-br from-rose-900 to-red-950 rounded-xl p-6 border border-rose-800 hover:border-rose-400 hover:shadow-lg transition-all text-white">
-                        <h4 class="font-bold text-lg group-hover:text-rose-300">PDF Toolkit</h4>
-                        <p class="text-sm text-rose-100/80 mt-2">50+ PDF tools — merge, split, OCR, convert on pdf.toolbasecamp.com</p>
-                    </a>
-                    <a href="https://dev.toolbasecamp.com" class="group bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 border border-slate-700 hover:border-blue-400 hover:shadow-lg transition-all text-white">
-                        <h4 class="font-bold text-lg group-hover:text-blue-300">Developer Toolkit</h4>
-                        <p class="text-sm text-slate-300 mt-2">120+ developer tools — Base64, JWT, JSON, hash on dev.toolbasecamp.com</p>
-                    </a>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                    <a href="html/docs/pdf-to-word.html" class="group bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all">
-                        <h4 class="font-bold text-gray-900 group-hover:text-blue-600">PDF to Word</h4>
-                        <p class="text-sm text-gray-500 mt-2">Convert PDF to editable DOCX</p>
-                    </a>
-                    <a href="html/docs/word-to-pdf.html" class="group bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all">
-                        <h4 class="font-bold text-gray-900 group-hover:text-blue-600">Word to PDF</h4>
-                        <p class="text-sm text-gray-500 mt-2">Turn DOCX into PDF</p>
-                    </a>
-                    <a href="html/docs/images-to-pdf.html" class="group bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all">
-                        <h4 class="font-bold text-gray-900 group-hover:text-blue-600">Images to PDF</h4>
-                        <p class="text-sm text-gray-500 mt-2">Merge images in your browser</p>
-                    </a>
-                    <a href="html/media/video-to-images.html" class="group bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all">
-                        <h4 class="font-bold text-gray-900 group-hover:text-blue-600">Video to Images</h4>
-                        <p class="text-sm text-gray-500 mt-2">Extract frames from video in your browser</p>
-                    </a>
-                    <a href="html/dev/json-to-java.html" class="group bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all">
-                        <h4 class="font-bold text-gray-900 group-hover:text-blue-600">JSON to Java</h4>
-                        <p class="text-sm text-gray-500 mt-2">Generate Java entity classes</p>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-white border-t border-gray-100 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>&copy; 2026 Tool Basecamp. All rights reserved.</p>
-        </div>
-    </footer>
+            </footer>
+        </main>
+    </div>
 
     <script src="js/config.js"></script>
     <script src="js/common_ui.js"></script>
+    <script src="js/tools-hub.js"></script>
+    <script>window.onload = renderToolsHub;</script>
 </body>
 </html>

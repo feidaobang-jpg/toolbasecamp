@@ -69,8 +69,7 @@ function renderMenu() {
     const isInSubDir = currentPath.includes('/html/');
     const { groupTitle: detectedGroupTitle } = getCurrentToolContext();
 
-    const homeHref = resolveToolUrl((siteConfig && siteConfig.homeUrl) || 'index.html');
-    const toolsHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'tool.html');
+    const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
     const siteName = (siteConfig && siteConfig.siteName) || 'Tool Basecamp';
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
 
@@ -97,7 +96,7 @@ function renderMenu() {
 
     sidebar.innerHTML =
         '<div class="logo">' +
-            '<a class="logo-header logo-header-link" href="' + homeHref + '">' +
+            '<a class="logo-header logo-header-link" href="' + hubHref + '">' +
                 '<div class="logo-badge">' + logoText + '</div>' +
                 '<h2>' + moduleTitle + '</h2>' +
             '</a>' +
@@ -105,8 +104,7 @@ function renderMenu() {
         '</div>' +
         '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>' +
         '<div class="sidebar-footer-nav">' +
-            '<a href="' + toolsHref + '">All tools</a>' +
-            '<a href="' + homeHref + '">Home</a>' +
+            '<a href="' + hubHref + '">All tools</a>' +
         '</div>' +
         '<div class="sidebar-footer-copy">' +
             '<p>&copy; 2026 ' + siteName + '</p>' +
@@ -119,8 +117,7 @@ function bindToolSidebarMobile(sidebar) {
     const content = document.querySelector('.container .content');
     if (!content || !sidebar) return;
 
-    const homeHref = resolveToolUrl((siteConfig && siteConfig.homeUrl) || 'index.html');
-    const toolsHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'tool.html');
+    const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
 
     let bar = content.querySelector('.tool-mobile-bar');
     if (!bar) {
@@ -130,9 +127,7 @@ function bindToolSidebarMobile(sidebar) {
             '<button type="button" class="tool-menu-toggle" aria-label="Open menu">&#9776;</button>' +
             '<span class="tool-mobile-title"></span>' +
             '<div class="tool-mobile-nav-links">' +
-                '<a class="tool-mobile-home" href="#">Home</a>' +
-                '<span class="tool-mobile-nav-sep">·</span>' +
-                '<a class="tool-mobile-tools" href="#">Tools</a>' +
+                '<a class="tool-mobile-tools" href="#">All tools</a>' +
             '</div>';
         content.insertBefore(bar, content.firstChild);
     }
@@ -141,10 +136,8 @@ function bindToolSidebarMobile(sidebar) {
     const h2 = sidebar.querySelector('.logo h2');
     if (titleEl && h2) titleEl.textContent = h2.textContent;
 
-    const homeLink = bar.querySelector('.tool-mobile-home');
     const toolsLink = bar.querySelector('.tool-mobile-tools');
-    if (homeLink) homeLink.href = homeHref;
-    if (toolsLink) toolsLink.href = toolsHref;
+    if (toolsLink) toolsLink.href = hubHref;
 
     let overlay = document.getElementById('tool-sidebar-overlay');
     if (!overlay) {

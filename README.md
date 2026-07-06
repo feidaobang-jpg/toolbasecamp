@@ -169,7 +169,7 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 ## Verify
 
 - https://toolbasecamp.com
-- https://toolbasecamp.com/tool.html
+- https://toolbasecamp.com/
 - https://dev.toolbasecamp.com
 - https://pdf.toolbasecamp.com
 - `curl https://toolbasecamp.com/api/health`
