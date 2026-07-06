@@ -161,11 +161,18 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    text-decoration: none;
     color: inherit;
 }
 
-.logo-header-link:hover {
+.logo-header-link,
+.logo-header-link:hover,
+.logo-header-link:focus,
+.logo-header-link:visited,
+.logo-header-link:active {
+    text-decoration: none;
+}
+
+.logo-header-link h2 {
     text-decoration: none;
 }
 

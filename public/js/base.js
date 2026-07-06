@@ -42,22 +42,18 @@ function getCurrentToolContext() {
 
 function renderSiteTitle() {
     const { groupTitle, toolTitle } = getCurrentToolContext();
-    let moduleTitle = (typeof siteConfig !== 'undefined' && siteConfig.siteName) ? siteConfig.siteName : 'Tool Basecamp';
-
-    if (groupTitle) {
-        moduleTitle = groupTitle;
-    }
+    const siteName = (typeof siteConfig !== 'undefined' && siteConfig.siteName) ? siteConfig.siteName : 'Tool Basecamp';
 
     if (toolTitle) {
         document.title = toolTitle + ' - Tool Basecamp';
     } else if (groupTitle) {
         document.title = groupTitle + ' - Tool Basecamp';
     } else {
-        document.title = moduleTitle;
+        document.title = siteName;
     }
 
     const logoTitleEl = document.querySelector('.logo h2');
-    if (logoTitleEl) logoTitleEl.textContent = moduleTitle;
+    if (logoTitleEl) logoTitleEl.textContent = siteName;
 }
 
 function renderMenu() {
@@ -67,13 +63,11 @@ function renderMenu() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const isInSubDir = currentPath.includes('/html/');
-    const { groupTitle: detectedGroupTitle } = getCurrentToolContext();
+    const { groupTitle: detectedGroupTitle, toolTitle: detectedToolTitle } = getCurrentToolContext();
 
     const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
     const siteName = (siteConfig && siteConfig.siteName) || 'Tool Basecamp';
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
-
-    let moduleTitle = detectedGroupTitle || siteName;
 
     let menuItemsHTML = '';
     if (typeof toolsConfig !== 'undefined' && toolsConfig.groups && detectedGroupTitle) {
@@ -98,7 +92,7 @@ function renderMenu() {
         '<div class="logo">' +
             '<a class="logo-header logo-header-link" href="' + hubHref + '">' +
                 '<div class="logo-badge">' + logoText + '</div>' +
-                '<h2>' + moduleTitle + '</h2>' +
+                '<h2>' + siteName + '</h2>' +
             '</a>' +
             '<div id="sidebar-user-meta" class="user-meta"></div>' +
         '</div>' +
@@ -110,10 +104,10 @@ function renderMenu() {
             '<p>&copy; 2026 ' + siteName + '</p>' +
         '</div>';
 
-    bindToolSidebarMobile(sidebar);
+    bindToolSidebarMobile(sidebar, detectedGroupTitle, detectedToolTitle, siteName);
 }
 
-function bindToolSidebarMobile(sidebar) {
+function bindToolSidebarMobile(sidebar, groupTitle, toolTitle, siteName) {
     const content = document.querySelector('.container .content');
     if (!content || !sidebar) return;
 
@@ -133,8 +127,7 @@ function bindToolSidebarMobile(sidebar) {
     }
 
     const titleEl = bar.querySelector('.tool-mobile-title');
-    const h2 = sidebar.querySelector('.logo h2');
-    if (titleEl && h2) titleEl.textContent = h2.textContent;
+    if (titleEl) titleEl.textContent = toolTitle || groupTitle || siteName || 'Tool Basecamp';
 
     const toolsLink = bar.querySelector('.tool-mobile-tools');
     if (toolsLink) toolsLink.href = hubHref;
