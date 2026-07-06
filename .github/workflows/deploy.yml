@@ -36,6 +36,10 @@ jobs:
 
       - name: Rsync static site
         run: |
+          VER="$(git rev-parse --short HEAD)"
+          find public -type f -name '*.html' -exec sed -i \
+            -E 's|(src="[^"]*/(config|base)\.js)(\?[^"]*)?"|\1?v='"${VER}"'"|g' \
+            {} +
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
@@ -106,6 +110,7 @@ jobs:
           systemctl daemon-reload
           systemctl enable toolbasecamp-api
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh
           bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
           bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh
@@ -127,6 +132,23 @@ jobs:
             fi
           done
           REMOTE
+
+      - name: Verify main site assets (public URL)
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/main-base.js -w '%{http_code}' \
+            'https://toolbasecamp.com/js/base.js' || echo '000')"
+          echo "base.js HTTPS $HTTP_CODE"
+          if [[ "$HTTP_CODE" == "200" ]] && ! grep -q 'renderToolBreadcrumb' /tmp/main-base.js; then
+            echo "::warning:: base.js missing navigation helpers — Cloudflare may still serve stale cache; HTML uses ?v= query bust."
+          else
+            echo "Main site base.js OK."
+          fi
+          HTTP_CODE="$(curl -s -o /tmp/main-vti.html -w '%{http_code}' \
+            'https://toolbasecamp.com/html/media/video-to-images.html' || echo '000')"
+          if [[ "$HTTP_CODE" == "200" ]] && grep -q 'base.js?v=' /tmp/main-vti.html; then
+            echo "Tool page asset cache-bust OK."
+          fi
 
       - name: Verify dev portal (public URL)
         run: |
