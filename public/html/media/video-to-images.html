@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video to Images - Tool Basecamp</title>
+  <meta name="description" content="Extract frames from video files in your browser. Preview, dedupe, and download as ZIP. No upload required.">
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css" />
+  <link rel="stylesheet" href="../../css/media/video-to-images.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1>Video to Images</h1>
+        <p>Extract frames from a video clip, preview them, and download selected frames as PNG/JPEG or ZIP. All processing runs locally in your browser.</p>
+      </div>
+
+      <div class="tool-card media-tool-card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">🎬</div>
+          <div class="drop-title">Drop a video here</div>
+          <div class="drop-hint">or</div>
+          <button type="button" class="btn-primary" id="browse-btn">Choose video</button>
+          <input type="file" id="video-input" accept="video/*" hidden />
+        </div>
+
+        <div class="tip-box">
+          <b>Privacy:</b> Your video never leaves this device. Supported formats depend on your browser (MP4/WebM usually work).
+        </div>
+
+        <section class="media-section hidden" id="video-preview-section">
+          <h3 class="section-title">Video preview</h3>
+          <div class="video-container" id="video-container"></div>
+
+          <h3 class="section-title">Extraction settings</h3>
+          <div class="settings-row">
+            <label>Frame interval (ms)
+              <input type="number" id="frame-interval" value="100" min="100" step="50" />
+            </label>
+            <label>Clip length (s)
+              <input type="range" id="extract-duration" min="1" max="10" value="3" step="0.5" />
+              <span id="extract-duration-value">3s</span>
+            </label>
+            <label>Start at (s)
+              <input type="range" id="start-time" min="0" max="100" value="0" step="0.1" />
+              <span id="start-time-value">0s</span>
+            </label>
+          </div>
+
+          <details class="advanced-block" id="watermark-removal-settings">
+            <summary>Watermark / background (optional)</summary>
+            <div class="settings-row">
+              <span class="settings-label">Corner to clear</span>
+              <div class="radio-group">
+                <label><input type="radio" name="watermark-position" value="top-left" checked /> Top left</label>
+                <label><input type="radio" name="watermark-position" value="top-right" /> Top right</label>
+                <label><input type="radio" name="watermark-position" value="bottom-left" /> Bottom left</label>
+                <label><input type="radio" name="watermark-position" value="bottom-right" /> Bottom right</label>
+              </div>
+              <label>Region size
+                <input type="range" id="watermark-size" min="10" max="30" value="20" />
+                <span id="watermark-size-value">20%</span>
+              </label>
+              <label>Background sensitivity
+                <input type="range" id="watermark-threshold" min="10" max="50" value="25" />
+                <span id="watermark-threshold-value">25</span>
+              </label>
+            </div>
+          </details>
+
+          <div class="action-row">
+            <button type="button" class="btn-primary" id="extract-frames-btn">Extract frames</button>
+            <button type="button" class="btn-secondary" id="remove-watermark-btn">Clear corner + background</button>
+            <button type="button" class="btn-secondary" id="clear-btn">Clear all</button>
+          </div>
+        </section>
+
+        <section class="media-section hidden" id="frames-preview-section">
+          <h3 class="section-title">Extracted frames (<span id="frame-count">0</span>)</h3>
+          <div class="frames-container" id="frames-container"></div>
+
+          <h3 class="section-title">Similar frames</h3>
+          <div class="settings-row">
+            <label>Similarity threshold
+              <input type="range" id="similarity-threshold" min="80" max="100" value="90" />
+              <span id="threshold-value">90%</span>
+            </label>
+            <button type="button" class="btn-secondary" id="keep-different-btn">Keep distinct frames only</button>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="btn-secondary" id="select-all-btn">Select all</button>
+            <button type="button" class="btn-secondary" id="preview-animation-btn">Preview animation</button>
+            <button type="button" class="btn-primary" id="save-selected-btn">Download selected (ZIP)</button>
+          </div>
+        </section>
+
+        <section class="media-section hidden" id="animation-preview-section">
+          <h3 class="section-title">Animation preview</h3>
+          <div class="animation-container" id="animation-container"></div>
+          <div class="animation-controls">
+            <button type="button" class="btn-secondary" id="play-pause-btn">Pause</button>
+            <label>FPS: <span id="speed-value">5</span>
+              <input type="range" id="speed-control" min="1" max="10" value="5" />
+            </label>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/common_ui.js"></script>
+  <script src="../../js/media/video-to-images.js"></script>
+</body>
+</html>

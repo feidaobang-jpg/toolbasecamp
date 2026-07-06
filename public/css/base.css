@@ -160,6 +160,7 @@ body {
 /* 内容区域样式 */
 .content {
     flex: 1;
+    min-width: 0;
     padding: 30px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -199,7 +200,7 @@ body {
     margin-top: 40px;
 }
 
-.tool-card {
+.tools-list .tool-card {
     width: 300px;
     padding: 25px;
     border-radius: 8px;
@@ -208,18 +209,18 @@ body {
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.tool-card:hover {
+.tools-list .tool-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-.tool-card h3 {
+.tools-list .tool-card h3 {
     font-size: 1.4em;
     margin-bottom: 15px;
     color: #2c3e50;
 }
 
-.tool-card p {
+.tools-list .tool-card p {
     margin-bottom: 20px;
     color: #7f8c8d;
     text-align: left;

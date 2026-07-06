@@ -3,7 +3,7 @@ const siteConfig = {
     logoText: 'TB',
     title: 'Tools',
     keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
-    description: 'Tool Basecamp — fast document conversion and developer utilities. PDF to Word, Word to PDF, Images to PDF, JSON to Java entity generator.',
+    description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
     adminEmail: 'admin@toolbasecamp.com',
     devPortalUrl: 'https://dev.toolbasecamp.com',
     pdfPortalUrl: 'https://pdf.toolbasecamp.com',
@@ -44,6 +44,12 @@ const portalsConfig = [
 const toolsConfig = {
     sectionTitle: 'Basecamp Tools',
     groups: [
+        {
+            title: 'Media Tools',
+            items: [
+                { title: 'Video to Images', url: 'html/media/video-to-images.html' }
+            ]
+        },
         {
             title: 'Document Tools',
             items: [

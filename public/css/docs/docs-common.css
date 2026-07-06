@@ -17,8 +17,10 @@
     color: #6b7280;
 }
 
-/* 主体卡片 */
+/* 主体卡片（工具页 — 占满内容区，勿用首页 300px 卡片宽） */
 .tool-card {
+    width: 100%;
+    max-width: none;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.08);
