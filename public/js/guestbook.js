@@ -154,7 +154,12 @@
         if (append && oldestId > 0) query += '&before_id=' + oldestId;
 
         authFetch('/guestbook/messages?' + query)
-            .then(function (res) { return res.json(); })
+            .then(function (res) {
+                return res.json().then(function (data) {
+                    if (!res.ok) throw new Error(data.detail || ('HTTP ' + res.status));
+                    return data;
+                });
+            })
             .then(function (data) {
                 hideLoading();
                 var messages = data.messages || [];
@@ -173,9 +178,9 @@
                 if (loadMoreWrap) loadMoreWrap.classList.toggle('hidden', !hasMore);
                 updateEmptyState();
             })
-            .catch(function () {
+            .catch(function (err) {
                 hideLoading();
-                if (!append) setStatus('Failed to load messages. Please try again.', true);
+                if (!append) setStatus((err && err.message) || 'Failed to load messages. Please try again.', true);
             })
             .finally(function () {
                 loading = false;

@@ -41,6 +41,8 @@ GUESTBOOK_MAX_GUEST_NAME_LEN = 20
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 
+_db_available = False
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -124,10 +126,27 @@ def ensure_tables():
 
 @app.on_event("startup")
 def _startup():
+    global _db_available
     try:
         ensure_tables()
+        _db_available = True
     except Exception as e:
         print(f"[startup] MySQL unavailable, auth/guestbook disabled: {e}")
+
+
+def require_db():
+    global _db_available
+    if _db_available:
+        return
+    try:
+        ensure_tables()
+        _db_available = True
+    except Exception as e:
+        print(f"[db] ensure_tables failed: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Guestbook service is temporarily unavailable. Please try again later.",
+        ) from e
 
 
 def hash_password(password: str) -> str:
@@ -247,11 +266,27 @@ def _serialize_guestbook_row(row: dict) -> dict:
 
 @app.get("/health")
 def health():
-    return {"ok": True, "service": "toolbasecamp-api", "ts": int(time.time())}
+    db_ok = False
+    if _db_available:
+        db_ok = True
+    else:
+        try:
+            conn = get_conn()
+            conn.close()
+            db_ok = True
+        except Exception:
+            db_ok = False
+    return {
+        "ok": True,
+        "service": "toolbasecamp-api",
+        "db": db_ok,
+        "ts": int(time.time()),
+    }
 
 
 @app.post("/auth/register")
 def register(body: RegisterBody):
+    require_db()
     email = (body.email or "").strip().lower()
     password = body.password or ""
 
@@ -285,6 +320,7 @@ def register(body: RegisterBody):
 
 @app.post("/auth/login")
 def login(body: LoginBody):
+    require_db()
     email = (body.email or "").strip().lower()
     password = body.password or ""
 
@@ -323,6 +359,7 @@ def change_password(
     body: ChangePasswordBody,
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
+    require_db()
     user = get_current_user(creds)
     old_password = body.old_password or ""
     new_password = body.new_password or ""
@@ -347,6 +384,7 @@ def change_password(
 
 @app.get("/auth/me")
 def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    require_db()
     user = get_current_user(creds)
     return {
         "success": True,
@@ -362,6 +400,7 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
 
 @app.get("/guestbook/messages")
 def guestbook_list_messages(before_id: int = 0, limit: int = GUESTBOOK_PAGE_SIZE):
+    require_db()
     lim = max(1, min(int(limit or GUESTBOOK_PAGE_SIZE), 100))
     rows: List[dict] = []
     has_more = False
@@ -409,6 +448,7 @@ def guestbook_send_message(
     body: GuestbookSendBody,
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
+    require_db()
     user = get_optional_user(creds)
     text = (body.content or "").strip()
     if not text:
@@ -452,6 +492,7 @@ def guestbook_delete_message(
     message_id: int,
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
+    require_db()
     admin = get_current_user(creds)
     require_admin(admin)
 

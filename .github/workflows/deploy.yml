@@ -121,6 +121,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-stirling-config.sh
           bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+          bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           systemctl restart toolbasecamp-api
           for i in 1 2 3 4 5; do
             if curl -sf http://127.0.0.1:8001/health; then
@@ -153,6 +154,20 @@ jobs:
           if [[ "$HTTP_CODE" == "200" ]] && grep -q 'base.js?v=' /tmp/main-vti.html; then
             echo "Tool page asset cache-bust OK."
           fi
+
+      - name: Verify guestbook API (public URL)
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/gb-api.json -w '%{http_code}' \
+            'https://toolbasecamp.com/api/guestbook/messages?limit=1' || echo '000')"
+          echo "guestbook API HTTPS $HTTP_CODE"
+          head -c 200 /tmp/gb-api.json || true
+          echo ""
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "::warning:: guestbook API returned $HTTP_CODE — check MySQL and ensure-api-db.sh on server."
+            exit 0
+          fi
+          echo "Guestbook API OK."
 
       - name: Verify dev portal (public URL)
         run: |
