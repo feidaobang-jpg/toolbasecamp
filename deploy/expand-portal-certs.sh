@@ -16,11 +16,14 @@ if [[ ! -f "$CERT_DIR/fullchain.pem" ]]; then
 fi
 
 echo "Expanding certificate for portal subdomains..."
-certbot certonly --nginx \
+if certbot certonly --nginx \
   -d toolbasecamp.com -d www.toolbasecamp.com \
   -d dev.toolbasecamp.com -d pdf.toolbasecamp.com \
   -d chef.toolbasecamp.com -d hoppscotch.toolbasecamp.com -d translate.toolbasecamp.com \
   --expand --non-interactive --agree-tos -m "$CERT_EMAIL" \
-  --keep-until-expiring || {
-    echo "WARNING: certbot expand failed — add DNS A records for new subdomains, then re-run deploy."
-  }
+  --keep-until-expiring; then
+  nginx -t && systemctl reload nginx
+  echo "Cert expanded and nginx reloaded."
+else
+  echo "WARNING: certbot expand failed — set new subdomains to DNS only (grey cloud) in Cloudflare, then re-run."
+fi

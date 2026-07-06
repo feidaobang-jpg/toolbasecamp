@@ -5,6 +5,13 @@ SITE_SRC="/opt/toolbasecamp-deploy/nginx-toolbasecamp-chef.conf"
 SITE="/etc/nginx/sites-available/toolbasecamp-chef"
 WEB_ROOT="/var/www/toolbasecamp-chef"
 
+if [[ ! -f "$WEB_ROOT/index.html" ]]; then
+  echo "ERROR: $WEB_ROOT/index.html missing — CyberChef not deployed yet."
+  echo "Re-run GitHub Actions deploy (Build CyberChef + Rsync chef portal), then run this script again."
+  ls -la "$WEB_ROOT" 2>/dev/null || true
+  exit 1
+fi
+
 bash /opt/toolbasecamp-deploy/expand-portal-certs.sh
 
 if [[ ! -f "$SITE_SRC" ]]; then
