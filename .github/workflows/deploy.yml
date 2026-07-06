@@ -106,6 +106,7 @@ jobs:
           systemctl daemon-reload
           systemctl enable toolbasecamp-api
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
+          bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
           bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh
           bash /opt/toolbasecamp-deploy/patch-stirling-config.sh
@@ -147,6 +148,10 @@ jobs:
             echo "::warning:: Public URL did not return next-tools HTML."
             exit 0
           fi
+          if ! grep -q 'portal-home-bar.js' /tmp/dev-public.html; then
+            echo "::warning:: dev portal missing portal-home-bar injection (nginx sub_filter)."
+            exit 0
+          fi
           echo "Dev portal OK."
 
       - name: Verify pdf portal (public URL)
@@ -163,6 +168,10 @@ jobs:
           fi
           if grep -q 'Tool Basecamp — Productivity Tools Hub' /tmp/pdf-public.html; then
             echo "::warning:: pdf URL shows main site — check nginx 443 vhost for pdf.toolbasecamp.com."
+            exit 0
+          fi
+          if ! grep -q 'portal-home-bar.js' /tmp/pdf-public.html; then
+            echo "::warning:: pdf portal missing portal-home-bar injection (nginx sub_filter)."
             exit 0
           fi
           echo "Pdf portal OK."

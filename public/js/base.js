@@ -1,27 +1,111 @@
 document.addEventListener('DOMContentLoaded', function () {
     renderSiteTitle();
     renderMenu();
+    renderToolBreadcrumb();
     initMenuEvents();
     initCopyButtons();
 });
 
-function renderSiteTitle() {
+function getToolRootPrefix() {
+    const path = window.location.pathname || '';
+    return path.includes('/html/') ? '../../' : '';
+}
+
+function resolveToolUrl(relativePath) {
+    const base = getToolRootPrefix();
+    const path = (relativePath || '').replace(/^\//, '');
+    return base + path;
+}
+
+function getCurrentToolContext() {
     const currentPath = window.location.pathname.toLowerCase();
-    let moduleTitle = (typeof siteConfig !== 'undefined' && siteConfig.siteName) ? siteConfig.siteName : 'Tool Basecamp';
+    const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase().split('?')[0];
+    let groupTitle = null;
+    let toolTitle = null;
 
     if (typeof toolsConfig !== 'undefined' && toolsConfig.groups) {
-        const currentFile = (window.location.pathname.split('/').pop() || '').toLowerCase().split('?')[0];
         for (const group of toolsConfig.groups) {
-            if (group.items && group.items.some(item => item.url.toLowerCase().endsWith(currentFile))) {
-                moduleTitle = group.title;
-                break;
+            if (!group.items) continue;
+            for (const item of group.items) {
+                const itemFile = item.url.toLowerCase().split('/').pop();
+                if (currentPath.endsWith(item.url.toLowerCase()) || currentPage === itemFile) {
+                    groupTitle = group.title;
+                    toolTitle = item.title;
+                    break;
+                }
             }
+            if (toolTitle) break;
         }
     }
 
-    document.title = moduleTitle;
+    return { groupTitle, toolTitle, currentPage };
+}
+
+function renderSiteTitle() {
+    const { groupTitle, toolTitle } = getCurrentToolContext();
+    let moduleTitle = (typeof siteConfig !== 'undefined' && siteConfig.siteName) ? siteConfig.siteName : 'Tool Basecamp';
+
+    if (groupTitle) {
+        moduleTitle = groupTitle;
+    }
+
+    if (toolTitle) {
+        document.title = toolTitle + ' - Tool Basecamp';
+    } else if (groupTitle) {
+        document.title = groupTitle + ' - Tool Basecamp';
+    } else {
+        document.title = moduleTitle;
+    }
+
     const logoTitleEl = document.querySelector('.logo h2');
     if (logoTitleEl) logoTitleEl.textContent = moduleTitle;
+}
+
+function renderToolBreadcrumb() {
+    const content = document.querySelector('.container .content');
+    if (!content || typeof toolsConfig === 'undefined') return;
+
+    const { groupTitle, toolTitle } = getCurrentToolContext();
+    if (!toolTitle) return;
+
+    const homeHref = resolveToolUrl((siteConfig && siteConfig.homeUrl) || 'index.html');
+    const toolsHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'tool.html');
+    const siteName = (siteConfig && siteConfig.siteName) || 'Tool Basecamp';
+
+    let bar = content.querySelector('.tool-breadcrumb');
+    if (!bar) {
+        bar = document.createElement('nav');
+        bar.className = 'tool-breadcrumb';
+        bar.setAttribute('aria-label', 'Breadcrumb');
+        const mobileBar = content.querySelector('.tool-mobile-bar');
+        if (mobileBar) {
+            mobileBar.insertAdjacentElement('afterend', bar);
+        } else {
+            content.insertBefore(bar, content.firstChild);
+        }
+    }
+
+    const parts = [
+        { label: 'Home', href: homeHref },
+        { label: 'Tools', href: toolsHref }
+    ];
+    if (groupTitle) {
+        parts.push({ label: groupTitle, href: null });
+    }
+    parts.push({ label: toolTitle, href: null });
+
+    bar.innerHTML = parts
+        .map((part, idx) => {
+            const isLast = idx === parts.length - 1;
+            const sep = isLast ? '' : '<span class="tool-breadcrumb-sep">/</span>';
+            if (part.href && !isLast) {
+                return '<a href="' + part.href + '">' + part.label + '</a>' + sep;
+            }
+            const cls = isLast ? ' tool-breadcrumb-current' : '';
+            const aria = isLast ? ' aria-current="page"' : '';
+            return '<span class="tool-breadcrumb-item' + cls + '"' + aria + '>' + part.label + '</span>' + sep;
+        })
+        .join('');
 }
 
 function renderMenu() {
@@ -31,26 +115,21 @@ function renderMenu() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const isInSubDir = currentPath.includes('/html/');
+    const { groupTitle: detectedGroupTitle } = getCurrentToolContext();
 
-    let detectedGroupTitle = null;
-    if (typeof toolsConfig !== 'undefined') {
-        const currentFileName = currentPage.split('?')[0];
-        for (const group of toolsConfig.groups) {
-            if (group.items && group.items.some(item => item.url.toLowerCase().endsWith(currentFileName))) {
-                detectedGroupTitle = group.title;
-                break;
-            }
-        }
-    }
+    const homeHref = resolveToolUrl((siteConfig && siteConfig.homeUrl) || 'index.html');
+    const toolsHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'tool.html');
+    const siteName = (siteConfig && siteConfig.siteName) || 'Tool Basecamp';
+    const logoText = (siteConfig && siteConfig.logoText) || 'TB';
 
-    let moduleTitle = detectedGroupTitle || ((typeof siteConfig !== 'undefined' && siteConfig.siteName) ? siteConfig.siteName : 'Tool Basecamp');
+    let moduleTitle = detectedGroupTitle || siteName;
 
     let menuItemsHTML = '';
     if (typeof toolsConfig !== 'undefined' && toolsConfig.groups && detectedGroupTitle) {
         toolsConfig.groups.forEach(group => {
             if (group.title !== detectedGroupTitle) return;
             if (group.title) {
-                menuItemsHTML += `<li class="menu-group-title">${group.title}</li>`;
+                menuItemsHTML += '<li class="menu-group-title">' + group.title + '</li>';
             }
             if (Array.isArray(group.items)) {
                 group.items.forEach(item => {
@@ -58,27 +137,28 @@ function renderMenu() {
                     if (isInSubDir) linkUrl = '../../' + item.url;
                     const itemUrlLower = item.url.toLowerCase();
                     const isActive = currentPath.endsWith(itemUrlLower) || currentPage === itemUrlLower.split('/').pop();
-                    menuItemsHTML += `<li${isActive ? ' class="active"' : ''}><a href="${linkUrl}">${item.title}</a></li>`;
+                    menuItemsHTML += '<li' + (isActive ? ' class="active"' : '') + '><a href="' + linkUrl + '">' + item.title + '</a></li>';
                 });
             }
         });
     }
 
-    sidebar.innerHTML = `
-        <div class="logo">
-            <div class="logo-header">
-                <div class="logo-badge">${(typeof siteConfig !== 'undefined' && siteConfig.logoText) || 'TB'}</div>
-                <h2>${moduleTitle}</h2>
-            </div>
-            <div id="sidebar-user-meta" class="user-meta"></div>
-        </div>
-        <nav class="menu">
-            <ul>${menuItemsHTML}</ul>
-        </nav>
-        <div style="padding:20px 10px;border-top:1px solid #f3f4f6;text-align:center;font-size:12px;color:#9ca3af;margin-top:auto;">
-            <p>&copy; 2026 ${(typeof siteConfig !== 'undefined' && siteConfig.siteName) || 'Tool Basecamp'}</p>
-        </div>
-    `;
+    sidebar.innerHTML =
+        '<div class="logo">' +
+            '<a class="logo-header logo-header-link" href="' + homeHref + '">' +
+                '<div class="logo-badge">' + logoText + '</div>' +
+                '<h2>' + moduleTitle + '</h2>' +
+            '</a>' +
+            '<div id="sidebar-user-meta" class="user-meta"></div>' +
+        '</div>' +
+        '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>' +
+        '<div class="sidebar-footer-nav">' +
+            '<a href="' + toolsHref + '">All tools</a>' +
+            '<a href="' + homeHref + '">Home</a>' +
+        '</div>' +
+        '<div class="sidebar-footer-copy">' +
+            '<p>&copy; 2026 ' + siteName + '</p>' +
+        '</div>';
 
     bindToolSidebarMobile(sidebar);
 }
@@ -87,9 +167,8 @@ function bindToolSidebarMobile(sidebar) {
     const content = document.querySelector('.container .content');
     if (!content || !sidebar) return;
 
-    const path = window.location.pathname || '';
-    const isInSubDir = path.includes('/html/');
-    const homeHref = isInSubDir ? '../../tool.html' : 'tool.html';
+    const homeHref = resolveToolUrl((siteConfig && siteConfig.homeUrl) || 'index.html');
+    const toolsHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'tool.html');
 
     let bar = content.querySelector('.tool-mobile-bar');
     if (!bar) {
@@ -98,7 +177,11 @@ function bindToolSidebarMobile(sidebar) {
         bar.innerHTML =
             '<button type="button" class="tool-menu-toggle" aria-label="Open menu">&#9776;</button>' +
             '<span class="tool-mobile-title"></span>' +
-            '<a class="tool-mobile-home" href="#">Tools</a>';
+            '<div class="tool-mobile-nav-links">' +
+                '<a class="tool-mobile-home" href="#">Home</a>' +
+                '<span class="tool-mobile-nav-sep">·</span>' +
+                '<a class="tool-mobile-tools" href="#">Tools</a>' +
+            '</div>';
         content.insertBefore(bar, content.firstChild);
     }
 
@@ -107,7 +190,9 @@ function bindToolSidebarMobile(sidebar) {
     if (titleEl && h2) titleEl.textContent = h2.textContent;
 
     const homeLink = bar.querySelector('.tool-mobile-home');
+    const toolsLink = bar.querySelector('.tool-mobile-tools');
     if (homeLink) homeLink.href = homeHref;
+    if (toolsLink) toolsLink.href = toolsHref;
 
     let overlay = document.getElementById('tool-sidebar-overlay');
     if (!overlay) {

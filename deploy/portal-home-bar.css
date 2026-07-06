@@ -1,0 +1,50 @@
+/* Fixed top bar on pdf / dev subdomains — injected via nginx */
+:root {
+  --portal-bar-height: 36px;
+}
+
+body.portal-has-home-bar {
+  padding-top: var(--portal-bar-height) !important;
+}
+
+#portal-home-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  height: var(--portal-bar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+#portal-home-bar a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#portal-home-bar a:hover {
+  color: #fff;
+}
+
+#portal-home-bar .portal-bar-sep {
+  color: #64748b;
+  margin: 0 10px;
+  font-size: 12px;
+}
+
+#portal-home-bar .portal-bar-hint {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 400;
+}
