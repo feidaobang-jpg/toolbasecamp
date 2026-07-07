@@ -21,8 +21,8 @@ fi
 python3 "$PATCH" "$TMP" "$OUT"
 rm -f "$TMP"
 
-if ! grep -q 'detectedLanguage' "$OUT"; then
-  echo "ERROR: patched app.js verification failed"
+if ! grep -q 'self.sourceLang === "undefined"' "$OUT"; then
+  echo "ERROR: patched app.js missing lang guard before translate request"
   exit 1
 fi
 

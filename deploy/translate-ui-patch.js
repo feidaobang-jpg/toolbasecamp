@@ -1,13 +1,12 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v8';
+  window.__tbTranslatePatch = 'v9';
 
   var swapLock = false;
 
   function normLang(code, fallback) {
-    if (!code || code === 'auto' || code === 'undefined' || code === 'null') {
-      return fallback || 'en';
-    }
+    if (!code || code === 'undefined' || code === 'null') return fallback || 'en';
+    if (code === 'auto') return 'auto';
     if (String(code).indexOf('zh') === 0) return 'zh';
     if (String(code).indexOf('en') === 0) return 'en';
     return fallback || 'en';
@@ -15,25 +14,15 @@
 
   function sanitizeApp(app) {
     if (!app) return;
-    app.sourceLang = normLang(app.sourceLang, 'en');
+    if (app.sourceLang !== 'auto') {
+      app.sourceLang = normLang(app.sourceLang, 'en');
+    } else if (!app.sourceLang || app.sourceLang === 'undefined') {
+      app.sourceLang = 'auto';
+    }
     app.targetLang = normLang(app.targetLang, 'zh');
-    if (app.sourceLang === app.targetLang) {
+    if (app.sourceLang !== 'auto' && app.sourceLang === app.targetLang) {
       app.targetLang = app.sourceLang === 'zh' ? 'en' : 'zh';
     }
-  }
-
-  function syncSelects(app) {
-    if (!app || !app.$nextTick) return;
-    app.$nextTick(function () {
-      try {
-        if (app.$refs.sourceLangDropdown && window.M) {
-          M.FormSelect.init(app.$refs.sourceLangDropdown);
-        }
-        if (app.$refs.targetLangDropdown && window.M) {
-          M.FormSelect.init(app.$refs.targetLangDropdown);
-        }
-      } catch (err) { /* ignore */ }
-    });
   }
 
   function runSwap(app, e) {
@@ -55,12 +44,12 @@
     var tgt = app.targetLang;
     var src = app.sourceLang;
 
-    if (app.sourceLang === 'auto' || src === 'auto') {
+    if (src === 'auto') {
       try {
         if (app.output) {
           var res = JSON.parse(app.output);
           if (res.detectedLanguage && res.detectedLanguage.language) {
-            src = normLang(res.detectedLanguage.language, src);
+            src = normLang(res.detectedLanguage.language, 'en');
           }
         }
       } catch (err) { /* ignore */ }
@@ -78,7 +67,6 @@
     app.translatedText = '';
     app.output = '';
     sanitizeApp(app);
-    syncSelects(app);
 
     if (typeof app.handleInput === 'function') {
       app.handleInput(e || new Event('click'));
@@ -92,7 +80,6 @@
     app.swapLangs = function (ev) {
       if (ev && ev.preventDefault) ev.preventDefault();
     };
-
     if (app.$options && app.$options.methods) {
       app.$options.methods.swapLangs = app.swapLangs;
     }

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Patch LibreTranslate app.js swapLangs for auto-detect + en/zh only."""
+"""Patch LibreTranslate app.js: swapLangs + guard translate requests."""
 from __future__ import annotations
 
 import re
 import sys
 from pathlib import Path
 
-FIXED = r"""swapLangs: function(e){
+SWAP_FIXED = r"""swapLangs: function(e){
                 this.closeSuggestTranslation(e);
 
                 var tgt = this.targetLang;
@@ -39,7 +39,25 @@ FIXED = r"""swapLangs: function(e){
                 this.handleInput(e);
             }"""
 
-PATTERN = re.compile(r"swapLangs: function\(e\)\{[\s\S]*?\n            \},")
+LANG_GUARD = r"""if (!self.targetLang || self.targetLang === "undefined") self.targetLang = "zh";
+                    if (!self.sourceLang || self.sourceLang === "undefined") self.sourceLang = "auto";
+                    if (self.sourceLang !== "auto") {
+                        if (self.sourceLang.indexOf("zh") === 0) self.sourceLang = "zh";
+                        else if (self.sourceLang.indexOf("en") === 0) self.sourceLang = "en";
+                        else self.sourceLang = "en";
+                    }
+                    if (self.targetLang.indexOf("zh") === 0) self.targetLang = "zh";
+                    else if (self.targetLang.indexOf("en") === 0) self.targetLang = "en";
+                    else self.targetLang = "zh";
+                    if (self.sourceLang !== "auto" && self.sourceLang === self.targetLang) {
+                        self.targetLang = self.sourceLang === "zh" ? "en" : "zh";
+                    }
+                    """
+
+SWAP_PATTERN = re.compile(r"swapLangs: function\(e\)\{[\s\S]*?\n            \},")
+APPEND_PATTERN = re.compile(
+    r"(var data = new FormData\(\);\s*\n\s*)data\.append\(\"q\", self\.inputText\);"
+)
 
 
 def main() -> int:
@@ -47,17 +65,20 @@ def main() -> int:
         print("Usage: patch_libretranslate_app.py INPUT.js OUTPUT.js", file=sys.stderr)
         return 1
 
-    src = Path(sys.argv[1])
-    dst = Path(sys.argv[2])
-    text = src.read_text(encoding="utf-8")
+    text = Path(sys.argv[1]).read_text(encoding="utf-8")
 
-    new_text, n = PATTERN.subn(FIXED + ",", text, count=1)
-    if n != 1:
-        print("ERROR: swapLangs block not found in app.js", file=sys.stderr)
+    text, n_swap = SWAP_PATTERN.subn(SWAP_FIXED + ",", text, count=1)
+    if n_swap != 1:
+        print("ERROR: swapLangs block not found", file=sys.stderr)
         return 1
 
-    dst.write_text(new_text, encoding="utf-8")
-    print(f"OK: patched {dst}")
+    text, n_guard = APPEND_PATTERN.subn(r"\1" + LANG_GUARD + r'data.append("q", self.inputText);', text, count=1)
+    if n_guard != 1:
+        print("ERROR: handleInput FormData block not found", file=sys.stderr)
+        return 1
+
+    Path(sys.argv[2]).write_text(text, encoding="utf-8")
+    print(f"OK: patched {sys.argv[2]}")
     return 0
 
 
