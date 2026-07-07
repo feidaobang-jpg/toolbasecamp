@@ -1,12 +1,14 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v6';
+  window.__tbTranslatePatch = 'v7';
 
-  function normLang(code) {
-    if (!code || code === 'auto') return code;
+  function normLang(code, fallback) {
+    if (!code || code === 'auto' || code === 'undefined') {
+      return fallback || 'en';
+    }
     if (code.indexOf('zh') === 0) return 'zh';
     if (code.indexOf('en') === 0) return 'en';
-    return code;
+    return fallback || code;
   }
 
   function runSwap(app, e) {
@@ -21,39 +23,31 @@
       app.closeSuggestTranslation(e || { preventDefault: function () {} });
     }
 
-    var src = normLang(app.sourceLang);
-    var tgt = normLang(app.targetLang);
+    var tgt = normLang(app.targetLang, 'zh');
+    var src = normLang(app.sourceLang, 'en');
 
     if (app.sourceLang === 'auto') {
       try {
         if (app.output) {
           var res = JSON.parse(app.output);
           if (res.detectedLanguage && res.detectedLanguage.language) {
-            src = normLang(res.detectedLanguage.language);
+            src = normLang(res.detectedLanguage.language, src);
           }
         }
       } catch (err) { /* ignore */ }
     }
 
-    if (app.sourceLang === 'auto' || !src || src === 'auto') {
-      app.sourceLang = tgt;
-      app.targetLang = tgt === 'zh' ? 'en' : 'zh';
-    } else {
-      app.sourceLang = tgt;
-      app.targetLang = src;
-      if (app.sourceLang === app.targetLang) {
-        app.targetLang = app.sourceLang === 'zh' ? 'en' : 'zh';
-      }
+    if (app.sourceLang === 'auto' || !src) {
+      src = tgt === 'zh' ? 'en' : 'zh';
     }
 
-    app.sourceLang = normLang(app.sourceLang);
-    app.targetLang = normLang(app.targetLang);
+    app.sourceLang = tgt;
+    app.targetLang = src === tgt ? (tgt === 'zh' ? 'en' : 'zh') : src;
     app.detectedLangText = '';
 
     if (app.translatedText) {
       app.inputText = app.translatedText;
     }
-
     app.translatedText = '';
     app.output = '';
 
@@ -62,13 +56,9 @@
     }
   }
 
-  function isSwapClick(target) {
-    if (!target || !target.closest) return false;
-    return !!target.closest('.btn-switch-language, a[aria-label*="Swap"], button[aria-label*="Swap"]');
-  }
-
   document.addEventListener('click', function (e) {
-    if (!isSwapClick(e.target)) return;
+    if (!e.target || !e.target.closest) return;
+    if (!e.target.closest('.btn-switch-language, a[aria-label*="Swap"], button[aria-label*="Swap"]')) return;
     runSwap(window._vueApp, e);
   }, true);
 

@@ -9,7 +9,10 @@ from pathlib import Path
 FIXED = r"""swapLangs: function(e){
                 this.closeSuggestTranslation(e);
 
-                var src = this.sourceLang;
+                var tgt = this.targetLang || "zh";
+                var src = this.sourceLang || "en";
+                if (tgt.indexOf("zh") === 0) tgt = "zh";
+                else if (tgt.indexOf("en") === 0) tgt = "en";
                 if (src === "auto" && this.output) {
                     try {
                         var _tb = JSON.parse(this.output);
@@ -19,31 +22,15 @@ FIXED = r"""swapLangs: function(e){
                     } catch (err) {}
                 }
                 if (src && src.indexOf("zh") === 0) src = "zh";
-                if (src && src.indexOf("en") === 0) src = "en";
+                else if (src && src.indexOf("en") === 0) src = "en";
+                if (src === "auto" || !src) src = tgt === "zh" ? "en" : "zh";
 
-                if (this.sourceLang === "auto" || !src || src === "auto") {
-                    this.sourceLang = this.targetLang;
-                    this.targetLang = this.targetLang === "zh" ? "en" : "zh";
-                } else {
-                    var tgtLang = this.langs.find(function(l){ return l.code === this.targetLang; }.bind(this));
-                    if (!tgtLang || !tgtLang.targets || tgtLang.targets.indexOf(src) === -1) {
-                        this.sourceLang = this.targetLang;
-                        this.targetLang = src;
-                    } else {
-                        var t = src;
-                        this.sourceLang = this.targetLang;
-                        this.targetLang = t;
-                    }
-                    if (this.sourceLang === this.targetLang) {
-                        this.targetLang = this.sourceLang === "zh" ? "en" : "zh";
-                    }
-                }
+                var newSrc = tgt;
+                var newTgt = src;
+                if (newSrc === newTgt) newTgt = newSrc === "zh" ? "en" : "zh";
 
-                if (this.sourceLang && this.sourceLang.indexOf("zh") === 0) this.sourceLang = "zh";
-                if (this.targetLang && this.targetLang.indexOf("zh") === 0) this.targetLang = "zh";
-                if (this.sourceLang && this.sourceLang.indexOf("en") === 0) this.sourceLang = "en";
-                if (this.targetLang && this.targetLang.indexOf("en") === 0) this.targetLang = "en";
-
+                this.sourceLang = newSrc;
+                this.targetLang = newTgt;
                 this.detectedLangText = "";
                 this.inputText = this.translatedText;
                 this.translatedText = "";
