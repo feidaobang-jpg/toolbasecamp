@@ -105,6 +105,8 @@ Requires **~2GB RAM** for Postgres + app. First deploy generates `hoppscotch.env
 
 [LibreTranslate](https://github.com/LibreTranslate/LibreTranslate) (AGPL) in Docker on `127.0.0.1:5000`, languages **en + zh only** (`LT_LOAD_ONLY`) to limit memory (~2GB cap).
 
+**Portal UX:** typing no longer auto-translates — click the **Translate** button. API request/response panels are hidden (`LT_HIDE_API`). Public programmatic access to `/translate` is blocked at nginx (POST requires Referer from this portal); rate limit 30 req/min per IP.
+
 | Name | Type | Content | Proxy |
 |------|------|---------|-------|
 | `translate` | A | same server IP | Proxied OK |

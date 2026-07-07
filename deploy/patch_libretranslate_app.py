@@ -36,7 +36,6 @@ SWAP_FIXED = r"""swapLangs: function(e){
                 this.detectedLangText = "";
                 this.inputText = this.translatedText;
                 this.translatedText = "";
-                this.handleInput(e);
             }"""
 
 LANG_GUARD = r"""if (!self.targetLang || self.targetLang === "undefined") self.targetLang = "zh";

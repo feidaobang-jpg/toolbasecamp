@@ -36,6 +36,7 @@ needs_recreate() {
   local env
   env="$(docker inspect "$CONTAINER" --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null || true)"
   echo "$env" | grep -q 'LT_LOAD_ONLY=en,zh' || return 0
+  echo "$env" | grep -q 'LT_HIDE_API=true' || return 0
   if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER"; then
     return 0
   fi
@@ -51,6 +52,9 @@ run_libretranslate() {
     --memory "$MEM_LIMIT" \
     -e LT_LOAD_ONLY=en,zh \
     -e LT_DISABLE_WEB_UI=false \
+    -e LT_HIDE_API=true \
+    -e LT_SUGGESTIONS=false \
+    -e LT_REQ_LIMIT=30 \
     "$IMAGE"
 }
 

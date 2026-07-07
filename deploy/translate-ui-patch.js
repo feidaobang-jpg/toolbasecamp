@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v9';
+  window.__tbTranslatePatch = 'v10';
 
   var swapLock = false;
 
@@ -23,6 +23,35 @@
     if (app.sourceLang !== 'auto' && app.sourceLang === app.targetLang) {
       app.targetLang = app.sourceLang === 'zh' ? 'en' : 'zh';
     }
+  }
+
+  function syncInputState(app) {
+    sanitizeApp(app);
+    if (typeof app.updateQueryParam === 'function') {
+      app.updateQueryParam('source', app.sourceLang);
+      app.updateQueryParam('target', app.targetLang);
+      app.updateQueryParam('q', app.inputText);
+    }
+    if (app.timeout) {
+      clearTimeout(app.timeout);
+      app.timeout = null;
+    }
+    app.detectedLangText = '';
+    if (app.inputText === '') {
+      app.translatedText = '';
+      app.output = '';
+      if (typeof app.abortPreviousTransRequest === 'function') {
+        app.abortPreviousTransRequest();
+      }
+      app.loadingTranslation = false;
+    }
+  }
+
+  function runTranslate(app) {
+    if (!app || typeof app.handleInput !== 'function') return;
+    sanitizeApp(app);
+    app._tbAllowTranslate = true;
+    app.handleInput(new Event('click'));
   }
 
   function runSwap(app, e) {
@@ -67,10 +96,57 @@
     app.translatedText = '';
     app.output = '';
     sanitizeApp(app);
+    syncInputState(app);
+  }
 
-    if (typeof app.handleInput === 'function') {
-      app.handleInput(e || new Event('click'));
+  function injectStyles() {
+    if (document.getElementById('tb-translate-patch-style')) return;
+    var style = document.createElement('style');
+    style.id = 'tb-translate-patch-style';
+    style.textContent = [
+      '.tb-translate-btn {',
+      '  margin-left: 12px;',
+      '  vertical-align: middle;',
+      '}',
+      '.tb-translate-row {',
+      '  display: flex;',
+      '  align-items: center;',
+      '  flex-wrap: wrap;',
+      '  gap: 8px;',
+      '  margin: 8px 0 12px;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  function injectTranslateButton(app) {
+    if (document.querySelector('.tb-translate-btn')) return true;
+
+    var swap = document.querySelector('.btn-switch-language');
+    if (!swap) return false;
+
+    injectStyles();
+
+    var row = document.createElement('div');
+    row.className = 'tb-translate-row';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn waves-effect waves-light tb-translate-btn';
+    btn.innerHTML = '<i class="material-icons left">translate</i>Translate';
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      runTranslate(app);
+    });
+
+    row.appendChild(btn);
+    var anchor = swap.closest('.col') || swap.parentElement;
+    if (anchor && anchor.parentElement) {
+      anchor.parentElement.insertBefore(row, anchor.nextSibling);
+    } else if (swap.parentElement) {
+      swap.parentElement.appendChild(row);
     }
+    return true;
   }
 
   function patchApp(app) {
@@ -86,9 +162,15 @@
 
     var origHandle = app.handleInput.bind(app);
     app.handleInput = function (ev) {
-      sanitizeApp(this);
-      return origHandle(ev);
+      if (this._tbAllowTranslate) {
+        this._tbAllowTranslate = false;
+        sanitizeApp(this);
+        return origHandle(ev);
+      }
+      syncInputState(this);
     };
+
+    injectTranslateButton(app);
   }
 
   document.addEventListener('click', function (e) {
@@ -99,7 +181,10 @@
 
   var tries = 0;
   var timer = setInterval(function () {
-    if (window._vueApp) patchApp(window._vueApp);
+    if (window._vueApp) {
+      patchApp(window._vueApp);
+      injectTranslateButton(window._vueApp);
+    }
     if (++tries > 200) clearInterval(timer);
   }, 100);
 })();
