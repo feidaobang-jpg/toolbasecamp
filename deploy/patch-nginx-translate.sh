@@ -19,5 +19,17 @@ systemctl reload nginx
 
 CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: translate.toolbasecamp.com' || echo 000)"
 echo "translate.toolbasecamp.com HTTP $CODE"
-[[ "$CODE" == "200" ]] || exit 1
-echo "OK: translate.toolbasecamp.com"
+
+HTTPS_BODY="$(curl -sk https://127.0.0.1/ -H 'Host: translate.toolbasecamp.com' || true)"
+if echo "$HTTPS_BODY" | grep -qE '子站入口|Portals|Productivity Tools Hub'; then
+  echo "ERROR: HTTPS serves main site — run expand-portal-certs.sh (grey-cloud DNS helps)."
+  exit 1
+fi
+
+if [[ "$CODE" == "200" ]] || echo "$HTTPS_BODY" | grep -qi 'libretranslate\|translate'; then
+  echo "OK: translate.toolbasecamp.com"
+else
+  echo "WARNING: translate check HTTP $CODE — is Docker running on :5000?"
+  docker ps --filter name=libretranslate 2>/dev/null || true
+  exit 1
+fi
