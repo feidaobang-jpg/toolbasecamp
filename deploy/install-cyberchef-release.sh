@@ -51,9 +51,9 @@ echo "Downloading ${ASSET_URL}"
 curl -fsSL -o "$TMP/cyberchef.zip" "$ASSET_URL"
 unzip -q "$TMP/cyberchef.zip" -d "$TMP/extract"
 
-INDEX="$(find "$TMP/extract" -type f -name index.html | head -1)"
+INDEX="$(find "$TMP/extract" -type f \( -name index.html -o -name index.html.gz \) | head -1)"
 if [[ -z "$INDEX" || ! -f "$INDEX" ]]; then
-  echo "ERROR: index.html not found inside release zip"
+  echo "ERROR: index.html / index.html.gz not found inside release zip"
   find "$TMP/extract" -maxdepth 3 -type f | head -20 || true
   exit 1
 fi
@@ -63,6 +63,18 @@ mkdir -p "$WEB_ROOT"
 find "$WEB_ROOT" -mindepth 1 -maxdepth 1 ! -name 'portal-home-bar.css' ! -name 'portal-home-bar.js' \
   -exec rm -rf {} + 2>/dev/null || true
 cp -a "$SRC"/. "$WEB_ROOT/"
+
+# CyberChef v11+ release ships index.html.gz (precompressed for static hosts)
+if [[ -f "$WEB_ROOT/index.html.gz" && ! -f "$WEB_ROOT/index.html" ]]; then
+  echo "Decompressing index.html.gz → index.html"
+  gunzip -f "$WEB_ROOT/index.html.gz"
+fi
+
+if [[ ! -f "$WEB_ROOT/index.html" ]]; then
+  echo "ERROR: index.html still missing after extract"
+  ls -la "$WEB_ROOT" | head -20 || true
+  exit 1
+fi
 chown -R www-data:www-data "$WEB_ROOT"
 chmod -R a+rX "$WEB_ROOT"
 find "$WEB_ROOT" -type f -exec chmod a+r {} +

@@ -91,11 +91,15 @@ jobs:
           fi
           curl -fsSL -o /tmp/cyberchef-bundle.zip "$ASSET_URL"
           unzip -q /tmp/cyberchef-bundle.zip -d /tmp/cyberchef-bundle
-          CHEF_DIR="$(dirname "$(find /tmp/cyberchef-bundle -type f -name index.html | head -1)")"
-          if [[ -z "$CHEF_DIR" || ! -f "$CHEF_DIR/index.html" ]]; then
-            echo "::error:: index.html not found in release zip"
+          CHEF_INDEX="$(find /tmp/cyberchef-bundle -type f \( -name index.html -o -name index.html.gz \) | head -1)"
+          CHEF_DIR="$(dirname "$CHEF_INDEX")"
+          if [[ -z "$CHEF_DIR" || ! -f "$CHEF_DIR/index.html" && ! -f "$CHEF_DIR/index.html.gz" ]]; then
+            echo "::error:: index.html / index.html.gz not found in release zip"
             find /tmp/cyberchef-bundle -maxdepth 3 -type f | head -20 || true
             exit 1
+          fi
+          if [[ -f "$CHEF_DIR/index.html.gz" && ! -f "$CHEF_DIR/index.html" ]]; then
+            gunzip -f "$CHEF_DIR/index.html.gz"
           fi
           echo "CHEF_DIR=$CHEF_DIR" >> "$GITHUB_ENV"
 
