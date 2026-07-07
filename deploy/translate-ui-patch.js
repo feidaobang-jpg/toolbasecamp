@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v10';
+  window.__tbTranslatePatch = 'v11';
 
   var swapLock = false;
 
@@ -99,52 +99,90 @@
     syncInputState(app);
   }
 
+  function findTextareaRow() {
+    var ta1 = document.getElementById('textarea1');
+    var ta2 = document.getElementById('textarea2');
+    if (!ta1 || !ta2) return null;
+
+    var row = ta1.closest('.row');
+    while (row) {
+      if (row.contains(ta2)) return row;
+      row = row.parentElement ? row.parentElement.closest('.row') : null;
+    }
+    return ta1.closest('.textarea-container');
+  }
+
   function injectStyles() {
     if (document.getElementById('tb-translate-patch-style')) return;
     var style = document.createElement('style');
     style.id = 'tb-translate-patch-style';
     style.textContent = [
-      '.tb-translate-btn {',
-      '  margin-left: 12px;',
-      '  vertical-align: middle;',
-      '}',
-      '.tb-translate-row {',
+      '#tb-translate-bar {',
       '  display: flex;',
+      '  justify-content: center;',
       '  align-items: center;',
-      '  flex-wrap: wrap;',
+      '  width: 100%;',
+      '  margin: 20px 0 28px;',
+      '  padding: 0 16px;',
+      '  box-sizing: border-box;',
+      '  clear: both;',
+      '}',
+      '.tb-translate-btn {',
+      '  display: inline-flex !important;',
+      '  align-items: center;',
+      '  justify-content: center;',
       '  gap: 8px;',
-      '  margin: 8px 0 12px;',
+      '  min-width: 160px;',
+      '  height: 46px;',
+      '  padding: 0 24px !important;',
+      '  overflow: visible;',
+      '  line-height: 1;',
+      '  float: none !important;',
+      '  margin: 0 !important;',
+      '}',
+      '.tb-translate-btn .material-icons {',
+      '  float: none !important;',
+      '  margin: 0 !important;',
+      '  line-height: 1;',
+      '  font-size: 22px;',
+      '  width: auto;',
+      '  height: auto;',
+      '}',
+      '.tb-translate-btn span {',
+      '  line-height: 1;',
       '}'
     ].join('\n');
     document.head.appendChild(style);
   }
 
   function injectTranslateButton(app) {
-    if (document.querySelector('.tb-translate-btn')) return true;
-
-    var swap = document.querySelector('.btn-switch-language');
-    if (!swap) return false;
+    var anchorRow = findTextareaRow();
+    if (!anchorRow) return false;
 
     injectStyles();
 
-    var row = document.createElement('div');
-    row.className = 'tb-translate-row';
-
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'btn waves-effect waves-light tb-translate-btn';
-    btn.innerHTML = '<i class="material-icons left">translate</i>Translate';
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      runTranslate(app);
+    document.querySelectorAll('.tb-translate-row').forEach(function (el) {
+      el.remove();
     });
 
-    row.appendChild(btn);
-    var anchor = swap.closest('.col') || swap.parentElement;
-    if (anchor && anchor.parentElement) {
-      anchor.parentElement.insertBefore(row, anchor.nextSibling);
-    } else if (swap.parentElement) {
-      swap.parentElement.appendChild(row);
+    var bar = document.getElementById('tb-translate-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'tb-translate-bar';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn waves-effect waves-light tb-translate-btn';
+      btn.innerHTML = '<i class="material-icons">translate</i><span>Translate</span>';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        runTranslate(app);
+      });
+      bar.appendChild(btn);
+    }
+
+    if (anchorRow.nextElementSibling !== bar) {
+      anchorRow.parentNode.insertBefore(bar, anchorRow.nextSibling);
     }
     return true;
   }
