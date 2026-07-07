@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v4';
+  window.__tbTranslatePatch = 'v5';
 
   function runSwap(app, e) {
     if (e) {
@@ -14,8 +14,8 @@
       app.closeSuggestTranslation(e || { preventDefault: function () {} });
     }
 
-    var tgt = app.targetLang;
     var src = app.sourceLang;
+    var tgt = app.targetLang;
 
     if (src === 'auto') {
       try {
@@ -51,19 +51,11 @@
 
   function isSwapClick(target) {
     if (!target || !target.closest) return false;
-    var node = target;
-    for (var depth = 0; depth < 6 && node; depth++) {
-      var icons = node.querySelectorAll
-        ? node.querySelectorAll('i, span, .material-icons, .material-symbols-outlined')
-        : [];
-      var selfText = (node.textContent || '').trim();
-      if (selfText === 'swap_horiz') return true;
-      for (var i = 0; i < icons.length; i++) {
-        if ((icons[i].textContent || '').trim() === 'swap_horiz') return true;
-      }
-      if (node.getAttribute && node.getAttribute('aria-label') === 'swap_horiz') return true;
-      node = node.parentElement;
-    }
+    if (target.closest('.btn-switch-language')) return true;
+    var el = target.closest('a[aria-label*="Swap"], button[aria-label*="Swap"]');
+    if (el) return true;
+    var icon = target.closest('i.material-icons, span.material-icons');
+    if (icon && (icon.textContent || '').indexOf('swap_horiz') !== -1) return true;
     return false;
   }
 
@@ -74,13 +66,12 @@
 
   function patchVueMethod() {
     var app = window._vueApp;
-    if (!app || app._tbSwapPatched) return;
+    if (!app) return;
     var fixed = function (ev) { runSwap(this, ev); };
     app.swapLangs = fixed;
     if (app.$options && app.$options.methods) {
       app.$options.methods.swapLangs = fixed;
     }
-    app._tbSwapPatched = true;
   }
 
   var tries = 0;
