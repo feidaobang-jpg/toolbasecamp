@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mind Map - Tool Basecamp</title>
-    <meta name="description" content="Turn Markdown headings into an interactive mind map in your browser.">
+    <meta name="description" content="Visual mind map editor — click to add nodes, drag to arrange. Runs in your browser.">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="../../css/diagram/diagram-tools.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mind-elixir@5.0.4/dist/style.css">
 </head>
 <body>
     <div class="container">
@@ -15,34 +16,32 @@
             <div class="diagram-tool">
                 <div class="diagram-tool-header">
                     <h2 data-i18n="tools.mindmap.title">Mind Map</h2>
-                    <p data-i18n="tools.mindmap.desc">Paste Markdown with headings and lists — render an interactive mind map locally.</p>
+                    <p data-i18n="tools.mindmap.desc">Visual mind map — double-click to edit, use toolbar or shortcuts to add nodes.</p>
                 </div>
 
-                <div class="diagram-privacy" data-i18n="tools.mindmap.privacy">Your text stays in the browser. Nothing is sent to a server.</div>
+                <div class="diagram-privacy" data-i18n="tools.mindmap.privacy">Your map stays in the browser. Nothing is uploaded to our server.</div>
+
+                <div class="diagram-tips">
+                    <span data-i18n="tools.mindmap.tipsTitle">Tips:</span>
+                    <ul>
+                        <li data-i18n="tools.mindmap.tip1">Double-click a node to edit text</li>
+                        <li data-i18n="tools.mindmap.tip2">Tab — add child node · Enter — add sibling · Delete — remove</li>
+                        <li data-i18n="tools.mindmap.tip3">Use the floating toolbar to zoom, expand/collapse, or export PNG</li>
+                    </ul>
+                </div>
 
                 <div class="diagram-actions">
-                    <button type="button" id="render-btn" class="btn-primary" data-i18n="tools.mindmap.render">Render</button>
-                    <button type="button" id="fit-btn" class="btn-secondary" data-i18n="tools.mindmap.fit">Fit view</button>
-                    <button type="button" id="download-btn" class="btn-secondary" data-i18n="tools.mindmap.downloadSvg">Download SVG</button>
-                    <button type="button" id="clear-btn" class="btn-secondary" data-i18n="tools.mindmap.clear">Clear</button>
+                    <button type="button" id="new-btn" class="btn-secondary" data-i18n="tools.mindmap.newMap">New map</button>
+                    <button type="button" id="export-png-btn" class="btn-primary" data-i18n="tools.mindmap.exportPng">Export PNG</button>
+                    <button type="button" id="export-json-btn" class="btn-secondary" data-i18n="tools.mindmap.exportJson">Export JSON</button>
+                    <button type="button" id="import-json-btn" class="btn-secondary" data-i18n="tools.mindmap.importJson">Import JSON</button>
+                    <input type="file" id="import-file" accept=".json,application/json" hidden>
                 </div>
 
                 <div id="error-box" class="diagram-error" role="alert"></div>
 
-                <div class="diagram-workspace">
-                    <div class="diagram-panel">
-                        <div class="diagram-panel-label" data-i18n="tools.mindmap.inputLabel">Markdown</div>
-                        <textarea id="md-input" class="diagram-editor" spellcheck="false"></textarea>
-                    </div>
-                    <div class="diagram-panel">
-                        <div class="diagram-panel-label" data-i18n="tools.mindmap.previewLabel">Mind map</div>
-                        <div class="diagram-preview">
-                            <div class="diagram-preview-empty" id="preview-empty" data-i18n="tools.mindmap.previewEmpty">Click Render to preview</div>
-                            <div class="diagram-preview-inner">
-                                <svg id="markmap-svg"></svg>
-                            </div>
-                        </div>
-                    </div>
+                <div class="diagram-canvas-wrap">
+                    <div id="mindmap-root"></div>
                 </div>
             </div>
         </main>

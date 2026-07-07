@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mermaid Diagram - Tool Basecamp</title>
-    <meta name="description" content="Render flowcharts, sequence diagrams, and more from Mermaid syntax in your browser.">
+    <title>Flowchart Editor - Tool Basecamp</title>
+    <meta name="description" content="Visual flowchart and diagram editor — drag shapes, insert tables, export PNG/SVG.">
     <link rel="stylesheet" href="../../css/base.css">
     <link rel="stylesheet" href="../../css/diagram/diagram-tools.css">
 </head>
@@ -14,32 +14,23 @@
         <main class="content">
             <div class="diagram-tool">
                 <div class="diagram-tool-header">
-                    <h2 data-i18n="tools.mermaid.title">Mermaid Diagram</h2>
-                    <p data-i18n="tools.mermaid.desc">Write Mermaid syntax to preview flowcharts, sequence diagrams, and more.</p>
+                    <h2 data-i18n="tools.flowchart.title">Flowchart & Diagram</h2>
+                    <p data-i18n="tools.flowchart.desc">Drag shapes from the left panel, insert tables and connectors — full visual editor.</p>
                 </div>
 
-                <div class="diagram-privacy" data-i18n="tools.mermaid.privacy">Your diagram code stays in the browser. Nothing is sent to a server.</div>
+                <div class="diagram-privacy" data-i18n="tools.flowchart.privacy">Diagrams are edited in your browser. Export via File menu inside the editor (PNG, SVG, PDF).</div>
 
-                <div class="diagram-actions">
-                    <button type="button" id="render-btn" class="btn-primary" data-i18n="tools.mermaid.render">Render</button>
-                    <button type="button" id="download-btn" class="btn-secondary" data-i18n="tools.mermaid.downloadSvg">Download SVG</button>
-                    <button type="button" id="clear-btn" class="btn-secondary" data-i18n="tools.mermaid.clear">Clear</button>
+                <div class="diagram-tips">
+                    <span data-i18n="tools.flowchart.tipsTitle">Tips:</span>
+                    <ul>
+                        <li data-i18n="tools.flowchart.tip1">Drag shapes from the left library onto the canvas</li>
+                        <li data-i18n="tools.flowchart.tip2">Arrange → Insert → Table to add a table</li>
+                        <li data-i18n="tools.flowchart.tip3">File → Export to save as PNG, SVG, or PDF</li>
+                    </ul>
                 </div>
 
-                <div id="error-box" class="diagram-error" role="alert"></div>
-
-                <div class="diagram-workspace">
-                    <div class="diagram-panel">
-                        <div class="diagram-panel-label" data-i18n="tools.mermaid.inputLabel">Mermaid code</div>
-                        <textarea id="mermaid-input" class="diagram-editor" spellcheck="false"></textarea>
-                    </div>
-                    <div class="diagram-panel">
-                        <div class="diagram-panel-label" data-i18n="tools.mermaid.previewLabel">Preview</div>
-                        <div class="diagram-preview">
-                            <div class="diagram-preview-empty" id="preview-empty" data-i18n="tools.mermaid.previewEmpty">Click Render to preview</div>
-                            <div id="mermaid-output" class="diagram-preview-inner"></div>
-                        </div>
-                    </div>
+                <div class="diagram-canvas-wrap">
+                    <iframe id="drawio-frame" class="diagram-embed-frame" title="Flowchart editor"></iframe>
                 </div>
             </div>
         </main>
@@ -51,6 +42,6 @@
     <script src="../../js/config.js"></script>
     <script src="../../js/base.js"></script>
     <script src="../../js/common_ui.js"></script>
-    <script type="module" src="../../js/diagram/mermaid.js"></script>
+    <script src="../../js/diagram/flowchart.js"></script>
 </body>
 </html>

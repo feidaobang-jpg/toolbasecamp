@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreadsheet - Tool Basecamp</title>
+    <meta name="description" content="Click-to-edit spreadsheet in your browser — like a lightweight Excel.">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/diagram/diagram-tools.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/x-data-spreadsheet@1.1.9/dist/xspreadsheet.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar"></aside>
+        <main class="content">
+            <div class="diagram-tool">
+                <div class="diagram-tool-header">
+                    <h2 data-i18n="tools.spreadsheet.title">Spreadsheet</h2>
+                    <p data-i18n="tools.spreadsheet.desc">Click cells to edit — toolbar for formatting, merge, and formulas.</p>
+                </div>
+
+                <div class="diagram-privacy" data-i18n="tools.spreadsheet.privacy">Data stays in your browser. Export JSON to save locally.</div>
+
+                <div class="diagram-tips">
+                    <span data-i18n="tools.spreadsheet.tipsTitle">Tips:</span>
+                    <ul>
+                        <li data-i18n="tools.spreadsheet.tip1">Click any cell to type — use toolbar for bold, colors, merge</li>
+                        <li data-i18n="tools.spreadsheet.tip2">Bottom tabs to add sheets (+ icon)</li>
+                        <li data-i18n="tools.spreadsheet.tip3">Export JSON to save, Import JSON to restore</li>
+                    </ul>
+                </div>
+
+                <div class="diagram-actions">
+                    <button type="button" id="export-json-btn" class="btn-primary" data-i18n="tools.spreadsheet.exportJson">Export JSON</button>
+                    <button type="button" id="import-json-btn" class="btn-secondary" data-i18n="tools.spreadsheet.importJson">Import JSON</button>
+                    <button type="button" id="clear-btn" class="btn-secondary" data-i18n="tools.spreadsheet.clear">Clear</button>
+                    <input type="file" id="import-file" accept=".json,application/json" hidden>
+                </div>
+
+                <div id="error-box" class="diagram-error" role="alert"></div>
+
+                <div class="diagram-canvas-wrap">
+                    <div id="spreadsheet-root"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/locales/en.js"></script>
+    <script src="../../js/locales/zh-CN.js"></script>
+    <script src="../../js/i18n.js"></script>
+    <script src="../../js/config.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../js/common_ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/x-data-spreadsheet@1.1.9/dist/xspreadsheet.js"></script>
+    <script src="../../js/diagram/spreadsheet.js"></script>
+</body>
+</html>

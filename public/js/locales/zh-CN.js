@@ -167,31 +167,43 @@ window.TB_LOCALES['zh-CN'] = {
         },
         mindmap: {
             title: '思维导图',
-            desc: '粘贴 Markdown 标题与列表，在浏览器本地生成交互式思维导图。',
-            privacy: '文本仅在浏览器中处理，不会上传到服务器。',
-            inputLabel: 'Markdown',
-            previewLabel: '思维导图',
-            previewEmpty: '点击「渲染」预览',
-            render: '渲染',
-            fit: '适应视图',
-            downloadSvg: '下载 SVG',
-            clear: '清空',
-            renderError: '渲染失败',
-            nothingToExport: '没有可导出的内容，请先渲染思维导图'
+            desc: '可视化思维导图 — 双击编辑，用工具栏或快捷键添加节点。',
+            privacy: '导图仅在浏览器中编辑，不会上传到服务器。',
+            tipsTitle: '操作提示：',
+            tip1: '双击节点可编辑文字',
+            tip2: 'Tab 添加子节点 · Enter 添加同级 · Delete 删除',
+            tip3: '使用浮动工具栏缩放、展开/折叠或导出 PNG',
+            newMap: '新建导图',
+            exportPng: '导出 PNG',
+            exportJson: '导出 JSON',
+            importJson: '导入 JSON',
+            newConfirm: '新建导图？未保存的内容将丢失。',
+            exportError: '导出失败',
+            importError: 'JSON 文件无效'
         },
-        mermaid: {
-            title: 'Mermaid 流程图',
-            desc: '编写 Mermaid 语法，预览流程图、时序图等。',
-            privacy: '代码仅在浏览器中处理，不会上传到服务器。',
-            inputLabel: 'Mermaid 代码',
-            previewLabel: '预览',
-            previewEmpty: '点击「渲染」预览',
-            render: '渲染',
-            downloadSvg: '下载 SVG',
+        flowchart: {
+            title: '流程图画板',
+            desc: '从左侧拖拽图形，插入表格和连线 — 全可视化编辑。',
+            privacy: '图表在浏览器中编辑，可通过编辑器内「文件」菜单导出 PNG、SVG、PDF。',
+            tipsTitle: '操作提示：',
+            tip1: '从左侧图形库拖拽到画布',
+            tip2: '排列 → 插入 → 表格，可插入表格',
+            tip3: '文件 → 导出，保存为 PNG、SVG 或 PDF'
+        },
+        spreadsheet: {
+            title: '在线表格',
+            desc: '点击单元格编辑 — 工具栏支持格式、合并与公式。',
+            privacy: '数据仅在浏览器中，导出 JSON 可本地保存。',
+            tipsTitle: '操作提示：',
+            tip1: '点击单元格输入 — 工具栏可设粗体、颜色、合并',
+            tip2: '底部标签页可添加工作表（+ 号）',
+            tip3: '导出 JSON 保存，导入 JSON 恢复',
+            exportJson: '导出 JSON',
+            importJson: '导入 JSON',
             clear: '清空',
-            renderError: '渲染失败',
-            nothingToExport: '没有可导出的内容，请先渲染图表'
-        }
+            clearConfirm: '清空所有单元格？此操作不可撤销。',
+            importError: 'JSON 文件无效'
+        },
     },
     sidebar: {
         allTools: '全部工具'
