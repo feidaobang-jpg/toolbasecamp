@@ -1,5 +1,5 @@
 #!/bin/bash
-# Restore main site nginx (HTTP + HTTPS) — do NOT overwrite with HTTP-only config
+# Restore main site nginx (HTTP + HTTPS) + draw.io static files
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
@@ -7,15 +7,10 @@ SITE_SRC="$DEPLOY/nginx-toolbasecamp.conf"
 SITE_AVAIL="/etc/nginx/sites-available/toolbasecamp"
 SITE_ENABLED="/etc/nginx/sites-enabled/toolbasecamp"
 
-for script in patch-nginx-api.sh patch-nginx-main-cache.sh; do
-  if [[ -f "$DEPLOY/$script" ]]; then
-    bash "$DEPLOY/$script"
-  fi
-done
-
-if [[ -f "$DEPLOY/patch-nginx-drawio.sh" ]]; then
-  bash "$DEPLOY/patch-nginx-drawio.sh"
-fi
+bash "$DEPLOY/patch-nginx-api.sh"
+bash "$DEPLOY/patch-nginx-main-cache.sh"
+bash "$DEPLOY/patch-nginx-drawio.sh"
+bash "$DEPLOY/install-drawio-static.sh"
 
 if [[ ! -f "$SITE_SRC" ]]; then
   echo "ERROR: $SITE_SRC not found"
@@ -34,17 +29,20 @@ systemctl reload nginx
 
 HTTP_CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: toolbasecamp.com' || echo 000)"
 HTTPS_TITLE="$(curl -sk https://127.0.0.1/ -H 'Host: toolbasecamp.com' | grep -oP '(?<=<title>)[^<]+' | head -1 || true)"
+DRAWIO_TITLE="$(curl -sk https://127.0.0.1/drawio/ -H 'Host: toolbasecamp.com' | grep -oP '(?<=<title>)[^<]+' | head -1 || true)"
 
 echo "toolbasecamp.com HTTP $HTTP_CODE"
 echo "toolbasecamp.com HTTPS title: ${HTTPS_TITLE:-"(none)"}"
+echo "toolbasecamp.com/drawio/ title: ${DRAWIO_TITLE:-"(none)"}"
 
 if echo "$HTTPS_TITLE" | grep -qi 'cyberchef'; then
-  echo "ERROR: HTTPS still serves CyberChef — check nginx 443 vhost for toolbasecamp.com"
+  echo "ERROR: main site HTTPS still serves CyberChef"
   exit 1
 fi
 
-if ! echo "$HTTPS_TITLE" | grep -qi 'tool basecamp'; then
-  echo "WARNING: expected Tool Basecamp title, got: $HTTPS_TITLE"
+if echo "$DRAWIO_TITLE" | grep -qi 'cyberchef'; then
+  echo "ERROR: /drawio/ still serves CyberChef — draw.io install failed"
+  exit 1
 fi
 
-echo "OK: main site nginx restored"
+echo "OK: main site nginx + draw.io restored"

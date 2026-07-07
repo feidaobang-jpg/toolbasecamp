@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fix toolbasecamp.com showing CyberChef or wrong site on HTTPS
+# Fix toolbasecamp.com nginx + /drawio/ (CyberChef mis-route / duplicate /api/)
 set -euo pipefail
 
 echo "========== toolbasecamp.com main site fix =========="
