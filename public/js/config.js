@@ -90,6 +90,13 @@ const toolsConfig = {
             ]
         },
         {
+            titleKey: 'tools.groups.diagram',
+            items: [
+                { titleKey: 'tools.mindmap.title', url: 'html/diagram/mindmap.html' },
+                { titleKey: 'tools.mermaid.title', url: 'html/diagram/mermaid.html' }
+            ]
+        },
+        {
             titleKey: 'tools.groups.developer',
             items: [
                 { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' }

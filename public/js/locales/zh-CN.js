@@ -84,6 +84,7 @@ window.TB_LOCALES['zh-CN'] = {
         groups: {
             media: '媒体工具',
             document: '文档工具',
+            diagram: '图表工具',
             developer: '开发者工具'
         },
         videoToImages: {
@@ -163,6 +164,33 @@ window.TB_LOCALES['zh-CN'] = {
             clear: '清除',
             emptyJson: '请输入 JSON 数据',
             parseError: 'JSON 解析错误：{message}'
+        },
+        mindmap: {
+            title: '思维导图',
+            desc: '粘贴 Markdown 标题与列表，在浏览器本地生成交互式思维导图。',
+            privacy: '文本仅在浏览器中处理，不会上传到服务器。',
+            inputLabel: 'Markdown',
+            previewLabel: '思维导图',
+            previewEmpty: '点击「渲染」预览',
+            render: '渲染',
+            fit: '适应视图',
+            downloadSvg: '下载 SVG',
+            clear: '清空',
+            renderError: '渲染失败',
+            nothingToExport: '没有可导出的内容，请先渲染思维导图'
+        },
+        mermaid: {
+            title: 'Mermaid 流程图',
+            desc: '编写 Mermaid 语法，预览流程图、时序图等。',
+            privacy: '代码仅在浏览器中处理，不会上传到服务器。',
+            inputLabel: 'Mermaid 代码',
+            previewLabel: '预览',
+            previewEmpty: '点击「渲染」预览',
+            render: '渲染',
+            downloadSvg: '下载 SVG',
+            clear: '清空',
+            renderError: '渲染失败',
+            nothingToExport: '没有可导出的内容，请先渲染图表'
         }
     },
     sidebar: {

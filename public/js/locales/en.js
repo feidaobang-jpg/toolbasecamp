@@ -85,6 +85,7 @@ window.TB_LOCALES.en = {
         groups: {
             media: 'Media Tools',
             document: 'Document Tools',
+            diagram: 'Diagram Tools',
             developer: 'Developer Tools'
         },
         videoToImages: {
@@ -164,6 +165,33 @@ window.TB_LOCALES.en = {
             clear: 'Clear',
             emptyJson: 'Please enter JSON data',
             parseError: 'JSON parse error: {message}'
+        },
+        mindmap: {
+            title: 'Mind Map',
+            desc: 'Paste Markdown with headings and lists — render an interactive mind map locally.',
+            privacy: 'Your text stays in the browser. Nothing is sent to a server.',
+            inputLabel: 'Markdown',
+            previewLabel: 'Mind map',
+            previewEmpty: 'Click Render to preview',
+            render: 'Render',
+            fit: 'Fit view',
+            downloadSvg: 'Download SVG',
+            clear: 'Clear',
+            renderError: 'Render failed',
+            nothingToExport: 'Nothing to export — render a mind map first'
+        },
+        mermaid: {
+            title: 'Mermaid Diagram',
+            desc: 'Write Mermaid syntax to preview flowcharts, sequence diagrams, and more.',
+            privacy: 'Your diagram code stays in the browser. Nothing is sent to a server.',
+            inputLabel: 'Mermaid code',
+            previewLabel: 'Preview',
+            previewEmpty: 'Click Render to preview',
+            render: 'Render',
+            downloadSvg: 'Download SVG',
+            clear: 'Clear',
+            renderError: 'Render failed',
+            nothingToExport: 'Nothing to export — render a diagram first'
         }
     },
     sidebar: {

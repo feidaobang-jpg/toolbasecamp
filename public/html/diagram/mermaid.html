@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Diagram - Tool Basecamp</title>
+    <meta name="description" content="Render flowcharts, sequence diagrams, and more from Mermaid syntax in your browser.">
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/diagram/diagram-tools.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar"></aside>
+        <main class="content">
+            <div class="diagram-tool">
+                <div class="diagram-tool-header">
+                    <h2 data-i18n="tools.mermaid.title">Mermaid Diagram</h2>
+                    <p data-i18n="tools.mermaid.desc">Write Mermaid syntax to preview flowcharts, sequence diagrams, and more.</p>
+                </div>
+
+                <div class="diagram-privacy" data-i18n="tools.mermaid.privacy">Your diagram code stays in the browser. Nothing is sent to a server.</div>
+
+                <div class="diagram-actions">
+                    <button type="button" id="render-btn" class="btn-primary" data-i18n="tools.mermaid.render">Render</button>
+                    <button type="button" id="download-btn" class="btn-secondary" data-i18n="tools.mermaid.downloadSvg">Download SVG</button>
+                    <button type="button" id="clear-btn" class="btn-secondary" data-i18n="tools.mermaid.clear">Clear</button>
+                </div>
+
+                <div id="error-box" class="diagram-error" role="alert"></div>
+
+                <div class="diagram-workspace">
+                    <div class="diagram-panel">
+                        <div class="diagram-panel-label" data-i18n="tools.mermaid.inputLabel">Mermaid code</div>
+                        <textarea id="mermaid-input" class="diagram-editor" spellcheck="false"></textarea>
+                    </div>
+                    <div class="diagram-panel">
+                        <div class="diagram-panel-label" data-i18n="tools.mermaid.previewLabel">Preview</div>
+                        <div class="diagram-preview">
+                            <div class="diagram-preview-empty" id="preview-empty" data-i18n="tools.mermaid.previewEmpty">Click Render to preview</div>
+                            <div id="mermaid-output" class="diagram-preview-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/locales/en.js"></script>
+    <script src="../../js/locales/zh-CN.js"></script>
+    <script src="../../js/i18n.js"></script>
+    <script src="../../js/config.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../js/common_ui.js"></script>
+    <script type="module" src="../../js/diagram/mermaid.js"></script>
+</body>
+</html>
