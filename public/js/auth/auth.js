@@ -53,6 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
     return msg;
   }
 
+  function apiErrorDetail(data) {
+    if (!data || data.detail == null) return '';
+    if (typeof data.detail === 'string') return data.detail;
+    if (Array.isArray(data.detail)) {
+      return data.detail.map(function (d) { return d.msg || d.message || String(d); }).join('; ');
+    }
+    return String(data.detail);
+  }
+
   async function postJson(path, body) {
     const res = await fetch(`${AUTH_BASE_URL}${path}`, {
       method: 'POST',
@@ -63,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('Backend service unavailable');
     }
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+    if (!res.ok) throw new Error(apiErrorDetail(data) || `HTTP ${res.status}`);
     return data;
   }
 

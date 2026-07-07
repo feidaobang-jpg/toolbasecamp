@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from pydantic import BaseModel
 
 app = FastAPI(title="Tool Basecamp API")
@@ -38,7 +38,6 @@ GUESTBOOK_PAGE_SIZE = 30
 GUESTBOOK_MAX_TEXT_LEN = 500
 GUESTBOOK_MAX_GUEST_NAME_LEN = 20
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 
 _db_available = False
@@ -150,11 +149,14 @@ def require_db():
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def verify_password(password: str, password_hash: str) -> bool:
-    return pwd_context.verify(password, password_hash)
+    try:
+        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+    except (ValueError, TypeError):
+        return False
 
 
 def create_access_token(user_id: int, email: str) -> str:
@@ -305,14 +307,27 @@ def register(body: RegisterBody):
             if cur.fetchone():
                 raise HTTPException(status_code=400, detail="Email already registered")
 
-            pw_hash = hash_password(password)
+            try:
+                pw_hash = hash_password(password)
+            except Exception as exc:
+                print(f"[register] hash_password failed: {exc}")
+                raise HTTPException(status_code=500, detail="Registration failed. Please try again.") from exc
+
             cur.execute(
                 "INSERT INTO users (email, password_hash, role) VALUES (%s, %s, %s)",
                 (email, pw_hash, ROLE_USER),
             )
             user_id = cur.lastrowid
+    except HTTPException:
+        raise
+    except Exception as exc:
+        print(f"[register] database error: {exc}")
+        raise HTTPException(status_code=500, detail="Registration failed. Please try again.") from exc
     finally:
         conn.close()
+
+    if not user_id:
+        raise HTTPException(status_code=500, detail="Registration failed. Please try again.")
 
     token = create_access_token(int(user_id), email)
     return {"success": True, "token": token}
