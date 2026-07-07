@@ -1,31 +1,26 @@
 #!/bin/bash
-# Ensure main site serves self-hosted /drawio/ and draw.war is installed
+# Install self-hosted /drawio/ static files + nginx snippet (never overwrite main site config)
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
-SITE_SRC="$DEPLOY/nginx-toolbasecamp.conf"
-SITE="/etc/nginx/sites-enabled/toolbasecamp"
+SNIPPET="/etc/nginx/snippets/toolbasecamp-drawio.conf"
 
 bash "$DEPLOY/install-drawio-static.sh"
 
-if [[ -f "$SITE_SRC" && -f "$SITE" ]]; then
-  if ! grep -q 'location \^~ /drawio/' "$SITE"; then
-    cp "$SITE_SRC" "/etc/nginx/sites-available/toolbasecamp"
-    ln -sf "/etc/nginx/sites-available/toolbasecamp" "$SITE"
-    echo "Updated main nginx site from $SITE_SRC"
-  fi
+mkdir -p /etc/nginx/snippets
+cat > "$SNIPPET" << 'EOF'
+location ^~ /drawio/ {
+    root /var/www/toolbasecamp;
+    try_files $uri $uri/ /drawio/index.html;
+    add_header Cache-Control "public, max-age=3600";
+}
+EOF
+
+echo "OK: draw.io snippet at $SNIPPET"
+
+CODE="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1/drawio/" -H 'Host: toolbasecamp.com' 2>/dev/null || echo 000)"
+if [[ "$CODE" == "200" || "$CODE" == "301" || "$CODE" == "302" ]]; then
+  echo "toolbasecamp.com/drawio/ HTTP $CODE"
+else
+  echo "NOTE: /drawio/ HTTP $CODE — run patch-nginx-main.sh to reload nginx with drawio include"
 fi
-
-nginx -t
-systemctl reload nginx
-
-CODE="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1/drawio/" -H 'Host: toolbasecamp.com' || echo 000)"
-echo "toolbasecamp.com/drawio/ HTTP $CODE"
-
-if [[ "$CODE" != "200" && "$CODE" != "301" && "$CODE" != "302" ]]; then
-  echo "WARNING: /drawio/ returned HTTP $CODE"
-  ls -la /var/www/toolbasecamp/drawio/index.html 2>/dev/null || true
-  exit 1
-fi
-
-echo "OK: self-hosted draw.io at /drawio/"

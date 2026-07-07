@@ -157,6 +157,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-drawio.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-main.sh
           bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
           bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh
