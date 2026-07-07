@@ -181,17 +181,6 @@ window.TB_LOCALES['zh-CN'] = {
             exportError: '导出失败',
             importError: 'JSON 文件无效'
         },
-        excalidraw: {
-            title: '手绘白板',
-            desc: '手绘风格画板 — 图形、箭头、文字与自由涂鸦。',
-            privacy: '画板内容仅在浏览器中，可通过内置菜单导出 PNG 或 .excalidraw 文件。',
-            tipsTitle: '操作提示：',
-            tip1: '左侧选择工具 — 矩形、箭头、画笔、文字',
-            tip2: '按住空格键拖动画布',
-            tip3: '菜单 (☰) → 导出图片或保存到磁盘',
-            loading: '白板加载中…',
-            loadError: '白板加载失败，请检查网络后强制刷新（Ctrl+Shift+R）'
-        },
         spreadsheet: {
             title: '在线表格',
             desc: '点击单元格编辑 — 工具栏支持格式、合并与公式。',

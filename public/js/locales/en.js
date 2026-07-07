@@ -182,17 +182,6 @@ window.TB_LOCALES.en = {
             exportError: 'Export failed',
             importError: 'Invalid JSON file'
         },
-        excalidraw: {
-            title: 'Whiteboard',
-            desc: 'Hand-drawn style sketch board — shapes, arrows, text, and freehand drawing.',
-            privacy: 'Drawings stay in your browser. Use the menu inside the board to export PNG or .excalidraw.',
-            tipsTitle: 'Tips:',
-            tip1: 'Pick tools on the left — rectangle, arrow, pen, text',
-            tip2: 'Hold Space and drag to pan the canvas',
-            tip3: 'Menu (☰) → Export image or Save to disk',
-            loading: 'Loading whiteboard…',
-            loadError: 'Whiteboard failed to load — check network and refresh (Ctrl+Shift+R)'
-        },
         spreadsheet: {
             title: 'Spreadsheet',
             desc: 'Click cells to edit — toolbar for formatting, merge, and formulas.',
