@@ -1,6 +1,13 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v5';
+  window.__tbTranslatePatch = 'v6';
+
+  function normLang(code) {
+    if (!code || code === 'auto') return code;
+    if (code.indexOf('zh') === 0) return 'zh';
+    if (code.indexOf('en') === 0) return 'en';
+    return code;
+  }
 
   function runSwap(app, e) {
     if (e) {
@@ -14,21 +21,21 @@
       app.closeSuggestTranslation(e || { preventDefault: function () {} });
     }
 
-    var src = app.sourceLang;
-    var tgt = app.targetLang;
+    var src = normLang(app.sourceLang);
+    var tgt = normLang(app.targetLang);
 
-    if (src === 'auto') {
+    if (app.sourceLang === 'auto') {
       try {
         if (app.output) {
           var res = JSON.parse(app.output);
           if (res.detectedLanguage && res.detectedLanguage.language) {
-            src = res.detectedLanguage.language;
+            src = normLang(res.detectedLanguage.language);
           }
         }
       } catch (err) { /* ignore */ }
     }
 
-    if (src === 'auto') {
+    if (app.sourceLang === 'auto' || !src || src === 'auto') {
       app.sourceLang = tgt;
       app.targetLang = tgt === 'zh' ? 'en' : 'zh';
     } else {
@@ -39,11 +46,17 @@
       }
     }
 
+    app.sourceLang = normLang(app.sourceLang);
+    app.targetLang = normLang(app.targetLang);
     app.detectedLangText = '';
+
     if (app.translatedText) {
       app.inputText = app.translatedText;
     }
+
     app.translatedText = '';
+    app.output = '';
+
     if (typeof app.handleInput === 'function') {
       app.handleInput(e || new Event('click'));
     }
@@ -51,12 +64,7 @@
 
   function isSwapClick(target) {
     if (!target || !target.closest) return false;
-    if (target.closest('.btn-switch-language')) return true;
-    var el = target.closest('a[aria-label*="Swap"], button[aria-label*="Swap"]');
-    if (el) return true;
-    var icon = target.closest('i.material-icons, span.material-icons');
-    if (icon && (icon.textContent || '').indexOf('swap_horiz') !== -1) return true;
-    return false;
+    return !!target.closest('.btn-switch-language, a[aria-label*="Swap"], button[aria-label*="Swap"]');
   }
 
   document.addEventListener('click', function (e) {

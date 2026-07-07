@@ -68,6 +68,12 @@ wait_ready() {
   return 1
 }
 
+patch_app_js() {
+  if [[ -f /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh ]]; then
+    bash /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh || true
+  fi
+}
+
 install_docker
 
 if needs_recreate; then
@@ -75,10 +81,12 @@ if needs_recreate; then
   docker pull "$IMAGE" || true
   run_libretranslate
   wait_ready
+  patch_app_js
 else
   echo "LibreTranslate already configured — restarting."
   docker restart "$CONTAINER"
   wait_ready
+  patch_app_js
 fi
 
 echo "LibreTranslate on http://127.0.0.1:${PORT} (languages: en, zh)"
