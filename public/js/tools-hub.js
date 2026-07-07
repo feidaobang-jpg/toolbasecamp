@@ -8,77 +8,74 @@ function renderPortals(container) {
 
     const portalThemes = {
         pdf: {
-            card: 'group block bg-gradient-to-br from-rose-900 to-red-950 rounded-2xl p-6 sm:p-8 border border-rose-800 hover:border-rose-400 hover:shadow-xl transition-all duration-300 text-white',
-            label: 'text-rose-300',
-            iconWrap: 'bg-rose-600/20 text-rose-300 group-hover:bg-rose-600 group-hover:text-white',
-            cta: 'text-rose-300 group-hover:text-white',
+            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-rose-500 hover:border-rose-300 hover:shadow-md transition-all duration-200 h-full',
+            iconWrap: 'bg-rose-50 text-rose-600 group-hover:bg-rose-100',
+            titleHover: 'group-hover:text-rose-600',
+            external: 'group-hover:text-rose-500',
             icon: 'fa-file-pdf'
         },
         dev: {
-            card: 'group block bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 sm:p-8 border border-slate-700 hover:border-blue-400 hover:shadow-xl transition-all duration-300 text-white',
-            label: 'text-blue-300',
-            iconWrap: 'bg-blue-600/20 text-blue-300 group-hover:bg-blue-600 group-hover:text-white',
-            cta: 'text-blue-300 group-hover:text-white',
+            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-slate-700 hover:border-slate-400 hover:shadow-md transition-all duration-200 h-full',
+            iconWrap: 'bg-slate-100 text-slate-700 group-hover:bg-slate-200',
+            titleHover: 'group-hover:text-slate-800',
+            external: 'group-hover:text-slate-600',
             icon: 'fa-code'
         },
         chef: {
-            card: 'group block bg-gradient-to-br from-amber-900 to-orange-950 rounded-2xl p-6 sm:p-8 border border-amber-800 hover:border-amber-400 hover:shadow-xl transition-all duration-300 text-white',
-            label: 'text-amber-300',
-            iconWrap: 'bg-amber-600/20 text-amber-300 group-hover:bg-amber-600 group-hover:text-white',
-            cta: 'text-amber-300 group-hover:text-white',
+            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-amber-500 hover:border-amber-300 hover:shadow-md transition-all duration-200 h-full',
+            iconWrap: 'bg-amber-50 text-amber-600 group-hover:bg-amber-100',
+            titleHover: 'group-hover:text-amber-700',
+            external: 'group-hover:text-amber-500',
             icon: 'fa-shield-halved'
         },
         hoppscotch: {
-            card: 'group block bg-gradient-to-br from-emerald-900 to-teal-950 rounded-2xl p-6 sm:p-8 border border-emerald-800 hover:border-emerald-400 hover:shadow-xl transition-all duration-300 text-white',
-            label: 'text-emerald-300',
-            iconWrap: 'bg-emerald-600/20 text-emerald-300 group-hover:bg-emerald-600 group-hover:text-white',
-            cta: 'text-emerald-300 group-hover:text-white',
+            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-emerald-500 hover:border-emerald-300 hover:shadow-md transition-all duration-200 h-full',
+            iconWrap: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100',
+            titleHover: 'group-hover:text-emerald-700',
+            external: 'group-hover:text-emerald-500',
             icon: 'fa-paper-plane'
         },
         translate: {
-            card: 'group block bg-gradient-to-br from-sky-900 to-blue-950 rounded-2xl p-6 sm:p-8 border border-sky-800 hover:border-sky-400 hover:shadow-xl transition-all duration-300 text-white',
-            label: 'text-sky-300',
-            iconWrap: 'bg-sky-600/20 text-sky-300 group-hover:bg-sky-600 group-hover:text-white',
-            cta: 'text-sky-300 group-hover:text-white',
+            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-sky-500 hover:border-sky-300 hover:shadow-md transition-all duration-200 h-full',
+            iconWrap: 'bg-sky-50 text-sky-600 group-hover:bg-sky-100',
+            titleHover: 'group-hover:text-sky-700',
+            external: 'group-hover:text-sky-500',
             icon: 'fa-language'
         }
     };
 
     const sectionEl = document.createElement('section');
-    sectionEl.className = 'mb-10';
+    sectionEl.className = 'mt-10 pt-8 border-t border-gray-200';
 
     const headerEl = document.createElement('div');
-    headerEl.className = 'mb-6';
+    headerEl.className = 'mb-5';
     headerEl.innerHTML =
         '<h2 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">' + tr('hub.portalsTitle') + '</h2>' +
         '<p class="text-sm text-gray-500 mt-1">' + tr('hub.portalsSubtitle') + '</p>';
     sectionEl.appendChild(headerEl);
 
     const gridEl = document.createElement('div');
-    gridEl.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6';
+    gridEl.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4';
 
     portalsConfig.forEach(portal => {
         const theme = portalThemes[portal.theme] || portalThemes.dev;
         const card = document.createElement('a');
         card.href = portal.url || '#';
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
         const title = lbl(portal);
         const desc = portal.descriptionKey ? tr(portal.descriptionKey) : (portal.description || '');
-        const cta = portal.ctaKey ? tr(portal.ctaKey) : (portal.cta || tr('hub.open'));
         card.className = theme.card;
         card.innerHTML =
-            '<div class="flex items-start justify-between gap-4">' +
-                '<div class="min-w-0">' +
-                    '<p class="text-xs uppercase tracking-wider ' + theme.label + ' font-semibold mb-2">' + (portal.meta || '') + '</p>' +
-                    '<h3 class="text-xl sm:text-2xl font-bold mb-3">' + title + '</h3>' +
-                    '<p class="text-sm text-slate-300 leading-relaxed">' + desc + '</p>' +
-                '</div>' +
-                '<div class="flex-shrink-0 w-12 h-12 rounded-xl ' + theme.iconWrap + ' flex items-center justify-center transition-colors">' +
-                    '<i class="fas ' + theme.icon + ' text-lg"></i>' +
-                '</div>' +
+            '<div class="flex-shrink-0 w-10 h-10 rounded-lg ' + theme.iconWrap + ' flex items-center justify-center transition-colors">' +
+                '<i class="fas ' + theme.icon + ' text-sm"></i>' +
             '</div>' +
-            '<span class="inline-flex items-center gap-2 mt-6 text-sm font-semibold ' + theme.cta + ' transition-colors">' +
-                cta + ' <i class="fas fa-arrow-right text-xs"></i>' +
-            '</span>';
+            '<div class="min-w-0 flex-1">' +
+                '<h3 class="font-bold text-gray-900 text-sm leading-snug ' + theme.titleHover + ' transition-colors">' + title + '</h3>' +
+                '<p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">' + desc + '</p>' +
+                (portal.meta ? '<p class="text-[11px] text-gray-400 mt-1.5 truncate">' + portal.meta + '</p>' : '') +
+            '</div>' +
+            '<i class="fas fa-arrow-up-right-from-square text-xs text-gray-300 flex-shrink-0 mt-0.5 ' + theme.external + ' transition-colors"></i>';
         gridEl.appendChild(card);
     });
 
@@ -95,8 +92,8 @@ function renderToolGroups(container) {
 
     if (toolsConfig.sectionTitleKey) {
         const titleWrap = document.createElement('div');
-        titleWrap.className = 'mb-6 pt-2 border-t border-gray-200';
-        titleWrap.innerHTML = '<h2 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight mt-8">' + tr(toolsConfig.sectionTitleKey) + '</h2>';
+        titleWrap.className = 'mb-6';
+        titleWrap.innerHTML = '<h2 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">' + tr(toolsConfig.sectionTitleKey) + '</h2>';
         container.appendChild(titleWrap);
     }
 
@@ -112,13 +109,13 @@ function renderToolGroups(container) {
         headerEl.innerHTML = '<h3 class="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">' + tr(group.titleKey) + '</h3>';
 
         const gridEl = document.createElement('div');
-        gridEl.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6';
+        gridEl.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4';
 
         group.items.forEach(item => {
             const card = document.createElement('a');
             card.href = item.url || '#';
             const label = item.titleKey ? tr(item.titleKey) : (item.title || '');
-            card.className = 'group bg-white rounded-xl p-4 border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex items-center h-full';
+            card.className = 'group bg-white rounded-xl p-4 border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex items-center h-full';
             card.innerHTML = '<h3 class="font-bold text-gray-900 truncate group-hover:text-blue-600 transition-colors">' + label + '</h3>';
             gridEl.appendChild(card);
         });
@@ -138,8 +135,8 @@ function renderToolsHub() {
     const containerEl = document.createElement('div');
     containerEl.className = 'max-w-7xl mx-auto';
 
-    renderPortals(containerEl);
     renderToolGroups(containerEl);
+    renderPortals(containerEl);
 
     if (!containerEl.children.length) {
         const tr = (k) => (typeof window.t === 'function' ? window.t(k) : k);
