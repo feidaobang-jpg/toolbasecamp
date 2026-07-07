@@ -12,7 +12,11 @@ echo "[1] LibreTranslate Docker"
 bash /opt/toolbasecamp-deploy/install-libretranslate.sh
 
 echo ""
-echo "[2] nginx + certificate"
+echo "[2] Patch app.js (swap button fix)"
+bash /opt/toolbasecamp-deploy/patch-libretranslate-app.sh
+
+echo ""
+echo "[3] nginx + certificate"
 bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
 
 if [[ ! -f /opt/toolbasecamp-deploy/translate-ui-patch.js ]]; then
@@ -21,8 +25,14 @@ else
   echo "OK: translate-ui-patch.js present"
 fi
 
+if grep -q '_tb.detectedLanguage' /opt/toolbasecamp-deploy/libretranslate-app.js 2>/dev/null; then
+  echo "OK: libretranslate-app.js patched (swap fix)"
+else
+  echo "WARNING: libretranslate-app.js not patched"
+fi
+
 echo ""
-echo "[3] Verify origin"
+echo "[4] Verify origin"
 CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5000/ || echo 000)"
 echo "LibreTranslate :5000 HTTP $CODE"
 

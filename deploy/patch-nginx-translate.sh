@@ -14,6 +14,19 @@ fi
 cp "$SITE_SRC" "$SITE"
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-translate
 
+if [[ -f /opt/toolbasecamp-deploy/patch-libretranslate-app.sh ]]; then
+  bash /opt/toolbasecamp-deploy/patch-libretranslate-app.sh
+fi
+
+if [[ ! -f /opt/toolbasecamp-deploy/libretranslate-app.js ]]; then
+  echo "ERROR: libretranslate-app.js missing — run patch-libretranslate-app.sh"
+  exit 1
+fi
+if ! grep -q '_tb.detectedLanguage' /opt/toolbasecamp-deploy/libretranslate-app.js; then
+  echo "ERROR: patched app.js does not contain swap fix"
+  exit 1
+fi
+
 nginx -t
 systemctl reload nginx
 

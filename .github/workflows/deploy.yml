@@ -169,6 +169,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/install-hoppscotch.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh
           bash /opt/toolbasecamp-deploy/install-libretranslate.sh
+          bash /opt/toolbasecamp-deploy/patch-libretranslate-app.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           systemctl restart toolbasecamp-api
