@@ -29,12 +29,15 @@ bash /opt/toolbasecamp-deploy/ensure-api-db.sh || true
 "$APP_DIR/venv/bin/pip" uninstall -y passlib 2>/dev/null || true
 
 echo "Verify bcrypt hash..."
-"$APP_DIR/venv/bin/python" - <<'PY'
+(
+  cd "$APP_DIR"
+  "$APP_DIR/venv/bin/python" -c "
 from main import hash_password, verify_password
-h = hash_password("test123456")
-assert verify_password("test123456", h)
-print("bcrypt OK")
-PY
+h = hash_password('test123456')
+assert verify_password('test123456', h)
+print('bcrypt OK')
+"
+)
 
 systemctl daemon-reload
 systemctl restart toolbasecamp-api

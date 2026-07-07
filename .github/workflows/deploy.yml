@@ -153,7 +153,10 @@ jobs:
           "$APP_DIR/venv/bin/pip" install -q -U pip
           "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements.txt"
           "$APP_DIR/venv/bin/pip" uninstall -y passlib 2>/dev/null || true
-          "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
+          (
+            cd "$APP_DIR"
+            "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
+          )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
           systemctl enable toolbasecamp-api
