@@ -117,15 +117,63 @@
     display: block;
 }
 
-#logicflow-root,
 #excalidraw-root {
     width: 100%;
     height: 100%;
     min-height: 480px;
 }
 
-.diagram-canvas-wrap--tall {
+.content--board {
+    padding: 16px 20px 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.diagram-tool--board {
+    height: calc(100vh - 48px);
+    min-height: 640px;
+    gap: 10px;
+}
+
+.diagram-tool-header--compact h2 {
+    margin-bottom: 4px;
+}
+
+.diagram-tips-details {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.diagram-tips-details summary {
+    cursor: pointer;
+    color: #2563eb;
+    user-select: none;
+}
+
+.diagram-tips-details ul {
+    margin: 8px 0 0 18px;
+    line-height: 1.6;
+}
+
+.diagram-canvas-wrap--board {
+    flex: 1;
     min-height: 520px;
+    overflow: visible;
+}
+
+.diagram-loading {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.diagram-loading[hidden] {
+    display: none;
+}
+
+#excalidraw-root .excalidraw {
+    height: 100% !important;
 }
 
 @media (max-width: 900px) {
@@ -133,10 +181,13 @@
         height: auto;
     }
 
+    .diagram-tool--board {
+        height: auto;
+        min-height: 560px;
+    }
+
     .diagram-canvas-wrap,
     #mindmap-root,
-    #logicflow-root,
-    #excalidraw-root,
     #spreadsheet-root {
         min-height: 420px;
     }

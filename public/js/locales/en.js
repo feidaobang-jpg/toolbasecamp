@@ -190,24 +190,8 @@ window.TB_LOCALES.en = {
             tip1: 'Pick tools on the left — rectangle, arrow, pen, text',
             tip2: 'Hold Space and drag to pan the canvas',
             tip3: 'Menu (☰) → Export image or Save to disk',
-            loadError: 'Whiteboard failed to load — check network and refresh'
-        },
-        flowchart: {
-            title: 'Flowchart',
-            desc: 'Add nodes and drag to connect — lightweight flow editor powered by LogicFlow.',
-            privacy: 'Your diagram stays in the browser. Export JSON to save locally.',
-            tipsTitle: 'Tips:',
-            tip1: 'Click a shape button, then click the canvas to place it',
-            tip2: 'Drag from a node anchor to another node to connect',
-            tip3: 'Double-click node text to edit · Delete key removes selection',
-            addRect: 'Rectangle',
-            addCircle: 'Circle',
-            addDiamond: 'Diamond',
-            exportJson: 'Export JSON',
-            importJson: 'Import JSON',
-            clear: 'Clear',
-            clearConfirm: 'Clear the entire flowchart? This cannot be undone.',
-            importError: 'Invalid JSON file'
+            loading: 'Loading whiteboard…',
+            loadError: 'Whiteboard failed to load — check network and refresh (Ctrl+Shift+R)'
         },
         spreadsheet: {
             title: 'Spreadsheet',

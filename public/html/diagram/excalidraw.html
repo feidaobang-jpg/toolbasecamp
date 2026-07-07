@@ -15,27 +15,24 @@
 <body>
     <div class="container">
         <aside class="sidebar"></aside>
-        <main class="content">
-            <div class="diagram-tool">
-                <div class="diagram-tool-header">
+        <main class="content content--board">
+            <div class="diagram-tool diagram-tool--board">
+                <div class="diagram-tool-header diagram-tool-header--compact">
                     <h2 data-i18n="tools.excalidraw.title">Whiteboard</h2>
-                    <p data-i18n="tools.excalidraw.desc">Hand-drawn style sketch board — shapes, arrows, text, and freehand drawing.</p>
-                </div>
-
-                <div class="diagram-privacy" data-i18n="tools.excalidraw.privacy">Drawings stay in your browser. Use the menu inside the board to export PNG or .excalidraw.</div>
-
-                <div class="diagram-tips">
-                    <span data-i18n="tools.excalidraw.tipsTitle">Tips:</span>
-                    <ul>
-                        <li data-i18n="tools.excalidraw.tip1">Pick tools on the left — rectangle, arrow, pen, text</li>
-                        <li data-i18n="tools.excalidraw.tip2">Hold Space and drag to pan the canvas</li>
-                        <li data-i18n="tools.excalidraw.tip3">Menu (☰) → Export image or Save to disk</li>
-                    </ul>
+                    <details class="diagram-tips-details">
+                        <summary data-i18n="tools.excalidraw.tipsTitle">Tips</summary>
+                        <ul>
+                            <li data-i18n="tools.excalidraw.tip1">Pick tools on the left — rectangle, arrow, pen, text</li>
+                            <li data-i18n="tools.excalidraw.tip2">Hold Space and drag to pan the canvas</li>
+                            <li data-i18n="tools.excalidraw.tip3">Menu (☰) → Export image or Save to disk</li>
+                        </ul>
+                    </details>
                 </div>
 
                 <div id="error-box" class="diagram-error" role="alert"></div>
+                <div id="loading-box" class="diagram-loading" data-i18n="tools.excalidraw.loading">Loading whiteboard…</div>
 
-                <div class="diagram-canvas-wrap diagram-canvas-wrap--tall">
+                <div class="diagram-canvas-wrap diagram-canvas-wrap--board">
                     <div id="excalidraw-root"></div>
                 </div>
             </div>

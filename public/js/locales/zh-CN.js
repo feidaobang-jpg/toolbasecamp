@@ -189,24 +189,8 @@ window.TB_LOCALES['zh-CN'] = {
             tip1: '左侧选择工具 — 矩形、箭头、画笔、文字',
             tip2: '按住空格键拖动画布',
             tip3: '菜单 (☰) → 导出图片或保存到磁盘',
-            loadError: '白板加载失败，请检查网络后刷新'
-        },
-        flowchart: {
-            title: '流程图',
-            desc: '添加节点并拖拽连线 — 基于 LogicFlow 的轻量流程编辑器。',
-            privacy: '流程图仅在浏览器中编辑，导出 JSON 可本地保存。',
-            tipsTitle: '操作提示：',
-            tip1: '点击形状按钮，再点击画布放置节点',
-            tip2: '从节点锚点拖到另一节点即可连线',
-            tip3: '双击节点文字编辑 · Delete 键删除选中项',
-            addRect: '矩形',
-            addCircle: '圆形',
-            addDiamond: '菱形',
-            exportJson: '导出 JSON',
-            importJson: '导入 JSON',
-            clear: '清空',
-            clearConfirm: '清空整个流程图？此操作不可撤销。',
-            importError: 'JSON 文件无效'
+            loading: '白板加载中…',
+            loadError: '白板加载失败，请检查网络后强制刷新（Ctrl+Shift+R）'
         },
         spreadsheet: {
             title: '在线表格',

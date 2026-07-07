@@ -1,10 +1,6 @@
-import React from 'https://esm.sh/react@19.0.0';
-import ReactDOM from 'https://esm.sh/react-dom@19.0.0/client';
-import * as ExcalidrawLib from 'https://esm.sh/@excalidraw/excalidraw@0.18.0?deps=react@19.0.0,react-dom@19.0.0';
-
-const { Excalidraw } = ExcalidrawLib;
 const rootEl = document.getElementById('excalidraw-root');
 const errorBox = document.getElementById('error-box');
+const loadingBox = document.getElementById('loading-box');
 
 function tr(key) {
     return typeof window.t === 'function' ? window.t(key) : key;
@@ -16,15 +12,43 @@ function localeCode() {
 }
 
 function showError(msg) {
+    if (loadingBox) loadingBox.hidden = true;
     if (!errorBox) return;
     errorBox.textContent = msg;
     errorBox.classList.add('is-visible');
 }
 
-try {
-    const root = ReactDOM.createRoot(rootEl);
-    root.render(React.createElement(Excalidraw, { langCode: localeCode() }));
-} catch (err) {
-    showError(tr('tools.excalidraw.loadError'));
-    console.error(err);
+function hideLoading() {
+    if (loadingBox) loadingBox.hidden = true;
 }
+
+async function initExcalidraw() {
+    if (!rootEl) return;
+
+    try {
+        const React = await import('https://cdn.jsdelivr.net/npm/react@18.3.1/+esm');
+        const ReactDOM = await import('https://cdn.jsdelivr.net/npm/react-dom@18.3.1/client/+esm');
+        const ExcalidrawLib = await import('https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw@0.18.0/+esm');
+
+        const { Excalidraw } = ExcalidrawLib;
+        const root = ReactDOM.createRoot(rootEl);
+        root.render(React.createElement(Excalidraw, {
+            langCode: localeCode(),
+            UIOptions: {
+                canvasActions: {
+                    loadScene: true,
+                    saveToActiveFile: true,
+                    export: { saveFileToDisk: true },
+                    toggleTheme: true
+                }
+            }
+        }));
+
+        hideLoading();
+    } catch (err) {
+        console.error(err);
+        showError(tr('tools.excalidraw.loadError'));
+    }
+}
+
+initExcalidraw();
