@@ -15,6 +15,12 @@ echo ""
 echo "[2] nginx + certificate"
 bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
 
+if [[ ! -f /opt/toolbasecamp-deploy/translate-ui-patch.js ]]; then
+  echo "WARNING: translate-ui-patch.js missing — re-run GitHub Actions deploy."
+else
+  echo "OK: translate-ui-patch.js present"
+fi
+
 echo ""
 echo "[3] Verify origin"
 CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5000/ || echo 000)"

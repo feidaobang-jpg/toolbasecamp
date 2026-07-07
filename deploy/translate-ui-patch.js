@@ -1,63 +1,99 @@
 (function () {
-  function resolveDetectedSource(app) {
-    if (app.sourceLang !== 'auto') return app.sourceLang;
-    try {
-      if (app.output) {
-        var res = JSON.parse(app.output);
-        if (res.detectedLanguage && res.detectedLanguage.language) {
-          return res.detectedLanguage.language;
+  'use strict';
+
+  function runSwap(app, e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+    if (e && e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+    if (typeof app.closeSuggestTranslation === 'function') {
+      app.closeSuggestTranslation(e || { preventDefault: function () {} });
+    }
+
+    var src = app.sourceLang;
+    if (src === 'auto') {
+      try {
+        if (app.output) {
+          var res = JSON.parse(app.output);
+          if (res.detectedLanguage && res.detectedLanguage.language) {
+            src = res.detectedLanguage.language;
+          }
         }
+      } catch (err) { /* ignore */ }
+    }
+
+    if (src === 'auto') {
+      if (window.M && M.toast) {
+        M.toast({ html: '请先翻译一次以检测语言，或手动选择源语言后再互换。' });
       }
-    } catch (e) { /* ignore */ }
-    return 'auto';
+      return;
+    }
+
+    var tgt = app.targetLang;
+    var tgtLang = null;
+    for (var i = 0; i < app.langs.length; i++) {
+      if (app.langs[i].code === tgt) {
+        tgtLang = app.langs[i];
+        break;
+      }
+    }
+
+    if (tgtLang && tgtLang.targets && tgtLang.targets.indexOf(src) !== -1) {
+      app.sourceLang = tgt;
+      app.targetLang = src;
+    } else {
+      app.sourceLang = tgt;
+      app.targetLang = src;
+    }
+
+    if (app.sourceLang === app.targetLang) {
+      app.targetLang = app.sourceLang === 'zh' ? 'en' : 'zh';
+    }
+
+    app.detectedLangText = '';
+    app.inputText = app.translatedText;
+    app.translatedText = '';
+    if (typeof app.handleInput === 'function') {
+      app.handleInput(e || new Event('click'));
+    }
   }
 
-  function patchApp(app) {
-    if (!app || app._tbTranslatePatched) return false;
-    if (app.loading) return false;
-
-    app.swapLangs = function (e) {
-      this.closeSuggestTranslation(e);
-
-      var src = resolveDetectedSource(this);
-      var tgt = this.targetLang;
-
-      if (src === 'auto') {
-        if (window.M && M.toast) {
-          M.toast({ html: '请先翻译一次以检测语言，或手动选择源语言后再互换。' });
-        }
-        return;
-      }
-
-      var tgtLang = this.langs.find(function (l) { return l.code === tgt; });
-      if (!tgtLang || !tgtLang.targets || tgtLang.targets.indexOf(src) === -1) {
-        this.sourceLang = tgt;
-        this.targetLang = src;
+  function isSwapControl(target) {
+    if (!target || !target.closest) return false;
+    var el = target.closest('a, button, .swap-langs, [class*="swap"]');
+    if (!el) {
+      if ((target.textContent || '').trim() === 'swap_horiz') {
+        el = target.parentElement;
       } else {
-        this.sourceLang = tgt;
-        this.targetLang = src;
+        return false;
       }
+    }
+    var text = (el.textContent || '').replace(/\s+/g, ' ');
+    return text.indexOf('swap_horiz') !== -1;
+  }
 
-      if (this.sourceLang === this.targetLang) {
-        this.targetLang = this.sourceLang === 'zh' ? 'en' : 'zh';
-      }
+  document.addEventListener('click', function (e) {
+    if (!isSwapControl(e.target)) return;
+    var app = window._vueApp;
+    if (!app) return;
+    runSwap(app, e);
+  }, true);
 
-      this.detectedLangText = '';
-      this.inputText = this.translatedText;
-      this.translatedText = '';
-      this.handleInput(e);
-    };
+  function patchMethods() {
+    var app = window._vueApp;
+    if (!app || app._tbSwapPatched) return !!app;
 
-    app._tbTranslatePatched = true;
+    var bound = function (e) { runSwap(this, e); };
+    app.swapLangs = bound;
+    if (app.$options && app.$options.methods) {
+      app.$options.methods.swapLangs = bound;
+    }
+    app._tbSwapPatched = true;
     return true;
   }
 
   var tries = 0;
   var timer = setInterval(function () {
-    if (window._vueApp && patchApp(window._vueApp)) {
-      clearInterval(timer);
-      return;
-    }
-    if (++tries > 80) clearInterval(timer);
-  }, 150);
+    if (patchMethods() || ++tries > 240) clearInterval(timer);
+  }, 50);
 })();
