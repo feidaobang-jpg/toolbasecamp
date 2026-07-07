@@ -9,10 +9,13 @@ from pathlib import Path
 FIXED = r"""swapLangs: function(e){
                 this.closeSuggestTranslation(e);
 
-                var tgt = this.targetLang || "zh";
-                var src = this.sourceLang || "en";
+                var tgt = this.targetLang;
+                var src = this.sourceLang;
+                if (!tgt || tgt === "undefined") tgt = "zh";
+                if (!src || src === "undefined") src = "en";
                 if (tgt.indexOf("zh") === 0) tgt = "zh";
                 else if (tgt.indexOf("en") === 0) tgt = "en";
+                else tgt = "zh";
                 if (src === "auto" && this.output) {
                     try {
                         var _tb = JSON.parse(this.output);
@@ -23,14 +26,13 @@ FIXED = r"""swapLangs: function(e){
                 }
                 if (src && src.indexOf("zh") === 0) src = "zh";
                 else if (src && src.indexOf("en") === 0) src = "en";
+                else if (src !== "auto") src = "en";
                 if (src === "auto" || !src) src = tgt === "zh" ? "en" : "zh";
 
-                var newSrc = tgt;
-                var newTgt = src;
-                if (newSrc === newTgt) newTgt = newSrc === "zh" ? "en" : "zh";
-
-                this.sourceLang = newSrc;
-                this.targetLang = newTgt;
+                this.sourceLang = tgt;
+                this.targetLang = src === tgt ? (tgt === "zh" ? "en" : "zh") : src;
+                if (!this.sourceLang || this.sourceLang === "undefined") this.sourceLang = "en";
+                if (!this.targetLang || this.targetLang === "undefined") this.targetLang = "zh";
                 this.detectedLangText = "";
                 this.inputText = this.translatedText;
                 this.translatedText = "";
