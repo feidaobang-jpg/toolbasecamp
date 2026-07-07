@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fix toolbasecamp.com nginx + /drawio/ (CyberChef mis-route / duplicate /api/)
+# Fix toolbasecamp.com nginx (HTTPS vhost / duplicate /api/)
 set -euo pipefail
 
 echo "========== toolbasecamp.com main site fix =========="

@@ -182,16 +182,6 @@ window.TB_LOCALES.en = {
             exportError: 'Export failed',
             importError: 'Invalid JSON file'
         },
-        flowchart: {
-            title: 'Flowchart & Diagram',
-            desc: 'Drag shapes from the left panel, insert tables and connectors — full visual editor.',
-            privacy: 'Diagrams are edited in your browser on this site (/drawio). Export via File menu (PNG, SVG, PDF).',
-            tipsTitle: 'Tips:',
-            tip1: 'Drag shapes from the left library onto the canvas',
-            tip2: 'Arrange → Insert → Table to add a table',
-            tip3: 'File → Export to save as PNG, SVG, or PDF',
-            loadError: 'Flowchart editor failed to load. Wait for deploy to finish or hard-refresh the page.'
-        },
         spreadsheet: {
             title: 'Spreadsheet',
             desc: 'Click cells to edit — toolbar for formatting, merge, and formulas.',

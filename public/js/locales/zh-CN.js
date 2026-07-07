@@ -181,16 +181,6 @@ window.TB_LOCALES['zh-CN'] = {
             exportError: '导出失败',
             importError: 'JSON 文件无效'
         },
-        flowchart: {
-            title: '流程图画板',
-            desc: '从左侧拖拽图形，插入表格和连线 — 全可视化编辑。',
-            privacy: '图表在本站 /drawio 编辑器中打开，可在「文件」菜单导出 PNG、SVG、PDF。',
-            tipsTitle: '操作提示：',
-            tip1: '从左侧图形库拖拽到画布',
-            tip2: '排列 → 插入 → 表格，可插入表格',
-            tip3: '文件 → 导出，保存为 PNG、SVG 或 PDF',
-            loadError: '流程图编辑器加载失败，请等待部署完成或强制刷新页面（Ctrl+Shift+R）。'
-        },
         spreadsheet: {
             title: '在线表格',
             desc: '点击单元格编辑 — 工具栏支持格式、合并与公式。',

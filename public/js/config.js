@@ -93,7 +93,6 @@ const toolsConfig = {
             titleKey: 'tools.groups.diagram',
             items: [
                 { titleKey: 'tools.mindmap.title', url: 'html/diagram/mindmap.html' },
-                { titleKey: 'tools.flowchart.title', url: 'html/diagram/mermaid.html' },
                 { titleKey: 'tools.spreadsheet.title', url: 'html/diagram/spreadsheet.html' }
             ]
         },
