@@ -296,6 +296,8 @@ def register(body: RegisterBody):
         raise HTTPException(status_code=400, detail="Invalid email address")
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    if len(password.encode("utf-8")) > 72:
+        raise HTTPException(status_code=400, detail="Password must not exceed 72 characters")
 
     if email == ADMIN_EMAIL:
         raise HTTPException(status_code=400, detail="This account cannot be registered")
