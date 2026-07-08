@@ -151,7 +151,7 @@ View deploy runs: GitHub repo → **Actions** tab.
 
 ### Hybrid: home NAS (Docker Desktop)
 
-Memory-heavy portals (PDF, translate, etc.) can run on a **Win11 NAS with Docker Desktop + WSL2** instead of upgrading VPS RAM. See [docs/HOME-NAS.md](docs/HOME-NAS.md).
+Memory-heavy portals (PDF, translate, etc.) can run on a **Win11 NAS with Docker Desktop + WSL2** instead of upgrading VPS RAM. See [docs/HOME-NAS.md](docs/HOME-NAS.md) and [docs/CLOUDFLARE-TUNNEL-NAS.md](docs/CLOUDFLARE-TUNNEL-NAS.md).
 
 ### One-time: GitHub Secrets
 

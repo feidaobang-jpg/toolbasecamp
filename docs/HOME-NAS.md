@@ -72,7 +72,7 @@ wsl --shutdown
 - `pdf.toolbasecamp.com` 在 Cloudflare 指到 Tunnel  
 - 国内手机访问与主站一致（橙云）  
 
-备选：**Tailscale** 组网，VPS nginx `proxy_pass` 到 NAS 的 `100.x.x.x`（见下文混合架构）。
+**分步清单：** [CLOUDFLARE-TUNNEL-NAS.md](./CLOUDFLARE-TUNNEL-NAS.md)（含 docker-compose 与 VPS 收尾脚本）
 
 ---
 
