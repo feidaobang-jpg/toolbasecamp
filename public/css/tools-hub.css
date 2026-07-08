@@ -32,7 +32,7 @@
 
 .hub-sidebar-right {
     border-left: 1px solid #f3f4f6;
-    width: 15rem;
+    width: 17.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -124,14 +124,38 @@
     line-height: 1.3;
 }
 
-.hub-portal-text span {
-    display: block;
-    margin-top: 0.125rem;
+.hub-portal-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0.25rem 0 0;
     font-size: 0.6875rem;
+    font-weight: 400;
+    color: #6b7280;
+    line-height: 1.45;
+}
+
+.hub-portal-meta {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.625rem;
     color: #9ca3af;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.hub-portal-external {
+    flex-shrink: 0;
+    font-size: 0.625rem;
+    color: #d1d5db;
+    margin-top: 0.125rem;
+    transition: color 0.15s;
+}
+
+.hub-portal-list a:hover .hub-portal-external {
+    color: #9ca3af;
 }
 
 .hub-center {

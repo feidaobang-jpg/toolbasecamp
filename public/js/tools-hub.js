@@ -43,6 +43,19 @@
         return toolsConfig.groups.filter(g => g && g.titleKey && Array.isArray(g.items) && g.items.length > 0);
     }
 
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function portalDesc(portal) {
+        if (portal.descriptionKey) return tr(portal.descriptionKey);
+        return portal.description || '';
+    }
+
     function renderLeftNav(sidebarEl, groups) {
         if (!sidebarEl) return;
         sidebarEl.innerHTML =
@@ -73,6 +86,7 @@
         const listEl = sidebarEl.querySelector('.hub-portal-list');
         portalsConfig.forEach(portal => {
             const theme = portalThemes[portal.theme] || portalThemes.dev;
+            const desc = portalDesc(portal);
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = portal.url || '#';
@@ -80,10 +94,12 @@
             a.rel = 'noopener noreferrer';
             a.innerHTML =
                 '<span class="hub-portal-icon ' + theme.iconWrap + '"><i class="fas ' + theme.icon + '"></i></span>' +
-                '<span class="hub-portal-text"><strong>' + lbl(portal) + '</strong>' +
-                (portal.meta ? '<span>' + portal.meta + '</span>' : '') +
+                '<span class="hub-portal-text">' +
+                    '<strong>' + escapeHtml(lbl(portal)) + '</strong>' +
+                    (desc ? '<p class="hub-portal-desc">' + escapeHtml(desc) + '</p>' : '') +
+                    (portal.meta ? '<span class="hub-portal-meta">' + escapeHtml(portal.meta) + '</span>' : '') +
                 '</span>' +
-                '<i class="fas fa-arrow-up-right-from-square text-[10px] text-gray-300 mt-1"></i>';
+                '<i class="fas fa-arrow-up-right-from-square hub-portal-external"></i>';
             li.appendChild(a);
             listEl.appendChild(li);
         });
