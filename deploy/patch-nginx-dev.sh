@@ -30,8 +30,17 @@ bash /opt/toolbasecamp-deploy/expand-portal-certs.sh
 cp "$SITE_SRC" "$SITE"
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-dev
 
+bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh || true
+
 nginx -t
 systemctl reload nginx
+
+BAR_HEAD="$(curl -sk "https://127.0.0.1/portal-home-bar.js" -H 'Host: dev.toolbasecamp.com' | head -c 20 || true)"
+if [[ "$BAR_HEAD" != "(function () {"* ]]; then
+  echo "ERROR: dev portal-home-bar.js not served as JS (got: ${BAR_HEAD})"
+  exit 1
+fi
+echo "OK: dev portal-home-bar.js"
 
 echo "=== dev server blocks ==="
 nginx -T 2>/dev/null | grep -c 'server_name dev.toolbasecamp.com' || true

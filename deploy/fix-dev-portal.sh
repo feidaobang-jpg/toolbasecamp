@@ -14,6 +14,13 @@ fi
 
 bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
 
+DEV_JS="$(curl -sk https://127.0.0.1/portal-home-bar.js -H 'Host: dev.toolbasecamp.com' | head -c 20 || true)"
+if [[ "$DEV_JS" != "(function () {"* ]]; then
+  echo "ERROR: dev portal-home-bar.js still returns HTML — nginx alias fix failed."
+  exit 1
+fi
+echo "OK: dev portal-home-bar.js serves JavaScript"
+
 echo ""
 echo "=== Compare titles (must differ) ==="
 echo -n "dev HTTPS:  "

@@ -250,6 +250,10 @@ jobs:
             echo "::warning:: dev portal missing portal-home-bar injection (nginx sub_filter)."
             exit 0
           fi
+          DEV_JS="$(curl -s 'https://dev.toolbasecamp.com/portal-home-bar.js' | head -c 20 || true)"
+          if [[ "$DEV_JS" != "(function () {"* ]]; then
+            echo "::warning:: dev portal-home-bar.js returns HTML not JS — run patch-nginx-dev.sh"
+          fi
           echo "Dev portal OK."
 
       - name: Verify pdf portal (public URL)

@@ -31,6 +31,9 @@ echo "Local pdf vhost HTTPS $HTTPS_CODE"
 
 if [[ "$HTTPS_CODE" == "200" ]] && grep -qi 'stirling\|pdf' /tmp/tbc-pdf-https.html; then
   echo "OK: pdf.toolbasecamp.com → Stirling-PDF"
+elif grep -q 'Tool Basecamp — Productivity Tools Hub\|Productivity Tools Hub' /tmp/tbc-pdf-https.html 2>/dev/null; then
+  echo "ERROR: pdf HTTPS serves main site — run: bash /opt/toolbasecamp-deploy/fix-pdf-portal.sh"
+  exit 1
 elif grep -q 'Tool Basecamp' /tmp/tbc-pdf-https.html 2>/dev/null; then
   echo "ERROR: pdf HTTPS serves main site — run certbot expand for pdf.toolbasecamp.com"
   exit 1
