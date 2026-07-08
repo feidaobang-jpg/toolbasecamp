@@ -22,6 +22,11 @@ echo "=== Fix chef ==="
 bash /opt/toolbasecamp-deploy/fix-chef-portal.sh
 
 echo ""
+echo "=== Stop translate on VPS (after NAS translate is live) ==="
+echo "When translate.toolbasecamp.com works from NAS Tunnel, run:"
+echo "  sudo bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh"
+
+echo ""
 echo "=== Memory AFTER ==="
 free -h
 echo ""

@@ -1,65 +1,72 @@
-# NAS 上 PDF + Cloudflare Tunnel 一键目录
+# NAS 子站（PDF + 翻译）+ Cloudflare Tunnel
 
-Win11 Docker Desktop 跑 Stirling-PDF，经 Cloudflare Tunnel 暴露 `pdf.toolbasecamp.com`，无需家里开 443 端口。
+Win11 Docker Desktop 跑吃内存服务，经 **同一 Tunnel** 暴露子域，家里不用开 443。
 
-**完整图文步骤见：** [docs/CLOUDFLARE-TUNNEL-NAS.md](../../docs/CLOUDFLARE-TUNNEL-NAS.md)
+**完整步骤：** [docs/CLOUDFLARE-TUNNEL-NAS.md](../../docs/CLOUDFLARE-TUNNEL-NAS.md)
 
-## 快速开始
+## 迁移顺序
 
-### 1. Cloudflare 创建 Tunnel（浏览器）
+| 步骤 | 子域 | Docker 服务 | VPS 收尾 |
+|------|------|-------------|----------|
+| ✅ 1 | `pdf` | `pdf-proxy:80` | `stop-vps-pdf-after-nas-migration.sh` |
+| ▶ 2 | `translate` | `translate-proxy:80` | `stop-vps-translate-after-nas-migration.sh` |
+| 3 | `hoppscotch` | （待加） | 待加 |
 
-1. [Cloudflare Zero Trust](https://one.dash.cloudflare.com/) → **Networks → Tunnels**
-2. **Create a tunnel** → 选 **Cloudflared** → 命名如 `tbc-home-nas`
-3. 复制 **Install connector** 里的 token（形如 `eyJh...`）
-4. **Public Hostname** 添加：
-   - Subdomain: `pdf`
-   - Domain: `toolbasecamp.com`
-   - Service type: **HTTP**
-   - URL: `pdf-proxy:80`（Docker 内 nginx，见 compose）
-5. 保存
+---
 
-### 2. NAS 准备
+## 第 2 步：迁移 translate（当前）
+
+### Cloudflare Tunnel 加一条 Public Hostname
+
+Zero Trust → 你的 Tunnel → **Public Hostname** → Add：
+
+| 字段 | 值 |
+|------|-----|
+| Subdomain | `translate` |
+| Domain | `toolbasecamp.com` |
+| Type | HTTP |
+| URL | `translate-proxy:80` |
+
+删除 DNS 里旧的 `translate` **A 记录**（若有）。
+
+### NAS PowerShell
 
 ```powershell
 cd D:\toolbasecamp\deploy\home-nas
-copy .env.example .env
-notepad .env
+powershell -ExecutionPolicy Bypass -File .\setup-nginx-translate.ps1
+docker compose up -d
+docker compose ps
 ```
 
-下载 OCR 语言包（PowerShell）：
+首次启动 LibreTranslate 约 **2～5 分钟**（下载 en/zh 模型）。
 
-```powershell
-mkdir tessdata -Force
-Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/eng.traineddata" -OutFile tessdata\eng.traineddata
-Invoke-WebRequest -Uri "https://github.com/tesseract-ocr/tessdata_fast/raw/main/chi_sim.traineddata" -OutFile tessdata\chi_sim.traineddata
+验证：`https://translate.toolbasecamp.com` → 翻译页 + 顶部返回条。
+
+### VPS 释放内存（外网正常后）
+
+```bash
+sudo bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh
+free -h
 ```
 
-生成 nginx 配置（注入返回主站顶栏）：
+内存预计从 ~55% 再降到 ~35～40%。
+
+---
+
+## 第 1 步：PDF（已完成可跳过）
+
+### Cloudflare Tunnel
+
+Public Hostname：`pdf.toolbasecamp.com` → `pdf-proxy:80`
+
+### NAS
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\setup-nginx-pdf.ps1
-```
-
-### 3. 启动
-
-```powershell
 docker compose up -d
-docker compose ps
-docker compose logs -f cloudflared
 ```
 
-本地测 Stirling：`curl http://127.0.0.1:8080/`（需临时映射端口时见 compose 注释）  
-外网测：手机无痕打开 `https://pdf.toolbasecamp.com`
-
-### 4. VPS 释放内存（迁移成功后）
-
-SSH 到 VPS：
-
-```bash
-sudo bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh
-```
-
-Cloudflare DNS：`pdf` 由 Tunnel 接管后，**删除** 原指向 VPS IP 的 A 记录（Tunnel 会自动创建 CNAME）。
+VPS：`sudo bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh`
 
 ---
 
@@ -67,17 +74,14 @@ Cloudflare DNS：`pdf` 由 Tunnel 接管后，**删除** 原指向 VPS IP 的 A 
 
 | 文件 | 作用 |
 |------|------|
-| `docker-compose.yml` | Stirling + nginx 注入 + cloudflared |
-| `.env.example` | Tunnel token 模板 |
-| `nginx-pdf.conf.template` | nginx 反代模板 |
-| `setup-nginx-pdf.ps1` | 把 inject snippet 写入 nginx 配置 |
-| `stop-vps-pdf-after-nas-migration.sh` | VPS 侧停 Stirling / 关 pdf vhost |
+| `docker-compose.yml` | PDF + 翻译 + cloudflared |
+| `setup-nginx-pdf.ps1` / `setup-nginx-translate.ps1` | 生成 nginx 注入配置 |
+| `stop-vps-*-after-nas-migration.sh` | VPS 侧停对应 Docker |
 
 ## 常用命令
 
 ```powershell
-docker compose logs stirling-pdf --tail 50
-docker compose restart cloudflared
-docker compose down
+docker compose logs libretranslate --tail 40
+docker compose restart translate-proxy cloudflared
 docker compose pull && docker compose up -d
 ```

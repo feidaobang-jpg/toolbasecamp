@@ -188,16 +188,40 @@ ports:
 
 ---
 
-## 以后加 translate / hoppscotch
+## 第 2 步：迁移 translate（LibreTranslate）
 
-同一 Tunnel 可再加 Public Hostname：
+### Cloudflare 加 Public Hostname
 
-| 子域 | Docker URL |
-|------|------------|
-| `translate.toolbasecamp.com` | `translate-proxy:80`（需另起 compose 服务） |
-| 或单独 compose 文件 | 同一 `cloudflared` 网络 `external` 连接 |
+| 字段 | 值 |
+|------|-----|
+| Subdomain | `translate` |
+| URL | `translate-proxy:80` |
 
-建议每迁一个服务：Tunnel 加 hostname → NAS 起容器 → VPS 停对应 Docker → 验证 → 再迁下一个。
+删 DNS 旧 `translate` A 记录。
+
+### NAS
+
+```powershell
+cd D:\toolbasecamp\deploy\home-nas
+powershell -ExecutionPolicy Bypass -File .\setup-nginx-translate.ps1
+docker compose up -d
+```
+
+等 `tbc-libretranslate` 就绪（首次 2～5 分钟），访问 `https://translate.toolbasecamp.com`。
+
+### VPS 收尾
+
+```bash
+sudo bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh
+```
+
+---
+
+## 第 3 步：hoppscotch（待做）
+
+同一 Tunnel 再加 hostname → `hoppscotch-proxy:80`（compose 待补充）。
+
+建议每迁一个：**Tunnel hostname → NAS docker compose up → 外网验证 → VPS 停 Docker**。
 
 ---
 
