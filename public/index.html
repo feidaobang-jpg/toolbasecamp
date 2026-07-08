@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
+    <link rel="stylesheet" href="css/tools-hub.css">
     <script>
         tailwind.config = { theme: { extend: { colors: { primary: '#2563eb' } } } };
     </script>
@@ -26,7 +27,17 @@
 
     <div class="flex-1 flex overflow-hidden relative">
         <main class="flex-1 flex flex-col w-0 overflow-hidden bg-gray-50">
-            <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 scroll-smooth" id="main-content"></div>
+            <div id="hub-shell" class="hub-shell">
+                <div id="hub-mobile-toolbar" class="hub-mobile-toolbar" aria-hidden="true"></div>
+                <div id="hub-mobile-portals" class="hub-mobile-portals" aria-hidden="true"></div>
+                <div class="hub-body">
+                    <aside id="hub-sidebar-left" class="hub-sidebar hub-sidebar-left" aria-label="Categories"></aside>
+                    <div class="hub-center" id="hub-center">
+                        <div id="main-content" class="hub-center-inner"></div>
+                    </div>
+                    <aside id="hub-sidebar-right" class="hub-sidebar hub-sidebar-right" aria-label="Portals"></aside>
+                </div>
+            </div>
             <footer class="bg-white border-t border-gray-200 mt-auto">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <div class="text-center text-sm text-gray-500">

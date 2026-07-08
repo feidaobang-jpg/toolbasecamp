@@ -1,154 +1,307 @@
-function renderPortals(container) {
-    if (typeof portalsConfig === 'undefined' || !Array.isArray(portalsConfig) || portalsConfig.length === 0) {
-        return;
-    }
-
-    const tr = (k) => (typeof window.t === 'function' ? window.t(k) : k);
-    const lbl = (item) => (typeof window.tbLabel === 'function' ? window.tbLabel(item) : (item.title || ''));
-
+(function () {
     const portalThemes = {
         pdf: {
-            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-rose-500 hover:border-rose-300 hover:shadow-md transition-all duration-200 h-full',
-            iconWrap: 'bg-rose-50 text-rose-600 group-hover:bg-rose-100',
-            titleHover: 'group-hover:text-rose-600',
-            external: 'group-hover:text-rose-500',
+            iconWrap: 'bg-rose-50 text-rose-600',
+            chip: 'border-rose-200 text-rose-800',
             icon: 'fa-file-pdf'
         },
         dev: {
-            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-slate-700 hover:border-slate-400 hover:shadow-md transition-all duration-200 h-full',
-            iconWrap: 'bg-slate-100 text-slate-700 group-hover:bg-slate-200',
-            titleHover: 'group-hover:text-slate-800',
-            external: 'group-hover:text-slate-600',
+            iconWrap: 'bg-slate-100 text-slate-700',
+            chip: 'border-slate-300 text-slate-800',
             icon: 'fa-code'
         },
         chef: {
-            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-amber-500 hover:border-amber-300 hover:shadow-md transition-all duration-200 h-full',
-            iconWrap: 'bg-amber-50 text-amber-600 group-hover:bg-amber-100',
-            titleHover: 'group-hover:text-amber-700',
-            external: 'group-hover:text-amber-500',
+            iconWrap: 'bg-amber-50 text-amber-600',
+            chip: 'border-amber-200 text-amber-900',
             icon: 'fa-shield-halved'
         },
         hoppscotch: {
-            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-emerald-500 hover:border-emerald-300 hover:shadow-md transition-all duration-200 h-full',
-            iconWrap: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100',
-            titleHover: 'group-hover:text-emerald-700',
-            external: 'group-hover:text-emerald-500',
+            iconWrap: 'bg-emerald-50 text-emerald-600',
+            chip: 'border-emerald-200 text-emerald-900',
             icon: 'fa-paper-plane'
         },
         translate: {
-            card: 'group flex gap-3 items-start bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-sky-500 hover:border-sky-300 hover:shadow-md transition-all duration-200 h-full',
-            iconWrap: 'bg-sky-50 text-sky-600 group-hover:bg-sky-100',
-            titleHover: 'group-hover:text-sky-700',
-            external: 'group-hover:text-sky-500',
+            iconWrap: 'bg-sky-50 text-sky-600',
+            chip: 'border-sky-200 text-sky-900',
             icon: 'fa-language'
         }
     };
 
-    const sectionEl = document.createElement('section');
-    sectionEl.className = 'mt-10 pt-8 border-t border-gray-200';
+    let scrollSpyObserver = null;
+    let searchQuery = '';
 
-    const headerEl = document.createElement('div');
-    headerEl.className = 'mb-5';
-    headerEl.innerHTML =
-        '<h2 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">' + tr('hub.portalsTitle') + '</h2>' +
-        '<p class="text-sm text-gray-500 mt-1">' + tr('hub.portalsSubtitle') + '</p>';
-    sectionEl.appendChild(headerEl);
-
-    const gridEl = document.createElement('div');
-    gridEl.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4';
-
-    portalsConfig.forEach(portal => {
-        const theme = portalThemes[portal.theme] || portalThemes.dev;
-        const card = document.createElement('a');
-        card.href = portal.url || '#';
-        card.target = '_blank';
-        card.rel = 'noopener noreferrer';
-        const title = lbl(portal);
-        const desc = portal.descriptionKey ? tr(portal.descriptionKey) : (portal.description || '');
-        card.className = theme.card;
-        card.innerHTML =
-            '<div class="flex-shrink-0 w-10 h-10 rounded-lg ' + theme.iconWrap + ' flex items-center justify-center transition-colors">' +
-                '<i class="fas ' + theme.icon + ' text-sm"></i>' +
-            '</div>' +
-            '<div class="min-w-0 flex-1">' +
-                '<h3 class="font-bold text-gray-900 text-sm leading-snug ' + theme.titleHover + ' transition-colors">' + title + '</h3>' +
-                '<p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">' + desc + '</p>' +
-                (portal.meta ? '<p class="text-[11px] text-gray-400 mt-1.5 truncate">' + portal.meta + '</p>' : '') +
-            '</div>' +
-            '<i class="fas fa-arrow-up-right-from-square text-xs text-gray-300 flex-shrink-0 mt-0.5 ' + theme.external + ' transition-colors"></i>';
-        gridEl.appendChild(card);
-    });
-
-    sectionEl.appendChild(gridEl);
-    container.appendChild(sectionEl);
-}
-
-function renderToolGroups(container) {
-    if (typeof toolsConfig === 'undefined' || !Array.isArray(toolsConfig.groups) || toolsConfig.groups.length === 0) {
-        return;
+    function tr(k) {
+        return typeof window.t === 'function' ? window.t(k) : k;
     }
 
-    const tr = (k) => (typeof window.t === 'function' ? window.t(k) : k);
-
-    if (toolsConfig.sectionTitleKey) {
-        const titleWrap = document.createElement('div');
-        titleWrap.className = 'mb-6';
-        titleWrap.innerHTML = '<h2 class="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">' + tr(toolsConfig.sectionTitleKey) + '</h2>';
-        container.appendChild(titleWrap);
+    function lbl(item) {
+        return typeof window.tbLabel === 'function' ? window.tbLabel(item) : (item.title || '');
     }
 
-    toolsConfig.groups.forEach((group, index) => {
-        if (!group || !group.titleKey || !Array.isArray(group.items) || group.items.length === 0) return;
+    function getGroups() {
+        if (typeof toolsConfig === 'undefined' || !Array.isArray(toolsConfig.groups)) return [];
+        return toolsConfig.groups.filter(g => g && g.titleKey && Array.isArray(g.items) && g.items.length > 0);
+    }
 
-        const sectionEl = document.createElement('section');
-        sectionEl.id = 'section-' + index;
-        sectionEl.className = index === 0 ? '' : 'mt-10';
+    function renderLeftNav(sidebarEl, groups) {
+        if (!sidebarEl) return;
+        sidebarEl.innerHTML =
+            '<div class="hub-sidebar-head">' + tr('hub.categories') + '</div>' +
+            '<ul class="hub-nav-list" id="hub-nav-list"></ul>';
+        const listEl = sidebarEl.querySelector('#hub-nav-list');
+        groups.forEach((group, index) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#section-' + index;
+            a.dataset.sectionId = 'section-' + index;
+            a.textContent = tr(group.titleKey);
+            if (index === 0) a.classList.add('is-active');
+            li.appendChild(a);
+            listEl.appendChild(li);
+        });
+    }
 
-        const headerEl = document.createElement('div');
-        headerEl.className = 'flex items-center gap-4';
-        headerEl.innerHTML = '<h3 class="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">' + tr(group.titleKey) + '</h3>';
+    function renderRightPortals(sidebarEl) {
+        if (!sidebarEl || typeof portalsConfig === 'undefined' || !portalsConfig.length) {
+            if (sidebarEl) sidebarEl.innerHTML = '';
+            return;
+        }
+        sidebarEl.innerHTML =
+            '<div class="hub-sidebar-head">' + tr('hub.portalsTitle') + '</div>' +
+            '<p class="hub-sidebar-sub">' + tr('hub.portalsSubtitle') + '</p>' +
+            '<ul class="hub-portal-list"></ul>';
+        const listEl = sidebarEl.querySelector('.hub-portal-list');
+        portalsConfig.forEach(portal => {
+            const theme = portalThemes[portal.theme] || portalThemes.dev;
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = portal.url || '#';
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.innerHTML =
+                '<span class="hub-portal-icon ' + theme.iconWrap + '"><i class="fas ' + theme.icon + '"></i></span>' +
+                '<span class="hub-portal-text"><strong>' + lbl(portal) + '</strong>' +
+                (portal.meta ? '<span>' + portal.meta + '</span>' : '') +
+                '</span>' +
+                '<i class="fas fa-arrow-up-right-from-square text-[10px] text-gray-300 mt-1"></i>';
+            li.appendChild(a);
+            listEl.appendChild(li);
+        });
+    }
 
-        const gridEl = document.createElement('div');
-        gridEl.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4';
+    function renderMobilePortals(containerEl) {
+        if (!containerEl) return;
+        if (typeof portalsConfig === 'undefined' || !portalsConfig.length) {
+            containerEl.innerHTML = '';
+            containerEl.setAttribute('aria-hidden', 'true');
+            return;
+        }
+        containerEl.setAttribute('aria-hidden', 'false');
+        containerEl.innerHTML =
+            '<div class="hub-mobile-portals-label">' + tr('hub.portalsTitle') + '</div>' +
+            '<div class="hub-mobile-portals-row"></div>';
+        const rowEl = containerEl.querySelector('.hub-mobile-portals-row');
+        portalsConfig.forEach(portal => {
+            const theme = portalThemes[portal.theme] || portalThemes.dev;
+            const a = document.createElement('a');
+            a.href = portal.url || '#';
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.className = 'hub-mobile-portal-chip ' + theme.chip;
+            a.innerHTML = '<i class="fas ' + theme.icon + '"></i><span>' + lbl(portal) + '</span>';
+            rowEl.appendChild(a);
+        });
+    }
 
-        group.items.forEach(item => {
-            const card = document.createElement('a');
-            card.href = item.url || '#';
-            const label = item.titleKey ? tr(item.titleKey) : (item.title || '');
-            card.className = 'group bg-white rounded-xl p-4 border border-gray-200 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex items-center h-full';
-            card.innerHTML = '<h3 class="font-bold text-gray-900 truncate group-hover:text-blue-600 transition-colors">' + label + '</h3>';
-            gridEl.appendChild(card);
+    function renderMobileSearch(toolbarEl) {
+        if (!toolbarEl) return;
+        toolbarEl.setAttribute('aria-hidden', 'false');
+        toolbarEl.innerHTML =
+            '<div class="hub-search-wrap">' +
+                '<i class="fas fa-search"></i>' +
+                '<input type="search" id="hub-search-input" class="hub-search-input" autocomplete="off" ' +
+                    'placeholder="' + tr('hub.searchPlaceholder') + '" value="' + escapeAttr(searchQuery) + '">' +
+                '<button type="button" id="hub-search-clear" class="hub-search-clear' +
+                    (searchQuery ? ' is-visible' : '') + '" aria-label="Clear">' +
+                    '<i class="fas fa-times"></i></button>' +
+            '</div>';
+        bindSearch(toolbarEl);
+    }
+
+    function escapeAttr(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;');
+    }
+
+    function bindSearch(toolbarEl) {
+        const input = toolbarEl.querySelector('#hub-search-input');
+        const clearBtn = toolbarEl.querySelector('#hub-search-clear');
+        if (!input) return;
+
+        input.addEventListener('input', function () {
+            searchQuery = input.value.trim();
+            if (clearBtn) clearBtn.classList.toggle('is-visible', searchQuery.length > 0);
+            applySearchFilter(searchQuery);
         });
 
-        sectionEl.appendChild(headerEl);
-        sectionEl.appendChild(gridEl);
-        container.appendChild(sectionEl);
-    });
-}
-
-function renderToolsHub() {
-    const mainContent = document.getElementById('main-content');
-    if (!mainContent) return;
-
-    mainContent.innerHTML = '';
-
-    const containerEl = document.createElement('div');
-    containerEl.className = 'max-w-7xl mx-auto';
-
-    renderToolGroups(containerEl);
-    renderPortals(containerEl);
-
-    if (!containerEl.children.length) {
-        const tr = (k) => (typeof window.t === 'function' ? window.t(k) : k);
-        mainContent.innerHTML = '<div class="text-center text-gray-500 py-12">' + tr('hub.noTools') + '</div>';
-        return;
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                input.value = '';
+                searchQuery = '';
+                clearBtn.classList.remove('is-visible');
+                applySearchFilter('');
+                input.focus();
+            });
+        }
     }
 
-    mainContent.appendChild(containerEl);
-}
+    function applySearchFilter(query) {
+        const centerEl = document.getElementById('main-content');
+        const emptyEl = document.getElementById('hub-empty-search');
+        if (!centerEl) return;
 
-window.renderToolsHub = renderToolsHub;
+        const normalized = query.toLowerCase();
+        let visibleCount = 0;
 
-document.addEventListener('tb:locale', function () {
-    if (typeof window.renderToolsHub === 'function') renderToolsHub();
-});
+        centerEl.querySelectorAll('.hub-group').forEach(groupEl => {
+            let groupVisible = 0;
+            groupEl.querySelectorAll('.hub-tool-card').forEach(card => {
+                const text = (card.dataset.search || '').toLowerCase();
+                const match = !normalized || text.indexOf(normalized) !== -1;
+                card.classList.toggle('is-hidden', !match);
+                if (match) {
+                    groupVisible += 1;
+                    visibleCount += 1;
+                }
+            });
+            groupEl.classList.toggle('is-hidden', groupVisible === 0);
+        });
+
+        if (emptyEl) {
+            emptyEl.classList.toggle('is-visible', normalized.length > 0 && visibleCount === 0);
+        }
+    }
+
+    function renderToolGroups(containerEl, groups) {
+        if (!containerEl) return;
+
+        if (toolsConfig && toolsConfig.sectionTitleKey) {
+            const titleEl = document.createElement('h2');
+            titleEl.className = 'hub-section-title';
+            titleEl.textContent = tr(toolsConfig.sectionTitleKey);
+            containerEl.appendChild(titleEl);
+        }
+
+        groups.forEach((group, index) => {
+            const sectionEl = document.createElement('section');
+            sectionEl.id = 'section-' + index;
+            sectionEl.className = 'hub-group';
+
+            const headerEl = document.createElement('h3');
+            headerEl.className = 'hub-group-head';
+            headerEl.textContent = tr(group.titleKey);
+            sectionEl.appendChild(headerEl);
+
+            const gridEl = document.createElement('div');
+            gridEl.className = 'hub-tools-grid';
+
+            group.items.forEach(item => {
+                const label = item.titleKey ? tr(item.titleKey) : (item.title || '');
+                const groupLabel = tr(group.titleKey);
+                const card = document.createElement('a');
+                card.href = item.url || '#';
+                card.className = 'hub-tool-card';
+                card.dataset.search = groupLabel + ' ' + label;
+                card.innerHTML = '<h3>' + label + '</h3>';
+                gridEl.appendChild(card);
+            });
+
+            sectionEl.appendChild(gridEl);
+            containerEl.appendChild(sectionEl);
+        });
+
+        const emptyEl = document.createElement('div');
+        emptyEl.id = 'hub-empty-search';
+        emptyEl.className = 'hub-empty-search';
+        emptyEl.textContent = tr('hub.noSearchResults');
+        containerEl.appendChild(emptyEl);
+    }
+
+    function bindNavScroll(centerEl, sidebarEl) {
+        if (!centerEl || !sidebarEl) return;
+        const links = sidebarEl.querySelectorAll('.hub-nav-list a');
+        if (!links.length) return;
+
+        if (scrollSpyObserver) {
+            scrollSpyObserver.disconnect();
+            scrollSpyObserver = null;
+        }
+
+        const sections = centerEl.querySelectorAll('.hub-group');
+        if (!sections.length) return;
+
+        scrollSpyObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const id = entry.target.id;
+                links.forEach(link => {
+                    link.classList.toggle('is-active', link.dataset.sectionId === id);
+                });
+            });
+        }, {
+            root: centerEl,
+            rootMargin: '-20% 0px -60% 0px',
+            threshold: 0
+        });
+
+        sections.forEach(section => scrollSpyObserver.observe(section));
+
+        links.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = centerEl.querySelector('#' + link.dataset.sectionId);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    }
+
+    function renderToolsHub() {
+        const centerEl = document.getElementById('main-content');
+        const leftEl = document.getElementById('hub-sidebar-left');
+        const rightEl = document.getElementById('hub-sidebar-right');
+        const mobileToolbar = document.getElementById('hub-mobile-toolbar');
+        const mobilePortals = document.getElementById('hub-mobile-portals');
+        const scrollRoot = document.getElementById('hub-center');
+
+        if (!centerEl) return;
+
+        const groups = getGroups();
+        centerEl.innerHTML = '';
+
+        if (!groups.length) {
+            centerEl.innerHTML = '<div class="text-center text-gray-500 py-12">' + tr('hub.noTools') + '</div>';
+            if (leftEl) leftEl.innerHTML = '';
+            if (rightEl) rightEl.innerHTML = '';
+            if (mobileToolbar) mobileToolbar.innerHTML = '';
+            if (mobilePortals) mobilePortals.innerHTML = '';
+            return;
+        }
+
+        renderLeftNav(leftEl, groups);
+        renderRightPortals(rightEl);
+        renderMobilePortals(mobilePortals);
+        renderMobileSearch(mobileToolbar);
+        renderToolGroups(centerEl, groups);
+
+        if (searchQuery) applySearchFilter(searchQuery);
+        bindNavScroll(scrollRoot, leftEl);
+    }
+
+    window.renderToolsHub = renderToolsHub;
+
+    document.addEventListener('tb:locale', function () {
+        if (typeof window.renderToolsHub === 'function') renderToolsHub();
+    });
+})();

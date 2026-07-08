@@ -51,7 +51,10 @@ window.TB_LOCALES.en = {
         portalsTitle: 'Portals',
         portalsSubtitle: 'Extended tool collections hosted under Tool Basecamp.',
         basecampTools: 'Basecamp Tools',
+        categories: 'Categories',
         noTools: 'No tools configured.',
+        noSearchResults: 'No matching tools',
+        searchPlaceholder: 'Search tools…',
         open: 'Open'
     },
     portals: {

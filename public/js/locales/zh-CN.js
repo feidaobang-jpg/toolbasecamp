@@ -50,7 +50,10 @@ window.TB_LOCALES['zh-CN'] = {
         portalsTitle: '子站入口',
         portalsSubtitle: 'Tool Basecamp 托管的扩展工具集合。',
         basecampTools: '主站工具',
+        categories: '分类',
         noTools: '暂无配置的工具。',
+        noSearchResults: '没有匹配的工具',
+        searchPlaceholder: '搜索工具…',
         open: '打开'
     },
     portals: {
