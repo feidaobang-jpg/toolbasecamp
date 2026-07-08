@@ -15,15 +15,15 @@ fi
 
 echo ""
 echo "=== Public checks ==="
-DEV_JS="$(curl -s --connect-timeout 10 --max-time 30 'https://dev.toolbasecamp.com/portal-home-bar.js' | head -c 20 || true)"
-echo "dev portal-home-bar.js: ${DEV_JS}"
+DEV_JS="$(curl -s --connect-timeout 10 --max-time 30 'https://dev.toolbasecamp.com/' | head -c 200 || true)"
+echo "dev HTML has inline bar: $(echo "$DEV_JS" | grep -q 'portal-has-home-bar' && echo yes || echo no)"
 
 PDF_CODE="$(curl -sk --connect-timeout 10 --max-time 90 -o /tmp/tbc-pdf-mobile.html -w '%{http_code}' 'https://pdf.toolbasecamp.com/' || echo 000)"
 PDF_TITLE="$(grep -oP '(?<=<title>)[^<]+' /tmp/tbc-pdf-mobile.html 2>/dev/null | head -1 || true)"
 echo "pdf HTTPS: $PDF_CODE title=${PDF_TITLE:-"(empty)"}"
 
-if [[ "$DEV_JS" != "(function () {"* ]]; then
-  echo "WARNING: dev JS still wrong — purge Cloudflare cache for dev.toolbasecamp.com"
+if ! echo "$DEV_JS" | grep -q 'portal-has-home-bar'; then
+  echo "WARNING: dev missing inline portal bar — run patch-nginx-dev.sh + purge Cloudflare cache"
 fi
 if [[ "$PDF_CODE" != "200" ]]; then
   echo "WARNING: pdf HTTPS $PDF_CODE"

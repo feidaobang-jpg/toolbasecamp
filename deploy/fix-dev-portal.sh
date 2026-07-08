@@ -1,5 +1,5 @@
 #!/bin/bash
-# Emergency fix: dev.toolbasecamp.com HTTPS serves main site (Cloudflare Full + no :443 vhost)
+# Emergency fix: dev.toolbasecamp.com HTTPS / mobile styles / inline portal bar
 set -euo pipefail
 
 echo "=== Fix dev portal HTTPS ==="
@@ -14,12 +14,16 @@ fi
 
 bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
 
-DEV_JS="$(curl -sk https://127.0.0.1/portal-home-bar.js -H 'Host: dev.toolbasecamp.com' | head -c 20 || true)"
-if [[ "$DEV_JS" != "(function () {"* ]]; then
-  echo "ERROR: dev portal-home-bar.js still returns HTML — nginx alias fix failed."
+HTML="$(curl -sk https://127.0.0.1/ -H 'Host: dev.toolbasecamp.com' || true)"
+if grep -q 'portal-home-bar.js' <<< "$HTML"; then
+  echo "ERROR: dev still uses external portal-home-bar.js — inline inject failed."
   exit 1
 fi
-echo "OK: dev portal-home-bar.js serves JavaScript"
+if ! grep -q 'portal-has-home-bar' <<< "$HTML"; then
+  echo "ERROR: dev HTML missing inline portal bar."
+  exit 1
+fi
+echo "OK: dev inline portal bar"
 
 echo ""
 echo "=== Compare titles (must differ) ==="
@@ -29,5 +33,5 @@ echo -n "main HTTPS: "
 curl -sk https://127.0.0.1/ -H 'Host: toolbasecamp.com' | grep -oP '(?<=<title>)[^<]+' | head -1 || echo "(none)"
 
 echo ""
-echo "If dev shows Next Tools above, hard-refresh browser (Ctrl+Shift+R)."
+echo "Purge Cloudflare cache for dev.toolbasecamp.com, then hard-refresh on phone."
 echo "Cloudflare SSL must be Full or Flexible (not Off)."

@@ -247,13 +247,12 @@ jobs:
             echo "::warning:: Public URL did not return next-tools HTML."
             exit 0
           fi
-          if ! grep -q 'portal-home-bar.js' /tmp/dev-public.html; then
-            echo "::warning:: dev portal missing portal-home-bar injection (nginx sub_filter)."
+          if ! grep -q 'portal-has-home-bar' /tmp/dev-public.html; then
+            echo "::warning:: dev portal missing inline portal bar — run patch-nginx-dev.sh"
             exit 0
           fi
-          DEV_JS="$(curl -s 'https://dev.toolbasecamp.com/portal-home-bar.js' | head -c 20 || true)"
-          if [[ "$DEV_JS" != "(function () {"* ]]; then
-            echo "::warning:: dev portal-home-bar.js returns HTML not JS — run patch-nginx-dev.sh"
+          if grep -q 'portal-home-bar.js' /tmp/dev-public.html; then
+            echo "::warning:: dev still uses external portal-home-bar.js — run patch-nginx-dev.sh"
           fi
           echo "Dev portal OK."
 
