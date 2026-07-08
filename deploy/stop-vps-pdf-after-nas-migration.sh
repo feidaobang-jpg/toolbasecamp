@@ -4,6 +4,10 @@ set -euo pipefail
 
 echo "========== Stop VPS pdf (NAS migration) =========="
 
+FLAG="/opt/toolbasecamp-deploy/pdf-on-nas.flag"
+date -u +"%Y-%m-%dT%H:%M:%SZ" > "$FLAG"
+echo "OK: created $FLAG (deploy will skip Stirling on VPS)"
+
 if docker ps -a --format '{{.Names}}' | grep -qx 'stirling-pdf'; then
   echo "Stopping stirling-pdf container..."
   docker stop stirling-pdf 2>/dev/null || true

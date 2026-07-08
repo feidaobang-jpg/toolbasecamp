@@ -167,18 +167,28 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
           bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh
           bash /opt/toolbasecamp-deploy/patch-stirling-config.sh
-          bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
-          bash /opt/toolbasecamp-deploy/install-stirling-warmup-cron.sh
-          bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+          if [[ ! -f /opt/toolbasecamp-deploy/pdf-on-nas.flag ]]; then
+            bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
+            bash /opt/toolbasecamp-deploy/install-stirling-warmup-cron.sh
+            bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+          else
+            echo "pdf-on-nas.flag set — skip Stirling PDF on VPS"
+            bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh || true
+          fi
           if [[ ! -f /var/www/toolbasecamp-chef/index.html ]]; then
             bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh
           fi
           bash /opt/toolbasecamp-deploy/patch-nginx-chef.sh
           bash /opt/toolbasecamp-deploy/install-hoppscotch.sh
           bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh
-          bash /opt/toolbasecamp-deploy/install-libretranslate.sh
-          bash /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh || true
-          bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
+          if [[ ! -f /opt/toolbasecamp-deploy/translate-on-nas.flag ]]; then
+            bash /opt/toolbasecamp-deploy/install-libretranslate.sh
+            bash /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh || true
+            bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
+          else
+            echo "translate-on-nas.flag set — skip LibreTranslate on VPS"
+            bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
+          fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           systemctl restart toolbasecamp-api
           for i in 1 2 3 4 5; do

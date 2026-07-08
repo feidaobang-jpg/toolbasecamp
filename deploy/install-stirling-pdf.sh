@@ -2,10 +2,15 @@
 # Stirling-PDF via Docker on 127.0.0.1:8080
 set -euo pipefail
 
+DEPLOY="/opt/toolbasecamp-deploy"
+if [[ -f "$DEPLOY/pdf-on-nas.flag" ]]; then
+  echo "PDF runs on home NAS (pdf-on-nas.flag) — skip Stirling on VPS."
+  exit 0
+fi
+
 STIRLING_IMAGE="docker.stirlingpdf.com/stirlingtools/stirling-pdf"
 STIRLING_PORT="8080"
 CONTAINER="stirling-pdf"
-DEPLOY="/opt/toolbasecamp-deploy"
 CUSTOM_SETTINGS="$DEPLOY/stirling-custom_settings.yml"
 TESSDIR="/opt/toolbasecamp-stirling/tessdata"
 

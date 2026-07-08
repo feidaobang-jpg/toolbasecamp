@@ -2,6 +2,12 @@
 # LibreTranslate via Docker on 127.0.0.1:5000 (en + zh only to limit memory)
 set -euo pipefail
 
+DEPLOY="/opt/toolbasecamp-deploy"
+if [[ -f "$DEPLOY/translate-on-nas.flag" ]]; then
+  echo "Translate runs on home NAS (translate-on-nas.flag) — skip LibreTranslate on VPS."
+  exit 0
+fi
+
 IMAGE="libretranslate/libretranslate:latest"
 CONTAINER="libretranslate"
 PORT="5000"

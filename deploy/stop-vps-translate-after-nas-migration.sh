@@ -4,6 +4,10 @@ set -euo pipefail
 
 echo "========== Stop VPS translate (NAS migration) =========="
 
+FLAG="/opt/toolbasecamp-deploy/translate-on-nas.flag"
+date -u +"%Y-%m-%dT%H:%M:%SZ" > "$FLAG"
+echo "OK: created $FLAG (deploy will skip LibreTranslate on VPS)"
+
 if docker ps -a --format '{{.Names}}' | grep -qx 'libretranslate'; then
   docker stop libretranslate 2>/dev/null || true
   docker rm libretranslate 2>/dev/null || true
