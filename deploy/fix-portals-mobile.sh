@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fix mobile/pdf timeout: Stirling memory, warmup, nginx, Cloudflare grey cloud
+# Fix mobile/pdf: Stirling warmup, nginx inject, Cloudflare proxy for pdf DNS
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
@@ -26,12 +26,18 @@ if [[ "$DEV_JS" != "(function () {"* ]]; then
   echo "WARNING: dev JS still wrong — purge Cloudflare cache for dev.toolbasecamp.com"
 fi
 if [[ "$PDF_CODE" != "200" ]]; then
-  echo "WARNING: pdf HTTPS $PDF_CODE — Cloudflare: set pdf to DNS only (grey cloud), wait 2 min, retry."
+  echo "WARNING: pdf HTTPS $PDF_CODE"
+  if [[ -f "$DEPLOY/check-pdf-dns.sh" ]]; then
+    bash "$DEPLOY/check-pdf-dns.sh" || true
+  else
+    echo "  Cloudflare: set pdf to ORANGE cloud (Proxied), same as dev — grey cloud blocks CN mobile."
+  fi
 elif [[ "$PDF_TITLE" == *"Tool Basecamp"* ]] && [[ "$PDF_TITLE" != *"PDF"* ]]; then
-  echo "WARNING: pdf still serves main site — grey cloud + fix-pdf-portal.sh"
+  echo "WARNING: pdf still serves main site — run fix-pdf-portal.sh + expand cert for pdf subdomain"
 fi
 
 echo ""
-echo "Cloudflare: pdf.toolbasecamp.com MUST be grey cloud (DNS only), not orange proxy."
-echo "Phone: use Wi‑Fi once after fix; first load may take up to 60s if JVM was cold."
+echo "Cloudflare: pdf MUST be ORANGE cloud (Proxied) for China/mobile access."
+echo "Grey cloud (DNS only) only works where the US VPS IP is reachable; long OCR may 524 via proxy."
+echo "Phone: purge cache, hard refresh; first load up to 60s if JVM was cold."
 echo "Done."

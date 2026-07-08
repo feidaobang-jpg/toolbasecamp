@@ -79,7 +79,8 @@ fi
 
 if echo "$BODY" | grep -qi 'stirling\|pdf'; then
   echo ""
-  echo "SUCCESS. Cloudflare: pdf MUST be grey cloud (DNS only). Purge cache, then open on phone."
+  echo "SUCCESS. Cloudflare: set pdf to ORANGE cloud (Proxied), purge cache, then open on phone."
+  echo "  (Grey cloud / DNS only → direct US IP; many CN mobile networks cannot connect.)"
 else
   echo "WARNING: check output above."
 fi

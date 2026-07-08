@@ -36,9 +36,11 @@ English + 简体中文; browser language auto-detect; header **中文 / EN** tog
 
 | Name | Type | Content | Proxy |
 |------|------|---------|-------|
-| `pdf` | A | same server IP as main site | **DNS only (grey cloud)** |
+| `pdf` | A | same server IP as main site | **Proxied (orange cloud)** — required for China/mobile |
 
-**Important:** Keep `pdf` on **DNS only**, not proxied (orange cloud). Cloudflare proxy times out long OCR/conversion jobs (~100s → HTTP **524**). Main site and `dev` can stay proxied.
+**Important:** Use **Proxied (orange cloud)** like `dev` and the main site. **DNS only (grey cloud)** points phones at the US VPS IP directly; many mobile networks in China **cannot connect** (page never loads). Orange cloud may return HTTP **524** only on very long OCR/conversion jobs (>~100s) — split large files if that happens.
+
+**Do not** leave `pdf` on grey cloud unless all users are on networks that reach the origin IP.
 
 Push to GitHub → Actions runs `install-stirling-pdf.sh` + `patch-nginx-pdf.sh`. Manual:
 
@@ -53,7 +55,7 @@ Requires **~4GB RAM**. Login disabled; CSRF off for public tool POSTs; onboardin
 
 **OCR:** Install `eng` + `chi_sim` tessdata (`install-stirling-tessdata.sh`). For **JPEG/PNG screenshots**, `patch-stirling-ocr.sh` wraps ocrmypdf with `--image-dpi 300` (Stirling 2.14 bug). Select **简体中文** (or eng+chi_sim) in the OCR language dropdown.
 
-**HTTP 524 on large PDFs:** Cloudflare orange-cloud timeout. Set `pdf` to grey cloud, run `patch-nginx-pdf.sh` (30 min nginx timeout), or split the PDF and OCR in smaller parts.
+**HTTP 524 on large PDFs:** Cloudflare orange-cloud timeout (~100s). Split the PDF/OCR into smaller parts, or temporarily set `pdf` to grey cloud only for that job (if your network can reach the VPS IP).
 
 ## Developer portal (dev.toolbasecamp.com)
 
