@@ -91,13 +91,14 @@
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
             a.innerHTML =
-                '<span class="hub-portal-icon ' + theme.iconWrap + '"><i class="fas ' + theme.icon + '"></i></span>' +
-                '<span class="hub-portal-text">' +
-                    '<strong>' + escapeHtml(lbl(portal)) + '</strong>' +
-                    (desc ? '<p class="hub-portal-desc">' + escapeHtml(desc) + '</p>' : '') +
-                    (portal.meta ? '<span class="hub-portal-meta">' + escapeHtml(portal.meta) + '</span>' : '') +
-                '</span>' +
-                '<i class="fas fa-arrow-up-right-from-square hub-portal-external"></i>';
+                '<div class="hub-portal-top">' +
+                    '<span class="hub-portal-icon ' + theme.iconWrap + '"><i class="fas ' + theme.icon + '"></i></span>' +
+                    '<strong class="hub-portal-title">' + escapeHtml(lbl(portal)) +
+                        ' <i class="fas fa-arrow-up-right-from-square hub-portal-external-inline" aria-hidden="true"></i>' +
+                    '</strong>' +
+                '</div>' +
+                (desc ? '<p class="hub-portal-desc">' + escapeHtml(desc) + '</p>' : '') +
+                (portal.meta ? '<span class="hub-portal-meta">' + escapeHtml(portal.meta) + '</span>' : '');
             li.appendChild(a);
             listEl.appendChild(li);
         });
