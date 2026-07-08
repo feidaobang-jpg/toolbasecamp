@@ -149,6 +149,10 @@ Rollback: `git checkout <commit>` then push again.
 
 View deploy runs: GitHub repo → **Actions** tab.
 
+### Hybrid: home NAS (Docker Desktop)
+
+Memory-heavy portals (PDF, translate, etc.) can run on a **Win11 NAS with Docker Desktop + WSL2** instead of upgrading VPS RAM. See [docs/HOME-NAS.md](docs/HOME-NAS.md).
+
 ### One-time: GitHub Secrets
 
 Repo → **Settings → Secrets and variables → Actions → New repository secret**
