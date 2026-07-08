@@ -58,9 +58,7 @@
 
     function renderLeftNav(sidebarEl, groups) {
         if (!sidebarEl) return;
-        sidebarEl.innerHTML =
-            '<div class="hub-sidebar-head">' + tr('hub.categories') + '</div>' +
-            '<ul class="hub-nav-list" id="hub-nav-list"></ul>';
+        sidebarEl.innerHTML = '<ul class="hub-nav-list" id="hub-nav-list"></ul>';
         const listEl = sidebarEl.querySelector('#hub-nav-list');
         groups.forEach((group, index) => {
             const li = document.createElement('li');
@@ -202,13 +200,6 @@
 
     function renderToolGroups(containerEl, groups) {
         if (!containerEl) return;
-
-        if (toolsConfig && toolsConfig.sectionTitleKey) {
-            const titleEl = document.createElement('h2');
-            titleEl.className = 'hub-section-title';
-            titleEl.textContent = tr(toolsConfig.sectionTitleKey);
-            containerEl.appendChild(titleEl);
-        }
 
         groups.forEach((group, index) => {
             const sectionEl = document.createElement('section');
