@@ -20,6 +20,7 @@ else
   docker rm -f stirling-pdf 2>/dev/null || true
   bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh 2>/dev/null || mkdir -p /opt/toolbasecamp-stirling/tessdata
   docker run -d --name stirling-pdf --restart unless-stopped \
+    --memory 1g --memory-swap 1g \
     -p 127.0.0.1:8080:8080 \
     -v stirling-data:/configs \
     -v /opt/toolbasecamp-stirling/tessdata:/usr/share/tessdata \
@@ -31,6 +32,7 @@ else
     -e SYSTEM_GOOGLEVISIBILITY=false \
     -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
+    -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx768m" \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \
     docker.stirlingpdf.com/stirlingtools/stirling-pdf
@@ -119,7 +121,15 @@ fi
 
 if echo "$BODY" | grep -qi 'stirling\|pdf'; then
   echo ""
-  echo "SUCCESS. Purge Cloudflare cache for pdf.toolbasecamp.com, then open in browser."
+  echo "SUCCESS. Cloudflare: pdf MUST be grey cloud (DNS only). Purge cache, then open on phone."
 else
   echo "WARNING: check output above."
+fi
+
+echo ""
+echo "Warming Stirling (mobile first load)..."
+if [[ -f "$DEPLOY/install-stirling-warmup-cron.sh" ]]; then
+  bash "$DEPLOY/install-stirling-warmup-cron.sh"
+else
+  bash "$DEPLOY/warm-stirling-pdf.sh" 2>/dev/null || true
 fi

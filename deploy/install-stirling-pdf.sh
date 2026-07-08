@@ -51,7 +51,10 @@ needs_recreate() {
   echo "$env" | grep -qx 'SECURITY_CSRFDISABLED=true' || return 0
   echo "$env" | grep -qx 'SYSTEM_ENABLEONBOARDING=false' || return 0
   echo "$env" | grep -q 'TESSERACT_LANGS=.*chi_sim' || return 0
-  echo "$env" | grep -q 'JAVA_TOOL_OPTIONS=.*Xmx2g' || return 0
+  echo "$env" | grep -q 'JAVA_TOOL_OPTIONS=.*Xmx768m' || return 0
+  if ! docker inspect "$CONTAINER" --format '{{.HostConfig.Memory}}' 2>/dev/null | grep -q '1073741824'; then
+    return 0
+  fi
   if ! docker inspect "$CONTAINER" --format '{{json .Mounts}}' 2>/dev/null | grep -q tessdata; then
     return 0
   fi
@@ -66,6 +69,7 @@ needs_recreate() {
 run_stirling() {
   docker rm -f "$CONTAINER" 2>/dev/null || true
   docker run -d --name "$CONTAINER" --restart unless-stopped \
+    --memory 1g --memory-swap 1g \
     -p "127.0.0.1:${STIRLING_PORT}:8080" \
     -v stirling-data:/configs \
     -v "${TESSDIR}:/usr/share/tessdata" \
@@ -77,7 +81,7 @@ run_stirling() {
     -e SYSTEM_GOOGLEVISIBILITY=false \
     -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
-    -e JAVA_TOOL_OPTIONS="-Xms512m -Xmx2g" \
+    -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx768m" \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \
     "$STIRLING_IMAGE"
