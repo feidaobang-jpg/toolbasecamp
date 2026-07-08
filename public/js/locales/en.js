@@ -69,18 +69,18 @@ window.TB_LOCALES.en = {
             cta: 'Open Developer Toolkit'
         },
         chef: {
-            title: 'CyberChef',
-            description: 'The cyber swiss army knife — encode, decode, encrypt, compress, and analyze data in your browser. Static build, no server processing.',
+            title: 'Cyber Swiss Army Knife',
+            description: 'CyberChef — encode, decode, encrypt, compress, and analyze data in your browser. Static build, no server processing.',
             cta: 'Open CyberChef'
         },
         hoppscotch: {
-            title: 'Hoppscotch',
-            description: 'Lightweight API client for REST, GraphQL, and WebSocket — collections, environments, and history. Self-hosted for your team.',
+            title: 'API Client',
+            description: 'Hoppscotch — lightweight REST, GraphQL, and WebSocket debugging with collections and environments. Self-hosted for your team.',
             cta: 'Open Hoppscotch'
         },
         translate: {
-            title: 'LibreTranslate',
-            description: 'Privacy-friendly machine translation (English ↔ 中文). Self-hosted; watch server memory on small VPS plans.',
+            title: 'Machine Translation',
+            description: 'LibreTranslate — privacy-friendly English ↔ 中文 translation. Self-hosted; on small VPS plans load en and zh language packs only.',
             cta: 'Open Translator'
         }
     },
