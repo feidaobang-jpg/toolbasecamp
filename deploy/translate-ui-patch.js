@@ -1,8 +1,34 @@
 (function () {
   'use strict';
-  window.__tbTranslatePatch = 'v11';
+  window.__tbTranslatePatch = 'v12';
 
   var swapLock = false;
+
+  function readCookie(name) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  function getPortalLocale() {
+    var fromCookie = readCookie('tb-locale');
+    if (fromCookie === 'zh-CN' || fromCookie === 'en') return fromCookie;
+    try {
+      var saved = localStorage.getItem('tb-locale');
+      if (saved === 'zh-CN' || saved === 'en') return saved;
+    } catch (err) { /* ignore */ }
+    var nav = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    return nav.indexOf('zh') === 0 ? 'zh-CN' : 'en';
+  }
+
+  function translateButtonLabel() {
+    return getPortalLocale() === 'zh-CN' ? '翻译' : 'Translate';
+  }
+
+  function updateTranslateButtonLabel(btn) {
+    if (!btn) return;
+    var span = btn.querySelector('span');
+    if (span) span.textContent = translateButtonLabel();
+  }
 
   function normLang(code, fallback) {
     if (!code || code === 'undefined' || code === 'null') return fallback || 'en';
@@ -173,12 +199,14 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'btn waves-effect waves-light tb-translate-btn';
-      btn.innerHTML = '<i class="material-icons">translate</i><span>Translate</span>';
+      btn.innerHTML = '<i class="material-icons">translate</i><span>' + translateButtonLabel() + '</span>';
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         runTranslate(app);
       });
       bar.appendChild(btn);
+    } else {
+      updateTranslateButtonLabel(bar.querySelector('.tb-translate-btn'));
     }
 
     if (anchorRow.nextElementSibling !== bar) {

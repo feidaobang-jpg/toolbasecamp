@@ -58,10 +58,18 @@
         return item.name || item.title || item.description || item.cta || '';
     }
 
+    function syncLocaleCookie(locale) {
+        try {
+            document.cookie = 'tb-locale=' + encodeURIComponent(locale) +
+                '; domain=.toolbasecamp.com; path=/; max-age=31536000; SameSite=Lax';
+        } catch (e) { /* ignore */ }
+    }
+
     function setLocale(locale) {
         if (SUPPORTED.indexOf(locale) === -1) return;
         currentLocale = locale;
         try { localStorage.setItem(STORAGE_KEY, locale); } catch (e) { /* ignore */ }
+        syncLocaleCookie(locale);
         document.documentElement.lang = locale === 'zh-CN' ? 'zh-CN' : 'en';
         apply(document);
         updateLangSwitcher();
@@ -135,6 +143,7 @@
 
     function init() {
         currentLocale = detectLocale();
+        syncLocaleCookie(currentLocale);
         document.documentElement.lang = currentLocale === 'zh-CN' ? 'zh-CN' : 'en';
         apply(document);
         injectLangSwitcher();
