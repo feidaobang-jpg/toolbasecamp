@@ -45,58 +45,7 @@ fi
 
 echo ""
 echo "[2] nginx pdf vhost"
-if [[ -f "$DEPLOY/nginx-toolbasecamp-pdf.conf" ]]; then
-  cp "$DEPLOY/nginx-toolbasecamp-pdf.conf" /etc/nginx/sites-available/toolbasecamp-pdf
-else
-  cat > /etc/nginx/sites-available/toolbasecamp-pdf << 'NGINX'
-server {
-    listen 80;
-    listen [::]:80;
-    server_name pdf.toolbasecamp.com;
-    client_max_body_size 100m;
-    location / {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 300s;
-    }
-}
-server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
-    server_name pdf.toolbasecamp.com;
-    ssl_certificate /etc/letsencrypt/live/toolbasecamp.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/toolbasecamp.com/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-    client_max_body_size 100m;
-    location / {
-        proxy_pass http://127.0.0.1:8080;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 300s;
-    }
-}
-NGINX
-fi
-ln -sf /etc/nginx/sites-available/toolbasecamp-pdf /etc/nginx/sites-enabled/toolbasecamp-pdf
-
-echo ""
-echo "[2b] Wait for Stirling before nginx reload..."
-if ! bash "$DEPLOY/warm-stirling-pdf.sh"; then
-  echo "ERROR: Stirling not ready — fix docker before exposing pdf vhost."
-  docker ps -a | grep stirling || true
-  exit 1
-fi
-
-nginx -t
-systemctl reload nginx
+bash "$DEPLOY/patch-nginx-pdf.sh"
 
 echo ""
 echo "[3] Expand SSL cert (fixes Cloudflare 526)"
