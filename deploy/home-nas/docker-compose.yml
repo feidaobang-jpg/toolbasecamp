@@ -23,11 +23,12 @@ services:
       UI_APPNAME: PDF Toolkit
       UI_APPNAMENAVBAR: PDF Toolkit
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 120s
+      # First JVM boot on NAS can take 3–5 min; wget may be missing — try curl too
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ 2>/dev/null || curl -sf http://127.0.0.1:8080/ >/dev/null || exit 1"]
+      interval: 20s
+      timeout: 15s
+      retries: 12
+      start_period: 300s
 
   pdf-proxy:
     image: nginx:1.27-alpine

@@ -166,6 +166,7 @@ VPS 内存应从 ~75% 明显下降。
 | Tunnel 断开 | Token 错误或 NAS 断网 | 检查 `.env` token；`docker compose restart cloudflared` |
 | 无返回主站顶栏 | 未跑 setup-nginx-pdf.ps1 | 重跑脚本并 `docker compose restart pdf-proxy` |
 | OCR 无中文 | tessdata 缺失 | 重下 `chi_sim.traineddata` 并重启 stirling |
+| `stirling-pdf is unhealthy` | JVM 冷启动超过 2 分钟 | 等 5 分钟；`docker compose logs stirling-pdf`；更新 compose 后 `docker compose up -d` |
 | 大 PDF OCR 524 | Cloudflare 100s 限制 | 拆小文件；与 VPS 灰云问题相同 |
 
 ### 查看 Tunnel 是否在线
