@@ -168,6 +168,7 @@ VPS 内存应从 ~75% 明显下降。
 | OCR 无中文 | tessdata 缺失 | 重下 `chi_sim.traineddata` 并重启 stirling |
 | `stirling-pdf is unhealthy` | JVM 冷启动超过 2 分钟 | 等 5 分钟；`docker compose logs stirling-pdf`；更新 compose 后 `docker compose up -d` |
 | 空白页 + `Unexpected identifier 'https'` | nginx 注入脚本引号被截断 | 更新 `pdf-portal-inject.snippet` 后重跑 `setup-nginx-pdf.ps1`，`docker compose restart pdf-proxy` |
+| 一直 Loading | nginx 传 `X-Forwarded-Proto: http`（Tunnel 外网是 HTTPS） | 更新 `nginx-pdf.conf.template` 后重跑 setup 脚本，`docker compose restart pdf-proxy stirling-pdf` |
 | 大 PDF OCR 524 | Cloudflare 100s 限制 | 拆小文件；与 VPS 灰云问题相同 |
 
 ### 查看 Tunnel 是否在线

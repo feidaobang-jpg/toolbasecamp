@@ -20,6 +20,7 @@ services:
       TESSERACT_LANGS: eng,chi_sim
       SYSTEM_MAXFILESIZE: "100"
       JAVA_TOOL_OPTIONS: "-Xms512m -Xmx1536m"
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
       UI_APPNAME: PDF Toolkit
       UI_APPNAMENAVBAR: PDF Toolkit
     # No healthcheck — Stirling image often lacks wget/curl; JVM may take 3–5 min on first boot
