@@ -51,8 +51,8 @@ needs_recreate() {
   echo "$env" | grep -qx 'SECURITY_CSRFDISABLED=true' || return 0
   echo "$env" | grep -qx 'SYSTEM_ENABLEONBOARDING=false' || return 0
   echo "$env" | grep -q 'TESSERACT_LANGS=.*chi_sim' || return 0
-  echo "$env" | grep -q 'JAVA_TOOL_OPTIONS=.*Xmx768m' || return 0
-  if ! docker inspect "$CONTAINER" --format '{{.HostConfig.Memory}}' 2>/dev/null | grep -q '1073741824'; then
+  echo "$env" | grep -q 'JAVA_TOOL_OPTIONS=.*Xmx896m' || return 0
+  if ! docker inspect "$CONTAINER" --format '{{.HostConfig.Memory}}' 2>/dev/null | grep -q '1342177280'; then
     return 0
   fi
   if ! docker inspect "$CONTAINER" --format '{{json .Mounts}}' 2>/dev/null | grep -q tessdata; then
@@ -69,7 +69,7 @@ needs_recreate() {
 run_stirling() {
   docker rm -f "$CONTAINER" 2>/dev/null || true
   docker run -d --name "$CONTAINER" --restart unless-stopped \
-    --memory 1g --memory-swap 1g \
+    --memory 1280m --memory-swap 1536m \
     -p "127.0.0.1:${STIRLING_PORT}:8080" \
     -v stirling-data:/configs \
     -v "${TESSDIR}:/usr/share/tessdata" \
@@ -81,23 +81,27 @@ run_stirling() {
     -e SYSTEM_GOOGLEVISIBILITY=false \
     -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
-    -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx768m" \
+    -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx896m" \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \
     "$STIRLING_IMAGE"
 }
 
 wait_stirling() {
-  for i in $(seq 1 24); do
-    CODE="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:${STIRLING_PORT}/" || echo 000)"
+  for i in $(seq 1 48); do
+    CODE="$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 3 --max-time 15 "http://127.0.0.1:${STIRLING_PORT}/" || echo 000)"
     if [[ "$CODE" == "200" ]]; then
-      echo "Stirling-PDF ready (HTTP 200)."
+      echo "Stirling-PDF ready (HTTP 200) after ~$((i * 5))s max."
       return 0
     fi
-    echo "Waiting for Stirling-PDF... HTTP $CODE (attempt $i/24)"
-    sleep 10
+    if [[ "$i" -le 3 || $((i % 6)) -eq 0 ]]; then
+      echo "Waiting for Stirling-PDF... HTTP $CODE (attempt $i/48, cold start may take 60–90s)"
+    fi
+    sleep 5
   done
-  docker logs "$CONTAINER" --tail 40 || true
+  echo "ERROR: Stirling-PDF did not become ready — recent logs:"
+  docker logs "$CONTAINER" --tail 50 || true
+  docker inspect "$CONTAINER" --format 'State={{.State.Status}} OOM={{.State.OOMKilled}} Exit={{.State.ExitCode}}' || true
   return 1
 }
 
@@ -120,9 +124,14 @@ if needs_recreate; then
   run_stirling
   wait_stirling
 else
-  echo "Stirling-PDF already configured — restarting to apply settings."
-  docker restart "$CONTAINER"
-  wait_stirling
+  CODE="$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 3 --max-time 15 "http://127.0.0.1:${STIRLING_PORT}/" || echo 000)"
+  if [[ "$CODE" == "200" ]]; then
+    echo "Stirling-PDF already healthy (HTTP 200) — skip restart."
+  else
+    echo "Stirling-PDF not responding (HTTP $CODE) — starting..."
+    docker start "$CONTAINER" 2>/dev/null || run_stirling
+    wait_stirling
+  fi
 fi
 
 seed_custom_settings

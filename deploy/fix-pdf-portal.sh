@@ -20,7 +20,7 @@ else
   docker rm -f stirling-pdf 2>/dev/null || true
   bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh 2>/dev/null || mkdir -p /opt/toolbasecamp-stirling/tessdata
   docker run -d --name stirling-pdf --restart unless-stopped \
-    --memory 1g --memory-swap 1g \
+    --memory 1280m --memory-swap 1536m \
     -p 127.0.0.1:8080:8080 \
     -v stirling-data:/configs \
     -v /opt/toolbasecamp-stirling/tessdata:/usr/share/tessdata \
@@ -32,7 +32,7 @@ else
     -e SYSTEM_GOOGLEVISIBILITY=false \
     -e TESSERACT_LANGS=eng,chi_sim \
     -e SYSTEM_MAXFILESIZE=100 \
-    -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx768m" \
+    -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx896m" \
     -e UI_APPNAME="PDF Toolkit" \
     -e UI_APPNAMENAVBAR="PDF Toolkit" \
     docker.stirlingpdf.com/stirlingtools/stirling-pdf
@@ -86,6 +86,15 @@ server {
 NGINX
 fi
 ln -sf /etc/nginx/sites-available/toolbasecamp-pdf /etc/nginx/sites-enabled/toolbasecamp-pdf
+
+echo ""
+echo "[2b] Wait for Stirling before nginx reload..."
+if ! bash "$DEPLOY/warm-stirling-pdf.sh"; then
+  echo "ERROR: Stirling not ready — fix docker before exposing pdf vhost."
+  docker ps -a | grep stirling || true
+  exit 1
+fi
+
 nginx -t
 systemctl reload nginx
 
