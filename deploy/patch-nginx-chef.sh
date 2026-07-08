@@ -1,8 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-SITE_SRC="/opt/toolbasecamp-deploy/nginx-toolbasecamp-chef.conf"
+DEPLOY="/opt/toolbasecamp-deploy"
+SITE_SRC="$DEPLOY/nginx-toolbasecamp-chef.conf"
 SITE="/etc/nginx/sites-available/toolbasecamp-chef"
+SNIPPET="$DEPLOY/chef-portal-inject.snippet"
 WEB_ROOT="/var/www/toolbasecamp-chef"
 
 if [[ ! -f "$WEB_ROOT/index.html" ]]; then
@@ -12,26 +14,41 @@ if [[ ! -f "$WEB_ROOT/index.html" ]]; then
   exit 1
 fi
 
-bash /opt/toolbasecamp-deploy/expand-portal-certs.sh
-
-if [[ ! -f "$SITE_SRC" ]]; then
-  echo "ERROR: $SITE_SRC not found"
+if [[ ! -f "$SITE_SRC" || ! -f "$SNIPPET" ]]; then
+  echo "ERROR: missing $SITE_SRC or $SNIPPET"
   exit 1
 fi
 
-cp "$SITE_SRC" "$SITE"
+bash "$DEPLOY/expand-portal-certs.sh"
+
+python3 << PY
+from pathlib import Path
+template = Path("$SITE_SRC").read_text(encoding="utf-8")
+snippet = Path("$SNIPPET").read_text(encoding="utf-8").replace("\n", "").strip()
+if "CHEF_HEAD_INJECT" not in template:
+    raise SystemExit("ERROR: nginx template missing CHEF_HEAD_INJECT placeholder")
+if "'" in snippet:
+    raise SystemExit("ERROR: chef inject snippet must not contain single quotes")
+out = template.replace("CHEF_HEAD_INJECT", snippet)
+Path("$SITE").write_text(out, encoding="utf-8")
+print("OK: wrote nginx chef site with inline portal bar")
+PY
+
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-chef
-bash /opt/toolbasecamp-deploy/install-portal-home-bar-static.sh "$WEB_ROOT"
 
 nginx -t
 systemctl reload nginx
 
-BAR_HEAD="$(curl -sk "https://127.0.0.1/portal-home-bar.js" -H 'Host: chef.toolbasecamp.com' | head -c 20 || true)"
-if [[ "$BAR_HEAD" != "(function () {"* ]]; then
-  echo "ERROR: portal-home-bar.js not served correctly on chef (got: ${BAR_HEAD})"
+HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: chef.toolbasecamp.com' || true)"
+if ! grep -q 'id="portal-home-bar"' <<< "$HTML"; then
+  echo "ERROR: chef HTML missing inline portal-home-bar injection"
   exit 1
 fi
-echo "OK: chef portal-home-bar.js"
+if grep -q 'portal-home-bar.js' <<< "$HTML"; then
+  echo "ERROR: chef still references external portal-home-bar.js"
+  exit 1
+fi
+echo "OK: chef inline portal bar"
 
 CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: chef.toolbasecamp.com' || echo 000)"
 echo "chef.toolbasecamp.com HTTP $CODE"
