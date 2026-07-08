@@ -288,6 +288,10 @@ jobs:
             echo "::warning:: chef URL did not return CyberChef HTML."
             exit 0
           fi
+          BAR_HEAD="$(curl -s 'https://chef.toolbasecamp.com/portal-home-bar.js' | head -c 20 || true)"
+          if [[ "$BAR_HEAD" != "(function () {"* ]]; then
+            echo "::warning:: chef portal-home-bar.js invalid (got: ${BAR_HEAD}) — re-run patch-nginx-chef.sh"
+          fi
           echo "Chef portal OK."
 
       - name: Verify hoppscotch portal (public URL)

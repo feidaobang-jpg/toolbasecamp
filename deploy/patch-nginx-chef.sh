@@ -26,6 +26,13 @@ bash /opt/toolbasecamp-deploy/install-portal-home-bar-static.sh "$WEB_ROOT"
 nginx -t
 systemctl reload nginx
 
+BAR_HEAD="$(curl -sk "https://127.0.0.1/portal-home-bar.js" -H 'Host: chef.toolbasecamp.com' | head -c 20 || true)"
+if [[ "$BAR_HEAD" != "(function () {"* ]]; then
+  echo "ERROR: portal-home-bar.js not served correctly on chef (got: ${BAR_HEAD})"
+  exit 1
+fi
+echo "OK: chef portal-home-bar.js"
+
 CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: chef.toolbasecamp.com' || echo 000)"
 echo "chef.toolbasecamp.com HTTP $CODE"
 [[ "$CODE" == "200" ]] || exit 1
