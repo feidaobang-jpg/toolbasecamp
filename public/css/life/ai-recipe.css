@@ -1,0 +1,87 @@
+.recipe-card .input-section {
+  margin-bottom: 16px;
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.recipe-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 96px;
+  font-family: inherit;
+}
+
+.recipe-textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.recipe-drop {
+  margin-top: 0;
+}
+
+.recipe-result-card {
+  margin-top: 16px;
+}
+
+.recipe-result-header h2 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  color: #111827;
+}
+
+.recipe-meta {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.recipe-detected {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+}
+
+.recipe-detected h3,
+.recipe-block h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: #111827;
+}
+
+.recipe-detected p {
+  margin: 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+.recipe-block {
+  margin-top: 20px;
+}
+
+.recipe-block ul,
+.recipe-block ol {
+  margin: 0;
+  padding-left: 22px;
+  color: #374151;
+  line-height: 1.7;
+}
+
+.recipe-block li + li {
+  margin-top: 6px;
+}

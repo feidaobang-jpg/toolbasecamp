@@ -196,6 +196,9 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
+| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen) API key for AI recipe |
+| `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region, matches VPS) |
+| `QWEN_MODEL` | Default `qwen3.7-plus-us` (text + image, US region) |
 
 Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
@@ -211,12 +214,28 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/register` | Email sign-up |
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
+| POST | `/api/recipe/generate` | AI recipe from text and/or image (Qwen) |
+
+### AI Recipe (Qwen / DashScope)
+
+Purchase and API key: [阿里云百炼 Model Studio](https://bailian.console.aliyun.com/) → API Key → create key in **美国（弗吉尼亚）** region.
+
+Server env (`/etc/toolbasecamp-api.env`):
+
+```bash
+DASHSCOPE_API_KEY=sk-xxxxxxxx
+DASHSCOPE_BASE_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
+QWEN_MODEL=qwen3.7-plus-us
+```
+
+Then `systemctl restart toolbasecamp-api`. New users get free tokens on 百炼; see console for balance and billing.
 
 ---
 
 ## Verify
 
 - https://toolbasecamp.com
+- https://toolbasecamp.com/html/life/ai-recipe.html
 - https://toolbasecamp.com/
 - https://dev.toolbasecamp.com
 - https://pdf.toolbasecamp.com

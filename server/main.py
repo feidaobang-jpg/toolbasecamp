@@ -8,13 +8,15 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
 import pymysql
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 import bcrypt
 from pydantic import BaseModel
+
+from recipe_ai import MAX_INGREDIENTS_TEXT_LEN, generate_recipe
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -37,6 +39,11 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 GUESTBOOK_PAGE_SIZE = 30
 GUESTBOOK_MAX_TEXT_LEN = 500
 GUESTBOOK_MAX_GUEST_NAME_LEN = 20
+
+RECIPE_IMAGE_MAX_BYTES = 5 * 1024 * 1024
+RECIPE_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp"}
+RECIPE_GENERATE_LIMIT_GUEST = 10
+RECIPE_GENERATE_LIMIT_USER = 30
 
 security = HTTPBearer(auto_error=False)
 
@@ -116,6 +123,19 @@ def ensure_tables():
                     INDEX idx_created (created_at),
                     INDEX idx_id (id),
                     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+                """
+            )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS recipe_rate_limits (
+                    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                    limit_key VARCHAR(128) NOT NULL,
+                    action_type VARCHAR(32) NOT NULL,
+                    usage_date DATE NOT NULL,
+                    usage_count INT NOT NULL DEFAULT 0,
+                    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    UNIQUE KEY uk_limit (limit_key, action_type, usage_date)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """
             )
@@ -237,6 +257,66 @@ def _mask_email(email: str) -> str:
     if len(local) <= 2:
         return f"{local[0]}***@{domain}"
     return f"{local[:2]}***@{domain}"
+
+
+def _client_ip(request: Request) -> str:
+    forwarded = (request.headers.get("x-forwarded-for") or "").split(",")[0].strip()
+    if forwarded:
+        return forwarded
+    if request.client and request.client.host:
+        return request.client.host
+    return "unknown"
+
+
+def _today_utc() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def _check_rate_limit(limit_key: str, action_type: str, max_count: int):
+    if max_count <= 0:
+        return
+    require_db()
+    today = _today_utc()
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT usage_count FROM recipe_rate_limits
+                WHERE limit_key=%s AND action_type=%s AND usage_date=%s
+                """,
+                (limit_key, action_type, today),
+            )
+            row = cur.fetchone()
+            current = int(row["usage_count"]) if row else 0
+            if current >= max_count:
+                raise HTTPException(
+                    status_code=429,
+                    detail="Daily limit reached. Please try again tomorrow or log in for a higher limit.",
+                )
+            if row:
+                cur.execute(
+                    """
+                    UPDATE recipe_rate_limits SET usage_count = usage_count + 1
+                    WHERE limit_key=%s AND action_type=%s AND usage_date=%s
+                    """,
+                    (limit_key, action_type, today),
+                )
+            else:
+                cur.execute(
+                    """
+                    INSERT INTO recipe_rate_limits (limit_key, action_type, usage_date, usage_count)
+                    VALUES (%s, %s, %s, 1)
+                    """,
+                    (limit_key, action_type, today),
+                )
+    finally:
+        conn.close()
+
+
+def _normalize_locale(locale: str) -> str:
+    loc = (locale or "").strip()
+    return "zh-CN" if loc in ("zh-CN", "zh", "zh-cn") else "en"
 
 
 def _sanitize_guest_name(name: str) -> str:
@@ -590,6 +670,60 @@ async def pdf_to_word(file: UploadFile = File(...)):
     except Exception as exc:
         shutil.rmtree(tmp_dir, ignore_errors=True)
         raise HTTPException(status_code=500, detail=f"Conversion failed: {exc}") from exc
+
+
+@app.post("/recipe/generate")
+async def recipe_generate(
+    request: Request,
+    ingredients_text: str = Form(""),
+    locale: str = Form("en"),
+    image: Optional[UploadFile] = File(None),
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
+    user = get_optional_user(creds)
+    text = (ingredients_text or "").strip()
+    if len(text) > MAX_INGREDIENTS_TEXT_LEN:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Ingredients text must not exceed {MAX_INGREDIENTS_TEXT_LEN} characters",
+        )
+
+    image_bytes = None
+    image_mime = None
+    if image and image.filename:
+        image_mime = (image.content_type or "").split(";")[0].strip().lower()
+        if image_mime not in RECIPE_IMAGE_MIMES:
+            raise HTTPException(status_code=400, detail="Image must be JPEG, PNG, or WebP")
+        image_bytes = await image.read()
+        if len(image_bytes) > RECIPE_IMAGE_MAX_BYTES:
+            raise HTTPException(status_code=400, detail="Image must not exceed 5 MB")
+        if len(image_bytes) == 0:
+            image_bytes = None
+
+    if not text and not image_bytes:
+        raise HTTPException(status_code=400, detail="Please enter ingredients or upload an image")
+
+    limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
+    max_gen = RECIPE_GENERATE_LIMIT_USER if user else RECIPE_GENERATE_LIMIT_GUEST
+    _check_rate_limit(limit_key, "generate", max_gen)
+
+    try:
+        recipe = await generate_recipe(
+            ingredients_text=text,
+            image_bytes=image_bytes,
+            image_mime=image_mime,
+            locale=_normalize_locale(locale),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        print(f"[recipe/generate] {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        print(f"[recipe/generate] unexpected error: {exc}")
+        raise HTTPException(status_code=500, detail="Recipe generation failed. Please try again.") from exc
+
+    return {"success": True, "recipe": recipe}
 
 
 @app.post("/word-to-pdf")

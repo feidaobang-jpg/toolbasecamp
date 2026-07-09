@@ -86,10 +86,38 @@ window.TB_LOCALES.en = {
     },
     tools: {
         groups: {
+            life: 'Life Tools',
             media: 'Media Tools',
             document: 'Document Tools',
             diagram: 'Diagram Tools',
             developer: 'Developer Tools'
+        },
+        aiRecipe: {
+            title: 'AI Recipe',
+            desc: 'Enter ingredients or upload a photo — AI creates a full recipe with steps.',
+            textLabel: 'Ingredients (text)',
+            textPlaceholder: 'e.g. tomato, egg, rice, onion',
+            imageLabel: 'Ingredients (photo)',
+            dropTitle: 'Click or drag an ingredient photo here',
+            dropHint: 'JPEG, PNG, or WebP — up to 5 MB (optional)',
+            removeImage: 'Remove',
+            note: 'Tip:',
+            noteBody: 'You can use text only, photo only, or both together.',
+            generate: 'Generate recipe',
+            clear: 'Clear',
+            uploading: 'Uploading...',
+            generating: 'Generating recipe...',
+            processing: 'Processing...',
+            done: 'Done',
+            failed: 'Generation failed',
+            needInput: 'Please enter ingredients or upload a photo',
+            invalidImage: 'Please upload JPEG, PNG, or WebP',
+            imageTooLarge: 'Image must not exceed 5 MB',
+            meta: 'Serves {servings} · Prep {prep} min · Cook {cook} min',
+            detected: 'Detected ingredients',
+            ingredients: 'Ingredients',
+            steps: 'Steps',
+            tips: 'Tips'
         },
         videoToImages: {
             title: 'Video to Images',

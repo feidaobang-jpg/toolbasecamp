@@ -76,6 +76,12 @@ const toolsConfig = {
     sectionTitleKey: 'hub.basecampTools',
     groups: [
         {
+            titleKey: 'tools.groups.life',
+            items: [
+                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' }
+            ]
+        },
+        {
             titleKey: 'tools.groups.media',
             items: [
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }

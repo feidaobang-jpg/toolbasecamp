@@ -85,10 +85,38 @@ window.TB_LOCALES['zh-CN'] = {
     },
     tools: {
         groups: {
+            life: '生活工具',
             media: '媒体工具',
             document: '文档工具',
             diagram: '图表工具',
             developer: '开发者工具'
+        },
+        aiRecipe: {
+            title: 'AI 菜谱',
+            desc: '输入食材或上传照片，AI 生成完整菜谱与步骤。',
+            textLabel: '食材（文字）',
+            textPlaceholder: '例如：番茄、鸡蛋、米饭、洋葱',
+            imageLabel: '食材（图片）',
+            dropTitle: '点击或拖拽食材照片到此处',
+            dropHint: '支持 JPEG、PNG、WebP，最大 5 MB（可选）',
+            removeImage: '移除',
+            note: '提示：',
+            noteBody: '可以只填文字、只上传图片，或两者一起使用。',
+            generate: '生成菜谱',
+            clear: '清空',
+            uploading: '上传中...',
+            generating: '正在生成菜谱...',
+            processing: '处理中...',
+            done: '完成',
+            failed: '生成失败',
+            needInput: '请输入食材或上传图片',
+            invalidImage: '请上传 JPEG、PNG 或 WebP 图片',
+            imageTooLarge: '图片不能超过 5 MB',
+            meta: '份量 {servings} 人 · 准备 {prep} 分钟 · 烹饪 {cook} 分钟',
+            detected: '识别到的食材',
+            ingredients: '用料',
+            steps: '步骤',
+            tips: '小贴士'
         },
         videoToImages: {
             title: '视频转图片',

@@ -62,6 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
     return String(data.detail);
   }
 
+  function getSafeNextUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const next = (params.get('next') || '').trim();
+    if (!next) return '';
+    if (next.startsWith('http://') || next.startsWith('https://') || next.startsWith('//')) return '';
+    if (next.startsWith('/')) return next;
+    return '';
+  }
+
+  function redirectAfterAuth() {
+    const next = getSafeNextUrl();
+    if (next) {
+      window.location.href = next;
+      return;
+    }
+    window.location.href = 'profile.html';
+  }
+
   async function postJson(path, body) {
     const res = await fetch(`${AUTH_BASE_URL}${path}`, {
       method: 'POST',
@@ -95,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await postJson('/auth/register', { email, password });
         if (data.token) setToken(data.token);
         setStatus('Account created. Redirecting...');
-        setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
+        setTimeout(() => { redirectAfterAuth(); }, 1000);
       } catch (e) {
         setStatus(translateError(e.message || String(e)), true);
         setLoading(registerBtn, false, 'Sign up');
@@ -119,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await postJson('/auth/login', { email, password });
         if (data.token) setToken(data.token);
         setStatus('Logged in. Redirecting...');
-        setTimeout(() => { window.location.href = 'profile.html'; }, 1000);
+        setTimeout(() => { redirectAfterAuth(); }, 1000);
       } catch (e) {
         setStatus(translateError(e.message || String(e)), true);
         setLoading(loginBtn, false, 'Log in');

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Recipe - Tool Basecamp</title>
+  <meta name="description" content="Generate recipes from ingredient text or photos using AI.">
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css" />
+  <link rel="stylesheet" href="../../css/life/ai-recipe.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.aiRecipe.title">AI Recipe</h1>
+        <p data-i18n="tools.aiRecipe.desc">Enter ingredients or upload a photo — AI creates a full recipe with steps.</p>
+      </div>
+
+      <div class="tool-card recipe-card">
+        <div class="input-section">
+          <label class="field-label" for="ingredients-text" data-i18n="tools.aiRecipe.textLabel">Ingredients (text)</label>
+          <textarea id="ingredients-text" class="recipe-textarea" rows="4"
+            data-i18n-placeholder="tools.aiRecipe.textPlaceholder"
+            placeholder="e.g. tomato, egg, rice"></textarea>
+        </div>
+
+        <div class="input-section">
+          <label class="field-label" data-i18n="tools.aiRecipe.imageLabel">Ingredients (photo)</label>
+          <div class="drop-zone recipe-drop" id="drop-zone">
+            <div class="drop-icon">📷</div>
+            <div class="drop-title" data-i18n="tools.aiRecipe.dropTitle">Click or drag an ingredient photo here</div>
+            <div class="drop-hint" data-i18n="tools.aiRecipe.dropHint">JPEG, PNG, or WebP — up to 5 MB (optional)</div>
+            <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" style="display:none" />
+          </div>
+          <div class="file-info-row" id="file-info" style="display:none">
+            <span class="file-icon">🖼️</span>
+            <span class="file-name" id="file-name">-</span>
+            <span class="file-size" id="file-size">-</span>
+            <button class="remove-btn" id="remove-btn" data-i18n-title="tools.aiRecipe.removeImage" title="Remove">✕</button>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.aiRecipe.note">Tip:</b>
+          <span data-i18n="tools.aiRecipe.noteBody">You can use text only, photo only, or both together.</span>
+        </div>
+
+        <div class="action-row">
+          <button class="btn-primary" id="generate-btn">
+            <span>🍳</span> <span data-i18n="tools.aiRecipe.generate">Generate recipe</span>
+          </button>
+          <button class="btn-secondary" id="clear-btn" data-i18n="tools.aiRecipe.clear">Clear</button>
+        </div>
+
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-label">
+            <span id="progress-status" data-i18n="tools.aiRecipe.generating">Generating...</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="error-box" id="error-box">
+          <span>⚠️</span>
+          <span id="error-msg" data-i18n="tools.aiRecipe.failed">Generation failed</span>
+        </div>
+      </div>
+
+      <div class="tool-card recipe-result-card" id="result-card" style="display:none">
+        <div class="recipe-result-header">
+          <h2 id="recipe-title">-</h2>
+          <p class="recipe-meta" id="recipe-meta">-</p>
+        </div>
+
+        <div class="recipe-detected" id="detected-wrap" style="display:none">
+          <h3 data-i18n="tools.aiRecipe.detected">Detected ingredients</h3>
+          <p id="detected-list"></p>
+        </div>
+
+        <div class="recipe-block">
+          <h3 data-i18n="tools.aiRecipe.ingredients">Ingredients</h3>
+          <ul id="ingredients-list"></ul>
+        </div>
+
+        <div class="recipe-block">
+          <h3 data-i18n="tools.aiRecipe.steps">Steps</h3>
+          <ol id="steps-list"></ol>
+        </div>
+
+        <div class="recipe-block" id="tips-wrap" style="display:none">
+          <h3 data-i18n="tools.aiRecipe.tips">Tips</h3>
+          <ul id="tips-list"></ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/common_ui.js"></script>
+  <script src="../../js/life/ai-recipe.js"></script>
+</body>
+</html>
