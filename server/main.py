@@ -20,6 +20,7 @@ from recipe_ai import (
     MAX_INGREDIENTS_TEXT_LEN,
     MAX_RECIPE_IMAGES,
     detect_ingredients,
+    generate_recipe,
     generate_recipe_from_selection,
 )
 
@@ -353,6 +354,93 @@ async def _read_recipe_images(images: List[UploadFile]) -> List[tuple]:
             raise HTTPException(status_code=400, detail="Each image must not exceed 5 MB")
         parsed.append((image_bytes, image_mime))
     return parsed
+
+
+async def _collect_form_images(form) -> List[UploadFile]:
+    uploads: List[UploadFile] = []
+    seen = set()
+    for key in ("images", "image"):
+        for item in form.getlist(key):
+            if not hasattr(item, "read"):
+                continue
+            ident = id(item)
+            if ident in seen:
+                continue
+            seen.add(ident)
+            uploads.append(item)
+    return uploads
+
+
+async def _recipe_detect_core(
+    request: Request,
+    *,
+    ingredients_text: str,
+    locale: str,
+    image_payload: List[tuple],
+    user: Optional[dict],
+) -> dict:
+    text = (ingredients_text or "").strip()
+    if len(text) > MAX_INGREDIENTS_TEXT_LEN:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Ingredients text must not exceed {MAX_INGREDIENTS_TEXT_LEN} characters",
+        )
+    if not text and not image_payload:
+        raise HTTPException(status_code=400, detail="Please enter ingredients or upload an image")
+
+    limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
+    max_detect = RECIPE_DETECT_LIMIT_USER if user else RECIPE_DETECT_LIMIT_GUEST
+    _check_rate_limit(limit_key, "detect", max_detect)
+
+    try:
+        result = await detect_ingredients(
+            ingredients_text=text,
+            images=image_payload,
+            locale=_normalize_locale(locale),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        print(f"[recipe/detect] {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        print(f"[recipe/detect] unexpected error: {exc}")
+        raise HTTPException(status_code=500, detail="Ingredient detection failed. Please try again.") from exc
+
+    return {"success": True, **result}
+
+
+async def _recipe_generate_json_core(
+    request: Request,
+    body: RecipeGenerateBody,
+    user: Optional[dict],
+) -> dict:
+    ingredients = [str(x).strip() for x in (body.ingredients or []) if str(x).strip()]
+    if not ingredients:
+        raise HTTPException(status_code=400, detail="Please select at least one ingredient")
+    if len(ingredients) > 50:
+        raise HTTPException(status_code=400, detail="Too many ingredients selected")
+
+    limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
+    max_gen = RECIPE_GENERATE_LIMIT_USER if user else RECIPE_GENERATE_LIMIT_GUEST
+    _check_rate_limit(limit_key, "generate", max_gen)
+
+    try:
+        recipe = await generate_recipe_from_selection(
+            ingredients=ingredients,
+            locale=_normalize_locale(body.locale or "en"),
+            extra_notes=(body.notes or "").strip(),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        print(f"[recipe/generate] {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        print(f"[recipe/generate] unexpected error: {exc}")
+        raise HTTPException(status_code=500, detail="Recipe generation failed. Please try again.") from exc
+
+    return {"success": True, "recipe": recipe}
 
 
 def _sanitize_guest_name(name: str) -> str:
@@ -720,72 +808,79 @@ async def recipe_detect(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
     user = get_optional_user(creds)
-    text = (ingredients_text or "").strip()
-    if len(text) > MAX_INGREDIENTS_TEXT_LEN:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Ingredients text must not exceed {MAX_INGREDIENTS_TEXT_LEN} characters",
-        )
-
     image_payload = await _read_recipe_images(images or [])
-    if not text and not image_payload:
-        raise HTTPException(status_code=400, detail="Please enter ingredients or upload an image")
-
-    limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
-    max_detect = RECIPE_DETECT_LIMIT_USER if user else RECIPE_DETECT_LIMIT_GUEST
-    _check_rate_limit(limit_key, "detect", max_detect)
-
-    try:
-        result = await detect_ingredients(
-            ingredients_text=text,
-            images=image_payload,
-            locale=_normalize_locale(locale),
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        print(f"[recipe/detect] {exc}")
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:
-        print(f"[recipe/detect] unexpected error: {exc}")
-        raise HTTPException(status_code=500, detail="Ingredient detection failed. Please try again.") from exc
-
-    return {"success": True, **result}
+    return await _recipe_detect_core(
+        request,
+        ingredients_text=ingredients_text,
+        locale=locale,
+        image_payload=image_payload,
+        user=user,
+    )
 
 
 @app.post("/recipe/generate")
 async def recipe_generate(
     request: Request,
-    body: RecipeGenerateBody,
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
     user = get_optional_user(creds)
-    ingredients = [str(x).strip() for x in (body.ingredients or []) if str(x).strip()]
-    if not ingredients:
-        raise HTTPException(status_code=400, detail="Please select at least one ingredient")
-    if len(ingredients) > 50:
-        raise HTTPException(status_code=400, detail="Too many ingredients selected")
+    content_type = (request.headers.get("content-type") or "").lower()
 
-    limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
-    max_gen = RECIPE_GENERATE_LIMIT_USER if user else RECIPE_GENERATE_LIMIT_GUEST
-    _check_rate_limit(limit_key, "generate", max_gen)
+    if "application/json" in content_type:
+        try:
+            payload = await request.json()
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail="Invalid JSON body") from exc
+        body = RecipeGenerateBody(**payload)
+        return await _recipe_generate_json_core(request, body, user)
 
-    try:
-        recipe = await generate_recipe_from_selection(
-            ingredients=ingredients,
-            locale=_normalize_locale(body.locale or "en"),
-            extra_notes=(body.notes or "").strip(),
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        print(f"[recipe/generate] {exc}")
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:
-        print(f"[recipe/generate] unexpected error: {exc}")
-        raise HTTPException(status_code=500, detail="Recipe generation failed. Please try again.") from exc
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+        step = str(form.get("step") or "").strip().lower()
+        text = str(form.get("ingredients_text") or "").strip()
+        locale = str(form.get("locale") or "en")
+        image_payload = await _read_recipe_images(await _collect_form_images(form))
 
-    return {"success": True, "recipe": recipe}
+        if step == "detect":
+            return await _recipe_detect_core(
+                request,
+                ingredients_text=text,
+                locale=locale,
+                image_payload=image_payload,
+                user=user,
+            )
+
+        if not text and not image_payload:
+            raise HTTPException(status_code=400, detail="Please enter ingredients or upload an image")
+
+        limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
+        max_gen = RECIPE_GENERATE_LIMIT_USER if user else RECIPE_GENERATE_LIMIT_GUEST
+        _check_rate_limit(limit_key, "generate", max_gen)
+
+        image_bytes = image_payload[0][0] if image_payload else None
+        image_mime = image_payload[0][1] if image_payload else None
+        try:
+            recipe = await generate_recipe(
+                ingredients_text=text,
+                image_bytes=image_bytes,
+                image_mime=image_mime,
+                locale=_normalize_locale(locale),
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except RuntimeError as exc:
+            print(f"[recipe/generate] {exc}")
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except Exception as exc:
+            print(f"[recipe/generate] unexpected error: {exc}")
+            raise HTTPException(status_code=500, detail="Recipe generation failed. Please try again.") from exc
+
+        return {"success": True, "recipe": recipe}
+
+    raise HTTPException(
+        status_code=400,
+        detail="Use application/json for selected ingredients, or multipart/form-data for detect/legacy upload",
+    )
 
 
 @app.post("/word-to-pdf")

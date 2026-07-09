@@ -129,30 +129,68 @@ document.addEventListener('DOMContentLoaded', function () {
             const wrap = document.createElement('div');
             wrap.className = 'recipe-preview-item';
 
+            const thumb = document.createElement('div');
+            thumb.className = 'recipe-preview-thumb';
+
             const img = document.createElement('img');
             img.src = item.url;
             img.alt = item.file.name;
-
-            const meta = document.createElement('div');
-            meta.className = 'recipe-preview-meta';
-            meta.textContent = formatSize(item.file.size);
 
             const remove = document.createElement('button');
             remove.type = 'button';
             remove.className = 'recipe-preview-remove';
             remove.title = tr('tools.aiRecipe.removeImage');
-            remove.textContent = '✕';
-            remove.addEventListener('click', function () {
+            remove.setAttribute('aria-label', tr('tools.aiRecipe.removeImage'));
+            remove.innerHTML = '&times;';
+            remove.addEventListener('click', function (e) {
+                e.stopPropagation();
                 removeImage(item.id);
             });
 
-            wrap.appendChild(img);
+            thumb.appendChild(img);
+            thumb.appendChild(remove);
+
+            const meta = document.createElement('div');
+            meta.className = 'recipe-preview-meta';
+            meta.textContent = formatSize(item.file.size);
+
+            wrap.appendChild(thumb);
             wrap.appendChild(meta);
-            wrap.appendChild(remove);
             previewGrid.appendChild(wrap);
         });
 
         dropZone.classList.toggle('has-file', imageItems.length > 0);
+    }
+
+    function buildDetectForm(text) {
+        const form = new FormData();
+        form.append('ingredients_text', text);
+        form.append('locale', getLocale());
+        imageItems.forEach(function (item) {
+            form.append('images', item.file);
+        });
+        return form;
+    }
+
+    async function requestDetect(text) {
+        const primaryForm = buildDetectForm(text);
+        let res = await fetch(API_BASE + '/recipe/detect', {
+            method: 'POST',
+            headers: authHeaders(),
+            body: primaryForm
+        });
+
+        if (res.status === 404) {
+            const fallbackForm = buildDetectForm(text);
+            fallbackForm.append('step', 'detect');
+            res = await fetch(API_BASE + '/recipe/generate', {
+                method: 'POST',
+                headers: authHeaders(),
+                body: fallbackForm
+            });
+        }
+
+        return res;
     }
 
     function addImages(fileList) {
@@ -327,19 +365,8 @@ document.addEventListener('DOMContentLoaded', function () {
         showProgress(tr('tools.aiRecipe.uploading'), 15);
 
         try {
-            const form = new FormData();
-            form.append('ingredients_text', text);
-            form.append('locale', getLocale());
-            imageItems.forEach(function (item) {
-                form.append('images', item.file);
-            });
-
             showProgress(tr('tools.aiRecipe.detecting'), 50);
-            const res = await fetch(API_BASE + '/recipe/detect', {
-                method: 'POST',
-                headers: authHeaders(),
-                body: form
-            });
+            const res = await requestDetect(text);
 
             showProgress(tr('tools.aiRecipe.processing'), 85);
 
@@ -350,6 +377,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await res.json().catch(function () { return {}; });
             if (!res.ok) {
                 throw new Error(data.detail || tr('tools.aiRecipe.detectFailed'));
+            }
+
+            if (data.recipe) {
+                showProgress(tr('tools.aiRecipe.done'), 100);
+                renderRecipe(data.recipe);
+                return;
             }
 
             const items = data.ingredients || [];

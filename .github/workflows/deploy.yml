@@ -218,6 +218,15 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             exit 1
           fi
+          DETECT_HTTP="$(curl -s -o /tmp/recipe-detect-local.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/detect -F 'ingredients_text=tomato' -F 'locale=en' || echo '000')"
+          echo "local recipe/detect POST $DETECT_HTTP"
+          head -c 200 /tmp/recipe-detect-local.txt || true
+          echo ""
+          if [[ "$DETECT_HTTP" == "404" ]]; then
+            echo "=== recipe/detect still 404 on localhost ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            exit 1
+          fi
           REMOTE
 
       - name: Verify main site assets (public URL)
@@ -261,6 +270,16 @@ jobs:
           echo ""
           if [[ "$HTTP_CODE" == "404" ]]; then
             echo "::error:: recipe API route missing — server main.py may not be deployed; check toolbasecamp-api restart."
+            exit 1
+          fi
+          DETECT_CODE="$(curl -s -o /tmp/recipe-detect-api.txt -w '%{http_code}' \
+            -X POST 'https://toolbasecamp.com/api/recipe/detect' \
+            -F 'ingredients_text=tomato' -F 'locale=en' || echo '000')"
+          echo "recipe/detect POST HTTPS $DETECT_CODE"
+          head -c 200 /tmp/recipe-detect-api.txt || true
+          echo ""
+          if [[ "$DETECT_CODE" == "404" ]]; then
+            echo "::error:: recipe/detect route missing — restart toolbasecamp-api on server."
             exit 1
           fi
           if [[ "$HTTP_CODE" != "422" && "$HTTP_CODE" != "400" && "$HTTP_CODE" != "503" ]]; then
