@@ -51,6 +51,7 @@
   position: relative;
   height: 96px;
   background: #111827;
+  cursor: zoom-in;
 }
 
 .recipe-preview-thumb img {
@@ -58,6 +59,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: zoom-in;
 }
 
 .recipe-preview-meta {
@@ -93,6 +95,121 @@
 
 .recipe-preview-remove:hover {
   background: rgba(220, 38, 38, 0.9);
+}
+
+.recipe-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.88);
+  box-sizing: border-box;
+}
+
+.recipe-lightbox-body {
+  max-width: min(92vw, 960px);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.recipe-lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(88vh - 48px);
+  object-fit: contain;
+  border-radius: 10px;
+  background: #0f172a;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.recipe-lightbox-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  justify-content: center;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
+.recipe-lightbox-counter {
+  font-weight: 600;
+}
+
+.recipe-lightbox-caption {
+  color: #cbd5e1;
+}
+
+.recipe-lightbox-close,
+.recipe-lightbox-nav {
+  position: absolute;
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.recipe-lightbox-close:hover,
+.recipe-lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.recipe-lightbox-close {
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+  padding: 0;
+}
+
+.recipe-lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+  padding: 0;
+}
+
+.recipe-lightbox-prev {
+  left: 16px;
+}
+
+.recipe-lightbox-next {
+  right: 16px;
+}
+
+@media (max-width: 640px) {
+  .recipe-lightbox {
+    padding: 12px;
+  }
+
+  .recipe-lightbox-prev {
+    left: 8px;
+  }
+
+  .recipe-lightbox-next {
+    right: 8px;
+  }
+
+  .recipe-lightbox-close {
+    top: 10px;
+    right: 10px;
+  }
 }
 
 .recipe-select-card {

@@ -123,18 +123,119 @@ document.addEventListener('DOMContentLoaded', function () {
         return tr('tools.aiRecipe.sourceText');
     }
 
+    let lightboxEl = null;
+    let lightboxIndex = 0;
+    let lightboxKeyHandler = null;
+
+    function closeImageLightbox() {
+        if (lightboxKeyHandler) {
+            document.removeEventListener('keydown', lightboxKeyHandler);
+            lightboxKeyHandler = null;
+        }
+        if (lightboxEl) {
+            lightboxEl.remove();
+            lightboxEl = null;
+        }
+        document.body.style.overflow = '';
+    }
+
+    function updateLightboxView() {
+        if (!lightboxEl || !imageItems.length) return;
+        const img = lightboxEl.querySelector('.recipe-lightbox-img');
+        const caption = lightboxEl.querySelector('.recipe-lightbox-caption');
+        const counter = lightboxEl.querySelector('.recipe-lightbox-counter');
+        const item = imageItems[lightboxIndex];
+        if (!item || !img) return;
+
+        img.src = item.url;
+        img.alt = item.file.name;
+        if (caption) {
+            caption.textContent = item.file.name + ' · ' + formatSize(item.file.size);
+        }
+        if (counter) {
+            counter.textContent = tr('tools.aiRecipe.imagePreviewOf', {
+                current: lightboxIndex + 1,
+                total: imageItems.length
+            });
+        }
+
+        const showNav = imageItems.length > 1;
+        lightboxEl.querySelectorAll('.recipe-lightbox-nav').forEach(function (btn) {
+            btn.style.display = showNav ? 'flex' : 'none';
+        });
+    }
+
+    function openImageLightbox(index) {
+        if (!imageItems.length) return;
+        closeImageLightbox();
+
+        lightboxIndex = Math.max(0, Math.min(index, imageItems.length - 1));
+        lightboxEl = document.createElement('div');
+        lightboxEl.className = 'recipe-lightbox';
+        lightboxEl.setAttribute('role', 'dialog');
+        lightboxEl.setAttribute('aria-modal', 'true');
+        lightboxEl.innerHTML =
+            '<button type="button" class="recipe-lightbox-close" aria-label="' + tr('tools.aiRecipe.closePreview') + '">&times;</button>' +
+            '<button type="button" class="recipe-lightbox-nav recipe-lightbox-prev" aria-label="' + tr('tools.aiRecipe.prevImage') + '">&#8249;</button>' +
+            '<div class="recipe-lightbox-body">' +
+            '  <img class="recipe-lightbox-img" alt="" />' +
+            '  <div class="recipe-lightbox-meta">' +
+            '    <span class="recipe-lightbox-counter"></span>' +
+            '    <span class="recipe-lightbox-caption"></span>' +
+            '  </div>' +
+            '</div>' +
+            '<button type="button" class="recipe-lightbox-nav recipe-lightbox-next" aria-label="' + tr('tools.aiRecipe.nextImage') + '">&#8250;</button>';
+
+        lightboxEl.querySelector('.recipe-lightbox-close').addEventListener('click', closeImageLightbox);
+        lightboxEl.querySelector('.recipe-lightbox-prev').addEventListener('click', function (e) {
+            e.stopPropagation();
+            lightboxIndex = (lightboxIndex - 1 + imageItems.length) % imageItems.length;
+            updateLightboxView();
+        });
+        lightboxEl.querySelector('.recipe-lightbox-next').addEventListener('click', function (e) {
+            e.stopPropagation();
+            lightboxIndex = (lightboxIndex + 1) % imageItems.length;
+            updateLightboxView();
+        });
+        lightboxEl.addEventListener('click', function (e) {
+            if (e.target === lightboxEl) closeImageLightbox();
+        });
+
+        lightboxKeyHandler = function (e) {
+            if (!lightboxEl) return;
+            if (e.key === 'Escape') closeImageLightbox();
+            if (e.key === 'ArrowLeft' && imageItems.length > 1) {
+                lightboxIndex = (lightboxIndex - 1 + imageItems.length) % imageItems.length;
+                updateLightboxView();
+            }
+            if (e.key === 'ArrowRight' && imageItems.length > 1) {
+                lightboxIndex = (lightboxIndex + 1) % imageItems.length;
+                updateLightboxView();
+            }
+        };
+        document.addEventListener('keydown', lightboxKeyHandler);
+
+        document.body.appendChild(lightboxEl);
+        document.body.style.overflow = 'hidden';
+        updateLightboxView();
+    }
+
     function renderPreviews() {
         previewGrid.innerHTML = '';
-        imageItems.forEach(function (item) {
+        imageItems.forEach(function (item, index) {
             const wrap = document.createElement('div');
             wrap.className = 'recipe-preview-item';
 
             const thumb = document.createElement('div');
             thumb.className = 'recipe-preview-thumb';
+            thumb.title = tr('tools.aiRecipe.viewImage');
 
             const img = document.createElement('img');
             img.src = item.url;
             img.alt = item.file.name;
+            img.addEventListener('click', function () {
+                openImageLightbox(index);
+            });
 
             const remove = document.createElement('button');
             remove.type = 'button';
@@ -225,12 +326,19 @@ document.addEventListener('DOMContentLoaded', function () {
     function removeImage(id) {
         const idx = imageItems.findIndex(function (item) { return item.id === id; });
         if (idx < 0) return;
+        if (lightboxEl && lightboxIndex === idx) {
+            closeImageLightbox();
+        } else if (lightboxEl && lightboxIndex > idx) {
+            lightboxIndex -= 1;
+            updateLightboxView();
+        }
         URL.revokeObjectURL(imageItems[idx].url);
         imageItems.splice(idx, 1);
         renderPreviews();
     }
 
     function clearImages() {
+        closeImageLightbox();
         imageItems.forEach(function (item) {
             URL.revokeObjectURL(item.url);
         });
