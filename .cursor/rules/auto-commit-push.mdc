@@ -8,7 +8,7 @@ alwaysApply: true
 When you finish a coding task that modified tracked files in this repo:
 
 1. **Commit and push without waiting for the user to ask**, unless they said "don't commit", "no push", or the session is Ask/Plan mode only.
-2. Follow the repo commit style: short imperative subject, 1–2 sentences focusing on why.
+2. Follow the repo commit style: **commit message in 简体中文**; short imperative subject, 1–2 sentences focusing on why (e.g. `feat: 新增 AI 菜谱千问接口`).
 3. Use a normal commit (not `--amend`) unless amend rules in user rules apply.
 4. **Push** to `origin` on the current branch after a successful commit so GitHub Actions deploy can run.
 5. Do **not** commit secrets (`.env`, API keys, `/etc/*` copies).
@@ -18,7 +18,7 @@ Typical flow after implementation:
 
 ```bash
 git add <relevant files>
-git commit -m "feat: ..."
+git commit -m "feat: 简要中文说明"
 git push origin HEAD
 ```
 
