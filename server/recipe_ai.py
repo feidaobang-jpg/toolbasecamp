@@ -18,6 +18,8 @@ QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
 MAX_INGREDIENTS_TEXT_LEN = 2000
 MAX_RECIPE_IMAGES = 5
 HTTP_TIMEOUT = 120.0
+RECIPE_MAX_TOKENS = 1800
+RECIPE_TEMPERATURE = 0.5
 
 RECIPE_SCHEMA_HINT = """
 Return ONLY valid JSON (no markdown) with this exact structure:
@@ -145,6 +147,8 @@ async def _call_qwen(
     *,
     model: str,
     use_json_mode: bool = False,
+    max_tokens: int = 4096,
+    temperature: float = 0.7,
 ) -> str:
     if not DASHSCOPE_API_KEY:
         raise RuntimeError("DashScope API key is not configured (set DASHSCOPE_API_KEY)")
@@ -152,8 +156,8 @@ async def _call_qwen(
     payload: dict = {
         "model": model,
         "messages": messages,
-        "temperature": 0.7,
-        "max_tokens": 4096,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
     }
     if use_json_mode:
         payload["response_format"] = {"type": "json_object"}
@@ -267,12 +271,8 @@ async def _generate_recipe_from_text(
     ingredient_list = ", ".join(ingredients)
     if locale == "zh-CN":
         user_text = f"可用食材：{ingredient_list}。请生成一道实用的主菜菜谱。"
-        if extra_notes:
-            user_text += f" 图片备注：{extra_notes}"
     else:
         user_text = f"Available ingredients: {ingredient_list}. Create one practical main dish recipe."
-        if extra_notes:
-            user_text += f" Image notes: {extra_notes}"
 
     system_text = (
         "You are a helpful cooking assistant. Generate exactly one complete recipe. "
@@ -284,12 +284,14 @@ async def _generate_recipe_from_text(
         {"role": "user", "content": user_text},
     ]
 
-    raw = await _call_qwen(messages, model=QWEN_MODEL, use_json_mode=True)
-    try:
-        parsed = _extract_json(raw)
-    except json.JSONDecodeError:
-        raw = await _call_qwen(messages, model=QWEN_MODEL, use_json_mode=False)
-        parsed = _extract_json(raw)
+    raw = await _call_qwen(
+        messages,
+        model=QWEN_MODEL,
+        use_json_mode=True,
+        max_tokens=RECIPE_MAX_TOKENS,
+        temperature=RECIPE_TEMPERATURE,
+    )
+    parsed = _extract_json(raw)
 
     recipe = _normalize_recipe(parsed, detected=ingredients)
     if not recipe["detected_ingredients"]:
@@ -363,7 +365,6 @@ async def detect_ingredients(
 async def generate_recipe_from_selection(
     ingredients: List[str],
     locale: str,
-    extra_notes: str = "",
 ) -> dict:
     locale = "zh-CN" if locale == "zh-CN" else "en"
     cleaned: List[str] = []
@@ -377,7 +378,7 @@ async def generate_recipe_from_selection(
     if not cleaned:
         raise ValueError("Please select at least one ingredient.")
 
-    return await _generate_recipe_from_text(cleaned, locale, extra_notes)
+    return await _generate_recipe_from_text(cleaned, locale)
 
 
 async def generate_recipe(

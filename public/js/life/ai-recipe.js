@@ -413,8 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: authHeaders({ 'Content-Type': 'application/json' }),
                 body: JSON.stringify({
                     ingredients: selected,
-                    locale: getLocale(),
-                    notes: detectNotes
+                    locale: getLocale()
                 })
             });
 

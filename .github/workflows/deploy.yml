@@ -38,11 +38,9 @@ jobs:
         run: |
           VER="$(git rev-parse --short HEAD)"
           while IFS= read -r -d '' f; do
-            sed -i -E \
-              "s|(src=\"([^\"?]+\.js))\"|\1?v=${VER}\"|g" \
-              "s|(href=\"([^\"?]+\.css))\"|\1?v=${VER}\"|g" \
-              "$f"
+            perl -pi -e "s/(href=\"[^\"]*\\.css)(?:\\?[^\"]*)?\"/\$1?v=${VER}\"/g; s/(src=\"[^\"]*\\.js)(?:\\?[^\"]*)?\"/\$1?v=${VER}\"/g" "$f"
           done < <(find public -type f -name '*.html' -print0)
+          grep -q 'recipe-ingredient-tags' public/html/life/ai-recipe.html
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
@@ -245,6 +243,18 @@ jobs:
           if [[ "$HTTP_CODE" == "200" ]] && grep -q 'base.js?v=' /tmp/main-vti.html; then
             echo "Tool page asset cache-bust OK."
           fi
+          RECIPE_HTML_CODE="$(curl -s -o /tmp/ai-recipe.html -w '%{http_code}' \
+            'https://toolbasecamp.com/html/life/ai-recipe.html' || echo '000')"
+          echo "ai-recipe.html HTTPS $RECIPE_HTML_CODE"
+          if [[ "$RECIPE_HTML_CODE" == "200" ]] && ! grep -q 'recipe-ingredient-tags' /tmp/ai-recipe.html; then
+            echo "::error:: ai-recipe.html is stale (missing tag UI) — purge Cloudflare cache or check rsync deploy."
+            exit 1
+          fi
+          if [[ "$RECIPE_HTML_CODE" == "200" ]] && ! grep -q 'ai-recipe.js?v=' /tmp/ai-recipe.html; then
+            echo "::error:: ai-recipe.html missing JS cache-bust query — deploy sed may have failed."
+            exit 1
+          fi
+          echo "AI recipe static page OK."
 
       - name: Verify guestbook API (public URL)
         run: |

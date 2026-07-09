@@ -330,7 +330,6 @@ def _normalize_locale(locale: str) -> str:
 class RecipeGenerateBody(BaseModel):
     ingredients: List[str]
     locale: Optional[str] = "en"
-    notes: Optional[str] = ""
 
 
 async def _read_recipe_images(images: List[UploadFile]) -> List[tuple]:
@@ -429,7 +428,6 @@ async def _recipe_generate_json_core(
         recipe = await generate_recipe_from_selection(
             ingredients=ingredients,
             locale=_normalize_locale(body.locale or "en"),
-            extra_notes=(body.notes or "").strip(),
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
