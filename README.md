@@ -198,7 +198,8 @@ systemctl restart toolbasecamp-api
 | `ADMIN_EMAIL` | Guestbook admin |
 | `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen) API key for AI recipe |
 | `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region, matches VPS) |
-| `QWEN_MODEL` | Default `qwen3.7-plus-us` (text + image, US region) |
+| `QWEN_MODEL` | Default `qwen3.7-plus-us` (text recipe generation) |
+| `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (image ingredient recognition) |
 
 Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 

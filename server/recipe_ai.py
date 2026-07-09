@@ -2,7 +2,7 @@ import base64
 import json
 import os
 import re
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import httpx
 
@@ -12,6 +12,8 @@ DASHSCOPE_BASE_URL = os.environ.get(
     "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
 QWEN_MODEL = os.environ.get("QWEN_MODEL", "qwen3.7-plus-us")
+# Vision step: dedicated VL model is more reliable than one-shot image+recipe
+QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
 
 MAX_INGREDIENTS_TEXT_LEN = 2000
 HTTP_TIMEOUT = 120.0
@@ -113,43 +115,10 @@ def _mime_for_image(image_bytes: bytes, image_mime: Optional[str]) -> str:
     return "image/jpeg"
 
 
-def _build_user_content(
-    ingredients_text: str,
-    image_bytes: Optional[bytes],
-    image_mime: Optional[str],
-    locale: str,
-) -> Union[str, List[dict]]:
-    parts: List[str] = []
-    if locale == "zh-CN":
-        parts.append("请根据以下信息生成一道实用的主菜菜谱。")
-        if ingredients_text.strip():
-            parts.append(f"用户提供的食材文字：{ingredients_text.strip()}")
-        if image_bytes:
-            parts.append("用户还上传了一张食材图片，请识别图中可见食材并纳入菜谱。")
-        if not ingredients_text.strip() and image_bytes:
-            parts.append("用户仅提供了图片，请从图片中识别食材。")
-        parts.append("请用 JSON 格式输出菜谱，不要输出 markdown。")
-    else:
-        parts.append("Generate one practical main dish recipe from the information below.")
-        if ingredients_text.strip():
-            parts.append(f"User-provided ingredients: {ingredients_text.strip()}")
-        if image_bytes:
-            parts.append("The user also uploaded an ingredient photo — identify visible items and use them.")
-        if not ingredients_text.strip() and image_bytes:
-            parts.append("Only a photo was provided — identify ingredients from the image.")
-        parts.append("Output the recipe as JSON only, not markdown.")
-
-    text_block = "\n".join(parts)
-
-    if image_bytes:
-        b64 = base64.b64encode(image_bytes).decode("ascii")
-        mime = _mime_for_image(image_bytes, image_mime)
-        # Image first — matches Qwen VL examples and improves recognition
-        return [
-            {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}},
-            {"type": "text", "text": text_block},
-        ]
-    return text_block
+def _image_data_url(image_bytes: bytes, image_mime: Optional[str]) -> str:
+    mime = _mime_for_image(image_bytes, image_mime)
+    b64 = base64.b64encode(image_bytes).decode("ascii")
+    return f"data:{mime};base64,{b64}"
 
 
 def _extract_message_content(message: dict) -> str:
@@ -160,9 +129,7 @@ def _extract_message_content(message: dict) -> str:
         chunks: List[str] = []
         for part in content:
             if isinstance(part, dict):
-                if part.get("type") == "text" and part.get("text"):
-                    chunks.append(str(part["text"]))
-                elif part.get("text"):
+                if part.get("text"):
                     chunks.append(str(part["text"]))
             elif isinstance(part, str):
                 chunks.append(part)
@@ -172,12 +139,17 @@ def _extract_message_content(message: dict) -> str:
     return str(content).strip()
 
 
-async def _call_qwen(messages: List[dict], use_json_mode: bool) -> str:
+async def _call_qwen(
+    messages: List[dict],
+    *,
+    model: str,
+    use_json_mode: bool = False,
+) -> str:
     if not DASHSCOPE_API_KEY:
         raise RuntimeError("DashScope API key is not configured (set DASHSCOPE_API_KEY)")
 
     payload: dict = {
-        "model": QWEN_MODEL,
+        "model": model,
         "messages": messages,
         "temperature": 0.7,
         "max_tokens": 4096,
@@ -193,12 +165,12 @@ async def _call_qwen(messages: List[dict], use_json_mode: bool) -> str:
         resp = await client.post(f"{DASHSCOPE_BASE_URL}/chat/completions", json=payload, headers=headers)
         if resp.status_code >= 400:
             detail = resp.text[:800]
-            raise RuntimeError(f"Qwen API error ({resp.status_code}): {detail}")
+            raise RuntimeError(f"Qwen API error ({resp.status_code}) model={model}: {detail}")
         data = resp.json()
 
     choices = data.get("choices") or []
     if not choices:
-        raise RuntimeError(f"Qwen returned no choices: {json.dumps(data)[:500]}")
+        raise RuntimeError(f"Qwen returned no choices (model={model}): {json.dumps(data)[:500]}")
 
     choice = choices[0]
     message = choice.get("message") or {}
@@ -206,7 +178,8 @@ async def _call_qwen(messages: List[dict], use_json_mode: bool) -> str:
     if not content:
         finish = choice.get("finish_reason") or "unknown"
         raise RuntimeError(
-            f"Qwen returned empty content (finish_reason={finish}): {json.dumps(data)[:500]}"
+            f"Qwen returned empty content (model={model}, finish_reason={finish}): "
+            f"{json.dumps(data)[:500]}"
         )
     return content
 
@@ -214,7 +187,7 @@ async def _call_qwen(messages: List[dict], use_json_mode: bool) -> str:
 def _parse_text_ingredients(ingredients_text: str) -> List[str]:
     merged: List[str] = []
     seen = set()
-    for part in re.split(r"[,，、\n;；]+", ingredients_text or ""):
+    for part in re.split(r"[,，、\n;；\s]+", ingredients_text or ""):
         part = part.strip()
         if part:
             key = part.lower()
@@ -224,6 +197,105 @@ def _parse_text_ingredients(ingredients_text: str) -> List[str]:
     return merged
 
 
+def _merge_ingredient_lists(text_list: List[str], vision_list: List[str]) -> List[str]:
+    merged: List[str] = []
+    seen = set()
+    for name in text_list + vision_list:
+        key = (name or "").strip().lower()
+        if key and key not in seen:
+            seen.add(key)
+            merged.append(name.strip())
+    return merged
+
+
+async def _vision_extract_ingredients(
+    image_bytes: bytes,
+    image_mime: Optional[str],
+    locale: str,
+) -> Tuple[List[str], str]:
+    if locale == "zh-CN":
+        prompt = (
+            "请识别这张图片中可见的食材（食物原料）。"
+            '只输出 JSON：{"ingredients":["食材1","食材2"],"notes":"可选简短备注"}。'
+            "不要输出 markdown 或其他说明。"
+        )
+    else:
+        prompt = (
+            "Identify visible food ingredients in this image. "
+            'Output JSON only: {"ingredients":["item1","item2"],"notes":"optional"}'
+        )
+
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image_url", "image_url": {"url": _image_data_url(image_bytes, image_mime)}},
+                {"type": "text", "text": prompt},
+            ],
+        }
+    ]
+
+    models_to_try = []
+    for m in (QWEN_VL_MODEL, QWEN_MODEL, "qwen-vl-plus", "qwen3-vl-plus"):
+        if m and m not in models_to_try:
+            models_to_try.append(m)
+
+    last_err: Optional[Exception] = None
+    for model in models_to_try:
+        try:
+            raw = await _call_qwen(messages, model=model, use_json_mode=False)
+            data = _extract_json(raw)
+            items = data.get("ingredients") or []
+            names = [str(x).strip() for x in items if str(x).strip()]
+            notes = str(data.get("notes") or "").strip()
+            if names:
+                return names, notes
+            last_err = RuntimeError(f"Vision model {model} returned no ingredients")
+        except Exception as exc:
+            last_err = exc
+            print(f"[recipe/vision] model={model} failed: {exc}")
+
+    raise RuntimeError(f"Could not identify ingredients from image: {last_err}")
+
+
+async def _generate_recipe_from_text(
+    ingredients: List[str],
+    locale: str,
+    extra_notes: str = "",
+) -> dict:
+    ingredient_list = ", ".join(ingredients)
+    if locale == "zh-CN":
+        user_text = f"可用食材：{ingredient_list}。请生成一道实用的主菜菜谱。"
+        if extra_notes:
+            user_text += f" 图片备注：{extra_notes}"
+    else:
+        user_text = f"Available ingredients: {ingredient_list}. Create one practical main dish recipe."
+        if extra_notes:
+            user_text += f" Image notes: {extra_notes}"
+
+    system_text = (
+        "You are a helpful cooking assistant. Generate exactly one complete recipe. "
+        "Put all used ingredient names in detected_ingredients. "
+        f"{_locale_prompt(locale)} {RECIPE_SCHEMA_HINT}"
+    )
+    messages = [
+        {"role": "system", "content": system_text},
+        {"role": "user", "content": user_text},
+    ]
+
+    raw = await _call_qwen(messages, model=QWEN_MODEL, use_json_mode=True)
+    try:
+        parsed = _extract_json(raw)
+    except json.JSONDecodeError:
+        raw = await _call_qwen(messages, model=QWEN_MODEL, use_json_mode=False)
+        parsed = _extract_json(raw)
+
+    recipe = _normalize_recipe(parsed, detected=ingredients)
+    if not recipe["detected_ingredients"]:
+        recipe["detected_ingredients"] = ingredients
+    return recipe
+
+
 async def generate_recipe(
     ingredients_text: str,
     image_bytes: Optional[bytes],
@@ -231,39 +303,29 @@ async def generate_recipe(
     locale: str,
 ) -> dict:
     locale = "zh-CN" if locale == "zh-CN" else "en"
-    text_only = _parse_text_ingredients(ingredients_text)
+    text_ingredients = _parse_text_ingredients(ingredients_text)
 
-    if not text_only and not image_bytes:
+    if not text_ingredients and not image_bytes:
         raise ValueError("No ingredients found. Please enter text or upload a clearer ingredient photo.")
 
-    has_image = bool(image_bytes)
-    system_text = (
-        "You are a helpful cooking assistant. Generate exactly one complete recipe. "
-        "If an image is provided, identify visible food ingredients first. "
-        "Put all identified or user-provided ingredient names in detected_ingredients. "
-        f"{_locale_prompt(locale)} {RECIPE_SCHEMA_HINT}"
-    )
-    system_prompt: Union[str, List[dict]] = (
-        [{"type": "text", "text": system_text}] if has_image else system_text
-    )
+    vision_ingredients: List[str] = []
+    vision_notes = ""
 
-    user_content = _build_user_content(ingredients_text, image_bytes, image_mime, locale)
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_content},
-    ]
+    if image_bytes:
+        try:
+            vision_ingredients, vision_notes = await _vision_extract_ingredients(
+                image_bytes, image_mime, locale
+            )
+        except RuntimeError as exc:
+            print(f"[recipe/generate] vision step failed: {exc}")
+            if not text_ingredients:
+                raise ValueError(
+                    "Could not identify ingredients from the photo. "
+                    "Try a clearer image or enter ingredients as text."
+                ) from exc
 
-    # Vision + json_object often returns empty on Qwen; text-only works with json mode
-    use_json_mode = not has_image
-    raw = await _call_qwen(messages, use_json_mode=use_json_mode)
-    try:
-        parsed = _extract_json(raw)
-    except json.JSONDecodeError:
-        raw = await _call_qwen(messages, use_json_mode=False)
-        parsed = _extract_json(raw)
+    merged = _merge_ingredient_lists(text_ingredients, vision_ingredients)
+    if not merged:
+        raise ValueError("No ingredients found. Please enter text or upload a clearer ingredient photo.")
 
-    fallback_detected = text_only
-    recipe = _normalize_recipe(parsed, detected=fallback_detected)
-    if not recipe["detected_ingredients"] and fallback_detected:
-        recipe["detected_ingredients"] = fallback_detected
-    return recipe
+    return await _generate_recipe_from_text(merged, locale, vision_notes)
