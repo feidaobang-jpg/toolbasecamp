@@ -1,5 +1,5 @@
 /**
- * Shared UI: navigation, auth bar, favicon, back-to-top
+ * Shared UI: navigation, auth bar, favicon
  */
 (function () {
     function tr(key) {
@@ -480,23 +480,6 @@
     window.showBackendServiceError = showBackendServiceError;
     window.check502Error = check502Error;
 
-    function initBackToTop() {
-        if (document.getElementById('back-to-top')) return;
-        const btn = document.createElement('button');
-        btn.id = 'back-to-top';
-        btn.type = 'button';
-        btn.setAttribute('aria-label', tr('common.backToTop'));
-        btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-        btn.style.cssText = 'position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:#2563eb;color:white;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.15);opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:50;';
-        document.body.appendChild(btn);
-        window.addEventListener('scroll', () => {
-            const show = window.scrollY > 400;
-            btn.style.opacity = show ? '1' : '0';
-            btn.style.pointerEvents = show ? 'auto' : 'none';
-        });
-        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-    }
-
     function runMainUiInit() {
         injectFavicon();
         updatePageLogo();
@@ -504,7 +487,6 @@
         initSiteMobileNav();
         updatePageTitle();
         renderAuthStatus();
-        initBackToTop();
     }
 
     document.addEventListener('DOMContentLoaded', runMainUiInit);
