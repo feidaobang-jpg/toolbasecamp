@@ -237,6 +237,23 @@ jobs:
           fi
           echo "Guestbook API OK."
 
+      - name: Verify recipe API route (public URL)
+        run: |
+          sleep 2
+          HTTP_CODE="$(curl -s -o /tmp/recipe-api.txt -w '%{http_code}' \
+            -X POST 'https://toolbasecamp.com/api/recipe/generate' || echo '000')"
+          echo "recipe/generate POST HTTPS $HTTP_CODE"
+          head -c 200 /tmp/recipe-api.txt || true
+          echo ""
+          if [[ "$HTTP_CODE" == "404" ]]; then
+            echo "::error:: recipe API route missing — server main.py may not be deployed; check toolbasecamp-api restart."
+            exit 1
+          fi
+          if [[ "$HTTP_CODE" != "422" && "$HTTP_CODE" != "400" && "$HTTP_CODE" != "503" ]]; then
+            echo "::warning:: recipe API returned $HTTP_CODE (expected 400/422 without body, or 503 if Qwen key missing)."
+          fi
+          echo "Recipe API route OK."
+
       - name: Verify dev portal (public URL)
         run: |
           sleep 3
