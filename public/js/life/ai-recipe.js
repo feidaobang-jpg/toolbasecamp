@@ -32,6 +32,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const tipsWrap = document.getElementById('tips-wrap');
     const tipsList = document.getElementById('tips-list');
 
+    const requiredEls = {
+        'ingredients-text': ingredientsText,
+        'drop-zone': dropZone,
+        'file-input': fileInput,
+        'image-preview-grid': previewGrid,
+        'detect-btn': detectBtn,
+        'clear-btn': clearBtn,
+        'select-card': selectCard,
+        'ingredient-choices': ingredientChoices,
+        'select-all-btn': selectAllBtn,
+        'select-none-btn': selectNoneBtn,
+        'generate-btn': generateBtn
+    };
+    const missing = Object.keys(requiredEls).filter(function (id) { return !requiredEls[id]; });
+    if (missing.length) {
+        console.error('ai-recipe: missing DOM nodes:', missing.join(', '));
+        if (errorBox && errorMsg) {
+            errorBox.style.display = 'flex';
+            errorMsg.textContent = 'Page assets are out of date. Please hard-refresh (Ctrl+F5).';
+        }
+        return;
+    }
+
     let imageItems = [];
     let detectNotes = '';
     let nextImageId = 1;

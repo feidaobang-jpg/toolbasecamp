@@ -38,13 +38,9 @@ jobs:
         run: |
           VER="$(git rev-parse --short HEAD)"
           while IFS= read -r -d '' f; do
-            sed -i \
-              -e "s|js/config.js\"|js/config.js?v=${VER}\"|g" \
-              -e "s|js/base.js\"|js/base.js?v=${VER}\"|g" \
-              -e "s|js/tools-hub.js\"|js/tools-hub.js?v=${VER}\"|g" \
-              -e "s|js/i18n.js\"|js/i18n.js?v=${VER}\"|g" \
-              -e "s|js/locales/en.js\"|js/locales/en.js?v=${VER}\"|g" \
-              -e "s|js/locales/zh-CN.js\"|js/locales/zh-CN.js?v=${VER}\"|g" \
+            sed -i -E \
+              "s|(src=\"([^\"?]+\.js))\"|\1?v=${VER}\"|g" \
+              "s|(href=\"([^\"?]+\.css))\"|\1?v=${VER}\"|g" \
               "$f"
           done < <(find public -type f -name '*.html' -print0)
           rsync -avz --delete \
