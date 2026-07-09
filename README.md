@@ -196,10 +196,14 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen) API key for AI recipe |
+| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen) — **image ingredient recognition** (required for photos) |
 | `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region, matches VPS) |
-| `QWEN_MODEL` | Default `qwen3.7-plus-us` (text recipe generation) |
-| `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (image ingredient recognition) |
+| `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
+| `QWEN_MODEL` | Qwen text fallback when DeepSeek unavailable (default `qwen3.7-plus-us`) |
+| `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** (faster) |
+| `DEEPSEEK_MODEL` | Default `deepseek-chat` |
+| `DEEPSEEK_BASE_URL` | Default `https://api.deepseek.com` |
+| `RECIPE_TEXT_PROVIDER` | `auto` (default), `deepseek`, or `qwen` |
 
 Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
@@ -216,21 +220,42 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
 | POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL) |
-| POST | `/api/recipe/generate` | Generate recipe from selected ingredient list (Qwen) |
+| POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek text, Qwen fallback) |
 
-### AI Recipe (Qwen / DashScope)
+### AI Recipe (DeepSeek + Qwen)
 
-Purchase and API key: [阿里云百炼 Model Studio](https://bailian.console.aliyun.com/) → API Key → create key in **美国（弗吉尼亚）** region.
+- **识图 / detect**: Qwen VL (`DASHSCOPE_API_KEY`)
+- **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_API_KEY`), falls back to Qwen if DeepSeek fails
 
-Server env (`/etc/toolbasecamp-api.env`):
+**1. DeepSeek（文字生成，推荐）**
+
+Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys → create key → top up if needed.
+
+**2. 千问（识图，上传图片时必需）**
+
+[阿里云百炼](https://bailian.console.aliyun.com/) → API Key → **美国（弗吉尼亚）** region.
+
+**3. Server env** (`/etc/toolbasecamp-api.env`):
 
 ```bash
+# DeepSeek — recipe generation (faster)
+DEEPSEEK_API_KEY=sk-xxxxxxxx
+DEEPSEEK_MODEL=deepseek-chat
+
+# Qwen — image recognition (keep existing)
 DASHSCOPE_API_KEY=sk-xxxxxxxx
 DASHSCOPE_BASE_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
-QWEN_MODEL=qwen3.7-plus-us
+QWEN_VL_MODEL=qwen3-vl-plus
 ```
 
-Then `systemctl restart toolbasecamp-api`. New users get free tokens on 百炼; see console for balance and billing.
+Then:
+
+```bash
+systemctl restart toolbasecamp-api
+curl -s http://127.0.0.1:8001/health | jq .recipe
+```
+
+Expect `"text_provider": "deepseek"` when `DEEPSEEK_API_KEY` is set.
 
 ---
 

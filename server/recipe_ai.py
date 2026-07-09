@@ -2,18 +2,24 @@ import base64
 import json
 import os
 import re
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 import httpx
 
-# Alibaba Cloud Model Studio (DashScope) — Qwen only
+# Alibaba Cloud Model Studio (DashScope) — vision + Qwen text fallback
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "") or os.environ.get("QWEN_API_KEY", "")
 DASHSCOPE_BASE_URL = os.environ.get(
     "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
 QWEN_MODEL = os.environ.get("QWEN_MODEL", "qwen3.7-plus-us")
-# Vision step: dedicated VL model is more reliable than one-shot image+recipe
 QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
+
+# DeepSeek — faster text recipe generation (OpenAI-compatible API)
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
+DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+# auto | deepseek | qwen — auto uses DeepSeek when DEEPSEEK_API_KEY is set
+RECIPE_TEXT_PROVIDER = os.environ.get("RECIPE_TEXT_PROVIDER", "auto").strip().lower()
 
 MAX_INGREDIENTS_TEXT_LEN = 2000
 MAX_RECIPE_IMAGES = 5
@@ -142,16 +148,19 @@ def _extract_message_content(message: dict) -> str:
     return str(content).strip()
 
 
-async def _call_qwen(
+async def _call_chat_completions(
     messages: List[dict],
     *,
+    provider: str,
+    base_url: str,
+    api_key: str,
     model: str,
     use_json_mode: bool = False,
     max_tokens: int = 4096,
     temperature: float = 0.7,
 ) -> str:
-    if not DASHSCOPE_API_KEY:
-        raise RuntimeError("DashScope API key is not configured (set DASHSCOPE_API_KEY)")
+    if not api_key:
+        raise RuntimeError(f"{provider} API key is not configured")
 
     payload: dict = {
         "model": model,
@@ -163,19 +172,19 @@ async def _call_qwen(
         payload["response_format"] = {"type": "json_object"}
 
     headers = {
-        "Authorization": f"Bearer {DASHSCOPE_API_KEY}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
     async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
-        resp = await client.post(f"{DASHSCOPE_BASE_URL}/chat/completions", json=payload, headers=headers)
+        resp = await client.post(f"{base_url}/chat/completions", json=payload, headers=headers)
         if resp.status_code >= 400:
             detail = resp.text[:800]
-            raise RuntimeError(f"Qwen API error ({resp.status_code}) model={model}: {detail}")
+            raise RuntimeError(f"{provider} API error ({resp.status_code}) model={model}: {detail}")
         data = resp.json()
 
     choices = data.get("choices") or []
     if not choices:
-        raise RuntimeError(f"Qwen returned no choices (model={model}): {json.dumps(data)[:500]}")
+        raise RuntimeError(f"{provider} returned no choices (model={model}): {json.dumps(data)[:500]}")
 
     choice = choices[0]
     message = choice.get("message") or {}
@@ -183,10 +192,106 @@ async def _call_qwen(
     if not content:
         finish = choice.get("finish_reason") or "unknown"
         raise RuntimeError(
-            f"Qwen returned empty content (model={model}, finish_reason={finish}): "
+            f"{provider} returned empty content (model={model}, finish_reason={finish}): "
             f"{json.dumps(data)[:500]}"
         )
     return content
+
+
+def get_recipe_config() -> dict:
+    return {
+        "text_provider": _recipe_text_provider(),
+        "deepseek_configured": bool(DEEPSEEK_API_KEY),
+        "dashscope_configured": bool(DASHSCOPE_API_KEY),
+        "deepseek_model": DEEPSEEK_MODEL if DEEPSEEK_API_KEY else None,
+        "qwen_vl_model": QWEN_VL_MODEL,
+    }
+
+
+async def _call_qwen(
+    messages: List[dict],
+    *,
+    model: str,
+    use_json_mode: bool = False,
+    max_tokens: int = 4096,
+    temperature: float = 0.7,
+) -> str:
+    return await _call_chat_completions(
+        messages,
+        provider="Qwen",
+        base_url=DASHSCOPE_BASE_URL,
+        api_key=DASHSCOPE_API_KEY,
+        model=model,
+        use_json_mode=use_json_mode,
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
+
+
+async def _call_deepseek(
+    messages: List[dict],
+    *,
+    use_json_mode: bool = False,
+    max_tokens: int = 4096,
+    temperature: float = 0.7,
+) -> str:
+    return await _call_chat_completions(
+        messages,
+        provider="DeepSeek",
+        base_url=DEEPSEEK_BASE_URL,
+        api_key=DEEPSEEK_API_KEY,
+        model=DEEPSEEK_MODEL,
+        use_json_mode=use_json_mode,
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
+
+
+def _recipe_text_provider() -> str:
+    if RECIPE_TEXT_PROVIDER in ("deepseek", "qwen"):
+        return RECIPE_TEXT_PROVIDER
+    return "deepseek" if DEEPSEEK_API_KEY else "qwen"
+
+
+async def _call_recipe_text_model(
+    messages: List[dict],
+    *,
+    use_json_mode: bool = True,
+    max_tokens: int = RECIPE_MAX_TOKENS,
+    temperature: float = RECIPE_TEMPERATURE,
+) -> str:
+    provider = _recipe_text_provider()
+    if provider == "deepseek":
+        if not DEEPSEEK_API_KEY:
+            raise RuntimeError("DeepSeek API key is not configured (set DEEPSEEK_API_KEY)")
+        try:
+            return await _call_deepseek(
+                messages,
+                use_json_mode=use_json_mode,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
+        except Exception as exc:
+            if not DASHSCOPE_API_KEY:
+                raise
+            print(f"[recipe/text] DeepSeek failed, falling back to Qwen: {exc}")
+            return await _call_qwen(
+                messages,
+                model=QWEN_MODEL,
+                use_json_mode=use_json_mode,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
+
+    if not DASHSCOPE_API_KEY:
+        raise RuntimeError("DashScope API key is not configured (set DASHSCOPE_API_KEY)")
+    return await _call_qwen(
+        messages,
+        model=QWEN_MODEL,
+        use_json_mode=use_json_mode,
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
 
 
 def _parse_text_ingredients(ingredients_text: str) -> List[str]:
@@ -284,13 +389,7 @@ async def _generate_recipe_from_text(
         {"role": "user", "content": user_text},
     ]
 
-    raw = await _call_qwen(
-        messages,
-        model=QWEN_MODEL,
-        use_json_mode=True,
-        max_tokens=RECIPE_MAX_TOKENS,
-        temperature=RECIPE_TEMPERATURE,
-    )
+    raw = await _call_recipe_text_model(messages, use_json_mode=True)
     parsed = _extract_json(raw)
 
     recipe = _normalize_recipe(parsed, detected=ingredients)

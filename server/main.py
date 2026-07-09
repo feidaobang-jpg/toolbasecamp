@@ -22,6 +22,7 @@ from recipe_ai import (
     detect_ingredients,
     generate_recipe,
     generate_recipe_from_selection,
+    get_recipe_config,
 )
 
 app = FastAPI(title="Tool Basecamp API")
@@ -488,6 +489,7 @@ def health():
         "recipe_api": any(
             getattr(r, "path", "") in ("/recipe/generate", "/recipe/detect") for r in app.routes
         ),
+        "recipe": get_recipe_config(),
         "ts": int(time.time()),
     }
 
