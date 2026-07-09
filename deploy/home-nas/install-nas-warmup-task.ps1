@@ -6,11 +6,9 @@ $TaskName = "ToolBasecamp-NAS-Portal-Warmup"
 
 if (-not (Test-Path $Script)) { throw "Missing $Script" }
 
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" `
-    -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$Script`""
-$Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration ([TimeSpan]::MaxValue)
-$Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable
+# schtasks avoids PowerShell RepetitionDuration limits (MaxValue → XML error 0x80041318)
+$Tr = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$Script`""
+schtasks /Create /TN $TaskName /TR $Tr /SC MINUTE /MO 5 /F | Out-Null
 
-Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Settings $Settings -Force | Out-Null
 Write-Host "OK: scheduled task '$TaskName' (every 5 min)"
 & $Script
