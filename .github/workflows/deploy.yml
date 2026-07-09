@@ -153,9 +153,11 @@ jobs:
           "$APP_DIR/venv/bin/pip" install -q -U pip
           "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements.txt"
           "$APP_DIR/venv/bin/pip" uninstall -y passlib 2>/dev/null || true
+          rm -rf "$APP_DIR/__pycache__"
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths, 'missing /recipe/generate in app.routes: ' + str(paths)"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -190,11 +192,18 @@ jobs:
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
           fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
-          systemctl restart toolbasecamp-api
+          systemctl stop toolbasecamp-api 2>/dev/null || true
+          fuser -k 8001/tcp 2>/dev/null || true
+          sleep 1
+          systemctl start toolbasecamp-api
           for i in 1 2 3 4 5; do
+            if curl -sf http://127.0.0.1:8001/health | grep -q '"recipe_api":true'; then
+              echo "health OK with recipe_api"
+              break
+            fi
             if curl -sf http://127.0.0.1:8001/health; then
               echo ""
-              break
+              echo "WARNING: health OK but recipe_api missing — stale API process?"
             fi
             sleep 2
             if [[ "$i" -eq 5 ]]; then
@@ -204,6 +213,15 @@ jobs:
               exit 1
             fi
           done
+          RECIPE_HTTP="$(curl -s -o /tmp/recipe-local.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -F 'ingredients_text=tomato' || echo '000')"
+          echo "local recipe/generate POST $RECIPE_HTTP"
+          head -c 200 /tmp/recipe-local.txt || true
+          echo ""
+          if [[ "$RECIPE_HTTP" == "404" ]]; then
+            echo "=== recipe route still 404 on localhost ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            exit 1
+          fi
           REMOTE
 
       - name: Verify main site assets (public URL)
