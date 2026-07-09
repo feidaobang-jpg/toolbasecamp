@@ -134,6 +134,7 @@ window.TB_LOCALES['zh-CN'] = {
             imageTooLarge: '单张图片不能超过 5 MB',
             meta: '份量 {servings} 人 · 准备 {prep} 分钟 · 烹饪 {cook} 分钟',
             detected: '识别到的食材',
+            selectedIngredients: '已选食材',
             ingredients: '用料',
             steps: '步骤',
             tips: '小贴士'

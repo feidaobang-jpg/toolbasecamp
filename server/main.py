@@ -438,6 +438,7 @@ async def _recipe_generate_json_core(
         print(f"[recipe/generate] unexpected error: {exc}")
         raise HTTPException(status_code=500, detail="Recipe generation failed. Please try again.") from exc
 
+    recipe["selected_ingredients"] = ingredients
     return {"success": True, "recipe": recipe}
 
 

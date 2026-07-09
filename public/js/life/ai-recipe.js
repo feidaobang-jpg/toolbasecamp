@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function renderRecipe(recipe) {
+    function renderRecipe(recipe, selectedIngredients) {
         recipeTitle.textContent = recipe.title || '-';
 
         const servings = recipe.servings || 2;
@@ -412,10 +412,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const cook = recipe.cook_minutes || 0;
         recipeMeta.textContent = tr('tools.aiRecipe.meta', { servings: servings, prep: prep, cook: cook });
 
-        const detected = recipe.detected_ingredients || [];
-        if (detected.length) {
+        const selected = selectedIngredients || recipe.selected_ingredients || recipe.detected_ingredients || [];
+        if (selected.length) {
             detectedWrap.style.display = 'block';
-            detectedList.textContent = detected.join(', ');
+            detectedList.textContent = selected.join(', ');
         } else {
             detectedWrap.style.display = 'none';
         }
@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             showProgress(tr('tools.aiRecipe.done'), 100);
-            renderRecipe(data.recipe || {});
+            renderRecipe(data.recipe || {}, selected);
         } catch (e) {
             showError(e.message || tr('tools.aiRecipe.failed'));
         } finally {

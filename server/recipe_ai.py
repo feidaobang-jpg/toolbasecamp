@@ -52,7 +52,7 @@ def _normalize_recipe(data: dict, detected: Optional[List[str]] = None) -> dict:
     ingredients = data.get("ingredients") or []
     steps = data.get("steps") or []
     tips = data.get("tips") or []
-    detected_list = data.get("detected_ingredients") or detected or []
+    detected_list = list(detected) if detected is not None else (data.get("detected_ingredients") or [])
 
     norm_ingredients = []
     for item in ingredients:
@@ -276,7 +276,7 @@ async def _generate_recipe_from_text(
 
     system_text = (
         "You are a helpful cooking assistant. Generate exactly one complete recipe. "
-        "Put all used ingredient names in detected_ingredients. "
+        "You may add common seasonings in ingredients; do not list them in detected_ingredients. "
         f"{_locale_prompt(locale)} {RECIPE_SCHEMA_HINT}"
     )
     messages = [
@@ -294,8 +294,7 @@ async def _generate_recipe_from_text(
     parsed = _extract_json(raw)
 
     recipe = _normalize_recipe(parsed, detected=ingredients)
-    if not recipe["detected_ingredients"]:
-        recipe["detected_ingredients"] = ingredients
+    recipe["detected_ingredients"] = ingredients
     return recipe
 
 

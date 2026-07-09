@@ -135,6 +135,7 @@ window.TB_LOCALES.en = {
             imageTooLarge: 'Each image must not exceed 5 MB',
             meta: 'Serves {servings} · Prep {prep} min · Cook {cook} min',
             detected: 'Detected ingredients',
+            selectedIngredients: 'Selected ingredients',
             ingredients: 'Ingredients',
             steps: 'Steps',
             tips: 'Tips'
