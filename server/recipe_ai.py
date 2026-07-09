@@ -2,7 +2,7 @@ import base64
 import json
 import os
 import re
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 import httpx
 
@@ -100,12 +100,25 @@ def _locale_prompt(locale: str) -> str:
     )
 
 
+def _mime_for_image(image_bytes: bytes, image_mime: Optional[str]) -> str:
+    mime = (image_mime or "").split(";")[0].strip().lower()
+    if mime in {"image/jpeg", "image/png", "image/webp"}:
+        return mime
+    if image_bytes[:3] == b"\xff\xd8\xff":
+        return "image/jpeg"
+    if image_bytes[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    if image_bytes[:4] == b"RIFF" and image_bytes[8:12] == b"WEBP":
+        return "image/webp"
+    return "image/jpeg"
+
+
 def _build_user_content(
     ingredients_text: str,
     image_bytes: Optional[bytes],
     image_mime: Optional[str],
     locale: str,
-) -> Any:
+) -> Union[str, List[dict]]:
     parts: List[str] = []
     if locale == "zh-CN":
         parts.append("请根据以下信息生成一道实用的主菜菜谱。")
@@ -115,6 +128,7 @@ def _build_user_content(
             parts.append("用户还上传了一张食材图片，请识别图中可见食材并纳入菜谱。")
         if not ingredients_text.strip() and image_bytes:
             parts.append("用户仅提供了图片，请从图片中识别食材。")
+        parts.append("请用 JSON 格式输出菜谱，不要输出 markdown。")
     else:
         parts.append("Generate one practical main dish recipe from the information below.")
         if ingredients_text.strip():
@@ -123,29 +137,54 @@ def _build_user_content(
             parts.append("The user also uploaded an ingredient photo — identify visible items and use them.")
         if not ingredients_text.strip() and image_bytes:
             parts.append("Only a photo was provided — identify ingredients from the image.")
+        parts.append("Output the recipe as JSON only, not markdown.")
 
     text_block = "\n".join(parts)
 
     if image_bytes:
         b64 = base64.b64encode(image_bytes).decode("ascii")
-        mime = image_mime or "image/jpeg"
+        mime = _mime_for_image(image_bytes, image_mime)
+        # Image first — matches Qwen VL examples and improves recognition
         return [
-            {"type": "text", "text": text_block},
             {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}},
+            {"type": "text", "text": text_block},
         ]
     return text_block
 
 
-async def _call_qwen(messages: List[dict]) -> str:
+def _extract_message_content(message: dict) -> str:
+    content = message.get("content")
+    if isinstance(content, str):
+        return content.strip()
+    if isinstance(content, list):
+        chunks: List[str] = []
+        for part in content:
+            if isinstance(part, dict):
+                if part.get("type") == "text" and part.get("text"):
+                    chunks.append(str(part["text"]))
+                elif part.get("text"):
+                    chunks.append(str(part["text"]))
+            elif isinstance(part, str):
+                chunks.append(part)
+        return "\n".join(chunks).strip()
+    if content is None:
+        return ""
+    return str(content).strip()
+
+
+async def _call_qwen(messages: List[dict], use_json_mode: bool) -> str:
     if not DASHSCOPE_API_KEY:
         raise RuntimeError("DashScope API key is not configured (set DASHSCOPE_API_KEY)")
 
-    payload = {
+    payload: dict = {
         "model": QWEN_MODEL,
         "messages": messages,
-        "response_format": {"type": "json_object"},
         "temperature": 0.7,
+        "max_tokens": 4096,
     }
+    if use_json_mode:
+        payload["response_format"] = {"type": "json_object"}
+
     headers = {
         "Authorization": f"Bearer {DASHSCOPE_API_KEY}",
         "Content-Type": "application/json",
@@ -159,10 +198,16 @@ async def _call_qwen(messages: List[dict]) -> str:
 
     choices = data.get("choices") or []
     if not choices:
-        raise RuntimeError("Qwen returned no choices")
-    content = choices[0].get("message", {}).get("content") or ""
-    if not content.strip():
-        raise RuntimeError("Qwen returned empty content")
+        raise RuntimeError(f"Qwen returned no choices: {json.dumps(data)[:500]}")
+
+    choice = choices[0]
+    message = choice.get("message") or {}
+    content = _extract_message_content(message)
+    if not content:
+        finish = choice.get("finish_reason") or "unknown"
+        raise RuntimeError(
+            f"Qwen returned empty content (finish_reason={finish}): {json.dumps(data)[:500]}"
+        )
     return content
 
 
@@ -191,11 +236,15 @@ async def generate_recipe(
     if not text_only and not image_bytes:
         raise ValueError("No ingredients found. Please enter text or upload a clearer ingredient photo.")
 
-    system_prompt = (
+    has_image = bool(image_bytes)
+    system_text = (
         "You are a helpful cooking assistant. Generate exactly one complete recipe. "
         "If an image is provided, identify visible food ingredients first. "
         "Put all identified or user-provided ingredient names in detected_ingredients. "
         f"{_locale_prompt(locale)} {RECIPE_SCHEMA_HINT}"
+    )
+    system_prompt: Union[str, List[dict]] = (
+        [{"type": "text", "text": system_text}] if has_image else system_text
     )
 
     user_content = _build_user_content(ingredients_text, image_bytes, image_mime, locale)
@@ -204,16 +253,13 @@ async def generate_recipe(
         {"role": "user", "content": user_content},
     ]
 
-    raw = await _call_qwen(messages)
+    # Vision + json_object often returns empty on Qwen; text-only works with json mode
+    use_json_mode = not has_image
+    raw = await _call_qwen(messages, use_json_mode=use_json_mode)
     try:
         parsed = _extract_json(raw)
     except json.JSONDecodeError:
-        raw = await _call_qwen(
-            [
-                {"role": "system", "content": system_prompt + " Output strict JSON only."},
-                {"role": "user", "content": user_content},
-            ]
-        )
+        raw = await _call_qwen(messages, use_json_mode=False)
         parsed = _extract_json(raw)
 
     fallback_detected = text_only
