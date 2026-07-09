@@ -215,7 +215,8 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/register` | Email sign-up |
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
-| POST | `/api/recipe/generate` | AI recipe from text and/or image (Qwen) |
+| POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL) |
+| POST | `/api/recipe/generate` | Generate recipe from selected ingredient list (Qwen) |
 
 ### AI Recipe (Qwen / DashScope)
 

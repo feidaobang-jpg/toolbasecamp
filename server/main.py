@@ -16,7 +16,12 @@ from jose import JWTError, jwt
 import bcrypt
 from pydantic import BaseModel
 
-from recipe_ai import MAX_INGREDIENTS_TEXT_LEN, generate_recipe
+from recipe_ai import (
+    MAX_INGREDIENTS_TEXT_LEN,
+    MAX_RECIPE_IMAGES,
+    detect_ingredients,
+    generate_recipe_from_selection,
+)
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -42,6 +47,8 @@ GUESTBOOK_MAX_GUEST_NAME_LEN = 20
 
 RECIPE_IMAGE_MAX_BYTES = 5 * 1024 * 1024
 RECIPE_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp"}
+RECIPE_DETECT_LIMIT_GUEST = 20
+RECIPE_DETECT_LIMIT_USER = 60
 RECIPE_GENERATE_LIMIT_GUEST = 10
 RECIPE_GENERATE_LIMIT_USER = 30
 
@@ -319,6 +326,35 @@ def _normalize_locale(locale: str) -> str:
     return "zh-CN" if loc in ("zh-CN", "zh", "zh-cn") else "en"
 
 
+class RecipeGenerateBody(BaseModel):
+    ingredients: List[str]
+    locale: Optional[str] = "en"
+    notes: Optional[str] = ""
+
+
+async def _read_recipe_images(images: List[UploadFile]) -> List[tuple]:
+    if len(images) > MAX_RECIPE_IMAGES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"You can upload at most {MAX_RECIPE_IMAGES} images",
+        )
+
+    parsed: List[tuple] = []
+    for image in images:
+        if not image or not image.filename:
+            continue
+        image_mime = (image.content_type or "").split(";")[0].strip().lower()
+        if image_mime not in RECIPE_IMAGE_MIMES:
+            raise HTTPException(status_code=400, detail="Image must be JPEG, PNG, or WebP")
+        image_bytes = await image.read()
+        if len(image_bytes) == 0:
+            continue
+        if len(image_bytes) > RECIPE_IMAGE_MAX_BYTES:
+            raise HTTPException(status_code=400, detail="Each image must not exceed 5 MB")
+        parsed.append((image_bytes, image_mime))
+    return parsed
+
+
 def _sanitize_guest_name(name: str) -> str:
     cleaned = re.sub(r"[\x00-\x1f\x7f]", "", (name or "").strip())
     cleaned = cleaned[:GUESTBOOK_MAX_GUEST_NAME_LEN]
@@ -362,7 +398,9 @@ def health():
         "ok": True,
         "service": "toolbasecamp-api",
         "db": db_ok,
-        "recipe_api": any(getattr(r, "path", "") == "/recipe/generate" for r in app.routes),
+        "recipe_api": any(
+            getattr(r, "path", "") in ("/recipe/generate", "/recipe/detect") for r in app.routes
+        ),
         "ts": int(time.time()),
     }
 
@@ -673,12 +711,12 @@ async def pdf_to_word(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Conversion failed: {exc}") from exc
 
 
-@app.post("/recipe/generate")
-async def recipe_generate(
+@app.post("/recipe/detect")
+async def recipe_detect(
     request: Request,
     ingredients_text: str = Form(""),
     locale: str = Form("en"),
-    image: Optional[UploadFile] = File(None),
+    images: List[UploadFile] = File(default=[]),
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ):
     user = get_optional_user(creds)
@@ -689,31 +727,54 @@ async def recipe_generate(
             detail=f"Ingredients text must not exceed {MAX_INGREDIENTS_TEXT_LEN} characters",
         )
 
-    image_bytes = None
-    image_mime = None
-    if image and image.filename:
-        image_mime = (image.content_type or "").split(";")[0].strip().lower()
-        if image_mime not in RECIPE_IMAGE_MIMES:
-            raise HTTPException(status_code=400, detail="Image must be JPEG, PNG, or WebP")
-        image_bytes = await image.read()
-        if len(image_bytes) > RECIPE_IMAGE_MAX_BYTES:
-            raise HTTPException(status_code=400, detail="Image must not exceed 5 MB")
-        if len(image_bytes) == 0:
-            image_bytes = None
-
-    if not text and not image_bytes:
+    image_payload = await _read_recipe_images(images or [])
+    if not text and not image_payload:
         raise HTTPException(status_code=400, detail="Please enter ingredients or upload an image")
+
+    limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
+    max_detect = RECIPE_DETECT_LIMIT_USER if user else RECIPE_DETECT_LIMIT_GUEST
+    _check_rate_limit(limit_key, "detect", max_detect)
+
+    try:
+        result = await detect_ingredients(
+            ingredients_text=text,
+            images=image_payload,
+            locale=_normalize_locale(locale),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        print(f"[recipe/detect] {exc}")
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception as exc:
+        print(f"[recipe/detect] unexpected error: {exc}")
+        raise HTTPException(status_code=500, detail="Ingredient detection failed. Please try again.") from exc
+
+    return {"success": True, **result}
+
+
+@app.post("/recipe/generate")
+async def recipe_generate(
+    request: Request,
+    body: RecipeGenerateBody,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
+    user = get_optional_user(creds)
+    ingredients = [str(x).strip() for x in (body.ingredients or []) if str(x).strip()]
+    if not ingredients:
+        raise HTTPException(status_code=400, detail="Please select at least one ingredient")
+    if len(ingredients) > 50:
+        raise HTTPException(status_code=400, detail="Too many ingredients selected")
 
     limit_key = f"user:{user['id']}" if user else f"ip:{_client_ip(request)}"
     max_gen = RECIPE_GENERATE_LIMIT_USER if user else RECIPE_GENERATE_LIMIT_GUEST
     _check_rate_limit(limit_key, "generate", max_gen)
 
     try:
-        recipe = await generate_recipe(
-            ingredients_text=text,
-            image_bytes=image_bytes,
-            image_mime=image_mime,
-            locale=_normalize_locale(locale),
+        recipe = await generate_recipe_from_selection(
+            ingredients=ingredients,
+            locale=_normalize_locale(body.locale or "en"),
+            extra_notes=(body.notes or "").strip(),
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

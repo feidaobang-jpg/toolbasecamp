@@ -3,15 +3,13 @@ document.addEventListener('DOMContentLoaded', function () {
         ? siteConfig.apiBase
         : 'http://127.0.0.1:8001';
     const TOKEN_KEY = 'auth_token';
+    const MAX_IMAGES = 5;
 
     const ingredientsText = document.getElementById('ingredients-text');
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
-    const fileInfo = document.getElementById('file-info');
-    const fileName = document.getElementById('file-name');
-    const fileSize = document.getElementById('file-size');
-    const removeBtn = document.getElementById('remove-btn');
-    const generateBtn = document.getElementById('generate-btn');
+    const previewGrid = document.getElementById('image-preview-grid');
+    const detectBtn = document.getElementById('detect-btn');
     const clearBtn = document.getElementById('clear-btn');
     const progressWrap = document.getElementById('progress-wrap');
     const progressBar = document.getElementById('progress-bar');
@@ -19,6 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressPct = document.getElementById('progress-percent');
     const errorBox = document.getElementById('error-box');
     const errorMsg = document.getElementById('error-msg');
+    const selectCard = document.getElementById('select-card');
+    const ingredientChoices = document.getElementById('ingredient-choices');
+    const selectAllBtn = document.getElementById('select-all-btn');
+    const selectNoneBtn = document.getElementById('select-none-btn');
+    const generateBtn = document.getElementById('generate-btn');
     const resultCard = document.getElementById('result-card');
     const recipeTitle = document.getElementById('recipe-title');
     const recipeMeta = document.getElementById('recipe-meta');
@@ -29,7 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const tipsWrap = document.getElementById('tips-wrap');
     const tipsList = document.getElementById('tips-list');
 
-    let currentFile = null;
+    let imageItems = [];
+    let detectNotes = '';
+    let nextImageId = 1;
 
     function tr(key, params) {
         return (typeof window.t === 'function' ? window.t(key, params) : key);
@@ -73,45 +78,167 @@ document.addEventListener('DOMContentLoaded', function () {
     function showError(msg) {
         errorBox.style.display = 'flex';
         errorMsg.textContent = msg;
+        errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function hideError() {
         errorBox.style.display = 'none';
     }
 
-    function setFile(file) {
+    function isValidImage(file) {
         const mime = (file.type || '').toLowerCase();
         const okMime = ['image/jpeg', 'image/png', 'image/webp'];
         const okExt = /\.(jpe?g|png|webp)$/i.test(file.name || '');
-        if (!okMime.includes(mime) && !okExt) {
-            showError(tr('tools.aiRecipe.invalidImage'));
-            return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-            showError(tr('tools.aiRecipe.imageTooLarge'));
-            return;
-        }
-        currentFile = file;
-        fileName.textContent = file.name;
-        fileSize.textContent = formatSize(file.size);
-        fileInfo.style.display = 'flex';
-        dropZone.classList.add('has-file');
-        hideError();
+        return okMime.includes(mime) || okExt;
     }
 
-    function clearImage() {
-        currentFile = null;
+    function sourceLabel(sources) {
+        const hasText = sources.indexOf('text') >= 0;
+        const hasImage = sources.indexOf('image') >= 0;
+        if (hasText && hasImage) return tr('tools.aiRecipe.sourceBoth');
+        if (hasImage) return tr('tools.aiRecipe.sourceImage');
+        return tr('tools.aiRecipe.sourceText');
+    }
+
+    function renderPreviews() {
+        previewGrid.innerHTML = '';
+        imageItems.forEach(function (item) {
+            const wrap = document.createElement('div');
+            wrap.className = 'recipe-preview-item';
+
+            const img = document.createElement('img');
+            img.src = item.url;
+            img.alt = item.file.name;
+
+            const meta = document.createElement('div');
+            meta.className = 'recipe-preview-meta';
+            meta.textContent = formatSize(item.file.size);
+
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'recipe-preview-remove';
+            remove.title = tr('tools.aiRecipe.removeImage');
+            remove.textContent = '✕';
+            remove.addEventListener('click', function () {
+                removeImage(item.id);
+            });
+
+            wrap.appendChild(img);
+            wrap.appendChild(meta);
+            wrap.appendChild(remove);
+            previewGrid.appendChild(wrap);
+        });
+
+        dropZone.classList.toggle('has-file', imageItems.length > 0);
+    }
+
+    function addImages(fileList) {
+        const files = Array.from(fileList || []);
+        if (!files.length) return;
+
+        hideError();
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (imageItems.length >= MAX_IMAGES) {
+                showError(tr('tools.aiRecipe.maxImages', { max: MAX_IMAGES }));
+                break;
+            }
+            if (!isValidImage(file)) {
+                showError(tr('tools.aiRecipe.invalidImage'));
+                continue;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                showError(tr('tools.aiRecipe.imageTooLarge'));
+                continue;
+            }
+            imageItems.push({
+                id: nextImageId++,
+                file: file,
+                url: URL.createObjectURL(file)
+            });
+        }
+        renderPreviews();
         fileInput.value = '';
-        fileInfo.style.display = 'none';
-        dropZone.classList.remove('has-file');
+    }
+
+    function removeImage(id) {
+        const idx = imageItems.findIndex(function (item) { return item.id === id; });
+        if (idx < 0) return;
+        URL.revokeObjectURL(imageItems[idx].url);
+        imageItems.splice(idx, 1);
+        renderPreviews();
+    }
+
+    function clearImages() {
+        imageItems.forEach(function (item) {
+            URL.revokeObjectURL(item.url);
+        });
+        imageItems = [];
+        fileInput.value = '';
+        renderPreviews();
+    }
+
+    function hideSelection() {
+        selectCard.style.display = 'none';
+        ingredientChoices.innerHTML = '';
+        detectNotes = '';
     }
 
     function clearAll() {
         ingredientsText.value = '';
-        clearImage();
+        clearImages();
         hideError();
         hideProgress();
+        hideSelection();
         resultCard.style.display = 'none';
+    }
+
+    function renderIngredientChoices(items) {
+        ingredientChoices.innerHTML = '';
+        items.forEach(function (item, index) {
+            const li = document.createElement('li');
+            li.className = 'recipe-ingredient-choice';
+
+            const id = 'ingredient-choice-' + index;
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = id;
+            checkbox.value = item.name;
+            checkbox.checked = true;
+            checkbox.className = 'recipe-ingredient-checkbox';
+
+            const label = document.createElement('label');
+            label.htmlFor = id;
+            label.className = 'recipe-ingredient-label';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'recipe-ingredient-name';
+            nameSpan.textContent = item.name;
+
+            const sourceSpan = document.createElement('span');
+            sourceSpan.className = 'recipe-ingredient-source';
+            sourceSpan.textContent = sourceLabel(item.sources || []);
+
+            label.appendChild(nameSpan);
+            label.appendChild(sourceSpan);
+            li.appendChild(checkbox);
+            li.appendChild(label);
+            ingredientChoices.appendChild(li);
+        });
+
+        selectCard.style.display = 'block';
+        selectCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function getSelectedIngredients() {
+        return Array.from(ingredientChoices.querySelectorAll('.recipe-ingredient-checkbox:checked'))
+            .map(function (el) { return el.value; });
+    }
+
+    function setAllChoices(checked) {
+        ingredientChoices.querySelectorAll('.recipe-ingredient-checkbox').forEach(function (el) {
+            el.checked = checked;
+        });
     }
 
     function renderRecipe(recipe) {
@@ -163,29 +290,82 @@ document.addEventListener('DOMContentLoaded', function () {
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    async function doGenerate() {
+    async function doDetect() {
         const text = (ingredientsText.value || '').trim();
-        if (!text && !currentFile) {
+        if (!text && !imageItems.length) {
             showError(tr('tools.aiRecipe.needInput'));
             return;
         }
 
         hideError();
         resultCard.style.display = 'none';
-        generateBtn.disabled = true;
+        hideSelection();
+        detectBtn.disabled = true;
         showProgress(tr('tools.aiRecipe.uploading'), 15);
 
         try {
             const form = new FormData();
             form.append('ingredients_text', text);
             form.append('locale', getLocale());
-            if (currentFile) form.append('image', currentFile);
+            imageItems.forEach(function (item) {
+                form.append('images', item.file);
+            });
 
-            showProgress(tr('tools.aiRecipe.generating'), 45);
-            const res = await fetch(API_BASE + '/recipe/generate', {
+            showProgress(tr('tools.aiRecipe.detecting'), 50);
+            const res = await fetch(API_BASE + '/recipe/detect', {
                 method: 'POST',
                 headers: authHeaders(),
                 body: form
+            });
+
+            showProgress(tr('tools.aiRecipe.processing'), 85);
+
+            if (typeof check502Error !== 'undefined' && check502Error(res)) {
+                throw new Error(tr('common.serviceUnavailable'));
+            }
+
+            const data = await res.json().catch(function () { return {}; });
+            if (!res.ok) {
+                throw new Error(data.detail || tr('tools.aiRecipe.detectFailed'));
+            }
+
+            const items = data.ingredients || [];
+            if (!items.length) {
+                throw new Error(tr('tools.aiRecipe.needInput'));
+            }
+
+            detectNotes = data.notes || '';
+            renderIngredientChoices(items);
+            showProgress(tr('tools.aiRecipe.detectDone'), 100);
+        } catch (e) {
+            showError(e.message || tr('tools.aiRecipe.detectFailed'));
+        } finally {
+            hideProgress();
+            detectBtn.disabled = false;
+        }
+    }
+
+    async function doGenerate() {
+        const selected = getSelectedIngredients();
+        if (!selected.length) {
+            showError(tr('tools.aiRecipe.noSelection'));
+            return;
+        }
+
+        hideError();
+        resultCard.style.display = 'none';
+        generateBtn.disabled = true;
+        showProgress(tr('tools.aiRecipe.generating'), 35);
+
+        try {
+            const res = await fetch(API_BASE + '/recipe/generate', {
+                method: 'POST',
+                headers: authHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({
+                    ingredients: selected,
+                    locale: getLocale(),
+                    notes: detectNotes
+                })
             });
 
             showProgress(tr('tools.aiRecipe.processing'), 80);
@@ -220,13 +400,14 @@ document.addEventListener('DOMContentLoaded', function () {
     dropZone.addEventListener('drop', function (e) {
         e.preventDefault();
         dropZone.classList.remove('drag-over');
-        const f = e.dataTransfer.files[0];
-        if (f) setFile(f);
+        addImages(e.dataTransfer.files);
     });
     fileInput.addEventListener('change', function (e) {
-        if (e.target.files[0]) setFile(e.target.files[0]);
+        addImages(e.target.files);
     });
-    removeBtn.addEventListener('click', clearImage);
+    selectAllBtn.addEventListener('click', function () { setAllChoices(true); });
+    selectNoneBtn.addEventListener('click', function () { setAllChoices(false); });
     clearBtn.addEventListener('click', clearAll);
+    detectBtn.addEventListener('click', doDetect);
     generateBtn.addEventListener('click', doGenerate);
 });

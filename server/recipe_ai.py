@@ -16,6 +16,7 @@ QWEN_MODEL = os.environ.get("QWEN_MODEL", "qwen3.7-plus-us")
 QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
 
 MAX_INGREDIENTS_TEXT_LEN = 2000
+MAX_RECIPE_IMAGES = 5
 HTTP_TIMEOUT = 120.0
 
 RECIPE_SCHEMA_HINT = """
@@ -294,6 +295,89 @@ async def _generate_recipe_from_text(
     if not recipe["detected_ingredients"]:
         recipe["detected_ingredients"] = ingredients
     return recipe
+
+
+def _build_ingredient_catalog(
+    text_list: List[str],
+    vision_lists: List[List[str]],
+) -> List[dict]:
+    catalog: dict = {}
+    for name in text_list:
+        key = name.strip().lower()
+        if not key:
+            continue
+        if key not in catalog:
+            catalog[key] = {"name": name.strip(), "sources": ["text"]}
+        elif "text" not in catalog[key]["sources"]:
+            catalog[key]["sources"].append("text")
+
+    for names in vision_lists:
+        for name in names:
+            key = (name or "").strip().lower()
+            if not key:
+                continue
+            if key not in catalog:
+                catalog[key] = {"name": name.strip(), "sources": ["image"]}
+            elif "image" not in catalog[key]["sources"]:
+                catalog[key]["sources"].append("image")
+
+    return list(catalog.values())
+
+
+async def detect_ingredients(
+    ingredients_text: str,
+    images: List[Tuple[bytes, Optional[str]]],
+    locale: str,
+) -> dict:
+    locale = "zh-CN" if locale == "zh-CN" else "en"
+    text_ingredients = _parse_text_ingredients(ingredients_text)
+
+    vision_lists: List[List[str]] = []
+    vision_notes: List[str] = []
+
+    for image_bytes, image_mime in images:
+        try:
+            names, notes = await _vision_extract_ingredients(image_bytes, image_mime, locale)
+            if names:
+                vision_lists.append(names)
+            if notes:
+                vision_notes.append(notes)
+        except RuntimeError as exc:
+            print(f"[recipe/detect] vision step failed: {exc}")
+            if not text_ingredients and len(images) == 1:
+                raise ValueError(
+                    "Could not identify ingredients from the photo. "
+                    "Try a clearer image or enter ingredients as text."
+                ) from exc
+
+    catalog = _build_ingredient_catalog(text_ingredients, vision_lists)
+    if not catalog:
+        raise ValueError("No ingredients found. Please enter text or upload clearer ingredient photos.")
+
+    return {
+        "ingredients": catalog,
+        "notes": " ".join(vision_notes).strip(),
+    }
+
+
+async def generate_recipe_from_selection(
+    ingredients: List[str],
+    locale: str,
+    extra_notes: str = "",
+) -> dict:
+    locale = "zh-CN" if locale == "zh-CN" else "en"
+    cleaned: List[str] = []
+    seen = set()
+    for name in ingredients:
+        key = (name or "").strip().lower()
+        if key and key not in seen:
+            seen.add(key)
+            cleaned.append(name.strip())
+
+    if not cleaned:
+        raise ValueError("Please select at least one ingredient.")
+
+    return await _generate_recipe_from_text(cleaned, locale, extra_notes)
 
 
 async def generate_recipe(

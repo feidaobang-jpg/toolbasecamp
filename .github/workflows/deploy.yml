@@ -157,7 +157,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths, 'missing /recipe/generate in app.routes: ' + str(paths)"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths)"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -213,7 +213,7 @@ jobs:
               exit 1
             fi
           done
-          RECIPE_HTTP="$(curl -s -o /tmp/recipe-local.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -F 'ingredients_text=tomato' || echo '000')"
+          RECIPE_HTTP="$(curl -s -o /tmp/recipe-local.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -H 'Content-Type: application/json' -d '{"ingredients":["tomato"],"locale":"en"}' || echo '000')"
           echo "local recipe/generate POST $RECIPE_HTTP"
           head -c 200 /tmp/recipe-local.txt || true
           echo ""

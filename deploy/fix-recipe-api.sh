@@ -31,7 +31,7 @@ curl -s http://127.0.0.1:8001/health
 echo ""
 
 echo "=== Recipe route test ==="
-HTTP="$(curl -s -o /tmp/recipe-test.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -F 'ingredients_text=tomato')"
+HTTP="$(curl -s -o /tmp/recipe-test.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -H 'Content-Type: application/json' -d '{"ingredients":["tomato"],"locale":"en"}')"
 echo "POST /recipe/generate -> $HTTP"
 head -c 300 /tmp/recipe-test.txt
 echo ""
