@@ -362,6 +362,7 @@ def health():
         "ok": True,
         "service": "toolbasecamp-api",
         "db": db_ok,
+        "recipe_api": any(getattr(r, "path", "") == "/recipe/generate" for r in app.routes),
         "ts": int(time.time()),
     }
 
