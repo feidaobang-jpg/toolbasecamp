@@ -107,7 +107,7 @@ window.TB_LOCALES['zh-CN'] = {
             detectDone: '食材识别完成',
             detectFailed: '食材识别失败',
             selectIngredients: '选择要使用的食材',
-            selectHint: '取消勾选不需要的食材。',
+            selectHint: '点击标签选择或取消食材。',
             selectAll: '全选',
             selectNone: '取消全选',
             generateFromSelection: '生成菜谱',

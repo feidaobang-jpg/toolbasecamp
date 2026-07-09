@@ -256,21 +256,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderIngredientChoices(items) {
         ingredientChoices.innerHTML = '';
-        items.forEach(function (item, index) {
-            const li = document.createElement('li');
-            li.className = 'recipe-ingredient-choice';
-
-            const id = 'ingredient-choice-' + index;
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = id;
-            checkbox.value = item.name;
-            checkbox.checked = true;
-            checkbox.className = 'recipe-ingredient-checkbox';
-
-            const label = document.createElement('label');
-            label.htmlFor = id;
-            label.className = 'recipe-ingredient-label';
+        items.forEach(function (item) {
+            const tag = document.createElement('button');
+            tag.type = 'button';
+            tag.className = 'recipe-ingredient-tag is-selected';
+            tag.dataset.name = item.name;
+            tag.setAttribute('aria-pressed', 'true');
 
             const nameSpan = document.createElement('span');
             nameSpan.className = 'recipe-ingredient-name';
@@ -280,11 +271,13 @@ document.addEventListener('DOMContentLoaded', function () {
             sourceSpan.className = 'recipe-ingredient-source';
             sourceSpan.textContent = sourceLabel(item.sources || []);
 
-            label.appendChild(nameSpan);
-            label.appendChild(sourceSpan);
-            li.appendChild(checkbox);
-            li.appendChild(label);
-            ingredientChoices.appendChild(li);
+            tag.appendChild(nameSpan);
+            tag.appendChild(sourceSpan);
+            tag.addEventListener('click', function () {
+                const selected = tag.classList.toggle('is-selected');
+                tag.setAttribute('aria-pressed', selected ? 'true' : 'false');
+            });
+            ingredientChoices.appendChild(tag);
         });
 
         selectCard.style.display = 'block';
@@ -292,13 +285,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getSelectedIngredients() {
-        return Array.from(ingredientChoices.querySelectorAll('.recipe-ingredient-checkbox:checked'))
-            .map(function (el) { return el.value; });
+        return Array.from(ingredientChoices.querySelectorAll('.recipe-ingredient-tag.is-selected'))
+            .map(function (el) { return el.dataset.name; });
     }
 
     function setAllChoices(checked) {
-        ingredientChoices.querySelectorAll('.recipe-ingredient-checkbox').forEach(function (el) {
-            el.checked = checked;
+        ingredientChoices.querySelectorAll('.recipe-ingredient-tag').forEach(function (el) {
+            el.classList.toggle('is-selected', checked);
+            el.setAttribute('aria-pressed', checked ? 'true' : 'false');
         });
     }
 

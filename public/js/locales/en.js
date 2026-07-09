@@ -108,7 +108,7 @@ window.TB_LOCALES.en = {
             detectDone: 'Ingredients identified',
             detectFailed: 'Ingredient identification failed',
             selectIngredients: 'Select ingredients to use',
-            selectHint: 'Uncheck anything you do not want in the recipe.',
+            selectHint: 'Click tags to include or exclude ingredients.',
             selectAll: 'Select all',
             selectNone: 'Clear selection',
             generateFromSelection: 'Generate recipe',

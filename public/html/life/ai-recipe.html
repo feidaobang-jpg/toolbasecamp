@@ -68,13 +68,13 @@
 
       <div class="tool-card recipe-select-card" id="select-card" style="display:none">
         <h2 class="recipe-select-title" data-i18n="tools.aiRecipe.selectIngredients">Select ingredients to use</h2>
-        <p class="recipe-select-hint" data-i18n="tools.aiRecipe.selectHint">Uncheck anything you do not want in the recipe.</p>
+        <p class="recipe-select-hint" data-i18n="tools.aiRecipe.selectHint">Click tags to include or exclude ingredients.</p>
         <div class="recipe-select-actions">
           <button type="button" class="btn-link" id="select-all-btn" data-i18n="tools.aiRecipe.selectAll">Select all</button>
           <span class="recipe-select-divider">·</span>
           <button type="button" class="btn-link" id="select-none-btn" data-i18n="tools.aiRecipe.selectNone">Clear selection</button>
         </div>
-        <ul class="recipe-ingredient-choices" id="ingredient-choices"></ul>
+        <div class="recipe-ingredient-tags" id="ingredient-choices"></div>
         <div class="action-row">
           <button class="btn-primary" id="generate-btn">
             <span>🍳</span> <span data-i18n="tools.aiRecipe.generateFromSelection">Generate recipe</span>
