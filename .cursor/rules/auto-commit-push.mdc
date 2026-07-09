@@ -1,0 +1,25 @@
+---
+description: After implementing code changes, commit and push to origin automatically
+alwaysApply: true
+---
+
+# Auto commit and push (toolbasecamp)
+
+When you finish a coding task that modified tracked files in this repo:
+
+1. **Commit and push without waiting for the user to ask**, unless they said "don't commit", "no push", or the session is Ask/Plan mode only.
+2. Follow the repo commit style: short imperative subject, 1–2 sentences focusing on why.
+3. Use a normal commit (not `--amend`) unless amend rules in user rules apply.
+4. **Push** to `origin` on the current branch after a successful commit so GitHub Actions deploy can run.
+5. Do **not** commit secrets (`.env`, API keys, `/etc/*` copies).
+6. If `git push` fails (network), report the error and leave changes committed locally.
+
+Typical flow after implementation:
+
+```bash
+git add <relevant files>
+git commit -m "feat: ..."
+git push origin HEAD
+```
+
+If there are no file changes, skip commit/push.
