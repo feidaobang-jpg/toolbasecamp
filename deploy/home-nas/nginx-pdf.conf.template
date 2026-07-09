@@ -43,5 +43,8 @@ server {
         sub_filter '</head>' 'PDF_HEAD_INJECT</head>';
         sub_filter_once on;
         sub_filter_types text/html;
+        gzip on;
+        gzip_types text/html;
+        gzip_min_length 256;
     }
 }
