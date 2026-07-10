@@ -22,6 +22,10 @@ window.TB_LOCALES.en = {
         en: 'EN',
         zh: '中文'
     },
+    stats: {
+        sitePv: 'Views',
+        siteUv: 'Visitors'
+    },
     auth: {
         login: 'Log in',
         signup: 'Sign up',

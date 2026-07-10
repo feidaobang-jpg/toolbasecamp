@@ -21,6 +21,10 @@ window.TB_LOCALES['zh-CN'] = {
         en: 'EN',
         zh: '中文'
     },
+    stats: {
+        sitePv: '总浏览',
+        siteUv: '访客'
+    },
     auth: {
         login: '登录',
         signup: '注册',

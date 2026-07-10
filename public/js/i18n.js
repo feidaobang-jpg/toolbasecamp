@@ -109,10 +109,69 @@
         });
     }
 
+    function ensureHeaderUtils(headerRow) {
+        var utils = document.getElementById('tb-header-utils');
+        if (utils || !headerRow) return utils;
+
+        utils = document.createElement('div');
+        utils.id = 'tb-header-utils';
+
+        var auth = headerRow.querySelector('#auth-status');
+        var mobileSlot = headerRow.querySelector('#site-header-mobile-slot');
+        if (auth) {
+            headerRow.insertBefore(utils, auth);
+        } else if (mobileSlot) {
+            headerRow.insertBefore(utils, mobileSlot);
+        } else {
+            headerRow.appendChild(utils);
+        }
+        return utils;
+    }
+
+    function loadBusuanziScript() {
+        if (document.getElementById('busuanzi-script')) return;
+        var script = document.createElement('script');
+        script.id = 'busuanzi-script';
+        script.async = true;
+        script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+        document.body.appendChild(script);
+    }
+
+    function injectSiteStats() {
+        if (document.getElementById('tb-site-stats')) return;
+        var headerRow = document.querySelector('header .max-w-7xl');
+        if (!headerRow) return;
+
+        var utils = ensureHeaderUtils(headerRow);
+        if (!utils) return;
+
+        var stats = document.createElement('div');
+        stats.id = 'tb-site-stats';
+        stats.setAttribute('aria-label', t('stats.sitePv') + ', ' + t('stats.siteUv'));
+        stats.innerHTML =
+            '<span id="busuanzi_container_site_pv">' +
+                '<span data-i18n="stats.sitePv">' + t('stats.sitePv') + '</span> ' +
+                '<span id="busuanzi_value_site_pv" class="tb-stats-num">...</span>' +
+            '</span>' +
+            '<span class="tb-stats-sep" aria-hidden="true"></span>' +
+            '<span id="busuanzi_container_site_uv">' +
+                '<span data-i18n="stats.siteUv">' + t('stats.siteUv') + '</span> ' +
+                '<span id="busuanzi_value_site_uv" class="tb-stats-num">...</span>' +
+            '</span>';
+
+        utils.insertBefore(stats, utils.firstChild);
+        loadBusuanziScript();
+    }
+
     function injectLangSwitcher() {
         if (document.getElementById('tb-lang-switcher')) return;
         var headerRow = document.querySelector('header .max-w-7xl');
         if (!headerRow) return;
+
+        var utils = ensureHeaderUtils(headerRow);
+        if (!utils) return;
+
+        injectSiteStats();
 
         var wrap = document.createElement('div');
         wrap.id = 'tb-lang-switcher';
@@ -129,15 +188,7 @@
             setLocale(btn.getAttribute('data-locale'));
         });
 
-        var mobileSlot = headerRow.querySelector('#site-header-mobile-slot');
-        var auth = headerRow.querySelector('#auth-status');
-        if (auth) {
-            headerRow.insertBefore(wrap, auth);
-        } else if (mobileSlot) {
-            headerRow.insertBefore(wrap, mobileSlot);
-        } else {
-            headerRow.appendChild(wrap);
-        }
+        utils.appendChild(wrap);
         updateLangSwitcher();
     }
 
