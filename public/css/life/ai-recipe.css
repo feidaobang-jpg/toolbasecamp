@@ -233,33 +233,35 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .recipe-select-ctl {
-  padding: 4px 8px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #fff;
+  color: #374151;
   font: inherit;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .recipe-select-ctl:hover {
-  background: #eff6ff;
-  color: #1d4ed8;
+  border-color: #93c5fd;
+  background: #f8fafc;
+  color: #111827;
 }
 
-.recipe-select-ctl-sep {
-  color: #d1d5db;
-  font-size: 13px;
-  line-height: 1;
-  user-select: none;
+.recipe-select-ctl:active {
+  background: #eff6ff;
+  border-color: #3b82f6;
 }
 
 .recipe-ingredient-tags {
@@ -313,7 +315,7 @@
 }
 
 .recipe-ingredient-tag.is-selected .recipe-ingredient-name {
-  color: #1d4ed8;
+  color: #111827;
 }
 
 .recipe-ingredient-tag .recipe-ingredient-source {
@@ -328,8 +330,8 @@
 }
 
 .recipe-ingredient-tag.is-selected .recipe-ingredient-source {
-  background: #dbeafe;
-  color: #3b82f6;
+  background: #e5e7eb;
+  color: #6b7280;
 }
 
 .recipe-result-card {
@@ -445,6 +447,6 @@
 }
 
 .recipe-ingredient-selected {
-  color: #2563eb;
+  color: #111827;
   font-weight: 600;
 }
