@@ -5,7 +5,7 @@
 window.TB_LOCALES['zh-CN'] = {
     site: {
         name: '工具大本营',
-        logoBadge: '工具',
+        logoBadge: '工',
         description: '工具大本营 — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
         keywords: '效率工具, PDF 转换, JSON 转 Java, 开发者工具, 文档工具',
         footer: '保留所有权利。',
