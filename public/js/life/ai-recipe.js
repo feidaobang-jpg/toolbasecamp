@@ -436,6 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const amount = (item.amount || '').trim();
             const name = (item.name || '').trim();
             const highlighted = isSelectedIngredient(name, selected);
+            if (highlighted) li.classList.add('is-selected');
 
             if (amount && name) {
                 li.appendChild(document.createTextNode(amount + ' '));
@@ -445,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 li.appendChild(nameSpan);
             } else {
                 li.textContent = amount ? amount + ' ' + name : name;
-                if (highlighted) li.className = 'recipe-ingredient-selected';
+                if (highlighted) li.classList.add('recipe-ingredient-selected');
             }
             ingredientsList.appendChild(li);
         });

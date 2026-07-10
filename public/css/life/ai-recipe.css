@@ -377,8 +377,37 @@
   line-height: 1.7;
 }
 
+.recipe-ingredients-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.recipe-ingredients-tiles li {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #f9fafb;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #374151;
+}
+
+.recipe-ingredients-tiles li.is-selected {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+}
+
 .recipe-block li + li {
   margin-top: 6px;
+}
+
+.recipe-ingredients-tiles li + li {
+  margin-top: 0;
 }
 
 .recipe-ingredient-selected {
