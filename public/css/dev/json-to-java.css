@@ -51,39 +51,7 @@ textarea {
     display: flex;
     gap: 12px;
     margin: 20px 0;
-}
-
-button {
-    padding: 8px 16px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-weight: bold;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
-#clear-btn {
-    background-color: #3498db;
-}
-
-#clear-btn:hover {
-    background-color: #2980b9;
-}
-
-#copy-java-btn, #copy-inner-classes-btn {
-    background-color: #3498db;
-    margin-top: 10px;
-    align-self: flex-start;
-}
-
-#copy-java-btn:hover, #copy-inner-classes-btn:hover {
-    background-color: #2980b9;
+    flex-wrap: wrap;
 }
 
 .options-section {

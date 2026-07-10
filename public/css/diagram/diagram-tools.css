@@ -43,36 +43,6 @@
     align-items: center;
 }
 
-.diagram-actions .btn-primary,
-.diagram-actions .btn-secondary {
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: background 0.15s;
-}
-
-.diagram-actions .btn-primary {
-    background: #2563eb;
-    color: #fff;
-}
-
-.diagram-actions .btn-primary:hover {
-    background: #1d4ed8;
-}
-
-.diagram-actions .btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #e5e7eb;
-}
-
-.diagram-actions .btn-secondary:hover {
-    background: #e5e7eb;
-}
-
 .diagram-canvas-wrap {
     flex: 1;
     min-height: 0;
