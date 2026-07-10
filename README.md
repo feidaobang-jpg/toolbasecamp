@@ -196,16 +196,12 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) — **vision (V4) + recipe text** |
-| `DEEPSEEK_MODEL` | Text recipe default `deepseek-v4-flash` |
-| `DEEPSEEK_VL_MODEL` | Vision default `deepseek-v4-flash` |
+| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen US) — **image ingredient recognition** (required for photos) |
+| `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region) |
+| `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
+| `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** |
+| `DEEPSEEK_MODEL` | Default `deepseek-chat` |
 | `DEEPSEEK_BASE_URL` | Default `https://api.deepseek.com` |
-| `RECIPE_TEXT_PROVIDER` | `auto` (default), `deepseek`, or `qwen` |
-| `RECIPE_VISION_PROVIDER` | `auto` (default), `deepseek`, or `qwen` |
-| `DASHSCOPE_API_KEY` | Optional Qwen fallback for vision/text |
-| `DASHSCOPE_BASE_URL` | China: `https://dashscope.aliyuncs.com/compatible-mode/v1` |
-| `QWEN_VL_MODEL` | Qwen vision fallback (e.g. `qwen3-vl-flash`) |
-| `QWEN_MODEL` | Qwen text fallback (e.g. `qwen-plus`) |
 
 Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
@@ -221,33 +217,33 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/register` | Email sign-up |
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
-| POST | `/api/recipe/detect` | Identify ingredients (DeepSeek V4 vision, Qwen fallback) |
-| POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek text) |
+| POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL US) |
+| POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek) |
 
-### AI Recipe (DeepSeek V4)
+### AI Recipe (Qwen US + DeepSeek)
 
-- **识图 / detect**: DeepSeek V4 (`DEEPSEEK_VL_MODEL`, default `deepseek-v4-flash`)
-- **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_MODEL`)
-- **千问**：可选回退（配置 `DASHSCOPE_API_KEY`）
+- **识图 / detect**: Qwen VL US (`DASHSCOPE_API_KEY`, `dashscope-us.aliyuncs.com`)
+- **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_API_KEY`)
 
-**1. DeepSeek（识图 + 文字，推荐）**
+**1. DeepSeek（文字生成）**
 
 Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys → top up balance.
 
-**2. Server env** (`/etc/toolbasecamp-api.env`):
+**2. 千问美国区（识图，上传图片时必需）**
+
+[阿里云百炼](https://bailian.console.aliyun.com/) → API Key → **美国（弗吉尼亚）** region.
+
+**3. Server env** (`/etc/toolbasecamp-api.env`):
 
 ```bash
+# DeepSeek — recipe text generation
 DEEPSEEK_API_KEY=sk-xxxxxxxx
-DEEPSEEK_MODEL=deepseek-v4-flash
-DEEPSEEK_VL_MODEL=deepseek-v4-flash
-```
+DEEPSEEK_MODEL=deepseek-chat
 
-Optional Qwen fallback:
-
-```bash
+# Qwen US — image recognition
 DASHSCOPE_API_KEY=sk-xxxxxxxx
-DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-QWEN_VL_MODEL=qwen3-vl-flash
+DASHSCOPE_BASE_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
+QWEN_VL_MODEL=qwen3-vl-plus
 ```
 
 Then:
@@ -257,7 +253,7 @@ systemctl restart toolbasecamp-api
 curl -s http://127.0.0.1:8001/health
 ```
 
-Expect `"vision_provider": "deepseek"` and `"text_provider": "deepseek"` in the `recipe` block.
+Expect `"text_provider": "deepseek"` and `"vision_provider": "qwen"`.
 
 Example file: `deploy/toolbasecamp-api.env.example`
 

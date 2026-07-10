@@ -380,3 +380,8 @@
 .recipe-block li + li {
   margin-top: 6px;
 }
+
+.recipe-ingredient-selected {
+  color: #2563eb;
+  font-weight: 600;
+}

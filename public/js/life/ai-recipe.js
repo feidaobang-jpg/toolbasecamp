@@ -404,6 +404,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function isSelectedIngredient(name, selectedList) {
+        const n = (name || '').trim().toLowerCase();
+        if (!n || !selectedList || !selectedList.length) return false;
+        return selectedList.some(function (sel) {
+            const s = (sel || '').trim().toLowerCase();
+            if (!s) return false;
+            return n === s || n.includes(s) || s.includes(n);
+        });
+    }
+
     function renderRecipe(recipe, selectedIngredients) {
         recipeTitle.textContent = recipe.title || '-';
 
@@ -425,7 +435,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const li = document.createElement('li');
             const amount = (item.amount || '').trim();
             const name = (item.name || '').trim();
-            li.textContent = amount ? amount + ' ' + name : name;
+            const highlighted = isSelectedIngredient(name, selected);
+
+            if (amount && name) {
+                li.appendChild(document.createTextNode(amount + ' '));
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = name;
+                if (highlighted) nameSpan.className = 'recipe-ingredient-selected';
+                li.appendChild(nameSpan);
+            } else {
+                li.textContent = amount ? amount + ' ' + name : name;
+                if (highlighted) li.className = 'recipe-ingredient-selected';
+            }
             ingredientsList.appendChild(li);
         });
 
