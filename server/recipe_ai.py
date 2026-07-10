@@ -9,10 +9,10 @@ import httpx
 # Alibaba Cloud Model Studio (DashScope) — vision + Qwen text fallback
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "") or os.environ.get("QWEN_API_KEY", "")
 DASHSCOPE_BASE_URL = os.environ.get(
-    "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
+    "DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
-QWEN_MODEL = os.environ.get("QWEN_MODEL", "qwen3.7-plus-us")
-QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
+QWEN_MODEL = os.environ.get("QWEN_MODEL", "qwen-plus")
+QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen-vl-plus")
 
 # DeepSeek — faster text recipe generation (OpenAI-compatible API)
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
@@ -198,11 +198,23 @@ async def _call_chat_completions(
     return content
 
 
+def _dashscope_region_label() -> str:
+    url = DASHSCOPE_BASE_URL.lower()
+    if "dashscope-us" in url or "us-east" in url:
+        return "us"
+    if "dashscope-intl" in url or "ap-southeast" in url:
+        return "sg"
+    return "cn"
+
+
 def get_recipe_config() -> dict:
     return {
         "text_provider": _recipe_text_provider(),
         "deepseek_configured": bool(DEEPSEEK_API_KEY),
         "dashscope_configured": bool(DASHSCOPE_API_KEY),
+        "dashscope_region": _dashscope_region_label(),
+        "dashscope_base_url": DASHSCOPE_BASE_URL,
+        "qwen_model": QWEN_MODEL,
         "deepseek_model": DEEPSEEK_MODEL if DEEPSEEK_API_KEY else None,
         "qwen_vl_model": QWEN_VL_MODEL,
     }

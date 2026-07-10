@@ -197,9 +197,9 @@ systemctl restart toolbasecamp-api
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
 | `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen) — **image ingredient recognition** (required for photos) |
-| `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region, matches VPS) |
-| `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
-| `QWEN_MODEL` | Qwen text fallback when DeepSeek unavailable (default `qwen3.7-plus-us`) |
+| `DASHSCOPE_BASE_URL` | Default `https://dashscope.aliyuncs.com/compatible-mode/v1` (China 华北2). US: `https://dashscope-us.aliyuncs.com/compatible-mode/v1` |
+| `QWEN_VL_MODEL` | Default `qwen-vl-plus` (vision). Cheaper: `qwen3-vl-flash` |
+| `QWEN_MODEL` | Qwen text fallback when DeepSeek unavailable (default `qwen-plus`) |
 | `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** (faster) |
 | `DEEPSEEK_MODEL` | Default `deepseek-chat` |
 | `DEEPSEEK_BASE_URL` | Default `https://api.deepseek.com` |
@@ -233,7 +233,8 @@ Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys 
 
 **2. 千问（识图，上传图片时必需）**
 
-[阿里云百炼](https://bailian.console.aliyun.com/) → API Key → **美国（弗吉尼亚）** region.
+[阿里云百炼](https://bailian.console.aliyun.com/) → 右上角选 **华北2（北京）** → API Key → 创建 Key。  
+**美国区 Key 与国内 endpoint 不能混用。**
 
 **3. Server env** (`/etc/toolbasecamp-api.env`):
 
@@ -242,20 +243,30 @@ Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys 
 DEEPSEEK_API_KEY=sk-xxxxxxxx
 DEEPSEEK_MODEL=deepseek-chat
 
-# Qwen — image recognition (keep existing)
+# Qwen — China region (cheaper, default in code)
 DASHSCOPE_API_KEY=sk-xxxxxxxx
-DASHSCOPE_BASE_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
-QWEN_VL_MODEL=qwen3-vl-plus
+DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+QWEN_VL_MODEL=qwen-vl-plus
+QWEN_MODEL=qwen-plus
+```
+
+Example file: `deploy/toolbasecamp-api.env.example`
+
+**Switch US → China on VPS** (after setting Beijing API key):
+
+```bash
+bash /opt/toolbasecamp-deploy/switch-qwen-to-china.sh
 ```
 
 Then:
 
 ```bash
 systemctl restart toolbasecamp-api
-curl -s http://127.0.0.1:8001/health | jq .recipe
+curl -s http://127.0.0.1:8001/health
 ```
 
-Expect `"text_provider": "deepseek"` when `DEEPSEEK_API_KEY` is set.
+Expect `"dashscope_region": "cn"` in the `recipe` block.  
+**Note:** VPS is in the US; China DashScope may be slower for image detect but often cheaper. Recipe text still uses DeepSeek if configured.
 
 ---
 
