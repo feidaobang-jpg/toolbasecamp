@@ -4,11 +4,12 @@
  */
 window.TB_LOCALES['zh-CN'] = {
     site: {
-        name: 'Tool Basecamp',
-        description: 'Tool Basecamp — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
+        name: '工具大本营',
+        logoBadge: '工具',
+        description: '工具大本营 — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
         keywords: '效率工具, PDF 转换, JSON 转 Java, 开发者工具, 文档工具',
         footer: '保留所有权利。',
-        pageTitleSuffix: 'Tool Basecamp'
+        pageTitleSuffix: '工具大本营'
     },
     nav: {
         tools: '工具',
@@ -37,7 +38,7 @@ window.TB_LOCALES['zh-CN'] = {
         noAccount: '还没有账户？',
         hasAccount: '已有账户？',
         createAccount: '创建账户',
-        registerSubtitle: '注册 Tool Basecamp 账户',
+        registerSubtitle: '注册工具大本营账户',
         registerBtn: '注册',
         changePassword: '修改密码',
         currentPassword: '当前密码',
@@ -48,7 +49,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     hub: {
         portalsTitle: '子站入口',
-        portalsSubtitle: 'Tool Basecamp 托管的扩展工具集合。',
+        portalsSubtitle: '工具大本营托管的扩展工具集合。',
         basecampTools: '主站工具',
         categories: '分类',
         noTools: '暂无配置的工具。',
@@ -252,7 +253,8 @@ window.TB_LOCALES['zh-CN'] = {
         },
     },
     sidebar: {
-        allTools: '全部工具'
+        allTools: '全部工具',
+        backHome: '返回首页'
     },
     guestbook: {
         title: '留言板',
@@ -279,7 +281,7 @@ window.TB_LOCALES['zh-CN'] = {
         deleteFailed: '删除失败'
     },
     about: {
-        title: '关于 Tool Basecamp',
+        title: '关于工具大本营',
         lead: '面向全球用户的效率工具集 — 从文档转换起步，持续扩展开发者实用功能。',
         documentTitle: '文档工具',
         documentDesc: 'PDF 转 Word、Word 转 PDF、图片转 PDF — 快速简洁。',

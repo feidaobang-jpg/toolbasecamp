@@ -63,7 +63,12 @@ function renderSiteTitle() {
     }
 
     const logoTitleEl = document.querySelector('.logo h2');
-    if (logoTitleEl) logoTitleEl.textContent = siteName;
+    if (logoTitleEl) {
+        const { groupTitleKey, toolTitleKey } = getCurrentToolContext();
+        logoTitleEl.textContent = (groupTitleKey || toolTitleKey)
+            ? tr('sidebar.backHome')
+            : siteName;
+    }
 }
 
 function renderMenu() {
@@ -78,6 +83,10 @@ function renderMenu() {
     const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
+    const logoBadgeKey = tr('site.logoBadge');
+    const logoBadge = (logoBadgeKey && logoBadgeKey !== 'site.logoBadge') ? logoBadgeKey : logoText;
+    const isToolSubPage = !!(groupTitleKey || toolTitleKey);
+    const logoLabel = isToolSubPage ? tr('sidebar.backHome') : siteName;
 
     let menuItemsHTML = '';
     if (typeof toolsConfig !== 'undefined' && toolsConfig.groups && groupTitleKey) {
@@ -102,8 +111,8 @@ function renderMenu() {
     sidebar.innerHTML =
         '<div class="logo">' +
             '<a class="logo-header logo-header-link" href="' + hubHref + '">' +
-                '<div class="logo-badge">' + logoText + '</div>' +
-                '<h2>' + siteName + '</h2>' +
+                '<div class="logo-badge">' + logoBadge + '</div>' +
+                '<h2>' + logoLabel + '</h2>' +
             '</a>' +
             '<div id="sidebar-user-meta" class="user-meta"></div>' +
         '</div>' +

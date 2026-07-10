@@ -461,7 +461,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const siteUrl = (typeof siteConfig !== 'undefined' && siteConfig.mainSiteOrigin)
             ? siteConfig.mainSiteOrigin.replace(/\/$/, '') + '/'
             : 'https://toolbasecamp.com/';
-        lines.push(getLocale() === 'zh-CN' ? '来自 Tool Basecamp AI 菜谱' : 'From Tool Basecamp AI Recipe');
+        const footerLabel = getLocale() === 'zh-CN'
+            ? ('来自 ' + tr('site.name') + ' AI 菜谱')
+            : ('From ' + tr('site.name') + ' AI Recipe');
+        lines.push(footerLabel);
         lines.push(siteUrl);
         return lines.join('\n');
     }

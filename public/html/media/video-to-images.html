@@ -23,7 +23,7 @@
           <div class="drop-icon">🎬</div>
           <div class="drop-title" data-i18n="tools.videoToImages.dropTitle">Drop a video here</div>
           <div class="drop-hint" data-i18n="tools.videoToImages.dropOr">or</div>
-          <button type="button" class="btn-primary" id="browse-btn" data-i18n="tools.videoToImages.chooseVideo">Choose video</button>
+          <button type="button" class="tb-btn" id="browse-btn" data-i18n="tools.videoToImages.chooseVideo">Choose video</button>
           <input type="file" id="video-input" accept="video/*" hidden />
         </div>
 
@@ -72,9 +72,9 @@
           </details>
 
           <div class="action-row">
-            <button type="button" class="btn-primary" id="extract-frames-btn">Extract frames</button>
-            <button type="button" class="btn-secondary" id="remove-watermark-btn">Clear corner + background</button>
-            <button type="button" class="btn-secondary" id="clear-btn">Clear all</button>
+            <button type="button" class="tb-btn" id="extract-frames-btn" data-i18n="tools.videoToImages.extractFrames">Extract frames</button>
+            <button type="button" class="tb-btn" id="remove-watermark-btn" data-i18n="tools.videoToImages.clearCorner">Clear corner + background</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.videoToImages.clearAll">Clear all</button>
           </div>
         </section>
 
@@ -88,13 +88,13 @@
               <input type="range" id="similarity-threshold" min="80" max="100" value="90" />
               <span id="threshold-value">90%</span>
             </label>
-            <button type="button" class="btn-secondary" id="keep-different-btn">Keep distinct frames only</button>
+            <button type="button" class="tb-btn" id="keep-different-btn" data-i18n="tools.videoToImages.dedupe">Keep distinct frames only</button>
           </div>
 
           <div class="action-row">
-            <button type="button" class="btn-secondary" id="select-all-btn">Select all</button>
-            <button type="button" class="btn-secondary" id="preview-animation-btn">Preview animation</button>
-            <button type="button" class="btn-primary" id="save-selected-btn">Download selected (ZIP)</button>
+            <button type="button" class="tb-btn" id="select-all-btn" data-i18n="tools.videoToImages.selectAll">Select all</button>
+            <button type="button" class="tb-btn" id="preview-animation-btn" data-i18n="tools.videoToImages.animationPreview">Preview animation</button>
+            <button type="button" class="tb-btn" id="save-selected-btn" data-i18n="tools.videoToImages.saveZip">Download selected (ZIP)</button>
           </div>
         </section>
 
@@ -102,7 +102,7 @@
           <h3 class="section-title">Animation preview</h3>
           <div class="animation-container" id="animation-container"></div>
           <div class="animation-controls">
-            <button type="button" class="btn-secondary" id="play-pause-btn">Pause</button>
+            <button type="button" class="tb-btn" id="play-pause-btn" data-i18n="tools.videoToImages.pause">Pause</button>
             <label>FPS: <span id="speed-value">5</span>
               <input type="range" id="speed-control" min="1" max="10" value="5" />
             </label>

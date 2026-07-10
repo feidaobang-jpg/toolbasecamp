@@ -229,28 +229,13 @@
 }
 
 .recipe-select-actions {
-  margin-bottom: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.recipe-select-divider {
-  color: #9ca3af;
-  margin: 0 6px;
-}
-
-.btn-link {
-  border: none;
-  background: none;
-  color: #2563eb;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 0;
-}
-
-.btn-link:hover {
-  text-decoration: underline;
-}
-
-.recipe-ingredient-tags {
+.recipe-result-card {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -318,12 +303,6 @@
   margin-top: 24px;
   padding-top: 16px;
   border-top: 1px solid #e5e7eb;
-}
-
-.recipe-result-actions .btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .recipe-toast {

@@ -217,9 +217,11 @@
 
     function updatePageLogo() {
         if (typeof siteConfig === 'undefined') return;
-        if (siteConfig.logoText) {
-            document.querySelectorAll('.logo-text').forEach(el => { el.textContent = siteConfig.logoText; });
-        }
+        const badgeKey = tr('site.logoBadge');
+        const badge = (badgeKey && badgeKey !== 'site.logoBadge')
+            ? badgeKey
+            : ((siteConfig.logoText) || 'TB');
+        document.querySelectorAll('.logo-text').forEach(el => { el.textContent = badge; });
         if (siteConfig.siteNameKey) {
             document.querySelectorAll('.site-name').forEach(el => { el.textContent = tr(siteConfig.siteNameKey); });
         } else if (siteConfig.siteName) {

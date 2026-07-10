@@ -48,10 +48,8 @@
         </div>
 
         <div class="action-row">
-          <button class="btn-primary" id="convert-btn" disabled>
-            <span>🚀</span> Generate PDF
-          </button>
-          <button class="btn-secondary" id="clear-btn">Clear all</button>
+          <button type="button" class="tb-btn" id="convert-btn" disabled data-i18n="tools.imagesToPdf.merge">Merge to PDF</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.imagesToPdf.clear">Clear</button>
         </div>
 
         <div class="progress-wrap" id="progress-wrap">
@@ -76,9 +74,7 @@
               <div class="result-name" id="result-name">output.pdf</div>
               <div class="result-size" id="result-size">Done</div>
             </div>
-            <a class="btn-download" id="download-btn" href="#" download="output.pdf">
-              <span>⬇️</span> Download PDF
-            </a>
+            <a class="tb-btn" id="download-btn" href="#" download="output.pdf" data-i18n="tools.imagesToPdf.download">Download PDF</a>
           </div>
         </div>
       </div>

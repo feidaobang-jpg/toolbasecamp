@@ -6,6 +6,7 @@ window.TB_LOCALES = window.TB_LOCALES || {};
 window.TB_LOCALES.en = {
     site: {
         name: 'Tool Basecamp',
+        logoBadge: 'TB',
         description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
         keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
         footer: 'All rights reserved.',
@@ -253,7 +254,8 @@ window.TB_LOCALES.en = {
         }
     },
     sidebar: {
-        allTools: 'All tools'
+        allTools: 'All tools',
+        backHome: 'Back to home'
     },
     guestbook: {
         title: 'Guestbook',

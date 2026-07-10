@@ -10,6 +10,48 @@ body {
     color: #333;
 }
 
+/* 全站统一按钮 — 修改此处即可全局生效 */
+.tb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.tb-btn.w-full {
+    width: 100%;
+}
+
+a.tb-btn {
+    text-decoration: none;
+}
+
+.tb-btn:hover {
+    background: #1d4ed8;
+}
+
+.tb-btn:active {
+    background: #1e40af;
+}
+
+.tb-btn:disabled,
+.tb-btn.is-disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+}
+
 .container {
     display: flex;
     min-height: 100vh;
@@ -318,25 +360,9 @@ body {
     background-color: #2980b9;
 }
 
-/* 通用样式 */
-button {
-    background-color: #3498db;
-    color: white;
-    border-radius: 4px;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #2980b9;
-}
-
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+/* 通用样式 — 无 .tb-btn 的按钮仅保留字体继承，避免覆盖统一按钮 */
+button:not(.tb-btn):not(.btn-link):not(.recipe-preview-remove):not(.recipe-lightbox-close):not(.recipe-lightbox-nav):not(.tool-menu-toggle):not(.hub-search-clear) {
+    font: inherit;
 }
 
 textarea {
@@ -381,22 +407,6 @@ label {
     vertical-align: middle;
 }
 
-#clear-btn {
-    background-color: #3498db;
-}
-
-#clear-btn:hover {
-    background-color: #2980b9;
-}
-
-#copy-btn {
-    background-color: #3498db;
-}
-
-#copy-btn:hover {
-    background-color: #2980b9;
-}
-
 #result-output {
     background-color: #f8f8f8;
 }
@@ -431,14 +441,9 @@ label {
     margin-bottom: 20px;
 }
 
-.copy-btn {
+.tb-btn.copy-btn {
     align-self: flex-start;
     margin-top: 10px;
-    background-color: #3498db;
-}
-
-.copy-btn:hover {
-    background-color: #2980b9;
 }
 
 /* —— 工具页（.container + .sidebar）：小屏侧栏改为抽屉 —— */

@@ -7,7 +7,7 @@
   <meta name="description" content="Generate recipes from ingredient text or photos using AI.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=copy1" />
+  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=btn1" />
 </head>
 <body>
   <div class="container">
@@ -44,10 +44,8 @@
         </div>
 
         <div class="action-row">
-          <button class="btn-primary" id="detect-btn">
-            <span>🔍</span> <span data-i18n="tools.aiRecipe.detectIngredients">Identify ingredients</span>
-          </button>
-          <button class="btn-secondary" id="clear-btn" data-i18n="tools.aiRecipe.clear">Clear</button>
+          <button type="button" class="tb-btn" id="detect-btn" data-i18n="tools.aiRecipe.detectIngredients">Identify ingredients</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.aiRecipe.clear">Clear</button>
         </div>
 
         <div class="progress-wrap" id="progress-wrap">
@@ -76,9 +74,7 @@
         </div>
         <div class="recipe-ingredient-tags" id="ingredient-choices"></div>
         <div class="action-row">
-          <button class="btn-primary" id="generate-btn">
-            <span>🍳</span> <span data-i18n="tools.aiRecipe.generateFromSelection">Generate recipe</span>
-          </button>
+          <button type="button" class="tb-btn" id="generate-btn" data-i18n="tools.aiRecipe.generateFromSelection">Generate recipe</button>
         </div>
       </div>
 
@@ -109,9 +105,7 @@
         </div>
 
         <div class="recipe-result-actions">
-          <button type="button" class="btn-secondary" id="copy-result-btn">
-            <span>📋</span> <span data-i18n="tools.aiRecipe.copyResult">Copy result</span>
-          </button>
+          <button type="button" class="tb-btn" id="copy-result-btn" data-i18n="tools.aiRecipe.copyResult">Copy result</button>
         </div>
       </div>
     </main>
@@ -123,6 +117,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/common_ui.js"></script>
-  <script src="../../js/life/ai-recipe.js?v=copy2"></script>
+  <script src="../../js/life/ai-recipe.js?v=btn1"></script>
 </body>
 </html>
