@@ -25,8 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultCard = document.getElementById('result-card');
     const recipeTitle = document.getElementById('recipe-title');
     const recipeMeta = document.getElementById('recipe-meta');
-    const detectedWrap = document.getElementById('detected-wrap');
-    const detectedList = document.getElementById('detected-list');
     const ingredientsList = document.getElementById('ingredients-list');
     const stepsList = document.getElementById('steps-list');
     const tipsWrap = document.getElementById('tips-wrap');
@@ -492,17 +490,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function isSelectedIngredient(name, selectedList) {
-        const n = (name || '').trim().toLowerCase();
-        if (!n || !selectedList || !selectedList.length) return false;
-        return selectedList.some(function (sel) {
-            const s = (sel || '').trim().toLowerCase();
-            if (!s) return false;
-            return n === s || n.includes(s) || s.includes(n);
-        });
-    }
-
-    function renderRecipe(recipe, selectedIngredients) {
+    function renderRecipe(recipe) {
         lastRecipe = recipe || null;
         recipeTitle.textContent = recipe.title || '-';
 
@@ -511,32 +499,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const cook = recipe.cook_minutes || 0;
         recipeMeta.textContent = tr('tools.aiRecipe.meta', { servings: servings, prep: prep, cook: cook });
 
-        const selected = selectedIngredients || recipe.selected_ingredients || recipe.detected_ingredients || [];
-        if (selected.length) {
-            detectedWrap.style.display = 'block';
-            detectedList.textContent = selected.join(', ');
-        } else {
-            detectedWrap.style.display = 'none';
-        }
-
         ingredientsList.innerHTML = '';
         (recipe.ingredients || []).forEach(function (item) {
             const li = document.createElement('li');
             const amount = (item.amount || '').trim();
             const name = (item.name || '').trim();
-            const highlighted = isSelectedIngredient(name, selected);
-            if (highlighted) li.classList.add('is-selected');
-
-            if (amount && name) {
-                li.appendChild(document.createTextNode(amount + ' '));
-                const nameSpan = document.createElement('span');
-                nameSpan.textContent = name;
-                if (highlighted) nameSpan.className = 'recipe-ingredient-selected';
-                li.appendChild(nameSpan);
-            } else {
-                li.textContent = amount ? amount + ' ' + name : name;
-                if (highlighted) li.classList.add('recipe-ingredient-selected');
-            }
+            li.textContent = amount && name ? amount + ' ' + name : (amount || name);
             ingredientsList.appendChild(li);
         });
 
@@ -662,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             showProgress(tr('tools.aiRecipe.done'), 100);
-            renderRecipe(data.recipe || {}, selected);
+            renderRecipe(data.recipe || {});
         } catch (e) {
             showError(e.message || tr('tools.aiRecipe.failed'));
         } finally {
