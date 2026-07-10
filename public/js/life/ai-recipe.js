@@ -429,21 +429,28 @@ document.addEventListener('DOMContentLoaded', function () {
         return amount && name ? amount + ' ' + name : (amount || name);
     }
 
+    function ingredientSeparator() {
+        return getLocale() === 'zh-CN' ? '，' : ', ';
+    }
+
+    function formatIngredientsText(ingredients) {
+        return (ingredients || [])
+            .map(formatIngredientLine)
+            .filter(function (line) { return !!line; })
+            .join(ingredientSeparator());
+    }
+
     function buildRecipeClipboardText(recipe) {
         const servings = recipe.servings || 2;
         const prep = recipe.prep_minutes || 0;
         const cook = recipe.cook_minutes || 0;
-        const ingredientLines = (recipe.ingredients || [])
-            .map(formatIngredientLine)
-            .filter(function (line) { return !!line; });
-        const ingredientSep = getLocale() === 'zh-CN' ? '，' : ', ';
         const lines = [
             recipe.title || '',
             '',
             tr('tools.aiRecipe.meta', { servings: servings, prep: prep, cook: cook }),
             '',
             '【' + tr('tools.aiRecipe.ingredients') + '】',
-            ingredientLines.join(ingredientSep)
+            formatIngredientsText(recipe.ingredients)
         ];
 
         lines.push('');
@@ -499,14 +506,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const cook = recipe.cook_minutes || 0;
         recipeMeta.textContent = tr('tools.aiRecipe.meta', { servings: servings, prep: prep, cook: cook });
 
-        ingredientsList.innerHTML = '';
-        (recipe.ingredients || []).forEach(function (item) {
-            const li = document.createElement('li');
-            const amount = (item.amount || '').trim();
-            const name = (item.name || '').trim();
-            li.textContent = amount && name ? amount + ' ' + name : (amount || name);
-            ingredientsList.appendChild(li);
-        });
+        ingredientsList.textContent = formatIngredientsText(recipe.ingredients);
 
         stepsList.innerHTML = '';
         (recipe.steps || []).forEach(function (step) {
