@@ -196,14 +196,16 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen) — **image ingredient recognition** (required for photos) |
-| `DASHSCOPE_BASE_URL` | Default `https://dashscope.aliyuncs.com/compatible-mode/v1` (China 华北2). US: `https://dashscope-us.aliyuncs.com/compatible-mode/v1` |
-| `QWEN_VL_MODEL` | Default `qwen-vl-plus` (vision). Cheaper: `qwen3-vl-flash` |
-| `QWEN_MODEL` | Qwen text fallback when DeepSeek unavailable (default `qwen-plus`) |
-| `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** (faster) |
-| `DEEPSEEK_MODEL` | Default `deepseek-chat` |
+| `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) — **vision (V4) + recipe text** |
+| `DEEPSEEK_MODEL` | Text recipe default `deepseek-v4-flash` |
+| `DEEPSEEK_VL_MODEL` | Vision default `deepseek-v4-flash` |
 | `DEEPSEEK_BASE_URL` | Default `https://api.deepseek.com` |
 | `RECIPE_TEXT_PROVIDER` | `auto` (default), `deepseek`, or `qwen` |
+| `RECIPE_VISION_PROVIDER` | `auto` (default), `deepseek`, or `qwen` |
+| `DASHSCOPE_API_KEY` | Optional Qwen fallback for vision/text |
+| `DASHSCOPE_BASE_URL` | China: `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| `QWEN_VL_MODEL` | Qwen vision fallback (e.g. `qwen3-vl-flash`) |
+| `QWEN_MODEL` | Qwen text fallback (e.g. `qwen-plus`) |
 
 Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 
@@ -219,43 +221,33 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/register` | Email sign-up |
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
-| POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL) |
-| POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek text, Qwen fallback) |
+| POST | `/api/recipe/detect` | Identify ingredients (DeepSeek V4 vision, Qwen fallback) |
+| POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek text) |
 
-### AI Recipe (DeepSeek + Qwen)
+### AI Recipe (DeepSeek V4)
 
-- **识图 / detect**: Qwen VL (`DASHSCOPE_API_KEY`)
-- **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_API_KEY`), falls back to Qwen if DeepSeek fails
+- **识图 / detect**: DeepSeek V4 (`DEEPSEEK_VL_MODEL`, default `deepseek-v4-flash`)
+- **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_MODEL`)
+- **千问**：可选回退（配置 `DASHSCOPE_API_KEY`）
 
-**1. DeepSeek（文字生成，推荐）**
+**1. DeepSeek（识图 + 文字，推荐）**
 
-Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys → create key → top up if needed.
+Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys → top up balance.
 
-**2. 千问（识图，上传图片时必需）**
-
-[阿里云百炼](https://bailian.console.aliyun.com/) → 右上角选 **华北2（北京）** → API Key → 创建 Key。  
-**美国区 Key 与国内 endpoint 不能混用。**
-
-**3. Server env** (`/etc/toolbasecamp-api.env`):
+**2. Server env** (`/etc/toolbasecamp-api.env`):
 
 ```bash
-# DeepSeek — recipe generation (faster)
 DEEPSEEK_API_KEY=sk-xxxxxxxx
-DEEPSEEK_MODEL=deepseek-chat
-
-# Qwen — China region (cheaper, default in code)
-DASHSCOPE_API_KEY=sk-xxxxxxxx
-DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-QWEN_VL_MODEL=qwen-vl-plus
-QWEN_MODEL=qwen-plus
+DEEPSEEK_MODEL=deepseek-v4-flash
+DEEPSEEK_VL_MODEL=deepseek-v4-flash
 ```
 
-Example file: `deploy/toolbasecamp-api.env.example`
-
-**Switch US → China on VPS** (after setting Beijing API key):
+Optional Qwen fallback:
 
 ```bash
-bash /opt/toolbasecamp-deploy/switch-qwen-to-china.sh
+DASHSCOPE_API_KEY=sk-xxxxxxxx
+DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+QWEN_VL_MODEL=qwen3-vl-flash
 ```
 
 Then:
@@ -265,8 +257,9 @@ systemctl restart toolbasecamp-api
 curl -s http://127.0.0.1:8001/health
 ```
 
-Expect `"dashscope_region": "cn"` in the `recipe` block.  
-**Note:** VPS is in the US; China DashScope may be slower for image detect but often cheaper. Recipe text still uses DeepSeek if configured.
+Expect `"vision_provider": "deepseek"` and `"text_provider": "deepseek"` in the `recipe` block.
+
+Example file: `deploy/toolbasecamp-api.env.example`
 
 ---
 

@@ -14,18 +14,22 @@ DASHSCOPE_BASE_URL = os.environ.get(
 QWEN_MODEL = os.environ.get("QWEN_MODEL", "qwen-plus")
 QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen-vl-plus")
 
-# DeepSeek — faster text recipe generation (OpenAI-compatible API)
+# DeepSeek — text recipe + V4 vision (OpenAI-compatible API)
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
-DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
-# auto | deepseek | qwen — auto uses DeepSeek when DEEPSEEK_API_KEY is set
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
+DEEPSEEK_VL_MODEL = os.environ.get("DEEPSEEK_VL_MODEL", "deepseek-v4-flash")
+# auto | deepseek | qwen
 RECIPE_TEXT_PROVIDER = os.environ.get("RECIPE_TEXT_PROVIDER", "auto").strip().lower()
+RECIPE_VISION_PROVIDER = os.environ.get("RECIPE_VISION_PROVIDER", "auto").strip().lower()
 
 MAX_INGREDIENTS_TEXT_LEN = 2000
 MAX_RECIPE_IMAGES = 5
 HTTP_TIMEOUT = 120.0
+VISION_TIMEOUT = 90.0
 RECIPE_MAX_TOKENS = 1800
 RECIPE_TEMPERATURE = 0.5
+VISION_MAX_TOKENS = 1024
 
 RECIPE_SCHEMA_HINT = """
 Return ONLY valid JSON (no markdown) with this exact structure:
@@ -158,6 +162,8 @@ async def _call_chat_completions(
     use_json_mode: bool = False,
     max_tokens: int = 4096,
     temperature: float = 0.7,
+    timeout: float = HTTP_TIMEOUT,
+    extra_payload: Optional[dict] = None,
 ) -> str:
     if not api_key:
         raise RuntimeError(f"{provider} API key is not configured")
@@ -170,12 +176,14 @@ async def _call_chat_completions(
     }
     if use_json_mode:
         payload["response_format"] = {"type": "json_object"}
+    if extra_payload:
+        payload.update(extra_payload)
 
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
-    async with httpx.AsyncClient(timeout=HTTP_TIMEOUT) as client:
+    async with httpx.AsyncClient(timeout=timeout) as client:
         resp = await client.post(f"{base_url}/chat/completions", json=payload, headers=headers)
         if resp.status_code >= 400:
             detail = resp.text[:800]
@@ -210,12 +218,14 @@ def _dashscope_region_label() -> str:
 def get_recipe_config() -> dict:
     return {
         "text_provider": _recipe_text_provider(),
+        "vision_provider": _recipe_vision_provider(),
         "deepseek_configured": bool(DEEPSEEK_API_KEY),
         "dashscope_configured": bool(DASHSCOPE_API_KEY),
         "dashscope_region": _dashscope_region_label(),
         "dashscope_base_url": DASHSCOPE_BASE_URL,
         "qwen_model": QWEN_MODEL,
         "deepseek_model": DEEPSEEK_MODEL if DEEPSEEK_API_KEY else None,
+        "deepseek_vl_model": DEEPSEEK_VL_MODEL if DEEPSEEK_API_KEY else None,
         "qwen_vl_model": QWEN_VL_MODEL,
     }
 
@@ -227,6 +237,7 @@ async def _call_qwen(
     use_json_mode: bool = False,
     max_tokens: int = 4096,
     temperature: float = 0.7,
+    timeout: float = HTTP_TIMEOUT,
 ) -> str:
     return await _call_chat_completions(
         messages,
@@ -237,25 +248,39 @@ async def _call_qwen(
         use_json_mode=use_json_mode,
         max_tokens=max_tokens,
         temperature=temperature,
+        timeout=timeout,
     )
+
+
+def _deepseek_fast_payload(model: str) -> dict:
+    """Disable thinking for faster vision / recipe JSON on V4 models."""
+    name = (model or "").lower()
+    if name.startswith("deepseek-v4") or name in ("deepseek-chat", "deepseek-reasoner"):
+        return {"thinking": {"type": "disabled"}}
+    return {}
 
 
 async def _call_deepseek(
     messages: List[dict],
     *,
+    model: Optional[str] = None,
     use_json_mode: bool = False,
     max_tokens: int = 4096,
     temperature: float = 0.7,
+    timeout: float = HTTP_TIMEOUT,
 ) -> str:
+    chosen = model or DEEPSEEK_MODEL
     return await _call_chat_completions(
         messages,
         provider="DeepSeek",
         base_url=DEEPSEEK_BASE_URL,
         api_key=DEEPSEEK_API_KEY,
-        model=DEEPSEEK_MODEL,
+        model=chosen,
         use_json_mode=use_json_mode,
         max_tokens=max_tokens,
         temperature=temperature,
+        timeout=timeout,
+        extra_payload=_deepseek_fast_payload(chosen),
     )
 
 
@@ -263,6 +288,122 @@ def _recipe_text_provider() -> str:
     if RECIPE_TEXT_PROVIDER in ("deepseek", "qwen"):
         return RECIPE_TEXT_PROVIDER
     return "deepseek" if DEEPSEEK_API_KEY else "qwen"
+
+
+def _recipe_vision_provider() -> str:
+    if RECIPE_VISION_PROVIDER in ("deepseek", "qwen"):
+        return RECIPE_VISION_PROVIDER
+    return "deepseek" if DEEPSEEK_API_KEY else "qwen"
+
+
+def _qwen_vision_models() -> List[str]:
+    region = _dashscope_region_label()
+    if region == "cn":
+        fallbacks = ("qwen3-vl-flash", "qwen3-vl-plus", "qwen-vl-plus")
+    else:
+        fallbacks = ("qwen3-vl-plus", "qwen-vl-plus", "qwen3-vl-flash")
+    models: List[str] = []
+    for m in (QWEN_VL_MODEL, *fallbacks):
+        if m and m not in models:
+            models.append(m)
+    return models
+
+
+def _deepseek_vision_models() -> List[str]:
+    models: List[str] = []
+    for m in (DEEPSEEK_VL_MODEL, "deepseek-v4-flash", "deepseek-v4-pro", "deepseek-chat"):
+        if m and m not in models:
+            models.append(m)
+    return models
+
+
+def _vision_prompt(locale: str) -> str:
+    if locale == "zh-CN":
+        return (
+            "请识别这张图片中可见的食材（食物原料）。"
+            '只输出 JSON：{"ingredients":["食材1","食材2"],"notes":"可选简短备注"}。'
+            "不要输出 markdown 或其他说明。"
+        )
+    return (
+        "Identify visible food ingredients in this image. "
+        'Output JSON only: {"ingredients":["item1","item2"],"notes":"optional"}'
+    )
+
+
+def _vision_messages(image_bytes: bytes, image_mime: Optional[str], locale: str) -> List[dict]:
+    return [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image_url", "image_url": {"url": _image_data_url(image_bytes, image_mime)}},
+                {"type": "text", "text": _vision_prompt(locale)},
+            ],
+        }
+    ]
+
+
+async def _parse_vision_response(raw: str, model: str) -> Tuple[List[str], str]:
+    data = _extract_json(raw)
+    items = data.get("ingredients") or []
+    names = [str(x).strip() for x in items if str(x).strip()]
+    notes = str(data.get("notes") or "").strip()
+    if not names:
+        raise RuntimeError(f"Vision model {model} returned no ingredients")
+    return names, notes
+
+
+async def _vision_extract_with_deepseek(
+    image_bytes: bytes,
+    image_mime: Optional[str],
+    locale: str,
+) -> Tuple[List[str], str]:
+    if not DEEPSEEK_API_KEY:
+        raise RuntimeError("DeepSeek API key is not configured (set DEEPSEEK_API_KEY)")
+
+    messages = _vision_messages(image_bytes, image_mime, locale)
+    last_err: Optional[Exception] = None
+    for model in _deepseek_vision_models():
+        try:
+            raw = await _call_deepseek(
+                messages,
+                model=model,
+                use_json_mode=False,
+                max_tokens=VISION_MAX_TOKENS,
+                temperature=0.2,
+                timeout=VISION_TIMEOUT,
+            )
+            return await _parse_vision_response(raw, model)
+        except Exception as exc:
+            last_err = exc
+            print(f"[recipe/vision/deepseek] model={model} failed: {exc}")
+    raise RuntimeError(f"Could not identify ingredients from image (DeepSeek): {last_err}")
+
+
+async def _vision_extract_with_qwen(
+    image_bytes: bytes,
+    image_mime: Optional[str],
+    locale: str,
+) -> Tuple[List[str], str]:
+    if not DASHSCOPE_API_KEY:
+        raise RuntimeError("DashScope API key is not configured (set DASHSCOPE_API_KEY)")
+
+    messages = _vision_messages(image_bytes, image_mime, locale)
+    last_err: Optional[Exception] = None
+    for model in _qwen_vision_models():
+        try:
+            raw = await _call_qwen(
+                messages,
+                model=model,
+                use_json_mode=False,
+                max_tokens=VISION_MAX_TOKENS,
+                temperature=0.2,
+                timeout=VISION_TIMEOUT,
+            )
+            return await _parse_vision_response(raw, model)
+        except Exception as exc:
+            last_err = exc
+            print(f"[recipe/vision/qwen] model={model} failed: {exc}")
+    raise RuntimeError(f"Could not identify ingredients from image (Qwen): {last_err}")
 
 
 async def _call_recipe_text_model(
@@ -335,49 +476,23 @@ async def _vision_extract_ingredients(
     image_mime: Optional[str],
     locale: str,
 ) -> Tuple[List[str], str]:
-    if locale == "zh-CN":
-        prompt = (
-            "请识别这张图片中可见的食材（食物原料）。"
-            '只输出 JSON：{"ingredients":["食材1","食材2"],"notes":"可选简短备注"}。'
-            "不要输出 markdown 或其他说明。"
-        )
-    else:
-        prompt = (
-            "Identify visible food ingredients in this image. "
-            'Output JSON only: {"ingredients":["item1","item2"],"notes":"optional"}'
-        )
-
-    messages = [
-        {
-            "role": "user",
-            "content": [
-                {"type": "image_url", "image_url": {"url": _image_data_url(image_bytes, image_mime)}},
-                {"type": "text", "text": prompt},
-            ],
-        }
-    ]
-
-    models_to_try = []
-    for m in (QWEN_VL_MODEL, QWEN_MODEL, "qwen-vl-plus", "qwen3-vl-plus"):
-        if m and m not in models_to_try:
-            models_to_try.append(m)
-
-    last_err: Optional[Exception] = None
-    for model in models_to_try:
+    provider = _recipe_vision_provider()
+    if provider == "deepseek":
         try:
-            raw = await _call_qwen(messages, model=model, use_json_mode=False)
-            data = _extract_json(raw)
-            items = data.get("ingredients") or []
-            names = [str(x).strip() for x in items if str(x).strip()]
-            notes = str(data.get("notes") or "").strip()
-            if names:
-                return names, notes
-            last_err = RuntimeError(f"Vision model {model} returned no ingredients")
+            return await _vision_extract_with_deepseek(image_bytes, image_mime, locale)
         except Exception as exc:
-            last_err = exc
-            print(f"[recipe/vision] model={model} failed: {exc}")
+            if not DASHSCOPE_API_KEY:
+                raise
+            print(f"[recipe/vision] DeepSeek failed, falling back to Qwen: {exc}")
+            return await _vision_extract_with_qwen(image_bytes, image_mime, locale)
 
-    raise RuntimeError(f"Could not identify ingredients from image: {last_err}")
+    try:
+        return await _vision_extract_with_qwen(image_bytes, image_mime, locale)
+    except Exception as exc:
+        if DEEPSEEK_API_KEY and provider != "qwen":
+            print(f"[recipe/vision] Qwen failed, falling back to DeepSeek: {exc}")
+            return await _vision_extract_with_deepseek(image_bytes, image_mime, locale)
+        raise
 
 
 async def _generate_recipe_from_text(

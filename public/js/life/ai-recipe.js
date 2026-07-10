@@ -468,7 +468,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             showProgress(tr('tools.aiRecipe.detecting'), 50);
-            const res = await requestDetect(text);
+            const detectStart = Date.now();
+            const progressTimer = setInterval(function () {
+                const elapsed = Math.floor((Date.now() - detectStart) / 1000);
+                const pct = Math.min(84, 50 + Math.floor(elapsed / 2));
+                showProgress(tr('tools.aiRecipe.detectingSlow', { seconds: elapsed }), pct);
+            }, 1000);
+
+            let res;
+            try {
+                res = await requestDetect(text);
+            } finally {
+                clearInterval(progressTimer);
+            }
 
             showProgress(tr('tools.aiRecipe.processing'), 85);
 
