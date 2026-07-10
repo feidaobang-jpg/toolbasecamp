@@ -142,7 +142,16 @@ window.TB_LOCALES.en = {
             tips: 'Tips',
             copyResult: 'Copy result',
             copyDone: 'Result copied to clipboard',
-            copyFailed: 'Copy failed — please select and copy manually'
+            copyFailed: 'Copy failed — please select and copy manually',
+            dishImage: 'Dish photo',
+            generateDishImage: 'Generate dish photo',
+            generatingDishImage: 'Generating dish photo… (about 30–60 seconds)',
+            dishImageDone: 'Dish photo ready',
+            dishImageFailed: 'Dish photo generation failed',
+            dishImageLoginHint: 'Log in to generate a dish photo (5 per day)',
+            dishImageLoginRequired: 'Please log in to generate a dish photo',
+            dishImageLimitReached: 'Daily dish photo limit reached. Try again tomorrow.',
+            dishImageSaveNote: 'Right-click or long-press to save the image'
         },
         videoToImages: {
             title: 'Video to Images',

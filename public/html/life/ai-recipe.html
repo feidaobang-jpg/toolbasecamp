@@ -7,7 +7,7 @@
   <meta name="description" content="Generate recipes from ingredient text or photos using AI.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=select2" />
+  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=dish1" />
 </head>
 <body>
   <div class="container">
@@ -103,6 +103,25 @@
           <ul id="tips-list"></ul>
         </div>
 
+        <div class="recipe-dish-image-block" id="dish-image-wrap">
+          <h3 data-i18n="tools.aiRecipe.dishImage">Dish photo</h3>
+          <p class="recipe-dish-image-hint" id="dish-image-login-hint" style="display:none"
+            data-i18n="tools.aiRecipe.dishImageLoginHint">Log in to generate a dish photo (5 per day).</p>
+          <div class="recipe-dish-image-actions">
+            <button type="button" class="tb-btn" id="generate-dish-image-btn"
+              data-i18n="tools.aiRecipe.generateDishImage">Generate dish photo</button>
+          </div>
+          <div class="recipe-dish-image-loading" id="dish-image-loading" style="display:none">
+            <span class="recipe-dish-image-spinner" aria-hidden="true"></span>
+            <span id="dish-image-loading-text" data-i18n="tools.aiRecipe.generatingDishImage">Generating dish photo...</span>
+          </div>
+          <p class="recipe-dish-image-error" id="dish-image-error" style="display:none"></p>
+          <div class="recipe-dish-image-result" id="dish-image-result" style="display:none">
+            <img id="dish-image-preview" alt="" />
+            <p class="recipe-dish-image-save-note" data-i18n="tools.aiRecipe.dishImageSaveNote">Right-click or long-press to save the image.</p>
+          </div>
+        </div>
+
         <div class="recipe-result-actions">
           <button type="button" class="tb-btn" id="copy-result-btn" data-i18n="tools.aiRecipe.copyResult">Copy result</button>
         </div>
@@ -116,6 +135,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/common_ui.js"></script>
-  <script src="../../js/life/ai-recipe.js?v=btn1"></script>
+  <script src="../../js/life/ai-recipe.js?v=dish1"></script>
 </body>
 </html>

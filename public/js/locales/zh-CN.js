@@ -141,7 +141,16 @@ window.TB_LOCALES['zh-CN'] = {
             tips: '小贴士',
             copyResult: '复制结果',
             copyDone: '已复制结果到剪切板',
-            copyFailed: '复制失败，请手动选择复制'
+            copyFailed: '复制失败，请手动选择复制',
+            dishImage: '成品效果图',
+            generateDishImage: '生成效果图',
+            generatingDishImage: '正在生成效果图…（约需 30–60 秒）',
+            dishImageDone: '效果图已生成',
+            dishImageFailed: '效果图生成失败',
+            dishImageLoginHint: '登录后可生成成品效果图（每日 5 次）',
+            dishImageLoginRequired: '请先登录后再生成效果图',
+            dishImageLimitReached: '今日效果图次数已用完，请明天再试',
+            dishImageSaveNote: '请右键或长按图片保存到本地'
         },
         videoToImages: {
             title: '视频转图片',

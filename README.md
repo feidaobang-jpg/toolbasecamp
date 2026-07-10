@@ -196,9 +196,11 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen US) — **image ingredient recognition** (required for photos) |
+| `DASHSCOPE_API_KEY` | Alibaba Model Studio (Qwen US) — **ingredient recognition + dish photo** (photos / dish image) |
 | `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region) |
 | `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
+| `WAN_IMAGE_MODEL` | Default `wan2.7-image` (dish photo generation) |
+| `WAN_IMAGE_SIZE` | Default `2K` |
 | `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** |
 | `DEEPSEEK_MODEL` | Default `deepseek-chat` |
 | `DEEPSEEK_BASE_URL` | Default `https://api.deepseek.com` |
@@ -219,11 +221,13 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | GET/POST | `/api/guestbook/messages` | Guestbook |
 | POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL US) |
 | POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek) |
+| POST | `/api/recipe/dish-image` | Generate dish photo from recipe (Wan 2.7, logged-in users, 5/day) |
 
-### AI Recipe (Qwen US + DeepSeek)
+### AI Recipe (Qwen US + DeepSeek + Wan)
 
 - **识图 / detect**: Qwen VL US (`DASHSCOPE_API_KEY`, `dashscope-us.aliyuncs.com`)
 - **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_API_KEY`)
+- **成品效果图 / dish-image**: Wan 2.7 (`WAN_IMAGE_MODEL`, same `DASHSCOPE_API_KEY`, login required)
 
 **1. DeepSeek（文字生成）**
 
@@ -240,10 +244,12 @@ Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys 
 DEEPSEEK_API_KEY=sk-xxxxxxxx
 DEEPSEEK_MODEL=deepseek-chat
 
-# Qwen US — image recognition
+# Qwen US — image recognition + dish photo (Wan)
 DASHSCOPE_API_KEY=sk-xxxxxxxx
 DASHSCOPE_BASE_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
 QWEN_VL_MODEL=qwen3-vl-plus
+WAN_IMAGE_MODEL=wan2.7-image
+WAN_IMAGE_SIZE=2K
 ```
 
 Then:
