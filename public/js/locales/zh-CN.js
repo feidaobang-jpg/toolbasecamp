@@ -93,7 +93,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         aiRecipe: {
             title: 'AI 菜谱',
-            desc: '输入食材或上传照片，先识别再勾选，最后生成完整菜谱。',
+            desc: '输入食材或上传照片，先识别再选择，最后生成完整菜谱。',
             textLabel: '食材（文字）',
             textPlaceholder: '例如：番茄、鸡蛋、米饭、洋葱',
             imageLabel: '食材（图片）',
@@ -106,7 +106,7 @@ window.TB_LOCALES['zh-CN'] = {
             nextImage: '下一张',
             imagePreviewOf: '{current} / {total}',
             note: '提示：',
-            noteBody: '可以只填文字、只上传图片，或两者一起使用。请先识别食材，再勾选要用的原料。',
+            noteBody: '可以只填文字、只上传图片，或两者一起使用。请先识别食材，再选择要用的原料。',
             detectIngredients: '识别食材',
             detecting: '正在识别食材...',
             detectingSlow: '正在识别食材...（已 {seconds} 秒）',
@@ -122,7 +122,6 @@ window.TB_LOCALES['zh-CN'] = {
             sourceText: '来自文字',
             sourceImage: '来自图片',
             sourceBoth: '文字与图片',
-            dishImageNote: '成品菜图片需要文生图模型（如阿里通义万相），当前 DeepSeek 识图/文字模型不能生成菜品图。',
             generate: '生成菜谱',
             clear: '清空',
             uploading: '上传中...',
@@ -138,7 +137,10 @@ window.TB_LOCALES['zh-CN'] = {
             selectedIngredients: '已选食材',
             ingredients: '用料',
             steps: '步骤',
-            tips: '小贴士'
+            tips: '小贴士',
+            copyResult: '复制结果',
+            copyDone: '已复制结果到剪切板',
+            copyFailed: '复制失败，请手动选择复制'
         },
         videoToImages: {
             title: '视频转图片',

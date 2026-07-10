@@ -123,7 +123,6 @@ window.TB_LOCALES.en = {
             sourceText: 'From text',
             sourceImage: 'From photo',
             sourceBoth: 'From text & photo',
-            dishImageNote: 'Finished dish photos require an image generation model (e.g. Alibaba Wanxiang), not the current vision/text models.',
             generate: 'Generate recipe',
             clear: 'Clear',
             uploading: 'Uploading...',
@@ -139,7 +138,10 @@ window.TB_LOCALES.en = {
             selectedIngredients: 'Selected ingredients',
             ingredients: 'Ingredients',
             steps: 'Steps',
-            tips: 'Tips'
+            tips: 'Tips',
+            copyResult: 'Copy result',
+            copyDone: 'Result copied to clipboard',
+            copyFailed: 'Copy failed — please select and copy manually'
         },
         videoToImages: {
             title: 'Video to Images',

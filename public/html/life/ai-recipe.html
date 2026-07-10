@@ -7,7 +7,7 @@
   <meta name="description" content="Generate recipes from ingredient text or photos using AI.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=ingtiles1" />
+  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=copy1" />
 </head>
 <body>
   <div class="container">
@@ -88,11 +88,6 @@
           <p class="recipe-meta" id="recipe-meta">-</p>
         </div>
 
-        <div class="recipe-dish-image-note" id="dish-image-note">
-          <span class="recipe-dish-icon">🖼️</span>
-          <span data-i18n="tools.aiRecipe.dishImageNote">Finished dish photos require an image generation model (e.g. Alibaba Wanxiang), not the current Qwen vision model.</span>
-        </div>
-
         <div class="recipe-detected" id="detected-wrap" style="display:none">
           <h3 data-i18n="tools.aiRecipe.selectedIngredients">Selected ingredients</h3>
           <p id="detected-list"></p>
@@ -112,6 +107,12 @@
           <h3 data-i18n="tools.aiRecipe.tips">Tips</h3>
           <ul id="tips-list"></ul>
         </div>
+
+        <div class="recipe-result-actions">
+          <button type="button" class="btn-secondary" id="copy-result-btn">
+            <span>📋</span> <span data-i18n="tools.aiRecipe.copyResult">Copy result</span>
+          </button>
+        </div>
       </div>
     </main>
   </div>
@@ -122,6 +123,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/common_ui.js"></script>
-  <script src="../../js/life/ai-recipe.js?v=ingtiles1"></script>
+  <script src="../../js/life/ai-recipe.js?v=copy1"></script>
 </body>
 </html>

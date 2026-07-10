@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const stepsList = document.getElementById('steps-list');
     const tipsWrap = document.getElementById('tips-wrap');
     const tipsList = document.getElementById('tips-list');
+    const copyResultBtn = document.getElementById('copy-result-btn');
 
     const requiredEls = {
         'ingredients-text': ingredientsText,
@@ -58,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let imageItems = [];
     let detectNotes = '';
     let nextImageId = 1;
+    let lastRecipe = null;
+    let toastTimer = null;
 
     function tr(key, params) {
         return (typeof window.t === 'function' ? window.t(key, params) : key);
@@ -359,6 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError();
         hideProgress();
         hideSelection();
+        lastRecipe = null;
         resultCard.style.display = 'none';
     }
 
@@ -404,6 +408,84 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function showToast(message) {
+        let toast = document.querySelector('.recipe-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'recipe-toast';
+            toast.setAttribute('role', 'status');
+            toast.setAttribute('aria-live', 'polite');
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toast.classList.remove('is-visible');
+        }, 2200);
+    }
+
+    function formatIngredientLine(item) {
+        const amount = (item.amount || '').trim();
+        const name = (item.name || '').trim();
+        return amount && name ? amount + ' ' + name : (amount || name);
+    }
+
+    function buildRecipeClipboardText(recipe) {
+        const servings = recipe.servings || 2;
+        const prep = recipe.prep_minutes || 0;
+        const cook = recipe.cook_minutes || 0;
+        const lines = [
+            recipe.title || '',
+            '',
+            tr('tools.aiRecipe.meta', { servings: servings, prep: prep, cook: cook }),
+            '',
+            '【' + tr('tools.aiRecipe.ingredients') + '】'
+        ];
+
+        (recipe.ingredients || []).forEach(function (item) {
+            const line = formatIngredientLine(item);
+            if (line) lines.push(line);
+        });
+
+        lines.push('');
+        lines.push('【' + tr('tools.aiRecipe.steps') + '】');
+        (recipe.steps || []).forEach(function (step, idx) {
+            const order = step.order || idx + 1;
+            const text = (step.text || '').trim();
+            if (text) lines.push(order + '. ' + text);
+        });
+
+        lines.push('');
+        lines.push('---');
+        lines.push(getLocale() === 'zh-CN' ? '来自 Tool Basecamp AI 菜谱' : 'From Tool Basecamp AI Recipe');
+        lines.push(window.location.href.split('#')[0]);
+        return lines.join('\n');
+    }
+
+    async function copyRecipeResult() {
+        if (!lastRecipe) return;
+        const text = buildRecipeClipboardText(lastRecipe);
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            showToast(tr('tools.aiRecipe.copyDone'));
+        } catch (e) {
+            showToast(tr('tools.aiRecipe.copyFailed'));
+        }
+    }
+
     function isSelectedIngredient(name, selectedList) {
         const n = (name || '').trim().toLowerCase();
         if (!n || !selectedList || !selectedList.length) return false;
@@ -415,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderRecipe(recipe, selectedIngredients) {
+        lastRecipe = recipe || null;
         recipeTitle.textContent = recipe.title || '-';
 
         const servings = recipe.servings || 2;
@@ -485,6 +568,8 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError();
         resultCard.style.display = 'none';
         hideSelection();
+        lastRecipe = null;
+        resultCard.style.display = 'none';
         detectBtn.disabled = true;
         showProgress(tr('tools.aiRecipe.uploading'), 15);
 
@@ -601,4 +686,5 @@ document.addEventListener('DOMContentLoaded', function () {
     clearBtn.addEventListener('click', clearAll);
     detectBtn.addEventListener('click', doDetect);
     generateBtn.addEventListener('click', doGenerate);
+    if (copyResultBtn) copyResultBtn.addEventListener('click', copyRecipeResult);
 });
