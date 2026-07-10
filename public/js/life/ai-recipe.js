@@ -435,18 +435,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const servings = recipe.servings || 2;
         const prep = recipe.prep_minutes || 0;
         const cook = recipe.cook_minutes || 0;
+        const ingredientLines = (recipe.ingredients || [])
+            .map(formatIngredientLine)
+            .filter(function (line) { return !!line; });
+        const ingredientSep = getLocale() === 'zh-CN' ? '，' : ', ';
         const lines = [
             recipe.title || '',
             '',
             tr('tools.aiRecipe.meta', { servings: servings, prep: prep, cook: cook }),
             '',
-            '【' + tr('tools.aiRecipe.ingredients') + '】'
+            '【' + tr('tools.aiRecipe.ingredients') + '】',
+            ingredientLines.join(ingredientSep)
         ];
-
-        (recipe.ingredients || []).forEach(function (item) {
-            const line = formatIngredientLine(item);
-            if (line) lines.push(line);
-        });
 
         lines.push('');
         lines.push('【' + tr('tools.aiRecipe.steps') + '】');
@@ -458,8 +458,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         lines.push('');
         lines.push('---');
+        const siteUrl = (typeof siteConfig !== 'undefined' && siteConfig.mainSiteOrigin)
+            ? siteConfig.mainSiteOrigin.replace(/\/$/, '') + '/'
+            : 'https://toolbasecamp.com/';
         lines.push(getLocale() === 'zh-CN' ? '来自 Tool Basecamp AI 菜谱' : 'From Tool Basecamp AI Recipe');
-        lines.push(window.location.href.split('#')[0]);
+        lines.push(siteUrl);
         return lines.join('\n');
     }
 
