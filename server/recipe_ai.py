@@ -12,8 +12,6 @@ DASHSCOPE_BASE_URL = os.environ.get(
     "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
 QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
-WAN_IMAGE_MODEL = os.environ.get("WAN_IMAGE_MODEL", "wan2.7-image")
-WAN_IMAGE_SIZE = os.environ.get("WAN_IMAGE_SIZE", "2K")
 
 # DeepSeek — recipe text generation
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
@@ -24,7 +22,6 @@ MAX_INGREDIENTS_TEXT_LEN = 2000
 MAX_RECIPE_IMAGES = 5
 HTTP_TIMEOUT = 120.0
 VISION_TIMEOUT = 90.0
-DISH_IMAGE_TIMEOUT = 180.0
 RECIPE_MAX_TOKENS = 1800
 RECIPE_TEMPERATURE = 0.5
 VISION_MAX_TOKENS = 1024
@@ -213,26 +210,15 @@ def _dashscope_region_label() -> str:
     return "cn"
 
 
-def _dashscope_api_root() -> str:
-    url = DASHSCOPE_BASE_URL.rstrip("/")
-    if "/compatible-mode/" in url:
-        return url.split("/compatible-mode/")[0]
-    if url.endswith("/v1"):
-        return url[:-3]
-    return url
-
-
 def get_recipe_config() -> dict:
     return {
         "vision_provider": "qwen",
         "text_provider": "deepseek",
         "dashscope_configured": bool(DASHSCOPE_API_KEY),
         "deepseek_configured": bool(DEEPSEEK_API_KEY),
-        "dish_image_configured": bool(DASHSCOPE_API_KEY),
         "dashscope_region": _dashscope_region_label(),
         "dashscope_base_url": DASHSCOPE_BASE_URL,
         "qwen_vl_model": QWEN_VL_MODEL,
-        "wan_image_model": WAN_IMAGE_MODEL,
         "deepseek_model": DEEPSEEK_MODEL,
     }
 
@@ -515,122 +501,3 @@ async def generate_recipe(
         raise ValueError("No ingredients found. Please enter text or upload a clearer ingredient photo.")
 
     return await _generate_recipe_from_text(merged, locale, vision_notes)
-
-
-def _build_dish_image_prompt(recipe: dict, locale: str) -> str:
-    title = (recipe.get("title") or "dish").strip()
-    ingredient_names: List[str] = []
-    for item in recipe.get("ingredients") or []:
-        if not isinstance(item, dict):
-            continue
-        name = (item.get("name") or "").strip()
-        amount = (item.get("amount") or "").strip()
-        if name:
-            ingredient_names.append(f"{amount} {name}".strip() if amount else name)
-    ing_text = ", ".join(ingredient_names[:12])
-
-    if locale == "zh-CN":
-        return (
-            f"专业美食摄影，45度俯拍，自然柔光，精致餐厅摆盘。"
-            f"菜品：{title}。"
-            + (f"主要食材：{ing_text}。" if ing_text else "")
-            + "高清写实、色泽诱人、白色瓷盘、浅景深背景虚化，无文字、无水印、无人物。"
-        )
-    return (
-        f"Professional food photography, 45-degree angle, soft natural light, fine dining plating. "
-        f"Dish: {title}. "
-        + (f"Key ingredients: {ing_text}. " if ing_text else "")
-        + "Photorealistic, appetizing colors, white ceramic plate, shallow depth of field, "
-        "no text, no watermark, no people."
-    )
-
-
-def _extract_wan_image_url(data: dict) -> str:
-    output = data.get("output") or {}
-    for choice in output.get("choices") or []:
-        message = choice.get("message") or {}
-        for item in message.get("content") or []:
-            if not isinstance(item, dict):
-                continue
-            url = item.get("image") or item.get("url")
-            if url:
-                return str(url)
-    raise RuntimeError(
-        f"Wan image API returned no image URL: {json.dumps(data, ensure_ascii=False)[:500]}"
-    )
-
-
-async def _fetch_image_bytes(url: str) -> Tuple[bytes, str]:
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        resp = await client.get(url)
-        resp.raise_for_status()
-        mime = (resp.headers.get("content-type") or "image/png").split(";")[0].strip().lower()
-        if not mime.startswith("image/"):
-            mime = "image/png"
-        return resp.content, mime
-
-
-async def generate_recipe_dish_image(recipe: dict, locale: str) -> dict:
-    if not DASHSCOPE_API_KEY:
-        raise RuntimeError("DASHSCOPE_API_KEY is not configured")
-
-    locale = "zh-CN" if locale == "zh-CN" else "en"
-    title = (recipe.get("title") or "").strip()
-    if not title:
-        raise ValueError("Recipe title is required for dish image generation")
-
-    prompt = _build_dish_image_prompt(recipe, locale)
-    api_url = (
-        f"{_dashscope_api_root()}/api/v1/services/aigc/multimodal-generation/generation"
-    )
-    payload = {
-        "model": WAN_IMAGE_MODEL,
-        "input": {
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [{"text": prompt}],
-                }
-            ]
-        },
-        "parameters": {
-            "size": WAN_IMAGE_SIZE,
-            "n": 1,
-            "watermark": False,
-        },
-    }
-
-    async with httpx.AsyncClient(timeout=DISH_IMAGE_TIMEOUT) as client:
-        resp = await client.post(
-            api_url,
-            headers={
-                "Authorization": f"Bearer {DASHSCOPE_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json=payload,
-        )
-        if resp.status_code >= 400:
-            body = resp.text[:500]
-            raise RuntimeError(
-                f"Wan image API error (HTTP {resp.status_code}, model={WAN_IMAGE_MODEL}): {body}"
-            )
-        data = resp.json()
-
-    if data.get("code"):
-        raise RuntimeError(
-            f"Wan image API error: {data.get('message') or data.get('code')}"
-        )
-
-    image_url = _extract_wan_image_url(data)
-    image_bytes, mime = await _fetch_image_bytes(image_url)
-    if len(image_bytes) > 8 * 1024 * 1024:
-        raise RuntimeError("Generated image is too large to return")
-
-    b64 = base64.b64encode(image_bytes).decode("ascii")
-    usage = data.get("usage") or {}
-    return {
-        "image_data_url": f"data:{mime};base64,{b64}",
-        "mime_type": mime,
-        "size": usage.get("size") or "",
-        "model": WAN_IMAGE_MODEL,
-    }

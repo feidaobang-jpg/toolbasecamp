@@ -32,14 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const tipsWrap = document.getElementById('tips-wrap');
     const tipsList = document.getElementById('tips-list');
     const copyResultBtn = document.getElementById('copy-result-btn');
-    const dishImageWrap = document.getElementById('dish-image-wrap');
-    const dishImageLoginHint = document.getElementById('dish-image-login-hint');
-    const generateDishImageBtn = document.getElementById('generate-dish-image-btn');
-    const dishImageLoading = document.getElementById('dish-image-loading');
-    const dishImageLoadingText = document.getElementById('dish-image-loading-text');
-    const dishImageError = document.getElementById('dish-image-error');
-    const dishImageResult = document.getElementById('dish-image-result');
-    const dishImagePreview = document.getElementById('dish-image-preview');
 
     const requiredEls = {
         'ingredients-text': ingredientsText,
@@ -68,8 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let detectNotes = '';
     let nextImageId = 1;
     let lastRecipe = null;
-    let lastDishImageDataUrl = '';
-    let dishImageBusy = false;
     let toastTimer = null;
 
     function tr(key, params) {
@@ -512,40 +502,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function hideDishImageError() {
-        if (dishImageError) {
-            dishImageError.style.display = 'none';
-            dishImageError.textContent = '';
-        }
-    }
-
-    function showDishImageError(msg) {
-        if (!dishImageError) return;
-        dishImageError.textContent = msg;
-        dishImageError.style.display = 'block';
-    }
-
-    function resetDishImageUI() {
-        lastDishImageDataUrl = '';
-        hideDishImageError();
-        if (dishImageLoading) dishImageLoading.style.display = 'none';
-        if (dishImageResult) dishImageResult.style.display = 'none';
-        if (dishImagePreview) {
-            dishImagePreview.removeAttribute('src');
-            dishImagePreview.alt = '';
-        }
-    }
-
-    function updateDishImageAuthUI() {
-        const loggedIn = !!getToken();
-        if (dishImageLoginHint) {
-            dishImageLoginHint.style.display = loggedIn ? 'none' : 'block';
-        }
-        if (generateDishImageBtn) {
-            generateDishImageBtn.disabled = dishImageBusy || !loggedIn;
-        }
-    }
-
     function renderRecipe(recipe, selectedIngredients) {
         lastRecipe = recipe || null;
         recipeTitle.textContent = recipe.title || '-';
@@ -604,84 +560,8 @@ document.addEventListener('DOMContentLoaded', function () {
             tipsWrap.style.display = 'none';
         }
 
-        resetDishImageUI();
-        updateDishImageAuthUI();
-        if (dishImagePreview && recipe.title) {
-            dishImagePreview.alt = recipe.title;
-        }
-
         resultCard.style.display = 'block';
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    async function doGenerateDishImage() {
-        if (!lastRecipe) return;
-        if (!getToken()) {
-            showToast(tr('tools.aiRecipe.dishImageLoginRequired'));
-            return;
-        }
-        if (dishImageBusy) return;
-
-        hideDishImageError();
-        dishImageBusy = true;
-        updateDishImageAuthUI();
-        if (generateDishImageBtn) generateDishImageBtn.disabled = true;
-        if (dishImageLoading) dishImageLoading.style.display = 'flex';
-        if (dishImageLoadingText) {
-            dishImageLoadingText.textContent = tr('tools.aiRecipe.generatingDishImage');
-        }
-        if (dishImageResult) dishImageResult.style.display = 'none';
-
-        const ingredients = (lastRecipe.ingredients || []).map(function (item) {
-            return {
-                name: (item.name || '').trim(),
-                amount: (item.amount || '').trim()
-            };
-        }).filter(function (item) { return item.name; });
-
-        try {
-            const res = await fetch(API_BASE + '/recipe/dish-image', {
-                method: 'POST',
-                headers: authHeaders({ 'Content-Type': 'application/json' }),
-                body: JSON.stringify({
-                    title: lastRecipe.title || '',
-                    ingredients: ingredients,
-                    locale: getLocale()
-                })
-            });
-
-            if (typeof check502Error !== 'undefined' && check502Error(res)) {
-                throw new Error(tr('common.serviceUnavailable'));
-            }
-
-            const data = await res.json().catch(function () { return {}; });
-            if (res.status === 401) {
-                throw new Error(tr('tools.aiRecipe.dishImageLoginRequired'));
-            }
-            if (res.status === 429) {
-                throw new Error(tr('tools.aiRecipe.dishImageLimitReached'));
-            }
-            if (!res.ok) {
-                throw new Error(data.detail || tr('tools.aiRecipe.dishImageFailed'));
-            }
-
-            const dataUrl = data.image_data_url || '';
-            if (!dataUrl || !dishImagePreview) {
-                throw new Error(tr('tools.aiRecipe.dishImageFailed'));
-            }
-
-            lastDishImageDataUrl = dataUrl;
-            dishImagePreview.src = dataUrl;
-            dishImagePreview.alt = lastRecipe.title || tr('tools.aiRecipe.dishImage');
-            if (dishImageResult) dishImageResult.style.display = 'block';
-            showToast(tr('tools.aiRecipe.dishImageDone'));
-        } catch (e) {
-            showDishImageError(e.message || tr('tools.aiRecipe.dishImageFailed'));
-        } finally {
-            dishImageBusy = false;
-            if (dishImageLoading) dishImageLoading.style.display = 'none';
-            updateDishImageAuthUI();
-        }
     }
 
     async function doDetect() {
@@ -813,5 +693,4 @@ document.addEventListener('DOMContentLoaded', function () {
     detectBtn.addEventListener('click', doDetect);
     generateBtn.addEventListener('click', doGenerate);
     if (copyResultBtn) copyResultBtn.addEventListener('click', copyRecipeResult);
-    if (generateDishImageBtn) generateDishImageBtn.addEventListener('click', doGenerateDishImage);
 });

@@ -21,7 +21,6 @@ from recipe_ai import (
     MAX_RECIPE_IMAGES,
     detect_ingredients,
     generate_recipe,
-    generate_recipe_dish_image,
     generate_recipe_from_selection,
     get_recipe_config,
 )
@@ -54,8 +53,6 @@ RECIPE_DETECT_LIMIT_GUEST = 20
 RECIPE_DETECT_LIMIT_USER = 60
 RECIPE_GENERATE_LIMIT_GUEST = 10
 RECIPE_GENERATE_LIMIT_USER = 30
-RECIPE_IMAGE_LIMIT_GUEST = 0
-RECIPE_IMAGE_LIMIT_USER = 5
 
 security = HTTPBearer(auto_error=False)
 
@@ -262,13 +259,6 @@ def require_admin(user: dict):
         raise HTTPException(status_code=403, detail="Admin access required")
 
 
-def can_generate_recipe_image(user: Optional[dict]) -> bool:
-    """Whether the user may request a dish image. Reserved for subscription/ad tiers."""
-    if not user:
-        return False
-    return True
-
-
 def _mask_email(email: str) -> str:
     if not email or "@" not in email:
         return email or "User"
@@ -340,17 +330,6 @@ def _normalize_locale(locale: str) -> str:
 
 class RecipeGenerateBody(BaseModel):
     ingredients: List[str]
-    locale: Optional[str] = "en"
-
-
-class RecipeIngredientItem(BaseModel):
-    name: str
-    amount: Optional[str] = ""
-
-
-class RecipeDishImageBody(BaseModel):
-    title: str
-    ingredients: List[RecipeIngredientItem] = []
     locale: Optional[str] = "en"
 
 
@@ -508,9 +487,7 @@ def health():
         "service": "toolbasecamp-api",
         "db": db_ok,
         "recipe_api": any(
-            getattr(r, "path", "")
-            in ("/recipe/generate", "/recipe/detect", "/recipe/dish-image")
-            for r in app.routes
+            getattr(r, "path", "") in ("/recipe/generate", "/recipe/detect") for r in app.routes
         ),
         "recipe": get_recipe_config(),
         "ts": int(time.time()),
@@ -905,50 +882,6 @@ async def recipe_generate(
         status_code=400,
         detail="Use application/json for selected ingredients, or multipart/form-data for detect/legacy upload",
     )
-
-
-@app.post("/recipe/dish-image")
-async def recipe_dish_image(
-    request: Request,
-    body: RecipeDishImageBody,
-    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
-):
-    user = get_current_user(creds)
-    if not can_generate_recipe_image(user):
-        raise HTTPException(status_code=403, detail="Dish image generation is not available for this account")
-
-    limit_key = f"user:{user['id']}"
-    _check_rate_limit(limit_key, "image", RECIPE_IMAGE_LIMIT_USER)
-
-    title = (body.title or "").strip()
-    if not title:
-        raise HTTPException(status_code=400, detail="Recipe title is required")
-
-    recipe_payload = {
-        "title": title,
-        "ingredients": [
-            {"name": (item.name or "").strip(), "amount": (item.amount or "").strip()}
-            for item in (body.ingredients or [])
-            if (item.name or "").strip()
-        ],
-    }
-    locale = _normalize_locale(body.locale or "en")
-
-    try:
-        result = await generate_recipe_dish_image(recipe_payload, locale)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        print(f"[recipe/dish-image] {exc}")
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    except Exception as exc:
-        print(f"[recipe/dish-image] unexpected error: {exc}")
-        raise HTTPException(
-            status_code=500,
-            detail="Dish image generation failed. Please try again.",
-        ) from exc
-
-    return {"success": True, **result}
 
 
 @app.post("/word-to-pdf")
