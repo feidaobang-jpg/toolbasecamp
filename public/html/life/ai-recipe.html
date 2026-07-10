@@ -7,7 +7,7 @@
   <meta name="description" content="Generate recipes from ingredient text or photos using AI.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=btn1" />
+  <link rel="stylesheet" href="../../css/life/ai-recipe.css?v=select2" />
 </head>
 <body>
   <div class="container">
@@ -68,9 +68,8 @@
         <h2 class="recipe-select-title" data-i18n="tools.aiRecipe.selectIngredients">Select ingredients to use</h2>
         <p class="recipe-select-hint" data-i18n="tools.aiRecipe.selectHint">Click tags to include or exclude ingredients.</p>
         <div class="recipe-select-actions">
-          <button type="button" class="btn-link" id="select-all-btn" data-i18n="tools.aiRecipe.selectAll">Select all</button>
-          <span class="recipe-select-divider">·</span>
-          <button type="button" class="btn-link" id="select-none-btn" data-i18n="tools.aiRecipe.selectNone">Clear selection</button>
+          <button type="button" class="tb-btn tb-btn-sm" id="select-all-btn" data-i18n="tools.aiRecipe.selectAll">Select all</button>
+          <button type="button" class="tb-btn tb-btn-sm" id="select-none-btn" data-i18n="tools.aiRecipe.selectNone">Clear selection</button>
         </div>
         <div class="recipe-ingredient-tags" id="ingredient-choices"></div>
         <div class="action-row">

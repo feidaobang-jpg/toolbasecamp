@@ -229,13 +229,13 @@
 }
 
 .recipe-select-actions {
-    margin-bottom: 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.recipe-result-card {
+.recipe-ingredient-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -245,33 +245,32 @@
 
 .recipe-ingredient-tag {
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 2px;
-  padding: 8px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 999px;
-  background: #f9fafb;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
   cursor: pointer;
   font: inherit;
-  text-align: center;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .recipe-ingredient-tag:hover {
-  border-color: #cbd5e1;
-  background: #f3f4f6;
+  border-color: #93c5fd;
+  background: #f8fafc;
 }
 
 .recipe-ingredient-tag.is-selected {
   border-color: #2563eb;
-  background: #eff6ff;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+  background: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .recipe-ingredient-tag:not(.is-selected) {
-  opacity: 0.55;
-  border-style: dashed;
+  opacity: 1;
 }
 
 .recipe-ingredient-tag .recipe-ingredient-name {
@@ -282,17 +281,22 @@
 }
 
 .recipe-ingredient-tag.is-selected .recipe-ingredient-name {
-  color: #1d4ed8;
+  color: #fff;
 }
 
 .recipe-ingredient-tag .recipe-ingredient-source {
   font-size: 11px;
-  color: #6b7280;
+  font-weight: 500;
   line-height: 1.2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: #6b7280;
 }
 
 .recipe-ingredient-tag.is-selected .recipe-ingredient-source {
-  color: #3b82f6;
+  background: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .recipe-result-card {
@@ -387,7 +391,7 @@
   align-items: center;
   padding: 6px 12px;
   border: 1px solid #e5e7eb;
-  border-radius: 999px;
+  border-radius: 10px;
   background: #f9fafb;
   font-size: 14px;
   line-height: 1.4;
