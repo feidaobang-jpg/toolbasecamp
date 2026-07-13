@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboard.classList.remove('is-open');
         keyboard.setAttribute('aria-hidden', 'true');
         gridScroll.classList.remove('keyboard-open');
+        document.body.classList.remove('keyboard-open');
         renderGrid();
     }
 
@@ -171,15 +172,32 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboard.classList.add('is-open');
         keyboard.setAttribute('aria-hidden', 'false');
         gridScroll.classList.add('keyboard-open');
+        document.body.classList.add('keyboard-open');
         updateKeyboardDisplay();
         updateNavKeys();
         renderGrid();
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                if (currentPersonIndex >= 0 && currentScoreIndex >= 0) {
+                    scrollToCell(currentPersonIndex, currentScoreIndex);
+                }
+            });
+        });
     }
 
     function openCell(personIndex, scoreIndex) {
         currentPersonIndex = personIndex;
         currentScoreIndex = scoreIndex;
         tempValue = persons[personIndex].scores[scoreIndex] || '';
+        if (showKeyboard) {
+            updateKeyboardDisplay();
+            updateNavKeys();
+            renderGrid();
+            requestAnimationFrame(function () {
+                scrollToCell(personIndex, scoreIndex);
+            });
+            return;
+        }
         showKeyboardPanel();
     }
 
@@ -198,11 +216,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function scrollToCell(personIndex, scoreIndex) {
         const cell = document.getElementById('score-' + personIndex + '-' + scoreIndex);
-        if (!cell) return;
+        if (!cell || !gridScroll) return;
+
         if (isMobileBoard()) {
-            cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            const scrollRect = gridScroll.getBoundingClientRect();
+            const cellRect = cell.getBoundingClientRect();
+            const margin = 8;
+
+            if (cellRect.top < scrollRect.top + margin) {
+                gridScroll.scrollTop -= scrollRect.top - cellRect.top + margin;
+            } else if (cellRect.bottom > scrollRect.bottom - margin) {
+                gridScroll.scrollTop += cellRect.bottom - scrollRect.bottom + margin;
+            }
             return;
         }
+
         cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
 

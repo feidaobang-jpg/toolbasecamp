@@ -13,6 +13,14 @@
   gap: 12px;
 }
 
+.card-score-list-desc {
+  display: none;
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
 .card-score-note {
   margin: 16px 0 0;
   font-size: 13px;
@@ -48,10 +56,12 @@
   max-width: 100%;
   margin-bottom: 16px;
   -webkit-overflow-scrolling: touch;
+  flex: 1;
+  min-height: 0;
 }
 
 .card-score-scroll.keyboard-open {
-  padding-bottom: 280px;
+  margin-bottom: 0;
 }
 
 .card-score-grid {
@@ -186,18 +196,17 @@
 }
 
 .card-score-keyboard {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  transform: translateY(100%);
-  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
   pointer-events: none;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
 }
 
 .card-score-keyboard.is-open {
-  transform: translateY(0);
+  max-height: 420px;
+  opacity: 1;
   pointer-events: auto;
 }
 
@@ -299,8 +308,16 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* —— 移动端：计分板全屏沉浸，列宽均分视口（对齐小程序） —— */
+/* —— 移动端：列表页顶栏即标题；计分板 flex 布局，键盘占用底部后网格自动收缩 —— */
 @media (max-width: 768px) {
+  body.card-score-page:not(.card-score-board-active) .tool-header {
+    display: none;
+  }
+
+  body.card-score-page:not(.card-score-board-active) .card-score-list-desc {
+    display: block;
+  }
+
   body.card-score-page .tool-card:not(.card-score-board-wrap) {
     margin: 0;
     padding: 16px;
@@ -335,7 +352,7 @@
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 4px 0;
     border-radius: 0;
     box-shadow: none;
     min-height: 0;
@@ -345,6 +362,7 @@
   body.card-score-board-active .card-score-board-toolbar {
     margin-bottom: 6px;
     padding: 0 4px;
+    flex-shrink: 0;
   }
 
   body.card-score-board-active .card-score-scroll {
@@ -353,8 +371,12 @@
     margin-bottom: 8px;
   }
 
-  body.card-score-board-active .card-score-scroll.keyboard-open {
-    padding-bottom: min(46vh, 300px);
+  body.card-score-board-active.keyboard-open .card-score-scroll {
+    margin-bottom: 4px;
+  }
+
+  body.card-score-board-active.keyboard-open .card-score-add-btn {
+    display: none;
   }
 
   body.card-score-board-active .card-score-grid {
@@ -369,10 +391,15 @@
   }
 
   body.card-score-board-active .card-score-add-btn {
-    width: 100%;
-    margin: 0 4px;
+    width: calc(100% - 8px);
+    margin: 0 4px 8px;
     padding: 8px 16px;
     font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  body.card-score-board-active .card-score-keyboard {
+    margin: 0 -4px;
   }
 
   body.card-score-board-active .card-score-keyboard-header {
@@ -385,28 +412,34 @@
     height: 40px;
     font-size: 16px;
   }
-
-  .card-score-scroll.keyboard-open {
-    padding-bottom: min(46vh, 300px);
-  }
 }
 
 @media (min-width: 769px) {
-  .card-score-scroll.keyboard-open {
-    padding-bottom: 0;
-  }
-
   .card-score-keyboard {
+    position: fixed;
     left: auto;
     right: 24px;
     bottom: 24px;
     width: 320px;
+    z-index: 1000;
+    max-height: none;
+    opacity: 1;
     transform: translateY(calc(100% + 24px));
-    border-radius: 12px;
-    overflow: hidden;
+    transition: transform 0.25s ease, opacity 0.2s ease;
   }
 
   .card-score-keyboard.is-open {
     transform: translateY(0);
+    max-height: none;
+  }
+
+  .card-score-keyboard:not(.is-open) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .card-score-keyboard-panel {
+    border-radius: 12px;
+    overflow: hidden;
   }
 }
