@@ -74,6 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return '';
     }
 
+    function formatRoundLabel(roundIndex, roundTotal) {
+        const roundNum = roundIndex + 1;
+        const total = roundTotal !== '' && roundTotal !== undefined ? roundTotal : 0;
+        return roundNum + '/' + total;
+    }
+
     function applyListView() {
         hideKeyboard();
         document.body.classList.remove('card-score-board-active');
@@ -170,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const playerCount = Math.max(persons.length, 1);
         const vw = document.documentElement.clientWidth;
         const horizontalPad = 12;
-        const leftWidth = playerCount > 6 ? 30 : playerCount > 4 ? 34 : 38;
+        const leftWidth = playerCount > 6 ? 38 : playerCount > 4 ? 42 : 46;
         const available = vw - horizontalPad - leftWidth;
         const colWidth = available / playerCount;
 
@@ -237,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
         gridScroll.classList.add('keyboard-open');
         document.body.classList.add('keyboard-open');
         updateKeyboardDisplay();
-        updateNavKeys();
         renderGrid();
         updateScrollLayout();
     }
@@ -248,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function () {
         tempValue = persons[personIndex].scores[scoreIndex] || '';
         if (showKeyboard) {
             updateKeyboardDisplay();
-            updateNavKeys();
             renderGrid();
             requestAnimationFrame(function () {
                 scrollToCell(personIndex, scoreIndex);
@@ -260,15 +264,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateKeyboardDisplay() {
         keyboardDisplay.textContent = tempValue || tr('tools.cardScore.keyboardPlaceholder');
-    }
-
-    function updateNavKeys() {
-        keyboard.querySelectorAll('[data-key="prev"]').forEach(function (btn) {
-            btn.disabled = currentPersonIndex <= 0;
-        });
-        keyboard.querySelectorAll('[data-key="next"]').forEach(function (btn) {
-            btn.disabled = currentPersonIndex >= persons.length - 1;
-        });
     }
 
     function scrollToCell(personIndex, scoreIndex) {
@@ -291,39 +286,11 @@ document.addEventListener('DOMContentLoaded', function () {
         cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
 
-    function moveToNextInput() {
-        if (currentPersonIndex < persons.length - 1) {
-            currentPersonIndex += 1;
-            tempValue = persons[currentPersonIndex].scores[currentScoreIndex] || '';
-            updateKeyboardDisplay();
-            updateNavKeys();
-            renderGrid();
-            scrollToCell(currentPersonIndex, currentScoreIndex);
-        }
-    }
-
-    function moveToPrevInput() {
-        if (currentPersonIndex > 0) {
-            currentPersonIndex -= 1;
-            tempValue = persons[currentPersonIndex].scores[currentScoreIndex] || '';
-            updateKeyboardDisplay();
-            updateNavKeys();
-            renderGrid();
-            scrollToCell(currentPersonIndex, currentScoreIndex);
-        }
-    }
-
     function onKeyboardClick(key) {
         if (currentPersonIndex < 0 || currentScoreIndex < 0) return;
 
         if (key === 'delete') {
             tempValue = tempValue.slice(0, -1);
-        } else if (key === 'prev') {
-            moveToPrevInput();
-            return;
-        } else if (key === 'next') {
-            moveToNextInput();
-            return;
         } else if (key === '-') {
             tempValue = tempValue.startsWith('-') ? tempValue.substring(1) : '-' + tempValue;
         } else {
@@ -395,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let r = 0; r < roundCount; r++) {
             const cell = document.createElement('div');
             cell.className = 'card-score-cell is-round-total';
-            cell.textContent = summationScores[r] !== '' && summationScores[r] !== undefined ? summationScores[r] : '';
+            cell.textContent = formatRoundLabel(r, summationScores[r]);
             scoresLeft.appendChild(cell);
         }
 

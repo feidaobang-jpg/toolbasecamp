@@ -131,6 +131,8 @@
 .card-score-cell.is-round-total {
   font-weight: 600;
   color: #111827;
+  font-size: calc(var(--cs-font-size) - 1px);
+  letter-spacing: -0.02em;
 }
 
 .card-score-cell.is-player-total {
@@ -282,18 +284,6 @@
   background: #ffebee;
   color: #f44336;
   font-size: 12px;
-}
-
-.card-score-key-nav {
-  background: #e3f2fd;
-  color: #2196f3;
-  font-size: 12px;
-}
-
-.card-score-key-nav:disabled {
-  background: #f5f5f5;
-  color: #bdbdbd;
-  cursor: not-allowed;
 }
 
 .recipe-toast {
