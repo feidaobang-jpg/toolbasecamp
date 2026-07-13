@@ -91,12 +91,12 @@ window.TB_LOCALES.en = {
     },
     tools: {
         groups: {
-            calc: 'Calculators',
-            life: 'Life Tools',
-            media: 'Media Tools',
-            document: 'Document Tools',
-            diagram: 'Diagram Tools',
-            developer: 'Developer Tools'
+            calc: 'Calc',
+            life: 'Life',
+            media: 'Media',
+            document: 'Document',
+            diagram: 'Diagram',
+            developer: 'Developer'
         },
         age: {
             title: 'Age',

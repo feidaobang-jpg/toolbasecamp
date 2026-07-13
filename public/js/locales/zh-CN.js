@@ -90,12 +90,12 @@ window.TB_LOCALES['zh-CN'] = {
     },
     tools: {
         groups: {
-            calc: '计算工具',
-            life: '生活工具',
-            media: '媒体工具',
-            document: '文档工具',
-            diagram: '图表工具',
-            developer: '开发者工具'
+            calc: '计算',
+            life: '生活',
+            media: '媒体',
+            document: '文档',
+            diagram: '图表',
+            developer: '开发者'
         },
         age: {
             title: '年龄',
