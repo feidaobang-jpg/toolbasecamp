@@ -91,11 +91,23 @@ window.TB_LOCALES.en = {
     },
     tools: {
         groups: {
+            calc: 'Calculators',
             life: 'Life Tools',
             media: 'Media Tools',
             document: 'Document Tools',
             diagram: 'Diagram Tools',
             developer: 'Developer Tools'
+        },
+        age: {
+            title: 'Age',
+            desc: 'Enter a Gregorian birth date to calculate age as of today.',
+            birthLabel: 'Birth date (Gregorian)',
+            calculate: 'Calculate',
+            clear: 'Clear',
+            resultYears: '{years} years old',
+            resultDetail: 'Born {birth} — {years} years, {months} months, {days} days',
+            emptyDate: 'Please select a birth date',
+            futureBirth: 'Birth date cannot be in the future'
         },
         aiRecipe: {
             title: 'AI Recipe',

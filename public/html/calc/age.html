@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Age Calculator - Tool Basecamp</title>
+  <meta name="description" content="Calculate age from a Gregorian calendar birth date.">
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css" />
+  <link rel="stylesheet" href="../../css/calc/age.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.age.title">Age</h1>
+        <p data-i18n="tools.age.desc">Enter a Gregorian birth date to calculate age as of today.</p>
+      </div>
+
+      <div class="tool-card age-card">
+        <div class="age-field">
+          <label class="field-label" for="birth-date" data-i18n="tools.age.birthLabel">Birth date (Gregorian)</label>
+          <input type="date" id="birth-date" class="age-date-input" />
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.age.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.age.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="age-result-wrap" id="result-wrap" hidden>
+          <div class="age-result-main" id="result-main"></div>
+          <p class="age-result-detail" id="result-detail"></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/age.js?v=1"></script>
+</body>
+</html>

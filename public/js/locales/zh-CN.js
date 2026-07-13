@@ -90,11 +90,23 @@ window.TB_LOCALES['zh-CN'] = {
     },
     tools: {
         groups: {
+            calc: '计算工具',
             life: '生活工具',
             media: '媒体工具',
             document: '文档工具',
             diagram: '图表工具',
             developer: '开发者工具'
+        },
+        age: {
+            title: '年龄',
+            desc: '输入公历生日，计算截至今天的周岁年龄。',
+            birthLabel: '公历生日',
+            calculate: '计算',
+            clear: '清空',
+            resultYears: '{years} 岁',
+            resultDetail: '生于 {birth}，已满 {years} 岁 {months} 个月 {days} 天',
+            emptyDate: '请选择生日',
+            futureBirth: '生日不能晚于今天'
         },
         aiRecipe: {
             title: 'AI 菜谱',

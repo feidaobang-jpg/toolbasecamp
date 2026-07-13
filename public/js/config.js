@@ -76,6 +76,12 @@ const toolsConfig = {
     sectionTitleKey: 'hub.basecampTools',
     groups: [
         {
+            titleKey: 'tools.groups.calc',
+            items: [
+                { titleKey: 'tools.age.title', url: 'html/calc/age.html' }
+            ]
+        },
+        {
             titleKey: 'tools.groups.life',
             items: [
                 { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' },

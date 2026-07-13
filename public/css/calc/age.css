@@ -1,0 +1,51 @@
+.age-card .field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.age-field {
+  margin-bottom: 20px;
+}
+
+.age-date-input {
+  width: 100%;
+  max-width: 280px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  color: #111827;
+  background: #fff;
+}
+
+.age-date-input:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 0;
+  border-color: #2563eb;
+}
+
+.age-result-wrap {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+}
+
+.age-result-main {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e40af;
+  line-height: 1.2;
+}
+
+.age-result-detail {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+}
