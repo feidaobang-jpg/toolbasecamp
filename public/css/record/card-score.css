@@ -345,10 +345,6 @@
 }
 
 @media (max-width: 768px) {
-  body.card-score-page:not(.card-score-board-active) .tool-header {
-    display: none;
-  }
-
   body.card-score-page:not(.card-score-board-active) .card-score-list-desc {
     display: block;
   }

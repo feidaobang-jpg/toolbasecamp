@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const formPlayerRadios = document.querySelectorAll('input[name="form-player-count"]');
     const gameListEl = document.getElementById('game-list');
     const emptyHistoryEl = document.getElementById('empty-history');
-    const backBtn = document.getElementById('back-btn');
     const settingsInfoEl = document.getElementById('settings-info');
     const roundInputSection = document.getElementById('round-input-section');
     const historyRoundsSection = document.getElementById('history-rounds-section');
@@ -426,14 +425,19 @@ document.addEventListener('DOMContentLoaded', function () {
         field.className = 'k510-score-field';
 
         const text = document.createElement('span');
-        text.textContent = label + '：';
+        text.className = 'k510-score-field-label';
+        text.textContent = label;
 
         const input = document.createElement('input');
-        input.type = 'number';
+        input.type = 'text';
         input.inputMode = 'numeric';
+        input.maxLength = 4;
+        input.className = 'k510-score-field-input';
         input.value = value;
         input.addEventListener('input', function () {
-            onChange(input.value);
+            const digits = input.value.replace(/\D/g, '');
+            input.value = digits;
+            onChange(digits);
         });
 
         field.appendChild(text);
@@ -693,7 +697,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    backBtn.addEventListener('click', showListView);
+    [perRoundAmountInput, perGangAmountInput].forEach(function (input) {
+        if (!input) return;
+        input.addEventListener('input', function () {
+            input.value = input.value.replace(/\D/g, '');
+        });
+    });
 
     window.addEventListener('popstate', function () {
         const params = new URLSearchParams(window.location.search);

@@ -195,10 +195,6 @@
 }
 
 @media (max-width: 768px) {
-  body.k510-reward-page .tool-header {
-    display: none;
-  }
-
   body.k510-reward-page .content {
     padding-top: 0;
   }

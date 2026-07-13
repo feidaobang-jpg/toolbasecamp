@@ -85,9 +85,14 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.life',
             items: [
-                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' },
-                { titleKey: 'tools.cardScore.title', url: 'html/life/card-score.html' },
-                { titleKey: 'tools.k510Score.title', url: 'html/life/510k-score.html' }
+                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' }
+            ]
+        },
+        {
+            titleKey: 'tools.groups.record',
+            items: [
+                { titleKey: 'tools.cardScore.title', url: 'html/record/card-score.html' },
+                { titleKey: 'tools.k510Score.title', url: 'html/record/510k-score.html' }
             ]
         },
         {

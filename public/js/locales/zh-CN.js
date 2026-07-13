@@ -92,6 +92,7 @@ window.TB_LOCALES['zh-CN'] = {
         groups: {
             calc: '计算',
             life: '生活',
+            record: '记录',
             media: '媒体',
             document: '文档',
             diagram: '图表',
@@ -148,8 +149,8 @@ window.TB_LOCALES['zh-CN'] = {
             perRoundInfo: '每局金额：{amount} 元',
             perGangInfo: '每杠金额：{amount} 元',
             roundTitle: '第 {n} 圈',
-            teamAScore: 'A 队分数',
-            teamBScore: 'B 队分数',
+            teamAScore: 'A队',
+            teamBScore: 'B队',
             recordGang: '记录杠数',
             submitRound: '确认本圈',
             settleGame: '收盘结算',

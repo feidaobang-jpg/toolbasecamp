@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>510K Score - Tool Basecamp</title>
+  <meta name="description" content="510K card game scorekeeper with teams, rounds, gang counts, and settlement. Data saved locally.">
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css" />
+  <link rel="stylesheet" href="../../css/record/510k-score.css?v=3" />
+</head>
+<body class="k510-score-page">
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.k510Score.title">510K Score</h1>
+        <p data-i18n="tools.k510Score.desc">Team-based 510K scoring with rounds, gang counts, and settlement. All data stays on this device.</p>
+      </div>
+
+      <!-- List view -->
+      <div class="tool-card k510-view" id="list-view">
+        <div class="k510-list-actions" id="list-actions">
+          <button type="button" class="tb-btn w-full" id="new-game-btn" data-i18n="tools.k510Score.newGame">New game</button>
+        </div>
+
+        <div class="k510-form" id="new-game-form" hidden>
+          <section class="k510-section">
+            <h2 class="k510-section-title" data-i18n="tools.k510Score.gameSettings">Game settings</h2>
+            <div class="k510-form-row">
+              <span class="k510-form-label" data-i18n="tools.k510Score.selectPlayers">Players</span>
+              <label class="k510-radio"><input type="radio" name="form-player-count" value="4" checked /> <span data-i18n="tools.k510Score.players4">4</span></label>
+              <label class="k510-radio"><input type="radio" name="form-player-count" value="6" /> <span data-i18n="tools.k510Score.players6">6</span></label>
+            </div>
+            <div class="k510-form-row">
+              <label class="k510-form-label" for="per-round-amount" data-i18n="tools.k510Score.perRoundAmount">Per round amount</label>
+              <input type="text" id="per-round-amount" class="k510-input" value="100" inputmode="numeric" />
+            </div>
+            <div class="k510-form-row">
+              <label class="k510-form-label" for="per-gang-amount" data-i18n="tools.k510Score.perGangAmount">Per gang amount</label>
+              <input type="text" id="per-gang-amount" class="k510-input" value="5" inputmode="numeric" />
+            </div>
+          </section>
+
+          <section class="k510-section">
+            <h2 class="k510-section-title" data-i18n="tools.k510Score.teamSetup">Team setup</h2>
+            <div class="k510-teams">
+              <div class="k510-team-box">
+                <div class="k510-team-title" data-i18n="tools.k510Score.teamA">Team A</div>
+                <div id="team1-inputs"></div>
+              </div>
+              <div class="k510-team-box">
+                <div class="k510-team-title k510-team-b" data-i18n="tools.k510Score.teamB">Team B</div>
+                <div id="team2-inputs"></div>
+              </div>
+            </div>
+          </section>
+
+          <div class="k510-form-actions">
+            <button type="button" class="tb-btn k510-btn-cancel" id="cancel-form-btn" data-i18n="tools.k510Score.cancel">Cancel</button>
+            <button type="button" class="tb-btn" id="start-game-btn" data-i18n="tools.k510Score.startGame" disabled>Start game</button>
+          </div>
+        </div>
+
+        <div class="k510-history" id="history-section">
+          <h2 class="k510-section-title" data-i18n="tools.k510Score.history">History</h2>
+          <div id="game-list"></div>
+          <p class="k510-empty" id="empty-history" data-i18n="tools.k510Score.noHistory">No saved games yet</p>
+        </div>
+
+        <p class="k510-note" data-i18n="tools.k510Score.privacyNote">Game data is stored locally in your browser only.</p>
+      </div>
+
+      <!-- Score view -->
+      <div class="tool-card k510-view" id="score-view" hidden>
+        <div class="k510-score-top">
+          <div class="k510-settings-info" id="settings-info"></div>
+        </div>
+
+        <div id="round-input-section"></div>
+        <div id="history-rounds-section"></div>
+        <div id="settled-section"></div>
+      </div>
+
+      <div class="recipe-toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/record/510k-score.js?v=3"></script>
+</body>
+</html>

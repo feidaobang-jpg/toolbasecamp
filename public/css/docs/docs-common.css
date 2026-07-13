@@ -17,6 +17,18 @@
     color: #6b7280;
 }
 
+@media (max-width: 768px) {
+    .content > .tool-mobile-bar ~ .tool-header {
+        display: none;
+    }
+
+    .tool-card {
+        margin: 0 0 16px;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+}
+
 /* 主体卡片（工具页 — 占满内容区，勿用首页 300px 卡片宽） */
 .tool-card {
     width: 100%;

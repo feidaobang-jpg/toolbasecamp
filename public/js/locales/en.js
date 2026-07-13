@@ -93,6 +93,7 @@ window.TB_LOCALES.en = {
         groups: {
             calc: 'Calc',
             life: 'Life',
+            record: 'Records',
             media: 'Media',
             document: 'Document',
             diagram: 'Diagram',
@@ -149,8 +150,8 @@ window.TB_LOCALES.en = {
             perRoundInfo: 'Per round: {amount}',
             perGangInfo: 'Per gang: {amount}',
             roundTitle: 'Round {n}',
-            teamAScore: 'Team A score',
-            teamBScore: 'Team B score',
+            teamAScore: 'Team A',
+            teamBScore: 'Team B',
             recordGang: 'Gang counts',
             submitRound: 'Submit round',
             settleGame: 'Settle game',
