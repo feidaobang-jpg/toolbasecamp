@@ -13,6 +13,54 @@ jobs:
       DO_USER: ${{ secrets.DO_USER }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            public:
+              - 'public/**'
+            server:
+              - 'server/**'
+            deploy:
+              - 'deploy/**'
+            portal_dev:
+              - 'deploy/next-tools.ref'
+            portal_chef:
+              - 'deploy/cyberchef.ref'
+            workflow:
+              - '.github/workflows/deploy.yml'
+
+      - name: Set full deploy
+        id: full
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "yes=1" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.changes.outputs.workflow }}" == "true" ]]; then
+            echo "yes=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Print deploy scope
+        run: |
+          echo "event=${{ github.event_name }}"
+          echo "full=${{ steps.full.outputs.yes }}"
+          echo "public=${{ steps.changes.outputs.public }}"
+          echo "server=${{ steps.changes.outputs.server }}"
+          echo "deploy=${{ steps.changes.outputs.deploy }}"
+          echo "portal_dev=${{ steps.changes.outputs.portal_dev }}"
+          echo "portal_chef=${{ steps.changes.outputs.portal_chef }}"
+          if [[ "${{ steps.full.outputs.yes }}" == "1" ]]; then
+            echo "Full deploy → all steps enabled."
+          elif [[ "${{ steps.changes.outputs.public }}" == "true" \
+             && "${{ steps.changes.outputs.server }}" != "true" \
+             && "${{ steps.changes.outputs.deploy }}" != "true" \
+             && "${{ steps.changes.outputs.portal_dev }}" != "true" \
+             && "${{ steps.changes.outputs.portal_chef }}" != "true" ]]; then
+            echo "Static-only change → skip next-tools / CyberChef / API restart."
+          fi
 
       - name: Validate secrets
         run: |
@@ -35,6 +83,7 @@ jobs:
           ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Rsync static site
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
         run: |
           VER="$(git rev-parse --short HEAD)"
           while IFS= read -r -d '' f; do
@@ -47,6 +96,7 @@ jobs:
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
 
       - name: Rsync API server
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |
           rsync -avz --delete --exclude venv \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
@@ -54,6 +104,7 @@ jobs:
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
 
       - name: Rsync deploy scripts
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
         run: |
           rsync -avz \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
@@ -61,6 +112,7 @@ jobs:
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-deploy/"
 
       - name: Build next-tools dev portal
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
         run: |
           NEXT_TOOLS_REF="$(tr -d '\r\n' < deploy/next-tools.ref)"
           echo "Building next-tools ref: ${NEXT_TOOLS_REF}"
@@ -73,6 +125,7 @@ jobs:
           pnpm build
 
       - name: Download CyberChef release
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_chef == 'true'
         run: |
           CHEF_REF="$(tr -d '\r\n' < deploy/cyberchef.ref)"
           echo "Downloading CyberChef release: ${CHEF_REF}"
@@ -98,6 +151,7 @@ jobs:
           echo "CHEF_DIR=$CHEF_DIR" >> "$GITHUB_ENV"
 
       - name: Rsync dev portal
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-dev"
@@ -115,6 +169,7 @@ jobs:
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/LICENSE"
 
       - name: Rsync chef portal
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_chef == 'true'
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-chef"
@@ -128,6 +183,7 @@ jobs:
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/SOURCE.txt"
 
       - name: Install API deps and restart
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash -s' << 'REMOTE'
@@ -228,6 +284,7 @@ jobs:
           REMOTE
 
       - name: Verify main site assets (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/main-base.js -w '%{http_code}' \
@@ -257,6 +314,7 @@ jobs:
           echo "AI recipe static page OK."
 
       - name: Verify guestbook API (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/gb-api.json -w '%{http_code}' \
@@ -271,6 +329,7 @@ jobs:
           echo "Guestbook API OK."
 
       - name: Verify recipe API route (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |
           sleep 2
           HTTP_CODE="$(curl -s -o /tmp/recipe-api.txt -w '%{http_code}' \
@@ -298,6 +357,7 @@ jobs:
           echo "Recipe API route OK."
 
       - name: Verify dev portal (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/dev-public.html -w '%{http_code}' \
@@ -327,6 +387,7 @@ jobs:
           echo "Dev portal OK."
 
       - name: Verify pdf portal (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/pdf-public.html -w '%{http_code}' \
@@ -349,6 +410,7 @@ jobs:
           echo "Pdf portal OK."
 
       - name: Verify chef portal (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_chef == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/chef-public.html -w '%{http_code}' \
@@ -371,6 +433,7 @@ jobs:
           echo "Chef portal OK."
 
       - name: Verify hoppscotch portal (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/hop-public.html -w '%{http_code}' \
@@ -383,6 +446,7 @@ jobs:
           echo "Hoppscotch portal OK."
 
       - name: Verify translate portal (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/tr-public.html -w '%{http_code}' \
