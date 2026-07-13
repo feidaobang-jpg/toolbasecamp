@@ -371,23 +371,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const colCount = persons[0] ? persons[0].scores.length : 0;
         if (persons.length > 0 && colCount > 0 && inputNum === persons.length * colCount) {
-            const newScoreIndex = colCount;
             for (let i = 0; i < persons.length; i++) {
                 persons[i].scores.push('');
             }
             summationScores.push('');
             saveToStorage();
-            currentPersonIndex = 0;
-            currentScoreIndex = newScoreIndex;
-            tempValue = '';
-            updateKeyboardDisplay();
-            updateNavKeys();
-            renderGrid();
-            updateScrollLayout();
-            requestAnimationFrame(function () {
-                scrollToCell(0, newScoreIndex);
-            });
-            return;
+            setTimeout(function () {
+                scrollToCell(0, persons[0].scores.length - 1);
+            }, 50);
         }
 
         renderGrid();
