@@ -87,7 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
         indexSpan.textContent = String(roundNum);
 
         const sumSpan = document.createElement('span');
-        sumSpan.className = 'round-sum' + (total < 0 ? ' negative' : '');
+        let sumClass = 'round-sum';
+        if (total < 0) sumClass += ' negative';
+        else if (total > 0) sumClass += ' positive';
+        sumSpan.className = sumClass;
         sumSpan.textContent = String(total);
 
         cell.appendChild(indexSpan);

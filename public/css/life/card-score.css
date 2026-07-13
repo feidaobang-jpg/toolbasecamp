@@ -136,7 +136,8 @@
 }
 
 .card-score-cell.is-round-meta .round-index {
-  flex: 0 0 42%;
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,6 +157,10 @@
   font-weight: 600;
   color: #111827;
   font-size: calc(var(--cs-font-size) - 1px);
+}
+
+.card-score-cell.is-round-meta .round-sum.positive {
+  color: #f5653b;
 }
 
 .card-score-cell.is-round-meta .round-sum.negative {
