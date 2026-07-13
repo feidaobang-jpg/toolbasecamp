@@ -7,7 +7,7 @@
   <meta name="description" content="Calculate age from a Gregorian calendar birth date.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/calc/age.css?v=1" />
+  <link rel="stylesheet" href="../../css/calc/age.css?v=2" />
 </head>
 <body>
   <div class="container">
@@ -33,6 +33,8 @@
 
         <div class="age-result-wrap" id="result-wrap" hidden>
           <div class="age-result-main" id="result-main"></div>
+          <p class="age-result-sub" id="result-virtual" hidden></p>
+          <p class="age-result-sub" id="result-lunar" hidden></p>
           <p class="age-result-detail" id="result-detail"></p>
         </div>
       </div>
@@ -44,6 +46,7 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/calc/age.js?v=1"></script>
+  <script src="../../js/calc/solarlunar.min.js?v=1"></script>
+  <script src="../../js/calc/age.js?v=2"></script>
 </body>
 </html>

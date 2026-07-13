@@ -99,12 +99,16 @@ window.TB_LOCALES['zh-CN'] = {
         },
         age: {
             title: '年龄',
-            desc: '输入公历生日，计算截至今天的周岁年龄。',
+            desc: '输入公历生日，计算周岁、虚岁与对应农历生日。',
             birthLabel: '公历生日',
             calculate: '计算',
             clear: '清空',
-            resultYears: '{years} 岁',
+            resultYears: '{years} 岁（周岁）',
+            resultVirtual: '{years} 岁（虚岁）',
+            resultLunar: '农历生日：{lunar}',
+            leapPrefix: '闰',
             resultDetail: '生于 {birth}，已满 {years} 岁 {months} 个月 {days} 天',
+            lunarFormatEn: '{gz} ({animal}), {leap}{month}{day}',
             emptyDate: '请选择生日',
             futureBirth: '生日不能晚于今天'
         },

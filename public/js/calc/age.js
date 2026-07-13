@@ -5,10 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const errorBox = document.getElementById('error-box');
     const resultWrap = document.getElementById('result-wrap');
     const resultMain = document.getElementById('result-main');
+    const resultVirtual = document.getElementById('result-virtual');
+    const resultLunar = document.getElementById('result-lunar');
     const resultDetail = document.getElementById('result-detail');
 
     function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
+    }
+
+    function getLunarLib() {
+        if (typeof solarLunar === 'undefined') return null;
+        return solarLunar.default || solarLunar;
     }
 
     function parseBirthDate(value) {
@@ -31,6 +38,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const now = new Date();
         now.setHours(0, 0, 0, 0);
         return now;
+    }
+
+    function solarToLunar(date) {
+        const lib = getLunarLib();
+        if (!lib || typeof lib.solar2lunar !== 'function') return null;
+        const result = lib.solar2lunar(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            date.getDate()
+        );
+        return result === -1 ? null : result;
     }
 
     function calcAgeYears(birth, today) {
@@ -58,6 +76,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         return { years: years, months: months, days: days };
+    }
+
+    function calcVirtualAge(birth, today) {
+        const birthLunar = solarToLunar(birth);
+        const todayLunar = solarToLunar(today);
+        if (!birthLunar || !todayLunar) return null;
+        return todayLunar.lYear - birthLunar.lYear + 1;
+    }
+
+    function formatLunarBirthday(lunar) {
+        if (!lunar) return '';
+        const leap = lunar.isLeap ? tr('tools.age.leapPrefix') : '';
+        const isZh = typeof window.tbGetLocale === 'function' && window.tbGetLocale() === 'zh-CN';
+        if (isZh) {
+            return lunar.gzYear + '年 ' + leap + lunar.monthCn + lunar.dayCn;
+        }
+        return tr('tools.age.lunarFormatEn', {
+            gz: lunar.gzYear,
+            animal: lunar.animal || '',
+            month: lunar.monthCn,
+            day: lunar.dayCn,
+            leap: leap
+        });
     }
 
     function formatDisplayDate(date) {
@@ -95,8 +136,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const years = calcAgeYears(birth, today);
         const detail = calcAgeDetail(birth, today);
+        const birthLunar = solarToLunar(birth);
+        const virtualAge = calcVirtualAge(birth, today);
 
         resultMain.textContent = tr('tools.age.resultYears', { years: years });
+
+        if (virtualAge !== null) {
+            resultVirtual.textContent = tr('tools.age.resultVirtual', { years: virtualAge });
+            resultVirtual.hidden = false;
+        } else {
+            resultVirtual.hidden = true;
+        }
+
+        if (birthLunar) {
+            resultLunar.textContent = tr('tools.age.resultLunar', {
+                lunar: formatLunarBirthday(birthLunar)
+            });
+            resultLunar.hidden = false;
+        } else {
+            resultLunar.hidden = true;
+        }
+
         resultDetail.textContent = tr('tools.age.resultDetail', {
             birth: formatDisplayDate(birth),
             years: detail.years,
@@ -111,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
         hideError();
         resultWrap.hidden = true;
         resultMain.textContent = '';
+        resultVirtual.textContent = '';
+        resultLunar.textContent = '';
         resultDetail.textContent = '';
     }
 

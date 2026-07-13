@@ -100,12 +100,16 @@ window.TB_LOCALES.en = {
         },
         age: {
             title: 'Age',
-            desc: 'Enter a Gregorian birth date to calculate age as of today.',
+            desc: 'Enter a Gregorian birth date to get nominal age, traditional Chinese age, and the lunar birthday.',
             birthLabel: 'Birth date (Gregorian)',
             calculate: 'Calculate',
             clear: 'Clear',
-            resultYears: '{years} years old',
+            resultYears: '{years} years old (nominal)',
+            resultVirtual: '{years} (traditional Chinese age)',
+            resultLunar: 'Lunar birthday: {lunar}',
+            leapPrefix: 'leap ',
             resultDetail: 'Born {birth} — {years} years, {months} months, {days} days',
+            lunarFormatEn: '{gz} ({animal}), {leap}{month}{day}',
             emptyDate: 'Please select a birth date',
             futureBirth: 'Birth date cannot be in the future'
         },
