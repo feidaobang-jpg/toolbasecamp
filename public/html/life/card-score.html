@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Card Score - Tool Basecamp</title>
   <meta name="description" content="Offline card game scorekeeper for multiple players. Data saved locally in your browser.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/card-score.css?v=3" />
+  <link rel="stylesheet" href="../../css/life/card-score.css?v=4" />
 </head>
 <body class="card-score-page">
   <div class="container">
@@ -28,44 +28,41 @@
       </div>
 
       <div class="tool-card card-score-board-wrap card-score-view" id="board-view" hidden>
-        <div class="card-score-board-toolbar">
-          <button type="button" class="card-score-back-btn" id="back-btn" data-i18n="tools.cardScore.back">Back</button>
-        </div>
         <div class="card-score-scroll" id="grid-scroll">
           <div class="card-score-grid" id="score-grid"></div>
         </div>
         <button type="button" class="tb-btn card-score-add-btn" id="add-player-btn" data-i18n="tools.cardScore.addPlayer">Add player</button>
+      </div>
 
-        <div class="card-score-keyboard" id="keyboard" aria-hidden="true">
-          <div class="card-score-keyboard-panel">
-            <div class="card-score-keyboard-header">
-              <span id="keyboard-display" data-i18n="tools.cardScore.keyboardPlaceholder">Enter score</span>
-              <button type="button" class="card-score-keyboard-close" id="keyboard-close" aria-label="Close">&times;</button>
-            </div>
-            <div class="card-score-key-row">
-              <button type="button" class="card-score-key" data-key="1">1</button>
-              <button type="button" class="card-score-key" data-key="2">2</button>
-              <button type="button" class="card-score-key" data-key="3">3</button>
-            </div>
-            <div class="card-score-key-row">
-              <button type="button" class="card-score-key" data-key="4">4</button>
-              <button type="button" class="card-score-key" data-key="5">5</button>
-              <button type="button" class="card-score-key" data-key="6">6</button>
-            </div>
-            <div class="card-score-key-row">
-              <button type="button" class="card-score-key" data-key="7">7</button>
-              <button type="button" class="card-score-key" data-key="8">8</button>
-              <button type="button" class="card-score-key" data-key="9">9</button>
-            </div>
-            <div class="card-score-key-row">
-              <button type="button" class="card-score-key" data-key="-">-</button>
-              <button type="button" class="card-score-key" data-key="0">0</button>
-              <button type="button" class="card-score-key card-score-key-delete" data-key="delete" data-i18n="tools.cardScore.backspace">Del</button>
-            </div>
-            <div class="card-score-key-row">
-              <button type="button" class="card-score-key card-score-key-nav" data-key="prev" data-i18n="tools.cardScore.prevCell">Prev</button>
-              <button type="button" class="card-score-key card-score-key-nav" data-key="next" data-i18n="tools.cardScore.nextCell">Next</button>
-            </div>
+      <div class="card-score-keyboard" id="keyboard" aria-hidden="true">
+        <div class="card-score-keyboard-panel">
+          <div class="card-score-keyboard-header">
+            <span id="keyboard-display" data-i18n="tools.cardScore.keyboardPlaceholder">Enter score</span>
+            <button type="button" class="card-score-keyboard-close" id="keyboard-close" aria-label="Close">&times;</button>
+          </div>
+          <div class="card-score-key-row">
+            <button type="button" class="card-score-key" data-key="1">1</button>
+            <button type="button" class="card-score-key" data-key="2">2</button>
+            <button type="button" class="card-score-key" data-key="3">3</button>
+          </div>
+          <div class="card-score-key-row">
+            <button type="button" class="card-score-key" data-key="4">4</button>
+            <button type="button" class="card-score-key" data-key="5">5</button>
+            <button type="button" class="card-score-key" data-key="6">6</button>
+          </div>
+          <div class="card-score-key-row">
+            <button type="button" class="card-score-key" data-key="7">7</button>
+            <button type="button" class="card-score-key" data-key="8">8</button>
+            <button type="button" class="card-score-key" data-key="9">9</button>
+          </div>
+          <div class="card-score-key-row">
+            <button type="button" class="card-score-key" data-key="-">-</button>
+            <button type="button" class="card-score-key" data-key="0">0</button>
+            <button type="button" class="card-score-key card-score-key-delete" data-key="delete" data-i18n="tools.cardScore.backspace">Del</button>
+          </div>
+          <div class="card-score-key-row">
+            <button type="button" class="card-score-key card-score-key-nav" data-key="prev" data-i18n="tools.cardScore.prevCell">Prev</button>
+            <button type="button" class="card-score-key card-score-key-nav" data-key="next" data-i18n="tools.cardScore.nextCell">Next</button>
           </div>
         </div>
       </div>
@@ -79,6 +76,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/life/card-score.js?v=3"></script>
+  <script src="../../js/life/card-score.js?v=4"></script>
 </body>
 </html>

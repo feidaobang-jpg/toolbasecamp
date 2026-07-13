@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const boardView = document.getElementById('board-view');
     const newGameBtn = document.getElementById('new-game-btn');
     const continueBtn = document.getElementById('continue-btn');
-    const backBtn = document.getElementById('back-btn');
     const addPlayerBtn = document.getElementById('add-player-btn');
     const gridScroll = document.getElementById('grid-scroll');
     const scoreGrid = document.getElementById('score-grid');
@@ -22,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentScoreIndex = -1;
     let tempValue = '';
     let toastTimer = null;
+    let boardHistoryPushed = false;
 
     function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
@@ -73,13 +73,23 @@ document.addEventListener('DOMContentLoaded', function () {
         return '';
     }
 
-    function showListView() {
+    function applyListView() {
         hideKeyboard();
         document.body.classList.remove('card-score-board-active');
         listView.hidden = false;
         listView.classList.add('is-active');
         boardView.hidden = true;
         boardView.classList.remove('is-active');
+        updateScrollLayout();
+    }
+
+    function showListView(fromPopState) {
+        if (!fromPopState && boardHistoryPushed) {
+            history.back();
+            return;
+        }
+        boardHistoryPushed = false;
+        applyListView();
     }
 
     function showBoardView() {
@@ -88,7 +98,10 @@ document.addEventListener('DOMContentLoaded', function () {
         listView.classList.remove('is-active');
         boardView.hidden = false;
         boardView.classList.add('is-active');
+        history.pushState({ cardScoreView: 'board' }, '');
+        boardHistoryPushed = true;
         recalculate();
+        updateScrollLayout();
     }
 
     function isBoardVisible() {
@@ -97,6 +110,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function isMobileBoard() {
         return window.matchMedia('(max-width: 768px)').matches && isBoardVisible();
+    }
+
+    function syncViewportInsets() {
+        const vv = window.visualViewport;
+        if (!vv) {
+            document.documentElement.style.removeProperty('--cs-vv-offset-bottom');
+            document.documentElement.style.removeProperty('--cs-vv-height');
+            return;
+        }
+
+        const bottomInset = Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
+        document.documentElement.style.setProperty('--cs-vv-offset-bottom', bottomInset + 'px');
+        document.documentElement.style.setProperty('--cs-vv-height', vv.height + 'px');
+    }
+
+    function updateScrollLayout() {
+        syncViewportInsets();
+
+        if (!gridScroll) return;
+
+        if (!isMobileBoard()) {
+            gridScroll.style.removeProperty('max-height');
+            return;
+        }
+
+        requestAnimationFrame(function () {
+            const vv = window.visualViewport;
+            const viewHeight = vv ? vv.height : window.innerHeight;
+            const scrollTop = gridScroll.getBoundingClientRect().top;
+            let reservedBottom = 8;
+
+            if (showKeyboard && keyboard.classList.contains('is-open')) {
+                reservedBottom += keyboard.offsetHeight + 4;
+            } else if (addPlayerBtn && addPlayerBtn.offsetParent !== null) {
+                reservedBottom += addPlayerBtn.offsetHeight + 12;
+            }
+
+            const maxHeight = Math.max(96, viewHeight - scrollTop - reservedBottom);
+            gridScroll.style.maxHeight = maxHeight + 'px';
+
+            if (showKeyboard && currentPersonIndex >= 0 && currentScoreIndex >= 0) {
+                scrollToCell(currentPersonIndex, currentScoreIndex);
+            }
+        });
     }
 
     function updateLayoutMetrics() {
@@ -134,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
         scoreGrid.style.setProperty('--cs-left-width', leftWidth + 'px');
         scoreGrid.style.setProperty('--cs-cell-height', cellHeight + 'px');
         scoreGrid.style.setProperty('--cs-font-size', fontSize + 'px');
+        updateScrollLayout();
     }
 
     function startNewGame() {
@@ -164,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboard.setAttribute('aria-hidden', 'true');
         gridScroll.classList.remove('keyboard-open');
         document.body.classList.remove('keyboard-open');
+        updateScrollLayout();
         renderGrid();
     }
 
@@ -176,13 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateKeyboardDisplay();
         updateNavKeys();
         renderGrid();
-        requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-                if (currentPersonIndex >= 0 && currentScoreIndex >= 0) {
-                    scrollToCell(currentPersonIndex, currentScoreIndex);
-                }
-            });
-        });
+        updateScrollLayout();
     }
 
     function openCell(personIndex, scoreIndex) {
@@ -433,9 +486,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     newGameBtn.addEventListener('click', startNewGame);
     continueBtn.addEventListener('click', continueGame);
-    backBtn.addEventListener('click', showListView);
     addPlayerBtn.addEventListener('click', addPerson);
     keyboardClose.addEventListener('click', hideKeyboard);
+
+    window.addEventListener('popstate', function () {
+        if (boardHistoryPushed && isBoardVisible()) {
+            boardHistoryPushed = false;
+            applyListView();
+        }
+    });
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', updateScrollLayout);
+        window.visualViewport.addEventListener('scroll', updateScrollLayout);
+    }
 
     keyboard.querySelectorAll('.card-score-key').forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -449,10 +513,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (showKeyboard) updateKeyboardDisplay();
     });
 
-    window.addEventListener('resize', updateLayoutMetrics);
+    window.addEventListener('resize', function () {
+        updateLayoutMetrics();
+        updateScrollLayout();
+    });
     window.addEventListener('orientationchange', function () {
-        setTimeout(updateLayoutMetrics, 100);
+        setTimeout(function () {
+            updateLayoutMetrics();
+            updateScrollLayout();
+        }, 100);
     });
 
-    showListView();
+    applyListView();
 });

@@ -32,25 +32,6 @@
   padding-bottom: 16px;
 }
 
-.card-score-board-toolbar {
-  margin-bottom: 12px;
-  flex-shrink: 0;
-}
-
-.card-score-back-btn {
-  border: none;
-  background: none;
-  padding: 4px 0;
-  font: inherit;
-  font-size: 14px;
-  color: #2563eb;
-  cursor: pointer;
-}
-
-.card-score-back-btn:hover {
-  color: #1d4ed8;
-}
-
 .card-score-scroll {
   overflow: auto;
   max-width: 100%;
@@ -58,10 +39,6 @@
   -webkit-overflow-scrolling: touch;
   flex: 1;
   min-height: 0;
-}
-
-.card-score-scroll.keyboard-open {
-  margin-bottom: 0;
 }
 
 .card-score-grid {
@@ -196,33 +173,34 @@
 }
 
 .card-score-keyboard {
-  flex-shrink: 0;
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: var(--cs-vv-offset-bottom, 0);
+  z-index: 1000;
+  transform: translateY(110%);
+  transition: transform 0.22s ease;
   pointer-events: none;
-  transition: max-height 0.25s ease, opacity 0.2s ease;
 }
 
 .card-score-keyboard.is-open {
-  max-height: 420px;
-  opacity: 1;
+  transform: translateY(0);
   pointer-events: auto;
 }
 
 .card-score-keyboard-panel {
   background: #f7f7f7;
-  padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-score-keyboard-header {
   background: #fff;
-  height: 40px;
-  line-height: 40px;
+  height: 36px;
+  line-height: 36px;
   text-align: center;
-  font-size: 15px;
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
   border-radius: 8px;
   position: relative;
   color: #374151;
@@ -244,8 +222,8 @@
 
 .card-score-key-row {
   display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
+  gap: 5px;
+  margin-bottom: 5px;
 }
 
 .card-score-key-row:last-child {
@@ -254,11 +232,11 @@
 
 .card-score-key {
   flex: 1;
-  height: 44px;
+  height: 40px;
   border: none;
   border-radius: 8px;
   background: #fff;
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -270,13 +248,13 @@
 .card-score-key-delete {
   background: #ffebee;
   color: #f44336;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .card-score-key-nav {
   background: #e3f2fd;
   color: #2196f3;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .card-score-key-nav:disabled {
@@ -288,7 +266,7 @@
 .recipe-toast {
   position: fixed;
   left: 50%;
-  bottom: 32px;
+  bottom: calc(32px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%) translateY(12px);
   padding: 10px 18px;
   background: rgba(17, 24, 39, 0.92);
@@ -308,7 +286,6 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* —— 移动端：列表页顶栏即标题；计分板 flex 布局，键盘占用底部后网格自动收缩 —— */
 @media (max-width: 768px) {
   body.card-score-page:not(.card-score-board-active) .tool-header {
     display: none;
@@ -328,14 +305,14 @@
   }
 
   body.card-score-board-active .container {
-    min-height: 100dvh;
-    height: 100dvh;
+    height: var(--cs-vv-height, 100dvh);
+    min-height: var(--cs-vv-height, 100dvh);
   }
 
   body.card-score-board-active .content {
-    padding: 0;
+    padding: 4px 4px 0;
     box-shadow: none;
-    height: 100dvh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -352,27 +329,17 @@
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: 8px 4px 0;
+    padding: 0;
     border-radius: 0;
     box-shadow: none;
     min-height: 0;
     overflow: hidden;
   }
 
-  body.card-score-board-active .card-score-board-toolbar {
-    margin-bottom: 6px;
-    padding: 0 4px;
-    flex-shrink: 0;
-  }
-
   body.card-score-board-active .card-score-scroll {
-    flex: 1;
+    flex: none;
     min-height: 0;
     margin-bottom: 8px;
-  }
-
-  body.card-score-board-active.keyboard-open .card-score-scroll {
-    margin-bottom: 4px;
   }
 
   body.card-score-board-active.keyboard-open .card-score-add-btn {
@@ -398,44 +365,23 @@
     flex-shrink: 0;
   }
 
-  body.card-score-board-active .card-score-keyboard {
-    margin: 0 -4px;
-  }
-
-  body.card-score-board-active .card-score-keyboard-header {
-    height: 36px;
-    line-height: 36px;
-    font-size: 14px;
-  }
-
   body.card-score-board-active .card-score-key {
-    height: 40px;
-    font-size: 16px;
+    height: 36px;
+    font-size: 15px;
   }
 }
 
 @media (min-width: 769px) {
   .card-score-keyboard {
-    position: fixed;
     left: auto;
     right: 24px;
     bottom: 24px;
     width: 320px;
-    z-index: 1000;
-    max-height: none;
-    opacity: 1;
     transform: translateY(calc(100% + 24px));
-    transition: transform 0.25s ease, opacity 0.2s ease;
   }
 
   .card-score-keyboard.is-open {
     transform: translateY(0);
-    max-height: none;
-  }
-
-  .card-score-keyboard:not(.is-open) {
-    opacity: 0;
-    pointer-events: none;
   }
 
   .card-score-keyboard-panel {
