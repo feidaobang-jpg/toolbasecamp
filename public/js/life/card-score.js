@@ -74,10 +74,25 @@ document.addEventListener('DOMContentLoaded', function () {
         return '';
     }
 
-    function formatRoundLabel(roundIndex, roundTotal) {
+    function buildRoundMetaCell(roundIndex, roundTotal) {
+        const cell = document.createElement('div');
+        cell.className = 'card-score-cell is-round-meta';
+
         const roundNum = roundIndex + 1;
-        const total = roundTotal !== '' && roundTotal !== undefined ? roundTotal : 0;
-        return roundNum + '/' + total;
+        const totalVal = roundTotal !== '' && roundTotal !== undefined ? Number(roundTotal) : 0;
+        const total = isNaN(totalVal) ? 0 : totalVal;
+
+        const indexSpan = document.createElement('span');
+        indexSpan.className = 'round-index';
+        indexSpan.textContent = String(roundNum);
+
+        const sumSpan = document.createElement('span');
+        sumSpan.className = 'round-sum' + (total < 0 ? ' negative' : '');
+        sumSpan.textContent = String(total);
+
+        cell.appendChild(indexSpan);
+        cell.appendChild(sumSpan);
+        return cell;
     }
 
     function applyListView() {
@@ -176,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const playerCount = Math.max(persons.length, 1);
         const vw = document.documentElement.clientWidth;
         const horizontalPad = 12;
-        const leftWidth = playerCount > 6 ? 38 : playerCount > 4 ? 42 : 46;
+        const leftWidth = playerCount > 6 ? 44 : playerCount > 4 ? 48 : 52;
         const available = vw - horizontalPad - leftWidth;
         const colWidth = available / playerCount;
 
@@ -360,10 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
         scoresLeft.className = 'card-score-left';
 
         for (let r = 0; r < roundCount; r++) {
-            const cell = document.createElement('div');
-            cell.className = 'card-score-cell is-round-total';
-            cell.textContent = formatRoundLabel(r, summationScores[r]);
-            scoresLeft.appendChild(cell);
+            scoresLeft.appendChild(buildRoundMetaCell(r, summationScores[r]));
         }
 
         const scoresPlayers = document.createElement('div');

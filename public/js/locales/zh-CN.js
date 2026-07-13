@@ -164,9 +164,7 @@ window.TB_LOCALES['zh-CN'] = {
             unnamedPlayer: '此人',
             namePlaceholder: '姓名',
             keyboardPlaceholder: '请输入分数',
-            backspace: '回退',
-            prevCell: '左一格',
-            nextCell: '右一格'
+            backspace: '回退'
         },
         videoToImages: {
             title: '视频转图片',

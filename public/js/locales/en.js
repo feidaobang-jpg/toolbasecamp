@@ -165,9 +165,7 @@ window.TB_LOCALES.en = {
             unnamedPlayer: 'this player',
             namePlaceholder: 'Name',
             keyboardPlaceholder: 'Enter score',
-            backspace: 'Del',
-            prevCell: 'Prev',
-            nextCell: 'Next'
+            backspace: 'Del'
         },
         videoToImages: {
             title: 'Video to Images',
