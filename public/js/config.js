@@ -78,14 +78,16 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.calc',
             items: [
-                { titleKey: 'tools.age.title', url: 'html/calc/age.html' }
+                { titleKey: 'tools.age.title', url: 'html/calc/age.html' },
+                { titleKey: 'tools.k510Reward.title', url: 'html/calc/510k-reward.html' }
             ]
         },
         {
             titleKey: 'tools.groups.life',
             items: [
                 { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' },
-                { titleKey: 'tools.cardScore.title', url: 'html/life/card-score.html' }
+                { titleKey: 'tools.cardScore.title', url: 'html/life/card-score.html' },
+                { titleKey: 'tools.k510Score.title', url: 'html/life/510k-score.html' }
             ]
         },
         {

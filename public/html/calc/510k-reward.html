@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>510K Reward - Tool Basecamp</title>
+  <meta name="description" content="Calculate 510K card game reward scores for 4 or 6 players with a custom multiplier.">
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css" />
+  <link rel="stylesheet" href="../../css/calc/510k-reward.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.k510Reward.title">510K Reward</h1>
+        <p data-i18n="tools.k510Reward.desc">Enter each player's total score across rows, then calculate reward points and multiplied results.</p>
+      </div>
+
+      <div class="tool-card k510-card">
+        <div class="k510-controls">
+          <fieldset class="k510-fieldset">
+            <legend data-i18n="tools.k510Reward.playerCount">Players</legend>
+            <label class="k510-radio"><input type="radio" name="player-count" value="4" /> <span data-i18n="tools.k510Reward.players4">4 players</span></label>
+            <label class="k510-radio"><input type="radio" name="player-count" value="6" /> <span data-i18n="tools.k510Reward.players6">6 players</span></label>
+          </fieldset>
+          <div class="k510-multiplier">
+            <label for="multiplier" data-i18n="tools.k510Reward.multiplier">Multiplier</label>
+            <input type="number" id="multiplier" min="0" max="999" value="5" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="k510-grid-wrap" id="grid-wrap" hidden>
+          <div class="k510-grid" id="score-grid"></div>
+        </div>
+
+        <div class="action-row k510-actions">
+          <button type="button" class="tb-btn k510-btn-add" id="add-row-btn" data-i18n="tools.k510Reward.addRow" disabled>Add row</button>
+          <button type="button" class="tb-btn k510-btn-calc" id="calc-btn" data-i18n="tools.k510Reward.calculate" disabled>Calculate</button>
+          <button type="button" class="tb-btn k510-btn-clear" id="clear-btn" data-i18n="tools.k510Reward.clear" disabled>Clear</button>
+        </div>
+      </div>
+
+      <div class="recipe-toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/510k-reward.js?v=1"></script>
+</body>
+</html>
