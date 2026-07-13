@@ -141,8 +141,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f9fafb;
-  color: #6b7280;
+  background: #fff;
+  color: #111827;
   font-size: calc(var(--cs-font-size) - 1px);
   font-weight: 500;
 }
@@ -155,8 +155,11 @@
   justify-content: center;
   border-left: 1px solid #ddd;
   font-weight: 600;
-  color: #111827;
   font-size: calc(var(--cs-font-size) - 1px);
+}
+
+.card-score-cell.is-round-meta .round-sum.zero {
+  color: #2563eb;
 }
 
 .card-score-cell.is-round-meta .round-sum.positive {

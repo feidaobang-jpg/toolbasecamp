@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let sumClass = 'round-sum';
         if (total < 0) sumClass += ' negative';
         else if (total > 0) sumClass += ' positive';
+        else sumClass += ' zero';
         sumSpan.className = sumClass;
         sumSpan.textContent = String(total);
 
