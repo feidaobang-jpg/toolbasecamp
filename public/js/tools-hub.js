@@ -27,7 +27,6 @@
         }
     };
 
-    let scrollSpyObserver = null;
     let searchQuery = '';
 
     function tr(k) {
@@ -54,22 +53,6 @@
     function portalDesc(portal) {
         if (portal.descriptionKey) return tr(portal.descriptionKey);
         return portal.description || '';
-    }
-
-    function renderLeftNav(sidebarEl, groups) {
-        if (!sidebarEl) return;
-        sidebarEl.innerHTML = '<ul class="hub-nav-list" id="hub-nav-list"></ul>';
-        const listEl = sidebarEl.querySelector('#hub-nav-list');
-        groups.forEach((group, index) => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = '#section-' + index;
-            a.dataset.sectionId = 'section-' + index;
-            a.textContent = tr(group.titleKey);
-            if (index === 0) a.classList.add('is-active');
-            li.appendChild(a);
-            listEl.appendChild(li);
-        });
     }
 
     function renderRightPortals(sidebarEl) {
@@ -237,63 +220,11 @@
         containerEl.appendChild(emptyEl);
     }
 
-    function scrollHubToSection(sectionId) {
-        const scrollRoot = document.getElementById('hub-center');
-        const target = document.getElementById(sectionId);
-        if (!scrollRoot || !target) return;
-
-        const marginTop = parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
-        const rootRect = scrollRoot.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const top = scrollRoot.scrollTop + (targetRect.top - rootRect.top) - marginTop;
-        scrollRoot.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-    }
-
-    function bindNavScroll(scrollRoot, sidebarEl) {
-        if (!scrollRoot || !sidebarEl) return;
-        const links = sidebarEl.querySelectorAll('.hub-nav-list a');
-        if (!links.length) return;
-
-        if (scrollSpyObserver) {
-            scrollSpyObserver.disconnect();
-            scrollSpyObserver = null;
-        }
-
-        const sections = scrollRoot.querySelectorAll('.hub-group');
-        if (!sections.length) return;
-
-        scrollSpyObserver = new IntersectionObserver(function (entries) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const id = entry.target.id;
-                links.forEach(link => {
-                    link.classList.toggle('is-active', link.dataset.sectionId === id);
-                });
-            });
-        }, {
-            root: scrollRoot,
-            rootMargin: '-20% 0px -60% 0px',
-            threshold: 0
-        });
-
-        sections.forEach(section => scrollSpyObserver.observe(section));
-
-        links.forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                scrollHubToSection(link.dataset.sectionId);
-                links.forEach(l => l.classList.toggle('is-active', l === link));
-            });
-        });
-    }
-
     function renderToolsHub() {
         const centerEl = document.getElementById('main-content');
-        const leftEl = document.getElementById('hub-sidebar-left');
         const rightEl = document.getElementById('hub-sidebar-right');
         const mobileToolbar = document.getElementById('hub-mobile-toolbar');
         const mobilePortals = document.getElementById('hub-mobile-portals');
-        const scrollRoot = document.getElementById('hub-center');
 
         if (!centerEl) return;
 
@@ -302,21 +233,18 @@
 
         if (!groups.length) {
             centerEl.innerHTML = '<div class="text-center text-gray-500 py-12">' + tr('hub.noTools') + '</div>';
-            if (leftEl) leftEl.innerHTML = '';
             if (rightEl) rightEl.innerHTML = '';
             if (mobileToolbar) mobileToolbar.innerHTML = '';
             if (mobilePortals) mobilePortals.innerHTML = '';
             return;
         }
 
-        renderLeftNav(leftEl, groups);
         renderRightPortals(rightEl);
         renderMobilePortals(mobilePortals);
         renderMobileSearch(mobileToolbar);
         renderToolGroups(centerEl, groups);
 
         if (searchQuery) applySearchFilter(searchQuery);
-        bindNavScroll(scrollRoot, leftEl);
     }
 
     window.renderToolsHub = renderToolsHub;

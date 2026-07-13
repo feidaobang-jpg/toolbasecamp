@@ -1,4 +1,4 @@
-/* Homepage hub: left categories | center tools | right portals */
+/* Homepage hub: center tools | right portals */
 
 .hub-shell {
     display: flex;
@@ -24,10 +24,6 @@
     border-color: #f3f4f6;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-}
-
-.hub-sidebar-left {
-    border-right: 1px solid #f3f4f6;
 }
 
 .hub-sidebar-right {

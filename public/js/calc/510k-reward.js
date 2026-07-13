@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         gridWrap.hidden = false;
+        scoreGrid.dataset.playerCount = String(playerCount);
 
         for (let col = 0; col < playerCount; col += 1) {
             const column = document.createElement('div');
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const head = document.createElement('div');
             head.className = 'k510-col-head';
-            head.textContent = tr('tools.k510Reward.playerLabel', { n: col + 1 });
+            head.textContent = String(col + 1);
             column.appendChild(head);
 
             scoreRows.forEach(function (row, rowIndex) {

@@ -59,6 +59,7 @@
   overflow-x: auto;
   margin-bottom: 20px;
   padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .k510-grid {
@@ -92,6 +93,7 @@
   text-align: center;
   font: inherit;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .k510-score-input:focus {
@@ -105,6 +107,7 @@
   color: #111827;
   text-align: center;
   line-height: 1.35;
+  word-break: break-all;
 }
 
 .k510-result-multiplied {
@@ -116,6 +119,10 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.k510-actions .tb-btn {
+  min-width: 88px;
 }
 
 .k510-btn-add {
@@ -133,6 +140,95 @@
 .k510-actions .tb-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  body.k510-reward-page .tool-header {
+    display: none;
+  }
+
+  body.k510-reward-page .content {
+    padding-top: 0;
+  }
+
+  .k510-card {
+    padding: 12px;
+  }
+
+  .k510-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .k510-fieldset {
+    flex: 1 1 auto;
+    padding: 10px 12px 8px;
+  }
+
+  .k510-fieldset legend {
+    font-size: 13px;
+  }
+
+  .k510-radio {
+    margin-right: 12px;
+    font-size: 13px;
+  }
+
+  .k510-multiplier {
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+
+  .k510-grid-wrap {
+    overflow-x: visible;
+    margin: 0 0 16px;
+    padding: 0;
+  }
+
+  .k510-grid {
+    width: 100%;
+    gap: 4px;
+    justify-content: stretch;
+    min-width: 0;
+  }
+
+  .k510-col {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .k510-col-head {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .k510-score-input {
+    width: 100%;
+    padding: 7px 2px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .k510-result {
+    font-size: 11px;
+  }
+
+  .k510-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .k510-actions .tb-btn {
+    min-width: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 640px) {
