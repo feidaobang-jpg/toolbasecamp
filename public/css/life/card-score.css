@@ -1,3 +1,12 @@
+.card-score-view[hidden] {
+  display: none !important;
+}
+
+.card-score-board-wrap:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+}
+
 .card-score-actions {
   display: flex;
   flex-direction: column;
@@ -17,6 +26,7 @@
 
 .card-score-board-toolbar {
   margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
 .card-score-back-btn {
@@ -50,10 +60,13 @@
   min-width: 100%;
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
+  --cs-left-width: 72px;
+  --cs-cell-height: 40px;
+  --cs-font-size: 14px;
 }
 
 .card-score-left {
-  width: 72px;
+  width: var(--cs-left-width);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -62,6 +75,7 @@
 .card-score-players {
   display: flex;
   flex: 1;
+  min-width: 0;
 }
 
 .card-score-player-col {
@@ -74,20 +88,24 @@
 .card-score-cell {
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  min-height: 40px;
-  line-height: 40px;
+  min-height: var(--cs-cell-height);
+  line-height: var(--cs-cell-height);
   text-align: center;
-  font-size: 14px;
+  font-size: var(--cs-font-size);
   background: #fff;
   box-sizing: border-box;
-  padding: 0 4px;
+  padding: 0 2px;
   flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-score-cell.is-label {
   background: #f9fafb;
   color: #374151;
   font-weight: 500;
+  font-size: calc(var(--cs-font-size) - 1px);
 }
 
 .card-score-cell.is-round-total {
@@ -118,7 +136,7 @@
 
 .card-score-cell.is-score .cursor {
   animation: card-score-blink 1s infinite;
-  margin-left: 2px;
+  margin-left: 1px;
   color: #2196f3;
 }
 
@@ -129,15 +147,16 @@
 
 .card-score-name-input {
   width: 100%;
-  height: 40px;
+  height: var(--cs-cell-height);
   border: none;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   text-align: center;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--cs-font-size);
   box-sizing: border-box;
   background: #fff;
+  min-width: 0;
 }
 
 .card-score-name-input:focus {
@@ -149,16 +168,21 @@
   border: none;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  min-height: 40px;
+  min-height: var(--cs-cell-height);
   background: #fff;
   color: #f5653b;
   font: inherit;
-  font-size: 13px;
+  font-size: calc(var(--cs-font-size) - 1px);
   cursor: pointer;
+  padding: 0 2px;
 }
 
 .card-score-delete-btn:hover {
   background: #fef2f2;
+}
+
+.card-score-add-btn {
+  flex-shrink: 0;
 }
 
 .card-score-keyboard {
@@ -179,17 +203,17 @@
 
 .card-score-keyboard-panel {
   background: #f7f7f7;
-  padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .card-score-keyboard-header {
   background: #fff;
-  height: 44px;
-  line-height: 44px;
+  height: 40px;
+  line-height: 40px;
   text-align: center;
-  font-size: 16px;
-  margin-bottom: 10px;
+  font-size: 15px;
+  margin-bottom: 8px;
   border-radius: 8px;
   position: relative;
   color: #374151;
@@ -211,8 +235,8 @@
 
 .card-score-key-row {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .card-score-key-row:last-child {
@@ -221,11 +245,11 @@
 
 .card-score-key {
   flex: 1;
-  height: 48px;
+  height: 44px;
   border: none;
   border-radius: 8px;
   background: #fff;
-  font-size: 18px;
+  font-size: 17px;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -237,13 +261,13 @@
 .card-score-key-delete {
   background: #ffebee;
   color: #f44336;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .card-score-key-nav {
   background: #e3f2fd;
   color: #2196f3;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .card-score-key-nav:disabled {
@@ -275,7 +299,99 @@
   transform: translateX(-50%) translateY(0);
 }
 
-@media (min-width: 768px) {
+/* —— 移动端：计分板全屏沉浸，列宽均分视口（对齐小程序） —— */
+@media (max-width: 768px) {
+  body.card-score-page .tool-card:not(.card-score-board-wrap) {
+    margin: 0;
+    padding: 16px;
+  }
+
+  body.card-score-board-active {
+    overflow: hidden;
+  }
+
+  body.card-score-board-active .container {
+    min-height: 100dvh;
+    height: 100dvh;
+  }
+
+  body.card-score-board-active .content {
+    padding: 0;
+    box-shadow: none;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  body.card-score-board-active .tool-header,
+  body.card-score-board-active .tool-mobile-bar {
+    display: none !important;
+  }
+
+  body.card-score-board-active .card-score-board-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  body.card-score-board-active .card-score-board-toolbar {
+    margin-bottom: 6px;
+    padding: 0 4px;
+  }
+
+  body.card-score-board-active .card-score-scroll {
+    flex: 1;
+    min-height: 0;
+    margin-bottom: 8px;
+  }
+
+  body.card-score-board-active .card-score-scroll.keyboard-open {
+    padding-bottom: min(46vh, 300px);
+  }
+
+  body.card-score-board-active .card-score-grid {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.card-score-board-active .card-score-player-col {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 0;
+  }
+
+  body.card-score-board-active .card-score-add-btn {
+    width: 100%;
+    margin: 0 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  body.card-score-board-active .card-score-keyboard-header {
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+  }
+
+  body.card-score-board-active .card-score-key {
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .card-score-scroll.keyboard-open {
+    padding-bottom: min(46vh, 300px);
+  }
+}
+
+@media (min-width: 769px) {
   .card-score-scroll.keyboard-open {
     padding-bottom: 0;
   }

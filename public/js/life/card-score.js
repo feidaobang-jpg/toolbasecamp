@@ -75,14 +75,65 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showListView() {
         hideKeyboard();
-        listView.style.display = 'block';
-        boardView.style.display = 'none';
+        document.body.classList.remove('card-score-board-active');
+        listView.hidden = false;
+        listView.classList.add('is-active');
+        boardView.hidden = true;
+        boardView.classList.remove('is-active');
     }
 
     function showBoardView() {
-        listView.style.display = 'none';
-        boardView.style.display = 'block';
+        document.body.classList.add('card-score-board-active');
+        listView.hidden = true;
+        listView.classList.remove('is-active');
+        boardView.hidden = false;
+        boardView.classList.add('is-active');
         recalculate();
+    }
+
+    function isBoardVisible() {
+        return !boardView.hidden;
+    }
+
+    function isMobileBoard() {
+        return window.matchMedia('(max-width: 768px)').matches && isBoardVisible();
+    }
+
+    function updateLayoutMetrics() {
+        if (!scoreGrid || !isMobileBoard()) {
+            if (scoreGrid) {
+                scoreGrid.style.removeProperty('--cs-left-width');
+                scoreGrid.style.removeProperty('--cs-cell-height');
+                scoreGrid.style.removeProperty('--cs-font-size');
+            }
+            return;
+        }
+
+        const playerCount = Math.max(persons.length, 1);
+        const vw = document.documentElement.clientWidth;
+        const horizontalPad = 12;
+        const leftWidth = playerCount > 6 ? 30 : playerCount > 4 ? 34 : 38;
+        const available = vw - horizontalPad - leftWidth;
+        const colWidth = available / playerCount;
+
+        let cellHeight = 32;
+        let fontSize = 13;
+
+        if (playerCount >= 6) {
+            cellHeight = 28;
+            fontSize = 10;
+        } else if (playerCount >= 5) {
+            cellHeight = 30;
+            fontSize = 11;
+        }
+
+        if (colWidth < 52) fontSize = Math.min(fontSize, 11);
+        if (colWidth < 44) fontSize = Math.min(fontSize, 10);
+        if (colWidth < 36) fontSize = Math.min(fontSize, 9);
+
+        scoreGrid.style.setProperty('--cs-left-width', leftWidth + 'px');
+        scoreGrid.style.setProperty('--cs-cell-height', cellHeight + 'px');
+        scoreGrid.style.setProperty('--cs-font-size', fontSize + 'px');
     }
 
     function startNewGame() {
@@ -147,7 +198,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function scrollToCell(personIndex, scoreIndex) {
         const cell = document.getElementById('score-' + personIndex + '-' + scoreIndex);
-        if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        if (!cell) return;
+        if (isMobileBoard()) {
+            cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            return;
+        }
+        cell.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
 
     function moveToNextInput() {
@@ -322,6 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
         scoreGrid.innerHTML = '';
         scoreGrid.appendChild(left);
         scoreGrid.appendChild(playersWrap);
+        updateLayoutMetrics();
     }
 
     function addPerson() {
@@ -360,8 +417,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.addEventListener('tb:locale', function () {
-        if (boardView.style.display !== 'none') renderGrid();
+        if (isBoardVisible()) renderGrid();
         if (showKeyboard) updateKeyboardDisplay();
+    });
+
+    window.addEventListener('resize', updateLayoutMetrics);
+    window.addEventListener('orientationchange', function () {
+        setTimeout(updateLayoutMetrics, 100);
     });
 
     showListView();

@@ -7,9 +7,9 @@
   <meta name="description" content="Offline card game scorekeeper for multiple players. Data saved locally in your browser.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/card-score.css?v=1" />
+  <link rel="stylesheet" href="../../css/life/card-score.css?v=2" />
 </head>
-<body>
+<body class="card-score-page">
   <div class="container">
     <aside class="sidebar"></aside>
     <main class="content">
@@ -18,7 +18,7 @@
         <p data-i18n="tools.cardScore.desc">Track scores for card games. All data stays on this device.</p>
       </div>
 
-      <div class="tool-card" id="list-view">
+      <div class="tool-card card-score-view is-active" id="list-view">
         <div class="card-score-actions">
           <button type="button" class="tb-btn w-full" id="new-game-btn" data-i18n="tools.cardScore.newGame">New game</button>
           <button type="button" class="tb-btn w-full" id="continue-btn" data-i18n="tools.cardScore.continueGame">Continue saved game</button>
@@ -26,14 +26,14 @@
         <p class="card-score-note" data-i18n="tools.cardScore.privacyNote">Scores are stored locally in your browser only.</p>
       </div>
 
-      <div class="tool-card card-score-board-wrap" id="board-view" style="display:none">
+      <div class="tool-card card-score-board-wrap card-score-view" id="board-view" hidden>
         <div class="card-score-board-toolbar">
           <button type="button" class="card-score-back-btn" id="back-btn" data-i18n="tools.cardScore.back">Back</button>
         </div>
         <div class="card-score-scroll" id="grid-scroll">
           <div class="card-score-grid" id="score-grid"></div>
         </div>
-        <button type="button" class="tb-btn" id="add-player-btn" data-i18n="tools.cardScore.addPlayer">Add player</button>
+        <button type="button" class="tb-btn card-score-add-btn" id="add-player-btn" data-i18n="tools.cardScore.addPlayer">Add player</button>
       </div>
 
       <div class="card-score-keyboard" id="keyboard" aria-hidden="true">
@@ -78,6 +78,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/life/card-score.js?v=1"></script>
+  <script src="../../js/life/card-score.js?v=2"></script>
 </body>
 </html>
