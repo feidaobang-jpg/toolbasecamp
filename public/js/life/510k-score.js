@@ -370,23 +370,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const gangGrid = document.createElement('div');
         gangGrid.className = 'k510-gang-grid';
-        allPlayers().forEach(function (player) {
+        allPlayers().forEach(function (player, index) {
             const item = document.createElement('div');
             item.className = 'k510-gang-item';
 
             const name = document.createElement('span');
-            name.textContent = player.name + '：';
+            name.className = 'k510-gang-label';
+            name.textContent = tr('tools.k510Score.memberLabel', { n: index + 1 }) + ' ' + player.name;
 
             const input = document.createElement('input');
-            input.type = 'number';
-            input.min = '0';
+            input.type = 'text';
             input.inputMode = 'numeric';
+            input.maxLength = 2;
             input.value = roundData.gangCounts[player.name] ? String(roundData.gangCounts[player.name]) : '';
             input.addEventListener('input', function () {
-                if (input.value === '') {
+                const digits = input.value.replace(/\D/g, '');
+                input.value = digits;
+                if (digits === '') {
                     delete roundData.gangCounts[player.name];
                 } else {
-                    roundData.gangCounts[player.name] = parseInt(input.value, 10) || 0;
+                    roundData.gangCounts[player.name] = parseInt(digits, 10) || 0;
                 }
             });
 

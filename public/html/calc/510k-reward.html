@@ -7,7 +7,7 @@
   <meta name="description" content="Calculate 510K card game reward scores for 4 or 6 players with a custom multiplier.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/calc/510k-reward.css?v=2" />
+  <link rel="stylesheet" href="../../css/calc/510k-reward.css?v=3" />
 </head>
 <body class="k510-reward-page">
   <div class="container">
@@ -22,13 +22,17 @@
         <div class="k510-controls">
           <fieldset class="k510-fieldset">
             <legend data-i18n="tools.k510Reward.playerCount">Players</legend>
-            <label class="k510-radio"><input type="radio" name="player-count" value="4" /> <span data-i18n="tools.k510Reward.players4">4 players</span></label>
-            <label class="k510-radio"><input type="radio" name="player-count" value="6" /> <span data-i18n="tools.k510Reward.players6">6 players</span></label>
+            <div class="k510-fieldset-body">
+              <label class="k510-radio"><input type="radio" name="player-count" value="4" /> <span data-i18n="tools.k510Reward.players4">4 players</span></label>
+              <label class="k510-radio"><input type="radio" name="player-count" value="6" /> <span data-i18n="tools.k510Reward.players6">6 players</span></label>
+            </div>
           </fieldset>
-          <div class="k510-multiplier">
-            <label for="multiplier" data-i18n="tools.k510Reward.multiplier">Multiplier</label>
-            <input type="number" id="multiplier" min="0" max="999" value="5" inputmode="numeric" />
-          </div>
+          <fieldset class="k510-fieldset k510-fieldset-multiplier">
+            <legend data-i18n="tools.k510Reward.multiplier">Multiplier</legend>
+            <div class="k510-fieldset-body">
+              <input type="text" id="multiplier" inputmode="numeric" maxlength="3" value="5" aria-label="Multiplier" />
+            </div>
+          </fieldset>
         </div>
 
         <div class="k510-grid-wrap" id="grid-wrap" hidden>
@@ -51,6 +55,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/calc/510k-reward.js?v=2"></script>
+  <script src="../../js/calc/510k-reward.js?v=3"></script>
 </body>
 </html>

@@ -56,11 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const column = document.createElement('div');
             column.className = 'k510-col';
 
-            const head = document.createElement('div');
-            head.className = 'k510-col-head';
-            head.textContent = String(col + 1);
-            column.appendChild(head);
-
             scoreRows.forEach(function (row, rowIndex) {
                 const input = document.createElement('input');
                 input.type = 'text';
@@ -68,6 +63,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.maxLength = 3;
                 input.className = 'k510-score-input';
                 input.value = row[col] || '';
+                if (rowIndex === 0) {
+                    input.placeholder = tr('tools.k510Reward.playerLabel', { n: col + 1 });
+                }
                 input.dataset.row = String(rowIndex);
                 input.dataset.col = String(col);
                 input.addEventListener('input', onScoreInput);
@@ -78,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             resultBox.className = 'k510-result';
             if (results[col] !== undefined) {
                 const base = document.createElement('div');
+                base.className = 'k510-result-base';
                 base.textContent = String(results[col]);
                 resultBox.appendChild(base);
                 if (multipliedResults[col] !== undefined) {
