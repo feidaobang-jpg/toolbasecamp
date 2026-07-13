@@ -7,7 +7,7 @@
   <meta name="description" content="Offline card game scorekeeper for multiple players. Data saved locally in your browser.">
   <link rel="stylesheet" href="../../css/base.css" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css" />
-  <link rel="stylesheet" href="../../css/life/card-score.css?v=4" />
+  <link rel="stylesheet" href="../../css/life/card-score.css?v=5" />
 </head>
 <body class="card-score-page">
   <div class="container">
@@ -29,7 +29,10 @@
 
       <div class="tool-card card-score-board-wrap card-score-view" id="board-view" hidden>
         <div class="card-score-scroll" id="grid-scroll">
-          <div class="card-score-grid" id="score-grid"></div>
+          <div class="card-score-grid card-score-grid-scores" id="score-grid"></div>
+        </div>
+        <div class="card-score-footer" id="score-footer">
+          <div class="card-score-grid card-score-grid-footer" id="score-footer-grid"></div>
         </div>
         <button type="button" class="tb-btn card-score-add-btn" id="add-player-btn" data-i18n="tools.cardScore.addPlayer">Add player</button>
       </div>
@@ -76,6 +79,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/life/card-score.js?v=4"></script>
+  <script src="../../js/life/card-score.js?v=5"></script>
 </body>
 </html>

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const addPlayerBtn = document.getElementById('add-player-btn');
     const gridScroll = document.getElementById('grid-scroll');
     const scoreGrid = document.getElementById('score-grid');
+    const scoreFooterGrid = document.getElementById('score-footer-grid');
     const keyboard = document.getElementById('keyboard');
     const keyboardDisplay = document.getElementById('keyboard-display');
     const keyboardClose = document.getElementById('keyboard-close');
@@ -128,27 +129,24 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateScrollLayout() {
         syncViewportInsets();
 
-        if (!gridScroll) return;
+        if (!gridScroll || !boardView) return;
 
         if (!isMobileBoard()) {
             gridScroll.style.removeProperty('max-height');
+            boardView.style.removeProperty('padding-bottom');
+            document.documentElement.style.removeProperty('--cs-keyboard-height');
             return;
         }
 
         requestAnimationFrame(function () {
-            const vv = window.visualViewport;
-            const viewHeight = vv ? vv.height : window.innerHeight;
-            const scrollTop = gridScroll.getBoundingClientRect().top;
-            let reservedBottom = 8;
-
             if (showKeyboard && keyboard.classList.contains('is-open')) {
-                reservedBottom += keyboard.offsetHeight + 4;
-            } else if (addPlayerBtn && addPlayerBtn.offsetParent !== null) {
-                reservedBottom += addPlayerBtn.offsetHeight + 12;
+                const keyboardHeight = keyboard.offsetHeight;
+                boardView.style.paddingBottom = keyboardHeight + 'px';
+                document.documentElement.style.setProperty('--cs-keyboard-height', keyboardHeight + 'px');
+            } else {
+                boardView.style.paddingBottom = '';
+                document.documentElement.style.removeProperty('--cs-keyboard-height');
             }
-
-            const maxHeight = Math.max(96, viewHeight - scrollTop - reservedBottom);
-            gridScroll.style.maxHeight = maxHeight + 'px';
 
             if (showKeyboard && currentPersonIndex >= 0 && currentScoreIndex >= 0) {
                 scrollToCell(currentPersonIndex, currentScoreIndex);
@@ -157,12 +155,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateLayoutMetrics() {
-        if (!scoreGrid || !isMobileBoard()) {
-            if (scoreGrid) {
-                scoreGrid.style.removeProperty('--cs-left-width');
-                scoreGrid.style.removeProperty('--cs-cell-height');
-                scoreGrid.style.removeProperty('--cs-font-size');
-            }
+        if (!scoreGrid && !scoreFooterGrid) return;
+
+        if (!isMobileBoard()) {
+            [scoreGrid, scoreFooterGrid].forEach(function (grid) {
+                if (!grid) return;
+                grid.style.removeProperty('--cs-left-width');
+                grid.style.removeProperty('--cs-cell-height');
+                grid.style.removeProperty('--cs-font-size');
+            });
             return;
         }
 
@@ -188,9 +189,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (colWidth < 44) fontSize = Math.min(fontSize, 10);
         if (colWidth < 36) fontSize = Math.min(fontSize, 9);
 
-        scoreGrid.style.setProperty('--cs-left-width', leftWidth + 'px');
-        scoreGrid.style.setProperty('--cs-cell-height', cellHeight + 'px');
-        scoreGrid.style.setProperty('--cs-font-size', fontSize + 'px');
+        [scoreGrid, scoreFooterGrid].forEach(function (grid) {
+            if (!grid) return;
+            grid.style.setProperty('--cs-left-width', leftWidth + 'px');
+            grid.style.setProperty('--cs-cell-height', cellHeight + 'px');
+            grid.style.setProperty('--cs-font-size', fontSize + 'px');
+        });
         updateScrollLayout();
     }
 
@@ -367,42 +371,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const colCount = persons[0] ? persons[0].scores.length : 0;
         if (persons.length > 0 && colCount > 0 && inputNum === persons.length * colCount) {
+            const newScoreIndex = colCount;
             for (let i = 0; i < persons.length; i++) {
                 persons[i].scores.push('');
             }
             summationScores.push('');
             saveToStorage();
-            setTimeout(function () {
-                scrollToCell(0, persons[0].scores.length - 1);
-            }, 50);
+            currentPersonIndex = 0;
+            currentScoreIndex = newScoreIndex;
+            tempValue = '';
+            updateKeyboardDisplay();
+            updateNavKeys();
+            renderGrid();
+            updateScrollLayout();
+            requestAnimationFrame(function () {
+                scrollToCell(0, newScoreIndex);
+            });
+            return;
         }
 
         renderGrid();
     }
 
     function renderGrid() {
-        if (!scoreGrid) return;
+        if (!scoreGrid || !scoreFooterGrid) return;
 
         const roundCount = persons[0] ? persons[0].scores.length : 0;
-        const left = document.createElement('div');
-        left.className = 'card-score-left';
+
+        const scoresLeft = document.createElement('div');
+        scoresLeft.className = 'card-score-left';
 
         for (let r = 0; r < roundCount; r++) {
             const cell = document.createElement('div');
             cell.className = 'card-score-cell is-round-total';
             cell.textContent = summationScores[r] !== '' && summationScores[r] !== undefined ? summationScores[r] : '';
-            left.appendChild(cell);
+            scoresLeft.appendChild(cell);
         }
 
-        ['rowTotal', 'rowName', 'rowActions'].forEach(function (labelKey) {
-            const cell = document.createElement('div');
-            cell.className = 'card-score-cell is-label';
-            cell.textContent = tr('tools.cardScore.' + labelKey);
-            left.appendChild(cell);
-        });
-
-        const playersWrap = document.createElement('div');
-        playersWrap.className = 'card-score-players';
+        const scoresPlayers = document.createElement('div');
+        scoresPlayers.className = 'card-score-players';
 
         persons.forEach(function (person, personIndex) {
             const col = document.createElement('div');
@@ -426,6 +433,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 col.appendChild(cell);
             });
+
+            scoresPlayers.appendChild(col);
+        });
+
+        scoreGrid.innerHTML = '';
+        scoreGrid.appendChild(scoresLeft);
+        scoreGrid.appendChild(scoresPlayers);
+
+        const footerLeft = document.createElement('div');
+        footerLeft.className = 'card-score-left';
+
+        ['rowTotal', 'rowName', 'rowActions'].forEach(function (labelKey) {
+            const cell = document.createElement('div');
+            cell.className = 'card-score-cell is-label';
+            cell.textContent = tr('tools.cardScore.' + labelKey);
+            footerLeft.appendChild(cell);
+        });
+
+        const footerPlayers = document.createElement('div');
+        footerPlayers.className = 'card-score-players';
+
+        persons.forEach(function (person, personIndex) {
+            const col = document.createElement('div');
+            col.className = 'card-score-player-col';
 
             const totalCell = document.createElement('div');
             totalCell.className = 'card-score-cell is-player-total';
@@ -453,12 +484,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             col.appendChild(delBtn);
 
-            playersWrap.appendChild(col);
+            footerPlayers.appendChild(col);
         });
 
-        scoreGrid.innerHTML = '';
-        scoreGrid.appendChild(left);
-        scoreGrid.appendChild(playersWrap);
+        scoreFooterGrid.innerHTML = '';
+        scoreFooterGrid.appendChild(footerLeft);
+        scoreFooterGrid.appendChild(footerPlayers);
+
         updateLayoutMetrics();
     }
 

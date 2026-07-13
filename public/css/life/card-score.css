@@ -32,13 +32,46 @@
   padding-bottom: 16px;
 }
 
+.card-score-board-wrap:not([hidden]) .card-score-scroll {
+  margin-bottom: 0;
+}
+
+@media (min-width: 769px) {
+  .card-score-board-wrap:not([hidden]) .card-score-scroll {
+    margin-bottom: 0;
+  }
+
+  .card-score-footer {
+    margin-bottom: 16px;
+  }
+}
+
 .card-score-scroll {
   overflow: auto;
   max-width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   -webkit-overflow-scrolling: touch;
   flex: 1;
   min-height: 0;
+}
+
+.card-score-footer {
+  flex-shrink: 0;
+  border-top: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.card-score-grid-scores {
+  border-bottom: none;
+}
+
+.card-score-grid-footer {
+  border-top: none;
+}
+
+.card-score-grid-footer .card-score-left .card-score-cell:first-child,
+.card-score-grid-footer .card-score-player-col > *:first-child {
+  border-top: none;
 }
 
 .card-score-grid {
@@ -337,9 +370,13 @@
   }
 
   body.card-score-board-active .card-score-scroll {
-    flex: none;
+    flex: 1;
     min-height: 0;
-    margin-bottom: 8px;
+    margin-bottom: 0;
+  }
+
+  body.card-score-board-active .card-score-footer {
+    flex-shrink: 0;
   }
 
   body.card-score-board-active.keyboard-open .card-score-add-btn {
