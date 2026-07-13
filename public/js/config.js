@@ -78,7 +78,8 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.life',
             items: [
-                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' }
+                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' },
+                { titleKey: 'tools.cardScore.title', url: 'html/life/card-score.html' }
             ]
         },
         {
