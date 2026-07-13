@@ -42,6 +42,12 @@ document.addEventListener('DOMContentLoaded', function () {
         multipliedResults = [];
     }
 
+    function hasResults() {
+        return results.some(function (value) {
+            return value !== undefined;
+        });
+    }
+
     function renderGrid() {
         scoreGrid.innerHTML = '';
         if (!playerCount) {
@@ -50,45 +56,92 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         gridWrap.hidden = false;
-        scoreGrid.dataset.playerCount = String(playerCount);
 
+        const showRowLabels = scoreRows.length > 1;
+        const layout = document.createElement('div');
+        layout.className = 'k510-score-layout';
+        layout.style.setProperty('--player-count', String(playerCount));
+        layout.dataset.hasRowLabels = showRowLabels ? 'true' : 'false';
+
+        const headerRow = document.createElement('div');
+        headerRow.className = 'k510-score-header';
+        if (showRowLabels) {
+            const corner = document.createElement('div');
+            corner.className = 'k510-score-corner';
+            corner.setAttribute('aria-hidden', 'true');
+            headerRow.appendChild(corner);
+        }
         for (let col = 0; col < playerCount; col += 1) {
-            const column = document.createElement('div');
-            column.className = 'k510-col';
+            const head = document.createElement('div');
+            head.className = 'k510-score-head-cell';
+            head.textContent = tr('tools.k510Reward.playerLabel', { n: col + 1 });
+            headerRow.appendChild(head);
+        }
+        layout.appendChild(headerRow);
 
-            scoreRows.forEach(function (row, rowIndex) {
+        const body = document.createElement('div');
+        body.className = 'k510-score-body';
+        scoreRows.forEach(function (row, rowIndex) {
+            const rowEl = document.createElement('div');
+            rowEl.className = 'k510-score-row';
+
+            if (showRowLabels) {
+                const rowLabel = document.createElement('div');
+                rowLabel.className = 'k510-score-row-label';
+                rowLabel.textContent = tr('tools.k510Reward.rowLabel', { n: rowIndex + 1 });
+                rowEl.appendChild(rowLabel);
+            }
+
+            for (let col = 0; col < playerCount; col += 1) {
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.inputMode = 'numeric';
                 input.maxLength = 3;
                 input.className = 'k510-score-input';
                 input.value = row[col] || '';
-                if (rowIndex === 0) {
-                    input.placeholder = tr('tools.k510Reward.playerLabel', { n: col + 1 });
-                }
                 input.dataset.row = String(rowIndex);
                 input.dataset.col = String(col);
                 input.addEventListener('input', onScoreInput);
-                column.appendChild(input);
-            });
-
-            const resultBox = document.createElement('div');
-            resultBox.className = 'k510-result';
-            if (results[col] !== undefined) {
-                const base = document.createElement('div');
-                base.className = 'k510-result-base';
-                base.textContent = String(results[col]);
-                resultBox.appendChild(base);
-                if (multipliedResults[col] !== undefined) {
-                    const multiplied = document.createElement('div');
-                    multiplied.className = 'k510-result-multiplied';
-                    multiplied.textContent = String(multipliedResults[col]);
-                    resultBox.appendChild(multiplied);
-                }
+                rowEl.appendChild(input);
             }
-            column.appendChild(resultBox);
-            scoreGrid.appendChild(column);
+
+            body.appendChild(rowEl);
+        });
+        layout.appendChild(body);
+
+        if (hasResults()) {
+            const resultRow = document.createElement('div');
+            resultRow.className = 'k510-score-row k510-score-result-row';
+
+            if (showRowLabels) {
+                const resultLabel = document.createElement('div');
+                resultLabel.className = 'k510-score-row-label';
+                resultLabel.textContent = tr('tools.k510Reward.rewardLabel');
+                resultRow.appendChild(resultLabel);
+            }
+
+            for (let col = 0; col < playerCount; col += 1) {
+                const cell = document.createElement('div');
+                cell.className = 'k510-score-result-cell';
+                if (results[col] !== undefined) {
+                    const base = document.createElement('div');
+                    base.className = 'k510-result-base';
+                    base.textContent = String(results[col]);
+                    cell.appendChild(base);
+                    if (multipliedResults[col] !== undefined) {
+                        const multiplied = document.createElement('div');
+                        multiplied.className = 'k510-result-multiplied';
+                        multiplied.textContent = String(multipliedResults[col]);
+                        cell.appendChild(multiplied);
+                    }
+                }
+                resultRow.appendChild(cell);
+            }
+
+            layout.appendChild(resultRow);
         }
+
+        scoreGrid.appendChild(layout);
     }
 
     function onPlayerChange(count) {

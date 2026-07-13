@@ -105,6 +105,8 @@ window.TB_LOCALES['zh-CN'] = {
             players6: '6 人',
             multiplier: '倍率',
             playerLabel: '玩家{n}',
+            rowLabel: '第{n}行',
+            rewardLabel: '奖惩',
             addRow: '加行',
             calculate: '计算',
             clear: '清空',

@@ -106,6 +106,8 @@ window.TB_LOCALES.en = {
             players6: '6 players',
             multiplier: 'Multiplier',
             playerLabel: 'P{n}',
+            rowLabel: 'R{n}',
+            rewardLabel: 'Reward',
             addRow: 'Add row',
             calculate: 'Calculate',
             clear: 'Clear',
