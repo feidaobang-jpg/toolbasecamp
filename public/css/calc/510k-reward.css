@@ -200,7 +200,12 @@
   }
 
   .k510-card {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     padding: 12px;
+    box-sizing: border-box;
   }
 
   .k510-controls {
