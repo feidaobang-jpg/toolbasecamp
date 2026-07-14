@@ -233,13 +233,13 @@ window.TB_LOCALES['zh-CN'] = {
             futureBirth: '生日不能晚于今天'
         },
         bmi: {
-            title: 'BMI',
-            desc: '根据身高与体重计算 BMI，并给出简要建议（中国成人标准）。',
+            title: '体重指数',
+            desc: '根据身高与体重计算 BMI（体重指数），并给出简要建议（中国成人标准）。',
             heightLabel: '身高 (cm)',
             weightLabel: '体重 (kg)',
             heightPlaceholder: '例如 170',
             weightPlaceholder: '例如 65',
-            calculate: '计算 BMI',
+            calculate: '计算',
             clear: '清空',
             bmiLabel: 'BMI 指数',
             statusLabel: '体重状态',
