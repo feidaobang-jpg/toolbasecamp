@@ -113,13 +113,32 @@ document.addEventListener('DOMContentLoaded', function () {
         errorBox.style.display = 'none';
     }
 
-    /** 内容变高后滚到底，避免手机上按钮仍在视口外 */
+    function getScrollParent(el) {
+        let node = el && el.parentElement;
+        while (node && node !== document.body && node !== document.documentElement) {
+            const style = window.getComputedStyle(node);
+            const oy = style.overflowY;
+            if ((oy === 'auto' || oy === 'scroll' || oy === 'overlay') &&
+                node.scrollHeight > node.clientHeight + 1) {
+                return node;
+            }
+            node = node.parentElement;
+        }
+        return document.scrollingElement || document.documentElement;
+    }
+
+    /** 滚到滚动容器真实底部（不要用可能往回滚的 scrollIntoView） */
     function scrollRevealBottom(el) {
-        if (!el) return;
         requestAnimationFrame(function () {
             setTimeout(function () {
-                el.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 50);
+                const scroller = getScrollParent(el || document.body);
+                const top = scroller.scrollHeight;
+                if (typeof scroller.scrollTo === 'function') {
+                    scroller.scrollTo({ top: top, behavior: 'smooth' });
+                } else {
+                    scroller.scrollTop = top;
+                }
+            }, 80);
         });
     }
 
@@ -638,6 +657,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } finally {
             hideProgress();
             generateBtn.disabled = false;
+            if (resultCard.style.display !== 'none') {
+                scrollRevealBottom(resultCard);
+            }
         }
     }
 
