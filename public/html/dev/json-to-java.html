@@ -17,13 +17,13 @@
                 <div class="tool-container">
                     <div class="input-section">
                         <label for="json-input" data-i18n="tools.jsonToJava.inputLabel">JSON input</label>
-                        <textarea id="json-input" rows="12" placeholder="Paste your JSON here"></textarea>
+                        <textarea id="json-input" rows="12" data-i18n-placeholder="tools.jsonToJava.inputPlaceholder" placeholder="Paste your JSON here"></textarea>
                     </div>
 
                     <div class="options-section">
                         <div class="checkbox-option">
                             <input type="checkbox" id="use-inner-classes" checked>
-                            <label for="use-inner-classes">Use inner classes</label>
+                            <label for="use-inner-classes" data-i18n="tools.jsonToJava.useInnerClasses">Use inner classes</label>
                         </div>
                     </div>
 
@@ -33,15 +33,15 @@
                     </div>
 
                     <div class="output-section">
-                        <label for="java-output">Main entity class:</label>
+                        <label for="java-output" data-i18n="tools.jsonToJava.mainClassLabel">Main entity class</label>
                         <pre id="java-output" class="code-display"></pre>
-                        <button type="button" class="tb-btn copy-btn" data-target="java-output">Copy main class</button>
+                        <button type="button" class="tb-btn copy-btn" data-target="java-output" data-i18n="tools.jsonToJava.copyMainClass">Copy main class</button>
                     </div>
 
                     <div class="output-section" id="inner-classes-section" style="display: none;">
-                        <label for="inner-classes-output">Inner classes:</label>
+                        <label for="inner-classes-output" data-i18n="tools.jsonToJava.innerClassesLabel">Inner classes</label>
                         <pre id="inner-classes-output" class="code-display"></pre>
-                        <button type="button" class="tb-btn copy-btn" data-target="inner-classes-output">Copy inner classes</button>
+                        <button type="button" class="tb-btn copy-btn" data-target="inner-classes-output" data-i18n="tools.jsonToJava.copyInnerClasses">Copy inner classes</button>
                     </div>
                 </div>
             </div>
