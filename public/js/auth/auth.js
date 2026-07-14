@@ -54,6 +54,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!msg) return tr('auth.unknownError');
     if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return tr('auth.networkError');
     if (msg.includes('Backend service unavailable')) return tr('auth.serviceUnavailable');
+
+    var map = {
+      'Invalid email or password': 'auth.invalidCredentials',
+      'Invalid email address': 'auth.invalidEmail',
+      'Password must be at least 6 characters': 'auth.passwordTooShort',
+      'Password must not exceed 72 characters': 'auth.passwordTooLong',
+      'Email already registered': 'auth.emailRegistered',
+      'This account cannot be registered': 'auth.accountBlocked',
+      'Registration failed. Please try again.': 'auth.registerFailed',
+      'Current password is incorrect': 'auth.currentPasswordWrong',
+      'New password must be at least 6 characters': 'auth.passwordTooShort',
+      'Authentication required': 'auth.authRequired',
+      'Session expired. Please log in again.': 'auth.sessionExpired',
+      'User not found': 'auth.userNotFound',
+      'Admin access required': 'auth.adminRequired'
+    };
+    if (map[msg]) return tr(map[msg]);
     return msg;
   }
 
