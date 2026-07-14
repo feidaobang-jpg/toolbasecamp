@@ -89,10 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showProgress(status, pct) {
+        const newlyShown = window.getComputedStyle(progressWrap).display === 'none';
         progressWrap.style.display = 'block';
         progressStatus.textContent = status;
         progressPct.textContent = pct + '%';
         progressBar.style.width = pct + '%';
+        if (newlyShown) {
+            scrollRevealBottom(progressWrap);
+        }
     }
 
     function hideProgress() {
