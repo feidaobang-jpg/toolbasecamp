@@ -109,6 +109,16 @@ document.addEventListener('DOMContentLoaded', function () {
         errorBox.style.display = 'none';
     }
 
+    /** 内容变高后滚到底，避免手机上按钮仍在视口外 */
+    function scrollRevealBottom(el) {
+        if (!el) return;
+        requestAnimationFrame(function () {
+            setTimeout(function () {
+                el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 50);
+        });
+    }
+
     function isValidImage(file) {
         const mime = (file.type || '').toLowerCase();
         const okMime = ['image/jpeg', 'image/png', 'image/webp'];
@@ -322,6 +332,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderPreviews();
         fileInput.value = '';
+        if (imageItems.length) {
+            scrollRevealBottom(detectBtn);
+        }
     }
 
     function removeImage(id) {
@@ -391,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         selectCard.style.display = 'block';
-        selectCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollRevealBottom(generateBtn);
     }
 
     function getSelectedIngredients() {
@@ -593,6 +606,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } finally {
             hideProgress();
             detectBtn.disabled = false;
+            if (selectCard.style.display !== 'none') {
+                scrollRevealBottom(generateBtn);
+            }
         }
     }
 
