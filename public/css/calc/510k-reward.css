@@ -177,18 +177,6 @@
   min-width: 88px;
 }
 
-.k510-btn-add {
-  background: #2563eb;
-}
-
-.k510-btn-calc {
-  background: #059669;
-}
-
-.k510-btn-clear {
-  background: #dc2626;
-}
-
 .k510-actions .tb-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
