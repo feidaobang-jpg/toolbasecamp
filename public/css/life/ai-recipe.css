@@ -274,22 +274,22 @@
 
 .recipe-ingredient-tag {
   display: inline-flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
   width: auto;
   max-width: 100%;
-  min-width: 0;
-  padding: 8px 12px;
+  padding: 7px 12px;
   border: 1.5px solid #e5e7eb;
   border-radius: 999px;
   background: #fff;
   cursor: pointer;
   font: inherit;
-  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #111827;
+  white-space: nowrap;
   box-sizing: border-box;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .recipe-ingredient-tag:hover {
@@ -297,62 +297,24 @@
   background: #f8fafc;
 }
 
-/* 未选中：灰边白底，字色弱一点 */
+/* 未选中：灰边浅底 */
 .recipe-ingredient-tag:not(.is-selected) {
   border-color: #e5e7eb;
   background: #f9fafb;
-}
-
-.recipe-ingredient-tag:not(.is-selected) .recipe-ingredient-name {
   color: #9ca3af;
   font-weight: 500;
 }
 
-.recipe-ingredient-tag:not(.is-selected) .recipe-ingredient-source {
-  background: #e5e7eb;
-  color: #9ca3af;
-}
-
-/* 选中：实心蓝底白字，区分明显 */
+/* 选中：实心蓝底白字 */
 .recipe-ingredient-tag.is-selected {
   border-color: #2563eb;
   background: #2563eb;
-  box-shadow: none;
+  color: #fff;
 }
 
 .recipe-ingredient-tag.is-selected:hover {
   border-color: #1d4ed8;
   background: #1d4ed8;
-}
-
-.recipe-ingredient-tag .recipe-ingredient-name {
-  flex: 0 1 auto;
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  line-height: 1.3;
-  white-space: nowrap;
-}
-
-.recipe-ingredient-tag.is-selected .recipe-ingredient-name {
-  color: #fff;
-}
-
-.recipe-ingredient-tag .recipe-ingredient-source {
-  flex-shrink: 0;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.2;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: #f3f4f6;
-  color: #6b7280;
-  letter-spacing: 0.02em;
-}
-
-.recipe-ingredient-tag.is-selected .recipe-ingredient-source {
-  background: rgba(255, 255, 255, 0.22);
   color: #fff;
 }
 

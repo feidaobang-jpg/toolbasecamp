@@ -224,7 +224,6 @@
         const centerEl = document.getElementById('main-content');
         const rightEl = document.getElementById('hub-sidebar-right');
         const mobileToolbar = document.getElementById('hub-mobile-toolbar');
-        const mobilePortals = document.getElementById('hub-mobile-portals');
 
         if (!centerEl) return;
 
@@ -235,14 +234,19 @@
             centerEl.innerHTML = '<div class="text-center text-gray-500 py-12">' + tr('hub.noTools') + '</div>';
             if (rightEl) rightEl.innerHTML = '';
             if (mobileToolbar) mobileToolbar.innerHTML = '';
-            if (mobilePortals) mobilePortals.innerHTML = '';
             return;
         }
 
         renderRightPortals(rightEl);
-        renderMobilePortals(mobilePortals);
         renderMobileSearch(mobileToolbar);
         renderToolGroups(centerEl, groups);
+
+        // 手机端子站入口放在工具列表最下方，不占首屏
+        const mobilePortals = document.createElement('div');
+        mobilePortals.id = 'hub-mobile-portals';
+        mobilePortals.className = 'hub-mobile-portals';
+        centerEl.appendChild(mobilePortals);
+        renderMobilePortals(mobilePortals);
 
         if (searchQuery) applySearchFilter(searchQuery);
     }

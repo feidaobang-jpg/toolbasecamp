@@ -126,14 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return okMime.includes(mime) || okExt;
     }
 
-    function sourceLabel(sources) {
-        const hasText = sources.indexOf('text') >= 0;
-        const hasImage = sources.indexOf('image') >= 0;
-        if (hasText && hasImage) return tr('tools.aiRecipe.sourceBoth');
-        if (hasImage) return tr('tools.aiRecipe.sourceImage');
-        return tr('tools.aiRecipe.sourceText');
-    }
-
     let lightboxEl = null;
     let lightboxIndex = 0;
     let lightboxKeyHandler = null;
@@ -385,17 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tag.className = 'recipe-ingredient-tag is-selected';
             tag.dataset.name = item.name;
             tag.setAttribute('aria-pressed', 'true');
-
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'recipe-ingredient-name';
-            nameSpan.textContent = item.name;
-
-            const sourceSpan = document.createElement('span');
-            sourceSpan.className = 'recipe-ingredient-source';
-            sourceSpan.textContent = sourceLabel(item.sources || []);
-
-            tag.appendChild(nameSpan);
-            tag.appendChild(sourceSpan);
+            tag.textContent = item.name;
             tag.addEventListener('click', function () {
                 const selected = tag.classList.toggle('is-selected');
                 tag.setAttribute('aria-pressed', selected ? 'true' : 'false');
@@ -542,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         resultCard.style.display = 'block';
-        resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollRevealBottom(resultCard);
     }
 
     async function doDetect() {
