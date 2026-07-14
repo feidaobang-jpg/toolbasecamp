@@ -17,34 +17,136 @@ document.addEventListener('DOMContentLoaded', function () {
 
     loginLink.href = R.loginUrl();
 
+    function parseYmd(value) {
+        if (!value) return null;
+        var parts = String(value).slice(0, 10).split('-').map(Number);
+        if (parts.length !== 3) return null;
+        var d = new Date(parts[0], parts[1] - 1, parts[2]);
+        if (
+            d.getFullYear() !== parts[0] ||
+            d.getMonth() !== parts[1] - 1 ||
+            d.getDate() !== parts[2]
+        ) {
+            return null;
+        }
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+
+    function todayStart() {
+        var d = new Date();
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+
+    function dateOnYear(base, year) {
+        var m = base.getMonth();
+        var day = base.getDate();
+        var d = new Date(year, m, day);
+        // Feb 29 on non-leap → rolls to Mar 1; pin to Feb 28
+        if (m === 1 && day === 29 && d.getMonth() !== 1) {
+            d = new Date(year, 1, 28);
+        }
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+
+    function dayDiff(a, b) {
+        return Math.round((a.getTime() - b.getTime()) / 86400000);
+    }
+
+    /** Yearly cycle from original date — independent of API daysLeft. */
+    function anniversaryCycle(dateStr) {
+        var base = parseYmd(dateStr);
+        var today = todayStart();
+        if (!base) {
+            return {
+                daysLeft: 0,
+                daysToNext: 0,
+                anniversaryYears: 0,
+                nextAnniversaryYears: 0
+            };
+        }
+
+        if (base.getTime() > today.getTime()) {
+            var until = dayDiff(base, today);
+            return {
+                daysLeft: until,
+                daysToNext: until,
+                anniversaryYears: 0,
+                nextAnniversaryYears: 0
+            };
+        }
+
+        var thisYear = dateOnYear(base, today.getFullYear());
+        var nextOcc =
+            thisYear.getTime() >= today.getTime()
+                ? thisYear
+                : dateOnYear(base, today.getFullYear() + 1);
+        var daysToNext = dayDiff(nextOcc, today);
+        var daysLeft;
+        var anniversaryYears;
+
+        if (thisYear.getTime() > today.getTime()) {
+            daysLeft = dayDiff(thisYear, today);
+            anniversaryYears = thisYear.getFullYear() - base.getFullYear();
+        } else if (thisYear.getTime() === today.getTime()) {
+            daysLeft = 0;
+            anniversaryYears = thisYear.getFullYear() - base.getFullYear();
+        } else {
+            daysLeft = -dayDiff(today, thisYear);
+            anniversaryYears = thisYear.getFullYear() - base.getFullYear();
+        }
+
+        return {
+            daysLeft: daysLeft,
+            daysToNext: daysToNext,
+            anniversaryYears: Math.max(0, anniversaryYears),
+            nextAnniversaryYears: Math.max(0, nextOcc.getFullYear() - base.getFullYear())
+        };
+    }
+
+    function withCycle(item) {
+        var cycle = anniversaryCycle(item.date);
+        return Object.assign({}, item, cycle);
+    }
+
     function daysText(n) {
         if (n === 0) return tr('tools.importantDays.today');
         if (n > 0) return tr('tools.importantDays.inDays', { n: n });
         return tr('tools.importantDays.daysAgo', { n: Math.abs(n) });
     }
 
-    function anniversaryText(item) {
-        var years = item.anniversaryYears;
-        if (years == null || years < 1) return '';
-        return tr('tools.importantDays.anniversary', { n: years });
-    }
-
     function metaText(item) {
         var parts = [item.date];
-        var ann = anniversaryText(item);
-        if (ann) parts.push(ann);
+        if (item.anniversaryYears >= 1) {
+            parts.push(tr('tools.importantDays.anniversary', { n: item.anniversaryYears }));
+        }
         return parts.join(' · ');
     }
 
     function nextHint(item) {
         if (item.daysLeft >= 0) return '';
-        var n = item.daysToNext;
-        if (n == null || n <= 0) return '';
-        var nextYears = item.nextAnniversaryYears;
-        if (nextYears != null && nextYears > 0) {
-            return tr('tools.importantDays.nextWithYears', { n: n, years: nextYears });
+        if (!(item.daysToNext > 0)) return '';
+        if (item.nextAnniversaryYears > 0) {
+            return tr('tools.importantDays.nextWithYears', {
+                n: item.daysToNext,
+                years: item.nextAnniversaryYears
+            });
         }
-        return tr('tools.importantDays.nextInDays', { n: n });
+        return tr('tools.importantDays.nextInDays', { n: item.daysToNext });
+    }
+
+    function sortItems(items) {
+        return items.slice().sort(function (a, b) {
+            var da = a.daysLeft;
+            var db = b.daysLeft;
+            if (da === 0 && db !== 0) return -1;
+            if (db === 0 && da !== 0) return 1;
+            if (da > 0 && db > 0) return da - db;
+            if (da < 0 && db < 0) return a.daysToNext - b.daysToNext;
+            return db - da;
+        });
     }
 
     function showList() {
@@ -108,20 +210,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function showDeployVer(sha) {
-        var el = document.getElementById('deploy-ver');
-        if (!el || !sha) return;
-        el.hidden = false;
-        el.textContent = tr('tools.records.deployVer', { sha: String(sha).slice(0, 7) });
-    }
-
     function load() {
         R.setError(errorBox, '');
-        R.apiJson('/health').then(function (h) {
-            if (h && h.deploy_sha) showDeployVer(h.deploy_sha);
-        }).catch(function () { /* ignore */ });
         return R.apiJson('/records/days')
-            .then(function (data) { render(data.items || []); })
+            .then(function (data) {
+                var items = sortItems((data.items || []).map(withCycle));
+                render(items);
+            })
             .catch(function (e) { R.setError(errorBox, e.message); });
     }
 

@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import tempfile
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
 import pymysql
@@ -496,12 +496,21 @@ def health():
                 deploy_sha = (fh.read() or "").strip()[:40]
     except OSError:
         deploy_sha = ""
+    # Probe whether in-memory records serializer uses annual anniversary logic
+    days_sample = None
+    try:
+        from user_records import _anniversary_cycle
+
+        days_sample = _anniversary_cycle(date(2015, 5, 20), date.today()).get("daysLeft")
+    except Exception:
+        days_sample = None
     return {
         "ok": True,
         "service": "toolbasecamp-api",
         "db": db_ok,
         "recipe_api": "/recipe/generate" in paths and "/recipe/detect" in paths,
         "records_api": "/records/days" in paths,
+        "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),
         "ts": int(time.time()),

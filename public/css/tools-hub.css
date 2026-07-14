@@ -254,6 +254,7 @@
 .hub-tool-card {
     display: inline-flex;
     align-items: center;
+    gap: 0.4rem;
     flex: 0 1 auto;
     width: auto;
     max-width: 100%;
@@ -264,6 +265,19 @@
     border-radius: 0.75rem;
     text-decoration: none;
     transition: border-color 0.15s, box-shadow 0.15s, color 0.15s;
+}
+
+.hub-tool-badge {
+    flex: 0 0 auto;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    white-space: nowrap;
 }
 
 .hub-tool-card:hover {

@@ -93,7 +93,8 @@ window.TB_LOCALES['zh-CN'] = {
         noTools: '暂无配置的工具。',
         noSearchResults: '没有匹配的工具',
         searchPlaceholder: '搜索工具…',
-        open: '打开'
+        open: '打开',
+        loginRequired: '需登录'
     },
     portals: {
         pdf: {
@@ -388,8 +389,7 @@ window.TB_LOCALES['zh-CN'] = {
             ratingRange: '评分需在 0～5 之间',
             networkError: '网络错误，请稍后重试',
             serviceUnavailable: '服务暂时不可用，请稍后重试',
-            unknownError: '操作失败，请稍后重试',
-            deployVer: '服务版本 {sha}（刷新后若看到第 N 周年即为新逻辑）'
+            unknownError: '操作失败，请稍后重试'
         },
         importantDays: {
             title: '重要日子',

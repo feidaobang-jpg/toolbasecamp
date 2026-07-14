@@ -205,7 +205,13 @@
                 card.href = item.url || '#';
                 card.className = 'hub-tool-card';
                 card.dataset.search = groupLabel + ' ' + label;
-                card.innerHTML = '<h3>' + label + '</h3>';
+                if (item.authRequired) {
+                    card.innerHTML =
+                        '<h3>' + escapeHtml(label) + '</h3>' +
+                        '<span class="hub-tool-badge">' + escapeHtml(tr('hub.loginRequired')) + '</span>';
+                } else {
+                    card.innerHTML = '<h3>' + escapeHtml(label) + '</h3>';
+                }
                 gridEl.appendChild(card);
             });
 

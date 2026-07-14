@@ -101,10 +101,10 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.cardScore.title', url: 'html/record/card-score.html' },
                 { titleKey: 'tools.k510Score.title', url: 'html/record/510k-score.html' },
-                { titleKey: 'tools.importantDays.title', url: 'html/record/important-days.html' },
-                { titleKey: 'tools.dailyClock.title', url: 'html/record/daily-clock.html' },
-                { titleKey: 'tools.deposit.title', url: 'html/record/deposit.html' },
-                { titleKey: 'tools.goods.title', url: 'html/record/goods.html' }
+                { titleKey: 'tools.importantDays.title', url: 'html/record/important-days.html', authRequired: true },
+                { titleKey: 'tools.dailyClock.title', url: 'html/record/daily-clock.html', authRequired: true },
+                { titleKey: 'tools.deposit.title', url: 'html/record/deposit.html', authRequired: true },
+                { titleKey: 'tools.goods.title', url: 'html/record/goods.html', authRequired: true }
             ]
         },
         {

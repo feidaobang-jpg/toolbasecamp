@@ -94,7 +94,8 @@ window.TB_LOCALES.en = {
         noTools: 'No tools configured.',
         noSearchResults: 'No matching tools',
         searchPlaceholder: 'Search tools…',
-        open: 'Open'
+        open: 'Open',
+        loginRequired: 'Sign-in'
     },
     portals: {
         pdf: {
@@ -389,8 +390,7 @@ window.TB_LOCALES.en = {
             ratingRange: 'Rating must be between 0 and 5',
             networkError: 'Network error. Please try again.',
             serviceUnavailable: 'Service temporarily unavailable. Please try again later.',
-            unknownError: 'Something went wrong. Please try again.',
-            deployVer: 'API build {sha} (anniversary text = new logic)'
+            unknownError: 'Something went wrong. Please try again.'
         },
         importantDays: {
             title: 'Important Days',
