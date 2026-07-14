@@ -126,12 +126,30 @@ window.TB_LOCALES.en = {
     tools: {
         groups: {
             calc: 'Calc',
+            convert: 'Convert',
             life: 'Life',
             record: 'Records',
             media: 'Media',
             document: 'Document',
             diagram: 'Diagram',
             developer: 'Developer'
+        },
+        rmbUppercase: {
+            title: 'RMB Uppercase',
+            desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',
+            amountLabel: 'Amount',
+            amountPlaceholder: 'e.g. 1234.56',
+            note: 'Note:',
+            noteBody: 'Supports 0–999,999,999,999.99 with up to two decimal places. Output follows Chinese financial uppercase rules.',
+            convert: 'Convert',
+            clear: 'Clear',
+            resultLabel: 'Uppercase amount',
+            copyResult: 'Copy result',
+            needAmount: 'Please enter an amount',
+            invalidAmount: 'Please enter a valid amount',
+            nothingToCopy: 'Nothing to copy',
+            copyDone: 'Copied',
+            copyFailed: 'Copy failed — please select and copy manually'
         },
         k510Reward: {
             title: '510K Reward',

@@ -83,6 +83,12 @@ const toolsConfig = {
             ]
         },
         {
+            titleKey: 'tools.groups.convert',
+            items: [
+                { titleKey: 'tools.rmbUppercase.title', url: 'html/convert/rmb-uppercase.html' }
+            ]
+        },
+        {
             titleKey: 'tools.groups.life',
             items: [
                 { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' }

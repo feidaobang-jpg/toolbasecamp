@@ -125,12 +125,30 @@ window.TB_LOCALES['zh-CN'] = {
     tools: {
         groups: {
             calc: '计算',
+            convert: '转换',
             life: '生活',
             record: '记录',
             media: '媒体',
             document: '文档',
             diagram: '图表',
             developer: '开发者'
+        },
+        rmbUppercase: {
+            title: '人民币大写',
+            desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',
+            amountLabel: '金额',
+            amountPlaceholder: '请输入金额，如 1234.56',
+            note: '说明：',
+            noteBody: '支持 0～999,999,999,999.99，最多两位小数。输出符合财务大写习惯。',
+            convert: '转换',
+            clear: '清除',
+            resultLabel: '大写金额',
+            copyResult: '复制结果',
+            needAmount: '请输入金额',
+            invalidAmount: '请输入有效金额',
+            nothingToCopy: '没有可复制的内容',
+            copyDone: '复制成功',
+            copyFailed: '复制失败，请手动选择复制'
         },
         k510Reward: {
             title: '510K奖励',

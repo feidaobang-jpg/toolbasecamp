@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RMB Uppercase - Tool Basecamp</title>
+  <meta name="description" content="Convert Arabic numeral amounts to Chinese uppercase RMB amounts for finance and contracts.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/convert/rmb-uppercase.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.rmbUppercase.title">RMB Uppercase</h1>
+        <p data-i18n="tools.rmbUppercase.desc">Convert a numeric amount to Chinese uppercase RMB wording.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="rmb-field">
+          <label class="field-label" for="amount-input" data-i18n="tools.rmbUppercase.amountLabel">Amount</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="amount-input"
+            class="rmb-amount-input"
+            data-i18n-placeholder="tools.rmbUppercase.amountPlaceholder"
+            placeholder="e.g. 1234.56"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="tip-box" style="margin-top:14px">
+          <b data-i18n="tools.rmbUppercase.note">Note:</b>
+          <span data-i18n="tools.rmbUppercase.noteBody">Supports 0–999,999,999,999.99. Output follows Chinese financial uppercase rules.</span>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="convert-btn" data-i18n="tools.rmbUppercase.convert">Convert</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.rmbUppercase.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="rmb-result-wrap" id="result-wrap" hidden>
+          <div class="rmb-result-label" data-i18n="tools.rmbUppercase.resultLabel">Uppercase amount</div>
+          <div class="rmb-result-text" id="result-text"></div>
+          <div class="action-row" style="margin-top:16px">
+            <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.rmbUppercase.copyResult">Copy result</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/convert/rmb-uppercase.js?v=1"></script>
+</body>
+</html>
