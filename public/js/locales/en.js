@@ -364,7 +364,7 @@ window.TB_LOCALES.en = {
             useInnerClasses: 'Use inner classes',
             mainClassLabel: 'Main entity class',
             innerClassesLabel: 'Inner classes',
-            copyMainClass: 'Copy result',
+            copyMainClass: 'Copy main class',
             copyInnerClasses: 'Copy inner classes',
             generate: 'Generate',
             clear: 'Clear',

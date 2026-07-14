@@ -363,7 +363,7 @@ window.TB_LOCALES['zh-CN'] = {
             useInnerClasses: '使用内部类',
             mainClassLabel: '主实体类',
             innerClassesLabel: '内部类',
-            copyMainClass: '复制结果',
+            copyMainClass: '复制主类',
             copyInnerClasses: '复制内部类',
             generate: '生成',
             clear: '清除',
