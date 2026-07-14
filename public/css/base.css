@@ -229,13 +229,58 @@ a.tb-btn {
     color: #2563eb;
 }
 
+/* 工具页侧栏「返回首页」按钮 */
+.logo-home-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e40af;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.logo-home-btn:hover,
+.logo-home-btn:focus {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.12);
+}
+
+.logo-home-btn:visited,
+.logo-home-btn:active {
+    color: #1e40af;
+    text-decoration: none;
+}
+
+.logo-home-btn .logo-badge {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.logo-home-label {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.logo .user-meta {
+    padding-left: 0;
+}
+
 .sidebar-footer-nav {
     padding: 12px 24px;
     border-top: 1px solid #f3f4f6;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: auto;
 }
 
 .sidebar-footer-nav a {
@@ -254,6 +299,8 @@ a.tb-btn {
     text-align: center;
     font-size: 12px;
     color: #9ca3af;
+    border-top: 1px solid #f3f4f6;
+    margin-top: auto;
 }
 
 .sidebar-footer-copy p {
@@ -261,27 +308,7 @@ a.tb-btn {
 }
 
 .tool-mobile-nav-links {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-}
-
-.tool-mobile-nav-links a {
-    font-size: 13px;
-    font-weight: 500;
-    color: #2563eb;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.tool-mobile-nav-links a:hover {
-    color: #1d4ed8;
-}
-
-.tool-mobile-nav-sep {
-    color: #9ca3af;
-    font-size: 12px;
+    display: none;
 }
 
 /* 内容区域样式 */

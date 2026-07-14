@@ -135,16 +135,13 @@ function renderMenu() {
 
     sidebar.innerHTML =
         '<div class="logo">' +
-            '<a class="logo-header logo-header-link" href="' + hubHref + '">' +
-                '<div class="logo-badge">' + logoBadge + '</div>' +
-                '<h2>' + logoLabel + '</h2>' +
+            '<a class="logo-home-btn" href="' + hubHref + '">' +
+                '<span class="logo-badge">' + logoBadge + '</span>' +
+                '<span class="logo-home-label">' + logoLabel + '</span>' +
             '</a>' +
             '<div id="sidebar-user-meta" class="user-meta"></div>' +
         '</div>' +
         '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>' +
-        '<div class="sidebar-footer-nav">' +
-            '<a href="' + hubHref + '">' + tr('sidebar.allTools') + '</a>' +
-        '</div>' +
         '<div class="sidebar-footer-copy">' +
             '<p>&copy; 2026 ' + siteName + '</p>' +
         '</div>';
@@ -156,18 +153,13 @@ function bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName) {
     const content = document.querySelector('.container .content');
     if (!content || !sidebar) return;
 
-    const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
-
     let bar = content.querySelector('.tool-mobile-bar');
     if (!bar) {
         bar = document.createElement('div');
         bar.className = 'tool-mobile-bar';
         bar.innerHTML =
             '<button type="button" class="tool-menu-toggle" aria-label="Open menu">&#9776;</button>' +
-            '<span class="tool-mobile-title"></span>' +
-            '<div class="tool-mobile-nav-links">' +
-                '<a class="tool-mobile-tools" href="#">All tools</a>' +
-            '</div>';
+            '<span class="tool-mobile-title"></span>';
         content.insertBefore(bar, content.firstChild);
     }
 
@@ -175,11 +167,9 @@ function bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName) {
     const mobileTitle = toolTitleKey ? tr(toolTitleKey) : (groupTitleKey ? tr(groupTitleKey) : siteName);
     if (titleEl) titleEl.textContent = mobileTitle;
 
-    const toolsLink = bar.querySelector('.tool-mobile-tools');
-    if (toolsLink) {
-        toolsLink.href = hubHref;
-        toolsLink.textContent = tr('sidebar.allTools');
-    }
+    // Remove legacy "全部工具" link if present from older JS
+    const legacyTools = bar.querySelector('.tool-mobile-nav-links');
+    if (legacyTools) legacyTools.remove();
 
     let overlay = document.getElementById('tool-sidebar-overlay');
     if (!overlay) {
