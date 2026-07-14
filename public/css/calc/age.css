@@ -36,26 +36,19 @@
   border-radius: 12px;
 }
 
-.age-result-main {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1e40af;
-  line-height: 1.2;
-}
-
-.age-result-sub {
-  margin-top: 10px;
-  font-size: 18px;
+.age-result-main,
+.age-result-sub,
+.age-result-detail {
+  margin: 0;
+  font-size: 16px;
   font-weight: 600;
   color: #1e3a8a;
-  line-height: 1.4;
+  line-height: 1.55;
 }
 
+.age-result-sub,
 .age-result-detail {
-  margin-top: 12px;
-  font-size: 13px;
-  color: #475569;
-  line-height: 1.5;
+  margin-top: 8px;
 }
 
 @media (max-width: 768px) {

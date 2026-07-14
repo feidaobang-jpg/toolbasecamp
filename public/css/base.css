@@ -45,12 +45,12 @@ a.tb-btn {
 }
 
 .tb-btn:hover {
-    background: #1d4ed8;
+    background: #2563eb;
     color: #fff;
 }
 
 .tb-btn:active {
-    background: #1e40af;
+    background: #2563eb;
     color: #fff;
 }
 
