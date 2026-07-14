@@ -488,12 +488,21 @@ def health():
         except Exception:
             db_ok = False
     paths = {getattr(r, "path", "") for r in app.routes}
+    deploy_sha = ""
+    try:
+        sha_path = os.path.join(os.path.dirname(__file__), "DEPLOY_SHA")
+        if os.path.isfile(sha_path):
+            with open(sha_path, encoding="utf-8") as fh:
+                deploy_sha = (fh.read() or "").strip()[:40]
+    except OSError:
+        deploy_sha = ""
     return {
         "ok": True,
         "service": "toolbasecamp-api",
         "db": db_ok,
         "recipe_api": "/recipe/generate" in paths and "/recipe/detect" in paths,
         "records_api": "/records/days" in paths,
+        "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),
         "ts": int(time.time()),
     }

@@ -14,6 +14,7 @@ venv/
 *.log
 server.log
 server.log.bak
+server/DEPLOY_SHA
 
 # OS / editor
 .DS_Store

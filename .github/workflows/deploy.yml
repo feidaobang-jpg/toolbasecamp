@@ -98,10 +98,14 @@ jobs:
       - name: Rsync API server
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |
+          git rev-parse HEAD > server/DEPLOY_SHA
           rsync -avz --delete --exclude venv \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             server/ \
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" \
+            'test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
 
       - name: Rsync deploy scripts
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
@@ -242,34 +246,45 @@ jobs:
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
           fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
+          echo "=== force restart API for records routes ==="
           systemctl stop toolbasecamp-api 2>/dev/null || true
           fuser -k 8001/tcp 2>/dev/null || true
-          sleep 1
+          pkill -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
+          sleep 2
+          rm -rf /opt/toolbasecamp-api/__pycache__
           systemctl start toolbasecamp-api
-          for i in 1 2 3 4 5; do
+          HEALTH_OK=0
+          for i in 1 2 3 4 5 6 7 8; do
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
-            if echo "$HEALTH_JSON" | grep -q '"recipe_api":true' \
-              && echo "$HEALTH_JSON" | grep -q '"records_api":true'; then
+            echo "health try $i: $HEALTH_JSON"
+            if echo "$HEALTH_JSON" | grep -F '"recipe_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null; then
               echo "health OK with recipe_api and records_api"
+              HEALTH_OK=1
               break
             fi
-            if [[ -n "$HEALTH_JSON" ]]; then
-              echo "$HEALTH_JSON"
-              echo "WARNING: health OK but recipe_api/records_api missing — stale API process?"
-            fi
             sleep 2
-            if [[ "$i" -eq 5 ]]; then
-              echo "=== toolbasecamp-api status ==="
-              systemctl status toolbasecamp-api --no-pager || true
-              journalctl -u toolbasecamp-api -n 40 --no-pager || true
-              bash /opt/toolbasecamp-deploy/fix-records-api.sh || true
-              exit 1
-            fi
           done
-          curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/records/days' || {
-            echo "=== openapi missing /records/days — forcing records fix ==="
+          if [[ "$HEALTH_OK" != "1" ]]; then
+            echo "=== toolbasecamp-api status ==="
+            systemctl status toolbasecamp-api --no-pager || true
+            journalctl -u toolbasecamp-api -n 80 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
+            HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
+            echo "health after fix: $HEALTH_JSON"
+            echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
+          fi
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
+            echo "=== openapi missing /records/days ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            exit 1
           }
+          DAYS_CODE="$(curl -s -o /tmp/records-days-local.txt -w '%{http_code}' http://127.0.0.1:8001/records/days || echo 000)"
+          echo "local GET /records/days -> $DAYS_CODE"
+          if [[ "$DAYS_CODE" == "404" ]]; then
+            echo "=== local /records/days still 404 ==="
+            exit 1
+          fi
           RECIPE_HTTP="$(curl -s -o /tmp/recipe-local.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -H 'Content-Type: application/json' -d '{"ingredients":["tomato"],"locale":"en"}' || echo '000')"
           echo "local recipe/generate POST $RECIPE_HTTP"
           head -c 200 /tmp/recipe-local.txt || true
@@ -362,6 +377,41 @@ jobs:
             echo "::warning:: recipe API returned $HTTP_CODE (expected 400/422 without body, or 503 if Qwen key missing)."
           fi
           echo "Recipe API route OK."
+
+      - name: Verify records API route (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          sleep 3
+          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          echo "public health: $HEALTH"
+          DAYS_CODE="$(curl -sS -o /tmp/records-days-public.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/records/days?cb=$RANDOM" || echo '000')"
+          echo "public GET /api/records/days -> $DAYS_CODE"
+          head -c 200 /tmp/records-days-public.txt || true
+          echo ""
+          if echo "$HEALTH" | grep -F '"records_api":true' >/dev/null \
+            && [[ "$DAYS_CODE" != "404" && "$DAYS_CODE" != "000" ]]; then
+            echo "Records API public OK."
+            exit 0
+          fi
+          echo "::warning:: public records API missing — forcing remote fix-records-api.sh"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-records-api.sh'
+          sleep 3
+          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          echo "public health after fix: $HEALTH"
+          DAYS_CODE="$(curl -sS -o /tmp/records-days-public2.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/records/days?cb=$RANDOM" || echo '000')"
+          echo "public GET /api/records/days after fix -> $DAYS_CODE"
+          if ! echo "$HEALTH" | grep -F '"records_api":true' >/dev/null; then
+            echo "::error:: public health still missing records_api after fix"
+            exit 1
+          fi
+          if [[ "$DAYS_CODE" == "404" || "$DAYS_CODE" == "000" ]]; then
+            echo "::error:: public /api/records/days still $DAYS_CODE after fix"
+            exit 1
+          fi
+          echo "Records API public OK after fix."
 
       - name: Verify dev portal (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'

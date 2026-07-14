@@ -30,9 +30,11 @@ assert '/records/days' in paths, 'missing /records/days: ' + str(paths)
 echo "=== Restart API (kill stale port 8001) ==="
 systemctl stop toolbasecamp-api 2>/dev/null || true
 fuser -k 8001/tcp 2>/dev/null || true
-sleep 1
-systemctl start toolbasecamp-api
+pkill -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
 sleep 2
+rm -rf "$APP_DIR/__pycache__"
+systemctl start toolbasecamp-api
+sleep 3
 systemctl status toolbasecamp-api --no-pager || true
 
 echo "=== Health ==="
