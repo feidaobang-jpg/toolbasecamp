@@ -128,10 +128,6 @@
   flex: 1;
 }
 
-.k510-btn-cancel {
-  background: #6b7280;
-}
-
 .k510-history .k510-section-title {
   margin-bottom: 12px;
 }
@@ -336,10 +332,6 @@
 
 .k510-round-actions .tb-btn {
   flex: 1;
-}
-
-.k510-btn-settle {
-  background: #dc2626;
 }
 
 .k510-round-history {
