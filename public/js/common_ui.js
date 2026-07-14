@@ -192,26 +192,26 @@
     }
 
     function injectFavicon() {
-        if (!document.querySelector("link[rel*='icon']")) {
-            const link = document.createElement('link');
-            link.type = 'image/x-icon';
-            link.rel = 'shortcut icon';
-            const canvas = document.createElement('canvas');
-            canvas.width = 64;
-            canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#2563eb';
-            ctx.beginPath();
-            ctx.roundRect(0, 0, 64, 64, 16);
-            ctx.fill();
-            const text = (typeof siteConfig !== 'undefined' && siteConfig.logoText) ? siteConfig.logoText : 'TB';
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 24px Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(text, 32, 34);
-            link.href = canvas.toDataURL('image/x-icon');
-            document.head.appendChild(link);
+        if (document.querySelector("link[rel='icon'], link[rel='shortcut icon']")) return;
+
+        const svg = document.createElement('link');
+        svg.rel = 'icon';
+        svg.type = 'image/svg+xml';
+        svg.href = '/favicon.svg';
+        document.head.appendChild(svg);
+
+        const ico = document.createElement('link');
+        ico.rel = 'icon';
+        ico.type = 'image/x-icon';
+        ico.sizes = 'any';
+        ico.href = '/favicon.ico';
+        document.head.appendChild(ico);
+
+        if (!document.querySelector("link[rel='apple-touch-icon']")) {
+            const apple = document.createElement('link');
+            apple.rel = 'apple-touch-icon';
+            apple.href = '/apple-touch-icon.png';
+            document.head.appendChild(apple);
         }
     }
 

@@ -1,4 +1,29 @@
+function injectToolFavicon() {
+    if (document.querySelector("link[rel='icon'], link[rel='shortcut icon']")) return;
+
+    const svg = document.createElement('link');
+    svg.rel = 'icon';
+    svg.type = 'image/svg+xml';
+    svg.href = '/favicon.svg';
+    document.head.appendChild(svg);
+
+    const ico = document.createElement('link');
+    ico.rel = 'icon';
+    ico.type = 'image/x-icon';
+    ico.sizes = 'any';
+    ico.href = '/favicon.ico';
+    document.head.appendChild(ico);
+
+    if (!document.querySelector("link[rel='apple-touch-icon']")) {
+        const apple = document.createElement('link');
+        apple.rel = 'apple-touch-icon';
+        apple.href = '/apple-touch-icon.png';
+        document.head.appendChild(apple);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+    injectToolFavicon();
     renderSiteTitle();
     renderMenu();
     initMenuEvents();
