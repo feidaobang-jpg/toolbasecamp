@@ -9,8 +9,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/base.css?v=5">
     <link rel="stylesheet" href="../../css/site-mobile-nav.css">
-    <script src="../../js/locales/en.js"></script>
-    <script src="../../js/locales/zh-CN.js"></script>
+    <script src="../../js/locales/en.js?v=auth3"></script>
+    <script src="../../js/locales/zh-CN.js?v=auth3"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
     <script src="../../js/common_ui.js"></script>
@@ -96,6 +96,29 @@
         document.addEventListener('DOMContentLoaded', async () => {
             function tr(key, params) {
                 return typeof t === 'function' ? t(key, params) : key;
+            }
+
+            function translateAuthError(msg) {
+                if (!msg) return tr('auth.unknownError');
+                var map = {
+                    'Invalid email or password': 'auth.invalidCredentials',
+                    'Invalid email address': 'auth.invalidEmail',
+                    'Password must be at least 6 characters': 'auth.passwordTooShort',
+                    'Password must not exceed 72 characters': 'auth.passwordTooLong',
+                    'Email already registered': 'auth.emailRegistered',
+                    'This account cannot be registered': 'auth.accountBlocked',
+                    'Registration failed. Please try again.': 'auth.registerFailed',
+                    'Current password is incorrect': 'auth.currentPasswordWrong',
+                    'New password must be at least 6 characters': 'auth.passwordTooShort',
+                    'Authentication required': 'auth.authRequired',
+                    'Session expired. Please log in again.': 'auth.sessionExpired',
+                    'User not found': 'auth.userNotFound',
+                    'Admin access required': 'auth.adminRequired',
+                    'Update failed': 'auth.updateFailed'
+                };
+                if (map[msg]) return tr(map[msg]);
+                if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return tr('auth.networkError');
+                return msg;
             }
 
             const token = localStorage.getItem('auth_token');
@@ -185,7 +208,7 @@
                     localStorage.removeItem('auth_token');
                     window.location.href = 'login.html';
                 } catch (e) {
-                    msgEl.textContent = e.message;
+                    msgEl.textContent = translateAuthError(e.message);
                     msgEl.classList.remove('hidden');
                 } finally {
                     btn.disabled = false;
