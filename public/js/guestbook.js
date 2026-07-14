@@ -110,7 +110,7 @@
         item.innerHTML =
             '<div class="gb-item-header">' +
                 '<div class="gb-item-name">' +
-                    escapeHtml(msg.sender_name) +
+                    '<span class="gb-name-text">' + escapeHtml(msg.sender_name) + '</span>' +
                     '<span class="gb-badge' + badgeClass + '">' + badgeText + '</span>' +
                 '</div>' +
                 '<div class="gb-item-actions">' +
