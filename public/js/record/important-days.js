@@ -108,8 +108,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function showDeployVer(sha) {
+        var el = document.getElementById('deploy-ver');
+        if (!el || !sha) return;
+        el.hidden = false;
+        el.textContent = tr('tools.records.deployVer', { sha: String(sha).slice(0, 7) });
+    }
+
     function load() {
         R.setError(errorBox, '');
+        R.apiJson('/health').then(function (h) {
+            if (h && h.deploy_sha) showDeployVer(h.deploy_sha);
+        }).catch(function () { /* ignore */ });
         return R.apiJson('/records/days')
             .then(function (data) { render(data.items || []); })
             .catch(function (e) { R.setError(errorBox, e.message); });
