@@ -265,8 +265,8 @@
 }
 
 .recipe-ingredient-tags {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
   gap: 8px;
   margin: 0 0 16px;
   padding: 0;
@@ -276,62 +276,85 @@
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px 7px 14px;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
   border: 1.5px solid #e5e7eb;
-  border-radius: 999px;
+  border-radius: 12px;
   background: #fff;
   cursor: pointer;
   font: inherit;
   text-align: left;
-  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .recipe-ingredient-tag:hover {
-  border-color: #93c5fd;
+  border-color: #cbd5e1;
   background: #f8fafc;
 }
 
-.recipe-ingredient-tag.is-selected {
-  border-color: #3b82f6;
-  background: #eff6ff;
-  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08);
-}
-
+/* 未选中：灰边白底，字色弱一点 */
 .recipe-ingredient-tag:not(.is-selected) {
-  opacity: 0.5;
-  background: #fafafa;
+  border-color: #e5e7eb;
+  background: #f9fafb;
 }
 
-.recipe-ingredient-tag:not(.is-selected):hover {
-  opacity: 0.85;
+.recipe-ingredient-tag:not(.is-selected) .recipe-ingredient-name {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.recipe-ingredient-tag:not(.is-selected) .recipe-ingredient-source {
+  background: #e5e7eb;
+  color: #9ca3af;
+}
+
+/* 选中：实心蓝底白字，区分明显 */
+.recipe-ingredient-tag.is-selected {
+  border-color: #2563eb;
+  background: #2563eb;
+  box-shadow: none;
+}
+
+.recipe-ingredient-tag.is-selected:hover {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
 }
 
 .recipe-ingredient-tag .recipe-ingredient-name {
+  flex: 1;
+  min-width: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #111827;
   line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .recipe-ingredient-tag.is-selected .recipe-ingredient-name {
-  color: #111827;
+  color: #fff;
 }
 
 .recipe-ingredient-tag .recipe-ingredient-source {
+  flex-shrink: 0;
   font-size: 10px;
   font-weight: 500;
   line-height: 1.2;
   padding: 2px 6px;
   border-radius: 999px;
   background: #f3f4f6;
-  color: #9ca3af;
+  color: #6b7280;
   letter-spacing: 0.02em;
 }
 
 .recipe-ingredient-tag.is-selected .recipe-ingredient-source {
-  background: #e5e7eb;
-  color: #6b7280;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
 }
 
 .recipe-result-card {

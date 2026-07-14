@@ -410,7 +410,14 @@
     overflow-x: auto;
     padding: 0.5rem 1rem 0.75rem;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.hub-mobile-portals-row::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .hub-mobile-portal-chip {
