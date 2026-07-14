@@ -6,7 +6,7 @@
   <title>Word to PDF - Tool Basecamp</title>
   <meta name="description" content="Convert Word DOC or DOCX files to PDF online.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=6" />
 </head>
 <body>
   <div class="container">
@@ -29,11 +29,12 @@
           <span class="file-icon">📝</span>
           <span class="file-name" id="file-name">-</span>
           <span class="file-size" id="file-size">-</span>
-          <button class="remove-btn" id="remove-btn" title="Remove">✕</button>
+          <button class="remove-btn" id="remove-btn" data-i18n-title="tools.wordToPdf.remove" title="Remove">✕</button>
         </div>
 
         <div class="tip-box" style="margin-top:14px">
-          <b>Note:</b> Conversion uses LibreOffice. Documents with special fonts or macros may differ slightly.
+          <b data-i18n="tools.wordToPdf.note">Note:</b>
+          <span data-i18n="tools.wordToPdf.noteBody">Conversion uses LibreOffice. Documents with special fonts or macros may differ slightly.</span>
         </div>
 
         <div class="action-row">
@@ -43,7 +44,7 @@
 
         <div class="progress-wrap" id="progress-wrap">
           <div class="progress-label">
-            <span id="progress-status">Converting...</span>
+            <span id="progress-status" data-i18n="tools.wordToPdf.converting">Converting...</span>
             <span id="progress-percent">0%</span>
           </div>
           <div class="progress-bar-bg">
@@ -53,7 +54,7 @@
 
         <div class="error-box" id="error-box">
           <span>⚠️</span>
-          <span id="error-msg">Conversion failed</span>
+          <span id="error-msg" data-i18n="tools.wordToPdf.conversionFailed">Conversion failed</span>
         </div>
 
         <div class="result-wrap" id="result-wrap">
@@ -61,7 +62,7 @@
             <span class="result-icon">📕</span>
             <div class="result-info">
               <div class="result-name" id="result-name">-</div>
-              <div class="result-size" id="result-size">Done</div>
+              <div class="result-size" id="result-size" data-i18n="tools.wordToPdf.done">Done</div>
             </div>
             <a class="tb-btn" id="download-btn" href="#" download data-i18n="tools.wordToPdf.downloadPdf">Download PDF</a>
           </div>

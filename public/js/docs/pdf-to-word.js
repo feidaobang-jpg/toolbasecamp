@@ -21,6 +21,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const API_BASE = (typeof siteConfig !== 'undefined' && siteConfig.apiBase) ? siteConfig.apiBase : 'http://127.0.0.1:8001';
     let currentFile = null;
 
+    function tr(key, params) {
+        return typeof t === 'function' ? t(key, params) : key;
+    }
+
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
     dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
@@ -37,11 +41,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setFile(f) {
         if (!f.name.toLowerCase().endsWith('.pdf')) {
-            showError('Please select a PDF file (.pdf)');
+            showError(tr('tools.pdfToWord.invalidFile'));
             return;
         }
         if (f.size > 50 * 1024 * 1024) {
-            showError('File size must not exceed 50 MB');
+            showError(tr('tools.pdfToWord.fileTooLarge'));
             return;
         }
         currentFile = f;
@@ -69,33 +73,33 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!currentFile) return;
         hideError();
         hideResult();
-        showProgress('Uploading...', 10);
+        showProgress(tr('tools.pdfToWord.uploading'), 10);
         convertBtn.disabled = true;
 
         try {
             const form = new FormData();
             form.append('file', currentFile);
-            showProgress('Converting...', 40);
+            showProgress(tr('tools.pdfToWord.converting'), 40);
 
             const res = await fetch(`${API_BASE}/pdf-to-word`, { method: 'POST', body: form });
-            showProgress('Processing...', 80);
+            showProgress(tr('tools.pdfToWord.processing'), 80);
 
             if (typeof check502Error !== 'undefined' && check502Error(res)) {
-                throw new Error('Service unavailable');
+                throw new Error(tr('tools.pdfToWord.serviceUnavailable'));
             }
             if (!res.ok) {
                 const err = await res.json().catch(() => ({}));
-                throw new Error(err.detail || `Server error ${res.status}`);
+                throw new Error(err.detail || tr('tools.pdfToWord.serverError', { status: res.status }));
             }
 
             const blob = await res.blob();
             const outName = currentFile.name.replace(/\.pdf$/i, '') + '.docx';
             const url = URL.createObjectURL(blob);
-            showProgress('Done', 100);
+            showProgress(tr('tools.pdfToWord.done'), 100);
             showResult(outName, blob.size, url, outName, blob);
         } catch (e) {
             hideProgress();
-            showError(e.message || 'Conversion failed. Please try again.');
+            showError(e.message || tr('tools.pdfToWord.conversionFailed'));
         } finally {
             convertBtn.disabled = false;
         }
@@ -114,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function showResult(name, size, url, dlName, blob) {
         resultWrap.style.display = 'block';
         resultName.textContent = name;
-        resultSize.textContent = `Size: ${formatSize(size)}`;
+        resultSize.textContent = tr('tools.pdfToWord.sizeLabel', { size: formatSize(size) });
         downloadBtn.href = url;
         downloadBtn.download = dlName;
         downloadBtn.onclick = async (e) => {

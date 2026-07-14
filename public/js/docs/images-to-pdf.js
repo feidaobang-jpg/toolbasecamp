@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let images = [];
     let dragSrcIdx = null;
 
+    function tr(key, params) {
+        return typeof t === 'function' ? t(key, params) : key;
+    }
+
     renderList();
 
     document.addEventListener('dragover', e => e.preventDefault());
@@ -144,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const jsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
         if (!jsPDF) {
-            showError('jsPDF failed to load. Please refresh the page.');
+            showError(tr('tools.imagesToPdf.jsPdfFailed'));
             return;
         }
 
@@ -153,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         hideError();
         hideResult();
-        showProgress('Generating PDF...', 5);
+        showProgress(tr('tools.imagesToPdf.generating'), 5);
         convertBtn.disabled = true;
 
         await tick();
@@ -164,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
             for (let i = 0; i < images.length; i++) {
                 const imgData = images[i];
                 const pct = Math.round(((i + 1) / images.length) * 90) + 5;
-                showProgress(`Processing ${i + 1} / ${images.length}...`, pct);
+                showProgress(tr('tools.imagesToPdf.processing', { current: i + 1, total: images.length }), pct);
                 await tick();
 
                 let orient;
@@ -194,18 +198,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 pdf.addImage(imgData.dataUrl, fmt, x, y, drawW, drawH);
             }
 
-            showProgress('Packaging...', 98);
+            showProgress(tr('tools.imagesToPdf.packaging'), 98);
             await tick();
 
             const pdfBlob = pdf.output('blob');
             const url = URL.createObjectURL(pdfBlob);
             const outName = 'images_' + Date.now() + '.pdf';
 
-            showProgress('Done', 100);
+            showProgress(tr('tools.imagesToPdf.done'), 100);
             showResult(outName, pdfBlob.size, url, outName, pdfBlob);
         } catch (e) {
             hideProgress();
-            showError('Generation failed: ' + (e.message || e));
+            showError(tr('tools.imagesToPdf.conversionFailed') + (e.message ? ' ' + e.message : ''));
         } finally {
             convertBtn.disabled = false;
         }
@@ -234,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function showResult(name, size, url, dlName, blob) {
         resultWrap.style.display = 'block';
         resultName.textContent = name;
-        resultSize.textContent = `Size: ${formatSize(size)}`;
+        resultSize.textContent = tr('tools.imagesToPdf.sizeLabel', { size: formatSize(size) });
         downloadBtn.href = url;
         downloadBtn.download = dlName;
         downloadBtn.onclick = async (e) => {
