@@ -21,28 +21,31 @@
         <div class="img-list" id="img-list">
           <div class="img-add-btn" id="img-add-btn">
             <span>＋</span>
-            <span>Add images</span>
+            <span data-i18n="tools.imagesToPdf.addImages">Add images</span>
           </div>
         </div>
         <input type="file" id="file-input" accept="image/*" multiple style="display:none" />
 
         <div class="tip-box">
-          <b>Tip:</b> Supports JPG, PNG, WebP. Image order becomes page order. Drag thumbnails to reorder. All processing happens locally.
+          <b data-i18n="tools.imagesToPdf.tip">Tip:</b>
+          <span data-i18n="tools.imagesToPdf.tipBody">Supports JPG, PNG, WebP. Image order becomes page order. Drag thumbnails to reorder. All processing happens locally.</span>
         </div>
 
         <div class="options-row">
-          <label>Orientation:
+          <label>
+            <span data-i18n="tools.imagesToPdf.orientation">Orientation</span>
             <select id="orientation-select">
-              <option value="auto">Auto (follow image)</option>
-              <option value="portrait">Portrait</option>
-              <option value="landscape">Landscape</option>
+              <option value="auto" data-i18n="tools.imagesToPdf.orientAuto">Auto (follow image)</option>
+              <option value="portrait" data-i18n="tools.imagesToPdf.orientPortrait">Portrait</option>
+              <option value="landscape" data-i18n="tools.imagesToPdf.orientLandscape">Landscape</option>
             </select>
           </label>
-          <label>Margin:
+          <label>
+            <span data-i18n="tools.imagesToPdf.margin">Margin</span>
             <select id="margin-select">
-              <option value="0">None</option>
-              <option value="10" selected>Small</option>
-              <option value="20">Medium</option>
+              <option value="0" data-i18n="tools.imagesToPdf.marginNone">None</option>
+              <option value="10" selected data-i18n="tools.imagesToPdf.marginSmall">Small</option>
+              <option value="20" data-i18n="tools.imagesToPdf.marginMedium">Medium</option>
             </select>
           </label>
         </div>
@@ -54,7 +57,7 @@
 
         <div class="progress-wrap" id="progress-wrap">
           <div class="progress-label">
-            <span id="progress-status">Processing...</span>
+            <span id="progress-status" data-i18n="tools.imagesToPdf.generating">Generating PDF...</span>
             <span id="progress-percent">0%</span>
           </div>
           <div class="progress-bar-bg">
@@ -64,7 +67,7 @@
 
         <div class="error-box" id="error-box">
           <span>⚠️</span>
-          <span id="error-msg">Generation failed</span>
+          <span id="error-msg" data-i18n="tools.imagesToPdf.conversionFailed">Generation failed</span>
         </div>
 
         <div class="result-wrap" id="result-wrap">
@@ -72,9 +75,9 @@
             <span class="result-icon">📕</span>
             <div class="result-info">
               <div class="result-name" id="result-name">output.pdf</div>
-              <div class="result-size" id="result-size">Done</div>
+              <div class="result-size" id="result-size" data-i18n="tools.imagesToPdf.done">Done</div>
             </div>
-            <a class="tb-btn" id="download-btn" href="#" download="output.pdf" data-i18n="tools.imagesToPdf.download">Download PDF</a>
+            <a class="tb-btn" id="download-btn" href="#" download="output.pdf" data-i18n="tools.imagesToPdf.downloadPdf">Download PDF</a>
           </div>
         </div>
       </div>

@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderList();
 
+    document.addEventListener('tb:locale', function () {
+        renderList();
+    });
+
     document.addEventListener('dragover', e => e.preventDefault());
     document.addEventListener('drop', e => {
         e.preventDefault();
@@ -83,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const rmBtn = document.createElement('button');
             rmBtn.className = 'img-remove';
             rmBtn.textContent = '✕';
-            rmBtn.title = 'Remove';
+            rmBtn.title = tr('tools.imagesToPdf.remove');
             rmBtn.addEventListener('click', e => {
                 e.stopPropagation();
                 images.splice(idx, 1);
@@ -102,7 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const addBtn = document.createElement('div');
         addBtn.className = 'img-add-btn';
-        addBtn.innerHTML = '<span>＋</span><span>Add images</span>';
+        addBtn.innerHTML = '<span>＋</span><span></span>';
+        addBtn.querySelector('span:last-child').textContent = tr('tools.imagesToPdf.addImages');
         addBtn.addEventListener('click', () => fileInput.click());
         imgList.appendChild(addBtn);
     }
