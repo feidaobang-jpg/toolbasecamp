@@ -24,6 +24,7 @@ from recipe_ai import (
     generate_recipe_from_selection,
     get_recipe_config,
 )
+from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -70,7 +71,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 class RegisterBody(BaseModel):
     email: str
@@ -148,6 +148,7 @@ def ensure_tables():
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """
             )
+            ensure_record_tables(cur)
     finally:
         conn.close()
 
@@ -235,6 +236,10 @@ def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
         raise HTTPException(status_code=401, detail="User not found")
 
     return user
+
+
+wire_records(get_conn, require_db, get_current_user)
+app.include_router(records_router)
 
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:

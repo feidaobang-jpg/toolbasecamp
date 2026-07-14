@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goods List - Tool Basecamp</title>
+  <meta name="description" content="Catalog belongings with categories, price and rating. Requires sign-in.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/record/records-common.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.goods.title">Goods List</h1>
+        <p data-i18n="tools.goods.desc">Organize items by category with price and rating. Requires sign-in.</p>
+      </div>
+
+      <div class="tool-card rec-gate" id="login-gate" hidden>
+        <p data-i18n="tools.records.loginRequired">Please sign in to use this tool. Your data is saved to your account.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card" id="list-view">
+          <p class="rec-note" data-i18n="tools.records.cloudNote">Data is stored on the server for your signed-in account only.</p>
+          <div class="rec-toolbar">
+            <button type="button" class="tb-btn" id="add-btn" data-i18n="tools.goods.add">Add item</button>
+            <button type="button" class="tb-btn" id="cat-btn" data-i18n="tools.goods.manageCategories">Categories</button>
+            <button type="button" class="tb-btn" id="refresh-btn" data-i18n="tools.records.refresh">Refresh</button>
+          </div>
+          <div class="rec-filters">
+            <input type="search" id="search-input" class="rec-input" data-i18n-placeholder="tools.goods.searchPlaceholder" placeholder="Search" />
+            <select id="parent-filter" class="rec-select"></select>
+            <select id="child-filter" class="rec-select"></select>
+            <select id="sort-select" class="rec-select">
+              <option value="rating:desc" data-i18n="tools.goods.sortRatingDesc">Rating ↓</option>
+              <option value="rating:asc" data-i18n="tools.goods.sortRatingAsc">Rating ↑</option>
+              <option value="price:desc" data-i18n="tools.goods.sortPriceDesc">Price ↓</option>
+              <option value="price:asc" data-i18n="tools.goods.sortPriceAsc">Price ↑</option>
+              <option value="name:asc" data-i18n="tools.goods.sortNameAsc">Name A–Z</option>
+              <option value="updated_at:desc" data-i18n="tools.goods.sortUpdated">Recently updated</option>
+            </select>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+          <div class="rec-list" id="list"></div>
+          <p class="rec-empty" id="empty" hidden data-i18n="tools.goods.empty">No items yet. Add a category first, then an item.</p>
+          <div class="action-row" id="more-wrap" hidden>
+            <button type="button" class="tb-btn" id="more-btn" data-i18n="tools.records.loadMore">Load more</button>
+          </div>
+        </div>
+
+        <div class="tool-card" id="form-view" hidden>
+          <h2 class="rec-section-title" id="form-title" data-i18n="tools.goods.add">Add item</h2>
+          <div class="rec-field">
+            <label class="field-label" for="g-name" data-i18n="tools.goods.nameLabel">Name</label>
+            <input type="text" id="g-name" class="rec-input" maxlength="80" autocomplete="off" />
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="g-parent" data-i18n="tools.goods.parentCategory">Parent category</label>
+            <select id="g-parent" class="rec-select"></select>
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="g-child" data-i18n="tools.goods.childCategory">Subcategory</label>
+            <select id="g-child" class="rec-select"></select>
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="g-price" data-i18n="tools.goods.priceLabel">Price</label>
+            <input type="text" inputmode="decimal" id="g-price" class="rec-input" autocomplete="off" />
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="g-rating" data-i18n="tools.goods.ratingLabel">Rating (0–5)</label>
+            <input type="text" inputmode="decimal" id="g-rating" class="rec-input" autocomplete="off" />
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="g-remark" data-i18n="tools.goods.remarkLabel">Remark</label>
+            <textarea id="g-remark" class="rec-textarea" maxlength="500"></textarea>
+          </div>
+          <div class="error-box" id="form-error" role="alert"></div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="save-btn" data-i18n="tools.records.save">Save</button>
+            <button type="button" class="tb-btn" id="cancel-btn" data-i18n="tools.records.cancel">Cancel</button>
+          </div>
+        </div>
+
+        <div class="tool-card" id="cat-view" hidden>
+          <div class="rec-toolbar">
+            <button type="button" class="tb-btn" id="cat-back-btn" data-i18n="tools.records.back">Back</button>
+          </div>
+          <h2 class="rec-section-title" data-i18n="tools.goods.manageCategories">Categories</h2>
+          <div class="rec-field">
+            <label class="field-label" for="cat-name" data-i18n="tools.goods.categoryName">Category name</label>
+            <input type="text" id="cat-name" class="rec-input" maxlength="40" autocomplete="off" />
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="cat-parent" data-i18n="tools.goods.parentOptional">Parent (optional)</label>
+            <select id="cat-parent" class="rec-select"></select>
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="cat-save-btn" data-i18n="tools.goods.addCategory">Add category</button>
+          </div>
+          <div class="error-box" id="cat-error" role="alert"></div>
+          <div class="rec-list" id="cat-list" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/record/records-client.js?v=1"></script>
+  <script src="../../js/record/goods.js?v=1"></script>
+</body>
+</html>

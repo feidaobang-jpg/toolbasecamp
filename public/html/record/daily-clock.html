@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Clock - Tool Basecamp</title>
+  <meta name="description" content="Habit check-in tracker. Data synced to your account.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/record/records-common.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.dailyClock.title">Daily Clock</h1>
+        <p data-i18n="tools.dailyClock.desc">Track habit check-ins toward a target count. Requires sign-in.</p>
+      </div>
+
+      <div class="tool-card rec-gate" id="login-gate" hidden>
+        <p data-i18n="tools.records.loginRequired">Please sign in to use this tool. Your data is saved to your account.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card" id="list-view">
+          <p class="rec-note" data-i18n="tools.records.cloudNote">Data is stored on the server for your signed-in account only.</p>
+          <div class="rec-toolbar">
+            <button type="button" class="tb-btn" id="add-btn" data-i18n="tools.dailyClock.add">Add goal</button>
+            <button type="button" class="tb-btn" id="reset-btn" data-i18n="tools.dailyClock.resetAll">Reset counts</button>
+            <button type="button" class="tb-btn" id="refresh-btn" data-i18n="tools.records.refresh">Refresh</button>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+          <div class="rec-list" id="list"></div>
+          <p class="rec-empty" id="empty" hidden data-i18n="tools.dailyClock.empty">No check-in goals yet.</p>
+        </div>
+
+        <div class="tool-card" id="form-view" hidden>
+          <h2 class="rec-section-title" id="form-title" data-i18n="tools.dailyClock.add">Add goal</h2>
+          <div class="rec-field">
+            <label class="field-label" for="name-input" data-i18n="tools.dailyClock.nameLabel">Name</label>
+            <input type="text" id="name-input" class="rec-input" maxlength="80" autocomplete="off" />
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="target-input" data-i18n="tools.dailyClock.targetLabel">Target count</label>
+            <input type="number" id="target-input" class="rec-input" min="1" step="1" inputmode="numeric" />
+          </div>
+          <div class="error-box" id="form-error" role="alert"></div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="save-btn" data-i18n="tools.records.save">Save</button>
+            <button type="button" class="tb-btn" id="cancel-btn" data-i18n="tools.records.cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/record/records-client.js?v=1"></script>
+  <script src="../../js/record/daily-clock.js?v=1"></script>
+</body>
+</html>
