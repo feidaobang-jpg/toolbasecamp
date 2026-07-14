@@ -1,0 +1,42 @@
+---
+description: 工具页全局 UI：手机居中、按钮样式、侧栏导航约定
+alwaysApply: true
+---
+
+# Tool Basecamp 全局 UI 约定
+
+## 按钮（必须统一）
+
+- 所有操作按钮只用 `class="tb-btn"`（需要撑满时加 `w-full`）。
+- **唯一样式源**：`public/css/base.css` 的 `.tb-btn`（蓝色 `#2563eb`、圆角胶囊）。
+- **禁止**在页面 CSS 里给 `.tb-btn` 改背景色（绿/红/灰等）。布局可用 flex/grid，不要覆盖 `background` / `color`。
+- 操作区容器用 `docs-common.css` 的 `.action-row`，不要为单页再造一套按钮类名。
+
+```html
+<!-- ✅ -->
+<div class="action-row">
+  <button type="button" class="tb-btn">计算</button>
+  <button type="button" class="tb-btn">清空</button>
+</div>
+
+<!-- ❌ 不要 -->
+<button class="tb-btn my-green-btn">计算</button>
+```
+
+## 手机左右居中（框架层）
+
+- 工具页外层：`.container` > `.sidebar` + `.content` > `.tool-card`。
+- 手机端（`max-width: 768px`）规则在 `base.css` / `docs-common.css`：
+  - 关闭时侧栏 `display: none`（不占位）；打开时 `fixed` 抽屉。
+  - `.content` / `.tool-card`：`width: 100%`，左右 `margin: 0`，禁止 `width:100%` + 左右 margin 同时用。
+- **`.tool-card` 桌面样式必须写在对应 `@media` 手机覆盖之前**，避免级联把手机 margin 冲掉。
+- 改居中只动框架 CSS，不要在每个工具页单独打补丁。
+
+## 侧栏导航
+
+- 工具页侧栏顶栏「返回首页」用 `.logo-home-btn`，唯一回首页入口。
+- 不要再加重复的「全部工具」链接（手机顶栏 / 侧栏底栏曾因重复已去掉）。
+
+## 修改后
+
+- 改了 `base.css` / `docs-common.css` 时，给引用处加或递增 `?v=` 缓存参数。

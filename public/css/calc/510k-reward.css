@@ -167,21 +167,6 @@
   width: 100%;
 }
 
-.k510-actions {
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.k510-actions .tb-btn {
-  min-width: 88px;
-}
-
-.k510-actions .tb-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 @media (max-width: 768px) {
   body.k510-reward-page .content {
     padding-top: 0;
@@ -250,19 +235,6 @@
   .k510-result-multiplied {
     margin-top: 16px;
     padding-top: 12px;
-  }
-
-  .k510-actions {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .k510-actions .tb-btn {
-    min-width: 0;
-    padding-left: 8px;
-    padding-right: 8px;
-    font-size: 14px;
   }
 }
 

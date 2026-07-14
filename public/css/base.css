@@ -10,7 +10,7 @@ body {
     color: #333;
 }
 
-/* 全站统一按钮 — 修改此处即可全局生效 */
+/* 全站统一按钮 — 所有工具操作按钮只用 .tb-btn，勿在页面 CSS 覆盖颜色 */
 .tb-btn {
     display: inline-flex;
     align-items: center;
@@ -41,20 +41,25 @@ body {
 
 a.tb-btn {
     text-decoration: none;
+    color: #fff;
 }
 
 .tb-btn:hover {
     background: #1d4ed8;
+    color: #fff;
 }
 
 .tb-btn:active {
     background: #1e40af;
+    color: #fff;
 }
 
 .tb-btn:disabled,
 .tb-btn.is-disabled {
     background: #93c5fd;
+    color: #fff;
     cursor: not-allowed;
+    opacity: 1;
 }
 
 .container {

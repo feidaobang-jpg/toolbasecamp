@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const settleBtn = document.createElement('button');
         settleBtn.type = 'button';
-        settleBtn.className = 'tb-btn k510-btn-settle';
+        settleBtn.className = 'tb-btn';
         settleBtn.textContent = tr('tools.k510Score.settleGame');
         settleBtn.addEventListener('click', settleGame);
 
