@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMI Calculator - Tool Basecamp</title>
+  <meta name="description" content="Calculate BMI from height and weight with category and suggestion.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/calc/bmi.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.bmi.title">BMI</h1>
+        <p data-i18n="tools.bmi.desc">Enter height and weight to calculate BMI and see a brief suggestion.</p>
+      </div>
+
+      <div class="tool-card bmi-card">
+        <div class="bmi-field">
+          <label class="field-label" for="height-input" data-i18n="tools.bmi.heightLabel">Height (cm)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="height-input"
+            class="bmi-input"
+            data-i18n-placeholder="tools.bmi.heightPlaceholder"
+            placeholder="e.g. 170"
+            autocomplete="off"
+          />
+        </div>
+        <div class="bmi-field">
+          <label class="field-label" for="weight-input" data-i18n="tools.bmi.weightLabel">Weight (kg)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="weight-input"
+            class="bmi-input"
+            data-i18n-placeholder="tools.bmi.weightPlaceholder"
+            placeholder="e.g. 65"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.bmi.calculate">Calculate BMI</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.bmi.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="bmi-result-wrap" id="result-wrap" hidden>
+          <div class="bmi-result-row">
+            <span class="bmi-result-label" data-i18n="tools.bmi.bmiLabel">BMI</span>
+            <span class="bmi-result-value" id="result-bmi"></span>
+          </div>
+          <div class="bmi-result-row">
+            <span class="bmi-result-label" data-i18n="tools.bmi.statusLabel">Status</span>
+            <span class="bmi-result-value" id="result-status"></span>
+          </div>
+          <p class="bmi-suggestion" id="result-suggestion"></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/bmi.js?v=1"></script>
+</body>
+</html>

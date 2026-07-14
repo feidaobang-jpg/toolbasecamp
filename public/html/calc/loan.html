@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loan Calculator - Tool Basecamp</title>
+  <meta name="description" content="Calculate equal-installment or equal-principal loan payments with a monthly schedule.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/calc/loan.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.loan.title">Loan</h1>
+        <p data-i18n="tools.loan.desc">Estimate monthly payments for equal principal &amp; interest or equal principal loans.</p>
+      </div>
+
+      <div class="tool-card loan-card">
+        <div class="loan-field">
+          <label class="field-label" for="amount-input" data-i18n="tools.loan.amountLabel">Loan amount</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="amount-input"
+            class="loan-input"
+            data-i18n-placeholder="tools.loan.amountPlaceholder"
+            placeholder="e.g. 1000000"
+            autocomplete="off"
+          />
+        </div>
+        <div class="loan-field">
+          <label class="field-label" for="years-input" data-i18n="tools.loan.yearsLabel">Term (years)</label>
+          <input
+            type="text"
+            inputmode="numeric"
+            id="years-input"
+            class="loan-input"
+            data-i18n-placeholder="tools.loan.yearsPlaceholder"
+            placeholder="e.g. 30"
+            autocomplete="off"
+          />
+        </div>
+        <div class="loan-field">
+          <label class="field-label" for="rate-input" data-i18n="tools.loan.rateLabel">Annual rate (%)</label>
+          <input
+            type="text"
+            inputmode="decimal"
+            id="rate-input"
+            class="loan-input"
+            data-i18n-placeholder="tools.loan.ratePlaceholder"
+            placeholder="e.g. 3.6"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="loan-method">
+          <div class="field-label" data-i18n="tools.loan.methodLabel">Repayment method</div>
+          <div class="loan-method-options" role="group">
+            <button type="button" class="loan-method-btn is-active" data-method="equal" id="method-equal" data-i18n="tools.loan.methodEqual">Equal P&amp;I</button>
+            <button type="button" class="loan-method-btn" data-method="capital" id="method-capital" data-i18n="tools.loan.methodCapital">Equal principal</button>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.loan.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.loan.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+      </div>
+
+      <div class="tool-card loan-result-card" id="result-card" hidden>
+        <h2 class="loan-section-title" data-i18n="tools.loan.resultTitle">Result</h2>
+        <div class="loan-result-row">
+          <span class="loan-result-label" id="payment-label" data-i18n="tools.loan.monthlyPayment">Monthly payment</span>
+          <span class="loan-result-value" id="result-monthly"></span>
+        </div>
+        <div class="loan-result-row">
+          <span class="loan-result-label" data-i18n="tools.loan.totalPayment">Total payment</span>
+          <span class="loan-result-value" id="result-total"></span>
+        </div>
+        <div class="loan-result-row">
+          <span class="loan-result-label" data-i18n="tools.loan.totalInterest">Total interest</span>
+          <span class="loan-result-value" id="result-interest"></span>
+        </div>
+      </div>
+
+      <div class="tool-card loan-detail-card" id="detail-card" hidden>
+        <h2 class="loan-section-title" data-i18n="tools.loan.detailTitle">Monthly schedule</h2>
+        <div class="loan-detail-scroll">
+          <table class="loan-detail-table">
+            <thead>
+              <tr>
+                <th data-i18n="tools.loan.colMonth">#</th>
+                <th data-i18n="tools.loan.colPayment">Payment</th>
+                <th data-i18n="tools.loan.colPrincipal">Principal</th>
+                <th data-i18n="tools.loan.colInterest">Interest</th>
+                <th data-i18n="tools.loan.colRemain">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="detail-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tool-card loan-help-card">
+        <h2 class="loan-section-title" data-i18n="tools.loan.helpTitle">About repayment methods</h2>
+        <p class="loan-help-item">
+          <strong data-i18n="tools.loan.helpEqualTerm">Equal P&amp;I:</strong>
+          <span data-i18n="tools.loan.helpEqualDesc">Same payment each month; principal rises and interest falls over time.</span>
+        </p>
+        <p class="loan-help-item">
+          <strong data-i18n="tools.loan.helpCapitalTerm">Equal principal:</strong>
+          <span data-i18n="tools.loan.helpCapitalDesc">Same principal each month plus interest on the balance; payments decrease over time.</span>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/loan.js?v=1"></script>
+</body>
+</html>

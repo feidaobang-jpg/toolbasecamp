@@ -1,0 +1,87 @@
+.bmi-card .field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.bmi-field {
+  margin-bottom: 16px;
+}
+
+.bmi-input {
+  width: 100%;
+  max-width: 280px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  color: #111827;
+  background: #fff;
+}
+
+.bmi-input:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 0;
+  border-color: #2563eb;
+}
+
+.bmi-result-wrap {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+}
+
+.bmi-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #dbeafe;
+}
+
+.bmi-result-label {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.bmi-result-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.bmi-result-value.status-under {
+  color: #0284c7;
+}
+
+.bmi-result-value.status-normal {
+  color: #16a34a;
+}
+
+.bmi-result-value.status-over {
+  color: #d97706;
+}
+
+.bmi-result-value.status-obese {
+  color: #dc2626;
+}
+
+.bmi-suggestion {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+@media (max-width: 768px) {
+  .bmi-input {
+    max-width: none;
+  }
+}

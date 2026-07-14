@@ -79,6 +79,8 @@ const toolsConfig = {
             titleKey: 'tools.groups.calc',
             items: [
                 { titleKey: 'tools.age.title', url: 'html/calc/age.html' },
+                { titleKey: 'tools.bmi.title', url: 'html/calc/bmi.html' },
+                { titleKey: 'tools.loan.title', url: 'html/calc/loan.html' },
                 { titleKey: 'tools.k510Reward.title', url: 'html/calc/510k-reward.html' }
             ]
         },
