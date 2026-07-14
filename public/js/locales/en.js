@@ -389,7 +389,8 @@ window.TB_LOCALES.en = {
             ratingRange: 'Rating must be between 0 and 5',
             networkError: 'Network error. Please try again.',
             serviceUnavailable: 'Service temporarily unavailable. Please try again later.',
-            unknownError: 'Something went wrong. Please try again.'
+            unknownError: 'Something went wrong. Please try again.',
+            deployVer: 'API build {sha} (anniversary text = new logic)'
         },
         importantDays: {
             title: 'Important Days',

@@ -388,7 +388,8 @@ window.TB_LOCALES['zh-CN'] = {
             ratingRange: '评分需在 0～5 之间',
             networkError: '网络错误，请稍后重试',
             serviceUnavailable: '服务暂时不可用，请稍后重试',
-            unknownError: '操作失败，请稍后重试'
+            unknownError: '操作失败，请稍后重试',
+            deployVer: '服务版本 {sha}（刷新后若看到第 N 周年即为新逻辑）'
         },
         importantDays: {
             title: '重要日子',
