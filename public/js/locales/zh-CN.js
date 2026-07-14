@@ -392,7 +392,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         importantDays: {
             title: '重要日子',
-            desc: '记录纪念日与倒数日。需登录，数据保存在服务端。',
+            desc: '记录纪念日与倒数日。按每年轮回显示距今天数与周年。需登录。',
             add: '添加日子',
             edit: '编辑日子',
             nameLabel: '名称',
@@ -401,6 +401,9 @@ window.TB_LOCALES['zh-CN'] = {
             today: '就是今天',
             inDays: '还有 {n} 天',
             daysAgo: '已过去 {n} 天',
+            anniversary: '第 {n} 周年',
+            nextInDays: '距下次还有 {n} 天',
+            nextWithYears: '距第 {years} 周年还有 {n} 天',
             deleteConfirm: '确定删除「{name}」？'
         },
         dailyClock: {

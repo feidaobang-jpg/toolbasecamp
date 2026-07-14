@@ -23,6 +23,30 @@ document.addEventListener('DOMContentLoaded', function () {
         return tr('tools.importantDays.daysAgo', { n: Math.abs(n) });
     }
 
+    function anniversaryText(item) {
+        var years = item.anniversaryYears;
+        if (years == null || years < 1) return '';
+        return tr('tools.importantDays.anniversary', { n: years });
+    }
+
+    function metaText(item) {
+        var parts = [item.date];
+        var ann = anniversaryText(item);
+        if (ann) parts.push(ann);
+        return parts.join(' · ');
+    }
+
+    function nextHint(item) {
+        if (item.daysLeft >= 0) return '';
+        var n = item.daysToNext;
+        if (n == null || n <= 0) return '';
+        var nextYears = item.nextAnniversaryYears;
+        if (nextYears != null && nextYears > 0) {
+            return tr('tools.importantDays.nextWithYears', { n: n, years: nextYears });
+        }
+        return tr('tools.importantDays.nextInDays', { n: n });
+    }
+
     function showList() {
         listView.hidden = false;
         formView.hidden = true;
@@ -55,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
             el.className = cls;
             el.innerHTML =
                 '<div class="rec-item-main">' +
-                '<div><p class="rec-item-title"></p><p class="rec-item-meta"></p></div>' +
+                '<div><p class="rec-item-title"></p><p class="rec-item-meta"></p><p class="rec-item-meta" data-next></p></div>' +
                 '<div class="rec-item-value"></div>' +
                 '</div>' +
                 '<div class="rec-item-actions">' +
@@ -63,7 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 '<button type="button" class="tb-btn" data-act="del"></button>' +
                 '</div>';
             el.querySelector('.rec-item-title').textContent = item.name;
-            el.querySelector('.rec-item-meta').textContent = item.date;
+            el.querySelector('.rec-item-meta').textContent = metaText(item);
+            var nextEl = el.querySelector('[data-next]');
+            var hint = nextHint(item);
+            if (hint) nextEl.textContent = hint;
+            else nextEl.hidden = true;
             el.querySelector('.rec-item-value').textContent = daysText(item.daysLeft);
             el.querySelector('[data-act="edit"]').textContent = tr('tools.records.edit');
             el.querySelector('[data-act="del"]').textContent = tr('tools.records.delete');

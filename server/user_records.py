@@ -350,17 +350,72 @@ def _parse_day_date(raw: str) -> date:
         raise HTTPException(status_code=400, detail="Invalid date") from exc
 
 
+def _date_on_year(base: date, year: int) -> date:
+    """Month/day in a given year; Feb 29 → Feb 28 on non-leap years."""
+    try:
+        return date(year, base.month, base.day)
+    except ValueError:
+        if base.month == 2 and base.day == 29:
+            return date(year, 2, 28)
+        raise
+
+
+def _anniversary_cycle(day_date: date, today: date) -> dict:
+    """
+    Recurring yearly anniversary relative to this year's month/day.
+    daysLeft: 0 today, >0 until this year's date, <0 days since this year's date.
+    """
+    if day_date > today:
+        # Future one-off date: not yet reached at all
+        days_left = (day_date - today).days
+        return {
+            "daysLeft": days_left,
+            "daysToNext": days_left,
+            "anniversaryYears": 0,
+            "nextAnniversaryYears": 0,
+            "totalDays": (today - day_date).days,  # negative until reached
+        }
+
+    this_year = _date_on_year(day_date, today.year)
+    next_occ = this_year if this_year >= today else _date_on_year(day_date, today.year + 1)
+    days_to_next = (next_occ - today).days
+
+    if this_year > today:
+        # This year's anniversary still ahead
+        days_left = (this_year - today).days
+        anniversary_years = this_year.year - day_date.year
+    elif this_year == today:
+        days_left = 0
+        anniversary_years = this_year.year - day_date.year
+    else:
+        # This year's anniversary already passed
+        days_left = -(today - this_year).days
+        anniversary_years = this_year.year - day_date.year
+
+    return {
+        "daysLeft": days_left,
+        "daysToNext": days_to_next,
+        "anniversaryYears": max(0, anniversary_years),
+        "nextAnniversaryYears": max(0, next_occ.year - day_date.year),
+        "totalDays": (today - day_date).days,
+    }
+
+
 def _serialize_day(row: dict) -> dict:
     day_date = row["day_date"]
     if isinstance(day_date, datetime):
         day_date = day_date.date()
     today = date.today()
-    days_left = (day_date - today).days
+    cycle = _anniversary_cycle(day_date, today)
     return {
         "id": row["id"],
         "name": row["name"],
         "date": day_date.isoformat(),
-        "daysLeft": days_left,
+        "daysLeft": cycle["daysLeft"],
+        "daysToNext": cycle["daysToNext"],
+        "anniversaryYears": cycle["anniversaryYears"],
+        "nextAnniversaryYears": cycle["nextAnniversaryYears"],
+        "totalDays": cycle["totalDays"],
         "createdAt": _iso(row.get("created_at")),
         "updatedAt": _iso(row.get("updated_at")),
     }
@@ -384,7 +439,8 @@ def list_days(user: dict = Depends(_user)):
                 return (0, 0)
             if d > 0:
                 return (1, d)
-            return (2, -d)
+            # Past this year's date: soonest next occurrence first
+            return (2, int(item.get("daysToNext") or 0))
 
         items.sort(key=sort_key)
         return {"items": items}

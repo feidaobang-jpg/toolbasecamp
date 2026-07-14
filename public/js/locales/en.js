@@ -393,7 +393,7 @@ window.TB_LOCALES.en = {
         },
         importantDays: {
             title: 'Important Days',
-            desc: 'Track anniversaries and countdowns. Requires sign-in; data is stored on the server.',
+            desc: 'Track anniversaries with yearly recurrence, countdown, and anniversary count. Requires sign-in.',
             add: 'Add day',
             edit: 'Edit day',
             nameLabel: 'Name',
@@ -402,6 +402,9 @@ window.TB_LOCALES.en = {
             today: 'Today',
             inDays: '{n} days left',
             daysAgo: '{n} days ago',
+            anniversary: '{n}-year anniversary',
+            nextInDays: '{n} days until next',
+            nextWithYears: '{n} days until the {years}-year anniversary',
             deleteConfirm: 'Delete “{name}”?'
         },
         dailyClock: {
