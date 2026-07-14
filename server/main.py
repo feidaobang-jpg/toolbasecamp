@@ -487,13 +487,13 @@ def health():
             db_ok = True
         except Exception:
             db_ok = False
+    paths = {getattr(r, "path", "") for r in app.routes}
     return {
         "ok": True,
         "service": "toolbasecamp-api",
         "db": db_ok,
-        "recipe_api": any(
-            getattr(r, "path", "") in ("/recipe/generate", "/recipe/detect") for r in app.routes
-        ),
+        "recipe_api": "/recipe/generate" in paths and "/recipe/detect" in paths,
+        "records_api": "/records/days" in paths,
         "recipe": get_recipe_config(),
         "ts": int(time.time()),
     }

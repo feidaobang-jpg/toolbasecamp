@@ -207,7 +207,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths)"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths)"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -247,22 +247,29 @@ jobs:
           sleep 1
           systemctl start toolbasecamp-api
           for i in 1 2 3 4 5; do
-            if curl -sf http://127.0.0.1:8001/health | grep -q '"recipe_api":true'; then
-              echo "health OK with recipe_api"
+            HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
+            if echo "$HEALTH_JSON" | grep -q '"recipe_api":true' \
+              && echo "$HEALTH_JSON" | grep -q '"records_api":true'; then
+              echo "health OK with recipe_api and records_api"
               break
             fi
-            if curl -sf http://127.0.0.1:8001/health; then
-              echo ""
-              echo "WARNING: health OK but recipe_api missing — stale API process?"
+            if [[ -n "$HEALTH_JSON" ]]; then
+              echo "$HEALTH_JSON"
+              echo "WARNING: health OK but recipe_api/records_api missing — stale API process?"
             fi
             sleep 2
             if [[ "$i" -eq 5 ]]; then
               echo "=== toolbasecamp-api status ==="
               systemctl status toolbasecamp-api --no-pager || true
               journalctl -u toolbasecamp-api -n 40 --no-pager || true
+              bash /opt/toolbasecamp-deploy/fix-records-api.sh || true
               exit 1
             fi
           done
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/records/days' || {
+            echo "=== openapi missing /records/days — forcing records fix ==="
+            bash /opt/toolbasecamp-deploy/fix-records-api.sh
+          }
           RECIPE_HTTP="$(curl -s -o /tmp/recipe-local.txt -w '%{http_code}' -X POST http://127.0.0.1:8001/recipe/generate -H 'Content-Type: application/json' -d '{"ingredients":["tomato"],"locale":"en"}' || echo '000')"
           echo "local recipe/generate POST $RECIPE_HTTP"
           head -c 200 /tmp/recipe-local.txt || true
