@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const tokenKey = 'auth_token';
 
+  function tr(key, params) {
+    return typeof t === 'function' ? t(key, params) : key;
+  }
+
   function setStatus(text, isError = false) {
     const el = document.getElementById('status');
     if (!el) return;
@@ -29,11 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isLoading) {
       btn.dataset.originalText = btn.textContent;
       btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>' + tr('auth.processing');
       btn.classList.add('opacity-75', 'cursor-not-allowed');
     } else {
       btn.disabled = false;
-      btn.textContent = btn.dataset.originalText || defaultText || 'Submit';
+      btn.textContent = btn.dataset.originalText || defaultText || tr('auth.loginBtn');
       btn.classList.remove('opacity-75', 'cursor-not-allowed');
     }
   }
@@ -47,9 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function translateError(msg) {
-    if (!msg) return 'Unknown error';
-    if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return 'Network error. Please check your connection.';
-    if (msg.includes('Backend service unavailable')) return 'Service unavailable';
+    if (!msg) return tr('auth.unknownError');
+    if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return tr('auth.networkError');
+    if (msg.includes('Backend service unavailable')) return tr('auth.serviceUnavailable');
     return msg;
   }
 
@@ -105,18 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
       setStatus('');
       const email = (emailInput?.value || '').trim();
       const password = passwordInput?.value || '';
-      if (!email) { setStatus('Please enter your email', true); return; }
-      if (!password) { setStatus('Please enter a password', true); return; }
+      if (!email) { setStatus(tr('auth.enterEmail'), true); return; }
+      if (!password) { setStatus(tr('auth.enterPassword'), true); return; }
 
       setLoading(registerBtn, true);
       try {
         const data = await postJson('/auth/register', { email, password });
         if (data.token) setToken(data.token);
-        setStatus('Account created. Redirecting...');
+        setStatus(tr('auth.accountCreated'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);
       } catch (e) {
         setStatus(translateError(e.message || String(e)), true);
-        setLoading(registerBtn, false, 'Sign up');
+        setLoading(registerBtn, false, tr('auth.registerBtn'));
       }
     };
     registerBtn.addEventListener('click', handleRegister);
@@ -129,18 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
       setStatus('');
       const email = (emailInput?.value || '').trim();
       const password = passwordInput?.value || '';
-      if (!email) { setStatus('Please enter your email', true); return; }
-      if (!password) { setStatus('Please enter your password', true); return; }
+      if (!email) { setStatus(tr('auth.enterEmail'), true); return; }
+      if (!password) { setStatus(tr('auth.enterPassword'), true); return; }
 
       setLoading(loginBtn, true);
       try {
         const data = await postJson('/auth/login', { email, password });
         if (data.token) setToken(data.token);
-        setStatus('Logged in. Redirecting...');
+        setStatus(tr('auth.loggedIn'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);
       } catch (e) {
         setStatus(translateError(e.message || String(e)), true);
-        setLoading(loginBtn, false, 'Log in');
+        setLoading(loginBtn, false, tr('auth.loginBtn'));
       }
     };
     loginBtn.addEventListener('click', handleLogin);
@@ -151,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       clearToken();
-      setStatus('Logged out');
+      setStatus(tr('auth.loggedOut'));
       setTimeout(() => { window.location.href = 'login.html'; }, 1000);
     });
   }

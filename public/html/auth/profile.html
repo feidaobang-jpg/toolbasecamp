@@ -7,7 +7,11 @@
     <meta name="description" content="Manage your Tool Basecamp account.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/base.css?v=5">
     <link rel="stylesheet" href="../../css/site-mobile-nav.css">
+    <script src="../../js/locales/en.js"></script>
+    <script src="../../js/locales/zh-CN.js"></script>
+    <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
     <script src="../../js/common_ui.js"></script>
 </head>
@@ -20,7 +24,7 @@
             </a>
             <nav data-nav="main" data-base-path="../../" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
             <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto">
-                <a href="../../index.html" class="text-sm text-gray-600 whitespace-nowrap">Home</a>
+                <a href="../../index.html" class="text-sm text-gray-600 whitespace-nowrap" data-i18n="auth.home">Home</a>
             </div>
         </div>
     </header>
@@ -31,23 +35,23 @@
                 <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 text-3xl mb-4">
                     <i class="fas fa-user"></i>
                 </div>
-                <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-email">Loading...</h2>
+                <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-email" data-i18n="auth.loading">Loading...</h2>
                 <span class="text-xs text-gray-400">UID: <span id="profile-uid">--</span></span>
             </div>
 
             <div class="p-6 space-y-3">
                 <button type="button" onclick="document.getElementById('modal-password').classList.remove('hidden')"
                     class="w-full py-2.5 px-4 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
-                    <i class="fas fa-key text-gray-400"></i> Change password
+                    <i class="fas fa-key text-gray-400"></i> <span data-i18n="auth.changePassword">Change password</span>
                 </button>
                 <button id="btn-logout-profile" type="button"
                     class="w-full py-2.5 px-4 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2">
-                    <i class="fas fa-sign-out-alt"></i> Log out
+                    <i class="fas fa-sign-out-alt"></i> <span data-i18n="auth.logout">Log out</span>
                 </button>
             </div>
 
             <div class="px-6 pb-6 text-sm text-gray-500 flex justify-between border-t border-gray-50 pt-4">
-                <span>Member since</span>
+                <span data-i18n="auth.memberSince">Member since</span>
                 <span id="profile-created-at" class="font-mono text-gray-700">--</span>
             </div>
         </div>
@@ -58,29 +62,29 @@
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="document.getElementById('modal-password').classList.add('hidden')"></div>
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Change password</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4" data-i18n="auth.changePassword">Change password</h3>
                     <div class="space-y-4">
                         <div>
-                            <label for="old-password" class="block text-sm font-medium text-gray-700">Current password</label>
+                            <label for="old-password" class="block text-sm font-medium text-gray-700" data-i18n="auth.currentPassword">Current password</label>
                             <input type="password" id="old-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm">
                         </div>
                         <div>
-                            <label for="new-password" class="block text-sm font-medium text-gray-700">New password</label>
-                            <input type="password" id="new-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm" placeholder="At least 6 characters">
+                            <label for="new-password" class="block text-sm font-medium text-gray-700" data-i18n="auth.newPassword">New password</label>
+                            <input type="password" id="new-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm" data-i18n-placeholder="auth.passwordHint" placeholder="At least 6 characters">
                         </div>
                         <div>
-                            <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm new password</label>
+                            <label for="confirm-password" class="block text-sm font-medium text-gray-700" data-i18n="auth.confirmPassword">Confirm new password</label>
                             <input type="password" id="confirm-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm">
                         </div>
                         <div id="pwd-msg" class="text-sm text-red-600 hidden"></div>
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse gap-2">
-                    <button type="button" id="btn-save-pwd" class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-sm font-medium text-white hover:bg-blue-700">
+                    <button type="button" id="btn-save-pwd" class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-sm font-medium text-white hover:bg-blue-700" data-i18n="auth.save">
                         Save
                     </button>
                     <button type="button" class="mt-3 sm:mt-0 w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                        onclick="document.getElementById('modal-password').classList.add('hidden')">
+                        onclick="document.getElementById('modal-password').classList.add('hidden')" data-i18n="auth.cancel">
                         Cancel
                     </button>
                 </div>
@@ -90,6 +94,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            function tr(key, params) {
+                return typeof t === 'function' ? t(key, params) : key;
+            }
+
             const token = localStorage.getItem('auth_token');
             if (!token) {
                 window.location.href = 'login.html';
@@ -121,9 +129,9 @@
 
             try {
                 const data = await fetchWithAuth('/auth/me');
-                if (!data.success) throw new Error(data.detail || 'Failed to load profile');
+                if (!data.success) throw new Error(data.detail || tr('auth.loadProfileFailed'));
                 const user = data.user;
-                document.getElementById('profile-email').textContent = user.email || 'Unknown';
+                document.getElementById('profile-email').textContent = user.email || '--';
                 document.getElementById('profile-uid').textContent = user.id || '--';
                 if (user.created_at) {
                     document.getElementById('profile-created-at').textContent =
@@ -146,24 +154,24 @@
                 msgEl.classList.add('hidden');
 
                 if (!oldPwd || !newPwd || !confirmPwd) {
-                    msgEl.textContent = 'Please fill in all fields';
+                    msgEl.textContent = tr('auth.fillAllFields');
                     msgEl.classList.remove('hidden');
                     return;
                 }
                 if (newPwd !== confirmPwd) {
-                    msgEl.textContent = 'New passwords do not match';
+                    msgEl.textContent = tr('auth.passwordMismatch');
                     msgEl.classList.remove('hidden');
                     return;
                 }
                 if (newPwd.length < 6) {
-                    msgEl.textContent = 'Password must be at least 6 characters';
+                    msgEl.textContent = tr('auth.passwordTooShort');
                     msgEl.classList.remove('hidden');
                     return;
                 }
 
                 const btn = document.getElementById('btn-save-pwd');
                 btn.disabled = true;
-                btn.textContent = 'Saving...';
+                btn.textContent = tr('auth.saving');
 
                 try {
                     const res = await fetch(`${AUTH_BASE_URL}/auth/change-password`, {
@@ -172,8 +180,8 @@
                         body: JSON.stringify({ old_password: oldPwd, new_password: newPwd })
                     });
                     const data = await res.json();
-                    if (!res.ok) throw new Error(data.detail || 'Update failed');
-                    alert('Password updated. Please log in again.');
+                    if (!res.ok) throw new Error(data.detail || tr('auth.updateFailed'));
+                    alert(tr('auth.passwordUpdated'));
                     localStorage.removeItem('auth_token');
                     window.location.href = 'login.html';
                 } catch (e) {
@@ -181,7 +189,7 @@
                     msgEl.classList.remove('hidden');
                 } finally {
                     btn.disabled = false;
-                    btn.textContent = 'Save';
+                    btn.textContent = tr('auth.save');
                 }
             });
         });
