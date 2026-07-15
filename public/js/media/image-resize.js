@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var exportBtn = document.getElementById('export-btn');
     var clearBtn = document.getElementById('clear-btn');
     var errorBox = document.getElementById('error-box');
-    var previewWrap = document.getElementById('preview-wrap');
-    var previewImg = document.getElementById('preview-img');
 
     var state = {
         image: null,
@@ -111,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
             else formatSelect.value = 'image/jpeg';
             updateSourcePreview();
             setBusy(true);
-            previewWrap.hidden = true;
         };
         img.onerror = function () {
             setError(tr('tools.imageResize.loadFailed'));
@@ -158,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!state.image) return;
         state.angle = (state.angle + 90) % 360;
         updateSourcePreview();
-        previewWrap.hidden = true;
     });
 
     exportBtn.addEventListener('click', function () {
@@ -174,8 +170,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var mime = formatSelect.value || 'image/jpeg';
         var quality = mime === 'image/jpeg' || mime === 'image/webp' ? 0.92 : undefined;
         var dataUrl = canvas.toDataURL(mime, quality);
-        previewImg.src = dataUrl;
-        previewWrap.hidden = false;
         var ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
         var a = document.createElement('a');
         a.href = dataUrl;
@@ -193,8 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
             state.objectUrl = '';
         }
         sourceImg.removeAttribute('src');
-        previewImg.removeAttribute('src');
-        previewWrap.hidden = true;
         setBusy(false);
         setError('');
     });
