@@ -503,7 +503,7 @@ window.TB_LOCALES['zh-CN'] = {
             tip: '提示：',
             tipBody: '在本机生成，不会上传。',
             generate: '生成',
-            download: '下载 PNG',
+            download: '下载图片',
             clear: '清除',
             emptyContent: '请输入内容',
             libFailed: '二维码库加载失败，请刷新页面。',

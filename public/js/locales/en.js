@@ -504,7 +504,7 @@ window.TB_LOCALES.en = {
             tip: 'Tip:',
             tipBody: 'Generated on this device. Nothing is uploaded.',
             generate: 'Generate',
-            download: 'Download PNG',
+            download: 'Download image',
             clear: 'Clear',
             emptyContent: 'Please enter content',
             libFailed: 'QR library failed to load. Please refresh.',
