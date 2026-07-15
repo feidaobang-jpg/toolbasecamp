@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
         frontInput.value = '';
         backInput.value = '';
         wmText.value = '';
-        scaleInput.value = '85';
+        scaleInput.value = '50';
         drag = null;
         setError('');
         redraw();
