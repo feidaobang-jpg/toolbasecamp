@@ -572,7 +572,8 @@ window.TB_LOCALES.en = {
             noText: 'No text detected',
             noImages: 'Please add images first',
             networkError: 'Network error. Please try again.',
-            unknownError: 'Something went wrong. Please try again.'
+            unknownError: 'Something went wrong. Please try again.',
+            processing: 'Processing...'
         },
         ocrText: {
             title: 'Extract Text',
@@ -581,7 +582,7 @@ window.TB_LOCALES.en = {
             dropHint: 'JPG, PNG, WebP — max 8MB',
             tip: 'Tip:',
             tipBody: 'The image is uploaded briefly for OCR and is not stored permanently.',
-            run: 'Recognize',
+            run: 'Start',
             copy: 'Copy text',
             clear: 'Clear'
         },
@@ -592,7 +593,7 @@ window.TB_LOCALES.en = {
             dropHint: 'JPG, PNG, WebP — max 8MB',
             tip: 'Tip:',
             tipBody: 'Paste into Excel or Sheets. Straight-on photos work best; avoid spreadsheet chrome (row/column headers) in the photo.',
-            run: 'Recognize',
+            run: 'Start',
             copy: 'Copy result',
             clear: 'Clear',
             empty: 'No table detected'
@@ -631,7 +632,7 @@ window.TB_LOCALES.en = {
             bgLabel: 'Background',
             tip: 'Tip:',
             tipBody: 'A clear front-facing face works best. Cutout uses one quota; size, background, scale and drag adjust locally.',
-            run: 'Cut out & compose',
+            run: 'Start',
             download: 'Download',
             clear: 'Clear',
             scaleLabel: 'Image scale',
@@ -653,7 +654,7 @@ window.TB_LOCALES.en = {
             removeShadow: 'Remove shadows before merge (uses cloud AI)',
             tip: 'Tip:',
             tipBody: 'Images are uploaded to generate the PDF. For offline merge without login, use the basic Images to PDF tool.',
-            convert: 'Convert to PDF',
+            convert: 'Start',
             clear: 'Clear'
         },
         videoToImages: {

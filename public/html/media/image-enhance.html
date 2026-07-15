@@ -7,7 +7,7 @@
   <meta name="description" content="Optimize document photos with cloud AI. Requires sign-in and daily quota.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=2" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=6" />
 </head>
 <body>
   <div class="container">
@@ -52,6 +52,10 @@
             <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.imageEnhance.download">Download</button>
             <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.imageEnhance.clear">Clear</button>
           </div>
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
           <div class="error-box" id="error-box" role="alert"></div>
           <div class="img-tool-preview" id="preview-wrap" hidden>
             <img id="preview-img" alt="" />
@@ -66,7 +70,7 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/media/image-cloud-client.js?v=1"></script>
-  <script src="../../js/media/image-enhance.js?v=1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=2"></script>
+  <script src="../../js/media/image-enhance.js?v=2"></script>
 </body>
 </html>

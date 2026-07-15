@@ -7,7 +7,7 @@
   <meta name="description" content="Make ID photos with cloud portrait cutout. Requires sign-in and daily quota.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=5" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=6" />
 </head>
 <body>
   <div class="container">
@@ -70,9 +70,13 @@
           <p class="img-tool-meta" id="drag-hint" hidden data-i18n="tools.idPhoto.dragHint">Drag the portrait on the canvas to adjust position.</p>
 
           <div class="action-row">
-            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.idPhoto.run">Cut out &amp; compose</button>
+            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.idPhoto.run">Start</button>
             <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.idPhoto.download">Download</button>
             <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.idPhoto.clear">Clear</button>
+          </div>
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.imageCloud.processing">Processing...</span>
           </div>
           <div class="error-box" id="error-box" role="alert"></div>
           <div class="img-tool-preview id-photo-sheet-wrap" id="preview-wrap" hidden>
@@ -88,7 +92,7 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/media/image-cloud-client.js?v=1"></script>
-  <script src="../../js/media/id-photo.js?v=2"></script>
+  <script src="../../js/media/image-cloud-client.js?v=2"></script>
+  <script src="../../js/media/id-photo.js?v=3"></script>
 </body>
 </html>

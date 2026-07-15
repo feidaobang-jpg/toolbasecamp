@@ -571,7 +571,8 @@ window.TB_LOCALES['zh-CN'] = {
             noText: '未识别到文字',
             noImages: '请先添加图片',
             networkError: '网络异常，请稍后重试',
-            unknownError: '操作失败，请稍后重试'
+            unknownError: '操作失败，请稍后重试',
+            processing: '处理中...'
         },
         ocrText: {
             title: '识别文字',
@@ -580,7 +581,7 @@ window.TB_LOCALES['zh-CN'] = {
             dropHint: '支持 JPG、PNG、WebP，最大 8MB',
             tip: '提示：',
             tipBody: '图片会短暂上传用于识别，不会作为永久文件保存。',
-            run: '开始识别',
+            run: '开始',
             copy: '复制文字',
             clear: '清除'
         },
@@ -591,7 +592,7 @@ window.TB_LOCALES['zh-CN'] = {
             dropHint: '支持 JPG、PNG、WebP，最大 8MB',
             tip: '提示：',
             tipBody: '结果可直接粘贴到 Excel / 表格。尽量正面拍摄，避免带上表格软件自带的行列标题。',
-            run: '开始识别',
+            run: '开始',
             copy: '复制结果',
             clear: '清除',
             empty: '未识别到表格'
@@ -630,7 +631,7 @@ window.TB_LOCALES['zh-CN'] = {
             bgLabel: '底色',
             tip: '提示：',
             tipBody: '正脸清晰照片效果最好。抠图消耗一次限额；改尺寸/底色、缩放与拖动仅在本地调整。',
-            run: '抠图并合成',
+            run: '开始',
             download: '下载',
             clear: '清除',
             scaleLabel: '图片缩放',
@@ -652,7 +653,7 @@ window.TB_LOCALES['zh-CN'] = {
             removeShadow: '合并前去阴影（使用云端 AI）',
             tip: '提示：',
             tipBody: '图片会上传以生成 PDF。无需登录的本地合并请用「图片转 PDF」。',
-            convert: '转为 PDF',
+            convert: '开始',
             clear: '清除'
         },
         videoToImages: {

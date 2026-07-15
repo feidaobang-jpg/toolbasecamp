@@ -17,9 +17,12 @@
     var errorBox = document.getElementById('error-box');
     var previewWrap = document.getElementById('preview-wrap');
     var previewImg = document.getElementById('preview-img');
+    var busyEl = document.getElementById('busy');
+    var busyText = document.getElementById('busy-text');
     var file = null;
     var previewUrl = '';
     var resultUrl = '';
+    var processing = false;
 
     var DEFAULT_TASKS = [
         { taskType: 1, id: 'cutEnhance' },
@@ -36,6 +39,15 @@
     ];
 
     if (loginLink) loginLink.href = C.loginUrl();
+
+    function setProcessing(on) {
+        processing = !!on;
+        C.setBusy(busyEl, busyText, processing, C.tr('tools.imageCloud.processing'));
+        runBtn.disabled = processing || !file;
+        clearBtn.disabled = processing;
+        downloadBtn.disabled = processing || !resultUrl;
+        if (taskSelect) taskSelect.disabled = processing;
+    }
 
     function fillTasks(tasks) {
         taskSelect.innerHTML = '';
@@ -112,9 +124,9 @@
     });
 
     runBtn.addEventListener('click', function () {
-        if (!file) return;
+        if (!file || processing) return;
         C.setError(errorBox, '');
-        runBtn.disabled = true;
+        setProcessing(true);
         var fd = new FormData();
         fd.append('file', file, file.name || 'image.jpg');
         fd.append('task_type', taskSelect.value || '302');
@@ -123,7 +135,6 @@
             resultUrl = C.b64ToObjectUrl(data.imageBase64, data.contentType || 'image/png');
             previewImg.src = resultUrl;
             previewWrap.hidden = false;
-            downloadBtn.disabled = false;
             if (data.quota) {
                 quotaLine.textContent = C.tr('tools.imageCloud.quotaLine', {
                     used: data.quota.used,
@@ -134,7 +145,7 @@
         }).catch(function (err) {
             C.setError(errorBox, err.message);
         }).finally(function () {
-            runBtn.disabled = !file;
+            setProcessing(false);
         });
     });
 

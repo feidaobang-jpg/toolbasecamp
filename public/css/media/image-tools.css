@@ -320,3 +320,33 @@
 .id-photo-sheet-wrap {
   margin-top: 16px;
 }
+
+.img-cloud-busy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 14px;
+}
+
+.img-cloud-busy[hidden] {
+  display: none !important;
+}
+
+.img-cloud-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #cbd5e1;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: img-cloud-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes img-cloud-spin {
+  to { transform: rotate(360deg); }
+}

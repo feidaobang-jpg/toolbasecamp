@@ -13,19 +13,32 @@
     var quotaLine = document.getElementById('quota-line');
     var tencentWarn = document.getElementById('tencent-warn');
     var errorBox = document.getElementById('error-box');
+    var busyEl = document.getElementById('busy');
+    var busyText = document.getElementById('busy-text');
     var files = [];
     var MAX = 12;
+    var processing = false;
+    var tencentOk = false;
 
     if (loginLink) loginLink.href = C.loginUrl();
+
+    function setProcessing(on) {
+        processing = !!on;
+        C.setBusy(busyEl, busyText, processing, C.tr('tools.imageCloud.processing'));
+        convertBtn.disabled = processing || !files.length;
+        clearBtn.disabled = processing;
+        removeShadow.disabled = processing || !tencentOk;
+    }
 
     function refreshQuota(status) {
         if (!status) return;
         quotaLine.textContent = C.formatQuota(status.quotas, 'to_pdf');
+        tencentOk = !!status.tencentConfigured;
         if (tencentWarn) {
-            tencentWarn.hidden = !!status.tencentConfigured;
-            if (!status.tencentConfigured) removeShadow.checked = false;
-            removeShadow.disabled = !status.tencentConfigured;
+            tencentWarn.hidden = tencentOk;
+            if (!tencentOk) removeShadow.checked = false;
         }
+        removeShadow.disabled = processing || !tencentOk;
     }
 
     function loadStatus() {
@@ -92,9 +105,9 @@
     });
 
     convertBtn.addEventListener('click', function () {
-        if (!files.length) return;
+        if (!files.length || processing) return;
         C.setError(errorBox, '');
-        convertBtn.disabled = true;
+        setProcessing(true);
         var fd = new FormData();
         files.forEach(function (f) { fd.append('files', f, f.name || 'image.jpg'); });
         fd.append('remove_shadow', removeShadow.checked ? 'true' : 'false');
@@ -109,7 +122,7 @@
         }).catch(function (err) {
             C.setError(errorBox, err.message);
         }).finally(function () {
-            convertBtn.disabled = !files.length;
+            setProcessing(false);
         });
     });
 

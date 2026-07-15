@@ -23,6 +23,8 @@
     var previewWrap = document.getElementById('preview-wrap');
     var canvas = document.getElementById('preview-canvas');
     var ctx = canvas.getContext('2d');
+    var busyEl = document.getElementById('busy');
+    var busyText = document.getElementById('busy-text');
 
     var file = null;
     var previewUrl = '';
@@ -31,8 +33,19 @@
     /** @type {{ x: number, y: number, w: number, h: number } | null} */
     var layout = null;
     var drag = null;
+    var processing = false;
 
     if (loginLink) loginLink.href = C.loginUrl();
+
+    function setProcessing(on) {
+        processing = !!on;
+        C.setBusy(busyEl, busyText, processing, C.tr('tools.imageCloud.processing'));
+        runBtn.disabled = processing || !file;
+        clearBtn.disabled = processing;
+        downloadBtn.disabled = processing || !cutoutImg;
+        if (scaleInput) scaleInput.disabled = processing;
+        if (sizeSelect) sizeSelect.disabled = processing;
+    }
 
     function loadStatus() {
         return C.apiJson('/image/status').then(function (s) {
@@ -265,9 +278,9 @@
     });
 
     runBtn.addEventListener('click', function () {
-        if (!file) return;
+        if (!file || processing) return;
         C.setError(errorBox, '');
-        runBtn.disabled = true;
+        setProcessing(true);
         var fd = new FormData();
         fd.append('file', file, file.name || 'portrait.jpg');
         C.apiJson('/image/id-photo/segment', { method: 'POST', body: fd }).then(function (data) {
@@ -293,7 +306,7 @@
         }).catch(function (err) {
             C.setError(errorBox, err.message);
         }).finally(function () {
-            runBtn.disabled = !file;
+            setProcessing(false);
         });
     });
 

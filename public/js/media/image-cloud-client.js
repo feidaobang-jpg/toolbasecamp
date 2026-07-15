@@ -146,6 +146,14 @@
         return URL.createObjectURL(new Blob([arr], { type: contentType || 'image/png' }));
     }
 
+    function setBusy(busyEl, textEl, on, msg) {
+        if (busyEl) {
+            busyEl.hidden = !on;
+            busyEl.setAttribute('aria-hidden', on ? 'false' : 'true');
+        }
+        if (textEl && msg != null) textEl.textContent = msg;
+    }
+
     global.TBImageCloud = {
         tr: tr,
         apiBase: apiBase,
@@ -156,6 +164,7 @@
         apiBlob: apiBlob,
         authFetch: authFetch,
         setError: setError,
+        setBusy: setBusy,
         formatQuota: formatQuota,
         b64ToObjectUrl: b64ToObjectUrl,
         translateDetail: translateDetail

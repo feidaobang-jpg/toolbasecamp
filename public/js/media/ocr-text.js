@@ -14,11 +14,21 @@
     var quotaLine = document.getElementById('quota-line');
     var errorBox = document.getElementById('error-box');
     var result = document.getElementById('result');
+    var busyEl = document.getElementById('busy');
+    var busyText = document.getElementById('busy-text');
     var file = null;
     var previewUrl = '';
+    var processing = false;
 
     if (loginLink) loginLink.href = C.loginUrl();
 
+    function setProcessing(on) {
+        processing = !!on;
+        C.setBusy(busyEl, busyText, processing, C.tr('tools.imageCloud.processing'));
+        runBtn.disabled = processing || !file;
+        clearBtn.disabled = processing;
+        copyBtn.disabled = processing || !(result.value || '').trim();
+    }
     function loadStatus() {
         return C.apiJson('/image/status').then(function (s) {
             quotaLine.textContent = C.formatQuota(s.quotas, 'ocr_text');
@@ -73,14 +83,13 @@
     });
 
     runBtn.addEventListener('click', function () {
-        if (!file) return;
+        if (!file || processing) return;
         C.setError(errorBox, '');
-        runBtn.disabled = true;
+        setProcessing(true);
         var fd = new FormData();
         fd.append('file', file, file.name || 'image.jpg');
         C.apiJson('/image/ocr-text', { method: 'POST', body: fd }).then(function (data) {
             result.value = data.text || '';
-            copyBtn.disabled = !result.value;
             if (data.quota) {
                 quotaLine.textContent = C.tr('tools.imageCloud.quotaLine', {
                     used: data.quota.used,
@@ -93,7 +102,7 @@
         }).catch(function (err) {
             C.setError(errorBox, err.message);
         }).finally(function () {
-            runBtn.disabled = !file;
+            setProcessing(false);
         });
     });
 
