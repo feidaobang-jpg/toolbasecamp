@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Important Days - Tool Basecamp</title>
-  <meta name="description" content="Track important dates with countdown. Data synced to your account.">
+  <meta name="description" content="Track important dates with solar or lunar calendar. Data synced to your account.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/record/records-common.css?v=2" />
+  <link rel="stylesheet" href="../../css/record/records-common.css?v=3" />
 </head>
 <body>
   <div class="container">
@@ -15,7 +15,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.importantDays.title">Important Days</h1>
-        <p data-i18n="tools.importantDays.desc">Remember anniversaries and countdowns. Requires sign-in; data is stored on the server.</p>
+        <p data-i18n="tools.importantDays.desc">Remember anniversaries with solar or lunar calendar. Requires sign-in.</p>
       </div>
 
       <div class="tool-card rec-gate" id="login-gate" hidden>
@@ -44,8 +44,36 @@
             <input type="text" id="name-input" class="rec-input" maxlength="80" autocomplete="off" />
           </div>
           <div class="rec-field">
-            <label class="field-label" for="date-input" data-i18n="tools.importantDays.dateLabel">Date</label>
-            <input type="date" id="date-input" class="rec-input" />
+            <div class="field-label" data-i18n="tools.importantDays.calendarLabel">Calendar</div>
+            <div class="rec-chip-row" role="group">
+              <button type="button" class="rec-chip is-active" data-cal="solar" id="cal-solar" data-i18n="tools.importantDays.calendarSolar">Solar</button>
+              <button type="button" class="rec-chip" data-cal="lunar" id="cal-lunar" data-i18n="tools.importantDays.calendarLunar">Lunar</button>
+            </div>
+          </div>
+          <div id="solar-fields">
+            <div class="rec-field">
+              <label class="field-label" for="date-input" data-i18n="tools.importantDays.dateLabel">Date</label>
+              <input type="date" id="date-input" class="rec-input" />
+            </div>
+          </div>
+          <div id="lunar-fields" hidden>
+            <div class="rec-field">
+              <label class="field-label" for="lunar-year" data-i18n="tools.importantDays.lunarYear">Lunar year</label>
+              <input type="number" id="lunar-year" class="rec-input" min="1900" max="2100" step="1" />
+            </div>
+            <div class="rec-field">
+              <label class="field-label" for="lunar-month" data-i18n="tools.importantDays.lunarMonth">Lunar month</label>
+              <select id="lunar-month" class="rec-select"></select>
+            </div>
+            <div class="rec-field">
+              <label class="field-label" for="lunar-day" data-i18n="tools.importantDays.lunarDay">Lunar day</label>
+              <select id="lunar-day" class="rec-select"></select>
+            </div>
+            <label class="rec-check" id="lunar-leap-wrap" hidden>
+              <input type="checkbox" id="lunar-leap" />
+              <span data-i18n="tools.importantDays.lunarLeap">Leap month</span>
+            </label>
+            <p class="rec-note" id="lunar-solar-hint"></p>
           </div>
           <div class="error-box" id="form-error" role="alert"></div>
           <div class="action-row">
@@ -62,7 +90,8 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
+  <script src="../../js/calc/solarlunar.min.js?v=1"></script>
   <script src="../../js/record/records-client.js?v=1"></script>
-  <script src="../../js/record/important-days.js?v=5"></script>
+  <script src="../../js/record/important-days.js?v=6"></script>
 </body>
 </html>

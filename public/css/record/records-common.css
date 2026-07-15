@@ -21,11 +21,19 @@
   flex: 0 0 auto;
 }
 
-.rec-note {
-  margin: 0 0 16px;
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.5;
+.rec-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.rec-check input {
+  width: 16px;
+  height: 16px;
 }
 
 .rec-field {

@@ -58,6 +58,8 @@
             'Not found': 'tools.records.notFound',
             'Invalid name': 'tools.records.invalidName',
             'Invalid date': 'tools.records.invalidDate',
+            'Invalid calendar type': 'tools.importantDays.invalidLunar',
+            'Invalid lunar date': 'tools.importantDays.invalidLunar',
             'Invalid type': 'tools.records.invalidType',
             'Invalid amount': 'tools.records.invalidAmount',
             'Invalid price': 'tools.records.invalidPrice',

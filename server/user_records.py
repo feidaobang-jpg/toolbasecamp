@@ -62,6 +62,10 @@ def ensure_record_tables(cur):
             user_id BIGINT NOT NULL,
             name VARCHAR(80) NOT NULL,
             day_date DATE NOT NULL,
+            calendar_type VARCHAR(10) NOT NULL DEFAULT 'solar',
+            lunar_month INT NULL,
+            lunar_day INT NULL,
+            lunar_leap TINYINT(1) NOT NULL DEFAULT 0,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_days_user (user_id),
@@ -70,6 +74,24 @@ def ensure_record_tables(cur):
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    for col_sql in (
+        "calendar_type VARCHAR(10) NOT NULL DEFAULT 'solar'",
+        "lunar_month INT NULL",
+        "lunar_day INT NULL",
+        "lunar_leap TINYINT(1) NOT NULL DEFAULT 0",
+    ):
+        col_name = col_sql.split()[0]
+        cur.execute(
+            """
+            SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = 'record_important_days'
+              AND COLUMN_NAME = %s
+            """,
+            (col_name,),
+        )
+        if int((cur.fetchone() or {}).get("c") or 0) == 0:
+            cur.execute(f"ALTER TABLE record_important_days ADD COLUMN {col_sql}")
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS record_deposits (
@@ -336,11 +358,19 @@ def delete_clock(clock_id: int, user: dict = Depends(_user)):
 class DayCreateBody(BaseModel):
     name: str
     date: str
+    calendarType: str = "solar"
+    lunarMonth: Optional[int] = None
+    lunarDay: Optional[int] = None
+    lunarLeap: bool = False
 
 
 class DayUpdateBody(BaseModel):
     name: str
     date: str
+    calendarType: str = "solar"
+    lunarMonth: Optional[int] = None
+    lunarDay: Optional[int] = None
+    lunarLeap: bool = False
 
 
 def _parse_day_date(raw: str) -> date:
@@ -348,6 +378,24 @@ def _parse_day_date(raw: str) -> date:
         return date.fromisoformat((raw or "").strip())
     except ValueError as exc:
         raise HTTPException(status_code=400, detail="Invalid date") from exc
+
+
+def _normalize_calendar_fields(
+    calendar_type: str,
+    lunar_month: Optional[int],
+    lunar_day: Optional[int],
+    lunar_leap: bool,
+) -> tuple:
+    ctype = (calendar_type or "solar").strip().lower()
+    if ctype not in ("solar", "lunar"):
+        raise HTTPException(status_code=400, detail="Invalid calendar type")
+    if ctype == "solar":
+        return "solar", None, None, 0
+    month = int(lunar_month or 0)
+    day = int(lunar_day or 0)
+    if month < 1 or month > 12 or day < 1 or day > 30:
+        raise HTTPException(status_code=400, detail="Invalid lunar date")
+    return "lunar", month, day, 1 if lunar_leap else 0
 
 
 def _date_on_year(base: date, year: int) -> date:
@@ -407,10 +455,15 @@ def _serialize_day(row: dict) -> dict:
         day_date = day_date.date()
     today = date.today()
     cycle = _anniversary_cycle(day_date, today)
+    ctype = (row.get("calendar_type") or "solar").lower()
     return {
         "id": row["id"],
         "name": row["name"],
         "date": day_date.isoformat(),
+        "calendarType": ctype if ctype in ("solar", "lunar") else "solar",
+        "lunarMonth": row.get("lunar_month"),
+        "lunarDay": row.get("lunar_day"),
+        "lunarLeap": bool(row.get("lunar_leap")),
         "daysLeft": cycle["daysLeft"],
         "daysToNext": cycle["daysToNext"],
         "anniversaryYears": cycle["anniversaryYears"],
@@ -454,15 +507,19 @@ def create_day(body: DayCreateBody, user: dict = Depends(_user)):
     if not name or len(name) > NAME_MAX:
         raise HTTPException(status_code=400, detail="Invalid name")
     day_date = _parse_day_date(body.date)
+    ctype, l_month, l_day, l_leap = _normalize_calendar_fields(
+        body.calendarType, body.lunarMonth, body.lunarDay, body.lunarLeap
+    )
     conn = _conn()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO record_important_days (user_id, name, day_date)
-                VALUES (%s, %s, %s)
+                INSERT INTO record_important_days
+                (user_id, name, day_date, calendar_type, lunar_month, lunar_day, lunar_leap)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
-                (user["id"], name, day_date),
+                (user["id"], name, day_date, ctype, l_month, l_day, l_leap),
             )
             new_id = cur.lastrowid
             cur.execute(
@@ -480,15 +537,20 @@ def update_day(day_id: int, body: DayUpdateBody, user: dict = Depends(_user)):
     if not name or len(name) > NAME_MAX:
         raise HTTPException(status_code=400, detail="Invalid name")
     day_date = _parse_day_date(body.date)
+    ctype, l_month, l_day, l_leap = _normalize_calendar_fields(
+        body.calendarType, body.lunarMonth, body.lunarDay, body.lunarLeap
+    )
     conn = _conn()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                UPDATE record_important_days SET name=%s, day_date=%s
+                UPDATE record_important_days
+                SET name=%s, day_date=%s, calendar_type=%s,
+                    lunar_month=%s, lunar_day=%s, lunar_leap=%s
                 WHERE id=%s AND user_id=%s
                 """,
-                (name, day_date, day_id, user["id"]),
+                (name, day_date, ctype, l_month, l_day, l_leap, day_id, user["id"]),
             )
             if cur.rowcount == 0:
                 raise HTTPException(status_code=404, detail="Not found")
