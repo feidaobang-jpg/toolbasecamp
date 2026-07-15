@@ -302,6 +302,20 @@
   touch-action: none;
 }
 
-#sheet-canvas.is-dragging {
+#preview-canvas {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  cursor: grab;
+  touch-action: none;
+}
+
+#preview-canvas.is-dragging {
   cursor: grabbing;
+}
+
+.id-photo-sheet-wrap {
+  margin-top: 16px;
 }

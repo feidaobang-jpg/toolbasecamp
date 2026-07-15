@@ -629,10 +629,12 @@ window.TB_LOCALES['zh-CN'] = {
             sizeLabel: '尺寸',
             bgLabel: '底色',
             tip: '提示：',
-            tipBody: '正脸清晰照片效果最好。抠图消耗一次限额；改尺寸/底色仅在本地重新合成。',
+            tipBody: '正脸清晰照片效果最好。抠图消耗一次限额；改尺寸/底色、缩放与拖动仅在本地调整。',
             run: '抠图并合成',
             download: '下载',
             clear: '清除',
+            scaleLabel: '图片缩放',
+            dragHint: '可在画布上拖动人像调整位置。',
             loadFailed: '抠图结果加载失败',
             sizes: {
                 largeOne: '大一寸（413×579）',

@@ -630,10 +630,12 @@ window.TB_LOCALES.en = {
             sizeLabel: 'Size',
             bgLabel: 'Background',
             tip: 'Tip:',
-            tipBody: 'A clear front-facing face works best. Cutout uses one quota; size/background changes recompose locally.',
+            tipBody: 'A clear front-facing face works best. Cutout uses one quota; size, background, scale and drag adjust locally.',
             run: 'Cut out & compose',
             download: 'Download',
             clear: 'Clear',
+            scaleLabel: 'Image scale',
+            dragHint: 'Drag the portrait on the canvas to adjust position.',
             loadFailed: 'Failed to load cutout result',
             sizes: {
                 largeOne: 'Large 1 inch (413×579)',
