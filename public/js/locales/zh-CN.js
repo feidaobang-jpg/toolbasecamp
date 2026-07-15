@@ -99,7 +99,7 @@ window.TB_LOCALES['zh-CN'] = {
     portals: {
         pdf: {
             title: 'PDF 工具箱',
-            description: '50+ PDF 工具 — 合并、拆分、压缩、OCR、转 Word、签名等。托管于 pdf.toolbasecamp.com。',
+            description: '50+ PDF 工具 — 合并、拆分、压缩、OCR、转 Word、签名等。自托管，浏览器打开即用。',
             cta: '打开 PDF 工具箱'
         },
         dev: {

@@ -80,8 +80,7 @@
                         ' <i class="fas fa-arrow-up-right-from-square hub-portal-external-inline" aria-hidden="true"></i>' +
                     '</strong>' +
                 '</div>' +
-                (desc ? '<p class="hub-portal-desc">' + escapeHtml(desc) + '</p>' : '') +
-                (portal.meta ? '<span class="hub-portal-meta">' + escapeHtml(portal.meta) + '</span>' : '');
+                (desc ? '<p class="hub-portal-desc">' + escapeHtml(desc) + '</p>' : '');
             li.appendChild(a);
             listEl.appendChild(li);
         });

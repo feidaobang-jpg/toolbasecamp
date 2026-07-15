@@ -35,7 +35,6 @@ const portalsConfig = [
         descriptionKey: 'portals.pdf.description',
         url: 'https://pdf.toolbasecamp.com',
         ctaKey: 'portals.pdf.cta',
-        meta: 'pdf.toolbasecamp.com',
         theme: 'pdf'
     },
     {
@@ -43,7 +42,6 @@ const portalsConfig = [
         descriptionKey: 'portals.dev.description',
         url: 'https://dev.toolbasecamp.com',
         ctaKey: 'portals.dev.cta',
-        meta: 'dev.toolbasecamp.com',
         theme: 'dev'
     },
     {
@@ -51,7 +49,6 @@ const portalsConfig = [
         descriptionKey: 'portals.chef.description',
         url: 'https://chef.toolbasecamp.com',
         ctaKey: 'portals.chef.cta',
-        meta: 'chef.toolbasecamp.com',
         theme: 'chef'
     },
     {
@@ -59,7 +56,6 @@ const portalsConfig = [
         descriptionKey: 'portals.hoppscotch.description',
         url: 'https://hoppscotch.toolbasecamp.com',
         ctaKey: 'portals.hoppscotch.cta',
-        meta: 'hoppscotch.toolbasecamp.com',
         theme: 'hoppscotch'
     },
     {
@@ -67,7 +63,6 @@ const portalsConfig = [
         descriptionKey: 'portals.translate.description',
         url: 'https://translate.toolbasecamp.com',
         ctaKey: 'portals.translate.cta',
-        meta: 'translate.toolbasecamp.com',
         theme: 'translate'
     }
 ];

@@ -100,7 +100,7 @@ window.TB_LOCALES.en = {
     portals: {
         pdf: {
             title: 'PDF Toolkit',
-            description: '50+ PDF tools — merge, split, compress, OCR, convert to Word, sign, and more. Self-hosted on pdf.toolbasecamp.com.',
+            description: '50+ PDF tools — merge, split, compress, OCR, convert to Word, sign, and more. Self-hosted and ready in the browser.',
             cta: 'Open PDF Toolkit'
         },
         dev: {
