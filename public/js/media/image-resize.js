@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
         naturalW: 0,
         naturalH: 0,
         angle: 0,
-        filling: false
+        filling: false,
+        objectUrl: ''
     };
 
     function setError(msg) {
@@ -61,34 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function loadFile(file) {
-        if (!file || !file.type || file.type.indexOf('image/') !== 0) {
-            setError(tr('tools.imageResize.invalidFile'));
-            return;
-        }
-        setError('');
-        var url = URL.createObjectURL(file);
-        var img = new Image();
-        img.onload = function () {
-            state.image = img;
-            state.naturalW = img.naturalWidth;
-            state.naturalH = img.naturalHeight;
-            state.angle = 0;
-            sourceImg.src = url;
-            if (file.type === 'image/png') formatSelect.value = 'image/png';
-            else if (file.type === 'image/webp') formatSelect.value = 'image/webp';
-            else formatSelect.value = 'image/jpeg';
-            syncInputsFromNatural();
-            setBusy(true);
-            previewWrap.hidden = true;
-        };
-        img.onerror = function () {
-            setError(tr('tools.imageResize.loadFailed'));
-            URL.revokeObjectURL(url);
-        };
-        img.src = url;
-    }
-
     function renderToCanvas(outW, outH) {
         var canvas = document.createElement('canvas');
         canvas.width = outW;
@@ -104,6 +77,48 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.drawImage(state.image, -drawW / 2, -drawH / 2, drawW, drawH);
         ctx.restore();
         return canvas;
+    }
+
+    /** Refresh on-page preview so rotation/size labels match what you see. */
+    function updateSourcePreview() {
+        if (!state.image) return;
+        var sz = displaySize();
+        var maxSide = 800;
+        var scale = Math.min(1, maxSide / Math.max(sz.w, sz.h));
+        var pw = Math.max(1, Math.round(sz.w * scale));
+        var ph = Math.max(1, Math.round(sz.h * scale));
+        sourceImg.src = renderToCanvas(pw, ph).toDataURL('image/png');
+        syncInputsFromNatural();
+    }
+
+    function loadFile(file) {
+        if (!file || !file.type || file.type.indexOf('image/') !== 0) {
+            setError(tr('tools.imageResize.invalidFile'));
+            return;
+        }
+        setError('');
+        if (state.objectUrl) URL.revokeObjectURL(state.objectUrl);
+        var url = URL.createObjectURL(file);
+        state.objectUrl = url;
+        var img = new Image();
+        img.onload = function () {
+            state.image = img;
+            state.naturalW = img.naturalWidth;
+            state.naturalH = img.naturalHeight;
+            state.angle = 0;
+            if (file.type === 'image/png') formatSelect.value = 'image/png';
+            else if (file.type === 'image/webp') formatSelect.value = 'image/webp';
+            else formatSelect.value = 'image/jpeg';
+            updateSourcePreview();
+            setBusy(true);
+            previewWrap.hidden = true;
+        };
+        img.onerror = function () {
+            setError(tr('tools.imageResize.loadFailed'));
+            URL.revokeObjectURL(url);
+            state.objectUrl = '';
+        };
+        img.src = url;
     }
 
     dropZone.addEventListener('click', function () { fileInput.click(); });
@@ -142,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
     rotateBtn.addEventListener('click', function () {
         if (!state.image) return;
         state.angle = (state.angle + 90) % 360;
-        syncInputsFromNatural();
+        updateSourcePreview();
         previewWrap.hidden = true;
     });
 
@@ -173,6 +188,10 @@ document.addEventListener('DOMContentLoaded', function () {
         state.naturalW = 0;
         state.naturalH = 0;
         state.angle = 0;
+        if (state.objectUrl) {
+            URL.revokeObjectURL(state.objectUrl);
+            state.objectUrl = '';
+        }
         sourceImg.removeAttribute('src');
         previewImg.removeAttribute('src');
         previewWrap.hidden = true;

@@ -521,7 +521,7 @@ window.TB_LOCALES['zh-CN'] = {
             tip: '提示：',
             tipBody: '从本机选择文件即可，不支持微信「从聊天选择」。处理不会上传。',
             rotate: '旋转 90°',
-            export: '导出',
+            export: '下载图片',
             clear: '清除',
             meta: '当前显示尺寸：{width} × {height}',
             invalidFile: '请选择图片文件',

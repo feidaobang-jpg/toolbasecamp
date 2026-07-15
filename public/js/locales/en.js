@@ -522,7 +522,7 @@ window.TB_LOCALES.en = {
             tip: 'Tip:',
             tipBody: 'Pick a file from your device. Chat-file pickers are not available on the web. Nothing is uploaded.',
             rotate: 'Rotate 90°',
-            export: 'Export',
+            export: 'Download image',
             clear: 'Clear',
             meta: 'Display size: {width} × {height}',
             invalidFile: 'Please choose an image file',
