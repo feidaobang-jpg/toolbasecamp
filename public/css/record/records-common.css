@@ -228,6 +228,15 @@
   font-weight: 700;
 }
 
+#detail-view .rec-progress {
+  margin: 8px 0 16px;
+  max-width: 420px;
+}
+
+#detail-view .rec-section-title {
+  margin-top: 8px;
+}
+
 .rec-days-today .rec-item-value {
   color: #16a34a;
 }

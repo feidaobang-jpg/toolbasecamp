@@ -433,12 +433,15 @@ window.TB_LOCALES['zh-CN'] = {
             checkinHint: '还可打卡 {remaining}',
             invalidCheckin: '请输入大于 0 的整数',
             resetOne: '清零',
-            resetOneConfirm: '确定将「{name}」的打卡进度清零？',
+            resetOneConfirm: '确定将「{name}」的打卡进度清零？（历史记录会保留）',
             resetAll: '清零全部',
-            resetConfirm: '确定将所有打卡次数清零？',
+            resetConfirm: '确定将所有打卡次数清零？（历史记录会保留）',
+            history: '历史',
+            noHistory: '暂无打卡记录。',
+            logCount: '+{count}',
             empty: '还没有打卡目标。',
             invalidTarget: '目标次数或分钟必须大于 0',
-            deleteConfirm: '确定删除「{name}」？'
+            deleteConfirm: '确定删除「{name}」？历史记录也会删除。'
         },
         deposit: {
             title: '存款',

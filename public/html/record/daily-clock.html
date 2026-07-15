@@ -7,7 +7,7 @@
   <meta name="description" content="Habit check-in tracker. Data synced to your account.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/record/records-common.css?v=2" />
+  <link rel="stylesheet" href="../../css/record/records-common.css?v=3" />
 </head>
 <body>
   <div class="container">
@@ -36,6 +36,21 @@
           <div class="error-box" id="error-box" role="alert"></div>
           <div class="rec-list" id="list"></div>
           <p class="rec-empty" id="empty" hidden data-i18n="tools.dailyClock.empty">No check-in goals yet.</p>
+        </div>
+
+        <div class="tool-card" id="detail-view" hidden>
+          <div class="rec-toolbar">
+            <button type="button" class="tb-btn" id="back-btn" data-i18n="tools.records.back">Back</button>
+            <button type="button" class="tb-btn" id="detail-checkin-btn" data-i18n="tools.dailyClock.checkin">Check in</button>
+            <button type="button" class="tb-btn" id="detail-reset-btn" data-i18n="tools.dailyClock.resetOne">Reset</button>
+          </div>
+          <h2 class="rec-section-title" id="detail-name"></h2>
+          <p class="rec-item-meta" id="detail-progress"></p>
+          <div class="rec-progress" id="detail-progress-bar"><span id="detail-progress-fill" style="width:0%"></span></div>
+          <div class="error-box" id="detail-error" role="alert"></div>
+          <h3 class="rec-section-title" data-i18n="tools.dailyClock.history">History</h3>
+          <div class="rec-txn-list" id="log-list"></div>
+          <p class="rec-empty" id="log-empty" hidden data-i18n="tools.dailyClock.noHistory">No check-ins yet.</p>
         </div>
 
         <div class="tool-card" id="form-view" hidden>
@@ -81,6 +96,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=1"></script>
-  <script src="../../js/record/daily-clock.js?v=4"></script>
+  <script src="../../js/record/daily-clock.js?v=5"></script>
 </body>
 </html>

@@ -434,12 +434,15 @@ window.TB_LOCALES.en = {
             checkinHint: '{remaining} remaining',
             invalidCheckin: 'Enter an integer greater than 0',
             resetOne: 'Reset',
-            resetOneConfirm: 'Reset progress for “{name}” to zero?',
+            resetOneConfirm: 'Reset progress for “{name}” to zero? (History is kept.)',
             resetAll: 'Reset counts',
-            resetConfirm: 'Reset all check-in counts to zero?',
+            resetConfirm: 'Reset all check-in counts to zero? (History is kept.)',
+            history: 'History',
+            noHistory: 'No check-ins yet.',
+            logCount: '+{count}',
             empty: 'No check-in goals yet.',
             invalidTarget: 'Target must be greater than 0',
-            deleteConfirm: 'Delete “{name}”?'
+            deleteConfirm: 'Delete “{name}”? History will also be deleted.'
         },
         deposit: {
             title: 'Deposits',

@@ -19,6 +19,7 @@ REMARK_MAX = 500
 CATEGORY_NAME_MAX = 40
 CLOCK_TARGET_MAX = 999999
 CHECKIN_MAX = 999
+CLOCK_LOG_LIMIT = 100
 DEPOSIT_AMOUNT_MAX = Decimal("99999999.99")
 GOODS_PRICE_MAX = Decimal("99999999.99")
 
@@ -51,6 +52,21 @@ def ensure_record_tables(cur):
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_clocks_user (user_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_clock_logs (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            clock_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            count INT NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_clock_logs_clock (clock_id, id),
+            INDEX idx_clock_logs_user (user_id),
+            FOREIGN KEY (clock_id) REFERENCES record_clocks(id) ON DELETE CASCADE,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
@@ -215,6 +231,28 @@ def _serialize_clock(row: dict) -> dict:
     }
 
 
+def _serialize_clock_log(row: dict) -> dict:
+    return {
+        "id": row["id"],
+        "count": int(row["count"]),
+        "time": _iso(row.get("created_at")),
+    }
+
+
+def _list_clock_logs(cur, *, clock_id: int, user_id: int, limit: int = CLOCK_LOG_LIMIT) -> List[dict]:
+    lim = max(1, min(int(limit), CLOCK_LOG_LIMIT))
+    cur.execute(
+        """
+        SELECT id, count, created_at FROM record_clock_logs
+        WHERE clock_id=%s AND user_id=%s
+        ORDER BY id DESC
+        LIMIT %s
+        """,
+        (clock_id, user_id, lim),
+    )
+    return [_serialize_clock_log(r) for r in (cur.fetchall() or [])]
+
+
 @router.get("/clocks")
 def list_clocks(user: dict = Depends(_user)):
     conn = _conn()
@@ -314,9 +352,36 @@ def checkin_clock(clock_id: int, body: ClockCheckinBody, user: dict = Depends(_u
                 """,
                 (add, clock_id, user["id"]),
             )
+            if add > 0:
+                cur.execute(
+                    """
+                    INSERT INTO record_clock_logs (clock_id, user_id, count)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (clock_id, user["id"], add),
+                )
             cur.execute("SELECT * FROM record_clocks WHERE id=%s", (clock_id,))
             out = _serialize_clock(cur.fetchone())
             out["added"] = add
+            return out
+    finally:
+        conn.close()
+
+
+@router.get("/clocks/{clock_id}/logs")
+def list_clock_logs(clock_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM record_clocks WHERE id=%s AND user_id=%s",
+                (clock_id, user["id"]),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Not found")
+            out = _serialize_clock(row)
+            out["logs"] = _list_clock_logs(cur, clock_id=clock_id, user_id=user["id"])
             return out
     finally:
         conn.close()
