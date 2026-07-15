@@ -111,10 +111,22 @@ document.addEventListener('DOMContentLoaded', function () {
         return Object.assign({}, item, cycle);
     }
 
-    function daysText(n) {
-        if (n === 0) return tr('tools.importantDays.today');
-        if (n > 0) return tr('tools.importantDays.inDays', { n: n });
-        return tr('tools.importantDays.daysAgo', { n: Math.abs(n) });
+    function primaryText(item) {
+        if (item.daysLeft === 0) return tr('tools.importantDays.today');
+        if (item.daysLeft > 0) return tr('tools.importantDays.inDays', { n: item.daysLeft });
+        // Past this year's date: highlight countdown to next anniversary
+        if (item.nextAnniversaryYears > 0) {
+            return tr('tools.importantDays.nextWithYears', {
+                n: item.daysToNext,
+                years: item.nextAnniversaryYears
+            });
+        }
+        return tr('tools.importantDays.inDays', { n: item.daysToNext });
+    }
+
+    function secondaryText(item) {
+        if (item.daysLeft >= 0) return '';
+        return tr('tools.importantDays.daysAgo', { n: Math.abs(item.daysLeft) });
     }
 
     function metaText(item) {
@@ -123,18 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
             parts.push(tr('tools.importantDays.anniversary', { n: item.anniversaryYears }));
         }
         return parts.join(' · ');
-    }
-
-    function nextHint(item) {
-        if (item.daysLeft >= 0) return '';
-        if (!(item.daysToNext > 0)) return '';
-        if (item.nextAnniversaryYears > 0) {
-            return tr('tools.importantDays.nextWithYears', {
-                n: item.daysToNext,
-                years: item.nextAnniversaryYears
-            });
-        }
-        return tr('tools.importantDays.nextInDays', { n: item.daysToNext });
     }
 
     function sortItems(items) {
@@ -181,8 +181,12 @@ document.addEventListener('DOMContentLoaded', function () {
             el.className = cls;
             el.innerHTML =
                 '<div class="rec-item-main">' +
-                '<div><p class="rec-item-title"></p><p class="rec-item-meta"></p><p class="rec-item-meta" data-next></p></div>' +
-                '<div class="rec-item-value"></div>' +
+                '<div>' +
+                '<p class="rec-item-title"></p>' +
+                '<p class="rec-item-meta"></p>' +
+                '<p class="rec-item-value" data-primary></p>' +
+                '<p class="rec-item-meta" data-secondary></p>' +
+                '</div>' +
                 '</div>' +
                 '<div class="rec-item-actions">' +
                 '<button type="button" class="tb-btn" data-act="edit"></button>' +
@@ -190,11 +194,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 '</div>';
             el.querySelector('.rec-item-title').textContent = item.name;
             el.querySelector('.rec-item-meta').textContent = metaText(item);
-            var nextEl = el.querySelector('[data-next]');
-            var hint = nextHint(item);
-            if (hint) nextEl.textContent = hint;
-            else nextEl.hidden = true;
-            el.querySelector('.rec-item-value').textContent = daysText(item.daysLeft);
+            el.querySelector('[data-primary]').textContent = primaryText(item);
+            var secondaryEl = el.querySelector('[data-secondary]');
+            var secondary = secondaryText(item);
+            if (secondary) secondaryEl.textContent = secondary;
+            else secondaryEl.hidden = true;
             el.querySelector('[data-act="edit"]').textContent = tr('tools.records.edit');
             el.querySelector('[data-act="del"]').textContent = tr('tools.records.delete');
             el.querySelector('[data-act="edit"]').addEventListener('click', function () {
