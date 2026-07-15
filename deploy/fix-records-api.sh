@@ -30,13 +30,17 @@ assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset: ' + st
 
 echo "=== Restart API (kill stale port 8001) ==="
 systemctl stop toolbasecamp-api 2>/dev/null || true
-fuser -k 8001/tcp 2>/dev/null || true
-pkill -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
+sleep 1
+fuser -k -9 8001/tcp 2>/dev/null || true
+pkill -9 -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
+pkill -9 -f 'run.py' 2>/dev/null || true
 sleep 2
 rm -rf "$APP_DIR/__pycache__"
+systemctl reset-failed toolbasecamp-api 2>/dev/null || true
 systemctl start toolbasecamp-api
 sleep 3
 systemctl status toolbasecamp-api --no-pager || true
+ss -lntp 2>/dev/null | grep 8001 || true
 
 echo "=== Health ==="
 HEALTH="$(curl -s http://127.0.0.1:8001/health || true)"
@@ -47,10 +51,20 @@ echo "$HEALTH" | grep -q '"records_api":true' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+echo "$HEALTH" | grep -q '"records_clock_reset":true' || {
+  echo "FAILED: health records_clock_reset is not true (stale process?)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 
 echo "=== Local openapi check ==="
 curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/days' || {
   echo "FAILED: openapi missing /records/days"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
+curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/clocks/{clock_id}/reset' || {
+  echo "FAILED: openapi missing clock reset route"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }

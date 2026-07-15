@@ -131,6 +131,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     body: '{}'
                 })
+                    .catch(function (e) {
+                        // Stale API without /reset: recreate goal to clear progress.
+                        if (!(e && e.status === 404)) throw e;
+                        return R.apiJson('/records/clocks/' + item.id, { method: 'DELETE' })
+                            .then(function () {
+                                return R.apiJson('/records/clocks', {
+                                    method: 'POST',
+                                    body: JSON.stringify({
+                                        name: item.name,
+                                        target_count: item.targetCount
+                                    })
+                                });
+                            });
+                    })
                     .then(load)
                     .catch(function (e) { R.setError(errorBox, e.message); });
             });

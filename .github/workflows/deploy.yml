@@ -248,11 +248,23 @@ jobs:
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           echo "=== force restart API for records routes ==="
           systemctl stop toolbasecamp-api 2>/dev/null || true
+          sleep 1
           fuser -k 8001/tcp 2>/dev/null || true
-          pkill -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
+          pkill -9 -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
+          pkill -9 -f 'run.py' 2>/dev/null || true
           sleep 2
-          rm -rf /opt/toolbasecamp-api/__pycache__
+          # Port must be free before start, otherwise systemd may leave an old orphan listening.
+          if ss -lnt 2>/dev/null | grep -q ':8001'; then
+            echo "port 8001 still busy — killing again"
+            fuser -k -9 8001/tcp 2>/dev/null || true
+            sleep 2
+          fi
+          rm -rf /opt/toolbasecamp-api/__pycache__ /opt/toolbasecamp-api/*/__pycache__ 2>/dev/null || true
+          systemctl reset-failed toolbasecamp-api 2>/dev/null || true
           systemctl start toolbasecamp-api
+          sleep 2
+          systemctl is-active toolbasecamp-api
+          ss -lntp 2>/dev/null | grep 8001 || netstat -lntp 2>/dev/null | grep 8001 || true
           HEALTH_OK=0
           for i in 1 2 3 4 5 6 7 8; do
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
@@ -397,11 +409,12 @@ jobs:
           head -c 200 /tmp/records-days-public.txt || true
           echo ""
           if echo "$HEALTH" | grep -F '"records_api":true' >/dev/null \
+            && echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null \
             && [[ "$DAYS_CODE" != "404" && "$DAYS_CODE" != "000" ]]; then
-            echo "Records API public OK."
+            echo "Records API public OK (incl. clock reset flag)."
             exit 0
           fi
-          echo "::warning:: public records API missing — forcing remote fix-records-api.sh"
+          echo "::warning:: public records API incomplete — forcing remote fix-records-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-records-api.sh'
           sleep 3
@@ -412,6 +425,17 @@ jobs:
           echo "public GET /api/records/days after fix -> $DAYS_CODE"
           if ! echo "$HEALTH" | grep -F '"records_api":true' >/dev/null; then
             echo "::error:: public health still missing records_api after fix"
+            exit 1
+          fi
+          if ! echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null; then
+            echo "::error:: public health still missing records_clock_reset after fix — API process stale"
+            exit 1
+          fi
+          RESET_CODE="$(curl -sS -o /tmp/clock-reset-public.txt -w '%{http_code}' \
+            -X POST "https://toolbasecamp.com/api/records/clocks/1/reset" || echo '000')"
+          echo "public POST /api/records/clocks/1/reset -> $RESET_CODE"
+          if [[ "$RESET_CODE" == "404" ]]; then
+            echo "::error:: public clock reset route still 404 after fix"
             exit 1
           fi
           if [[ "$DAYS_CODE" == "404" || "$DAYS_CODE" == "000" ]]; then
