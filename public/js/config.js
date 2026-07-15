@@ -110,6 +110,7 @@ const toolsConfig = {
                 { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
                 { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true },
+                { titleKey: 'tools.portraitCutout.title', url: 'html/media/portrait-cutout.html', authRequired: true },
                 { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]

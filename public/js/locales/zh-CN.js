@@ -645,6 +645,16 @@ window.TB_LOCALES['zh-CN'] = {
                 smallTwo: '小二寸（390×567）'
             }
         },
+        portraitCutout: {
+            title: '人像抠图',
+            desc: '去掉背景，下载透明 PNG。不绑定证件尺寸或底色。需登录，计入每日限额。',
+            dropTitle: '点击或拖入人像照片',
+            dropHint: '建议 JPG / PNG，不超过 5MB',
+            shareQuota: '与「制作证件照」共用每日抠图限额。',
+            run: '开始',
+            download: '下载',
+            clear: '清除'
+        },
         imagesToPdfAdvanced: {
             title: '图片转 PDF（高级）',
             desc: '服务端合并图片为 PDF，可选 AI 去阴影。需登录，计入每日限额。',

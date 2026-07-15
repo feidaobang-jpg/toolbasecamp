@@ -335,8 +335,26 @@
   font-size: 14px;
 }
 
-.img-cloud-busy[hidden] {
-  display: none !important;
+.img-tool-preview.cutout-preview {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background:
+    linear-gradient(45deg, #e5e7eb 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, #e5e7eb 25%, transparent 25%) 0 8px / 16px 16px,
+    linear-gradient(45deg, transparent 75%, #e5e7eb 75%) 8px -8px / 16px 16px,
+    linear-gradient(-45deg, transparent 75%, #e5e7eb 75%) -8px 0 / 16px 16px,
+    #f8fafc;
+  text-align: center;
+}
+
+.cutout-preview img {
+  max-width: 100%;
+  max-height: 420px;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .img-cloud-spinner {

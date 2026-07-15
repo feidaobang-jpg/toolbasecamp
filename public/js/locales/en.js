@@ -646,6 +646,16 @@ window.TB_LOCALES.en = {
                 smallTwo: 'Small 2 inch (390×567)'
             }
         },
+        portraitCutout: {
+            title: 'Portrait Cutout',
+            desc: 'Remove the background and download a transparent PNG. No ID size or color. Requires sign-in and daily quota.',
+            dropTitle: 'Click or drop a portrait photo',
+            dropHint: 'JPG / PNG — max 5MB recommended',
+            shareQuota: 'Shares the same daily quota as ID Photo.',
+            run: 'Start',
+            download: 'Download',
+            clear: 'Clear'
+        },
         imagesToPdfAdvanced: {
             title: 'Images to PDF (Advanced)',
             desc: 'Merge images into a PDF on the server with optional AI shadow removal. Requires sign-in and daily quota.',
