@@ -109,6 +109,10 @@ const toolsConfig = {
                 { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
                 { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
+                { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true },
+                { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true },
+                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true },
+                { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]
         },
@@ -117,7 +121,8 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.pdfToWord.title', url: 'html/docs/pdf-to-word.html' },
                 { titleKey: 'tools.wordToPdf.title', url: 'html/docs/word-to-pdf.html' },
-                { titleKey: 'tools.imagesToPdf.title', url: 'html/docs/images-to-pdf.html' }
+                { titleKey: 'tools.imagesToPdf.title', url: 'html/docs/images-to-pdf.html' },
+                { titleKey: 'tools.imagesToPdfAdvanced.title', url: 'html/media/images-to-pdf-advanced.html', authRequired: true }
             ]
         },
         {

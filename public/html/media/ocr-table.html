@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCR Table - Tool Basecamp</title>
+  <meta name="description" content="Recognize tables in images and copy as TSV. Requires sign-in and daily quota.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=2" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.ocrTable.title">Extract Table</h1>
+        <p data-i18n="tools.ocrTable.desc">Recognize table structure from a photo and copy as tab-separated text. Requires sign-in and daily quota.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in to use this cloud tool. Usage counts against your daily quota.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="quota-line"></p>
+          <div class="drop-zone" id="drop-zone">
+            <div class="drop-icon">＋</div>
+            <div class="drop-title" data-i18n="tools.ocrTable.dropTitle">Click or drop a table image</div>
+            <div class="drop-hint" data-i18n="tools.ocrTable.dropHint">JPG, PNG, WebP — max 8MB</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none" />
+          <div class="img-tool-source" id="source-wrap" hidden>
+            <img id="source-img" alt="" />
+          </div>
+          <div class="tip-box">
+            <b data-i18n="tools.ocrTable.tip">Tip:</b>
+            <span data-i18n="tools.ocrTable.tipBody">Paste the TSV result into Excel or Sheets. Straight-on photos work best.</span>
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.ocrTable.run">Recognize</button>
+            <button type="button" class="tb-btn" id="copy-btn" disabled data-i18n="tools.ocrTable.copy">Copy TSV</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.ocrTable.clear">Clear</button>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+          <textarea class="img-cloud-result-text" id="result" readonly rows="12"></textarea>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-cloud-client.js?v=1"></script>
+  <script src="../../js/media/ocr-table.js?v=1"></script>
+</body>
+</html>

@@ -25,6 +25,7 @@ from recipe_ai import (
     get_recipe_config,
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
+from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -149,6 +150,7 @@ def ensure_tables():
                 """
             )
             ensure_record_tables(cur)
+            ensure_image_quota_table(cur)
     finally:
         conn.close()
 
@@ -240,6 +242,8 @@ def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
 
 wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
+wire_image(get_conn, require_db, get_current_user)
+app.include_router(image_router)
 
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:
@@ -504,6 +508,12 @@ def health():
         days_sample = _anniversary_cycle(date(2015, 5, 20), date.today()).get("daysLeft")
     except Exception:
         days_sample = None
+    try:
+        from tencent_image import tencent_configured as _tencent_ok
+
+        tencent_image_ok = bool(_tencent_ok())
+    except Exception:
+        tencent_image_ok = False
     return {
         "ok": True,
         "service": "toolbasecamp-api",
@@ -512,6 +522,8 @@ def health():
         "records_api": "/records/days" in paths,
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,
         "records_clock_logs": "/records/clocks/{clock_id}/logs" in paths,
+        "image_api": "/image/ocr-text" in paths,
+        "tencent_image": tencent_image_ok,
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),
