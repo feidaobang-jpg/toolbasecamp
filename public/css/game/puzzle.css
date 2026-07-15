@@ -1,3 +1,21 @@
+.puzzle-preview-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.puzzle-preview {
+    width: calc(min(100%, 420px) / 3);
+    max-width: 140px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    flex-shrink: 0;
+}
+
 .puzzle-board {
     position: relative;
     width: min(100%, 420px);
@@ -31,5 +49,9 @@
 
 .puzzle-upload input[type="file"] {
     font-size: 13px;
-    max-width: 100%;
+    max-width: min(100%, 220px);
+}
+
+.puzzle-upload .tb-btn {
+    flex-shrink: 0;
 }

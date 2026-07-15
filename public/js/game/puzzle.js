@@ -6,6 +6,7 @@
     }
 
     var boardEl = document.getElementById('board');
+    var previewEl = document.getElementById('preview');
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
     var diffRow = document.getElementById('diff-row');
@@ -19,8 +20,21 @@
     var objectUrl = null;
 
     function setStatus(msg, cls) {
+        if (!msg) {
+            statusEl.hidden = true;
+            statusEl.textContent = '';
+            return;
+        }
+        statusEl.hidden = false;
         statusEl.textContent = msg;
         statusEl.className = 'game-status' + (cls ? ' ' + cls : '');
+    }
+
+    function syncPreviewSize() {
+        var boardSize = boardEl.clientWidth || 320;
+        var cell = boardSize / grid;
+        previewEl.style.width = cell + 'px';
+        previewEl.style.height = cell + 'px';
     }
 
     function makeDefaultImage() {
@@ -67,13 +81,15 @@
         pieces = order;
         selected = -1;
         complete = false;
-        setStatus(tr('tools.puzzle.hint'), 'is-idle');
+        setStatus('');
+        previewEl.src = imageUrl;
         render();
     }
 
     function render() {
         var size = boardEl.clientWidth || 320;
         var piece = size / grid;
+        syncPreviewSize();
         boardEl.innerHTML = '';
         pieces.forEach(function (correctIndex, displayIndex) {
             var row = Math.floor(correctIndex / grid);
@@ -124,6 +140,8 @@
         if (checkWin()) {
             complete = true;
             setStatus(tr('tools.puzzle.win'), 'is-win');
+        } else {
+            setStatus('');
         }
         render();
     });

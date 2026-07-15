@@ -15,14 +15,32 @@
     border-radius: 12%;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    transition: transform 0.12s ease, outline 0.12s ease;
+    transition: left 0.28s ease, top 0.28s ease, transform 0.28s ease, opacity 0.28s ease, outline 0.12s ease;
     padding: 0;
+    will-change: left, top, transform, opacity;
 }
 
 .gem.is-selected {
     outline: 3px solid #111827;
     z-index: 2;
     transform: scale(0.95);
+}
+
+.gem.is-clearing {
+    z-index: 3;
+    transform: scale(0.15);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.gem.is-swapping {
+    z-index: 4;
+    transition: left 0.35s ease-in-out, top 0.35s ease-in-out, transform 0.12s ease, outline 0.12s ease;
+}
+
+.gem.is-falling {
+    z-index: 3;
+    transition: left 0.32s cubic-bezier(0.22, 0.61, 0.36, 1), top 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .gem-type-1 { background: linear-gradient(135deg, #ff0000, #ff5252); }

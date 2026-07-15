@@ -51,8 +51,8 @@
             x: paddle.x + paddle.w / 2,
             y: paddle.y - 10,
             r: 7,
-            vx: (Math.random() > 0.5 ? 1 : -1) * (2.2 + level * 0.15),
-            vy: -(2.6 + level * 0.2),
+            vx: (Math.random() > 0.5 ? 1 : -1) * (0.75 + level * 0.05),
+            vy: -(0.9 + level * 0.07),
             speedScale: 1
         }];
         if (attach) waiting = true;
@@ -130,7 +130,7 @@
             x: brick.x + brick.w / 2,
             y: brick.y + brick.h / 2,
             r: 9,
-            vy: 2.2,
+            vy: 0.85,
             type: brick.powerUp
         });
     }
@@ -193,7 +193,7 @@
                 ball.x >= paddle.x && ball.x <= paddle.x + paddle.w &&
                 ball.vy > 0) {
                 var hit = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
-                ball.vx = hit * 3.5 * (ball.speedScale || 1);
+                ball.vx = hit * 1.2 * (ball.speedScale || 1);
                 ball.vy = -Math.abs(ball.vy);
                 ball.y = paddle.y - ball.r;
             }

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
-  <link rel="stylesheet" href="../../css/game/puzzle.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/puzzle.css?v=2" />
 </head>
 <body>
   <div class="container">
@@ -20,25 +20,29 @@
       </div>
 
       <div class="tool-card game-card">
-        <div class="game-toolbar">
-          <div class="game-status is-idle" id="status" data-i18n="tools.puzzle.hint">Tap two tiles to swap them.</div>
-          <div class="action-row">
-            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Shuffle</button>
+        <div class="puzzle-preview-row">
+          <img id="preview" class="puzzle-preview" alt="" />
+          <div class="game-diff-row" id="diff-row">
+            <button type="button" class="tb-btn is-active" data-n="3">3×3</button>
+            <button type="button" class="tb-btn" data-n="4">4×4</button>
+            <button type="button" class="tb-btn" data-n="5">5×5</button>
+            <button type="button" class="tb-btn" data-n="6">6×6</button>
           </div>
         </div>
-        <div class="game-diff-row" id="diff-row">
-          <button type="button" class="tb-btn is-active" data-n="3">3×3</button>
-          <button type="button" class="tb-btn" data-n="4">4×4</button>
-          <button type="button" class="tb-btn" data-n="5">5×5</button>
-          <button type="button" class="tb-btn" data-n="6">6×6</button>
-        </div>
+
         <div class="puzzle-upload">
           <label class="field-label" for="file-input" data-i18n="tools.puzzle.upload">Custom image (optional)</label>
           <input type="file" id="file-input" accept="image/*" />
+          <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Shuffle</button>
         </div>
+
+        <div class="game-status is-idle" id="status" hidden></div>
+
         <div class="game-board-wrap">
           <div class="puzzle-board" id="board"></div>
         </div>
+
+        <p class="game-hint" data-i18n="tools.puzzle.hint">Tap two tiles to swap them.</p>
       </div>
     </main>
   </div>
@@ -48,6 +52,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/game/puzzle.js?v=1"></script>
+  <script src="../../js/game/puzzle.js?v=2"></script>
 </body>
 </html>
