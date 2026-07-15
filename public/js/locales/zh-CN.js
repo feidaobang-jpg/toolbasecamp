@@ -563,6 +563,7 @@ window.TB_LOCALES['zh-CN'] = {
         imageCloud: {
             loginRequired: '请先登录后再使用云端图片工具。用量计入每日限额。',
             quotaLine: '今日已用 {used} / {limit}，剩余 {remaining}',
+            quotaUnlimited: '管理员账号：今日次数不限',
             dailyLimit: '今日次数已用完，请明天再试。',
             notConfigured: '服务端尚未配置腾讯云密钥（TENCENT_SECRET_ID / TENCENT_SECRET_KEY）。',
             notConfiguredHint: '服务端尚未配置腾讯云密钥，去阴影等 AI 能力暂不可用。',

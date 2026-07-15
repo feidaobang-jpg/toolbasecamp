@@ -564,6 +564,7 @@ window.TB_LOCALES.en = {
         imageCloud: {
             loginRequired: 'Please sign in to use this cloud tool. Usage counts against your daily quota.',
             quotaLine: 'Today: {used} / {limit} used, {remaining} left',
+            quotaUnlimited: 'Admin account: unlimited today',
             dailyLimit: 'Daily limit reached. Please try again tomorrow.',
             notConfigured: 'Tencent Cloud is not configured on the server (TENCENT_SECRET_ID / TENCENT_SECRET_KEY).',
             notConfiguredHint: 'Tencent Cloud keys are not configured yet. AI features like shadow removal are unavailable.',

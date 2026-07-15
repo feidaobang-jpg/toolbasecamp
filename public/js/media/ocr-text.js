@@ -91,11 +91,7 @@
         C.apiJson('/image/ocr-text', { method: 'POST', body: fd }).then(function (data) {
             result.value = data.text || '';
             if (data.quota) {
-                quotaLine.textContent = C.tr('tools.imageCloud.quotaLine', {
-                    used: data.quota.used,
-                    limit: data.quota.limit,
-                    remaining: data.quota.remaining
-                });
+                quotaLine.textContent = C.formatQuotaItem(data.quota);
             } else {
                 return loadStatus();
             }

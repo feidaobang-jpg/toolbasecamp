@@ -95,11 +95,7 @@
                 C.setError(errorBox, C.tr('tools.ocrTable.empty'));
             }
             if (data.quota) {
-                quotaLine.textContent = C.tr('tools.imageCloud.quotaLine', {
-                    used: data.quota.used,
-                    limit: data.quota.limit,
-                    remaining: data.quota.remaining
-                });
+                quotaLine.textContent = C.formatQuotaItem(data.quota);
             } else {
                 return loadStatus();
             }

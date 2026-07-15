@@ -27,7 +27,8 @@ router = APIRouter(prefix="/image", tags=["image"])
 MAX_UPLOAD = 8 * 1024 * 1024
 MAX_IMAGES_PDF = 12
 
-# Daily per-user limits (login required)
+# Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
 LIMITS = {
     "ocr_text": int(os.environ.get("IMAGE_LIMIT_OCR_TEXT", "30")),
     "ocr_table": int(os.environ.get("IMAGE_LIMIT_OCR_TABLE", "20")),
@@ -35,6 +36,14 @@ LIMITS = {
     "id_photo": int(os.environ.get("IMAGE_LIMIT_ID_PHOTO", "10")),
     "to_pdf": int(os.environ.get("IMAGE_LIMIT_TO_PDF", "20")),
 }
+
+
+def _is_admin(user: dict) -> bool:
+    return user.get("role") == "admin" or (user.get("email") or "").lower() == ADMIN_EMAIL
+
+
+def _unlimited_quota() -> dict:
+    return {"used": 0, "limit": 0, "remaining": 0, "unlimited": True}
 
 ENHANCE_TASKS = {
     1: "cutEnhance",
@@ -85,7 +94,10 @@ def ensure_image_quota_table(cur):
     )
 
 
-def _consume_quota(user_id: int, action: str) -> dict:
+def _consume_quota(user: dict, action: str) -> dict:
+    if _is_admin(user):
+        return _unlimited_quota()
+    user_id = int(user["id"])
     max_count = LIMITS.get(action, 0)
     if max_count <= 0:
         raise HTTPException(status_code=503, detail="This action is disabled")
@@ -159,6 +171,20 @@ class QuotaItem(BaseModel):
 
 @router.get("/status")
 def image_status(user: dict = Depends(_user)):
+    admin = _is_admin(user)
+    if admin:
+        items = [
+            {"action": action, "used": 0, "limit": 0, "remaining": 0, "unlimited": True}
+            for action in LIMITS
+        ]
+        return {
+            "tencentConfigured": tencent_configured(),
+            "isAdmin": True,
+            "quotas": items,
+            "enhanceTasks": [
+                {"taskType": k, "id": v} for k, v in sorted(ENHANCE_TASKS.items())
+            ],
+        }
     today = _today()
     conn = _conn()
     try:
@@ -185,6 +211,7 @@ def image_status(user: dict = Depends(_user)):
             )
         return {
             "tencentConfigured": tencent_configured(),
+            "isAdmin": False,
             "quotas": items,
             "enhanceTasks": [
                 {"taskType": k, "id": v} for k, v in sorted(ENHANCE_TASKS.items())
@@ -200,7 +227,7 @@ async def api_ocr_text(
     user: dict = Depends(_user),
 ):
     _require_tencent()
-    quota = _consume_quota(user["id"], "ocr_text")
+    quota = _consume_quota(user, "ocr_text")
     data = await _read_upload(file)
     text = ocr_general_text(data)
     return {"text": text, "quota": quota}
@@ -212,7 +239,7 @@ async def api_ocr_table(
     user: dict = Depends(_user),
 ):
     _require_tencent()
-    quota = _consume_quota(user["id"], "ocr_table")
+    quota = _consume_quota(user, "ocr_table")
     data = await _read_upload(file)
     result = ocr_table(data)
     result["quota"] = quota
@@ -228,7 +255,7 @@ async def api_enhance(
     _require_tencent()
     if int(task_type) not in ENHANCE_TASKS:
         raise HTTPException(status_code=400, detail="Invalid enhance task type")
-    quota = _consume_quota(user["id"], "enhance")
+    quota = _consume_quota(user, "enhance")
     data = await _read_upload(file)
     out = image_enhancement(data, int(task_type))
     return {
@@ -245,7 +272,7 @@ async def api_id_photo_segment(
     user: dict = Depends(_user),
 ):
     _require_tencent()
-    quota = _consume_quota(user["id"], "id_photo")
+    quota = _consume_quota(user, "id_photo")
     data = await _read_upload(file)
     out = segment_portrait(data)
     return {
@@ -267,7 +294,7 @@ async def api_to_pdf_advanced(
         raise HTTPException(status_code=400, detail=f"Too many images (max {MAX_IMAGES_PDF})")
     if remove_shadow:
         _require_tencent()
-    quota = _consume_quota(user["id"], "to_pdf")
+    quota = _consume_quota(user, "to_pdf")
     images: list[bytes] = []
     for f in files:
         raw = await _read_upload(f)

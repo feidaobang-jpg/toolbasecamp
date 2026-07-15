@@ -285,11 +285,7 @@
         fd.append('file', file, file.name || 'portrait.jpg');
         C.apiJson('/image/id-photo/segment', { method: 'POST', body: fd }).then(function (data) {
             if (data.quota) {
-                quotaLine.textContent = C.tr('tools.imageCloud.quotaLine', {
-                    used: data.quota.used,
-                    limit: data.quota.limit,
-                    remaining: data.quota.remaining
-                });
+                quotaLine.textContent = C.formatQuotaItem(data.quota);
             }
             return new Promise(function (resolve, reject) {
                 var img = new Image();

@@ -129,14 +129,19 @@
         el.classList.toggle('show', !!msg);
     }
 
-    function formatQuota(quotas, action) {
-        var item = (quotas || []).find(function (q) { return q.action === action; });
+    function formatQuotaItem(item) {
         if (!item) return '';
+        if (item.unlimited) return tr('tools.imageCloud.quotaUnlimited');
         return tr('tools.imageCloud.quotaLine', {
             used: item.used,
             limit: item.limit,
             remaining: item.remaining
         });
+    }
+
+    function formatQuota(quotas, action) {
+        var item = (quotas || []).find(function (q) { return q.action === action; });
+        return formatQuotaItem(item);
     }
 
     function b64ToObjectUrl(b64, contentType) {
@@ -166,6 +171,7 @@
         setError: setError,
         setBusy: setBusy,
         formatQuota: formatQuota,
+        formatQuotaItem: formatQuotaItem,
         b64ToObjectUrl: b64ToObjectUrl,
         translateDetail: translateDetail
     };
