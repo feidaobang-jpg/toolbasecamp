@@ -99,35 +99,232 @@ def ocr_table(image_bytes: bytes) -> dict:
     for td in getattr(resp, "TableDetections", None) or []:
         cells = []
         for c in getattr(td, "Cells", None) or []:
+            row_tl = int(getattr(c, "RowTl", 0) or 0)
+            col_tl = int(getattr(c, "ColTl", 0) or 0)
+            row_br = int(getattr(c, "RowBr", 0) or 0)
+            col_br = int(getattr(c, "ColBr", 0) or 0)
+            row_span = int(getattr(c, "RowSpan", 0) or 0)
+            col_span = int(getattr(c, "ColSpan", 0) or 0)
+            if row_br <= row_tl:
+                row_br = row_tl + max(1, row_span or 1)
+            if col_br <= col_tl:
+                col_br = col_tl + max(1, col_span or 1)
             cells.append(
                 {
-                    "row": int(getattr(c, "RowTl", 0) or 0),
-                    "col": int(getattr(c, "ColTl", 0) or 0),
-                    "rowSpan": int(getattr(c, "RowSpan", 1) or 1),
-                    "colSpan": int(getattr(c, "ColSpan", 1) or 1),
-                    "text": getattr(c, "Text", "") or "",
+                    "row": row_tl,
+                    "col": col_tl,
+                    "rowEnd": row_br,
+                    "colEnd": col_br,
+                    "rowSpan": max(1, row_br - row_tl),
+                    "colSpan": max(1, col_br - col_tl),
+                    "text": (getattr(c, "Text", "") or "").strip(),
                 }
             )
         tables.append({"cells": cells})
-    return {"tables": tables, "tsv": _tables_to_tsv(tables)}
+
+    excel_b64 = getattr(resp, "Data", None) or ""
+    tsv = ""
+    if excel_b64:
+        try:
+            tsv = _excel_b64_to_tsv(excel_b64)
+        except Exception:
+            tsv = ""
+    if not (tsv or "").strip():
+        tsv = _tables_to_tsv(tables)
+    tsv = _cleanup_table_tsv(tsv)
+    out: dict[str, Any] = {"tables": tables, "tsv": tsv}
+    if excel_b64:
+        out["excelBase64"] = excel_b64
+    return out
+
+
+def _excel_b64_to_tsv(b64: str) -> str:
+    """Parse Tencent Excel payload into TSV without requiring openpyxl."""
+    import io
+    import re
+    import zipfile
+    import xml.etree.ElementTree as ET
+
+    raw = base64.b64decode(b64)
+    ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+    shared: list[str] = []
+    with zipfile.ZipFile(io.BytesIO(raw)) as zf:
+        if "xl/sharedStrings.xml" in zf.namelist():
+            root = ET.fromstring(zf.read("xl/sharedStrings.xml"))
+            for si in root.findall("m:si", ns):
+                texts = [
+                    (n.text or "")
+                    for n in si.iter("{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t")
+                ]
+                shared.append("".join(texts))
+        sheet_path = next(
+            (n for n in zf.namelist() if n.startswith("xl/worksheets/sheet") and n.endswith(".xml")),
+            None,
+        )
+        if not sheet_path:
+            return ""
+        root = ET.fromstring(zf.read(sheet_path))
+
+    cell_map: dict[tuple[int, int], str] = {}
+    max_r = max_c = -1
+    for c in root.findall(".//m:c", ns):
+        ref = c.get("r") or ""
+        m = re.fullmatch(r"([A-Z]+)(\d+)", ref)
+        if not m:
+            continue
+        col = _excel_col_to_index(m.group(1))
+        row = int(m.group(2)) - 1
+        val = ""
+        v = c.find("m:v", ns)
+        if v is not None and v.text is not None:
+            if c.get("t") == "s":
+                try:
+                    val = shared[int(v.text)]
+                except (ValueError, IndexError):
+                    val = v.text
+            else:
+                val = v.text
+        cell_map[(row, col)] = (val or "").strip()
+        max_r = max(max_r, row)
+        max_c = max(max_c, col)
+
+    if max_r < 0:
+        return ""
+    lines = []
+    for r in range(max_r + 1):
+        lines.append("\t".join(cell_map.get((r, c), "") for c in range(max_c + 1)))
+    return "\n".join(lines)
+
+
+def _excel_col_to_index(letters: str) -> int:
+    n = 0
+    for ch in letters.upper():
+        n = n * 26 + (ord(ch) - 64)
+    return n - 1
+
+
+def _index_to_excel_col(idx: int) -> str:
+    n = idx + 1
+    out = []
+    while n:
+        n, rem = divmod(n - 1, 26)
+        out.append(chr(65 + rem))
+    return "".join(reversed(out))
 
 
 def _tables_to_tsv(tables: list) -> str:
     chunks = []
     for ti, table in enumerate(tables):
-        grid: dict[tuple[int, int], str] = {}
-        max_r = max_c = 0
-        for c in table.get("cells") or []:
-            r, col = c["row"], c["col"]
-            grid[(r, col)] = c.get("text") or ""
-            max_r = max(max_r, r)
-            max_c = max(max_c, col)
-        lines = []
-        for r in range(max_r + 1):
-            row = [grid.get((r, c), "") for c in range(max_c + 1)]
-            lines.append("\t".join(row))
-        chunks.append(f"# table {ti + 1}\n" + "\n".join(lines))
+        cells = table.get("cells") or []
+        if not cells:
+            continue
+        max_r = max(int(c.get("rowEnd", c.get("row", 0) + 1)) for c in cells)
+        max_c = max(int(c.get("colEnd", c.get("col", 0) + 1)) for c in cells)
+        grid = [["" for _ in range(max_c)] for _ in range(max_r)]
+        for c in cells:
+            text = (c.get("text") or "").strip()
+            if not text:
+                continue
+            r0 = int(c.get("row", 0))
+            c0 = int(c.get("col", 0))
+            r1 = int(c.get("rowEnd", r0 + int(c.get("rowSpan", 1) or 1)))
+            c1 = int(c.get("colEnd", c0 + int(c.get("colSpan", 1) or 1)))
+            for r in range(max(0, r0), min(max_r, max(r0 + 1, r1))):
+                for col in range(max(0, c0), min(max_c, max(c0 + 1, c1))):
+                    # Prefer first non-empty fill for merged cells
+                    if not grid[r][col]:
+                        grid[r][col] = text
+        lines = ["\t".join(row) for row in grid]
+        body = "\n".join(lines).strip()
+        if not body:
+            continue
+        if len(tables) > 1:
+            chunks.append(f"# table {ti + 1}\n{body}")
+        else:
+            chunks.append(body)
     return "\n\n".join(chunks)
+
+
+def _cleanup_table_tsv(tsv: str) -> str:
+    """Drop empty edges and Excel sheet chrome (row numbers / column letters)."""
+    import re
+
+    if not (tsv or "").strip():
+        return ""
+    blocks = []
+    for block in re.split(r"\n\n+", tsv.strip()):
+        header = ""
+        body = block
+        if body.startswith("# table"):
+            first, _, rest = body.partition("\n")
+            header = first
+            body = rest
+        rows = [line.split("\t") for line in body.splitlines() if line.strip() or line == ""]
+        # Drop fully empty trailing/leading rows
+        while rows and all(not (c or "").strip() for c in rows[0]):
+            rows.pop(0)
+        while rows and all(not (c or "").strip() for c in rows[-1]):
+            rows.pop()
+        if not rows:
+            continue
+        # Normalize width
+        width = max(len(r) for r in rows)
+        rows = [r + [""] * (width - len(r)) for r in rows]
+        # Drop trailing empty columns
+        while width > 0 and all(not (r[width - 1] or "").strip() for r in rows):
+            width -= 1
+            rows = [r[:width] for r in rows]
+        if not rows or width <= 0:
+            continue
+
+        # Drop Excel-like column letter header (A B C D...)
+        first = [((c or "").strip()) for c in rows[0]]
+        nonempty = [c for c in first if c]
+        if len(nonempty) >= 2 and all(re.fullmatch(r"[A-Za-z]{1,3}", c or "") for c in nonempty):
+            expected = [_index_to_excel_col(i) for i in range(len(nonempty))]
+            if [c.upper() for c in nonempty] == expected:
+                # If first cell is junk like "4" before letters, still treat as header row
+                rows = rows[1:]
+
+        elif len(first) >= 3 and re.fullmatch(r"\d+", first[0] or ""):
+            # Header like "4 A B C D" — drop row-number chrome + letter header
+            letters = first[1:]
+            nonempty = [c for c in letters if c]
+            if len(nonempty) >= 2 and all(re.fullmatch(r"[A-Za-z]{1,3}", c) for c in nonempty):
+                expected = [_index_to_excel_col(i) for i in range(len(nonempty))]
+                if [c.upper() for c in nonempty] == expected:
+                    rows = rows[1:]
+                    # and drop first column below
+                    rows = [r[1:] for r in rows]
+
+        if not rows:
+            continue
+
+        # Drop leading column of consecutive row numbers (1,2,3...)
+        first_col = [((r[0] or "").strip()) for r in rows]
+        numeric = [c for c in first_col if c]
+        if len(numeric) >= 2 and all(re.fullmatch(r"\d+", c) for c in numeric):
+            nums = [int(c) for c in numeric]
+            if nums == list(range(nums[0], nums[0] + len(nums))):
+                rows = [r[1:] for r in rows]
+
+        # Drop trailing empty columns again
+        width = max((len(r) for r in rows), default=0)
+        while width > 0 and all(len(r) <= width - 1 or not (r[width - 1] or "").strip() for r in rows):
+            width -= 1
+            rows = [r[:width] for r in rows]
+
+        # Drop rows that are completely empty after cleanup
+        rows = [r for r in rows if any((c or "").strip() for c in r)]
+        if not rows:
+            continue
+        body = "\n".join("\t".join(r) for r in rows)
+        # Keep multi-table markers only when useful; single table is paste-ready.
+        blocks.append(body if not header else f"{header}\n{body}".strip())
+    if len(blocks) == 1 and blocks[0].startswith("# table"):
+        _, _, rest = blocks[0].partition("\n")
+        return rest.strip()
+    return "\n\n".join(blocks)
 
 
 def image_enhancement(image_bytes: bytes, task_type: int) -> bytes:

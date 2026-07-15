@@ -590,9 +590,9 @@ window.TB_LOCALES['zh-CN'] = {
             dropTitle: '点击或拖入表格图片',
             dropHint: '支持 JPG、PNG、WebP，最大 8MB',
             tip: '提示：',
-            tipBody: '结果为制表符分隔文本，可贴到 Excel / 表格。正面拍摄效果更好。',
+            tipBody: '结果可直接粘贴到 Excel / 表格。尽量正面拍摄，避免带上表格软件自带的行列标题。',
             run: '开始识别',
-            copy: '复制 TSV',
+            copy: '复制结果',
             clear: '清除',
             empty: '未识别到表格'
         },

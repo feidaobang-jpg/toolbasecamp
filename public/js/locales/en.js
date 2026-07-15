@@ -591,9 +591,9 @@ window.TB_LOCALES.en = {
             dropTitle: 'Click or drop a table image',
             dropHint: 'JPG, PNG, WebP — max 8MB',
             tip: 'Tip:',
-            tipBody: 'Paste the TSV into Excel or Sheets. Straight-on photos work best.',
+            tipBody: 'Paste into Excel or Sheets. Straight-on photos work best; avoid spreadsheet chrome (row/column headers) in the photo.',
             run: 'Recognize',
-            copy: 'Copy TSV',
+            copy: 'Copy result',
             clear: 'Clear',
             empty: 'No table detected'
         },
