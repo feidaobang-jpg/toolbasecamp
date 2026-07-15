@@ -433,6 +433,8 @@ window.TB_LOCALES.en = {
             checkinLabel: 'Count or minutes this time',
             checkinHint: '{remaining} remaining',
             invalidCheckin: 'Enter an integer greater than 0',
+            resetOne: 'Reset',
+            resetOneConfirm: 'Reset progress for “{name}” to zero?',
             resetAll: 'Reset counts',
             resetConfirm: 'Reset all check-in counts to zero?',
             empty: 'No check-in goals yet.',

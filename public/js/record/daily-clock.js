@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 '<div class="rec-progress' + (done ? ' is-done' : '') + '"><span style="width:' + pct + '%"></span></div>' +
                 '<div class="rec-item-actions">' +
                 '<button type="button" class="tb-btn" data-act="checkin"></button>' +
+                '<button type="button" class="tb-btn" data-act="reset"></button>' +
                 '<button type="button" class="tb-btn" data-act="edit"></button>' +
                 '<button type="button" class="tb-btn" data-act="del"></button>' +
                 '</div>';
@@ -113,13 +114,25 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             el.querySelector('.rec-item-value').textContent = pct + '%';
             var checkBtn = el.querySelector('[data-act="checkin"]');
+            var resetBtn = el.querySelector('[data-act="reset"]');
             checkBtn.textContent = tr('tools.dailyClock.checkin');
             checkBtn.disabled = done;
+            resetBtn.textContent = tr('tools.dailyClock.resetOne');
+            resetBtn.disabled = item.currentCount <= 0;
             el.querySelector('[data-act="edit"]').textContent = tr('tools.records.edit');
             el.querySelector('[data-act="del"]').textContent = tr('tools.records.delete');
 
             checkBtn.addEventListener('click', function () {
                 openCheckinDialog(item);
+            });
+            resetBtn.addEventListener('click', function () {
+                if (!R.confirmDelete(tr('tools.dailyClock.resetOneConfirm', { name: item.name }))) return;
+                R.apiJson('/records/clocks/' + item.id + '/reset', {
+                    method: 'POST',
+                    body: '{}'
+                })
+                    .then(load)
+                    .catch(function (e) { R.setError(errorBox, e.message); });
             });
             el.querySelector('[data-act="edit"]').addEventListener('click', function () {
                 showForm(item);

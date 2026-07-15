@@ -432,6 +432,8 @@ window.TB_LOCALES['zh-CN'] = {
             checkinLabel: '本次次数或分钟',
             checkinHint: '还可打卡 {remaining}',
             invalidCheckin: '请输入大于 0 的整数',
+            resetOne: '清零',
+            resetOneConfirm: '确定将「{name}」的打卡进度清零？',
             resetAll: '清零全部',
             resetConfirm: '确定将所有打卡次数清零？',
             empty: '还没有打卡目标。',

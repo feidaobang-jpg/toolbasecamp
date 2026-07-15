@@ -336,6 +336,26 @@ def reset_clock_counts(user: dict = Depends(_user)):
         conn.close()
 
 
+@router.post("/clocks/{clock_id}/reset")
+def reset_clock(clock_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE record_clocks SET current_count=0
+                WHERE id=%s AND user_id=%s
+                """,
+                (clock_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute("SELECT * FROM record_clocks WHERE id=%s", (clock_id,))
+            return _serialize_clock(cur.fetchone())
+    finally:
+        conn.close()
+
+
 @router.delete("/clocks/{clock_id}")
 def delete_clock(clock_id: int, user: dict = Depends(_user)):
     conn = _conn()
