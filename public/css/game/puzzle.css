@@ -69,3 +69,48 @@
     flex: 0 0 auto;
     white-space: nowrap;
 }
+
+.puzzle-crop {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.puzzle-crop[hidden] {
+    display: none !important;
+}
+
+.puzzle-crop-stage {
+    position: relative;
+    width: min(100%, 420px);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #111827;
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+}
+
+.puzzle-crop-stage.is-dragging {
+    cursor: grabbing;
+}
+
+.puzzle-crop-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: none;
+    pointer-events: none;
+    transform-origin: 0 0;
+}
+
+.puzzle-crop-frame {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.28);
+    pointer-events: none;
+    border-radius: 10px;
+}

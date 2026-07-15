@@ -172,7 +172,10 @@ window.TB_LOCALES['zh-CN'] = {
             hint: '依次点两块碎片即可交换。',
             upload: '自定义图片（可选）',
             win: '拼图完成！',
-            loadFailed: '图片加载失败'
+            loadFailed: '图片加载失败',
+            cropHint: '拖动图片选择正方形区域，确认后用于拼图与预览（等比裁切，不拉伸）。',
+            cropApply: '确认裁切',
+            cropCancel: '取消'
         },
         gemswap: {
             title: '宝石迷阵',

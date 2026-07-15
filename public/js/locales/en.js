@@ -173,7 +173,10 @@ window.TB_LOCALES.en = {
             hint: 'Tap two tiles to swap them.',
             upload: 'Custom image (optional)',
             win: 'Puzzle complete!',
-            loadFailed: 'Failed to load image'
+            loadFailed: 'Failed to load image',
+            cropHint: 'Drag to pick a square area. Preview and puzzle use the same cropped image (no stretch).',
+            cropApply: 'Use this crop',
+            cropCancel: 'Cancel'
         },
         gemswap: {
             title: 'Gem Match',

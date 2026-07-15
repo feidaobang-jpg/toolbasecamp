@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
-  <link rel="stylesheet" href="../../css/game/puzzle.css?v=3" />
+  <link rel="stylesheet" href="../../css/game/puzzle.css?v=4" />
 </head>
 <body>
   <div class="container">
@@ -36,6 +36,18 @@
           <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Shuffle</button>
         </div>
 
+        <div class="puzzle-crop" id="crop-panel" hidden>
+          <p class="game-hint" data-i18n="tools.puzzle.cropHint">Drag to choose the square area, then confirm.</p>
+          <div class="puzzle-crop-stage" id="crop-stage">
+            <img id="crop-img" class="puzzle-crop-img" alt="" draggable="false" />
+            <div class="puzzle-crop-frame" aria-hidden="true"></div>
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="crop-apply" data-i18n="tools.puzzle.cropApply">Use this crop</button>
+            <button type="button" class="tb-btn" id="crop-cancel" data-i18n="tools.puzzle.cropCancel">Cancel</button>
+          </div>
+        </div>
+
         <div class="game-status is-idle" id="status" hidden></div>
 
         <div class="game-board-wrap">
@@ -52,6 +64,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/game/puzzle.js?v=2"></script>
+  <script src="../../js/game/puzzle.js?v=4"></script>
 </body>
 </html>
