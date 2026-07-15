@@ -25,6 +25,7 @@ paths=[getattr(r,'path','') for r in app.routes]
 print([p for p in paths if p.startswith('/records')])
 assert '/records/days' in paths, 'missing /records/days: ' + str(paths)
 assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset: ' + str(paths)
+assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs: ' + str(paths)
 "
 )
 
@@ -56,6 +57,11 @@ echo "$HEALTH" | grep -q '"records_clock_reset":true' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+echo "$HEALTH" | grep -q '"records_clock_logs":true' || {
+  echo "FAILED: health records_clock_logs is not true (stale process?)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 
 echo "=== Local openapi check ==="
 curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/days' || {
@@ -65,6 +71,11 @@ curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/days' || {
 }
 curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/clocks/{clock_id}/reset' || {
   echo "FAILED: openapi missing clock reset route"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
+curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/clocks/{clock_id}/logs' || {
+  echo "FAILED: openapi missing clock logs route"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
