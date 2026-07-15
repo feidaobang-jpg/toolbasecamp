@@ -24,6 +24,7 @@ from main import app
 paths=[getattr(r,'path','') for r in app.routes]
 print([p for p in paths if p.startswith('/records')])
 assert '/records/days' in paths, 'missing /records/days: ' + str(paths)
+assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset: ' + str(paths)
 "
 )
 

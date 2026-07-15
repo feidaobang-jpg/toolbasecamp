@@ -510,6 +510,7 @@ def health():
         "db": db_ok,
         "recipe_api": "/recipe/generate" in paths and "/recipe/detect" in paths,
         "records_api": "/records/days" in paths,
+        "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

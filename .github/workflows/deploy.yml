@@ -211,7 +211,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths)"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p])"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -258,8 +258,9 @@ jobs:
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health try $i: $HEALTH_JSON"
             if echo "$HEALTH_JSON" | grep -F '"recipe_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null; then
-              echo "health OK with recipe_api and records_api"
+              && echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null; then
+              echo "health OK with recipe_api, records_api, records_clock_reset"
               HEALTH_OK=1
               break
             fi
@@ -273,9 +274,15 @@ jobs:
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health after fix: $HEALTH_JSON"
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            exit 1
+          }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
+            echo "=== openapi missing clock reset route ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             exit 1
           }
