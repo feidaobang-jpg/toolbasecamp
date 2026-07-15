@@ -42,16 +42,30 @@
 
 .puzzle-upload {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-wrap: nowrap;
     align-items: center;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.puzzle-upload .field-label {
+    display: inline;
+    flex: 0 0 auto;
+    margin: 0;
+    white-space: nowrap;
+    font-size: 13px;
+    color: #374151;
 }
 
 .puzzle-upload input[type="file"] {
-    font-size: 13px;
-    max-width: min(100%, 220px);
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+    font-size: 12px;
 }
 
 .puzzle-upload .tb-btn {
-    flex-shrink: 0;
+    flex: 0 0 auto;
+    white-space: nowrap;
 }
