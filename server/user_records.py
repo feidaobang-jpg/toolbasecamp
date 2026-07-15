@@ -899,13 +899,17 @@ def _serialize_good(row: dict) -> dict:
     rating = row.get("rating")
     label = (row.get("price_label") or "").strip()
     price_display = label if label else _money(row["price"])
+    rating_out = None
+    if rating is not None:
+        rd = Decimal(str(rating))
+        rating_out = int(rd) if rd == rd.to_integral_value() else float(rd)
     return {
         "id": row["id"],
         "name": row["name"],
         "categoryId": row["category_id"],
         "category": row["category_name"],
         "price": price_display,
-        "rating": None if rating is None else float(rating),
+        "rating": rating_out,
         "remark": row.get("remark") or "",
         "createdAt": _iso(row.get("created_at")),
         "updatedAt": _iso(row.get("updated_at")),
@@ -1082,57 +1086,28 @@ def delete_category(category_id: int, user: dict = Depends(_user)):
 def _parse_optional_rating(raw: Optional[str]) -> Optional[Decimal]:
     if raw is None or str(raw).strip() == "":
         return None
-    try:
-        d = Decimal(str(raw).strip())
-    except (InvalidOperation, ValueError) as exc:
-        raise HTTPException(status_code=400, detail="Invalid rating") from exc
-    if d < 0 or d > 5:
-        raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
-    return d.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
+    text = str(raw).strip()
+    if not re.fullmatch(r"[0-5]", text):
+        raise HTTPException(status_code=400, detail="Rating must be an integer from 0 to 5")
+    return Decimal(text)
 
 
-def _parse_one_price_number(raw: str) -> Decimal:
+def _parse_goods_price(raw: Any) -> Tuple[str, Decimal]:
+    """Single positive number, at most 2 decimal places. Returns (label, value)."""
+    text = str(raw or "").strip()
+    if not text or not re.fullmatch(r"\d+(\.\d{1,2})?", text):
+        raise HTTPException(status_code=400, detail="Invalid price")
     try:
-        d = Decimal(raw.strip())
+        d = Decimal(text)
     except (InvalidOperation, ValueError) as exc:
         raise HTTPException(status_code=400, detail="Invalid price") from exc
     if d <= 0:
         raise HTTPException(status_code=400, detail="price must be greater than 0")
     if d > GOODS_PRICE_MAX:
         raise HTTPException(status_code=400, detail="price is too large")
-    return d.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-
-
-def _format_price_number(d: Decimal) -> str:
-    text = f"{d:.2f}".rstrip("0").rstrip(".")
-    return text or "0"
-
-
-def _parse_goods_price(raw: Any) -> Tuple[str, Decimal]:
-    """
-    Accept a single price or a range (e.g. 10-18 / 10~18).
-    Returns (display_label, sort_value). sort_value is the lower bound.
-    """
-    text = str(raw or "").strip()
-    if not text or len(text) > GOODS_PRICE_LABEL_MAX:
-        raise HTTPException(status_code=400, detail="Invalid price")
-    # Keep user-facing label mostly as typed; normalize range separators for parsing.
-    parts = [p.strip() for p in re.split(r"\s*[~\-—–－～至到]\s*", text) if p.strip()]
-    if len(parts) == 1 and re.fullmatch(r"\d+(\.\d+)?", parts[0]):
-        value = _parse_one_price_number(parts[0])
-        return _format_price_number(value), value
-    if len(parts) == 2 and all(re.fullmatch(r"\d+(\.\d+)?", p) for p in parts):
-        low = _parse_one_price_number(parts[0])
-        high = _parse_one_price_number(parts[1])
-        if low > high:
-            low, high = high, low
-        label = f"{_format_price_number(low)}-{_format_price_number(high)}"
-        return label, low
-    # Single non-range numeric already handled; anything else is invalid.
-    if len(parts) == 1:
-        value = _parse_one_price_number(parts[0])
-        return _format_price_number(value), value
-    raise HTTPException(status_code=400, detail="Invalid price")
+    value = d.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    label = f"{value:.2f}".rstrip("0").rstrip(".")
+    return label or "0", value
 
 
 @router.get("/goods")

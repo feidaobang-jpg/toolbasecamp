@@ -75,7 +75,8 @@
             'Category is in use': 'tools.records.categoryInUse',
             'Category has children': 'tools.records.categoryHasChildren',
             'Remark too long': 'tools.records.remarkTooLong',
-            'Rating must be between 0 and 5': 'tools.records.ratingRange'
+            'Rating must be between 0 and 5': 'tools.records.ratingRange',
+            'Rating must be an integer from 0 to 5': 'tools.records.ratingRange'
         };
         if (map[msg]) return tr(map[msg]);
         return msg;
