@@ -104,11 +104,13 @@
 }
 
 .rec-item-value {
-  font-size: 18px;
+  margin: 6px 0 0;
+  font-size: 16px;
   font-weight: 700;
   color: #1e3a8a;
-  white-space: nowrap;
+  line-height: 1.45;
   font-variant-numeric: tabular-nums;
+  word-break: break-word;
 }
 
 .rec-item-actions {
@@ -223,7 +225,7 @@
 }
 
 .rec-days-past .rec-item-value {
-  color: #64748b;
+  color: #1e3a8a;
 }
 
 .rec-rating {
