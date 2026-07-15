@@ -239,3 +239,31 @@
   color: #92400e;
   font-size: 13px;
 }
+
+.id-card-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+
+.id-card-thumb {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(100%, 220px);
+}
+
+.id-card-thumb img {
+  width: 100%;
+  max-height: 140px;
+  object-fit: contain;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.id-card-thumb span {
+  font-size: 12px;
+  color: #6b7280;
+}

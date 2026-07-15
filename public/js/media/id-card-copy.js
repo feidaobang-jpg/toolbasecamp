@@ -13,10 +13,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var errorBox = document.getElementById('error-box');
     var previewWrap = document.getElementById('preview-wrap');
     var canvas = document.getElementById('sheet-canvas');
+    var frontThumbWrap = document.getElementById('front-thumb-wrap');
+    var backThumbWrap = document.getElementById('back-thumb-wrap');
+    var frontThumb = document.getElementById('front-thumb');
+    var backThumb = document.getElementById('back-thumb');
     var lastUrl = '';
 
     var frontImg = null;
     var backImg = null;
+    var frontObjectUrl = '';
+    var backObjectUrl = '';
 
     // A4 at ~150 DPI
     var PAGE_W = 1240;
@@ -27,7 +33,33 @@ document.addEventListener('DOMContentLoaded', function () {
         errorBox.classList.toggle('show', !!msg);
     }
 
-    function loadInput(input, assign) {
+    function setThumb(side, img, objectUrl) {
+        if (side === 'front') {
+            if (frontObjectUrl) URL.revokeObjectURL(frontObjectUrl);
+            frontObjectUrl = objectUrl || '';
+            frontImg = img;
+            if (img) {
+                frontThumb.src = objectUrl;
+                frontThumbWrap.hidden = false;
+            } else {
+                frontThumb.removeAttribute('src');
+                frontThumbWrap.hidden = true;
+            }
+        } else {
+            if (backObjectUrl) URL.revokeObjectURL(backObjectUrl);
+            backObjectUrl = objectUrl || '';
+            backImg = img;
+            if (img) {
+                backThumb.src = objectUrl;
+                backThumbWrap.hidden = false;
+            } else {
+                backThumb.removeAttribute('src');
+                backThumbWrap.hidden = true;
+            }
+        }
+    }
+
+    function loadInput(input, side) {
         input.addEventListener('change', function () {
             var file = input.files && input.files[0];
             if (!file) return;
@@ -38,14 +70,19 @@ document.addEventListener('DOMContentLoaded', function () {
             setError('');
             var url = URL.createObjectURL(file);
             var img = new Image();
-            img.onload = function () { assign(img); };
-            img.onerror = function () { setError(tr('tools.idCardCopy.loadFailed')); };
+            img.onload = function () {
+                setThumb(side, img, url);
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(url);
+                setError(tr('tools.idCardCopy.loadFailed'));
+            };
             img.src = url;
         });
     }
 
-    loadInput(frontInput, function (img) { frontImg = img; });
-    loadInput(backInput, function (img) { backImg = img; });
+    loadInput(frontInput, 'front');
+    loadInput(backInput, 'back');
 
     function drawContained(ctx, img, boxX, boxY, boxW, boxH) {
         var ratio = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
@@ -116,10 +153,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     clearBtn.addEventListener('click', function () {
-        frontImg = null;
-        backImg = null;
+        setThumb('front', null, '');
+        setThumb('back', null, '');
         frontInput.value = '';
         backInput.value = '';
+        wmText.value = '';
         lastUrl = '';
         previewWrap.hidden = true;
         downloadBtn.disabled = true;
