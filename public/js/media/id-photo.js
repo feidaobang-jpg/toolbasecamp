@@ -78,7 +78,7 @@
         }
         return {
             x: (canvasSize.w - w) / 2,
-            y: canvasSize.h - h,
+            y: (canvasSize.h - h) / 2,
             w: w,
             h: h
         };
@@ -272,8 +272,8 @@
         dropZone.hidden = false;
         runBtn.disabled = true;
         downloadBtn.disabled = true;
-        scaleInput.value = '50';
-        scaleVal.textContent = '50%';
+        scaleInput.value = '100';
+        scaleVal.textContent = '100%';
         C.setError(errorBox, '');
     });
 
@@ -296,7 +296,7 @@
                 img.onload = function () {
                     cutoutImg = img;
                     layout = null;
-                    scaleInput.value = '50';
+                    scaleInput.value = '100';
                     compose();
                     resolve();
                 };
