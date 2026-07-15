@@ -129,7 +129,7 @@ window.TB_LOCALES['zh-CN'] = {
             convert: '转换',
             life: '生活',
             record: '记录',
-            media: '媒体',
+            media: '图片',
             document: '文档',
             diagram: '图表',
             developer: '开发者'

@@ -130,7 +130,7 @@ window.TB_LOCALES.en = {
             convert: 'Convert',
             life: 'Life',
             record: 'Records',
-            media: 'Media',
+            media: 'Images',
             document: 'Document',
             diagram: 'Diagram',
             developer: 'Developer'
