@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code - Tool Basecamp</title>
+  <meta name="description" content="Generate QR codes locally in your browser. No upload.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.qrCode.title">QR Code</h1>
+        <p data-i18n="tools.qrCode.desc">Generate a QR code from text or URL. Runs locally in your browser.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="rec-field">
+          <label class="field-label" for="qr-content" data-i18n="tools.qrCode.contentLabel">Content</label>
+          <textarea id="qr-content" class="rec-textarea img-tool-textarea" maxlength="2000"
+            data-i18n-placeholder="tools.qrCode.contentPlaceholder" placeholder="Enter text or URL"></textarea>
+        </div>
+        <div class="options-row">
+          <label>
+            <span data-i18n="tools.qrCode.sizeLabel">Size</span>
+            <select id="qr-size">
+              <option value="200">200px</option>
+              <option value="280" selected>280px</option>
+              <option value="360">360px</option>
+              <option value="480">480px</option>
+            </select>
+          </label>
+        </div>
+        <div class="tip-box">
+          <b data-i18n="tools.qrCode.tip">Tip:</b>
+          <span data-i18n="tools.qrCode.tipBody">Generated entirely on this device. Nothing is uploaded.</span>
+        </div>
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="generate-btn" data-i18n="tools.qrCode.generate">Generate</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.qrCode.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.qrCode.clear">Clear</button>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+        <div class="img-tool-preview" id="preview-wrap" hidden>
+          <canvas id="qr-canvas"></canvas>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/qr-code.js?v=1"></script>
+</body>
+</html>

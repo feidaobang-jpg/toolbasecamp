@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Resize - Tool Basecamp</title>
+  <meta name="description" content="Resize, rotate and export images locally in your browser.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.imageResize.title">Image Resize</h1>
+        <p data-i18n="tools.imageResize.desc">Resize and rotate images in your browser. Nothing is uploaded.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">＋</div>
+          <div class="drop-title" data-i18n="tools.imageResize.dropTitle">Click or drop an image</div>
+          <div class="drop-hint" data-i18n="tools.imageResize.dropHint">JPG, PNG, WebP</div>
+        </div>
+        <input type="file" id="file-input" accept="image/*" style="display:none" />
+
+        <div class="img-tool-source" id="source-wrap" hidden>
+          <img id="source-img" alt="" />
+          <p class="img-tool-meta" id="source-meta"></p>
+        </div>
+
+        <div class="img-tool-fields" id="controls" hidden>
+          <label>
+            <span data-i18n="tools.imageResize.widthLabel">Width (px)</span>
+            <input type="number" id="width-input" min="1" step="1" inputmode="numeric" />
+          </label>
+          <label>
+            <span data-i18n="tools.imageResize.heightLabel">Height (px)</span>
+            <input type="number" id="height-input" min="1" step="1" inputmode="numeric" />
+          </label>
+          <label class="img-tool-check">
+            <input type="checkbox" id="lock-ratio" checked />
+            <span data-i18n="tools.imageResize.lockRatio">Keep aspect ratio</span>
+          </label>
+          <label>
+            <span data-i18n="tools.imageResize.formatLabel">Format</span>
+            <select id="format-select">
+              <option value="image/jpeg">JPEG</option>
+              <option value="image/png">PNG</option>
+              <option value="image/webp">WebP</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.imageResize.tip">Tip:</b>
+          <span data-i18n="tools.imageResize.tipBody">All processing stays on this device. Choose a file from your computer — no chat picker.</span>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="rotate-btn" disabled data-i18n="tools.imageResize.rotate">Rotate 90°</button>
+          <button type="button" class="tb-btn" id="export-btn" disabled data-i18n="tools.imageResize.export">Export</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.imageResize.clear">Clear</button>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+        <div class="img-tool-preview" id="preview-wrap" hidden>
+          <img id="preview-img" alt="" />
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-resize.js?v=1"></script>
+</body>
+</html>

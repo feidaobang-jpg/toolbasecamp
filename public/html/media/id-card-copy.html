@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ID Card Copy Sheet - Tool Basecamp</title>
+  <meta name="description" content="Compose ID card images onto an A4 photocopy sheet locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.idCardCopy.title">ID Card Copy Sheet</h1>
+        <p data-i18n="tools.idCardCopy.desc">Place front/back photos onto an A4 sheet for printing. Runs locally.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="img-tool-fields">
+          <label>
+            <span data-i18n="tools.idCardCopy.frontLabel">Front</span>
+            <input type="file" id="front-input" accept="image/*" />
+          </label>
+          <label>
+            <span data-i18n="tools.idCardCopy.backLabel">Back (optional)</span>
+            <input type="file" id="back-input" accept="image/*" />
+          </label>
+          <label class="img-tool-check">
+            <input type="checkbox" id="half-size" />
+            <span data-i18n="tools.idCardCopy.halfSize">Half size layout</span>
+          </label>
+        </div>
+        <div class="rec-field">
+          <label class="field-label" for="wm-text" data-i18n="tools.idCardCopy.watermarkLabel">Watermark text (optional)</label>
+          <input type="text" id="wm-text" class="rec-input" maxlength="40" placeholder="复印无效" />
+        </div>
+        <div class="tip-box">
+          <b data-i18n="tools.idCardCopy.tip">Tip:</b>
+          <span data-i18n="tools.idCardCopy.tipBody">Pick files from your device only. Layout is generated in the browser for print/PDF use.</span>
+        </div>
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="render-btn" data-i18n="tools.idCardCopy.render">Generate sheet</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.idCardCopy.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.idCardCopy.clear">Clear</button>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+        <div class="img-tool-preview" id="preview-wrap" hidden>
+          <canvas id="sheet-canvas"></canvas>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/id-card-copy.js?v=1"></script>
+</body>
+</html>

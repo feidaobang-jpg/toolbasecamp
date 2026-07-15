@@ -1,0 +1,140 @@
+.img-tool-textarea {
+  width: 100%;
+  max-width: 640px;
+  min-height: 96px;
+}
+
+.img-tool-preview {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.img-tool-preview canvas,
+.img-tool-preview img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.img-tool-source {
+  margin: 12px 0 16px;
+  text-align: center;
+}
+
+.img-tool-source img {
+  max-width: min(100%, 420px);
+  max-height: 320px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.img-tool-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-bottom: 14px;
+}
+
+.img-tool-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.img-tool-fields input,
+.img-tool-fields select {
+  min-width: 120px;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.img-tool-check {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px !important;
+  font-weight: 500 !important;
+  margin-top: 22px;
+}
+
+.img-tool-check input {
+  min-width: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.img-tool-meta {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.rec-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.rec-field {
+  margin-bottom: 14px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.rec-textarea {
+  width: 100%;
+  max-width: 640px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 15px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.error-box {
+  display: none;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+.error-box.show {
+  display: block;
+}
+
+.img-wm-canvas-wrap {
+  margin: 12px 0 16px;
+  overflow: auto;
+  text-align: center;
+}
+
+#wm-canvas {
+  max-width: 100%;
+  touch-action: none;
+  cursor: crosshair;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f8fafc;
+}

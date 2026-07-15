@@ -105,6 +105,10 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.media',
             items: [
+                { titleKey: 'tools.qrCode.title', url: 'html/media/qr-code.html' },
+                { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
+                { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
+                { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]
         },
