@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -17,6 +18,7 @@ router = APIRouter(prefix="/records", tags=["records"])
 NAME_MAX = 80
 REMARK_MAX = 500
 CATEGORY_NAME_MAX = 40
+GOODS_PRICE_LABEL_MAX = 40
 CLOCK_TARGET_MAX = 999999
 CHECKIN_MAX = 999
 CLOCK_LOG_LIMIT = 100
@@ -172,6 +174,21 @@ def ensure_record_tables(cur):
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    for col_sql in (
+        "price_label VARCHAR(40) NULL",
+    ):
+        col_name = col_sql.split()[0]
+        cur.execute(
+            """
+            SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = 'record_goods'
+              AND COLUMN_NAME = %s
+            """,
+            (col_name,),
+        )
+        if int((cur.fetchone() or {}).get("c") or 0) == 0:
+            cur.execute(f"ALTER TABLE record_goods ADD COLUMN {col_sql}")
 
 
 def _iso(value: Any) -> Optional[str]:
@@ -880,12 +897,14 @@ def _serialize_category(row: dict) -> dict:
 
 def _serialize_good(row: dict) -> dict:
     rating = row.get("rating")
+    label = (row.get("price_label") or "").strip()
+    price_display = label if label else _money(row["price"])
     return {
         "id": row["id"],
         "name": row["name"],
         "categoryId": row["category_id"],
         "category": row["category_name"],
-        "price": _money(row["price"]),
+        "price": price_display,
         "rating": None if rating is None else float(rating),
         "remark": row.get("remark") or "",
         "createdAt": _iso(row.get("created_at")),
@@ -1072,6 +1091,50 @@ def _parse_optional_rating(raw: Optional[str]) -> Optional[Decimal]:
     return d.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP)
 
 
+def _parse_one_price_number(raw: str) -> Decimal:
+    try:
+        d = Decimal(raw.strip())
+    except (InvalidOperation, ValueError) as exc:
+        raise HTTPException(status_code=400, detail="Invalid price") from exc
+    if d <= 0:
+        raise HTTPException(status_code=400, detail="price must be greater than 0")
+    if d > GOODS_PRICE_MAX:
+        raise HTTPException(status_code=400, detail="price is too large")
+    return d.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+
+def _format_price_number(d: Decimal) -> str:
+    text = f"{d:.2f}".rstrip("0").rstrip(".")
+    return text or "0"
+
+
+def _parse_goods_price(raw: Any) -> Tuple[str, Decimal]:
+    """
+    Accept a single price or a range (e.g. 10-18 / 10~18).
+    Returns (display_label, sort_value). sort_value is the lower bound.
+    """
+    text = str(raw or "").strip()
+    if not text or len(text) > GOODS_PRICE_LABEL_MAX:
+        raise HTTPException(status_code=400, detail="Invalid price")
+    # Keep user-facing label mostly as typed; normalize range separators for parsing.
+    parts = [p.strip() for p in re.split(r"\s*[~\-—–－～至到]\s*", text) if p.strip()]
+    if len(parts) == 1 and re.fullmatch(r"\d+(\.\d+)?", parts[0]):
+        value = _parse_one_price_number(parts[0])
+        return _format_price_number(value), value
+    if len(parts) == 2 and all(re.fullmatch(r"\d+(\.\d+)?", p) for p in parts):
+        low = _parse_one_price_number(parts[0])
+        high = _parse_one_price_number(parts[1])
+        if low > high:
+            low, high = high, low
+        label = f"{_format_price_number(low)}-{_format_price_number(high)}"
+        return label, low
+    # Single non-range numeric already handled; anything else is invalid.
+    if len(parts) == 1:
+        value = _parse_one_price_number(parts[0])
+        return _format_price_number(value), value
+    raise HTTPException(status_code=400, detail="Invalid price")
+
+
 @router.get("/goods")
 def list_goods(
     q: str = "",
@@ -1153,9 +1216,7 @@ def create_good(body: GoodCreateBody, user: dict = Depends(_user)):
     remark = (body.remark or "").strip()
     if len(remark) > REMARK_MAX:
         raise HTTPException(status_code=400, detail="Remark too long")
-    price = _parse_money(body.price, field="price")
-    if price > GOODS_PRICE_MAX:
-        raise HTTPException(status_code=400, detail="price is too large")
+    price_label, price = _parse_goods_price(body.price)
     rating = _parse_optional_rating(body.rating)
     conn = _conn()
     try:
@@ -1164,8 +1225,8 @@ def create_good(body: GoodCreateBody, user: dict = Depends(_user)):
             cur.execute(
                 """
                 INSERT INTO record_goods
-                (user_id, name, category_id, category_name, price, rating, remark)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                (user_id, name, category_id, category_name, price, price_label, rating, remark)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     user["id"],
@@ -1173,6 +1234,7 @@ def create_good(body: GoodCreateBody, user: dict = Depends(_user)):
                     body.category_id,
                     label,
                     str(price),
+                    price_label,
                     None if rating is None else str(rating),
                     remark,
                 ),
@@ -1192,7 +1254,7 @@ def update_good(good_id: int, body: GoodUpdateBody, user: dict = Depends(_user))
     remark = (body.remark or "").strip()
     if len(remark) > REMARK_MAX:
         raise HTTPException(status_code=400, detail="Remark too long")
-    price = _parse_money(body.price, field="price")
+    price_label, price = _parse_goods_price(body.price)
     rating = _parse_optional_rating(body.rating)
     conn = _conn()
     try:
@@ -1207,7 +1269,8 @@ def update_good(good_id: int, body: GoodUpdateBody, user: dict = Depends(_user))
             cur.execute(
                 """
                 UPDATE record_goods
-                SET name=%s, category_id=%s, category_name=%s, price=%s, rating=%s, remark=%s
+                SET name=%s, category_id=%s, category_name=%s, price=%s, price_label=%s,
+                    rating=%s, remark=%s
                 WHERE id=%s AND user_id=%s
                 """,
                 (
@@ -1215,6 +1278,7 @@ def update_good(good_id: int, body: GoodUpdateBody, user: dict = Depends(_user))
                     body.category_id,
                     label,
                     str(price),
+                    price_label,
                     None if rating is None else str(rating),
                     remark,
                     good_id,
