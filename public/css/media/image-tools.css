@@ -220,14 +220,16 @@
 .img-cloud-swatch {
   width: 36px;
   height: 36px;
-  border: 2px solid transparent;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   cursor: pointer;
   padding: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .img-cloud-swatch.is-active {
   border-color: #111827;
+  border-width: 2px;
   box-shadow: 0 0 0 1px #fff inset;
 }
 
