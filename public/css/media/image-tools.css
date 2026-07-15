@@ -335,6 +335,10 @@
   font-size: 14px;
 }
 
+.img-cloud-busy[hidden] {
+  display: none !important;
+}
+
 .img-tool-preview.cutout-preview {
   margin-top: 16px;
   padding: 12px;
