@@ -241,6 +241,48 @@
   font-weight: 600;
 }
 
+.rec-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.rec-dialog[hidden] {
+  display: none !important;
+}
+
+.rec-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.rec-dialog-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 18px 16px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+}
+
+.rec-dialog-hint {
+  margin: -4px 0 14px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.rec-dialog-panel .rec-input {
+  max-width: none;
+}
+
 @media (max-width: 768px) {
   .rec-input,
   .rec-select,

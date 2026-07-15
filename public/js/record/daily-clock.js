@@ -13,7 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var targetInput = document.getElementById('target-input');
     var formTitle = document.getElementById('form-title');
     var loginLink = document.getElementById('login-link');
+    var checkinDialog = document.getElementById('checkin-dialog');
+    var checkinTitle = document.getElementById('checkin-title');
+    var checkinHint = document.getElementById('checkin-hint');
+    var checkinInput = document.getElementById('checkin-input');
+    var checkinError = document.getElementById('checkin-error');
     var editId = null;
+    var checkinItem = null;
+    var CHECKIN_MAX = 999;
 
     loginLink.href = R.loginUrl();
 
@@ -35,6 +42,47 @@ document.addEventListener('DOMContentLoaded', function () {
         targetInput.value = item ? item.targetCount : '';
         R.setError(formError, '');
         nameInput.focus();
+    }
+
+    function closeCheckinDialog() {
+        checkinDialog.hidden = true;
+        checkinItem = null;
+        R.setError(checkinError, '');
+    }
+
+    function openCheckinDialog(item) {
+        var remaining = Math.max(0, item.targetCount - item.currentCount);
+        if (remaining <= 0) return;
+        checkinItem = item;
+        checkinTitle.textContent = item.name || tr('tools.dailyClock.checkinTitle');
+        checkinHint.textContent = tr('tools.dailyClock.checkinHint', { remaining: remaining });
+        checkinInput.value = '1';
+        checkinInput.max = String(Math.min(remaining, CHECKIN_MAX));
+        R.setError(checkinError, '');
+        checkinDialog.hidden = false;
+        checkinInput.focus();
+        checkinInput.select();
+    }
+
+    function submitCheckin() {
+        if (!checkinItem) return;
+        var remaining = Math.max(0, checkinItem.targetCount - checkinItem.currentCount);
+        var count = parseInt(checkinInput.value, 10);
+        if (!(count > 0)) {
+            R.setError(checkinError, tr('tools.dailyClock.invalidCheckin'));
+            return;
+        }
+        count = Math.min(count, remaining, CHECKIN_MAX);
+        var itemId = checkinItem.id;
+        R.apiJson('/records/clocks/' + itemId + '/checkin', {
+            method: 'POST',
+            body: JSON.stringify({ count: count })
+        })
+            .then(function () {
+                closeCheckinDialog();
+                return load();
+            })
+            .catch(function (e) { R.setError(checkinError, e.message); });
     }
 
     function render(items) {
@@ -71,12 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
             el.querySelector('[data-act="del"]').textContent = tr('tools.records.delete');
 
             checkBtn.addEventListener('click', function () {
-                R.apiJson('/records/clocks/' + item.id + '/checkin', {
-                    method: 'POST',
-                    body: JSON.stringify({ count: 1 })
-                })
-                    .then(load)
-                    .catch(function (e) { R.setError(errorBox, e.message); });
+                openCheckinDialog(item);
             });
             el.querySelector('[data-act="edit"]').addEventListener('click', function () {
                 showForm(item);
@@ -129,6 +172,18 @@ document.addEventListener('DOMContentLoaded', function () {
         R.apiJson('/records/clocks/reset-counts', { method: 'POST', body: '{}' })
             .then(load)
             .catch(function (e) { R.setError(errorBox, e.message); });
+    });
+    document.getElementById('checkin-confirm').addEventListener('click', submitCheckin);
+    checkinDialog.querySelectorAll('[data-act="close-checkin"]').forEach(function (el) {
+        el.addEventListener('click', closeCheckinDialog);
+    });
+    checkinInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submitCheckin();
+        } else if (e.key === 'Escape') {
+            closeCheckinDialog();
+        }
     });
 
     R.requireLogin(gate, app).then(function (user) {

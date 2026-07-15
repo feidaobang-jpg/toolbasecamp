@@ -7,7 +7,7 @@
   <meta name="description" content="Habit check-in tracker. Data synced to your account.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/record/records-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/record/records-common.css?v=2" />
 </head>
 <body>
   <div class="container">
@@ -45,7 +45,7 @@
             <input type="text" id="name-input" class="rec-input" maxlength="80" autocomplete="off" />
           </div>
           <div class="rec-field">
-            <label class="field-label" for="target-input" data-i18n="tools.dailyClock.targetLabel">Target count</label>
+            <label class="field-label" for="target-input" data-i18n="tools.dailyClock.targetLabel">Target count or minutes</label>
             <input type="number" id="target-input" class="rec-input" min="1" step="1" inputmode="numeric" />
           </div>
           <div class="error-box" id="form-error" role="alert"></div>
@@ -58,12 +58,29 @@
     </main>
   </div>
 
+  <div class="rec-dialog" id="checkin-dialog" hidden>
+    <div class="rec-dialog-backdrop" data-act="close-checkin"></div>
+    <div class="rec-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="checkin-title">
+      <h2 class="rec-section-title" id="checkin-title" data-i18n="tools.dailyClock.checkinTitle">Check in</h2>
+      <p class="rec-dialog-hint" id="checkin-hint"></p>
+      <div class="rec-field">
+        <label class="field-label" for="checkin-input" data-i18n="tools.dailyClock.checkinLabel">Count or minutes this time</label>
+        <input type="number" id="checkin-input" class="rec-input" min="1" step="1" inputmode="numeric" />
+      </div>
+      <div class="error-box" id="checkin-error" role="alert"></div>
+      <div class="action-row">
+        <button type="button" class="tb-btn" id="checkin-confirm" data-i18n="tools.records.save">Save</button>
+        <button type="button" class="tb-btn" id="checkin-cancel" data-act="close-checkin" data-i18n="tools.records.cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../../js/locales/en.js"></script>
   <script src="../../js/locales/zh-CN.js"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=1"></script>
-  <script src="../../js/record/daily-clock.js?v=1"></script>
+  <script src="../../js/record/daily-clock.js?v=2"></script>
 </body>
 </html>
