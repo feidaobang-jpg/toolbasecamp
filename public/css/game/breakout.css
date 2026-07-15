@@ -1,0 +1,33 @@
+.breakout-canvas {
+    display: block;
+    width: min(100%, 520px);
+    height: auto;
+    aspect-ratio: 3 / 4;
+    max-height: 70vh;
+    background: #0f172a;
+    border-radius: 12px;
+    border: 1px solid #1e293b;
+    touch-action: none;
+    cursor: none;
+}
+
+.breakout-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.breakout-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.breakout-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}

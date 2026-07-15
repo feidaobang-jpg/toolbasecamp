@@ -133,7 +133,74 @@ window.TB_LOCALES.en = {
             media: 'Images',
             document: 'Document',
             diagram: 'Diagram',
-            developer: 'Developer'
+            developer: 'Developer',
+            game: 'Games'
+        },
+        game: {
+            restart: 'New game',
+            score: 'Score'
+        },
+        sudoku: {
+            title: 'Sudoku',
+            desc: 'Fill the 9×9 grid so every row, column, and 3×3 box has digits 1–9. Runs locally.',
+            hintPick: 'Select a cell, then pick a number.',
+            tip: 'Tip: gray cells are fixed. Duplicates in a row, column, or box are blocked.',
+            clearCell: 'Clear',
+            complete: 'Sudoku complete — nice!',
+            dupRow: 'Row {row} already has {n}',
+            dupCol: 'Column {col} already has {n}',
+            dupBox: 'This 3×3 box already has {n}'
+        },
+        klotski: {
+            title: 'Number Puzzle',
+            desc: 'Slide tiles into the empty space until numbers are in order. Runs locally.',
+            steps: 'Steps',
+            hint: 'Tap a tile next to the empty cell.',
+            win: 'Done in {n} steps!'
+        },
+        gomoku: {
+            title: 'Gomoku',
+            desc: 'Two players take turns. First to place five stones in a row wins. Runs locally.',
+            tip: 'Tip: play on one device — black and white take turns.',
+            blackTurn: 'Black to move',
+            whiteTurn: 'White to move',
+            blackWin: 'Black wins!',
+            whiteWin: 'White wins!'
+        },
+        puzzle: {
+            title: 'Jigsaw Puzzle',
+            desc: 'Swap tiles to restore the picture. Use the default image or upload your own. Runs locally.',
+            hint: 'Tap two tiles to swap them.',
+            upload: 'Custom image (optional)',
+            win: 'Puzzle complete!',
+            loadFailed: 'Failed to load image'
+        },
+        gemswap: {
+            title: 'Gem Match',
+            desc: 'Swap adjacent gems to clear matches of three or more. Runs locally.',
+            hint: 'Hint',
+            hintPlay: 'Select a gem, then an adjacent gem to swap.',
+            invalidSwap: 'That swap does not make a match',
+            noMoves: 'No moves left — start a new game',
+            hintFound: 'Highlighted a valid swap'
+        },
+        breakout: {
+            title: 'Breakout',
+            desc: 'Bounce the ball to clear bricks. Move with mouse or touch. Runs locally.',
+            lives: 'Lives',
+            level: 'Level',
+            start: 'Start',
+            hint: 'Press Start or click the canvas to launch, then move the paddle.',
+            playing: 'Playing',
+            clickLaunch: 'Click to launch',
+            levelUp: 'Level {n}!',
+            lifeLost: 'Life lost — click to continue',
+            gameOver: 'Game over',
+            powerGot: 'Power-up: {type}',
+            puExtend: 'Longer paddle',
+            puSlow: 'Slow',
+            puFast: 'Fast',
+            puSplit: 'Multi-ball'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

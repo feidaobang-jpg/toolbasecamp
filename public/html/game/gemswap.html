@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gem Match - Tool Basecamp</title>
+  <meta name="description" content="Match-3 gem puzzle. Swap adjacent gems to make lines of three or more.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/gemswap.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.gemswap.title">Gem Match</h1>
+        <p data-i18n="tools.gemswap.desc">Swap adjacent gems to clear matches of three or more. Runs locally.</p>
+      </div>
+
+      <div class="tool-card game-card">
+        <div class="game-toolbar">
+          <div class="game-stats">
+            <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="hint-btn" data-i18n="tools.gemswap.hint">Hint</button>
+            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
+          </div>
+        </div>
+        <div class="game-status is-idle" id="status" data-i18n="tools.gemswap.hintPlay">Select a gem, then an adjacent gem to swap.</div>
+        <div class="game-board-wrap">
+          <div class="gem-board" id="board"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/game/gemswap.js?v=1"></script>
+</body>
+</html>

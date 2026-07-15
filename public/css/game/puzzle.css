@@ -1,0 +1,35 @@
+.puzzle-board {
+    position: relative;
+    width: min(100%, 420px);
+    aspect-ratio: 1;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #d1d5db;
+}
+
+.puzzle-piece {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: outline 0.12s ease;
+}
+
+.puzzle-piece.is-selected {
+    outline: 3px solid #2563eb;
+    z-index: 2;
+}
+
+.puzzle-upload {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.puzzle-upload input[type="file"] {
+    font-size: 13px;
+    max-width: 100%;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jigsaw Puzzle - Tool Basecamp</title>
+  <meta name="description" content="Shuffle and swap tiles to restore an image. Upload your own photo optionally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/puzzle.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.puzzle.title">Jigsaw Puzzle</h1>
+        <p data-i18n="tools.puzzle.desc">Swap tiles to restore the picture. Use the default image or upload your own. Runs locally.</p>
+      </div>
+
+      <div class="tool-card game-card">
+        <div class="game-toolbar">
+          <div class="game-status is-idle" id="status" data-i18n="tools.puzzle.hint">Tap two tiles to swap them.</div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Shuffle</button>
+          </div>
+        </div>
+        <div class="game-diff-row" id="diff-row">
+          <button type="button" class="tb-btn is-active" data-n="3">3×3</button>
+          <button type="button" class="tb-btn" data-n="4">4×4</button>
+          <button type="button" class="tb-btn" data-n="5">5×5</button>
+          <button type="button" class="tb-btn" data-n="6">6×6</button>
+        </div>
+        <div class="puzzle-upload">
+          <label class="field-label" for="file-input" data-i18n="tools.puzzle.upload">Custom image (optional)</label>
+          <input type="file" id="file-input" accept="image/*" />
+        </div>
+        <div class="game-board-wrap">
+          <div class="puzzle-board" id="board"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/game/puzzle.js?v=1"></script>
+</body>
+</html>

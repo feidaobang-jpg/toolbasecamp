@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breakout - Tool Basecamp</title>
+  <meta name="description" content="Break bricks with a bouncing ball. Power-ups: longer paddle, speed change, multi-ball.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/breakout.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.breakout.title">Breakout</h1>
+        <p data-i18n="tools.breakout.desc">Bounce the ball to clear bricks. Move with mouse or touch. Runs locally.</p>
+      </div>
+
+      <div class="tool-card game-card">
+        <div class="game-toolbar">
+          <div class="game-stats">
+            <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
+            <span><span data-i18n="tools.breakout.lives">Lives</span>: <strong id="lives">3</strong></span>
+            <span><span data-i18n="tools.breakout.level">Level</span>: <strong id="level">1</strong></span>
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="start-btn" data-i18n="tools.breakout.start">Start</button>
+            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
+          </div>
+        </div>
+        <div class="game-status is-idle" id="status" data-i18n="tools.breakout.hint">Click Start, then move the paddle under the ball.</div>
+        <div class="game-board-wrap">
+          <canvas id="canvas" class="breakout-canvas" width="390" height="520"></canvas>
+        </div>
+        <div class="breakout-legend">
+          <span><i class="breakout-dot" style="background:#22c55e"></i> <span data-i18n="tools.breakout.puExtend">Longer paddle</span></span>
+          <span><i class="breakout-dot" style="background:#38bdf8"></i> <span data-i18n="tools.breakout.puSlow">Slow</span></span>
+          <span><i class="breakout-dot" style="background:#f97316"></i> <span data-i18n="tools.breakout.puFast">Fast</span></span>
+          <span><i class="breakout-dot" style="background:#a855f7"></i> <span data-i18n="tools.breakout.puSplit">Multi-ball</span></span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/game/breakout.js?v=1"></script>
+</body>
+</html>

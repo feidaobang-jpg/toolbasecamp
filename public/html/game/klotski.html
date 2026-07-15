@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Number Puzzle - Tool Basecamp</title>
+  <meta name="description" content="Slide numbered tiles into order. Classic klotski-style puzzle.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/klotski.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.klotski.title">Number Puzzle</h1>
+        <p data-i18n="tools.klotski.desc">Slide tiles into the empty space until numbers are in order. Runs locally.</p>
+      </div>
+
+      <div class="tool-card game-card">
+        <div class="game-toolbar">
+          <div class="game-stats">
+            <span><span data-i18n="tools.klotski.steps">Steps</span>: <strong id="steps">0</strong></span>
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
+          </div>
+        </div>
+        <div class="game-diff-row" id="diff-row">
+          <button type="button" class="tb-btn is-active" data-size="3">3×3</button>
+          <button type="button" class="tb-btn" data-size="4">4×4</button>
+          <button type="button" class="tb-btn" data-size="5">5×5</button>
+        </div>
+        <div class="game-status is-idle" id="status" data-i18n="tools.klotski.hint">Tap a tile next to the empty cell.</div>
+        <div class="game-board-wrap">
+          <div class="klotski-board" id="board"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/game/klotski.js?v=1"></script>
+</body>
+</html>

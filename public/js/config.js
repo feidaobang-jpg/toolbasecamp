@@ -138,6 +138,17 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' }
             ]
+        },
+        {
+            titleKey: 'tools.groups.game',
+            items: [
+                { titleKey: 'tools.sudoku.title', url: 'html/game/sudoku.html' },
+                { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html' },
+                { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html' },
+                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html' },
+                { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html' },
+                { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html' }
+            ]
         }
     ]
 };

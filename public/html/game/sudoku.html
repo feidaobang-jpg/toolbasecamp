@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sudoku - Tool Basecamp</title>
+  <meta name="description" content="Classic 9×9 sudoku in the browser.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/sudoku.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.sudoku.title">Sudoku</h1>
+        <p data-i18n="tools.sudoku.desc">Fill the 9×9 grid so every row, column, and 3×3 box has digits 1–9. Runs locally.</p>
+      </div>
+
+      <div class="tool-card game-card">
+        <div class="game-toolbar">
+          <div class="game-status is-idle" id="status" data-i18n="tools.sudoku.hintPick">Select a cell, then pick a number.</div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
+          </div>
+        </div>
+        <div class="game-board-wrap">
+          <div class="sudoku-board" id="board" aria-label="Sudoku board"></div>
+        </div>
+        <div class="sudoku-pad" id="pad"></div>
+        <p class="game-hint" data-i18n="tools.sudoku.tip">Tip: fixed gray cells cannot be changed. Duplicates in a row, column, or box are blocked.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/game/sudoku.js?v=1"></script>
+</body>
+</html>

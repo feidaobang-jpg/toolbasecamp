@@ -132,7 +132,74 @@ window.TB_LOCALES['zh-CN'] = {
             media: '图片',
             document: '文档',
             diagram: '图表',
-            developer: '开发者'
+            developer: '开发者',
+            game: '游戏'
+        },
+        game: {
+            restart: '重新开始',
+            score: '得分'
+        },
+        sudoku: {
+            title: '数独',
+            desc: '在 9×9 宫格中填入 1–9，使每行、每列、每个九宫都不重复。本地运行。',
+            hintPick: '先点选空格，再点数字。',
+            tip: '提示：灰色格子为题目固定数字，不可改。同行、同列或同宫重复会被拦截。',
+            clearCell: '清除',
+            complete: '恭喜，数独完成！',
+            dupRow: '第 {row} 行已有数字 {n}',
+            dupCol: '第 {col} 列已有数字 {n}',
+            dupBox: '当前九宫内已有数字 {n}'
+        },
+        klotski: {
+            title: '数字华容道',
+            desc: '滑动方块，把数字按顺序排好。本地运行。',
+            steps: '步数',
+            hint: '点击与空格相邻的方块即可移动。',
+            win: '恭喜！你用 {n} 步完成了拼图。'
+        },
+        gomoku: {
+            title: '五子棋',
+            desc: '双人轮流落子，先连成五子者获胜。本地运行。',
+            tip: '提示：适合同设备对战，黑白交替落子。',
+            blackTurn: '轮到黑棋',
+            whiteTurn: '轮到白棋',
+            blackWin: '黑棋获胜！',
+            whiteWin: '白棋获胜！'
+        },
+        puzzle: {
+            title: '拼图',
+            desc: '交换碎片还原整图。可用默认图或上传自己的照片。本地处理。',
+            hint: '依次点两块碎片即可交换。',
+            upload: '自定义图片（可选）',
+            win: '拼图完成！',
+            loadFailed: '图片加载失败'
+        },
+        gemswap: {
+            title: '宝石迷阵',
+            desc: '交换相邻宝石，消去三个及以上的同色连线。本地运行。',
+            hint: '提示',
+            hintPlay: '先点一颗宝石，再点相邻宝石进行交换。',
+            invalidSwap: '这样交换无法形成消除',
+            noMoves: '没有可走的步了，请重新开始',
+            hintFound: '已高亮一对可交换的宝石'
+        },
+        breakout: {
+            title: '打砖块',
+            desc: '操控挡板反弹小球击碎砖块。鼠标或触屏移动。本地运行。',
+            lives: '生命',
+            level: '关卡',
+            start: '开始',
+            hint: '点「开始」或点击画布发球，移动挡板接住球。',
+            playing: '游戏进行中',
+            clickLaunch: '点击发球',
+            levelUp: '进入第 {n} 关！',
+            lifeLost: '失去一条生命，点击继续',
+            gameOver: '游戏结束',
+            powerGot: '获得道具：{type}',
+            puExtend: '加长挡板',
+            puSlow: '减速',
+            puFast: '加速',
+            puSplit: '分身球'
         },
         rmbUppercase: {
             title: '人民币大写',

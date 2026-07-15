@@ -1,0 +1,30 @@
+.klotski-board {
+    display: grid;
+    gap: 6px;
+    width: min(100%, 360px);
+    aspect-ratio: 1;
+    padding: 8px;
+    background: #e5e7eb;
+    border-radius: 12px;
+}
+
+.klotski-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    font-size: clamp(18px, 5vw, 28px);
+    font-weight: 700;
+    color: #fff;
+    background: #2563eb;
+    cursor: pointer;
+    box-shadow: 0 2px 0 #1d4ed8;
+}
+
+.klotski-tile.is-empty {
+    background: transparent;
+    box-shadow: none;
+    cursor: default;
+    color: transparent;
+}
