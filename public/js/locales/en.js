@@ -14,7 +14,7 @@ window.TB_LOCALES.en = {
     },
     nav: {
         tools: 'Tools',
-        life: 'Life',
+        life: 'Content',
         games: 'Games',
         guestbook: 'Guestbook',
         about: 'About'
@@ -93,17 +93,17 @@ window.TB_LOCALES.en = {
         portalsSubtitle: 'Extended tool collections hosted under Tool Basecamp.',
         basecampTools: 'Basecamp Tools',
         gamesTitle: 'Games',
-        lifeTitle: 'Life',
+        lifeTitle: 'Content',
         categories: 'Categories',
         noTools: 'No tools configured.',
         noGames: 'No games configured.',
-        noLife: 'No life content configured.',
+        noLife: 'No content configured.',
         noSearchResults: 'No matching tools',
         noGameSearchResults: 'No matching games',
         noLifeSearchResults: 'No matching content',
         searchPlaceholder: 'Search tools…',
         searchGamesPlaceholder: 'Search games…',
-        searchLifePlaceholder: 'Search life content…',
+        searchLifePlaceholder: 'Search content…',
         open: 'Open',
         loginRequired: 'Sign-in'
     },
@@ -126,7 +126,7 @@ window.TB_LOCALES.en = {
         unknown: 'Feature not found',
         groups: {
             innermost: 'Heart notes',
-            live: 'Daily life',
+            live: 'Quotes',
             recreation: 'Fun',
             riddle: 'Riddles',
             study: 'Study'
@@ -1024,7 +1024,7 @@ window.TB_LOCALES.en = {
         allTools: 'All tools',
         backHome: 'Back to home',
         backGames: 'Back to games',
-        backLife: 'Back to life'
+        backLife: 'Back to content'
     },
     guestbook: {
         title: 'Guestbook',

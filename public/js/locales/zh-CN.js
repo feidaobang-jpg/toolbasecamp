@@ -13,7 +13,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     nav: {
         tools: '工具',
-        life: '生活',
+        life: '内容',
         games: '游戏',
         guestbook: '留言板',
         about: '关于'
@@ -92,17 +92,17 @@ window.TB_LOCALES['zh-CN'] = {
         portalsSubtitle: '工具大本营托管的扩展工具集合。',
         basecampTools: '主站工具',
         gamesTitle: '休闲游戏',
-        lifeTitle: '生活',
+        lifeTitle: '内容',
         categories: '分类',
         noTools: '暂无配置的工具。',
         noGames: '暂无配置的游戏。',
-        noLife: '暂无配置的生活内容。',
+        noLife: '暂无配置的内容。',
         noSearchResults: '没有匹配的工具',
         noGameSearchResults: '没有匹配的游戏',
         noLifeSearchResults: '没有匹配的内容',
         searchPlaceholder: '搜索工具…',
         searchGamesPlaceholder: '搜索游戏…',
-        searchLifePlaceholder: '搜索生活内容…',
+        searchLifePlaceholder: '搜索内容…',
         open: '打开',
         loginRequired: '需登录'
     },
@@ -125,7 +125,7 @@ window.TB_LOCALES['zh-CN'] = {
         unknown: '未找到该功能',
         groups: {
             innermost: '心语',
-            live: '生活',
+            live: '语录',
             recreation: '娱乐',
             riddle: '谜语',
             study: '学习'
@@ -1023,7 +1023,7 @@ window.TB_LOCALES['zh-CN'] = {
         allTools: '全部工具',
         backHome: '返回首页',
         backGames: '返回游戏',
-        backLife: '返回生活'
+        backLife: '返回内容'
     },
     guestbook: {
         title: '留言板',
