@@ -148,8 +148,9 @@
         var clearBtn = document.createElement('button');
         clearBtn.type = 'button';
         clearBtn.className = 'tb-btn';
-        clearBtn.textContent = tr('tools.sudoku.clearCell');
         clearBtn.dataset.number = '0';
+        clearBtn.setAttribute('data-i18n', 'tools.sudoku.clearCell');
+        clearBtn.textContent = tr('tools.sudoku.clearCell');
         padEl.appendChild(clearBtn);
     }
 
@@ -203,6 +204,20 @@
         if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') placeNumber(0);
     });
 
-    initPad();
-    newGame();
+    function boot() {
+        initPad();
+        newGame();
+        if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(padEl);
+    }
+
+    document.addEventListener('tb:locale', function () {
+        initPad();
+        if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(padEl);
+    });
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
 })();

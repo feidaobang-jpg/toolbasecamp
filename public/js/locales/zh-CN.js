@@ -201,7 +201,6 @@ window.TB_LOCALES['zh-CN'] = {
             powerGot: '获得道具：{type}',
             puExtend: '加长挡板',
             puSlow: '减速',
-            puFast: '加速',
             puSplit: '分身球'
         },
         rmbUppercase: {

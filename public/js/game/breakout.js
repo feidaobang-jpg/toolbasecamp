@@ -32,8 +32,8 @@
     var rows = 5;
     var pointerX = W / 2;
 
-    var PU_COLORS = { extend: '#22c55e', slow: '#38bdf8', fast: '#f97316', split: '#a855f7' };
-    var PU_LABEL = { extend: '长', slow: '慢', fast: '快', split: '分' };
+    var PU_COLORS = { extend: '#22c55e', slow: '#38bdf8', split: '#a855f7' };
+    var PU_LABEL = { extend: '长', slow: '慢', split: '分' };
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
@@ -51,8 +51,8 @@
             x: paddle.x + paddle.w / 2,
             y: paddle.y - 10,
             r: 7,
-            vx: (Math.random() > 0.5 ? 1 : -1) * (0.75 + level * 0.05),
-            vy: -(0.9 + level * 0.07),
+            vx: (Math.random() > 0.5 ? 1 : -1) * (1.5 + level * 0.1),
+            vy: -(1.8 + level * 0.14),
             speedScale: 1
         }];
         if (attach) waiting = true;
@@ -65,8 +65,8 @@
         var pad = 8;
         var bw = (W - pad * 2) / cols - 4;
         var bh = 16;
-        var types = ['extend', 'slow', 'fast', 'split'];
-        var i, c, r;
+        var types = ['extend', 'slow', 'split'];
+        var c, r;
         for (r = 0; r < rows; r++) {
             for (c = 0; c < cols; c++) {
                 var kind = 'normal';
@@ -85,7 +85,7 @@
                 });
             }
         }
-        // ensure each power-up type appears at least once on early levels
+        // ensure remaining power-up types appear at least once on early levels
         types.forEach(function (type, ti) {
             var b = bricks[ti % bricks.length];
             if (b.kind === 'normal') {
@@ -144,12 +144,6 @@
                 b.vx *= 0.85;
                 b.vy *= 0.85;
                 b.speedScale *= 0.85;
-            });
-        } else if (type === 'fast') {
-            balls.forEach(function (b) {
-                b.vx *= 1.15;
-                b.vy *= 1.15;
-                b.speedScale *= 1.15;
             });
         } else if (type === 'split' && balls.length) {
             var src = balls[0];

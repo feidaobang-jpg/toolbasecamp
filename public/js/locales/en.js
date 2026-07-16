@@ -202,7 +202,6 @@ window.TB_LOCALES.en = {
             powerGot: 'Power-up: {type}',
             puExtend: 'Longer paddle',
             puSlow: 'Slow',
-            puFast: 'Fast',
             puSplit: 'Multi-ball'
         },
         rmbUppercase: {
