@@ -66,53 +66,24 @@
                     item('caihongpi', 'caihongpi', [c('content', F.content)]),
                     item('dujitang', 'dujitang', [c('content', F.content)]),
                     item('godreply', 'godreply', [c('list.0.title', F.title), c('list.0.content', F.content)]),
-                    item('joke', 'joke', [L('list', [c('title', F.title), c('content', F.content)])]),
                     item('pyqwenan', 'pyqwenan', [c('content', F.content)]),
                     item('saylove', 'saylove', [c('content', F.content)]),
                     item('sentence', 'sentence', [c('content', F.content)]),
                     item('shilian', 'hsjz', [c('content', F.content)]),
                     item('tiangou', 'tiangou', [c('content', F.content)]),
-                    item('wanan', 'wanan', [c('content', F.content)]),
-                    item('zaoan', 'zaoan', [c('content', F.content)])
+                    item('zaoan', 'zaoan', [c('content', F.content)]),
+                    item('wanan', 'wanan', [c('content', F.content)])
                 ]
             },
             {
                 id: 'live',
                 titleKey: 'life.groups.live',
                 items: [
-                    item('msdl', 'msdl', [L('list', [c('shanglian', F.shanglian), c('xialian', F.xialian)])]),
-                    item('duilian', 'duilian', [c('content', F.content)]),
                     item('mingyan', 'mingyan', [c('list.0.content', F.content), c('list.0.author', F.author)]),
                     item('lzmy', 'lzmy', [c('saying', F.saying), c('transl', F.transl), c('source', F.source)]),
                     item('mgjuzi', 'mgjuzi', [c('content', F.content), c('author', F.author)]),
-                    item('qingshi', 'qingshi', [c('content', F.content), c('source', F.source), c('author', F.author)]),
-                    item('verse', 'verse', [c('list.0.content', F.content), c('list.0.source', F.source), c('list.0.author', F.author)]),
-                    item('dictum', 'dictum', [L('list', [c('content', F.content), c('mrname', F.mrname)])])
-                ]
-            },
-            {
-                id: 'recreation',
-                titleKey: 'life.groups.recreation',
-                items: [
-                    item('duishici', 'duishici', [c('quest', F.quest), c('answer', F.answer), c('source', F.source)]),
-                    item('naowan', 'naowan', [L('list', [c('quest', F.quest), c('result', F.answer)])]),
-                    item('scwd', 'scwd', [
-                        c('question', F.quest), c('answer_a', F.optionA), c('answer_b', F.optionB),
-                        c('answer_c', F.optionC), c('answer', F.answer), c('analytic', F.analytic)
-                    ]),
-                    item('proverb', 'proverb', [c('front', F.front), c('behind', F.behind)]),
-                    item('skl', 'skl', [c('content', F.content)]),
-                    item('xiehou', 'xiehou', [c('list.0.quest', F.quest), c('list.0.result', F.result)]),
-                    item('rkl', 'rkl', [{ path: 'list.0.content', labelKey: F.content, html: true }]),
-                    item('recJoke', 'joke', [c('list.0.title', F.title), c('list.0.content', F.content)]),
-                    item('moodpoetry', 'moodpoetry', [c('title', F.title), c('content', F.content), c('author', F.author)]),
-                    item('decide', 'decide', [
-                        c('title', F.title),
-                        { path: 'answer', labelKey: F.answer, fmt: 'bool01' },
-                        c('analyse', F.analyse)
-                    ]),
-                    item('mnpara', 'mnpara', [c('content', F.content)]),
-                    item('wenda', 'wenda', [c('quest', F.quest), c('result', F.result)])
+                    item('dictum', 'dictum', [L('list', [c('content', F.content), c('mrname', F.mrname)])]),
+                    item('gjmj', 'gjmj', [c('content', F.content), c('source', F.source)])
                 ]
             },
             {
@@ -129,7 +100,28 @@
                     item('caizimi', 'caizimi', [
                         c('riddle', F.riddle), c('type', F.type), c('answer', F.answer), c('description', F.desc)
                     ]),
-                    item('cityriddle', 'cityriddle', [c('quest', F.quest), c('result', F.answer)])
+                    item('cityriddle', 'cityriddle', [c('quest', F.quest), c('result', F.answer)]),
+                    item('naowan', 'naowan', [L('list', [c('quest', F.quest), c('result', F.answer)])])
+                ]
+            },
+            {
+                id: 'recreation',
+                titleKey: 'life.groups.recreation',
+                items: [
+                    item('joke', 'joke', [L('list', [c('title', F.title), c('content', F.content)])]),
+                    item('mnpara', 'mnpara', [c('content', F.content)]),
+                    item('decide', 'decide', [
+                        c('title', F.title),
+                        { path: 'answer', labelKey: F.answer, fmt: 'bool01' },
+                        c('analyse', F.analyse)
+                    ]),
+                    item('wenda', 'wenda', [c('quest', F.quest), c('result', F.result)]),
+                    item('duishici', 'duishici', [c('quest', F.quest), c('answer', F.answer), c('source', F.source)]),
+                    item('scwd', 'scwd', [
+                        c('question', F.quest), c('answer_a', F.optionA), c('answer_b', F.optionB),
+                        c('answer_c', F.optionC), c('answer', F.answer), c('analytic', F.analytic)
+                    ]),
+                    item('moodpoetry', 'moodpoetry', [c('title', F.title), c('content', F.content), c('author', F.author)])
                 ]
             },
             {
@@ -140,8 +132,6 @@
                         c('list.0.chengyu', F.chengyu), c('list.0.pinyin', F.pinyin),
                         c('list.0.diangu', F.diangu), c('list.0.chuchu', F.chuchu), c('list.0.fanli', F.fanli)
                     ], { input: { param: 'word', placeholderKey: 'life.ph.keyword' } }),
-                    item('dailyEnglish', 'everyday', [c('content', F.content), c('note', F.note)]),
-                    item('gjmj', 'gjmj', [c('content', F.content), c('source', F.source)]),
                     item('xhzd', 'xhzd', [
                         c('list.0.pyyb', F.pinyin), c('list.0.bihua', F.strokes),
                         { path: 'list.0.content', labelKey: F.content, html: true }
@@ -149,12 +139,21 @@
                     item('enwords', 'enwords', [
                         { path: 'content', labelKey: F.content, html: true }
                     ], { input: { param: 'word', placeholderKey: 'life.ph.english' } }),
-                    item('hotword', 'hotword', [
-                        c('list.0.title', F.title), c('list.0.content', F.content)
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.keyword' } }),
                     item('jfwords', 'jfwords', [c('jyc', F.jyc), c('fyc', F.fyc)], {
                         input: { param: 'word', placeholderKey: 'life.ph.keyword' }
                     }),
+                    item('hotword', 'hotword', [
+                        c('list.0.title', F.title), c('list.0.content', F.content)
+                    ], { input: { param: 'word', placeholderKey: 'life.ph.keyword' } }),
+                    item('dailyEnglish', 'everyday', [c('content', F.content), c('note', F.note)]),
+                    item('proverb', 'proverb', [c('front', F.front), c('behind', F.behind)]),
+                    item('xiehou', 'xiehou', [c('list.0.quest', F.quest), c('list.0.result', F.result)]),
+                    item('skl', 'skl', [c('content', F.content)]),
+                    item('rkl', 'rkl', [{ path: 'list.0.content', labelKey: F.content, html: true }]),
+                    item('msdl', 'msdl', [L('list', [c('shanglian', F.shanglian), c('xialian', F.xialian)])]),
+                    item('duilian', 'duilian', [c('content', F.content)]),
+                    item('qingshi', 'qingshi', [c('content', F.content), c('source', F.source), c('author', F.author)]),
+                    item('verse', 'verse', [c('list.0.content', F.content), c('list.0.source', F.source), c('list.0.author', F.author)]),
                     item('zmsc', 'zmsc', [c('content', F.content), c('source', F.source)]),
                     item('songci', 'songci', [
                         c('list.0.title', F.title), c('list.0.tags', F.tags), c('list.0.author', F.author),

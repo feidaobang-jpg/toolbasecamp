@@ -125,10 +125,10 @@ window.TB_LOCALES.en = {
         notConfigured: 'TianAPI key not configured (TIANAPI_KEY)',
         unknown: 'Feature not found',
         groups: {
-            innermost: 'Heart notes',
+            innermost: 'Copy',
             live: 'Quotes',
-            recreation: 'Fun',
             riddle: 'Riddles',
+            recreation: 'Play',
             study: 'Study'
         },
         items: {

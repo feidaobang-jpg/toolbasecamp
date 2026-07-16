@@ -124,10 +124,10 @@ window.TB_LOCALES['zh-CN'] = {
         notConfigured: '未配置天行密钥（TIANAPI_KEY）',
         unknown: '未找到该功能',
         groups: {
-            innermost: '心语',
+            innermost: '文案',
             live: '语录',
-            recreation: '娱乐',
             riddle: '谜语',
+            recreation: '趣玩',
             study: '学习'
         },
         items: {
