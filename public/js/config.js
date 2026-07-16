@@ -158,7 +158,8 @@ const gamesConfig = {
                 { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html' },
                 { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html' },
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html' },
-                { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html' }
+                { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html' },
+                { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' }
             ]
         }
     ]

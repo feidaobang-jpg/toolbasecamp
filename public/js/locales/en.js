@@ -336,6 +336,22 @@ window.TB_LOCALES.en = {
             puSlow: 'Slow',
             puSplit: 'Multi-ball'
         },
+        lianliankan: {
+            title: 'Lianliankan',
+            desc: 'Match identical emoji tiles with a path of at most two turns. Runs locally.',
+            pairs: 'Pairs left',
+            hint: 'Hint',
+            shuffle: 'Shuffle',
+            hintPlay: 'Select two matching tiles that can connect with at most two turns.',
+            pickSecond: 'Select a matching tile',
+            mismatch: 'Different tiles — selection moved',
+            cannotLink: 'Cannot link (blocked or more than two turns)',
+            hintFound: 'Highlighted a removable pair',
+            shuffled: 'Remaining tiles shuffled',
+            noMoves: 'No moves left — shuffle or start a new game',
+            suggestShuffle: 'No links available — try shuffle',
+            win: 'All cleared — you win!'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

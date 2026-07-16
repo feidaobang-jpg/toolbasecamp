@@ -1,0 +1,106 @@
+.llk-board {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    touch-action: manipulation;
+}
+
+.game-board-wrap:has(.llk-board) {
+    touch-action: manipulation;
+}
+
+.llk-grid {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+}
+
+.llk-path-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    overflow: visible;
+}
+
+.llk-path-layer polyline {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.9;
+}
+
+.llk-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: clamp(18px, 4.2vw, 28px);
+    line-height: 1;
+    background: transparent;
+    border: 2px solid transparent;
+    cursor: default;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.llk-cell.is-tile {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    cursor: pointer;
+}
+
+.llk-cell.is-tile:hover {
+    border-color: #93c5fd;
+}
+
+.llk-cell.is-selected {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    transform: scale(1.04);
+    z-index: 1;
+}
+
+.llk-cell.is-hint {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
+    animation: llk-pulse 0.9s ease-in-out infinite;
+}
+
+.llk-cell.is-clearing {
+    opacity: 0;
+    transform: scale(0.6);
+    pointer-events: none;
+}
+
+.llk-cell.is-empty {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+@keyframes llk-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+@media (max-width: 768px) {
+    .llk-board {
+        max-width: 100%;
+    }
+
+    .llk-grid {
+        gap: 3px;
+    }
+
+    .llk-cell {
+        border-radius: 8px;
+        font-size: clamp(16px, 5.5vw, 24px);
+    }
+}

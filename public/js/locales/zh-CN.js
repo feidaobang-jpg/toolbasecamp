@@ -335,6 +335,22 @@ window.TB_LOCALES['zh-CN'] = {
             puSlow: '减速',
             puSplit: '分身球'
         },
+        lianliankan: {
+            title: '连连看',
+            desc: '连接相同表情图案，路径最多拐两次。本地运行。',
+            pairs: '剩余对数',
+            hint: '提示',
+            shuffle: '洗牌',
+            hintPlay: '点选两枚相同图案，路径最多拐两次即可消除。',
+            pickSecond: '再选一枚相同图案',
+            mismatch: '图案不同，已改选当前格',
+            cannotLink: '这两枚连不通（超过两折或被挡住）',
+            hintFound: '已高亮一对可消除的牌',
+            shuffled: '已重新打乱剩余牌',
+            noMoves: '当前无解，请洗牌或新开一局',
+            suggestShuffle: '没有可连的牌了，试试洗牌',
+            win: '全部消除，过关！'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',
