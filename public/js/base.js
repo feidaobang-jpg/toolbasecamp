@@ -51,32 +51,53 @@ function tr(key) {
     return (typeof window.t === 'function' ? window.t(key) : key);
 }
 
+function matchConfigItem(groups, currentPath, currentPage) {
+    if (!Array.isArray(groups)) return null;
+    for (const group of groups) {
+        if (!group.items) continue;
+        for (const item of group.items) {
+            const itemFile = item.url.toLowerCase().split('/').pop();
+            if (currentPath.endsWith(item.url.toLowerCase()) || currentPage === itemFile) {
+                return {
+                    groupTitleKey: group.titleKey || null,
+                    toolTitleKey: item.titleKey || null
+                };
+            }
+        }
+    }
+    return null;
+}
+
 function getCurrentToolContext() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase().split('?')[0];
     let groupTitleKey = null;
     let toolTitleKey = null;
+    let moduleKind = null;
 
-    if (typeof toolsConfig !== 'undefined' && toolsConfig.groups) {
-        for (const group of toolsConfig.groups) {
-            if (!group.items) continue;
-            for (const item of group.items) {
-                const itemFile = item.url.toLowerCase().split('/').pop();
-                if (currentPath.endsWith(item.url.toLowerCase()) || currentPage === itemFile) {
-                    groupTitleKey = group.titleKey || null;
-                    toolTitleKey = item.titleKey || null;
-                    break;
-                }
-            }
-            if (toolTitleKey) break;
+    const toolHit = typeof toolsConfig !== 'undefined'
+        ? matchConfigItem(toolsConfig.groups, currentPath, currentPage)
+        : null;
+    if (toolHit) {
+        groupTitleKey = toolHit.groupTitleKey;
+        toolTitleKey = toolHit.toolTitleKey;
+        moduleKind = 'tools';
+    } else {
+        const gameHit = typeof gamesConfig !== 'undefined'
+            ? matchConfigItem(gamesConfig.groups, currentPath, currentPage)
+            : null;
+        if (gameHit) {
+            groupTitleKey = gameHit.groupTitleKey;
+            toolTitleKey = gameHit.toolTitleKey;
+            moduleKind = 'games';
         }
     }
 
-    return { groupTitleKey, toolTitleKey, currentPage };
+    return { groupTitleKey, toolTitleKey, currentPage, moduleKind };
 }
 
 function renderSiteTitle() {
-    const { groupTitleKey, toolTitleKey } = getCurrentToolContext();
+    const { groupTitleKey, toolTitleKey, moduleKind } = getCurrentToolContext();
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
 
     if (toolTitleKey) {
@@ -89,10 +110,13 @@ function renderSiteTitle() {
 
     const logoTitleEl = document.querySelector('.logo h2');
     if (logoTitleEl) {
-        const { groupTitleKey, toolTitleKey } = getCurrentToolContext();
-        logoTitleEl.textContent = (groupTitleKey || toolTitleKey)
-            ? tr('sidebar.backHome')
-            : siteName;
+        if (groupTitleKey || toolTitleKey) {
+            logoTitleEl.textContent = moduleKind === 'games'
+                ? tr('sidebar.backGames')
+                : tr('sidebar.backHome');
+        } else {
+            logoTitleEl.textContent = siteName;
+        }
     }
 }
 
@@ -103,19 +127,26 @@ function renderMenu() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const isInSubDir = currentPath.includes('/html/');
-    const { groupTitleKey, toolTitleKey } = getCurrentToolContext();
+    const { groupTitleKey, toolTitleKey, moduleKind } = getCurrentToolContext();
 
-    const hubHref = resolveToolUrl((siteConfig && siteConfig.toolsHubUrl) || 'index.html');
+    const hubHref = resolveToolUrl(
+        moduleKind === 'games'
+            ? ((siteConfig && siteConfig.gamesHubUrl) || 'games.html')
+            : ((siteConfig && siteConfig.toolsHubUrl) || 'index.html')
+    );
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
     const logoBadgeKey = tr('site.logoBadge');
     const logoBadge = (logoBadgeKey && logoBadgeKey !== 'site.logoBadge') ? logoBadgeKey : logoText;
     const isToolSubPage = !!(groupTitleKey || toolTitleKey);
-    const logoLabel = isToolSubPage ? tr('sidebar.backHome') : siteName;
+    const logoLabel = isToolSubPage
+        ? (moduleKind === 'games' ? tr('sidebar.backGames') : tr('sidebar.backHome'))
+        : siteName;
 
+    const sourceConfig = moduleKind === 'games' ? gamesConfig : toolsConfig;
     let menuItemsHTML = '';
-    if (typeof toolsConfig !== 'undefined' && toolsConfig.groups && groupTitleKey) {
-        toolsConfig.groups.forEach(group => {
+    if (sourceConfig && sourceConfig.groups && groupTitleKey) {
+        sourceConfig.groups.forEach(group => {
             if (group.titleKey !== groupTitleKey) return;
             if (group.titleKey) {
                 menuItemsHTML += '<li class="menu-group-title">' + tr(group.titleKey) + '</li>';

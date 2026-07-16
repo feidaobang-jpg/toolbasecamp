@@ -277,14 +277,27 @@
         return getAutoNavBasePath();
     }
 
+    function isNavItemActive(item, currentPage, pathname) {
+        const itemFile = (item.url || '').split('/').pop();
+        if (currentPage === item.url || currentPage === itemFile) return true;
+        const path = String(pathname || '').toLowerCase();
+        if (itemFile === 'games.html' && path.includes('/html/game/')) return true;
+        if (itemFile === 'index.html' && path.includes('/html/') &&
+            !path.includes('/html/game/') && !path.includes('/html/auth/')) {
+            return true;
+        }
+        return false;
+    }
+
     function updateNavMenu() {
         if (typeof siteConfig === 'undefined' || !siteConfig.nav) return;
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const pathname = window.location.pathname || '';
+        const currentPage = pathname.split('/').pop() || 'index.html';
         document.querySelectorAll('nav[data-nav="main"]').forEach(nav => {
             const basePath = getNavBasePathForEl(nav);
             nav.innerHTML = '';
             siteConfig.nav.forEach(item => {
-                const isActive = currentPage === item.url || currentPage === item.url.split('/').pop();
+                const isActive = isNavItemActive(item, currentPage, pathname);
                 const link = document.createElement('a');
                 link.href = basePath + item.url;
                 if (isActive) link.className = 'is-active';
@@ -339,11 +352,12 @@
 
         const mainNav = document.querySelector('nav[data-nav="main"]');
         const basePath = getNavBasePathForEl(mainNav);
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const pathname = window.location.pathname || '';
+        const currentPage = pathname.split('/').pop() || 'index.html';
 
         scroll.innerHTML = '';
         siteConfig.nav.forEach(item => {
-            const isActive = currentPage === item.url || currentPage === item.url.split('/').pop();
+            const isActive = isNavItemActive(item, currentPage, pathname);
             const a = document.createElement('a');
             a.href = basePath + item.url;
             a.textContent = navLabel(item);

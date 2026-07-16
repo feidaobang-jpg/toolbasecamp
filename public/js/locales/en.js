@@ -14,6 +14,7 @@ window.TB_LOCALES.en = {
     },
     nav: {
         tools: 'Tools',
+        games: 'Games',
         guestbook: 'Guestbook',
         about: 'About'
     },
@@ -90,12 +91,21 @@ window.TB_LOCALES.en = {
         portalsTitle: 'Portals',
         portalsSubtitle: 'Extended tool collections hosted under Tool Basecamp.',
         basecampTools: 'Basecamp Tools',
+        gamesTitle: 'Games',
         categories: 'Categories',
         noTools: 'No tools configured.',
+        noGames: 'No games configured.',
         noSearchResults: 'No matching tools',
+        noGameSearchResults: 'No matching games',
         searchPlaceholder: 'Search tools…',
+        searchGamesPlaceholder: 'Search games…',
         open: 'Open',
         loginRequired: 'Sign-in'
+    },
+    games: {
+        groups: {
+            casual: 'Casual games'
+        }
     },
     portals: {
         pdf: {
@@ -133,8 +143,7 @@ window.TB_LOCALES.en = {
             media: 'Images',
             document: 'Document',
             diagram: 'Diagram',
-            developer: 'Developer',
-            game: 'Games'
+            developer: 'Developer'
         },
         game: {
             restart: 'New game',
@@ -890,7 +899,8 @@ window.TB_LOCALES.en = {
     },
     sidebar: {
         allTools: 'All tools',
-        backHome: 'Back to home'
+        backHome: 'Back to home',
+        backGames: 'Back to games'
     },
     guestbook: {
         title: 'Guestbook',

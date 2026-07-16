@@ -13,6 +13,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     nav: {
         tools: '工具',
+        games: '游戏',
         guestbook: '留言板',
         about: '关于'
     },
@@ -89,12 +90,21 @@ window.TB_LOCALES['zh-CN'] = {
         portalsTitle: '子站入口',
         portalsSubtitle: '工具大本营托管的扩展工具集合。',
         basecampTools: '主站工具',
+        gamesTitle: '休闲游戏',
         categories: '分类',
         noTools: '暂无配置的工具。',
+        noGames: '暂无配置的游戏。',
         noSearchResults: '没有匹配的工具',
+        noGameSearchResults: '没有匹配的游戏',
         searchPlaceholder: '搜索工具…',
+        searchGamesPlaceholder: '搜索游戏…',
         open: '打开',
         loginRequired: '需登录'
+    },
+    games: {
+        groups: {
+            casual: '休闲游戏'
+        }
     },
     portals: {
         pdf: {
@@ -132,8 +142,7 @@ window.TB_LOCALES['zh-CN'] = {
             media: '图片',
             document: '文档',
             diagram: '图表',
-            developer: '开发者',
-            game: '游戏'
+            developer: '开发者'
         },
         game: {
             restart: '重新开始',
@@ -889,7 +898,8 @@ window.TB_LOCALES['zh-CN'] = {
     },
     sidebar: {
         allTools: '全部工具',
-        backHome: '返回首页'
+        backHome: '返回首页',
+        backGames: '返回游戏'
     },
     guestbook: {
         title: '留言板',

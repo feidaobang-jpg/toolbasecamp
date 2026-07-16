@@ -198,6 +198,10 @@
     scroll-behavior: smooth;
 }
 
+.hub-center-wide .hub-center-inner {
+    max-width: 64rem;
+}
+
 .hub-center-inner {
     max-width: 56rem;
     margin: 0 auto;

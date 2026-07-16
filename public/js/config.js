@@ -4,6 +4,7 @@ const siteConfig = {
     title: 'Tools',
     homeUrl: 'index.html',
     toolsHubUrl: 'index.html',
+    gamesHubUrl: 'games.html',
     mainSiteOrigin: 'https://toolbasecamp.com',
     descriptionKey: 'site.description',
     keywordsKey: 'site.keywords',
@@ -23,6 +24,7 @@ const siteConfig = {
     })(),
     nav: [
         { nameKey: 'nav.tools', url: 'index.html' },
+        { nameKey: 'nav.games', url: 'games.html' },
         { nameKey: 'nav.guestbook', url: 'guestbook.html' },
         { nameKey: 'nav.about', url: 'about.html' }
     ]
@@ -138,9 +140,16 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' }
             ]
-        },
+        }
+    ]
+};
+
+/** Top-level games hub (peer to tools) */
+const gamesConfig = {
+    sectionTitleKey: 'hub.gamesTitle',
+    groups: [
         {
-            titleKey: 'tools.groups.game',
+            titleKey: 'games.groups.casual',
             items: [
                 { titleKey: 'tools.sudoku.title', url: 'html/game/sudoku.html' },
                 { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html' },
@@ -156,3 +165,4 @@ const toolsConfig = {
 window.siteConfig = siteConfig;
 window.portalsConfig = portalsConfig;
 window.toolsConfig = toolsConfig;
+window.gamesConfig = gamesConfig;
