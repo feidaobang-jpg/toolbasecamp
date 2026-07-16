@@ -113,7 +113,7 @@ window.TB_LOCALES.en = {
         }
     },
     life: {
-        desc: 'Tap query for a random item; some tools accept a keyword. Powered by TianAPI.',
+        desc: 'Tap Query to fetch content; some tools accept a keyword. Powered by TianAPI.',
         query: 'Query',
         copy: 'Copy',
         copied: 'Copied',
@@ -121,6 +121,8 @@ window.TB_LOCALES.en = {
         empty: 'No results',
         needKeyword: 'Please enter a keyword',
         fetchFail: 'Request failed. Try again later.',
+        upstreamFail: 'Server cannot reach TianAPI (often blocked from overseas VPS). On the server run: curl -m 8 https://apis.tianapi.com/',
+        notConfigured: 'TianAPI key not configured (TIANAPI_KEY)',
         unknown: 'Feature not found',
         groups: {
             innermost: 'Heart notes',

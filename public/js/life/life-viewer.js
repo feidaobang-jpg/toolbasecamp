@@ -168,13 +168,15 @@
         });
     }
 
-    function detailMessage(data, fallback) {
+    function detailMessage(data, fallback, status) {
         var d = data && data.detail;
-        if (typeof d === 'string') return d;
+        if (typeof d === 'string' && d) return d;
         if (Array.isArray(d) && d.length) {
             return d.map(function (x) { return (x && x.msg) || String(x); }).join('; ');
         }
-        return (data && (data.msg || data.message)) || fallback;
+        if (status === 502 || status === 504) return tr('life.upstreamFail');
+        if (status === 503) return tr('life.notConfigured');
+        return (data && (data.msg || data.message)) || fallback || tr('life.fetchFail');
     }
 
     function run() {
@@ -196,9 +198,11 @@
         }).join('&');
         var url = apiBase() + '/life/tian/' + encodeURIComponent(item.api) + (qs ? '?' + qs : '');
         fetch(url).then(function (res) {
-            return res.json().catch(function () { return {}; }).then(function (data) {
+            return res.text().then(function (text) {
+                var data = {};
+                try { data = text ? JSON.parse(text) : {}; } catch (e) { data = {}; }
                 if (!res.ok) {
-                    throw new Error(detailMessage(data, res.statusText || tr('life.fetchFail')));
+                    throw new Error(detailMessage(data, res.statusText, res.status));
                 }
                 showResult(data.result);
             });
@@ -237,5 +241,5 @@
         if (copyBtn) copyBtn.textContent = tr('life.copy');
     });
 
-    if (!item.input) run();
+    // 不自动请求：避免一进页卡住「加载中」；用户点「查询」再拉
 })();
