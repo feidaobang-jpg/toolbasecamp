@@ -282,8 +282,12 @@
         if (currentPage === item.url || currentPage === itemFile) return true;
         const path = String(pathname || '').toLowerCase();
         if (itemFile === 'games.html' && path.includes('/html/game/')) return true;
+        if (itemFile === 'life.html' && path.includes('/html/life/view.html')) return true;
         if (itemFile === 'index.html' && path.includes('/html/') &&
-            !path.includes('/html/game/') && !path.includes('/html/auth/')) {
+            !path.includes('/html/game/') &&
+            !path.includes('/html/life/view.html') &&
+            !path.includes('/html/auth/')) {
+            // AI recipe stays under tools
             return true;
         }
         return false;

@@ -1,0 +1,88 @@
+.life-input-wrap {
+  margin-bottom: 12px;
+}
+
+.life-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111827;
+  background: #fff;
+}
+
+.life-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.life-busy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 14px;
+}
+
+.life-busy[hidden] {
+  display: none !important;
+}
+
+.life-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #cbd5e1;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: life-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes life-spin {
+  to { transform: rotate(360deg); }
+}
+
+.life-result {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.life-card {
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.life-field + .life-field {
+  margin-top: 12px;
+}
+
+.life-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.life-field-value {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #111827;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.life-field-value img {
+  max-width: 100%;
+  height: auto;
+}

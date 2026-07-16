@@ -26,6 +26,7 @@ from recipe_ai import (
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
+from tianapi_life import router as life_router
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -244,6 +245,7 @@ wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
 wire_image(get_conn, require_db, get_current_user)
 app.include_router(image_router)
+app.include_router(life_router)
 
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:

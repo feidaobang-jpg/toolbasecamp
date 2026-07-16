@@ -4,6 +4,7 @@ const siteConfig = {
     title: 'Tools',
     homeUrl: 'index.html',
     toolsHubUrl: 'index.html',
+    lifeHubUrl: 'life.html',
     gamesHubUrl: 'games.html',
     mainSiteOrigin: 'https://toolbasecamp.com',
     descriptionKey: 'site.description',
@@ -24,6 +25,7 @@ const siteConfig = {
     })(),
     nav: [
         { nameKey: 'nav.tools', url: 'index.html' },
+        { nameKey: 'nav.life', url: 'life.html' },
         { nameKey: 'nav.games', url: 'games.html' },
         { nameKey: 'nav.guestbook', url: 'guestbook.html' },
         { nameKey: 'nav.about', url: 'about.html' }
@@ -88,7 +90,7 @@ const toolsConfig = {
             ]
         },
         {
-            titleKey: 'tools.groups.life',
+            titleKey: 'tools.groups.food',
             items: [
                 { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' }
             ]

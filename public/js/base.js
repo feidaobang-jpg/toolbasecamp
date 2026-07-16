@@ -68,12 +68,31 @@ function matchConfigItem(groups, currentPath, currentPage) {
     return null;
 }
 
+function getLifePageContext() {
+    const currentPath = window.location.pathname.toLowerCase();
+    const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase().split('?')[0];
+    if (currentPage !== 'view.html' || currentPath.indexOf('/life/') === -1) return null;
+    if (typeof lifeFindById !== 'function') return null;
+    const id = new URLSearchParams(window.location.search).get('id');
+    const hit = lifeFindById(id);
+    if (!hit) return null;
+    return {
+        groupTitleKey: hit.group.titleKey || null,
+        toolTitleKey: hit.item.titleKey || null,
+        moduleKind: 'life',
+        lifeId: hit.item.id
+    };
+}
+
 function getCurrentToolContext() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || '').toLowerCase().split('?')[0];
     let groupTitleKey = null;
     let toolTitleKey = null;
     let moduleKind = null;
+
+    const lifeHit = getLifePageContext();
+    if (lifeHit) return Object.assign({ currentPage: currentPage }, lifeHit);
 
     const toolHit = typeof toolsConfig !== 'undefined'
         ? matchConfigItem(toolsConfig.groups, currentPath, currentPage)
@@ -96,6 +115,39 @@ function getCurrentToolContext() {
     return { groupTitleKey, toolTitleKey, currentPage, moduleKind };
 }
 
+function hubHrefForModule(moduleKind) {
+    if (moduleKind === 'games') return (siteConfig && siteConfig.gamesHubUrl) || 'games.html';
+    if (moduleKind === 'life') return (siteConfig && siteConfig.lifeHubUrl) || 'life.html';
+    return (siteConfig && siteConfig.toolsHubUrl) || 'index.html';
+}
+
+function backLabelForModule(moduleKind) {
+    if (moduleKind === 'games') return tr('sidebar.backGames');
+    if (moduleKind === 'life') return tr('sidebar.backLife');
+    return tr('sidebar.backHome');
+}
+
+function menuItemIsActive(item, currentPath, currentPage) {
+    const url = item.url || '';
+    const qIndex = url.indexOf('?');
+    if (qIndex !== -1) {
+        const pathPart = url.slice(0, qIndex).toLowerCase();
+        const itemFile = pathPart.split('/').pop();
+        if (currentPage !== itemFile && !currentPath.endsWith(pathPart)) return false;
+        const want = new URLSearchParams(url.slice(qIndex + 1)).get('id');
+        const have = new URLSearchParams(window.location.search).get('id');
+        return !!(want && want === have);
+    }
+    const itemUrlLower = url.toLowerCase();
+    return currentPath.endsWith(itemUrlLower) || currentPage === itemUrlLower.split('/').pop();
+}
+
+function sourceConfigForModule(moduleKind) {
+    if (moduleKind === 'games') return typeof gamesConfig !== 'undefined' ? gamesConfig : null;
+    if (moduleKind === 'life') return typeof lifeConfig !== 'undefined' ? lifeConfig : null;
+    return typeof toolsConfig !== 'undefined' ? toolsConfig : null;
+}
+
 function renderSiteTitle() {
     const { groupTitleKey, toolTitleKey, moduleKind } = getCurrentToolContext();
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
@@ -111,9 +163,7 @@ function renderSiteTitle() {
     const logoTitleEl = document.querySelector('.logo h2');
     if (logoTitleEl) {
         if (groupTitleKey || toolTitleKey) {
-            logoTitleEl.textContent = moduleKind === 'games'
-                ? tr('sidebar.backGames')
-                : tr('sidebar.backHome');
+            logoTitleEl.textContent = backLabelForModule(moduleKind);
         } else {
             logoTitleEl.textContent = siteName;
         }
@@ -125,25 +175,19 @@ function renderMenu() {
     if (!sidebar) return;
 
     const currentPath = window.location.pathname.toLowerCase();
-    const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase().split('?')[0];
     const isInSubDir = currentPath.includes('/html/');
     const { groupTitleKey, toolTitleKey, moduleKind } = getCurrentToolContext();
 
-    const hubHref = resolveToolUrl(
-        moduleKind === 'games'
-            ? ((siteConfig && siteConfig.gamesHubUrl) || 'games.html')
-            : ((siteConfig && siteConfig.toolsHubUrl) || 'index.html')
-    );
+    const hubHref = resolveToolUrl(hubHrefForModule(moduleKind));
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
     const logoBadgeKey = tr('site.logoBadge');
     const logoBadge = (logoBadgeKey && logoBadgeKey !== 'site.logoBadge') ? logoBadgeKey : logoText;
     const isToolSubPage = !!(groupTitleKey || toolTitleKey);
-    const logoLabel = isToolSubPage
-        ? (moduleKind === 'games' ? tr('sidebar.backGames') : tr('sidebar.backHome'))
-        : siteName;
+    const logoLabel = isToolSubPage ? backLabelForModule(moduleKind) : siteName;
 
-    const sourceConfig = moduleKind === 'games' ? gamesConfig : toolsConfig;
+    const sourceConfig = sourceConfigForModule(moduleKind);
     let menuItemsHTML = '';
     if (sourceConfig && sourceConfig.groups && groupTitleKey) {
         sourceConfig.groups.forEach(group => {
@@ -155,8 +199,7 @@ function renderMenu() {
                 group.items.forEach(item => {
                     let linkUrl = item.url;
                     if (isInSubDir) linkUrl = '../../' + item.url;
-                    const itemUrlLower = item.url.toLowerCase();
-                    const isActive = currentPath.endsWith(itemUrlLower) || currentPage === itemUrlLower.split('/').pop();
+                    const isActive = menuItemIsActive(item, currentPath, currentPage);
                     const label = item.titleKey ? tr(item.titleKey) : (item.title || '');
                     menuItemsHTML += '<li' + (isActive ? ' class="active"' : '') + '><a href="' + linkUrl + '">' + label + '</a></li>';
                 });
