@@ -351,6 +351,33 @@ window.TB_LOCALES['zh-CN'] = {
             suggestShuffle: '没有可连的牌了，试试洗牌',
             win: '全部消除，过关！'
         },
+        goldminer: {
+            title: '黄金矿工',
+            desc: '摆动钩爪抓取黄金与宝石，在时限内达到目标金额。本地运行。',
+            target: '目标',
+            level: '关卡',
+            time: '时间',
+            start: '开始',
+            hint: '点「开始」后，点击画面放下钩爪。',
+            tapStart: '点击开始',
+            playing: '钩爪摆动中 — 点击放下',
+            levelClear: '第 {n} 关完成！进入下一关…',
+            timeUp: '时间到，未达到目标',
+            legend: '💰 金块 · 💎 宝石 · 🪨 石头（重）· 💣 炸弹（扣分）'
+        },
+        descent: {
+            title: '下一百层',
+            desc: '不断下落穿越平台，越深越好。躲开尖刺。本地运行。',
+            depth: '深度',
+            best: '最佳',
+            start: '开始',
+            hint: '点「开始」。用 ← → 或 A/D，或触摸屏幕左右半边移动。',
+            tapStart: '点击开始',
+            playing: '左右移动，落在安全平台上',
+            hitSpike: '踩到尖刺！深度 {n}',
+            fell: '掉出屏幕！深度 {n}',
+            legend: '🟩 安全 · 🟦 弹跳 · 🟧 消失 · 🟥 尖刺'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

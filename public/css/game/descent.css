@@ -1,0 +1,17 @@
+.descent-canvas {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    background: #0f172a;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    touch-action: none;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .descent-canvas {
+        max-width: 100%;
+    }
+}

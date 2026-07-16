@@ -352,6 +352,33 @@ window.TB_LOCALES.en = {
             suggestShuffle: 'No links available — try shuffle',
             win: 'All cleared — you win!'
         },
+        goldminer: {
+            title: 'Gold Miner',
+            desc: 'Swing the claw to grab gold and gems before time runs out. Runs locally.',
+            target: 'Target',
+            level: 'Level',
+            time: 'Time',
+            start: 'Start',
+            hint: 'Press Start, then tap or click to drop the claw.',
+            tapStart: 'Tap to start',
+            playing: 'Claw swinging — tap to drop',
+            levelClear: 'Level {n} clear! Next level…',
+            timeUp: 'Time up — target not reached',
+            legend: '💰 gold · 💎 gem · 🪨 rock (heavy) · 💣 bomb (−score)'
+        },
+        descent: {
+            title: 'Descent 100',
+            desc: 'Fall through platforms — go as deep as you can. Avoid spikes. Runs locally.',
+            depth: 'Depth',
+            best: 'Best',
+            start: 'Start',
+            hint: 'Press Start. Move with ← → or A/D, or touch left/right half of the screen.',
+            tapStart: 'Tap to start',
+            playing: 'Move left/right and land on safe platforms',
+            hitSpike: 'Hit a spike! Depth {n}',
+            fell: 'Fell off screen! Depth {n}',
+            legend: '🟩 safe · 🟦 bounce · 🟧 vanish · 🟥 spike'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',
