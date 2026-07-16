@@ -51,8 +51,8 @@
             x: paddle.x + paddle.w / 2,
             y: paddle.y - 10,
             r: 7,
-            vx: (Math.random() > 0.5 ? 1 : -1) * (1.5 + level * 0.1),
-            vy: -(1.8 + level * 0.14),
+            vx: (Math.random() > 0.5 ? 1 : -1) * (3 + level * 0.2),
+            vy: -(3.6 + level * 0.28),
             speedScale: 1
         }];
         if (attach) waiting = true;
