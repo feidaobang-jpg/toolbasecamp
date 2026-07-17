@@ -215,10 +215,7 @@ function renderMenu() {
             '</a>' +
             '<div id="sidebar-user-meta" class="user-meta"></div>' +
         '</div>' +
-        '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>' +
-        '<div class="sidebar-footer-copy">' +
-            '<p>&copy; 2026 ' + siteName + '</p>' +
-        '</div>';
+        '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>';
 
     bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName);
 }
