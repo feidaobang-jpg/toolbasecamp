@@ -161,7 +161,18 @@ const gamesConfig = {
                 { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
                 { titleKey: 'tools.goldminer.title', url: 'html/game/goldminer.html' },
-                { titleKey: 'tools.descent.title', url: 'html/game/descent.html' }
+                { titleKey: 'tools.descent.title', url: 'html/game/descent.html' },
+                { titleKey: 'tools.snake.title', url: 'html/game/snake.html' },
+                { titleKey: 'tools.g2048.title', url: 'html/game/g2048.html' },
+                { titleKey: 'tools.whack.title', url: 'html/game/whack.html' },
+                { titleKey: 'tools.shooter.title', url: 'html/game/shooter.html' },
+                { titleKey: 'tools.jumpjump.title', url: 'html/game/jumpjump.html' },
+                { titleKey: 'tools.catcher.title', url: 'html/game/catcher.html' },
+                { titleKey: 'tools.tetris.title', url: 'html/game/tetris.html' },
+                { titleKey: 'tools.memory.title', url: 'html/game/memory.html' },
+                { titleKey: 'tools.runner.title', url: 'html/game/runner.html' },
+                { titleKey: 'tools.mines.title', url: 'html/game/mines.html' },
+                { titleKey: 'tools.slots.title', url: 'html/game/slots.html' }
             ]
         }
     ]

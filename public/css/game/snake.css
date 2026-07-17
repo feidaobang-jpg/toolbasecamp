@@ -1,0 +1,12 @@
+.snake-canvas, .g2048-board, .whack-grid, .shooter-canvas, .jump-canvas,
+.catcher-canvas, .tetris-canvas, .memory-grid, .runner-canvas, .mines-grid, .slots-wrap {
+  touch-action: none;
+}
+.snake-canvas, .shooter-canvas, .jump-canvas, .catcher-canvas, .tetris-canvas, .runner-canvas {
+  display: block; width: 100%; max-width: 360px; height: auto;
+  border-radius: 12px; border: 1px solid #e5e7eb; background: #0f172a;
+}
+.snake-canvas { max-width: 360px; }
+@media (max-width: 768px) {
+  .snake-canvas, .shooter-canvas, .jump-canvas, .catcher-canvas, .tetris-canvas, .runner-canvas { max-width: 100%; }
+}

@@ -378,6 +378,118 @@ window.TB_LOCALES['zh-CN'] = {
             fell: '掉出屏幕！深度 {n}',
             legend: '🟩 安全 · 🟦 弹跳 · 🟧 消失 · 🟥 尖刺'
         },
+        snake: {
+            title: '贪吃蛇',
+            desc: '操控小蛇吃苹果变长。本地运行。',
+            best: '最佳',
+            start: '开始',
+            hint: '方向键 / WASD / 滑动控制。',
+            playing: '游戏中',
+            gameOver: '撞墙或咬到自己了'
+        },
+        g2048: {
+            title: '2048',
+            desc: '滑动合并数字，冲向 2048。本地运行。',
+            best: '最佳',
+            hint: '方向键或滑动移动。',
+            win: '达到 2048！可继续玩',
+            lose: '没有可合并的步了'
+        },
+        whack: {
+            title: '打地鼠',
+            desc: '地鼠冒头就点，限时得分。本地运行。',
+            time: '时间',
+            start: '开始',
+            hint: '点「开始」后点击 🐹。',
+            playing: '快打！',
+            done: '时间到，得分 {n}'
+        },
+        shooter: {
+            title: '飞机大战',
+            desc: '左右移动并射击外星飞船。本地运行。',
+            lives: '生命',
+            start: '开始',
+            hint: '← → / A D 移动，空格或点击射击。',
+            tapStart: '点击开始',
+            playing: '消灭入侵者',
+            gameOver: '游戏结束'
+        },
+        jumpjump: {
+            title: '跳一跳',
+            desc: '按住蓄力，松手跳到下一平台。本地运行。',
+            best: '最佳',
+            hint: '在画面上按住蓄力，松手起跳。',
+            nice: '跳上了！继续',
+            miss: '没跳上，再来一局'
+        },
+        catcher: {
+            title: '接水果',
+            desc: '用篮子接住水果，躲开炸弹。本地运行。',
+            lives: '生命',
+            start: '开始',
+            hint: '鼠标/触屏或 ← → 移动篮子。',
+            tapStart: '点击开始',
+            playing: '接住水果！',
+            gameOver: '游戏结束',
+            legend: '🍎🍊🍇 得分 · 💣 扣生命'
+        },
+        tetris: {
+            title: '俄罗斯方块',
+            desc: '旋转下落方块消除整行。本地运行。',
+            lines: '消除行',
+            start: '开始',
+            hint: '← → 移动，↑ 旋转，↓ 软降，空格硬降。',
+            playing: '游戏中',
+            gameOver: '堆满了'
+        },
+        memory: {
+            title: '记忆翻牌',
+            desc: '翻开两张牌配对相同表情。本地运行。',
+            moves: '步数',
+            matched: '已配对',
+            hint: '翻开两张牌寻找配对。',
+            win: '全部配对！共用 {n} 步'
+        },
+        runner: {
+            title: '跑酷',
+            desc: '点击或空格跳跃，躲开障碍。本地运行。',
+            best: '最佳',
+            start: '开始',
+            hint: '点击 / 空格跳跃。',
+            tapStart: '点击开始',
+            playing: '跑起来！',
+            gameOver: '撞到了，得分 {n}'
+        },
+        mines: {
+            title: '扫雷',
+            desc: '翻开安全格，标出地雷。本地运行。',
+            flags: '旗帜',
+            hint: '单击翻开，长按/右键插旗。',
+            win: '扫雷成功！',
+            lose: '踩到雷了'
+        },
+        slots: {
+            title: '幸运老虎机',
+            desc: '转动转轮，冲刺礼炮奖、大熊猫、跑火车等。仅供娱乐，无真钱。',
+            credits: '筹码',
+            last: '上次赢得',
+            spin: '转动（−10）',
+            reset: '重置筹码',
+            hint: '点「转动」。三个相同图案可中奖。',
+            spinning: '转起来了…',
+            noCredits: '筹码不足，请重置',
+            thanks: '谢谢参与，再转一次吧',
+            winPrize: '{emoji} 恭喜获得【{prize}】！+{n} 筹码',
+            winSmall: '{emoji} 小奖 +{n} 筹码',
+            prizes: '🎆 礼炮奖 · 🐼 大熊猫 · 🚂 跑火车 · 🧧 红包奖 · 🍒 樱桃奖 · 谢谢参与',
+            prize: {
+                fireworks: '礼炮奖',
+                panda: '大熊猫',
+                train: '跑火车',
+                redpack: '红包奖',
+                cherry: '樱桃奖'
+            }
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

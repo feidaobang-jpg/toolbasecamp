@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slot Machine - Tool Basecamp</title>
+  <meta name="description" content="Spin the reels for Firework, Panda, Train prizes and more. Fun only, no real money.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/casual-more.css?v=1" />
+</head>
+<body>
+  <div class="container"><aside class="sidebar"></aside><main class="content">
+    <div class="tool-header">
+      <h1 data-i18n="tools.slots.title">Lucky Slots</h1>
+      <p data-i18n="tools.slots.desc">Spin for Firework, Panda, Train and more. Entertainment only — no real money.</p>
+    </div>
+    <div class="tool-card game-card">
+      <div class="game-toolbar">
+        <div class="game-stats">
+          <span><span data-i18n="tools.slots.credits">Credits</span>: <strong id="credits" class="slots-credits">100</strong></span>
+          <span><span data-i18n="tools.slots.last">Last win</span>: <strong id="last">0</strong></span>
+        </div>
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="spin-btn" data-i18n="tools.slots.spin">Spin (−10)</button>
+          <button type="button" class="tb-btn" id="reset-btn" data-i18n="tools.slots.reset">Reset credits</button>
+        </div>
+      </div>
+      <div class="game-status is-idle" id="status" data-i18n="tools.slots.hint">Press Spin. Three of a kind wins a prize.</div>
+      <div class="game-board-wrap">
+        <div class="slots-wrap" id="slots">
+          <div class="slots-reels">
+            <div class="slots-reel" id="r0">❓</div>
+            <div class="slots-reel" id="r1">❓</div>
+            <div class="slots-reel" id="r2">❓</div>
+          </div>
+          <p class="slots-prize-list" data-i18n-html="tools.slots.prizes">
+            🎆 礼炮奖 · 🐼 大熊猫 · 🚂 跑火车 · 🧧 红包奖 · 🍒 樱桃奖 · 谢谢参与
+          </p>
+        </div>
+      </div>
+    </div>
+  </main></div>
+  <script src="../../js/locales/en.js"></script><script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script><script src="../../js/config.js"></script><script src="../../js/base.js"></script>
+  <script src="../../js/game/slots.js?v=1"></script>
+</body></html>

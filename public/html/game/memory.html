@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Match - Tool Basecamp</title>
+  <meta name="description" content="Flip cards and match emoji pairs. Runs locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/casual-more.css?v=1" />
+</head>
+<body>
+  <div class="container"><aside class="sidebar"></aside><main class="content">
+    <div class="tool-header"><h1 data-i18n="tools.memory.title">Memory Match</h1><p data-i18n="tools.memory.desc">Flip two cards to find matching emoji. Runs locally.</p></div>
+    <div class="tool-card game-card">
+      <div class="game-toolbar">
+        <div class="game-stats">
+          <span><span data-i18n="tools.memory.moves">Moves</span>: <strong id="moves">0</strong></span>
+          <span><span data-i18n="tools.memory.matched">Matched</span>: <strong id="matched">0</strong>/8</span>
+        </div>
+        <div class="action-row"><button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button></div>
+      </div>
+      <div class="game-status is-idle" id="status" data-i18n="tools.memory.hint">Flip two cards to match.</div>
+      <div class="game-board-wrap"><div class="memory-grid" id="grid"></div></div>
+    </div>
+  </main></div>
+  <script src="../../js/locales/en.js"></script><script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script><script src="../../js/config.js"></script><script src="../../js/base.js"></script>
+  <script src="../../js/game/memory.js?v=1"></script>
+</body></html>

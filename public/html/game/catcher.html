@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fruit Catcher - Tool Basecamp</title>
+  <meta name="description" content="Catch falling fruit with your basket. Runs locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/casual-more.css?v=1" />
+</head>
+<body>
+  <div class="container"><aside class="sidebar"></aside><main class="content">
+    <div class="tool-header"><h1 data-i18n="tools.catcher.title">Fruit Catcher</h1><p data-i18n="tools.catcher.desc">Catch fruit, avoid bombs. Runs locally.</p></div>
+    <div class="tool-card game-card">
+      <div class="game-toolbar">
+        <div class="game-stats">
+          <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
+          <span><span data-i18n="tools.catcher.lives">Lives</span>: <strong id="lives">3</strong></span>
+        </div>
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="start-btn" data-i18n="tools.catcher.start">Start</button>
+          <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
+        </div>
+      </div>
+      <div class="game-status is-idle" id="status" data-i18n="tools.catcher.hint">Move basket with mouse/touch or ← →.</div>
+      <div class="game-board-wrap"><canvas id="canvas" class="game-emoji-canvas" width="360" height="480"></canvas></div>
+      <p class="game-hint" data-i18n="tools.catcher.legend">🍎🍊🍇 +points · 💣 −life</p>
+    </div>
+  </main></div>
+  <script src="../../js/locales/en.js"></script><script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script><script src="../../js/config.js"></script><script src="../../js/base.js"></script>
+  <script src="../../js/game/catcher.js?v=1"></script>
+</body></html>

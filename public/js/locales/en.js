@@ -379,6 +379,118 @@ window.TB_LOCALES.en = {
             fell: 'Fell off screen! Depth {n}',
             legend: '🟩 safe · 🟦 bounce · 🟧 vanish · 🟥 spike'
         },
+        snake: {
+            title: 'Snake',
+            desc: 'Steer the snake to eat apples. Runs locally.',
+            best: 'Best',
+            start: 'Start',
+            hint: 'Arrow keys / WASD / swipe to move.',
+            playing: 'Playing',
+            gameOver: 'Hit a wall or yourself'
+        },
+        g2048: {
+            title: '2048',
+            desc: 'Swipe or use arrow keys to merge tiles. Runs locally.',
+            best: 'Best',
+            hint: 'Arrow keys or swipe to move.',
+            win: 'Reached 2048! You can keep going',
+            lose: 'No moves left'
+        },
+        whack: {
+            title: 'Whack-a-Mole',
+            desc: 'Tap moles as they pop up. Runs locally.',
+            time: 'Time',
+            start: 'Start',
+            hint: 'Press Start, then tap 🐹.',
+            playing: 'Whack them!',
+            done: 'Time up — score {n}'
+        },
+        shooter: {
+            title: 'Space Shooter',
+            desc: 'Move and shoot the invaders. Runs locally.',
+            lives: 'Lives',
+            start: 'Start',
+            hint: '← → / A D move, Space or tap to shoot.',
+            tapStart: 'Tap to start',
+            playing: 'Blast the invaders',
+            gameOver: 'Game over'
+        },
+        jumpjump: {
+            title: 'Jump Jump',
+            desc: 'Hold to charge, release to jump. Runs locally.',
+            best: 'Best',
+            hint: 'Hold on the canvas to charge, release to jump.',
+            nice: 'Landed! Keep going',
+            miss: 'Missed — try again'
+        },
+        catcher: {
+            title: 'Fruit Catcher',
+            desc: 'Catch fruit, avoid bombs. Runs locally.',
+            lives: 'Lives',
+            start: 'Start',
+            hint: 'Move basket with mouse/touch or ← →.',
+            tapStart: 'Tap to start',
+            playing: 'Catch the fruit!',
+            gameOver: 'Game over',
+            legend: '🍎🍊🍇 points · 💣 −life'
+        },
+        tetris: {
+            title: 'Tetris',
+            desc: 'Clear lines with falling blocks. Runs locally.',
+            lines: 'Lines',
+            start: 'Start',
+            hint: '← → move, ↑ rotate, ↓ soft drop, Space hard drop.',
+            playing: 'Playing',
+            gameOver: 'Stacked out'
+        },
+        memory: {
+            title: 'Memory Match',
+            desc: 'Flip cards and match emoji pairs. Runs locally.',
+            moves: 'Moves',
+            matched: 'Matched',
+            hint: 'Flip two cards to match.',
+            win: 'All matched in {n} moves!'
+        },
+        runner: {
+            title: 'Runner',
+            desc: 'Tap or press Space to jump over obstacles. Runs locally.',
+            best: 'Best',
+            start: 'Start',
+            hint: 'Tap / Space to jump.',
+            tapStart: 'Tap to start',
+            playing: 'Run!',
+            gameOver: 'Crashed — score {n}'
+        },
+        mines: {
+            title: 'Minesweeper',
+            desc: 'Clear the board without hitting mines. Runs locally.',
+            flags: 'Flags',
+            hint: 'Tap to open, long-press / right-click to flag.',
+            win: 'Board cleared!',
+            lose: 'Boom — mine hit'
+        },
+        slots: {
+            title: 'Lucky Slots',
+            desc: 'Spin for Firework, Panda, Train prizes and more. Fun only — no real money.',
+            credits: 'Credits',
+            last: 'Last win',
+            spin: 'Spin (−10)',
+            reset: 'Reset credits',
+            hint: 'Press Spin. Three of a kind wins a prize.',
+            spinning: 'Spinning…',
+            noCredits: 'Not enough credits — reset',
+            thanks: 'Thanks for playing — spin again',
+            winPrize: '{emoji} You won [{prize}]! +{n} credits',
+            winSmall: '{emoji} Small win +{n} credits',
+            prizes: '🎆 Firework · 🐼 Panda · 🚂 Train · 🧧 Red pack · 🍒 Cherry · Thanks',
+            prize: {
+                fireworks: 'Firework Prize',
+                panda: 'Panda Prize',
+                train: 'Train Prize',
+                redpack: 'Red Pack',
+                cherry: 'Cherry Prize'
+            }
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',
