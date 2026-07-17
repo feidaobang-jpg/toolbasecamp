@@ -491,6 +491,16 @@ window.TB_LOCALES.en = {
                 cherry: 'Cherry Prize'
             }
         },
+        sheepstack: {
+            title: 'Stack Match',
+            desc: 'Tap free tiles into the tray. Three matching emoji clear. Fill the tray and you lose. Runs locally.',
+            left: 'Left',
+            undo: 'Undo',
+            tray: 'Tray (7)',
+            hint: 'Tap an uncovered tile to move it to the tray.',
+            win: 'All cleared — you win!',
+            lose: 'Tray full — try again'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

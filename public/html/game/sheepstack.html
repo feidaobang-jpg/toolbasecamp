@@ -3,40 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lianliankan - Tool Basecamp</title>
-  <meta name="description" content="Match identical emoji tiles with a path of at most two turns. Classic Lianliankan, runs locally.">
+  <title>Stack Match - Tool Basecamp</title>
+  <meta name="description" content="Tap uncovered emoji tiles into the tray. Three of a kind clear. Inspired by Sheep a Sheep. Runs locally.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
-  <link rel="stylesheet" href="../../css/game/lianliankan.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/sheepstack.css?v=1" />
 </head>
 <body>
   <div class="container">
     <aside class="sidebar"></aside>
     <main class="content">
       <div class="tool-header">
-        <h1 data-i18n="tools.lianliankan.title">Lianliankan</h1>
-        <p data-i18n="tools.lianliankan.desc">Match identical emoji tiles with a path of at most two turns. Runs locally.</p>
+        <h1 data-i18n="tools.sheepstack.title">Stack Match</h1>
+        <p data-i18n="tools.sheepstack.desc">Tap free tiles into the tray. Three matching emoji clear. Fill the tray and you lose. Runs locally.</p>
       </div>
 
       <div class="tool-card game-card">
         <div class="game-toolbar">
           <div class="game-stats">
+            <span><span data-i18n="tools.sheepstack.left">Left</span>: <strong id="left">0</strong></span>
             <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
-            <span><span data-i18n="tools.lianliankan.pairs">Pairs left</span>: <strong id="pairs">0</strong></span>
           </div>
           <div class="action-row">
-            <button type="button" class="tb-btn" id="hint-btn" data-i18n="tools.lianliankan.hint">Hint</button>
-            <button type="button" class="tb-btn" id="shuffle-btn" data-i18n="tools.lianliankan.shuffle">Shuffle</button>
+            <button type="button" class="tb-btn" id="undo-btn" data-i18n="tools.sheepstack.undo">Undo</button>
             <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
           </div>
         </div>
-        <div class="game-status is-idle" id="status" aria-live="polite"></div>
+        <div class="game-status is-idle" id="status" data-i18n="tools.sheepstack.hint">Tap an uncovered tile to move it to the tray.</div>
         <div class="game-board-wrap">
-          <div class="llk-board" id="board">
-            <svg class="llk-path-layer" id="path-layer" aria-hidden="true"></svg>
-            <div class="llk-grid" id="grid"></div>
-          </div>
+          <div class="ss-stage" id="stage"></div>
+        </div>
+        <div class="ss-tray-wrap">
+          <div class="ss-tray-label" data-i18n="tools.sheepstack.tray">Tray (7)</div>
+          <div class="ss-tray" id="tray"></div>
         </div>
       </div>
     </main>
@@ -47,6 +47,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/game/lianliankan.js?v=2"></script>
+  <script src="../../js/game/sheepstack.js?v=1"></script>
 </body>
 </html>

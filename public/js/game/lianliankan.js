@@ -277,7 +277,7 @@
         won = false;
         renderBoard();
         updateStats();
-        setStatus(tr('tools.lianliankan.hintPlay'), 'is-idle');
+        setStatus('', 'is-idle');
         ensureSolvable();
     }
 
@@ -341,14 +341,12 @@
             selected = { r: r, c: c };
             clearSelectionUi();
             el.classList.add('is-selected');
-            setStatus(tr('tools.lianliankan.pickSecond'), 'is-idle');
             return;
         }
 
         if (selected.r === r && selected.c === c) {
             selected = null;
             clearSelectionUi();
-            setStatus(tr('tools.lianliankan.hintPlay'), 'is-idle');
             return;
         }
 
@@ -358,7 +356,6 @@
             selected = { r: r, c: c };
             clearSelectionUi();
             el.classList.add('is-selected');
-            setStatus(tr('tools.lianliankan.mismatch'), 'is-idle');
             return;
         }
 
@@ -367,7 +364,6 @@
             selected = { r: r, c: c };
             clearSelectionUi();
             el.classList.add('is-selected');
-            setStatus(tr('tools.lianliankan.cannotLink'), 'is-lose');
             return;
         }
 
@@ -408,7 +404,7 @@
                 if (!hasAnyMove()) {
                     setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
                 } else {
-                    setStatus(tr('tools.lianliankan.hintPlay'), 'is-idle');
+                    setStatus('', 'is-idle');
                 }
             });
     }

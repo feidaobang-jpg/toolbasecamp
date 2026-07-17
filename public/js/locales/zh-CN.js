@@ -490,6 +490,16 @@ window.TB_LOCALES['zh-CN'] = {
                 cherry: '樱桃奖'
             }
         },
+        sheepstack: {
+            title: '叠消消',
+            desc: '点开未被压住的图案放入槽位，三个相同消除。槽满未消即败。本地运行。',
+            left: '剩余',
+            undo: '撤销',
+            tray: '槽位（7）',
+            hint: '点未被挡住的图案，移入下方槽位。',
+            win: '全部消除，过关！',
+            lose: '槽位满了，再开一局吧'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',
