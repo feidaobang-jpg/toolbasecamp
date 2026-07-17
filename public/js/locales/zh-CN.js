@@ -1216,7 +1216,10 @@ window.TB_LOCALES['zh-CN'] = {
         builtTitle: '为所有人打造',
         builtDesc: '中英文界面，简洁无干扰 — 专注好用的工具。',
         questions: '有问题或建议？',
-        visitGuestbook: '前往留言板'
+        visitGuestbook: '前往留言板',
+        friendLinks: '友情链接',
+        friendLinksLead: '相关站点',
+        friendGeek: '极客前沿'
     },
     common: {
         serviceUnavailable: '服务不可用',

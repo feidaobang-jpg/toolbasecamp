@@ -1217,7 +1217,10 @@ window.TB_LOCALES.en = {
         builtTitle: 'Built for everyone',
         builtDesc: 'Clean UI in English and Chinese — no clutter, just tools that work.',
         questions: 'Questions or feedback?',
-        visitGuestbook: 'Visit the guestbook'
+        visitGuestbook: 'Visit the guestbook',
+        friendLinks: 'Friend links',
+        friendLinksLead: 'Related sites',
+        friendGeek: 'Geek Frontier'
     },
     common: {
         serviceUnavailable: 'Service unavailable',

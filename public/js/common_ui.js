@@ -293,6 +293,20 @@
         return false;
     }
 
+    function getLocale() {
+        return typeof window.tbGetLocale === 'function' ? window.tbGetLocale() : 'en';
+    }
+
+    /** Hide Chinese-only modules (e.g. Content) when locale is English. */
+    function visibleNavItems() {
+        if (typeof siteConfig === 'undefined' || !Array.isArray(siteConfig.nav)) return [];
+        var locale = getLocale();
+        return siteConfig.nav.filter(function (item) {
+            if (locale === 'en' && item.nameKey === 'nav.life') return false;
+            return true;
+        });
+    }
+
     function updateNavMenu() {
         if (typeof siteConfig === 'undefined' || !siteConfig.nav) return;
         const pathname = window.location.pathname || '';
@@ -300,7 +314,7 @@
         document.querySelectorAll('nav[data-nav="main"]').forEach(nav => {
             const basePath = getNavBasePathForEl(nav);
             nav.innerHTML = '';
-            siteConfig.nav.forEach(item => {
+            visibleNavItems().forEach(item => {
                 const isActive = isNavItemActive(item, currentPage, pathname);
                 const link = document.createElement('a');
                 link.href = basePath + item.url;
@@ -360,7 +374,7 @@
         const currentPage = pathname.split('/').pop() || 'index.html';
 
         scroll.innerHTML = '';
-        siteConfig.nav.forEach(item => {
+        visibleNavItems().forEach(item => {
             const isActive = isNavItemActive(item, currentPage, pathname);
             const a = document.createElement('a');
             a.href = basePath + item.url;
