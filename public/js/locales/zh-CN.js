@@ -492,13 +492,23 @@ window.TB_LOCALES['zh-CN'] = {
         },
         sheepstack: {
             title: '叠消消',
-            desc: '点开未被压住的图案放入槽位，三个相同消除。槽满未消即败。本地运行。',
+            desc: '点开未被压住的图案放入槽位，三个相同消除。可用反悔、炸弹、提示、加时。本地运行。',
             left: '剩余',
             undo: '撤销',
             tray: '槽位（7）',
             hint: '点未被挡住的图案，移入下方槽位。',
             win: '全部消除，过关！',
-            lose: '槽位满了，再开一局吧'
+            lose: '槽位满了，再开一局吧',
+            timeUp: '时间到！',
+            propUndo: '反悔',
+            propBomb: '炸弹',
+            propHint: '提示',
+            propTime: '加时',
+            usedUndo: '已反悔一步',
+            usedBomb: '炸弹清掉槽位尾部牌',
+            usedHint: '已高亮可点的牌',
+            usedTime: '时间 +{n} 秒',
+            noHint: '当前没有可用提示'
         },
         rmbUppercase: {
             title: '人民币大写',

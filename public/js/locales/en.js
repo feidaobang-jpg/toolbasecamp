@@ -493,13 +493,23 @@ window.TB_LOCALES.en = {
         },
         sheepstack: {
             title: 'Stack Match',
-            desc: 'Tap free tiles into the tray. Three matching emoji clear. Fill the tray and you lose. Runs locally.',
+            desc: 'Tap free tiles into the tray. Three matching emoji clear. Props: undo, bomb, hint, +time. Runs locally.',
             left: 'Left',
             undo: 'Undo',
             tray: 'Tray (7)',
             hint: 'Tap an uncovered tile to move it to the tray.',
             win: 'All cleared — you win!',
-            lose: 'Tray full — try again'
+            lose: 'Tray full — try again',
+            timeUp: 'Time is up!',
+            propUndo: 'Undo',
+            propBomb: 'Bomb',
+            propHint: 'Hint',
+            propTime: '+Time',
+            usedUndo: 'Undid one move',
+            usedBomb: 'Bomb cleared tray tiles',
+            usedHint: 'Highlighted a useful tile',
+            usedTime: 'Time +{n}s',
+            noHint: 'No hint available'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

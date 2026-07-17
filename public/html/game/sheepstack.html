@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stack Match - Tool Basecamp</title>
-  <meta name="description" content="Tap uncovered emoji tiles into the tray. Three of a kind clear. Inspired by Sheep a Sheep. Runs locally.">
+  <meta name="description" content="Tap uncovered emoji tiles into the tray. Three of a kind clear. Props: undo, bomb, hint, time. Runs locally.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
-  <link rel="stylesheet" href="../../css/game/sheepstack.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/sheepstack.css?v=2" />
 </head>
 <body>
   <div class="container">
@@ -16,7 +16,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.sheepstack.title">Stack Match</h1>
-        <p data-i18n="tools.sheepstack.desc">Tap free tiles into the tray. Three matching emoji clear. Fill the tray and you lose. Runs locally.</p>
+        <p data-i18n="tools.sheepstack.desc">Tap free tiles into the tray. Three matching emoji clear. Use props if stuck. Runs locally.</p>
       </div>
 
       <div class="tool-card game-card">
@@ -24,9 +24,9 @@
           <div class="game-stats">
             <span><span data-i18n="tools.sheepstack.left">Left</span>: <strong id="left">0</strong></span>
             <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
+            <span>⏱ <strong id="time">180</strong>s</span>
           </div>
           <div class="action-row">
-            <button type="button" class="tb-btn" id="undo-btn" data-i18n="tools.sheepstack.undo">Undo</button>
             <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
           </div>
         </div>
@@ -36,7 +36,29 @@
         </div>
         <div class="ss-tray-wrap">
           <div class="ss-tray-label" data-i18n="tools.sheepstack.tray">Tray (7)</div>
-          <div class="ss-tray" id="tray"></div>
+          <div class="ss-tray" id="tray" aria-label="Tray"></div>
+        </div>
+        <div class="ss-props" id="props">
+          <button type="button" class="ss-prop" id="prop-undo" title="Undo">
+            <span class="ss-prop-ico">↩️</span>
+            <span class="ss-prop-name" data-i18n="tools.sheepstack.propUndo">Undo</span>
+            <span class="ss-prop-count" id="cnt-undo">3</span>
+          </button>
+          <button type="button" class="ss-prop" id="prop-bomb" title="Bomb">
+            <span class="ss-prop-ico">💣</span>
+            <span class="ss-prop-name" data-i18n="tools.sheepstack.propBomb">Bomb</span>
+            <span class="ss-prop-count" id="cnt-bomb">2</span>
+          </button>
+          <button type="button" class="ss-prop" id="prop-hint" title="Hint">
+            <span class="ss-prop-ico">❓</span>
+            <span class="ss-prop-name" data-i18n="tools.sheepstack.propHint">Hint</span>
+            <span class="ss-prop-count" id="cnt-hint">3</span>
+          </button>
+          <button type="button" class="ss-prop" id="prop-time" title="Time">
+            <span class="ss-prop-ico">⏱️</span>
+            <span class="ss-prop-name" data-i18n="tools.sheepstack.propTime">+Time</span>
+            <span class="ss-prop-count" id="cnt-time">2</span>
+          </button>
         </div>
       </div>
     </main>
@@ -47,6 +69,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/game/sheepstack.js?v=1"></script>
+  <script src="../../js/game/sheepstack.js?v=2"></script>
 </body>
 </html>
