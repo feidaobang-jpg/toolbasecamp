@@ -522,6 +522,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '立体躲避',
             desc: '简易 WebGL 三维跑道躲避，无外部库、无贴图。左右躲开方块即可。'
         },
+        arenaBrawl: {
+            title: '街机乱斗',
+            desc: '横版 2.5D 对战：免费 OGA 素材、连招、打击停顿与华丽特效。本地可玩。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

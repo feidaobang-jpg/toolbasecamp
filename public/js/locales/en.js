@@ -523,6 +523,10 @@ window.TB_LOCALES.en = {
             title: 'Cube Rush',
             desc: 'Simple WebGL 3D lane dodge — no libraries or textures. Move left/right and avoid cubes.'
         },
+        arenaBrawl: {
+            title: 'Arena Brawl',
+            desc: '2.5D arcade brawler with free OGA sprites, combos, hitstop and heavy VFX. Local play.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

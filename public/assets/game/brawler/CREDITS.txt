@@ -1,0 +1,8 @@
+﻿Assets used in Arena Brawl (2.5D):
+
+Punch Queen / Beat em Up Graphics Pack by Chewbatrij
+Source: https://opengameart.org/content/beat-em-up-graphics-pack
+License: free to use (author: use as you want; credit optional)
+
+Includes: queen, fistbot, hitspark, stage layers.
+Impact audio: synthesized via Web Audio API (no external samples).

@@ -180,7 +180,8 @@ const gamesConfig = {
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html' },
                 { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html' },
                 { titleKey: 'tools.parkour.title', url: 'html/game/parkour.html' },
-                { titleKey: 'tools.cubeRush.title', url: 'html/game/cube-rush.html' }
+                { titleKey: 'tools.cubeRush.title', url: 'html/game/cube-rush.html' },
+                { titleKey: 'tools.arenaBrawl.title', url: 'html/game/arena-brawl.html' }
             ]
         }
     ]
