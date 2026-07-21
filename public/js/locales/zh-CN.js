@@ -514,6 +514,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '潜水捕鱼',
             desc: '类似《潜水员戴夫》：下潜捕鱼、管理氧气、回船卖鱼升级、再潜更深。单文件零依赖。'
         },
+        parkour: {
+            title: '跑酷',
+            desc: '2D 自动向前跑酷：跳跃、二段跳、滑铲。Canvas 程序化绘制，无需素材，本地可玩。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

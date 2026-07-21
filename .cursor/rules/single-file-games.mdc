@@ -1,0 +1,43 @@
+---
+description: 休闲小游戏须单 HTML：Canvas 程序化绘制 + WebAudio + localStorage + 触屏；优先 2D
+globs: public/html/game/**/*
+alwaysApply: true
+---
+
+# 单文件休闲游戏约定
+
+新增或大改「可双击运行」的休闲小游戏时，默认遵守下列约束（与《潜水捕鱼》《跑酷》同标准）。
+
+## 形态
+
+- **优先单 HTML 文件**：`public/html/game/<name>.html`，内联 CSS + JS。
+- **禁止外部依赖**：不引用 CDN、图片/音频/字体素材包、Three.js 等库；不拆成必须联网才能玩的资源。
+- **2D Canvas 优先**：零依赖下用 Canvas 2D 程序化绘制。不要上 WebGL/3D，除非用户明确要求且能接受复杂度。
+- 可接入游戏中心（`config.js` 的 `gamesConfig` + 中英文 `locales`），但游戏本体仍须能单独打开运行。
+
+## 必须具备
+
+1. **Canvas 程序化绘制**  
+   场景、角色、UI 装饰均用代码画；不依赖贴图。
+
+2. **WebAudio 音效**  
+   用 `AudioContext` 合成短音效（跳、撞、得分等）；不引用外部音频文件。注意移动端需在用户手势后 `resume`。
+
+3. **localStorage 存档**  
+   至少持久化最高分；有成长/天数/中途进度的游戏应支持「继续」。键名带项目前缀（如 `tbc_<game>_v1`）。
+
+4. **触屏操作**  
+   手机可玩：虚拟按钮 / 滑杆 / 分区点击等；与键鼠并存。`touch-action: none`，`preventDefault` 避免滚动抢手势。
+
+## 工程习惯
+
+- 自适配画布（`devicePixelRatio` + resize）。
+- 主循环 `requestAnimationFrame`，逻辑与绘制分离。
+- 接入中心时补 `tools.<id>.title` / `desc`（en + zh-CN）。
+- 体积尽量克制；复杂系统可完整，但避免无用抽象层。
+
+## 反例
+
+- 必须加载 `*.png` / `*.mp3` / 外部 JS 库才能玩。  
+- 只有桌面键鼠、手机完全不能操作。  
+- 刷新即丢进度且无最高分记录（极简原型除外，合并前应补存档）。

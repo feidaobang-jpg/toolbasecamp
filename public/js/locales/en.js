@@ -515,6 +515,10 @@ window.TB_LOCALES.en = {
             title: 'Dive Fisher',
             desc: 'Dave-the-Diver style loop: dive, catch fish, watch oxygen, sell and upgrade, go deeper. Single HTML, no deps.'
         },
+        parkour: {
+            title: 'Parkour',
+            desc: '2D auto-runner parkour: jump, double-jump, slide. Procedural canvas, no assets. Runs locally.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

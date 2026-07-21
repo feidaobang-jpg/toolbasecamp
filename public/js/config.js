@@ -178,7 +178,8 @@ const gamesConfig = {
                 { titleKey: 'tools.mines.title', url: 'html/game/mines.html' },
                 { titleKey: 'tools.slots.title', url: 'html/game/slots.html' },
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html' },
-                { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html' }
+                { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html' },
+                { titleKey: 'tools.parkour.title', url: 'html/game/parkour.html' }
             ]
         }
     ]

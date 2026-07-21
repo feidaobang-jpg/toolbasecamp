@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>跑酷 · Parkour</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0a0f1a;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none}
+#wrap{position:relative;width:100%;height:100%;max-width:720px;margin:0 auto;background:#020617}
+canvas{display:block;width:100%;height:100%}
+#ui{position:absolute;inset:0;pointer-events:none}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.95);border:1px solid #334155;border-radius:14px;padding:18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#ui h1{font-size:1.4rem;color:#38bdf8;margin-bottom:6px}
+#ui p{font-size:.86rem;line-height:1.45;color:#94a3b8;margin-bottom:10px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:110px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#hud{position:absolute;left:0;right:0;top:0;padding:10px 12px;font-size:13px;line-height:1.4;text-shadow:0 1px 2px #000;pointer-events:none}
+#hud b{color:#fde68a}
+#touch{display:none;position:absolute;inset:0;pointer-events:none}
+#touch .btn{pointer-events:auto;position:absolute;border-radius:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center}
+#touch .jump{right:16px;bottom:24px;width:96px;height:96px;border-radius:50%}
+#touch .slide{left:16px;bottom:28px;width:88px;height:64px}
+@media(pointer:coarse){#touch{display:block}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"></div>
+  <div id="touch">
+    <div class="btn slide" id="btnSlide">滑铲</div>
+    <div class="btn jump" id="btnJump">跳</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>城市跑酷</h1>
+      <p>2D 侧视自动向前跑。空格 / W / ↑ 跳跃（可二段跳），↓ / S / Shift 滑铲钻障碍。吃金币、别掉下去。</p>
+      <p>触屏：右侧跳跃 · 左侧滑铲</p>
+      <div class="row">
+        <button id="btnStart">开始</button>
+        <button class="ghost" id="btnContinue" disabled>继续</button>
+      </div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h1>结束</h1>
+      <p id="overText"></p>
+      <div class="row">
+        <button id="btnRetry">再来一局</button>
+        <button class="ghost" id="btnMenu">回标题</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const SAVE='tbc_parkour_v1';
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+const hud=document.getElementById('hud');
+const wrap=document.getElementById('wrap');
+
+let W=640,H=360,DPR=1;
+let mode='menu'; // menu | play | over
+let keys={};
+let touchJump=false,touchSlide=false;
+let lastT=0;
+let audioCtx=null;
+let state=null;
+let best=0;
+
+try{best=JSON.parse(localStorage.getItem(SAVE)||'{}').best|0}catch(e){}
+
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function rand(a,b){return a+Math.random()*(b-a)}
+
+function ensureAudio(){
+  if(audioCtx)return audioCtx;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return null;
+  audioCtx=new AC();
+  return audioCtx;
+}
+function beep(freq,dur,type,vol,slide){
+  const ac=ensureAudio();if(!ac)return;
+  const t0=ac.currentTime;
+  const o=ac.createOscillator();const g=ac.createGain();
+  o.type=type||'sine';
+  o.frequency.setValueAtTime(freq,t0);
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,slide),t0+dur);
+  g.gain.setValueAtTime(vol||0.05,t0);
+  g.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+  o.connect(g);g.connect(ac.destination);
+  o.start(t0);o.stop(t0+dur+0.02);
+}
+function sfx(n){
+  if(n==='jump')beep(360,0.09,'square',0.04,220);
+  else if(n==='djump')beep(480,0.08,'square',0.04,300);
+  else if(n==='slide')beep(140,0.1,'triangle',0.04,80);
+  else if(n==='coin')beep(880,0.07,'sine',0.05,1200);
+  else if(n==='land')beep(120,0.05,'triangle',0.03);
+  else if(n==='hit')beep(90,0.25,'sawtooth',0.05,40);
+  else if(n==='start')beep(260,0.1,'sine',0.04,520);
+}
+
+function resize(){
+  const r=wrap.getBoundingClientRect();
+  DPR=Math.min(2,window.devicePixelRatio||1);
+  W=Math.max(320,Math.floor(r.width));
+  H=Math.max(280,Math.floor(r.height));
+  canvas.width=(W*DPR)|0;canvas.height=(H*DPR)|0;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize',resize);
+
+function groundY(){return H*0.78}
+
+function newRun(){
+  const gy=groundY();
+  state={
+    dist:0,score:0,coins:0,speed:220,t:0,alive:true,
+    px:W*0.28,py:gy-28,vx:0,vy:0,
+    onGround:true,jumps:0,slideT:0,invuln:0,
+    grav:1600,jumpV:-520,
+    plats:[],obs:[],coinList:[],particles:[],
+    nextPlatX:W*0.5,shake:0
+  };
+  // starting runway
+  state.plats.push({x:0,y:gy,w:W*1.2,h:H-gy,type:'ground'});
+  state.nextPlatX=W*1.1;
+  for(let i=0;i<8;i++)spawnChunk();
+  mode='play';
+  hidePanels();
+  sfx('start');
+  saveProgress(false);
+}
+
+function spawnChunk(){
+  const gy=groundY();
+  const kind=Math.random();
+  const gap=rand(70,120)+state.speed*0.08;
+  let x=state.nextPlatX+gap;
+  if(kind<0.55){
+    const w=rand(140,260);
+    const y=gy-rand(0,1)*rand(40,110);
+    state.plats.push({x,y,w,h:gy+40-y+(y<gy?0:H-gy),type:y<gy-5?'box':'ground'});
+    // maybe obstacle on top
+    if(Math.random()<0.45 && w>160){
+      if(Math.random()<0.5){
+        state.obs.push({x:x+w*0.55,y:y-36,w:28,h:36,kind:'block'});
+      }else{
+        state.obs.push({x:x+w*0.4,y:y-52,w:70,h:18,kind:'low'}); // slide under
+      }
+    }
+    if(Math.random()<0.7){
+      for(let i=0;i<3;i++)state.coinList.push({x:x+40+i*28,y:y-50-rand(0,30),r:7,got:false});
+    }
+    state.nextPlatX=x+w;
+  }else if(kind<0.8){
+    const w=rand(90,140);
+    const y=gy-rand(50,140);
+    state.plats.push({x,y,w,h:18,type:'float'});
+    state.coinList.push({x:x+w*0.5,y:y-28,r:8,got:false});
+    state.nextPlatX=x+w;
+  }else{
+    // double step
+    const w1=rand(100,160),w2=rand(100,160);
+    const y1=gy-rand(20,70),y2=gy-rand(80,150);
+    state.plats.push({x,y:y1,w:w1,h:18,type:'float'});
+    state.plats.push({x:x+w1+rand(40,80),y:y2,w:w2,h:18,type:'float'});
+    state.nextPlatX=x+w1+100+w2;
+  }
+}
+
+function saveProgress(isOver){
+  try{
+    const data={best:Math.max(best,state?state.score|0:0),run:null};
+    if(!isOver&&state&&mode==='play'){
+      data.run={
+        dist:state.dist,score:state.score,coins:state.coins,speed:state.speed,t:state.t,
+        py:state.py,vy:state.vy,onGround:state.onGround,jumps:state.jumps,slideT:state.slideT
+      };
+    }
+    best=data.best;
+    localStorage.setItem(SAVE,JSON.stringify(data));
+  }catch(e){}
+}
+function hasContinue(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SAVE)||'{}');
+    return !!(d&&d.run);
+  }catch(e){return false}
+}
+function continueRun(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SAVE)||'{}');
+    if(!d.run)return false;
+    newRun();
+    Object.assign(state,d.run);
+    state.alive=true;state.px=W*0.28;state.invuln=1.2;
+    // rebuild some platforms ahead
+    state.plats=[];state.obs=[];state.coinList=[];
+    const gy=groundY();
+    state.plats.push({x:state.dist-80,y:gy,w:W,h:H-gy,type:'ground'});
+    state.nextPlatX=state.dist+W*0.6;
+    for(let i=0;i<10;i++)spawnChunk();
+    mode='play';hidePanels();
+    return true;
+  }catch(e){return false}
+}
+
+function hidePanels(){
+  document.getElementById('panelMenu').classList.add('hidden');
+  document.getElementById('panelOver').classList.add('hidden');
+}
+
+function playerBox(){
+  const sliding=state.slideT>0;
+  const h=sliding?18:28;
+  const w=18;
+  return {x:state.px-w/2,y:state.py-h,w:w,h:h};
+}
+
+function jump(){
+  if(mode!=='play'||!state||!state.alive)return;
+  if(state.slideT>0)state.slideT=0;
+  if(state.onGround||state.jumps<2){
+    const first=state.onGround||state.jumps===0;
+    state.vy=first?state.jumpV:state.jumpV*0.88;
+    state.onGround=false;
+    state.jumps+=1;
+    sfx(first?'jump':'djump');
+  }
+}
+function slide(){
+  if(mode!=='play'||!state||!state.alive)return;
+  if(state.onGround){
+    state.slideT=0.55;
+    sfx('slide');
+  }else{
+    state.vy=Math.max(state.vy,420); // fast fall
+  }
+}
+
+function aabb(a,b){
+  return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+}
+
+function die(reason){
+  if(!state.alive)return;
+  if(state.invuln>0)return;
+  state.alive=false;
+  sfx('hit');
+  state.shake=10;
+  mode='over';
+  best=Math.max(best,state.score|0);
+  saveProgress(true);
+  document.getElementById('panelOver').classList.remove('hidden');
+  document.getElementById('overText').textContent=
+    '距离 '+Math.floor(state.dist)+' · 得分 '+state.score+' · 金币 '+state.coins+' · 最高 '+best+
+    (reason?' · '+reason:'');
+}
+
+function update(dt){
+  if(mode!=='play'||!state||!state.alive)return;
+  state.t+=dt;
+  state.speed=220+Math.min(280,state.dist*0.035);
+  const scroll=state.speed*dt;
+  state.dist+=scroll;
+  state.score=Math.floor(state.dist)+state.coins*10;
+  if(state.invuln>0)state.invuln-=dt;
+  if(state.shake>0)state.shake*=0.9;
+
+  // input hold slide
+  const wantSlide=keys['s']||keys['arrowdown']||keys['shift']||touchSlide;
+  if(wantSlide&&state.onGround&&state.slideT<=0)slide();
+  if(state.slideT>0)state.slideT-=dt;
+
+  // physics in screen space; world scrolls left
+  state.vy+=state.grav*dt;
+  state.py+=state.vy*dt;
+  state.onGround=false;
+
+  // scroll world
+  state.plats.forEach(p=>p.x-=scroll);
+  state.obs.forEach(o=>o.x-=scroll);
+  state.coinList.forEach(c=>c.x-=scroll);
+  state.nextPlatX-=scroll;
+
+  while(state.nextPlatX<state.dist+W*1.5)spawnChunk();
+  // prune
+  state.plats=state.plats.filter(p=>p.x+p.w>-80);
+  state.obs=state.obs.filter(o=>o.x+o.w>-80);
+  state.coinList=state.coinList.filter(c=>!c.got&&c.x>-80);
+
+  const box=playerBox();
+  // platform collision
+  for(const p of state.plats){
+    const plat={x:p.x,y:p.y,w:p.w,h:p.h};
+    if(state.vy>=0&&box.y+box.h<=p.y+12&&box.y+box.h+state.vy*dt>=p.y){
+      if(box.x+box.w>p.x+4&&box.x<p.x+p.w-4){
+        state.py=p.y;
+        state.vy=0;
+        if(!state.onGround)sfx('land');
+        state.onGround=true;
+        state.jumps=0;
+      }
+    }
+  }
+
+  // hazards
+  for(const o of state.obs){
+    const hb={x:o.x,y:o.y,w:o.w,h:o.h};
+    const pb=playerBox();
+    if(aabb(pb,hb)){
+      if(o.kind==='low'&&state.slideT>0)continue;
+      die(o.kind==='low'?'需要滑铲':'撞到障碍');
+      return;
+    }
+  }
+
+  // coins
+  for(const c of state.coinList){
+    if(c.got)continue;
+    const pb=playerBox();
+    const dx=pb.x+pb.w/2-c.x,dy=pb.y+pb.h/2-c.y;
+    if(dx*dx+dy*dy<(c.r+10)*(c.r+10)){
+      c.got=true;state.coins+=1;sfx('coin');
+      for(let i=0;i<6;i++)state.particles.push({x:c.x,y:c.y,vx:rand(-80,80),vy:rand(-120,-20),life:0.4,c:'#fbbf24'});
+    }
+  }
+
+  if(state.py>H+40)die('坠落');
+
+  state.particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt});
+  state.particles=state.particles.filter(p=>p.life>0);
+
+  if((state.score|0)%25===0)saveProgress(false);
+}
+
+function drawBg(){
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#0c4a6e');
+  g.addColorStop(0.45,'#082f49');
+  g.addColorStop(1,'#020617');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // buildings parallax
+  const off=(state?state.dist*0.15:0)%120;
+  ctx.fillStyle='rgba(15,23,42,.85)';
+  for(let i=-1;i<12;i++){
+    const x=i*120-off;
+    const h=80+(i*37)%100;
+    ctx.fillRect(x,groundY()-h,70,h);
+    ctx.fillStyle='rgba(56,189,248,.15)';
+    for(let wy=0;wy<4;wy++)for(let wx=0;wx<2;wx++)
+      ctx.fillRect(x+12+wx*22,groundY()-h+14+wy*18,10,10);
+    ctx.fillStyle='rgba(15,23,42,.85)';
+  }
+  // ground line glow
+  ctx.strokeStyle='rgba(56,189,248,.25)';
+  ctx.beginPath();ctx.moveTo(0,groundY()+0.5);ctx.lineTo(W,groundY()+0.5);ctx.stroke();
+}
+
+function draw(){
+  ctx.save();
+  if(state&&state.shake>0.5){
+    ctx.translate(rand(-state.shake,state.shake),rand(-state.shake,state.shake));
+  }
+  drawBg();
+
+  if(state){
+    // platforms
+    state.plats.forEach(p=>{
+      if(p.type==='float'){
+        ctx.fillStyle='#334155';
+        ctx.fillRect(p.x,p.y,p.w,14);
+        ctx.fillStyle='#38bdf8';
+        ctx.fillRect(p.x,p.y,p.w,3);
+      }else if(p.type==='box'){
+        ctx.fillStyle='#1e293b';
+        ctx.fillRect(p.x,p.y,p.w,p.h);
+        ctx.fillStyle='#475569';
+        ctx.fillRect(p.x,p.y,p.w,8);
+      }else{
+        ctx.fillStyle='#0f172a';
+        ctx.fillRect(p.x,p.y,p.w,p.h);
+        ctx.fillStyle='#1e293b';
+        ctx.fillRect(p.x,p.y,p.w,10);
+      }
+    });
+    // obstacles
+    state.obs.forEach(o=>{
+      if(o.kind==='low'){
+        ctx.fillStyle='#f97316';
+        ctx.fillRect(o.x,o.y,o.w,o.h);
+        ctx.fillStyle='#fdba74';
+        ctx.fillRect(o.x+4,o.y+4,o.w-8,4);
+      }else{
+        ctx.fillStyle='#ef4444';
+        ctx.fillRect(o.x,o.y,o.w,o.h);
+        ctx.fillStyle='#fecaca';
+        ctx.fillRect(o.x+6,o.y+8,8,8);
+      }
+    });
+    // coins
+    state.coinList.forEach(c=>{
+      if(c.got)return;
+      ctx.fillStyle='#fbbf24';
+      ctx.beginPath();ctx.arc(c.x,c.y,c.r,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fef3c7';
+      ctx.beginPath();ctx.arc(c.x-2,c.y-2,2.5,0,Math.PI*2);ctx.fill();
+    });
+    state.particles.forEach(p=>{
+      ctx.globalAlpha=clamp(p.life*2,0,1);
+      ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,3,3);ctx.globalAlpha=1;
+    });
+    // player
+    const pb=playerBox();
+    const blink=state.invuln>0&&((state.t*20)|0)%2===0;
+    if(!blink){
+      ctx.fillStyle='#38bdf8';
+      ctx.fillRect(pb.x,pb.y,pb.w,pb.h);
+      ctx.fillStyle='#e0f2fe';
+      ctx.fillRect(pb.x+3,pb.y+3,6,5);
+      // trail
+      ctx.fillStyle='rgba(56,189,248,.25)';
+      ctx.fillRect(pb.x-14,pb.y+8,12,4);
+    }
+  }else{
+    // idle preview silhouette
+    ctx.fillStyle='#1e293b';
+    ctx.fillRect(0,groundY(),W,H-groundY());
+    ctx.fillStyle='#38bdf8';
+    ctx.fillRect(W*0.28-9,groundY()-28,18,28);
+  }
+  ctx.restore();
+
+  if(mode==='play'&&state){
+    hud.innerHTML='距离 <b>'+Math.floor(state.dist)+'</b> · 得分 <b>'+state.score+'</b> · 金币 <b>'+state.coins+'</b> · 最高 <b>'+best+'</b>'+
+      (state.slideT>0?' · <b>滑铲</b>':'')+(state.jumps===1&&!state.onGround?' · 可二段跳':'');
+  }else if(mode==='menu'){
+    hud.innerHTML='最高分 <b>'+best+'</b>';
+  }else hud.innerHTML='';
+}
+
+function loop(ts){
+  const dt=Math.min(0.033,(ts-lastT)/1000||0.016);
+  lastT=ts;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('keydown',e=>{
+  keys[e.key.toLowerCase()]=true;
+  if(e.code==='Space'||e.key==='w'||e.key==='W'||e.key==='ArrowUp'){e.preventDefault();jump()}
+  if(e.key==='s'||e.key==='S'||e.key==='ArrowDown'||e.key==='Shift'){e.preventDefault();slide()}
+});
+window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+canvas.addEventListener('mousedown',()=>{ensureAudio();if(mode==='play')jump()});
+
+document.getElementById('btnJump').addEventListener('touchstart',e=>{e.preventDefault();touchJump=true;ensureAudio();jump()},{passive:false});
+document.getElementById('btnJump').addEventListener('touchend',e=>{e.preventDefault();touchJump=false},{passive:false});
+document.getElementById('btnSlide').addEventListener('touchstart',e=>{e.preventDefault();touchSlide=true;ensureAudio();slide()},{passive:false});
+document.getElementById('btnSlide').addEventListener('touchend',e=>{e.preventDefault();touchSlide=false},{passive:false});
+
+document.getElementById('btnStart').onclick=()=>{ensureAudio();newRun()};
+document.getElementById('btnContinue').onclick=()=>{ensureAudio();if(!continueRun())newRun()};
+document.getElementById('btnRetry').onclick=()=>{ensureAudio();newRun()};
+document.getElementById('btnMenu').onclick=()=>{
+  mode='menu';state=null;hidePanels();
+  document.getElementById('panelMenu').classList.remove('hidden');
+  document.getElementById('btnContinue').disabled=!hasContinue();
+};
+
+document.getElementById('btnContinue').disabled=!hasContinue();
+resize();
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
