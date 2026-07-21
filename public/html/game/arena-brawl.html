@@ -408,7 +408,7 @@ function update(dt){
   if(world.toSpawn>0){
     world.spawnT-=d;
     if(world.spawnT<=0){spawnEnemy();world.toSpawn--;world.spawnT=0.7}
-  }else if(world.enemies.every(e=>e.dead)){
+  }else if(world.enemies.length&&world.enemies.every(e=>e.dead)){
     world.wave++;
     world.toSpawn=2+world.wave;
     world.spawnT=1.0;
@@ -476,6 +476,7 @@ function draw(){
   ctx.clearRect(0,0,W,H);
   ctx.save();
   if(shake>0.4)ctx.translate(rand(-shake,shake),rand(-shake,shake));
+  const cam=world?world.camX:0;
 
   // sky / bg parallax 2.5D
   const g=ctx.createLinearGradient(0,0,0,H);
@@ -484,9 +485,8 @@ function draw(){
 
   if(imgs.bg){
     const bw=imgs.bg.width,bh=imgs.bg.height;
-    const scale=W/bw;
-    const drawH=bh*scale;
-    const ox=(-world.camX*0.25)%W;
+    const drawH=bh*(W/bw);
+    let ox=(-cam*0.25)%W;if(ox>0)ox-=W;
     ctx.drawImage(imgs.bg,ox,groundY()-drawH+20,W,drawH);
     ctx.drawImage(imgs.bg,ox+W,groundY()-drawH+20,W,drawH);
   }
@@ -502,7 +502,7 @@ function draw(){
   if(imgs.fg){
     const fh=60*SCALE/2.2;
     ctx.globalAlpha=0.85;
-    const ox=(-world.camX*0.9)%W;
+    let ox=(-cam*0.9)%W;if(ox>0)ox-=W;
     ctx.drawImage(imgs.fg,ox,H-fh-8,W,fh);
     ctx.drawImage(imgs.fg,ox+W,H-fh-8,W,fh);
     ctx.globalAlpha=1;
@@ -512,28 +512,32 @@ function draw(){
     afterimages.forEach(a=>{
       const img=a.kind==='player'?imgs.queen:imgs.bot;
       const sh=a.kind==='player'?sheets.queen:sheets.bot;
-      ctx.globalAlpha=a.life*1.8;
-      drawFrame(img,sh,a.fi,a.x-world.camX,zToY(a.z)+(a._airY||0),a.face,SCALE*0.95,0);
+      ctx.globalAlpha=clamp(a.life*2.2,0,0.55);
+      drawFrame(img,sh,a.fi,a.x-cam,zToY(a.z)+(a._airY||0),a.face,SCALE*0.95,0);
     });
     ctx.globalAlpha=1;
     const list=[world.player,...world.enemies].filter(Boolean);
     list.sort(sortDraw);
     list.forEach(drawFighter);
+  }else if(imgs.queen&&sheets.queen){
+    // 标题画面预览角色，确认精灵已加载
+    const sh=sheets.queen;
+    const fi=(sh.tags.Walk||{from:0}).from+((performance.now()/120|0)%3);
+    drawFrame(imgs.queen,sh,fi,W*0.5,groundY()-8,1,SCALE,0);
   }
 
   // VFX
   particles.forEach(p=>{
-    if(!world)return;
     ctx.globalAlpha=clamp(p.life*2,0,1);
     ctx.fillStyle=p.c;
-    ctx.beginPath();ctx.arc(p.x-world.camX,p.y,p.r,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(p.x-cam,p.y,p.r,0,Math.PI*2);ctx.fill();
   });
   ctx.globalAlpha=1;
   sparks.forEach(s=>{
     const t=s.t/s.life;
-    if(s.slash&&imgs.spark){
+    if(s.slash&&imgs.spark&&sheets.spark){
       ctx.save();
-      ctx.translate(s.x-world.camX,s.y);
+      ctx.translate(s.x-cam,s.y);
       ctx.scale((s.face||1)*(1.5+t),1.5+t);
       ctx.globalAlpha=1-t;
       const fr=sheets.spark.frames[t>0.5?1:0];
@@ -542,13 +546,13 @@ function draw(){
     }else{
       ctx.strokeStyle='rgba(255,255,255,'+(1-t)+')';
       ctx.lineWidth=3;
-      ctx.beginPath();ctx.arc(s.x-world.camX,s.y,10+t*40,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.arc(s.x-cam,s.y,10+t*40,0,Math.PI*2);ctx.stroke();
     }
   });
   floats.forEach(f=>{
     ctx.globalAlpha=1-f.t;
     ctx.fillStyle=f.c;ctx.font='bold 18px system-ui';ctx.textAlign='center';
-    ctx.fillText(f.text,f.x-world.camX,f.y);
+    ctx.fillText(f.text,f.x-cam,f.y);
     ctx.textAlign='left';ctx.globalAlpha=1;
   });
 
