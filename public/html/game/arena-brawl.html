@@ -629,6 +629,7 @@ document.getElementById('btnMenu').onclick=()=>{
     // idle: use walk frame 0 as idle by tagging
     if(!sheets.queen.tags.Idle)sheets.queen.tags.Idle={from:0,to:0};
     if(!sheets.bot.tags.Idle)sheets.bot.tags.Idle={from:0,to:0};
+    if(!sheets.bot.tags.Death)sheets.bot.tags.Death=sheets.bot.tags.Hit||{from:3,to:3};
     resize();
     requestAnimationFrame(loop);
   }catch(err){
