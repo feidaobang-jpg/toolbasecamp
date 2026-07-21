@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cover Maker - Tool Basecamp</title>
+  <meta name="description" content="Create 9:16 and 16:9 covers with a title overlay. Runs locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=10" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.coverMaker.title">Cover Maker</h1>
+        <p data-i18n="tools.coverMaker.desc">Upload a background, set a title and focus point, then generate 9:16 and 16:9 covers. Runs locally.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="rec-field">
+          <span class="field-label" data-i18n="tools.coverMaker.imageLabel">1. Background image</span>
+          <div class="drop-zone" id="drop-zone">
+            <div class="drop-icon">+</div>
+            <div class="drop-title" data-i18n="tools.coverMaker.dropTitle">Click or drop an image</div>
+            <div class="drop-hint" data-i18n="tools.coverMaker.dropHint">JPG, PNG, or WebP</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none" />
+          <div class="focus-wrap" id="focus-wrap" hidden>
+            <div class="focus-point-container" id="focus-container">
+              <img id="preview-img" alt="" />
+              <div id="focus-marker" class="focus-point-marker" hidden></div>
+            </div>
+            <p class="img-tool-meta" data-i18n="tools.coverMaker.focusHint">Click the image to set the subject focus point.</p>
+            <button type="button" class="tb-btn" id="reselect-btn" data-i18n="tools.coverMaker.reselect">Change image</button>
+          </div>
+        </div>
+
+        <div class="rec-field">
+          <label class="field-label" for="title-input" data-i18n="tools.coverMaker.titleLabel">2. Title</label>
+          <input type="text" id="title-input" class="rec-input" maxlength="40"
+            data-i18n-placeholder="tools.coverMaker.titlePlaceholder" placeholder="Cover title (keep it short)" />
+          <p class="img-tool-meta"><span id="char-count">0</span> <span data-i18n="tools.coverMaker.chars">chars</span></p>
+        </div>
+
+        <div class="img-tool-fields">
+          <label>
+            <span data-i18n="tools.coverMaker.fontSizeLabel">Font size</span>
+            <input type="number" id="font-size-input" value="140" min="20" max="400" />
+          </label>
+        </div>
+
+        <div class="rec-field">
+          <span class="field-label" data-i18n="tools.coverMaker.styleLabel">3. Text style</span>
+          <div class="style-choice-list">
+            <label class="style-choice">
+              <input type="radio" name="cover-style" value="money_yellow" checked />
+              <span>
+                <b data-i18n="tools.coverMaker.styleMoneyYellow">Yellow + black outline</b>
+                <small data-i18n="tools.coverMaker.styleMoneyYellowHint">Bold, money / urgency</small>
+              </span>
+            </label>
+            <label class="style-choice">
+              <input type="radio" name="cover-style" value="tech_blue" />
+              <span>
+                <b data-i18n="tools.coverMaker.styleTechBlue">White + blue outline</b>
+                <small data-i18n="tools.coverMaker.styleTechBlueHint">Tech / AI look</small>
+              </span>
+            </label>
+            <label class="style-choice">
+              <input type="radio" name="cover-style" value="tech_basic" />
+              <span>
+                <b data-i18n="tools.coverMaker.styleTechBasic">White + shadow</b>
+                <small data-i18n="tools.coverMaker.styleTechBasicHint">Clean professional</small>
+              </span>
+            </label>
+            <label class="style-choice">
+              <input type="radio" name="cover-style" value="money_red_bg" />
+              <span>
+                <b data-i18n="tools.coverMaker.styleMoneyRed">White on red banner</b>
+                <small data-i18n="tools.coverMaker.styleMoneyRedHint">Poster / announcement</small>
+              </span>
+            </label>
+            <label class="style-choice">
+              <input type="radio" name="cover-style" value="price_green" />
+              <span>
+                <b data-i18n="tools.coverMaker.stylePriceGreen">Neon green + black outline</b>
+                <small data-i18n="tools.coverMaker.stylePriceGreenHint">Price / promo</small>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="generate-btn" data-i18n="tools.coverMaker.generate">Generate covers</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.coverMaker.clear">Clear</button>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="cover-results" id="result-section" hidden>
+          <div class="cover-result-card">
+            <div class="cover-result-head">
+              <span>9:16</span>
+              <button type="button" class="tb-btn" id="dl-916" data-i18n="tools.coverMaker.download">Download</button>
+            </div>
+            <img id="result-916" alt="9:16" />
+          </div>
+          <div class="cover-result-card">
+            <div class="cover-result-head">
+              <span>16:9</span>
+              <button type="button" class="tb-btn" id="dl-169" data-i18n="tools.coverMaker.download">Download</button>
+            </div>
+            <img id="result-169" alt="16:9" />
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/cover-maker.js?v=1"></script>
+</body>
+</html>

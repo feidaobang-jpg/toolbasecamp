@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Icon Maker - Tool Basecamp</title>
+  <meta name="description" content="Generate square icons from text locally in your browser.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=10" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.iconMaker.title">Icon Maker</h1>
+        <p data-i18n="tools.iconMaker.desc">Enter text and a background color to generate a small square icon. Runs locally.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="rec-field">
+          <label class="field-label" for="text-input" data-i18n="tools.iconMaker.textLabel">1. Text</label>
+          <input type="text" id="text-input" class="rec-input" maxlength="32"
+            data-i18n-placeholder="tools.iconMaker.textPlaceholder" placeholder="e.g. TB / AI / VIP" />
+          <p class="img-tool-meta" data-i18n="tools.iconMaker.textHint">Characters are laid out in a grid with white text.</p>
+        </div>
+
+        <div class="img-tool-fields">
+          <label>
+            <span data-i18n="tools.iconMaker.sizeLabel">2. Icon size</span>
+            <input type="number" id="size-input" value="100" min="16" max="1024" />
+          </label>
+          <label>
+            <span data-i18n="tools.iconMaker.fontSizeLabel">3. Text size</span>
+            <input type="number" id="font-size-input" value="50" min="8" max="512" />
+          </label>
+          <label>
+            <span data-i18n="tools.iconMaker.radiusLabel">4. Corner radius</span>
+            <input type="number" id="corner-radius-input" value="0" min="0" max="512" />
+          </label>
+        </div>
+
+        <div class="rec-field">
+          <span class="field-label" data-i18n="tools.iconMaker.bgLabel">5. Background</span>
+          <div class="color-choice-row">
+            <label class="color-choice">
+              <input type="radio" name="bg-color" value="blue" checked />
+              <span class="color-dot" style="background:#2563eb"></span>
+              <span data-i18n="tools.iconMaker.bgBlue">Blue</span>
+            </label>
+            <label class="color-choice">
+              <input type="radio" name="bg-color" value="red" />
+              <span class="color-dot" style="background:#dc2626"></span>
+              <span data-i18n="tools.iconMaker.bgRed">Red</span>
+            </label>
+            <label class="color-choice">
+              <input type="radio" name="bg-color" value="green" />
+              <span class="color-dot" style="background:#16a34a"></span>
+              <span data-i18n="tools.iconMaker.bgGreen">Green</span>
+            </label>
+            <label class="color-choice">
+              <input type="radio" name="bg-color" value="black" />
+              <span class="color-dot" style="background:#111827"></span>
+              <span data-i18n="tools.iconMaker.bgBlack">Black</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="generate-btn" data-i18n="tools.iconMaker.generate">Generate icon</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.iconMaker.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.iconMaker.clear">Clear</button>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="img-tool-preview icon-preview-wrap" id="result-section" hidden>
+          <p class="img-tool-meta" id="result-size"></p>
+          <div class="checker-bg">
+            <img id="result-img" alt="" />
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/icon-maker.js?v=1"></script>
+</body>
+</html>
