@@ -519,6 +519,10 @@ window.TB_LOCALES.en = {
             title: 'Parkour',
             desc: '2D auto-runner parkour: jump, double-jump, slide. Procedural canvas, no assets. Runs locally.'
         },
+        cubeRush: {
+            title: 'Cube Rush',
+            desc: 'Simple WebGL 3D lane dodge — no libraries or textures. Move left/right and avoid cubes.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

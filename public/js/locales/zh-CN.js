@@ -518,6 +518,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '跑酷',
             desc: '2D 自动向前跑酷：跳跃、二段跳、滑铲。Canvas 程序化绘制，无需素材，本地可玩。'
         },
+        cubeRush: {
+            title: '立体躲避',
+            desc: '简易 WebGL 三维跑道躲避，无外部库、无贴图。左右躲开方块即可。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

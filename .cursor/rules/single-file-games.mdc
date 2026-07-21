@@ -12,7 +12,8 @@ alwaysApply: true
 
 - **优先单 HTML 文件**：`public/html/game/<name>.html`，内联 CSS + JS。
 - **禁止外部依赖**：不引用 CDN、图片/音频/字体素材包、Three.js 等库；不拆成必须联网才能玩的资源。
-- **2D Canvas 优先**：零依赖下用 Canvas 2D 程序化绘制。不要上 WebGL/3D，除非用户明确要求且能接受复杂度。
+- **2D Canvas 优先**：零依赖下用 Canvas 2D 程序化绘制。  
+- **真 3D 需用户明确要求**：可用裸 WebGL（禁止 Three.js 等外部库），保持单文件；优先极简玩法（如跑道躲避）。
 - 可接入游戏中心（`config.js` 的 `gamesConfig` + 中英文 `locales`），但游戏本体仍须能单独打开运行。
 
 ## 必须具备

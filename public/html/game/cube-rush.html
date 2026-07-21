@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>立体躲避 · Cube Rush</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#020617;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none}
+#wrap{position:relative;width:100%;height:100%;max-width:720px;margin:0 auto;background:#000}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:10px 12px;font-size:13px;text-shadow:0 1px 3px #000;pointer-events:none}
+#hud b{color:#fde68a}
+#ui{position:absolute;inset:0;pointer-events:none}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.95);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.35rem;color:#38bdf8;margin-bottom:8px}
+#ui p{font-size:.86rem;line-height:1.45;color:#94a3b8;margin-bottom:10px}
+#ui .row{display:flex;gap:8px;margin-top:12px}
+#ui button{font:inherit;flex:1;border:0;border-radius:999px;padding:10px 14px;background:#2563eb;color:#fff;cursor:pointer}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#touch{display:none;position:absolute;inset:0;pointer-events:none}
+#touch .zone{pointer-events:auto;position:absolute;top:20%;bottom:0;width:50%}
+#touch .L{left:0}#touch .R{right:0}
+#touch .hint{position:absolute;bottom:28px;width:50%;text-align:center;color:rgba(255,255,255,.35);font-size:13px;pointer-events:none}
+@media(pointer:coarse){#touch{display:block}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"></div>
+  <div id="touch">
+    <div class="zone L" id="zL"></div><div class="zone R" id="zR"></div>
+    <div class="hint" style="left:0">← 左</div><div class="hint" style="left:50%">右 →</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>立体躲避</h1>
+      <p>简易 WebGL 3D 试玩：沿跑道前进，左右躲开方块。无外部库、无贴图素材。</p>
+      <p>A / D 或 ← → 移动 · 触屏点左右半屏</p>
+      <div class="row"><button id="btnStart">开始</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h1>撞到了</h1>
+      <p id="overText"></p>
+      <div class="row">
+        <button id="btnRetry">再来</button>
+        <button class="ghost" id="btnMenu">标题</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const SAVE='tbc_cube_rush_v1';
+const canvas=document.getElementById('c');
+const gl=canvas.getContext('webgl',{antialias:true,alpha:false});
+if(!gl){
+  document.getElementById('panelMenu').innerHTML='<h1>无法启动</h1><p>当前浏览器不支持 WebGL。</p>';
+  return;
+}
+
+let W=640,H=360,DPR=1;
+let mode='menu', best=0, lastT=0;
+let keys={}, touchDir=0;
+let audioCtx=null;
+let state=null;
+
+try{best=(JSON.parse(localStorage.getItem(SAVE)||'{}').best)|0}catch(e){}
+
+function resize(){
+  const r=document.getElementById('wrap').getBoundingClientRect();
+  DPR=Math.min(2,devicePixelRatio||1);
+  W=Math.max(300,r.width|0);H=Math.max(280,r.height|0);
+  canvas.width=(W*DPR)|0;canvas.height=(H*DPR)|0;
+  gl.viewport(0,0,canvas.width,canvas.height);
+}
+window.addEventListener('resize',resize);
+
+function ensureAudio(){
+  if(audioCtx)return audioCtx;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return null;
+  return (audioCtx=new AC());
+}
+function beep(f,d,type,v,slide){
+  const ac=ensureAudio();if(!ac)return;
+  const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t);
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,slide),t+d);
+  g.gain.setValueAtTime(v||0.05,t);g.gain.exponentialRampToValueAtTime(0.001,t+d);
+  o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+0.02);
+}
+function sfx(n){
+  if(n==='start')beep(300,0.1,'sine',0.04,600);
+  else if(n==='tick')beep(700,0.04,'square',0.025);
+  else if(n==='hit')beep(80,0.3,'sawtooth',0.06,40);
+}
+
+/* —— tiny mat4 —— */
+function mat4(){return new Float32Array(16)}
+function ident(o){o.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);return o}
+function mul(a,b,o){
+  o=o||mat4();
+  for(let c=0;c<4;c++)for(let r=0;r<4;r++)
+    o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];
+  return o;
+}
+function persp(out,fovy,asp,n,f){
+  const t=1/Math.tan(fovy/2),nf=1/(n-f);
+  out.set([t/asp,0,0,0, 0,t,0,0, 0,0,(f+n)*nf,-1, 0,0,(2*f*n)*nf,0]);
+  return out;
+}
+function lookAt(out,ex,ey,ez,cx,cy,cz,ux,uy,uz){
+  let zx=ex-cx,zy=ey-cy,zz=ez-cz,l=Math.hypot(zx,zy,zz)||1;zx/=l;zy/=l;zz/=l;
+  let xx=uy*zz-uz*zy,xy=uz*zx-ux*zz,xz=ux*zy-uy*zx;l=Math.hypot(xx,xy,xz)||1;xx/=l;xy/=l;xz/=l;
+  const yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;
+  out.set([xx,yx,zx,0, xy,yy,zy,0, xz,yz,zz,0, -(xx*ex+xy*ey+xz*ez),-(yx*ex+yy*ey+yz*ez),-(zx*ex+zy*ey+zz*ez),1]);
+  return out;
+}
+function translate(m,x,y,z){const t=ident(mat4());t[12]=x;t[13]=y;t[14]=z;return mul(m,t,mat4())}
+function scale(m,x,y,z){const t=ident(mat4());t[0]=x;t[5]=y;t[10]=z;return mul(m,t,mat4())}
+
+const VS=`attribute vec3 aPos;uniform mat4 uMVP;void main(){gl_Position=uMVP*vec4(aPos,1.0);}`;
+const FS=`precision mediump float;uniform vec3 uColor;void main(){gl_FragColor=vec4(uColor,1.0);}`;
+
+function compile(type,src){
+  const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog=gl.createProgram();
+gl.attachShader(prog,compile(gl.VERTEX_SHADER,VS));
+gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,FS));
+gl.linkProgram(prog);
+const aPos=gl.getAttribLocation(prog,'aPos');
+const uMVP=gl.getUniformLocation(prog,'uMVP');
+const uColor=gl.getUniformLocation(prog,'uColor');
+
+// unit cube [-0.5,0.5]
+const cubeVerts=new Float32Array([
+  -0.5,-0.5,0.5, 0.5,-0.5,0.5, 0.5,0.5,0.5, -0.5,-0.5,0.5, 0.5,0.5,0.5, -0.5,0.5,0.5,
+  -0.5,-0.5,-0.5, -0.5,0.5,-0.5, 0.5,0.5,-0.5, -0.5,-0.5,-0.5, 0.5,0.5,-0.5, 0.5,-0.5,-0.5,
+  -0.5,0.5,-0.5, -0.5,0.5,0.5, 0.5,0.5,0.5, -0.5,0.5,-0.5, 0.5,0.5,0.5, 0.5,0.5,-0.5,
+  -0.5,-0.5,-0.5, 0.5,-0.5,-0.5, 0.5,-0.5,0.5, -0.5,-0.5,-0.5, 0.5,-0.5,0.5, -0.5,-0.5,0.5,
+  0.5,-0.5,-0.5, 0.5,0.5,-0.5, 0.5,0.5,0.5, 0.5,-0.5,-0.5, 0.5,0.5,0.5, 0.5,-0.5,0.5,
+  -0.5,-0.5,-0.5, -0.5,-0.5,0.5, -0.5,0.5,0.5, -0.5,-0.5,-0.5, -0.5,0.5,0.5, -0.5,0.5,-0.5
+]);
+const buf=gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+gl.bufferData(gl.ARRAY_BUFFER,cubeVerts,gl.STATIC_DRAW);
+
+const proj=mat4(),view=mat4(),mvp=mat4(),tmp=mat4();
+
+function drawCube(x,y,z,sx,sy,sz,r,g,b){
+  let m=ident(mat4());
+  m=translate(m,x,y,z);
+  m=scale(m,sx,sy,sz);
+  mul(proj,mul(view,m,tmp),mvp);
+  gl.uniformMatrix4fv(uMVP,false,mvp);
+  gl.uniform3f(uColor,r,g,b);
+  gl.drawArrays(gl.TRIANGLES,0,36);
+}
+
+function newGame(){
+  state={
+    z:0,x:0,vx:0,speed:14,t:0,score:0,
+    boxes:[],nextZ:20,alive:true
+  };
+  for(let i=0;i<12;i++)spawnBox(state.nextZ+i*8);
+  mode='play';
+  document.getElementById('panelMenu').classList.add('hidden');
+  document.getElementById('panelOver').classList.add('hidden');
+  sfx('start');
+}
+
+function spawnBox(z){
+  const lane=[-2.2,0,2.2][(Math.random()*3)|0];
+  // sometimes leave a gap lane empty by not spawning, or spawn 1-2
+  if(Math.random()<0.2){state.nextZ=z+6+Math.random()*4;return}
+  state.boxes.push({x:lane,y:0.55,z:z,s:1.1,hit:false});
+  if(Math.random()<0.35){
+    const other=[-2.2,0,2.2].filter(v=>v!==lane);
+    state.boxes.push({x:other[(Math.random()*other.length)|0],y:0.55,z:z+1.5,s:1.1,hit:false});
+  }
+  state.nextZ=z+7+Math.random()*5+(state.speed*0.15);
+}
+
+function over(){
+  if(!state.alive)return;
+  state.alive=false;mode='over';sfx('hit');
+  best=Math.max(best,state.score|0);
+  try{localStorage.setItem(SAVE,JSON.stringify({best}))}catch(e){}
+  document.getElementById('panelOver').classList.remove('hidden');
+  document.getElementById('overText').textContent='得分 '+state.score+' · 最高 '+best;
+}
+
+function update(dt){
+  if(mode!=='play'||!state||!state.alive)return;
+  state.t+=dt;
+  state.speed=14+Math.min(22,state.t*0.35);
+  state.z+=state.speed*dt;
+  state.score=Math.floor(state.z);
+
+  let steer=0;
+  if(keys['a']||keys['arrowleft'])steer-=1;
+  if(keys['d']||keys['arrowright'])steer+=1;
+  steer+=touchDir;
+  state.vx+=(steer*18-state.vx)*Math.min(1,dt*10);
+  state.x+=state.vx*dt;
+  state.x=Math.max(-3.1,Math.min(3.1,state.x));
+
+  while(state.nextZ<state.z+80)spawnBox(state.nextZ);
+
+  // collision: player at (x,0.5,z+2) roughly camera looking forward
+  const pz=state.z+1.2;
+  for(const b of state.boxes){
+    if(b.hit||b.z<state.z-2)continue;
+    const dx=Math.abs(b.x-state.x),dz=Math.abs(b.z-pz);
+    if(dx<0.95&&dz<0.95){b.hit=true;over();return}
+    if(!b._tick&&b.z<state.z+8&&b.z>state.z+6){b._tick=true;if(Math.random()<0.3)sfx('tick')}
+  }
+  state.boxes=state.boxes.filter(b=>b.z>state.z-10);
+}
+
+function render(){
+  gl.enable(gl.DEPTH_TEST);
+  gl.clearColor(0.02,0.05,0.1,1);
+  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,0,0);
+
+  const asp=canvas.width/Math.max(1,canvas.height);
+  persp(proj,Math.PI*0.42,asp,0.1,200);
+
+  const px=state?state.x:0;
+  const pz=state?state.z:0;
+  // chase camera
+  lookAt(view, px*0.85, 2.4, pz-6.5,  px*0.3, 0.8, pz+8,  0,1,0);
+
+  // ground tiles
+  for(let i=-2;i<40;i++){
+    const z=Math.floor(pz/4)*4+i*4;
+    const shade=((Math.floor(z/4)+Math.floor(px))&1)?0.12:0.16;
+    drawCube(0,-0.05,z+2, 9,0.1,4, 0.05,shade,0.14);
+  }
+  // side walls
+  for(let i=-1;i<30;i++){
+    const z=Math.floor(pz/6)*6+i*6;
+    drawCube(-4.2,1.2,z+3, 0.35,2.4,6, 0.08,0.2,0.28);
+    drawCube(4.2,1.2,z+3, 0.35,2.4,6, 0.08,0.2,0.28);
+  }
+
+  // player capsule-ish
+  drawCube(px,0.55,pz+1.2, 0.7,1.0,0.7, 0.22,0.65,0.95);
+
+  if(state){
+    state.boxes.forEach(b=>{
+      const t=Math.max(0,1-(b.z-pz)/70);
+      drawCube(b.x,b.y,b.z, b.s,b.s,b.s, 0.85,0.25+t*0.2,0.2);
+    });
+  }
+
+  // HUD
+  const hud=document.getElementById('hud');
+  if(mode==='play'&&state)hud.innerHTML='得分 <b>'+state.score+'</b> · 最高 <b>'+best+'</b> · 速度 <b>'+state.speed.toFixed(0)+'</b>';
+  else if(mode==='menu')hud.innerHTML='最高 <b>'+best+'</b>';
+  else hud.innerHTML='';
+}
+
+function loop(ts){
+  const dt=Math.min(0.033,(ts-lastT)/1000||0.016);lastT=ts;
+  update(dt);render();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;ensureAudio()});
+window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+document.getElementById('zL').addEventListener('touchstart',e=>{e.preventDefault();touchDir=-1;ensureAudio()},{passive:false});
+document.getElementById('zL').addEventListener('touchend',e=>{e.preventDefault();if(touchDir<0)touchDir=0},{passive:false});
+document.getElementById('zR').addEventListener('touchstart',e=>{e.preventDefault();touchDir=1;ensureAudio()},{passive:false});
+document.getElementById('zR').addEventListener('touchend',e=>{e.preventDefault();if(touchDir>0)touchDir=0},{passive:false});
+
+document.getElementById('btnStart').onclick=()=>{ensureAudio();newGame()};
+document.getElementById('btnRetry').onclick=()=>{ensureAudio();newGame()};
+document.getElementById('btnMenu').onclick=()=>{
+  mode='menu';state=null;
+  document.getElementById('panelOver').classList.add('hidden');
+  document.getElementById('panelMenu').classList.remove('hidden');
+};
+
+resize();
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
