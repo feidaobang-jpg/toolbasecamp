@@ -510,6 +510,10 @@ window.TB_LOCALES['zh-CN'] = {
             usedTime: '时间 +{n} 秒',
             noHint: '当前没有可用提示'
         },
+        diverDave: {
+            title: '潜水捕鱼',
+            desc: '类似《潜水员戴夫》：下潜捕鱼、管理氧气、回船卖鱼升级、再潜更深。单文件零依赖。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

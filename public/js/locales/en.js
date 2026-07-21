@@ -511,6 +511,10 @@ window.TB_LOCALES.en = {
             usedTime: 'Time +{n}s',
             noHint: 'No hint available'
         },
+        diverDave: {
+            title: 'Dive Fisher',
+            desc: 'Dave-the-Diver style loop: dive, catch fish, watch oxygen, sell and upgrade, go deeper. Single HTML, no deps.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',
