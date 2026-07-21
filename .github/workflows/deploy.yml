@@ -426,17 +426,40 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |
           sleep 2
-          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
-          echo "health: $HEALTH"
-          if ! echo "$HEALTH" | grep -F '"wan_i2v_api":true' >/dev/null; then
+          check_wan() {
+            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            echo "health: $HEALTH"
+            echo "$HEALTH" | grep -F '"wan_i2v_api":true' >/dev/null
+          }
+          if ! check_wan; then
+            echo "::warning:: public health missing wan_i2v_api — forcing fix-wan-api.sh on server"
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+              "${DO_USER}@${DO_HOST}" \
+              'bash /opt/toolbasecamp-deploy/fix-wan-api.sh'
+            sleep 3
+          fi
+          if ! check_wan; then
             echo "::error:: wan_i2v_api missing in /api/health — wan_video router not loaded."
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+              "${DO_USER}@${DO_HOST}" \
+              'echo DEPLOY_SHA=$(cat /opt/toolbasecamp-api/DEPLOY_SHA); ls -la /opt/toolbasecamp-api/wan_video.py /opt/toolbasecamp-api/main.py; curl -s http://127.0.0.1:8001/health; ss -lntp | grep 8001 || true; journalctl -u toolbasecamp-api -n 50 --no-pager || true'
             exit 1
           fi
           CODE="$(curl -sS -o /tmp/wan-status.txt -w '%{http_code}' \
-            'https://toolbasecamp.com/api/wan/status' || echo '000')"
+            "https://toolbasecamp.com/api/wan/status?cb=$RANDOM" || echo '000')"
           echo "GET /api/wan/status -> $CODE"
           head -c 200 /tmp/wan-status.txt || true
           echo ""
+          if [[ "$CODE" == "404" ]]; then
+            echo "::warning:: public /wan/status 404 — re-run fix-wan-api.sh"
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+              "${DO_USER}@${DO_HOST}" \
+              'bash /opt/toolbasecamp-deploy/fix-wan-api.sh'
+            sleep 3
+            CODE="$(curl -sS -o /tmp/wan-status.txt -w '%{http_code}' \
+              "https://toolbasecamp.com/api/wan/status?cb=$RANDOM" || echo '000')"
+            echo "retry GET /api/wan/status -> $CODE"
+          fi
           if [[ "$CODE" != "401" && "$CODE" != "200" ]]; then
             echo "::error:: unexpected /wan/status code $CODE (expected 401 without auth)."
             exit 1

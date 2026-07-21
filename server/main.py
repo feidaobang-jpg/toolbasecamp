@@ -556,6 +556,7 @@ def health():
         "wan_i2v": get_wan_config(),
         "wan_configured": wan_configured(),
         "wan_import_error": _wan_import_error or None,
+        "api_features": ["wan_i2v"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),
