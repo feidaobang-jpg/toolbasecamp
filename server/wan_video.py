@@ -249,7 +249,11 @@ def _prepare_image_data_uri(raw: bytes, filename: str, content_type: str) -> Tup
         w, h = img.size
         scale = min(1.0, MAX_IMAGE_EDGE / float(max(w, h)))
         if scale < 1.0:
-            img = img.resize((max(1, int(w * scale)), max(1, int(h * scale))), Image.Resampling.LANCZOS)
+            try:
+                resample = Image.Resampling.LANCZOS
+            except AttributeError:
+                resample = Image.LANCZOS  # type: ignore[attr-defined]
+            img = img.resize((max(1, int(w * scale)), max(1, int(h * scale))), resample)
         buf = io.BytesIO()
         out_mime = "image/png" if img.mode == "RGBA" else "image/jpeg"
         if out_mime == "image/png":

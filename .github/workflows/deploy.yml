@@ -287,6 +287,7 @@ jobs:
             journalctl -u toolbasecamp-api -n 80 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
             bash /opt/toolbasecamp-deploy/fix-watermark-api.sh
+            bash /opt/toolbasecamp-deploy/fix-wan-api.sh || true
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health after fix: $HEALTH_JSON"
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1

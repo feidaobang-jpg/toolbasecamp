@@ -28,7 +28,24 @@ from user_records import ensure_record_tables, router as records_router, _wire a
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
-from wan_video import router as wan_router, _wire as wire_wan, get_wan_config, wan_configured
+
+_wan_import_error = ""
+try:
+    from wan_video import router as wan_router, _wire as wire_wan, get_wan_config, wan_configured
+except Exception as exc:  # pragma: no cover - surface on /health when deploy breaks
+    wan_router = None
+
+    def wire_wan(*_a, **_k):
+        return None
+
+    def get_wan_config():
+        return {"configured": False, "error": str(exc)}
+
+    def wan_configured():
+        return False
+
+    _wan_import_error = str(exc)
+    print(f"[wan] import failed: {exc}")
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -249,8 +266,11 @@ wire_image(get_conn, require_db, get_current_user)
 app.include_router(image_router)
 app.include_router(life_router)
 app.include_router(watermark_router)
-wire_wan(get_conn, require_db, get_current_user)
-app.include_router(wan_router)
+if wan_router is not None:
+    wire_wan(get_conn, require_db, get_current_user)
+    app.include_router(wan_router)
+else:
+    print("[wan] router not mounted:", _wan_import_error or "unknown")
 
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:
@@ -535,6 +555,7 @@ def health():
         "wan_i2v_api": "/wan/i2v/submit" in paths,
         "wan_i2v": get_wan_config(),
         "wan_configured": wan_configured(),
+        "wan_import_error": _wan_import_error or None,
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),
