@@ -934,7 +934,8 @@ window.TB_LOCALES.en = {
             invalidFile: 'Please choose an image file',
             loadFailed: 'Failed to load image',
             processFail: 'Watermark removal failed',
-            networkError: 'Cannot reach the server. Please try again later.'
+            networkError: 'Cannot reach the server. Please try again later.',
+            notReady: 'Advanced watermark API is not ready yet. Please retry in a minute.'
         },
         iconMaker: {
             title: 'Icon Maker',
@@ -984,7 +985,8 @@ window.TB_LOCALES.en = {
             needImage: 'Please choose a background image',
             needTitle: 'Please enter a title',
             invalidFile: 'Please choose an image file',
-            loadFailed: 'Failed to load image'
+            loadFailed: 'Failed to load image',
+            generateFail: 'Failed to generate covers. Try a smaller image or another browser.'
         },
         idCardCopy: {
             title: 'ID Card Copy Sheet',

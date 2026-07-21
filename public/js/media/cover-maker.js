@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
         price_green: { text: '#00ff00', outline: '#000000', shadow: false, banner: false }
     };
 
+    // Keep under common mobile canvas limits while staying sharp enough for social covers.
+    var SIZE_916 = { w: 720, h: 1280 };
+    var SIZE_169 = { w: 1280, h: 720 };
+
     var dropZone = document.getElementById('drop-zone');
     var fileInput = document.getElementById('file-input');
     var focusWrap = document.getElementById('focus-wrap');
@@ -33,12 +37,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var sourceImage = null;
     var focusPoint = { x: 0.5, y: 0.5 };
     var dragging = false;
-    var data916 = '';
-    var data169 = '';
+    var blob916 = null;
+    var blob169 = null;
+    var url916 = '';
+    var url169 = '';
 
     function setError(msg) {
         errorBox.textContent = msg || '';
         errorBox.classList.toggle('show', !!msg);
+    }
+
+    function revoke(url) {
+        if (url) {
+            try { URL.revokeObjectURL(url); } catch (e) { /* ignore */ }
+        }
     }
 
     function selectedStyle() {
@@ -82,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function cropToRatio(img, ratioW, ratioH, fx, fy) {
-        var tw = img.naturalWidth;
-        var th = img.naturalHeight;
+        var tw = img.naturalWidth || img.width;
+        var th = img.naturalHeight || img.height;
         var target = ratioW / ratioH;
         var srcRatio = tw / th;
         var sx = 0;
@@ -103,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (sy < 0) sy = 0;
             if (sy + sh > th) sy = th - sh;
         }
-        return { sx: sx, sy: sy, sw: sw, sh: sh };
+        return { sx: sx, sy: sy, sw: Math.max(1, sw), sh: Math.max(1, sh) };
     }
 
     function wrapLines(ctx, text, maxWidth) {
@@ -122,14 +134,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return lines.length ? lines : [''];
     }
 
-    function drawCover(img, title, styleKey, ratioW, ratioH, fontSize) {
-        var outW = ratioW === 9 ? 1080 : 1920;
-        var outH = ratioW === 9 ? 1920 : 1080;
-        var crop = cropToRatio(img, ratioW, ratioH, focusPoint.x, focusPoint.y);
+    function drawCover(img, title, styleKey, outW, outH, fontSize) {
+        var crop = cropToRatio(img, outW, outH, focusPoint.x, focusPoint.y);
         var canvas = document.createElement('canvas');
         canvas.width = outW;
         canvas.height = outH;
         var ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('canvas');
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(0, 0, outW, outH);
         ctx.drawImage(img, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, outW, outH);
 
         var style = STYLES[styleKey] || STYLES.money_yellow;
@@ -180,21 +193,49 @@ document.addEventListener('DOMContentLoaded', function () {
                 ctx.fillText(ln, x + shadowOff, y + shadowOff);
             }
             if (style.outline) {
-                ctx.fillStyle = style.outline;
-                for (var ox = -outlineW; ox <= outlineW; ox++) {
-                    for (var oy = -outlineW; oy <= outlineW; oy++) {
-                        if (ox * ox + oy * oy <= outlineW * outlineW) {
-                            ctx.fillText(ln, x + ox, y + oy);
-                        }
-                    }
-                }
+                ctx.strokeStyle = style.outline;
+                ctx.lineWidth = outlineW * 2;
+                ctx.lineJoin = 'round';
+                ctx.miterLimit = 2;
+                ctx.strokeText(ln, x, y);
             }
             ctx.fillStyle = style.text;
             ctx.fillText(ln, x, y);
             yCursor += m.h + lineSpacing;
         });
 
-        return canvas.toDataURL('image/png');
+        return canvas;
+    }
+
+    function canvasToBlob(canvas) {
+        return new Promise(function (resolve, reject) {
+            if (canvas.toBlob) {
+                canvas.toBlob(function (blob) {
+                    if (blob) resolve(blob);
+                    else reject(new Error('blob'));
+                }, 'image/png');
+                return;
+            }
+            try {
+                var dataUrl = canvas.toDataURL('image/png');
+                if (!dataUrl || dataUrl === 'data:,') {
+                    reject(new Error('empty'));
+                    return;
+                }
+                var parts = dataUrl.split(',');
+                var bin = atob(parts[1] || '');
+                var arr = new Uint8Array(bin.length);
+                for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+                resolve(new Blob([arr], { type: 'image/png' }));
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    function scaleFont(userFont, baseW, outW) {
+        // UI default 140 was tuned for ~1080 width; scale to actual output.
+        return Math.max(24, Math.round(userFont * (outW / baseW)));
     }
 
     function generate() {
@@ -213,31 +254,71 @@ document.addEventListener('DOMContentLoaded', function () {
         fontSize = Math.max(20, Math.min(fontSize, 400));
         var style = selectedStyle();
 
-        data916 = drawCover(sourceImage, title, style, 9, 16, fontSize);
-        data169 = drawCover(sourceImage, title, style, 16, 9, fontSize);
-        result916.src = data916;
-        result169.src = data169;
-        resultSection.hidden = false;
+        generateBtn.disabled = true;
         setError('');
-        requestAnimationFrame(function () {
-            var scroller = document.querySelector('.content') || document.scrollingElement;
-            if (scroller) scroller.scrollTop = scroller.scrollHeight;
-        });
+
+        try {
+            var c916 = drawCover(
+                sourceImage,
+                title,
+                style,
+                SIZE_916.w,
+                SIZE_916.h,
+                scaleFont(fontSize, 1080, SIZE_916.w)
+            );
+            var c169 = drawCover(
+                sourceImage,
+                title,
+                style,
+                SIZE_169.w,
+                SIZE_169.h,
+                scaleFont(fontSize, 1920, SIZE_169.w)
+            );
+
+            Promise.all([canvasToBlob(c916), canvasToBlob(c169)]).then(function (blobs) {
+                revoke(url916);
+                revoke(url169);
+                blob916 = blobs[0];
+                blob169 = blobs[1];
+                url916 = URL.createObjectURL(blob916);
+                url169 = URL.createObjectURL(blob169);
+                result916.src = url916;
+                result169.src = url169;
+                resultSection.hidden = false;
+                requestAnimationFrame(function () {
+                    var scroller = document.querySelector('.content') || document.scrollingElement;
+                    if (scroller) scroller.scrollTop = scroller.scrollHeight;
+                });
+            }).catch(function () {
+                setError(tr('tools.coverMaker.generateFail'));
+            }).finally(function () {
+                generateBtn.disabled = false;
+            });
+        } catch (e) {
+            generateBtn.disabled = false;
+            setError(tr('tools.coverMaker.generateFail'));
+        }
     }
 
-    function download(dataUrl, name) {
-        if (!dataUrl) return;
+    function download(blob, name) {
+        if (!blob) return;
+        var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
-        a.href = dataUrl;
+        a.href = url;
         a.download = name;
         a.click();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
     }
 
     function clearAll() {
         sourceImage = null;
         focusPoint = { x: 0.5, y: 0.5 };
-        data916 = '';
-        data169 = '';
+        revoke(url916);
+        revoke(url169);
+        url916 = '';
+        url169 = '';
+        blob916 = null;
+        blob169 = null;
         fileInput.value = '';
         titleInput.value = '';
         charCount.textContent = '0';
@@ -291,6 +372,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     generateBtn.addEventListener('click', generate);
     clearBtn.addEventListener('click', clearAll);
-    dl916.addEventListener('click', function () { download(data916, 'cover_9_16.png'); });
-    dl169.addEventListener('click', function () { download(data169, 'cover_16_9.png'); });
+    dl916.addEventListener('click', function () { download(blob916, 'cover_9_16.png'); });
+    dl169.addEventListener('click', function () { download(blob169, 'cover_16_9.png'); });
 });

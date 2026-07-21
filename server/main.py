@@ -528,6 +528,7 @@ def health():
         "records_clock_logs": "/records/clocks/{clock_id}/logs" in paths,
         "image_api": "/image/ocr-text" in paths,
         "tencent_image": tencent_image_ok,
+        "watermark_api": "/watermark/image/process" in paths,
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

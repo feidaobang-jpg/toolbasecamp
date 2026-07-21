@@ -933,7 +933,8 @@ window.TB_LOCALES['zh-CN'] = {
             invalidFile: '请选择图片文件',
             loadFailed: '图片加载失败',
             processFail: '去水印失败',
-            networkError: '无法连接服务器，请稍后重试。'
+            networkError: '无法连接服务器，请稍后重试。',
+            notReady: '高级去水印服务尚未就绪，请稍后再试。'
         },
         iconMaker: {
             title: '图标制作',
@@ -983,7 +984,8 @@ window.TB_LOCALES['zh-CN'] = {
             needImage: '请先选择背景图片',
             needTitle: '请输入标题',
             invalidFile: '请选择图片文件',
-            loadFailed: '图片加载失败'
+            loadFailed: '图片加载失败',
+            generateFail: '封面生成失败，请换一张较小的图片或换个浏览器再试。'
         },
         idCardCopy: {
             title: '合成身份证复印件',

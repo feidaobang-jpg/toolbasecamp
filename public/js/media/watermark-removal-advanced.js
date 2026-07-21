@@ -242,6 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 var msg = err && err.message ? err.message : tr('tools.watermarkRemovalAdvanced.processFail');
                 if (String(msg).indexOf('Failed to fetch') !== -1) {
                     msg = tr('tools.watermarkRemovalAdvanced.networkError');
+                } else if (/not found/i.test(msg) || msg === 'Not Found') {
+                    msg = tr('tools.watermarkRemovalAdvanced.notReady');
                 }
                 setError(msg);
             })

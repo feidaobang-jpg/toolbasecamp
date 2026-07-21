@@ -529,6 +529,7 @@
 .cover-result-card img {
   display: block;
   width: 100%;
+  min-height: 160px;
   max-height: 420px;
   object-fit: contain;
   background: #f3f4f6;
