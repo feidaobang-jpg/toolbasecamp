@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var MIN_W = 6;
     var MIN_H = 4;
-    var HANDLE = 14;
+    var HANDLE = 22;
     var BOX_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'];
 
     var dropZone = document.getElementById('drop-zone');
@@ -113,11 +113,22 @@ document.addEventListener('DOMContentLoaded', function () {
         updateButtons();
     }
 
+    function eventClientXY(evt) {
+        if (evt.touches && evt.touches[0]) {
+            return { x: evt.touches[0].clientX, y: evt.touches[0].clientY };
+        }
+        if (evt.changedTouches && evt.changedTouches[0]) {
+            return { x: evt.changedTouches[0].clientX, y: evt.changedTouches[0].clientY };
+        }
+        return { x: evt.clientX, y: evt.clientY };
+    }
+
     function canvasPoint(evt) {
         var rect = canvas.getBoundingClientRect();
+        var pt = eventClientXY(evt);
         return {
-            x: (evt.clientX - rect.left) * (canvas.width / rect.width),
-            y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+            x: (pt.x - rect.left) * (canvas.width / Math.max(rect.width, 1)),
+            y: (pt.y - rect.top) * (canvas.height / Math.max(rect.height, 1))
         };
     }
 
@@ -264,8 +275,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
     });
 
-    canvas.addEventListener('mousedown', function (e) {
+    function onPointerDown(e) {
         if (!state.image) return;
+        if (e.cancelable) e.preventDefault();
         var p = canvasPoint(e);
         var hit = hitTest(p.x, p.y);
         var iw = state.image.naturalWidth;
@@ -291,10 +303,11 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }
         draw();
-    });
+    }
 
-    window.addEventListener('mousemove', function (e) {
+    function onPointerMove(e) {
         if (!state.drag || !state.image) return;
+        if (e.cancelable) e.preventDefault();
         var p = canvasPoint(e);
         var dx = (p.x - state.drag.startX) / state.scale;
         var dy = (p.y - state.drag.startY) / state.scale;
@@ -307,9 +320,20 @@ document.addEventListener('DOMContentLoaded', function () {
             state.image.naturalHeight
         );
         draw();
-    });
+    }
 
-    window.addEventListener('mouseup', function () { state.drag = null; });
+    function onPointerUp() {
+        state.drag = null;
+    }
+
+    canvas.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+
+    canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+    window.addEventListener('touchmove', onPointerMove, { passive: false });
+    window.addEventListener('touchend', onPointerUp);
+    window.addEventListener('touchcancel', onPointerUp);
 
     addBoxBtn.addEventListener('click', function () {
         if (!state.image) return;
