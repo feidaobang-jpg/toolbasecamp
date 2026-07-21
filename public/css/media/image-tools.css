@@ -506,6 +506,10 @@
   margin-top: 20px;
 }
 
+.cover-results[hidden] {
+  display: none !important;
+}
+
 .cover-result-card {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
