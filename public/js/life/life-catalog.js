@@ -1,67 +1,124 @@
 /**
- * Life (天行) feature catalog — one viewer page reads this config.
- * field: [path, labelKey] | { list, item: [[path,labelKey],...] } | { path, labelKey, html?, fmt? }
+ * Life (天行) feature catalog — 内容模块固定中文，不走 i18n。
+ * field: [path, label] | { list, item: [[path,label],...] } | { path, label, html?, fmt? }
  */
 (function (global) {
     'use strict';
 
     var F = {
-        content: 'life.f.content',
-        author: 'life.f.author',
-        source: 'life.f.source',
-        title: 'life.f.title',
-        quest: 'life.f.quest',
-        answer: 'life.f.answer',
-        result: 'life.f.result',
-        reason: 'life.f.reason',
-        transl: 'life.f.transl',
-        analyse: 'life.f.analyse',
-        note: 'life.f.note',
-        pinyin: 'life.f.pinyin',
-        strokes: 'life.f.strokes',
-        intro: 'life.f.intro',
-        kind: 'life.f.kind',
-        tags: 'life.f.tags',
-        yiwen: 'life.f.yiwen',
-        chengyu: 'life.f.chengyu',
-        diangu: 'life.f.diangu',
-        chuchu: 'life.f.chuchu',
-        fanli: 'life.f.fanli',
-        jyc: 'life.f.jyc',
-        fyc: 'life.f.fyc',
-        shanglian: 'life.f.shanglian',
-        xialian: 'life.f.xialian',
-        mrname: 'life.f.mrname',
-        front: 'life.f.front',
-        behind: 'life.f.behind',
-        type: 'life.f.type',
-        desc: 'life.f.desc',
-        abbr: 'life.f.abbr',
-        study: 'life.f.study',
-        optionA: 'life.f.optionA',
-        optionB: 'life.f.optionB',
-        optionC: 'life.f.optionC',
-        analytic: 'life.f.analytic',
-        saying: 'life.f.saying',
-        riddle: 'life.f.riddle'
+        content: '内容',
+        author: '作者',
+        source: '出处',
+        title: '标题',
+        quest: '问题',
+        answer: '答案',
+        result: '结果',
+        reason: '解释',
+        transl: '译文',
+        analyse: '解析',
+        note: '翻译',
+        pinyin: '拼音',
+        strokes: '笔画',
+        intro: '介绍',
+        kind: '种类',
+        tags: '标签',
+        yiwen: '译文',
+        chengyu: '成语',
+        diangu: '典故',
+        chuchu: '出处',
+        fanli: '范例',
+        jyc: '近义词',
+        fyc: '反义词',
+        shanglian: '上联',
+        xialian: '下联',
+        mrname: '名人',
+        front: '上句',
+        behind: '下句',
+        type: '类型',
+        desc: '说明',
+        abbr: '提示',
+        study: '详解',
+        optionA: '选项 A',
+        optionB: '选项 B',
+        optionC: '选项 C',
+        analytic: '解析',
+        saying: '名言',
+        riddle: '谜面'
+    };
+
+    var TITLES = {
+        caihongpi: '彩虹屁',
+        dujitang: '毒鸡汤',
+        godreply: '神回复',
+        joke: '笑话',
+        pyqwenan: '朋友圈文案',
+        saylove: '土味情话',
+        sentence: '心灵鸡汤',
+        shilian: '失恋文案',
+        tiangou: '舔狗日记',
+        wanan: '晚安心语',
+        zaoan: '早安心语',
+        msdl: '民俗对联',
+        duilian: '经典对联',
+        mingyan: '名人名言',
+        lzmy: '励志名言',
+        mgjuzi: '民国句子',
+        qingshi: '古代情诗',
+        verse: '优美诗句',
+        dictum: '名言警句',
+        duishici: '填对诗词',
+        naowan: '脑筋急转弯',
+        scwd: '诗词问答',
+        proverb: '文化谚语',
+        skl: '顺口溜',
+        xiehou: '歇后语',
+        rkl: '绕口令',
+        moodpoetry: '情结诗句',
+        decide: '判断题',
+        mnpara: '迷你段子',
+        wenda: '知识问答',
+        riddleAll: '谜语大全',
+        zimi: '字谜',
+        slogan: '猜广告语',
+        caichengyu: '猜成语',
+        caizimi: '猜灯谜',
+        cityriddle: '地名谜语',
+        idiom: '成语典故',
+        dailyEnglish: '每日英语',
+        gjmj: '古籍名句',
+        xhzd: '新华字典',
+        enwords: '英汉词典',
+        hotword: '网络流行语',
+        jfwords: '近义词反义词',
+        zmsc: '最美宋词',
+        songci: '精选宋词',
+        poetries: '唐诗三百首',
+        poetry: '唐诗大全'
+    };
+
+    var PH = {
+        keyword: '请输入关键字',
+        hanzi: '请输入单个汉字',
+        english: '请输入英语单词',
+        titleAuthor: '可输入标题或作者'
     };
 
     function item(id, api, fields, extra) {
-        var o = { id: id, api: api || id, titleKey: 'life.items.' + id, fields: fields };
+        var o = { id: id, api: api || id, title: TITLES[id] || id, fields: fields };
         if (extra) {
             Object.keys(extra).forEach(function (k) { o[k] = extra[k]; });
         }
         return o;
     }
 
-    function c(path, key) { return [path, key]; }
+    function c(path, label) { return [path, label]; }
     function L(listPath, pairs) { return { list: listPath, item: pairs }; }
 
     var catalog = {
         groups: [
             {
                 id: 'innermost',
-                titleKey: 'life.groups.innermost',
+                title: '文案',
                 items: [
                     item('caihongpi', 'caihongpi', [c('content', F.content)]),
                     item('dujitang', 'dujitang', [c('content', F.content)]),
@@ -77,7 +134,7 @@
             },
             {
                 id: 'live',
-                titleKey: 'life.groups.live',
+                title: '语录',
                 items: [
                     item('mingyan', 'mingyan', [c('list.0.content', F.content), c('list.0.author', F.author)]),
                     item('lzmy', 'lzmy', [c('saying', F.saying), c('transl', F.transl), c('source', F.source)]),
@@ -88,7 +145,7 @@
             },
             {
                 id: 'riddle',
-                titleKey: 'life.groups.riddle',
+                title: '谜语',
                 items: [
                     item('riddleAll', 'riddle', [c('quest', F.quest), c('answer', F.answer)]),
                     item('zimi', 'zimi', [c('content', F.content), c('answer', F.answer), c('reason', F.reason)]),
@@ -106,13 +163,13 @@
             },
             {
                 id: 'recreation',
-                titleKey: 'life.groups.recreation',
+                title: '趣玩',
                 items: [
                     item('joke', 'joke', [L('list', [c('title', F.title), c('content', F.content)])]),
                     item('mnpara', 'mnpara', [c('content', F.content)]),
                     item('decide', 'decide', [
                         c('title', F.title),
-                        { path: 'answer', labelKey: F.answer, fmt: 'bool01' },
+                        { path: 'answer', label: F.answer, fmt: 'bool01' },
                         c('analyse', F.analyse)
                     ]),
                     item('wenda', 'wenda', [c('quest', F.quest), c('result', F.result)]),
@@ -126,30 +183,30 @@
             },
             {
                 id: 'study',
-                titleKey: 'life.groups.study',
+                title: '学习',
                 items: [
                     item('idiom', 'chengyu', [
                         c('list.0.chengyu', F.chengyu), c('list.0.pinyin', F.pinyin),
                         c('list.0.diangu', F.diangu), c('list.0.chuchu', F.chuchu), c('list.0.fanli', F.fanli)
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.keyword' } }),
+                    ], { input: { param: 'word', placeholder: PH.keyword } }),
                     item('xhzd', 'xhzd', [
                         c('list.0.pyyb', F.pinyin), c('list.0.bihua', F.strokes),
-                        { path: 'list.0.content', labelKey: F.content, html: true }
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.hanzi' } }),
+                        { path: 'list.0.content', label: F.content, html: true }
+                    ], { input: { param: 'word', placeholder: PH.hanzi } }),
                     item('enwords', 'enwords', [
-                        { path: 'content', labelKey: F.content, html: true }
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.english' } }),
+                        { path: 'content', label: F.content, html: true }
+                    ], { input: { param: 'word', placeholder: PH.english } }),
                     item('jfwords', 'jfwords', [c('jyc', F.jyc), c('fyc', F.fyc)], {
-                        input: { param: 'word', placeholderKey: 'life.ph.keyword' }
+                        input: { param: 'word', placeholder: PH.keyword }
                     }),
                     item('hotword', 'hotword', [
                         c('list.0.title', F.title), c('list.0.content', F.content)
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.keyword' } }),
+                    ], { input: { param: 'word', placeholder: PH.keyword } }),
                     item('dailyEnglish', 'everyday', [c('content', F.content), c('note', F.note)]),
                     item('proverb', 'proverb', [c('front', F.front), c('behind', F.behind)]),
                     item('xiehou', 'xiehou', [c('list.0.quest', F.quest), c('list.0.result', F.result)]),
                     item('skl', 'skl', [c('content', F.content)]),
-                    item('rkl', 'rkl', [{ path: 'list.0.content', labelKey: F.content, html: true }]),
+                    item('rkl', 'rkl', [{ path: 'list.0.content', label: F.content, html: true }]),
                     item('msdl', 'msdl', [L('list', [c('shanglian', F.shanglian), c('xialian', F.xialian)])]),
                     item('duilian', 'duilian', [c('content', F.content)]),
                     item('qingshi', 'qingshi', [c('content', F.content), c('source', F.source), c('author', F.author)]),
@@ -157,18 +214,18 @@
                     item('zmsc', 'zmsc', [c('content', F.content), c('source', F.source)]),
                     item('songci', 'songci', [
                         c('list.0.title', F.title), c('list.0.tags', F.tags), c('list.0.author', F.author),
-                        { path: 'list.0.content', labelKey: F.content, html: true },
+                        { path: 'list.0.content', label: F.content, html: true },
                         c('list.0.yiwen', F.yiwen)
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.keyword' } }),
+                    ], { input: { param: 'word', placeholder: PH.keyword } }),
                     item('poetries', 'poetries', [
                         L('list', [c('title', F.title), c('content', F.content), c('author', F.author)])
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.titleAuthor', optional: true } }),
+                    ], { input: { param: 'word', placeholder: PH.titleAuthor, optional: true } }),
                     item('poetry', 'poetry', [
                         L('list', [
                             c('title', F.title), c('content', F.content), c('intro', F.intro),
                             c('kind', F.kind), c('author', F.author)
                         ])
-                    ], { input: { param: 'word', placeholderKey: 'life.ph.titleAuthor', optional: true } })
+                    ], { input: { param: 'word', placeholder: PH.titleAuthor, optional: true } })
                 ]
             }
         ]
@@ -190,11 +247,12 @@
     function toHubGroups() {
         return catalog.groups.map(function (g) {
             return {
-                titleKey: g.titleKey,
+                id: g.id,
+                title: g.title,
                 items: g.items.map(function (it) {
                     return {
                         id: it.id,
-                        titleKey: it.titleKey,
+                        title: it.title,
                         url: 'html/life/view.html?id=' + encodeURIComponent(it.id)
                     };
                 })
@@ -203,7 +261,7 @@
     }
 
     function syncLifeConfig() {
-        global.lifeConfig = { sectionTitleKey: 'hub.lifeTitle', groups: toHubGroups() };
+        global.lifeConfig = { sectionTitle: '内容', groups: toHubGroups() };
     }
 
     global.LIFE_CATALOG = catalog;

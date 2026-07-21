@@ -1,9 +1,22 @@
 (function () {
     'use strict';
 
-    function tr(key, params) {
-        return typeof window.t === 'function' ? window.t(key, params) : key;
-    }
+    var MSG = {
+        desc: '点击「查询」获取内容；部分条目支持关键字搜索。数据来自天行 API。',
+        query: '查询',
+        copy: '复制',
+        copied: '已复制',
+        empty: '暂无结果',
+        needKeyword: '请先输入关键字',
+        fetchFail: '请求失败，请稍后重试',
+        upstreamFail: '服务器访问天行接口失败（多为海外 VPS 网络不通）。请在服务器上测试：curl -m 8 https://apis.tianapi.com/',
+        notConfigured: '未配置天行密钥（TIANAPI_KEY）',
+        unknown: '未找到该功能',
+        pageSuffix: 'Tool Basecamp',
+        true: '正确',
+        false: '错误',
+        defaultPlaceholder: '请输入关键字'
+    };
 
     function apiBase() {
         return (typeof siteConfig !== 'undefined' && siteConfig.apiBase) || '';
@@ -23,13 +36,13 @@
     function fmtValue(val, spec) {
         if (val == null || val === '') return '';
         if (spec && spec.fmt === 'bool01') {
-            return Number(val) === 0 ? tr('life.f.false') : tr('life.f.true');
+            return Number(val) === 0 ? MSG.false : MSG.true;
         }
         return String(val);
     }
 
     function fieldSpec(entry) {
-        if (Array.isArray(entry)) return { path: entry[0], labelKey: entry[1] };
+        if (Array.isArray(entry)) return { path: entry[0], label: entry[1] };
         return entry || {};
     }
 
@@ -40,7 +53,7 @@
             wrap.className = 'life-field';
             var lab = document.createElement('div');
             lab.className = 'life-field-label';
-            lab.textContent = tr(row.labelKey);
+            lab.textContent = row.label;
             var val = document.createElement('div');
             val.className = 'life-field-value';
             if (row.html) val.innerHTML = String(row.value);
@@ -68,7 +81,7 @@
                 (listSpec.item || []).forEach(function (entry) {
                     var spec = fieldSpec(entry);
                     rows.push({
-                        labelKey: spec.labelKey,
+                        label: spec.label,
                         value: fmtValue(getByPath(it, spec.path), spec),
                         html: !!spec.html
                     });
@@ -82,7 +95,7 @@
         plain.forEach(function (entry) {
             var spec = fieldSpec(entry);
             rows.push({
-                labelKey: spec.labelKey,
+                label: spec.label,
                 value: fmtValue(getByPath(result, spec.path), spec),
                 html: !!spec.html
             });
@@ -105,23 +118,23 @@
     var busyEl = document.getElementById('life-busy');
 
     if (!hit) {
-        if (titleEl) titleEl.textContent = tr('life.unknown');
+        if (titleEl) titleEl.textContent = MSG.unknown;
         if (runBtn) runBtn.disabled = true;
         if (errorEl) {
-            errorEl.textContent = tr('life.unknown');
+            errorEl.textContent = MSG.unknown;
             errorEl.classList.add('show');
         }
         return;
     }
 
     var item = hit.item;
-    if (titleEl) titleEl.textContent = tr(item.titleKey);
-    if (descEl) descEl.textContent = tr('life.desc');
-    document.title = tr(item.titleKey) + ' - ' + tr('site.pageTitleSuffix');
+    if (titleEl) titleEl.textContent = item.title || MSG.unknown;
+    if (descEl) descEl.textContent = MSG.desc;
+    document.title = (item.title || MSG.unknown) + ' - ' + MSG.pageSuffix;
 
     if (item.input && inputWrap && inputEl) {
         inputWrap.hidden = false;
-        inputEl.placeholder = tr(item.input.placeholderKey || 'life.ph.keyword');
+        inputEl.placeholder = item.input.placeholder || MSG.defaultPlaceholder;
     }
 
     var lastPlainText = '';
@@ -144,7 +157,7 @@
         if (!cards.length || !cards.some(function (rows) {
             return rows.some(function (r) { return r.value; });
         })) {
-            setError(tr('life.empty'));
+            setError(MSG.empty);
             if (copyBtn) copyBtn.disabled = true;
             return;
         }
@@ -155,7 +168,7 @@
             renderRows(rows, card);
             resultEl.appendChild(card);
             rows.forEach(function (r) {
-                if (r.value) parts.push(tr(r.labelKey) + '：' + r.value.replace(/<[^>]+>/g, ''));
+                if (r.value) parts.push(r.label + '：' + r.value.replace(/<[^>]+>/g, ''));
             });
             if (idx < cards.length - 1) parts.push('---');
         });
@@ -174,9 +187,9 @@
         if (Array.isArray(d) && d.length) {
             return d.map(function (x) { return (x && x.msg) || String(x); }).join('; ');
         }
-        if (status === 502 || status === 504) return tr('life.upstreamFail');
-        if (status === 503) return tr('life.notConfigured');
-        return (data && (data.msg || data.message)) || fallback || tr('life.fetchFail');
+        if (status === 502 || status === 504) return MSG.upstreamFail;
+        if (status === 503) return MSG.notConfigured;
+        return (data && (data.msg || data.message)) || fallback || MSG.fetchFail;
     }
 
     function run() {
@@ -185,7 +198,7 @@
         if (item.input) {
             var v = (inputEl.value || '').trim();
             if (!v && !item.input.optional) {
-                setError(tr('life.needKeyword'));
+                setError(MSG.needKeyword);
                 return;
             }
             if (v) q[item.input.param || 'word'] = v;
@@ -207,7 +220,7 @@
                 showResult(data.result);
             });
         }).catch(function (err) {
-            setError(err.message || tr('life.fetchFail'));
+            setError(err.message || MSG.fetchFail);
         }).finally(function () {
             setBusy(false);
         });
@@ -219,8 +232,8 @@
             if (!lastPlainText) return;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(lastPlainText).then(function () {
-                    copyBtn.textContent = tr('life.copied');
-                    setTimeout(function () { copyBtn.textContent = tr('life.copy'); }, 1200);
+                    copyBtn.textContent = MSG.copied;
+                    setTimeout(function () { copyBtn.textContent = MSG.copy; }, 1200);
                 });
             }
         });
@@ -230,16 +243,6 @@
             if (e.key === 'Enter') run();
         });
     }
-
-    document.addEventListener('tb:locale', function () {
-        if (titleEl) titleEl.textContent = tr(item.titleKey);
-        if (descEl) descEl.textContent = tr('life.desc');
-        if (item.input && inputEl) {
-            inputEl.placeholder = tr(item.input.placeholderKey || 'life.ph.keyword');
-        }
-        runBtn.textContent = tr('life.query');
-        if (copyBtn) copyBtn.textContent = tr('life.copy');
-    });
 
     // 不自动请求：避免一进页卡住「加载中」；用户点「查询」再拉
 })();

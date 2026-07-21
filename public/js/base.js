@@ -77,11 +77,21 @@ function getLifePageContext() {
     const hit = lifeFindById(id);
     if (!hit) return null;
     return {
+        groupId: hit.group.id || null,
+        groupTitle: hit.group.title || null,
+        toolTitle: hit.item.title || null,
         groupTitleKey: hit.group.titleKey || null,
         toolTitleKey: hit.item.titleKey || null,
         moduleKind: 'life',
         lifeId: hit.item.id
     };
+}
+
+function resolveLabel(obj) {
+    if (!obj) return '';
+    if (obj.title) return obj.title;
+    if (obj.titleKey) return tr(obj.titleKey);
+    return '';
 }
 
 function getCurrentToolContext() {
@@ -149,20 +159,22 @@ function sourceConfigForModule(moduleKind) {
 }
 
 function renderSiteTitle() {
-    const { groupTitleKey, toolTitleKey, moduleKind } = getCurrentToolContext();
+    const { groupTitleKey, toolTitleKey, groupTitle, toolTitle, moduleKind } = getCurrentToolContext();
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
+    const toolLabel = toolTitle || (toolTitleKey ? tr(toolTitleKey) : '');
+    const groupLabel = groupTitle || (groupTitleKey ? tr(groupTitleKey) : '');
 
-    if (toolTitleKey) {
-        document.title = tr(toolTitleKey) + ' - ' + tr('site.pageTitleSuffix');
-    } else if (groupTitleKey) {
-        document.title = tr(groupTitleKey) + ' - ' + tr('site.pageTitleSuffix');
+    if (toolLabel) {
+        document.title = toolLabel + ' - ' + tr('site.pageTitleSuffix');
+    } else if (groupLabel) {
+        document.title = groupLabel + ' - ' + tr('site.pageTitleSuffix');
     } else {
         document.title = siteName;
     }
 
     const logoTitleEl = document.querySelector('.logo h2');
     if (logoTitleEl) {
-        if (groupTitleKey || toolTitleKey) {
+        if (groupLabel || toolLabel || groupTitleKey || toolTitleKey) {
             logoTitleEl.textContent = backLabelForModule(moduleKind);
         } else {
             logoTitleEl.textContent = siteName;
@@ -177,30 +189,37 @@ function renderMenu() {
     const currentPath = window.location.pathname.toLowerCase();
     const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase().split('?')[0];
     const isInSubDir = currentPath.includes('/html/');
-    const { groupTitleKey, toolTitleKey, moduleKind } = getCurrentToolContext();
+    const { groupTitleKey, toolTitleKey, groupTitle, toolTitle, groupId, moduleKind } = getCurrentToolContext();
 
     const hubHref = resolveToolUrl(hubHrefForModule(moduleKind));
     const siteName = tr((siteConfig && siteConfig.siteNameKey) || 'site.name');
     const logoText = (siteConfig && siteConfig.logoText) || 'TB';
     const logoBadgeKey = tr('site.logoBadge');
     const logoBadge = (logoBadgeKey && logoBadgeKey !== 'site.logoBadge') ? logoBadgeKey : logoText;
-    const isToolSubPage = !!(groupTitleKey || toolTitleKey);
+    const isToolSubPage = !!(groupTitleKey || toolTitleKey || groupTitle || toolTitle || groupId);
     const logoLabel = isToolSubPage ? backLabelForModule(moduleKind) : siteName;
 
     const sourceConfig = sourceConfigForModule(moduleKind);
     let menuItemsHTML = '';
-    if (sourceConfig && sourceConfig.groups && groupTitleKey) {
+    if (sourceConfig && sourceConfig.groups && (groupTitleKey || groupId || groupTitle)) {
         sourceConfig.groups.forEach(group => {
-            if (group.titleKey !== groupTitleKey) return;
-            if (group.titleKey) {
-                menuItemsHTML += '<li class="menu-group-title">' + tr(group.titleKey) + '</li>';
+            if (moduleKind === 'life') {
+                if (groupId && group.id !== groupId) return;
+                else if (!groupId && groupTitle && group.title !== groupTitle) return;
+                else if (!groupId && !groupTitle && group.titleKey !== groupTitleKey) return;
+            } else if (group.titleKey !== groupTitleKey) {
+                return;
+            }
+            const groupLabel = resolveLabel(group);
+            if (groupLabel) {
+                menuItemsHTML += '<li class="menu-group-title">' + groupLabel + '</li>';
             }
             if (Array.isArray(group.items)) {
                 group.items.forEach(item => {
                     let linkUrl = item.url;
                     if (isInSubDir) linkUrl = '../../' + item.url;
                     const isActive = menuItemIsActive(item, currentPath, currentPage);
-                    const label = item.titleKey ? tr(item.titleKey) : (item.title || '');
+                    const label = resolveLabel(item);
                     menuItemsHTML += '<li' + (isActive ? ' class="active"' : '') + '><a href="' + linkUrl + '">' + label + '</a></li>';
                 });
             }
@@ -217,10 +236,12 @@ function renderMenu() {
         '</div>' +
         '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>';
 
-    bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName);
+    const mobileGroupLabel = resolveLabel({ title: groupTitle, titleKey: groupTitleKey });
+    const mobileToolLabel = resolveLabel({ title: toolTitle, titleKey: toolTitleKey });
+    bindToolSidebarMobile(sidebar, mobileGroupLabel, mobileToolLabel, siteName);
 }
 
-function bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName) {
+function bindToolSidebarMobile(sidebar, groupLabel, toolLabel, siteName) {
     const content = document.querySelector('.container .content');
     if (!content || !sidebar) return;
 
@@ -235,7 +256,7 @@ function bindToolSidebarMobile(sidebar, groupTitleKey, toolTitleKey, siteName) {
     }
 
     const titleEl = bar.querySelector('.tool-mobile-title');
-    const mobileTitle = toolTitleKey ? tr(toolTitleKey) : (groupTitleKey ? tr(groupTitleKey) : siteName);
+    const mobileTitle = toolLabel || groupLabel || siteName;
     if (titleEl) titleEl.textContent = mobileTitle;
 
     // Remove legacy "全部工具" link if present from older JS

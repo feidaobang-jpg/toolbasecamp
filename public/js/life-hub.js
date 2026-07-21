@@ -1,10 +1,6 @@
 (function () {
     let searchQuery = '';
 
-    function tr(k) {
-        return typeof window.t === 'function' ? window.t(k) : k;
-    }
-
     function getGroups() {
         if (typeof lifeToHubGroups === 'function') return lifeToHubGroups();
         return [];
@@ -52,9 +48,9 @@
             '<div class="hub-search-wrap">' +
                 '<i class="fas fa-search"></i>' +
                 '<input type="search" id="hub-search-input" class="hub-search-input" autocomplete="off" ' +
-                    'placeholder="' + escapeAttr(tr('hub.searchLifePlaceholder')) + '" value="' + escapeAttr(searchQuery) + '">' +
+                    'placeholder="' + escapeAttr('搜索内容…') + '" value="' + escapeAttr(searchQuery) + '">' +
                 '<button type="button" id="hub-search-clear" class="hub-search-clear' +
-                    (searchQuery ? ' is-visible' : '') + '" aria-label="Clear">' +
+                    (searchQuery ? ' is-visible' : '') + '" aria-label="清除">' +
                     '<i class="fas fa-times"></i></button>' +
             '</div>';
         bindSearch(toolbarEl);
@@ -89,16 +85,16 @@
             sectionEl.className = 'hub-group';
             var headerEl = document.createElement('h3');
             headerEl.className = 'hub-group-head';
-            headerEl.textContent = tr(group.titleKey);
+            headerEl.textContent = group.title || '';
             sectionEl.appendChild(headerEl);
             var gridEl = document.createElement('div');
             gridEl.className = 'hub-tools-grid';
             group.items.forEach(function (item) {
-                var label = item.titleKey ? tr(item.titleKey) : (item.title || '');
+                var label = item.title || '';
                 var card = document.createElement('a');
                 card.href = item.url || '#';
                 card.className = 'hub-tool-card';
-                card.dataset.search = tr(group.titleKey) + ' ' + label;
+                card.dataset.search = (group.title || '') + ' ' + label;
                 card.innerHTML = '<h3>' + escapeHtml(label) + '</h3>';
                 gridEl.appendChild(card);
             });
@@ -108,7 +104,7 @@
         var emptyEl = document.createElement('div');
         emptyEl.id = 'hub-empty-search';
         emptyEl.className = 'hub-empty-search';
-        emptyEl.textContent = tr('hub.noLifeSearchResults');
+        emptyEl.textContent = '没有匹配的内容';
         containerEl.appendChild(emptyEl);
     }
 
@@ -119,7 +115,7 @@
         var groups = getGroups();
         centerEl.innerHTML = '';
         if (!groups.length) {
-            centerEl.innerHTML = '<div class="text-center text-gray-500 py-12">' + tr('hub.noLife') + '</div>';
+            centerEl.innerHTML = '<div class="text-center text-gray-500 py-12">暂无内容</div>';
             return;
         }
         renderMobileSearch(mobileToolbar);
@@ -128,7 +124,4 @@
     }
 
     window.renderLifeHub = renderLifeHub;
-    document.addEventListener('tb:locale', function () {
-        if (typeof window.renderLifeHub === 'function') renderLifeHub();
-    });
 })();

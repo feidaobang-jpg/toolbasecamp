@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content - Tool Basecamp</title>
-  <meta name="description" content="Content tools powered by TianAPI.">
+  <title>内容 - Tool Basecamp</title>
+  <meta name="description" content="天行内容工具：文案、谜语、诗词等。">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/life/life.css?v=1" />
@@ -14,8 +14,8 @@
     <aside class="sidebar"></aside>
     <main class="content">
       <div class="tool-header">
-        <h1 id="life-title">Life</h1>
-        <p id="life-desc" data-i18n="life.desc">Fetch a random piece or look up by keyword. Content from TianAPI.</p>
+        <h1 id="life-title">内容</h1>
+        <p id="life-desc">点击「查询」获取内容；部分条目支持关键字搜索。数据来自天行 API。</p>
       </div>
 
       <div class="tool-card">
@@ -23,12 +23,12 @@
           <input type="text" id="life-input" class="life-input" autocomplete="off" />
         </div>
         <div class="action-row">
-          <button type="button" class="tb-btn" id="life-run" data-i18n="life.query">Query</button>
-          <button type="button" class="tb-btn" id="life-copy" data-i18n="life.copy" disabled>Copy</button>
+          <button type="button" class="tb-btn" id="life-run">查询</button>
+          <button type="button" class="tb-btn" id="life-copy" disabled>复制</button>
         </div>
         <div class="life-busy" id="life-busy" hidden>
           <span class="life-spinner" aria-hidden="true"></span>
-          <span data-i18n="life.loading">Loading…</span>
+          <span>加载中…</span>
         </div>
         <div class="error-box" id="life-error" role="alert"></div>
         <div id="life-result" class="life-result"></div>
@@ -40,8 +40,8 @@
   <script src="../../js/locales/zh-CN.js"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
-  <script src="../../js/life/life-catalog.js?v=2"></script>
+  <script src="../../js/life/life-catalog.js?v=3"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/life/life-viewer.js?v=2"></script>
+  <script src="../../js/life/life-viewer.js?v=3"></script>
 </body>
 </html>
