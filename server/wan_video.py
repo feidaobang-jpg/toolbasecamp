@@ -29,7 +29,7 @@ DASHSCOPE_BASE_URL = os.environ.get(
     "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
-WAN_I2V_LIMIT = int(os.environ.get("WAN_I2V_LIMIT", "5"))
+WAN_I2V_LIMIT = int(os.environ.get("WAN_I2V_LIMIT", "2"))
 WAN_I2V_TIMEOUT = float(os.environ.get("WAN_I2V_TIMEOUT", "60"))
 MAX_UPLOAD = 6 * 1024 * 1024
 MAX_IMAGE_EDGE = 1280

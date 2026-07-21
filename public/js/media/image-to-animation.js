@@ -17,6 +17,9 @@
     var framesBtn = document.getElementById('frames-btn');
     var clearBtn = document.getElementById('clear-btn');
     var quotaLine = document.getElementById('quota-line');
+    var costNote = document.getElementById('cost-note');
+    var tierHint = document.getElementById('tier-hint');
+    var promptPresets = document.getElementById('prompt-presets');
     var errorBox = document.getElementById('error-box');
     var busyEl = document.getElementById('busy');
     var busyText = document.getElementById('busy-text');
@@ -31,6 +34,29 @@
     var pollTimer = null;
 
     if (loginLink) loginLink.href = C.loginUrl();
+
+    function localizeSelectOptions() {
+        if (durationSelect && durationSelect.options.length >= 2) {
+            durationSelect.options[0].textContent = C.tr('tools.imageToAnimation.duration5');
+            durationSelect.options[1].textContent = C.tr('tools.imageToAnimation.duration10');
+        }
+        if (resolutionSelect && resolutionSelect.options.length >= 2) {
+            resolutionSelect.options[0].textContent = C.tr('tools.imageToAnimation.res720');
+            resolutionSelect.options[1].textContent = C.tr('tools.imageToAnimation.res1080');
+        }
+    }
+
+    function updateTierHint() {
+        if (!tierHint) return;
+        var dur = durationSelect.value || '5';
+        var res = resolutionSelect.value || '720P';
+        var expensive = dur === '10' || res === '1080P';
+        tierHint.hidden = !expensive;
+        tierHint.textContent = expensive
+            ? C.tr('tools.imageToAnimation.tierMid')
+            : C.tr('tools.imageToAnimation.tierCheap');
+        if (!expensive) tierHint.hidden = true;
+    }
 
     function scrollBottom() {
         requestAnimationFrame(function () {
@@ -64,6 +90,11 @@
         promptInput.disabled = on;
         durationSelect.disabled = on;
         resolutionSelect.disabled = on;
+        if (promptPresets) {
+            promptPresets.querySelectorAll('.wan-preset').forEach(function (btn) {
+                btn.disabled = !!on;
+            });
+        }
     }
 
     function revokeVideo() {
@@ -299,10 +330,26 @@
     promptInput.addEventListener('input', function () {
         if (!polling) setBusy(false);
     });
+    durationSelect.addEventListener('change', updateTierHint);
+    resolutionSelect.addEventListener('change', updateTierHint);
+    if (promptPresets) {
+        promptPresets.addEventListener('click', function (e) {
+            var btn = e.target.closest('.wan-preset');
+            if (!btn || btn.disabled) return;
+            var key = btn.getAttribute('data-preset');
+            if (!key) return;
+            promptInput.value = C.tr('tools.imageToAnimation.presetTexts.' + key);
+            if (!polling) setBusy(false);
+            promptInput.focus();
+        });
+    }
     runBtn.addEventListener('click', startGenerate);
     downloadBtn.addEventListener('click', downloadMp4);
     framesBtn.addEventListener('click', captureFramesZip);
     clearBtn.addEventListener('click', clearAll);
+
+    localizeSelectOptions();
+    updateTierHint();
 
     C.requireLogin(gate, app).then(function (user) {
         if (!user) return;

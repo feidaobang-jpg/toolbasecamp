@@ -7,7 +7,7 @@
   <meta name="description" content="Turn a character image into a short animation with Alibaba Wan image-to-video. Requires sign-in and daily quota.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=12" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
 </head>
 <body>
   <div class="container">
@@ -28,6 +28,9 @@
       <div id="app" hidden>
         <div class="tool-card">
           <p class="img-cloud-quota" id="quota-line"></p>
+          <p class="wan-cost-note" id="cost-note" data-i18n="tools.imageToAnimation.costNote">
+            Default: 5s · 720P (cheapest). Prefer prompt presets to avoid wasted retries. Paid packs coming later (~¥2.9–4.9 / run).
+          </p>
 
           <div class="drop-zone" id="drop-zone">
             <div class="drop-icon">+</div>
@@ -43,6 +46,12 @@
           <div class="img-tool-fields" id="controls" hidden>
             <label class="wan-prompt-label">
               <span data-i18n="tools.imageToAnimation.promptLabel">Motion prompt</span>
+              <div class="wan-presets" id="prompt-presets" role="group" aria-label="Prompt presets">
+                <button type="button" class="wan-preset" data-preset="wave" data-i18n="tools.imageToAnimation.presetWave">Wave</button>
+                <button type="button" class="wan-preset" data-preset="idle" data-i18n="tools.imageToAnimation.presetIdle">Idle</button>
+                <button type="button" class="wan-preset" data-preset="walk" data-i18n="tools.imageToAnimation.presetWalk">Walk</button>
+                <button type="button" class="wan-preset" data-preset="nod" data-i18n="tools.imageToAnimation.presetNod">Nod</button>
+              </div>
               <textarea id="prompt-input" class="rec-input wan-prompt" rows="3" maxlength="1500"
                 data-i18n-placeholder="tools.imageToAnimation.promptPlaceholder"
                 placeholder="e.g. The character waves one hand gently, idle loop friendly motion"></textarea>
@@ -50,22 +59,24 @@
             <label>
               <span data-i18n="tools.imageToAnimation.durationLabel">Duration</span>
               <select id="duration-select">
-                <option value="5">5s</option>
-                <option value="10">10s</option>
+                <option value="5" selected data-i18n="tools.imageToAnimation.duration5">5s · recommended</option>
+                <option value="10" data-i18n="tools.imageToAnimation.duration10">10s · costs more</option>
               </select>
             </label>
             <label>
               <span data-i18n="tools.imageToAnimation.resolutionLabel">Resolution</span>
               <select id="resolution-select">
-                <option value="720P" selected>720P</option>
-                <option value="1080P">1080P</option>
+                <option value="720P" selected data-i18n="tools.imageToAnimation.res720">720P · recommended</option>
+                <option value="1080P" data-i18n="tools.imageToAnimation.res1080">1080P · costs more</option>
               </select>
             </label>
           </div>
 
+          <p class="wan-tier-hint" id="tier-hint" hidden></p>
+
           <div class="tip-box">
             <b data-i18n="tools.imageToAnimation.tip">Tip:</b>
-            <span data-i18n="tools.imageToAnimation.tipBody">Uses Alibaba Wan (silent clip). Generation may take 1–5 minutes. Each run uses one daily quota. Good for short game-asset motion previews.</span>
+            <span data-i18n="tools.imageToAnimation.tipBody">Silent Wan clip, usually 1–5 min. Each run uses 1 daily free slot (default 2/day). Use 5s + 720P + presets to save cost.</span>
           </div>
 
           <div class="action-row">
@@ -96,6 +107,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/media/image-cloud-client.js?v=4"></script>
-  <script src="../../js/media/image-to-animation.js?v=1"></script>
+  <script src="../../js/media/image-to-animation.js?v=2"></script>
 </body>
 </html>
