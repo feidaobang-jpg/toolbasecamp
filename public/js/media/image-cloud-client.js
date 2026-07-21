@@ -34,6 +34,8 @@
             'Session expired. Please log in again.': 'auth.sessionExpired',
             'Daily limit reached. Please try again tomorrow.': 'tools.imageCloud.dailyLimit',
             'Tencent Cloud is not configured (TENCENT_SECRET_ID / TENCENT_SECRET_KEY).': 'tools.imageCloud.notConfigured',
+            'DashScope is not configured (DASHSCOPE_API_KEY).': 'tools.imageToAnimation.notConfigured',
+            'Please enter a motion prompt': 'tools.imageToAnimation.needPrompt',
             'Please upload an image file': 'tools.imageCloud.invalidFile',
             'Empty file': 'tools.imageCloud.invalidFile',
             'Image is too large (max 8MB)': 'tools.imageCloud.tooLarge',

@@ -28,6 +28,7 @@ from user_records import ensure_record_tables, router as records_router, _wire a
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
+from wan_video import router as wan_router, _wire as wire_wan, get_wan_config, wan_configured
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -248,6 +249,8 @@ wire_image(get_conn, require_db, get_current_user)
 app.include_router(image_router)
 app.include_router(life_router)
 app.include_router(watermark_router)
+wire_wan(get_conn, require_db, get_current_user)
+app.include_router(wan_router)
 
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:
@@ -529,6 +532,9 @@ def health():
         "image_api": "/image/ocr-text" in paths,
         "tencent_image": tencent_image_ok,
         "watermark_api": "/watermark/image/process" in paths,
+        "wan_i2v_api": "/wan/i2v/submit" in paths,
+        "wan_i2v": get_wan_config(),
+        "wan_configured": wan_configured(),
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

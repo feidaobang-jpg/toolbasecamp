@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to Animation - Tool Basecamp</title>
+  <meta name="description" content="Turn a character image into a short animation with Alibaba Wan image-to-video. Requires sign-in and daily quota.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=12" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.imageToAnimation.title">Image to Animation</h1>
+        <p data-i18n="tools.imageToAnimation.desc">Upload a character image, describe the motion, and generate a short clip with Wan image-to-video. Requires sign-in and daily quota.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in to use this cloud tool. Usage counts against your daily quota.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="quota-line"></p>
+
+          <div class="drop-zone" id="drop-zone">
+            <div class="drop-icon">+</div>
+            <div class="drop-title" data-i18n="tools.imageToAnimation.dropTitle">Click or drop an image</div>
+            <div class="drop-hint" data-i18n="tools.imageToAnimation.dropHint">JPG, PNG, WebP — max 6MB. Character / subject works best.</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none" />
+
+          <div class="img-tool-source" id="source-wrap" hidden>
+            <img id="source-img" alt="" />
+          </div>
+
+          <div class="img-tool-fields" id="controls" hidden>
+            <label class="wan-prompt-label">
+              <span data-i18n="tools.imageToAnimation.promptLabel">Motion prompt</span>
+              <textarea id="prompt-input" class="rec-input wan-prompt" rows="3" maxlength="1500"
+                data-i18n-placeholder="tools.imageToAnimation.promptPlaceholder"
+                placeholder="e.g. The character waves one hand gently, idle loop friendly motion"></textarea>
+            </label>
+            <label>
+              <span data-i18n="tools.imageToAnimation.durationLabel">Duration</span>
+              <select id="duration-select">
+                <option value="5">5s</option>
+                <option value="10">10s</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="tools.imageToAnimation.resolutionLabel">Resolution</span>
+              <select id="resolution-select">
+                <option value="720P" selected>720P</option>
+                <option value="1080P">1080P</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="tip-box">
+            <b data-i18n="tools.imageToAnimation.tip">Tip:</b>
+            <span data-i18n="tools.imageToAnimation.tipBody">Uses Alibaba Wan (silent clip). Generation may take 1–5 minutes. Each run uses one daily quota. Good for short game-asset motion previews.</span>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.imageToAnimation.run">Generate animation</button>
+            <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.imageToAnimation.downloadMp4">Download MP4</button>
+            <button type="button" class="tb-btn" id="frames-btn" disabled data-i18n="tools.imageToAnimation.downloadFrames">Download frames ZIP</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.imageToAnimation.clear">Clear</button>
+          </div>
+
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+
+          <div class="wan-result" id="result-wrap" hidden>
+            <video id="result-video" controls playsinline></video>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-cloud-client.js?v=4"></script>
+  <script src="../../js/media/image-to-animation.js?v=1"></script>
+</body>
+</html>

@@ -413,6 +413,27 @@ jobs:
           fi
           echo "Recipe API route OK."
 
+      - name: Verify Wan I2V API route (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
+        run: |
+          sleep 2
+          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          echo "health: $HEALTH"
+          if ! echo "$HEALTH" | grep -F '"wan_i2v_api":true' >/dev/null; then
+            echo "::error:: wan_i2v_api missing in /api/health — wan_video router not loaded."
+            exit 1
+          fi
+          CODE="$(curl -sS -o /tmp/wan-status.txt -w '%{http_code}' \
+            'https://toolbasecamp.com/api/wan/status' || echo '000')"
+          echo "GET /api/wan/status -> $CODE"
+          head -c 200 /tmp/wan-status.txt || true
+          echo ""
+          if [[ "$CODE" != "401" && "$CODE" != "200" ]]; then
+            echo "::error:: unexpected /wan/status code $CODE (expected 401 without auth)."
+            exit 1
+          fi
+          echo "Wan I2V API route OK."
+
       - name: Verify records API route (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
