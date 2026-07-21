@@ -1,4 +1,8 @@
-"""Wan image-to-video (DashScope) — async submit + poll + proxy download."""
+"""Wan image-to-video (DashScope) — async submit + poll + proxy download.
+
+Deploy note: if /api/wan/* is 404 while deploy_sha is new, run:
+  bash /opt/toolbasecamp-deploy/fix-wan-api.sh
+"""
 
 from __future__ import annotations
 
