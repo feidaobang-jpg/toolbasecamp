@@ -529,7 +529,7 @@ window.TB_LOCALES.en = {
         },
         arenaStrike: {
             title: 'Arena Strike',
-            desc: 'Simple offline 3D gunfight with Three.js — geometry-only map, no textures or audio. Clear bot waves.'
+            desc: 'Offline 3D gunfight on Three.js — procedural PBR textures, WebAudio SFX, bot waves.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

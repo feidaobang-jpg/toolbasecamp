@@ -528,7 +528,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         arenaStrike: {
             title: '巷战突袭',
-            desc: '单机简易 3D 枪战（Three.js）：纯色几何体地图，无贴图无音效。清波次 Bot。'
+            desc: '单机 3D 枪战（Three.js）：程序化 PBR 贴图 + WebAudio 音效，清波次 Bot。'
         },
         rmbUppercase: {
             title: '人民币大写',
