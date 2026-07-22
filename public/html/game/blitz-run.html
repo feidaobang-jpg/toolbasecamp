@@ -27,7 +27,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
   display:none;position:fixed;right:max(8px,env(safe-area-inset-right));
   top:max(8px,env(safe-area-inset-top));z-index:20;
 }
-@media(pointer:coarse){#playTools{display:block}}
+body.is-mobile #playTools{display:block}
 #playTools button{
   font:inherit;font-size:11px;border:0;border-radius:999px;padding:8px 12px;
   background:rgba(37,99,235,.88);color:#fff;cursor:pointer;
@@ -91,7 +91,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
   </div>
   <div id="hpWrap"><i id="hpBar"></i></div>
   <div id="orientTip" class="hidden">
-    <div>横版建议 <b>横屏</b>；开战会尝试全屏（浏览器要求须由你点击触发）。</div>
+    <div>横版建议 <b>横屏</b>；需要时点右上角 <b>全屏</b>。</div>
     <div class="row"><button type="button" id="btnOrientHide">知道了</button></div>
   </div>
   <div id="touch">
@@ -103,7 +103,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>魂斗罗风格横版射击。8 向 · 河流/坦克/Boss · 道具 <b style="color:#fde68a">M L S R B</b>。</p>
-      <p>手机请 <b style="color:#7dd3fc">横屏</b>；点开战即全屏（无法在无点击时偷偷全屏）。<br/>键鼠：WASD 八向 · 空格跳 · J 射</p>
+      <p>手机请 <b style="color:#7dd3fc">横屏</b>，需要时点右上角全屏。<br/>键鼠：WASD 八向 · 空格跳 · J 射</p>
       <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
