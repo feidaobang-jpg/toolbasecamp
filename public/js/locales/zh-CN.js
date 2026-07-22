@@ -787,6 +787,24 @@ window.TB_LOCALES['zh-CN'] = {
             keyboardPlaceholder: '请输入分数',
             backspace: '回退'
         },
+        todoList: {
+            title: '待办清单',
+            desc: '添加、勾选、清理待办事项。数据仅保存在本机。',
+            privacyNote: '任务仅保存在本机浏览器，不会上传到服务器。',
+            placeholder: '要做什么？',
+            add: '添加',
+            filterAll: '全部',
+            filterPending: '待办',
+            filterDone: '已完成',
+            empty: '还没有任务，在上方添加一条吧。',
+            clearDone: '清除已完成',
+            clearDoneConfirm: '确定清除全部已完成任务？',
+            stats: '{pending} 待办 · {done} 已完成',
+            emptyText: '请输入任务内容',
+            saveFailed: '保存失败，请检查浏览器存储设置',
+            toggle: '标记完成',
+            editHint: '双击可编辑'
+        },
         records: {
             loginRequired: '请先登录后再使用。数据将保存到您的账号。',
             cloudNote: '数据保存在服务端，仅对当前登录账号可见。',

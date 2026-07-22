@@ -788,6 +788,24 @@ window.TB_LOCALES.en = {
             keyboardPlaceholder: 'Enter score',
             backspace: 'Del'
         },
+        todoList: {
+            title: 'To-Do List',
+            desc: 'Add, check off, and clear tasks. Data stays on this device only.',
+            privacyNote: 'Tasks are stored locally in your browser only.',
+            placeholder: 'What needs to be done?',
+            add: 'Add',
+            filterAll: 'All',
+            filterPending: 'Pending',
+            filterDone: 'Done',
+            empty: 'No tasks yet. Add one above.',
+            clearDone: 'Clear completed',
+            clearDoneConfirm: 'Clear all completed tasks?',
+            stats: '{pending} pending · {done} done',
+            emptyText: 'Please enter a task',
+            saveFailed: 'Could not save — check browser storage settings',
+            toggle: 'Toggle done',
+            editHint: 'Double-click to edit'
+        },
         records: {
             loginRequired: 'Please sign in to use this tool. Your data is saved to your account.',
             cloudNote: 'Data is stored on the server for your signed-in account only.',
