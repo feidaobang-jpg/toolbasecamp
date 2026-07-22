@@ -70,6 +70,11 @@ curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/days' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/todos' || {
+  echo "FAILED: openapi missing /records/todos"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/clocks/{clock_id}/reset' || {
   echo "FAILED: openapi missing clock reset route"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true

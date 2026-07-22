@@ -56,8 +56,9 @@ function matchConfigItem(groups, currentPath, currentPage) {
     for (const group of groups) {
         if (!group.items) continue;
         for (const item of group.items) {
-            const itemFile = item.url.toLowerCase().split('/').pop();
-            if (currentPath.endsWith(item.url.toLowerCase()) || currentPage === itemFile) {
+            const pathPart = (item.url || '').toLowerCase().split('?')[0];
+            const itemFile = pathPart.split('/').pop();
+            if (currentPath.endsWith(pathPart) || currentPage === itemFile) {
                 return {
                     groupTitleKey: group.titleKey || null,
                     toolTitleKey: item.titleKey || null

@@ -301,6 +301,12 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             exit 1
           }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/todos' >/dev/null || {
+            echo "=== openapi missing /records/todos — restarting records API ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-records-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/todos' >/dev/null || exit 1
+          }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/wan/i2v/submit' >/dev/null || {
             echo "=== openapi missing /wan/i2v/submit — killing orphans and restarting ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
