@@ -409,9 +409,9 @@ function update(dt) {
   const speed = 7;
   // player world x relative to scroll: keep on screen band
   player.x += mx * speed * dt;
-  const minX = scrollX - 1;
-  const maxX = scrollX + 8;
-  player.x = clamp(player.x, minX, maxX);
+  const bandMin = scrollX - 1;
+  const bandMax = scrollX + 8;
+  player.x = clamp(player.x, bandMin, bandMax);
   if (mx) player.facing = mx > 0 ? 1 : -1;
 
   // jump
