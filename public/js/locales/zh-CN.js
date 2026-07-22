@@ -535,8 +535,8 @@ window.TB_LOCALES['zh-CN'] = {
             desc: '竖屏友好 2D 塔防：僵尸从上往下，纯程序化绘制，适配手机。'
         },
         blitzRun3d: {
-            title: '冲锋行动 3D',
-            desc: '魂斗罗风格横版 3D 射击（Three.js）：跳跃射击、自动推进，支持触屏。'
+            title: '冲锋行动',
+            desc: '魂斗罗风格 2D 横版射击：跳跃射击、自动推进，纯 Canvas，支持触屏。'
         },
         rmbUppercase: {
             title: '人民币大写',

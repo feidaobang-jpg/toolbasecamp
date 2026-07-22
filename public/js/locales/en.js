@@ -536,8 +536,8 @@ window.TB_LOCALES.en = {
             desc: 'Portrait-friendly 2D tower defense — zombies come from the top. Fully procedural art.'
         },
         blitzRun3d: {
-            title: 'Blitz Run 3D',
-            desc: 'Contra-style side-scrolling 3D shooter on Three.js — jump, shoot, auto-scroll. Touch friendly.'
+            title: 'Blitz Run',
+            desc: 'Contra-style 2D side-scroller — jump, shoot, auto-scroll. Procedural Canvas, touch friendly.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

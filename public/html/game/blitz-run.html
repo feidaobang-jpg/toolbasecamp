@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>冲锋行动 · Blitz Run</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#020617;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:960px;margin:0 auto;background:#000}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+#hud{position:absolute;left:0;right:0;top:0;padding:10px 12px;pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px;z-index:2;display:flex;gap:12px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#hpWrap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(260px,70%);height:10px;background:#1e293b;border:1px solid #475569;border-radius:6px;overflow:hidden;pointer-events:none;z-index:2}
+#hpBar{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ef4444,#fbbf24)}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .pad{pointer-events:auto;position:absolute;left:12px;bottom:16px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2)}
+#touch .stick{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.3);left:33px;top:33px}
+#touch .btn{pointer-events:auto;position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+#touch .fire{right:16px;bottom:24px}
+#touch .jump{right:88px;bottom:24px}
+@media(pointer:coarse){#touch{display:block}#hpWrap{bottom:100px}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,420px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:16px;padding:20px 18px}
+#ui h1{font-size:1.4rem;color:#38bdf8;margin-bottom:8px}
+#ui p{font-size:.86rem;line-height:1.5;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+#ui button{font:inherit;flex:1;min-width:110px;border:0;border-radius:999px;padding:11px 16px;background:#2563eb;color:#fff;cursor:pointer}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+.hidden{display:none!important}
+#credit{position:absolute;left:10px;bottom:8px;font-size:10px;color:rgba(148,163,184,.55);pointer-events:none;z-index:2}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <span>HP <b id="hp">100</b></span>
+    <span>得分 <b id="score">0</b></span>
+    <span>里程 <b id="dist">0</b></span>
+    <span>最高 <b id="best">0</b></span>
+  </div>
+  <div id="hpWrap"><i id="hpBar"></i></div>
+  <div id="touch">
+    <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
+    <div class="btn jump" id="btnJump">跳</div>
+    <div class="btn fire" id="btnFire">射</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>冲锋行动</h1>
+      <p>魂斗罗风格横版射击（自创主题）。纯 Canvas 2D 程序化绘制，无外部库、无贴图。</p>
+      <p>键鼠：A/D 或 ←→ 移动 · W/空格 跳跃 · J 射击<br/>触屏：摇杆 + 跳 + 射。场景自动向右推进。</p>
+      <div class="row"><button id="btnStart">开战</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h1 id="overTitle">任务结束</h1>
+      <p id="overText"></p>
+      <div class="row">
+        <button id="btnRetry">再战</button>
+        <button class="ghost" id="btnMenu">标题</button>
+      </div>
+    </div>
+  </div>
+  <div id="credit">Canvas 2D · WebAudio · 适配触屏</div>
+</div>
+<script>
+(function () {
+'use strict';
+const SAVE = 'tbc_blitz_run_v2';
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const wrap = document.getElementById('wrap');
+const el = {
+  hp: document.getElementById('hp'),
+  score: document.getElementById('score'),
+  dist: document.getElementById('dist'),
+  best: document.getElementById('best'),
+  bar: document.getElementById('hpBar')
+};
+
+let W = 800, H = 450, DPR = 1, GROUND = 0;
+let mode = 'menu', lastT = 0, best = 0;
+let keys = Object.create(null);
+let touchMove = { x: 0, y: 0 };
+let fireHeld = false, jumpQueued = false;
+let audioCtx = null;
+let player = null;
+let bullets = [], eBullets = [], enemies = [], plats = [], particles = [];
+let scrollX = 0, spawnT = 0, shootCd = 0, invuln = 0, nextChunk = 0;
+
+try { best = (JSON.parse(localStorage.getItem(SAVE) || '{}').best) | 0; } catch (e) {}
+el.best.textContent = String(best);
+
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function rand(a, b) { return a + Math.random() * (b - a); }
+
+function ensureAudio() {
+  if (audioCtx) return audioCtx;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return null;
+  audioCtx = new AC();
+  return audioCtx;
+}
+function tone(freq, dur, type, vol, slide) {
+  const ac = ensureAudio(); if (!ac) return;
+  if (ac.state === 'suspended') ac.resume();
+  const t0 = ac.currentTime;
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t0);
+  if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, slide), t0 + dur);
+  g.gain.setValueAtTime(vol || 0.05, t0);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+  o.connect(g); g.connect(ac.destination);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+function sfx(n) {
+  if (n === 'shoot') tone(420, 0.05, 'square', 0.04, 120);
+  else if (n === 'jump') tone(260, 0.08, 'sine', 0.04, 420);
+  else if (n === 'hit') tone(100, 0.08, 'sawtooth', 0.05);
+  else if (n === 'hurt') tone(80, 0.15, 'sawtooth', 0.06, 40);
+  else if (n === 'die') tone(60, 0.35, 'sawtooth', 0.07, 30);
+  else if (n === 'start') tone(300, 0.12, 'sine', 0.05, 600);
+  else if (n === 'power') tone(500, 0.1, 'triangle', 0.05, 900);
+}
+
+function resize() {
+  const r = wrap.getBoundingClientRect();
+  DPR = Math.min(2, devicePixelRatio || 1);
+  W = Math.max(320, r.width | 0);
+  H = Math.max(480, r.height | 0);
+  canvas.width = (W * DPR) | 0;
+  canvas.height = (H * DPR) | 0;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  GROUND = H * 0.78;
+}
+window.addEventListener('resize', resize);
+
+function addChunk(x0) {
+  const w = 320;
+  plats.push({ x: x0, y: GROUND, w: w, h: H - GROUND + 40, ground: true });
+  if (Math.random() > 0.4) {
+    const pw = 70 + Math.random() * 90;
+    const px = x0 + 40 + Math.random() * 160;
+    const py = GROUND - (70 + Math.random() * 90);
+    plats.push({ x: px, y: py, w: pw, h: 16, ground: false });
+  }
+  if (Math.random() > 0.55) {
+    plats.push({
+      x: x0 + 30 + Math.random() * 200, y: GROUND - 28,
+      w: 28, h: 28, crate: true
+    });
+  }
+}
+
+function rebuildWorld() {
+  plats = [];
+  nextChunk = 0;
+  for (let i = -1; i < 6; i++) {
+    addChunk(i * 320);
+    nextChunk = (i + 1) * 320;
+  }
+}
+
+function newGame() {
+  ensureAudio();
+  bullets = []; eBullets = []; enemies = []; particles = [];
+  scrollX = 0; spawnT = 1.2; shootCd = 0; invuln = 0;
+  rebuildWorld();
+  player = {
+    x: 120, y: GROUND, vx: 0, vy: 0,
+    w: 28, h: 44, onGround: true, facing: 1,
+    hp: 100, maxHp: 100, score: 0, rapid: 0
+  };
+  mode = 'play';
+  document.getElementById('panelMenu').classList.add('hidden');
+  document.getElementById('panelOver').classList.add('hidden');
+  sfx('start');
+  updateHud();
+}
+
+function endGame() {
+  mode = 'over';
+  const score = (player.score | 0) + Math.floor(scrollX / 10);
+  best = Math.max(best, score);
+  try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
+  document.getElementById('panelOver').classList.remove('hidden');
+  document.getElementById('overTitle').textContent = '任务失败';
+  document.getElementById('overText').textContent = `得分 ${score} · 里程 ${Math.floor(scrollX)} · 最高 ${best}`;
+  sfx('die');
+  updateHud();
+}
+
+function updateHud() {
+  if (!player) return;
+  el.hp.textContent = String(Math.max(0, player.hp | 0));
+  el.bar.style.width = (100 * player.hp / player.maxHp) + '%';
+  el.score.textContent = String(player.score | 0);
+  el.dist.textContent = String(Math.floor(scrollX));
+  el.best.textContent = String(best);
+}
+
+function burst(x, y, c, n) {
+  for (let i = 0; i < n; i++) {
+    particles.push({
+      x, y, vx: rand(-120, 120), vy: rand(-180, -20),
+      life: rand(0.2, 0.5), c, r: rand(2, 4)
+    });
+  }
+}
+
+function footY(p) { return p.y; }
+function solidTop(x, yFeet, prevY) {
+  let best = null;
+  for (const p of plats) {
+    if (p.crate) continue;
+    if (x < p.x - 4 || x > p.x + p.w + 4) continue;
+    const top = p.y;
+    // land from above
+    if (prevY <= top + 2 && yFeet >= top - 2 && yFeet <= top + 18) {
+      if (best == null || top < best) best = top;
+    }
+  }
+  return best;
+}
+
+function tryShoot() {
+  if (!player || shootCd > 0) return;
+  shootCd = player.rapid > 0 ? 0.09 : 0.16;
+  sfx('shoot');
+  bullets.push({
+    x: player.x + player.facing * 22,
+    y: player.y - 28,
+    vx: player.facing * 520,
+    life: 0.9
+  });
+}
+
+function hurt(dmg) {
+  if (!player || invuln > 0 || mode !== 'play') return;
+  player.hp -= dmg;
+  invuln = 0.75;
+  sfx('hurt');
+  burst(player.x, player.y - 20, '#f87171', 8);
+  updateHud();
+  if (player.hp <= 0) {
+    player.hp = 0;
+    endGame();
+  }
+}
+
+function spawnEnemy() {
+  const kind = Math.random() > 0.7 ? 'flyer' : 'grunt';
+  const x = scrollX + W + 40;
+  enemies.push({
+    kind,
+    x,
+    y: kind === 'flyer' ? GROUND - 120 - Math.random() * 80 : GROUND,
+    w: 30, h: kind === 'flyer' ? 28 : 42,
+    hp: kind === 'flyer' ? 35 : 50,
+    shootCd: 0.6 + Math.random(),
+    bob: Math.random() * 10
+  });
+}
+
+function update(dt) {
+  if (mode !== 'play' || !player) return;
+
+  const scrollSpeed = 140 + Math.min(160, scrollX / 15);
+  scrollX += scrollSpeed * dt;
+
+  while (nextChunk < scrollX + W + 400) {
+    addChunk(nextChunk);
+    nextChunk += 320;
+  }
+  plats = plats.filter(p => p.x + p.w > scrollX - 80);
+
+  let mx = 0;
+  if (keys['a'] || keys['arrowleft']) mx -= 1;
+  if (keys['d'] || keys['arrowright']) mx += 1;
+  mx += touchMove.x;
+  mx = clamp(mx, -1, 1);
+
+  const speed = 220;
+  player.x += mx * speed * dt;
+  const minX = scrollX + 40;
+  const maxX = scrollX + W * 0.55;
+  player.x = clamp(player.x, minX, maxX);
+  if (mx) player.facing = mx > 0 ? 1 : -1;
+
+  if ((keys['w'] || keys[' '] || jumpQueued) && player.onGround) {
+    player.vy = -520;
+    player.onGround = false;
+    sfx('jump');
+  }
+  jumpQueued = false;
+  keys[' '] = false;
+
+  const prevY = player.y;
+  player.vy += 1600 * dt;
+  player.y += player.vy * dt;
+
+  const land = solidTop(player.x, player.y, prevY);
+  if (player.vy >= 0 && land != null) {
+    player.y = land;
+    player.vy = 0;
+    player.onGround = true;
+  } else {
+    player.onGround = false;
+  }
+  if (player.y > H + 40) hurt(100);
+
+  if (invuln > 0) invuln -= dt;
+  if (shootCd > 0) shootCd -= dt;
+  if (player.rapid > 0) player.rapid -= dt;
+  if (fireHeld || keys['j']) tryShoot();
+
+  spawnT -= dt;
+  if (spawnT <= 0) {
+    spawnEnemy();
+    spawnT = Math.max(0.55, 1.8 - scrollX / 4000);
+  }
+
+  // bullets
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    b.x += b.vx * dt;
+    b.life -= dt;
+    let dead = b.life <= 0 || b.x < scrollX - 20 || b.x > scrollX + W + 40;
+    for (const e of enemies) {
+      if (Math.abs(b.x - e.x) < e.w * 0.55 && Math.abs(b.y - (e.y - e.h * 0.5)) < e.h * 0.55) {
+        e.hp -= 22;
+        dead = true;
+        burst(b.x, b.y, '#fde68a', 5);
+        break;
+      }
+    }
+    if (dead) bullets.splice(i, 1);
+  }
+
+  // enemies
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    const e = enemies[i];
+    e.bob += dt * 6;
+    if (e.kind === 'flyer') {
+      e.x -= 90 * dt;
+      e.y = (GROUND - 130) + Math.sin(e.bob) * 28;
+    } else {
+      e.x -= 110 * dt;
+      const g = solidTop(e.x, e.y, e.y - 2);
+      e.y = g != null ? g : GROUND;
+    }
+
+    e.shootCd -= dt;
+    if (e.shootCd <= 0 && Math.abs(e.x - player.x) < W * 0.7) {
+      e.shootCd = 1.3 + Math.random() * 0.6;
+      const dir = Math.sign(player.x - e.x) || -1;
+      eBullets.push({
+        x: e.x, y: e.y - e.h * 0.55,
+        vx: dir * 280, life: 2.2
+      });
+    }
+
+    if (Math.abs(e.x - player.x) < 26 && Math.abs((e.y - e.h * 0.4) - (player.y - 22)) < 30) {
+      hurt(14);
+    }
+
+    if (e.hp <= 0) {
+      player.score += e.kind === 'flyer' ? 150 : 100;
+      burst(e.x, e.y - 20, '#f87171', 12);
+      sfx('hit');
+      enemies.splice(i, 1);
+      updateHud();
+      continue;
+    }
+    if (e.x < scrollX - 60) enemies.splice(i, 1);
+  }
+
+  for (let i = eBullets.length - 1; i >= 0; i--) {
+    const b = eBullets[i];
+    b.x += b.vx * dt;
+    b.life -= dt;
+    if (Math.abs(b.x - player.x) < 16 && Math.abs(b.y - (player.y - 24)) < 22) {
+      hurt(10);
+      eBullets.splice(i, 1);
+      continue;
+    }
+    if (b.life <= 0 || b.x < scrollX - 40) eBullets.splice(i, 1);
+  }
+
+  if (player.score > 0 && player.rapid <= 0 && player.score % 400 < 8 && Math.random() < 0.03) {
+    player.rapid = 5;
+    sfx('power');
+  }
+
+  player.score += dt * 3;
+  particles.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 500 * dt; p.life -= dt; });
+  particles = particles.filter(p => p.life > 0);
+  updateHud();
+}
+
+function wx(x) { return x - scrollX; }
+
+function drawHero() {
+  const x = wx(player.x), y = player.y;
+  const blink = invuln > 0 && (Math.floor(invuln * 14) % 2 === 0);
+  if (blink) return;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(player.facing, 1);
+  // legs
+  ctx.fillStyle = '#1e3a8a';
+  ctx.fillRect(-8, -18, 7, 18);
+  ctx.fillRect(2, -18, 7, 18);
+  // body
+  ctx.fillStyle = '#2563eb';
+  ctx.fillRect(-11, -40, 22, 24);
+  // head
+  ctx.fillStyle = '#f5c6a0';
+  ctx.beginPath(); ctx.arc(0, -50, 9, 0, Math.PI * 2); ctx.fill();
+  // gun
+  ctx.fillStyle = '#334155';
+  ctx.fillRect(6, -34, 22, 6);
+  // bandana
+  ctx.fillStyle = '#ef4444';
+  ctx.fillRect(-9, -56, 18, 4);
+  ctx.restore();
+}
+
+function drawEnemy(e) {
+  const x = wx(e.x), y = e.y;
+  ctx.save();
+  ctx.translate(x, y);
+  if (e.kind === 'flyer') {
+    ctx.fillStyle = '#f87171';
+    ctx.fillRect(-18, -22, 36, 10);
+    ctx.fillStyle = '#b91c1c';
+    ctx.fillRect(-10, -28, 20, 22);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(-6, -24, 3, 3); ctx.fillRect(3, -24, 3, 3);
+  } else {
+    ctx.fillStyle = '#7f1d1d';
+    ctx.fillRect(-10, -36, 20, 24);
+    ctx.fillStyle = '#9ca3af';
+    ctx.beginPath(); ctx.arc(0, -44, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(-4, -46, 3, 3); ctx.fillRect(2, -46, 3, 3);
+    ctx.fillStyle = '#450a0a';
+    ctx.fillRect(-8, -14, 6, 14); ctx.fillRect(2, -14, 6, 14);
+  }
+  ctx.fillStyle = 'rgba(0,0,0,.4)';
+  ctx.fillRect(-14, -e.h - 8, 28, 3);
+  ctx.fillStyle = '#ef4444';
+  ctx.fillRect(-14, -e.h - 8, 28 * clamp(e.hp / (e.kind === 'flyer' ? 35 : 50), 0, 1), 3);
+  ctx.restore();
+}
+
+function draw() {
+  // sky
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#0f172a');
+  g.addColorStop(0.55, '#1e3a5f');
+  g.addColorStop(1, '#14532d');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // parallax hills
+  ctx.fillStyle = '#172554';
+  for (let i = 0; i < 8; i++) {
+    const hx = ((i * 160 - scrollX * 0.25) % (W + 200) + W + 200) % (W + 200) - 100;
+    ctx.beginPath();
+    ctx.moveTo(hx, GROUND);
+    ctx.lineTo(hx + 80, GROUND - 70 - (i % 3) * 20);
+    ctx.lineTo(hx + 160, GROUND);
+    ctx.fill();
+  }
+
+  // platforms / ground
+  for (const p of plats) {
+    const x = wx(p.x);
+    if (x + p.w < -20 || x > W + 20) continue;
+    if (p.crate) {
+      ctx.fillStyle = '#92400e';
+      ctx.fillRect(x, p.y - p.h, p.w, p.h);
+      ctx.strokeStyle = '#78350f';
+      ctx.strokeRect(x + 0.5, p.y - p.h + 0.5, p.w - 1, p.h - 1);
+      continue;
+    }
+    if (p.ground) {
+      ctx.fillStyle = '#3f6212';
+      ctx.fillRect(x, p.y, p.w + 2, p.h);
+      ctx.fillStyle = '#4d7c0f';
+      ctx.fillRect(x, p.y, p.w + 2, 8);
+    } else {
+      ctx.fillStyle = '#78716c';
+      ctx.fillRect(x, p.y, p.w, p.h);
+      ctx.fillStyle = '#a8a29e';
+      ctx.fillRect(x, p.y, p.w, 4);
+    }
+  }
+
+  if (player) drawHero();
+  enemies.forEach(drawEnemy);
+
+  ctx.fillStyle = '#fde68a';
+  bullets.forEach(b => {
+    ctx.beginPath(); ctx.arc(wx(b.x), b.y, 4, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.fillStyle = '#fb923c';
+  eBullets.forEach(b => {
+    ctx.beginPath(); ctx.arc(wx(b.x), b.y, 4, 0, Math.PI * 2); ctx.fill();
+  });
+
+  particles.forEach(p => {
+    ctx.globalAlpha = clamp(p.life * 2, 0, 1);
+    ctx.fillStyle = p.c;
+    ctx.beginPath(); ctx.arc(wx(p.x), p.y, p.r, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  if (mode === 'menu') {
+    ctx.fillStyle = 'rgba(0,0,0,.25)';
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+
+function loop(ts) {
+  const dt = Math.min(0.033, (ts - lastT) / 1000 || 0.016);
+  lastT = ts;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('keydown', e => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.code === 'Space') { e.preventDefault(); keys[' '] = true; }
+  if (mode === 'play' && (e.key === 'j' || e.key === 'J')) { ensureAudio(); fireHeld = true; tryShoot(); }
+});
+window.addEventListener('keyup', e => {
+  keys[e.key.toLowerCase()] = false;
+  if (e.key === 'j' || e.key === 'J') fireHeld = false;
+});
+
+(function touch() {
+  const pad = document.getElementById('pad');
+  const stick = document.getElementById('stick');
+  function setStick(cx, cy) {
+    const r = pad.getBoundingClientRect();
+    let x = cx - (r.left + r.width / 2);
+    let y = cy - (r.top + r.height / 2);
+    const m = Math.hypot(x, y) || 1;
+    const mag = clamp(m / 40, 0, 1);
+    x /= m; y /= m;
+    touchMove = { x: x * mag, y: y * mag };
+    stick.style.left = (33 + x * mag * 26) + 'px';
+    stick.style.top = (33 + y * mag * 26) + 'px';
+  }
+  function endStick() {
+    touchMove = { x: 0, y: 0 };
+    stick.style.left = '33px';
+    stick.style.top = '33px';
+  }
+  pad.addEventListener('touchstart', e => { e.preventDefault(); ensureAudio(); setStick(e.changedTouches[0].clientX, e.changedTouches[0].clientY); }, { passive: false });
+  pad.addEventListener('touchmove', e => { e.preventDefault(); setStick(e.changedTouches[0].clientX, e.changedTouches[0].clientY); }, { passive: false });
+  pad.addEventListener('touchend', e => { e.preventDefault(); endStick(); }, { passive: false });
+  document.getElementById('btnJump').addEventListener('touchstart', e => { e.preventDefault(); ensureAudio(); jumpQueued = true; }, { passive: false });
+  document.getElementById('btnFire').addEventListener('touchstart', e => { e.preventDefault(); ensureAudio(); fireHeld = true; tryShoot(); }, { passive: false });
+  document.getElementById('btnFire').addEventListener('touchend', e => { e.preventDefault(); fireHeld = false; }, { passive: false });
+})();
+
+document.getElementById('btnStart').onclick = () => newGame();
+document.getElementById('btnRetry').onclick = () => newGame();
+document.getElementById('btnMenu').onclick = () => {
+  mode = 'menu';
+  document.getElementById('panelOver').classList.add('hidden');
+  document.getElementById('panelMenu').classList.remove('hidden');
+};
+
+resize();
+rebuildWorld();
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
