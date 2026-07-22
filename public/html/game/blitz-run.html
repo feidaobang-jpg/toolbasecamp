@@ -17,12 +17,13 @@ html,body{
   overflow:hidden;touch-action:none;user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
-/* 舞台由 JS 锁 16:9，居中 letterbox，与手机横屏一致 */
+/* 固定逻辑分辨率 960×540，整体 scale 适配窗口（窗口/全屏比例一致） */
 #wrap{
   position:fixed;left:50%;top:50%;
   width:960px;height:540px;
   max-width:none;margin:0;
   transform:translate(-50%,-50%);
+  transform-origin:center center;
   background:#000;overflow:hidden;
 }
 canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
@@ -96,7 +97,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>道具 M L S R B · 坦克/Boss</p>
-      <p>WASD 移动 · K 跳 · J 射</p>
+      <p>WASD 移动 · J 射 · K 跳</p>
       <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
@@ -108,7 +109,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
       </div>
     </div>
   </div>
-  <div id="credit">16:9 · K跳 J射 · M/L/S/R/B</div>
+  <div id="credit">16:9 · J射 K跳 · M/L/S/R/B</div>
 </div>
 <script>
 (function () {
@@ -128,7 +129,9 @@ const el = {
 
 const GUN_NAME = { normal: '—', M: 'M机枪', L: 'L激光', S: 'S散弹', R: 'R速射', B: 'B护盾' };
 
-let SW = 800, SH = 450, W = 800, H = 450, DPR = 1, zoom = 1, GROUND = 0;
+const BASE_W = 960, BASE_H = 540; // 固定逻辑分辨率，窗口只整体缩放
+let SW = BASE_W, SH = BASE_H, W = BASE_W, H = BASE_H, DPR = 1, zoom = 1, GROUND = 0;
+let stageScale = 1;
 let isPortrait = false, orientDismissed = false, orientSnooze = false;
 let mode = 'menu', lastT = 0, best = 0;
 let keys = Object.create(null);
@@ -248,47 +251,24 @@ function sfx(n) {
 }
 
 function resize() {
-  // 舞台固定 16:9，在视口内最大化居中（电脑/手机横屏同一套横版布局）
-  const ASPECT = 16 / 9;
+  // 逻辑分辨率固定；视口只做等比例缩放（窗口小=整画面缩小，人物相对大小与全屏一致）
   const vw = Math.max(320, window.innerWidth | 0);
   const vh = Math.max(240, window.innerHeight | 0);
-  let stageW, stageH;
-  if (vw / vh > ASPECT) {
-    stageH = vh;
-    stageW = Math.floor(stageH * ASPECT);
-  } else {
-    stageW = vw;
-    stageH = Math.floor(stageW / ASPECT);
-  }
-  wrap.style.width = stageW + 'px';
-  wrap.style.height = stageH + 'px';
+  stageScale = Math.min(vw / BASE_W, vh / BASE_H);
+  wrap.style.width = BASE_W + 'px';
+  wrap.style.height = BASE_H + 'px';
+  wrap.style.transform = 'translate(-50%,-50%) scale(' + stageScale + ')';
 
   DPR = Math.min(2, devicePixelRatio || 1);
-  SW = stageW;
-  SH = stageH;
-  canvas.width = (SW * DPR) | 0;
-  canvas.height = (SH * DPR) | 0;
-
-  const prevGround = GROUND;
-  // 逻辑视野始终按横版舞台，不再竖屏拉高
-  isPortrait = window.innerHeight > window.innerWidth * 1.05;
+  SW = BASE_W;
+  SH = BASE_H;
+  W = BASE_W;
+  H = BASE_H;
   zoom = 1;
-  W = SW;
-  H = SH;
+  canvas.width = (BASE_W * DPR) | 0;
+  canvas.height = (BASE_H * DPR) | 0;
   GROUND = H * 0.78;
-
-  if (plats.length && prevGround > 1 && Math.abs(GROUND - prevGround) > 0.5) {
-    const dy = GROUND - prevGround;
-    plats.forEach(p => {
-      p.y += dy;
-      if (p.kind === 'ground') p.h = H - p.y + 40;
-    });
-    waters.forEach(w => { w.y += dy; w.h = H - w.y + 50; });
-    if (player) player.y += dy;
-    enemies.forEach(e => { e.y += dy; });
-    pickups.forEach(p => { p.y += dy; });
-  }
-
+  isPortrait = window.innerHeight > window.innerWidth * 1.05;
   updateOrientUI();
 }
 window.addEventListener('resize', resize);
@@ -840,11 +820,11 @@ function drawEnemy(e) {
 }
 
 function draw() {
-  // 屏幕坐标清底，再按 zoom 绘制逻辑视野（竖屏更宽）
+  // 固定逻辑分辨率绘制，外层 CSS scale 适配窗口
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.fillStyle = '#020617';
   ctx.fillRect(0, 0, SW, SH);
-  ctx.setTransform(DPR * zoom, 0, 0, DPR * zoom, 0, 0);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
   const g = ctx.createLinearGradient(0, 0, 0, H);
   g.addColorStop(0, '#0c1929');
