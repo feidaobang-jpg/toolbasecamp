@@ -211,7 +211,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); import wan_video; assert wan_video.wan_configured or True"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); import wan_video; assert wan_video.wan_configured or True"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -271,11 +271,12 @@ jobs:
             echo "health try $i: $HEALTH_JSON"
             if echo "$HEALTH_JSON" | grep -F '"recipe_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"records_todos":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null; then
-              echo "health OK with recipe/records/reset/logs/watermark/wan"
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan"
               HEALTH_OK=1
               break
             fi
@@ -481,13 +482,18 @@ jobs:
           DAYS_CODE="$(curl -sS -o /tmp/records-days-public.txt -w '%{http_code}' \
             "https://toolbasecamp.com/api/records/days?cb=$RANDOM" || echo '000')"
           echo "public GET /api/records/days -> $DAYS_CODE"
+          TODOS_CODE="$(curl -sS -o /tmp/records-todos-public.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/records/todos?cb=$RANDOM" || echo '000')"
+          echo "public GET /api/records/todos -> $TODOS_CODE"
           head -c 200 /tmp/records-days-public.txt || true
           echo ""
           if echo "$HEALTH" | grep -F '"records_api":true' >/dev/null \
+            && echo "$HEALTH" | grep -F '"records_todos":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_logs":true' >/dev/null \
-            && [[ "$DAYS_CODE" != "404" && "$DAYS_CODE" != "000" ]]; then
-            echo "Records API public OK (incl. clock reset/logs flags)."
+            && [[ "$DAYS_CODE" != "404" && "$DAYS_CODE" != "000" ]] \
+            && [[ "$TODOS_CODE" != "404" && "$TODOS_CODE" != "000" ]]; then
+            echo "Records API public OK (incl. todos + clock reset/logs flags)."
             exit 0
           fi
           echo "::warning:: public records API incomplete — forcing remote fix-records-api.sh"
@@ -499,8 +505,15 @@ jobs:
           DAYS_CODE="$(curl -sS -o /tmp/records-days-public2.txt -w '%{http_code}' \
             "https://toolbasecamp.com/api/records/days?cb=$RANDOM" || echo '000')"
           echo "public GET /api/records/days after fix -> $DAYS_CODE"
+          TODOS_CODE="$(curl -sS -o /tmp/records-todos-public2.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/records/todos?cb=$RANDOM" || echo '000')"
+          echo "public GET /api/records/todos after fix -> $TODOS_CODE"
           if ! echo "$HEALTH" | grep -F '"records_api":true' >/dev/null; then
             echo "::error:: public health still missing records_api after fix"
+            exit 1
+          fi
+          if ! echo "$HEALTH" | grep -F '"records_todos":true' >/dev/null; then
+            echo "::error:: public health still missing records_todos after fix — API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null; then
@@ -527,6 +540,10 @@ jobs:
           fi
           if [[ "$DAYS_CODE" == "404" || "$DAYS_CODE" == "000" ]]; then
             echo "::error:: public /api/records/days still $DAYS_CODE after fix"
+            exit 1
+          fi
+          if [[ "$TODOS_CODE" == "404" || "$TODOS_CODE" == "000" ]]; then
+            echo "::error:: public /api/records/todos still $TODOS_CODE after fix"
             exit 1
           fi
           echo "Records API public OK after fix."
