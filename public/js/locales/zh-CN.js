@@ -524,7 +524,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         arenaBrawl: {
             title: '街机乱斗',
-            desc: '横版 2.5D 对战：免费 OGA 素材、连招、打击停顿与华丽特效。本地可玩。'
+            desc: '横版 2.5D 对战：纯 Canvas 自绘角色场景，无外部图片。连招、打击停顿与特效。'
         },
         rmbUppercase: {
             title: '人民币大写',

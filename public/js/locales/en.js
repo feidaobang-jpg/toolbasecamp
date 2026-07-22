@@ -525,7 +525,7 @@ window.TB_LOCALES.en = {
         },
         arenaBrawl: {
             title: 'Arena Brawl',
-            desc: '2.5D arcade brawler with free OGA sprites, combos, hitstop and heavy VFX. Local play.'
+            desc: '2.5D arcade brawler — all Canvas-drawn, no images. Combos, hitstop and heavy VFX.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',
