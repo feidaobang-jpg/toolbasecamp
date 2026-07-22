@@ -533,7 +533,7 @@ window.TB_LOCALES.en = {
         },
         gardenDefense: {
             title: 'Sunny Garden',
-            desc: 'Procedural 2D tower defense — plant, collect sun, stop shamblers. No external art.'
+            desc: 'Portrait-friendly 2D tower defense — zombies come from the top. Fully procedural art.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

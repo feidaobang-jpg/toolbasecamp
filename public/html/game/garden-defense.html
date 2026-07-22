@@ -7,18 +7,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0c1a12;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
-#wrap{position:relative;width:100%;height:100%;max-width:960px;margin:0 auto;background:#000}
+#wrap{position:relative;width:100%;height:100%;max-width:720px;margin:0 auto;background:#000}
 canvas{display:block;width:100%;height:100%}
-#hud{position:absolute;left:0;right:0;top:0;padding:8px 12px;pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 12px;pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;z-index:2}
 #hud b{color:#fde68a}
-#bar{position:absolute;left:0;right:0;bottom:0;padding:8px 10px 12px;display:flex;gap:8px;align-items:stretch;justify-content:center;flex-wrap:wrap;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));pointer-events:none}
-#bar .card{pointer-events:auto;min-width:72px;padding:6px 8px 8px;border-radius:12px;border:2px solid #475569;background:rgba(15,23,42,.88);text-align:center;font-size:11px;cursor:pointer;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;gap:2px}
-#bar .card canvas{width:44px;height:44px;display:block;border-radius:8px;background:rgba(34,80,40,.55)}
+#bar{position:absolute;left:0;right:0;bottom:0;padding:6px 8px calc(8px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;align-items:stretch;justify-content:center;flex-wrap:nowrap;overflow-x:auto;background:linear-gradient(180deg,transparent,rgba(0,0,0,.65));pointer-events:none;z-index:2}
+#bar .card{pointer-events:auto;flex:0 0 auto;min-width:58px;padding:4px 6px 6px;border-radius:12px;border:2px solid #475569;background:rgba(15,23,42,.9);text-align:center;font-size:10px;cursor:pointer;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;gap:1px}
+#bar .card canvas{width:40px;height:40px;display:block;border-radius:8px;background:rgba(34,80,40,.55)}
 #bar .card.on{border-color:#fbbf24;box-shadow:0 0 0 2px rgba(251,191,36,.35)}
 #bar .card.disabled{opacity:.45}
-#bar .cost{color:#fde68a;font-weight:700;font-size:12px}
-#bar .name{margin-top:0;line-height:1.2}
-#ui{position:absolute;inset:0;pointer-events:none}
+#bar .cost{color:#fde68a;font-weight:700;font-size:11px}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:3}
 #ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,400px);background:rgba(10,20,14,.95);border:1px solid #365314;border-radius:16px;padding:20px 18px}
 #ui h1{font-size:1.4rem;color:#a3e635;margin-bottom:8px}
 #ui p{font-size:.88rem;line-height:1.5;color:#94a3b8;margin-bottom:8px}
@@ -26,7 +25,12 @@ canvas{display:block;width:100%;height:100%}
 #ui button{font:inherit;flex:1;min-width:110px;border:0;border-radius:999px;padding:11px 16px;background:#2563eb;color:#fff;cursor:pointer}
 #ui button.ghost{background:#1e293b;border:1px solid #475569}
 .hidden{display:none!important}
-#credit{position:absolute;left:10px;bottom:56px;font-size:10px;color:rgba(148,163,184,.55);pointer-events:none}
+#credit{position:absolute;left:8px;bottom:72px;font-size:10px;color:rgba(148,163,184,.5);pointer-events:none;z-index:1}
+@media(min-width:700px){
+  #wrap{max-width:900px}
+  #bar .card{min-width:70px}
+  #bar .card canvas{width:46px;height:46px}
+}
 </style>
 </head>
 <body>
@@ -42,8 +46,8 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>阳光菜园</h1>
-      <p>纯程序化 2D 塔防（自创玩法，非任何商业作品素材）。收集阳光、种植防御、挡住从右侧袭来的僵尸。</p>
-      <p>点底部卡片选择植物，再点草地格子种植。点阳光可收集。铁铲可铲除植物。</p>
+      <p>竖屏友好的 2D 塔防：僵尸从<strong>上方</strong>来，基地在<strong>下方</strong>。纯程序化绘制，无外部贴图。</p>
+      <p>选底部卡片 → 点草地种植；点阳光收集；铁铲可铲除。</p>
       <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
@@ -55,19 +59,20 @@ canvas{display:block;width:100%;height:100%}
       </div>
     </div>
   </div>
-  <div id="credit">Canvas 程序化 · WebAudio · 无外部贴图</div>
+  <div id="credit">竖屏上下对战 · Canvas 程序化 · WebAudio</div>
 </div>
 <script>
 (function () {
 'use strict';
 const SAVE = 'tbc_garden_defense_v1';
-const ROWS = 5, COLS = 9;
+/* 竖屏：COLS=车道，ROWS=纵深（上=刷怪，下=基地） */
+const ROWS = 8, COLS = 5;
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 const wrap = document.getElementById('wrap');
 const barEl = document.getElementById('bar');
 
-let W = 800, H = 500, DPR = 1;
+let W = 400, H = 700, DPR = 1;
 let mode = 'menu', lastT = 0, best = 0;
 let audioCtx = null;
 let selected = 'peapod';
@@ -78,9 +83,9 @@ let suns = [];
 let particles = [];
 let floats = [];
 let sun = 50, wave = 1, kills = 0, score = 0;
-let spawnT = 0, waveT = 0, toSpawn = 0, lawnMowers = [];
-let shake = 0, loseRow = -1;
-let board = { x: 0, y: 0, cw: 0, ch: 0, top: 0, left: 0 };
+let spawnT = 0, toSpawn = 0, lawnMowers = [];
+let shake = 0;
+let board = { left: 0, top: 0, cw: 0, ch: 0, houseY: 0 };
 
 try { best = (JSON.parse(localStorage.getItem(SAVE) || '{}').best) | 0; } catch (e) {}
 document.getElementById('best').textContent = String(best);
@@ -96,7 +101,6 @@ const coolLeft = { sunbloom: 0, peapod: 0, oakshield: 0, frostpod: 0, shovel: 0 
 
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 function rand(a, b) { return a + Math.random() * (b - a); }
-function pick(a) { return a[(Math.random() * a.length) | 0]; }
 
 function ensureAudio() {
   if (audioCtx) return audioCtx;
@@ -134,24 +138,26 @@ function sfx(name) {
 function resize() {
   const r = wrap.getBoundingClientRect();
   DPR = Math.min(2, devicePixelRatio || 1);
-  W = Math.max(480, r.width | 0);
-  H = Math.max(360, r.height | 0);
+  W = Math.max(320, r.width | 0);
+  H = Math.max(480, r.height | 0);
   canvas.width = (W * DPR) | 0;
   canvas.height = (H * DPR) | 0;
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   layoutBoard();
 }
 function layoutBoard() {
-  const padX = 16, padTop = 48, padBot = 78;
-  const leftRail = 36;
-  const bw = W - padX * 2 - leftRail;
-  const bh = H - padTop - padBot;
+  const padX = Math.max(8, W * 0.03);
+  const padTop = 44;
+  const padBot = Math.max(78, H * 0.12);
+  const houseH = Math.max(36, Math.min(52, H * 0.06));
+  const bw = W - padX * 2;
+  const bh = H - padTop - padBot - houseH;
   board.cw = bw / COLS;
   board.ch = bh / ROWS;
-  board.left = padX + leftRail;
+  board.left = padX;
   board.top = padTop;
-  board.x = board.left;
-  board.y = board.top;
+  board.houseY = padTop + bh;
+  board.houseH = houseH;
 }
 window.addEventListener('resize', resize);
 
@@ -174,6 +180,56 @@ function emptyGrid() {
     grid[r] = [];
     for (let c = 0; c < COLS; c++) grid[r][c] = null;
   }
+}
+
+function paintPlantIcon(c, id, cx, cy, s, age) {
+  c.save();
+  c.translate(cx, cy);
+  if (id === 'sunbloom') {
+    c.fillStyle = '#4d7c0f';
+    c.fillRect(-3, 2, 6, s * 0.55);
+    c.fillStyle = '#fbbf24';
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + (age || 0) * 0.4;
+      c.beginPath();
+      c.ellipse(Math.cos(a) * s * 0.42, Math.sin(a) * s * 0.42 - s * 0.15, s * 0.2, s * 0.11, a, 0, Math.PI * 2);
+      c.fill();
+    }
+    c.fillStyle = '#a16207';
+    c.beginPath(); c.arc(0, -s * 0.15, s * 0.26, 0, Math.PI * 2); c.fill();
+  } else if (id === 'peapod' || id === 'frostpod') {
+    const frost = id === 'frostpod';
+    c.fillStyle = frost ? '#0e7490' : '#3f6212';
+    c.beginPath(); c.ellipse(0, s * 0.12, s * 0.32, s * 0.4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = frost ? '#67e8f9' : '#84cc16';
+    c.beginPath(); c.ellipse(0, -s * 0.12, s * 0.28, s * 0.34, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = frost ? '#155e75' : '#14532d';
+    c.beginPath(); c.arc(0, -s * 0.42, s * 0.14, 0, Math.PI * 2); c.fill();
+    if (frost) {
+      c.strokeStyle = 'rgba(186,230,253,.85)';
+      c.lineWidth = 2;
+      c.beginPath(); c.arc(0, 0, s * 0.52, 0, Math.PI * 2); c.stroke();
+    }
+  } else if (id === 'oakshield') {
+    c.fillStyle = '#78350f';
+    c.beginPath(); c.ellipse(0, s * 0.06, s * 0.48, s * 0.55, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#a16207';
+    c.beginPath(); c.ellipse(0, 0, s * 0.4, s * 0.48, 0, 0, Math.PI * 2); c.fill();
+  } else if (id === 'shovel') {
+    c.fillStyle = '#94a3b8';
+    c.fillRect(-4, -s * 0.45, 8, s * 0.7);
+    c.fillStyle = '#64748b';
+    c.beginPath();
+    c.moveTo(-s * 0.28, -s * 0.2);
+    c.lineTo(s * 0.28, -s * 0.2);
+    c.lineTo(s * 0.18, s * 0.35);
+    c.lineTo(-s * 0.18, s * 0.35);
+    c.closePath();
+    c.fill();
+    c.fillStyle = '#a16207';
+    c.fillRect(-5, s * 0.2, 10, s * 0.35);
+  }
+  c.restore();
 }
 
 function buildBar() {
@@ -214,11 +270,9 @@ function updateHud() {
     const p = PLANTS[id];
     const locked = id !== 'shovel' && (sun < p.cost || coolLeft[id] > 0);
     el.classList.toggle('disabled', locked);
-    if (id !== 'shovel' && coolLeft[id] > 0) {
-      el.querySelector('.cost').textContent = coolLeft[id].toFixed(1) + 's';
-    } else {
-      el.querySelector('.cost').textContent = id === 'shovel' ? '铲' : String(p.cost);
-    }
+    const costEl = el.querySelector('.cost');
+    if (id !== 'shovel' && coolLeft[id] > 0) costEl.textContent = coolLeft[id].toFixed(1) + 's';
+    else costEl.textContent = id === 'shovel' ? '铲' : String(p.cost);
   });
 }
 
@@ -227,12 +281,13 @@ function newGame() {
   emptyGrid();
   zombies = []; peas = []; suns = []; particles = []; floats = [];
   sun = 50; wave = 1; kills = 0; score = 0;
-  spawnT = 8; waveT = 0; toSpawn = 4;
+  spawnT = 7; toSpawn = 4;
   Object.keys(coolLeft).forEach(k => coolLeft[k] = 0);
   lawnMowers = [];
-  for (let r = 0; r < ROWS; r++) lawnMowers.push({ r, x: board.left - 28, active: false, used: false });
+  for (let c = 0; c < COLS; c++) {
+    lawnMowers.push({ c, y: board.houseY + board.houseH * 0.35, active: false, used: false });
+  }
   mode = 'play';
-  loseRow = -1;
   document.getElementById('panelMenu').classList.add('hidden');
   document.getElementById('panelOver').classList.add('hidden');
   sfx('start');
@@ -256,19 +311,18 @@ function plantAt(r, c) {
     if (grid[r][c]) {
       grid[r][c] = null;
       sfx('plant');
-      burst(cellCenter(r, c).x, cellCenter(r, c).y, '#a3e635', 8);
+      const p = cellCenter(r, c);
+      burst(p.x, p.y, '#a3e635', 8);
     }
     return;
   }
   const def = PLANTS[selected];
-  if (!def || selected === 'shovel') return;
-  if (grid[r][c] || sun < def.cost || coolLeft[selected] > 0) return;
+  if (!def || grid[r][c] || sun < def.cost || coolLeft[selected] > 0) return;
   sun -= def.cost;
   coolLeft[selected] = def.cool;
   grid[r][c] = {
     id: selected, hp: def.hp, maxHp: def.hp,
-    shootT: rand(0.4, 1.2), sunT: rand(3, 6),
-    age: 0
+    shootT: rand(0.4, 1.2), sunT: rand(3, 6), age: 0
   };
   sfx('plant');
   const p = cellCenter(r, c);
@@ -277,13 +331,13 @@ function plantAt(r, c) {
 }
 
 function spawnZombie() {
-  const r = (Math.random() * ROWS) | 0;
+  const c = (Math.random() * COLS) | 0;
   const roll = Math.random();
-  let kind = 'basic', hp = 100 + wave * 12, speed = 18 + wave * 1.2, armor = 0;
+  let kind = 'basic', hp = 100 + wave * 12, speed = 22 + wave * 1.5, armor = 0;
   if (wave >= 2 && roll > 0.65) { kind = 'cone'; hp = 200 + wave * 18; armor = 1; }
   if (wave >= 4 && roll > 0.85) { kind = 'bucket'; hp = 380 + wave * 25; armor = 2; speed *= 0.9; }
   zombies.push({
-    r, x: board.left + COLS * board.cw + 30,
+    c, y: board.top - 20,
     hp, maxHp: hp, speed, kind, armor,
     eatT: 0, freeze: 0, bob: Math.random() * 10
   });
@@ -301,40 +355,36 @@ function burst(x, y, color, n) {
 function dropSun(x, y, value, falling) {
   suns.push({
     x,
-    y: falling ? board.top - 24 : y,
-    vy: falling ? 55 : -50,
+    y: falling ? board.top - 20 : y,
+    vy: falling ? 50 : -40,
     value: value || 25,
     life: 8,
     bob: Math.random() * 6,
     fromSky: !!falling,
-    targetY: falling ? rand(board.top + 50, board.top + ROWS * board.ch - 40) : y
+    targetY: falling ? rand(board.top + 40, board.houseY - 30) : y
   });
 }
 
 function update(dt) {
   if (mode !== 'play') return;
   if (shake > 0) shake *= Math.pow(0.05, dt);
-
   Object.keys(coolLeft).forEach(k => { if (coolLeft[k] > 0) coolLeft[k] = Math.max(0, coolLeft[k] - dt); });
 
-  // sky sun
-  waveT += dt;
-  if (Math.random() < dt * 0.18) {
-    dropSun(rand(board.left + 40, board.left + COLS * board.cw - 40), board.top - 10, 25, true);
+  if (Math.random() < dt * 0.2) {
+    dropSun(rand(board.left + 20, board.left + COLS * board.cw - 20), 0, 25, true);
   }
 
-  // waves
   spawnT -= dt;
   if (toSpawn > 0 && spawnT <= 0) {
     spawnZombie();
     toSpawn--;
-    spawnT = Math.max(1.2, 4.5 - wave * 0.25);
+    spawnT = Math.max(1.1, 4.2 - wave * 0.25);
   } else if (toSpawn <= 0 && zombies.length === 0) {
     wave++;
     if (wave > 8) { gameOver(true); return; }
     toSpawn = 3 + wave * 2;
-    spawnT = 4;
-    floats.push({ x: W / 2, y: H * 0.35, t: 0, text: '第 ' + wave + ' 波', c: '#a3e635' });
+    spawnT = 3.5;
+    floats.push({ x: W / 2, y: H * 0.28, t: 0, text: '第 ' + wave + ' 波', c: '#a3e635' });
   }
 
   // plants
@@ -348,17 +398,18 @@ function update(dt) {
         p.sunT -= dt;
         if (p.sunT <= 0) {
           p.sunT = 7.5;
-          dropSun(cen.x + rand(-10, 10), cen.y - 10, 25, false);
+          dropSun(cen.x + rand(-8, 8), cen.y - 8, 25, false);
         }
       }
       if (p.id === 'peapod' || p.id === 'frostpod') {
-        const threat = zombies.some(z => z.r === r && z.x > cen.x - 10 && z.x < board.left + COLS * board.cw + 40);
+        // 同车道上方有怪
+        const threat = zombies.some(z => z.c === c && z.y < cen.y + 10 && z.y > board.top - 40);
         if (threat) {
           p.shootT -= dt;
           if (p.shootT <= 0) {
             p.shootT = p.id === 'frostpod' ? 1.45 : 1.35;
             peas.push({
-              r, x: cen.x + 16, y: cen.y - 4,
+              c, x: cen.x, y: cen.y - 12,
               frost: p.id === 'frostpod', dmg: p.id === 'frostpod' ? 18 : 20
             });
             sfx('shoot');
@@ -368,14 +419,14 @@ function update(dt) {
     }
   }
 
-  // peas
+  // peas shoot UP
   for (let i = peas.length - 1; i >= 0; i--) {
     const p = peas[i];
-    p.x += 280 * dt;
+    p.y -= 260 * dt;
     let hit = false;
     for (const z of zombies) {
-      if (z.r !== p.r) continue;
-      if (Math.abs(z.x - p.x) < 22 && Math.abs(cellCenter(z.r, 0).y - p.y) < board.ch * 0.45) {
+      if (z.c !== p.c) continue;
+      if (Math.abs(z.y - p.y) < 22 && Math.abs(cellCenter(0, z.c).x - p.x) < board.cw * 0.4) {
         z.hp -= p.dmg;
         if (p.frost) z.freeze = Math.max(z.freeze, 3.5);
         burst(p.x, p.y, p.frost ? '#7dd3fc' : '#a3e635', 6);
@@ -384,21 +435,21 @@ function update(dt) {
         break;
       }
     }
-    if (hit || p.x > board.left + COLS * board.cw + 50) peas.splice(i, 1);
+    if (hit || p.y < board.top - 30) peas.splice(i, 1);
   }
 
-  // zombies
+  // zombies move DOWN
   for (let i = zombies.length - 1; i >= 0; i--) {
     const z = zombies[i];
     z.bob += dt * 6;
     if (z.freeze > 0) z.freeze -= dt;
     const speedMul = z.freeze > 0 ? 0.45 : 1;
-    const col = Math.floor((z.x - board.left) / board.cw);
+    const row = Math.floor((z.y - board.top) / board.ch);
     let eating = false;
-    if (col >= 0 && col < COLS) {
-      const plant = grid[z.r][col];
-      const cen = cellCenter(z.r, col);
-      if (plant && z.x < cen.x + board.cw * 0.35) {
+    if (row >= 0 && row < ROWS) {
+      const plant = grid[row][z.c];
+      const cen = cellCenter(row, z.c);
+      if (plant && z.y > cen.y - board.ch * 0.35) {
         eating = true;
         z.eatT += dt;
         if (z.eatT > 0.45) {
@@ -406,24 +457,22 @@ function update(dt) {
           plant.hp -= 18 + z.armor * 4;
           sfx('eat');
           if (plant.hp <= 0) {
-            grid[z.r][col] = null;
+            grid[row][z.c] = null;
             burst(cen.x, cen.y, '#65a30d', 12);
           }
         }
       }
     }
-    if (!eating) z.x -= z.speed * speedMul * dt;
+    if (!eating) z.y += z.speed * speedMul * dt;
 
-    // lawn mower
-    if (z.x < board.left - 8) {
-      const m = lawnMowers[z.r];
+    if (z.y > board.houseY + 4) {
+      const m = lawnMowers[z.c];
       if (m && !m.used) {
         m.active = true;
         m.used = true;
+        m.y = board.houseY;
         sfx('mow');
-      } else if (!m || m.used) {
-        // reached house
-        loseRow = z.r;
+      } else {
         shake = 12;
         gameOver(false);
         return;
@@ -432,30 +481,27 @@ function update(dt) {
 
     if (z.hp <= 0) {
       kills++;
-      score += 20;
-      burst(z.x, cellCenter(z.r, 0).y, '#94a3b8', 14);
+      burst(cellCenter(0, z.c).x, z.y, '#94a3b8', 14);
       sfx('die');
       zombies.splice(i, 1);
       updateHud();
     }
   }
 
-  // mowers
   lawnMowers.forEach(m => {
     if (!m.active) return;
-    m.x += 420 * dt;
+    m.y -= 400 * dt;
     for (let i = zombies.length - 1; i >= 0; i--) {
       const z = zombies[i];
-      if (z.r === m.r && Math.abs(z.x - m.x) < 30) {
+      if (z.c === m.c && Math.abs(z.y - m.y) < 28) {
         kills++;
-        burst(z.x, cellCenter(z.r, 0).y, '#fbbf24', 16);
+        burst(cellCenter(0, z.c).x, z.y, '#fbbf24', 16);
         zombies.splice(i, 1);
       }
     }
-    if (m.x > board.left + COLS * board.cw + 60) m.active = false;
+    if (m.y < board.top - 40) m.active = false;
   });
 
-  // suns
   for (let i = suns.length - 1; i >= 0; i--) {
     const s = suns[i];
     s.life -= dt;
@@ -464,9 +510,9 @@ function update(dt) {
       s.y += s.vy * dt;
       if (s.y >= s.targetY) { s.y = s.targetY; s.fromSky = false; s.vy = 0; }
     } else {
-      s.vy += 180 * dt;
+      s.vy += 160 * dt;
       s.y += s.vy * dt;
-      if (s.vy > 0 && s.y > s.targetY + 20) { s.y = s.targetY + 20; s.vy *= -0.25; }
+      if (s.vy > 0 && s.y > s.targetY + 16) { s.y = s.targetY + 16; s.vy *= -0.25; }
     }
     if (s.life <= 0) suns.splice(i, 1);
   }
@@ -478,160 +524,79 @@ function update(dt) {
   updateHud();
 }
 
-/* —— draw —— */
 function drawGrass() {
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const x = board.left + c * board.cw;
       const y = board.top + r * board.ch;
-      const dark = (r + c) % 2 === 0;
-      ctx.fillStyle = dark ? '#3f7a3a' : '#4a8f42';
+      ctx.fillStyle = (r + c) % 2 === 0 ? '#3f7a3a' : '#4a8f42';
       ctx.fillRect(x, y, board.cw + 0.5, board.ch + 0.5);
-      // soil line
-      ctx.strokeStyle = 'rgba(0,0,0,.08)';
+      ctx.strokeStyle = 'rgba(0,0,0,.06)';
       ctx.strokeRect(x + 0.5, y + 0.5, board.cw, board.ch);
     }
   }
 }
 
 function drawHouse() {
-  const x = 8, y = board.top, h = ROWS * board.ch, w = board.left - 12;
+  const y = board.houseY, h = board.houseH, x = board.left, w = COLS * board.cw;
   ctx.fillStyle = '#5b3a29';
   ctx.fillRect(x, y, w, h);
-  for (let i = 0; i < ROWS; i++) {
-    const yy = board.top + i * board.ch + board.ch * 0.2;
-    ctx.fillStyle = '#87ceeb';
-    ctx.fillRect(x + 6, yy, w - 12, board.ch * 0.55);
-    ctx.fillStyle = '#1e3a5f';
-    ctx.fillRect(x + 6, yy, w - 12, 4);
-  }
   ctx.fillStyle = '#7f1d1d';
-  ctx.beginPath();
-  ctx.moveTo(x - 4, y);
-  ctx.lineTo(x + w / 2, y - 18);
-  ctx.lineTo(x + w + 4, y);
-  ctx.fill();
-}
-
-function paintPlantIcon(c, id, cx, cy, s, age) {
-  c.save();
-  c.translate(cx, cy);
-  if (id === 'sunbloom') {
-    c.fillStyle = '#4d7c0f';
-    c.fillRect(-3, 2, 6, s * 0.55);
-    c.fillStyle = '#fbbf24';
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2 + (age || 0) * 0.4;
-      c.beginPath();
-      c.ellipse(Math.cos(a) * s * 0.42, Math.sin(a) * s * 0.42 - s * 0.15, s * 0.2, s * 0.11, a, 0, Math.PI * 2);
-      c.fill();
-    }
-    c.fillStyle = '#a16207';
-    c.beginPath(); c.arc(0, -s * 0.15, s * 0.26, 0, Math.PI * 2); c.fill();
-  } else if (id === 'peapod' || id === 'frostpod') {
-    const frost = id === 'frostpod';
-    c.fillStyle = frost ? '#0e7490' : '#3f6212';
-    c.beginPath(); c.ellipse(0, s * 0.12, s * 0.32, s * 0.4, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = frost ? '#67e8f9' : '#84cc16';
-    c.beginPath(); c.ellipse(s * 0.08, -s * 0.08, s * 0.38, s * 0.26, -0.15, 0, Math.PI * 2); c.fill();
-    c.fillStyle = frost ? '#155e75' : '#14532d';
-    c.beginPath(); c.arc(s * 0.38, -s * 0.08, s * 0.14, 0, Math.PI * 2); c.fill();
-    if (frost) {
-      c.strokeStyle = 'rgba(186,230,253,.85)';
-      c.lineWidth = 2;
-      c.beginPath(); c.arc(0, 0, s * 0.52, 0, Math.PI * 2); c.stroke();
-    }
-  } else if (id === 'oakshield') {
-    c.fillStyle = '#78350f';
-    c.beginPath(); c.ellipse(0, s * 0.06, s * 0.48, s * 0.55, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#a16207';
-    c.beginPath(); c.ellipse(0, 0, s * 0.4, s * 0.48, 0, 0, Math.PI * 2); c.fill();
-    c.strokeStyle = '#451a03';
-    c.lineWidth = 2;
-    c.beginPath();
-    c.moveTo(-s * 0.18, -s * 0.18); c.quadraticCurveTo(0, 0, s * 0.12, s * 0.22);
-    c.stroke();
-  } else if (id === 'shovel') {
-    c.fillStyle = '#94a3b8';
-    c.fillRect(-4, -s * 0.45, 8, s * 0.7);
-    c.fillStyle = '#64748b';
-    c.beginPath();
-    c.moveTo(-s * 0.28, -s * 0.2);
-    c.lineTo(s * 0.28, -s * 0.2);
-    c.lineTo(s * 0.18, s * 0.35);
-    c.lineTo(-s * 0.18, s * 0.35);
-    c.closePath();
-    c.fill();
-    c.fillStyle = '#a16207';
-    c.fillRect(-5, s * 0.2, 10, s * 0.35);
+  ctx.fillRect(x, y, w, 6);
+  for (let c = 0; c < COLS; c++) {
+    const wx = board.left + c * board.cw + board.cw * 0.25;
+    ctx.fillStyle = '#87ceeb';
+    ctx.fillRect(wx, y + 10, board.cw * 0.5, h - 16);
   }
-  c.restore();
 }
 
 function drawPlant(p, r, c) {
   const { x, y } = cellCenter(r, c);
-  const s = Math.min(board.cw, board.ch) * 0.36;
+  const s = Math.min(board.cw, board.ch) * 0.34;
   ctx.save();
-  // 轻微上下晃动，保持水平居中
   ctx.translate(x, y + Math.sin(p.age * 2) * 1.2);
   paintPlantIcon(ctx, p.id, 0, 0, s, p.age);
   if (p.hp < p.maxHp) {
     ctx.fillStyle = 'rgba(0,0,0,.45)';
-    ctx.fillRect(-20, -s - 12, 40, 5);
+    ctx.fillRect(-18, -s - 10, 36, 4);
     ctx.fillStyle = '#ef4444';
-    ctx.fillRect(-20, -s - 12, 40 * (p.hp / p.maxHp), 5);
+    ctx.fillRect(-18, -s - 10, 36 * (p.hp / p.maxHp), 4);
   }
   ctx.restore();
 }
 
 function drawZombie(z) {
-  const y = cellCenter(z.r, 0).y + Math.sin(z.bob) * 2;
-  const s = Math.min(board.cw, board.ch) * 0.36;
+  const x = cellCenter(0, z.c).x;
+  const s = Math.min(board.cw, board.ch) * 0.34;
   ctx.save();
-  ctx.translate(z.x, y);
+  ctx.translate(x, z.y + Math.sin(z.bob) * 2);
   if (z.freeze > 0) ctx.globalAlpha = 0.85;
-
-  // body
   ctx.fillStyle = z.kind === 'bucket' ? '#64748b' : '#6b7280';
-  ctx.beginPath(); ctx.ellipse(0, 8, s * 0.38, s * 0.55, 0, 0, Math.PI * 2); ctx.fill();
-  // head
+  ctx.beginPath(); ctx.ellipse(0, 6, s * 0.36, s * 0.5, 0, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#9ca3af';
-  ctx.beginPath(); ctx.arc(0, -s * 0.35, s * 0.32, 0, Math.PI * 2); ctx.fill();
-  // eyes
+  ctx.beginPath(); ctx.arc(0, -s * 0.32, s * 0.3, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#ef4444';
-  ctx.beginPath(); ctx.arc(-6, -s * 0.38, 3, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(6, -s * 0.38, 3, 0, Math.PI * 2); ctx.fill();
-  // arms
-  ctx.strokeStyle = '#9ca3af';
-  ctx.lineWidth = 5;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(-10, 0); ctx.lineTo(-22, 8 + Math.sin(z.bob) * 3);
-  ctx.moveTo(10, 0); ctx.lineTo(18, 4);
-  ctx.stroke();
-
+  ctx.beginPath(); ctx.arc(-5, -s * 0.34, 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(5, -s * 0.34, 2.5, 0, Math.PI * 2); ctx.fill();
   if (z.kind === 'cone') {
     ctx.fillStyle = '#ea580c';
     ctx.beginPath();
-    ctx.moveTo(0, -s * 0.85); ctx.lineTo(-12, -s * 0.35); ctx.lineTo(12, -s * 0.35);
+    ctx.moveTo(0, -s * 0.8); ctx.lineTo(-11, -s * 0.32); ctx.lineTo(11, -s * 0.32);
     ctx.fill();
   }
   if (z.kind === 'bucket') {
     ctx.fillStyle = '#94a3b8';
-    ctx.fillRect(-14, -s * 0.7, 28, 16);
-    ctx.fillStyle = '#64748b';
-    ctx.fillRect(-12, -s * 0.7, 24, 4);
+    ctx.fillRect(-13, -s * 0.65, 26, 14);
   }
   if (z.freeze > 0) {
     ctx.strokeStyle = 'rgba(125,211,252,.8)';
     ctx.lineWidth = 2;
-    ctx.strokeRect(-s * 0.5, -s * 0.9, s, s * 1.6);
+    ctx.strokeRect(-s * 0.45, -s * 0.85, s * 0.9, s * 1.5);
   }
-
   ctx.fillStyle = 'rgba(0,0,0,.4)';
-  ctx.fillRect(-18, -s - 14, 36, 4);
+  ctx.fillRect(-16, -s - 12, 32, 4);
   ctx.fillStyle = '#ef4444';
-  ctx.fillRect(-18, -s - 14, 36 * clamp(z.hp / z.maxHp, 0, 1), 4);
+  ctx.fillRect(-16, -s - 12, 32 * clamp(z.hp / z.maxHp, 0, 1), 4);
   ctx.restore();
   ctx.globalAlpha = 1;
 }
@@ -642,15 +607,14 @@ function drawSun(s) {
   ctx.translate(s.x, s.y);
   ctx.scale(pulse, pulse);
   ctx.fillStyle = '#fde68a';
-  ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath(); ctx.arc(0, 0, 13, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#fbbf24';
+  ctx.lineWidth = 3;
   for (let i = 0; i < 8; i++) {
     const a = i / 8 * Math.PI * 2;
     ctx.beginPath();
-    ctx.moveTo(Math.cos(a) * 12, Math.sin(a) * 12);
-    ctx.lineTo(Math.cos(a) * 20, Math.sin(a) * 20);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#fbbf24';
+    ctx.moveTo(Math.cos(a) * 11, Math.sin(a) * 11);
+    ctx.lineTo(Math.cos(a) * 18, Math.sin(a) * 18);
     ctx.stroke();
   }
   ctx.restore();
@@ -661,37 +625,25 @@ function draw() {
   ctx.save();
   if (shake > 0.5) ctx.translate(rand(-shake, shake), rand(-shake, shake));
 
-  // sky
   const g = ctx.createLinearGradient(0, 0, 0, H);
   g.addColorStop(0, '#7dd3fc');
-  g.addColorStop(0.45, '#86efac');
+  g.addColorStop(0.35, '#86efac');
   g.addColorStop(1, '#166534');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
-  // distant hills
-  ctx.fillStyle = '#4d7c0f';
-  ctx.beginPath();
-  ctx.moveTo(0, board.top + 30);
-  for (let i = 0; i < 8; i++) {
-    ctx.quadraticCurveTo(i * 120 + 40, board.top - 20 - (i % 3) * 15, i * 120 + 100, board.top + 20);
-  }
-  ctx.lineTo(W, board.top + 40);
-  ctx.lineTo(W, 0); ctx.lineTo(0, 0); ctx.fill();
-
-  drawHouse();
   drawGrass();
+  drawHouse();
 
-  // mowers idle
   lawnMowers.forEach(m => {
     if (m.used && !m.active) return;
-    const y = board.top + m.r * board.ch + board.ch * 0.55;
-    const x = m.active ? m.x : board.left - 26;
+    const x = board.left + m.c * board.cw + board.cw * 0.5;
+    const y = m.active ? m.y : board.houseY + board.houseH * 0.45;
     ctx.fillStyle = '#dc2626';
-    ctx.fillRect(x - 12, y - 10, 28, 16);
+    ctx.fillRect(x - 14, y - 8, 28, 14);
     ctx.fillStyle = '#111';
-    ctx.beginPath(); ctx.arc(x - 6, y + 8, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x + 8, y + 8, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x - 7, y + 7, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 7, y + 7, 4, 0, Math.PI * 2); ctx.fill();
   });
 
   for (let r = 0; r < ROWS; r++) {
@@ -703,11 +655,8 @@ function draw() {
 
   peas.forEach(p => {
     ctx.fillStyle = p.frost ? '#7dd3fc' : '#a3e635';
-    ctx.beginPath(); ctx.arc(p.x, p.y, 7, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = p.frost ? '#e0f2fe' : '#d9f99d';
-    ctx.beginPath(); ctx.arc(p.x - 2, p.y - 2, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2); ctx.fill();
   });
-
   zombies.forEach(drawZombie);
   suns.forEach(drawSun);
 
@@ -717,18 +666,15 @@ function draw() {
     ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
   });
   ctx.globalAlpha = 1;
-
   floats.forEach(f => {
     ctx.globalAlpha = 1 - f.t / 1.4;
     ctx.fillStyle = f.c;
-    ctx.font = 'bold 28px system-ui';
+    ctx.font = 'bold 26px system-ui';
     ctx.textAlign = 'center';
     ctx.fillText(f.text, f.x, f.y);
     ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   });
-
-  // selected plant ghost? skip for clarity
   ctx.restore();
 }
 
@@ -755,19 +701,15 @@ function collectSunAt(mx, my) {
   return false;
 }
 
-function onPointer(mx, my) {
+canvas.addEventListener('pointerdown', e => {
   if (mode !== 'play') return;
   ensureAudio();
-  if (collectSunAt(mx, my)) return;
-  const cell = hitCell(mx, my);
-  if (cell) plantAt(cell.r, cell.c);
-}
-
-canvas.addEventListener('pointerdown', e => {
   const rect = canvas.getBoundingClientRect();
   const mx = (e.clientX - rect.left) * (W / rect.width);
   const my = (e.clientY - rect.top) * (H / rect.height);
-  onPointer(mx, my);
+  if (collectSunAt(mx, my)) return;
+  const cell = hitCell(mx, my);
+  if (cell) plantAt(cell.r, cell.c);
 });
 
 document.getElementById('btnStart').onclick = () => newGame();
@@ -781,7 +723,9 @@ document.getElementById('btnMenu').onclick = () => {
 buildBar();
 resize();
 emptyGrid();
-for (let r = 0; r < ROWS; r++) lawnMowers.push({ r, x: board.left - 28, active: false, used: false });
+for (let c = 0; c < COLS; c++) {
+  lawnMowers.push({ c, y: board.houseY + 10, active: false, used: false });
+}
 requestAnimationFrame(loop);
 })();
 </script>

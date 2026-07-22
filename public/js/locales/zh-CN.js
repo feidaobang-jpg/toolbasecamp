@@ -532,7 +532,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         gardenDefense: {
             title: '阳光菜园',
-            desc: '纯程序化 2D 塔防：种植、收阳光、挡住僵尸。无外部贴图。'
+            desc: '竖屏友好 2D 塔防：僵尸从上往下，纯程序化绘制，适配手机。'
         },
         rmbUppercase: {
             title: '人民币大写',
