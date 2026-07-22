@@ -184,7 +184,7 @@ const gamesConfig = {
                 { titleKey: 'tools.arenaBrawl.title', url: 'html/game/arena-brawl.html' },
                 { titleKey: 'tools.arenaStrike.title', url: 'html/game/arena-strike.html' },
                 { titleKey: 'tools.gardenDefense.title', url: 'html/game/garden-defense.html' },
-                { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=5' }
+                { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=6' }
             ]
         }
     ]
