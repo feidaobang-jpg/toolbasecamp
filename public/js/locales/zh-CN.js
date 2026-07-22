@@ -536,7 +536,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         blitzRun3d: {
             title: '冲锋行动',
-            desc: '魂斗罗风格 2D：八向射击，M/L/S/R/B 道具，河流/坦克/Boss，镜头跟随。'
+            desc: '魂斗罗风格 2D：八向射击，M/L/S/R/B 道具，坦克/Boss，镜头跟随。'
         },
         rmbUppercase: {
             title: '人民币大写',
