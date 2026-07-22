@@ -17,7 +17,7 @@ html,body{
   overflow:hidden;touch-action:none;user-select:none;
   -webkit-tap-highlight-color:transparent;
 }
-/* 固定逻辑分辨率 960×540，整体 scale 适配窗口（窗口/全屏比例一致） */
+/* 固定逻辑 16:9；外框按显示像素设宽高（不用 CSS scale，避免发糊） */
 #wrap{
   position:fixed;left:50%;top:50%;
   width:960px;height:540px;
@@ -26,7 +26,7 @@ html,body{
   transform-origin:center center;
   background:#000;overflow:hidden;
 }
-canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+canvas{display:block;width:100%;height:100%;image-rendering:auto}
 #playTools{
   display:block;position:fixed;right:max(8px,env(safe-area-inset-right));
   top:max(8px,env(safe-area-inset-top));z-index:20;
@@ -138,9 +138,9 @@ const el = {
 
 const GUN_NAME = { normal: '—', M: 'M机枪', L: 'L激光', S: 'S散弹', R: 'R速射', B: 'B护盾' };
 
-const BASE_W = 960, BASE_H = 540; // 固定逻辑分辨率，窗口只整体缩放
+const BASE_W = 960, BASE_H = 540; // 固定逻辑分辨率
 let SW = BASE_W, SH = BASE_H, W = BASE_W, H = BASE_H, DPR = 1, zoom = 1, GROUND = 0;
-let stageScale = 1;
+let stageScale = 1, drawSX = 1, drawSY = 1;
 let isPortrait = false, orientDismissed = false, orientSnooze = false;
 let mode = 'menu', lastT = 0, best = 0;
 let keys = Object.create(null);
@@ -260,22 +260,28 @@ function sfx(n) {
 }
 
 function resize() {
-  // 逻辑分辨率固定；视口只做等比例缩放（窗口小=整画面缩小，人物相对大小与全屏一致）
+  // 逻辑 960×540；外框用显示像素，画布按 DPR 拉满，避免 CSS scale 发糊
   const vw = Math.max(320, window.innerWidth | 0);
   const vh = Math.max(240, window.innerHeight | 0);
   stageScale = Math.min(vw / BASE_W, vh / BASE_H);
-  wrap.style.width = BASE_W + 'px';
-  wrap.style.height = BASE_H + 'px';
-  wrap.style.transform = 'translate(-50%,-50%) scale(' + stageScale + ')';
+  const dispW = Math.max(1, Math.floor(BASE_W * stageScale));
+  const dispH = Math.max(1, Math.floor(BASE_H * stageScale));
+  wrap.style.width = dispW + 'px';
+  wrap.style.height = dispH + 'px';
+  wrap.style.transform = 'translate(-50%,-50%)';
 
-  DPR = Math.min(2, devicePixelRatio || 1);
-  SW = BASE_W;
-  SH = BASE_H;
+  DPR = Math.min(2.5, devicePixelRatio || 1);
   W = BASE_W;
   H = BASE_H;
+  SW = BASE_W;
+  SH = BASE_H;
   zoom = 1;
-  canvas.width = (BASE_W * DPR) | 0;
-  canvas.height = (BASE_H * DPR) | 0;
+  canvas.style.width = dispW + 'px';
+  canvas.style.height = dispH + 'px';
+  canvas.width = Math.floor(dispW * DPR);
+  canvas.height = Math.floor(dispH * DPR);
+  drawSX = canvas.width / BASE_W;
+  drawSY = canvas.height / BASE_H;
   GROUND = H * 0.78;
   isPortrait = window.innerHeight > window.innerWidth * 1.05;
   updateOrientUI();
@@ -414,12 +420,13 @@ function fireRate() {
 function tryShoot() {
   if (!player || mode !== 'play' || shootCd > 0) return;
   let ax = player.aimX, ay = player.aimY;
-  if (ax === 0 && ay === 0) {
+  // 无瞄准向量时强制朝面朝方向（不按方向键也能射）
+  if (!ax && !ay) {
     ax = player.facing || 1;
     ay = 0;
   }
   shootCd = fireRate();
-  const ox = player.x + ax * 18;
+  const ox = player.x + (ax || player.facing || 1) * 18;
   const oy = player.y - (player.crouch ? 18 : 28) + ay * 16;
   const spd = player.gun === 'L' ? 780 : 560;
 
@@ -566,18 +573,22 @@ function update(dt) {
   }
   player.x = Math.max(48, player.x);
 
-  // 有方向才改瞄准；松手保持上次瞄准，避免边移边射时方向被重置/翻转
+  // 无方向：默认朝面朝方向平射（魂斗罗）；有方向才改瞄准
   if (q.ax !== 0 || q.ay !== 0) {
     if (player.crouch) {
       player.aimX = player.facing;
       player.aimY = 0;
     } else if (q.ax === 0) {
+      // 纯上：竖直射；纯下已在 crouch 分支
       player.aimX = 0;
       player.aimY = q.ay;
     } else {
       player.aimX = q.ax;
       player.aimY = q.ay;
     }
+  } else {
+    player.aimX = player.facing || 1;
+    player.aimY = 0;
   }
 
   const prevY = player.y;
@@ -834,11 +845,10 @@ function drawEnemy(e) {
 }
 
 function draw() {
-  // 固定逻辑分辨率绘制，外层 CSS scale 适配窗口
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  // 按显示分辨率绘制，逻辑坐标仍是 960×540
+  ctx.setTransform(drawSX, 0, 0, drawSY, 0, 0);
   ctx.fillStyle = '#020617';
-  ctx.fillRect(0, 0, SW, SH);
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.fillRect(0, 0, W, H);
 
   const g = ctx.createLinearGradient(0, 0, 0, H);
   g.addColorStop(0, '#0c1929');
