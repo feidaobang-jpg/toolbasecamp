@@ -474,25 +474,207 @@ function addBox(x, y, z, sx, sy, sz, material, collidable = true) {
   return mesh;
 }
 
+function limbMesh(radius, length, material) {
+  const m = new THREE.Mesh(new THREE.CapsuleGeometry(radius, Math.max(0.01, length - radius * 2), 3, 6), material);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
+}
+
+function makeHumanoid(opts = {}) {
+  const skin = new THREE.MeshStandardMaterial({ color: opts.skin ?? 0xe0b090, roughness: 0.62, metalness: 0.02 });
+  const cloth = opts.camo ? pbr(TEX.camo, { roughness: 0.85 }) : new THREE.MeshStandardMaterial({ color: opts.cloth ?? 0x3b82f6, roughness: 0.75 });
+  const pants = new THREE.MeshStandardMaterial({ color: opts.pants ?? 0x1e293b, roughness: 0.85 });
+  const boot = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.7 });
+  const metal = pbr(TEX.metal, { metalness: 0.55, roughness: 0.4 });
+
+  const root = new THREE.Group();
+  const hips = new THREE.Group();
+  hips.position.y = 0.95;
+  root.add(hips);
+
+  // torso
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.45, 4, 8), cloth);
+  torso.position.y = 0.35;
+  torso.castShadow = true;
+  hips.add(torso);
+
+  // head
+  const neck = new THREE.Group();
+  neck.position.y = 0.72;
+  hips.add(neck);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), skin);
+  head.position.y = 0.18;
+  head.castShadow = true;
+  neck.add(head);
+  // simple face
+  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.025, 6, 6), new THREE.MeshStandardMaterial({ color: 0x0f172a }));
+  eyeL.position.set(-0.05, 0.2, 0.14);
+  neck.add(eyeL);
+  const eyeR = eyeL.clone();
+  eyeR.position.x = 0.05;
+  neck.add(eyeR);
+  if (opts.helmet) {
+    const helmet = new THREE.Mesh(
+      new THREE.SphereGeometry(0.175, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.58),
+      metal
+    );
+    helmet.position.y = 0.22;
+    neck.add(helmet);
+  }
+
+  function makeArm(side) {
+    const shoulder = new THREE.Group();
+    shoulder.position.set(side * 0.28, 0.58, 0);
+    hips.add(shoulder);
+    const upper = limbMesh(0.055, 0.32, skin);
+    upper.position.y = -0.16;
+    shoulder.add(upper);
+    const elbow = new THREE.Group();
+    elbow.position.y = -0.32;
+    shoulder.add(elbow);
+    const lower = limbMesh(0.045, 0.28, skin);
+    lower.position.y = -0.14;
+    elbow.add(lower);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), skin);
+    hand.position.y = -0.28;
+    hand.castShadow = true;
+    elbow.add(hand);
+    return { shoulder, elbow, hand };
+  }
+  const armL = makeArm(-1);
+  const armR = makeArm(1);
+
+  function makeLeg(side) {
+    const thighJ = new THREE.Group();
+    thighJ.position.set(side * 0.1, 0, 0);
+    hips.add(thighJ);
+    const thigh = limbMesh(0.07, 0.4, pants);
+    thigh.position.y = -0.2;
+    thighJ.add(thigh);
+    const knee = new THREE.Group();
+    knee.position.y = -0.4;
+    thighJ.add(knee);
+    const shin = limbMesh(0.055, 0.38, pants);
+    shin.position.y = -0.19;
+    knee.add(shin);
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.06, 0.2), boot);
+    foot.position.set(0, -0.4, 0.04);
+    foot.castShadow = true;
+    knee.add(foot);
+    return { thighJ, knee };
+  }
+  const legL = makeLeg(-1);
+  const legR = makeLeg(1);
+
+  // rifle in right hand
+  const gun = new THREE.Group();
+  gun.position.set(0.02, -0.02, 0.05);
+  armR.hand.add(gun);
+  const stock = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, 0.55), metal);
+  stock.position.z = 0.15;
+  gun.add(stock);
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.018, 0.35, 6), metal);
+  barrel.rotation.x = Math.PI / 2;
+  barrel.position.z = 0.48;
+  gun.add(barrel);
+
+  root.userData = {
+    body: torso,
+    neck,
+    armL,
+    armR,
+    legL,
+    legR,
+    hips,
+    skin,
+    cloth,
+    animT: Math.random() * 10
+  };
+  return root;
+}
+
+function animateHumanoid(ud, dt, moving, aiming) {
+  ud.animT += dt * (moving ? 9 : 2);
+  const t = ud.animT;
+  const swing = moving ? Math.sin(t) : 0;
+  const swing2 = moving ? Math.sin(t + Math.PI) : 0;
+  // legs
+  ud.legL.thighJ.rotation.x = swing * 0.7;
+  ud.legR.thighJ.rotation.x = swing2 * 0.7;
+  ud.legL.knee.rotation.x = moving ? Math.max(0, -swing) * 0.6 : 0.08;
+  ud.legR.knee.rotation.x = moving ? Math.max(0, -swing2) * 0.6 : 0.08;
+  // arms: left swings / right holds gun forward when aiming
+  if (aiming) {
+    ud.armR.shoulder.rotation.x = -1.15;
+    ud.armR.shoulder.rotation.y = -0.15;
+    ud.armR.elbow.rotation.x = -0.35;
+    ud.armL.shoulder.rotation.x = -1.0;
+    ud.armL.shoulder.rotation.y = 0.35;
+    ud.armL.elbow.rotation.x = -0.5;
+    ud.neck.rotation.x = -0.05;
+  } else {
+    ud.armR.shoulder.rotation.x = swing2 * 0.5 - 0.2;
+    ud.armR.shoulder.rotation.y = 0;
+    ud.armR.elbow.rotation.x = -0.3;
+    ud.armL.shoulder.rotation.x = swing * 0.5 - 0.2;
+    ud.armL.shoulder.rotation.y = 0;
+    ud.armL.elbow.rotation.x = -0.3;
+    ud.neck.rotation.x = 0;
+  }
+  ud.hips.position.y = 0.95 + (moving ? Math.abs(Math.sin(t * 2)) * 0.03 : 0);
+}
+
 function buildViewmodel() {
   while (camera.children.length) camera.remove(camera.children[0]);
   gunMesh = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 0.45), pbr(TEX.metal, { metalness: 0.7, roughness: 0.35 }));
-  body.position.set(0.22, -0.18, -0.45);
+  const skin = new THREE.MeshStandardMaterial({ color: 0xe0b090, roughness: 0.6 });
+  const sleeve = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.75 });
+  const metal = pbr(TEX.metal, { metalness: 0.7, roughness: 0.35 });
+
+  // right arm
+  const rArm = new THREE.Group();
+  rArm.position.set(0.18, -0.28, -0.25);
+  rArm.rotation.set(0.35, 0.15, -0.2);
+  const rUpper = new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.18, 3, 6), sleeve);
+  rUpper.rotation.x = 1.1;
+  rUpper.position.set(0, 0, -0.1);
+  rArm.add(rUpper);
+  const rHand = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.08, 0.1), skin);
+  rHand.position.set(0.02, -0.02, -0.32);
+  rArm.add(rHand);
+  gunMesh.add(rArm);
+
+  // left arm supporting
+  const lArm = new THREE.Group();
+  lArm.position.set(-0.05, -0.32, -0.35);
+  lArm.rotation.set(0.5, -0.4, 0.3);
+  const lUpper = new THREE.Mesh(new THREE.CapsuleGeometry(0.04, 0.16, 3, 6), sleeve);
+  lUpper.rotation.x = 0.9;
+  lArm.add(lUpper);
+  const lHand = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.07, 0.09), skin);
+  lHand.position.set(0.05, 0.02, -0.22);
+  lArm.add(lHand);
+  gunMesh.add(lArm);
+
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 0.5), metal);
+  body.position.set(0.12, -0.2, -0.5);
   gunMesh.add(body);
-  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.018, 0.35, 8), pbr(TEX.metal, { metalness: 0.8, roughness: 0.3 }));
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.018, 0.38, 8), metal);
   barrel.rotation.x = Math.PI / 2;
-  barrel.position.set(0.22, -0.16, -0.72);
+  barrel.position.set(0.12, -0.18, -0.82);
   gunMesh.add(barrel);
-  const grip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.08), pbr(TEX.wood, { roughness: 0.85 }));
-  grip.position.set(0.22, -0.28, -0.38);
+  const grip = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.13, 0.07), pbr(TEX.wood, { roughness: 0.85 }));
+  grip.position.set(0.12, -0.3, -0.42);
   gunMesh.add(grip);
+
+  gunMesh.userData.rArm = rArm;
+  gunMesh.userData.lArm = lArm;
   camera.add(gunMesh);
   scene.add(camera);
 }
 
 function buildMap() {
-  // clear scene except we rebuild fully
   while (scene.children.length) scene.remove(scene.children[0]);
   solids = [];
 
@@ -548,7 +730,6 @@ function buildMap() {
 
   muzzleFlash = new THREE.PointLight(0xffcc66, 0, 10);
   scene.add(muzzleFlash);
-
   buildViewmodel();
 }
 
@@ -579,23 +760,7 @@ function resolveCircle(pos, radius, feetY, height) {
 }
 
 function makeBotMesh() {
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 0.9, 4, 8), pbr(TEX.camo, { roughness: 0.85 }));
-  body.position.y = 1.1;
-  body.castShadow = true;
-  g.add(body);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 12), new THREE.MeshStandardMaterial({ color: 0xe8b88a, roughness: 0.65 }));
-  head.position.y = 1.95;
-  head.castShadow = true;
-  g.add(head);
-  const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55), pbr(TEX.metal, { metalness: 0.4, roughness: 0.5 }));
-  helmet.position.y = 2.05;
-  g.add(helmet);
-  const gun = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.7), pbr(TEX.metal, { metalness: 0.6, roughness: 0.35 }));
-  gun.position.set(0.25, 1.25, 0.35);
-  g.add(gun);
-  g.userData.body = body;
-  return g;
+  return makeHumanoid({ camo: true, helmet: true, pants: 0x334155 });
 }
 
 function spawnBot(x, z) {
@@ -781,11 +946,15 @@ function updatePlayer(dt) {
   camera.rotation.y = yaw;
   camera.rotation.x = pitch;
 
-  // subtle bob
+  // subtle bob + arm hold
   if (gunMesh) {
     const bob = moving ? Math.sin(performance.now() * 0.012) * 0.008 : 0;
     gunMesh.position.y = bob;
-    gunMesh.rotation.x = pitch * 0.15;
+    gunMesh.rotation.x = pitch * 0.12;
+    if (gunMesh.userData.rArm) {
+      gunMesh.userData.rArm.rotation.x = 0.35 + pitch * 0.08;
+      gunMesh.userData.lArm.rotation.x = 0.5 + pitch * 0.06;
+    }
   }
 
   if (fireHeld) tryShoot();
@@ -797,7 +966,9 @@ function updateBots(dt) {
     if (!b.alive) continue;
     if (b.hitFlash > 0) {
       b.hitFlash -= dt;
-      if (b.hitFlash <= 0) b.mesh.userData.body.material.emissiveIntensity = 0;
+      if (b.hitFlash <= 0 && b.mesh.userData.body) {
+        b.mesh.userData.body.material.emissiveIntensity = 0;
+      }
     }
     const p = b.mesh.position;
     const toPlayer = tmpV2.set(eye.x - p.x, 0, eye.z - p.z);
@@ -807,16 +978,21 @@ function updateBots(dt) {
 
     const head = new THREE.Vector3(p.x, 1.6, p.z);
     const canSee = dist < 32 && !losBlocked(head, eye);
+    let moving = false;
 
     if (dist > 6 || !canSee) {
       p.x += toPlayer.x * b.speed * dt;
       p.z += toPlayer.z * b.speed * dt;
       resolveCircle(p, 0.35, 0, 1.9);
+      moving = true;
     } else if (dist < 4) {
       p.x -= toPlayer.x * b.speed * 0.5 * dt;
       p.z -= toPlayer.z * b.speed * 0.5 * dt;
       resolveCircle(p, 0.35, 0, 1.9);
+      moving = true;
     }
+
+    animateHumanoid(b.mesh.userData, dt, moving, canSee);
 
     b.shootCd -= dt;
     if (canSee && b.shootCd <= 0 && dist < 28) {
