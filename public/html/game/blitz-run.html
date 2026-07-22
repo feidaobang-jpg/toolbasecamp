@@ -24,10 +24,9 @@ html,body{
 }
 canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
 #playTools{
-  display:none;position:fixed;right:max(8px,env(safe-area-inset-right));
+  display:block;position:fixed;right:max(8px,env(safe-area-inset-right));
   top:max(8px,env(safe-area-inset-top));z-index:20;
 }
-body.is-mobile #playTools{display:block}
 #playTools button{
   font:inherit;font-size:11px;border:0;border-radius:999px;padding:8px 12px;
   background:rgba(37,99,235,.88);color:#fff;cursor:pointer;
@@ -64,7 +63,6 @@ body.is-mobile #playTools{display:block}
   #touch .jump{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom))}
   #orientTip{display:none!important}
 }
-@media(orientation:landscape){#wrap{max-width:none}}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:4}
 #ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,440px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:16px;padding:20px 18px;max-height:90%;overflow:auto}
 #ui h1{font-size:1.4rem;color:#38bdf8;margin-bottom:8px}
@@ -103,7 +101,7 @@ body.is-mobile #playTools{display:block}
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>魂斗罗风格横版射击。8 向 · 河流/坦克/Boss · 道具 <b style="color:#fde68a">M L S R B</b>。</p>
-      <p>手机请 <b style="color:#7dd3fc">横屏</b>，需要时点右上角全屏。<br/>键鼠：WASD 八向 · 空格跳 · J 射</p>
+      <p>需要全屏时点右上角 <b style="color:#7dd3fc">全屏</b>（开战不会自动全屏）。手机建议横屏。<br/>键鼠：WASD 八向 · 空格跳 · J 射</p>
       <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
@@ -162,6 +160,14 @@ function isFs() {
   return !!(document.fullscreenElement || document.webkitFullscreenElement);
 }
 
+/** 粗指针/触屏设备（仅用于竖屏提示，与全屏无关） */
+function isMobileEnv() {
+  if (window.matchMedia('(pointer: coarse)').matches) return true;
+  if ((navigator.maxTouchPoints || 0) > 1 && window.matchMedia('(hover: none)').matches) return true;
+  const ua = navigator.userAgent || '';
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+}
+
 function updateFsBtn() {
   const bf = document.getElementById('btnFs');
   if (bf) bf.textContent = isFs() ? '退出全屏' : '全屏';
@@ -169,14 +175,13 @@ function updateFsBtn() {
 
 function updateOrientUI() {
   const tip = document.getElementById('orientTip');
-  const coarse = window.matchMedia('(pointer: coarse)').matches;
-  const show = coarse && isPortrait && !orientDismissed && !orientSnooze;
+  const show = isMobileEnv() && isPortrait && !orientDismissed && !orientSnooze;
   tip.classList.toggle('hidden', !show);
   tip.style.display = show ? 'block' : 'none';
   updateFsBtn();
 }
 
-/** 仅进入全屏（开战用）；浏览器禁止页面加载时无手势自动全屏 */
+/** 仅由「全屏」按钮调用 */
 async function enterFs() {
   if (isFs()) return true;
   const root = document.documentElement;
@@ -204,12 +209,11 @@ async function toggleFs() {
   setTimeout(resize, 60);
 }
 
-async function startGame() {
+function startGame() {
   ensureAudio();
   orientSnooze = true;
-  await enterFs(); // 必须挂在「开战」点击手势里，不能页面一开就全屏
+  updateOrientUI();
   newGame();
-  setTimeout(resize, 80);
 }
 
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -1047,7 +1051,12 @@ document.getElementById('btnMenu').onclick = () => {
   document.getElementById('panelOver').classList.add('hidden');
   document.getElementById('panelMenu').classList.remove('hidden');
 };
-document.getElementById('btnFs').onclick = () => { ensureAudio(); toggleFs(); };
+document.getElementById('btnFs').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  ensureAudio();
+  toggleFs();
+};
 document.getElementById('btnOrientHide').onclick = () => {
   orientDismissed = true;
   orientSnooze = true;
