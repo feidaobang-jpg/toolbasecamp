@@ -540,15 +540,8 @@ window.TB_LOCALES.en = {
             desc: 'Contra-style 2D run-and-gun: 8-way aim, M/L/S/R/B weapons, tanks and bosses.'
         },
         superMario: {
-            title: 'Super Mario',
-            desc: 'Jump, collect coins, stomp enemies in this classic platformer. Runs locally.',
-            coins: 'Coins',
-            lives: 'Lives',
-            level: 'Level',
-            hint: 'Arrow keys / WASD to move, Space / \u2191 to jump. Stomp enemies from above!',
-            levelUp: 'Level {0}!',
-            gameOver: 'Game Over! Final Score: {0}',
-            lostLife: 'Lives left: {0}'
+            title: 'Mushroom Quest',
+            desc: 'Side-scrolling platformer: coins, stomp foes, ?-blocks, pipes and flagpole. Original Canvas build.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

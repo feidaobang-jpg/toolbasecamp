@@ -539,15 +539,8 @@ window.TB_LOCALES['zh-CN'] = {
             desc: '魂斗罗风格 2D：八向射击，M/L/S/R/B 道具，坦克/Boss，镜头跟随。'
         },
         superMario: {
-            title: '超级玛丽',
-            desc: '经典平台跳跃游戏，收集金币、踩踏敌人。完全本地运行。',
-            coins: '金币',
-            lives: '生命',
-            level: '关卡',
-            hint: '方向键 / WASD 移动，空格 / ↑ 跳跃。从上方踩踏敌人！',
-            levelUp: '进入第 {0} 关！',
-            gameOver: '游戏结束！最终得分：{0}',
-            lostLife: '剩余生命：{0}'
+            title: '蘑菇冒险',
+            desc: '横版闯关：金币、踩怪、问号砖、水管与旗杆，纯 Canvas 自研。'
         },
         rmbUppercase: {
             title: '人民币大写',

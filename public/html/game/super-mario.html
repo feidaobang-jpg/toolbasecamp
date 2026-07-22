@@ -1,49 +1,767 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Super Mario - Tool Basecamp</title>
-  <meta name="description" content="Classic platformer — jump, collect coins, stomp enemies. Runs locally.">
-  <link rel="stylesheet" href="../../css/base.css?v=5" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
-  <link rel="stylesheet" href="../../css/game/casual-more.css?v=1" />
-  <style>
-    .mario-controls { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:12px; user-select:none; -webkit-user-select:none; }
-    .mario-controls button { width:60px; height:60px; font-size:22px; border-radius:14px; border:2px solid #ccc; background:#fff; cursor:pointer; touch-action:manipulation; display:flex; align-items:center; justify-content:center; }
-    .mario-controls button:active { background:#e5e7eb; transform:scale(0.92); }
-    .ctrl-row { display:flex; gap:10px; align-items:center; }
-    .ctrl-spacer { width:70px; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<title>蘑菇冒险 · Mushroom Quest</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;width:100%;height:100dvh;width:100dvw;
+  background:#020617;color:#e2e8f0;
+  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+  overflow:hidden;touch-action:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+#wrap{
+  position:fixed;left:50%;top:50%;
+  width:960px;height:540px;margin:0;
+  transform:translate(-50%,-50%);
+  background:#000;overflow:hidden;
+}
+canvas{display:block;width:100%;height:100%;image-rendering:auto}
+#hud{
+  position:absolute;left:0;right:0;top:0;z-index:2;
+  padding:8px 12px;font-size:13px;pointer-events:none;
+  text-shadow:0 1px 3px #000;display:flex;gap:12px;flex-wrap:wrap;
+}
+#hud b{color:#fde68a}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .pad{
+  pointer-events:auto;position:absolute;left:1.5%;bottom:2.5%;
+  width:11%;aspect-ratio:1;max-width:96px;min-width:52px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);
+}
+#touch .stick{
+  position:absolute;left:50%;top:50%;width:40%;height:40%;margin:-20% 0 0 -20%;
+  border-radius:50%;background:rgba(255,255,255,.32);transform:translate(0,0);
+}
+#touch .btn{
+  pointer-events:auto;position:absolute;right:1.5%;bottom:2.5%;
+  width:7%;aspect-ratio:1;max-width:56px;min-width:36px;border-radius:50%;
+  background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;
+}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{
+  pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(88%,340px);background:rgba(10,14,28,.94);border:1px solid #334155;
+  border-radius:14px;padding:14px 16px;
+}
+#ui h1{font-size:1.2rem;color:#fbbf24;margin-bottom:6px}
+#ui p{font-size:.8rem;line-height:1.4;color:#94a3b8;margin-bottom:6px}
+#ui .row{display:flex;gap:8px;margin-top:10px}
+#ui button{
+  font:inherit;flex:1;border:0;border-radius:999px;padding:12px 16px;
+  background:#2563eb;color:#fff;cursor:pointer;
+}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+.hidden{display:none!important}
+</style>
 </head>
 <body>
-  <div class="container"><aside class="sidebar"></aside><main class="content">
-    <div class="tool-header"><h1 data-i18n="tools.superMario.title">Super Mario</h1><p data-i18n="tools.superMario.desc">Jump, collect coins, stomp enemies in this classic platformer. Runs locally.</p></div>
-    <div class="tool-card game-card">
-      <div class="game-toolbar">
-        <div class="game-stats">
-          <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
-          <span><span data-i18n="tools.superMario.coins">Coins</span>: <strong id="coins">0</strong></span>
-          <span><span data-i18n="tools.superMario.lives">Lives</span>: <strong id="lives">3</strong></span>
-          <span><span data-i18n="tools.superMario.level">Level</span>: <strong id="level">1</strong></span>
-        </div>
-        <div class="action-row">
-          <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
-        </div>
-      </div>
-      <div class="game-status is-idle" id="status" data-i18n="tools.superMario.hint">Arrow keys / WASD to move, Space / ↑ to jump. Stomp enemies from above!</div>
-      <div class="game-board-wrap"><canvas id="canvas" class="game-emoji-canvas" width="480" height="320"></canvas></div>
-      <div class="mario-controls" id="touch-controls">
-        <div class="ctrl-row">
-          <button id="btn-left" title="Left">◀</button>
-          <button id="btn-right" title="Right">▶</button>
-          <div class="ctrl-spacer"></div>
-          <button id="btn-jump" title="Jump" style="background:#2563eb;color:#fff;border-color:#2563eb;font-size:26px;">▲</button>
-        </div>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <span>得分 <b id="score">0</b></span>
+    <span>金币 <b id="coins">0</b></span>
+    <span>生命 <b id="lives">3</b></span>
+    <span>关卡 <b id="level">1</b></span>
+    <span>最高 <b id="best">0</b></span>
+  </div>
+  <div id="touch">
+    <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
+    <div class="btn" id="btnJump">跳</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>蘑菇冒险</h1>
+      <p>横版闯关：吃金币、踩蘑菇怪、打问号砖、冲向旗杆。</p>
+      <p>WASD / 方向键移动 · 空格 / K / ↑ 跳跃</p>
+      <div class="row"><button id="btnStart">开战</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h1 id="overTitle">结束</h1>
+      <p id="overText"></p>
+      <div class="row">
+        <button id="btnRetry">再战</button>
+        <button class="ghost" id="btnMenu">标题</button>
       </div>
     </div>
-  </main></div>
-  <script src="../../js/locales/en.js"></script><script src="../../js/locales/zh-CN.js"></script>
-  <script src="../../js/i18n.js"></script><script src="../../js/config.js"></script><script src="../../js/base.js"></script>
-  <script src="../../js/game/super-mario.js?v=1"></script>
-</body></html>
+  </div>
+</div>
+<script>
+(function () {
+'use strict';
+const SAVE = 'tbc_mushroom_quest_v1';
+const BASE_W = 960, BASE_H = 540, TILE = 32;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const wrap = document.getElementById('wrap');
+const el = {
+  score: document.getElementById('score'),
+  coins: document.getElementById('coins'),
+  lives: document.getElementById('lives'),
+  level: document.getElementById('level'),
+  best: document.getElementById('best')
+};
+
+let W = BASE_W, H = BASE_H, drawSX = 1, drawSY = 1;
+let mode = 'menu', lastT = 0, best = 0;
+let keys = Object.create(null);
+let touchMove = { x: 0, y: 0 };
+let jumpQueued = false;
+let audioCtx = null;
+let camX = 0;
+let player = null;
+let tiles = []; // {x,y,w,h,kind} kind: ground|brick|q|pipe|flag
+let coins = [];
+let enemies = [];
+let particles = [];
+let floats = [];
+let worldW = 0;
+let invuln = 0;
+let level = 1;
+
+try { best = (JSON.parse(localStorage.getItem(SAVE) || '{}').best) | 0; } catch (e) {}
+el.best.textContent = String(best);
+
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function rand(a, b) { return a + Math.random() * (b - a); }
+function aabb(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+function ensureAudio() {
+  if (audioCtx) return audioCtx;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return null;
+  audioCtx = new AC();
+  return audioCtx;
+}
+function tone(freq, dur, type, vol, slide) {
+  const ac = ensureAudio(); if (!ac) return;
+  if (ac.state === 'suspended') ac.resume();
+  const t0 = ac.currentTime;
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t0);
+  if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, slide), t0 + dur);
+  g.gain.setValueAtTime(vol || 0.05, t0);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+  o.connect(g); g.connect(ac.destination);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+function sfx(n) {
+  if (n === 'jump') tone(280, 0.1, 'square', 0.04, 520);
+  else if (n === 'coin') tone(880, 0.08, 'sine', 0.045, 1400);
+  else if (n === 'stomp') tone(160, 0.09, 'triangle', 0.05, 80);
+  else if (n === 'hurt') tone(90, 0.16, 'sawtooth', 0.05, 40);
+  else if (n === 'bump') tone(120, 0.06, 'square', 0.03);
+  else if (n === 'power') tone(400, 0.14, 'triangle', 0.05, 900);
+  else if (n === 'flag') { tone(520, 0.12, 'sine', 0.05, 780); tone(780, 0.18, 'sine', 0.04, 1040); }
+  else if (n === 'die') tone(60, 0.35, 'sawtooth', 0.06, 30);
+  else if (n === 'start') tone(300, 0.1, 'sine', 0.045, 600);
+}
+
+function resize() {
+  const vw = Math.max(320, window.innerWidth | 0);
+  const vh = Math.max(240, window.innerHeight | 0);
+  const scale = Math.min(vw / BASE_W, vh / BASE_H);
+  const dispW = Math.max(1, Math.floor(BASE_W * scale));
+  const dispH = Math.max(1, Math.floor(BASE_H * scale));
+  wrap.style.width = dispW + 'px';
+  wrap.style.height = dispH + 'px';
+  const dpr = Math.min(2.5, devicePixelRatio || 1);
+  canvas.style.width = dispW + 'px';
+  canvas.style.height = dispH + 'px';
+  canvas.width = Math.floor(dispW * dpr);
+  canvas.height = Math.floor(dispH * dpr);
+  drawSX = canvas.width / BASE_W;
+  drawSY = canvas.height / BASE_H;
+  W = BASE_W; H = BASE_H;
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 100));
+
+function groundY() { return H - TILE * 2; }
+
+function addGround(x0, x1) {
+  const y = groundY();
+  tiles.push({ x: x0, y: y, w: x1 - x0, h: H - y, kind: 'ground' });
+}
+
+function buildLevel(lv) {
+  tiles = []; coins = []; enemies = []; particles = []; floats = [];
+  const len = 70 + lv * 12;
+  worldW = len * TILE;
+
+  // 地面分段（留坑）
+  const gaps = [];
+  const pits = 2 + (lv | 0);
+  for (let i = 0; i < pits; i++) {
+    const px = (14 + i * Math.floor((len - 20) / (pits + 1)) + (Math.random() * 3 | 0)) * TILE;
+    const pw = (2 + (Math.random() * 2 | 0)) * TILE;
+    gaps.push({ x: px, w: pw });
+  }
+  gaps.sort((a, b) => a.x - b.x);
+  let cursor = 0;
+  gaps.forEach(g => {
+    if (g.x > cursor) addGround(cursor, g.x);
+    cursor = Math.max(cursor, g.x + g.w);
+  });
+  if (cursor < worldW) addGround(cursor, worldW);
+
+  // 平台与砖
+  for (let i = 0; i < 8 + lv * 2; i++) {
+    const bx = (8 + Math.random() * (len - 16)) * TILE;
+    const by = groundY() - (3 + (Math.random() * 4 | 0)) * TILE;
+    const n = 2 + (Math.random() * 3 | 0);
+    for (let j = 0; j < n; j++) {
+      const kind = Math.random() > 0.55 ? 'q' : 'brick';
+      tiles.push({
+        x: bx + j * TILE, y: by, w: TILE, h: TILE, kind,
+        used: false, bump: 0
+      });
+    }
+  }
+
+  // 水管
+  for (let i = 0; i < 2 + (lv > 2 ? 1 : 0); i++) {
+    const px = (15 + i * 22 + (Math.random() * 6 | 0)) * TILE;
+    const ph = (2 + (Math.random() * 2 | 0)) * TILE;
+    tiles.push({ x: px, y: groundY() - ph, w: TILE * 2, h: ph, kind: 'pipe' });
+  }
+
+  // 金币
+  for (let i = 0; i < 12 + lv * 4; i++) {
+    coins.push({
+      x: (6 + Math.random() * (len - 10)) * TILE,
+      y: groundY() - (2 + (Math.random() * 5 | 0)) * TILE,
+      w: 14, h: 14, taken: false, spin: Math.random() * 10
+    });
+  }
+
+  // 怪
+  for (let i = 0; i < 6 + lv * 2; i++) {
+    enemies.push({
+      x: (10 + Math.random() * (len - 14)) * TILE,
+      y: groundY() - 28,
+      w: 28, h: 28,
+      vx: (Math.random() > 0.5 ? -1 : 1) * (55 + lv * 8),
+      dead: false, squish: 0, vy: 0
+    });
+  }
+
+  // 旗杆
+  tiles.push({
+    x: worldW - TILE * 5, y: groundY() - TILE * 8,
+    w: 8, h: TILE * 8, kind: 'flag'
+  });
+  tiles.push({
+    x: worldW - TILE * 5 - 10, y: groundY() - TILE * 8,
+    w: 28, h: 20, kind: 'flagtop'
+  });
+}
+
+function spawnPlayer(keepStats) {
+  const big = keepStats && player ? player.big : false;
+  player = {
+    x: TILE * 3, y: groundY() - (big ? 56 : 40),
+    w: 24, h: big ? 48 : 36,
+    vx: 0, vy: 0, onGround: false, facing: 1,
+    big: big, score: keepStats && player ? player.score : 0,
+    coins: keepStats && player ? player.coins : 0,
+    lives: keepStats && player ? player.lives : 3,
+    won: false
+  };
+  camX = 0;
+  invuln = 1.2;
+}
+
+function updateHud() {
+  if (!player) return;
+  el.score.textContent = String(player.score | 0);
+  el.coins.textContent = String(player.coins | 0);
+  el.lives.textContent = String(player.lives | 0);
+  el.level.textContent = String(level);
+  el.best.textContent = String(best);
+}
+
+function burst(x, y, c, n) {
+  for (let i = 0; i < n; i++) {
+    particles.push({
+      x, y, vx: rand(-120, 120), vy: rand(-220, -40),
+      life: rand(0.2, 0.45), c, r: rand(2, 4)
+    });
+  }
+}
+
+function solidTiles() {
+  return tiles.filter(t => t.kind !== 'flag' && t.kind !== 'flagtop');
+}
+
+function collideWorld(body, vx, vy) {
+  let nx = body.x + vx, ny = body.y + vy;
+  let hitX = false, hitY = false, onGround = false;
+  const box = { x: nx, y: body.y, w: body.w, h: body.h };
+  for (const t of solidTiles()) {
+    if (!aabb(box, t)) continue;
+    if (vx > 0) nx = t.x - body.w;
+    else if (vx < 0) nx = t.x + t.w;
+    hitX = true;
+  }
+  box.x = nx; box.y = ny;
+  for (const t of solidTiles()) {
+    if (!aabb(box, t)) continue;
+    if (vy > 0) {
+      ny = t.y - body.h;
+      onGround = true;
+    } else if (vy < 0) {
+      ny = t.y + t.h;
+      // 顶砖
+      if (t.kind === 'brick' || t.kind === 'q') bumpBlock(t);
+    }
+    hitY = true;
+  }
+  return { x: nx, y: ny, hitX, hitY, onGround };
+}
+
+function bumpBlock(t) {
+  if (t.bump > 0) return;
+  t.bump = 0.15;
+  sfx('bump');
+  if (t.kind === 'q' && !t.used) {
+    t.used = true;
+    t.kind = 'used';
+    if (Math.random() > 0.72 && !player.big) {
+      // 变大蘑菇用金币替代简单：直接变大
+      player.big = true;
+      player.h = 48;
+      player.y -= 12;
+      floats.push({ x: t.x, y: t.y - 20, t: 0, text: '变大!', c: '#f87171' });
+      sfx('power');
+    } else {
+      player.coins++;
+      player.score += 100;
+      floats.push({ x: t.x + 8, y: t.y - 10, t: 0, text: '+1', c: '#fbbf24' });
+      sfx('coin');
+      burst(t.x + 16, t.y, '#fde68a', 6);
+    }
+    updateHud();
+  } else if (t.kind === 'brick' && player.big) {
+    // 大个子砸砖
+    const idx = tiles.indexOf(t);
+    if (idx >= 0) tiles.splice(idx, 1);
+    player.score += 50;
+    burst(t.x + 16, t.y + 16, '#fb923c', 10);
+    updateHud();
+  }
+}
+
+function hurtPlayer() {
+  if (invuln > 0 || !player || player.won) return;
+  if (player.big) {
+    player.big = false;
+    player.h = 36;
+    invuln = 1.5;
+    sfx('hurt');
+    return;
+  }
+  player.lives--;
+  sfx('hurt');
+  updateHud();
+  if (player.lives <= 0) {
+    endGame(false);
+  } else {
+    spawnPlayer(true);
+    updateHud();
+  }
+}
+
+function endGame(win) {
+  mode = 'over';
+  const score = player ? player.score : 0;
+  best = Math.max(best, score);
+  try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
+  document.getElementById('panelOver').classList.remove('hidden');
+  document.getElementById('overTitle').textContent = win ? '过关！' : '冒险结束';
+  document.getElementById('overText').textContent =
+    (win ? `第 ${level} 关完成！` : '') + `得分 ${score} · 金币 ${player ? player.coins : 0} · 最高 ${best}`;
+  sfx(win ? 'flag' : 'die');
+  updateHud();
+}
+
+function nextLevel() {
+  level++;
+  player.score += 1000;
+  buildLevel(level);
+  spawnPlayer(true);
+  updateHud();
+  floats.push({ x: player.x, y: player.y - 40, t: 0, text: '第 ' + level + ' 关', c: '#38bdf8' });
+  sfx('power');
+}
+
+function newGame() {
+  ensureAudio();
+  level = 1;
+  buildLevel(level);
+  spawnPlayer(false);
+  mode = 'play';
+  document.getElementById('panelMenu').classList.add('hidden');
+  document.getElementById('panelOver').classList.add('hidden');
+  sfx('start');
+  updateHud();
+}
+
+function update(dt) {
+  if (mode !== 'play' || !player || player.won) return;
+
+  let ix = 0;
+  if (keys['a'] || keys['arrowleft']) ix -= 1;
+  if (keys['d'] || keys['arrowright']) ix += 1;
+  ix += touchMove.x > 0.25 ? 1 : touchMove.x < -0.25 ? -1 : 0;
+
+  const speed = player.big ? 210 : 190;
+  player.vx = ix * speed;
+  if (ix) player.facing = ix;
+
+  const wantJump = keys[' '] || keys['k'] || keys['arrowup'] || keys['w'] || jumpQueued;
+  if (wantJump && player.onGround) {
+    player.vy = player.big ? -520 : -480;
+    player.onGround = false;
+    sfx('jump');
+  }
+  jumpQueued = false;
+  keys[' '] = false;
+  keys['k'] = false;
+  keys['arrowup'] = false;
+  keys['w'] = false;
+
+  player.vy += 1650 * dt;
+  const stepX = collideWorld(player, player.vx * dt, 0);
+  player.x = stepX.x;
+  if (stepX.hitX) player.vx = 0;
+  const stepY = collideWorld(player, 0, player.vy * dt);
+  player.y = stepY.y;
+  if (stepY.hitY) {
+    if (player.vy > 0) player.onGround = true;
+    player.vy = 0;
+  } else player.onGround = stepY.onGround;
+
+  // 掉坑
+  if (player.y > H + 20) hurtPlayer();
+
+  // 旗杆
+  for (const t of tiles) {
+    if ((t.kind === 'flag' || t.kind === 'flagtop') && aabb(player, t)) {
+      player.won = true;
+      player.score += 500 + level * 200;
+      sfx('flag');
+      updateHud();
+      setTimeout(() => {
+        if (mode === 'play') nextLevel();
+      }, 700);
+      break;
+    }
+  }
+
+  // 金币
+  for (const c of coins) {
+    if (c.taken) continue;
+    c.spin += dt * 8;
+    if (aabb(player, c)) {
+      c.taken = true;
+      player.coins++;
+      player.score += 100;
+      sfx('coin');
+      burst(c.x, c.y, '#fde68a', 5);
+      updateHud();
+    }
+  }
+
+  // 敌人
+  for (const e of enemies) {
+    if (e.dead) {
+      e.squish += dt;
+      continue;
+    }
+    const er = collideWorld(e, e.vx * dt, 0);
+    e.x = er.x;
+    if (er.hitX) e.vx *= -1;
+    e.vy = (e.vy || 0) + 1650 * dt;
+    const ey = collideWorld(e, 0, e.vy * dt);
+    e.y = ey.y;
+    if (ey.hitY) e.vy = 0;
+
+    if (!aabb(player, e) || invuln > 0) continue;
+    // 踩
+    if (player.vy > 60 && player.y + player.h - e.y < 18) {
+      e.dead = true;
+      e.squish = 0;
+      player.vy = -320;
+      player.score += 200;
+      sfx('stomp');
+      burst(e.x + 14, e.y, '#a3e635', 8);
+      updateHud();
+    } else {
+      hurtPlayer();
+    }
+  }
+  enemies = enemies.filter(e => !e.dead || e.squish < 0.45);
+
+  // 砖回弹
+  tiles.forEach(t => { if (t.bump > 0) t.bump -= dt; });
+
+  camX = clamp(player.x - W * 0.35, 0, Math.max(0, worldW - W));
+  if (invuln > 0) invuln -= dt;
+
+  particles.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 500 * dt; p.life -= dt; });
+  particles = particles.filter(p => p.life > 0);
+  floats.forEach(f => { f.t += dt; f.y -= 28 * dt; });
+  floats = floats.filter(f => f.t < 1.2);
+}
+
+function wx(x) { return x - camX; }
+
+function draw() {
+  ctx.setTransform(drawSX, 0, 0, drawSY, 0, 0);
+  // 天空
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#5ec8ff');
+  g.addColorStop(1, '#b8ecff');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // 远山
+  ctx.fillStyle = '#7dd3a0';
+  for (let i = 0; i < 6; i++) {
+    const hx = ((i * 220 - camX * 0.2) % (W + 260) + W + 260) % (W + 260) - 80;
+    ctx.beginPath();
+    ctx.moveTo(hx, groundY());
+    ctx.lineTo(hx + 110, groundY() - 90);
+    ctx.lineTo(hx + 220, groundY());
+    ctx.fill();
+  }
+
+  // 云
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  for (let i = 0; i < 5; i++) {
+    const cx = ((i * 200 - camX * 0.15) % (W + 200) + W + 200) % (W + 200) - 40;
+    const cy = 50 + (i % 3) * 28;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+    ctx.arc(cx + 20, cy - 6, 22, 0, Math.PI * 2);
+    ctx.arc(cx + 42, cy, 16, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 砖
+  tiles.forEach(t => {
+    const x = wx(t.x), y = t.y - (t.bump > 0 ? 6 : 0);
+    if (x + t.w < -20 || x > W + 20) return;
+    if (t.kind === 'ground') {
+      ctx.fillStyle = '#c4a574';
+      ctx.fillRect(x, t.y, t.w + 1, t.h);
+      ctx.fillStyle = '#5a9e3e';
+      ctx.fillRect(x, t.y, t.w + 1, 10);
+    } else if (t.kind === 'brick') {
+      ctx.fillStyle = '#c2410c';
+      ctx.fillRect(x, y, t.w - 1, t.h - 1);
+      ctx.strokeStyle = '#7c2d12';
+      ctx.strokeRect(x + 0.5, y + 0.5, t.w - 2, t.h - 2);
+    } else if (t.kind === 'q' || t.kind === 'used') {
+      ctx.fillStyle = t.kind === 'used' ? '#a8a29e' : '#fbbf24';
+      ctx.fillRect(x, y, t.w - 1, t.h - 1);
+      if (t.kind === 'q') {
+        ctx.fillStyle = '#78350f';
+        ctx.font = 'bold 18px system-ui';
+        ctx.textAlign = 'center';
+        ctx.fillText('?', x + 15, y + 23);
+        ctx.textAlign = 'left';
+      }
+    } else if (t.kind === 'pipe') {
+      ctx.fillStyle = '#16a34a';
+      ctx.fillRect(x + 4, y + 14, t.w - 8, t.h - 14);
+      ctx.fillStyle = '#22c55e';
+      ctx.fillRect(x, y, t.w, 18);
+      ctx.fillStyle = '#15803d';
+      ctx.fillRect(x, y, 6, 18);
+      ctx.fillRect(x + t.w - 6, y, 6, 18);
+    } else if (t.kind === 'flag') {
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(x, y, t.w, t.h);
+    } else if (t.kind === 'flagtop') {
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + t.w, y + 10);
+      ctx.lineTo(x, y + t.h);
+      ctx.fill();
+    }
+  });
+
+  // 金币
+  coins.forEach(c => {
+    if (c.taken) return;
+    const x = wx(c.x), y = c.y + Math.sin(c.spin) * 3;
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath(); ctx.ellipse(x + 7, y + 7, 7, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fde68a';
+    ctx.fillRect(x + 5, y + 3, 4, 8);
+  });
+
+  // 敌人
+  enemies.forEach(e => {
+    const x = wx(e.x);
+    if (e.dead) {
+      ctx.fillStyle = '#78716c';
+      ctx.fillRect(x, e.y + 16, e.w, 10);
+      return;
+    }
+    ctx.fillStyle = '#78350f';
+    ctx.beginPath(); ctx.ellipse(x + 14, e.y + 16, 14, 12, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x + 6, e.y + 10, 6, 6);
+    ctx.fillRect(x + 16, e.y + 10, 6, 6);
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x + 8, e.y + 12, 3, 3);
+    ctx.fillRect(x + 18, e.y + 12, 3, 3);
+  });
+
+  // 玩家
+  if (player) {
+    const blink = invuln > 0 && ((invuln * 12) | 0) % 2 === 0;
+    if (!blink) {
+      const x = wx(player.x), y = player.y;
+      ctx.save();
+      ctx.translate(x + player.w / 2, y + player.h);
+      ctx.scale(player.facing, 1);
+      // 鞋
+      ctx.fillStyle = '#7c2d12';
+      ctx.fillRect(-12, -8, 10, 8);
+      ctx.fillRect(2, -8, 10, 8);
+      // 裤
+      ctx.fillStyle = '#1d4ed8';
+      ctx.fillRect(-10, player.big ? -28 : -22, 20, player.big ? 20 : 14);
+      // 身
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(-11, player.big ? -44 : -34, 22, player.big ? 18 : 14);
+      // 头
+      ctx.fillStyle = '#f5c6a0';
+      ctx.beginPath(); ctx.arc(0, player.big ? -52 : -40, 9, 0, Math.PI * 2); ctx.fill();
+      // 帽
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(-11, player.big ? -60 : -48, 22, 8);
+      ctx.fillRect(-6, player.big ? -64 : -52, 12, 6);
+      ctx.restore();
+    }
+  }
+
+  particles.forEach(p => {
+    ctx.globalAlpha = clamp(p.life * 2, 0, 1);
+    ctx.fillStyle = p.c;
+    ctx.beginPath(); ctx.arc(wx(p.x), p.y, p.r, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  floats.forEach(f => {
+    ctx.globalAlpha = 1 - f.t / 1.2;
+    ctx.fillStyle = f.c;
+    ctx.font = 'bold 16px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(f.text, wx(f.x), f.y);
+    ctx.textAlign = 'left';
+  });
+  ctx.globalAlpha = 1;
+
+  if (mode === 'menu') {
+    ctx.fillStyle = 'rgba(0,0,0,.25)';
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+
+function loop(ts) {
+  const dt = Math.min(0.033, (ts - lastT) / 1000 || 0.016);
+  lastT = ts;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  keys[k] = true;
+  if (mode === 'play' && (k === ' ' || k === 'k' || k === 'arrowup' || k === 'w')) {
+    e.preventDefault();
+    jumpQueued = true;
+  }
+});
+window.addEventListener('keyup', e => {
+  keys[e.key.toLowerCase()] = false;
+});
+
+(function touch() {
+  const pad = document.getElementById('pad');
+  const stick = document.getElementById('stick');
+  let stickId = null;
+  function setStick(cx, cy) {
+    const rect = pad.getBoundingClientRect();
+    if (rect.width < 1) return;
+    const lw = pad.clientWidth, lh = pad.clientHeight;
+    const lx = (cx - rect.left) / rect.width * lw;
+    const ly = (cy - rect.top) / rect.height * lh;
+    let x = lx - lw / 2, y = ly - lh / 2;
+    const m = Math.hypot(x, y) || 1;
+    const mag = clamp(m / (lw * 0.36), 0, 1);
+    x = (x / m) * mag; y = (y / m) * mag;
+    touchMove = { x, y };
+    const travel = lw * 0.2;
+    stick.style.transform = 'translate(' + (x * travel) + 'px,' + (y * travel) + 'px)';
+  }
+  function endStick() {
+    stickId = null;
+    touchMove = { x: 0, y: 0 };
+    stick.style.transform = 'translate(0,0)';
+  }
+  function byId(list, id) {
+    for (let i = 0; i < list.length; i++) if (list[i].identifier === id) return list[i];
+    return null;
+  }
+  pad.addEventListener('touchstart', e => {
+    e.preventDefault(); ensureAudio();
+    if (stickId != null) return;
+    stickId = e.changedTouches[0].identifier;
+    setStick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  }, { passive: false });
+  window.addEventListener('touchmove', e => {
+    if (stickId == null) return;
+    const t = byId(e.touches, stickId);
+    if (!t) return;
+    e.preventDefault();
+    setStick(t.clientX, t.clientY);
+  }, { passive: false });
+  function onEnd(e) {
+    if (stickId != null && byId(e.changedTouches, stickId)) endStick();
+  }
+  window.addEventListener('touchend', onEnd, { passive: false });
+  window.addEventListener('touchcancel', onEnd, { passive: false });
+  document.getElementById('btnJump').addEventListener('touchstart', e => {
+    e.preventDefault(); ensureAudio(); jumpQueued = true;
+  }, { passive: false });
+})();
+
+document.getElementById('btnStart').onclick = () => newGame();
+document.getElementById('btnRetry').onclick = () => newGame();
+document.getElementById('btnMenu').onclick = () => {
+  mode = 'menu';
+  document.getElementById('panelOver').classList.add('hidden');
+  document.getElementById('panelMenu').classList.remove('hidden');
+};
+
+resize();
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
