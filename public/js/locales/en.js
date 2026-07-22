@@ -531,6 +531,10 @@ window.TB_LOCALES.en = {
             title: 'Arena Strike',
             desc: 'Offline 3D gunfight on Three.js — procedural PBR textures, WebAudio SFX, bot waves.'
         },
+        gardenDefense: {
+            title: 'Sunny Garden',
+            desc: 'Procedural 2D tower defense — plant, collect sun, stop shamblers. No external art.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

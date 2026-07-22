@@ -182,7 +182,8 @@ const gamesConfig = {
                 { titleKey: 'tools.parkour.title', url: 'html/game/parkour.html' },
                 { titleKey: 'tools.cubeRush.title', url: 'html/game/cube-rush.html' },
                 { titleKey: 'tools.arenaBrawl.title', url: 'html/game/arena-brawl.html' },
-                { titleKey: 'tools.arenaStrike.title', url: 'html/game/arena-strike.html' }
+                { titleKey: 'tools.arenaStrike.title', url: 'html/game/arena-strike.html' },
+                { titleKey: 'tools.gardenDefense.title', url: 'html/game/garden-defense.html' }
             ]
         }
     ]

@@ -530,6 +530,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '巷战突袭',
             desc: '单机 3D 枪战（Three.js）：程序化 PBR 贴图 + WebAudio 音效，清波次 Bot。'
         },
+        gardenDefense: {
+            title: '阳光菜园',
+            desc: '纯程序化 2D 塔防：种植、收阳光、挡住僵尸。无外部贴图。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',
