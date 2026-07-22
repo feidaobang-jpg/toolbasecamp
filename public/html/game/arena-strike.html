@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>巷战突袭 · Arena Strike</title>
+<!-- three@0.170.0 via jsDelivr -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+  }
+}
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#020617;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:1100px;margin:0 auto;background:#000}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;inset:0;pointer-events:none}
+#cross{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px}
+#cross::before,#cross::after{content:'';position:absolute;background:#e2e8f0;opacity:.85}
+#cross::before{left:8px;top:0;width:2px;height:18px}
+#cross::after{left:0;top:8px;width:18px;height:2px}
+#stats{position:absolute;left:12px;top:10px;font-size:13px;text-shadow:0 1px 3px #000;line-height:1.55}
+#stats b{color:#fde68a}
+#hpWrap{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:min(280px,70%);height:12px;background:#1e293b;border:1px solid #475569;border-radius:6px;overflow:hidden}
+#hpBar{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ef4444,#fbbf24)}
+#dmgFlash{position:absolute;inset:0;background:rgba(220,38,38,.35);opacity:0;transition:opacity .08s;pointer-events:none}
+#hitMark{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);color:#fbbf24;font-weight:800;font-size:18px;opacity:0;pointer-events:none}
+#ui{position:absolute;inset:0;pointer-events:none}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,420px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:16px;padding:20px 18px;box-shadow:0 20px 60px rgba(0,0,0,.55)}
+#ui h1{font-size:1.45rem;color:#38bdf8;margin-bottom:8px}
+#ui p{font-size:.88rem;line-height:1.5;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+#ui button{font:inherit;flex:1;min-width:120px;border:0;border-radius:999px;padding:11px 16px;background:#2563eb;color:#fff;cursor:pointer}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#touch{display:none;position:absolute;inset:0;pointer-events:none}
+#touch .pad{pointer-events:auto;position:absolute;left:14px;bottom:18px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2)}
+#touch .stick{position:absolute;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.3);left:36px;top:36px}
+#touch .look{pointer-events:auto;position:absolute;right:0;top:0;bottom:0;width:55%}
+#touch .fire{pointer-events:auto;position:absolute;right:18px;bottom:28px;width:72px;height:72px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center}
+@media(pointer:coarse){#touch{display:block}#cross{opacity:.7}}
+.hidden{display:none!important}
+#credit{position:absolute;left:10px;bottom:8px;font-size:10px;color:rgba(148,163,184,.65);pointer-events:none}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="hud">
+    <div id="cross"></div>
+    <div id="stats">HP <b id="hpTxt">100</b> · 击杀 <b id="kills">0</b> · 波次 <b id="wave">1</b> · 最高 <b id="best">0</b></div>
+    <div id="hpWrap"><i id="hpBar"></i></div>
+    <div id="dmgFlash"></div>
+    <div id="hitMark">HIT</div>
+  </div>
+  <div id="touch">
+    <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
+    <div class="look" id="lookZone"></div>
+    <div class="fire" id="btnFire">开火</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>巷战突袭</h1>
+      <p>单机简易 3D 枪战（Three.js）。纯色几何体场景，无贴图、无音效。清波次 Bot，挑战最高击杀。</p>
+      <p>键鼠：点击锁定鼠标 · WASD 移动 · 鼠标瞄准 · 左键开火<br/>触屏：左摇杆移动 · 右侧滑动瞄准 · 开火键</p>
+      <div class="row"><button id="btnStart">开战</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h1 id="overTitle">战斗结束</h1>
+      <p id="overText"></p>
+      <div class="row">
+        <button id="btnRetry">再战</button>
+        <button class="ghost" id="btnMenu">标题</button>
+      </div>
+    </div>
+  </div>
+  <div id="credit">Three.js 0.170 · 几何体场景 · 无外部贴图/音频</div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+
+const SAVE = 'tbc_arena_strike_v1';
+const wrap = document.getElementById('wrap');
+const statsEl = {
+  hp: document.getElementById('hpTxt'),
+  kills: document.getElementById('kills'),
+  wave: document.getElementById('wave'),
+  best: document.getElementById('best'),
+  bar: document.getElementById('hpBar'),
+  flash: document.getElementById('dmgFlash'),
+  hit: document.getElementById('hitMark')
+};
+
+let best = 0;
+try { best = (JSON.parse(localStorage.getItem(SAVE) || '{}').best) | 0; } catch (e) {}
+statsEl.best.textContent = String(best);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+renderer.shadowMap.enabled = true;
+wrap.insertBefore(renderer.domElement, wrap.firstChild);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87a0b8);
+scene.fog = new THREE.Fog(0x87a0b8, 28, 75);
+
+const camera = new THREE.PerspectiveCamera(75, 1, 0.08, 120);
+const clock = new THREE.Clock();
+const raycaster = new THREE.Raycaster();
+const tmpV = new THREE.Vector3();
+const tmpV2 = new THREE.Vector3();
+
+let mode = 'menu';
+let yaw = 0, pitch = 0;
+let player = null;
+let bots = [];
+let solids = [];
+let bullets = [];
+let muzzleFlash = null;
+let keys = Object.create(null);
+let pointerLocked = false;
+let touchMove = { x: 0, y: 0 };
+let lookTouch = null;
+let fireHeld = false;
+let shootCd = 0;
+let hitFlashT = 0;
+let worldTime = 0;
+
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function resize() {
+  const r = wrap.getBoundingClientRect();
+  const w = Math.max(320, r.width | 0);
+  const h = Math.max(240, r.height | 0);
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+
+function mat(color, opts = {}) {
+  return new THREE.MeshStandardMaterial({
+    color, roughness: opts.roughness ?? 0.85, metalness: opts.metalness ?? 0.05, flatShading: !!opts.flat
+  });
+}
+
+function addBox(x, y, z, sx, sy, sz, color, collidable = true) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), mat(color));
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  if (collidable) {
+    solids.push({
+      min: new THREE.Vector3(x - sx / 2, y - sy / 2, z - sz / 2),
+      max: new THREE.Vector3(x + sx / 2, y + sy / 2, z + sz / 2),
+      mesh
+    });
+  }
+  return mesh;
+}
+
+function buildMap() {
+  while (scene.children.length) scene.remove(scene.children[0]);
+  solids = [];
+
+  const hemi = new THREE.HemisphereLight(0xbdd4ff, 0x3a3a2a, 0.85);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xfff1d6, 1.05);
+  sun.position.set(18, 28, 10);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.camera.near = 2;
+  sun.shadow.camera.far = 80;
+  sun.shadow.camera.left = -35;
+  sun.shadow.camera.right = 35;
+  sun.shadow.camera.top = 35;
+  sun.shadow.camera.bottom = -35;
+  scene.add(sun);
+
+  // floor / ceiling-ish walls of arena
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), mat(0x5a6b52));
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // outer walls
+  addBox(0, 2, -30, 60, 4, 1.2, 0x6b7280);
+  addBox(0, 2, 30, 60, 4, 1.2, 0x6b7280);
+  addBox(-30, 2, 0, 1.2, 4, 60, 0x6b7280);
+  addBox(30, 2, 0, 1.2, 4, 60, 0x6b7280);
+
+  // cover crates / walls (CS-ish mid)
+  const crates = [
+    [0, 1, 0, 3, 2, 3, 0x8b5a2b],
+    [-8, 1.2, -6, 4, 2.4, 1.2, 0x78716c],
+    [8, 1.2, 6, 4, 2.4, 1.2, 0x78716c],
+    [-12, 1.5, 10, 2, 3, 6, 0x57534e],
+    [12, 1.5, -10, 2, 3, 6, 0x57534e],
+    [-4, 1, 14, 6, 2, 2, 0x854d0e],
+    [4, 1, -14, 6, 2, 2, 0x854d0e],
+    [-18, 1, -2, 3, 2, 3, 0x44403c],
+    [18, 1, 2, 3, 2, 3, 0x44403c],
+    [0, 1.5, 20, 8, 3, 1.5, 0x64748b],
+    [0, 1.5, -20, 8, 3, 1.5, 0x64748b]
+  ];
+  crates.forEach(c => addBox(...c));
+
+  // ramp-ish blocks
+  addBox(-20, 0.6, 18, 5, 1.2, 5, 0x4b5563);
+  addBox(20, 0.6, -18, 5, 1.2, 5, 0x4b5563);
+
+  muzzleFlash = new THREE.PointLight(0xffcc66, 0, 8);
+  scene.add(muzzleFlash);
+}
+
+function aabbOverlap(amin, amax, bmin, bmax) {
+  return amin.x < bmax.x && amax.x > bmin.x &&
+    amin.y < bmax.y && amax.y > bmin.y &&
+    amin.z < bmax.z && amax.z > bmin.z;
+}
+
+function resolveCircle(pos, radius, feetY, height) {
+  const min = new THREE.Vector3(pos.x - radius, feetY, pos.z - radius);
+  const max = new THREE.Vector3(pos.x + radius, feetY + height, pos.z + radius);
+  for (const s of solids) {
+    if (!aabbOverlap(min, max, s.min, s.max)) continue;
+    const dx1 = s.max.x - min.x;
+    const dx2 = max.x - s.min.x;
+    const dz1 = s.max.z - min.z;
+    const dz2 = max.z - s.min.z;
+    const ox = dx1 < dx2 ? -dx1 : dx2;
+    const oz = dz1 < dz2 ? -dz1 : dz2;
+    if (Math.abs(ox) < Math.abs(oz)) pos.x += ox;
+    else pos.z += oz;
+    min.x = pos.x - radius; max.x = pos.x + radius;
+    min.z = pos.z - radius; max.z = pos.z + radius;
+  }
+  pos.x = clamp(pos.x, -28.5, 28.5);
+  pos.z = clamp(pos.z, -28.5, 28.5);
+}
+
+function makeBotMesh(teamColor) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.35, 0.9, 4, 8), mat(teamColor, { flat: true }));
+  body.position.y = 1.1;
+  body.castShadow = true;
+  g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 10), mat(0xf1c27d));
+  head.position.y = 1.95;
+  head.castShadow = true;
+  g.add(head);
+  const gun = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.7), mat(0x1f2937, { metalness: 0.4 }));
+  gun.position.set(0.25, 1.25, 0.35);
+  g.add(gun);
+  g.userData.body = body;
+  return g;
+}
+
+function spawnBot(x, z) {
+  const mesh = makeBotMesh(0xb91c1c);
+  mesh.position.set(x, 0, z);
+  scene.add(mesh);
+  const bot = {
+    mesh, hp: 60, maxHp: 60, speed: 3.2 + Math.random() * 0.8,
+    shootCd: 0.6 + Math.random(), aimErr: 0.04 + Math.random() * 0.05,
+    alive: true, hitFlash: 0
+  };
+  bots.push(bot);
+  return bot;
+}
+
+function clearBots() {
+  bots.forEach(b => scene.remove(b.mesh));
+  bots = [];
+}
+
+function updateHud() {
+  if (!player) return;
+  statsEl.hp.textContent = String(Math.max(0, player.hp | 0));
+  statsEl.bar.style.width = (100 * player.hp / player.maxHp) + '%';
+  statsEl.kills.textContent = String(player.kills);
+  statsEl.wave.textContent = String(player.wave);
+  statsEl.best.textContent = String(best);
+}
+
+function showHit() {
+  hitFlashT = 0.18;
+  statsEl.hit.style.opacity = '1';
+}
+
+function playerHurt(dmg) {
+  if (!player || mode !== 'play') return;
+  player.hp -= dmg;
+  statsEl.flash.style.opacity = '1';
+  setTimeout(() => { statsEl.flash.style.opacity = '0'; }, 80);
+  updateHud();
+  if (player.hp <= 0) {
+    player.hp = 0;
+    endGame(false);
+  }
+}
+
+function endGame(win) {
+  mode = 'over';
+  document.exitPointerLock?.();
+  const score = player.kills * 100 + player.wave * 50;
+  best = Math.max(best, score);
+  try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
+  document.getElementById('panelOver').classList.remove('hidden');
+  document.getElementById('overTitle').textContent = win ? '清场胜利' : '你倒下了';
+  document.getElementById('overText').textContent = `得分 ${score} · 击杀 ${player.kills} · 波次 ${player.wave} · 最高 ${best}`;
+  updateHud();
+}
+
+function spawnWave() {
+  const n = 3 + player.wave;
+  const spots = [
+    [-22, -22], [22, -22], [-22, 22], [22, 22],
+    [0, -24], [0, 24], [-24, 0], [24, 0]
+  ];
+  for (let i = 0; i < n; i++) {
+    const s = spots[i % spots.length];
+    const j = (Math.random() - 0.5) * 3;
+    spawnBot(s[0] + j, s[1] - j);
+  }
+}
+
+function newGame() {
+  buildMap();
+  clearBots();
+  bullets = [];
+  yaw = 0; pitch = 0;
+  player = {
+    pos: new THREE.Vector3(0, 1.6, 8),
+    vel: new THREE.Vector3(),
+    hp: 100, maxHp: 100,
+    kills: 0, wave: 1, radius: 0.35, height: 1.7,
+    invuln: 0
+  };
+  camera.position.copy(player.pos);
+  mode = 'play';
+  worldTime = 0;
+  document.getElementById('panelMenu').classList.add('hidden');
+  document.getElementById('panelOver').classList.add('hidden');
+  spawnWave();
+  updateHud();
+  // desktop: request lock on start click already happened
+  if (!('ontouchstart' in window)) {
+    renderer.domElement.requestPointerLock?.();
+  }
+}
+
+function losBlocked(from, to) {
+  const dir = tmpV.copy(to).sub(from);
+  const dist = dir.length();
+  if (dist < 0.01) return true;
+  dir.multiplyScalar(1 / dist);
+  raycaster.set(from, dir);
+  raycaster.far = dist;
+  const hits = raycaster.intersectObjects(solids.map(s => s.mesh), false);
+  return hits.length > 0 && hits[0].distance < dist - 0.2;
+}
+
+function tryShoot() {
+  if (mode !== 'play' || !player || shootCd > 0) return;
+  shootCd = 0.16;
+  muzzleFlash.intensity = 2.2;
+  muzzleFlash.position.copy(camera.position).add(tmpV.set(0, -0.05, -0.4).applyQuaternion(camera.quaternion));
+
+  raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+  raycaster.far = 80;
+  const botMeshes = bots.filter(b => b.alive).map(b => b.mesh);
+  const hits = raycaster.intersectObjects(botMeshes, true);
+  let hitBot = null;
+  let hitPoint = null;
+  if (hits.length) {
+    let root = hits[0].object;
+    while (root.parent && root.parent !== scene) root = root.parent;
+    const wallHit = raycaster.intersectObjects(solids.map(s => s.mesh), false);
+    if (!wallHit.length || wallHit[0].distance > hits[0].distance) {
+      hitBot = bots.find(b => b.mesh === root);
+      hitPoint = hits[0].point.clone();
+    }
+  }
+  // tracer
+  const start = camera.position.clone().add(new THREE.Vector3(0.15, -0.12, -0.3).applyQuaternion(camera.quaternion));
+  const end = hitPoint || camera.position.clone().add(raycaster.ray.direction.clone().multiplyScalar(40));
+  bullets.push({ a: start, b: end, t: 0.07 });
+
+  if (hitBot && hitBot.alive) {
+    hitBot.hp -= 34;
+    hitBot.hitFlash = 0.15;
+    hitBot.mesh.userData.body.material.emissive = new THREE.Color(0xffffff);
+    hitBot.mesh.userData.body.material.emissiveIntensity = 0.7;
+    showHit();
+    if (hitBot.hp <= 0) {
+      hitBot.alive = false;
+      hitBot.mesh.visible = false;
+      player.kills++;
+      updateHud();
+      if (bots.every(b => !b.alive)) {
+        player.wave++;
+        if (player.wave > 6) endGame(true);
+        else spawnWave();
+        updateHud();
+      }
+    }
+  }
+}
+
+function updatePlayer(dt) {
+  let mx = 0, mz = 0;
+  if (keys['w'] || keys['arrowup']) mz -= 1;
+  if (keys['s'] || keys['arrowdown']) mz += 1;
+  if (keys['a'] || keys['arrowleft']) mx -= 1;
+  if (keys['d'] || keys['arrowright']) mx += 1;
+  mx += touchMove.x;
+  mz += touchMove.y;
+  const len = Math.hypot(mx, mz) || 1;
+  if (len > 1) { mx /= len; mz /= len; }
+
+  const forward = new THREE.Vector3(Math.sin(yaw), 0, Math.cos(yaw));
+  const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+  const wish = right.multiplyScalar(mx).add(forward.multiplyScalar(mz));
+  const speed = 7.2;
+  player.pos.x += wish.x * speed * dt;
+  player.pos.z += wish.z * speed * dt;
+  resolveCircle(player.pos, player.radius, 0, player.height);
+  player.pos.y = 1.6;
+  if (player.invuln > 0) player.invuln -= dt;
+
+  camera.position.copy(player.pos);
+  camera.rotation.order = 'YXZ';
+  camera.rotation.y = yaw;
+  camera.rotation.x = pitch;
+
+  if (fireHeld) tryShoot();
+}
+
+function updateBots(dt) {
+  const eye = player.pos;
+  for (const b of bots) {
+    if (!b.alive) continue;
+    if (b.hitFlash > 0) {
+      b.hitFlash -= dt;
+      if (b.hitFlash <= 0) {
+        b.mesh.userData.body.material.emissiveIntensity = 0;
+      }
+    }
+    const p = b.mesh.position;
+    const toPlayer = tmpV2.set(eye.x - p.x, 0, eye.z - p.z);
+    const dist = toPlayer.length();
+    if (dist > 0.001) toPlayer.multiplyScalar(1 / dist);
+    b.mesh.rotation.y = Math.atan2(toPlayer.x, toPlayer.z);
+
+    const head = new THREE.Vector3(p.x, 1.6, p.z);
+    const canSee = dist < 32 && !losBlocked(head, eye);
+
+    if (dist > 6 || !canSee) {
+      // chase
+      p.x += toPlayer.x * b.speed * dt;
+      p.z += toPlayer.z * b.speed * dt;
+      resolveCircle(p, 0.35, 0, 1.9);
+    } else if (dist < 4) {
+      // back off slightly
+      p.x -= toPlayer.x * b.speed * 0.5 * dt;
+      p.z -= toPlayer.z * b.speed * 0.5 * dt;
+      resolveCircle(p, 0.35, 0, 1.9);
+    }
+
+    b.shootCd -= dt;
+    if (canSee && b.shootCd <= 0 && dist < 28) {
+      b.shootCd = 0.55 + Math.random() * 0.45;
+      // imperfect aim
+      const aim = eye.clone().add(new THREE.Vector3(
+        (Math.random() - 0.5) * b.aimErr * dist * 8,
+        (Math.random() - 0.5) * 0.3,
+        (Math.random() - 0.5) * b.aimErr * dist * 8
+      ));
+      if (!losBlocked(head, aim) && Math.random() < 0.55) {
+        // hit chance scales with distance
+        const acc = clamp(1.15 - dist / 35, 0.25, 0.9);
+        if (Math.random() < acc && player.invuln <= 0) {
+          playerHurt(9 + Math.random() * 6);
+          player.invuln = 0.12;
+        }
+      }
+      bullets.push({ a: head.clone().add(toPlayer.clone().multiplyScalar(0.4)), b: aim, t: 0.06, enemy: true });
+    }
+  }
+}
+
+function updateBullets(dt) {
+  bullets.forEach(b => { b.t -= dt; });
+  bullets = bullets.filter(b => b.t > 0);
+}
+
+function drawTracers() {
+  // remove old tracer lines each frame via dedicated group would be cleaner;
+  // draw with immediate-ish helpers: use transient Line objects
+  if (!drawTracers.group) {
+    drawTracers.group = new THREE.Group();
+    scene.add(drawTracers.group);
+  }
+  while (drawTracers.group.children.length) {
+    const c = drawTracers.group.children[0];
+    drawTracers.group.remove(c);
+    c.geometry.dispose();
+    c.material.dispose();
+  }
+  for (const b of bullets) {
+    const geo = new THREE.BufferGeometry().setFromPoints([b.a, b.b]);
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({
+      color: b.enemy ? 0xf97316 : 0xfef08a,
+      transparent: true,
+      opacity: clamp(b.t * 12, 0, 1)
+    }));
+    drawTracers.group.add(line);
+  }
+}
+
+function tick() {
+  const dt = Math.min(0.033, clock.getDelta());
+  worldTime += dt;
+  if (muzzleFlash) muzzleFlash.intensity = Math.max(0, muzzleFlash.intensity - dt * 18);
+  if (hitFlashT > 0) {
+    hitFlashT -= dt;
+    if (hitFlashT <= 0) statsEl.hit.style.opacity = '0';
+  }
+  if (shootCd > 0) shootCd -= dt;
+
+  if (mode === 'play' && player) {
+    updatePlayer(dt);
+    updateBots(dt);
+    updateBullets(dt);
+    drawTracers();
+  }
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(tick);
+}
+
+// —— input ——
+renderer.domElement.addEventListener('click', () => {
+  if (mode === 'play' && !('ontouchstart' in window)) {
+    renderer.domElement.requestPointerLock?.();
+    tryShoot();
+  }
+});
+document.addEventListener('pointerlockchange', () => {
+  pointerLocked = document.pointerLockElement === renderer.domElement;
+});
+document.addEventListener('mousemove', (e) => {
+  if (mode !== 'play' || !pointerLocked) return;
+  const sens = 0.0022;
+  yaw -= e.movementX * sens;
+  pitch -= e.movementY * sens;
+  pitch = clamp(pitch, -1.4, 1.4);
+});
+window.addEventListener('keydown', (e) => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.code === 'Space') e.preventDefault();
+});
+window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+window.addEventListener('mousedown', (e) => {
+  if (e.button === 0 && mode === 'play') fireHeld = true;
+});
+window.addEventListener('mouseup', (e) => {
+  if (e.button === 0) fireHeld = false;
+});
+
+(function touch() {
+  const pad = document.getElementById('pad');
+  const stick = document.getElementById('stick');
+  const lookZone = document.getElementById('lookZone');
+  function setStick(cx, cy) {
+    const r = pad.getBoundingClientRect();
+    let x = cx - (r.left + r.width / 2);
+    let y = cy - (r.top + r.height / 2);
+    const m = Math.hypot(x, y) || 1;
+    const max = 40;
+    const mag = clamp(m / max, 0, 1);
+    x /= m; y /= m;
+    touchMove = { x: x * mag, y: y * mag };
+    stick.style.left = (36 + x * mag * 28) + 'px';
+    stick.style.top = (36 + y * mag * 28) + 'px';
+  }
+  function endStick() {
+    touchMove = { x: 0, y: 0 };
+    stick.style.left = '36px';
+    stick.style.top = '36px';
+  }
+  pad.addEventListener('touchstart', e => { e.preventDefault(); const t = e.changedTouches[0]; setStick(t.clientX, t.clientY); }, { passive: false });
+  pad.addEventListener('touchmove', e => { e.preventDefault(); const t = e.changedTouches[0]; setStick(t.clientX, t.clientY); }, { passive: false });
+  pad.addEventListener('touchend', e => { e.preventDefault(); endStick(); }, { passive: false });
+
+  lookZone.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.changedTouches[0];
+    lookTouch = { id: t.identifier, x: t.clientX, y: t.clientY };
+  }, { passive: false });
+  lookZone.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!lookTouch || mode !== 'play') return;
+    for (const t of e.changedTouches) {
+      if (t.identifier !== lookTouch.id) continue;
+      const dx = t.clientX - lookTouch.x;
+      const dy = t.clientY - lookTouch.y;
+      lookTouch.x = t.clientX; lookTouch.y = t.clientY;
+      yaw -= dx * 0.005;
+      pitch -= dy * 0.004;
+      pitch = clamp(pitch, -1.4, 1.4);
+    }
+  }, { passive: false });
+  lookZone.addEventListener('touchend', e => {
+    e.preventDefault();
+    for (const t of e.changedTouches) {
+      if (lookTouch && t.identifier === lookTouch.id) lookTouch = null;
+    }
+  }, { passive: false });
+
+  const fire = document.getElementById('btnFire');
+  fire.addEventListener('touchstart', e => { e.preventDefault(); fireHeld = true; tryShoot(); }, { passive: false });
+  fire.addEventListener('touchend', e => { e.preventDefault(); fireHeld = false; }, { passive: false });
+})();
+
+document.getElementById('btnStart').onclick = () => newGame();
+document.getElementById('btnRetry').onclick = () => newGame();
+document.getElementById('btnMenu').onclick = () => {
+  mode = 'menu';
+  document.getElementById('panelOver').classList.add('hidden');
+  document.getElementById('panelMenu').classList.remove('hidden');
+};
+
+buildMap();
+camera.position.set(0, 1.6, 10);
+camera.lookAt(0, 1.2, 0);
+tick();
+</script>
+</body>
+</html>

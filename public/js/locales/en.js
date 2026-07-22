@@ -527,6 +527,10 @@ window.TB_LOCALES.en = {
             title: 'Arena Brawl',
             desc: '2.5D arcade brawler — all Canvas-drawn, no images. Combos, hitstop and heavy VFX.'
         },
+        arenaStrike: {
+            title: 'Arena Strike',
+            desc: 'Simple offline 3D gunfight with Three.js — geometry-only map, no textures or audio. Clear bot waves.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

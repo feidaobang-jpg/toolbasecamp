@@ -526,6 +526,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '街机乱斗',
             desc: '横版 2.5D 对战：纯 Canvas 自绘角色场景，无外部图片。连招、打击停顿与特效。'
         },
+        arenaStrike: {
+            title: '巷战突袭',
+            desc: '单机简易 3D 枪战（Three.js）：纯色几何体地图，无贴图无音效。清波次 Bot。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

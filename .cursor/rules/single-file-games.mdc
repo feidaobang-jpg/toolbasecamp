@@ -1,5 +1,5 @@
 ---
-description: 休闲小游戏须单 HTML：Canvas 程序化绘制 + WebAudio + localStorage + 触屏；优先 2D
+description: 休闲小游戏约定：单 HTML、程序化绘制；默认零依赖，3D/复杂玩法可引入引擎
 globs: public/html/game/**/*
 alwaysApply: true
 ---
@@ -10,19 +10,20 @@ alwaysApply: true
 
 ## 形态
 
-- **优先单 HTML 文件**：`public/html/game/<name>.html`，内联 CSS + JS。
-- **禁止外部依赖**：不引用 CDN、图片/音频/字体素材包、Three.js 等库；不拆成必须联网才能玩的资源。
-- **2D Canvas 优先**：零依赖下用 Canvas 2D 程序化绘制。  
-- **真 3D 需用户明确要求**：可用裸 WebGL（禁止 Three.js 等外部库），保持单文件；优先极简玩法（如跑道躲避）。
-- 可接入游戏中心（`config.js` 的 `gamesConfig` + 中英文 `locales`），但游戏本体仍须能单独打开运行。
+- **优先单 HTML 文件**：`public/html/game/<name>.html`，内联 CSS + JS（可用 `type="module"`）。
+- **默认零外部依赖**：不引用图片/音频/字体素材包；不拆成必须额外下载贴图才能玩的资源。
+- **2D Canvas 优先**：零依赖下用 Canvas 2D 程序化绘制。
+- **可引入引擎（按需）**：用户明确要求 3D / 复杂场景时，允许通过 CDN 引入 **Three.js、Babylon.js** 等引擎（`importmap` 或 ESM CDN）。引擎只负责渲染与数学；场景与角色仍优先用代码几何体/材质色块，不默认上贴图。
+- **裸 WebGL**：仅在明确要求「无引擎」时使用。
+- 可接入游戏中心（`config.js` 的 `gamesConfig` + 中英文 `locales`），但游戏本体仍须能单独打开运行（允许依赖一次 CDN；离线不可玩需在标题说明）。
 
 ## 必须具备
 
-1. **Canvas 程序化绘制**  
-   场景、角色、UI 装饰均用代码画；不依赖贴图。
+1. **程序化外观**  
+   场景、角色、UI 装饰优先代码生成；不依赖贴图包。使用引擎时用 `BoxGeometry` / `Capsule` / 纯色 `MeshStandardMaterial` 等即可。
 
-2. **WebAudio 音效**  
-   用 `AudioContext` 合成短音效（跳、撞、得分等）；不引用外部音频文件。注意移动端需在用户手势后 `resume`。
+2. **音效（按需）**  
+   默认可用 `AudioContext` 合成短音效；**若用户明确不要声音，则不要加**。不引用外部音频文件。移动端需在用户手势后 `resume`。
 
 3. **localStorage 存档**  
    至少持久化最高分；有成长/天数/中途进度的游戏应支持「继续」。键名带项目前缀（如 `tbc_<game>_v1`）。
@@ -36,6 +37,7 @@ alwaysApply: true
 - 主循环 `requestAnimationFrame`，逻辑与绘制分离。
 - 接入中心时补 `tools.<id>.title` / `desc`（en + zh-CN）。
 - 体积尽量克制；复杂系统可完整，但避免无用抽象层。
+- 引入引擎时：**钉死版本号**（如 `three@0.170.0`），写进 HTML 注释；不要用无版本 `latest`。
 
 ## 例外：明确要求「网上免费素材」的对战/演出向游戏
 
@@ -43,13 +45,14 @@ alwaysApply: true
 
 - 允许本地打包 **CC0 / 作者声明可自由使用** 的精灵图与音效（放入 `public/assets/game/<name>/`）。
 - 必须附 `CREDITS.txt`（来源链接 + 许可）。
-- 禁止付费素材、不明授权热链、Three.js 等重型外部库。
-- 仍需：触屏、localStorage、WebAudio（可与素材音效并存）。
+- 禁止付费素材、不明授权热链。
+- 仍可同时使用引擎；仍需触屏、localStorage；音效按用户要求。
 - 打击感应包含：hitstop、震屏、受击闪白、连击数、粒子/冲击波等「手感层」，不能只贴图播放。
 
 ## 反例
 
-- 必须加载来源不明的 `*.png` / `*.mp3` / 外部 JS 库才能玩。  
+- 必须加载来源不明的 `*.png` / `*.mp3` 才能玩。  
 - 只有桌面键鼠、手机完全不能操作。  
-- 刷新即丢进度且无最高分记录（极简原型除外，合并前应补存档）。
-- 声称「顶级打击感」却无 hitstop / 震屏 / 连招反馈。
+- 刷新即丢进度且无最高分记录（极简原型除外，合并前应补存档）。  
+- 声称「顶级打击感」却无 hitstop / 震屏 / 连招反馈。  
+- 3D 游戏无故拒绝引擎、硬用几千行裸 WebGL 重复造轮子（用户未禁止引擎时）。

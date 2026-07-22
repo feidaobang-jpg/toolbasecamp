@@ -181,7 +181,8 @@ const gamesConfig = {
                 { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html' },
                 { titleKey: 'tools.parkour.title', url: 'html/game/parkour.html' },
                 { titleKey: 'tools.cubeRush.title', url: 'html/game/cube-rush.html' },
-                { titleKey: 'tools.arenaBrawl.title', url: 'html/game/arena-brawl.html' }
+                { titleKey: 'tools.arenaBrawl.title', url: 'html/game/arena-brawl.html' },
+                { titleKey: 'tools.arenaStrike.title', url: 'html/game/arena-strike.html' }
             ]
         }
     ]
