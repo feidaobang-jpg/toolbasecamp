@@ -109,9 +109,9 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
 
 const SAVE = 'tbc_blast_party_v1';
 const BASE_W = 960, BASE_H = 540;
-const COLS = 15, ROWS = 11, TILE = 48;
+const COLS = 15, ROWS = 11, TILE = 40;
 const BOARD_W = COLS * TILE, BOARD_H = ROWS * TILE;
-const OX = (BASE_W - BOARD_W) / 2, OY = 34;
+const OX = (BASE_W - BOARD_W) / 2, OY = 36;
 
 const EMPTY = 0, HARD = 1, SOFT = 2;
 const FUSE = 2.4, BLAST_DUR = 0.45;
@@ -462,52 +462,68 @@ function moveEntity(ent, dt, isPlayer) {
   if (isPlayer && !player.alive) return;
   if (!isPlayer && !ent.alive) return;
 
-  let dx = 0, dy = 0;
+  // —— 玩家：格子对齐移动（朝下一格中心走，不再拽回当前格）——
   if (isPlayer) {
+    let dx = 0, dy = 0;
     const q = quantize8(touchMove.x, touchMove.y);
-    if (keys.ArrowUp || keys.w || keys.W) dy = -1;
-    else if (keys.ArrowDown || keys.s || keys.S) dy = 1;
-    else if (keys.ArrowLeft || keys.a || keys.A) dx = -1;
-    else if (keys.ArrowRight || keys.d || keys.D) dx = 1;
-    else if (q.ax || q.ay) { dx = q.ax; dy = q.ay; }
-    if (dx || dy) ent.dir = { x: dx, y: dy };
-  }
-
-  const cx = px(ent.c) + TILE / 2, cy = py(ent.r) + TILE / 2;
-  const dist = Math.hypot(ent.x - cx, ent.y - cy);
-  const aligned = dist < 3;
-
-  if (isPlayer) {
-    if (!dx && !dy) {
-      if (aligned) ent.moving = false;
-      return;
+    if (keys.ArrowUp || keys.w || keys.W || keys['arrowup']) dy = -1;
+    else if (keys.ArrowDown || keys.s || keys.S || keys['arrowdown']) dy = 1;
+    if (keys.ArrowLeft || keys.a || keys.A || keys['arrowleft']) dx = -1;
+    else if (keys.ArrowRight || keys.d || keys.D || keys['arrowright']) dx = 1;
+    // 摇杆（键鼠优先；同时按左右时以水平为准，避免斜向卡死）
+    if (!dx && !dy && (q.ax || q.ay)) {
+      if (Math.abs(touchMove.x) >= Math.abs(touchMove.y)) { dx = q.ax; dy = 0; }
+      else { dx = 0; dy = q.ay; }
     }
-    if (!aligned && ent.moving) {
-      const nx = cx - ent.x, ny = cy - ent.y;
-      const nd = Math.hypot(nx, ny) || 1;
-      const step = ent.speed * dt;
-      if (step >= nd) { ent.x = cx; ent.y = cy; ent.moving = false; }
-      else { ent.x += nx / nd * step; ent.y += ny / nd * step; }
-      return;
+    // 禁止斜向：取主轴
+    if (dx && dy) {
+      if (Math.abs(touchMove.x) >= Math.abs(touchMove.y)) dy = 0;
+      else dx = 0;
     }
-    const nc = ent.c + ent.dir.x, nr = ent.r + ent.dir.y;
-    const blocked = !isWalkable(nc, nr, true) || (bombAt(nc, nr) && !bombAt(ent.c, ent.r));
-    if (!blocked) {
-      ent.moving = true;
-      const mx = ent.dir.x * ent.speed * dt, my = ent.dir.y * ent.speed * dt;
-      ent.x += mx; ent.y += my;
-      const ncx = px(nc) + TILE / 2, ncy = py(nr) + TILE / 2;
-      if ((ent.dir.x > 0 && ent.x >= ncx) || (ent.dir.x < 0 && ent.x <= ncx) ||
-          (ent.dir.y > 0 && ent.y >= ncy) || (ent.dir.y < 0 && ent.y <= ncy)) {
-        ent.x = ncx; ent.y = ncy; ent.c = nc; ent.r = nr; ent.moving = false;
+
+    const speed = ent.speed * dt;
+    const targetC = ent.moving ? ent.c + ent.dir.x : ent.c;
+    const targetR = ent.moving ? ent.r + ent.dir.y : ent.r;
+    const tx = px(targetC) + TILE / 2;
+    const ty = py(targetR) + TILE / 2;
+
+    if (ent.moving) {
+      const nx = tx - ent.x, ny = ty - ent.y;
+      const nd = Math.hypot(nx, ny);
+      if (nd <= speed || nd < 0.5) {
+        ent.x = tx; ent.y = ty;
+        ent.c = targetC; ent.r = targetR;
+        ent.moving = false;
+      } else {
+        ent.x += (nx / nd) * speed;
+        ent.y += (ny / nd) * speed;
       }
-    } else if (aligned) {
-      ent.moving = false;
+      return;
+    }
+
+    // 已对齐：接受新方向
+    if (dx || dy) {
+      ent.dir = { x: dx, y: dy };
+      const nc = ent.c + dx, nr = ent.r + dy;
+      const blocked = !isWalkable(nc, nr, true) || (bombAt(nc, nr) && !bombAt(ent.c, ent.r));
+      if (!blocked) {
+        ent.moving = true;
+        // 本帧先挪一点，避免站桩感
+        const ntx = px(nc) + TILE / 2, nty = py(nr) + TILE / 2;
+        const nx = ntx - ent.x, ny = nty - ent.y;
+        const nd = Math.hypot(nx, ny) || 1;
+        const step = Math.min(speed, nd);
+        ent.x += (nx / nd) * step;
+        ent.y += (ny / nd) * step;
+      }
     }
     return;
   }
 
   /* enemy AI */
+  const cx = px(ent.c) + TILE / 2, cy = py(ent.r) + TILE / 2;
+  const dist = Math.hypot(ent.x - cx, ent.y - cy);
+  const aligned = dist < 3;
   ent.turnCd -= dt;
   if (aligned || ent.turnCd <= 0) {
     ent.x = cx; ent.y = cy;
@@ -794,14 +810,20 @@ function loop(t) {
 
 /* input */
 window.addEventListener('keydown', e => {
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  keys[k] = true;
   keys[e.key] = true;
   if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) e.preventDefault();
-  if ((e.key === 'j' || e.key === 'J' || e.key === ' ') && mode === 'play') {
+  if ((k === 'j' || e.key === ' ') && mode === 'play') {
     e.preventDefault();
     tryPlaceBomb();
   }
 });
-window.addEventListener('keyup', e => { keys[e.key] = false; });
+window.addEventListener('keyup', e => {
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  keys[k] = false;
+  keys[e.key] = false;
+});
 
 const pad = document.getElementById('pad');
 const stick = document.getElementById('stick');

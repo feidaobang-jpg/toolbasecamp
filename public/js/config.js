@@ -187,7 +187,7 @@ const gamesConfig = {
                 { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=11' },
                 { titleKey: 'tools.superMario.title', url: 'html/game/super-mario.html?v=2' },
                 { titleKey: 'tools.steelBattle.title', url: 'html/game/steel-battle.html' },
-                { titleKey: 'tools.blastParty.title', url: 'html/game/blast-party.html' },
+                { titleKey: 'tools.blastParty.title', url: 'html/game/blast-party.html?v=2' },
                 { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html' },
                 { titleKey: 'tools.townWalk.title', url: 'html/game/town-walk.html' },
                 { titleKey: 'tools.town3d.title', url: 'html/game/town-3d.html' }
