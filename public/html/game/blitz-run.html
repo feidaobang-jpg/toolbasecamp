@@ -16,11 +16,11 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
 #touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
 #touch .pad{pointer-events:auto;position:absolute;left:12px;bottom:16px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2)}
 #touch .stick{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.3);left:33px;top:33px}
-#touch .btn{pointer-events:auto;position:absolute;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
-/* 射在前（靠外拇指热区），跳在后 */
-#touch .fire{right:14px;bottom:22px;width:72px;height:72px;font-size:14px;font-weight:700;background:rgba(37,99,235,.72)}
-#touch .jump{right:96px;bottom:28px;width:58px;height:58px;background:rgba(30,58,138,.55)}
-@media(pointer:coarse){#touch{display:block}#hpWrap{bottom:108px}}
+#touch .btn{pointer-events:auto;position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+/* 射在左，跳在右（同尺寸） */
+#touch .fire{right:88px;bottom:24px}
+#touch .jump{right:16px;bottom:24px}
+@media(pointer:coarse){#touch{display:block}#hpWrap{bottom:100px}}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:4}
 #ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,420px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:16px;padding:20px 18px}
 #ui h1{font-size:1.4rem;color:#38bdf8;margin-bottom:8px}
@@ -51,7 +51,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>魂斗罗风格横版射击（自创主题）。纯 Canvas 2D 程序化绘制，无外部库、无贴图。</p>
-      <p>键鼠：A/D 或 ←→ 移动 · W/空格 跳跃 · J 射击<br/>触屏：左摇杆移动 · 右侧「射」在前、「跳」在后。镜头跟随人物，不自动卷轴。</p>
+      <p>键鼠：A/D 或 ←→ 移动 · W/空格 跳跃 · J 射击<br/>触屏：左摇杆移动 · 右侧「射」在左、「跳」在右。镜头跟随人物。</p>
       <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
