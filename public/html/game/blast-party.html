@@ -742,6 +742,12 @@ function draw(t) {
   ctx.setTransform(drawSX, 0, 0, drawSY, 0, 0);
   ctx.clearRect(0, 0, BASE_W, BASE_H);
 
+  if (!grid.length || !grid[0]) {
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, BASE_W, BASE_H);
+    return;
+  }
+
   let sx = 0, sy = 0;
   if (shake > 0) { sx = rand(-4, 4); sy = rand(-4, 4); }
   ctx.save();
@@ -751,6 +757,7 @@ function draw(t) {
   ctx.fillRect(OX - 4, OY - 4, BOARD_W + 8, BOARD_H + 8);
 
   for (let r = 0; r < ROWS; r++) {
+    if (!grid[r]) continue;
     for (let c = 0; c < COLS; c++) drawTile(c, r, grid[r][c], t);
   }
 
