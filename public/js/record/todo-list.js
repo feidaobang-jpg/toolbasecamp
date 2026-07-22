@@ -2,6 +2,7 @@
   'use strict';
 
   var SAVE = 'tbc_todo_list_v1';
+  var STATUS = { pending: 'pending', doing: 'doing', done: 'done' };
   var items = [];
   var filter = 'all';
   var editingId = null;
@@ -16,18 +17,17 @@
   var footerEl = document.getElementById('footer-actions');
   var clearDoneBtn = document.getElementById('clear-done-btn');
 
-  function t(key, fallback) {
-    try {
-      if (window.i18n && typeof window.i18n.t === 'function') {
-        var v = window.i18n.t(key);
-        if (v && v !== key) return v;
-      }
-    } catch (e) {}
-    return fallback || key;
+  function t(key, params) {
+    return typeof window.t === 'function' ? window.t(key, params) : key;
   }
 
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
+  function normalizeStatus(raw, doneFlag) {
+    if (raw === STATUS.doing || raw === STATUS.done || raw === STATUS.pending) return raw;
+    return doneFlag ? STATUS.done : STATUS.pending;
   }
 
   function load() {
@@ -42,7 +42,7 @@
           return {
             id: String(it.id || uid()),
             text: String(it.text).slice(0, 200),
-            done: !!it.done,
+            status: normalizeStatus(it.status, it.done),
             createdAt: Number(it.createdAt) || Date.now()
           };
         });
@@ -56,7 +56,7 @@
       localStorage.setItem(SAVE, JSON.stringify({ items: items }));
       showError('');
     } catch (e) {
-      showError(t('tools.todoList.saveFailed', 'Could not save — check browser storage settings'));
+      showError(t('tools.todoList.saveFailed'));
     }
   }
 
@@ -67,28 +67,44 @@
   }
 
   function visibleItems() {
-    if (filter === 'pending') return items.filter(function (it) { return !it.done; });
-    if (filter === 'done') return items.filter(function (it) { return it.done; });
+    if (filter === 'pending' || filter === 'doing' || filter === 'done') {
+      return items.filter(function (it) { return it.status === filter; });
+    }
     return items.slice();
   }
 
   function counts() {
     var pending = 0;
+    var doing = 0;
     var done = 0;
     for (var i = 0; i < items.length; i++) {
-      if (items[i].done) done++;
+      if (items[i].status === STATUS.done) done++;
+      else if (items[i].status === STATUS.doing) doing++;
       else pending++;
     }
-    return { pending: pending, done: done, total: items.length };
+    return { pending: pending, doing: doing, done: done, total: items.length };
+  }
+
+  function statusLabel(status) {
+    if (status === STATUS.doing) return t('tools.todoList.statusDoing');
+    if (status === STATUS.done) return t('tools.todoList.statusDone');
+    return t('tools.todoList.statusPending');
+  }
+
+  function nextStatus(status) {
+    if (status === STATUS.pending) return STATUS.doing;
+    if (status === STATUS.doing) return STATUS.done;
+    return STATUS.pending;
   }
 
   function render() {
     var c = counts();
-    var tpl = t('tools.todoList.stats', '{pending} pending · {done} done');
-    statsEl.textContent = tpl
-      .replace('{pending}', String(c.pending))
-      .replace('{done}', String(c.done))
-      .replace('{total}', String(c.total));
+    statsEl.textContent = t('tools.todoList.stats', {
+      pending: c.pending,
+      doing: c.doing,
+      done: c.done,
+      total: c.total
+    });
 
     footerEl.hidden = c.done === 0;
 
@@ -103,16 +119,17 @@
 
     view.forEach(function (it) {
       var row = document.createElement('div');
-      row.className = 'todo-item' + (it.done ? ' is-done' : '');
+      row.className = 'todo-item status-' + it.status;
       row.dataset.id = it.id;
 
-      var check = document.createElement('input');
-      check.type = 'checkbox';
-      check.className = 'todo-check';
-      check.checked = it.done;
-      check.setAttribute('aria-label', t('tools.todoList.toggle', 'Toggle done'));
-      check.addEventListener('change', function () {
-        it.done = check.checked;
+      var statusBtn = document.createElement('button');
+      statusBtn.type = 'button';
+      statusBtn.className = 'todo-status';
+      statusBtn.textContent = statusLabel(it.status);
+      statusBtn.title = t('tools.todoList.cycleStatus');
+      statusBtn.setAttribute('aria-label', t('tools.todoList.cycleStatus'));
+      statusBtn.addEventListener('click', function () {
+        it.status = nextStatus(it.status);
         save();
         render();
       });
@@ -144,7 +161,7 @@
         var text = document.createElement('p');
         text.className = 'todo-text';
         text.textContent = it.text;
-        text.title = t('tools.todoList.editHint', 'Double-click to edit');
+        text.title = t('tools.todoList.editHint');
         text.addEventListener('dblclick', function () {
           editingId = it.id;
           render();
@@ -158,7 +175,7 @@
       var editBtn = document.createElement('button');
       editBtn.type = 'button';
       editBtn.className = 'tb-btn';
-      editBtn.textContent = t('tools.records.edit', 'Edit');
+      editBtn.textContent = t('tools.records.edit');
       editBtn.addEventListener('click', function () {
         editingId = it.id;
         render();
@@ -167,7 +184,7 @@
       var delBtn = document.createElement('button');
       delBtn.type = 'button';
       delBtn.className = 'tb-btn';
-      delBtn.textContent = t('tools.records.delete', 'Delete');
+      delBtn.textContent = t('tools.records.delete');
       delBtn.addEventListener('click', function () {
         items = items.filter(function (x) { return x.id !== it.id; });
         if (editingId === it.id) editingId = null;
@@ -178,7 +195,7 @@
       actions.appendChild(editBtn);
       actions.appendChild(delBtn);
 
-      row.appendChild(check);
+      row.appendChild(statusBtn);
       row.appendChild(body);
       row.appendChild(actions);
       listEl.appendChild(row);
@@ -200,7 +217,7 @@
   function addTodo(text) {
     text = String(text || '').trim().slice(0, 200);
     if (!text) {
-      showError(t('tools.todoList.emptyText', 'Please enter a task'));
+      showError(t('tools.todoList.emptyText'));
       inputEl.focus();
       return;
     }
@@ -208,10 +225,10 @@
     items.unshift({
       id: uid(),
       text: text,
-      done: false,
+      status: STATUS.pending,
       createdAt: Date.now()
     });
-    filter = filter === 'done' ? 'all' : filter;
+    filter = filter === 'done' || filter === 'doing' ? 'all' : filter;
     save();
     render();
   }
@@ -233,10 +250,14 @@
 
   clearDoneBtn.addEventListener('click', function () {
     if (!counts().done) return;
-    if (!window.confirm(t('tools.todoList.clearDoneConfirm', 'Clear all completed tasks?'))) return;
-    items = items.filter(function (it) { return !it.done; });
+    if (!window.confirm(t('tools.todoList.clearDoneConfirm'))) return;
+    items = items.filter(function (it) { return it.status !== STATUS.done; });
     editingId = null;
     save();
+    render();
+  });
+
+  document.addEventListener('tb:locale', function () {
     render();
   });
 
