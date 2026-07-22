@@ -66,23 +66,6 @@
     errorEl.hidden = !msg;
   }
 
-  function scrollBottom() {
-    requestAnimationFrame(function () {
-      var node = document.scrollingElement || document.documentElement;
-      var candidates = [document.querySelector('.content'), document.querySelector('main'), node];
-      var scroller = null;
-      for (var i = 0; i < candidates.length; i++) {
-        var el = candidates[i];
-        if (el && el.scrollHeight > el.clientHeight + 1) {
-          scroller = el;
-          break;
-        }
-      }
-      scroller = scroller || node;
-      if (scroller) scroller.scrollTop = scroller.scrollHeight;
-    });
-  }
-
   function visibleItems() {
     if (filter === 'pending') return items.filter(function (it) { return !it.done; });
     if (filter === 'done') return items.filter(function (it) { return it.done; });
