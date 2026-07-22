@@ -543,6 +543,26 @@ window.TB_LOCALES.en = {
             title: 'Mushroom Quest',
             desc: 'Side-scrolling platformer: coins, stomp foes, ?-blocks, pipes and flagpole. Original Canvas build.'
         },
+        steelBattle: {
+            title: 'Steel Battle',
+            desc: 'Battle City homage: bricks, steel, water, defend the base through enemy waves.'
+        },
+        blastParty: {
+            title: 'Blast Party',
+            desc: 'Bomberman homage: bombs, soft blocks, power-ups, clear each stage.'
+        },
+        starSerpent: {
+            title: 'Star Serpent',
+            desc: 'Salamander homage: vertical shmup with S/M/L powerups and a serpent boss.'
+        },
+        townWalk: {
+            title: 'Sky Town',
+            desc: '2D top-down town stroll: chat with locals and visit doorways.'
+        },
+        town3d: {
+            title: 'Street Blocks 3D',
+            desc: 'Tiny Three.js town: walk the main street and interact at golden doors.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

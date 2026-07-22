@@ -542,6 +542,26 @@ window.TB_LOCALES['zh-CN'] = {
             title: '蘑菇冒险',
             desc: '横版闯关：金币、踩怪、问号砖、水管与旗杆，纯 Canvas 自研。'
         },
+        steelBattle: {
+            title: '钢铁大战',
+            desc: '坦克大战致敬：砖墙/钢墙/水面，守护基地，波次敌军。'
+        },
+        blastParty: {
+            title: '炸弹奇兵',
+            desc: '炸弹人致敬：摆炸弹清软墙与怪物，捡范围/数量道具。'
+        },
+        starSerpent: {
+            title: '星蛇突击',
+            desc: '沙罗曼蛇致敬：纵版射击，S/M/L 道具，星蛇 Boss。'
+        },
+        townWalk: {
+            title: '青空小镇',
+            desc: '2D 俯视城镇散步：聊天、逛广场、打听店铺门口。'
+        },
+        town3d: {
+            title: '立体街区',
+            desc: '3D 小城原型（Three.js）：主街漫步，金色门口互动。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<title>立体街区 · Town 3D</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#020617;color:#e2e8f0;font-family:system-ui,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:fixed;inset:0}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:10px 12px;z-index:2;pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px}
+#hud b{color:#7dd3fc}
+#hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:2;padding:8px 14px;border-radius:10px;background:rgba(15,23,42,.85);border:1px solid #334155;font-size:13px;display:none}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .pad{pointer-events:auto;position:absolute;left:16px;bottom:16px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25)}
+#touch .stick{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:rgba(255,255,255,.3)}
+#touch .btn{pointer-events:auto;position:absolute;right:16px;bottom:24px;width:64px;height:64px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90%,380px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:14px;padding:16px}
+#ui h1{font-size:1.25rem;color:#a5b4fc;margin-bottom:8px}
+#ui p{font-size:.84rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui button{font:inherit;width:100%;border:0;border-radius:999px;padding:12px;background:#2563eb;color:#fff;cursor:pointer}
+.hidden{display:none!important}
+</style>
+<!-- three@0.170.0 -->
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="hud">立体街区 · 走到彩色门口按 <b>J / 互动</b></div>
+  <div id="hint"></div>
+  <div id="touch">
+    <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
+    <div class="btn" id="btnAct">互动</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>立体街区</h1>
+      <p>3D 小城原型：一条主街、几栋楼、可互动的门口。</p>
+      <p>WASD 移动 · 鼠标拖拽转向 · J 互动</p>
+      <button id="btnStart">进入街区</button>
+    </div>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+
+const SAVE='tbc_town3d_v1';
+const wrap=document.getElementById('wrap');
+const hintEl=document.getElementById('hint');
+let mode='menu';
+let keys=Object.create(null);
+let touchMove={x:0,y:0};
+let yaw=0,pitch=0.18;
+let looking=false,lx=0,ly=0;
+let visited=0;
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+wrap.insertBefore(renderer.domElement,wrap.firstChild);
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x87b7ff);
+scene.fog=new THREE.Fog(0x87b7ff,25,70);
+
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,120);
+const player=new THREE.Object3D();
+player.position.set(0,0,10);
+scene.add(player);
+
+const hemi=new THREE.HemisphereLight(0xdbeafe,0x4d7c0f,1.1);
+scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xfff7ed,1.2);
+sun.position.set(12,22,8);sun.castShadow=true;
+sun.shadow.mapSize.set(1024,1024);
+scene.add(sun);
+
+const ground=new THREE.Mesh(
+  new THREE.PlaneGeometry(80,80),
+  new THREE.MeshStandardMaterial({color:0x6ee7b7})
+);
+ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+
+const road=new THREE.Mesh(
+  new THREE.PlaneGeometry(8,70),
+  new THREE.MeshStandardMaterial({color:0x64748b})
+);
+road.rotation.x=-Math.PI/2;road.position.y=0.02;road.receiveShadow=true;scene.add(road);
+
+function box(w,h,d,color,x,z){
+  const m=new THREE.Mesh(
+    new THREE.BoxGeometry(w,h,d),
+    new THREE.MeshStandardMaterial({color})
+  );
+  m.position.set(x,h/2,z);m.castShadow=true;m.receiveShadow=true;
+  scene.add(m);return m;
+}
+
+const doors=[];
+function building(x,z,w,h,d,color,name,line){
+  box(w,h,d,color,x,z);
+  const door=new THREE.Mesh(
+    new THREE.BoxGeometry(1.2,2,0.2),
+    new THREE.MeshStandardMaterial({color:0xfbbf24})
+  );
+  door.position.set(x,1,z+d/2+0.05);
+  scene.add(door);
+  doors.push({pos:door.position,name,line,seen:false});
+}
+
+building(-8,0,6,5,6,0xb45309,'咖啡角','飘来烘焙香气。要不要进来坐坐？');
+building(8,-4,7,6,7,0x1d4ed8,'蓝屋画廊','墙上挂着小镇速写。');
+building(-7,12,5,4,5,0x15803d,'绿意杂货','门口摆着新鲜蔬果箱。');
+building(9,14,6,5,6,0x7c3aed,'紫藤客栈','楼上有便宜的床位。');
+box(2,0.4,2,0x38bdf8,0,-8); // fountain base
+const treeGeo=new THREE.ConeGeometry(1.2,3,8);
+const treeMat=new THREE.MeshStandardMaterial({color:0x166534});
+[-12,12].forEach((x,i)=>{
+  const t=new THREE.Mesh(treeGeo,treeMat);
+  t.position.set(x,1.5,i===0?-10:8);t.castShadow=true;scene.add(t);
+});
+
+const colliders=[
+  {x:-8,z:0,r:4},{x:8,z:-4,r:4.5},{x:-7,z:12,r:3.5},{x:9,z:14,r:4}
+];
+
+function resize(){
+  const w=innerWidth,h=innerHeight;
+  renderer.setSize(w,h);
+  camera.aspect=w/h;camera.updateProjectionMatrix();
+}
+addEventListener('resize',resize);
+
+function tryAct(){
+  if(mode!=='play')return;
+  const p=player.position;
+  let best=null,bd=9;
+  for(const d of doors){
+    const dist=Math.hypot(p.x-d.pos.x,p.z-d.pos.z);
+    if(dist<bd){bd=dist;best=d}
+  }
+  if(best&&bd<3.2){
+    hintEl.style.display='block';
+    hintEl.textContent=best.name+'：'+best.line;
+    if(!best.seen){best.seen=true;visited++;try{localStorage.setItem(SAVE,JSON.stringify({v:visited}))}catch(e){}}
+    setTimeout(()=>{hintEl.style.display='none'},3200);
+  }else{
+    hintEl.style.display='block';
+    hintEl.textContent='走近金色门口再互动';
+    setTimeout(()=>{hintEl.style.display='none'},1600);
+  }
+}
+
+const clock=new THREE.Clock();
+function frame(){
+  const dt=Math.min(0.05,clock.getDelta());
+  if(mode==='play'){
+    let ix=0,iz=0;
+    if(keys['a']||keys['arrowleft'])ix-=1;
+    if(keys['d']||keys['arrowright'])ix+=1;
+    if(keys['w']||keys['arrowup'])iz-=1;
+    if(keys['s']||keys['arrowdown'])iz+=1;
+    ix+=touchMove.x;iz+=touchMove.y;
+    const len=Math.hypot(ix,iz);
+    if(len>0.2){
+      const sp=6*dt;
+      const s=Math.sin(yaw),c=Math.cos(yaw);
+      const fx=(ix/len)*c+(iz/len)*s;
+      const fz=-(ix/len)*s+(iz/len)*c;
+      let nx=player.position.x+fx*sp;
+      let nz=player.position.z+fz*sp;
+      let blocked=false;
+      for(const cld of colliders){
+        if(Math.hypot(nx-cld.x,nz-cld.z)<cld.r){blocked=true;break}
+      }
+      if(Math.abs(nx)>36||Math.abs(nz)>36)blocked=true;
+      if(!blocked){player.position.x=nx;player.position.z=nz}
+    }
+    camera.position.set(
+      player.position.x-Math.sin(yaw)*7,
+      3.2+Math.sin(pitch)*2,
+      player.position.z-Math.cos(yaw)*7
+    );
+    camera.lookAt(player.position.x,1.4,player.position.z);
+  }else{
+    camera.position.set(0,8,18);camera.lookAt(0,1,0);
+  }
+  renderer.render(scene,camera);
+  requestAnimationFrame(frame);
+}
+
+addEventListener('keydown',e=>{
+  keys[e.key.toLowerCase()]=true;
+  if(e.key.toLowerCase()==='j')tryAct();
+});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+renderer.domElement.addEventListener('pointerdown',e=>{
+  if(mode!=='play')return;
+  looking=true;lx=e.clientX;ly=e.clientY;
+  renderer.domElement.setPointerCapture(e.pointerId);
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+  if(!looking)return;
+  yaw-= (e.clientX-lx)*0.005;
+  pitch=Math.max(-0.2,Math.min(0.6,pitch+(e.clientY-ly)*0.003));
+  lx=e.clientX;ly=e.clientY;
+});
+renderer.domElement.addEventListener('pointerup',()=>{looking=false});
+
+(function touch(){
+  const pad=document.getElementById('pad'),stick=document.getElementById('stick');
+  let id=null;
+  function set(cx,cy){
+    const r=pad.getBoundingClientRect();
+    let x=cx-(r.left+r.width/2),y=cy-(r.top+r.height/2);
+    const m=Math.hypot(x,y)||1,mag=Math.min(1,m/42);
+    x=(x/m)*mag;y=(y/m)*mag;touchMove={x,y};
+    stick.style.transform=`translate(${x*28}px,${y*28}px)`;
+  }
+  function end(){id=null;touchMove={x:0,y:0};stick.style.transform='translate(0,0)'}
+  pad.addEventListener('touchstart',e=>{e.preventDefault();id=e.changedTouches[0].identifier;set(e.changedTouches[0].clientX,e.changedTouches[0].clientY)},{passive:false});
+  addEventListener('touchmove',e=>{if(id==null)return;for(const t of e.touches)if(t.identifier===id){e.preventDefault();set(t.clientX,t.clientY)}},{passive:false});
+  addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===id)end()});
+  document.getElementById('btnAct').addEventListener('touchstart',e=>{e.preventDefault();tryAct()},{passive:false});
+})();
+
+document.getElementById('btnStart').onclick=()=>{
+  mode='play';document.getElementById('panelMenu').classList.add('hidden');
+};
+resize();frame();
+</script>
+</body>
+</html>

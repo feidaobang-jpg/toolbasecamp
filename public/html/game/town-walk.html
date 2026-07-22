@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<title>青空小镇 · Town Walk</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;width:100%;height:100dvh;width:100dvw;background:#0f172a;color:#e2e8f0;font-family:system-ui,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:fixed;left:50%;top:50%;width:960px;height:540px;transform:translate(-50%,-50%);background:#000;overflow:hidden}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 12px;z-index:2;pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px;display:flex;gap:12px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#dialog{display:none;position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:min(92%,720px);z-index:5;background:rgba(15,23,42,.94);border:1px solid #475569;border-radius:12px;padding:12px 14px;pointer-events:auto}
+#dialog .who{color:#38bdf8;font-weight:700;margin-bottom:4px;font-size:13px}
+#dialog .txt{font-size:14px;line-height:1.45;color:#e2e8f0}
+#dialog .hint{margin-top:8px;font-size:11px;color:#94a3b8}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .pad{pointer-events:auto;position:absolute;left:1.5%;bottom:2.5%;width:11%;aspect-ratio:1;max-width:96px;min-width:52px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25)}
+#touch .stick{position:absolute;left:50%;top:50%;width:40%;height:40%;margin:-20% 0 0 -20%;border-radius:50%;background:rgba(255,255,255,.3);transform:translate(0,0)}
+#touch .btn{pointer-events:auto;position:absolute;right:1.5%;bottom:2.5%;width:7%;aspect-ratio:1;max-width:56px;min-width:36px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,360px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:14px;padding:14px 16px}
+#ui h1{font-size:1.2rem;color:#67e8f9;margin-bottom:6px}
+#ui p{font-size:.8rem;line-height:1.4;color:#94a3b8;margin-bottom:6px}
+#ui button{font:inherit;width:100%;border:0;border-radius:999px;padding:12px;background:#2563eb;color:#fff;cursor:pointer;margin-top:8px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"><span>青空小镇</span><span>探索 <b id="spots">0</b>/6</span><span>提示：走近人按 <b>J / 对话</b></span></div>
+  <div id="dialog"><div class="who" id="dWho"></div><div class="txt" id="dTxt"></div><div class="hint">再按 J / 对话 关闭</div></div>
+  <div id="touch">
+    <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
+    <div class="btn" id="btnTalk">对话</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>青空小镇</h1>
+      <p>2D 俯视城镇散步：和居民聊天、逛广场、进商店门口。</p>
+      <p>WASD 移动 · J 对话</p>
+      <button id="btnStart">出门散步</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const SAVE='tbc_town_walk_v1';
+const BASE_W=960,BASE_H=540,TILE=32;
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),wrap=document.getElementById('wrap');
+let drawSX=1,drawSY=1,mode='menu',keys=Object.create(null),touchMove={x:0,y:0};
+let player={x:15*TILE,y:12*TILE,w:20,h:24,facing:0};
+let cam={x:0,y:0};
+let visited=Object.create(null);
+let dialog=null;
+let bestExplore=0;
+try{bestExplore=(JSON.parse(localStorage.getItem(SAVE)||'{}').explore)|0}catch(e){}
+
+const MAP_W=40,MAP_H=28;
+// 0草 1路 2水 3墙/建筑占位
+const map=[];
+for(let y=0;y<MAP_H;y++){
+  map[y]=[];
+  for(let x=0;x<MAP_W;x++){
+    let t=0;
+    if(x===0||y===0||x===MAP_W-1||y===MAP_H-1)t=3;
+    else if(y===14||x===18||x===19)t=1;
+    else if(y>=8&&y<=10&&x>=8&&x<=14)t=1; // plaza
+    else if(y>=20&&y<=22&&x>=24&&x<=30)t=2; // pond
+    map[y][x]=t;
+  }
+}
+// buildings as solid rects in world
+const buildings=[
+  {x:6*TILE,y:4*TILE,w:6*TILE,h:4*TILE,c:'#b45309',door:true,name:'面包店',talk:'刚出炉的面包香喷喷！欢迎随时来坐。',id:'bakery'},
+  {x:24*TILE,y:3*TILE,w:7*TILE,h:5*TILE,c:'#1d4ed8',door:true,name:'图书屋',talk:'书架上有旅行笔记。小镇虽小，故事很多。',id:'library'},
+  {x:30*TILE,y:14*TILE,w:6*TILE,h:5*TILE,c:'#15803d',door:true,name:'道具屋',talk:'今天进了闪亮的小零件，或许能派上用场。',id:'shop'},
+  {x:4*TILE,y:18*TILE,w:5*TILE,h:4*TILE,c:'#7c3aed',door:true,name:'小屋',talk:'窗台上晒着猫。午睡时光最舒服。',id:'house'},
+  {x:20*TILE,y:18*TILE,w:4*TILE,h:3*TILE,c:'#0f766e',door:false,name:'凉亭',talk:'坐下来听听风声吧。',id:'gazebo'}
+];
+const npcs=[
+  {x:10*TILE,y:9*TILE,name:'邮差小陈',lines:['信都送到啦！','广场喷泉修好了，去看看？'],id:'npc_post'},
+  {x:26*TILE,y:15*TILE,name:'钓客阿青',lines:['池塘里好像有大家伙。','别掉进水里哦。'],id:'npc_fish'},
+  {x:19*TILE,y:12*TILE,name:'向导米米',lines:['欢迎来到青空小镇！','按 J 可以和人对话、在门口打听。'],id:'npc_guide'}
+];
+
+function resize(){
+  const vw=Math.max(320,innerWidth|0),vh=Math.max(240,innerHeight|0);
+  const s=Math.min(vw/BASE_W,vh/BASE_H);
+  const dw=Math.floor(BASE_W*s),dh=Math.floor(BASE_H*s);
+  wrap.style.width=dw+'px';wrap.style.height=dh+'px';
+  const dpr=Math.min(2.5,devicePixelRatio||1);
+  canvas.style.width=dw+'px';canvas.style.height=dh+'px';
+  canvas.width=Math.floor(dw*dpr);canvas.height=Math.floor(dh*dpr);
+  drawSX=canvas.width/BASE_W;drawSY=canvas.height/BASE_H;
+}
+addEventListener('resize',resize);
+
+function solidAt(px,py,pw,ph){
+  const x0=Math.floor(px/TILE),y0=Math.floor(py/TILE);
+  const x1=Math.floor((px+pw-1)/TILE),y1=Math.floor((py+ph-1)/TILE);
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+    if(x<0||y<0||x>=MAP_W||y>=MAP_H)return true;
+    if(map[y][x]===2||map[y][x]===3)return true;
+  }
+  for(const b of buildings){
+    if(px<b.x+b.w&&px+pw>b.x&&py<b.y+b.h&&py+ph>b.y){
+      // door gap at bottom center
+      if(b.door){
+        const dx=b.x+b.w/2-12,dw=24;
+        if(py+ph>b.y+b.h-8&&px+pw>dx&&px<dx+dw)continue;
+      }
+      return true;
+    }
+  }
+  return false;
+}
+
+function nearInteract(){
+  const cx=player.x+player.w/2,cy=player.y+player.h/2;
+  for(const n of npcs){
+    if(Math.hypot(cx-(n.x+12),cy-(n.y+12))<40)return {type:'npc',ref:n};
+  }
+  for(const b of buildings){
+    const dx=b.x+b.w/2,dy=b.y+b.h;
+    if(Math.hypot(cx-dx,cy-(dy+8))<36)return {type:'building',ref:b};
+  }
+  return null;
+}
+
+function openDialog(who,txt,id){
+  dialog={who,txt,id};
+  document.getElementById('dialog').style.display='block';
+  document.getElementById('dWho').textContent=who;
+  document.getElementById('dTxt').textContent=txt;
+  if(id)visited[id]=1;
+  const n=Object.keys(visited).length;
+  document.getElementById('spots').textContent=String(n);
+  if(n>bestExplore){
+    bestExplore=n;
+    try{localStorage.setItem(SAVE,JSON.stringify({explore:bestExplore}))}catch(e){}
+  }
+}
+function closeDialog(){dialog=null;document.getElementById('dialog').style.display='none'}
+
+function tryTalk(){
+  if(dialog){closeDialog();return}
+  const hit=nearInteract();
+  if(!hit)return;
+  if(hit.type==='npc'){
+    const line=hit.ref.lines[(Math.random()*hit.ref.lines.length)|0];
+    openDialog(hit.ref.name,line,hit.ref.id);
+  }else{
+    openDialog(hit.ref.name,hit.ref.talk,hit.ref.id);
+  }
+}
+
+function update(dt){
+  if(mode!=='play'||dialog)return;
+  let ix=0,iy=0;
+  if(keys['a']||keys['arrowleft'])ix-=1;
+  if(keys['d']||keys['arrowright'])ix+=1;
+  if(keys['w']||keys['arrowup'])iy-=1;
+  if(keys['s']||keys['arrowdown'])iy+=1;
+  ix+=touchMove.x;iy+=touchMove.y;
+  if(Math.abs(ix)<0.25)ix=0;if(Math.abs(iy)<0.25)iy=0;
+  if(ix||iy){
+    const len=Math.hypot(ix,iy)||1;
+    const sp=140*dt;
+    const nx=player.x+(ix/len)*sp,ny=player.y+(iy/len)*sp;
+    if(!solidAt(nx,player.y,player.w,player.h))player.x=nx;
+    if(!solidAt(player.x,ny,player.w,player.h))player.y=ny;
+    if(Math.abs(ix)>Math.abs(iy))player.facing=ix>0?1:3;else player.facing=iy>0?2:0;
+  }
+  cam.x=Math.max(0,Math.min(MAP_W*TILE-BASE_W,player.x-BASE_W*0.45));
+  cam.y=Math.max(0,Math.min(MAP_H*TILE-BASE_H,player.y-BASE_H*0.45));
+}
+
+function draw(){
+  ctx.setTransform(drawSX,0,0,drawSY,0,0);
+  ctx.fillStyle='#4ade80';
+  ctx.fillRect(0,0,BASE_W,BASE_H);
+  for(let y=0;y<MAP_H;y++)for(let x=0;x<MAP_W;x++){
+    const sx=x*TILE-cam.x,sy=y*TILE-cam.y;
+    if(sx<-TILE||sy<-TILE||sx>BASE_W||sy>BASE_H)continue;
+    const t=map[y][x];
+    if(t===0){ctx.fillStyle=(x+y)%2?'#4ade80':'#86efac';ctx.fillRect(sx,sy,TILE,TILE)}
+    else if(t===1){ctx.fillStyle='#d6d3d1';ctx.fillRect(sx,sy,TILE,TILE);ctx.fillStyle='#a8a29e';ctx.fillRect(sx,sy+TILE-4,TILE,4)}
+    else if(t===2){ctx.fillStyle='#38bdf8';ctx.fillRect(sx,sy,TILE,TILE)}
+    else{ctx.fillStyle='#57534e';ctx.fillRect(sx,sy,TILE,TILE)}
+  }
+  buildings.forEach(b=>{
+    const x=b.x-cam.x,y=b.y-cam.y;
+    ctx.fillStyle=b.c;ctx.fillRect(x,y,b.w,b.h);
+    ctx.fillStyle='rgba(255,255,255,.15)';ctx.fillRect(x,y,b.w,10);
+    if(b.door){ctx.fillStyle='#1e293b';ctx.fillRect(x+b.w/2-12,y+b.h-22,24,22)}
+    ctx.fillStyle='#fff';ctx.font='12px system-ui';ctx.textAlign='center';
+    ctx.fillText(b.name,x+b.w/2,y+16);ctx.textAlign='left';
+  });
+  // plaza fountain
+  ctx.fillStyle='#7dd3fc';
+  ctx.beginPath();ctx.arc(11*TILE-cam.x,9.5*TILE-cam.y,18,0,Math.PI*2);ctx.fill();
+  npcs.forEach(n=>{
+    const x=n.x-cam.x,y=n.y-cam.y;
+    ctx.fillStyle='#fbbf24';ctx.fillRect(x+4,y+8,16,16);
+    ctx.fillStyle='#f5c6a0';ctx.beginPath();ctx.arc(x+12,y+6,7,0,Math.PI*2);ctx.fill();
+  });
+  // player
+  const px=player.x-cam.x,py=player.y-cam.y;
+  ctx.fillStyle='#2563eb';ctx.fillRect(px,py+8,player.w,player.h-8);
+  ctx.fillStyle='#f5c6a0';ctx.beginPath();ctx.arc(px+10,py+6,8,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#ef4444';ctx.fillRect(px+2,py-2,16,5);
+  const hit=nearInteract();
+  if(hit&&!dialog&&mode==='play'){
+    ctx.fillStyle='rgba(255,255,255,.9)';ctx.font='bold 12px system-ui';ctx.textAlign='center';
+    ctx.fillText('J 对话',px+10,py-8);ctx.textAlign='left';
+  }
+}
+
+let lastT=0;
+function loop(ts){
+  const dt=Math.min(0.033,(ts-lastT)/1000||0.016);lastT=ts;
+  update(dt);draw();requestAnimationFrame(loop);
+}
+addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();keys[k]=true;
+  if(mode==='play'&&k==='j'){e.preventDefault();tryTalk()}
+});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+(function touch(){
+  const pad=document.getElementById('pad'),stick=document.getElementById('stick');
+  let id=null;
+  function set(cx,cy){
+    const r=pad.getBoundingClientRect();if(r.width<1)return;
+    const lx=(cx-r.left)/r.width*pad.clientWidth,ly=(cy-r.top)/r.height*pad.clientHeight;
+    let x=lx-pad.clientWidth/2,y=ly-pad.clientHeight/2;const m=Math.hypot(x,y)||1;
+    const mag=Math.min(1,m/(pad.clientWidth*0.36));x=(x/m)*mag;y=(y/m)*mag;
+    touchMove={x,y};const t=pad.clientWidth*0.2;stick.style.transform=`translate(${x*t}px,${y*t}px)`;
+  }
+  function end(){id=null;touchMove={x:0,y:0};stick.style.transform='translate(0,0)'}
+  pad.addEventListener('touchstart',e=>{e.preventDefault();if(id!=null)return;id=e.changedTouches[0].identifier;set(e.changedTouches[0].clientX,e.changedTouches[0].clientY)},{passive:false});
+  addEventListener('touchmove',e=>{if(id==null)return;for(const t of e.touches)if(t.identifier===id){e.preventDefault();set(t.clientX,t.clientY)}},{passive:false});
+  addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===id)end()});
+  document.getElementById('btnTalk').addEventListener('touchstart',e=>{e.preventDefault();tryTalk()},{passive:false});
+})();
+document.getElementById('btnStart').onclick=()=>{
+  mode='play';document.getElementById('panelMenu').classList.add('hidden');
+  document.getElementById('spots').textContent=String(Object.keys(visited).length);
+};
+resize();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
