@@ -22,33 +22,26 @@ html,body{
   max-width:960px;margin:0 auto;background:#000;
   overflow:hidden;
 }
-#wrap.virt-land{
-  max-width:none;margin:0;z-index:5;
-  /* 尺寸/位移由 JS 按 innerWidth/Height 写入 */
-}
 canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
 #playTools{
   display:none;position:fixed;right:max(8px,env(safe-area-inset-right));
-  top:max(8px,env(safe-area-inset-top));z-index:20;gap:6px;flex-direction:column;
+  top:max(8px,env(safe-area-inset-top));z-index:20;
 }
-@media(pointer:coarse){#playTools{display:flex}}
+@media(pointer:coarse){#playTools{display:block}}
 #playTools button{
   font:inherit;font-size:11px;border:0;border-radius:999px;padding:8px 12px;
   background:rgba(37,99,235,.88);color:#fff;cursor:pointer;
   box-shadow:0 2px 10px rgba(0,0,0,.35);white-space:nowrap;
 }
-#playTools button.on{background:rgba(34,197,94,.9)}
-#playTools button.ghost{background:rgba(30,41,59,.9);border:1px solid #475569}
 #hud{position:absolute;left:0;right:0;top:0;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px;z-index:2;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 #hud b{color:#fde68a}
 #hud .gun{padding:2px 8px;border-radius:999px;background:rgba(37,99,235,.45);border:1px solid #60a5fa;color:#93c5fd;font-weight:700}
 #hpWrap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(260px,70%);height:10px;background:#1e293b;border:1px solid #475569;border-radius:6px;overflow:hidden;pointer-events:none;z-index:2}
 #hpBar{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ef4444,#fbbf24)}
-#orientTip{display:none;position:absolute;left:50%;top:52px;transform:translateX(-50%);z-index:5;max-width:min(92%,360px);padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #38bdf8;color:#e2e8f0;font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#orientTip{display:none;position:absolute;left:50%;top:52px;transform:translateX(-50%);z-index:5;max-width:min(92%,340px);padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #38bdf8;color:#e2e8f0;font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #orientTip b{color:#7dd3fc}
-#orientTip .row{display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap}
-#orientTip button{font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#2563eb;color:#fff;cursor:pointer}
-#orientTip button.ghost{background:#1e293b;border:1px solid #475569}
+#orientTip .row{display:flex;gap:8px;margin-top:10px;justify-content:center}
+#orientTip button{font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#1e293b;border:1px solid #475569;color:#fff;cursor:pointer}
 #touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
 #touch .pad{pointer-events:auto;position:absolute;left:12px;bottom:16px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2)}
 #touch .stick{position:absolute;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.3);left:36px;top:36px}
@@ -60,7 +53,6 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
   #hpWrap{bottom:108px}
   #credit{display:none}
 }
-/* 真横屏 或 竖屏横玩：宽视野操作区 */
 @media(pointer:coarse) and (orientation:landscape){
   #wrap{max-width:none}
   #hud{padding:6px 10px;font-size:12px;gap:8px}
@@ -72,15 +64,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
   #touch .jump{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom))}
   #orientTip{display:none!important}
 }
-#wrap.virt-land #hud{padding:6px 10px;font-size:12px;gap:8px}
-#wrap.virt-land #hpWrap{top:36px;bottom:auto;width:min(200px,40%);left:50%;transform:translateX(-50%)}
-#wrap.virt-land #touch .pad{left:10px;bottom:8px;width:108px;height:108px}
-#wrap.virt-land #touch .stick{width:44px;height:44px;left:32px;top:32px}
-#wrap.virt-land #touch .btn{width:58px;height:58px}
-#wrap.virt-land #touch .fire{right:78px;bottom:12px}
-#wrap.virt-land #touch .jump{right:12px;bottom:12px}
-#wrap.virt-land #orientTip{display:none!important}
-@media(orientation:landscape){#wrap:not(.virt-land){max-width:none}}
+@media(orientation:landscape){#wrap{max-width:none}}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:4}
 #ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,440px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:16px;padding:20px 18px;max-height:90%;overflow:auto}
 #ui h1{font-size:1.4rem;color:#38bdf8;margin-bottom:8px}
@@ -95,7 +79,6 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
 <body>
 <div id="playTools">
   <button type="button" id="btnFs" title="全屏">全屏</button>
-  <button type="button" class="ghost" id="btnVirt" title="手机竖着也能横版玩">竖屏横玩</button>
 </div>
 <div id="wrap">
   <canvas id="c"></canvas>
@@ -108,12 +91,8 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
   </div>
   <div id="hpWrap"><i id="hpBar"></i></div>
   <div id="orientTip" class="hidden">
-    <div>未开自动旋转也能玩：点 <b>竖屏横玩</b>；想藏浏览器栏再点 <b>全屏</b>（安卓更稳）。</div>
-    <div class="row">
-      <button type="button" id="btnTipVirt">竖屏横玩</button>
-      <button type="button" id="btnTipFs">全屏</button>
-      <button type="button" class="ghost" id="btnOrientHide">不再提示</button>
-    </div>
+    <div>横版建议 <b>横屏</b>；开战会尝试全屏（浏览器要求须由你点击触发）。</div>
+    <div class="row"><button type="button" id="btnOrientHide">知道了</button></div>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
@@ -124,11 +103,8 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>魂斗罗风格横版射击。8 向 · 河流/坦克/Boss · 道具 <b style="color:#fde68a">M L S R B</b>。</p>
-      <p>手机：建议右上角 <b style="color:#7dd3fc">全屏</b> + <b style="color:#7dd3fc">竖屏横玩</b>（不用开自动旋转）。<br/>键鼠：WASD 八向 · 空格跳 · J 射</p>
-      <div class="row">
-        <button id="btnImmerse">全屏开战</button>
-        <button class="ghost" id="btnStart">直接开战</button>
-      </div>
+      <p>手机请 <b style="color:#7dd3fc">横屏</b>；点开战即全屏（无法在无点击时偷偷全屏）。<br/>键鼠：WASD 八向 · 空格跳 · J 射</p>
+      <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">任务结束</h1>
@@ -161,7 +137,6 @@ const GUN_NAME = { normal: '—', M: 'M机枪', L: 'L激光', S: 'S散弹', R: '
 
 let SW = 800, SH = 450, W = 800, H = 450, DPR = 1, zoom = 1, GROUND = 0;
 let isPortrait = false, orientDismissed = false, orientSnooze = false;
-let virtLand = false;
 let mode = 'menu', lastT = 0, best = 0;
 let keys = Object.create(null);
 let touchMove = { x: 0, y: 0 };
@@ -183,82 +158,58 @@ function saveMeta() {
   try { localStorage.setItem(SAVE, JSON.stringify({ best, orientHide: orientDismissed })); } catch (e) {}
 }
 
-function updateOrientUI() {
-  const tip = document.getElementById('orientTip');
-  const coarse = window.matchMedia('(pointer: coarse)').matches;
-  const show = coarse && isPortrait && !virtLand && !orientDismissed && !orientSnooze;
-  tip.classList.toggle('hidden', !show);
-  tip.style.display = show ? 'block' : 'none';
-  const bv = document.getElementById('btnVirt');
-  if (bv) {
-    bv.classList.toggle('on', virtLand);
-    bv.textContent = virtLand ? '退出横玩' : '竖屏横玩';
-  }
-  const bf = document.getElementById('btnFs');
-  if (bf) bf.textContent = isFs() ? '退出全屏' : '全屏';
-}
-
 function isFs() {
   return !!(document.fullscreenElement || document.webkitFullscreenElement);
 }
 
-function physicalPortrait() {
-  return window.innerHeight > window.innerWidth * 1.02;
+function updateFsBtn() {
+  const bf = document.getElementById('btnFs');
+  if (bf) bf.textContent = isFs() ? '退出全屏' : '全屏';
 }
 
-/** 竖屏横玩：CSS 旋转舞台，不依赖系统自动旋转 */
-function applyVirtLand() {
-  if (virtLand && physicalPortrait()) {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    wrap.classList.add('virt-land');
-    wrap.style.position = 'fixed';
-    wrap.style.width = vh + 'px';
-    wrap.style.height = vw + 'px';
-    wrap.style.left = ((vw - vh) / 2) + 'px';
-    wrap.style.top = ((vh - vw) / 2) + 'px';
-    wrap.style.transform = 'rotate(90deg)';
-    wrap.style.maxWidth = 'none';
-    wrap.style.margin = '0';
-  } else {
-    if (!physicalPortrait()) virtLand = false;
-    wrap.classList.remove('virt-land');
-    wrap.style.position = '';
-    wrap.style.width = '';
-    wrap.style.height = '';
-    wrap.style.left = '';
-    wrap.style.top = '';
-    wrap.style.transform = '';
-    wrap.style.maxWidth = '';
-    wrap.style.margin = '';
-  }
+function updateOrientUI() {
+  const tip = document.getElementById('orientTip');
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  const show = coarse && isPortrait && !orientDismissed && !orientSnooze;
+  tip.classList.toggle('hidden', !show);
+  tip.style.display = show ? 'block' : 'none';
+  updateFsBtn();
 }
 
-async function requestFs() {
+/** 仅进入全屏（开战用）；浏览器禁止页面加载时无手势自动全屏 */
+async function enterFs() {
+  if (isFs()) return true;
   const root = document.documentElement;
+  try {
+    if (root.requestFullscreen) await root.requestFullscreen();
+    else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+  } catch (e) { return false; }
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock('landscape');
+    }
+  } catch (e) {}
+  return isFs();
+}
+
+async function toggleFs() {
   try {
     if (isFs()) {
       if (document.exitFullscreen) await document.exitFullscreen();
       else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     } else {
-      if (root.requestFullscreen) await root.requestFullscreen();
-      else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+      await enterFs();
     }
   } catch (e) {}
-  try {
-    if (isFs() && screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock('landscape');
-    }
-  } catch (e) {}
-  setTimeout(() => { applyVirtLand(); resize(); }, 60);
+  setTimeout(resize, 60);
 }
 
-function setVirtLand(on) {
-  virtLand = !!on;
-  if (virtLand) orientSnooze = true;
-  applyVirtLand();
-  resize();
-  updateOrientUI();
+async function startGame() {
+  ensureAudio();
+  orientSnooze = true;
+  await enterFs(); // 必须挂在「开战」点击手势里，不能页面一开就全屏
+  newGame();
+  setTimeout(resize, 80);
 }
 
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -298,8 +249,6 @@ function sfx(n) {
 }
 
 function resize() {
-  applyVirtLand();
-  // 旋转后用 clientWidth（布局尺寸），不要用 getBoundingClientRect（AABB）
   DPR = Math.min(2, devicePixelRatio || 1);
   SW = Math.max(320, wrap.clientWidth | 0);
   SH = Math.max(240, wrap.clientHeight | 0);
@@ -307,8 +256,7 @@ function resize() {
   canvas.height = (SH * DPR) | 0;
 
   const prevGround = GROUND;
-  // 竖屏横玩时按横屏逻辑（宽视野），不再额外 zoom-out
-  isPortrait = SH > SW * 1.05 && !virtLand;
+  isPortrait = SH > SW * 1.05;
   if (isPortrait) {
     W = Math.round(SW * 1.4);
     zoom = SW / W;
@@ -1092,32 +1040,17 @@ window.addEventListener('keyup', e => {
   document.getElementById('btnFire').addEventListener('touchend', e => { e.preventDefault(); fireHeld = false; }, { passive: false });
 })();
 
-document.getElementById('btnStart').onclick = () => newGame();
-document.getElementById('btnImmerse').onclick = async () => {
-  ensureAudio();
-  await requestFs();
-  if (physicalPortrait()) setVirtLand(true);
-  else setVirtLand(false);
-  newGame();
-};
-document.getElementById('btnRetry').onclick = () => newGame();
+document.getElementById('btnStart').onclick = () => startGame();
+document.getElementById('btnRetry').onclick = () => startGame();
 document.getElementById('btnMenu').onclick = () => {
   mode = 'menu';
   document.getElementById('panelOver').classList.add('hidden');
   document.getElementById('panelMenu').classList.remove('hidden');
 };
-document.getElementById('btnFs').onclick = () => { ensureAudio(); requestFs(); };
-document.getElementById('btnVirt').onclick = () => {
-  ensureAudio();
-  setVirtLand(!virtLand);
-};
-document.getElementById('btnTipVirt').onclick = () => {
-  ensureAudio();
-  setVirtLand(true);
-};
-document.getElementById('btnTipFs').onclick = () => { ensureAudio(); requestFs(); };
+document.getElementById('btnFs').onclick = () => { ensureAudio(); toggleFs(); };
 document.getElementById('btnOrientHide').onclick = () => {
   orientDismissed = true;
+  orientSnooze = true;
   saveMeta();
   updateOrientUI();
 };
