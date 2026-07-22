@@ -537,7 +537,7 @@ window.TB_LOCALES.en = {
         },
         blitzRun3d: {
             title: 'Blitz Run',
-            desc: 'Contra-style 2D run-and-gun: 8-way aim, M/L/S/R/B weapons, rivers, tanks and bosses.'
+            desc: 'Contra-style 2D run-and-gun: 8-way aim, M/L/S/R/B weapons, tanks and bosses.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',
