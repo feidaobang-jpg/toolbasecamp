@@ -10,6 +10,13 @@
   line-height: 1.5;
 }
 
+.rec-note {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
 .rec-toolbar {
   display: flex;
   flex-wrap: wrap;
