@@ -1,4 +1,4 @@
-"""Private per-user record tools: clocks, important days, deposits, goods."""
+"""Private per-user record tools: clocks, important days, deposits, goods, todos."""
 
 from __future__ import annotations
 
@@ -16,6 +16,8 @@ security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/records", tags=["records"])
 
 NAME_MAX = 80
+TODO_TEXT_MAX = 200
+TODO_STATUSES = ("pending", "doing", "done")
 REMARK_MAX = 500
 CATEGORY_NAME_MAX = 40
 GOODS_PRICE_LABEL_MAX = 40
@@ -189,6 +191,21 @@ def ensure_record_tables(cur):
         )
         if int((cur.fetchone() or {}).get("c") or 0) == 0:
             cur.execute(f"ALTER TABLE record_goods ADD COLUMN {col_sql}")
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_todos (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            user_id BIGINT NOT NULL,
+            content VARCHAR(200) NOT NULL,
+            status VARCHAR(16) NOT NULL DEFAULT 'pending',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_todos_user (user_id),
+            INDEX idx_todos_user_status (user_id, status),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
 
 
 def _iso(value: Any) -> Optional[str]:
@@ -1274,6 +1291,141 @@ def delete_good(good_id: int, user: dict = Depends(_user)):
             cur.execute(
                 "DELETE FROM record_goods WHERE id=%s AND user_id=%s",
                 (good_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+        return {"ok": True}
+    finally:
+        conn.close()
+
+
+# ----- todos -----
+
+
+class TodoCreateBody(BaseModel):
+    text: str
+    status: str = "pending"
+
+
+class TodoUpdateBody(BaseModel):
+    text: str
+    status: str
+
+
+def _normalize_todo_status(raw: str) -> str:
+    s = (raw or "").strip().lower()
+    if s not in TODO_STATUSES:
+        raise HTTPException(status_code=400, detail="Invalid status")
+    return s
+
+
+def _normalize_todo_text(raw: str) -> str:
+    text = (raw or "").strip()
+    if not text or len(text) > TODO_TEXT_MAX:
+        raise HTTPException(status_code=400, detail="Invalid text")
+    return text
+
+
+def _serialize_todo(row: dict) -> dict:
+    return {
+        "id": row["id"],
+        "text": row["content"],
+        "status": row["status"],
+        "createdAt": _iso(row.get("created_at")),
+        "updatedAt": _iso(row.get("updated_at")),
+    }
+
+
+@router.get("/todos")
+def list_todos(user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT * FROM record_todos
+                WHERE user_id=%s
+                ORDER BY
+                  FIELD(status, 'doing', 'pending', 'done'),
+                  updated_at DESC, id DESC
+                """,
+                (user["id"],),
+            )
+            rows = cur.fetchall() or []
+        return {"items": [_serialize_todo(r) for r in rows]}
+    finally:
+        conn.close()
+
+
+@router.post("/todos")
+def create_todo(body: TodoCreateBody, user: dict = Depends(_user)):
+    text = _normalize_todo_text(body.text)
+    status = _normalize_todo_status(body.status)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO record_todos (user_id, content, status) VALUES (%s, %s, %s)",
+                (user["id"], text, status),
+            )
+            new_id = cur.lastrowid
+            cur.execute(
+                "SELECT * FROM record_todos WHERE id=%s AND user_id=%s",
+                (new_id, user["id"]),
+            )
+            return _serialize_todo(cur.fetchone())
+    finally:
+        conn.close()
+
+
+@router.post("/todos/clear-done")
+def clear_done_todos(user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM record_todos WHERE user_id=%s AND status='done'",
+                (user["id"],),
+            )
+            deleted = int(cur.rowcount or 0)
+        return {"ok": True, "deleted": deleted}
+    finally:
+        conn.close()
+
+
+@router.put("/todos/{todo_id}")
+def update_todo(todo_id: int, body: TodoUpdateBody, user: dict = Depends(_user)):
+    text = _normalize_todo_text(body.text)
+    status = _normalize_todo_status(body.status)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE record_todos SET content=%s, status=%s
+                WHERE id=%s AND user_id=%s
+                """,
+                (text, status, todo_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute(
+                "SELECT * FROM record_todos WHERE id=%s AND user_id=%s",
+                (todo_id, user["id"]),
+            )
+            return _serialize_todo(cur.fetchone())
+    finally:
+        conn.close()
+
+
+@router.delete("/todos/{todo_id}")
+def delete_todo(todo_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM record_todos WHERE id=%s AND user_id=%s",
+                (todo_id, user["id"]),
             )
             if cur.rowcount == 0:
                 raise HTTPException(status_code=404, detail="Not found")

@@ -1,12 +1,16 @@
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  var SAVE = 'tbc_todo_list_v1';
+  var R = window.TBRecords;
+  var tr = R.tr;
   var STATUS = { pending: 'pending', doing: 'doing', done: 'done' };
   var items = [];
   var filter = 'all';
   var editingId = null;
+  var busy = false;
 
+  var gate = document.getElementById('login-gate');
+  var app = document.getElementById('app');
   var listEl = document.getElementById('list');
   var emptyEl = document.getElementById('empty');
   var statsEl = document.getElementById('stats');
@@ -16,54 +20,40 @@
   var filterRow = document.getElementById('filter-row');
   var footerEl = document.getElementById('footer-actions');
   var clearDoneBtn = document.getElementById('clear-done-btn');
+  var refreshBtn = document.getElementById('refresh-btn');
+  var loginLink = document.getElementById('login-link');
 
-  function t(key, params) {
-    return typeof window.t === 'function' ? window.t(key, params) : key;
-  }
-
-  function uid() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-  }
-
-  function normalizeStatus(raw, doneFlag) {
-    if (raw === STATUS.doing || raw === STATUS.done || raw === STATUS.pending) return raw;
-    return doneFlag ? STATUS.done : STATUS.pending;
-  }
-
-  function load() {
-    try {
-      var raw = localStorage.getItem(SAVE);
-      if (!raw) return [];
-      var data = JSON.parse(raw);
-      if (!Array.isArray(data.items)) return [];
-      return data.items
-        .filter(function (it) { return it && typeof it.text === 'string'; })
-        .map(function (it) {
-          return {
-            id: String(it.id || uid()),
-            text: String(it.text).slice(0, 200),
-            status: normalizeStatus(it.status, it.done),
-            createdAt: Number(it.createdAt) || Date.now()
-          };
-        });
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function save() {
-    try {
-      localStorage.setItem(SAVE, JSON.stringify({ items: items }));
-      showError('');
-    } catch (e) {
-      showError(t('tools.todoList.saveFailed'));
-    }
-  }
+  loginLink.href = R.loginUrl();
 
   function showError(msg) {
-    if (!errorEl) return;
-    errorEl.textContent = msg || '';
-    errorEl.hidden = !msg;
+    R.setError(errorEl, msg || '');
+  }
+
+  function scrollBottom() {
+    requestAnimationFrame(function () {
+      var node = document.scrollingElement || document.documentElement;
+      var candidates = [document.querySelector('.content'), document.querySelector('main'), node];
+      var scroller = null;
+      for (var i = 0; i < candidates.length; i++) {
+        var el = candidates[i];
+        if (el && el.scrollHeight > el.clientHeight + 1) {
+          scroller = el;
+          break;
+        }
+      }
+      scroller = scroller || node;
+      if (scroller) scroller.scrollTop = scroller.scrollHeight;
+    });
+  }
+
+  function normalizeItem(it) {
+    return {
+      id: it.id,
+      text: String(it.text || ''),
+      status: it.status === STATUS.doing || it.status === STATUS.done ? it.status : STATUS.pending,
+      createdAt: it.createdAt,
+      updatedAt: it.updatedAt
+    };
   }
 
   function visibleItems() {
@@ -86,9 +76,9 @@
   }
 
   function statusLabel(status) {
-    if (status === STATUS.doing) return t('tools.todoList.statusDoing');
-    if (status === STATUS.done) return t('tools.todoList.statusDone');
-    return t('tools.todoList.statusPending');
+    if (status === STATUS.doing) return tr('tools.todoList.statusDoing');
+    if (status === STATUS.done) return tr('tools.todoList.statusDone');
+    return tr('tools.todoList.statusPending');
   }
 
   function nextStatus(status) {
@@ -99,7 +89,7 @@
 
   function render() {
     var c = counts();
-    statsEl.textContent = t('tools.todoList.stats', {
+    statsEl.textContent = tr('tools.todoList.stats', {
       pending: c.pending,
       doing: c.doing,
       done: c.done,
@@ -120,18 +110,17 @@
     view.forEach(function (it) {
       var row = document.createElement('div');
       row.className = 'todo-item status-' + it.status;
-      row.dataset.id = it.id;
+      row.dataset.id = String(it.id);
 
       var statusBtn = document.createElement('button');
       statusBtn.type = 'button';
       statusBtn.className = 'todo-status';
       statusBtn.textContent = statusLabel(it.status);
-      statusBtn.title = t('tools.todoList.cycleStatus');
-      statusBtn.setAttribute('aria-label', t('tools.todoList.cycleStatus'));
+      statusBtn.title = tr('tools.todoList.cycleStatus');
+      statusBtn.setAttribute('aria-label', tr('tools.todoList.cycleStatus'));
+      statusBtn.disabled = busy;
       statusBtn.addEventListener('click', function () {
-        it.status = nextStatus(it.status);
-        save();
-        render();
+        updateTodo(it, { text: it.text, status: nextStatus(it.status) });
       });
 
       var body = document.createElement('div');
@@ -143,6 +132,7 @@
         edit.className = 'todo-edit-input';
         edit.value = it.text;
         edit.maxLength = 200;
+        edit.disabled = busy;
         edit.addEventListener('keydown', function (e) {
           if (e.key === 'Enter') {
             e.preventDefault();
@@ -161,7 +151,7 @@
         var text = document.createElement('p');
         text.className = 'todo-text';
         text.textContent = it.text;
-        text.title = t('tools.todoList.editHint');
+        text.title = tr('tools.todoList.editHint');
         text.addEventListener('dblclick', function () {
           editingId = it.id;
           render();
@@ -175,7 +165,8 @@
       var editBtn = document.createElement('button');
       editBtn.type = 'button';
       editBtn.className = 'tb-btn';
-      editBtn.textContent = t('tools.records.edit');
+      editBtn.textContent = tr('tools.records.edit');
+      editBtn.disabled = busy;
       editBtn.addEventListener('click', function () {
         editingId = it.id;
         render();
@@ -184,12 +175,10 @@
       var delBtn = document.createElement('button');
       delBtn.type = 'button';
       delBtn.className = 'tb-btn';
-      delBtn.textContent = t('tools.records.delete');
+      delBtn.textContent = tr('tools.records.delete');
+      delBtn.disabled = busy;
       delBtn.addEventListener('click', function () {
-        items = items.filter(function (x) { return x.id !== it.id; });
-        if (editingId === it.id) editingId = null;
-        save();
-        render();
+        deleteTodo(it);
       });
 
       actions.appendChild(editBtn);
@@ -202,40 +191,97 @@
     });
   }
 
+  function load() {
+    showError('');
+    return R.apiJson('/records/todos').then(function (data) {
+      items = (data.items || []).map(normalizeItem);
+      render();
+    }).catch(function (err) {
+      showError(err.message || tr('tools.records.unknownError'));
+      scrollBottom();
+    });
+  }
+
   function commitEdit(it, value) {
     var text = String(value || '').trim().slice(0, 200);
     editingId = null;
-    if (!text) {
+    if (!text || text === it.text) {
       render();
       return;
     }
-    it.text = text;
-    save();
+    updateTodo(it, { text: text, status: it.status });
+  }
+
+  function updateTodo(it, body) {
+    if (busy) return;
+    busy = true;
     render();
+    R.apiJson('/records/todos/' + it.id, {
+      method: 'PUT',
+      body: JSON.stringify(body)
+    }).then(function (updated) {
+      var next = normalizeItem(updated);
+      items = items.map(function (x) { return x.id === next.id ? next : x; });
+      busy = false;
+      render();
+    }).catch(function (err) {
+      busy = false;
+      showError(err.message || tr('tools.records.unknownError'));
+      render();
+      scrollBottom();
+    });
+  }
+
+  function deleteTodo(it) {
+    if (busy) return;
+    if (!R.confirmDelete(tr('tools.todoList.deleteConfirm', { text: it.text }))) return;
+    busy = true;
+    render();
+    R.apiJson('/records/todos/' + it.id, { method: 'DELETE' }).then(function () {
+      items = items.filter(function (x) { return x.id !== it.id; });
+      if (editingId === it.id) editingId = null;
+      busy = false;
+      render();
+    }).catch(function (err) {
+      busy = false;
+      showError(err.message || tr('tools.records.unknownError'));
+      render();
+      scrollBottom();
+    });
   }
 
   function addTodo(text) {
     text = String(text || '').trim().slice(0, 200);
     if (!text) {
-      showError(t('tools.todoList.emptyText'));
+      showError(tr('tools.todoList.emptyText'));
       inputEl.focus();
       return;
     }
+    if (busy) return;
+    busy = true;
     showError('');
-    items.unshift({
-      id: uid(),
-      text: text,
-      status: STATUS.pending,
-      createdAt: Date.now()
-    });
-    filter = filter === 'done' || filter === 'doing' ? 'all' : filter;
-    save();
     render();
+    R.apiJson('/records/todos', {
+      method: 'POST',
+      body: JSON.stringify({ text: text, status: STATUS.pending })
+    }).then(function (created) {
+      items.unshift(normalizeItem(created));
+      filter = filter === 'done' || filter === 'doing' ? 'all' : filter;
+      busy = false;
+      render();
+      scrollBottom();
+    }).catch(function (err) {
+      busy = false;
+      showError(err.message || tr('tools.records.unknownError'));
+      render();
+      scrollBottom();
+    });
   }
 
   formEl.addEventListener('submit', function (e) {
     e.preventDefault();
-    addTodo(inputEl.value);
+    var value = inputEl.value;
+    addTodo(value);
     inputEl.value = '';
     inputEl.focus();
   });
@@ -248,20 +294,34 @@
     render();
   });
 
+  refreshBtn.addEventListener('click', function () {
+    if (busy) return;
+    load();
+  });
+
   clearDoneBtn.addEventListener('click', function () {
-    if (!counts().done) return;
-    if (!window.confirm(t('tools.todoList.clearDoneConfirm'))) return;
-    items = items.filter(function (it) { return it.status !== STATUS.done; });
-    editingId = null;
-    save();
+    if (busy || !counts().done) return;
+    if (!window.confirm(tr('tools.todoList.clearDoneConfirm'))) return;
+    busy = true;
     render();
+    R.apiJson('/records/todos/clear-done', { method: 'POST', body: '{}' }).then(function () {
+      items = items.filter(function (it) { return it.status !== STATUS.done; });
+      editingId = null;
+      busy = false;
+      render();
+    }).catch(function (err) {
+      busy = false;
+      showError(err.message || tr('tools.records.unknownError'));
+      render();
+      scrollBottom();
+    });
   });
 
   document.addEventListener('tb:locale', function () {
     render();
   });
 
-  items = load();
-  render();
-  inputEl.focus();
-})();
+  R.requireLogin(gate, app).then(function (user) {
+    if (user) load().then(function () { inputEl.focus(); });
+  });
+});

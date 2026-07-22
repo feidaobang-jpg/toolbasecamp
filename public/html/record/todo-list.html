@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>To-Do List - Tool Basecamp</title>
-  <meta name="description" content="Simple to-do list with pending and done items. Data stays in your browser.">
+  <meta name="description" content="To-do list with pending, in progress and done. Requires sign-in; data synced to your account.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=3" />
-  <link rel="stylesheet" href="../../css/record/todo-list.css?v=2" />
+  <link rel="stylesheet" href="../../css/record/todo-list.css?v=3" />
 </head>
 <body>
   <div class="container">
@@ -16,32 +16,42 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.todoList.title">To-Do List</h1>
-        <p data-i18n="tools.todoList.desc">Add, check off, and clear tasks. Data stays on this device.</p>
+        <p data-i18n="tools.todoList.desc">Add, check off, and clear tasks. Requires sign-in.</p>
       </div>
 
-      <div class="tool-card">
-        <p class="rec-note" data-i18n="tools.todoList.privacyNote">Tasks are stored locally in your browser only.</p>
-
-        <form class="todo-add-row" id="add-form" autocomplete="off">
-          <input type="text" id="todo-input" class="rec-input todo-input" maxlength="200" data-i18n-placeholder="tools.todoList.placeholder" placeholder="What needs to be done?" />
-          <button type="submit" class="tb-btn" data-i18n="tools.todoList.add">Add</button>
-        </form>
-
-        <div class="rec-chip-row" id="filter-row" role="tablist">
-          <button type="button" class="rec-chip is-active" data-filter="all" data-i18n="tools.todoList.filterAll">All</button>
-          <button type="button" class="rec-chip" data-filter="pending" data-i18n="tools.todoList.filterPending">Pending</button>
-          <button type="button" class="rec-chip" data-filter="doing" data-i18n="tools.todoList.filterDoing">In progress</button>
-          <button type="button" class="rec-chip" data-filter="done" data-i18n="tools.todoList.filterDone">Done</button>
+      <div class="tool-card rec-gate" id="login-gate" hidden>
+        <p data-i18n="tools.records.loginRequired">Please sign in to use this tool. Your data is saved to your account.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
         </div>
+      </div>
 
-        <p class="todo-stats" id="stats"></p>
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="rec-note" data-i18n="tools.records.cloudNote">Data is stored on the server for your signed-in account only.</p>
 
-        <div class="error-box" id="error-box" role="alert"></div>
-        <div class="todo-list" id="list"></div>
-        <p class="rec-empty" id="empty" hidden data-i18n="tools.todoList.empty">No tasks yet. Add one above.</p>
+          <form class="todo-add-row" id="add-form" autocomplete="off">
+            <input type="text" id="todo-input" class="rec-input todo-input" maxlength="200" data-i18n-placeholder="tools.todoList.placeholder" placeholder="What needs to be done?" />
+            <button type="submit" class="tb-btn" data-i18n="tools.todoList.add">Add</button>
+            <button type="button" class="tb-btn" id="refresh-btn" data-i18n="tools.records.refresh">Refresh</button>
+          </form>
 
-        <div class="action-row todo-footer" id="footer-actions" hidden>
-          <button type="button" class="tb-btn" id="clear-done-btn" data-i18n="tools.todoList.clearDone">Clear completed</button>
+          <div class="rec-chip-row" id="filter-row" role="tablist">
+            <button type="button" class="rec-chip is-active" data-filter="all" data-i18n="tools.todoList.filterAll">All</button>
+            <button type="button" class="rec-chip" data-filter="pending" data-i18n="tools.todoList.filterPending">Pending</button>
+            <button type="button" class="rec-chip" data-filter="doing" data-i18n="tools.todoList.filterDoing">In progress</button>
+            <button type="button" class="rec-chip" data-filter="done" data-i18n="tools.todoList.filterDone">Done</button>
+          </div>
+
+          <p class="todo-stats" id="stats"></p>
+
+          <div class="error-box" id="error-box" role="alert"></div>
+          <div class="todo-list" id="list"></div>
+          <p class="rec-empty" id="empty" hidden data-i18n="tools.todoList.empty">No tasks yet. Add one above.</p>
+
+          <div class="action-row todo-footer" id="footer-actions" hidden>
+            <button type="button" class="tb-btn" id="clear-done-btn" data-i18n="tools.todoList.clearDone">Clear completed</button>
+          </div>
         </div>
       </div>
     </main>
@@ -52,6 +62,7 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/record/todo-list.js?v=2"></script>
+  <script src="../../js/record/records-client.js?v=3"></script>
+  <script src="../../js/record/todo-list.js?v=3"></script>
 </body>
 </html>
