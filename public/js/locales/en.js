@@ -535,6 +535,10 @@ window.TB_LOCALES.en = {
             title: 'Sunny Garden',
             desc: 'Portrait-friendly 2D tower defense — zombies come from the top. Fully procedural art.'
         },
+        blitzRun3d: {
+            title: 'Blitz Run 3D',
+            desc: 'Contra-style side-scrolling 3D shooter on Three.js — jump, shoot, auto-scroll. Touch friendly.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

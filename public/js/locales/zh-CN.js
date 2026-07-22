@@ -534,6 +534,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '阳光菜园',
             desc: '竖屏友好 2D 塔防：僵尸从上往下，纯程序化绘制，适配手机。'
         },
+        blitzRun3d: {
+            title: '冲锋行动 3D',
+            desc: '魂斗罗风格横版 3D 射击（Three.js）：跳跃射击、自动推进，支持触屏。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',
