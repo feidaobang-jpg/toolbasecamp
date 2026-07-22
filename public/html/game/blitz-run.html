@@ -16,10 +16,11 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
 #touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
 #touch .pad{pointer-events:auto;position:absolute;left:12px;bottom:16px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2)}
 #touch .stick{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.3);left:33px;top:33px}
-#touch .btn{pointer-events:auto;position:absolute;width:64px;height:64px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
-#touch .fire{right:16px;bottom:24px}
-#touch .jump{right:88px;bottom:24px}
-@media(pointer:coarse){#touch{display:block}#hpWrap{bottom:100px}}
+#touch .btn{pointer-events:auto;position:absolute;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+/* 射在前（靠外拇指热区），跳在后 */
+#touch .fire{right:14px;bottom:22px;width:72px;height:72px;font-size:14px;font-weight:700;background:rgba(37,99,235,.72)}
+#touch .jump{right:96px;bottom:28px;width:58px;height:58px;background:rgba(30,58,138,.55)}
+@media(pointer:coarse){#touch{display:block}#hpWrap{bottom:108px}}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:4}
 #ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,420px);background:rgba(10,14,28,.94);border:1px solid #334155;border-radius:16px;padding:20px 18px}
 #ui h1{font-size:1.4rem;color:#38bdf8;margin-bottom:8px}
@@ -43,14 +44,14 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
   <div id="hpWrap"><i id="hpBar"></i></div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="btn jump" id="btnJump">跳</div>
     <div class="btn fire" id="btnFire">射</div>
+    <div class="btn jump" id="btnJump">跳</div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>魂斗罗风格横版射击（自创主题）。纯 Canvas 2D 程序化绘制，无外部库、无贴图。</p>
-      <p>键鼠：A/D 或 ←→ 移动 · W/空格 跳跃 · J 射击<br/>触屏：摇杆 + 跳 + 射。场景自动向右推进。</p>
+      <p>键鼠：A/D 或 ←→ 移动 · W/空格 跳跃 · J 射击<br/>触屏：左摇杆移动 · 右侧「射」在前、「跳」在后。镜头跟随人物，不自动卷轴。</p>
       <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
@@ -182,12 +183,12 @@ function newGame() {
 
 function endGame() {
   mode = 'over';
-  const score = (player.score | 0) + Math.floor(scrollX / 10);
+  const score = (player.score | 0) + Math.floor(player.x / 10);
   best = Math.max(best, score);
   try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
   document.getElementById('panelOver').classList.remove('hidden');
   document.getElementById('overTitle').textContent = '任务失败';
-  document.getElementById('overText').textContent = `得分 ${score} · 里程 ${Math.floor(scrollX)} · 最高 ${best}`;
+  document.getElementById('overText').textContent = `得分 ${score} · 里程 ${Math.floor(player.x)} · 最高 ${best}`;
   sfx('die');
   updateHud();
 }
@@ -197,7 +198,7 @@ function updateHud() {
   el.hp.textContent = String(Math.max(0, player.hp | 0));
   el.bar.style.width = (100 * player.hp / player.maxHp) + '%';
   el.score.textContent = String(player.score | 0);
-  el.dist.textContent = String(Math.floor(scrollX));
+  el.dist.textContent = String(Math.floor(player.x));
   el.best.textContent = String(best);
 }
 
@@ -252,7 +253,7 @@ function hurt(dmg) {
 
 function spawnEnemy() {
   const kind = Math.random() > 0.7 ? 'flyer' : 'grunt';
-  const x = scrollX + W + 40;
+  const x = player.x + W * 0.85 + rand(40, 160);
   enemies.push({
     kind,
     x,
@@ -267,14 +268,20 @@ function spawnEnemy() {
 function update(dt) {
   if (mode !== 'play' || !player) return;
 
-  const scrollSpeed = 140 + Math.min(160, scrollX / 15);
-  scrollX += scrollSpeed * dt;
+  // 镜头跟随人物（魂斗罗式），不自动卷轴
+  const camTarget = player.x - W * 0.32;
+  if (camTarget > scrollX) {
+    scrollX = camTarget; // 向右推进时跟拍
+  } else if (player.x < scrollX + W * 0.18) {
+    scrollX = Math.max(0, player.x - W * 0.18); // 允许小幅回走
+  }
+  scrollX = Math.max(0, scrollX);
 
-  while (nextChunk < scrollX + W + 400) {
+  while (nextChunk < player.x + W + 500) {
     addChunk(nextChunk);
     nextChunk += 320;
   }
-  plats = plats.filter(p => p.x + p.w > scrollX - 80);
+  plats = plats.filter(p => p.x + p.w > scrollX - 120);
 
   let mx = 0;
   if (keys['a'] || keys['arrowleft']) mx -= 1;
@@ -282,11 +289,9 @@ function update(dt) {
   mx += touchMove.x;
   mx = clamp(mx, -1, 1);
 
-  const speed = 220;
+  const speed = 230;
   player.x += mx * speed * dt;
-  const minX = scrollX + 40;
-  const maxX = scrollX + W * 0.55;
-  player.x = clamp(player.x, minX, maxX);
+  player.x = Math.max(48, player.x);
   if (mx) player.facing = mx > 0 ? 1 : -1;
 
   if ((keys['w'] || keys[' '] || jumpQueued) && player.onGround) {
@@ -319,7 +324,7 @@ function update(dt) {
   spawnT -= dt;
   if (spawnT <= 0) {
     spawnEnemy();
-    spawnT = Math.max(0.55, 1.8 - scrollX / 4000);
+    spawnT = Math.max(0.7, 2.0 - player.x / 5000);
   }
 
   // bullets
@@ -327,7 +332,7 @@ function update(dt) {
     const b = bullets[i];
     b.x += b.vx * dt;
     b.life -= dt;
-    let dead = b.life <= 0 || b.x < scrollX - 20 || b.x > scrollX + W + 40;
+    let dead = b.life <= 0 || b.x < scrollX - 40 || b.x > scrollX + W + 80;
     for (const e of enemies) {
       if (Math.abs(b.x - e.x) < e.w * 0.55 && Math.abs(b.y - (e.y - e.h * 0.5)) < e.h * 0.55) {
         e.hp -= 22;
@@ -344,16 +349,18 @@ function update(dt) {
     const e = enemies[i];
     e.bob += dt * 6;
     if (e.kind === 'flyer') {
-      e.x -= 90 * dt;
+      e.x -= 70 * dt;
       e.y = (GROUND - 130) + Math.sin(e.bob) * 28;
     } else {
-      e.x -= 110 * dt;
-      const g = solidTop(e.x, e.y, e.y - 2);
-      e.y = g != null ? g : GROUND;
+      // 朝玩家靠近一点，更像魂斗罗对峙
+      const dir = Math.sign(player.x - e.x) || -1;
+      e.x += dir * 55 * dt;
+      const gnd = solidTop(e.x, e.y, e.y - 2);
+      e.y = gnd != null ? gnd : GROUND;
     }
 
     e.shootCd -= dt;
-    if (e.shootCd <= 0 && Math.abs(e.x - player.x) < W * 0.7) {
+    if (e.shootCd <= 0 && Math.abs(e.x - player.x) < W * 0.75) {
       e.shootCd = 1.3 + Math.random() * 0.6;
       const dir = Math.sign(player.x - e.x) || -1;
       eBullets.push({
@@ -374,7 +381,7 @@ function update(dt) {
       updateHud();
       continue;
     }
-    if (e.x < scrollX - 60) enemies.splice(i, 1);
+    if (e.x < scrollX - 80 || e.x > player.x + W + 200) enemies.splice(i, 1);
   }
 
   for (let i = eBullets.length - 1; i >= 0; i--) {
@@ -394,7 +401,7 @@ function update(dt) {
     sfx('power');
   }
 
-  player.score += dt * 3;
+  player.score += dt * 2;
   particles.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 500 * dt; p.life -= dt; });
   particles = particles.filter(p => p.life > 0);
   updateHud();
