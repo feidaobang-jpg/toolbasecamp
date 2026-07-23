@@ -55,13 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
     resultMeta.textContent = '';
   }
 
-  function scrollBottom() {
-    requestAnimationFrame(function () {
-      var scroller = document.querySelector('.content') || document.scrollingElement;
-      if (scroller) scroller.scrollTop = scroller.scrollHeight;
-    });
-  }
-
   function clampInt(el, min, max, fallback) {
     var n = parseInt(el.value, 10);
     if (!isFinite(n)) n = fallback;
@@ -319,7 +312,6 @@ document.addEventListener('DOMContentLoaded', function () {
         width: canvas.width,
         height: canvas.height
       });
-      scrollBottom();
     }, 'image/png');
   }
 
