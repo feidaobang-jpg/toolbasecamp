@@ -24,9 +24,14 @@
 }
 
 .todo-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "status body"
+    "actions actions";
+  column-gap: 10px;
+  row-gap: 10px;
+  align-items: start;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   padding: 12px 14px;
@@ -38,7 +43,7 @@
 }
 
 .todo-status {
-  flex: 0 0 auto;
+  grid-area: status;
   margin: 0;
   padding: 4px 8px;
   border: 1px solid #cbd5e1;
@@ -47,15 +52,10 @@
   color: #475569;
   font: inherit;
   font-size: 12px;
-  line-height: 1.2;
+  line-height: 1.35;
   cursor: pointer;
   white-space: nowrap;
-}
-
-.todo-item.status-doing .todo-status {
-  border-color: #93c5fd;
-  background: #eff6ff;
-  color: #1d4ed8;
+  align-self: start;
 }
 
 .todo-item.status-done .todo-status {
@@ -65,7 +65,7 @@
 }
 
 .todo-body {
-  flex: 1 1 auto;
+  grid-area: body;
   min-width: 0;
 }
 
@@ -95,10 +95,10 @@
 }
 
 .todo-item-actions {
+  grid-area: actions;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  flex: 0 0 auto;
 }
 
 .todo-item-actions .tb-btn {
@@ -111,13 +111,14 @@
   margin-top: 16px;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   .todo-item {
-    flex-wrap: wrap;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "status body actions";
+    align-items: center;
   }
 
   .todo-item-actions {
-    width: 100%;
-    padding-left: 0;
+    justify-content: flex-end;
   }
 }
