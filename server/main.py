@@ -31,6 +31,7 @@ from life_plans import (
     _wire as wire_life_plans,
     deepseek_configured as life_deepseek_ok,
     PLAN_KINDS as LIFE_PLAN_KINDS,
+    LIFE_PLANS_PROMPT_REV,
 )
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
@@ -572,6 +573,7 @@ def health():
                 "family_meal",
             )
         ),
+        "life_plans_prompt_rev": LIFE_PLANS_PROMPT_REV,
         "tencent_image": tencent_image_ok,
         "life_plans_deepseek": life_deepseek_ok(),
         "watermark_api": "/watermark/image/process" in paths,

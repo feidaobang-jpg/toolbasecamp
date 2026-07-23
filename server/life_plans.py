@@ -28,6 +28,8 @@ LIMITS = {
     "drug_label": int(os.environ.get("DRUG_LABEL_LIMIT", "10")),
 }
 MAX_UPLOAD = 8 * 1024 * 1024
+# Bump when Chinese prompt / locale logic changes — also exposed on /health.
+LIFE_PLANS_PROMPT_REV = 4
 
 PLAN_KINDS = frozenset(
     {
@@ -253,15 +255,15 @@ def _plan_looks_mostly_english(plan: dict) -> bool:
 
 
 def _resolve_plan_locale(locale: str, fields: dict) -> str:
-    """Prefer zh-CN unless the client explicitly asks for English."""
+    """Prefer zh-CN. Only keep English when client explicitly asks and no CJK input."""
     raw = (locale or "").strip() or "zh-CN"
     low = raw.lower()
+    blob = " ".join(str(v) for v in (fields or {}).values())
+    if _text_has_cjk(blob):
+        return "zh-CN"
     if low == "en" or low.startswith("en-"):
-        # Still flip to Chinese when user typed CJK in the form.
-        blob = " ".join(str(v) for v in (fields or {}).values())
-        if _text_has_cjk(blob):
-            return "zh-CN"
         return "en"
+    # Default Chinese for this product (UI zh, numeric-only forms, etc.)
     return "zh-CN"
 
 

@@ -674,6 +674,7 @@ jobs:
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"life_plans_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"life_plans_ready":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"life_plans_prompt_rev":4' >/dev/null \
               && echo "$HEALTH" | grep -F 'family_meal' >/dev/null
           }
           LP_CODE="$(curl -sS -o /tmp/lp-status.txt -w '%{http_code}' \

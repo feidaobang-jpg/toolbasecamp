@@ -16,18 +16,17 @@
   }
 
   function locale() {
+    // Life plans: Chinese UI / Chinese browser → zh-CN.
+    // Only use English when the user explicitly chose English in the switcher.
     try {
       var saved = localStorage.getItem('tb-locale');
-      if (saved === 'zh-CN' || saved === 'en') return saved;
+      if (saved === 'en') return 'en';
+      if (saved === 'zh-CN') return 'zh-CN';
     } catch (e) { /* ignore */ }
     if (typeof global.tbGetLocale === 'function') {
       var loc = String(global.tbGetLocale() || '');
-      if (loc === 'zh-CN' || loc === 'en') return loc;
+      if (loc === 'en') return 'en';
     }
-    var lang = String((document.documentElement && document.documentElement.lang) || '').toLowerCase();
-    if (lang.indexOf('zh') === 0) return 'zh-CN';
-    var nav = String((navigator.language || navigator.userLanguage || '')).toLowerCase();
-    if (nav.indexOf('zh') === 0) return 'zh-CN';
     return 'zh-CN';
   }
 
