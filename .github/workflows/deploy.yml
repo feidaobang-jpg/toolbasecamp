@@ -280,8 +280,9 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan"
+              && echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null; then
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout"
               HEALTH_OK=1
               break
             fi
@@ -294,6 +295,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
             bash /opt/toolbasecamp-deploy/fix-watermark-api.sh
             bash /opt/toolbasecamp-deploy/fix-wan-api.sh || true
+            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health after fix: $HEALTH_JSON"
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
@@ -301,6 +303,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -324,6 +327,12 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-watermark-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/watermark/image/process' >/dev/null || exit 1
+          }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/image/general-cutout/segment' >/dev/null || {
+            echo "=== openapi missing /image/general-cutout/segment — forcing restart ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/image/general-cutout/segment' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
             echo "=== openapi missing clock reset route ==="
