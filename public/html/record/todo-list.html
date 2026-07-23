@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>To-Do List - Tool Basecamp</title>
-  <meta name="description" content="To-do list with pending, in progress and done. Requires sign-in; data synced to your account.">
+  <title>To-Do (Task List) - Tool Basecamp</title>
+  <meta name="description" content="To-do / task list with open and done. Requires sign-in; data synced to your account.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=4" />
-  <link rel="stylesheet" href="../../css/record/todo-list.css?v=3" />
+  <link rel="stylesheet" href="../../css/record/todo-list.css?v=4" />
 </head>
 <body>
   <div class="container">
     <aside class="sidebar"></aside>
     <main class="content">
       <div class="tool-header">
-        <h1 data-i18n="tools.todoList.title">To-Do List</h1>
-        <p data-i18n="tools.todoList.desc">Add, check off, and clear tasks. Requires sign-in.</p>
+        <h1 data-i18n="tools.todoList.title">To-Do (Task List)</h1>
+        <p data-i18n="tools.todoList.desc">Add and check off tasks. Open or done only. Requires sign-in.</p>
       </div>
 
       <div class="tool-card rec-gate" id="login-gate" hidden>
@@ -38,8 +38,7 @@
 
           <div class="rec-chip-row" id="filter-row" role="tablist">
             <button type="button" class="rec-chip is-active" data-filter="all" data-i18n="tools.todoList.filterAll">All</button>
-            <button type="button" class="rec-chip" data-filter="pending" data-i18n="tools.todoList.filterPending">Pending</button>
-            <button type="button" class="rec-chip" data-filter="doing" data-i18n="tools.todoList.filterDoing">In progress</button>
+            <button type="button" class="rec-chip" data-filter="pending" data-i18n="tools.todoList.filterPending">Open</button>
             <button type="button" class="rec-chip" data-filter="done" data-i18n="tools.todoList.filterDone">Done</button>
           </div>
 
@@ -63,6 +62,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=6"></script>
   <script src="../../js/record/records-client.js?v=3"></script>
-  <script src="../../js/record/todo-list.js?v=5"></script>
+  <script src="../../js/record/todo-list.js?v=6"></script>
 </body>
 </html>

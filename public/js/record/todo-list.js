@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var R = window.TBRecords;
   var tr = R.tr;
-  var STATUS = { pending: 'pending', doing: 'doing', done: 'done' };
+  var STATUS = { pending: 'pending', done: 'done' };
   var items = [];
   var filter = 'all';
   var editingId = null;
@@ -30,17 +30,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function normalizeItem(it) {
+    var status = it.status === STATUS.done ? STATUS.done : STATUS.pending;
     return {
       id: it.id,
       text: String(it.text || ''),
-      status: it.status === STATUS.doing || it.status === STATUS.done ? it.status : STATUS.pending,
+      status: status,
       createdAt: it.createdAt,
       updatedAt: it.updatedAt
     };
   }
 
   function visibleItems() {
-    if (filter === 'pending' || filter === 'doing' || filter === 'done') {
+    if (filter === STATUS.pending || filter === STATUS.done) {
       return items.filter(function (it) { return it.status === filter; });
     }
     return items.slice();
@@ -48,33 +49,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function counts() {
     var pending = 0;
-    var doing = 0;
     var done = 0;
     for (var i = 0; i < items.length; i++) {
       if (items[i].status === STATUS.done) done++;
-      else if (items[i].status === STATUS.doing) doing++;
       else pending++;
     }
-    return { pending: pending, doing: doing, done: done, total: items.length };
+    return { pending: pending, done: done, total: items.length };
   }
 
   function statusLabel(status) {
-    if (status === STATUS.doing) return tr('tools.todoList.statusDoing');
     if (status === STATUS.done) return tr('tools.todoList.statusDone');
     return tr('tools.todoList.statusPending');
   }
 
   function nextStatus(status) {
-    if (status === STATUS.pending) return STATUS.doing;
-    if (status === STATUS.doing) return STATUS.done;
-    return STATUS.pending;
+    return status === STATUS.pending ? STATUS.done : STATUS.pending;
   }
 
   function render() {
     var c = counts();
     statsEl.textContent = tr('tools.todoList.stats', {
       pending: c.pending,
-      doing: c.doing,
       done: c.done,
       total: c.total
     });
@@ -246,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
       body: JSON.stringify({ text: text, status: STATUS.pending })
     }).then(function (created) {
       items.unshift(normalizeItem(created));
-      filter = filter === 'done' || filter === 'doing' ? 'all' : filter;
+      if (filter === STATUS.done) filter = 'all';
       busy = false;
       render();
     }).catch(function (err) {
