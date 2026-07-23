@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day Trip Plan - Tool Basecamp</title>
+  <meta name="description" content="Half-day or full-day local outing plan. Requires sign-in.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <link rel="stylesheet" href="../../css/life/life-plans.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.dayTripPlan.title">Day Trip Plan</h1>
+        <p data-i18n="tools.dayTripPlan.desc">Half-day or full-day local outing from city and interests. Requires sign-in.</p>
+      </div>
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="quota-line"></p>
+          <form id="plan-form" class="life-plan-form">
+            <div class="field-row">
+              <label class="field-label" for="city" data-i18n="tools.dayTripPlan.city">City / area</label>
+              <input id="city" name="city" type="text" required data-i18n-placeholder="tools.dayTripPlan.cityPh" placeholder="e.g. Shanghai · Pudong" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="duration" data-i18n="tools.dayTripPlan.duration">Duration</label>
+              <select id="duration" name="duration" required>
+                <option value="half_day" data-i18n="tools.dayTripPlan.halfDay">Half day</option>
+                <option value="full_day" data-i18n="tools.dayTripPlan.fullDay" selected>Full day</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="interests" data-i18n="tools.dayTripPlan.interests">Interests</label>
+              <textarea id="interests" name="interests" rows="2" required data-i18n-placeholder="tools.dayTripPlan.interestsPh" placeholder="Museum, walk, cafe, kids…"></textarea>
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="companions" data-i18n="tools.dayTripPlan.companions">Companions (optional)</label>
+              <input id="companions" name="companions" type="text" data-i18n-placeholder="tools.dayTripPlan.companionsPh" placeholder="Solo / couple / kids…" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="budget" data-i18n="tools.dayTripPlan.budget">Budget (optional)</label>
+              <input id="budget" name="budget" type="text" data-i18n-placeholder="tools.dayTripPlan.budgetPh" placeholder="e.g. ¥200 per person" />
+            </div>
+            <div class="action-row">
+              <button type="submit" class="tb-btn" id="run-btn" data-i18n="tools.lifePlans.generate">Generate</button>
+              <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.lifePlans.clear">Clear</button>
+              <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.lifePlans.copy">Copy</button>
+              <button type="button" class="tb-btn" id="download-btn" data-i18n="tools.lifePlans.download">Download</button>
+            </div>
+          </form>
+          <div class="life-plan-busy" id="busy" hidden>
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+        </div>
+        <div class="tool-card life-plan-result" id="result-card" hidden>
+          <div id="result-mount"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-cloud-client.js?v=8"></script>
+  <script src="../../js/life/life-plans.js?v=2"></script>
+  <script>TBLifePlans.initPlanPage({ kind: 'day_trip' });</script>
+</body>
+</html>

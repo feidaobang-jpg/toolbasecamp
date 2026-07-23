@@ -37,6 +37,11 @@ PLAN_KINDS = frozenset(
         "pc_upgrade",
         "seasonal_food",
         "outfit",
+        "day_trip",
+        "moving",
+        "savings",
+        "interview",
+        "family_meal",
     }
 )
 
@@ -251,6 +256,11 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         "pc_upgrade": "Suggest PC upgrade/accessory options from current specs and optional budget. Note prices change.",
         "seasonal_food": "Suggest a weekly produce/meat plan for the season and region. Practical shopping list.",
         "outfit": "Suggest outfits for the temperature/weather and optional occasion. List layers and footwear.",
+        "day_trip": "Create a half-day or one-day local outing plan: timed stops, transport tips, food, packing. Not real-time booking.",
+        "moving": "Create a moving/home-relocation checklist by room and timeline (before / moving day / after). Practical packing and utilities.",
+        "savings": "Create a monthly savings/budget outline from income, fixed costs, and a savings goal. Not financial advice; no investment picks.",
+        "interview": "From a job description and background, produce likely interview questions, STAR story outlines, and prep checklist. Not a guarantee of outcomes.",
+        "family_meal": "Create a 7-day family meal plan with simple dishes plus a grocery shopping list. Respect people count, allergies, and kitchen constraints.",
     }
     return common + "\nTask: " + hints.get(kind, "Create a helpful plan.")
 

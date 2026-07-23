@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly Savings Plan - Tool Basecamp</title>
+  <meta name="description" content="Monthly budget outline from income and savings goal. Not financial advice. Requires sign-in.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <link rel="stylesheet" href="../../css/life/life-plans.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.savingsPlan.title">Monthly Savings Plan</h1>
+        <p data-i18n="tools.savingsPlan.desc">Budget outline from income, fixed costs, and a savings goal. Not financial advice. Requires sign-in.</p>
+      </div>
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="quota-line"></p>
+          <form id="plan-form" class="life-plan-form">
+            <div class="field-row">
+              <label class="field-label" for="income" data-i18n="tools.savingsPlan.income">Monthly income (approx.)</label>
+              <input id="income" name="income" type="text" required data-i18n-placeholder="tools.savingsPlan.incomePh" placeholder="e.g. 12000" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="fixed" data-i18n="tools.savingsPlan.fixed">Fixed expenses</label>
+              <textarea id="fixed" name="fixed" rows="2" required data-i18n-placeholder="tools.savingsPlan.fixedPh" placeholder="Rent, loan, phone…"></textarea>
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="goal" data-i18n="tools.savingsPlan.goal">Savings goal this month</label>
+              <input id="goal" name="goal" type="text" required data-i18n-placeholder="tools.savingsPlan.goalPh" placeholder="e.g. Save 2000" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="notes" data-i18n="tools.savingsPlan.notes">Notes (optional)</label>
+              <textarea id="notes" name="notes" rows="2" data-i18n-placeholder="tools.savingsPlan.notesPh" placeholder="Big bills, household size…"></textarea>
+            </div>
+            <p class="life-plan-disclaimer" data-i18n="tools.savingsPlan.disclaimer">For reference only — not investment advice.</p>
+            <div class="action-row">
+              <button type="submit" class="tb-btn" id="run-btn" data-i18n="tools.lifePlans.generate">Generate</button>
+              <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.lifePlans.clear">Clear</button>
+              <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.lifePlans.copy">Copy</button>
+              <button type="button" class="tb-btn" id="download-btn" data-i18n="tools.lifePlans.download">Download</button>
+            </div>
+          </form>
+          <div class="life-plan-busy" id="busy" hidden>
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+        </div>
+        <div class="tool-card life-plan-result" id="result-card" hidden>
+          <div id="result-mount"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-cloud-client.js?v=8"></script>
+  <script src="../../js/life/life-plans.js?v=2"></script>
+  <script>TBLifePlans.initPlanPage({ kind: 'savings' });</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interview Prep - Tool Basecamp</title>
+  <meta name="description" content="Interview questions and story outlines from a job description. Requires sign-in.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <link rel="stylesheet" href="../../css/life/life-plans.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.interviewPlan.title">Interview Prep</h1>
+        <p data-i18n="tools.interviewPlan.desc">Paste a JD — get likely questions and story outlines. Requires sign-in.</p>
+      </div>
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="quota-line"></p>
+          <form id="plan-form" class="life-plan-form">
+            <div class="field-row">
+              <label class="field-label" for="role" data-i18n="tools.interviewPlan.role">Target role</label>
+              <input id="role" name="role" type="text" required data-i18n-placeholder="tools.interviewPlan.rolePh" placeholder="e.g. Frontend engineer" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="jd" data-i18n="tools.interviewPlan.jd">Job description</label>
+              <textarea id="jd" name="jd" rows="5" required data-i18n-placeholder="tools.interviewPlan.jdPh" placeholder="Paste duties and requirements…"></textarea>
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="background" data-i18n="tools.interviewPlan.background">Your background (optional)</label>
+              <textarea id="background" name="background" rows="3" data-i18n-placeholder="tools.interviewPlan.backgroundPh" placeholder="Years, projects, why leaving…"></textarea>
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="style" data-i18n="tools.interviewPlan.style">Interview format (optional)</label>
+              <input id="style" name="style" type="text" data-i18n-placeholder="tools.interviewPlan.stylePh" placeholder="Phone / onsite / tech round…" />
+            </div>
+            <div class="action-row">
+              <button type="submit" class="tb-btn" id="run-btn" data-i18n="tools.lifePlans.generate">Generate</button>
+              <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.lifePlans.clear">Clear</button>
+              <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.lifePlans.copy">Copy</button>
+              <button type="button" class="tb-btn" id="download-btn" data-i18n="tools.lifePlans.download">Download</button>
+            </div>
+          </form>
+          <div class="life-plan-busy" id="busy" hidden>
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+        </div>
+        <div class="tool-card life-plan-result" id="result-card" hidden>
+          <div id="result-mount"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-cloud-client.js?v=8"></script>
+  <script src="../../js/life/life-plans.js?v=2"></script>
+  <script>TBLifePlans.initPlanPage({ kind: 'interview' });</script>
+</body>
+</html>
