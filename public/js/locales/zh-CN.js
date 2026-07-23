@@ -1074,22 +1074,12 @@ window.TB_LOCALES['zh-CN'] = {
             loadFailed: '图片加载失败',
             generateFail: '合成失败，请换较小图片重试。'
         },
-        removeBackground: {
-            title: '去背景',
-            desc: '一键去除人像背景，下载透明 PNG。需登录，计入每日限额。',
-            dropTitle: '点击或拖入人像照片',
-            dropHint: '建议 JPG / PNG，不超过 5MB',
-            shareQuota: '与「制作证件照」「智能抠图」共用每日抠图限额。',
-            run: '去除背景',
-            download: '下载',
-            clear: '清除'
-        },
         smartCutout: {
             title: '智能抠图',
             desc: '一键人像抠图（腾讯云），输出透明 PNG。需登录，计入每日限额。',
             dropTitle: '点击或拖入人像照片',
             dropHint: '选图后自动抠图 · JPG / PNG · 不超过 5MB',
-            shareQuota: '与「制作证件照」「去背景」共用每日抠图限额。',
+            shareQuota: '与「制作证件照」共用每日抠图限额。',
             run: '开始抠图',
             download: '下载',
             clear: '清除',

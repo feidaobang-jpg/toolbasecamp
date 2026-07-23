@@ -117,7 +117,6 @@ const toolsConfig = {
                 { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
                 { titleKey: 'tools.addWatermark.title', url: 'html/media/add-watermark.html' },
                 { titleKey: 'tools.addBackground.title', url: 'html/media/add-background.html' },
-                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true },
                 { titleKey: 'tools.smartCutout.title', url: 'html/media/smart-cutout.html', authRequired: true },
                 { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
                 { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
