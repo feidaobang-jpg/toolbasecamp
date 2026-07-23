@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var modeRow = document.getElementById('mode-row');
   var wmFields = document.getElementById('wm-fields');
   var gapField = document.getElementById('gap-field');
-  var posRow = document.getElementById('pos-row');
   var textInput = document.getElementById('text-input');
   var fontSizeInput = document.getElementById('font-size-input');
   var opacityInput = document.getElementById('opacity-input');
@@ -29,8 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var state = {
     image: null,
     scale: 1,
-    mode: 'single',
-    pos: 'center',
+    var mode: 'single',
     x: 0.5,
     y: 0.5,
     dragging: false,
@@ -55,27 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
       chips[i].classList.toggle('is-active', chips[i].getAttribute('data-mode') === state.mode);
     }
     var tile = state.mode === 'tile';
-    posRow.hidden = !state.image || tile;
     gapField.hidden = !tile;
     canvas.style.cursor = tile ? 'default' : 'grab';
-  }
-
-  function syncPosChips() {
-    var chips = posRow.querySelectorAll('[data-pos]');
-    for (var i = 0; i < chips.length; i++) {
-      chips[i].classList.toggle('is-active', chips[i].getAttribute('data-pos') === state.pos);
-    }
-  }
-
-  function applyPreset(pos) {
-    state.pos = pos || 'center';
-    var pad = 0.08;
-    if (state.pos === 'tl') { state.x = pad; state.y = pad; }
-    else if (state.pos === 'tr') { state.x = 1 - pad; state.y = pad; }
-    else if (state.pos === 'bl') { state.x = pad; state.y = 1 - pad; }
-    else if (state.pos === 'br') { state.x = 1 - pad; state.y = 1 - pad; }
-    else { state.x = 0.5; state.y = 0.5; state.pos = 'center'; }
-    syncPosChips();
   }
 
   function hexToRgb(hex) {
@@ -248,7 +227,8 @@ document.addEventListener('DOMContentLoaded', function () {
     img.onload = function () {
       state.image = img;
       state.name = (file.name || 'image').replace(/\.[^.]+$/, '') + '_watermark.png';
-      applyPreset('center');
+      state.x = 0.5;
+      state.y = 0.5;
       dropZone.hidden = true;
       canvasWrap.hidden = false;
       modeRow.hidden = false;
@@ -274,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
     canvasWrap.hidden = true;
     modeRow.hidden = true;
     wmFields.hidden = true;
-    posRow.hidden = true;
     gapField.hidden = true;
     dropZone.hidden = false;
     setError('');
@@ -339,13 +318,6 @@ document.addEventListener('DOMContentLoaded', function () {
     renderPreview();
   });
 
-  posRow.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-pos]');
-    if (!btn || !state.image || state.mode !== 'single') return;
-    applyPreset(btn.getAttribute('data-pos'));
-    renderPreview();
-  });
-
   function onPointerDown(e) {
     if (!state.image || state.mode !== 'single' || !watermarkText()) return;
     if (e.cancelable) e.preventDefault();
@@ -353,8 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!hitText(p.x, p.y)) {
       state.x = p.x / (canvas.width || 1);
       state.y = p.y / (canvas.height || 1);
-      state.pos = 'custom';
-      syncPosChips();
       renderPreview();
       return;
     }
@@ -377,8 +347,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var ay = p.y / state.scale - state.dragOffY;
     state.x = Math.max(0, Math.min(1, ax / iw));
     state.y = Math.max(0, Math.min(1, ay / ih));
-    state.pos = 'custom';
-    syncPosChips();
     renderPreview();
   }
 
