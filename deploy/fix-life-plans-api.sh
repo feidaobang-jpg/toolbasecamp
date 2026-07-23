@@ -26,11 +26,14 @@ print([p for p in paths if 'life-plan' in p])
 assert '/life-plans/status' in paths
 assert '/life-plans/generate' in paths
 assert '/life-plans/drug-label' in paths
-from life_plans import PLAN_KINDS
+from life_plans import PLAN_KINDS, LIFE_PLANS_PROMPT_REV
 need = {'day_trip','savings','interview','family_meal'}
 missing = sorted(need - set(PLAN_KINDS))
 assert not missing, 'disk PLAN_KINDS missing: ' + str(missing)
-print('PLAN_KINDS', sorted(PLAN_KINDS))
+gone = {'shopping','wishlist','moving'} & set(PLAN_KINDS)
+assert not gone, 'disk still has removed kinds: ' + str(sorted(gone))
+assert LIFE_PLANS_PROMPT_REV == 5, 'disk prompt_rev=%s' % LIFE_PLANS_PROMPT_REV
+print('PLAN_KINDS', sorted(PLAN_KINDS), 'prompt_rev', LIFE_PLANS_PROMPT_REV)
 "
 )
 
@@ -70,7 +73,9 @@ for i in 1 2 3 4 5 6 7 8; do
     && echo "$HEALTH" | grep -q '"life_plans_ready":true' \
     && echo "$HEALTH" | grep -q '"life_plans_day_trip":true' \
     && echo "$HEALTH" | grep -q '"life_plans_prompt_rev":5' \
-    && echo "$HEALTH" | grep -q 'family_meal'; then
+    && echo "$HEALTH" | grep -q 'family_meal' \
+    && ! echo "$HEALTH" | grep -q '"shopping"' \
+    && ! echo "$HEALTH" | grep -q '"wishlist"'; then
     OK=1
     break
   fi
