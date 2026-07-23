@@ -1033,7 +1033,7 @@ window.TB_LOCALES.en = {
             dropTitle: 'Click or drop an image',
             dropHint: 'JPG, PNG, or WebP',
             tip: 'Tip:',
-            tipBody: 'Type to preview instantly. Single: drag on the image. Tile: repeats diagonally across the image.',
+            tipBody: 'Type to preview instantly. Single: drag to move, SE handle to resize. Tile: repeats diagonally across the image.',
             modeSingle: 'Single',
             modeTile: 'Tile',
             textLabel: 'Watermark text',

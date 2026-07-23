@@ -1032,7 +1032,7 @@ window.TB_LOCALES['zh-CN'] = {
             dropTitle: '点击或拖入图片',
             dropHint: '支持 JPG、PNG、WebP',
             tip: '提示：',
-            tipBody: '输入文字即可实时预览。单个模式可在图上拖动；平铺模式会斜向重复铺满。',
+            tipBody: '输入文字即可实时预览。单个：拖动移动，右下角手柄缩放；平铺：斜向重复铺满。',
             modeSingle: '单个',
             modeTile: '平铺',
             textLabel: '水印文字',

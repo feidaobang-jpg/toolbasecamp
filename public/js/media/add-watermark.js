@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   var MARGIN = 24;
+  var HANDLE = 14;
   var TILE_ANGLE = -28 * Math.PI / 180;
 
   var dropZone = document.getElementById('drop-zone');
@@ -28,12 +29,17 @@ document.addEventListener('DOMContentLoaded', function () {
   var state = {
     image: null,
     scale: 1,
-    var mode: 'single',
+    mode: 'single',
     x: 0.5,
     y: 0.5,
     dragging: false,
+    resizing: false,
     dragOffX: 0,
     dragOffY: 0,
+    resizeTlX: 0,
+    resizeTlY: 0,
+    resizeStartW: 1,
+    resizeStartSize: 48,
     name: 'watermarked.png',
     metrics: null
   };
@@ -191,11 +197,23 @@ document.addEventListener('DOMContentLoaded', function () {
       var sy = placed.anchor.y * state.scale;
       var sw = placed.metrics.w * state.scale;
       var sh = placed.metrics.h * state.scale;
+      var boxX = sx - 4;
+      var boxY = sy - 4;
+      var boxW = sw + 8;
+      var boxH = sh + 8;
       ctx.save();
       ctx.strokeStyle = 'rgba(37,99,235,0.7)';
       ctx.lineWidth = 1.5;
       ctx.setLineDash([5, 4]);
-      ctx.strokeRect(sx - 4, sy - 4, sw + 8, sh + 8);
+      ctx.strokeRect(boxX, boxY, boxW, boxH);
+      ctx.setLineDash([]);
+      var hx = boxX + boxW;
+      var hy = boxY + boxH;
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(hx - HANDLE / 2, hy - HANDLE / 2, HANDLE, HANDLE);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(hx - HANDLE / 2, hy - HANDLE / 2, HANDLE, HANDLE);
       ctx.restore();
     }
 
@@ -247,6 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function clearAll() {
     state.image = null;
     state.dragging = false;
+    state.resizing = false;
     state.metrics = null;
     state.mode = 'single';
     fileInput.value = '';
@@ -280,16 +299,38 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  function hitText(cx, cy) {
-    if (!state.image || !state.metrics || state.mode !== 'single') return false;
+  function boxRectDisplay() {
+    if (!state.image || !state.metrics || state.mode !== 'single') return null;
     var iw = state.image.naturalWidth;
     var ih = state.image.naturalHeight;
     var anchor = textAnchor(iw, ih, state.metrics);
-    var sx = anchor.x * state.scale - 8;
-    var sy = anchor.y * state.scale - 8;
-    var sw = state.metrics.w * state.scale + 16;
-    var sh = state.metrics.h * state.scale + 16;
-    return cx >= sx && cx <= sx + sw && cy >= sy && cy <= sy + sh;
+    var sx = anchor.x * state.scale - 4;
+    var sy = anchor.y * state.scale - 4;
+    var sw = state.metrics.w * state.scale + 8;
+    var sh = state.metrics.h * state.scale + 8;
+    return { x: sx, y: sy, w: sw, h: sh, tlX: anchor.x, tlY: anchor.y };
+  }
+
+  function hitResizeHandle(cx, cy) {
+    var box = boxRectDisplay();
+    if (!box) return false;
+    var hx = box.x + box.w;
+    var hy = box.y + box.h;
+    var tol = Math.max(HANDLE, 18) / 2 + 4;
+    return Math.abs(cx - hx) <= tol && Math.abs(cy - hy) <= tol;
+  }
+
+  function hitText(cx, cy) {
+    var box = boxRectDisplay();
+    if (!box) return false;
+    return cx >= box.x && cx <= box.x + box.w && cy >= box.y && cy <= box.y + box.h;
+  }
+
+  function updateHoverCursor(p) {
+    if (!state.image || state.mode !== 'single' || state.dragging || state.resizing) return;
+    if (hitResizeHandle(p.x, p.y)) canvas.style.cursor = 'nwse-resize';
+    else if (hitText(p.x, p.y)) canvas.style.cursor = 'grab';
+    else canvas.style.cursor = 'crosshair';
   }
 
   dropZone.addEventListener('click', function () { fileInput.click(); });
@@ -313,6 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!btn || !state.image) return;
     state.mode = btn.getAttribute('data-mode') === 'tile' ? 'tile' : 'single';
     state.dragging = false;
+    state.resizing = false;
     setError('');
     syncModeUi();
     renderPreview();
@@ -322,37 +364,75 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!state.image || state.mode !== 'single' || !watermarkText()) return;
     if (e.cancelable) e.preventDefault();
     var p = canvasPoint(e);
+    var iw = state.image.naturalWidth;
+    var ih = state.image.naturalHeight;
+
+    if (hitResizeHandle(p.x, p.y) && state.metrics) {
+      var anchor = textAnchor(iw, ih, state.metrics);
+      state.resizing = true;
+      state.dragging = false;
+      state.resizeTlX = anchor.x;
+      state.resizeTlY = anchor.y;
+      state.resizeStartW = Math.max(1, state.metrics.w);
+      state.resizeStartSize = fontSize();
+      canvas.style.cursor = 'nwse-resize';
+      return;
+    }
+
     if (!hitText(p.x, p.y)) {
       state.x = p.x / (canvas.width || 1);
       state.y = p.y / (canvas.height || 1);
       renderPreview();
       return;
     }
-    var iw = state.image.naturalWidth;
-    var ih = state.image.naturalHeight;
-    var anchor = textAnchor(iw, ih, state.metrics);
+    var anchorMove = textAnchor(iw, ih, state.metrics);
     state.dragging = true;
+    state.resizing = false;
     canvas.style.cursor = 'grabbing';
-    state.dragOffX = p.x / state.scale - (anchor.x + state.metrics.w / 2);
-    state.dragOffY = p.y / state.scale - (anchor.y + state.metrics.h / 2);
+    state.dragOffX = p.x / state.scale - (anchorMove.x + state.metrics.w / 2);
+    state.dragOffY = p.y / state.scale - (anchorMove.y + state.metrics.h / 2);
   }
 
   function onPointerMove(e) {
-    if (!state.dragging || !state.image || state.mode !== 'single') return;
-    if (e.cancelable) e.preventDefault();
+    if (!state.image || state.mode !== 'single') return;
     var p = canvasPoint(e);
-    var iw = state.image.naturalWidth;
-    var ih = state.image.naturalHeight;
-    var ax = p.x / state.scale - state.dragOffX;
-    var ay = p.y / state.scale - state.dragOffY;
-    state.x = Math.max(0, Math.min(1, ax / iw));
-    state.y = Math.max(0, Math.min(1, ay / ih));
-    renderPreview();
+
+    if (state.resizing) {
+      if (e.cancelable) e.preventDefault();
+      var iw = state.image.naturalWidth;
+      var ih = state.image.naturalHeight;
+      var px = p.x / state.scale;
+      var targetW = Math.max(16, px - state.resizeTlX);
+      var ratio = targetW / state.resizeStartW;
+      var newSize = Math.round(state.resizeStartSize * ratio);
+      newSize = Math.max(12, Math.min(400, newSize));
+      fontSizeInput.value = String(newSize);
+      var metrics = measureText(ctx, watermarkText(), newSize);
+      state.x = Math.max(0, Math.min(1, (state.resizeTlX + metrics.w / 2) / iw));
+      state.y = Math.max(0, Math.min(1, (state.resizeTlY + metrics.h / 2) / ih));
+      renderPreview();
+      return;
+    }
+
+    if (state.dragging) {
+      if (e.cancelable) e.preventDefault();
+      var iw2 = state.image.naturalWidth;
+      var ih2 = state.image.naturalHeight;
+      var ax = p.x / state.scale - state.dragOffX;
+      var ay = p.y / state.scale - state.dragOffY;
+      state.x = Math.max(0, Math.min(1, ax / iw2));
+      state.y = Math.max(0, Math.min(1, ay / ih2));
+      renderPreview();
+      return;
+    }
+
+    updateHoverCursor(p);
   }
 
   function onPointerUp() {
-    if (state.dragging) {
+    if (state.dragging || state.resizing) {
       state.dragging = false;
+      state.resizing = false;
       if (state.mode === 'single') canvas.style.cursor = 'grab';
     }
   }
