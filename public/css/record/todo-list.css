@@ -25,12 +25,9 @@
 
 .todo-item {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas:
-    "status body"
-    "actions actions";
-  column-gap: 10px;
-  row-gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "status body actions";
+  column-gap: 8px;
   align-items: start;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -97,28 +94,19 @@
 .todo-item-actions {
   grid-area: actions;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
+  flex-shrink: 0;
+  align-self: start;
 }
 
 .todo-item-actions .tb-btn {
-  padding: 6px 12px;
+  padding: 6px 10px;
   font-size: 13px;
   min-height: 0;
+  white-space: nowrap;
 }
 
 .todo-footer {
   margin-top: 16px;
-}
-
-@media (min-width: 769px) {
-  .todo-item {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas: "status body actions";
-    align-items: center;
-  }
-
-  .todo-item-actions {
-    justify-content: flex-end;
-  }
 }
