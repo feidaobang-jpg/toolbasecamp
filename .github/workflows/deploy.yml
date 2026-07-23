@@ -276,12 +276,15 @@ jobs:
           sleep 2
           systemctl is-active toolbasecamp-api
           ss -lntp 2>/dev/null | grep 8001 || netstat -lntp 2>/dev/null | grep 8001 || true
+          # Always nuke once more — DEPLOY_SHA on disk can update while an orphan keeps old PLAN_KINDS.
+          echo "=== Force life-plans process reload ==="
+          bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
           if ! echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
-            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_day_trip":true' >/dev/null; then
+            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null; then
             echo "stale process detected right after start — running fix scripts"
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
             bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
@@ -299,8 +302,8 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"life_plans_day_trip":true' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans(+day_trip)"
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null; then
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready"
               HEALTH_OK=1
               break
             fi
@@ -324,7 +327,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null || exit 1
-            echo "$HEALTH_JSON" | grep -F '"life_plans_day_trip":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -669,7 +672,10 @@ jobs:
           check_lp() {
             HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
-            echo "$HEALTH" | grep -F '"life_plans_api":true' >/dev/null
+            echo "$HEALTH" | grep -F '"life_plans_api":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"life_plans_ready":true' >/dev/null \
+              && echo "$HEALTH" | grep -F 'shopping' >/dev/null \
+              && echo "$HEALTH" | grep -F 'wishlist' >/dev/null
           }
           LP_CODE="$(curl -sS -o /tmp/lp-status.txt -w '%{http_code}' \
             "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"

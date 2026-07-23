@@ -26,6 +26,11 @@ print([p for p in paths if 'life-plan' in p])
 assert '/life-plans/status' in paths
 assert '/life-plans/generate' in paths
 assert '/life-plans/drug-label' in paths
+from life_plans import PLAN_KINDS
+need = {'day_trip','moving','savings','interview','family_meal','shopping','wishlist'}
+missing = sorted(need - set(PLAN_KINDS))
+assert not missing, 'disk PLAN_KINDS missing: ' + str(missing)
+print('PLAN_KINDS', sorted(PLAN_KINDS))
 "
 )
 
@@ -62,15 +67,18 @@ for i in 1 2 3 4 5 6 7 8; do
   HEALTH="$(curl -sf http://127.0.0.1:8001/health || true)"
   echo "try $i: $HEALTH"
   if echo "$HEALTH" | grep -q '"life_plans_api":true' \
+    && echo "$HEALTH" | grep -q '"life_plans_ready":true' \
     && echo "$HEALTH" | grep -q '"life_plans_day_trip":true' \
-    && echo "$HEALTH" | grep -q 'shopping'; then
+    && echo "$HEALTH" | grep -q 'shopping' \
+    && echo "$HEALTH" | grep -q 'wishlist' \
+    && echo "$HEALTH" | grep -q 'family_meal'; then
     OK=1
     break
   fi
   sleep 2
 done
 if [[ "$OK" != "1" ]]; then
-  echo "FAILED: health missing life_plans kinds (need day_trip/shopping in process memory)"
+  echo "FAILED: health missing life_plans_ready / new kinds in process memory"
   journalctl -u toolbasecamp-api -n 60 --no-pager || true
   exit 1
 fi
@@ -78,4 +86,4 @@ curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/life-plans/status' || {
   echo "FAILED: openapi missing /life-plans/status"
   exit 1
 }
-echo "OK: life-plans API is live on :8001 (kinds include day_trip)"
+echo "OK: life-plans API is live on :8001 (life_plans_ready)"

@@ -563,6 +563,18 @@ def health():
         "life_plans_api": "/life-plans/generate" in paths,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),
         "life_plans_day_trip": "day_trip" in LIFE_PLAN_KINDS,
+        "life_plans_ready": all(
+            k in LIFE_PLAN_KINDS
+            for k in (
+                "day_trip",
+                "moving",
+                "savings",
+                "interview",
+                "family_meal",
+                "shopping",
+                "wishlist",
+            )
+        ),
         "tencent_image": tencent_image_ok,
         "life_plans_deepseek": life_deepseek_ok(),
         "watermark_api": "/watermark/image/process" in paths,
