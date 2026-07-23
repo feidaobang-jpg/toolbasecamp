@@ -1,83 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Erase - Tool Basecamp</title>
-  <meta name="description" content="Erase watermarks, mosaics and marks with server inpainting, or paint mosaic locally.">
-  <link rel="stylesheet" href="../../css/base.css?v=5" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <meta http-equiv="refresh" content="0;url=add-mosaic.html" />
+  <link rel="canonical" href="add-mosaic.html" />
+  <title>Redirecting…</title>
+  <script>location.replace('add-mosaic.html');</script>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar"></aside>
-    <main class="content">
-      <div class="tool-header">
-        <h1 data-i18n="tools.smartErase.title">Smart Erase</h1>
-        <p data-i18n="tools.smartErase.desc">Erase watermarks / marks with server repair, or paint mosaic locally.</p>
-      </div>
-
-      <div class="tool-card">
-        <div class="drop-zone" id="drop-zone">
-          <div class="drop-icon">+</div>
-          <div class="drop-title" data-i18n="tools.smartErase.dropTitle">Click or drop an image</div>
-          <div class="drop-hint" data-i18n="tools.smartErase.dropHint">JPG, PNG, or WebP</div>
-        </div>
-        <input type="file" id="file-input" accept="image/*" style="display:none" />
-
-        <div class="img-wm-canvas-wrap" id="canvas-wrap" hidden>
-          <canvas id="wm-canvas"></canvas>
-        </div>
-
-        <div class="collage-presets" id="mode-row" role="group" hidden>
-          <button type="button" class="rec-chip is-active" data-mode="erase" data-i18n="tools.smartErase.modeErase">Smart erase</button>
-          <button type="button" class="rec-chip" data-mode="mosaic" data-i18n="tools.smartErase.modeMosaic">Add mosaic</button>
-        </div>
-
-        <div class="tip-box" id="tip-erase">
-          <b data-i18n="tools.smartErase.tip">Tip:</b>
-          <span data-i18n="tools.smartErase.tipErase">Draw boxes over watermarks, mosaics or marks. Server OpenCV repair (upload). You can keep editing after erase.</span>
-        </div>
-        <div class="tip-box" id="tip-mosaic" hidden>
-          <b data-i18n="tools.smartErase.tip">Tip:</b>
-          <span data-i18n="tools.smartErase.tipMosaic">Paint with the brush to add mosaic. Runs locally, no upload.</span>
-        </div>
-
-        <div class="img-tool-fields" id="mosaic-fields" hidden>
-          <label>
-            <span data-i18n="tools.smartErase.brushLabel">Brush size</span>
-            <input type="range" id="brush-input" min="12" max="120" value="40" />
-          </label>
-          <label>
-            <span data-i18n="tools.smartErase.blockLabel">Mosaic block</span>
-            <input type="range" id="block-input" min="4" max="40" value="12" />
-          </label>
-        </div>
-
-        <div class="action-row" id="erase-actions">
-          <button type="button" class="tb-btn" id="process-btn" disabled data-i18n="tools.smartErase.process">Erase selection</button>
-          <button type="button" class="tb-btn" id="add-box-btn" disabled data-i18n="tools.smartErase.addBox">Add box</button>
-          <button type="button" class="tb-btn" id="del-box-btn" disabled data-i18n="tools.smartErase.delBox">Delete box</button>
-          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.smartErase.download">Download</button>
-          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.smartErase.clear">Clear</button>
-        </div>
-        <div class="action-row" id="mosaic-actions" hidden>
-          <button type="button" class="tb-btn" id="undo-mosaic-btn" disabled data-i18n="tools.smartErase.undoMosaic">Undo stroke</button>
-          <button type="button" class="tb-btn" id="download-btn-2" disabled data-i18n="tools.smartErase.download">Download</button>
-          <button type="button" class="tb-btn" id="clear-btn-2" data-i18n="tools.smartErase.clear">Clear</button>
-        </div>
-
-        <div class="error-box" id="error-box" role="alert"></div>
-      </div>
-    </main>
-  </div>
-
-  <script src="../../js/locales/en.js"></script>
-  <script src="../../js/locales/zh-CN.js"></script>
-  <script src="../../js/i18n.js"></script>
-  <script src="../../js/config.js"></script>
-  <script src="../../js/base.js"></script>
-  <script src="../../js/media/smart-erase.js?v=1"></script>
+  <p><a href="add-mosaic.html">加马赛克</a></p>
 </body>
 </html>

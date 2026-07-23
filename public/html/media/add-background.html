@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Background - Tool Basecamp</title>
+  <meta name="description" content="Place a foreground (best with transparent PNG) on a solid color or background image. Runs locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.addBackground.title">Add Background</h1>
+        <p data-i18n="tools.addBackground.desc">Compose a subject onto a solid color or background image. Best with a transparent PNG. Runs locally.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="rec-field">
+          <span class="field-label" data-i18n="tools.addBackground.fgLabel">1. Foreground image</span>
+          <div class="drop-zone" id="fg-drop">
+            <div class="drop-icon">+</div>
+            <div class="drop-title" data-i18n="tools.addBackground.fgDropTitle">Click or drop foreground</div>
+            <div class="drop-hint" data-i18n="tools.addBackground.fgDropHint">Transparent PNG works best</div>
+          </div>
+          <input type="file" id="fg-input" accept="image/*" style="display:none" />
+          <div class="img-tool-source" id="fg-source" hidden>
+            <img id="fg-preview" alt="" />
+            <button type="button" class="tb-btn" id="fg-reselect" data-i18n="tools.addBackground.reselectFg">Change foreground</button>
+          </div>
+        </div>
+
+        <div class="rec-field">
+          <span class="field-label" data-i18n="tools.addBackground.bgModeLabel">2. Background</span>
+          <div class="collage-presets" id="bg-mode-row" role="group">
+            <button type="button" class="rec-chip is-active" data-mode="color" data-i18n="tools.addBackground.modeColor">Solid color</button>
+            <button type="button" class="rec-chip" data-mode="image" data-i18n="tools.addBackground.modeImage">Background image</button>
+          </div>
+        </div>
+
+        <div class="img-tool-fields" id="color-fields">
+          <label>
+            <span data-i18n="tools.addBackground.colorLabel">Background color</span>
+            <input type="color" id="color-input" value="#ffffff" />
+          </label>
+        </div>
+
+        <div id="bg-image-block" hidden>
+          <div class="drop-zone" id="bg-drop">
+            <div class="drop-icon">+</div>
+            <div class="drop-title" data-i18n="tools.addBackground.bgDropTitle">Click or drop background</div>
+            <div class="drop-hint" data-i18n="tools.addBackground.bgDropHint">JPG, PNG, or WebP</div>
+          </div>
+          <input type="file" id="bg-input" accept="image/*" style="display:none" />
+          <div class="img-tool-source" id="bg-source" hidden>
+            <img id="bg-preview" alt="" />
+            <button type="button" class="tb-btn" id="bg-reselect" data-i18n="tools.addBackground.reselectBg">Change background</button>
+          </div>
+        </div>
+
+        <div class="img-tool-fields">
+          <label>
+            <span data-i18n="tools.addBackground.scaleLabel">Subject scale</span>
+            <input type="range" id="scale-input" min="10" max="100" value="85" />
+          </label>
+          <span class="img-tool-meta" id="scale-val">85%</span>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.addBackground.tip">Tip:</b>
+          <span data-i18n="tools.addBackground.tipBody">Use a cutout PNG as foreground. Solid color fills canvas to subject size; background image sets canvas size and subject is centered.</span>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="generate-btn" disabled data-i18n="tools.addBackground.generate">Generate preview</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.addBackground.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.addBackground.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="img-tool-preview" id="preview-wrap" hidden>
+          <img id="result-img" alt="" />
+          <p class="img-tool-meta" id="result-meta"></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/add-background.js?v=1"></script>
+</body>
+</html>

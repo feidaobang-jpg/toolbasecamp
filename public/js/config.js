@@ -112,14 +112,19 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.qrCode.title', url: 'html/media/qr-code.html' },
                 { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
-                { titleKey: 'tools.smartErase.title', url: 'html/media/smart-erase.html' },
+                { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
+                { titleKey: 'tools.watermarkRemovalAdvanced.title', url: 'html/media/watermark-removal-advanced.html' },
+                { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
+                { titleKey: 'tools.addWatermark.title', url: 'html/media/add-watermark.html' },
+                { titleKey: 'tools.addBackground.title', url: 'html/media/add-background.html' },
+                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true },
+                { titleKey: 'tools.smartCutout.title', url: 'html/media/smart-cutout.html', authRequired: true },
                 { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
                 { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
                 { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
                 { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
                 { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true },
-                { titleKey: 'tools.portraitCutout.title', url: 'html/media/portrait-cutout.html', authRequired: true },
                 { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]

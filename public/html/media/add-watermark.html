@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Watermark - Tool Basecamp</title>
+  <meta name="description" content="Add a text watermark to an image locally in your browser. No upload.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.addWatermark.title">Add Watermark</h1>
+        <p data-i18n="tools.addWatermark.desc">Add a text watermark locally. Drag to place or use presets. Nothing is uploaded.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">+</div>
+          <div class="drop-title" data-i18n="tools.addWatermark.dropTitle">Click or drop an image</div>
+          <div class="drop-hint" data-i18n="tools.addWatermark.dropHint">JPG, PNG, or WebP</div>
+        </div>
+        <input type="file" id="file-input" accept="image/*" style="display:none" />
+
+        <div class="img-wm-canvas-wrap" id="canvas-wrap" hidden>
+          <canvas id="wm-canvas"></canvas>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.addWatermark.tip">Tip:</b>
+          <span data-i18n="tools.addWatermark.tipBody">Enter text, adjust style, then generate. Drag the watermark on the canvas or pick a corner preset.</span>
+        </div>
+
+        <div class="img-tool-fields" id="wm-fields" hidden>
+          <label style="flex:1 1 220px">
+            <span data-i18n="tools.addWatermark.textLabel">Watermark text</span>
+            <input type="text" id="text-input" maxlength="80"
+              data-i18n-placeholder="tools.addWatermark.textPlaceholder" placeholder="e.g. © Tool Basecamp" />
+          </label>
+          <label>
+            <span data-i18n="tools.addWatermark.fontSizeLabel">Font size</span>
+            <input type="number" id="font-size-input" value="48" min="12" max="400" />
+          </label>
+          <label>
+            <span data-i18n="tools.addWatermark.opacityLabel">Opacity</span>
+            <input type="range" id="opacity-input" min="0.1" max="1" step="0.05" value="0.55" />
+          </label>
+          <label>
+            <span data-i18n="tools.addWatermark.colorLabel">Color</span>
+            <input type="color" id="color-input" value="#ffffff" />
+          </label>
+        </div>
+
+        <div class="collage-presets" id="pos-row" role="group" hidden>
+          <button type="button" class="rec-chip" data-pos="tl" data-i18n="tools.addWatermark.posTl">Top left</button>
+          <button type="button" class="rec-chip" data-pos="tr" data-i18n="tools.addWatermark.posTr">Top right</button>
+          <button type="button" class="rec-chip is-active" data-pos="center" data-i18n="tools.addWatermark.posCenter">Center</button>
+          <button type="button" class="rec-chip" data-pos="bl" data-i18n="tools.addWatermark.posBl">Bottom left</button>
+          <button type="button" class="rec-chip" data-pos="br" data-i18n="tools.addWatermark.posBr">Bottom right</button>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="generate-btn" disabled data-i18n="tools.addWatermark.generate">Generate preview</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.addWatermark.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.addWatermark.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/add-watermark.js?v=1"></script>
+</body>
+</html>

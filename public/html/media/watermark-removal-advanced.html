@@ -1,13 +1,60 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0;url=smart-erase.html" />
-  <link rel="canonical" href="smart-erase.html" />
-  <title>Redirecting…</title>
-  <script>location.replace('smart-erase.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remove Watermark (Advanced) - Tool Basecamp</title>
+  <meta name="description" content="Mark watermark regions and remove them with server-side OpenCV inpainting.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=10" />
 </head>
 <body>
-  <p><a href="smart-erase.html">智能擦除</a></p>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.watermarkRemovalAdvanced.title">Remove Watermark (Advanced)</h1>
+        <p data-i18n="tools.watermarkRemovalAdvanced.desc">Draw boxes over watermarks; the server uses OpenCV inpainting for better results. Image is uploaded for processing.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">+</div>
+          <div class="drop-title" data-i18n="tools.watermarkRemovalAdvanced.dropTitle">Click or drop an image</div>
+          <div class="drop-hint" data-i18n="tools.watermarkRemovalAdvanced.dropHint">Then drag boxes to cover watermarks</div>
+        </div>
+        <input type="file" id="file-input" accept="image/*" style="display:none" />
+
+        <div class="img-wm-canvas-wrap" id="canvas-wrap" hidden>
+          <canvas id="wm-canvas"></canvas>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.watermarkRemovalAdvanced.tip">Tip:</b>
+          <span data-i18n="tools.watermarkRemovalAdvanced.tipBody">Drag to draw or resize boxes. Add multiple boxes for several watermarks. Processing runs on the server.</span>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="process-btn" disabled data-i18n="tools.watermarkRemovalAdvanced.process">Remove watermark</button>
+          <button type="button" class="tb-btn" id="add-box-btn" disabled data-i18n="tools.watermarkRemovalAdvanced.addBox">Add box</button>
+          <button type="button" class="tb-btn" id="del-box-btn" disabled data-i18n="tools.watermarkRemovalAdvanced.delBox">Delete box</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.watermarkRemovalAdvanced.download">Download</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.watermarkRemovalAdvanced.clear">Clear</button>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+        <div class="img-tool-preview" id="result-wrap" hidden>
+          <img id="result-img" alt="" />
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/watermark-removal-advanced.js?v=3"></script>
 </body>
 </html>

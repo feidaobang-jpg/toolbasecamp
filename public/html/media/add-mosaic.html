@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Mosaic - Tool Basecamp</title>
+  <meta name="description" content="Paint mosaic over sensitive areas locally in your browser. No upload.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.addMosaic.title">Add Mosaic</h1>
+        <p data-i18n="tools.addMosaic.desc">Paint mosaic with a brush locally. Nothing is uploaded.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">+</div>
+          <div class="drop-title" data-i18n="tools.addMosaic.dropTitle">Click or drop an image</div>
+          <div class="drop-hint" data-i18n="tools.addMosaic.dropHint">JPG, PNG, or WebP</div>
+        </div>
+        <input type="file" id="file-input" accept="image/*" style="display:none" />
+
+        <div class="img-wm-canvas-wrap" id="canvas-wrap" hidden>
+          <canvas id="mosaic-canvas"></canvas>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.addMosaic.tip">Tip:</b>
+          <span data-i18n="tools.addMosaic.tipBody">Paint with the brush to pixelate. Adjust brush and block size as needed. Runs entirely on this device.</span>
+        </div>
+
+        <div class="img-tool-fields" id="mosaic-fields" hidden>
+          <label>
+            <span data-i18n="tools.addMosaic.brushLabel">Brush size</span>
+            <input type="range" id="brush-input" min="12" max="120" value="40" />
+          </label>
+          <label>
+            <span data-i18n="tools.addMosaic.blockLabel">Mosaic block</span>
+            <input type="range" id="block-input" min="4" max="40" value="12" />
+          </label>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="undo-btn" disabled data-i18n="tools.addMosaic.undo">Undo stroke</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.addMosaic.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.addMosaic.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/add-mosaic.js?v=1"></script>
+</body>
+</html>
