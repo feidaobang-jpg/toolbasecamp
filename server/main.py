@@ -26,7 +26,12 @@ from recipe_ai import (
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
-from life_plans import router as life_plans_router, _wire as wire_life_plans, deepseek_configured as life_deepseek_ok
+from life_plans import (
+    router as life_plans_router,
+    _wire as wire_life_plans,
+    deepseek_configured as life_deepseek_ok,
+    PLAN_KINDS as LIFE_PLAN_KINDS,
+)
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
 
@@ -556,6 +561,8 @@ def health():
         "image_api": "/image/ocr-text" in paths,
         "general_cutout_api": "/image/general-cutout/segment" in paths,
         "life_plans_api": "/life-plans/generate" in paths,
+        "life_plans_kinds": sorted(LIFE_PLAN_KINDS),
+        "life_plans_day_trip": "day_trip" in LIFE_PLAN_KINDS,
         "tencent_image": tencent_image_ok,
         "life_plans_deepseek": life_deepseek_ok(),
         "watermark_api": "/watermark/image/process" in paths,
