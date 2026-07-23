@@ -29,7 +29,7 @@ LIMITS = {
 }
 MAX_UPLOAD = 8 * 1024 * 1024
 # Bump when Chinese prompt / locale logic changes — also exposed on /health.
-LIFE_PLANS_PROMPT_REV = 4
+LIFE_PLANS_PROMPT_REV = 5  # force process reload 2026-07-23b
 
 PLAN_KINDS = frozenset(
     {
