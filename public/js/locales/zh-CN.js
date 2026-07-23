@@ -960,7 +960,7 @@ window.TB_LOCALES['zh-CN'] = {
             generateFailed: '生成失败，请重试。'
         },
         imageResize: {
-            title: '调整图片大小',
+            title: '调整大小',
             desc: '缩放、旋转并导出图片，全部在浏览器本地处理。',
             dropTitle: '点击或拖入图片',
             dropHint: '支持 JPG、PNG、WebP',
@@ -979,7 +979,7 @@ window.TB_LOCALES['zh-CN'] = {
             invalidSize: '请输入有效宽高（1～10000）'
         },
         watermarkRemoval: {
-            title: '图片去水印',
+            title: '去水印',
             desc: '框选水印区域并在本地清除，不上传。',
             dropTitle: '点击或拖入图片',
             dropHint: '在图上拖动以框选区域',
@@ -1063,7 +1063,7 @@ window.TB_LOCALES['zh-CN'] = {
             reselectBg: '更换背景',
             scaleLabel: '主体缩放',
             tip: '提示：',
-            tipBody: '前景建议先用「人像抠图」或「通用抠图」得到透明图。纯色时画布跟主体；背景图时画布跟背景，主体居中。',
+            tipBody: '前景建议先用「人像抠图（去背景）」或「通用抠图（去背景）」得到透明图。纯色时画布跟主体；背景图时画布跟背景，主体居中。',
             generate: '生成预览',
             download: '下载',
             clear: '清除',
@@ -1075,8 +1075,8 @@ window.TB_LOCALES['zh-CN'] = {
             generateFail: '合成失败，请换较小图片重试。'
         },
         removeBackground: {
-            title: '人像抠图',
-            desc: '专为人像设计的智能抠图（腾讯云人像分割），输出透明 PNG。需登录，计入每日限额。商品/宠物等请用「通用抠图」。',
+            title: '人像抠图（去背景）',
+            desc: '专为人像设计的智能抠图（腾讯云人像分割），输出透明 PNG。需登录，计入每日限额。商品/宠物等请用「通用抠图（去背景）」。',
             dropTitle: '点击或拖入人像照片（半身/全身均可）',
             dropHint: 'JPG / PNG · 不超过 5MB · 需能看清人物',
             shareQuota: '与「制作证件照」共用每日抠图限额。',
@@ -1086,7 +1086,7 @@ window.TB_LOCALES['zh-CN'] = {
             noPortrait: '无法检测到人像'
         },
         generalCutout: {
-            title: '通用抠图',
+            title: '通用抠图（去背景）',
             desc: '自动识别商品、宠物、图标等主体并去除背景，输出透明 PNG。需登录，计入每日限额。',
             dropTitle: '点击或拖入任意图片（商品 / 宠物 / 图标等）',
             dropHint: 'JPG / PNG · 不超过 8MB · 主体尽量居中、背景简单更佳',
@@ -1116,7 +1116,7 @@ window.TB_LOCALES['zh-CN'] = {
             needText: '请输入文字'
         },
         imageCollage: {
-            title: '多图合成',
+            title: '合成',
             desc: '将多张图片合并为一张（支持 2×2、九宫格、自定义行列）。本地处理，不上传。',
             addImages: '添加图片',
             tip: '提示：',
@@ -1297,7 +1297,7 @@ window.TB_LOCALES['zh-CN'] = {
             empty: '未识别到表格'
         },
         imageEnhance: {
-            title: '图片优化',
+            title: '优化增强',
             desc: '文档拍照优化：切边矫正、去阴影、锐化文字等。需登录，计入每日限额。',
             dropTitle: '点击或拖入图片',
             dropHint: '支持 JPG、PNG、WebP，最大 8MB',
@@ -1345,7 +1345,7 @@ window.TB_LOCALES['zh-CN'] = {
             }
         },
         portraitCutout: {
-            title: '人像抠图',
+            title: '人像抠图（去背景）',
             desc: '专为人像设计的智能抠图，输出透明 PNG。需登录，计入每日限额。',
             dropTitle: '点击或拖入人像照片（半身/全身均可）',
             dropHint: 'JPG / PNG · 不超过 5MB · 需能看清人物',

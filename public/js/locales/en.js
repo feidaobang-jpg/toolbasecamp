@@ -961,7 +961,7 @@ window.TB_LOCALES.en = {
             generateFailed: 'Generation failed. Please try again.'
         },
         imageResize: {
-            title: 'Image Resize',
+            title: 'Resize',
             desc: 'Resize and rotate images locally in your browser.',
             dropTitle: 'Click or drop an image',
             dropHint: 'JPG, PNG, WebP',
@@ -1076,7 +1076,7 @@ window.TB_LOCALES.en = {
             generateFail: 'Failed to compose. Try a smaller image.'
         },
         removeBackground: {
-            title: 'Portrait Cutout',
+            title: 'Portrait Cutout (Remove BG)',
             desc: 'Portrait-focused smart cutout (Tencent Cloud). Transparent PNG. Requires sign-in and daily quota. For products/pets, use General Cutout.',
             dropTitle: 'Click or drop a portrait photo (half / full body)',
             dropHint: 'JPG / PNG · max 5MB · person should be clearly visible',
@@ -1087,7 +1087,7 @@ window.TB_LOCALES.en = {
             noPortrait: 'Unable to detect a portrait'
         },
         generalCutout: {
-            title: 'General Cutout',
+            title: 'General Cutout (Remove BG)',
             desc: 'Remove background for products, pets, logos and other subjects. Transparent PNG. Requires sign-in and daily quota.',
             dropTitle: 'Click or drop any subject photo (product / pet / logo…)',
             dropHint: 'JPG / PNG · max 8MB · centered subject and simple background work best',
@@ -1117,7 +1117,7 @@ window.TB_LOCALES.en = {
             needText: 'Please enter some text'
         },
         imageCollage: {
-            title: 'Image Collage',
+            title: 'Collage',
             desc: 'Merge multiple images into one grid (2×2, 3×3, custom rows/cols). Runs locally.',
             addImages: 'Add images',
             tip: 'Tip:',
@@ -1298,7 +1298,7 @@ window.TB_LOCALES.en = {
             empty: 'No table detected'
         },
         imageEnhance: {
-            title: 'Image Optimize',
+            title: 'Enhance',
             desc: 'Optimize document photos: straighten, remove shadows, sharpen text, and more. Requires sign-in and daily quota.',
             dropTitle: 'Click or drop an image',
             dropHint: 'JPG, PNG, WebP — max 8MB',
@@ -1346,7 +1346,7 @@ window.TB_LOCALES.en = {
             }
         },
         portraitCutout: {
-            title: 'Portrait Cutout',
+            title: 'Portrait Cutout (Remove BG)',
             desc: 'Portrait-focused smart cutout. Transparent PNG. Requires sign-in and daily quota.',
             dropTitle: 'Click or drop a portrait photo (half / full body)',
             dropHint: 'JPG / PNG · max 5MB · person should be clearly visible',
