@@ -809,8 +809,8 @@ window.TB_LOCALES['zh-CN'] = {
             prefPh: '美食、亲子、风景…'
         },
         pcUpgradePlan: {
-            title: '硬件升级',
-            desc: '根据现有配置建议配件或升级方案。价格会变动。需登录。',
+            title: '电脑升级',
+            desc: '根据现有电脑配置建议配件或升级方案。价格会变动。需登录。',
             specs: '当前配置',
             specsPh: 'CPU / 显卡 / 内存 / 硬盘 / 电源…',
             budget: '预算（可选）',

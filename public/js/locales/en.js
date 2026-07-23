@@ -810,8 +810,8 @@ window.TB_LOCALES.en = {
             prefPh: 'Food, kids, scenic…'
         },
         pcUpgradePlan: {
-            title: 'PC Upgrade Plan',
-            desc: 'Upgrade and accessory ideas from your specs. Prices change. Requires sign-in.',
+            title: 'Computer Upgrade',
+            desc: 'Upgrade and accessory ideas from your PC specs. Prices change. Requires sign-in.',
             specs: 'Current specs',
             specsPh: 'CPU / GPU / RAM / storage / PSU…',
             budget: 'Budget (optional)',
