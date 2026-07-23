@@ -1085,7 +1085,7 @@ window.TB_LOCALES.en = {
             deleteConfirm: 'Delete all deposit data for “{name}”?'
         },
         goods: {
-            title: 'Goods List',
+            title: 'Item Ratings',
             desc: 'Catalog items by category with price and rating. Requires sign-in.',
             add: 'Add item',
             edit: 'Edit item',

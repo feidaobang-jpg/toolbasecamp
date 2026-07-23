@@ -1084,7 +1084,7 @@ window.TB_LOCALES['zh-CN'] = {
             deleteConfirm: '确定删除「{name}」的全部存款记录？'
         },
         goods: {
-            title: '物品清单',
+            title: '物品评价',
             desc: '按分类管理物品、价格与评分。需登录，数据保存在服务端。',
             add: '添加物品',
             edit: '编辑物品',
