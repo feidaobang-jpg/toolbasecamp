@@ -16,15 +16,19 @@
   }
 
   function locale() {
-    var loc = '';
+    try {
+      var saved = localStorage.getItem('tb-locale');
+      if (saved === 'zh-CN' || saved === 'en') return saved;
+    } catch (e) { /* ignore */ }
     if (typeof global.tbGetLocale === 'function') {
-      loc = String(global.tbGetLocale() || '');
+      var loc = String(global.tbGetLocale() || '');
+      if (loc === 'zh-CN' || loc === 'en') return loc;
     }
-    if (!loc) {
-      var lang = String((document.documentElement && document.documentElement.lang) || '').toLowerCase();
-      loc = lang.indexOf('zh') === 0 ? 'zh-CN' : 'en';
-    }
-    return loc || 'zh-CN';
+    var lang = String((document.documentElement && document.documentElement.lang) || '').toLowerCase();
+    if (lang.indexOf('zh') === 0) return 'zh-CN';
+    var nav = String((navigator.language || navigator.userLanguage || '')).toLowerCase();
+    if (nav.indexOf('zh') === 0) return 'zh-CN';
+    return 'zh-CN';
   }
 
   function formatQuota(item) {

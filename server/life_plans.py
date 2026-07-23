@@ -235,21 +235,42 @@ async def _fetch_temperature(city: str) -> Optional[dict]:
         return None
 
 
+def _text_has_cjk(s: str) -> bool:
+    return any("\u4e00" <= ch <= "\u9fff" for ch in (s or ""))
+
+
+def _plan_looks_mostly_english(plan: dict) -> bool:
+    parts = [str(plan.get("title") or ""), str(plan.get("summary") or "")]
+    for sec in plan.get("sections") or []:
+        if not isinstance(sec, dict):
+            continue
+        parts.append(str(sec.get("heading") or ""))
+        for b in sec.get("bullets") or []:
+            parts.append(str(b))
+    sample = " ".join(parts)
+    cjk = sum(1 for ch in sample if "\u4e00" <= ch <= "\u9fff")
+    ascii_letters = sum(1 for ch in sample if ("A" <= ch <= "Z") or ("a" <= ch <= "z"))
+    if ascii_letters < 24:
+        return False
+    return cjk * 3 < ascii_letters
+
+
+def _resolve_plan_locale(locale: str, fields: dict) -> str:
+    """Prefer zh-CN unless the client explicitly asks for English."""
+    raw = (locale or "").strip() or "zh-CN"
+    low = raw.lower()
+    if low == "en" or low.startswith("en-"):
+        # Still flip to Chinese when user typed CJK in the form.
+        blob = " ".join(str(v) for v in (fields or {}).values())
+        if _text_has_cjk(blob):
+            return "zh-CN"
+        return "en"
+    return "zh-CN"
+
+
 def _plan_system_prompt(kind: str, locale: str) -> str:
     zh = _locale_is_zh(locale)
     if zh:
-        lang = (
-            "【强制】全部输出必须使用简体中文：title、summary、sections 的 heading/bullets、"
-            "disclaimer、markdown 一律用中文。禁止英文标题或英文正文（专有名词可保留原文）。"
-            "只输出合法 JSON，不要用 markdown 代码块包裹。"
-        )
-        role = "你是面向中国用户的生活计划助手，内容要具体、可执行。"
-        shape = (
-            '顶层 JSON 结构固定为：{"title":"字符串","summary":"字符串",'
-            '"sections":[{"heading":"字符串","bullets":["字符串"]}],'
-            '"disclaimer":"字符串","markdown":"字符串"}。'
-            "markdown 字段放完整可读正文（与 sections 内容一致，也必须是中文）。"
-        )
         hints = {
             "weight_loss": "根据身高体重与目标，生成减肥周计划：热量/运动要点、示例一日三餐、进度检查。非医疗建议。",
             "study": "根据年级与成绩生成自学计划：每周安排、薄弱科练习、阶段检测。",
@@ -266,7 +287,21 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
             "shopping": "按用途与已知要买的物品，生成分类采购清单：必买/可选、数量与分区（生鲜/日用品等）。",
         }
         task = hints.get(kind, "生成一份实用的中文计划。")
-        return f"{lang}\n{role}\n{shape}\n任务：{task}"
+        example = (
+            "输出示例（仅示意结构，请按用户输入改写）："
+            '{"title":"三人口一周家常菜单","summary":"以家常快手菜为主，并附采购清单。",'
+            '"sections":[{"heading":"周一","bullets":["早餐：白粥配鸡蛋","午餐：番茄炒蛋配米饭","晚餐：清炒时蔬"]}],'
+            '"disclaimer":"仅供参考。","markdown":"# 三人口一周家常菜单\\n\\n…"}'
+            "。禁止输出类似 English title：7-Day Family Meal Plan。"
+        )
+        return (
+            "你是面向中国用户的生活计划助手。\n"
+            f"任务：{task}\n"
+            '顶层 JSON：{"title":"…","summary":"…","sections":[{"heading":"…","bullets":["…"]}],'
+            '"disclaimer":"…","markdown":"…"}。只输出 JSON。\n'
+            f"{example}\n"
+            "【最后强调】title、summary、heading、bullets、disclaimer、markdown 必须全部是简体中文。"
+        )
 
     lang = "Reply in English. Output valid JSON only, no markdown code fences."
     common = (
@@ -302,7 +337,7 @@ def _plan_user_message(kind: str, locale: str, user_payload: dict) -> str:
     if zh:
         return (
             f"请用简体中文生成 kind={kind} 的计划。locale={locale}。"
-            "JSON 中所有面向用户的字符串必须是中文。\n输入：\n"
+            "JSON 中所有面向用户的字符串必须是中文，不要用英文写菜名或标题。\n输入：\n"
             + payload
         )
     return (
@@ -409,7 +444,7 @@ async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user
         fields["season"] = _current_season()
 
     quota = _consume_quota(user, "life_plan")
-    locale = body.locale or "zh-CN"
+    locale = _resolve_plan_locale(body.locale or "zh-CN", fields)
     user_payload = {
         "kind": kind,
         "locale": locale,
@@ -428,11 +463,29 @@ async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user
             messages,
             use_json_mode=True,
             max_tokens=3500,
-            temperature=0.55,
+            temperature=0.35 if _locale_is_zh(locale) else 0.55,
             timeout=90.0,
         )
         parsed = _extract_json(raw)
         plan = _normalize_plan(parsed)
+        if _locale_is_zh(locale) and _plan_looks_mostly_english(plan):
+            retry_messages = messages + [
+                {
+                    "role": "user",
+                    "content": (
+                        "上一次结果几乎全是英文，不合格。请重新输出，"
+                        "title/summary/sections/disclaimer/markdown 必须全部是简体中文。"
+                    ),
+                }
+            ]
+            raw2 = await _call_deepseek(
+                retry_messages,
+                use_json_mode=True,
+                max_tokens=3500,
+                temperature=0.2,
+                timeout=90.0,
+            )
+            plan = _normalize_plan(_extract_json(raw2))
     except HTTPException:
         raise
     except Exception as exc:
@@ -442,7 +495,7 @@ async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user
         "success": True,
         "kind": kind,
         "plan": plan,
-        "meta": {"weather": weather, "fields": fields},
+        "meta": {"weather": weather, "fields": fields, "locale": locale},
         "quota": quota,
     }
 
