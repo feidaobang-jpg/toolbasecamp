@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Collage - Tool Basecamp</title>
+  <meta name="description" content="Merge multiple images into a grid collage such as 2x2 or 3x3. Runs locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=12" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.imageCollage.title">Image Collage</h1>
+        <p data-i18n="tools.imageCollage.desc">Merge multiple images into one grid (2×2, 3×3, custom rows/cols). Runs locally.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="img-list" id="img-list">
+          <div class="img-add-btn" id="img-add-btn">
+            <span>＋</span>
+            <span data-i18n="tools.imageCollage.addImages">Add images</span>
+          </div>
+        </div>
+        <input type="file" id="file-input" accept="image/*" multiple style="display:none" />
+
+        <p class="img-tool-meta" id="count-meta"></p>
+
+        <div class="tip-box">
+          <b data-i18n="tools.imageCollage.tip">Tip:</b>
+          <span data-i18n="tools.imageCollage.tipBody">Drag thumbnails to reorder. Extra images beyond the grid are ignored. Nothing is uploaded.</span>
+        </div>
+
+        <div class="rec-chip-row collage-presets" id="preset-row" role="group">
+          <button type="button" class="rec-chip" data-cols="2" data-rows="1" data-i18n="tools.imageCollage.preset2">2 images</button>
+          <button type="button" class="rec-chip" data-cols="2" data-rows="2" data-i18n="tools.imageCollage.preset4">2×2</button>
+          <button type="button" class="rec-chip is-active" data-cols="3" data-rows="3" data-i18n="tools.imageCollage.preset9">3×3</button>
+          <button type="button" class="rec-chip" data-cols="3" data-rows="2" data-i18n="tools.imageCollage.preset6">3×2</button>
+        </div>
+
+        <div class="img-tool-fields">
+          <label>
+            <span data-i18n="tools.imageCollage.colsLabel">Columns</span>
+            <input type="number" id="cols-input" value="3" min="1" max="6" />
+          </label>
+          <label>
+            <span data-i18n="tools.imageCollage.rowsLabel">Rows</span>
+            <input type="number" id="rows-input" value="3" min="1" max="6" />
+          </label>
+          <label>
+            <span data-i18n="tools.imageCollage.gapLabel">Gap (px)</span>
+            <input type="number" id="gap-input" value="8" min="0" max="40" />
+          </label>
+          <label>
+            <span data-i18n="tools.imageCollage.bgLabel">Background</span>
+            <input type="color" id="bg-input" value="#ffffff" />
+          </label>
+          <label>
+            <span data-i18n="tools.imageCollage.fitLabel">Fit</span>
+            <select id="fit-select">
+              <option value="cover" selected data-i18n="tools.imageCollage.fitCover">Cover (crop)</option>
+              <option value="contain" data-i18n="tools.imageCollage.fitContain">Contain (letterbox)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="img-tool-fields">
+          <label>
+            <span data-i18n="tools.imageCollage.sizeModeLabel">Size mode</span>
+            <select id="size-mode">
+              <option value="canvas" selected data-i18n="tools.imageCollage.sizeCanvas">Full image size</option>
+              <option value="cell" data-i18n="tools.imageCollage.sizeCell">Cell max edge</option>
+            </select>
+          </label>
+          <label id="canvas-w-field">
+            <span data-i18n="tools.imageCollage.widthLabel">Width (px)</span>
+            <input type="number" id="width-input" value="1080" min="64" max="8192" />
+          </label>
+          <label id="canvas-h-field">
+            <span data-i18n="tools.imageCollage.heightLabel">Height (px)</span>
+            <input type="number" id="height-input" value="1080" min="64" max="8192" />
+          </label>
+          <label id="cell-max-field" hidden>
+            <span data-i18n="tools.imageCollage.cellMaxLabel">Cell max edge (px)</span>
+            <input type="number" id="cell-max-input" value="400" min="32" max="4096" />
+          </label>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="generate-btn" disabled data-i18n="tools.imageCollage.generate">Generate</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.imageCollage.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.imageCollage.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="img-tool-preview" id="preview-wrap" hidden>
+          <img id="result-img" alt="" />
+          <p class="img-tool-meta" id="result-meta"></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-collage.js?v=1"></script>
+</body>
+</html>

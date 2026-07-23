@@ -612,3 +612,40 @@
   background: #f3f4f6;
 }
 
+/* Image collage */
+.collage-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.collage-presets .rec-chip {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.collage-presets .rec-chip.is-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.img-tool-fields input[type="color"] {
+  min-width: 48px;
+  height: 38px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.img-item.dragging {
+  opacity: 0.55;
+}
+
