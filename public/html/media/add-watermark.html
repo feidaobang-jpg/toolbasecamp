@@ -15,7 +15,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.addWatermark.title">Add Watermark</h1>
-        <p data-i18n="tools.addWatermark.desc">Add a text watermark locally. Drag to place or use presets. Nothing is uploaded.</p>
+        <p data-i18n="tools.addWatermark.desc">Add a text watermark locally. Single mark or tiled. Nothing is uploaded.</p>
       </div>
 
       <div class="tool-card">
@@ -32,7 +32,12 @@
 
         <div class="tip-box">
           <b data-i18n="tools.addWatermark.tip">Tip:</b>
-          <span data-i18n="tools.addWatermark.tipBody">Enter text, adjust style, then generate. Drag the watermark on the canvas or pick a corner preset.</span>
+          <span data-i18n="tools.addWatermark.tipBody">Type to preview instantly. Single mode: drag or pick a corner. Tile mode: repeats across the image.</span>
+        </div>
+
+        <div class="collage-presets" id="mode-row" role="group" hidden>
+          <button type="button" class="rec-chip is-active" data-mode="single" data-i18n="tools.addWatermark.modeSingle">Single</button>
+          <button type="button" class="rec-chip" data-mode="tile" data-i18n="tools.addWatermark.modeTile">Tile</button>
         </div>
 
         <div class="img-tool-fields" id="wm-fields" hidden>
@@ -53,6 +58,10 @@
             <span data-i18n="tools.addWatermark.colorLabel">Color</span>
             <input type="color" id="color-input" value="#ffffff" />
           </label>
+          <label id="gap-field" hidden>
+            <span data-i18n="tools.addWatermark.gapLabel">Tile gap</span>
+            <input type="range" id="gap-input" min="0.5" max="3" step="0.1" value="1.4" />
+          </label>
         </div>
 
         <div class="collage-presets" id="pos-row" role="group" hidden>
@@ -64,8 +73,7 @@
         </div>
 
         <div class="action-row">
-          <button type="button" class="tb-btn" id="generate-btn" disabled data-i18n="tools.addWatermark.generate">Generate preview</button>
-          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.addWatermark.download">Download PNG</button>
+          <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.addWatermark.download">Download image</button>
           <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.addWatermark.clear">Clear</button>
         </div>
 
@@ -79,6 +87,6 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/media/add-watermark.js?v=1"></script>
+  <script src="../../js/media/add-watermark.js?v=2"></script>
 </body>
 </html>

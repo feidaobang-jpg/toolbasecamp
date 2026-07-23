@@ -6,19 +6,22 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   var MARGIN = 24;
+  var TILE_ANGLE = -28 * Math.PI / 180;
 
   var dropZone = document.getElementById('drop-zone');
   var fileInput = document.getElementById('file-input');
   var canvasWrap = document.getElementById('canvas-wrap');
   var canvas = document.getElementById('wm-canvas');
   var ctx = canvas.getContext('2d');
+  var modeRow = document.getElementById('mode-row');
   var wmFields = document.getElementById('wm-fields');
+  var gapField = document.getElementById('gap-field');
   var posRow = document.getElementById('pos-row');
   var textInput = document.getElementById('text-input');
   var fontSizeInput = document.getElementById('font-size-input');
   var opacityInput = document.getElementById('opacity-input');
   var colorInput = document.getElementById('color-input');
-  var generateBtn = document.getElementById('generate-btn');
+  var gapInput = document.getElementById('gap-input');
   var downloadBtn = document.getElementById('download-btn');
   var clearBtn = document.getElementById('clear-btn');
   var errorBox = document.getElementById('error-box');
@@ -26,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var state = {
     image: null,
     scale: 1,
+    mode: 'single',
     pos: 'center',
     x: 0.5,
     y: 0.5,
     dragging: false,
     dragOffX: 0,
     dragOffY: 0,
-    previewReady: false,
     name: 'watermarked.png',
     metrics: null
   };
@@ -43,9 +46,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateButtons() {
-    var has = !!state.image;
-    generateBtn.disabled = !has;
-    downloadBtn.disabled = !has || !state.previewReady;
+    downloadBtn.disabled = !state.image || !watermarkText();
+  }
+
+  function syncModeUi() {
+    var chips = modeRow.querySelectorAll('[data-mode]');
+    for (var i = 0; i < chips.length; i++) {
+      chips[i].classList.toggle('is-active', chips[i].getAttribute('data-mode') === state.mode);
+    }
+    var tile = state.mode === 'tile';
+    posRow.hidden = !state.image || tile;
+    gapField.hidden = !tile;
+    canvas.style.cursor = tile ? 'default' : 'grab';
   }
 
   function syncPosChips() {
@@ -90,6 +102,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return Math.max(0.1, Math.min(1, v));
   }
 
+  function tileGap() {
+    var v = parseFloat(gapInput.value);
+    if (isNaN(v)) v = 1.4;
+    return Math.max(0.5, Math.min(3, v));
+  }
+
   function measureText(wctx, text, size) {
     wctx.font = 'bold ' + size + 'px sans-serif';
     var m = wctx.measureText(text);
@@ -108,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return { x: x, y: y, ax: x + metrics.w / 2, ay: y + metrics.h / 2 };
   }
 
-  function drawWatermarkOn(wctx, iw, ih, text, size, color, alpha) {
+  function drawSingle(wctx, iw, ih, text, size, color, alpha) {
     var rgb = hexToRgb(color);
     wctx.save();
     wctx.font = 'bold ' + size + 'px sans-serif';
@@ -121,6 +139,42 @@ document.addEventListener('DOMContentLoaded', function () {
     return { metrics: metrics, anchor: anchor };
   }
 
+  function drawTile(wctx, iw, ih, text, size, color, alpha) {
+    var rgb = hexToRgb(color);
+    var metrics = measureText(wctx, text, size);
+    var gap = tileGap();
+    var stepX = Math.max(metrics.w + 24, metrics.w * gap);
+    var stepY = Math.max(metrics.h * 2.2, metrics.h * gap * 2.4);
+    var diag = Math.sqrt(iw * iw + ih * ih);
+
+    wctx.save();
+    wctx.translate(iw / 2, ih / 2);
+    wctx.rotate(TILE_ANGLE);
+    wctx.font = 'bold ' + size + 'px sans-serif';
+    wctx.textAlign = 'center';
+    wctx.textBaseline = 'middle';
+    wctx.fillStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + alpha + ')';
+
+    var startX = -diag;
+    var startY = -diag;
+    for (var y = startY; y < diag; y += stepY) {
+      var row = Math.round((y - startY) / stepY);
+      var ox = (row % 2) * (stepX / 2);
+      for (var x = startX + ox; x < diag; x += stepX) {
+        wctx.fillText(text, x, y);
+      }
+    }
+    wctx.restore();
+    return { metrics: metrics, anchor: null };
+  }
+
+  function drawWatermarkOn(wctx, iw, ih, text, size, color, alpha) {
+    if (state.mode === 'tile') {
+      return drawTile(wctx, iw, ih, text, size, color, alpha);
+    }
+    return drawSingle(wctx, iw, ih, text, size, color, alpha);
+  }
+
   function renderPreview() {
     if (!state.image) return;
     var iw = state.image.naturalWidth;
@@ -131,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var ch = Math.round(ih * state.scale);
     canvas.width = cw;
     canvas.height = ch;
-    canvas.style.cursor = 'grab';
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(state.image, 0, 0, cw, ch);
 
@@ -154,17 +207,18 @@ document.addEventListener('DOMContentLoaded', function () {
     state.metrics = placed.metrics;
     ctx.drawImage(off, 0, 0, cw, ch);
 
-    // drag handle outline in display space
-    var sx = placed.anchor.x * state.scale;
-    var sy = placed.anchor.y * state.scale;
-    var sw = placed.metrics.w * state.scale;
-    var sh = placed.metrics.h * state.scale;
-    ctx.save();
-    ctx.strokeStyle = 'rgba(37,99,235,0.7)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([5, 4]);
-    ctx.strokeRect(sx - 4, sy - 4, sw + 8, sh + 8);
-    ctx.restore();
+    if (state.mode === 'single' && placed.anchor) {
+      var sx = placed.anchor.x * state.scale;
+      var sy = placed.anchor.y * state.scale;
+      var sw = placed.metrics.w * state.scale;
+      var sh = placed.metrics.h * state.scale;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(37,99,235,0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 4]);
+      ctx.strokeRect(sx - 4, sy - 4, sw + 8, sh + 8);
+      ctx.restore();
+    }
 
     updateButtons();
   }
@@ -193,16 +247,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var img = new Image();
     img.onload = function () {
       state.image = img;
-      state.previewReady = false;
       state.name = (file.name || 'image').replace(/\.[^.]+$/, '') + '_watermark.png';
       applyPreset('center');
       dropZone.hidden = true;
       canvasWrap.hidden = false;
+      modeRow.hidden = false;
       wmFields.hidden = false;
-      posRow.hidden = false;
       setError('');
+      syncModeUi();
       renderPreview();
-      updateButtons();
     };
     img.onerror = function () {
       URL.revokeObjectURL(url);
@@ -213,16 +266,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function clearAll() {
     state.image = null;
-    state.previewReady = false;
     state.dragging = false;
     state.metrics = null;
+    state.mode = 'single';
     fileInput.value = '';
     textInput.value = '';
     canvasWrap.hidden = true;
+    modeRow.hidden = true;
     wmFields.hidden = true;
     posRow.hidden = true;
+    gapField.hidden = true;
     dropZone.hidden = false;
     setError('');
+    syncModeUi();
     updateButtons();
   }
 
@@ -246,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function hitText(cx, cy) {
-    if (!state.image || !state.metrics) return false;
+    if (!state.image || !state.metrics || state.mode !== 'single') return false;
     var iw = state.image.naturalWidth;
     var ih = state.image.naturalHeight;
     var anchor = textAnchor(iw, ih, state.metrics);
@@ -273,22 +329,28 @@ document.addEventListener('DOMContentLoaded', function () {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
   });
 
+  modeRow.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-mode]');
+    if (!btn || !state.image) return;
+    state.mode = btn.getAttribute('data-mode') === 'tile' ? 'tile' : 'single';
+    state.dragging = false;
+    setError('');
+    syncModeUi();
+    renderPreview();
+  });
+
   posRow.addEventListener('click', function (e) {
     var btn = e.target.closest('[data-pos]');
-    if (!btn || !state.image) return;
+    if (!btn || !state.image || state.mode !== 'single') return;
     applyPreset(btn.getAttribute('data-pos'));
-    state.previewReady = false;
     renderPreview();
-    updateButtons();
   });
 
   function onPointerDown(e) {
-    if (!state.image || !watermarkText()) return;
+    if (!state.image || state.mode !== 'single' || !watermarkText()) return;
     if (e.cancelable) e.preventDefault();
     var p = canvasPoint(e);
-    if (!hitText(p.x, p.y) && !state.metrics) return;
     if (!hitText(p.x, p.y)) {
-      // allow placing by click anywhere: move center to point
       state.x = p.x / (canvas.width || 1);
       state.y = p.y / (canvas.height || 1);
       state.pos = 'custom';
@@ -306,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function onPointerMove(e) {
-    if (!state.dragging || !state.image) return;
+    if (!state.dragging || !state.image || state.mode !== 'single') return;
     if (e.cancelable) e.preventDefault();
     var p = canvasPoint(e);
     var iw = state.image.naturalWidth;
@@ -317,15 +379,13 @@ document.addEventListener('DOMContentLoaded', function () {
     state.y = Math.max(0, Math.min(1, ay / ih));
     state.pos = 'custom';
     syncPosChips();
-    state.previewReady = false;
     renderPreview();
   }
 
   function onPointerUp() {
     if (state.dragging) {
       state.dragging = false;
-      canvas.style.cursor = 'grab';
-      updateButtons();
+      if (state.mode === 'single') canvas.style.cursor = 'grab';
     }
   }
 
@@ -337,26 +397,13 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('touchend', onPointerUp);
   window.addEventListener('touchcancel', onPointerUp);
 
-  generateBtn.addEventListener('click', function () {
-    if (!state.image) return;
-    if (!watermarkText()) {
-      setError(tr('tools.addWatermark.needText'));
-      state.previewReady = false;
-      updateButtons();
-      return;
-    }
-    setError('');
-    state.previewReady = true;
-    renderPreview();
-    updateButtons();
-  });
-
   downloadBtn.addEventListener('click', function () {
     var out = buildOutputCanvas();
     if (!out) {
       setError(tr('tools.addWatermark.needText'));
       return;
     }
+    setError('');
     out.toBlob(function (blob) {
       if (!blob) return;
       var url = URL.createObjectURL(blob);
@@ -370,27 +417,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
   clearBtn.addEventListener('click', clearAll);
 
+  function schedulePreview() {
+    if (state.image) renderPreview();
+    else updateButtons();
+  }
+
   ['input', 'change'].forEach(function (ev) {
-    textInput.addEventListener(ev, function () {
-      state.previewReady = false;
-      if (state.image) renderPreview();
-      updateButtons();
-    });
-    fontSizeInput.addEventListener(ev, function () {
-      state.previewReady = false;
-      if (state.image) renderPreview();
-      updateButtons();
-    });
-    opacityInput.addEventListener(ev, function () {
-      state.previewReady = false;
-      if (state.image) renderPreview();
-      updateButtons();
-    });
-    colorInput.addEventListener(ev, function () {
-      state.previewReady = false;
-      if (state.image) renderPreview();
-      updateButtons();
-    });
+    textInput.addEventListener(ev, schedulePreview);
+    fontSizeInput.addEventListener(ev, schedulePreview);
+    opacityInput.addEventListener(ev, schedulePreview);
+    colorInput.addEventListener(ev, schedulePreview);
+    gapInput.addEventListener(ev, schedulePreview);
   });
 
   window.addEventListener('resize', function () {
