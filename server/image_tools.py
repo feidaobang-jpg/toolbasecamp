@@ -12,7 +12,6 @@ from fastapi.responses import Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
-from general_cutout import rembg_available, segment_general
 from tencent_image import (
     image_enhancement,
     images_to_pdf_bytes,
@@ -21,6 +20,18 @@ from tencent_image import (
     segment_portrait,
     tencent_configured,
 )
+
+try:
+    from general_cutout import rembg_available, segment_general
+except ImportError:  # pragma: no cover
+    def rembg_available() -> bool:
+        return False
+
+    def segment_general(image_bytes: bytes) -> bytes:
+        raise HTTPException(
+            status_code=503,
+            detail="General cutout is not available (rembg not installed).",
+        )
 
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/image", tags=["image"])

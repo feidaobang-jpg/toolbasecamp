@@ -1269,6 +1269,7 @@ window.TB_LOCALES.en = {
             accountArrears: 'Tencent Cloud account is in arrears. Please top up and retry.',
             noText: 'No text detected',
             noImages: 'Please add images first',
+            routeNotFound: 'API route not ready. Refresh later — the server may still be updating.',
             networkError: 'Network error. Please try again.',
             unknownError: 'Something went wrong. Please try again.',
             processing: 'Processing...'

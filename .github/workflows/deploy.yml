@@ -206,12 +206,17 @@ jobs:
           [[ -d "$APP_DIR/venv" ]] || python3 -m venv "$APP_DIR/venv"
           "$APP_DIR/venv/bin/pip" install -q -U pip
           "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements.txt"
+          # rembg is optional (large); install best-effort so core API still deploys
+          if [[ -f "$APP_DIR/requirements-general-cutout.txt" ]]; then
+            "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements-general-cutout.txt" \
+              || echo "WARN: rembg install failed — general cutout will return 503 until installed"
+          fi
           "$APP_DIR/venv/bin/pip" uninstall -y passlib 2>/dev/null || true
           rm -rf "$APP_DIR/__pycache__"
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); import wan_video; assert wan_video.wan_configured or True"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); import wan_video; assert wan_video.wan_configured or True"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload

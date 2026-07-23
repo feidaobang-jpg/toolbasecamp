@@ -1268,6 +1268,7 @@ window.TB_LOCALES['zh-CN'] = {
             accountArrears: '腾讯云账号欠费，请充值后再试',
             noText: '未识别到文字',
             noImages: '请先添加图片',
+            routeNotFound: '接口未就绪，请稍后刷新重试（服务端可能正在更新）',
             networkError: '网络异常，请稍后重试',
             unknownError: '操作失败，请稍后重试',
             processing: '处理中...'

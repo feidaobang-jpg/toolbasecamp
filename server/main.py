@@ -551,6 +551,7 @@ def health():
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,
         "records_clock_logs": "/records/clocks/{clock_id}/logs" in paths,
         "image_api": "/image/ocr-text" in paths,
+        "general_cutout_api": "/image/general-cutout/segment" in paths,
         "tencent_image": tencent_image_ok,
         "watermark_api": "/watermark/image/process" in paths,
         "wan_i2v_api": "/wan/i2v/submit" in paths,

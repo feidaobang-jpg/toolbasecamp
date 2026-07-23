@@ -63,7 +63,8 @@
             'Tencent Cloud service is not enabled': 'tools.imageCloud.serviceNotEnabled',
             'Tencent Cloud account is in arrears': 'tools.imageCloud.accountArrears',
             'No text detected in image': 'tools.imageCloud.noText',
-            'No images': 'tools.imageCloud.noImages'
+            'No images': 'tools.imageCloud.noImages',
+            'Not Found': 'tools.imageCloud.routeNotFound'
         };
         if (map[msg]) return tr(map[msg]);
         return msg;

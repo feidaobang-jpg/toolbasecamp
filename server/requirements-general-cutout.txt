@@ -1,0 +1,4 @@
+# Optional: general cutout (rembg). Install on VPS after core API is up:
+#   /opt/toolbasecamp-api/venv/bin/pip install -r /opt/toolbasecamp-api/requirements-general-cutout.txt
+rembg>=2.0.50
+onnxruntime>=1.16.0
