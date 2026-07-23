@@ -349,6 +349,54 @@ def image_enhancement(image_bytes: bytes, task_type: int) -> bytes:
         raise HTTPException(status_code=502, detail="Invalid enhancement image data") from exc
 
 
+def _map_tencent_error(exc: Any) -> str:
+    code = getattr(exc, "code", "") or ""
+    msg = getattr(exc, "message", "") or str(exc)
+    mapping = {
+        "FailedOperation.ImageNoText": "No text detected in image",
+        "FailedOperation.ImageDecodeFailed": "Image decode failed",
+        "FailedOperation.ImageDownloadError": "Image download failed",
+        "FailedOperation.ImageFacedetectFailed": "No portrait subject detected",
+        "FailedOperation.ImageNotSupported": "Unsupported image format",
+        "FailedOperation.ImageResolutionExceed": "Image resolution is too large",
+        "FailedOperation.ImageResolutionInsufficient": "Image resolution is too small",
+        "FailedOperation.ImageSizeExceed": "Image content is too large",
+        "FailedOperation.ProfileNumExceed": "Too many people in the image",
+        "FailedOperation.RequestEntityTooLarge": "Image content is too large",
+        "FailedOperation.RequestTimeout": "Portrait cutout timed out",
+        "FailedOperation.RpcFail": "Portrait cutout service unavailable",
+        "FailedOperation.SegmentFailed": "Could not separate subject from background",
+        "FailedOperation.ServerError": "Portrait cutout service busy",
+        "FailedOperation.InnerError": "Portrait cutout service busy",
+        "FailedOperation.UnKnowError": "Portrait cutout failed",
+        "FailedOperation.UnOpenError": "Tencent Cloud service is not enabled",
+        "LimitExceeded.TooLargeFileError": "Image content is too large",
+        "ResourceUnavailable.InArrears": "Tencent Cloud account is in arrears",
+        "UnauthorizedOperation": "Tencent Cloud credentials unauthorized",
+        "AuthFailure.SecretIdNotFound": "Invalid TENCENT_SECRET_ID",
+        "AuthFailure.SignatureFailure": "Invalid TENCENT_SECRET_KEY",
+    }
+    return mapping.get(code, msg or "Tencent Cloud request failed")
+
+
+def _segment_http_status(exc: Any) -> int:
+    """400 for image/content issues; 502 for infra / account problems."""
+    code = getattr(exc, "code", "") or ""
+    if code.startswith("AuthFailure") or code in {
+        "ResourceUnavailable.InArrears",
+        "FailedOperation.UnOpenError",
+        "UnauthorizedOperation",
+        "FailedOperation.RpcFail",
+        "FailedOperation.ServerError",
+        "FailedOperation.InnerError",
+        "FailedOperation.RequestTimeout",
+    }:
+        return 502
+    if code.startswith("FailedOperation.") or code.startswith("LimitExceeded."):
+        return 400
+    return 502
+
+
 def segment_portrait(image_bytes: bytes) -> bytes:
     from tencentcloud.bda.v20200324 import models
     from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
@@ -361,30 +409,17 @@ def segment_portrait(image_bytes: bytes) -> bytes:
     try:
         resp = client.SegmentPortraitPic(req)
     except TencentCloudSDKException as exc:
-        raise HTTPException(status_code=502, detail=_map_tencent_error(exc)) from exc
+        raise HTTPException(status_code=_segment_http_status(exc), detail=_map_tencent_error(exc)) from exc
     img_b64 = getattr(resp, "ResultImage", None) or ""
     if not img_b64:
-        raise HTTPException(status_code=502, detail="Portrait segment returned empty image")
+        raise HTTPException(
+            status_code=400,
+            detail="Could not separate subject from background",
+        )
     try:
         return base64.b64decode(img_b64)
     except Exception as exc:
         raise HTTPException(status_code=502, detail="Invalid segment image data") from exc
-
-
-def _map_tencent_error(exc: Any) -> str:
-    code = getattr(exc, "code", "") or ""
-    msg = getattr(exc, "message", "") or str(exc)
-    mapping = {
-        "FailedOperation.ImageNoText": "No text detected in image",
-        "FailedOperation.ImageDecodeFailed": "Image decode failed",
-        "LimitExceeded.TooLargeFileError": "Image content is too large",
-        "ResourceUnavailable.InArrears": "Tencent Cloud account is in arrears",
-        "FailedOperation.UnOpenError": "Tencent Cloud service is not enabled",
-        "UnauthorizedOperation": "Tencent Cloud credentials unauthorized",
-        "AuthFailure.SecretIdNotFound": "Invalid TENCENT_SECRET_ID",
-        "AuthFailure.SignatureFailure": "Invalid TENCENT_SECRET_KEY",
-    }
-    return mapping.get(code, msg or "Tencent Cloud request failed")
 
 
 def images_to_pdf_bytes(image_list: list[bytes]) -> bytes:

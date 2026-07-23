@@ -26,9 +26,15 @@
         return '../auth/login.html?next=' + encodeURIComponent(next);
     }
 
-    function translateDetail(msg) {
-        if (!msg) return tr('tools.imageCloud.unknownError');
+    function translateDetail(msg, status) {
+        if (!msg) {
+            if (status === 502 || status === 504) return tr('tools.imageCloud.serviceUnavailable');
+            return tr('tools.imageCloud.unknownError');
+        }
         if (String(msg).indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
+        if (msg === 'Bad Gateway' || msg === 'Gateway Timeout') {
+            return tr('tools.imageCloud.serviceUnavailable');
+        }
         var map = {
             'Authentication required': 'auth.authRequired',
             'Session expired. Please log in again.': 'auth.sessionExpired',
@@ -40,6 +46,20 @@
             'Empty file': 'tools.imageCloud.invalidFile',
             'Image is too large (max 8MB)': 'tools.imageCloud.tooLarge',
             'Image is too large for portrait segment (max 5MB)': 'tools.imageCloud.tooLarge',
+            'Image content is too large': 'tools.imageCloud.tooLarge',
+            'Image decode failed': 'tools.imageCloud.decodeFailed',
+            'Unsupported image format': 'tools.imageCloud.unsupportedFormat',
+            'Image resolution is too large': 'tools.imageCloud.resolutionTooLarge',
+            'Image resolution is too small': 'tools.imageCloud.resolutionTooSmall',
+            'No portrait subject detected': 'tools.imageCloud.noSubject',
+            'Too many people in the image': 'tools.imageCloud.tooManyPeople',
+            'Could not separate subject from background': 'tools.imageCloud.segmentFailed',
+            'Portrait cutout timed out': 'tools.imageCloud.segmentTimeout',
+            'Portrait cutout service busy': 'tools.imageCloud.segmentBusy',
+            'Portrait cutout service unavailable': 'tools.imageCloud.serviceUnavailable',
+            'Portrait cutout failed': 'tools.imageCloud.segmentFailed',
+            'Tencent Cloud service is not enabled': 'tools.imageCloud.serviceNotEnabled',
+            'Tencent Cloud account is in arrears': 'tools.imageCloud.accountArrears',
             'No text detected in image': 'tools.imageCloud.noText',
             'No images': 'tools.imageCloud.noImages'
         };
@@ -63,7 +83,11 @@
         if (token) headers.Authorization = 'Bearer ' + token;
         options.headers = headers;
         return fetch(apiBase() + path, options).then(function (res) {
-            if (typeof global.check502Error === 'function') global.check502Error(res);
+            // Only treat opaque gateway HTML 502 as site-wide outage; JSON 502 may be API detail.
+            var ct = (res.headers && res.headers.get('content-type')) || '';
+            if (res.status === 502 && ct.indexOf('application/json') === -1) {
+                if (typeof global.check502Error === 'function') global.check502Error(res);
+            }
             return res;
         });
     }
@@ -96,7 +120,7 @@
         return authFetch(path, options).then(function (res) {
             return res.json().catch(function () { return {}; }).then(function (data) {
                 if (!res.ok) {
-                    var err = new Error(translateDetail(detailFromData(data) || res.statusText));
+                    var err = new Error(translateDetail(detailFromData(data) || res.statusText, res.status));
                     err.status = res.status;
                     err.data = data;
                     throw err;
@@ -110,7 +134,7 @@
         return authFetch(path, options).then(function (res) {
             if (!res.ok) {
                 return res.json().catch(function () { return {}; }).then(function (data) {
-                    var err = new Error(translateDetail(detailFromData(data) || res.statusText));
+                    var err = new Error(translateDetail(detailFromData(data) || res.statusText, res.status));
                     err.status = res.status;
                     throw err;
                 });
