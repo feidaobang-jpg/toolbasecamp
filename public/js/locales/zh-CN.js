@@ -1078,12 +1078,11 @@ window.TB_LOCALES['zh-CN'] = {
             title: '去背景（智能抠图）',
             desc: '一键去除人像背景（腾讯云智能抠图），输出透明 PNG。需登录，计入每日限额。',
             dropTitle: '点击或拖入人像照片',
-            dropHint: '选图后自动抠图 · JPG / PNG · 不超过 5MB',
+            dropHint: 'JPG / PNG · 不超过 5MB',
             shareQuota: '与「制作证件照」共用每日抠图限额。',
             run: '去除背景',
             download: '下载',
-            clear: '清除',
-            autoHint: '选择照片后会自动开始抠图。'
+            clear: '清除'
         },
         iconMaker: {
             title: '图标制作',

@@ -84,7 +84,6 @@
     sourceWrap.hidden = false;
     dropZone.hidden = true;
     runBtn.disabled = false;
-    runCutout();
   }
 
   dropZone.addEventListener('click', function () { fileInput.click(); });

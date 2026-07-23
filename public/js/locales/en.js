@@ -1079,12 +1079,11 @@ window.TB_LOCALES.en = {
             title: 'Remove Background (Smart Cutout)',
             desc: 'One-click portrait cutout with Tencent Cloud. Transparent PNG. Requires sign-in and daily quota.',
             dropTitle: 'Click or drop a portrait photo',
-            dropHint: 'Upload to cut out automatically · JPG / PNG · max 5MB',
+            dropHint: 'JPG / PNG · max 5MB',
             shareQuota: 'Shares the same daily quota as ID Photo.',
             run: 'Remove background',
             download: 'Download',
-            clear: 'Clear',
-            autoHint: 'Cutout starts automatically after you choose a photo.'
+            clear: 'Clear'
         },
         iconMaker: {
             title: 'Icon Maker',
