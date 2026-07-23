@@ -284,7 +284,8 @@ jobs:
           echo "health immediately after start: $HEALTH_JSON"
           if ! echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
-            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null; then
+            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
+            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":4' >/dev/null; then
             echo "stale process detected right after start — running fix scripts"
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
             bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
@@ -302,8 +303,9 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready"
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":4' >/dev/null; then
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev"
               HEALTH_OK=1
               break
             fi
@@ -328,6 +330,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":4' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
