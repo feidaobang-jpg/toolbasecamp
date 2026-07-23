@@ -8,8 +8,8 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="vendor/tailwindcss.js"></script>
+    <link href="vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
     <link rel="stylesheet" href="css/tools-hub.css?v=portal-nometas">
     <link rel="dns-prefetch" href="https://pdf.toolbasecamp.com">
@@ -53,7 +53,13 @@
     <script src="js/i18n.js"></script>
     <script src="js/config.js"></script>
     <script src="js/common_ui.js"></script>
-    <script src="js/tools-hub.js?v=portal-nometas"></script>
-    <script>window.addEventListener('load', function () { if (typeof renderToolsHub === 'function') renderToolsHub(); });</script>
+    <script src="js/tools-hub.js?v=portal-nometas2"></script>
+    <script>
+      (function () {
+        function go() { if (typeof renderToolsHub === 'function') renderToolsHub(); }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+        else go();
+      })();
+    </script>
 </body>
 </html>
