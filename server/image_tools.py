@@ -12,6 +12,7 @@ from fastapi.responses import Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
+from general_cutout import rembg_available, segment_general
 from tencent_image import (
     image_enhancement,
     images_to_pdf_bytes,
@@ -34,6 +35,7 @@ LIMITS = {
     "ocr_table": int(os.environ.get("IMAGE_LIMIT_OCR_TABLE", "20")),
     "enhance": int(os.environ.get("IMAGE_LIMIT_ENHANCE", "20")),
     "id_photo": int(os.environ.get("IMAGE_LIMIT_ID_PHOTO", "10")),
+    "general_cutout": int(os.environ.get("IMAGE_LIMIT_GENERAL_CUTOUT", "15")),
     "to_pdf": int(os.environ.get("IMAGE_LIMIT_TO_PDF", "20")),
 }
 
@@ -179,6 +181,7 @@ def image_status(user: dict = Depends(_user)):
         ]
         return {
             "tencentConfigured": tencent_configured(),
+            "generalCutoutAvailable": rembg_available(),
             "isAdmin": True,
             "quotas": items,
             "enhanceTasks": [
@@ -211,6 +214,7 @@ def image_status(user: dict = Depends(_user)):
             )
         return {
             "tencentConfigured": tencent_configured(),
+            "generalCutoutAvailable": rembg_available(),
             "isAdmin": False,
             "quotas": items,
             "enhanceTasks": [
@@ -275,6 +279,26 @@ async def api_id_photo_segment(
     quota = _consume_quota(user, "id_photo")
     data = await _read_upload(file)
     out = segment_portrait(data)
+    return {
+        "imageBase64": base64.b64encode(out).decode("ascii"),
+        "contentType": "image/png",
+        "quota": quota,
+    }
+
+
+@router.post("/general-cutout/segment")
+async def api_general_cutout_segment(
+    file: UploadFile = File(...),
+    user: dict = Depends(_user),
+):
+    if not rembg_available():
+        raise HTTPException(
+            status_code=503,
+            detail="General cutout is not available (rembg not installed).",
+        )
+    quota = _consume_quota(user, "general_cutout")
+    data = await _read_upload(file)
+    out = segment_general(data)
     return {
         "imageBase64": base64.b64encode(out).decode("ascii"),
         "contentType": "image/png",

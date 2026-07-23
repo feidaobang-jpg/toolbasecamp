@@ -35,7 +35,10 @@
 
   function loadStatus() {
     return C.apiJson('/image/status').then(function (s) {
-      quotaLine.textContent = C.formatQuota(s.quotas, 'id_photo');
+      quotaLine.textContent = C.formatQuota(s.quotas, 'general_cutout');
+      if (s.generalCutoutAvailable === false) {
+        C.setError(errorBox, C.tr('tools.generalCutout.notAvailable'));
+      }
     }).catch(function (err) {
       C.setError(errorBox, err.message);
     });
@@ -54,8 +57,8 @@
     C.setError(errorBox, '');
     setProcessing(true);
     var fd = new FormData();
-    fd.append('file', file, file.name || 'portrait.jpg');
-    C.apiJson('/image/id-photo/segment', { method: 'POST', body: fd }).then(function (data) {
+    fd.append('file', file, file.name || 'subject.jpg');
+    C.apiJson('/image/general-cutout/segment', { method: 'POST', body: fd }).then(function (data) {
       if (data.quota) {
         quotaLine.textContent = C.formatQuotaItem(data.quota);
       }
@@ -121,7 +124,7 @@
     if (!resultUrl) return;
     var a = document.createElement('a');
     a.href = resultUrl;
-    a.download = 'portrait_cutout_' + Date.now() + '.png';
+    a.download = 'general_cutout_' + Date.now() + '.png';
     a.click();
   });
 

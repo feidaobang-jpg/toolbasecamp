@@ -13,3 +13,5 @@ opencv-python-headless>=4.8.0
 tencentcloud-sdk-python-common>=3.0.1200
 tencentcloud-sdk-python-ocr>=3.0.1200
 tencentcloud-sdk-python-bda>=3.0.1200
+rembg>=2.0.50
+onnxruntime>=1.16.0

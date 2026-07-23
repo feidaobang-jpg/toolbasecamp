@@ -58,6 +58,8 @@
             'Portrait cutout service busy': 'tools.imageCloud.segmentBusy',
             'Portrait cutout service unavailable': 'tools.imageCloud.serviceUnavailable',
             'Portrait cutout failed': 'tools.imageCloud.segmentFailed',
+            'General cutout failed': 'tools.imageCloud.segmentFailed',
+            'General cutout is not available (rembg not installed).': 'tools.generalCutout.notAvailable',
             'Tencent Cloud service is not enabled': 'tools.imageCloud.serviceNotEnabled',
             'Tencent Cloud account is in arrears': 'tools.imageCloud.accountArrears',
             'No text detected in image': 'tools.imageCloud.noText',

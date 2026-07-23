@@ -1064,7 +1064,7 @@ window.TB_LOCALES.en = {
             reselectBg: 'Change background',
             scaleLabel: 'Subject scale',
             tip: 'Tip:',
-            tipBody: 'Use a cutout PNG as foreground. Solid color fills canvas to subject size; background image sets canvas size and subject is centered.',
+            tipBody: 'Use Portrait Cutout or General Cutout for a transparent PNG first. Solid color fills canvas to subject size; background image sets canvas size and subject is centered.',
             generate: 'Generate preview',
             download: 'Download',
             clear: 'Clear',
@@ -1076,14 +1076,25 @@ window.TB_LOCALES.en = {
             generateFail: 'Failed to compose. Try a smaller image.'
         },
         removeBackground: {
-            title: 'Remove Background (Smart Cutout)',
-            desc: 'One-click portrait cutout with Tencent Cloud. Transparent PNG. Requires sign-in and daily quota.',
-            dropTitle: 'Click or drop a portrait photo',
-            dropHint: 'JPG / PNG · max 5MB',
+            title: 'Portrait Cutout',
+            desc: 'Portrait-focused smart cutout (Tencent Cloud). Transparent PNG. Requires sign-in and daily quota. For products/pets, use General Cutout.',
+            dropTitle: 'Click or drop a portrait photo (half / full body)',
+            dropHint: 'JPG / PNG · max 5MB · person should be clearly visible',
             shareQuota: 'Shares the same daily quota as ID Photo.',
-            run: 'Remove background',
+            run: 'Start cutout',
             download: 'Download',
             clear: 'Clear'
+        },
+        generalCutout: {
+            title: 'General Cutout',
+            desc: 'Remove background for products, pets, logos and other subjects. Transparent PNG. Requires sign-in and daily quota.',
+            dropTitle: 'Click or drop any subject photo (product / pet / logo…)',
+            dropHint: 'JPG / PNG · max 8MB · centered subject and simple background work best',
+            shareQuota: 'Uses its own daily quota (separate from Portrait Cutout).',
+            run: 'Start cutout',
+            download: 'Download',
+            clear: 'Clear',
+            notAvailable: 'General cutout is not ready (rembg not installed on the server).'
         },
         iconMaker: {
             title: 'Icon Maker',
@@ -1333,12 +1344,12 @@ window.TB_LOCALES.en = {
             }
         },
         portraitCutout: {
-            title: 'Remove Background',
-            desc: 'Remove the background and download a transparent PNG. No ID size or color. Requires sign-in and daily quota.',
-            dropTitle: 'Click or drop a portrait photo',
-            dropHint: 'JPG / PNG — max 5MB recommended',
+            title: 'Portrait Cutout',
+            desc: 'Portrait-focused smart cutout. Transparent PNG. Requires sign-in and daily quota.',
+            dropTitle: 'Click or drop a portrait photo (half / full body)',
+            dropHint: 'JPG / PNG · max 5MB · person should be clearly visible',
             shareQuota: 'Shares the same daily quota as ID Photo.',
-            run: 'Start',
+            run: 'Start cutout',
             download: 'Download',
             clear: 'Clear'
         },

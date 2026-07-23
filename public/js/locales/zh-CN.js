@@ -1063,7 +1063,7 @@ window.TB_LOCALES['zh-CN'] = {
             reselectBg: '更换背景',
             scaleLabel: '主体缩放',
             tip: '提示：',
-            tipBody: '前景建议先用「去背景（智能抠图）」得到透明图。纯色时画布跟主体；背景图时画布跟背景，主体居中。',
+            tipBody: '前景建议先用「人像抠图」或「通用抠图」得到透明图。纯色时画布跟主体；背景图时画布跟背景，主体居中。',
             generate: '生成预览',
             download: '下载',
             clear: '清除',
@@ -1075,14 +1075,25 @@ window.TB_LOCALES['zh-CN'] = {
             generateFail: '合成失败，请换较小图片重试。'
         },
         removeBackground: {
-            title: '去背景（智能抠图）',
-            desc: '一键去除人像背景（腾讯云智能抠图），输出透明 PNG。需登录，计入每日限额。',
-            dropTitle: '点击或拖入人像照片',
-            dropHint: 'JPG / PNG · 不超过 5MB',
+            title: '人像抠图',
+            desc: '专为人像设计的智能抠图（腾讯云人像分割），输出透明 PNG。需登录，计入每日限额。商品/宠物等请用「通用抠图」。',
+            dropTitle: '点击或拖入人像照片（半身/全身均可）',
+            dropHint: 'JPG / PNG · 不超过 5MB · 需能看清人物',
             shareQuota: '与「制作证件照」共用每日抠图限额。',
-            run: '去除背景',
+            run: '开始抠图',
             download: '下载',
             clear: '清除'
+        },
+        generalCutout: {
+            title: '通用抠图',
+            desc: '自动识别商品、宠物、图标等主体并去除背景，输出透明 PNG。需登录，计入每日限额。',
+            dropTitle: '点击或拖入任意图片（商品 / 宠物 / 图标等）',
+            dropHint: 'JPG / PNG · 不超过 8MB · 主体尽量居中、背景简单更佳',
+            shareQuota: '独立每日限额，不与人像抠图共用。',
+            run: '开始抠图',
+            download: '下载',
+            clear: '清除',
+            notAvailable: '通用抠图服务未就绪（服务端未安装 rembg）。'
         },
         iconMaker: {
             title: '图标制作',
@@ -1332,12 +1343,12 @@ window.TB_LOCALES['zh-CN'] = {
             }
         },
         portraitCutout: {
-            title: '去背景',
-            desc: '去掉背景，下载透明 PNG。不绑定证件尺寸或底色。需登录，计入每日限额。',
-            dropTitle: '点击或拖入人像照片',
-            dropHint: '建议 JPG / PNG，不超过 5MB',
+            title: '人像抠图',
+            desc: '专为人像设计的智能抠图，输出透明 PNG。需登录，计入每日限额。',
+            dropTitle: '点击或拖入人像照片（半身/全身均可）',
+            dropHint: 'JPG / PNG · 不超过 5MB · 需能看清人物',
             shareQuota: '与「制作证件照」共用每日抠图限额。',
-            run: '开始',
+            run: '开始抠图',
             download: '下载',
             clear: '清除'
         },
