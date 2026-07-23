@@ -16,8 +16,15 @@
   }
 
   function locale() {
-    if (typeof global.tbGetLocale === 'function') return global.tbGetLocale();
-    return 'zh-CN';
+    var loc = '';
+    if (typeof global.tbGetLocale === 'function') {
+      loc = String(global.tbGetLocale() || '');
+    }
+    if (!loc) {
+      var lang = String((document.documentElement && document.documentElement.lang) || '').toLowerCase();
+      loc = lang.indexOf('zh') === 0 ? 'zh-CN' : 'en';
+    }
+    return loc || 'zh-CN';
   }
 
   function formatQuota(item) {

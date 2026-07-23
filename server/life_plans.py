@@ -237,11 +237,38 @@ async def _fetch_temperature(city: str) -> Optional[dict]:
 
 def _plan_system_prompt(kind: str, locale: str) -> str:
     zh = _locale_is_zh(locale)
-    lang = (
-        "用简体中文回答。只输出合法 JSON，不要 markdown。"
-        if zh
-        else "Reply in English. Output valid JSON only, no markdown."
-    )
+    if zh:
+        lang = (
+            "【强制】全部输出必须使用简体中文：title、summary、sections 的 heading/bullets、"
+            "disclaimer、markdown 一律用中文。禁止英文标题或英文正文（专有名词可保留原文）。"
+            "只输出合法 JSON，不要用 markdown 代码块包裹。"
+        )
+        role = "你是面向中国用户的生活计划助手，内容要具体、可执行。"
+        shape = (
+            '顶层 JSON 结构固定为：{"title":"字符串","summary":"字符串",'
+            '"sections":[{"heading":"字符串","bullets":["字符串"]}],'
+            '"disclaimer":"字符串","markdown":"字符串"}。'
+            "markdown 字段放完整可读正文（与 sections 内容一致，也必须是中文）。"
+        )
+        hints = {
+            "weight_loss": "根据身高体重与目标，生成减肥周计划：热量/运动要点、示例一日三餐、进度检查。非医疗建议。",
+            "study": "根据年级与成绩生成自学计划：每周安排、薄弱科练习、阶段检测。",
+            "road_trip": "生成自驾行程文案（按天、途经点、打包、提示）。仅文字行程，不含实时路况。",
+            "pc_upgrade": "根据现有电脑配置与预算，给出升级/配件建议。注明价格会变动。",
+            "seasonal_food": "按季节与地区给出一周青菜/水果/肉类参考及采购提示。",
+            "outfit": "按气温/天气与场合给出穿搭建议：分层搭配与鞋履。",
+            "day_trip": "生成半天或一天本地出行安排：时段行程、交通提示、餐饮、携带物品。不含实时预订。",
+            "moving": "按房间与时间线生成搬家清单（搬前/搬家日/搬后）：打包、水电燃气、杂务。",
+            "savings": "按收入、固定支出与攒钱目标生成本月预算与可砍项。非理财建议，不荐股。",
+            "interview": "根据岗位说明与背景，生成可能面试题、经历故事骨架（STAR）与准备清单。不保证结果。",
+            "family_meal": "按人数与忌口生成一周家庭菜单与采购清单，菜品要家常可做。",
+            "wishlist": "按兴趣与预算整理短期/中期/长期愿望清单，附大致花费或精力与优先级。非理财建议。",
+            "shopping": "按用途与已知要买的物品，生成分类采购清单：必买/可选、数量与分区（生鲜/日用品等）。",
+        }
+        task = hints.get(kind, "生成一份实用的中文计划。")
+        return f"{lang}\n{role}\n{shape}\n任务：{task}"
+
+    lang = "Reply in English. Output valid JSON only, no markdown code fences."
     common = (
         f"{lang}\n"
         "You are a practical planning assistant for everyday life tools. "
@@ -251,7 +278,7 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         '"disclaimer":"string","markdown":"string"}. '
         "Put a full readable markdown document in markdown (same content as sections)."
     )
-    hints = {
+    hints_en = {
         "weight_loss": "Create a weight-loss plan with weekly calorie/activity outline, sample day meals, and progress checks. Not medical advice.",
         "study": "Create a self-study plan from grade and scores: weekly schedule, weak-subject drills, checkpoint tests.",
         "road_trip": "Create a driving-trip itinerary (days, stops, packing, tips). Text itinerary only; no real-time traffic.",
@@ -266,7 +293,22 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         "wishlist": "Create a practical wish/bucket list grouped by short/medium/long term, with rough cost or effort notes and a simple prioritization. Not financial advice.",
         "shopping": "Create a purchase/shopping checklist from the occasion and items already listed. Group by store section or category, mark must-buy vs optional, and note quantities when useful.",
     }
-    return common + "\nTask: " + hints.get(kind, "Create a helpful plan.")
+    return common + "\nTask: " + hints_en.get(kind, "Create a helpful plan.")
+
+
+def _plan_user_message(kind: str, locale: str, user_payload: dict) -> str:
+    zh = _locale_is_zh(locale)
+    payload = json.dumps(user_payload, ensure_ascii=False)
+    if zh:
+        return (
+            f"请用简体中文生成 kind={kind} 的计划。locale={locale}。"
+            "JSON 中所有面向用户的字符串必须是中文。\n输入：\n"
+            + payload
+        )
+    return (
+        f"Generate the plan in English for kind={kind}. locale={locale}.\nInput JSON:\n"
+        + payload
+    )
 
 
 def _normalize_plan(data: dict) -> dict:
@@ -370,6 +412,7 @@ async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user
     locale = body.locale or "zh-CN"
     user_payload = {
         "kind": kind,
+        "locale": locale,
         "fields": fields,
         "weather": weather,
     }
@@ -377,8 +420,7 @@ async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user
         {"role": "system", "content": _plan_system_prompt(kind, locale)},
         {
             "role": "user",
-            "content": "Generate the plan for this input JSON:\n"
-            + json.dumps(user_payload, ensure_ascii=False),
+            "content": _plan_user_message(kind, locale, user_payload),
         },
     ]
     try:
