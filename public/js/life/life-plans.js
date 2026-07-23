@@ -184,7 +184,7 @@
       downloadBtn.disabled = true;
       downloadBtn.addEventListener('click', function () {
         if (!lastPlan) return;
-        downloadText((cfg.kind || 'plan') + '_' + Date.now() + '.md', lastPlan.markdown || '');
+        downloadText((cfg.kind || 'plan') + '_' + Date.now() + '.txt', lastPlan.markdown || '');
       });
     }
 
