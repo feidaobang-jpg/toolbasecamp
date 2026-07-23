@@ -251,7 +251,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
           fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
-          echo "=== force restart API for records routes ==="
+          echo "=== Nuclear restart before start ==="
           systemctl stop toolbasecamp-api 2>/dev/null || true
           sleep 1
           fuser -k 8001/tcp 2>/dev/null || true
@@ -259,17 +259,30 @@ jobs:
           pkill -9 -f 'run.py' 2>/dev/null || true
           sleep 2
           # Port must be free before start, otherwise systemd may leave an old orphan listening.
-          if ss -lnt 2>/dev/null | grep -q ':8001'; then
-            echo "port 8001 still busy — killing again"
-            fuser -k -9 8001/tcp 2>/dev/null || true
-            sleep 2
-          fi
+          for _ in 1 2 3 4 5; do
+            if ss -lnt 2>/dev/null | grep -q ':8001'; then
+              echo "port 8001 still busy — killing again"
+              fuser -k -9 8001/tcp 2>/dev/null || true
+              pkill -9 -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
+              sleep 2
+            else
+              break
+            fi
+          done
           rm -rf /opt/toolbasecamp-api/__pycache__ /opt/toolbasecamp-api/*/__pycache__ 2>/dev/null || true
+          find /opt/toolbasecamp-api -name '*.pyc' -delete 2>/dev/null || true
           systemctl reset-failed toolbasecamp-api 2>/dev/null || true
           systemctl start toolbasecamp-api
           sleep 2
           systemctl is-active toolbasecamp-api
           ss -lntp 2>/dev/null | grep 8001 || netstat -lntp 2>/dev/null | grep 8001 || true
+          # Prove the *listening* process is the new code (not a stale orphan)
+          HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
+          echo "health immediately after start: $HEALTH_JSON"
+          if ! echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null; then
+            echo "stale process detected right after start — running fix-general-cutout-api.sh"
+            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
+          fi
           HEALTH_OK=0
           for i in 1 2 3 4 5 6 7 8; do
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
@@ -295,7 +308,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
             bash /opt/toolbasecamp-deploy/fix-watermark-api.sh
             bash /opt/toolbasecamp-deploy/fix-wan-api.sh || true
-            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
+            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health after fix: $HEALTH_JSON"
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
@@ -596,6 +609,44 @@ jobs:
             exit 1
           fi
           echo "Watermark API public OK after fix."
+
+      - name: Verify general cutout API route (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          sleep 2
+          check_gc() {
+            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            echo "health: $HEALTH"
+            echo "$HEALTH" | grep -F '"general_cutout_api":true' >/dev/null
+          }
+          GC_CODE="$(curl -sS -o /tmp/gc-seg.txt -w '%{http_code}' \
+            -X POST "https://toolbasecamp.com/api/image/general-cutout/segment?cb=$RANDOM" || echo '000')"
+          echo "public POST /api/image/general-cutout/segment -> $GC_CODE"
+          head -c 200 /tmp/gc-seg.txt || true
+          echo ""
+          if check_gc && [[ "$GC_CODE" != "404" && "$GC_CODE" != "000" ]]; then
+            echo "General cutout API public OK."
+            exit 0
+          fi
+          echo "::warning:: public general cutout missing — forcing fix-general-cutout-api.sh"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh'
+          sleep 3
+          GC_CODE="$(curl -sS -o /tmp/gc-seg2.txt -w '%{http_code}' \
+            -X POST "https://toolbasecamp.com/api/image/general-cutout/segment?cb=$RANDOM" || echo '000')"
+          echo "retry POST -> $GC_CODE"
+          if ! check_gc; then
+            echo "::error:: public health still missing general_cutout_api after fix"
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+              "${DO_USER}@${DO_HOST}" \
+              'echo SHA=$(cat /opt/toolbasecamp-api/DEPLOY_SHA); grep -n general-cutout /opt/toolbasecamp-api/image_tools.py | head; curl -s http://127.0.0.1:8001/health; ss -lntp | grep 8001; journalctl -u toolbasecamp-api -n 40 --no-pager'
+            exit 1
+          fi
+          if [[ "$GC_CODE" == "404" || "$GC_CODE" == "000" ]]; then
+            echo "::error:: public general-cutout still $GC_CODE after fix (expected 401/422/503)"
+            exit 1
+          fi
+          echo "General cutout API public OK after fix."
 
       - name: Verify dev portal (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'

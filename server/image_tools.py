@@ -23,7 +23,9 @@ from tencent_image import (
 
 try:
     from general_cutout import rembg_available, segment_general
-except ImportError:  # pragma: no cover
+except Exception as exc:  # pragma: no cover — keep image tools up if rembg stack breaks
+    print(f"[general_cutout] import failed: {exc}")
+
     def rembg_available() -> bool:
         return False
 

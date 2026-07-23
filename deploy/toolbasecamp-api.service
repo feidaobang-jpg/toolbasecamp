@@ -9,7 +9,7 @@ WorkingDirectory=/opt/toolbasecamp-api
 Environment=HOST=127.0.0.1
 Environment=PORT=8001
 EnvironmentFile=-/etc/toolbasecamp-api.env
-ExecStart=/opt/toolbasecamp-api/venv/bin/python run.py
+ExecStart=/opt/toolbasecamp-api/venv/bin/python -B run.py
 Restart=always
 RestartSec=3
 
