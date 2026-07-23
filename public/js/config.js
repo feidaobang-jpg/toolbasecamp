@@ -112,8 +112,7 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.qrCode.title', url: 'html/media/qr-code.html' },
                 { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
-                { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
-                { titleKey: 'tools.watermarkRemovalAdvanced.title', url: 'html/media/watermark-removal-advanced.html' },
+                { titleKey: 'tools.smartErase.title', url: 'html/media/smart-erase.html' },
                 { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
                 { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
                 { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
