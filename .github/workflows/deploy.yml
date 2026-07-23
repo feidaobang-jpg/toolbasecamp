@@ -216,7 +216,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); import wan_video; assert wan_video.wan_configured or True"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); assert '/life-plans/generate' in paths and '/life-plans/status' in paths and '/life-plans/drug-label' in paths, 'missing life-plans routes: ' + str([p for p in paths if 'life' in p]); import wan_video; assert wan_video.wan_configured or True"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -279,9 +279,11 @@ jobs:
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
-          if ! echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null; then
-            echo "stale process detected right after start — running fix-general-cutout-api.sh"
-            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
+          if ! echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
+            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null; then
+            echo "stale process detected right after start — running fix scripts"
+            bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
+            bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           fi
           HEALTH_OK=0
           for i in 1 2 3 4 5 6 7 8; do
@@ -294,8 +296,9 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout"
+              && echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null; then
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans"
               HEALTH_OK=1
               break
             fi
@@ -309,6 +312,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-watermark-api.sh
             bash /opt/toolbasecamp-deploy/fix-wan-api.sh || true
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
+            bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health after fix: $HEALTH_JSON"
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
@@ -317,6 +321,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"wan_i2v_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -346,6 +351,12 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/image/general-cutout/segment' >/dev/null || exit 1
+          }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/life-plans/status' >/dev/null || {
+            echo "=== openapi missing /life-plans/status — forcing restart ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/life-plans/status' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
             echo "=== openapi missing clock reset route ==="
@@ -647,6 +658,41 @@ jobs:
             exit 1
           fi
           echo "General cutout API public OK after fix."
+
+      - name: Verify life-plans API route (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          sleep 2
+          check_lp() {
+            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            echo "health: $HEALTH"
+            echo "$HEALTH" | grep -F '"life_plans_api":true' >/dev/null
+          }
+          LP_CODE="$(curl -sS -o /tmp/lp-status.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+          echo "public GET /api/life-plans/status -> $LP_CODE"
+          head -c 200 /tmp/lp-status.txt || true
+          echo ""
+          if check_lp && [[ "$LP_CODE" != "404" && "$LP_CODE" != "000" ]]; then
+            echo "Life-plans API public OK."
+            exit 0
+          fi
+          echo "::warning:: public life-plans missing — forcing fix-life-plans-api.sh"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh'
+          sleep 3
+          LP_CODE="$(curl -sS -o /tmp/lp-status2.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+          echo "retry GET -> $LP_CODE"
+          if ! check_lp; then
+            echo "::error:: public health still missing life_plans_api after fix"
+            exit 1
+          fi
+          if [[ "$LP_CODE" == "404" || "$LP_CODE" == "000" ]]; then
+            echo "::error:: public /life-plans/status still $LP_CODE after fix (expected 401)"
+            exit 1
+          fi
+          echo "Life-plans API public OK after fix."
 
       - name: Verify dev portal (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'

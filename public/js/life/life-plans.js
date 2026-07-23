@@ -205,6 +205,7 @@
     var runBtn = document.getElementById('run-btn');
     var clearBtn = document.getElementById('clear-btn');
     var copyBtn = document.getElementById('copy-btn');
+    var downloadBtn = document.getElementById('download-btn');
     var printBtn = document.getElementById('print-btn');
     var quotaLine = document.getElementById('quota-line');
     var errorBox = document.getElementById('error-box');
@@ -294,6 +295,7 @@
           if (largeMount) largeMount.innerHTML = html;
           if (resultCard) resultCard.hidden = false;
           if (copyBtn) copyBtn.disabled = false;
+          if (downloadBtn) downloadBtn.disabled = false;
           if (printBtn) printBtn.disabled = false;
         }).catch(function (err) {
           C.setError(errorBox, err.message);
@@ -316,6 +318,7 @@
         if (largeMount) largeMount.innerHTML = '';
         if (runBtn) runBtn.disabled = true;
         if (copyBtn) copyBtn.disabled = true;
+        if (downloadBtn) downloadBtn.disabled = true;
         if (printBtn) printBtn.disabled = true;
         C.setError(errorBox, '');
       });
@@ -329,6 +332,14 @@
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text);
         }
+      });
+    }
+    if (downloadBtn) {
+      downloadBtn.disabled = true;
+      downloadBtn.addEventListener('click', function () {
+        if (!lastLabel) return;
+        var name = (lastLabel.drug_name || 'drug_label').replace(/[\\/:*?"<>|]+/g, '_');
+        downloadText(name + '_large_print.txt', lastLabel.large_print_text || '');
       });
     }
     if (printBtn) {
