@@ -64,7 +64,13 @@
       resultImg.src = resultUrl;
       previewWrap.hidden = false;
     }).catch(function (err) {
-      C.setError(errorBox, err.message);
+      var msg = (err && err.message) || '';
+      // Keep auth / quota messages; map all cutout failures to a simple tip.
+      if (/登录|限额|次数|Authentication|Session|Daily limit|sign in|log in|quota/i.test(msg)) {
+        C.setError(errorBox, msg);
+      } else {
+        C.setError(errorBox, C.tr('tools.removeBackground.noPortrait'));
+      }
     }).finally(function () {
       setProcessing(false);
     });

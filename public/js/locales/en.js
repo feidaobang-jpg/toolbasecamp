@@ -1083,7 +1083,8 @@ window.TB_LOCALES.en = {
             shareQuota: 'Shares the same daily quota as ID Photo.',
             run: 'Start cutout',
             download: 'Download',
-            clear: 'Clear'
+            clear: 'Clear',
+            noPortrait: 'Unable to detect a portrait'
         },
         generalCutout: {
             title: 'General Cutout',

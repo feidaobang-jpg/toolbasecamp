@@ -1082,7 +1082,8 @@ window.TB_LOCALES['zh-CN'] = {
             shareQuota: '与「制作证件照」共用每日抠图限额。',
             run: '开始抠图',
             download: '下载',
-            clear: '清除'
+            clear: '清除',
+            noPortrait: '无法检测到人像'
         },
         generalCutout: {
             title: '通用抠图',
