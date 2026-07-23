@@ -29,23 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
     R.setError(errorEl, msg || '');
   }
 
-  function scrollBottom() {
-    requestAnimationFrame(function () {
-      var node = document.scrollingElement || document.documentElement;
-      var candidates = [document.querySelector('.content'), document.querySelector('main'), node];
-      var scroller = null;
-      for (var i = 0; i < candidates.length; i++) {
-        var el = candidates[i];
-        if (el && el.scrollHeight > el.clientHeight + 1) {
-          scroller = el;
-          break;
-        }
-      }
-      scroller = scroller || node;
-      if (scroller) scroller.scrollTop = scroller.scrollHeight;
-    });
-  }
-
   function normalizeItem(it) {
     return {
       id: it.id,
@@ -198,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
       render();
     }).catch(function (err) {
       showError(err.message || tr('tools.records.unknownError'));
-      scrollBottom();
     });
   }
 
@@ -228,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function () {
       busy = false;
       showError(err.message || tr('tools.records.unknownError'));
       render();
-      scrollBottom();
     });
   }
 
@@ -246,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
       busy = false;
       showError(err.message || tr('tools.records.unknownError'));
       render();
-      scrollBottom();
     });
   }
 
@@ -269,12 +249,10 @@ document.addEventListener('DOMContentLoaded', function () {
       filter = filter === 'done' || filter === 'doing' ? 'all' : filter;
       busy = false;
       render();
-      scrollBottom();
     }).catch(function (err) {
       busy = false;
       showError(err.message || tr('tools.records.unknownError'));
       render();
-      scrollBottom();
     });
   }
 
@@ -313,7 +291,6 @@ document.addEventListener('DOMContentLoaded', function () {
       busy = false;
       showError(err.message || tr('tools.records.unknownError'));
       render();
-      scrollBottom();
     });
   });
 
