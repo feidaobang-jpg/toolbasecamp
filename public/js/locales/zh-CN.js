@@ -908,6 +908,30 @@ window.TB_LOCALES['zh-CN'] = {
             style: '口味偏好（可选）',
             stylePh: '清淡、少油、快手菜…'
         },
+        shoppingPlan: {
+            title: '采购清单',
+            desc: '按用途与已有物品生成分类采购清单。需登录。',
+            occasion: '采购用途',
+            occasionPh: '周末囤货 / 聚餐 / 搬家日用品…',
+            items: '已知要买的（可选）',
+            itemsPh: '米、抽纸、洗衣液…',
+            store: '购买渠道（可选）',
+            storePh: '超市 / 菜市场 / 网购…',
+            budget: '预算（可选）',
+            budgetPh: '例如：300 元'
+        },
+        wishlistPlan: {
+            title: '愿望清单',
+            desc: '按兴趣与预算整理短期/中期/长期愿望清单。需登录。',
+            themes: '愿望方向',
+            themesPh: '旅行、学习、数码、体验…',
+            horizon: '时间跨度（可选）',
+            horizonPh: '今年 / 三年内…',
+            budget: '大致预算（可选）',
+            budgetPh: '例如：全年 2 万内',
+            notes: '已有想法（可选）',
+            notesPh: '想去日本、学吉他…'
+        },
         drugLabel: {
             title: '药品大字版',
             desc: '拍摄说明书，OCR 后整理成大字易读版。不能替代医嘱。需登录。',

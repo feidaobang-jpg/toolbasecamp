@@ -108,6 +108,8 @@ const toolsConfig = {
                 { titleKey: 'tools.interviewPlan.title', url: 'html/life/interview-plan.html', authRequired: true },
                 { titleKey: 'tools.seasonalFoodPlan.title', url: 'html/life/seasonal-food-plan.html', authRequired: true },
                 { titleKey: 'tools.familyMealPlan.title', url: 'html/life/family-meal-plan.html', authRequired: true },
+                { titleKey: 'tools.shoppingPlan.title', url: 'html/life/shopping-plan.html', authRequired: true },
+                { titleKey: 'tools.wishlistPlan.title', url: 'html/life/wishlist-plan.html', authRequired: true },
                 { titleKey: 'tools.outfitPlan.title', url: 'html/life/outfit-plan.html', authRequired: true }
             ]
         },

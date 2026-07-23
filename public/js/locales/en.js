@@ -909,6 +909,30 @@ window.TB_LOCALES.en = {
             style: 'Taste preference (optional)',
             stylePh: 'Light, low oil, quick meals…'
         },
+        shoppingPlan: {
+            title: 'Shopping List',
+            desc: 'Categorized purchase checklist from occasion and known items. Requires sign-in.',
+            occasion: 'What for',
+            occasionPh: 'Weekly groceries / party / moving supplies…',
+            items: 'Already know to buy (optional)',
+            itemsPh: 'Rice, tissues, detergent…',
+            store: 'Where (optional)',
+            storePh: 'Supermarket / market / online…',
+            budget: 'Budget (optional)',
+            budgetPh: 'e.g. ¥300'
+        },
+        wishlistPlan: {
+            title: 'Wish List',
+            desc: 'Short / medium / long-term wishes from interests and budget. Requires sign-in.',
+            themes: 'Wish themes',
+            themesPh: 'Travel, learning, gadgets, experiences…',
+            horizon: 'Time horizon (optional)',
+            horizonPh: 'This year / within 3 years…',
+            budget: 'Rough budget (optional)',
+            budgetPh: 'e.g. under ¥20k / year',
+            notes: 'Ideas you already have (optional)',
+            notesPh: 'Trip to Japan, learn guitar…'
+        },
         drugLabel: {
             title: 'Drug Label (Large Print)',
             desc: 'OCR a leaflet into large-print sections. Not a substitute for medical advice. Requires sign-in.',

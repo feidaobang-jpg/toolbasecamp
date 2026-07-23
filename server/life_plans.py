@@ -42,6 +42,8 @@ PLAN_KINDS = frozenset(
         "savings",
         "interview",
         "family_meal",
+        "wishlist",
+        "shopping",
     }
 )
 
@@ -261,6 +263,8 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         "savings": "Create a monthly savings/budget outline from income, fixed costs, and a savings goal. Not financial advice; no investment picks.",
         "interview": "From a job description and background, produce likely interview questions, STAR story outlines, and prep checklist. Not a guarantee of outcomes.",
         "family_meal": "Create a 7-day family meal plan with simple dishes plus a grocery shopping list. Respect people count, allergies, and kitchen constraints.",
+        "wishlist": "Create a practical wish/bucket list grouped by short/medium/long term, with rough cost or effort notes and a simple prioritization. Not financial advice.",
+        "shopping": "Create a purchase/shopping checklist from the occasion and items already listed. Group by store section or category, mark must-buy vs optional, and note quantities when useful.",
     }
     return common + "\nTask: " + hints.get(kind, "Create a helpful plan.")
 
