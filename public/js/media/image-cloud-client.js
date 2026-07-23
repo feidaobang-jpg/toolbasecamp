@@ -64,9 +64,17 @@
             'Tencent Cloud account is in arrears': 'tools.imageCloud.accountArrears',
             'No text detected in image': 'tools.imageCloud.noText',
             'No images': 'tools.imageCloud.noImages',
-            'Not Found': 'tools.imageCloud.routeNotFound'
+            'Not Found': 'tools.imageCloud.routeNotFound',
+            'DeepSeek is not configured (DEEPSEEK_API_KEY).': 'tools.lifePlans.deepseekMissing',
+            'Please fill in the form fields': 'tools.lifePlans.needFields',
+            'Invalid plan kind': 'tools.lifePlans.invalidKind',
+            'Provide a city or temperature for outfit advice': 'tools.outfitPlan.needTemp',
+            'Plan generation failed': 'tools.lifePlans.genFailed'
         };
         if (map[msg]) return tr(map[msg]);
+        if (String(msg).indexOf('Plan generation failed') === 0) return tr('tools.lifePlans.genFailed');
+        if (String(msg).indexOf('Structuring failed') === 0) return tr('tools.lifePlans.genFailed');
+        if (String(msg).indexOf('OCR failed') === 0) return tr('tools.imageCloud.unknownError');
         return msg;
     }
 

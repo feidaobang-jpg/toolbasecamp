@@ -262,6 +262,7 @@ window.TB_LOCALES.en = {
             calc: 'Calc',
             convert: 'Convert',
             food: 'Food',
+            lifePlans: 'Life Plans',
             record: 'Records',
             media: 'Images',
             document: 'Document',
@@ -766,6 +767,93 @@ window.TB_LOCALES.en = {
             copyResult: 'Copy result',
             copyDone: 'Result copied to clipboard',
             copyFailed: 'Copy failed — please select and copy manually'
+        },
+        lifePlans: {
+            generate: 'Generate',
+            clear: 'Clear',
+            copy: 'Copy',
+            copied: 'Copied',
+            download: 'Download',
+            deepseekMissing: 'DeepSeek is not configured on the server (DEEPSEEK_API_KEY).',
+            needFields: 'Please fill in the form fields',
+            invalidKind: 'Invalid plan kind',
+            genFailed: 'Plan generation failed. Please try again.'
+        },
+        weightLossPlan: {
+            title: 'Weight Loss Plan',
+            desc: 'Weekly outline from height, weight and goal. Not medical advice. Requires sign-in.',
+            height: 'Height (cm)',
+            weight: 'Current weight (kg)',
+            target: 'Target weight (kg)',
+            weeks: 'Weeks',
+            notes: 'Notes (optional)',
+            notesPh: 'Diet preference, injuries…',
+            disclaimer: 'Not medical advice. See a doctor before major diet or exercise changes.'
+        },
+        studyPlan: {
+            title: 'Self-Study Plan',
+            desc: 'Weekly study schedule from grade and scores. Requires sign-in.',
+            grade: 'Grade / level',
+            gradePh: 'e.g. Grade 8 / Senior 2',
+            scores: 'Scores / weak subjects',
+            scoresPh: 'Math 72, English 85, Physics weak…',
+            goal: 'Goal (optional)',
+            goalPh: 'Exam in 2 months…'
+        },
+        roadTripPlan: {
+            title: 'Road Trip Plan',
+            desc: 'Text itinerary from origin to destination (no live traffic). Requires sign-in.',
+            origin: 'Origin',
+            destination: 'Destination',
+            days: 'Days',
+            preferences: 'Preferences (optional)',
+            prefPh: 'Food, kids, scenic…'
+        },
+        pcUpgradePlan: {
+            title: 'PC Upgrade Plan',
+            desc: 'Upgrade and accessory ideas from your specs. Prices change. Requires sign-in.',
+            specs: 'Current specs',
+            specsPh: 'CPU / GPU / RAM / storage / PSU…',
+            budget: 'Budget (optional)',
+            budgetPh: 'e.g. $300',
+            useCase: 'Main use (optional)',
+            useCasePh: 'Gaming / video / office…'
+        },
+        seasonalFoodPlan: {
+            title: 'Seasonal Food Plan',
+            desc: 'Weekly veggies, fruit or meat ideas by season. Requires sign-in.',
+            season: 'Season',
+            seasonAuto: 'Auto (current)',
+            spring: 'Spring',
+            summer: 'Summer',
+            autumn: 'Autumn',
+            winter: 'Winter',
+            region: 'Region (optional)',
+            regionPh: 'e.g. East China',
+            focus: 'Focus',
+            focusAll: 'All',
+            focusVeg: 'Vegetables',
+            focusFruit: 'Fruit',
+            focusMeat: 'Meat'
+        },
+        outfitPlan: {
+            title: 'Outfit by Weather',
+            desc: 'City (auto temp) or temperature → layering ideas. Requires sign-in.',
+            city: 'City (optional)',
+            cityPh: 'e.g. Shanghai',
+            temp: 'Temperature °C (optional if city set)',
+            occasion: 'Occasion (optional)',
+            occasionPh: 'Office / outdoor / date…',
+            needTemp: 'Provide a city or a temperature'
+        },
+        drugLabel: {
+            title: 'Drug Label (Large Print)',
+            desc: 'OCR a leaflet into large-print sections. Not a substitute for medical advice. Requires sign-in.',
+            dropTitle: 'Click or drop leaflet photo',
+            dropHint: 'JPG / PNG · max 8MB · clear text works best',
+            run: 'Make large print',
+            print: 'Print',
+            disclaimer: 'Reading aid only. Follow your doctor or pharmacist.'
         },
         cardScore: {
             title: 'Card Score',

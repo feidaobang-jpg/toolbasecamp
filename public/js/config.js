@@ -96,6 +96,17 @@ const toolsConfig = {
             ]
         },
         {
+            titleKey: 'tools.groups.lifePlans',
+            items: [
+                { titleKey: 'tools.weightLossPlan.title', url: 'html/life/weight-loss-plan.html', authRequired: true },
+                { titleKey: 'tools.studyPlan.title', url: 'html/life/study-plan.html', authRequired: true },
+                { titleKey: 'tools.roadTripPlan.title', url: 'html/life/road-trip-plan.html', authRequired: true },
+                { titleKey: 'tools.pcUpgradePlan.title', url: 'html/life/pc-upgrade-plan.html', authRequired: true },
+                { titleKey: 'tools.seasonalFoodPlan.title', url: 'html/life/seasonal-food-plan.html', authRequired: true },
+                { titleKey: 'tools.outfitPlan.title', url: 'html/life/outfit-plan.html', authRequired: true }
+            ]
+        },
+        {
             titleKey: 'tools.groups.record',
             items: [
                 { titleKey: 'tools.cardScore.title', url: 'html/record/card-score.html' },
@@ -137,7 +148,8 @@ const toolsConfig = {
                 { titleKey: 'tools.imagesToPdf.title', url: 'html/docs/images-to-pdf.html' },
                 { titleKey: 'tools.imagesToPdfAdvanced.title', url: 'html/media/images-to-pdf-advanced.html', authRequired: true },
                 { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true },
-                { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true }
+                { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true },
+                { titleKey: 'tools.drugLabel.title', url: 'html/docs/drug-label.html', authRequired: true }
             ]
         },
         {

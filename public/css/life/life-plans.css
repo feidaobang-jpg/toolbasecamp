@@ -1,0 +1,88 @@
+.life-plan-form .field-row {
+  margin-bottom: 14px;
+}
+.life-plan-form .field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.life-plan-form input[type="text"],
+.life-plan-form input[type="number"],
+.life-plan-form select,
+.life-plan-form textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font: inherit;
+}
+.life-plan-form textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.life-plan-disclaimer {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+.life-plan-result h2 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+.life-plan-result .summary {
+  margin: 0 0 16px;
+  color: #374151;
+  line-height: 1.55;
+}
+.life-plan-section {
+  margin-bottom: 16px;
+}
+.life-plan-section h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+.life-plan-section ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.life-plan-section li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.life-plan-busy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  color: #374151;
+}
+.life-plan-busy[hidden] {
+  display: none !important;
+}
+.drug-large-print {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 1.35rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.drug-large-print .drug-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+@media print {
+  .sidebar, .action-row, .img-cloud-quota, .drop-zone, .tip-box, .tool-header p {
+    display: none !important;
+  }
+  .drug-large-print {
+    border: none;
+    font-size: 18pt;
+  }
+}

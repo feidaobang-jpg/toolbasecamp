@@ -261,6 +261,7 @@ window.TB_LOCALES['zh-CN'] = {
             calc: '计算',
             convert: '转换',
             food: '美食',
+            lifePlans: '生活计划',
             record: '记录',
             media: '图片',
             document: '文档',
@@ -765,6 +766,93 @@ window.TB_LOCALES['zh-CN'] = {
             copyResult: '复制结果',
             copyDone: '已复制结果到剪切板',
             copyFailed: '复制失败，请手动选择复制'
+        },
+        lifePlans: {
+            generate: '生成计划',
+            clear: '清除',
+            copy: '复制',
+            copied: '已复制',
+            download: '下载',
+            deepseekMissing: '服务端尚未配置 DeepSeek（DEEPSEEK_API_KEY）。',
+            needFields: '请填写表单内容',
+            invalidKind: '无效的计划类型',
+            genFailed: '计划生成失败，请稍后重试'
+        },
+        weightLossPlan: {
+            title: '减肥计划',
+            desc: '根据身高体重与目标生成周计划。非医疗建议，需登录。',
+            height: '身高（厘米）',
+            weight: '当前体重（公斤）',
+            target: '目标体重（公斤）',
+            weeks: '计划周数',
+            notes: '备注（可选）',
+            notesPh: '饮食偏好、伤病等',
+            disclaimer: '非医疗建议。大幅改变饮食或运动前请咨询医生。'
+        },
+        studyPlan: {
+            title: '自学计划',
+            desc: '根据年级与成绩生成每周自学安排。需登录。',
+            grade: '年级 / 学段',
+            gradePh: '例如：初二 / 高一',
+            scores: '成绩 / 薄弱科目',
+            scoresPh: '数学 72，英语 85，物理偏弱…',
+            goal: '目标（可选）',
+            goalPh: '两个月后考试…'
+        },
+        roadTripPlan: {
+            title: '自驾攻略',
+            desc: '出发地与目的地生成行程文案（不含实时路况）。需登录。',
+            origin: '出发地',
+            destination: '目的地',
+            days: '天数',
+            preferences: '偏好（可选）',
+            prefPh: '美食、亲子、风景…'
+        },
+        pcUpgradePlan: {
+            title: '硬件升级',
+            desc: '根据现有配置建议配件或升级方案。价格会变动。需登录。',
+            specs: '当前配置',
+            specsPh: 'CPU / 显卡 / 内存 / 硬盘 / 电源…',
+            budget: '预算（可选）',
+            budgetPh: '例如：2000 元',
+            useCase: '主要用途（可选）',
+            useCasePh: '游戏 / 剪辑 / 办公…'
+        },
+        seasonalFoodPlan: {
+            title: '时令食材',
+            desc: '按季节生成一周青菜 / 水果 / 肉类参考。需登录。',
+            season: '季节',
+            seasonAuto: '自动（当前）',
+            spring: '春',
+            summer: '夏',
+            autumn: '秋',
+            winter: '冬',
+            region: '地区（可选）',
+            regionPh: '例如：华东',
+            focus: '侧重',
+            focusAll: '全部',
+            focusVeg: '青菜',
+            focusFruit: '水果',
+            focusMeat: '肉类'
+        },
+        outfitPlan: {
+            title: '气温穿搭',
+            desc: '填写城市（自动取温）或温度，生成穿搭建议。需登录。',
+            city: '城市（可选）',
+            cityPh: '例如：上海',
+            temp: '温度 ℃（有城市时可留空）',
+            occasion: '场合（可选）',
+            occasionPh: '上班 / 户外 / 约会…',
+            needTemp: '请填写城市或温度'
+        },
+        drugLabel: {
+            title: '药品大字版',
+            desc: '拍摄说明书，OCR 后整理成大字易读版。不能替代医嘱。需登录。',
+            dropTitle: '点击或拖入说明书照片',
+            dropHint: 'JPG / PNG · 不超过 8MB · 文字清晰更好',
+            run: '生成大字版',
+            print: '打印',
+            disclaimer: '仅供阅读辅助。请遵医嘱或药师指导，勿据此自行改药量。'
         },
         cardScore: {
             title: '单机计分',

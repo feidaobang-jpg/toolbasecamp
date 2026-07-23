@@ -26,6 +26,7 @@ from recipe_ai import (
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
+from life_plans import router as life_plans_router, _wire as wire_life_plans, deepseek_configured as life_deepseek_ok
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
 
@@ -264,6 +265,8 @@ wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
 wire_image(get_conn, require_db, get_current_user)
 app.include_router(image_router)
+wire_life_plans(get_conn, require_db, get_current_user)
+app.include_router(life_plans_router)
 app.include_router(life_router)
 app.include_router(watermark_router)
 if wan_router is not None:
@@ -552,7 +555,9 @@ def health():
         "records_clock_logs": "/records/clocks/{clock_id}/logs" in paths,
         "image_api": "/image/ocr-text" in paths,
         "general_cutout_api": "/image/general-cutout/segment" in paths,
+        "life_plans_api": "/life-plans/generate" in paths,
         "tencent_image": tencent_image_ok,
+        "life_plans_deepseek": life_deepseek_ok(),
         "watermark_api": "/watermark/image/process" in paths,
         "wan_i2v_api": "/wan/i2v/submit" in paths,
         "wan_i2v": get_wan_config(),
