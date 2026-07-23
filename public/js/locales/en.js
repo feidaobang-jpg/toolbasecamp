@@ -1075,13 +1075,13 @@ window.TB_LOCALES.en = {
             loadFailed: 'Failed to load image',
             generateFail: 'Failed to compose. Try a smaller image.'
         },
-        smartCutout: {
-            title: 'Smart Cutout',
+        removeBackground: {
+            title: 'Remove Background (Smart Cutout)',
             desc: 'One-click portrait cutout with Tencent Cloud. Transparent PNG. Requires sign-in and daily quota.',
             dropTitle: 'Click or drop a portrait photo',
             dropHint: 'Upload to cut out automatically · JPG / PNG · max 5MB',
             shareQuota: 'Shares the same daily quota as ID Photo.',
-            run: 'Cut out',
+            run: 'Remove background',
             download: 'Download',
             clear: 'Clear',
             autoHint: 'Cutout starts automatically after you choose a photo.'

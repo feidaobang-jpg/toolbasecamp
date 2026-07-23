@@ -1063,7 +1063,7 @@ window.TB_LOCALES['zh-CN'] = {
             reselectBg: '更换背景',
             scaleLabel: '主体缩放',
             tip: '提示：',
-            tipBody: '前景建议先用「智能抠图」得到透明图。纯色时画布跟主体；背景图时画布跟背景，主体居中。',
+            tipBody: '前景建议先用「去背景（智能抠图）」得到透明图。纯色时画布跟主体；背景图时画布跟背景，主体居中。',
             generate: '生成预览',
             download: '下载',
             clear: '清除',
@@ -1074,13 +1074,13 @@ window.TB_LOCALES['zh-CN'] = {
             loadFailed: '图片加载失败',
             generateFail: '合成失败，请换较小图片重试。'
         },
-        smartCutout: {
-            title: '智能抠图',
-            desc: '一键人像抠图（腾讯云），输出透明 PNG。需登录，计入每日限额。',
+        removeBackground: {
+            title: '去背景（智能抠图）',
+            desc: '一键去除人像背景（腾讯云智能抠图），输出透明 PNG。需登录，计入每日限额。',
             dropTitle: '点击或拖入人像照片',
             dropHint: '选图后自动抠图 · JPG / PNG · 不超过 5MB',
             shareQuota: '与「制作证件照」共用每日抠图限额。',
-            run: '开始抠图',
+            run: '去除背景',
             download: '下载',
             clear: '清除',
             autoHint: '选择照片后会自动开始抠图。'

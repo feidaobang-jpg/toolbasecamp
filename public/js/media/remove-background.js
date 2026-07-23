@@ -122,7 +122,7 @@
     if (!resultUrl) return;
     var a = document.createElement('a');
     a.href = resultUrl;
-    a.download = 'smart_cutout_' + Date.now() + '.png';
+    a.download = 'remove_bg_' + Date.now() + '.png';
     a.click();
   });
 
