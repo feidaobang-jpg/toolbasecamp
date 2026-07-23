@@ -556,8 +556,10 @@ def health():
         "recipe_api": "/recipe/generate" in paths and "/recipe/detect" in paths,
         "records_api": "/records/days" in paths,
         "records_todos": "/records/todos" in paths,
+        "records_task_lists": "/records/task-lists" in paths,
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,
         "records_clock_logs": "/records/clocks/{clock_id}/logs" in paths,
+        "records_task_lists": "/records/task-lists" in paths,
         "image_api": "/image/ocr-text" in paths,
         "general_cutout_api": "/image/general-cutout/segment" in paths,
         "life_plans_api": "/life-plans/generate" in paths,
@@ -567,12 +569,9 @@ def health():
             k in LIFE_PLAN_KINDS
             for k in (
                 "day_trip",
-                "moving",
                 "savings",
                 "interview",
                 "family_meal",
-                "shopping",
-                "wishlist",
             )
         ),
         "tencent_image": tencent_image_ok,

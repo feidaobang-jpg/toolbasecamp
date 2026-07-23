@@ -1,0 +1,45 @@
+.task-add-row {
+  align-items: center;
+}
+
+.task-type-label {
+  font-size: 13px;
+  color: #64748b;
+  flex: 0 0 auto;
+}
+
+.task-type-select {
+  flex: 0 1 140px;
+  min-width: 110px;
+  max-width: 180px;
+}
+
+.task-cat-tag {
+  flex: 0 0 auto;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  white-space: nowrap;
+}
+
+.todo-item.status-done .task-cat-tag {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+#category-filter-row {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .task-type-label {
+    width: 100%;
+  }
+  .task-type-select {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}

@@ -38,12 +38,9 @@ PLAN_KINDS = frozenset(
         "seasonal_food",
         "outfit",
         "day_trip",
-        "moving",
         "savings",
         "interview",
         "family_meal",
-        "wishlist",
-        "shopping",
     }
 )
 
@@ -279,12 +276,9 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
             "seasonal_food": "按季节与地区给出一周青菜/水果/肉类参考及采购提示。",
             "outfit": "按气温/天气与场合给出穿搭建议：分层搭配与鞋履。",
             "day_trip": "生成半天或一天本地出行安排：时段行程、交通提示、餐饮、携带物品。不含实时预订。",
-            "moving": "按房间与时间线生成搬家清单（搬前/搬家日/搬后）：打包、水电燃气、杂务。",
             "savings": "按收入、固定支出与攒钱目标生成本月预算与可砍项。非理财建议，不荐股。",
             "interview": "根据岗位说明与背景，生成可能面试题、经历故事骨架（STAR）与准备清单。不保证结果。",
             "family_meal": "按人数与忌口生成一周家庭菜单与采购清单，菜品要家常可做。",
-            "wishlist": "按兴趣与预算整理短期/中期/长期愿望清单，附大致花费或精力与优先级。非理财建议。",
-            "shopping": "按用途与已知要买的物品，生成分类采购清单：必买/可选、数量与分区（生鲜/日用品等）。",
         }
         task = hints.get(kind, "生成一份实用的中文计划。")
         example = (
@@ -321,12 +315,9 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         "seasonal_food": "Suggest a weekly produce/meat plan for the season and region. Practical shopping list.",
         "outfit": "Suggest outfits for the temperature/weather and optional occasion. List layers and footwear.",
         "day_trip": "Create a half-day or one-day local outing plan: timed stops, transport tips, food, packing. Not real-time booking.",
-        "moving": "Create a moving/home-relocation checklist by room and timeline (before / moving day / after). Practical packing and utilities.",
         "savings": "Create a monthly savings/budget outline from income, fixed costs, and a savings goal. Not financial advice; no investment picks.",
         "interview": "From a job description and background, produce likely interview questions, STAR story outlines, and prep checklist. Not a guarantee of outcomes.",
         "family_meal": "Create a 7-day family meal plan with simple dishes plus a grocery shopping list. Respect people count, allergies, and kitchen constraints.",
-        "wishlist": "Create a practical wish/bucket list grouped by short/medium/long term, with rough cost or effort notes and a simple prioritization. Not financial advice.",
-        "shopping": "Create a purchase/shopping checklist from the occasion and items already listed. Group by store section or category, mark must-buy vs optional, and note quantities when useful.",
     }
     return common + "\nTask: " + hints_en.get(kind, "Create a helpful plan.")
 

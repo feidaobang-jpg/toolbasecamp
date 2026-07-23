@@ -18,6 +18,30 @@ router = APIRouter(prefix="/records", tags=["records"])
 NAME_MAX = 80
 TODO_TEXT_MAX = 200
 TODO_STATUSES = ("pending", "doing", "done")
+TASK_LIST_TEXT_MAX = 200
+TASK_LIST_STATUSES = ("pending", "done")
+TASK_LIST_CATEGORIES = (
+    "moving",
+    "shopping",
+    "wishlist",
+    "daily",
+    "work",
+    "study",
+    "travel",
+    "party",
+    "home",
+    "health",
+    "finance",
+    "packing",
+    "gift",
+    "car",
+    "baby",
+    "pet",
+    "digital",
+    "errand",
+    "cleaning",
+    "other",
+)
 REMARK_MAX = 500
 CATEGORY_NAME_MAX = 40
 GOODS_PRICE_LABEL_MAX = 40
@@ -202,6 +226,23 @@ def ensure_record_tables(cur):
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_todos_user (user_id),
             INDEX idx_todos_user_status (user_id, status),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_task_lists (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            user_id BIGINT NOT NULL,
+            content VARCHAR(200) NOT NULL,
+            category VARCHAR(32) NOT NULL,
+            status VARCHAR(16) NOT NULL DEFAULT 'pending',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_task_lists_user (user_id),
+            INDEX idx_task_lists_user_cat (user_id, category),
+            INDEX idx_task_lists_user_status (user_id, status),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
@@ -1426,6 +1467,183 @@ def delete_todo(todo_id: int, user: dict = Depends(_user)):
             cur.execute(
                 "DELETE FROM record_todos WHERE id=%s AND user_id=%s",
                 (todo_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+        return {"ok": True}
+    finally:
+        conn.close()
+
+# ----- task lists (typed checklists: pending/done only) -----
+
+
+class TaskListCreateBody(BaseModel):
+    text: str
+    category: str = "daily"
+    status: str = "pending"
+
+
+class TaskListUpdateBody(BaseModel):
+    text: str
+    category: str
+    status: str
+
+
+def _normalize_task_list_status(raw: str) -> str:
+    s = (raw or "").strip().lower()
+    if s not in TASK_LIST_STATUSES:
+        raise HTTPException(status_code=400, detail="Invalid status")
+    return s
+
+
+def _normalize_task_list_category(raw: str) -> str:
+    s = (raw or "").strip().lower()
+    if s not in TASK_LIST_CATEGORIES:
+        raise HTTPException(status_code=400, detail="Invalid category")
+    return s
+
+
+def _normalize_task_list_text(raw: str) -> str:
+    text = (raw or "").strip()
+    if not text or len(text) > TASK_LIST_TEXT_MAX:
+        raise HTTPException(status_code=400, detail="Invalid text")
+    return text
+
+
+def _serialize_task_list(row: dict) -> dict:
+    return {
+        "id": row["id"],
+        "text": row["content"],
+        "category": row["category"],
+        "status": row["status"],
+        "createdAt": _iso(row.get("created_at")),
+        "updatedAt": _iso(row.get("updated_at")),
+    }
+
+
+@router.get("/task-lists")
+def list_task_lists(
+    category: Optional[str] = None,
+    status: Optional[str] = None,
+    user: dict = Depends(_user),
+):
+    cat = None
+    st = None
+    if category and str(category).strip() and str(category).strip().lower() != "all":
+        cat = _normalize_task_list_category(category)
+    if status and str(status).strip() and str(status).strip().lower() != "all":
+        st = _normalize_task_list_status(status)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            sql = "SELECT * FROM record_task_lists WHERE user_id=%s"
+            args: list[Any] = [user["id"]]
+            if cat:
+                sql += " AND category=%s"
+                args.append(cat)
+            if st:
+                sql += " AND status=%s"
+                args.append(st)
+            sql += " ORDER BY FIELD(status, 'pending', 'done'), updated_at DESC, id DESC"
+            cur.execute(sql, tuple(args))
+            rows = cur.fetchall() or []
+        return {
+            "items": [_serialize_task_list(r) for r in rows],
+            "categories": list(TASK_LIST_CATEGORIES),
+        }
+    finally:
+        conn.close()
+
+
+@router.post("/task-lists")
+def create_task_list(body: TaskListCreateBody, user: dict = Depends(_user)):
+    text = _normalize_task_list_text(body.text)
+    category = _normalize_task_list_category(body.category)
+    status = _normalize_task_list_status(body.status)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO record_task_lists (user_id, content, category, status)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (user["id"], text, category, status),
+            )
+            new_id = cur.lastrowid
+            cur.execute(
+                "SELECT * FROM record_task_lists WHERE id=%s AND user_id=%s",
+                (new_id, user["id"]),
+            )
+            return _serialize_task_list(cur.fetchone())
+    finally:
+        conn.close()
+
+
+@router.post("/task-lists/clear-done")
+def clear_done_task_lists(
+    category: Optional[str] = None,
+    user: dict = Depends(_user),
+):
+    cat = None
+    if category and str(category).strip() and str(category).strip().lower() != "all":
+        cat = _normalize_task_list_category(category)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            if cat:
+                cur.execute(
+                    """
+                    DELETE FROM record_task_lists
+                    WHERE user_id=%s AND status='done' AND category=%s
+                    """,
+                    (user["id"], cat),
+                )
+            else:
+                cur.execute(
+                    "DELETE FROM record_task_lists WHERE user_id=%s AND status='done'",
+                    (user["id"],),
+                )
+            deleted = int(cur.rowcount or 0)
+        return {"ok": True, "deleted": deleted}
+    finally:
+        conn.close()
+
+
+@router.put("/task-lists/{item_id}")
+def update_task_list(item_id: int, body: TaskListUpdateBody, user: dict = Depends(_user)):
+    text = _normalize_task_list_text(body.text)
+    category = _normalize_task_list_category(body.category)
+    status = _normalize_task_list_status(body.status)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE record_task_lists SET content=%s, category=%s, status=%s
+                WHERE id=%s AND user_id=%s
+                """,
+                (text, category, status, item_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute(
+                "SELECT * FROM record_task_lists WHERE id=%s AND user_id=%s",
+                (item_id, user["id"]),
+            )
+            return _serialize_task_list(cur.fetchone())
+    finally:
+        conn.close()
+
+
+@router.delete("/task-lists/{item_id}")
+def delete_task_list(item_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM record_task_lists WHERE id=%s AND user_id=%s",
+                (item_id, user["id"]),
             )
             if cur.rowcount == 0:
                 raise HTTPException(status_code=404, detail="Not found")

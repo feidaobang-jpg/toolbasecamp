@@ -27,7 +27,7 @@ assert '/life-plans/status' in paths
 assert '/life-plans/generate' in paths
 assert '/life-plans/drug-label' in paths
 from life_plans import PLAN_KINDS
-need = {'day_trip','moving','savings','interview','family_meal','shopping','wishlist'}
+need = {'day_trip','savings','interview','family_meal'}
 missing = sorted(need - set(PLAN_KINDS))
 assert not missing, 'disk PLAN_KINDS missing: ' + str(missing)
 print('PLAN_KINDS', sorted(PLAN_KINDS))
@@ -69,8 +69,6 @@ for i in 1 2 3 4 5 6 7 8; do
   if echo "$HEALTH" | grep -q '"life_plans_api":true' \
     && echo "$HEALTH" | grep -q '"life_plans_ready":true' \
     && echo "$HEALTH" | grep -q '"life_plans_day_trip":true' \
-    && echo "$HEALTH" | grep -q 'shopping' \
-    && echo "$HEALTH" | grep -q 'wishlist' \
     && echo "$HEALTH" | grep -q 'family_meal'; then
     OK=1
     break

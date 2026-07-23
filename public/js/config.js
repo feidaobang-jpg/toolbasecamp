@@ -103,13 +103,10 @@ const toolsConfig = {
                 { titleKey: 'tools.roadTripPlan.title', url: 'html/life/road-trip-plan.html', authRequired: true },
                 { titleKey: 'tools.dayTripPlan.title', url: 'html/life/day-trip-plan.html', authRequired: true },
                 { titleKey: 'tools.pcUpgradePlan.title', url: 'html/life/pc-upgrade-plan.html', authRequired: true },
-                { titleKey: 'tools.movingPlan.title', url: 'html/life/moving-plan.html', authRequired: true },
                 { titleKey: 'tools.savingsPlan.title', url: 'html/life/savings-plan.html', authRequired: true },
                 { titleKey: 'tools.interviewPlan.title', url: 'html/life/interview-plan.html', authRequired: true },
                 { titleKey: 'tools.seasonalFoodPlan.title', url: 'html/life/seasonal-food-plan.html', authRequired: true },
                 { titleKey: 'tools.familyMealPlan.title', url: 'html/life/family-meal-plan.html', authRequired: true },
-                { titleKey: 'tools.shoppingPlan.title', url: 'html/life/shopping-plan.html', authRequired: true },
-                { titleKey: 'tools.wishlistPlan.title', url: 'html/life/wishlist-plan.html', authRequired: true },
                 { titleKey: 'tools.outfitPlan.title', url: 'html/life/outfit-plan.html', authRequired: true }
             ]
         },
@@ -118,6 +115,7 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.cardScore.title', url: 'html/record/card-score.html' },
                 { titleKey: 'tools.todoList.title', url: 'html/record/todo-list.html?v=4', authRequired: true },
+                { titleKey: 'tools.taskList.title', url: 'html/record/task-list.html', authRequired: true },
                 { titleKey: 'tools.k510Score.title', url: 'html/record/510k-score.html' },
                 { titleKey: 'tools.importantDays.title', url: 'html/record/important-days.html', authRequired: true },
                 { titleKey: 'tools.dailyClock.title', url: 'html/record/daily-clock.html', authRequired: true },
