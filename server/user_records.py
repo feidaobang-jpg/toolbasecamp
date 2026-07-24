@@ -1219,9 +1219,13 @@ def create_rent_payment(rent_id: int, body: RentPaymentBody, user: dict = Depend
             if not row:
                 raise HTTPException(status_code=404, detail="Not found")
             if body.amount is None or str(body.amount).strip() == "":
-                amount = Decimal(str(row["rent_amount"]))
+                amount = Decimal(str(row["rent_amount"])).quantize(
+                    Decimal("1"), rounding=ROUND_HALF_UP
+                )
             else:
-                amount = _parse_money(body.amount)
+                amount = _parse_money(body.amount).quantize(
+                    Decimal("1"), rounding=ROUND_HALF_UP
+                )
             # Atomic upsert — avoids 400 when the same period is submitted again.
             cur.execute(
                 """
