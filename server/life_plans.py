@@ -29,7 +29,7 @@ LIMITS = {
 }
 MAX_UPLOAD = 8 * 1024 * 1024
 # Bump when Chinese prompt / locale logic changes — also exposed on /health.
-LIFE_PLANS_PROMPT_REV = 7  # batch2: fitness/job/date/pet 2026-07-24
+LIFE_PLANS_PROMPT_REV = 8  # batch2 live + LF normalize 2026-07-24
 
 PLAN_KINDS = frozenset(
     {
