@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var pay = original - saved;
             resultPay.textContent = fmt(pay);
             resultSave.textContent = fmt(saved);
+            resultPercent.textContent = '';
             rowPay.hidden = false;
             rowSave.hidden = false;
             rowPercent.hidden = true;
@@ -95,6 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             var pct = (part / whole) * 100;
             resultPercent.textContent = pct.toFixed(2) + '%';
+            resultPay.textContent = '';
+            resultSave.textContent = '';
             rowPay.hidden = true;
             rowSave.hidden = true;
             rowPercent.hidden = false;

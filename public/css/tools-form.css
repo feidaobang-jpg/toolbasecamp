@@ -85,6 +85,10 @@
   border-bottom: 1px solid rgba(186, 230, 253, 0.6);
 }
 
+.tb-result-row[hidden] {
+  display: none !important;
+}
+
 .tb-result-row:last-child {
   border-bottom: none;
 }
