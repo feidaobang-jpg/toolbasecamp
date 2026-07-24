@@ -1,0 +1,44 @@
+# Normalize line endings: store LF in Git, checkout LF on all OSes.
+# Prevents "content identical but newlines differ" phantom diffs on Windows.
+
+* text=auto eol=lf
+
+# Explicit text
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.svg text eol=lf
+*.xml text eol=lf
+*.csv text eol=lf
+*.env text eol=lf
+*.mdc text eol=lf
+
+# Windows-only scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.mp3 binary
+*.mp4 binary
+*.wasm binary
