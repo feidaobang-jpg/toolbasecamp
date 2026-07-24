@@ -209,6 +209,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderList(items) {
         listEl.className = 'rec-list rec-rent-list';
         listEl.innerHTML = '';
+        var rank = { overdue: 0, due: 1, partial: 2, full: 3 };
+        items = (items || []).slice().sort(function (a, b) {
+            var ra = rank[payState(a)] != null ? rank[payState(a)] : 9;
+            var rb = rank[payState(b)] != null ? rank[payState(b)] : 9;
+            if (ra !== rb) return ra - rb;
+            return String(a.title || '').localeCompare(String(b.title || ''), 'zh');
+        });
         emptyEl.hidden = items.length > 0;
         items.forEach(function (item) {
             var state = payState(item);
