@@ -567,6 +567,7 @@ def health():
         "image_api": "/image/ocr-text" in paths,
         "general_cutout_api": "/image/general-cutout/segment" in paths,
         "life_plans_api": "/life-plans/generate" in paths,
+        "fx_api": "/fx/rate" in paths,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),
         "life_plans_day_trip": "day_trip" in LIFE_PLAN_KINDS,
         "life_plans_ready": all(

@@ -306,7 +306,8 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null; then
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null; then
               echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev"
               HEALTH_OK=1
               break
@@ -370,6 +371,14 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/life-plans/status' >/dev/null || exit 1
           }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/fx/rate' >/dev/null || {
+            echo "=== openapi missing /fx/rate — restarting API ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            systemctl restart toolbasecamp-api
+            sleep 3
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/fx/rate' >/dev/null || exit 1
+          }
+
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
             echo "=== openapi missing clock reset route ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
