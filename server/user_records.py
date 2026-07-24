@@ -920,8 +920,8 @@ def delete_deposit(deposit_id: int, user: dict = Depends(_user)):
 RENT_DUE_DAY_MIN = 1
 RENT_DUE_DAY_MAX = 31
 RENT_PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
-# Bump when list paidAmount / integer display must be live (stale-process guard).
-RENT_PAY_REV = 3
+# Bump when list paidAmount / integer display / due-day max must be live.
+RENT_PAY_REV = 4
 RENT_NOTE_MAX = 500
 RENT_PAY_NOTE_MAX = 200
 
