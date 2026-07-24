@@ -1422,7 +1422,7 @@ window.TB_LOCALES.en = {
             titleLabel: 'Property / address',
             tenantLabel: 'Tenant',
             amountLabel: 'Monthly rent',
-            dueDayLabel: 'Due day (1–28)',
+            dueDayLabel: 'Due day (1–31)',
             noteLabel: 'Note',
             recordPayment: 'Record payment',
             periodLabel: 'Period (YYYY-MM)',

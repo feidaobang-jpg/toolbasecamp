@@ -80,6 +80,7 @@
             'Invalid text': 'tools.todoList.emptyText',
             'Invalid title': 'tools.rent.needTitle',
             'Invalid due_day': 'tools.rent.invalidDueDay',
+            'due_day must be 1–31': 'tools.rent.invalidDueDay',
             'due_day must be 1–28': 'tools.rent.invalidDueDay',
             'Invalid period (use YYYY-MM)': 'tools.rent.needPeriod',
             'Payment for this period already exists': 'tools.rent.periodExists',

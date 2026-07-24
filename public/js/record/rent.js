@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
             R.setError(formError, tr('tools.records.invalidAmount'));
             return;
         }
-        if (!(dueDay >= 1 && dueDay <= 28)) {
+        if (!(dueDay >= 1 && dueDay <= 31)) {
             R.setError(formError, tr('tools.rent.invalidDueDay'));
             return;
         }

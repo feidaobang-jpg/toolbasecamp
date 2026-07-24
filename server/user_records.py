@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import calendar
 import re
 from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
@@ -917,7 +918,7 @@ def delete_deposit(deposit_id: int, user: dict = Depends(_user)):
 # ---------- Rent collection ----------
 
 RENT_DUE_DAY_MIN = 1
-RENT_DUE_DAY_MAX = 28
+RENT_DUE_DAY_MAX = 31
 RENT_PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
 # Bump when list paidAmount / integer display must be live (stale-process guard).
 RENT_PAY_REV = 3
@@ -953,7 +954,7 @@ def _parse_due_day(raw: Any) -> int:
     except (TypeError, ValueError) as exc:
         raise HTTPException(status_code=400, detail="Invalid due_day") from exc
     if day < RENT_DUE_DAY_MIN or day > RENT_DUE_DAY_MAX:
-        raise HTTPException(status_code=400, detail="due_day must be 1–28")
+        raise HTTPException(status_code=400, detail="due_day must be 1–31")
     return day
 
 
@@ -974,12 +975,17 @@ def _current_period(today: Optional[date] = None) -> str:
 
 
 def _rent_status(due_day: int, paid_periods: set, today: Optional[date] = None) -> str:
-    """paid | due | overdue for the current calendar month."""
+    """paid | due | overdue for the current calendar month.
+
+    Due days 29–31 clamp to the last day of shorter months (e.g. Feb).
+    """
     d = today or date.today()
     period = _current_period(d)
     if period in paid_periods:
         return "paid"
-    if d.day > int(due_day):
+    last = calendar.monthrange(d.year, d.month)[1]
+    effective_due = min(max(int(due_day), 1), last)
+    if d.day > effective_due:
         return "overdue"
     return "due"
 
