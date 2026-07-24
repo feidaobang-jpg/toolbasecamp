@@ -30,7 +30,8 @@ LIMITS = {
 }
 MAX_UPLOAD = 8 * 1024 * 1024
 # Bump when Chinese prompt / locale logic changes — also exposed on /health.
-LIFE_PLANS_PROMPT_REV = 8  # batch2 live + LF normalize 2026-07-24
+LIFE_PLANS_PROMPT_REV = 9  # guest life plans no-login 2026-07-24
+LIFE_PLANS_GUEST_OK = True
 
 PLAN_KINDS = frozenset(
     {
@@ -75,8 +76,19 @@ def _user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     return router.get_current_user(creds)  # type: ignore[attr-defined]
 
 
-def _optional_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
-    return router.get_optional_user(creds)  # type: ignore[attr-defined]
+def _optional_user(request: Request):
+    """Optional auth without HTTPBearer (avoids 401 when no Authorization header)."""
+    auth = (request.headers.get("authorization") or "").strip()
+    if not auth.lower().startswith("bearer "):
+        return router.get_optional_user(None)  # type: ignore[attr-defined]
+    token = auth[7:].strip()
+    if not token:
+        return router.get_optional_user(None)  # type: ignore[attr-defined]
+
+    class _Creds:
+        credentials = token
+
+    return router.get_optional_user(_Creds())  # type: ignore[attr-defined]
 
 
 def _conn():

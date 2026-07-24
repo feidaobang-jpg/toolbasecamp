@@ -285,7 +285,8 @@ jobs:
           if ! echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
-            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":8' >/dev/null; then
+            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null \
+            || ! echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null; then
             echo "stale process detected right after start — running fix scripts"
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
             bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
@@ -304,7 +305,8 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":8' >/dev/null; then
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null; then
               echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev"
               HEALTH_OK=1
               break
@@ -330,7 +332,8 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"general_cutout_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null || exit 1
-            echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":8' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -677,7 +680,8 @@ jobs:
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"life_plans_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"life_plans_ready":true' >/dev/null \
-              && echo "$HEALTH" | grep -F '"life_plans_prompt_rev":8' >/dev/null \
+              && echo "$HEALTH" | grep -F '"life_plans_prompt_rev":9' >/dev/null \
+              && echo "$HEALTH" | grep -F '"life_plans_guest_ok":true' >/dev/null \
               && echo "$HEALTH" | grep -F 'family_meal' >/dev/null \
               && echo "$HEALTH" | grep -F 'fitness_week' >/dev/null
           }
@@ -687,6 +691,13 @@ jobs:
           head -c 200 /tmp/lp-status.txt || true
           echo ""
           if check_lp && [[ "$LP_CODE" != "404" && "$LP_CODE" != "000" ]]; then
+            # guest status must not be 401
+            ST_CODE="$(curl -sS -o /tmp/lp-guest-status.txt -w '%{http_code}' "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+            echo "public guest GET /api/life-plans/status -> $ST_CODE"
+            if [[ "$ST_CODE" == "401" || "$ST_CODE" == "000" ]]; then
+              echo "::error:: life-plans/status still requires auth ($ST_CODE)"
+              exit 1
+            fi
             echo "Life-plans API public OK."
             exit 0
           fi
@@ -703,6 +714,15 @@ jobs:
           fi
           if [[ "$LP_CODE" == "404" || "$LP_CODE" == "000" ]]; then
             echo "::error:: public /life-plans/status still $LP_CODE after fix (expected 401)"
+            exit 1
+          fi
+
+          # Prove anonymous /status works (no Authorization)
+          ST_CODE="$(curl -sS -o /tmp/lp-guest-status.txt -w '%{http_code}' \
+            "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+          echo "public guest GET /api/life-plans/status -> $ST_CODE"
+          if [[ "$ST_CODE" == "401" || "$ST_CODE" == "000" ]]; then
+            echo "::error:: life-plans/status still requires auth ($ST_CODE)"
             exit 1
           fi
           echo "Life-plans API public OK after fix."

@@ -33,6 +33,13 @@
   function formatQuota(item) {
     if (!item) return '';
     if (item.unlimited) return tr('tools.imageCloud.quotaUnlimited');
+    if (item.guest) {
+      return tr('tools.lifePlans.guestHint', {
+        used: item.used,
+        limit: item.limit,
+        remaining: item.remaining
+      });
+    }
     return tr('tools.imageCloud.quotaLine', {
       used: item.used,
       limit: item.limit,

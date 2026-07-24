@@ -779,6 +779,8 @@ window.TB_LOCALES.en = {
             invalidKind: 'Invalid plan kind',
             genFailed: 'Plan generation failed. Please try again.',
             dailyLimitGuest: 'Free daily limit reached. Sign in for a higher limit, or try again tomorrow.'
+            guestHint: '{remaining}/{limit} left today (guest). Sign in for a higher limit.',
+            limitLoginHint: 'Daily limit reached. Sign in for a higher limit, or try again tomorrow.',
         },
         weightLossPlan: {
             title: 'Weight Loss Plan',
