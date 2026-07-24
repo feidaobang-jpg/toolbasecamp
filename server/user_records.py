@@ -919,8 +919,8 @@ def delete_deposit(deposit_id: int, user: dict = Depends(_user)):
 RENT_DUE_DAY_MIN = 1
 RENT_DUE_DAY_MAX = 28
 RENT_PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
-# Bump when payment upsert semantics change (stale-process guard).
-RENT_PAY_REV = 2
+# Bump when list paidAmount / integer display must be live (stale-process guard).
+RENT_PAY_REV = 3
 RENT_NOTE_MAX = 500
 RENT_PAY_NOTE_MAX = 200
 
@@ -1036,7 +1036,7 @@ def _payment_amounts_for(cur, *, rent_id: int, user_id: int) -> dict:
         """,
         (rent_id, user_id),
     )
-    return {r["period"]: _rent_money(r["amount"]) for r in (cur.fetchall() or [])}
+    return {(str(r["period"]) or "").strip(): _rent_money(r["amount"]) for r in (cur.fetchall() or [])}
 
 
 def _paid_periods_for(cur, *, rent_id: int, user_id: int) -> set:

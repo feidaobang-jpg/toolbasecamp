@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
         payBtn.textContent = existing ? tr('tools.rent.updatePayment') : tr('tools.rent.submitPayment');
     }
 
+    function fmtYuan(v) {
+        if (v == null || v === '') return '';
+        var n = Number(String(v).replace(/,/g, ''));
+        if (!isFinite(n)) return String(v);
+        return String(Math.round(n));
+    }
+
     function statusLabel(status) {
         if (status === 'paid') return tr('tools.rent.statusPaid');
         if (status === 'overdue') return tr('tools.rent.statusOverdue');
@@ -78,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function fillForm(data) {
         fTitle.value = data && data.title ? data.title : '';
         fTenant.value = data && data.tenantName ? data.tenantName : '';
-        fAmount.value = data && data.rentAmount ? data.rentAmount : '';
+        fAmount.value = data && data.rentAmount ? fmtYuan(data.rentAmount) : '';
         fDue.value = data && data.dueDay ? String(data.dueDay) : '1';
         fNote.value = data && data.note ? data.note : '';
     }
@@ -105,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 '<br><span data-note class="rec-item-meta"></span></div>' +
                 '<div><button type="button" class="tb-btn" data-act="del"></button></div>';
             el.querySelector('[data-period]').textContent = row.period;
-            el.querySelector('[data-amt]').textContent = '¥' + row.amount;
+            el.querySelector('[data-amt]').textContent = '¥' + fmtYuan(row.amount);
             el.querySelector('[data-time]').textContent = R.formatTime(row.time);
             var noteEl = el.querySelector('[data-note]');
             if (row.note) {
@@ -133,13 +140,17 @@ document.addEventListener('DOMContentLoaded', function () {
         var parts = [
             tr('tools.rent.metaLine', {
                 tenant: data.tenantName || tr('tools.rent.noTenant'),
-                amount: data.rentAmount,
+                amount: fmtYuan(data.rentAmount),
                 dueDay: data.dueDay
             })
         ];
         detailMeta.textContent = parts.join(' · ');
         detailStatus.className = statusClass(data.status);
         detailStatus.textContent = statusLabel(data.status) + ' · ' + data.currentPeriod;
+        if (data.status === 'paid' && data.paidAmount) {
+            detailStatus.textContent +=
+                ' · ' + tr('tools.rent.receivedAmount', { amount: fmtYuan(data.paidAmount) });
+        }
         if (data.note) {
             detailNote.hidden = false;
             detailNote.textContent = data.note;
@@ -150,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
         payPeriod.value = data.currentPeriod || '';
         var existing = paymentForPeriod(payPeriod.value);
         if (existing) {
-            payAmount.value = existing.amount || '';
+            payAmount.value = fmtYuan(existing.amount) || '';
             payNote.value = existing.note || '';
         } else {
             payAmount.value = '';
@@ -189,14 +200,16 @@ document.addEventListener('DOMContentLoaded', function () {
             el.querySelector('.rec-item-title').textContent = item.title;
             el.querySelector('.rec-item-meta').textContent =
                 (item.tenantName ? item.tenantName + ' · ' : '') +
-                tr('tools.rent.dueDayShort', { day: item.dueDay });
+                tr('tools.rent.dueDayShort', { day: item.dueDay }) +
+                ' · ' + tr('tools.rent.perMonth', { amount: fmtYuan(item.rentAmount) });
             var st = el.querySelector('[data-status]');
             st.className = statusClass(item.status);
             st.textContent = statusLabel(item.status);
+            var paid = item.paidAmount || item.paid_amount;
             el.querySelector('[data-amt]').textContent =
-                item.status === 'paid' && item.paidAmount
-                    ? tr('tools.rent.receivedAmount', { amount: item.paidAmount })
-                    : tr('tools.rent.perMonth', { amount: item.rentAmount });
+                paid
+                    ? tr('tools.rent.receivedAmount', { amount: fmtYuan(paid) })
+                    : tr('tools.rent.perMonth', { amount: fmtYuan(item.rentAmount) });
             el.querySelector('[data-act="open"]').textContent = tr('tools.rent.open');
             el.querySelector('[data-act="open"]').addEventListener('click', function () {
                 openDetail(item.id);
@@ -304,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
     payPeriod.addEventListener('change', function () {
         var existing = paymentForPeriod((payPeriod.value || '').trim());
         if (existing) {
-            payAmount.value = existing.amount || '';
+            payAmount.value = fmtYuan(existing.amount) || '';
             payNote.value = existing.note || '';
         } else {
             payAmount.value = '';
