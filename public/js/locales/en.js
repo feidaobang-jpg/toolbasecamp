@@ -1444,7 +1444,7 @@ window.TB_LOCALES.en = {
             receivedAmount: 'Received ¥{amount}',
             owedAmount: 'Still owed ¥{amount}',
             needTitle: 'Please enter a property or address',
-            invalidDueDay: 'Due day must be 1–28',
+            invalidDueDay: 'Due day must be 1–31',
             needPeriod: 'Please choose a period',
             periodExists: 'A payment for this period already exists',
             invalidTenant: 'Tenant name is too long',
