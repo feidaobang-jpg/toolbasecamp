@@ -193,7 +193,10 @@ document.addEventListener('DOMContentLoaded', function () {
             var st = el.querySelector('[data-status]');
             st.className = statusClass(item.status);
             st.textContent = statusLabel(item.status);
-            el.querySelector('[data-amt]').textContent = tr('tools.rent.perMonth', { amount: item.rentAmount });
+            el.querySelector('[data-amt]').textContent =
+                item.status === 'paid' && item.paidAmount
+                    ? tr('tools.rent.receivedAmount', { amount: item.paidAmount })
+                    : tr('tools.rent.perMonth', { amount: item.rentAmount });
             el.querySelector('[data-act="open"]').textContent = tr('tools.rent.open');
             el.querySelector('[data-act="open"]').addEventListener('click', function () {
                 openDetail(item.id);

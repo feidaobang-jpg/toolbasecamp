@@ -1438,6 +1438,7 @@ window.TB_LOCALES['zh-CN'] = {
             noTenant: '未填写',
             dueDayShort: '每月 {day} 日',
             perMonth: '¥{amount}/月',
+            receivedAmount: '实收 ¥{amount}',
             needTitle: '请填写房源或地址',
             invalidDueDay: '交租日请填 1–28',
             needPeriod: '请选择账期',

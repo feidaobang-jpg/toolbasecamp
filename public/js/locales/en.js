@@ -1439,6 +1439,7 @@ window.TB_LOCALES.en = {
             noTenant: 'No tenant',
             dueDayShort: 'Due day {day}',
             perMonth: '¥{amount}/mo',
+            receivedAmount: 'Received ¥{amount}',
             needTitle: 'Please enter a property or address',
             invalidDueDay: 'Due day must be 1–28',
             needPeriod: 'Please choose a period',

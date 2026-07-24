@@ -993,10 +993,17 @@ def _serialize_rent(
     *,
     paid_periods: Optional[set] = None,
     payments: Optional[List[dict]] = None,
+    paid_amount: Optional[str] = None,
     today: Optional[date] = None,
 ) -> dict:
     periods = paid_periods if paid_periods is not None else set()
     status = _rent_status(int(row["due_day"]), periods, today=today)
+    period = _current_period(today)
+    if paid_amount is None and payments:
+        for pay in payments:
+            if pay.get("period") == period:
+                paid_amount = pay.get("amount")
+                break
     out = {
         "id": row["id"],
         "title": row["title"],
@@ -1005,7 +1012,8 @@ def _serialize_rent(
         "dueDay": int(row["due_day"]),
         "note": row.get("note") or "",
         "status": status,
-        "currentPeriod": _current_period(today),
+        "currentPeriod": period,
+        "paidAmount": paid_amount,
         "createdAt": _iso(row.get("created_at")),
         "updatedAt": _iso(row.get("updated_at")),
     }
@@ -1014,15 +1022,19 @@ def _serialize_rent(
     return out
 
 
-def _paid_periods_for(cur, *, rent_id: int, user_id: int) -> set:
+def _payment_amounts_for(cur, *, rent_id: int, user_id: int) -> dict:
     cur.execute(
         """
-        SELECT period FROM record_rent_payments
+        SELECT period, amount FROM record_rent_payments
         WHERE rent_id=%s AND user_id=%s
         """,
         (rent_id, user_id),
     )
-    return {r["period"] for r in (cur.fetchall() or [])}
+    return {r["period"]: _money(r["amount"]) for r in (cur.fetchall() or [])}
+
+
+def _paid_periods_for(cur, *, rent_id: int, user_id: int) -> set:
+    return set(_payment_amounts_for(cur, rent_id=rent_id, user_id=user_id).keys())
 
 
 @router.get("/rents")
@@ -1041,9 +1053,17 @@ def list_rents(user: dict = Depends(_user)):
             rows = cur.fetchall() or []
             items = []
             rank = {"overdue": 0, "due": 1, "paid": 2}
+            period = _current_period()
             for row in rows:
-                periods = _paid_periods_for(cur, rent_id=row["id"], user_id=user["id"])
-                items.append(_serialize_rent(row, paid_periods=periods))
+                amounts = _payment_amounts_for(cur, rent_id=row["id"], user_id=user["id"])
+                periods = set(amounts.keys())
+                items.append(
+                    _serialize_rent(
+                        row,
+                        paid_periods=periods,
+                        paid_amount=amounts.get(period),
+                    )
+                )
             items.sort(key=lambda x: (rank.get(x["status"], 9), x["title"].lower()))
         return {"items": items}
     finally:
