@@ -992,6 +992,72 @@ window.TB_LOCALES.en = {
             notes: 'Avoid (optional)',
             notesPh: 'No beef, lactose intolerant…'
         },
+
+        fitnessWeekPlan: {
+            title: 'Fitness Starter Week',
+            desc: 'Beginner weekly workout outline. Not medical advice. Requires sign-in.',
+            level: 'Experience',
+            levelPh: 'e.g. Beginner / back after a break',
+            gear: 'Equipment',
+            gearPh: 'None / dumbbells / gym',
+            days: 'Days per week',
+            minutes: 'Minutes per session (optional)',
+            notes: 'Limits (optional)',
+            notesPh: 'Knee issues, prefer home…'
+        },
+        lowOilWeekPlan: {
+            title: 'Low Sugar / Oil Week',
+            desc: 'One-week lighter meals and swaps. Not medical advice. Requires sign-in.',
+            people: 'People',
+            focus: 'Focus',
+            focusPh: 'Less sugar / less oil / both',
+            allergies: 'Allergies (optional)',
+            allergiesPh: 'Dairy, peanuts…',
+            kitchen: 'Kitchen (optional)',
+            kitchenPh: 'Rice cooker, air fryer…',
+            notes: 'Notes (optional)',
+            notesPh: 'Office lunch, dislike bitter…'
+        },
+        jobApplyWeekPlan: {
+            title: 'Job Apply Week',
+            desc: 'Weekly apply rhythm, resume tweaks, and follow-ups. Requires sign-in.',
+            role: 'Target role',
+            rolePh: 'Frontend / operations…',
+            background: 'Background',
+            backgroundPh: 'Years, stack, highlights…',
+            hours: 'Hours available / day (optional)',
+            channels: 'Channels (optional)',
+            channelsPh: 'Boss, LinkedIn, referrals…',
+            notes: 'Notes (optional)',
+            notesPh: 'Need remote, city…'
+        },
+        dateNightPlan: {
+            title: 'Date / Anniversary',
+            desc: 'Date or anniversary plan from city and budget. Requires sign-in.',
+            occasion: 'Occasion',
+            occasionPh: 'Anniversary / first date…',
+            city: 'City / area',
+            cityPh: 'e.g. Shanghai · Xuhui',
+            budget: 'Budget',
+            budgetPh: 'e.g. ¥300–500',
+            style: 'Style (optional)',
+            stylePh: 'Quiet dinner, walk, movie…',
+            notes: 'Notes (optional)',
+            notesPh: 'No spicy, rainy backup…'
+        },
+        petTravelPlan: {
+            title: 'Pet Travel / Boarding',
+            desc: 'Checklist for pet travel or boarding. Requires sign-in.',
+            pet: 'Pet',
+            petPh: 'Cat 3y / medium dog…',
+            mode: 'Mode',
+            modePh: 'Flight / train / car / boarding',
+            days: 'Days (optional)',
+            destination: 'Destination (optional)',
+            destinationPh: 'City or kennel name…',
+            notes: 'Notes (optional)',
+            notesPh: 'Vaccines, meds, anxiety…'
+        },
         shoppingPlan: {
             title: 'Shopping List',
             desc: 'Categorized purchase checklist from occasion and known items. Requires sign-in.',

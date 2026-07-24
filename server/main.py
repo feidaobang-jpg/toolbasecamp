@@ -573,6 +573,8 @@ def health():
                 "family_meal",
                 "travel_pack",
                 "office_lunch",
+                "fitness_week",
+                "job_apply_week",
             )
         ),
         "life_plans_prompt_rev": LIFE_PLANS_PROMPT_REV,

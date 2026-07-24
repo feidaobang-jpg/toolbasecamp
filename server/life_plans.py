@@ -29,7 +29,7 @@ LIMITS = {
 }
 MAX_UPLOAD = 8 * 1024 * 1024
 # Bump when Chinese prompt / locale logic changes — also exposed on /health.
-LIFE_PLANS_PROMPT_REV = 6  # batch: pack/party/kids/etc 2026-07-24
+LIFE_PLANS_PROMPT_REV = 7  # batch2: fitness/job/date/pet 2026-07-24
 
 PLAN_KINDS = frozenset(
     {
@@ -49,6 +49,11 @@ PLAN_KINDS = frozenset(
         "kids_weekend",
         "emergency_kit",
         "office_lunch",
+        "fitness_week",
+        "low_oil_week",
+        "job_apply_week",
+        "date_night",
+        "pet_travel",
     }
 )
 
@@ -298,6 +303,11 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
             "kids_weekend": "按孩子年龄与城市生成周末亲子安排：室内外时段、物料与备选雨天方案。",
             "emergency_kit": "按家庭人数与所在城市生成家庭应急包清单：药品、饮水食物、照明通讯、证件复印件。非专业救援指导。",
             "office_lunch": "为上班族生成一周办公室午餐轮换：便当/外卖/附近简餐，兼顾预算与少油少重。",
+            "fitness_week": "按经验与器械生成入门健身周计划：每日训练动作、组数、休息与热身拉伸。非医疗建议。",
+            "low_oil_week": "生成戒糖/少油一周餐食：替换清单、示例三餐与采购提示。非医疗建议。",
+            "job_apply_week": "按目标岗位与背景生成求职投递周：每日投递量、简历修改要点、跟进话术与时间表。",
+            "date_night": "按场合、城市与预算生成约会/纪念日安排：时段路线、餐饮备选与雨天方案。",
+            "pet_travel": "按宠物与出行/托养方式生成检查清单：证件疫苗、笼具物品、应激安抚与注意事项。",
         }
         task = hints.get(kind, "生成一份实用的中文计划。")
         example = (
@@ -348,6 +358,11 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         "kids_weekend": "Plan a weekend with kids by age and city: timed indoor/outdoor activities, materials, and a rainy-day backup.",
         "emergency_kit": "Build a household emergency kit checklist by family size and city: meds, water/food, light/comms, document copies. Not professional disaster advice.",
         "office_lunch": "Create a 5-day office lunch rotation (bento / takeout / nearby cheap eats) with budget and lighter options.",
+        "fitness_week": "Beginner weekly fitness plan from experience and gear: moves, sets, rest, warm-up/stretch. Not medical advice.",
+        "low_oil_week": "One-week lower sugar/oil meals: swaps, sample days, shopping tips. Not medical advice.",
+        "job_apply_week": "Weekly job-apply plan: daily volume, resume tweaks, follow-up scripts, schedule.",
+        "date_night": "Date/anniversary plan from occasion, city, and budget: timed stops, food backups, rainy option.",
+        "pet_travel": "Pet travel or boarding checklist: docs/vaccines, crate/gear, calming tips, cautions.",
     }
     return common + "\nTask: " + hints_en.get(kind, "Create a helpful plan.")
 

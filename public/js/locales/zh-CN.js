@@ -991,6 +991,72 @@ window.TB_LOCALES['zh-CN'] = {
             notes: '忌口（可选）',
             notesPh: '不吃牛肉、乳糖不耐受…'
         },
+
+        fitnessWeekPlan: {
+            title: '健身入门周',
+            desc: '零基础或复训一周训练安排。非医疗建议，需登录。',
+            level: '经验水平',
+            levelPh: '例如：零基础 / 停训后重启',
+            gear: '器械条件',
+            gearPh: '无器械 / 哑铃 / 健身房',
+            days: '每周训练天数',
+            minutes: '单次时长（分钟，可选）',
+            notes: '限制与偏好（可选）',
+            notesPh: '膝盖不适、想在家练…'
+        },
+        lowOilWeekPlan: {
+            title: '戒糖少油一周',
+            desc: '一周轻负担餐食与替换清单。非医疗建议，需登录。',
+            people: '用餐人数',
+            focus: '侧重点',
+            focusPh: '少糖 / 少油 / 两者都要',
+            allergies: '忌口（可选）',
+            allergiesPh: '乳制品、花生…',
+            kitchen: '厨具（可选）',
+            kitchenPh: '电饭煲、空气炸锅…',
+            notes: '备注（可选）',
+            notesPh: '要带饭、不爱苦味…'
+        },
+        jobApplyWeekPlan: {
+            title: '求职投递周',
+            desc: '一周投递节奏、简历要点与跟进话术。需登录。',
+            role: '目标岗位',
+            rolePh: '前端 / 运营 / 产品…',
+            background: '个人背景',
+            backgroundPh: '年限、技术栈、亮点…',
+            hours: '每天可投入小时（可选）',
+            channels: '渠道（可选）',
+            channelsPh: 'Boss、脉脉、内推…',
+            notes: '备注（可选）',
+            notesPh: '要远程、限定城市…'
+        },
+        dateNightPlan: {
+            title: '约会纪念日',
+            desc: '按城市与预算生成约会或纪念日安排。需登录。',
+            occasion: '场合',
+            occasionPh: '纪念日 / 初次约会…',
+            city: '城市 / 区域',
+            cityPh: '例如：上海·徐汇',
+            budget: '预算',
+            budgetPh: '例如：300–500 元',
+            style: '风格（可选）',
+            stylePh: '安静晚餐、散步、电影…',
+            notes: '备注（可选）',
+            notesPh: '不吃辣、雨天备选…'
+        },
+        petTravelPlan: {
+            title: '宠物出行托养',
+            desc: '出行或托养检查清单与物品准备。需登录。',
+            pet: '宠物情况',
+            petPh: '猫 3 岁 / 中型犬…',
+            mode: '方式',
+            modePh: '飞机 / 火车 / 自驾 / 寄养',
+            days: '天数（可选）',
+            destination: '目的地（可选）',
+            destinationPh: '城市或寄养机构…',
+            notes: '备注（可选）',
+            notesPh: '疫苗、用药、易应激…'
+        },
         shoppingPlan: {
             title: '采购清单',
             desc: '按用途与已有物品生成分类采购清单。需登录。',

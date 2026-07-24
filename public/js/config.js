@@ -113,7 +113,12 @@ const toolsConfig = {
                 { titleKey: 'tools.partyHostPlan.title', url: 'html/life/party-host-plan.html', authRequired: true },
                 { titleKey: 'tools.kidsWeekendPlan.title', url: 'html/life/kids-weekend-plan.html', authRequired: true },
                 { titleKey: 'tools.emergencyKitPlan.title', url: 'html/life/emergency-kit-plan.html', authRequired: true },
-                { titleKey: 'tools.officeLunchPlan.title', url: 'html/life/office-lunch-plan.html', authRequired: true }
+                { titleKey: 'tools.officeLunchPlan.title', url: 'html/life/office-lunch-plan.html', authRequired: true },
+                { titleKey: 'tools.fitnessWeekPlan.title', url: 'html/life/fitness-week-plan.html', authRequired: true },
+                { titleKey: 'tools.lowOilWeekPlan.title', url: 'html/life/low-oil-week-plan.html', authRequired: true },
+                { titleKey: 'tools.jobApplyWeekPlan.title', url: 'html/life/job-apply-week-plan.html', authRequired: true },
+                { titleKey: 'tools.dateNightPlan.title', url: 'html/life/date-night-plan.html', authRequired: true },
+                { titleKey: 'tools.petTravelPlan.title', url: 'html/life/pet-travel-plan.html', authRequired: true }
             ]
         },
         {
