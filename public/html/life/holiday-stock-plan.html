@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holiday Stocking - Tool Basecamp</title>
+  <meta name="description" content="Holiday stocking and prep timeline. Requires sign-in.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <link rel="stylesheet" href="../../css/life/life-plans.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.holidayStockPlan.title">Holiday Stocking</h1>
+        <p data-i18n="tools.holidayStockPlan.desc">Holiday stocking and prep timeline. Requires sign-in.</p>
+      </div>
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="quota-line"></p>
+          <form id="plan-form" class="life-plan-form">
+            <div class="field-row">
+              <label class="field-label" for="holiday" data-i18n="tools.holidayStockPlan.holiday">Holiday / break</label>
+              <input id="holiday" name="holiday" type="text" required data-i18n-placeholder="tools.holidayStockPlan.holidayPh" placeholder="Spring Festival / National Day…" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="days" data-i18n="tools.holidayStockPlan.days">Days at home</label>
+              <input id="days" name="days" type="number" value="7" min="1" max="30" required />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="people" data-i18n="tools.holidayStockPlan.people">People to feed</label>
+              <input id="people" name="people" type="number" value="4" min="1" max="20" required />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="focus" data-i18n="tools.holidayStockPlan.focus">Focus (optional)</label>
+              <input id="focus" name="focus" type="text" data-i18n-placeholder="tools.holidayStockPlan.focusPh" placeholder="Stay in, hosting guests…" />
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="notes" data-i18n="tools.holidayStockPlan.notes">Already have (optional)</label>
+              <input id="notes" name="notes" type="text" data-i18n-placeholder="tools.holidayStockPlan.notesPh" placeholder="Rice/oil OK…" />
+            </div>
+            <div class="action-row">
+              <button type="submit" class="tb-btn" id="run-btn" data-i18n="tools.lifePlans.generate">Generate</button>
+              <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.lifePlans.clear">Clear</button>
+              <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.lifePlans.copy">Copy</button>
+              <button type="button" class="tb-btn" id="download-btn" data-i18n="tools.lifePlans.download">Download</button>
+            </div>
+          </form>
+          <div class="life-plan-busy" id="busy" hidden>
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+        </div>
+        <div class="tool-card life-plan-result" id="result-card" hidden>
+          <div id="result-mount"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js?v=lp-batch2"></script>
+  <script src="../../js/locales/zh-CN.js?v=lp-batch2"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/media/image-cloud-client.js?v=8"></script>
+  <script src="../../js/life/life-plans.js?v=5"></script>
+  <script>TBLifePlans.initPlanPage({ kind: 'holiday_stock' });</script>
+</body>
+</html>

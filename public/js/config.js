@@ -107,7 +107,13 @@ const toolsConfig = {
                 { titleKey: 'tools.interviewPlan.title', url: 'html/life/interview-plan.html', authRequired: true },
                 { titleKey: 'tools.seasonalFoodPlan.title', url: 'html/life/seasonal-food-plan.html', authRequired: true },
                 { titleKey: 'tools.familyMealPlan.title', url: 'html/life/family-meal-plan.html', authRequired: true },
-                { titleKey: 'tools.outfitPlan.title', url: 'html/life/outfit-plan.html', authRequired: true }
+                { titleKey: 'tools.outfitPlan.title', url: 'html/life/outfit-plan.html', authRequired: true },
+                { titleKey: 'tools.travelPackPlan.title', url: 'html/life/travel-pack-plan.html', authRequired: true },
+                { titleKey: 'tools.holidayStockPlan.title', url: 'html/life/holiday-stock-plan.html', authRequired: true },
+                { titleKey: 'tools.partyHostPlan.title', url: 'html/life/party-host-plan.html', authRequired: true },
+                { titleKey: 'tools.kidsWeekendPlan.title', url: 'html/life/kids-weekend-plan.html', authRequired: true },
+                { titleKey: 'tools.emergencyKitPlan.title', url: 'html/life/emergency-kit-plan.html', authRequired: true },
+                { titleKey: 'tools.officeLunchPlan.title', url: 'html/life/office-lunch-plan.html', authRequired: true }
             ]
         },
         {

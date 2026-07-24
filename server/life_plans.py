@@ -29,7 +29,7 @@ LIMITS = {
 }
 MAX_UPLOAD = 8 * 1024 * 1024
 # Bump when Chinese prompt / locale logic changes — also exposed on /health.
-LIFE_PLANS_PROMPT_REV = 5  # force process reload 2026-07-23b
+LIFE_PLANS_PROMPT_REV = 6  # batch: pack/party/kids/etc 2026-07-24
 
 PLAN_KINDS = frozenset(
     {
@@ -43,6 +43,12 @@ PLAN_KINDS = frozenset(
         "savings",
         "interview",
         "family_meal",
+        "travel_pack",
+        "holiday_stock",
+        "party_host",
+        "kids_weekend",
+        "emergency_kit",
+        "office_lunch",
     }
 )
 
@@ -272,7 +278,12 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
     if zh:
         hints = {
             "weight_loss": "根据身高体重与目标，生成减肥周计划：热量/运动要点、示例一日三餐、进度检查。非医疗建议。",
-            "study": "根据年级与成绩生成自学计划：每周安排、薄弱科练习、阶段检测。",
+            "study": (
+                "根据计划类型(mode)、年级与成绩生成学习计划。"
+                "mode=general：每周自学安排、薄弱科练习、阶段检测；"
+                "mode=exam_sprint：考前倒推每日任务与模拟检测；"
+                "mode=oral：口语练习节奏、话题清单与录音自检。"
+            ),
             "road_trip": "生成自驾行程文案（按天、途经点、打包、提示）。仅文字行程，不含实时路况。",
             "pc_upgrade": "根据现有电脑配置与预算，给出升级/配件建议。注明价格会变动。",
             "seasonal_food": "按季节与地区给出一周青菜/水果/肉类参考及采购提示。",
@@ -281,6 +292,12 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
             "savings": "按收入、固定支出与攒钱目标生成本月预算与可砍项。非理财建议，不荐股。",
             "interview": "根据岗位说明与背景，生成可能面试题、经历故事骨架（STAR）与准备清单。不保证结果。",
             "family_meal": "按人数与忌口生成一周家庭菜单与采购清单，菜品要家常可做。",
+            "travel_pack": "按目的地气候、天数与出行方式生成分类行李清单（衣物/洗护/证件/数码），注明可托运与随身。",
+            "holiday_stock": "按节日/长假天数与用餐人数生成备货与备菜节奏：主食荤素、零食、清洁纸品，避免浪费。",
+            "party_host": "按人数与预算生成聚会承办清单：菜单、采购、时间表、场地布置与善后。",
+            "kids_weekend": "按孩子年龄与城市生成周末亲子安排：室内外时段、物料与备选雨天方案。",
+            "emergency_kit": "按家庭人数与所在城市生成家庭应急包清单：药品、饮水食物、照明通讯、证件复印件。非专业救援指导。",
+            "office_lunch": "为上班族生成一周办公室午餐轮换：便当/外卖/附近简餐，兼顾预算与少油少重。",
         }
         task = hints.get(kind, "生成一份实用的中文计划。")
         example = (
@@ -311,7 +328,12 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
     )
     hints_en = {
         "weight_loss": "Create a weight-loss plan with weekly calorie/activity outline, sample day meals, and progress checks. Not medical advice.",
-        "study": "Create a self-study plan from grade and scores: weekly schedule, weak-subject drills, checkpoint tests.",
+        "study": (
+            "From plan type (mode), grade, and scores: "
+            "mode=general weekly self-study with weak-subject drills; "
+            "mode=exam_sprint day-by-day countdown to the exam; "
+            "mode=oral speaking drills, topic list, and self-check habit."
+        ),
         "road_trip": "Create a driving-trip itinerary (days, stops, packing, tips). Text itinerary only; no real-time traffic.",
         "pc_upgrade": "Suggest PC upgrade/accessory options from current specs and optional budget. Note prices change.",
         "seasonal_food": "Suggest a weekly produce/meat plan for the season and region. Practical shopping list.",
@@ -320,6 +342,12 @@ def _plan_system_prompt(kind: str, locale: str) -> str:
         "savings": "Create a monthly savings/budget outline from income, fixed costs, and a savings goal. Not financial advice; no investment picks.",
         "interview": "From a job description and background, produce likely interview questions, STAR story outlines, and prep checklist. Not a guarantee of outcomes.",
         "family_meal": "Create a 7-day family meal plan with simple dishes plus a grocery shopping list. Respect people count, allergies, and kitchen constraints.",
+        "travel_pack": "Build a categorized packing list from destination climate, trip length, and travel mode (clothes, toiletries, docs, gadgets). Note carry-on vs checked.",
+        "holiday_stock": "Create a holiday/long-break stocking plan by days and people: staples, produce, snacks, paper goods, and prep timeline. Avoid waste.",
+        "party_host": "Create a party hosting plan: menu, shopping list, timeline, setup, and cleanup for the guest count and budget.",
+        "kids_weekend": "Plan a weekend with kids by age and city: timed indoor/outdoor activities, materials, and a rainy-day backup.",
+        "emergency_kit": "Build a household emergency kit checklist by family size and city: meds, water/food, light/comms, document copies. Not professional disaster advice.",
+        "office_lunch": "Create a 5-day office lunch rotation (bento / takeout / nearby cheap eats) with budget and lighter options.",
     }
     return common + "\nTask: " + hints_en.get(kind, "Create a helpful plan.")
 

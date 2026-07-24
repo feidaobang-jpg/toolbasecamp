@@ -792,13 +792,17 @@ window.TB_LOCALES.en = {
         },
         studyPlan: {
             title: 'Self-Study Plan',
-            desc: 'Weekly study schedule from grade and scores. Requires sign-in.',
+            desc: 'General study, exam/cert sprint, or speaking practice. Requires sign-in.',
+            mode: 'Plan type',
+            modeGeneral: 'General self-study',
+            modeExam: 'Exam / cert sprint',
+            modeOral: 'Speaking / oral',
             grade: 'Grade / level',
-            gradePh: 'e.g. Grade 8 / Senior 2',
+            gradePh: 'e.g. Grade 8 / Senior 2 / CET-4',
             scores: 'Scores / weak subjects',
             scoresPh: 'Math 72, English 85, Physics weak…',
             goal: 'Goal (optional)',
-            goalPh: 'Exam in 2 months…'
+            goalPh: 'Exam in 2 months / daily speaking…'
         },
         roadTripPlan: {
             title: 'Road Trip Plan',
@@ -908,6 +912,85 @@ window.TB_LOCALES.en = {
             kitchenPh: 'Rice cooker only / can stir-fry…',
             style: 'Taste preference (optional)',
             stylePh: 'Light, low oil, quick meals…'
+        },
+
+        travelPackPlan: {
+            title: 'Travel Packing',
+            desc: 'Categorized packing list from destination, days, and travel mode. Requires sign-in.',
+            destination: 'Destination',
+            destinationPh: 'e.g. Chengdu / Osaka',
+            days: 'Days',
+            climate: 'Climate / season (optional)',
+            climatePh: 'Humid heat, dry cold, big swings…',
+            mode: 'Travel mode (optional)',
+            modePh: 'Flight / train / drive…',
+            notes: 'Special needs (optional)',
+            notesPh: 'Kids, hiking, business…'
+        },
+        holidayStockPlan: {
+            title: 'Holiday Stocking',
+            desc: 'Stocking and prep timeline for a holiday or long break. Requires sign-in.',
+            holiday: 'Holiday / break',
+            holidayPh: 'Spring Festival / National Day…',
+            days: 'Days at home',
+            people: 'People to feed',
+            focus: 'Focus (optional)',
+            focusPh: 'Stay in, hosting guests, light meals…',
+            notes: 'Already have (optional)',
+            notesPh: 'Rice/oil OK, need snacks…'
+        },
+        partyHostPlan: {
+            title: 'Party Hosting',
+            desc: 'Menu, shopping list, and timeline from guest count and budget. Requires sign-in.',
+            occasion: 'Occasion',
+            occasionPh: 'Birthday / housewarming / reunion…',
+            guests: 'Guests',
+            budget: 'Budget (optional)',
+            budgetPh: 'e.g. ¥800',
+            place: 'Place (optional)',
+            placePh: 'Home / outdoor BBQ…',
+            notes: 'Diet / prefs (optional)',
+            notesPh: 'Vegetarian, no alcohol, kids…'
+        },
+        kidsWeekendPlan: {
+            title: 'Kids Weekend',
+            desc: 'Weekend plan and materials by kids ages and city. Requires sign-in.',
+            ages: 'Kids ages',
+            agesPh: 'e.g. 3 and 7',
+            city: 'City / area',
+            cityPh: 'e.g. Hangzhou · West Lake',
+            energy: 'Energy preference (optional)',
+            energyPh: 'More outdoors / quiet indoors…',
+            budget: 'Budget (optional)',
+            budgetPh: 'e.g. ¥100 per person',
+            notes: 'Notes (optional)',
+            notesPh: 'Rain backup, allergies…'
+        },
+        emergencyKitPlan: {
+            title: 'Emergency Kit',
+            desc: 'Household emergency kit checklist by family size. Not professional disaster advice. Requires sign-in.',
+            people: 'Household size',
+            city: 'City (optional)',
+            cityPh: 'e.g. Guangzhou',
+            risks: 'Scenarios (optional)',
+            risksPh: 'Power/water outage, typhoon, drill…',
+            hasCar: 'Have a car? (optional)',
+            hasCarPh: 'Yes / no',
+            notes: 'Already own (optional)',
+            notesPh: 'Flashlight, first-aid kit…'
+        },
+        officeLunchPlan: {
+            title: 'Office Lunch Week',
+            desc: '5-day office lunch rotation (bento / takeout / nearby). Requires sign-in.',
+            budget: 'Daily budget (approx.)',
+            budgetPh: 'e.g. ¥25–40',
+            style: 'Taste preference (optional)',
+            stylePh: 'Less oil, mild, hot meals…',
+            kitchen: 'Setup (optional)',
+            kitchenPh: 'Microwave / takeout only…',
+            days: 'Workdays',
+            notes: 'Avoid (optional)',
+            notesPh: 'No beef, lactose intolerant…'
         },
         shoppingPlan: {
             title: 'Shopping List',

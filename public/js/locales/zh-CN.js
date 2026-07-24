@@ -791,13 +791,17 @@ window.TB_LOCALES['zh-CN'] = {
         },
         studyPlan: {
             title: '自学计划',
-            desc: '根据年级与成绩生成每周自学安排。需登录。',
+            desc: '常规自学、考证冲刺或口语提升计划。需登录。',
+            mode: '计划类型',
+            modeGeneral: '常规自学',
+            modeExam: '考证 / 考试冲刺',
+            modeOral: '口语提升',
             grade: '年级 / 学段',
-            gradePh: '例如：初二 / 高一',
+            gradePh: '例如：初二 / 高一 / 四级备考',
             scores: '成绩 / 薄弱科目',
             scoresPh: '数学 72，英语 85，物理偏弱…',
             goal: '目标（可选）',
-            goalPh: '两个月后考试…'
+            goalPh: '两个月后考试 / 日常口语…'
         },
         roadTripPlan: {
             title: '自驾攻略',
@@ -907,6 +911,85 @@ window.TB_LOCALES['zh-CN'] = {
             kitchenPh: '只有电饭煲 / 可爆炒…',
             style: '口味偏好（可选）',
             stylePh: '清淡、少油、快手菜…'
+        },
+
+        travelPackPlan: {
+            title: '旅行打包',
+            desc: '按目的地、天数与出行方式生成分类行李清单。需登录。',
+            destination: '目的地',
+            destinationPh: '例如：成都 / 日本大阪',
+            days: '出行天数',
+            climate: '气候 / 季节（可选）',
+            climatePh: '湿热、干冷、温差大…',
+            mode: '出行方式（可选）',
+            modePh: '飞机 / 高铁 / 自驾…',
+            notes: '特殊需求（可选）',
+            notesPh: '带娃、徒步、商务会议…'
+        },
+        holidayStockPlan: {
+            title: '长假备货',
+            desc: '按节日或长假天数与人数生成备货与备菜节奏。需登录。',
+            holiday: '节日 / 假期',
+            holidayPh: '春节 / 国庆 / 五一…',
+            days: '在家天数',
+            people: '用餐人数',
+            focus: '侧重（可选）',
+            focusPh: '少出门、宴客、清淡…',
+            notes: '已有存货（可选）',
+            notesPh: '米面油还够、缺零食…'
+        },
+        partyHostPlan: {
+            title: '聚会承办',
+            desc: '按人数与预算生成菜单、采购与时间表。需登录。',
+            occasion: '聚会场合',
+            occasionPh: '生日 / 乔迁 / 同学聚会…',
+            guests: '人数',
+            budget: '预算（可选）',
+            budgetPh: '例如：800 元',
+            place: '场地（可选）',
+            placePh: '家里 / 户外烧烤…',
+            notes: '忌口与偏好（可选）',
+            notesPh: '素食、不喝酒、有小孩…'
+        },
+        kidsWeekendPlan: {
+            title: '带娃周末',
+            desc: '按孩子年龄与城市生成周末安排与物料清单。需登录。',
+            ages: '孩子年龄',
+            agesPh: '例如：3 岁、7 岁',
+            city: '城市 / 区域',
+            cityPh: '例如：杭州·西湖区',
+            energy: '精力偏好（可选）',
+            energyPh: '户外多 / 室内安静…',
+            budget: '预算（可选）',
+            budgetPh: '例如：人均 100',
+            notes: '备注（可选）',
+            notesPh: '雨天备选、过敏…'
+        },
+        emergencyKitPlan: {
+            title: '家庭应急包',
+            desc: '按家庭人数生成应急物资清单。非专业救援指导，需登录。',
+            people: '家庭人数',
+            city: '所在城市（可选）',
+            cityPh: '例如：广州',
+            risks: '关注场景（可选）',
+            risksPh: '停水停电、台风、地震演练…',
+            hasCar: '是否有车（可选）',
+            hasCarPh: '有 / 无',
+            notes: '已有物品（可选）',
+            notesPh: '已有手电筒、急救包…'
+        },
+        officeLunchPlan: {
+            title: '办公室午餐周',
+            desc: '生成一周上班午餐轮换（便当/外卖/附近简餐）。需登录。',
+            budget: '每日预算（大约）',
+            budgetPh: '例如：25–40 元',
+            style: '口味偏好（可选）',
+            stylePh: '少油、少辣、要热饭…',
+            kitchen: '条件（可选）',
+            kitchenPh: '有微波炉 / 只能外卖…',
+            days: '工作日天数',
+            notes: '忌口（可选）',
+            notesPh: '不吃牛肉、乳糖不耐受…'
         },
         shoppingPlan: {
             title: '采购清单',

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Study Plan - Tool Basecamp</title>
-  <meta name="description" content="Build a self-study plan from grade and scores. Requires sign-in.">
+  <meta name="description" content="Build a self-study or exam-sprint plan. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
@@ -16,7 +16,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.studyPlan.title">Self-Study Plan</h1>
-        <p data-i18n="tools.studyPlan.desc">Enter grade and scores — get a weekly study schedule. Requires sign-in.</p>
+        <p data-i18n="tools.studyPlan.desc">Weekly study or exam/oral sprint from grade and scores. Requires sign-in.</p>
       </div>
       <div class="tool-card img-cloud-gate" id="login-gate" hidden>
         <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
@@ -28,6 +28,14 @@
         <div class="tool-card">
           <p class="img-cloud-quota" id="quota-line"></p>
           <form id="plan-form" class="life-plan-form">
+            <div class="field-row">
+              <label class="field-label" for="mode" data-i18n="tools.studyPlan.mode">Plan type</label>
+              <select id="mode" name="mode" required>
+                <option value="general" data-i18n="tools.studyPlan.modeGeneral" selected>General self-study</option>
+                <option value="exam_sprint" data-i18n="tools.studyPlan.modeExam">Exam / cert sprint</option>
+                <option value="oral" data-i18n="tools.studyPlan.modeOral">Speaking / oral</option>
+              </select>
+            </div>
             <div class="field-row">
               <label class="field-label" for="grade" data-i18n="tools.studyPlan.grade">Grade / level</label>
               <input id="grade" name="grade" type="text" required data-i18n-placeholder="tools.studyPlan.gradePh" placeholder="e.g. Grade 8 / Senior 2" />
@@ -59,8 +67,8 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=lp-gen1"></script>
-  <script src="../../js/locales/zh-CN.js?v=lp-gen1"></script>
+  <script src="../../js/locales/en.js?v=lp-batch2"></script>
+  <script src="../../js/locales/zh-CN.js?v=lp-batch2"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>

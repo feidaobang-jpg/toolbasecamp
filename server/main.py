@@ -571,6 +571,8 @@ def health():
                 "savings",
                 "interview",
                 "family_meal",
+                "travel_pack",
+                "office_lunch",
             )
         ),
         "life_plans_prompt_rev": LIFE_PLANS_PROMPT_REV,
