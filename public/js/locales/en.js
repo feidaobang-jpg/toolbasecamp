@@ -617,7 +617,7 @@ window.TB_LOCALES.en = {
             fromLabel: 'From',
             toLabel: 'To',
             manualRateLabel: 'Manual rate (optional)',
-            manualRatePlaceholder: '1 FROM = ? TO',
+            manualRatePlaceholder: '1 source = ? target',
             convert: 'Convert',
             clear: 'Clear',
             resultTitle: 'Result',
@@ -629,7 +629,13 @@ window.TB_LOCALES.en = {
             liveOk: 'Live rate available',
             liveFail: 'Could not fetch live rate — enter a manual rate',
             needManual: 'Live rate unavailable. Enter a manual rate to convert.',
-            manualUsed: 'Manual: 1 {from} = {rate} {to}'
+            manualUsed: 'Manual: 1 {from} = {rate} {to}',
+            cny: 'Chinese Yuan (CNY)',
+            usd: 'US Dollar (USD)',
+            eur: 'Euro (EUR)',
+            jpy: 'Japanese Yen (JPY)',
+            hkd: 'Hong Kong Dollar (HKD)',
+            gbp: 'British Pound (GBP)'
         },
         timestampTimezone: {
             title: 'Timestamp & Timezone',

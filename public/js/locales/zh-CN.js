@@ -610,7 +610,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         currencyConvert: {
             title: '汇率换算',
-            desc: '在 CNY、USD、EUR 等主流货币间换算，支持实时汇率或手动汇率。',
+            desc: '在人民币、美元、欧元等主流货币间换算，支持实时汇率或手动汇率。',
             amountLabel: '金额',
             amountPlaceholder: '例如 100',
             fromLabel: '从',
@@ -628,7 +628,13 @@ window.TB_LOCALES['zh-CN'] = {
             liveOk: '已获取实时汇率',
             liveFail: '无法获取实时汇率，请填写手动汇率',
             needManual: '实时汇率不可用，请填写手动汇率后再换算。',
-            manualUsed: '手动：1 {from} = {rate} {to}'
+            manualUsed: '手动：1 {from} = {rate} {to}',
+            cny: '人民币 (CNY)',
+            usd: '美元 (USD)',
+            eur: '欧元 (EUR)',
+            jpy: '日元 (JPY)',
+            hkd: '港币 (HKD)',
+            gbp: '英镑 (GBP)'
         },
         timestampTimezone: {
             title: '时间戳与时区',

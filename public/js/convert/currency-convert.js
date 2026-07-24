@@ -88,6 +88,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function currencyLabel(code) {
+        var key = 'tools.currencyConvert.' + String(code || '').toLowerCase();
+        var label = tr(key);
+        return label && label !== key ? label : code;
+    }
+
     function convert() {
         showError('');
         var raw = amountInput.value.trim();
@@ -111,13 +117,20 @@ document.addEventListener('DOMContentLoaded', function () {
             var out = amount * info.rate;
             var to = toCurrency.value;
             var from = fromCurrency.value;
-            resultValue.textContent = out.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) + ' ' + to;
+            var fromL = currencyLabel(from);
+            var toL = currencyLabel(to);
+            resultValue.textContent =
+                out.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) + ' · ' + toL;
             if (info.source === 'same') {
-                resultRate.textContent = '1 ' + from + ' = 1 ' + to;
+                resultRate.textContent = '1 ' + fromL + ' = 1 ' + toL;
             } else if (info.source === 'manual') {
-                resultRate.textContent = tr('tools.currencyConvert.manualUsed', { from: from, to: to, rate: info.rate });
+                resultRate.textContent = tr('tools.currencyConvert.manualUsed', {
+                    from: fromL,
+                    to: toL,
+                    rate: info.rate
+                });
             } else {
-                resultRate.textContent = '1 ' + from + ' = ' + info.rate + ' ' + to;
+                resultRate.textContent = '1 ' + fromL + ' = ' + info.rate + ' ' + toL;
             }
             resultWrap.hidden = false;
         });

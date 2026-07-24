@@ -1,10 +1,6 @@
 /* Shared form layout for static calculator / convert tools */
 .field-row {
-  margin-bottom: 14px;
-}
-
-.field-row:last-child {
-  margin-bottom: 0;
+  margin-bottom: 18px;
 }
 
 .field-label {
@@ -12,7 +8,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .tb-input,
@@ -58,6 +54,7 @@
 
 .tb-result {
   margin-top: 20px;
+  margin-bottom: 4px;
   padding: 16px 18px;
   background: #f0f9ff;
   border: 1px solid #bae6fd;
@@ -166,7 +163,18 @@
 .tb-status {
   font-size: 12px;
   color: #64748b;
-  margin-top: 8px;
+  margin: 4px 0 16px;
+  min-height: 1.2em;
+  line-height: 1.4;
+}
+
+.currency-card .tb-select {
+  min-height: 44px;
+}
+
+.currency-card .tb-result-value {
+  max-width: 62%;
+  line-height: 1.45;
 }
 
 .tb-status.ok {
