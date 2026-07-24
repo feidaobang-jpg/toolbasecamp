@@ -279,6 +279,7 @@ jobs:
           # Always nuke once more — DEPLOY_SHA on disk can update while an orphan keeps old PLAN_KINDS.
           echo "=== Force life-plans process reload ==="
           bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
+          bash /opt/toolbasecamp-deploy/fix-fx-api.sh
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
@@ -335,6 +336,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -679,6 +681,23 @@ jobs:
             exit 1
           fi
           echo "General cutout API public OK after fix."
+
+
+      - name: Verify FX rate API (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          FX="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
+          echo "fx: $FX"
+          echo "$FX" | grep -F '"rate"' >/dev/null || {
+            echo "::warning:: public fx missing — forcing fix-fx-api.sh"
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+              "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-fx-api.sh'
+            sleep 2
+            FX="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
+            echo "retry: $FX"
+            echo "$FX" | grep -F '"rate"' >/dev/null || exit 1
+          }
+          echo "FX API public OK."
 
       - name: Verify life-plans API route (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
