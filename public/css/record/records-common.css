@@ -259,9 +259,89 @@
   background: #fee2e2;
 }
 
+.rec-rent-status.is-partial {
+  color: #c2410c;
+  background: #ffedd5;
+}
+
+.rec-rent-status.is-full {
+  color: #15803d;
+  background: #dcfce7;
+}
+
 .rec-status-line {
   margin: 8px 0 0;
   font-size: 14px;
+}
+
+/* Rent list cards — roomier layout */
+.rec-list.rec-rent-list {
+  gap: 14px;
+}
+
+.rec-item.rec-rent-item {
+  padding: 16px 18px 14px;
+}
+
+.rec-rent-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.rec-rent-head .rec-item-title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.rec-rent-head .rec-rent-status {
+  flex-shrink: 0;
+  font-size: 13px;
+  padding: 4px 10px;
+  margin-top: 1px;
+}
+
+.rec-rent-item .rec-item-meta {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.rec-rent-amt {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  color: #1e3a8a;
+}
+
+.rec-rent-amt.is-full {
+  color: #15803d;
+}
+
+.rec-rent-amt.is-partial {
+  color: #c2410c;
+}
+
+.rec-rent-owed {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #b45309;
+  line-height: 1.4;
+}
+
+.rec-rent-item .rec-item-actions {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
 }
 
 #detail-view .rec-progress {

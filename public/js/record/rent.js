@@ -54,15 +54,33 @@ document.addEventListener('DOMContentLoaded', function () {
         return String(Math.round(n));
     }
 
-    function statusLabel(status) {
-        if (status === 'paid') return tr('tools.rent.statusPaid');
-        if (status === 'overdue') return tr('tools.rent.statusOverdue');
+    function yuanNum(v) {
+        var n = Number(String(v == null ? '' : v).replace(/,/g, ''));
+        return isFinite(n) ? Math.round(n) : 0;
+    }
+
+    /** due | overdue | full | partial */
+    function payState(item) {
+        var paid = yuanNum(item.paidAmount || item.paid_amount);
+        if (paid <= 0) {
+            return item.status === 'overdue' ? 'overdue' : 'due';
+        }
+        var rent = yuanNum(item.rentAmount);
+        if (rent > 0 && paid < rent) return 'partial';
+        return 'full';
+    }
+
+    function statusLabel(state) {
+        if (state === 'full') return tr('tools.rent.statusPaidFull');
+        if (state === 'partial') return tr('tools.rent.statusPartial');
+        if (state === 'overdue') return tr('tools.rent.statusOverdue');
         return tr('tools.rent.statusDue');
     }
 
-    function statusClass(status) {
-        if (status === 'paid') return 'rec-rent-status is-paid';
-        if (status === 'overdue') return 'rec-rent-status is-overdue';
+    function statusClass(state) {
+        if (state === 'full') return 'rec-rent-status is-full';
+        if (state === 'partial') return 'rec-rent-status is-partial';
+        if (state === 'overdue') return 'rec-rent-status is-overdue';
         return 'rec-rent-status is-due';
     }
 
@@ -145,12 +163,17 @@ document.addEventListener('DOMContentLoaded', function () {
             })
         ];
         detailMeta.textContent = parts.join(' · ');
-        detailStatus.className = statusClass(data.status);
-        detailStatus.textContent = statusLabel(data.status) + ' · ' + data.currentPeriod;
-        if (data.status === 'paid' && data.paidAmount) {
-            detailStatus.textContent +=
-                ' · ' + tr('tools.rent.receivedAmount', { amount: fmtYuan(data.paidAmount) });
+        var state = payState(data);
+        detailStatus.className = statusClass(state);
+        var statusText = statusLabel(state) + ' · ' + data.currentPeriod;
+        if (data.paidAmount) {
+            statusText += ' · ' + tr('tools.rent.receivedAmount', { amount: fmtYuan(data.paidAmount) });
         }
+        if (state === 'partial') {
+            var owe = Math.max(0, yuanNum(data.rentAmount) - yuanNum(data.paidAmount));
+            statusText += ' · ' + tr('tools.rent.owedAmount', { amount: String(owe) });
+        }
+        detailStatus.textContent = statusText;
         if (data.note) {
             detailNote.hidden = false;
             detailNote.textContent = data.note;
@@ -184,16 +207,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderList(items) {
+        listEl.className = 'rec-list rec-rent-list';
         listEl.innerHTML = '';
         emptyEl.hidden = items.length > 0;
         items.forEach(function (item) {
+            var state = payState(item);
+            var paid = item.paidAmount || item.paid_amount;
             var el = document.createElement('div');
-            el.className = 'rec-item';
+            el.className = 'rec-item rec-rent-item';
             el.innerHTML =
-                '<div class="rec-item-main">' +
-                '<div><p class="rec-item-title"></p><p class="rec-item-meta"></p></div>' +
-                '<div class="rec-item-value"><span data-status></span><br><span data-amt></span></div>' +
+                '<div class="rec-rent-head">' +
+                '<p class="rec-item-title"></p>' +
+                '<span data-status></span>' +
                 '</div>' +
+                '<p class="rec-item-meta"></p>' +
+                '<p class="rec-rent-amt" data-amt></p>' +
+                '<p class="rec-rent-owed" data-owed hidden></p>' +
                 '<div class="rec-item-actions">' +
                 '<button type="button" class="tb-btn" data-act="open"></button>' +
                 '</div>';
@@ -203,13 +232,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 tr('tools.rent.dueDayShort', { day: item.dueDay }) +
                 ' · ' + tr('tools.rent.perMonth', { amount: fmtYuan(item.rentAmount) });
             var st = el.querySelector('[data-status]');
-            st.className = statusClass(item.status);
-            st.textContent = statusLabel(item.status);
-            var paid = item.paidAmount || item.paid_amount;
-            el.querySelector('[data-amt]').textContent =
-                paid
-                    ? tr('tools.rent.receivedAmount', { amount: fmtYuan(paid) })
-                    : tr('tools.rent.perMonth', { amount: fmtYuan(item.rentAmount) });
+            st.className = statusClass(state);
+            st.textContent = statusLabel(state);
+            var amtEl = el.querySelector('[data-amt]');
+            if (paid) {
+                amtEl.textContent = tr('tools.rent.receivedAmount', { amount: fmtYuan(paid) });
+                amtEl.classList.add(state === 'full' ? 'is-full' : 'is-partial');
+            } else {
+                amtEl.textContent = tr('tools.rent.perMonth', { amount: fmtYuan(item.rentAmount) });
+            }
+            var owedEl = el.querySelector('[data-owed]');
+            if (state === 'partial') {
+                var owe = Math.max(0, yuanNum(item.rentAmount) - yuanNum(paid));
+                owedEl.hidden = false;
+                owedEl.textContent = tr('tools.rent.owedAmount', { amount: String(owe) });
+            }
             el.querySelector('[data-act="open"]').textContent = tr('tools.rent.open');
             el.querySelector('[data-act="open"]').addEventListener('click', function () {
                 openDetail(item.id);
