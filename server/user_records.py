@@ -259,6 +259,12 @@ def _money(value: Any) -> str:
     return f"{d:.2f}"
 
 
+def _rent_money(value: Any) -> str:
+    """Rent amounts display as whole yuan (no decimals)."""
+    d = Decimal(str(value or 0)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+    return f"{d:.0f}"
+
+
 def _parse_money(raw: Any, *, field: str = "amount") -> Decimal:
     try:
         d = Decimal(str(raw).strip())
@@ -982,7 +988,7 @@ def _serialize_rent_payment(row: dict) -> dict:
     return {
         "id": row["id"],
         "period": row["period"],
-        "amount": _money(row["amount"]),
+        "amount": _rent_money(row["amount"]),
         "note": row.get("note") or "",
         "time": _iso(row.get("created_at")),
     }
@@ -1008,7 +1014,7 @@ def _serialize_rent(
         "id": row["id"],
         "title": row["title"],
         "tenantName": row.get("tenant_name") or "",
-        "rentAmount": _money(row["rent_amount"]),
+        "rentAmount": _rent_money(row["rent_amount"]),
         "dueDay": int(row["due_day"]),
         "note": row.get("note") or "",
         "status": status,
@@ -1030,7 +1036,7 @@ def _payment_amounts_for(cur, *, rent_id: int, user_id: int) -> dict:
         """,
         (rent_id, user_id),
     )
-    return {r["period"]: _money(r["amount"]) for r in (cur.fetchall() or [])}
+    return {r["period"]: _rent_money(r["amount"]) for r in (cur.fetchall() or [])}
 
 
 def _paid_periods_for(cur, *, rent_id: int, user_id: int) -> set:
@@ -1078,7 +1084,9 @@ def create_rent(body: RentCreateBody, user: dict = Depends(_user)):
     tenant = (body.tenant_name or "").strip()
     if len(tenant) > NAME_MAX:
         raise HTTPException(status_code=400, detail="Invalid tenant_name")
-    amount = _parse_money(body.rent_amount, field="rent_amount")
+    amount = _parse_money(body.rent_amount, field="rent_amount").quantize(
+        Decimal("1"), rounding=ROUND_HALF_UP
+    )
     due_day = _parse_due_day(body.due_day)
     note = (body.note or "").strip()
     if len(note) > RENT_NOTE_MAX:
@@ -1136,7 +1144,9 @@ def update_rent(rent_id: int, body: RentUpdateBody, user: dict = Depends(_user))
     tenant = (body.tenant_name or "").strip()
     if len(tenant) > NAME_MAX:
         raise HTTPException(status_code=400, detail="Invalid tenant_name")
-    amount = _parse_money(body.rent_amount, field="rent_amount")
+    amount = _parse_money(body.rent_amount, field="rent_amount").quantize(
+        Decimal("1"), rounding=ROUND_HALF_UP
+    )
     due_day = _parse_due_day(body.due_day)
     note = (body.note or "").strip()
     if len(note) > RENT_NOTE_MAX:
