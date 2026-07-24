@@ -36,6 +36,7 @@ from life_plans import (
 )
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
+from fx_rates import router as fx_router
 
 _wan_import_error = ""
 try:
@@ -275,6 +276,7 @@ app.include_router(image_router)
 # life_plans wired after get_optional_user + _client_ip
 app.include_router(life_router)
 app.include_router(watermark_router)
+app.include_router(fx_router)
 if wan_router is not None:
     wire_wan(get_conn, require_db, get_current_user)
     app.include_router(wan_router)

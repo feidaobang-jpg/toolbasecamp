@@ -39,15 +39,22 @@ document.addEventListener('DOMContentLoaded', function () {
         rateStatus.className = 'tb-status' + (cls ? ' ' + cls : '');
     }
 
+    function apiBase() {
+        if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) return siteConfig.apiBase;
+        var host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') return 'http://127.0.0.1:8001';
+        return window.location.origin + '/api';
+    }
+
     function fetchRate(from, to) {
         if (from === to) return Promise.resolve(1);
-        var url = 'https://api.frankfurter.app/latest?from=' + encodeURIComponent(from) + '&to=' + encodeURIComponent(to);
+        var url = apiBase() + '/fx/rate?from=' + encodeURIComponent(from) + '&to=' + encodeURIComponent(to);
         return fetch(url).then(function (res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json();
         }).then(function (data) {
-            if (!data.rates || data.rates[to] == null) throw new Error('no rate');
-            return data.rates[to];
+            if (data.rate == null) throw new Error('no rate');
+            return Number(data.rate);
         });
     }
 
