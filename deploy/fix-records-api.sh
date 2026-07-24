@@ -26,6 +26,8 @@ print([p for p in paths if p.startswith('/records')])
 assert '/records/days' in paths, 'missing /records/days: ' + str(paths)
 assert '/records/todos' in paths, 'missing /records/todos: ' + str(paths)
 assert '/records/rents' in paths, 'missing /records/rents: ' + str(paths)
+from user_records import RENT_PAY_REV
+assert RENT_PAY_REV >= 2, 'stale rent pay rev: ' + str(RENT_PAY_REV)
 assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset: ' + str(paths)
 assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs: ' + str(paths)
 "
@@ -66,6 +68,11 @@ echo "$HEALTH" | grep -q '"records_clock_logs":true' || {
 }
 echo "$HEALTH" | grep -q '"records_rents":true' || {
   echo "FAILED: health records_rents is not true (stale process?)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
+echo "$HEALTH" | grep -q '"records_rent_pay_rev":2' || {
+  echo "FAILED: health records_rent_pay_rev!=2 (stale payment upsert?)"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }

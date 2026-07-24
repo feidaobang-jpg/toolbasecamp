@@ -300,6 +300,7 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_todos":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_rents":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"records_rent_pay_rev":2' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null \
@@ -332,6 +333,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_todos":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_rents":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"records_rent_pay_rev":2' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null || exit 1
@@ -564,6 +566,7 @@ jobs:
           if echo "$HEALTH" | grep -F '"records_api":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_todos":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_rents":true' >/dev/null \
+            && echo "$HEALTH" | grep -F '"records_rent_pay_rev":2' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_logs":true' >/dev/null \
             && [[ "$DAYS_CODE" != "404" && "$DAYS_CODE" != "000" ]] \
@@ -593,6 +596,10 @@ jobs:
           fi
           if ! echo "$HEALTH" | grep -F '"records_rents":true' >/dev/null; then
             echo "::error:: public health still missing records_rents after fix — API process stale"
+            exit 1
+          fi
+          if ! echo "$HEALTH" | grep -F '"records_rent_pay_rev":2' >/dev/null; then
+            echo "::error:: public health still missing records_rent_pay_rev=2 after fix — API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null; then

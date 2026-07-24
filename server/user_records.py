@@ -913,6 +913,8 @@ def delete_deposit(deposit_id: int, user: dict = Depends(_user)):
 RENT_DUE_DAY_MIN = 1
 RENT_DUE_DAY_MAX = 28
 RENT_PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
+# Bump when payment upsert semantics change (stale-process guard).
+RENT_PAY_REV = 2
 RENT_NOTE_MAX = 500
 RENT_PAY_NOTE_MAX = 200
 
@@ -951,6 +953,10 @@ def _parse_due_day(raw: Any) -> int:
 
 def _parse_period(raw: Any) -> str:
     period = (str(raw or "")).strip()
+    # Tolerate locale display like 2026年07月 if a client ever sends it.
+    m = re.match(r"^(\d{4})\D+(\d{1,2})\D*$", period)
+    if m:
+        period = f"{int(m.group(1)):04d}-{int(m.group(2)):02d}"
     if not RENT_PERIOD_RE.match(period):
         raise HTTPException(status_code=400, detail="Invalid period (use YYYY-MM)")
     return period
@@ -1167,7 +1173,7 @@ def delete_rent(rent_id: int, user: dict = Depends(_user)):
 
 @router.post("/rents/{rent_id}/payments")
 def create_rent_payment(rent_id: int, body: RentPaymentBody, user: dict = Depends(_user)):
-    """Create or update payment for a period (upsert)."""
+    """Create or update payment for a period (MySQL upsert)."""
     period = _parse_period(body.period)
     note = (body.note or "").strip()
     if len(note) > RENT_PAY_NOTE_MAX:
@@ -1186,28 +1192,18 @@ def create_rent_payment(rent_id: int, body: RentPaymentBody, user: dict = Depend
                 amount = Decimal(str(row["rent_amount"]))
             else:
                 amount = _parse_money(body.amount)
+            # Atomic upsert — avoids 400 when the same period is submitted again.
             cur.execute(
-                "SELECT id FROM record_rent_payments WHERE rent_id=%s AND period=%s AND user_id=%s",
-                (rent_id, period, user["id"]),
+                """
+                INSERT INTO record_rent_payments (rent_id, user_id, period, amount, note)
+                VALUES (%s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    amount=VALUES(amount),
+                    note=VALUES(note),
+                    user_id=VALUES(user_id)
+                """,
+                (rent_id, user["id"], period, amount, note),
             )
-            existing = cur.fetchone()
-            if existing:
-                cur.execute(
-                    """
-                    UPDATE record_rent_payments
-                    SET amount=%s, note=%s
-                    WHERE id=%s AND rent_id=%s AND user_id=%s
-                    """,
-                    (amount, note, existing["id"], rent_id, user["id"]),
-                )
-            else:
-                cur.execute(
-                    """
-                    INSERT INTO record_rent_payments (rent_id, user_id, period, amount, note)
-                    VALUES (%s, %s, %s, %s, %s)
-                    """,
-                    (rent_id, user["id"], period, amount, note),
-                )
             cur.execute(
                 "UPDATE record_rents SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
                 (rent_id,),
