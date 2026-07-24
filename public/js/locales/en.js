@@ -778,7 +778,7 @@ window.TB_LOCALES.en = {
             needFields: 'Please fill in the form fields',
             invalidKind: 'Invalid plan kind',
             genFailed: 'Plan generation failed. Please try again.',
-            dailyLimitGuest: 'Free daily limit reached. Sign in for a higher limit, or try again tomorrow.'
+            dailyLimitGuest: 'Free daily limit reached. Sign in for a higher limit, or try again tomorrow.',
             guestHint: '{remaining}/{limit} left today (guest). Sign in for a higher limit.',
             limitLoginHint: 'Daily limit reached. Sign in for a higher limit, or try again tomorrow.',
         },

@@ -777,7 +777,7 @@ window.TB_LOCALES['zh-CN'] = {
             needFields: '请填写表单内容',
             invalidKind: '无效的计划类型',
             genFailed: '计划生成失败，请稍后重试',
-            dailyLimitGuest: '今日免费次数已用完。登录后额度更高，或明天再试。'
+            dailyLimitGuest: '今日免费次数已用完。登录后额度更高，或明天再试。',
             guestHint: '今日剩余 {remaining}/{limit} 次（未登录）。登录后额度更高。',
             limitLoginHint: '今日次数已用完。登录后可获得更高额度，或明天再试。',
         },
