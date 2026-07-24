@@ -308,8 +308,10 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev"
+              && echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null; then
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev/fx_thb_twd"
               HEALTH_OK=1
               break
             fi
@@ -337,6 +339,8 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -686,18 +690,34 @@ jobs:
       - name: Verify FX rate API (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
+          check_fx() {
+            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            echo "health: $HEALTH"
+            echo "$HEALTH" | grep -F '"fx_api":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"fx_thb_twd":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"fx_allowed_rev":2' >/dev/null
+          }
           FX="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
-          echo "fx: $FX"
-          echo "$FX" | grep -F '"rate"' >/dev/null || {
-            echo "::warning:: public fx missing — forcing fix-fx-api.sh"
+          echo "fx CNY->USD: $FX"
+          THB="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
+          echo "fx USD->THB: $THB"
+          if ! check_fx || ! echo "$FX" | grep -F '"rate"' >/dev/null || ! echo "$THB" | grep -F '"rate"' >/dev/null; then
+            echo "::warning:: public fx incomplete — forcing fix-fx-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-fx-api.sh'
             sleep 2
             FX="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
-            echo "retry: $FX"
+            THB="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
+            TWD="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=TWD&cb=$RANDOM" || true)"
+            echo "retry CNY->USD: $FX"
+            echo "retry USD->THB: $THB"
+            echo "retry USD->TWD: $TWD"
+            check_fx || exit 1
             echo "$FX" | grep -F '"rate"' >/dev/null || exit 1
-          }
-          echo "FX API public OK."
+            echo "$THB" | grep -F '"rate"' >/dev/null || exit 1
+            echo "$TWD" | grep -F '"rate"' >/dev/null || exit 1
+          fi
+          echo "FX API public OK (incl. THB)."
 
       - name: Verify life-plans API route (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'

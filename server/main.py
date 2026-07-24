@@ -36,6 +36,8 @@ from life_plans import (
 )
 from tianapi_life import router as life_router
 from watermark import router as watermark_router
+from fx_rates import ALLOWED as FX_ALLOWED
+from fx_rates import FX_ALLOWED_REV
 from fx_rates import router as fx_router
 
 _wan_import_error = ""
@@ -568,6 +570,8 @@ def health():
         "general_cutout_api": "/image/general-cutout/segment" in paths,
         "life_plans_api": "/life-plans/generate" in paths,
         "fx_api": "/fx/rate" in paths,
+        "fx_allowed_rev": FX_ALLOWED_REV,
+        "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),
         "life_plans_day_trip": "day_trip" in LIFE_PLAN_KINDS,
         "life_plans_ready": all(

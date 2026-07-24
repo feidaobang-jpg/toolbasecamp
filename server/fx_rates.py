@@ -14,6 +14,8 @@ ALLOWED = frozenset({
     "CNY", "USD", "EUR", "JPY", "HKD", "GBP",
     "AUD", "CAD", "SGD", "KRW", "THB", "TWD",
 })
+# Bump when ALLOWED changes so /health proves the live process reloaded.
+FX_ALLOWED_REV = 2
 TIMEOUT = float(os.environ.get("FX_TIMEOUT", "12"))
 
 
