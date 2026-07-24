@@ -777,11 +777,12 @@ window.TB_LOCALES.en = {
             deepseekMissing: 'DeepSeek is not configured on the server (DEEPSEEK_API_KEY).',
             needFields: 'Please fill in the form fields',
             invalidKind: 'Invalid plan kind',
-            genFailed: 'Plan generation failed. Please try again.'
+            genFailed: 'Plan generation failed. Please try again.',
+            dailyLimitGuest: 'Free daily limit reached. Sign in for a higher limit, or try again tomorrow.'
         },
         weightLossPlan: {
             title: 'Weight Loss Plan',
-            desc: 'Weekly outline from height, weight and goal. Not medical advice. Requires sign-in.',
+            desc: 'Weekly outline from height, weight and goal. Not medical advice. No login required; daily limit applies.',
             height: 'Height (cm)',
             weight: 'Current weight (kg)',
             target: 'Target weight (kg)',
@@ -792,7 +793,7 @@ window.TB_LOCALES.en = {
         },
         studyPlan: {
             title: 'Self-Study Plan',
-            desc: 'General study, exam/cert sprint, or speaking practice. Requires sign-in.',
+            desc: 'General study, exam/cert sprint, or speaking practice. No login required; daily limit applies.',
             mode: 'Plan type',
             modeGeneral: 'General self-study',
             modeExam: 'Exam / cert sprint',
@@ -806,7 +807,7 @@ window.TB_LOCALES.en = {
         },
         roadTripPlan: {
             title: 'Road Trip Plan',
-            desc: 'Text itinerary from origin to destination (no live traffic). Requires sign-in.',
+            desc: 'Text itinerary from origin to destination (no live traffic). No login required; daily limit applies.',
             origin: 'Origin',
             destination: 'Destination',
             days: 'Days',
@@ -815,7 +816,7 @@ window.TB_LOCALES.en = {
         },
         pcUpgradePlan: {
             title: 'Computer Upgrade',
-            desc: 'Upgrade and accessory ideas from your PC specs. Prices change. Requires sign-in.',
+            desc: 'Upgrade and accessory ideas from your PC specs. Prices change. No login required; daily limit applies.',
             specs: 'Current specs',
             specsPh: 'CPU / GPU / RAM / storage / PSU…',
             budget: 'Budget (optional)',
@@ -825,7 +826,7 @@ window.TB_LOCALES.en = {
         },
         seasonalFoodPlan: {
             title: 'Seasonal Food Plan',
-            desc: 'Weekly veggies, fruit or meat ideas by season. Requires sign-in.',
+            desc: 'Weekly veggies, fruit or meat ideas by season. No login required; daily limit applies.',
             season: 'Season',
             seasonAuto: 'Auto (current)',
             spring: 'Spring',
@@ -842,7 +843,7 @@ window.TB_LOCALES.en = {
         },
         outfitPlan: {
             title: 'Outfit by Weather',
-            desc: 'City (auto temp) or temperature → layering ideas. Requires sign-in.',
+            desc: 'City (auto temp) or temperature → layering ideas. No login required; daily limit applies.',
             city: 'City (optional)',
             cityPh: 'e.g. Shanghai',
             temp: 'Temperature °C (optional if city set)',
@@ -852,7 +853,7 @@ window.TB_LOCALES.en = {
         },
         dayTripPlan: {
             title: 'Day Trip Plan',
-            desc: 'Half-day or full-day local outing from city and interests. Requires sign-in.',
+            desc: 'Half-day or full-day local outing from city and interests. No login required; daily limit applies.',
             city: 'City / area',
             cityPh: 'e.g. Shanghai · Pudong',
             duration: 'Duration',
@@ -879,7 +880,7 @@ window.TB_LOCALES.en = {
         },
         savingsPlan: {
             title: 'Monthly Savings Plan',
-            desc: 'Budget outline from income, fixed costs, and a savings goal. Not financial advice. Requires sign-in.',
+            desc: 'Budget outline from income, fixed costs, and a savings goal. Not financial advice. No login required; daily limit applies.',
             income: 'Monthly income (approx.)',
             incomePh: 'e.g. 12000',
             fixed: 'Fixed expenses',
@@ -892,7 +893,7 @@ window.TB_LOCALES.en = {
         },
         interviewPlan: {
             title: 'Interview Prep',
-            desc: 'Paste a JD — get likely questions and story outlines. Requires sign-in.',
+            desc: 'Paste a JD — get likely questions and story outlines. No login required; daily limit applies.',
             role: 'Target role',
             rolePh: 'e.g. Frontend engineer',
             jd: 'Job description',
@@ -904,7 +905,7 @@ window.TB_LOCALES.en = {
         },
         familyMealPlan: {
             title: 'Family Meal Plan',
-            desc: '7-day meals plus a grocery list from household size and diet limits. Requires sign-in.',
+            desc: '7-day meals plus a grocery list from household size and diet limits. No login required; daily limit applies.',
             people: 'People to feed',
             allergies: 'Allergies / avoid (optional)',
             allergiesPh: 'Seafood, cilantro, peanuts…',
@@ -916,7 +917,7 @@ window.TB_LOCALES.en = {
 
         travelPackPlan: {
             title: 'Travel Packing',
-            desc: 'Categorized packing list from destination, days, and travel mode. Requires sign-in.',
+            desc: 'Categorized packing list from destination, days, and travel mode. No login required; daily limit applies.',
             destination: 'Destination',
             destinationPh: 'e.g. Chengdu / Osaka',
             days: 'Days',
@@ -929,7 +930,7 @@ window.TB_LOCALES.en = {
         },
         holidayStockPlan: {
             title: 'Holiday Stocking',
-            desc: 'Stocking and prep timeline for a holiday or long break. Requires sign-in.',
+            desc: 'Stocking and prep timeline for a holiday or long break. No login required; daily limit applies.',
             holiday: 'Holiday / break',
             holidayPh: 'Spring Festival / National Day…',
             days: 'Days at home',
@@ -941,7 +942,7 @@ window.TB_LOCALES.en = {
         },
         partyHostPlan: {
             title: 'Party Hosting',
-            desc: 'Menu, shopping list, and timeline from guest count and budget. Requires sign-in.',
+            desc: 'Menu, shopping list, and timeline from guest count and budget. No login required; daily limit applies.',
             occasion: 'Occasion',
             occasionPh: 'Birthday / housewarming / reunion…',
             guests: 'Guests',
@@ -954,7 +955,7 @@ window.TB_LOCALES.en = {
         },
         kidsWeekendPlan: {
             title: 'Kids Weekend',
-            desc: 'Weekend plan and materials by kids ages and city. Requires sign-in.',
+            desc: 'Weekend plan and materials by kids ages and city. No login required; daily limit applies.',
             ages: 'Kids ages',
             agesPh: 'e.g. 3 and 7',
             city: 'City / area',
@@ -968,7 +969,7 @@ window.TB_LOCALES.en = {
         },
         emergencyKitPlan: {
             title: 'Emergency Kit',
-            desc: 'Household emergency kit checklist by family size. Not professional disaster advice. Requires sign-in.',
+            desc: 'Household emergency kit checklist by family size. Not professional disaster advice. No login required; daily limit applies.',
             people: 'Household size',
             city: 'City (optional)',
             cityPh: 'e.g. Guangzhou',
@@ -981,7 +982,7 @@ window.TB_LOCALES.en = {
         },
         officeLunchPlan: {
             title: 'Office Lunch Week',
-            desc: '5-day office lunch rotation (bento / takeout / nearby). Requires sign-in.',
+            desc: '5-day office lunch rotation (bento / takeout / nearby). No login required; daily limit applies.',
             budget: 'Daily budget (approx.)',
             budgetPh: 'e.g. ¥25–40',
             style: 'Taste preference (optional)',
@@ -995,7 +996,7 @@ window.TB_LOCALES.en = {
 
         fitnessWeekPlan: {
             title: 'Fitness Starter Week',
-            desc: 'Beginner weekly workout outline. Not medical advice. Requires sign-in.',
+            desc: 'Beginner weekly workout outline. Not medical advice. No login required; daily limit applies.',
             level: 'Experience',
             levelPh: 'e.g. Beginner / back after a break',
             gear: 'Equipment',
@@ -1007,7 +1008,7 @@ window.TB_LOCALES.en = {
         },
         lowOilWeekPlan: {
             title: 'Low Sugar / Oil Week',
-            desc: 'One-week lighter meals and swaps. Not medical advice. Requires sign-in.',
+            desc: 'One-week lighter meals and swaps. Not medical advice. No login required; daily limit applies.',
             people: 'People',
             focus: 'Focus',
             focusPh: 'Less sugar / less oil / both',
@@ -1020,7 +1021,7 @@ window.TB_LOCALES.en = {
         },
         jobApplyWeekPlan: {
             title: 'Job Apply Week',
-            desc: 'Weekly apply rhythm, resume tweaks, and follow-ups. Requires sign-in.',
+            desc: 'Weekly apply rhythm, resume tweaks, and follow-ups. No login required; daily limit applies.',
             role: 'Target role',
             rolePh: 'Frontend / operations…',
             background: 'Background',
@@ -1033,7 +1034,7 @@ window.TB_LOCALES.en = {
         },
         dateNightPlan: {
             title: 'Date / Anniversary',
-            desc: 'Date or anniversary plan from city and budget. Requires sign-in.',
+            desc: 'Date or anniversary plan from city and budget. No login required; daily limit applies.',
             occasion: 'Occasion',
             occasionPh: 'Anniversary / first date…',
             city: 'City / area',
@@ -1047,7 +1048,7 @@ window.TB_LOCALES.en = {
         },
         petTravelPlan: {
             title: 'Pet Travel / Boarding',
-            desc: 'Checklist for pet travel or boarding. Requires sign-in.',
+            desc: 'Checklist for pet travel or boarding. No login required; daily limit applies.',
             pet: 'Pet',
             petPh: 'Cat 3y / medium dog…',
             mode: 'Mode',

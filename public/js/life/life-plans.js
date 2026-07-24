@@ -198,10 +198,9 @@
       });
     }
 
-    C.requireLogin(gate, app).then(function (user) {
-      if (!user) return;
-      loadStatus();
-    });
+    if (gate) gate.hidden = true;
+    if (app) app.hidden = false;
+    loadStatus();
   }
 
   function initDrugPage() {

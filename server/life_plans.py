@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 import httpx
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
@@ -25,6 +25,7 @@ router = APIRouter(prefix="/life-plans", tags=["life-plans"])
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
 LIMITS = {
     "life_plan": int(os.environ.get("LIFE_PLAN_LIMIT", "20")),
+    "life_plan_guest": int(os.environ.get("LIFE_PLAN_GUEST_LIMIT", "5")),
     "drug_label": int(os.environ.get("DRUG_LABEL_LIMIT", "10")),
 }
 MAX_UPLOAD = 8 * 1024 * 1024
@@ -62,14 +63,20 @@ def deepseek_configured() -> bool:
     return bool(DEEPSEEK_API_KEY)
 
 
-def _wire(get_conn, require_db, get_current_user):
+def _wire(get_conn, require_db, get_current_user, get_optional_user=None, get_client_ip=None):
     router.get_conn = get_conn  # type: ignore[attr-defined]
     router.require_db = require_db  # type: ignore[attr-defined]
     router.get_current_user = get_current_user  # type: ignore[attr-defined]
+    router.get_optional_user = get_optional_user or (lambda creds: None)  # type: ignore[attr-defined]
+    router.get_client_ip = get_client_ip or (lambda request: "unknown")  # type: ignore[attr-defined]
 
 
 def _user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     return router.get_current_user(creds)  # type: ignore[attr-defined]
+
+
+def _optional_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    return router.get_optional_user(creds)  # type: ignore[attr-defined]
 
 
 def _conn():
@@ -102,6 +109,123 @@ def ensure_quota_table(cur):
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+
+
+def _ensure_rate_table(cur) -> None:
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS recipe_rate_limits (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            limit_key VARCHAR(128) NOT NULL,
+            action_type VARCHAR(32) NOT NULL,
+            usage_date DATE NOT NULL,
+            usage_count INT NOT NULL DEFAULT 0,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uk_limit (limit_key, action_type, usage_date)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+
+
+def _life_plan_limit_key(user: Optional[dict], request: Request) -> str:
+    if user and user.get("id"):
+        return f"user:{int(user['id'])}"
+    return f"ip:{router.get_client_ip(request)}"  # type: ignore[attr-defined]
+
+
+def _life_plan_max(user: Optional[dict]) -> int:
+    if user and _is_admin(user):
+        return 0  # unlimited
+    if user:
+        return int(LIMITS.get("life_plan") or 0)
+    return int(LIMITS.get("life_plan_guest") or 0)
+
+
+def _consume_life_plan_quota(user: Optional[dict], request: Request) -> dict:
+    if user and _is_admin(user):
+        return _unlimited_quota()
+    max_count = _life_plan_max(user)
+    if max_count <= 0:
+        raise HTTPException(status_code=503, detail="This action is disabled")
+    limit_key = _life_plan_limit_key(user, request)
+    today = _today()
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_rate_table(cur)
+            cur.execute(
+                """
+                SELECT usage_count FROM recipe_rate_limits
+                WHERE limit_key=%s AND action_type=%s AND usage_date=%s
+                """,
+                (limit_key, "life_plan", today),
+            )
+            row = cur.fetchone()
+            current = int(row["usage_count"]) if row else 0
+            if current >= max_count:
+                raise HTTPException(
+                    status_code=429,
+                    detail=(
+                        "Daily limit reached. Please try again tomorrow or log in for a higher limit."
+                        if not user
+                        else "Daily limit reached. Please try again tomorrow."
+                    ),
+                )
+            if row:
+                cur.execute(
+                    """
+                    UPDATE recipe_rate_limits SET usage_count = usage_count + 1
+                    WHERE limit_key=%s AND action_type=%s AND usage_date=%s
+                    """,
+                    (limit_key, "life_plan", today),
+                )
+            else:
+                cur.execute(
+                    """
+                    INSERT INTO recipe_rate_limits (limit_key, action_type, usage_date, usage_count)
+                    VALUES (%s, %s, %s, 1)
+                    """,
+                    (limit_key, "life_plan", today),
+                )
+            used = current + 1
+        return {
+            "used": used,
+            "limit": max_count,
+            "remaining": max(0, max_count - used),
+            "guest": not bool(user),
+        }
+    finally:
+        conn.close()
+
+
+def _peek_life_plan_quota(user: Optional[dict], request: Request) -> dict:
+    if user and _is_admin(user):
+        return _unlimited_quota()
+    max_count = _life_plan_max(user)
+    today = _today()
+    limit_key = _life_plan_limit_key(user, request)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_rate_table(cur)
+            cur.execute(
+                """
+                SELECT usage_count FROM recipe_rate_limits
+                WHERE limit_key=%s AND action_type=%s AND usage_date=%s
+                """,
+                (limit_key, "life_plan", today),
+            )
+            row = cur.fetchone()
+            used = int(row["usage_count"]) if row else 0
+        return {
+            "used": used,
+            "limit": max_count,
+            "remaining": max(0, max_count - used),
+            "action": "life_plan",
+            "guest": not bool(user),
+        }
+    finally:
+        conn.close()
 
 
 def _consume_quota(user: dict, action: str) -> dict:
@@ -434,21 +558,31 @@ def _clean_fields(fields: dict) -> dict:
 
 
 @router.get("/status")
-def life_plans_status(user: dict = Depends(_user)):
+def life_plans_status(
+    request: Request,
+    user: Optional[dict] = Depends(_optional_user),
+):
+    quotas = {
+        "life_plan": _peek_life_plan_quota(user, request),
+    }
+    if user:
+        quotas["drug_label"] = _peek_quota(user, "drug_label")
     return {
         "deepseekConfigured": deepseek_configured(),
         "tencentConfigured": tencent_configured(),
-        "isAdmin": _is_admin(user),
-        "quotas": {
-            "life_plan": _peek_quota(user, "life_plan"),
-            "drug_label": _peek_quota(user, "drug_label"),
-        },
+        "isAdmin": bool(user and _is_admin(user)),
+        "loggedIn": bool(user),
+        "quotas": quotas,
         "kinds": sorted(PLAN_KINDS),
     }
 
 
 @router.post("/generate")
-async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user)):
+async def life_plans_generate(
+    body: PlanGenerateBody,
+    request: Request,
+    user: Optional[dict] = Depends(_optional_user),
+):
     if not deepseek_configured():
         raise HTTPException(
             status_code=503,
@@ -479,7 +613,7 @@ async def life_plans_generate(body: PlanGenerateBody, user: dict = Depends(_user
     if kind == "seasonal_food" and not fields.get("season"):
         fields["season"] = _current_season()
 
-    quota = _consume_quota(user, "life_plan")
+    quota = _consume_life_plan_quota(user, request)
     locale = _resolve_plan_locale(body.locale or "zh-CN", fields)
     user_payload = {
         "kind": kind,

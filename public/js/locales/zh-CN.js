@@ -776,11 +776,12 @@ window.TB_LOCALES['zh-CN'] = {
             deepseekMissing: '服务端尚未配置 DeepSeek（DEEPSEEK_API_KEY）。',
             needFields: '请填写表单内容',
             invalidKind: '无效的计划类型',
-            genFailed: '计划生成失败，请稍后重试'
+            genFailed: '计划生成失败，请稍后重试',
+            dailyLimitGuest: '今日免费次数已用完。登录后额度更高，或明天再试。'
         },
         weightLossPlan: {
             title: '减肥计划',
-            desc: '根据身高体重与目标生成周计划。非医疗建议，需登录。',
+            desc: '根据身高体重与目标生成周计划。非医疗建议。免登录，按日限次。',
             height: '身高（厘米）',
             weight: '当前体重（公斤）',
             target: '目标体重（公斤）',
@@ -791,7 +792,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         studyPlan: {
             title: '自学计划',
-            desc: '常规自学、考证冲刺或口语提升计划。需登录。',
+            desc: '常规自学、考证冲刺或口语提升计划。免登录，按日限次。',
             mode: '计划类型',
             modeGeneral: '常规自学',
             modeExam: '考证 / 考试冲刺',
@@ -805,7 +806,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         roadTripPlan: {
             title: '自驾攻略',
-            desc: '出发地与目的地生成行程文案（不含实时路况）。需登录。',
+            desc: '出发地与目的地生成行程文案（不含实时路况）。免登录，按日限次。',
             origin: '出发地',
             destination: '目的地',
             days: '天数',
@@ -814,7 +815,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         pcUpgradePlan: {
             title: '电脑升级',
-            desc: '根据现有电脑配置建议配件或升级方案。价格会变动。需登录。',
+            desc: '根据现有电脑配置建议配件或升级方案。价格会变动。免登录，按日限次。',
             specs: '当前配置',
             specsPh: 'CPU / 显卡 / 内存 / 硬盘 / 电源…',
             budget: '预算（可选）',
@@ -824,7 +825,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         seasonalFoodPlan: {
             title: '时令食材',
-            desc: '按季节生成一周青菜 / 水果 / 肉类参考。需登录。',
+            desc: '按季节生成一周青菜 / 水果 / 肉类参考。免登录，按日限次。',
             season: '季节',
             seasonAuto: '自动（当前）',
             spring: '春',
@@ -841,7 +842,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         outfitPlan: {
             title: '气温穿搭',
-            desc: '填写城市（自动取温）或温度，生成穿搭建议。需登录。',
+            desc: '填写城市（自动取温）或温度，生成穿搭建议。免登录，按日限次。',
             city: '城市（可选）',
             cityPh: '例如：上海',
             temp: '温度 ℃（有城市时可留空）',
@@ -851,7 +852,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         dayTripPlan: {
             title: '周末一日游',
-            desc: '按城市与兴趣生成半天/一天本地出行安排。需登录。',
+            desc: '按城市与兴趣生成半天/一天本地出行安排。免登录，按日限次。',
             city: '城市 / 区域',
             cityPh: '例如：上海·浦东',
             duration: '时长',
@@ -878,7 +879,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         savingsPlan: {
             title: '月度省钱',
-            desc: '按收入与固定支出生成本月预算与可砍项。非理财建议，需登录。',
+            desc: '按收入与固定支出生成本月预算与可砍项。非理财建议。免登录，按日限次。',
             income: '月收入（约）',
             incomePh: '例如：12000',
             fixed: '固定支出',
@@ -891,7 +892,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         interviewPlan: {
             title: '面试提纲',
-            desc: '粘贴岗位说明，生成可能问题与经历故事骨架。需登录。',
+            desc: '粘贴岗位说明，生成可能问题与经历故事骨架。免登录，按日限次。',
             role: '目标岗位',
             rolePh: '例如：前端开发',
             jd: '岗位说明 / JD',
@@ -903,7 +904,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         familyMealPlan: {
             title: '家庭周菜单',
-            desc: '按人数与忌口生成一周菜谱与采购清单。需登录。',
+            desc: '按人数与忌口生成一周菜谱与采购清单。免登录，按日限次。',
             people: '用餐人数',
             allergies: '忌口 / 过敏（可选）',
             allergiesPh: '海鲜、香菜、花生…',
@@ -915,7 +916,7 @@ window.TB_LOCALES['zh-CN'] = {
 
         travelPackPlan: {
             title: '旅行打包',
-            desc: '按目的地、天数与出行方式生成分类行李清单。需登录。',
+            desc: '按目的地、天数与出行方式生成分类行李清单。免登录，按日限次。',
             destination: '目的地',
             destinationPh: '例如：成都 / 日本大阪',
             days: '出行天数',
@@ -928,7 +929,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         holidayStockPlan: {
             title: '长假备货',
-            desc: '按节日或长假天数与人数生成备货与备菜节奏。需登录。',
+            desc: '按节日或长假天数与人数生成备货与备菜节奏。免登录，按日限次。',
             holiday: '节日 / 假期',
             holidayPh: '春节 / 国庆 / 五一…',
             days: '在家天数',
@@ -940,7 +941,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         partyHostPlan: {
             title: '聚会承办',
-            desc: '按人数与预算生成菜单、采购与时间表。需登录。',
+            desc: '按人数与预算生成菜单、采购与时间表。免登录，按日限次。',
             occasion: '聚会场合',
             occasionPh: '生日 / 乔迁 / 同学聚会…',
             guests: '人数',
@@ -953,7 +954,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         kidsWeekendPlan: {
             title: '带娃周末',
-            desc: '按孩子年龄与城市生成周末安排与物料清单。需登录。',
+            desc: '按孩子年龄与城市生成周末安排与物料清单。免登录，按日限次。',
             ages: '孩子年龄',
             agesPh: '例如：3 岁、7 岁',
             city: '城市 / 区域',
@@ -967,7 +968,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         emergencyKitPlan: {
             title: '家庭应急包',
-            desc: '按家庭人数生成应急物资清单。非专业救援指导，需登录。',
+            desc: '按家庭人数生成应急物资清单。非专业救援指导。免登录，按日限次。',
             people: '家庭人数',
             city: '所在城市（可选）',
             cityPh: '例如：广州',
@@ -980,7 +981,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         officeLunchPlan: {
             title: '办公室午餐周',
-            desc: '生成一周上班午餐轮换（便当/外卖/附近简餐）。需登录。',
+            desc: '生成一周上班午餐轮换（便当/外卖/附近简餐）。免登录，按日限次。',
             budget: '每日预算（大约）',
             budgetPh: '例如：25–40 元',
             style: '口味偏好（可选）',
@@ -994,7 +995,7 @@ window.TB_LOCALES['zh-CN'] = {
 
         fitnessWeekPlan: {
             title: '健身入门周',
-            desc: '零基础或复训一周训练安排。非医疗建议，需登录。',
+            desc: '零基础或复训一周训练安排。非医疗建议。免登录，按日限次。',
             level: '经验水平',
             levelPh: '例如：零基础 / 停训后重启',
             gear: '器械条件',
@@ -1006,7 +1007,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         lowOilWeekPlan: {
             title: '戒糖少油一周',
-            desc: '一周轻负担餐食与替换清单。非医疗建议，需登录。',
+            desc: '一周轻负担餐食与替换清单。非医疗建议。免登录，按日限次。',
             people: '用餐人数',
             focus: '侧重点',
             focusPh: '少糖 / 少油 / 两者都要',
@@ -1019,7 +1020,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         jobApplyWeekPlan: {
             title: '求职投递周',
-            desc: '一周投递节奏、简历要点与跟进话术。需登录。',
+            desc: '一周投递节奏、简历要点与跟进话术。免登录，按日限次。',
             role: '目标岗位',
             rolePh: '前端 / 运营 / 产品…',
             background: '个人背景',
@@ -1032,7 +1033,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         dateNightPlan: {
             title: '约会纪念日',
-            desc: '按城市与预算生成约会或纪念日安排。需登录。',
+            desc: '按城市与预算生成约会或纪念日安排。免登录，按日限次。',
             occasion: '场合',
             occasionPh: '纪念日 / 初次约会…',
             city: '城市 / 区域',
@@ -1046,7 +1047,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         petTravelPlan: {
             title: '宠物出行托养',
-            desc: '出行或托养检查清单与物品准备。需登录。',
+            desc: '出行或托养检查清单与物品准备。免登录，按日限次。',
             pet: '宠物情况',
             petPh: '猫 3 岁 / 中型犬…',
             mode: '方式',

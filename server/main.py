@@ -271,8 +271,7 @@ wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
 wire_image(get_conn, require_db, get_current_user)
 app.include_router(image_router)
-wire_life_plans(get_conn, require_db, get_current_user)
-app.include_router(life_plans_router)
+# life_plans wired after get_optional_user + _client_ip
 app.include_router(life_router)
 app.include_router(watermark_router)
 if wan_router is not None:
@@ -320,6 +319,9 @@ def _client_ip(request: Request) -> str:
     if request.client and request.client.host:
         return request.client.host
     return "unknown"
+
+wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
+app.include_router(life_plans_router)
 
 
 def _today_utc() -> str:
