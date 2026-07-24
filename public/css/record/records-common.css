@@ -235,6 +235,35 @@
   font-weight: 700;
 }
 
+.rec-rent-status {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
+.rec-rent-status.is-paid {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.rec-rent-status.is-due {
+  color: #a16207;
+  background: #fef9c3;
+}
+
+.rec-rent-status.is-overdue {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.rec-status-line {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
 #detail-view .rec-progress {
   margin: 8px 0 16px;
   max-width: 420px;

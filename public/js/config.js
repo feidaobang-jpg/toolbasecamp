@@ -138,6 +138,7 @@ const toolsConfig = {
                 { titleKey: 'tools.importantDays.title', url: 'html/record/important-days.html', authRequired: true },
                 { titleKey: 'tools.dailyClock.title', url: 'html/record/daily-clock.html', authRequired: true },
                 { titleKey: 'tools.deposit.title', url: 'html/record/deposit.html', authRequired: true },
+                { titleKey: 'tools.rent.title', url: 'html/record/rent.html', authRequired: true },
                 { titleKey: 'tools.goods.title', url: 'html/record/goods.html', authRequired: true }
             ]
         },

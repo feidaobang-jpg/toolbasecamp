@@ -78,6 +78,15 @@
             'Rating must be between 0 and 5': 'tools.records.ratingRange',
             'Rating must be an integer from 0 to 5': 'tools.records.ratingRange',
             'Invalid text': 'tools.todoList.emptyText',
+            'Invalid title': 'tools.rent.needTitle',
+            'Invalid due_day': 'tools.rent.invalidDueDay',
+            'due_day must be 1–28': 'tools.rent.invalidDueDay',
+            'Invalid period (use YYYY-MM)': 'tools.rent.needPeriod',
+            'Payment for this period already exists': 'tools.rent.periodExists',
+            'note too long': 'tools.records.remarkTooLong',
+            'rent_amount must be greater than 0': 'tools.records.amountPositive',
+            'Invalid rent_amount': 'tools.records.invalidAmount',
+            'Invalid tenant_name': 'tools.rent.invalidTenant',
             'Invalid status': 'tools.todoList.invalidStatus'
         };
         if (map[msg]) return tr(map[msg]);

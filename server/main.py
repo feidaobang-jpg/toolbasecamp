@@ -564,6 +564,7 @@ def health():
         "recipe_api": "/recipe/generate" in paths and "/recipe/detect" in paths,
         "records_api": "/records/days" in paths,
         "records_todos": "/records/todos" in paths,
+        "records_rents": "/records/rents" in paths,
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,
         "records_clock_logs": "/records/clocks/{clock_id}/logs" in paths,
         "image_api": "/image/ocr-text" in paths,

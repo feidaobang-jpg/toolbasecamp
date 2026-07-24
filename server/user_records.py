@@ -1,4 +1,4 @@
-"""Private per-user record tools: clocks, important days, deposits, goods, todos."""
+"""Private per-user record tools: clocks, important days, deposits, goods, todos, rents."""
 
 from __future__ import annotations
 
@@ -206,6 +206,42 @@ def ensure_record_tables(cur):
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_rents (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            user_id BIGINT NOT NULL,
+            title VARCHAR(80) NOT NULL,
+            tenant_name VARCHAR(80) NOT NULL DEFAULT '',
+            rent_amount DECIMAL(14,2) NOT NULL,
+            due_day TINYINT NOT NULL DEFAULT 1,
+            note VARCHAR(500) NOT NULL DEFAULT '',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_rents_user (user_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_rent_payments (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            rent_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            period CHAR(7) NOT NULL,
+            amount DECIMAL(14,2) NOT NULL,
+            note VARCHAR(200) NOT NULL DEFAULT '',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_rent_period (rent_id, period),
+            INDEX idx_rent_pay_rent (rent_id),
+            FOREIGN KEY (rent_id) REFERENCES record_rents(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+
+
 def _iso(value: Any) -> Optional[str]:
     if value is None:
         return None
@@ -868,6 +904,362 @@ def delete_deposit(deposit_id: int, user: dict = Depends(_user)):
             if cur.rowcount == 0:
                 raise HTTPException(status_code=404, detail="Not found")
         return {"ok": True}
+    finally:
+        conn.close()
+
+
+# ---------- Rent collection ----------
+
+RENT_DUE_DAY_MIN = 1
+RENT_DUE_DAY_MAX = 28
+RENT_PERIOD_RE = re.compile(r"^\d{4}-(0[1-9]|1[0-2])$")
+RENT_NOTE_MAX = 500
+RENT_PAY_NOTE_MAX = 200
+
+
+class RentCreateBody(BaseModel):
+    title: str
+    tenant_name: str = ""
+    rent_amount: str
+    due_day: int = 1
+    note: str = ""
+
+
+class RentUpdateBody(BaseModel):
+    title: str
+    tenant_name: str = ""
+    rent_amount: str
+    due_day: int = 1
+    note: str = ""
+
+
+class RentPaymentBody(BaseModel):
+    period: str
+    amount: Optional[str] = None
+    note: str = ""
+
+
+def _parse_due_day(raw: Any) -> int:
+    try:
+        day = int(raw)
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail="Invalid due_day") from exc
+    if day < RENT_DUE_DAY_MIN or day > RENT_DUE_DAY_MAX:
+        raise HTTPException(status_code=400, detail="due_day must be 1–28")
+    return day
+
+
+def _parse_period(raw: Any) -> str:
+    period = (str(raw or "")).strip()
+    if not RENT_PERIOD_RE.match(period):
+        raise HTTPException(status_code=400, detail="Invalid period (use YYYY-MM)")
+    return period
+
+
+def _current_period(today: Optional[date] = None) -> str:
+    d = today or date.today()
+    return f"{d.year:04d}-{d.month:02d}"
+
+
+def _rent_status(due_day: int, paid_periods: set, today: Optional[date] = None) -> str:
+    """paid | due | overdue for the current calendar month."""
+    d = today or date.today()
+    period = _current_period(d)
+    if period in paid_periods:
+        return "paid"
+    if d.day > int(due_day):
+        return "overdue"
+    return "due"
+
+
+def _serialize_rent_payment(row: dict) -> dict:
+    return {
+        "id": row["id"],
+        "period": row["period"],
+        "amount": _money(row["amount"]),
+        "note": row.get("note") or "",
+        "time": _iso(row.get("created_at")),
+    }
+
+
+def _serialize_rent(
+    row: dict,
+    *,
+    paid_periods: Optional[set] = None,
+    payments: Optional[List[dict]] = None,
+    today: Optional[date] = None,
+) -> dict:
+    periods = paid_periods if paid_periods is not None else set()
+    status = _rent_status(int(row["due_day"]), periods, today=today)
+    out = {
+        "id": row["id"],
+        "title": row["title"],
+        "tenantName": row.get("tenant_name") or "",
+        "rentAmount": _money(row["rent_amount"]),
+        "dueDay": int(row["due_day"]),
+        "note": row.get("note") or "",
+        "status": status,
+        "currentPeriod": _current_period(today),
+        "createdAt": _iso(row.get("created_at")),
+        "updatedAt": _iso(row.get("updated_at")),
+    }
+    if payments is not None:
+        out["payments"] = payments
+    return out
+
+
+def _paid_periods_for(cur, *, rent_id: int, user_id: int) -> set:
+    cur.execute(
+        """
+        SELECT period FROM record_rent_payments
+        WHERE rent_id=%s AND user_id=%s
+        """,
+        (rent_id, user_id),
+    )
+    return {r["period"] for r in (cur.fetchall() or [])}
+
+
+@router.get("/rents")
+def list_rents(user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT * FROM record_rents
+                WHERE user_id=%s
+                ORDER BY updated_at DESC, id DESC
+                """,
+                (user["id"],),
+            )
+            rows = cur.fetchall() or []
+            items = []
+            rank = {"overdue": 0, "due": 1, "paid": 2}
+            for row in rows:
+                periods = _paid_periods_for(cur, rent_id=row["id"], user_id=user["id"])
+                items.append(_serialize_rent(row, paid_periods=periods))
+            items.sort(key=lambda x: (rank.get(x["status"], 9), x["title"].lower()))
+        return {"items": items}
+    finally:
+        conn.close()
+
+
+@router.post("/rents")
+def create_rent(body: RentCreateBody, user: dict = Depends(_user)):
+    title = (body.title or "").strip()
+    if not title or len(title) > NAME_MAX:
+        raise HTTPException(status_code=400, detail="Invalid title")
+    tenant = (body.tenant_name or "").strip()
+    if len(tenant) > NAME_MAX:
+        raise HTTPException(status_code=400, detail="Invalid tenant_name")
+    amount = _parse_money(body.rent_amount, field="rent_amount")
+    due_day = _parse_due_day(body.due_day)
+    note = (body.note or "").strip()
+    if len(note) > RENT_NOTE_MAX:
+        raise HTTPException(status_code=400, detail="note too long")
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO record_rents (user_id, title, tenant_name, rent_amount, due_day, note)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """,
+                (user["id"], title, tenant, amount, due_day, note),
+            )
+            new_id = cur.lastrowid
+            cur.execute("SELECT * FROM record_rents WHERE id=%s", (new_id,))
+            return _serialize_rent(cur.fetchone(), paid_periods=set(), payments=[])
+    finally:
+        conn.close()
+
+
+@router.get("/rents/{rent_id}")
+def get_rent(rent_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM record_rents WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Not found")
+            periods = _paid_periods_for(cur, rent_id=rent_id, user_id=user["id"])
+            cur.execute(
+                """
+                SELECT * FROM record_rent_payments
+                WHERE rent_id=%s AND user_id=%s
+                ORDER BY period DESC, id DESC
+                LIMIT 120
+                """,
+                (rent_id, user["id"]),
+            )
+            pays = [_serialize_rent_payment(p) for p in (cur.fetchall() or [])]
+        return _serialize_rent(row, paid_periods=periods, payments=pays)
+    finally:
+        conn.close()
+
+
+@router.put("/rents/{rent_id}")
+def update_rent(rent_id: int, body: RentUpdateBody, user: dict = Depends(_user)):
+    title = (body.title or "").strip()
+    if not title or len(title) > NAME_MAX:
+        raise HTTPException(status_code=400, detail="Invalid title")
+    tenant = (body.tenant_name or "").strip()
+    if len(tenant) > NAME_MAX:
+        raise HTTPException(status_code=400, detail="Invalid tenant_name")
+    amount = _parse_money(body.rent_amount, field="rent_amount")
+    due_day = _parse_due_day(body.due_day)
+    note = (body.note or "").strip()
+    if len(note) > RENT_NOTE_MAX:
+        raise HTTPException(status_code=400, detail="note too long")
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE record_rents
+                SET title=%s, tenant_name=%s, rent_amount=%s, due_day=%s, note=%s
+                WHERE id=%s AND user_id=%s
+                """,
+                (title, tenant, amount, due_day, note, rent_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute(
+                "SELECT * FROM record_rents WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            row = cur.fetchone()
+            periods = _paid_periods_for(cur, rent_id=rent_id, user_id=user["id"])
+            cur.execute(
+                """
+                SELECT * FROM record_rent_payments
+                WHERE rent_id=%s AND user_id=%s
+                ORDER BY period DESC, id DESC
+                LIMIT 120
+                """,
+                (rent_id, user["id"]),
+            )
+            pays = [_serialize_rent_payment(p) for p in (cur.fetchall() or [])]
+        return _serialize_rent(row, paid_periods=periods, payments=pays)
+    finally:
+        conn.close()
+
+
+@router.delete("/rents/{rent_id}")
+def delete_rent(rent_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM record_rents WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+        return {"ok": True}
+    finally:
+        conn.close()
+
+
+@router.post("/rents/{rent_id}/payments")
+def create_rent_payment(rent_id: int, body: RentPaymentBody, user: dict = Depends(_user)):
+    period = _parse_period(body.period)
+    note = (body.note or "").strip()
+    if len(note) > RENT_PAY_NOTE_MAX:
+        raise HTTPException(status_code=400, detail="note too long")
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM record_rents WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Not found")
+            if body.amount is None or str(body.amount).strip() == "":
+                amount = Decimal(str(row["rent_amount"]))
+            else:
+                amount = _parse_money(body.amount)
+            cur.execute(
+                "SELECT id FROM record_rent_payments WHERE rent_id=%s AND period=%s",
+                (rent_id, period),
+            )
+            if cur.fetchone():
+                raise HTTPException(status_code=400, detail="Payment for this period already exists")
+            cur.execute(
+                """
+                INSERT INTO record_rent_payments (rent_id, user_id, period, amount, note)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (rent_id, user["id"], period, amount, note),
+            )
+            cur.execute(
+                "UPDATE record_rents SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
+                (rent_id,),
+            )
+            periods = _paid_periods_for(cur, rent_id=rent_id, user_id=user["id"])
+            cur.execute(
+                """
+                SELECT * FROM record_rent_payments
+                WHERE rent_id=%s AND user_id=%s
+                ORDER BY period DESC, id DESC
+                LIMIT 120
+                """,
+                (rent_id, user["id"]),
+            )
+            pays = [_serialize_rent_payment(p) for p in (cur.fetchall() or [])]
+            cur.execute(
+                "SELECT * FROM record_rents WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            row = cur.fetchone()
+        return _serialize_rent(row, paid_periods=periods, payments=pays)
+    finally:
+        conn.close()
+
+
+@router.delete("/rents/{rent_id}/payments/{payment_id}")
+def delete_rent_payment(rent_id: int, payment_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                DELETE FROM record_rent_payments
+                WHERE id=%s AND rent_id=%s AND user_id=%s
+                """,
+                (payment_id, rent_id, user["id"]),
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute(
+                "UPDATE record_rents SET updated_at=CURRENT_TIMESTAMP WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            cur.execute(
+                "SELECT * FROM record_rents WHERE id=%s AND user_id=%s",
+                (rent_id, user["id"]),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Not found")
+            periods = _paid_periods_for(cur, rent_id=rent_id, user_id=user["id"])
+            cur.execute(
+                """
+                SELECT * FROM record_rent_payments
+                WHERE rent_id=%s AND user_id=%s
+                ORDER BY period DESC, id DESC
+                LIMIT 120
+                """,
+                (rent_id, user["id"]),
+            )
+            pays = [_serialize_rent_payment(p) for p in (cur.fetchall() or [])]
+        return _serialize_rent(row, paid_periods=periods, payments=pays)
     finally:
         conn.close()
 

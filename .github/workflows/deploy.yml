@@ -216,7 +216,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); assert '/life-plans/generate' in paths and '/life-plans/status' in paths and '/life-plans/drug-label' in paths, 'missing life-plans routes: ' + str([p for p in paths if 'life' in p]); from life_plans import PLAN_KINDS; assert 'day_trip' in PLAN_KINDS and 'travel_pack' in PLAN_KINDS and 'fitness_week' in PLAN_KINDS and 'job_apply_week' in PLAN_KINDS and 'pet_travel' in PLAN_KINDS and 'shopping' not in PLAN_KINDS and 'wishlist' not in PLAN_KINDS, 'unexpected life-plan kinds: ' + str(sorted(PLAN_KINDS)); import wan_video; assert wan_video.wan_configured or True"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/rents' in paths, 'missing rents routes: ' + str([p for p in paths if 'rent' in p or 'record' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); assert '/life-plans/generate' in paths and '/life-plans/status' in paths and '/life-plans/drug-label' in paths, 'missing life-plans routes: ' + str([p for p in paths if 'life' in p]); from life_plans import PLAN_KINDS; assert 'day_trip' in PLAN_KINDS and 'travel_pack' in PLAN_KINDS and 'fitness_week' in PLAN_KINDS and 'job_apply_week' in PLAN_KINDS and 'pet_travel' in PLAN_KINDS and 'shopping' not in PLAN_KINDS and 'wishlist' not in PLAN_KINDS, 'unexpected life-plan kinds: ' + str(sorted(PLAN_KINDS)); import wan_video; assert wan_video.wan_configured or True"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -299,6 +299,7 @@ jobs:
             if echo "$HEALTH_JSON" | grep -F '"recipe_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_todos":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"records_rents":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null \
@@ -329,6 +330,8 @@ jobs:
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "health after fix: $HEALTH_JSON"
             echo "$HEALTH_JSON" | grep -F '"records_api":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"records_todos":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"records_rents":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_clock_logs":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"watermark_api":true' >/dev/null || exit 1
@@ -352,6 +355,12 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/todos' >/dev/null || exit 1
+          }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/rents' >/dev/null || {
+            echo "=== openapi missing /records/rents — restarting records API ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-records-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/rents' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/wan/i2v/submit' >/dev/null || {
             echo "=== openapi missing /wan/i2v/submit — killing orphans and restarting ==="
@@ -554,11 +563,12 @@ jobs:
           echo ""
           if echo "$HEALTH" | grep -F '"records_api":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_todos":true' >/dev/null \
+            && echo "$HEALTH" | grep -F '"records_rents":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_logs":true' >/dev/null \
             && [[ "$DAYS_CODE" != "404" && "$DAYS_CODE" != "000" ]] \
             && [[ "$TODOS_CODE" != "404" && "$TODOS_CODE" != "000" ]]; then
-            echo "Records API public OK (incl. todos + clock reset/logs flags)."
+            echo "Records API public OK (incl. todos + rents + clock reset/logs flags)."
             exit 0
           fi
           echo "::warning:: public records API incomplete — forcing remote fix-records-api.sh"
@@ -579,6 +589,10 @@ jobs:
           fi
           if ! echo "$HEALTH" | grep -F '"records_todos":true' >/dev/null; then
             echo "::error:: public health still missing records_todos after fix — API process stale"
+            exit 1
+          fi
+          if ! echo "$HEALTH" | grep -F '"records_rents":true' >/dev/null; then
+            echo "::error:: public health still missing records_rents after fix — API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null; then
