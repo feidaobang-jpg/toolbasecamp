@@ -768,7 +768,7 @@ window.TB_LOCALES['zh-CN'] = {
             copyFailed: '复制失败，请手动选择复制'
         },
         lifePlans: {
-            generate: '生成计划',
+            generate: '生成',
             clear: '清除',
             copy: '复制',
             copied: '已复制',

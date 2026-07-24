@@ -11,6 +11,7 @@ alwaysApply: true
 - **唯一样式源**：`public/css/base.css` 的 `.tb-btn`（蓝色 `#2563eb`、圆角胶囊）。
 - **禁止**在页面 CSS 里给 `.tb-btn` 改背景色（绿/红/灰等）。布局可用 flex/grid，不要覆盖 `background` / `color`。
 - 操作区容器用 `docs-common.css` 的 `.action-row`，不要为单页再造一套按钮类名。
+- **文案：主操作「生成」一律短写**。不要用「生成计划 / 生成菜单 / 生成穿搭」等「生成 + 产物名」；中文键值就写 `生成`，英文 `Generate`。菜谱等需区分产物的例外（如「生成菜谱」）须用户明确要求后再加后缀。
 
 ```html
 <!-- ✅ -->
