@@ -1167,6 +1167,7 @@ def delete_rent(rent_id: int, user: dict = Depends(_user)):
 
 @router.post("/rents/{rent_id}/payments")
 def create_rent_payment(rent_id: int, body: RentPaymentBody, user: dict = Depends(_user)):
+    """Create or update payment for a period (upsert)."""
     period = _parse_period(body.period)
     note = (body.note or "").strip()
     if len(note) > RENT_PAY_NOTE_MAX:
@@ -1186,18 +1187,27 @@ def create_rent_payment(rent_id: int, body: RentPaymentBody, user: dict = Depend
             else:
                 amount = _parse_money(body.amount)
             cur.execute(
-                "SELECT id FROM record_rent_payments WHERE rent_id=%s AND period=%s",
-                (rent_id, period),
+                "SELECT id FROM record_rent_payments WHERE rent_id=%s AND period=%s AND user_id=%s",
+                (rent_id, period, user["id"]),
             )
-            if cur.fetchone():
-                raise HTTPException(status_code=400, detail="Payment for this period already exists")
-            cur.execute(
-                """
-                INSERT INTO record_rent_payments (rent_id, user_id, period, amount, note)
-                VALUES (%s, %s, %s, %s, %s)
-                """,
-                (rent_id, user["id"], period, amount, note),
-            )
+            existing = cur.fetchone()
+            if existing:
+                cur.execute(
+                    """
+                    UPDATE record_rent_payments
+                    SET amount=%s, note=%s
+                    WHERE id=%s AND rent_id=%s AND user_id=%s
+                    """,
+                    (amount, note, existing["id"], rent_id, user["id"]),
+                )
+            else:
+                cur.execute(
+                    """
+                    INSERT INTO record_rent_payments (rent_id, user_id, period, amount, note)
+                    VALUES (%s, %s, %s, %s, %s)
+                    """,
+                    (rent_id, user["id"], period, amount, note),
+                )
             cur.execute(
                 "UPDATE record_rents SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
                 (rent_id,),

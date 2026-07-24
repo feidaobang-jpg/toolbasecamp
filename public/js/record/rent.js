@@ -27,11 +27,25 @@ document.addEventListener('DOMContentLoaded', function () {
     var payList = document.getElementById('pay-list');
     var payEmpty = document.getElementById('pay-empty');
     var loginLink = document.getElementById('login-link');
+    var payBtn = document.getElementById('pay-btn');
     var currentId = null;
     var currentData = null;
     var editingId = null;
 
     loginLink.href = R.loginUrl();
+
+    function paymentForPeriod(period) {
+        var list = (currentData && currentData.payments) || [];
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].period === period) return list[i];
+        }
+        return null;
+    }
+
+    function syncPayButton() {
+        var existing = paymentForPeriod((payPeriod.value || '').trim());
+        payBtn.textContent = existing ? tr('tools.rent.updatePayment') : tr('tools.rent.submitPayment');
+    }
 
     function statusLabel(status) {
         if (status === 'paid') return tr('tools.rent.statusPaid');
@@ -134,8 +148,15 @@ document.addEventListener('DOMContentLoaded', function () {
             detailNote.textContent = '';
         }
         payPeriod.value = data.currentPeriod || '';
-        payAmount.value = '';
-        payNote.value = '';
+        var existing = paymentForPeriod(payPeriod.value);
+        if (existing) {
+            payAmount.value = existing.amount || '';
+            payNote.value = existing.note || '';
+        } else {
+            payAmount.value = '';
+            payNote.value = '';
+        }
+        syncPayButton();
         renderPayments(data.payments || []);
         R.setError(detailError, '');
     }
@@ -276,6 +297,18 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(function (data) { applyDetail(data); })
             .catch(function (e) { R.setError(detailError, e.message); });
+    });
+    payPeriod.addEventListener('change', function () {
+        var existing = paymentForPeriod((payPeriod.value || '').trim());
+        if (existing) {
+            payAmount.value = existing.amount || '';
+            payNote.value = existing.note || '';
+        } else {
+            payAmount.value = '';
+            payNote.value = '';
+        }
+        syncPayButton();
+        R.setError(detailError, '');
     });
 
     R.requireLogin(gate, app).then(function (user) {

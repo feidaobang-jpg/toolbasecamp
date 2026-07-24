@@ -1429,6 +1429,7 @@ window.TB_LOCALES.en = {
             payAmountLabel: 'Amount (blank = monthly rent)',
             payNoteLabel: 'Payment note',
             submitPayment: 'Mark paid',
+            updatePayment: 'Update payment',
             history: 'Payment history',
             noHistory: 'No payments yet.',
             statusPaid: 'Paid this month',

@@ -1428,6 +1428,7 @@ window.TB_LOCALES['zh-CN'] = {
             payAmountLabel: '实收金额（留空=月租）',
             payNoteLabel: '收款备注',
             submitPayment: '标记已收',
+            updatePayment: '更新收款',
             history: '收款记录',
             noHistory: '暂无收款记录',
             statusPaid: '本月已收',
