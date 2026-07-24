@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JWT Decode - Tool Basecamp</title>
+  <meta name="description" content="Decode JWT header and payload without verification.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.jwtDecode.title">JWT Decode</h1>
+        <p data-i18n="tools.jwtDecode.desc">Paste a JWT to decode its header and payload as JSON (no signature verification).</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tip-box">
+          <b data-i18n="tools.jwtDecode.note">Note:</b>
+          <span data-i18n="tools.jwtDecode.noteBody">Decoding is for inspection only. Never trust unverified token contents.</span>
+        </div>
+
+        <div class="field-row" style="margin-top:14px">
+          <label class="field-label" for="jwt-input" data-i18n="tools.jwtDecode.inputLabel">JWT</label>
+          <textarea id="jwt-input" class="tb-textarea" rows="5" data-i18n-placeholder="tools.jwtDecode.inputPlaceholder" placeholder="eyJhbGciOiJIUzI1NiIs…"></textarea>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="decode-btn" data-i18n="tools.jwtDecode.decode">Decode</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.jwtDecode.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.jwtDecode.headerTitle">Header</div>
+          <pre class="tb-result-pre" id="result-header"></pre>
+          <div class="tb-result-title" style="margin-top:16px" data-i18n="tools.jwtDecode.payloadTitle">Payload</div>
+          <pre class="tb-result-pre" id="result-payload"></pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/dev/jwt-decode.js?v=1"></script>
+</body>
+</html>

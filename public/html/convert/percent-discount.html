@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Percent &amp; Discount - Tool Basecamp</title>
+  <meta name="description" content="Calculate discount price or percentage from part and whole.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.percentDiscount.title">Percent &amp; Discount</h1>
+        <p data-i18n="tools.percentDiscount.desc">Compute sale price from a discount, or find what percent one value is of another.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tb-tabs" role="tablist">
+          <button type="button" class="tb-tab active" data-tab="discount" data-i18n="tools.percentDiscount.tabDiscount">Discount</button>
+          <button type="button" class="tb-tab" data-tab="percent" data-i18n="tools.percentDiscount.tabPercent">Percent</button>
+        </div>
+
+        <div class="tb-tab-panel" id="panel-discount">
+          <div class="field-row">
+            <label class="field-label" for="original-input" data-i18n="tools.percentDiscount.originalLabel">Original price</label>
+            <input type="text" inputmode="decimal" id="original-input" class="tb-input" data-i18n-placeholder="tools.percentDiscount.originalPlaceholder" placeholder="e.g. 199" autocomplete="off" />
+          </div>
+          <div class="field-row">
+            <label class="field-label" for="discount-input" data-i18n="tools.percentDiscount.discountLabel">Discount (%)</label>
+            <input type="text" inputmode="decimal" id="discount-input" class="tb-input" data-i18n-placeholder="tools.percentDiscount.discountPlaceholder" placeholder="e.g. 20" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="tb-tab-panel" id="panel-percent" hidden>
+          <div class="field-row">
+            <label class="field-label" for="part-input" data-i18n="tools.percentDiscount.partLabel">Part</label>
+            <input type="text" inputmode="decimal" id="part-input" class="tb-input" data-i18n-placeholder="tools.percentDiscount.partPlaceholder" placeholder="e.g. 25" autocomplete="off" />
+          </div>
+          <div class="field-row">
+            <label class="field-label" for="whole-input" data-i18n="tools.percentDiscount.wholeLabel">Whole</label>
+            <input type="text" inputmode="decimal" id="whole-input" class="tb-input" data-i18n-placeholder="tools.percentDiscount.wholePlaceholder" placeholder="e.g. 200" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.percentDiscount.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.percentDiscount.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.percentDiscount.resultTitle">Result</div>
+          <div class="tb-result-row" id="row-pay" hidden>
+            <span class="tb-result-label" data-i18n="tools.percentDiscount.payLabel">You pay</span>
+            <span class="tb-result-value" id="result-pay"></span>
+          </div>
+          <div class="tb-result-row" id="row-save" hidden>
+            <span class="tb-result-label" data-i18n="tools.percentDiscount.saveLabel">You save</span>
+            <span class="tb-result-value" id="result-save"></span>
+          </div>
+          <div class="tb-result-row" id="row-percent" hidden>
+            <span class="tb-result-label" data-i18n="tools.percentDiscount.percentLabel">Percent</span>
+            <span class="tb-result-value" id="result-percent"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/convert/percent-discount.js?v=1"></script>
+</body>
+</html>

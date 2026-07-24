@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timestamp &amp; Timezone - Tool Basecamp</title>
+  <meta name="description" content="Convert Unix timestamps and datetimes across timezones.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.timestampTimezone.title">Timestamp &amp; Timezone</h1>
+        <p data-i18n="tools.timestampTimezone.desc">Convert between Unix timestamps (seconds or ms) and local datetimes in common timezones.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tb-radio-row">
+          <label><input type="radio" name="mode" value="toDate" checked /> <span data-i18n="tools.timestampTimezone.modeToDate">Timestamp → datetime</span></label>
+          <label><input type="radio" name="mode" value="toTs" /> <span data-i18n="tools.timestampTimezone.modeToTs">Datetime → timestamp</span></label>
+        </div>
+
+        <div class="field-row" id="ts-panel">
+          <label class="field-label" for="ts-input" data-i18n="tools.timestampTimezone.tsLabel">Timestamp</label>
+          <input type="text" inputmode="numeric" id="ts-input" class="tb-input" data-i18n-placeholder="tools.timestampTimezone.tsPlaceholder" placeholder="e.g. 1700000000 or 1700000000000" autocomplete="off" />
+          <div class="tb-radio-row" style="margin-top:8px;margin-bottom:0">
+            <label><input type="radio" name="ts-unit" value="auto" checked /> <span data-i18n="tools.timestampTimezone.tsAuto">Auto detect</span></label>
+            <label><input type="radio" name="ts-unit" value="s" /> <span data-i18n="tools.timestampTimezone.tsSeconds">Seconds</span></label>
+            <label><input type="radio" name="ts-unit" value="ms" /> <span data-i18n="tools.timestampTimezone.tsMillis">Milliseconds</span></label>
+          </div>
+        </div>
+
+        <div class="field-row" id="date-panel" hidden>
+          <label class="field-label" for="date-input" data-i18n="tools.timestampTimezone.dateLabel">Datetime</label>
+          <input type="datetime-local" id="date-input" class="tb-input" step="1" />
+        </div>
+
+        <div class="field-row">
+          <label class="field-label" for="tz-select" data-i18n="tools.timestampTimezone.tzLabel">Timezone</label>
+          <select id="tz-select" class="tb-select">
+            <option value="UTC">UTC</option>
+            <option value="Asia/Shanghai">Asia/Shanghai</option>
+            <option value="America/New_York">America/New_York</option>
+            <option value="Europe/London">Europe/London</option>
+          </select>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="convert-btn" data-i18n="tools.timestampTimezone.convert">Convert</button>
+          <button type="button" class="tb-btn" id="now-btn" data-i18n="tools.timestampTimezone.now">Now</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.timestampTimezone.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.timestampTimezone.resultTitle">Result</div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.timestampTimezone.resultDatetime">Datetime</span>
+            <span class="tb-result-value" id="result-datetime"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.timestampTimezone.resultSeconds">Unix (s)</span>
+            <span class="tb-result-value" id="result-seconds"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.timestampTimezone.resultMillis">Unix (ms)</span>
+            <span class="tb-result-value" id="result-millis"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/convert/timestamp-timezone.js?v=1"></script>
+</body>
+</html>

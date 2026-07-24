@@ -20,6 +20,10 @@ from tencent_image import (
     segment_portrait,
     tencent_configured,
 )
+from dashscope_image_edit import (
+    dashscope_image_edit_configured,
+    edit_image_with_instruction,
+)
 
 try:
     from general_cutout import rembg_available, segment_general
@@ -50,6 +54,7 @@ LIMITS = {
     "id_photo": int(os.environ.get("IMAGE_LIMIT_ID_PHOTO", "10")),
     "general_cutout": int(os.environ.get("IMAGE_LIMIT_GENERAL_CUTOUT", "15")),
     "to_pdf": int(os.environ.get("IMAGE_LIMIT_TO_PDF", "20")),
+    "instruct_edit": int(os.environ.get("IMAGE_LIMIT_INSTRUCT_EDIT", "8")),
 }
 
 
@@ -195,6 +200,7 @@ def image_status(user: dict = Depends(_user)):
         return {
             "tencentConfigured": tencent_configured(),
             "generalCutoutAvailable": rembg_available(),
+            "instructEditConfigured": dashscope_image_edit_configured(),
             "isAdmin": True,
             "quotas": items,
             "enhanceTasks": [
@@ -228,6 +234,7 @@ def image_status(user: dict = Depends(_user)):
         return {
             "tencentConfigured": tencent_configured(),
             "generalCutoutAvailable": rembg_available(),
+            "instructEditConfigured": dashscope_image_edit_configured(),
             "isAdmin": False,
             "quotas": items,
             "enhanceTasks": [
@@ -315,6 +322,27 @@ async def api_general_cutout_segment(
     return {
         "imageBase64": base64.b64encode(out).decode("ascii"),
         "contentType": "image/png",
+        "quota": quota,
+    }
+
+
+@router.post("/instruct-edit")
+async def api_instruct_edit(
+    file: UploadFile = File(...),
+    prompt: str = Form(...),
+    user: dict = Depends(_user),
+):
+    if not dashscope_image_edit_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+        )
+    quota = _consume_quota(user, "instruct_edit")
+    data = await _read_upload(file)
+    out, ctype = await edit_image_with_instruction(data, prompt)
+    return {
+        "imageBase64": base64.b64encode(out).decode("ascii"),
+        "contentType": ctype or "image/png",
         "quota": quota,
     }
 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base64 &amp; URL Encode - Tool Basecamp</title>
+  <meta name="description" content="Encode and decode Base64 and URL-encoded text.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.base64Url.title">Base64 &amp; URL Encode</h1>
+        <p data-i18n="tools.base64Url.desc">Encode or decode Base64 and URL (encodeURIComponent) text in the browser.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tb-tabs" role="tablist">
+          <button type="button" class="tb-tab active" data-mode="b64enc" data-i18n="tools.base64Url.tabB64Enc">Base64 encode</button>
+          <button type="button" class="tb-tab" data-mode="b64dec" data-i18n="tools.base64Url.tabB64Dec">Base64 decode</button>
+          <button type="button" class="tb-tab" data-mode="urlenc" data-i18n="tools.base64Url.tabUrlEnc">URL encode</button>
+          <button type="button" class="tb-tab" data-mode="urldec" data-i18n="tools.base64Url.tabUrlDec">URL decode</button>
+        </div>
+
+        <div class="field-row">
+          <label class="field-label" for="input-text" data-i18n="tools.base64Url.inputLabel">Input</label>
+          <textarea id="input-text" class="tb-textarea" rows="6" data-i18n-placeholder="tools.base64Url.inputPlaceholder" placeholder="Enter text…"></textarea>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="convert-btn" data-i18n="tools.base64Url.convert">Convert</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.base64Url.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.base64Url.outputLabel">Output</div>
+          <pre class="tb-result-pre" id="result-text"></pre>
+          <div class="action-row" style="margin-top:12px">
+            <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.base64Url.copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/dev/base64-url.js?v=1"></script>
+</body>
+</html>

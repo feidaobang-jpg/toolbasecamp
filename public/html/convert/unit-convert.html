@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit Converter - Tool Basecamp</title>
+  <meta name="description" content="Convert length, mass, temperature, area, and volume units.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.unitConvert.title">Unit Converter</h1>
+        <p data-i18n="tools.unitConvert.desc">Convert between common length, mass, temperature, area, and volume units.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="field-row">
+          <label class="field-label" for="category-select" data-i18n="tools.unitConvert.categoryLabel">Category</label>
+          <select id="category-select" class="tb-select">
+            <option value="length" data-i18n="tools.unitConvert.catLength">Length</option>
+            <option value="mass" data-i18n="tools.unitConvert.catMass">Mass</option>
+            <option value="temp" data-i18n="tools.unitConvert.catTemp">Temperature</option>
+            <option value="area" data-i18n="tools.unitConvert.catArea">Area</option>
+            <option value="volume" data-i18n="tools.unitConvert.catVolume">Volume</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="value-input" data-i18n="tools.unitConvert.valueLabel">Value</label>
+          <input type="text" inputmode="decimal" id="value-input" class="tb-input" data-i18n-placeholder="tools.unitConvert.valuePlaceholder" placeholder="e.g. 100" autocomplete="off" />
+        </div>
+        <div class="field-row-inline">
+          <div class="field-row">
+            <label class="field-label" for="from-unit" data-i18n="tools.unitConvert.fromLabel">From</label>
+            <select id="from-unit" class="tb-select"></select>
+          </div>
+          <div class="field-row">
+            <label class="field-label" for="to-unit" data-i18n="tools.unitConvert.toLabel">To</label>
+            <select id="to-unit" class="tb-select"></select>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="convert-btn" data-i18n="tools.unitConvert.convert">Convert</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.unitConvert.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.unitConvert.resultTitle">Result</div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.unitConvert.resultLabel">Converted</span>
+            <span class="tb-result-value" id="result-value"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/convert/unit-convert.js?v=1"></script>
+</body>
+</html>

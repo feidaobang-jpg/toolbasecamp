@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Date Difference - Tool Basecamp</title>
+  <meta name="description" content="Calculate calendar days and workdays between two dates.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.dateDiff.title">Date Difference</h1>
+        <p data-i18n="tools.dateDiff.desc">Find calendar days and Mon–Fri workdays between two dates (no public holiday calendar).</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="field-row-inline">
+          <div class="field-row">
+            <label class="field-label" for="start-input" data-i18n="tools.dateDiff.startLabel">Start date</label>
+            <input type="date" id="start-input" class="tb-input" />
+          </div>
+          <div class="field-row">
+            <label class="field-label" for="end-input" data-i18n="tools.dateDiff.endLabel">End date</label>
+            <input type="date" id="end-input" class="tb-input" />
+          </div>
+        </div>
+
+        <div class="tip-box" style="margin-top:14px">
+          <b data-i18n="tools.dateDiff.note">Note:</b>
+          <span data-i18n="tools.dateDiff.noteBody">Workdays count Monday–Friday only; weekends and public holidays are not excluded.</span>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.dateDiff.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.dateDiff.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.dateDiff.resultTitle">Result</div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.dateDiff.calendarLabel">Calendar days</span>
+            <span class="tb-result-value" id="result-calendar"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.dateDiff.workdaysLabel">Workdays (Mon–Fri)</span>
+            <span class="tb-result-value" id="result-workdays"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/date-diff.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bill Split - Tool Basecamp</title>
+  <meta name="description" content="Split a bill equally or by custom weights among people.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.billSplit.title">Bill Split</h1>
+        <p data-i18n="tools.billSplit.desc">Split a total evenly or by custom weights (comma-separated).</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="field-row">
+          <label class="field-label" for="total-input" data-i18n="tools.billSplit.totalLabel">Total amount</label>
+          <input type="text" inputmode="decimal" id="total-input" class="tb-input" data-i18n-placeholder="tools.billSplit.totalPlaceholder" placeholder="e.g. 256.80" autocomplete="off" />
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="people-input" data-i18n="tools.billSplit.peopleLabel">Number of people</label>
+          <input type="text" inputmode="numeric" id="people-input" class="tb-input" data-i18n-placeholder="tools.billSplit.peoplePlaceholder" placeholder="e.g. 4" autocomplete="off" />
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="weights-input" data-i18n="tools.billSplit.weightsLabel">Weights (optional, comma-separated)</label>
+          <input type="text" id="weights-input" class="tb-input" data-i18n-placeholder="tools.billSplit.weightsPlaceholder" placeholder="e.g. 1,2,1,1" autocomplete="off" />
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.billSplit.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.billSplit.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.billSplit.resultTitle">Each share</div>
+          <div id="result-list"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/bill-split.js?v=1"></script>
+</body>
+</html>

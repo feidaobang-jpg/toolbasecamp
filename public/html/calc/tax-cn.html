@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>China Income Tax - Tool Basecamp</title>
+  <meta name="description" content="Rough estimate of China monthly personal income tax (PIT).">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.taxCn.title">China Income Tax</h1>
+        <p data-i18n="tools.taxCn.desc">Rough monthly PIT estimate: gross salary minus ¥5,000 threshold and optional social insurance.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tip-box">
+          <b data-i18n="tools.taxCn.disclaimerTitle">Disclaimer:</b>
+          <span data-i18n="tools.taxCn.disclaimerBody">Rough estimate only. Actual tax depends on deductions, bonuses, city rules, and policy updates.</span>
+        </div>
+
+        <div class="field-row" style="margin-top:14px">
+          <label class="field-label" for="gross-input" data-i18n="tools.taxCn.grossLabel">Pre-tax monthly salary (¥)</label>
+          <input type="text" inputmode="decimal" id="gross-input" class="tb-input" data-i18n-placeholder="tools.taxCn.grossPlaceholder" placeholder="e.g. 15000" autocomplete="off" />
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="social-input" data-i18n="tools.taxCn.socialLabel">Social insurance + housing fund (¥, optional)</label>
+          <input type="text" inputmode="decimal" id="social-input" class="tb-input" data-i18n-placeholder="tools.taxCn.socialPlaceholder" placeholder="e.g. 2000" autocomplete="off" />
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.taxCn.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.taxCn.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.taxCn.resultTitle">Result</div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.taxCn.taxableLabel">Taxable income</span>
+            <span class="tb-result-value" id="result-taxable"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.taxCn.taxLabel">Tax payable</span>
+            <span class="tb-result-value" id="result-tax"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.taxCn.afterLabel">After-tax salary</span>
+            <span class="tb-result-value" id="result-after"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.taxCn.rateLabel">Marginal rate</span>
+            <span class="tb-result-value" id="result-rate"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/tax-cn.js?v=1"></script>
+</body>
+</html>

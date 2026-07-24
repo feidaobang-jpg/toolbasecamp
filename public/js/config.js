@@ -80,13 +80,21 @@ const toolsConfig = {
                 { titleKey: 'tools.age.title', url: 'html/calc/age.html' },
                 { titleKey: 'tools.bmi.title', url: 'html/calc/bmi.html' },
                 { titleKey: 'tools.loan.title', url: 'html/calc/loan.html' },
-                { titleKey: 'tools.k510Reward.title', url: 'html/calc/510k-reward.html' }
+                { titleKey: 'tools.k510Reward.title', url: 'html/calc/510k-reward.html' },
+                { titleKey: 'tools.taxCn.title', url: 'html/calc/tax-cn.html' },
+                { titleKey: 'tools.billSplit.title', url: 'html/calc/bill-split.html' },
+                { titleKey: 'tools.fuelCost.title', url: 'html/calc/fuel-cost.html' },
+                { titleKey: 'tools.dateDiff.title', url: 'html/calc/date-diff.html' }
             ]
         },
         {
             titleKey: 'tools.groups.convert',
             items: [
-                { titleKey: 'tools.rmbUppercase.title', url: 'html/convert/rmb-uppercase.html' }
+                { titleKey: 'tools.rmbUppercase.title', url: 'html/convert/rmb-uppercase.html' },
+                { titleKey: 'tools.unitConvert.title', url: 'html/convert/unit-convert.html' },
+                { titleKey: 'tools.currencyConvert.title', url: 'html/convert/currency-convert.html' },
+                { titleKey: 'tools.timestampTimezone.title', url: 'html/convert/timestamp-timezone.html' },
+                { titleKey: 'tools.percentDiscount.title', url: 'html/convert/percent-discount.html' }
             ]
         },
         {
@@ -151,6 +159,7 @@ const toolsConfig = {
                 { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
                 { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true },
+                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true },
                 { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]
@@ -177,7 +186,11 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.developer',
             items: [
-                { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' }
+                { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },
+                { titleKey: 'tools.base64Url.title', url: 'html/dev/base64-url.html' },
+                { titleKey: 'tools.regexTester.title', url: 'html/dev/regex-tester.html' },
+                { titleKey: 'tools.jwtDecode.title', url: 'html/dev/jwt-decode.html' },
+                { titleKey: 'tools.jsonFormat.title', url: 'html/dev/json-format.html' }
             ]
         }
     ]

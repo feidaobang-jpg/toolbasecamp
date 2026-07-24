@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regex Tester - Tool Basecamp</title>
+  <meta name="description" content="Test regular expressions and view matches and capture groups.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.regexTester.title">Regex Tester</h1>
+        <p data-i18n="tools.regexTester.desc">Test a JavaScript regular expression against sample text and inspect matches.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="field-row-inline">
+          <div class="field-row">
+            <label class="field-label" for="pattern-input" data-i18n="tools.regexTester.patternLabel">Pattern</label>
+            <input type="text" id="pattern-input" class="tb-input" data-i18n-placeholder="tools.regexTester.patternPlaceholder" placeholder="e.g. (\d+)" autocomplete="off" />
+          </div>
+          <div class="field-row">
+            <label class="field-label" for="flags-input" data-i18n="tools.regexTester.flagsLabel">Flags</label>
+            <input type="text" id="flags-input" class="tb-input" value="g" data-i18n-placeholder="tools.regexTester.flagsPlaceholder" placeholder="gimuy" autocomplete="off" />
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="test-input" data-i18n="tools.regexTester.testLabel">Test string</label>
+          <textarea id="test-input" class="tb-textarea" rows="6" data-i18n-placeholder="tools.regexTester.testPlaceholder" placeholder="Text to test against…"></textarea>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="test-btn" data-i18n="tools.regexTester.test">Test</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.regexTester.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.regexTester.resultTitle">Matches</div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.regexTester.countLabel">Match count</span>
+            <span class="tb-result-value" id="result-count"></span>
+          </div>
+          <pre class="tb-result-pre" id="result-matches"></pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/dev/regex-tester.js?v=1"></script>
+</body>
+</html>

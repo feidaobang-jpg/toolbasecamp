@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuel Cost - Tool Basecamp</title>
+  <meta name="description" content="Estimate fuel liters and trip cost from distance and consumption.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.fuelCost.title">Fuel Cost</h1>
+        <p data-i18n="tools.fuelCost.desc">Estimate fuel used and trip cost from distance, consumption (L/100km), and price per liter.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="field-row">
+          <label class="field-label" for="distance-input" data-i18n="tools.fuelCost.distanceLabel">Distance (km)</label>
+          <input type="text" inputmode="decimal" id="distance-input" class="tb-input" data-i18n-placeholder="tools.fuelCost.distancePlaceholder" placeholder="e.g. 320" autocomplete="off" />
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="consumption-input" data-i18n="tools.fuelCost.consumptionLabel">Consumption (L/100km)</label>
+          <input type="text" inputmode="decimal" id="consumption-input" class="tb-input" data-i18n-placeholder="tools.fuelCost.consumptionPlaceholder" placeholder="e.g. 7.5" autocomplete="off" />
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="price-input" data-i18n="tools.fuelCost.priceLabel">Price per liter</label>
+          <input type="text" inputmode="decimal" id="price-input" class="tb-input" data-i18n-placeholder="tools.fuelCost.pricePlaceholder" placeholder="e.g. 8.20" autocomplete="off" />
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="calc-btn" data-i18n="tools.fuelCost.calculate">Calculate</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.fuelCost.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.fuelCost.resultTitle">Result</div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.fuelCost.litersLabel">Fuel used</span>
+            <span class="tb-result-value" id="result-liters"></span>
+          </div>
+          <div class="tb-result-row">
+            <span class="tb-result-label" data-i18n="tools.fuelCost.costLabel">Total cost</span>
+            <span class="tb-result-value" id="result-cost"></span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/calc/fuel-cost.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Format - Tool Basecamp</title>
+  <meta name="description" content="Format or minify JSON with copy support.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.jsonFormat.title">JSON Format</h1>
+        <p data-i18n="tools.jsonFormat.desc">Pretty-print or minify JSON in the browser.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="field-row">
+          <label class="field-label" for="json-input" data-i18n="tools.jsonFormat.inputLabel">JSON input</label>
+          <textarea id="json-input" class="tb-textarea" rows="10" data-i18n-placeholder="tools.jsonFormat.inputPlaceholder" placeholder='{"key":"value"}'></textarea>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="format-btn" data-i18n="tools.jsonFormat.format">Format</button>
+          <button type="button" class="tb-btn" id="minify-btn" data-i18n="tools.jsonFormat.minify">Minify</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.jsonFormat.clear">Clear</button>
+        </div>
+
+        <div class="error-box" id="error-box" role="alert"></div>
+
+        <div class="tb-result" id="result-wrap" hidden>
+          <div class="tb-result-title" data-i18n="tools.jsonFormat.outputLabel">Output</div>
+          <pre class="tb-result-pre" id="result-text"></pre>
+          <div class="action-row" style="margin-top:12px">
+            <button type="button" class="tb-btn" id="copy-btn" data-i18n="tools.jsonFormat.copy">Copy</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/dev/json-format.js?v=1"></script>
+</body>
+</html>
