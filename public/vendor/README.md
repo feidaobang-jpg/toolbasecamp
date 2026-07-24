@@ -6,3 +6,5 @@ Self-hosted copies so hub/auth pages do not wait on overseas CDNs.
 - `font-awesome/` — Font Awesome 6.0.0 CSS + woff2 webfonts
 
 Update by re-downloading from the upstream CDN URLs when bumping versions.
+
+Note: the Play-CDN `console.warn` about production use is stripped from this local snapshot.
