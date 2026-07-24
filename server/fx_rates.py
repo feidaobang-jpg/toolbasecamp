@@ -10,7 +10,10 @@ from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter(prefix="/fx", tags=["fx"])
 
-ALLOWED = frozenset({"CNY", "USD", "EUR", "JPY", "HKD", "GBP", "AUD", "CAD", "SGD", "KRW"})
+ALLOWED = frozenset({
+    "CNY", "USD", "EUR", "JPY", "HKD", "GBP",
+    "AUD", "CAD", "SGD", "KRW", "THB", "TWD",
+})
 TIMEOUT = float(os.environ.get("FX_TIMEOUT", "12"))
 
 

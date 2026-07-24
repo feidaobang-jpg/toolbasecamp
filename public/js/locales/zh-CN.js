@@ -634,7 +634,13 @@ window.TB_LOCALES['zh-CN'] = {
             eur: '欧元 (EUR)',
             jpy: '日元 (JPY)',
             hkd: '港币 (HKD)',
-            gbp: '英镑 (GBP)'
+            gbp: '英镑 (GBP)',
+            aud: '澳元 (AUD)',
+            cad: '加元 (CAD)',
+            sgd: '新加坡元 (SGD)',
+            krw: '韩元 (KRW)',
+            thb: '泰铢 (THB)',
+            twd: '新台币 (TWD)'
         },
         timestampTimezone: {
             title: '时间戳与时区',

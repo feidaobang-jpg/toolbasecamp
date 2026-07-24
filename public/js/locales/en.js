@@ -635,7 +635,13 @@ window.TB_LOCALES.en = {
             eur: 'Euro (EUR)',
             jpy: 'Japanese Yen (JPY)',
             hkd: 'Hong Kong Dollar (HKD)',
-            gbp: 'British Pound (GBP)'
+            gbp: 'British Pound (GBP)',
+            aud: 'Australian Dollar (AUD)',
+            cad: 'Canadian Dollar (CAD)',
+            sgd: 'Singapore Dollar (SGD)',
+            krw: 'South Korean Won (KRW)',
+            thb: 'Thai Baht (THB)',
+            twd: 'New Taiwan Dollar (TWD)'
         },
         timestampTimezone: {
             title: 'Timestamp & Timezone',
