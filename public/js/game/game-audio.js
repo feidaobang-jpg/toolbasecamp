@@ -388,16 +388,18 @@
             }
 
             if (li >= 0) {
-                // short duty-like square lead
-                playVoice(theme.scale[li % theme.scale.length], beat * 0.72, theme.voice || 'square', 0.34, t0);
+                // bright short square lead
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.7, theme.voice || 'square', 0.34, t0);
+                // soft octave sparkle for "platformer" bounce
+                if (step % 4 === 0) {
+                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.35, 'triangle', 0.08, t0);
+                }
             }
             if (bi >= 0) {
-                // triangle bass (NES-ish)
-                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 0.95, 'triangle', 0.26, t0);
+                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 0.9, 'triangle', 0.24, t0);
             }
             if (hi >= 0) {
-                // arpeggio pulse every step — thick FC stage texture
-                playVoice(theme.scale[hi % theme.scale.length], beat * 0.45, 'square', 0.1, t0);
+                playVoice(theme.scale[hi % theme.scale.length], beat * 0.4, 'square', 0.09, t0);
             }
         }
 
