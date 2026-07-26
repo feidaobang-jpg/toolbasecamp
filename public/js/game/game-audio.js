@@ -263,6 +263,14 @@
             tone(240, 0.04, 'square', 0.12);
             noiseBurst(0.04, 0.16);
         },
+        shoot: function () {
+            tone(880, 0.04, 'square', 0.12);
+            tone(520, 0.06, 'triangle', 0.1, (ctx && ctx.currentTime) + 0.03);
+        },
+        jump: function () {
+            tone(360, 0.06, 'square', 0.16);
+            tone(520, 0.08, 'square', 0.14, (ctx && ctx.currentTime) + 0.04);
+        },
         brick: function () {
             tone(340, 0.05, 'triangle', 0.2);
             noiseBurst(0.05, 0.2);
@@ -484,8 +492,21 @@
         if (fn) fn();
     }
 
+    var SFX_ALIAS = {
+        fire: 'shoot',
+        laser: 'shoot',
+        bomb: 'power',
+        coin: 'place',
+        eat: 'place',
+        kick: 'hit',
+        punch: 'hit',
+        land: 'move'
+    };
+
     function sfx(name) {
-        if (muted || !SFX[name]) return;
+        if (muted) return;
+        if (!SFX[name] && SFX_ALIAS[name]) name = SFX_ALIAS[name];
+        if (!SFX[name]) return;
         // Never call resume() here — that triggers AudioContext autoplay warnings from rAF/game logic
         if (!unlocked || !ctx || ctx.state !== 'running') {
             pendingSfx = name;
@@ -605,9 +626,24 @@
         return true;
     }
 
+    var gestureUnlockBound = false;
+
+    /**
+     * pointerdown keeps userActivation; click/onclick often runs after it expires
+     * (esp. mobile / DevTools device mode), so unlock-on-click alone stays silent.
+     */
+    function bindGestureUnlock() {
+        if (gestureUnlockBound) return;
+        gestureUnlockBound = true;
+        document.addEventListener('pointerdown', function () {
+            unlock();
+        }, { capture: true, passive: true });
+    }
+
     /** Call once from each game: inject mute/volume UI + start BGM. */
     function boot(theme) {
         var run = function () {
+            bindGestureUnlock();
             injectToolbarControls();
             startBgm(theme || 'catchy');
             refreshInjectedLabels();
@@ -621,10 +657,6 @@
     }
 
     document.addEventListener('tb:locale', refreshInjectedLabels);
-
-    // No global keydown/pointer unlock here — that raced with game buttons and
-    // caused resume() to run outside a gesture (warning + silent audio).
-    // Mute / volume / each game's Restart call unlock() on click instead.
 
     global.GameAudio = {
         unlock: unlock,
