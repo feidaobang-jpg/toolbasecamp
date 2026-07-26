@@ -89,7 +89,6 @@
     var hintsLeft = 3;
     var shufflesLeft = 3;
     var selected = null;
-    var busy = false;
     var won = false;
     var ended = false;
     var timerId = 0;
@@ -156,7 +155,6 @@
             timeEl.parentElement.classList.toggle('is-urgent', timeLeft > 0 && timeLeft <= 15);
         }
         if (bestEl) bestEl.textContent = String(bestLevel);
-        // Do not disable on busy — gray flash during clear animation is unnecessary
         hintBtn.disabled = ended || won || hintsLeft <= 0;
         shuffleBtn.disabled = ended || won || shufflesLeft <= 0 || pairsLeft() === 0;
         // Visible counts on buttons (drop data-i18n so labels stay in sync)
@@ -185,7 +183,7 @@
     function startTimer() {
         stopTimer();
         timerId = setInterval(function () {
-            if (busy || won || ended) return;
+            if (won || ended) return;
             timeLeft -= 1;
             updateStats();
             if (timeLeft <= 0) {
@@ -432,7 +430,6 @@
         hintsLeft = cfg.hints;
         shufflesLeft = cfg.shuffles;
         selected = null;
-        busy = false;
         won = false;
         ended = false;
         grid = emptyGrid();
@@ -461,9 +458,10 @@
     }
 
     function onCellClick(ev) {
-        if (busy || won || ended) return;
+        if (won || ended) return;
         var el = ev.currentTarget;
-        if (!el.classList.contains('is-tile')) return;
+        // Allow next pick immediately; ignore tiles mid-fade
+        if (!el.classList.contains('is-tile') || el.classList.contains('is-clearing')) return;
         var r = +el.dataset.r;
         var c = +el.dataset.c;
         if (!grid[r][c]) return;
@@ -485,7 +483,7 @@
 
         var r1 = selected.r;
         var c1 = selected.c;
-        if (grid[r1][c1] !== grid[r][c]) {
+        if (!grid[r1][c1] || grid[r1][c1] !== grid[r][c]) {
             selected = { r: r, c: c };
             clearSelectionUi();
             el.classList.add('is-selected');
@@ -504,60 +502,59 @@
     }
 
     function clearMatch(r1, c1, r2, c2, path) {
-        busy = true;
         selected = null;
         clearSelectionUi();
         drawPath(path);
-        cellEls[r1][c1].classList.add('is-clearing');
-        cellEls[r2][c2].classList.add('is-clearing');
 
-        Promise.resolve()
-            .then(function () { return wait(PATH_MS); })
-            .then(function () {
-                grid[r1][c1] = null;
-                grid[r2][c2] = null;
-                play('match');
-                score += 10 + Math.min(20, level);
-                updateStats();
-                clearPath();
-                cellEls[r1][c1].className = 'llk-cell is-empty';
-                cellEls[r1][c1].textContent = '';
-                cellEls[r1][c1].disabled = true;
-                cellEls[r2][c2].className = 'llk-cell is-empty';
-                cellEls[r2][c2].textContent = '';
-                cellEls[r2][c2].disabled = true;
-                return wait(CLEAR_MS);
-            })
-            .then(function () {
-                busy = false;
-                if (pairsLeft() === 0) {
-                    won = true;
-                    stopTimer();
-                    var bonus = Math.max(0, Math.ceil(timeLeft)) * 2;
-                    score += bonus;
-                    updateStats();
-                    play('win');
-                    setStatus(tr('tools.lianliankan.levelClear', {
-                        n: level,
-                        bonus: bonus
-                    }), 'is-win');
-                    saveBest();
-                    setTimeout(function () {
-                        if (won) nextLevel();
-                    }, 1200);
-                    return;
-                }
-                if (!hasAnyMove()) {
-                    play('invalid');
-                    setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
-                } else {
-                    setStatus('', 'is-idle');
-                }
-            });
+        var el1 = cellEls[r1][c1];
+        var el2 = cellEls[r2][c2];
+        el1.classList.add('is-clearing');
+        el2.classList.add('is-clearing');
+
+        // Free the board logic immediately so the next pair can be tapped at once
+        grid[r1][c1] = null;
+        grid[r2][c2] = null;
+        play('match');
+        score += 10 + Math.min(20, level);
+        updateStats();
+
+        if (pairsLeft() === 0) {
+            won = true;
+            stopTimer();
+            var bonus = Math.max(0, Math.ceil(timeLeft)) * 2;
+            score += bonus;
+            updateStats();
+            play('win');
+            setStatus(tr('tools.lianliankan.levelClear', {
+                n: level,
+                bonus: bonus
+            }), 'is-win');
+            saveBest();
+            setTimeout(function () {
+                if (won) nextLevel();
+            }, 1200);
+        } else if (!hasAnyMove()) {
+            play('invalid');
+            setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
+        } else {
+            setStatus('', 'is-idle');
+        }
+
+        wait(180).then(function () {
+            clearPath();
+            return wait(CLEAR_MS);
+        }).then(function () {
+            el1.className = 'llk-cell is-empty';
+            el1.textContent = '';
+            el1.disabled = true;
+            el2.className = 'llk-cell is-empty';
+            el2.textContent = '';
+            el2.disabled = true;
+        });
     }
 
     function onHint() {
-        if (busy || won || ended || hintsLeft <= 0) return;
+        if (won || ended || hintsLeft <= 0) return;
         clearHintUi();
         var move = hasAnyMove();
         if (!move) {
