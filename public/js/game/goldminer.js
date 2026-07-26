@@ -392,8 +392,6 @@
     }
 
     function startGame(fromScratch) {
-        armAudio();
-        play('start');
         cancelAnimationFrame(raf);
         raf = 0;
         if (fromScratch) {
@@ -404,20 +402,28 @@
         resetLevel(false);
         setStatus(tr('tools.goldminer.playing'), 'is-idle');
         lastTs = 0;
-        raf = requestAnimationFrame(loop);
+        var kick = function () {
+            play('start');
+            raf = requestAnimationFrame(loop);
+        };
+        // Unlock audio inside the click stack, then start SFX/BGM
+        if (audio && audio.unlock) {
+            Promise.resolve(audio.unlock()).then(kick);
+        } else {
+            kick();
+        }
     }
 
     restartBtn.addEventListener('click', function () {
-        armAudio();
         startGame(true);
     });
     canvas.addEventListener('pointerdown', function (e) {
         e.preventDefault();
-        armAudio();
         if (state === 'idle' || state === 'lose' || state === 'win') {
             if (state !== 'win') startGame(true);
             return;
         }
+        if (audio && audio.unlock) audio.unlock();
         dropClaw();
     });
 

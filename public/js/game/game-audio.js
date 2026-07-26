@@ -22,10 +22,7 @@
     var muteBtns = [];
     var volumeSliders = [];
     var pendingSfx = null;
-    /** Only call ctx.resume() / new AudioContext while this is true (user-gesture window). */
-    var resumeAllowed = false;
     var resumeInFlight = null;
-    var lastResumeAt = 0;
 
     try {
         muted = localStorage.getItem(STORAGE_KEY) === '1';
@@ -48,11 +45,10 @@
         return global.AudioContext || global.webkitAudioContext;
     }
 
-    function ensure() {
-        if (!unlocked) return null;
+    /** @param {boolean} canCreate - only true from unlock() inside a user gesture */
+    function ensure(canCreate) {
         if (ctx) return ctx;
-        // Never construct AudioContext outside a user-gesture window (Chrome warning)
-        if (!resumeAllowed) return null;
+        if (!canCreate) return null;
         var Ctor = AC();
         if (!Ctor) return null;
         try {
@@ -64,7 +60,6 @@
         master.gain.value = masterLevel();
         master.connect(ctx.destination);
         sfxGain = ctx.createGain();
-        // another 2x on top of previous loudness
         sfxGain.gain.value = 2.2;
         sfxGain.connect(master);
         bgmGain = ctx.createGain();
@@ -73,51 +68,36 @@
         return ctx;
     }
 
-    function allowResumeBriefly() {
-        resumeAllowed = true;
-        global.setTimeout(function () { resumeAllowed = false; }, 500);
-    }
-
-    function resume() {
-        if (!ctx) return Promise.resolve();
-        if (ctx.state !== 'suspended') return Promise.resolve();
-        if (!resumeAllowed) return Promise.resolve();
-        // Stacked resume() calls each log a Chrome autoplay warning
-        var now = Date.now();
-        if (resumeInFlight) return resumeInFlight;
-        if (now - lastResumeAt < 800) return Promise.resolve();
-        lastResumeAt = now;
-        resumeInFlight = ctx.resume().then(function () {
-            resumeInFlight = null;
-        }).catch(function () {
-            resumeInFlight = null;
-        });
-        return resumeInFlight;
-    }
-
     function afterUnlock() {
-        if (bgmWanted && !muted && ctx && ctx.state === 'running' && !bgmTimer) {
-            startBgmInternal();
-        }
-        if (pendingSfx && ctx && ctx.state === 'running') {
+        if (!ctx || ctx.state !== 'running') return;
+        if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
+        if (pendingSfx) {
             var name = pendingSfx;
             pendingSfx = null;
             if (!muted) playSfxNow(name);
         }
     }
 
+    /**
+     * Must be called from a click/tap handler. Creates AudioContext once,
+     * resumes if needed, then starts pending BGM/SFX.
+     */
     function unlock() {
-        // Already running — no resume(), no console spam
-        if (ctx && ctx.state === 'running') {
-            unlocked = true;
+        unlocked = true;
+        var c = ensure(true);
+        if (!c) return Promise.resolve();
+        if (c.state === 'running') {
             afterUnlock();
             return Promise.resolve();
         }
-        allowResumeBriefly();
-        unlocked = true;
-        ensure();
-        if (!ctx) return Promise.resolve();
-        return resume().then(afterUnlock);
+        if (resumeInFlight) return resumeInFlight;
+        resumeInFlight = c.resume().then(function () {
+            resumeInFlight = null;
+            afterUnlock();
+        }).catch(function () {
+            resumeInFlight = null;
+        });
+        return resumeInFlight;
     }
 
     function setMasterMute(on) {
@@ -179,7 +159,7 @@
     }
 
     function tone(freq, dur, type, gain, when, dest) {
-        var c = ensure();
+        var c = ensure(false);
         if (!c || muted || c.state !== 'running') return;
         var t0 = (when != null ? when : c.currentTime);
         var osc = c.createOscillator();
@@ -196,7 +176,7 @@
     }
 
     function noiseBurst(dur, gain, when) {
-        var c = ensure();
+        var c = ensure(false);
         if (!c || muted || c.state !== 'running') return;
         var t0 = when != null ? when : c.currentTime;
         var len = Math.max(1, Math.floor(c.sampleRate * dur));
@@ -327,7 +307,7 @@
     THEMES.arcade = THEMES.catchy;
 
     function playVoice(freq, dur, type, gain, when) {
-        var c = ensure();
+        var c = ensure(false);
         if (!c || muted || !bgmGain || c.state !== 'running') return;
         var t0 = when != null ? when : c.currentTime;
         var osc = c.createOscillator();
@@ -344,7 +324,7 @@
     }
 
     function playKick(beatDur) {
-        var c = ensure();
+        var c = ensure(false);
         if (!c || muted || !bgmGain || c.state !== 'running') return;
         var t0 = c.currentTime;
         var osc = c.createOscillator();
@@ -370,7 +350,7 @@
     function startBgmInternal() {
         stopBgmInternal();
         if (!unlocked || muted) return;
-        var c = ensure();
+        var c = ensure(false);
         if (!c) return;
         var theme = THEMES[bgmTheme] || THEMES.catchy;
         var beat = 60 / theme.bpm;
@@ -441,7 +421,7 @@
 
         function tick() {
             if (muted || !bgmWanted) return;
-            c = ensure();
+            c = ensure(false);
             if (!c || c.state !== 'running') {
                 bgmTimer = global.setTimeout(tick, 50);
                 return;
@@ -605,25 +585,9 @@
 
     document.addEventListener('tb:locale', refreshInjectedLabels);
 
-    function installUnlockGestures() {
-        // First real click/tap only. Do not use keydown (Ctrl spam).
-        // Games also call unlock() on their Start/Restart buttons.
-        var onPointer = function () {
-            unlock();
-            if (ctx && ctx.state === 'running') {
-                document.removeEventListener('pointerdown', onPointer, true);
-                document.removeEventListener('touchstart', onPointer, true);
-            }
-        };
-        document.addEventListener('pointerdown', onPointer, true);
-        document.addEventListener('touchstart', onPointer, true);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', installUnlockGestures);
-    } else {
-        installUnlockGestures();
-    }
+    // No global keydown/pointer unlock here — that raced with game buttons and
+    // caused resume() to run outside a gesture (warning + silent audio).
+    // Mute / volume / each game's Restart call unlock() on click instead.
 
     global.GameAudio = {
         unlock: unlock,
