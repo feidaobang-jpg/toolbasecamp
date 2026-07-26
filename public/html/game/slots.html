@@ -107,8 +107,8 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>🐯 老虎机</h1>
-      <p>斗兽棋动物：象＞狮＞虎＞豹＞狼＞狗＞猫＞鼠。押对应动物；停在<strong>大/小</strong>格按格内分值结算。</p>
-      <p>大象顶中 100、左邻小象 50；狮虎豹大 20 / 小 2；狼狗猫大 10 / 小 2；鼠仅大 5。「GO」可沿用上次押分。</p>
+      <p>斗兽棋动物：象＞狮＞虎＞豹＞狼＞狗＞猫＞鼠。押对应动物；盘上分大小格，停哪格按该格结算。</p>
+      <p>顶中大象；左中<strong>礼包</strong>、右中<strong>火车</strong>。大小格交替，同种动物大小不相邻。「GO」可沿用上次押分。</p>
       <div class="row">
         <button id="btnPlay">进入</button>
         <button class="ghost" id="btnReset">重置 100 分</button>
@@ -139,18 +139,19 @@ const KINDS = [
 const EMOJI = {
   elephant: '🐘', lion: '🦁', tiger: '🐯', leopard: '🐆',
   wolf: '🐺', dog: '🐶', cat: '🐱', rat: '🐭',
-  cannon: '🎆', train: '🚂'
+  gift: '🎁', train: '🚂'
 };
 
-/** 24 格：顶中(3)大象100，其左(2)小象50；其余分大小 */
+/** 24 格：顶中大象；左中(21)礼包、右中(9)火车；其余大小交替且同种大小不相邻 */
 function C(a, big) { return { a: a, big: !!big }; }
 const RING = [
-  C('rat', true), C('cat', false), C('elephant', false), C('elephant', true), C('lion', true), C('tiger', true), C('leopard', true),
-  C('cannon', true), C('wolf', true), C('dog', true), C('cat', true), C('lion', false),
-  C('rat', true), C('tiger', false), C('leopard', false), C('wolf', false), C('dog', false), C('cat', false), C('train', true),
-  C('rat', true), C('lion', true), C('tiger', true), C('leopard', true), C('wolf', true)
+  C('wolf', false), C('rat', true), C('cat', false), C('elephant', true), C('lion', false), C('tiger', true), C('leopard', false),
+  C('wolf', true), C('dog', false), C('train', true), C('cat', true), C('tiger', false),
+  C('lion', true), C('leopard', false), C('wolf', true), C('elephant', false), C('dog', true), C('cat', false), C('lion', true),
+  C('tiger', false), C('leopard', true), C('gift', true), C('leopard', false), C('rat', true)
 ];
-
+/* 索引: 0狼小 1鼠 2猫小 3大象 4狮小 5虎大 6豹小 | 7狼大 8狗小 9火车 10猫大 11虎小
+         12狮大 13豹小 14狼大 15小象 16狗大 17猫小 18狮大 | 19虎小 20豹大 21礼包 22豹小 23鼠 */
 let W = 360, H = 360, dpr = 1;
 let credits = 100;
 let lastWin = 0;
@@ -197,7 +198,7 @@ function syncTestBtn() {
 }
 
 function kindMeta(id) { return KINDS.find(k => k.id === id); }
-function isSpecial(cell) { return cell.a === 'cannon' || cell.a === 'train'; }
+function isSpecial(cell) { return cell.a === 'gift' || cell.a === 'train'; }
 
 function cellPay(cell) {
   if (isSpecial(cell)) return 0;
@@ -260,7 +261,7 @@ function drawCell(i, lit) {
   const cell = RING[i];
   const r = cellRect(i);
   const g = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h);
-  if (cell.a === 'cannon') { g.addColorStop(0, lit ? '#fde68a' : '#a16207'); g.addColorStop(1, lit ? '#fbbf24' : '#78350f'); }
+  if (cell.a === 'gift') { g.addColorStop(0, lit ? '#fde68a' : '#a16207'); g.addColorStop(1, lit ? '#fbbf24' : '#78350f'); }
   else if (cell.a === 'train') { g.addColorStop(0, lit ? '#7dd3fc' : '#0369a1'); g.addColorStop(1, lit ? '#38bdf8' : '#0c4a6e'); }
   else { g.addColorStop(0, lit ? '#fffbeb' : '#f8fafc'); g.addColorStop(1, lit ? '#fde68a' : '#e2e8f0'); }
   ctx.fillStyle = g;
@@ -280,25 +281,7 @@ function drawCell(i, lit) {
     drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, true);
   } else {
     const big = cell.big || cell.a === 'rat';
-    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h * (big ? 0.46 : 0.42), r.w, big);
-    // 小格角标 / 分值提示
-    const pay = cellPay(cell);
-    ctx.fillStyle = '#ef4444';
-    ctx.font = 'bold ' + Math.max(8, r.w * 0.22) + 'px system-ui';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText(big ? '' : '小', r.x + 4, r.y + 3);
-    if (!big) {
-      ctx.fillStyle = '#b91c1c';
-      ctx.font = 'bold ' + Math.max(8, r.w * 0.2) + 'px system-ui';
-      ctx.textAlign = 'right';
-      ctx.fillText('×' + pay, r.x + r.w - 3, r.y + 3);
-    } else if (pay >= 50) {
-      ctx.fillStyle = '#b91c1c';
-      ctx.font = 'bold ' + Math.max(8, r.w * 0.2) + 'px system-ui';
-      ctx.textAlign = 'right';
-      ctx.fillText(String(pay), r.x + r.w - 3, r.y + 3);
-    }
+    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, big);
   }
 }
 
@@ -502,10 +485,10 @@ async function runSpin() {
   const cell = RING[stop];
   let win = 0, msg = '谢谢参与';
 
-  if (cell.a === 'cannon') {
+  if (cell.a === 'gift') {
     const picks = await animateCannon(stop);
     win = payoutCells(picks);
-    msg = win > 0 ? ('礼炮打中 +' + win) : '礼炮未押中';
+    msg = win > 0 ? ('礼包打中 +' + win) : '礼包未押中';
     sfx(win > 0 ? 'win' : 'lose');
   } else if (cell.a === 'train') {
     await animateTrain(stop);
@@ -593,7 +576,7 @@ document.getElementById('btnBig').onclick = () => doDouble(true);
 document.getElementById('btnMenu').onclick = () => document.getElementById('panelMenu').classList.remove('hidden');
 document.getElementById('btnTest').onclick = () => {
   unlock(); testBoost = !testBoost; syncTestBtn(); save();
-  toast(testBoost ? '测试开：礼炮/火车更常出现' : '测试关：特奖恢复低概率'); sfx('swap');
+  toast(testBoost ? '测试开：礼包/火车更常出现' : '测试关：特奖恢复低概率'); sfx('swap');
 };
 document.getElementById('btnPlay').onclick = () => {
   unlock(); document.getElementById('panelMenu').classList.add('hidden'); sfx('place');
