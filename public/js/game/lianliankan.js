@@ -156,8 +156,9 @@
             timeEl.parentElement.classList.toggle('is-urgent', timeLeft > 0 && timeLeft <= 15);
         }
         if (bestEl) bestEl.textContent = String(bestLevel);
-        hintBtn.disabled = busy || ended || won || hintsLeft <= 0;
-        shuffleBtn.disabled = busy || ended || won || shufflesLeft <= 0 || pairsLeft() === 0;
+        // Do not disable on busy — gray flash during clear animation is unnecessary
+        hintBtn.disabled = ended || won || hintsLeft <= 0;
+        shuffleBtn.disabled = ended || won || shufflesLeft <= 0 || pairsLeft() === 0;
         // Visible counts on buttons (drop data-i18n so labels stay in sync)
         hintBtn.removeAttribute('data-i18n');
         shuffleBtn.removeAttribute('data-i18n');
