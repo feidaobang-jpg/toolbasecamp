@@ -3,7 +3,6 @@
 
     var audio = window.GameAudio;
     function play(name) { if (audio) audio.sfx(name); }
-    function armAudio() { if (audio && audio.unlock) audio.unlock(); }
     if (audio) audio.boot('catchy');
 
     function tr(key, params) {
