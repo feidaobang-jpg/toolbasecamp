@@ -22,8 +22,15 @@ alwaysApply: true
 1. **程序化外观**  
    场景、角色、UI 装饰优先代码生成；不依赖贴图包。使用引擎时用 `BoxGeometry` / `Capsule` / 纯色 `MeshStandardMaterial` 等即可。
 
-2. **音效（按需）**  
-   默认可用 `AudioContext` 合成短音效；**若用户明确不要声音，则不要加**。不引用外部音频文件。移动端需在用户手势后 `resume`。
+2. **音效与背景音乐（必须）**  
+   新增或大改游戏时**默认必须**有短音效（SFX）和循环 BGM；**仅当用户明确说不要声音时才可省略**。  
+   - 优先复用共享模块 `public/js/game/game-audio.js`（Web Audio 程序化合成，零外部音频文件）。  
+   - HTML 在游戏脚本前引入：`<script src="../../js/game/game-audio.js"></script>`（部署会自动加 `?v=`）。  
+   - 工具栏提供「静音」按钮 + 音量滑动条（`#sound-btn` / `#volume-slider`），调用 `GameAudio.bindControls()`；滑条中间为默认音量，右侧可再加大。  
+   - 启动：`GameAudio.startBgm(...)`；交互点调用 `GameAudio.sfx('place'|'swap'|'win'|...)`。  
+   - **禁止**在页面加载时创建/启动 `AudioContext`；须在用户手势后 `unlock`/`resume`。  
+   - 禁止使用有版权的原版游戏曲目；可用原创 chiptune / 程序化旋律。  
+   - 用户明确要求免费素材包时，可另加本地音效文件，并附 `CREDITS.txt`。
 
 3. **localStorage 存档**  
    至少持久化最高分；有成长/天数/中途进度的游戏应支持「继续」。键名带项目前缀（如 `tbc_<game>_v1`）。
