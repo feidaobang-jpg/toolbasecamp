@@ -7,6 +7,8 @@
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
+    canvas.style.cursor = 'auto';
+    canvas.style.setProperty('cursor', 'auto', 'important');
     var scoreEl = document.getElementById('score');
     var livesEl = document.getElementById('lives');
     var levelEl = document.getElementById('level');
@@ -42,7 +44,7 @@
     var pointerX = W / 2;
     var keyLeft = false;
     var keyRight = false;
-    var PADDLE_SPEED = 3.5;
+    var PADDLE_SPEED = 1.75;
 
     var PU_COLORS = { extend: '#22c55e', slow: '#38bdf8', split: '#a855f7' };
     var PU_LABEL = { extend: '长', slow: '慢', split: '分' };

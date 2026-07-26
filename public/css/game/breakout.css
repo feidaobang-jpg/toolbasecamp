@@ -8,7 +8,11 @@
     border-radius: 12px;
     border: 1px solid #1e293b;
     touch-action: none;
-    cursor: default;
+    cursor: auto !important;
+}
+
+.game-board-wrap:has(.breakout-canvas) {
+    cursor: auto !important;
 }
 
 .breakout-legend {
