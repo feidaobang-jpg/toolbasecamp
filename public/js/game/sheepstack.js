@@ -1,7 +1,11 @@
 (function () {
     'use strict';
 
-    function tr(key, params) {
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
     }
 
@@ -190,6 +194,7 @@
                 }
                 counts[emoji] -= MATCH;
                 score += 30;
+                play('match');
             }
         });
     }
@@ -211,7 +216,7 @@
                 timeLeft = 0;
                 ended = true;
                 stopTimer();
-                setStatus(tr('tools.sheepstack.timeUp'), 'is-lose');
+                play('lose'); setStatus(tr('tools.sheepstack.timeUp'), 'is-lose');
                 updatePropsUi();
             }
         }, 1000);
@@ -222,14 +227,14 @@
         if (left === 0) {
             ended = true;
             stopTimer();
-            setStatus(tr('tools.sheepstack.win'), 'is-win');
+            play('win'); setStatus(tr('tools.sheepstack.win'), 'is-win');
             updatePropsUi();
             return true;
         }
         if (tray.length >= TRAY_MAX) {
             ended = true;
             stopTimer();
-            setStatus(tr('tools.sheepstack.lose'), 'is-lose');
+            play('lose'); setStatus(tr('tools.sheepstack.lose'), 'is-lose');
             updatePropsUi();
             return true;
         }
@@ -284,7 +289,7 @@
         clearHints();
         refreshBlocked();
         hud();
-        setStatus(tr('tools.sheepstack.usedUndo'), 'is-idle');
+        play('click'); setStatus(tr('tools.sheepstack.usedUndo'), 'is-idle');
     }
 
     function useBomb() {
@@ -296,7 +301,7 @@
         tray.splice(tray.length - removeN, removeN);
         clearHints();
         hud();
-        setStatus(tr('tools.sheepstack.usedBomb'), 'is-idle');
+        play('brick'); setStatus(tr('tools.sheepstack.usedBomb'), 'is-idle');
     }
 
     function useHint() {
@@ -341,7 +346,7 @@
 
         props.hint -= 1;
         hud();
-        setStatus(tr('tools.sheepstack.usedHint'), 'is-idle');
+        play('select'); setStatus(tr('tools.sheepstack.usedHint'), 'is-idle');
     }
 
     function useTime() {
@@ -353,7 +358,7 @@
         setStatus(tr('tools.sheepstack.usedTime', { n: TIME_BONUS }), 'is-win');
     }
 
-    function reset() {
+    function reset() { play('start');
         stopTimer();
         stage.innerHTML = '';
         tiles = [];

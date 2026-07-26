@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, KEY = 'tb_jump_best';
     var score = 0, best = 0, plats = [], player, charging = false, power = 0, flying = false, raf = 0, last = 0, state = 'ready';
@@ -9,7 +13,7 @@
     function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
     function hud() { document.getElementById('score').textContent = score; document.getElementById('best').textContent = best; }
     function addPlat(x, y, w) { plats.push({ x: x, y: y, w: w, emoji: ['🟫', '🟧', '🟪'][score % 3] }); }
-    function reset() {
+    function reset() { play('start');
         score = 0; plats = []; flying = false; charging = false; power = 0; state = 'ready';
         addPlat(40, H - 80, 70); addPlat(200, H - 80, 60);
         player = { x: 75, y: H - 80, r: 14, vx: 0, vy: 0, on: 0 };
@@ -43,10 +47,10 @@
             if (landed == null) {
                 state = 'lose';
                 if (score > best) { best = score; try { localStorage.setItem(KEY, String(best)); } catch (e) {} }
-                hud(); setStatus(tr('tools.jumpjump.miss'), 'is-lose'); return;
+                hud(); play('lose'); setStatus(tr('tools.jumpjump.miss'), 'is-lose'); return;
             }
             player.on = landed;
-            if (landed === plats.length - 1) { score += 1; nextPlat(); hud(); setStatus(tr('tools.jumpjump.nice'), 'is-win'); }
+            if (landed === plats.length - 1) { score += 1; nextPlat(); hud(); play('level'); setStatus(tr('tools.jumpjump.nice'), 'is-win'); }
             else setStatus(tr('tools.jumpjump.hint'), 'is-idle');
         }
     }

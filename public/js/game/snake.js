@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var N = 16, cell = canvas.width / N, score = 0, best = 0, snake, dir, nextDir, food, state = 'idle', timer = 0;
     var KEY = 'tb_snake_best';
@@ -32,14 +36,15 @@
         if (h.x < 0 || h.y < 0 || h.x >= N || h.y >= N || snake.some(function (s) { return s.x === h.x && s.y === h.y; })) {
             state = 'lose';
             if (score > best) { best = score; try { localStorage.setItem(KEY, String(best)); } catch (e) {} }
-            hud(); setStatus(tr('tools.snake.gameOver'), 'is-lose'); clearInterval(timer); return;
+            hud(); play('lose'); setStatus(tr('tools.snake.gameOver'), 'is-lose'); clearInterval(timer); return;
         }
         snake.unshift(h);
-        if (h.x === food.x && h.y === food.y) { score += 10; placeFood(); hud(); }
+        if (h.x === food.x && h.y === food.y) { play('match'); score += 10; placeFood(); hud(); }
         else snake.pop();
         draw();
     }
     function start() {
+        play('start');
         clearInterval(timer); reset(); state = 'playing';
         setStatus(tr('tools.snake.playing'), 'is-idle');
         timer = setInterval(tick, 140); draw();

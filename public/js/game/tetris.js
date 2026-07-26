@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var COLS = 10, ROWS = 20, BS = 20;
     var COLORS = ['🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '🟫'];
@@ -22,7 +26,7 @@
     function spawn() {
         var id = (Math.random() * SHAPES.length) | 0;
         piece = { shape: SHAPES[id].map(function (r) { return r.slice(); }), x: 3, y: 0, emoji: COLORS[id] };
-        if (collide(piece.x, piece.y, piece.shape)) { state = 'lose'; setStatus(tr('tools.tetris.gameOver'), 'is-lose'); }
+        if (collide(piece.x, piece.y, piece.shape)) { state = 'lose'; play('lose'); setStatus(tr('tools.tetris.gameOver'), 'is-lose'); }
     }
     function collide(x, y, shape) {
         for (var r = 0; r < shape.length; r++) for (var c = 0; c < shape[r].length; c++) {
@@ -40,12 +44,12 @@
             });
         });
     }
-    function clearLines() {
+    function clearLines() { /*sfx*/
         var cleared = 0;
         for (var r = ROWS - 1; r >= 0; r--) {
             if (board[r].every(Boolean)) { board.splice(r, 1); board.unshift(Array(COLS).fill(null)); cleared++; r++; }
         }
-        if (cleared) { lines += cleared; score += [0, 100, 300, 500, 800][cleared]; dropMs = Math.max(120, 600 - lines * 8); hud(); }
+        if (cleared) { play('match'); lines += cleared; score += [0, 100, 300, 500, 800][cleared]; dropMs = Math.max(120, 600 - lines * 8); hud(); }
     }
     function rotate() {
         var s = piece.shape, N = s.length, M = s[0].length, out = [];
@@ -79,7 +83,7 @@
         if (!last) last = ts; var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
         update(dt); draw(); if (state === 'playing') raf = requestAnimationFrame(loop);
     }
-    function start() {
+    function start() { play('start');
         cancelAnimationFrame(raf); board = emptyBoard(); score = 0; lines = 0; dropMs = 600; acc = 0;
         state = 'playing'; hud(); spawn(); last = 0; setStatus(tr('tools.tetris.playing'), 'is-idle'); raf = requestAnimationFrame(loop);
     }

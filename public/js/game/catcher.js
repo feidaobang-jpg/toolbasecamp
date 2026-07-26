@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, state = 'idle', score = 0, lives = 3;
     var basket = { x: W / 2, w: 64 }, items = [], keys = {}, spawn = 0, raf = 0, last = 0;
@@ -23,12 +27,12 @@
         for (var i = items.length - 1; i >= 0; i--) {
             var it = items[i]; it.y += it.vy * s;
             if (it.y > H - 50 && Math.abs(it.x - basket.x) < basket.w * 0.55) {
-                if (it.bomb) { lives -= 1; if (lives <= 0) { state = 'lose'; setStatus(tr('tools.catcher.gameOver'), 'is-lose'); } }
-                else score += 10;
+                if (it.bomb) { lives -= 1; if (lives <= 0) { state = 'lose'; play('lose'); setStatus(tr('tools.catcher.gameOver'), 'is-lose'); } }
+                else play('match'); score += 10;
                 items.splice(i, 1); hud(); continue;
             }
             if (it.y > H + 30) {
-                if (!it.bomb) { lives -= 1; if (lives <= 0) { state = 'lose'; setStatus(tr('tools.catcher.gameOver'), 'is-lose'); } }
+                if (!it.bomb) { lives -= 1; if (lives <= 0) { state = 'lose'; play('lose'); setStatus(tr('tools.catcher.gameOver'), 'is-lose'); } }
                 items.splice(i, 1); hud();
             }
         }
@@ -47,7 +51,7 @@
         if (!last) last = ts; var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
         update(dt); draw(); if (state === 'playing') raf = requestAnimationFrame(loop);
     }
-    function start() { cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0; setStatus(tr('tools.catcher.playing'), 'is-idle'); raf = requestAnimationFrame(loop); }
+    function start() { play('start'); cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0; setStatus(tr('tools.catcher.playing'), 'is-idle'); raf = requestAnimationFrame(loop); }
     document.getElementById('start-btn').onclick = function () { if (state !== 'playing') start(); };
     document.getElementById('restart-btn').onclick = start;
     window.addEventListener('keydown', function (e) { keys[e.key] = true; if (state !== 'playing' && (e.key === 'Enter' || e.key === ' ')) start(); });

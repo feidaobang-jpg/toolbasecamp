@@ -1,7 +1,11 @@
 (function () {
     'use strict';
 
-    function tr(key, params) {
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
     }
 
@@ -161,7 +165,7 @@
 
     function levelWin() {
         state = 'win';
-        setStatus(tr('tools.goldminer.levelClear', { n: level }), 'is-win');
+        play('level'); setStatus(tr('tools.goldminer.levelClear', { n: level }), 'is-win');
         cancelAnimationFrame(raf);
         raf = 0;
         setTimeout(function () {
@@ -174,7 +178,7 @@
         }, 900);
     }
 
-    function gameOver(reasonKey) {
+    function gameOver(reasonKey) { play('lose');
         state = 'lose';
         setStatus(tr(reasonKey), 'is-lose');
         cancelAnimationFrame(raf);
@@ -280,7 +284,7 @@
         if (state === 'playing') raf = requestAnimationFrame(loop);
     }
 
-    function startGame(fromScratch) {
+    function startGame(fromScratch) { play('start');
         cancelAnimationFrame(raf);
         raf = 0;
         if (fromScratch) {

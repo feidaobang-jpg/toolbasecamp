@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var ROWS = 9, COLS = 9, MINE_N = 10;
     var gridEl = document.getElementById('grid'), cells = [], mines = [], opened = 0, flags = 0, dead = false, won = false;
     function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
@@ -15,7 +19,7 @@
         }
         return out;
     }
-    function reset() {
+    function reset() { play('start');
         dead = false; won = false; opened = 0; flags = 0; mines = [];
         gridEl.style.gridTemplateColumns = 'repeat(' + COLS + ', 1fr)';
         gridEl.innerHTML = ''; cells = [];
@@ -60,10 +64,10 @@
         if (cell.mine) {
             dead = true;
             mines.forEach(function (c, i) { if (c.mine) { c.open = true; renderCell(i); } });
-            setStatus(tr('tools.mines.lose'), 'is-lose'); return;
+            play('lose'); setStatus(tr('tools.mines.lose'), 'is-lose'); return;
         }
         if (cell.n === 0) neighbors(cell.r, cell.c).forEach(openCell);
-        if (opened === ROWS * COLS - MINE_N) { won = true; setStatus(tr('tools.mines.win'), 'is-win'); }
+        if (opened === ROWS * COLS - MINE_N) { won = true; play('win'); setStatus(tr('tools.mines.win'), 'is-win'); }
     }
     function flagCell(id) {
         var cell = mines[id];

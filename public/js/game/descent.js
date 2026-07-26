@@ -1,7 +1,11 @@
 (function () {
     'use strict';
 
-    function tr(key, params) {
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
     }
 
@@ -107,7 +111,7 @@
         }
     }
 
-    function resetGame() {
+    function resetGame() { play('start');
         player.x = W / 2;
         player.y = 120;
         player.vx = 0;
@@ -129,7 +133,7 @@
             try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) { /* ignore */ }
         }
         updateHud();
-        setStatus(tr(reasonKey, { n: maxDepth }), 'is-lose');
+        play('lose'); setStatus(tr(reasonKey, { n: maxDepth }), 'is-lose');
         cancelAnimationFrame(raf);
         raf = 0;
     }
@@ -282,7 +286,7 @@
         if (state === 'playing') raf = requestAnimationFrame(loop);
     }
 
-    function start() {
+    function start() { play('start');
         cancelAnimationFrame(raf);
         raf = 0;
         resetGame();

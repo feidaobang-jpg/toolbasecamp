@@ -492,6 +492,57 @@
         bindVolumeSlider(opts.volumeSlider || document.getElementById('volume-slider'));
     }
 
+    function injectToolbarControls() {
+        if (document.getElementById('sound-btn') && document.getElementById('volume-slider')) {
+            bindControls();
+            return true;
+        }
+        var row = document.querySelector('.game-toolbar .action-row') ||
+            document.querySelector('.tool-card .action-row') ||
+            document.querySelector('.action-row');
+        if (!row) {
+            var card = document.querySelector('.game-card') || document.querySelector('.tool-card');
+            if (!card) return false;
+            row = document.createElement('div');
+            row.className = 'action-row game-audio-bar';
+            card.insertBefore(row, card.firstChild);
+        }
+        if (!document.getElementById('sound-btn')) {
+            var mute = document.createElement('button');
+            mute.type = 'button';
+            mute.className = 'tb-btn';
+            mute.id = 'sound-btn';
+            mute.textContent = i18n('tools.game.soundOn', 'Mute');
+            row.insertBefore(mute, row.firstChild);
+        }
+        if (!document.getElementById('volume-slider')) {
+            var lab = document.createElement('label');
+            lab.className = 'game-volume';
+            var span = document.createElement('span');
+            span.textContent = i18n('tools.game.volume', 'Volume');
+            var input = document.createElement('input');
+            input.type = 'range';
+            input.id = 'volume-slider';
+            input.min = '0';
+            input.max = '100';
+            input.value = '50';
+            input.setAttribute('aria-label', 'Volume');
+            lab.appendChild(span);
+            lab.appendChild(input);
+            var muteBtn = document.getElementById('sound-btn');
+            if (muteBtn && muteBtn.nextSibling) row.insertBefore(lab, muteBtn.nextSibling);
+            else row.appendChild(lab);
+        }
+        bindControls();
+        return true;
+    }
+
+    /** Call once from each game: inject mute/volume UI + start BGM. */
+    function boot(theme) {
+        injectToolbarControls();
+        startBgm(theme || 'catchy');
+    }
+
     function installUnlockGestures() {
         var once = function () {
             unlock();
@@ -522,6 +573,8 @@
         bindMuteButton: bindMuteButton,
         bindVolumeSlider: bindVolumeSlider,
         bindControls: bindControls,
+        injectToolbarControls: injectToolbarControls,
+        boot: boot,
         refreshMuteLabels: syncMuteButtons,
         themes: Object.keys(THEMES)
     };

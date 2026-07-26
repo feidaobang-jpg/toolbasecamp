@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var grid = document.getElementById('grid'), holes = [], score = 0, time = 30, playing = false, timers = [];
     function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
     function hud() { document.getElementById('score').textContent = score; document.getElementById('time').textContent = time; }
@@ -9,7 +13,7 @@
         b.type = 'button'; b.className = 'whack-hole'; b.textContent = '🕳️'; b.dataset.i = i;
         b.onclick = function () {
             if (!playing || this.dataset.up !== '1') return;
-            score += 10; this.dataset.up = '0'; this.textContent = '🕳️'; hud();
+            play('hit'); score += 10; this.dataset.up = '0'; this.textContent = '🕳️'; hud();
         };
         grid.appendChild(b); holes.push(b);
     }
@@ -21,7 +25,7 @@
         timers.push(setTimeout(function () { if (h.dataset.up === '1') { h.dataset.up = '0'; h.textContent = '🕳️'; } }, 700 + Math.random() * 400));
         timers.push(setTimeout(pop, 450 + Math.random() * 350));
     }
-    function start() {
+    function start() { play('start');
         clearTimers(); score = 0; time = 30; playing = true; hud();
         setStatus(tr('tools.whack.playing'), 'is-idle');
         holes.forEach(function (h) { h.dataset.up = '0'; h.textContent = '🕳️'; });
@@ -31,7 +35,7 @@
             time -= 1; hud();
             if (time <= 0) {
                 playing = false; clearTimers(); clearInterval(tick);
-                setStatus(tr('tools.whack.done', { n: score }), 'is-win');
+                play('win'); setStatus(tr('tools.whack.done', { n: score }), 'is-win');
             }
         }, 1000);
         timers.push(tick);

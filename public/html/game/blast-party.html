@@ -895,5 +895,13 @@ resize();
 requestAnimationFrame(loop);
 })();
 </script>
+  <script src="../../js/game/game-audio.js?v=8"></script>
+  <script>
+  (function () {
+    function go() { if (window.GameAudio) window.GameAudio.boot('catchy'); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+    else go();
+  })();
+  </script>
 </body>
 </html>

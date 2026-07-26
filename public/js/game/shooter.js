@@ -1,13 +1,17 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, state = 'idle', score = 0, lives = 3;
     var ship = { x: W / 2, y: H - 40 }, bullets = [], enemies = [], keys = {}, cool = 0, raf = 0, last = 0, spawnT = 0;
     function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
     function hud() { document.getElementById('score').textContent = score; document.getElementById('lives').textContent = lives; }
     function reset() { score = 0; lives = 3; ship.x = W / 2; bullets = []; enemies = []; cool = 0; spawnT = 0; hud(); }
-    function shoot() { if (cool > 0) return; cool = 0.22; bullets.push({ x: ship.x, y: ship.y - 18, vy: -9 }); }
+    function shoot() { if (cool > 0) return; cool = 0.22; play('hit'); bullets.push({ x: ship.x, y: ship.y - 18, vy: -9 }); }
     function update(dt) {
         if (state !== 'playing') return;
         var s = dt * 60;
@@ -31,10 +35,10 @@
                 }
             }
             if (hit) { enemies.splice(i, 1); continue; }
-            if (e.y > H + 20) { enemies.splice(i, 1); lives -= 1; if (lives <= 0) { state = 'lose'; setStatus(tr('tools.shooter.gameOver'), 'is-lose'); } }
+            if (e.y > H + 20) { enemies.splice(i, 1); lives -= 1; if (lives <= 0) { state = 'lose'; play('lose'); setStatus(tr('tools.shooter.gameOver'), 'is-lose'); } }
             else if (Math.hypot(e.x - ship.x, e.y - ship.y) < 26) {
                 enemies.splice(i, 1); lives -= 1;
-                if (lives <= 0) { state = 'lose'; setStatus(tr('tools.shooter.gameOver'), 'is-lose'); }
+                if (lives <= 0) { state = 'lose'; play('lose'); setStatus(tr('tools.shooter.gameOver'), 'is-lose'); }
             }
         }
         hud();
@@ -55,7 +59,7 @@
         update(dt); draw();
         if (state === 'playing') raf = requestAnimationFrame(loop);
     }
-    function start() {
+    function start() { play('start');
         cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0;
         setStatus(tr('tools.shooter.playing'), 'is-idle'); raf = requestAnimationFrame(loop);
     }

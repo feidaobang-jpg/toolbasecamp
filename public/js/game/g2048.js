@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var boardEl = document.getElementById('board'), score = 0, best = 0, grid, won = false;
     var KEY = 'tb_2048_best';
     var COLORS = { 0: '#cdc1b4', 2: '#eee4da', 4: '#ede0c8', 8: '#f2b179', 16: '#f59563', 32: '#f67c5f', 64: '#f65e3b', 128: '#edcf72', 256: '#edcc61', 512: '#edc850', 1024: '#edc53f', 2048: '#edc22e' };
@@ -31,7 +35,7 @@
     function slide(row) {
         var arr = row.filter(Boolean), out = [], i;
         for (i = 0; i < arr.length; i++) {
-            if (arr[i] === arr[i + 1]) { out.push(arr[i] * 2); score += arr[i] * 2; i++; }
+            if (arr[i] === arr[i + 1]) { out.push(arr[i] * 2); score += arr[i] * 2; i++; play('match'); }
             else out.push(arr[i]);
         }
         while (out.length < 4) out.push(0);
@@ -54,8 +58,8 @@
         if (score > best) { best = score; try { localStorage.setItem(KEY, String(best)); } catch (e) {} }
         render();
         if (!won && grid.some(function (row) { return row.indexOf(2048) >= 0; })) {
-            won = true; setStatus(tr('tools.g2048.win'), 'is-win');
-        } else if (!canMove()) setStatus(tr('tools.g2048.lose'), 'is-lose');
+            won = true; play('win'); setStatus(tr('tools.g2048.win'), 'is-win');
+        } else if (!canMove()) play('lose'); setStatus(tr('tools.g2048.lose'), 'is-lose');
         else setStatus(tr('tools.g2048.hint'), 'is-idle');
     }
     function canMove() {
@@ -66,7 +70,7 @@
         }
         return false;
     }
-    function reset() { grid = empty(); score = 0; won = false; spawn(); spawn(); render(); setStatus(tr('tools.g2048.hint'), 'is-idle'); }
+    function reset() { play('start'); grid = empty(); score = 0; won = false; spawn(); spawn(); render(); setStatus(tr('tools.g2048.hint'), 'is-idle'); }
     document.getElementById('restart-btn').onclick = reset;
     window.addEventListener('keydown', function (e) {
         var m = { ArrowLeft: 'L', ArrowRight: 'R', ArrowUp: 'U', ArrowDown: 'D' };

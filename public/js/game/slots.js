@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
 
     /**
      * Weighted symbols. Three-of-a-kind prize names (lottery-flavored, fun only):
@@ -79,7 +83,7 @@
     function spin() {
         if (spinning) return;
         if (credits < COST) {
-            setStatus(tr('tools.slots.noCredits'), 'is-lose');
+            play('invalid'); setStatus(tr('tools.slots.noCredits'), 'is-lose');
             return;
         }
         spinning = true;
@@ -105,7 +109,7 @@
                     emoji: ev.emoji
                 }), 'is-win');
             } else if (ev.win > 0) {
-                setStatus(tr('tools.slots.winSmall', { n: ev.win, emoji: ev.emoji }), 'is-win');
+                play('win'); setStatus(tr('tools.slots.winSmall', { n: ev.win, emoji: ev.emoji }), 'is-win');
             } else {
                 setStatus(tr('tools.slots.thanks'), 'is-idle');
             }

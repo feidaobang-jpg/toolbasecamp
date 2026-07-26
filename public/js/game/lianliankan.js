@@ -1,6 +1,11 @@
 (function () {
     'use strict';
 
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+
     function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
     }
@@ -269,6 +274,7 @@
     }
 
     function newGame() {
+        play('start');
         grid = emptyGrid();
         fillInner(buildPool());
         score = 0;
@@ -288,7 +294,7 @@
             tries++;
         }
         if (pairsLeft() > 0 && !hasAnyMove()) {
-            setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
+            play('lose'); setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
         }
     }
 
@@ -322,7 +328,7 @@
             if (hasAnyMove()) {
                 setStatus(tr('tools.lianliankan.shuffled'), 'is-idle');
             } else {
-                setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
+                play('lose'); setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
             }
         }
     }
@@ -383,7 +389,7 @@
             .then(function () {
                 grid[r1][c1] = null;
                 grid[r2][c2] = null;
-                score += 10;
+                play('match'); score += 10;
                 updateStats();
                 clearPath();
                 cellEls[r1][c1].className = 'llk-cell is-empty';
@@ -398,11 +404,11 @@
                 busy = false;
                 if (pairsLeft() === 0) {
                     won = true;
-                    setStatus(tr('tools.lianliankan.win'), 'is-win');
+                    play('win'); setStatus(tr('tools.lianliankan.win'), 'is-win');
                     return;
                 }
                 if (!hasAnyMove()) {
-                    setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
+                    play('invalid'); setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
                 } else {
                     setStatus('', 'is-idle');
                 }
@@ -414,7 +420,7 @@
         clearHintUi();
         var move = hasAnyMove();
         if (!move) {
-            setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
+            play('invalid'); setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
             return;
         }
         selected = null;

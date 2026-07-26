@@ -1,6 +1,10 @@
 (function () {
     'use strict';
-    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    
+    var audio = window.GameAudio;
+    function play(name) { if (audio) audio.sfx(name); }
+    if (audio) audio.boot('catchy');
+function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, KEY = 'tb_runner_best';
     var ground = H - 40, player, obs = [], score = 0, best = 0, state = 'idle', speed = 5, spawn = 0, raf = 0, last = 0;
@@ -33,7 +37,7 @@
                 state = 'lose';
                 var sc = Math.floor(score);
                 if (sc > best) { best = sc; try { localStorage.setItem(KEY, String(best)); } catch (e) {} }
-                hud(); setStatus(tr('tools.runner.gameOver', { n: sc }), 'is-lose');
+                hud(); play('lose'); setStatus(tr('tools.runner.gameOver', { n: sc }), 'is-lose');
             }
         }
         hud();
@@ -53,7 +57,7 @@
         if (!last) last = ts; var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
         update(dt); draw(); if (state === 'playing') raf = requestAnimationFrame(loop);
     }
-    function start() { cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0; setStatus(tr('tools.runner.playing'), 'is-idle'); raf = requestAnimationFrame(loop); }
+    function start() { play('start'); cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0; setStatus(tr('tools.runner.playing'), 'is-idle'); raf = requestAnimationFrame(loop); }
     document.getElementById('start-btn').onclick = function () { if (state !== 'playing') start(); };
     document.getElementById('restart-btn').onclick = start;
     window.addEventListener('keydown', function (e) {
