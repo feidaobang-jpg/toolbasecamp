@@ -18,7 +18,6 @@ function tr(key, params) {
     var scoreEl = document.getElementById('score');
     var bestEl = document.getElementById('best');
     var statusEl = document.getElementById('status');
-    var startBtn = document.getElementById('start-btn');
     var restartBtn = document.getElementById('restart-btn');
 
     var BEST_KEY = 'tb_descent_best';
@@ -296,10 +295,6 @@ function tr(key, params) {
         raf = requestAnimationFrame(loop);
     }
 
-    startBtn.addEventListener('click', function () {
-        if (state === 'playing') return;
-        start();
-    });
     restartBtn.addEventListener('click', start);
 
     window.addEventListener('keydown', function (e) {

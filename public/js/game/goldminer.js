@@ -20,7 +20,6 @@
     var levelEl = document.getElementById('level');
     var timeEl = document.getElementById('time');
     var statusEl = document.getElementById('status');
-    var startBtn = document.getElementById('start-btn');
     var restartBtn = document.getElementById('restart-btn');
 
     /** Base item types — spawn weights scaled by level. */
@@ -398,11 +397,6 @@
         raf = requestAnimationFrame(loop);
     }
 
-    startBtn.addEventListener('click', function () {
-        armAudio();
-        if (state === 'playing') return;
-        startGame(true);
-    });
     restartBtn.addEventListener('click', function () {
         armAudio();
         startGame(true);

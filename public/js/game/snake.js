@@ -54,7 +54,6 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         if (dir.x === -x && dir.y === -y) return;
         nextDir = { x: x, y: y };
     }
-    document.getElementById('start-btn').onclick = function () { if (state !== 'playing') start(); };
     document.getElementById('restart-btn').onclick = start;
     window.addEventListener('keydown', function (e) {
         var m = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0], W: [0, -1], S: [0, 1], A: [-1, 0], D: [1, 0] };

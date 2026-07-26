@@ -40,7 +40,6 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         }, 1000);
         timers.push(tick);
     }
-    document.getElementById('start-btn').onclick = function () { if (!playing) start(); };
     document.getElementById('restart-btn').onclick = start;
     setStatus(tr('tools.whack.hint'), 'is-idle');
 })();

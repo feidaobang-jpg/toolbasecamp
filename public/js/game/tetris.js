@@ -87,7 +87,6 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         cancelAnimationFrame(raf); board = emptyBoard(); score = 0; lines = 0; dropMs = 600; acc = 0;
         state = 'playing'; hud(); spawn(); last = 0; setStatus(tr('tools.tetris.playing'), 'is-idle'); raf = requestAnimationFrame(loop);
     }
-    document.getElementById('start-btn').onclick = function () { if (state !== 'playing') start(); };
     document.getElementById('restart-btn').onclick = start;
     window.addEventListener('keydown', function (e) {
         if (state !== 'playing') { if (e.key === 'Enter' || e.key === ' ') start(); return; }

@@ -52,7 +52,6 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         update(dt); draw(); if (state === 'playing') raf = requestAnimationFrame(loop);
     }
     function start() { play('start'); cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0; setStatus(tr('tools.catcher.playing'), 'is-idle'); raf = requestAnimationFrame(loop); }
-    document.getElementById('start-btn').onclick = function () { if (state !== 'playing') start(); };
     document.getElementById('restart-btn').onclick = start;
     window.addEventListener('keydown', function (e) { keys[e.key] = true; if (state !== 'playing' && (e.key === 'Enter' || e.key === ' ')) start(); });
     window.addEventListener('keyup', function (e) { keys[e.key] = false; });
