@@ -22,8 +22,10 @@
     var muteBtns = [];
     var volumeSliders = [];
     var pendingSfx = null;
-    /** Only call ctx.resume() while this is true (user-gesture window). */
+    /** Only call ctx.resume() / new AudioContext while this is true (user-gesture window). */
     var resumeAllowed = false;
+    var resumeInFlight = null;
+    var lastResumeAt = 0;
 
     try {
         muted = localStorage.getItem(STORAGE_KEY) === '1';
@@ -49,9 +51,15 @@
     function ensure() {
         if (!unlocked) return null;
         if (ctx) return ctx;
+        // Never construct AudioContext outside a user-gesture window (Chrome warning)
+        if (!resumeAllowed) return null;
         var Ctor = AC();
         if (!Ctor) return null;
-        ctx = new Ctor();
+        try {
+            ctx = new Ctor();
+        } catch (e) {
+            return null;
+        }
         master = ctx.createGain();
         master.gain.value = masterLevel();
         master.connect(ctx.destination);
@@ -67,15 +75,24 @@
 
     function allowResumeBriefly() {
         resumeAllowed = true;
-        global.setTimeout(function () { resumeAllowed = false; }, 400);
+        global.setTimeout(function () { resumeAllowed = false; }, 500);
     }
 
     function resume() {
         if (!ctx) return Promise.resolve();
         if (ctx.state !== 'suspended') return Promise.resolve();
-        // Calling resume() outside a user gesture logs Chrome's autoplay warning
         if (!resumeAllowed) return Promise.resolve();
-        return ctx.resume().catch(function () { /* ignore */ });
+        // Stacked resume() calls each log a Chrome autoplay warning
+        var now = Date.now();
+        if (resumeInFlight) return resumeInFlight;
+        if (now - lastResumeAt < 800) return Promise.resolve();
+        lastResumeAt = now;
+        resumeInFlight = ctx.resume().then(function () {
+            resumeInFlight = null;
+        }).catch(function () {
+            resumeInFlight = null;
+        });
+        return resumeInFlight;
     }
 
     function afterUnlock() {
@@ -99,6 +116,7 @@
         allowResumeBriefly();
         unlocked = true;
         ensure();
+        if (!ctx) return Promise.resolve();
         return resume().then(afterUnlock);
     }
 
@@ -588,10 +606,15 @@
     document.addEventListener('tb:locale', refreshInjectedLabels);
 
     function installUnlockGestures() {
-        // Only pointer/touch — NOT keydown.
-        // Holding Ctrl/Shift fires repeated keydown and was spamming
-        // "AudioContext was not allowed to start" in Chrome.
-        var onPointer = function () { unlock(); };
+        // First real click/tap only. Do not use keydown (Ctrl spam).
+        // Games also call unlock() on their Start/Restart buttons.
+        var onPointer = function () {
+            unlock();
+            if (ctx && ctx.state === 'running') {
+                document.removeEventListener('pointerdown', onPointer, true);
+                document.removeEventListener('touchstart', onPointer, true);
+            }
+        };
         document.addEventListener('pointerdown', onPointer, true);
         document.addEventListener('touchstart', onPointer, true);
     }
