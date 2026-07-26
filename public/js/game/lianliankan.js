@@ -573,7 +573,7 @@
     }
 
     function onShuffle() {
-        if (busy || won || ended || shufflesLeft <= 0) return;
+        if (won || ended || shufflesLeft <= 0) return;
         if (pairsLeft() === 0) return;
         shufflesLeft -= 1;
         shuffleRemaining(true);
