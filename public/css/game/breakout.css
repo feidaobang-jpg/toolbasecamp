@@ -8,24 +8,7 @@
     border-radius: 12px;
     border: 1px solid #1e293b;
     touch-action: none;
-    cursor: crosshair;
-}
-
-.breakout-pad-keys {
-    display: flex;
-    gap: 12px;
-    width: min(100%, 520px);
-    margin: 0 auto;
-}
-
-.breakout-pad-btn {
-    flex: 1 1 0;
-    min-height: 48px;
-    font-size: 20px;
-    line-height: 1;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
+    cursor: default;
 }
 
 .breakout-legend {

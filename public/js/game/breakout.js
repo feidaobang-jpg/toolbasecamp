@@ -11,7 +11,6 @@
     var livesEl = document.getElementById('lives');
     var levelEl = document.getElementById('level');
     var statusEl = document.getElementById('status');
-    var startBtn = document.getElementById('start-btn');
     var restartBtn = document.getElementById('restart-btn');
     var audio = window.GameAudio;
 
@@ -429,33 +428,30 @@
         else if (k === 'ArrowRight' || k === 'd' || k === 'D') keyRight = false;
     }
 
-    function bindHoldButton(btn, isLeft) {
-        if (!btn) return;
-        function down(e) {
-            e.preventDefault();
-            if (isLeft) keyLeft = true;
-            else keyRight = true;
-            if (!running && !gameOver) launch();
-            try { btn.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-        }
-        function up() {
-            if (isLeft) keyLeft = false;
-            else keyRight = false;
-        }
-        btn.addEventListener('pointerdown', down);
-        btn.addEventListener('pointerup', up);
-        btn.addEventListener('pointercancel', up);
-        btn.addEventListener('lostpointercapture', up);
-    }
-
-    // Desktop: any mouse move maps X to paddle — no click/hold needed
+    // Desktop: mouse move follows paddle (no button hold). Keep default cursor.
     window.addEventListener('mousemove', function (e) {
         if (keyLeft || keyRight || gameOver) return;
         if (isTypingTarget(e.target)) return;
         setPointerFromClientX(e.clientX);
     }, { passive: true });
 
-    // Touch on canvas: finger X follows paddle
+    // Phone: press and drag on canvas
+    canvas.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'mouse') {
+            setPointerFromClientX(e.clientX);
+            launch();
+            return;
+        }
+        e.preventDefault();
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+        setPointerFromEvent(e);
+        launch();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+        if (e.pointerType === 'mouse') return;
+        if (!e.isPrimary) return;
+        setPointerFromEvent(e);
+    });
     canvas.addEventListener('touchstart', function (e) {
         setPointerFromEvent(e);
         launch();
@@ -465,18 +461,13 @@
         setPointerFromEvent(e);
     }, { passive: false });
 
-    canvas.addEventListener('click', launch);
+    canvas.addEventListener('click', function () {
+        launch();
+    });
 
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
 
-    bindHoldButton(document.getElementById('pad-left'), true);
-    bindHoldButton(document.getElementById('pad-right'), false);
-
-    startBtn.addEventListener('click', function () {
-        if (gameOver) resetGame();
-        launch();
-    });
     restartBtn.addEventListener('click', resetGame);
 
     resetGame();

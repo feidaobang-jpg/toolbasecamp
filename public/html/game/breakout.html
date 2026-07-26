@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/game/games-common.css?v=3" />
-  <link rel="stylesheet" href="../../css/game/breakout.css?v=3" />
+  <link rel="stylesheet" href="../../css/game/breakout.css?v=4" />
 </head>
 <body>
   <div class="container">
@@ -32,17 +32,12 @@
               <span data-i18n="tools.game.volume">音量</span>
               <input type="range" id="volume-slider" min="0" max="100" value="50" aria-label="Volume" />
             </label>
-            <button type="button" class="tb-btn" id="start-btn" data-i18n="tools.breakout.start">Start</button>
             <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
           </div>
         </div>
-        <div class="game-status is-idle" id="status" data-i18n="tools.breakout.hint">Click Start, then move the paddle under the ball.</div>
+        <div class="game-status is-idle" id="status" data-i18n="tools.breakout.hint">Click the canvas or press Space to launch. Move mouse or drag on screen to steer.</div>
         <div class="game-board-wrap">
           <canvas id="canvas" class="breakout-canvas" width="390" height="520"></canvas>
-        </div>
-        <div class="breakout-pad-keys" aria-label="Paddle controls">
-          <button type="button" class="tb-btn breakout-pad-btn" id="pad-left">◀</button>
-          <button type="button" class="tb-btn breakout-pad-btn" id="pad-right">▶</button>
         </div>
         <div class="breakout-legend">
           <span><i class="breakout-dot" style="background:#22c55e"></i> <span data-i18n="tools.breakout.puExtend">Longer paddle</span></span>
@@ -59,6 +54,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/game/game-audio.js?v=7"></script>
-  <script src="../../js/game/breakout.js?v=7"></script>
+  <script src="../../js/game/breakout.js?v=8"></script>
 </body>
 </html>
