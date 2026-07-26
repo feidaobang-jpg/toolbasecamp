@@ -208,13 +208,16 @@
         }
     };
 
-    // scale: C4 D4 E4 G4 A4 C5 D5 E5 G5 A5 (pentatonic-leaning)
-    var CATCHY_SCALE = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0];
+    // C pentatonic (sheep-style backup)
+    var SCALE_C = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0];
+    // G major cheerful (clearly different key/color)
+    var SCALE_G = [196.0, 220.0, 246.94, 293.66, 329.63, 392.0, 440.0, 493.88, 587.33, 659.25];
 
-    // Previous sheep-style tune (restore by setting catchy = catchyPrev)
+    // Last liked sheep-style tune — restore: THEMES.catchy = THEMES.catchyPrev
     var CATCHY_PREV = {
         bpm: 264,
-        scale: CATCHY_SCALE,
+        scale: SCALE_C,
+        voice: 'triangle',
         lead: [
             3, 3, 5, 3, 4, 4, 3, -1,
             1, 1, 3, 1, 0, 0, 0, -1,
@@ -231,24 +234,25 @@
 
     var THEMES = {
         catchyPrev: CATCHY_PREV,
-        // new try: bubbly arcade jingle (down-up hooks + syncopation)
+        // NEW: G-major march jingle — slower phrase feel, square lead, obvious contrast
         catchy: {
-            bpm: 264,
-            scale: CATCHY_SCALE,
+            bpm: 200,
+            scale: SCALE_G,
+            voice: 'square',
             lead: [
-                // hook A
-                5, 4, 3, 4, 5, 5, 5, -1,
-                4, 3, 1, 3, 4, 4, 4, -1,
-                5, 4, 3, 4, 5, 7, 5, 4,
-                3, 1, 0, 1, 3, 3, 3, -1,
-                // hook B (higher sparkle)
-                7, 5, 7, 8, 7, 5, 4, 5,
-                3, 4, 5, 7, 5, 4, 3, -1,
-                5, 5, 4, 3, 1, 3, 5, 4,
-                3, 1, 0, 0, 1, 3, 0, -1
+                // "ta-ta-ta TAA" march hook
+                5, 5, 5, 7, 5, -1, 3, 5,
+                7, 7, 7, 8, 7, -1, 5, 3,
+                5, 3, 1, 3, 5, 5, 7, -1,
+                5, 3, 1, 0, 1, 1, 1, -1,
+                // answer: leap up then tumble
+                8, 7, 5, 8, 7, 5, 3, 5,
+                7, 5, 3, 1, 3, 5, 3, -1,
+                5, 5, 7, 5, 3, 1, 0, 1,
+                3, 5, 7, 5, 3, 1, 0, -1
             ],
-            bass: [0, 0, -1, 3, 4, 4, -1, 3, 0, 0, -1, 1, 3, 3, -1, 0],
-            hop: [8, -1, 7, 5, 8, -1, 5, 7]
+            bass: [0, -1, 0, -1, 3, -1, 3, -1, 4, -1, 4, -1, 0, 1, 3, 0],
+            hop: [7, 8, -1, 7, 5, 8, -1, 5]
         },
         calm: null,
         upbeat: null,
@@ -324,14 +328,14 @@
             else if (bgmStep % 2 === 1) playHat(beat);
 
             if (li >= 0) {
-                playVoice(theme.scale[li % theme.scale.length], beat * 0.88, 'triangle', 0.3, t0);
-                // cute chirp on alternate notes
+                var leadType = theme.voice || 'square';
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.88, leadType, 0.32, t0);
                 if (bgmStep % 2 === 0) {
                     playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.4, 'sine', 0.12, t0);
                 }
             }
             if (bi >= 0) {
-                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.05, 'square', 0.18, t0);
+                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.05, 'triangle', 0.2, t0);
             }
             if (hi >= 0 && bgmStep % 4 === 2) {
                 playVoice(theme.scale[hi % theme.scale.length], beat * 0.35, 'sine', 0.14, t0 + beat * 0.45);
