@@ -9,11 +9,21 @@
     var boardEl = document.getElementById('board');
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
+    var audio = window.GameAudio;
 
     var board = [];
     var current = 1;
     var gameOver = false;
     var last = null;
+
+    if (audio) {
+        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.startBgm('calm');
+    }
+
+    function play(name) {
+        if (audio) audio.sfx(name);
+    }
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
@@ -76,6 +86,7 @@
         current = 1;
         gameOver = false;
         last = null;
+        play('start');
         setStatus(turnMsg(), 'is-idle');
         render();
     }
@@ -91,8 +102,10 @@
         last = { x: x, y: y };
         if (checkWin(x, y, current)) {
             gameOver = true;
+            play('win');
             setStatus(current === 1 ? tr('tools.gomoku.blackWin') : tr('tools.gomoku.whiteWin'), 'is-win');
         } else {
+            play('place');
             current = current === 1 ? 2 : 1;
             setStatus(turnMsg(), 'is-idle');
         }

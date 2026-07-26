@@ -74,6 +74,11 @@
     opacity: 0.95;
 }
 
+.game-toolbar .tb-btn.is-muted,
+.puzzle-upload .tb-btn.is-muted {
+    opacity: 0.72;
+}
+
 @media (max-width: 768px) {
     .game-toolbar {
         flex-direction: column;

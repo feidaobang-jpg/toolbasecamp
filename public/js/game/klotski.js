@@ -10,12 +10,22 @@
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
     var diffRow = document.getElementById('diff-row');
+    var audio = window.GameAudio;
 
     var size = 3;
     var board = [];
     var empty = { x: 2, y: 2 };
     var steps = 0;
     var gameOver = false;
+
+    if (audio) {
+        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.startBgm('calm');
+    }
+
+    function play(name) {
+        if (audio) audio.sfx(name);
+    }
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
@@ -87,6 +97,7 @@
         steps = 0;
         gameOver = false;
         stepsEl.textContent = '0';
+        play('start');
         setStatus(tr('tools.klotski.hint'), 'is-idle');
         render();
     }
@@ -138,7 +149,10 @@
         render();
         if (checkWin()) {
             gameOver = true;
+            play('win');
             setStatus(tr('tools.klotski.win', { n: steps }), 'is-win');
+        } else {
+            play('move');
         }
     });
 

@@ -16,6 +16,16 @@
     var cropImg = document.getElementById('crop-img');
     var cropApply = document.getElementById('crop-apply');
     var cropCancel = document.getElementById('crop-cancel');
+    var audio = window.GameAudio;
+
+    if (audio) {
+        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.startBgm('calm');
+    }
+
+    function play(name) {
+        if (audio) audio.sfx(name);
+    }
 
     var grid = 3;
     var imageUrl = '';
@@ -105,6 +115,7 @@
         pieces = order;
         selected = -1;
         complete = false;
+        play('start');
         setStatus('');
         previewEl.src = imageUrl;
         render();
@@ -246,11 +257,13 @@
         var idx = Number(el.dataset.index);
         if (selected < 0) {
             selected = idx;
+            play('select');
             render();
             return;
         }
         if (selected === idx) {
             selected = -1;
+            play('click');
             render();
             return;
         }
@@ -260,8 +273,10 @@
         selected = -1;
         if (checkWin()) {
             complete = true;
+            play('win');
             setStatus(tr('tools.puzzle.win'), 'is-win');
         } else {
+            play('swap');
             setStatus('');
         }
         render();

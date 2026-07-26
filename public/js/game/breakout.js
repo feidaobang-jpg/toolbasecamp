@@ -13,6 +13,16 @@
     var statusEl = document.getElementById('status');
     var startBtn = document.getElementById('start-btn');
     var restartBtn = document.getElementById('restart-btn');
+    var audio = window.GameAudio;
+
+    if (audio) {
+        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.startBgm('arcade');
+    }
+
+    function play(name) {
+        if (audio) audio.sfx(name);
+    }
 
     var W = canvas.width;
     var H = canvas.height;
@@ -108,6 +118,7 @@
         initBricks();
         resetBall(true);
         syncHud();
+        play('start');
         setStatus(tr('tools.breakout.hint'), 'is-idle');
         draw();
     }
@@ -121,6 +132,7 @@
         waiting = true;
         running = true;
         syncHud();
+        play('level');
         setStatus(tr('tools.breakout.levelUp', { n: level }), 'is-win');
     }
 
@@ -178,9 +190,9 @@
             ball.x += ball.vx;
             ball.y += ball.vy;
 
-            if (ball.x - ball.r < 0) { ball.x = ball.r; ball.vx *= -1; }
-            if (ball.x + ball.r > W) { ball.x = W - ball.r; ball.vx *= -1; }
-            if (ball.y - ball.r < 0) { ball.y = ball.r; ball.vy *= -1; }
+            if (ball.x - ball.r < 0) { ball.x = ball.r; ball.vx *= -1; play('hit'); }
+            if (ball.x + ball.r > W) { ball.x = W - ball.r; ball.vx *= -1; play('hit'); }
+            if (ball.y - ball.r < 0) { ball.y = ball.r; ball.vy *= -1; play('hit'); }
 
             if (ball.y + ball.r >= paddle.y &&
                 ball.y + ball.r <= paddle.y + paddle.h + 8 &&
@@ -190,6 +202,7 @@
                 ball.vx = hit * 1.2 * (ball.speedScale || 1);
                 ball.vy = -Math.abs(ball.vy);
                 ball.y = paddle.y - ball.r;
+                play('hit');
             }
 
             for (bj = 0; bj < bricks.length; bj++) {
@@ -206,17 +219,23 @@
                 if (minX < minY) ball.vx *= -1;
                 else ball.vy *= -1;
 
-                if (br.kind === 'unbreakable') break;
+                if (br.kind === 'unbreakable') {
+                    play('hit');
+                    break;
+                }
                 br.hp -= 1;
                 if (br.hp <= 0) {
                     br.status = 0;
                     score += br.kind === 'hard' ? 20 : 10;
+                    play('brick');
                     spawnPowerUp(br);
                     syncHud();
                     if (!bricksLeft()) {
                         nextLevel();
                         return;
                     }
+                } else {
+                    play('hit');
                 }
                 break;
             }
@@ -232,11 +251,13 @@
             if (lives <= 0) {
                 gameOver = true;
                 running = false;
+                play('lose');
                 setStatus(tr('tools.breakout.gameOver'), 'is-lose');
                 return;
             }
             paddle.w = paddle.baseW;
             resetBall(true);
+            play('life');
             setStatus(tr('tools.breakout.lifeLost'), 'is-idle');
         }
 
@@ -251,6 +272,7 @@
                 pu.x >= paddle.x && pu.x <= paddle.x + paddle.w) {
                 applyPowerUp(pu.type);
                 powerUps.splice(bi, 1);
+                play('power');
                 setStatus(tr('tools.breakout.powerGot', { type: tr('tools.breakout.pu' + pu.type.charAt(0).toUpperCase() + pu.type.slice(1)) }), 'is-win');
             }
         }
@@ -350,6 +372,7 @@
         }
         if (waiting && balls.length) {
             waiting = false;
+            play('start');
             setStatus(tr('tools.breakout.playing'), 'is-idle');
         }
     }

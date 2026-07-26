@@ -16,6 +16,7 @@
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
     var hintBtn = document.getElementById('hint-btn');
+    var audio = window.GameAudio;
 
     var gems = [];
     var score = 0;
@@ -23,6 +24,15 @@
     var busy = false;
     var gemSize = 40;
     var gap = 3;
+
+    if (audio) {
+        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.startBgm('upbeat');
+    }
+
+    function play(name) {
+        if (audio) audio.sfx(name);
+    }
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
@@ -252,6 +262,7 @@
                 }
                 score += matched.size * 10;
                 scoreEl.textContent = String(score);
+                play('match');
                 animateClear(matched).then(function () {
                     matched.forEach(function (i) { gems[i] = 0; });
                     var plan = planCollapse(gems);
@@ -279,12 +290,14 @@
         // revert data for visual swap from current DOM positions first
         gems = snapshot;
 
+        play('swap');
         animateSwap(a, b).then(function () {
             if (!valid) {
                 // swap back visually
                 return animateSwap(a, b).then(function () {
                     selected = -1;
                     busy = false;
+                    play('invalid');
                     setStatus(tr('tools.gemswap.invalidSwap'), 'is-lose');
                     render();
                 });
@@ -296,7 +309,10 @@
             setStatus(tr('tools.gemswap.hintPlay'), 'is-idle');
             return resolveMatchesAnimated().then(function () {
                 busy = false;
-                if (!findHint()) setStatus(tr('tools.gemswap.noMoves'), 'is-lose');
+                if (!findHint()) {
+                    play('lose');
+                    setStatus(tr('tools.gemswap.noMoves'), 'is-lose');
+                }
             });
         }).catch(function () {
             busy = false;
@@ -340,6 +356,7 @@
         clearInitialMatchesSync();
         score = 0;
         scoreEl.textContent = '0';
+        play('start');
         setStatus(tr('tools.gemswap.hintPlay'), 'is-idle');
         render();
     }
@@ -351,12 +368,14 @@
         var i = Number(el.dataset.index);
         if (selected < 0) {
             selected = i;
+            play('select');
             setStatus(tr('tools.gemswap.hintPlay'), 'is-idle');
             render();
             return;
         }
         if (selected === i) {
             selected = -1;
+            play('click');
             render();
             return;
         }
@@ -367,10 +386,12 @@
         if (busy) return;
         var h = findHint();
         if (!h) {
+            play('invalid');
             setStatus(tr('tools.gemswap.noMoves'), 'is-lose');
             return;
         }
         selected = h[0];
+        play('select');
         setStatus(tr('tools.gemswap.hintFound'), 'is-idle');
         render();
         var second = gemEl(h[1]);

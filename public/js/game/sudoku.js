@@ -9,10 +9,20 @@
     var padEl = document.getElementById('pad');
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
+    var audio = window.GameAudio;
 
     var board = [];
     var original = [];
     var selected = { row: -1, col: -1 };
+
+    if (audio) {
+        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.startBgm('calm');
+    }
+
+    function play(name) {
+        if (audio) audio.sfx(name);
+    }
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
@@ -164,13 +174,19 @@
         if (original[row][col] !== 0) return;
         var dup = checkDuplicate(row, col, num);
         if (dup) {
+            play('invalid');
             setStatus(dup, 'is-lose');
             return;
         }
         board[row][col] = num;
         render();
-        if (isComplete()) setStatus(tr('tools.sudoku.complete'), 'is-win');
-        else setStatus(tr('tools.sudoku.hintPick'), 'is-idle');
+        if (isComplete()) {
+            play('win');
+            setStatus(tr('tools.sudoku.complete'), 'is-win');
+        } else {
+            play(num === 0 ? 'click' : 'place');
+            setStatus(tr('tools.sudoku.hintPick'), 'is-idle');
+        }
     }
 
     function newGame() {
@@ -178,6 +194,7 @@
         board = puzzle.map(function (row) { return row.slice(); });
         original = puzzle.map(function (row) { return row.slice(); });
         selected = { row: -1, col: -1 };
+        play('start');
         setStatus(tr('tools.sudoku.hintPick'), 'is-idle');
         render();
     }
@@ -189,6 +206,7 @@
         var col = Number(cell.dataset.col);
         if (original[row][col] !== 0) return;
         selected = { row: row, col: col };
+        play('select');
         render();
     });
 

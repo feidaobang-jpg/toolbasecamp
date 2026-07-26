@@ -7,7 +7,7 @@
   <meta name="description" content="Match-3 gem puzzle. Swap adjacent gems to make lines of three or more.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/game/games-common.css?v=1" />
+  <link rel="stylesheet" href="../../css/game/games-common.css?v=2" />
   <link rel="stylesheet" href="../../css/game/gemswap.css?v=2" />
 </head>
 <body>
@@ -25,6 +25,7 @@
             <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
           </div>
           <div class="action-row">
+            <button type="button" class="tb-btn" id="sound-btn" data-i18n="tools.game.soundOn" data-i18n-sound-on="tools.game.soundOn" data-i18n-sound-off="tools.game.soundOff">Sound on</button>
             <button type="button" class="tb-btn" id="hint-btn" data-i18n="tools.gemswap.hint">Hint</button>
             <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
           </div>
@@ -42,6 +43,7 @@
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/game/gemswap.js?v=2"></script>
+  <script src="../../js/game/game-audio.js?v=1"></script>
+  <script src="../../js/game/gemswap.js?v=3"></script>
 </body>
 </html>

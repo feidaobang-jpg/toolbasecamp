@@ -271,7 +271,9 @@ window.TB_LOCALES.en = {
         },
         game: {
             restart: 'New game',
-            score: 'Score'
+            score: 'Score',
+            soundOn: 'Sound on',
+            soundOff: 'Muted'
         },
         sudoku: {
             title: 'Sudoku',
