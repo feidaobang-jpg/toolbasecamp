@@ -1,44 +1,400 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Snake - Tool Basecamp</title>
-  <meta name="description" content="Classic snake — eat apples and grow. Emoji tiles. Runs locally.">
-  <link rel="stylesheet" href="../../css/base.css?v=5" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/game/games-common.css?v=3" />
-  <link rel="stylesheet" href="../../css/game/snake.css?v=1" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>贪吃蛇 · Snake</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b1220;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:#0f172a;display:flex;flex-direction:column}
+#top{flex:0 0 auto;padding:10px 12px 6px;padding-right:130px}
+#hud{display:flex;flex-wrap:wrap;gap:10px 14px;font-size:13px;text-shadow:0 1px 2px #000}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:48%;justify-content:flex-end}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#hint{font-size:12px;color:#94a3b8;margin-top:6px;line-height:1.45}
+#hint kbd{display:inline-block;padding:1px 6px;border-radius:6px;background:#1e293b;border:1px solid #475569;color:#e2e8f0;font-size:11px}
+#boardWrap{flex:1 1 auto;min-height:0;padding:4px 12px;display:flex;align-items:center;justify-content:center}
+canvas{display:block;width:min(100%,100%);max-height:100%;aspect-ratio:1;background:#020617;border-radius:12px;border:1px solid #334155}
+#pad{flex:0 0 auto;display:none;padding:8px 16px calc(12px + env(safe-area-inset-bottom,0));justify-content:center}
+#pad .grid{display:grid;grid-template-columns:64px 64px 64px;grid-template-rows:52px 52px 52px;gap:6px}
+#pad .btn{border:0;border-radius:14px;background:rgba(37,99,235,.45);color:#fff;font-size:20px;font-weight:700;border:1px solid rgba(255,255,255,.25)}
+#pad .btn:active,#pad .btn.on{background:rgba(37,99,235,.85)}
+#pad .u{grid-column:2;grid-row:1}#pad .l{grid-column:1;grid-row:2}#pad .r{grid-column:3;grid-row:2}#pad .d{grid-column:2;grid-row:3}
+#pad .spacer{grid-column:2;grid-row:2;visibility:hidden}
+@media(pointer:coarse){#pad{display:flex}#hint .desk{display:none}}
+@media(pointer:fine){#hint .mob{display:none}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.96);border:1px solid #334155;border-radius:16px;padding:18px 16px}
+#ui h1{font-size:1.35rem;color:#4ade80;margin-bottom:8px}
+#ui h2{font-size:1.05rem;color:#86efac;margin-bottom:8px}
+#ui p{font-size:.86rem;line-height:1.5;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#ui button{font:inherit;flex:1;min-width:110px;border:0;border-radius:999px;padding:11px 16px;background:#2563eb;color:#fff;cursor:pointer}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+.hidden{display:none!important}
+</style>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar"></aside>
-    <main class="content">
-      <div class="tool-header">
-        <h1 data-i18n="tools.snake.title">Snake</h1>
-        <p data-i18n="tools.snake.desc">Steer the snake to eat apples. Runs locally.</p>
-      </div>
-      <div class="tool-card game-card">
-        <div class="game-toolbar">
-          <div class="game-stats">
-            <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
-            <span><span data-i18n="tools.snake.best">Best</span>: <strong id="best">0</strong></span>
-          </div>
-          <div class="action-row">
-            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
-          </div>
-        </div>
-        <div class="game-status is-idle" id="status" data-i18n="tools.snake.hint">Arrow keys / WASD / swipe to move.</div>
-        <div class="game-board-wrap"><canvas id="canvas" class="snake-canvas" width="360" height="360"></canvas></div>
-      </div>
-    </main>
+<div id="wrap">
+  <div id="top">
+    <div id="hud">
+      <span>关卡 <b id="level">1</b></span>
+      <span>得分 <b id="score">0</b></span>
+      <span>目标 <b id="goal">0</b>/<b id="need">5</b></span>
+      <span>最高 <b id="best">0</b></span>
+    </div>
+    <p id="hint">
+      <span class="desk">键盘：<kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 或 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 转向 · <kbd>空格</kbd> 开始/暂停</span>
+      <span class="mob">手机：用下方方向键转向（不能直接掉头）</span>
+    </p>
   </div>
-  <script src="../../js/locales/en.js"></script>
-  <script src="../../js/locales/zh-CN.js"></script>
-  <script src="../../js/i18n.js"></script>
-  <script src="../../js/config.js"></script>
-  <script src="../../js/base.js"></script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
-  <script src="../../js/game/snake.js?v=5"></script>
+  <div class="action-row" id="audioBar"></div>
+  <div id="boardWrap"><canvas id="c" width="400" height="400"></canvas></div>
+  <div id="pad">
+    <div class="grid">
+      <button type="button" class="btn u" id="btnU" aria-label="上">▲</button>
+      <button type="button" class="btn l" id="btnL" aria-label="左">◀</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn r" id="btnR" aria-label="右">▶</button>
+      <button type="button" class="btn d" id="btnD" aria-label="下">▼</button>
+    </div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>贪吃蛇</h1>
+      <p>吃苹果过关，关卡越高速度越快、场地障碍越多。撞墙、撞自己或撞障碍即失败。</p>
+      <p class="desk">电脑用方向键 / WASD；手机用屏幕下方方向键。</p>
+      <div class="row"><button id="btnNew">开始游戏</button></div>
+    </div>
+    <div class="panel hidden" id="panelClear">
+      <h2>第 <span id="clearLv">1</span> 关通过！</h2>
+      <p id="clearMsg"></p>
+      <div class="row"><button id="btnNext">下一关</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2>游戏结束</h2>
+      <p id="overMsg"></p>
+      <div class="row">
+        <button id="btnRetry">再来</button>
+        <button class="ghost" id="btnMenu">菜单</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=20"></script>
+<script>
+(function () {
+'use strict';
+const KEY = 'tbc_snake_v2';
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let N = 16, cell = 25, dpr = 1;
+let mode = 'menu'; // menu | play | pause | clear | over
+let state = null;
+let best = 0;
+let acc = 0;
+
+function sfx(n) { try { GameAudio && GameAudio.sfx(n); } catch (e) {} }
+function unlock() { try { GameAudio && GameAudio.unlock(); } catch (e) {} }
+function loadBest() {
+  try { best = (JSON.parse(localStorage.getItem(KEY) || '{}').best) | 0; } catch (e) { best = 0; }
+  document.getElementById('best').textContent = best;
+}
+function saveBest(score) {
+  if (score > best) {
+    best = score;
+    try { localStorage.setItem(KEY, JSON.stringify({ best })); } catch (e) {}
+  }
+  document.getElementById('best').textContent = best;
+}
+
+function hidePanels() {
+  ['panelMenu', 'panelClear', 'panelOver'].forEach(id => document.getElementById(id).classList.add('hidden'));
+}
+function show(id) { hidePanels(); document.getElementById(id).classList.remove('hidden'); }
+
+function levelNeed(lv) { return 4 + lv; }
+function levelSpeed(lv) { return Math.max(55, 155 - (lv - 1) * 9); }
+function levelSize(lv) { return lv < 4 ? 14 : lv < 8 ? 16 : 18; }
+function obstacleCount(lv) { return lv < 3 ? 0 : Math.min(12, (lv - 2) * 2); }
+
+function resize() {
+  const wrap = document.getElementById('boardWrap');
+  const r = wrap.getBoundingClientRect();
+  const side = Math.max(220, Math.min(r.width, r.height) - 4);
+  dpr = Math.min(2, devicePixelRatio || 1);
+  canvas.style.width = side + 'px';
+  canvas.style.height = side + 'px';
+  canvas.width = Math.floor(side * dpr);
+  canvas.height = Math.floor(side * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cell = side / (state ? state.n : N);
+}
+window.addEventListener('resize', () => { resize(); draw(); });
+
+function freeCell(occ) {
+  let x, y, guard = 0;
+  do {
+    x = (Math.random() * state.n) | 0;
+    y = (Math.random() * state.n) | 0;
+    guard++;
+  } while (occ(x, y) && guard < 200);
+  return { x, y };
+}
+
+function buildObstacles(n, snake) {
+  const obs = [];
+  const blocked = (x, y) =>
+    snake.some(s => s.x === x && s.y === y) ||
+    obs.some(o => o.x === x && o.y === y) ||
+    (Math.abs(x - snake[0].x) + Math.abs(y - snake[0].y) < 3);
+  const count = obstacleCount(state.level);
+  for (let i = 0; i < count; i++) {
+    const p = freeCell(blocked);
+    obs.push(p);
+  }
+  return obs;
+}
+
+function placeFood() {
+  const occ = (x, y) =>
+    state.snake.some(s => s.x === x && s.y === y) ||
+    state.obs.some(o => o.x === x && o.y === y);
+  state.food = freeCell(occ);
+}
+
+function startLevel(lv, keepScore) {
+  unlock();
+  N = levelSize(lv);
+  state = {
+    level: lv,
+    n: N,
+    snake: [],
+    dir: { x: 1, y: 0 },
+    nextDir: { x: 1, y: 0 },
+    food: { x: 0, y: 0 },
+    obs: [],
+    eaten: 0,
+    need: levelNeed(lv),
+    score: keepScore && state ? state.score : 0,
+    tickMs: levelSpeed(lv),
+    alive: true
+  };
+  const mid = (N / 2) | 0;
+  state.snake = [{ x: mid, y: mid }, { x: mid - 1, y: mid }, { x: mid - 2, y: mid }];
+  state.obs = buildObstacles(N, state.snake);
+  placeFood();
+  mode = 'play';
+  acc = 0;
+  hidePanels();
+  resize();
+  hud();
+  sfx('start');
+  draw();
+}
+
+function hud() {
+  if (!state) return;
+  document.getElementById('level').textContent = state.level;
+  document.getElementById('score').textContent = state.score;
+  document.getElementById('goal').textContent = state.eaten;
+  document.getElementById('need').textContent = state.need;
+  document.getElementById('best').textContent = Math.max(best, state.score);
+}
+
+function die(reason) {
+  mode = 'over';
+  state.alive = false;
+  saveBest(state.score);
+  document.getElementById('overMsg').textContent =
+    reason + ' · 第 ' + state.level + ' 关 · 得分 ' + state.score + '（最高 ' + best + '）';
+  show('panelOver');
+  sfx('lose');
+}
+
+function clearLevel() {
+  mode = 'clear';
+  document.getElementById('clearLv').textContent = state.level;
+  document.getElementById('clearMsg').textContent =
+    '本关得分累计 ' + state.score + ' · 下一关更快' + (obstacleCount(state.level + 1) ? '，障碍更多' : '');
+  show('panelClear');
+  sfx('win');
+  saveBest(state.score);
+}
+
+function setDir(x, y) {
+  if (mode !== 'play' || !state) return;
+  if (state.dir.x === -x && state.dir.y === -y) return;
+  state.nextDir = { x, y };
+}
+
+function step() {
+  if (mode !== 'play' || !state || !state.alive) return;
+  state.dir = state.nextDir;
+  const h = { x: state.snake[0].x + state.dir.x, y: state.snake[0].y + state.dir.y };
+  if (h.x < 0 || h.y < 0 || h.x >= state.n || h.y >= state.n) {
+    die('撞到墙壁');
+    return;
+  }
+  if (state.snake.some(s => s.x === h.x && s.y === h.y)) {
+    die('咬到自己');
+    return;
+  }
+  if (state.obs.some(o => o.x === h.x && o.y === h.y)) {
+    die('撞上障碍');
+    return;
+  }
+  state.snake.unshift(h);
+  if (h.x === state.food.x && h.y === state.food.y) {
+    state.eaten++;
+    state.score += 10 + state.level * 2;
+    sfx('match');
+    hud();
+    if (state.eaten >= state.need) {
+      clearLevel();
+      draw();
+      return;
+    }
+    placeFood();
+  } else {
+    state.snake.pop();
+  }
+  hud();
+  draw();
+}
+
+function draw() {
+  const side = canvas.width / dpr;
+  cell = side / (state ? state.n : N);
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(0, 0, side, side);
+  // grid
+  ctx.strokeStyle = 'rgba(51,65,85,.45)';
+  ctx.lineWidth = 1;
+  const n = state ? state.n : N;
+  for (let i = 0; i <= n; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * cell, 0); ctx.lineTo(i * cell, side);
+    ctx.moveTo(0, i * cell); ctx.lineTo(side, i * cell);
+    ctx.stroke();
+  }
+  if (!state) return;
+  // obstacles
+  state.obs.forEach(o => {
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(o.x * cell + 2, o.y * cell + 2, cell - 4, cell - 4);
+  });
+  // food
+  ctx.beginPath();
+  ctx.fillStyle = '#ef4444';
+  ctx.arc(state.food.x * cell + cell / 2, state.food.y * cell + cell / 2, cell * 0.32, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#22c55e';
+  ctx.fillRect(state.food.x * cell + cell * 0.55, state.food.y * cell + cell * 0.15, 3, cell * 0.25);
+  // snake
+  state.snake.forEach((s, i) => {
+    const t = i === 0 ? '#4ade80' : '#16a34a';
+    ctx.fillStyle = t;
+    const pad = i === 0 ? 1 : 3;
+    roundRect(s.x * cell + pad, s.y * cell + pad, cell - pad * 2, cell - pad * 2, 5);
+    ctx.fill();
+    if (i === 0) {
+      ctx.fillStyle = '#0f172a';
+      const ex = s.x * cell + cell * (0.5 + state.dir.x * 0.15);
+      const ey = s.y * cell + cell * (0.5 + state.dir.y * 0.15);
+      ctx.beginPath();
+      ctx.arc(ex - cell * 0.12, ey - cell * 0.08, 2.2, 0, Math.PI * 2);
+      ctx.arc(ex + cell * 0.12, ey - cell * 0.08, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+  if (mode === 'pause') {
+    ctx.fillStyle = 'rgba(15,23,42,.55)';
+    ctx.fillRect(0, 0, side, side);
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 20px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('暂停', side / 2, side / 2);
+  }
+}
+
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  if (mode === 'play' && state) {
+    acc += dt * 1000;
+    while (acc >= state.tickMs) {
+      acc -= state.tickMs;
+      step();
+      if (mode !== 'play') break;
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('keydown', e => {
+  const map = {
+    ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+    w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0],
+    W: [0, -1], S: [0, 1], A: [-1, 0], D: [1, 0]
+  };
+  if (map[e.key]) {
+    e.preventDefault();
+    unlock();
+    if (mode === 'menu' || mode === 'over') startLevel(1, false);
+    else if (mode === 'pause') { mode = 'play'; draw(); }
+    setDir(map[e.key][0], map[e.key][1]);
+  }
+  if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    unlock();
+    if (mode === 'menu' || mode === 'over') startLevel(1, false);
+    else if (mode === 'play') { mode = 'pause'; draw(); }
+    else if (mode === 'pause') { mode = 'play'; }
+    else if (mode === 'clear') startLevel(state.level + 1, true);
+  }
+});
+
+function bindPad(id, x, y) {
+  const el = document.getElementById(id);
+  const down = e => { e.preventDefault(); unlock(); el.classList.add('on'); if (mode === 'menu' || mode === 'over') startLevel(1, false); setDir(x, y); };
+  const up = () => el.classList.remove('on');
+  el.addEventListener('pointerdown', down);
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointerleave', up);
+  el.addEventListener('pointercancel', up);
+}
+bindPad('btnU', 0, -1);
+bindPad('btnD', 0, 1);
+bindPad('btnL', -1, 0);
+bindPad('btnR', 1, 0);
+
+document.getElementById('btnNew').onclick = () => { unlock(); startLevel(1, false); };
+document.getElementById('btnRetry').onclick = () => { unlock(); startLevel(1, false); };
+document.getElementById('btnNext').onclick = () => { unlock(); startLevel(state.level + 1, true); };
+document.getElementById('btnMenu').onclick = () => { mode = 'menu'; state = null; show('panelMenu'); loadBest(); draw(); };
+
+loadBest();
+resize();
+draw();
+if (window.GameAudio) GameAudio.boot('catchy');
+requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>

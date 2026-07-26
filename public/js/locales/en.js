@@ -389,12 +389,7 @@ window.TB_LOCALES.en = {
         },
         snake: {
             title: 'Snake',
-            desc: 'Steer the snake to eat apples. Runs locally.',
-            best: 'Best',
-            start: 'Start',
-            hint: 'Arrow keys / WASD / swipe to move.',
-            playing: 'Playing',
-            gameOver: 'Hit a wall or yourself'
+            desc: 'Level-based snake with rising speed and obstacles. Keyboard arrows/WASD; on-screen D-pad on phones.'
         },
         g2048: {
             title: '2048',
@@ -478,26 +473,8 @@ window.TB_LOCALES.en = {
             lose: 'Boom — mine hit'
         },
         slots: {
-            title: 'Lucky Slots',
-            desc: 'Spin for Firework, Panda, Train prizes and more. Fun only — no real money.',
-            credits: 'Credits',
-            last: 'Last win',
-            spin: 'Spin (−10)',
-            reset: 'Reset credits',
-            hint: 'Press Spin. Three of a kind wins a prize.',
-            spinning: 'Spinning…',
-            noCredits: 'Not enough credits — reset',
-            thanks: 'Thanks for playing — spin again',
-            winPrize: '{emoji} You won [{prize}]! +{n} credits',
-            winSmall: '{emoji} Small win +{n} credits',
-            prizes: '🎆 Firework · 🐼 Panda · 🚂 Train · 🧧 Red pack · 🍒 Cherry · Thanks',
-            prize: {
-                fireworks: 'Firework Prize',
-                panda: 'Panda Prize',
-                train: 'Train Prize',
-                redpack: 'Red Pack',
-                cherry: 'Cherry Prize'
-            }
+            title: 'Fruit Machine',
+            desc: 'Classic lucky fruit machine: place bets, run the lights, win on your symbol. Fun only — no real money.'
         },
         sheepstack: {
             title: 'Stack Match',

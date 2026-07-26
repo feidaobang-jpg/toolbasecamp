@@ -388,12 +388,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         snake: {
             title: '贪吃蛇',
-            desc: '操控小蛇吃苹果变长。本地运行。',
-            best: '最佳',
-            start: '开始',
-            hint: '方向键 / WASD / 滑动控制。',
-            playing: '游戏中',
-            gameOver: '撞墙或咬到自己了'
+            desc: '关卡制贪吃蛇：难度递增、障碍增多。电脑方向键/WASD，手机下方方向键。'
         },
         g2048: {
             title: '2048',
@@ -477,26 +472,8 @@ window.TB_LOCALES['zh-CN'] = {
             lose: '踩到雷了'
         },
         slots: {
-            title: '幸运老虎机',
-            desc: '转动转轮，冲刺礼炮奖、大熊猫、跑火车等。仅供娱乐，无真钱。',
-            credits: '筹码',
-            last: '上次赢得',
-            spin: '转动（−10）',
-            reset: '重置筹码',
-            hint: '点「转动」。三个相同图案可中奖。',
-            spinning: '转起来了…',
-            noCredits: '筹码不足，请重置',
-            thanks: '谢谢参与，再转一次吧',
-            winPrize: '{emoji} 恭喜获得【{prize}】！+{n} 筹码',
-            winSmall: '{emoji} 小奖 +{n} 筹码',
-            prizes: '🎆 礼炮奖 · 🐼 大熊猫 · 🚂 跑火车 · 🧧 红包奖 · 🍒 樱桃奖 · 谢谢参与',
-            prize: {
-                fireworks: '礼炮奖',
-                panda: '大熊猫',
-                train: '跑火车',
-                redpack: '红包奖',
-                cherry: '樱桃奖'
-            }
+            title: '水果机',
+            desc: '经典幸运水果机：押分跑灯，停在押中图案上得分。仅供娱乐，无真钱。'
         },
         sheepstack: {
             title: '叠消消',

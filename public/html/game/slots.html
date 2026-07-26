@@ -1,48 +1,384 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Slot Machine - Tool Basecamp</title>
-  <meta name="description" content="Spin the reels for Firework, Panda, Train prizes and more. Fun only, no real money.">
-  <link rel="stylesheet" href="../../css/base.css?v=5" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
-  <link rel="stylesheet" href="../../css/game/games-common.css?v=3" />
-  <link rel="stylesheet" href="../../css/game/casual-more.css?v=1" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>幸运水果机 · Fruit Machine</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0a3d28;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:linear-gradient(180deg,#166534,#14532d 40%,#052e16);display:flex;flex-direction:column;padding:8px;gap:8px}
+#audioBar{position:absolute;top:6px;right:6px;z-index:6;display:flex;gap:4px;align-items:center;flex-wrap:wrap;max-width:46%;justify-content:flex-end}
+#audioBar .tb-btn{font-size:10px;padding:5px 8px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#bbf7d0}
+#audioBar input[type=range]{width:64px}
+#board{flex:1.15 1 0;min-height:0;position:relative;border-radius:16px;background:#14532d;border:4px solid #86efac;box-shadow:inset 0 0 0 3px #166534,0 8px 24px rgba(0,0,0,.35);overflow:hidden}
+canvas{display:block;width:100%;height:100%}
+#panel{flex:1 1 0;min-height:180px;display:grid;grid-template-columns:1fr 110px;gap:8px;padding:8px;border-radius:16px;background:repeating-linear-gradient(-45deg,#86efac,#86efac 12px,#4ade80 12px,#4ade80 24px);border:3px solid #166534}
+#bets{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:6px}
+.bet{position:relative;border:0;border-radius:10px;background:#0f172a;color:#fff;padding:4px 2px 6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;box-shadow:0 3px 0 #020617;cursor:pointer}
+.bet:active{transform:translateY(2px);box-shadow:0 1px 0 #020617}
+.bet .stake{font-size:11px;font-weight:700;color:#fde68a;min-height:14px}
+.bet .ico{font-size:22px;line-height:1.1}
+.bet .pay{font-size:11px;font-weight:800;color:#fbbf24}
+.bet.on{outline:2px solid #fbbf24}
+#side{display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:6px;padding:4px 0}
+#scoreBox{width:100%;background:#0f172a;border:2px solid #334155;border-radius:8px;padding:6px 4px;text-align:center}
+#scoreBox .lab{font-size:10px;color:#94a3b8}
+#scoreBox b{display:block;font-size:22px;color:#fde68a;line-height:1.2}
+#btnGo{width:88px;height:88px;border-radius:50%;border:4px solid #fff7ed;background:radial-gradient(circle at 35% 30%,#fdba74,#ea580c 55%,#9a3412);color:#fff;font-size:26px;font-weight:900;letter-spacing:1px;box-shadow:0 6px 0 #7c2d12,0 10px 20px rgba(0,0,0,.35);cursor:pointer}
+#btnGo:active{transform:translateY(3px);box-shadow:0 3px 0 #7c2d12}
+#btnGo:disabled{opacity:.55;cursor:not-allowed}
+#btnMenu{width:100%;border:0;border-radius:999px;padding:8px 10px;background:#16a34a;color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 2px 0 #14532d}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:8}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(15,23,42,.96);border:1px solid #334155;border-radius:16px;padding:18px 16px}
+#ui h1{font-size:1.3rem;color:#fbbf24;margin-bottom:8px}
+#ui p{font-size:.85rem;line-height:1.5;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;margin-top:12px}
+#ui button{font:inherit;flex:1;border:0;border-radius:999px;padding:11px 14px;background:#2563eb;color:#fff;cursor:pointer}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+.hidden{display:none!important}
+#toast{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 16px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:15px;opacity:0;transition:opacity .2s}
+#toast.show{opacity:1}
+</style>
 </head>
 <body>
-  <div class="container"><aside class="sidebar"></aside><main class="content">
-    <div class="tool-header">
-      <h1 data-i18n="tools.slots.title">Lucky Slots</h1>
-      <p data-i18n="tools.slots.desc">Spin for Firework, Panda, Train and more. Entertainment only — no real money.</p>
+<div id="wrap">
+  <div class="action-row" id="audioBar"></div>
+  <div id="board"><canvas id="c"></canvas></div>
+  <div id="panel">
+    <div id="bets"></div>
+    <div id="side">
+      <div id="scoreBox"><div class="lab">总分</div><b id="credits">100</b></div>
+      <button type="button" id="btnGo">GO</button>
+      <button type="button" id="btnMenu">菜单</button>
     </div>
-    <div class="tool-card game-card">
-      <div class="game-toolbar">
-        <div class="game-stats">
-          <span><span data-i18n="tools.slots.credits">Credits</span>: <strong id="credits" class="slots-credits">100</strong></span>
-          <span><span data-i18n="tools.slots.last">Last win</span>: <strong id="last">0</strong></span>
-        </div>
-        <div class="action-row">
-          <button type="button" class="tb-btn" id="spin-btn" data-i18n="tools.slots.spin">Spin (−10)</button>
-          <button type="button" class="tb-btn" id="reset-btn" data-i18n="tools.slots.reset">Reset credits</button>
-        </div>
-      </div>
-      <div class="game-status is-idle" id="status" data-i18n="tools.slots.hint">Press Spin. Three of a kind wins a prize.</div>
-      <div class="game-board-wrap">
-        <div class="slots-wrap" id="slots">
-          <div class="slots-reels">
-            <div class="slots-reel" id="r0">❓</div>
-            <div class="slots-reel" id="r1">❓</div>
-            <div class="slots-reel" id="r2">❓</div>
-          </div>
-          <p class="slots-prize-list" data-i18n-html="tools.slots.prizes">
-            🎆 礼炮奖 · 🐼 大熊猫 · 🚂 跑火车 · 🧧 红包奖 · 🍒 樱桃奖 · 谢谢参与
-          </p>
-        </div>
+  </div>
+  <div id="toast"></div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>幸运水果机</h1>
+      <p>点下方水果押分，再按 <b>GO</b> 跑灯。停在押中的图案上即可按倍率得分。</p>
+      <p>GOOD LUCK 随机小奖；带 ×2 的格子中奖翻倍。仅供娱乐，无真钱。</p>
+      <div class="row">
+        <button id="btnPlay">开始</button>
+        <button class="ghost" id="btnReset">重置 100 分</button>
       </div>
     </div>
-  </main></div>
-  <script src="../../js/locales/en.js"></script><script src="../../js/locales/zh-CN.js"></script>
-  <script src="../../js/i18n.js"></script><script src="../../js/config.js"></script><script src="../../js/base.js"></script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
-  <script src="../../js/game/slots.js?v=1"></script>
-</body></html>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=20"></script>
+<script>
+(function () {
+'use strict';
+const KEY = 'tbc_fruit_machine_v1';
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+/** bet keys & base payout */
+const KINDS = [
+  { id: 'bar', emoji: '🍫', label: 'BAR', pay: 50, color: '#f87171' },
+  { id: 'seven', emoji: '7️⃣', label: '77', pay: 40, color: '#fb7185' },
+  { id: 'star', emoji: '⭐', label: '星星', pay: 30, color: '#fbbf24' },
+  { id: 'melon', emoji: '🍉', label: '西瓜', pay: 25, color: '#4ade80' },
+  { id: 'bell', emoji: '🔔', label: '铃铛', pay: 20, color: '#facc15' },
+  { id: 'lemon', emoji: '🍋', label: '柠檬', pay: 15, color: '#fde047' },
+  { id: 'orange', emoji: '🍊', label: '橙子', pay: 10, color: '#fb923c' },
+  { id: 'apple', emoji: '🍎', label: '苹果', pay: 5, color: '#ef4444' }
+];
+
+/** 24-cell ring layout inspired by classic fruit machines */
+const RING = [
+  { kind: 'apple', x2: false }, { kind: 'orange', x2: true }, { kind: 'lemon', x2: false },
+  { kind: 'luck', x2: false }, { kind: 'bell', x2: false }, { kind: 'melon', x2: true },
+  { kind: 'star', x2: false }, { kind: 'seven', x2: false }, { kind: 'bar', x2: true },
+  { kind: 'apple', x2: false }, { kind: 'orange', x2: false }, { kind: 'lemon', x2: true },
+  { kind: 'luck', x2: false }, { kind: 'bell', x2: true }, { kind: 'melon', x2: false },
+  { kind: 'star', x2: true }, { kind: 'seven', x2: false }, { kind: 'bar', x2: false },
+  { kind: 'apple', x2: true }, { kind: 'orange', x2: false }, { kind: 'lemon', x2: false },
+  { kind: 'bell', x2: false }, { kind: 'melon', x2: false }, { kind: 'star', x2: false }
+];
+
+let W = 360, H = 360, dpr = 1;
+let credits = 100;
+let bets = Object.create(null);
+KINDS.forEach(k => { bets[k.id] = 0; });
+let cursor = 0;
+let spinning = false;
+let flash = 0;
+let centerMsg = '0';
+
+function sfx(n) { try { GameAudio && GameAudio.sfx(n); } catch (e) {} }
+function unlock() { try { GameAudio && GameAudio.unlock(); } catch (e) {} }
+
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY) || '{}');
+    if (typeof d.credits === 'number') credits = d.credits;
+  } catch (e) {}
+  document.getElementById('credits').textContent = credits;
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify({ credits })); } catch (e) {}
+}
+
+function kindMeta(id) {
+  if (id === 'luck') return { id: 'luck', emoji: '🍀', label: 'LUCK', pay: 0, color: '#f472b6' };
+  return KINDS.find(k => k.id === id);
+}
+
+function totalBet() {
+  return KINDS.reduce((s, k) => s + (bets[k.id] || 0), 0);
+}
+
+function resize() {
+  const box = document.getElementById('board').getBoundingClientRect();
+  dpr = Math.min(2, devicePixelRatio || 1);
+  W = Math.max(240, box.width);
+  H = Math.max(240, box.height);
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', () => { resize(); draw(); });
+
+function cellRect(i) {
+  // 24 cells around perimeter: 7 top, 5 right, 7 bottom, 5 left (corners shared → 24)
+  const cols = 7, rows = 7;
+  const pad = 6;
+  const cw = (W - pad * 2) / cols;
+  const ch = (H - pad * 2) / rows;
+  const map = [];
+  for (let x = 0; x < cols; x++) map.push({ c: x, r: 0 });
+  for (let y = 1; y < rows - 1; y++) map.push({ c: cols - 1, r: y });
+  for (let x = cols - 1; x >= 0; x--) map.push({ c: x, r: rows - 1 });
+  for (let y = rows - 2; y >= 1; y--) map.push({ c: 0, r: y });
+  const m = map[i % map.length];
+  return { x: pad + m.c * cw, y: pad + m.r * ch, w: cw, h: ch };
+}
+
+function drawCell(i, lit) {
+  const cell = RING[i];
+  const meta = kindMeta(cell.kind);
+  const r = cellRect(i);
+  const g = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h);
+  if (cell.kind === 'luck') {
+    g.addColorStop(0, lit ? '#f9a8d4' : '#db2777');
+    g.addColorStop(1, lit ? '#f472b6' : '#9d174d');
+  } else {
+    g.addColorStop(0, lit ? '#fef3c7' : '#1e293b');
+    g.addColorStop(1, lit ? '#fde68a' : '#0f172a');
+  }
+  ctx.fillStyle = g;
+  ctx.strokeStyle = lit ? '#fbbf24' : '#334155';
+  ctx.lineWidth = lit ? 3 : 1;
+  roundRect(r.x + 2, r.y + 2, r.w - 4, r.h - 4, 8);
+  ctx.fill();
+  ctx.stroke();
+  if (cell.kind === 'luck') {
+    ctx.fillStyle = '#fef08a';
+    ctx.font = 'bold ' + Math.max(9, r.w * 0.18) + 'px system-ui';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('GOOD', r.x + r.w / 2, r.y + r.h * 0.38);
+    ctx.fillText('LUCK!', r.x + r.w / 2, r.y + r.h * 0.62);
+  } else {
+    ctx.font = Math.max(16, r.w * 0.42) + 'px "Segoe UI Emoji",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(meta.emoji, r.x + r.w / 2, r.y + r.h * 0.55);
+  }
+  if (cell.x2) {
+    ctx.fillStyle = '#ef4444';
+    roundRect(r.x + 4, r.y + 4, Math.max(18, r.w * 0.32), Math.max(14, r.h * 0.22), 4);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold ' + Math.max(9, r.w * 0.16) + 'px system-ui';
+    ctx.fillText('×2', r.x + 4 + Math.max(18, r.w * 0.32) / 2, r.y + 4 + Math.max(14, r.h * 0.22) / 2 + 0.5);
+  }
+}
+
+function draw() {
+  // center field
+  ctx.fillStyle = '#7f1d1d';
+  ctx.fillRect(0, 0, W, H);
+  const pattern = ctx.createLinearGradient(0, 0, W, H);
+  pattern.addColorStop(0, '#991b1b');
+  pattern.addColorStop(1, '#450a0a');
+  const inner = { x: W * 0.16, y: H * 0.16, w: W * 0.68, h: H * 0.68 };
+  ctx.fillStyle = pattern;
+  roundRect(inner.x, inner.y, inner.w, inner.h, 12);
+  ctx.fill();
+
+  // title
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = 'bold ' + Math.max(22, W * 0.075) + 'px "Segoe UI","PingFang SC",sans-serif';
+  ctx.fillStyle = '#fbbf24';
+  ctx.fillText('幸运水果机', W / 2, H * 0.38);
+  ctx.font = Math.max(18, W * 0.06) + 'px "Segoe UI Emoji",sans-serif';
+  ctx.fillText('🍎  🍋', W / 2, H * 0.48);
+
+  // digital
+  const dw = W * 0.28, dh = H * 0.1;
+  ctx.fillStyle = '#020617';
+  roundRect(W / 2 - dw / 2, H * 0.56, dw, dh, 6);
+  ctx.fill();
+  ctx.strokeStyle = '#475569';
+  ctx.stroke();
+  ctx.fillStyle = '#f87171';
+  ctx.font = 'bold ' + Math.max(16, dh * 0.55) + 'px ui-monospace,monospace';
+  ctx.fillText(String(centerMsg), W / 2, H * 0.56 + dh / 2);
+
+  for (let i = 0; i < RING.length; i++) {
+    const lit = spinning ? (i === cursor || (flash > 0 && i === cursor)) : (i === cursor && flash > 0);
+    drawCell(i, i === cursor);
+  }
+}
+
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+function renderBets() {
+  const box = document.getElementById('bets');
+  box.innerHTML = '';
+  KINDS.forEach(k => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
+    b.innerHTML = '<span class="stake">' + (bets[k.id] || 0) + '</span><span class="ico">' + k.emoji + '</span><span class="pay">' + k.pay + '</span>';
+    b.onclick = () => {
+      unlock();
+      if (spinning) return;
+      if (credits <= 0) { toast('分数不足'); sfx('invalid'); return; }
+      credits--;
+      bets[k.id]++;
+      document.getElementById('credits').textContent = credits;
+      save();
+      sfx('click');
+      renderBets();
+    };
+    box.appendChild(b);
+  });
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runSpin() {
+  if (spinning) return;
+  unlock();
+  const bet = totalBet();
+  if (bet <= 0) { toast('请先押分'); sfx('invalid'); return; }
+  spinning = true;
+  document.getElementById('btnGo').disabled = true;
+  centerMsg = '…';
+  sfx('start');
+
+  // weighted stop: slightly favor lower pays for balance, still random among ring cells
+  const weights = RING.map(cell => {
+    if (cell.kind === 'luck') return 1.1;
+    const k = kindMeta(cell.kind);
+    return 1.2 + (55 - k.pay) / 50;
+  });
+  let sum = weights.reduce((a, b) => a + b, 0);
+  let roll = Math.random() * sum;
+  let stop = 0;
+  for (let i = 0; i < weights.length; i++) {
+    roll -= weights[i];
+    if (roll <= 0) { stop = i; break; }
+  }
+
+  const laps = 3 + ((Math.random() * 2) | 0);
+  const totalSteps = laps * RING.length + ((stop - cursor + RING.length) % RING.length);
+  for (let s = 0; s < totalSteps; s++) {
+    cursor = (cursor + 1) % RING.length;
+    draw();
+    if (s % 2 === 0) sfx('move');
+    const t = 28 + Math.floor(s / totalSteps * 90) + (s > totalSteps - 8 ? (s - (totalSteps - 8)) * 35 : 0);
+    await sleep(t);
+  }
+
+  const cell = RING[cursor];
+  let win = 0;
+  let msg = '谢谢参与';
+  if (cell.kind === 'luck') {
+    win = 2 + ((Math.random() * 8) | 0);
+    msg = 'GOOD LUCK +' + win;
+    sfx('power');
+  } else {
+    const stake = bets[cell.kind] || 0;
+    if (stake > 0) {
+      win = stake * kindMeta(cell.kind).pay * (cell.x2 ? 2 : 1);
+      msg = kindMeta(cell.kind).emoji + ' 中奖 +' + win + (cell.x2 ? ' (×2)' : '');
+      sfx('win');
+    } else {
+      sfx('lose');
+    }
+  }
+  credits += win;
+  centerMsg = win > 0 ? ('+' + win) : '0';
+  document.getElementById('credits').textContent = credits;
+  // clear bets after spin
+  KINDS.forEach(k => { bets[k.id] = 0; });
+  renderBets();
+  save();
+  toast(msg);
+  flash = 12;
+  spinning = false;
+  document.getElementById('btnGo').disabled = false;
+  if (credits <= 0) {
+    setTimeout(() => toast('分数用尽，可在菜单重置'), 1700);
+  }
+}
+
+function loop() {
+  if (flash > 0) flash--;
+  draw();
+  requestAnimationFrame(loop);
+}
+
+document.getElementById('btnGo').onclick = () => runSpin();
+document.getElementById('btnMenu').onclick = () => {
+  document.getElementById('panelMenu').classList.remove('hidden');
+};
+document.getElementById('btnPlay').onclick = () => {
+  unlock();
+  document.getElementById('panelMenu').classList.add('hidden');
+  sfx('place');
+};
+document.getElementById('btnReset').onclick = () => {
+  unlock();
+  credits = 100;
+  KINDS.forEach(k => { bets[k.id] = 0; });
+  centerMsg = '100';
+  document.getElementById('credits').textContent = credits;
+  renderBets();
+  save();
+  sfx('swap');
+  toast('已重置为 100 分');
+};
+
+load();
+renderBets();
+resize();
+if (window.GameAudio) GameAudio.boot('catchy');
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

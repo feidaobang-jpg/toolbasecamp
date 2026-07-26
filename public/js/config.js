@@ -218,7 +218,7 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.draft',
             items: [
-                { titleKey: 'tools.snake.title', url: 'html/game/snake.html' },
+                { titleKey: 'tools.snake.title', url: 'html/game/snake.html?v=2' },
                 { titleKey: 'tools.g2048.title', url: 'html/game/g2048.html' },
                 { titleKey: 'tools.whack.title', url: 'html/game/whack.html' },
                 { titleKey: 'tools.shooter.title', url: 'html/game/shooter.html' },
@@ -228,7 +228,7 @@ const gamesConfig = {
                 { titleKey: 'tools.memory.title', url: 'html/game/memory.html' },
                 { titleKey: 'tools.runner.title', url: 'html/game/runner.html' },
                 { titleKey: 'tools.mines.title', url: 'html/game/mines.html' },
-                { titleKey: 'tools.slots.title', url: 'html/game/slots.html' },
+                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=2' },
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html' },
                 { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html' },
                 { titleKey: 'tools.parkour.title', url: 'html/game/parkour.html' },
