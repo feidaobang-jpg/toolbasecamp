@@ -1,18 +1,22 @@
 .llk-board {
     position: relative;
     width: 100%;
-    max-width: 720px;
+    max-width: 1120px;
     margin: 0 auto;
     touch-action: manipulation;
+    container-type: inline-size;
+    container-name: llk;
 }
 
 .game-board-wrap:has(.llk-board) {
     touch-action: manipulation;
+    width: 100%;
+    padding: 0;
 }
 
 .llk-grid {
     display: grid;
-    gap: 5px;
+    gap: 6px;
     width: 100%;
 }
 
@@ -40,14 +44,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    font-size: clamp(22px, 5vw, 36px);
+    border-radius: 12px;
+    /* ~2x previous look: fill most of the cell */
+    font-size: 8.2cqw;
     line-height: 1;
     background: transparent;
     border: 2px solid transparent;
     cursor: default;
     transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
     -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
 }
 
 .llk-cell.is-tile {
@@ -83,6 +91,8 @@
 .llk-cell.is-empty {
     visibility: hidden;
     pointer-events: none;
+    border: none;
+    box-shadow: none;
 }
 
 @keyframes llk-pulse {
@@ -91,8 +101,15 @@
 }
 
 @media (max-width: 768px) {
+    /* Bleed into card padding so tiles use almost full phone width */
+    .game-board-wrap:has(.llk-board) {
+        margin-left: -8px;
+        margin-right: -8px;
+        width: calc(100% + 16px);
+    }
+
     .llk-board {
-        max-width: 100%;
+        max-width: none;
     }
 
     .llk-grid {
@@ -101,6 +118,6 @@
 
     .llk-cell {
         border-radius: 8px;
-        font-size: clamp(20px, 7vw, 30px);
+        font-size: 8.8cqw;
     }
 }

@@ -110,7 +110,10 @@
     }
 
     function renderBoard() {
-        gridEl.style.gridTemplateColumns = 'repeat(' + TOTAL_C + ', minmax(0, 1fr))';
+        gridEl.style.gridTemplateColumns =
+            'minmax(4px, 0.25fr) repeat(' + COLS + ', minmax(0, 1fr)) minmax(4px, 0.25fr)';
+        gridEl.style.gridTemplateRows =
+            'minmax(4px, 0.25fr) repeat(' + ROWS + ', minmax(0, 1fr)) minmax(4px, 0.25fr)';
         gridEl.innerHTML = '';
         cellEls = [];
         for (var r = 0; r < TOTAL_R; r++) {
