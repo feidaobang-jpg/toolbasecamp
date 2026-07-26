@@ -465,6 +465,7 @@
 
     function onCellClick(ev) {
         if (won || ended) return;
+        primeAudio();
         var el = ev.currentTarget;
         // Allow next pick immediately; ignore tiles mid-fade
         if (!el.classList.contains('is-tile') || el.classList.contains('is-clearing')) return;
@@ -602,6 +603,9 @@
         }
     }
 
+    hintBtn.addEventListener('pointerdown', primeAudio);
+    shuffleBtn.addEventListener('pointerdown', primeAudio);
+    restartBtn.addEventListener('pointerdown', primeAudio);
     hintBtn.addEventListener('click', onHint);
     shuffleBtn.addEventListener('click', onShuffle);
     restartBtn.addEventListener('click', newGame);
