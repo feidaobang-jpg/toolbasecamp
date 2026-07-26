@@ -401,16 +401,12 @@
         resetLevel(false);
         setStatus(tr('tools.goldminer.playing'), 'is-idle');
         lastTs = 0;
-        var kick = function () {
-            play('start');
-            raf = requestAnimationFrame(loop);
-        };
-        // Unlock audio inside the click stack, then start SFX/BGM
+        // Never block gameplay on audio unlock (resume can hang / warn)
         if (audio && audio.unlock) {
-            Promise.resolve(audio.unlock()).then(kick);
-        } else {
-            kick();
+            try { audio.unlock(); } catch (e) { /* ignore */ }
         }
+        play('start');
+        raf = requestAnimationFrame(loop);
     }
 
     restartBtn.addEventListener('click', function () {
@@ -422,11 +418,16 @@
             if (state !== 'win') startGame(true);
             return;
         }
-        if (audio && audio.unlock) audio.unlock();
+        if (audio && audio.unlock) {
+            try { audio.unlock(); } catch (err) { /* ignore */ }
+        }
         dropClaw();
     });
 
     resetLevel(false);
     draw();
     setStatus(tr('tools.goldminer.hint'), 'is-idle');
+    document.addEventListener('tb:locale', function () {
+        if (state === 'idle') setStatus(tr('tools.goldminer.hint'), 'is-idle');
+    });
 })();

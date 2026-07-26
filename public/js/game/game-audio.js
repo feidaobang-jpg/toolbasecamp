@@ -91,12 +91,16 @@
             return Promise.resolve();
         }
         if (resumeInFlight) return resumeInFlight;
-        resumeInFlight = c.resume().then(function () {
-            resumeInFlight = null;
-            afterUnlock();
-        }).catch(function () {
-            resumeInFlight = null;
-        });
+        // Always settle so callers are never stuck waiting on resume()
+        resumeInFlight = Promise.resolve()
+            .then(function () { return c.resume(); })
+            .then(function () {
+                resumeInFlight = null;
+                afterUnlock();
+            })
+            .catch(function () {
+                resumeInFlight = null;
+            });
         return resumeInFlight;
     }
 
