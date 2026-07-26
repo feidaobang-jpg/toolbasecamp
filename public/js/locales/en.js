@@ -306,7 +306,7 @@ window.TB_LOCALES.en = {
         puzzle: {
             title: 'Jigsaw Puzzle',
             desc: 'Swap tiles to restore the picture. Use the default image or upload your own. Runs locally.',
-            hint: 'Tap two tiles to swap them.',
+            hint: 'Drag onto another tile to swap, or tap two tiles.',
             upload: 'Custom image (optional)',
             win: 'Puzzle complete!',
             loadFailed: 'Failed to load image',

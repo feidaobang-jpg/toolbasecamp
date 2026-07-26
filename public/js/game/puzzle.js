@@ -38,7 +38,9 @@
     var cropScale = 1;
     var cropOffset = { x: 0, y: 0 };
     var drag = null;
+    var tileDrag = null;
     var OUTPUT = 900;
+    var DRAG_THRESHOLD = 8;
 
     function setStatus(msg, cls) {
         if (!msg) {
@@ -153,6 +155,122 @@
         return true;
     }
 
+    function swapTiles(a, b) {
+        if (a === b || a < 0 || b < 0) return false;
+        var tmp = pieces[a];
+        pieces[a] = pieces[b];
+        pieces[b] = tmp;
+        selected = -1;
+        if (checkWin()) {
+            complete = true;
+            play('win');
+            setStatus(tr('tools.puzzle.win'), 'is-win');
+        } else {
+            play('swap');
+            setStatus('');
+        }
+        render();
+        return true;
+    }
+
+    function indexAtPoint(clientX, clientY) {
+        var rect = boardEl.getBoundingClientRect();
+        var size = boardEl.clientWidth || 1;
+        var cell = size / grid;
+        var x = clientX - rect.left;
+        var y = clientY - rect.top;
+        if (x < 0 || y < 0 || x >= size || y >= size) return -1;
+        var col = Math.min(grid - 1, Math.floor(x / cell));
+        var row = Math.min(grid - 1, Math.floor(y / cell));
+        return row * grid + col;
+    }
+
+    function onTileSelectClick(idx) {
+        if (selected < 0) {
+            selected = idx;
+            play('select');
+            render();
+            return;
+        }
+        if (selected === idx) {
+            selected = -1;
+            play('click');
+            render();
+            return;
+        }
+        swapTiles(selected, idx);
+    }
+
+    function onTilePointerDown(e) {
+        if (complete) return;
+        var el = e.target.closest('.puzzle-piece');
+        if (!el) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        var idx = Number(el.dataset.index);
+        var p = pointerPos(e);
+        tileDrag = {
+            from: idx,
+            el: el,
+            startX: p.x,
+            startY: p.y,
+            moved: false,
+            dx: 0,
+            dy: 0,
+            pointerId: e.pointerId
+        };
+        try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+        e.preventDefault();
+    }
+
+    function onTilePointerMove(e) {
+        if (!tileDrag || e.pointerId !== tileDrag.pointerId) return;
+        var p = pointerPos(e);
+        var dx = p.x - tileDrag.startX;
+        var dy = p.y - tileDrag.startY;
+        if (!tileDrag.moved && (dx * dx + dy * dy) >= DRAG_THRESHOLD * DRAG_THRESHOLD) {
+            tileDrag.moved = true;
+            selected = -1;
+            tileDrag.el.classList.add('is-dragging');
+            play('select');
+        }
+        if (!tileDrag.moved) return;
+        tileDrag.dx = dx;
+        tileDrag.dy = dy;
+        tileDrag.el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        e.preventDefault();
+    }
+
+    function onTilePointerUp(e) {
+        if (!tileDrag || e.pointerId !== tileDrag.pointerId) return;
+        var from = tileDrag.from;
+        var moved = tileDrag.moved;
+        var el = tileDrag.el;
+        var p = pointerPos(e);
+        try { el.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+        el.classList.remove('is-dragging');
+        el.style.transform = '';
+        tileDrag = null;
+
+        if (complete) return;
+        if (moved) {
+            var to = indexAtPoint(p.x, p.y);
+            if (to >= 0 && to !== from) swapTiles(from, to);
+            else render();
+            return;
+        }
+        onTileSelectClick(from);
+    }
+
+    function onTilePointerCancel(e) {
+        if (!tileDrag || e.pointerId !== tileDrag.pointerId) return;
+        var el = tileDrag.el;
+        try { el.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+        el.classList.remove('is-dragging');
+        el.style.transform = '';
+        tileDrag = null;
+        render();
+    }
+
     function clampCrop() {
         var stage = cropStage.clientWidth || 320;
         var drawW = cropNatural.w * cropScale;
@@ -250,36 +368,13 @@
         cropStage.classList.remove('is-dragging');
     }
 
+    boardEl.addEventListener('pointerdown', onTilePointerDown);
+    boardEl.addEventListener('pointermove', onTilePointerMove);
+    boardEl.addEventListener('pointerup', onTilePointerUp);
+    boardEl.addEventListener('pointercancel', onTilePointerCancel);
+    // prevent ghost click after drag on some browsers
     boardEl.addEventListener('click', function (e) {
-        if (complete) return;
-        var el = e.target.closest('.puzzle-piece');
-        if (!el) return;
-        var idx = Number(el.dataset.index);
-        if (selected < 0) {
-            selected = idx;
-            play('select');
-            render();
-            return;
-        }
-        if (selected === idx) {
-            selected = -1;
-            play('click');
-            render();
-            return;
-        }
-        var tmp = pieces[selected];
-        pieces[selected] = pieces[idx];
-        pieces[idx] = tmp;
-        selected = -1;
-        if (checkWin()) {
-            complete = true;
-            play('win');
-            setStatus(tr('tools.puzzle.win'), 'is-win');
-        } else {
-            play('swap');
-            setStatus('');
-        }
-        render();
+        if (e.target.closest('.puzzle-piece')) e.preventDefault();
     });
 
     diffRow.addEventListener('click', function (e) {

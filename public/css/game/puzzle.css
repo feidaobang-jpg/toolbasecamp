@@ -31,8 +31,11 @@
     box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.55);
     background-repeat: no-repeat;
-    cursor: pointer;
+    cursor: grab;
+    touch-action: none;
     transition: outline 0.12s ease;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .puzzle-piece.is-selected {
@@ -40,13 +43,21 @@
     z-index: 2;
 }
 
+.puzzle-piece.is-dragging {
+    outline: 3px solid #2563eb;
+    z-index: 5;
+    opacity: 0.92;
+    cursor: grabbing;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.28);
+    transition: none;
+}
+
 .puzzle-upload {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 8px 10px;
     width: 100%;
-    overflow-x: auto;
 }
 
 .puzzle-upload .field-label {
@@ -59,7 +70,7 @@
 }
 
 .puzzle-upload input[type="file"] {
-    flex: 1 1 auto;
+    flex: 1 1 160px;
     min-width: 0;
     max-width: none;
     font-size: 12px;
@@ -68,6 +79,23 @@
 .puzzle-upload .tb-btn {
     flex: 0 0 auto;
     white-space: nowrap;
+}
+
+.puzzle-audio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.puzzle-audio .game-volume {
+    flex: 1 1 160px;
+    max-width: 280px;
+}
+
+.puzzle-audio .game-volume input[type="range"] {
+    max-width: none;
 }
 
 .puzzle-crop {

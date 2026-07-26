@@ -305,7 +305,7 @@ window.TB_LOCALES['zh-CN'] = {
         puzzle: {
             title: '拼图',
             desc: '交换碎片还原整图。可用默认图或上传自己的照片。本地处理。',
-            hint: '依次点两块碎片即可交换。',
+            hint: '拖到目标格互换，或依次点两块碎片交换。',
             upload: '自定义图片（可选）',
             win: '拼图完成！',
             loadFailed: '图片加载失败',
