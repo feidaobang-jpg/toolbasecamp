@@ -7,17 +7,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#1e293b;color:#fff7ed;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;overflow:hidden;touch-action:none;user-select:none}
-#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:linear-gradient(180deg,#334155,#1e293b);display:flex;flex-direction:column;padding:5px;gap:4px}
-#topBar{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center;min-height:26px}
+#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:linear-gradient(180deg,#334155,#1e293b);display:flex;flex-direction:column;padding:4px;gap:3px;justify-content:flex-start}
+#topBar{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center;min-height:24px}
 #audioBar{display:flex;gap:4px;align-items:center}
 #audioBar .tb-btn{font-size:11px;padding:4px 9px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
 #audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#93c5fd}
 #audioBar input[type=range]{width:56px}
 #board{
-  flex:1 1 auto;min-height:0;width:100%;aspect-ratio:1 / 1;max-height:min(62vh,460px);
+  flex:0 0 auto;width:100%;height:auto;margin:0 auto;
   border-radius:12px;background:#0f172a;border:3px solid #64748b;
   box-shadow:inset 0 0 0 2px #1e293b,0 4px 12px rgba(0,0,0,.35);
-  overflow:hidden;position:relative;margin:0 auto
+  overflow:hidden;position:relative
 }
 canvas{display:block;width:100%;height:100%}
 #mid{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:1px 0}
@@ -26,7 +26,6 @@ canvas{display:block;width:100%;height:100%}
 .act:disabled{opacity:.4;cursor:not-allowed}
 #btnAll{padding:5px 12px;border-radius:8px;font-size:12px;background:linear-gradient(180deg,#86efac,#16a34a);color:#052e16}
 #btnClear{padding:5px 12px;border-radius:8px;font-size:12px;background:linear-gradient(180deg,#fb923c,#c2410c);color:#fff}
-/* 底部压低：内容高度，不抢盘面 */
 #panel{
   flex:0 0 auto;display:flex;gap:6px;padding:6px;
   border-radius:12px;border:2px solid #166534;
@@ -185,10 +184,23 @@ function totalBet() { return KINDS.reduce((s, k) => s + (bets[k.id] || 0), 0); }
 function totalOf(map) { return KINDS.reduce((s, k) => s + (map[k.id] || 0), 0); }
 
 function resize() {
-  const box = document.getElementById('board').getBoundingClientRect();
+  const board = document.getElementById('board');
+  const wrap = document.getElementById('wrap');
+  const used =
+    document.getElementById('topBar').offsetHeight +
+    document.getElementById('mid').offsetHeight +
+    document.getElementById('panel').offsetHeight +
+    document.getElementById('foot').offsetHeight +
+    20;
+  const availW = Math.max(160, wrap.clientWidth - 8);
+  const availH = Math.max(160, wrap.clientHeight - used);
+  // 正方形铺满可用区，格子顶满画布无上下黑边
+  const side = Math.floor(Math.min(availW, availH) / 7) * 7;
+  board.style.width = side + 'px';
+  board.style.height = side + 'px';
   dpr = Math.min(2, devicePixelRatio || 1);
-  W = Math.max(240, box.width);
-  H = Math.max(240, box.height);
+  W = side;
+  H = side;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -196,10 +208,10 @@ function resize() {
 window.addEventListener('resize', () => { resize(); draw(); });
 
 function cellRect(i) {
-  const cols = 7, rows = 7, pad = 3;
-  const size = Math.floor(Math.min((W - pad * 2) / cols, (H - pad * 2) / rows));
+  const cols = 7, rows = 7;
+  const size = Math.floor(Math.min(W, H) / cols);
   const gridW = size * cols, gridH = size * rows;
-  const ox = Math.floor((W - gridW) / 2), oy = Math.floor((H - gridH) / 2);
+  const ox = 0, oy = 0;
   const map = [];
   for (let x = 0; x < cols; x++) map.push({ c: x, r: 0 });
   for (let y = 1; y < rows - 1; y++) map.push({ c: cols - 1, r: y });
@@ -538,6 +550,7 @@ document.getElementById('btnReset').onclick = () => {
 load();
 renderBets();
 resize();
+requestAnimationFrame(() => { resize(); draw(); });
 if (window.GameAudio) GameAudio.boot('catchy');
 requestAnimationFrame(loop);
 })();
