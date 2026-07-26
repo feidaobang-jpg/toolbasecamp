@@ -369,14 +369,6 @@
         for (var i = 0; i < items.length; i++) {
             var it = items[i];
             if (!it.alive && it !== caught) continue;
-            var r = it.size * 0.55;
-            ctx.beginPath();
-            ctx.arc(it.x, it.y, r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255,255,255,0.88)';
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(15,23,42,0.12)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
             ctx.font = it.size + 'px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
             ctx.fillText(it.emoji, it.x, it.y);
         }
