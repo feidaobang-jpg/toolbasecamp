@@ -16,7 +16,7 @@
     var H = canvas.height;
 
     var moneyEl = document.getElementById('money');
-    var targetEl = document.getElementById('target');
+    var leftEl = document.getElementById('left');
     var levelEl = document.getElementById('level');
     var timeEl = document.getElementById('time');
     var statusEl = document.getElementById('status');
@@ -41,7 +41,6 @@
     var state = 'idle'; // idle | playing | win | lose
     var level = 1;
     var money = 0;
-    var target = 650;
     var timeLeft = 60;
     var items = [];
     var angle = 0;
@@ -69,21 +68,22 @@
         }, ms || 1200);
     }
 
-    function updateHud() {
-        moneyEl.textContent = String(money);
-        targetEl.textContent = String(target);
-        levelEl.textContent = String(level);
-        timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
+    /** Loot left to clear (bombs do not count). */
+    function remainingLoot() {
+        var n = 0;
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].alive && items[i].kind !== 'bomb') n++;
+        }
+        // Item currently on the hook still counts until finishPull
+        if (caught && caught.kind !== 'bomb') n++;
+        return n;
     }
 
-    /**
-     * Classic-style cumulative money goals.
-     * Clearing level 1 with ~650 must NOT make level 2 pass with one more grab.
-     */
-    function levelTarget(n) {
-        var goals = [0, 650, 1250, 2100, 3200, 4800, 7000, 10000, 14000];
-        if (n < goals.length) return goals[n];
-        return Math.round(goals[goals.length - 1] * Math.pow(1.35, n - (goals.length - 1)));
+    function updateHud() {
+        moneyEl.textContent = String(money);
+        if (leftEl) leftEl.textContent = String(remainingLoot());
+        levelEl.textContent = String(level);
+        timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
     }
 
     function swingSpeed() {
@@ -127,13 +127,10 @@
         return ITEM_TYPES[0];
     }
 
-    function spawnItems() {
-        items = [];
-        var count = 8 + Math.min(level, 7);
+    function placeItem(t) {
         var tries = 0;
-        while (items.length < count && tries < 220) {
+        while (tries < 80) {
             tries++;
-            var t = pickType();
             var x = 40 + Math.random() * (W - 80);
             var y = 140 + Math.random() * (H - 200);
             var ok = true;
@@ -154,13 +151,34 @@
                 y: y,
                 alive: true
             });
+            return true;
+        }
+        return false;
+    }
+
+    function spawnItems() {
+        items = [];
+        var count = 8 + Math.min(level, 7);
+        var tries = 0;
+        while (items.length < count && tries < 220) {
+            tries++;
+            placeItem(pickType());
+        }
+        // Guarantee at least some clearable loot (bombs alone cannot clear a level)
+        var loot = 0;
+        for (var j = 0; j < items.length; j++) {
+            if (items[j].kind !== 'bomb') loot++;
+        }
+        while (loot < 5) {
+            if (!placeItem(ITEM_TYPES[Math.floor(Math.random() * 4)])) break; // gold/gem only
+            loot++;
         }
     }
 
     function resetLevel(keepMoney) {
         if (!keepMoney) money = 0;
-        target = levelTarget(level);
-        timeLeft = Math.max(35, 68 - level * 3);
+        // More items + less time each level
+        timeLeft = Math.max(40, 75 - level * 3);
         hookLen = 36;
         phase = 'swing';
         caught = null;
@@ -238,7 +256,8 @@
             }
             caught = null;
             updateHud();
-            if (money >= target) {
+            // Clear all loot (gold/gem/rock); bombs may remain
+            if (remainingLoot() === 0) {
                 levelWin();
                 return;
             }
@@ -256,8 +275,7 @@
         setTimeout(function () {
             level += 1;
             state = 'playing';
-            // Keep cumulative money; next goal is much higher
-            resetLevel(true);
+            resetLevel(true); // keep score across levels
             setStatus(tr('tools.goldminer.playing'), 'is-idle');
             lastTs = 0;
             raf = requestAnimationFrame(loop);
@@ -287,7 +305,7 @@
             timerAcc = 0;
             updateHud();
             if (timeLeft <= 0) {
-                if (money >= target) levelWin();
+                if (remainingLoot() === 0) levelWin();
                 else gameOver('tools.goldminer.timeUp');
                 return;
             }
