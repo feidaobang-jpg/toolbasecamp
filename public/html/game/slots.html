@@ -100,7 +100,7 @@ const KEY = 'tbc_tiger_slots_v2';
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 
-/** 斗兽棋八种：押一种，盘上分大小格 */
+/** 斗兽棋：象狮虎豹狼狗猫各一大一小；其余格全是大鼠(固定5分) */
 const KINDS = [
   { id: 'elephant', emoji: '🐘', label: '象', payBig: 100, paySmall: 50 },
   { id: 'lion',     emoji: '🦁', label: '狮', payBig: 20,  paySmall: 2 },
@@ -109,7 +109,7 @@ const KINDS = [
   { id: 'wolf',     emoji: '🐺', label: '狼', payBig: 10,  paySmall: 2 },
   { id: 'dog',      emoji: '🐶', label: '狗', payBig: 10,  paySmall: 2 },
   { id: 'cat',      emoji: '🐱', label: '猫', payBig: 10,  paySmall: 2 },
-  { id: 'rat',      emoji: '🐭', label: '鼠', payBig: 10,  paySmall: 2 }
+  { id: 'rat',      emoji: '🐭', label: '鼠', payBig: 5,   paySmall: null }
 ];
 
 const EMOJI = {
@@ -118,15 +118,14 @@ const EMOJI = {
   gift: '🎁', train: '🚂'
 };
 
-/** 24 格：顶中大象；左中(21)礼包、右中(9)火车；其余大小交替且同种大小不相邻 */
+/** 顶中大象；左中礼包、右中火车；每种一大一小且不相邻；其余 8 格大鼠 */
 function C(a, big) { return { a: a, big: !!big }; }
 const RING = [
-  C('wolf', false), C('rat', true), C('cat', false), C('elephant', true), C('lion', false), C('tiger', true), C('leopard', false),
-  C('wolf', true), C('dog', false), C('train', true), C('cat', true), C('tiger', false),
-  C('lion', true), C('rat', false), C('wolf', true), C('elephant', false), C('dog', true), C('cat', false), C('lion', true),
-  C('tiger', false), C('leopard', true), C('gift', true), C('leopard', false), C('rat', true)
+  C('rat', true), C('rat', true), C('cat', false), C('elephant', true), C('lion', false), C('tiger', true), C('wolf', false),
+  C('leopard', true), C('dog', false), C('train', true), C('cat', true), C('rat', true),
+  C('lion', true), C('leopard', false), C('wolf', true), C('elephant', false), C('dog', true), C('rat', true), C('rat', true),
+  C('tiger', false), C('rat', true), C('gift', true), C('rat', true), C('rat', true)
 ];
-/* 鼠：大(1)(23) 10 分、小(13) 2 分，与大小鼠均不相邻 */
 let W = 360, H = 360, dpr = 1;
 let credits = 100;
 let lastWin = 0;

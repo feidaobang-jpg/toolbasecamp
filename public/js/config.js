@@ -1,4 +1,4 @@
-const siteConfig = {
+﻿const siteConfig = {
     siteNameKey: 'site.name',
     logoText: 'TB',
     title: 'Tools',
@@ -228,7 +228,7 @@ const gamesConfig = {
                 { titleKey: 'tools.memory.title', url: 'html/game/memory.html' },
                 { titleKey: 'tools.runner.title', url: 'html/game/runner.html' },
                 { titleKey: 'tools.mines.title', url: 'html/game/mines.html' },
-                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=11' },
+                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=12' },
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html' },
                 { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html' },
                 { titleKey: 'tools.parkour.title', url: 'html/game/parkour.html' },
