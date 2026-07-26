@@ -89,9 +89,14 @@
         } catch (e) { /* ignore */ }
     }
 
-    function afterUnlock() {
+    /** @param {boolean} fromResume - context just resumed after suspend; re-kick BGM */
+    function afterUnlock(fromResume) {
         if (!ctx || ctx.state !== 'running') return;
-        if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
+        applyMasterGain();
+        if (bgmWanted && !muted) {
+            // After suspend (e.g. timer SFX / tab), scheduler may be dead — restart
+            if (!bgmTimer || fromResume) startBgmInternal();
+        }
         if (pendingSfx) {
             var name = pendingSfx;
             pendingSfx = null;
@@ -109,7 +114,7 @@
         var c = ensure(true);
         if (!c) return Promise.resolve();
         if (c.state === 'running') {
-            afterUnlock();
+            afterUnlock(false);
             return Promise.resolve();
         }
         if (resumeInFlight) return resumeInFlight;
@@ -122,7 +127,7 @@
         }
         resumeInFlight = Promise.resolve(p).then(function () {
             resumeInFlight = null;
-            afterUnlock();
+            afterUnlock(true);
         }).catch(function () {
             resumeInFlight = null;
         });

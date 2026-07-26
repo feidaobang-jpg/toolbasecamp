@@ -3,6 +3,11 @@
 
     var audio = window.GameAudio;
     function play(name) { if (audio) audio.sfx(name); }
+    function primeAudio() {
+        if (audio && audio.unlock) {
+            try { audio.unlock(); } catch (e) { /* ignore */ }
+        }
+    }
     if (audio) audio.boot('catchy');
 
     function tr(key, params) {
@@ -448,6 +453,7 @@
     }
 
     function newGame() {
+        primeAudio();
         play('start');
         startLevel(1, false);
     }
