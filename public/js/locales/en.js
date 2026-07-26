@@ -383,16 +383,7 @@ window.TB_LOCALES.en = {
         },
         descent: {
             title: 'Descent 100',
-            desc: 'Fall through platforms — go as deep as you can. Avoid spikes. Runs locally.',
-            depth: 'Depth',
-            best: 'Best',
-            start: 'Start',
-            hint: 'Press Start. Move with ← → or A/D, or touch left/right half of the screen.',
-            tapStart: 'Tap to start',
-            playing: 'Move left/right and land on safe platforms',
-            hitSpike: 'Hit a spike! Depth {n}',
-            fell: 'Fell off screen! Depth {n}',
-            legend: '🟩 safe · 🟦 bounce · 🟧 vanish · 🟥 spike'
+            desc: 'Homage to the classic 100-floor drop: land on boards to B100, avoid spikes, life drains over time. Portrait-first, wider on desktop.'
         },
         snake: {
             title: 'Snake',
