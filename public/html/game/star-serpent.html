@@ -57,6 +57,17 @@ canvas{display:block;width:100%;height:100%}
   color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;
 }
 @media(pointer:coarse){#touch{display:block}#credit{display:none}}
+#orientTip{
+  display:none;position:absolute;left:50%;top:48px;transform:translateX(-50%);z-index:5;
+  max-width:min(92%,340px);padding:10px 14px;border-radius:12px;
+  background:rgba(15,23,42,.92);border:1px solid #38bdf8;color:#e2e8f0;
+  font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+#orientTip .row{display:flex;gap:8px;margin-top:8px;justify-content:center}
+#orientTip button{
+  font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#2563eb;color:#fff;cursor:pointer;
+}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:4}
 #ui .panel{
   pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -88,6 +99,10 @@ canvas{display:block;width:100%;height:100%}
     <span class="tag" id="weaponTag">普通弹</span>
   </div>
   <div id="bossBarWrap"><i id="bossBar"></i></div>
+  <div id="orientTip" class="hidden">
+    <div>街机横屏视野，建议 <b>横屏</b> 游玩（不强制旋转）</div>
+    <div class="row"><button type="button" id="btnOrientHide">知道了</button></div>
+  </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
     <div class="fire" id="btnFire">射</div>
@@ -95,7 +110,7 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>星蛇突击</h1>
-      <p>Salamander / Life Force 风格纵版 STG。穿越有机星域，击落敌巢与星蛇 Boss。</p>
+      <p>Salamander / Life Force 风格纵版 STG。穿越有机星域，击落敌巢与星蛇 Boss。手机建议横屏。</p>
       <p>键鼠：WASD 移动 · J 开火<br/>触屏：左摇杆 · 右下开火</p>
       <p>胶囊：<b style="color:#60a5fa">S</b> 加速 · <b style="color:#f472b6">M</b> 导弹 · <b style="color:#34d399">L</b> 激光</p>
       <div class="row">
@@ -152,6 +167,7 @@ let mode = 'menu';
 let lastT = 0;
 let best = 0;
 let savedRun = null;
+let isPortrait = false, orientDismissed = false, orientSnooze = false;
 
 let keys = Object.create(null);
 let touchMove = { x: 0, y: 0 };
@@ -182,6 +198,7 @@ let flashT = 0;
 try {
   const saved = JSON.parse(localStorage.getItem(SAVE) || '{}');
   best = (saved.best) | 0;
+  orientDismissed = !!saved.orientHide;
   if (saved.run && saved.run.player) savedRun = saved.run;
 } catch (e) {}
 el.best.textContent = String(best);
@@ -191,9 +208,22 @@ function saveMeta(run) {
   try {
     localStorage.setItem(SAVE, JSON.stringify({
       best,
-      run: run || null
+      orientHide: orientDismissed,
+      run: run === undefined ? savedRun : run
     }));
   } catch (e) {}
+}
+function isMobileEnv() {
+  if (window.matchMedia('(pointer: coarse)').matches) return true;
+  if ((navigator.maxTouchPoints || 0) > 1 && window.matchMedia('(hover: none)').matches) return true;
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+}
+function updateOrientUI() {
+  const tip = document.getElementById('orientTip');
+  if (!tip) return;
+  const show = isMobileEnv() && isPortrait && !orientDismissed && !orientSnooze;
+  tip.classList.toggle('hidden', !show);
+  tip.style.display = show ? 'block' : 'none';
 }
 
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -217,6 +247,8 @@ function resize() {
   canvas.height = Math.floor(dispH * DPR);
   drawSX = canvas.width / BASE_W;
   drawSY = canvas.height / BASE_H;
+  isPortrait = vh > vw * 1.05;
+  updateOrientUI();
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 120));
@@ -1210,6 +1242,8 @@ el.btnFire.addEventListener('pointerleave', () => { fireHeld = false; });
 
 function startGame(continued) {
   ensureAudio();
+  orientSnooze = true;
+  updateOrientUI();
   sfx('start');
   mode = 'play';
   el.panelMenu.classList.add('hidden');
@@ -1227,12 +1261,19 @@ el.btnContinue.addEventListener('click', () => startGame(true));
 el.btnRetry.addEventListener('click', () => startGame(false));
 el.btnMenu.addEventListener('click', () => {
   mode = 'menu';
+  orientSnooze = false;
+  updateOrientUI();
   el.panelOver.classList.add('hidden');
   el.panelMenu.classList.remove('hidden');
   try {
     const saved = JSON.parse(localStorage.getItem(SAVE) || '{}');
     el.btnContinue.disabled = !(saved.run && saved.run.player);
   } catch (e) { el.btnContinue.disabled = true; }
+});
+document.getElementById('btnOrientHide').addEventListener('click', () => {
+  orientDismissed = true;
+  saveMeta(savedRun);
+  updateOrientUI();
 });
 
 resize();

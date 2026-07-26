@@ -383,7 +383,7 @@ window.TB_LOCALES.en = {
         },
         descent: {
             title: 'Descent 100',
-            desc: 'Homage to the classic 100-floor drop: land on boards to B100, avoid spikes, life drains over time. Portrait-first, wider on desktop.'
+            desc: 'Homage to the classic 100-floor drop: land on boards to B100, avoid spikes, life drains over time. Portrait-first.'
         },
         snake: {
             title: 'Snake',
@@ -543,11 +543,11 @@ window.TB_LOCALES.en = {
         },
         blitzRun3d: {
             title: 'Blitz Run',
-            desc: 'Contra-style 2D run-and-gun: 8-way aim, M/L/S/R/B weapons, tanks and bosses.'
+            desc: 'Contra-style side-scroller. Landscape view on desktop; mobile suggests landscape (not forced).'
         },
         superMario: {
             title: 'Mushroom Quest',
-            desc: 'Side-scrolling platformer: coins, stomp foes, ?-blocks, pipes and flagpole. Original Canvas build.'
+            desc: 'Side-scrolling platformer. Landscape view on desktop; mobile suggests landscape (not forced).'
         },
         steelBattle: {
             title: 'Steel Battle',
@@ -559,7 +559,7 @@ window.TB_LOCALES.en = {
         },
         starSerpent: {
             title: 'Star Serpent',
-            desc: 'Salamander homage: vertical shmup with S/M/L powerups and a serpent boss.'
+            desc: 'Salamander homage vertical shmup. Arcade landscape frame; mobile suggests landscape (not forced).'
         },
         townWalk: {
             title: 'Sky Town',

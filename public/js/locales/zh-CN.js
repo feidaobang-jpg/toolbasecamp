@@ -382,7 +382,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         descent: {
             title: '下一百层',
-            desc: '致敬《是男人就下一百层》：左右落板下到 B100，躲开钉子，生命随时间下降。竖屏优先，桌面加宽。'
+            desc: '致敬《是男人就下一百层》：左右落板下到 B100，躲开钉子，生命随时间下降。竖屏优先。'
         },
         snake: {
             title: '贪吃蛇',
@@ -542,11 +542,11 @@ window.TB_LOCALES['zh-CN'] = {
         },
         blitzRun3d: {
             title: '冲锋行动',
-            desc: '魂斗罗风格 2D：八向射击，M/L/S/R/B 道具，坦克/Boss，镜头跟随。'
+            desc: '魂斗罗风格横版射击：八向射击与道具。桌面横屏视野，手机建议横屏（不强制）。'
         },
         superMario: {
             title: '蘑菇冒险',
-            desc: '横版闯关：金币、踩怪、问号砖、水管与旗杆，纯 Canvas 自研。'
+            desc: '横版闯关：金币、踩怪、问号砖与旗杆。桌面横屏视野，手机建议横屏（不强制）。'
         },
         steelBattle: {
             title: '钢铁大战',
@@ -558,7 +558,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         starSerpent: {
             title: '星蛇突击',
-            desc: '沙罗曼蛇致敬：纵版射击，S/M/L 道具，星蛇 Boss。'
+            desc: '沙罗曼蛇致敬：纵版射击与 Boss。街机横屏视野，手机建议横屏（不强制）。'
         },
         townWalk: {
             title: '青空小镇',
