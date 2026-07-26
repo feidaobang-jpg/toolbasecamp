@@ -126,6 +126,33 @@ function tr(key, params) {
         };
     }
 
+    /** Simple claw tip aligned with the rope direction. */
+    function drawHook(x, y, ang) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(ang);
+        ctx.strokeStyle = '#b45309';
+        ctx.fillStyle = '#f59e0b';
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        // joint where rope meets hook
+        ctx.beginPath();
+        ctx.arc(0, 0, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#92400e';
+        ctx.stroke();
+        // stem + curved claw continuing along rope (+y)
+        ctx.strokeStyle = '#d97706';
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, 10);
+        ctx.quadraticCurveTo(0, 18, 9, 17);
+        ctx.quadraticCurveTo(12, 16, 11, 12);
+        ctx.stroke();
+        ctx.restore();
+    }
+
     function tryCatch() {
         var tip = hookTip();
         var best = null;
@@ -254,16 +281,16 @@ function tr(key, params) {
         ctx.textBaseline = 'middle';
         ctx.fillText('🧑‍⛏️', ORIGIN.x, 28);
 
-        // rope + hook
+        // rope + drawn hook (emoji hook sits poorly on the line)
         var tip = hookTip();
         ctx.strokeStyle = '#334155';
         ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(ORIGIN.x, ORIGIN.y);
         ctx.lineTo(tip.x, tip.y);
         ctx.stroke();
-        ctx.font = '22px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
-        ctx.fillText('🪝', tip.x, tip.y);
+        drawHook(tip.x, tip.y, angle);
 
         // items — light pad under emoji so they stay readable on dirt
         for (var i = 0; i < items.length; i++) {

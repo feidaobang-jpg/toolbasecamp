@@ -64,24 +64,25 @@
     }
 
     function resume() {
-        var c = ensure();
-        if (!c) return Promise.resolve();
-        if (c.state === 'suspended') {
-            return c.resume().catch(function () { /* ignore */ });
+        if (!ctx) return Promise.resolve();
+        if (ctx.state !== 'suspended') return Promise.resolve();
+        // resume() outside a user gesture logs a Chrome warning — callers must be gesture handlers
+        return ctx.resume().catch(function () { /* ignore */ });
+    }
+
+    function afterUnlock() {
+        if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
+        if (pendingSfx) {
+            var name = pendingSfx;
+            pendingSfx = null;
+            if (!muted) playSfxNow(name);
         }
-        return Promise.resolve();
     }
 
     function unlock() {
-        if (!unlocked) unlocked = true;
-        return resume().then(function () {
-            if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
-            if (pendingSfx) {
-                var name = pendingSfx;
-                pendingSfx = null;
-                playSfxNow(name);
-            }
-        });
+        unlocked = true;
+        ensure();
+        return resume().then(afterUnlock);
     }
 
     function setMasterMute(on) {
@@ -436,10 +437,12 @@
 
     function sfx(name) {
         if (muted || !SFX[name]) return;
-        if (!unlocked) return;
-        unlock().then(function () {
-            playSfxNow(name);
-        });
+        // Never call resume() here — that triggers AudioContext autoplay warnings from rAF/game logic
+        if (!unlocked || !ctx || ctx.state !== 'running') {
+            pendingSfx = name;
+            return;
+        }
+        playSfxNow(name);
     }
 
     function startBgm(theme) {
