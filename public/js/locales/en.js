@@ -329,7 +329,7 @@ window.TB_LOCALES.en = {
             lives: 'Lives',
             level: 'Level',
             start: 'Start',
-            hint: 'Press Start or click to launch. Move the mouse over the canvas to steer; or use ← → / A D, Space to launch.',
+            hint: 'Press Start to launch. Desktop: move the mouse left/right (no click). Mobile: hold ◀ ▶ below. Or ← → / A D, Space to launch.',
             playing: 'Playing',
             clickLaunch: 'Click or Space to launch',
             levelUp: 'Level {n}!',

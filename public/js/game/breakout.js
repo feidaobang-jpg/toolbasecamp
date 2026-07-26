@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     'use strict';
 
     function tr(key, params) {
@@ -43,7 +43,7 @@
     var pointerX = W / 2;
     var keyLeft = false;
     var keyRight = false;
-    var PADDLE_SPEED = 7;
+    var PADDLE_SPEED = 3.5;
 
     var PU_COLORS = { extend: '#22c55e', slow: '#38bdf8', split: '#a855f7' };
     var PU_LABEL = { extend: '长', slow: '慢', split: '分' };
@@ -370,14 +370,20 @@
         if (running) raf = requestAnimationFrame(loop);
     }
 
-    function setPointerFromEvent(e) {
+
+    function setPointerFromClientX(clientX) {
         var rect = canvas.getBoundingClientRect();
+        if (!rect.width) return;
+        pointerX = ((clientX - rect.left) / rect.width) * W;
+        pointerX = Math.max(0, Math.min(W, pointerX));
+    }
+
+    function setPointerFromEvent(e) {
         var clientX = e.clientX;
         if (e.touches && e.touches[0]) clientX = e.touches[0].clientX;
-        if (e.changedTouches && e.changedTouches[0] && clientX == null) {
-            clientX = e.changedTouches[0].clientX;
-        }
-        pointerX = ((clientX - rect.left) / rect.width) * W;
+        else if (e.changedTouches && e.changedTouches[0]) clientX = e.changedTouches[0].clientX;
+        if (typeof clientX !== 'number') return;
+        setPointerFromClientX(clientX);
     }
 
     function launch() {
@@ -423,15 +429,33 @@
         else if (k === 'ArrowRight' || k === 'd' || k === 'D') keyRight = false;
     }
 
-    // Mouse: follow cursor over canvas — no need to hold button
-    canvas.addEventListener('pointermove', function (e) {
-        if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
-            setPointerFromEvent(e);
+    function bindHoldButton(btn, isLeft) {
+        if (!btn) return;
+        function down(e) {
+            e.preventDefault();
+            if (isLeft) keyLeft = true;
+            else keyRight = true;
+            if (!running && !gameOver) launch();
+            try { btn.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
         }
-    });
-    canvas.addEventListener('mousemove', setPointerFromEvent);
+        function up() {
+            if (isLeft) keyLeft = false;
+            else keyRight = false;
+        }
+        btn.addEventListener('pointerdown', down);
+        btn.addEventListener('pointerup', up);
+        btn.addEventListener('pointercancel', up);
+        btn.addEventListener('lostpointercapture', up);
+    }
 
-    // Touch: finger X follows paddle (move freely while touching)
+    // Desktop: any mouse move maps X to paddle — no click/hold needed
+    window.addEventListener('mousemove', function (e) {
+        if (keyLeft || keyRight || gameOver) return;
+        if (isTypingTarget(e.target)) return;
+        setPointerFromClientX(e.clientX);
+    }, { passive: true });
+
+    // Touch on canvas: finger X follows paddle
     canvas.addEventListener('touchstart', function (e) {
         setPointerFromEvent(e);
         launch();
@@ -442,15 +466,12 @@
     }, { passive: false });
 
     canvas.addEventListener('click', launch);
-    canvas.addEventListener('pointerdown', function (e) {
-        if (e.pointerType === 'touch') return;
-        setPointerFromEvent(e);
-        // click/tap launches; movement already tracked by pointermove
-        if (waiting) launch();
-    });
 
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
+
+    bindHoldButton(document.getElementById('pad-left'), true);
+    bindHoldButton(document.getElementById('pad-right'), false);
 
     startBtn.addEventListener('click', function () {
         if (gameOver) resetGame();
