@@ -84,6 +84,8 @@
      */
     function unlock() {
         unlocked = true;
+        // create + resume MUST stay synchronous in the click/tap call stack.
+        // Deferring resume() via Promise.then() loses the user gesture → no sound + Chrome warning.
         var c = ensure(true);
         if (!c) return Promise.resolve();
         if (c.state === 'running') {
@@ -91,16 +93,18 @@
             return Promise.resolve();
         }
         if (resumeInFlight) return resumeInFlight;
-        // Always settle so callers are never stuck waiting on resume()
-        resumeInFlight = Promise.resolve()
-            .then(function () { return c.resume(); })
-            .then(function () {
-                resumeInFlight = null;
-                afterUnlock();
-            })
-            .catch(function () {
-                resumeInFlight = null;
-            });
+        var p;
+        try {
+            p = c.resume();
+        } catch (e) {
+            return Promise.resolve();
+        }
+        resumeInFlight = Promise.resolve(p).then(function () {
+            resumeInFlight = null;
+            afterUnlock();
+        }).catch(function () {
+            resumeInFlight = null;
+        });
         return resumeInFlight;
     }
 
