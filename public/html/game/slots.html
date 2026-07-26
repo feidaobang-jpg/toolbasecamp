@@ -176,6 +176,7 @@ function cellPay(cell) {
   if (isSpecial(cell)) return 0;
   const k = kindMeta(cell.a);
   if (!k) return 0;
+  if (cell.a === 'rat') return k.payBig;
   return cell.big ? k.payBig : k.paySmall;
 }
 
@@ -251,7 +252,7 @@ function drawCell(i, lit) {
   if (isSpecial(cell)) {
     drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, true);
   } else {
-    const big = cell.big || cell.a === 'rat';
+    const big = cell.a === 'rat' ? true : !!cell.big;
     drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, big);
   }
 }
@@ -321,7 +322,6 @@ function toast(msg) {
 
 function payLabel(k) {
   if (k.paySmall == null) return String(k.payBig);
-  if (k.id === 'elephant') return k.payBig + '/' + k.paySmall;
   return k.payBig + '/' + k.paySmall;
 }
 
@@ -482,7 +482,7 @@ async function runSpin() {
     const pay = cellPay(cell);
     if (stake > 0) {
       win = stake * pay;
-      const sizeTag = (cell.a !== 'rat' && !cell.big) ? '小' : '大';
+      const sizeTag = cell.a === 'rat' ? '' : (cell.big ? '大' : '小');
       msg = EMOJI[cell.a] + sizeTag + kindMeta(cell.a).label + ' +' + win;
       sfx('win');
     } else sfx('lose');
