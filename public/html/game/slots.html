@@ -6,71 +6,78 @@
 <title>幸运水果机 · Fruit Machine</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#0a3d28;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
-#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:linear-gradient(180deg,#166534,#14532d 45%,#052e16);display:flex;flex-direction:column;padding:6px;gap:6px}
-#board{flex:1 1 auto;min-height:0;position:relative;border-radius:14px;background:#14532d;border:4px solid #86efac;box-shadow:inset 0 0 0 3px #166534,0 6px 18px rgba(0,0,0,.35);overflow:hidden}
+html,body{height:100%;background:#1a0f08;color:#fef3c7;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:linear-gradient(180deg,#3b2414,#1c100a);display:flex;flex-direction:column;padding:6px 6px 8px;gap:5px}
+#topHud{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ledBox{background:#050505;border:2px solid #a16207;border-radius:8px;padding:5px 8px;box-shadow:inset 0 0 12px #000}
+.ledBox .lab{font-size:10px;color:#fbbf24;letter-spacing:.5px;font-weight:700}
+.ledBox b{display:block;font-size:22px;color:#ef4444;font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;line-height:1.15;text-shadow:0 0 8px rgba(239,68,68,.45)}
+#board{flex:1 1 auto;min-height:0;border-radius:12px;background:#292524;border:3px solid #ca8a04;box-shadow:inset 0 0 0 2px #78350f,0 6px 16px rgba(0,0,0,.45);overflow:hidden}
 canvas{display:block;width:100%;height:100%}
-/* 押注区压矮：固定偏矮，把空间留给跑灯盘 */
-#panel{flex:0 0 auto;display:flex;flex-direction:column;gap:5px;padding:6px 7px 7px;border-radius:12px;background:repeating-linear-gradient(-45deg,#86efac,#86efac 10px,#4ade80 10px,#4ade80 20px);border:3px solid #166534}
-#scores{display:flex;gap:8px}
-.scoreBox{flex:1;background:#0f172a;border:2px solid #334155;border-radius:8px;padding:4px 6px;text-align:center;display:flex;align-items:center;justify-content:space-between;gap:6px}
-.scoreBox .lab{font-size:11px;color:#94a3b8}
-.scoreBox b{font-size:18px;color:#fde68a;font-variant-numeric:tabular-nums}
-#bets{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
-.bet{border:0;border-radius:8px;background:#0f172a;color:#fff;padding:3px 2px 4px;display:flex;flex-direction:column;align-items:center;gap:1px;box-shadow:0 2px 0 #020617;cursor:pointer;min-height:0}
-.bet:active{transform:translateY(1px);box-shadow:0 1px 0 #020617}
-.bet .stake{font-size:10px;font-weight:700;color:#fde68a;line-height:1}
-.bet canvas{width:26px;height:26px;display:block}
-.bet .pay{font-size:10px;font-weight:800;color:#fbbf24;line-height:1}
-.bet.on{outline:2px solid #fbbf24}
-#controls{display:flex;align-items:center;gap:6px}
-#btnGo{flex:0 0 auto;width:64px;height:40px;border-radius:999px;border:2px solid #fff7ed;background:linear-gradient(180deg,#fb923c,#c2410c);color:#fff;font-size:16px;font-weight:900;box-shadow:0 3px 0 #7c2d12;cursor:pointer}
-#btnGo:active{transform:translateY(2px);box-shadow:0 1px 0 #7c2d12}
-#btnGo:disabled{opacity:.55;cursor:not-allowed}
-#btnMenu,#btnTest{flex:1;border:0;border-radius:999px;padding:9px 8px;background:#16a34a;color:#fff;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 2px 0 #14532d}
-#btnTest{background:#1e40af;box-shadow:0 2px 0 #1e3a8a}
-#btnTest.on{background:#f59e0b;box-shadow:0 2px 0 #b45309;color:#111}
-#audioBar{flex:0 0 auto;display:flex;gap:4px;align-items:center;justify-content:flex-end;min-width:0}
+#mid{flex:0 0 auto;display:flex;align-items:center;gap:5px}
+.act{border:0;border-radius:10px;padding:8px 6px;font-weight:800;font-size:12px;cursor:pointer;color:#fff;box-shadow:0 2px 0 #0006}
+.act:active{transform:translateY(1px);box-shadow:0 1px 0 #0006}
+.act:disabled{opacity:.45;cursor:not-allowed}
+#btnAll{background:linear-gradient(180deg,#4ade80,#15803d);flex:1}
+#btnSmall,#btnBig{background:linear-gradient(180deg,#facc15,#ca8a04);color:#111;flex:1}
+#btnGo{background:linear-gradient(180deg,#f87171,#b91c1c);flex:1.2;font-size:15px;padding:10px 6px;border-radius:999px;border:2px solid #fecaca}
+#btnMenu{background:linear-gradient(180deg,#60a5fa,#1d4ed8);flex:.9}
+#panel{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;padding:6px;border-radius:12px;background:linear-gradient(180deg,#44403c,#292524);border:2px solid #a16207}
+#bets{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+.bet{border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-width:0}
+.bet .pay{font-size:10px;font-weight:800;color:#fde047;line-height:1}
+.bet .led{width:100%;background:#050505;border:1px solid #78716c;border-radius:4px;color:#ef4444;font-size:11px;font-family:ui-monospace,monospace;font-weight:700;text-align:center;padding:2px 0;line-height:1.2}
+.bet .icoWrap{width:100%;aspect-ratio:1;max-height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#86efac,#166534);border:2px solid #bbf7d0;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #14532d}
+.bet.on .icoWrap{outline:2px solid #fbbf24;outline-offset:1px}
+.bet.on .led{border-color:#fbbf24}
+.bet canvas{width:22px;height:22px;display:block}
+#foot{flex:0 0 auto;display:flex;align-items:center;gap:6px;justify-content:space-between}
+#btnTest{border:0;border-radius:999px;padding:6px 10px;background:#1e3a8a;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
+#btnTest.on{background:#b45309}
+#audioBar{display:flex;gap:4px;align-items:center;justify-content:flex-end}
 #audioBar .tb-btn{font-size:10px;padding:5px 8px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
-#audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#14532d;font-weight:700}
+#audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#fbbf24}
 #audioBar input[type=range]{width:56px}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:8}
-#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(15,23,42,.96);border:1px solid #334155;border-radius:16px;padding:16px 14px}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(15,23,42,.96);border:1px solid #a16207;border-radius:16px;padding:16px 14px}
 #ui h1{font-size:1.25rem;color:#fbbf24;margin-bottom:8px}
 #ui p{font-size:.82rem;line-height:1.5;color:#94a3b8;margin-bottom:7px}
 #ui .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 #ui button{font:inherit;flex:1;min-width:100px;border:0;border-radius:999px;padding:10px 12px;background:#2563eb;color:#fff;cursor:pointer}
 #ui button.ghost{background:#1e293b;border:1px solid #475569}
 .hidden{display:none!important}
-#toast{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
+#toast{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
 #toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div id="wrap">
+  <div id="topHud">
+    <div class="ledBox"><div class="lab">BONUS-WIN</div><b id="winScore">0</b></div>
+    <div class="ledBox"><div class="lab">CREDIT</div><b id="credits">100</b></div>
+  </div>
   <div id="board"><canvas id="c"></canvas></div>
-  <div id="panel">
-    <div id="scores">
-      <div class="scoreBox"><span class="lab">赢分</span><b id="winScore">0</b></div>
-      <div class="scoreBox"><span class="lab">总分</span><b id="credits">100</b></div>
-    </div>
-    <div id="bets"></div>
-    <div id="controls">
-      <button type="button" id="btnGo">开始</button>
-      <button type="button" id="btnMenu">菜单</button>
-      <button type="button" id="btnTest" title="提高礼炮/火车出现率">测试特奖</button>
-      <div class="action-row" id="audioBar"></div>
-    </div>
+  <div id="mid">
+    <button type="button" class="act" id="btnAll">全+1</button>
+    <button type="button" class="act" id="btnSmall">1-7 小</button>
+    <button type="button" class="act" id="btnBig">8-14 大</button>
+    <button type="button" class="act" id="btnGo">开始</button>
+    <button type="button" class="act" id="btnMenu">菜单</button>
+  </div>
+  <div id="panel"><div id="bets"></div></div>
+  <div id="foot">
+    <button type="button" id="btnTest">测试特奖</button>
+    <div class="action-row" id="audioBar"></div>
   </div>
   <div id="toast"></div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>幸运水果机</h1>
-      <p>点下方图案押分，再按「开始」跑灯。停在押中的图案上按倍率得分。</p>
-      <p><b>礼炮</b>（左右中格）：随机打中 3 个结果结算。<b>火车</b>（另一侧中格）：8 灯同行，停下时 8 格都算中奖。</p>
-      <p>图标为程序绘制的街机风格，不是系统表情。仅供娱乐，无真钱。</p>
+      <p>点下方图案押分；「开始」会<strong>沿用上次押分</strong>（若当前未押）。「全+1」各图案各加 1 分。</p>
+      <p><b>礼炮</b>随机打中 3 格；<b>火车</b> 8 灯同行全结算。中奖后可用「小/大」比倍（1–7 / 8–14）。</p>
+      <p>仅供娱乐，无真钱。</p>
       <div class="row">
-        <button id="btnPlay">开始</button>
+        <button id="btnPlay">进入</button>
         <button class="ghost" id="btnReset">重置 100 分</button>
       </div>
     </div>
@@ -80,12 +87,12 @@ canvas{display:block;width:100%;height:100%}
 <script>
 (function () {
 'use strict';
-const KEY = 'tbc_fruit_machine_v2';
+const KEY = 'tbc_fruit_machine_v3';
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 
 const KINDS = [
-  { id: 'bar', label: 'BAR', pay: 50 },
+  { id: 'bar', label: 'BAR', pay: 100 },
   { id: 'seven', label: '77', pay: 40 },
   { id: 'star', label: '星', pay: 30 },
   { id: 'melon', label: '瓜', pay: 20 },
@@ -95,10 +102,6 @@ const KINDS = [
   { id: 'apple', label: '苹', pay: 5 }
 ];
 
-/**
- * 24 格环：上7 + 右5 + 下7 + 左5
- * 右中 = index 9，左中 = index 21 → 礼炮 / 火车
- */
 const RING = [
   'apple', 'orange', 'lemon', 'bell', 'melon', 'star', 'seven',
   'apple', 'bar', 'cannon', 'orange', 'lemon',
@@ -110,29 +113,40 @@ let W = 360, H = 360, dpr = 1;
 let credits = 100;
 let lastWin = 0;
 let bets = Object.create(null);
-KINDS.forEach(k => { bets[k.id] = 0; });
+let lastBets = Object.create(null);
+KINDS.forEach(k => { bets[k.id] = 0; lastBets[k.id] = 0; });
 let cursor = 0;
-let litSet = new Set(); // for train: multiple lights
+let litSet = new Set();
 let spinning = false;
 let centerMsg = '0';
-let testBoost = false; // 测试：抬高礼炮/火车概率
-let animMode = 'single'; // single | train | cannon
+let testBoost = false;
+let animMode = 'single';
+let canDouble = false;
 
 function sfx(n) { try { GameAudio && GameAudio.sfx(n); } catch (e) {} }
 function unlock() { try { GameAudio && GameAudio.unlock(); } catch (e) {} }
+
+function hud() {
+  document.getElementById('credits').textContent = credits;
+  document.getElementById('winScore').textContent = lastWin;
+  document.getElementById('btnSmall').disabled = spinning || !canDouble || lastWin <= 0;
+  document.getElementById('btnBig').disabled = spinning || !canDouble || lastWin <= 0;
+}
 
 function load() {
   try {
     const d = JSON.parse(localStorage.getItem(KEY) || '{}');
     if (typeof d.credits === 'number') credits = d.credits;
     testBoost = !!d.testBoost;
+    if (d.lastBets) KINDS.forEach(k => { lastBets[k.id] = d.lastBets[k.id] | 0; });
   } catch (e) {}
-  document.getElementById('credits').textContent = credits;
-  document.getElementById('winScore').textContent = lastWin;
+  hud();
   syncTestBtn();
 }
 function save() {
-  try { localStorage.setItem(KEY, JSON.stringify({ credits, testBoost })); } catch (e) {}
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ credits, testBoost, lastBets: Object.assign({}, lastBets) }));
+  } catch (e) {}
 }
 function syncTestBtn() {
   const b = document.getElementById('btnTest');
@@ -145,10 +159,8 @@ function kindMeta(id) {
   if (id === 'train') return { id: 'train', label: '火车', pay: 0 };
   return KINDS.find(k => k.id === id);
 }
-
-function totalBet() {
-  return KINDS.reduce((s, k) => s + (bets[k.id] || 0), 0);
-}
+function totalBet() { return KINDS.reduce((s, k) => s + (bets[k.id] || 0), 0); }
+function totalOf(map) { return KINDS.reduce((s, k) => s + (map[k.id] || 0), 0); }
 
 function resize() {
   const box = document.getElementById('board').getBoundingClientRect();
@@ -163,8 +175,7 @@ window.addEventListener('resize', () => { resize(); draw(); });
 
 function cellRect(i) {
   const cols = 7, rows = 7, pad = 5;
-  const cw = (W - pad * 2) / cols;
-  const ch = (H - pad * 2) / rows;
+  const cw = (W - pad * 2) / cols, ch = (H - pad * 2) / rows;
   const map = [];
   for (let x = 0; x < cols; x++) map.push({ c: x, r: 0 });
   for (let y = 1; y < rows - 1; y++) map.push({ c: cols - 1, r: y });
@@ -174,7 +185,6 @@ function cellRect(i) {
   return { x: pad + m.c * cw, y: pad + m.r * ch, w: cw, h: ch };
 }
 
-/** 程序化街机图标（非 emoji） */
 function drawIcon(c, kind, x, y, s) {
   c.save();
   c.translate(x, y);
@@ -182,14 +192,11 @@ function drawIcon(c, kind, x, y, s) {
   if (kind === 'apple') {
     c.fillStyle = '#dc2626';
     c.beginPath(); c.ellipse(0, 2, r * 0.9, r, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#16a34a';
-    c.fillRect(-2, -r - 2, 3, 7);
+    c.fillStyle = '#16a34a'; c.fillRect(-2, -r - 2, 3, 7);
     c.beginPath(); c.ellipse(5, -r, 5, 3, 0.5, 0, Math.PI * 2); c.fill();
   } else if (kind === 'orange') {
     c.fillStyle = '#ea580c';
     c.beginPath(); c.arc(0, 1, r * 0.95, 0, Math.PI * 2); c.fill();
-    c.strokeStyle = '#c2410c'; c.lineWidth = 1;
-    c.beginPath(); c.arc(0, 1, r * 0.55, 0.2, 1.2); c.stroke();
   } else if (kind === 'lemon') {
     c.fillStyle = '#eab308';
     c.beginPath(); c.ellipse(0, 1, r * 1.05, r * 0.7, 0.4, 0, Math.PI * 2); c.fill();
@@ -198,57 +205,40 @@ function drawIcon(c, kind, x, y, s) {
     c.beginPath(); c.arc(0, 2, r, Math.PI * 1.05, Math.PI * 1.95); c.fill();
     c.fillStyle = '#f87171';
     c.beginPath(); c.arc(0, 2, r * 0.72, Math.PI * 1.1, Math.PI * 1.9); c.fill();
-    c.fillStyle = '#fff';
-    for (let i = -2; i <= 2; i++) { c.beginPath(); c.arc(i * 4, 4, 1.2, 0, Math.PI * 2); c.fill(); }
   } else if (kind === 'bell') {
     c.fillStyle = '#facc15';
     c.beginPath();
     c.moveTo(-r * 0.7, -2); c.quadraticCurveTo(0, -r - 2, r * 0.7, -2);
     c.lineTo(r * 0.85, r * 0.55); c.lineTo(-r * 0.85, r * 0.55); c.closePath(); c.fill();
-    c.fillStyle = '#f59e0b';
-    c.beginPath(); c.arc(0, r * 0.7, 3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f59e0b'; c.beginPath(); c.arc(0, r * 0.7, 3, 0, Math.PI * 2); c.fill();
   } else if (kind === 'star') {
     c.fillStyle = '#fbbf24';
     c.beginPath();
     for (let i = 0; i < 5; i++) {
-      const a = -Math.PI / 2 + i * Math.PI * 2 / 5;
-      const a2 = a + Math.PI / 5;
+      const a = -Math.PI / 2 + i * Math.PI * 2 / 5, a2 = a + Math.PI / 5;
       c.lineTo(Math.cos(a) * r, Math.sin(a) * r);
       c.lineTo(Math.cos(a2) * r * 0.45, Math.sin(a2) * r * 0.45);
     }
     c.closePath(); c.fill();
   } else if (kind === 'seven') {
-    c.fillStyle = '#ef4444';
-    roundPath(c, -r, -r * 0.7, r * 2, r * 1.4, 4); c.fill();
-    c.fillStyle = '#fff';
-    c.font = 'bold ' + Math.max(10, s * 0.55) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('77', 0, 1);
+    c.fillStyle = '#ef4444'; roundPath(c, -r, -r * 0.7, r * 2, r * 1.4, 4); c.fill();
+    c.fillStyle = '#fff'; c.font = 'bold ' + Math.max(10, s * 0.5) + 'px system-ui';
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('77', 0, 1);
   } else if (kind === 'bar') {
-    c.fillStyle = '#1e293b';
-    roundPath(c, -r * 1.05, -r * 0.55, r * 2.1, r * 1.1, 3); c.fill();
-    c.fillStyle = '#f8fafc';
-    c.font = 'bold ' + Math.max(9, s * 0.38) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('BAR', 0, 1);
+    c.fillStyle = '#111'; roundPath(c, -r * 1.05, -r * 0.55, r * 2.1, r * 1.1, 3); c.fill();
+    c.fillStyle = '#f8fafc'; c.font = 'bold ' + Math.max(8, s * 0.34) + 'px system-ui';
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('BAR', 0, 1);
   } else if (kind === 'cannon') {
-    c.fillStyle = '#7c3aed';
-    roundPath(c, -r, -r * 0.75, r * 2, r * 1.5, 5); c.fill();
-    c.fillStyle = '#fde68a';
-    c.font = 'bold ' + Math.max(9, s * 0.32) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('礼炮', 0, 1);
+    c.fillStyle = '#7c3aed'; roundPath(c, -r, -r * 0.75, r * 2, r * 1.5, 5); c.fill();
+    c.fillStyle = '#fde68a'; c.font = 'bold ' + Math.max(9, s * 0.3) + 'px system-ui';
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('礼炮', 0, 1);
   } else if (kind === 'train') {
-    c.fillStyle = '#0369a1';
-    roundPath(c, -r, -r * 0.75, r * 2, r * 1.5, 5); c.fill();
-    c.fillStyle = '#e0f2fe';
-    c.font = 'bold ' + Math.max(9, s * 0.32) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('火车', 0, 1);
+    c.fillStyle = '#0369a1'; roundPath(c, -r, -r * 0.75, r * 2, r * 1.5, 5); c.fill();
+    c.fillStyle = '#e0f2fe'; c.font = 'bold ' + Math.max(9, s * 0.3) + 'px system-ui';
+    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('火车', 0, 1);
   }
   c.restore();
 }
-
 function roundPath(c, x, y, w, h, rad) {
   c.beginPath();
   c.moveTo(x + rad, y);
@@ -263,18 +253,11 @@ function drawCell(i, lit) {
   const kind = RING[i];
   const r = cellRect(i);
   const g = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h);
-  if (kind === 'cannon') {
-    g.addColorStop(0, lit ? '#c4b5fd' : '#5b21b6');
-    g.addColorStop(1, lit ? '#8b5cf6' : '#3b0764');
-  } else if (kind === 'train') {
-    g.addColorStop(0, lit ? '#7dd3fc' : '#0369a1');
-    g.addColorStop(1, lit ? '#38bdf8' : '#0c4a6e');
-  } else {
-    g.addColorStop(0, lit ? '#fef3c7' : '#1e293b');
-    g.addColorStop(1, lit ? '#fde68a' : '#0f172a');
-  }
+  if (kind === 'cannon') { g.addColorStop(0, lit ? '#c4b5fd' : '#5b21b6'); g.addColorStop(1, lit ? '#8b5cf6' : '#3b0764'); }
+  else if (kind === 'train') { g.addColorStop(0, lit ? '#7dd3fc' : '#0369a1'); g.addColorStop(1, lit ? '#38bdf8' : '#0c4a6e'); }
+  else { g.addColorStop(0, lit ? '#fef3c7' : '#44403c'); g.addColorStop(1, lit ? '#fde68a' : '#1c1917'); }
   ctx.fillStyle = g;
-  ctx.strokeStyle = lit ? '#fbbf24' : '#334155';
+  ctx.strokeStyle = lit ? '#fbbf24' : '#78716c';
   ctx.lineWidth = lit ? 2.5 : 1;
   roundPath(ctx, r.x + 2, r.y + 2, r.w - 4, r.h - 4, 7);
   ctx.fill(); ctx.stroke();
@@ -282,36 +265,41 @@ function drawCell(i, lit) {
 }
 
 function draw() {
-  ctx.fillStyle = '#7f1d1d';
-  ctx.fillRect(0, 0, W, H);
+  const bg = ctx.createRadialGradient(W / 2, H / 2, 20, W / 2, H / 2, W * 0.7);
+  bg.addColorStop(0, '#78350f'); bg.addColorStop(1, '#1c1917');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
   const inner = { x: W * 0.155, y: H * 0.155, w: W * 0.69, h: H * 0.69 };
-  const pat = ctx.createLinearGradient(0, 0, W, H);
-  pat.addColorStop(0, '#b91c1c'); pat.addColorStop(1, '#450a0a');
-  ctx.fillStyle = pat;
-  roundPath(ctx, inner.x, inner.y, inner.w, inner.h, 10);
-  ctx.fill();
+  ctx.fillStyle = '#7c2d12';
+  roundPath(ctx, inner.x, inner.y, inner.w, inner.h, 10); ctx.fill();
+  // sunburst-ish dots
+  ctx.fillStyle = 'rgba(251,191,36,.12)';
+  for (let i = 0; i < 18; i++) {
+    const a = i / 18 * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(W / 2 + Math.cos(a) * W * 0.18, H / 2 + Math.sin(a) * H * 0.18, 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillStyle = '#fbbf24';
-  ctx.font = 'bold ' + Math.max(20, W * 0.07) + 'px "Segoe UI","PingFang SC",sans-serif';
-  ctx.fillText('幸运水果机', W / 2, H * 0.36);
-  // 小图标装饰（程序绘制）
-  drawIcon(ctx, 'apple', W * 0.38, H * 0.46, 28);
-  drawIcon(ctx, 'lemon', W * 0.62, H * 0.46, 28);
+  ctx.font = 'bold ' + Math.max(20, W * 0.068) + 'px "Segoe UI","PingFang SC",sans-serif';
+  ctx.fillText('水果老虎机', W / 2, H * 0.36);
+  drawIcon(ctx, 'apple', W * 0.36, H * 0.46, 26);
+  drawIcon(ctx, 'melon', W * 0.5, H * 0.47, 26);
+  drawIcon(ctx, 'lemon', W * 0.64, H * 0.46, 26);
 
-  const dw = W * 0.3, dh = H * 0.1;
-  ctx.fillStyle = '#020617';
-  roundPath(ctx, W / 2 - dw / 2, H * 0.55, dw, dh, 6);
-  ctx.fill();
-  ctx.strokeStyle = '#475569'; ctx.stroke();
-  ctx.fillStyle = '#f87171';
-  ctx.font = 'bold ' + Math.max(15, dh * 0.5) + 'px ui-monospace,monospace';
-  ctx.fillText(String(centerMsg), W / 2, H * 0.55 + dh / 2);
+  const dw = W * 0.28, dh = H * 0.09;
+  ctx.fillStyle = '#050505';
+  roundPath(ctx, W / 2 - dw / 2, H * 0.56, dw, dh, 6); ctx.fill();
+  ctx.strokeStyle = '#a16207'; ctx.stroke();
+  ctx.fillStyle = '#ef4444';
+  ctx.font = 'bold ' + Math.max(14, dh * 0.55) + 'px ui-monospace,monospace';
+  ctx.fillText(String(centerMsg), W / 2, H * 0.56 + dh / 2);
 
   for (let i = 0; i < 24; i++) {
-    const lit = litSet.has(i) || (animMode === 'single' && i === cursor && litSet.size === 0);
-    drawCell(i, lit || i === cursor);
+    const lit = litSet.has(i) || i === cursor;
+    drawCell(i, lit);
   }
 }
 
@@ -320,12 +308,12 @@ function toast(msg) {
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => el.classList.remove('show'), 1800);
+  toast._t = setTimeout(() => el.classList.remove('show'), 1700);
 }
 
 function paintBetIcon(cv, kind) {
   const c = cv.getContext('2d');
-  const s = 26;
+  const s = 22;
   cv.width = s * 2; cv.height = s * 2;
   c.setTransform(2, 0, 0, 2, 0, 0);
   c.clearRect(0, 0, s, s);
@@ -339,64 +327,73 @@ function renderBets() {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
+    b.innerHTML = '<span class="pay">' + k.pay + '</span><span class="led">' + String(bets[k.id] || 0).padStart(2, '0') + '</span>';
+    const wrap = document.createElement('div');
+    wrap.className = 'icoWrap';
     const cv = document.createElement('canvas');
     paintBetIcon(cv, k.id);
-    b.innerHTML = '<span class="stake">' + (bets[k.id] || 0) + '</span>';
-    b.appendChild(cv);
-    const pay = document.createElement('span');
-    pay.className = 'pay';
-    pay.textContent = String(k.pay);
-    b.appendChild(pay);
-    b.onclick = () => {
-      unlock();
-      if (spinning) return;
-      if (credits <= 0) { toast('分数不足'); sfx('invalid'); return; }
-      credits--;
-      bets[k.id]++;
-      document.getElementById('credits').textContent = credits;
-      save();
-      sfx('click');
-      renderBets();
-    };
+    wrap.appendChild(cv);
+    b.appendChild(wrap);
+    b.onclick = () => addBet(k.id, 1);
     box.appendChild(b);
   });
+}
+
+function addBet(id, n) {
+  unlock();
+  if (spinning) return;
+  canDouble = false; hud();
+  for (let i = 0; i < n; i++) {
+    if (credits <= 0) { toast('分数不足'); sfx('invalid'); break; }
+    credits--;
+    bets[id]++;
+  }
+  hud(); save(); sfx('click'); renderBets();
+}
+
+/** 开始时：若当前无押分，沿用上次押分并从 CREDIT 扣除 */
+function ensureBetsForSpin() {
+  if (totalBet() > 0) return true;
+  const need = totalOf(lastBets);
+  if (need <= 0) { toast('请先押分'); sfx('invalid'); return false; }
+  if (credits < need) { toast('分数不足，无法沿用上次押分'); sfx('invalid'); return false; }
+  credits -= need;
+  KINDS.forEach(k => { bets[k.id] = lastBets[k.id] | 0; });
+  hud(); renderBets();
+  toast('沿用上次押分 −' + need);
+  return true;
+}
+
+function snapshotLastBets() {
+  KINDS.forEach(k => { lastBets[k.id] = bets[k.id] | 0; });
+  save();
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function payoutForKinds(kindIds) {
   let win = 0;
-  const hit = [];
   kindIds.forEach(id => {
     if (id === 'cannon' || id === 'train') return;
     const stake = bets[id] || 0;
-    if (stake > 0) {
-      const add = stake * kindMeta(id).pay;
-      win += add;
-      hit.push(id);
-    }
+    if (stake > 0) win += stake * kindMeta(id).pay;
   });
-  return { win, hit };
+  return win;
 }
 
 function pickStopIndex() {
   const weights = RING.map(kind => {
     if (kind === 'cannon' || kind === 'train') return testBoost ? 4.5 : 0.55;
     const k = kindMeta(kind);
-    return 1.15 + (55 - k.pay) / 55;
+    return 1.1 + (110 - k.pay) / 110;
   });
-  let sum = weights.reduce((a, b) => a + b, 0);
-  let roll = Math.random() * sum;
-  for (let i = 0; i < weights.length; i++) {
-    roll -= weights[i];
-    if (roll <= 0) return i;
-  }
+  let sum = weights.reduce((a, b) => a + b, 0), roll = Math.random() * sum;
+  for (let i = 0; i < weights.length; i++) { roll -= weights[i]; if (roll <= 0) return i; }
   return 0;
 }
 
 async function animateSingle(stop) {
-  animMode = 'single';
-  litSet = new Set();
+  animMode = 'single'; litSet = new Set();
   const laps = 2 + ((Math.random() * 2) | 0);
   const total = laps * 24 + ((stop - cursor + 24) % 24);
   for (let s = 0; s < total; s++) {
@@ -404,15 +401,13 @@ async function animateSingle(stop) {
     litSet = new Set([cursor]);
     draw();
     if (s % 2 === 0) sfx('move');
-    const t = 26 + Math.floor(s / total * 80) + (s > total - 10 ? (s - (total - 10)) * 28 : 0);
-    await sleep(t);
+    await sleep(26 + Math.floor(s / total * 80) + (s > total - 10 ? (s - (total - 10)) * 28 : 0));
   }
 }
 
 async function animateTrain(stopHead) {
   animMode = 'train';
-  const LEN = 8;
-  const laps = 2;
+  const LEN = 8, laps = 2;
   const total = laps * 24 + ((stopHead - cursor + 24) % 24);
   for (let s = 0; s < total; s++) {
     cursor = (cursor + 1) % 24;
@@ -420,10 +415,8 @@ async function animateTrain(stopHead) {
     for (let k = 0; k < LEN; k++) litSet.add((cursor - k + 24) % 24);
     draw();
     if (s % 2 === 0) sfx('move');
-    const t = 30 + Math.floor(s / total * 70) + (s > total - 10 ? (s - (total - 10)) * 30 : 0);
-    await sleep(t);
+    await sleep(30 + Math.floor(s / total * 70) + (s > total - 10 ? (s - (total - 10)) * 30 : 0));
   }
-  // final train positions: 8 cells ending at stopHead
   cursor = stopHead;
   litSet = new Set();
   for (let k = 0; k < LEN; k++) litSet.add((stopHead - k + 24) % 24);
@@ -432,11 +425,8 @@ async function animateTrain(stopHead) {
 
 async function animateCannon(stop) {
   await animateSingle(stop);
-  // flash 3 random fruit hits
   const fruitIdx = [];
-  for (let i = 0; i < 24; i++) {
-    if (RING[i] !== 'cannon' && RING[i] !== 'train') fruitIdx.push(i);
-  }
+  for (let i = 0; i < 24; i++) if (RING[i] !== 'cannon' && RING[i] !== 'train') fruitIdx.push(i);
   const picks = [];
   while (picks.length < 3 && fruitIdx.length) {
     const j = (Math.random() * fruitIdx.length) | 0;
@@ -444,9 +434,7 @@ async function animateCannon(stop) {
   }
   for (let n = 0; n < 3; n++) {
     litSet = new Set([stop, ...picks.slice(0, n + 1)]);
-    draw();
-    sfx('power');
-    await sleep(280);
+    draw(); sfx('power'); await sleep(280);
   }
   return picks.map(i => RING[i]);
 }
@@ -454,31 +442,30 @@ async function animateCannon(stop) {
 async function runSpin() {
   if (spinning) return;
   unlock();
-  if (totalBet() <= 0) { toast('请先押分'); sfx('invalid'); return; }
+  canDouble = false; hud();
+  if (!ensureBetsForSpin()) return;
+
   spinning = true;
   document.getElementById('btnGo').disabled = true;
   centerMsg = '…';
-  lastWin = 0;
-  document.getElementById('winScore').textContent = '0';
+  lastWin = 0; hud();
+  snapshotLastBets();
   sfx('start');
 
   const stop = pickStopIndex();
   const kind = RING[stop];
-  let win = 0;
-  let msg = '谢谢参与';
+  let win = 0, msg = '谢谢参与';
 
   if (kind === 'cannon') {
     const hitKinds = await animateCannon(stop);
-    const res = payoutForKinds(hitKinds);
-    win = res.win;
+    win = payoutForKinds(hitKinds);
     msg = win > 0 ? ('礼炮打中 +' + win) : '礼炮未押中';
     sfx(win > 0 ? 'win' : 'lose');
   } else if (kind === 'train') {
     await animateTrain(stop);
     const kinds = [];
     for (let k = 0; k < 8; k++) kinds.push(RING[(stop - k + 24) % 24]);
-    const res = payoutForKinds(kinds);
-    win = res.win;
+    win = payoutForKinds(kinds);
     msg = win > 0 ? ('火车经过 +' + win) : '火车未押中';
     sfx(win > 0 ? 'win' : 'lose');
   } else {
@@ -488,56 +475,75 @@ async function runSpin() {
       win = stake * kindMeta(kind).pay;
       msg = kindMeta(kind).label + ' 中奖 +' + win;
       sfx('win');
-    } else {
-      sfx('lose');
-    }
+    } else sfx('lose');
   }
 
   credits += win;
   lastWin = win;
+  canDouble = win > 0;
   centerMsg = win > 0 ? ('+' + win) : '0';
-  document.getElementById('credits').textContent = credits;
-  document.getElementById('winScore').textContent = lastWin;
   KINDS.forEach(k => { bets[k.id] = 0; });
   renderBets();
-  save();
-  toast(msg);
+  hud(); save();
+  toast(msg + (canDouble ? ' · 可小/大比倍' : ''));
   spinning = false;
   document.getElementById('btnGo').disabled = false;
   if (credits <= 0) setTimeout(() => toast('分数用尽，可在菜单重置'), 1600);
 }
 
+function doDouble(isBig) {
+  unlock();
+  if (spinning || !canDouble || lastWin <= 0) return;
+  const roll = 1 + ((Math.random() * 14) | 0); // 1..14
+  const winSide = isBig ? (roll >= 8) : (roll <= 7);
+  centerMsg = String(roll);
+  if (winSide) {
+    credits += lastWin;
+    lastWin *= 2;
+    toast((isBig ? '大' : '小') + '中！骰 ' + roll + ' · 赢分 ' + lastWin);
+    sfx('win');
+  } else {
+    credits -= lastWin;
+    if (credits < 0) credits = 0;
+    toast((isBig ? '大' : '小') + '不中 · 骰 ' + roll);
+    lastWin = 0;
+    canDouble = false;
+    sfx('lose');
+  }
+  hud(); save();
+}
+
 function loop() { draw(); requestAnimationFrame(loop); }
 
 document.getElementById('btnGo').onclick = () => runSpin();
-document.getElementById('btnMenu').onclick = () => {
-  document.getElementById('panelMenu').classList.remove('hidden');
-};
-document.getElementById('btnTest').onclick = () => {
+document.getElementById('btnAll').onclick = () => {
   unlock();
-  testBoost = !testBoost;
-  syncTestBtn();
-  save();
-  toast(testBoost ? '测试开：礼炮/火车更常出现' : '测试关：特奖恢复低概率');
-  sfx('swap');
+  if (spinning) return;
+  canDouble = false;
+  let added = 0;
+  KINDS.forEach(k => {
+    if (credits > 0) { credits--; bets[k.id]++; added++; }
+  });
+  if (!added) toast('分数不足');
+  else { sfx('click'); toast('全押 +1'); }
+  hud(); renderBets(); save();
+};
+document.getElementById('btnSmall').onclick = () => doDouble(false);
+document.getElementById('btnBig').onclick = () => doDouble(true);
+document.getElementById('btnMenu').onclick = () => document.getElementById('panelMenu').classList.remove('hidden');
+document.getElementById('btnTest').onclick = () => {
+  unlock(); testBoost = !testBoost; syncTestBtn(); save();
+  toast(testBoost ? '测试开：礼炮/火车更常出现' : '测试关：特奖恢复低概率'); sfx('swap');
 };
 document.getElementById('btnPlay').onclick = () => {
-  unlock();
-  document.getElementById('panelMenu').classList.add('hidden');
-  sfx('place');
+  unlock(); document.getElementById('panelMenu').classList.add('hidden'); sfx('place');
 };
 document.getElementById('btnReset').onclick = () => {
   unlock();
-  credits = 100;
-  lastWin = 0;
-  KINDS.forEach(k => { bets[k.id] = 0; });
+  credits = 100; lastWin = 0; canDouble = false;
+  KINDS.forEach(k => { bets[k.id] = 0; lastBets[k.id] = 0; });
   centerMsg = '100';
-  document.getElementById('credits').textContent = credits;
-  document.getElementById('winScore').textContent = '0';
-  renderBets();
-  save();
-  sfx('swap');
-  toast('已重置为 100 分');
+  hud(); renderBets(); save(); sfx('swap'); toast('已重置为 100 分');
 };
 
 load();
