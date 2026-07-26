@@ -1,6 +1,6 @@
 /**
  * Shared procedural SFX + BGM for casual games (Web Audio API).
- * No external audio files; unlocks on first user gesture.
+ * AudioContext is created only after a user gesture (browser autoplay policy).
  */
 (function (global) {
     'use strict';
@@ -17,6 +17,7 @@
     var bgmTheme = 'calm';
     var bgmWanted = false;
     var muteBtns = [];
+    var pendingSfx = null;
 
     try {
         muted = localStorage.getItem(STORAGE_KEY) === '1';
@@ -27,6 +28,7 @@
     }
 
     function ensure() {
+        if (!unlocked) return null;
         if (ctx) return ctx;
         var Ctor = AC();
         if (!Ctor) return null;
@@ -46,14 +48,21 @@
     function resume() {
         var c = ensure();
         if (!c) return Promise.resolve();
-        if (c.state === 'suspended') return c.resume();
+        if (c.state === 'suspended') {
+            return c.resume().catch(function () { /* ignore */ });
+        }
         return Promise.resolve();
     }
 
     function unlock() {
+        if (!unlocked) unlocked = true;
         return resume().then(function () {
-            if (ctx && ctx.state === 'running') unlocked = true;
-            if (bgmWanted && !muted && !bgmTimer && unlocked) startBgmInternal();
+            if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
+            if (pendingSfx) {
+                var name = pendingSfx;
+                pendingSfx = null;
+                playSfxNow(name);
+            }
         });
     }
 
@@ -62,8 +71,8 @@
         try {
             localStorage.setItem(STORAGE_KEY, muted ? '1' : '0');
         } catch (e) { /* ignore */ }
-        if (master) {
-            var now = ctx ? ctx.currentTime : 0;
+        if (master && ctx) {
+            var now = ctx.currentTime;
             master.gain.cancelScheduledValues(now);
             master.gain.setTargetAtTime(muted ? 0 : 1, now, 0.03);
         }
@@ -72,11 +81,17 @@
         syncMuteButtons();
     }
 
+    function i18n(key, fallback) {
+        return typeof global.t === 'function' ? global.t(key) : fallback;
+    }
+
     function syncMuteButtons() {
         muteBtns.forEach(function (btn) {
             if (!btn) return;
-            var onLabel = btn.dataset.soundOn || 'Sound on';
-            var offLabel = btn.dataset.soundOff || 'Muted';
+            var onLabel = i18n('tools.game.soundOn', 'Sound on');
+            var offLabel = i18n('tools.game.soundOff', 'Muted');
+            btn.dataset.soundOn = onLabel;
+            btn.dataset.soundOff = offLabel;
             btn.setAttribute('aria-pressed', muted ? 'true' : 'false');
             btn.textContent = muted ? offLabel : onLabel;
             btn.classList.toggle('is-muted', muted);
@@ -85,7 +100,7 @@
 
     function tone(freq, dur, type, gain, when, dest) {
         var c = ensure();
-        if (!c || muted) return;
+        if (!c || muted || c.state !== 'running') return;
         var t0 = (when != null ? when : c.currentTime);
         var osc = c.createOscillator();
         var g = c.createGain();
@@ -102,7 +117,7 @@
 
     function noiseBurst(dur, gain, when) {
         var c = ensure();
-        if (!c || muted) return;
+        if (!c || muted || c.state !== 'running') return;
         var t0 = when != null ? when : c.currentTime;
         var len = Math.max(1, Math.floor(c.sampleRate * dur));
         var buf = c.createBuffer(1, len, c.sampleRate);
@@ -126,12 +141,8 @@
     }
 
     var SFX = {
-        select: function () {
-            tone(660, 0.06, 'sine', 0.12);
-        },
-        click: function () {
-            tone(520, 0.05, 'triangle', 0.1);
-        },
+        select: function () { tone(660, 0.06, 'sine', 0.12); },
+        click: function () { tone(520, 0.05, 'triangle', 0.1); },
         place: function () {
             tone(420, 0.07, 'sine', 0.14);
             tone(630, 0.05, 'sine', 0.08, (ctx && ctx.currentTime) + 0.04);
@@ -216,7 +227,7 @@
 
     function playBgmNote(freq, beatDur) {
         var c = ensure();
-        if (!c || muted || !bgmGain) return;
+        if (!c || muted || !bgmGain || c.state !== 'running') return;
         var t0 = c.currentTime;
         var osc = c.createOscillator();
         var g = c.createGain();
@@ -233,7 +244,8 @@
 
     function startBgmInternal() {
         stopBgmInternal();
-        if (!ensure() || muted) return;
+        if (!unlocked || muted) return;
+        if (!ensure()) return;
         var theme = THEMES[bgmTheme] || THEMES.calm;
         var beat = 60 / theme.bpm;
         bgmStep = 0;
@@ -243,7 +255,6 @@
             if (idx >= 0) {
                 var freq = theme.scale[idx % theme.scale.length];
                 playBgmNote(freq, beat * 0.95);
-                // soft bass every 4 steps
                 if (bgmStep % 4 === 0) {
                     playBgmNote(theme.scale[0] / 2, beat * 1.6);
                 }
@@ -261,19 +272,27 @@
         }
     }
 
-    function sfx(name) {
-        if (muted) return;
-        unlock();
+    function playSfxNow(name) {
         var fn = SFX[name];
         if (fn) fn();
+    }
+
+    function sfx(name) {
+        if (muted || !SFX[name]) return;
+        if (!unlocked) {
+            // ignore autoplay-time sfx (e.g. newGame on load); wait for gesture
+            return;
+        }
+        unlock().then(function () {
+            playSfxNow(name);
+        });
     }
 
     function startBgm(theme) {
         if (theme) bgmTheme = theme;
         bgmWanted = true;
-        unlock().then(function () {
-            if (!muted) startBgmInternal();
-        });
+        // do not create AudioContext here — wait for user gesture
+        if (unlocked && !muted) startBgmInternal();
     }
 
     function stopBgm() {
@@ -281,17 +300,14 @@
         stopBgmInternal();
     }
 
-    function i18n(key, fallback) {
-        return typeof global.t === 'function' ? global.t(key) : fallback;
-    }
-
     function bindMuteButton(btn) {
         if (!btn) return;
         btn.removeAttribute('data-i18n');
-        btn.dataset.soundOn = i18n('tools.game.soundOn', 'Sound on');
-        btn.dataset.soundOff = i18n('tools.game.soundOff', 'Muted');
         muteBtns.push(btn);
         syncMuteButtons();
+        // refresh label after i18n applies language
+        global.setTimeout(syncMuteButtons, 0);
+        global.setTimeout(syncMuteButtons, 50);
         btn.addEventListener('click', function () {
             unlock();
             setMasterMute(!muted);
@@ -324,6 +340,7 @@
         setMuted: setMasterMute,
         isMuted: function () { return muted; },
         bindMuteButton: bindMuteButton,
+        refreshMuteLabels: syncMuteButtons,
         themes: Object.keys(THEMES)
     };
 })(window);

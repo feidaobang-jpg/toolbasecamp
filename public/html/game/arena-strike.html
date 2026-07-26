@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>巷战突袭 · Arena Strike</title>
-<!-- Engine: three@0.170.0 (jsDelivr) — web 3D de-facto standard -->
+<!-- Engine: three@0.170.0 (jsDelivr) �?web 3D de-facto standard -->
 <script type="importmap">
 {
   "imports": {
@@ -49,7 +49,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="wrap">
   <div id="hud">
     <div id="cross"></div>
-    <div id="stats">HP <b id="hpTxt">100</b> · 击杀 <b id="kills">0</b> · 波次 <b id="wave">1</b> · 最高 <b id="best">0</b></div>
+    <div id="stats">HP <b id="hpTxt">100</b> · 击杀 <b id="kills">0</b> · 波次 <b id="wave">1</b> · 最�?<b id="best">0</b></div>
     <div id="hpWrap"><i id="hpBar"></i></div>
     <div id="dmgFlash"></div>
     <div id="hitMark">HIT</div>
@@ -57,14 +57,14 @@ canvas{display:block;width:100%;height:100%}
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
     <div class="look" id="lookZone"></div>
-    <div class="fire" id="btnFire">开火</div>
+    <div class="fire" id="btnFire">开�?/div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>巷战突袭</h1>
-      <p>单机简易 3D 枪战，引擎 <b style="color:#e2e8f0">Three.js</b>。程序化 PBR 贴图 + WebAudio 枪火/受击/脚步。清波次 Bot。</p>
-      <p>键鼠：点击锁定 · WASD · 鼠标瞄准 · 左键开火<br/>触屏：左摇杆 · 右侧滑动瞄准 · 开火键</p>
-      <div class="row"><button id="btnStart">开战</button></div>
+      <p>单机简�?3D 枪战，引�?<b style="color:#e2e8f0">Three.js</b>。程序化 PBR 贴图 + WebAudio 枪火/受击/脚步。清波次 Bot�?/p>
+      <p>键鼠：点击锁�?· WASD · 鼠标瞄准 · 左键开�?br/>触屏：左摇杆 · 右侧滑动瞄准 · 开火键</p>
+      <div class="row"><button id="btnStart">开�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">战斗结束</h1>
@@ -623,7 +623,7 @@ function buildMap() {
 }
 
 function resolveCircle(pos, radius) {
-  // circle (XZ) vs AABB — stable, no axis-flip jitter
+  // circle (XZ) vs AABB �?stable, no axis-flip jitter
   const pad = 0.02;
   for (let iter = 0; iter < 3; iter++) {
     for (const s of solids) {
@@ -713,8 +713,8 @@ function endGame(win) {
   best = Math.max(best, score);
   try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
   document.getElementById('panelOver').classList.remove('hidden');
-  document.getElementById('overTitle').textContent = win ? '清场胜利' : '你倒下了';
-  document.getElementById('overText').textContent = `得分 ${score} · 击杀 ${player.kills} · 波次 ${player.wave} · 最高 ${best}`;
+  document.getElementById('overTitle').textContent = win ? '清场胜利' : '你倒下�?;
+  document.getElementById('overText').textContent = `得分 ${score} · 击杀 ${player.kills} · 波次 ${player.wave} · 最�?${best}`;
   sfx(win ? 'win' : 'ko');
   updateHud();
 }

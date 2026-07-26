@@ -31,7 +31,7 @@ canvas{display:block;width:100%;height:100%}
 </head>
 <body>
 <div id="wrap">
-  <div id="hud">立体街区 · 走到彩色门口按 <b>J / 互动</b></div>
+  <div id="hud">立体街区 · 走到彩色门口�?<b>J / 互动</b></div>
   <div id="hint"></div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
@@ -40,7 +40,7 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>立体街区</h1>
-      <p>3D 小城原型：一条主街、几栋楼、可互动的门口。</p>
+      <p>3D 小城原型：一条主街、几栋楼、可互动的门口�?/p>
       <p>WASD 移动 · 鼠标拖拽转向 · J 互动</p>
       <button id="btnStart">进入街区</button>
     </div>
@@ -114,10 +114,10 @@ function building(x,z,w,h,d,color,name,line){
   doors.push({pos:door.position,name,line,seen:false});
 }
 
-building(-8,0,6,5,6,0xb45309,'咖啡角','飘来烘焙香气。要不要进来坐坐？');
-building(8,-4,7,6,7,0x1d4ed8,'蓝屋画廊','墙上挂着小镇速写。');
-building(-7,12,5,4,5,0x15803d,'绿意杂货','门口摆着新鲜蔬果箱。');
-building(9,14,6,5,6,0x7c3aed,'紫藤客栈','楼上有便宜的床位。');
+building(-8,0,6,5,6,0xb45309,'咖啡�?,'飘来烘焙香气。要不要进来坐坐�?);
+building(8,-4,7,6,7,0x1d4ed8,'蓝屋画廊','墙上挂着小镇速写�?);
+building(-7,12,5,4,5,0x15803d,'绿意杂货','门口摆着新鲜蔬果箱�?);
+building(9,14,6,5,6,0x7c3aed,'紫藤客栈','楼上有便宜的床位�?);
 box(2,0.4,2,0x38bdf8,0,-8); // fountain base
 const treeGeo=new THREE.ConeGeometry(1.2,3,8);
 const treeMat=new THREE.MeshStandardMaterial({color:0x166534});
@@ -147,12 +147,12 @@ function tryAct(){
   }
   if(best&&bd<3.2){
     hintEl.style.display='block';
-    hintEl.textContent=best.name+'：'+best.line;
+    hintEl.textContent=best.name+'�?+best.line;
     if(!best.seen){best.seen=true;visited++;try{localStorage.setItem(SAVE,JSON.stringify({v:visited}))}catch(e){}}
     setTimeout(()=>{hintEl.style.display='none'},3200);
   }else{
     hintEl.style.display='block';
-    hintEl.textContent='走近金色门口再互动';
+    hintEl.textContent='走近金色门口再互�?;
     setTimeout(()=>{hintEl.style.display='none'},1600);
   }
 }
