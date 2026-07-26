@@ -59,8 +59,12 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         render();
         if (!won && grid.some(function (row) { return row.indexOf(2048) >= 0; })) {
             won = true; play('win'); setStatus(tr('tools.g2048.win'), 'is-win');
-        } else if (!canMove()) play('lose'); setStatus(tr('tools.g2048.lose'), 'is-lose');
-        else setStatus(tr('tools.g2048.hint'), 'is-idle');
+        } else if (!canMove()) {
+            play('lose');
+            setStatus(tr('tools.g2048.lose'), 'is-lose');
+        } else {
+            setStatus(tr('tools.g2048.hint'), 'is-idle');
+        }
     }
     function canMove() {
         for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++) {
