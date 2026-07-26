@@ -583,6 +583,21 @@
         play('swap');
     }
 
+    function refreshLocaleUi() {
+        updateStats();
+        if (!ended && !won) {
+            var cfg = levelConfig(level);
+            setStatus(tr('tools.lianliankan.levelStart', {
+                n: level,
+                rows: cfg.rows,
+                cols: cfg.cols,
+                time: Math.max(0, Math.ceil(timeLeft))
+            }), statusEl.classList.contains('is-win') ? 'is-win'
+                : statusEl.classList.contains('is-lose') ? 'is-lose'
+                : 'is-idle');
+        }
+    }
+
     hintBtn.addEventListener('click', onHint);
     shuffleBtn.addEventListener('click', onShuffle);
     restartBtn.addEventListener('click', newGame);
@@ -593,6 +608,14 @@
     });
 
     newGame();
+    // Scripts run before i18n init — refresh Chinese/English copy afterwards
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', refreshLocaleUi);
+    } else {
+        setTimeout(refreshLocaleUi, 0);
+    }
+    document.addEventListener('tb:locale', refreshLocaleUi);
+
     requestAnimationFrame(function () {
         syncEmojiSize();
         requestAnimationFrame(syncEmojiSize);
