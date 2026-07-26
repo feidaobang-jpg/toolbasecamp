@@ -474,7 +474,7 @@ window.TB_LOCALES.en = {
         },
         slots: {
             title: 'Fruit Machine',
-            desc: 'Classic lucky fruit machine: place bets, run the lights, win on your symbol. Fun only — no real money.'
+            desc: 'Classic fruit machine with cannon and train bonuses. Procedural arcade icons. Fun only — no real money.'
         },
         sheepstack: {
             title: 'Stack Match',
