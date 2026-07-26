@@ -108,6 +108,8 @@ window.TB_LOCALES['zh-CN'] = {
     },
     games: {
         groups: {
+            polished: '高完成度',
+            draft: '低完成度',
             casual: '休闲游戏'
         }
     },

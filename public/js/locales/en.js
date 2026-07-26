@@ -109,6 +109,8 @@ window.TB_LOCALES.en = {
     },
     games: {
         groups: {
+            polished: 'Polished',
+            draft: 'Early drafts',
             casual: 'Casual games'
         }
     },
