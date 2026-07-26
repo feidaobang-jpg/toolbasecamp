@@ -208,31 +208,47 @@
         }
     };
 
-    // Bright major / cute casual-game earworms (short looping phrases)
-    // scale: C4 D4 E4 G4 A4 C5 D5 E5 G5 A5 (pentatonic-leaning, skip F/B for "羊了个羊" vibe)
+    // scale: C4 D4 E4 G4 A4 C5 D5 E5 G5 A5 (pentatonic-leaning)
     var CATCHY_SCALE = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0];
 
+    // Previous sheep-style tune (restore by setting catchy = catchyPrev)
+    var CATCHY_PREV = {
+        bpm: 264,
+        scale: CATCHY_SCALE,
+        lead: [
+            3, 3, 5, 3, 4, 4, 3, -1,
+            1, 1, 3, 1, 0, 0, 0, -1,
+            5, 5, 7, 5, 4, 3, 1, 3,
+            5, 5, 4, 3, 1, 0, 0, -1,
+            0, 1, 3, 5, 4, 3, 1, 0,
+            3, 4, 5, 7, 5, 4, 3, 1,
+            5, 3, 5, 3, 4, 1, 0, 1,
+            3, 3, 4, 3, 1, 0, 0, -1
+        ],
+        bass: [0, -1, 0, 3, 4, -1, 4, 3, 0, -1, 0, 3, 4, 3, 1, 0],
+        hop: [5, 7, 5, -1, 8, 5, 7, -1]
+    };
+
     var THEMES = {
-        // bouncy sheep-style motif: short call-and-response, sticky loop
+        catchyPrev: CATCHY_PREV,
+        // new try: bubbly arcade jingle (down-up hooks + syncopation)
         catchy: {
             bpm: 264,
             scale: CATCHY_SCALE,
             lead: [
-                // call
-                3, 3, 5, 3, 4, 4, 3, -1,
-                1, 1, 3, 1, 0, 0, 0, -1,
-                // response (higher)
-                5, 5, 7, 5, 4, 3, 1, 3,
-                5, 5, 4, 3, 1, 0, 0, -1,
-                // bounce climb
-                0, 1, 3, 5, 4, 3, 1, 0,
-                3, 4, 5, 7, 5, 4, 3, 1,
-                // tag — repeats hard in the ear
-                5, 3, 5, 3, 4, 1, 0, 1,
-                3, 3, 4, 3, 1, 0, 0, -1
+                // hook A
+                5, 4, 3, 4, 5, 5, 5, -1,
+                4, 3, 1, 3, 4, 4, 4, -1,
+                5, 4, 3, 4, 5, 7, 5, 4,
+                3, 1, 0, 1, 3, 3, 3, -1,
+                // hook B (higher sparkle)
+                7, 5, 7, 8, 7, 5, 4, 5,
+                3, 4, 5, 7, 5, 4, 3, -1,
+                5, 5, 4, 3, 1, 3, 5, 4,
+                3, 1, 0, 0, 1, 3, 0, -1
             ],
-            bass: [0, -1, 0, 3, 4, -1, 4, 3, 0, -1, 0, 3, 4, 3, 1, 0],
-            hop: [5, 7, 5, -1, 8, 5, 7, -1]
+            bass: [0, 0, -1, 3, 4, 4, -1, 3, 0, 0, -1, 1, 3, 3, -1, 0],
+            hop: [8, -1, 7, 5, 8, -1, 5, 7]
         },
         calm: null,
         upbeat: null,
