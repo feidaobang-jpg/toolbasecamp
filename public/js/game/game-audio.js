@@ -13,7 +13,8 @@
     var bgmGain = null;
     var unlocked = false;
     var muted = false;
-    var volume = 1; // 0–1 user level (applied on master)
+    // 0–2 multiplier on master: 1 = current default (slider middle), 2 = louder max
+    var volume = 1;
     var bgmTimer = null;
     var bgmStep = 0;
     var bgmTheme = 'catchy';
@@ -25,7 +26,7 @@
     try {
         muted = localStorage.getItem(STORAGE_KEY) === '1';
         var savedVol = parseFloat(localStorage.getItem(VOLUME_KEY));
-        if (!isNaN(savedVol)) volume = Math.max(0, Math.min(1, savedVol));
+        if (!isNaN(savedVol)) volume = Math.max(0, Math.min(2, savedVol));
     } catch (e) { /* ignore */ }
 
     function masterLevel() {
@@ -96,7 +97,7 @@
     }
 
     function setVolume(v) {
-        var next = Math.max(0, Math.min(1, Number(v)));
+        var next = Math.max(0, Math.min(2, Number(v)));
         if (isNaN(next)) return;
         volume = next;
         try {
@@ -108,9 +109,6 @@
             try { localStorage.setItem(STORAGE_KEY, '0'); } catch (e2) { /* ignore */ }
             if (bgmWanted && unlocked) startBgmInternal();
             syncMuteButtons();
-        }
-        if (volume <= 0.001) {
-            // keep muted flag separate; just silence via volume
         }
         applyMasterGain();
         syncVolumeSliders();
@@ -134,7 +132,8 @@
     }
 
     function syncVolumeSliders() {
-        var pct = String(Math.round(volume * 100));
+        // slider 0–100 maps to volume 0–2 (50 = default)
+        var pct = String(Math.round(volume * 50));
         volumeSliders.forEach(function (el) {
             if (!el) return;
             if (String(el.value) !== pct) el.value = pct;
@@ -448,7 +447,8 @@
         syncVolumeSliders();
         var onChange = function () {
             unlock();
-            setVolume(Number(el.value) / 100);
+            // 50 → volume 1 (default), 100 → volume 2 (louder)
+            setVolume(Number(el.value) / 50);
         };
         el.addEventListener('input', onChange);
         el.addEventListener('change', onChange);
