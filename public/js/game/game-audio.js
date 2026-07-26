@@ -6,22 +6,38 @@
     'use strict';
 
     var STORAGE_KEY = 'tb-game-audio-muted';
+    var VOLUME_KEY = 'tb-game-audio-volume';
     var ctx = null;
     var master = null;
     var sfxGain = null;
     var bgmGain = null;
     var unlocked = false;
     var muted = false;
+    var volume = 1; // 0–1 user level (applied on master)
     var bgmTimer = null;
     var bgmStep = 0;
     var bgmTheme = 'catchy';
     var bgmWanted = false;
     var muteBtns = [];
+    var volumeSliders = [];
     var pendingSfx = null;
 
     try {
         muted = localStorage.getItem(STORAGE_KEY) === '1';
+        var savedVol = parseFloat(localStorage.getItem(VOLUME_KEY));
+        if (!isNaN(savedVol)) volume = Math.max(0, Math.min(1, savedVol));
     } catch (e) { /* ignore */ }
+
+    function masterLevel() {
+        return muted ? 0 : volume;
+    }
+
+    function applyMasterGain() {
+        if (!master || !ctx) return;
+        var now = ctx.currentTime;
+        master.gain.cancelScheduledValues(now);
+        master.gain.setTargetAtTime(masterLevel(), now, 0.03);
+    }
 
     function AC() {
         return global.AudioContext || global.webkitAudioContext;
@@ -34,14 +50,14 @@
         if (!Ctor) return null;
         ctx = new Ctor();
         master = ctx.createGain();
-        master.gain.value = muted ? 0 : 1;
+        master.gain.value = masterLevel();
         master.connect(ctx.destination);
         sfxGain = ctx.createGain();
-        // ~2x previous loudness
-        sfxGain.gain.value = 1.1;
+        // another 2x on top of previous loudness
+        sfxGain.gain.value = 2.2;
         sfxGain.connect(master);
         bgmGain = ctx.createGain();
-        bgmGain.gain.value = 0.32;
+        bgmGain.gain.value = 0.64;
         bgmGain.connect(master);
         return ctx;
     }
@@ -72,14 +88,32 @@
         try {
             localStorage.setItem(STORAGE_KEY, muted ? '1' : '0');
         } catch (e) { /* ignore */ }
-        if (master && ctx) {
-            var now = ctx.currentTime;
-            master.gain.cancelScheduledValues(now);
-            master.gain.setTargetAtTime(muted ? 0 : 1, now, 0.03);
-        }
+        applyMasterGain();
         if (muted) stopBgmInternal();
         else if (bgmWanted && unlocked) startBgmInternal();
         syncMuteButtons();
+        syncVolumeSliders();
+    }
+
+    function setVolume(v) {
+        var next = Math.max(0, Math.min(1, Number(v)));
+        if (isNaN(next)) return;
+        volume = next;
+        try {
+            localStorage.setItem(VOLUME_KEY, String(volume));
+        } catch (e) { /* ignore */ }
+        // dragging above 0 while muted → unmute
+        if (volume > 0.001 && muted) {
+            muted = false;
+            try { localStorage.setItem(STORAGE_KEY, '0'); } catch (e2) { /* ignore */ }
+            if (bgmWanted && unlocked) startBgmInternal();
+            syncMuteButtons();
+        }
+        if (volume <= 0.001) {
+            // keep muted flag separate; just silence via volume
+        }
+        applyMasterGain();
+        syncVolumeSliders();
     }
 
     function i18n(key, fallback) {
@@ -96,6 +130,16 @@
             btn.setAttribute('aria-pressed', muted ? 'true' : 'false');
             btn.textContent = muted ? offLabel : onLabel;
             btn.classList.toggle('is-muted', muted);
+        });
+    }
+
+    function syncVolumeSliders() {
+        var pct = String(Math.round(volume * 100));
+        volumeSliders.forEach(function (el) {
+            if (!el) return;
+            if (String(el.value) !== pct) el.value = pct;
+            el.setAttribute('aria-valuenow', pct);
+            el.title = i18n('tools.game.volume', 'Volume') + ' ' + pct + '%';
         });
     }
 
@@ -395,6 +439,27 @@
         });
     }
 
+    function bindVolumeSlider(el) {
+        if (!el) return;
+        volumeSliders.push(el);
+        el.min = '0';
+        el.max = '100';
+        el.step = '1';
+        syncVolumeSliders();
+        var onChange = function () {
+            unlock();
+            setVolume(Number(el.value) / 100);
+        };
+        el.addEventListener('input', onChange);
+        el.addEventListener('change', onChange);
+    }
+
+    function bindControls(opts) {
+        opts = opts || {};
+        bindMuteButton(opts.muteBtn || document.getElementById('sound-btn'));
+        bindVolumeSlider(opts.volumeSlider || document.getElementById('volume-slider'));
+    }
+
     function installUnlockGestures() {
         var once = function () {
             unlock();
@@ -420,7 +485,11 @@
         stopBgm: stopBgm,
         setMuted: setMasterMute,
         isMuted: function () { return muted; },
+        setVolume: setVolume,
+        getVolume: function () { return volume; },
         bindMuteButton: bindMuteButton,
+        bindVolumeSlider: bindVolumeSlider,
+        bindControls: bindControls,
         refreshMuteLabels: syncMuteButtons,
         themes: Object.keys(THEMES)
     };

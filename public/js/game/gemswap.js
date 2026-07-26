@@ -26,7 +26,7 @@
     var gap = 3;
 
     if (audio) {
-        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.bindControls();
         audio.startBgm('upbeat');
     }
 

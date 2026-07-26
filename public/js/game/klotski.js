@@ -19,7 +19,7 @@
     var gameOver = false;
 
     if (audio) {
-        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.bindControls();
         audio.startBgm('calm');
     }
 

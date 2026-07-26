@@ -17,7 +17,7 @@
     var last = null;
 
     if (audio) {
-        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.bindControls();
         audio.startBgm('calm');
     }
 

@@ -272,7 +272,8 @@ window.TB_LOCALES['zh-CN'] = {
             restart: '重新开始',
             score: '得分',
             soundOn: '静音',
-            soundOff: '开声音'
+            soundOff: '开声音',
+            volume: '音量'
         },
         sudoku: {
             title: '数独',

@@ -16,7 +16,7 @@
     var selected = { row: -1, col: -1 };
 
     if (audio) {
-        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.bindControls();
         audio.startBgm('calm');
     }
 

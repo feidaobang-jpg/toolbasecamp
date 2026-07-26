@@ -16,7 +16,7 @@
     var audio = window.GameAudio;
 
     if (audio) {
-        audio.bindMuteButton(document.getElementById('sound-btn'));
+        audio.bindControls();
         audio.startBgm('arcade');
     }
 
