@@ -202,7 +202,7 @@ const gamesConfig = {
     sectionTitleKey: 'hub.gamesTitle',
     groups: [
         {
-            titleKey: 'games.groups.casual',
+            titleKey: 'games.groups.polished',
             items: [
                 { titleKey: 'tools.sudoku.title', url: 'html/game/sudoku.html' },
                 { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html' },
@@ -212,7 +212,12 @@ const gamesConfig = {
                 { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
                 { titleKey: 'tools.goldminer.title', url: 'html/game/goldminer.html' },
-                { titleKey: 'tools.descent.title', url: 'html/game/descent.html?v=2' },
+                { titleKey: 'tools.descent.title', url: 'html/game/descent.html?v=2' }
+            ]
+        },
+        {
+            titleKey: 'games.groups.draft',
+            items: [
                 { titleKey: 'tools.snake.title', url: 'html/game/snake.html' },
                 { titleKey: 'tools.g2048.title', url: 'html/game/g2048.html' },
                 { titleKey: 'tools.whack.title', url: 'html/game/whack.html' },
