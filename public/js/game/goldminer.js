@@ -32,7 +32,7 @@ function tr(key, params) {
 
     var ORIGIN = { x: W / 2, y: 52 };
     var MAX_LEN = H - 80;
-    var SWING_SPEED = 0.028;
+    var SWING_SPEED = 0.028 / 3;
     var SHOOT_SPEED = 7;
     var BASE_RETRACT = 5;
 
@@ -237,9 +237,16 @@ function tr(key, params) {
     function draw() {
         ctx.clearRect(0, 0, W, H);
 
-        // sky / ground already in CSS bg; fill soft ground overlay
-        ctx.fillStyle = 'rgba(255,255,255,0.12)';
-        ctx.fillRect(0, 0, W, 96);
+        // Opaque sky + dirt so CSS bg never washes out emoji contrast
+        var skyH = 96;
+        ctx.fillStyle = '#7ec8e8';
+        ctx.fillRect(0, 0, W, skyH);
+        var dirt = ctx.createLinearGradient(0, skyH, 0, H);
+        dirt.addColorStop(0, '#e8d4a8');
+        dirt.addColorStop(0.45, '#d2b48c');
+        dirt.addColorStop(1, '#b8956a');
+        ctx.fillStyle = dirt;
+        ctx.fillRect(0, skyH, W, H - skyH);
 
         // miner
         ctx.font = '36px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
@@ -258,10 +265,18 @@ function tr(key, params) {
         ctx.font = '22px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
         ctx.fillText('🪝', tip.x, tip.y);
 
-        // items
+        // items — light pad under emoji so they stay readable on dirt
         for (var i = 0; i < items.length; i++) {
             var it = items[i];
             if (!it.alive && it !== caught) continue;
+            var r = it.size * 0.55;
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,255,255,0.88)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(15,23,42,0.12)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
             ctx.font = it.size + 'px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
             ctx.fillText(it.emoji, it.x, it.y);
         }
