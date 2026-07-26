@@ -428,10 +428,18 @@
         dropClaw();
     });
 
+    function refreshIdleCopy() {
+        if (state !== 'idle') return;
+        setStatus(tr('tools.goldminer.hint'), 'is-idle');
+        draw();
+    }
+
     resetLevel(false);
-    draw();
-    setStatus(tr('tools.goldminer.hint'), 'is-idle');
-    document.addEventListener('tb:locale', function () {
-        if (state === 'idle') setStatus(tr('tools.goldminer.hint'), 'is-idle');
-    });
+    // i18n may init on DOMContentLoaded after this script — refresh copy then
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', refreshIdleCopy);
+    } else {
+        refreshIdleCopy();
+    }
+    document.addEventListener('tb:locale', refreshIdleCopy);
 })();
