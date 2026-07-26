@@ -52,7 +52,6 @@ canvas{display:block;width:100%;height:100%}
   gap:1px;border-radius:6px
 }
 .bet .emo{font-size:clamp(22px,7.2vw,34px);line-height:1;filter:drop-shadow(0 1px 1px #0008)}
-.bet .emoCanvas{width:clamp(22px,7.2vw,34px);height:clamp(22px,7.2vw,34px);display:block;filter:drop-shadow(0 1px 1px #0008)}
 .bet .pay{font-size:10px;font-weight:800;color:#fde047;line-height:1}
 #side{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 #scoreBox{width:100%;background:#0f172a;border:2px solid #334155;border-radius:8px;padding:4px 2px;text-align:center}
@@ -332,25 +331,9 @@ function renderBets() {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
-    const score = document.createElement('span');
-    score.className = 'scoreLayer';
-    score.textContent = String(bets[k.id] || 0);
-    const ico = document.createElement('span');
-    ico.className = 'icoLayer';
-    if (k.id === 'elephant' || k.id === 'leopard') {
-      ico.appendChild(paintBetIcon(k.id, 32));
-    } else {
-      const emo = document.createElement('span');
-      emo.className = 'emo';
-      emo.textContent = k.emoji;
-      ico.appendChild(emo);
-    }
-    const pay = document.createElement('span');
-    pay.className = 'pay';
-    pay.textContent = payLabel(k);
-    ico.appendChild(pay);
-    b.appendChild(score);
-    b.appendChild(ico);
+    b.innerHTML =
+      '<span class="scoreLayer">' + (bets[k.id] || 0) + '</span>' +
+      '<span class="icoLayer"><span class="emo">' + k.emoji + '</span><span class="pay">' + payLabel(k) + '</span></span>';
     b.onclick = () => { focusBet = idx; addBet(k.id, 1); };
     box.appendChild(b);
   });
