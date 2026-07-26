@@ -1,11 +1,12 @@
 (function () {
     'use strict';
 
-    
     var audio = window.GameAudio;
     function play(name) { if (audio) audio.sfx(name); }
+    function armAudio() { if (audio && audio.unlock) audio.unlock(); }
     if (audio) audio.boot('catchy');
-function tr(key, params) {
+
+    function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
     }
 
@@ -22,17 +23,19 @@ function tr(key, params) {
     var startBtn = document.getElementById('start-btn');
     var restartBtn = document.getElementById('restart-btn');
 
+    /** Base item types — spawn weights scaled by level. */
     var ITEM_TYPES = [
-        { emoji: '💰', value: 100, weight: 1.2, size: 28, w: 0.35 },
-        { emoji: '💰', value: 250, weight: 1.6, size: 36, w: 0.2 },
-        { emoji: '💎', value: 500, weight: 0.7, size: 26, w: 0.12 },
-        { emoji: '🪨', value: 20, weight: 2.2, size: 34, w: 0.25 },
-        { emoji: '💣', value: -80, weight: 1.0, size: 28, w: 0.08 }
+        { emoji: '💰', value: 100, mass: 1.2, size: 28, kind: 'gold' },
+        { emoji: '💰', value: 250, mass: 1.7, size: 36, kind: 'gold' },
+        { emoji: '💰', value: 500, mass: 2.4, size: 44, kind: 'gold' },
+        { emoji: '💎', value: 600, mass: 0.65, size: 26, kind: 'gem' },
+        { emoji: '🪨', value: 20, mass: 2.6, size: 34, kind: 'rock' },
+        { emoji: '💣', value: -150, mass: 1.0, size: 28, kind: 'bomb' }
     ];
 
     var ORIGIN = { x: W / 2, y: 52 };
     var MAX_LEN = H - 80;
-    var SWING_SPEED = 0.028 / 3;
+    var SWING_BASE = 0.028 / 3;
     var SHOOT_SPEED = 7;
     var BASE_RETRACT = 5;
 
@@ -52,10 +55,19 @@ function tr(key, params) {
     var lastTs = 0;
     var timerAcc = 0;
     var raf = 0;
+    var statusResetTimer = 0;
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
         statusEl.className = 'game-status' + (cls ? ' ' + cls : '');
+    }
+
+    function flashStatus(msg, cls, ms) {
+        setStatus(msg, cls);
+        clearTimeout(statusResetTimer);
+        statusResetTimer = setTimeout(function () {
+            if (state === 'playing') setStatus(tr('tools.goldminer.playing'), 'is-idle');
+        }, ms || 1200);
     }
 
     function updateHud() {
@@ -65,36 +77,80 @@ function tr(key, params) {
         timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
     }
 
+    /**
+     * Classic-style cumulative money goals.
+     * Clearing level 1 with ~650 must NOT make level 2 pass with one more grab.
+     */
+    function levelTarget(n) {
+        var goals = [0, 650, 1250, 2100, 3200, 4800, 7000, 10000, 14000];
+        if (n < goals.length) return goals[n];
+        return Math.round(goals[goals.length - 1] * Math.pow(1.35, n - (goals.length - 1)));
+    }
+
+    function swingSpeed() {
+        // Slightly faster swing each level → harder to aim
+        return SWING_BASE * (1 + (level - 1) * 0.07);
+    }
+
+    function retractSpeed() {
+        // Slightly slower pull each level
+        return BASE_RETRACT / (1 + (level - 1) * 0.05);
+    }
+
+    function spawnChance(kind) {
+        // Higher levels: more rocks/bombs, fewer easy golds/gems
+        var t = Math.min(level - 1, 8);
+        if (kind === 'gold') return Math.max(0.28, 0.55 - t * 0.03);
+        if (kind === 'gem') return Math.max(0.05, 0.12 - t * 0.008);
+        if (kind === 'rock') return Math.min(0.4, 0.22 + t * 0.02);
+        if (kind === 'bomb') return Math.min(0.18, 0.06 + t * 0.012);
+        return 0.1;
+    }
+
     function pickType() {
-        var r = Math.random();
+        var pool = [];
+        var i;
+        for (i = 0; i < ITEM_TYPES.length; i++) {
+            var t = ITEM_TYPES[i];
+            var w = spawnChance(t.kind);
+            // Split gold chance across gold variants
+            if (t.kind === 'gold') w = w / 3;
+            pool.push({ t: t, w: w });
+        }
+        var sum = 0;
+        for (i = 0; i < pool.length; i++) sum += pool[i].w;
+        var r = Math.random() * sum;
         var acc = 0;
-        for (var i = 0; i < ITEM_TYPES.length; i++) {
-            acc += ITEM_TYPES[i].w;
-            if (r <= acc) return ITEM_TYPES[i];
+        for (i = 0; i < pool.length; i++) {
+            acc += pool[i].w;
+            if (r <= acc) return pool[i].t;
         }
         return ITEM_TYPES[0];
     }
 
     function spawnItems() {
         items = [];
-        var count = 8 + Math.min(level, 6);
+        var count = 8 + Math.min(level, 7);
         var tries = 0;
-        while (items.length < count && tries < 200) {
+        while (items.length < count && tries < 220) {
             tries++;
             var t = pickType();
             var x = 40 + Math.random() * (W - 80);
             var y = 140 + Math.random() * (H - 200);
             var ok = true;
             for (var i = 0; i < items.length; i++) {
-                var d = Math.hypot(items[i].x - x, items[i].y - y);
-                if (d < 48) { ok = false; break; }
+                if (Math.hypot(items[i].x - x, items[i].y - y) < 50) {
+                    ok = false;
+                    break;
+                }
             }
             if (!ok) continue;
             items.push({
                 emoji: t.emoji,
                 value: t.value,
-                weight: t.weight,
+                mass: t.mass,
                 size: t.size,
+                kind: t.kind,
                 x: x,
                 y: y,
                 alive: true
@@ -102,14 +158,10 @@ function tr(key, params) {
         }
     }
 
-    function levelTarget(n) {
-        return 500 + n * 150;
-    }
-
     function resetLevel(keepMoney) {
         if (!keepMoney) money = 0;
         target = levelTarget(level);
-        timeLeft = Math.max(40, 65 - level * 2);
+        timeLeft = Math.max(35, 68 - level * 3);
         hookLen = 36;
         phase = 'swing';
         caught = null;
@@ -126,23 +178,19 @@ function tr(key, params) {
         };
     }
 
-    /** Simple claw tip aligned with the rope direction. */
     function drawHook(x, y, ang) {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(ang);
-        ctx.strokeStyle = '#b45309';
         ctx.fillStyle = '#f59e0b';
+        ctx.strokeStyle = '#92400e';
         ctx.lineWidth = 2.5;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        // joint where rope meets hook
         ctx.beginPath();
         ctx.arc(0, 0, 3.2, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#92400e';
         ctx.stroke();
-        // stem + curved claw continuing along rope (+y)
         ctx.strokeStyle = '#d97706';
         ctx.beginPath();
         ctx.moveTo(0, 0);
@@ -177,8 +225,18 @@ function tr(key, params) {
 
     function finishPull() {
         if (caught) {
-            money += caught.value;
-            if (money < 0) money = 0;
+            if (caught.kind === 'bomb') {
+                // Bomb: big score penalty (classic casual rule) + feedback
+                money = Math.max(0, money + caught.value);
+                play('hit');
+                flashStatus(tr('tools.goldminer.bombHit', { n: Math.abs(caught.value) }), 'is-lose', 1400);
+            } else {
+                money += caught.value;
+                play(caught.kind === 'gem' ? 'level' : 'match');
+                if (caught.kind === 'rock') {
+                    flashStatus(tr('tools.goldminer.rockHit'), 'is-idle', 900);
+                }
+            }
             caught = null;
             updateHud();
             if (money >= target) {
@@ -192,20 +250,23 @@ function tr(key, params) {
 
     function levelWin() {
         state = 'win';
-        play('level'); setStatus(tr('tools.goldminer.levelClear', { n: level }), 'is-win');
+        play('win');
+        setStatus(tr('tools.goldminer.levelClear', { n: level }), 'is-win');
         cancelAnimationFrame(raf);
         raf = 0;
         setTimeout(function () {
             level += 1;
             state = 'playing';
+            // Keep cumulative money; next goal is much higher
             resetLevel(true);
             setStatus(tr('tools.goldminer.playing'), 'is-idle');
             lastTs = 0;
             raf = requestAnimationFrame(loop);
-        }, 900);
+        }, 1000);
     }
 
-    function gameOver(reasonKey) { play('lose');
+    function gameOver(reasonKey) {
+        play('lose');
         state = 'lose';
         setStatus(tr(reasonKey), 'is-lose');
         cancelAnimationFrame(raf);
@@ -214,6 +275,7 @@ function tr(key, params) {
 
     function dropClaw() {
         if (state !== 'playing' || phase !== 'swing') return;
+        play('click');
         phase = 'shoot';
     }
 
@@ -233,21 +295,19 @@ function tr(key, params) {
         }
 
         if (phase === 'swing') {
-            angle += angleDir * SWING_SPEED * (dt * 60);
+            angle += angleDir * swingSpeed() * (dt * 60);
             if (angle > angleMax) { angle = angleMax; angleDir = -1; }
             if (angle < angleMin) { angle = angleMin; angleDir = 1; }
         } else if (phase === 'shoot') {
             hookLen += SHOOT_SPEED * (dt * 60);
-            if (tryCatch()) {
-                /* hooked an item */
-            } else {
+            if (!tryCatch()) {
                 var tip = hookTip();
                 if (tip.x < 8 || tip.x > W - 8 || tip.y > H - 12 || hookLen >= MAX_LEN) {
                     phase = 'pull';
                 }
             }
         } else if (phase === 'pull') {
-            var speed = BASE_RETRACT / (caught ? caught.weight : 1);
+            var speed = retractSpeed() / (caught ? caught.mass : 1);
             hookLen -= speed * (dt * 60);
             if (caught) {
                 var tip3 = hookTip();
@@ -264,7 +324,6 @@ function tr(key, params) {
     function draw() {
         ctx.clearRect(0, 0, W, H);
 
-        // Opaque sky + dirt so CSS bg never washes out emoji contrast
         var skyH = 96;
         ctx.fillStyle = '#7ec8e8';
         ctx.fillRect(0, 0, W, skyH);
@@ -275,13 +334,11 @@ function tr(key, params) {
         ctx.fillStyle = dirt;
         ctx.fillRect(0, skyH, W, H - skyH);
 
-        // miner
         ctx.font = '36px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('🧑‍⛏️', ORIGIN.x, 28);
 
-        // rope + drawn hook (emoji hook sits poorly on the line)
         var tip = hookTip();
         ctx.strokeStyle = '#334155';
         ctx.lineWidth = 2.5;
@@ -292,7 +349,6 @@ function tr(key, params) {
         ctx.stroke();
         drawHook(tip.x, tip.y, angle);
 
-        // items — light pad under emoji so they stay readable on dirt
         for (var i = 0; i < items.length; i++) {
             var it = items[i];
             if (!it.alive && it !== caught) continue;
@@ -326,7 +382,9 @@ function tr(key, params) {
         if (state === 'playing') raf = requestAnimationFrame(loop);
     }
 
-    function startGame(fromScratch) { play('start');
+    function startGame(fromScratch) {
+        armAudio();
+        play('start');
         cancelAnimationFrame(raf);
         raf = 0;
         if (fromScratch) {
@@ -340,17 +398,18 @@ function tr(key, params) {
         raf = requestAnimationFrame(loop);
     }
 
-    function newGame() {
-        startGame(true);
-    }
-
     startBtn.addEventListener('click', function () {
+        armAudio();
         if (state === 'playing') return;
         startGame(true);
     });
-    restartBtn.addEventListener('click', newGame);
+    restartBtn.addEventListener('click', function () {
+        armAudio();
+        startGame(true);
+    });
     canvas.addEventListener('pointerdown', function (e) {
         e.preventDefault();
+        armAudio();
         if (state === 'idle' || state === 'lose' || state === 'win') {
             if (state !== 'win') startGame(true);
             return;

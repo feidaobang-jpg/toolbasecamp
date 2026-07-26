@@ -368,7 +368,9 @@ window.TB_LOCALES.en = {
             playing: 'Claw swinging — tap to drop',
             levelClear: 'Level {n} clear! Next level…',
             timeUp: 'Time up — target not reached',
-            legend: '💰 gold · 💎 gem · 🪨 rock (heavy) · 💣 bomb (−score)'
+            legend: '💰 gold · 💎 gem (light) · 🪨 rock (heavy/slow) · 💣 bomb (big penalty)',
+            bombHit: 'Bomb! -{n}',
+            rockHit: 'Rock hooked — slow retract…'
         },
         descent: {
             title: 'Descent 100',

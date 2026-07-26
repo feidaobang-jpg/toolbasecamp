@@ -22,6 +22,8 @@
     var muteBtns = [];
     var volumeSliders = [];
     var pendingSfx = null;
+    /** Only call ctx.resume() while this is true (user-gesture window). */
+    var resumeAllowed = false;
 
     try {
         muted = localStorage.getItem(STORAGE_KEY) === '1';
@@ -63,16 +65,24 @@
         return ctx;
     }
 
+    function allowResumeBriefly() {
+        resumeAllowed = true;
+        global.setTimeout(function () { resumeAllowed = false; }, 400);
+    }
+
     function resume() {
         if (!ctx) return Promise.resolve();
         if (ctx.state !== 'suspended') return Promise.resolve();
-        // resume() outside a user gesture logs a Chrome warning — callers must be gesture handlers
+        // Calling resume() outside a user gesture logs Chrome's autoplay warning
+        if (!resumeAllowed) return Promise.resolve();
         return ctx.resume().catch(function () { /* ignore */ });
     }
 
     function afterUnlock() {
-        if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
-        if (pendingSfx) {
+        if (bgmWanted && !muted && ctx && ctx.state === 'running' && !bgmTimer) {
+            startBgmInternal();
+        }
+        if (pendingSfx && ctx && ctx.state === 'running') {
             var name = pendingSfx;
             pendingSfx = null;
             if (!muted) playSfxNow(name);
@@ -80,6 +90,7 @@
     }
 
     function unlock() {
+        allowResumeBriefly();
         unlocked = true;
         ensure();
         return resume().then(afterUnlock);
@@ -571,15 +582,12 @@
     document.addEventListener('tb:locale', refreshInjectedLabels);
 
     function installUnlockGestures() {
-        var once = function () {
+        var onGesture = function () {
             unlock();
-            document.removeEventListener('pointerdown', once, true);
-            document.removeEventListener('keydown', once, true);
-            document.removeEventListener('touchstart', once, true);
         };
-        document.addEventListener('pointerdown', once, true);
-        document.addEventListener('keydown', once, true);
-        document.addEventListener('touchstart', once, true);
+        document.addEventListener('pointerdown', onGesture, true);
+        document.addEventListener('keydown', onGesture, true);
+        document.addEventListener('touchstart', onGesture, true);
     }
 
     if (document.readyState === 'loading') {

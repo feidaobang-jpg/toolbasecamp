@@ -367,7 +367,9 @@ window.TB_LOCALES['zh-CN'] = {
             playing: '钩爪摆动中 — 点击放下',
             levelClear: '第 {n} 关完成！进入下一关…',
             timeUp: '时间到，未达到目标',
-            legend: '💰 金块 · 💎 宝石 · 🪨 石头（重）· 💣 炸弹（扣分）'
+            legend: '💰 金块 · 💎 宝石（轻）· 🪨 石头（重且慢）· 💣 炸弹（爆炸大额扣分）',
+            bombHit: '炸弹爆炸！-{n}',
+            rockHit: '勾到石头，收回很慢…'
         },
         descent: {
             title: '下一百层',
