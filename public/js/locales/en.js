@@ -342,11 +342,17 @@ window.TB_LOCALES.en = {
         },
         lianliankan: {
             title: 'Lianliankan',
-            desc: 'Match identical emoji tiles with a path of at most two turns. Runs locally.',
+            desc: 'Match tiles with at most two turns. Multi-level, timed, rising difficulty. Runs locally.',
             pairs: 'Pairs left',
+            level: 'Level',
+            time: 'Time',
+            best: 'Best',
             hint: 'Hint',
             shuffle: 'Shuffle',
+            hintsLeft: 'Hints left: {n}',
+            shufflesLeft: 'Shuffles left: {n}',
             hintPlay: 'Select two matching tiles that can connect with at most two turns.',
+            levelStart: 'Level {n}! Board {rows}×{cols}, {time}s limit',
             pickSecond: 'Select a matching tile',
             mismatch: 'Different tiles — selection moved',
             cannotLink: 'Cannot link (blocked or more than two turns)',
@@ -354,6 +360,8 @@ window.TB_LOCALES.en = {
             shuffled: 'Remaining tiles shuffled',
             noMoves: 'No moves left — shuffle or start a new game',
             suggestShuffle: 'No links available — try shuffle',
+            timeUp: 'Time up — level failed',
+            levelClear: 'Level {n} clear! Time bonus +{bonus}. Next…',
             win: 'All cleared — you win!'
         },
         goldminer: {

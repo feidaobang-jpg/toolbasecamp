@@ -30,17 +30,26 @@
     ];
 
     /**
-     * Difficulty by level (1-based):
-     * - board grows through SIZE_STEPS
-     * - more tile kinds → fewer duplicates → harder
-     * - less time, fewer hints / shuffles
+     * Level curve (1-based):
+     *  1  4×6   4种  150s  提示5 洗牌4  — 入门
+     *  2  6×6   6种  135s  提示4 洗牌3
+     *  3  6×8   8种  120s  提示4 洗牌3
+     *  4  8×8  10种  105s  提示3 洗牌2
+     *  5  8×10 12种   95s  提示3 洗牌2
+     *  6 10×10 14种   85s  提示2 洗牌2
+     *  7+ 固定最大盘，种类↑、时间↓，道具最少各 1
      */
     function levelConfig(n) {
-        var idx = Math.min(n - 1, SIZE_STEPS.length - 1);
+        var idx = Math.min(Math.max(n, 1) - 1, SIZE_STEPS.length - 1);
         var size = SIZE_STEPS[idx];
         var extra = Math.max(0, n - SIZE_STEPS.length);
-        var typeCount = Math.min(TILES.length, 4 + Math.floor((n - 1) * 1.2) + extra);
-        var timeLimit = Math.max(45, 150 - (n - 1) * 10 - extra * 5);
+        var typeBase = [4, 6, 8, 10, 12, 14];
+        var typeCount = Math.min(
+            TILES.length,
+            (typeBase[idx] || 14) + extra
+        );
+        var timeBase = [150, 135, 120, 105, 95, 85];
+        var timeLimit = Math.max(40, (timeBase[idx] || 85) - extra * 5);
         var hints = Math.max(1, 5 - Math.floor((n - 1) / 2));
         var shuffles = Math.max(1, 4 - Math.floor((n - 1) / 3));
         return {
@@ -142,10 +151,18 @@
         scoreEl.textContent = String(score);
         pairsEl.textContent = String(pairsLeft());
         if (levelEl) levelEl.textContent = String(level);
-        if (timeEl) timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
+        if (timeEl) {
+            timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
+            timeEl.parentElement.classList.toggle('is-urgent', timeLeft > 0 && timeLeft <= 15);
+        }
         if (bestEl) bestEl.textContent = String(bestLevel);
         hintBtn.disabled = busy || ended || won || hintsLeft <= 0;
         shuffleBtn.disabled = busy || ended || won || shufflesLeft <= 0 || pairsLeft() === 0;
+        // Visible counts on buttons (drop data-i18n so labels stay in sync)
+        hintBtn.removeAttribute('data-i18n');
+        shuffleBtn.removeAttribute('data-i18n');
+        hintBtn.textContent = tr('tools.lianliankan.hint') + ' (' + hintsLeft + ')';
+        shuffleBtn.textContent = tr('tools.lianliankan.shuffle') + ' (' + shufflesLeft + ')';
         hintBtn.title = tr('tools.lianliankan.hintsLeft', { n: hintsLeft });
         shuffleBtn.title = tr('tools.lianliankan.shufflesLeft', { n: shufflesLeft });
     }

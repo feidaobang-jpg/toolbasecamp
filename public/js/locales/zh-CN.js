@@ -351,7 +351,7 @@ window.TB_LOCALES['zh-CN'] = {
             hintsLeft: '剩余提示 {n}',
             shufflesLeft: '剩余洗牌 {n}',
             hintPlay: '点选两枚相同图案，路径最多拐两次即可消除。',
-            levelStart: '第 {n} 关 · {rows}×{cols} · {time} 秒',
+            levelStart: '第 {n} 关开始！棋盘 {rows}×{cols}，限时 {time} 秒',
             pickSecond: '再选一枚相同图案',
             mismatch: '图案不同，已改选当前格',
             cannotLink: '这两枚连不通（超过两折或被挡住）',

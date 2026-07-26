@@ -1,3 +1,7 @@
+.game-stats .is-urgent strong {
+    color: #dc2626;
+}
+
 .llk-board {
     position: relative;
     width: 100%;
