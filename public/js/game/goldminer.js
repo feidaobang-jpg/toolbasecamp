@@ -390,6 +390,12 @@
         if (state === 'playing') raf = requestAnimationFrame(loop);
     }
 
+    function primeAudio() {
+        if (audio && audio.unlock) {
+            try { audio.unlock(); } catch (e) { /* ignore */ }
+        }
+    }
+
     function startGame(fromScratch) {
         cancelAnimationFrame(raf);
         raf = 0;
@@ -401,25 +407,23 @@
         resetLevel(false);
         setStatus(tr('tools.goldminer.playing'), 'is-idle');
         lastTs = 0;
-        // Never block gameplay on audio unlock (resume can hang / warn)
-        if (audio && audio.unlock) {
-            try { audio.unlock(); } catch (e) { /* ignore */ }
-        }
+        primeAudio();
         play('start');
         raf = requestAnimationFrame(loop);
     }
 
+    // Unlock on pointerdown (has user-activation); start on click/pointerup path
+    restartBtn.addEventListener('pointerdown', function () { primeAudio(); });
     restartBtn.addEventListener('click', function () {
+        primeAudio();
         startGame(true);
     });
     canvas.addEventListener('pointerdown', function (e) {
         e.preventDefault();
+        primeAudio();
         if (state === 'idle' || state === 'lose' || state === 'win') {
             if (state !== 'win') startGame(true);
             return;
-        }
-        if (audio && audio.unlock) {
-            try { audio.unlock(); } catch (err) { /* ignore */ }
         }
         dropClaw();
     });

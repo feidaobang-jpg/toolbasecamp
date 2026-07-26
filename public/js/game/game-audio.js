@@ -68,6 +68,27 @@
         return ctx;
     }
 
+    function gestureActive() {
+        try {
+            // Chrome: only create/resume AudioContext while this is true
+            if (navigator.userActivation && typeof navigator.userActivation.isActive === 'boolean') {
+                return navigator.userActivation.isActive;
+            }
+        } catch (e) { /* ignore */ }
+        return true;
+    }
+
+    function beepUnlock(c) {
+        // Silent one-sample buffer — helps iOS / Chrome mark the context as running
+        try {
+            var buf = c.createBuffer(1, 1, c.sampleRate || 22050);
+            var src = c.createBufferSource();
+            src.buffer = buf;
+            src.connect(master || c.destination);
+            src.start(0);
+        } catch (e) { /* ignore */ }
+    }
+
     function afterUnlock() {
         if (!ctx || ctx.state !== 'running') return;
         if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
@@ -79,13 +100,12 @@
     }
 
     /**
-     * Must be called from a click/tap handler. Creates AudioContext once,
-     * resumes if needed, then starts pending BGM/SFX.
+     * Call from pointerdown/click. Creates AudioContext only while the browser
+     * still has a user gesture (avoids console warning + silent failure).
      */
     function unlock() {
+        if (!gestureActive()) return Promise.resolve();
         unlocked = true;
-        // create + resume MUST stay synchronous in the click/tap call stack.
-        // Deferring resume() via Promise.then() loses the user gesture → no sound + Chrome warning.
         var c = ensure(true);
         if (!c) return Promise.resolve();
         if (c.state === 'running') {
@@ -93,6 +113,7 @@
             return Promise.resolve();
         }
         if (resumeInFlight) return resumeInFlight;
+        beepUnlock(c);
         var p;
         try {
             p = c.resume();
@@ -490,6 +511,8 @@
         syncMuteButtons();
         global.setTimeout(syncMuteButtons, 0);
         global.setTimeout(syncMuteButtons, 50);
+        // pointerdown keeps user-activation; click alone can be too late (esp. DevTools device mode)
+        btn.addEventListener('pointerdown', function () { unlock(); });
         btn.addEventListener('click', function () {
             unlock();
             setMasterMute(!muted);
@@ -508,6 +531,7 @@
             // 50 → volume 1 (default), 100 → volume 2 (louder)
             setVolume(Number(el.value) / 50);
         };
+        el.addEventListener('pointerdown', function () { unlock(); });
         el.addEventListener('input', onChange);
         el.addEventListener('change', onChange);
     }
