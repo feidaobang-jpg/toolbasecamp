@@ -20,13 +20,12 @@ html,body{height:100%;background:#1e293b;color:#fff7ed;font-family:"Segoe UI","P
   overflow:hidden;position:relative;margin:0 auto
 }
 canvas{display:block;width:100%;height:100%}
-#mid{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:6px;padding:1px 0}
+#mid{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:1px 0}
 .act{border:0;cursor:pointer;font-weight:800;box-shadow:0 2px 0 #0004}
 .act:active{transform:translateY(1px)}
 .act:disabled{opacity:.4;cursor:not-allowed}
-#btnAll{padding:5px 10px;border-radius:8px;font-size:12px;background:linear-gradient(180deg,#86efac,#16a34a);color:#052e16}
-#btnSmall,#btnBig{width:32px;height:32px;border-radius:50%;font-size:12px;background:#fff;color:#111;border:2px solid #e2e8f0}
-#btnPrev,#btnNext{width:30px;height:30px;border-radius:8px;font-size:13px;background:#facc15;color:#422006}
+#btnAll{padding:5px 12px;border-radius:8px;font-size:12px;background:linear-gradient(180deg,#86efac,#16a34a);color:#052e16}
+#btnClear{padding:5px 12px;border-radius:8px;font-size:12px;background:linear-gradient(180deg,#fb923c,#c2410c);color:#fff}
 /* 底部压低：内容高度，不抢盘面 */
 #panel{
   flex:0 0 auto;display:flex;gap:6px;padding:6px;
@@ -54,7 +53,7 @@ canvas{display:block;width:100%;height:100%}
 }
 .bet .emo{font-size:clamp(22px,7.2vw,34px);line-height:1;filter:drop-shadow(0 1px 1px #0008)}
 .bet .pay{font-size:10px;font-weight:800;color:#fde047;line-height:1}
-#side{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:4px}
+#side{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 #scoreBox{width:100%;background:#0f172a;border:2px solid #334155;border-radius:8px;padding:4px 2px;text-align:center}
 #scoreBox .lab{font-size:11px;color:#94a3b8;font-weight:700}
 #scoreBox b{display:block;font-size:18px;color:#f8fafc;font-variant-numeric:tabular-nums;line-height:1.15}
@@ -64,21 +63,10 @@ canvas{display:block;width:100%;height:100%}
   box-shadow:0 3px 0 #9a3412,0 0 10px rgba(234,88,12,.35)
 }
 #btnGo:disabled{opacity:.45;cursor:not-allowed}
-#btnMenu{
-  width:100%;border:0;border-radius:8px;padding:6px 4px;font-weight:800;font-size:12px;cursor:pointer;
-  background:linear-gradient(180deg,#4ade80,#15803d);color:#052e16;box-shadow:0 2px 0 #14532d
-}
-#foot{flex:0 0 auto}
+#foot{flex:0 0 auto;display:flex;gap:6px;align-items:center}
 #btnTest{border:0;border-radius:999px;padding:4px 9px;background:#1e3a8a;color:#fff;font-size:10px;font-weight:700;cursor:pointer}
 #btnTest.on{background:#b45309}
-#ui{position:absolute;inset:0;pointer-events:none;z-index:8}
-#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(15,23,42,.96);border:1px solid #64748b;border-radius:16px;padding:16px 14px}
-#ui h1{font-size:1.25rem;color:#fbbf24;margin-bottom:8px}
-#ui p{font-size:.8rem;line-height:1.5;color:#94a3b8;margin-bottom:7px}
-#ui .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-#ui button{font:inherit;flex:1;min-width:100px;border:0;border-radius:999px;padding:10px 12px;background:#2563eb;color:#fff;cursor:pointer}
-#ui button.ghost{background:#1e293b;border:1px solid #475569}
-.hidden{display:none!important}
+#btnReset{border:0;border-radius:999px;padding:4px 9px;background:#44403c;color:#fde68a;font-size:10px;font-weight:700;cursor:pointer}
 #toast{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
 #toast.show{opacity:1}
 </style>
@@ -89,32 +77,20 @@ canvas{display:block;width:100%;height:100%}
   <div id="board"><canvas id="c"></canvas></div>
   <div id="mid">
     <button type="button" class="act" id="btnAll" title="全+1">×1</button>
-    <button type="button" class="act" id="btnPrev" aria-label="左">◀</button>
-    <button type="button" class="act" id="btnNext" aria-label="右">▶</button>
-    <button type="button" class="act" id="btnSmall">小</button>
-    <button type="button" class="act" id="btnBig">大</button>
+    <button type="button" class="act" id="btnClear" title="清空押分">清空</button>
   </div>
   <div id="panel">
     <div id="betMain"><div id="bets"></div></div>
     <div id="side">
       <div id="scoreBox"><div class="lab">总分</div><b id="credits">100</b></div>
       <button type="button" id="btnGo" title="开始">GO</button>
-      <button type="button" id="btnMenu">菜单</button>
     </div>
   </div>
-  <div id="foot"><button type="button" id="btnTest">测试特奖</button></div>
+  <div id="foot">
+    <button type="button" id="btnTest">测试特奖</button>
+    <button type="button" id="btnReset">重置 100 分</button>
+  </div>
   <div id="toast"></div>
-  <div id="ui">
-    <div class="panel" id="panelMenu">
-      <h1>🐯 老虎机</h1>
-      <p>斗兽棋动物：象＞狮＞虎＞豹＞狼＞狗＞猫＞鼠。押对应动物；盘上分大小格，停哪格按该格结算。</p>
-      <p>顶中大象；左中<strong>礼包</strong>、右中<strong>火车</strong>。大小格交替，同种动物大小不相邻。「GO」可沿用上次押分。</p>
-      <div class="row">
-        <button id="btnPlay">进入</button>
-        <button class="ghost" id="btnReset">重置 100 分</button>
-      </div>
-    </div>
-  </div>
 </div>
 <script src="../../js/game/game-audio.js?v=20"></script>
 <script>
@@ -163,7 +139,6 @@ let litSet = new Set();
 let spinning = false;
 let centerMsg = '0';
 let testBoost = false;
-let canDouble = false;
 let focusBet = 0;
 
 function sfx(n) { try { GameAudio && GameAudio.sfx(n); } catch (e) {} }
@@ -172,8 +147,6 @@ function unlock() { try { GameAudio && GameAudio.unlock(); } catch (e) {} }
 function hud() {
   const el = document.getElementById('credits');
   if (el) el.textContent = credits;
-  document.getElementById('btnSmall').disabled = spinning || !canDouble || lastWin <= 0;
-  document.getElementById('btnBig').disabled = spinning || !canDouble || lastWin <= 0;
 }
 
 function load() {
@@ -360,7 +333,7 @@ function renderBets() {
   KINDS.forEach((k, idx) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'bet' + ((bets[k.id] > 0 || idx === focusBet) ? ' on' : '');
+    b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
     b.innerHTML =
       '<span class="scoreLayer">' + (bets[k.id] || 0) + '</span>' +
       '<span class="icoLayer"><span class="emo">' + k.emoji + '</span><span class="pay">' + payLabel(k) + '</span></span>';
@@ -372,13 +345,22 @@ function renderBets() {
 function addBet(id, n) {
   unlock();
   if (spinning) return;
-  canDouble = false; hud();
   for (let i = 0; i < n; i++) {
     if (credits <= 0) { toast('分数不足'); sfx('invalid'); break; }
     credits--;
     bets[id]++;
   }
   hud(); save(); sfx('click'); renderBets();
+}
+
+function clearBets() {
+  unlock();
+  if (spinning) return;
+  const back = totalBet();
+  if (back <= 0) { toast('没有押分'); sfx('invalid'); return; }
+  credits += back;
+  KINDS.forEach(k => { bets[k.id] = 0; });
+  hud(); renderBets(); save(); sfx('swap'); toast('已清空押分 +' + back);
 }
 
 function ensureBetsForSpin() {
@@ -471,7 +453,6 @@ async function animateCannon(stop) {
 async function runSpin() {
   if (spinning) return;
   unlock();
-  canDouble = false; hud();
   if (!ensureBetsForSpin()) return;
 
   spinning = true;
@@ -504,44 +485,21 @@ async function runSpin() {
     if (stake > 0) {
       win = stake * pay;
       const sizeTag = (cell.a !== 'rat' && !cell.big) ? '小' : '大';
-      msg = EMOJI[cell.a] + sizeTag + kindMeta(cell.a).label + ' ×' + pay + ' +' + win;
+      msg = EMOJI[cell.a] + sizeTag + kindMeta(cell.a).label + ' +' + win;
       sfx('win');
     } else sfx('lose');
   }
 
   credits += win;
   lastWin = win;
-  canDouble = win > 0;
   centerMsg = win > 0 ? String(Math.min(99, win)) : '0';
   KINDS.forEach(k => { bets[k.id] = 0; });
   renderBets();
   hud(); save();
-  toast(msg + (canDouble ? ' · 可小/大比倍' : ''));
+  toast(msg);
   spinning = false;
   document.getElementById('btnGo').disabled = false;
-  if (credits <= 0) setTimeout(() => toast('分数用尽，可在菜单重置'), 1600);
-}
-
-function doDouble(isBig) {
-  unlock();
-  if (spinning || !canDouble || lastWin <= 0) return;
-  const roll = 1 + ((Math.random() * 14) | 0);
-  const winSide = isBig ? (roll >= 8) : (roll <= 7);
-  centerMsg = String(roll);
-  if (winSide) {
-    credits += lastWin;
-    lastWin *= 2;
-    toast((isBig ? '大' : '小') + '中！骰 ' + roll + ' · 赢分 ' + lastWin);
-    sfx('win');
-  } else {
-    credits -= lastWin;
-    if (credits < 0) credits = 0;
-    toast((isBig ? '大' : '小') + '不中 · 骰 ' + roll);
-    lastWin = 0;
-    canDouble = false;
-    sfx('lose');
-  }
-  hud(); save();
+  if (credits <= 0) setTimeout(() => toast('分数用尽，可点重置'), 1600);
 }
 
 function loop() { draw(); requestAnimationFrame(loop); }
@@ -550,7 +508,6 @@ document.getElementById('btnGo').onclick = () => runSpin();
 document.getElementById('btnAll').onclick = () => {
   unlock();
   if (spinning) return;
-  canDouble = false;
   let added = 0;
   KINDS.forEach(k => {
     if (credits > 0) { credits--; bets[k.id]++; added++; }
@@ -559,31 +516,15 @@ document.getElementById('btnAll').onclick = () => {
   else { sfx('click'); toast('全押 +1'); }
   hud(); renderBets(); save();
 };
-document.getElementById('btnPrev').onclick = () => {
-  unlock();
-  focusBet = (focusBet + 7) % 8;
-  renderBets();
-  if (!spinning) addBet(KINDS[focusBet].id, 1);
-};
-document.getElementById('btnNext').onclick = () => {
-  unlock();
-  focusBet = (focusBet + 1) % 8;
-  renderBets();
-  if (!spinning) addBet(KINDS[focusBet].id, 1);
-};
-document.getElementById('btnSmall').onclick = () => doDouble(false);
-document.getElementById('btnBig').onclick = () => doDouble(true);
-document.getElementById('btnMenu').onclick = () => document.getElementById('panelMenu').classList.remove('hidden');
+document.getElementById('btnClear').onclick = () => clearBets();
 document.getElementById('btnTest').onclick = () => {
   unlock(); testBoost = !testBoost; syncTestBtn(); save();
   toast(testBoost ? '测试开：礼包/火车更常出现' : '测试关：特奖恢复低概率'); sfx('swap');
 };
-document.getElementById('btnPlay').onclick = () => {
-  unlock(); document.getElementById('panelMenu').classList.add('hidden'); sfx('place');
-};
 document.getElementById('btnReset').onclick = () => {
   unlock();
-  credits = 100; lastWin = 0; canDouble = false;
+  if (spinning) return;
+  credits = 100; lastWin = 0;
   KINDS.forEach(k => { bets[k.id] = 0; lastBets[k.id] = 0; });
   centerMsg = '0';
   hud(); renderBets(); save(); sfx('swap'); toast('已重置为 100 分');
