@@ -334,6 +334,38 @@
             tone(659, 0.08, 'sine', 0.24, t);
             tone(784, 0.08, 'sine', 0.24, t + 0.07);
             tone(988, 0.12, 'sine', 0.24, t + 0.14);
+        },
+        /** 礼包特奖：喜庆号角 + 闪亮 */
+        gift: function () {
+            var t = ctx ? ctx.currentTime : 0;
+            [523, 659, 784, 988, 1175, 988, 1319].forEach(function (f, i) {
+                tone(f, 0.11, 'triangle', 0.26, t + i * 0.07);
+            });
+            tone(1568, 0.2, 'sine', 0.18, t + 0.52);
+            noiseBurst(0.1, 0.1, t + 0.55);
+        },
+        giftPop: function () {
+            var t = ctx ? ctx.currentTime : 0;
+            tone(880, 0.05, 'sine', 0.22, t);
+            tone(1320, 0.09, 'sine', 0.22, t + 0.04);
+            tone(1760, 0.08, 'triangle', 0.14, t + 0.1);
+        },
+        /** 开火车：汽笛 + 轮轨节奏 */
+        train: function () {
+            var t = ctx ? ctx.currentTime : 0;
+            tone(740, 0.28, 'sine', 0.22, t);
+            tone(880, 0.4, 'sine', 0.2, t + 0.06);
+            tone(988, 0.22, 'triangle', 0.14, t + 0.12);
+            var i;
+            for (i = 0; i < 8; i++) {
+                tone(110 + (i % 2) * 55, 0.07, 'sawtooth', 0.13, t + 0.45 + i * 0.11);
+                noiseBurst(0.05, 0.09, t + 0.45 + i * 0.11);
+            }
+        },
+        trainChug: function () {
+            tone(130, 0.06, 'sawtooth', 0.15);
+            tone(95, 0.05, 'square', 0.08, (ctx && ctx.currentTime) + 0.03);
+            noiseBurst(0.045, 0.12);
         }
     };
 
@@ -528,7 +560,12 @@
         eat: 'place',
         kick: 'hit',
         punch: 'hit',
-        land: 'move'
+        land: 'move',
+        salute: 'gift',
+        cannon: 'gift',
+        giftbox: 'gift',
+        choo: 'train',
+        locomotive: 'train'
     };
 
     function sfx(name) {

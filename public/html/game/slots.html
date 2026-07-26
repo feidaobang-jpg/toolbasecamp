@@ -92,7 +92,7 @@ canvas{display:block;width:100%;height:100%}
   </div>
   <div id="toast"></div>
 </div>
-<script src="../../js/game/game-audio.js?v=20"></script>
+<script src="../../js/game/game-audio.js?v=21"></script>
 <script>
 (function () {
 'use strict';
@@ -319,7 +319,6 @@ function toast(msg) {
 }
 
 function payLabel(k) {
-  if (k.paySmall == null) return String(k.payBig);
   return k.payBig + '/' + k.paySmall;
 }
 
@@ -416,22 +415,25 @@ async function animateSingle(stop) {
 async function animateTrain(stopHead) {
   const LEN = 8, laps = 2;
   const total = laps * 24 + ((stopHead - cursor + 24) % 24);
+  sfx('train');
   for (let s = 0; s < total; s++) {
     cursor = (cursor + 1) % 24;
     litSet = new Set();
     for (let k = 0; k < LEN; k++) litSet.add((cursor - k + 24) % 24);
     draw();
-    if (s % 2 === 0) sfx('move');
+    if (s % 2 === 0) sfx('trainChug');
     await sleep(30 + Math.floor(s / total * 70) + (s > total - 10 ? (s - (total - 10)) * 30 : 0));
   }
   cursor = stopHead;
   litSet = new Set();
   for (let k = 0; k < LEN; k++) litSet.add((stopHead - k + 24) % 24);
   draw();
+  sfx('train');
 }
 
 async function animateCannon(stop) {
   await animateSingle(stop);
+  sfx('gift');
   const animalIdx = [];
   for (let i = 0; i < 24; i++) if (!isSpecial(RING[i])) animalIdx.push(i);
   const picks = [];
@@ -441,7 +443,7 @@ async function animateCannon(stop) {
   }
   for (let n = 0; n < 3; n++) {
     litSet = new Set([stop, ...picks.slice(0, n + 1)]);
-    draw(); sfx('power'); await sleep(280);
+    draw(); sfx('giftPop'); await sleep(280);
   }
   return picks;
 }
@@ -466,21 +468,23 @@ async function runSpin() {
     const picks = await animateCannon(stop);
     win = payoutCells(picks);
     msg = win > 0 ? ('礼包打中 +' + win) : '礼包未押中';
-    sfx(win > 0 ? 'win' : 'lose');
+    if (win > 0) sfx('gift');
+    else sfx('lose');
   } else if (cell.a === 'train') {
     await animateTrain(stop);
     const idxs = [];
     for (let k = 0; k < 8; k++) idxs.push((stop - k + 24) % 24);
     win = payoutCells(idxs);
     msg = win > 0 ? ('火车经过 +' + win) : '火车未押中';
-    sfx(win > 0 ? 'win' : 'lose');
+    if (win > 0) sfx('train');
+    else sfx('lose');
   } else {
     await animateSingle(stop);
     const stake = bets[cell.a] || 0;
     const pay = cellPay(cell);
     if (stake > 0) {
       win = stake * pay;
-      const sizeTag = cell.a === 'rat' ? '' : (cell.big ? '大' : '小');
+      const sizeTag = cell.big ? '大' : '小';
       msg = EMOJI[cell.a] + sizeTag + kindMeta(cell.a).label + ' +' + win;
       sfx('win');
     } else sfx('lose');
