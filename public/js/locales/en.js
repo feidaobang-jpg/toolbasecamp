@@ -473,7 +473,7 @@ window.TB_LOCALES.en = {
             lose: 'Boom — mine hit'
         },
         slots: {
-            title: 'Fruit Machine',
+            title: 'Tiger Slots',
             desc: 'Classic fruit machine with cannon and train bonuses. Procedural arcade icons. Fun only — no real money.'
         },
         sheepstack: {

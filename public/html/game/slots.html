@@ -3,34 +3,71 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>幸运水果机 · Fruit Machine</title>
+<title>老虎机 · Animal Slots</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#1a0f08;color:#fef3c7;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
-#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:linear-gradient(180deg,#3b2414,#1c100a);display:flex;flex-direction:column;padding:6px 6px 8px;gap:5px}
-#topHud{flex:0 0 auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ledBox{background:#050505;border:2px solid #a16207;border-radius:8px;padding:5px 8px;box-shadow:inset 0 0 12px #000}
-.ledBox .lab{font-size:10px;color:#fbbf24;letter-spacing:.5px;font-weight:700}
-.ledBox b{display:block;font-size:22px;color:#ef4444;font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;line-height:1.15;text-shadow:0 0 8px rgba(239,68,68,.45)}
-#board{flex:1 1 auto;min-height:0;border-radius:12px;background:#292524;border:3px solid #ca8a04;box-shadow:inset 0 0 0 2px #78350f,0 6px 16px rgba(0,0,0,.45);overflow:hidden}
+html,body{height:100%;background:#2a1810;color:#fff7ed;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:
+  radial-gradient(ellipse at 50% 18%,#5c3a22 0%,transparent 55%),
+  linear-gradient(180deg,#4a2f1c,#2a1810 55%,#1a100c);
+  display:flex;flex-direction:column;padding:8px 8px 6px;gap:6px}
+#board{
+  flex:1 1 auto;min-height:0;border-radius:18px;
+  background:linear-gradient(145deg,#8b5a2b,#5c3a1e 40%,#3e2714);
+  border:4px solid #c9a227;
+  box-shadow:inset 0 0 0 3px #6b4423,0 8px 20px rgba(0,0,0,.45);
+  overflow:hidden;position:relative
+}
 canvas{display:block;width:100%;height:100%}
-#mid{flex:0 0 auto;display:flex;align-items:center;gap:5px}
-.act{border:0;border-radius:10px;padding:8px 6px;font-weight:800;font-size:12px;cursor:pointer;color:#fff;box-shadow:0 2px 0 #0006}
-.act:active{transform:translateY(1px);box-shadow:0 1px 0 #0006}
+#mid{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:6px;
+  padding:8px 10px;border-radius:14px;
+  background:linear-gradient(180deg,#d4d4d8,#9ca3af 55%,#71717a);
+  border:2px solid #e5e7eb;box-shadow:inset 0 1px 0 #fff8,0 3px 0 #52525b
+}
+.act{border:0;cursor:pointer;font-weight:800;color:#fff;box-shadow:0 3px 0 #0005}
+.act:active{transform:translateY(1px);box-shadow:0 1px 0 #0005}
 .act:disabled{opacity:.45;cursor:not-allowed}
-#btnAll{background:linear-gradient(180deg,#4ade80,#15803d);flex:1}
-#btnSmall,#btnBig{background:linear-gradient(180deg,#facc15,#ca8a04);color:#111;flex:1}
-#btnGo{background:linear-gradient(180deg,#f87171,#b91c1c);flex:1.2;font-size:15px;padding:10px 6px;border-radius:999px;border:2px solid #fecaca}
-#btnMenu{background:linear-gradient(180deg,#60a5fa,#1d4ed8);flex:.9}
-#panel{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;padding:6px;border-radius:12px;background:linear-gradient(180deg,#44403c,#292524);border:2px solid #a16207}
+#btnAll{
+  width:44px;height:44px;border-radius:10px;font-size:13px;
+  background:linear-gradient(180deg,#86efac,#16a34a);border:2px solid #bbf7d0;color:#052e16
+}
+#btnPrev,#btnNext{
+  width:40px;height:40px;border-radius:10px;font-size:18px;line-height:1;
+  background:linear-gradient(180deg,#fde047,#eab308);border:2px solid #fef08a;color:#422006
+}
+#btnSmall,#btnBig{
+  width:42px;height:42px;border-radius:50%;font-size:15px;
+  background:linear-gradient(180deg,#fff,#e5e7eb);border:2px solid #f8fafc;color:#111;box-shadow:0 3px 0 #64748b
+}
+#btnGo{
+  width:52px;height:52px;border-radius:50%;font-size:22px;line-height:1;padding:0;
+  background:radial-gradient(circle at 35% 30%,#fca5a5,#dc2626 55%,#991b1b);
+  border:3px solid #fecaca;box-shadow:0 4px 0 #7f1d1d,0 0 12px rgba(220,38,38,.35)
+}
+#panel{
+  flex:0 0 auto;display:flex;flex-direction:column;gap:4px;
+  padding:8px 6px 6px;border-radius:14px;
+  background:linear-gradient(180deg,#5c4030,#3b2718);
+  border:2px solid #c9a227;box-shadow:inset 0 0 0 1px #7c4a28
+}
 #bets{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
-.bet{border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-width:0}
-.bet .pay{font-size:10px;font-weight:800;color:#fde047;line-height:1}
-.bet .led{width:100%;background:#050505;border:1px solid #78716c;border-radius:4px;color:#ef4444;font-size:11px;font-family:ui-monospace,monospace;font-weight:700;text-align:center;padding:2px 0;line-height:1.2}
-.bet .icoWrap{width:100%;aspect-ratio:1;max-height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#86efac,#166534);border:2px solid #bbf7d0;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #14532d}
+.bet{border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-width:0}
+.bet .led{
+  width:100%;background:#0a0a0a;border:1px solid #78716c;border-radius:4px;
+  color:#ef4444;font-size:12px;font-family:ui-monospace,Consolas,monospace;font-weight:700;
+  text-align:center;padding:3px 0;line-height:1.15;box-shadow:inset 0 0 6px #000
+}
+.bet .icoWrap{
+  width:100%;aspect-ratio:1;max-height:42px;border-radius:10px;
+  background:radial-gradient(circle at 35% 28%,#86efac,#15803d);
+  border:2px solid #bbf7d0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 2px 0 #14532d;gap:0;padding:2px 0
+}
+.bet .emo{font-size:18px;line-height:1;filter:drop-shadow(0 1px 1px #0006)}
+.bet .pay{font-size:9px;font-weight:800;color:#fef08a;line-height:1;text-shadow:0 1px 0 #0008}
 .bet.on .icoWrap{outline:2px solid #fbbf24;outline-offset:1px}
-.bet.on .led{border-color:#fbbf24}
-.bet canvas{width:22px;height:22px;display:block}
+.bet.on .led{border-color:#fbbf24;box-shadow:inset 0 0 8px rgba(251,191,36,.35)}
 #foot{flex:0 0 auto;display:flex;align-items:center;gap:6px;justify-content:space-between}
 #btnTest{border:0;border-radius:999px;padding:6px 10px;background:#1e3a8a;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
 #btnTest.on{background:#b45309}
@@ -39,42 +76,40 @@ canvas{display:block;width:100%;height:100%}
 #audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#fbbf24}
 #audioBar input[type=range]{width:56px}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:8}
-#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(15,23,42,.96);border:1px solid #a16207;border-radius:16px;padding:16px 14px}
-#ui h1{font-size:1.25rem;color:#fbbf24;margin-bottom:8px}
-#ui p{font-size:.82rem;line-height:1.5;color:#94a3b8;margin-bottom:7px}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(28,16,12,.96);border:1px solid #c9a227;border-radius:16px;padding:16px 14px}
+#ui h1{font-size:1.3rem;color:#fbbf24;margin-bottom:8px}
+#ui p{font-size:.82rem;line-height:1.5;color:#d6d3d1;margin-bottom:7px}
 #ui .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 #ui button{font:inherit;flex:1;min-width:100px;border:0;border-radius:999px;padding:10px 12px;background:#2563eb;color:#fff;cursor:pointer}
-#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button.ghost{background:#292524;border:1px solid #78716c}
 .hidden{display:none!important}
-#toast{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
+#toast{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(28,16,12,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
 #toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div id="wrap">
-  <div id="topHud">
-    <div class="ledBox"><div class="lab">BONUS-WIN</div><b id="winScore">0</b></div>
-    <div class="ledBox"><div class="lab">CREDIT</div><b id="credits">100</b></div>
-  </div>
   <div id="board"><canvas id="c"></canvas></div>
   <div id="mid">
-    <button type="button" class="act" id="btnAll">全+1</button>
-    <button type="button" class="act" id="btnSmall">1-7 小</button>
-    <button type="button" class="act" id="btnBig">8-14 大</button>
-    <button type="button" class="act" id="btnGo">开始</button>
-    <button type="button" class="act" id="btnMenu">菜单</button>
+    <button type="button" class="act" id="btnAll" title="全+1">×1</button>
+    <button type="button" class="act" id="btnPrev" aria-label="左">◀</button>
+    <button type="button" class="act" id="btnNext" aria-label="右">▶</button>
+    <button type="button" class="act" id="btnSmall">小</button>
+    <button type="button" class="act" id="btnBig">大</button>
+    <button type="button" class="act" id="btnGo" title="开始">▶</button>
   </div>
   <div id="panel"><div id="bets"></div></div>
   <div id="foot">
     <button type="button" id="btnTest">测试特奖</button>
+    <button type="button" id="btnMenu" style="border:0;border-radius:999px;padding:6px 10px;background:#44403c;color:#fde68a;font-size:11px;font-weight:700;cursor:pointer">菜单</button>
     <div class="action-row" id="audioBar"></div>
   </div>
   <div id="toast"></div>
   <div id="ui">
     <div class="panel" id="panelMenu">
-      <h1>幸运水果机</h1>
-      <p>点下方图案押分；「开始」会<strong>沿用上次押分</strong>（若当前未押）。「全+1」各图案各加 1 分。</p>
-      <p><b>礼炮</b>随机打中 3 格；<b>火车</b> 8 灯同行全结算。中奖后可用「小/大」比倍（1–7 / 8–14）。</p>
+      <h1>🐯 老虎机</h1>
+      <p>点下方动物押分；「开始」会<strong>沿用上次押分</strong>（当前未押时）。「×1」各图案各加 1 分。</p>
+      <p><b>礼炮 🎆</b>随机打中 3 格；<b>火车 🚂</b> 8 灯同行结算。中奖后可点「小/大」比倍（1–7 / 8–14）。</p>
       <p>仅供娱乐，无真钱。</p>
       <div class="row">
         <button id="btnPlay">进入</button>
@@ -87,26 +122,33 @@ canvas{display:block;width:100%;height:100%}
 <script>
 (function () {
 'use strict';
-const KEY = 'tbc_fruit_machine_v3';
+const KEY = 'tbc_tiger_slots_v1';
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 
+/** 动物表情图案（赔率由高到低） */
 const KINDS = [
-  { id: 'bar', label: 'BAR', pay: 100 },
-  { id: 'seven', label: '77', pay: 40 },
-  { id: 'star', label: '星', pay: 30 },
-  { id: 'melon', label: '瓜', pay: 20 },
-  { id: 'bell', label: '铃', pay: 20 },
-  { id: 'lemon', label: '柠', pay: 15 },
-  { id: 'orange', label: '橙', pay: 10 },
-  { id: 'apple', label: '苹', pay: 5 }
+  { id: 'panda',   emoji: '🐼', label: '熊猫', pay: 120 },
+  { id: 'tiger',   emoji: '🐯', label: '老虎', pay: 40 },
+  { id: 'leopard', emoji: '🐆', label: '豹子', pay: 30 },
+  { id: 'lion',    emoji: '🦁', label: '狮子', pay: 20 },
+  { id: 'chicken', emoji: '🐔', label: '小鸡', pay: 20 },
+  { id: 'rabbit',  emoji: '🐰', label: '兔子', pay: 15 },
+  { id: 'fox',     emoji: '🦊', label: '狐狸', pay: 10 },
+  { id: 'mouse',   emoji: '🐭', label: '老鼠', pay: 5 }
 ];
 
+const EMOJI = {
+  panda: '🐼', tiger: '🐯', leopard: '🐆', lion: '🦁',
+  chicken: '🐔', rabbit: '🐰', fox: '🦊', mouse: '🐭',
+  cannon: '🎆', train: '🚂'
+};
+
 const RING = [
-  'apple', 'orange', 'lemon', 'bell', 'melon', 'star', 'seven',
-  'apple', 'bar', 'cannon', 'orange', 'lemon',
-  'seven', 'star', 'melon', 'bell', 'lemon', 'orange', 'apple',
-  'bar', 'seven', 'train', 'melon', 'star'
+  'mouse', 'fox', 'rabbit', 'chicken', 'lion', 'leopard', 'tiger',
+  'mouse', 'panda', 'cannon', 'fox', 'rabbit',
+  'tiger', 'leopard', 'lion', 'chicken', 'rabbit', 'fox', 'mouse',
+  'panda', 'tiger', 'train', 'lion', 'leopard'
 ];
 
 let W = 360, H = 360, dpr = 1;
@@ -118,17 +160,15 @@ KINDS.forEach(k => { bets[k.id] = 0; lastBets[k.id] = 0; });
 let cursor = 0;
 let litSet = new Set();
 let spinning = false;
-let centerMsg = '0';
+let centerMsg = '20';
 let testBoost = false;
-let animMode = 'single';
 let canDouble = false;
+let focusBet = 0;
 
 function sfx(n) { try { GameAudio && GameAudio.sfx(n); } catch (e) {} }
 function unlock() { try { GameAudio && GameAudio.unlock(); } catch (e) {} }
 
 function hud() {
-  document.getElementById('credits').textContent = credits;
-  document.getElementById('winScore').textContent = lastWin;
   document.getElementById('btnSmall').disabled = spinning || !canDouble || lastWin <= 0;
   document.getElementById('btnBig').disabled = spinning || !canDouble || lastWin <= 0;
 }
@@ -155,8 +195,8 @@ function syncTestBtn() {
 }
 
 function kindMeta(id) {
-  if (id === 'cannon') return { id: 'cannon', label: '礼炮', pay: 0 };
-  if (id === 'train') return { id: 'train', label: '火车', pay: 0 };
+  if (id === 'cannon') return { id: 'cannon', label: '礼炮', pay: 0, emoji: '🎆' };
+  if (id === 'train') return { id: 'train', label: '火车', pay: 0, emoji: '🚂' };
   return KINDS.find(k => k.id === id);
 }
 function totalBet() { return KINDS.reduce((s, k) => s + (bets[k.id] || 0), 0); }
@@ -174,7 +214,7 @@ function resize() {
 window.addEventListener('resize', () => { resize(); draw(); });
 
 function cellRect(i) {
-  const cols = 7, rows = 7, pad = 5;
+  const cols = 7, rows = 7, pad = 4;
   const cw = (W - pad * 2) / cols, ch = (H - pad * 2) / rows;
   const map = [];
   for (let x = 0; x < cols; x++) map.push({ c: x, r: 0 });
@@ -185,60 +225,6 @@ function cellRect(i) {
   return { x: pad + m.c * cw, y: pad + m.r * ch, w: cw, h: ch };
 }
 
-function drawIcon(c, kind, x, y, s) {
-  c.save();
-  c.translate(x, y);
-  const r = s * 0.42;
-  if (kind === 'apple') {
-    c.fillStyle = '#dc2626';
-    c.beginPath(); c.ellipse(0, 2, r * 0.9, r, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#16a34a'; c.fillRect(-2, -r - 2, 3, 7);
-    c.beginPath(); c.ellipse(5, -r, 5, 3, 0.5, 0, Math.PI * 2); c.fill();
-  } else if (kind === 'orange') {
-    c.fillStyle = '#ea580c';
-    c.beginPath(); c.arc(0, 1, r * 0.95, 0, Math.PI * 2); c.fill();
-  } else if (kind === 'lemon') {
-    c.fillStyle = '#eab308';
-    c.beginPath(); c.ellipse(0, 1, r * 1.05, r * 0.7, 0.4, 0, Math.PI * 2); c.fill();
-  } else if (kind === 'melon') {
-    c.fillStyle = '#16a34a';
-    c.beginPath(); c.arc(0, 2, r, Math.PI * 1.05, Math.PI * 1.95); c.fill();
-    c.fillStyle = '#f87171';
-    c.beginPath(); c.arc(0, 2, r * 0.72, Math.PI * 1.1, Math.PI * 1.9); c.fill();
-  } else if (kind === 'bell') {
-    c.fillStyle = '#facc15';
-    c.beginPath();
-    c.moveTo(-r * 0.7, -2); c.quadraticCurveTo(0, -r - 2, r * 0.7, -2);
-    c.lineTo(r * 0.85, r * 0.55); c.lineTo(-r * 0.85, r * 0.55); c.closePath(); c.fill();
-    c.fillStyle = '#f59e0b'; c.beginPath(); c.arc(0, r * 0.7, 3, 0, Math.PI * 2); c.fill();
-  } else if (kind === 'star') {
-    c.fillStyle = '#fbbf24';
-    c.beginPath();
-    for (let i = 0; i < 5; i++) {
-      const a = -Math.PI / 2 + i * Math.PI * 2 / 5, a2 = a + Math.PI / 5;
-      c.lineTo(Math.cos(a) * r, Math.sin(a) * r);
-      c.lineTo(Math.cos(a2) * r * 0.45, Math.sin(a2) * r * 0.45);
-    }
-    c.closePath(); c.fill();
-  } else if (kind === 'seven') {
-    c.fillStyle = '#ef4444'; roundPath(c, -r, -r * 0.7, r * 2, r * 1.4, 4); c.fill();
-    c.fillStyle = '#fff'; c.font = 'bold ' + Math.max(10, s * 0.5) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('77', 0, 1);
-  } else if (kind === 'bar') {
-    c.fillStyle = '#111'; roundPath(c, -r * 1.05, -r * 0.55, r * 2.1, r * 1.1, 3); c.fill();
-    c.fillStyle = '#f8fafc'; c.font = 'bold ' + Math.max(8, s * 0.34) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('BAR', 0, 1);
-  } else if (kind === 'cannon') {
-    c.fillStyle = '#7c3aed'; roundPath(c, -r, -r * 0.75, r * 2, r * 1.5, 5); c.fill();
-    c.fillStyle = '#fde68a'; c.font = 'bold ' + Math.max(9, s * 0.3) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('礼炮', 0, 1);
-  } else if (kind === 'train') {
-    c.fillStyle = '#0369a1'; roundPath(c, -r, -r * 0.75, r * 2, r * 1.5, 5); c.fill();
-    c.fillStyle = '#e0f2fe'; c.font = 'bold ' + Math.max(9, s * 0.3) + 'px system-ui';
-    c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('火车', 0, 1);
-  }
-  c.restore();
-}
 function roundPath(c, x, y, w, h, rad) {
   c.beginPath();
   c.moveTo(x + rad, y);
@@ -249,58 +235,136 @@ function roundPath(c, x, y, w, h, rad) {
   c.closePath();
 }
 
+function drawEmoji(c, kind, x, y, s) {
+  const e = EMOJI[kind] || '❓';
+  c.save();
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  c.font = Math.max(12, Math.floor(s * 0.78)) + 'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+  c.fillText(e, x, y + 1);
+  c.restore();
+}
+
 function drawCell(i, lit) {
   const kind = RING[i];
   const r = cellRect(i);
   const g = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h);
-  if (kind === 'cannon') { g.addColorStop(0, lit ? '#c4b5fd' : '#5b21b6'); g.addColorStop(1, lit ? '#8b5cf6' : '#3b0764'); }
+  if (kind === 'cannon') { g.addColorStop(0, lit ? '#fde68a' : '#a16207'); g.addColorStop(1, lit ? '#fbbf24' : '#78350f'); }
   else if (kind === 'train') { g.addColorStop(0, lit ? '#7dd3fc' : '#0369a1'); g.addColorStop(1, lit ? '#38bdf8' : '#0c4a6e'); }
-  else { g.addColorStop(0, lit ? '#fef3c7' : '#44403c'); g.addColorStop(1, lit ? '#fde68a' : '#1c1917'); }
+  else { g.addColorStop(0, lit ? '#fff7ed' : '#fef3c7'); g.addColorStop(1, lit ? '#fde68a' : '#d6d3d1'); }
   ctx.fillStyle = g;
-  ctx.strokeStyle = lit ? '#fbbf24' : '#78716c';
-  ctx.lineWidth = lit ? 2.5 : 1;
-  roundPath(ctx, r.x + 2, r.y + 2, r.w - 4, r.h - 4, 7);
+  ctx.strokeStyle = lit ? '#ef4444' : '#a8a29e';
+  ctx.lineWidth = lit ? 2.8 : 1.2;
+  roundPath(ctx, r.x + 2, r.y + 2, r.w - 4, r.h - 4, 8);
   ctx.fill(); ctx.stroke();
-  drawIcon(ctx, kind, r.x + r.w / 2, r.y + r.h / 2, Math.min(r.w, r.h) * 0.78);
+  if (lit) {
+    ctx.strokeStyle = 'rgba(239,68,68,.85)';
+    ctx.lineWidth = 3;
+    roundPath(ctx, r.x + 1, r.y + 1, r.w - 2, r.h - 2, 9);
+    ctx.stroke();
+  }
+  drawEmoji(ctx, kind, r.x + r.w / 2, r.y + r.h / 2, Math.min(r.w, r.h));
+}
+
+function drawSunburst(cx, cy, R) {
+  const rays = 24;
+  for (let i = 0; i < rays; i++) {
+    const a0 = (i / rays) * Math.PI * 2;
+    const a1 = ((i + 0.5) / rays) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, a0, a1);
+    ctx.closePath();
+    ctx.fillStyle = i % 2 === 0 ? '#fbbf24' : '#f59e0b';
+    ctx.globalAlpha = 0.55;
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  // dots overlay
+  ctx.fillStyle = 'rgba(120,53,15,.18)';
+  for (let i = 0; i < 40; i++) {
+    const a = (i / 40) * Math.PI * 2;
+    const rr = R * (0.35 + (i % 5) * 0.1);
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 function draw() {
-  const bg = ctx.createRadialGradient(W / 2, H / 2, 20, W / 2, H / 2, W * 0.7);
-  bg.addColorStop(0, '#78350f'); bg.addColorStop(1, '#1c1917');
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  // wood board fill
+  const wood = ctx.createLinearGradient(0, 0, 0, H);
+  wood.addColorStop(0, '#7c4a28'); wood.addColorStop(1, '#4a2c17');
+  ctx.fillStyle = wood; ctx.fillRect(0, 0, W, H);
 
-  const inner = { x: W * 0.155, y: H * 0.155, w: W * 0.69, h: H * 0.69 };
-  ctx.fillStyle = '#7c2d12';
-  roundPath(ctx, inner.x, inner.y, inner.w, inner.h, 10); ctx.fill();
-  // sunburst-ish dots
-  ctx.fillStyle = 'rgba(251,191,36,.12)';
-  for (let i = 0; i < 18; i++) {
-    const a = i / 18 * Math.PI * 2;
-    ctx.beginPath();
-    ctx.arc(W / 2 + Math.cos(a) * W * 0.18, H / 2 + Math.sin(a) * H * 0.18, 3, 0, Math.PI * 2);
-    ctx.fill();
-  }
+  const cx = W / 2, cy = H / 2;
+  const inner = { x: W * 0.145, y: H * 0.145, w: W * 0.71, h: H * 0.71 };
+  roundPath(ctx, inner.x, inner.y, inner.w, inner.h, 12);
+  ctx.save();
+  ctx.clip();
+  drawSunburst(cx, cy, Math.max(inner.w, inner.h) * 0.72);
+  ctx.restore();
 
+  // 奖池 / 金币
+  const boxW = W * 0.28, boxH = H * 0.08;
+  const boxY = H * 0.22;
+  drawLedPanel(W * 0.22, boxY, boxW, boxH, '奖池', String(lastWin));
+  drawLedPanel(W * 0.78 - boxW, boxY, boxW, boxH, '金币', String(credits));
+
+  // center circle number
+  const cr = Math.min(W, H) * 0.11;
+  ctx.beginPath();
+  ctx.arc(cx, cy + H * 0.02, cr, 0, Math.PI * 2);
+  const cg = ctx.createRadialGradient(cx - cr * 0.3, cy - cr * 0.2, 2, cx, cy, cr);
+  cg.addColorStop(0, '#a16207'); cg.addColorStop(1, '#451a03');
+  ctx.fillStyle = cg; ctx.fill();
+  ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.fillStyle = '#fef3c7';
+  ctx.font = 'bold ' + Math.max(18, cr * 0.7) + 'px ui-monospace,Consolas,monospace';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#fbbf24';
-  ctx.font = 'bold ' + Math.max(20, W * 0.068) + 'px "Segoe UI","PingFang SC",sans-serif';
-  ctx.fillText('水果老虎机', W / 2, H * 0.36);
-  drawIcon(ctx, 'apple', W * 0.36, H * 0.46, 26);
-  drawIcon(ctx, 'melon', W * 0.5, H * 0.47, 26);
-  drawIcon(ctx, 'lemon', W * 0.64, H * 0.46, 26);
+  ctx.fillText(String(centerMsg), cx, cy + H * 0.02 + 1);
 
-  const dw = W * 0.28, dh = H * 0.09;
-  ctx.fillStyle = '#050505';
-  roundPath(ctx, W / 2 - dw / 2, H * 0.56, dw, dh, 6); ctx.fill();
-  ctx.strokeStyle = '#a16207'; ctx.stroke();
-  ctx.fillStyle = '#ef4444';
-  ctx.font = 'bold ' + Math.max(14, dh * 0.55) + 'px ui-monospace,monospace';
-  ctx.fillText(String(centerMsg), W / 2, H * 0.56 + dh / 2);
+  // title animals
+  ctx.font = Math.max(16, W * 0.055) + 'px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
+  ctx.fillText('🐼 🐯 🐆', cx, H * 0.40);
+  ctx.fillStyle = '#7f1d1d';
+  ctx.font = 'bold ' + Math.max(16, W * 0.055) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('老虎机', cx, H * 0.48);
+
+  // soft hint buttons look (non-interactive decoration matching ref)
+  const bw = W * 0.28, bh = H * 0.055;
+  drawSoftBtn(cx - bw - 6, H * 0.62, bw, bh, '获取金币');
+  drawSoftBtn(cx + 6, H * 0.62, bw, bh, '幸运转盘');
 
   for (let i = 0; i < 24; i++) {
     const lit = litSet.has(i) || i === cursor;
     drawCell(i, lit);
   }
+}
+
+function drawLedPanel(x, y, w, h, lab, val) {
+  ctx.fillStyle = '#0a0a0a';
+  roundPath(ctx, x, y, w, h, 5); ctx.fill();
+  ctx.strokeStyle = '#a16207'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold ' + Math.max(8, h * 0.28) + 'px system-ui';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText(lab, x + w / 2, y + 2);
+  ctx.fillStyle = '#ef4444';
+  ctx.font = 'bold ' + Math.max(12, h * 0.42) + 'px ui-monospace,Consolas,monospace';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(val, x + w / 2, y + h * 0.62);
+}
+
+function drawSoftBtn(x, y, w, h, text) {
+  const g = ctx.createLinearGradient(x, y, x, y + h);
+  g.addColorStop(0, '#fb923c'); g.addColorStop(1, '#ea580c');
+  ctx.fillStyle = g;
+  roundPath(ctx, x, y, w, h, h / 2); ctx.fill();
+  ctx.fillStyle = '#fff7ed';
+  ctx.font = 'bold ' + Math.max(9, h * 0.42) + 'px "PingFang SC",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, x + w / 2, y + h / 2);
 }
 
 function toast(msg) {
@@ -311,30 +375,18 @@ function toast(msg) {
   toast._t = setTimeout(() => el.classList.remove('show'), 1700);
 }
 
-function paintBetIcon(cv, kind) {
-  const c = cv.getContext('2d');
-  const s = 22;
-  cv.width = s * 2; cv.height = s * 2;
-  c.setTransform(2, 0, 0, 2, 0, 0);
-  c.clearRect(0, 0, s, s);
-  drawIcon(c, kind, s / 2, s / 2, s * 0.95);
-}
-
 function renderBets() {
   const box = document.getElementById('bets');
   box.innerHTML = '';
-  KINDS.forEach(k => {
+  KINDS.forEach((k, idx) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
-    b.innerHTML = '<span class="pay">' + k.pay + '</span><span class="led">' + String(bets[k.id] || 0).padStart(2, '0') + '</span>';
-    const wrap = document.createElement('div');
-    wrap.className = 'icoWrap';
-    const cv = document.createElement('canvas');
-    paintBetIcon(cv, k.id);
-    wrap.appendChild(cv);
-    b.appendChild(wrap);
-    b.onclick = () => addBet(k.id, 1);
+    if (idx === focusBet) b.style.filter = 'brightness(1.08)';
+    b.innerHTML =
+      '<span class="led">' + String(bets[k.id] || 0).padStart(2, '0') + '</span>' +
+      '<span class="icoWrap"><span class="emo">' + k.emoji + '</span><span class="pay">' + k.pay + '</span></span>';
+    b.onclick = () => { focusBet = idx; addBet(k.id, 1); };
     box.appendChild(b);
   });
 }
@@ -344,19 +396,19 @@ function addBet(id, n) {
   if (spinning) return;
   canDouble = false; hud();
   for (let i = 0; i < n; i++) {
-    if (credits <= 0) { toast('分数不足'); sfx('invalid'); break; }
+    if (credits <= 0) { toast('金币不足'); sfx('invalid'); break; }
     credits--;
     bets[id]++;
   }
   hud(); save(); sfx('click'); renderBets();
 }
 
-/** 开始时：若当前无押分，沿用上次押分并从 CREDIT 扣除 */
+/** 开始时：若当前无押分，沿用上次押分并从金币扣除 */
 function ensureBetsForSpin() {
   if (totalBet() > 0) return true;
   const need = totalOf(lastBets);
   if (need <= 0) { toast('请先押分'); sfx('invalid'); return false; }
-  if (credits < need) { toast('分数不足，无法沿用上次押分'); sfx('invalid'); return false; }
+  if (credits < need) { toast('金币不足，无法沿用上次押分'); sfx('invalid'); return false; }
   credits -= need;
   KINDS.forEach(k => { bets[k.id] = lastBets[k.id] | 0; });
   hud(); renderBets();
@@ -385,7 +437,7 @@ function pickStopIndex() {
   const weights = RING.map(kind => {
     if (kind === 'cannon' || kind === 'train') return testBoost ? 4.5 : 0.55;
     const k = kindMeta(kind);
-    return 1.1 + (110 - k.pay) / 110;
+    return 1.1 + (130 - k.pay) / 130;
   });
   let sum = weights.reduce((a, b) => a + b, 0), roll = Math.random() * sum;
   for (let i = 0; i < weights.length; i++) { roll -= weights[i]; if (roll <= 0) return i; }
@@ -393,7 +445,7 @@ function pickStopIndex() {
 }
 
 async function animateSingle(stop) {
-  animMode = 'single'; litSet = new Set();
+  litSet = new Set();
   const laps = 2 + ((Math.random() * 2) | 0);
   const total = laps * 24 + ((stop - cursor + 24) % 24);
   for (let s = 0; s < total; s++) {
@@ -406,7 +458,6 @@ async function animateSingle(stop) {
 }
 
 async function animateTrain(stopHead) {
-  animMode = 'train';
   const LEN = 8, laps = 2;
   const total = laps * 24 + ((stopHead - cursor + 24) % 24);
   for (let s = 0; s < total; s++) {
@@ -425,12 +476,12 @@ async function animateTrain(stopHead) {
 
 async function animateCannon(stop) {
   await animateSingle(stop);
-  const fruitIdx = [];
-  for (let i = 0; i < 24; i++) if (RING[i] !== 'cannon' && RING[i] !== 'train') fruitIdx.push(i);
+  const animalIdx = [];
+  for (let i = 0; i < 24; i++) if (RING[i] !== 'cannon' && RING[i] !== 'train') animalIdx.push(i);
   const picks = [];
-  while (picks.length < 3 && fruitIdx.length) {
-    const j = (Math.random() * fruitIdx.length) | 0;
-    picks.push(fruitIdx.splice(j, 1)[0]);
+  while (picks.length < 3 && animalIdx.length) {
+    const j = (Math.random() * animalIdx.length) | 0;
+    picks.push(animalIdx.splice(j, 1)[0]);
   }
   for (let n = 0; n < 3; n++) {
     litSet = new Set([stop, ...picks.slice(0, n + 1)]);
@@ -473,7 +524,7 @@ async function runSpin() {
     const stake = bets[kind] || 0;
     if (stake > 0) {
       win = stake * kindMeta(kind).pay;
-      msg = kindMeta(kind).label + ' 中奖 +' + win;
+      msg = kindMeta(kind).emoji + kindMeta(kind).label + ' 中奖 +' + win;
       sfx('win');
     } else sfx('lose');
   }
@@ -481,20 +532,20 @@ async function runSpin() {
   credits += win;
   lastWin = win;
   canDouble = win > 0;
-  centerMsg = win > 0 ? ('+' + win) : '0';
+  centerMsg = win > 0 ? String(Math.min(99, win)) : '0';
   KINDS.forEach(k => { bets[k.id] = 0; });
   renderBets();
   hud(); save();
   toast(msg + (canDouble ? ' · 可小/大比倍' : ''));
   spinning = false;
   document.getElementById('btnGo').disabled = false;
-  if (credits <= 0) setTimeout(() => toast('分数用尽，可在菜单重置'), 1600);
+  if (credits <= 0) setTimeout(() => toast('金币用尽，可在菜单重置'), 1600);
 }
 
 function doDouble(isBig) {
   unlock();
   if (spinning || !canDouble || lastWin <= 0) return;
-  const roll = 1 + ((Math.random() * 14) | 0); // 1..14
+  const roll = 1 + ((Math.random() * 14) | 0);
   const winSide = isBig ? (roll >= 8) : (roll <= 7);
   centerMsg = String(roll);
   if (winSide) {
@@ -524,9 +575,21 @@ document.getElementById('btnAll').onclick = () => {
   KINDS.forEach(k => {
     if (credits > 0) { credits--; bets[k.id]++; added++; }
   });
-  if (!added) toast('分数不足');
+  if (!added) toast('金币不足');
   else { sfx('click'); toast('全押 +1'); }
   hud(); renderBets(); save();
+};
+document.getElementById('btnPrev').onclick = () => {
+  unlock();
+  focusBet = (focusBet + 7) % 8;
+  renderBets();
+  if (!spinning) addBet(KINDS[focusBet].id, 1);
+};
+document.getElementById('btnNext').onclick = () => {
+  unlock();
+  focusBet = (focusBet + 1) % 8;
+  renderBets();
+  if (!spinning) addBet(KINDS[focusBet].id, 1);
 };
 document.getElementById('btnSmall').onclick = () => doDouble(false);
 document.getElementById('btnBig').onclick = () => doDouble(true);
@@ -542,9 +605,27 @@ document.getElementById('btnReset').onclick = () => {
   unlock();
   credits = 100; lastWin = 0; canDouble = false;
   KINDS.forEach(k => { bets[k.id] = 0; lastBets[k.id] = 0; });
-  centerMsg = '100';
-  hud(); renderBets(); save(); sfx('swap'); toast('已重置为 100 分');
+  centerMsg = '20';
+  hud(); renderBets(); save(); sfx('swap'); toast('已重置为 100 金币');
 };
+
+// 中心装饰按钮点击：小彩蛋
+canvas.addEventListener('pointerdown', (e) => {
+  unlock();
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) * (W / rect.width);
+  const y = (e.clientY - rect.top) * (H / rect.height);
+  const cx = W / 2, bw = W * 0.28, bh = H * 0.055, by = H * 0.62;
+  if (y >= by && y <= by + bh) {
+    if (x >= cx - bw - 6 && x <= cx - 6) {
+      if (credits < 5000) { credits = Math.min(5000, credits + 100); toast('获取金币 +100'); sfx('power'); hud(); save(); }
+      else toast('金币已满');
+    } else if (x >= cx + 6 && x <= cx + 6 + bw) {
+      toast('幸运转盘：下次特奖概率略增');
+      testBoost = true; syncTestBtn(); save(); sfx('swap');
+    }
+  }
+});
 
 load();
 renderBets();
