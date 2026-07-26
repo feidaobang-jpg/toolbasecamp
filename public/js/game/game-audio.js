@@ -164,15 +164,43 @@
         syncVolumeSliders();
     }
 
+    var ZH_LABELS = {
+        'tools.game.soundOn': '静音',
+        'tools.game.soundOff': '开声音',
+        'tools.game.volume': '音量'
+    };
+    var EN_LABELS = {
+        'tools.game.soundOn': 'Mute',
+        'tools.game.soundOff': 'Unmute',
+        'tools.game.volume': 'Volume'
+    };
+
+    function preferZh() {
+        try {
+            var lang = (document.documentElement && document.documentElement.lang) || '';
+            if (/^zh/i.test(lang)) return true;
+            // standalone game pages often skip i18n; default CN site → Chinese chrome
+            if (typeof global.t !== 'function' && !lang) return true;
+            var nav = (navigator.language || navigator.userLanguage || '');
+            if (/^zh/i.test(nav) && typeof global.t !== 'function') return true;
+        } catch (e) { /* ignore */ }
+        return false;
+    }
+
     function i18n(key, fallback) {
-        return typeof global.t === 'function' ? global.t(key) : fallback;
+        if (typeof global.t === 'function') {
+            var tr = global.t(key);
+            if (tr && tr !== key) return tr;
+        }
+        var pack = preferZh() ? ZH_LABELS : EN_LABELS;
+        return pack[key] || fallback || key;
     }
 
     function syncMuteButtons() {
         muteBtns.forEach(function (btn) {
             if (!btn) return;
-            var onLabel = i18n('tools.game.soundOn', 'Mute');
-            var offLabel = i18n('tools.game.soundOff', 'Unmute');
+            var onLabel = i18n('tools.game.soundOn');
+            var offLabel = i18n('tools.game.soundOff');
             btn.dataset.soundOn = onLabel;
             btn.dataset.soundOff = offLabel;
             btn.setAttribute('aria-pressed', muted ? 'true' : 'false');
@@ -188,7 +216,7 @@
             if (!el) return;
             if (String(el.value) !== pct) el.value = pct;
             el.setAttribute('aria-valuenow', pct);
-            el.title = i18n('tools.game.volume', 'Volume') + ' ' + pct + '%';
+            el.title = i18n('tools.game.volume') + ' ' + pct + '%';
         });
     }
 
@@ -571,9 +599,9 @@
     function refreshInjectedLabels() {
         syncMuteButtons();
         var volSpan = document.querySelector('.game-volume [data-i18n="tools.game.volume"]');
-        if (volSpan) volSpan.textContent = i18n('tools.game.volume', 'Volume');
+        if (volSpan) volSpan.textContent = i18n('tools.game.volume');
         var volInput = document.getElementById('volume-slider');
-        if (volInput) volInput.setAttribute('aria-label', i18n('tools.game.volume', 'Volume'));
+        if (volInput) volInput.setAttribute('aria-label', i18n('tools.game.volume'));
     }
 
     function injectToolbarControls() {
