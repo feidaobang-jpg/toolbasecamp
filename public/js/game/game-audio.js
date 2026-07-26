@@ -275,25 +275,22 @@
         hop: [5, 7, 5, -1, 8, 5, 7, -1]
     };
 
+    // Main 32-step hook — looped 3× so the end joins the start smoothly
+    var CATCHY_HOOK = [
+        5, 5, 5, 7, 5, -1, 3, 5,
+        7, 7, 7, 8, 7, -1, 5, 3,
+        5, 3, 1, 3, 5, 5, 7, -1,
+        5, 3, 1, 0, 1, 1, 1, -1
+    ];
+
     var THEMES = {
         catchyPrev: CATCHY_PREV,
-        // NEW: G-major march jingle — slower phrase feel, square lead, obvious contrast
+        // G-major march: same hook ×3 (no jarring B-section)
         catchy: {
             bpm: 200,
             scale: SCALE_G,
             voice: 'square',
-            lead: [
-                // "ta-ta-ta TAA" march hook
-                5, 5, 5, 7, 5, -1, 3, 5,
-                7, 7, 7, 8, 7, -1, 5, 3,
-                5, 3, 1, 3, 5, 5, 7, -1,
-                5, 3, 1, 0, 1, 1, 1, -1,
-                // answer: leap up then tumble
-                8, 7, 5, 8, 7, 5, 3, 5,
-                7, 5, 3, 1, 3, 5, 3, -1,
-                5, 5, 7, 5, 3, 1, 0, 1,
-                3, 5, 7, 5, 3, 1, 0, -1
-            ],
+            lead: CATCHY_HOOK.concat(CATCHY_HOOK, CATCHY_HOOK),
             bass: [0, -1, 0, -1, 3, -1, 3, -1, 4, -1, 4, -1, 0, 1, 3, 0],
             hop: [7, 8, -1, 7, 5, 8, -1, 5]
         },
@@ -344,48 +341,93 @@
         noiseBurst(Math.min(0.04, beatDur * 0.35), 0.08);
     }
 
+    var bgmNextTime = 0;
+
     function startBgmInternal() {
         stopBgmInternal();
         if (!unlocked || muted) return;
-        if (!ensure()) return;
+        var c = ensure();
+        if (!c) return;
         var theme = THEMES[bgmTheme] || THEMES.catchy;
         var beat = 60 / theme.bpm;
         bgmStep = 0;
-        function tick() {
-            if (muted || !bgmWanted) return;
-            var c = ensure();
-            if (!c || c.state !== 'running') {
-                bgmTimer = global.setTimeout(tick, beat * 1000);
-                return;
-            }
+        bgmNextTime = c.currentTime + 0.05;
+
+        function scheduleAt(t0, step) {
             var lead = theme.lead;
             var bass = theme.bass;
             var hop = theme.hop;
-            var li = lead[bgmStep % lead.length];
-            var bi = bass[bgmStep % bass.length];
-            var hi = hop[bgmStep % hop.length];
-            var t0 = c.currentTime;
+            var li = lead[step % lead.length];
+            var bi = bass[step % bass.length];
+            var hi = hop[step % hop.length];
 
-            // kick on 0/4, hat on offbeats — keeps the loop dancing
-            if (bgmStep % 4 === 0) playKick(beat);
-            else if (bgmStep % 2 === 1) playHat(beat);
+            if (step % 4 === 0) {
+                // inline kick at exact audio time
+                if (!muted && bgmGain && c.state === 'running') {
+                    var kOsc = c.createOscillator();
+                    var kG = c.createGain();
+                    kOsc.type = 'sine';
+                    kOsc.frequency.setValueAtTime(140, t0);
+                    kOsc.frequency.exponentialRampToValueAtTime(55, t0 + 0.08);
+                    kG.gain.setValueAtTime(0.0001, t0);
+                    kG.gain.exponentialRampToValueAtTime(0.45, t0 + 0.01);
+                    kG.gain.exponentialRampToValueAtTime(0.0001, t0 + beat * 0.55);
+                    kOsc.connect(kG);
+                    kG.connect(bgmGain);
+                    kOsc.start(t0);
+                    kOsc.stop(t0 + beat);
+                }
+            } else if (step % 2 === 1) {
+                // soft hat
+                var len = Math.max(1, Math.floor(c.sampleRate * Math.min(0.04, beat * 0.35)));
+                var buf = c.createBuffer(1, len, c.sampleRate);
+                var data = buf.getChannelData(0);
+                var i;
+                for (i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
+                var src = c.createBufferSource();
+                var hg = c.createGain();
+                var f = c.createBiquadFilter();
+                f.type = 'highpass';
+                f.frequency.value = 4000;
+                src.buffer = buf;
+                hg.gain.setValueAtTime(0.06, t0);
+                hg.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.04);
+                src.connect(f);
+                f.connect(hg);
+                hg.connect(bgmGain);
+                src.start(t0);
+                src.stop(t0 + 0.05);
+            }
 
             if (li >= 0) {
-                var leadType = theme.voice || 'square';
-                playVoice(theme.scale[li % theme.scale.length], beat * 0.88, leadType, 0.32, t0);
-                if (bgmStep % 2 === 0) {
-                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.4, 'sine', 0.12, t0);
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.85, theme.voice || 'square', 0.32, t0);
+                if (step % 2 === 0) {
+                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.38, 'sine', 0.1, t0);
                 }
             }
             if (bi >= 0) {
-                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.05, 'triangle', 0.2, t0);
+                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.0, 'triangle', 0.2, t0);
             }
-            if (hi >= 0 && bgmStep % 4 === 2) {
-                playVoice(theme.scale[hi % theme.scale.length], beat * 0.35, 'sine', 0.14, t0 + beat * 0.45);
+            if (hi >= 0 && step % 4 === 2) {
+                playVoice(theme.scale[hi % theme.scale.length], beat * 0.32, 'sine', 0.12, t0 + beat * 0.5);
             }
+        }
 
-            bgmStep++;
-            bgmTimer = global.setTimeout(tick, beat * 1000);
+        function tick() {
+            if (muted || !bgmWanted) return;
+            c = ensure();
+            if (!c || c.state !== 'running') {
+                bgmTimer = global.setTimeout(tick, 50);
+                return;
+            }
+            // schedule ahead on the audio clock to avoid setTimeout drift/stutter
+            var horizon = c.currentTime + 0.12;
+            while (bgmNextTime < horizon) {
+                scheduleAt(bgmNextTime, bgmStep);
+                bgmNextTime += beat;
+                bgmStep++;
+            }
+            bgmTimer = global.setTimeout(tick, 25);
         }
         tick();
     }
