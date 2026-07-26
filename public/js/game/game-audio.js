@@ -251,48 +251,36 @@
         }
     };
 
-    // C pentatonic (sheep-style backup)
-    var SCALE_C = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0];
-    // G major cheerful (clearly different key/color)
-    var SCALE_G = [196.0, 220.0, 246.94, 293.66, 329.63, 392.0, 440.0, 493.88, 587.33, 659.25];
+    // A minor (FC / shoot-'em-up vibe) — original composition, not a copyrighted track
+    // A3 B3 C4 D4 E4 F4 G4 A4 B4 C5 D5 E5
+    var SCALE_AM = [220.0, 246.94, 261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25];
 
-    // Last liked sheep-style tune — restore: THEMES.catchy = THEMES.catchyPrev
-    var CATCHY_PREV = {
-        bpm: 264,
-        scale: SCALE_C,
-        voice: 'triangle',
-        lead: [
-            3, 3, 5, 3, 4, 4, 3, -1,
-            1, 1, 3, 1, 0, 0, 0, -1,
-            5, 5, 7, 5, 4, 3, 1, 3,
-            5, 5, 4, 3, 1, 0, 0, -1,
-            0, 1, 3, 5, 4, 3, 1, 0,
-            3, 4, 5, 7, 5, 4, 3, 1,
-            5, 3, 5, 3, 4, 1, 0, 1,
-            3, 3, 4, 3, 1, 0, 0, -1
-        ],
-        bass: [0, -1, 0, 3, 4, -1, 4, 3, 0, -1, 0, 3, 4, 3, 1, 0],
-        hop: [5, 7, 5, -1, 8, 5, 7, -1]
-    };
-
-    // Main 32-step hook — looped 3× so the end joins the start smoothly
-    var CATCHY_HOOK = [
-        5, 5, 5, 7, 5, -1, 3, 5,
-        7, 7, 7, 8, 7, -1, 5, 3,
-        5, 3, 1, 3, 5, 5, 7, -1,
-        5, 3, 1, 0, 1, 1, 1, -1
+    // 32-step heroic hook ×3 for smooth looping (Konami/FC-era style, original notes)
+    var RETRO_HOOK = [
+        // punchy rise
+        4, 4, 6, 7, 8, -1, 7, 6,
+        4, 4, 6, 7, 8, 9, 8, 7,
+        // drive + resolve back to E
+        4, 6, 7, 8, 9, -1, 8, 7,
+        6, 4, 3, 4, 7, -1, 4, -1
     ];
 
     var THEMES = {
-        catchyPrev: CATCHY_PREV,
-        // G-major march: same hook ×3 (no jarring B-section)
+        // Retro FC / arcade stage BGM (inspired by era, not copying any game)
         catchy: {
-            bpm: 200,
-            scale: SCALE_G,
+            bpm: 176,
+            scale: SCALE_AM,
             voice: 'square',
-            lead: CATCHY_HOOK.concat(CATCHY_HOOK, CATCHY_HOOK),
-            bass: [0, -1, 0, -1, 3, -1, 3, -1, 4, -1, 4, -1, 0, 1, 3, 0],
-            hop: [7, 8, -1, 7, 5, 8, -1, 5]
+            lead: RETRO_HOOK.concat(RETRO_HOOK, RETRO_HOOK),
+            // driving 8th-note bass like stage themes
+            bass: [
+                0, -1, 0, -1, 0, -1, 3, -1,
+                4, -1, 4, -1, 4, -1, 3, -1,
+                0, -1, 0, -1, 0, -1, 3, -1,
+                5, -1, 4, -1, 3, -1, 0, -1
+            ],
+            // continuous pulse arpeggio (NES "harmony" layer)
+            hop: [7, 4, 0, 4, 9, 4, 0, 4, 8, 4, 0, 4, 7, 4, 3, 4]
         },
         calm: null,
         upbeat: null,
@@ -400,16 +388,16 @@
             }
 
             if (li >= 0) {
-                playVoice(theme.scale[li % theme.scale.length], beat * 0.85, theme.voice || 'square', 0.32, t0);
-                if (step % 2 === 0) {
-                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.38, 'sine', 0.1, t0);
-                }
+                // short duty-like square lead
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.72, theme.voice || 'square', 0.34, t0);
             }
             if (bi >= 0) {
-                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.0, 'triangle', 0.2, t0);
+                // triangle bass (NES-ish)
+                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 0.95, 'triangle', 0.26, t0);
             }
-            if (hi >= 0 && step % 4 === 2) {
-                playVoice(theme.scale[hi % theme.scale.length], beat * 0.32, 'sine', 0.12, t0 + beat * 0.5);
+            if (hi >= 0) {
+                // arpeggio pulse every step — thick FC stage texture
+                playVoice(theme.scale[hi % theme.scale.length], beat * 0.45, 'square', 0.1, t0);
             }
         }
 
