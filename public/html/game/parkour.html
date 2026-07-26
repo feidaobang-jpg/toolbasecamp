@@ -32,15 +32,15 @@ canvas{display:block;width:100%;height:100%}
   <div id="hud"></div>
   <div id="touch">
     <div class="btn slide" id="btnSlide">滑铲</div>
-    <div class="btn jump" id="btnJump">�?/div>
+    <div class="btn jump" id="btnJump">跳</div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>城市跑酷</h1>
-      <p>2D 侧视自动向前跑。空�?/ W / �?跳跃（可二段跳），↓ / S / Shift 滑铲钻障碍。吃金币、别掉下去�?/p>
-      <p>触屏：右侧跳�?· 左侧滑铲</p>
+      <p>2D 侧视自动向前跑。空格 / W / ↑ 跳跃（可二段跳），↓ / S / Shift 滑铲钻障碍。吃金币、别掉下去。</p>
+      <p>触屏：右侧跳跃 · 左侧滑铲</p>
       <div class="row">
-        <button id="btnStart">开�?/button>
+        <button id="btnStart">开始</button>
         <button class="ghost" id="btnContinue" disabled>继续</button>
       </div>
     </div>
@@ -49,7 +49,7 @@ canvas{display:block;width:100%;height:100%}
       <p id="overText"></p>
       <div class="row">
         <button id="btnRetry">再来一局</button>
-        <button class="ghost" id="btnMenu">回标�?/button>
+        <button class="ghost" id="btnMenu">回标题</button>
       </div>
     </div>
   </div>
@@ -260,7 +260,7 @@ function die(reason){
   saveProgress(true);
   document.getElementById('panelOver').classList.remove('hidden');
   document.getElementById('overText').textContent=
-    '距离 '+Math.floor(state.dist)+' · 得分 '+state.score+' · 金币 '+state.coins+' · 最�?'+best+
+    '距离 '+Math.floor(state.dist)+' · 得分 '+state.score+' · 金币 '+state.coins+' · 最高 '+best+
     (reason?' · '+reason:'');
 }
 
@@ -317,7 +317,7 @@ function update(dt){
     const pb=playerBox();
     if(aabb(pb,hb)){
       if(o.kind==='low'&&state.slideT>0)continue;
-      die(o.kind==='low'?'需要滑�?:'撞到障碍');
+      die(o.kind==='low'?'需要滑铲':'撞到障碍');
       return;
     }
   }
@@ -439,7 +439,7 @@ function draw(){
   ctx.restore();
 
   if(mode==='play'&&state){
-    hud.innerHTML='距离 <b>'+Math.floor(state.dist)+'</b> · 得分 <b>'+state.score+'</b> · 金币 <b>'+state.coins+'</b> · 最�?<b>'+best+'</b>'+
+    hud.innerHTML='距离 <b>'+Math.floor(state.dist)+'</b> · 得分 <b>'+state.score+'</b> · 金币 <b>'+state.coins+'</b> · 最高 <b>'+best+'</b>'+
       (state.slideT>0?' · <b>滑铲</b>':'')+(state.jumps===1&&!state.onGround?' · 可二段跳':'');
   }else if(mode==='menu'){
     hud.innerHTML='最高分 <b>'+best+'</b>';

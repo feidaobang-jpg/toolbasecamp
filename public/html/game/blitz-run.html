@@ -39,7 +39,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
 #hud{position:absolute;left:0;right:0;top:0;padding:8px 12px;pointer-events:none;text-shadow:0 1px 3px #000;font-size:13px;z-index:2;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 #hud b{color:#fde68a}
 #hud .gun{padding:2px 8px;border-radius:999px;background:rgba(37,99,235,.45);border:1px solid #60a5fa;color:#93c5fd;font-weight:700}
-/* 横版布局：血条在上方，不挡地�?*/
+/* 横版布局：血条在上方，不挡地面 */
 #hpWrap{position:absolute;left:50%;top:36px;bottom:auto;transform:translateX(-50%);width:min(220px,40%);height:10px;background:#1e293b;border:1px solid #475569;border-radius:6px;overflow:hidden;pointer-events:none;z-index:2}
 #hpBar{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ef4444,#fbbf24)}
 #orientTip{display:none;position:absolute;left:50%;top:52px;transform:translateX(-50%);z-index:5;max-width:min(92%,340px);padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #38bdf8;color:#e2e8f0;font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.35)}
@@ -98,27 +98,27 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
   <canvas id="c"></canvas>
   <div id="hud">
     <span>HP <b id="hp">100</b></span>
-    <span>武器 <span class="gun" id="gun">�?/span></span>
+    <span>武器 <span class="gun" id="gun">—</span></span>
     <span>得分 <b id="score">0</b></span>
     <span>里程 <b id="dist">0</b></span>
-    <span>最�?<b id="best">0</b></span>
+    <span>最高 <b id="best">0</b></span>
   </div>
   <div id="hpWrap"><i id="hpBar"></i></div>
   <div id="orientTip" class="hidden">
     <div>建议 <b>横屏</b> 游玩</div>
-    <div class="row"><button type="button" id="btnOrientHide">知道�?/button></div>
+    <div class="row"><button type="button" id="btnOrientHide">知道了</button></div>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="btn fire" id="btnFire">�?/div>
-    <div class="btn jump" id="btnJump">�?/div>
+    <div class="btn fire" id="btnFire">射</div>
+    <div class="btn jump" id="btnJump">跳</div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>冲锋行动</h1>
       <p>道具 M L S R B H · 打落空中胶囊再捡</p>
-      <p>WASD 移动 · J �?· K �?/p>
-      <div class="row"><button id="btnStart">开�?/button></div>
+      <p>WASD 移动 · J 射 · K 跳</p>
+      <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">任务结束</h1>
@@ -129,7 +129,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
       </div>
     </div>
   </div>
-  <div id="credit">16:9 · J�?K�?· M/L/S/R/B/H</div>
+  <div id="credit">16:9 · J射 K跳 · M/L/S/R/B/H</div>
 </div>
 <script>
 (function () {
@@ -147,9 +147,10 @@ const el = {
   gun: document.getElementById('gun')
 };
 
-const GUN_NAME = { normal: '�?, M: 'M机枪', L: 'L激�?, S: 'S散弹', R: 'R速射', B: 'B护盾', H: 'H补血' };
+const GUN_NAME = { normal: '—', M: 'M机枪', L: 'L激光', S: 'S散弹', R: 'R速射', B: 'B护盾', H: 'H补血' };
 
-const BASE_W = 960, BASE_H = 540; // 固定逻辑分辨�?let SW = BASE_W, SH = BASE_H, W = BASE_W, H = BASE_H, DPR = 1, zoom = 1, GROUND = 0;
+const BASE_W = 960, BASE_H = 540; // 固定逻辑分辨率
+let SW = BASE_W, SH = BASE_H, W = BASE_W, H = BASE_H, DPR = 1, zoom = 1, GROUND = 0;
 let stageScale = 1, drawSX = 1, drawSY = 1;
 let isPortrait = false, orientDismissed = false, orientSnooze = false;
 let mode = 'menu', lastT = 0, best = 0;
@@ -177,7 +178,7 @@ function isFs() {
   return !!(document.fullscreenElement || document.webkitFullscreenElement);
 }
 
-/** 粗指�?触屏设备（仅用于竖屏提示，与全屏无关�?*/
+/** 粗指针/触屏设备（仅用于竖屏提示，与全屏无关） */
 function isMobileEnv() {
   if (window.matchMedia('(pointer: coarse)').matches) return true;
   if ((navigator.maxTouchPoints || 0) > 1 && window.matchMedia('(hover: none)').matches) return true;
@@ -187,7 +188,7 @@ function isMobileEnv() {
 
 function updateFsBtn() {
   const bf = document.getElementById('btnFs');
-  if (bf) bf.textContent = isFs() ? '退出全�? : '全屏';
+  if (bf) bf.textContent = isFs() ? '退出全屏' : '全屏';
 }
 
 function updateOrientUI() {
@@ -198,7 +199,7 @@ function updateOrientUI() {
   updateFsBtn();
 }
 
-/** 仅由「全屏」按钮调�?*/
+/** 仅由「全屏」按钮调用 */
 async function enterFs() {
   if (isFs()) return true;
   const root = document.documentElement;
@@ -270,7 +271,7 @@ function sfx(n) {
 }
 
 function resize() {
-  // 逻辑 960×540；外框用显示像素，画布按 DPR 拉满，避�?CSS scale 发糊
+  // 逻辑 960×540；外框用显示像素，画布按 DPR 拉满，避免 CSS scale 发糊
   const vw = Math.max(320, window.innerWidth | 0);
   const vh = Math.max(240, window.innerHeight | 0);
   stageScale = Math.min(vw / BASE_W, vh / BASE_H);
@@ -301,7 +302,7 @@ window.addEventListener('orientationchange', () => setTimeout(resize, 120));
 document.addEventListener('fullscreenchange', () => setTimeout(resize, 60));
 document.addEventListener('webkitfullscreenchange', () => setTimeout(resize, 60));
 
-/** 八向量化：输入向�?�?单位轴对�?斜向 */
+/** 八向量化：输入向量 → 单位轴对齐/斜向 */
 function quantize8(x, y) {
   const dead = 0.28;
   let ax = Math.abs(x) < dead ? 0 : (x > 0 ? 1 : -1);
@@ -382,7 +383,7 @@ function endGame(win) {
   saveMeta();
   document.getElementById('panelOver').classList.remove('hidden');
   document.getElementById('overTitle').textContent = win ? '关卡突破' : '任务失败';
-  document.getElementById('overText').textContent = `得分 ${score} · 里程 ${Math.floor(player.x)} · 最�?${best}`;
+  document.getElementById('overText').textContent = `得分 ${score} · 里程 ${Math.floor(player.x)} · 最高 ${best}`;
   sfx(win ? 'power' : 'die');
   updateHud();
 }
@@ -394,7 +395,7 @@ function updateHud() {
   el.score.textContent = String(player.score | 0);
   el.dist.textContent = String(Math.floor(player.x));
   el.best.textContent = String(best);
-  el.gun.textContent = GUN_NAME[player.gun] || '�?;
+  el.gun.textContent = GUN_NAME[player.gun] || '—';
   if (player.barrier > 0) el.gun.textContent += '+B';
 }
 
@@ -433,7 +434,8 @@ function fireRate() {
 function tryShoot() {
   if (!player || mode !== 'play' || shootCd > 0) return;
   let ax = player.aimX, ay = player.aimY;
-  // 无瞄准向量时强制朝面朝方向（不按方向键也能射�?  if (!ax && !ay) {
+  // 无瞄准向量时强制朝面朝方向（不按方向键也能射）
+  if (!ax && !ay) {
     ax = player.facing || 1;
     ay = 0;
   }
@@ -562,7 +564,8 @@ function update(dt) {
   }
   plats = plats.filter(p => p.x + p.w > scrollX - 140);
 
-  // —�?八向输入（移动与瞄准用轴值，避免 || �?-0 等搞乱）—�?  let ix = 0, iy = 0;
+  // —— 八向输入（移动与瞄准用轴值，避免 || 把 -0 等搞乱）——
+  let ix = 0, iy = 0;
   if (keys['a'] || keys['arrowleft']) ix -= 1;
   if (keys['d'] || keys['arrowright']) ix += 1;
   if (keys['w'] || keys['arrowup']) iy -= 1;
@@ -594,7 +597,7 @@ function update(dt) {
       player.aimX = player.facing;
       player.aimY = 0;
     } else if (q.ax === 0) {
-      // 纯上：竖直射；纯下已�?crouch 分支
+      // 纯上：竖直射；纯下已在 crouch 分支
       player.aimX = 0;
       player.aimY = q.ay;
     } else {
@@ -763,7 +766,8 @@ function update(dt) {
       sfx('hit');
       if (e.kind === 'boss') {
         bossAlive = false;
-        // 掉一堆道�?        ['M', 'L', 'S', 'R', 'B', 'H'].forEach((t, idx) => {
+        // 掉一堆道具
+        ['M', 'L', 'S', 'R', 'B', 'H'].forEach((t, idx) => {
           pickups.push({
             x: e.x - 50 + idx * 20, y: e.y - 90,
             type: t, bob: idx, vx: rand(-40, 40),
@@ -828,7 +832,8 @@ function drawHero() {
   ctx.beginPath(); ctx.arc(0, crouch ? -22 : -50, 9, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = '#ef4444';
   ctx.fillRect(-9, crouch ? -28 : -56, 18, 4);
-  // 枪管：本地坐标按瞄准（已�?facing 翻转�?  const ang = Math.atan2(player.aimY, player.aimX * face);
+  // 枪管：本地坐标按瞄准（已按 facing 翻转）
+  const ang = Math.atan2(player.aimY, player.aimX * face);
   ctx.save();
   ctx.translate(6, crouch ? -18 : -32);
   ctx.rotate(ang);

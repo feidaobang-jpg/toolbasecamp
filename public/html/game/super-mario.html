@@ -68,18 +68,18 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
     <span>金币 <b id="coins">0</b></span>
     <span>生命 <b id="lives">3</b></span>
     <span>关卡 <b id="level">1</b></span>
-    <span>最�?<b id="best">0</b></span>
+    <span>最高 <b id="best">0</b></span>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="btn" id="btnJump">�?/div>
+    <div class="btn" id="btnJump">跳</div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>蘑菇冒险</h1>
-      <p>横版闯关：吃金币、踩蘑菇怪、打问号砖、冲向旗杆�?/p>
-      <p>WASD / 方向键移�?· 空格 / K / �?跳跃</p>
-      <div class="row"><button id="btnStart">开�?/button></div>
+      <p>横版闯关：吃金币、踩蘑菇怪、打问号砖、冲向旗杆。</p>
+      <p>WASD / 方向键移动 · 空格 / K / ↑ 跳跃</p>
+      <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">结束</h1>
@@ -243,7 +243,8 @@ function buildLevel(lv) {
     });
   }
 
-  // �?  for (let i = 0; i < 6 + lv * 2; i++) {
+  // 怪
+  for (let i = 0; i < 6 + lv * 2; i++) {
     enemies.push({
       x: (10 + Math.random() * (len - 14)) * TILE,
       y: groundY() - 28,
@@ -350,7 +351,8 @@ function bumpBlock(t) {
     }
     updateHud();
   } else if (t.kind === 'brick' && player.big) {
-    // 大个子砸�?    const idx = tiles.indexOf(t);
+    // 大个子砸砖
+    const idx = tiles.indexOf(t);
     if (idx >= 0) tiles.splice(idx, 1);
     player.score += 50;
     burst(t.x + 16, t.y + 16, '#fb923c', 10);
@@ -384,9 +386,9 @@ function endGame(win) {
   best = Math.max(best, score);
   try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
   document.getElementById('panelOver').classList.remove('hidden');
-  document.getElementById('overTitle').textContent = win ? '过关�? : '冒险结束';
+  document.getElementById('overTitle').textContent = win ? '过关！' : '冒险结束';
   document.getElementById('overText').textContent =
-    (win ? `�?${level} 关完成！` : '') + `得分 ${score} · 金币 ${player ? player.coins : 0} · 最�?${best}`;
+    (win ? `第 ${level} 关完成！` : '') + `得分 ${score} · 金币 ${player ? player.coins : 0} · 最高 ${best}`;
   sfx(win ? 'flag' : 'die');
   updateHud();
 }
@@ -397,7 +399,7 @@ function nextLevel() {
   buildLevel(level);
   spawnPlayer(true);
   updateHud();
-  floats.push({ x: player.x, y: player.y - 40, t: 0, text: '�?' + level + ' �?, c: '#38bdf8' });
+  floats.push({ x: player.x, y: player.y - 40, t: 0, text: '第 ' + level + ' 关', c: '#38bdf8' });
   sfx('power');
 }
 
@@ -494,7 +496,8 @@ function update(dt) {
     if (ey.hitY) e.vy = 0;
 
     if (!aabb(player, e) || invuln > 0) continue;
-    // �?    if (player.vy > 60 && player.y + player.h - e.y < 18) {
+    // 踩
+    if (player.vy > 60 && player.y + player.h - e.y < 18) {
       e.dead = true;
       e.squish = 0;
       player.vy = -320;
@@ -508,7 +511,8 @@ function update(dt) {
   }
   enemies = enemies.filter(e => !e.dead || e.squish < 0.45);
 
-  // 砖回�?  tiles.forEach(t => { if (t.bump > 0) t.bump -= dt; });
+  // 砖回弹
+  tiles.forEach(t => { if (t.bump > 0) t.bump -= dt; });
 
   camX = clamp(player.x - W * 0.35, 0, Math.max(0, worldW - W));
   if (invuln > 0) invuln -= dt;
@@ -541,7 +545,8 @@ function draw() {
     ctx.fill();
   }
 
-  // �?  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  // 云
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
   for (let i = 0; i < 5; i++) {
     const cx = ((i * 200 - camX * 0.15) % (W + 200) + W + 200) % (W + 200) - 40;
     const cy = 50 + (i % 3) * 28;
@@ -552,7 +557,8 @@ function draw() {
     ctx.fill();
   }
 
-  // �?  tiles.forEach(t => {
+  // 砖
+  tiles.forEach(t => {
     const x = wx(t.x), y = t.y - (t.bump > 0 ? 6 : 0);
     if (x + t.w < -20 || x > W + 20) return;
     if (t.kind === 'ground') {
@@ -632,16 +638,21 @@ function draw() {
       ctx.save();
       ctx.translate(x + player.w / 2, y + player.h);
       ctx.scale(player.facing, 1);
-      // �?      ctx.fillStyle = '#7c2d12';
+      // 鞋
+      ctx.fillStyle = '#7c2d12';
       ctx.fillRect(-12, -8, 10, 8);
       ctx.fillRect(2, -8, 10, 8);
-      // �?      ctx.fillStyle = '#1d4ed8';
+      // 裤
+      ctx.fillStyle = '#1d4ed8';
       ctx.fillRect(-10, player.big ? -28 : -22, 20, player.big ? 20 : 14);
-      // �?      ctx.fillStyle = '#ef4444';
+      // 身
+      ctx.fillStyle = '#ef4444';
       ctx.fillRect(-11, player.big ? -44 : -34, 22, player.big ? 18 : 14);
-      // �?      ctx.fillStyle = '#f5c6a0';
+      // 头
+      ctx.fillStyle = '#f5c6a0';
       ctx.beginPath(); ctx.arc(0, player.big ? -52 : -40, 9, 0, Math.PI * 2); ctx.fill();
-      // �?      ctx.fillStyle = '#dc2626';
+      // 帽
+      ctx.fillStyle = '#dc2626';
       ctx.fillRect(-11, player.big ? -60 : -48, 22, 8);
       ctx.fillRect(-6, player.big ? -64 : -52, 12, 6);
       ctx.restore();

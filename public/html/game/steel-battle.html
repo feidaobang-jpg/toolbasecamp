@@ -73,18 +73,18 @@ canvas{display:block;width:100%;height:100%}
     <span>得分 <b id="score">0</b></span>
     <span>生命 <b id="lives">3</b></span>
     <span>敌余 <b id="remain">0</b></span>
-    <span>最�?<b id="best">0</b></span>
+    <span>最高 <b id="best">0</b></span>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="fire" id="btnFire">�?/div>
+    <div class="fire" id="btnFire">射</div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>钢铁大战</h1>
-      <p>FC 坦克大战致敬：击毁敌军、保护基地鹰标，砖墙可打穿、钢墙不可毁�?/p>
-      <p>键盘：WASD / 方向键移�?· J / 空格射击<br/>触屏：左摇杆 · 右下「射�?/p>
-      <div class="row"><button id="btnStart">开始战�?/button></div>
+      <p>FC 坦克大战致敬：击毁敌军、保护基地鹰标，砖墙可打穿、钢墙不可毁。</p>
+      <p>键盘：WASD / 方向键移动 · J / 空格射击<br/>触屏：左摇杆 · 右下「射」</p>
+      <div class="row"><button id="btnStart">开始战斗</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">战斗结束</h1>
@@ -95,9 +95,9 @@ canvas{display:block;width:100%;height:100%}
       </div>
     </div>
     <div class="panel hidden" id="panelClear">
-      <h1>波次清剿�?/h1>
+      <h1>波次清剿！</h1>
       <p id="clearText"></p>
-      <div class="row"><button id="btnNext">下一�?/button></div>
+      <div class="row"><button id="btnNext">下一波</button></div>
     </div>
   </div>
   <div id="credit">960×540 · WASD · J/空格 · 触屏摇杆</div>
@@ -539,7 +539,7 @@ function playerHit() {
   lives--;
   hud.lives.textContent = String(lives);
   if (lives <= 0) {
-    endGame(false, '坦克被击毁，生命耗尽�?);
+    endGame(false, '坦克被击毁，生命耗尽！');
   } else {
     setTimeout(() => {
       if (mode === 'playing') spawnPlayer();
@@ -671,7 +671,7 @@ function checkWaveClear() {
     return;
   }
   mode = 'wave_clear';
-  ui.clearText.textContent = '�?' + wave + ' 波完�?· 得分 ' + score + ' · 准备下一�?;
+  ui.clearText.textContent = '第 ' + wave + ' 波完成 · 得分 ' + score + ' · 准备下一波';
   ui.clear.classList.remove('hidden');
 }
 
@@ -687,7 +687,7 @@ function endGame(win, msg) {
   mode = win ? 'win' : 'gameover';
   saveBest();
   ui.overTitle.textContent = win ? '大获全胜' : '战斗结束';
-  ui.overText.textContent = msg + ' 最终得�?' + score + (score >= best ? ' · 新纪录！' : '');
+  ui.overText.textContent = msg + ' 最终得分 ' + score + (score >= best ? ' · 新纪录！' : '');
   ui.over.classList.remove('hidden');
 }
 
@@ -884,7 +884,7 @@ function drawHUD() {
     ctx.font = 'bold 22px system-ui,sans-serif';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#fbbf24';
-    ctx.fillText('�?' + wave + ' �?, W / 2, OY - 14);
+    ctx.fillText('第 ' + wave + ' 波', W / 2, OY - 14);
   }
 }
 
