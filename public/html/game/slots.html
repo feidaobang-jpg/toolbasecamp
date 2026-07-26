@@ -52,6 +52,7 @@ canvas{display:block;width:100%;height:100%}
   gap:1px;border-radius:6px
 }
 .bet .emo{font-size:clamp(22px,7.2vw,34px);line-height:1;filter:drop-shadow(0 1px 1px #0008)}
+.bet .emoCanvas{width:clamp(22px,7.2vw,34px);height:clamp(22px,7.2vw,34px);display:block;filter:drop-shadow(0 1px 1px #0008)}
 .bet .pay{font-size:10px;font-weight:800;color:#fde047;line-height:1}
 #side{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 #scoreBox{width:100%;background:#0f172a;border:2px solid #334155;border-radius:8px;padding:4px 2px;text-align:center}
@@ -218,14 +219,95 @@ function roundPath(c, x, y, w, h, rad) {
 }
 
 function drawEmoji(c, animal, x, y, s, big) {
-  const e = EMOJI[animal] || '❓';
   c.save();
-  c.textAlign = 'center';
-  c.textBaseline = 'middle';
-  const scale = big ? 0.82 : 0.55;
-  c.font = Math.max(10, Math.floor(s * scale)) + 'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
-  c.fillText(e, x, y + (big ? 0 : 2));
+  c.translate(x, y);
+  const scale = big ? 1 : 0.62;
+  c.scale(scale, scale);
+  const r = s * 0.38;
+  if (animal === 'elephant') {
+    drawElephantFace(c, r);
+  } else if (animal === 'leopard') {
+    drawLeopardFace(c, r);
+  } else {
+    const e = EMOJI[animal] || '❓';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.font = Math.max(10, Math.floor(s * 0.82)) + 'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+    c.fillText(e, 0, 2);
+  }
   c.restore();
+}
+
+/** Unicode 无象脸/豹脸，手绘正面头像与狮虎等「脸」一致 */
+function drawElephantFace(c, r) {
+  c.fillStyle = '#9ca3af';
+  c.beginPath(); c.ellipse(-r * 0.95, -r * 0.1, r * 0.55, r * 0.7, -0.25, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(r * 0.95, -r * 0.1, r * 0.55, r * 0.7, 0.25, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#d1d5db';
+  c.beginPath(); c.ellipse(-r * 0.95, -r * 0.05, r * 0.32, r * 0.42, -0.25, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(r * 0.95, -r * 0.05, r * 0.32, r * 0.42, 0.25, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#a8a29e';
+  c.beginPath(); c.ellipse(0, 0, r * 0.78, r * 0.85, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#111';
+  c.beginPath(); c.arc(-r * 0.28, -r * 0.12, r * 0.12, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.arc(r * 0.28, -r * 0.12, r * 0.12, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#fff';
+  c.beginPath(); c.arc(-r * 0.25, -r * 0.16, r * 0.045, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.arc(r * 0.31, -r * 0.16, r * 0.045, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#78716c';
+  c.beginPath();
+  c.moveTo(-r * 0.18, r * 0.15);
+  c.quadraticCurveTo(-r * 0.35, r * 0.75, -r * 0.08, r * 1.15);
+  c.quadraticCurveTo(0, r * 1.25, r * 0.08, r * 1.15);
+  c.quadraticCurveTo(r * 0.35, r * 0.75, r * 0.18, r * 0.15);
+  c.closePath();
+  c.fill();
+  c.fillStyle = '#57534e';
+  c.beginPath(); c.ellipse(0, r * 1.12, r * 0.16, r * 0.1, 0, 0, Math.PI * 2); c.fill();
+}
+
+function drawLeopardFace(c, r) {
+  c.fillStyle = '#f59e0b';
+  c.beginPath(); c.moveTo(-r * 0.7, -r * 0.55); c.lineTo(-r * 0.35, -r * 1.05); c.lineTo(-r * 0.05, -r * 0.55); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(r * 0.7, -r * 0.55); c.lineTo(r * 0.35, -r * 1.05); c.lineTo(r * 0.05, -r * 0.55); c.closePath(); c.fill();
+  c.fillStyle = '#fbbf24';
+  c.beginPath(); c.moveTo(-r * 0.55, -r * 0.58); c.lineTo(-r * 0.35, -r * 0.88); c.lineTo(-r * 0.18, -r * 0.58); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(r * 0.55, -r * 0.58); c.lineTo(r * 0.35, -r * 0.88); c.lineTo(r * 0.18, -r * 0.58); c.closePath(); c.fill();
+  c.fillStyle = '#fbbf24';
+  c.beginPath(); c.ellipse(0, 0, r * 0.85, r * 0.8, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#78350f';
+  [[-0.45, -0.25], [0.4, -0.3], [-0.5, 0.25], [0.48, 0.2], [0, 0.35], [-0.2, -0.45], [0.22, -0.5]].forEach(p => {
+    c.beginPath(); c.ellipse(r * p[0], r * p[1], r * 0.1, r * 0.08, 0.3, 0, Math.PI * 2); c.fill();
+  });
+  c.fillStyle = '#111';
+  c.beginPath(); c.ellipse(-r * 0.28, -r * 0.05, r * 0.14, r * 0.16, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(r * 0.28, -r * 0.05, r * 0.14, r * 0.16, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#4ade80';
+  c.beginPath(); c.ellipse(-r * 0.28, -r * 0.02, r * 0.07, r * 0.09, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(r * 0.28, -r * 0.02, r * 0.07, r * 0.09, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#111';
+  c.beginPath(); c.ellipse(-r * 0.28, -r * 0.02, r * 0.03, r * 0.06, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.ellipse(r * 0.28, -r * 0.02, r * 0.03, r * 0.06, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#fff7ed';
+  c.beginPath(); c.ellipse(0, r * 0.35, r * 0.28, r * 0.22, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#44403c';
+  c.beginPath(); c.moveTo(0, r * 0.22); c.lineTo(-r * 0.1, r * 0.38); c.lineTo(r * 0.1, r * 0.38); c.closePath(); c.fill();
+  c.strokeStyle = '#44403c'; c.lineWidth = Math.max(1, r * 0.06);
+  c.beginPath(); c.moveTo(0, r * 0.38); c.lineTo(0, r * 0.48); c.stroke();
+  c.beginPath(); c.moveTo(0, r * 0.48); c.quadraticCurveTo(-r * 0.18, r * 0.55, -r * 0.22, r * 0.42); c.stroke();
+  c.beginPath(); c.moveTo(0, r * 0.48); c.quadraticCurveTo(r * 0.18, r * 0.55, r * 0.22, r * 0.42); c.stroke();
+}
+
+function paintBetIcon(kindId, size) {
+  const cv = document.createElement('canvas');
+  const d = Math.max(28, size | 0);
+  cv.width = d * 2; cv.height = d * 2;
+  cv.style.width = d + 'px'; cv.style.height = d + 'px';
+  cv.className = 'emoCanvas';
+  const c = cv.getContext('2d');
+  c.setTransform(2, 0, 0, 2, 0, 0);
+  drawEmoji(c, kindId, d / 2, d / 2, d * 0.95, true);
+  return cv;
 }
 
 function drawCell(i, lit) {
@@ -295,8 +377,9 @@ function draw() {
   ctx.fillStyle = '#facc15';
   ctx.font = 'bold ' + Math.max(16, r0.size * 0.4) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
   ctx.fillText('老虎机', cx, cy - r0.size * 0.5);
-  ctx.font = Math.max(16, r0.size * 0.5) + 'px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
-  ctx.fillText('🐘🦁🐯', cx, cy - r0.size * 0.02);
+  drawEmoji(ctx, 'elephant', cx - r0.size * 0.7, cy - r0.size * 0.02, r0.size * 0.85, true);
+  drawEmoji(ctx, 'lion', cx, cy - r0.size * 0.02, r0.size * 0.85, true);
+  drawEmoji(ctx, 'tiger', cx + r0.size * 0.7, cy - r0.size * 0.02, r0.size * 0.85, true);
 
   const dw = Math.min(iw * 0.4, r0.size * 2.1), dh = r0.size * 0.68;
   ctx.fillStyle = '#020617';
@@ -331,9 +414,25 @@ function renderBets() {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
-    b.innerHTML =
-      '<span class="scoreLayer">' + (bets[k.id] || 0) + '</span>' +
-      '<span class="icoLayer"><span class="emo">' + k.emoji + '</span><span class="pay">' + payLabel(k) + '</span></span>';
+    const score = document.createElement('span');
+    score.className = 'scoreLayer';
+    score.textContent = String(bets[k.id] || 0);
+    const ico = document.createElement('span');
+    ico.className = 'icoLayer';
+    if (k.id === 'elephant' || k.id === 'leopard') {
+      ico.appendChild(paintBetIcon(k.id, 32));
+    } else {
+      const emo = document.createElement('span');
+      emo.className = 'emo';
+      emo.textContent = k.emoji;
+      ico.appendChild(emo);
+    }
+    const pay = document.createElement('span');
+    pay.className = 'pay';
+    pay.textContent = payLabel(k);
+    ico.appendChild(pay);
+    b.appendChild(score);
+    b.appendChild(ico);
     b.onclick = () => { focusBet = idx; addBet(k.id, 1); };
     box.appendChild(b);
   });
