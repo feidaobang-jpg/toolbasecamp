@@ -251,36 +251,36 @@
         }
     };
 
-    // A minor (FC / shoot-'em-up vibe) — original composition, not a copyrighted track
-    // A3 B3 C4 D4 E4 F4 G4 A4 B4 C5 D5 E5
-    var SCALE_AM = [220.0, 246.94, 261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25];
+    // Bright C major platformer vibe — original composition (not Nintendo copyright)
+    // C4 D4 E4 F4 G4 A4 B4 C5 D5 E5 F5 G5
+    var SCALE_C = [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25, 698.46, 783.99];
 
-    // 32-step heroic hook ×3 for smooth looping (Konami/FC-era style, original notes)
-    var RETRO_HOOK = [
-        // punchy rise
-        4, 4, 6, 7, 8, -1, 7, 6,
-        4, 4, 6, 7, 8, 9, 8, 7,
-        // drive + resolve back to E
-        4, 6, 7, 8, 9, -1, 8, 7,
-        6, 4, 3, 4, 7, -1, 4, -1
+    // Bouncy major hook ×3 — cheerful, skippy, Mario-era feel (original notes)
+    var MARIOISH_HOOK = [
+        // bounce up
+        2, 4, 7, 4, 3, 5, 4, 2,
+        0, 2, 4, 7, 6, 4, 5, 4,
+        // higher reply then land
+        2, 4, 7, 9, 8, 6, 7, 5,
+        4, 2, 0, 2, 4, -1, 4, -1
     ];
 
     var THEMES = {
-        // Retro FC / arcade stage BGM (inspired by era, not copying any game)
+        // Cheerful major FC platformer BGM (era-inspired, original)
         catchy: {
-            bpm: 176,
-            scale: SCALE_AM,
+            bpm: 158,
+            scale: SCALE_C,
             voice: 'square',
-            lead: RETRO_HOOK.concat(RETRO_HOOK, RETRO_HOOK),
-            // driving 8th-note bass like stage themes
+            lead: MARIOISH_HOOK.concat(MARIOISH_HOOK, MARIOISH_HOOK),
+            // skippy root–fifth bass
             bass: [
-                0, -1, 0, -1, 0, -1, 3, -1,
-                4, -1, 4, -1, 4, -1, 3, -1,
-                0, -1, 0, -1, 0, -1, 3, -1,
-                5, -1, 4, -1, 3, -1, 0, -1
+                0, -1, 4, -1, 0, -1, 4, -1,
+                5, -1, 4, -1, 0, -1, 4, -1,
+                0, -1, 4, -1, 0, -1, 4, -1,
+                3, -1, 4, -1, 0, -1, 4, -1
             ],
-            // continuous pulse arpeggio (NES "harmony" layer)
-            hop: [7, 4, 0, 4, 9, 4, 0, 4, 8, 4, 0, 4, 7, 4, 3, 4]
+            // light sparkle arpeggio
+            hop: [7, -1, 9, -1, 11, -1, 9, -1, 7, -1, 4, -1, 7, -1, 9, -1]
         },
         calm: null,
         upbeat: null,
