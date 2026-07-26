@@ -474,7 +474,7 @@ window.TB_LOCALES.en = {
         },
         slots: {
             title: 'Tiger Slots',
-            desc: 'Animal emoji slots: bet on panda/tiger and more, cannon & train bonuses, big/small double-up. Start reuses last bets. Fun only.'
+            desc: 'Jungle-chess animal slots: elephant–rat with big/small pays, cannon & train bonuses. GO reuses last bets. Fun only.'
         },
         sheepstack: {
             title: 'Stack Match',
