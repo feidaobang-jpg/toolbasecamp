@@ -1,7 +1,7 @@
 .llk-board {
     position: relative;
     width: 100%;
-    max-width: 560px;
+    max-width: 720px;
     margin: 0 auto;
     touch-action: manipulation;
 }
@@ -12,7 +12,7 @@
 
 .llk-grid {
     display: grid;
-    gap: 4px;
+    gap: 5px;
     width: 100%;
 }
 
@@ -41,7 +41,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    font-size: clamp(18px, 4.2vw, 28px);
+    font-size: clamp(22px, 5vw, 36px);
     line-height: 1;
     background: transparent;
     border: 2px solid transparent;
@@ -101,6 +101,6 @@
 
     .llk-cell {
         border-radius: 8px;
-        font-size: clamp(16px, 5.5vw, 24px);
+        font-size: clamp(20px, 7vw, 30px);
     }
 }
