@@ -41,6 +41,9 @@
     var cols = 8;
     var rows = 5;
     var pointerX = W / 2;
+    var keyLeft = false;
+    var keyRight = false;
+    var PADDLE_SPEED = 7;
 
     var PU_COLORS = { extend: '#22c55e', slow: '#38bdf8', split: '#a855f7' };
     var PU_LABEL = { extend: '长', slow: '慢', split: '分' };
@@ -57,12 +60,13 @@
     }
 
     function resetBall(attach) {
+        // ~half previous launch speed
         balls = [{
             x: paddle.x + paddle.w / 2,
             y: paddle.y - 10,
             r: 7,
-            vx: (Math.random() > 0.5 ? 1 : -1) * (3 + level * 0.2),
-            vy: -(3.6 + level * 0.28),
+            vx: (Math.random() > 0.5 ? 1 : -1) * (1.5 + level * 0.1),
+            vy: -(1.8 + level * 0.14),
             speedScale: 1
         }];
         if (attach) waiting = true;
@@ -176,7 +180,16 @@
 
     function update() {
         if (!running || gameOver) return;
-        paddle.x = Math.max(0, Math.min(W - paddle.w, pointerX - paddle.w / 2));
+
+        // keyboard overrides pointer while held
+        if (keyLeft || keyRight) {
+            if (keyLeft) paddle.x -= PADDLE_SPEED;
+            if (keyRight) paddle.x += PADDLE_SPEED;
+            paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+            pointerX = paddle.x + paddle.w / 2;
+        } else {
+            paddle.x = Math.max(0, Math.min(W - paddle.w, pointerX - paddle.w / 2));
+        }
 
         if (waiting) {
             balls[0].x = paddle.x + paddle.w / 2;
@@ -361,6 +374,9 @@
         var rect = canvas.getBoundingClientRect();
         var clientX = e.clientX;
         if (e.touches && e.touches[0]) clientX = e.touches[0].clientX;
+        if (e.changedTouches && e.changedTouches[0] && clientX == null) {
+            clientX = e.changedTouches[0].clientX;
+        }
         pointerX = ((clientX - rect.left) / rect.width) * W;
     }
 
@@ -377,16 +393,64 @@
         }
     }
 
+    function isTypingTarget(el) {
+        if (!el || !el.tagName) return false;
+        var tag = el.tagName.toLowerCase();
+        return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+    }
+
+    function onKeyDown(e) {
+        if (isTypingTarget(e.target)) return;
+        var k = e.key;
+        if (k === 'ArrowLeft' || k === 'a' || k === 'A') {
+            keyLeft = true;
+            e.preventDefault();
+            if (!running && !gameOver) launch();
+        } else if (k === 'ArrowRight' || k === 'd' || k === 'D') {
+            keyRight = true;
+            e.preventDefault();
+            if (!running && !gameOver) launch();
+        } else if (k === ' ' || k === 'Spacebar' || k === 'Enter') {
+            e.preventDefault();
+            if (gameOver) resetGame();
+            launch();
+        }
+    }
+
+    function onKeyUp(e) {
+        var k = e.key;
+        if (k === 'ArrowLeft' || k === 'a' || k === 'A') keyLeft = false;
+        else if (k === 'ArrowRight' || k === 'd' || k === 'D') keyRight = false;
+    }
+
+    // Mouse: follow cursor over canvas — no need to hold button
+    canvas.addEventListener('pointermove', function (e) {
+        if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+            setPointerFromEvent(e);
+        }
+    });
     canvas.addEventListener('mousemove', setPointerFromEvent);
-    canvas.addEventListener('touchmove', function (e) {
-        e.preventDefault();
-        setPointerFromEvent(e);
-    }, { passive: false });
-    canvas.addEventListener('click', launch);
+
+    // Touch: finger X follows paddle (move freely while touching)
     canvas.addEventListener('touchstart', function (e) {
         setPointerFromEvent(e);
         launch();
     }, { passive: true });
+    canvas.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+        setPointerFromEvent(e);
+    }, { passive: false });
+
+    canvas.addEventListener('click', launch);
+    canvas.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'touch') return;
+        setPointerFromEvent(e);
+        // click/tap launches; movement already tracked by pointermove
+        if (waiting) launch();
+    });
+
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
 
     startBtn.addEventListener('click', function () {
         if (gameOver) resetGame();

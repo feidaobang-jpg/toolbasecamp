@@ -8,7 +8,7 @@
     border-radius: 12px;
     border: 1px solid #1e293b;
     touch-action: none;
-    cursor: none;
+    cursor: crosshair;
 }
 
 .breakout-legend {
