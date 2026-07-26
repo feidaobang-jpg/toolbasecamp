@@ -362,7 +362,7 @@ window.TB_LOCALES['zh-CN'] = {
             level: '关卡',
             time: '时间',
             start: '开始',
-            hint: '点「开始」后，点击画面放下钩爪。',
+            hint: '点「重新开始」或点击画面开始，游戏中再点画面放下钩爪。',
             tapStart: '点击开始',
             playing: '钩爪摆动中 — 点击放下',
             levelClear: '第 {n} 关完成！进入下一关…',

@@ -363,7 +363,7 @@ window.TB_LOCALES.en = {
             level: 'Level',
             time: 'Time',
             start: 'Start',
-            hint: 'Press Start, then tap or click to drop the claw.',
+            hint: 'Tap Restart or the playfield to start, then tap again to drop the claw.',
             tapStart: 'Tap to start',
             playing: 'Claw swinging — tap to drop',
             levelClear: 'Level {n} clear! Next level…',
