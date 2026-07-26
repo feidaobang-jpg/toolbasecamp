@@ -492,9 +492,18 @@
         bindVolumeSlider(opts.volumeSlider || document.getElementById('volume-slider'));
     }
 
+    function refreshInjectedLabels() {
+        syncMuteButtons();
+        var volSpan = document.querySelector('.game-volume [data-i18n="tools.game.volume"]');
+        if (volSpan) volSpan.textContent = i18n('tools.game.volume', 'Volume');
+        var volInput = document.getElementById('volume-slider');
+        if (volInput) volInput.setAttribute('aria-label', i18n('tools.game.volume', 'Volume'));
+    }
+
     function injectToolbarControls() {
         if (document.getElementById('sound-btn') && document.getElementById('volume-slider')) {
             bindControls();
+            refreshInjectedLabels();
             return true;
         }
         var row = document.querySelector('.game-toolbar .action-row') ||
@@ -512,6 +521,7 @@
             mute.type = 'button';
             mute.className = 'tb-btn';
             mute.id = 'sound-btn';
+            mute.setAttribute('data-i18n', 'tools.game.soundOn');
             mute.textContent = i18n('tools.game.soundOn', 'Mute');
             row.insertBefore(mute, row.firstChild);
         }
@@ -519,6 +529,7 @@
             var lab = document.createElement('label');
             lab.className = 'game-volume';
             var span = document.createElement('span');
+            span.setAttribute('data-i18n', 'tools.game.volume');
             span.textContent = i18n('tools.game.volume', 'Volume');
             var input = document.createElement('input');
             input.type = 'range';
@@ -526,7 +537,7 @@
             input.min = '0';
             input.max = '100';
             input.value = '50';
-            input.setAttribute('aria-label', 'Volume');
+            input.setAttribute('aria-label', i18n('tools.game.volume', 'Volume'));
             lab.appendChild(span);
             lab.appendChild(input);
             var muteBtn = document.getElementById('sound-btn');
@@ -534,14 +545,27 @@
             else row.appendChild(lab);
         }
         bindControls();
+        if (typeof global.tbApplyI18n === 'function') global.tbApplyI18n(row);
+        refreshInjectedLabels();
         return true;
     }
 
     /** Call once from each game: inject mute/volume UI + start BGM. */
     function boot(theme) {
-        injectToolbarControls();
-        startBgm(theme || 'catchy');
+        var run = function () {
+            injectToolbarControls();
+            startBgm(theme || 'catchy');
+            refreshInjectedLabels();
+        };
+        // After i18n init when possible (DOMContentLoaded listener order = script order)
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', run);
+        } else {
+            run();
+        }
     }
+
+    document.addEventListener('tb:locale', refreshInjectedLabels);
 
     function installUnlockGestures() {
         var once = function () {

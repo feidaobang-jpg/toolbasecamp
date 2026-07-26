@@ -142,6 +142,18 @@
         clearPath();
         clearSelectionUi();
         clearHintUi();
+        syncEmojiSize();
+    }
+
+    /** Emoji scale with cell size (CSS alone is unreliable on <button>). */
+    function syncEmojiSize() {
+        var sample = gridEl.querySelector('.llk-cell.is-tile') ||
+            (cellEls[PAD] && cellEls[PAD][PAD]);
+        if (!sample) return;
+        var w = sample.clientWidth || sample.getBoundingClientRect().width;
+        if (!w) return;
+        var px = Math.max(20, Math.floor(w * 0.84));
+        gridEl.style.setProperty('--llk-emoji-size', px + 'px');
     }
 
     function clearSelectionUi() {
@@ -445,9 +457,14 @@
     restartBtn.addEventListener('click', newGame);
 
     window.addEventListener('resize', function () {
-        // Path overlay uses getBoundingClientRect; clear any stale path.
         clearPath();
+        syncEmojiSize();
     });
 
     newGame();
+    // Layout may settle after first paint
+    requestAnimationFrame(function () {
+        syncEmojiSize();
+        requestAnimationFrame(syncEmojiSize);
+    });
 })();

@@ -1,11 +1,9 @@
 .llk-board {
     position: relative;
     width: 100%;
-    max-width: 1120px;
+    max-width: 720px;
     margin: 0 auto;
     touch-action: manipulation;
-    container-type: inline-size;
-    container-name: llk;
 }
 
 .game-board-wrap:has(.llk-board) {
@@ -16,7 +14,7 @@
 
 .llk-grid {
     display: grid;
-    gap: 6px;
+    gap: 5px;
     width: 100%;
 }
 
@@ -44,9 +42,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    /* ~2x previous look: fill most of the cell */
-    font-size: 8.2cqw;
+    border-radius: 10px;
+    /* JS sets --llk-emoji-size from cell width so emoji fills the tile */
+    font-size: var(--llk-emoji-size, 32px) !important;
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif;
     line-height: 1;
     background: transparent;
     border: 2px solid transparent;
@@ -101,15 +100,14 @@
 }
 
 @media (max-width: 768px) {
-    /* Bleed into card padding so tiles use almost full phone width */
     .game-board-wrap:has(.llk-board) {
-        margin-left: -8px;
-        margin-right: -8px;
-        width: calc(100% + 16px);
+        margin-left: -4px;
+        margin-right: -4px;
+        width: calc(100% + 8px);
     }
 
     .llk-board {
-        max-width: none;
+        max-width: 100%;
     }
 
     .llk-grid {
@@ -118,6 +116,5 @@
 
     .llk-cell {
         border-radius: 8px;
-        font-size: 8.8cqw;
     }
 }
