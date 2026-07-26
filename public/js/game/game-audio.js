@@ -90,6 +90,12 @@
     }
 
     function unlock() {
+        // Already running — no resume(), no console spam
+        if (ctx && ctx.state === 'running') {
+            unlocked = true;
+            afterUnlock();
+            return Promise.resolve();
+        }
         allowResumeBriefly();
         unlocked = true;
         ensure();
@@ -582,12 +588,12 @@
     document.addEventListener('tb:locale', refreshInjectedLabels);
 
     function installUnlockGestures() {
-        var onGesture = function () {
-            unlock();
-        };
-        document.addEventListener('pointerdown', onGesture, true);
-        document.addEventListener('keydown', onGesture, true);
-        document.addEventListener('touchstart', onGesture, true);
+        // Only pointer/touch — NOT keydown.
+        // Holding Ctrl/Shift fires repeated keydown and was spamming
+        // "AudioContext was not allowed to start" in Chrome.
+        var onPointer = function () { unlock(); };
+        document.addEventListener('pointerdown', onPointer, true);
+        document.addEventListener('touchstart', onPointer, true);
     }
 
     if (document.readyState === 'loading') {
