@@ -578,6 +578,54 @@ window.TB_LOCALES.en = {
             title: 'Street Blocks 3D',
             desc: 'Tiny Three.js town: walk the main street and interact at golden doors.'
         },
+        fishFeast: {
+            title: 'Fish Feast',
+            desc: 'Eat smaller fish to grow, avoid bigger ones. Upgrade speed and shields between stages.'
+        },
+        motoBrawl: {
+            title: 'Moto Brawl',
+            desc: 'Side-view motorcycle race-brawl: dodge, bash rivals, upgrade engine and weapons.'
+        },
+        circusRun: {
+            title: 'Circus Run',
+            desc: 'Auto-run circus stages — jump fire rings, buy lives and jump power between levels.'
+        },
+        kungfuBrawl: {
+            title: 'Kung Fu',
+            desc: 'Side-view brawler with punches, blocks, stage clears, and dojo upgrades.'
+        },
+        megaBee: {
+            title: 'Mega Bee',
+            desc: 'Vertical bee-formation shmup with wave bosses and firepower upgrades.'
+        },
+        skyRaid: {
+            title: 'Sky Raid',
+            desc: 'Vertical air raid: enemy formations and tanks, shop guns, shields and bombs.'
+        },
+        streetSoccer: {
+            title: 'Street Soccer',
+            desc: 'Simple top-down soccer: score goals, climb rounds, upgrade speed and shot power.'
+        },
+        streetHoops: {
+            title: 'Street Hoops',
+            desc: 'Timing-bar basketball challenges with accuracy and tempo upgrades.'
+        },
+        bubbleShot: {
+            title: 'Bubble Shot',
+            desc: 'Aim and pop matching bubbles. Multi-stage layouts with bomb and color-swap items.'
+        },
+        marblePath: {
+            title: 'Marble Path',
+            desc: 'Zuma-style path marbles: shoot matches of three, use slow and bomb items.'
+        },
+        cozyFarm: {
+            title: 'Cozy Farm',
+            desc: 'Plant, water, harvest and sell. Day loop with plot/seed upgrades and continue save.'
+        },
+        cozyRanch: {
+            title: 'Cozy Ranch',
+            desc: 'Feed cows and sheep, collect milk/wool, expand pens and production. Continue save.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',

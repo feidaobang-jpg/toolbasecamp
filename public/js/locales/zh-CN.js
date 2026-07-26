@@ -577,6 +577,54 @@ window.TB_LOCALES['zh-CN'] = {
             title: '立体街区',
             desc: '3D 小城原型（Three.js）：主街漫步，金色门口互动。'
         },
+        fishFeast: {
+            title: '大鱼吃小鱼',
+            desc: '吃小鱼长大、躲开大鱼；过关升级游速与护盾。程序化绘制，本地可玩。'
+        },
+        motoBrawl: {
+            title: '暴力摩托',
+            desc: '侧视摩托竞速近战：变道躲障、击倒对手，修车铺强化引擎与武器。'
+        },
+        circusRun: {
+            title: '马戏团',
+            desc: '自动跑酷跳火圈闯关，过关买续命与弹跳。纯 Canvas，触屏可玩。'
+        },
+        kungfuBrawl: {
+            title: '功夫',
+            desc: '横版对打：拳踢格挡清关，武馆升级攻击与气血。'
+        },
+        megaBee: {
+            title: '大蜜蜂',
+            desc: '纵版蜜蜂阵型射击，波次 Boss，整备火力与护盾。'
+        },
+        skyRaid: {
+            title: '雷电战机',
+            desc: '纵版空战：敌机编队与坦克，航母补给强化机枪、护盾与炸弹。'
+        },
+        streetSoccer: {
+            title: '足球',
+            desc: '简化俯视足球：射门得分，联赛轮次升级跑动与射门。'
+        },
+        streetHoops: {
+            title: '篮球',
+            desc: '时机条投篮闯关，训练营升级绿区与节奏。'
+        },
+        bubbleShot: {
+            title: '泡泡龙',
+            desc: '角度发射同色消除，多关布局，炸弹与换色道具。'
+        },
+        marblePath: {
+            title: '彩珠巡游',
+            desc: '轨道彩珠射击消三连（祖玛风），减速与炸弹道具过关。'
+        },
+        cozyFarm: {
+            title: '农场',
+            desc: '种地浇水收割卖出，天数循环，开垦地块与升级种子，可继续。'
+        },
+        cozyRanch: {
+            title: '牧场',
+            desc: '喂养牛羊、挤奶剪毛，扩建栏位与产量升级，可继续。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

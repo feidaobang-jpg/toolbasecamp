@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>彩珠巡游 · Marble Path</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#1a1030;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:#12081f}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:55%}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#touch{display:none;position:absolute;left:0;right:0;bottom:10px;pointer-events:none;z-index:3;display:none;justify-content:center;gap:8px}
+#touch .btn{pointer-events:auto;padding:10px 14px;border-radius:999px;background:rgba(37,99,235,.55);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:12px}
+@media(pointer:coarse){#touch{display:flex}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.94);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.3rem;margin-bottom:6px;color:#c084fc}
+#ui h2{font-size:1.05rem;margin:0 0 10px;color:#d8b4fe}
+#ui p{font-size:.85rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:100px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button:disabled{opacity:.45}
+#ui .shop-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.84rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"><span>分 <b id="score">0</b></span><span>关 <b id="level">1</b></span><span>币 <b id="coins">0</b></span><span>最高 <b id="best">0</b></span></div>
+  <div class="action-row" id="audioBar"></div>
+  <div id="touch"><div class="btn" id="btnSlow">减速</div><div class="btn" id="btnBomb">炸弹</div></div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>彩珠巡游</h1>
+      <p>轨道彩珠前进，射击插入消三连。别让珠串抵达终点。道具可减速/爆炸。</p>
+      <p>拖动瞄准 · 点击/空格发射</p>
+      <div class="row"><button id="btnNew">新游戏</button><button class="ghost" id="btnContinue" disabled>继续</button></div>
+    </div>
+    <div class="panel hidden" id="panelShop">
+      <h2>神殿补给 · 关 <span id="shopLv">1</span></h2>
+      <p id="shopMsg"></p><div id="shopList"></div>
+      <div class="row"><button id="btnNext">下一关</button><button class="ghost" id="btnSaveMenu">存档回菜单</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2>珠串抵达终点</h2><p id="overMsg"></p>
+      <div class="row"><button id="btnRetry">再来</button><button class="ghost" id="btnOverMenu">菜单</button></div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=18"></script>
+<script>
+(function(){
+const KEY='tbc_marble_path_v1';
+const COLORS=['#ef4444','#3b82f6','#22c55e','#eab308','#f472b6'];
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=360,H=640,dpr=1,mode='menu',state=null,best=0;
+
+function sfx(n){try{GameAudio&&GameAudio.sfx(n)}catch(e){}}
+function unlock(){try{GameAudio&&GameAudio.unlock()}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+function loadMeta(){const d=load();best=(d&&d.best)||0;document.getElementById('best').textContent=best;document.getElementById('btnContinue').disabled=!(d&&d.play)}
+function persist(){if(!state)return;save({best:Math.max(best,state.score),play:{score:state.score,coins:state.coins,level:state.level,slow:state.slowItems,bombs:state.bombs}})}
+function resize(){const r=document.getElementById('wrap').getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=Math.max(280,r.width);H=Math.max(400,r.height);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);if(state)state.path=makePath()}
+window.addEventListener('resize',resize);
+function hidePanels(){['panelMenu','panelShop','panelOver'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function show(id){hidePanels();document.getElementById(id).classList.remove('hidden')}
+
+function makePath(){
+  const pts=[];const steps=120;
+  for(let i=0;i<=steps;i++){
+    const t=i/steps;
+    const x=W*0.15+Math.sin(t*Math.PI*2.2)*W*0.28+t*W*0.55;
+    const y=H*0.18+t*(H*0.55)+Math.cos(t*Math.PI*3)*30;
+    pts.push({x,y});
+  }
+  // arc length
+  let len=0;pts[0].s=0;
+  for(let i=1;i<pts.length;i++){len+=Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y);pts[i].s=len}
+  pts.total=len;return pts;
+}
+
+function posAt(path,s){
+  s=Math.max(0,Math.min(path.total,s));
+  for(let i=1;i<path.length;i++){
+    if(path[i].s>=s){
+      const a=path[i-1],b=path[i];const t=(s-a.s)/Math.max(0.001,b.s-a.s);
+      return {x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
+    }
+  }
+  return {x:path[path.length-1].x,y:path[path.length-1].y};
+}
+
+function newChain(lv,path){
+  const n=18+lv*3;const gap=22;const colors=Math.min(5,3+((lv/2)|0));
+  const balls=[];let s=-n*gap;
+  for(let i=0;i<n;i++){balls.push({s:s+i*gap,c:(Math.random()*colors)|0});}
+  return balls;
+}
+
+function newGame(from){
+  unlock();const p=from||{};
+  const path=makePath();
+  state={score:p.score||0,coins:p.coins||0,level:p.level||1,slowItems:p.slow||1,bombs:p.bombs||1,path,balls:newChain(p.level||1,path),angle:-Math.PI/2,shot:null,cur:0,next:0,speedMul:1,slowT:0,t:0,head:0};
+  state.cur=(Math.random()*4)|0;state.next=(Math.random()*4)|0;
+  mode='play';hidePanels();hud();sfx('place');
+}
+
+function hud(){if(!state)return;document.getElementById('score').textContent=state.score|0;document.getElementById('level').textContent=state.level;document.getElementById('coins').textContent=state.coins;document.getElementById('best').textContent=Math.max(best,state.score)|0}
+
+function openShop(){
+  mode='shop';document.getElementById('shopLv').textContent=state.level;
+  document.getElementById('shopMsg').textContent='金币 '+state.coins;
+  const list=document.getElementById('shopList');list.innerHTML='';
+  [{id:'slow',name:'减速 +1',cost:14},{id:'bomb',name:'炸弹 +1',cost:16}].forEach(it=>{
+    const row=document.createElement('div');row.className='shop-item';row.innerHTML='<span>'+it.name+'</span>';
+    const b=document.createElement('button');b.textContent=it.cost+' 币';b.disabled=state.coins<it.cost;
+    b.onclick=()=>{unlock();if(state.coins<it.cost)return;state.coins-=it.cost;sfx('swap');if(it.id==='slow')state.slowItems++;if(it.id==='bomb')state.bombs++;persist();openShop();hud()};
+    row.appendChild(b);list.appendChild(row);
+  });
+  show('panelShop');persist();
+}
+
+function collapse(){
+  let changed=true;
+  while(changed){
+    changed=false;
+    // pack by s order
+    state.balls.sort((a,b)=>a.s-b.s);
+    let i=0;
+    while(i<state.balls.length){
+      let j=i;while(j<state.balls.length&&state.balls[j].c===state.balls[i].c)j++;
+      if(j-i>=3){
+        const rem=j-i;state.balls.splice(i,rem);state.score+=rem*40;state.coins+=rem;changed=true;sfx('place');
+      }else i=j;
+    }
+  }
+  // re-gap
+  if(state.balls.length){
+    state.balls.sort((a,b)=>a.s-b.s);
+    const gap=22;let base=state.balls[0].s;
+    for(let i=0;i<state.balls.length;i++)state.balls[i].s=base+i*gap;
+  }
+}
+
+function insertAt(s,c){
+  state.balls.push({s,c});
+  collapse();
+  if(!state.balls.length){state.level++;state.coins+=20;state.score+=500;sfx('win');openShop()}
+}
+
+function fire(){
+  if(mode!=='play'||!state||state.shot)return;
+  unlock();
+  const sx=W/2,sy=H*0.78;
+  state.shot={x:sx,y:sy,vx:Math.cos(state.angle)*380,vy:Math.sin(state.angle)*380,c:state.cur};
+  state.cur=state.next;state.next=(Math.random()*Math.min(5,3+((state.level/2)|0)))|0;
+}
+
+function useSlow(){if(mode!=='play'||!state||state.slowItems<=0)return;state.slowItems--;state.slowT=4;sfx('swap');persist();hud()}
+function useBomb(){
+  if(mode!=='play'||!state||state.bombs<=0)return;
+  state.bombs--;sfx('win');
+  if(state.balls.length){state.balls.splice(0,Math.min(5,state.balls.length));state.score+=150;collapse();if(!state.balls.length){state.level++;state.coins+=20;sfx('win');openShop()}}
+  persist();hud();
+}
+
+function update(dt){
+  if(mode!=='play'||!state)return;
+  state.t+=dt;state.slowT=Math.max(0,state.slowT-dt);
+  const spd=(28+state.level*3)*(state.slowT>0?0.35:1);
+  state.head+=spd*dt;
+  state.balls.forEach(b=>b.s+=spd*dt);
+  // lose
+  if(state.balls.some(b=>b.s>=state.path.total-5)){
+    mode='over';best=Math.max(best,state.score);save({best,play:null});
+    document.getElementById('overMsg').textContent='得分 '+state.score;show('panelOver');sfx('lose');return;
+  }
+  if(state.shot){
+    const s=state.shot;s.x+=s.vx*dt;s.y+=s.vy*dt;
+    if(s.x<0||s.x>W||s.y<0||s.y>H){state.shot=null}
+    else{
+      for(const b of state.balls){
+        const p=posAt(state.path,b.s);
+        if(Math.hypot(p.x-s.x,p.y-s.y)<18){insertAt(b.s,s.c);state.shot=null;sfx('hit');break}
+      }
+    }
+  }
+  hud();
+}
+
+function draw(){
+  ctx.fillStyle='#1e1033';ctx.fillRect(0,0,W,H);
+  if(!state)return;
+  ctx.strokeStyle='#4c1d95';ctx.lineWidth=18;ctx.lineCap='round';ctx.beginPath();
+  state.path.forEach((p,i)=>{if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)});ctx.stroke();
+  ctx.strokeStyle='#7c3aed';ctx.lineWidth=4;ctx.stroke();
+  // end hole
+  const end=state.path[state.path.length-1];
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(end.x,end.y,16,0,Math.PI*2);ctx.fill();
+  state.balls.forEach(b=>{const p=posAt(state.path,b.s);ctx.fillStyle=COLORS[b.c];ctx.beginPath();ctx.arc(p.x,p.y,10,0,Math.PI*2);ctx.fill()});
+  const sx=W/2,sy=H*0.78;
+  ctx.strokeStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+Math.cos(state.angle)*70,sy+Math.sin(state.angle)*70);ctx.stroke();
+  ctx.fillStyle=COLORS[state.cur];ctx.beginPath();ctx.arc(sx,sy,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=COLORS[state.next];ctx.beginPath();ctx.arc(sx+32,sy+6,8,0,Math.PI*2);ctx.fill();
+  if(state.shot){ctx.fillStyle=COLORS[state.shot.c];ctx.beginPath();ctx.arc(state.shot.x,state.shot.y,10,0,Math.PI*2);ctx.fill()}
+  ctx.fillStyle='#94a3b8';ctx.font='12px system-ui';ctx.fillText('减速 '+state.slowItems+' · 炸弹 '+state.bombs+(state.slowT>0?' · 减速中':''),12,H-12);
+}
+
+let last=performance.now();
+function loop(n){const dt=Math.min(0.033,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop)}
+window.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();fire()}});
+canvas.addEventListener('pointermove',e=>{if(mode!=='play'||!state)return;const r=canvas.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;state.angle=Math.atan2(y-H*0.78,x-W/2)});
+canvas.addEventListener('pointerdown',()=>{if(mode==='play')fire()});
+document.getElementById('btnSlow').onclick=()=>{unlock();useSlow()};
+document.getElementById('btnBomb').onclick=()=>{unlock();useBomb()};
+
+document.getElementById('btnNew').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnContinue').onclick=()=>{unlock();const d=load();if(d&&d.play)newGame(d.play)};
+document.getElementById('btnNext').onclick=()=>{unlock();state.path=makePath();state.balls=newChain(state.level,state.path);state.shot=null;state.head=0;mode='play';hidePanels();persist();sfx('place')};
+document.getElementById('btnSaveMenu').onclick=()=>{persist();mode='menu';show('panelMenu');loadMeta()};
+document.getElementById('btnRetry').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnOverMenu').onclick=()=>{mode='menu';show('panelMenu');loadMeta()};
+
+loadMeta();resize();if(window.GameAudio)GameAudio.boot('catchy');requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

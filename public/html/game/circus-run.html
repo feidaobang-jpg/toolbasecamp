@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>马戏团 · Circus Run</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#2a1035;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:#1a0b22}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:55%}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .jump{pointer-events:auto;position:absolute;right:20px;bottom:28px;width:88px;height:88px;border-radius:50%;background:rgba(37,99,235,.55);border:1px solid rgba(255,255,255,.3);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.94);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.3rem;margin-bottom:6px;color:#e879f9}
+#ui h2{font-size:1.05rem;margin:0 0 10px;color:#f0abfc}
+#ui p{font-size:.85rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:100px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button:disabled{opacity:.45}
+#ui .shop-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.84rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"><span>分 <b id="score">0</b></span><span>关 <b id="level">1</b></span><span>命 <b id="lives">3</b></span><span>最高 <b id="best">0</b></span></div>
+  <div class="action-row" id="audioBar"></div>
+  <div id="touch"><div class="jump" id="btnJump">跳</div></div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>马戏团</h1>
+      <p>自动向前跑，跳跃穿过火圈、躲开障碍。过关买续命与弹跳。</p>
+      <p>空格 / 点击 / 触屏「跳」</p>
+      <div class="row"><button id="btnNew">新游戏</button><button class="ghost" id="btnContinue" disabled>继续</button></div>
+    </div>
+    <div class="panel hidden" id="panelShop">
+      <h2>后台整备 · 关 <span id="shopLv">1</span></h2>
+      <p id="shopMsg"></p><div id="shopList"></div>
+      <div class="row"><button id="btnNext">下一关</button><button class="ghost" id="btnSaveMenu">存档回菜单</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2>演出失败</h2><p id="overMsg"></p>
+      <div class="row"><button id="btnRetry">再来</button><button class="ghost" id="btnOverMenu">菜单</button></div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=18"></script>
+<script>
+(function(){
+const KEY='tbc_circus_run_v1';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=360,H=640,dpr=1,mode='menu',state=null,best=0,jumpQueued=false;
+const keys={};
+
+function sfx(n){try{GameAudio&&GameAudio.sfx(n)}catch(e){}}
+function unlock(){try{GameAudio&&GameAudio.unlock()}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+function loadMeta(){const d=load();best=(d&&d.best)||0;document.getElementById('best').textContent=best;document.getElementById('btnContinue').disabled=!(d&&d.play)}
+function persist(){if(!state)return;save({best:Math.max(best,state.score),play:{score:state.score,coins:state.coins,level:state.level,lives:state.lives,jump:state.jumpLv,extra:state.extra}})}
+function resize(){const r=document.getElementById('wrap').getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=Math.max(280,r.width);H=Math.max(400,r.height);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+window.addEventListener('resize',resize);
+function hidePanels(){['panelMenu','panelShop','panelOver'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function show(id){hidePanels();document.getElementById(id).classList.remove('hidden')}
+
+function groundY(){return H*0.72}
+
+function buildLevel(lv){
+  const objs=[];let x=420;
+  const n=8+lv*2;
+  for(let i=0;i<n;i++){
+    const kind=Math.random()<0.45?'ring':(Math.random()<0.5?'box':'low');
+    objs.push({x,kind,passed:false,scored:false});
+    x+=180+Math.random()*80-lv*4;
+  }
+  objs.push({x:x+80,kind:'flag',passed:false,scored:false});
+  return objs;
+}
+
+function newGame(from){
+  unlock();const p=from||{};
+  state={
+    score:p.score||0,coins:p.coins||0,level:p.level||1,
+    lives:p.lives||3,jumpLv:p.jump||0,extra:p.extra||0,
+    x:80,y:0,vy:0,onGround:true,scroll:0,
+    objs:buildLevel(p.level||1),inv:0,t:0
+  };
+  state.y=groundY();
+  mode='play';hidePanels();hud();sfx('place');
+}
+
+function hud(){if(!state)return;document.getElementById('score').textContent=state.score|0;document.getElementById('level').textContent=state.level;document.getElementById('lives').textContent=state.lives;document.getElementById('best').textContent=Math.max(best,state.score)|0}
+
+function openShop(){
+  mode='shop';document.getElementById('shopLv').textContent=state.level;
+  document.getElementById('shopMsg').textContent='金币 '+state.coins;
+  const list=document.getElementById('shopList');list.innerHTML='';
+  [{id:'life',name:'续命 +1',cost:20,ok:state.lives<6},{id:'jump',name:'弹跳更高',cost:15+state.jumpLv*10,ok:state.jumpLv<4},{id:'coin',name:'兑换分',cost:10,ok:state.coins>=10}].forEach(it=>{
+    const row=document.createElement('div');row.className='shop-item';row.innerHTML='<span>'+it.name+'</span>';
+    const b=document.createElement('button');b.textContent=it.cost+' 币';b.disabled=!it.ok||state.coins<it.cost;
+    b.onclick=()=>{unlock();if(state.coins<it.cost||!it.ok)return;state.coins-=it.cost;sfx('swap');if(it.id==='life')state.lives++;if(it.id==='jump')state.jumpLv++;if(it.id==='coin')state.score+=100;persist();openShop();hud()};
+    row.appendChild(b);list.appendChild(row);
+  });
+  show('panelShop');persist();
+}
+
+function hurt(){
+  if(state.inv>0)return;
+  state.lives--;state.inv=1.2;sfx('hit');
+  if(state.lives<=0){
+    mode='over';best=Math.max(best,state.score);save({best,play:null});
+    document.getElementById('overMsg').textContent='得分 '+state.score+' · 第 '+state.level+' 关';
+    show('panelOver');sfx('lose');
+  }
+  hud();
+}
+
+function jump(){
+  if(mode!=='play'||!state)return;
+  if(state.onGround){state.vy=-(420+state.jumpLv*40);state.onGround=false;sfx('jump');}
+}
+
+function update(dt){
+  if(mode!=='play'||!state)return;
+  state.t+=dt;state.inv=Math.max(0,state.inv-dt);
+  if(jumpQueued||keys[' ']||keys['ArrowUp']||keys['w']||keys['W']){jump();jumpQueued=false;keys[' ']=false}
+  const spd=170+state.level*12;
+  state.scroll+=spd*dt;
+  state.vy+=1400*dt;state.y+=state.vy*dt;
+  const gy=groundY();
+  if(state.y>=gy){state.y=gy;state.vy=0;state.onGround=true}
+  const px=state.x;
+  state.objs.forEach(o=>{
+    const ox=o.x-state.scroll;
+    if(o.kind==='flag'&&ox<px+20&&!o.passed){
+      o.passed=true;state.level++;state.coins+=12+state.level*2;state.score+=300;sfx('win');openShop();return;
+    }
+    if(o.kind==='ring'){
+      if(!o.scored&&ox<px&&ox>px-40&&state.y<gy-30){o.scored=true;state.score+=80;state.coins+=2;sfx('place')}
+      if(!o.passed&&Math.abs(ox-px)<28&&state.y>gy-20){o.passed=true;hurt()}
+    }
+    if(o.kind==='box'&&Math.abs(ox-px)<26&&state.y>gy-36){if(!o.passed){o.passed=true;hurt()}}
+    if(o.kind==='low'&&Math.abs(ox-px)<30&&state.y>gy-18){if(!o.passed){o.passed=true;hurt()}}
+  });
+  state.score+=Math.round(dt*10);hud();
+}
+
+function draw(){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#4c1d95');g.addColorStop(1,'#1e1b4b');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // tent stripes
+  for(let i=0;i<10;i++){ctx.fillStyle=i%2?'rgba(220,38,38,.15)':'rgba(250,250,250,.08)';ctx.fillRect(i*W/10,0,W/10,H*0.55)}
+  ctx.fillStyle='#3f2a1a';ctx.fillRect(0,groundY(),W,H-groundY());
+  ctx.fillStyle='#a16207';ctx.fillRect(0,groundY(),W,6);
+  if(!state)return;
+  state.objs.forEach(o=>{
+    const x=o.x-state.scroll;if(x<-60||x>W+60)return;
+    const gy=groundY();
+    if(o.kind==='ring'){
+      ctx.strokeStyle='#f97316';ctx.lineWidth=6;ctx.beginPath();ctx.ellipse(x,gy-48,28,40,0,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,gy-48,20,32,0,0,Math.PI*2);ctx.stroke();
+    }else if(o.kind==='box'){
+      ctx.fillStyle='#b45309';ctx.fillRect(x-16,gy-40,32,40);
+    }else if(o.kind==='low'){
+      ctx.fillStyle='#7f1d1d';ctx.fillRect(x-20,gy-14,40,14);
+    }else if(o.kind==='flag'){
+      ctx.fillStyle='#22c55e';ctx.fillRect(x,gy-70,4,70);ctx.fillRect(x,gy-70,28,18);
+    }
+  });
+  const blink=state.inv>0&&((state.t*10)|0)%2===0;
+  if(!blink){
+    ctx.fillStyle='#f472b6';ctx.fillRect(state.x-12,state.y-36,24,36);
+    ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(state.x,state.y-42,8,0,Math.PI*2);ctx.fill();
+  }
+}
+
+let last=performance.now();
+function loop(n){const dt=Math.min(0.033,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop)}
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' ')e.preventDefault()});
+window.addEventListener('keyup',e=>{keys[e.key]=false});
+document.getElementById('btnJump').addEventListener('pointerdown',e=>{e.preventDefault();unlock();jumpQueued=true});
+canvas.addEventListener('pointerdown',()=>{if(mode==='play'){unlock();jumpQueued=true}});
+
+document.getElementById('btnNew').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnContinue').onclick=()=>{unlock();const d=load();if(d&&d.play)newGame(d.play)};
+document.getElementById('btnNext').onclick=()=>{unlock();state.objs=buildLevel(state.level);state.scroll=0;state.y=groundY();state.vy=0;state.onGround=true;mode='play';hidePanels();persist();sfx('place')};
+document.getElementById('btnSaveMenu').onclick=()=>{persist();mode='menu';show('panelMenu');loadMeta()};
+document.getElementById('btnRetry').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnOverMenu').onclick=()=>{mode='menu';show('panelMenu');loadMeta()};
+
+loadMeta();resize();if(window.GameAudio)GameAudio.boot('catchy');requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

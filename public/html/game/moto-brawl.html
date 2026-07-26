@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>暴力摩托 · Moto Brawl</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#1a0f0a;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:520px;margin:0 auto;background:#0c0a09}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:55%}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .btn{pointer-events:auto;position:absolute;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+#touch .up{left:24px;bottom:100px;width:64px;height:64px}
+#touch .dn{left:24px;bottom:24px;width:64px;height:64px}
+#touch .atk{right:24px;bottom:40px;width:76px;height:76px;background:rgba(37,99,235,.5)}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.94);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.3rem;margin-bottom:6px;color:#fb923c}
+#ui h2{font-size:1.05rem;margin:0 0 10px;color:#fdba74}
+#ui p{font-size:.85rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:100px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button:disabled{opacity:.45}
+#ui .shop-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.84rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <span>分 <b id="score">0</b></span>
+    <span>关 <b id="level">1</b></span>
+    <span>币 <b id="coins">0</b></span>
+    <span>最高 <b id="best">0</b></span>
+  </div>
+  <div class="action-row" id="audioBar"></div>
+  <div id="touch">
+    <div class="btn up" id="btnUp">上</div>
+    <div class="btn dn" id="btnDn">下</div>
+    <div class="btn atk" id="btnAtk">打</div>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>暴力摩托</h1>
+      <p>侧视摩托竞速：躲开障碍、近战击倒对手，冲到终点。升级引擎与武器。</p>
+      <p>键鼠：W/S 或 ↑↓ 变道 · J/空格 攻击</p>
+      <div class="row"><button id="btnNew">新游戏</button><button class="ghost" id="btnContinue" disabled>继续</button></div>
+    </div>
+    <div class="panel hidden" id="panelShop">
+      <h2>修车铺 · 第 <span id="shopLv">1</span> 关后</h2>
+      <p id="shopMsg"></p>
+      <div id="shopList"></div>
+      <div class="row"><button id="btnNext">下一关</button><button class="ghost" id="btnSaveMenu">存档回菜单</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2 id="overTitle">撞毁了</h2>
+      <p id="overMsg"></p>
+      <div class="row"><button id="btnRetry">再来</button><button class="ghost" id="btnOverMenu">菜单</button></div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=18"></script>
+<script>
+(function(){
+const KEY='tbc_moto_brawl_v1';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=360,H=640,dpr=1,mode='menu',state=null,best=0;
+const keys={};const hold={up:false,dn:false,atk:false};
+
+function sfx(n){try{GameAudio&&GameAudio.sfx(n)}catch(e){}}
+function unlock(){try{GameAudio&&GameAudio.unlock()}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+function loadMeta(){const d=load();best=(d&&d.best)||0;document.getElementById('best').textContent=best;document.getElementById('btnContinue').disabled=!(d&&d.play)}
+function persist(){if(!state)return;save({best:Math.max(best,state.score),play:{score:state.score,coins:state.coins,level:state.level,eng:state.eng,wep:state.wep,hp:state.hpMax}})}
+function resize(){const r=document.getElementById('wrap').getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=Math.max(280,r.width);H=Math.max(400,r.height);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+window.addEventListener('resize',resize);
+function hidePanels(){['panelMenu','panelShop','panelOver'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function show(id){hidePanels();document.getElementById(id).classList.remove('hidden')}
+function lanes(){return [H*0.38,H*0.55,H*0.72]}
+
+function newGame(from){
+  unlock();const p=from||{};
+  const L=lanes();
+  state={
+    score:p.score||0,coins:p.coins||0,level:p.level||1,
+    eng:p.eng||0,wep:p.wep||0,hpMax:p.hp||3,hp:p.hp||3,
+    lane:1,y:L[1],x:W*0.28,dist:0,goal:1800+((p.level||1)-1)*400,
+    speed:0,enemies:[],obs:[],atkCd:0,hitFlash:0,t:0,scroll:0
+  };
+  for(let i=0;i<5;i++)spawnAhead(600+i*280);
+  mode='play';hidePanels();hud();sfx('place');
+}
+
+function spawnAhead(at){
+  const L=lanes();
+  if(Math.random()<0.55){
+    state.enemies.push({dist:at,lane:(Math.random()*3)|0,hp:1+((state.level/3)|0),alive:true});
+  }else{
+    state.obs.push({dist:at,lane:(Math.random()*3)|0,kind:Math.random()<0.5?'rock':'oil'});
+  }
+}
+
+function hud(){if(!state)return;document.getElementById('score').textContent=state.score|0;document.getElementById('level').textContent=state.level;document.getElementById('coins').textContent=state.coins|0;document.getElementById('best').textContent=Math.max(best,state.score)|0}
+
+function openShop(win){
+  mode='shop';
+  document.getElementById('shopLv').textContent=state.level;
+  document.getElementById('shopMsg').textContent=(win?'通关！':'')+' 金币 '+state.coins;
+  const list=document.getElementById('shopList');list.innerHTML='';
+  [{id:'eng',name:'引擎加速',cost:18+state.eng*12,ok:state.eng<5},{id:'wep',name:'武器伤害',cost:16+state.wep*10,ok:state.wep<5},{id:'hp',name:'装甲 +1',cost:22,ok:state.hpMax<6}].forEach(it=>{
+    const row=document.createElement('div');row.className='shop-item';
+    row.innerHTML='<span>'+it.name+'</span>';
+    const b=document.createElement('button');b.textContent=it.cost+' 币';b.disabled=!it.ok||state.coins<it.cost;
+    b.onclick=()=>{unlock();if(state.coins<it.cost||!it.ok)return;state.coins-=it.cost;sfx('swap');if(it.id==='eng')state.eng++;if(it.id==='wep')state.wep++;if(it.id==='hp'){state.hpMax++;state.hp++}persist();openShop(win);hud()};
+    row.appendChild(b);list.appendChild(row);
+  });
+  show('panelShop');persist();
+}
+
+function fail(msg){
+  mode='over';best=Math.max(best,state.score);save({best,play:null});
+  document.getElementById('overTitle').textContent=msg||'撞毁了';
+  document.getElementById('overMsg').textContent='得分 '+state.score+' · 第 '+state.level+' 关';
+  show('panelOver');sfx('lose');hud();
+}
+
+function update(dt){
+  if(mode!=='play'||!state)return;
+  state.t+=dt;state.atkCd=Math.max(0,state.atkCd-dt);state.hitFlash=Math.max(0,state.hitFlash-dt);
+  const wantUp=keys['ArrowUp']||keys['w']||keys['W']||hold.up;
+  const wantDn=keys['ArrowDown']||keys['s']||keys['S']||hold.dn;
+  const wantAtk=keys[' ']||keys['j']||keys['J']||hold.atk;
+  if(wantUp)state.lane=Math.max(0,state.lane-1),keys['ArrowUp']=keys['w']=keys['W']=false,hold.up=false;
+  if(wantDn)state.lane=Math.min(2,state.lane+1),keys['ArrowDown']=keys['s']=keys['S']=false,hold.dn=false;
+  const L=lanes();
+  state.y+=(L[state.lane]-state.y)*Math.min(1,dt*10);
+  const base=220+state.eng*35+state.level*8;
+  state.speed=base;state.dist+=state.speed*dt;state.scroll+=state.speed*dt;
+  state.score+=Math.round(state.speed*dt*0.05);
+
+  if(wantAtk&&state.atkCd<=0){
+    state.atkCd=0.45-state.wep*0.04;sfx('hit');
+    state.enemies.forEach(e=>{
+      if(!e.alive)return;
+      const ex=W*0.28+(e.dist-state.dist)*0.35;
+      if(e.lane===state.lane&&ex>state.x&&ex<state.x+90){
+        e.hp-=1+state.wep;if(e.hp<=0){e.alive=false;state.coins+=3;state.score+=50;sfx('place')}
+      }
+    });
+  }
+
+  while(state.enemies.length+state.obs.length<8)spawnAhead(state.dist+900+Math.random()*500);
+
+  state.enemies=state.enemies.filter(e=>{
+    if(!e.alive)return e.dist>state.dist-100;
+    const ex=W*0.28+(e.dist-state.dist)*0.35;
+    const ey=L[e.lane];
+    if(Math.abs(ex-state.x)<40&&Math.abs(ey-state.y)<28){
+      state.hp--;state.hitFlash=0.3;sfx('hit');e.alive=false;
+      if(state.hp<=0){fail('被撞翻了');return false}
+    }
+    return e.dist>state.dist-80;
+  });
+  state.obs=state.obs.filter(o=>{
+    const ox=W*0.28+(o.dist-state.dist)*0.35;
+    const oy=L[o.lane];
+    if(Math.abs(ox-state.x)<36&&Math.abs(oy-state.y)<26){
+      state.hp--;state.hitFlash=0.3;sfx('hit');
+      if(state.hp<=0){fail(o.kind==='oil'?'打滑翻车':'撞上障碍');return false}
+      return false;
+    }
+    return o.dist>state.dist-80;
+  });
+
+  if(state.dist>=state.goal){
+    state.level++;state.coins+=15+state.level*3;state.score+=200;sfx('win');openShop(true);return;
+  }
+  hud();
+}
+
+function drawBike(x,y,color,attacking){
+  ctx.save();ctx.translate(x,y);
+  ctx.fillStyle='#334155';ctx.fillRect(-18,8,14,6);ctx.fillRect(10,8,14,6);
+  ctx.fillStyle=color;ctx.fillRect(-16,-6,36,14);
+  ctx.fillStyle='#1e293b';ctx.fillRect(8,-14,16,10);
+  if(attacking){ctx.strokeStyle='#fbbf24';ctx.lineWidth=3;ctx.beginPath();ctx.arc(28,0,16,-0.6,0.6);ctx.stroke()}
+  ctx.restore();
+}
+
+function draw(){
+  ctx.fillStyle='#1c1917';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#292524';ctx.fillRect(0,H*0.32,W,H*0.5);
+  ctx.strokeStyle='#57534e';ctx.setLineDash([18,14]);ctx.lineWidth=2;
+  const off=-(state?state.scroll:0)%32;
+  for(let i=1;i<=2;i++){const y=H*0.32+i*(H*0.5/3);ctx.beginPath();ctx.moveTo(off,y);ctx.lineTo(W,y);ctx.stroke()}
+  ctx.setLineDash([]);
+  // desert sky
+  ctx.fillStyle='#7c2d12';ctx.fillRect(0,0,W,H*0.32);
+  for(let i=0;i<6;i++){ctx.fillStyle='#9a3412';ctx.fillRect(((i*90-(state?state.scroll:0)*0.2)%(W+40)),H*0.2,30,H*0.12)}
+
+  if(!state)return;
+  const L=lanes();
+  state.obs.forEach(o=>{
+    const x=W*0.28+(o.dist-state.dist)*0.35;const y=L[o.lane];
+    if(x<-40||x>W+40)return;
+    ctx.fillStyle=o.kind==='oil'?'#171717':'#78716c';
+    if(o.kind==='oil'){ctx.beginPath();ctx.ellipse(x,y+8,22,8,0,0,Math.PI*2);ctx.fill()}
+    else{ctx.fillRect(x-12,y-10,24,20)}
+  });
+  state.enemies.forEach(e=>{
+    if(!e.alive)return;
+    const x=W*0.28+(e.dist-state.dist)*0.35;const y=L[e.lane];
+    if(x<-40||x>W+40)return;
+    drawBike(x,y,'#ef4444',false);
+  });
+  const atk=state.atkCd>0.25;
+  drawBike(state.x,state.y,state.hitFlash>0?'#fff':'#38bdf8',atk);
+  // progress
+  ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(16,H-22,W-32,8);
+  ctx.fillStyle='#2563eb';ctx.fillRect(16,H-22,Math.min(1,state.dist/state.goal)*(W-32),8);
+  ctx.fillStyle='#e2e8f0';ctx.font='12px system-ui';ctx.fillText('HP '+state.hp+'/'+state.hpMax,16,H-30);
+}
+
+let last=performance.now();
+function loop(n){const dt=Math.min(0.033,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop)}
+
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown',' '].includes(e.key))e.preventDefault()});
+window.addEventListener('keyup',e=>{keys[e.key]=false});
+function bindHold(el,flag){el.addEventListener('pointerdown',e=>{e.preventDefault();hold[flag]=true});el.addEventListener('pointerup',()=>hold[flag]=false);el.addEventListener('pointercancel',()=>hold[flag]=false)}
+bindHold(document.getElementById('btnUp'),'up');bindHold(document.getElementById('btnDn'),'dn');bindHold(document.getElementById('btnAtk'),'atk');
+
+document.getElementById('btnNew').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnContinue').onclick=()=>{unlock();const d=load();if(d&&d.play)newGame(d.play)};
+document.getElementById('btnNext').onclick=()=>{unlock();state.dist=0;state.goal=1800+(state.level-1)*400;state.hp=state.hpMax;state.enemies=[];state.obs=[];for(let i=0;i<5;i++)spawnAhead(500+i*300);mode='play';hidePanels();persist();sfx('place')};
+document.getElementById('btnSaveMenu').onclick=()=>{persist();mode='menu';show('panelMenu');loadMeta()};
+document.getElementById('btnRetry').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnOverMenu').onclick=()=>{mode='menu';show('panelMenu');loadMeta()};
+
+loadMeta();resize();if(window.GameAudio)GameAudio.boot('catchy');requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

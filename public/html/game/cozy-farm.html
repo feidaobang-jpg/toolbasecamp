@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>农场 · Cozy Farm</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#14532d;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:#166534}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:55%}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#bar{position:absolute;left:0;right:0;bottom:0;padding:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));z-index:3}
+#bar button{font:inherit;border:0;border-radius:999px;padding:10px 12px;background:#2563eb;color:#fff;cursor:pointer;font-size:12px}
+#bar button.on{outline:2px solid #fde68a}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.94);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.3rem;margin-bottom:6px;color:#86efac}
+#ui h2{font-size:1.05rem;margin:0 0 10px;color:#bbf7d0}
+#ui p{font-size:.85rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:100px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button:disabled{opacity:.45}
+#ui .shop-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.84rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"><span>天 <b id="day">1</b></span><span>币 <b id="coins">30</b></span><span>种子 <b id="seeds">5</b></span><span>最高天 <b id="best">0</b></span></div>
+  <div class="action-row" id="audioBar"></div>
+  <div id="bar">
+    <button id="toolSeed" class="on">播种</button>
+    <button id="toolWater">浇水</button>
+    <button id="toolHarvest">收割</button>
+    <button id="toolSleep">睡觉</button>
+    <button id="toolShop">商店</button>
+  </div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>农场</h1>
+      <p>种地、浇水、收割卖出。每天结束可升级地块与种子。继续存档。</p>
+      <p>点地块操作 · 工具栏切换</p>
+      <div class="row"><button id="btnNew">新游戏</button><button class="ghost" id="btnContinue" disabled>继续</button></div>
+    </div>
+    <div class="panel hidden" id="panelShop">
+      <h2>农场商店 · 第 <span id="shopLv">1</span> 天</h2>
+      <p id="shopMsg"></p><div id="shopList"></div>
+      <div class="row"><button id="btnCloseShop">关闭</button><button class="ghost" id="btnSaveMenu">存档回菜单</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2>破产回家</h2><p id="overMsg"></p>
+      <div class="row"><button id="btnRetry">再来</button><button class="ghost" id="btnOverMenu">菜单</button></div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=18"></script>
+<script>
+(function(){
+const KEY='tbc_cozy_farm_v1';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=360,H=640,dpr=1,mode='menu',state=null,best=0,tool='seed';
+const COLS=4,ROWS=4;
+
+function sfx(n){try{GameAudio&&GameAudio.sfx(n)}catch(e){}}
+function unlock(){try{GameAudio&&GameAudio.unlock()}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+function loadMeta(){const d=load();best=(d&&d.best)||0;document.getElementById('best').textContent=best;document.getElementById('btnContinue').disabled=!(d&&d.play)}
+function persist(){if(!state)return;save({best:Math.max(best,state.day),play:state})}
+function resize(){const r=document.getElementById('wrap').getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=Math.max(280,r.width);H=Math.max(400,r.height);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+window.addEventListener('resize',resize);
+function hidePanels(){['panelMenu','panelShop','panelOver'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function show(id){hidePanels();document.getElementById(id).classList.remove('hidden')}
+
+function emptyPlots(n){
+  const arr=[];for(let i=0;i<n;i++)arr.push({stage:0,water:0,crop:null});return arr;
+}
+
+function newGame(from){
+  unlock();
+  if(from){state=JSON.parse(JSON.stringify(from))}
+  else{
+    state={day:1,coins:30,seeds:5,plots:emptyPlots(6),plotMax:6,seedLv:0,earn:0};
+  }
+  mode='play';hidePanels();hud();sfx('place');
+}
+
+function hud(){if(!state)return;document.getElementById('day').textContent=state.day;document.getElementById('coins').textContent=state.coins;document.getElementById('seeds').textContent=state.seeds;document.getElementById('best').textContent=Math.max(best,state.day)}
+
+function setTool(t){
+  tool=t;
+  ['toolSeed','toolWater','toolHarvest'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  if(t==='seed')document.getElementById('toolSeed').classList.add('on');
+  if(t==='water')document.getElementById('toolWater').classList.add('on');
+  if(t==='harvest')document.getElementById('toolHarvest').classList.add('on');
+}
+
+function openShop(){
+  mode='shop';document.getElementById('shopLv').textContent=state.day;
+  document.getElementById('shopMsg').textContent='金币 '+state.coins;
+  const list=document.getElementById('shopList');list.innerHTML='';
+  [{id:'seed',name:'买种子 x3',cost:8},{id:'plot',name:'开垦地块',cost:25,ok:state.plots.length<12},{id:'lv',name:'优质种子',cost:20+state.seedLv*15,ok:state.seedLv<3}].forEach(it=>{
+    const ok=it.ok!==false;const row=document.createElement('div');row.className='shop-item';row.innerHTML='<span>'+it.name+(ok?'':'（已满）')+'</span>';
+    const b=document.createElement('button');b.textContent=it.cost+' 币';b.disabled=!ok||state.coins<it.cost;
+    b.onclick=()=>{unlock();if(state.coins<it.cost||!ok)return;state.coins-=it.cost;sfx('swap');if(it.id==='seed')state.seeds+=3;if(it.id==='plot')state.plots.push({stage:0,water:0,crop:null});if(it.id==='lv')state.seedLv++;persist();openShop();hud()};
+    row.appendChild(b);list.appendChild(row);
+  });
+  show('panelShop');persist();
+}
+
+function plotRect(i){
+  const n=state.plots.length;const cols=Math.min(4,n);
+  const cell=Math.min(72,(W-40)/cols);const rows=Math.ceil(n/cols);
+  const ox=(W-cols*cell)/2,oy=H*0.22;
+  const r=(i/cols)|0,c=i%cols;
+  return {x:ox+c*cell+4,y:oy+r*cell+4,w:cell-8,h:cell-8};
+}
+
+function onPlot(i){
+  if(mode!=='play'||!state)return;
+  unlock();const p=state.plots[i];if(!p)return;
+  if(tool==='seed'){
+    if(p.crop||state.seeds<=0)return;
+    state.seeds--;p.crop='veg';p.stage=1;p.water=0;sfx('place');
+  }else if(tool==='water'){
+    if(!p.crop||p.water)return;
+    p.water=1;sfx('swap');
+  }else if(tool==='harvest'){
+    if(!p.crop||p.stage<3)return;
+    const pay=8+state.seedLv*4;state.coins+=pay;state.earn+=pay;state.score=(state.score||0)+pay;
+    p.crop=null;p.stage=0;p.water=0;sfx('win');
+  }
+  persist();hud();
+}
+
+function sleep(){
+  if(mode!=='play'||!state)return;
+  unlock();
+  state.plots.forEach(p=>{
+    if(p.crop&&p.water){p.stage=Math.min(3,p.stage+1);p.water=0}
+    else if(p.crop&&!p.water&&Math.random()<0.25){/* wilt chance */}
+  });
+  state.day++;best=Math.max(best,state.day);
+  // daily cost
+  state.coins-=2;
+  if(state.coins<0){mode='over';save({best,play:null});document.getElementById('overMsg').textContent='坚持了 '+state.day+' 天';show('panelOver');sfx('lose');return}
+  sfx('place');persist();hud();
+}
+
+function draw(){
+  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#38bdf8');g.addColorStop(0.35,'#86efac');g.addColorStop(1,'#166534');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#92400e';ctx.fillRect(16,H*0.12,70,48);ctx.fillStyle='#b45309';ctx.fillRect(12,H*0.12+20,78,8);
+  if(!state)return;
+  state.plots.forEach((p,i)=>{
+    const r=plotRect(i);
+    ctx.fillStyle=p.water?'#713f12':'#a16207';ctx.fillRect(r.x,r.y,r.w,r.h);
+    if(p.crop){
+      const h=r.h*(0.25+p.stage*0.2);
+      ctx.fillStyle=p.stage>=3?'#facc15':'#22c55e';
+      ctx.fillRect(r.x+r.w*0.35,r.y+r.h-h,r.w*0.3,h);
+      if(p.stage>=3){ctx.beginPath();ctx.arc(r.x+r.w/2,r.y+r.h-h,6,0,Math.PI*2);ctx.fill()}
+    }
+  });
+  ctx.fillStyle='#e2e8f0';ctx.font='13px system-ui';ctx.fillText('工具: '+(tool==='seed'?'播种':tool==='water'?'浇水':'收割')+' · 种子等级 '+(state.seedLv+1),16,H-70);
+}
+
+function loop(){draw();requestAnimationFrame(loop)}
+canvas.addEventListener('pointerdown',e=>{
+  if(mode!=='play'||!state)return;
+  const r=canvas.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+  for(let i=0;i<state.plots.length;i++){const p=plotRect(i);if(x>=p.x&&x<=p.x+p.w&&y>=p.y&&y<=p.y+p.h){onPlot(i);break}}
+});
+
+document.getElementById('toolSeed').onclick=()=>{setTool('seed');unlock()};
+document.getElementById('toolWater').onclick=()=>{setTool('water');unlock()};
+document.getElementById('toolHarvest').onclick=()=>{setTool('harvest');unlock()};
+document.getElementById('toolSleep').onclick=()=>sleep();
+document.getElementById('toolShop').onclick=()=>{unlock();openShop()};
+document.getElementById('btnCloseShop').onclick=()=>{mode='play';hidePanels();persist()};
+document.getElementById('btnNew').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnContinue').onclick=()=>{unlock();const d=load();if(d&&d.play)newGame(d.play)};
+document.getElementById('btnSaveMenu').onclick=()=>{persist();mode='menu';show('panelMenu');loadMeta()};
+document.getElementById('btnRetry').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnOverMenu').onclick=()=>{mode='menu';show('panelMenu');loadMeta()};
+
+loadMeta();resize();if(window.GameAudio)GameAudio.boot('catchy');requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>篮球 · Street Hoops</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#1c1917;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:#292524}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:55%}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .shot{pointer-events:auto;position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:140px;height:64px;border-radius:999px;background:rgba(37,99,235,.55);color:#fff;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.3);font-size:15px}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.94);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.3rem;margin-bottom:6px;color:#fdba74}
+#ui h2{font-size:1.05rem;margin:0 0 10px;color:#fed7aa}
+#ui p{font-size:.85rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:100px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button:disabled{opacity:.45}
+#ui .shop-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.84rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud"><span>分 <b id="score">0</b></span><span>关 <b id="level">1</b></span><span>币 <b id="coins">0</b></span><span>最高 <b id="best">0</b></span></div>
+  <div class="action-row" id="audioBar"></div>
+  <div id="touch"><div class="shot" id="btnShot">投篮</div></div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>篮球</h1>
+      <p>时机条投篮：绿区命中得分。关卡对手干扰，升级精度与节奏。</p>
+      <p>空格 / 点击 /「投篮」在绿区松开或按下</p>
+      <div class="row"><button id="btnNew">新游戏</button><button class="ghost" id="btnContinue" disabled>继续</button></div>
+    </div>
+    <div class="panel hidden" id="panelShop">
+      <h2>训练营 · 关 <span id="shopLv">1</span></h2>
+      <p id="shopMsg"></p><div id="shopList"></div>
+      <div class="row"><button id="btnNext">下一关</button><button class="ghost" id="btnSaveMenu">存档回菜单</button></div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2>挑战失败</h2><p id="overMsg"></p>
+      <div class="row"><button id="btnRetry">再来</button><button class="ghost" id="btnOverMenu">菜单</button></div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=18"></script>
+<script>
+(function(){
+const KEY='tbc_hoops_v1';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=360,H=640,dpr=1,mode='menu',state=null,best=0;
+
+function sfx(n){try{GameAudio&&GameAudio.sfx(n)}catch(e){}}
+function unlock(){try{GameAudio&&GameAudio.unlock()}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+function loadMeta(){const d=load();best=(d&&d.best)||0;document.getElementById('best').textContent=best;document.getElementById('btnContinue').disabled=!(d&&d.play)}
+function persist(){if(!state)return;save({best:Math.max(best,state.score),play:{score:state.score,coins:state.coins,level:state.level,acc:state.acc,spd:state.spd,miss:state.missLeft}})}
+function resize(){const r=document.getElementById('wrap').getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);W=Math.max(280,r.width);H=Math.max(400,r.height);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+window.addEventListener('resize',resize);
+function hidePanels(){['panelMenu','panelShop','panelOver'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function show(id){hidePanels();document.getElementById(id).classList.remove('hidden')}
+
+function newShot(){
+  const greenW=0.14+state.acc*0.03;
+  state.green=0.35+Math.random()*0.35;state.greenW=greenW;
+  state.cursor=0;state.dir=1;state.flying=null;state.defX=W*0.55;
+}
+
+function newGame(from){
+  unlock();const p=from||{};
+  state={score:p.score||0,coins:p.coins||0,level:p.level||1,acc:p.acc||0,spd:p.spd||0,need:4+((p.level||1)-1),made:0,missLeft:p.miss||3,t:0};
+  newShot();mode='play';hidePanels();hud();sfx('place');
+}
+
+function hud(){if(!state)return;document.getElementById('score').textContent=state.score|0;document.getElementById('level').textContent=state.level;document.getElementById('coins').textContent=state.coins;document.getElementById('best').textContent=Math.max(best,state.score)|0}
+
+function openShop(){
+  mode='shop';document.getElementById('shopLv').textContent=state.level;
+  document.getElementById('shopMsg').textContent='金币 '+state.coins+' · 命中 '+state.made;
+  const list=document.getElementById('shopList');list.innerHTML='';
+  [{id:'acc',name:'绿区加宽',cost:15+state.acc*12,ok:state.acc<5},{id:'spd',name:'节奏可控',cost:12+state.spd*10,ok:state.spd<4},{id:'miss',name:'容错 +1',cost:18,ok:state.missLeft<5}].forEach(it=>{
+    const row=document.createElement('div');row.className='shop-item';row.innerHTML='<span>'+it.name+'</span>';
+    const b=document.createElement('button');b.textContent=it.cost+' 币';b.disabled=!it.ok||state.coins<it.cost;
+    b.onclick=()=>{unlock();if(state.coins<it.cost||!it.ok)return;state.coins-=it.cost;sfx('swap');if(it.id==='acc')state.acc++;if(it.id==='spd')state.spd++;if(it.id==='miss')state.missLeft++;persist();openShop();hud()};
+    row.appendChild(b);list.appendChild(row);
+  });
+  show('panelShop');persist();
+}
+
+function shoot(){
+  if(mode!=='play'||!state||state.flying)return;
+  unlock();
+  const hit=Math.abs(state.cursor-state.green)<state.greenW/2;
+  const hoop={x:W*0.5,y:H*0.22};
+  state.flying={x:W*0.5,y:H*0.75,t:0,hit,tx:hoop.x+(hit?0:(Math.random()-.5)*50),ty:hoop.y+(hit?0:30)};
+  sfx(hit?'place':'hit');
+}
+
+function update(dt){
+  if(mode!=='play'||!state)return;
+  state.t+=dt;
+  if(!state.flying){
+    const speed=1.1+state.level*0.08-state.spd*0.1;
+    state.cursor+=state.dir*speed*dt;
+    if(state.cursor>1){state.cursor=1;state.dir=-1}
+    if(state.cursor<0){state.cursor=0;state.dir=1}
+    // defender sway
+    state.defX=W*0.5+Math.sin(state.t*(1.5+state.level*0.2))*40;
+  }else{
+    state.flying.t+=dt*1.8;
+    const t=Math.min(1,state.flying.t);
+    state.flying.x=W*0.5+(state.flying.tx-W*0.5)*t;
+    state.flying.y=H*0.75+(state.flying.ty-H*0.75)*t-Math.sin(t*Math.PI)*80;
+    if(t>=1){
+      const blocked=Math.abs(state.defX-state.flying.tx)<28&&!state.flying.hit;
+      if(state.flying.hit&&!blocked){
+        state.made++;state.score+=100+state.level*10;state.coins+=2;sfx('win');
+        if(state.made>=state.need){state.level++;state.coins+=10;openShop();return}
+      }else{
+        state.missLeft--;sfx('lose');
+        if(state.missLeft<=0){mode='over';best=Math.max(best,state.score);save({best,play:null});document.getElementById('overMsg').textContent='得分 '+state.score;show('panelOver');return}
+      }
+      newShot();
+    }
+  }
+  hud();
+}
+
+function draw(){
+  ctx.fillStyle='#44403c';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#b45309';ctx.fillRect(0,H*0.55,W,H*0.45);
+  // hoop
+  ctx.strokeStyle='#e7e5e4';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W*0.5,40);ctx.lineTo(W*0.5,H*0.18);ctx.stroke();
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(W*0.5,H*0.22,28,10,0,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle='#78716c';ctx.fillRect(W*0.5+26,H*0.12,6,40);
+  if(!state)return;
+  // defender
+  ctx.fillStyle='#f87171';ctx.fillRect(state.defX-12,H*0.28,24,40);
+  ctx.fillStyle='#fecaca';ctx.beginPath();ctx.arc(state.defX,H*0.28-8,8,0,Math.PI*2);ctx.fill();
+  // player
+  ctx.fillStyle='#38bdf8';ctx.fillRect(W*0.5-14,H*0.72,28,44);
+  ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(W*0.5,H*0.72-8,9,0,Math.PI*2);ctx.fill();
+  // ball
+  const bx=state.flying?state.flying.x:W*0.5,by=state.flying?state.flying.y:H*0.68;
+  ctx.fillStyle='#ea580c';ctx.beginPath();ctx.arc(bx,by,10,0,Math.PI*2);ctx.fill();
+  // timing bar
+  const bx0=40,bw=W-80,by0=H-70;
+  ctx.fillStyle='#1c1917';ctx.fillRect(bx0,by0,bw,16);
+  ctx.fillStyle='#22c55e';ctx.fillRect(bx0+(state.green-state.greenW/2)*bw,by0,state.greenW*bw,16);
+  ctx.fillStyle='#f8fafc';ctx.fillRect(bx0+state.cursor*bw-2,by0-3,4,22);
+  ctx.fillStyle='#e2e8f0';ctx.font='12px system-ui';ctx.fillText('命中 '+state.made+'/'+state.need+' · 失误剩余 '+state.missLeft,40,H-40);
+}
+
+let last=performance.now();
+function loop(n){const dt=Math.min(0.033,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop)}
+window.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();shoot()}});
+canvas.addEventListener('pointerdown',()=>{if(mode==='play')shoot()});
+document.getElementById('btnShot').addEventListener('pointerdown',e=>{e.preventDefault();shoot()});
+
+document.getElementById('btnNew').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnContinue').onclick=()=>{unlock();const d=load();if(d&&d.play)newGame(d.play)};
+document.getElementById('btnNext').onclick=()=>{unlock();state.made=0;state.need=4+(state.level-1);state.missLeft=Math.max(state.missLeft,3);newShot();mode='play';hidePanels();persist();sfx('place')};
+document.getElementById('btnSaveMenu').onclick=()=>{persist();mode='menu';show('panelMenu');loadMeta()};
+document.getElementById('btnRetry').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnOverMenu').onclick=()=>{mode='menu';show('panelMenu');loadMeta()};
+
+loadMeta();resize();if(window.GameAudio)GameAudio.boot('catchy');requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

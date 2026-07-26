@@ -237,7 +237,19 @@ const gamesConfig = {
                 { titleKey: 'tools.blastParty.title', url: 'html/game/blast-party.html?v=2' },
                 { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html' },
                 { titleKey: 'tools.townWalk.title', url: 'html/game/town-walk.html' },
-                { titleKey: 'tools.town3d.title', url: 'html/game/town-3d.html' }
+                { titleKey: 'tools.town3d.title', url: 'html/game/town-3d.html' },
+                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html' },
+                { titleKey: 'tools.motoBrawl.title', url: 'html/game/moto-brawl.html' },
+                { titleKey: 'tools.circusRun.title', url: 'html/game/circus-run.html' },
+                { titleKey: 'tools.kungfuBrawl.title', url: 'html/game/kungfu-brawl.html' },
+                { titleKey: 'tools.megaBee.title', url: 'html/game/mega-bee.html' },
+                { titleKey: 'tools.skyRaid.title', url: 'html/game/sky-raid.html' },
+                { titleKey: 'tools.streetSoccer.title', url: 'html/game/street-soccer.html' },
+                { titleKey: 'tools.streetHoops.title', url: 'html/game/street-hoops.html' },
+                { titleKey: 'tools.bubbleShot.title', url: 'html/game/bubble-shot.html' },
+                { titleKey: 'tools.marblePath.title', url: 'html/game/marble-path.html' },
+                { titleKey: 'tools.cozyFarm.title', url: 'html/game/cozy-farm.html' },
+                { titleKey: 'tools.cozyRanch.title', url: 'html/game/cozy-ranch.html' }
             ]
         }
     ]

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>大鱼吃小鱼 · Fish Feast</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#041525;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:#06283f}
+canvas{display:block;width:100%;height:100%}
+#hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+#hud b{color:#fde68a}
+#audioBar{position:absolute;top:8px;right:8px;z-index:5;pointer-events:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;max-width:55%}
+#audioBar .tb-btn{font-size:11px;padding:6px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:4px;font-size:10px;color:#94a3b8}
+#audioBar input[type=range]{width:72px}
+#touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:3}
+#touch .pad{pointer-events:auto;position:absolute;left:16px;bottom:16px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+#touch .stick{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.35);left:33px;top:33px}
+@media(pointer:coarse){#touch{display:block}}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:4}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,380px);background:rgba(15,23,42,.94);border:1px solid #334155;border-radius:14px;padding:18px 16px}
+#ui h1{font-size:1.3rem;margin-bottom:6px;color:#38bdf8}
+#ui h2{font-size:1.05rem;margin:0 0 10px;color:#7dd3fc}
+#ui p{font-size:.85rem;line-height:1.45;color:#94a3b8;margin-bottom:8px}
+#ui .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#ui button{font:inherit;border:0;border-radius:999px;padding:10px 16px;background:#2563eb;color:#fff;cursor:pointer;flex:1;min-width:100px}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
+#ui button:disabled{opacity:.45;cursor:not-allowed}
+#ui .shop-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b;font-size:.84rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <span>分 <b id="score">0</b></span>
+    <span>关 <b id="level">1</b></span>
+    <span>币 <b id="coins">0</b></span>
+    <span>最高 <b id="best">0</b></span>
+  </div>
+  <div class="action-row" id="audioBar"></div>
+  <div id="touch"><div class="pad" id="pad"><div class="stick" id="stick"></div></div></div>
+  <div id="ui">
+    <div class="panel" id="panelMenu">
+      <h1>大鱼吃小鱼</h1>
+      <p>吃比自己小的鱼长大，撞到更大的会死。过关赚金币，升级速度与护盾。</p>
+      <p>键鼠：WASD / 方向键 · 触屏：左下摇杆</p>
+      <div class="row">
+        <button id="btnNew">新游戏</button>
+        <button class="ghost" id="btnContinue" disabled>继续</button>
+      </div>
+    </div>
+    <div class="panel hidden" id="panelShop">
+      <h2>过关商店 · 第 <span id="shopLv">1</span> 关</h2>
+      <p id="shopMsg">选择强化后继续下一关。</p>
+      <div id="shopList"></div>
+      <div class="row">
+        <button id="btnNext">下一关</button>
+        <button class="ghost" id="btnSaveMenu">存档回菜单</button>
+      </div>
+    </div>
+    <div class="panel hidden" id="panelOver">
+      <h2>被大鱼吃掉了</h2>
+      <p id="overMsg"></p>
+      <div class="row">
+        <button id="btnRetry">再来</button>
+        <button class="ghost" id="btnOverMenu">菜单</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../../js/game/game-audio.js?v=18"></script>
+<script>
+(function(){
+const KEY='tbc_fish_feast_v1';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+let W=360,H=640,dpr=1;
+const keys={};let stick={x:0,y:0,active:false};
+let mode='menu',state=null,best=0;
+
+function sfx(n){try{GameAudio&&GameAudio.sfx(n)}catch(e){}}
+function unlock(){try{GameAudio&&GameAudio.unlock()}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+function save(data){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+function loadMeta(){const d=load();best=(d&&d.best)||0;document.getElementById('best').textContent=best;document.getElementById('btnContinue').disabled=!(d&&d.play)}
+function persist(){if(!state)return;save({best:Math.max(best,state.score),play:{score:state.score,coins:state.coins,level:state.level,spd:state.spdLv,shield:state.shieldLv,size:state.player.r}})}
+
+function resize(){
+  const wrap=document.getElementById('wrap');
+  const r=wrap.getBoundingClientRect();
+  dpr=Math.min(2,window.devicePixelRatio||1);
+  W=Math.max(280,r.width);H=Math.max(400,r.height);
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize',resize);
+
+function hidePanels(){['panelMenu','panelShop','panelOver'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
+function show(id){hidePanels();document.getElementById(id).classList.remove('hidden')}
+
+function mkFish(r,x,y,friendly){
+  const hue=friendly?190: (r<12?80:r<22?40:r<36?10:340);
+  return {x,y,r,vx:(Math.random()-.5)*40,vy:(Math.random()-.5)*40,hue,blink:Math.random()*6};
+}
+
+function newGame(from){
+  unlock();
+  const play=from||{};
+  const level=play.level||1;
+  const size=play.size||10;
+  state={
+    score:play.score||0,coins:play.coins||0,level,
+    spdLv:play.spd||0,shieldLv:play.shield||0,shield:0,
+    player:{x:W/2,y:H/2,r:size,angle:0},
+    fish:[],bubbles:[],t:0,goal:8+level*3,eaten:0,alive:true
+  };
+  spawnWave();
+  mode='play';hidePanels();
+  updateHud();sfx('place');
+}
+
+function spawnWave(){
+  const n=14+state.level*2;
+  state.fish=[];
+  const pr=state.player.r;
+  for(let i=0;i<n;i++){
+    let r;
+    const roll=Math.random();
+    if(roll<.45)r=pr*(.35+.35*Math.random());
+    else if(roll<.75)r=pr*(.9+1.1*Math.random());
+    else r=pr*(1.3+1.4*Math.random());
+    r=Math.max(5,Math.min(48,r));
+    let x,y,guard=0;
+    do{x=Math.random()*W;y=Math.random()*H;guard++}while(Math.hypot(x-state.player.x,y-state.player.y)<80&&guard<30);
+    state.fish.push(mkFish(r,x,y,false));
+  }
+}
+
+function updateHud(){
+  if(!state)return;
+  document.getElementById('score').textContent=state.score|0;
+  document.getElementById('level').textContent=state.level;
+  document.getElementById('coins').textContent=state.coins|0;
+  document.getElementById('best').textContent=Math.max(best,state.score)|0;
+}
+
+function openShop(){
+  mode='shop';
+  document.getElementById('shopLv').textContent=state.level;
+  document.getElementById('shopMsg').textContent='金币 '+state.coins+' · 吃掉 '+state.eaten+' 条';
+  const list=document.getElementById('shopList');
+  list.innerHTML='';
+  const items=[
+    {id:'spd',name:'游速 +1',cost:15+state.spdLv*10,ok:state.spdLv<5},
+    {id:'shield',name:'护盾次数 +1',cost:20+state.shieldLv*12,ok:state.shieldLv<4},
+    {id:'size',name:'体型微调',cost:12,ok:true}
+  ];
+  items.forEach(it=>{
+    const row=document.createElement('div');row.className='shop-item';
+    row.innerHTML='<span>'+it.name+(it.ok?'':'（已满）')+'</span>';
+    const b=document.createElement('button');
+    b.textContent=it.cost+' 币';
+    b.disabled=!it.ok||state.coins<it.cost;
+    b.onclick=()=>{
+      unlock();if(state.coins<it.cost||!it.ok)return;
+      state.coins-=it.cost;sfx('swap');
+      if(it.id==='spd')state.spdLv++;
+      if(it.id==='shield'){state.shieldLv++;state.shield++}
+      if(it.id==='size')state.player.r=Math.min(40,state.player.r+1.5);
+      persist();openShop();updateHud();
+    };
+    row.appendChild(b);list.appendChild(row);
+  });
+  show('panelShop');persist();
+}
+
+function gameOver(){
+  mode='over';state.alive=false;
+  best=Math.max(best,state.score);
+  save({best,play:null});
+  document.getElementById('overMsg').textContent='得分 '+state.score+' · 到达第 '+state.level+' 关';
+  show('panelOver');sfx('lose');updateHud();
+}
+
+function inputVec(){
+  let x=stick.active?stick.x:0,y=stick.active?stick.y:0;
+  if(keys['ArrowLeft']||keys['a']||keys['A'])x-=1;
+  if(keys['ArrowRight']||keys['d']||keys['D'])x+=1;
+  if(keys['ArrowUp']||keys['w']||keys['W'])y-=1;
+  if(keys['ArrowDown']||keys['s']||keys['S'])y+=1;
+  const m=Math.hypot(x,y)||1;return {x:x/m,y:y/m};
+}
+
+function update(dt){
+  if(mode!=='play'||!state||!state.alive)return;
+  state.t+=dt;
+  const iv=inputVec();
+  const spd=90+state.spdLv*28;
+  state.player.x+=iv.x*spd*dt;
+  state.player.y+=iv.y*spd*dt;
+  state.player.x=Math.max(state.player.r,Math.min(W-state.player.r,state.player.x));
+  state.player.y=Math.max(state.player.r,Math.min(H-state.player.r,state.player.y));
+  if(iv.x||iv.y)state.player.angle=Math.atan2(iv.y,iv.x);
+  const depthBoost=1+state.level*0.04;
+  state.fish.forEach(f=>{
+    f.blink+=dt;
+    f.x+=f.vx*dt*depthBoost;f.y+=f.vy*dt*depthBoost;
+    if(f.x<f.r||f.x>W-f.r)f.vx*=-1;
+    if(f.y<f.r||f.y>H-f.r)f.vy*=-1;
+    f.x=Math.max(f.r,Math.min(W-f.r,f.x));
+    f.y=Math.max(f.r,Math.min(H-f.r,f.y));
+    if(Math.random()<0.01){f.vx+=(Math.random()-.5)*20;f.vy+=(Math.random()-.5)*20}
+  });
+  if(Math.random()<0.03)state.bubbles.push({x:Math.random()*W,y:H+4,r:2+Math.random()*3,vy:20+Math.random()*40});
+  state.bubbles=state.bubbles.filter(b=>{b.y-=b.vy*dt;return b.y>-10});
+
+  const p=state.player;
+  for(let i=state.fish.length-1;i>=0;i--){
+    const f=state.fish[i];
+    const d=Math.hypot(f.x-p.x,f.y-p.y);
+    if(d<p.r+f.r-2){
+      if(f.r<p.r*0.95){
+        state.fish.splice(i,1);
+        p.r=Math.min(42,p.r+Math.max(0.4,f.r*0.08));
+        state.score+=Math.round(5+f.r+state.level);
+        state.coins+=Math.round(1+f.r/6);
+        state.eaten++;sfx('place');
+        if(state.eaten>=state.goal){
+          state.level++;state.coins+=10+state.level*2;sfx('win');
+          openShop();return;
+        }
+      }else if(f.r>p.r*1.05){
+        if(state.shield>0){state.shield--;state.fish.splice(i,1);sfx('hit');}
+        else{gameOver();return;}
+      }
+    }
+  }
+  if(state.fish.length<8+state.level){
+    const pr=p.r;const r=pr*(.4+Math.random()*1.6);
+    state.fish.push(mkFish(Math.max(5,Math.min(48,r)),Math.random()*W,Math.random()<0.5?-20:H+20,false));
+  }
+  updateHud();
+}
+
+function drawFish(f,isPlayer){
+  ctx.save();
+  ctx.translate(f.x,f.y);
+  ctx.rotate(f.angle||Math.atan2(f.vy||0,f.vx||1));
+  const r=f.r;
+  ctx.fillStyle=isPlayer?'#38bdf8':('hsl('+f.hue+' 70% 55%)');
+  ctx.beginPath();
+  ctx.ellipse(0,0,r,r*0.65,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.moveTo(-r*0.7,0);ctx.lineTo(-r*1.25,-r*0.45);ctx.lineTo(-r*1.25,r*0.45);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#0f172a';
+  ctx.beginPath();ctx.arc(r*0.35,-r*0.15,Math.max(1.5,r*0.12),0,Math.PI*2);ctx.fill();
+  if(isPlayer&&state.shield>0){
+    ctx.strokeStyle='rgba(250,250,210,.55)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,0,r+4,0,Math.PI*2);ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function draw(){
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#0a3a5c');g.addColorStop(1,'#021018');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,255,255,.08)';
+  const tw=state?state.t:0;
+  for(let i=0;i<12;i++){ctx.beginPath();ctx.arc((i*67+tw*10)%W,(i*97)%H,1.2,0,Math.PI*2);ctx.fill()}
+  if(state){
+    state.bubbles.forEach(b=>{ctx.strokeStyle='rgba(180,220,255,.35)';ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.stroke()});
+    state.fish.forEach(f=>drawFish(f,false));
+    drawFish(state.player,true);
+    ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='12px system-ui';
+    ctx.fillText('目标 '+(state.eaten)+'/'+state.goal,10,H-14);
+  }
+}
+
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.033,(now-last)/1000);last=now;
+  update(dt);draw();
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});
+window.addEventListener('keyup',e=>{keys[e.key]=false});
+
+(function bindPad(){
+  const pad=document.getElementById('pad'),st=document.getElementById('stick');
+  function set(clientX,clientY){
+    const r=pad.getBoundingClientRect();
+    let x=(clientX-r.left)/r.width*2-1,y=(clientY-r.top)/r.height*2-1;
+    const m=Math.hypot(x,y);if(m>1){x/=m;y/=m}
+    stick={x,y,active:true};
+    st.style.left=(33+x*28)+'px';st.style.top=(33+y*28)+'px';
+  }
+  function end(){stick={x:0,y:0,active:false};st.style.left='33px';st.style.top='33px'}
+  pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);set(e.clientX,e.clientY)});
+  pad.addEventListener('pointermove',e=>{if(stick.active)set(e.clientX,e.clientY)});
+  pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end);
+})();
+
+document.getElementById('btnNew').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnContinue').onclick=()=>{unlock();const d=load();if(d&&d.play)newGame(d.play)};
+document.getElementById('btnNext').onclick=()=>{unlock();state.eaten=0;state.goal=8+state.level*3;state.shield=state.shieldLv;spawnWave();mode='play';hidePanels();persist();sfx('place')};
+document.getElementById('btnSaveMenu').onclick=()=>{persist();mode='menu';show('panelMenu');loadMeta()};
+document.getElementById('btnRetry').onclick=()=>{unlock();newGame(null)};
+document.getElementById('btnOverMenu').onclick=()=>{mode='menu';show('panelMenu');loadMeta()};
+
+loadMeta();resize();
+if(window.GameAudio)GameAudio.boot('catchy');
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
