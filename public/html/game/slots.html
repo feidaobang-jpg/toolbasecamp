@@ -6,89 +6,94 @@
 <title>老虎机 · Animal Slots</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:#2a1810;color:#fff7ed;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;overflow:hidden;touch-action:none;user-select:none}
-#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:
-  radial-gradient(ellipse at 50% 18%,#5c3a22 0%,transparent 55%),
-  linear-gradient(180deg,#4a2f1c,#2a1810 55%,#1a100c);
-  display:flex;flex-direction:column;padding:8px 8px 6px;gap:6px}
+html,body{height:100%;background:#1e293b;color:#fff7ed;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;overflow:hidden;touch-action:none;user-select:none}
+#wrap{position:relative;width:100%;height:100%;max-width:420px;margin:0 auto;background:linear-gradient(180deg,#334155,#1e293b);display:flex;flex-direction:column;padding:6px;gap:5px}
+#topBar{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center;gap:6px;min-height:28px}
+#audioBar{display:flex;gap:4px;align-items:center}
+#audioBar .tb-btn{font-size:11px;padding:5px 10px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
+#audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#93c5fd}
+#audioBar input[type=range]{width:64px}
 #board{
-  flex:1 1 auto;min-height:0;border-radius:18px;
-  background:linear-gradient(145deg,#8b5a2b,#5c3a1e 40%,#3e2714);
-  border:4px solid #c9a227;
-  box-shadow:inset 0 0 0 3px #6b4423,0 8px 20px rgba(0,0,0,.45);
-  overflow:hidden;position:relative
+  flex:0 0 auto;width:100%;aspect-ratio:1 / 1;max-height:min(52vh,420px);
+  border-radius:14px;background:#0f172a;border:3px solid #64748b;
+  box-shadow:inset 0 0 0 2px #1e293b,0 4px 14px rgba(0,0,0,.35);
+  overflow:hidden;position:relative;margin:0 auto
 }
 canvas{display:block;width:100%;height:100%}
 #mid{
-  flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:6px;
-  padding:8px 10px;border-radius:14px;
-  background:linear-gradient(180deg,#d4d4d8,#9ca3af 55%,#71717a);
-  border:2px solid #e5e7eb;box-shadow:inset 0 1px 0 #fff8,0 3px 0 #52525b
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:2px 0
 }
-.act{border:0;cursor:pointer;font-weight:800;color:#fff;box-shadow:0 3px 0 #0005}
-.act:active{transform:translateY(1px);box-shadow:0 1px 0 #0005}
-.act:disabled{opacity:.45;cursor:not-allowed}
-#btnAll{
-  width:44px;height:44px;border-radius:10px;font-size:13px;
-  background:linear-gradient(180deg,#86efac,#16a34a);border:2px solid #bbf7d0;color:#052e16
-}
-#btnPrev,#btnNext{
-  width:40px;height:40px;border-radius:10px;font-size:18px;line-height:1;
-  background:linear-gradient(180deg,#fde047,#eab308);border:2px solid #fef08a;color:#422006
-}
-#btnSmall,#btnBig{
-  width:42px;height:42px;border-radius:50%;font-size:15px;
-  background:linear-gradient(180deg,#fff,#e5e7eb);border:2px solid #f8fafc;color:#111;box-shadow:0 3px 0 #64748b
-}
-#btnGo{
-  width:52px;height:52px;border-radius:50%;font-size:22px;line-height:1;padding:0;
-  background:radial-gradient(circle at 35% 30%,#fca5a5,#dc2626 55%,#991b1b);
-  border:3px solid #fecaca;box-shadow:0 4px 0 #7f1d1d,0 0 12px rgba(220,38,38,.35)
-}
+.act{border:0;cursor:pointer;font-weight:800;box-shadow:0 2px 0 #0004}
+.act:active{transform:translateY(1px)}
+.act:disabled{opacity:.4;cursor:not-allowed}
+#btnAll{padding:6px 12px;border-radius:8px;font-size:12px;background:linear-gradient(180deg,#86efac,#16a34a);color:#052e16}
+#btnSmall,#btnBig{width:36px;height:36px;border-radius:50%;font-size:13px;background:#fff;color:#111;border:2px solid #e2e8f0}
+#btnPrev,#btnNext{width:34px;height:34px;border-radius:8px;font-size:14px;background:#facc15;color:#422006}
 #panel{
-  flex:0 0 auto;display:flex;flex-direction:column;gap:4px;
-  padding:8px 6px 6px;border-radius:14px;
-  background:linear-gradient(180deg,#5c4030,#3b2718);
-  border:2px solid #c9a227;box-shadow:inset 0 0 0 1px #7c4a28
+  flex:1 1 auto;min-height:0;display:flex;gap:8px;padding:10px 8px;
+  border-radius:14px;border:2px solid #166534;
+  background:
+    repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(0,0,0,.06) 8px,rgba(0,0,0,.06) 16px),
+    linear-gradient(180deg,#86efac,#4ade80 40%,#22c55e);
+  box-shadow:inset 0 1px 0 #bbf7d0
 }
-#bets{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
-.bet{border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-width:0}
-.bet .led{
-  width:100%;background:#0a0a0a;border:1px solid #78716c;border-radius:4px;
-  color:#ef4444;font-size:12px;font-family:ui-monospace,Consolas,monospace;font-weight:700;
-  text-align:center;padding:3px 0;line-height:1.15;box-shadow:inset 0 0 6px #000
+#betMain{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+#bets{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:8px;flex:1;min-height:0}
+.bet{
+  border:2px solid #334155;border-radius:12px;padding:4px 4px 5px;cursor:pointer;min-width:0;min-height:0;
+  background:linear-gradient(180deg,#1e293b,#0f172a);display:flex;flex-direction:column;gap:3px;
+  box-shadow:0 2px 0 #14532d
 }
-.bet .icoWrap{
-  width:100%;aspect-ratio:1;max-height:42px;border-radius:10px;
-  background:radial-gradient(circle at 35% 28%,#86efac,#15803d);
-  border:2px solid #bbf7d0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  box-shadow:0 2px 0 #14532d;gap:0;padding:2px 0
+.bet.on{border-color:#fbbf24;box-shadow:0 0 0 2px rgba(251,191,36,.45),0 2px 0 #14532d}
+/* 第1层：押分 */
+.bet .scoreLayer{
+  flex:0 0 auto;background:#020617;border-radius:6px;padding:3px 0;
+  color:#facc15;font-size:15px;font-weight:800;font-family:ui-monospace,Consolas,monospace;
+  text-align:center;line-height:1.15;border:1px solid #475569
 }
-.bet .emo{font-size:18px;line-height:1;filter:drop-shadow(0 1px 1px #0006)}
-.bet .pay{font-size:9px;font-weight:800;color:#fef08a;line-height:1;text-shadow:0 1px 0 #0008}
-.bet.on .icoWrap{outline:2px solid #fbbf24;outline-offset:1px}
-.bet.on .led{border-color:#fbbf24;box-shadow:inset 0 0 8px rgba(251,191,36,.35)}
-#foot{flex:0 0 auto;display:flex;align-items:center;gap:6px;justify-content:space-between}
-#btnTest{border:0;border-radius:999px;padding:6px 10px;background:#1e3a8a;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
+/* 第2层：大图标 + 赔率 */
+.bet .icoLayer{
+  flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;border-radius:8px;background:radial-gradient(circle at 40% 30%,#334155,#1e293b)
+}
+.bet .emo{font-size:clamp(28px,8vw,40px);line-height:1;filter:drop-shadow(0 2px 2px #0008)}
+.bet .pay{font-size:12px;font-weight:800;color:#fde047;line-height:1}
+#side{
+  flex:0 0 88px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:6px;padding:2px 0
+}
+#scoreBox{
+  width:100%;background:#0f172a;border:2px solid #334155;border-radius:10px;padding:6px 4px;text-align:center
+}
+#scoreBox .lab{font-size:12px;color:#94a3b8;font-weight:700}
+#scoreBox b{display:block;font-size:22px;color:#f8fafc;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:2px}
+#btnGo{
+  width:72px;height:72px;border-radius:50%;border:4px solid #fdba74;cursor:pointer;font-weight:900;font-size:22px;color:#fff;
+  background:radial-gradient(circle at 35% 28%,#fb923c,#ea580c 55%,#c2410c);
+  box-shadow:0 4px 0 #9a3412,0 0 14px rgba(234,88,12,.4)
+}
+#btnGo:disabled{opacity:.45;cursor:not-allowed}
+#btnMenu{
+  width:100%;border:0;border-radius:10px;padding:8px 6px;font-weight:800;font-size:13px;cursor:pointer;
+  background:linear-gradient(180deg,#4ade80,#15803d);color:#052e16;box-shadow:0 2px 0 #14532d
+}
+#foot{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-start}
+#btnTest{border:0;border-radius:999px;padding:5px 10px;background:#1e3a8a;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
 #btnTest.on{background:#b45309}
-#audioBar{display:flex;gap:4px;align-items:center;justify-content:flex-end}
-#audioBar .tb-btn{font-size:10px;padding:5px 8px;border:0;border-radius:999px;background:#2563eb;color:#fff;cursor:pointer}
-#audioBar .game-volume{display:flex;align-items:center;gap:3px;font-size:10px;color:#fbbf24}
-#audioBar input[type=range]{width:56px}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:8}
-#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(28,16,12,.96);border:1px solid #c9a227;border-radius:16px;padding:16px 14px}
+#ui .panel{pointer-events:auto;position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(92%,360px);background:rgba(15,23,42,.96);border:1px solid #64748b;border-radius:16px;padding:16px 14px}
 #ui h1{font-size:1.3rem;color:#fbbf24;margin-bottom:8px}
-#ui p{font-size:.82rem;line-height:1.5;color:#d6d3d1;margin-bottom:7px}
+#ui p{font-size:.82rem;line-height:1.5;color:#94a3b8;margin-bottom:7px}
 #ui .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 #ui button{font:inherit;flex:1;min-width:100px;border:0;border-radius:999px;padding:10px 12px;background:#2563eb;color:#fff;cursor:pointer}
-#ui button.ghost{background:#292524;border:1px solid #78716c}
+#ui button.ghost{background:#1e293b;border:1px solid #475569}
 .hidden{display:none!important}
-#toast{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(28,16,12,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
+#toast{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);z-index:7;pointer-events:none;padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.92);border:1px solid #fbbf24;color:#fde68a;font-weight:700;font-size:14px;opacity:0;transition:opacity .2s;max-width:88%;text-align:center}
 #toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div id="wrap">
+  <div id="topBar"><div class="action-row" id="audioBar"></div></div>
   <div id="board"><canvas id="c"></canvas></div>
   <div id="mid">
     <button type="button" class="act" id="btnAll" title="全+1">×1</button>
@@ -96,20 +101,22 @@ canvas{display:block;width:100%;height:100%}
     <button type="button" class="act" id="btnNext" aria-label="右">▶</button>
     <button type="button" class="act" id="btnSmall">小</button>
     <button type="button" class="act" id="btnBig">大</button>
-    <button type="button" class="act" id="btnGo" title="开始">▶</button>
   </div>
-  <div id="panel"><div id="bets"></div></div>
-  <div id="foot">
-    <button type="button" id="btnTest">测试特奖</button>
-    <button type="button" id="btnMenu" style="border:0;border-radius:999px;padding:6px 10px;background:#44403c;color:#fde68a;font-size:11px;font-weight:700;cursor:pointer">菜单</button>
-    <div class="action-row" id="audioBar"></div>
+  <div id="panel">
+    <div id="betMain"><div id="bets"></div></div>
+    <div id="side">
+      <div id="scoreBox"><div class="lab">总分</div><b id="credits">100</b></div>
+      <button type="button" id="btnGo" title="开始">GO</button>
+      <button type="button" id="btnMenu">菜单</button>
+    </div>
   </div>
+  <div id="foot"><button type="button" id="btnTest">测试特奖</button></div>
   <div id="toast"></div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>🐯 老虎机</h1>
-      <p>点下方动物押分；「开始」会<strong>沿用上次押分</strong>（当前未押时）。「×1」各图案各加 1 分。</p>
-      <p><b>礼炮 🎆</b>随机打中 3 格；<b>火车 🚂</b> 8 灯同行结算。中奖后可点「小/大」比倍（1–7 / 8–14）。</p>
+      <p>点下方动物押分；「GO」会<strong>沿用上次押分</strong>（当前未押时）。「×1」各图案各加 1 分。</p>
+      <p><b>礼炮 🎆</b>随机打中 3 格；<b>火车 🚂</b> 8 灯同行结算。中奖后可点「小/大」比倍。</p>
       <p>仅供娱乐，无真钱。</p>
       <div class="row">
         <button id="btnPlay">进入</button>
@@ -169,6 +176,8 @@ function sfx(n) { try { GameAudio && GameAudio.sfx(n); } catch (e) {} }
 function unlock() { try { GameAudio && GameAudio.unlock(); } catch (e) {} }
 
 function hud() {
+  const el = document.getElementById('credits');
+  if (el) el.textContent = credits;
   document.getElementById('btnSmall').disabled = spinning || !canDouble || lastWin <= 0;
   document.getElementById('btnBig').disabled = spinning || !canDouble || lastWin <= 0;
 }
@@ -214,15 +223,20 @@ function resize() {
 window.addEventListener('resize', () => { resize(); draw(); });
 
 function cellRect(i) {
-  const cols = 7, rows = 7, pad = 4;
-  const cw = (W - pad * 2) / cols, ch = (H - pad * 2) / rows;
+  const cols = 7, rows = 7, pad = 3;
+  // 强制正方形格子：取宽高可用空间的较小边
+  const size = Math.floor(Math.min((W - pad * 2) / cols, (H - pad * 2) / rows));
+  const gridW = size * cols;
+  const gridH = size * rows;
+  const ox = Math.floor((W - gridW) / 2);
+  const oy = Math.floor((H - gridH) / 2);
   const map = [];
   for (let x = 0; x < cols; x++) map.push({ c: x, r: 0 });
   for (let y = 1; y < rows - 1; y++) map.push({ c: cols - 1, r: y });
   for (let x = cols - 1; x >= 0; x--) map.push({ c: x, r: rows - 1 });
   for (let y = rows - 2; y >= 1; y--) map.push({ c: 0, r: y });
   const m = map[i % 24];
-  return { x: pad + m.c * cw, y: pad + m.r * ch, w: cw, h: ch };
+  return { x: ox + m.c * size, y: oy + m.r * size, w: size, h: size, ox, oy, size, gridW, gridH };
 }
 
 function roundPath(c, x, y, w, h, rad) {
@@ -251,23 +265,25 @@ function drawCell(i, lit) {
   const g = ctx.createLinearGradient(r.x, r.y, r.x, r.y + r.h);
   if (kind === 'cannon') { g.addColorStop(0, lit ? '#fde68a' : '#a16207'); g.addColorStop(1, lit ? '#fbbf24' : '#78350f'); }
   else if (kind === 'train') { g.addColorStop(0, lit ? '#7dd3fc' : '#0369a1'); g.addColorStop(1, lit ? '#38bdf8' : '#0c4a6e'); }
-  else { g.addColorStop(0, lit ? '#fff7ed' : '#fef3c7'); g.addColorStop(1, lit ? '#fde68a' : '#d6d3d1'); }
+  else { g.addColorStop(0, lit ? '#fffbeb' : '#f8fafc'); g.addColorStop(1, lit ? '#fde68a' : '#e2e8f0'); }
   ctx.fillStyle = g;
-  ctx.strokeStyle = lit ? '#ef4444' : '#a8a29e';
-  ctx.lineWidth = lit ? 2.8 : 1.2;
-  roundPath(ctx, r.x + 2, r.y + 2, r.w - 4, r.h - 4, 8);
+  ctx.strokeStyle = lit ? '#facc15' : '#94a3b8';
+  ctx.lineWidth = lit ? 3 : 1.5;
+  // 正方形圆角格
+  const inset = 2;
+  roundPath(ctx, r.x + inset, r.y + inset, r.w - inset * 2, r.h - inset * 2, Math.min(8, r.w * 0.18));
   ctx.fill(); ctx.stroke();
   if (lit) {
-    ctx.strokeStyle = 'rgba(239,68,68,.85)';
-    ctx.lineWidth = 3;
-    roundPath(ctx, r.x + 1, r.y + 1, r.w - 2, r.h - 2, 9);
+    ctx.strokeStyle = 'rgba(250,204,21,.95)';
+    ctx.lineWidth = 3.5;
+    roundPath(ctx, r.x + 1, r.y + 1, r.w - 2, r.h - 2, Math.min(9, r.w * 0.2));
     ctx.stroke();
   }
-  drawEmoji(ctx, kind, r.x + r.w / 2, r.y + r.h / 2, Math.min(r.w, r.h));
+  drawEmoji(ctx, kind, r.x + r.w / 2, r.y + r.h / 2, r.w * 0.92);
 }
 
 function drawSunburst(cx, cy, R) {
-  const rays = 24;
+  const rays = 28;
   for (let i = 0; i < rays; i++) {
     const a0 = (i / rays) * Math.PI * 2;
     const a1 = ((i + 0.5) / rays) * Math.PI * 2;
@@ -275,96 +291,53 @@ function drawSunburst(cx, cy, R) {
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, R, a0, a1);
     ctx.closePath();
-    ctx.fillStyle = i % 2 === 0 ? '#fbbf24' : '#f59e0b';
-    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = i % 2 === 0 ? '#1e3a5f' : '#0ea5e9';
+    ctx.globalAlpha = 0.35;
     ctx.fill();
   }
   ctx.globalAlpha = 1;
-  // dots overlay
-  ctx.fillStyle = 'rgba(120,53,15,.18)';
-  for (let i = 0; i < 40; i++) {
-    const a = (i / 40) * Math.PI * 2;
-    const rr = R * (0.35 + (i % 5) * 0.1);
-    ctx.beginPath();
-    ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 2.2, 0, Math.PI * 2);
-    ctx.fill();
-  }
 }
 
 function draw() {
-  // wood board fill
-  const wood = ctx.createLinearGradient(0, 0, 0, H);
-  wood.addColorStop(0, '#7c4a28'); wood.addColorStop(1, '#4a2c17');
-  ctx.fillStyle = wood; ctx.fillRect(0, 0, W, H);
+  // 深蓝底板（贴近参考）
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, W, H);
 
-  const cx = W / 2, cy = H / 2;
-  const inner = { x: W * 0.145, y: H * 0.145, w: W * 0.71, h: H * 0.71 };
-  roundPath(ctx, inner.x, inner.y, inner.w, inner.h, 12);
+  const r0 = cellRect(0);
+  const cx = r0.ox + r0.gridW / 2;
+  const cy = r0.oy + r0.gridH / 2;
+  const innerPad = r0.size * 0.15;
+  const ix = r0.ox + r0.size + innerPad;
+  const iy = r0.oy + r0.size + innerPad;
+  const iw = r0.gridW - r0.size * 2 - innerPad * 2;
+  const ih = r0.gridH - r0.size * 2 - innerPad * 2;
+
+  roundPath(ctx, ix, iy, iw, ih, 10);
   ctx.save();
   ctx.clip();
-  drawSunburst(cx, cy, Math.max(inner.w, inner.h) * 0.72);
+  drawSunburst(cx, cy, Math.max(iw, ih) * 0.75);
   ctx.restore();
 
-  // 奖池 / 金币
-  const boxW = W * 0.28, boxH = H * 0.08;
-  const boxY = H * 0.22;
-  drawLedPanel(W * 0.22, boxY, boxW, boxH, '奖池', String(lastWin));
-  drawLedPanel(W * 0.78 - boxW, boxY, boxW, boxH, '金币', String(credits));
-
-  // center circle number
-  const cr = Math.min(W, H) * 0.11;
-  ctx.beginPath();
-  ctx.arc(cx, cy + H * 0.02, cr, 0, Math.PI * 2);
-  const cg = ctx.createRadialGradient(cx - cr * 0.3, cy - cr * 0.2, 2, cx, cy, cr);
-  cg.addColorStop(0, '#a16207'); cg.addColorStop(1, '#451a03');
-  ctx.fillStyle = cg; ctx.fill();
-  ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 3; ctx.stroke();
-  ctx.fillStyle = '#fef3c7';
-  ctx.font = 'bold ' + Math.max(18, cr * 0.7) + 'px ui-monospace,Consolas,monospace';
+  // 中心标题 + 结果
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(String(centerMsg), cx, cy + H * 0.02 + 1);
+  ctx.fillStyle = '#facc15';
+  ctx.font = 'bold ' + Math.max(16, r0.size * 0.42) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('老虎机', cx, cy - r0.size * 0.55);
+  ctx.font = Math.max(18, r0.size * 0.55) + 'px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
+  ctx.fillText('🐼 🐯', cx, cy - r0.size * 0.05);
 
-  // title animals
-  ctx.font = Math.max(16, W * 0.055) + 'px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
-  ctx.fillText('🐼 🐯 🐆', cx, H * 0.40);
-  ctx.fillStyle = '#7f1d1d';
-  ctx.font = 'bold ' + Math.max(16, W * 0.055) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
-  ctx.fillText('老虎机', cx, H * 0.48);
-
-  // soft hint buttons look (non-interactive decoration matching ref)
-  const bw = W * 0.28, bh = H * 0.055;
-  drawSoftBtn(cx - bw - 6, H * 0.62, bw, bh, '获取金币');
-  drawSoftBtn(cx + 6, H * 0.62, bw, bh, '幸运转盘');
+  const dw = Math.min(iw * 0.42, r0.size * 2.2), dh = r0.size * 0.72;
+  ctx.fillStyle = '#020617';
+  roundPath(ctx, cx - dw / 2, cy + r0.size * 0.45, dw, dh, 6); ctx.fill();
+  ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = 'bold ' + Math.max(16, dh * 0.55) + 'px ui-monospace,Consolas,monospace';
+  ctx.fillText(String(centerMsg), cx, cy + r0.size * 0.45 + dh / 2);
 
   for (let i = 0; i < 24; i++) {
     const lit = litSet.has(i) || i === cursor;
     drawCell(i, lit);
   }
-}
-
-function drawLedPanel(x, y, w, h, lab, val) {
-  ctx.fillStyle = '#0a0a0a';
-  roundPath(ctx, x, y, w, h, 5); ctx.fill();
-  ctx.strokeStyle = '#a16207'; ctx.lineWidth = 1.5; ctx.stroke();
-  ctx.fillStyle = '#fbbf24';
-  ctx.font = 'bold ' + Math.max(8, h * 0.28) + 'px system-ui';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText(lab, x + w / 2, y + 2);
-  ctx.fillStyle = '#ef4444';
-  ctx.font = 'bold ' + Math.max(12, h * 0.42) + 'px ui-monospace,Consolas,monospace';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(val, x + w / 2, y + h * 0.62);
-}
-
-function drawSoftBtn(x, y, w, h, text) {
-  const g = ctx.createLinearGradient(x, y, x, y + h);
-  g.addColorStop(0, '#fb923c'); g.addColorStop(1, '#ea580c');
-  ctx.fillStyle = g;
-  roundPath(ctx, x, y, w, h, h / 2); ctx.fill();
-  ctx.fillStyle = '#fff7ed';
-  ctx.font = 'bold ' + Math.max(9, h * 0.42) + 'px "PingFang SC",sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(text, x + w / 2, y + h / 2);
 }
 
 function toast(msg) {
@@ -382,10 +355,10 @@ function renderBets() {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'bet' + (bets[k.id] > 0 ? ' on' : '');
-    if (idx === focusBet) b.style.filter = 'brightness(1.08)';
+    if (idx === focusBet) b.classList.add('on');
     b.innerHTML =
-      '<span class="led">' + String(bets[k.id] || 0).padStart(2, '0') + '</span>' +
-      '<span class="icoWrap"><span class="emo">' + k.emoji + '</span><span class="pay">' + k.pay + '</span></span>';
+      '<span class="scoreLayer">' + (bets[k.id] || 0) + '</span>' +
+      '<span class="icoLayer"><span class="emo">' + k.emoji + '</span><span class="pay">' + k.pay + '</span></span>';
     b.onclick = () => { focusBet = idx; addBet(k.id, 1); };
     box.appendChild(b);
   });
@@ -608,24 +581,6 @@ document.getElementById('btnReset').onclick = () => {
   centerMsg = '20';
   hud(); renderBets(); save(); sfx('swap'); toast('已重置为 100 金币');
 };
-
-// 中心装饰按钮点击：小彩蛋
-canvas.addEventListener('pointerdown', (e) => {
-  unlock();
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX - rect.left) * (W / rect.width);
-  const y = (e.clientY - rect.top) * (H / rect.height);
-  const cx = W / 2, bw = W * 0.28, bh = H * 0.055, by = H * 0.62;
-  if (y >= by && y <= by + bh) {
-    if (x >= cx - bw - 6 && x <= cx - 6) {
-      if (credits < 5000) { credits = Math.min(5000, credits + 100); toast('获取金币 +100'); sfx('power'); hud(); save(); }
-      else toast('金币已满');
-    } else if (x >= cx + 6 && x <= cx + 6 + bw) {
-      toast('幸运转盘：下次特奖概率略增');
-      testBoost = true; syncTestBtn(); save(); sfx('swap');
-    }
-  }
-});
 
 load();
 renderBets();
