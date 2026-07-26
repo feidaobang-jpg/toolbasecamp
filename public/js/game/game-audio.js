@@ -215,7 +215,8 @@
     var THEMES = {
         // default catchy loop — bounce + sticky 8-bar phrase
         catchy: {
-            bpm: 132,
+            // 2x previous tempo (was 132)
+            bpm: 264,
             scale: CATCHY_SCALE,
             // Ode-to-Joy-ish + bounce fill, very sticky
             lead: [
