@@ -51,7 +51,10 @@ canvas{display:block;width:100%;height:100%}
   flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:1px;border-radius:6px
 }
-.bet .emo{font-size:clamp(22px,7.2vw,34px);line-height:1;filter:drop-shadow(0 1px 1px #0008)}
+.bet .emo{
+  font-size:28px;line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 1px 1px #0008);font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif
+}
 .bet .pay{font-size:10px;font-weight:800;color:#fde047;line-height:1}
 #side{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 #scoreBox{width:100%;background:#0f172a;border:2px solid #334155;border-radius:8px;padding:4px 2px;text-align:center}
@@ -216,14 +219,16 @@ function roundPath(c, x, y, w, h, rad) {
   c.closePath();
 }
 
-function drawEmoji(c, animal, x, y, s, big) {
+function drawEmoji(c, animal, x, y, s) {
   const e = EMOJI[animal] || '❓';
+  // 全身类表情略缩小，与狮/虎等「脸」视觉同大；不再按大小格缩放
+  const optical = { elephant: 0.88, leopard: 0.9, train: 0.88, gift: 0.9 }[animal] || 1;
+  const px = Math.max(14, Math.floor(s * 0.72 * optical));
   c.save();
   c.textAlign = 'center';
   c.textBaseline = 'middle';
-  const scale = big ? 0.82 : 0.55;
-  c.font = Math.max(10, Math.floor(s * scale)) + 'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
-  c.fillText(e, x, y + (big ? 0 : 2));
+  c.font = px + 'px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+  c.fillText(e, x, y);
   c.restore();
 }
 
@@ -248,10 +253,9 @@ function drawCell(i, lit) {
   }
 
   if (isSpecial(cell)) {
-    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, true);
+    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w);
   } else {
-    const big = !!cell.big;
-    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, big);
+    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w);
   }
 }
 
