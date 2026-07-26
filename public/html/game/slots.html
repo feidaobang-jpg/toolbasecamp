@@ -109,7 +109,7 @@ const KINDS = [
   { id: 'wolf',     emoji: '🐺', label: '狼', payBig: 10,  paySmall: 2 },
   { id: 'dog',      emoji: '🐶', label: '狗', payBig: 10,  paySmall: 2 },
   { id: 'cat',      emoji: '🐱', label: '猫', payBig: 10,  paySmall: 2 },
-  { id: 'rat',      emoji: '🐭', label: '鼠', payBig: 5,   paySmall: null }
+  { id: 'rat',      emoji: '🐭', label: '鼠', payBig: 10,  paySmall: 2 }
 ];
 
 const EMOJI = {
@@ -123,11 +123,10 @@ function C(a, big) { return { a: a, big: !!big }; }
 const RING = [
   C('wolf', false), C('rat', true), C('cat', false), C('elephant', true), C('lion', false), C('tiger', true), C('leopard', false),
   C('wolf', true), C('dog', false), C('train', true), C('cat', true), C('tiger', false),
-  C('lion', true), C('leopard', false), C('wolf', true), C('elephant', false), C('dog', true), C('cat', false), C('lion', true),
+  C('lion', true), C('rat', false), C('wolf', true), C('elephant', false), C('dog', true), C('cat', false), C('lion', true),
   C('tiger', false), C('leopard', true), C('gift', true), C('leopard', false), C('rat', true)
 ];
-/* 索引: 0狼小 1鼠 2猫小 3大象 4狮小 5虎大 6豹小 | 7狼大 8狗小 9火车 10猫大 11虎小
-         12狮大 13豹小 14狼大 15小象 16狗大 17猫小 18狮大 | 19虎小 20豹大 21礼包 22豹小 23鼠 */
+/* 鼠：大(1)(23) 10 分、小(13) 2 分，与大小鼠均不相邻 */
 let W = 360, H = 360, dpr = 1;
 let credits = 100;
 let lastWin = 0;
@@ -177,7 +176,6 @@ function cellPay(cell) {
   if (isSpecial(cell)) return 0;
   const k = kindMeta(cell.a);
   if (!k) return 0;
-  if (cell.a === 'rat') return k.payBig;
   return cell.big ? k.payBig : k.paySmall;
 }
 
