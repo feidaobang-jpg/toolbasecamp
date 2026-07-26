@@ -287,23 +287,53 @@
         while (pathLayer.firstChild) pathLayer.removeChild(pathLayer.firstChild);
     }
 
+    /**
+     * Centers must be axis-aligned per row/col. Pad cells are narrower and
+     * aspect-ratio makes their boxes shorter — using their own rect caused
+     * diagonal-looking polylines. Take X from a content cell in the column
+     * and Y from a content cell in the row when possible.
+     */
     function cellCenter(r, c) {
-        var el = cellEls[r][c];
         var boardRect = boardEl.getBoundingClientRect();
-        var rect = el.getBoundingClientRect();
+        var xEl = cellEls[r][c];
+        var yEl = cellEls[r][c];
+        if (c >= PAD && c < PAD + COLS && cellEls[PAD] && cellEls[PAD][c]) {
+            xEl = cellEls[PAD][c];
+        } else if (cellEls[PAD] && cellEls[PAD][PAD]) {
+            // border column: still use playable row band for stable X via neighbor
+            xEl = cellEls[r][c];
+        }
+        if (r >= PAD && r < PAD + ROWS && cellEls[r] && cellEls[r][PAD]) {
+            yEl = cellEls[r][PAD];
+        }
+        var xRect = xEl.getBoundingClientRect();
+        var yRect = yEl.getBoundingClientRect();
         return {
-            x: rect.left - boardRect.left + rect.width / 2,
-            y: rect.top - boardRect.top + rect.height / 2
+            x: xRect.left - boardRect.left + xRect.width / 2,
+            y: yRect.top - boardRect.top + yRect.height / 2
         };
     }
 
     function drawPath(points) {
         clearPath();
         if (!points || points.length < 2) return;
-        var pts = points.map(function (p) {
-            var center = cellCenter(p.r, p.c);
-            return center.x + ',' + center.y;
-        }).join(' ');
+        var centers = [];
+        var i;
+        for (i = 0; i < points.length; i++) {
+            centers.push(cellCenter(points[i].r, points[i].c));
+        }
+        // Snap to pure H/V segments (classic Lianliankan — no diagonals)
+        for (i = 1; i < centers.length; i++) {
+            if (points[i].r === points[i - 1].r) {
+                centers[i].y = centers[i - 1].y;
+            } else if (points[i].c === points[i - 1].c) {
+                centers[i].x = centers[i - 1].x;
+            } else {
+                // Should not happen from findPath; force a corner via previous Y then X
+                centers[i].y = centers[i - 1].y;
+            }
+        }
+        var pts = centers.map(function (p) { return p.x + ',' + p.y; }).join(' ');
         var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         poly.setAttribute('points', pts);
         pathLayer.appendChild(poly);
