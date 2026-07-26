@@ -209,28 +209,30 @@
     };
 
     // Bright major / cute casual-game earworms (short looping phrases)
-    // scale: C4 D4 E4 F4 G4 A4 B4 C5 D5 E5
-    var CATCHY_SCALE = [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25];
+    // scale: C4 D4 E4 G4 A4 C5 D5 E5 G5 A5 (pentatonic-leaning, skip F/B for "羊了个羊" vibe)
+    var CATCHY_SCALE = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0];
 
     var THEMES = {
-        // default catchy loop — bounce + sticky 8-bar phrase
+        // bouncy sheep-style motif: short call-and-response, sticky loop
         catchy: {
-            // 2x previous tempo (was 132)
             bpm: 264,
             scale: CATCHY_SCALE,
-            // Ode-to-Joy-ish + bounce fill, very sticky
             lead: [
-                2, 2, 3, 4, 4, 3, 2, 1,
-                0, 0, 1, 2, 2, 1, 1, -1,
-                2, 2, 3, 4, 4, 3, 2, 1,
-                0, 0, 1, 2, 1, 0, 0, -1,
-                1, 1, 2, 0, 1, 2, 3, 2,
-                0, 1, 2, 3, 4, 4, 3, -1,
-                2, 2, 3, 4, 4, 3, 2, 1,
-                0, 0, 1, 2, 1, 0, 0, -1
+                // call
+                3, 3, 5, 3, 4, 4, 3, -1,
+                1, 1, 3, 1, 0, 0, 0, -1,
+                // response (higher)
+                5, 5, 7, 5, 4, 3, 1, 3,
+                5, 5, 4, 3, 1, 0, 0, -1,
+                // bounce climb
+                0, 1, 3, 5, 4, 3, 1, 0,
+                3, 4, 5, 7, 5, 4, 3, 1,
+                // tag — repeats hard in the ear
+                5, 3, 5, 3, 4, 1, 0, 1,
+                3, 3, 4, 3, 1, 0, 0, -1
             ],
-            bass: [0, -1, 0, -1, 4, -1, 4, -1, 5, -1, 5, -1, 4, -1, 4, -1],
-            hop: [7, -1, 9, -1, 7, -1, 5, -1]
+            bass: [0, -1, 0, 3, 4, -1, 4, 3, 0, -1, 0, 3, 4, 3, 1, 0],
+            hop: [5, 7, 5, -1, 8, 5, 7, -1]
         },
         calm: null,
         upbeat: null,
@@ -306,17 +308,17 @@
             else if (bgmStep % 2 === 1) playHat(beat);
 
             if (li >= 0) {
-                playVoice(theme.scale[li % theme.scale.length], beat * 0.92, 'square', 0.28, t0);
-                // light octave sparkle every other phrase note
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.88, 'triangle', 0.3, t0);
+                // cute chirp on alternate notes
                 if (bgmStep % 2 === 0) {
-                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.45, 'triangle', 0.1, t0);
+                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.4, 'sine', 0.12, t0);
                 }
             }
             if (bi >= 0) {
-                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.05, 'triangle', 0.22, t0);
+                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.05, 'square', 0.18, t0);
             }
-            if (hi >= 0 && bgmStep % 8 >= 4) {
-                playVoice(theme.scale[hi % theme.scale.length], beat * 0.4, 'sine', 0.12, t0 + beat * 0.5);
+            if (hi >= 0 && bgmStep % 4 === 2) {
+                playVoice(theme.scale[hi % theme.scale.length], beat * 0.35, 'sine', 0.14, t0 + beat * 0.45);
             }
 
             bgmStep++;
