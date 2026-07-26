@@ -219,11 +219,12 @@ function roundPath(c, x, y, w, h, rad) {
   c.closePath();
 }
 
-function drawEmoji(c, animal, x, y, s) {
+function drawEmoji(c, animal, x, y, s, big) {
   const e = EMOJI[animal] || '❓';
-  // 全身类表情略缩小，与狮/虎等「脸」视觉同大；不再按大小格缩放
+  // 同档位统一尺寸：大格一致、小格一致；全身表情略缩以对齐脸部
+  const tier = big ? 0.78 : 0.52;
   const optical = { elephant: 0.88, leopard: 0.9, train: 0.88, gift: 0.9 }[animal] || 1;
-  const px = Math.max(14, Math.floor(s * 0.72 * optical));
+  const px = Math.max(12, Math.floor(s * tier * optical));
   c.save();
   c.textAlign = 'center';
   c.textBaseline = 'middle';
@@ -253,9 +254,9 @@ function drawCell(i, lit) {
   }
 
   if (isSpecial(cell)) {
-    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w);
+    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, true);
   } else {
-    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w);
+    drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, !!cell.big);
   }
 }
 
