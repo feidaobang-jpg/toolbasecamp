@@ -626,7 +626,7 @@
             mute.className = 'tb-btn';
             mute.id = 'sound-btn';
             mute.setAttribute('data-i18n', 'tools.game.soundOn');
-            mute.textContent = i18n('tools.game.soundOn', 'Mute');
+            mute.textContent = i18n('tools.game.soundOn');
             row.insertBefore(mute, row.firstChild);
         }
         if (!document.getElementById('volume-slider')) {
@@ -634,14 +634,14 @@
             lab.className = 'game-volume';
             var span = document.createElement('span');
             span.setAttribute('data-i18n', 'tools.game.volume');
-            span.textContent = i18n('tools.game.volume', 'Volume');
+            span.textContent = i18n('tools.game.volume');
             var input = document.createElement('input');
             input.type = 'range';
             input.id = 'volume-slider';
             input.min = '0';
             input.max = '100';
             input.value = '50';
-            input.setAttribute('aria-label', i18n('tools.game.volume', 'Volume'));
+            input.setAttribute('aria-label', i18n('tools.game.volume'));
             lab.appendChild(span);
             lab.appendChild(input);
             var muteBtn = document.getElementById('sound-btn');

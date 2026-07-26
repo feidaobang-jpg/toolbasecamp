@@ -231,16 +231,16 @@ const gamesConfig = {
                 { titleKey: 'tools.arenaBrawl.title', url: 'html/game/arena-brawl.html' },
                 { titleKey: 'tools.arenaStrike.title', url: 'html/game/arena-strike.html' },
                 { titleKey: 'tools.gardenDefense.title', url: 'html/game/garden-defense.html' },
-                { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=11' },
-                { titleKey: 'tools.superMario.title', url: 'html/game/super-mario.html?v=2' },
+                { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=12' },
+                { titleKey: 'tools.superMario.title', url: 'html/game/super-mario.html?v=3' },
                 { titleKey: 'tools.steelBattle.title', url: 'html/game/steel-battle.html' },
                 { titleKey: 'tools.blastParty.title', url: 'html/game/blast-party.html?v=2' },
-                { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html' },
+                { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html?v=2' },
                 { titleKey: 'tools.townWalk.title', url: 'html/game/town-walk.html' },
                 { titleKey: 'tools.town3d.title', url: 'html/game/town-3d.html' },
-                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html' },
-                { titleKey: 'tools.bubbleShot.title', url: 'html/game/bubble-shot.html' },
-                { titleKey: 'tools.marblePath.title', url: 'html/game/marble-path.html' }
+                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=2' },
+                { titleKey: 'tools.bubbleShot.title', url: 'html/game/bubble-shot.html?v=2' },
+                { titleKey: 'tools.marblePath.title', url: 'html/game/marble-path.html?v=2' }
             ]
         }
     ]
