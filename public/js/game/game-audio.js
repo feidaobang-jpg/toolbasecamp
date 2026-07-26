@@ -14,7 +14,7 @@
     var muted = false;
     var bgmTimer = null;
     var bgmStep = 0;
-    var bgmTheme = 'calm';
+    var bgmTheme = 'catchy';
     var bgmWanted = false;
     var muteBtns = [];
     var pendingSfx = null;
@@ -37,10 +37,11 @@
         master.gain.value = muted ? 0 : 1;
         master.connect(ctx.destination);
         sfxGain = ctx.createGain();
-        sfxGain.gain.value = 0.55;
+        // ~2x previous loudness
+        sfxGain.gain.value = 1.1;
         sfxGain.connect(master);
         bgmGain = ctx.createGain();
-        bgmGain.gain.value = 0.14;
+        bgmGain.gain.value = 0.32;
         bgmGain.connect(master);
         return ctx;
     }
@@ -88,8 +89,8 @@
     function syncMuteButtons() {
         muteBtns.forEach(function (btn) {
             if (!btn) return;
-            var onLabel = i18n('tools.game.soundOn', 'Sound on');
-            var offLabel = i18n('tools.game.soundOff', 'Muted');
+            var onLabel = i18n('tools.game.soundOn', 'Mute');
+            var offLabel = i18n('tools.game.soundOff', 'Unmute');
             btn.dataset.soundOn = onLabel;
             btn.dataset.soundOff = offLabel;
             btn.setAttribute('aria-pressed', muted ? 'true' : 'false');
@@ -141,124 +142,182 @@
     }
 
     var SFX = {
-        select: function () { tone(660, 0.06, 'sine', 0.12); },
-        click: function () { tone(520, 0.05, 'triangle', 0.1); },
+        select: function () { tone(660, 0.06, 'sine', 0.22); },
+        click: function () { tone(520, 0.05, 'triangle', 0.2); },
         place: function () {
-            tone(420, 0.07, 'sine', 0.14);
-            tone(630, 0.05, 'sine', 0.08, (ctx && ctx.currentTime) + 0.04);
+            tone(420, 0.07, 'sine', 0.26);
+            tone(630, 0.05, 'sine', 0.16, (ctx && ctx.currentTime) + 0.04);
         },
         move: function () {
-            tone(380, 0.06, 'triangle', 0.12);
-            tone(480, 0.05, 'triangle', 0.08, (ctx && ctx.currentTime) + 0.035);
+            tone(380, 0.06, 'triangle', 0.22);
+            tone(480, 0.05, 'triangle', 0.16, (ctx && ctx.currentTime) + 0.035);
         },
         swap: function () {
-            tone(500, 0.05, 'sine', 0.1);
-            tone(700, 0.06, 'sine', 0.1, (ctx && ctx.currentTime) + 0.05);
+            tone(500, 0.05, 'sine', 0.2);
+            tone(700, 0.06, 'sine', 0.2, (ctx && ctx.currentTime) + 0.05);
         },
         invalid: function () {
-            tone(220, 0.12, 'sawtooth', 0.08);
-            tone(160, 0.14, 'sawtooth', 0.06, (ctx && ctx.currentTime) + 0.06);
+            tone(220, 0.12, 'sawtooth', 0.16);
+            tone(160, 0.14, 'sawtooth', 0.12, (ctx && ctx.currentTime) + 0.06);
         },
         match: function () {
             var t = ctx ? ctx.currentTime : 0;
-            tone(523, 0.08, 'sine', 0.12, t);
-            tone(659, 0.08, 'sine', 0.12, t + 0.06);
-            tone(784, 0.1, 'sine', 0.12, t + 0.12);
+            tone(523, 0.08, 'sine', 0.24, t);
+            tone(659, 0.08, 'sine', 0.24, t + 0.06);
+            tone(784, 0.1, 'sine', 0.24, t + 0.12);
         },
         hit: function () {
-            tone(240, 0.04, 'square', 0.06);
-            noiseBurst(0.04, 0.08);
+            tone(240, 0.04, 'square', 0.12);
+            noiseBurst(0.04, 0.16);
         },
         brick: function () {
-            tone(340, 0.05, 'triangle', 0.1);
-            noiseBurst(0.05, 0.1);
+            tone(340, 0.05, 'triangle', 0.2);
+            noiseBurst(0.05, 0.2);
         },
         power: function () {
             var t = ctx ? ctx.currentTime : 0;
-            tone(440, 0.07, 'sine', 0.12, t);
-            tone(660, 0.08, 'sine', 0.12, t + 0.07);
-            tone(880, 0.1, 'sine', 0.12, t + 0.14);
+            tone(440, 0.07, 'sine', 0.24, t);
+            tone(660, 0.08, 'sine', 0.24, t + 0.07);
+            tone(880, 0.1, 'sine', 0.24, t + 0.14);
         },
         life: function () {
-            tone(300, 0.1, 'sawtooth', 0.07);
-            tone(200, 0.14, 'sawtooth', 0.06, (ctx && ctx.currentTime) + 0.08);
+            tone(300, 0.1, 'sawtooth', 0.14);
+            tone(200, 0.14, 'sawtooth', 0.12, (ctx && ctx.currentTime) + 0.08);
         },
         win: function () {
             var t = ctx ? ctx.currentTime : 0;
             [523, 659, 784, 1046].forEach(function (f, i) {
-                tone(f, 0.16, 'sine', 0.14, t + i * 0.1);
+                tone(f, 0.16, 'sine', 0.28, t + i * 0.1);
             });
         },
         lose: function () {
             var t = ctx ? ctx.currentTime : 0;
-            tone(392, 0.18, 'triangle', 0.12, t);
-            tone(311, 0.22, 'triangle', 0.12, t + 0.14);
-            tone(233, 0.28, 'triangle', 0.12, t + 0.3);
+            tone(392, 0.18, 'triangle', 0.24, t);
+            tone(311, 0.22, 'triangle', 0.24, t + 0.14);
+            tone(233, 0.28, 'triangle', 0.24, t + 0.3);
         },
         start: function () {
-            tone(523, 0.08, 'sine', 0.1);
-            tone(784, 0.1, 'sine', 0.1, (ctx && ctx.currentTime) + 0.08);
+            tone(523, 0.08, 'sine', 0.2);
+            tone(784, 0.1, 'sine', 0.2, (ctx && ctx.currentTime) + 0.08);
         },
         level: function () {
             var t = ctx ? ctx.currentTime : 0;
-            tone(659, 0.08, 'sine', 0.12, t);
-            tone(784, 0.08, 'sine', 0.12, t + 0.07);
-            tone(988, 0.12, 'sine', 0.12, t + 0.14);
+            tone(659, 0.08, 'sine', 0.24, t);
+            tone(784, 0.08, 'sine', 0.24, t + 0.07);
+            tone(988, 0.12, 'sine', 0.24, t + 0.14);
         }
     };
+
+    // Bright major / cute casual-game earworms (short looping phrases)
+    // scale: C4 D4 E4 F4 G4 A4 B4 C5 D5 E5
+    var CATCHY_SCALE = [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25];
 
     var THEMES = {
-        calm: {
-            bpm: 72,
-            scale: [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25],
-            pattern: [0, 2, 4, 2, 5, 4, 2, 0, 4, 5, 7, 5, 4, 2, 0, -1]
+        // default catchy loop — bounce + sticky 8-bar phrase
+        catchy: {
+            bpm: 132,
+            scale: CATCHY_SCALE,
+            // Ode-to-Joy-ish + bounce fill, very sticky
+            lead: [
+                2, 2, 3, 4, 4, 3, 2, 1,
+                0, 0, 1, 2, 2, 1, 1, -1,
+                2, 2, 3, 4, 4, 3, 2, 1,
+                0, 0, 1, 2, 1, 0, 0, -1,
+                1, 1, 2, 0, 1, 2, 3, 2,
+                0, 1, 2, 3, 4, 4, 3, -1,
+                2, 2, 3, 4, 4, 3, 2, 1,
+                0, 0, 1, 2, 1, 0, 0, -1
+            ],
+            bass: [0, -1, 0, -1, 4, -1, 4, -1, 5, -1, 5, -1, 4, -1, 4, -1],
+            hop: [7, -1, 9, -1, 7, -1, 5, -1]
         },
-        upbeat: {
-            bpm: 108,
-            scale: [261.63, 311.13, 349.23, 392.0, 466.16, 523.25, 622.25, 698.46],
-            pattern: [0, 3, 5, 3, 4, 5, 7, 5, 3, 0, 5, 4, 3, 1, 0, 3]
-        },
-        arcade: {
-            bpm: 120,
-            scale: [196.0, 246.94, 293.66, 329.63, 392.0, 493.88, 587.33, 659.25],
-            pattern: [0, 4, 2, 4, 5, 4, 7, 5, 4, 2, 0, 2, 5, 4, 3, 0]
-        }
+        calm: null,
+        upbeat: null,
+        arcade: null
     };
+    THEMES.calm = THEMES.catchy;
+    THEMES.upbeat = THEMES.catchy;
+    THEMES.arcade = THEMES.catchy;
 
-    function playBgmNote(freq, beatDur) {
+    function playVoice(freq, dur, type, gain, when) {
+        var c = ensure();
+        if (!c || muted || !bgmGain || c.state !== 'running') return;
+        var t0 = when != null ? when : c.currentTime;
+        var osc = c.createOscillator();
+        var g = c.createGain();
+        osc.type = type || 'square';
+        osc.frequency.setValueAtTime(freq, t0);
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(gain, t0 + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + Math.max(0.04, dur * 0.9));
+        osc.connect(g);
+        g.connect(bgmGain);
+        osc.start(t0);
+        osc.stop(t0 + dur + 0.02);
+    }
+
+    function playKick(beatDur) {
         var c = ensure();
         if (!c || muted || !bgmGain || c.state !== 'running') return;
         var t0 = c.currentTime;
         var osc = c.createOscillator();
         var g = c.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, t0);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(140, t0);
+        osc.frequency.exponentialRampToValueAtTime(55, t0 + 0.08);
         g.gain.setValueAtTime(0.0001, t0);
-        g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, t0 + beatDur * 0.85);
+        g.gain.exponentialRampToValueAtTime(0.45, t0 + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + beatDur * 0.55);
         osc.connect(g);
         g.connect(bgmGain);
         osc.start(t0);
         osc.stop(t0 + beatDur);
     }
 
+    function playHat(beatDur) {
+        noiseBurst(Math.min(0.04, beatDur * 0.35), 0.08);
+    }
+
     function startBgmInternal() {
         stopBgmInternal();
         if (!unlocked || muted) return;
         if (!ensure()) return;
-        var theme = THEMES[bgmTheme] || THEMES.calm;
+        var theme = THEMES[bgmTheme] || THEMES.catchy;
         var beat = 60 / theme.bpm;
         bgmStep = 0;
         function tick() {
             if (muted || !bgmWanted) return;
-            var idx = theme.pattern[bgmStep % theme.pattern.length];
-            if (idx >= 0) {
-                var freq = theme.scale[idx % theme.scale.length];
-                playBgmNote(freq, beat * 0.95);
-                if (bgmStep % 4 === 0) {
-                    playBgmNote(theme.scale[0] / 2, beat * 1.6);
+            var c = ensure();
+            if (!c || c.state !== 'running') {
+                bgmTimer = global.setTimeout(tick, beat * 1000);
+                return;
+            }
+            var lead = theme.lead;
+            var bass = theme.bass;
+            var hop = theme.hop;
+            var li = lead[bgmStep % lead.length];
+            var bi = bass[bgmStep % bass.length];
+            var hi = hop[bgmStep % hop.length];
+            var t0 = c.currentTime;
+
+            // kick on 0/4, hat on offbeats — keeps the loop dancing
+            if (bgmStep % 4 === 0) playKick(beat);
+            else if (bgmStep % 2 === 1) playHat(beat);
+
+            if (li >= 0) {
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.92, 'square', 0.28, t0);
+                // light octave sparkle every other phrase note
+                if (bgmStep % 2 === 0) {
+                    playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.45, 'triangle', 0.1, t0);
                 }
             }
+            if (bi >= 0) {
+                playVoice(theme.scale[bi % theme.scale.length] / 2, beat * 1.05, 'triangle', 0.22, t0);
+            }
+            if (hi >= 0 && bgmStep % 8 >= 4) {
+                playVoice(theme.scale[hi % theme.scale.length], beat * 0.4, 'sine', 0.12, t0 + beat * 0.5);
+            }
+
             bgmStep++;
             bgmTimer = global.setTimeout(tick, beat * 1000);
         }
@@ -279,19 +338,19 @@
 
     function sfx(name) {
         if (muted || !SFX[name]) return;
-        if (!unlocked) {
-            // ignore autoplay-time sfx (e.g. newGame on load); wait for gesture
-            return;
-        }
+        if (!unlocked) return;
         unlock().then(function () {
             playSfxNow(name);
         });
     }
 
     function startBgm(theme) {
-        if (theme) bgmTheme = theme;
+        // All game themes map to the same catchy earworm loop
+        bgmTheme = 'catchy';
+        if (theme && THEMES[theme]) bgmTheme = theme === 'calm' || theme === 'upbeat' || theme === 'arcade'
+            ? 'catchy'
+            : theme;
         bgmWanted = true;
-        // do not create AudioContext here — wait for user gesture
         if (unlocked && !muted) startBgmInternal();
     }
 
@@ -305,7 +364,6 @@
         btn.removeAttribute('data-i18n');
         muteBtns.push(btn);
         syncMuteButtons();
-        // refresh label after i18n applies language
         global.setTimeout(syncMuteButtons, 0);
         global.setTimeout(syncMuteButtons, 50);
         btn.addEventListener('click', function () {
