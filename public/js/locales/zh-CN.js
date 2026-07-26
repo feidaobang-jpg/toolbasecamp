@@ -341,11 +341,17 @@ window.TB_LOCALES['zh-CN'] = {
         },
         lianliankan: {
             title: '连连看',
-            desc: '连接相同表情图案，路径最多拐两次。本地运行。',
+            desc: '连接相同表情，路径最多拐两次。多关卡难度递增，限时消除。本地运行。',
             pairs: '剩余对数',
+            level: '关卡',
+            time: '时间',
+            best: '最高关',
             hint: '提示',
             shuffle: '洗牌',
+            hintsLeft: '剩余提示 {n}',
+            shufflesLeft: '剩余洗牌 {n}',
             hintPlay: '点选两枚相同图案，路径最多拐两次即可消除。',
+            levelStart: '第 {n} 关 · {rows}×{cols} · {time} 秒',
             pickSecond: '再选一枚相同图案',
             mismatch: '图案不同，已改选当前格',
             cannotLink: '这两枚连不通（超过两折或被挡住）',
@@ -353,6 +359,8 @@ window.TB_LOCALES['zh-CN'] = {
             shuffled: '已重新打乱剩余牌',
             noMoves: '当前无解，请洗牌或新开一局',
             suggestShuffle: '没有可连的牌了，试试洗牌',
+            timeUp: '时间到！本关失败',
+            levelClear: '第 {n} 关完成！时间奖励 +{bonus}，进入下一关…',
             win: '全部消除，过关！'
         },
         goldminer: {

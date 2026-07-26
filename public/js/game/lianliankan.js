@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    
     var audio = window.GameAudio;
     function play(name) { if (audio) audio.sfx(name); }
     if (audio) audio.boot('catchy');
@@ -10,37 +9,87 @@
         return typeof window.t === 'function' ? window.t(key, params) : key;
     }
 
-    /** Inner playable size; board is padded with empty border. */
-    var ROWS = 8;
-    var COLS = 10;
     var PAD = 1;
-    var TOTAL_R = ROWS + PAD * 2;
-    var TOTAL_C = COLS + PAD * 2;
     var CLEAR_MS = 280;
     var PATH_MS = 320;
+    var BEST_KEY = 'tbc_lianliankan_v1';
     var TILES = [
         '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼',
-        '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔'
+        '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔',
+        '🐧', '🐦', '🐤', '🦄', '🐝', '🐛', '🦋', '🐞'
     ];
+
+    /** Board size steps — each cell count is even so pairs fill exactly. */
+    var SIZE_STEPS = [
+        { rows: 4, cols: 6 },  // 12 pairs — tutorial
+        { rows: 6, cols: 6 },  // 18
+        { rows: 6, cols: 8 },  // 24
+        { rows: 8, cols: 8 },  // 32
+        { rows: 8, cols: 10 }, // 40
+        { rows: 10, cols: 10 } // 50 — max
+    ];
+
+    /**
+     * Difficulty by level (1-based):
+     * - board grows through SIZE_STEPS
+     * - more tile kinds → fewer duplicates → harder
+     * - less time, fewer hints / shuffles
+     */
+    function levelConfig(n) {
+        var idx = Math.min(n - 1, SIZE_STEPS.length - 1);
+        var size = SIZE_STEPS[idx];
+        var extra = Math.max(0, n - SIZE_STEPS.length);
+        var typeCount = Math.min(TILES.length, 4 + Math.floor((n - 1) * 1.2) + extra);
+        var timeLimit = Math.max(45, 150 - (n - 1) * 10 - extra * 5);
+        var hints = Math.max(1, 5 - Math.floor((n - 1) / 2));
+        var shuffles = Math.max(1, 4 - Math.floor((n - 1) / 3));
+        return {
+            rows: size.rows,
+            cols: size.cols,
+            typeCount: typeCount,
+            timeLimit: timeLimit,
+            hints: hints,
+            shuffles: shuffles
+        };
+    }
 
     var boardEl = document.getElementById('board');
     var gridEl = document.getElementById('grid');
     var pathLayer = document.getElementById('path-layer');
     var scoreEl = document.getElementById('score');
     var pairsEl = document.getElementById('pairs');
+    var levelEl = document.getElementById('level');
+    var timeEl = document.getElementById('time');
+    var bestEl = document.getElementById('best');
     var statusEl = document.getElementById('status');
     var hintBtn = document.getElementById('hint-btn');
     var shuffleBtn = document.getElementById('shuffle-btn');
     var restartBtn = document.getElementById('restart-btn');
 
+    var ROWS = 8;
+    var COLS = 10;
+    var TOTAL_R = ROWS + PAD * 2;
+    var TOTAL_C = COLS + PAD * 2;
+
     /** @type {(string|null)[][]} */
     var grid = [];
     var score = 0;
+    var level = 1;
+    var bestLevel = 1;
+    var timeLeft = 120;
+    var hintsLeft = 3;
+    var shufflesLeft = 3;
     var selected = null;
     var busy = false;
     var won = false;
+    var ended = false;
+    var timerId = 0;
     /** @type {HTMLElement[][]} */
     var cellEls = [];
+
+    try {
+        bestLevel = Math.max(1, parseInt(localStorage.getItem(BEST_KEY), 10) || 1);
+    } catch (e) { /* ignore */ }
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
@@ -59,6 +108,13 @@
             arr[j] = t;
         }
         return arr;
+    }
+
+    function applySize(rows, cols) {
+        ROWS = rows;
+        COLS = cols;
+        TOTAL_R = ROWS + PAD * 2;
+        TOTAL_C = COLS + PAD * 2;
     }
 
     function emptyGrid() {
@@ -85,15 +141,54 @@
     function updateStats() {
         scoreEl.textContent = String(score);
         pairsEl.textContent = String(pairsLeft());
+        if (levelEl) levelEl.textContent = String(level);
+        if (timeEl) timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
+        if (bestEl) bestEl.textContent = String(bestLevel);
+        hintBtn.disabled = busy || ended || won || hintsLeft <= 0;
+        shuffleBtn.disabled = busy || ended || won || shufflesLeft <= 0 || pairsLeft() === 0;
+        hintBtn.title = tr('tools.lianliankan.hintsLeft', { n: hintsLeft });
+        shuffleBtn.title = tr('tools.lianliankan.shufflesLeft', { n: shufflesLeft });
     }
 
-    function buildPool() {
+    function saveBest() {
+        if (level > bestLevel) {
+            bestLevel = level;
+            try { localStorage.setItem(BEST_KEY, String(bestLevel)); } catch (e) { /* ignore */ }
+        }
+    }
+
+    function stopTimer() {
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = 0;
+        }
+    }
+
+    function startTimer() {
+        stopTimer();
+        timerId = setInterval(function () {
+            if (busy || won || ended) return;
+            timeLeft -= 1;
+            updateStats();
+            if (timeLeft <= 0) {
+                timeLeft = 0;
+                ended = true;
+                stopTimer();
+                play('lose');
+                setStatus(tr('tools.lianliankan.timeUp'), 'is-lose');
+                updateStats();
+            }
+        }, 1000);
+    }
+
+    function buildPool(typeCount) {
         var need = ROWS * COLS;
         if (need % 2 !== 0) need -= 1;
+        var kinds = TILES.slice(0, Math.max(2, typeCount));
         var pool = [];
         var i = 0;
         while (pool.length < need) {
-            var emoji = TILES[i % TILES.length];
+            var emoji = kinds[i % kinds.length];
             pool.push(emoji, emoji);
             i++;
         }
@@ -145,7 +240,6 @@
         syncEmojiSize();
     }
 
-    /** Emoji scale with cell size (CSS alone is unreliable on <button>). */
     function syncEmojiSize() {
         var sample = gridEl.querySelector('.llk-cell.is-tile') ||
             (cellEls[PAD] && cellEls[PAD][PAD]);
@@ -199,56 +293,36 @@
         return grid[r][c] === null;
     }
 
-    /** Straight line between two cells; intermediates must be empty. Endpoints may be occupied. */
     function clearLine(r1, c1, r2, c2) {
-        if (r1 === r2) {
-            var minC = Math.min(c1, c2);
-            var maxC = Math.max(c1, c2);
-            for (var c = minC + 1; c < maxC; c++) {
-                if (!isEmpty(r1, c)) return false;
-            }
-            return true;
+        if (r1 !== r2 && c1 !== c2) return false;
+        var dr = r2 === r1 ? 0 : (r2 > r1 ? 1 : -1);
+        var dc = c2 === c1 ? 0 : (c2 > c1 ? 1 : -1);
+        var r = r1 + dr;
+        var c = c1 + dc;
+        while (r !== r2 || c !== c2) {
+            if (!isEmpty(r, c)) return false;
+            r += dr;
+            c += dc;
         }
-        if (c1 === c2) {
-            var minR = Math.min(r1, r2);
-            var maxR = Math.max(r1, r2);
-            for (var r = minR + 1; r < maxR; r++) {
-                if (!isEmpty(r, c1)) return false;
-            }
-            return true;
-        }
-        return false;
+        return true;
     }
 
-    /**
-     * Find path with at most 2 turns (0–2 corners).
-     * @returns {{r:number,c:number}[]|null}
-     */
     function findPath(r1, c1, r2, c2) {
-        if (r1 === r2 && c1 === c2) return null;
         if (grid[r1][c1] === null || grid[r2][c2] === null) return null;
         if (grid[r1][c1] !== grid[r2][c2]) return null;
+        if (r1 === r2 && c1 === c2) return null;
 
-        // 0 turns
         if (clearLine(r1, c1, r2, c2)) {
             return [{ r: r1, c: c1 }, { r: r2, c: c2 }];
         }
 
-        // 1 turn
-        var corners1 = [
-            { r: r1, c: c2 },
-            { r: r2, c: c1 }
-        ];
-        for (var i = 0; i < corners1.length; i++) {
-            var m = corners1[i];
-            if ((m.r === r1 && m.c === c1) || (m.r === r2 && m.c === c2)) continue;
-            if (!isEmpty(m.r, m.c)) continue;
-            if (clearLine(r1, c1, m.r, m.c) && clearLine(m.r, m.c, r2, c2)) {
-                return [{ r: r1, c: c1 }, m, { r: r2, c: c2 }];
-            }
+        if (isEmpty(r1, c2) && clearLine(r1, c1, r1, c2) && clearLine(r1, c2, r2, c2)) {
+            return [{ r: r1, c: c1 }, { r: r1, c: c2 }, { r: r2, c: c2 }];
+        }
+        if (isEmpty(r2, c1) && clearLine(r1, c1, r2, c1) && clearLine(r2, c1, r2, c2)) {
+            return [{ r: r1, c: c1 }, { r: r2, c: c1 }, { r: r2, c: c2 }];
         }
 
-        // 2 turns: via empty cell on same row as start, then to target row
         var r;
         var c;
         for (c = 0; c < TOTAL_C; c++) {
@@ -258,7 +332,6 @@
                 return [{ r: r1, c: c1 }, { r: r1, c: c }, { r: r2, c: c }, { r: r2, c: c2 }];
             }
         }
-
         for (r = 0; r < TOTAL_R; r++) {
             if (!isEmpty(r, c1)) continue;
             if (!clearLine(r1, c1, r, c1)) continue;
@@ -266,7 +339,6 @@
                 return [{ r: r1, c: c1 }, { r: r, c: c1 }, { r: r, c: c2 }, { r: r2, c: c2 }];
             }
         }
-
         return null;
     }
 
@@ -288,20 +360,6 @@
         return null;
     }
 
-    function newGame() {
-        play('start');
-        grid = emptyGrid();
-        fillInner(buildPool());
-        score = 0;
-        selected = null;
-        busy = false;
-        won = false;
-        renderBoard();
-        updateStats();
-        setStatus('', 'is-idle');
-        ensureSolvable();
-    }
-
     function ensureSolvable() {
         var tries = 0;
         while (!hasAnyMove() && pairsLeft() > 0 && tries < 40) {
@@ -309,7 +367,8 @@
             tries++;
         }
         if (pairsLeft() > 0 && !hasAnyMove()) {
-            play('lose'); setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
+            play('lose');
+            setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
         }
     }
 
@@ -331,25 +390,60 @@
         selected = null;
         renderBoard();
         if (announce) {
-            var move = hasAnyMove();
-            if (!move && pairsLeft() > 0) {
-                var tries = 0;
-                while (!hasAnyMove() && tries < 40) {
-                    shuffleRemaining(false);
-                    tries++;
-                }
-                renderBoard();
+            var tries = 0;
+            while (!hasAnyMove() && pairsLeft() > 0 && tries < 40) {
+                shuffleRemaining(false);
+                tries++;
             }
+            renderBoard();
             if (hasAnyMove()) {
                 setStatus(tr('tools.lianliankan.shuffled'), 'is-idle');
             } else {
-                play('lose'); setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
+                play('lose');
+                setStatus(tr('tools.lianliankan.noMoves'), 'is-lose');
             }
         }
     }
 
+    function startLevel(n, keepScore) {
+        var cfg = levelConfig(n);
+        level = n;
+        applySize(cfg.rows, cfg.cols);
+        if (!keepScore) score = 0;
+        timeLeft = cfg.timeLimit;
+        hintsLeft = cfg.hints;
+        shufflesLeft = cfg.shuffles;
+        selected = null;
+        busy = false;
+        won = false;
+        ended = false;
+        grid = emptyGrid();
+        fillInner(buildPool(cfg.typeCount));
+        renderBoard();
+        updateStats();
+        setStatus(tr('tools.lianliankan.levelStart', {
+            n: level,
+            rows: cfg.rows,
+            cols: cfg.cols,
+            time: cfg.timeLimit
+        }), 'is-idle');
+        ensureSolvable();
+        startTimer();
+        saveBest();
+    }
+
+    function newGame() {
+        play('start');
+        startLevel(1, false);
+    }
+
+    function nextLevel() {
+        play('level');
+        startLevel(level + 1, true);
+    }
+
     function onCellClick(ev) {
-        if (busy || won) return;
+        if (busy || won || ended) return;
         var el = ev.currentTarget;
         if (!el.classList.contains('is-tile')) return;
         var r = +el.dataset.r;
@@ -404,7 +498,8 @@
             .then(function () {
                 grid[r1][c1] = null;
                 grid[r2][c2] = null;
-                play('match'); score += 10;
+                play('match');
+                score += 10 + Math.min(20, level);
                 updateStats();
                 clearPath();
                 cellEls[r1][c1].className = 'llk-cell is-empty';
@@ -419,11 +514,24 @@
                 busy = false;
                 if (pairsLeft() === 0) {
                     won = true;
-                    play('win'); setStatus(tr('tools.lianliankan.win'), 'is-win');
+                    stopTimer();
+                    var bonus = Math.max(0, Math.ceil(timeLeft)) * 2;
+                    score += bonus;
+                    updateStats();
+                    play('win');
+                    setStatus(tr('tools.lianliankan.levelClear', {
+                        n: level,
+                        bonus: bonus
+                    }), 'is-win');
+                    saveBest();
+                    setTimeout(function () {
+                        if (won) nextLevel();
+                    }, 1200);
                     return;
                 }
                 if (!hasAnyMove()) {
-                    play('invalid'); setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
+                    play('invalid');
+                    setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
                 } else {
                     setStatus('', 'is-idle');
                 }
@@ -431,25 +539,31 @@
     }
 
     function onHint() {
-        if (busy || won) return;
+        if (busy || won || ended || hintsLeft <= 0) return;
         clearHintUi();
         var move = hasAnyMove();
         if (!move) {
-            play('invalid'); setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
+            play('invalid');
+            setStatus(tr('tools.lianliankan.suggestShuffle'), 'is-lose');
             return;
         }
+        hintsLeft -= 1;
         selected = null;
         clearSelectionUi();
         cellEls[move.a.r][move.a.c].classList.add('is-hint');
         cellEls[move.b.r][move.b.c].classList.add('is-hint');
         setStatus(tr('tools.lianliankan.hintFound'), 'is-idle');
+        updateStats();
+        play('select');
     }
 
     function onShuffle() {
-        if (busy || won) return;
+        if (busy || won || ended || shufflesLeft <= 0) return;
         if (pairsLeft() === 0) return;
+        shufflesLeft -= 1;
         shuffleRemaining(true);
         updateStats();
+        play('swap');
     }
 
     hintBtn.addEventListener('click', onHint);
@@ -462,7 +576,6 @@
     });
 
     newGame();
-    // Layout may settle after first paint
     requestAnimationFrame(function () {
         syncEmojiSize();
         requestAnimationFrame(syncEmojiSize);
