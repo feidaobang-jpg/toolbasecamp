@@ -100,7 +100,7 @@ const KEY = 'tbc_tiger_slots_v2';
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 
-/** 斗兽棋：象狮虎豹狼狗猫各 1 大 2 小；剩 1 格大鼠(5分) */
+/** 斗兽棋：象 1 大 1 小(底中)；狮虎豹狼狗猫各 1 大 2 小；鼠大10/小2 */
 const KINDS = [
   { id: 'elephant', emoji: '🐘', label: '象', payBig: 100, paySmall: 50 },
   { id: 'lion',     emoji: '🦁', label: '狮', payBig: 20,  paySmall: 2 },
@@ -109,7 +109,7 @@ const KINDS = [
   { id: 'wolf',     emoji: '🐺', label: '狼', payBig: 10,  paySmall: 2 },
   { id: 'dog',      emoji: '🐶', label: '狗', payBig: 10,  paySmall: 2 },
   { id: 'cat',      emoji: '🐱', label: '猫', payBig: 10,  paySmall: 2 },
-  { id: 'rat',      emoji: '🐭', label: '鼠', payBig: 5,   paySmall: null }
+  { id: 'rat',      emoji: '🐭', label: '鼠', payBig: 10,  paySmall: 2 }
 ];
 
 const EMOJI = {
@@ -118,10 +118,10 @@ const EMOJI = {
   gift: '🎁', train: '🚂'
 };
 
-/** 顶中大象；左中礼包、右中火车；每种 1 大 2 小且同种大小不相邻；剩 1 大鼠 */
+/** 顶中大象、底中小象；左上小鼠；左中礼包、右中火车；同种大小不相邻 */
 function C(a, big) { return { a: a, big: !!big }; }
 const RING = [
-  C('elephant', false), C('rat', true), C('lion', false), C('elephant', true), C('tiger', false), C('wolf', true), C('leopard', false),
+  C('rat', false), C('lion', false), C('rat', true), C('elephant', true), C('tiger', false), C('wolf', true), C('leopard', false),
   C('dog', true), C('cat', false), C('train', true), C('lion', true), C('tiger', false),
   C('wolf', false), C('leopard', true), C('dog', false), C('elephant', false), C('cat', true), C('lion', false), C('tiger', true),
   C('wolf', false), C('leopard', false), C('gift', true), C('dog', false), C('cat', false)
@@ -175,7 +175,6 @@ function cellPay(cell) {
   if (isSpecial(cell)) return 0;
   const k = kindMeta(cell.a);
   if (!k) return 0;
-  if (cell.a === 'rat') return k.payBig;
   return cell.big ? k.payBig : k.paySmall;
 }
 
@@ -251,7 +250,7 @@ function drawCell(i, lit) {
   if (isSpecial(cell)) {
     drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, true);
   } else {
-    const big = cell.a === 'rat' ? true : !!cell.big;
+    const big = !!cell.big;
     drawEmoji(ctx, cell.a, r.x + r.w / 2, r.y + r.h / 2, r.w, big);
   }
 }
