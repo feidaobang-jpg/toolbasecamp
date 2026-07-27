@@ -95,6 +95,9 @@
             'Game already finished': 'tools.onlineCardScore.gameFinished',
             'Only creator can finish': 'tools.onlineCardScore.onlyCreator',
             'Only creator can delete': 'tools.onlineCardScore.onlyCreatorDelete',
+            'Only creator can add local': 'tools.onlineCardScore.onlyCreatorAddLocal',
+            'Only creator can remove local': 'tools.onlineCardScore.onlyCreatorRemoveLocal',
+            'Not a local player': 'tools.onlineCardScore.notLocalPlayer',
             'Method Not Allowed': 'tools.records.methodNotAllowed',
             'Only host can edit others': 'tools.onlineCardScore.onlyHostEdit',
             'Missing player score': 'tools.onlineCardScore.missingScore',
@@ -117,11 +120,24 @@
         return String(data.detail);
     }
 
+    var guestTokenHeader = 'X-OCS-Guest-Token';
+    var activeGuestToken = '';
+
+    function setGuestToken(token) {
+        activeGuestToken = token ? String(token) : '';
+    }
+
+    function getGuestToken() {
+        return activeGuestToken || '';
+    }
+
     function authFetch(path, options) {
         options = options || {};
         var headers = Object.assign({}, options.headers || {});
         var token = getToken();
         if (token) headers.Authorization = 'Bearer ' + token;
+        var gt = options.guestToken != null ? options.guestToken : getGuestToken();
+        if (gt) headers[guestTokenHeader] = gt;
         if (options.body && !(options.body instanceof FormData) && !headers['Content-Type']) {
             headers['Content-Type'] = 'application/json';
         }
@@ -231,10 +247,25 @@
         return global.confirm(message);
     }
 
+    function optionalLogin(gateEl, contentEl) {
+        /** Show app for guests; load user if token present. Never blocks join UI. */
+        if (gateEl) gateEl.hidden = true;
+        if (contentEl) contentEl.hidden = false;
+        if (!getToken()) return Promise.resolve(null);
+        return authFetch('/auth/me').then(function (res) {
+            if (!res.ok) return null;
+            return res.json().then(function (data) {
+                return data && data.user ? data.user : data;
+            }).catch(function () { return null; });
+        }).catch(function () { return null; });
+    }
+
     global.TBRecords = {
         tr: tr,
         apiBase: apiBase,
         getToken: getToken,
+        setGuestToken: setGuestToken,
+        getGuestToken: getGuestToken,
         loginUrl: loginUrl,
         escapeHtml: escapeHtml,
         formatTime: formatTime,
@@ -242,6 +273,7 @@
         authFetch: authFetch,
         apiJson: apiJson,
         requireLogin: requireLogin,
+        optionalLogin: optionalLogin,
         setError: setError,
         confirmDelete: confirmDelete
     };

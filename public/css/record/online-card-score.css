@@ -229,6 +229,21 @@
   background: #eee;
 }
 
+.ocs-remove-local {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+  vertical-align: middle;
+}
+
+.ocs-remove-local:hover {
+  color: #dc2626;
+}
+
 .ocs-key-del {
   background: #ffebee;
   color: #f44336;

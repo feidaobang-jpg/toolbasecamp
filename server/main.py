@@ -412,6 +412,10 @@ def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional
     return _fetch_user_by_id(user_id)
 
 
+# Re-bind so online guest routes can resolve optional auth.
+wire_records(get_conn, require_db, get_current_user, get_optional_user)
+
+
 def is_admin(user: dict) -> bool:
     if not user:
         return False

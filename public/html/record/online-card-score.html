@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Online Card Score - Tool Basecamp</title>
-  <meta name="description" content="Create a room, share the code, and sync scores by polling. Requires sign-in.">
+  <meta name="description" content="Create a room, share the code, sync scores. Guests can join without sign-in; host can add offline players.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=8" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=6" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=7" />
 </head>
 <body>
   <div class="container">
@@ -28,18 +28,24 @@
 
       <div id="app" hidden>
         <div class="tool-card" id="home-view">
-          <p class="rec-note" data-i18n="tools.onlineCardScore.pollNote">Everyone must be signed in. The board refreshes automatically about every 3 seconds.</p>
+          <p class="rec-note" data-i18n="tools.onlineCardScore.pollNote">Create requires sign-in. Joiners can enter as guests with a display name. Host can add offline players. Up to 10 seats. Board refreshes about every 3 seconds.</p>
+          <p class="rec-note" id="guest-login-prompt" hidden>
+            <span data-i18n="tools.onlineCardScore.guestLoginHint">Want to create rooms or manage the table? </span>
+            <a id="guest-login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+          </p>
           <div class="rec-field">
             <label class="field-label" for="display-name" data-i18n="tools.onlineCardScore.displayName">Display name (optional)</label>
             <input type="text" id="display-name" class="rec-input" maxlength="40" autocomplete="nickname" placeholder="" />
-            <p class="rec-note" style="margin-top:6px" data-i18n="tools.onlineCardScore.displayNameHint">Leave blank to use last 4 digits of phone/email</p>
+            <p class="rec-note" id="display-name-hint" style="margin-top:6px" data-i18n="tools.onlineCardScore.displayNameHint">Leave blank to use last 4 digits of phone/email</p>
           </div>
-          <div class="rec-field">
-            <label class="field-label" for="game-name" data-i18n="tools.onlineCardScore.gameName">Game name (optional)</label>
-            <input type="text" id="game-name" class="rec-input" maxlength="80" autocomplete="off" />
-          </div>
-          <div class="action-row">
-            <button type="button" class="tb-btn" id="create-btn" data-i18n="tools.onlineCardScore.create">Create room</button>
+          <div id="create-panel">
+            <div class="rec-field" id="game-name-field">
+              <label class="field-label" for="game-name" data-i18n="tools.onlineCardScore.gameName">Game name (optional)</label>
+              <input type="text" id="game-name" class="rec-input" maxlength="80" autocomplete="off" />
+            </div>
+            <div class="action-row">
+              <button type="button" class="tb-btn" id="create-btn" data-i18n="tools.onlineCardScore.create">Create room</button>
+            </div>
           </div>
           <div class="rec-field" style="margin-top:18px">
             <label class="field-label" for="join-code" data-i18n="tools.onlineCardScore.roomCode">Room code</label>
@@ -65,6 +71,7 @@
           <div class="rec-toolbar">
             <button type="button" class="tb-btn" id="back-btn" data-i18n="tools.records.back">Back</button>
             <button type="button" class="tb-btn" id="copy-code-btn" data-i18n="tools.onlineCardScore.copyCode">Copy code</button>
+            <button type="button" class="tb-btn" id="add-local-btn" hidden data-i18n="tools.onlineCardScore.addLocal">Add offline player</button>
             <button type="button" class="tb-btn" id="finish-btn" hidden data-i18n="tools.onlineCardScore.finish">Finish</button>
             <button type="button" class="tb-btn" id="delete-btn" hidden data-i18n="tools.onlineCardScore.delete">Delete room</button>
           </div>
@@ -124,12 +131,12 @@
     </div>
   </div>
 
-  <script src="../../js/locales/en.js?v=ocs6"></script>
-  <script src="../../js/locales/zh-CN.js?v=ocs6"></script>
+  <script src="../../js/locales/en.js?v=ocs7"></script>
+  <script src="../../js/locales/zh-CN.js?v=ocs7"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/record/records-client.js?v=7"></script>
-  <script src="../../js/record/online-card-score.js?v=8"></script>
+  <script src="../../js/record/records-client.js?v=8"></script>
+  <script src="../../js/record/online-card-score.js?v=9"></script>
 </body>
 </html>

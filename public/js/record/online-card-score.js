@@ -41,11 +41,96 @@ document.addEventListener('DOMContentLoaded', function () {
     var pollInFlight = false;
     var POLL_MS = 3000;
     var NAME_KEY = 'tbc_online_score_name';
+    var GUEST_KEY = 'tbc_ocs_guest_v1';
+    var loggedIn = false;
+    var hostOnlyEls = null;
 
     loginLink.href = R.loginUrl();
     try {
         displayName.value = localStorage.getItem(NAME_KEY) || '';
     } catch (e) { /* ignore */ }
+
+    function loadGuestMap() {
+        try {
+            return JSON.parse(localStorage.getItem(GUEST_KEY) || '{}') || {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveGuestToken(gameId, token, code) {
+        if (!token) return;
+        var map = loadGuestMap();
+        if (!map.byId) map = { byId: map, byCode: {} };
+        if (!map.byId) map.byId = {};
+        if (!map.byCode) map.byCode = {};
+        if (gameId) map.byId[String(gameId)] = token;
+        if (code) map.byCode[String(code).toUpperCase()] = token;
+        try {
+            localStorage.setItem(GUEST_KEY, JSON.stringify(map));
+        } catch (e) { /* ignore */ }
+        R.setGuestToken(token);
+    }
+
+    function restoreGuestToken(gameId, code) {
+        var map = loadGuestMap();
+        var byId = map.byId || map;
+        var byCode = map.byCode || {};
+        var tok = '';
+        if (gameId) tok = byId[String(gameId)] || '';
+        if (!tok && code) tok = byCode[String(code).toUpperCase()] || '';
+        R.setGuestToken(tok);
+        return tok;
+    }
+
+    function playerKey(p) {
+        if (!p) return '';
+        if (p.playerId != null && p.playerId !== '') return String(p.playerId);
+        return String(p.userId);
+    }
+
+    function updateHostOnlyUi() {
+        if (!hostOnlyEls) {
+            hostOnlyEls = [
+                document.getElementById('create-panel'),
+                document.getElementById('game-name-field'),
+                document.querySelector('.ocs-home-split'),
+                document.getElementById('refresh-list-btn')
+            ];
+        }
+        hostOnlyEls.forEach(function (el) {
+            if (el) el.hidden = !loggedIn;
+        });
+        var hint = document.getElementById('display-name-hint');
+        if (hint) {
+            hint.setAttribute(
+                'data-i18n',
+                loggedIn ? 'tools.onlineCardScore.displayNameHint' : 'tools.onlineCardScore.guestNameHint'
+            );
+            hint.textContent = loggedIn
+                ? tr('tools.onlineCardScore.displayNameHint')
+                : tr('tools.onlineCardScore.guestNameHint');
+        }
+        var label = document.querySelector('label[for="display-name"]');
+        if (label) {
+            label.setAttribute(
+                'data-i18n',
+                loggedIn ? 'tools.onlineCardScore.displayName' : 'tools.onlineCardScore.guestDisplayName'
+            );
+            label.textContent = loggedIn
+                ? tr('tools.onlineCardScore.displayName')
+                : tr('tools.onlineCardScore.guestDisplayName');
+        }
+        var note = document.querySelector('#home-view > .rec-note');
+        if (note) {
+            note.setAttribute('data-i18n', 'tools.onlineCardScore.pollNote');
+            note.textContent = tr('tools.onlineCardScore.pollNote');
+        }
+        var loginPrompt = document.getElementById('guest-login-prompt');
+        if (loginPrompt) loginPrompt.hidden = loggedIn;
+        var guestLoginLink = document.getElementById('guest-login-link');
+        if (guestLoginLink) guestLoginLink.href = R.loginUrl();
+    }
 
     function rememberName() {
         var n = displayName.value.trim();
@@ -74,7 +159,26 @@ document.addEventListener('DOMContentLoaded', function () {
     function resolveDisplayName() {
         var typed = rememberName();
         if (typed) return typed;
-        return accountTail4(meUser);
+        if (loggedIn) return accountTail4(meUser);
+        return '';
+    }
+
+    function myViewerPlayerId(data) {
+        if (data && data.viewerPlayerId != null && data.viewerPlayerId !== '') {
+            return data.viewerPlayerId;
+        }
+        return null;
+    }
+
+    function isRoomCreator(data) {
+        if (!data) return false;
+        if (!loggedIn) return false;
+        var cid = Number(data.creatorId);
+        var vid = Number(data.viewerId != null ? data.viewerId : meId);
+        if (Number.isFinite(cid) && Number.isFinite(vid) && cid > 0 && vid > 0) {
+            return cid === vid;
+        }
+        return !!data.isCreator;
     }
 
     function formatRoomTitle(name) {
@@ -201,21 +305,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return '<td class="' + scoreClass(n) + '">' + n + '</td>';
     }
 
-    function myViewerId(data) {
-        if (data && data.viewerId != null && data.viewerId !== '') return data.viewerId;
-        return meId;
-    }
-
-    function isRoomCreator(data) {
-        if (!data) return false;
-        var cid = Number(data.creatorId);
-        var vid = Number(myViewerId(data));
-        if (Number.isFinite(cid) && Number.isFinite(vid) && cid > 0 && vid > 0) {
-            return cid === vid;
-        }
-        return !!data.isCreator;
-    }
-
     function appendGameItem(listEl, item) {
         var el = document.createElement('div');
         el.className = 'rec-item ocs-game-item';
@@ -268,6 +357,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function loadList() {
+        if (!loggedIn) {
+            renderList([]);
+            return Promise.resolve();
+        }
         R.setError(homeError, '');
         return R.apiJson('/records/online-games')
             .then(function (data) { renderList(data.items || []); })
@@ -278,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof r.sum === 'number') return r.sum;
         var s = 0;
         (players || []).forEach(function (p) {
-            var n = r.scores && r.scores[String(p.userId)];
+            var n = r.scores && r.scores[playerKey(p)];
             if (typeof n === 'number') s += n;
         });
         return s;
@@ -296,6 +389,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var creator = isRoomCreator(data);
         finishBtn.hidden = !(creator && data.status !== 'finished');
         if (deleteBtn) deleteBtn.hidden = !creator;
+        var addLocalBtn = document.getElementById('add-local-btn');
+        if (addLocalBtn) {
+            addLocalBtn.hidden = !(creator && data.status !== 'finished');
+        }
         roundForm.hidden = data.status === 'finished';
         updateSumWarn(data);
         if (draftHint) {
@@ -351,17 +448,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var head = '<tr><th>' + R.escapeHtml(tr('tools.onlineCardScore.round')) + '</th>';
         players.forEach(function (p) {
-            head += '<th>' + R.escapeHtml(p.displayName) + '</th>';
+            var label = p.displayName;
+            if (p.playerKind === 'local') {
+                label += ' (' + tr('tools.onlineCardScore.localBadge') + ')';
+            }
+            head += '<th>' + R.escapeHtml(label);
+            if (isRoomCreator(data) && p.playerKind === 'local' && data.status !== 'finished') {
+                head += ' <button type="button" class="ocs-remove-local" data-pid="' +
+                    R.escapeHtml(playerKey(p)) + '" title="' +
+                    R.escapeHtml(tr('tools.onlineCardScore.removeLocal')) + '">×</button>';
+            }
+            head += '</th>';
         });
         head += '<th>' + sumLabel + '</th></tr>';
         scoreHead.innerHTML = head;
+        scoreHead.querySelectorAll('.ocs-remove-local').forEach(function (btn) {
+            btn.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                removeLocalPlayer(btn.getAttribute('data-pid'));
+            });
+        });
 
         var body = '';
         rounds.forEach(function (r) {
             var rs = rowSum(r, players);
             body += '<tr><td class="is-round">' + r.roundNo + '</td>';
             players.forEach(function (p) {
-                var n = (r.scores && r.scores[String(p.userId)]);
+                var n = (r.scores && r.scores[playerKey(p)]);
                 if (typeof n !== 'number') n = 0;
                 body += scoreCell(n);
             });
@@ -373,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body += '<tr class="ocs-draft-row"><td class="is-round">' +
                 R.escapeHtml(tr('tools.onlineCardScore.draftRound')) + '</td>';
             players.forEach(function (p) {
-                var key = String(p.userId);
+                var key = playerKey(p);
                 if (Object.prototype.hasOwnProperty.call(draft, key)) {
                     body += scoreCell(draft[key]);
                 } else {
@@ -394,14 +507,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function canEditPlayer(data, player) {
         if (isRoomCreator(data)) return true;
-        var vid = myViewerId(data);
+        var vid = myViewerPlayerId(data);
         if (vid == null || vid === '') return false;
-        return String(player.userId) === String(vid);
+        return playerKey(player) === String(vid);
     }
 
     function isOwnPlayer(data, player) {
-        var vid = myViewerId(data);
-        return vid != null && String(player.userId) === String(vid);
+        var vid = myViewerPlayerId(data);
+        return vid != null && playerKey(player) === String(vid);
     }
 
     /** Fill non-focused inputs from server draft so joiners' saves appear for the host. */
@@ -465,21 +578,26 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!canEditPlayer(data, p)) return;
             var field = document.createElement('div');
             field.className = 'rec-field';
-            var key = String(p.userId);
+            var key = playerKey(p);
             var has = Object.prototype.hasOwnProperty.call(draft, key);
             var own = isOwnPlayer(data, p);
+            var kind = p.playerKind || 'user';
             field.innerHTML =
                 '<label class="field-label"></label>' +
                 '<input type="text" readonly class="rec-input ocs-score-input" inputmode="none" autocomplete="off" />';
             var label = field.querySelector('label');
             var input = field.querySelector('input');
-            label.dataset.baseName = p.displayName;
+            var baseName = p.displayName;
+            if (kind === 'local') {
+                baseName += ' (' + tr('tools.onlineCardScore.localBadge') + ')';
+            }
+            label.dataset.baseName = baseName;
             if (isRoomCreator(data) && !own) {
                 label.dataset.optionalHint = '(' + tr('tools.onlineCardScore.hostFillHint') + ')';
             }
             var mark = has ? ' ✓' : '';
             label.textContent =
-                p.displayName +
+                baseName +
                 (label.dataset.optionalHint ? ' ' + label.dataset.optionalHint : '') +
                 mark;
             input.dataset.uid = key;
@@ -535,7 +653,7 @@ document.addEventListener('DOMContentLoaded', function () {
             rounds: data.rounds,
             draft: data.draftScores,
             players: (data.players || []).map(function (p) {
-                return [p.userId, p.displayName, p.total, p.hasDraft];
+                return [playerKey(p), p.displayName, p.playerKind, p.total, p.hasDraft];
             }),
             draftReadyCount: data.draftReadyCount,
             draftSum: data.draftSum,
@@ -560,6 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function refreshBoard(silent) {
         if (!currentGameId || pollInFlight) return Promise.resolve();
         pollInFlight = true;
+        restoreGuestToken(currentGameId, currentGame && currentGame.code);
         return R.apiJson('/records/online-games/' + currentGameId)
             .then(function (data) {
                 var sig = boardSig(data);
@@ -603,15 +722,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function openGame(id) {
         R.setError(boardError, '');
+        restoreGuestToken(id);
         R.apiJson('/records/online-games/' + id)
             .then(function (data) {
+                if (data.guestToken) saveGuestToken(data.id, data.guestToken, data.code);
                 showBoard();
                 renderBoard(data, { forceInputs: true });
+                startPoll();
             })
             .catch(function (e) { R.setError(homeError, e.message); });
     }
 
+    function removeLocalPlayer(playerId) {
+        if (!currentGameId || !playerId) return;
+        if (!window.confirm(tr('tools.onlineCardScore.removeLocalConfirm'))) return;
+        R.apiJson('/records/online-games/' + currentGameId + '/players/' + playerId, {
+            method: 'DELETE'
+        })
+            .then(function (data) {
+                renderBoard(data, { forceInputs: true });
+            })
+            .catch(function (e) { R.setError(boardError, e.message); });
+    }
+
+    function addLocalPlayer() {
+        if (!currentGameId || !isRoomCreator(currentGame)) return;
+        var name = window.prompt(tr('tools.onlineCardScore.addLocalPrompt'), '');
+        if (name == null) return;
+        name = String(name).trim();
+        if (!name) {
+            R.setError(boardError, tr('tools.onlineCardScore.needName'));
+            return;
+        }
+        R.setError(boardError, '');
+        R.apiJson('/records/online-games/' + currentGameId + '/players', {
+            method: 'POST',
+            body: JSON.stringify({ display_name: name })
+        })
+            .then(function (data) {
+                renderBoard(data, { forceInputs: true });
+            })
+            .catch(function (e) { R.setError(boardError, e.message); });
+    }
+
     document.getElementById('create-btn').addEventListener('click', function () {
+        if (!loggedIn) {
+            R.setError(homeError, tr('tools.onlineCardScore.loginToCreate'));
+            return;
+        }
         var name = resolveDisplayName();
         if (!name) {
             R.setError(homeError, tr('tools.onlineCardScore.needName'));
@@ -621,6 +779,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var roomTitle = gameName.value.trim() || tr('tools.onlineCardScore.defaultRoomName', { name: name });
         R.setError(homeError, '');
         setBusy(true);
+        R.setGuestToken('');
         R.apiJson('/records/online-games', {
             method: 'POST',
             body: JSON.stringify({
@@ -631,6 +790,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (data) {
                 showBoard();
                 renderBoard(data, { forceInputs: true });
+                startPoll();
             })
             .catch(function (e) { R.setError(homeError, e.message); })
             .then(function () { setBusy(false); });
@@ -639,7 +799,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('join-btn').addEventListener('click', function () {
         var name = resolveDisplayName();
         var code = joinCode.value.trim().toUpperCase();
-        if (!name) {
+        if (!loggedIn && !name) {
+            R.setError(homeError, tr('tools.onlineCardScore.needName'));
+            displayName.focus();
+            return;
+        }
+        if (loggedIn && !name) {
             R.setError(homeError, tr('tools.onlineCardScore.needName'));
             displayName.focus();
             return;
@@ -652,13 +817,17 @@ document.addEventListener('DOMContentLoaded', function () {
         joinCode.value = code;
         R.setError(homeError, '');
         setBusy(true);
+        restoreGuestToken(null, code);
         R.apiJson('/records/online-games/join', {
             method: 'POST',
             body: JSON.stringify({ code: code, display_name: name })
         })
             .then(function (data) {
+                if (data.guestToken) saveGuestToken(data.id, data.guestToken, data.code);
+                else if (!loggedIn) restoreGuestToken(data.id, data.code);
                 showBoard();
                 renderBoard(data, { forceInputs: true });
+                startPoll();
             })
             .catch(function (e) { R.setError(homeError, e.message); })
             .then(function () { setBusy(false); });
@@ -666,6 +835,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('refresh-list-btn').addEventListener('click', loadList);
     document.getElementById('back-btn').addEventListener('click', showHome);
+
+    var addLocalBtn = document.getElementById('add-local-btn');
+    if (addLocalBtn) {
+        addLocalBtn.addEventListener('click', addLocalPlayer);
+    }
 
     document.getElementById('copy-code-btn').addEventListener('click', function () {
         if (!currentGame) return;
@@ -764,13 +938,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('beforeunload', stopPoll);
 
-    R.requireLogin(gate, app).then(function (user) {
-        if (!user) return;
+    R.optionalLogin(gate, app).then(function (user) {
+        loggedIn = !!(user && (user.id != null || user.user_id != null));
         meUser = user;
-        meId = user.id != null ? user.id : user.user_id;
+        meId = user && (user.id != null ? user.id : user.user_id);
+        updateHostOnlyUi();
         var params = new URLSearchParams(window.location.search || '');
         var code = (params.get('code') || '').trim().toUpperCase();
         if (code) joinCode.value = code;
-        loadList();
+        if (loggedIn) loadList();
+        else renderList([]);
     });
 });
