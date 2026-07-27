@@ -1332,6 +1332,7 @@ window.TB_LOCALES.en = {
             round: 'Round',
             roundSum: 'Sum',
             total: 'Total',
+            footName: 'Name',
             needName: 'Cannot build a display name. Enter one, or add a phone/email to your account.',
             needCode: 'Please enter a room code',
             needScore: 'Please enter a score',

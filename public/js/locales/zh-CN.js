@@ -1331,6 +1331,7 @@ window.TB_LOCALES['zh-CN'] = {
             round: '局',
             roundSum: '合计',
             total: '总分',
+            footName: '姓名',
             needName: '无法生成显示名，请填写桌上显示名或完善账号手机号/邮箱',
             needCode: '请填写房间码',
             needScore: '请填写分数',
