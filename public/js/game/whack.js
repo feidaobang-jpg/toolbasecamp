@@ -18,10 +18,10 @@
     }
     function cfg(lv) {
         return {
-            time: Math.max(14, 32 - lv * 2),
-            goal: 40 + lv * 25,
-            hide: Math.max(320, 900 - lv * 50),
-            gap: Math.max(220, 520 - lv * 35)
+            time: Math.max(12, 26 - lv * 1.5),
+            goal: 75 + lv * 40,
+            hide: Math.max(260, 720 - lv * 48),
+            gap: Math.max(160, 400 - lv * 32)
         };
     }
     function hud() {

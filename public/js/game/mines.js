@@ -8,13 +8,13 @@
 
     var KEY = 'tbc_mines_lv_v1';
     var LEVELS = [
-        { rows: 8, cols: 8, mines: 10 },
         { rows: 9, cols: 9, mines: 14 },
-        { rows: 12, cols: 12, mines: 28 },
-        { rows: 14, cols: 14, mines: 40 },
-        { rows: 16, cols: 16, mines: 55 }
+        { rows: 10, cols: 10, mines: 22 },
+        { rows: 12, cols: 12, mines: 32 },
+        { rows: 14, cols: 14, mines: 45 },
+        { rows: 16, cols: 16, mines: 60 }
     ];
-    var ROWS = 8, COLS = 8, MINE_N = 10, level = 1, bestLv = 1;
+    var ROWS = 9, COLS = 9, MINE_N = 14, level = 1, bestLv = 1;
     var gridEl = document.getElementById('grid'), cells = [], mines = [], opened = 0, flags = 0, dead = false, won = false;
     try { bestLv = Math.max(1, +JSON.parse(localStorage.getItem(KEY) || '{}').bestLv || 1); } catch (e) {}
 

@@ -6,7 +6,7 @@
     }
 
     var GRID = 8;
-    var TYPES = 5;
+    var TYPES = 6;
     var SWAP_MS = 360;
     var CLEAR_MS = 300;
     var FALL_MS = 340;
@@ -25,8 +25,8 @@
     var gems = [];
     var score = 0;
     var level = 1;
-    var goal = 300;
-    var movesLeft = 30;
+    var goal = 580;
+    var movesLeft = 23;
     var bestLv = 1;
     var selected = -1;
     var busy = false;
@@ -48,9 +48,11 @@
 
     function cfg(lv) {
         return {
-            types: Math.min(7, 4 + Math.floor((lv - 1) / 2)),
-            goal: 250 + lv * 120,
-            moves: Math.max(16, 34 - lv)
+            // 颜色越多越难；第 1 关就 6 色，后期满 7
+            types: Math.min(7, 5 + Math.floor((lv + 1) / 2)),
+            // 每关独立目标（过关清零分数）
+            goal: 420 + lv * 160,
+            moves: Math.max(12, 24 - Math.floor(lv * 0.85))
         };
     }
 
@@ -368,7 +370,7 @@
         saveBest();
         play('level');
         setStatus(tr('tools.gemswap.levelClear', { n: level }), 'is-win');
-        setTimeout(function () { startLevel(level + 1, true); }, 900);
+        setTimeout(function () { startLevel(level + 1, false); }, 900);
     }
 
     function findHint() {

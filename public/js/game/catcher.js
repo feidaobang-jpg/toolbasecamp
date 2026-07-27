@@ -25,10 +25,10 @@
         var lv = document.getElementById('level'); if (lv) lv.textContent = level;
         var g = document.getElementById('goal'); if (g) g.textContent = caught + '/' + goal;
     }
-    function levelGoal(lv) { return 6 + lv * 4; }
-    function bombRate(lv) { return Math.min(0.42, 0.12 + lv * 0.03); }
-    function fallSpeed(lv) { return 2.0 + lv * 0.25; }
-    function spawnGap(lv) { return Math.max(0.28, 0.95 - lv * 0.06); }
+    function levelGoal(lv) { return 10 + lv * 5; }
+    function bombRate(lv) { return Math.min(0.48, 0.18 + lv * 0.035); }
+    function fallSpeed(lv) { return 2.6 + lv * 0.32; }
+    function spawnGap(lv) { return Math.max(0.24, 0.78 - lv * 0.055); }
 
     function resetRun() {
         score = 0; lives = 3; level = 1; caught = 0; goal = levelGoal(1);

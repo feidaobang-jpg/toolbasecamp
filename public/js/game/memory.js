@@ -9,7 +9,6 @@
     var KEY = 'tbc_memory_lv_v1';
     var ALL = ['🐶', '🐱', '🐸', '🦊', '🐼', '🦁', '🐵', '🐷', '🐯', '🐮', '🐰', '🐻'];
     var LEVELS = [
-        { pairs: 4, cols: 4 },
         { pairs: 6, cols: 4 },
         { pairs: 8, cols: 4 },
         { pairs: 10, cols: 5 },

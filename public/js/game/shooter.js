@@ -25,9 +25,9 @@
         var lv = document.getElementById('level'); if (lv) lv.textContent = level;
         var g = document.getElementById('goal'); if (g) g.textContent = kills + '/' + need;
     }
-    function waveNeed(lv) { return 6 + lv * 3; }
-    function enemyVy(lv) { return 1.4 + lv * 0.22 + Math.random() * 1.2; }
-    function spawnGap(lv) { return Math.max(0.28, 1.05 - lv * 0.07); }
+    function waveNeed(lv) { return 10 + lv * 4; }
+    function enemyVy(lv) { return 1.9 + lv * 0.28 + Math.random() * 1.3; }
+    function spawnGap(lv) { return Math.max(0.24, 0.82 - lv * 0.065); }
 
     function resetRun() {
         score = 0; lives = 3; level = 1; kills = 0; need = waveNeed(1);

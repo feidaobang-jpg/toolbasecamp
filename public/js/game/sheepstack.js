@@ -64,18 +64,18 @@ function tr(key, params) {
     }
 
     function cfg(lv) {
-        var kinds = Math.min(EMOJIS.length, 6 + Math.floor((lv - 1) / 1));
-        var each = 6 + Math.floor((lv - 1) / 2) * 3;
+        var kinds = Math.min(EMOJIS.length, 8 + Math.floor((lv - 1) / 2));
+        var each = 9 + Math.floor((lv - 1) / 2) * 3;
         return {
             kinds: kinds,
             each: each,
-            time: Math.max(75, 185 - lv * 12),
-            layersExtra: Math.min(2, Math.floor((lv - 1) / 3)),
+            time: Math.max(55, 135 - lv * 10),
+            layersExtra: Math.min(2, Math.floor(lv / 2)),
             props: {
-                undo: Math.max(1, 4 - Math.floor((lv - 1) / 3)),
-                bomb: Math.max(1, 3 - Math.floor((lv - 1) / 4)),
-                hint: Math.max(1, 4 - Math.floor((lv - 1) / 3)),
-                time: Math.max(1, 3 - Math.floor((lv - 1) / 4))
+                undo: Math.max(1, 3 - Math.floor((lv - 1) / 3)),
+                bomb: Math.max(1, 2 - Math.floor((lv - 1) / 4)),
+                hint: Math.max(1, 3 - Math.floor((lv - 1) / 3)),
+                time: Math.max(1, 2 - Math.floor((lv - 1) / 4))
             }
         };
     }
