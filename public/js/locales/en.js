@@ -1292,7 +1292,7 @@ window.TB_LOCALES.en = {
             unnamedPlayer: 'this player',
             namePlaceholder: 'Name',
             keyboardPlaceholder: 'Enter score',
-            backspace: 'Del'
+            backspace: '←'
         },
         onlineCardScore: {
             title: 'Online Card Score',
@@ -1370,7 +1370,7 @@ window.TB_LOCALES.en = {
             hostFillHint: 'optional',
             hostOptional: 'Others can leave blank — they sync when players save',
             keyboardPlaceholder: 'Enter score',
-            backspace: 'Del'
+            backspace: '←'
         },
         todoList: {
             title: 'To-Do (Task List)',

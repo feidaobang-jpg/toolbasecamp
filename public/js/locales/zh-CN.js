@@ -1291,7 +1291,7 @@ window.TB_LOCALES['zh-CN'] = {
             unnamedPlayer: '此人',
             namePlaceholder: '姓名',
             keyboardPlaceholder: '请输入分数',
-            backspace: '回退'
+            backspace: '←'
         },
         onlineCardScore: {
             title: '联机计分',
@@ -1369,7 +1369,7 @@ window.TB_LOCALES['zh-CN'] = {
             hostFillHint: '可代填',
             hostOptional: '他人分数可留空，由对方填写后自动同步',
             keyboardPlaceholder: '请输入分数',
-            backspace: '回退'
+            backspace: '←'
         },
         todoList: {
             title: '待办（任务清单）',
