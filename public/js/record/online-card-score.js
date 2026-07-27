@@ -339,10 +339,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function roundMetaCell(label, sum) {
         var sumN = typeof sum === 'number' ? sum : 0;
-        return '<td class="ocs-round-meta">' +
-            '<span class="ocs-round-no">' + R.escapeHtml(String(label)) + '</span>' +
-            '<span class="ocs-round-sum ' + scoreClass(sumN) + '">' + sumN + '</span>' +
-            '</td>';
+        /* 局数、本局合计拆成两个真实列，表尾用 colspan=2，避免和 sticky 列宽错位 */
+        return '<td class="ocs-round-no">' + R.escapeHtml(String(label)) + '</td>' +
+            '<td class="ocs-round-sum ' + scoreClass(sumN) + '">' + sumN + '</td>';
+    }
+
+    function syncColgroup(playerCount) {
+        var table = document.getElementById('score-table');
+        if (!table) return;
+        var old = table.querySelector('colgroup');
+        if (old) old.remove();
+        var html = '<colgroup><col class="ocs-col-round" /><col class="ocs-col-sum" />';
+        var i;
+        for (i = 0; i < playerCount; i++) html += '<col />';
+        html += '</colgroup>';
+        table.insertAdjacentHTML('afterbegin', html);
     }
 
     function appendGameItem(listEl, item) {
@@ -485,6 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var rounds = data.rounds || [];
         var draft = data.draftScores || {};
 
+        syncColgroup(players.length);
         scoreHead.innerHTML = '';
 
         var body = '';
@@ -515,14 +527,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         scoreBody.innerHTML = body || '';
 
-        var footTotal = '<tr class="ocs-foot-total"><td class="ocs-foot-label">' +
+        var footTotal = '<tr class="ocs-foot-total"><td class="ocs-foot-label" colspan="2">' +
             R.escapeHtml(tr('tools.onlineCardScore.total')) + '</td>';
         players.forEach(function (p) {
             footTotal += scoreCell(p.total || 0);
         });
         footTotal += '</tr>';
 
-        var footNames = '<tr class="ocs-foot-names"><td class="ocs-foot-label">' +
+        var footNames = '<tr class="ocs-foot-names"><td class="ocs-foot-label" colspan="2">' +
             R.escapeHtml(tr('tools.onlineCardScore.footName')) + '</td>';
         players.forEach(function (p) {
             var label = p.displayName;

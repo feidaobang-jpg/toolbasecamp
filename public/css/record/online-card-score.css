@@ -92,43 +92,20 @@
   border-bottom: none;
 }
 
-.ocs-table td:first-child,
-.ocs-table th:first-child {
-  width: 72px;
-  min-width: 72px;
-  max-width: 72px;
-  padding: 0;
+.ocs-table col.ocs-col-round,
+.ocs-table col.ocs-col-sum {
+  width: 36px;
 }
 
-.ocs-table td.ocs-round-meta {
-  padding: 0;
-  vertical-align: middle;
-}
-
-.ocs-round-meta {
-  display: flex;
-  height: 40px;
-  width: 100%;
-}
-
-.ocs-round-no,
-.ocs-round-sum {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.ocs-table td.ocs-round-no,
+.ocs-table td.ocs-round-sum {
+  padding: 0 2px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.ocs-round-no {
+.ocs-table td.ocs-round-no {
   color: #64748b;
-  background: transparent;
-}
-
-.ocs-round-sum {
-  border-left: 1px solid #ddd;
 }
 
 .ocs-table .is-pos {
@@ -154,13 +131,15 @@
   background: #fffbeb;
 }
 
-.ocs-table tr.ocs-draft-row .ocs-round-no {
-  background: transparent;
-}
-
 .ocs-table tfoot td {
   position: sticky;
   z-index: 3;
+  /* sticky 底会盖住相邻竖线，用内阴影补回，避免总分左侧缺口 */
+  box-shadow: inset -1px 0 0 #ddd;
+}
+
+.ocs-table tfoot td:last-child {
+  box-shadow: none;
 }
 
 .ocs-table tfoot tr.ocs-foot-names td {
@@ -176,7 +155,10 @@
   background: #fff;
   font-weight: 700;
   color: #111827;
-  /* sticky 会盖住上方横线，用内阴影补回 */
+  box-shadow: inset 0 1px 0 #ddd, inset -1px 0 0 #ddd;
+}
+
+.ocs-table tfoot tr.ocs-foot-total td:last-child {
   box-shadow: inset 0 1px 0 #ddd;
 }
 
