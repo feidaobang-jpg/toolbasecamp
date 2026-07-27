@@ -548,8 +548,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var base = label.dataset.baseName || label.textContent.replace(/\s*[✓*].*$/, '');
             label.dataset.baseName = base;
             var mark = Object.prototype.hasOwnProperty.call(draft, key) ? ' ✓' : '';
-            var hint = label.dataset.optionalHint || '';
-            label.textContent = base + (hint ? ' ' + hint : '') + mark;
+            label.textContent = base + mark;
         }
     }
 
@@ -592,14 +591,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 baseName += ' (' + tr('tools.onlineCardScore.localBadge') + ')';
             }
             label.dataset.baseName = baseName;
-            if (isRoomCreator(data) && !own) {
-                label.dataset.optionalHint = '(' + tr('tools.onlineCardScore.hostFillHint') + ')';
-            }
             var mark = has ? ' ✓' : '';
-            label.textContent =
-                baseName +
-                (label.dataset.optionalHint ? ' ' + label.dataset.optionalHint : '') +
-                mark;
+            label.textContent = baseName + mark;
             input.dataset.uid = key;
             input.dataset.own = own ? '1' : '0';
             input.placeholder = isRoomCreator(data) && !own

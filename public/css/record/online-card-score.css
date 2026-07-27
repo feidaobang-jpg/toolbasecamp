@@ -111,14 +111,32 @@
 }
 
 .ocs-round-form .rec-field {
-  margin-bottom: 12px;
+  margin-bottom: 0;
+  min-width: 0;
 }
 
 .ocs-round-form .ocs-score-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 10px 8px;
   margin-bottom: 14px;
+}
+
+.ocs-round-form .ocs-score-grid .field-label {
+  font-size: 13px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ocs-round-form .ocs-score-input {
+  width: 100%;
+  max-width: 72px;
+  padding: 8px 6px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
 .ocs-badge {
