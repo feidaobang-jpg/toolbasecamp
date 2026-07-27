@@ -1327,6 +1327,7 @@ window.TB_LOCALES.en = {
             roomFull: 'Room is full',
             gameFinished: 'Game already finished',
             onlyCreator: 'Only the host can finish the game',
+            onlyCreatorDelete: 'Only the host can delete the room',
             onlyHostEdit: 'You can only edit your own score',
             missingScore: 'Enter a score for every player',
             tooManyRounds: 'Too many rounds',
@@ -1335,12 +1336,18 @@ window.TB_LOCALES.en = {
             draftProgress: 'Filled {ready}/{total}',
             draftSumLine: 'Current sum {sum}',
             needZeroSum: 'Sum must be 0 to settle',
+            sumMismatchWarn: 'Round sum is {sum} (not 0). Please check scores together.',
             willSettle: 'Sum is 0 — saving will settle this round',
             autoSettleHint: 'Settles automatically when everyone is in and sum is 0',
             settled: 'Settled — next round ready',
             waitOthers: 'Waiting for other players…',
             noEditable: 'No editable scores',
-            codeHint: 'Room codes are 6 digits for easy sharing'
+            codeHint: 'Room codes are 6 digits for easy sharing',
+            delete: 'Delete room',
+            deleteConfirm: 'Delete this room? All scores will be removed permanently.',
+            deleted: 'Room deleted',
+            hostFillHint: 'optional',
+            hostOptional: 'Others can leave blank — they sync when players save'
         },
         todoList: {
             title: 'To-Do (Task List)',

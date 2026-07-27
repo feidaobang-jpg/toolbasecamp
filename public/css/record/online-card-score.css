@@ -10,7 +10,15 @@
 }
 
 .ocs-joined-title {
-  margin-top: 22px;
+  margin-top: 48px;
+  padding-top: 8px;
+}
+
+.ocs-sum-warn.show {
+  display: flex;
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #c2410c;
 }
 
 .ocs-busy {

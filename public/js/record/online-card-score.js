@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var roundInputs = document.getElementById('round-inputs');
     var roundForm = document.getElementById('round-form');
     var finishBtn = document.getElementById('finish-btn');
+    var deleteBtn = document.getElementById('delete-btn');
+    var sumWarn = document.getElementById('sum-warn');
     var loginLink = document.getElementById('login-link');
     var currentGameId = null;
     var currentGame = null;
@@ -79,6 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
         boardView.hidden = true;
         homeView.hidden = false;
         R.setError(boardError, '');
+        if (sumWarn) {
+            sumWarn.textContent = '';
+            sumWarn.classList.remove('show');
+        }
         loadList();
     }
 
@@ -119,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '</div>' +
             '<div class="rec-item-actions">' +
             '<button type="button" class="tb-btn" data-act="open"></button>' +
+            (item.isCreator ? '<button type="button" class="tb-btn" data-act="del"></button>' : '') +
             '</div>';
         el.querySelector('.rec-item-title').textContent = item.name;
         el.querySelector('.rec-item-meta').textContent =
@@ -134,6 +141,13 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             openGame(item.id);
         });
+        var del = el.querySelector('[data-act="del"]');
+        if (del) {
+            del.textContent = tr('tools.onlineCardScore.delete');
+            del.addEventListener('click', function () {
+                deleteGame(item.id, true);
+            });
+        }
         listEl.appendChild(el);
     }
 
@@ -179,7 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
             ' · ' +
             tr('tools.onlineCardScore.polling');
         finishBtn.hidden = !(data.isCreator && data.status !== 'finished');
+        if (deleteBtn) deleteBtn.hidden = !data.isCreator;
         roundForm.hidden = data.status === 'finished';
+        updateSumWarn(data);
         if (draftHint) {
             if (data.status === 'finished') {
                 draftHint.textContent = '';
@@ -195,15 +211,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (ready > 0) {
                     parts.push(tr('tools.onlineCardScore.draftSumLine', { sum: sum }));
                 }
-                if (data.draftComplete && sum !== 0) {
+                if (data.sumMismatch || (data.draftComplete && sum !== 0)) {
                     parts.push(tr('tools.onlineCardScore.needZeroSum'));
                 } else if (data.canSettle) {
                     parts.push(tr('tools.onlineCardScore.willSettle'));
                 } else {
                     parts.push(tr('tools.onlineCardScore.autoSettleHint'));
                 }
+                if (data.isCreator) {
+                    parts.push(tr('tools.onlineCardScore.hostOptional'));
+                }
                 draftHint.textContent = parts.join(' · ');
             }
+        }
+    }
+
+    function updateSumWarn(data) {
+        if (!sumWarn) return;
+        var bad = data && data.status !== 'finished' &&
+            (data.sumMismatch || (data.draftComplete && (data.draftSum || 0) !== 0));
+        if (bad) {
+            sumWarn.textContent = tr('tools.onlineCardScore.sumMismatchWarn', {
+                sum: data.draftSum || 0
+            });
+            sumWarn.classList.add('show');
+        } else {
+            sumWarn.textContent = '';
+            sumWarn.classList.remove('show');
         }
     }
 
@@ -263,12 +297,57 @@ document.addEventListener('DOMContentLoaded', function () {
         return String(player.userId) === String(vid);
     }
 
+    function isOwnPlayer(data, player) {
+        var vid = myViewerId(data);
+        return vid != null && String(player.userId) === String(vid);
+    }
+
+    /** Fill non-focused inputs from server draft so joiners' saves appear for the host. */
+    function syncDraftIntoInputs(data) {
+        var draft = data.draftScores || {};
+        var ae = document.activeElement;
+        var inputs = roundInputs.querySelectorAll('.ocs-score-input');
+        for (var i = 0; i < inputs.length; i++) {
+            var inp = inputs[i];
+            if (ae === inp) continue;
+            var key = inp.dataset.uid;
+            if (Object.prototype.hasOwnProperty.call(draft, key)) {
+                var next = String(draft[key]);
+                if (inp.value !== next) inp.value = next;
+            } else if (inp.value !== '' && !inp.dataset.localEdit) {
+                inp.value = '';
+            }
+        }
+        updateDraftCheckmarks(data);
+    }
+
+    function updateDraftCheckmarks(data) {
+        var draft = data.draftScores || {};
+        var fields = roundInputs.querySelectorAll('.rec-field');
+        for (var i = 0; i < fields.length; i++) {
+            var field = fields[i];
+            var input = field.querySelector('.ocs-score-input');
+            var label = field.querySelector('.field-label');
+            if (!input || !label) continue;
+            var key = input.dataset.uid;
+            var base = label.dataset.baseName || label.textContent.replace(/\s*[✓*].*$/, '');
+            label.dataset.baseName = base;
+            var mark = Object.prototype.hasOwnProperty.call(draft, key) ? ' ✓' : '';
+            var hint = label.dataset.optionalHint || '';
+            label.textContent = base + (hint ? ' ' + hint : '') + mark;
+        }
+    }
+
     function renderInputs(data, force) {
         if (data.status === 'finished') {
             roundInputs.innerHTML = '';
+            document.getElementById('submit-round-btn').hidden = true;
             return;
         }
-        if (!force && isEditingScore()) return;
+        if (!force && isEditingScore()) {
+            syncDraftIntoInputs(data);
+            return;
+        }
 
         var players = data.players || [];
         var draft = data.draftScores || {};
@@ -293,16 +372,30 @@ document.addEventListener('DOMContentLoaded', function () {
             field.className = 'rec-field';
             var key = String(p.userId);
             var has = Object.prototype.hasOwnProperty.call(draft, key);
+            var own = isOwnPlayer(data, p);
             field.innerHTML =
                 '<label class="field-label"></label>' +
                 '<input type="text" inputmode="numeric" class="rec-input ocs-score-input" autocomplete="off" />';
             var label = field.querySelector('label');
-            var mark = has ? ' ✓' : '';
-            label.textContent = p.displayName + mark;
             var input = field.querySelector('input');
+            label.dataset.baseName = p.displayName;
+            if (data.isCreator && !own) {
+                label.dataset.optionalHint = '(' + tr('tools.onlineCardScore.hostFillHint') + ')';
+            }
+            var mark = has ? ' ✓' : '';
+            label.textContent =
+                p.displayName +
+                (label.dataset.optionalHint ? ' ' + label.dataset.optionalHint : '') +
+                mark;
             input.dataset.uid = key;
-            input.placeholder = tr('tools.onlineCardScore.scorePlaceholder');
+            input.dataset.own = own ? '1' : '0';
+            input.placeholder = data.isCreator && !own
+                ? tr('tools.onlineCardScore.hostFillHint')
+                : tr('tools.onlineCardScore.scorePlaceholder');
             input.value = has ? String(draft[key]) : '';
+            input.addEventListener('input', function () {
+                input.dataset.localEdit = '1';
+            });
             grid.appendChild(field);
         });
         if (!grid.children.length) {
@@ -339,7 +432,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }),
             draftReadyCount: data.draftReadyCount,
             draftSum: data.draftSum,
-            canSettle: data.canSettle
+            canSettle: data.canSettle,
+            sumMismatch: data.sumMismatch
         });
     }
 
@@ -372,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     lastBoardSig = sig;
                     renderHeader(data);
                     renderTable(data);
+                    syncDraftIntoInputs(data);
                 } else {
                     renderBoard(data);
                 }
@@ -381,6 +476,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!silent) R.setError(boardError, e.message);
             })
             .then(function () { pollInFlight = false; });
+    }
+
+    function deleteGame(id, fromList) {
+        if (!R.confirmDelete(tr('tools.onlineCardScore.deleteConfirm'))) return;
+        R.setError(fromList ? homeError : boardError, '');
+        R.apiJson('/records/online-games/' + id, { method: 'DELETE' })
+            .then(function () {
+                if (!fromList || String(id) === String(currentGameId)) {
+                    showHome();
+                } else {
+                    loadList();
+                }
+            })
+            .catch(function (e) {
+                R.setError(fromList ? homeError : boardError, e.message);
+            });
     }
 
     function openGame(id) {
@@ -470,21 +581,34 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(function (e) { R.setError(boardError, e.message); });
     });
 
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function () {
+            if (!currentGameId) return;
+            deleteGame(currentGameId, false);
+        });
+    }
+
     document.getElementById('submit-round-btn').addEventListener('click', function () {
-        if (!currentGameId) return;
+        if (!currentGameId || !currentGame) return;
         var scores = {};
         var inputs = roundInputs.querySelectorAll('.ocs-score-input');
         if (!inputs.length) {
             R.setError(boardError, tr('tools.onlineCardScore.noEditable'));
             return;
         }
+        var isCreator = !!currentGame.isCreator;
         for (var i = 0; i < inputs.length; i++) {
             var inp = inputs[i];
             var raw = String(inp.value || '').trim();
+            var own = inp.dataset.own === '1';
             if (raw === '') {
-                R.setError(boardError, tr('tools.onlineCardScore.needScore'));
-                inp.focus();
-                return;
+                // Host may leave others blank; own score is still required when saving.
+                if (own || !isCreator) {
+                    R.setError(boardError, tr('tools.onlineCardScore.needScore'));
+                    inp.focus();
+                    return;
+                }
+                continue;
             }
             if (!/^[+-]?\d+$/.test(raw)) {
                 R.setError(boardError, tr('tools.onlineCardScore.invalidScore'));
@@ -492,10 +616,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             scores[inp.dataset.uid] = parseInt(raw, 10);
+            delete inp.dataset.localEdit;
+        }
+        if (!Object.keys(scores).length) {
+            R.setError(boardError, tr('tools.onlineCardScore.needScore'));
+            return;
         }
         R.setError(boardError, '');
         setBusy(true);
-        // Prefer /rounds (always registered); falls back path used by older clients.
         R.apiJson('/records/online-games/' + currentGameId + '/rounds', {
             method: 'POST',
             body: JSON.stringify({ scores: scores })
@@ -504,6 +632,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderBoard(data, { forceInputs: true });
                 if (data.settled) {
                     boardStatus.textContent = tr('tools.onlineCardScore.settled');
+                } else {
+                    updateSumWarn(data);
                 }
             })
             .catch(function (e) { R.setError(boardError, e.message); })

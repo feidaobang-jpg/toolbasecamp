@@ -1326,6 +1326,7 @@ window.TB_LOCALES['zh-CN'] = {
             roomFull: '房间已满',
             gameFinished: '本局已结束',
             onlyCreator: '仅房主可结束本局',
+            onlyCreatorDelete: '仅房主可删除房间',
             onlyHostEdit: '只能修改自己的分数',
             missingScore: '请为每位玩家填写分数',
             tooManyRounds: '局数已达上限',
@@ -1334,12 +1335,18 @@ window.TB_LOCALES['zh-CN'] = {
             draftProgress: '已填 {ready}/{total}',
             draftSumLine: '当前合计 {sum}',
             needZeroSum: '合计须为 0 才能自动结算',
+            sumMismatchWarn: '本局合计为 {sum}（不为 0），请大家核对分数后再保存',
             willSettle: '合计已为 0，保存后将自动进入下一局',
             autoSettleHint: '全员填完且合计为 0 时自动结算',
             settled: '已自动结算，进入下一局',
             waitOthers: '等待其他玩家填写分数…',
             noEditable: '没有可编辑的分数',
-            codeHint: '房间码为 6 位数字，口头报号更方便'
+            codeHint: '房间码为 6 位数字，口头报号更方便',
+            delete: '删除房间',
+            deleteConfirm: '确定删除该房间？分数记录将一并清除，且不可恢复。',
+            deleted: '房间已删除',
+            hostFillHint: '可代填',
+            hostOptional: '他人分数可留空，由对方填写后自动同步'
         },
         todoList: {
             title: '待办（任务清单）',

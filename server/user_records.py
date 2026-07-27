@@ -1576,6 +1576,7 @@ def _load_online_game(cur, game_id: int) -> dict:
         "draftComplete": draft_complete,
         "draftSum": draft_sum,
         "canSettle": draft_complete and draft_sum == 0,
+        "sumMismatch": draft_complete and draft_sum != 0,
     }
 
 
@@ -1822,6 +1823,23 @@ def finish_online_game(game_id: int, user: dict = Depends(_user)):
                 _load_online_game(cur, game_id), user_id=user["id"]
             )
         return data
+    finally:
+        conn.close()
+
+
+@router.delete("/online-games/{game_id}")
+def delete_online_game(game_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM record_online_games WHERE id=%s", (game_id,))
+            game = cur.fetchone()
+            if not game:
+                raise HTTPException(status_code=404, detail="Not found")
+            if game["creator_id"] != user["id"]:
+                raise HTTPException(status_code=403, detail="Only creator can delete")
+            cur.execute("DELETE FROM record_online_games WHERE id=%s", (game_id,))
+        return {"ok": True, "id": game_id}
     finally:
         conn.close()
 
