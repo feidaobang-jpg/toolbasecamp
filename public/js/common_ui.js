@@ -27,6 +27,28 @@
         return `${local.slice(0, 2)}***@${domain}`;
     }
 
+    function maskPhone(phone) {
+        const p = String(phone || '').trim();
+        if (p.length >= 7) return p.slice(0, 3) + '****' + p.slice(-4);
+        return p || 'User';
+    }
+
+    function maskAccount(userOrStr) {
+        if (userOrStr && typeof userOrStr === 'object') {
+            const phone = (userOrStr.phone || '').trim();
+            const email = (userOrStr.email || '').trim();
+            const display = (userOrStr.display || '').trim();
+            if (phone) return maskPhone(phone);
+            if (email) return maskEmail(email);
+            if (display.includes('@')) return maskEmail(display);
+            if (display) return maskPhone(display);
+            return 'User';
+        }
+        const s = String(userOrStr || '');
+        if (s.includes('@')) return maskEmail(s);
+        return maskPhone(s);
+    }
+
     function renderAuthStatus() {
         const headerContainer = document.querySelector('header .max-w-7xl');
         const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
@@ -173,17 +195,18 @@
                 return data;
             })
             .then((data) => {
-                const email = data?.user?.email;
-                if (email && userEl) {
-                    userEl.querySelector('span').textContent = maskEmail(email);
+                const user = data?.user || data;
+                const label = maskAccount(user);
+                if (userEl) {
+                    userEl.querySelector('span').textContent = label;
                 }
-                if (email && mobileUserSpan) {
-                    mobileUserSpan.textContent = maskEmail(email);
+                if (mobileUserSpan) {
+                    mobileUserSpan.textContent = label;
                 }
                 const sidebarMeta = document.getElementById('sidebar-user-meta');
-                if (sidebarMeta && email) {
+                if (sidebarMeta && label) {
                     sidebarMeta.classList.add('is-visible');
-                    sidebarMeta.innerHTML = `<div class="user-meta-name">${maskEmail(email)}</div>`;
+                    sidebarMeta.innerHTML = `<div class="user-meta-name">${label}</div>`;
                 }
             })
             .catch((error) => {

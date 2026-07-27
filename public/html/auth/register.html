@@ -33,13 +33,14 @@
 
                 <div class="space-y-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.email">Email</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.accountLabel">Phone / Email</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400"></i>
+                                <i class="fas fa-user text-gray-400"></i>
                             </div>
-                            <input id="email" type="email" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white" data-i18n-placeholder="auth.emailPlaceholder" placeholder="you@example.com" />
+                            <input id="account" type="text" autocomplete="username" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white" data-i18n-placeholder="auth.accountPlaceholder" placeholder="Phone or email" />
                         </div>
+                        <p class="mt-1.5 text-xs text-gray-400" data-i18n="auth.phoneNote">Phone login needs no SMS code — keep your password safe</p>
                     </div>
 
                     <div>
@@ -65,11 +66,11 @@
         </div>
     </main>
 
-    <script src="../../js/locales/en.js?v=auth2"></script>
-    <script src="../../js/locales/zh-CN.js?v=auth2"></script>
+    <script src="../../js/locales/en.js?v=auth4"></script>
+    <script src="../../js/locales/zh-CN.js?v=auth4"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
-    <script src="../../js/common_ui.js?v=2"></script>
-    <script src="../../js/auth/auth.js?v=2"></script>
+    <script src="../../js/common_ui.js?v=3"></script>
+    <script src="../../js/auth/auth.js?v=3"></script>
 </body>
 </html>

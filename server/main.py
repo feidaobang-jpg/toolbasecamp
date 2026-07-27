@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import time
 from datetime import date, datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import pymysql
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
@@ -76,6 +76,8 @@ ROLE_ADMIN = "admin"
 ROLE_USER = "user"
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+PHONE_CN_RE = re.compile(r"^1[3-9]\d{9}$")
+AUTH_PHONE_REV = 1
 
 GUESTBOOK_PAGE_SIZE = 30
 GUESTBOOK_MAX_TEXT_LEN = 500
@@ -106,12 +108,16 @@ app.add_middleware(
 )
 
 class RegisterBody(BaseModel):
-    email: str
+    email: str = ""
+    phone: str = ""
+    account: str = ""
     password: str
 
 
 class LoginBody(BaseModel):
-    email: str
+    email: str = ""
+    phone: str = ""
+    account: str = ""
     password: str
 
 
@@ -146,14 +152,61 @@ def ensure_tables():
                 """
                 CREATE TABLE IF NOT EXISTS users (
                     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                    email VARCHAR(255) NOT NULL UNIQUE,
+                    email VARCHAR(255) NULL,
+                    phone VARCHAR(32) NULL,
                     password_hash VARCHAR(255) NOT NULL,
                     role VARCHAR(20) NOT NULL DEFAULT 'user',
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    UNIQUE KEY uq_users_email (email),
+                    UNIQUE KEY uq_users_phone (phone)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """
             )
+            # Migrate older installs: add phone, allow null email
+            cur.execute(
+                """
+                SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'users'
+                  AND COLUMN_NAME = 'phone'
+                """
+            )
+            if int((cur.fetchone() or {}).get("c") or 0) == 0:
+                cur.execute("ALTER TABLE users ADD COLUMN phone VARCHAR(32) NULL")
+            cur.execute(
+                """
+                SELECT COUNT(*) AS c FROM information_schema.STATISTICS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'users'
+                  AND INDEX_NAME = 'uq_users_phone'
+                """
+            )
+            if int((cur.fetchone() or {}).get("c") or 0) == 0:
+                try:
+                    cur.execute(
+                        "CREATE UNIQUE INDEX uq_users_phone ON users (phone)"
+                    )
+                except Exception as exc:
+                    print(f"[migrate] uq_users_phone: {exc}")
+            # email may still be NOT NULL UNIQUE from older schema
+            cur.execute(
+                """
+                SELECT IS_NULLABLE AS n, COLUMN_TYPE AS t
+                FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'users'
+                  AND COLUMN_NAME = 'email'
+                """
+            )
+            email_col = cur.fetchone() or {}
+            if str(email_col.get("n") or "").upper() == "NO":
+                try:
+                    cur.execute(
+                        "ALTER TABLE users MODIFY COLUMN email VARCHAR(255) NULL"
+                    )
+                except Exception as exc:
+                    print(f"[migrate] email nullable: {exc}")
             cur.execute(
                 """
                 CREATE TABLE IF NOT EXISTS guestbook_messages (
@@ -223,12 +276,59 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 
-def create_access_token(user_id: int, email: str) -> str:
+def normalize_phone(raw: str) -> str:
+    s = re.sub(r"[\s\-()]", "", (raw or "").strip())
+    if s.startswith("+86"):
+        s = s[3:]
+    elif s.startswith("0086"):
+        s = s[4:]
+    elif s.startswith("86") and len(s) == 13 and s[2:].isdigit():
+        s = s[2:]
+    if not PHONE_CN_RE.match(s):
+        raise HTTPException(status_code=400, detail="Invalid phone number")
+    return s
+
+
+def parse_account_fields(
+    *, email: str = "", phone: str = "", account: str = ""
+) -> Tuple[Optional[str], Optional[str]]:
+    """Return (email, phone); exactly one should be set for register/login."""
+    acc = (account or "").strip()
+    em = (email or "").strip().lower()
+    ph = (phone or "").strip()
+    if acc:
+        if "@" in acc:
+            em = acc.lower()
+            ph = ""
+        else:
+            ph = acc
+            em = ""
+    out_email: Optional[str] = None
+    out_phone: Optional[str] = None
+    if em:
+        if not EMAIL_RE.match(em):
+            raise HTTPException(status_code=400, detail="Invalid email address")
+        out_email = em
+    if ph:
+        out_phone = normalize_phone(ph)
+    if out_email and out_phone:
+        raise HTTPException(
+            status_code=400, detail="Use either email or phone, not both"
+        )
+    if not out_email and not out_phone:
+        raise HTTPException(status_code=400, detail="Email or phone required")
+    return out_email, out_phone
+
+
+def create_access_token(
+    user_id: int, email: Optional[str] = None, phone: Optional[str] = None
+) -> str:
     now = datetime.now(timezone.utc)
     exp = now + timedelta(days=JWT_EXPIRE_DAYS)
     payload = {
         "sub": str(user_id),
-        "email": email,
+        "email": email or "",
+        "phone": phone or "",
         "iat": int(now.timestamp()),
         "exp": int(exp.timestamp()),
     }
@@ -244,7 +344,10 @@ def _fetch_user_by_id(user_id: int) -> Optional[dict]:
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT id, email, role, password_hash, created_at, updated_at FROM users WHERE id=%s",
+                """
+                SELECT id, email, phone, role, password_hash, created_at, updated_at
+                FROM users WHERE id=%s
+                """,
                 (user_id,),
             )
             return cur.fetchone()
@@ -316,6 +419,36 @@ def _mask_email(email: str) -> str:
     if len(local) <= 2:
         return f"{local[0]}***@{domain}"
     return f"{local[:2]}***@{domain}"
+
+
+def _mask_phone(phone: str) -> str:
+    p = (phone or "").strip()
+    if len(p) >= 7:
+        return f"{p[:3]}****{p[-4:]}"
+    return p or "User"
+
+
+def _account_label(user: dict) -> str:
+    phone = (user.get("phone") or "").strip()
+    email = (user.get("email") or "").strip()
+    if phone:
+        return phone
+    return email
+
+
+def _mask_account(user_or_email) -> str:
+    if isinstance(user_or_email, dict):
+        phone = (user_or_email.get("phone") or "").strip()
+        email = (user_or_email.get("email") or "").strip()
+        if phone:
+            return _mask_phone(phone)
+        return _mask_email(email)
+    s = str(user_or_email or "")
+    if "@" in s:
+        return _mask_email(s)
+    if s.isdigit() or (s.startswith("1") and len(s) == 11):
+        return _mask_phone(s)
+    return _mask_email(s) if s else "User"
 
 
 def _client_ip(request: Request) -> str:
@@ -503,10 +636,11 @@ def _sanitize_guest_name(name: str) -> str:
 
 
 def _serialize_guestbook_row(row: dict) -> dict:
-    email = row.get("email") or ""
     user_id = row.get("user_id")
     if user_id:
-        sender_name = _mask_email(email)
+        sender_name = _mask_account(
+            {"email": row.get("email") or "", "phone": row.get("phone") or ""}
+        )
         is_guest = False
     else:
         sender_name = _sanitize_guest_name(row.get("guest_name") or "Guest")
@@ -570,6 +704,8 @@ def health():
         "records_online_draft": "/records/online-games/{game_id}/draft-scores" in paths,
         "records_online_delete": "/records/online-games/{game_id}/delete" in paths,
         "records_online_draft_rev": ONLINE_DRAFT_REV,
+        "auth_phone_login": True,
+        "auth_phone_rev": AUTH_PHONE_REV,
         "records_rent_pay_rev": RENT_PAY_REV,
         "records_rent_due_max": RENT_DUE_DAY_MAX,
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,
@@ -615,25 +751,31 @@ def health():
 @app.post("/auth/register")
 def register(body: RegisterBody):
     require_db()
-    email = (body.email or "").strip().lower()
     password = body.password or ""
+    email, phone = parse_account_fields(
+        email=body.email or "", phone=body.phone or "", account=body.account or ""
+    )
 
-    if not EMAIL_RE.match(email):
-        raise HTTPException(status_code=400, detail="Invalid email address")
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
     if len(password.encode("utf-8")) > 72:
         raise HTTPException(status_code=400, detail="Password must not exceed 72 characters")
 
-    if email == ADMIN_EMAIL:
+    if email and email == ADMIN_EMAIL:
         raise HTTPException(status_code=400, detail="This account cannot be registered")
 
     conn = get_conn()
+    user_id = None
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM users WHERE email=%s", (email,))
-            if cur.fetchone():
-                raise HTTPException(status_code=400, detail="Email already registered")
+            if email:
+                cur.execute("SELECT id FROM users WHERE email=%s", (email,))
+                if cur.fetchone():
+                    raise HTTPException(status_code=400, detail="Email already registered")
+            if phone:
+                cur.execute("SELECT id FROM users WHERE phone=%s", (phone,))
+                if cur.fetchone():
+                    raise HTTPException(status_code=400, detail="Phone already registered")
 
             try:
                 pw_hash = hash_password(password)
@@ -642,8 +784,8 @@ def register(body: RegisterBody):
                 raise HTTPException(status_code=500, detail="Registration failed. Please try again.") from exc
 
             cur.execute(
-                "INSERT INTO users (email, password_hash, role) VALUES (%s, %s, %s)",
-                (email, pw_hash, ROLE_USER),
+                "INSERT INTO users (email, phone, password_hash, role) VALUES (%s, %s, %s, %s)",
+                (email, phone, pw_hash, ROLE_USER),
             )
             user_id = cur.lastrowid
     except HTTPException:
@@ -657,43 +799,62 @@ def register(body: RegisterBody):
     if not user_id:
         raise HTTPException(status_code=500, detail="Registration failed. Please try again.")
 
-    token = create_access_token(int(user_id), email)
+    token = create_access_token(int(user_id), email=email, phone=phone)
     return {"success": True, "token": token}
 
 
 @app.post("/auth/login")
 def login(body: LoginBody):
     require_db()
-    email = (body.email or "").strip().lower()
     password = body.password or ""
-
-    if not EMAIL_RE.match(email):
-        raise HTTPException(status_code=400, detail="Invalid email address")
+    email, phone = parse_account_fields(
+        email=body.email or "", phone=body.phone or "", account=body.account or ""
+    )
 
     conn = get_conn()
     try:
         with conn.cursor() as cur:
-            cur.execute(
-                "SELECT id, email, password_hash, role FROM users WHERE email=%s",
-                (email,),
-            )
+            if email:
+                cur.execute(
+                    """
+                    SELECT id, email, phone, password_hash, role
+                    FROM users WHERE email=%s
+                    """,
+                    (email,),
+                )
+            else:
+                cur.execute(
+                    """
+                    SELECT id, email, phone, password_hash, role
+                    FROM users WHERE phone=%s
+                    """,
+                    (phone,),
+                )
             user = cur.fetchone()
     finally:
         conn.close()
 
     if not user or not verify_password(password, user["password_hash"]):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+        raise HTTPException(status_code=400, detail="Invalid account or password")
 
-    if email == ADMIN_EMAIL and user.get("role") != ROLE_ADMIN:
+    user_email = (user.get("email") or "").strip().lower()
+    if user_email == ADMIN_EMAIL and user.get("role") != ROLE_ADMIN:
         conn = get_conn()
         try:
             with conn.cursor() as cur:
-                cur.execute("UPDATE users SET role=%s WHERE email=%s", (ROLE_ADMIN, email))
+                cur.execute(
+                    "UPDATE users SET role=%s WHERE id=%s",
+                    (ROLE_ADMIN, user["id"]),
+                )
         finally:
             conn.close()
         user["role"] = ROLE_ADMIN
 
-    token = create_access_token(int(user["id"]), user["email"])
+    token = create_access_token(
+        int(user["id"]),
+        email=user.get("email"),
+        phone=user.get("phone"),
+    )
     return {"success": True, "token": token}
 
 
@@ -729,11 +890,15 @@ def change_password(
 def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     require_db()
     user = get_current_user(creds)
+    email = user.get("email") or ""
+    phone = user.get("phone") or ""
     return {
         "success": True,
         "user": {
             "id": user["id"],
-            "email": user["email"],
+            "email": email,
+            "phone": phone,
+            "display": phone or email,
             "role": user["role"],
             "created_at": user["created_at"],
             "updated_at": user["updated_at"],
@@ -754,7 +919,7 @@ def guestbook_list_messages(before_id: int = 0, limit: int = GUESTBOOK_PAGE_SIZE
             if bid > 0:
                 cur.execute(
                     """
-                    SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email
+                    SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email, u.phone
                     FROM guestbook_messages g
                     LEFT JOIN users u ON u.id = g.user_id
                     WHERE g.id < %s
@@ -766,7 +931,7 @@ def guestbook_list_messages(before_id: int = 0, limit: int = GUESTBOOK_PAGE_SIZE
             else:
                 cur.execute(
                     """
-                    SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email
+                    SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email, u.phone
                     FROM guestbook_messages g
                     LEFT JOIN users u ON u.id = g.user_id
                     ORDER BY g.id DESC
@@ -816,7 +981,7 @@ def guestbook_send_message(
             msg_id = cur.lastrowid
             cur.execute(
                 """
-                SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email
+                SELECT g.id, g.user_id, g.guest_name, g.content, g.created_at, u.email, u.phone
                 FROM guestbook_messages g
                 LEFT JOIN users u ON u.id = g.user_id
                 WHERE g.id = %s

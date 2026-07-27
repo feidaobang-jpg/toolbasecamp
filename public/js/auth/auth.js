@@ -57,10 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var map = {
       'Invalid email or password': 'auth.invalidCredentials',
+      'Invalid account or password': 'auth.invalidCredentials',
       'Invalid email address': 'auth.invalidEmail',
+      'Invalid phone number': 'auth.invalidPhone',
+      'Email or phone required': 'auth.enterAccount',
+      'Use either email or phone, not both': 'auth.enterAccount',
       'Password must be at least 6 characters': 'auth.passwordTooShort',
       'Password must not exceed 72 characters': 'auth.passwordTooLong',
       'Email already registered': 'auth.emailRegistered',
+      'Phone already registered': 'auth.phoneRegistered',
       'This account cannot be registered': 'auth.accountBlocked',
       'Registration failed. Please try again.': 'auth.registerFailed',
       'Current password is incorrect': 'auth.currentPasswordWrong',
@@ -115,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return data;
   }
 
-  const emailInput = document.getElementById('email');
+  const accountInput = document.getElementById('account') || document.getElementById('email');
   const passwordInput = document.getElementById('password');
   const registerBtn = document.getElementById('btn-register');
   const loginBtn = document.getElementById('btn-login');
@@ -124,14 +129,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (registerBtn) {
     const handleRegister = async () => {
       setStatus('');
-      const email = (emailInput?.value || '').trim();
+      const account = (accountInput?.value || '').trim();
       const password = passwordInput?.value || '';
-      if (!email) { setStatus(tr('auth.enterEmail'), true); return; }
+      if (!account) { setStatus(tr('auth.enterAccount'), true); return; }
       if (!password) { setStatus(tr('auth.enterPassword'), true); return; }
 
       setLoading(registerBtn, true);
       try {
-        const data = await postJson('/auth/register', { email, password });
+        const data = await postJson('/auth/register', { account, password });
         if (data.token) setToken(data.token);
         setStatus(tr('auth.accountCreated'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);
@@ -141,21 +146,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
     registerBtn.addEventListener('click', handleRegister);
-    emailInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleRegister(); });
+    accountInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleRegister(); });
     passwordInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleRegister(); });
   }
 
   if (loginBtn) {
     const handleLogin = async () => {
       setStatus('');
-      const email = (emailInput?.value || '').trim();
+      const account = (accountInput?.value || '').trim();
       const password = passwordInput?.value || '';
-      if (!email) { setStatus(tr('auth.enterEmail'), true); return; }
+      if (!account) { setStatus(tr('auth.enterAccount'), true); return; }
       if (!password) { setStatus(tr('auth.enterPassword'), true); return; }
 
       setLoading(loginBtn, true);
       try {
-        const data = await postJson('/auth/login', { email, password });
+        const data = await postJson('/auth/login', { account, password });
         if (data.token) setToken(data.token);
         setStatus(tr('auth.loggedIn'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);
@@ -165,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
     loginBtn.addEventListener('click', handleLogin);
-    emailInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
+    accountInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
     passwordInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleLogin(); });
   }
 

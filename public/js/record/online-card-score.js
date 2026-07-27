@@ -723,8 +723,11 @@ document.addEventListener('DOMContentLoaded', function () {
     R.requireLogin(gate, app).then(function (user) {
         if (!user) return;
         meId = user.id != null ? user.id : user.user_id;
-        if (!displayName.value && user.email) {
-            displayName.value = String(user.email).split('@')[0];
+        if (!displayName.value) {
+            var label = String(user.display || user.phone || user.email || '').trim();
+            if (label) {
+                displayName.value = label.includes('@') ? label.split('@')[0] : label;
+            }
         }
         var params = new URLSearchParams(window.location.search || '');
         var code = (params.get('code') || '').trim().toUpperCase();
