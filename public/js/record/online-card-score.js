@@ -221,27 +221,37 @@ document.addEventListener('DOMContentLoaded', function () {
         ocsKeyboardDisplay.textContent = v || tr('tools.onlineCardScore.keyboardPlaceholder');
     }
 
-    function syncKeyboardInset() {
-        var h = 0;
-        if (keyboardOpen && ocsKeyboard) {
-            h = ocsKeyboard.offsetHeight || 0;
+    function updateKeyboardLayout() {
+        if (!boardView) return;
+        if (!keyboardOpen || !ocsKeyboard) {
+            boardView.style.paddingBottom = '';
+            return;
         }
-        document.documentElement.style.setProperty('--ocs-kb-h', h > 0 ? (h + 'px') : '0px');
-        if (boardView) boardView.classList.toggle('ocs-kb-open', keyboardOpen && h > 0);
-    }
-
-    function ensureSubmitVisible() {
-        var btn = document.getElementById('submit-round-btn');
-        if (!btn || btn.hidden || !keyboardOpen) return;
+        var kbH = ocsKeyboard.offsetHeight || 0;
+        boardView.style.paddingBottom = kbH > 0 ? (kbH + 16) + 'px' : '';
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
-                try {
-                    btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                } catch (e) {
-                    try { btn.scrollIntoView(false); } catch (e2) { /* ignore */ }
-                }
+                scrollBoardForKeyboard(kbH);
             });
         });
+    }
+
+    function scrollBoardForKeyboard(kbH) {
+        if (!keyboardOpen) return;
+        kbH = kbH || (ocsKeyboard ? ocsKeyboard.offsetHeight : 0);
+        var anchor = document.querySelector('.ocs-submit-row') || roundForm;
+        if (!anchor) return;
+        var rect = anchor.getBoundingClientRect();
+        var gap = 12;
+        var visibleBottom = window.innerHeight - kbH - gap;
+        var delta = rect.bottom - visibleBottom;
+        if (delta > 0) {
+            try {
+                window.scrollBy({ top: delta, behavior: 'smooth' });
+            } catch (e) {
+                window.scrollBy(0, delta);
+            }
+        }
     }
 
     function hideScoreKeyboard() {
@@ -252,8 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ocsKeyboard.classList.remove('is-open');
             ocsKeyboard.setAttribute('aria-hidden', 'true');
         }
-        if (roundForm) roundForm.classList.remove('keyboard-open');
-        syncKeyboardInset();
+        updateKeyboardLayout();
     }
 
     function openScoreKeyboard(input) {
@@ -266,14 +275,9 @@ document.addEventListener('DOMContentLoaded', function () {
         keyboardOpen = true;
         ocsKeyboard.classList.add('is-open');
         ocsKeyboard.setAttribute('aria-hidden', 'false');
-        if (roundForm) roundForm.classList.add('keyboard-open');
         updateKeyboardDisplay();
-        syncKeyboardInset();
-        ensureSubmitVisible();
-        setTimeout(function () {
-            syncKeyboardInset();
-            ensureSubmitVisible();
-        }, 260);
+        updateKeyboardLayout();
+        setTimeout(updateKeyboardLayout, 280);
     }
 
     function onScoreKey(key) {
@@ -964,6 +968,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.addEventListener('beforeunload', stopPoll);
+    window.addEventListener('resize', function () {
+        if (keyboardOpen) syncKeyboardInset();
+    });
 
     R.optionalLogin(gate, app).then(function (user) {
         loggedIn = !!(user && (user.id != null || user.user_id != null));
