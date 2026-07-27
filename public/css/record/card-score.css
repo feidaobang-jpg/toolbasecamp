@@ -315,12 +315,6 @@
   background: #eee;
 }
 
-.card-score-key-delete {
-  background: #ffebee;
-  color: #f44336;
-  font-size: 12px;
-}
-
 .recipe-toast {
   position: fixed;
   left: 50%;

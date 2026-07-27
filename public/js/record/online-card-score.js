@@ -969,7 +969,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('beforeunload', stopPoll);
     window.addEventListener('resize', function () {
-        if (keyboardOpen) syncKeyboardInset();
+        if (keyboardOpen) updateKeyboardLayout();
     });
 
     R.optionalLogin(gate, app).then(function (user) {
