@@ -497,7 +497,19 @@ document.addEventListener('DOMContentLoaded', function () {
         var draft = data.draftScores || {};
 
         syncColgroup(players.length);
-        scoreHead.innerHTML = '';
+
+        var head = '<tr>' +
+            '<th class="ocs-head-round" title="' +
+            R.escapeHtml(tr('tools.onlineCardScore.colRoundTitle')) + '">' +
+            R.escapeHtml(tr('tools.onlineCardScore.colRound')) + '</th>' +
+            '<th class="ocs-head-sum" title="' +
+            R.escapeHtml(tr('tools.onlineCardScore.colSumTitle')) + '">' +
+            R.escapeHtml(tr('tools.onlineCardScore.colSum')) + '</th>';
+        players.forEach(function () {
+            head += '<th aria-hidden="true"></th>';
+        });
+        head += '</tr>';
+        scoreHead.innerHTML = head;
 
         var body = '';
         rounds.forEach(function (r) {
