@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var currentGameId = null;
     var currentGame = null;
     var meId = null;
+    var meUser = null;
     var lastBoardSig = '';
     var pollTimer = null;
     var pollInFlight = false;
@@ -50,8 +51,39 @@ document.addEventListener('DOMContentLoaded', function () {
         var n = displayName.value.trim();
         try {
             if (n) localStorage.setItem(NAME_KEY, n);
+            else localStorage.removeItem(NAME_KEY);
         } catch (e) { /* ignore */ }
         return n;
+    }
+
+    function accountTail4(user) {
+        var phone = String((user && user.phone) || '').replace(/\D/g, '');
+        if (phone.length >= 4) return phone.slice(-4);
+        var email = String((user && user.email) || (user && user.display) || '').trim();
+        var local = email.includes('@') ? email.split('@')[0] : email;
+        var digits = local.replace(/\D/g, '');
+        if (digits.length >= 4) return digits.slice(-4);
+        if (local) {
+            var t = local.slice(-4);
+            while (t.length < 4) t = '0' + t;
+            return t.slice(-4);
+        }
+        return '';
+    }
+
+    function resolveDisplayName() {
+        var typed = rememberName();
+        if (typed) return typed;
+        return accountTail4(meUser);
+    }
+
+    function formatRoomTitle(name) {
+        var raw = String(name || '');
+        var m = /^(.+)'s game$/i.exec(raw);
+        if (m) {
+            return tr('tools.onlineCardScore.defaultRoomName', { name: m[1] });
+        }
+        return raw;
     }
 
     function stopPoll() {
@@ -186,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '<button type="button" class="tb-btn" data-act="open"></button>' +
             (item.isCreator ? '<button type="button" class="tb-btn" data-act="del"></button>' : '') +
             '</div>';
-        el.querySelector('.rec-item-title').textContent = item.name;
+        el.querySelector('.rec-item-title').textContent = formatRoomTitle(item.name);
         el.querySelector('.rec-item-meta').textContent =
             tr('tools.onlineCardScore.listMeta', {
                 code: item.code,
@@ -243,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderHeader(data) {
-        boardTitle.textContent = data.name;
+        boardTitle.textContent = formatRoomTitle(data.name);
         boardCode.textContent = data.code;
         boardStatus.textContent =
             statusLabel(data.status) +
@@ -569,18 +601,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.getElementById('create-btn').addEventListener('click', function () {
-        var name = rememberName();
+        var name = resolveDisplayName();
         if (!name) {
             R.setError(homeError, tr('tools.onlineCardScore.needName'));
             displayName.focus();
             return;
         }
+        var roomTitle = gameName.value.trim() || tr('tools.onlineCardScore.defaultRoomName', { name: name });
         R.setError(homeError, '');
         setBusy(true);
         R.apiJson('/records/online-games', {
             method: 'POST',
             body: JSON.stringify({
-                name: gameName.value.trim(),
+                name: roomTitle,
                 display_name: name
             })
         })
@@ -593,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('join-btn').addEventListener('click', function () {
-        var name = rememberName();
+        var name = resolveDisplayName();
         var code = joinCode.value.trim().toUpperCase();
         if (!name) {
             R.setError(homeError, tr('tools.onlineCardScore.needName'));
@@ -722,13 +755,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     R.requireLogin(gate, app).then(function (user) {
         if (!user) return;
+        meUser = user;
         meId = user.id != null ? user.id : user.user_id;
-        if (!displayName.value) {
-            var label = String(user.display || user.phone || user.email || '').trim();
-            if (label) {
-                displayName.value = label.includes('@') ? label.split('@')[0] : label;
-            }
-        }
         var params = new URLSearchParams(window.location.search || '');
         var code = (params.get('code') || '').trim().toUpperCase();
         if (code) joinCode.value = code;

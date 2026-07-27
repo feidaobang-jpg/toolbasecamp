@@ -1380,17 +1380,17 @@ ONLINE_PLAYER_NAME_MAX = 40
 ONLINE_MAX_PLAYERS = 8
 ONLINE_MAX_ROUNDS = 80
 ONLINE_SCORE_ABS_MAX = 999999
-ONLINE_DRAFT_REV = 1
+ONLINE_DRAFT_REV = 2
 
 
 class OnlineGameCreateBody(BaseModel):
     name: str = ""
-    display_name: str
+    display_name: str = ""
 
 
 class OnlineGameJoinBody(BaseModel):
     code: str
-    display_name: str
+    display_name: str = ""
 
 
 class OnlineRoundBody(BaseModel):
@@ -1420,11 +1420,33 @@ def _normalize_room_code(raw: Any) -> str:
     return code
 
 
-def _parse_display_name(raw: Any) -> str:
+def _account_tail4(user: dict) -> str:
+    """Last 4 digits of phone, else last 4 digits/chars of email local part."""
+    phone = re.sub(r"\D", "", str((user or {}).get("phone") or ""))
+    if len(phone) >= 4:
+        return phone[-4:]
+    email = str((user or {}).get("email") or "").strip()
+    local = email.split("@", 1)[0] if email else ""
+    digits = re.sub(r"\D", "", local)
+    if len(digits) >= 4:
+        return digits[-4:]
+    if local:
+        return local[-4:].rjust(4, "0")[-4:]
+    return "0000"
+
+
+def _parse_display_name(raw: Any, user: Optional[dict] = None) -> str:
     name = (str(raw or "")).strip()
+    if not name and user is not None:
+        name = _account_tail4(user)
     if not name or len(name) > ONLINE_PLAYER_NAME_MAX:
         raise HTTPException(status_code=400, detail="Invalid display_name")
     return name
+
+
+def _default_room_name(display: str) -> str:
+    # Product default is Chinese; clients may send a localized name explicitly.
+    return f"{display}的房间"
 
 
 def _player_in_game(cur, *, game_id: int, user_id: int) -> Optional[dict]:
@@ -1623,8 +1645,8 @@ def list_online_games(user: dict = Depends(_user)):
 
 @router.post("/online-games")
 def create_online_game(body: OnlineGameCreateBody, user: dict = Depends(_user)):
-    display = _parse_display_name(body.display_name)
-    name = (body.name or "").strip() or f"{display}'s game"
+    display = _parse_display_name(body.display_name, user)
+    name = (body.name or "").strip() or _default_room_name(display)
     if len(name) > ONLINE_NAME_MAX:
         raise HTTPException(status_code=400, detail="Invalid name")
     conn = _conn()
@@ -1655,7 +1677,7 @@ def create_online_game(body: OnlineGameCreateBody, user: dict = Depends(_user)):
 @router.post("/online-games/join")
 def join_online_game(body: OnlineGameJoinBody, user: dict = Depends(_user)):
     code = _normalize_room_code(body.code)
-    display = _parse_display_name(body.display_name)
+    display = _parse_display_name(body.display_name, user)
     conn = _conn()
     try:
         with conn.cursor() as cur:

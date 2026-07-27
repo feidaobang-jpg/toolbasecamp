@@ -30,8 +30,9 @@
         <div class="tool-card" id="home-view">
           <p class="rec-note" data-i18n="tools.onlineCardScore.pollNote">Everyone must be signed in. The board refreshes automatically about every 3 seconds.</p>
           <div class="rec-field">
-            <label class="field-label" for="display-name" data-i18n="tools.onlineCardScore.displayName">Your name at the table</label>
-            <input type="text" id="display-name" class="rec-input" maxlength="40" autocomplete="nickname" />
+            <label class="field-label" for="display-name" data-i18n="tools.onlineCardScore.displayName">Display name (optional)</label>
+            <input type="text" id="display-name" class="rec-input" maxlength="40" autocomplete="nickname" placeholder="" />
+            <p class="rec-note" style="margin-top:6px" data-i18n="tools.onlineCardScore.displayNameHint">Leave blank to use last 4 digits of phone/email</p>
           </div>
           <div class="rec-field">
             <label class="field-label" for="game-name" data-i18n="tools.onlineCardScore.gameName">Game name (optional)</label>
@@ -129,6 +130,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=7"></script>
-  <script src="../../js/record/online-card-score.js?v=6"></script>
+  <script src="../../js/record/online-card-score.js?v=7"></script>
 </body>
 </html>
