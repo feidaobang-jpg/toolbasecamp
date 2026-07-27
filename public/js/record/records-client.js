@@ -95,6 +95,7 @@
             'Game already finished': 'tools.onlineCardScore.gameFinished',
             'Only creator can finish': 'tools.onlineCardScore.onlyCreator',
             'Only creator can delete': 'tools.onlineCardScore.onlyCreatorDelete',
+            'Method Not Allowed': 'tools.records.methodNotAllowed',
             'Only host can edit others': 'tools.onlineCardScore.onlyHostEdit',
             'Missing player score': 'tools.onlineCardScore.missingScore',
             'Invalid score': 'tools.onlineCardScore.invalidScore',

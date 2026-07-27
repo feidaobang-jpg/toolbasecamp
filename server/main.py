@@ -568,6 +568,7 @@ def health():
         "records_rents": "/records/rents" in paths,
         "records_online_games": "/records/online-games" in paths,
         "records_online_draft": "/records/online-games/{game_id}/draft-scores" in paths,
+        "records_online_delete": "/records/online-games/{game_id}/delete" in paths,
         "records_online_draft_rev": ONLINE_DRAFT_REV,
         "records_rent_pay_rev": RENT_PAY_REV,
         "records_rent_due_max": RENT_DUE_DAY_MAX,

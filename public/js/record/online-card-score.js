@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var deleteBtn = document.getElementById('delete-btn');
     var sumWarn = document.getElementById('sum-warn');
     var loginLink = document.getElementById('login-link');
+    var ocsKeyboard = document.getElementById('ocs-keyboard');
+    var ocsKeyboardDisplay = document.getElementById('ocs-keyboard-display');
+    var ocsKeyboardClose = document.getElementById('ocs-keyboard-close');
+    var activeScoreInput = null;
+    var keyboardOpen = false;
     var currentGameId = null;
     var currentGame = null;
     var meId = null;
@@ -69,12 +74,66 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function isEditingScore() {
+        if (keyboardOpen && activeScoreInput) return true;
         var ae = document.activeElement;
         return !!(ae && ae.classList && ae.classList.contains('ocs-score-input'));
     }
 
+    function updateKeyboardDisplay() {
+        if (!ocsKeyboardDisplay) return;
+        var v = activeScoreInput ? String(activeScoreInput.value || '') : '';
+        ocsKeyboardDisplay.textContent = v || tr('tools.onlineCardScore.keyboardPlaceholder');
+    }
+
+    function hideScoreKeyboard() {
+        keyboardOpen = false;
+        if (activeScoreInput) activeScoreInput.classList.remove('is-active');
+        activeScoreInput = null;
+        if (ocsKeyboard) {
+            ocsKeyboard.classList.remove('is-open');
+            ocsKeyboard.setAttribute('aria-hidden', 'true');
+        }
+        if (roundForm) roundForm.classList.remove('keyboard-open');
+    }
+
+    function openScoreKeyboard(input) {
+        if (!input || !ocsKeyboard) return;
+        if (activeScoreInput && activeScoreInput !== input) {
+            activeScoreInput.classList.remove('is-active');
+        }
+        activeScoreInput = input;
+        input.classList.add('is-active');
+        keyboardOpen = true;
+        ocsKeyboard.classList.add('is-open');
+        ocsKeyboard.setAttribute('aria-hidden', 'false');
+        if (roundForm) roundForm.classList.add('keyboard-open');
+        updateKeyboardDisplay();
+        try {
+            input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        } catch (e) { /* ignore */ }
+    }
+
+    function onScoreKey(key) {
+        if (!activeScoreInput) return;
+        var v = String(activeScoreInput.value || '');
+        if (key === 'delete') {
+            v = v.slice(0, -1);
+        } else if (key === '-') {
+            v = v.charAt(0) === '-' ? v.slice(1) : '-' + v;
+        } else {
+            if (v.length >= 7) return;
+            if (v === '0') v = key;
+            else if (v === '-0') v = '-' + key;
+            else v += key;
+        }
+        activeScoreInput.value = v;
+        activeScoreInput.dataset.localEdit = '1';
+        updateKeyboardDisplay();
+    }
+
     function showHome() {
         stopPoll();
+        hideScoreKeyboard();
         currentGameId = null;
         currentGame = null;
         lastBoardSig = '';
@@ -305,11 +364,10 @@ document.addEventListener('DOMContentLoaded', function () {
     /** Fill non-focused inputs from server draft so joiners' saves appear for the host. */
     function syncDraftIntoInputs(data) {
         var draft = data.draftScores || {};
-        var ae = document.activeElement;
         var inputs = roundInputs.querySelectorAll('.ocs-score-input');
         for (var i = 0; i < inputs.length; i++) {
             var inp = inputs[i];
-            if (ae === inp) continue;
+            if (inp === activeScoreInput) continue;
             var key = inp.dataset.uid;
             if (Object.prototype.hasOwnProperty.call(draft, key)) {
                 var next = String(draft[key]);
@@ -319,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         updateDraftCheckmarks(data);
+        if (activeScoreInput) updateKeyboardDisplay();
     }
 
     function updateDraftCheckmarks(data) {
@@ -340,6 +399,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderInputs(data, force) {
         if (data.status === 'finished') {
+            hideScoreKeyboard();
             roundInputs.innerHTML = '';
             document.getElementById('submit-round-btn').hidden = true;
             return;
@@ -349,19 +409,11 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        var keepUid = activeScoreInput ? activeScoreInput.dataset.uid : null;
+        var keepVal = activeScoreInput ? activeScoreInput.value : null;
+
         var players = data.players || [];
         var draft = data.draftScores || {};
-        var prevFocusUid = null;
-        var prevSelStart = null;
-        var prevSelEnd = null;
-        var ae = document.activeElement;
-        if (ae && ae.classList && ae.classList.contains('ocs-score-input')) {
-            prevFocusUid = ae.dataset.uid;
-            try {
-                prevSelStart = ae.selectionStart;
-                prevSelEnd = ae.selectionEnd;
-            } catch (e) { /* ignore */ }
-        }
 
         roundInputs.innerHTML = '';
         var grid = document.createElement('div');
@@ -375,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var own = isOwnPlayer(data, p);
             field.innerHTML =
                 '<label class="field-label"></label>' +
-                '<input type="text" inputmode="numeric" class="rec-input ocs-score-input" autocomplete="off" />';
+                '<input type="text" readonly class="rec-input ocs-score-input" inputmode="none" autocomplete="off" />';
             var label = field.querySelector('label');
             var input = field.querySelector('input');
             label.dataset.baseName = p.displayName;
@@ -392,13 +444,24 @@ document.addEventListener('DOMContentLoaded', function () {
             input.placeholder = data.isCreator && !own
                 ? tr('tools.onlineCardScore.hostFillHint')
                 : tr('tools.onlineCardScore.scorePlaceholder');
-            input.value = has ? String(draft[key]) : '';
-            input.addEventListener('input', function () {
-                input.dataset.localEdit = '1';
+            if (keepUid === key && keepVal != null) {
+                input.value = keepVal;
+            } else {
+                input.value = has ? String(draft[key]) : '';
+            }
+            input.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                openScoreKeyboard(input);
+            });
+            input.addEventListener('focus', function (ev) {
+                ev.preventDefault();
+                try { input.blur(); } catch (e) { /* ignore */ }
+                openScoreKeyboard(input);
             });
             grid.appendChild(field);
         });
         if (!grid.children.length) {
+            hideScoreKeyboard();
             var tip = document.createElement('p');
             tip.className = 'rec-note';
             tip.textContent = tr('tools.onlineCardScore.waitOthers');
@@ -409,13 +472,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('submit-round-btn').hidden = false;
         }
 
-        if (prevFocusUid) {
-            var restore = roundInputs.querySelector('.ocs-score-input[data-uid="' + prevFocusUid + '"]');
-            if (restore) {
-                restore.focus();
-                try {
-                    if (prevSelStart != null) restore.setSelectionRange(prevSelStart, prevSelEnd);
-                } catch (e2) { /* ignore */ }
+        if (keepUid) {
+            var restore = roundInputs.querySelector('.ocs-score-input[data-uid="' + keepUid + '"]');
+            if (restore && keyboardOpen) {
+                activeScoreInput = restore;
+                restore.classList.add('is-active');
+                updateKeyboardDisplay();
+            } else if (!restore) {
+                hideScoreKeyboard();
             }
         }
     }
@@ -481,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function deleteGame(id, fromList) {
         if (!R.confirmDelete(tr('tools.onlineCardScore.deleteConfirm'))) return;
         R.setError(fromList ? homeError : boardError, '');
-        R.apiJson('/records/online-games/' + id, { method: 'DELETE' })
+        R.apiJson('/records/online-games/' + id + '/delete', { method: 'POST' })
             .then(function () {
                 if (!fromList || String(id) === String(currentGameId)) {
                     showHome();
@@ -629,6 +693,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({ scores: scores })
         })
             .then(function (data) {
+                hideScoreKeyboard();
                 renderBoard(data, { forceInputs: true });
                 if (data.settled) {
                     boardStatus.textContent = tr('tools.onlineCardScore.settled');
@@ -639,6 +704,19 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(function (e) { R.setError(boardError, e.message); })
             .then(function () { setBusy(false); });
     });
+
+    if (ocsKeyboardClose) {
+        ocsKeyboardClose.addEventListener('click', hideScoreKeyboard);
+    }
+    if (ocsKeyboard) {
+        ocsKeyboard.querySelectorAll('.ocs-key').forEach(function (btn) {
+            btn.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                var key = btn.getAttribute('data-key');
+                if (key) onScoreKey(key);
+            });
+        });
+    }
 
     window.addEventListener('beforeunload', stopPoll);
 

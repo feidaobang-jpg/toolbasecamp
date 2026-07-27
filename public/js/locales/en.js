@@ -1347,7 +1347,9 @@ window.TB_LOCALES.en = {
             deleteConfirm: 'Delete this room? All scores will be removed permanently.',
             deleted: 'Room deleted',
             hostFillHint: 'optional',
-            hostOptional: 'Others can leave blank — they sync when players save'
+            hostOptional: 'Others can leave blank — they sync when players save',
+            keyboardPlaceholder: 'Enter score',
+            backspace: 'Del'
         },
         todoList: {
             title: 'To-Do (Task List)',
@@ -1380,6 +1382,7 @@ window.TB_LOCALES.en = {
             back: 'Back',
             loadMore: 'Load more',
             notFound: 'Record not found',
+            methodNotAllowed: 'This action is not allowed. Please refresh and try again.',
             invalidName: 'Please enter a valid name',
             invalidDate: 'Please choose a valid date',
             invalidType: 'Invalid operation type',

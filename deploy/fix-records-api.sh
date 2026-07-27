@@ -28,6 +28,7 @@ assert '/records/todos' in paths, 'missing /records/todos: ' + str(paths)
 assert '/records/rents' in paths, 'missing /records/rents: ' + str(paths)
 assert '/records/online-games' in paths, 'missing /records/online-games: ' + str(paths)
 assert '/records/online-games/{game_id}/draft-scores' in paths, 'missing online draft-scores: ' + str(paths)
+assert '/records/online-games/{game_id}/delete' in paths, 'missing online delete: ' + str(paths)
 from user_records import RENT_PAY_REV
 assert RENT_PAY_REV >= 4, 'stale rent pay rev: ' + str(RENT_PAY_REV)
 from user_records import RENT_DUE_DAY_MAX
@@ -85,6 +86,11 @@ echo "$HEALTH" | grep -q '"records_online_draft":true' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+echo "$HEALTH" | grep -q '"records_online_delete":true' || {
+  echo "FAILED: health records_online_delete is not true (stale process?)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 echo "$HEALTH" | grep -q '"records_rent_pay_rev":4' || {
   echo "FAILED: health records_rent_pay_rev!=4 (stale list/integer/due-day?)"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
@@ -119,6 +125,11 @@ curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/online-games' || 
 }
 curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/online-games/{game_id}/draft-scores' || {
   echo "FAILED: openapi missing /records/online-games/{game_id}/draft-scores"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
+curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/online-games/{game_id}/delete' || {
+  echo "FAILED: openapi missing /records/online-games/{game_id}/delete"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }

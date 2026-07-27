@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=8" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=8" />
-  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=5" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=6" />
 </head>
 <body>
   <div class="container">
@@ -94,12 +94,41 @@
     </main>
   </div>
 
-  <script src="../../js/locales/en.js?v=ocs4"></script>
-  <script src="../../js/locales/zh-CN.js?v=ocs4"></script>
+  <div class="ocs-keyboard" id="ocs-keyboard" aria-hidden="true">
+    <div class="ocs-keyboard-panel">
+      <div class="ocs-keyboard-header">
+        <span id="ocs-keyboard-display" data-i18n="tools.onlineCardScore.keyboardPlaceholder">Enter score</span>
+        <button type="button" class="ocs-keyboard-close" id="ocs-keyboard-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="ocs-key-row">
+        <button type="button" class="ocs-key" data-key="1">1</button>
+        <button type="button" class="ocs-key" data-key="2">2</button>
+        <button type="button" class="ocs-key" data-key="3">3</button>
+      </div>
+      <div class="ocs-key-row">
+        <button type="button" class="ocs-key" data-key="4">4</button>
+        <button type="button" class="ocs-key" data-key="5">5</button>
+        <button type="button" class="ocs-key" data-key="6">6</button>
+      </div>
+      <div class="ocs-key-row">
+        <button type="button" class="ocs-key" data-key="7">7</button>
+        <button type="button" class="ocs-key" data-key="8">8</button>
+        <button type="button" class="ocs-key" data-key="9">9</button>
+      </div>
+      <div class="ocs-key-row">
+        <button type="button" class="ocs-key" data-key="-">−</button>
+        <button type="button" class="ocs-key" data-key="0">0</button>
+        <button type="button" class="ocs-key ocs-key-del" data-key="delete" data-i18n="tools.onlineCardScore.backspace">Del</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/locales/en.js?v=ocs5"></script>
+  <script src="../../js/locales/zh-CN.js?v=ocs5"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/record/records-client.js?v=5"></script>
-  <script src="../../js/record/online-card-score.js?v=5"></script>
+  <script src="../../js/record/records-client.js?v=6"></script>
+  <script src="../../js/record/online-card-score.js?v=6"></script>
 </body>
 </html>

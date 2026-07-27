@@ -1346,7 +1346,9 @@ window.TB_LOCALES['zh-CN'] = {
             deleteConfirm: '确定删除该房间？分数记录将一并清除，且不可恢复。',
             deleted: '房间已删除',
             hostFillHint: '可代填',
-            hostOptional: '他人分数可留空，由对方填写后自动同步'
+            hostOptional: '他人分数可留空，由对方填写后自动同步',
+            keyboardPlaceholder: '请输入分数',
+            backspace: '回退'
         },
         todoList: {
             title: '待办（任务清单）',
@@ -1379,6 +1381,7 @@ window.TB_LOCALES['zh-CN'] = {
             back: '返回',
             loadMore: '加载更多',
             notFound: '记录不存在',
+            methodNotAllowed: '操作不被允许，请刷新页面后重试',
             invalidName: '请输入有效名称',
             invalidDate: '请选择有效日期',
             invalidType: '操作类型无效',
