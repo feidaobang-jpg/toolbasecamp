@@ -300,6 +300,16 @@ document.addEventListener('DOMContentLoaded', function () {
         updateKeyboardDisplay();
     }
 
+    function scrollScoreBoardToEnd() {
+        var target = scoreFoot || scoreTableWrap;
+        if (!target) return;
+        try {
+            target.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        } catch (e) {
+            target.scrollIntoView(false);
+        }
+    }
+
     function showHome() {
         stopPoll();
         hideScoreKeyboard();
@@ -532,9 +542,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var roundCount = rounds.length;
         var shouldScrollBottom = prevRoundCount >= 0 && roundCount > prevRoundCount;
         prevRoundCount = roundCount;
-        if (shouldScrollBottom && scoreTableWrap) {
+        if (shouldScrollBottom) {
             requestAnimationFrame(function () {
-                scoreTableWrap.scrollTop = scoreTableWrap.scrollHeight;
+                scrollScoreBoardToEnd();
             });
         }
 
@@ -981,11 +991,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderBoard(data, { forceInputs: true });
                 if (data.settled) {
                     boardStatus.textContent = tr('tools.onlineCardScore.settled');
-                    if (scoreTableWrap) {
-                        requestAnimationFrame(function () {
-                            scoreTableWrap.scrollTop = scoreTableWrap.scrollHeight;
-                        });
-                    }
+                    requestAnimationFrame(function () {
+                        scrollScoreBoardToEnd();
+                    });
                 } else {
                     updateSumWarn(data);
                 }

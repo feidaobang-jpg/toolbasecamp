@@ -56,13 +56,12 @@
 }
 
 .ocs-table-wrap {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: min(55vh, 420px);
   margin: 12px 0 18px;
   border: 1px solid #ddd;
   border-radius: 12px;
   background: #fff;
+  /* 全高展开，只跟网页一起滚，避免表内+页面双层滚动 */
+  overflow: visible;
 }
 
 .ocs-table {
@@ -139,9 +138,8 @@
 }
 
 .ocs-table tfoot td {
-  position: sticky;
-  z-index: 3;
-  /* 去掉右边框，只用内阴影画竖线，避免与 border 叠成粗线 */
+  /* 表已全展开，不再 sticky，避免盖住下方「本局分数」 */
+  position: static;
   border-right: none;
   box-shadow: inset -1px 0 0 #ddd;
 }
@@ -151,7 +149,6 @@
 }
 
 .ocs-table tfoot tr.ocs-foot-names td {
-  bottom: 0;
   background: #f9fafb;
   font-weight: 600;
   color: #334155;
@@ -159,7 +156,6 @@
 }
 
 .ocs-table tfoot tr.ocs-foot-total td {
-  bottom: 40px;
   background: #fff;
   font-weight: 700;
   color: #111827;
