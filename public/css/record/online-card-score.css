@@ -49,7 +49,9 @@
 }
 
 .ocs-table-wrap {
-  overflow-x: auto;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: min(55vh, 420px);
   margin: 12px 0 18px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
@@ -57,7 +59,8 @@
 
 .ocs-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 320px;
   font-size: 14px;
 }
@@ -70,10 +73,14 @@
   white-space: nowrap;
 }
 
-.ocs-table th {
+.ocs-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
   background: #f8fafc;
   font-weight: 600;
   color: #334155;
+  box-shadow: 0 1px 0 #e5e7eb;
 }
 
 .ocs-table td.is-round {
