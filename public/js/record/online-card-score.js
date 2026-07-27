@@ -336,6 +336,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return '<td class="' + scoreClass(n) + '">' + n + '</td>';
     }
 
+    function roundMetaCell(label, sum) {
+        var sumN = typeof sum === 'number' ? sum : 0;
+        return '<td class="ocs-round-meta">' +
+            '<span class="ocs-round-no">' + R.escapeHtml(String(label)) + '</span>' +
+            '<span class="ocs-round-sum ' + scoreClass(sumN) + '">' + sumN + '</span>' +
+            '</td>';
+    }
+
     function appendGameItem(listEl, item) {
         var el = document.createElement('div');
         el.className = 'rec-item ocs-game-item';
@@ -475,47 +483,25 @@ document.addEventListener('DOMContentLoaded', function () {
         var players = data.players || [];
         var rounds = data.rounds || [];
         var draft = data.draftScores || {};
-        var sumLabel = R.escapeHtml(tr('tools.onlineCardScore.roundSum'));
 
-        var head = '<tr><th>' + R.escapeHtml(tr('tools.onlineCardScore.round')) + '</th>';
-        players.forEach(function (p) {
-            var label = p.displayName;
-            if (p.playerKind === 'local') {
-                label += ' (' + tr('tools.onlineCardScore.localBadge') + ')';
-            }
-            head += '<th>' + R.escapeHtml(label);
-            if (isRoomCreator(data) && p.playerKind === 'local' && data.status !== 'finished') {
-                head += ' <button type="button" class="ocs-remove-local" data-pid="' +
-                    R.escapeHtml(playerKey(p)) + '" title="' +
-                    R.escapeHtml(tr('tools.onlineCardScore.removeLocal')) + '">×</button>';
-            }
-            head += '</th>';
-        });
-        head += '<th>' + sumLabel + '</th></tr>';
-        scoreHead.innerHTML = head;
-        scoreHead.querySelectorAll('.ocs-remove-local').forEach(function (btn) {
-            btn.addEventListener('click', function (ev) {
-                ev.preventDefault();
-                removeLocalPlayer(btn.getAttribute('data-pid'));
-            });
-        });
+        scoreHead.innerHTML = '';
 
         var body = '';
         rounds.forEach(function (r) {
             var rs = rowSum(r, players);
-            body += '<tr><td class="is-round">' + r.roundNo + '</td>';
+            body += '<tr>' + roundMetaCell(r.roundNo, rs);
             players.forEach(function (p) {
                 var n = (r.scores && r.scores[playerKey(p)]);
                 if (typeof n !== 'number') n = 0;
                 body += scoreCell(n);
             });
-            body += scoreCell(rs) + '</tr>';
+            body += '</tr>';
         });
 
         var draftKeys = Object.keys(draft);
         if (data.status !== 'finished' && draftKeys.length) {
-            body += '<tr class="ocs-draft-row"><td class="is-round">' +
-                R.escapeHtml(tr('tools.onlineCardScore.draftRound')) + '</td>';
+            body += '<tr class="ocs-draft-row">' +
+                roundMetaCell(tr('tools.onlineCardScore.draftRound'), data.draftSum || 0);
             players.forEach(function (p) {
                 var key = playerKey(p);
                 if (Object.prototype.hasOwnProperty.call(draft, key)) {
@@ -524,16 +510,40 @@ document.addEventListener('DOMContentLoaded', function () {
                     body += '<td class="ocs-pending">—</td>';
                 }
             });
-            body += scoreCell(data.draftSum || 0) + '</tr>';
+            body += '</tr>';
         }
         scoreBody.innerHTML = body || '';
 
-        var foot = '<tr><td>' + R.escapeHtml(tr('tools.onlineCardScore.total')) + '</td>';
+        var footTotal = '<tr class="ocs-foot-total"><td class="ocs-foot-label">' +
+            R.escapeHtml(tr('tools.onlineCardScore.total')) + '</td>';
         players.forEach(function (p) {
-            foot += scoreCell(p.total || 0);
+            footTotal += scoreCell(p.total || 0);
         });
-        foot += '<td></td></tr>';
-        scoreFoot.innerHTML = foot;
+        footTotal += '</tr>';
+
+        var footNames = '<tr class="ocs-foot-names"><td class="ocs-foot-label"></td>';
+        players.forEach(function (p) {
+            var label = p.displayName;
+            if (p.playerKind === 'local') {
+                label += ' (' + tr('tools.onlineCardScore.localBadge') + ')';
+            }
+            footNames += '<td class="ocs-name-cell">' + R.escapeHtml(label);
+            if (isRoomCreator(data) && p.playerKind === 'local' && data.status !== 'finished') {
+                footNames += ' <button type="button" class="ocs-remove-local" data-pid="' +
+                    R.escapeHtml(playerKey(p)) + '" title="' +
+                    R.escapeHtml(tr('tools.onlineCardScore.removeLocal')) + '">×</button>';
+            }
+            footNames += '</td>';
+        });
+        footNames += '</tr>';
+
+        scoreFoot.innerHTML = footTotal + footNames;
+        scoreFoot.querySelectorAll('.ocs-remove-local').forEach(function (btn) {
+            btn.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                removeLocalPlayer(btn.getAttribute('data-pid'));
+            });
+        });
     }
 
     function canEditPlayer(data, player) {
