@@ -6,13 +6,17 @@
     }
 
     var GRID = 8;
-    var TYPES = 7;
+    var TYPES = 5;
     var SWAP_MS = 360;
     var CLEAR_MS = 300;
     var FALL_MS = 340;
+    var KEY = 'tbc_gemswap_lv_v1';
 
     var boardEl = document.getElementById('board');
     var scoreEl = document.getElementById('score');
+    var levelEl = document.getElementById('level');
+    var goalEl = document.getElementById('goal');
+    var movesEl = document.getElementById('moves');
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
     var hintBtn = document.getElementById('hint-btn');
@@ -20,10 +24,16 @@
 
     var gems = [];
     var score = 0;
+    var level = 1;
+    var goal = 300;
+    var movesLeft = 30;
+    var bestLv = 1;
     var selected = -1;
     var busy = false;
+    var cleared = false;
     var gemSize = 40;
     var gap = 3;
+    try { bestLv = Math.max(1, +JSON.parse(localStorage.getItem(KEY) || '{}').bestLv || 1); } catch (e) {}
 
     if (audio) {
         audio.bindControls();
@@ -37,6 +47,28 @@
     function setStatus(msg, cls) {
         statusEl.textContent = msg;
         statusEl.className = 'game-status' + (cls ? ' ' + cls : '');
+    }
+
+    function cfg(lv) {
+        return {
+            types: Math.min(7, 4 + Math.floor((lv - 1) / 2)),
+            goal: 250 + lv * 120,
+            moves: Math.max(16, 34 - lv)
+        };
+    }
+
+    function hud() {
+        scoreEl.textContent = String(score);
+        if (levelEl) levelEl.textContent = String(level);
+        if (goalEl) goalEl.textContent = String(goal);
+        if (movesEl) movesEl.textContent = String(movesLeft);
+    }
+
+    function saveBest() {
+        if (level > bestLv) {
+            bestLv = level;
+            try { localStorage.setItem(KEY, JSON.stringify({ bestLv: bestLv })); } catch (e) {}
+        }
     }
 
     function wait(ms) {
@@ -261,7 +293,7 @@
                     return;
                 }
                 score += matched.size * 10;
-                scoreEl.textContent = String(score);
+                hud();
                 play('match');
                 animateClear(matched).then(function () {
                     matched.forEach(function (i) { gems[i] = 0; });
@@ -302,6 +334,8 @@
                     render();
                 });
             }
+            movesLeft -= 1;
+            hud();
             tmp = gems[a];
             gems[a] = gems[b];
             gems[b] = tmp;
@@ -309,6 +343,16 @@
             setStatus(tr('tools.gemswap.hintPlay'), 'is-idle');
             return resolveMatchesAnimated().then(function () {
                 busy = false;
+                if (cleared) return;
+                if (score >= goal) {
+                    clearLevel();
+                    return;
+                }
+                if (movesLeft <= 0) {
+                    play('lose');
+                    setStatus(tr('tools.gemswap.outOfMoves', { n: score }), 'is-lose');
+                    return;
+                }
                 if (!findHint()) {
                     play('lose');
                     setStatus(tr('tools.gemswap.noMoves'), 'is-lose');
@@ -318,6 +362,16 @@
             busy = false;
             render();
         });
+    }
+
+    function clearLevel() {
+        if (cleared) return;
+        cleared = true;
+        busy = true;
+        saveBest();
+        play('level');
+        setStatus(tr('tools.gemswap.levelClear', { n: level }), 'is-win');
+        setTimeout(function () { startLevel(level + 1, true); }, 900);
     }
 
     function findHint() {
@@ -349,16 +403,26 @@
         }
     }
 
-    function newGame() {
+    function startLevel(lv, keepScore) {
         busy = false;
+        cleared = false;
         selected = -1;
+        level = lv;
+        var c = cfg(level);
+        TYPES = c.types;
+        goal = c.goal;
+        movesLeft = c.moves;
+        if (!keepScore) score = 0;
         gems = generateBoard();
         clearInitialMatchesSync();
-        score = 0;
-        scoreEl.textContent = '0';
+        hud();
         play('start');
-        setStatus(tr('tools.gemswap.hintPlay'), 'is-idle');
+        setStatus(tr('tools.gemswap.levelStart', { n: level, goal: goal, moves: movesLeft }), 'is-idle');
         render();
+    }
+
+    function newGame() {
+        startLevel(1, false);
     }
 
     boardEl.addEventListener('click', function (e) {

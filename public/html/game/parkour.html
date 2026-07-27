@@ -37,7 +37,7 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>城市跑酷</h1>
-      <p>2D 侧视自动向前跑。空格 / W / ↑ 跳跃（可二段跳），↓ / S / Shift 滑铲钻障碍。吃金币、别掉下去。</p>
+      <p>2D 侧视自动向前跑。空格 / W / ↑ 跳跃（可二段跳），↓ / S / Shift 滑铲钻障碍。吃金币、别掉下去。距离推进关卡，速度与障碍递增。</p>
       <p>触屏：右侧跳跃 · 左侧滑铲</p>
       <div class="row">
         <button id="btnStart">开始</button>
@@ -122,11 +122,12 @@ function newRun(){
   const gy=groundY();
   state={
     dist:0,score:0,coins:0,speed:220,t:0,alive:true,
+    level:1,lastLv:1,
     px:W*0.28,py:gy-28,vx:0,vy:0,
     onGround:true,jumps:0,slideT:0,invuln:0,
     grav:1600,jumpV:-520,
     plats:[],obs:[],coinList:[],particles:[],
-    nextPlatX:W*0.5,shake:0
+    nextPlatX:W*0.5,shake:0,toast:0,toastMsg:''
   };
   // starting runway
   state.plats.push({x:0,y:gy,w:W*1.2,h:H-gy,type:'ground'});
@@ -140,15 +141,16 @@ function newRun(){
 
 function spawnChunk(){
   const gy=groundY();
+  const lv=state.level||1;
   const kind=Math.random();
-  const gap=rand(70,120)+state.speed*0.08;
+  const gap=rand(70,120)+state.speed*0.08+lv*6;
   let x=state.nextPlatX+gap;
   if(kind<0.55){
-    const w=rand(140,260);
-    const y=gy-rand(0,1)*rand(40,110);
+    const w=rand(Math.max(100,140-lv*4),Math.max(160,260-lv*6));
+    const y=gy-rand(0,1)*rand(40,110+lv*4);
     state.plats.push({x,y,w,h:gy+40-y+(y<gy?0:H-gy),type:y<gy-5?'box':'ground'});
     // maybe obstacle on top
-    if(Math.random()<0.45 && w>160){
+    if(Math.random()<Math.min(0.75,0.4+lv*0.04) && w>140){
       if(Math.random()<0.5){
         state.obs.push({x:x+w*0.55,y:y-36,w:28,h:36,kind:'block'});
       }else{
@@ -260,17 +262,25 @@ function die(reason){
   saveProgress(true);
   document.getElementById('panelOver').classList.remove('hidden');
   document.getElementById('overText').textContent=
-    '距离 '+Math.floor(state.dist)+' · 得分 '+state.score+' · 金币 '+state.coins+' · 最高 '+best+
+    '关卡 '+state.level+' · 距离 '+Math.floor(state.dist)+' · 得分 '+state.score+' · 金币 '+state.coins+' · 最高 '+best+
     (reason?' · '+reason:'');
 }
 
 function update(dt){
   if(mode!=='play'||!state||!state.alive)return;
   state.t+=dt;
-  state.speed=220+Math.min(280,state.dist*0.035);
+  const lv=Math.floor(state.dist/450)+1;
+  if(lv>state.level){
+    state.level=lv;
+    state.toast=2.2;
+    state.toastMsg='进入第 '+state.level+' 关！';
+    sfx('start');
+  }
+  state.speed=200+state.level*28+Math.min(120,state.dist*0.02);
   const scroll=state.speed*dt;
   state.dist+=scroll;
   state.score=Math.floor(state.dist)+state.coins*10;
+  if(state.toast>0)state.toast-=dt;
   if(state.invuln>0)state.invuln-=dt;
   if(state.shake>0)state.shake*=0.9;
 
@@ -439,7 +449,8 @@ function draw(){
   ctx.restore();
 
   if(mode==='play'&&state){
-    hud.innerHTML='距离 <b>'+Math.floor(state.dist)+'</b> · 得分 <b>'+state.score+'</b> · 金币 <b>'+state.coins+'</b> · 最高 <b>'+best+'</b>'+
+    hud.innerHTML='关卡 <b>'+state.level+'</b> · 距离 <b>'+Math.floor(state.dist)+'</b> · 得分 <b>'+state.score+'</b> · 金币 <b>'+state.coins+'</b> · 最高 <b>'+best+'</b>'+
+      (state.toast>0?' · <b>'+state.toastMsg+'</b>':'')+
       (state.slideT>0?' · <b>滑铲</b>':'')+(state.jumps===1&&!state.onGround?' · 可二段跳':'');
   }else if(mode==='menu'){
     hud.innerHTML='最高分 <b>'+best+'</b>';

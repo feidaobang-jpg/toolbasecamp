@@ -37,7 +37,7 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>立体躲避</h1>
-      <p>简易 WebGL 3D 试玩：沿跑道前进，左右躲开方块。无外部库、无贴图素材。</p>
+      <p>简易 WebGL 3D 试玩：沿跑道前进，左右躲开方块。距离推进关卡，速度与密度递增。无外部库、无贴图素材。</p>
       <p>A / D 或 ← → 移动 · 触屏点左右半屏</p>
       <div class="row"><button id="btnStart">开始</button></div>
     </div>
@@ -166,7 +166,7 @@ function drawCube(x,y,z,sx,sy,sz,r,g,b){
 
 function newGame(){
   state={
-    z:0,x:0,vx:0,speed:14,t:0,score:0,
+    z:0,x:0,vx:0,speed:12,t:0,score:0,level:1,toast:0,
     boxes:[],nextZ:20,alive:true
   };
   for(let i=0;i<12;i++)spawnBox(state.nextZ+i*8);
@@ -177,15 +177,16 @@ function newGame(){
 }
 
 function spawnBox(z){
+  const lv=state.level||1;
   const lane=[-2.2,0,2.2][(Math.random()*3)|0];
   // sometimes leave a gap lane empty by not spawning, or spawn 1-2
-  if(Math.random()<0.2){state.nextZ=z+6+Math.random()*4;return}
+  if(Math.random()<Math.max(0.08,0.22-lv*0.015)){state.nextZ=z+6+Math.random()*4;return}
   state.boxes.push({x:lane,y:0.55,z:z,s:1.1,hit:false});
-  if(Math.random()<0.35){
+  if(Math.random()<Math.min(0.55,0.28+lv*0.03)){
     const other=[-2.2,0,2.2].filter(v=>v!==lane);
     state.boxes.push({x:other[(Math.random()*other.length)|0],y:0.55,z:z+1.5,s:1.1,hit:false});
   }
-  state.nextZ=z+7+Math.random()*5+(state.speed*0.15);
+  state.nextZ=z+Math.max(5.2,7.2-lv*0.12)+Math.random()*Math.max(2.5,5-lv*0.15)+(state.speed*0.12);
 }
 
 function over(){
@@ -194,15 +195,22 @@ function over(){
   best=Math.max(best,state.score|0);
   try{localStorage.setItem(SAVE,JSON.stringify({best}))}catch(e){}
   document.getElementById('panelOver').classList.remove('hidden');
-  document.getElementById('overText').textContent='得分 '+state.score+' · 最高 '+best;
+  document.getElementById('overText').textContent='关卡 '+state.level+' · 得分 '+state.score+' · 最高 '+best;
 }
 
 function update(dt){
   if(mode!=='play'||!state||!state.alive)return;
   state.t+=dt;
-  state.speed=14+Math.min(22,state.t*0.35);
+  const lv=Math.floor(state.score/120)+1;
+  if(lv>state.level){
+    state.level=lv;
+    state.toast=2;
+    sfx('start');
+  }
+  state.speed=12+state.level*1.6+Math.min(14,state.t*0.12);
   state.z+=state.speed*dt;
   state.score=Math.floor(state.z);
+  if(state.toast>0)state.toast-=dt;
 
   let steer=0;
   // Camera looks toward +Z, so world +X appears on the left of the screen — invert steer.
@@ -268,7 +276,7 @@ function render(){
 
   // HUD
   const hud=document.getElementById('hud');
-  if(mode==='play'&&state)hud.innerHTML='得分 <b>'+state.score+'</b> · 最高 <b>'+best+'</b> · 速度 <b>'+state.speed.toFixed(0)+'</b>';
+  if(mode==='play'&&state)hud.innerHTML='关卡 <b>'+state.level+'</b> · 得分 <b>'+state.score+'</b> · 最高 <b>'+best+'</b> · 速度 <b>'+state.speed.toFixed(0)+'</b>'+(state.toast>0?' · <b>进入第 '+state.level+' 关</b>':'');
   else if(mode==='menu')hud.innerHTML='最高 <b>'+best+'</b>';
   else hud.innerHTML='';
 }

@@ -325,12 +325,17 @@ window.TB_LOCALES['zh-CN'] = {
         },
         gemswap: {
             title: '宝石迷阵',
-            desc: '交换相邻宝石，消去三个及以上的同色连线。本地运行。',
+            desc: '交换相邻宝石消三连；达成目标分过关，颜色种类递增、步数收紧。本地运行。',
             hint: '提示',
             hintPlay: '先点一颗宝石，再点相邻宝石进行交换。',
             invalidSwap: '这样交换无法形成消除',
             noMoves: '没有可走的步了，请重新开始',
-            hintFound: '已高亮一对可交换的宝石'
+            outOfMoves: '步数用尽，得分 {n}',
+            hintFound: '已高亮一对可交换的宝石',
+            goal: '目标',
+            moves: '步数',
+            levelStart: '第 {n} 关 · 目标 {goal} · {moves} 步',
+            levelClear: '第 {n} 关完成！进入下一关…'
         },
         breakout: {
             title: '打砖块',
@@ -504,7 +509,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         sheepstack: {
             title: '叠消消',
-            desc: '点开未被压住的图案放入槽位，三个相同消除。可用反悔、炸弹、提示、加时。本地运行。',
+            desc: '点开未被压住的图案放入槽位，三个相同消除。通关后牌更多、时间更紧。本地运行。',
             left: '剩余',
             undo: '撤销',
             tray: '槽位（7）',
@@ -520,7 +525,9 @@ window.TB_LOCALES['zh-CN'] = {
             usedBomb: '炸弹清掉槽位尾部牌',
             usedHint: '已高亮可点的牌',
             usedTime: '时间 +{n} 秒',
-            noHint: '当前没有可用提示'
+            noHint: '当前没有可用提示',
+            levelStart: '第 {n} 关开始！',
+            levelClear: '第 {n} 关完成！进入下一关…'
         },
         diverDave: {
             title: '潜水捕鱼',
@@ -528,11 +535,11 @@ window.TB_LOCALES['zh-CN'] = {
         },
         parkour: {
             title: '跑酷',
-            desc: '2D 自动向前跑酷：跳跃、二段跳、滑铲。Canvas 程序化绘制，无需素材，本地可玩。'
+            desc: '2D 自动向前跑酷：跳跃、二段跳、滑铲。距离推进关卡，速度与障碍递增。'
         },
         cubeRush: {
             title: '立体躲避',
-            desc: '简易 WebGL 三维跑道躲避，无外部库、无贴图。左右躲开方块即可。'
+            desc: '简易 WebGL 三维跑道躲避。距离推进关卡，速度与密度递增。'
         },
         arenaBrawl: {
             title: '街机乱斗',

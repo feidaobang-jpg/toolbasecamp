@@ -326,12 +326,17 @@ window.TB_LOCALES.en = {
         },
         gemswap: {
             title: 'Gem Match',
-            desc: 'Swap adjacent gems to clear matches of three or more. Runs locally.',
+            desc: 'Swap gems to match three+. Reach the score goal to clear; more colors and fewer moves each level.',
             hint: 'Hint',
             hintPlay: 'Select a gem, then an adjacent gem to swap.',
             invalidSwap: 'That swap does not make a match',
             noMoves: 'No moves left — start a new game',
-            hintFound: 'Highlighted a valid swap'
+            outOfMoves: 'Out of moves — score {n}',
+            hintFound: 'Highlighted a valid swap',
+            goal: 'Goal',
+            moves: 'Moves',
+            levelStart: 'Level {n} · goal {goal} · {moves} moves',
+            levelClear: 'Level {n} clear! Next…'
         },
         breakout: {
             title: 'Breakout',
@@ -505,7 +510,7 @@ window.TB_LOCALES.en = {
         },
         sheepstack: {
             title: 'Stack Match',
-            desc: 'Tap free tiles into the tray. Three matching emoji clear. Props: undo, bomb, hint, +time. Runs locally.',
+            desc: 'Tap free tiles into the tray. Three matching emoji clear. Later levels: more tiles, less time.',
             left: 'Left',
             undo: 'Undo',
             tray: 'Tray (7)',
@@ -521,7 +526,9 @@ window.TB_LOCALES.en = {
             usedBomb: 'Bomb cleared tray tiles',
             usedHint: 'Highlighted a useful tile',
             usedTime: 'Time +{n}s',
-            noHint: 'No hint available'
+            noHint: 'No hint available',
+            levelStart: 'Level {n} start!',
+            levelClear: 'Level {n} clear! Next…'
         },
         diverDave: {
             title: 'Dive Fisher',
@@ -529,11 +536,11 @@ window.TB_LOCALES.en = {
         },
         parkour: {
             title: 'Parkour',
-            desc: '2D auto-runner parkour: jump, double-jump, slide. Procedural canvas, no assets. Runs locally.'
+            desc: '2D auto-runner: jump, double-jump, slide. Distance raises levels — faster with denser hazards.'
         },
         cubeRush: {
             title: 'Cube Rush',
-            desc: 'Simple WebGL 3D lane dodge — no libraries or textures. Move left/right and avoid cubes.'
+            desc: 'Simple WebGL 3D lane dodge. Distance raises levels — faster with denser cubes.'
         },
         arenaBrawl: {
             title: 'Arena Brawl',

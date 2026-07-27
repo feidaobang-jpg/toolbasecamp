@@ -12,14 +12,15 @@ function tr(key, params) {
     var EMOJIS = ['🐑', '🥕', '🌾', '🌿', '🪵', '🪣', '🧤', '🧶', '🔔', '🍎', '🌽', '🍄'];
     var TRAY_MAX = 7;
     var MATCH = 3;
-    var START_TIME = 180;
     var TIME_BONUS = 30;
+    var KEY = 'tbc_sheepstack_lv_v1';
 
     var stage = document.getElementById('stage');
     var trayEl = document.getElementById('tray');
     var leftEl = document.getElementById('left');
     var scoreEl = document.getElementById('score');
     var timeEl = document.getElementById('time');
+    var levelEl = document.getElementById('level');
     var statusEl = document.getElementById('status');
     var restartBtn = document.getElementById('restart-btn');
     var propUndo = document.getElementById('prop-undo');
@@ -35,12 +36,16 @@ function tr(key, params) {
     var tiles = [];
     var tray = [];
     var score = 0;
+    var level = 1;
+    var bestLv = 1;
     var ended = false;
+    var advancing = false;
     var history = [];
     var idSeq = 0;
     var props = { undo: 3, bomb: 2, hint: 3, time: 2 };
-    var timeLeft = START_TIME;
+    var timeLeft = 180;
     var timerId = 0;
+    try { bestLv = Math.max(1, +JSON.parse(localStorage.getItem(KEY) || '{}').bestLv || 1); } catch (e) {}
 
     function setStatus(msg, cls) {
         statusEl.textContent = msg || '';
@@ -58,10 +63,35 @@ function tr(key, params) {
         propTime.disabled = ended || props.time <= 0;
     }
 
+    function cfg(lv) {
+        var kinds = Math.min(EMOJIS.length, 6 + Math.floor((lv - 1) / 1));
+        var each = 6 + Math.floor((lv - 1) / 2) * 3;
+        return {
+            kinds: kinds,
+            each: each,
+            time: Math.max(75, 185 - lv * 12),
+            layersExtra: Math.min(2, Math.floor((lv - 1) / 3)),
+            props: {
+                undo: Math.max(1, 4 - Math.floor((lv - 1) / 3)),
+                bomb: Math.max(1, 3 - Math.floor((lv - 1) / 4)),
+                hint: Math.max(1, 4 - Math.floor((lv - 1) / 3)),
+                time: Math.max(1, 3 - Math.floor((lv - 1) / 4))
+            }
+        };
+    }
+
+    function saveBest() {
+        if (level > bestLv) {
+            bestLv = level;
+            try { localStorage.setItem(KEY, JSON.stringify({ bestLv: bestLv })); } catch (e) {}
+        }
+    }
+
     function hud() {
         leftEl.textContent = String(tiles.filter(function (t) { return !t.gone; }).length);
         scoreEl.textContent = String(score);
         timeEl.textContent = String(Math.max(0, Math.ceil(timeLeft)));
+        if (levelEl) levelEl.textContent = String(level);
         renderTray();
         updatePropsUi();
     }
@@ -76,12 +106,11 @@ function tr(key, params) {
         return arr;
     }
 
-    function buildPool() {
-        var kinds = 8;
-        var each = 6;
+    function buildPool(lv) {
+        var c = cfg(lv || level);
         var pool = [];
-        for (var i = 0; i < kinds; i++) {
-            for (var n = 0; n < each; n++) pool.push(EMOJIS[i]);
+        for (var i = 0; i < c.kinds; i++) {
+            for (var n = 0; n < c.each; n++) pool.push(EMOJIS[i]);
         }
         return shuffle(pool);
     }
@@ -125,14 +154,16 @@ function tr(key, params) {
     function placeLayout(pool) {
         var W = stage.clientWidth || 320;
         var H = stage.clientHeight || 320;
-        tileSize = Math.max(36, Math.min(48, Math.floor(W / 7.2)));
+        tileSize = Math.max(32, Math.min(48, Math.floor(W / 7.2)));
         stage.style.setProperty('--ss-tile', tileSize + 'px');
 
+        var extra = cfg(level).layersExtra;
         var layers = [
-            { count: 16, z: 0, pad: Math.floor(tileSize * 0.45) },
-            { count: 16, z: 1, pad: Math.floor(tileSize * 0.85) },
-            { count: 16, z: 2, pad: Math.floor(tileSize * 1.25) }
+            { count: 16 + extra * 4, z: 0, pad: Math.floor(tileSize * 0.4) },
+            { count: 16 + extra * 4, z: 1, pad: Math.floor(tileSize * 0.75) },
+            { count: 16 + extra * 2, z: 2, pad: Math.floor(tileSize * 1.1) }
         ];
+        if (extra >= 1) layers.push({ count: 8 + extra * 4, z: 3, pad: Math.floor(tileSize * 1.35) });
         var idx = 0;
         layers.forEach(function (layer) {
             var cols = 4;
@@ -140,17 +171,20 @@ function tr(key, params) {
             var usableW = Math.max(tileSize, W - layer.pad * 2 - tileSize);
             var usableH = Math.max(tileSize, H - layer.pad * 2 - tileSize);
             for (var i = 0; i < layer.count && idx < pool.length; i++) {
-                var c = i % cols;
+                var col = i % cols;
                 var r = (i / cols) | 0;
                 var jitterX = (Math.random() - 0.5) * (tileSize * 0.35);
                 var jitterY = (Math.random() - 0.5) * (tileSize * 0.35);
-                var x = layer.pad + (cols === 1 ? 0 : (c / (cols - 1)) * usableW) + jitterX;
+                var x = layer.pad + (cols === 1 ? 0 : (col / (cols - 1)) * usableW) + jitterX;
                 var y = layer.pad + (rows === 1 ? 0 : (r / Math.max(1, rows - 1)) * usableH) + jitterY;
                 x = Math.max(2, Math.min(W - tileSize - 2, x));
                 y = Math.max(2, Math.min(H - tileSize - 2, y));
                 addTile(pool[idx++], x, y, layer.z);
             }
         });
+        while (idx < pool.length) {
+            addTile(pool[idx++], 4 + Math.random() * (W - tileSize - 8), 4 + Math.random() * (H - tileSize - 8), 2 + extra);
+        }
     }
 
     function addTile(emoji, x, y, z) {
@@ -226,9 +260,13 @@ function tr(key, params) {
         var left = tiles.filter(function (t) { return !t.gone; }).length;
         if (left === 0) {
             ended = true;
+            advancing = true;
             stopTimer();
-            play('win'); setStatus(tr('tools.sheepstack.win'), 'is-win');
+            saveBest();
+            play('level');
+            setStatus(tr('tools.sheepstack.levelClear', { n: level }), 'is-win');
             updatePropsUi();
+            setTimeout(function () { startLevel(level + 1, true); }, 900);
             return true;
         }
         if (tray.length >= TRAY_MAX) {
@@ -358,22 +396,30 @@ function tr(key, params) {
         setStatus(tr('tools.sheepstack.usedTime', { n: TIME_BONUS }), 'is-win');
     }
 
-    function reset() { play('start');
+    function startLevel(lv, keepScore) {
+        play('start');
         stopTimer();
         stage.innerHTML = '';
         tiles = [];
         tray = [];
-        score = 0;
+        if (!keepScore) score = 0;
+        level = lv;
         ended = false;
+        advancing = false;
         history = [];
         idSeq = 0;
-        props = { undo: 3, bomb: 2, hint: 3, time: 2 };
-        timeLeft = START_TIME;
-        placeLayout(buildPool());
+        var c = cfg(level);
+        props = { undo: c.props.undo, bomb: c.props.bomb, hint: c.props.hint, time: c.props.time };
+        timeLeft = c.time;
+        placeLayout(buildPool(level));
         refreshBlocked();
         hud();
-        setStatus(tr('tools.sheepstack.hint'), 'is-idle');
+        setStatus(tr('tools.sheepstack.levelStart', { n: level }), 'is-idle');
         startTimer();
+    }
+
+    function reset() {
+        startLevel(1, false);
     }
 
     propUndo.addEventListener('click', useUndo);
