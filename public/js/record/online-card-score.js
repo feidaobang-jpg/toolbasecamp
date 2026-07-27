@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '</div>' +
             '<div class="rec-item-actions">' +
             '<button type="button" class="tb-btn" data-act="open"></button>' +
-            (item.isCreator || isRoomCreator(item) ? '<button type="button" class="tb-btn" data-act="del"></button>' : '') +
+            (isRoomCreator(item) ? '<button type="button" class="tb-btn" data-act="del"></button>' : '') +
             '</div>';
         el.querySelector('.rec-item-title').textContent = formatRoomTitle(item.name);
         el.querySelector('.rec-item-meta').textContent =
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var created = [];
         var joined = [];
         (items || []).forEach(function (item) {
-            if (item.isCreator || isRoomCreator(item)) created.push(item);
+            if (isRoomCreator(item)) created.push(item);
             else joined.push(item);
         });
         created.forEach(function (item) { appendGameItem(createdList, item); });
@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function () {
             R.setError(boardError, tr('tools.onlineCardScore.noEditable'));
             return;
         }
-        var isCreator = !!currentGame.isCreator;
+        var isCreator = isRoomCreator(currentGame);
         for (var i = 0; i < inputs.length; i++) {
             var inp = inputs[i];
             var raw = String(inp.value || '').trim();
