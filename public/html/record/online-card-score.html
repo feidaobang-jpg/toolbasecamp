@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=8" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=13" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=14" />
 </head>
 <body>
   <div class="container">
@@ -82,12 +82,18 @@
           <div class="error-box ocs-sum-warn" id="sum-warn" role="alert"></div>
           <div class="error-box" id="board-error" role="alert"></div>
 
-          <div class="ocs-table-wrap">
-            <table class="ocs-table" id="score-table">
-              <thead id="score-head"></thead>
-              <tbody id="score-body"></tbody>
-              <tfoot id="score-foot"></tfoot>
-            </table>
+          <div class="ocs-board-block">
+            <div class="ocs-table-wrap">
+              <table class="ocs-table" id="score-table">
+                <thead id="score-head"></thead>
+                <tbody id="score-body"></tbody>
+              </table>
+            </div>
+            <div class="ocs-table-foot-wrap">
+              <table class="ocs-table ocs-table-foot">
+                <tbody id="score-foot"></tbody>
+              </table>
+            </div>
           </div>
 
           <div id="round-form" class="ocs-round-form">
@@ -137,6 +143,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=8"></script>
-  <script src="../../js/record/online-card-score.js?v=13"></script>
+  <script src="../../js/record/online-card-score.js?v=14"></script>
 </body>
 </html>

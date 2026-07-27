@@ -48,43 +48,95 @@
   line-height: 1.45;
 }
 
+.ocs-board-block {
+  margin: 12px 0 18px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
 .ocs-table-wrap {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  max-height: min(55vh, 420px);
-  margin: 12px 0 18px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  max-height: min(50vh, 380px);
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  background: #fff;
+}
+
+.ocs-table-foot-wrap {
+  flex-shrink: 0;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ocs-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 320px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  min-width: 280px;
   font-size: 14px;
+}
+
+.ocs-table-foot {
+  border-top: none;
 }
 
 .ocs-table th,
 .ocs-table td {
-  padding: 10px 8px;
+  padding: 0 4px;
+  height: 40px;
   text-align: center;
-  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  border: 1px solid #ddd;
   white-space: nowrap;
   background: #fff;
+  box-sizing: border-box;
+}
+
+/* 去掉外框与 block 边框叠成双线 */
+.ocs-table tr:first-child td {
+  border-top: none;
+}
+
+.ocs-table tr td:first-child {
+  border-left: none;
+}
+
+.ocs-table tr td:last-child {
+  border-right: none;
+}
+
+.ocs-table-wrap .ocs-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ocs-table-foot tr:last-child td {
+  border-bottom: none;
+}
+
+/* 左列：局号+本局合计，与表尾标签同宽 */
+.ocs-table td:first-child,
+.ocs-table th:first-child {
+  width: 72px;
+  min-width: 72px;
+  max-width: 72px;
+  padding: 0;
 }
 
 .ocs-table td.ocs-round-meta {
   padding: 0;
-  min-width: 72px;
-  width: 72px;
   vertical-align: stretch;
 }
 
 .ocs-round-meta {
   display: flex;
-  height: 100%;
-  min-height: 40px;
+  height: 40px;
+  width: 100%;
 }
 
 .ocs-round-no,
@@ -104,7 +156,7 @@
 }
 
 .ocs-round-sum {
-  border-left: 1px solid #e5e7eb;
+  border-left: 1px solid #ddd;
 }
 
 .ocs-table .is-pos {
@@ -134,42 +186,33 @@
   background: #fffbeb;
 }
 
-.ocs-table tfoot td {
-  border-bottom: none;
-  border-top: 1px solid #e5e7eb;
-  position: sticky;
-  z-index: 3;
+.ocs-table-foot .ocs-foot-total td {
+  background: #fff;
+  font-weight: 700;
+  color: #111827;
 }
 
-.ocs-table tfoot tr.ocs-foot-names td {
-  bottom: 0;
-  background: #f8fafc;
+.ocs-table-foot .ocs-foot-names td {
+  background: #f9fafb;
   font-weight: 600;
   color: #334155;
-  box-shadow: 0 -1px 0 #e5e7eb;
 }
 
-.ocs-table tfoot tr.ocs-foot-total td {
-  bottom: 41px;
-  background: #eff6ff;
-  font-weight: 700;
-  box-shadow: 0 -1px 0 #e5e7eb;
+.ocs-table-foot td.ocs-foot-label {
+  color: #374151;
+  font-weight: 500;
+  font-size: 13px;
+  background: #f9fafb;
 }
 
-.ocs-table tfoot td.ocs-foot-label {
-  color: #475569;
-  font-weight: 600;
-  background: #f1f5f9;
-}
-
-.ocs-table tfoot tr.ocs-foot-total td.ocs-foot-label {
-  background: #dbeafe;
+.ocs-table-foot .ocs-foot-total td.ocs-foot-label {
+  background: #f9fafb;
 }
 
 .ocs-table .ocs-name-cell {
-  max-width: 88px;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 13px;
 }
 
 .ocs-round-form .rec-field {

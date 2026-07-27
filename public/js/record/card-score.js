@@ -219,6 +219,13 @@ document.addEventListener('DOMContentLoaded', function () {
             grid.style.setProperty('--cs-left-width', leftWidth + 'px');
             grid.style.setProperty('--cs-cell-height', cellHeight + 'px');
             grid.style.setProperty('--cs-font-size', fontSize + 'px');
+            grid.style.width = '';
+        });
+        requestAnimationFrame(function () {
+            if (!scoreGrid || !scoreFooterGrid) return;
+            var w = Math.max(scoreGrid.scrollWidth, scoreFooterGrid.scrollWidth);
+            scoreGrid.style.width = w + 'px';
+            scoreFooterGrid.style.width = w + 'px';
         });
         updateScrollLayout();
     }

@@ -46,9 +46,22 @@
   }
 }
 
+.card-score-board-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
 .card-score-scroll {
-  overflow: auto;
-  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-width: none;
   margin-bottom: 0;
   -webkit-overflow-scrolling: touch;
   flex: 1;
@@ -57,8 +70,9 @@
 
 .card-score-footer {
   flex-shrink: 0;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #ddd;
   background: #fff;
+  overflow: hidden;
 }
 
 .card-score-grid-scores {
@@ -78,8 +92,8 @@
   display: flex;
   width: max-content;
   min-width: 100%;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
+  border-top: none;
+  border-left: none;
   --cs-left-width: 72px;
   --cs-cell-height: 40px;
   --cs-font-size: 14px;
@@ -94,7 +108,7 @@
 
 .card-score-players {
   display: flex;
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -382,6 +396,13 @@
     box-shadow: none;
     min-height: 0;
     overflow: hidden;
+  }
+
+  body.card-score-board-active .card-score-board-inner {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
   }
 
   body.card-score-board-active .card-score-scroll {
