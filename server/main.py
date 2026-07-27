@@ -72,12 +72,13 @@ JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 JWT_EXPIRE_DAYS = int(os.environ.get("JWT_EXPIRE_DAYS", "30"))
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_PHONE = os.environ.get("ADMIN_PHONE", "15859130726").strip()
 ROLE_ADMIN = "admin"
 ROLE_USER = "user"
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 PHONE_CN_RE = re.compile(r"^1[3-9]\d{9}$")
-AUTH_PHONE_REV = 1
+AUTH_PHONE_REV = 2
 
 GUESTBOOK_PAGE_SIZE = 30
 GUESTBOOK_MAX_TEXT_LEN = 500
@@ -236,6 +237,14 @@ def ensure_tables():
             )
             ensure_record_tables(cur)
             ensure_image_quota_table(cur)
+            if ADMIN_PHONE:
+                try:
+                    cur.execute(
+                        "UPDATE users SET role=%s WHERE phone=%s AND role<>%s",
+                        (ROLE_ADMIN, ADMIN_PHONE, ROLE_ADMIN),
+                    )
+                except Exception as exc:
+                    print(f"[migrate] admin phone promote: {exc}")
     finally:
         conn.close()
 
@@ -372,7 +381,7 @@ def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
 
-    return user
+    return _ensure_admin_role(user)
 
 
 wire_records(get_conn, require_db, get_current_user)
@@ -404,7 +413,37 @@ def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional
 
 
 def is_admin(user: dict) -> bool:
-    return user.get("role") == ROLE_ADMIN or (user.get("email") or "").lower() == ADMIN_EMAIL
+    if not user:
+        return False
+    if user.get("role") == ROLE_ADMIN:
+        return True
+    if (user.get("email") or "").lower() == ADMIN_EMAIL:
+        return True
+    if ADMIN_PHONE and (user.get("phone") or "").strip() == ADMIN_PHONE:
+        return True
+    return False
+
+
+def _ensure_admin_role(user: dict) -> dict:
+    """Promote configured admin email/phone accounts if needed."""
+    if not user or user.get("role") == ROLE_ADMIN:
+        return user
+    email = (user.get("email") or "").strip().lower()
+    phone = (user.get("phone") or "").strip()
+    should = email == ADMIN_EMAIL or (ADMIN_PHONE and phone == ADMIN_PHONE)
+    if not should:
+        return user
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE users SET role=%s WHERE id=%s",
+                (ROLE_ADMIN, user["id"]),
+            )
+    finally:
+        conn.close()
+    user["role"] = ROLE_ADMIN
+    return user
 
 
 def require_admin(user: dict):
@@ -764,6 +803,10 @@ def register(body: RegisterBody):
     if email and email == ADMIN_EMAIL:
         raise HTTPException(status_code=400, detail="This account cannot be registered")
 
+    role = ROLE_USER
+    if phone and ADMIN_PHONE and phone == ADMIN_PHONE:
+        role = ROLE_ADMIN
+
     conn = get_conn()
     user_id = None
     try:
@@ -785,7 +828,7 @@ def register(body: RegisterBody):
 
             cur.execute(
                 "INSERT INTO users (email, phone, password_hash, role) VALUES (%s, %s, %s, %s)",
-                (email, phone, pw_hash, ROLE_USER),
+                (email, phone, pw_hash, role),
             )
             user_id = cur.lastrowid
     except HTTPException:
@@ -837,18 +880,7 @@ def login(body: LoginBody):
     if not user or not verify_password(password, user["password_hash"]):
         raise HTTPException(status_code=400, detail="Invalid account or password")
 
-    user_email = (user.get("email") or "").strip().lower()
-    if user_email == ADMIN_EMAIL and user.get("role") != ROLE_ADMIN:
-        conn = get_conn()
-        try:
-            with conn.cursor() as cur:
-                cur.execute(
-                    "UPDATE users SET role=%s WHERE id=%s",
-                    (ROLE_ADMIN, user["id"]),
-                )
-        finally:
-            conn.close()
-        user["role"] = ROLE_ADMIN
+    user = _ensure_admin_role(user)
 
     token = create_access_token(
         int(user["id"]),

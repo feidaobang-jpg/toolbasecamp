@@ -11,6 +11,7 @@
     keywordsKey: 'site.keywords',
     footerKey: 'site.footer',
     adminEmail: 'admin@toolbasecamp.com',
+    adminPhone: '15859130726',
     devPortalUrl: 'https://dev.toolbasecamp.com',
     pdfPortalUrl: 'https://pdf.toolbasecamp.com',
     chefPortalUrl: 'https://chef.toolbasecamp.com',

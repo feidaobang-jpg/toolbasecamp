@@ -93,6 +93,7 @@ window.TB_LOCALES['zh-CN'] = {
         openMenu: '打开账户菜单',
         closeMenu: '关闭',
         phoneNote: '手机号登录无需短信验证码，请自行保管密码'
+    },
     hub: {
         portalsTitle: '子站入口',
         portalsSubtitle: '工具大本营托管的扩展工具集合。',

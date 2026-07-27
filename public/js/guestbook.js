@@ -65,7 +65,11 @@
     function checkIsAdmin(user) {
         if (!user) return false;
         var adminEmail = (typeof siteConfig !== 'undefined' && siteConfig.adminEmail) || 'admin@toolbasecamp.com';
-        return user.role === 'admin' || (user.email || '').toLowerCase() === adminEmail.toLowerCase();
+        var adminPhone = (typeof siteConfig !== 'undefined' && siteConfig.adminPhone) || '15859130726';
+        if (user.role === 'admin') return true;
+        if ((user.email || '').toLowerCase() === adminEmail.toLowerCase()) return true;
+        if (adminPhone && String(user.phone || '').trim() === String(adminPhone).trim()) return true;
+        return false;
     }
 
     function setStatus(text, isError) {
