@@ -1373,12 +1373,14 @@ def delete_rent_payment(rent_id: int, payment_id: int, user: dict = Depends(_use
 
 # ---------- Online card score (room code + poll) ----------
 
-ONLINE_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+ONLINE_CODE_DIGITS = "0123456789"
+ONLINE_CODE_LEN = 6
 ONLINE_NAME_MAX = 80
 ONLINE_PLAYER_NAME_MAX = 40
 ONLINE_MAX_PLAYERS = 8
 ONLINE_MAX_ROUNDS = 80
 ONLINE_SCORE_ABS_MAX = 999999
+ONLINE_DRAFT_REV = 1
 
 
 class OnlineGameCreateBody(BaseModel):
@@ -1403,11 +1405,19 @@ class OnlineDraftBody(BaseModel):
 
 def _gen_online_code(cur) -> str:
     for _ in range(40):
-        code = "".join(secrets.choice(ONLINE_CODE_ALPHABET) for _ in range(6))
+        code = "".join(secrets.choice(ONLINE_CODE_DIGITS) for _ in range(ONLINE_CODE_LEN))
         cur.execute("SELECT id FROM record_online_games WHERE code=%s", (code,))
         if not cur.fetchone():
             return code
     raise HTTPException(status_code=500, detail="Could not allocate room code")
+
+
+def _normalize_room_code(raw: Any) -> str:
+    code = (str(raw or "")).strip().upper()
+    # New rooms are 6 digits; still accept legacy alphanumeric codes.
+    if not re.fullmatch(r"[A-Z0-9]{6}", code):
+        raise HTTPException(status_code=400, detail="Invalid room code")
+    return code
 
 
 def _parse_display_name(raw: Any) -> str:
@@ -1643,9 +1653,7 @@ def create_online_game(body: OnlineGameCreateBody, user: dict = Depends(_user)):
 
 @router.post("/online-games/join")
 def join_online_game(body: OnlineGameJoinBody, user: dict = Depends(_user)):
-    code = (body.code or "").strip().upper()
-    if not re.fullmatch(r"[A-Z0-9]{6}", code):
-        raise HTTPException(status_code=400, detail="Invalid room code")
+    code = _normalize_room_code(body.code)
     display = _parse_display_name(body.display_name)
     conn = _conn()
     try:

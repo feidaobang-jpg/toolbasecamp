@@ -10,8 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var joinCode = document.getElementById('join-code');
     var homeError = document.getElementById('home-error');
     var boardError = document.getElementById('board-error');
-    var gameList = document.getElementById('game-list');
-    var gameEmpty = document.getElementById('game-empty');
+    var createdList = document.getElementById('created-list');
+    var joinedList = document.getElementById('joined-list');
+    var createdEmpty = document.getElementById('created-empty');
+    var joinedEmpty = document.getElementById('joined-empty');
     var boardTitle = document.getElementById('board-title');
     var boardCode = document.getElementById('board-code');
     var boardStatus = document.getElementById('board-status');
@@ -25,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var loginLink = document.getElementById('login-link');
     var currentGameId = null;
     var currentGame = null;
+    var meId = null;
     var lastBoardSig = '';
     var pollTimer = null;
     var pollInFlight = false;
@@ -101,36 +104,52 @@ document.addEventListener('DOMContentLoaded', function () {
         return '<td class="' + scoreClass(n) + '">' + n + '</td>';
     }
 
-    function renderList(items) {
-        gameList.innerHTML = '';
-        gameEmpty.hidden = items.length > 0;
-        items.forEach(function (item) {
-            var el = document.createElement('div');
-            el.className = 'rec-item ocs-game-item';
-            el.innerHTML =
-                '<div class="rec-item-main">' +
-                '<div><p class="rec-item-title"></p><p class="rec-item-meta"></p></div>' +
-                '<div><span data-st class="ocs-badge"></span></div>' +
-                '</div>' +
-                '<div class="rec-item-actions">' +
-                '<button type="button" class="tb-btn" data-act="open"></button>' +
-                '</div>';
-            el.querySelector('.rec-item-title').textContent = item.name;
-            el.querySelector('.rec-item-meta').textContent =
-                tr('tools.onlineCardScore.listMeta', {
-                    code: item.code,
-                    count: item.playerCount
-                });
-            var st = el.querySelector('[data-st]');
-            st.className = 'ocs-badge is-' + item.status;
-            st.textContent = statusLabel(item.status);
-            var btn = el.querySelector('[data-act="open"]');
-            btn.textContent = tr('tools.onlineCardScore.open');
-            btn.addEventListener('click', function () {
-                openGame(item.id);
+    function myViewerId(data) {
+        if (data && data.viewerId != null && data.viewerId !== '') return data.viewerId;
+        return meId;
+    }
+
+    function appendGameItem(listEl, item) {
+        var el = document.createElement('div');
+        el.className = 'rec-item ocs-game-item';
+        el.innerHTML =
+            '<div class="rec-item-main">' +
+            '<div><p class="rec-item-title"></p><p class="rec-item-meta"></p></div>' +
+            '<div><span data-st class="ocs-badge"></span></div>' +
+            '</div>' +
+            '<div class="rec-item-actions">' +
+            '<button type="button" class="tb-btn" data-act="open"></button>' +
+            '</div>';
+        el.querySelector('.rec-item-title').textContent = item.name;
+        el.querySelector('.rec-item-meta').textContent =
+            tr('tools.onlineCardScore.listMeta', {
+                code: item.code,
+                count: item.playerCount
             });
-            gameList.appendChild(el);
+        var st = el.querySelector('[data-st]');
+        st.className = 'ocs-badge is-' + item.status;
+        st.textContent = statusLabel(item.status);
+        var btn = el.querySelector('[data-act="open"]');
+        btn.textContent = tr('tools.onlineCardScore.open');
+        btn.addEventListener('click', function () {
+            openGame(item.id);
         });
+        listEl.appendChild(el);
+    }
+
+    function renderList(items) {
+        createdList.innerHTML = '';
+        joinedList.innerHTML = '';
+        var created = [];
+        var joined = [];
+        (items || []).forEach(function (item) {
+            if (item.isCreator) created.push(item);
+            else joined.push(item);
+        });
+        created.forEach(function (item) { appendGameItem(createdList, item); });
+        joined.forEach(function (item) { appendGameItem(joinedList, item); });
+        createdEmpty.hidden = created.length > 0;
+        joinedEmpty.hidden = joined.length > 0;
     }
 
     function loadList() {
@@ -138,6 +157,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return R.apiJson('/records/online-games')
             .then(function (data) { renderList(data.items || []); })
             .catch(function (e) { R.setError(homeError, e.message); });
+    }
+
+    function rowSum(r, players) {
+        if (typeof r.sum === 'number') return r.sum;
+        var s = 0;
+        (players || []).forEach(function (p) {
+            var n = r.scores && r.scores[String(p.userId)];
+            if (typeof n === 'number') s += n;
+        });
+        return s;
     }
 
     function renderHeader(data) {
@@ -193,14 +222,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var body = '';
         rounds.forEach(function (r) {
-            var rowSum = typeof r.sum === 'number' ? r.sum : 0;
+            var rs = rowSum(r, players);
             body += '<tr><td class="is-round">' + r.roundNo + '</td>';
             players.forEach(function (p) {
                 var n = (r.scores && r.scores[String(p.userId)]);
                 if (typeof n !== 'number') n = 0;
                 body += scoreCell(n);
             });
-            body += scoreCell(rowSum) + '</tr>';
+            body += scoreCell(rs) + '</tr>';
         });
 
         var draftKeys = Object.keys(draft);
@@ -229,7 +258,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function canEditPlayer(data, player) {
         if (data.isCreator) return true;
-        return String(player.userId) === String(data.viewerId);
+        var vid = myViewerId(data);
+        if (vid == null || vid === '') return false;
+        return String(player.userId) === String(vid);
     }
 
     function renderInputs(data, force) {
@@ -279,8 +310,10 @@ document.addEventListener('DOMContentLoaded', function () {
             tip.className = 'rec-note';
             tip.textContent = tr('tools.onlineCardScore.waitOthers');
             roundInputs.appendChild(tip);
+            document.getElementById('submit-round-btn').hidden = true;
         } else {
             roundInputs.appendChild(grid);
+            document.getElementById('submit-round-btn').hidden = false;
         }
 
         if (prevFocusUid) {
@@ -462,7 +495,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         R.setError(boardError, '');
         setBusy(true);
-        R.apiJson('/records/online-games/' + currentGameId + '/draft-scores', {
+        // Prefer /rounds (always registered); falls back path used by older clients.
+        R.apiJson('/records/online-games/' + currentGameId + '/rounds', {
             method: 'POST',
             body: JSON.stringify({ scores: scores })
         })
@@ -480,6 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     R.requireLogin(gate, app).then(function (user) {
         if (!user) return;
+        meId = user.id != null ? user.id : user.user_id;
         if (!displayName.value && user.email) {
             displayName.value = String(user.email).split('@')[0];
         }

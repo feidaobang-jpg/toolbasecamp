@@ -25,7 +25,7 @@ from recipe_ai import (
     get_recipe_config,
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
-from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV
+from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from life_plans import (
     router as life_plans_router,
@@ -567,6 +567,8 @@ def health():
         "records_todos": "/records/todos" in paths,
         "records_rents": "/records/rents" in paths,
         "records_online_games": "/records/online-games" in paths,
+        "records_online_draft": "/records/online-games/{game_id}/draft-scores" in paths,
+        "records_online_draft_rev": ONLINE_DRAFT_REV,
         "records_rent_pay_rev": RENT_PAY_REV,
         "records_rent_due_max": RENT_DUE_DAY_MAX,
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,

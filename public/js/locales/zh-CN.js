@@ -1289,14 +1289,18 @@ window.TB_LOCALES['zh-CN'] = {
         onlineCardScore: {
             title: '联机计分',
             desc: '创建房间、分享房间码，多人轮询同步分数。需登录。',
-            pollNote: '每位牌友都需登录同一网站。记分板约每 3 秒自动刷新。',
+            pollNote: '每位牌友都需登录同一网站。房间码为 6 位数字。记分板约每 3 秒自动刷新。',
             displayName: '桌上显示名',
             gameName: '牌局名称（可选）',
             roomCode: '房间码',
             create: '创建房间',
             join: '加入房间',
             myGames: '我的房间',
+            createdGames: '我创建的房间',
+            joinedGames: '我加入的房间',
             empty: '还没有房间。',
+            createdEmpty: '还没有创建过房间。',
+            joinedEmpty: '还没有加入过房间。',
             open: '进入',
             copyCode: '复制房间码',
             finish: '结束本局',
@@ -1334,7 +1338,8 @@ window.TB_LOCALES['zh-CN'] = {
             autoSettleHint: '全员填完且合计为 0 时自动结算',
             settled: '已自动结算，进入下一局',
             waitOthers: '等待其他玩家填写分数…',
-            noEditable: '没有可编辑的分数'
+            noEditable: '没有可编辑的分数',
+            codeHint: '房间码为 6 位数字，口头报号更方便'
         },
         todoList: {
             title: '待办（任务清单）',

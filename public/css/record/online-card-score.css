@@ -9,6 +9,10 @@
   margin-bottom: 12px;
 }
 
+.ocs-joined-title {
+  margin-top: 22px;
+}
+
 .ocs-busy {
   opacity: 0.65;
   pointer-events: none;

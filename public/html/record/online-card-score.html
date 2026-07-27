@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=8" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=8" />
-  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=3" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=4" />
 </head>
 <body>
   <div class="container">
@@ -42,7 +42,7 @@
           </div>
           <div class="rec-field" style="margin-top:18px">
             <label class="field-label" for="join-code" data-i18n="tools.onlineCardScore.roomCode">Room code</label>
-            <input type="text" id="join-code" class="rec-input" maxlength="6" autocomplete="off" style="text-transform:uppercase" />
+            <input type="text" id="join-code" class="rec-input" maxlength="6" inputmode="numeric" autocomplete="off" />
           </div>
           <div class="action-row">
             <button type="button" class="tb-btn" id="join-btn" data-i18n="tools.onlineCardScore.join">Join room</button>
@@ -51,9 +51,12 @@
           <div class="error-box" id="home-error" role="alert"></div>
 
           <div class="ocs-home-split">
-            <h2 class="rec-section-title" data-i18n="tools.onlineCardScore.myGames">My rooms</h2>
-            <div class="rec-list" id="game-list"></div>
-            <p class="rec-empty" id="game-empty" hidden data-i18n="tools.onlineCardScore.empty">No rooms yet.</p>
+            <h2 class="rec-section-title" data-i18n="tools.onlineCardScore.createdGames">Rooms I created</h2>
+            <div class="rec-list" id="created-list"></div>
+            <p class="rec-empty" id="created-empty" hidden data-i18n="tools.onlineCardScore.createdEmpty">No rooms created yet.</p>
+            <h2 class="rec-section-title ocs-joined-title" data-i18n="tools.onlineCardScore.joinedGames">Rooms I joined</h2>
+            <div class="rec-list" id="joined-list"></div>
+            <p class="rec-empty" id="joined-empty" hidden data-i18n="tools.onlineCardScore.joinedEmpty">No joined rooms yet.</p>
           </div>
         </div>
 
@@ -89,12 +92,12 @@
     </main>
   </div>
 
-  <script src="../../js/locales/en.js?v=ocs2"></script>
-  <script src="../../js/locales/zh-CN.js?v=ocs2"></script>
+  <script src="../../js/locales/en.js?v=ocs3"></script>
+  <script src="../../js/locales/zh-CN.js?v=ocs3"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=4"></script>
-  <script src="../../js/record/online-card-score.js?v=3"></script>
+  <script src="../../js/record/online-card-score.js?v=4"></script>
 </body>
 </html>

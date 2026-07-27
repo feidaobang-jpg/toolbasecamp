@@ -1290,14 +1290,18 @@ window.TB_LOCALES.en = {
         onlineCardScore: {
             title: 'Online Card Score',
             desc: 'Create a room, share the code, and sync scores by polling. Requires sign-in.',
-            pollNote: 'Everyone must be signed in. The board refreshes about every 3 seconds.',
+            pollNote: 'Everyone must be signed in. Room codes are 6 digits. The board refreshes about every 3 seconds.',
             displayName: 'Display name',
             gameName: 'Game name (optional)',
             roomCode: 'Room code',
             create: 'Create room',
             join: 'Join room',
             myGames: 'My rooms',
+            createdGames: 'Rooms I created',
+            joinedGames: 'Rooms I joined',
             empty: 'No rooms yet.',
+            createdEmpty: 'No rooms created yet.',
+            joinedEmpty: 'No joined rooms yet.',
             open: 'Open',
             copyCode: 'Copy code',
             finish: 'Finish game',
@@ -1335,7 +1339,8 @@ window.TB_LOCALES.en = {
             autoSettleHint: 'Settles automatically when everyone is in and sum is 0',
             settled: 'Settled — next round ready',
             waitOthers: 'Waiting for other players…',
-            noEditable: 'No editable scores'
+            noEditable: 'No editable scores',
+            codeHint: 'Room codes are 6 digits for easy sharing'
         },
         todoList: {
             title: 'To-Do (Task List)',
