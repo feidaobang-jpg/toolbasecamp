@@ -15,10 +15,7 @@
     var original = [];
     var selected = { row: -1, col: -1 };
 
-    if (audio) {
-        audio.bindControls();
-        audio.startBgm('calm');
-    }
+    if (audio) audio.boot('calm');
 
     function play(name) {
         if (audio) audio.sfx(name);

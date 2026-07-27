@@ -206,12 +206,12 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.polished',
             items: [
-                { titleKey: 'tools.sudoku.title', url: 'html/game/sudoku.html' },
-                { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html' },
-                { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html' },
-                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html' },
-                { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=4' },
-                { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html' },
+                { titleKey: 'tools.sudoku.title', url: 'html/game/sudoku.html?v=3' },
+                { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
+                { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=2' },
+                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=2' },
+                { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=5' },
+                { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html?v=2' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
                 { titleKey: 'tools.goldminer.title', url: 'html/game/goldminer.html' },
                 { titleKey: 'tools.descent.title', url: 'html/game/descent.html?v=2' }

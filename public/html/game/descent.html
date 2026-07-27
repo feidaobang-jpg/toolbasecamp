@@ -41,50 +41,50 @@ canvas{display:block;width:100%;height:100%}
   <canvas id="c"></canvas>
   <div id="hud">
     <span>楼层 <b id="floor">0</b>/100</span>
-    <span>最高 <b id="best">0</b></span>
+    <span>最�?<b id="best">0</b></span>
     <span>生命</span>
   </div>
   <div id="lifeWrap"><div id="lifeBar"></div></div>
   <div class="action-row" id="audioBar"></div>
   <div id="touch">
     <div class="btn left" id="btnL">◀</div>
-    <div class="btn right" id="btnR">▶</div>
+    <div class="btn right" id="btnR">�?/div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>下一百层</h1>
-      <p>致敬经典《是男人就下一百层》：左右移动落板，躲开钉子，撑到 B100。</p>
-      <p>生命会随时间下降，落在安全板上可回一点血。掉出屏幕或踩钉即败。</p>
+      <p>致敬经典《是男人就下一百层》：左右移动落板，躲开钉子，撑�?B100�?/p>
+      <p>生命会随时间下降，落在安全板上可回一点血。掉出屏幕或踩钉即败�?/p>
       <div class="legend">
         <span><i style="background:#86efac"></i>普通板</span>
-        <span><i style="background:#ef4444"></i>钉子板</span>
-        <span><i style="background:#38bdf8"></i>弹簧板</span>
-        <span><i style="background:#fb923c"></i>消失板</span>
+        <span><i style="background:#ef4444"></i>钉子�?/span>
+        <span><i style="background:#38bdf8"></i>弹簧�?/span>
+        <span><i style="background:#fb923c"></i>消失�?/span>
         <span><i style="background:#a78bfa"></i>传送带</span>
-        <span><i style="background:#f472b6"></i>移动板</span>
+        <span><i style="background:#f472b6"></i>移动�?/span>
       </div>
-      <p>键鼠：← → / A D · 触屏：底部左右键</p>
-      <div class="row"><button id="btnNew">开始挑战</button></div>
+      <p>键鼠：← �?/ A D · 触屏：底部左右键</p>
+      <div class="row"><button id="btnNew">开始挑�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h2 id="overTitle">挑战失败</h2>
       <p id="overMsg"></p>
       <div class="row">
-        <button id="btnRetry">再来一次</button>
-        <button class="ghost" id="btnMenu">回菜单</button>
+        <button id="btnRetry">再来一�?/button>
+        <button class="ghost" id="btnMenu">回菜�?/button>
       </div>
     </div>
     <div class="panel hidden" id="panelWin">
       <h2>是男人！B100 通关</h2>
       <p id="winMsg"></p>
       <div class="row">
-        <button id="btnWinAgain">再下一次</button>
-        <button class="ghost" id="btnWinMenu">回菜单</button>
+        <button id="btnWinAgain">再下一�?/button>
+        <button class="ghost" id="btnWinMenu">回菜�?/button>
       </div>
     </div>
   </div>
 </div>
-<script src="../../js/game/game-audio.js?v=20"></script>
+<script src="../../js/game/game-audio.js?v=22"></script>
 <script>
 (function () {
 'use strict';
@@ -240,7 +240,7 @@ function die(reason) {
   mode = 'over';
   saveBest(state.floor);
   document.getElementById('overTitle').textContent = '挑战失败';
-  document.getElementById('overMsg').textContent = reason + ' · 到达 B' + state.floor + '（最高 B' + best + '）';
+  document.getElementById('overMsg').textContent = reason + ' · 到达 B' + state.floor + '（最�?B' + best + '�?;
   show('panelOver');
   sfx('lose');
 }
@@ -250,7 +250,7 @@ function win() {
   state.won = true;
   mode = 'win';
   saveBest(100);
-  document.getElementById('winMsg').textContent = '生命剩余 ' + Math.round(state.life * 100) + '% · 最高纪录 B' + best;
+  document.getElementById('winMsg').textContent = '生命剩余 ' + Math.round(state.life * 100) + '% · 最高纪�?B' + best;
   show('panelWin');
   sfx('win');
 }
@@ -309,7 +309,7 @@ function update(dt) {
       if (p.type === 'spike') {
         state.px = nx; state.py = top - ph / 2;
         state.shake = 0.25;
-        die('踩到钉子板');
+        die('踩到钉子�?);
         return;
       }
       ny = top - ph / 2;
@@ -371,7 +371,7 @@ function update(dt) {
 
   state.plats = state.plats.filter(p => p.alive && p.y > state.camY - 80);
 
-  // life drain — faster deeper
+  // life drain �?faster deeper
   const drain = 0.045 + state.floor * 0.00055;
   state.life -= drain * dt;
   if (state.life <= 0) {
@@ -521,7 +521,7 @@ function draw() {
       ctx.fillStyle = 'rgba(255,255,255,.35)';
       ctx.font = '12px system-ui';
       ctx.textAlign = 'center';
-      ctx.fillText(p.type === 'conveyL' ? '◀◀◀' : '▶▶▶', p.x + p.w / 2, py + 11);
+      ctx.fillText(p.type === 'conveyL' ? '◀◀◀' : '▶▶�?, p.x + p.w / 2, py + 11);
     } else if (p.type === 'moving') {
       ctx.fillStyle = 'rgba(255,255,255,.4)';
       ctx.fillRect(p.x + p.w / 2 - 8, py + 5, 16, 3);

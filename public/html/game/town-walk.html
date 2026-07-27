@@ -31,7 +31,7 @@ canvas{display:block;width:100%;height:100%}
 <body>
 <div id="wrap">
   <canvas id="c"></canvas>
-  <div id="hud"><span>青空小镇</span><span>探索 <b id="spots">0</b>/6</span><span>提示：走近人按 <b>J / 对话</b></span></div>
+  <div id="hud"><span>青空小镇</span><span>探索 <b id="spots">0</b>/6</span><span>提示：走近人�?<b>J / 对话</b></span></div>
   <div id="dialog"><div class="who" id="dWho"></div><div class="txt" id="dTxt"></div><div class="hint">再按 J / 对话 关闭</div></div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
@@ -40,7 +40,7 @@ canvas{display:block;width:100%;height:100%}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>青空小镇</h1>
-      <p>2D 俯视城镇散步：和居民聊天、逛广场、进商店门口。</p>
+      <p>2D 俯视城镇散步：和居民聊天、逛广场、进商店门口�?/p>
       <p>WASD 移动 · J 对话</p>
       <button id="btnStart">出门散步</button>
     </div>
@@ -61,7 +61,7 @@ let bestExplore=0;
 try{bestExplore=(JSON.parse(localStorage.getItem(SAVE)||'{}').explore)|0}catch(e){}
 
 const MAP_W=40,MAP_H=28;
-// 0草 1路 2水 3墙/建筑占位
+// 0�?1�?2�?3�?建筑占位
 const map=[];
 for(let y=0;y<MAP_H;y++){
   map[y]=[];
@@ -76,16 +76,16 @@ for(let y=0;y<MAP_H;y++){
 }
 // buildings as solid rects in world
 const buildings=[
-  {x:6*TILE,y:4*TILE,w:6*TILE,h:4*TILE,c:'#b45309',door:true,name:'面包店',talk:'刚出炉的面包香喷喷！欢迎随时来坐。',id:'bakery'},
-  {x:24*TILE,y:3*TILE,w:7*TILE,h:5*TILE,c:'#1d4ed8',door:true,name:'图书屋',talk:'书架上有旅行笔记。小镇虽小，故事很多。',id:'library'},
-  {x:30*TILE,y:14*TILE,w:6*TILE,h:5*TILE,c:'#15803d',door:true,name:'道具屋',talk:'今天进了闪亮的小零件，或许能派上用场。',id:'shop'},
-  {x:4*TILE,y:18*TILE,w:5*TILE,h:4*TILE,c:'#7c3aed',door:true,name:'小屋',talk:'窗台上晒着猫。午睡时光最舒服。',id:'house'},
-  {x:20*TILE,y:18*TILE,w:4*TILE,h:3*TILE,c:'#0f766e',door:false,name:'凉亭',talk:'坐下来听听风声吧。',id:'gazebo'}
+  {x:6*TILE,y:4*TILE,w:6*TILE,h:4*TILE,c:'#b45309',door:true,name:'面包�?,talk:'刚出炉的面包香喷喷！欢迎随时来坐�?,id:'bakery'},
+  {x:24*TILE,y:3*TILE,w:7*TILE,h:5*TILE,c:'#1d4ed8',door:true,name:'图书�?,talk:'书架上有旅行笔记。小镇虽小，故事很多�?,id:'library'},
+  {x:30*TILE,y:14*TILE,w:6*TILE,h:5*TILE,c:'#15803d',door:true,name:'道具�?,talk:'今天进了闪亮的小零件，或许能派上用场�?,id:'shop'},
+  {x:4*TILE,y:18*TILE,w:5*TILE,h:4*TILE,c:'#7c3aed',door:true,name:'小屋',talk:'窗台上晒着猫。午睡时光最舒服�?,id:'house'},
+  {x:20*TILE,y:18*TILE,w:4*TILE,h:3*TILE,c:'#0f766e',door:false,name:'凉亭',talk:'坐下来听听风声吧�?,id:'gazebo'}
 ];
 const npcs=[
   {x:10*TILE,y:9*TILE,name:'邮差小陈',lines:['信都送到啦！','广场喷泉修好了，去看看？'],id:'npc_post'},
-  {x:26*TILE,y:15*TILE,name:'钓客阿青',lines:['池塘里好像有大家伙。','别掉进水里哦。'],id:'npc_fish'},
-  {x:19*TILE,y:12*TILE,name:'向导米米',lines:['欢迎来到青空小镇！','按 J 可以和人对话、在门口打听。'],id:'npc_guide'}
+  {x:26*TILE,y:15*TILE,name:'钓客阿青',lines:['池塘里好像有大家伙�?,'别掉进水里哦�?],id:'npc_fish'},
+  {x:19*TILE,y:12*TILE,name:'向导米米',lines:['欢迎来到青空小镇�?,'�?J 可以和人对话、在门口打听�?],id:'npc_guide'}
 ];
 
 function resize(){
@@ -254,7 +254,7 @@ document.getElementById('btnStart').onclick=()=>{
 resize();requestAnimationFrame(loop);
 })();
 </script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
+  <script src="../../js/game/game-audio.js?v=22"></script>
   <script>
   (function () {
     function go() { if (window.GameAudio) window.GameAudio.boot('catchy'); }

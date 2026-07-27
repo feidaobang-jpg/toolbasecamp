@@ -70,23 +70,23 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
   </div>
 
   <div id="orientTip" class="hidden">
-    <div>横版闯关，建议 <b>横屏</b> 游玩</div>
-    <div class="row"><button type="button" id="btnHideTip">知道了</button></div>
+    <div>横版闯关，建�?<b>横屏</b> 游玩</div>
+    <div class="row"><button type="button" id="btnHideTip">知道�?/button></div>
   </div>
 
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="btn-jump" id="btnJumpT">跳</div>
-    <div class="btn-fire" id="btnFireT">射</div>
+    <div class="btn-jump" id="btnJumpT">�?/div>
+    <div class="btn-fire" id="btnFireT">�?/div>
   </div>
 
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>超级玛丽</h1>
       <p>横版平台跳跃：踩蘑菇怪、踢龟壳、吃金币、拿道具、冲向旗杆！</p>
-      <p style="color:#fbbf24">道具：<span class="power-badge" style="background:#f87171;color:#fff">蘑菇</span> 变大 <span class="power-badge fire">花</span> 发射火球 <span class="power-badge star">星</span> 无敌</p>
-      <p>WASD/方向键 · 空格/↑ 跳跃 · J/↓ 射击/踢壳</p>
-      <div class="row"><button id="btnStart">开始冒险</button></div>
+      <p style="color:#fbbf24">道具�?span class="power-badge" style="background:#f87171;color:#fff">蘑菇</span> 变大 <span class="power-badge fire">�?/span> 发射火球 <span class="power-badge star">�?/span> 无敌</p>
+      <p>WASD/方向�?· 空格/�?跳跃 · J/�?射击/踢壳</p>
+      <div class="row"><button id="btnStart">开始冒�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">Game Over</h1>
@@ -97,10 +97,10 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
       </div>
     </div>
     <div class="panel hidden" id="panelWin">
-      <h1 id="winTitle">过关！</h1>
+      <h1 id="winTitle">过关�?/h1>
       <p id="winText"></p>
       <div class="row">
-        <button id="btnNext">下一关</button>
+        <button id="btnNext">下一�?/button>
         <button class="ghost" id="btnWinMenu">返回标题</button>
       </div>
     </div>
@@ -111,13 +111,11 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
   </div>
 </div>
 
-<script src="../../js/game/game-audio.js?v=20"></script>
+<script src="../../js/game/game-audio.js?v=22"></script>
 <script>
 (function(){'use strict';
-// ═══════════════════════════════════════════
-//  SUPER MARIO — Canvas Platformer
-// ═══════════════════════════════════════════
-
+// ══════════════════════════════════════════�?//  SUPER MARIO �?Canvas Platformer
+// ══════════════════════════════════════════�?
 const SAVE_KEY = 'tbc_super_mario_v1';
 const BW = 960, BH = 540, T = 32;
 const G = 1680, JV = -540, JB = -580;
@@ -147,7 +145,7 @@ function saveMeta() { try { localStorage.setItem(SAVE_KEY, JSON.stringify({ best
 
 // ─── AUDIO ───
 let audioOn = false;
-function initAudio() { if (!audioOn && window.GameAudio) { GameAudio.bindControls(); GameAudio.startBgm('catchy'); audioOn = true; } }
+function initAudio() { if (!audioOn && window.GameAudio) { GameAudio.boot('catchy'); audioOn = true; } }
 window.addEventListener('pointerdown', function un() { initAudio(); }, { once: true });
 function sf(n) { if (window.GameAudio) GameAudio.sfx(n); }
 
@@ -354,13 +352,13 @@ function endGame(win) {
   const sc = player ? player.score : 0; best = Math.max(best, sc); saveMeta();
   if (win) {
     document.getElementById('panelWin').classList.remove('hidden');
-    document.getElementById('winTitle').textContent = '世界 ' + wNum + '-' + lvNum + ' 过关！';
-    document.getElementById('winText').textContent = '得分 ' + sc + ' · 金币 ' + (player ? player.coins : 0) + ' · 最高 ' + best;
+    document.getElementById('winTitle').textContent = '世界 ' + wNum + '-' + lvNum + ' 过关�?;
+    document.getElementById('winText').textContent = '得分 ' + sc + ' · 金币 ' + (player ? player.coins : 0) + ' · 最�?' + best;
     sf('win');
   } else {
     document.getElementById('panelOver').classList.remove('hidden');
     document.getElementById('overTitle').textContent = 'Game Over';
-    document.getElementById('overText').textContent = '得分 ' + sc + ' · 到达世界 ' + wNum + '-' + lvNum + ' · 最高 ' + best;
+    document.getElementById('overText').textContent = '得分 ' + sc + ' · 到达世界 ' + wNum + '-' + lvNum + ' · 最�?' + best;
     sf('lose');
   }
   if (window.GameAudio) GameAudio.stopBgm(); updateHUD();

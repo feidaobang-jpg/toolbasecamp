@@ -94,7 +94,7 @@
         if (!ctx || ctx.state !== 'running') return;
         applyMasterGain();
         if (bgmWanted && !muted) {
-            // After suspend (e.g. timer SFX / tab), scheduler may be dead — restart
+            // After suspend / page switch, scheduler may be dead — always re-kick on resume
             if (!bgmTimer || fromResume) startBgmInternal();
         }
         if (pendingSfx) {
@@ -114,7 +114,8 @@
         var c = ensure(true);
         if (!c) return Promise.resolve();
         if (c.state === 'running') {
-            afterUnlock(false);
+            // Still re-kick BGM: after navigating games, timer can be null while ctx "running"
+            afterUnlock(true);
             return Promise.resolve();
         }
         if (resumeInFlight) return resumeInFlight;
@@ -587,6 +588,7 @@
             ? 'catchy'
             : theme;
         bgmWanted = true;
+        bindGestureUnlock();
         if (unlocked && !muted) startBgmInternal();
     }
 
@@ -629,6 +631,7 @@
 
     function bindControls(opts) {
         opts = opts || {};
+        bindGestureUnlock();
         bindMuteButton(opts.muteBtn || document.getElementById('sound-btn'));
         bindVolumeSlider(opts.volumeSlider || document.getElementById('volume-slider'));
     }
@@ -692,22 +695,42 @@
     }
 
     var gestureUnlockBound = false;
+    var lifecycleBound = false;
 
     /**
      * pointerdown keeps userActivation; click/onclick often runs after it expires
      * (esp. mobile / DevTools device mode), so unlock-on-click alone stays silent.
+     * Must run for ALL games — including those that only call bindControls() without boot().
      */
     function bindGestureUnlock() {
         if (gestureUnlockBound) return;
         gestureUnlockBound = true;
-        document.addEventListener('pointerdown', function () {
-            unlock();
-        }, { capture: true, passive: true });
+        var kick = function () { unlock(); };
+        document.addEventListener('pointerdown', kick, { capture: true, passive: true });
+        document.addEventListener('touchstart', kick, { capture: true, passive: true });
+        document.addEventListener('keydown', kick, { capture: true });
+    }
+
+    /** Resume after tab hide / bfcache restore when user returns. */
+    function bindLifecycle() {
+        if (lifecycleBound) return;
+        lifecycleBound = true;
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden || !unlocked) return;
+            if (ctx && ctx.state !== 'running') unlock();
+            else if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
+        });
+        global.addEventListener('pageshow', function () {
+            if (!unlocked) return;
+            if (ctx && ctx.state !== 'running') unlock();
+            else if (bgmWanted && !muted && !bgmTimer) startBgmInternal();
+        });
     }
 
     /** Call once from each game: inject mute/volume UI + start BGM. */
     function boot(theme) {
         var run = function () {
+            bindLifecycle();
             bindGestureUnlock();
             injectToolbarControls();
             startBgm(theme || 'catchy');
@@ -719,6 +742,14 @@
         } else {
             run();
         }
+    }
+
+    // Safety net: games that only call bindControls()/startBgm() still get gesture unlock
+    bindLifecycle();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindGestureUnlock);
+    } else {
+        bindGestureUnlock();
     }
 
     document.addEventListener('tb:locale', refreshInjectedLabels);

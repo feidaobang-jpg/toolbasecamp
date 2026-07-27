@@ -44,15 +44,15 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>潜水捕鱼</h1>
-      <p>灵感来自《潜水员戴夫》：白天下潜捕鱼，盯紧氧气，回船上卖鱼升级，再潜更深。</p>
-      <p>键鼠：WASD / 方向键移动 · Shift 冲刺 · 鼠标瞄准点击或空格发射鱼叉 · Esc 回船（靠近水面时）</p>
+      <p>灵感来自《潜水员戴夫》：白天下潜捕鱼，盯紧氧气，回船上卖鱼升级，再潜更深�?/p>
+      <p>键鼠：WASD / 方向键移�?· Shift 冲刺 · 鼠标瞄准点击或空格发射鱼�?· Esc 回船（靠近水面时�?/p>
       <div class="row">
-        <button id="btnNew">新游戏</button>
+        <button id="btnNew">新游�?/button>
         <button class="ghost" id="btnContinue" disabled>继续</button>
       </div>
     </div>
     <div class="panel hidden" id="panelBoat">
-      <h2>船上 · 第 <span id="boatDay">1</span> 天</h2>
+      <h2>船上 · �?<span id="boatDay">1</span> �?/h2>
       <p id="boatSummary"></p>
       <div id="shopList"></div>
       <div class="row">
@@ -62,8 +62,8 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair}
       </div>
     </div>
     <div class="panel hidden" id="panelRescue">
-      <h2>氧气耗尽 · 紧急救援</h2>
-      <p>同伴把你拖回船上。今天的渔获全部丢失。</p>
+      <h2>氧气耗尽 · 紧急救�?/h2>
+      <p>同伴把你拖回船上。今天的渔获全部丢失�?/p>
       <div class="row"><button id="btnRescueOk">回到船上</button></div>
     </div>
   </div>
@@ -78,21 +78,21 @@ const hud=document.getElementById('hud');
 const wrap=document.getElementById('wrap');
 
 const SPECIES=[
-  {id:'clown',name:'小丑鱼',min:0,max:180,hp:1,w:1,price:8,speed:55,r:9,color:'#f97316',glow:0},
-  {id:'sardine',name:'沙丁鱼',min:20,max:260,hp:1,w:1,price:6,speed:70,r:7,color:'#94a3b8',glow:0},
+  {id:'clown',name:'小丑�?,min:0,max:180,hp:1,w:1,price:8,speed:55,r:9,color:'#f97316',glow:0},
+  {id:'sardine',name:'沙丁�?,min:20,max:260,hp:1,w:1,price:6,speed:70,r:7,color:'#94a3b8',glow:0},
   {id:'bass',name:'鲈鱼',min:80,max:380,hp:2,w:2,price:18,speed:50,r:11,color:'#65a30d',glow:0},
-  {id:'tuna',name:'金枪鱼',min:220,max:620,hp:3,w:3,price:42,speed:85,r:14,color:'#0ea5e9',glow:0},
-  {id:'lion',name:'狮子鱼',min:300,max:720,hp:3,w:2,price:55,speed:45,r:12,color:'#ef4444',glow:0},
+  {id:'tuna',name:'金枪�?,min:220,max:620,hp:3,w:3,price:42,speed:85,r:14,color:'#0ea5e9',glow:0},
+  {id:'lion',name:'狮子�?,min:300,max:720,hp:3,w:2,price:55,speed:45,r:12,color:'#ef4444',glow:0},
   {id:'grouper',name:'石斑',min:400,max:900,hp:4,w:4,price:70,speed:40,r:16,color:'#a855f7',glow:0},
   {id:'jelly',name:'水母',min:150,max:800,hp:2,w:1,price:22,speed:25,r:13,color:'#e879f9',glow:0.35},
-  {id:'angler',name:'鮟鱇鱼',min:750,max:1300,hp:5,w:4,price:160,speed:35,r:15,color:'#1e293b',glow:1},
+  {id:'angler',name:'鮟鱇�?,min:750,max:1300,hp:5,w:4,price:160,speed:35,r:15,color:'#1e293b',glow:1},
   {id:'shark',name:'小型鲨鱼',min:900,max:1450,hp:6,w:5,price:210,speed:95,r:18,color:'#64748b',glow:0},
-  {id:'oarfish',name:'皇带鱼',min:1250,max:1800,hp:8,w:6,price:520,speed:60,r:20,color:'#fbbf24',glow:0.6}
+  {id:'oarfish',name:'皇带�?,min:1250,max:1800,hp:8,w:6,price:520,speed:60,r:20,color:'#fbbf24',glow:0.6}
 ];
 
 const UPGRADES=[
-  {key:'oxy',name:'氧气瓶',desc:'最大氧气 +25',base:40,scale:1.45,apply:s=>{s.maxOxy+=25;s.oxy=Math.min(s.oxy+25,s.maxOxy)}},
-  {key:'suit',name:'潜水服极限',desc:'安全深度 +120m',base:55,scale:1.5,apply:s=>{s.suitLimit+=120}},
+  {key:'oxy',name:'氧气�?,desc:'最大氧�?+25',base:40,scale:1.45,apply:s=>{s.maxOxy+=25;s.oxy=Math.min(s.oxy+25,s.maxOxy)}},
+  {key:'suit',name:'潜水服极�?,desc:'安全深度 +120m',base:55,scale:1.5,apply:s=>{s.suitLimit+=120}},
   {key:'dmg',name:'鱼叉伤害',desc:'伤害 +1',base:50,scale:1.55,apply:s=>{s.spearDmg+=1}},
   {key:'range',name:'鱼叉射程',desc:'射程 +40',base:45,scale:1.5,apply:s=>{s.spearRange+=40}},
   {key:'net',name:'网兜负重',desc:'负重上限 +3',base:48,scale:1.48,apply:s=>{s.netMax+=3}}
@@ -230,7 +230,7 @@ function startDive(){
   spawnFishBand();
   camY=0;camX=0;
   hidePanels();
-  showMsg('下潜开始 · 注意氧气',2);
+  showMsg('下潜开�?· 注意氧气',2);
   sfx('splash');
   save();
 }
@@ -243,8 +243,8 @@ function goBoat(fromRescue){
   const w=netWeight(state);
   const val=state.catch.reduce((a,c)=>a+c.price,0);
   document.getElementById('boatSummary').textContent=fromRescue
-    ?('救援成功。金币 '+state.gold+' · 渔获已丢失。')
-    :('渔获 '+state.catch.length+' 条 · 负重 '+w+'/'+state.netMax+' · 估值 '+val+' 金币 · 钱包 '+state.gold);
+    ?('救援成功。金�?'+state.gold+' · 渔获已丢失�?)
+    :('渔获 '+state.catch.length+' �?· 负重 '+w+'/'+state.netMax+' · 估�?'+val+' 金币 · 钱包 '+state.gold);
   renderShop();
   save();
 }
@@ -326,7 +326,7 @@ function fireSpear(){
 function tryCatch(f){
   const item={id:f.sp.id,name:f.sp.name,w:f.sp.w,price:f.sp.price};
   if(netWeight(state)+item.w>state.netMax){
-    showMsg('网兜超重！'+f.sp.name+'挣脱了',2);
+    showMsg('网兜超重�?+f.sp.name+'挣脱�?,2);
     sfx('pop');
     f.hp=f.maxHp;
     f.alive=true;
@@ -386,7 +386,7 @@ function updateDive(dt){
     return;
   }
   if(state.py<18&&my<-0.3){
-    // hold up near surface a moment — auto prompt
+    // hold up near surface a moment �?auto prompt
   }
 
   state.spearCd=Math.max(0,state.spearCd-dt);
@@ -620,12 +620,12 @@ function draw(){
     const d=Math.floor(depthOf(state.py));
     const w=netWeight(state);
     const over=d>state.suitLimit;
-    hud.innerHTML='第 <b>'+state.day+'</b> 天 · 深度 <b>'+d+'</b>m'+(over?' <b style="color:#f87171">超出极限!</b>':'')+
+    hud.innerHTML='�?<b>'+state.day+'</b> �?· 深度 <b>'+d+'</b>m'+(over?' <b style="color:#f87171">超出极限!</b>':'')+
       '<br/>氧气 <b>'+Math.ceil(state.oxy)+'</b>/'+state.maxOxy+
       ' · 渔获 <b>'+state.catch.length+'</b> · 负重 <b>'+w+'/'+state.netMax+'</b>'+
-      '<br/>靠近水面按 <b>E / Esc</b> 回船 · 鱼叉冷却 '+(state.spearCd>0?state.spearCd.toFixed(1)+'s':'就绪');
+      '<br/>靠近水面�?<b>E / Esc</b> 回船 · 鱼叉冷却 '+(state.spearCd>0?state.spearCd.toFixed(1)+'s':'就绪');
   }else if(mode==='boat'&&state){
-    hud.innerHTML='船上休整 · 金币 <b>'+state.gold+'</b> · 第 <b>'+state.day+'</b> 天';
+    hud.innerHTML='船上休整 · 金币 <b>'+state.gold+'</b> · �?<b>'+state.day+'</b> �?;
   }else hud.innerHTML='';
 
   if(msgT>0){
@@ -730,7 +730,7 @@ resize();
 requestAnimationFrame(loop);
 })();
 </script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
+  <script src="../../js/game/game-audio.js?v=22"></script>
   <script>
   (function () {
     function go() { if (window.GameAudio) window.GameAudio.boot('catchy'); }

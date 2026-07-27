@@ -35,10 +35,7 @@
     var gap = 3;
     try { bestLv = Math.max(1, +JSON.parse(localStorage.getItem(KEY) || '{}').bestLv || 1); } catch (e) {}
 
-    if (audio) {
-        audio.bindControls();
-        audio.startBgm('upbeat');
-    }
+    if (audio) audio.boot('upbeat');
 
     function play(name) {
         if (audio) audio.sfx(name);

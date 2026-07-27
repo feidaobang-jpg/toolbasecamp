@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>贪吃蛇 · Snake</title>
+<title>贪吃�?· Snake</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0b1220;color:#e2e8f0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden;touch-action:none;user-select:none}
@@ -45,35 +45,35 @@ canvas{display:block;width:min(100%,100%);max-height:100%;aspect-ratio:1;backgro
       <span>关卡 <b id="level">1</b></span>
       <span>得分 <b id="score">0</b></span>
       <span>目标 <b id="goal">0</b>/<b id="need">5</b></span>
-      <span>最高 <b id="best">0</b></span>
+      <span>最�?<b id="best">0</b></span>
     </div>
     <p id="hint">
-      <span class="desk">键盘：<kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> 或 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 转向 · <kbd>空格</kbd> 开始/暂停</span>
-      <span class="mob">手机：用下方方向键转向（不能直接掉头）</span>
+      <span class="desk">键盘�?kbd>�?/kbd><kbd>�?/kbd><kbd>�?/kbd><kbd>�?/kbd> �?<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 转向 · <kbd>空格</kbd> 开�?暂停</span>
+      <span class="mob">手机：用下方方向键转向（不能直接掉头�?/span>
     </p>
   </div>
   <div class="action-row" id="audioBar"></div>
   <div id="boardWrap"><canvas id="c" width="400" height="400"></canvas></div>
   <div id="pad">
     <div class="grid">
-      <button type="button" class="btn u" id="btnU" aria-label="上">▲</button>
-      <button type="button" class="btn l" id="btnL" aria-label="左">◀</button>
+      <button type="button" class="btn u" id="btnU" aria-label="�?>�?/button>
+      <button type="button" class="btn l" id="btnL" aria-label="�?>◀</button>
       <div class="spacer"></div>
-      <button type="button" class="btn r" id="btnR" aria-label="右">▶</button>
-      <button type="button" class="btn d" id="btnD" aria-label="下">▼</button>
+      <button type="button" class="btn r" id="btnR" aria-label="�?>�?/button>
+      <button type="button" class="btn d" id="btnD" aria-label="�?>�?/button>
     </div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
-      <h1>贪吃蛇</h1>
-      <p>吃苹果过关，关卡越高速度越快、场地障碍越多。撞墙、撞自己或撞障碍即失败。</p>
-      <p class="desk">电脑用方向键 / WASD；手机用屏幕下方方向键。</p>
-      <div class="row"><button id="btnNew">开始游戏</button></div>
+      <h1>贪吃�?/h1>
+      <p>吃苹果过关，关卡越高速度越快、场地障碍越多。撞墙、撞自己或撞障碍即失败�?/p>
+      <p class="desk">电脑用方向键 / WASD；手机用屏幕下方方向键�?/p>
+      <div class="row"><button id="btnNew">开始游�?/button></div>
     </div>
     <div class="panel hidden" id="panelClear">
-      <h2>第 <span id="clearLv">1</span> 关通过！</h2>
+      <h2>�?<span id="clearLv">1</span> 关通过�?/h2>
       <p id="clearMsg"></p>
-      <div class="row"><button id="btnNext">下一关</button></div>
+      <div class="row"><button id="btnNext">下一�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h2>游戏结束</h2>
@@ -85,7 +85,7 @@ canvas{display:block;width:min(100%,100%);max-height:100%;aspect-ratio:1;backgro
     </div>
   </div>
 </div>
-<script src="../../js/game/game-audio.js?v=20"></script>
+<script src="../../js/game/game-audio.js?v=22"></script>
 <script>
 (function () {
 'use strict';
@@ -118,7 +118,7 @@ function hidePanels() {
 function show(id) { hidePanels(); document.getElementById(id).classList.remove('hidden'); }
 
 function levelNeed(lv) { return 4 + lv; }
-// tick interval (ms); larger = slower. Lv1 ≈ 1/3 of previous pace
+// tick interval (ms); larger = slower. Lv1 �?1/3 of previous pace
 function levelSpeed(lv) { return Math.max(160, 465 - (lv - 1) * 22); }
 function levelSize(lv) { return lv < 4 ? 14 : lv < 8 ? 16 : 18; }
 function obstacleCount(lv) { return lv < 3 ? 0 : Math.min(12, (lv - 2) * 2); }
@@ -212,7 +212,7 @@ function die(reason) {
   state.alive = false;
   saveBest(state.score);
   document.getElementById('overMsg').textContent =
-    reason + ' · 第 ' + state.level + ' 关 · 得分 ' + state.score + '（最高 ' + best + '）';
+    reason + ' · �?' + state.level + ' �?· 得分 ' + state.score + '（最�?' + best + '�?;
   show('panelOver');
   sfx('lose');
 }
@@ -221,7 +221,7 @@ function clearLevel() {
   mode = 'clear';
   document.getElementById('clearLv').textContent = state.level;
   document.getElementById('clearMsg').textContent =
-    '本关得分累计 ' + state.score + ' · 下一关更快' + (obstacleCount(state.level + 1) ? '，障碍更多' : '');
+    '本关得分累计 ' + state.score + ' · 下一关更�? + (obstacleCount(state.level + 1) ? '，障碍更�? : '');
   show('panelClear');
   sfx('win');
   saveBest(state.score);

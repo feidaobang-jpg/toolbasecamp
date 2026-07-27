@@ -16,10 +16,7 @@
     var restartBtn = document.getElementById('restart-btn');
     var audio = window.GameAudio;
 
-    if (audio) {
-        audio.bindControls();
-        audio.startBgm('arcade');
-    }
+    if (audio) audio.boot('arcade');
 
     function play(name) {
         if (audio) audio.sfx(name);

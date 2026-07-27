@@ -38,21 +38,21 @@ canvas{display:block;width:100%;height:100%}
   <div id="hud">
     <div>HP</div><div class="bar"><i id="hpBar"></i></div>
     <div style="margin-top:6px">必杀</div><div class="bar sp"><i id="spBar"></i></div>
-    <div style="margin-top:8px;font-size:12px">波次 <b id="waveN">1</b> · 击倒 <b id="kills">0</b> · 最高 <b id="best">0</b></div>
+    <div style="margin-top:8px;font-size:12px">波次 <b id="waveN">1</b> · 击�?<b id="kills">0</b> · 最�?<b id="best">0</b></div>
     <div class="combo" id="combo">COMBO 0</div>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="btn a" id="btnAtk">拳</div>
+    <div class="btn a" id="btnAtk">�?/div>
     <div class="btn b" id="btnSp">必杀</div>
-    <div class="btn c" id="btnJump">跳</div>
+    <div class="btn c" id="btnJump">�?/div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>街机乱斗 Arena</h1>
-      <p>横版 2.5D 对战。角色与场景全部 Canvas 程序化绘制，无外部图片。</p>
-      <p>键鼠：WASD / 方向键移动 · J / 空格 出拳连招 · K 跳跃 · L / U 必杀<br/>触屏：摇杆 + 拳 / 跳 / 必杀</p>
-      <div class="row"><button id="btnStart">开战</button></div>
+      <p>横版 2.5D 对战。角色与场景全部 Canvas 程序化绘制，无外部图片�?/p>
+      <p>键鼠：WASD / 方向键移�?· J / 空格 出拳连招 · K 跳跃 · L / U 必杀<br/>触屏：摇�?+ �?/ �?/ 必杀</p>
+      <div class="row"><button id="btnStart">开�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">战斗结束</h1>
@@ -63,7 +63,7 @@ canvas{display:block;width:100%;height:100%}
       </div>
     </div>
   </div>
-  <div id="credit">GFX: Canvas 程序化 · SFX: WebAudio</div>
+  <div id="credit">GFX: Canvas 程序�?· SFX: WebAudio</div>
 </div>
 <script>
 (function(){
@@ -272,8 +272,8 @@ function gameOver(win){
   best=Math.max(best,score);
   try{localStorage.setItem(SAVE,JSON.stringify({best}))}catch(e){}
   document.getElementById('panelOver').classList.remove('hidden');
-  document.getElementById('overTitle').textContent=win?'清场胜利':'你倒下了';
-  document.getElementById('overText').textContent='得分 '+score+' · 击倒 '+world.kills+' · 最高 '+best;
+  document.getElementById('overTitle').textContent=win?'清场胜利':'你倒下�?;
+  document.getElementById('overText').textContent='得分 '+score+' · 击�?'+world.kills+' · 最�?'+best;
 }
 
 function spawnEnemy(){
@@ -398,7 +398,7 @@ function update(dt){
   afterimages=afterimages.filter(a=>a.life>0);
 }
 
-/* —— 程序化绘制 —— */
+/* —�?程序化绘�?—�?*/
 function roundRect(x,y,w,h,r){
   const rr=Math.min(r,w/2,h/2);
   ctx.beginPath();
@@ -773,7 +773,7 @@ resize();
 requestAnimationFrame(loop);
 })();
 </script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
+  <script src="../../js/game/game-audio.js?v=22"></script>
   <script>
   (function () {
     function go() { if (window.GameAudio) window.GameAudio.boot('catchy'); }

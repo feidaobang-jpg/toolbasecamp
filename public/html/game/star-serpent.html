@@ -94,25 +94,25 @@ canvas{display:block;width:100%;height:100%}
   <canvas id="c"></canvas>
   <div id="hud">
     <span>得分 <b id="score">0</b></span>
-    <span>命 <b id="lives">3</b></span>
-    <span>最高 <b id="best">0</b></span>
+    <span>�?<b id="lives">3</b></span>
+    <span>最�?<b id="best">0</b></span>
     <span class="tag" id="weaponTag">普通弹</span>
   </div>
   <div id="bossBarWrap"><i id="bossBar"></i></div>
   <div id="orientTip" class="hidden">
-    <div>街机横屏视野，建议 <b>横屏</b> 游玩（不强制旋转）</div>
-    <div class="row"><button type="button" id="btnOrientHide">知道了</button></div>
+    <div>街机横屏视野，建�?<b>横屏</b> 游玩（不强制旋转�?/div>
+    <div class="row"><button type="button" id="btnOrientHide">知道�?/button></div>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
-    <div class="fire" id="btnFire">射</div>
+    <div class="fire" id="btnFire">�?/div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>星蛇突击</h1>
-      <p>Salamander / Life Force 风格纵版 STG。穿越有机星域，击落敌巢与星蛇 Boss。手机建议横屏。</p>
-      <p>键鼠：WASD 移动 · J 开火<br/>触屏：左摇杆 · 右下开火</p>
-      <p>胶囊：<b style="color:#60a5fa">S</b> 加速 · <b style="color:#f472b6">M</b> 导弹 · <b style="color:#34d399">L</b> 激光</p>
+      <p>Salamander / Life Force 风格纵版 STG。穿越有机星域，击落敌巢与星�?Boss。手机建议横屏�?/p>
+      <p>键鼠：WASD 移动 · J 开�?br/>触屏：左摇杆 · 右下开�?/p>
+      <p>胶囊�?b style="color:#60a5fa">S</b> 加�?· <b style="color:#f472b6">M</b> 导弹 · <b style="color:#34d399">L</b> 激�?/p>
       <div class="row">
         <button id="btnStart">出击</button>
         <button class="ghost" id="btnContinue" disabled>继续</button>
@@ -159,8 +159,8 @@ const el = {
   btnFire: document.getElementById('btnFire')
 };
 
-const WEAPON_NAME = { normal: '普通弹', missile: '导弹', laser: '激光' };
-const POWER_LABEL = { S: '加速', M: '导弹', L: '激光' };
+const WEAPON_NAME = { normal: '普通弹', missile: '导弹', laser: '激�? };
+const POWER_LABEL = { S: '加�?, M: '导弹', L: '激�? };
 
 let W = BASE_W, H = BASE_H, DPR = 1, drawSX = 1, drawSY = 1, stageScale = 1;
 let mode = 'menu';
@@ -529,7 +529,7 @@ function spawnBoss() {
     maxTotal: segs.reduce((s, g) => s + g.maxHp, 0)
   };
   el.bossBarWrap.style.display = 'block';
-  addFloat('⚠ 星蛇 Boss 来袭', W * 0.5, H * 0.35, '#f97316', 2.2);
+  addFloat('�?星蛇 Boss 来袭', W * 0.5, H * 0.35, '#f97316', 2.2);
 }
 
 /* ========== Combat ========== */
@@ -610,7 +610,7 @@ function gameOver(clear) {
   el.overTitle.textContent = clear ? '任务完成' : '任务结束';
   el.overText.textContent = clear
     ? '星域已净化！得分 ' + player.score
-    : '得分 ' + (player ? player.score : 0) + ' · 最高 ' + best;
+    : '得分 ' + (player ? player.score : 0) + ' · 最�?' + best;
   el.btnContinue.disabled = true;
 }
 
@@ -637,13 +637,13 @@ function applyPower(kind) {
   if (kind === 'S') {
     player.spdLv = Math.min(4, player.spdLv + 1);
     player.spd = 260 + player.spdLv * 35;
-    addFloat('加速 UP', player.x, player.y - 36, '#60a5fa');
+    addFloat('加�?UP', player.x, player.y - 36, '#60a5fa');
   } else if (kind === 'M') {
     player.weapon = 'missile';
     addFloat('导弹武装', player.x, player.y - 36, '#f472b6');
   } else if (kind === 'L') {
     player.weapon = 'laser';
-    addFloat('激光武装', player.x, player.y - 36, '#34d399');
+    addFloat('激光武�?, player.x, player.y - 36, '#34d399');
   }
   updateHud();
 }
@@ -1282,7 +1282,7 @@ initTunnel();
 requestAnimationFrame(loop);
 })();
 </script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
+  <script src="../../js/game/game-audio.js?v=22"></script>
   <script>
   (function () {
     function go() { if (window.GameAudio) window.GameAudio.boot('catchy'); }

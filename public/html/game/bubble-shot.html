@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>泡泡龙 · Bubble Shot</title>
+<title>泡泡�?· Bubble Shot</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0f172a;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
-/* 竖屏主设计：适度最大宽度 */
+/* 竖屏主设计：适度最大宽�?*/
 #wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:#1e293b}
 canvas{display:block;width:100%;height:100%}
 #hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
@@ -35,20 +35,20 @@ canvas{display:block;width:100%;height:100%}
 <body>
 <div id="wrap">
   <canvas id="c"></canvas>
-  <div id="hud"><span>分 <b id="score">0</b></span><span>关 <b id="level">1</b></span><span>币 <b id="coins">0</b></span><span>最高 <b id="best">0</b></span></div>
+  <div id="hud"><span>�?<b id="score">0</b></span><span>�?<b id="level">1</b></span><span>�?<b id="coins">0</b></span><span>最�?<b id="best">0</b></span></div>
   <div class="action-row" id="audioBar"></div>
   <div id="touch"><div class="btn" id="btnBomb">炸弹</div><div class="btn" id="btnSwap">换色</div></div>
   <div id="ui">
     <div class="panel" id="panelMenu">
-      <h1>泡泡龙</h1>
-      <p>瞄准发射同色泡泡，≥3 相连消除。过关用金币买炸弹与换色。</p>
-      <p>拖动/方向键瞄准 · 空格或点击发射</p>
-      <div class="row"><button id="btnNew">新游戏</button><button class="ghost" id="btnContinue" disabled>继续</button></div>
+      <h1>泡泡�?/h1>
+      <p>瞄准发射同色泡泡，≥3 相连消除。过关用金币买炸弹与换色�?/p>
+      <p>拖动/方向键瞄�?· 空格或点击发�?/p>
+      <div class="row"><button id="btnNew">新游�?/button><button class="ghost" id="btnContinue" disabled>继续</button></div>
     </div>
     <div class="panel hidden" id="panelShop">
-      <h2>道具店 · 关 <span id="shopLv">1</span></h2>
+      <h2>道具�?· �?<span id="shopLv">1</span></h2>
       <p id="shopMsg"></p><div id="shopList"></div>
-      <div class="row"><button id="btnNext">下一关</button><button class="ghost" id="btnSaveMenu">存档回菜单</button></div>
+      <div class="row"><button id="btnNext">下一�?/button><button class="ghost" id="btnSaveMenu">存档回菜�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h2>顶到底了</h2><p id="overMsg"></p>
@@ -56,7 +56,7 @@ canvas{display:block;width:100%;height:100%}
     </div>
   </div>
 </div>
-<script src="../../js/game/game-audio.js?v=20"></script>
+<script src="../../js/game/game-audio.js?v=22"></script>
 <script>
 (function(){
 const KEY='tbc_bubble_shot_v1';
@@ -110,7 +110,7 @@ function openShop(){
   const list=document.getElementById('shopList');list.innerHTML='';
   [{id:'bomb',name:'炸弹 +1',cost:15},{id:'swap',name:'换色 +1',cost:12}].forEach(it=>{
     const row=document.createElement('div');row.className='shop-item';row.innerHTML='<span>'+it.name+'</span>';
-    const b=document.createElement('button');b.textContent=it.cost+' 币';b.disabled=state.coins<it.cost;
+    const b=document.createElement('button');b.textContent=it.cost+' �?;b.disabled=state.coins<it.cost;
     b.onclick=()=>{unlock();if(state.coins<it.cost)return;state.coins-=it.cost;sfx('swap');if(it.id==='bomb')state.bombs++;if(it.id==='swap')state.swaps++;persist();openShop();hud()};
     row.appendChild(b);list.appendChild(row);
   });

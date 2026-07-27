@@ -16,10 +16,7 @@
     var gameOver = false;
     var last = null;
 
-    if (audio) {
-        audio.bindControls();
-        audio.startBgm('calm');
-    }
+    if (audio) audio.boot('calm');
 
     function play(name) {
         if (audio) audio.sfx(name);

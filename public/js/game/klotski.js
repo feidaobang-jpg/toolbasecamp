@@ -18,10 +18,7 @@
     var steps = 0;
     var gameOver = false;
 
-    if (audio) {
-        audio.bindControls();
-        audio.startBgm('calm');
-    }
+    if (audio) audio.boot('calm');
 
     function play(name) {
         if (audio) audio.sfx(name);

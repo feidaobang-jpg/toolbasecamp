@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title>大鱼吃小鱼 · Fish Feast</title>
+<title>大鱼吃小�?· Fish Feast</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#041525;color:#e2e8f0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;overflow:hidden;touch-action:none;user-select:none}
-/* 竖屏主设计：适度最大宽度 */
+/* 竖屏主设计：适度最大宽�?*/
 #wrap{position:relative;width:100%;height:100%;max-width:480px;margin:0 auto;background:#06283f}
 canvas{display:block;width:100%;height:100%}
 #hud{position:absolute;left:0;right:0;top:0;padding:8px 10px;font-size:12px;text-shadow:0 1px 2px #000;pointer-events:none;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
@@ -37,30 +37,30 @@ canvas{display:block;width:100%;height:100%}
 <div id="wrap">
   <canvas id="c"></canvas>
   <div id="hud">
-    <span>分 <b id="score">0</b></span>
-    <span>关 <b id="level">1</b></span>
-    <span>币 <b id="coins">0</b></span>
-    <span>最高 <b id="best">0</b></span>
+    <span>�?<b id="score">0</b></span>
+    <span>�?<b id="level">1</b></span>
+    <span>�?<b id="coins">0</b></span>
+    <span>最�?<b id="best">0</b></span>
   </div>
   <div class="action-row" id="audioBar"></div>
   <div id="touch"><div class="pad" id="pad"><div class="stick" id="stick"></div></div></div>
   <div id="ui">
     <div class="panel" id="panelMenu">
-      <h1>大鱼吃小鱼</h1>
-      <p>吃比自己小的鱼长大，撞到更大的会死。过关赚金币，升级速度与护盾。</p>
-      <p>键鼠：WASD / 方向键 · 触屏：左下摇杆</p>
+      <h1>大鱼吃小�?/h1>
+      <p>吃比自己小的鱼长大，撞到更大的会死。过关赚金币，升级速度与护盾�?/p>
+      <p>键鼠：WASD / 方向�?· 触屏：左下摇�?/p>
       <div class="row">
-        <button id="btnNew">新游戏</button>
+        <button id="btnNew">新游�?/button>
         <button class="ghost" id="btnContinue" disabled>继续</button>
       </div>
     </div>
     <div class="panel hidden" id="panelShop">
-      <h2>过关商店 · 第 <span id="shopLv">1</span> 关</h2>
-      <p id="shopMsg">选择强化后继续下一关。</p>
+      <h2>过关商店 · �?<span id="shopLv">1</span> �?/h2>
+      <p id="shopMsg">选择强化后继续下一关�?/p>
       <div id="shopList"></div>
       <div class="row">
-        <button id="btnNext">下一关</button>
-        <button class="ghost" id="btnSaveMenu">存档回菜单</button>
+        <button id="btnNext">下一�?/button>
+        <button class="ghost" id="btnSaveMenu">存档回菜�?/button>
       </div>
     </div>
     <div class="panel hidden" id="panelOver">
@@ -73,7 +73,7 @@ canvas{display:block;width:100%;height:100%}
     </div>
   </div>
 </div>
-<script src="../../js/game/game-audio.js?v=20"></script>
+<script src="../../js/game/game-audio.js?v=22"></script>
 <script>
 (function(){
 const KEY='tbc_fish_feast_v1';
@@ -151,11 +151,11 @@ function updateHud(){
 function openShop(){
   mode='shop';
   document.getElementById('shopLv').textContent=state.level;
-  document.getElementById('shopMsg').textContent='金币 '+state.coins+' · 吃掉 '+state.eaten+' 条';
+  document.getElementById('shopMsg').textContent='金币 '+state.coins+' · 吃掉 '+state.eaten+' �?;
   const list=document.getElementById('shopList');
   list.innerHTML='';
   const items=[
-    {id:'spd',name:'游速 +1',cost:15+state.spdLv*10,ok:state.spdLv<5},
+    {id:'spd',name:'游�?+1',cost:15+state.spdLv*10,ok:state.spdLv<5},
     {id:'shield',name:'护盾次数 +1',cost:20+state.shieldLv*12,ok:state.shieldLv<4},
     {id:'size',name:'体型微调',cost:12,ok:true}
   ];
@@ -163,7 +163,7 @@ function openShop(){
     const row=document.createElement('div');row.className='shop-item';
     row.innerHTML='<span>'+it.name+(it.ok?'':'（已满）')+'</span>';
     const b=document.createElement('button');
-    b.textContent=it.cost+' 币';
+    b.textContent=it.cost+' �?;
     b.disabled=!it.ok||state.coins<it.cost;
     b.onclick=()=>{
       unlock();if(state.coins<it.cost||!it.ok)return;
@@ -182,7 +182,7 @@ function gameOver(){
   mode='over';state.alive=false;
   best=Math.max(best,state.score);
   save({best,play:null});
-  document.getElementById('overMsg').textContent='得分 '+state.score+' · 到达第 '+state.level+' 关';
+  document.getElementById('overMsg').textContent='得分 '+state.score+' · 到达�?'+state.level+' �?;
   show('panelOver');sfx('lose');updateHud();
 }
 

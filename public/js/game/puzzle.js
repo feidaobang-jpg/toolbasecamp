@@ -18,10 +18,7 @@
     var cropCancel = document.getElementById('crop-cancel');
     var audio = window.GameAudio;
 
-    if (audio) {
-        audio.bindControls();
-        audio.startBgm('calm');
-    }
+    if (audio) audio.boot('calm');
 
     function play(name) {
         if (audio) audio.sfx(name);

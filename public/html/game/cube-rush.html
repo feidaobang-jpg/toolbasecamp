@@ -32,17 +32,17 @@ canvas{display:block;width:100%;height:100%}
   <div id="hud"></div>
   <div id="touch">
     <div class="zone L" id="zL"></div><div class="zone R" id="zR"></div>
-    <div class="hint" style="left:0">← 左</div><div class="hint" style="left:50%">右 →</div>
+    <div class="hint" style="left:0">�?�?/div><div class="hint" style="left:50%">�?�?/div>
   </div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>立体躲避</h1>
-      <p>简易 WebGL 3D 试玩：沿跑道前进，左右躲开方块。距离推进关卡，速度与密度递增。无外部库、无贴图素材。</p>
-      <p>A / D 或 ← → 移动 · 触屏点左右半屏</p>
-      <div class="row"><button id="btnStart">开始</button></div>
+      <p>简�?WebGL 3D 试玩：沿跑道前进，左右躲开方块。距离推进关卡，速度与密度递增。无外部库、无贴图素材�?/p>
+      <p>A / D �?�?�?移动 · 触屏点左右半�?/p>
+      <div class="row"><button id="btnStart">开�?/button></div>
     </div>
     <div class="panel hidden" id="panelOver">
-      <h1>撞到了</h1>
+      <h1>撞到�?/h1>
       <p id="overText"></p>
       <div class="row">
         <button id="btnRetry">再来</button>
@@ -58,7 +58,7 @@ const SAVE='tbc_cube_rush_v1';
 const canvas=document.getElementById('c');
 const gl=canvas.getContext('webgl',{antialias:true,alpha:false});
 if(!gl){
-  document.getElementById('panelMenu').innerHTML='<h1>无法启动</h1><p>当前浏览器不支持 WebGL。</p>';
+  document.getElementById('panelMenu').innerHTML='<h1>无法启动</h1><p>当前浏览器不支持 WebGL�?/p>';
   return;
 }
 
@@ -99,7 +99,7 @@ function sfx(n){
   else if(n==='hit')beep(80,0.3,'sawtooth',0.06,40);
 }
 
-/* —— tiny mat4 —— */
+/* —�?tiny mat4 —�?*/
 function mat4(){return new Float32Array(16)}
 function ident(o){o.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);return o}
 function mul(a,b,o){
@@ -195,7 +195,7 @@ function over(){
   best=Math.max(best,state.score|0);
   try{localStorage.setItem(SAVE,JSON.stringify({best}))}catch(e){}
   document.getElementById('panelOver').classList.remove('hidden');
-  document.getElementById('overText').textContent='关卡 '+state.level+' · 得分 '+state.score+' · 最高 '+best;
+  document.getElementById('overText').textContent='关卡 '+state.level+' · 得分 '+state.score+' · 最�?'+best;
 }
 
 function update(dt){
@@ -213,7 +213,7 @@ function update(dt){
   if(state.toast>0)state.toast-=dt;
 
   let steer=0;
-  // Camera looks toward +Z, so world +X appears on the left of the screen — invert steer.
+  // Camera looks toward +Z, so world +X appears on the left of the screen �?invert steer.
   if(keys['a']||keys['arrowleft'])steer+=1;
   if(keys['d']||keys['arrowright'])steer-=1;
   steer-=touchDir;
@@ -276,8 +276,8 @@ function render(){
 
   // HUD
   const hud=document.getElementById('hud');
-  if(mode==='play'&&state)hud.innerHTML='关卡 <b>'+state.level+'</b> · 得分 <b>'+state.score+'</b> · 最高 <b>'+best+'</b> · 速度 <b>'+state.speed.toFixed(0)+'</b>'+(state.toast>0?' · <b>进入第 '+state.level+' 关</b>':'');
-  else if(mode==='menu')hud.innerHTML='最高 <b>'+best+'</b>';
+  if(mode==='play'&&state)hud.innerHTML='关卡 <b>'+state.level+'</b> · 得分 <b>'+state.score+'</b> · 最�?<b>'+best+'</b> · 速度 <b>'+state.speed.toFixed(0)+'</b>'+(state.toast>0?' · <b>进入�?'+state.level+' �?/b>':'');
+  else if(mode==='menu')hud.innerHTML='最�?<b>'+best+'</b>';
   else hud.innerHTML='';
 }
 
@@ -306,7 +306,7 @@ resize();
 requestAnimationFrame(loop);
 })();
 </script>
-  <script src="../../js/game/game-audio.js?v=20"></script>
+  <script src="../../js/game/game-audio.js?v=22"></script>
   <script>
   (function () {
     function go() { if (window.GameAudio) window.GameAudio.boot('catchy'); }
