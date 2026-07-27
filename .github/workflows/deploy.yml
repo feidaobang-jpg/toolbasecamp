@@ -280,6 +280,7 @@ jobs:
           echo "=== Force life-plans process reload ==="
           bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           bash /opt/toolbasecamp-deploy/fix-fx-api.sh
+          bash /opt/toolbasecamp-deploy/fix-auth-api.sh
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
@@ -303,6 +304,8 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"records_online_games":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_online_draft":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_online_delete":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"auth_phone_login":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"auth_phone_rev":3' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_rent_pay_rev":4' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_rent_due_max":31' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null \
@@ -317,7 +320,7 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev/fx_thb_twd"
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev/fx_thb_twd/auth_phone"
               HEALTH_OK=1
               break
             fi
@@ -354,6 +357,8 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"auth_phone_login":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"auth_phone_rev":3' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
@@ -484,6 +489,48 @@ jobs:
             exit 0
           fi
           echo "Guestbook API OK."
+
+      - name: Verify phone login API (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          sleep 2
+          check_auth_phone() {
+            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            echo "health: $HEALTH"
+            echo "$HEALTH" | grep -F '"auth_phone_login":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"auth_phone_rev":3' >/dev/null
+          }
+          LOGIN_CODE="$(curl -sS -o /tmp/auth-phone-login.json -w '%{http_code}' \
+            -X POST 'https://toolbasecamp.com/api/auth/login' \
+            -H 'Content-Type: application/json' \
+            -d '{"account":"13800138000","password":"wrong-password-xx"}' || echo '000')"
+          echo "public POST /api/auth/login (phone account) -> $LOGIN_CODE"
+          head -c 300 /tmp/auth-phone-login.json || true
+          echo ""
+          if check_auth_phone && [[ "$LOGIN_CODE" != "422" && "$LOGIN_CODE" != "000" ]]; then
+            echo "Phone login API public OK."
+            exit 0
+          fi
+          echo "::warning:: public phone login incomplete — forcing fix-auth-api.sh"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-auth-api.sh'
+          sleep 3
+          LOGIN_CODE="$(curl -sS -o /tmp/auth-phone-login2.json -w '%{http_code}' \
+            -X POST 'https://toolbasecamp.com/api/auth/login' \
+            -H 'Content-Type: application/json' \
+            -d '{"account":"13800138000","password":"wrong-password-xx"}' || echo '000')"
+          echo "retry login -> $LOGIN_CODE"
+          head -c 300 /tmp/auth-phone-login2.json || true
+          echo ""
+          if ! check_auth_phone; then
+            echo "::error:: public health still missing auth_phone_login after fix"
+            exit 1
+          fi
+          if [[ "$LOGIN_CODE" == "422" || "$LOGIN_CODE" == "000" ]]; then
+            echo "::error:: phone login still $LOGIN_CODE after fix (email still required?)"
+            exit 1
+          fi
+          echo "Phone login API public OK after fix."
 
       - name: Verify recipe API route (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'

@@ -83,9 +83,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!data || data.detail == null) return '';
     if (typeof data.detail === 'string') return data.detail;
     if (Array.isArray(data.detail)) {
-      return data.detail.map(function (d) { return d.msg || d.message || String(d); }).join('; ');
+      return data.detail.map(function (d) {
+        var loc = Array.isArray(d.loc) ? d.loc.filter(function (x) { return x !== 'body'; }).join('.') : '';
+        var msg = d.msg || d.message || String(d);
+        return loc ? (loc + ': ' + msg) : msg;
+      }).join('; ');
     }
     return String(data.detail);
+  }
+
+  function authPayload(account, password) {
+    const acc = String(account || '').trim();
+    const body = { account: acc, password: password || '' };
+    if (acc.includes('@')) {
+      body.email = acc.toLowerCase();
+      body.phone = '';
+    } else {
+      body.phone = acc;
+      body.email = '';
+    }
+    return body;
   }
 
   function getSafeNextUrl() {
@@ -136,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setLoading(registerBtn, true);
       try {
-        const data = await postJson('/auth/register', { account, password });
+        const data = await postJson('/auth/register', authPayload(account, password));
         if (data.token) setToken(data.token);
         setStatus(tr('auth.accountCreated'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);
@@ -160,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       setLoading(loginBtn, true);
       try {
-        const data = await postJson('/auth/login', { account, password });
+        const data = await postJson('/auth/login', authPayload(account, password));
         if (data.token) setToken(data.token);
         setStatus(tr('auth.loggedIn'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);

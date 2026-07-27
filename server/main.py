@@ -78,7 +78,7 @@ ROLE_USER = "user"
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 PHONE_CN_RE = re.compile(r"^1[3-9]\d{9}$")
-AUTH_PHONE_REV = 2
+AUTH_PHONE_REV = 3
 
 GUESTBOOK_PAGE_SIZE = 30
 GUESTBOOK_MAX_TEXT_LEN = 500
