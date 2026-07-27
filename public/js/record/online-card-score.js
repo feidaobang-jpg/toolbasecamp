@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var scoreBody = document.getElementById('score-body');
     var scoreFoot = document.getElementById('score-foot');
     var scoreTableWrap = document.querySelector('.ocs-table-wrap');
-    var scoreFootWrap = document.querySelector('.ocs-table-foot-wrap');
     var roundInputs = document.getElementById('round-inputs');
     var roundForm = document.getElementById('round-form');
     var finishBtn = document.getElementById('finish-btn');
@@ -547,22 +546,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 removeLocalPlayer(btn.getAttribute('data-pid'));
             });
         });
-        syncBoardScrollWidths();
-    }
-
-    function syncBoardScrollWidths() {
-        var bodyTable = document.getElementById('score-table');
-        var footTable = scoreFoot && scoreFoot.closest('table');
-        if (!bodyTable || !footTable || !scoreTableWrap || !scoreFootWrap) return;
-        bodyTable.style.width = '';
-        footTable.style.width = '';
-        var w = Math.max(
-            bodyTable.scrollWidth,
-            footTable.scrollWidth,
-            scoreTableWrap.clientWidth
-        );
-        bodyTable.style.width = w + 'px';
-        footTable.style.width = w + 'px';
     }
 
     function canEditPlayer(data, player) {
@@ -999,21 +982,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('beforeunload', stopPoll);
     window.addEventListener('resize', function () {
         if (keyboardOpen) updateKeyboardLayout();
-        syncBoardScrollWidths();
     });
-
-    var boardScrollLock = false;
-    function bindBoardHScroll(a, b) {
-        if (!a || !b) return;
-        a.addEventListener('scroll', function () {
-            if (boardScrollLock) return;
-            boardScrollLock = true;
-            b.scrollLeft = a.scrollLeft;
-            boardScrollLock = false;
-        }, { passive: true });
-    }
-    bindBoardHScroll(scoreTableWrap, scoreFootWrap);
-    bindBoardHScroll(scoreFootWrap, scoreTableWrap);
 
     R.optionalLogin(gate, app).then(function (user) {
         loggedIn = !!(user && (user.id != null || user.user_id != null));

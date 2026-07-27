@@ -51,16 +51,14 @@
   flex-direction: column;
   min-height: 0;
   flex: 1;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fff;
 }
 
 .card-score-scroll {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: auto;
   max-width: none;
   margin-bottom: 0;
   -webkit-overflow-scrolling: touch;
@@ -73,6 +71,9 @@
   border-top: 1px solid #ddd;
   background: #fff;
   overflow: hidden;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }
 
 .card-score-grid-scores {
