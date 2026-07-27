@@ -91,6 +91,11 @@ echo "$HEALTH" | grep -q '"records_online_delete":true' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+echo "$HEALTH" | grep -q '"records_online_draft_rev":3' || {
+  echo "FAILED: health records_online_draft_rev!=3 (guest/local players missing — stale process?)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 echo "$HEALTH" | grep -q '"records_rent_pay_rev":4' || {
   echo "FAILED: health records_rent_pay_rev!=4 (stale list/integer/due-day?)"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
@@ -133,6 +138,11 @@ curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/online-games/{gam
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/online-games/{game_id}/players' || {
+  echo "FAILED: openapi missing /records/online-games/{game_id}/players (local seats)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/clocks/{clock_id}/reset' || {
   echo "FAILED: openapi missing clock reset route"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
@@ -143,6 +153,19 @@ curl -s http://127.0.0.1:8001/openapi.json | grep -q '/records/clocks/{clock_id}
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+
+echo "=== Guest join must not require auth (expect 404 room, not 401) ==="
+GUEST_JOIN="$(curl -s -o /tmp/ocs-guest-join.json -w '%{http_code}' \
+  -X POST http://127.0.0.1:8001/records/online-games/join \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"999999","display_name":"guest"}')"
+echo "POST /records/online-games/join (guest) -> $GUEST_JOIN"
+head -c 200 /tmp/ocs-guest-join.json; echo ""
+if [[ "$GUEST_JOIN" == "401" ]]; then
+  echo "FAILED: guest join still requires auth"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+fi
 
 echo "=== Auth required check (expect 401) ==="
 CODE="$(curl -s -o /tmp/records-days.txt -w '%{http_code}' http://127.0.0.1:8001/records/days)"

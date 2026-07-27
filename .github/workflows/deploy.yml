@@ -281,6 +281,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           bash /opt/toolbasecamp-deploy/fix-fx-api.sh
           bash /opt/toolbasecamp-deploy/fix-auth-api.sh
+          bash /opt/toolbasecamp-deploy/fix-records-api.sh
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
@@ -304,6 +305,7 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"records_online_games":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_online_draft":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_online_delete":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"records_online_draft_rev":3' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"auth_phone_login":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"auth_phone_rev":3' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"records_rent_pay_rev":4' >/dev/null \
@@ -343,6 +345,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"records_online_games":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_online_draft":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_online_delete":true' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"records_online_draft_rev":3' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_rent_pay_rev":4' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_rent_due_max":31' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"records_clock_reset":true' >/dev/null || exit 1
@@ -624,6 +627,7 @@ jobs:
             && echo "$HEALTH" | grep -F '"records_online_games":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_online_draft":true' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_online_delete":true' >/dev/null \
+            && echo "$HEALTH" | grep -F '"records_online_draft_rev":3' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_rent_pay_rev":4' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_rent_due_max":31' >/dev/null \
             && echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null \
@@ -667,6 +671,19 @@ jobs:
           fi
           if ! echo "$HEALTH" | grep -F '"records_online_delete":true' >/dev/null; then
             echo "::error:: public health still missing records_online_delete after fix — API process stale"
+            exit 1
+          fi
+          if ! echo "$HEALTH" | grep -F '"records_online_draft_rev":3' >/dev/null; then
+            echo "::error:: public health still missing records_online_draft_rev=3 after fix — guest/local seats stale"
+            exit 1
+          fi
+          GUEST_JOIN="$(curl -sS -o /tmp/ocs-guest-join-public.json -w '%{http_code}' \
+            -X POST 'https://toolbasecamp.com/api/records/online-games/join' \
+            -H 'Content-Type: application/json' \
+            -d '{"code":"999999","display_name":"guest"}' || echo '000')"
+          echo "public guest join -> $GUEST_JOIN"
+          if [[ "$GUEST_JOIN" == "401" ]]; then
+            echo "::error:: guest join still requires auth after fix"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_rent_pay_rev":4' >/dev/null; then
