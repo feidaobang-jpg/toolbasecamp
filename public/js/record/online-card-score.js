@@ -223,36 +223,47 @@ document.addEventListener('DOMContentLoaded', function () {
         ocsKeyboardDisplay.textContent = v || tr('tools.onlineCardScore.keyboardPlaceholder');
     }
 
+    function keyboardMetrics() {
+        var kbH = 0;
+        if (ocsKeyboard) {
+            var kr = ocsKeyboard.getBoundingClientRect();
+            kbH = Math.max(ocsKeyboard.offsetHeight || 0, Math.round(kr.height) || 0);
+        }
+        var vv = window.visualViewport;
+        return {
+            kbH: kbH,
+            viewTop: vv ? vv.offsetTop : 0,
+            viewH: vv ? vv.height : window.innerHeight
+        };
+    }
+
     function updateKeyboardLayout() {
         if (!boardView) return;
         if (!keyboardOpen || !ocsKeyboard) {
             boardView.style.paddingBottom = '';
             return;
         }
-        var kbH = ocsKeyboard.offsetHeight || 0;
-        boardView.style.paddingBottom = kbH > 0 ? (kbH + 16) + 'px' : '';
+        var m = keyboardMetrics();
+        /* 多留一点底边，避免只露出半个「保存分数」 */
+        boardView.style.paddingBottom = m.kbH > 0 ? (m.kbH + 32) + 'px' : '';
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
-                scrollBoardForKeyboard(kbH);
+                scrollBoardForKeyboard();
             });
         });
     }
 
-    function scrollBoardForKeyboard(kbH) {
+    function scrollBoardForKeyboard() {
         if (!keyboardOpen) return;
-        kbH = kbH || (ocsKeyboard ? ocsKeyboard.offsetHeight : 0);
+        var m = keyboardMetrics();
         var anchor = document.querySelector('.ocs-submit-row') || roundForm;
         if (!anchor) return;
         var rect = anchor.getBoundingClientRect();
-        var gap = 12;
-        var visibleBottom = window.innerHeight - kbH - gap;
-        var delta = rect.bottom - visibleBottom;
+        var gap = 20;
+        var visibleBottom = m.viewTop + m.viewH - m.kbH - gap;
+        var delta = Math.ceil(rect.bottom - visibleBottom);
         if (delta > 0) {
-            try {
-                window.scrollBy({ top: delta, behavior: 'smooth' });
-            } catch (e) {
-                window.scrollBy(0, delta);
-            }
+            window.scrollBy(0, delta + 8);
         }
     }
 
@@ -279,7 +290,8 @@ document.addEventListener('DOMContentLoaded', function () {
         ocsKeyboard.setAttribute('aria-hidden', 'false');
         updateKeyboardDisplay();
         updateKeyboardLayout();
-        setTimeout(updateKeyboardLayout, 280);
+        setTimeout(updateKeyboardLayout, 80);
+        setTimeout(updateKeyboardLayout, 320);
     }
 
     function onScoreKey(key) {
@@ -317,6 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentGame = null;
         lastBoardSig = '';
         prevRoundCount = -1;
+        document.body.classList.remove('ocs-board-active');
         boardView.hidden = true;
         homeView.hidden = false;
         R.setError(boardError, '');
@@ -330,6 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function showBoard() {
         homeView.hidden = true;
         boardView.hidden = false;
+        document.body.classList.add('ocs-board-active');
         startPoll();
     }
 
@@ -361,9 +375,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!table) return;
         var old = table.querySelector('colgroup');
         if (old) old.remove();
-        var html = '<colgroup><col class="ocs-col-round" /><col class="ocs-col-sum" />';
+        /* 局数、合计与玩家列等宽均分，人多时每人也能分到宽度 */
+        var html = '<colgroup>';
         var i;
-        for (i = 0; i < playerCount; i++) html += '<col />';
+        var n = playerCount + 2;
+        for (i = 0; i < n; i++) html += '<col />';
         html += '</colgroup>';
         table.insertAdjacentHTML('afterbegin', html);
     }
@@ -1019,6 +1035,14 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', function () {
         if (keyboardOpen) updateKeyboardLayout();
     });
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', function () {
+            if (keyboardOpen) updateKeyboardLayout();
+        });
+        window.visualViewport.addEventListener('scroll', function () {
+            if (keyboardOpen) scrollBoardForKeyboard();
+        });
+    }
 
     R.optionalLogin(gate, app).then(function (user) {
         loggedIn = !!(user && (user.id != null || user.user_id != null));

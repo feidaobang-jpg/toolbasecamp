@@ -61,7 +61,9 @@
   border-radius: 12px;
   background: #fff;
   /* 全高展开，只跟网页一起滚，避免表内+页面双层滚动 */
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ocs-table {
@@ -69,7 +71,7 @@
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 280px;
+  min-width: 100%;
   font-size: 14px;
 }
 
@@ -98,15 +100,10 @@
   border-bottom: none;
 }
 
-.ocs-table col.ocs-col-round,
-.ocs-table col.ocs-col-sum {
-  width: 40px;
-}
-
 .ocs-table td.ocs-round-no,
 .ocs-table td.ocs-round-sum {
-  padding: 0 2px;
-  font-size: 13px;
+  padding: 0 1px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -180,7 +177,8 @@
 .ocs-table .ocs-name-cell {
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 13px;
+  font-size: 12px;
+  padding: 0 1px;
 }
 
 .ocs-round-form .rec-field {
@@ -189,9 +187,13 @@
 
 .ocs-round-form .ocs-score-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
   margin-bottom: 14px;
+}
+
+.ocs-submit-row {
+  margin-bottom: 4px;
 }
 
 .ocs-badge {
@@ -312,4 +314,43 @@
 .ocs-remove-local:hover {
   color: #dc2626;
 }
+
+/* 记分板：手机端收紧边距，表格尽量铺满 */
+@media (max-width: 768px) {
+  body.ocs-board-active .content {
+    padding: 4px;
+  }
+
+  body.ocs-board-active #board-view.tool-card {
+    margin: 0;
+    padding: 8px 4px 12px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.ocs-board-active .ocs-table-wrap {
+    margin: 8px 0 12px;
+    border-radius: 8px;
+  }
+
+  body.ocs-board-active .ocs-table {
+    font-size: 13px;
+  }
+
+  body.ocs-board-active .ocs-table td,
+  body.ocs-board-active .ocs-table th {
+    padding: 0 1px;
+  }
+
+  body.ocs-board-active .ocs-round-form .ocs-score-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  body.ocs-board-active .rec-toolbar {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+}
+
 
