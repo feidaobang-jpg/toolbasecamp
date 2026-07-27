@@ -24,9 +24,16 @@
 }
 
 .ocs-status-line {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
   font-size: 14px;
   color: #64748b;
+}
+
+.ocs-draft-hint {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.45;
 }
 
 .ocs-table-wrap {
@@ -63,13 +70,26 @@
 }
 
 .ocs-table .is-pos {
-  color: #15803d;
+  color: #dc2626;
   font-weight: 700;
 }
 
 .ocs-table .is-neg {
-  color: #b91c1c;
+  color: #16a34a;
   font-weight: 700;
+}
+
+.ocs-table .is-zero {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.ocs-table .ocs-pending {
+  color: #94a3b8;
+}
+
+.ocs-table tr.ocs-draft-row td {
+  background: #fffbeb;
 }
 
 .ocs-table tfoot td {

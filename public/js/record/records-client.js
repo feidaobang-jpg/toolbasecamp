@@ -94,10 +94,12 @@
             'Room is full': 'tools.onlineCardScore.roomFull',
             'Game already finished': 'tools.onlineCardScore.gameFinished',
             'Only creator can finish': 'tools.onlineCardScore.onlyCreator',
+            'Only host can edit others': 'tools.onlineCardScore.onlyHostEdit',
             'Missing player score': 'tools.onlineCardScore.missingScore',
             'Invalid score': 'tools.onlineCardScore.invalidScore',
             'Too many rounds': 'tools.onlineCardScore.tooManyRounds',
             'Score too large': 'tools.onlineCardScore.invalidScore',
+            'Unknown player': 'tools.onlineCardScore.unknownPlayer',
             'Invalid status': 'tools.todoList.invalidStatus'
         };
         if (map[msg]) return tr(map[msg]);

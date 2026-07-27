@@ -251,6 +251,7 @@ def ensure_record_tables(cur):
             name VARCHAR(80) NOT NULL,
             creator_id BIGINT NOT NULL,
             status VARCHAR(16) NOT NULL DEFAULT 'open',
+            draft_scores_json TEXT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             UNIQUE KEY uq_online_game_code (code),
@@ -260,6 +261,16 @@ def ensure_record_tables(cur):
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    cur.execute(
+        """
+        SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'record_online_games'
+          AND COLUMN_NAME = 'draft_scores_json'
+        """
+    )
+    if int((cur.fetchone() or {}).get("c") or 0) == 0:
+        cur.execute("ALTER TABLE record_online_games ADD COLUMN draft_scores_json TEXT NULL")
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS record_online_game_players (
@@ -1384,6 +1395,12 @@ class OnlineRoundBody(BaseModel):
     scores: Dict[str, int]
 
 
+class OnlineDraftBody(BaseModel):
+    """Partial draft scores. Null clears a player's draft entry."""
+
+    scores: Dict[str, Optional[int]]
+
+
 def _gen_online_code(cur) -> str:
     for _ in range(40):
         code = "".join(secrets.choice(ONLINE_CODE_ALPHABET) for _ in range(6))
@@ -1409,6 +1426,74 @@ def _player_in_game(cur, *, game_id: int, user_id: int) -> Optional[dict]:
         (game_id, user_id),
     )
     return cur.fetchone()
+
+
+def _parse_score_map(raw: Any) -> Dict[str, int]:
+    if not raw:
+        return {}
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw or "{}")
+        except json.JSONDecodeError:
+            return {}
+    if not isinstance(raw, dict):
+        return {}
+    clean: Dict[str, int] = {}
+    for k, v in raw.items():
+        try:
+            n = int(v)
+        except (TypeError, ValueError):
+            continue
+        if abs(n) > ONLINE_SCORE_ABS_MAX:
+            continue
+        clean[str(k)] = n
+    return clean
+
+
+def _round_sum(scores: Dict[str, int]) -> int:
+    return int(sum(scores.values()))
+
+
+def _finalize_online_payload(data: dict, *, user_id: int) -> dict:
+    data["viewerId"] = user_id
+    data["youAreIn"] = True
+    data["isCreator"] = data.get("creatorId") == user_id
+    return data
+
+
+def _try_settle_draft(cur, *, game: dict, player_ids: List[str], draft: Dict[str, int], actor_id: int) -> bool:
+    """If every player has a draft score and sum is 0, commit a round and clear draft."""
+    if not player_ids:
+        return False
+    if any(pid not in draft for pid in player_ids):
+        return False
+    clean = {pid: int(draft[pid]) for pid in player_ids}
+    if _round_sum(clean) != 0:
+        return False
+    cur.execute(
+        "SELECT COALESCE(MAX(round_no), 0) AS m FROM record_online_game_rounds WHERE game_id=%s",
+        (game["id"],),
+    )
+    next_round = int((cur.fetchone() or {}).get("m") or 0) + 1
+    if next_round > ONLINE_MAX_ROUNDS:
+        raise HTTPException(status_code=400, detail="Too many rounds")
+    cur.execute(
+        """
+        INSERT INTO record_online_game_rounds (game_id, round_no, scores_json, created_by)
+        VALUES (%s, %s, %s, %s)
+        """,
+        (game["id"], next_round, json.dumps(clean, ensure_ascii=False), actor_id),
+    )
+    status = "playing" if game["status"] == "open" else game["status"]
+    cur.execute(
+        """
+        UPDATE record_online_games
+        SET draft_scores_json=NULL, status=%s, updated_at=CURRENT_TIMESTAMP
+        WHERE id=%s
+        """,
+        (status, game["id"]),
+    )
+    return True
 
 
 def _load_online_game(cur, game_id: int) -> dict:
@@ -1437,28 +1522,25 @@ def _load_online_game(cur, game_id: int) -> dict:
     rounds = []
     totals: Dict[str, int] = {str(p["user_id"]): 0 for p in players}
     for row in round_rows:
-        try:
-            scores = json.loads(row["scores_json"] or "{}")
-        except json.JSONDecodeError:
-            scores = {}
-        clean = {}
-        for k, v in (scores or {}).items():
-            try:
-                n = int(v)
-            except (TypeError, ValueError):
-                n = 0
-            clean[str(k)] = n
-            if str(k) in totals:
-                totals[str(k)] += n
+        clean = _parse_score_map(row.get("scores_json"))
+        for k, n in clean.items():
+            if k in totals:
+                totals[k] += n
         rounds.append(
             {
                 "id": row["id"],
                 "roundNo": int(row["round_no"]),
                 "scores": clean,
+                "sum": _round_sum(clean),
                 "createdBy": row["created_by"],
                 "createdAt": _iso(row.get("created_at")),
             }
         )
+    draft = _parse_score_map(game.get("draft_scores_json"))
+    player_ids = [str(p["user_id"]) for p in players]
+    draft_ready = sum(1 for pid in player_ids if pid in draft)
+    draft_complete = bool(player_ids) and draft_ready == len(player_ids)
+    draft_sum = _round_sum({pid: draft[pid] for pid in player_ids if pid in draft}) if draft else 0
     return {
         "id": game["id"],
         "code": game["code"],
@@ -1473,11 +1555,17 @@ def _load_online_game(cur, game_id: int) -> dict:
                 "displayName": p["display_name"],
                 "joinedAt": _iso(p.get("joined_at")),
                 "total": totals.get(str(p["user_id"]), 0),
+                "hasDraft": str(p["user_id"]) in draft,
             }
             for p in players
         ],
         "rounds": rounds,
         "roundCount": len(rounds),
+        "draftScores": draft,
+        "draftReadyCount": draft_ready,
+        "draftComplete": draft_complete,
+        "draftSum": draft_sum,
+        "canSettle": draft_complete and draft_sum == 0,
     }
 
 
@@ -1547,9 +1635,7 @@ def create_online_game(body: OnlineGameCreateBody, user: dict = Depends(_user)):
                 """,
                 (game_id, user["id"], display),
             )
-            data = _load_online_game(cur, game_id)
-            data["youAreIn"] = True
-            data["isCreator"] = True
+            data = _finalize_online_payload(_load_online_game(cur, game_id), user_id=user["id"])
         return data
     finally:
         conn.close()
@@ -1601,9 +1687,9 @@ def join_online_game(body: OnlineGameJoinBody, user: dict = Depends(_user)):
                 "UPDATE record_online_games SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
                 (game["id"],),
             )
-            data = _load_online_game(cur, game["id"])
-            data["youAreIn"] = True
-            data["isCreator"] = game["creator_id"] == user["id"]
+            data = _finalize_online_payload(
+                _load_online_game(cur, game["id"]), user_id=user["id"]
+            )
         return data
     finally:
         conn.close()
@@ -1616,72 +1702,89 @@ def get_online_game(game_id: int, user: dict = Depends(_user)):
         with conn.cursor() as cur:
             if not _player_in_game(cur, game_id=game_id, user_id=user["id"]):
                 raise HTTPException(status_code=404, detail="Not found")
-            data = _load_online_game(cur, game_id)
-            data["youAreIn"] = True
-            data["isCreator"] = data["creatorId"] == user["id"]
+            data = _finalize_online_payload(
+                _load_online_game(cur, game_id), user_id=user["id"]
+            )
         return data
+    finally:
+        conn.close()
+
+
+def _apply_draft_scores(cur, *, game_id: int, user: dict, raw_scores: Dict[str, Any]) -> dict:
+    if not _player_in_game(cur, game_id=game_id, user_id=user["id"]):
+        raise HTTPException(status_code=404, detail="Not found")
+    cur.execute("SELECT * FROM record_online_games WHERE id=%s", (game_id,))
+    game = cur.fetchone()
+    if not game:
+        raise HTTPException(status_code=404, detail="Not found")
+    if game["status"] == "finished":
+        raise HTTPException(status_code=400, detail="Game already finished")
+    cur.execute(
+        "SELECT user_id FROM record_online_game_players WHERE game_id=%s",
+        (game_id,),
+    )
+    player_ids = [str(r["user_id"]) for r in (cur.fetchall() or [])]
+    player_set = set(player_ids)
+    is_creator = game["creator_id"] == user["id"]
+    draft = _parse_score_map(game.get("draft_scores_json"))
+    for pid, val in (raw_scores or {}).items():
+        key = str(pid)
+        if key not in player_set:
+            raise HTTPException(status_code=400, detail="Unknown player")
+        if not is_creator and key != str(user["id"]):
+            raise HTTPException(status_code=403, detail="Only host can edit others")
+        if val is None:
+            draft.pop(key, None)
+            continue
+        try:
+            n = int(val)
+        except (TypeError, ValueError) as exc:
+            raise HTTPException(status_code=400, detail="Invalid score") from exc
+        if abs(n) > ONLINE_SCORE_ABS_MAX:
+            raise HTTPException(status_code=400, detail="Score too large")
+        draft[key] = n
+    settled = _try_settle_draft(
+        cur,
+        game=game,
+        player_ids=player_ids,
+        draft=draft,
+        actor_id=user["id"],
+    )
+    if not settled:
+        cur.execute(
+            """
+            UPDATE record_online_games
+            SET draft_scores_json=%s, updated_at=CURRENT_TIMESTAMP
+            WHERE id=%s
+            """,
+            (json.dumps(draft, ensure_ascii=False) if draft else None, game_id),
+        )
+    data = _finalize_online_payload(_load_online_game(cur, game_id), user_id=user["id"])
+    data["settled"] = settled
+    return data
+
+
+@router.post("/online-games/{game_id}/draft-scores")
+def upsert_online_draft(game_id: int, body: OnlineDraftBody, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            return _apply_draft_scores(
+                cur, game_id=game_id, user=user, raw_scores=body.scores or {}
+            )
     finally:
         conn.close()
 
 
 @router.post("/online-games/{game_id}/rounds")
 def add_online_round(game_id: int, body: OnlineRoundBody, user: dict = Depends(_user)):
+    """Backward-compatible alias: treat as draft upsert (host may send all). """
     conn = _conn()
     try:
         with conn.cursor() as cur:
-            if not _player_in_game(cur, game_id=game_id, user_id=user["id"]):
-                raise HTTPException(status_code=404, detail="Not found")
-            cur.execute("SELECT * FROM record_online_games WHERE id=%s", (game_id,))
-            game = cur.fetchone()
-            if not game:
-                raise HTTPException(status_code=404, detail="Not found")
-            if game["status"] == "finished":
-                raise HTTPException(status_code=400, detail="Game already finished")
-            cur.execute(
-                "SELECT user_id FROM record_online_game_players WHERE game_id=%s",
-                (game_id,),
+            return _apply_draft_scores(
+                cur, game_id=game_id, user=user, raw_scores=body.scores or {}
             )
-            player_ids = {str(r["user_id"]) for r in (cur.fetchall() or [])}
-            raw = body.scores or {}
-            clean: Dict[str, int] = {}
-            for pid in player_ids:
-                if pid not in raw:
-                    raise HTTPException(status_code=400, detail="Missing player score")
-                try:
-                    n = int(raw[pid])
-                except (TypeError, ValueError) as exc:
-                    raise HTTPException(status_code=400, detail="Invalid score") from exc
-                if abs(n) > ONLINE_SCORE_ABS_MAX:
-                    raise HTTPException(status_code=400, detail="Score too large")
-                clean[pid] = n
-            cur.execute(
-                "SELECT COALESCE(MAX(round_no), 0) AS m FROM record_online_game_rounds WHERE game_id=%s",
-                (game_id,),
-            )
-            next_round = int((cur.fetchone() or {}).get("m") or 0) + 1
-            if next_round > ONLINE_MAX_ROUNDS:
-                raise HTTPException(status_code=400, detail="Too many rounds")
-            cur.execute(
-                """
-                INSERT INTO record_online_game_rounds (game_id, round_no, scores_json, created_by)
-                VALUES (%s, %s, %s, %s)
-                """,
-                (game_id, next_round, json.dumps(clean, ensure_ascii=False), user["id"]),
-            )
-            if game["status"] == "open":
-                cur.execute(
-                    "UPDATE record_online_games SET status='playing', updated_at=CURRENT_TIMESTAMP WHERE id=%s",
-                    (game_id,),
-                )
-            else:
-                cur.execute(
-                    "UPDATE record_online_games SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
-                    (game_id,),
-                )
-            data = _load_online_game(cur, game_id)
-            data["youAreIn"] = True
-            data["isCreator"] = data["creatorId"] == user["id"]
-        return data
     finally:
         conn.close()
 
@@ -1707,9 +1810,9 @@ def finish_online_game(game_id: int, user: dict = Depends(_user)):
                 """,
                 (game_id,),
             )
-            data = _load_online_game(cur, game_id)
-            data["youAreIn"] = True
-            data["isCreator"] = True
+            data = _finalize_online_payload(
+                _load_online_game(cur, game_id), user_id=user["id"]
+            )
         return data
     finally:
         conn.close()

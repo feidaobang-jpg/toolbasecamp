@@ -524,8 +524,8 @@ window.TB_LOCALES['zh-CN'] = {
             desc: '魂斗罗风格横版射击：八向射击与道具。桌面横屏视野，手机建议横屏（不强制）。'
         },
         superMario: {
-            title: '蘑菇冒险',
-            desc: '横版闯关：金币、踩怪、问号砖与旗杆。桌面横屏视野，手机建议横屏（不强制）。'
+            title: '超级玛丽',
+            desc: '经典横版闯关：踩蘑菇怪、踢龟壳、吃金币、拿道具、冲向旗杆！'
         },
         steelBattle: {
             title: '钢铁大战',
@@ -1301,12 +1301,15 @@ window.TB_LOCALES['zh-CN'] = {
             copyCode: '复制房间码',
             finish: '结束本局',
             finishConfirm: '确定结束本局？结束后不能再记分。',
-            addRound: '登记本局分数',
-            submitRound: '提交分数',
+            addRound: '本局分数',
+            submitRound: '保存分数',
             round: '局',
+            roundSum: '合计',
             total: '总分',
             needName: '请填写桌上显示名',
             needCode: '请填写房间码',
+            needScore: '请填写分数',
+            scorePlaceholder: '整数，可负',
             invalidScore: '请输入有效整数分数',
             copied: '房间码已复制',
             polling: '自动同步中',
@@ -1319,8 +1322,19 @@ window.TB_LOCALES['zh-CN'] = {
             roomFull: '房间已满',
             gameFinished: '本局已结束',
             onlyCreator: '仅房主可结束本局',
+            onlyHostEdit: '只能修改自己的分数',
             missingScore: '请为每位玩家填写分数',
-            tooManyRounds: '局数已达上限'
+            tooManyRounds: '局数已达上限',
+            unknownPlayer: '玩家不在本房间',
+            draftRound: '待结算',
+            draftProgress: '已填 {ready}/{total}',
+            draftSumLine: '当前合计 {sum}',
+            needZeroSum: '合计须为 0 才能自动结算',
+            willSettle: '合计已为 0，保存后将自动进入下一局',
+            autoSettleHint: '全员填完且合计为 0 时自动结算',
+            settled: '已自动结算，进入下一局',
+            waitOthers: '等待其他玩家填写分数…',
+            noEditable: '没有可编辑的分数'
         },
         todoList: {
             title: '待办（任务清单）',

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var boardTitle = document.getElementById('board-title');
     var boardCode = document.getElementById('board-code');
     var boardStatus = document.getElementById('board-status');
+    var draftHint = document.getElementById('draft-hint');
     var scoreHead = document.getElementById('score-head');
     var scoreBody = document.getElementById('score-body');
     var scoreFoot = document.getElementById('score-foot');
@@ -24,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var loginLink = document.getElementById('login-link');
     var currentGameId = null;
     var currentGame = null;
+    var lastBoardSig = '';
     var pollTimer = null;
+    var pollInFlight = false;
     var POLL_MS = 3000;
     var NAME_KEY = 'tbc_online_score_name';
 
@@ -60,10 +63,16 @@ document.addEventListener('DOMContentLoaded', function () {
         boardView.classList.toggle('ocs-busy', !!on);
     }
 
+    function isEditingScore() {
+        var ae = document.activeElement;
+        return !!(ae && ae.classList && ae.classList.contains('ocs-score-input'));
+    }
+
     function showHome() {
         stopPoll();
         currentGameId = null;
         currentGame = null;
+        lastBoardSig = '';
         boardView.hidden = true;
         homeView.hidden = false;
         R.setError(boardError, '');
@@ -85,7 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function scoreClass(n) {
         if (n > 0) return 'is-pos';
         if (n < 0) return 'is-neg';
-        return '';
+        return 'is-zero';
+    }
+
+    function scoreCell(n) {
+        return '<td class="' + scoreClass(n) + '">' + n + '</td>';
     }
 
     function renderList(items) {
@@ -127,9 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(function (e) { R.setError(homeError, e.message); });
     }
 
-    function renderBoard(data) {
-        currentGame = data;
-        currentGameId = data.id;
+    function renderHeader(data) {
         boardTitle.textContent = data.name;
         boardCode.textContent = data.code;
         boardStatus.textContent =
@@ -140,63 +151,203 @@ document.addEventListener('DOMContentLoaded', function () {
             tr('tools.onlineCardScore.polling');
         finishBtn.hidden = !(data.isCreator && data.status !== 'finished');
         roundForm.hidden = data.status === 'finished';
+        if (draftHint) {
+            if (data.status === 'finished') {
+                draftHint.textContent = '';
+                draftHint.hidden = true;
+            } else {
+                draftHint.hidden = false;
+                var ready = data.draftReadyCount || 0;
+                var total = (data.players || []).length;
+                var sum = data.draftSum || 0;
+                var parts = [
+                    tr('tools.onlineCardScore.draftProgress', { ready: ready, total: total })
+                ];
+                if (ready > 0) {
+                    parts.push(tr('tools.onlineCardScore.draftSumLine', { sum: sum }));
+                }
+                if (data.draftComplete && sum !== 0) {
+                    parts.push(tr('tools.onlineCardScore.needZeroSum'));
+                } else if (data.canSettle) {
+                    parts.push(tr('tools.onlineCardScore.willSettle'));
+                } else {
+                    parts.push(tr('tools.onlineCardScore.autoSettleHint'));
+                }
+                draftHint.textContent = parts.join(' · ');
+            }
+        }
+    }
 
+    function renderTable(data) {
         var players = data.players || [];
         var rounds = data.rounds || [];
+        var draft = data.draftScores || {};
+        var sumLabel = R.escapeHtml(tr('tools.onlineCardScore.roundSum'));
 
         var head = '<tr><th>' + R.escapeHtml(tr('tools.onlineCardScore.round')) + '</th>';
         players.forEach(function (p) {
             head += '<th>' + R.escapeHtml(p.displayName) + '</th>';
         });
-        head += '</tr>';
+        head += '<th>' + sumLabel + '</th></tr>';
         scoreHead.innerHTML = head;
 
         var body = '';
         rounds.forEach(function (r) {
+            var rowSum = typeof r.sum === 'number' ? r.sum : 0;
             body += '<tr><td class="is-round">' + r.roundNo + '</td>';
             players.forEach(function (p) {
-                var n = (r.scores && r.scores[String(p.userId)]) || 0;
-                body += '<td class="' + scoreClass(n) + '">' + n + '</td>';
+                var n = (r.scores && r.scores[String(p.userId)]);
+                if (typeof n !== 'number') n = 0;
+                body += scoreCell(n);
             });
-            body += '</tr>';
+            body += scoreCell(rowSum) + '</tr>';
         });
+
+        var draftKeys = Object.keys(draft);
+        if (data.status !== 'finished' && draftKeys.length) {
+            body += '<tr class="ocs-draft-row"><td class="is-round">' +
+                R.escapeHtml(tr('tools.onlineCardScore.draftRound')) + '</td>';
+            players.forEach(function (p) {
+                var key = String(p.userId);
+                if (Object.prototype.hasOwnProperty.call(draft, key)) {
+                    body += scoreCell(draft[key]);
+                } else {
+                    body += '<td class="ocs-pending">—</td>';
+                }
+            });
+            body += scoreCell(data.draftSum || 0) + '</tr>';
+        }
         scoreBody.innerHTML = body || '';
 
         var foot = '<tr><td>' + R.escapeHtml(tr('tools.onlineCardScore.total')) + '</td>';
         players.forEach(function (p) {
-            foot += '<td class="' + scoreClass(p.total) + '">' + p.total + '</td>';
+            foot += scoreCell(p.total || 0);
         });
-        foot += '</tr>';
+        foot += '<td></td></tr>';
         scoreFoot.innerHTML = foot;
+    }
+
+    function canEditPlayer(data, player) {
+        if (data.isCreator) return true;
+        return String(player.userId) === String(data.viewerId);
+    }
+
+    function renderInputs(data, force) {
+        if (data.status === 'finished') {
+            roundInputs.innerHTML = '';
+            return;
+        }
+        if (!force && isEditingScore()) return;
+
+        var players = data.players || [];
+        var draft = data.draftScores || {};
+        var prevFocusUid = null;
+        var prevSelStart = null;
+        var prevSelEnd = null;
+        var ae = document.activeElement;
+        if (ae && ae.classList && ae.classList.contains('ocs-score-input')) {
+            prevFocusUid = ae.dataset.uid;
+            try {
+                prevSelStart = ae.selectionStart;
+                prevSelEnd = ae.selectionEnd;
+            } catch (e) { /* ignore */ }
+        }
 
         roundInputs.innerHTML = '';
-        if (data.status !== 'finished') {
-            var grid = document.createElement('div');
-            grid.className = 'ocs-score-grid';
-            players.forEach(function (p) {
-                var field = document.createElement('div');
-                field.className = 'rec-field';
-                field.innerHTML =
-                    '<label class="field-label"></label>' +
-                    '<input type="text" inputmode="numeric" class="rec-input ocs-score-input" value="0" />';
-                field.querySelector('label').textContent = p.displayName;
-                field.querySelector('input').dataset.uid = String(p.userId);
-                grid.appendChild(field);
-            });
+        var grid = document.createElement('div');
+        grid.className = 'ocs-score-grid';
+        players.forEach(function (p) {
+            if (!canEditPlayer(data, p)) return;
+            var field = document.createElement('div');
+            field.className = 'rec-field';
+            var key = String(p.userId);
+            var has = Object.prototype.hasOwnProperty.call(draft, key);
+            field.innerHTML =
+                '<label class="field-label"></label>' +
+                '<input type="text" inputmode="numeric" class="rec-input ocs-score-input" autocomplete="off" />';
+            var label = field.querySelector('label');
+            var mark = has ? ' ✓' : '';
+            label.textContent = p.displayName + mark;
+            var input = field.querySelector('input');
+            input.dataset.uid = key;
+            input.placeholder = tr('tools.onlineCardScore.scorePlaceholder');
+            input.value = has ? String(draft[key]) : '';
+            grid.appendChild(field);
+        });
+        if (!grid.children.length) {
+            var tip = document.createElement('p');
+            tip.className = 'rec-note';
+            tip.textContent = tr('tools.onlineCardScore.waitOthers');
+            roundInputs.appendChild(tip);
+        } else {
             roundInputs.appendChild(grid);
+        }
+
+        if (prevFocusUid) {
+            var restore = roundInputs.querySelector('.ocs-score-input[data-uid="' + prevFocusUid + '"]');
+            if (restore) {
+                restore.focus();
+                try {
+                    if (prevSelStart != null) restore.setSelectionRange(prevSelStart, prevSelEnd);
+                } catch (e2) { /* ignore */ }
+            }
         }
     }
 
+    function boardSig(data) {
+        return JSON.stringify({
+            id: data.id,
+            status: data.status,
+            updatedAt: data.updatedAt,
+            rounds: data.rounds,
+            draft: data.draftScores,
+            players: (data.players || []).map(function (p) {
+                return [p.userId, p.displayName, p.total, p.hasDraft];
+            }),
+            draftReadyCount: data.draftReadyCount,
+            draftSum: data.draftSum,
+            canSettle: data.canSettle
+        });
+    }
+
+    function renderBoard(data, opts) {
+        opts = opts || {};
+        var sig = boardSig(data);
+        var same = sig === lastBoardSig && !opts.forceInputs;
+        currentGame = data;
+        currentGameId = data.id;
+        lastBoardSig = sig;
+        if (same) return;
+        renderHeader(data);
+        renderTable(data);
+        renderInputs(data, !!opts.forceInputs);
+    }
+
     function refreshBoard(silent) {
-        if (!currentGameId) return Promise.resolve();
+        if (!currentGameId || pollInFlight) return Promise.resolve();
+        pollInFlight = true;
         return R.apiJson('/records/online-games/' + currentGameId)
             .then(function (data) {
-                renderBoard(data);
+                var sig = boardSig(data);
+                if (sig === lastBoardSig) {
+                    if (!silent) R.setError(boardError, '');
+                    return;
+                }
+                if (isEditingScore()) {
+                    currentGame = data;
+                    currentGameId = data.id;
+                    lastBoardSig = sig;
+                    renderHeader(data);
+                    renderTable(data);
+                } else {
+                    renderBoard(data);
+                }
                 if (!silent) R.setError(boardError, '');
             })
             .catch(function (e) {
                 if (!silent) R.setError(boardError, e.message);
-            });
+            })
+            .then(function () { pollInFlight = false; });
     }
 
     function openGame(id) {
@@ -204,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
         R.apiJson('/records/online-games/' + id)
             .then(function (data) {
                 showBoard();
-                renderBoard(data);
+                renderBoard(data, { forceInputs: true });
             })
             .catch(function (e) { R.setError(homeError, e.message); });
     }
@@ -227,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(function (data) {
                 showBoard();
-                renderBoard(data);
+                renderBoard(data, { forceInputs: true });
             })
             .catch(function (e) { R.setError(homeError, e.message); })
             .then(function () { setBusy(false); });
@@ -255,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(function (data) {
                 showBoard();
-                renderBoard(data);
+                renderBoard(data, { forceInputs: true });
             })
             .catch(function (e) { R.setError(homeError, e.message); })
             .then(function () { setBusy(false); });
@@ -282,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!currentGameId) return;
         if (!window.confirm(tr('tools.onlineCardScore.finishConfirm'))) return;
         R.apiJson('/records/online-games/' + currentGameId + '/finish', { method: 'POST' })
-            .then(function (data) { renderBoard(data); })
+            .then(function (data) { renderBoard(data, { forceInputs: true }); })
             .catch(function (e) { R.setError(boardError, e.message); });
     });
 
@@ -290,24 +441,39 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!currentGameId) return;
         var scores = {};
         var inputs = roundInputs.querySelectorAll('.ocs-score-input');
+        if (!inputs.length) {
+            R.setError(boardError, tr('tools.onlineCardScore.noEditable'));
+            return;
+        }
         for (var i = 0; i < inputs.length; i++) {
             var inp = inputs[i];
             var raw = String(inp.value || '').trim();
-            if (raw === '') raw = '0';
-            var n = parseInt(raw, 10);
-            if (!isFinite(n)) {
-                R.setError(boardError, tr('tools.onlineCardScore.invalidScore'));
+            if (raw === '') {
+                R.setError(boardError, tr('tools.onlineCardScore.needScore'));
+                inp.focus();
                 return;
             }
-            scores[inp.dataset.uid] = n;
+            if (!/^[+-]?\d+$/.test(raw)) {
+                R.setError(boardError, tr('tools.onlineCardScore.invalidScore'));
+                inp.focus();
+                return;
+            }
+            scores[inp.dataset.uid] = parseInt(raw, 10);
         }
         R.setError(boardError, '');
-        R.apiJson('/records/online-games/' + currentGameId + '/rounds', {
+        setBusy(true);
+        R.apiJson('/records/online-games/' + currentGameId + '/draft-scores', {
             method: 'POST',
             body: JSON.stringify({ scores: scores })
         })
-            .then(function (data) { renderBoard(data); })
-            .catch(function (e) { R.setError(boardError, e.message); });
+            .then(function (data) {
+                renderBoard(data, { forceInputs: true });
+                if (data.settled) {
+                    boardStatus.textContent = tr('tools.onlineCardScore.settled');
+                }
+            })
+            .catch(function (e) { R.setError(boardError, e.message); })
+            .then(function () { setBusy(false); });
     });
 
     window.addEventListener('beforeunload', stopPoll);

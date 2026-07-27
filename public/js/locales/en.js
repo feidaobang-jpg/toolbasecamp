@@ -525,8 +525,8 @@ window.TB_LOCALES.en = {
             desc: 'Contra-style side-scroller. Landscape view on desktop; mobile suggests landscape (not forced).'
         },
         superMario: {
-            title: 'Mushroom Quest',
-            desc: 'Side-scrolling platformer. Landscape view on desktop; mobile suggests landscape (not forced).'
+            title: 'Super Mario',
+            desc: 'Classic side-scrolling platformer: stomp Goombas, kick shells, collect coins, power-ups and reach the flagpole.'
         },
         steelBattle: {
             title: 'Steel Battle',
@@ -1302,12 +1302,15 @@ window.TB_LOCALES.en = {
             copyCode: 'Copy code',
             finish: 'Finish game',
             finishConfirm: 'Finish this game? No more scores can be added.',
-            addRound: 'Add round',
-            submitRound: 'Submit scores',
+            addRound: 'This round',
+            submitRound: 'Save scores',
             round: 'Round',
+            roundSum: 'Sum',
             total: 'Total',
             needName: 'Please enter a display name',
             needCode: 'Please enter a room code',
+            needScore: 'Please enter a score',
+            scorePlaceholder: 'Integer (may be negative)',
             invalidScore: 'Please enter valid integer scores',
             copied: 'Room code copied',
             polling: 'Auto-syncing',
@@ -1320,8 +1323,19 @@ window.TB_LOCALES.en = {
             roomFull: 'Room is full',
             gameFinished: 'Game already finished',
             onlyCreator: 'Only the host can finish the game',
+            onlyHostEdit: 'You can only edit your own score',
             missingScore: 'Enter a score for every player',
-            tooManyRounds: 'Too many rounds'
+            tooManyRounds: 'Too many rounds',
+            unknownPlayer: 'Player is not in this room',
+            draftRound: 'Pending',
+            draftProgress: 'Filled {ready}/{total}',
+            draftSumLine: 'Current sum {sum}',
+            needZeroSum: 'Sum must be 0 to settle',
+            willSettle: 'Sum is 0 — saving will settle this round',
+            autoSettleHint: 'Settles automatically when everyone is in and sum is 0',
+            settled: 'Settled — next round ready',
+            waitOthers: 'Waiting for other players…',
+            noEditable: 'No editable scores'
         },
         todoList: {
             title: 'To-Do (Task List)',
