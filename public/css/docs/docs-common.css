@@ -270,6 +270,10 @@
     gap: 8px;
 }
 
+.error-box.show {
+    display: flex;
+}
+
 /* 图片列表（图片转PDF用）*/
 .img-list {
     display: flex;

@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }, POLL_MS);
     }
 
+    function setBusy(on) {
+        homeView.classList.toggle('ocs-busy', !!on);
+        boardView.classList.toggle('ocs-busy', !!on);
+    }
+
     function showHome() {
         stopPoll();
         currentGameId = null;
@@ -208,9 +213,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var name = rememberName();
         if (!name) {
             R.setError(homeError, tr('tools.onlineCardScore.needName'));
+            displayName.focus();
             return;
         }
         R.setError(homeError, '');
+        setBusy(true);
         R.apiJson('/records/online-games', {
             method: 'POST',
             body: JSON.stringify({
@@ -222,7 +229,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 showBoard();
                 renderBoard(data);
             })
-            .catch(function (e) { R.setError(homeError, e.message); });
+            .catch(function (e) { R.setError(homeError, e.message); })
+            .then(function () { setBusy(false); });
     });
 
     document.getElementById('join-btn').addEventListener('click', function () {
@@ -230,13 +238,17 @@ document.addEventListener('DOMContentLoaded', function () {
         var code = joinCode.value.trim().toUpperCase();
         if (!name) {
             R.setError(homeError, tr('tools.onlineCardScore.needName'));
+            displayName.focus();
             return;
         }
         if (!code) {
             R.setError(homeError, tr('tools.onlineCardScore.needCode'));
+            joinCode.focus();
             return;
         }
+        joinCode.value = code;
         R.setError(homeError, '');
+        setBusy(true);
         R.apiJson('/records/online-games/join', {
             method: 'POST',
             body: JSON.stringify({ code: code, display_name: name })
@@ -245,7 +257,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 showBoard();
                 renderBoard(data);
             })
-            .catch(function (e) { R.setError(homeError, e.message); });
+            .catch(function (e) { R.setError(homeError, e.message); })
+            .then(function () { setBusy(false); });
     });
 
     document.getElementById('refresh-list-btn').addEventListener('click', loadList);

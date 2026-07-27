@@ -6,9 +6,9 @@
   <title>Online Card Score - Tool Basecamp</title>
   <meta name="description" content="Create a room, share the code, and sync scores by polling. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=5" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=8" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=8" />
-  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=1" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=2" />
 </head>
 <body>
   <div class="container">
@@ -49,9 +49,12 @@
             <button type="button" class="tb-btn" id="refresh-list-btn" data-i18n="tools.records.refresh">Refresh</button>
           </div>
           <div class="error-box" id="home-error" role="alert"></div>
-          <h2 class="rec-section-title" data-i18n="tools.onlineCardScore.myGames">My rooms</h2>
-          <div class="rec-list" id="game-list"></div>
-          <p class="rec-empty" id="game-empty" hidden data-i18n="tools.onlineCardScore.empty">No rooms yet.</p>
+
+          <div class="ocs-home-split">
+            <h2 class="rec-section-title" data-i18n="tools.onlineCardScore.myGames">My rooms</h2>
+            <div class="rec-list" id="game-list"></div>
+            <p class="rec-empty" id="game-empty" hidden data-i18n="tools.onlineCardScore.empty">No rooms yet.</p>
+          </div>
         </div>
 
         <div class="tool-card" id="board-view" hidden>
@@ -91,6 +94,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=3"></script>
-  <script src="../../js/record/online-card-score.js?v=1"></script>
+  <script src="../../js/record/online-card-score.js?v=2"></script>
 </body>
 </html>
