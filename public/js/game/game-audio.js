@@ -89,12 +89,12 @@
         } catch (e) { /* ignore */ }
     }
 
-    /** @param {boolean} fromResume - context just resumed after suspend; re-kick BGM */
+    /** @param {boolean} fromResume - true only right after ctx.resume() from suspended */
     function afterUnlock(fromResume) {
         if (!ctx || ctx.state !== 'running') return;
         applyMasterGain();
         if (bgmWanted && !muted) {
-            // After suspend / page switch, scheduler may be dead — always re-kick on resume
+            // Only start/restart when nothing is playing, or after a real suspend→resume
             if (!bgmTimer || fromResume) startBgmInternal();
         }
         if (pendingSfx) {
@@ -107,6 +107,7 @@
     /**
      * Call from pointerdown/click. Creates AudioContext only while the browser
      * still has a user gesture (avoids console warning + silent failure).
+     * Subsequent clicks are no-ops once audio is running with BGM (do not restart music).
      */
     function unlock() {
         if (!gestureActive()) return Promise.resolve();
@@ -114,8 +115,8 @@
         var c = ensure(true);
         if (!c) return Promise.resolve();
         if (c.state === 'running') {
-            // Still re-kick BGM: after navigating games, timer can be null while ctx "running"
-            afterUnlock(true);
+            // Already live: flush pending SFX / start BGM only if missing — never restart loop
+            afterUnlock(false);
             return Promise.resolve();
         }
         if (resumeInFlight) return resumeInFlight;
@@ -705,7 +706,18 @@
     function bindGestureUnlock() {
         if (gestureUnlockBound) return;
         gestureUnlockBound = true;
-        var kick = function () { unlock(); };
+        var kick = function () {
+            // Fast path: already unlocked & playing — skip unlock (avoids menu-click BGM restarts)
+            if (unlocked && ctx && ctx.state === 'running' && (!bgmWanted || muted || bgmTimer)) {
+                if (pendingSfx && !muted) {
+                    var name = pendingSfx;
+                    pendingSfx = null;
+                    playSfxNow(name);
+                }
+                return;
+            }
+            unlock();
+        };
         document.addEventListener('pointerdown', kick, { capture: true, passive: true });
         document.addEventListener('touchstart', kick, { capture: true, passive: true });
         document.addEventListener('keydown', kick, { capture: true });
