@@ -147,10 +147,66 @@
     }
 
     function requireLogin(gateEl, contentEl) {
+        function showLoginGate() {
+            if (gateEl) {
+                gateEl.hidden = false;
+                var p = gateEl.querySelector('p');
+                if (p) p.setAttribute('data-i18n', 'tools.records.loginRequired');
+                if (p && typeof global.t === 'function') p.textContent = tr('tools.records.loginRequired');
+                var link = gateEl.querySelector('a.tb-btn, #login-link');
+                if (link) {
+                    link.hidden = false;
+                    link.textContent = tr('auth.login');
+                    link.href = loginUrl();
+                }
+                var retry = gateEl.querySelector('[data-act="retry"]');
+                if (retry) retry.hidden = true;
+            }
+            if (contentEl) contentEl.hidden = true;
+        }
+
+        function showServiceGate() {
+            if (gateEl) {
+                gateEl.hidden = false;
+                var p = gateEl.querySelector('p');
+                if (p) {
+                    p.removeAttribute('data-i18n');
+                    p.textContent = tr('tools.records.serviceUnavailable');
+                }
+                var link = gateEl.querySelector('a.tb-btn, #login-link');
+                if (link) link.hidden = true;
+                var retry = gateEl.querySelector('[data-act="retry"]');
+                if (!retry) {
+                    var row = gateEl.querySelector('.action-row') || gateEl;
+                    retry = document.createElement('button');
+                    retry.type = 'button';
+                    retry.className = 'tb-btn';
+                    retry.setAttribute('data-act', 'retry');
+                    retry.addEventListener('click', function () {
+                        window.location.reload();
+                    });
+                    row.appendChild(retry);
+                }
+                retry.hidden = false;
+                retry.textContent = tr('tools.records.retry');
+            }
+            if (contentEl) contentEl.hidden = true;
+        }
+
         return authFetch('/auth/me').then(function (res) {
             if (res.status === 401 || res.status === 403) {
-                if (gateEl) gateEl.hidden = false;
-                if (contentEl) contentEl.hidden = true;
+                showLoginGate();
+                return null;
+            }
+            if (res.status === 502 || res.status === 503 || res.status === 504 || res.status >= 500) {
+                // Token still valid; do not pretend the user logged out.
+                if (getToken()) showServiceGate();
+                else showLoginGate();
+                return null;
+            }
+            if (!res.ok) {
+                if (getToken()) showServiceGate();
+                else showLoginGate();
                 return null;
             }
             return res.json().then(function (user) {
@@ -159,8 +215,8 @@
                 return user;
             });
         }).catch(function () {
-            if (gateEl) gateEl.hidden = false;
-            if (contentEl) contentEl.hidden = true;
+            if (getToken()) showServiceGate();
+            else showLoginGate();
             return null;
         });
     }

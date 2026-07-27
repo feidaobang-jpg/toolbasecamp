@@ -155,9 +155,21 @@
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(async (res) => {
-                if (check502Error(res)) throw new Error('Backend service unavailable');
+                if (res.status === 502 || res.status === 503 || res.status === 504) {
+                    if (check502Error(res)) throw new Error('Backend service unavailable');
+                    throw new Error('Backend service unavailable');
+                }
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+                if (res.status === 401 || res.status === 403) {
+                    const err = new Error(data.detail || 'Unauthorized');
+                    err.authFailed = true;
+                    throw err;
+                }
+                if (!res.ok) {
+                    const err = new Error(data.detail || `HTTP ${res.status}`);
+                    err.httpStatus = res.status;
+                    throw err;
+                }
                 return data;
             })
             .then((data) => {
@@ -175,7 +187,17 @@
                 }
             })
             .catch((error) => {
-                if (error.message === 'Backend service unavailable') return;
+                // Keep session on outage / network blips; only clear token on real auth failure.
+                if (error && (error.message === 'Backend service unavailable' || error.name === 'TypeError')) {
+                    return;
+                }
+                if (error && error.httpStatus && error.httpStatus >= 500) {
+                    return;
+                }
+                if (!(error && error.authFailed)) {
+                    // Unknown non-auth error: do not wipe login
+                    return;
+                }
                 localStorage.removeItem(tokenKey);
                 if (wrap && userEl && logoutBtn) {
                     wrap.innerHTML = '';

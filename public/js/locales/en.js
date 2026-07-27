@@ -1402,6 +1402,7 @@ window.TB_LOCALES.en = {
             ratingRange: 'Rating must be an integer from 0 to 5',
             networkError: 'Network error. Please try again.',
             serviceUnavailable: 'Service temporarily unavailable. Please try again later.',
+            retry: 'Retry',
             unknownError: 'Something went wrong. Please try again.'
         },
         importantDays: {
