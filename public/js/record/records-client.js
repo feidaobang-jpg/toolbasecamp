@@ -88,6 +88,16 @@
             'rent_amount must be greater than 0': 'tools.records.amountPositive',
             'Invalid rent_amount': 'tools.records.invalidAmount',
             'Invalid tenant_name': 'tools.rent.invalidTenant',
+            'Invalid display_name': 'tools.onlineCardScore.needName',
+            'Invalid room code': 'tools.onlineCardScore.needCode',
+            'Room not found': 'tools.onlineCardScore.roomNotFound',
+            'Room is full': 'tools.onlineCardScore.roomFull',
+            'Game already finished': 'tools.onlineCardScore.gameFinished',
+            'Only creator can finish': 'tools.onlineCardScore.onlyCreator',
+            'Missing player score': 'tools.onlineCardScore.missingScore',
+            'Invalid score': 'tools.onlineCardScore.invalidScore',
+            'Too many rounds': 'tools.onlineCardScore.tooManyRounds',
+            'Score too large': 'tools.onlineCardScore.invalidScore',
             'Invalid status': 'tools.todoList.invalidStatus'
         };
         if (map[msg]) return tr(map[msg]);

@@ -1,0 +1,97 @@
+.ocs-code-line {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: #1d4ed8;
+}
+
+.ocs-status-line {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.ocs-table-wrap {
+  overflow-x: auto;
+  margin: 12px 0 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.ocs-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 320px;
+  font-size: 14px;
+}
+
+.ocs-table th,
+.ocs-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+  white-space: nowrap;
+}
+
+.ocs-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #334155;
+}
+
+.ocs-table td.is-round {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.ocs-table .is-pos {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.ocs-table .is-neg {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.ocs-table tfoot td {
+  background: #eff6ff;
+  font-weight: 700;
+  border-bottom: none;
+}
+
+.ocs-round-form .rec-field {
+  margin-bottom: 12px;
+}
+
+.ocs-round-form .ocs-score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ocs-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.ocs-badge.is-open,
+.ocs-badge.is-playing {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.ocs-badge.is-finished {
+  color: #64748b;
+  background: #f1f5f9;
+}
+
+.ocs-game-item .rec-item-meta {
+  font-size: 14px;
+}

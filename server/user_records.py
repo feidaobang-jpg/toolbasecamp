@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import calendar
+import json
 import re
+import secrets
 from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from typing import Any, Dict, List, Optional, Tuple
@@ -238,6 +240,54 @@ def ensure_record_tables(cur):
             INDEX idx_rent_pay_rent (rent_id),
             FOREIGN KEY (rent_id) REFERENCES record_rents(id) ON DELETE CASCADE,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_online_games (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            code CHAR(6) NOT NULL,
+            name VARCHAR(80) NOT NULL,
+            creator_id BIGINT NOT NULL,
+            status VARCHAR(16) NOT NULL DEFAULT 'open',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_online_game_code (code),
+            INDEX idx_online_games_creator (creator_id),
+            INDEX idx_online_games_status (status),
+            FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_online_game_players (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            game_id BIGINT NOT NULL,
+            user_id BIGINT NOT NULL,
+            display_name VARCHAR(40) NOT NULL,
+            joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_online_game_player (game_id, user_id),
+            INDEX idx_online_players_user (user_id),
+            FOREIGN KEY (game_id) REFERENCES record_online_games(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS record_online_game_rounds (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            game_id BIGINT NOT NULL,
+            round_no INT NOT NULL,
+            scores_json TEXT NOT NULL,
+            created_by BIGINT NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_online_round (game_id, round_no),
+            INDEX idx_online_rounds_game (game_id),
+            FOREIGN KEY (game_id) REFERENCES record_online_games(id) ON DELETE CASCADE,
+            FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
@@ -1306,6 +1356,361 @@ def delete_rent_payment(rent_id: int, payment_id: int, user: dict = Depends(_use
             )
             pays = [_serialize_rent_payment(p) for p in (cur.fetchall() or [])]
         return _serialize_rent(row, paid_periods=periods, payments=pays)
+    finally:
+        conn.close()
+
+
+# ---------- Online card score (room code + poll) ----------
+
+ONLINE_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+ONLINE_NAME_MAX = 80
+ONLINE_PLAYER_NAME_MAX = 40
+ONLINE_MAX_PLAYERS = 8
+ONLINE_MAX_ROUNDS = 80
+ONLINE_SCORE_ABS_MAX = 999999
+
+
+class OnlineGameCreateBody(BaseModel):
+    name: str = ""
+    display_name: str
+
+
+class OnlineGameJoinBody(BaseModel):
+    code: str
+    display_name: str
+
+
+class OnlineRoundBody(BaseModel):
+    scores: Dict[str, int]
+
+
+def _gen_online_code(cur) -> str:
+    for _ in range(40):
+        code = "".join(secrets.choice(ONLINE_CODE_ALPHABET) for _ in range(6))
+        cur.execute("SELECT id FROM record_online_games WHERE code=%s", (code,))
+        if not cur.fetchone():
+            return code
+    raise HTTPException(status_code=500, detail="Could not allocate room code")
+
+
+def _parse_display_name(raw: Any) -> str:
+    name = (str(raw or "")).strip()
+    if not name or len(name) > ONLINE_PLAYER_NAME_MAX:
+        raise HTTPException(status_code=400, detail="Invalid display_name")
+    return name
+
+
+def _player_in_game(cur, *, game_id: int, user_id: int) -> Optional[dict]:
+    cur.execute(
+        """
+        SELECT * FROM record_online_game_players
+        WHERE game_id=%s AND user_id=%s
+        """,
+        (game_id, user_id),
+    )
+    return cur.fetchone()
+
+
+def _load_online_game(cur, game_id: int) -> dict:
+    cur.execute("SELECT * FROM record_online_games WHERE id=%s", (game_id,))
+    game = cur.fetchone()
+    if not game:
+        raise HTTPException(status_code=404, detail="Not found")
+    cur.execute(
+        """
+        SELECT * FROM record_online_game_players
+        WHERE game_id=%s
+        ORDER BY joined_at ASC, id ASC
+        """,
+        (game_id,),
+    )
+    players = cur.fetchall() or []
+    cur.execute(
+        """
+        SELECT * FROM record_online_game_rounds
+        WHERE game_id=%s
+        ORDER BY round_no ASC
+        """,
+        (game_id,),
+    )
+    round_rows = cur.fetchall() or []
+    rounds = []
+    totals: Dict[str, int] = {str(p["user_id"]): 0 for p in players}
+    for row in round_rows:
+        try:
+            scores = json.loads(row["scores_json"] or "{}")
+        except json.JSONDecodeError:
+            scores = {}
+        clean = {}
+        for k, v in (scores or {}).items():
+            try:
+                n = int(v)
+            except (TypeError, ValueError):
+                n = 0
+            clean[str(k)] = n
+            if str(k) in totals:
+                totals[str(k)] += n
+        rounds.append(
+            {
+                "id": row["id"],
+                "roundNo": int(row["round_no"]),
+                "scores": clean,
+                "createdBy": row["created_by"],
+                "createdAt": _iso(row.get("created_at")),
+            }
+        )
+    return {
+        "id": game["id"],
+        "code": game["code"],
+        "name": game["name"],
+        "status": game["status"],
+        "creatorId": game["creator_id"],
+        "createdAt": _iso(game.get("created_at")),
+        "updatedAt": _iso(game.get("updated_at")),
+        "players": [
+            {
+                "userId": p["user_id"],
+                "displayName": p["display_name"],
+                "joinedAt": _iso(p.get("joined_at")),
+                "total": totals.get(str(p["user_id"]), 0),
+            }
+            for p in players
+        ],
+        "rounds": rounds,
+        "roundCount": len(rounds),
+    }
+
+
+@router.get("/online-games")
+def list_online_games(user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT g.*
+                FROM record_online_games g
+                INNER JOIN record_online_game_players p ON p.game_id = g.id
+                WHERE p.user_id=%s
+                ORDER BY g.updated_at DESC, g.id DESC
+                LIMIT 40
+                """,
+                (user["id"],),
+            )
+            rows = cur.fetchall() or []
+            items = []
+            for g in rows:
+                cur.execute(
+                    "SELECT COUNT(*) AS c FROM record_online_game_players WHERE game_id=%s",
+                    (g["id"],),
+                )
+                pc = int((cur.fetchone() or {}).get("c") or 0)
+                items.append(
+                    {
+                        "id": g["id"],
+                        "code": g["code"],
+                        "name": g["name"],
+                        "status": g["status"],
+                        "creatorId": g["creator_id"],
+                        "isCreator": g["creator_id"] == user["id"],
+                        "playerCount": pc,
+                        "updatedAt": _iso(g.get("updated_at")),
+                    }
+                )
+        return {"items": items}
+    finally:
+        conn.close()
+
+
+@router.post("/online-games")
+def create_online_game(body: OnlineGameCreateBody, user: dict = Depends(_user)):
+    display = _parse_display_name(body.display_name)
+    name = (body.name or "").strip() or f"{display}'s game"
+    if len(name) > ONLINE_NAME_MAX:
+        raise HTTPException(status_code=400, detail="Invalid name")
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            code = _gen_online_code(cur)
+            cur.execute(
+                """
+                INSERT INTO record_online_games (code, name, creator_id, status)
+                VALUES (%s, %s, %s, 'open')
+                """,
+                (code, name, user["id"]),
+            )
+            game_id = cur.lastrowid
+            cur.execute(
+                """
+                INSERT INTO record_online_game_players (game_id, user_id, display_name)
+                VALUES (%s, %s, %s)
+                """,
+                (game_id, user["id"], display),
+            )
+            data = _load_online_game(cur, game_id)
+            data["youAreIn"] = True
+            data["isCreator"] = True
+        return data
+    finally:
+        conn.close()
+
+
+@router.post("/online-games/join")
+def join_online_game(body: OnlineGameJoinBody, user: dict = Depends(_user)):
+    code = (body.code or "").strip().upper()
+    if not re.fullmatch(r"[A-Z0-9]{6}", code):
+        raise HTTPException(status_code=400, detail="Invalid room code")
+    display = _parse_display_name(body.display_name)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM record_online_games WHERE code=%s ORDER BY id DESC LIMIT 1",
+                (code,),
+            )
+            game = cur.fetchone()
+            if not game:
+                raise HTTPException(status_code=404, detail="Room not found")
+            if game["status"] == "finished":
+                raise HTTPException(status_code=400, detail="Game already finished")
+            existing = _player_in_game(cur, game_id=game["id"], user_id=user["id"])
+            if existing:
+                cur.execute(
+                    """
+                    UPDATE record_online_game_players
+                    SET display_name=%s
+                    WHERE id=%s
+                    """,
+                    (display, existing["id"]),
+                )
+            else:
+                cur.execute(
+                    "SELECT COUNT(*) AS c FROM record_online_game_players WHERE game_id=%s",
+                    (game["id"],),
+                )
+                if int((cur.fetchone() or {}).get("c") or 0) >= ONLINE_MAX_PLAYERS:
+                    raise HTTPException(status_code=400, detail="Room is full")
+                cur.execute(
+                    """
+                    INSERT INTO record_online_game_players (game_id, user_id, display_name)
+                    VALUES (%s, %s, %s)
+                    """,
+                    (game["id"], user["id"], display),
+                )
+            cur.execute(
+                "UPDATE record_online_games SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
+                (game["id"],),
+            )
+            data = _load_online_game(cur, game["id"])
+            data["youAreIn"] = True
+            data["isCreator"] = game["creator_id"] == user["id"]
+        return data
+    finally:
+        conn.close()
+
+
+@router.get("/online-games/{game_id}")
+def get_online_game(game_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            if not _player_in_game(cur, game_id=game_id, user_id=user["id"]):
+                raise HTTPException(status_code=404, detail="Not found")
+            data = _load_online_game(cur, game_id)
+            data["youAreIn"] = True
+            data["isCreator"] = data["creatorId"] == user["id"]
+        return data
+    finally:
+        conn.close()
+
+
+@router.post("/online-games/{game_id}/rounds")
+def add_online_round(game_id: int, body: OnlineRoundBody, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            if not _player_in_game(cur, game_id=game_id, user_id=user["id"]):
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute("SELECT * FROM record_online_games WHERE id=%s", (game_id,))
+            game = cur.fetchone()
+            if not game:
+                raise HTTPException(status_code=404, detail="Not found")
+            if game["status"] == "finished":
+                raise HTTPException(status_code=400, detail="Game already finished")
+            cur.execute(
+                "SELECT user_id FROM record_online_game_players WHERE game_id=%s",
+                (game_id,),
+            )
+            player_ids = {str(r["user_id"]) for r in (cur.fetchall() or [])}
+            raw = body.scores or {}
+            clean: Dict[str, int] = {}
+            for pid in player_ids:
+                if pid not in raw:
+                    raise HTTPException(status_code=400, detail="Missing player score")
+                try:
+                    n = int(raw[pid])
+                except (TypeError, ValueError) as exc:
+                    raise HTTPException(status_code=400, detail="Invalid score") from exc
+                if abs(n) > ONLINE_SCORE_ABS_MAX:
+                    raise HTTPException(status_code=400, detail="Score too large")
+                clean[pid] = n
+            cur.execute(
+                "SELECT COALESCE(MAX(round_no), 0) AS m FROM record_online_game_rounds WHERE game_id=%s",
+                (game_id,),
+            )
+            next_round = int((cur.fetchone() or {}).get("m") or 0) + 1
+            if next_round > ONLINE_MAX_ROUNDS:
+                raise HTTPException(status_code=400, detail="Too many rounds")
+            cur.execute(
+                """
+                INSERT INTO record_online_game_rounds (game_id, round_no, scores_json, created_by)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (game_id, next_round, json.dumps(clean, ensure_ascii=False), user["id"]),
+            )
+            if game["status"] == "open":
+                cur.execute(
+                    "UPDATE record_online_games SET status='playing', updated_at=CURRENT_TIMESTAMP WHERE id=%s",
+                    (game_id,),
+                )
+            else:
+                cur.execute(
+                    "UPDATE record_online_games SET updated_at=CURRENT_TIMESTAMP WHERE id=%s",
+                    (game_id,),
+                )
+            data = _load_online_game(cur, game_id)
+            data["youAreIn"] = True
+            data["isCreator"] = data["creatorId"] == user["id"]
+        return data
+    finally:
+        conn.close()
+
+
+@router.post("/online-games/{game_id}/finish")
+def finish_online_game(game_id: int, user: dict = Depends(_user)):
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM record_online_games WHERE id=%s", (game_id,))
+            game = cur.fetchone()
+            if not game:
+                raise HTTPException(status_code=404, detail="Not found")
+            if game["creator_id"] != user["id"]:
+                raise HTTPException(status_code=403, detail="Only creator can finish")
+            if not _player_in_game(cur, game_id=game_id, user_id=user["id"]):
+                raise HTTPException(status_code=404, detail="Not found")
+            cur.execute(
+                """
+                UPDATE record_online_games
+                SET status='finished', updated_at=CURRENT_TIMESTAMP
+                WHERE id=%s
+                """,
+                (game_id,),
+            )
+            data = _load_online_game(cur, game_id)
+            data["youAreIn"] = True
+            data["isCreator"] = True
+        return data
     finally:
         conn.close()
 

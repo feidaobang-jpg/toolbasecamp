@@ -566,6 +566,7 @@ def health():
         "records_api": "/records/days" in paths,
         "records_todos": "/records/todos" in paths,
         "records_rents": "/records/rents" in paths,
+        "records_online_games": "/records/online-games" in paths,
         "records_rent_pay_rev": RENT_PAY_REV,
         "records_rent_due_max": RENT_DUE_DAY_MAX,
         "records_clock_reset": "/records/clocks/{clock_id}/reset" in paths,

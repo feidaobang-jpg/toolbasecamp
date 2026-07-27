@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Card Score - Tool Basecamp</title>
+  <meta name="description" content="Create a room, share the code, and sync scores by polling. Requires sign-in.">
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/record/records-common.css?v=8" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.onlineCardScore.title">Online Card Score</h1>
+        <p data-i18n="tools.onlineCardScore.desc">Share a room code with friends. Scores sync every few seconds. Requires sign-in.</p>
+      </div>
+
+      <div class="tool-card rec-gate" id="login-gate" hidden>
+        <p data-i18n="tools.records.loginRequired">Please sign in to use this tool. Your data is saved to your account.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card" id="home-view">
+          <p class="rec-note" data-i18n="tools.onlineCardScore.pollNote">Everyone must be signed in. The board refreshes automatically about every 3 seconds.</p>
+          <div class="rec-field">
+            <label class="field-label" for="display-name" data-i18n="tools.onlineCardScore.displayName">Your name at the table</label>
+            <input type="text" id="display-name" class="rec-input" maxlength="40" autocomplete="nickname" />
+          </div>
+          <div class="rec-field">
+            <label class="field-label" for="game-name" data-i18n="tools.onlineCardScore.gameName">Game name (optional)</label>
+            <input type="text" id="game-name" class="rec-input" maxlength="80" autocomplete="off" />
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="create-btn" data-i18n="tools.onlineCardScore.create">Create room</button>
+          </div>
+          <div class="rec-field" style="margin-top:18px">
+            <label class="field-label" for="join-code" data-i18n="tools.onlineCardScore.roomCode">Room code</label>
+            <input type="text" id="join-code" class="rec-input" maxlength="6" autocomplete="off" style="text-transform:uppercase" />
+          </div>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="join-btn" data-i18n="tools.onlineCardScore.join">Join room</button>
+            <button type="button" class="tb-btn" id="refresh-list-btn" data-i18n="tools.records.refresh">Refresh</button>
+          </div>
+          <div class="error-box" id="home-error" role="alert"></div>
+          <h2 class="rec-section-title" data-i18n="tools.onlineCardScore.myGames">My rooms</h2>
+          <div class="rec-list" id="game-list"></div>
+          <p class="rec-empty" id="game-empty" hidden data-i18n="tools.onlineCardScore.empty">No rooms yet.</p>
+        </div>
+
+        <div class="tool-card" id="board-view" hidden>
+          <div class="rec-toolbar">
+            <button type="button" class="tb-btn" id="back-btn" data-i18n="tools.records.back">Back</button>
+            <button type="button" class="tb-btn" id="copy-code-btn" data-i18n="tools.onlineCardScore.copyCode">Copy code</button>
+            <button type="button" class="tb-btn" id="finish-btn" hidden data-i18n="tools.onlineCardScore.finish">Finish</button>
+          </div>
+          <h2 class="rec-section-title" id="board-title"></h2>
+          <p class="ocs-code-line" id="board-code"></p>
+          <p class="ocs-status-line" id="board-status"></p>
+          <div class="error-box" id="board-error" role="alert"></div>
+
+          <div class="ocs-table-wrap">
+            <table class="ocs-table" id="score-table">
+              <thead id="score-head"></thead>
+              <tbody id="score-body"></tbody>
+              <tfoot id="score-foot"></tfoot>
+            </table>
+          </div>
+
+          <div id="round-form" class="ocs-round-form">
+            <h3 class="rec-section-title" data-i18n="tools.onlineCardScore.addRound">Add round</h3>
+            <div id="round-inputs"></div>
+            <div class="action-row">
+              <button type="button" class="tb-btn" id="submit-round-btn" data-i18n="tools.onlineCardScore.submitRound">Submit scores</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js?v=ocs1"></script>
+  <script src="../../js/locales/zh-CN.js?v=ocs1"></script>
+  <script src="../../js/i18n.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/record/records-client.js?v=3"></script>
+  <script src="../../js/record/online-card-score.js?v=1"></script>
+</body>
+</html>
