@@ -48,6 +48,13 @@
   line-height: 1.45;
 }
 
+.ocs-table-legend {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
 .ocs-table-wrap {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -129,23 +136,6 @@
 
 .ocs-table tr.ocs-draft-row td {
   background: #fffbeb;
-}
-
-.ocs-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  background: #f9fafb;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 0 2px;
-  height: 32px;
-}
-
-.ocs-table thead th.ocs-head-round,
-.ocs-table thead th.ocs-head-sum {
-  color: #475569;
 }
 
 .ocs-table tfoot td {
