@@ -61,21 +61,35 @@
 .ocs-table {
   width: 100%;
   table-layout: fixed;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 280px;
   font-size: 14px;
 }
 
+/* 只画右/下边，与外框连成单线网格，避免每格四边叠成双线 */
 .ocs-table th,
 .ocs-table td {
   padding: 0 4px;
   height: 40px;
   text-align: center;
   vertical-align: middle;
-  border: 1px solid #ddd;
+  border: none;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   white-space: nowrap;
   background: #fff;
+  background-clip: padding-box;
   box-sizing: border-box;
+}
+
+.ocs-table th:last-child,
+.ocs-table td:last-child {
+  border-right: none;
+}
+
+.ocs-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .ocs-table td:first-child,
@@ -110,7 +124,7 @@
 
 .ocs-round-no {
   color: #64748b;
-  background: #fff;
+  background: transparent;
 }
 
 .ocs-round-sum {
@@ -141,7 +155,7 @@
 }
 
 .ocs-table tr.ocs-draft-row .ocs-round-no {
-  background: #fffbeb;
+  background: transparent;
 }
 
 .ocs-table tfoot td {
@@ -154,6 +168,7 @@
   background: #f9fafb;
   font-weight: 600;
   color: #334155;
+  border-bottom: none;
 }
 
 .ocs-table tfoot tr.ocs-foot-total td {
@@ -161,12 +176,18 @@
   background: #fff;
   font-weight: 700;
   color: #111827;
+  /* sticky 会盖住上方横线，用内阴影补回 */
+  box-shadow: inset 0 1px 0 #ddd;
 }
 
 .ocs-table tfoot td.ocs-foot-label {
   color: #374151;
   font-weight: 500;
   font-size: 13px;
+  background: #f9fafb;
+}
+
+.ocs-table tfoot tr.ocs-foot-total td.ocs-foot-label {
   background: #f9fafb;
 }
 

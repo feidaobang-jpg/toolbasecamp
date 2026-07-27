@@ -68,15 +68,22 @@
 
 .card-score-footer {
   flex-shrink: 0;
-  border-top: 1px solid #ddd;
+  border-top: none;
   background: #fff;
   overflow: hidden;
   position: sticky;
   bottom: 0;
   z-index: 2;
+  /* 与上方分数区单线衔接，避免 sticky 盖边 + 双线断开 */
+  box-shadow: inset 0 1px 0 #ddd;
 }
 
 .card-score-grid-scores {
+  border-bottom: none;
+}
+
+.card-score-grid-scores .card-score-left .card-score-cell:last-child,
+.card-score-grid-scores .card-score-player-col .card-score-cell:last-child {
   border-bottom: none;
 }
 
@@ -87,6 +94,18 @@
 .card-score-grid-footer .card-score-left .card-score-cell:first-child,
 .card-score-grid-footer .card-score-player-col > *:first-child {
   border-top: none;
+}
+
+/* 末列不画右边框，避免与外框叠成双线 */
+.card-score-players .card-score-player-col:last-child .card-score-cell,
+.card-score-players .card-score-player-col:last-child .card-score-name-input,
+.card-score-players .card-score-player-col:last-child .card-score-delete-btn {
+  border-right: none;
+}
+
+.card-score-grid-footer .card-score-left .card-score-cell:last-child,
+.card-score-grid-footer .card-score-player-col > *:last-child {
+  border-bottom: none;
 }
 
 .card-score-grid {
