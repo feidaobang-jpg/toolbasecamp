@@ -221,6 +221,29 @@ document.addEventListener('DOMContentLoaded', function () {
         ocsKeyboardDisplay.textContent = v || tr('tools.onlineCardScore.keyboardPlaceholder');
     }
 
+    function syncKeyboardInset() {
+        var h = 0;
+        if (keyboardOpen && ocsKeyboard) {
+            h = ocsKeyboard.offsetHeight || 0;
+        }
+        document.documentElement.style.setProperty('--ocs-kb-h', h > 0 ? (h + 'px') : '0px');
+        if (boardView) boardView.classList.toggle('ocs-kb-open', keyboardOpen && h > 0);
+    }
+
+    function ensureSubmitVisible() {
+        var btn = document.getElementById('submit-round-btn');
+        if (!btn || btn.hidden || !keyboardOpen) return;
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                try {
+                    btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                } catch (e) {
+                    try { btn.scrollIntoView(false); } catch (e2) { /* ignore */ }
+                }
+            });
+        });
+    }
+
     function hideScoreKeyboard() {
         keyboardOpen = false;
         if (activeScoreInput) activeScoreInput.classList.remove('is-active');
@@ -230,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ocsKeyboard.setAttribute('aria-hidden', 'true');
         }
         if (roundForm) roundForm.classList.remove('keyboard-open');
+        syncKeyboardInset();
     }
 
     function openScoreKeyboard(input) {
@@ -244,9 +268,12 @@ document.addEventListener('DOMContentLoaded', function () {
         ocsKeyboard.setAttribute('aria-hidden', 'false');
         if (roundForm) roundForm.classList.add('keyboard-open');
         updateKeyboardDisplay();
-        try {
-            input.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        } catch (e) { /* ignore */ }
+        syncKeyboardInset();
+        ensureSubmitVisible();
+        setTimeout(function () {
+            syncKeyboardInset();
+            ensureSubmitVisible();
+        }, 260);
     }
 
     function onScoreKey(key) {

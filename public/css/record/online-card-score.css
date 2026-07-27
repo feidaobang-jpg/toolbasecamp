@@ -151,7 +151,20 @@
 }
 
 .ocs-round-form.keyboard-open {
-  padding-bottom: 220px;
+  padding-bottom: 0;
+}
+
+#board-view.ocs-kb-open {
+  padding-bottom: calc(var(--ocs-kb-h, 280px) + 12px);
+}
+
+#board-view.ocs-kb-open .ocs-submit-row {
+  position: sticky;
+  bottom: var(--ocs-kb-h, 280px);
+  z-index: 900;
+  background: #fff;
+  padding: 10px 0 8px;
+  margin-top: 4px;
 }
 
 .ocs-keyboard {
