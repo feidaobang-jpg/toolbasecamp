@@ -28,6 +28,11 @@
   flex: 0 0 auto;
 }
 
+.rec-toolbar .tb-btn[hidden],
+.tb-btn[hidden] {
+  display: none !important;
+}
+
 .rec-check {
   display: flex;
   align-items: center;

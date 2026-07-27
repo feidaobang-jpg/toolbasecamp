@@ -206,6 +206,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return meId;
     }
 
+    function isRoomCreator(data) {
+        if (!data) return false;
+        var cid = Number(data.creatorId);
+        var vid = Number(myViewerId(data));
+        if (Number.isFinite(cid) && Number.isFinite(vid) && cid > 0 && vid > 0) {
+            return cid === vid;
+        }
+        return !!data.isCreator;
+    }
+
     function appendGameItem(listEl, item) {
         var el = document.createElement('div');
         el.className = 'rec-item ocs-game-item';
@@ -216,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '</div>' +
             '<div class="rec-item-actions">' +
             '<button type="button" class="tb-btn" data-act="open"></button>' +
-            (item.isCreator ? '<button type="button" class="tb-btn" data-act="del"></button>' : '') +
+            (item.isCreator || isRoomCreator(item) ? '<button type="button" class="tb-btn" data-act="del"></button>' : '') +
             '</div>';
         el.querySelector('.rec-item-title').textContent = formatRoomTitle(item.name);
         el.querySelector('.rec-item-meta').textContent =
@@ -248,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var created = [];
         var joined = [];
         (items || []).forEach(function (item) {
-            if (item.isCreator) created.push(item);
+            if (item.isCreator || isRoomCreator(item)) created.push(item);
             else joined.push(item);
         });
         created.forEach(function (item) { appendGameItem(createdList, item); });
@@ -283,8 +293,9 @@ document.addEventListener('DOMContentLoaded', function () {
             tr('tools.onlineCardScore.playerCount', { count: (data.players || []).length }) +
             ' · ' +
             tr('tools.onlineCardScore.polling');
-        finishBtn.hidden = !(data.isCreator && data.status !== 'finished');
-        if (deleteBtn) deleteBtn.hidden = !data.isCreator;
+        var creator = isRoomCreator(data);
+        finishBtn.hidden = !(creator && data.status !== 'finished');
+        if (deleteBtn) deleteBtn.hidden = !creator;
         roundForm.hidden = data.status === 'finished';
         updateSumWarn(data);
         if (draftHint) {
@@ -309,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     parts.push(tr('tools.onlineCardScore.autoSettleHint'));
                 }
-                if (data.isCreator) {
+                if (isRoomCreator(data)) {
                     parts.push(tr('tools.onlineCardScore.hostOptional'));
                 }
                 draftHint.textContent = parts.join(' · ');
@@ -382,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function canEditPlayer(data, player) {
-        if (data.isCreator) return true;
+        if (isRoomCreator(data)) return true;
         var vid = myViewerId(data);
         if (vid == null || vid === '') return false;
         return String(player.userId) === String(vid);
@@ -463,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var label = field.querySelector('label');
             var input = field.querySelector('input');
             label.dataset.baseName = p.displayName;
-            if (data.isCreator && !own) {
+            if (isRoomCreator(data) && !own) {
                 label.dataset.optionalHint = '(' + tr('tools.onlineCardScore.hostFillHint') + ')';
             }
             var mark = has ? ' ✓' : '';
@@ -473,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 mark;
             input.dataset.uid = key;
             input.dataset.own = own ? '1' : '0';
-            input.placeholder = data.isCreator && !own
+            input.placeholder = isRoomCreator(data) && !own
                 ? tr('tools.onlineCardScore.hostFillHint')
                 : tr('tools.onlineCardScore.scorePlaceholder');
             if (keepUid === key && keepVal != null) {

@@ -1487,9 +1487,13 @@ def _round_sum(scores: Dict[str, int]) -> int:
 
 
 def _finalize_online_payload(data: dict, *, user_id: int) -> dict:
-    data["viewerId"] = user_id
+    data["viewerId"] = int(user_id)
     data["youAreIn"] = True
-    data["isCreator"] = data.get("creatorId") == user_id
+    try:
+        creator_id = int(data.get("creatorId") or 0)
+    except (TypeError, ValueError):
+        creator_id = 0
+    data["isCreator"] = creator_id == int(user_id)
     return data
 
 
