@@ -42,7 +42,7 @@
 }
 
 .ocs-draft-hint {
-  margin: 0 0 14px;
+  margin: 10px 0 8px;
   font-size: 13px;
   color: #475569;
   line-height: 1.45;
@@ -56,14 +56,18 @@
 }
 
 .ocs-table-wrap {
-  margin: 12px 0 18px;
+  margin: 8px 0 4px;
   border: 1px solid #ddd;
   border-radius: 12px;
   background: #fff;
-  /* 全高展开，只跟网页一起滚，避免表内+页面双层滚动 */
-  overflow-x: auto;
-  overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
+  /* 不设 overflow，避免表内滚动容器抢走整页下拉手势 */
+  overflow: visible;
+}
+
+#board-view .ocs-sum-warn,
+#board-view #board-error {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .ocs-table {

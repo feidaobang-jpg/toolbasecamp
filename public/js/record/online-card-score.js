@@ -1039,9 +1039,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.visualViewport.addEventListener('resize', function () {
             if (keyboardOpen) updateKeyboardLayout();
         });
-        window.visualViewport.addEventListener('scroll', function () {
-            if (keyboardOpen) scrollBoardForKeyboard();
-        });
     }
 
     R.optionalLogin(gate, app).then(function (user) {

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=8" />
   <link rel="stylesheet" href="../../css/record/records-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=21" />
+  <link rel="stylesheet" href="../../css/record/online-card-score.css?v=22" />
 </head>
 <body>
   <div class="container">
@@ -78,9 +78,6 @@
           <h2 class="rec-section-title" id="board-title"></h2>
           <p class="ocs-code-line" id="board-code"></p>
           <p class="ocs-status-line" id="board-status"></p>
-          <p class="ocs-draft-hint" id="draft-hint" hidden></p>
-          <div class="error-box ocs-sum-warn" id="sum-warn" role="alert"></div>
-          <div class="error-box" id="board-error" role="alert"></div>
 
           <p class="ocs-table-legend" data-i18n="tools.onlineCardScore.tableLegend">Left two columns: round number · round total</p>
           <div class="ocs-table-wrap">
@@ -90,6 +87,10 @@
               <tfoot id="score-foot"></tfoot>
             </table>
           </div>
+
+          <p class="ocs-draft-hint" id="draft-hint" hidden></p>
+          <div class="error-box ocs-sum-warn" id="sum-warn" role="alert"></div>
+          <div class="error-box" id="board-error" role="alert"></div>
 
           <div id="round-form" class="ocs-round-form">
             <h3 class="rec-section-title" data-i18n="tools.onlineCardScore.addRound">Add round</h3>
@@ -138,6 +139,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/record/records-client.js?v=8"></script>
-  <script src="../../js/record/online-card-score.js?v=21"></script>
+  <script src="../../js/record/online-card-score.js?v=22"></script>
 </body>
 </html>
