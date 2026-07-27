@@ -17,9 +17,16 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         [[0, 1, 1], [1, 1, 0]],
         [[1, 1, 0], [0, 1, 1]]
     ];
-    var board, piece, score = 0, lines = 0, state = 'idle', dropMs = 600, acc = 0, raf = 0, last = 0;
+    var board, piece, score = 0, lines = 0, level = 1, state = 'idle', dropMs = 800, acc = 0, raf = 0, last = 0;
     function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
-    function hud() { document.getElementById('score').textContent = score; document.getElementById('lines').textContent = lines; }
+    function calcLevel() { return Math.floor(lines / 10) + 1; }
+    function dropForLevel(lv) { return Math.max(100, 800 - (lv - 1) * 70); }
+    function hud() {
+        document.getElementById('score').textContent = score;
+        document.getElementById('lines').textContent = lines;
+        var lvEl = document.getElementById('level');
+        if (lvEl) lvEl.textContent = level;
+    }
     function emptyBoard() {
         var b = []; for (var r = 0; r < ROWS; r++) { b[r] = []; for (var c = 0; c < COLS; c++) b[r][c] = null; } return b;
     }
@@ -49,7 +56,19 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         for (var r = ROWS - 1; r >= 0; r--) {
             if (board[r].every(Boolean)) { board.splice(r, 1); board.unshift(Array(COLS).fill(null)); cleared++; r++; }
         }
-        if (cleared) { play('match'); lines += cleared; score += [0, 100, 300, 500, 800][cleared]; dropMs = Math.max(120, 600 - lines * 8); hud(); }
+        if (cleared) {
+            play('match');
+            lines += cleared;
+            score += [0, 100, 300, 500, 800][cleared] * level;
+            var prev = level;
+            level = calcLevel();
+            dropMs = dropForLevel(level);
+            if (level > prev) {
+                play('level');
+                setStatus(tr('tools.tetris.levelUp', { n: level }), 'is-win');
+            }
+            hud();
+        }
     }
     function rotate() {
         var s = piece.shape, N = s.length, M = s[0].length, out = [];
@@ -84,7 +103,8 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         update(dt); draw(); if (state === 'playing') raf = requestAnimationFrame(loop);
     }
     function start() { play('start');
-        cancelAnimationFrame(raf); board = emptyBoard(); score = 0; lines = 0; dropMs = 600; acc = 0;
+        cancelAnimationFrame(raf); board = emptyBoard(); score = 0; lines = 0; level = 1;
+        dropMs = dropForLevel(1); acc = 0;
         state = 'playing'; hud(); spawn(); last = 0; setStatus(tr('tools.tetris.playing'), 'is-idle'); raf = requestAnimationFrame(loop);
     }
     document.getElementById('restart-btn').onclick = start;

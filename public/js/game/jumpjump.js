@@ -7,27 +7,31 @@
 function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, KEY = 'tb_jump_best';
-    var score = 0, best = 0, plats = [], player, charging = false, power = 0, flying = false, raf = 0, last = 0, state = 'ready';
+    var score = 0, best = 0, level = 1, plats = [], player, charging = false, power = 0, flying = false, raf = 0, last = 0, state = 'ready';
     try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
     document.getElementById('best').textContent = best;
     function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
-    function hud() { document.getElementById('score').textContent = score; document.getElementById('best').textContent = best; }
+    function hud() {
+        document.getElementById('score').textContent = score;
+        document.getElementById('best').textContent = best;
+        var lv = document.getElementById('level');
+        if (lv) lv.textContent = level;
+    }
     function addPlat(x, y, w) { plats.push({ x: x, y: y, w: w, emoji: ['🟫', '🟧', '🟪'][score % 3] }); }
     function reset() { play('start');
-        score = 0; plats = []; flying = false; charging = false; power = 0; state = 'ready';
+        score = 0; level = 1; plats = []; flying = false; charging = false; power = 0; state = 'ready';
         addPlat(40, H - 80, 70); addPlat(200, H - 80, 60);
         player = { x: 75, y: H - 80, r: 14, vx: 0, vy: 0, on: 0 };
         hud(); setStatus(tr('tools.jumpjump.hint'), 'is-idle'); draw();
     }
     function nextPlat() {
         var lastP = plats[plats.length - 1];
-        var gap = 70 + Math.random() * 90;
-        var w = 48 + Math.random() * 30;
+        var gap = 65 + level * 10 + Math.random() * (70 + level * 8);
+        var w = Math.max(34, 58 - level * 2 + Math.random() * 22);
         var x = Math.min(W - w - 20, lastP.x + gap);
         if (x < 20) x = 20 + Math.random() * 40;
         addPlat(x, H - 80, w);
         if (plats.length > 4) plats.shift();
-        // shift world left so current stay visible
         var shift = plats[0].x - 40;
         plats.forEach(function (p) { p.x -= shift; });
         player.x -= shift;
@@ -50,7 +54,19 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
                 hud(); play('lose'); setStatus(tr('tools.jumpjump.miss'), 'is-lose'); return;
             }
             player.on = landed;
-            if (landed === plats.length - 1) { score += 1; nextPlat(); hud(); play('level'); setStatus(tr('tools.jumpjump.nice'), 'is-win'); }
+            if (landed === plats.length - 1) {
+                score += 1;
+                var prev = level;
+                level = Math.floor(score / 3) + 1;
+                nextPlat(); hud();
+                if (level > prev) {
+                    play('level');
+                    setStatus(tr('tools.jumpjump.levelUp', { n: level }), 'is-win');
+                } else {
+                    play('level');
+                    setStatus(tr('tools.jumpjump.nice'), 'is-win');
+                }
+            }
             else setStatus(tr('tools.jumpjump.hint'), 'is-idle');
         }
     }

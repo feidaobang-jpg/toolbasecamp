@@ -1,34 +1,58 @@
 (function () {
     'use strict';
-    
+
     var audio = window.GameAudio;
     function play(name) { if (audio) audio.sfx(name); }
     if (audio) audio.boot('catchy');
-function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+    function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; }
+
     var canvas = document.getElementById('canvas'), ctx = canvas.getContext('2d');
     var W = canvas.width, H = canvas.height, KEY = 'tb_runner_best';
-    var ground = H - 40, player, obs = [], score = 0, best = 0, state = 'idle', speed = 5, spawn = 0, raf = 0, last = 0;
+    var ground = H - 40, player, obs = [], score = 0, best = 0, level = 1, lastAnnounced = 1;
+    var state = 'idle', speed = 5, spawn = 0, raf = 0, last = 0;
     try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
     document.getElementById('best').textContent = best;
-    function setStatus(m, c) { var el = document.getElementById('status'); el.textContent = m; el.className = 'game-status' + (c ? ' ' + c : ''); }
-    function hud() { document.getElementById('score').textContent = Math.floor(score); document.getElementById('best').textContent = best; }
+
+    function setStatus(m, c) {
+        var el = document.getElementById('status');
+        el.textContent = m;
+        el.className = 'game-status' + (c ? ' ' + c : '');
+    }
+    function calcLevel(sc) { return Math.floor(sc / 80) + 1; }
+    function hud() {
+        document.getElementById('score').textContent = Math.floor(score);
+        document.getElementById('best').textContent = best;
+        var lv = document.getElementById('level');
+        if (lv) lv.textContent = level;
+    }
     function reset() {
-        player = { x: 60, y: ground, vy: 0, on: true }; obs = []; score = 0; speed = 5; spawn = 0; hud();
+        player = { x: 60, y: ground, vy: 0, on: true };
+        obs = []; score = 0; level = 1; lastAnnounced = 1; speed = 4.8; spawn = 0; hud();
     }
     function jump() {
         if (state !== 'playing') return;
-        if (player.on) { player.vy = -10; player.on = false; }
+        if (player.on) { player.vy = -10; player.on = false; play('jump'); }
     }
     function update(dt) {
         if (state !== 'playing') return;
         var s = dt * 60;
-        score += dt * 10; speed = 5 + score * 0.01;
+        score += dt * 10;
+        var lv = calcLevel(score);
+        if (lv > level) {
+            level = lv;
+            play('level');
+            setStatus(tr('tools.runner.levelUp', { n: level }), 'is-win');
+            lastAnnounced = level;
+        }
+        speed = 4.5 + level * 0.55;
         player.vy += 0.55 * s; player.y += player.vy * s;
         if (player.y >= ground) { player.y = ground; player.vy = 0; player.on = true; }
         spawn -= dt;
         if (spawn <= 0) {
-            spawn = 0.9 + Math.random() * 0.9;
+            spawn = Math.max(0.35, 1.05 - level * 0.07) + Math.random() * Math.max(0.25, 0.7 - level * 0.04);
+            var twin = level >= 4 && Math.random() < 0.25;
             obs.push({ x: W + 20, y: ground, emoji: Math.random() < 0.5 ? '🌵' : '🪨', w: 28 });
+            if (twin) obs.push({ x: W + 55, y: ground, emoji: '🪨', w: 24 });
         }
         for (var i = obs.length - 1; i >= 0; i--) {
             obs[i].x -= speed * s;
@@ -37,7 +61,8 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
                 state = 'lose';
                 var sc = Math.floor(score);
                 if (sc > best) { best = sc; try { localStorage.setItem(KEY, String(best)); } catch (e) {} }
-                hud(); play('lose'); setStatus(tr('tools.runner.gameOver', { n: sc }), 'is-lose');
+                hud(); play('lose');
+                setStatus(tr('tools.runner.gameOver', { n: sc }), 'is-lose');
             }
         }
         hud();
@@ -50,18 +75,28 @@ function tr(k, p) { return typeof window.t === 'function' ? window.t(k, p) : k; 
         obs.forEach(function (o) { ctx.fillText(o.emoji, o.x, o.y); });
         if (state === 'idle') {
             ctx.fillStyle = 'rgba(15,23,42,0.35)'; ctx.fillRect(0, 0, W, H);
-            ctx.fillStyle = '#fff'; ctx.font = '600 16px system-ui'; ctx.fillText(tr('tools.runner.tapStart'), W / 2, H / 2);
+            ctx.fillStyle = '#fff'; ctx.font = '600 16px system-ui';
+            ctx.fillText(tr('tools.runner.tapStart'), W / 2, H / 2);
         }
     }
     function loop(ts) {
         if (!last) last = ts; var dt = Math.min(0.05, (ts - last) / 1000); last = ts;
         update(dt); draw(); if (state === 'playing') raf = requestAnimationFrame(loop);
     }
-    function start() { play('start'); cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0; setStatus(tr('tools.runner.playing'), 'is-idle'); raf = requestAnimationFrame(loop); }
+    function start() {
+        play('start'); cancelAnimationFrame(raf); reset(); state = 'playing'; last = 0;
+        setStatus(tr('tools.runner.playing'), 'is-idle'); raf = requestAnimationFrame(loop);
+    }
     document.getElementById('restart-btn').onclick = start;
     window.addEventListener('keydown', function (e) {
-        if (e.key === ' ' || e.key === 'ArrowUp') { e.preventDefault(); if (state !== 'playing') start(); else jump(); }
+        if (e.key === ' ' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (state !== 'playing') start(); else jump();
+        }
     });
-    canvas.addEventListener('pointerdown', function (e) { e.preventDefault(); if (state !== 'playing') start(); else jump(); });
+    canvas.addEventListener('pointerdown', function (e) {
+        e.preventDefault();
+        if (state !== 'playing') start(); else jump();
+    });
     reset(); draw(); setStatus(tr('tools.runner.hint'), 'is-idle');
 })();

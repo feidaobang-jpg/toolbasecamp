@@ -280,6 +280,7 @@ window.TB_LOCALES['zh-CN'] = {
         game: {
             restart: '重新开始',
             score: '得分',
+            level: '关卡',
             soundOn: '静音',
             soundOff: '开声音',
             volume: '音量'
@@ -407,76 +408,95 @@ window.TB_LOCALES['zh-CN'] = {
         },
         whack: {
             title: '打地鼠',
-            desc: '地鼠冒头就点，限时得分。本地运行。',
+            desc: '地鼠冒头就点；过关提速、目标更高。本地运行。',
             time: '时间',
+            goal: '目标',
             start: '开始',
-            hint: '点「开始」后点击 🐹。',
+            hint: '点「开始」后点击 🐹，达到目标分过关。',
             playing: '快打！',
-            done: '时间到，得分 {n}'
+            done: '时间到，得分 {n}',
+            levelStart: '第 {n} 关 · 目标 {goal} 分',
+            levelClear: '第 {n} 关完成！进入下一关…',
+            fail: '第 {n} 关失败 · {score}/{goal}'
         },
         shooter: {
             title: '飞机大战',
-            desc: '左右移动并射击外星飞船。本地运行。',
+            desc: '消灭一波敌人过关；关卡越高敌机越快。本地运行。',
             lives: '生命',
+            goal: '击毁',
             start: '开始',
             hint: '← → / A D 移动，空格或点击射击。',
             tapStart: '点击开始',
             playing: '消灭入侵者',
-            gameOver: '游戏结束'
+            gameOver: '游戏结束',
+            levelStart: '第 {n} 关 · 击毁 {need}',
+            levelClear: '第 {n} 关完成！下一波更难…'
         },
         jumpjump: {
             title: '跳一跳',
-            desc: '按住蓄力，松手跳到下一平台。本地运行。',
+            desc: '按住蓄力跳台；关卡升高间距更大、台更窄。本地运行。',
             best: '最佳',
             hint: '在画面上按住蓄力，松手起跳。',
             nice: '跳上了！继续',
-            miss: '没跳上，再来一局'
+            miss: '没跳上，再来一局',
+            levelUp: '进入第 {n} 关！台更远更窄'
         },
         catcher: {
             title: '接水果',
-            desc: '用篮子接住水果，躲开炸弹。本地运行。',
+            desc: '接够数量过关；关卡越高下落更快、炸弹更多。本地运行。',
             lives: '生命',
+            goal: '进度',
             start: '开始',
             hint: '鼠标/触屏或 ← → 移动篮子。',
             tapStart: '点击开始',
             playing: '接住水果！',
             gameOver: '游戏结束',
-            legend: '🍎🍊🍇 得分 · 💣 扣生命'
+            legend: '🍎🍊🍇 得分 · 💣 扣生命',
+            levelStart: '第 {n} 关 · 接住 {goal} 个',
+            levelClear: '第 {n} 关完成！'
         },
         tetris: {
             title: '俄罗斯方块',
-            desc: '旋转下落方块消除整行。本地运行。',
+            desc: '消行升级，速度递增。本地运行。',
             lines: '消除行',
             start: '开始',
             hint: '← → 移动，↑ 旋转，↓ 软降，空格硬降。',
             playing: '游戏中',
-            gameOver: '堆满了'
+            gameOver: '堆满了',
+            levelUp: '升到第 {n} 关！下落更快'
         },
         memory: {
             title: '记忆翻牌',
-            desc: '翻开两张牌配对相同表情。本地运行。',
+            desc: '配对过关；关卡越高牌越多。本地运行。',
             moves: '步数',
             matched: '已配对',
             hint: '翻开两张牌寻找配对。',
-            win: '全部配对！共用 {n} 步'
+            win: '全部配对！共用 {n} 步',
+            winAll: '通关！总步数 {n}',
+            levelStart: '第 {n} 关 · {pairs} 对',
+            levelClear: '第 {n} 关完成！进入下一关…'
         },
         runner: {
             title: '跑酷',
-            desc: '点击或空格跳跃，躲开障碍。本地运行。',
+            desc: '跳跃躲障；分数推进关卡，速度与密度递增。本地运行。',
             best: '最佳',
             start: '开始',
             hint: '点击 / 空格跳跃。',
             tapStart: '点击开始',
             playing: '跑起来！',
-            gameOver: '撞到了，得分 {n}'
+            gameOver: '撞到了，得分 {n}',
+            levelUp: '进入第 {n} 关！更快更密'
         },
         mines: {
             title: '扫雷',
-            desc: '翻开安全格，标出地雷。本地运行。',
+            desc: '通关后进入更大更密的雷区。本地运行。',
             flags: '旗帜',
             hint: '单击翻开，长按/右键插旗。',
             win: '扫雷成功！',
-            lose: '踩到雷了'
+            winAll: '全部关卡完成！',
+            lose: '踩到雷了',
+            levelStart: '第 {n} 关 · {mines} 颗雷',
+            levelClear: '第 {n} 关完成！进入下一关…'
         },
         slots: {
             title: '老虎机',

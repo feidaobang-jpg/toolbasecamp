@@ -281,6 +281,7 @@ window.TB_LOCALES.en = {
         game: {
             restart: 'New game',
             score: 'Score',
+            level: 'Level',
             soundOn: 'Mute',
             soundOff: 'Unmute',
             volume: 'Volume'
@@ -408,76 +409,95 @@ window.TB_LOCALES.en = {
         },
         whack: {
             title: 'Whack-a-Mole',
-            desc: 'Tap moles as they pop up. Runs locally.',
+            desc: 'Tap moles before they hide. Clear goals to level up — faster pops each stage.',
             time: 'Time',
+            goal: 'Goal',
             start: 'Start',
-            hint: 'Press Start, then tap 🐹.',
+            hint: 'Press Start, then tap 🐹. Reach the goal to clear the level.',
             playing: 'Whack them!',
-            done: 'Time up — score {n}'
+            done: 'Time up — score {n}',
+            levelStart: 'Level {n} · goal {goal}',
+            levelClear: 'Level {n} cleared! Next…',
+            fail: 'Level {n} failed · {score}/{goal}'
         },
         shooter: {
             title: 'Space Shooter',
-            desc: 'Move and shoot the invaders. Runs locally.',
+            desc: 'Clear waves of invaders. Higher levels spawn faster foes.',
             lives: 'Lives',
+            goal: 'Kills',
             start: 'Start',
             hint: '← → / A D move, Space or tap to shoot.',
             tapStart: 'Tap to start',
             playing: 'Blast the invaders',
-            gameOver: 'Game over'
+            gameOver: 'Game over',
+            levelStart: 'Level {n} · destroy {need}',
+            levelClear: 'Wave {n} cleared! Harder next…'
         },
         jumpjump: {
             title: 'Jump Jump',
-            desc: 'Hold to charge, release to jump. Runs locally.',
+            desc: 'Hold to charge jumps. Higher levels: wider gaps, narrower platforms.',
             best: 'Best',
             hint: 'Hold on the canvas to charge, release to jump.',
             nice: 'Landed! Keep going',
-            miss: 'Missed — try again'
+            miss: 'Missed — try again',
+            levelUp: 'Level {n}! Farther & thinner pads'
         },
         catcher: {
             title: 'Fruit Catcher',
-            desc: 'Catch fruit, avoid bombs. Runs locally.',
+            desc: 'Catch a quota to clear levels. Faster drops and more bombs as you go.',
             lives: 'Lives',
+            goal: 'Progress',
             start: 'Start',
             hint: 'Move basket with mouse/touch or ← →.',
             tapStart: 'Tap to start',
             playing: 'Catch the fruit!',
             gameOver: 'Game over',
-            legend: '🍎🍊🍇 points · 💣 −life'
+            legend: '🍎🍊🍇 points · 💣 −life',
+            levelStart: 'Level {n} · catch {goal}',
+            levelClear: 'Level {n} cleared!'
         },
         tetris: {
             title: 'Tetris',
-            desc: 'Clear lines with falling blocks. Runs locally.',
+            desc: 'Clear lines to level up — drop speed rises every 10 lines.',
             lines: 'Lines',
             start: 'Start',
             hint: '← → move, ↑ rotate, ↓ soft drop, Space hard drop.',
             playing: 'Playing',
-            gameOver: 'Stacked out'
+            gameOver: 'Stacked out',
+            levelUp: 'Level {n}! Faster drops'
         },
         memory: {
             title: 'Memory Match',
-            desc: 'Flip cards and match emoji pairs. Runs locally.',
+            desc: 'Match pairs to clear levels. More cards each stage.',
             moves: 'Moves',
             matched: 'Matched',
             hint: 'Flip two cards to match.',
-            win: 'All matched in {n} moves!'
+            win: 'All matched in {n} moves!',
+            winAll: 'All levels cleared! Moves {n}',
+            levelStart: 'Level {n} · {pairs} pairs',
+            levelClear: 'Level {n} cleared! Next…'
         },
         runner: {
             title: 'Runner',
-            desc: 'Tap or press Space to jump over obstacles. Runs locally.',
+            desc: 'Jump obstacles. Score advances levels with faster denser hazards.',
             best: 'Best',
             start: 'Start',
             hint: 'Tap / Space to jump.',
             tapStart: 'Tap to start',
             playing: 'Run!',
-            gameOver: 'Crashed — score {n}'
+            gameOver: 'Crashed — score {n}',
+            levelUp: 'Level {n}! Faster & denser'
         },
         mines: {
             title: 'Minesweeper',
-            desc: 'Clear the board without hitting mines. Runs locally.',
+            desc: 'Clear boards to unlock denser minefields.',
             flags: 'Flags',
             hint: 'Tap to open, long-press / right-click to flag.',
             win: 'Board cleared!',
-            lose: 'Boom — mine hit'
+            winAll: 'All mine levels cleared!',
+            lose: 'Boom — mine hit',
+            levelStart: 'Level {n} · {mines} mines',
+            levelClear: 'Level {n} cleared! Next…'
         },
         slots: {
             title: 'Tiger Slots',
