@@ -17,6 +17,7 @@
     'page.life': { zh: '内容中心', en: 'Content hub' },
     'page.games': { zh: '游戏中心', en: 'Games hub' },
     'page.guestbook': { zh: '留言板', en: 'Guestbook' },
+    'page.cool-sites': { zh: '导航', en: 'Directory' },
     'page.about': { zh: '关于', en: 'About' }
   };
 

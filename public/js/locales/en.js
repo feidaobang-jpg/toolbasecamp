@@ -16,9 +16,16 @@ window.TB_LOCALES.en = {
         tools: 'Tools',
         life: 'Content',
         games: 'Games',
+        sites: 'Directory',
         guestbook: 'Guestbook',
         about: 'About',
         siteStats: 'Stats'
+    },
+    coolSites: {
+        title: 'Directory',
+        catalog: 'Categories',
+        description: 'Curated links for AI tools, docs, design resources, and productivity software.',
+        defaultDesc: 'Recommended site'
     },
     lang: {
         switcher: 'Language',

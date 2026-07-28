@@ -28,6 +28,7 @@
         { nameKey: 'nav.tools', url: 'index.html' },
         { nameKey: 'nav.life', url: 'life.html' },
         { nameKey: 'nav.games', url: 'games.html' },
+        { nameKey: 'nav.sites', url: 'cool-sites.html' },
         { nameKey: 'nav.guestbook', url: 'guestbook.html' },
         { nameKey: 'nav.about', url: 'about.html' }
     ]

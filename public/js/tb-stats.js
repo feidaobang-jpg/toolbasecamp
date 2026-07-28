@@ -87,6 +87,7 @@
         if (file === 'life') return 'page.life';
         if (file === 'games') return 'page.games';
         if (file === 'guestbook') return 'page.guestbook';
+        if (file === 'cool-sites') return 'page.cool-sites';
         if (file === 'about') return 'page.about';
         if (path.indexOf('/html/admin/') !== -1) return '';
 

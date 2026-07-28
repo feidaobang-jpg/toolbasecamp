@@ -15,9 +15,16 @@ window.TB_LOCALES['zh-CN'] = {
         tools: '工具',
         life: '内容',
         games: '游戏',
+        sites: '导航',
         guestbook: '留言板',
         about: '关于',
         siteStats: '统计'
+    },
+    coolSites: {
+        title: '导航',
+        catalog: '导航目录',
+        description: '极客导航：AI 工具、开发文档、设计资源与效率软件收录。',
+        defaultDesc: '优质网站推荐'
     },
     lang: {
         switcher: '语言',
