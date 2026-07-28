@@ -66,32 +66,29 @@
   min-height: 0;
 }
 
+/* 表尾固定在分数区下方（不 sticky），避免盖住上一行、底边悬空 */
 .card-score-footer {
   flex-shrink: 0;
-  border-top: none;
+  border-top: 1px solid #ddd;
   background: #fff;
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
-  /* 与上方分数区单线衔接，避免 sticky 盖边 + 双线断开 */
-  box-shadow: inset 0 1px 0 #ddd;
+}
+
+.card-score-footer-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.card-score-footer-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .card-score-grid-scores {
   border-bottom: none;
 }
 
-.card-score-grid-scores .card-score-left .card-score-cell:last-child,
-.card-score-grid-scores .card-score-player-col .card-score-cell:last-child {
-  border-bottom: none;
-}
-
 .card-score-grid-footer {
-  border-top: none;
-}
-
-.card-score-grid-footer .card-score-left .card-score-cell:first-child,
-.card-score-grid-footer .card-score-player-col > *:first-child {
   border-top: none;
 }
 
@@ -102,34 +99,10 @@
   border-right: none;
 }
 
-/*
- * sticky 表尾在部分手机浏览器上 border 不绘制（联机同问题）。
- * 与联机一致：改用 inset 阴影画横竖线，末行/末列靠外框收口。
- */
-.card-score-grid-footer .card-score-cell,
-.card-score-grid-footer .card-score-name-input,
-.card-score-grid-footer .card-score-delete-btn {
-  border-right: none;
+/* 表尾末行底边靠外框收口 */
+.card-score-grid-footer .card-score-left .card-score-cell:last-child,
+.card-score-grid-footer .card-score-player-col > *:last-child {
   border-bottom: none;
-  box-shadow: inset -1px 0 0 #ddd, inset 0 -1px 0 #ddd;
-}
-
-.card-score-grid-footer .card-score-player-col:last-child .card-score-cell,
-.card-score-grid-footer .card-score-player-col:last-child .card-score-name-input,
-.card-score-grid-footer .card-score-player-col:last-child .card-score-delete-btn {
-  box-shadow: inset 0 -1px 0 #ddd;
-}
-
-.card-score-grid-footer .card-score-left .card-score-cell:last-child {
-  box-shadow: inset -1px 0 0 #ddd;
-}
-
-.card-score-grid-footer .card-score-player-col:not(:last-child) > *:last-child {
-  box-shadow: inset -1px 0 0 #ddd;
-}
-
-.card-score-grid-footer .card-score-player-col:last-child > *:last-child {
-  box-shadow: none;
 }
 
 .card-score-grid {

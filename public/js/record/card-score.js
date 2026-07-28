@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const continueBtn = document.getElementById('continue-btn');
     const addPlayerBtn = document.getElementById('add-player-btn');
     const gridScroll = document.getElementById('grid-scroll');
+    const footerScroll = document.getElementById('footer-scroll');
     const scoreGrid = document.getElementById('score-grid');
     const scoreFooterGrid = document.getElementById('score-footer-grid');
     const keyboard = document.getElementById('keyboard');
@@ -23,6 +24,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let tempValue = '';
     let toastTimer = null;
     let boardHistoryPushed = false;
+    let syncingHScroll = false;
+
+    function syncHorizontalScroll(from, to) {
+        if (!from || !to || syncingHScroll) return;
+        syncingHScroll = true;
+        to.scrollLeft = from.scrollLeft;
+        syncingHScroll = false;
+    }
 
     function tr(key, params) {
         return typeof window.t === 'function' ? window.t(key, params) : key;
@@ -536,6 +545,15 @@ document.addEventListener('DOMContentLoaded', function () {
             updateScrollLayout();
         }, 100);
     });
+
+    if (gridScroll && footerScroll) {
+        gridScroll.addEventListener('scroll', function () {
+            syncHorizontalScroll(gridScroll, footerScroll);
+        }, { passive: true });
+        footerScroll.addEventListener('scroll', function () {
+            syncHorizontalScroll(footerScroll, gridScroll);
+        }, { passive: true });
+    }
 
     applyListView();
 });
