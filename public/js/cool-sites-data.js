@@ -35,11 +35,7 @@ window.COOL_SITES_DATA = [
 
                             { title: 'Linux 命令大全', desc: 'Linux 命令搜索引擎', url: 'https://wangchujiang.com/linux-command/', icon: 'fas fa-terminal', isFontIcon: true },
 
-                            { title: '蓝奏云', desc: '好用的云盘，下载不限速', url: 'https://www.lanzou.com/', icon: 'fas fa-cloud-download-alt', isFontIcon: true },
-
-                            { title: 'JSON 格式化', desc: '在线 JSON 校验、格式化工具', url: 'https://www.json.cn/', icon: 'fas fa-code', isFontIcon: true },
-
-                            { title: '时间戳转换', desc: 'Unix 时间戳转换工具', url: 'https://tool.lu/timestamp/', icon: 'fas fa-clock', isFontIcon: true }
+                            { title: '蓝奏云', desc: '好用的云盘，下载不限速', url: 'https://www.lanzou.com/', icon: 'fas fa-cloud-download-alt', isFontIcon: true }
 
                         ]
 
@@ -55,19 +51,11 @@ window.COOL_SITES_DATA = [
 
                             { title: 'PDF24 Tools', desc: '免费好用的在线 PDF 工具箱', url: 'https://tools.pdf24.org/zh', icon: 'fas fa-file-pdf', isFontIcon: true },
 
-                            { title: 'Convertio', desc: '文件转换器 (支持超过 300 种格式)', url: 'https://convertio.co/zh/', icon: 'fas fa-sync-alt', isFontIcon: true },
-
                             { title: 'Table Convert', desc: '在线表格转换与生成工具', url: 'https://tableconvert.com/', icon: 'fas fa-table', isFontIcon: true },
-
-                            { title: 'UU在线工具', desc: '便捷实用的工具集合站', url: 'https://uutool.cn/', icon: 'fas fa-tools', isFontIcon: true },
 
                             { title: 'Greasy Fork', desc: '用户脚本的聚集地', url: 'https://greasyfork.org/zh-CN', icon: 'fas fa-code-branch', isFontIcon: true },
 
-                            { title: '正则表达式', desc: '在线正则测试、调试', url: 'https://regex101.com/', icon: 'fas fa-registered', isFontIcon: true },
-
                             { title: 'TinyPNG', desc: '智能 WebP, PNG, JPEG 图片压缩', url: 'https://tinypng.com/', icon: 'https://tinypng.com/images/apple-touch-icon.png' },
-
-                            { title: 'Base64 编码', desc: '在线 Base64 编码/解码', url: 'https://base64.us/', icon: 'fas fa-exchange-alt', isFontIcon: true },
 
                             { title: 'Can I Use', desc: '前端浏览器兼容性查询', url: 'https://caniuse.com/', icon: 'https://caniuse.com/img/favicon-128.png' },
 
@@ -113,7 +101,7 @@ window.COOL_SITES_DATA = [
 
                     {
 
-                        name: '国际',
+                        name: '国外',
 
                         items: [
 
