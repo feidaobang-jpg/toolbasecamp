@@ -259,15 +259,13 @@ document.addEventListener('DOMContentLoaded', function () {
         updateKeyboardLayout();
     }
 
-    /** 仅在页面真正滚动一段距离后关闭；忽略点按时的 touchmove 抖动 */
+    /** 一开始滚动就关闭软键盘（打开后短暂忽略，避免 padding 误触） */
     function closeKeyboardOnUserScroll() {
         if (!keyboardOpen) return;
-        var y = window.scrollY || window.pageYOffset || 0;
         if (Date.now() < kbIgnoreScrollCloseUntil) {
-            kbCloseScrollY = y;
+            kbCloseScrollY = window.scrollY || window.pageYOffset || 0;
             return;
         }
-        if (Math.abs(y - kbCloseScrollY) < 12) return;
         hideScoreKeyboard();
     }
 
