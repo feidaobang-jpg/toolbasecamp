@@ -251,6 +251,8 @@ jobs:
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
           fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
+          bash /opt/toolbasecamp-deploy/install-mysql-backup-cron.sh || true
+          bash /opt/toolbasecamp-deploy/install-api-health-cron.sh || true
           echo "=== Nuclear restart before start ==="
           systemctl stop toolbasecamp-api 2>/dev/null || true
           sleep 1
