@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var homeView = document.getElementById('home-view');
     var boardView = document.getElementById('board-view');
     var displayName = document.getElementById('display-name');
-    var gameName = document.getElementById('game-name');
     var joinCode = document.getElementById('join-code');
     var homeError = document.getElementById('home-error');
     var boardError = document.getElementById('board-error');
@@ -95,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!hostOnlyEls) {
             hostOnlyEls = [
                 document.getElementById('create-panel'),
-                document.getElementById('game-name-field'),
                 document.querySelector('.ocs-home-split'),
                 document.getElementById('refresh-list-btn')
             ];
@@ -103,6 +101,18 @@ document.addEventListener('DOMContentLoaded', function () {
         hostOnlyEls.forEach(function (el) {
             if (el) el.hidden = !loggedIn;
         });
+        var authStatus = document.getElementById('auth-status');
+        if (authStatus) {
+            authStatus.classList.toggle('is-user', loggedIn);
+            authStatus.classList.toggle('is-guest', !loggedIn);
+            authStatus.setAttribute(
+                'data-i18n',
+                loggedIn ? 'tools.onlineCardScore.authLoggedIn' : 'tools.onlineCardScore.authGuest'
+            );
+            authStatus.textContent = loggedIn
+                ? tr('tools.onlineCardScore.authLoggedIn')
+                : tr('tools.onlineCardScore.authGuest');
+        }
         var hint = document.getElementById('display-name-hint');
         if (hint) {
             hint.setAttribute(
@@ -123,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 ? tr('tools.onlineCardScore.displayName')
                 : tr('tools.onlineCardScore.guestDisplayName');
         }
-        var note = document.querySelector('#home-view > .rec-note');
+        var note = document.querySelector('#home-view > .rec-note:not(#guest-login-prompt)');
         if (note) {
             note.setAttribute('data-i18n', 'tools.onlineCardScore.pollNote');
             note.textContent = tr('tools.onlineCardScore.pollNote');
@@ -850,7 +860,7 @@ document.addEventListener('DOMContentLoaded', function () {
             displayName.focus();
             return;
         }
-        var roomTitle = gameName.value.trim() || tr('tools.onlineCardScore.defaultRoomName', { name: name });
+        var roomTitle = tr('tools.onlineCardScore.defaultRoomName', { name: name });
         R.setError(homeError, '');
         setBusy(true);
         R.setGuestToken('');

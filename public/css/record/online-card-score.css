@@ -1,3 +1,19 @@
+.ocs-auth-status {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.ocs-auth-status.is-guest {
+  color: #c2410c;
+}
+
+.ocs-auth-status.is-user {
+  color: #1d4ed8;
+}
+
 .ocs-home-split {
   margin-top: 28px;
   padding-top: 22px;
