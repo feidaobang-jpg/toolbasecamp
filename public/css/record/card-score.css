@@ -70,7 +70,6 @@
   flex-shrink: 0;
   border-top: none;
   background: #fff;
-  overflow: hidden;
   position: sticky;
   bottom: 0;
   z-index: 2;
@@ -103,9 +102,34 @@
   border-right: none;
 }
 
-.card-score-grid-footer .card-score-left .card-score-cell:last-child,
-.card-score-grid-footer .card-score-player-col > *:last-child {
+/*
+ * sticky 表尾在部分手机浏览器上 border 不绘制（联机同问题）。
+ * 与联机一致：改用 inset 阴影画横竖线，末行/末列靠外框收口。
+ */
+.card-score-grid-footer .card-score-cell,
+.card-score-grid-footer .card-score-name-input,
+.card-score-grid-footer .card-score-delete-btn {
+  border-right: none;
   border-bottom: none;
+  box-shadow: inset -1px 0 0 #ddd, inset 0 -1px 0 #ddd;
+}
+
+.card-score-grid-footer .card-score-player-col:last-child .card-score-cell,
+.card-score-grid-footer .card-score-player-col:last-child .card-score-name-input,
+.card-score-grid-footer .card-score-player-col:last-child .card-score-delete-btn {
+  box-shadow: inset 0 -1px 0 #ddd;
+}
+
+.card-score-grid-footer .card-score-left .card-score-cell:last-child {
+  box-shadow: inset -1px 0 0 #ddd;
+}
+
+.card-score-grid-footer .card-score-player-col:not(:last-child) > *:last-child {
+  box-shadow: inset -1px 0 0 #ddd;
+}
+
+.card-score-grid-footer .card-score-player-col:last-child > *:last-child {
+  box-shadow: none;
 }
 
 .card-score-grid {
@@ -418,11 +442,9 @@
     overflow: hidden;
   }
 
+  /* 与联机一致：手机全屏仍保留外框，末列/表尾靠外框收口，避免总分周围缺边 */
   body.card-score-board-active .card-score-board-inner {
     border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-top: none;
   }
 
   body.card-score-board-active .card-score-scroll {
