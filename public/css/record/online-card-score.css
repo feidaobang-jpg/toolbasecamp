@@ -200,6 +200,30 @@
   margin-bottom: 4px;
 }
 
+/* 键盘打开时：保存按钮钉在键盘上方，不靠滚整页露出 */
+body.ocs-kb-open .ocs-submit-row {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--ocs-kb-h, 0px) + 8px);
+  z-index: 1001;
+  margin: 0;
+  padding: 8px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 -2px 14px rgba(15, 23, 42, 0.12);
+}
+
+body.ocs-kb-open .ocs-submit-row .tb-btn {
+  width: 100%;
+}
+
+.ocs-score-input {
+  caret-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .ocs-badge {
   display: inline-block;
   font-size: 12px;
