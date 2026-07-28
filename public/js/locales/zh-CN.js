@@ -1381,7 +1381,7 @@ window.TB_LOCALES['zh-CN'] = {
             missingScore: '请为每位玩家填写分数',
             tooManyRounds: '局数已达上限',
             unknownPlayer: '玩家不在本房间',
-            draftRound: '待结算',
+            draftRound: '待结',
             draftProgress: '已填 {ready}/{total}',
             draftSumLine: '当前合计 {sum}',
             needZeroSum: '合计须为 0 才能自动结算',
