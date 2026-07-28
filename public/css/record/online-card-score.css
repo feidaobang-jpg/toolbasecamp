@@ -233,8 +233,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  /* 跟可视区底边对齐，避免滚动后 fixed 键盘往上飘 */
-  bottom: var(--ocs-vv-offset-bottom, 0px);
+  bottom: 0;
   z-index: 1000;
   transform: translateY(110%);
   transition: transform 0.22s ease;
