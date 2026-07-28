@@ -225,22 +225,35 @@ document.addEventListener('DOMContentLoaded', function () {
         ocsKeyboardDisplay.textContent = v || tr('tools.onlineCardScore.keyboardPlaceholder');
     }
 
-    function keyboardMetrics() {
-        var kbH = 0;
-        var kbTop = window.innerHeight;
-        if (ocsKeyboard) {
-            kbH = ocsKeyboard.offsetHeight || 0;
-            var kr = ocsKeyboard.getBoundingClientRect();
-            /* transform 动画中 top 偏大，用最终位置估算，避免少滚 */
-            var estimatedTop = window.innerHeight - kbH;
-            kbTop = Math.min(Math.round(kr.top), estimatedTop);
-            if (kbH < 1) kbH = Math.max(0, window.innerHeight - kbTop);
+    function syncViewportInsets() {
+        var vv = window.visualViewport;
+        if (!vv) {
+            document.documentElement.style.removeProperty('--ocs-vv-offset-bottom');
+            return;
         }
+        var bottomInset = Math.max(0, window.innerHeight - vv.offsetTop - vv.height);
+        document.documentElement.style.setProperty('--ocs-vv-offset-bottom', bottomInset + 'px');
+    }
+
+    function keyboardMetrics() {
+        syncViewportInsets();
+        var kbH = ocsKeyboard ? (ocsKeyboard.offsetHeight || 0) : 0;
+        var vv = window.visualViewport;
+        var visualBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
+        var estimatedTop = visualBottom - kbH;
+        var kbTop = estimatedTop;
+        if (ocsKeyboard && keyboardOpen) {
+            var kr = ocsKeyboard.getBoundingClientRect();
+            /* 动画未结束时 top 偏下，取更靠上的最终位置，避免少滚 */
+            kbTop = Math.min(Math.round(kr.top), estimatedTop);
+        }
+        if (kbH < 1) kbH = Math.max(0, visualBottom - kbTop);
         return { kbH: kbH, kbTop: kbTop };
     }
 
     function updateKeyboardLayout(allowScroll) {
         if (!boardView) return;
+        syncViewportInsets();
         if (!keyboardOpen || !ocsKeyboard) {
             boardView.style.paddingBottom = '';
             return;
@@ -269,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function () {
         kbIgnoreScrollCloseUntil = Math.max(kbIgnoreScrollCloseUntil, Date.now() + 600);
         window.scrollBy(0, delta + 16);
         requestAnimationFrame(function () {
+            syncViewportInsets();
             kbProgrammaticScroll = false;
-            /* 再核一次，防止 padding 生效后仍差一截 */
             var m2 = keyboardMetrics();
             var r2 = anchor.getBoundingClientRect();
             var d2 = Math.ceil(r2.bottom - (m2.kbTop - gap));
@@ -278,7 +291,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 kbProgrammaticScroll = true;
                 kbIgnoreScrollCloseUntil = Math.max(kbIgnoreScrollCloseUntil, Date.now() + 600);
                 window.scrollBy(0, d2 + 8);
-                requestAnimationFrame(function () { kbProgrammaticScroll = false; });
+                requestAnimationFrame(function () {
+                    syncViewportInsets();
+                    kbProgrammaticScroll = false;
+                });
             }
         });
     }
@@ -292,6 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ocsKeyboard.setAttribute('aria-hidden', 'true');
         }
         updateKeyboardLayout(false);
+        syncViewportInsets();
     }
 
     /** 键盘弹出后用户上滑/滚动 → 关闭软键盘，避免再被强制滚到底 */
@@ -311,14 +328,13 @@ document.addEventListener('DOMContentLoaded', function () {
         input.classList.add('is-active');
         keyboardOpen = true;
         kbIgnoreScrollCloseUntil = Date.now() + 800;
+        syncViewportInsets();
         ocsKeyboard.classList.add('is-open');
         ocsKeyboard.setAttribute('aria-hidden', 'false');
         updateKeyboardDisplay();
-        /* 打开时多滚几次：padding 生效后 + 键盘动画结束后 */
         updateKeyboardLayout(true);
         setTimeout(function () { updateKeyboardLayout(true); }, 60);
         setTimeout(function () { updateKeyboardLayout(true); }, 260);
-        setTimeout(function () { updateKeyboardLayout(true); }, 420);
     }
 
     function onScoreKey(key) {
@@ -1062,13 +1078,20 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', closeKeyboardOnUserScroll, { passive: true });
     window.addEventListener('touchmove', closeKeyboardOnUserScroll, { passive: true });
     window.addEventListener('resize', function () {
+        syncViewportInsets();
         if (keyboardOpen) updateKeyboardLayout(false);
     });
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', function () {
+            syncViewportInsets();
             if (keyboardOpen) updateKeyboardLayout(false);
         });
+        window.visualViewport.addEventListener('scroll', function () {
+            /* 只钉键盘位置，不强制滚页面，避免飘 + 抢滚动 */
+            syncViewportInsets();
+        });
     }
+    syncViewportInsets();
 
     R.optionalLogin(gate, app).then(function (user) {
         loggedIn = !!(user && (user.id != null || user.user_id != null));
