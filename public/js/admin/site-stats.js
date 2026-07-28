@@ -10,6 +10,37 @@
   var rangeSelect = document.getElementById('range-days');
   var refreshBtn = document.getElementById('refresh-btn');
   var errorBox = document.getElementById('error-box');
+  var labelMaps = null;
+
+  var PAGE_LABELS = {
+    'page.home': { zh: '首页', en: 'Home' },
+    'page.life': { zh: '内容中心', en: 'Content hub' },
+    'page.games': { zh: '游戏中心', en: 'Games hub' },
+    'page.guestbook': { zh: '留言板', en: 'Guestbook' },
+    'page.about': { zh: '关于', en: 'About' }
+  };
+
+  var MODULE_LABELS = {
+    page: { zh: '站点页面', en: 'Site pages' },
+    action: { zh: '关键操作', en: 'Key actions' },
+    'tool.calc': { zh: '计算', en: 'Calc' },
+    'tool.convert': { zh: '转换', en: 'Convert' },
+    'tool.life': { zh: '生活计划', en: 'Life plans' },
+    'tool.record': { zh: '记录', en: 'Records' },
+    'tool.media': { zh: '媒体', en: 'Media' },
+    'tool.docs': { zh: '文档', en: 'Docs' },
+    'tool.dev': { zh: '开发', en: 'Dev' },
+    'tool.diagram': { zh: '图表', en: 'Diagram' },
+    'tool.game': { zh: '游戏', en: 'Games' },
+    'tool.auth': { zh: '账户', en: 'Auth' }
+  };
+
+  var ACTION_LABELS = {
+    'action.record.card-score.new': { zh: '单机计分 · 新开一局', en: 'Card score · New game' },
+    'action.record.card-score.continue': { zh: '单机计分 · 继续', en: 'Card score · Continue' },
+    'action.record.online-card-score.create': { zh: '联机计分 · 创建房间', en: 'Online score · Create' },
+    'action.record.online-card-score.join': { zh: '联机计分 · 加入房间', en: 'Online score · Join' }
+  };
 
   function apiBase() {
     if (window.siteConfig && window.siteConfig.apiBase) return window.siteConfig.apiBase;
@@ -20,6 +51,83 @@
 
   function token() {
     return localStorage.getItem(TOKEN_KEY) || '';
+  }
+
+  function langIsZh() {
+    try {
+      if (typeof window.tbGetLocale === 'function') return window.tbGetLocale() === 'zh-CN';
+    } catch (e) { /* ignore */ }
+    return (document.documentElement.lang || '').toLowerCase().indexOf('zh') === 0;
+  }
+
+  function trKey(key) {
+    if (typeof window.t === 'function') {
+      var v = window.t(key);
+      if (v && v !== key) return v;
+    }
+    return '';
+  }
+
+  function buildLabelMaps() {
+    var toolByFile = {};
+    var groupByFolder = {};
+    function addTools(groups) {
+      if (!Array.isArray(groups)) return;
+      groups.forEach(function (group) {
+        var folder = '';
+        (group.items || []).forEach(function (item) {
+          var url = (item.url || '').split('?')[0];
+          var parts = url.replace(/^\/+/, '').split('/');
+          if (parts.length < 3) return;
+          folder = parts[1];
+          var file = (parts[2] || '').replace(/\.html$/i, '');
+          if (!file) return;
+          toolByFile[folder + '/' + file] = item.titleKey || '';
+          if (group.titleKey && !groupByFolder[folder]) {
+            groupByFolder[folder] = group.titleKey;
+          }
+        });
+      });
+    }
+    if (window.toolsConfig) addTools(toolsConfig.groups);
+    if (window.gamesConfig) addTools(gamesConfig.groups);
+    return { toolByFile: toolByFile, groupByFolder: groupByFolder };
+  }
+
+  function maps() {
+    if (!labelMaps) labelMaps = buildLabelMaps();
+    return labelMaps;
+  }
+
+  function pickLocale(obj) {
+    if (!obj) return '';
+    return langIsZh() ? (obj.zh || obj.en || '') : (obj.en || obj.zh || '');
+  }
+
+  function labelForEvent(name) {
+    if (PAGE_LABELS[name]) return pickLocale(PAGE_LABELS[name]);
+    if (ACTION_LABELS[name]) return pickLocale(ACTION_LABELS[name]);
+    if (MODULE_LABELS[name]) return pickLocale(MODULE_LABELS[name]);
+
+    var m = /^tool\.([a-z0-9_-]+)\.([a-z0-9_-]+)$/i.exec(name || '');
+    if (m) {
+      var key = m[1] + '/' + m[2];
+      var titleKey = maps().toolByFile[key];
+      var title = titleKey ? trKey(titleKey) : '';
+      if (title) return title;
+      return m[2].replace(/-/g, ' ');
+    }
+
+    if ((name || '').indexOf('tool.') === 0) {
+      var folder = name.split('.')[1] || '';
+      var gKey = maps().groupByFolder[folder];
+      var gTitle = gKey ? trKey(gKey) : '';
+      if (gTitle) return gTitle;
+      var mod = MODULE_LABELS['tool.' + folder];
+      if (mod) return pickLocale(mod);
+    }
+
+    return name || '';
   }
 
   function showError(msg) {
@@ -47,6 +155,22 @@
     return String(n == null ? 0 : n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  function escapeHtml(text) {
+    var d = document.createElement('div');
+    d.textContent = text || '';
+    return d.innerHTML;
+  }
+
+  function nameCellHtml(name) {
+    var label = labelForEvent(name);
+    return (
+      '<div class="event-name">' +
+        '<div class="event-label">' + escapeHtml(label) + '</div>' +
+        '<div class="event-key">' + escapeHtml(name) + '</div>' +
+      '</div>'
+    );
+  }
+
   function renderBars(container, items, maxCount) {
     container.innerHTML = '';
     if (!items.length) {
@@ -58,17 +182,11 @@
       var row = document.createElement('div');
       row.className = 'module-row';
       row.innerHTML =
-        '<div class="text-sm text-gray-800 truncate">' + escapeHtml(item.name) + '</div>' +
+        nameCellHtml(item.name) +
         '<div class="text-sm font-semibold tabular-nums">' + fmt(item.count) + '</div>' +
         '<div class="stats-bar"><span style="width:' + pct + '%"></span></div>';
       container.appendChild(row);
     });
-  }
-
-  function escapeHtml(text) {
-    var d = document.createElement('div');
-    d.textContent = text || '';
-    return d.innerHTML;
   }
 
   function renderTop(items) {
@@ -86,7 +204,7 @@
       var tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="text-gray-400">' + (idx + 1) + '</td>' +
-        '<td><code class="text-xs text-gray-800">' + escapeHtml(item.name) + '</code></td>' +
+        '<td>' + nameCellHtml(item.name) + '</td>' +
         '<td class="font-semibold tabular-nums">' + fmt(item.count) + '</td>' +
         '<td style="width:40%"><div class="stats-bar"><span style="width:' + pct + '%"></span></div></td>';
       body.appendChild(tr);
@@ -95,6 +213,7 @@
 
   function loadOverview() {
     showError('');
+    labelMaps = null;
     var days = parseInt(rangeSelect.value, 10) || 7;
     return fetch(apiBase() + '/stats/overview?days=' + days, {
       headers: {
@@ -115,8 +234,11 @@
       var sum = top.reduce(function (a, b) { return a + (b.count || 0); }, 0);
       document.getElementById('event-sum').textContent = fmt(sum);
       document.getElementById('event-kinds').textContent = fmt(top.length);
-      document.getElementById('range-label').textContent =
-        (data.from || '') + ' → ' + (data.to || '') + ' · 共 ' + (data.days || days) + ' 天';
+      var tip = (data.from || '') + ' → ' + (data.to || '') + ' · 共 ' + (data.days || days) + ' 天';
+      var ips = data.exclude_ips_configured || [];
+      if (ips.length) tip += ' · 已排除 IP ' + ips.length + ' 个';
+      tip += ' · 管理员访问不计入';
+      document.getElementById('range-label').textContent = tip;
       var modules = data.modules || [];
       var maxMod = modules.length ? modules[0].count : 0;
       renderBars(document.getElementById('module-list'), modules, maxMod);
@@ -143,6 +265,9 @@
     if (loginLink) loginLink.classList.add('hidden');
     var label = user.phone || user.email || 'admin';
     if (authLabel) authLabel.textContent = label;
+    try {
+      localStorage.setItem('tb-stats-exclude', '1');
+    } catch (e) { /* ignore */ }
   }
 
   function boot() {
@@ -172,5 +297,8 @@
 
   if (refreshBtn) refreshBtn.addEventListener('click', loadOverview);
   if (rangeSelect) rangeSelect.addEventListener('change', loadOverview);
+  document.addEventListener('tb:locale', function () {
+    if (!app.classList.contains('hidden')) loadOverview();
+  });
   boot();
 })();

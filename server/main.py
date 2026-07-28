@@ -461,10 +461,6 @@ def require_admin(user: dict):
         raise HTTPException(status_code=403, detail="Admin access required")
 
 
-# Bind admin-only stats overview after require_admin is defined.
-wire_site_stats(get_conn, require_db, get_current_user, require_admin)
-
-
 def _mask_email(email: str) -> str:
     if not email or "@" not in email:
         return email or "User"
@@ -512,6 +508,16 @@ def _client_ip(request: Request) -> str:
         return request.client.host
     return "unknown"
 
+
+wire_site_stats(
+    get_conn,
+    require_db,
+    get_current_user,
+    require_admin,
+    get_optional_user,
+    is_admin,
+    _client_ip,
+)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
 

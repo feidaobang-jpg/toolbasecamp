@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import os
 import re
 import uuid
 from datetime import date, timedelta
 from typing import Any, Callable, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
@@ -17,7 +18,10 @@ security = HTTPBearer(auto_error=False)
 _get_conn: Optional[Callable[[], Any]] = None
 _require_db: Optional[Callable[[], None]] = None
 _get_current_user: Optional[Callable[..., Any]] = None
+_get_optional_user: Optional[Callable[..., Any]] = None
 _require_admin: Optional[Callable[[dict], None]] = None
+_is_admin: Optional[Callable[[dict], bool]] = None
+_client_ip: Optional[Callable[[Request], str]] = None
 
 _VISITOR_RE = re.compile(
     r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
@@ -25,19 +29,34 @@ _VISITOR_RE = re.compile(
 _EVENT_RE = re.compile(r"^[a-z][a-z0-9._-]{1,95}$")
 
 
+def _exclude_ips() -> set[str]:
+    raw = os.environ.get("STATS_EXCLUDE_IPS", "") or ""
+    return {p.strip() for p in raw.split(",") if p.strip()}
+
+
 def wire(
     get_conn: Callable[[], Any],
     require_db: Callable[[], None],
     get_current_user: Optional[Callable[..., Any]] = None,
     require_admin: Optional[Callable[[dict], None]] = None,
+    get_optional_user: Optional[Callable[..., Any]] = None,
+    is_admin: Optional[Callable[[dict], bool]] = None,
+    client_ip: Optional[Callable[[Request], str]] = None,
 ) -> None:
-    global _get_conn, _require_db, _get_current_user, _require_admin
+    global _get_conn, _require_db, _get_current_user, _get_optional_user
+    global _require_admin, _is_admin, _client_ip
     _get_conn = get_conn
     _require_db = require_db
     if get_current_user is not None:
         _get_current_user = get_current_user
     if require_admin is not None:
         _require_admin = require_admin
+    if get_optional_user is not None:
+        _get_optional_user = get_optional_user
+    if is_admin is not None:
+        _is_admin = is_admin
+    if client_ip is not None:
+        _client_ip = client_ip
 
 
 def ensure_site_stats_tables(cur) -> None:
@@ -107,6 +126,25 @@ def _read_totals(cur) -> dict:
     }
 
 
+def _should_skip_count(
+    request: Request,
+    creds: Optional[HTTPAuthorizationCredentials],
+) -> bool:
+    """Skip counting for excluded IPs and logged-in admins."""
+    if _client_ip is not None:
+        ip = (_client_ip(request) or "").strip()
+        if ip and ip in _exclude_ips():
+            return True
+    if _get_optional_user is not None and _is_admin is not None and creds is not None:
+        try:
+            user = _get_optional_user(creds)
+        except Exception:
+            user = None
+        if user and _is_admin(user):
+            return True
+    return False
+
+
 def _admin_user(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ) -> dict:
@@ -131,13 +169,28 @@ def get_stats():
 
 
 @router.post("/hit")
-def record_hit(body: Optional[HitBody] = None):
+def record_hit(
+    request: Request,
+    body: Optional[HitBody] = None,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
     """Increment PV; increment UV once per visitor_id."""
     if _require_db is None or _get_conn is None:
         raise HTTPException(status_code=503, detail="Stats unavailable")
     _require_db()
     payload = body or HitBody()
     visitor_id = _normalize_visitor_id(payload.visitor_id)
+    if _should_skip_count(request, creds):
+        conn = _get_conn()
+        try:
+            with conn.cursor() as cur:
+                totals = _read_totals(cur)
+        finally:
+            conn.close()
+        totals["visitor_id"] = visitor_id
+        totals["skipped"] = True
+        return totals
+
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
@@ -155,19 +208,27 @@ def record_hit(body: Optional[HitBody] = None):
                 )
             totals = _read_totals(cur)
         totals["visitor_id"] = visitor_id
+        totals["skipped"] = False
         return totals
     finally:
         conn.close()
 
 
 @router.post("/event")
-def record_event(body: EventBody):
+def record_event(
+    request: Request,
+    body: EventBody,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
     """Anonymous feature/page counter (daily bucket)."""
     if _require_db is None or _get_conn is None:
         raise HTTPException(status_code=503, detail="Stats unavailable")
     _require_db()
     name = _normalize_event_name(body.name)
     today = date.today().isoformat()
+    if _should_skip_count(request, creds):
+        return {"ok": True, "name": name, "date": today, "skipped": True}
+
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
@@ -179,7 +240,7 @@ def record_event(body: EventBody):
                 """,
                 (today, name),
             )
-        return {"ok": True, "name": name, "date": today}
+        return {"ok": True, "name": name, "date": today, "skipped": False}
     finally:
         conn.close()
 
@@ -233,7 +294,6 @@ def stats_overview(
                 for r in daily_rows
             ]
 
-            # Aggregate by first segment (page / tool) and module path prefix.
             by_module: dict[str, int] = {}
             for item in top:
                 parts = item["name"].split(".")
@@ -256,6 +316,7 @@ def stats_overview(
             "events_top": top,
             "events_daily": daily,
             "modules": modules,
+            "exclude_ips_configured": sorted(_exclude_ips()),
         }
     finally:
         conn.close()

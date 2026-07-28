@@ -1,11 +1,14 @@
 /**
  * Lightweight anonymous feature / page event tracker.
  * Usage: TBStats.track('tool.record.card-score'); or data-tb-track="..."
+ * Skips when localStorage tb-stats-exclude=1 (set for admin sessions).
  */
 (function () {
     'use strict';
 
     var ENDPOINT = '/stats/event';
+    var EXCLUDE_KEY = 'tb-stats-exclude';
+    var TOKEN_KEY = 'auth_token';
     var queued = {};
     var flushTimer = null;
     var pageTracked = false;
@@ -15,6 +18,23 @@
         var host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') return 'http://127.0.0.1:8001';
         return window.location.origin + '/api';
+    }
+
+    function shouldExclude() {
+        try {
+            return localStorage.getItem(EXCLUDE_KEY) === '1';
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function authHeaders() {
+        var headers = { 'Content-Type': 'application/json', Accept: 'application/json' };
+        try {
+            var token = localStorage.getItem(TOKEN_KEY) || '';
+            if (token) headers.Authorization = 'Bearer ' + token;
+        } catch (e) { /* ignore */ }
+        return headers;
     }
 
     function normalizeName(name) {
@@ -27,10 +47,11 @@
     }
 
     function sendOne(name) {
+        if (shouldExclude()) return;
         try {
             fetch(apiBase() + ENDPOINT, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                headers: authHeaders(),
                 body: JSON.stringify({ name: name }),
                 credentials: 'same-origin',
                 cache: 'no-store',
@@ -49,6 +70,7 @@
     }
 
     function track(name) {
+        if (shouldExclude()) return;
         var key = normalizeName(name);
         if (!key || key.length < 2) return;
         if (!/^[a-z][a-z0-9._-]{1,95}$/.test(key)) return;
@@ -78,7 +100,7 @@
     }
 
     function trackPage() {
-        if (pageTracked) return;
+        if (pageTracked || shouldExclude()) return;
         var ev = pathToEvent();
         if (!ev) return;
         pageTracked = true;
@@ -94,6 +116,13 @@
         }, true);
     }
 
+    function setExclude(on) {
+        try {
+            if (on) localStorage.setItem(EXCLUDE_KEY, '1');
+            else localStorage.removeItem(EXCLUDE_KEY);
+        } catch (e) { /* ignore */ }
+    }
+
     function init() {
         bindDataTrack();
         trackPage();
@@ -101,7 +130,9 @@
 
     window.TBStats = {
         track: track,
-        trackPage: trackPage
+        trackPage: trackPage,
+        setExclude: setExclude,
+        shouldExclude: shouldExclude
     };
 
     if (document.readyState === 'loading') {

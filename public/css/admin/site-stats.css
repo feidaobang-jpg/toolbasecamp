@@ -64,6 +64,25 @@
   grid-column: 1 / -1;
 }
 
+.event-name {
+  min-width: 0;
+}
+
+.event-label {
+  font-size: 13px;
+  color: #111827;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.event-key {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #9ca3af;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
+}
+
 .error-box {
   background: #fef2f2;
   border: 1px solid #fecaca;

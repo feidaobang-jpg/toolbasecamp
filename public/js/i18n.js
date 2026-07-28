@@ -177,9 +177,14 @@
 
     function loadSiteStats() {
         var visitorId = getOrCreateVisitorId();
+        var headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+        try {
+            var token = localStorage.getItem('auth_token') || '';
+            if (token) headers.Authorization = 'Bearer ' + token;
+        } catch (e) { /* ignore */ }
         fetch(apiBase() + '/stats/hit', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: headers,
             body: JSON.stringify({ visitor_id: visitorId }),
             credentials: 'same-origin',
             cache: 'no-store'

@@ -125,6 +125,7 @@
             logout.className = 'w-full rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
             logout.addEventListener('click', () => {
                 localStorage.removeItem(tokenKey);
+                try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
                 window.location.reload();
             });
             box.appendChild(userLink);
@@ -162,6 +163,7 @@
             logoutBtn = createBtn(tr('auth.logout'));
             logoutBtn.addEventListener('click', () => {
                 localStorage.removeItem(tokenKey);
+                try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
                 window.location.reload();
             });
             wrap.appendChild(logoutBtn);
@@ -209,6 +211,21 @@
                     sidebarMeta.innerHTML = `<div class="user-meta-name">${label}</div>`;
                 }
                 injectAdminStatsLink(user, wrap);
+                if (isAdminUser(user)) {
+                    try {
+                        localStorage.setItem('tb-stats-exclude', '1');
+                        if (window.TBStats && typeof window.TBStats.setExclude === 'function') {
+                            window.TBStats.setExclude(true);
+                        }
+                    } catch (e) { /* ignore */ }
+                } else {
+                    try {
+                        localStorage.removeItem('tb-stats-exclude');
+                        if (window.TBStats && typeof window.TBStats.setExclude === 'function') {
+                            window.TBStats.setExclude(false);
+                        }
+                    } catch (e2) { /* ignore */ }
+                }
             })
             .catch((error) => {
                 // Keep session on outage / network blips; only clear token on real auth failure.
@@ -223,6 +240,7 @@
                     return;
                 }
                 localStorage.removeItem(tokenKey);
+                try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
                 if (wrap && userEl && logoutBtn) {
                     wrap.innerHTML = '';
                     wrap.appendChild(createLink(loginUrl, tr('auth.login')));
@@ -602,7 +620,7 @@
         script.id = 'tb-stats-script';
         script.async = true;
         const base = window.location.pathname.includes('/html/') ? '../../' : '';
-        script.src = `${base}js/tb-stats.js?v=1`;
+        script.src = `${base}js/tb-stats.js?v=2`;
         document.head.appendChild(script);
     }
 

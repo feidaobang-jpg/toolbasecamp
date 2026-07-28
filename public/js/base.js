@@ -37,7 +37,7 @@ function ensureTbStats() {
     var script = document.createElement('script');
     script.id = 'tb-stats-script';
     script.async = true;
-    script.src = getToolRootPrefix() + 'js/tb-stats.js?v=1';
+        script.src = getToolRootPrefix() + 'js/tb-stats.js?v=2';
     document.head.appendChild(script);
 }
 
