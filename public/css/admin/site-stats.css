@@ -83,6 +83,19 @@
   word-break: break-all;
 }
 
+.geo-row-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.geo-bar-cn > span { background: #2563eb; }
+.geo-bar-overseas > span { background: #059669; }
+.geo-bar-unknown > span { background: #9ca3af; }
+
 .error-box {
   background: #fef2f2;
   border: 1px solid #fecaca;

@@ -211,6 +211,54 @@
     });
   }
 
+  function renderGeo(geo) {
+    var pvBars = document.getElementById('geo-pv-bars');
+    var uvBars = document.getElementById('geo-uv-bars');
+    var pvSum = document.getElementById('geo-pv-summary');
+    var uvSum = document.getElementById('geo-uv-summary');
+    if (!pvBars || !uvBars) return;
+
+    var labels = {
+      cn: '国内',
+      overseas: '海外',
+      unknown: '未知'
+    };
+    var order = ['cn', 'overseas', 'unknown'];
+    geo = geo || {};
+    var pv = geo.pv || {};
+    var uv = geo.uv || {};
+    var pvShare = geo.pv_share || {};
+    var uvShare = geo.uv_share || {};
+
+    function fill(container, counts, shares) {
+      container.innerHTML = '';
+      order.forEach(function (key) {
+        var count = counts[key] || 0;
+        var share = shares[key] || 0;
+        var pct = Math.round(share * 1000) / 10;
+        var barPct = Math.max(count > 0 ? 2 : 0, Math.round(share * 100));
+        var row = document.createElement('div');
+        row.className = 'geo-row';
+        row.innerHTML =
+          '<div class="geo-row-head">' +
+            '<span>' + labels[key] + '</span>' +
+            '<span class="tabular-nums">' + fmt(count) + ' · ' + pct + '%</span>' +
+          '</div>' +
+          '<div class="stats-bar geo-bar geo-bar-' + key + '"><span style="width:' + barPct + '%"></span></div>';
+        container.appendChild(row);
+      });
+    }
+
+    fill(pvBars, pv, pvShare);
+    fill(uvBars, uv, uvShare);
+    if (pvSum) {
+      pvSum.textContent = '区间浏览合计 ' + fmt(geo.pv_total || 0);
+    }
+    if (uvSum) {
+      uvSum.textContent = '区间访客合计 ' + fmt(geo.uv_total || 0) + '（按首次访客地区）';
+    }
+  }
+
   function loadOverview() {
     showError('');
     labelMaps = null;
@@ -239,6 +287,7 @@
       if (ips.length) tip += ' · 已排除 IP ' + ips.length + ' 个';
       tip += ' · 管理员访问不计入';
       document.getElementById('range-label').textContent = tip;
+      renderGeo(data.geo);
       var modules = data.modules || [];
       var maxMod = modules.length ? modules[0].count : 0;
       renderBars(document.getElementById('module-list'), modules, maxMod);

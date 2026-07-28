@@ -9,7 +9,7 @@
   <script src="../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../css/site-mobile-nav.css" />
-  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=2" />
+  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=3" />
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -72,6 +72,23 @@
       <p id="error-box" class="error-box" hidden></p>
 
       <section class="bg-white rounded-2xl border border-gray-100 p-5">
+        <h3 class="font-semibold text-gray-900 mb-1">国内 vs 海外</h3>
+        <p class="text-xs text-gray-400 mb-4">按访问 IP 粗分（管理员/排除 IP 不计入）；未知多为内网或解析失败</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm text-gray-600 mb-2">浏览量占比</div>
+            <div id="geo-pv-bars" class="space-y-2"></div>
+            <p id="geo-pv-summary" class="text-xs text-gray-400 mt-2"></p>
+          </div>
+          <div>
+            <div class="text-sm text-gray-600 mb-2">访客占比</div>
+            <div id="geo-uv-bars" class="space-y-2"></div>
+            <p id="geo-uv-summary" class="text-xs text-gray-400 mt-2"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-gray-100 p-5">
         <h3 class="font-semibold text-gray-900 mb-4">模块汇总</h3>
         <div id="module-list" class="space-y-2"></div>
       </section>
@@ -100,6 +117,6 @@
   <script src="../../js/locales/zh-CN.js"></script>
   <script src="../../js/i18n.js?v=stats2"></script>
   <script src="../../js/config.js"></script>
-  <script src="../../js/admin/site-stats.js?v=2"></script>
+  <script src="../../js/admin/site-stats.js?v=3"></script>
 </body>
 </html>
