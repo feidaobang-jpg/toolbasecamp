@@ -46,10 +46,34 @@ if ! mysqldump --defaults-extra-file="$CNF" \
   --triggers \
   --events \
   --hex-blob \
+  --no-tablespaces \
   --default-character-set=utf8mb4 \
   "$DB_NAME" | gzip -c > "$OUT"; then
   rm -f "$OUT"
   MSG="[toolbasecamp] MySQL backup FAILED on ${HOST} db=${DB_NAME}"
+  echo "$MSG" >&2
+  if [[ -x "$DEPLOY_DIR/notify-alert.sh" ]]; then
+    bash "$DEPLOY_DIR/notify-alert.sh" "$MSG" || true
+  fi
+  exit 1
+fi
+
+# Reject suspiciously tiny dumps (likely empty/failed despite exit 0).
+BYTES="$(wc -c < "$OUT" | tr -d ' ')"
+if [[ "${BYTES:-0}" -lt 200 ]]; then
+  rm -f "$OUT"
+  MSG="[toolbasecamp] MySQL backup too small (${BYTES}B) on ${HOST} — likely failed"
+  echo "$MSG" >&2
+  if [[ -x "$DEPLOY_DIR/notify-alert.sh" ]]; then
+    bash "$DEPLOY_DIR/notify-alert.sh" "$MSG" || true
+  fi
+  exit 1
+fi
+
+# Confirm gzip contains SQL text (not a truncated error-only stream).
+if ! gzip -dc "$OUT" | head -c 200 | grep -Eqi 'CREATE TABLE|MySQL dump|Database:'; then
+  rm -f "$OUT"
+  MSG="[toolbasecamp] MySQL backup content invalid on ${HOST}"
   echo "$MSG" >&2
   if [[ -x "$DEPLOY_DIR/notify-alert.sh" ]]; then
     bash "$DEPLOY_DIR/notify-alert.sh" "$MSG" || true
