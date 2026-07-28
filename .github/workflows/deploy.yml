@@ -216,7 +216,7 @@ jobs:
           (
             cd "$APP_DIR"
             "$APP_DIR/venv/bin/python" -c "from main import hash_password, verify_password; h=hash_password('deploy_check'); assert verify_password('deploy_check', h)"
-            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/rents' in paths, 'missing rents routes: ' + str([p for p in paths if 'rent' in p or 'record' in p]); assert '/records/online-games' in paths, 'missing online-games routes: ' + str([p for p in paths if 'online' in p or 'record' in p]); assert '/records/online-games/{game_id}/draft-scores' in paths, 'missing online draft-scores: ' + str([p for p in paths if 'online' in p]); assert '/records/online-games/{game_id}/delete' in paths, 'missing online delete: ' + str([p for p in paths if 'online' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); assert '/life-plans/generate' in paths and '/life-plans/status' in paths and '/life-plans/drug-label' in paths, 'missing life-plans routes: ' + str([p for p in paths if 'life' in p]); from life_plans import PLAN_KINDS; assert 'day_trip' in PLAN_KINDS and 'travel_pack' in PLAN_KINDS and 'fitness_week' in PLAN_KINDS and 'job_apply_week' in PLAN_KINDS and 'pet_travel' in PLAN_KINDS and 'shopping' not in PLAN_KINDS and 'wishlist' not in PLAN_KINDS, 'unexpected life-plan kinds: ' + str(sorted(PLAN_KINDS)); import wan_video; assert wan_video.wan_configured or True"
+            "$APP_DIR/venv/bin/python" -c "from main import app; paths=[getattr(r,'path','') for r in app.routes]; assert '/recipe/generate' in paths and '/recipe/detect' in paths, 'missing recipe routes: ' + str(paths); assert '/records/days' in paths, 'missing records routes: ' + str(paths); assert '/records/todos' in paths, 'missing todos routes: ' + str([p for p in paths if 'todo' in p or 'record' in p]); assert '/records/rents' in paths, 'missing rents routes: ' + str([p for p in paths if 'rent' in p or 'record' in p]); assert '/records/online-games' in paths, 'missing online-games routes: ' + str([p for p in paths if 'online' in p or 'record' in p]); assert '/records/online-games/{game_id}/draft-scores' in paths, 'missing online draft-scores: ' + str([p for p in paths if 'online' in p]); assert '/records/online-games/{game_id}/delete' in paths, 'missing online delete: ' + str([p for p in paths if 'online' in p]); assert '/records/clocks/{clock_id}/reset' in paths, 'missing clock reset route: ' + str([p for p in paths if 'clock' in p]); assert '/records/clocks/{clock_id}/logs' in paths, 'missing clock logs route: ' + str([p for p in paths if 'clock' in p]); assert '/watermark/image/process' in paths, 'missing watermark routes: ' + str([p for p in paths if 'water' in p]); assert '/wan/i2v/submit' in paths and '/wan/status' in paths, 'missing wan i2v routes: ' + str([p for p in paths if 'wan' in p]); assert '/image/general-cutout/segment' in paths, 'missing general cutout route: ' + str([p for p in paths if 'image' in p or 'cutout' in p]); assert '/life-plans/generate' in paths and '/life-plans/status' in paths and '/life-plans/drug-label' in paths, 'missing life-plans routes: ' + str([p for p in paths if 'life' in p]); assert '/stats/hit' in paths and '/stats' in paths, 'missing site stats routes: ' + str([p for p in paths if 'stat' in p]); from life_plans import PLAN_KINDS; assert 'day_trip' in PLAN_KINDS and 'travel_pack' in PLAN_KINDS and 'fitness_week' in PLAN_KINDS and 'job_apply_week' in PLAN_KINDS and 'pet_travel' in PLAN_KINDS and 'shopping' not in PLAN_KINDS and 'wishlist' not in PLAN_KINDS, 'unexpected life-plan kinds: ' + str(sorted(PLAN_KINDS)); import wan_video; assert wan_video.wan_configured or True"
           )
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
@@ -280,6 +280,7 @@ jobs:
           echo "=== Force life-plans process reload ==="
           bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           bash /opt/toolbasecamp-deploy/fix-fx-api.sh
+          bash /opt/toolbasecamp-deploy/fix-stats-api.sh
           bash /opt/toolbasecamp-deploy/fix-auth-api.sh
           bash /opt/toolbasecamp-deploy/fix-records-api.sh
           # Prove the *listening* process is the new code (not a stale orphan)
@@ -410,6 +411,12 @@ jobs:
             systemctl restart toolbasecamp-api
             sleep 3
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/fx/rate' >/dev/null || exit 1
+          }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/hit' >/dev/null || {
+            echo "=== openapi missing /stats/hit — forcing fix-stats-api.sh ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-stats-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/hit' >/dev/null || exit 1
           }
 
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
@@ -831,6 +838,32 @@ jobs:
             echo "$TWD" | grep -F '"rate"' >/dev/null || exit 1
           fi
           echo "FX API public OK (incl. THB)."
+
+      - name: Verify site stats API (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          check_stats() {
+            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            echo "health: $HEALTH"
+            echo "$HEALTH" | grep -F '"stats_api":true' >/dev/null
+          }
+          HIT="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/hit?cb=$RANDOM" \
+            -H 'Content-Type: application/json' \
+            -d '{"visitor_id":"00000000-0000-4000-8000-0000000000aa"}' || true)"
+          echo "stats hit: $HIT"
+          if ! check_stats || ! echo "$HIT" | grep -F '"site_pv"' >/dev/null; then
+            echo "::warning:: public stats incomplete — forcing fix-stats-api.sh"
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+              "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-stats-api.sh'
+            sleep 2
+            HIT="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/hit?cb=$RANDOM" \
+              -H 'Content-Type: application/json' \
+              -d '{"visitor_id":"00000000-0000-4000-8000-0000000000aa"}' || true)"
+            echo "retry hit: $HIT"
+            check_stats || exit 1
+            echo "$HIT" | grep -F '"site_pv"' >/dev/null || exit 1
+          fi
+          echo "Site stats API public OK."
 
       - name: Verify life-plans API route (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
