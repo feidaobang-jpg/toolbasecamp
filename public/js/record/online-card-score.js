@@ -242,8 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var kbH = m.kbH || 0;
         document.body.classList.add('ocs-kb-open');
         document.documentElement.style.setProperty('--ocs-kb-h', kbH + 'px');
-        /* 给固定「保存分数」条留空，不再 window.scrollBy（会整页连键盘一起上移） */
-        boardView.style.paddingBottom = kbH > 0 ? (kbH + 64) + 'px' : '';
+        boardView.style.paddingBottom = kbH > 0 ? (kbH + 16) + 'px' : '';
         /* padding 可能触发 scroll，短暂忽略关闭 */
         kbIgnoreScrollCloseUntil = Math.max(kbIgnoreScrollCloseUntil, Date.now() + 400);
         kbCloseScrollY = window.scrollY || window.pageYOffset || 0;
