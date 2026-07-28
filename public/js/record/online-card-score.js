@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var ocsKeyboardClose = document.getElementById('ocs-keyboard-close');
     var activeScoreInput = null;
     var keyboardOpen = false;
-    var kbIgnoreScrollCloseUntil = 0;
-    var kbTouchStartY = null;
     var currentGameId = null;
     var currentGame = null;
     var meId = null;
@@ -247,7 +245,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function hideScoreKeyboard() {
         keyboardOpen = false;
-        kbTouchStartY = null;
         if (activeScoreInput) activeScoreInput.classList.remove('is-active');
         activeScoreInput = null;
         if (ocsKeyboard) {
@@ -255,31 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
             ocsKeyboard.setAttribute('aria-hidden', 'true');
         }
         updateKeyboardLayout();
-    }
-
-    /** 一开始滚动/上滑就关闭（打开后短暂忽略，避免点按误触） */
-    function closeKeyboardOnUserScroll() {
-        if (!keyboardOpen) return;
-        if (Date.now() < kbIgnoreScrollCloseUntil) return;
-        hideScoreKeyboard();
-    }
-
-    function onKbTouchStart(ev) {
-        if (!keyboardOpen || !ev.touches || !ev.touches[0]) return;
-        if (ocsKeyboard && ev.target && ocsKeyboard.contains(ev.target)) {
-            kbTouchStartY = null;
-            return;
-        }
-        kbTouchStartY = ev.touches[0].clientY;
-    }
-
-    function onKbTouchMove(ev) {
-        if (!keyboardOpen || kbTouchStartY == null) return;
-        if (Date.now() < kbIgnoreScrollCloseUntil) return;
-        if (ocsKeyboard && ev.target && ocsKeyboard.contains(ev.target)) return;
-        if (!ev.touches || !ev.touches[0]) return;
-        if (Math.abs(ev.touches[0].clientY - kbTouchStartY) < 18) return;
-        hideScoreKeyboard();
     }
 
     function openScoreKeyboard(input) {
@@ -290,9 +262,6 @@ document.addEventListener('DOMContentLoaded', function () {
         activeScoreInput = input;
         input.classList.add('is-active');
         keyboardOpen = true;
-        kbTouchStartY = null;
-        /* 只忽略点按瞬间，勿在 layout/resize 里续期，否则滚动永远关不掉 */
-        kbIgnoreScrollCloseUntil = Date.now() + 320;
         try {
             if (document.activeElement && document.activeElement.blur) {
                 document.activeElement.blur();
@@ -1045,9 +1014,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.addEventListener('beforeunload', stopPoll);
-    window.addEventListener('scroll', closeKeyboardOnUserScroll, { passive: true });
-    window.addEventListener('touchstart', onKbTouchStart, { passive: true });
-    window.addEventListener('touchmove', onKbTouchMove, { passive: true });
     window.addEventListener('resize', function () {
         if (keyboardOpen) updateKeyboardLayout();
     });
@@ -1055,7 +1021,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.visualViewport.addEventListener('resize', function () {
             if (keyboardOpen) updateKeyboardLayout();
         });
-        window.visualViewport.addEventListener('scroll', closeKeyboardOnUserScroll, { passive: true });
     }
 
     R.optionalLogin(gate, app).then(function (user) {
