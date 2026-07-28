@@ -25,7 +25,16 @@ window.TB_LOCALES.en = {
         title: 'Directory',
         catalog: 'Categories',
         description: 'Curated links for AI tools, docs, design resources, and productivity software.',
-        defaultDesc: 'Recommended site'
+        defaultDesc: 'Recommended site',
+        sections: {
+            tools: 'Productivity',
+            develop: 'Developers',
+            cloud: 'Cloud & Hosting',
+            ai: 'Artificial Intelligence',
+            community: 'Community & Learning',
+            design: 'Design Inspiration',
+            office: 'Office & Collaboration'
+        }
     },
     lang: {
         switcher: 'Language',

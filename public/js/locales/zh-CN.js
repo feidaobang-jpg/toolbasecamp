@@ -24,7 +24,16 @@ window.TB_LOCALES['zh-CN'] = {
         title: '导航',
         catalog: '导航目录',
         description: '极客导航：AI 工具、开发文档、设计资源与效率软件收录。',
-        defaultDesc: '优质网站推荐'
+        defaultDesc: '优质网站推荐',
+        sections: {
+            tools: '效率工具',
+            develop: '开发资源',
+            cloud: '云与托管',
+            ai: '人工智能',
+            community: '社区学习',
+            design: '设计灵感',
+            office: '办公协作'
+        }
     },
     lang: {
         switcher: '语言',

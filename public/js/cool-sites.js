@@ -10,6 +10,20 @@
     return fallback || key;
   }
 
+  function currentLocale() {
+    if (typeof window.tbGetLocale === 'function') return window.tbGetLocale();
+    return document.documentElement.lang || 'en';
+  }
+
+  function isEnglish() {
+    var loc = String(currentLocale() || '').toLowerCase();
+    return loc.indexOf('zh') !== 0;
+  }
+
+  function sectionTitle(section) {
+    return tr('coolSites.sections.' + section.id, section.title);
+  }
+
   function escapeHtml(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;')
@@ -28,6 +42,14 @@
       out.push(item);
     });
     return out;
+  }
+
+  function visibleGroups(section) {
+    var groups = section.groups || [];
+    if (!isEnglish()) return groups;
+    return groups.filter(function (group) {
+      return String(group.name || '') !== '国内';
+    });
   }
 
   function faviconUrl(url) {
@@ -74,12 +96,26 @@
     mobileNav.innerHTML = '';
     mainContent.innerHTML = '';
 
-    data.forEach(function (section, index) {
+    var en = isEnglish();
+    var visibleSections = [];
+    data.forEach(function (section) {
+      var groups = visibleGroups(section).filter(function (group) {
+        return dedupeItems(group.items).length > 0;
+      });
+      if (!groups.length) return;
+      visibleSections.push({ section: section, groups: groups });
+    });
+
+    visibleSections.forEach(function (entry, index) {
+      var section = entry.section;
+      var groups = entry.groups;
+      var title = sectionTitle(section);
+
       var menuItem = document.createElement('a');
       menuItem.href = '#' + section.id;
       menuItem.innerHTML =
         '<i class="' + escapeHtml(section.icon) + '"></i><span class="font-medium">' +
-        escapeHtml(section.title) + '</span>';
+        escapeHtml(title) + '</span>';
       if (index === 0) menuItem.classList.add('sidebar-active');
       bindSidebarLink(menuItem, section.id);
       sidebarNav.appendChild(menuItem);
@@ -93,13 +129,16 @@
       sectionEl.className = 'cool-sites-section';
       sectionEl.innerHTML =
         '<h2 class="cool-sites-section-title"><i class="' + escapeHtml(section.icon) + '"></i> ' +
-        escapeHtml(section.title) + '</h2>';
+        escapeHtml(title) + '</h2>';
 
-      (section.groups || []).forEach(function (group) {
-        var groupTitle = document.createElement('h3');
-        groupTitle.className = 'cool-sites-group-title';
-        groupTitle.textContent = group.name;
-        sectionEl.appendChild(groupTitle);
+      groups.forEach(function (group) {
+        // English: only overseas items — hide redundant "国外" subgroup headers.
+        if (!en) {
+          var groupTitle = document.createElement('h3');
+          groupTitle.className = 'cool-sites-group-title';
+          groupTitle.textContent = group.name;
+          sectionEl.appendChild(groupTitle);
+        }
 
         var grid = document.createElement('div');
         grid.className = 'cool-sites-grid';
@@ -141,12 +180,9 @@
   }
 
   function syncActiveFromScroll() {
-    var data = window.COOL_SITES_DATA || [];
     var currentId = '';
-    data.forEach(function (section) {
-      var el = document.getElementById(section.id);
-      if (!el) return;
-      if (el.getBoundingClientRect().top <= 150) currentId = section.id;
+    document.querySelectorAll('#main-content .cool-sites-section').forEach(function (el) {
+      if (el.getBoundingClientRect().top <= 150) currentId = el.id;
     });
     if (!currentId) return;
     document.querySelectorAll('.cool-sites-aside-nav a').forEach(function (el) {
@@ -166,6 +202,7 @@
     if (openBtn) openBtn.addEventListener('click', function () { setSidebarOpen(true); });
     if (closeBtn) closeBtn.addEventListener('click', function () { setSidebarOpen(false); });
     if (overlay) overlay.addEventListener('click', function () { setSidebarOpen(false); });
+    document.addEventListener('tb:locale', function () { render(); });
   }
 
   if (document.readyState === 'loading') {
