@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var ocsKeyboardClose = document.getElementById('ocs-keyboard-close');
     var activeScoreInput = null;
     var keyboardOpen = false;
+    var kbIgnoreScrollCloseUntil = 0;
     var currentGameId = null;
     var currentGame = null;
     var meId = null;
@@ -237,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    function updateKeyboardLayout() {
+    function updateKeyboardLayout(allowScroll) {
         if (!boardView) return;
         if (!keyboardOpen || !ocsKeyboard) {
             boardView.style.paddingBottom = '';
@@ -246,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var m = keyboardMetrics();
         /* 多留一点底边，避免只露出半个「保存分数」 */
         boardView.style.paddingBottom = m.kbH > 0 ? (m.kbH + 32) + 'px' : '';
+        if (!allowScroll) return;
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
                 scrollBoardForKeyboard();
@@ -275,7 +277,15 @@ document.addEventListener('DOMContentLoaded', function () {
             ocsKeyboard.classList.remove('is-open');
             ocsKeyboard.setAttribute('aria-hidden', 'true');
         }
-        updateKeyboardLayout();
+        updateKeyboardLayout(false);
+    }
+
+    /** 键盘弹出后用户上滑/滚动 → 关闭软键盘，避免再被强制滚到底 */
+    function closeKeyboardOnUserScroll(ev) {
+        if (!keyboardOpen) return;
+        if (Date.now() < kbIgnoreScrollCloseUntil) return;
+        if (ev && ocsKeyboard && ev.target && ocsKeyboard.contains(ev.target)) return;
+        hideScoreKeyboard();
     }
 
     function openScoreKeyboard(input) {
@@ -286,12 +296,14 @@ document.addEventListener('DOMContentLoaded', function () {
         activeScoreInput = input;
         input.classList.add('is-active');
         keyboardOpen = true;
+        kbIgnoreScrollCloseUntil = Date.now() + 450;
         ocsKeyboard.classList.add('is-open');
         ocsKeyboard.setAttribute('aria-hidden', 'false');
         updateKeyboardDisplay();
-        updateKeyboardLayout();
-        setTimeout(updateKeyboardLayout, 80);
-        setTimeout(updateKeyboardLayout, 320);
+        /* 仅打开时滚一次露出保存按钮；之后不再强行滚到底 */
+        updateKeyboardLayout(true);
+        setTimeout(function () { updateKeyboardLayout(false); }, 80);
+        setTimeout(function () { updateKeyboardLayout(false); }, 320);
     }
 
     function onScoreKey(key) {
@@ -1032,12 +1044,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.addEventListener('beforeunload', stopPoll);
+    window.addEventListener('scroll', closeKeyboardOnUserScroll, { passive: true });
+    window.addEventListener('touchmove', closeKeyboardOnUserScroll, { passive: true });
     window.addEventListener('resize', function () {
-        if (keyboardOpen) updateKeyboardLayout();
+        if (keyboardOpen) updateKeyboardLayout(false);
     });
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', function () {
-            if (keyboardOpen) updateKeyboardLayout();
+            if (keyboardOpen) updateKeyboardLayout(false);
         });
     }
 
