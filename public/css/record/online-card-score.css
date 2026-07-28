@@ -58,7 +58,7 @@
 .ocs-table-wrap {
   margin: 8px 0 4px;
   border: 1px solid #ddd;
-  border-radius: 12px;
+  border-radius: 0;
   background: #fff;
   /* 不设 overflow，避免表内滚动容器抢走整页下拉手势 */
   overflow: visible;
@@ -358,7 +358,7 @@ body.ocs-kb-open .ocs-submit-row .tb-btn {
 
   body.ocs-board-active .ocs-table-wrap {
     margin: 8px 0 12px;
-    border-radius: 8px;
+    border-radius: 0;
   }
 
   body.ocs-board-active .ocs-table {
