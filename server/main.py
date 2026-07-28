@@ -461,6 +461,10 @@ def require_admin(user: dict):
         raise HTTPException(status_code=403, detail="Admin access required")
 
 
+# Bind admin-only stats overview after require_admin is defined.
+wire_site_stats(get_conn, require_db, get_current_user, require_admin)
+
+
 def _mask_email(email: str) -> str:
     if not email or "@" not in email:
         return email or "User"
@@ -764,6 +768,7 @@ def health():
         "life_plans_api": "/life-plans/generate" in paths,
         "fx_api": "/fx/rate" in paths,
         "stats_api": "/stats/hit" in paths,
+        "stats_events_api": "/stats/event" in paths and "/stats/overview" in paths,
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),

@@ -208,6 +208,7 @@
                     sidebarMeta.classList.add('is-visible');
                     sidebarMeta.innerHTML = `<div class="user-meta-name">${label}</div>`;
                 }
+                injectAdminStatsLink(user, wrap);
             })
             .catch((error) => {
                 // Keep session on outage / network blips; only clear token on real auth failure.
@@ -559,6 +560,52 @@
     window.showBackendServiceError = showBackendServiceError;
     window.check502Error = check502Error;
 
+    function isAdminUser(user) {
+        if (!user) return false;
+        const adminEmail = (typeof siteConfig !== 'undefined' && siteConfig.adminEmail) || '';
+        const adminPhone = (typeof siteConfig !== 'undefined' && siteConfig.adminPhone) || '';
+        if (user.role === 'admin') return true;
+        if (adminEmail && (user.email || '').toLowerCase() === adminEmail.toLowerCase()) return true;
+        if (adminPhone && String(user.phone || '').trim() === String(adminPhone).trim()) return true;
+        return false;
+    }
+
+    function injectAdminStatsLink(user, wrap) {
+        if (!isAdminUser(user)) return;
+        const existing = document.getElementById('tb-admin-stats-link');
+        if (existing) return;
+        const base = window.location.pathname.includes('/html/') ? '../../' : '';
+        const href = `${base}html/admin/site-stats.html`;
+        if (wrap) {
+            const a = document.createElement('a');
+            a.id = 'tb-admin-stats-link';
+            a.href = href;
+            a.textContent = tr('nav.siteStats') === 'nav.siteStats' ? '统计' : tr('nav.siteStats');
+            a.className = 'text-sm text-blue-600 hover:text-blue-700 transition-colors';
+            a.title = '内部统计';
+            wrap.insertBefore(a, wrap.firstChild);
+        }
+        const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
+        if (mobileAuthSlot && !mobileAuthSlot.querySelector('#tb-admin-stats-link-m')) {
+            const a = document.createElement('a');
+            a.id = 'tb-admin-stats-link-m';
+            a.href = href;
+            a.textContent = tr('nav.siteStats') === 'nav.siteStats' ? '内部统计' : tr('nav.siteStats');
+            a.className = 'block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700';
+            mobileAuthSlot.appendChild(a);
+        }
+    }
+
+    function ensureTbStatsScript() {
+        if (window.TBStats || document.getElementById('tb-stats-script')) return;
+        const script = document.createElement('script');
+        script.id = 'tb-stats-script';
+        script.async = true;
+        const base = window.location.pathname.includes('/html/') ? '../../' : '';
+        script.src = `${base}js/tb-stats.js?v=1`;
+        document.head.appendChild(script);
+    }
+
     function runMainUiInit() {
         injectFavicon();
         updatePageLogo();
@@ -566,6 +613,7 @@
         initSiteMobileNav();
         updatePageTitle();
         renderAuthStatus();
+        ensureTbStatsScript();
     }
 
     document.addEventListener('DOMContentLoaded', runMainUiInit);

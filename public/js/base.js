@@ -28,7 +28,18 @@ document.addEventListener('DOMContentLoaded', function () {
     renderMenu();
     initMenuEvents();
     initCopyButtons();
+    ensureTbStats();
 });
+
+function ensureTbStats() {
+    if (window.TBStats) return;
+    if (document.getElementById('tb-stats-script')) return;
+    var script = document.createElement('script');
+    script.id = 'tb-stats-script';
+    script.async = true;
+    script.src = getToolRootPrefix() + 'js/tb-stats.js?v=1';
+    document.head.appendChild(script);
+}
 
 document.addEventListener('tb:locale', function () {
     renderSiteTitle();

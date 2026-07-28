@@ -16,7 +16,8 @@ window.TB_LOCALES['zh-CN'] = {
         life: '内容',
         games: '游戏',
         guestbook: '留言板',
-        about: '关于'
+        about: '关于',
+        siteStats: '统计'
     },
     lang: {
         switcher: '语言',

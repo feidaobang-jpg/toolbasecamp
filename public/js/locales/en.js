@@ -17,7 +17,8 @@ window.TB_LOCALES.en = {
         life: 'Content',
         games: 'Games',
         guestbook: 'Guestbook',
-        about: 'About'
+        about: 'About',
+        siteStats: 'Stats'
     },
     lang: {
         switcher: 'Language',
