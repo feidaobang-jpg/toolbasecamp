@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var activeScoreInput = null;
     var keyboardOpen = false;
     var kbIgnoreScrollCloseUntil = 0;
+    var kbProgrammaticScroll = false;
     var currentGameId = null;
     var currentGame = null;
     var meId = null;
@@ -226,16 +227,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function keyboardMetrics() {
         var kbH = 0;
+        var kbTop = window.innerHeight;
         if (ocsKeyboard) {
+            kbH = ocsKeyboard.offsetHeight || 0;
             var kr = ocsKeyboard.getBoundingClientRect();
-            kbH = Math.max(ocsKeyboard.offsetHeight || 0, Math.round(kr.height) || 0);
+            /* transform 动画中 top 偏大，用最终位置估算，避免少滚 */
+            var estimatedTop = window.innerHeight - kbH;
+            kbTop = Math.min(Math.round(kr.top), estimatedTop);
+            if (kbH < 1) kbH = Math.max(0, window.innerHeight - kbTop);
         }
-        var vv = window.visualViewport;
-        return {
-            kbH: kbH,
-            viewTop: vv ? vv.offsetTop : 0,
-            viewH: vv ? vv.height : window.innerHeight
-        };
+        return { kbH: kbH, kbTop: kbTop };
     }
 
     function updateKeyboardLayout(allowScroll) {
@@ -245,8 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         var m = keyboardMetrics();
-        /* 多留一点底边，避免只露出半个「保存分数」 */
-        boardView.style.paddingBottom = m.kbH > 0 ? (m.kbH + 32) + 'px' : '';
+        boardView.style.paddingBottom = m.kbH > 0 ? (m.kbH + 48) + 'px' : '';
         if (!allowScroll) return;
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
@@ -257,16 +257,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function scrollBoardForKeyboard() {
         if (!keyboardOpen) return;
-        var m = keyboardMetrics();
         var anchor = document.querySelector('.ocs-submit-row') || roundForm;
         if (!anchor) return;
+        var m = keyboardMetrics();
+        var gap = 28;
+        var visibleBottom = m.kbTop - gap;
         var rect = anchor.getBoundingClientRect();
-        var gap = 20;
-        var visibleBottom = m.viewTop + m.viewH - m.kbH - gap;
         var delta = Math.ceil(rect.bottom - visibleBottom);
-        if (delta > 0) {
-            window.scrollBy(0, delta + 8);
-        }
+        if (delta <= 0) return;
+        kbProgrammaticScroll = true;
+        kbIgnoreScrollCloseUntil = Math.max(kbIgnoreScrollCloseUntil, Date.now() + 600);
+        window.scrollBy(0, delta + 16);
+        requestAnimationFrame(function () {
+            kbProgrammaticScroll = false;
+            /* 再核一次，防止 padding 生效后仍差一截 */
+            var m2 = keyboardMetrics();
+            var r2 = anchor.getBoundingClientRect();
+            var d2 = Math.ceil(r2.bottom - (m2.kbTop - gap));
+            if (d2 > 2 && keyboardOpen) {
+                kbProgrammaticScroll = true;
+                kbIgnoreScrollCloseUntil = Math.max(kbIgnoreScrollCloseUntil, Date.now() + 600);
+                window.scrollBy(0, d2 + 8);
+                requestAnimationFrame(function () { kbProgrammaticScroll = false; });
+            }
+        });
     }
 
     function hideScoreKeyboard() {
@@ -282,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /** 键盘弹出后用户上滑/滚动 → 关闭软键盘，避免再被强制滚到底 */
     function closeKeyboardOnUserScroll(ev) {
-        if (!keyboardOpen) return;
+        if (!keyboardOpen || kbProgrammaticScroll) return;
         if (Date.now() < kbIgnoreScrollCloseUntil) return;
         if (ev && ocsKeyboard && ev.target && ocsKeyboard.contains(ev.target)) return;
         hideScoreKeyboard();
@@ -296,14 +310,15 @@ document.addEventListener('DOMContentLoaded', function () {
         activeScoreInput = input;
         input.classList.add('is-active');
         keyboardOpen = true;
-        kbIgnoreScrollCloseUntil = Date.now() + 450;
+        kbIgnoreScrollCloseUntil = Date.now() + 800;
         ocsKeyboard.classList.add('is-open');
         ocsKeyboard.setAttribute('aria-hidden', 'false');
         updateKeyboardDisplay();
-        /* 仅打开时滚一次露出保存按钮；之后不再强行滚到底 */
+        /* 打开时多滚几次：padding 生效后 + 键盘动画结束后 */
         updateKeyboardLayout(true);
-        setTimeout(function () { updateKeyboardLayout(false); }, 80);
-        setTimeout(function () { updateKeyboardLayout(false); }, 320);
+        setTimeout(function () { updateKeyboardLayout(true); }, 60);
+        setTimeout(function () { updateKeyboardLayout(true); }, 260);
+        setTimeout(function () { updateKeyboardLayout(true); }, 420);
     }
 
     function onScoreKey(key) {
