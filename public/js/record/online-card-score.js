@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var activeScoreInput = null;
     var keyboardOpen = false;
     var kbIgnoreScrollCloseUntil = 0;
+    var kbCloseScrollY = 0;
     var currentGameId = null;
     var currentGame = null;
     var meId = null;
@@ -243,6 +244,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.documentElement.style.setProperty('--ocs-kb-h', kbH + 'px');
         /* 给固定「保存分数」条留空，不再 window.scrollBy（会整页连键盘一起上移） */
         boardView.style.paddingBottom = kbH > 0 ? (kbH + 64) + 'px' : '';
+        /* padding 可能触发 scroll，短暂忽略关闭 */
+        kbIgnoreScrollCloseUntil = Math.max(kbIgnoreScrollCloseUntil, Date.now() + 400);
+        kbCloseScrollY = window.scrollY || window.pageYOffset || 0;
     }
 
     function hideScoreKeyboard() {
@@ -256,11 +260,15 @@ document.addEventListener('DOMContentLoaded', function () {
         updateKeyboardLayout();
     }
 
-    /** 键盘弹出后用户上滑/滚动 → 关闭软键盘 */
-    function closeKeyboardOnUserScroll(ev) {
+    /** 仅在页面真正滚动一段距离后关闭；忽略点按时的 touchmove 抖动 */
+    function closeKeyboardOnUserScroll() {
         if (!keyboardOpen) return;
-        if (Date.now() < kbIgnoreScrollCloseUntil) return;
-        if (ev && ocsKeyboard && ev.target && ocsKeyboard.contains(ev.target)) return;
+        var y = window.scrollY || window.pageYOffset || 0;
+        if (Date.now() < kbIgnoreScrollCloseUntil) {
+            kbCloseScrollY = y;
+            return;
+        }
+        if (Math.abs(y - kbCloseScrollY) < 12) return;
         hideScoreKeyboard();
     }
 
@@ -272,7 +280,8 @@ document.addEventListener('DOMContentLoaded', function () {
         activeScoreInput = input;
         input.classList.add('is-active');
         keyboardOpen = true;
-        kbIgnoreScrollCloseUntil = Date.now() + 500;
+        kbIgnoreScrollCloseUntil = Date.now() + 900;
+        kbCloseScrollY = window.scrollY || window.pageYOffset || 0;
         try {
             if (document.activeElement && document.activeElement.blur) {
                 document.activeElement.blur();
@@ -700,11 +709,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             input.addEventListener('click', function (ev) {
                 ev.preventDefault();
-                openScoreKeyboard(input);
             });
             input.addEventListener('focus', function () {
                 try { input.blur(); } catch (e) { /* ignore */ }
-                openScoreKeyboard(input);
             });
             grid.appendChild(field);
         });
@@ -1028,7 +1035,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.addEventListener('beforeunload', stopPoll);
     window.addEventListener('scroll', closeKeyboardOnUserScroll, { passive: true });
-    window.addEventListener('touchmove', closeKeyboardOnUserScroll, { passive: true });
     window.addEventListener('resize', function () {
         if (keyboardOpen) updateKeyboardLayout();
     });
