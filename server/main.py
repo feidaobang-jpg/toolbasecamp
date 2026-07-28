@@ -40,6 +40,9 @@ from watermark import router as watermark_router
 from fx_rates import ALLOWED as FX_ALLOWED
 from fx_rates import FX_ALLOWED_REV
 from fx_rates import router as fx_router
+from site_stats import ensure_site_stats_tables
+from site_stats import router as site_stats_router
+from site_stats import wire as wire_site_stats
 
 _wan_import_error = ""
 try:
@@ -237,6 +240,7 @@ def ensure_tables():
             )
             ensure_record_tables(cur)
             ensure_image_quota_table(cur)
+            ensure_site_stats_tables(cur)
             if ADMIN_PHONE:
                 try:
                     cur.execute(
@@ -392,6 +396,8 @@ app.include_router(image_router)
 app.include_router(life_router)
 app.include_router(watermark_router)
 app.include_router(fx_router)
+wire_site_stats(get_conn, require_db)
+app.include_router(site_stats_router)
 if wan_router is not None:
     wire_wan(get_conn, require_db, get_current_user)
     app.include_router(wan_router)
@@ -757,6 +763,7 @@ def health():
         "general_cutout_api": "/image/general-cutout/segment" in paths,
         "life_plans_api": "/life-plans/generate" in paths,
         "fx_api": "/fx/rate" in paths,
+        "stats_api": "/stats/hit" in paths,
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),

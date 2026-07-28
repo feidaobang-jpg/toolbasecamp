@@ -128,13 +128,73 @@
         return utils;
     }
 
-    function loadBusuanziScript() {
-        if (document.getElementById('busuanzi-script')) return;
-        var script = document.createElement('script');
-        script.id = 'busuanzi-script';
-        script.async = true;
-        script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
-        document.body.appendChild(script);
+    function apiBase() {
+        if (window.siteConfig && window.siteConfig.apiBase) {
+            return window.siteConfig.apiBase;
+        }
+        var host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') {
+            return 'http://127.0.0.1:8001';
+        }
+        return window.location.origin + '/api';
+    }
+
+    function getOrCreateVisitorId() {
+        var key = 'tb-visitor-id';
+        try {
+            var existing = localStorage.getItem(key);
+            if (existing && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(existing)) {
+                return existing.toLowerCase();
+            }
+        } catch (e) { /* ignore */ }
+        var id = '';
+        try {
+            if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+                id = window.crypto.randomUUID();
+            }
+        } catch (e2) { /* ignore */ }
+        if (!id) {
+            id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (Math.random() * 16) | 0;
+                var v = c === 'x' ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+            });
+        }
+        try { localStorage.setItem(key, id); } catch (e3) { /* ignore */ }
+        return id;
+    }
+
+    function fillSiteStats(data) {
+        if (!data) return;
+        var pv = document.getElementById('tb-stats-value-pv');
+        var uv = document.getElementById('tb-stats-value-uv');
+        if (pv && data.site_pv != null) pv.textContent = String(data.site_pv);
+        if (uv && data.site_uv != null) uv.textContent = String(data.site_uv);
+        if (data.visitor_id) {
+            try { localStorage.setItem('tb-visitor-id', data.visitor_id); } catch (e) { /* ignore */ }
+        }
+    }
+
+    function loadSiteStats() {
+        var visitorId = getOrCreateVisitorId();
+        fetch(apiBase() + '/stats/hit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ visitor_id: visitorId }),
+            credentials: 'same-origin',
+            cache: 'no-store'
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('stats ' + res.status);
+                return res.json();
+            })
+            .then(fillSiteStats)
+            .catch(function () {
+                fetch(apiBase() + '/stats', { credentials: 'same-origin', cache: 'no-store' })
+                    .then(function (res) { return res.ok ? res.json() : null; })
+                    .then(fillSiteStats)
+                    .catch(function () { /* keep placeholder */ });
+            });
     }
 
     function injectSiteStats() {
@@ -149,18 +209,18 @@
         stats.id = 'tb-site-stats';
         stats.setAttribute('aria-label', t('stats.sitePv') + ', ' + t('stats.siteUv'));
         stats.innerHTML =
-            '<span id="busuanzi_container_site_pv">' +
+            '<span id="tb-stats-pv">' +
                 '<span data-i18n="stats.sitePv">' + t('stats.sitePv') + '</span> ' +
-                '<span id="busuanzi_value_site_pv" class="tb-stats-num">...</span>' +
+                '<span id="tb-stats-value-pv" class="tb-stats-num">...</span>' +
             '</span>' +
             '<span class="tb-stats-sep" aria-hidden="true"></span>' +
-            '<span id="busuanzi_container_site_uv">' +
+            '<span id="tb-stats-uv">' +
                 '<span data-i18n="stats.siteUv">' + t('stats.siteUv') + '</span> ' +
-                '<span id="busuanzi_value_site_uv" class="tb-stats-num">...</span>' +
+                '<span id="tb-stats-value-uv" class="tb-stats-num">...</span>' +
             '</span>';
 
         utils.insertBefore(stats, utils.firstChild);
-        loadBusuanziScript();
+        loadSiteStats();
     }
 
     function injectLangSwitcher() {
