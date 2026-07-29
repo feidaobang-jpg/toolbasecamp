@@ -33,47 +33,10 @@
         return p || 'User';
     }
 
-    var ACCOUNT_LABEL_KEY = 'tb-account-label';
-
-    function escapeHtml(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    function getCachedAccountLabel() {
-        try {
-            return localStorage.getItem(ACCOUNT_LABEL_KEY) || '';
-        } catch (e) {
-            return '';
-        }
-    }
-
-    function setCachedAccountLabel(label) {
-        try {
-            if (label) localStorage.setItem(ACCOUNT_LABEL_KEY, label);
-            else localStorage.removeItem(ACCOUNT_LABEL_KEY);
-        } catch (e) { /* ignore */ }
-    }
-
-    function paintSidebarAccount(label) {
-        const sidebarMeta = document.getElementById('sidebar-user-meta');
-        if (!sidebarMeta) return;
-        if (label) {
-            sidebarMeta.classList.add('is-visible');
-            sidebarMeta.innerHTML = '<div class="user-meta-name">' + escapeHtml(label) + '</div>';
-        } else {
-            sidebarMeta.innerHTML = '';
-            sidebarMeta.classList.remove('is-visible');
-        }
-    }
-
     function clearAuthLocalState(tokenKey) {
         localStorage.removeItem(tokenKey);
-        setCachedAccountLabel('');
-        try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
+        try { localStorage.removeItem('tb-account-label'); } catch (e) { /* ignore */ }
+        try { localStorage.removeItem('tb-stats-exclude'); } catch (e2) { /* ignore */ }
     }
 
     function maskAccount(userOrStr) {
@@ -182,13 +145,8 @@
                 wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
             }
             fillMobileAuthLoggedOut();
-            setCachedAccountLabel('');
-            paintSidebarAccount('');
             return;
         }
-
-        // Avoid sidebar height jump: show last known account while /auth/me loads.
-        paintSidebarAccount(getCachedAccountLabel());
 
         let userEl = null;
         let logoutBtn = null;
@@ -246,8 +204,6 @@
                 if (mobileUserSpan) {
                     mobileUserSpan.textContent = label;
                 }
-                setCachedAccountLabel(label);
-                paintSidebarAccount(label);
                 injectAdminLinks(user, wrap);
                 if (isAdminUser(user)) {
                     try {
@@ -284,7 +240,6 @@
                     wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
                 }
                 fillMobileAuthLoggedOut();
-                paintSidebarAccount('');
             });
     }
 
