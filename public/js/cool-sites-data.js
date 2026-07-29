@@ -20,7 +20,8 @@ window.COOL_SITES_DATA = [
           { title: 'TinyPNG', desc: '智能 WebP、PNG、JPEG 图片压缩', url: 'https://tinypng.com/', icon: 'https://tinypng.com/images/apple-touch-icon.png' },
           { title: 'Table Convert', desc: '在线表格转换与生成工具', url: 'https://tableconvert.com/', icon: 'fas fa-table', isFontIcon: true },
           { title: 'Greasy Fork', desc: '用户脚本的聚集地', url: 'https://greasyfork.org/zh-CN', icon: 'fas fa-code-branch', isFontIcon: true },
-          { title: 'PassMark', desc: 'CPU/GPU 性能基准测试查询', url: 'https://www.cpubenchmark.net/', icon: 'fas fa-chart-bar', isFontIcon: true }
+          { title: 'PassMark', desc: 'CPU/GPU 性能基准测试查询', url: 'https://www.cpubenchmark.net/', icon: 'fas fa-chart-bar', isFontIcon: true },
+          { title: 'Notebookcheck', desc: '笔记本 CPU/GPU 跑分排行与评测', url: 'https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html', icon: 'fas fa-laptop', isFontIcon: true }
         ]
       }
     ]

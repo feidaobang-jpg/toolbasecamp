@@ -2309,11 +2309,15 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladderNbCpu: {
             title: '笔记本处理器',
-            desc: '笔记本 CPU 性能天梯图（越高越强）'
+            desc: '笔记本 CPU 性能天梯图（越高越强）',
+            staleNote: '快科技笔记本 CPU 专题已停更（约只到 12 代酷睿）。下表仅供参考；更新跑分请看',
+            staleLink: 'Notebookcheck 笔记本处理器榜'
         },
         ladderNbGpu: {
             title: '笔记本显卡',
-            desc: '笔记本 GPU 性能天梯图（越高越强）'
+            desc: '笔记本 GPU 性能天梯图（越高越强）',
+            staleNote: '快科技笔记本显卡专题已停更（尚无 50 系）。下表仅供参考；更新跑分请看',
+            staleLink: 'Notebookcheck 笔记本显卡榜'
         },
         mindmap: {
             title: '思维导图',

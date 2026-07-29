@@ -2310,11 +2310,15 @@ window.TB_LOCALES.en = {
         },
         ladderNbCpu: {
             title: 'Laptop CPU',
-            desc: 'Laptop CPU performance ladder (higher is stronger)'
+            desc: 'Laptop CPU performance ladder (higher is stronger)',
+            staleNote: 'The mydrivers laptop CPU chart has stopped updating (roughly through 12th-gen Core). Table below is for reference; for newer scores see',
+            staleLink: 'Notebookcheck mobile CPU list'
         },
         ladderNbGpu: {
             title: 'Laptop GPU',
-            desc: 'Laptop GPU performance ladder (higher is stronger)'
+            desc: 'Laptop GPU performance ladder (higher is stronger)',
+            staleNote: 'The mydrivers laptop GPU chart has stopped updating (no RTX 50 series). Table below is for reference; for newer scores see',
+            staleLink: 'Notebookcheck mobile GPU list'
         },
         mindmap: {
             title: 'Mind Map',

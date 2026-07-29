@@ -83,6 +83,27 @@
   color: #ef4444;
 }
 
+.ladder-stale-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ladder-stale-note a {
+  color: #b45309;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.ladder-stale-note a:hover {
+  color: #92400e;
+}
+
 .ladder-container .top,
 .ladder-container .logo_div,
 .ladder-container .float_div,
