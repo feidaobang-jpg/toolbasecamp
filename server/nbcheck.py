@@ -308,58 +308,6 @@ def _is_low_confidence_perf(tr) -> bool:
     return False
 
 
-def _header_indices(table) -> Dict[str, int]:
-    """Map normalized header labels -> column index (first header-like row)."""
-    out: Dict[str, int] = {}
-    for tr in table.find_all("tr"):
-        cells = tr.find_all(["td", "th"])
-        if len(cells) < 4:
-            continue
-        texts = [c.get_text(" ", strip=True) for c in cells]
-        joined = " ".join(texts).lower()
-        if "model" not in joined and "pos" not in joined:
-            continue
-        if not any("tdp" in t.lower() or "perf" in t.lower() for t in texts):
-            # Still accept a Model header row without TDP (GPU tables).
-            if "model" not in joined:
-                continue
-        for i, t in enumerate(texts):
-            key = re.sub(r"\s+", " ", t).strip().lower()
-            if key and key not in out:
-                out[key] = i
-        if out:
-            break
-    return out
-
-
-def _cell_at(tr, idx: Optional[int]) -> str:
-    if idx is None or idx < 0:
-        return ""
-    tds = tr.find_all("td")
-    if idx >= len(tds):
-        return ""
-    return tds[idx].get_text(" ", strip=True)
-
-
-def _tdp_pair(tr, headers: Dict[str, int]) -> tuple[Optional[float], Optional[float]]:
-    """Return (base TDP, turbo/PL2 TDP) when columns exist."""
-    base = None
-    turbo = None
-    for key in ("tdp watt", "tdp", "tdp (watt)"):
-        if key in headers:
-            n = _parse_num(_cell_at(tr, headers[key]))
-            if n is not None and n > 0:
-                base = n
-                break
-    for key in ("tdp turbo", "tdp turbo pl2", "pl2"):
-        if key in headers:
-            n = _parse_num(_cell_at(tr, headers[key]))
-            if n is not None and n > 0:
-                turbo = n
-                break
-    return base, turbo
-
-
 def _scrape_list(list_id: str) -> Dict[str, Any]:
     meta = LISTS.get(list_id)
     if not meta:
@@ -380,7 +328,6 @@ def _scrape_list(list_id: str) -> Dict[str, Any]:
     if not table:
         raise RuntimeError(f"Notebookcheck table not found for {list_id}")
 
-    col_map = _header_indices(table)
     items: List[Dict[str, Any]] = []
     for tr in table.find_all("tr"):
         if not tr.find("td", class_="poslabel"):
@@ -412,11 +359,6 @@ def _scrape_list(list_id: str) -> Dict[str, Any]:
             item["time_spy"] = _time_spy_after_perf(tr)
         if kind in ("cpu", "nb_cpu"):
             item["cb_r23"] = _cb_r23_multi(tr)
-            tdp, tdp_turbo = _tdp_pair(tr, col_map)
-            if tdp is not None:
-                item["tdp"] = tdp
-            if tdp_turbo is not None:
-                item["tdp_turbo"] = tdp_turbo
         if kind == "soc":
             item["score_label"] = meta.get("score_label") or "Geekbench 5.5 Multi"
         items.append(item)
