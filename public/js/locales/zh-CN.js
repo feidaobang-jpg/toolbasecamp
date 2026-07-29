@@ -18,7 +18,20 @@ window.TB_LOCALES['zh-CN'] = {
         sites: '导航',
         guestbook: '留言板',
         about: '关于',
-        siteStats: '统计'
+        siteStats: '统计',
+        private: '自用'
+    },
+    privateHub: {
+        title: '自用',
+        heading: '管理员自用工具',
+        subtitle: '仅管理员可见 · 不进公开导航与 SEO',
+        needLogin: '请先登录管理员账号',
+        needAdmin: '需要管理员登录后查看',
+        empty: '暂无自用工具',
+        emptyGroup: '暂无工具，迁入后显示在此',
+        groups: {
+            stock: '股票'
+        }
     },
     coolSites: {
         title: '导航',

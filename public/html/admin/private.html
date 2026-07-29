@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>自用 - 工具大本营</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../vendor/tailwindcss.js?v=2"></script>
+  <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/site-mobile-nav.css" />
+  <link rel="stylesheet" href="../../css/admin/private-hub.css?v=1" />
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js?v=stats1"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/common_ui.js?v=4"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../../index.html" class="flex items-center gap-2 flex-shrink-0 group">
+        <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">TB</div>
+        <h1 class="text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate" data-i18n="privateHub.title">自用</h1>
+      </a>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <a href="site-stats.html" class="text-gray-500 hover:text-blue-600" data-i18n="nav.siteStats">统计</a>
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
+    </div>
+
+    <div id="app" class="hidden space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-gray-900" data-i18n="privateHub.heading">管理员自用工具</h2>
+        <p class="text-sm text-gray-500 mt-1" data-i18n="privateHub.subtitle">仅管理员可见 · 不进公开导航与 SEO</p>
+      </div>
+      <div id="groups" class="space-y-6"></div>
+    </div>
+  </main>
+
+  <script src="../../js/admin/private-hub.js?v=1"></script>
+</body>
+</html>

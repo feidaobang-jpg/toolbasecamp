@@ -258,3 +258,19 @@ window.siteConfig = siteConfig;
 window.portalsConfig = portalsConfig;
 window.toolsConfig = toolsConfig;
 window.gamesConfig = gamesConfig;
+
+/** Admin-only personal tools (not shown in public hub). */
+const privateToolsConfig = {
+    sectionTitleKey: 'privateHub.title',
+    groups: [
+        {
+            titleKey: 'privateHub.groups.stock',
+            items: [
+                // Migrate stock tools here, e.g.:
+                // { titleKey: 'privateHub.stock.demo.title', url: 'html/admin/private/stock-demo.html' }
+            ]
+        }
+    ]
+};
+
+window.privateToolsConfig = privateToolsConfig;

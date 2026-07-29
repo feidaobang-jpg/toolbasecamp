@@ -19,7 +19,20 @@ window.TB_LOCALES.en = {
         sites: 'Directory',
         guestbook: 'Guestbook',
         about: 'About',
-        siteStats: 'Stats'
+        siteStats: 'Stats',
+        private: 'Private'
+    },
+    privateHub: {
+        title: 'Private',
+        heading: 'Admin private tools',
+        subtitle: 'Admins only · hidden from public nav and SEO',
+        needLogin: 'Please sign in as admin',
+        needAdmin: 'Admin sign-in required',
+        empty: 'No private tools yet',
+        emptyGroup: 'No tools in this group yet',
+        groups: {
+            stock: 'Stocks'
+        }
     },
     coolSites: {
         title: 'Directory',

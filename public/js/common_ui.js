@@ -210,7 +210,7 @@
                     sidebarMeta.classList.add('is-visible');
                     sidebarMeta.innerHTML = `<div class="user-meta-name">${label}</div>`;
                 }
-                injectAdminStatsLink(user, wrap);
+                injectAdminLinks(user, wrap);
                 if (isAdminUser(user)) {
                     try {
                         localStorage.setItem('tb-stats-exclude', '1');
@@ -588,30 +588,62 @@
         return false;
     }
 
-    function injectAdminStatsLink(user, wrap) {
-        if (!isAdminUser(user)) return;
-        const existing = document.getElementById('tb-admin-stats-link');
-        if (existing) return;
-        const base = window.location.pathname.includes('/html/') ? '../../' : '';
-        const href = `${base}html/admin/site-stats.html`;
-        if (wrap) {
-            const a = document.createElement('a');
-            a.id = 'tb-admin-stats-link';
-            a.href = href;
-            a.textContent = tr('nav.siteStats') === 'nav.siteStats' ? '统计' : tr('nav.siteStats');
-            a.className = 'text-sm text-blue-600 hover:text-blue-700 transition-colors';
-            a.title = '内部统计';
-            wrap.insertBefore(a, wrap.firstChild);
-        }
+    window.tbIsAdminUser = isAdminUser;
+
+    function injectAdminNavLink(wrap, opts) {
+        if (!wrap || !opts || !opts.id || !opts.href) return;
+        if (document.getElementById(opts.id)) return;
+        const a = document.createElement('a');
+        a.id = opts.id;
+        a.href = opts.href;
+        a.textContent = opts.label;
+        a.className = 'text-sm text-blue-600 hover:text-blue-700 transition-colors';
+        if (opts.title) a.title = opts.title;
+        wrap.insertBefore(a, wrap.firstChild);
+    }
+
+    function injectAdminMobileLink(opts) {
         const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
-        if (mobileAuthSlot && !mobileAuthSlot.querySelector('#tb-admin-stats-link-m')) {
-            const a = document.createElement('a');
-            a.id = 'tb-admin-stats-link-m';
-            a.href = href;
-            a.textContent = tr('nav.siteStats') === 'nav.siteStats' ? '内部统计' : tr('nav.siteStats');
-            a.className = 'block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700';
-            mobileAuthSlot.appendChild(a);
-        }
+        if (!mobileAuthSlot || !opts || !opts.id || !opts.href) return;
+        if (mobileAuthSlot.querySelector('#' + opts.id)) return;
+        const a = document.createElement('a');
+        a.id = opts.id;
+        a.href = opts.href;
+        a.textContent = opts.label;
+        a.className = 'block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700';
+        mobileAuthSlot.appendChild(a);
+    }
+
+    function injectAdminLinks(user, wrap) {
+        if (!isAdminUser(user)) return;
+        const base = window.location.pathname.includes('/html/') ? '../../' : '';
+        const statsLabel = tr('nav.siteStats') === 'nav.siteStats' ? '统计' : tr('nav.siteStats');
+        const privateLabel = tr('nav.private') === 'nav.private' ? '自用' : tr('nav.private');
+
+        // Insert order: firstChild each time → final left-to-right = 自用, 统计
+        injectAdminNavLink(wrap, {
+            id: 'tb-admin-stats-link',
+            href: `${base}html/admin/site-stats.html`,
+            label: statsLabel,
+            title: '内部统计'
+        });
+        injectAdminNavLink(wrap, {
+            id: 'tb-admin-private-link',
+            href: `${base}html/admin/private.html`,
+            label: privateLabel,
+            title: '管理员自用'
+        });
+
+        injectAdminMobileLink({
+            id: 'tb-admin-private-link-m',
+            href: `${base}html/admin/private.html`,
+            label: privateLabel
+        });
+        injectAdminMobileLink({
+            id: 'tb-admin-stats-link-m',
+            href: `${base}html/admin/site-stats.html`,
+            label: statsLabel
+        });
     }
 
     function ensureTbStatsScript() {
