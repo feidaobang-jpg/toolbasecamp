@@ -11,11 +11,11 @@ Register in `public/js/config.js` → `privateToolsConfig`.
 
 Server module: `server/stocks.py` (needs `requests`, `pandas` on the API host).
 
-## Android
+## Android（需百度翻译的）
 
 Under `android/`:
 
-- strings.xml 翻译、文件批量重命名（百度翻译，仅自用页加载密钥脚本）
-- MVP / Adapter / 下拉刷新分页代码生成（项目模板）
+- strings.xml 翻译
+- 文件批量重命名
 
-Public developer hub already has JSON→Java; layout XML→findView is public under `html/dev/layout-converter.html`.
+公开 Android 工具在首页「Android」分类：`html/android/*`、布局转换在 `html/dev/layout-converter.html`。

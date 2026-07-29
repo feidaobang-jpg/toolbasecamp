@@ -45,18 +45,6 @@ window.TB_LOCALES['zh-CN'] = {
             folderTranslator: {
                 title: '文件批量重命名',
                 desc: '批量翻译并重命名本地文件'
-            },
-            mvpConverter: {
-                title: 'MVP 代码生成',
-                desc: '按项目模板生成 MVP 脚手架'
-            },
-            adapterGenerator: {
-                title: 'Adapter 代码生成',
-                desc: 'RecyclerView Adapter 模板生成'
-            },
-            refreshPageGenerator: {
-                title: '下拉刷新分页生成',
-                desc: '下拉刷新 / 分页页面脚手架'
             }
         }
     },
@@ -332,6 +320,7 @@ window.TB_LOCALES['zh-CN'] = {
             media: '图片',
             document: '文档',
             diagram: '图表',
+            android: 'Android',
             developer: '开发者'
         },
         game: {
@@ -2285,6 +2274,18 @@ window.TB_LOCALES['zh-CN'] = {
         layoutConverter: {
             title: '布局 XML 转 findView',
             desc: 'Android 布局 XML 转 findViewById / ButterKnife / Kotlin'
+        },
+        mvpConverter: {
+            title: 'MVP 代码生成',
+            desc: '按接口信息生成 MVP 脚手架代码'
+        },
+        adapterGenerator: {
+            title: 'Adapter 代码生成',
+            desc: '生成 RecyclerView / 列表 Adapter 模板'
+        },
+        refreshPageGenerator: {
+            title: '下拉刷新分页生成',
+            desc: '生成下拉刷新与分页页面脚手架'
         },
         mindmap: {
             title: '思维导图',

@@ -46,18 +46,6 @@ window.TB_LOCALES.en = {
             folderTranslator: {
                 title: 'Batch file rename',
                 desc: 'Translate and rename local files in bulk'
-            },
-            mvpConverter: {
-                title: 'MVP generator',
-                desc: 'Project-specific MVP scaffold'
-            },
-            adapterGenerator: {
-                title: 'Adapter generator',
-                desc: 'RecyclerView adapter templates'
-            },
-            refreshPageGenerator: {
-                title: 'Pull-to-refresh generator',
-                desc: 'Pull-to-refresh / paging page scaffold'
             }
         }
     },
@@ -333,6 +321,7 @@ window.TB_LOCALES.en = {
             media: 'Images',
             document: 'Document',
             diagram: 'Diagram',
+            android: 'Android',
             developer: 'Developer'
         },
         game: {
@@ -2286,6 +2275,18 @@ window.TB_LOCALES.en = {
         layoutConverter: {
             title: 'Layout XML to findView',
             desc: 'Convert Android layout XML to findViewById / ButterKnife / Kotlin'
+        },
+        mvpConverter: {
+            title: 'MVP code generator',
+            desc: 'Generate MVP scaffold code from API info'
+        },
+        adapterGenerator: {
+            title: 'Adapter code generator',
+            desc: 'Generate RecyclerView / list Adapter templates'
+        },
+        refreshPageGenerator: {
+            title: 'Pull-to-refresh page generator',
+            desc: 'Scaffold pull-to-refresh and paging pages'
         },
         mindmap: {
             title: 'Mind Map',

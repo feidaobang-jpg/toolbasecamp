@@ -188,10 +188,19 @@ const toolsConfig = {
             ]
         },
         {
-            titleKey: 'tools.groups.developer',
+            titleKey: 'tools.groups.android',
             items: [
                 { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },
                 { titleKey: 'tools.layoutConverter.title', url: 'html/dev/layout-converter.html' },
+                { titleKey: 'tools.mvpConverter.title', url: 'html/android/mvp-converter.html' },
+                { titleKey: 'tools.adapterGenerator.title', url: 'html/android/adapter-generator.html' },
+                { titleKey: 'tools.refreshPageGenerator.title', url: 'html/android/refresh-page-generator.html' }
+            ]
+        },
+        {
+            titleKey: 'tools.groups.developer',
+            items: [
+                { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },
                 { titleKey: 'tools.base64Url.title', url: 'html/dev/base64-url.html' },
                 { titleKey: 'tools.regexTester.title', url: 'html/dev/regex-tester.html' },
                 { titleKey: 'tools.jwtDecode.title', url: 'html/dev/jwt-decode.html' },
@@ -286,21 +295,6 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.android.folderTranslator.title',
                     descriptionKey: 'privateHub.android.folderTranslator.desc',
                     url: 'html/admin/private/android/folder-translator.html'
-                },
-                {
-                    titleKey: 'privateHub.android.mvpConverter.title',
-                    descriptionKey: 'privateHub.android.mvpConverter.desc',
-                    url: 'html/admin/private/android/mvp-converter.html'
-                },
-                {
-                    titleKey: 'privateHub.android.adapterGenerator.title',
-                    descriptionKey: 'privateHub.android.adapterGenerator.desc',
-                    url: 'html/admin/private/android/adapter-generator.html'
-                },
-                {
-                    titleKey: 'privateHub.android.refreshPageGenerator.title',
-                    descriptionKey: 'privateHub.android.refreshPageGenerator.desc',
-                    url: 'html/admin/private/android/refresh-page-generator.html'
                 }
             ]
         }

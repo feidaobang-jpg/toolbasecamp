@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adapter 代码生成 - 工具大本营</title>
+  <meta name="description" content="Adapter 代码生成" />
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/android/adapter-generator.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+<div class="page active">
+                <h2 data-i18n="tools.adapterGenerator.title">Adapter 代码生成</h2>
+                <div class="tool-container">
+                    <div class="input-section">
+                        <div class="row">
+                            <div class="field">
+                                <label>Adapter类型:</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" id="recycler-adapter" name="adapter-type" value="recycler" checked>
+                                        BaseRecyclerviewAdapter
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" id="zbase-adapter" name="adapter-type" value="zbase">
+                                        ZBaseAdapter
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-section">
+                        <button type="button" class="tb-btn" id="generate-btn">生成</button>
+                        <button type="button" class="tb-btn" id="clear-btn">清空</button>
+                    </div>
+
+                    <div class="output-sections">
+                        <div class="output-section">
+                            <label for="adapter-output">Adapter代码:</label>
+                            <pre id="adapter-output" class="code-display"></pre>
+                            <button type="button" class="tb-btn copy-btn" data-target="adapter-output">复制代码</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js?v=stats1"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/common_ui.js?v=4"></script>
+  <script src="../../js/android/adapter-generator.js?v=1"></script>
+</body>
+</html>
