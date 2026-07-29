@@ -238,13 +238,24 @@ function renderMenu() {
         });
     }
 
+    let cachedAccount = '';
+    try {
+        cachedAccount = localStorage.getItem('tb-account-label') || '';
+    } catch (e) { /* ignore */ }
+    const metaClass = cachedAccount ? 'user-meta is-visible' : 'user-meta';
+    const metaHtml = cachedAccount
+        ? '<div class="user-meta-name">' + String(cachedAccount)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') +
+          '</div>'
+        : '';
+
     sidebar.innerHTML =
         '<div class="logo">' +
             '<a class="logo-home-btn" href="' + hubHref + '">' +
                 '<span class="logo-badge">' + logoBadge + '</span>' +
                 '<span class="logo-home-label">' + logoLabel + '</span>' +
             '</a>' +
-            '<div id="sidebar-user-meta" class="user-meta"></div>' +
+            '<div id="sidebar-user-meta" class="' + metaClass + '">' + metaHtml + '</div>' +
         '</div>' +
         '<nav class="menu"><ul>' + menuItemsHTML + '</ul></nav>';
 

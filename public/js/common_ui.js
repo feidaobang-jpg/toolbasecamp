@@ -33,6 +33,49 @@
         return p || 'User';
     }
 
+    var ACCOUNT_LABEL_KEY = 'tb-account-label';
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function getCachedAccountLabel() {
+        try {
+            return localStorage.getItem(ACCOUNT_LABEL_KEY) || '';
+        } catch (e) {
+            return '';
+        }
+    }
+
+    function setCachedAccountLabel(label) {
+        try {
+            if (label) localStorage.setItem(ACCOUNT_LABEL_KEY, label);
+            else localStorage.removeItem(ACCOUNT_LABEL_KEY);
+        } catch (e) { /* ignore */ }
+    }
+
+    function paintSidebarAccount(label) {
+        const sidebarMeta = document.getElementById('sidebar-user-meta');
+        if (!sidebarMeta) return;
+        if (label) {
+            sidebarMeta.classList.add('is-visible');
+            sidebarMeta.innerHTML = '<div class="user-meta-name">' + escapeHtml(label) + '</div>';
+        } else {
+            sidebarMeta.innerHTML = '';
+            sidebarMeta.classList.remove('is-visible');
+        }
+    }
+
+    function clearAuthLocalState(tokenKey) {
+        localStorage.removeItem(tokenKey);
+        setCachedAccountLabel('');
+        try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
+    }
+
     function maskAccount(userOrStr) {
         if (userOrStr && typeof userOrStr === 'object') {
             const phone = (userOrStr.phone || '').trim();
@@ -124,8 +167,7 @@
             const logout = createBtn(tr('auth.logout'));
             logout.className = 'w-full rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
             logout.addEventListener('click', () => {
-                localStorage.removeItem(tokenKey);
-                try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
+                clearAuthLocalState(tokenKey);
                 window.location.reload();
             });
             box.appendChild(userLink);
@@ -140,13 +182,13 @@
                 wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
             }
             fillMobileAuthLoggedOut();
-            const sidebarMeta = document.getElementById('sidebar-user-meta');
-            if (sidebarMeta) {
-                sidebarMeta.innerHTML = '';
-                sidebarMeta.classList.remove('is-visible');
-            }
+            setCachedAccountLabel('');
+            paintSidebarAccount('');
             return;
         }
+
+        // Avoid sidebar height jump: show last known account while /auth/me loads.
+        paintSidebarAccount(getCachedAccountLabel());
 
         let userEl = null;
         let logoutBtn = null;
@@ -162,8 +204,7 @@
 
             logoutBtn = createBtn(tr('auth.logout'));
             logoutBtn.addEventListener('click', () => {
-                localStorage.removeItem(tokenKey);
-                try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
+                clearAuthLocalState(tokenKey);
                 window.location.reload();
             });
             wrap.appendChild(logoutBtn);
@@ -205,11 +246,8 @@
                 if (mobileUserSpan) {
                     mobileUserSpan.textContent = label;
                 }
-                const sidebarMeta = document.getElementById('sidebar-user-meta');
-                if (sidebarMeta && label) {
-                    sidebarMeta.classList.add('is-visible');
-                    sidebarMeta.innerHTML = `<div class="user-meta-name">${label}</div>`;
-                }
+                setCachedAccountLabel(label);
+                paintSidebarAccount(label);
                 injectAdminLinks(user, wrap);
                 if (isAdminUser(user)) {
                     try {
@@ -239,19 +277,14 @@
                     // Unknown non-auth error: do not wipe login
                     return;
                 }
-                localStorage.removeItem(tokenKey);
-                try { localStorage.removeItem('tb-stats-exclude'); } catch (e) { /* ignore */ }
+                clearAuthLocalState(tokenKey);
                 if (wrap && userEl && logoutBtn) {
                     wrap.innerHTML = '';
                     wrap.appendChild(createLink(loginUrl, tr('auth.login')));
                     wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
                 }
                 fillMobileAuthLoggedOut();
-                const sidebarMeta = document.getElementById('sidebar-user-meta');
-                if (sidebarMeta) {
-                    sidebarMeta.innerHTML = '';
-                    sidebarMeta.classList.remove('is-visible');
-                }
+                paintSidebarAccount('');
             });
     }
 
