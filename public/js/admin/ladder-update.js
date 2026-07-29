@@ -143,10 +143,22 @@
   }
 
   function loadNbcheckStatus() {
-    return fetch(apiBase() + '/nbcheck/status', {
-      headers: authHeaders(),
-      cache: 'no-store'
-    })
+    return fetch(apiBase() + '/health', { cache: 'no-store' })
+      .then(function (res) {
+        return res.ok ? res.json() : null;
+      })
+      .catch(function () {
+        return null;
+      })
+      .then(function (health) {
+        if (!health || !health.nbcheck_api) {
+          throw new Error('Notebookcheck API 未加载（需重新部署/重启 API）');
+        }
+        return fetch(apiBase() + '/nbcheck/status', {
+          headers: authHeaders(),
+          cache: 'no-store'
+        });
+      })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();

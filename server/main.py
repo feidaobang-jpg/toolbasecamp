@@ -790,7 +790,8 @@ def health():
         "stats_events_api": "/stats/event" in paths and "/stats/overview" in paths,
         "stats_geo_rev": STATS_GEO_REV,
         "ladder_api": "/ladder/refresh" in paths and "/ladder/status" in paths,
-        "nbcheck_api": "/nbcheck/refresh" in paths and "/nbcheck/nb_gpu" in paths,
+        # FastAPI registers path params as /nbcheck/{list_id}, not /nbcheck/nb_gpu
+        "nbcheck_api": "/nbcheck/refresh" in paths and "/nbcheck/status" in paths and "/nbcheck/{list_id}" in paths,
         "stocks_api": (
             "/stocks/recommend-tail-buy" in paths
             and "/stocks/recommend-monthly-recovery" in paths

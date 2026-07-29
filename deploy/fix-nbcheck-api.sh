@@ -45,12 +45,17 @@ HEALTH="$(curl -sf http://127.0.0.1:8001/health || true)"
 echo "$HEALTH" | head -c 900
 echo
 echo "$HEALTH" | grep -q '"nbcheck_api":true' || {
-  echo "FAILED: health missing nbcheck_api"
+  echo "FAILED: health missing nbcheck_api=true (stale process or wrong path check)"
   journalctl -u toolbasecamp-api -n 60 --no-pager || true
   exit 1
 }
-curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/nbcheck/nb_gpu' || {
-  echo "FAILED: openapi missing /nbcheck/nb_gpu"
+# OpenAPI shows /nbcheck/{list_id}, not the concrete /nbcheck/nb_gpu
+curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/nbcheck/status' || {
+  echo "FAILED: openapi missing /nbcheck/status"
+  exit 1
+}
+curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/nbcheck/{list_id}' || {
+  echo "FAILED: openapi missing /nbcheck/{list_id}"
   exit 1
 }
 curl -sf http://127.0.0.1:8001/nbcheck/nb_gpu | grep -q '"items"' || {
