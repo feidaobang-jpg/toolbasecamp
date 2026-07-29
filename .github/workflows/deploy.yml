@@ -86,10 +86,30 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
         run: |
           VER="$(git rev-parse --short HEAD)"
-          while IFS= read -r -d '' f; do
-            perl -pi -e "s/(href=\"[^\"]*\\.css)(?:\\?[^\"]*)?\"/\$1?v=${VER}\"/g; s/(src=\"[^\"]*\\.js)(?:\\?[^\"]*)?\"/\$1?v=${VER}\"/g" "$f"
-          done < <(find public -type f -name '*.html' -print0)
+          # Bust CSS/JS cache in HTML. Must stay UTF-8 — perl -pi under LANG=C corrupts CJK to '?'.
+          python3 - <<'PY' "$VER"
+          import re, sys
+          from pathlib import Path
+          ver = sys.argv[1]
+          css = re.compile(r'(href="[^"]*\.css)(?:\?[^"]*)?"')
+          js = re.compile(r'(src="[^"]*\.js)(?:\?[^"]*)?"')
+          for path in Path("public").rglob("*.html"):
+              text = path.read_text(encoding="utf-8")
+              text2 = css.sub(rf'\1?v={ver}"', text)
+              text2 = js.sub(rf'\1?v={ver}"', text2)
+              if text2 != text:
+                  path.write_text(text2, encoding="utf-8", newline="\n")
+          PY
           grep -q 'recipe-ingredient-tags' public/html/life/ai-recipe.html
+          # Sanity: Chinese titles must survive cache bust
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("public/html/ladder/cpu_rank.html")
+          raw = p.read_bytes()
+          assert b"</title>" in raw, "cpu_rank.html missing </title>"
+          assert "\u684c\u9762".encode("utf-8") in raw, "cpu_rank.html lost UTF-8 Chinese after cache bust"
+          print("UTF-8 ladder HTML OK")
+          PY
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
