@@ -2269,7 +2269,7 @@ window.TB_LOCALES['zh-CN'] = {
             desc: '中文翻译成 string.xml（百度翻译）'
         },
         folderTranslator: {
-            title: '文件批量重命名',
+            title: '文件批量翻译重命名',
             desc: '批量翻译并重命名本地文件'
         },
         mvpConverter: {
