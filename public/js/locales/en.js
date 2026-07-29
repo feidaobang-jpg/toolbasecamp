@@ -31,22 +31,11 @@ window.TB_LOCALES.en = {
         empty: 'No private tools yet',
         emptyGroup: 'No tools in this group yet',
         groups: {
-            stock: 'Stocks',
-            android: 'Android'
+            stock: 'Stocks'
         },
         stock: {
             picksTitle: 'Stock picks',
             picksDesc: 'Monthly K start (long-term) and late-session low buy (overnight)'
-        },
-        android: {
-            stringTranslator: {
-                title: 'strings.xml translator',
-                desc: 'Translate Chinese into strings.xml (Baidu)'
-            },
-            folderTranslator: {
-                title: 'Batch file rename',
-                desc: 'Translate and rename local files in bulk'
-            }
         }
     },
     coolSites: {
@@ -2275,6 +2264,14 @@ window.TB_LOCALES.en = {
         layoutConverter: {
             title: 'Layout XML to findView',
             desc: 'Convert Android layout XML to findViewById / ButterKnife / Kotlin'
+        },
+        stringTranslator: {
+            title: 'strings.xml translator',
+            desc: 'Translate Chinese into strings.xml (Baidu Translate)'
+        },
+        folderTranslator: {
+            title: 'Batch file rename',
+            desc: 'Translate and rename local files in bulk'
         },
         mvpConverter: {
             title: 'MVP code generator',

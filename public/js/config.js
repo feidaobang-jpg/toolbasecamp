@@ -192,6 +192,8 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },
                 { titleKey: 'tools.layoutConverter.title', url: 'html/dev/layout-converter.html' },
+                { titleKey: 'tools.stringTranslator.title', url: 'html/android/string-translator.html' },
+                { titleKey: 'tools.folderTranslator.title', url: 'html/android/folder-translator.html' },
                 { titleKey: 'tools.mvpConverter.title', url: 'html/android/mvp-converter.html' },
                 { titleKey: 'tools.adapterGenerator.title', url: 'html/android/adapter-generator.html' },
                 { titleKey: 'tools.refreshPageGenerator.title', url: 'html/android/refresh-page-generator.html' }
@@ -280,21 +282,6 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.stock.picksTitle',
                     descriptionKey: 'privateHub.stock.picksDesc',
                     url: 'html/admin/private/stock-picks.html'
-                }
-            ]
-        },
-        {
-            titleKey: 'privateHub.groups.android',
-            items: [
-                {
-                    titleKey: 'privateHub.android.stringTranslator.title',
-                    descriptionKey: 'privateHub.android.stringTranslator.desc',
-                    url: 'html/admin/private/android/string-translator.html'
-                },
-                {
-                    titleKey: 'privateHub.android.folderTranslator.title',
-                    descriptionKey: 'privateHub.android.folderTranslator.desc',
-                    url: 'html/admin/private/android/folder-translator.html'
                 }
             ]
         }

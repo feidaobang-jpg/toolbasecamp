@@ -11,11 +11,4 @@ Register in `public/js/config.js` → `privateToolsConfig`.
 
 Server module: `server/stocks.py` (needs `requests`, `pandas` on the API host).
 
-## Android（需百度翻译的）
-
-Under `android/`:
-
-- strings.xml 翻译
-- 文件批量重命名
-
-公开 Android 工具在首页「Android」分类：`html/android/*`、布局转换在 `html/dev/layout-converter.html`。
+Android 工具已全部公开，见首页「Android」分类。

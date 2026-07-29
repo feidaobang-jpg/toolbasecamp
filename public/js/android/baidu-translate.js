@@ -1,4 +1,4 @@
-/** Baidu Translate helpers for admin-only Android tools. Do not load on public pages. */
+/** Baidu Translate helpers for Android string/file tools (browser JSONP). */
 async function translateTo(text, to) {
 	try {
 		// 百度翻译API配置

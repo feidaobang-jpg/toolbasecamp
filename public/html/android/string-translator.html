@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>strings.xml 翻译 - 工具大本营</title>
+  <meta name="description" content="strings.xml 翻译" />
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/android/string-translator.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+<div class="page active">
+                <h2 data-i18n="tools.stringTranslator.title">strings.xml 翻译</h2>
+                <div class="tool-container">
+                    <div class="input-section">
+                        <label for="input">输入文本:</label>
+                        <textarea id="input" rows="12" placeholder="请输入要转换的中文，支持多行。"></textarea>
+                    </div>
+
+                    <div class="button-section">
+                        <button type="button" class="tb-btn" id="convert-btn">生成</button>
+                        <button type="button" class="tb-btn" id="clear-btn">清空</button>
+                    </div>
+
+                    <div class="output-section">
+                        <label for="chinese-output">中文结果:</label>
+                        <pre id="chinese-output" class="code-display"></pre>
+                        <button type="button" class="tb-btn copy-btn" data-target="chinese-output">复制中文代码</button>
+                    </div>
+
+                    <div class="output-section">
+                        <label for="english-output">英文结果:</label>
+                        <pre id="english-output" class="code-display"></pre>
+                        <button type="button" class="tb-btn copy-btn" data-target="english-output">复制英文代码</button>
+                    </div>
+
+                    <div class="output-section">
+                        <label for="japanese-output">日文结果:</label>
+                        <pre id="japanese-output" class="code-display"></pre>
+                        <button type="button" class="tb-btn copy-btn" data-target="japanese-output">复制日文代码</button>
+                    </div>
+                </div>
+            </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js?v=stats1"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/common_ui.js?v=4"></script>
+  <script src="../../js/android/baidu-translate.js?v=1"></script>
+  <script src="../../js/android/string-translator.js?v=1"></script>
+</body>
+</html>

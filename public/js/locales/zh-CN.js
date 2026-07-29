@@ -30,22 +30,11 @@ window.TB_LOCALES['zh-CN'] = {
         empty: '暂无自用工具',
         emptyGroup: '暂无工具，迁入后显示在此',
         groups: {
-            stock: '股票',
-            android: 'Android'
+            stock: '股票'
         },
         stock: {
             picksTitle: '选股策略',
             picksDesc: '月K启动（长线）与尾盘低吸（隔夜）'
-        },
-        android: {
-            stringTranslator: {
-                title: 'strings.xml 翻译',
-                desc: '中文翻译成 string.xml（百度翻译）'
-            },
-            folderTranslator: {
-                title: '文件批量重命名',
-                desc: '批量翻译并重命名本地文件'
-            }
         }
     },
     coolSites: {
@@ -2274,6 +2263,14 @@ window.TB_LOCALES['zh-CN'] = {
         layoutConverter: {
             title: '布局 XML 转 findView',
             desc: 'Android 布局 XML 转 findViewById / ButterKnife / Kotlin'
+        },
+        stringTranslator: {
+            title: 'strings.xml 翻译',
+            desc: '中文翻译成 string.xml（百度翻译）'
+        },
+        folderTranslator: {
+            title: '文件批量重命名',
+            desc: '批量翻译并重命名本地文件'
         },
         mvpConverter: {
             title: 'MVP 代码生成',
