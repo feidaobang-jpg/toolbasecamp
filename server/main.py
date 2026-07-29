@@ -48,6 +48,8 @@ from stocks import router as stocks_router
 from stocks import wire as wire_stocks
 from ladder import router as ladder_router
 from ladder import wire as wire_ladder
+from nbcheck import router as nbcheck_router
+from nbcheck import wire as wire_nbcheck
 
 _wan_import_error = ""
 try:
@@ -527,6 +529,8 @@ wire_stocks(get_current_user, require_admin)
 app.include_router(stocks_router)
 wire_ladder(get_current_user, require_admin)
 app.include_router(ladder_router)
+wire_nbcheck(get_current_user, require_admin)
+app.include_router(nbcheck_router)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
 
@@ -786,6 +790,7 @@ def health():
         "stats_events_api": "/stats/event" in paths and "/stats/overview" in paths,
         "stats_geo_rev": STATS_GEO_REV,
         "ladder_api": "/ladder/refresh" in paths and "/ladder/status" in paths,
+        "nbcheck_api": "/nbcheck/refresh" in paths and "/nbcheck/nb_gpu" in paths,
         "stocks_api": (
             "/stocks/recommend-tail-buy" in paths
             and "/stocks/recommend-monthly-recovery" in paths

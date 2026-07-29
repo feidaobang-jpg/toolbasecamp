@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>笔记本显卡跑分榜 - 工具大本营</title>
+  <meta name="description" content="基于 Notebookcheck 的笔记本 GPU 相对跑分排行" data-i18n-content="tools.ladderNbGpuRank.desc" />
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
+  <link rel="stylesheet" href="../../css/ladder/nb-rank.css?v=1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.ladderNbGpuRank.title">笔记本显卡跑分榜</h1>
+        <p data-i18n="tools.ladderNbGpuRank.desc">基于 Notebookcheck 相对性能分（越高越强）</p>
+      </div>
+      <p class="nb-rank-note">
+        <span data-i18n="tools.ladderNbGpuRank.note">数据来自 Notebookcheck 公开榜，仅供参考；同型号因功耗墙差异可能差一截。原世代天梯见</span>
+        <a href="nb_gpu.html" data-i18n="tools.ladderNbGpuRank.legacyLink">快科技笔记本显卡天梯</a>
+        ·
+        <a id="nb-rank-source-link" href="https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html" target="_blank" rel="noopener noreferrer" data-i18n="tools.ladderNbGpuRank.sourceLink">Notebookcheck 源页</a>
+      </p>
+      <p id="nb-rank-meta" class="nb-rank-meta"></p>
+      <div id="nb-rank-filters" class="nb-rank-filters">
+        <button type="button" class="is-active" data-brand="all" data-i18n="tools.ladderNbGpuRank.filterAll">全部</button>
+        <button type="button" data-brand="nvidia">NVIDIA</button>
+        <button type="button" data-brand="amd">AMD</button>
+        <button type="button" data-brand="intel">Intel</button>
+      </div>
+      <div class="tool-card ladder-card">
+        <div id="nb-rank-list" class="nb-rank-list"></div>
+      </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js"></script>
+  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/i18n.js?v=stats1"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js"></script>
+  <script src="../../js/common_ui.js?v=8"></script>
+  <script src="../../js/ladder/nb-rank.js?v=1"></script>
+</body>
+</html>

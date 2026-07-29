@@ -205,7 +205,8 @@ const toolsConfig = {
                 { titleKey: 'tools.ladderGpu.title', url: 'html/ladder/gpu.html' },
                 { titleKey: 'tools.ladderSoc.title', url: 'html/ladder/soc.html' },
                 { titleKey: 'tools.ladderNbCpu.title', url: 'html/ladder/nb_cpu.html' },
-                { titleKey: 'tools.ladderNbGpu.title', url: 'html/ladder/nb_gpu.html' }
+                { titleKey: 'tools.ladderNbGpu.title', url: 'html/ladder/nb_gpu.html' },
+                { titleKey: 'tools.ladderNbGpuRank.title', url: 'html/ladder/nb_gpu_rank.html' }
             ]
         },
         {

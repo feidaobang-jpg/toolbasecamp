@@ -2316,8 +2316,21 @@ window.TB_LOCALES['zh-CN'] = {
         ladderNbGpu: {
             title: '笔记本显卡',
             desc: '笔记本 GPU 性能天梯图（越高越强）',
-            staleNote: '快科技笔记本显卡专题已停更（尚无 50 系）。下表仅供参考；更新跑分请看',
-            staleLink: 'Notebookcheck 笔记本显卡榜'
+            staleNote: '快科技笔记本显卡专题已停更（尚无 50 系）。下表仅供参考；更新跑分请看站内',
+            staleLink: '笔记本显卡跑分榜'
+        },
+        ladderNbGpuRank: {
+            title: '笔记本显卡跑分榜',
+            desc: '基于 Notebookcheck 的笔记本 GPU 相对跑分排行',
+            note: '数据来自 Notebookcheck 公开榜，仅供参考；同型号因功耗墙差异可能差一截。原世代天梯见',
+            legacyLink: '快科技笔记本显卡天梯',
+            sourceLink: 'Notebookcheck 源页',
+            updated: '更新',
+            count: '条目',
+            empty: '暂无数据',
+            loading: '加载中…',
+            loadFail: '加载失败',
+            filterAll: '全部'
         },
         mindmap: {
             title: '思维导图',

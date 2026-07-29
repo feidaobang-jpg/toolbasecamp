@@ -2318,7 +2318,20 @@ window.TB_LOCALES.en = {
             title: 'Laptop GPU',
             desc: 'Laptop GPU performance ladder (higher is stronger)',
             staleNote: 'The mydrivers laptop GPU chart has stopped updating (no RTX 50 series). Table below is for reference; for newer scores see',
-            staleLink: 'Notebookcheck mobile GPU list'
+            staleLink: 'Laptop GPU rank (Notebookcheck)'
+        },
+        ladderNbGpuRank: {
+            title: 'Laptop GPU Rank',
+            desc: 'Relative laptop GPU ranking based on Notebookcheck',
+            note: 'Data from Notebookcheck public charts, for reference only; same SKU can vary with TGP. Legacy generation chart:',
+            legacyLink: 'mydrivers laptop GPU ladder',
+            sourceLink: 'Notebookcheck source',
+            updated: 'Updated',
+            count: 'Items',
+            empty: 'No data',
+            loading: 'Loading…',
+            loadFail: 'Failed to load',
+            filterAll: 'All'
         },
         mindmap: {
             title: 'Mind Map',

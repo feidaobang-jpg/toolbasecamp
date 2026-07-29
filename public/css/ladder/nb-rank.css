@@ -1,0 +1,140 @@
+/* Notebookcheck-style ranked ladder (vertical bars). */
+
+.nb-rank-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.nb-rank-note a {
+  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.nb-rank-meta {
+  margin: 0 0 14px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.nb-rank-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.nb-rank-filters button {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.nb-rank-filters button.is-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.nb-rank-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nb-rank-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 56px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.nb-rank-pos {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+}
+
+.nb-rank-main {
+  min-width: 0;
+}
+
+.nb-rank-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nb-rank-sub {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.nb-rank-bar-wrap {
+  margin-top: 6px;
+  height: 8px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.nb-rank-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: #94a3b8;
+  width: 0;
+}
+
+.nb-rank-bar.is-nvidia { background: #76b900; }
+.nb-rank-bar.is-amd { background: #ed1c24; }
+.nb-rank-bar.is-intel { background: #0068b5; }
+
+.nb-rank-score {
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  text-align: right;
+}
+
+.nb-rank-empty,
+.nb-rank-error {
+  padding: 24px 12px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.nb-rank-error {
+  color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  .nb-rank-row {
+    grid-template-columns: 28px minmax(0, 1fr) 48px;
+    gap: 8px;
+    padding: 8px;
+  }
+  .nb-rank-name {
+    font-size: 12px;
+  }
+}
