@@ -32,6 +32,10 @@ window.TB_LOCALES.en = {
         emptyGroup: 'No tools in this group yet',
         groups: {
             stock: 'Stocks'
+        },
+        stock: {
+            picksTitle: 'Stock picks',
+            picksDesc: 'Monthly K start (long-term) and late-session low buy (overnight)'
         }
     },
     coolSites: {

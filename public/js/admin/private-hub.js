@@ -106,7 +106,8 @@
           var a = document.createElement('a');
           a.className = 'private-card';
           a.href = toolHref(item.url);
-          var descKey = (item.titleKey || '').replace(/\.title$/, '.desc');
+          var descKey = item.descriptionKey
+            || (item.titleKey || '').replace(/\.title$/i, '.desc').replace(/Title$/, 'Desc');
           a.innerHTML =
             '<h4 class="private-card-title"></h4><p class="private-card-desc"></p>';
           a.querySelector('.private-card-title').textContent = lbl(item);

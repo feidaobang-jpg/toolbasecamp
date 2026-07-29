@@ -31,6 +31,10 @@ window.TB_LOCALES['zh-CN'] = {
         emptyGroup: '暂无工具，迁入后显示在此',
         groups: {
             stock: '股票'
+        },
+        stock: {
+            picksTitle: '选股策略',
+            picksDesc: '月K启动（长线）与尾盘低吸（隔夜）'
         }
     },
     coolSites: {

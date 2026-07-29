@@ -266,8 +266,11 @@ const privateToolsConfig = {
         {
             titleKey: 'privateHub.groups.stock',
             items: [
-                // Migrate stock tools here, e.g.:
-                // { titleKey: 'privateHub.stock.demo.title', url: 'html/admin/private/stock-demo.html' }
+                {
+                    titleKey: 'privateHub.stock.picksTitle',
+                    descriptionKey: 'privateHub.stock.picksDesc',
+                    url: 'html/admin/private/stock-picks.html'
+                }
             ]
         }
     ]

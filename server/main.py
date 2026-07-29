@@ -43,6 +43,8 @@ from fx_rates import router as fx_router
 from site_stats import ensure_site_stats_tables
 from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
+from stocks import router as stocks_router
+from stocks import wire as wire_stocks
 
 _wan_import_error = ""
 try:
@@ -518,6 +520,8 @@ wire_site_stats(
     is_admin,
     _client_ip,
 )
+wire_stocks(get_current_user, require_admin)
+app.include_router(stocks_router)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
 
