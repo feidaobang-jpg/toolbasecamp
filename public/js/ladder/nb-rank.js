@@ -106,7 +106,17 @@
       row.className = 'nb-rank-row';
       var sub = [];
       if (it.architecture) sub.push(it.architecture);
-      if (it.tdp) sub.push('TDP ' + Math.round(Number(it.tdp)) + ' W');
+      if (it.tdp || it.tdp_turbo) {
+        var base = it.tdp ? Math.round(Number(it.tdp)) : null;
+        var turbo = it.tdp_turbo ? Math.round(Number(it.tdp_turbo)) : null;
+        if (base != null && turbo != null && turbo !== base) {
+          sub.push('TDP ' + base + '–' + turbo + ' W');
+        } else if (turbo != null) {
+          sub.push('TDP ' + turbo + ' W');
+        } else if (base != null) {
+          sub.push('TDP ' + base + ' W');
+        }
+      }
       if (it.time_spy) sub.push('Time Spy ' + Math.round(Number(it.time_spy)));
       if (it.cb_r23) sub.push('CB R23 ' + Math.round(Number(it.cb_r23)));
       row.innerHTML =

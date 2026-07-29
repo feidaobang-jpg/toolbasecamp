@@ -285,6 +285,29 @@ def _score_for_row(tr, kind: str) -> Optional[float]:
     return _parse_num(perf_td.get_text(" ", strip=True) if perf_td else "")
 
 
+def _perf_confidence(tr) -> Optional[float]:
+    """Notebookcheck appends sample confidence like '~72.7 23%' on Perf. Rating."""
+    perf_td = tr.find("td", class_="bv_perfrating")
+    if not perf_td:
+        return None
+    text = perf_td.get_text(" ", strip=True)
+    m = re.search(r"(\d+)\s*%", text)
+    return float(m.group(1)) if m else None
+
+
+def _is_low_confidence_perf(tr) -> bool:
+    """Drop sparse estimates that can outrank solid measurements (e.g. M4 8-Core @ 23%)."""
+    conf = _perf_confidence(tr)
+    if conf is not None and conf < 40:
+        return True
+    pos_td = tr.find("td", class_="poslabel")
+    pos_raw = pos_td.get_text(" ", strip=True) if pos_td else ""
+    # Asterisk = estimated position; require at least moderate confidence if known.
+    if "*" in pos_raw and (conf is None or conf < 50):
+        return True
+    return False
+
+
 def _header_indices(table) -> Dict[str, int]:
     """Map normalized header labels -> column index (first header-like row)."""
     out: Dict[str, int] = {}
@@ -318,14 +341,23 @@ def _cell_at(tr, idx: Optional[int]) -> str:
     return tds[idx].get_text(" ", strip=True)
 
 
-def _tdp_from_row(tr, headers: Dict[str, int]) -> Optional[float]:
-    """Base TDP (Watt) when the list exposes it — mainly CPU tables."""
+def _tdp_pair(tr, headers: Dict[str, int]) -> tuple[Optional[float], Optional[float]]:
+    """Return (base TDP, turbo/PL2 TDP) when columns exist."""
+    base = None
+    turbo = None
     for key in ("tdp watt", "tdp", "tdp (watt)"):
         if key in headers:
             n = _parse_num(_cell_at(tr, headers[key]))
             if n is not None and n > 0:
-                return n
-    return None
+                base = n
+                break
+    for key in ("tdp turbo", "tdp turbo pl2", "pl2"):
+        if key in headers:
+            n = _parse_num(_cell_at(tr, headers[key]))
+            if n is not None and n > 0:
+                turbo = n
+                break
+    return base, turbo
 
 
 def _scrape_list(list_id: str) -> Dict[str, Any]:
@@ -356,6 +388,9 @@ def _scrape_list(list_id: str) -> Dict[str, Any]:
         model = _row_model(tr)
         if not _include_row(model, kind):
             continue
+        # CPU relative ratings with tiny sample confidence can invent outliers.
+        if kind in ("cpu", "nb_cpu") and _is_low_confidence_perf(tr):
+            continue
         perf = _score_for_row(tr, kind)
         if perf is None or perf <= 0:
             continue
@@ -370,13 +405,18 @@ def _scrape_list(list_id: str) -> Dict[str, Any]:
             "architecture": arch_td.get_text(strip=True) if arch_td else "",
             "perf_rating": perf,
         }
+        conf = _perf_confidence(tr)
+        if conf is not None:
+            item["confidence"] = conf
         if kind in ("gpu", "nb_gpu"):
             item["time_spy"] = _time_spy_after_perf(tr)
         if kind in ("cpu", "nb_cpu"):
             item["cb_r23"] = _cb_r23_multi(tr)
-            tdp = _tdp_from_row(tr, col_map)
+            tdp, tdp_turbo = _tdp_pair(tr, col_map)
             if tdp is not None:
                 item["tdp"] = tdp
+            if tdp_turbo is not None:
+                item["tdp_turbo"] = tdp_turbo
         if kind == "soc":
             item["score_label"] = meta.get("score_label") or "Geekbench 5.5 Multi"
         items.append(item)
