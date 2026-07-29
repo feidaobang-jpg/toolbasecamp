@@ -212,11 +212,12 @@
     });
   }
 
-  function renderGeo(geo) {
+  function renderGeo(geo, sitePv, geoRev) {
     var pvBars = document.getElementById('geo-pv-bars');
     var uvBars = document.getElementById('geo-uv-bars');
     var pvSum = document.getElementById('geo-pv-summary');
     var uvSum = document.getElementById('geo-uv-summary');
+    var emptyNote = document.getElementById('geo-empty-note');
     if (!pvBars || !uvBars) return;
 
     var labels = {
@@ -230,6 +231,7 @@
     var uv = geo.uv || {};
     var pvShare = geo.pv_share || {};
     var uvShare = geo.uv_share || {};
+    var pvTotal = geo.pv_total || 0;
 
     function fill(container, counts, shares) {
       container.innerHTML = '';
@@ -253,10 +255,25 @@
     fill(pvBars, pv, pvShare);
     fill(uvBars, uv, uvShare);
     if (pvSum) {
-      pvSum.textContent = '区间浏览合计 ' + fmt(geo.pv_total || 0);
+      pvSum.textContent = '区间浏览合计 ' + fmt(pvTotal);
     }
     if (uvSum) {
       uvSum.textContent = '区间访客合计 ' + fmt(geo.uv_total || 0) + '（按首次访客地区）';
+    }
+    if (emptyNote) {
+      if (pvTotal <= 0 && (sitePv || 0) > 0) {
+        emptyNote.classList.remove('hidden');
+        if (geoRev == null) {
+          emptyNote.textContent =
+            '当前 API 未返回地区字段（可能进程仍是旧版 site_stats）。请重新部署/重启 toolbasecamp-api；历史累计浏览也无法按 IP 回填。';
+        } else {
+          emptyNote.textContent =
+            '当前区间尚无地区数据：上线地区统计之前的累计浏览无法按 IP 回填，之后的新站点浏览命中会出现在这里。';
+        }
+      } else {
+        emptyNote.classList.add('hidden');
+        emptyNote.textContent = '';
+      }
     }
   }
 
@@ -288,7 +305,7 @@
       if (ips.length) tip += ' · 已排除 IP ' + ips.length + ' 个';
       tip += ' · 管理员访问不计入';
       document.getElementById('range-label').textContent = tip;
-      renderGeo(data.geo);
+      renderGeo(data.geo, data.site_pv, data.geo_rev);
       var modules = data.modules || [];
       var maxMod = modules.length ? modules[0].count : 0;
       renderBars(document.getElementById('module-list'), modules, maxMod);

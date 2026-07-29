@@ -324,8 +324,9 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev/fx_thb_twd/auth_phone"
+              && echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"stats_geo_rev":1' >/dev/null; then
+              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev/fx_thb_twd/auth_phone/stats_geo"
               HEALTH_OK=1
               break
             fi
@@ -363,6 +364,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"stats_geo_rev":1' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"auth_phone_login":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"auth_phone_rev":3' >/dev/null || exit 1
           fi
@@ -857,7 +859,9 @@ jobs:
           check_stats() {
             HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
-            echo "$HEALTH" | grep -F '"stats_api":true' >/dev/null
+            echo "$HEALTH" | grep -F '"stats_api":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"stats_events_api":true' >/dev/null \
+              && echo "$HEALTH" | grep -F '"stats_geo_rev":1' >/dev/null
           }
           HIT="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/hit?cb=$RANDOM" \
             -H 'Content-Type: application/json' \
@@ -867,7 +871,10 @@ jobs:
             -H 'Content-Type: application/json' \
             -d '{"name":"page.home"}' || true)"
           echo "stats event: $EV"
-          if ! check_stats || ! echo "$HIT" | grep -F '"site_pv"' >/dev/null || ! echo "$EV" | grep -F '"ok":true' >/dev/null; then
+          if ! check_stats || ! echo "$HIT" | grep -F '"site_pv"' >/dev/null \
+            || ! echo "$HIT" | grep -F '"region"' >/dev/null \
+            || ! echo "$HIT" | grep -F '"geo_rev":1' >/dev/null \
+            || ! echo "$EV" | grep -F '"ok":true' >/dev/null; then
             echo "::warning:: public stats incomplete — forcing fix-stats-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-stats-api.sh'
@@ -882,11 +889,14 @@ jobs:
             echo "retry event: $EV"
             check_stats || exit 1
             echo "$HIT" | grep -F '"site_pv"' >/dev/null || exit 1
+            echo "$HIT" | grep -F '"region"' >/dev/null || exit 1
+            echo "$HIT" | grep -F '"geo_rev":1' >/dev/null || exit 1
             echo "$EV" | grep -F '"ok":true' >/dev/null || exit 1
           fi
           HEALTH2="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
           echo "$HEALTH2" | grep -F '"stats_events_api":true' >/dev/null || exit 1
-          echo "Site stats API public OK."
+          echo "$HEALTH2" | grep -F '"stats_geo_rev":1' >/dev/null || exit 1
+          echo "Site stats API public OK (incl. geo)."
 
       - name: Verify life-plans API route (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'

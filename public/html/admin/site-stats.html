@@ -74,7 +74,8 @@
 
       <section class="bg-white rounded-2xl border border-gray-100 p-5">
         <h3 class="font-semibold text-gray-900 mb-1">国内 vs 海外</h3>
-        <p class="text-xs text-gray-400 mb-4">按访问 IP 粗分（管理员/排除 IP 不计入）；未知多为内网或解析失败</p>
+        <p class="text-xs text-gray-400 mb-4">按访问 IP 粗分（管理员/排除 IP 不计入）；未知多为内网或解析失败。仅统计「站点浏览」命中，不含功能事件；上线地区统计之前的历史 PV 无法回填。</p>
+        <p id="geo-empty-note" class="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-4 hidden"></p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <div class="text-sm text-gray-600 mb-2">浏览量占比</div>
@@ -118,6 +119,6 @@
   <script src="../../js/locales/zh-CN.js"></script>
   <script src="../../js/i18n.js?v=stats2"></script>
   <script src="../../js/config.js"></script>
-  <script src="../../js/admin/site-stats.js?v=3"></script>
+  <script src="../../js/admin/site-stats.js?v=4"></script>
 </body>
 </html>

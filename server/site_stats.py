@@ -15,6 +15,10 @@ from pydantic import BaseModel, Field
 router = APIRouter(prefix="/stats", tags=["stats"])
 security = HTTPBearer(auto_error=False)
 
+# Bumped when geo daily write/overview fields change — health must expose this so
+# deploy can detect a stale orphan process still serving pre-geo site_stats.
+STATS_GEO_REV = 1
+
 _get_conn: Optional[Callable[[], Any]] = None
 _require_db: Optional[Callable[[], None]] = None
 _get_current_user: Optional[Callable[..., Any]] = None
@@ -22,6 +26,7 @@ _get_optional_user: Optional[Callable[..., Any]] = None
 _require_admin: Optional[Callable[[dict], None]] = None
 _is_admin: Optional[Callable[[dict], bool]] = None
 _client_ip: Optional[Callable[[Request], str]] = None
+_tables_ready = False
 
 _VISITOR_RE = re.compile(
     r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
@@ -60,6 +65,7 @@ def wire(
 
 
 def ensure_site_stats_tables(cur) -> None:
+    global _tables_ready
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS site_stats (
@@ -132,6 +138,15 @@ def ensure_site_stats_tables(cur) -> None:
     cur.execute(
         "INSERT IGNORE INTO site_stats (id, site_pv, site_uv) VALUES (1, 0, 0)"
     )
+    _tables_ready = True
+
+
+def _ensure_tables(cur) -> None:
+    """Idempotent; used on hit so geo tables exist even if startup missed them."""
+    global _tables_ready
+    if _tables_ready:
+        return
+    ensure_site_stats_tables(cur)
 
 
 class HitBody(BaseModel):
@@ -324,8 +339,14 @@ def record_hit(
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
+            _ensure_tables(cur)
             ip = (_client_ip(request) if _client_ip else "") or ""
-            region = _resolve_region(request, cur, ip)
+            try:
+                region = _resolve_region(request, cur, ip)
+            except Exception:
+                region = "unknown"
+            if region not in ("cn", "overseas", "unknown"):
+                region = "unknown"
             cur.execute(
                 "INSERT IGNORE INTO site_stats (id, site_pv, site_uv) VALUES (1, 0, 0)"
             )
@@ -344,6 +365,7 @@ def record_hit(
         totals["visitor_id"] = visitor_id
         totals["skipped"] = False
         totals["region"] = region
+        totals["geo_rev"] = STATS_GEO_REV
         return totals
     finally:
         conn.close()
@@ -394,6 +416,7 @@ def stats_overview(
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
+            _ensure_tables(cur)
             totals = _read_totals(cur)
             cur.execute(
                 """
@@ -494,6 +517,7 @@ def stats_overview(
             "events_daily": daily,
             "modules": modules,
             "geo": geo,
+            "geo_rev": STATS_GEO_REV,
             "exclude_ips_configured": sorted(_exclude_ips()),
         }
     finally:

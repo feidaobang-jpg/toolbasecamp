@@ -40,6 +40,7 @@ from watermark import router as watermark_router
 from fx_rates import ALLOWED as FX_ALLOWED
 from fx_rates import FX_ALLOWED_REV
 from fx_rates import router as fx_router
+from site_stats import STATS_GEO_REV
 from site_stats import ensure_site_stats_tables
 from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
@@ -783,6 +784,7 @@ def health():
         "fx_api": "/fx/rate" in paths,
         "stats_api": "/stats/hit" in paths,
         "stats_events_api": "/stats/event" in paths and "/stats/overview" in paths,
+        "stats_geo_rev": STATS_GEO_REV,
         "ladder_api": "/ladder/refresh" in paths and "/ladder/status" in paths,
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,

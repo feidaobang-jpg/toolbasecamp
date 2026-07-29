@@ -9,7 +9,16 @@ test -f "$APP_DIR/site_stats.py" || {
   echo "FAILED: missing $APP_DIR/site_stats.py — deploy server/ first"
   exit 1
 }
-grep -n "site_stats\|stats_api\|/stats/hit\|/stats/event\|/stats/overview" "$APP_DIR/main.py" "$APP_DIR/site_stats.py" | head -60 || true
+grep -n "site_stats\|stats_api\|/stats/hit\|/stats/event\|/stats/overview\|_bump_geo\|STATS_GEO_REV\|site_stats_geo_daily" \
+  "$APP_DIR/main.py" "$APP_DIR/site_stats.py" | head -80 || true
+grep -q '_bump_geo' "$APP_DIR/site_stats.py" || {
+  echo "FAILED: $APP_DIR/site_stats.py missing geo write path (_bump_geo)"
+  exit 1
+}
+grep -q 'STATS_GEO_REV' "$APP_DIR/site_stats.py" || {
+  echo "FAILED: $APP_DIR/site_stats.py missing STATS_GEO_REV"
+  exit 1
+}
 
 echo "=== Nuclear restart ==="
 systemctl stop toolbasecamp-api 2>/dev/null || true
@@ -43,6 +52,11 @@ echo "$HEALTH" | grep -q '"stats_events_api":true' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
+echo "$HEALTH" | grep -q '"stats_geo_rev":1' || {
+  echo "FAILED: health missing stats_geo_rev:1 (stale process without geo?)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
+  exit 1
+}
 curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/stats/hit' || {
   echo "FAILED: openapi missing /stats/hit"
   exit 1
@@ -65,6 +79,14 @@ echo "$HIT" | grep -q 'site_pv' || {
   echo "FAILED: hit response missing site_pv"
   exit 1
 }
+echo "$HIT" | grep -q '"region"' || {
+  echo "FAILED: hit response missing region — geo write path not loaded"
+  exit 1
+}
+echo "$HIT" | grep -q '"geo_rev":1' || {
+  echo "FAILED: hit response missing geo_rev:1"
+  exit 1
+}
 EV="$(curl -sf -X POST http://127.0.0.1:8001/stats/event \
   -H 'Content-Type: application/json' \
   -d '{"name":"page.home"}' || true)"
@@ -74,4 +96,4 @@ echo "$EV" | grep -q '"ok":true' || {
   exit 1
 }
 
-echo "OK: stats API live (hit + event + overview)"
+echo "OK: stats API live (hit + event + overview + geo)"
