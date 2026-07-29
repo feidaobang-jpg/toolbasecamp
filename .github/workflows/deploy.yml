@@ -53,13 +53,13 @@ jobs:
           echo "portal_dev=${{ steps.changes.outputs.portal_dev }}"
           echo "portal_chef=${{ steps.changes.outputs.portal_chef }}"
           if [[ "${{ steps.full.outputs.yes }}" == "1" ]]; then
-            echo "Full deploy ‚Ü?all steps enabled."
+            echo "Full deploy ù?all steps enabled."
           elif [[ "${{ steps.changes.outputs.public }}" == "true" \
              && "${{ steps.changes.outputs.server }}" != "true" \
              && "${{ steps.changes.outputs.deploy }}" != "true" \
              && "${{ steps.changes.outputs.portal_dev }}" != "true" \
              && "${{ steps.changes.outputs.portal_chef }}" != "true" ]]; then
-            echo "Static-only change ‚Ü?skip next-tools / CyberChef / API restart."
+            echo "Static-only change ù?skip next-tools / CyberChef / API restart."
           fi
 
       - name: Validate secrets
@@ -86,11 +86,12 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
         run: |
           VER="$(git rev-parse --short HEAD)"
-          # Bust CSS/JS cache in HTML. Must stay UTF-8 ó perl -pi under LANG=C corrupts CJK to '?'.
-          python3 - <<'PY' "$VER"
-          import re, sys
+          # Bust CSS/JS cache in HTML. Must stay UTF-8 (perl -pi under LANG=C corrupts CJK to '?').
+          export VER
+          python3 <<'PY'
+          import os, re
           from pathlib import Path
-          ver = sys.argv[1]
+          ver = os.environ["VER"]
           css = re.compile(r'(href="[^"]*\.css)(?:\?[^"]*)?"')
           js = re.compile(r'(src="[^"]*\.js)(?:\?[^"]*)?"')
           for path in Path("public").rglob("*.html"):
@@ -102,7 +103,7 @@ jobs:
           PY
           grep -q 'recipe-ingredient-tags' public/html/life/ai-recipe.html
           # Sanity: Chinese titles must survive cache bust
-          python3 - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
           p = Path("public/html/ladder/cpu_rank.html")
           raw = p.read_bytes()
@@ -229,7 +230,7 @@ jobs:
           # rembg is optional (large); install best-effort so core API still deploys
           if [[ -f "$APP_DIR/requirements-general-cutout.txt" ]]; then
             "$APP_DIR/venv/bin/pip" install -q -r "$APP_DIR/requirements-general-cutout.txt" \
-              || echo "WARN: rembg install failed ‚Ä?general cutout will return 503 until installed"
+              || echo "WARN: rembg install failed ù?general cutout will return 503 until installed"
           fi
           "$APP_DIR/venv/bin/pip" uninstall -y passlib 2>/dev/null || true
           rm -rf "$APP_DIR/__pycache__"
@@ -253,7 +254,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/install-stirling-warmup-cron.sh
             bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
           else
-            echo "pdf-on-nas.flag set ‚Ä?skip Stirling PDF on VPS"
+            echo "pdf-on-nas.flag set ù?skip Stirling PDF on VPS"
             bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh || true
           fi
           if [[ ! -f /var/www/toolbasecamp-chef/index.html ]]; then
@@ -267,7 +268,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh || true
             bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
           else
-            echo "translate-on-nas.flag set ‚Ä?skip LibreTranslate on VPS"
+            echo "translate-on-nas.flag set ù?skip LibreTranslate on VPS"
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
           fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
@@ -283,7 +284,7 @@ jobs:
           # Port must be free before start, otherwise systemd may leave an old orphan listening.
           for _ in 1 2 3 4 5; do
             if ss -lnt 2>/dev/null | grep -q ':8001'; then
-              echo "port 8001 still busy ‚Ä?killing again"
+              echo "port 8001 still busy ù?killing again"
               fuser -k -9 8001/tcp 2>/dev/null || true
               pkill -9 -f '/opt/toolbasecamp-api/venv/bin/python' 2>/dev/null || true
               sleep 2
@@ -298,7 +299,7 @@ jobs:
           sleep 2
           systemctl is-active toolbasecamp-api
           ss -lntp 2>/dev/null | grep 8001 || netstat -lntp 2>/dev/null | grep 8001 || true
-          # Always nuke once more ‚Ä?DEPLOY_SHA on disk can update while an orphan keeps old PLAN_KINDS.
+          # Always nuke once more ù?DEPLOY_SHA on disk can update while an orphan keeps old PLAN_KINDS.
           echo "=== Force life-plans process reload ==="
           bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           bash /opt/toolbasecamp-deploy/fix-fx-api.sh
@@ -315,7 +316,7 @@ jobs:
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_ready":true' >/dev/null \
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_prompt_rev":9' >/dev/null \
             || ! echo "$HEALTH_JSON" | grep -F '"life_plans_guest_ok":true' >/dev/null; then
-            echo "stale process detected right after start ‚Ä?running fix scripts"
+            echo "stale process detected right after start ù?running fix scripts"
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh || true
             bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
           fi
@@ -404,19 +405,19 @@ jobs:
             exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/todos' >/dev/null || {
-            echo "=== openapi missing /records/todos ‚Ä?restarting records API ==="
+            echo "=== openapi missing /records/todos ù?restarting records API ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/todos' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/rents' >/dev/null || {
-            echo "=== openapi missing /records/rents ‚Ä?restarting records API ==="
+            echo "=== openapi missing /records/rents ù?restarting records API ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-records-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/rents' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/wan/i2v/submit' >/dev/null || {
-            echo "=== openapi missing /wan/i2v/submit ‚Ä?killing orphans and restarting ==="
+            echo "=== openapi missing /wan/i2v/submit ù?killing orphans and restarting ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-wan-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/wan/i2v/submit' >/dev/null || exit 1
@@ -428,59 +429,59 @@ jobs:
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/watermark/image/process' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/image/general-cutout/segment' >/dev/null || {
-            echo "=== openapi missing /image/general-cutout/segment ‚Ä?forcing restart ==="
+            echo "=== openapi missing /image/general-cutout/segment ù?forcing restart ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/image/general-cutout/segment' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/life-plans/status' >/dev/null || {
-            echo "=== openapi missing /life-plans/status ‚Ä?forcing restart ==="
+            echo "=== openapi missing /life-plans/status ù?forcing restart ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/life-plans/status' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/fx/rate' >/dev/null || {
-            echo "=== openapi missing /fx/rate ‚Ä?restarting API ==="
+            echo "=== openapi missing /fx/rate ù?restarting API ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             systemctl restart toolbasecamp-api
             sleep 3
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/fx/rate' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/hit' >/dev/null || {
-            echo "=== openapi missing /stats/hit ‚Ä?forcing fix-stats-api.sh ==="
+            echo "=== openapi missing /stats/hit ù?forcing fix-stats-api.sh ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-stats-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/hit' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/event' >/dev/null || {
-            echo "=== openapi missing /stats/event ‚Ä?forcing fix-stats-api.sh ==="
+            echo "=== openapi missing /stats/event ù?forcing fix-stats-api.sh ==="
             bash /opt/toolbasecamp-deploy/fix-stats-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/event' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/overview' >/dev/null || {
-            echo "=== openapi missing /stats/overview ‚Ä?forcing fix-stats-api.sh ==="
+            echo "=== openapi missing /stats/overview ù?forcing fix-stats-api.sh ==="
             bash /opt/toolbasecamp-deploy/fix-stats-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/overview' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-tail-buy' >/dev/null || {
-            echo "=== openapi missing /stocks/recommend-tail-buy ‚Ä?forcing fix-stocks-api.sh ==="
+            echo "=== openapi missing /stocks/recommend-tail-buy ù?forcing fix-stocks-api.sh ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-stocks-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-tail-buy' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-monthly-recovery' >/dev/null || {
-            echo "=== openapi missing /stocks/recommend-monthly-recovery ‚Ä?forcing fix-stocks-api.sh ==="
+            echo "=== openapi missing /stocks/recommend-monthly-recovery ù?forcing fix-stocks-api.sh ==="
             bash /opt/toolbasecamp-deploy/fix-stocks-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-monthly-recovery' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/status' >/dev/null || {
-            echo "=== openapi missing /nbcheck/status ‚Ä?forcing fix-nbcheck-api.sh ==="
+            echo "=== openapi missing /nbcheck/status ù?forcing fix-nbcheck-api.sh ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/status' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/{list_id}' >/dev/null || {
-            echo "=== openapi missing /nbcheck/{list_id} ‚Ä?forcing fix-nbcheck-api.sh ==="
+            echo "=== openapi missing /nbcheck/{list_id} ù?forcing fix-nbcheck-api.sh ==="
             bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/{list_id}' >/dev/null || exit 1
           }
@@ -529,7 +530,7 @@ jobs:
             'https://toolbasecamp.com/js/base.js' || echo '000')"
           echo "base.js HTTPS $HTTP_CODE"
           if [[ "$HTTP_CODE" == "200" ]] && ! grep -q 'sidebar-footer-nav' /tmp/main-base.js; then
-            echo "::warning:: base.js missing sidebar navigation ‚Ä?Cloudflare may still serve stale cache; HTML uses ?v= query bust."
+            echo "::warning:: base.js missing sidebar navigation ù?Cloudflare may still serve stale cache; HTML uses ?v= query bust."
           else
             echo "Main site base.js OK."
           fi
@@ -542,11 +543,11 @@ jobs:
             'https://toolbasecamp.com/html/life/ai-recipe.html' || echo '000')"
           echo "ai-recipe.html HTTPS $RECIPE_HTML_CODE"
           if [[ "$RECIPE_HTML_CODE" == "200" ]] && ! grep -q 'recipe-ingredient-tags' /tmp/ai-recipe.html; then
-            echo "::error:: ai-recipe.html is stale (missing tag UI) ‚Ä?purge Cloudflare cache or check rsync deploy."
+            echo "::error:: ai-recipe.html is stale (missing tag UI) ù?purge Cloudflare cache or check rsync deploy."
             exit 1
           fi
           if [[ "$RECIPE_HTML_CODE" == "200" ]] && ! grep -q 'ai-recipe.js?v=' /tmp/ai-recipe.html; then
-            echo "::error:: ai-recipe.html missing JS cache-bust query ‚Ä?deploy sed may have failed."
+            echo "::error:: ai-recipe.html missing JS cache-bust query ù?deploy sed may have failed."
             exit 1
           fi
           echo "AI recipe static page OK."
@@ -569,7 +570,7 @@ jobs:
             echo "Nbcheck API public OK."
             exit 0
           fi
-          echo "::warning:: public nbcheck missing ‚Ä?forcing fix-nbcheck-api.sh"
+          echo "::warning:: public nbcheck missing ù?forcing fix-nbcheck-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh'
           sleep 2
@@ -590,7 +591,7 @@ jobs:
           head -c 200 /tmp/gb-api.json || true
           echo ""
           if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: guestbook API returned $HTTP_CODE ‚Ä?check MySQL and ensure-api-db.sh on server."
+            echo "::warning:: guestbook API returned $HTTP_CODE ù?check MySQL and ensure-api-db.sh on server."
             exit 0
           fi
           echo "Guestbook API OK."
@@ -616,7 +617,7 @@ jobs:
             echo "Phone login API public OK."
             exit 0
           fi
-          echo "::warning:: public phone login incomplete ‚Ä?forcing fix-auth-api.sh"
+          echo "::warning:: public phone login incomplete ù?forcing fix-auth-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-auth-api.sh'
           sleep 3
@@ -647,7 +648,7 @@ jobs:
           head -c 200 /tmp/recipe-api.txt || true
           echo ""
           if [[ "$HTTP_CODE" == "404" ]]; then
-            echo "::error:: recipe API route missing ‚Ä?server main.py may not be deployed; check toolbasecamp-api restart."
+            echo "::error:: recipe API route missing ù?server main.py may not be deployed; check toolbasecamp-api restart."
             exit 1
           fi
           DETECT_CODE="$(curl -s -o /tmp/recipe-detect-api.txt -w '%{http_code}' \
@@ -657,7 +658,7 @@ jobs:
           head -c 200 /tmp/recipe-detect-api.txt || true
           echo ""
           if [[ "$DETECT_CODE" == "404" ]]; then
-            echo "::error:: recipe/detect route missing ‚Ä?restart toolbasecamp-api on server."
+            echo "::error:: recipe/detect route missing ù?restart toolbasecamp-api on server."
             exit 1
           fi
           if [[ "$HTTP_CODE" != "422" && "$HTTP_CODE" != "400" && "$HTTP_CODE" != "503" ]]; then
@@ -675,14 +676,14 @@ jobs:
             echo "$HEALTH" | grep -F '"wan_i2v_api":true' >/dev/null
           }
           if ! check_wan; then
-            echo "::warning:: public health missing wan_i2v_api ‚Ä?forcing fix-wan-api.sh on server"
+            echo "::warning:: public health missing wan_i2v_api ù?forcing fix-wan-api.sh on server"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" \
               'bash /opt/toolbasecamp-deploy/fix-wan-api.sh'
             sleep 3
           fi
           if ! check_wan; then
-            echo "::error:: wan_i2v_api missing in /api/health ‚Ä?wan_video router not loaded."
+            echo "::error:: wan_i2v_api missing in /api/health ù?wan_video router not loaded."
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" \
               'echo DEPLOY_SHA=$(cat /opt/toolbasecamp-api/DEPLOY_SHA); ls -la /opt/toolbasecamp-api/wan_video.py /opt/toolbasecamp-api/main.py; curl -s http://127.0.0.1:8001/health; ss -lntp | grep 8001 || true; journalctl -u toolbasecamp-api -n 50 --no-pager || true'
@@ -694,7 +695,7 @@ jobs:
           head -c 200 /tmp/wan-status.txt || true
           echo ""
           if [[ "$CODE" == "404" ]]; then
-            echo "::warning:: public /wan/status 404 ‚Ä?re-run fix-wan-api.sh"
+            echo "::warning:: public /wan/status 404 ù?re-run fix-wan-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" \
               'bash /opt/toolbasecamp-deploy/fix-wan-api.sh'
@@ -739,7 +740,7 @@ jobs:
             echo "Records API public OK (incl. todos + rents + clock reset/logs flags)."
             exit 0
           fi
-          echo "::warning:: public records API incomplete ‚Ä?forcing remote fix-records-api.sh"
+          echo "::warning:: public records API incomplete ù?forcing remote fix-records-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-records-api.sh'
           sleep 3
@@ -756,27 +757,27 @@ jobs:
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_todos":true' >/dev/null; then
-            echo "::error:: public health still missing records_todos after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_todos after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_rents":true' >/dev/null; then
-            echo "::error:: public health still missing records_rents after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_rents after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_online_games":true' >/dev/null; then
-            echo "::error:: public health still missing records_online_games after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_online_games after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_online_draft":true' >/dev/null; then
-            echo "::error:: public health still missing records_online_draft after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_online_draft after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_online_delete":true' >/dev/null; then
-            echo "::error:: public health still missing records_online_delete after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_online_delete after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_online_draft_rev":3' >/dev/null; then
-            echo "::error:: public health still missing records_online_draft_rev=3 after fix ‚Ä?guest/local seats stale"
+            echo "::error:: public health still missing records_online_draft_rev=3 after fix ù?guest/local seats stale"
             exit 1
           fi
           GUEST_JOIN="$(curl -sS -o /tmp/ocs-guest-join-public.json -w '%{http_code}' \
@@ -789,19 +790,19 @@ jobs:
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_rent_pay_rev":4' >/dev/null; then
-            echo "::error:: public health still missing records_rent_pay_rev=4 after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_rent_pay_rev=4 after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_rent_due_max":31' >/dev/null; then
-            echo "::error:: public health still missing records_rent_due_max=31 after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_rent_due_max=31 after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_clock_reset":true' >/dev/null; then
-            echo "::error:: public health still missing records_clock_reset after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_clock_reset after fix ù?API process stale"
             exit 1
           fi
           if ! echo "$HEALTH" | grep -F '"records_clock_logs":true' >/dev/null; then
-            echo "::error:: public health still missing records_clock_logs after fix ‚Ä?API process stale"
+            echo "::error:: public health still missing records_clock_logs after fix ù?API process stale"
             exit 1
           fi
           RESET_CODE="$(curl -sS -o /tmp/clock-reset-public.txt -w '%{http_code}' \
@@ -844,7 +845,7 @@ jobs:
             echo "Watermark API public OK."
             exit 0
           fi
-          echo "::warning:: public watermark API incomplete ‚Ä?forcing remote fix-watermark-api.sh"
+          echo "::warning:: public watermark API incomplete ù?forcing remote fix-watermark-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-watermark-api.sh'
           sleep 3
@@ -881,7 +882,7 @@ jobs:
             echo "General cutout API public OK."
             exit 0
           fi
-          echo "::warning:: public general cutout missing ‚Ä?forcing fix-general-cutout-api.sh"
+          echo "::warning:: public general cutout missing ù?forcing fix-general-cutout-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh'
           sleep 3
@@ -917,7 +918,7 @@ jobs:
           THB="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
           echo "fx USD->THB: $THB"
           if ! check_fx || ! echo "$FX" | grep -F '"rate"' >/dev/null || ! echo "$THB" | grep -F '"rate"' >/dev/null; then
-            echo "::warning:: public fx incomplete ‚Ä?forcing fix-fx-api.sh"
+            echo "::warning:: public fx incomplete ù?forcing fix-fx-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-fx-api.sh'
             sleep 2
@@ -956,7 +957,7 @@ jobs:
             || ! echo "$HIT" | grep -F '"region"' >/dev/null \
             || ! echo "$HIT" | grep -F '"geo_rev":1' >/dev/null \
             || ! echo "$EV" | grep -F '"ok":true' >/dev/null; then
-            echo "::warning:: public stats incomplete ‚Ä?forcing fix-stats-api.sh"
+            echo "::warning:: public stats incomplete ù?forcing fix-stats-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-stats-api.sh'
             sleep 2
@@ -1009,7 +1010,7 @@ jobs:
             echo "Life-plans API public OK."
             exit 0
           fi
-          echo "::warning:: public life-plans missing ‚Ä?forcing fix-life-plans-api.sh"
+          echo "::warning:: public life-plans missing ù?forcing fix-life-plans-api.sh"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh'
           sleep 3
@@ -1048,8 +1049,8 @@ jobs:
             echo "::warning:: dev portal HTTPS returned $HTTP_CODE (nginx on server may still be OK)."
             exit 0
           fi
-          if grep -q 'Tool Basecamp ‚Ä?Productivity Tools Hub' /tmp/dev-public.html; then
-            echo "::warning:: Public URL still shows main site ‚Ä?purge Cloudflare cache or check Origin Rules."
+          if grep -q 'Tool Basecamp ù?Productivity Tools Hub' /tmp/dev-public.html; then
+            echo "::warning:: Public URL still shows main site ù?purge Cloudflare cache or check Origin Rules."
             exit 0
           fi
           if ! grep -qi 'next tools' /tmp/dev-public.html; then
@@ -1057,11 +1058,11 @@ jobs:
             exit 0
           fi
           if ! grep -q 'portal-has-home-bar' /tmp/dev-public.html; then
-            echo "::warning:: dev portal missing inline portal bar ‚Ä?run patch-nginx-dev.sh"
+            echo "::warning:: dev portal missing inline portal bar ù?run patch-nginx-dev.sh"
             exit 0
           fi
           if grep -q 'portal-home-bar.js' /tmp/dev-public.html; then
-            echo "::warning:: dev still uses external portal-home-bar.js ‚Ä?run patch-nginx-dev.sh"
+            echo "::warning:: dev still uses external portal-home-bar.js ù?run patch-nginx-dev.sh"
           fi
           echo "Dev portal OK."
 
@@ -1075,11 +1076,11 @@ jobs:
           head -c 600 /tmp/pdf-public.html || true
           echo ""
           if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: pdf portal HTTPS returned $HTTP_CODE ‚Ä?add Cloudflare DNS: pdf A record, then re-run deploy."
+            echo "::warning:: pdf portal HTTPS returned $HTTP_CODE ù?add Cloudflare DNS: pdf A record, then re-run deploy."
             exit 0
           fi
-          if grep -q 'Tool Basecamp ‚Ä?Productivity Tools Hub' /tmp/pdf-public.html; then
-            echo "::warning:: pdf URL shows main site ‚Ä?check nginx 443 vhost for pdf.toolbasecamp.com."
+          if grep -q 'Tool Basecamp ù?Productivity Tools Hub' /tmp/pdf-public.html; then
+            echo "::warning:: pdf URL shows main site ù?check nginx 443 vhost for pdf.toolbasecamp.com."
             exit 0
           fi
           if ! grep -q 'portal-home-bar.js' /tmp/pdf-public.html; then
@@ -1096,7 +1097,7 @@ jobs:
             'https://chef.toolbasecamp.com/' || echo '000')"
           echo "HTTPS $HTTP_CODE"
           if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: chef portal HTTPS returned $HTTP_CODE ‚Ä?add Cloudflare DNS: chef A record, then re-run deploy."
+            echo "::warning:: chef portal HTTPS returned $HTTP_CODE ù?add Cloudflare DNS: chef A record, then re-run deploy."
             exit 0
           fi
           if ! grep -qi 'cyberchef' /tmp/chef-public.html; then
@@ -1104,10 +1105,10 @@ jobs:
             exit 0
           fi
           if grep -q 'portal-home-bar.js' /tmp/chef-public.html; then
-            echo "::warning:: chef still loads external portal-home-bar.js ‚Ä?run patch-nginx-chef.sh"
+            echo "::warning:: chef still loads external portal-home-bar.js ù?run patch-nginx-chef.sh"
           fi
           if ! grep -q 'portal-home-bar' /tmp/chef-public.html; then
-            echo "::warning:: chef missing inline portal-home-bar ‚Ä?run patch-nginx-chef.sh"
+            echo "::warning:: chef missing inline portal-home-bar ù?run patch-nginx-chef.sh"
           fi
           echo "Chef portal OK."
 
@@ -1119,7 +1120,7 @@ jobs:
             'https://hoppscotch.toolbasecamp.com/' || echo '000')"
           echo "HTTPS $HTTP_CODE"
           if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: hoppscotch portal HTTPS returned $HTTP_CODE ‚Ä?add Cloudflare DNS: hoppscotch A record, then re-run deploy."
+            echo "::warning:: hoppscotch portal HTTPS returned $HTTP_CODE ù?add Cloudflare DNS: hoppscotch A record, then re-run deploy."
             exit 0
           fi
           echo "Hoppscotch portal OK."
@@ -1132,7 +1133,7 @@ jobs:
             'https://translate.toolbasecamp.com/' || echo '000')"
           echo "HTTPS $HTTP_CODE"
           if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: translate portal HTTPS returned $HTTP_CODE ‚Ä?add Cloudflare DNS: translate A record, then re-run deploy."
+            echo "::warning:: translate portal HTTPS returned $HTTP_CODE ù?add Cloudflare DNS: translate A record, then re-run deploy."
             exit 0
           fi
           echo "Translate portal OK."
