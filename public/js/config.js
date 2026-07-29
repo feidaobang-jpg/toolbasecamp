@@ -285,6 +285,21 @@ const privateToolsConfig = {
     sectionTitleKey: 'privateHub.title',
     groups: [
         {
+            titleKey: 'privateHub.groups.ops',
+            items: [
+                {
+                    titleKey: 'privateHub.ops.siteStatsTitle',
+                    descriptionKey: 'privateHub.ops.siteStatsDesc',
+                    url: 'html/admin/site-stats.html'
+                },
+                {
+                    titleKey: 'privateHub.ladder.updateTitle',
+                    descriptionKey: 'privateHub.ladder.updateDesc',
+                    url: 'html/admin/private/ladder-update.html'
+                }
+            ]
+        },
+        {
             titleKey: 'privateHub.groups.stock',
             items: [
                 {

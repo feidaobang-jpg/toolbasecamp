@@ -2,6 +2,19 @@
 
 Register in `public/js/config.js` → `privateToolsConfig`.
 
+Top nav shows a single admin entry「自用」; stats / ladder live as cards inside this hub.
+
+## Site ops
+
+- Page: `../site-stats.html` — PV/UV and feature event ranking
+- Page: `ladder-update.html` — manual scrape of 快科技天梯
+- API (admin JWT):
+  - `GET /api/ladder/status`
+  - `POST /api/ladder/refresh`
+  - `GET /api/ladder/{id}` (public cache for live pages)
+
+Server module: `server/ladder.py` (needs `requests`, `beautifulsoup4`).
+
 ## Stock picks
 
 - Page: `stock-picks.html` — 月K启动 / 尾盘低吸

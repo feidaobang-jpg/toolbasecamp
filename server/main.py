@@ -45,6 +45,8 @@ from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
 from stocks import router as stocks_router
 from stocks import wire as wire_stocks
+from ladder import router as ladder_router
+from ladder import wire as wire_ladder
 
 _wan_import_error = ""
 try:
@@ -522,6 +524,8 @@ wire_site_stats(
 )
 wire_stocks(get_current_user, require_admin)
 app.include_router(stocks_router)
+wire_ladder(get_current_user, require_admin)
+app.include_router(ladder_router)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
 
@@ -779,6 +783,7 @@ def health():
         "fx_api": "/fx/rate" in paths,
         "stats_api": "/stats/hit" in paths,
         "stats_events_api": "/stats/event" in paths and "/stats/overview" in paths,
+        "ladder_api": "/ladder/refresh" in paths and "/ladder/status" in paths,
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),

@@ -605,16 +605,9 @@
     function injectAdminLinks(user, wrap) {
         if (!isAdminUser(user)) return;
         const base = window.location.pathname.includes('/html/') ? '../../' : '';
-        const statsLabel = tr('nav.siteStats') === 'nav.siteStats' ? '统计' : tr('nav.siteStats');
         const privateLabel = tr('nav.private') === 'nav.private' ? '自用' : tr('nav.private');
 
-        // Insert order: firstChild each time → final left-to-right = 自用, 统计
-        injectAdminNavLink(wrap, {
-            id: 'tb-admin-stats-link',
-            href: `${base}html/admin/site-stats.html`,
-            label: statsLabel,
-            title: '内部统计'
-        });
+        // Single admin entry: 自用 hub (stats / ladder update live inside)
         injectAdminNavLink(wrap, {
             id: 'tb-admin-private-link',
             href: `${base}html/admin/private.html`,
@@ -626,11 +619,6 @@
             id: 'tb-admin-private-link-m',
             href: `${base}html/admin/private.html`,
             label: privateLabel
-        });
-        injectAdminMobileLink({
-            id: 'tb-admin-stats-link-m',
-            href: `${base}html/admin/site-stats.html`,
-            label: statsLabel
         });
     }
 

@@ -31,7 +31,17 @@ window.TB_LOCALES.en = {
         empty: 'No private tools yet',
         emptyGroup: 'No tools in this group yet',
         groups: {
+            ops: 'Site ops',
             stock: 'Stocks'
+        },
+        ops: {
+            siteStatsTitle: 'Site stats',
+            siteStatsDesc: 'Views, visitors, and feature usage ranking'
+        },
+        ladder: {
+            updateTitle: 'Ladder refresh',
+            updateDesc: 'Manually scrape MyDrivers ladders and update public pages',
+            refreshAll: 'Refresh all'
         },
         stock: {
             picksTitle: 'Stock picks',

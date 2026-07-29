@@ -30,7 +30,17 @@ window.TB_LOCALES['zh-CN'] = {
         empty: '暂无自用工具',
         emptyGroup: '暂无工具，迁入后显示在此',
         groups: {
+            ops: '站点运维',
             stock: '股票'
+        },
+        ops: {
+            siteStatsTitle: '站点统计',
+            siteStatsDesc: '浏览量、访客与功能使用排行'
+        },
+        ladder: {
+            updateTitle: '性能天梯更新',
+            updateDesc: '手动抓取快科技天梯并更新公开页',
+            refreshAll: '全部更新'
         },
         stock: {
             picksTitle: '选股策略',
