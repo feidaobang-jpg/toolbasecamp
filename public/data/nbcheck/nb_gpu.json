@@ -1,0 +1,771 @@
+{
+  "id": "nb_gpu",
+  "title": "笔记本显卡跑分榜",
+  "source": "Notebookcheck",
+  "source_url": "https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html",
+  "credit": "Data from Notebookcheck. For reference only; laptop TGP varies by chassis.",
+  "updated_at": "2026-07-29T03:38:40Z",
+  "count": 76,
+  "items": [
+    {
+      "pos": 9,
+      "model": "NVIDIA GeForce RTX 5090 Laptop",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 84.9,
+      "time_spy": 24483.0,
+      "rank": 1,
+      "pct": 100.0
+    },
+    {
+      "pos": 17,
+      "model": "NVIDIA GeForce RTX 5080 Laptop",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 78.4,
+      "time_spy": 21624.5,
+      "rank": 2,
+      "pct": 92.3
+    },
+    {
+      "pos": 30,
+      "model": "AMD Radeon RX 7900M",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 76.3,
+      "time_spy": 19434.0,
+      "rank": 3,
+      "pct": 89.9
+    },
+    {
+      "pos": 35,
+      "model": "NVIDIA GeForce RTX 5070 Ti Laptop",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 73.9,
+      "time_spy": 16739.5,
+      "rank": 4,
+      "pct": 87.0
+    },
+    {
+      "pos": 22,
+      "model": "NVIDIA GeForce RTX 4090 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 72.2,
+      "time_spy": 21251.0,
+      "rank": 5,
+      "pct": 85.0
+    },
+    {
+      "pos": 32,
+      "model": "NVIDIA GeForce RTX 4080 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 69.2,
+      "time_spy": 18441.0,
+      "rank": 6,
+      "pct": 81.5
+    },
+    {
+      "pos": 53,
+      "model": "NVIDIA GeForce RTX 5070 Laptop",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 64.4,
+      "time_spy": 13561.0,
+      "rank": 7,
+      "pct": 75.9
+    },
+    {
+      "pos": 52,
+      "model": "NVIDIA GeForce RTX 3080 Ti Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 57.8,
+      "time_spy": 12269.0,
+      "rank": 8,
+      "pct": 68.1
+    },
+    {
+      "pos": 69,
+      "model": "AMD Radeon RX 6850M XT",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 57.2,
+      "time_spy": 11837.0,
+      "rank": 9,
+      "pct": 67.4
+    },
+    {
+      "pos": 56,
+      "model": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 56.9,
+      "time_spy": 11959.5,
+      "rank": 10,
+      "pct": 67.0
+    },
+    {
+      "pos": 77,
+      "model": "AMD Radeon RX 6800M",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 54.7,
+      "time_spy": 11256.5,
+      "rank": 11,
+      "pct": 64.4
+    },
+    {
+      "pos": 73,
+      "model": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 52.6,
+      "time_spy": 10338.0,
+      "rank": 12,
+      "pct": 62.0
+    },
+    {
+      "pos": 65,
+      "model": "NVIDIA GeForce RTX 5060 Laptop",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 52.4,
+      "time_spy": 11937.0,
+      "rank": 13,
+      "pct": 61.7
+    },
+    {
+      "pos": 70,
+      "model": "NVIDIA GeForce RTX 3070 Ti Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 51.7,
+      "time_spy": 10462.0,
+      "rank": 14,
+      "pct": 60.9
+    },
+    {
+      "pos": 88,
+      "model": "AMD Radeon RX 7600M XT",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 51.3,
+      "time_spy": 9856.0,
+      "rank": 15,
+      "pct": 60.4
+    },
+    {
+      "pos": 89,
+      "model": "AMD Radeon RX 6800S",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 48.7,
+      "time_spy": 9033.0,
+      "rank": 16,
+      "pct": 57.4
+    },
+    {
+      "pos": 64,
+      "model": "NVIDIA GeForce RTX 3080 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 48.1,
+      "time_spy": 10752.0,
+      "rank": 17,
+      "pct": 56.7
+    },
+    {
+      "pos": 82,
+      "model": "NVIDIA GeForce RTX 3070 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 47.5,
+      "time_spy": 9619.0,
+      "rank": 18,
+      "pct": 55.9
+    },
+    {
+      "pos": 120,
+      "model": "AMD Radeon RX 7600S",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 47.2,
+      "time_spy": 9203.0,
+      "rank": 19,
+      "pct": 55.6
+    },
+    {
+      "pos": 97,
+      "model": "NVIDIA GeForce RTX 2080 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 47.0,
+      "time_spy": 9854.0,
+      "rank": 20,
+      "pct": 55.4
+    },
+    {
+      "pos": 81,
+      "model": "NVIDIA GeForce RTX 2080 Super Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 46.5,
+      "time_spy": 10313.0,
+      "rank": 21,
+      "pct": 54.8
+    },
+    {
+      "pos": 127,
+      "model": "Intel Arc A770M",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 46.0,
+      "time_spy": 10783.0,
+      "rank": 22,
+      "pct": 54.2
+    },
+    {
+      "pos": 137,
+      "model": "AMD Radeon RX 6600M",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 45.0,
+      "time_spy": 7840.0,
+      "rank": 23,
+      "pct": 53.0
+    },
+    {
+      "pos": 138,
+      "model": "AMD Radeon RX 6700S",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 44.9,
+      "time_spy": 8316.0,
+      "rank": 24,
+      "pct": 52.9
+    },
+    {
+      "pos": 153,
+      "model": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 44.7,
+      "time_spy": 8125.0,
+      "rank": 25,
+      "pct": 52.7
+    },
+    {
+      "pos": 117,
+      "model": "AMD Radeon RX 7600M",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 44.0,
+      "time_spy": 9097.0,
+      "rank": 26,
+      "pct": 51.8
+    },
+    {
+      "pos": 121,
+      "model": "NVIDIA GeForce RTX 2070 Super Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 42.6,
+      "time_spy": 8272.0,
+      "rank": 27,
+      "pct": 50.2
+    },
+    {
+      "pos": 123,
+      "model": "NVIDIA GeForce RTX 2080 Super Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 42.6,
+      "time_spy": 8331.0,
+      "rank": 28,
+      "pct": 50.2
+    },
+    {
+      "pos": 86,
+      "model": "NVIDIA GeForce RTX 5050 Laptop",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 42.3,
+      "time_spy": 9122.0,
+      "rank": 29,
+      "pct": 49.8
+    },
+    {
+      "pos": 92,
+      "model": "AMD Radeon RX 7700S",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 41.6,
+      "time_spy": 10206.0,
+      "rank": 30,
+      "pct": 49.0
+    },
+    {
+      "pos": 154,
+      "model": "NVIDIA GeForce RTX 2070 Super Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 40.8,
+      "time_spy": 7373.5,
+      "rank": 31,
+      "pct": 48.1
+    },
+    {
+      "pos": 119,
+      "model": "NVIDIA GeForce RTX 3060 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 40.6,
+      "time_spy": 8222.0,
+      "rank": 32,
+      "pct": 47.8
+    },
+    {
+      "pos": 99,
+      "model": "AMD Radeon RX 6700M",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 40.4,
+      "time_spy": 8988.5,
+      "rank": 33,
+      "pct": 47.6
+    },
+    {
+      "pos": 139,
+      "model": "NVIDIA GeForce RTX 2070 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 39.8,
+      "time_spy": 7738.0,
+      "rank": 34,
+      "pct": 46.9
+    },
+    {
+      "pos": 147,
+      "model": "NVIDIA GeForce GTX 1080 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 39.6,
+      "time_spy": 6917.0,
+      "rank": 35,
+      "pct": 46.6
+    },
+    {
+      "pos": 142,
+      "model": "NVIDIA GeForce RTX 2080 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 39.6,
+      "time_spy": 7923.0,
+      "rank": 36,
+      "pct": 46.6
+    },
+    {
+      "pos": 185,
+      "model": "Intel Arc A730M",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 38.6,
+      "time_spy": 8813.0,
+      "rank": 37,
+      "pct": 45.5
+    },
+    {
+      "pos": 136,
+      "model": "AMD Radeon RX 6650M",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 38.4,
+      "time_spy": 8700.0,
+      "rank": 38,
+      "pct": 45.2
+    },
+    {
+      "pos": 172,
+      "model": "NVIDIA GeForce GTX 1080 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 35.0,
+      "time_spy": 5868.5,
+      "rank": 39,
+      "pct": 41.2
+    },
+    {
+      "pos": 162,
+      "model": "NVIDIA GeForce RTX 2070 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 34.8,
+      "time_spy": 6661.0,
+      "rank": 40,
+      "pct": 41.0
+    },
+    {
+      "pos": 168,
+      "model": "NVIDIA GeForce RTX 2060 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 33.2,
+      "time_spy": 6141.0,
+      "rank": 41,
+      "pct": 39.1
+    },
+    {
+      "pos": 190,
+      "model": "NVIDIA GeForce GTX 1660 Ti Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 32.1,
+      "time_spy": 5659.0,
+      "rank": 42,
+      "pct": 37.8
+    },
+    {
+      "pos": 174,
+      "model": "NVIDIA GeForce GTX 1070 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 31.9,
+      "time_spy": 5485.0,
+      "rank": 43,
+      "pct": 37.6
+    },
+    {
+      "pos": 157,
+      "model": "AMD Radeon RX 6600S",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 30.6,
+      "time_spy": 7494.0,
+      "rank": 44,
+      "pct": 36.0
+    },
+    {
+      "pos": 198,
+      "model": "NVIDIA GeForce GTX 1070 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 29.3,
+      "time_spy": 4708.0,
+      "rank": 45,
+      "pct": 34.5
+    },
+    {
+      "pos": 192,
+      "model": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 29.2,
+      "time_spy": 4571.0,
+      "rank": 46,
+      "pct": 34.4
+    },
+    {
+      "pos": 191,
+      "model": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 28.6,
+      "time_spy": 5170.0,
+      "rank": 47,
+      "pct": 33.7
+    },
+    {
+      "pos": 188,
+      "model": "AMD Radeon RX 5600M",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA",
+      "perf_rating": 28.3,
+      "time_spy": 5933.5,
+      "rank": 48,
+      "pct": 33.3
+    },
+    {
+      "pos": 207,
+      "model": "NVIDIA GeForce RTX 3050 4GB Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 27.7,
+      "time_spy": 4497.0,
+      "rank": 49,
+      "pct": 32.6
+    },
+    {
+      "pos": 175,
+      "model": "NVIDIA GeForce RTX 2060 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 26.1,
+      "time_spy": 5638.5,
+      "rank": 50,
+      "pct": 30.7
+    },
+    {
+      "pos": 212,
+      "model": "AMD Radeon RX 6500M",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 25.2,
+      "time_spy": 4372.0,
+      "rank": 51,
+      "pct": 29.7
+    },
+    {
+      "pos": 210,
+      "model": "NVIDIA GeForce GTX 1660 Ti Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 25.0,
+      "time_spy": 5084.5,
+      "rank": 52,
+      "pct": 29.4
+    },
+    {
+      "pos": 231,
+      "model": "NVIDIA GeForce GTX 1650 Ti Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 24.2,
+      "time_spy": 3618.0,
+      "rank": 53,
+      "pct": 28.5
+    },
+    {
+      "pos": 260,
+      "model": "NVIDIA GeForce GTX 1060 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 24.0,
+      "time_spy": 3324.0,
+      "rank": 54,
+      "pct": 28.3
+    },
+    {
+      "pos": 224,
+      "model": "NVIDIA GeForce GTX 1060 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 23.4,
+      "time_spy": 3580.5,
+      "rank": 55,
+      "pct": 27.6
+    },
+    {
+      "pos": 199,
+      "model": "Intel Arc A550M",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 22.5,
+      "time_spy": 5830.0,
+      "rank": 56,
+      "pct": 26.5
+    },
+    {
+      "pos": 209,
+      "model": "Intel Arc A530M",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 22.3,
+      "time_spy": 5851.0,
+      "rank": 57,
+      "pct": 26.3
+    },
+    {
+      "pos": 252,
+      "model": "NVIDIA GeForce GTX 1650 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 22.2,
+      "time_spy": 3488.0,
+      "rank": 58,
+      "pct": 26.1
+    },
+    {
+      "pos": 211,
+      "model": "AMD Radeon RX 6550M",
+      "brand": "AMD",
+      "architecture": "RDNA 2",
+      "perf_rating": 22.1,
+      "time_spy": 4546.0,
+      "rank": 59,
+      "pct": 26.0
+    },
+    {
+      "pos": 263,
+      "model": "NVIDIA GeForce GTX 1650 Ti Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 21.6,
+      "time_spy": 3098.0,
+      "rank": 60,
+      "pct": 25.4
+    },
+    {
+      "pos": 233,
+      "model": "AMD Radeon RX 5500M",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA",
+      "perf_rating": 20.6,
+      "time_spy": 4298.0,
+      "rank": 61,
+      "pct": 24.3
+    },
+    {
+      "pos": 274,
+      "model": "NVIDIA GeForce GTX 1650 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 19.9,
+      "time_spy": 3016.0,
+      "rank": 62,
+      "pct": 23.4
+    },
+    {
+      "pos": 257,
+      "model": "AMD Radeon RX 5300M",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA",
+      "perf_rating": 18.2,
+      "time_spy": 3566.5,
+      "rank": 63,
+      "pct": 21.4
+    },
+    {
+      "pos": 306,
+      "model": "NVIDIA GeForce GTX 1050 Ti Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 17.8,
+      "time_spy": 2326.0,
+      "rank": 64,
+      "pct": 21.0
+    },
+    {
+      "pos": 308,
+      "model": "NVIDIA GeForce GTX 1050 Ti Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 17.7,
+      "time_spy": 2261.0,
+      "rank": 65,
+      "pct": 20.8
+    },
+    {
+      "pos": 261,
+      "model": "NVIDIA T1200 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 17.6,
+      "time_spy": 3595.0,
+      "rank": 66,
+      "pct": 20.7
+    },
+    {
+      "pos": 243,
+      "model": "NVIDIA GeForce RTX 2050 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 17.0,
+      "time_spy": 3220.5,
+      "rank": 67,
+      "pct": 20.0
+    },
+    {
+      "pos": 296,
+      "model": "Intel Arc A310",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 16.2,
+      "time_spy": 3269.0,
+      "rank": 68,
+      "pct": 19.1
+    },
+    {
+      "pos": 340,
+      "model": "NVIDIA GeForce GTX 1050 Max-Q",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 15.1,
+      "time_spy": 1615.0,
+      "rank": 69,
+      "pct": 17.8
+    },
+    {
+      "pos": 290,
+      "model": "NVIDIA T600 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 15.1,
+      "time_spy": 2766.0,
+      "rank": 70,
+      "pct": 17.8
+    },
+    {
+      "pos": 334,
+      "model": "NVIDIA GeForce GTX 1050 Mobile",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 14.9,
+      "time_spy": 1610.0,
+      "rank": 71,
+      "pct": 17.6
+    },
+    {
+      "pos": 230,
+      "model": "Intel Arc A370M",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 14.7,
+      "time_spy": 3885.0,
+      "rank": 72,
+      "pct": 17.3
+    },
+    {
+      "pos": 304,
+      "model": "Intel Arc A350M",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 13.2,
+      "time_spy": 3050.0,
+      "rank": 73,
+      "pct": 15.5
+    },
+    {
+      "pos": 313,
+      "model": "NVIDIA T550 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 10.0,
+      "time_spy": 1928.0,
+      "rank": 74,
+      "pct": 11.8
+    },
+    {
+      "pos": 397,
+      "model": "AMD Radeon RX 550X (Laptop)",
+      "brand": "AMD",
+      "architecture": "Polaris",
+      "perf_rating": 9.2,
+      "time_spy": 1050.0,
+      "rank": 75,
+      "pct": 10.8
+    },
+    {
+      "pos": 316,
+      "model": "NVIDIA T500 Laptop GPU",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 8.5,
+      "time_spy": 1787.5,
+      "rank": 76,
+      "pct": 10.0
+    }
+  ]
+}

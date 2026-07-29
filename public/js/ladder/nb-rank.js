@@ -93,22 +93,44 @@
     });
   }
 
+  function applyData(data) {
+    state.items = data.items || [];
+    state.sourceUrl = data.source_url || '';
+    state.updatedAt = data.updated_at || '';
+    var noteLink = document.getElementById('nb-rank-source-link');
+    if (noteLink && state.sourceUrl) noteLink.href = state.sourceUrl;
+    setMeta();
+    render();
+  }
+
+  function staticFallbackUrl() {
+    var path = window.location.pathname || '';
+    var parts = path.replace(/^\//, '').split('/').filter(Boolean);
+    var last = parts[parts.length - 1] || '';
+    var dirs = last.indexOf('.') >= 0 ? parts.slice(0, -1) : parts;
+    var prefix = dirs.length ? '../'.repeat(dirs.length) : '';
+    return prefix + 'data/nbcheck/nb_gpu.json';
+  }
+
   function load() {
     var root = document.getElementById('nb-rank-list');
-    var noteLink = document.getElementById('nb-rank-source-link');
     if (root) root.innerHTML = '<div class="nb-rank-empty">' + tr('tools.ladderNbGpuRank.loading', '加载中…') + '</div>';
     fetch(apiBase() + '/nbcheck/nb_gpu', { headers: { Accept: 'application/json' }, cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
       })
-      .then(function (data) {
-        state.items = data.items || [];
-        state.sourceUrl = data.source_url || '';
-        state.updatedAt = data.updated_at || '';
-        if (noteLink && state.sourceUrl) noteLink.href = state.sourceUrl;
-        setMeta();
-        render();
+      .then(applyData)
+      .catch(function () {
+        return fetch(staticFallbackUrl() + '?t=' + Date.now(), {
+          headers: { Accept: 'application/json' },
+          cache: 'no-store'
+        }).then(function (res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        }).then(function (data) {
+          applyData(data);
+        });
       })
       .catch(function (err) {
         if (root) {

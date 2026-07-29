@@ -286,6 +286,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/fix-auth-api.sh
           bash /opt/toolbasecamp-deploy/fix-records-api.sh
           bash /opt/toolbasecamp-deploy/fix-stocks-api.sh || true
+          bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh || true
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
@@ -445,6 +446,12 @@ jobs:
             echo "=== openapi missing /stocks/recommend-monthly-recovery — forcing fix-stocks-api.sh ==="
             bash /opt/toolbasecamp-deploy/fix-stocks-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-monthly-recovery' >/dev/null || exit 1
+          }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/nb_gpu' >/dev/null || {
+            echo "=== openapi missing /nbcheck/nb_gpu — forcing fix-nbcheck-api.sh ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/nb_gpu' >/dev/null || exit 1
           }
 
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
