@@ -190,7 +190,6 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.android',
             items: [
-                { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },
                 { titleKey: 'tools.layoutConverter.title', url: 'html/dev/layout-converter.html' },
                 { titleKey: 'tools.stringTranslator.title', url: 'html/android/string-translator.html' },
                 { titleKey: 'tools.folderTranslator.title', url: 'html/android/folder-translator.html' },
