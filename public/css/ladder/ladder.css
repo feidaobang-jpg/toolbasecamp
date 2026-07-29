@@ -1,36 +1,5 @@
 /* 性能天梯图 */
 
-.ladder-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 16px;
-}
-
-.ladder-tabs a {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  color: #475569;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-
-.ladder-tabs a:hover {
-  background: #f1f5f9;
-  color: #0f172a;
-}
-
-.ladder-tabs a.is-active {
-  color: #fff;
-  background: #2563eb;
-  border-color: #2563eb;
-}
-
 .ladder-card {
   padding: 8px;
   overflow: hidden;
@@ -141,10 +110,5 @@
   .ladder-container .brand-header td {
     font-size: 12px;
     padding: 6px;
-  }
-
-  .ladder-tabs a {
-    padding: 6px 12px;
-    font-size: 12px;
   }
 }
