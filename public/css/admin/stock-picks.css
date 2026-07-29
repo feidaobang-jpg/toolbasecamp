@@ -170,11 +170,23 @@
 .status {
   color: #6b7280;
   font-size: 13px;
+  flex: 1;
+  min-width: 12rem;
+  line-height: 1.55;
 }
 
 .status.loading {
   color: #2563eb;
   font-weight: 600;
+}
+
+.status.is-weak {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.status.is-error {
+  color: #b91c1c;
 }
 
 /* ── 股票推荐卡片 ────────────────────────────────────────────── */

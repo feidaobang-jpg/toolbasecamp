@@ -786,6 +786,10 @@ def health():
         "stats_events_api": "/stats/event" in paths and "/stats/overview" in paths,
         "stats_geo_rev": STATS_GEO_REV,
         "ladder_api": "/ladder/refresh" in paths and "/ladder/status" in paths,
+        "stocks_api": (
+            "/stocks/recommend-tail-buy" in paths
+            and "/stocks/recommend-monthly-recovery" in paths
+        ),
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
         "life_plans_kinds": sorted(LIFE_PLAN_KINDS),

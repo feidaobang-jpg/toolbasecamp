@@ -61,8 +61,38 @@
     return n.toFixed(digits);
   }
 
-  function setStatus(el, text) {
-    if (el) el.textContent = text || '';
+  function setStatus(el, text, opts) {
+    if (!el) return;
+    el.textContent = text || '';
+    el.classList.toggle('is-weak', !!(opts && opts.weak));
+    el.classList.toggle('is-error', !!(opts && opts.error));
+  }
+
+  function detailText(data) {
+    if (!data) return '';
+    var d = data.detail;
+    if (typeof d === 'string') return d;
+    if (Array.isArray(d) && d.length) {
+      return d.map(function (x) {
+        if (typeof x === 'string') return x;
+        if (x && x.msg) return String(x.msg);
+        return '';
+      }).filter(Boolean).join('；');
+    }
+    return '';
+  }
+
+  function pickEmptyStatus(data) {
+    var market = (data && (data.market_regime || data.market)) || null;
+    var marketNote = (market && market.message) ? String(market.message).trim() : '';
+    var msg = (data && data.message) ? String(data.message).trim() : '';
+    var reason = (data && data.reason) ? String(data.reason).trim() : '';
+    var hint = (data && data.hint) ? String(data.hint).trim() : '';
+    var regime = market && market.regime ? String(market.regime) : '';
+    // Prefer explicit market-gate copy when regime is weak (may already be in message).
+    var text = msg || marketNote || reason || hint || '暂无推荐结果';
+    var weak = regime === 'weak' || /大盘偏弱|暂不推荐新建仓/.test(text);
+    return { text: text, weak: weak };
   }
 
   function pctClass(v) {
@@ -244,36 +274,41 @@
         resultsEl.innerHTML = '';
         if (resp.status === 401 || resp.status === 403) {
           showGate('需要管理员登录后查看');
-          setStatus(statusEl, '无权限');
+          setStatus(statusEl, '无权限', { error: true });
           return;
         }
         if (!data) {
           var timeoutHint = (resp.status === 504 || resp.status === 502)
             ? '（网关超时：计算耗时较长，请稍后重试）'
             : '';
-          setStatus(statusEl, '接口返回失败：HTTP ' + resp.status + timeoutHint);
+          setStatus(statusEl, '接口返回失败：HTTP ' + resp.status + timeoutHint, { error: true });
+          return;
+        }
+        // Non-OK must be handled before empty-items fallback (404 `{detail}` used to look like「暂无推荐结果」).
+        if (!resp.ok) {
+          var errMsg = data.message || detailText(data) || ('接口返回失败 HTTP ' + resp.status);
+          setStatus(statusEl, errMsg, { error: true });
           return;
         }
         var items = data.items || [];
         var market = data.market_regime || null;
-        var marketNote = (market && market.message) ? String(market.message) : '';
+        var marketNote = (market && market.message) ? String(market.message).trim() : '';
         if (!items.length) {
-          setStatus(statusEl, data.message || marketNote || '暂无推荐结果');
-          return;
-        }
-        if (!resp.ok) {
-          setStatus(statusEl, data.message || ('接口返回失败 HTTP ' + resp.status));
+          var empty = pickEmptyStatus(data);
+          setStatus(statusEl, empty.text, { weak: empty.weak });
           return;
         }
         var baseMsg = '生成完成，共 ' + items.length + ' 只';
-        setStatus(statusEl, data.message || (marketNote ? baseMsg + ' · ' + marketNote : baseMsg));
+        var doneMsg = data.message || (marketNote ? baseMsg + ' · ' + marketNote : baseMsg);
+        var weakDone = market && market.regime === 'weak';
+        setStatus(statusEl, doneMsg, { weak: !!weakDone });
         items.forEach(function (it, idx) {
           var merged = Object.assign({}, it, { generated_at: data.generated_at });
           resultsEl.appendChild(renderFn(merged, idx));
         });
       })
       .catch(function (e) {
-        setStatus(statusEl, '请求失败：' + (e && e.message ? e.message : String(e)));
+        setStatus(statusEl, '请求失败：' + (e && e.message ? e.message : String(e)), { error: true });
       })
       .finally(function () {
         btnEl.disabled = false;

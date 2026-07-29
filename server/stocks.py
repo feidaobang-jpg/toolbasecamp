@@ -999,8 +999,11 @@ def _assess_hs300_market() -> dict:
         weak = True
         reasons.append(f"近10日约 {ret_10d:.2f}%")
     elif ret_5d is not None and ret_5d < -2.0:
-        caution = True
-        reasons.append(f"近5日约 {ret_5d:.2f}%")
+        # Avoid duplicating「近5日约 x%」when MA20 weak reason already includes it.
+        already_5d = any("近5日约" in r for r in reasons)
+        if not already_5d:
+            caution = True
+            reasons.append(f"近5日约 {ret_5d:.2f}%")
 
     if ma60 is not None and last < ma60 * 0.97 and ret_20d is not None and ret_20d < -4.0:
         weak = True
