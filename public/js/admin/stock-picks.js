@@ -278,8 +278,8 @@
           return;
         }
         if (!data) {
-          var timeoutHint = (resp.status === 504 || resp.status === 502)
-            ? '（网关超时：计算耗时较长，请稍后重试）'
+          var timeoutHint = (resp.status === 504 || resp.status === 502 || resp.status === 524)
+            ? '（网关超时：计算超过约 2 分钟被中断；已优化重试，请再试一次）'
             : '';
           setStatus(statusEl, '接口返回失败：HTTP ' + resp.status + timeoutHint, { error: true });
           return;

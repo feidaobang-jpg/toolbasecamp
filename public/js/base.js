@@ -37,7 +37,7 @@ function ensureTbStats() {
     var script = document.createElement('script');
     script.id = 'tb-stats-script';
     script.async = true;
-        script.src = getToolRootPrefix() + 'js/tb-stats.js?v=2';
+    script.src = getToolRootPrefix() + 'js/tb-stats.js?v=3';
     document.head.appendChild(script);
 }
 
@@ -48,8 +48,15 @@ document.addEventListener('tb:locale', function () {
 });
 
 function getToolRootPrefix() {
-    const path = window.location.pathname || '';
-    return path.includes('/html/') ? '../../' : '';
+    if (typeof window.tbSiteRootPrefix === 'function') {
+        return window.tbSiteRootPrefix();
+    }
+    const path = (window.location.pathname || '').replace(/\/+/g, '/');
+    const parts = path.replace(/^\//, '').split('/').filter(Boolean);
+    if (!parts.length) return '';
+    const last = parts[parts.length - 1];
+    const dirs = last.includes('.') ? parts.slice(0, -1) : parts;
+    return dirs.length ? '../'.repeat(dirs.length) : '';
 }
 
 function resolveToolUrl(relativePath) {

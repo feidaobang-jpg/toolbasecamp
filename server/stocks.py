@@ -528,20 +528,38 @@ def _round_match_score(score: Optional[float]) -> Optional[float]:
         return None
     return round(v, 1)
 
+def _is_retryable_empty(result: Optional[dict]) -> bool:
+    """仅对行情/K线拉取失败重试；策略筛完为空或大盘偏弱不再整轮重算（避免触发网关 120s 超时）。"""
+    if not result:
+        return True
+    if result.get("no_retry"):
+        return False
+    if result.get("items"):
+        return False
+    msg = str(result.get("message") or "")
+    markers = ("失败", "超时", "为空", "timeout", "Timeout")
+    return any(m in msg for m in markers)
+
+
 def _with_empty_result_retry(compute_fn, only_basic: bool):
     """无结果时间隔重试，应对行情/K线接口偶发失败（不改变策略筛选标准）。"""
     last: Optional[dict] = None
     for attempt in range(_STOCK_EMPTY_RETRY_ATTEMPTS):
         last = compute_fn(only_basic=only_basic)
-        if last and last.get("no_retry"):
-            return last
-        if last and (last.get("items") or []):
+        if last and last.get("items"):
             if attempt > 0:
                 last = dict(last)
                 msg = (last.get("message") or "").strip()
                 retry_note = f"（第{attempt + 1}次查询成功）"
                 last["message"] = f"{msg}{retry_note}".strip() if msg else retry_note
             return last
+        if not _is_retryable_empty(last):
+            return last or {
+                "success": False,
+                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "items": [],
+                "message": "查询失败，请稍后重试",
+            }
         if attempt < _STOCK_EMPTY_RETRY_ATTEMPTS - 1:
             time.sleep(_STOCK_EMPTY_RETRY_INTERVAL_S)
     return last or {
@@ -1262,7 +1280,7 @@ def _compute_tail_buy(only_basic: bool = True):
             (df["__turn"].fillna(0) >= 0.1) &
             (df["__turn"].fillna(0) <= 5.0)
         ]
-    df_scan = df_scan.sort_values("__amount", ascending=False).head(120)
+    df_scan = df_scan.sort_values("__amount", ascending=False).head(80)
     scan_rows = [row for _, row in df_scan.iterrows()]
 
     candidates = _parallel_row_scan(
@@ -1336,6 +1354,7 @@ def _compute_tail_buy(only_basic: bool = True):
         "generated_at": generated_at,
         "strategy": "tail_buy",
         "items": items,
+        "no_retry": True,
         "is_trade_time": is_trade_time,
         "in_live_window": in_live_window,
         "market_regime": market,
@@ -1576,7 +1595,7 @@ def _compute_monthly_recovery(only_basic: bool = True):
         (df["__vr"].fillna(0) <= 3.5) &
         (df["__turn"].fillna(0) >= 0.05) &
         (df["__turn"].fillna(0) <= 8.0)
-    ].sort_values("__amount", ascending=False).head(160)
+    ].sort_values("__amount", ascending=False).head(100)
     # 成分池过窄时，放宽成交额再补一批（仍保持价位门槛）
     if use_index and len(df_scan) < 40:
         extra = df[
@@ -1584,8 +1603,8 @@ def _compute_monthly_recovery(only_basic: bool = True):
             (df["__price"].fillna(0) >= 3.0) &
             (df["__pct"].fillna(0) >= -4.5) &
             (df["__pct"].fillna(0) <= 7.0)
-        ].sort_values("__amount", ascending=False).head(160)
-        df_scan = pd.concat([df_scan, extra]).drop_duplicates(subset=["代码"]).head(160)
+        ].sort_values("__amount", ascending=False).head(100)
+        df_scan = pd.concat([df_scan, extra]).drop_duplicates(subset=["代码"]).head(100)
 
     scan_rows = [row for _, row in df_scan.iterrows()]
     candidates = _parallel_row_scan(scan_rows, _monthly_recovery_eval_row, max_workers=8)
@@ -1655,6 +1674,7 @@ def _compute_monthly_recovery(only_basic: bool = True):
         "generated_at": generated_at,
         "strategy": "monthly_recovery",
         "items": items,
+        "no_retry": True,
         "market_regime": market,
         "message": " ".join(msg_parts).strip(),
     }

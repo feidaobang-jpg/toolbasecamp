@@ -2,6 +2,17 @@
  * Shared UI: navigation, auth bar, favicon
  */
 (function () {
+    /** Root-relative prefix for nested pages (e.g. /html/admin/private/x.html → ../../../). */
+    function getSiteRootPrefix() {
+        const path = (window.location.pathname || '').replace(/\/+/g, '/');
+        const parts = path.replace(/^\//, '').split('/').filter(Boolean);
+        if (!parts.length) return '';
+        const last = parts[parts.length - 1];
+        const dirs = last.includes('.') ? parts.slice(0, -1) : parts;
+        return dirs.length ? '../'.repeat(dirs.length) : '';
+    }
+    window.tbSiteRootPrefix = getSiteRootPrefix;
+
     function tr(key) {
         return (typeof window.t === 'function' ? window.t(key) : key);
     }
@@ -96,8 +107,7 @@
         };
 
         const resolveAuthUrl = (pageName) => {
-            const base = window.location.pathname.includes('/html/') ? '../../' : '';
-            return `${base}html/auth/${pageName}`;
+            return `${getSiteRootPrefix()}html/auth/${pageName}`;
         };
 
         const loginUrl = resolveAuthUrl('login.html');
@@ -604,7 +614,7 @@
 
     function injectAdminLinks(user, wrap) {
         if (!isAdminUser(user)) return;
-        const base = window.location.pathname.includes('/html/') ? '../../' : '';
+        const base = getSiteRootPrefix();
         const privateLabel = tr('nav.private') === 'nav.private' ? '自用' : tr('nav.private');
 
         // Single admin entry: 自用 hub (stats / ladder update live inside)
@@ -627,8 +637,7 @@
         const script = document.createElement('script');
         script.id = 'tb-stats-script';
         script.async = true;
-        const base = window.location.pathname.includes('/html/') ? '../../' : '';
-        script.src = `${base}js/tb-stats.js?v=2`;
+        script.src = `${getSiteRootPrefix()}js/tb-stats.js?v=3`;
         document.head.appendChild(script);
     }
 
