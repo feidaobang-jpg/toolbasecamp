@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>文件批量重命名 - 自用</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../../vendor/tailwindcss.js?v=2"></script>
+  <link href="../../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../../../css/site-mobile-nav.css" />
+  <link rel="stylesheet" href="../../../../css/admin/android/folder-translator.css?v=1" />
+  <script src="../../../../js/locales/en.js"></script>
+  <script src="../../../../js/locales/zh-CN.js"></script>
+  <script src="../../../../js/i18n.js?v=stats1"></script>
+  <script src="../../../../js/config.js"></script>
+  <script src="../../../../js/common_ui.js?v=4"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> 自用
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate">文件批量重命名</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" class="text-blue-600 hover:underline hidden" href="../../../auth/login.html">登录</a>
+      </div>
+    </div>
+  </header>
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../../auth/login.html" class="tb-btn inline-flex">去登录</a>
+    </div>
+    <div id="app" class="hidden max-w-5xl mx-auto">
+      <div class="bg-white rounded-2xl border border-gray-100 p-5 sm:p-8">
+<div class="page active">
+                <h2>文件批量翻译重命名工具</h2>
+                <div class="tool-container">
+                    <div class="input-section">
+                        <label for="prefix-input">文件名前缀:</label>
+                        <input type="text" id="prefix-input" placeholder="请输入文件名前缀">
+                    </div>
+                    <div class="input-section">
+                        <label id="file-count-label">已选择文件: 0</label>
+                        <div class="file-selection-mode">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="append-files-checkbox"> 累加选择文件
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="button-section">
+                        <button class="tb-btn" type="button" id="generate-btn">生成</button>
+                        <button class="tb-btn" type="button" id="clear-btn">清空</button>
+                    </div>
+                </div>
+            </div>
+      </div>
+    </div>
+  </main>
+  <script src="../../../../js/admin/private-page-guard.js?v=1"></script>
+  <script src="../../../../js/admin/baidu-translate.js?v=1"></script>
+  <script src="../../../../js/base.js"></script>
+  <script src="../../../../js/admin/android/folder-translator.js?v=1"></script>
+</body>
+</html>

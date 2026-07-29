@@ -1,0 +1,75 @@
+.tool-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.output-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.output-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* 为code-display增加专门的样式 */
+#layout-output.code-display, #main-class-output.code-display {
+    min-height: 500px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.button-section {
+    display: flex;
+    gap: 12px;
+    margin: 5px 0;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+#clear-btn {
+    background-color: #3498db;
+}
+
+#clear-btn:hover {
+    background-color: #2980b9;
+}
+
+.copy-btn {
+    align-self: flex-start;
+    margin-top: 5px;
+    background-color: #3498db;
+}
+
+.copy-btn:hover {
+    background-color: #2980b9;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2c3e50;
+} 

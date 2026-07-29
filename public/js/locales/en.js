@@ -31,11 +31,34 @@ window.TB_LOCALES.en = {
         empty: 'No private tools yet',
         emptyGroup: 'No tools in this group yet',
         groups: {
-            stock: 'Stocks'
+            stock: 'Stocks',
+            android: 'Android'
         },
         stock: {
             picksTitle: 'Stock picks',
             picksDesc: 'Monthly K start (long-term) and late-session low buy (overnight)'
+        },
+        android: {
+            stringTranslator: {
+                title: 'strings.xml translator',
+                desc: 'Translate Chinese into strings.xml (Baidu)'
+            },
+            folderTranslator: {
+                title: 'Batch file rename',
+                desc: 'Translate and rename local files in bulk'
+            },
+            mvpConverter: {
+                title: 'MVP generator',
+                desc: 'Project-specific MVP scaffold'
+            },
+            adapterGenerator: {
+                title: 'Adapter generator',
+                desc: 'RecyclerView adapter templates'
+            },
+            refreshPageGenerator: {
+                title: 'Pull-to-refresh generator',
+                desc: 'Pull-to-refresh / paging page scaffold'
+            }
         }
     },
     coolSites: {
@@ -2259,6 +2282,10 @@ window.TB_LOCALES.en = {
             clear: 'Clear',
             emptyJson: 'Please enter JSON data',
             parseError: 'JSON parse error: {message}'
+        },
+        layoutConverter: {
+            title: 'Layout XML to findView',
+            desc: 'Convert Android layout XML to findViewById / ButterKnife / Kotlin'
         },
         mindmap: {
             title: 'Mind Map',

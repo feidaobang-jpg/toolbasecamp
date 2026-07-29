@@ -30,11 +30,34 @@ window.TB_LOCALES['zh-CN'] = {
         empty: '暂无自用工具',
         emptyGroup: '暂无工具，迁入后显示在此',
         groups: {
-            stock: '股票'
+            stock: '股票',
+            android: 'Android'
         },
         stock: {
             picksTitle: '选股策略',
             picksDesc: '月K启动（长线）与尾盘低吸（隔夜）'
+        },
+        android: {
+            stringTranslator: {
+                title: 'strings.xml 翻译',
+                desc: '中文翻译成 string.xml（百度翻译）'
+            },
+            folderTranslator: {
+                title: '文件批量重命名',
+                desc: '批量翻译并重命名本地文件'
+            },
+            mvpConverter: {
+                title: 'MVP 代码生成',
+                desc: '按项目模板生成 MVP 脚手架'
+            },
+            adapterGenerator: {
+                title: 'Adapter 代码生成',
+                desc: 'RecyclerView Adapter 模板生成'
+            },
+            refreshPageGenerator: {
+                title: '下拉刷新分页生成',
+                desc: '下拉刷新 / 分页页面脚手架'
+            }
         }
     },
     coolSites: {
@@ -2258,6 +2281,10 @@ window.TB_LOCALES['zh-CN'] = {
             clear: '清除',
             emptyJson: '请输入 JSON 数据',
             parseError: 'JSON 解析错误：{message}'
+        },
+        layoutConverter: {
+            title: '布局 XML 转 findView',
+            desc: 'Android 布局 XML 转 findViewById / ButterKnife / Kotlin'
         },
         mindmap: {
             title: '思维导图',
