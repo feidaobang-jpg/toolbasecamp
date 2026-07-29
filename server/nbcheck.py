@@ -188,6 +188,33 @@ def _save_json(payload: Dict[str, Any]) -> str:
     return path
 
 
+def _web_root() -> Optional[str]:
+    env = (os.environ.get("TOOLBASECAMP_WEB_ROOT") or "").strip()
+    if env and os.path.isdir(env):
+        return env
+    local = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "public"))
+    if os.path.isdir(os.path.join(local, "html", "ladder")):
+        return local
+    prod = "/var/www/toolbasecamp"
+    if os.path.isdir(os.path.join(prod, "html", "ladder")):
+        return prod
+    return None
+
+
+def _save_public_copy(payload: Dict[str, Any]) -> Optional[str]:
+    root = _web_root()
+    if not root:
+        return None
+    out_dir = os.path.join(root, "data", "nbcheck")
+    os.makedirs(out_dir, exist_ok=True)
+    path = os.path.join(out_dir, f"{payload.get('id') or NB_GPU_ID}.json")
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, path)
+    return path
+
+
 def refresh_nb_gpu() -> Dict[str, Any]:
     if not _REFRESH_LOCK.acquire(blocking=False):
         raise HTTPException(status_code=409, detail="Refresh already running")
@@ -197,6 +224,7 @@ def refresh_nb_gpu() -> Dict[str, Any]:
     try:
         payload = _scrape_nb_gpu()
         path = _save_json(payload)
+        public_path = _save_public_copy(payload)
         return {
             "ok": True,
             "id": NB_GPU_ID,
@@ -204,6 +232,7 @@ def refresh_nb_gpu() -> Dict[str, Any]:
             "kept": len(payload.get("items") or []),
             "updated_at": payload.get("updated_at"),
             "path": path,
+            "public_path": public_path,
         }
     except Exception as exc:
         _REFRESH_STATE["last_error"] = str(exc)
