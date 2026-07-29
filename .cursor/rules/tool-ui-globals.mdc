@@ -38,6 +38,14 @@ alwaysApply: true
 - 工具页侧栏顶栏「返回首页」用 `.logo-home-btn`，唯一回首页入口。
 - 不要再加重复的「全部工具」链接（手机顶栏 / 侧栏底栏曾因重复已去掉）。
 
+## 工具标题（侧栏 vs 内容区，框架层）
+
+- 标准结构仍保留 `.tool-header`（可含 `h1` + 可选说明 `p`）；`base.js` 会注入 `.tool-mobile-bar` 显示当前工具名。
+- **手机**（`max-width: 768px`）：标题只在顶栏 `.tool-mobile-bar`；`.tool-mobile-bar ~ .tool-header` 隐藏（`docs-common.css`）。
+- **桌面**（`min-width: 769px`、有侧栏时）：侧栏高亮已表示当前工具，隐藏与侧栏重复的 `.tool-header > h1`；若没有说明 `p`，整块 `.tool-header` 一并隐藏（`base.css`）。
+- **禁止**在单个工具页用自定义 CSS / 删掉 `h1` 来「去重」；改行为只动 `base.css` / `docs-common.css`。
+- 说明文案需要桌面可见时，放在 `.tool-header > p`，不要塞进侧栏。
+
 ## 不要默认自动滚动
 
 - **默认不要**在界面变化后自动 `scrollTop = scrollHeight` / `scrollTo` / `scrollIntoView`。
