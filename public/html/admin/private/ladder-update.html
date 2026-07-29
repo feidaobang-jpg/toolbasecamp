@@ -44,17 +44,23 @@
       </p>
       <div class="ladder-toolbar action-row">
         <button type="button" id="btn-refresh-all" class="tb-btn" data-i18n="privateHub.ladder.refreshAll">全部更新</button>
-        <button type="button" id="btn-refresh-nbcheck" class="tb-btn">更新 Notebookcheck 显卡榜</button>
+        <button type="button" id="btn-refresh-nbcheck" class="tb-btn">更新全部 Notebookcheck</button>
       </div>
       <div id="status" class="ladder-status"></div>
       <div id="meta-line" class="ladder-meta"></div>
       <div id="ladder-list" class="ladder-list"></div>
-      <h3 class="ladder-subhead" style="margin-top:20px;font-size:15px;font-weight:700;">Notebookcheck</h3>
+      <h3 class="ladder-subhead" style="margin-top:20px;font-size:15px;font-weight:700;">Notebookcheck（5 榜）</h3>
       <div id="nbcheck-list" class="ladder-list"></div>
-      <p class="ladder-meta"><a href="../../ladder/nb_gpu_rank.html" target="_blank" rel="noopener">查看公开跑分榜</a></p>
+      <p class="ladder-meta">公开页：
+        <a href="../../ladder/cpu_rank.html" target="_blank" rel="noopener">桌面 CPU</a> ·
+        <a href="../../ladder/gpu_rank.html" target="_blank" rel="noopener">桌面 GPU</a> ·
+        <a href="../../ladder/soc_rank.html" target="_blank" rel="noopener">手机 SoC</a> ·
+        <a href="../../ladder/nb_cpu_rank.html" target="_blank" rel="noopener">笔记本 CPU</a> ·
+        <a href="../../ladder/nb_gpu_rank.html" target="_blank" rel="noopener">笔记本 GPU</a>
+      </p>
     </div>
   </main>
 
-  <script src="../../../js/admin/ladder-update.js?v=2"></script>
+  <script src="../../../js/admin/ladder-update.js?v=3"></script>
 </body>
 </html>

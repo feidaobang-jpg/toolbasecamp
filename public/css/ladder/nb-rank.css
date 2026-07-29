@@ -108,6 +108,14 @@
 .nb-rank-bar.is-nvidia { background: #76b900; }
 .nb-rank-bar.is-amd { background: #ed1c24; }
 .nb-rank-bar.is-intel { background: #0068b5; }
+.nb-rank-bar.is-apple { background: #555555; }
+.nb-rank-bar.is-qualcomm { background: #3253dc; }
+.nb-rank-bar.is-mediatek { background: #ee7b0b; }
+.nb-rank-bar.is-samsung { background: #1428a0; }
+.nb-rank-bar.is-google { background: #4285f4; }
+.nb-rank-bar.is-hisilicon { background: #cf0a2c; }
+.nb-rank-bar.is-xiaomi { background: #ff6700; }
+.nb-rank-bar.is-unisoc { background: #00a0e9; }
 
 .nb-rank-score {
   font-size: 13px;

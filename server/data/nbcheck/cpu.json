@@ -1,0 +1,1017 @@
+{
+  "id": "cpu",
+  "title": "桌面处理器跑分榜",
+  "source": "Notebookcheck",
+  "source_url": "https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html",
+  "credit": "Data from Notebookcheck mobile/desktop processor list (desktop filter). For reference only.",
+  "score_label": null,
+  "filters": [
+    "intel",
+    "amd",
+    "apple"
+  ],
+  "updated_at": "2026-07-29T06:35:36Z",
+  "count": 137,
+  "items": [
+    {
+      "pos": 1,
+      "model": "AMD Ryzen Threadripper PRO 7995WX",
+      "brand": "AMD",
+      "architecture": "Storm Peak",
+      "perf_rating": 88.5,
+      "cb_r23": 107681.0,
+      "rank": 1,
+      "pct": 100.0
+    },
+    {
+      "pos": 16,
+      "model": "Intel Core Ultra 7 265KF",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 85.5,
+      "cb_r23": null,
+      "rank": 2,
+      "pct": 96.6
+    },
+    {
+      "pos": 5,
+      "model": "Intel Core Ultra 7 270K Plus",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S Refresh",
+      "perf_rating": 81.3,
+      "cb_r23": 44253.0,
+      "rank": 3,
+      "pct": 91.9
+    },
+    {
+      "pos": 65,
+      "model": "Intel Core Ultra 5 245KF",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 81.2,
+      "cb_r23": null,
+      "rank": 4,
+      "pct": 91.8
+    },
+    {
+      "pos": 199,
+      "model": "Apple M4 8-Core",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 81.1,
+      "cb_r23": null,
+      "rank": 5,
+      "pct": 91.6
+    },
+    {
+      "pos": 3,
+      "model": "AMD Ryzen 9 9950X3D",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 80.2,
+      "cb_r23": 42018.0,
+      "rank": 6,
+      "pct": 90.6
+    },
+    {
+      "pos": 4,
+      "model": "AMD Ryzen 9 9950X",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 79.1,
+      "cb_r23": 40924.0,
+      "rank": 7,
+      "pct": 89.4
+    },
+    {
+      "pos": 6,
+      "model": "Intel Core Ultra 9 285K",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 78.5,
+      "cb_r23": 42522.0,
+      "rank": 8,
+      "pct": 88.7
+    },
+    {
+      "pos": 24,
+      "model": "Intel Core Ultra 9 285",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 78.2,
+      "cb_r23": null,
+      "rank": 9,
+      "pct": 88.4
+    },
+    {
+      "pos": 8,
+      "model": "Intel Core i9-14900K",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 77.2,
+      "cb_r23": 39399.5,
+      "rank": 10,
+      "pct": 87.2
+    },
+    {
+      "pos": 18,
+      "model": "Intel Core i9-13900K",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 75.1,
+      "cb_r23": 38271.5,
+      "rank": 11,
+      "pct": 84.9
+    },
+    {
+      "pos": 19,
+      "model": "AMD Ryzen 9 7950X3D",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 74.8,
+      "cb_r23": 36291.0,
+      "rank": 12,
+      "pct": 84.5
+    },
+    {
+      "pos": 21,
+      "model": "AMD Ryzen 9 9900X",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 74.5,
+      "cb_r23": 32172.0,
+      "rank": 13,
+      "pct": 84.2
+    },
+    {
+      "pos": 20,
+      "model": "AMD Ryzen 9 7950X",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen 4)",
+      "perf_rating": 74.3,
+      "cb_r23": 36523.0,
+      "rank": 14,
+      "pct": 84.0
+    },
+    {
+      "pos": 85,
+      "model": "Intel Core Ultra 5 245",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 73.3,
+      "cb_r23": null,
+      "rank": 15,
+      "pct": 82.8
+    },
+    {
+      "pos": 39,
+      "model": "Intel Core Ultra 5 250K Plus",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S Refresh",
+      "perf_rating": 72.9,
+      "cb_r23": 30867.0,
+      "rank": 16,
+      "pct": 82.4
+    },
+    {
+      "pos": 27,
+      "model": "Apple M4 Pro 14-Core",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 71.3,
+      "cb_r23": 23435.0,
+      "rank": 17,
+      "pct": 80.6
+    },
+    {
+      "pos": 40,
+      "model": "AMD Ryzen 9 7900X",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 70.6,
+      "cb_r23": 29300.0,
+      "rank": 18,
+      "pct": 79.8
+    },
+    {
+      "pos": 38,
+      "model": "AMD Ryzen 7 9850X3D",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 70.3,
+      "cb_r23": 22807.0,
+      "rank": 19,
+      "pct": 79.4
+    },
+    {
+      "pos": 29,
+      "model": "Intel Core i7-14700K",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 69.9,
+      "cb_r23": 33440.5,
+      "rank": 20,
+      "pct": 79.0
+    },
+    {
+      "pos": 51,
+      "model": "Apple M4 Pro 12-Core",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 69.7,
+      "cb_r23": 19206.5,
+      "rank": 21,
+      "pct": 78.8
+    },
+    {
+      "pos": 17,
+      "model": "Intel Core Ultra 7 265K",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 68.9,
+      "cb_r23": 35850.0,
+      "rank": 22,
+      "pct": 77.9
+    },
+    {
+      "pos": 41,
+      "model": "Intel Core i7-13700K",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 68.3,
+      "cb_r23": 30745.0,
+      "rank": 23,
+      "pct": 77.2
+    },
+    {
+      "pos": 53,
+      "model": "AMD Ryzen 7 9800X3D",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 67.9,
+      "cb_r23": 23230.0,
+      "rank": 24,
+      "pct": 76.7
+    },
+    {
+      "pos": 57,
+      "model": "AMD Ryzen 9 7900",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 66.5,
+      "cb_r23": 24776.0,
+      "rank": 25,
+      "pct": 75.1
+    },
+    {
+      "pos": 58,
+      "model": "AMD Ryzen 7 9700X",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 66.3,
+      "cb_r23": 20485.0,
+      "rank": 26,
+      "pct": 74.9
+    },
+    {
+      "pos": 32,
+      "model": "Intel Core i9-14900",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 65.2,
+      "cb_r23": 31070.0,
+      "rank": 27,
+      "pct": 73.7
+    },
+    {
+      "pos": 66,
+      "model": "Intel Core Ultra 5 245K",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 64.8,
+      "cb_r23": 25066.0,
+      "rank": 28,
+      "pct": 73.2
+    },
+    {
+      "pos": 120,
+      "model": "Intel Core i9-14901E",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 64.8,
+      "cb_r23": null,
+      "rank": 29,
+      "pct": 73.2
+    },
+    {
+      "pos": 69,
+      "model": "Intel Core i5-14600K",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 64.3,
+      "cb_r23": 24491.0,
+      "rank": 30,
+      "pct": 72.7
+    },
+    {
+      "pos": 198,
+      "model": "Intel Core Ultra 5 225",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 64.0,
+      "cb_r23": null,
+      "rank": 31,
+      "pct": 72.3
+    },
+    {
+      "pos": 92,
+      "model": "AMD Ryzen 7 7700X",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 63.5,
+      "cb_r23": 19088.0,
+      "rank": 32,
+      "pct": 71.8
+    },
+    {
+      "pos": 93,
+      "model": "AMD Ryzen 5 9600X",
+      "brand": "AMD",
+      "architecture": "Granite Ridge",
+      "perf_rating": 63.3,
+      "cb_r23": 17528.5,
+      "rank": 33,
+      "pct": 71.5
+    },
+    {
+      "pos": 68,
+      "model": "Intel Core i7-14700",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 62.9,
+      "cb_r23": 28398.0,
+      "rank": 34,
+      "pct": 71.1
+    },
+    {
+      "pos": 94,
+      "model": "Intel Core Ultra 5 235",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 62.5,
+      "cb_r23": 21677.0,
+      "rank": 35,
+      "pct": 70.6
+    },
+    {
+      "pos": 73,
+      "model": "Intel Core i7-13700",
+      "brand": "Intel",
+      "architecture": "Raptor Lake-S",
+      "perf_rating": 62.1,
+      "cb_r23": 25369.0,
+      "rank": 36,
+      "pct": 70.2
+    },
+    {
+      "pos": 95,
+      "model": "AMD Ryzen 7 7700",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 61.8,
+      "cb_r23": 18760.0,
+      "rank": 37,
+      "pct": 69.8
+    },
+    {
+      "pos": 76,
+      "model": "Intel Core i5-13600K",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 61.8,
+      "cb_r23": 24221.0,
+      "rank": 38,
+      "pct": 69.8
+    },
+    {
+      "pos": 188,
+      "model": "Intel Core i9-14901TE",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 60.9,
+      "cb_r23": null,
+      "rank": 39,
+      "pct": 68.8
+    },
+    {
+      "pos": 118,
+      "model": "AMD Ryzen 5 7600X",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 60.0,
+      "cb_r23": 15236.0,
+      "rank": 40,
+      "pct": 67.8
+    },
+    {
+      "pos": 67,
+      "model": "Intel Core i9-12900K",
+      "brand": "Intel",
+      "architecture": "Alder Lake",
+      "perf_rating": 59.3,
+      "cb_r23": 26125.0,
+      "rank": 41,
+      "pct": 67.0
+    },
+    {
+      "pos": 117,
+      "model": "AMD Ryzen 7 7800X3D",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 58.6,
+      "cb_r23": 16817.0,
+      "rank": 42,
+      "pct": 66.2
+    },
+    {
+      "pos": 112,
+      "model": "Intel Core i7-12700",
+      "brand": "Intel",
+      "architecture": "Alder Lake",
+      "perf_rating": 57.5,
+      "cb_r23": 21751.0,
+      "rank": 43,
+      "pct": 65.0
+    },
+    {
+      "pos": 192,
+      "model": "Intel Core i7-14701TE",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 57.5,
+      "cb_r23": null,
+      "rank": 44,
+      "pct": 65.0
+    },
+    {
+      "pos": 140,
+      "model": "Intel Core Ultra 5 225F",
+      "brand": "Intel",
+      "architecture": "Arrow Lake-S",
+      "perf_rating": 56.5,
+      "cb_r23": 16467.0,
+      "rank": 45,
+      "pct": 63.8
+    },
+    {
+      "pos": 144,
+      "model": "AMD Ryzen 7 8700G",
+      "brand": "AMD",
+      "architecture": "Phoenix",
+      "perf_rating": 56.4,
+      "cb_r23": 17128.0,
+      "rank": 46,
+      "pct": 63.7
+    },
+    {
+      "pos": 77,
+      "model": "AMD Ryzen 9 5950X",
+      "brand": "AMD",
+      "architecture": "Vermeer (Zen 3)",
+      "perf_rating": 53.6,
+      "cb_r23": 26017.0,
+      "rank": 47,
+      "pct": 60.6
+    },
+    {
+      "pos": 220,
+      "model": "AMD Ryzen 5 7600",
+      "brand": "AMD",
+      "architecture": "Raphael (Zen4)",
+      "perf_rating": 53.0,
+      "cb_r23": 12735.0,
+      "rank": 48,
+      "pct": 59.9
+    },
+    {
+      "pos": 231,
+      "model": "Intel Core i5-14501TE",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 52.7,
+      "cb_r23": null,
+      "rank": 49,
+      "pct": 59.5
+    },
+    {
+      "pos": 189,
+      "model": "Intel Core i5-14501E",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 52.6,
+      "cb_r23": null,
+      "rank": 50,
+      "pct": 59.4
+    },
+    {
+      "pos": 111,
+      "model": "Intel Core i7-12700K",
+      "brand": "Intel",
+      "architecture": "Alder Lake",
+      "perf_rating": 51.9,
+      "cb_r23": 19784.0,
+      "rank": 51,
+      "pct": 58.6
+    },
+    {
+      "pos": 182,
+      "model": "Intel Core i5-13400F",
+      "brand": "Intel",
+      "architecture": "Raptor Lake-S",
+      "perf_rating": 51.7,
+      "cb_r23": 15911.0,
+      "rank": 52,
+      "pct": 58.4
+    },
+    {
+      "pos": 183,
+      "model": "Intel Core i5-13400",
+      "brand": "Intel",
+      "architecture": "Raptor Lake-S",
+      "perf_rating": 51.6,
+      "cb_r23": 15953.0,
+      "rank": 53,
+      "pct": 58.3
+    },
+    {
+      "pos": 219,
+      "model": "Intel Core i5-14500",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 51.5,
+      "cb_r23": 15012.0,
+      "rank": 54,
+      "pct": 58.2
+    },
+    {
+      "pos": 210,
+      "model": "AMD Ryzen 7 5800X",
+      "brand": "AMD",
+      "architecture": "Vermeer (Zen 3)",
+      "perf_rating": 50.9,
+      "cb_r23": 15476.0,
+      "rank": 55,
+      "pct": 57.5
+    },
+    {
+      "pos": 193,
+      "model": "Intel Core i9-11900K",
+      "brand": "Intel",
+      "architecture": "Rocket Lake",
+      "perf_rating": 50.5,
+      "cb_r23": 14747.0,
+      "rank": 56,
+      "pct": 57.1
+    },
+    {
+      "pos": 148,
+      "model": "Intel Core i5-12600K",
+      "brand": "Intel",
+      "architecture": "Alder Lake",
+      "perf_rating": 49.7,
+      "cb_r23": 17491.0,
+      "rank": 57,
+      "pct": 56.2
+    },
+    {
+      "pos": 229,
+      "model": "Intel Core i5-13500",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 49.7,
+      "cb_r23": 14573.0,
+      "rank": 58,
+      "pct": 56.2
+    },
+    {
+      "pos": 216,
+      "model": "Intel Core i7-12700F",
+      "brand": "Intel",
+      "architecture": "Alder Lake",
+      "perf_rating": 49.1,
+      "cb_r23": 15291.0,
+      "rank": 59,
+      "pct": 55.5
+    },
+    {
+      "pos": 264,
+      "model": "AMD Ryzen 7 5700X",
+      "brand": "AMD",
+      "architecture": "Vermeer (Zen 3)",
+      "perf_rating": 48.0,
+      "cb_r23": 13184.0,
+      "rank": 60,
+      "pct": 54.2
+    },
+    {
+      "pos": 241,
+      "model": "AMD Ryzen 9 5900X",
+      "brand": "AMD",
+      "architecture": "Vermeer (Zen3)",
+      "perf_rating": 47.8,
+      "cb_r23": 16262.0,
+      "rank": 61,
+      "pct": 54.0
+    },
+    {
+      "pos": 285,
+      "model": "Intel Core i9-11900KB",
+      "brand": "Intel",
+      "architecture": "Tiger Lake-H",
+      "perf_rating": 47.8,
+      "cb_r23": 11726.0,
+      "rank": 62,
+      "pct": 54.0
+    },
+    {
+      "pos": 305,
+      "model": "Intel Core i5-14500T",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 47.7,
+      "cb_r23": 11790.0,
+      "rank": 63,
+      "pct": 53.9
+    },
+    {
+      "pos": 276,
+      "model": "Intel Core i5-12400F",
+      "brand": "Intel",
+      "architecture": "Alder Lake-S",
+      "perf_rating": 47.3,
+      "cb_r23": 12380.0,
+      "rank": 64,
+      "pct": 53.4
+    },
+    {
+      "pos": 312,
+      "model": "Intel Core i5-14401TE",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 46.8,
+      "cb_r23": null,
+      "rank": 65,
+      "pct": 52.9
+    },
+    {
+      "pos": 166,
+      "model": "Intel Core i9-12900",
+      "brand": "Intel",
+      "architecture": "Alder Lake",
+      "perf_rating": 46.0,
+      "cb_r23": 18628.0,
+      "rank": 66,
+      "pct": 52.0
+    },
+    {
+      "pos": 201,
+      "model": "AMD Ryzen 7 5800X3D",
+      "brand": "AMD",
+      "architecture": "Vermeer (Zen3)",
+      "perf_rating": 45.0,
+      "cb_r23": 14317.0,
+      "rank": 67,
+      "pct": 50.8
+    },
+    {
+      "pos": 81,
+      "model": "Intel Core i9-10980XE",
+      "brand": "Intel",
+      "architecture": "Cascade Lake",
+      "perf_rating": 44.8,
+      "cb_r23": null,
+      "rank": 68,
+      "pct": 50.6
+    },
+    {
+      "pos": 217,
+      "model": "Intel Core i7-11700K",
+      "brand": "Intel",
+      "architecture": "Rocket Lake",
+      "perf_rating": 44.4,
+      "cb_r23": 14281.0,
+      "rank": 69,
+      "pct": 50.2
+    },
+    {
+      "pos": 83,
+      "model": "Intel Core i9-9980XE",
+      "brand": "Intel",
+      "architecture": "Sky Lake-X",
+      "perf_rating": 43.5,
+      "cb_r23": null,
+      "rank": 70,
+      "pct": 49.2
+    },
+    {
+      "pos": 369,
+      "model": "Intel Core i5-13500T",
+      "brand": "Intel",
+      "architecture": "Raptor Lake",
+      "perf_rating": 43.3,
+      "cb_r23": 11028.0,
+      "rank": 71,
+      "pct": 48.9
+    },
+    {
+      "pos": 82,
+      "model": "AMD Ryzen 9 3950X",
+      "brand": "AMD",
+      "architecture": "Matisse (Zen 2)",
+      "perf_rating": 43.0,
+      "cb_r23": null,
+      "rank": 72,
+      "pct": 48.6
+    },
+    {
+      "pos": 298,
+      "model": "AMD Ryzen 5 5600X",
+      "brand": "AMD",
+      "architecture": "Vermeer (Zen 3)",
+      "perf_rating": 41.4,
+      "cb_r23": 11838.0,
+      "rank": 73,
+      "pct": 46.8
+    },
+    {
+      "pos": 317,
+      "model": "Intel Core i5-11600K",
+      "brand": "Intel",
+      "architecture": "Rocket Lake",
+      "perf_rating": 40.3,
+      "cb_r23": 11217.5,
+      "rank": 74,
+      "pct": 45.5
+    },
+    {
+      "pos": 329,
+      "model": "AMD Ryzen 9 3900X",
+      "brand": "AMD",
+      "architecture": "Matisse (Zen 2)",
+      "perf_rating": 40.0,
+      "cb_r23": 19000.0,
+      "rank": 75,
+      "pct": 45.2
+    },
+    {
+      "pos": 277,
+      "model": "AMD Ryzen 7 5700G",
+      "brand": "AMD",
+      "architecture": "Cezanne (Zen 3)",
+      "perf_rating": 39.9,
+      "cb_r23": 12830.5,
+      "rank": 76,
+      "pct": 45.1
+    },
+    {
+      "pos": 301,
+      "model": "AMD Ryzen 7 PRO 5750G",
+      "brand": "AMD",
+      "architecture": "Cezanne PRO (Zen 3)",
+      "perf_rating": 39.3,
+      "cb_r23": 12157.0,
+      "rank": 77,
+      "pct": 44.4
+    },
+    {
+      "pos": 313,
+      "model": "Intel Core i7-11700",
+      "brand": "Intel",
+      "architecture": "Rocket Lake",
+      "perf_rating": 39.2,
+      "cb_r23": 10287.0,
+      "rank": 78,
+      "pct": 44.3
+    },
+    {
+      "pos": 195,
+      "model": "Intel Core i9-10850K",
+      "brand": "Intel",
+      "architecture": "Comet Lake-S",
+      "perf_rating": 39.1,
+      "cb_r23": 15538.0,
+      "rank": 79,
+      "pct": 44.2
+    },
+    {
+      "pos": 196,
+      "model": "Intel Core i9-10900K",
+      "brand": "Intel",
+      "architecture": "Comet Lake",
+      "perf_rating": 38.7,
+      "cb_r23": 15821.0,
+      "rank": 80,
+      "pct": 43.7
+    },
+    {
+      "pos": 187,
+      "model": "AMD Ryzen 9 3900",
+      "brand": "AMD",
+      "architecture": "Matisse (Zen 2)",
+      "perf_rating": 38.3,
+      "cb_r23": null,
+      "rank": 81,
+      "pct": 43.3
+    },
+    {
+      "pos": 278,
+      "model": "Intel Core i9-9900KS",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-R",
+      "perf_rating": 37.7,
+      "cb_r23": null,
+      "rank": 82,
+      "pct": 42.6
+    },
+    {
+      "pos": 272,
+      "model": "AMD Ryzen 7 3800XT",
+      "brand": "AMD",
+      "architecture": "Matisse (Zen 2)",
+      "perf_rating": 37.6,
+      "cb_r23": null,
+      "rank": 83,
+      "pct": 42.5
+    },
+    {
+      "pos": 263,
+      "model": "Intel Core i9-10910",
+      "brand": "Intel",
+      "architecture": "Comet Lake-S",
+      "perf_rating": 37.3,
+      "cb_r23": null,
+      "rank": 84,
+      "pct": 42.1
+    },
+    {
+      "pos": 368,
+      "model": "AMD Ryzen 5 5600G",
+      "brand": "AMD",
+      "architecture": "Cezanne",
+      "perf_rating": 37.2,
+      "cb_r23": 10551.0,
+      "rank": 85,
+      "pct": 42.0
+    },
+    {
+      "pos": 288,
+      "model": "Intel Core i7-10700K",
+      "brand": "Intel",
+      "architecture": "Comet Lake",
+      "perf_rating": 36.7,
+      "cb_r23": null,
+      "rank": 86,
+      "pct": 41.5
+    },
+    {
+      "pos": 279,
+      "model": "AMD Ryzen 7 3700X",
+      "brand": "AMD",
+      "architecture": "Matisse (Zen 2)",
+      "perf_rating": 35.8,
+      "cb_r23": null,
+      "rank": 87,
+      "pct": 40.5
+    },
+    {
+      "pos": 296,
+      "model": "Intel Core i9-9900K",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-R",
+      "perf_rating": 34.3,
+      "cb_r23": 12397.0,
+      "rank": 88,
+      "pct": 38.8
+    },
+    {
+      "pos": 386,
+      "model": "Intel Core i5-11400F",
+      "brand": "Intel",
+      "architecture": "Rocket Lake",
+      "perf_rating": 34.0,
+      "cb_r23": 10235.0,
+      "rank": 89,
+      "pct": 38.4
+    },
+    {
+      "pos": 362,
+      "model": "Intel Core i5-10600K",
+      "brand": "Intel",
+      "architecture": "Comet Lake",
+      "perf_rating": 33.7,
+      "cb_r23": 10475.0,
+      "rank": 90,
+      "pct": 38.1
+    },
+    {
+      "pos": 458,
+      "model": "Intel Core i7-8086K",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-S",
+      "perf_rating": 32.0,
+      "cb_r23": 8686.0,
+      "rank": 91,
+      "pct": 36.2
+    },
+    {
+      "pos": 587,
+      "model": "Intel Core i5-8600K",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-S",
+      "perf_rating": 30.6,
+      "cb_r23": null,
+      "rank": 92,
+      "pct": 34.6
+    },
+    {
+      "pos": 396,
+      "model": "Intel Core i7-10700",
+      "brand": "Intel",
+      "architecture": "Comet Lake",
+      "perf_rating": 30.5,
+      "cb_r23": 8532.0,
+      "rank": 93,
+      "pct": 34.5
+    },
+    {
+      "pos": 427,
+      "model": "AMD Ryzen 7 2700X",
+      "brand": "AMD",
+      "architecture": "Zen+",
+      "perf_rating": 29.8,
+      "cb_r23": null,
+      "rank": 94,
+      "pct": 33.7
+    },
+    {
+      "pos": 480,
+      "model": "Intel Core i7-9700",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-R",
+      "perf_rating": 29.2,
+      "cb_r23": null,
+      "rank": 95,
+      "pct": 33.0
+    },
+    {
+      "pos": 450,
+      "model": "Intel Core i7-9700K",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-R",
+      "perf_rating": 29.2,
+      "cb_r23": null,
+      "rank": 96,
+      "pct": 33.0
+    },
+    {
+      "pos": 489,
+      "model": "Intel Core i5-10400F",
+      "brand": "Intel",
+      "architecture": "Comet Lake",
+      "perf_rating": 29.0,
+      "cb_r23": null,
+      "rank": 97,
+      "pct": 32.8
+    },
+    {
+      "pos": 539,
+      "model": "Intel Core i3-10320",
+      "brand": "Intel",
+      "architecture": "Comet Lake-S",
+      "perf_rating": 28.9,
+      "cb_r23": 5986.0,
+      "rank": 98,
+      "pct": 32.7
+    },
+    {
+      "pos": 584,
+      "model": "Intel Core i5-8400",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-S",
+      "perf_rating": 28.3,
+      "cb_r23": null,
+      "rank": 99,
+      "pct": 32.0
+    },
+    {
+      "pos": 485,
+      "model": "Intel Core i7-8700K",
+      "brand": "Intel",
+      "architecture": "Coffee Lake-S",
+      "perf_rating": 27.7,
+      "cb_r23": null,
+      "rank": 100,
+      "pct": 31.3
+    }
+  ]
+}

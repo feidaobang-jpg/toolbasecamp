@@ -2297,21 +2297,71 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladderCpu: {
             title: '桌面处理器',
-            desc: '桌面 CPU 性能天梯图（越高越强）'
+            desc: '桌面 CPU 性能天梯图（越高越强）',
+            rankNote: '也可查看站内',
+            rankLink: '桌面处理器跑分榜'
+        },
+        ladderCpuRank: {
+            title: '桌面处理器跑分榜',
+            desc: '基于 Notebookcheck 的桌面 CPU 相对跑分排行',
+            updated: '更新',
+            count: '条目',
+            empty: '暂无数据',
+            loading: '加载中…',
+            loadFail: '加载失败',
+            filterAll: '全部',
+            scoreLabel: '分数'
         },
         ladderGpu: {
             title: '桌面显卡',
-            desc: '桌面 GPU 性能天梯图（越高越强）'
+            desc: '桌面 GPU 性能天梯图（越高越强）',
+            rankNote: '也可查看站内',
+            rankLink: '桌面显卡跑分榜'
+        },
+        ladderGpuRank: {
+            title: '桌面显卡跑分榜',
+            desc: '基于 Notebookcheck 的桌面 GPU 相对跑分排行',
+            updated: '更新',
+            count: '条目',
+            empty: '暂无数据',
+            loading: '加载中…',
+            loadFail: '加载失败',
+            filterAll: '全部',
+            scoreLabel: '分数'
         },
         ladderSoc: {
             title: '手机 SoC',
-            desc: '手机芯片性能天梯图（越高越强）'
+            desc: '手机芯片性能天梯图（越高越强）',
+            rankNote: '也可查看站内',
+            rankLink: '手机 SoC 跑分榜'
+        },
+        ladderSocRank: {
+            title: '手机 SoC 跑分榜',
+            desc: '基于 Notebookcheck Geekbench 多核的手机 SoC 排行',
+            updated: '更新',
+            count: '条目',
+            empty: '暂无数据',
+            loading: '加载中…',
+            loadFail: '加载失败',
+            filterAll: '全部',
+            scoreLabel: '分数'
         },
         ladderNbCpu: {
             title: '笔记本处理器',
             desc: '笔记本 CPU 性能天梯图（越高越强）',
             staleNote: '快科技笔记本 CPU 专题已停更（约只到 12 代酷睿）。下表仅供参考；更新跑分请看',
-            staleLink: 'Notebookcheck 笔记本处理器榜'
+            staleLink: '笔记本处理器跑分榜'
+        },
+        ladderNbCpuRank: {
+            title: '笔记本处理器跑分榜',
+            desc: '基于 Notebookcheck 的笔记本 CPU 相对跑分排行',
+            updated: '更新',
+            count: '条目',
+            empty: '暂无数据',
+            loading: '加载中…',
+            loadFail: '加载失败',
+            filterAll: '全部',
+            scoreLabel: '分数'
         },
         ladderNbGpu: {
             title: '笔记本显卡',
@@ -2330,7 +2380,8 @@ window.TB_LOCALES['zh-CN'] = {
             empty: '暂无数据',
             loading: '加载中…',
             loadFail: '加载失败',
-            filterAll: '全部'
+            filterAll: '全部',
+            scoreLabel: '分数'
         },
         mindmap: {
             title: '思维导图',

@@ -83,6 +83,18 @@
   word-break: break-all;
 }
 
+.ladder-row-link {
+  font-size: 0.8125rem;
+  color: #2563eb;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ladder-row-link:hover {
+  text-decoration: underline;
+}
+
 .ladder-row-btn {
   flex-shrink: 0;
 }

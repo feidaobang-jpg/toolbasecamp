@@ -1,7 +1,18 @@
 /**
- * Notebookcheck mobile GPU ranking list renderer.
+ * Notebookcheck ranking list renderer (list-id aware via window.NB_RANK_CONFIG).
+ *
+ * Page config example:
+ *   window.NB_RANK_CONFIG = {
+ *     listId: 'nb_gpu',
+ *     i18nPrefix: 'tools.ladderNbGpuRank',
+ *     filters: ['nvidia', 'amd', 'intel']
+ *   };
  */
 (function () {
+  function cfg() {
+    return window.NB_RANK_CONFIG || { listId: 'nb_gpu', i18nPrefix: 'tools.ladderNbGpuRank' };
+  }
+
   function apiBase() {
     if (window.siteConfig && window.siteConfig.apiBase) return window.siteConfig.apiBase;
     var host = window.location.hostname;
@@ -17,11 +28,25 @@
     return fallback || key;
   }
 
+  function i18nKey(suffix) {
+    return (cfg().i18nPrefix || 'tools.ladderNbGpuRank') + '.' + suffix;
+  }
+
   function brandClass(brand) {
-    var b = String(brand || '').toLowerCase();
+    var b = String(brand || '')
+      .toLowerCase()
+      .replace(/\s+/g, '');
     if (b === 'nvidia') return 'is-nvidia';
     if (b === 'amd') return 'is-amd';
     if (b === 'intel') return 'is-intel';
+    if (b === 'apple') return 'is-apple';
+    if (b === 'qualcomm') return 'is-qualcomm';
+    if (b === 'mediatek') return 'is-mediatek';
+    if (b === 'samsung') return 'is-samsung';
+    if (b === 'google') return 'is-google';
+    if (b === 'hisilicon') return 'is-hisilicon';
+    if (b === 'xiaomi') return 'is-xiaomi';
+    if (b === 'unisoc') return 'is-unisoc';
     return '';
   }
 
@@ -29,7 +54,8 @@
     items: [],
     brand: 'all',
     sourceUrl: '',
-    updatedAt: ''
+    updatedAt: '',
+    scoreLabel: ''
   };
 
   function setMeta() {
@@ -38,12 +64,15 @@
     var parts = [];
     if (state.updatedAt) {
       parts.push(
-        tr('tools.ladderNbGpuRank.updated', '更新') +
+        tr(i18nKey('updated'), '更新') +
           '：' +
           state.updatedAt.replace('T', ' ').replace('Z', ' UTC')
       );
     }
-    parts.push(tr('tools.ladderNbGpuRank.count', '条目') + '：' + state.items.length);
+    parts.push(tr(i18nKey('count'), '条目') + '：' + state.items.length);
+    if (state.scoreLabel) {
+      parts.push(tr(i18nKey('scoreLabel'), '分数') + '：' + state.scoreLabel);
+    }
     meta.textContent = parts.join(' · ');
   }
 
@@ -54,12 +83,19 @@
     });
   }
 
+  function formatScore(it) {
+    var n = Number(it.perf_rating);
+    if (!isFinite(n)) return '-';
+    if (n >= 1000) return String(Math.round(n));
+    return n.toFixed(1);
+  }
+
   function render() {
     var root = document.getElementById('nb-rank-list');
     if (!root) return;
     var list = filtered();
     if (!list.length) {
-      root.innerHTML = '<div class="nb-rank-empty">' + tr('tools.ladderNbGpuRank.empty', '暂无数据') + '</div>';
+      root.innerHTML = '<div class="nb-rank-empty">' + tr(i18nKey('empty'), '暂无数据') + '</div>';
       return;
     }
     var top = list[0] && list[0].perf_rating ? Number(list[0].perf_rating) : 1;
@@ -71,6 +107,7 @@
       var sub = [];
       if (it.architecture) sub.push(it.architecture);
       if (it.time_spy) sub.push('Time Spy ' + Math.round(Number(it.time_spy)));
+      if (it.cb_r23) sub.push('CB R23 ' + Math.round(Number(it.cb_r23)));
       row.innerHTML =
         '<div class="nb-rank-pos">' +
         (idx + 1) +
@@ -85,12 +122,32 @@
         '%"></div></div>' +
         '</div>' +
         '<div class="nb-rank-score">' +
-        (it.perf_rating != null ? Number(it.perf_rating).toFixed(1) : '-') +
+        formatScore(it) +
         '</div>';
       row.querySelector('.nb-rank-name').textContent = it.model || '';
       row.querySelector('.nb-rank-sub').textContent = sub.join(' · ');
       root.appendChild(row);
     });
+  }
+
+  function ensureFilters() {
+    var box = document.getElementById('nb-rank-filters');
+    if (!box) return;
+    var brands = cfg().filters;
+    if (!brands || !brands.length) return;
+    // If page already has buttons, keep them; else build from config.
+    if (box.querySelector('button[data-brand]')) return;
+    var html =
+      '<button type="button" class="is-active" data-brand="all">' +
+      tr(i18nKey('filterAll'), '全部') +
+      '</button>';
+    brands.forEach(function (b) {
+      var label = b.charAt(0).toUpperCase() + b.slice(1);
+      if (b === 'hisilicon') label = 'HiSilicon';
+      if (b === 'mediatek') label = 'MediaTek';
+      html += '<button type="button" data-brand="' + b + '">' + label + '</button>';
+    });
+    box.innerHTML = html;
   }
 
   function bindFilters() {
@@ -111,17 +168,19 @@
     state.items = data.items || [];
     state.sourceUrl = data.source_url || '';
     state.updatedAt = data.updated_at || '';
+    state.scoreLabel = data.score_label || cfg().scoreLabel || '';
     setMeta();
     render();
   }
 
   function staticUrl() {
+    var listId = cfg().listId || 'nb_gpu';
     var path = window.location.pathname || '';
     var parts = path.replace(/^\//, '').split('/').filter(Boolean);
     var last = parts[parts.length - 1] || '';
     var dirs = last.indexOf('.') >= 0 ? parts.slice(0, -1) : parts;
     var prefix = dirs.length ? '../'.repeat(dirs.length) : '';
-    return prefix + 'data/nbcheck/nb_gpu.json';
+    return prefix + 'data/nbcheck/' + listId + '.json';
   }
 
   function loadStatic() {
@@ -135,7 +194,8 @@
   }
 
   function loadApi() {
-    return fetch(apiBase() + '/nbcheck/nb_gpu', {
+    var listId = cfg().listId || 'nb_gpu';
+    return fetch(apiBase() + '/nbcheck/' + encodeURIComponent(listId), {
       headers: { Accept: 'application/json' },
       cache: 'no-store'
     }).then(function (res) {
@@ -165,9 +225,8 @@
     var root = document.getElementById('nb-rank-list');
     if (root) {
       root.innerHTML =
-        '<div class="nb-rank-empty">' + tr('tools.ladderNbGpuRank.loading', '加载中…') + '</div>';
+        '<div class="nb-rank-empty">' + tr(i18nKey('loading'), '加载中…') + '</div>';
     }
-    // Only hit /nbcheck when health says the route exists — avoids noisy console 404.
     apiReady()
       .then(function (ready) {
         return ready ? loadApi() : loadStatic();
@@ -180,7 +239,7 @@
         if (root) {
           root.innerHTML =
             '<div class="nb-rank-error">' +
-            tr('tools.ladderNbGpuRank.loadFail', '加载失败') +
+            tr(i18nKey('loadFail'), '加载失败') +
             '：' +
             (err && err.message ? err.message : String(err)) +
             '</div>';
@@ -189,6 +248,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    ensureFilters();
     bindFilters();
     load();
   });

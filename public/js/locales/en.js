@@ -2298,21 +2298,71 @@ window.TB_LOCALES.en = {
         },
         ladderCpu: {
             title: 'Desktop CPU',
-            desc: 'Desktop CPU performance ladder (higher is stronger)'
+            desc: 'Desktop CPU performance ladder (higher is stronger)',
+            rankNote: 'Also see',
+            rankLink: 'Desktop CPU Rank'
+        },
+        ladderCpuRank: {
+            title: 'Desktop CPU Rank',
+            desc: 'Relative desktop CPU ranking based on Notebookcheck',
+            updated: 'Updated',
+            count: 'Items',
+            empty: 'No data',
+            loading: 'Loading…',
+            loadFail: 'Failed to load',
+            filterAll: 'All',
+            scoreLabel: 'Score'
         },
         ladderGpu: {
             title: 'Desktop GPU',
-            desc: 'Desktop GPU performance ladder (higher is stronger)'
+            desc: 'Desktop GPU performance ladder (higher is stronger)',
+            rankNote: 'Also see',
+            rankLink: 'Desktop GPU Rank'
+        },
+        ladderGpuRank: {
+            title: 'Desktop GPU Rank',
+            desc: 'Relative desktop GPU ranking based on Notebookcheck',
+            updated: 'Updated',
+            count: 'Items',
+            empty: 'No data',
+            loading: 'Loading…',
+            loadFail: 'Failed to load',
+            filterAll: 'All',
+            scoreLabel: 'Score'
         },
         ladderSoc: {
             title: 'Mobile SoC',
-            desc: 'Phone SoC performance ladder (higher is stronger)'
+            desc: 'Phone SoC performance ladder (higher is stronger)',
+            rankNote: 'Also see',
+            rankLink: 'Mobile SoC Rank'
+        },
+        ladderSocRank: {
+            title: 'Mobile SoC Rank',
+            desc: 'Phone SoC ranking by Notebookcheck Geekbench multi-core',
+            updated: 'Updated',
+            count: 'Items',
+            empty: 'No data',
+            loading: 'Loading…',
+            loadFail: 'Failed to load',
+            filterAll: 'All',
+            scoreLabel: 'Score'
         },
         ladderNbCpu: {
             title: 'Laptop CPU',
             desc: 'Laptop CPU performance ladder (higher is stronger)',
             staleNote: 'The mydrivers laptop CPU chart has stopped updating (roughly through 12th-gen Core). Table below is for reference; for newer scores see',
-            staleLink: 'Notebookcheck mobile CPU list'
+            staleLink: 'Laptop CPU Rank'
+        },
+        ladderNbCpuRank: {
+            title: 'Laptop CPU Rank',
+            desc: 'Relative laptop CPU ranking based on Notebookcheck',
+            updated: 'Updated',
+            count: 'Items',
+            empty: 'No data',
+            loading: 'Loading…',
+            loadFail: 'Failed to load',
+            filterAll: 'All',
+            scoreLabel: 'Score'
         },
         ladderNbGpu: {
             title: 'Laptop GPU',
@@ -2331,7 +2381,8 @@ window.TB_LOCALES.en = {
             empty: 'No data',
             loading: 'Loading…',
             loadFail: 'Failed to load',
-            filterAll: 'All'
+            filterAll: 'All',
+            scoreLabel: 'Score'
         },
         mindmap: {
             title: 'Mind Map',

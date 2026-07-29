@@ -118,6 +118,17 @@
     }
   }
 
+  function publicRankHref(listId) {
+    var map = {
+      cpu: '../../ladder/cpu_rank.html',
+      gpu: '../../ladder/gpu_rank.html',
+      soc: '../../ladder/soc_rank.html',
+      nb_cpu: '../../ladder/nb_cpu_rank.html',
+      nb_gpu: '../../ladder/nb_gpu_rank.html'
+    };
+    return map[listId] || '../../ladder/nb_gpu_rank.html';
+  }
+
   function renderNbcheck(data) {
     var root = document.getElementById('nbcheck-list');
     if (!root) return;
@@ -130,14 +141,20 @@
         '<div class="ladder-row-title"></div>' +
         '<div class="ladder-row-meta"></div>' +
         '</div>' +
+        '<a class="ladder-row-link" target="_blank" rel="noopener">查看</a>' +
         '<button type="button" class="tb-btn ladder-row-btn">更新</button>';
       row.querySelector('.ladder-row-title').textContent = item.title + ' (' + item.id + ')';
       row.querySelector('.ladder-row-meta').textContent =
         (item.has_data ? '已缓存 ' + (item.kept || 0) + ' 条' : '尚未更新') +
         ' · ' +
         fmtTime(item.updated_at) +
+        (data.running && data.current_id === item.id ? ' · 抓取中…' : '') +
         (data.last_error ? ' · ' + data.last_error : '');
-      row.querySelector('button').addEventListener('click', runNbcheckRefresh);
+      var link = row.querySelector('a');
+      if (link) link.href = publicRankHref(item.id);
+      row.querySelector('button').addEventListener('click', function () {
+        runNbcheckRefresh(item.id);
+      });
       root.appendChild(row);
     });
   }
@@ -169,14 +186,19 @@
       });
   }
 
-  function runNbcheckRefresh() {
+  function runNbcheckRefresh(listId) {
     var btn = document.getElementById('btn-refresh-nbcheck');
     if (btn) btn.disabled = true;
-    setStatus('正在抓取 Notebookcheck 笔记本显卡榜…');
+    var target = listId || 'all';
+    setStatus(
+      target === 'all'
+        ? '正在抓取全部 Notebookcheck 榜单…'
+        : '正在抓取 Notebookcheck：' + target + '…'
+    );
     fetch(apiBase() + '/nbcheck/refresh', {
       method: 'POST',
       headers: authHeaders(),
-      body: '{}',
+      body: JSON.stringify({ id: target }),
       cache: 'no-store'
     })
       .then(function (res) {
@@ -186,7 +208,21 @@
         });
       })
       .then(function (body) {
-        setStatus('Notebookcheck 更新完成：' + (body.kept || body.count || 0) + ' 条');
+        var n = 0;
+        if (body.results && body.results.length) {
+          n = body.results.reduce(function (sum, r) {
+            return sum + (r.kept || r.count || 0);
+          }, 0);
+          setStatus(
+            'Notebookcheck 更新完成：' +
+              (body.refreshed || []).join(', ') +
+              '（共 ' +
+              n +
+              ' 条）'
+          );
+        } else {
+          setStatus('Notebookcheck 更新完成：' + (body.kept || body.count || 0) + ' 条');
+        }
         return loadNbcheckStatus();
       })
       .catch(function (err) {
@@ -282,7 +318,11 @@
           runRefresh(null);
         });
         var btnNb = document.getElementById('btn-refresh-nbcheck');
-        if (btnNb) btnNb.addEventListener('click', runNbcheckRefresh);
+        if (btnNb) {
+          btnNb.addEventListener('click', function () {
+            runNbcheckRefresh('all');
+          });
+        }
         return Promise.all([
           loadStatus().catch(function (err) {
             setStatus('加载天梯状态失败：' + (err && err.message ? err.message : err), true);

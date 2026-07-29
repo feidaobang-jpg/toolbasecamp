@@ -1,0 +1,797 @@
+{
+  "id": "gpu",
+  "title": "桌面显卡跑分榜",
+  "source": "Notebookcheck",
+  "source_url": "https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html",
+  "credit": "Data from Notebookcheck graphics list (desktop filter). For reference only.",
+  "score_label": null,
+  "filters": [
+    "nvidia",
+    "amd",
+    "intel"
+  ],
+  "updated_at": "2026-07-29T06:35:37Z",
+  "count": 78,
+  "items": [
+    {
+      "pos": 1,
+      "model": "NVIDIA GeForce RTX 5090",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 88.2,
+      "time_spy": 871500.0,
+      "rank": 1,
+      "pct": 100.0
+    },
+    {
+      "pos": 3,
+      "model": "NVIDIA GeForce RTX 5080",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 74.7,
+      "time_spy": 885950.0,
+      "rank": 2,
+      "pct": 84.7
+    },
+    {
+      "pos": 2,
+      "model": "NVIDIA GeForce RTX 4090",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 73.5,
+      "time_spy": 787951.0,
+      "rank": 3,
+      "pct": 83.3
+    },
+    {
+      "pos": 5,
+      "model": "NVIDIA GeForce RTX 5070 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 69.6,
+      "time_spy": 900699.0,
+      "rank": 4,
+      "pct": 78.9
+    },
+    {
+      "pos": 6,
+      "model": "AMD Radeon RX 7900 XTX",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 66.2,
+      "time_spy": 777464.0,
+      "rank": 5,
+      "pct": 75.1
+    },
+    {
+      "pos": 4,
+      "model": "NVIDIA GeForce RTX 4080 Super",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 62.5,
+      "time_spy": 870270.0,
+      "rank": 6,
+      "pct": 70.9
+    },
+    {
+      "pos": 15,
+      "model": "AMD Radeon RX 7900 XT",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 61.7,
+      "time_spy": 737404.0,
+      "rank": 7,
+      "pct": 70.0
+    },
+    {
+      "pos": 16,
+      "model": "NVIDIA GeForce RTX 5070",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 60.5,
+      "time_spy": 862499.0,
+      "rank": 8,
+      "pct": 68.6
+    },
+    {
+      "pos": 12,
+      "model": "AMD Radeon RX 9070",
+      "brand": "AMD",
+      "architecture": "RDNA 4",
+      "perf_rating": 60.4,
+      "time_spy": 738816.0,
+      "rank": 9,
+      "pct": 68.5
+    },
+    {
+      "pos": 8,
+      "model": "NVIDIA GeForce RTX 4080",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 59.9,
+      "time_spy": 769721.0,
+      "rank": 10,
+      "pct": 67.9
+    },
+    {
+      "pos": 7,
+      "model": "AMD Radeon RX 9070 XT",
+      "brand": "AMD",
+      "architecture": "RDNA 4",
+      "perf_rating": 57.8,
+      "time_spy": null,
+      "rank": 11,
+      "pct": 65.5
+    },
+    {
+      "pos": 18,
+      "model": "NVIDIA GeForce RTX 4070 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 57.8,
+      "time_spy": 815367.0,
+      "rank": 12,
+      "pct": 65.5
+    },
+    {
+      "pos": 21,
+      "model": "AMD Radeon RX 6950 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 55.1,
+      "time_spy": 634277.0,
+      "rank": 13,
+      "pct": 62.5
+    },
+    {
+      "pos": 14,
+      "model": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 54.5,
+      "time_spy": 759135.0,
+      "rank": 14,
+      "pct": 61.8
+    },
+    {
+      "pos": 20,
+      "model": "AMD Radeon RX 7900 GRE",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 53.8,
+      "time_spy": 637522.0,
+      "rank": 15,
+      "pct": 61.0
+    },
+    {
+      "pos": 24,
+      "model": "NVIDIA GeForce RTX 3090",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 53.5,
+      "time_spy": 795061.0,
+      "rank": 16,
+      "pct": 60.7
+    },
+    {
+      "pos": 13,
+      "model": "NVIDIA GeForce RTX 3090 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 52.7,
+      "time_spy": 564087.0,
+      "rank": 17,
+      "pct": 59.8
+    },
+    {
+      "pos": 25,
+      "model": "NVIDIA GeForce RTX 3080 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 52.4,
+      "time_spy": 785365.0,
+      "rank": 18,
+      "pct": 59.4
+    },
+    {
+      "pos": 27,
+      "model": "AMD Radeon RX 7800 XT",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 52.2,
+      "time_spy": 745990.0,
+      "rank": 19,
+      "pct": 59.2
+    },
+    {
+      "pos": 28,
+      "model": "NVIDIA GeForce RTX 4070 SUPER",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 51.9,
+      "time_spy": 766678.0,
+      "rank": 20,
+      "pct": 58.8
+    },
+    {
+      "pos": 38,
+      "model": "NVIDIA GeForce RTX 4070",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 51.3,
+      "time_spy": 798347.0,
+      "rank": 21,
+      "pct": 58.2
+    },
+    {
+      "pos": 44,
+      "model": "AMD Radeon RX 7700 XT",
+      "brand": "AMD",
+      "architecture": "RDNA 3",
+      "perf_rating": 48.1,
+      "time_spy": 730434.0,
+      "rank": 22,
+      "pct": 54.5
+    },
+    {
+      "pos": 33,
+      "model": "NVIDIA GeForce RTX 5060 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 48.0,
+      "time_spy": 838177.0,
+      "rank": 23,
+      "pct": 54.4
+    },
+    {
+      "pos": 39,
+      "model": "AMD Radeon RX 9060 XT 16GB",
+      "brand": "AMD",
+      "architecture": "RDNA 4",
+      "perf_rating": 47.1,
+      "time_spy": 693716.0,
+      "rank": 24,
+      "pct": 53.4
+    },
+    {
+      "pos": 48,
+      "model": "NVIDIA GeForce RTX 3070 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 46.9,
+      "time_spy": 808594.0,
+      "rank": 25,
+      "pct": 53.2
+    },
+    {
+      "pos": 34,
+      "model": "NVIDIA GeForce RTX 3080 12 GB",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 45.9,
+      "time_spy": 549644.0,
+      "rank": 26,
+      "pct": 52.0
+    },
+    {
+      "pos": 26,
+      "model": "AMD Radeon RX 9070 GRE",
+      "brand": "AMD",
+      "architecture": "RDNA 4",
+      "perf_rating": 45.8,
+      "time_spy": null,
+      "rank": 27,
+      "pct": 51.9
+    },
+    {
+      "pos": 43,
+      "model": "AMD Radeon RX 6800",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 45.2,
+      "time_spy": 587234.0,
+      "rank": 28,
+      "pct": 51.2
+    },
+    {
+      "pos": 50,
+      "model": "NVIDIA GeForce RTX 5060",
+      "brand": "NVIDIA",
+      "architecture": "Blackwell",
+      "perf_rating": 45.1,
+      "time_spy": 839999.0,
+      "rank": 29,
+      "pct": 51.1
+    },
+    {
+      "pos": 42,
+      "model": "AMD Radeon RX 6800 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 43.9,
+      "time_spy": 504438.0,
+      "rank": 30,
+      "pct": 49.8
+    },
+    {
+      "pos": 51,
+      "model": "NVIDIA GeForce RTX 4060 Ti 8G",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 43.7,
+      "time_spy": 795061.0,
+      "rank": 31,
+      "pct": 49.5
+    },
+    {
+      "pos": 31,
+      "model": "AMD Radeon RX 6900 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 42.9,
+      "time_spy": null,
+      "rank": 32,
+      "pct": 48.6
+    },
+    {
+      "pos": 37,
+      "model": "NVIDIA GeForce RTX 3080",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 42.5,
+      "time_spy": 529548.0,
+      "rank": 33,
+      "pct": 48.2
+    },
+    {
+      "pos": 66,
+      "model": "Intel Arc B580",
+      "brand": "Intel",
+      "architecture": "Xe2",
+      "perf_rating": 40.0,
+      "time_spy": 692508.0,
+      "rank": 34,
+      "pct": 45.4
+    },
+    {
+      "pos": 61,
+      "model": "AMD Radeon RX 6700 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 39.6,
+      "time_spy": 628292.0,
+      "rank": 35,
+      "pct": 44.9
+    },
+    {
+      "pos": 59,
+      "model": "AMD Radeon RX 6750 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 38.9,
+      "time_spy": 529598.0,
+      "rank": 36,
+      "pct": 44.1
+    },
+    {
+      "pos": 10,
+      "model": "NVIDIA RTX 6000 Ada Generation",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 38.3,
+      "time_spy": null,
+      "rank": 37,
+      "pct": 43.4
+    },
+    {
+      "pos": 49,
+      "model": "NVIDIA GeForce RTX 4060 Ti 16G",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 38.2,
+      "time_spy": 600933.0,
+      "rank": 38,
+      "pct": 43.3
+    },
+    {
+      "pos": 63,
+      "model": "NVIDIA GeForce RTX 4060",
+      "brand": "NVIDIA",
+      "architecture": "Ada Lovelace",
+      "perf_rating": 38.1,
+      "time_spy": 783772.0,
+      "rank": 39,
+      "pct": 43.2
+    },
+    {
+      "pos": 60,
+      "model": "NVIDIA GeForce RTX 2080 Ti (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 38.0,
+      "time_spy": 521458.0,
+      "rank": 40,
+      "pct": 43.1
+    },
+    {
+      "pos": 67,
+      "model": "Intel Arc A770",
+      "brand": "Intel",
+      "architecture": "Xe",
+      "perf_rating": 37.8,
+      "time_spy": 699999.0,
+      "rank": 41,
+      "pct": 42.9
+    },
+    {
+      "pos": 62,
+      "model": "NVIDIA GeForce RTX 3060 Ti",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 36.3,
+      "time_spy": 619230.0,
+      "rank": 42,
+      "pct": 41.2
+    },
+    {
+      "pos": 68,
+      "model": "AMD Radeon RX 7600",
+      "brand": "AMD",
+      "architecture": "",
+      "perf_rating": 36.1,
+      "time_spy": 655035.0,
+      "rank": 43,
+      "pct": 40.9
+    },
+    {
+      "pos": 90,
+      "model": "Intel Arc A750",
+      "brand": "Intel",
+      "architecture": "Xe",
+      "perf_rating": 35.4,
+      "time_spy": 634482.0,
+      "rank": 44,
+      "pct": 40.1
+    },
+    {
+      "pos": 58,
+      "model": "NVIDIA GeForce RTX 3070",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 35.4,
+      "time_spy": 502470.0,
+      "rank": 45,
+      "pct": 40.1
+    },
+    {
+      "pos": 78,
+      "model": "AMD Radeon RX 6650 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 33.4,
+      "time_spy": 451929.0,
+      "rank": 46,
+      "pct": 37.9
+    },
+    {
+      "pos": 75,
+      "model": "NVIDIA GeForce RTX 2080 Super (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 33.3,
+      "time_spy": 515887.0,
+      "rank": 47,
+      "pct": 37.8
+    },
+    {
+      "pos": 125,
+      "model": "Intel Arc A580",
+      "brand": "Intel",
+      "architecture": "Xe",
+      "perf_rating": 32.5,
+      "time_spy": 593548.0,
+      "rank": 48,
+      "pct": 36.8
+    },
+    {
+      "pos": 79,
+      "model": "AMD Radeon RX 6600 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 32.3,
+      "time_spy": 472371.0,
+      "rank": 49,
+      "pct": 36.6
+    },
+    {
+      "pos": 80,
+      "model": "NVIDIA GeForce RTX 2080 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 31.6,
+      "time_spy": 436117.0,
+      "rank": 50,
+      "pct": 35.8
+    },
+    {
+      "pos": 113,
+      "model": "AMD Radeon RX 5700 XT (Desktop)",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA",
+      "perf_rating": 31.2,
+      "time_spy": 499658.0,
+      "rank": 51,
+      "pct": 35.4
+    },
+    {
+      "pos": 105,
+      "model": "NVIDIA GeForce RTX 2070 Super (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 30.9,
+      "time_spy": 521878.0,
+      "rank": 52,
+      "pct": 35.0
+    },
+    {
+      "pos": 128,
+      "model": "AMD Radeon RX 6600",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 30.7,
+      "time_spy": 564912.0,
+      "rank": 53,
+      "pct": 34.8
+    },
+    {
+      "pos": 100,
+      "model": "NVIDIA GeForce GTX 1080 Ti (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 29.6,
+      "time_spy": 394694.0,
+      "rank": 54,
+      "pct": 33.6
+    },
+    {
+      "pos": 91,
+      "model": "NVIDIA GeForce RTX 3060",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 29.2,
+      "time_spy": 561364.0,
+      "rank": 55,
+      "pct": 33.1
+    },
+    {
+      "pos": 135,
+      "model": "AMD Radeon RX 5700 (Desktop)",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA",
+      "perf_rating": 28.9,
+      "time_spy": 489113.0,
+      "rank": 56,
+      "pct": 32.8
+    },
+    {
+      "pos": 171,
+      "model": "AMD Radeon RX 5600 XT (Desktop)",
+      "brand": "AMD",
+      "architecture": "",
+      "perf_rating": 28.8,
+      "time_spy": 548796.0,
+      "rank": 57,
+      "pct": 32.7
+    },
+    {
+      "pos": 126,
+      "model": "NVIDIA GeForce RTX 2060 Super (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 28.5,
+      "time_spy": 502470.0,
+      "rank": 58,
+      "pct": 32.3
+    },
+    {
+      "pos": 116,
+      "model": "NVIDIA GeForce RTX 2070 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 27.7,
+      "time_spy": 425550.0,
+      "rank": 59,
+      "pct": 31.4
+    },
+    {
+      "pos": 122,
+      "model": "NVIDIA GeForce GTX 1080 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 25.7,
+      "time_spy": 421474.0,
+      "rank": 60,
+      "pct": 29.1
+    },
+    {
+      "pos": 169,
+      "model": "NVIDIA GeForce RTX 3050",
+      "brand": "NVIDIA",
+      "architecture": "Ampere",
+      "perf_rating": 24.8,
+      "time_spy": 580370.0,
+      "rank": 61,
+      "pct": 28.1
+    },
+    {
+      "pos": 143,
+      "model": "NVIDIA GeForce RTX 2060 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 24.7,
+      "time_spy": 424149.0,
+      "rank": 62,
+      "pct": 28.0
+    },
+    {
+      "pos": 170,
+      "model": "NVIDIA GeForce GTX 1070 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 24.2,
+      "time_spy": 463865.0,
+      "rank": 63,
+      "pct": 27.4
+    },
+    {
+      "pos": 197,
+      "model": "NVIDIA GeForce GTX 1660 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 23.6,
+      "time_spy": 570753.0,
+      "rank": 64,
+      "pct": 26.8
+    },
+    {
+      "pos": 159,
+      "model": "NVIDIA GeForce GTX 1070 Ti (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 23.5,
+      "time_spy": 442105.0,
+      "rank": 65,
+      "pct": 26.6
+    },
+    {
+      "pos": 200,
+      "model": "NVIDIA GeForce GTX 1650 Super (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 23.5,
+      "time_spy": 653824.0,
+      "rank": 66,
+      "pct": 26.6
+    },
+    {
+      "pos": 178,
+      "model": "NVIDIA GeForce GTX 1660 Ti (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 23.4,
+      "time_spy": 483604.0,
+      "rank": 67,
+      "pct": 26.5
+    },
+    {
+      "pos": 182,
+      "model": "AMD Radeon RX 5500 XT (Desktop)",
+      "brand": "AMD",
+      "architecture": "",
+      "perf_rating": 23.2,
+      "time_spy": 560812.0,
+      "rank": 68,
+      "pct": 26.3
+    },
+    {
+      "pos": 179,
+      "model": "NVIDIA GeForce GTX 1660 Super (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 23.1,
+      "time_spy": 477037.0,
+      "rank": 69,
+      "pct": 26.2
+    },
+    {
+      "pos": 181,
+      "model": "AMD Radeon RX 6500 XT",
+      "brand": "AMD",
+      "architecture": "Navi / RDNA2",
+      "perf_rating": 20.1,
+      "time_spy": 356129.0,
+      "rank": 70,
+      "pct": 22.8
+    },
+    {
+      "pos": 220,
+      "model": "NVIDIA GeForce GTX 1060 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 19.4,
+      "time_spy": 437988.0,
+      "rank": 71,
+      "pct": 22.0
+    },
+    {
+      "pos": 245,
+      "model": "Intel Arc A380",
+      "brand": "Intel",
+      "architecture": "Xe HPG",
+      "perf_rating": 18.0,
+      "time_spy": 466666.0,
+      "rank": 72,
+      "pct": 20.4
+    },
+    {
+      "pos": 251,
+      "model": "NVIDIA GeForce GTX 1650 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Turing",
+      "perf_rating": 16.1,
+      "time_spy": 404725.0,
+      "rank": 73,
+      "pct": 18.3
+    },
+    {
+      "pos": 307,
+      "model": "NVIDIA GeForce GTX 1050 Ti (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 13.4,
+      "time_spy": 352876.0,
+      "rank": 74,
+      "pct": 15.2
+    },
+    {
+      "pos": 333,
+      "model": "NVIDIA GeForce GTX 1050 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 12.4,
+      "time_spy": 349683.0,
+      "rank": 75,
+      "pct": 14.1
+    },
+    {
+      "pos": 404,
+      "model": "NVIDIA GeForce GT 1030 (Desktop)",
+      "brand": "NVIDIA",
+      "architecture": "Pascal",
+      "perf_rating": 7.3,
+      "time_spy": 219163.0,
+      "rank": 76,
+      "pct": 8.3
+    },
+    {
+      "pos": 406,
+      "model": "AMD Radeon RX Vega 11",
+      "brand": "AMD",
+      "architecture": "Vega",
+      "perf_rating": 6.1,
+      "time_spy": 157382.0,
+      "rank": 77,
+      "pct": 6.9
+    },
+    {
+      "pos": 412,
+      "model": "NVIDIA GeForce GT 710",
+      "brand": "NVIDIA",
+      "architecture": "Kepler",
+      "perf_rating": 2.6,
+      "time_spy": 70459.0,
+      "rank": 78,
+      "pct": 2.9
+    }
+  ]
+}

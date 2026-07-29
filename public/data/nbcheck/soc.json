@@ -1,0 +1,1020 @@
+{
+  "id": "soc",
+  "title": "手机 SoC 跑分榜",
+  "source": "Notebookcheck",
+  "source_url": "https://www.notebookcheck.net/Smartphone-Processors-Benchmark-List.149513.0.html",
+  "credit": "Data from Notebookcheck smartphone/tablet SoC list. Ranked by Geekbench 5.5 Multi-Core when available. For reference only.",
+  "score_label": "Geekbench 5.5 Multi",
+  "filters": [
+    "qualcomm",
+    "mediatek",
+    "apple",
+    "samsung",
+    "google",
+    "hisilicon"
+  ],
+  "updated_at": "2026-07-29T07:03:28Z",
+  "count": 235,
+  "items": [
+    {
+      "pos": 449,
+      "model": "Samsung Exynos 2600",
+      "brand": "Samsung",
+      "architecture": "",
+      "perf_rating": 9451.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 1,
+      "pct": 100.0
+    },
+    {
+      "pos": 303,
+      "model": "MediaTek Dimensity 9500",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X930 Travis / Cortex-A730 6x Gelas",
+      "perf_rating": 9412.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 2,
+      "pct": 99.6
+    },
+    {
+      "pos": 375,
+      "model": "Qualcomm Snapdragon 8 Elite for Galaxy",
+      "brand": "Qualcomm",
+      "architecture": "Oryon v2",
+      "perf_rating": 8041.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 3,
+      "pct": 85.1
+    },
+    {
+      "pos": 294,
+      "model": "Qualcomm Snapdragon 8 Elite Gen 5",
+      "brand": "Qualcomm",
+      "architecture": "Oryon v3",
+      "perf_rating": 7969.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 4,
+      "pct": 84.3
+    },
+    {
+      "pos": 382,
+      "model": "Qualcomm Snapdragon 8 Elite",
+      "brand": "Qualcomm",
+      "architecture": "Oryon v2",
+      "perf_rating": 7833.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 5,
+      "pct": 82.9
+    },
+    {
+      "pos": 399,
+      "model": "Apple A19",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 7482.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 6,
+      "pct": 79.2
+    },
+    {
+      "pos": 413,
+      "model": "Mediatek Dimensity 9400",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X925, X4, A720",
+      "perf_rating": 7398.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 7,
+      "pct": 78.3
+    },
+    {
+      "pos": 414,
+      "model": "Mediatek Dimensity 9400e",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X925, X4, A720",
+      "perf_rating": 7209.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 8,
+      "pct": 76.3
+    },
+    {
+      "pos": 481,
+      "model": "Samsung Exynos 2500",
+      "brand": "Samsung",
+      "architecture": "",
+      "perf_rating": 7154.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 9,
+      "pct": 75.7
+    },
+    {
+      "pos": 411,
+      "model": "Mediatek Dimensity 9400+",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X925, X4, A720",
+      "perf_rating": 7149.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 10,
+      "pct": 75.6
+    },
+    {
+      "pos": 410,
+      "model": "Xiaomi Xring O1",
+      "brand": "Xiaomi",
+      "architecture": "Cortex-X925, A725, A520",
+      "perf_rating": 7083.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 11,
+      "pct": 74.9
+    },
+    {
+      "pos": 412,
+      "model": "Mediatek Dimensity 9500s",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X925, X4, A720",
+      "perf_rating": 6700.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 12,
+      "pct": 70.9
+    },
+    {
+      "pos": 438,
+      "model": "Apple A18 Pro",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 6687.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 13,
+      "pct": 70.8
+    },
+    {
+      "pos": 452,
+      "model": "MediaTek Dimensity 9300",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X4 / A720",
+      "perf_rating": 6681.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 14,
+      "pct": 70.7
+    },
+    {
+      "pos": 448,
+      "model": "MediaTek Dimensity 9300+",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X4 / A720",
+      "perf_rating": 6678.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 15,
+      "pct": 70.7
+    },
+    {
+      "pos": 474,
+      "model": "Qualcomm Snapdragon 8s Gen 4 SM8735",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A720 / Cortex-X4",
+      "perf_rating": 6245.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 16,
+      "pct": 66.1
+    },
+    {
+      "pos": 464,
+      "model": "Qualcomm Snapdragon 8 Gen 3 for Galaxy",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X4 / A720 / A720 / A520 (Kryo)",
+      "perf_rating": 6162.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 17,
+      "pct": 65.2
+    },
+    {
+      "pos": 558,
+      "model": "MediaTek Dimensity 8450",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A725",
+      "perf_rating": 6151.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 18,
+      "pct": 65.1
+    },
+    {
+      "pos": 445,
+      "model": "Apple A18",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 6130.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 19,
+      "pct": 64.9
+    },
+    {
+      "pos": 469,
+      "model": "Qualcomm Snapdragon 8 Gen 3",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X4 / A720 / A720 / A520 (Kryo)",
+      "perf_rating": 5977.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 20,
+      "pct": 63.2
+    },
+    {
+      "pos": 482,
+      "model": "Samsung Exynos 2400",
+      "brand": "Samsung",
+      "architecture": "Cortex-X4 / A720 / A520",
+      "perf_rating": 5716.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 21,
+      "pct": 60.5
+    },
+    {
+      "pos": 634,
+      "model": "HiSilicon Kirin 9030 Pro",
+      "brand": "HiSilicon",
+      "architecture": "",
+      "perf_rating": 5681.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 22,
+      "pct": 60.1
+    },
+    {
+      "pos": 484,
+      "model": "Samsung Exynos 2400e",
+      "brand": "Samsung",
+      "architecture": "Cortex-X4 / A720 / A520",
+      "perf_rating": 5622.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 23,
+      "pct": 59.5
+    },
+    {
+      "pos": 518,
+      "model": "Apple A16 Bionic",
+      "brand": "Apple",
+      "architecture": "Crete",
+      "perf_rating": 5433.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 24,
+      "pct": 57.5
+    },
+    {
+      "pos": 506,
+      "model": "Apple A17 Pro",
+      "brand": "Apple",
+      "architecture": "Coll APL1V02",
+      "perf_rating": 5305.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 25,
+      "pct": 56.1
+    },
+    {
+      "pos": 559,
+      "model": "MediaTek Dimensity 8400",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A725",
+      "perf_rating": 5284.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 26,
+      "pct": 55.9
+    },
+    {
+      "pos": 557,
+      "model": "MediaTek Dimensity 8500",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A725",
+      "perf_rating": 5121.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 27,
+      "pct": 54.2
+    },
+    {
+      "pos": 574,
+      "model": "Qualcomm Snapdragon 8 Gen 2",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X3 / A715 / A710 / A510 (Kryo)",
+      "perf_rating": 4998.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 28,
+      "pct": 52.9
+    },
+    {
+      "pos": 573,
+      "model": "Qualcomm Snapdragon 8 Gen 2 for Galaxy",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X3 / A715 / A710 / A510 (Kryo)",
+      "perf_rating": 4989.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 29,
+      "pct": 52.8
+    },
+    {
+      "pos": 580,
+      "model": "MediaTek Dimensity 9200+",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X3 / A715 / A510",
+      "perf_rating": 4936.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 30,
+      "pct": 52.2
+    },
+    {
+      "pos": 567,
+      "model": "Apple A15 Bionic",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 4788.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 31,
+      "pct": 50.7
+    },
+    {
+      "pos": 594,
+      "model": "Apple A12Z Bionic",
+      "brand": "Apple",
+      "architecture": "Vortex, Tempest",
+      "perf_rating": 4709.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 32,
+      "pct": 49.8
+    },
+    {
+      "pos": 617,
+      "model": "HiSilicon Kirin T92",
+      "brand": "HiSilicon",
+      "architecture": "HiSilicon Main, Mid",
+      "perf_rating": 4709.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 33,
+      "pct": 49.8
+    },
+    {
+      "pos": 590,
+      "model": "Google Tensor G5",
+      "brand": "Google",
+      "architecture": "Laguna",
+      "perf_rating": 4676.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 34,
+      "pct": 49.5
+    },
+    {
+      "pos": 608,
+      "model": "Apple A12X Bionic",
+      "brand": "Apple",
+      "architecture": "Vortex, Tempest",
+      "perf_rating": 4620.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 35,
+      "pct": 48.9
+    },
+    {
+      "pos": 579,
+      "model": "MediaTek Dimensity 9000+",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X2 / A710 / A510",
+      "perf_rating": 4606.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 36,
+      "pct": 48.7
+    },
+    {
+      "pos": 636,
+      "model": "HiSilicon Kirin 9020",
+      "brand": "HiSilicon",
+      "architecture": "HiSilicon Main, Mid",
+      "perf_rating": 4366.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 37,
+      "pct": 46.2
+    },
+    {
+      "pos": 612,
+      "model": "Qualcomm Snapdragon 8s Gen 3",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X4 / A720 / A720 / A520 (Kryo)",
+      "perf_rating": 4337.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 38,
+      "pct": 45.9
+    },
+    {
+      "pos": 622,
+      "model": "MediaTek Dimensity 8300-Ultra",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A15 / A510",
+      "perf_rating": 4233.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 39,
+      "pct": 44.8
+    },
+    {
+      "pos": 655,
+      "model": "HiSilicon Kirin 9010",
+      "brand": "HiSilicon",
+      "architecture": "HiSilicon Main-II, Mid, Cortex A510",
+      "perf_rating": 4221.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 40,
+      "pct": 44.7
+    },
+    {
+      "pos": 627,
+      "model": "Qualcomm Snapdragon 8+ Gen 1",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X2 / A710 / A510 (Kryo) Waipio",
+      "perf_rating": 4162.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 41,
+      "pct": 44.0
+    },
+    {
+      "pos": 597,
+      "model": "Apple A14 Bionic",
+      "brand": "Apple",
+      "architecture": "Firestorm, Icestorm",
+      "perf_rating": 4093.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 42,
+      "pct": 43.3
+    },
+    {
+      "pos": 644,
+      "model": "Qualcomm Snapdragon 7+ Gen 3",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X4, A720, A520",
+      "perf_rating": 4063.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 43,
+      "pct": 43.0
+    },
+    {
+      "pos": 645,
+      "model": "Samsung Exynos 1680",
+      "brand": "Samsung",
+      "architecture": "",
+      "perf_rating": 4062.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 44,
+      "pct": 43.0
+    },
+    {
+      "pos": 664,
+      "model": "MediaTek Dimensity 9000",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X2 / A710 / A510",
+      "perf_rating": 4051.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 45,
+      "pct": 42.9
+    },
+    {
+      "pos": 682,
+      "model": "MediaTek Dimensity 8300",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A715 / A510",
+      "perf_rating": 3982.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 46,
+      "pct": 42.1
+    },
+    {
+      "pos": 647,
+      "model": "Qualcomm Snapdragon 7+ Gen 2",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X2 / A710 / A510",
+      "perf_rating": 3959.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 47,
+      "pct": 41.9
+    },
+    {
+      "pos": 735,
+      "model": "HiSilicon Kirin 8020",
+      "brand": "HiSilicon",
+      "architecture": "",
+      "perf_rating": 3930.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 48,
+      "pct": 41.6
+    },
+    {
+      "pos": 692,
+      "model": "HiSilicon Kirin 9000W",
+      "brand": "HiSilicon",
+      "architecture": "",
+      "perf_rating": 3878.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 49,
+      "pct": 41.0
+    },
+    {
+      "pos": 661,
+      "model": "MediaTek Dimensity 8200-Ultra",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 3873.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 50,
+      "pct": 41.0
+    },
+    {
+      "pos": 581,
+      "model": "MediaTek Dimensity 9200",
+      "brand": "MediaTek",
+      "architecture": "Cortex-X3 / A715 / A510",
+      "perf_rating": 3863.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 51,
+      "pct": 40.9
+    },
+    {
+      "pos": 679,
+      "model": "MediaTek Dimensity 8350",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A15 / A510",
+      "perf_rating": 3835.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 52,
+      "pct": 40.6
+    },
+    {
+      "pos": 681,
+      "model": "Google Tensor G4",
+      "brand": "Google",
+      "architecture": "",
+      "perf_rating": 3787.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 53,
+      "pct": 40.1
+    },
+    {
+      "pos": 673,
+      "model": "MediaTek Dimensity 8100",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 3720.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 54,
+      "pct": 39.4
+    },
+    {
+      "pos": 718,
+      "model": "Qualcomm Snapdragon 888 Plus 5G",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X1 / A78 / A55 (Kryo 680)",
+      "perf_rating": 3628.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 55,
+      "pct": 38.4
+    },
+    {
+      "pos": 710,
+      "model": "Samsung Exynos 1580",
+      "brand": "Samsung",
+      "architecture": "",
+      "perf_rating": 3607.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 56,
+      "pct": 38.2
+    },
+    {
+      "pos": 706,
+      "model": "Qualcomm Snapdragon 888 5G",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X1 / A78 / A55 (Kryo 680)",
+      "perf_rating": 3598.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 57,
+      "pct": 38.1
+    },
+    {
+      "pos": 693,
+      "model": "Qualcomm Snapdragon 8 Gen 1",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X2 / A710 / A510 (Kryo) Waipio",
+      "perf_rating": 3581.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 58,
+      "pct": 37.9
+    },
+    {
+      "pos": 689,
+      "model": "Samsung Exynos 2200",
+      "brand": "Samsung",
+      "architecture": "Exynos X2 / Cortex-A710 / A510",
+      "perf_rating": 3579.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 59,
+      "pct": 37.9
+    },
+    {
+      "pos": 680,
+      "model": "Qualcomm Snapdragon 7 Gen 4 SM7750-AB",
+      "brand": "Qualcomm",
+      "architecture": "Cortex A520/A720",
+      "perf_rating": 3576.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 60,
+      "pct": 37.8
+    },
+    {
+      "pos": 734,
+      "model": "HiSilicon Kirin T82",
+      "brand": "HiSilicon",
+      "architecture": "HiSilicon Main, Mid",
+      "perf_rating": 3556.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 61,
+      "pct": 37.6
+    },
+    {
+      "pos": 708,
+      "model": "Qualcomm Snapdragon G3x Gen 1",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X1 / A78 / A55 (Kryo 680)",
+      "perf_rating": 3553.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 62,
+      "pct": 37.6
+    },
+    {
+      "pos": 724,
+      "model": "Google Tensor G3",
+      "brand": "Google",
+      "architecture": "Zuma - Cortex X3 / A715 / A510",
+      "perf_rating": 3395.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 63,
+      "pct": 35.9
+    },
+    {
+      "pos": 685,
+      "model": "Apple A13 Bionic",
+      "brand": "Apple",
+      "architecture": "Lightning and Thunder",
+      "perf_rating": 3378.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 64,
+      "pct": 35.7
+    },
+    {
+      "pos": 736,
+      "model": "HiSilicon Kirin T92C",
+      "brand": "HiSilicon",
+      "architecture": "HiSilicon Main, Mid",
+      "perf_rating": 3374.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 65,
+      "pct": 35.7
+    },
+    {
+      "pos": 723,
+      "model": "Samsung Exynos 2100 5G",
+      "brand": "Samsung",
+      "architecture": "Exynos X1 / Cortex-A78 / A55",
+      "perf_rating": 3364.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 66,
+      "pct": 35.6
+    },
+    {
+      "pos": 737,
+      "model": "Samsung Exynos 1480",
+      "brand": "Samsung",
+      "architecture": "ARM Cortex-A55 / A78",
+      "perf_rating": 3349.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 67,
+      "pct": 35.4
+    },
+    {
+      "pos": 742,
+      "model": "Qualcomm Snapdragon 888 4G",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-X1 / A78 / A55 (Kryo 680)",
+      "perf_rating": 3334.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 68,
+      "pct": 35.3
+    },
+    {
+      "pos": 763,
+      "model": "MediaTek Dimensity 8020",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 3310.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 69,
+      "pct": 35.0
+    },
+    {
+      "pos": 746,
+      "model": "Qualcomm Snapdragon 865",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A77 / A55 (Kryo 585)",
+      "perf_rating": 3309.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 70,
+      "pct": 35.0
+    },
+    {
+      "pos": 795,
+      "model": "Qualcomm Snapdragon 7 Gen 3",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A715 / A510",
+      "perf_rating": 3257.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 71,
+      "pct": 34.5
+    },
+    {
+      "pos": 754,
+      "model": "Qualcomm Snapdragon 865+ (Plus)",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A77 / A55 (Kryo 585)",
+      "perf_rating": 3250.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 72,
+      "pct": 34.4
+    },
+    {
+      "pos": 766,
+      "model": "Google Tensor G2",
+      "brand": "Google",
+      "architecture": "Cortex X1 / A76 / A55",
+      "perf_rating": 3217.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 73,
+      "pct": 34.0
+    },
+    {
+      "pos": 803,
+      "model": "Qualcomm Snapdragon 870 5G",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A77 / A55 (Kryo 585)",
+      "perf_rating": 3188.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 74,
+      "pct": 33.7
+    },
+    {
+      "pos": 810,
+      "model": "Qualcomm Snapdragon 7s Gen 3",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A720 / A520",
+      "perf_rating": 3145.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 75,
+      "pct": 33.3
+    },
+    {
+      "pos": 798,
+      "model": "HiSilicon Kirin 990 5G",
+      "brand": "HiSilicon",
+      "architecture": "Cortex-A76/-A55",
+      "perf_rating": 3076.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 76,
+      "pct": 32.6
+    },
+    {
+      "pos": 849,
+      "model": "Qualcomm Snapdragon 778G 4G",
+      "brand": "Qualcomm",
+      "architecture": "Kryo 670 (Cortex-A78/A55)",
+      "perf_rating": 3019.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 77,
+      "pct": 31.9
+    },
+    {
+      "pos": 821,
+      "model": "Qualcomm Snapdragon 780G 5G",
+      "brand": "Qualcomm",
+      "architecture": "Kryo 670 (Cortex-A78/A55)",
+      "perf_rating": 2998.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 78,
+      "pct": 31.7
+    },
+    {
+      "pos": 786,
+      "model": "Qualcomm Snapdragon 7s Gen 4",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A720 / A520",
+      "perf_rating": 2988.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 79,
+      "pct": 31.6
+    },
+    {
+      "pos": 799,
+      "model": "HiSilicon Kirin 990",
+      "brand": "HiSilicon",
+      "architecture": "Cortex-A76/-A55",
+      "perf_rating": 2977.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 80,
+      "pct": 31.5
+    },
+    {
+      "pos": 839,
+      "model": "Qualcomm QCM6490",
+      "brand": "Qualcomm",
+      "architecture": "Kryo 670 (Cortex-A78/A55)",
+      "perf_rating": 2944.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 81,
+      "pct": 31.2
+    },
+    {
+      "pos": 827,
+      "model": "Google Tensor",
+      "brand": "Google",
+      "architecture": "Exynos X1 / Cortex-A76 / A55",
+      "perf_rating": 2940.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 82,
+      "pct": 31.1
+    },
+    {
+      "pos": 835,
+      "model": "Qualcomm Snapdragon 778G+ 5G",
+      "brand": "Qualcomm",
+      "architecture": "Kryo 670 (Cortex-A78/A55)",
+      "perf_rating": 2929.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 83,
+      "pct": 31.0
+    },
+    {
+      "pos": 856,
+      "model": "MediaTek Dimensity 7300",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2915.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 84,
+      "pct": 30.8
+    },
+    {
+      "pos": 837,
+      "model": "Qualcomm Snapdragon 7 Gen 1",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A710 / A510",
+      "perf_rating": 2912.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 85,
+      "pct": 30.8
+    },
+    {
+      "pos": 816,
+      "model": "MediaTek Dimensity 7400X",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2909.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 86,
+      "pct": 30.8
+    },
+    {
+      "pos": 850,
+      "model": "Qualcomm Snapdragon 778G 5G",
+      "brand": "Qualcomm",
+      "architecture": "Kryo 670 (Cortex-A78/A55)",
+      "perf_rating": 2889.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 87,
+      "pct": 30.6
+    },
+    {
+      "pos": 861,
+      "model": "Qualcomm Snapdragon 6 Gen 3",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2864.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 88,
+      "pct": 30.3
+    },
+    {
+      "pos": 840,
+      "model": "MediaTek Dimensity 8050",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2852.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 89,
+      "pct": 30.2
+    },
+    {
+      "pos": 857,
+      "model": "MediaTek Dimensity 7300X",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2832.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 90,
+      "pct": 30.0
+    },
+    {
+      "pos": 844,
+      "model": "Apple A12 Bionic",
+      "brand": "Apple",
+      "architecture": "",
+      "perf_rating": 2814.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 91,
+      "pct": 29.8
+    },
+    {
+      "pos": 862,
+      "model": "Qualcomm Snapdragon 7s Gen 2",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2807.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 92,
+      "pct": 29.7
+    },
+    {
+      "pos": 826,
+      "model": "Samsung Exynos 990",
+      "brand": "Samsung",
+      "architecture": "Exynos M5 / Cortex A-76 / Cortex-A55",
+      "perf_rating": 2787.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 93,
+      "pct": 29.5
+    },
+    {
+      "pos": 867,
+      "model": "Qualcomm Snapdragon 6 Gen 1",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2763.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 94,
+      "pct": 29.2
+    },
+    {
+      "pos": 854,
+      "model": "Samsung Exynos 1380",
+      "brand": "Samsung",
+      "architecture": "ARM Cortex-A55 / A78",
+      "perf_rating": 2763.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 95,
+      "pct": 29.2
+    },
+    {
+      "pos": 836,
+      "model": "MediaTek Dimensity 1000+",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A77 / A55",
+      "perf_rating": 2762.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 96,
+      "pct": 29.2
+    },
+    {
+      "pos": 870,
+      "model": "Qualcomm Snapdragon 860",
+      "brand": "Qualcomm",
+      "architecture": "Cortex-A76 / A55 (Kryo 485)",
+      "perf_rating": 2712.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 97,
+      "pct": 28.7
+    },
+    {
+      "pos": 863,
+      "model": "MediaTek Dimensity 1300",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2700.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 98,
+      "pct": 28.6
+    },
+    {
+      "pos": 807,
+      "model": "MediaTek Dimensity 1200",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A78 / A55",
+      "perf_rating": 2689.5,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 99,
+      "pct": 28.5
+    },
+    {
+      "pos": 871,
+      "model": "MediaTek Dimensity 820",
+      "brand": "MediaTek",
+      "architecture": "Cortex-A76 / A55",
+      "perf_rating": 2678.0,
+      "score_label": "Geekbench 5.5 Multi",
+      "rank": 100,
+      "pct": 28.3
+    }
+  ]
+}

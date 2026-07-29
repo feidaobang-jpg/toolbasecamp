@@ -6,7 +6,7 @@ APP_DIR=/opt/toolbasecamp-api
 
 echo "=== Check nbcheck files ==="
 test -f "$APP_DIR/nbcheck.py" || {
-  echo "FAILED: missing $APP_DIR/nbcheck.py â€” deploy server/ first"
+  echo "FAILED: missing $APP_DIR/nbcheck.py ?deploy server/ first"
   exit 1
 }
 grep -q 'include_router(nbcheck_router)' "$APP_DIR/main.py" || {
@@ -18,9 +18,11 @@ grep -q 'nbcheck_api' "$APP_DIR/main.py" || {
   exit 1
 }
 mkdir -p "$APP_DIR/data/nbcheck"
-test -f "$APP_DIR/data/nbcheck/nb_gpu.json" || {
-  echo "WARN: missing seed $APP_DIR/data/nbcheck/nb_gpu.json"
-}
+for _seed in cpu gpu soc nb_cpu nb_gpu; do
+  test -f "$APP_DIR/data/nbcheck/${_seed}.json" || {
+    echo "WARN: missing seed $APP_DIR/data/nbcheck/${_seed}.json"
+  }
+done
 
 echo "=== Verify import on disk ==="
 (
@@ -49,7 +51,7 @@ for _ in 1 2 3 4 5; do
   pkill -9 -f 'run.py' 2>/dev/null || true
   sleep 1
   if ss -lnt 2>/dev/null | grep -q ':8001'; then
-    echo "port 8001 still busy â€” retry kill"
+    echo "port 8001 still busy ?retry kill"
   else
     break
   fi
@@ -76,8 +78,8 @@ echo "$HEALTH" | grep -q '"nbcheck_api":true' || {
   ss -lntp 2>/dev/null | grep 8001 || true
   exit 1
 }
-echo "$HEALTH" | grep -q '"nbcheck_api_rev":1' || {
-  echo "FAILED: health missing nbcheck_api_rev=1"
+echo "$HEALTH" | grep -q '"nbcheck_api_rev":2' || {
+  echo "FAILED: health missing nbcheck_api_rev=2"
   exit 1
 }
 # OpenAPI shows /nbcheck/{list_id}, not the concrete /nbcheck/nb_gpu
@@ -93,5 +95,10 @@ curl -sf http://127.0.0.1:8001/nbcheck/nb_gpu | grep -q '"items"' || {
   echo "FAILED: /nbcheck/nb_gpu has no items"
   exit 1
 }
+for _id in cpu gpu soc nb_cpu; do
+  curl -sf "http://127.0.0.1:8001/nbcheck/${_id}" | grep -q '"items"' || {
+    echo "WARN: /nbcheck/${_id} has no items (seed/refresh may be needed)"
+  }
+done
 
 echo "nbcheck API OK"
