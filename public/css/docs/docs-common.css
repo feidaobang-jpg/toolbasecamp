@@ -30,6 +30,7 @@
 }
 
 @media (max-width: 768px) {
+    /* Phone: title lives in .tool-mobile-bar (base.js); hide duplicate tool-header */
     .content > .tool-mobile-bar ~ .tool-header {
         display: none;
     }

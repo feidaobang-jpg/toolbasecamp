@@ -590,4 +590,16 @@ label {
     .tool-mobile-home:hover {
         color: #1d4ed8;
     }
+}
+
+/* Desktop tool shell: sidebar already shows the current tool — hide duplicate H1.
+   Keep optional .tool-header > p description. Phone uses .tool-mobile-bar title. */
+@media (min-width: 769px) {
+    .container > .sidebar ~ .content > .tool-header > h1 {
+        display: none;
+    }
+
+    .container > .sidebar ~ .content > .tool-header:not(:has(> p)) {
+        display: none;
+    }
 } 
