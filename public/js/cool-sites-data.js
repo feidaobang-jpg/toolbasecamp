@@ -106,6 +106,7 @@ window.COOL_SITES_DATA = [
           { title: 'ComfyUI', desc: '节点式 AI 绘图后端', url: 'https://github.com/comfyanonymous/ComfyUI', icon: 'https://github.com/fluidicon.png' },
           { title: 'Civitai', desc: '开源生成式 AI 模型社区', url: 'https://civitai.com/', icon: 'https://civitai.com/favicon.ico' },
           { title: 'Hugging Face', desc: 'AI 社区，模型托管与共享', url: 'https://huggingface.co/', icon: 'https://huggingface.co/favicon.ico' },
+          { title: 'LiveBench', desc: 'AI 大模型排行榜与基准测评', url: 'https://livebench.ai/#/', icon: 'fas fa-trophy', isFontIcon: true },
           { title: 'Poe', desc: '聚合多种 AI 模型的问答平台', url: 'https://poe.com/', icon: 'https://poe.com/favicon.ico' },
           { title: 'Meshy', desc: '3D AI 模型生成工具', url: 'https://www.meshy.ai/', icon: 'https://www.meshy.ai/favicon.ico' },
           { title: 'Tripo AI', desc: '快速生成 3D 模型的 AI 工具', url: 'https://www.tripo3d.ai/', icon: 'https://www.tripo3d.ai/favicon.ico' },
