@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rewrite public/**/*.html CSS/JS ?v= cache busters without corrupting UTF-8."""
+"""Rewrite public/**/*.html CSS/JS ?v= cache busters without touching non-ASCII bytes."""
 from __future__ import annotations
 
 import os
@@ -13,16 +13,21 @@ def main() -> int:
     if not ver:
         print("usage: VER=abc1234 bust-html-cache.py", file=sys.stderr)
         return 2
+    # Keep version ASCII-only for safe byte substitution.
+    if not re.fullmatch(r"[0-9a-zA-Z._-]+", ver):
+        print(f"ERROR: unsafe VER={ver!r}", file=sys.stderr)
+        return 2
     root = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("public")
-    css = re.compile(r'(href="[^"]*\.css)(?:\?[^"]*)?"')
-    js = re.compile(r'(src="[^"]*\.js)(?:\?[^"]*)?"')
+    ver_b = ver.encode("ascii")
+    css = re.compile(rb'(href="[^"]*\.css)(?:\?[^"]*)?"')
+    js = re.compile(rb'(src="[^"]*\.js)(?:\?[^"]*)?"')
     n = 0
     for path in root.rglob("*.html"):
-        text = path.read_text(encoding="utf-8")
-        text2 = css.sub(rf'\1?v={ver}"', text)
-        text2 = js.sub(rf'\1?v={ver}"', text2)
-        if text2 != text:
-            path.write_text(text2, encoding="utf-8", newline="\n")
+        raw = path.read_bytes()
+        out = css.sub(rb"\1?v=" + ver_b + b'"', raw)
+        out = js.sub(rb"\1?v=" + ver_b + b'"', out)
+        if out != raw:
+            path.write_bytes(out)
             n += 1
     sample = root / "html" / "ladder" / "cpu_rank.html"
     if sample.is_file():
