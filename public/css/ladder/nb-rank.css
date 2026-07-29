@@ -1,5 +1,10 @@
 /* Notebookcheck-style ranked ladder (vertical bars). */
 
+.tool-header.nb-rank-header {
+  border-bottom: none;
+  padding-bottom: 8px;
+}
+
 .nb-rank-note {
   margin: 0 0 12px;
   padding: 10px 12px;

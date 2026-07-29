@@ -38,8 +38,8 @@ window.TB_LOCALES['zh-CN'] = {
             siteStatsDesc: '浏览量、访客与功能使用排行'
         },
         ladder: {
-            updateTitle: '性能天梯更新',
-            updateDesc: '手动抓取快科技天梯并更新公开页',
+            updateTitle: '性能跑分榜更新',
+            updateDesc: '手动抓取 Notebookcheck 跑分并更新公开页',
             refreshAll: '全部更新'
         },
         stock: {
@@ -320,7 +320,7 @@ window.TB_LOCALES['zh-CN'] = {
             document: '文档',
             diagram: '图表',
             android: 'Android',
-            ladder: '性能天梯图',
+            ladder: '性能跑分榜',
             developer: '开发者'
         },
         game: {

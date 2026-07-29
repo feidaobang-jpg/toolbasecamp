@@ -106,6 +106,7 @@
       row.className = 'nb-rank-row';
       var sub = [];
       if (it.architecture) sub.push(it.architecture);
+      if (it.tdp) sub.push('TDP ' + Math.round(Number(it.tdp)) + ' W');
       if (it.time_spy) sub.push('Time Spy ' + Math.round(Number(it.time_spy)));
       if (it.cb_r23) sub.push('CB R23 ' + Math.round(Number(it.cb_r23)));
       row.innerHTML =

@@ -39,8 +39,8 @@ window.TB_LOCALES.en = {
             siteStatsDesc: 'Views, visitors, and feature usage ranking'
         },
         ladder: {
-            updateTitle: 'Ladder refresh',
-            updateDesc: 'Manually scrape MyDrivers ladders and update public pages',
+            updateTitle: 'Benchmark rank refresh',
+            updateDesc: 'Manually scrape Notebookcheck rankings and update public pages',
             refreshAll: 'Refresh all'
         },
         stock: {
@@ -321,7 +321,7 @@ window.TB_LOCALES.en = {
             document: 'Document',
             diagram: 'Diagram',
             android: 'Android',
-            ladder: 'Performance Ladder',
+            ladder: 'Benchmark Ranks',
             developer: 'Developer'
         },
         game: {

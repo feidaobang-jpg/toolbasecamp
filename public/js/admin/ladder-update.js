@@ -1,5 +1,5 @@
 /**
- * Admin private tool: manually refresh performance ladder tables.
+ * Admin private tool: manually refresh Notebookcheck rank lists.
  */
 (function () {
   function apiBase() {
@@ -76,45 +76,6 @@
       return d.toLocaleString();
     } catch (e) {
       return iso;
-    }
-  }
-
-  function renderList(data) {
-    var root = document.getElementById('ladder-list');
-    var metaEl = document.getElementById('meta-line');
-    if (!root) return;
-    root.innerHTML = '';
-    (data.items || []).forEach(function (item) {
-      var row = document.createElement('div');
-      row.className = 'ladder-row' + (item.ok === false ? ' is-bad' : item.ok ? ' is-ok' : '');
-      var state = item.has_cache
-        ? (item.ok === false ? '失败' : '已缓存')
-        : '尚未更新';
-      row.innerHTML =
-        '<div class="ladder-row-main">' +
-        '<div class="ladder-row-title"></div>' +
-        '<div class="ladder-row-meta"></div>' +
-        '</div>' +
-        '<button type="button" class="tb-btn ladder-row-btn">更新</button>';
-      row.querySelector('.ladder-row-title').textContent = item.name + ' (' + item.id + ')';
-      var meta =
-        state +
-        ' · ' +
-        fmtTime(item.updated_at) +
-        (item.error ? ' · ' + item.error : '') +
-        (item.bytes ? ' · ' + item.bytes + ' B' : '');
-      row.querySelector('.ladder-row-meta').textContent = meta;
-      row.querySelector('button').addEventListener('click', function () {
-        runRefresh([item.id]);
-      });
-      root.appendChild(row);
-    });
-    if (metaEl) {
-      metaEl.textContent =
-        '上次全量刷新：' +
-        fmtTime(data.last_refresh) +
-        (data.running ? ' · 正在刷新…' : '') +
-        (data.web_root ? ' · 站点目录：' + data.web_root : '');
     }
   }
 
@@ -233,65 +194,6 @@
       });
   }
 
-  function loadStatus() {
-    return fetch(apiBase() + '/ladder/status', {
-      headers: authHeaders(),
-      cache: 'no-store'
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(function (data) {
-        renderList(data);
-        return data;
-      });
-  }
-
-  function runRefresh(ids) {
-    var btnAll = document.getElementById('btn-refresh-all');
-    if (btnAll) btnAll.disabled = true;
-    setStatus(ids && ids.length ? '正在更新 ' + ids.join(', ') + '…' : '正在抓取全部天梯…');
-    fetch(apiBase() + '/ladder/refresh', {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify(ids && ids.length ? { ids: ids } : {}),
-      cache: 'no-store'
-    })
-      .then(function (res) {
-        return res.json().then(function (body) {
-          if (!res.ok) throw new Error((body && body.detail) || 'HTTP ' + res.status);
-          return body;
-        });
-      })
-      .then(function (body) {
-        var okCount = (body.results || []).filter(function (r) {
-          return r.ok;
-        }).length;
-        var fail = (body.results || []).filter(function (r) {
-          return !r.ok;
-        });
-        var msg = '完成：成功 ' + okCount + '/' + (body.results || []).length;
-        if (fail.length) {
-          msg +=
-            '；失败：' +
-            fail
-              .map(function (f) {
-                return f.id + ' (' + (f.error || '?') + ')';
-              })
-              .join('；');
-        }
-        setStatus(msg, fail.length > 0);
-        return loadStatus();
-      })
-      .catch(function (err) {
-        setStatus('更新失败：' + (err && err.message ? err.message : err), true);
-      })
-      .finally(function () {
-        if (btnAll) btnAll.disabled = false;
-      });
-  }
-
   function boot() {
     var tok = token();
     if (!tok) {
@@ -314,23 +216,15 @@
           return;
         }
         showApp(user);
-        document.getElementById('btn-refresh-all').addEventListener('click', function () {
-          runRefresh(null);
-        });
         var btnNb = document.getElementById('btn-refresh-nbcheck');
         if (btnNb) {
           btnNb.addEventListener('click', function () {
             runNbcheckRefresh('all');
           });
         }
-        return Promise.all([
-          loadStatus().catch(function (err) {
-            setStatus('加载天梯状态失败：' + (err && err.message ? err.message : err), true);
-          }),
-          loadNbcheckStatus().catch(function (err) {
-            setStatus('加载 Notebookcheck 状态失败：' + (err && err.message ? err.message : err), true);
-          })
-        ]);
+        return loadNbcheckStatus().catch(function (err) {
+          setStatus('加载 Notebookcheck 状态失败：' + (err && err.message ? err.message : err), true);
+        });
       })
       .catch(function () {
         showGate('需要管理员登录后查看');

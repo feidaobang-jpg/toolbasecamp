@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>性能天梯更新 - 自用</title>
+  <title>性能跑分榜更新 - 自用</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="../../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
@@ -23,7 +23,7 @@
       <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ladder.updateTitle">性能天梯更新</h1>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ladder.updateTitle">性能跑分榜更新</h1>
       <div class="ml-auto flex items-center gap-3 text-sm">
         <span id="auth-label" class="text-gray-500"></span>
         <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fladder-update.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
@@ -38,18 +38,14 @@
     </div>
 
     <div id="app" class="ladder-update-wrap hidden">
-      <h2 data-i18n="privateHub.ladder.updateTitle">性能天梯更新</h2>
+      <h2 data-i18n="privateHub.ladder.updateTitle">性能跑分榜更新</h2>
       <p class="ladder-update-desc" data-i18n="privateHub.ladder.updateDesc">
-        从快科技天梯专题抓取表格，写入缓存并尝试更新公开页。无定时任务，请手动点击更新。源站可能拦截云服务器 IP。
+        从 Notebookcheck 抓取跑分并写入缓存与公开 JSON。无定时任务，请手动更新。
       </p>
       <div class="ladder-toolbar action-row">
-        <button type="button" id="btn-refresh-all" class="tb-btn" data-i18n="privateHub.ladder.refreshAll">全部更新</button>
-        <button type="button" id="btn-refresh-nbcheck" class="tb-btn">更新全部 Notebookcheck</button>
+        <button type="button" id="btn-refresh-nbcheck" class="tb-btn" data-i18n="privateHub.ladder.refreshAll">全部更新</button>
       </div>
       <div id="status" class="ladder-status"></div>
-      <div id="meta-line" class="ladder-meta"></div>
-      <div id="ladder-list" class="ladder-list"></div>
-      <h3 class="ladder-subhead" style="margin-top:20px;font-size:15px;font-weight:700;">Notebookcheck（5 榜）</h3>
       <div id="nbcheck-list" class="ladder-list"></div>
       <p class="ladder-meta">公开页：
         <a href="../../ladder/cpu_rank.html" target="_blank" rel="noopener">桌面 CPU</a> ·
@@ -61,6 +57,6 @@
     </div>
   </main>
 
-  <script src="../../../js/admin/ladder-update.js?v=3"></script>
+  <script src="../../../js/admin/ladder-update.js?v=4"></script>
 </body>
 </html>

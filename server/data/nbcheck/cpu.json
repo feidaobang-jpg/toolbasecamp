@@ -10,7 +10,7 @@
     "amd",
     "apple"
   ],
-  "updated_at": "2026-07-29T06:35:36Z",
+  "updated_at": "2026-07-29T08:16:05Z",
   "count": 137,
   "items": [
     {
@@ -20,6 +20,7 @@
       "architecture": "Storm Peak",
       "perf_rating": 88.5,
       "cb_r23": 107681.0,
+      "tdp": 350.0,
       "rank": 1,
       "pct": 100.0
     },
@@ -30,6 +31,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 85.5,
       "cb_r23": null,
+      "tdp": 125.0,
       "rank": 2,
       "pct": 96.6
     },
@@ -40,6 +42,7 @@
       "architecture": "Arrow Lake-S Refresh",
       "perf_rating": 81.3,
       "cb_r23": 44253.0,
+      "tdp": 125.0,
       "rank": 3,
       "pct": 91.9
     },
@@ -50,6 +53,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 81.2,
       "cb_r23": null,
+      "tdp": 125.0,
       "rank": 4,
       "pct": 91.8
     },
@@ -60,6 +64,7 @@
       "architecture": "",
       "perf_rating": 81.1,
       "cb_r23": null,
+      "tdp": 5.0,
       "rank": 5,
       "pct": 91.6
     },
@@ -70,6 +75,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 80.2,
       "cb_r23": 42018.0,
+      "tdp": 170.0,
       "rank": 6,
       "pct": 90.6
     },
@@ -80,6 +86,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 79.1,
       "cb_r23": 40924.0,
+      "tdp": 170.0,
       "rank": 7,
       "pct": 89.4
     },
@@ -90,6 +97,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 78.5,
       "cb_r23": 42522.0,
+      "tdp": 125.0,
       "rank": 8,
       "pct": 88.7
     },
@@ -100,6 +108,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 78.2,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 9,
       "pct": 88.4
     },
@@ -110,6 +119,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 77.2,
       "cb_r23": 39399.5,
+      "tdp": 125.0,
       "rank": 10,
       "pct": 87.2
     },
@@ -120,6 +130,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 75.1,
       "cb_r23": 38271.5,
+      "tdp": 125.0,
       "rank": 11,
       "pct": 84.9
     },
@@ -130,6 +141,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 74.8,
       "cb_r23": 36291.0,
+      "tdp": 120.0,
       "rank": 12,
       "pct": 84.5
     },
@@ -140,6 +152,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 74.5,
       "cb_r23": 32172.0,
+      "tdp": 120.0,
       "rank": 13,
       "pct": 84.2
     },
@@ -150,6 +163,7 @@
       "architecture": "Raphael (Zen 4)",
       "perf_rating": 74.3,
       "cb_r23": 36523.0,
+      "tdp": 170.0,
       "rank": 14,
       "pct": 84.0
     },
@@ -160,6 +174,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 73.3,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 15,
       "pct": 82.8
     },
@@ -170,6 +185,7 @@
       "architecture": "Arrow Lake-S Refresh",
       "perf_rating": 72.9,
       "cb_r23": 30867.0,
+      "tdp": 125.0,
       "rank": 16,
       "pct": 82.4
     },
@@ -180,6 +196,7 @@
       "architecture": "",
       "perf_rating": 71.3,
       "cb_r23": 23435.0,
+      "tdp": 40.0,
       "rank": 17,
       "pct": 80.6
     },
@@ -190,6 +207,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 70.6,
       "cb_r23": 29300.0,
+      "tdp": 170.0,
       "rank": 18,
       "pct": 79.8
     },
@@ -200,6 +218,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 70.3,
       "cb_r23": 22807.0,
+      "tdp": 170.0,
       "rank": 19,
       "pct": 79.4
     },
@@ -210,6 +229,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 69.9,
       "cb_r23": 33440.5,
+      "tdp": 125.0,
       "rank": 20,
       "pct": 79.0
     },
@@ -220,6 +240,7 @@
       "architecture": "",
       "perf_rating": 69.7,
       "cb_r23": 19206.5,
+      "tdp": 32.0,
       "rank": 21,
       "pct": 78.8
     },
@@ -230,6 +251,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 68.9,
       "cb_r23": 35850.0,
+      "tdp": 125.0,
       "rank": 22,
       "pct": 77.9
     },
@@ -240,6 +262,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 68.3,
       "cb_r23": 30745.0,
+      "tdp": 125.0,
       "rank": 23,
       "pct": 77.2
     },
@@ -250,6 +273,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 67.9,
       "cb_r23": 23230.0,
+      "tdp": 120.0,
       "rank": 24,
       "pct": 76.7
     },
@@ -260,6 +284,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 66.5,
       "cb_r23": 24776.0,
+      "tdp": 65.0,
       "rank": 25,
       "pct": 75.1
     },
@@ -270,6 +295,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 66.3,
       "cb_r23": 20485.0,
+      "tdp": 65.0,
       "rank": 26,
       "pct": 74.9
     },
@@ -280,6 +306,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 65.2,
       "cb_r23": 31070.0,
+      "tdp": 65.0,
       "rank": 27,
       "pct": 73.7
     },
@@ -290,6 +317,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 64.8,
       "cb_r23": 25066.0,
+      "tdp": 125.0,
       "rank": 28,
       "pct": 73.2
     },
@@ -300,6 +328,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 64.8,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 29,
       "pct": 73.2
     },
@@ -310,6 +339,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 64.3,
       "cb_r23": 24491.0,
+      "tdp": 125.0,
       "rank": 30,
       "pct": 72.7
     },
@@ -320,6 +350,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 64.0,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 31,
       "pct": 72.3
     },
@@ -330,6 +361,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 63.5,
       "cb_r23": 19088.0,
+      "tdp": 170.0,
       "rank": 32,
       "pct": 71.8
     },
@@ -340,6 +372,7 @@
       "architecture": "Granite Ridge",
       "perf_rating": 63.3,
       "cb_r23": 17528.5,
+      "tdp": 65.0,
       "rank": 33,
       "pct": 71.5
     },
@@ -350,6 +383,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 62.9,
       "cb_r23": 28398.0,
+      "tdp": 65.0,
       "rank": 34,
       "pct": 71.1
     },
@@ -360,6 +394,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 62.5,
       "cb_r23": 21677.0,
+      "tdp": 65.0,
       "rank": 35,
       "pct": 70.6
     },
@@ -370,6 +405,7 @@
       "architecture": "Raptor Lake-S",
       "perf_rating": 62.1,
       "cb_r23": 25369.0,
+      "tdp": 65.0,
       "rank": 36,
       "pct": 70.2
     },
@@ -380,6 +416,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 61.8,
       "cb_r23": 18760.0,
+      "tdp": 65.0,
       "rank": 37,
       "pct": 69.8
     },
@@ -390,6 +427,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 61.8,
       "cb_r23": 24221.0,
+      "tdp": 125.0,
       "rank": 38,
       "pct": 69.8
     },
@@ -400,6 +438,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 60.9,
       "cb_r23": null,
+      "tdp": 45.0,
       "rank": 39,
       "pct": 68.8
     },
@@ -410,6 +449,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 60.0,
       "cb_r23": 15236.0,
+      "tdp": 105.0,
       "rank": 40,
       "pct": 67.8
     },
@@ -420,6 +460,7 @@
       "architecture": "Alder Lake",
       "perf_rating": 59.3,
       "cb_r23": 26125.0,
+      "tdp": 125.0,
       "rank": 41,
       "pct": 67.0
     },
@@ -430,6 +471,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 58.6,
       "cb_r23": 16817.0,
+      "tdp": 120.0,
       "rank": 42,
       "pct": 66.2
     },
@@ -440,6 +482,7 @@
       "architecture": "Alder Lake",
       "perf_rating": 57.5,
       "cb_r23": 21751.0,
+      "tdp": 65.0,
       "rank": 43,
       "pct": 65.0
     },
@@ -450,6 +493,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 57.5,
       "cb_r23": null,
+      "tdp": 45.0,
       "rank": 44,
       "pct": 65.0
     },
@@ -460,6 +504,7 @@
       "architecture": "Arrow Lake-S",
       "perf_rating": 56.5,
       "cb_r23": 16467.0,
+      "tdp": 65.0,
       "rank": 45,
       "pct": 63.8
     },
@@ -470,6 +515,7 @@
       "architecture": "Phoenix",
       "perf_rating": 56.4,
       "cb_r23": 17128.0,
+      "tdp": 65.0,
       "rank": 46,
       "pct": 63.7
     },
@@ -480,6 +526,7 @@
       "architecture": "Vermeer (Zen 3)",
       "perf_rating": 53.6,
       "cb_r23": 26017.0,
+      "tdp": 105.0,
       "rank": 47,
       "pct": 60.6
     },
@@ -490,6 +537,7 @@
       "architecture": "Raphael (Zen4)",
       "perf_rating": 53.0,
       "cb_r23": 12735.0,
+      "tdp": 65.0,
       "rank": 48,
       "pct": 59.9
     },
@@ -500,6 +548,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 52.7,
       "cb_r23": null,
+      "tdp": 45.0,
       "rank": 49,
       "pct": 59.5
     },
@@ -510,6 +559,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 52.6,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 50,
       "pct": 59.4
     },
@@ -520,6 +570,7 @@
       "architecture": "Alder Lake",
       "perf_rating": 51.9,
       "cb_r23": 19784.0,
+      "tdp": 125.0,
       "rank": 51,
       "pct": 58.6
     },
@@ -530,6 +581,7 @@
       "architecture": "Raptor Lake-S",
       "perf_rating": 51.7,
       "cb_r23": 15911.0,
+      "tdp": 65.0,
       "rank": 52,
       "pct": 58.4
     },
@@ -540,6 +592,7 @@
       "architecture": "Raptor Lake-S",
       "perf_rating": 51.6,
       "cb_r23": 15953.0,
+      "tdp": 65.0,
       "rank": 53,
       "pct": 58.3
     },
@@ -550,6 +603,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 51.5,
       "cb_r23": 15012.0,
+      "tdp": 65.0,
       "rank": 54,
       "pct": 58.2
     },
@@ -560,6 +614,7 @@
       "architecture": "Vermeer (Zen 3)",
       "perf_rating": 50.9,
       "cb_r23": 15476.0,
+      "tdp": 105.0,
       "rank": 55,
       "pct": 57.5
     },
@@ -570,6 +625,7 @@
       "architecture": "Rocket Lake",
       "perf_rating": 50.5,
       "cb_r23": 14747.0,
+      "tdp": 125.0,
       "rank": 56,
       "pct": 57.1
     },
@@ -580,6 +636,7 @@
       "architecture": "Alder Lake",
       "perf_rating": 49.7,
       "cb_r23": 17491.0,
+      "tdp": 125.0,
       "rank": 57,
       "pct": 56.2
     },
@@ -590,6 +647,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 49.7,
       "cb_r23": 14573.0,
+      "tdp": 65.0,
       "rank": 58,
       "pct": 56.2
     },
@@ -600,6 +658,7 @@
       "architecture": "Alder Lake",
       "perf_rating": 49.1,
       "cb_r23": 15291.0,
+      "tdp": 65.0,
       "rank": 59,
       "pct": 55.5
     },
@@ -610,6 +669,7 @@
       "architecture": "Vermeer (Zen 3)",
       "perf_rating": 48.0,
       "cb_r23": 13184.0,
+      "tdp": 65.0,
       "rank": 60,
       "pct": 54.2
     },
@@ -620,6 +680,7 @@
       "architecture": "Vermeer (Zen3)",
       "perf_rating": 47.8,
       "cb_r23": 16262.0,
+      "tdp": 105.0,
       "rank": 61,
       "pct": 54.0
     },
@@ -630,6 +691,7 @@
       "architecture": "Tiger Lake-H",
       "perf_rating": 47.8,
       "cb_r23": 11726.0,
+      "tdp": 65.0,
       "rank": 62,
       "pct": 54.0
     },
@@ -640,6 +702,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 47.7,
       "cb_r23": 11790.0,
+      "tdp": 35.0,
       "rank": 63,
       "pct": 53.9
     },
@@ -650,6 +713,7 @@
       "architecture": "Alder Lake-S",
       "perf_rating": 47.3,
       "cb_r23": 12380.0,
+      "tdp": 65.0,
       "rank": 64,
       "pct": 53.4
     },
@@ -660,6 +724,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 46.8,
       "cb_r23": null,
+      "tdp": 45.0,
       "rank": 65,
       "pct": 52.9
     },
@@ -670,6 +735,7 @@
       "architecture": "Alder Lake",
       "perf_rating": 46.0,
       "cb_r23": 18628.0,
+      "tdp": 65.0,
       "rank": 66,
       "pct": 52.0
     },
@@ -680,6 +746,7 @@
       "architecture": "Vermeer (Zen3)",
       "perf_rating": 45.0,
       "cb_r23": 14317.0,
+      "tdp": 105.0,
       "rank": 67,
       "pct": 50.8
     },
@@ -690,6 +757,7 @@
       "architecture": "Cascade Lake",
       "perf_rating": 44.8,
       "cb_r23": null,
+      "tdp": 165.0,
       "rank": 68,
       "pct": 50.6
     },
@@ -700,6 +768,7 @@
       "architecture": "Rocket Lake",
       "perf_rating": 44.4,
       "cb_r23": 14281.0,
+      "tdp": 125.0,
       "rank": 69,
       "pct": 50.2
     },
@@ -710,6 +779,7 @@
       "architecture": "Sky Lake-X",
       "perf_rating": 43.5,
       "cb_r23": null,
+      "tdp": 165.0,
       "rank": 70,
       "pct": 49.2
     },
@@ -720,6 +790,7 @@
       "architecture": "Raptor Lake",
       "perf_rating": 43.3,
       "cb_r23": 11028.0,
+      "tdp": 35.0,
       "rank": 71,
       "pct": 48.9
     },
@@ -730,6 +801,7 @@
       "architecture": "Matisse (Zen 2)",
       "perf_rating": 43.0,
       "cb_r23": null,
+      "tdp": 105.0,
       "rank": 72,
       "pct": 48.6
     },
@@ -740,6 +812,7 @@
       "architecture": "Vermeer (Zen 3)",
       "perf_rating": 41.4,
       "cb_r23": 11838.0,
+      "tdp": 65.0,
       "rank": 73,
       "pct": 46.8
     },
@@ -750,6 +823,7 @@
       "architecture": "Rocket Lake",
       "perf_rating": 40.3,
       "cb_r23": 11217.5,
+      "tdp": 125.0,
       "rank": 74,
       "pct": 45.5
     },
@@ -760,6 +834,7 @@
       "architecture": "Matisse (Zen 2)",
       "perf_rating": 40.0,
       "cb_r23": 19000.0,
+      "tdp": 105.0,
       "rank": 75,
       "pct": 45.2
     },
@@ -770,6 +845,7 @@
       "architecture": "Cezanne (Zen 3)",
       "perf_rating": 39.9,
       "cb_r23": 12830.5,
+      "tdp": 65.0,
       "rank": 76,
       "pct": 45.1
     },
@@ -780,6 +856,7 @@
       "architecture": "Cezanne PRO (Zen 3)",
       "perf_rating": 39.3,
       "cb_r23": 12157.0,
+      "tdp": 65.0,
       "rank": 77,
       "pct": 44.4
     },
@@ -790,6 +867,7 @@
       "architecture": "Rocket Lake",
       "perf_rating": 39.2,
       "cb_r23": 10287.0,
+      "tdp": 65.0,
       "rank": 78,
       "pct": 44.3
     },
@@ -800,6 +878,7 @@
       "architecture": "Comet Lake-S",
       "perf_rating": 39.1,
       "cb_r23": 15538.0,
+      "tdp": 125.0,
       "rank": 79,
       "pct": 44.2
     },
@@ -810,6 +889,7 @@
       "architecture": "Comet Lake",
       "perf_rating": 38.7,
       "cb_r23": 15821.0,
+      "tdp": 125.0,
       "rank": 80,
       "pct": 43.7
     },
@@ -820,6 +900,7 @@
       "architecture": "Matisse (Zen 2)",
       "perf_rating": 38.3,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 81,
       "pct": 43.3
     },
@@ -830,6 +911,7 @@
       "architecture": "Coffee Lake-R",
       "perf_rating": 37.7,
       "cb_r23": null,
+      "tdp": 127.0,
       "rank": 82,
       "pct": 42.6
     },
@@ -840,6 +922,7 @@
       "architecture": "Matisse (Zen 2)",
       "perf_rating": 37.6,
       "cb_r23": null,
+      "tdp": 105.0,
       "rank": 83,
       "pct": 42.5
     },
@@ -850,6 +933,7 @@
       "architecture": "Comet Lake-S",
       "perf_rating": 37.3,
       "cb_r23": null,
+      "tdp": 125.0,
       "rank": 84,
       "pct": 42.1
     },
@@ -860,6 +944,7 @@
       "architecture": "Cezanne",
       "perf_rating": 37.2,
       "cb_r23": 10551.0,
+      "tdp": 65.0,
       "rank": 85,
       "pct": 42.0
     },
@@ -870,6 +955,7 @@
       "architecture": "Comet Lake",
       "perf_rating": 36.7,
       "cb_r23": null,
+      "tdp": 125.0,
       "rank": 86,
       "pct": 41.5
     },
@@ -880,6 +966,7 @@
       "architecture": "Matisse (Zen 2)",
       "perf_rating": 35.8,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 87,
       "pct": 40.5
     },
@@ -890,6 +977,7 @@
       "architecture": "Coffee Lake-R",
       "perf_rating": 34.3,
       "cb_r23": 12397.0,
+      "tdp": 95.0,
       "rank": 88,
       "pct": 38.8
     },
@@ -900,6 +988,7 @@
       "architecture": "Rocket Lake",
       "perf_rating": 34.0,
       "cb_r23": 10235.0,
+      "tdp": 65.0,
       "rank": 89,
       "pct": 38.4
     },
@@ -910,6 +999,7 @@
       "architecture": "Comet Lake",
       "perf_rating": 33.7,
       "cb_r23": 10475.0,
+      "tdp": 125.0,
       "rank": 90,
       "pct": 38.1
     },
@@ -920,6 +1010,7 @@
       "architecture": "Coffee Lake-S",
       "perf_rating": 32.0,
       "cb_r23": 8686.0,
+      "tdp": 95.0,
       "rank": 91,
       "pct": 36.2
     },
@@ -930,6 +1021,7 @@
       "architecture": "Coffee Lake-S",
       "perf_rating": 30.6,
       "cb_r23": null,
+      "tdp": 95.0,
       "rank": 92,
       "pct": 34.6
     },
@@ -940,6 +1032,7 @@
       "architecture": "Comet Lake",
       "perf_rating": 30.5,
       "cb_r23": 8532.0,
+      "tdp": 65.0,
       "rank": 93,
       "pct": 34.5
     },
@@ -950,6 +1043,7 @@
       "architecture": "Zen+",
       "perf_rating": 29.8,
       "cb_r23": null,
+      "tdp": 105.0,
       "rank": 94,
       "pct": 33.7
     },
@@ -960,6 +1054,7 @@
       "architecture": "Coffee Lake-R",
       "perf_rating": 29.2,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 95,
       "pct": 33.0
     },
@@ -970,6 +1065,7 @@
       "architecture": "Coffee Lake-R",
       "perf_rating": 29.2,
       "cb_r23": null,
+      "tdp": 95.0,
       "rank": 96,
       "pct": 33.0
     },
@@ -980,6 +1076,7 @@
       "architecture": "Comet Lake",
       "perf_rating": 29.0,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 97,
       "pct": 32.8
     },
@@ -990,6 +1087,7 @@
       "architecture": "Comet Lake-S",
       "perf_rating": 28.9,
       "cb_r23": 5986.0,
+      "tdp": 65.0,
       "rank": 98,
       "pct": 32.7
     },
@@ -1000,6 +1098,7 @@
       "architecture": "Coffee Lake-S",
       "perf_rating": 28.3,
       "cb_r23": null,
+      "tdp": 65.0,
       "rank": 99,
       "pct": 32.0
     },
@@ -1010,6 +1109,7 @@
       "architecture": "Coffee Lake-S",
       "perf_rating": 27.7,
       "cb_r23": null,
+      "tdp": 95.0,
       "rank": 100,
       "pct": 31.3
     }
