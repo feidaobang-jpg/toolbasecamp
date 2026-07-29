@@ -311,6 +311,7 @@ window.TB_LOCALES.en = {
             document: 'Document',
             diagram: 'Diagram',
             android: 'Android',
+            ladder: 'Performance Ladder',
             developer: 'Developer'
         },
         game: {
@@ -2284,6 +2285,26 @@ window.TB_LOCALES.en = {
         refreshPageGenerator: {
             title: 'Pull-to-refresh page generator',
             desc: 'Scaffold pull-to-refresh and paging pages'
+        },
+        ladderCpu: {
+            title: 'Desktop CPU',
+            desc: 'Desktop CPU performance ladder (higher is stronger)'
+        },
+        ladderGpu: {
+            title: 'Desktop GPU',
+            desc: 'Desktop GPU performance ladder (higher is stronger)'
+        },
+        ladderSoc: {
+            title: 'Mobile SoC',
+            desc: 'Phone SoC performance ladder (higher is stronger)'
+        },
+        ladderNbCpu: {
+            title: 'Laptop CPU',
+            desc: 'Laptop CPU performance ladder (higher is stronger)'
+        },
+        ladderNbGpu: {
+            title: 'Laptop GPU',
+            desc: 'Laptop GPU performance ladder (higher is stronger)'
         },
         mindmap: {
             title: 'Mind Map',

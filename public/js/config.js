@@ -199,6 +199,16 @@ const toolsConfig = {
             ]
         },
         {
+            titleKey: 'tools.groups.ladder',
+            items: [
+                { titleKey: 'tools.ladderCpu.title', url: 'html/ladder/cpu.html' },
+                { titleKey: 'tools.ladderGpu.title', url: 'html/ladder/gpu.html' },
+                { titleKey: 'tools.ladderSoc.title', url: 'html/ladder/soc.html' },
+                { titleKey: 'tools.ladderNbCpu.title', url: 'html/ladder/nb_cpu.html' },
+                { titleKey: 'tools.ladderNbGpu.title', url: 'html/ladder/nb_gpu.html' }
+            ]
+        },
+        {
             titleKey: 'tools.groups.developer',
             items: [
                 { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },

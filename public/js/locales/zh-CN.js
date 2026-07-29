@@ -310,6 +310,7 @@ window.TB_LOCALES['zh-CN'] = {
             document: '文档',
             diagram: '图表',
             android: 'Android',
+            ladder: '性能天梯图',
             developer: '开发者'
         },
         game: {
@@ -2283,6 +2284,26 @@ window.TB_LOCALES['zh-CN'] = {
         refreshPageGenerator: {
             title: '下拉刷新分页生成',
             desc: '生成下拉刷新与分页页面脚手架'
+        },
+        ladderCpu: {
+            title: '桌面处理器',
+            desc: '桌面 CPU 性能天梯图（越高越强）'
+        },
+        ladderGpu: {
+            title: '桌面显卡',
+            desc: '桌面 GPU 性能天梯图（越高越强）'
+        },
+        ladderSoc: {
+            title: '手机 SoC',
+            desc: '手机芯片性能天梯图（越高越强）'
+        },
+        ladderNbCpu: {
+            title: '笔记本处理器',
+            desc: '笔记本 CPU 性能天梯图（越高越强）'
+        },
+        ladderNbGpu: {
+            title: '笔记本显卡',
+            desc: '笔记本 GPU 性能天梯图（越高越强）'
         },
         mindmap: {
             title: '思维导图',
