@@ -104,17 +104,12 @@
       var pct = top > 0 ? Math.max(2, Math.round((1000 * Number(it.perf_rating || 0)) / top) / 10) : 0;
       var row = document.createElement('div');
       row.className = 'nb-rank-row';
-      var sub = [];
-      if (it.architecture) sub.push(it.architecture);
-      if (it.time_spy) sub.push('Time Spy ' + Math.round(Number(it.time_spy)));
-      if (it.cb_r23) sub.push('CB R23 ' + Math.round(Number(it.cb_r23)));
       row.innerHTML =
         '<div class="nb-rank-pos">' +
         (idx + 1) +
         '</div>' +
         '<div class="nb-rank-main">' +
         '<div class="nb-rank-name"></div>' +
-        '<div class="nb-rank-sub"></div>' +
         '<div class="nb-rank-bar-wrap"><div class="nb-rank-bar ' +
         brandClass(it.brand) +
         '" style="width:' +
@@ -125,7 +120,6 @@
         formatScore(it) +
         '</div>';
       row.querySelector('.nb-rank-name').textContent = it.model || '';
-      row.querySelector('.nb-rank-sub').textContent = sub.join(' · ');
       root.appendChild(row);
     });
   }
