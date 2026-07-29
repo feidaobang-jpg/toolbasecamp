@@ -2,16 +2,25 @@
     display: block;
     width: 100%;
     max-width: 390px;
+    aspect-ratio: 390 / 560;
+    min-height: 320px;
     height: auto;
     background: #7ec8e8;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     touch-action: manipulation;
     cursor: pointer;
+    /* Avoid collapsing when nested oddly during layout */
+    flex-shrink: 0;
+}
+
+.game-board-wrap .gm-canvas {
+    margin: 0 auto;
 }
 
 @media (max-width: 768px) {
     .gm-canvas {
         max-width: 100%;
+        min-height: 360px;
     }
 }

@@ -235,7 +235,7 @@ const gamesConfig = {
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=6' },
                 { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html?v=2' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
-                { titleKey: 'tools.goldminer.title', url: 'html/game/goldminer.html' },
+                { titleKey: 'tools.goldminer.title', url: 'html/game/goldminer.html?v=12' },
                 { titleKey: 'tools.descent.title', url: 'html/game/descent.html?v=2' }
             ]
         },
