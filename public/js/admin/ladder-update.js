@@ -316,6 +316,88 @@
       });
   }
 
+  function setPcBuildsStatus(text, isErr) {
+    var el = document.getElementById('pcbuilds-status');
+    if (!el) return;
+    el.textContent = text || '';
+    el.classList.toggle('is-error', !!isErr);
+  }
+
+  function loadPcBuildsStatus() {
+    return fetch(apiBase() + '/pcbuilds/status', {
+      headers: authHeaders(),
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        var parts = [];
+        if (data.running) parts.push('正在更新…');
+        else if (data.builds != null) parts.push(data.builds + ' 套方案');
+        if (data.json_mtime) parts.push('数据 ' + data.json_mtime);
+        if (data.script_ok === false) parts.push('服务器脚本未安装');
+        if (data.last_ok === false && data.last_error) parts.push(data.last_error);
+        setPcBuildsStatus(parts.join(' · ') || '—', data.last_ok === false || data.script_ok === false);
+        return data;
+      });
+  }
+
+  function pollPcBuildsUntilIdle(triesLeft) {
+    var left = triesLeft == null ? 60 : triesLeft;
+    return loadPcBuildsStatus()
+      .then(function (data) {
+        if (data && data.running && left > 0) {
+          return new Promise(function (resolve) {
+            setTimeout(function () {
+              resolve(pollPcBuildsUntilIdle(left - 1));
+            }, 3000);
+          });
+        }
+        if (data && data.last_ok === false) {
+          setPcBuildsStatus(
+            '失败：' + (data.last_error || '未知错误') + (data.last_log_tail ? ' · ' + data.last_log_tail.slice(-200) : ''),
+            true
+          );
+        }
+        return data;
+      })
+      .catch(function (err) {
+        setPcBuildsStatus('读取装机状态失败：' + (err && err.message ? err.message : err), true);
+      });
+  }
+
+  function runPcBuildsJob(path, label) {
+    var btnA = document.getElementById('btn-refresh-pcbuilds');
+    var btnB = document.getElementById('btn-generate-pcbuilds');
+    if (btnA) btnA.disabled = true;
+    if (btnB) btnB.disabled = true;
+    setPcBuildsStatus('已提交' + label + '…');
+    fetch(apiBase() + path, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: '{}',
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          if (!res.ok) throw new Error((body && body.detail) || 'HTTP ' + res.status);
+          return body;
+        });
+      })
+      .then(function () {
+        return pollPcBuildsUntilIdle(80);
+      })
+      .catch(function (err) {
+        setPcBuildsStatus(label + '失败：' + (err && err.message ? err.message : err), true);
+      })
+      .finally(function () {
+        if (btnA) btnA.disabled = false;
+        if (btnB) btnB.disabled = false;
+      });
+  }
+
   function boot() {
     var tok = token();
     if (!tok) {
@@ -361,8 +443,23 @@
             runNewsRegen();
           });
         }
+        var btnPc = document.getElementById('btn-refresh-pcbuilds');
+        if (btnPc) {
+          btnPc.addEventListener('click', function () {
+            runPcBuildsJob('/pcbuilds/refresh', '更新装机');
+          });
+        }
+        var btnPcGen = document.getElementById('btn-generate-pcbuilds');
+        if (btnPcGen) {
+          btnPcGen.addEventListener('click', function () {
+            runPcBuildsJob('/pcbuilds/generate', '刷新点评');
+          });
+        }
         loadNewsStatus().catch(function (err) {
           setNewsStatus('加载资讯状态失败：' + (err && err.message ? err.message : err), true);
+        });
+        loadPcBuildsStatus().catch(function (err) {
+          setPcBuildsStatus('加载装机状态失败：' + (err && err.message ? err.message : err), true);
         });
         return loadNbcheckStatus().catch(function (err) {
           setStatus('加载 Notebookcheck 状态失败：' + (err && err.message ? err.message : err), true);

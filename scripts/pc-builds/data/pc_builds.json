@@ -1,0 +1,699 @@
+[
+  {
+    "id": "office-apu",
+    "title": "2000元级：极致办公 / LOL网游 0噪音方案",
+    "summary": "【上一代经典】基于 AMD 5600G (Zen3) 强大的核显性能，无需独显即可流畅运行 LOL，办公性能依然过剩，性价比极高。",
+    "price_range": "¥1800 - ¥2200",
+    "tags": [
+      "办公",
+      "Zen3",
+      "核显"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD R5 5600G (散片)",
+        "price": "¥729"
+      },
+      {
+        "name": "主板",
+        "model": "微星 B450M-A PRO MAX",
+        "price": "¥399"
+      },
+      {
+        "name": "显卡",
+        "model": "Radeon Vega 7 (核显)",
+        "price": "¥0"
+      },
+      {
+        "name": "内存",
+        "model": "金百达 银爵 16GB (8Gx2) DDR4 3200",
+        "price": "¥229"
+      },
+      {
+        "name": "硬盘",
+        "model": "铠侠 RC20 500G NVMe",
+        "price": "¥269"
+      },
+      {
+        "name": "电源",
+        "model": "长城 HOPE-5000DS (400W)",
+        "price": "¥179"
+      },
+      {
+        "name": "机箱",
+        "model": "傻瓜超人 K88 (手提式)",
+        "price": "¥99"
+      }
+    ],
+    "review": "<p>这套以 AMD R5 5600G 为核心的配置，精准地诠释了“把钱花在刀刃上”的性价比哲学。</p>\n\n<p><strong>性能分析：</strong> 核心搭配非常合理，不存在瓶颈。R5 5600G 的 Zen3 架构 CPU 性能足以应对日常办公和网游需求，其内置的 Vega 7 核显是这套方案的灵魂，性能远超同期 Intel 核显，是“无独显”流畅运行《英雄联盟》等网游的保障。B450主板、双通道 3200MHz 内存和 NVMe 固态硬盘，都为核显性能的完全释放提供了坚实基础。</p>\n\n<p><strong>游戏表现：</strong> 这是一套典型的“网游/电竞”入门方案，其游戏能力有明确边界：\n<ul>\n<li><strong>1080P 分辨率：</strong> 流畅运行《英雄联盟》、《CS2》等电竞网游（中高画质）。对于《黑神话：悟空》、《赛博朋克2077》等3A大作，基本不具备可玩性，只能以极低画质和分辨率勉强尝试。</li>\n<li><strong>2K/4K 分辨率：</strong> 不适用于任何游戏场景，核显性能无法支撑。</li>\n</ul>\n</p>\n\n<p><strong>适用人群：</strong> 该配置完美契合其定位：\n<ul>\n<li><strong>极致办公用户：</strong> CPU性能过剩，多任务、文档处理、网页浏览丝滑流畅。</li>\n<li><strong>轻度网游玩家：</strong> 专注《英雄联盟》、《DOTA2》、《CS2》等电竞网游的玩家，追求性价比和低噪音。</li>\n<li><strong>预算极其有限的入门用户：</strong> 作为一台“全能”入门主机，未来可加装独立显卡升级。</li>\n</ul>\n<strong>不适用于</strong>追求3A大作、高分辨率游戏或专业视频剪辑、3D渲染的生产力用户。</p>\n\n<p><strong>性价比：</strong> 在 2000 元价位段，其性价比堪称“极致”。用最低的成本，实现了流畅办公和主流网游的需求。选择 B450 主板、散片 CPU 和手提式小机箱，都是控制预算的明智之举，整体搭配没有明显短板。对于目标用户而言，每一分钱都花在了实处。</p>",
+    "recommended_monitor": {
+      "model": "Redmi 1A 23.8英寸 IPS",
+      "price": "¥499"
+    },
+    "review_hash": "e42466aaad8fbce9fda7d82bed11fa38"
+  },
+  {
+    "id": "ai-value-amd-office",
+    "title": "3000元级：R5-5500 + 核显 办公网游利器",
+    "summary": "极致性价比入门方案，满足日常办公、影音娱乐及轻度网游需求，升级空间大。",
+    "price_range": "3000-3500元",
+    "tags": [
+      "AI热推",
+      "极致性价比",
+      "办公",
+      "轻度网游",
+      "ZOL趋势"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD Ryzen 5 5500",
+        "price": "¥600"
+      },
+      {
+        "name": "主板",
+        "model": "华硕B760M-P (替换为B550M)",
+        "price": "¥500"
+      },
+      {
+        "name": "内存",
+        "model": "七彩虹8GB DDR4 3200 (升级为16GB)",
+        "price": "¥200"
+      },
+      {
+        "name": "固态硬盘",
+        "model": "致态TiPlus7100（1TB）",
+        "price": "¥450"
+      },
+      {
+        "name": "显卡",
+        "model": "CPU集成核显",
+        "price": "¥0"
+      },
+      {
+        "name": "电源",
+        "model": "航嘉WD500K",
+        "price": "¥250"
+      },
+      {
+        "name": "机箱",
+        "model": "放牧者小蜜蜂",
+        "price": "¥150"
+      },
+      {
+        "name": "散热器",
+        "model": "CPU盒装自带",
+        "price": "¥0"
+      }
+    ],
+    "recommended_monitor": {
+      "model": "Redmi G27Q 240Hz (或同价位60/75Hz型号，如AOC 24B1XH)",
+      "price": "¥799"
+    },
+    "review": "<p><strong>配置点评：</strong>这是一套定位精准的“入门甜点”配置，以极低的成本构建了性能均衡、未来可期的平台，但“网游利器”的称号需要打上引号。</p>\n\n<ul>\n    <li><strong>性能与瓶颈：</strong>R5-5500作为一颗6核12线程的Zen3架构处理器，应对日常办公和多任务绰绰有余。然而，其最大的短板在于<strong>仅支持PCIe 3.0</strong>，这与你选择的顶级PCIe 4.0固态<strong>致态TiPlus7100</strong>无法完全匹配，性能有浪费。主板已修正为B550M，搭配合理，保证了未来升级独立显卡的基础。</li>\n    <li><strong>游戏表现预测：</strong>这套配置的图形性能完全依赖于CPU自带的<strong>核显</strong>，性能非常有限。对于《CS2》等电竞网游，在1080P低画质下或许能达到可玩的帧数；但对于《黑神话：悟空》、《赛博朋克2077》等3A大作，<strong>完全无法流畅运行</strong>，甚至可能无法正常启动。2K/4K游戏无需讨论。</li>\n    <li><strong>适用人群：</strong>非常适合<strong>预算极其严格</strong>的纯办公、影音娱乐用户，以及需要一台基础主机用于学习、编程、轻度内容消费的用户。它是“<strong>亮机过渡</strong>”的绝佳选择，预留了强大的电源和固态，未来加装一块千元级独立显卡（如RX 6600）即可立刻变身1080P游戏主机。</li>\n    <li><strong>性价比总结：</strong>在3000元价位，这套配置的<strong>CPU与固态硬盘性能溢出</strong>，而图形性能是明显短板。性价比体现在“<strong>框架优秀，核显凑合</strong>”。如果你近期绝无游戏需求，它很合格；但若对“网游”有期待，建议<strong>适当降低SSD规格，将预算转移至二手亮机卡</strong>，体验会立竿见影。</li>\n</ul>",
+    "review_hash": "ce4002579435c4e5c176cd473b429eff"
+  },
+  {
+    "id": "entry-level",
+    "title": "4200元级：RTX 4060 守门员 / 1080P 通吃",
+    "summary": "【40系经典】入门也不凑合！选用 RTX 4060 8G，拥有 DLSS 3 黑科技加持，搭配 i5-12400F，是目前运行 3A 大作的最低门槛，性价比极高。",
+    "price_range": "¥4200 - ¥4600",
+    "tags": [
+      "入门",
+      "RTX4060",
+      "DLSS3"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "Intel i5-12400F (散片)",
+        "price": "¥750"
+      },
+      {
+        "name": "主板",
+        "model": "铭瑄 H610M 挑战者",
+        "price": "¥450"
+      },
+      {
+        "name": "显卡",
+        "model": "七彩虹 RTX 4060 战斧 8G",
+        "price": "¥2099"
+      },
+      {
+        "name": "内存",
+        "model": "金百达 银爵 16GB (8Gx2) DDR4 3200",
+        "price": "¥239"
+      },
+      {
+        "name": "硬盘",
+        "model": "铠侠 RC20 500G NVMe",
+        "price": "¥269"
+      },
+      {
+        "name": "电源",
+        "model": "微星 A600DN (600W)",
+        "price": "¥259"
+      },
+      {
+        "name": "机箱",
+        "model": "玩嘉 孤勇者",
+        "price": "¥100"
+      }
+    ],
+    "review": "<p><strong>配置点评：</strong> 这是一套典型的“显卡驱动型”高性价比游戏配置，核心思路明确，但在细节上仍有可商榷之处。</p>\n\n<ul>\n  <li><strong>性能与瓶颈：</strong> <strong>i5-12400F + RTX 4060 是 1080P 游戏的黄金搭档</strong>，CPU 性能足以喂饱显卡，不存在明显瓶颈。铭瑄 H610M 主板是这套配置的“成本控制点”，它保证了基本功能，但扩展性（如 PCIe 4.0、M.2接口数量）和供电上限一般，限制了未来升级空间。</li>\n  <li><strong>游戏表现预测：</strong>\n    <ul>\n      <li><strong>1080P 分辨率：</strong> 这是它的主场。在《黑神话：悟空》、《赛博朋克2077》等高要求3A中，<strong>开启DLSS 3性能模式后，实现60帧以上流畅体验毫无压力</strong>，CS2等电竞游戏更是可以轻松突破144帧。</li>\n      <li><strong>2K 分辨率：</strong> 可以尝试，但在《赛博朋克2077》等光追大作中，需适当降低画质或依赖DLSS 3来维持流畅帧率。</li>\n      <li><strong>4K 分辨率：</strong> 不推荐，8GB显存和GPU性能将成为主要瓶颈。</li>\n    </ul>\n  </li>\n  <li><strong>适用人群：</strong> <strong>目标极其精准——预算有限的1080P游戏玩家</strong>。适合追求高画质、高帧率体验3A大作和电竞游戏的用户。对于视频剪辑、3D渲染等生产力场景，16GB内存和500G硬盘会迅速成为短板。</li>\n  <li><strong>性价比与建议：</strong> 在4200元价位能拿下RTX 4060，性价比确实突出。但<strong>“守门员”配置也意味着取舍</strong>：500G硬盘对于现代游戏捉襟见肘，建议至少升级至1TB；电源虽为600W但品牌型号较为入门，若预算允许，更换为口碑更好的品牌会更稳妥。这是一套“先解决有无，再考虑好坏”的务实之选。</li>\n</ul>",
+    "recommended_monitor": {
+      "model": "HKC VG245 23.8英寸 165Hz",
+      "price": "¥599"
+    },
+    "review_hash": "b5309e4b94aa167c8acde1910a4a11a5"
+  },
+  {
+    "id": "amd-value-king",
+    "title": "4800元级：RX 6750 GRE 12G / 显存越级",
+    "summary": "【A卡性价比】同价位无敌手！RX 6750 GRE 12G 版不仅性能强于 RTX 4060，更有 12G 大显存加持，在 2K 分辨率下爆杀对手，学生党的不二之选。",
+    "price_range": "¥4800 - ¥5200",
+    "tags": [
+      "6750GRE",
+      "12G显存",
+      "性价比"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "Intel i5-12400F (散片)",
+        "price": "¥750"
+      },
+      {
+        "name": "主板",
+        "model": "华硕 Prime H610M-A",
+        "price": "¥599"
+      },
+      {
+        "name": "显卡",
+        "model": "翰铠 RX 6750 GRE 12G 合金",
+        "price": "¥2099"
+      },
+      {
+        "name": "内存",
+        "model": "金百达 银爵 16GB (8Gx2) DDR4 3200",
+        "price": "¥239"
+      },
+      {
+        "name": "硬盘",
+        "model": "致态 TiPlus7100 1TB",
+        "price": "¥499"
+      },
+      {
+        "name": "电源",
+        "model": "长城 X6 (650W 金牌)",
+        "price": "¥399"
+      },
+      {
+        "name": "机箱",
+        "model": "先马 平头哥 M2",
+        "price": "¥150"
+      }
+    ],
+    "review": "<p><strong>【4800元级A卡性价比屠夫】</strong> 这套配置精准地卡在了“甜点”价位，核心思路明确：<strong>用i5-12400F这颗游戏神U，全力驱动RX 6750 GRE 12G这张越级显卡</strong>。CPU与显卡搭配均衡，不存在明显瓶颈，H610主板虽为入门级，但华硕这款型号供电和接口够用，确保了平台稳定。</p>\n\n<p><strong>游戏表现方面：</strong></p>\n<ul>\n  <li><strong>1080P分辨率</strong>：通杀所有游戏，可在《黑神话：悟空》、《赛博朋克2077》中开启高画质流畅运行。</li>\n  <li><strong>2K分辨率</strong>：这正是其主战场。凭借12GB大显存优势，在《赛博朋克2077》等大型3A游戏中，画质设定高于RTX 4060 8G版仍能保持流畅，真正做到“爆杀”。</li>\n  <li><strong>4K分辨率</strong>：可尝试中低画质，但非其舒适区，更适合作为未来的2K高帧率主力机。</li>\n</ul>\n\n<p><strong>适用人群：</strong> 这是为<strong>追求高性价比的3A游戏玩家和学生党</strong>量身定制的方案。它完美契合在2K显示器上畅玩大型单机游戏的需求，对于《CS2》等电竞游戏更是性能过剩。但若主要用于视频剪辑、3D渲染等重生产力场景，则非其强项。</p>\n\n<p><strong>性价比点评：</strong> 在4800-5200元价位，这套配置的性价比堪称“无敌手”。显卡选择是点睛之笔，RX 6750 GRE 12G以接近RTX 4060的价格，提供了逼近RTX 4060 Ti的游戏性能和多出4GB的显存，是当前2K游戏入门的最优解之一。其余配件如致态硬盘、金牌电源也均为靠谱选择，无明显短板。</p>",
+    "recommended_monitor": {
+      "model": "KTC H27T22S 27英寸 2K 170Hz",
+      "price": "¥849"
+    },
+    "review_hash": "75919caa91addb2928938a118d35e0de"
+  },
+  {
+    "id": "ai-mainstream-sweet-spot",
+    "title": "6000元级：i5-12600KF + RTX 4060 Ti 16G 2K甜点王",
+    "summary": "主流游戏玩家的黄金组合，通吃2K分辨率下各类游戏大作，兼顾内容创作。",
+    "price_range": "6000-7000元",
+    "tags": [
+      "AI热推",
+      "2K游戏",
+      "高性价比",
+      "主流之选",
+      "ZOL趋势"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "Intel 酷睿 i5 12600KF (替换14600KF，性价比更高)",
+        "price": "¥1400"
+      },
+      {
+        "name": "主板",
+        "model": "华硕B760M-P",
+        "price": "¥700"
+      },
+      {
+        "name": "内存",
+        "model": "金士顿叛逆者Renegade 32GB(16G*2) DDR5 6000",
+        "price": "¥700"
+      },
+      {
+        "name": "固态硬盘",
+        "model": "致态TiPlus7100（1TB）",
+        "price": "¥499"
+      },
+      {
+        "name": "显卡",
+        "model": "微星GeForce RTX 4060 Ti VENTUS 3X 16G OC",
+        "price": "¥3200"
+      },
+      {
+        "name": "电源",
+        "model": "航嘉WD600K",
+        "price": "¥300"
+      },
+      {
+        "name": "机箱",
+        "model": "先马平头哥M2 (或同价位风道好的机箱)",
+        "price": "¥159"
+      },
+      {
+        "name": "散热器",
+        "model": "利民PA120 SE",
+        "price": "¥150"
+      }
+    ],
+    "recommended_monitor": {
+      "model": "AOC Q27G3XMN MiniLED 2K",
+      "price": "¥1799"
+    },
+    "review": "<p><strong>配置点评：</strong>这套“2K甜点王”定位精准，核心搭配思路清晰，但部分细节值得商榷。</p>\n\n<ul>\n<li><strong>性能与瓶颈分析：</strong>i5-12600KF（10核16线程）搭配RTX 4060 Ti 16GB，在2K分辨率下是均衡的组合。CPU性能足以驱动显卡，16GB显存为高分辨率纹理和未来游戏提供了保障，避免了显存瓶颈。但需注意，<strong>主板（B760M-P）供电规格较为基础</strong>，可能无法完全释放12600KF在持续高负载下的全部性能潜力，对追求极限超频的用户是个限制。</li>\n\n<li><strong>游戏表现预测：</strong>这正是为2K游戏量身打造的配置。在<strong>2K分辨率</strong>下，可流畅运行《黑神话：悟空》（中高画质+DLSS 3）、《赛博朋克2077》（高画质+路径追踪需依赖DLSS 3帧生成）等3A大作，高帧率畅玩《CS2》更不在话下。在1080P下CPU负担更轻，帧数会更高；面对4K分辨率则显吃力，需大幅调低画质。</li>\n\n<li><strong>适用人群：</strong>非常适合追求<strong>2K高画质体验的3A游戏玩家</strong>，以及有轻度视频剪辑、AI绘图等内容创作需求的用户。对于纯电竞玩家，显卡规格略有溢出。</li>\n\n<li><strong>性价比评价：</strong>在6000-7000元价位，用上代高性价比CPU搭配大显存新显卡，思路正确。但<strong>RTX 4060 Ti 16G本身性价比争议较大</strong>，3200元的价格接近RTX 4070，性能却差距明显。若预算严格，可考虑RTX 4060 Ti 8G或AMD RX 7700 XT 12G以节省开支；若预算宽松，强烈建议加钱直接上RTX 4070，游戏体验将有质的飞跃。</li>\n</ul>\n\n<p><strong>总结：</strong>这是一套目标明确的2K游戏配置，但显卡选择是最大争议点，主板也略显“委屈”了CPU。用户需在“大显存战未来”与“绝对性能”之间做出抉择。</p>",
+    "review_hash": "5b92e365cc59d0ee80727f64eb1f9efe"
+  },
+  {
+    "id": "amd-mid-range",
+    "title": "7600元级：RX 7900 GRE / 2K 通杀",
+    "summary": "【红色风暴】R5 7500F 搭配 RX 7900 GRE 16G！这就是纯粹的游戏机器。比 4070 Super 更低的价格，却拥有接近 4070 Ti 的传统光栅性能和 16G 大显存，任何 2K 游戏都不在话下。",
+    "price_range": "¥7400 - ¥7800",
+    "tags": [
+      "7900GRE",
+      "16G大显存",
+      "2K通杀"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD R5 7500F (散片)",
+        "price": "¥999"
+      },
+      {
+        "name": "主板",
+        "model": "微星 PRO B650M-B",
+        "price": "¥699"
+      },
+      {
+        "name": "显卡",
+        "model": "蓝宝石 RX 7900 GRE 16G 白金",
+        "price": "¥3899"
+      },
+      {
+        "name": "内存",
+        "model": "光威 天策 32GB (16Gx2) DDR5 6000",
+        "price": "¥659"
+      },
+      {
+        "name": "硬盘",
+        "model": "致态 TiPlus7100 1TB",
+        "price": "¥499"
+      },
+      {
+        "name": "电源",
+        "model": "安钛克 NE750 (750W 金牌)",
+        "price": "¥499"
+      },
+      {
+        "name": "机箱",
+        "model": "朱雀 Air",
+        "price": "¥169"
+      },
+      {
+        "name": "散热",
+        "model": "利民 PA120 SE (双塔)",
+        "price": "¥159"
+      }
+    ],
+    "review": "<p><strong>性能分析：</strong>这套配置的核心思路非常清晰：<strong>一切为游戏服务</strong>。R5 7500F 作为一颗高性价比的6核游戏CPU，足以完全释放RX 7900 GRE在2K分辨率下的性能，搭配合理，不存在明显瓶颈。主板和电源选择务实，为整机稳定运行提供了可靠保障。</p>\n<p><strong>游戏表现预测：</strong>这正是这套配置的强项。在<strong>2K分辨率</strong>下，凭借接近RTX 4070 Ti的传统光栅性能和16GB大显存，可以<strong>通杀所有3A大作</strong>，例如在《黑神话：悟空》中开启高画质流畅运行毫无压力。在《赛博朋克2077》中，开启FSR后也能获得极高帧率。对于《CS2》这类电竞游戏，帧数将远超高刷新率显示器的需求。4K分辨率下，适当调整画质设置也能获得不错体验。</p>\n<p><strong>适用人群：</strong>这是为<strong>追求极致游戏体验的玩家</strong>量身打造的“游戏特化机”。它非常适合：</p>\n<ul>\n<li><strong>专注2K高画质3A大作的玩家</strong></li>\n<li><strong>兼顾高帧率电竞游戏的用户</strong></li>\n<li><strong>对光追要求不高，更看重传统性能和显存容量的用户</strong></li>\n</ul>\n<p><strong>性价比点评：</strong>在7600元价位，这套配置的性价比堪称<strong>“暴徒”级别</strong>。其核心优势在于，用比RTX 4070 Super更低的价格，提供了接近更高一级显卡的游戏性能，并且16GB显存为未来游戏和更高分辨率预留了充足空间。硬盘、电源等配件也均为口碑型号，没有明显缩水。如果你主要目标是玩游戏，且不依赖NVIDIA的特定生产力或光追生态，这套配置是目前该价位段非常犀利的选择。</p>",
+    "recommended_monitor": {
+      "model": "LG 27GP850 2K NanoIPS 180Hz",
+      "price": "¥1699"
+    },
+    "review_hash": "8ab8bb59af7c6a79bbdcca490b812251"
+  },
+  {
+    "id": "amd-zen5",
+    "title": "8600元级：Zen 5 + RTX 5060 Ti / 2K 甜点",
+    "summary": "【强强联手】AMD 最新的 9600X 处理器搭配 N 卡最新的 RTX 5060 Ti！Zen 5 的高频优势加上 50 系显卡的 DLSS 4 加持，是目前 7000 元价位段最均衡的 2K 游戏方案。",
+    "price_range": "¥8400 - ¥8800",
+    "tags": [
+      "Zen5",
+      "RTX5060Ti",
+      "2K原生"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD R5 9600X (盒装)",
+        "price": "¥1949"
+      },
+      {
+        "name": "主板",
+        "model": "微星 MAG B650M MORTAR WIFI",
+        "price": "¥1099"
+      },
+      {
+        "name": "显卡",
+        "model": "七彩虹 RTX 5060 Ti 12G Ultra W (新品)",
+        "price": "¥3599"
+      },
+      {
+        "name": "内存",
+        "model": "光威 天策 32GB (16Gx2) DDR5 6000 C30",
+        "price": "¥699"
+      },
+      {
+        "name": "硬盘",
+        "model": "致态 TiPlus7100 1TB",
+        "price": "¥499"
+      },
+      {
+        "name": "电源",
+        "model": "安钛克 NE750 (750W 金牌)",
+        "price": "¥499"
+      },
+      {
+        "name": "机箱",
+        "model": "朱雀 Air",
+        "price": "¥169"
+      },
+      {
+        "name": "散热",
+        "model": "利民 PA120 SE (双塔)",
+        "price": "¥159"
+      }
+    ],
+    "review": "<p><strong>8600元价位段的“新甜点”组合，Zen 5与RTX 5060 Ti的首次联手，纸面实力相当诱人。</strong>这套配置的核心思路清晰：用高频的R5 9600X驱动新一代“60Ti”显卡，目标直指2K高画质游戏。</p>\n\n<ul>\n    <li><strong>性能与瓶颈分析：</strong> R5 9600X的单核性能是Zen 5架构的亮点，足以完全发挥RTX 5060 Ti的性能，不存在CPU瓶颈。主板、内存（DDR5 6000 C30）和电源（750W金牌）的搭配也足够扎实，为这套平台提供了稳定的基础。</li>\n    <li><strong>游戏表现预测：</strong> 这套配置的舞台是<strong>2K分辨率</strong>。在《黑神话：悟空》、《赛博朋克2077》等3A大作中，开启DLSS 4（或DLSS 3）后，有望在2K高画质下获得流畅的60帧以上体验。对于《CS2》等电竞游戏，1080P下帧数将轻松突破电竞标准，2K下同样能保持极高帧率。4K游戏则较为吃力，需大幅调低画质。</li>\n    <li><strong>适用人群：</strong> 这是为<strong>追求2K高画质流畅体验的3A游戏玩家和电竞爱好者</strong>量身打造的方案。其生产力性能（如视频剪辑、编程）也足够应对主流需求，但并非专业工作站定位。</li>\n    <li><strong>性价比点评：</strong> 作为两家的最新产品，首发价格必然包含“尝鲜税”。R5 9600X与RTX 5060 Ti的组合性能值得期待，但性价比需待市场实际测试和价格稳定后再做最终评判。目前来看，它提供了当下最新的技术特性（如DLSS 4），适合<strong>追求前沿技术、希望“战未来”且预算充足的玩家</strong>。</li>\n</ul>",
+    "recommended_monitor": {
+      "model": "AOC Q27G3XMN MiniLED 2K",
+      "price": "¥1799"
+    },
+    "review_hash": "19474b43300cdce51956d7ac9aece9a5"
+  },
+  {
+    "id": "intel-arrow",
+    "title": "12700元级：Intel Ultra 5 / RTX 5070 AI 进阶",
+    "summary": "【50系甜点】Intel Core Ultra 5 245K 搭配最新的 RTX 5070！能效比大幅优化，不仅游戏强劲，在 50 系新架构加持下，AI 创作能力和光追体验全面超越 4070 系列。",
+    "price_range": "¥12700 - ¥13000",
+    "tags": [
+      "CoreUltra",
+      "RTX5070",
+      "AI创作"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "Intel Core Ultra 5 245K (盒装)",
+        "price": "¥2299"
+      },
+      {
+        "name": "主板",
+        "model": "微星 Z890 GAMING PLUS WIFI",
+        "price": "¥1999"
+      },
+      {
+        "name": "显卡",
+        "model": "铭瑄 RTX 5070 12G 瑷珈 (新品)",
+        "price": "¥4899"
+      },
+      {
+        "name": "内存",
+        "model": "宏碁掠夺者 32GB (16Gx2) DDR5 6400",
+        "price": "¥799"
+      },
+      {
+        "name": "硬盘",
+        "model": "致态 TiPro7000 2TB",
+        "price": "¥899"
+      },
+      {
+        "name": "电源",
+        "model": "海韵 Focus GX850 (850W ATX3.1)",
+        "price": "¥899"
+      },
+      {
+        "name": "机箱",
+        "model": "联力 包豪斯 O11D Mini",
+        "price": "¥599"
+      },
+      {
+        "name": "散热",
+        "model": "瓦尔基里 A360 水冷",
+        "price": "¥369"
+      }
+    ],
+    "review": "<p><strong>12700元级“50系甜点”配置点评：</strong>这套配置以Intel Ultra 5 245K搭配RTX 5070为核心，定位精准，是追求新一代游戏与AI性能用户的强力选择。</p>\n\n<ul>\n    <li><strong>性能与搭配分析：</strong>CPU与显卡的搭配非常均衡，不存在明显瓶颈。Ultra 5 245K足以释放RTX 5070的全部游戏性能，而Z890主板也为CPU超频和未来升级留足了空间。850W ATX3.1电源为这套高能效平台提供了稳定且充裕的电力保障。</li>\n    <li><strong>游戏表现预测：</strong>凭借RTX 5070的新架构，这套配置堪称2K分辨率游戏“甜点”。在<strong>2K分辨率</strong>下，足以在《黑神话：悟空》、《赛博朋克2077》等3A大作中开启高画质和高帧率光追，获得流畅体验；应对《CS2》等电竞游戏更是游刃有余，帧数极高。<strong>4K分辨率</strong>下需适当调整画质设置，而<strong>1080P</strong>则完全性能过剩。</li>\n    <li><strong>适用人群：</strong>主要面向追求高画质、高帧率体验的<strong>3A游戏玩家</strong>和<strong>电竞爱好者</strong>。同时，得益于50系显卡大幅增强的AI算力，它也适合进行<strong>AI绘图、视频剪辑</strong>等创意生产工作的用户。</li>\n    <li><strong>性价比评价：</strong>在1.3万元价位段，这套配置的性价比相当突出。它抓住了“买新不买旧”的心理，用上了最新的平台和显卡，性能全面超越上代4070系列。配件品牌选择也均为一线或口碑产品，没有明显短板。如果你是追求前沿游戏技术和AI应用的用户，这套配置值得重点考虑。</li>\n</ul>",
+    "recommended_monitor": {
+      "model": "ROG 绝杀27青春版 XG27ACS",
+      "price": "¥1999"
+    },
+    "review_hash": "e151bd7011eec205515553347b1a1f2d"
+  },
+  {
+    "id": "ai-high-end-4k-productivity",
+    "title": "14000元级：RX 7900 XTX / 纯血光栅旗舰",
+    "summary": "【A卡卡皇】7800X3D 搭配 RX 7900 XTX 24G！在不需要 CUDA 生产力的纯游戏领域，它的光栅性能足以挑战 RTX 4090，24G 超大显存更是战未来的保证，性价比极高。",
+    "price_range": "¥13500 - ¥14500",
+    "tags": [
+      "7900XTX",
+      "24G显存",
+      "旗舰"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD R7 7800X3D (散片)",
+        "price": "¥2599"
+      },
+      {
+        "name": "主板",
+        "model": "技嘉 B650M 小雕 AORUS ELITE",
+        "price": "¥1099"
+      },
+      {
+        "name": "显卡",
+        "model": "蓝宝石 RX 7900 XTX 24G 白金",
+        "price": "¥6799"
+      },
+      {
+        "name": "内存",
+        "model": "宏碁掠夺者 32G (16Gx2) DDR5 6000 C30",
+        "price": "¥799"
+      },
+      {
+        "name": "硬盘",
+        "model": "致态 TiPro7000 2TB",
+        "price": "¥899"
+      },
+      {
+        "name": "电源",
+        "model": "海韵 Focus GX850 (850W 金牌)",
+        "price": "¥899"
+      },
+      {
+        "name": "机箱",
+        "model": "联力 包豪斯 O11D Mini",
+        "price": "¥599"
+      },
+      {
+        "name": "散热",
+        "model": "利民 FC140 (风冷之王)",
+        "price": "¥299"
+      }
+    ],
+    "review": "<p><strong>【14000元级A卡卡皇，纯游戏利刃】</strong> 这套配置的核心思路非常清晰：用当前最强的游戏CPU之一R7 7800X3D，搭配AMD的旗舰显卡RX 7900 XTX，打造一台专为高帧率、高分辨率游戏而生的“光栅战神”。</p>\n\n<p><strong>性能分析：</strong> 搭配极为合理，<strong>不存在瓶颈</strong>。7800X3D凭借超大缓存，在绝大多数游戏中表现甚至优于更高核心数的CPU，是游戏特化“神U”。它能让RX 7900 XTX的24GB显存和强大光栅性能得到完全释放。850W金牌电源带这套平台也足够稳定。</p>\n\n<p><strong>游戏表现预测：</strong>\n<ul>\n<li><strong>1080P：</strong> 性能严重过剩，几乎所有游戏都能跑满高刷新率显示器。</li>\n<li><strong>2K分辨率：</strong> 这是它的“甜点区”，能在最高画质下，以极高帧率（远超144Hz）畅玩《CS2》等电竞游戏，也能在《黑神话：悟空》等3A大作中提供极其流畅的体验。</li>\n<li><strong>4K分辨率：</strong> 凭借24G大显存，在《赛博朋克2077》等游戏中开启最高画质（非路径追踪）也能获得流畅帧数，是畅玩4K游戏的强力保障。</li>\n</ul>\n</p>\n\n<p><strong>适用人群：</strong> 这是一套<strong>为纯粹游戏玩家量身定制的配置</strong>，尤其适合追求2K极致高刷和4K高画质的3A大作爱好者及电竞玩家。<strong>不推荐</strong>需要CUDA加速（如AI绘图、视频剪辑）的生产力用户选择。</p>\n\n<p><strong>性价比评价：</strong> 在1.4万元价位，这套配置的<strong>游戏性价比非常突出</strong>。其光栅性能足以对标价格贵得多的RTX 4080 SUPER甚至挑战RTX 4090，24GB显存更是“战未来”的资本。选择B650M主板、风冷散热和散片CPU，都是在保证性能的前提下，将预算精准投入显卡的明智之举。</p>",
+    "recommended_monitor": {
+      "model": "LG 27GP950 4K 160Hz",
+      "price": "¥4999"
+    },
+    "review_hash": "27119cb9dce5ffb4724c4904627bbe01"
+  },
+  {
+    "id": "gaming-king",
+    "title": "15000元级：9800X3D / RTX 5070 Ti 2K/4K 通吃",
+    "summary": "【新一代电竞王】AMD Ryzen 7 9800X3D 终于登场！作为新一代“网游之神”，其游戏性能再次刷新上限，彻底统治各类电竞网游。搭配 RTX 5070 Ti，Blackwell 架构带来了更强的光栅性能，是 2K 高刷和 4K 入门的完美拼图。",
+    "price_range": "¥14500 - ¥15500",
+    "tags": [
+      "9800X3D",
+      "RTX5070Ti",
+      "电竞神U"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD R7 9800X3D (盒装)",
+        "price": "¥3699"
+      },
+      {
+        "name": "主板",
+        "model": "技嘉 B650E AORUS ELITE X AX ICE",
+        "price": "¥1699"
+      },
+      {
+        "name": "显卡",
+        "model": "七彩虹 RTX 5070 Ti 16G AD OC (新品)",
+        "price": "¥6499"
+      },
+      {
+        "name": "内存",
+        "model": "芝奇 幻锋戟 32G (16Gx2) DDR5 6000 C30",
+        "price": "¥999"
+      },
+      {
+        "name": "硬盘",
+        "model": "三星 990 PRO 2TB",
+        "price": "¥1199"
+      },
+      {
+        "name": "电源",
+        "model": "振华 Leadex VII 1000W (白金)",
+        "price": "¥1099"
+      },
+      {
+        "name": "机箱",
+        "model": "恩杰 H6 Flow",
+        "price": "¥799"
+      },
+      {
+        "name": "散热",
+        "model": "利民 FC140 (风冷之王)",
+        "price": "¥299"
+      }
+    ],
+    "review": "<p><strong>配置点评：</strong>这套“新一代电竞王”配置，核心思路清晰，堆料精准，是一台定位高端的纯粹游戏利器。</p>\n<p><strong>性能与游戏表现：</strong></p>\n<ul>\n<li><strong>CPU/显卡搭配：</strong>R7 9800X3D凭借巨大的L3缓存，在电竞网游中拥有统治级表现，是名副其实的“帧率加速器”。RTX 5070 Ti作为新一代中高端主力，光栅性能大幅提升，足以在2K分辨率下通吃所有3A大作高画质高刷，并胜任4K入门体验。两者结合，在2K及以下分辨率下，CPU能完全释放显卡性能，<strong>搭配非常合理，无明显瓶颈</strong>。</li>\n<li><strong>游戏预测：</strong>在<strong>《CS2》</strong>等电竞游戏中，9800X3D将带来极高的最低帧和平均帧，体验丝滑。在<strong>2K分辨率</strong>下，运行<strong>《黑神话：悟空》</strong>、《赛博朋克2077》开启DLSS 3.5后，实现高画质百帧以上流畅体验毫无压力。<strong>4K分辨率</strong>下，则需在部分最新3A大作中适当调整画质设置以保持流畅帧率。</li>\n</ul>\n<p><strong>适用人群与性价比：</strong></p>\n<ul>\n<li><strong>适用人群：</strong>此配置<strong>极度适合追求极致电竞帧率和高画质3A体验的硬核游戏玩家</strong>。对于以网游、竞技游戏为主的用户，它是“天花板”级选择。但对于重度视频剪辑、3D渲染等生产力场景，其性价比不如同价位的英特尔酷睿或AMD非X3D处理器平台。</li>\n<li><strong>性价比：</strong>在1.5万元价位，这套配置选择了性能最强的游戏CPU和次旗舰显卡，其他配件如电源、内存、固态均为一线高端型号，<strong>“性价比”体现在将预算极致地倾斜到了游戏帧率上</strong>，整体搭配没有明显短板，属于“性能优先”的合理高价区间配置。</li>\n</ul>",
+    "recommended_monitor": {
+      "model": "三星 玄龙骑士 G7 4K 144Hz",
+      "price": "¥3999"
+    },
+    "review_hash": "69d28793da5f5bda6ce55bb031e9b42d"
+  },
+  {
+    "id": "intel-flagship",
+    "title": "22000元级：Intel Ultra 9 / RTX 5080 首发座驾",
+    "summary": "【拥抱 50 系】Core Ultra 9 285K 搭配最新的 RTX 5080 16G！得益于 Blackwell 架构的巨大提升，光追性能与 AI 算力碾压上一代旗舰，是高端玩家的尝鲜首选。",
+    "price_range": "¥22000 - ¥24000",
+    "tags": [
+      "RTX5080",
+      "Ultra9",
+      "光追新王"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "Intel Core Ultra 9 285K (盒装)",
+        "price": "¥4799"
+      },
+      {
+        "name": "主板",
+        "model": "ROG MAXIMUS Z890 HERO",
+        "price": "¥4999"
+      },
+      {
+        "name": "显卡",
+        "model": "ROG RTX 5080 16G 猛禽 (新品)",
+        "price": "¥9999"
+      },
+      {
+        "name": "内存",
+        "model": "芝奇 幻锋戟 64G (32Gx2) DDR5 6800",
+        "price": "¥1699"
+      },
+      {
+        "name": "硬盘",
+        "model": "西数 SN850X 4TB",
+        "price": "¥2299"
+      },
+      {
+        "name": "电源",
+        "model": "ROG 雷神 II 1200W",
+        "price": "¥2499"
+      },
+      {
+        "name": "机箱",
+        "model": "ROG 创世神 (Hyperion)",
+        "price": "¥2999"
+      },
+      {
+        "name": "散热",
+        "model": "ROG 龙神 III 360 水冷",
+        "price": "¥2299"
+      }
+    ],
+    "review": "<p><strong>性能分析：</strong>这套配置是典型的“顶级性能+顶级信仰”组合。Intel Core Ultra 9 285K与RTX 5080的组合，在当前消费级市场几乎不存在性能瓶颈，是追求极致单核与多核性能、以及最新图形技术的完美搭配。ROG Z890 HERO主板提供了充足的扩展与超频空间，1200W电源也为未来升级和瞬时功耗留足了冗余。</p>\n<p><strong>游戏表现：</strong>对于这套配置，讨论1080P分辨率已无意义，它生来就是为高分辨率和高画质服务的。在2K分辨率下，几乎可以无脑全开所有游戏（包括开启路径追踪的《赛博朋克2077》），帧率将远超高刷新率显示器的需求。在4K分辨率下，它将是流畅征服《黑神话：悟空》等未来3A大作的顶级座驾，而《CS2》这类电竞游戏更是不在话下。</p>\n<p><strong>适用人群：</strong>这是为<strong>追求极致性能、热衷首发尝鲜的顶级发烧友和高端玩家</strong>准备的。它非常适合追求4K光追极致体验的3A大作玩家，同时强大的CPU与显卡也能胜任8K视频剪辑、3D渲染等重负载生产力工作。但对于纯电竞玩家或普通办公用户而言，性能严重过剩。</p>\n<p><strong>性价比：</strong>谈论“性价比”在此略显苍白。超过一半的预算花在了ROG全家桶的顶级外观、灯效和品牌溢价上。如果你追求的是<strong>极致的性能与信仰的满足感</strong>，那么它为你的体验和心情付费，物有所值。但若只追求同等性能，在主板、机箱、散热和电源上均有大量性价比更高的选择，可以节省数千元预算。</p>\n<ul>\n<li><strong>犀利总结：</strong>这是一台性能怪兽，更是一件昂贵的“ROG信仰手办”。它为顶级体验和首发情怀买单，性能无可挑剔，但性价比并非其考量范畴。</li>\n</ul>",
+    "recommended_monitor": {
+      "model": "ROG PG32UCDM OLED 4K 240Hz",
+      "price": "¥9999"
+    },
+    "review_hash": "c6517a21611663528591b8d511453e3f"
+  },
+  {
+    "id": "amd-ultimate",
+    "title": "35000元级：AMD 9950X / RTX 5090 D 终极幻想",
+    "summary": "【地表最强】无需多言。AMD 9950X + RTX 5090 D 32G，这是目前人类消费级电脑的性能终点。合规版 D 系列依然保留了恐怖的 32G 显存与核心算力，无论是 8K 游戏还是 AI 炼丹，皆是寂寞。",
+    "price_range": "¥35000+",
+    "tags": [
+      "RTX5090D",
+      "算力怪兽",
+      "终极梦想"
+    ],
+    "parts": [
+      {
+        "name": "CPU",
+        "model": "AMD R9 9950X (盒装)",
+        "price": "¥4899"
+      },
+      {
+        "name": "主板",
+        "model": "ROG CROSSHAIR X670E HERO",
+        "price": "¥4599"
+      },
+      {
+        "name": "显卡",
+        "model": "ROG RTX 5090 D 32G 猛禽 (新品)",
+        "price": "¥18999"
+      },
+      {
+        "name": "内存",
+        "model": "芝奇 皇家戟 96G (48Gx2) DDR5 6400",
+        "price": "¥2599"
+      },
+      {
+        "name": "硬盘",
+        "model": "三星 990 PRO 4TB",
+        "price": "¥2399"
+      },
+      {
+        "name": "电源",
+        "model": "海韵 PRIME TX-1600 (1600W 钛金)",
+        "price": "¥3299"
+      },
+      {
+        "name": "机箱",
+        "model": "酷冷至尊 HAF 700 EVO",
+        "price": "¥2999"
+      },
+      {
+        "name": "散热",
+        "model": "瓦尔基里 V360 水冷",
+        "price": "¥399"
+      }
+    ],
+    "review": "<p><strong>性能分析：</strong>这套配置的核心搭配堪称“梦幻组合”。AMD R9 9950X作为新一代旗舰，拥有顶级的单核与多核性能，足以驱动任何应用。ROG RTX 5090 D 32G作为合规版旗舰，其核心算力与显存容量（32G）依然是消费级天花板。两者结合，在绝大多数场景下不存在传统意义上的“瓶颈”，是追求极致性能的终极选择。</p>\n<p><strong>游戏表现：</strong>对于这套配置，谈论1080P或2K分辨率已无意义，它生来就是为了征服4K乃至8K分辨率。在《黑神话：悟空》、《赛博朋克2077》等顶级3A大作中，4K分辨率下开启全极致光追和DLSS，预计也能提供远超流畅基准线的帧率体验。至于《CS2》这类电竞游戏，性能将完全溢出，体验由显示器的刷新率上限决定。</p>\n<p><strong>适用人群：</strong>这绝非为普通玩家或办公用户准备的方案。它精准服务于两类“硬核”用户：<ul><li><strong>极致游戏发烧友：</strong>追求4K/8K最高画质、无妥协光追体验的玩家。</li><li><strong>顶级内容创作者与AI开发者：</strong>需要恐怖并行算力与超大显存进行视频渲染、3D建模、科学计算或“炼丹”的专业人士。</li></ul></p>\n<p><strong>性价比：</strong>在“性价比”的字典里，找不到这套配置。它代表的是当前消费级PC的<strong>性能极限与价格巅峰</strong>。每一分钱都在为那超越主流几个身位的极致性能、旗舰用料和品牌溢价买单。选择它，意味着你已不再关心“值不值”，只在乎“是不是最好”。</p>",
+    "recommended_monitor": {
+      "model": "三星 Odyssey Neo G9 57英寸 8K",
+      "price": "¥14999"
+    },
+    "review_hash": "f8c5835f0992d46f076b1803c643c83d"
+  }
+]

@@ -42,7 +42,11 @@ window.TB_LOCALES.en = {
             newsTitle: 'Tech news',
             newsDesc: '“Refresh news” crawls & rewrites; “Rebuild pages” regenerates HTML from DB only',
             newsRefresh: 'Refresh news',
-            newsRegen: 'Rebuild pages'
+            newsRegen: 'Rebuild pages',
+            pcBuildsTitle: 'PC builds',
+            pcBuildsDesc: '“Update builds” crawls ZOL + AI (cloud IPs may be blocked); “Refresh reviews” rewrites reviews from JSON only',
+            pcBuildsRefresh: 'Update builds',
+            pcBuildsGenerate: 'Refresh reviews'
         },
         ladder: {
             updateTitle: 'Backend updates',
@@ -2326,6 +2330,26 @@ window.TB_LOCALES.en = {
             searchPlaceholder: 'Search model…',
             noMatch: 'No matches',
             scoreLabel: 'Score'
+        },
+        pcBuilds: {
+            title: '2026 PC Build Guides',
+            desc: 'Mainstream 2026 PC builds with AI reviews; prices are indicative only',
+            lead: 'Curated from recent popular parts, with AI commentary. Check live store prices before buying.',
+            loading: 'Loading…',
+            empty: 'No builds yet',
+            loadFail: 'Failed to load',
+            count: 'Builds',
+            yearNote: 'For the 2026 market',
+            parts: 'Parts list',
+            review: 'AI review',
+            noReview: 'No review yet',
+            tip: 'Tip',
+            jd: 'JD',
+            hostOnly: 'PC only (est.)',
+            hostMonitor: 'PC + monitor',
+            monitorBudget: 'Monitor budget',
+            monitorRec: 'Suggested',
+            fullPrice: 'Bundle estimate'
         },
         ladderGpu: {
             title: 'Desktop GPU',

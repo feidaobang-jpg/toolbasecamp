@@ -41,7 +41,11 @@ window.TB_LOCALES['zh-CN'] = {
             newsTitle: '科技资讯',
             newsDesc: '「更新资讯」抓取编译新文；「重生静态页」只按库重写 HTML',
             newsRefresh: '更新资讯',
-            newsRegen: '重生静态页'
+            newsRegen: '重生静态页',
+            pcBuildsTitle: '装机推荐',
+            pcBuildsDesc: '「更新装机」爬 ZOL+AI（云 IP 可能失败，宜本地跑脚本）；「刷新点评」只按现有 JSON 重写点评',
+            pcBuildsRefresh: '更新装机',
+            pcBuildsGenerate: '刷新点评'
         },
         ladder: {
             updateTitle: '后台更新',
@@ -2325,6 +2329,26 @@ window.TB_LOCALES['zh-CN'] = {
             searchPlaceholder: '搜索型号…',
             noMatch: '无匹配结果',
             scoreLabel: '分数'
+        },
+        pcBuilds: {
+            title: '2026 装机配置推荐',
+            desc: '2026 主流装机方案清单与 AI 点评，价格仅供参考',
+            lead: '根据近期网友热门配件整理的主流方案，附 AI 点评；价格波动请以电商实价为准。',
+            loading: '加载中…',
+            empty: '暂无装机方案',
+            loadFail: '加载失败',
+            count: '方案数',
+            yearNote: '面向 2026 年市场',
+            parts: '配置清单',
+            review: 'AI 点评',
+            noReview: '暂无点评',
+            tip: '装机小贴士',
+            jd: '京东',
+            hostOnly: '主机参考价',
+            hostMonitor: '主机 + 显示器',
+            monitorBudget: '推荐显示器预算',
+            monitorRec: '推荐',
+            fullPrice: '全套参考总价'
         },
         ladderGpu: {
             title: '桌面显卡',

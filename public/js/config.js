@@ -209,6 +209,7 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.ladder',
             items: [
+                { titleKey: 'tools.pcBuilds.title', url: 'html/ladder/pc-builds.html' },
                 { titleKey: 'tools.ladderCpuRank.title', url: 'html/ladder/cpu_rank.html' },
                 { titleKey: 'tools.ladderGpuRank.title', url: 'html/ladder/gpu_rank.html' },
                 { titleKey: 'tools.ladderSocRank.title', url: 'html/ladder/soc_rank.html' },
