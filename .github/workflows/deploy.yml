@@ -465,7 +465,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "$HEALTH_JSON" | grep -F '"pc_builds_api":true' >/dev/null || exit 1
-            echo "$HEALTH_JSON" | grep -F '"pc_builds_api_rev":2' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"pc_builds_api_rev":3' >/dev/null || exit 1
           fi
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/days' >/dev/null || {
             echo "=== openapi missing /records/days ==="
