@@ -64,7 +64,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .pc-build-head h2 {
@@ -89,18 +89,11 @@
   border-radius: 999px;
 }
 
-.pc-build-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (min-width: 900px) {
-  .pc-build-grid {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: 1.25rem;
-    align-items: start;
-  }
+.pc-build-summary {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #64748b;
 }
 
 .pc-build-parts {
@@ -109,8 +102,7 @@
   padding: 1rem 1.1rem;
 }
 
-.pc-build-parts h3,
-.pc-build-side h3 {
+.pc-build-parts h3 {
   margin: 0 0 0.75rem;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -198,11 +190,4 @@
   color: #ea580c;
   font-size: 1.125rem;
   font-variant-numeric: tabular-nums;
-}
-
-.pc-build-summary {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: #475569;
 }

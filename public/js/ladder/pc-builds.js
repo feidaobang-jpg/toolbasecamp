@@ -156,19 +156,14 @@
       '</h2><div class="pc-build-tags">' +
       tags +
       '</div></div>' +
-      '<div class="pc-build-grid">' +
+      summary +
       '<div class="pc-build-parts"><h3>' +
       esc(t('tools.pcBuilds.parts', '配置清单')) +
       '</h3><ul>' +
       renderParts(build.parts) +
       '</ul>' +
       renderPrice(info) +
-      '</div>' +
-      '<div class="pc-build-side"><h3>' +
-      esc(t('tools.pcBuilds.summaryTitle', '方案说明')) +
-      '</h3>' +
-      summary +
-      '</div></div></article>'
+      '</div></article>'
     );
   }
 
