@@ -332,6 +332,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/fix-records-api.sh
           bash /opt/toolbasecamp-deploy/fix-stocks-api.sh || true
           bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
+          bash /opt/toolbasecamp-deploy/fix-news-api.sh || true
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
