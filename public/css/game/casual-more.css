@@ -32,22 +32,6 @@
     font-size: clamp(18px, 6vw, 28px);
     color: #776e65;
 }
-.whack-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
-    max-width: 320px;
-}
-.whack-hole {
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: #334155;
-    border: none;
-    font-size: clamp(28px, 10vw, 42px);
-    cursor: pointer;
-    line-height: 1;
-}
 .memory-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

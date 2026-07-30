@@ -40,15 +40,15 @@ canvas{display:block;width:100%;height:100%}
     <span>阳光 <b id="sun">50</b></span>
     <span>波次 <b id="wave">1</b></span>
     <span>击退 <b id="kills">0</b></span>
-    <span>最�?<b id="best">0</b></span>
+    <span>最高 <b id="best">0</b></span>
   </div>
   <div id="bar"></div>
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>阳光菜园</h1>
-      <p>竖屏友好�?2D 塔防：僵尸从<strong>上方</strong>来，基地�?strong>下方</strong>。纯程序化绘制，无外部贴图�?/p>
-      <p>选底部卡�?�?点草地种植；点阳光收集；铁铲可铲除�?/p>
-      <div class="row"><button id="btnStart">开�?/button></div>
+      <p>竖屏友好的 2D 塔防：僵尸从<strong>上方</strong>来，基地在<strong>下方</strong>。纯程序化绘制，无外部贴图。</p>
+      <p>选底部卡片 → 点草地种植；点阳光收集；铁铲可铲除。</p>
+      <div class="row"><button id="btnStart">开战</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">园丁败北</h1>
@@ -59,13 +59,13 @@ canvas{display:block;width:100%;height:100%}
       </div>
     </div>
   </div>
-  <div id="credit">竖屏上下对战 · Canvas 程序�?· WebAudio</div>
+  <div id="credit">竖屏上下对战 · Canvas 程序化 · WebAudio</div>
 </div>
 <script>
 (function () {
 'use strict';
 const SAVE = 'tbc_garden_defense_v1';
-/* 竖屏：COLS=车道，ROWS=纵深（上=刷怪，�?基地�?*/
+/* 竖屏：COLS=车道，ROWS=纵深（上=刷怪，下=基地） */
 const ROWS = 8, COLS = 5;
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
@@ -91,10 +91,10 @@ try { best = (JSON.parse(localStorage.getItem(SAVE) || '{}').best) | 0; } catch 
 document.getElementById('best').textContent = String(best);
 
 const PLANTS = {
-  sunbloom: { name: '向日�?, cost: 50, hp: 80, cool: 7.5, color: '#fbbf24' },
-  peapod: { name: '豌豆�?, cost: 100, hp: 100, cool: 7.5, color: '#65a30d' },
-  oakshield: { name: '橡果�?, cost: 50, hp: 500, cool: 30, color: '#a16207' },
-  frostpod: { name: '霜冻�?, cost: 175, hp: 100, cool: 7.5, color: '#38bdf8' },
+  sunbloom: { name: '向日葵', cost: 50, hp: 80, cool: 7.5, color: '#fbbf24' },
+  peapod: { name: '豌豆荚', cost: 100, hp: 100, cool: 7.5, color: '#65a30d' },
+  oakshield: { name: '橡果盾', cost: 50, hp: 500, cool: 30, color: '#a16207' },
+  frostpod: { name: '霜冻荚', cost: 175, hp: 100, cool: 7.5, color: '#38bdf8' },
   shovel: { name: '铁铲', cost: 0, hp: 0, cool: 0, color: '#94a3b8' }
 };
 const coolLeft = { sunbloom: 0, peapod: 0, oakshield: 0, frostpod: 0, shovel: 0 };
@@ -245,7 +245,7 @@ function buildBar() {
     el.appendChild(ic);
     const cost = document.createElement('div');
     cost.className = 'cost';
-    cost.textContent = id === 'shovel' ? '�? : String(p.cost);
+    cost.textContent = id === 'shovel' ? '铲' : String(p.cost);
     el.appendChild(cost);
     const name = document.createElement('div');
     name.className = 'name';
@@ -272,7 +272,7 @@ function updateHud() {
     el.classList.toggle('disabled', locked);
     const costEl = el.querySelector('.cost');
     if (id !== 'shovel' && coolLeft[id] > 0) costEl.textContent = coolLeft[id].toFixed(1) + 's';
-    else costEl.textContent = id === 'shovel' ? '�? : String(p.cost);
+    else costEl.textContent = id === 'shovel' ? '铲' : String(p.cost);
   });
 }
 
@@ -301,7 +301,7 @@ function gameOver(win) {
   try { localStorage.setItem(SAVE, JSON.stringify({ best })); } catch (e) {}
   document.getElementById('panelOver').classList.remove('hidden');
   document.getElementById('overTitle').textContent = win ? '菜园保卫成功' : '园丁败北';
-  document.getElementById('overText').textContent = `得分 ${score} · 波次 ${wave} · 击退 ${kills} · 最�?${best}`;
+  document.getElementById('overText').textContent = `得分 ${score} · 波次 ${wave} · 击退 ${kills} · 最高 ${best}`;
   sfx(win ? 'win' : 'lose');
   updateHud();
 }
@@ -384,7 +384,7 @@ function update(dt) {
     if (wave > 8) { gameOver(true); return; }
     toSpawn = 3 + wave * 2;
     spawnT = 3.5;
-    floats.push({ x: W / 2, y: H * 0.28, t: 0, text: '�?' + wave + ' �?, c: '#a3e635' });
+    floats.push({ x: W / 2, y: H * 0.28, t: 0, text: '第 ' + wave + ' 波', c: '#a3e635' });
   }
 
   // plants
@@ -402,7 +402,8 @@ function update(dt) {
         }
       }
       if (p.id === 'peapod' || p.id === 'frostpod') {
-        // 同车道上方有�?        const threat = zombies.some(z => z.c === c && z.y < cen.y + 10 && z.y > board.top - 40);
+        // 同车道上方有怪
+        const threat = zombies.some(z => z.c === c && z.y < cen.y + 10 && z.y > board.top - 40);
         if (threat) {
           p.shootT -= dt;
           if (p.shootT <= 0) {

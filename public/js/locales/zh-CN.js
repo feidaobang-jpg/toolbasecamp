@@ -340,7 +340,7 @@ window.TB_LOCALES['zh-CN'] = {
             developer: '开发者'
         },
         game: {
-            restart: '重新开始',
+            restart: '开始',
             score: '得分',
             level: '关卡',
             soundOn: '静音',
@@ -391,7 +391,7 @@ window.TB_LOCALES['zh-CN'] = {
             hint: '提示',
             hintPlay: '先点一颗宝石，再点相邻宝石进行交换。',
             invalidSwap: '这样交换无法形成消除',
-            noMoves: '没有可走的步了，请重新开始',
+            noMoves: '没有可走的步了，请开始',
             outOfMoves: '步数用尽，得分 {n}',
             hintFound: '已高亮一对可交换的宝石',
             goal: '目标',
@@ -448,7 +448,7 @@ window.TB_LOCALES['zh-CN'] = {
             level: '关卡',
             time: '时间',
             start: '开始',
-            hint: '点「重新开始」或点击画面开始。勾完金块/宝石/石头过关，炸弹可留着不勾。',
+            hint: '点「开始」或点击画面开始。勾完金块/宝石/石头过关，炸弹可留着不勾。',
             tapStart: '点击开始',
             playing: '钩爪摆动中 — 点击放下',
             levelClear: '第 {n} 关完成！进入下一关…',
@@ -473,41 +473,6 @@ window.TB_LOCALES['zh-CN'] = {
             win: '达到 2048！可继续玩',
             lose: '没有可合并的步了'
         },
-        whack: {
-            title: '打地鼠',
-            desc: '地鼠冒头就点；过关提速、目标更高。本地运行。',
-            time: '时间',
-            goal: '目标',
-            start: '开始',
-            hint: '点「开始」后点击 🐹，达到目标分过关。',
-            playing: '快打！',
-            done: '时间到，得分 {n}',
-            levelStart: '第 {n} 关 · 目标 {goal} 分',
-            levelClear: '第 {n} 关完成！进入下一关…',
-            fail: '第 {n} 关失败 · {score}/{goal}'
-        },
-        shooter: {
-            title: '飞机大战',
-            desc: '消灭一波敌人过关；关卡越高敌机越快。本地运行。',
-            lives: '生命',
-            goal: '击毁',
-            start: '开始',
-            hint: '← → / A D 移动，空格或点击射击。',
-            tapStart: '点击开始',
-            playing: '消灭入侵者',
-            gameOver: '游戏结束',
-            levelStart: '第 {n} 关 · 击毁 {need}',
-            levelClear: '第 {n} 关完成！下一波更难…'
-        },
-        jumpjump: {
-            title: '跳一跳',
-            desc: '按住蓄力跳台；关卡升高间距更大、台更窄。本地运行。',
-            best: '最佳',
-            hint: '在画面上按住蓄力，松手起跳。',
-            nice: '跳上了！继续',
-            miss: '没跳上，再来一局',
-            levelUp: '进入第 {n} 关！台更远更窄'
-        },
         catcher: {
             title: '接水果',
             desc: '接够数量过关；关卡越高下落更快、炸弹更多。本地运行。',
@@ -522,16 +487,6 @@ window.TB_LOCALES['zh-CN'] = {
             levelStart: '第 {n} 关 · 接住 {goal} 个',
             levelClear: '第 {n} 关完成！'
         },
-        tetris: {
-            title: '俄罗斯方块',
-            desc: '消行升级，速度递增。本地运行。',
-            lines: '消除行',
-            start: '开始',
-            hint: '← → 移动，↑ 旋转，↓ 软降，空格硬降。',
-            playing: '游戏中',
-            gameOver: '堆满了',
-            levelUp: '升到第 {n} 关！下落更快'
-        },
         memory: {
             title: '记忆翻牌',
             desc: '配对过关；关卡越高牌越多。本地运行。',
@@ -542,17 +497,6 @@ window.TB_LOCALES['zh-CN'] = {
             winAll: '通关！总步数 {n}',
             levelStart: '第 {n} 关 · {pairs} 对',
             levelClear: '第 {n} 关完成！进入下一关…'
-        },
-        runner: {
-            title: '跑酷',
-            desc: '跳跃躲障；分数推进关卡，速度与密度递增。本地运行。',
-            best: '最佳',
-            start: '开始',
-            hint: '点击 / 空格跳跃。',
-            tapStart: '点击开始',
-            playing: '跑起来！',
-            gameOver: '撞到了，得分 {n}',
-            levelUp: '进入第 {n} 关！更快更密'
         },
         mines: {
             title: '扫雷',
@@ -595,22 +539,6 @@ window.TB_LOCALES['zh-CN'] = {
             title: '潜水捕鱼',
             desc: '类似《潜水员戴夫》：下潜捕鱼、管理氧气、回船卖鱼升级、再潜更深。单文件零依赖。'
         },
-        parkour: {
-            title: '跑酷',
-            desc: '2D 自动向前跑酷：跳跃、二段跳、滑铲。距离推进关卡，速度与障碍递增。'
-        },
-        cubeRush: {
-            title: '立体躲避',
-            desc: '简易 WebGL 三维跑道躲避。距离推进关卡，速度与密度递增。'
-        },
-        arenaBrawl: {
-            title: '街机乱斗',
-            desc: '横版 2.5D 对战：纯 Canvas 自绘角色场景，无外部图片。连招、打击停顿与特效。'
-        },
-        arenaStrike: {
-            title: '巷战突袭',
-            desc: '单机 3D 枪战（Three.js）：程序化 PBR 贴图 + WebAudio 音效，清波次 Bot。'
-        },
         gardenDefense: {
             title: '阳光菜园',
             desc: '竖屏友好 2D 塔防：僵尸从上往下，纯程序化绘制，适配手机。'
@@ -634,14 +562,6 @@ window.TB_LOCALES['zh-CN'] = {
         starSerpent: {
             title: '星蛇突击',
             desc: '沙罗曼蛇致敬：纵版射击与 Boss。街机横屏视野，手机建议横屏（不强制）。'
-        },
-        townWalk: {
-            title: '青空小镇',
-            desc: '2D 俯视城镇散步：聊天、逛广场、打听店铺门口。'
-        },
-        town3d: {
-            title: '立体街区',
-            desc: '3D 小城原型（Three.js）：主街漫步，金色门口互动。'
         },
         fishFeast: {
             title: '大鱼吃小鱼',

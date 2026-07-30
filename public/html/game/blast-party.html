@@ -74,7 +74,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
     <span>得分 <b id="score">0</b></span>
     <span>生命 <b id="lives">3</b></span>
     <span>敌人 <b id="enemies">0</b></span>
-    <span>最�?<b id="best">0</b></span>
+    <span>最高 <b id="best">0</b></span>
   </div>
   <div id="touch">
     <div class="pad" id="pad"><div class="stick" id="stick"></div></div>
@@ -83,9 +83,9 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
   <div id="ui">
     <div class="panel" id="panelMenu">
       <h1>炸弹奇兵</h1>
-      <p>迷宫炸弹人对战：炸开软墙、拾取强化、清剿敌人进入下一关�?/p>
-      <p>键盘：WASD 移动 · J / 空格 放炸�?br/>触屏：左摇杆移动 · 右下炸弹�?/p>
-      <div class="row"><button id="btnStart">开始游�?/button></div>
+      <p>迷宫炸弹人对战：炸开软墙、拾取强化、清剿敌人进入下一关。</p>
+      <p>键盘：WASD 移动 · J / 空格 放炸弹<br/>触屏：左摇杆移动 · 右下炸弹键</p>
+      <div class="row"><button id="btnStart">开始游戏</button></div>
     </div>
     <div class="panel hidden" id="panelOver">
       <h1 id="overTitle">游戏结束</h1>
@@ -96,12 +96,12 @@ canvas{display:block;width:100%;height:100%;image-rendering:auto}
       </div>
     </div>
     <div class="panel hidden" id="panelClear">
-      <h1>关卡完成�?/h1>
+      <h1>关卡完成！</h1>
       <p id="clearText"></p>
-      <div class="row"><button id="btnNext">下一�?/button></div>
+      <div class="row"><button id="btnNext">下一关</button></div>
     </div>
   </div>
-  <div id="credit">960×540 · WASD · J/空格 · 程序化绘�?· WebAudio</div>
+  <div id="credit">960×540 · WASD · J/空格 · 程序化绘制 · WebAudio</div>
 </div>
 <script>
 (function () {
@@ -409,7 +409,7 @@ function killPlayer() {
     saveBest();
     mode = 'over';
     document.getElementById('overTitle').textContent = '任务失败';
-    document.getElementById('overText').textContent = '得分 ' + score + ' · 到达�?' + stage + ' �?;
+    document.getElementById('overText').textContent = '得分 ' + score + ' · 到达第 ' + stage + ' 关';
     showPanel('panelOver');
   } else {
     setTimeout(() => {
@@ -438,7 +438,7 @@ function killEnemy(e) {
     score += 500 * stage;
     saveBest();
     mode = 'clear';
-    document.getElementById('clearText').textContent = '得分 +' + (500 * stage) + ' · 准备进入�?' + (stage + 1) + ' �?;
+    document.getElementById('clearText').textContent = '得分 +' + (500 * stage) + ' · 准备进入第 ' + (stage + 1) + ' 关';
     showPanel('panelClear');
     sfx('clear');
   }
@@ -449,7 +449,7 @@ function applyPower(type) {
   else if (type === 'range') player.range = clamp(player.range + 1, 2, 8);
   else if (type === 'speed') player.speed = clamp(player.speed + 18, 130, 220);
   sfx('pick');
-  msg = type === 'bomb' ? '炸弹+1' : type === 'range' ? '射程+1' : '加�?;
+  msg = type === 'bomb' ? '炸弹+1' : type === 'range' ? '射程+1' : '加速';
   msgT = 1.2;
 }
 
@@ -462,14 +462,16 @@ function moveEntity(ent, dt, isPlayer) {
   if (isPlayer && !player.alive) return;
   if (!isPlayer && !ent.alive) return;
 
-  // —�?玩家：格子对齐移动（朝下一格中心走，不再拽回当前格）—�?  if (isPlayer) {
+  // —— 玩家：格子对齐移动（朝下一格中心走，不再拽回当前格）——
+  if (isPlayer) {
     let dx = 0, dy = 0;
     const q = quantize8(touchMove.x, touchMove.y);
     if (keys.ArrowUp || keys.w || keys.W || keys['arrowup']) dy = -1;
     else if (keys.ArrowDown || keys.s || keys.S || keys['arrowdown']) dy = 1;
     if (keys.ArrowLeft || keys.a || keys.A || keys['arrowleft']) dx = -1;
     else if (keys.ArrowRight || keys.d || keys.D || keys['arrowright']) dx = 1;
-    // 摇杆（键鼠优先；同时按左右时以水平为准，避免斜向卡死�?    if (!dx && !dy && (q.ax || q.ay)) {
+    // 摇杆（键鼠优先；同时按左右时以水平为准，避免斜向卡死）
+    if (!dx && !dy && (q.ax || q.ay)) {
       if (Math.abs(touchMove.x) >= Math.abs(touchMove.y)) { dx = q.ax; dy = 0; }
       else { dx = 0; dy = q.ay; }
     }
@@ -499,13 +501,15 @@ function moveEntity(ent, dt, isPlayer) {
       return;
     }
 
-    // 已对齐：接受新方�?    if (dx || dy) {
+    // 已对齐：接受新方向
+    if (dx || dy) {
       ent.dir = { x: dx, y: dy };
       const nc = ent.c + dx, nr = ent.r + dy;
       const blocked = !isWalkable(nc, nr, true) || (bombAt(nc, nr) && !bombAt(ent.c, ent.r));
       if (!blocked) {
         ent.moving = true;
-        // 本帧先挪一点，避免站桩�?        const ntx = px(nc) + TILE / 2, nty = py(nr) + TILE / 2;
+        // 本帧先挪一点，避免站桩感
+        const ntx = px(nc) + TILE / 2, nty = py(nr) + TILE / 2;
         const nx = ntx - ent.x, ny = nty - ent.y;
         const nd = Math.hypot(nx, ny) || 1;
         const step = Math.min(speed, nd);
@@ -733,7 +737,7 @@ function drawHudBar() {
   const icons = [
     { label: '💣', val: player.bombMax, max: 8, color: '#ef4444' },
     { label: '🔥', val: player.range, max: 8, color: '#f97316' },
-    { label: '�?, val: (player.speed - 130) / 18 + 1, max: 5, color: '#38bdf8' }
+    { label: '⚡', val: (player.speed - 130) / 18 + 1, max: 5, color: '#38bdf8' }
   ];
   icons.forEach((ic, i) => {
     const ix = bx + i * (bw / 3) + 8;

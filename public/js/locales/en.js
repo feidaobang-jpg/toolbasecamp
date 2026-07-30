@@ -341,7 +341,7 @@ window.TB_LOCALES.en = {
             developer: 'Developer'
         },
         game: {
-            restart: 'New game',
+            restart: 'Start',
             score: 'Score',
             level: 'Level',
             soundOn: 'Mute',
@@ -449,7 +449,7 @@ window.TB_LOCALES.en = {
             level: 'Level',
             time: 'Time',
             start: 'Start',
-            hint: 'Tap Restart or the playfield to start. Clear all loot except bombs to pass the level.',
+            hint: 'Tap Start or the playfield to start. Clear all loot except bombs to pass the level.',
             tapStart: 'Tap to start',
             playing: 'Claw swinging — tap to drop',
             levelClear: 'Level {n} clear! Next level…',
@@ -474,41 +474,6 @@ window.TB_LOCALES.en = {
             win: 'Reached 2048! You can keep going',
             lose: 'No moves left'
         },
-        whack: {
-            title: 'Whack-a-Mole',
-            desc: 'Tap moles before they hide. Clear goals to level up — faster pops each stage.',
-            time: 'Time',
-            goal: 'Goal',
-            start: 'Start',
-            hint: 'Press Start, then tap 🐹. Reach the goal to clear the level.',
-            playing: 'Whack them!',
-            done: 'Time up — score {n}',
-            levelStart: 'Level {n} · goal {goal}',
-            levelClear: 'Level {n} cleared! Next…',
-            fail: 'Level {n} failed · {score}/{goal}'
-        },
-        shooter: {
-            title: 'Space Shooter',
-            desc: 'Clear waves of invaders. Higher levels spawn faster foes.',
-            lives: 'Lives',
-            goal: 'Kills',
-            start: 'Start',
-            hint: '← → / A D move, Space or tap to shoot.',
-            tapStart: 'Tap to start',
-            playing: 'Blast the invaders',
-            gameOver: 'Game over',
-            levelStart: 'Level {n} · destroy {need}',
-            levelClear: 'Wave {n} cleared! Harder next…'
-        },
-        jumpjump: {
-            title: 'Jump Jump',
-            desc: 'Hold to charge jumps. Higher levels: wider gaps, narrower platforms.',
-            best: 'Best',
-            hint: 'Hold on the canvas to charge, release to jump.',
-            nice: 'Landed! Keep going',
-            miss: 'Missed — try again',
-            levelUp: 'Level {n}! Farther & thinner pads'
-        },
         catcher: {
             title: 'Fruit Catcher',
             desc: 'Catch a quota to clear levels. Faster drops and more bombs as you go.',
@@ -523,16 +488,6 @@ window.TB_LOCALES.en = {
             levelStart: 'Level {n} · catch {goal}',
             levelClear: 'Level {n} cleared!'
         },
-        tetris: {
-            title: 'Tetris',
-            desc: 'Clear lines to level up — drop speed rises every 10 lines.',
-            lines: 'Lines',
-            start: 'Start',
-            hint: '← → move, ↑ rotate, ↓ soft drop, Space hard drop.',
-            playing: 'Playing',
-            gameOver: 'Stacked out',
-            levelUp: 'Level {n}! Faster drops'
-        },
         memory: {
             title: 'Memory Match',
             desc: 'Match pairs to clear levels. More cards each stage.',
@@ -543,17 +498,6 @@ window.TB_LOCALES.en = {
             winAll: 'All levels cleared! Moves {n}',
             levelStart: 'Level {n} · {pairs} pairs',
             levelClear: 'Level {n} cleared! Next…'
-        },
-        runner: {
-            title: 'Runner',
-            desc: 'Jump obstacles. Score advances levels with faster denser hazards.',
-            best: 'Best',
-            start: 'Start',
-            hint: 'Tap / Space to jump.',
-            tapStart: 'Tap to start',
-            playing: 'Run!',
-            gameOver: 'Crashed — score {n}',
-            levelUp: 'Level {n}! Faster & denser'
         },
         mines: {
             title: 'Minesweeper',
@@ -596,22 +540,6 @@ window.TB_LOCALES.en = {
             title: 'Dive Fisher',
             desc: 'Dave-the-Diver style loop: dive, catch fish, watch oxygen, sell and upgrade, go deeper. Single HTML, no deps.'
         },
-        parkour: {
-            title: 'Parkour',
-            desc: '2D auto-runner: jump, double-jump, slide. Distance raises levels — faster with denser hazards.'
-        },
-        cubeRush: {
-            title: 'Cube Rush',
-            desc: 'Simple WebGL 3D lane dodge. Distance raises levels — faster with denser cubes.'
-        },
-        arenaBrawl: {
-            title: 'Arena Brawl',
-            desc: '2.5D arcade brawler — all Canvas-drawn, no images. Combos, hitstop and heavy VFX.'
-        },
-        arenaStrike: {
-            title: 'Arena Strike',
-            desc: 'Offline 3D gunfight on Three.js — procedural PBR textures, WebAudio SFX, bot waves.'
-        },
         gardenDefense: {
             title: 'Sunny Garden',
             desc: 'Portrait-friendly 2D tower defense — zombies come from the top. Fully procedural art.'
@@ -635,14 +563,6 @@ window.TB_LOCALES.en = {
         starSerpent: {
             title: 'Star Serpent',
             desc: 'Salamander homage vertical shmup. Arcade landscape frame; mobile suggests landscape (not forced).'
-        },
-        townWalk: {
-            title: 'Sky Town',
-            desc: '2D top-down town stroll: chat with locals and visit doorways.'
-        },
-        town3d: {
-            title: 'Street Blocks 3D',
-            desc: 'Tiny Three.js town: walk the main street and interact at golden doors.'
         },
         fishFeast: {
             title: 'Fish Feast',

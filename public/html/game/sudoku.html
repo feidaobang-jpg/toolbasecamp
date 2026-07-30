@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sudoku - Tool Basecamp</title>
   <meta name="description" content="Classic 9×9 sudoku in the browser.">
-  <link rel="stylesheet" href="../../css/base.css?v=9" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
+  <link rel="stylesheet" href="../../css/base.css?v=5" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=7" />
   <link rel="stylesheet" href="../../css/game/games-common.css?v=3" />
   <link rel="stylesheet" href="../../css/game/sudoku.css?v=1" />
 </head>
@@ -16,7 +16,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.sudoku.title">Sudoku</h1>
-        <p data-i18n="tools.sudoku.desc">Fill the 9×9 grid so every row, column, and 3×3 box has digits 1�?. Runs locally.</p>
+        <p data-i18n="tools.sudoku.desc">Fill the 9×9 grid so every row, column, and 3×3 box has digits 1–9. Runs locally.</p>
       </div>
 
       <div class="tool-card game-card">
@@ -28,7 +28,7 @@
               <span data-i18n="tools.game.volume">音量</span>
               <input type="range" id="volume-slider" min="0" max="100" value="50" aria-label="Volume" />
             </label>
-            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">New game</button>
+            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Start</button>
           </div>
         </div>
         <div class="game-board-wrap">
@@ -46,6 +46,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/game/game-audio.js?v=23"></script>
-  <script src="../../js/game/sudoku.js?v=3"></script>
+  <script src="../../js/game/sudoku.js?v=2"></script>
 </body>
 </html>
