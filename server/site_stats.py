@@ -182,6 +182,7 @@ def _read_totals(cur) -> dict:
 
 def _country_to_region(country: str) -> str:
     cc = (country or "").strip().upper()
+    # Mainland China only as 国内 (HK/MO/TW count as overseas for this split).
     if cc in ("CN", "CHN", "CHINA"):
         return "cn"
     if cc and cc not in ("XX", "T1", "A1", "A2", "ZZ"):

@@ -72,8 +72,8 @@
       <p id="error-box" class="error-box" hidden></p>
 
       <section class="bg-white rounded-2xl border border-gray-100 p-5">
-        <h3 class="font-semibold text-gray-900 mb-1">国内 vs 海外</h3>
-        <p class="text-xs text-gray-400 mb-4">按访问 IP / Cloudflare 国家头粗分（仅中国大陆计为国内；管理员与排除 IP 不计入）。爬虫与海外节点常会把区间拉成「全海外」。未知多为内网或解析失败。仅统计站点浏览命中；上线地区统计之前的历史 PV 无法回填。</p>
+        <h3 class="font-semibold text-gray-900 mb-1">国内 / 海外</h3>
+        <p class="text-xs text-gray-400 mb-4">按访问 IP / Cloudflare 国家头粗分（仅中国大陆计为国内）。管理员与排除 IP 不计入，所以你自己浏览通常看不到「国内」。爬虫与海外节点常会把区间拉成「全海外」。未知多为内网或解析失败；上线地区统计之前的历史无法回填。</p>
         <p id="geo-empty-note" class="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-4 hidden"></p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -118,6 +118,6 @@
   <script src="../../js/locales/zh-CN.js"></script>
   <script src="../../js/i18n.js?v=stats2"></script>
   <script src="../../js/config.js"></script>
-  <script src="../../js/admin/site-stats.js?v=5"></script>
+  <script src="../../js/admin/site-stats.js?v=6"></script>
 </body>
 </html>

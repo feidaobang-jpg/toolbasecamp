@@ -69,10 +69,17 @@
   }
 
   function langIsZh() {
+    // 自用统计页默认中文；仅在明确选 EN 时用英文标签
     try {
-      if (typeof window.tbGetLocale === 'function') return window.tbGetLocale() === 'zh-CN';
+      if (typeof window.tbGetLocale === 'function') {
+        var loc = String(window.tbGetLocale() || '').toLowerCase();
+        if (loc.indexOf('en') === 0) return false;
+        if (loc.indexOf('zh') === 0) return true;
+      }
     } catch (e) { /* ignore */ }
-    return (document.documentElement.lang || '').toLowerCase().indexOf('zh') === 0;
+    var lang = (document.documentElement.lang || 'zh-CN').toLowerCase();
+    if (lang.indexOf('en') === 0) return false;
+    return true;
   }
 
   function trKey(key) {
@@ -120,19 +127,21 @@
   }
 
   function labelForEvent(name) {
+    name = (name || '').trim();
+    if (!name) return '';
     if (PAGE_LABELS[name]) return pickLocale(PAGE_LABELS[name]);
     if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
     if (ACTION_LABELS[name]) return pickLocale(ACTION_LABELS[name]);
     if (MODULE_LABELS[name]) return pickLocale(MODULE_LABELS[name]);
 
-    if ((name || '').indexOf('portal.') === 0) {
-      var portalKey = 'portal.' + (name.split('.')[1] || '');
-      if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
+    if (name.indexOf('portal.') === 0) {
+      var parts = name.split('.');
+      var portalKey = 'portal.' + (parts[1] || '');
       if (PORTAL_LABELS[portalKey]) return pickLocale(PORTAL_LABELS[portalKey]);
-      return langIsZh() ? '子站 · ' + (name.split('.').slice(1).join(' · ') || name) : name;
+      return langIsZh() ? '子站 · ' + parts.slice(1).join(' · ') : name;
     }
 
-    var m = /^tool\.([a-z0-9_-]+)\.([a-z0-9_-]+)$/i.exec(name || '');
+    var m = /^tool\.([a-z0-9_-]+)\.([a-z0-9_-]+)$/i.exec(name);
     if (m) {
       var key = m[1] + '/' + m[2];
       var titleKey = maps().toolByFile[key];
@@ -141,7 +150,7 @@
       return m[2].replace(/-/g, ' ');
     }
 
-    if ((name || '').indexOf('tool.') === 0) {
+    if (name.indexOf('tool.') === 0) {
       var folder = name.split('.')[1] || '';
       var gKey = maps().groupByFolder[folder];
       var gTitle = gKey ? trKey(gKey) : '';
@@ -150,7 +159,7 @@
       if (mod) return pickLocale(mod);
     }
 
-    return name || '';
+    return name;
   }
 
   function showError(msg) {
@@ -186,11 +195,13 @@
 
   function nameCellHtml(name) {
     var label = labelForEvent(name);
-    var showKey = label && label !== name;
+    var show = label || name;
+    var tip = label && label !== name ? name : '';
     return (
-      '<div class="event-name">' +
-        '<div class="event-label">' + escapeHtml(label || name) + '</div>' +
-        (showKey ? '<div class="event-key">' + escapeHtml(name) + '</div>' : '') +
+      '<div class="event-name"' +
+      (tip ? ' title="' + escapeHtml(tip) + '"' : '') +
+      '>' +
+        '<div class="event-label">' + escapeHtml(show) + '</div>' +
       '</div>'
     );
   }
