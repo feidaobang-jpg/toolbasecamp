@@ -38,6 +38,13 @@
 /** Self-hosted portals (same brand, separate deploy) */
 const portalsConfig = [
     {
+        titleKey: 'portals.news.title',
+        descriptionKey: 'portals.news.description',
+        url: 'https://news.toolbasecamp.com',
+        ctaKey: 'portals.news.cta',
+        theme: 'news'
+    },
+    {
         titleKey: 'portals.pdf.title',
         descriptionKey: 'portals.pdf.description',
         url: 'https://pdf.toolbasecamp.com',
@@ -71,13 +78,6 @@ const portalsConfig = [
         url: 'https://translate.toolbasecamp.com',
         ctaKey: 'portals.translate.cta',
         theme: 'translate'
-    },
-    {
-        titleKey: 'portals.news.title',
-        descriptionKey: 'portals.news.description',
-        url: 'https://news.toolbasecamp.com',
-        ctaKey: 'portals.news.cta',
-        theme: 'news'
     }
 ];
 
