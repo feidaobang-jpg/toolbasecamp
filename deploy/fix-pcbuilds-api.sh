@@ -66,8 +66,9 @@ echo "$HEALTH" | grep -q '"pc_builds_api":true' || {
   journalctl -u toolbasecamp-api -n 80 --no-pager || true
   exit 1
 }
-echo "$HEALTH" | grep -q '"pc_builds_api_rev":2' || {
-  echo "FAILED: health pc_builds_api_rev!=2"
+echo "$HEALTH" | grep -q '"pc_builds_api_rev":3' || {
+  echo "FAILED: health pc_builds_api_rev!=3 (disk may be old — redeploy server/ then re-run)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
 curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/pcbuilds/list' >/dev/null || {
