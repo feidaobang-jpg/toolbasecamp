@@ -33,7 +33,7 @@ SITE_NAME = "Tool Basecamp 资讯"
 SITE_LOGO_TEXT = "TB"
 NEWS_SECTION_NAME = "科技资讯"
 SITE_BASE_URL = os.environ.get("NEWS_SITE_URL", "https://news.toolbasecamp.com").rstrip("/")
-KEYWORDS = "科技资讯,AI,硬件,显卡,手机,DeepSeek,Tool Basecamp"
+KEYWORDS = "科技资讯,AI,硬件,显卡,手机,Tool Basecamp"
 DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由 Tool Basecamp 自动整理。"
 
 DEEPSEEK_API_KEY = (os.environ.get("DEEPSEEK_API_KEY") or "").strip()
@@ -43,7 +43,7 @@ DEEPSEEK_API_URL = os.environ.get(
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat").strip()
 
 ITEMS_PER_FEED = int(os.environ.get("NEWS_ITEMS_PER_FEED", "2"))
-MAX_TOTAL_ITEMS = int(os.environ.get("NEWS_MAX_TOTAL", "300"))
+MAX_TOTAL_ITEMS = int(os.environ.get("NEWS_MAX_TOTAL", "100"))
 ITEMS_PER_PAGE = int(os.environ.get("NEWS_ITEMS_PER_PAGE", "15"))
 
 RSS_FEEDS = [

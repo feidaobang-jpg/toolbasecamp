@@ -50,4 +50,4 @@ python build_news.py --smoke /tmp/tbc-news-smoke
 
 ## 清理策略
 
-库内最多保留 300 条；超额时删除旧行及对应 `articles/*.html`、封面图。
+库内最多保留 100 条（可用环境变量 `NEWS_MAX_TOTAL` 覆盖）；超额时删除旧行及对应 `articles/*.html`、封面图。
