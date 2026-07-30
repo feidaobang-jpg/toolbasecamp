@@ -308,6 +308,11 @@ window.TB_LOCALES.en = {
             title: 'Machine Translation',
             description: 'LibreTranslate — privacy-friendly English ↔ 中文 translation. Self-hosted; on small VPS plans load en and zh language packs only.',
             cta: 'Open Translator'
+        },
+        news: {
+            title: 'Tech News',
+            description: 'Overseas tech news rewritten in Chinese — AI, hardware, and gadgets, updated daily.',
+            cta: 'Open News'
         }
     },
     tools: {

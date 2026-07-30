@@ -31,6 +31,12 @@ jobs:
               - 'deploy/next-tools.ref'
             portal_chef:
               - 'deploy/cyberchef.ref'
+            portal_news:
+              - 'scripts/news/**'
+              - 'deploy/nginx-toolbasecamp-news.conf'
+              - 'deploy/patch-nginx-news.sh'
+              - 'deploy/news-portal-inject.snippet'
+              - 'deploy/install-news-cron.sh'
             workflow:
               - '.github/workflows/deploy.yml'
 
@@ -52,13 +58,15 @@ jobs:
           echo "deploy=${{ steps.changes.outputs.deploy }}"
           echo "portal_dev=${{ steps.changes.outputs.portal_dev }}"
           echo "portal_chef=${{ steps.changes.outputs.portal_chef }}"
+          echo "portal_news=${{ steps.changes.outputs.portal_news }}"
           if [[ "${{ steps.full.outputs.yes }}" == "1" ]]; then
             echo "Full deploy  - all steps enabled."
           elif [[ "${{ steps.changes.outputs.public }}" == "true" \
              && "${{ steps.changes.outputs.server }}" != "true" \
              && "${{ steps.changes.outputs.deploy }}" != "true" \
              && "${{ steps.changes.outputs.portal_dev }}" != "true" \
-             && "${{ steps.changes.outputs.portal_chef }}" != "true" ]]; then
+             && "${{ steps.changes.outputs.portal_chef }}" != "true" \
+             && "${{ steps.changes.outputs.portal_news }}" != "true" ]]; then
             echo "Static-only change  - skip next-tools / CyberChef / API restart."
           fi
 
@@ -113,6 +121,38 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             deploy/ \
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-deploy/"
+
+      - name: Rsync news crawler
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_news == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" "mkdir -p /opt/toolbasecamp-news /var/www/toolbasecamp-news"
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            --exclude '.venv' --exclude '__pycache__' \
+            scripts/news/ \
+            "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-news/"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" "chmod +x /opt/toolbasecamp-news/run_news.sh"
+
+      - name: Install news portal (cron + nginx)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_news == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" 'bash -s' << 'REMOTE'
+          set -euo pipefail
+          if [[ ! -f /opt/toolbasecamp-news/build_news.py ]]; then
+            echo "news crawler missing - skip"
+            exit 0
+          fi
+          # Ensure deploy scripts present for patch/cert
+          if [[ ! -f /opt/toolbasecamp-deploy/patch-nginx-news.sh ]]; then
+            echo "patch-nginx-news.sh missing - skip nginx (deploy rsync needed)"
+            exit 0
+          fi
+          bash /opt/toolbasecamp-deploy/install-news-cron.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-news.sh
+          REMOTE
 
       - name: Build next-tools dev portal
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
@@ -248,6 +288,12 @@ jobs:
           else
             echo "translate-on-nas.flag set  - skip LibreTranslate on VPS"
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
+          fi
+          if [[ -f /opt/toolbasecamp-news/build_news.py ]]; then
+            bash /opt/toolbasecamp-deploy/install-news-cron.sh || true
+            bash /opt/toolbasecamp-deploy/patch-nginx-news.sh || true
+          else
+            echo "news crawler not present  - skip news portal"
           fi
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           bash /opt/toolbasecamp-deploy/install-mysql-backup-cron.sh || true
@@ -1089,6 +1135,23 @@ jobs:
             echo "::warning:: chef missing inline portal-home-bar  - run patch-nginx-chef.sh"
           fi
           echo "Chef portal OK."
+
+      - name: Verify news portal (public URL)
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_news == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          sleep 3
+          HTTP_CODE="$(curl -s -o /tmp/news-public.html -w '%{http_code}' \
+            'https://news.toolbasecamp.com/' || echo '000')"
+          echo "HTTPS $HTTP_CODE"
+          if [[ "$HTTP_CODE" != "200" ]]; then
+            echo "::warning:: news portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: news A record (orange cloud), then re-run deploy."
+            exit 0
+          fi
+          if ! grep -qi '??\|Tool Basecamp' /tmp/news-public.html; then
+            echo "::warning:: news URL did not look like news portal HTML."
+            exit 0
+          fi
+          echo "News portal OK."
 
       - name: Verify hoppscotch portal (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'

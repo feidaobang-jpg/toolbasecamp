@@ -24,6 +24,11 @@
             iconWrap: 'bg-sky-50 text-sky-600',
             chip: 'border-sky-200 text-sky-900',
             icon: 'fa-language'
+        },
+        news: {
+            iconWrap: 'bg-indigo-50 text-indigo-600',
+            chip: 'border-indigo-200 text-indigo-900',
+            icon: 'fa-newspaper'
         }
     };
 

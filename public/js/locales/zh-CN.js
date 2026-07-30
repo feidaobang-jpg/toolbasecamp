@@ -307,6 +307,11 @@ window.TB_LOCALES['zh-CN'] = {
             title: '机器翻译',
             description: 'LibreTranslate — 注重隐私的英 ↔ 中翻译。自托管；小内存 VPS 建议只加载 en、zh 语言包。',
             cta: '打开翻译'
+        },
+        news: {
+            title: '科技资讯',
+            description: '海外科技资讯中文编译 — AI、硬件与数码动态，每日自动更新。',
+            cta: '打开资讯'
         }
     },
     tools: {

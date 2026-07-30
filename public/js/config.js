@@ -17,6 +17,7 @@
     chefPortalUrl: 'https://chef.toolbasecamp.com',
     hoppscotchPortalUrl: 'https://hoppscotch.toolbasecamp.com',
     translatePortalUrl: 'https://translate.toolbasecamp.com',
+    newsPortalUrl: 'https://news.toolbasecamp.com',
     apiBase: (function () {
         const host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') {
@@ -70,6 +71,13 @@ const portalsConfig = [
         url: 'https://translate.toolbasecamp.com',
         ctaKey: 'portals.translate.cta',
         theme: 'translate'
+    },
+    {
+        titleKey: 'portals.news.title',
+        descriptionKey: 'portals.news.description',
+        url: 'https://news.toolbasecamp.com',
+        ctaKey: 'portals.news.cta',
+        theme: 'news'
     }
 ];
 

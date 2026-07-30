@@ -35,6 +35,7 @@ run_expand() {
     -d toolbasecamp.com -d www.toolbasecamp.com \
     -d dev.toolbasecamp.com -d pdf.toolbasecamp.com \
     -d chef.toolbasecamp.com -d hoppscotch.toolbasecamp.com -d translate.toolbasecamp.com \
+    -d news.toolbasecamp.com \
     --expand --non-interactive --agree-tos -m "$CERT_EMAIL" \
     --keep-until-expiring
 }

@@ -44,6 +44,7 @@ from site_stats import STATS_GEO_REV
 from site_stats import ensure_site_stats_tables
 from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
+from news_articles import ensure_news_tables
 from stocks import router as stocks_router
 from stocks import wire as wire_stocks
 from ladder import router as ladder_router
@@ -250,6 +251,7 @@ def ensure_tables():
             ensure_record_tables(cur)
             ensure_image_quota_table(cur)
             ensure_site_stats_tables(cur)
+            ensure_news_tables(cur)
             if ADMIN_PHONE:
                 try:
                     cur.execute(
