@@ -39,8 +39,9 @@ window.TB_LOCALES['zh-CN'] = {
             refreshTitle: '后台更新',
             refreshDesc: '手动触发爬虫与编译任务（科技资讯、性能跑分榜等）',
             newsTitle: '科技资讯',
-            newsDesc: 'RSS 抓取 + DeepSeek 中文编译，生成 news 子站静态页',
-            newsRefresh: '更新资讯'
+            newsDesc: '「更新资讯」抓取编译新文；「重生静态页」只按库重写 HTML',
+            newsRefresh: '更新资讯',
+            newsRegen: '重生静态页'
         },
         ladder: {
             updateTitle: '后台更新',

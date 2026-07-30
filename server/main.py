@@ -53,7 +53,7 @@ from nbcheck import router as nbcheck_router
 from nbcheck import wire as wire_nbcheck
 
 NBCHECK_API_REV = 2
-NEWS_API_REV = 1
+NEWS_API_REV = 2
 
 _wan_import_error = ""
 try:

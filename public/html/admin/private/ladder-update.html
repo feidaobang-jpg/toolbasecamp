@@ -48,9 +48,10 @@
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.newsTitle">科技资讯</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.newsDesc">RSS 抓取 + DeepSeek 中文编译，写入数据库并生成 news 子站静态页。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.newsDesc">「更新资讯」= RSS 抓取 + DeepSeek 编译；「重生静态页」= 只按库里已有内容重写 HTML（不去抓新文）。</p>
         <div class="ladder-toolbar action-row">
           <button type="button" id="btn-refresh-news" class="tb-btn" data-i18n="privateHub.ops.newsRefresh">更新资讯</button>
+          <button type="button" id="btn-regen-news" class="tb-btn" data-i18n="privateHub.ops.newsRegen">重生静态页</button>
           <a id="news-public-link" class="ladder-row-link" href="https://news.toolbasecamp.com/" target="_blank" rel="noopener">查看公开页</a>
         </div>
         <div id="news-status" class="ladder-status"></div>
@@ -70,6 +71,6 @@
     </div>
   </main>
 
-  <script src="../../../js/admin/ladder-update.js?v=6"></script>
+  <script src="../../../js/admin/ladder-update.js?v=7"></script>
 </body>
 </html>

@@ -40,8 +40,9 @@ window.TB_LOCALES.en = {
             refreshTitle: 'Backend updates',
             refreshDesc: 'Manually run crawlers and compile jobs (tech news, benchmark ranks, …)',
             newsTitle: 'Tech news',
-            newsDesc: 'RSS crawl + DeepSeek rewrite, publish static pages on the news subdomain',
-            newsRefresh: 'Refresh news'
+            newsDesc: '“Refresh news” crawls & rewrites; “Rebuild pages” regenerates HTML from DB only',
+            newsRefresh: 'Refresh news',
+            newsRegen: 'Rebuild pages'
         },
         ladder: {
             updateTitle: 'Backend updates',

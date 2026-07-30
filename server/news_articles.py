@@ -103,7 +103,7 @@ def _index_mtime() -> Optional[str]:
         return None
 
 
-def _run_crawl() -> None:
+def _run_crawl(extra_args: Optional[list] = None, timeout: int = 900) -> None:
     global _running, _last_finished, _last_ok, _last_log_tail, _last_error
     try:
         if not os.path.isfile(RUN_SCRIPT):
@@ -111,13 +111,14 @@ def _run_crawl() -> None:
         env = os.environ.copy()
         env["NEWS_HOME"] = NEWS_HOME
         env["NEWS_WEB_ROOT"] = NEWS_WEB_ROOT
+        cmd = ["bash", RUN_SCRIPT] + list(extra_args or [])
         proc = subprocess.run(
-            ["bash", RUN_SCRIPT],
+            cmd,
             cwd=NEWS_HOME,
             env=env,
             capture_output=True,
             text=True,
-            timeout=900,
+            timeout=timeout,
             check=False,
         )
         out = ((proc.stdout or "") + "\n" + (proc.stderr or "")).strip()
@@ -158,21 +159,41 @@ def news_status(_admin: dict = Depends(_admin_user)):
     }
 
 
-@router.post("/refresh")
-def news_refresh(_admin: dict = Depends(_admin_user)):
-    _ = _admin
+def _start_job(extra_args: Optional[list], message: str, timeout: int = 900) -> dict:
     global _running, _last_started, _last_error
     with _lock:
         if _running:
-            raise HTTPException(status_code=409, detail="资讯更新正在进行中")
+            raise HTTPException(status_code=409, detail="资讯任务正在进行中")
         if not os.path.isfile(RUN_SCRIPT):
             raise HTTPException(status_code=503, detail=f"找不到脚本：{RUN_SCRIPT}")
         _running = True
         _last_started = time.time()
         _last_error = ""
-    threading.Thread(target=_run_crawl, name="news-crawl", daemon=True).start()
-    return {
-        "ok": True,
-        "started": True,
-        "message": "已开始抓取并编译资讯（可能需要几分钟）",
-    }
+    threading.Thread(
+        target=_run_crawl,
+        kwargs={"extra_args": extra_args, "timeout": timeout},
+        name="news-job",
+        daemon=True,
+    ).start()
+    return {"ok": True, "started": True, "message": message}
+
+
+@router.post("/refresh")
+def news_refresh(_admin: dict = Depends(_admin_user)):
+    _ = _admin
+    return _start_job(
+        None,
+        "已开始抓取并编译资讯（可能需要几分钟）",
+        timeout=900,
+    )
+
+
+@router.post("/regen")
+def news_regen(_admin: dict = Depends(_admin_user)):
+    """Rebuild static HTML from MySQL only (no RSS / DeepSeek)."""
+    _ = _admin
+    return _start_job(
+        ["--regen-only"],
+        "已开始从数据库重生静态页（通常更快）",
+        timeout=300,
+    )

@@ -258,7 +258,9 @@
 
   function runNewsRefresh() {
     var btn = document.getElementById('btn-refresh-news');
+    var btnRegen = document.getElementById('btn-regen-news');
     if (btn) btn.disabled = true;
+    if (btnRegen) btnRegen.disabled = true;
     setNewsStatus('已提交资讯更新任务…');
     fetch(apiBase() + '/news/refresh', {
       method: 'POST',
@@ -280,6 +282,37 @@
       })
       .finally(function () {
         if (btn) btn.disabled = false;
+        if (btnRegen) btnRegen.disabled = false;
+      });
+  }
+
+  function runNewsRegen() {
+    var btn = document.getElementById('btn-regen-news');
+    var btnRefresh = document.getElementById('btn-refresh-news');
+    if (btn) btn.disabled = true;
+    if (btnRefresh) btnRefresh.disabled = true;
+    setNewsStatus('已提交重生静态页任务…');
+    fetch(apiBase() + '/news/regen', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: '{}',
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          if (!res.ok) throw new Error((body && body.detail) || 'HTTP ' + res.status);
+          return body;
+        });
+      })
+      .then(function () {
+        return pollNewsUntilIdle(40);
+      })
+      .catch(function (err) {
+        setNewsStatus('重生静态页失败：' + (err && err.message ? err.message : err), true);
+      })
+      .finally(function () {
+        if (btn) btn.disabled = false;
+        if (btnRefresh) btnRefresh.disabled = false;
       });
   }
 
@@ -320,6 +353,12 @@
         if (btnNews) {
           btnNews.addEventListener('click', function () {
             runNewsRefresh();
+          });
+        }
+        var btnRegen = document.getElementById('btn-regen-news');
+        if (btnRegen) {
+          btnRegen.addEventListener('click', function () {
+            runNewsRegen();
           });
         }
         loadNewsStatus().catch(function (err) {
