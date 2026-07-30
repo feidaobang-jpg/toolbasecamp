@@ -16,11 +16,12 @@ if [[ ! -f "$NEWS_HOME/build_news.py" ]]; then
   exit 1
 fi
 mkdir -p "$WEB_ROOT"
-if [[ ! -f "$WEB_ROOT/index.html" ]]; then
-  echo "Writing placeholder index..."
-  if [[ -x "$NEWS_HOME/.venv/bin/python" ]]; then
-    NEWS_WEB_ROOT="$WEB_ROOT" "$NEWS_HOME/.venv/bin/python" "$NEWS_HOME/build_news.py" --placeholder || true
-  fi
+if [[ -x "$NEWS_HOME/.venv/bin/python" ]]; then
+  echo "Regenerating HTML from DB (safe; will not wipe rows)..."
+  NEWS_WEB_ROOT="$WEB_ROOT" "$NEWS_HOME/.venv/bin/python" "$NEWS_HOME/build_news.py" --regen-only \
+    || NEWS_WEB_ROOT="$WEB_ROOT" "$NEWS_HOME/.venv/bin/python" "$NEWS_HOME/build_news.py" --placeholder || true
+elif [[ ! -f "$WEB_ROOT/index.html" ]]; then
+  echo "WARNING: no venv yet — run install-news-cron.sh first"
 fi
 if [[ -f "$WEB_ROOT/index.html" ]]; then
   echo "OK: $WEB_ROOT/index.html ($(wc -c < "$WEB_ROOT/index.html") bytes)"

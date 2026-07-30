@@ -51,3 +51,7 @@ python build_news.py --smoke /tmp/tbc-news-smoke
 ## 清理策略
 
 库内最多保留 100 条（可用环境变量 `NEWS_MAX_TOTAL` 覆盖）；超额时删除旧行及对应 `articles/*.html`、封面图。
+
+部署脚本只会在「库为空且没有首页」时写占位页；平时用 `--regen-only` 从数据库重建列表，避免再次出现「暂无资讯」。
+
+页面浏览会计入主站「站点统计」（`portal.news` / `portal.news.article`），量很小。

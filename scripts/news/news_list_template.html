@@ -8,47 +8,40 @@
     <meta name="description" content="{{description}}">
     <meta name="robots" content="index,follow">
     <link rel="icon" href="{{main_site}}favicon.svg" type="image/svg+xml">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = { theme: { extend: { colors: { primary: '#2563eb' } } } };
-    </script>
+    <link rel="stylesheet" href="{{asset_prefix}}news.css?v=1">
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 min-w-0">
-            <a href="{{home_href}}" class="flex items-center gap-2 flex-shrink-0 group">
-                <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">{{site_logo_text}}</div>
-                <h1 class="text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">{{site_name}}</h1>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="{{home_href}}" class="brand">
+                <div class="brand-mark">{{site_logo_text}}</div>
+                <h1 class="brand-title">{{site_name}}</h1>
             </a>
-            <div class="ml-auto flex items-center gap-4 text-sm">
-                <a href="{{main_site}}" class="text-gray-500 hover:text-blue-600">工具大本营</a>
-            </div>
+            <a href="{{main_site}}" class="header-link">工具大本营</a>
         </div>
     </header>
 
-    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <span class="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+    <main class="main">
+        <div class="section-head">
+            <h2 class="section-title">
+                <span class="section-bar" aria-hidden="true"></span>
                 {{news_section_name}}
             </h2>
-            <p class="text-sm text-gray-500 mt-2">海外科技资讯中文编译</p>
+            <p class="section-sub">海外科技资讯中文编译</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="news-grid">
             {{news_items}}
         </div>
 
         {{pagination}}
     </main>
 
-    <footer class="bg-white border-t border-gray-100 py-10 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm mb-2">&copy; <span id="y"></span> Tool Basecamp</p>
-            <a href="{{main_site}}" class="text-xs text-blue-600 hover:underline">返回工具大本营</a>
-        </div>
+    <footer class="site-footer">
+        <p>&copy; <span id="y"></span> Tool Basecamp</p>
+        <a href="{{main_site}}">返回工具大本营</a>
     </footer>
     <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+    <script src="{{asset_prefix}}news-stats.js?v=1" defer></script>
 </body>
 </html>

@@ -16,6 +16,7 @@ import json
 import math
 import os
 import re
+import shutil
 import sys
 import time
 from io import BytesIO
@@ -317,8 +318,7 @@ def insert_images_into_html(html_content: str, image_paths: List[str], img_prefi
         if img_idx < num_images and (i + 1) % interval == 0 and i < num_paragraphs - 1:
             name = os.path.basename(image_paths[img_idx])
             new_html.append(
-                f'<figure class="my-8"><img src="{img_prefix}{name}" '
-                f'class="w-full rounded-xl shadow-md" alt="" loading="lazy"></figure>'
+                f'<figure><img src="{img_prefix}{name}" alt="" loading="lazy"></figure>'
             )
             img_idx += 1
     return "".join(new_html)
@@ -480,19 +480,10 @@ def pagination_html(page: int, total_pages: int, prefix: str) -> str:
 
     def btn(label: str, p: int, active: bool = False, disabled: bool = False) -> str:
         if disabled:
-            return (
-                f'<span class="px-4 py-2 rounded-lg text-sm font-medium opacity-50 '
-                f'cursor-not-allowed bg-white border border-gray-200 text-gray-600">{label}</span>'
-            )
+            return f'<span class="page-btn-disabled">{label}</span>'
         if active:
-            return (
-                f'<span class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 '
-                f'text-white shadow-md">{label}</span>'
-            )
-        return (
-            f'<a href="{href(p)}" class="px-4 py-2 rounded-lg text-sm font-medium '
-            f'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200">{label}</a>'
-        )
+            return f'<span class="page-btn-active">{label}</span>'
+        return f'<a href="{href(p)}" class="page-btn">{label}</a>'
 
     parts = [btn("上一页", page - 1, disabled=page <= 1)]
     pages: List[Any] = []
@@ -506,15 +497,11 @@ def pagination_html(page: int, total_pages: int, prefix: str) -> str:
         pages = [1, "...", page - 1, page, page + 1, "...", total_pages]
     for p in pages:
         if p == "...":
-            parts.append('<span class="px-2 text-gray-400">...</span>')
+            parts.append('<span class="page-ellipsis">...</span>')
         else:
             parts.append(btn(str(p), int(p), active=int(p) == page))
     parts.append(btn("下一页", page + 1, disabled=page >= total_pages))
-    return (
-        '<div class="mt-12 flex justify-center items-center gap-2 flex-wrap">'
-        + "".join(parts)
-        + "</div>"
-    )
+    return '<div class="pagination">' + "".join(parts) + "</div>"
 
 
 def card_html(item: Dict[str, Any], path_prefix: str) -> str:
@@ -523,26 +510,18 @@ def card_html(item: Dict[str, Any], path_prefix: str) -> str:
     cover = item.get("cover_image") or ""
     if cover:
         img_src = path_prefix + cover
-        img_tag = (
-            f'<div class="aspect-video w-full overflow-hidden bg-gray-100 relative">'
-            f'<img src="{img_src}" class="w-full h-full object-cover group-hover:scale-105 '
-            f'transition-transform duration-500" alt="" loading="lazy" decoding="async"></div>'
-        )
+        img_tag = f'<div class="news-cover"><img src="{img_src}" alt="" loading="lazy" decoding="async"></div>'
     else:
-        img_tag = (
-            '<div class="aspect-video w-full overflow-hidden bg-gradient-to-br from-blue-500 '
-            'to-indigo-600 relative flex items-center justify-center">'
-            '<i class="fas fa-newspaper text-white text-4xl opacity-50"></i></div>'
-        )
+        img_tag = '<div class="news-cover news-cover-fallback" aria-hidden="true">📰</div>'
     return f"""
-    <a href="{href}" class="news-item bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col group overflow-hidden">
+    <a href="{href}" class="news-card">
         {img_tag}
-        <div class="p-5 flex flex-col gap-3 flex-1">
-            <h3 class="text-lg font-bold text-gray-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">{item['title']}</h3>
-            <p class="text-sm text-gray-500 leading-relaxed line-clamp-2 flex-1">{item.get('desc', '')}</p>
-            <div class="flex items-center gap-2 text-xs text-gray-400 font-mono mt-auto">
+        <div class="news-card-body">
+            <h3 class="news-card-title">{item['title']}</h3>
+            <p class="news-card-desc">{item.get('desc', '')}</p>
+            <div class="news-card-meta">
                 <span>{item.get('date', '')}</span>
-                <span class="text-gray-300">|</span>
+                <span>|</span>
                 <span>{item.get('source', '')}</span>
             </div>
         </div>
@@ -555,9 +534,10 @@ def write_list_page(items_slice: List[Dict[str, Any]], page: int, total_pages: i
         template = f.read()
     cards = "".join(card_html(it, path_prefix) for it in items_slice)
     if not cards:
-        cards = '<p class="text-gray-400 col-span-full text-center py-12">暂无资讯，请稍后刷新。</p>'
+        cards = '<p class="news-empty">暂无资讯，请稍后刷新。</p>'
     pag = pagination_html(page, total_pages, path_prefix)
     title = SITE_NAME if page <= 1 else f"{SITE_NAME} · 第 {page} 页"
+    asset_prefix = path_prefix  # '' or '../'
     html = template
     html = html.replace("{{news_items}}", cards)
     html = html.replace("{{pagination}}", pag)
@@ -569,13 +549,25 @@ def write_list_page(items_slice: List[Dict[str, Any]], page: int, total_pages: i
     html = html.replace("{{page_title}}", title)
     html = html.replace("{{main_site}}", "https://toolbasecamp.com/")
     html = html.replace("{{home_href}}", f"{path_prefix}index.html" if path_prefix else "index.html")
+    html = html.replace("{{asset_prefix}}", asset_prefix)
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 
 
+def sync_static_assets() -> None:
+    """Copy CSS/JS next to generated HTML under WEB_ROOT."""
+    os.makedirs(WEB_ROOT, exist_ok=True)
+    for name in ("news.css", "news-stats.js"):
+        src = os.path.join(SCRIPT_DIR, name)
+        dst = os.path.join(WEB_ROOT, name)
+        if os.path.isfile(src):
+            shutil.copy2(src, dst)
+
+
 def generate_list_pages(items: List[Dict[str, Any]]) -> None:
     print("正在生成列表分页...")
+    sync_static_assets()
     os.makedirs(WEB_ROOT, exist_ok=True)
     os.makedirs(PAGE_DIR, exist_ok=True)
     total = len(items)

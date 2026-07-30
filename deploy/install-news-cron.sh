@@ -1,5 +1,6 @@
 #!/bin/bash
 # Install news crawler deps + daily Linux cron (do NOT also schedule in 宝塔).
+# Never wipe a populated site with --placeholder.
 set -euo pipefail
 
 NEWS_HOME="${NEWS_HOME:-/opt/toolbasecamp-news}"
@@ -8,7 +9,6 @@ DEPLOY="${DEPLOY:-/opt/toolbasecamp-deploy}"
 
 mkdir -p "$NEWS_HOME" "$WEB_ROOT" /var/log
 
-# Scripts are rsynced by CI to NEWS_HOME.
 if [[ ! -f "$NEWS_HOME/build_news.py" ]]; then
   echo "ERROR: $NEWS_HOME/build_news.py missing — deploy must rsync scripts/news first."
   exit 1
@@ -20,8 +20,18 @@ python3 -m venv "$NEWS_HOME/.venv"
 "$NEWS_HOME/.venv/bin/pip" install -q -U pip
 "$NEWS_HOME/.venv/bin/pip" install -q -r "$NEWS_HOME/requirements.txt"
 
-# Placeholder homepage so nginx can serve something before first crawl
-NEWS_WEB_ROOT="$WEB_ROOT" "$NEWS_HOME/.venv/bin/python" "$NEWS_HOME/build_news.py" --placeholder
+PY="$NEWS_HOME/.venv/bin/python"
+export NEWS_WEB_ROOT="$WEB_ROOT"
+
+# Prefer rebuild from MySQL (restores list after accidental empty placeholder).
+if "$PY" "$NEWS_HOME/build_news.py" --regen-only; then
+  echo "Regenerated news HTML from database."
+elif [[ ! -f "$WEB_ROOT/index.html" ]]; then
+  echo "No DB content yet — writing empty placeholder index."
+  "$PY" "$NEWS_HOME/build_news.py" --placeholder
+else
+  echo "WARNING: regen-only failed; left existing $WEB_ROOT/index.html untouched."
+fi
 
 CRON_LINE="30 7 * * * /opt/toolbasecamp-news/run_news.sh"
 EXISTING="$(crontab -l 2>/dev/null || true)"
