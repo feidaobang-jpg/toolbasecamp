@@ -324,6 +324,30 @@ def insert_images_into_html(html_content: str, image_paths: List[str], img_prefi
     return "".join(new_html)
 
 
+def dedupe_content_images(html: str) -> str:
+    """Remove consecutive figures that point at the same image file (same basename)."""
+    if not html:
+        return html
+    pattern = re.compile(
+        r"(<figure>\s*<img\b[^>]*\bsrc=[\"']([^\"']+)[\"'][^>]*>\s*</figure>)",
+        re.I | re.S,
+    )
+    parts: List[str] = []
+    last_base = None
+    pos = 0
+    for m in pattern.finditer(html):
+        parts.append(html[pos : m.start()])
+        base = os.path.basename((m.group(2) or "").split("?")[0])
+        if base and base == last_base:
+            pos = m.end()
+            continue
+        last_base = base or last_base
+        parts.append(m.group(1))
+        pos = m.end()
+    parts.append(html[pos:])
+    return "".join(parts)
+
+
 def call_deepseek_compile(title: str, content: str, source: str) -> Optional[Dict[str, Any]]:
     if not DEEPSEEK_API_KEY:
         print("  - 缺少 DEEPSEEK_API_KEY，跳过 AI 编译")
@@ -450,7 +474,7 @@ def generate_detail_page(item: Dict[str, Any]) -> str:
         "{{keywords}}": KEYWORDS,
         "{{description}}": item.get("desc") or DESCRIPTION,
         "{{summary}}": item.get("desc") or "",
-        "{{content}}": item["content"],
+        "{{content}}": dedupe_content_images(item.get("content") or ""),
         "{{source}}": item["source"],
         "{{date}}": item["date"],
         "{{original_link}}": item["original_link"],
