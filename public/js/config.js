@@ -251,7 +251,7 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.draft',
             items: [
-                { titleKey: 'tools.snake.title', url: 'html/game/snake.html?v=3' },
+                { titleKey: 'tools.snake.title', url: 'html/game/snake.html?v=4' },
                 { titleKey: 'tools.g2048.title', url: 'html/game/g2048.html' },
                 { titleKey: 'tools.whack.title', url: 'html/game/whack.html?v=7' },
                 { titleKey: 'tools.shooter.title', url: 'html/game/shooter.html?v=7' },
