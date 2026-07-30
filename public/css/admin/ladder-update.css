@@ -35,12 +35,6 @@
   color: #b91c1c;
 }
 
-.ladder-meta {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin-bottom: 1rem;
-}
-
 .ladder-list {
   display: flex;
   flex-direction: column;
