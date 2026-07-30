@@ -3,6 +3,8 @@
 
   var currentTier = 'all';
   var year = new Date().getFullYear();
+  var allBuilds = null;
+  var fetchPromise = null;
 
   function apiBase() {
     if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) return siteConfig.apiBase;
@@ -174,18 +176,53 @@
     document.title = text + ' - ' + (t('site.name', '工具大本营') || '工具大本营');
   }
 
-  function setMeta(n) {
+  function setMeta(shown, total) {
     var el = document.getElementById('pc-builds-meta');
     if (!el) return;
-    el.textContent = t('tools.pcBuilds.count', '方案数') + '：' + n;
+    if (currentTier === 'all' || shown === total) {
+      el.textContent = t('tools.pcBuilds.count', '方案数') + '：' + shown;
+    } else {
+      el.textContent =
+        t('tools.pcBuilds.countFiltered', '当前') +
+        '：' +
+        shown +
+        ' / ' +
+        t('tools.pcBuilds.countTotal', '共') +
+        ' ' +
+        total;
+    }
   }
 
-  function load() {
+  function filteredBuilds() {
+    if (!allBuilds) return [];
+    if (currentTier === 'all') return allBuilds.slice();
+    return allBuilds.filter(function (b) {
+      return b.tier === currentTier;
+    });
+  }
+
+  function renderList() {
     var list = document.getElementById('pc-builds-list');
     if (!list) return;
-    list.innerHTML = '<p class="pc-builds-loading">' + esc(t('tools.pcBuilds.loading', '加载中…')) + '</p>';
-    var url = apiBase() + '/pcbuilds/list?tier=' + encodeURIComponent(currentTier);
-    fetch(url, { cache: 'no-store' })
+    var builds = filteredBuilds();
+    var total = allBuilds ? allBuilds.length : 0;
+    if (!builds.length) {
+      list.innerHTML = '<p class="pc-builds-empty">' + esc(t('tools.pcBuilds.empty', '暂无装机方案')) + '</p>';
+      setMeta(0, total);
+      return;
+    }
+    list.innerHTML = builds.map(renderCard).join('');
+    setMeta(builds.length, total);
+  }
+
+  function fetchAll() {
+    if (allBuilds) return Promise.resolve(allBuilds);
+    if (fetchPromise) return fetchPromise;
+    var list = document.getElementById('pc-builds-list');
+    if (list) {
+      list.innerHTML = '<p class="pc-builds-loading">' + esc(t('tools.pcBuilds.loading', '加载中…')) + '</p>';
+    }
+    fetchPromise = fetch(apiBase() + '/pcbuilds/list?tier=all', { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
@@ -193,17 +230,28 @@
       .then(function (data) {
         if (data.year) year = data.year;
         setTitle();
-        var builds = data.builds || [];
-        if (!builds.length) {
-          list.innerHTML = '<p class="pc-builds-empty">' + esc(t('tools.pcBuilds.empty', '暂无装机方案')) + '</p>';
-          setMeta(0);
-          return;
-        }
-        list.innerHTML = builds.map(renderCard).join('');
-        setMeta(builds.length);
+        allBuilds = data.builds || [];
+        fetchPromise = null;
+        return allBuilds;
+      })
+      .catch(function (err) {
+        fetchPromise = null;
+        allBuilds = null;
+        throw err;
+      });
+    return fetchPromise;
+  }
+
+  function load() {
+    var list = document.getElementById('pc-builds-list');
+    fetchAll()
+      .then(function () {
+        renderList();
       })
       .catch(function () {
-        list.innerHTML = '<p class="pc-builds-error">' + esc(t('tools.pcBuilds.loadFail', '加载失败')) + '</p>';
+        if (list) {
+          list.innerHTML = '<p class="pc-builds-error">' + esc(t('tools.pcBuilds.loadFail', '加载失败')) + '</p>';
+        }
       });
   }
 
@@ -217,7 +265,12 @@
       Array.prototype.forEach.call(box.querySelectorAll('button'), function (b) {
         b.classList.toggle('is-active', b === btn);
       });
-      load();
+      // Already cached → instant local filter (no loading flash)
+      if (allBuilds) {
+        renderList();
+      } else {
+        load();
+      }
     });
   }
 

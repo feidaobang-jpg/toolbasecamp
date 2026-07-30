@@ -36,7 +36,7 @@ DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat").strip()
 ZOL_YEAR = int(os.environ.get("PC_BUILDS_ZOL_YEAR") or datetime.now().year)
 MAX_ZOL_PAGES = int(os.environ.get("PC_BUILDS_ZOL_PAGES", "3"))
 # 每档目标套数（低/中/高）
-BUILDS_PER_TIER = int(os.environ.get("PC_BUILDS_PER_TIER", "5"))
+BUILDS_PER_TIER = int(os.environ.get("PC_BUILDS_PER_TIER", "6"))
 
 
 def format_price(price_str: Any) -> str:
