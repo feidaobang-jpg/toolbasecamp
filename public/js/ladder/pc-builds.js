@@ -1,7 +1,15 @@
 (function () {
   'use strict';
 
-  var DATA_URL = '/data/pc_builds.json';
+  var currentTier = 'all';
+  var year = new Date().getFullYear();
+
+  function apiBase() {
+    if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) return siteConfig.apiBase;
+    var host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return 'http://127.0.0.1:8001';
+    return window.location.origin + '/api';
+  }
 
   function t(key, fallback) {
     try {
@@ -31,7 +39,7 @@
   }
 
   function enrich(build) {
-    var host = 0;
+    var host = build.host_price || 0;
     var partsTotal = 0;
     var hasMonitor = false;
     (build.parts || []).forEach(function (part) {
@@ -39,8 +47,9 @@
       partsTotal += val;
       var name = part.name || '';
       if (name.indexOf('显示器') >= 0) hasMonitor = true;
-      if (!/显示器|键鼠|外设|耳机|音响/.test(name)) host += val;
+      if (!host && !/显示器|键鼠|外设|耳机|音响/.test(name)) host += val;
     });
+    if (!host) host = partsTotal;
     var monEst = 0;
     var monLabel = t('tools.pcBuilds.monitorBudget', '推荐显示器预算');
     var rec = build.recommended_monitor || {};
@@ -60,8 +69,7 @@
       hasMonitor: hasMonitor,
       monEst: monEst,
       monLabel: monLabel,
-      full: partsTotal + monEst,
-      sort: host
+      full: partsTotal + monEst
     };
   }
 
@@ -131,16 +139,15 @@
   function renderCard(build) {
     var info = enrich(build);
     var tags = (build.tags || [])
+      .filter(function (tag) {
+        return tag !== 'AI热推';
+      })
       .map(function (tag) {
         return '<span class="pc-build-tag">' + esc(tag) + '</span>';
       })
       .join('');
-    var tip = build.summary
-      ? '<div class="pc-build-tip"><strong>' +
-        esc(t('tools.pcBuilds.tip', '装机小贴士')) +
-        '：</strong> ' +
-        esc(build.summary) +
-        '</div>'
+    var summary = build.summary
+      ? '<p class="pc-build-summary">' + esc(build.summary) + '</p>'
       : '';
     return (
       '<article class="pc-build-card">' +
@@ -157,52 +164,72 @@
       '</ul>' +
       renderPrice(info) +
       '</div>' +
-      '<div class="pc-build-review"><h3>' +
-      esc(t('tools.pcBuilds.review', 'AI 点评')) +
-      '</h3><div class="pc-build-review-body">' +
-      (build.review || '<p>' + esc(t('tools.pcBuilds.noReview', '暂无点评')) + '</p>') +
-      '</div>' +
-      tip +
+      '<div class="pc-build-side"><h3>' +
+      esc(t('tools.pcBuilds.summaryTitle', '方案说明')) +
+      '</h3>' +
+      summary +
       '</div></div></article>'
     );
+  }
+
+  function setTitle() {
+    var el = document.getElementById('pc-builds-title');
+    var text = String(t('tools.pcBuilds.titleTpl', '{year} 装机配置推荐')).replace('{year}', String(year));
+    if (el) el.textContent = text;
+    document.title = text + ' - ' + (t('site.name', '工具大本营') || '工具大本营');
   }
 
   function setMeta(n) {
     var el = document.getElementById('pc-builds-meta');
     if (!el) return;
-    el.textContent = t('tools.pcBuilds.count', '方案数') + '：' + n + ' · ' + t('tools.pcBuilds.yearNote', '面向 2026 年市场');
+    el.textContent = t('tools.pcBuilds.count', '方案数') + '：' + n;
   }
 
-  function boot() {
+  function load() {
     var list = document.getElementById('pc-builds-list');
     if (!list) return;
-    fetch(DATA_URL + '?t=' + Date.now(), { cache: 'no-store' })
+    list.innerHTML = '<p class="pc-builds-loading">' + esc(t('tools.pcBuilds.loading', '加载中…')) + '</p>';
+    var url = apiBase() + '/pcbuilds/list?tier=' + encodeURIComponent(currentTier);
+    fetch(url, { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
       })
       .then(function (data) {
-        if (!Array.isArray(data) || !data.length) {
+        if (data.year) year = data.year;
+        setTitle();
+        var builds = data.builds || [];
+        if (!builds.length) {
           list.innerHTML = '<p class="pc-builds-empty">' + esc(t('tools.pcBuilds.empty', '暂无装机方案')) + '</p>';
           setMeta(0);
           return;
         }
-        var rows = data.map(function (b) {
-          return { b: b, s: enrich(b).sort };
-        });
-        rows.sort(function (a, c) {
-          return a.s - c.s;
-        });
-        list.innerHTML = rows
-          .map(function (r) {
-            return renderCard(r.b);
-          })
-          .join('');
-        setMeta(rows.length);
+        list.innerHTML = builds.map(renderCard).join('');
+        setMeta(builds.length);
       })
       .catch(function () {
         list.innerHTML = '<p class="pc-builds-error">' + esc(t('tools.pcBuilds.loadFail', '加载失败')) + '</p>';
       });
+  }
+
+  function bindFilters() {
+    var box = document.getElementById('pc-builds-filters');
+    if (!box) return;
+    box.addEventListener('click', function (e) {
+      var btn = e.target.closest('button[data-tier]');
+      if (!btn) return;
+      currentTier = btn.getAttribute('data-tier') || 'all';
+      Array.prototype.forEach.call(box.querySelectorAll('button'), function (b) {
+        b.classList.toggle('is-active', b === btn);
+      });
+      load();
+    });
+  }
+
+  function boot() {
+    setTitle();
+    bindFilters();
+    load();
   }
 
   if (document.readyState === 'loading') {

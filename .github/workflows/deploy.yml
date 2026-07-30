@@ -557,6 +557,12 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-news-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/news/regen' >/dev/null || exit 1
           }
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/pcbuilds/list' >/dev/null || {
+            echo "=== openapi missing /pcbuilds/list  - forcing fix-pcbuilds-api.sh ==="
+            journalctl -u toolbasecamp-api -n 40 --no-pager || true
+            bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/pcbuilds/list' >/dev/null || exit 1
+          }
 
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/records/clocks/{clock_id}/reset' >/dev/null || {
             echo "=== openapi missing clock reset route ==="

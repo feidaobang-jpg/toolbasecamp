@@ -44,9 +44,9 @@ window.TB_LOCALES.en = {
             newsRefresh: 'Refresh news',
             newsRegen: 'Rebuild pages',
             pcBuildsTitle: 'PC builds',
-            pcBuildsDesc: '“Update builds” crawls ZOL + AI (cloud IPs may be blocked); “Refresh reviews” rewrites reviews from JSON only',
+            pcBuildsDesc: '“Update builds” crawls ZOL + AI into MySQL (cloud IPs may be blocked); “Check DB” ensures table/seed ready',
             pcBuildsRefresh: 'Update builds',
-            pcBuildsGenerate: 'Refresh reviews'
+            pcBuildsGenerate: 'Check database'
         },
         ladder: {
             updateTitle: 'Backend updates',
@@ -2332,18 +2332,19 @@ window.TB_LOCALES.en = {
             scoreLabel: 'Score'
         },
         pcBuilds: {
-            title: '2026 PC Build Guides',
-            desc: 'Mainstream 2026 PC builds with AI reviews; prices are indicative only',
-            lead: 'Curated from recent popular parts, with AI commentary. Check live store prices before buying.',
+            title: 'PC Build Guides',
+            titleTpl: '{year} PC Build Guides',
+            desc: 'Mainstream PC builds by budget tier; prices are indicative only',
             loading: 'Loading…',
             empty: 'No builds yet',
             loadFail: 'Failed to load',
             count: 'Builds',
-            yearNote: 'For the 2026 market',
+            filterAll: 'All',
+            tierEntry: 'Entry',
+            tierMid: 'Mid',
+            tierHigh: 'High',
             parts: 'Parts list',
-            review: 'AI review',
-            noReview: 'No review yet',
-            tip: 'Tip',
+            summaryTitle: 'Overview',
             jd: 'JD',
             hostOnly: 'PC only (est.)',
             hostMonitor: 'PC + monitor',

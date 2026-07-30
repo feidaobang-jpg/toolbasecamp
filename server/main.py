@@ -45,7 +45,11 @@ from site_stats import ensure_site_stats_tables
 from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
 from news_articles import ensure_news_tables, router as news_router, wire as wire_news
-from pc_builds import router as pc_builds_router, wire as wire_pc_builds
+from pc_builds import (
+    ensure_pc_builds_tables,
+    router as pc_builds_router,
+    wire as wire_pc_builds,
+)
 from stocks import router as stocks_router
 from stocks import wire as wire_stocks
 from ladder import router as ladder_router
@@ -55,7 +59,7 @@ from nbcheck import wire as wire_nbcheck
 
 NBCHECK_API_REV = 2
 NEWS_API_REV = 2
-PC_BUILDS_API_REV = 1
+PC_BUILDS_API_REV = 2
 
 _wan_import_error = ""
 try:
@@ -256,6 +260,7 @@ def ensure_tables():
             ensure_image_quota_table(cur)
             ensure_site_stats_tables(cur)
             ensure_news_tables(cur)
+            ensure_pc_builds_tables(cur)
             if ADMIN_PHONE:
                 try:
                     cur.execute(
@@ -541,7 +546,7 @@ wire_nbcheck(get_current_user, require_admin)
 app.include_router(nbcheck_router)
 wire_news(get_conn, require_db, get_current_user, require_admin)
 app.include_router(news_router)
-wire_pc_builds(get_current_user, require_admin)
+wire_pc_builds(get_conn, require_db, get_current_user, require_admin)
 app.include_router(pc_builds_router)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
@@ -809,7 +814,9 @@ def health():
         and "/news/status" in paths
         and "/news/regen" in paths,
         "news_api_rev": NEWS_API_REV,
-        "pc_builds_api": "/pcbuilds/refresh" in paths and "/pcbuilds/status" in paths,
+        "pc_builds_api": "/pcbuilds/list" in paths
+        and "/pcbuilds/status" in paths
+        and "/pcbuilds/refresh" in paths,
         "pc_builds_api_rev": PC_BUILDS_API_REV,
         "stocks_api": (
             "/stocks/recommend-tail-buy" in paths

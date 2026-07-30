@@ -1,3 +1,33 @@
+.tool-header.pc-builds-header {
+  border-bottom: none;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
+}
+
+.pc-builds-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+}
+
+.pc-builds-filters button {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.pc-builds-filters button.is-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
 .pc-builds-meta {
   margin: 0 0 1rem;
   font-size: 0.875rem;
@@ -62,13 +92,14 @@
 .pc-build-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 @media (min-width: 900px) {
   .pc-build-grid {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
   }
 }
 
@@ -79,7 +110,7 @@
 }
 
 .pc-build-parts h3,
-.pc-build-review h3 {
+.pc-build-side h3 {
   margin: 0 0 0.75rem;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -169,32 +200,9 @@
   font-variant-numeric: tabular-nums;
 }
 
-.pc-build-review-body {
+.pc-build-summary {
+  margin: 0;
   font-size: 0.9375rem;
-  line-height: 1.7;
+  line-height: 1.65;
   color: #475569;
-}
-
-.pc-build-review-body p {
-  margin: 0 0 0.75em;
-}
-
-.pc-build-review-body ul {
-  margin: 0 0 0.75em;
-  padding-left: 1.2em;
-}
-
-.pc-build-tip {
-  margin-top: 1rem;
-  padding: 0.75rem 0.9rem;
-  background: #fffbeb;
-  border: 1px solid #fde68a;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: #92400e;
-  line-height: 1.55;
-}
-
-.pc-build-tip strong {
-  font-weight: 700;
 }

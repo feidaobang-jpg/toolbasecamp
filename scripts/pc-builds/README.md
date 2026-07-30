@@ -1,37 +1,25 @@
-# 装机推荐（2026）
+# 装机推荐
 
-ZOL 网友方案统计 → DeepSeek 生成主流推荐 → `public/data/pc_builds.json` → 主站页面渲染。
+ZOL 网友方案 → DeepSeek 生成低/中/高配 → **MySQL `pc_builds`** → 主站 `/api/pcbuilds/list`。
+
+- 年份：默认 `datetime.now().year`（可用 `PC_BUILDS_ZOL_YEAR` 覆盖）
+- 数量：每档默认 5 套（共约 15），`PC_BUILDS_PER_TIER` 可调
+- **不再生成 AI 长点评**，只保留短说明 `summary`
 
 ## 本地更新（推荐爬取）
 
-云服务器 IP 易被 ZOL 拦截，**爬取请在本地**：
-
 ```bash
 cd scripts/pc-builds
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-export DEEPSEEK_API_KEY=sk-...
+# 配置与 API 相同的 DB_* / DEEPSEEK_API_KEY
 python build_pc.py --crawl --clean
-```
-
-生成的 JSON 默认写到仓库 `public/data/pc_builds.json`，提交推送即可上线。
-
-仅刷新点评：
-
-```bash
-python build_pc.py --generate
 ```
 
 ## 服务器
 
-脚本目录：`/opt/toolbasecamp-pcbuilds`  
-数据文件：`/var/www/toolbasecamp/data/pc_builds.json`
-
 ```bash
-sudo /opt/toolbasecamp-pcbuilds/run_pc.sh --generate
-# 或后台更新页「更新装机」按钮（全量爬取在云上可能失败）
+sudo bash /opt/toolbasecamp-deploy/install-pc-builds.sh
+sudo bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh   # 若 /api/pcbuilds/* 404
+tbc-pcbuilds --crawl --clean   # 云 IP 可能被 ZOL 拦
 ```
-
-环境变量：`DEEPSEEK_API_KEY`（可用 `/etc/toolbasecamp-api.env`）、`PC_BUILDS_ZOL_YEAR`（默认 2026）。

@@ -386,7 +386,11 @@
           return body;
         });
       })
-      .then(function () {
+      .then(function (body) {
+        if (body && body.started === false) {
+          setPcBuildsStatus(body.message || label + '完成');
+          return loadPcBuildsStatus();
+        }
         return pollPcBuildsUntilIdle(80);
       })
       .catch(function (err) {
@@ -452,7 +456,7 @@
         var btnPcGen = document.getElementById('btn-generate-pcbuilds');
         if (btnPcGen) {
           btnPcGen.addEventListener('click', function () {
-            runPcBuildsJob('/pcbuilds/generate', '刷新点评');
+            runPcBuildsJob('/pcbuilds/generate', '检查数据库');
           });
         }
         loadNewsStatus().catch(function (err) {

@@ -59,10 +59,10 @@
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.pcBuildsTitle">装机推荐</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.pcBuildsDesc">「更新装机」爬 ZOL+AI（云 IP 可能失败，宜本地跑脚本）；「刷新点评」只按现有 JSON 重写点评</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.pcBuildsDesc">「更新装机」爬 ZOL+AI 写入数据库（云 IP 可能失败，宜本地跑脚本）；「检查数据库」确保表与种子数据就绪</p>
         <div class="ladder-toolbar action-row">
           <button type="button" id="btn-refresh-pcbuilds" class="tb-btn" data-i18n="privateHub.ops.pcBuildsRefresh">更新装机</button>
-          <button type="button" id="btn-generate-pcbuilds" class="tb-btn" data-i18n="privateHub.ops.pcBuildsGenerate">刷新点评</button>
+          <button type="button" id="btn-generate-pcbuilds" class="tb-btn" data-i18n="privateHub.ops.pcBuildsGenerate">检查数据库</button>
           <a class="ladder-row-link" href="../../ladder/pc-builds.html" target="_blank" rel="noopener">查看公开页</a>
         </div>
         <div id="pcbuilds-status" class="ladder-status"></div>
@@ -82,6 +82,6 @@
     </div>
   </main>
 
-  <script src="../../../js/admin/ladder-update.js?v=8"></script>
+  <script src="../../../js/admin/ladder-update.js?v=9"></script>
 </body>
 </html>
