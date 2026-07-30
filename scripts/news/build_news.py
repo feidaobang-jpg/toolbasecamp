@@ -141,6 +141,43 @@ def url_looks_like_author_or_avatar(url: str) -> bool:
     return any(k in u for k in keys)
 
 
+def image_fingerprint(img: Image.Image) -> str:
+    """Average-hash style fingerprint; same photo at different sizes usually matches."""
+    gray = img.convert("L").resize((16, 16), Image.Resampling.BILINEAR)
+    pixels = list(gray.getdata())
+    avg = sum(pixels) / len(pixels)
+    bits = "".join("1" if p >= avg else "0" for p in pixels)
+    return bits
+
+
+def image_fingerprint_file(path: str) -> Optional[str]:
+    try:
+        with Image.open(path) as img:
+            return image_fingerprint(img)
+    except Exception:
+        return None
+
+
+def fingerprint_distance(a: str, b: str) -> int:
+    if not a or not b or len(a) != len(b):
+        return 999
+    return sum(x != y for x, y in zip(a, b))
+
+
+def fingerprints_similar(a: Optional[str], b: Optional[str], max_dist: int = 8) -> bool:
+    if not a or not b:
+        return False
+    return fingerprint_distance(a, b) <= max_dist
+
+
+def local_image_path(rel_or_src: str) -> str:
+    """Map images/xxx.jpg or ../images/xxx.jpg to filesystem path."""
+    name = os.path.basename((rel_or_src or "").split("?")[0])
+    if not name:
+        return ""
+    return os.path.join(IMAGES_DIR, name)
+
+
 def download_image(
     url: str,
     min_width: int = 200,
@@ -325,23 +362,36 @@ def insert_images_into_html(html_content: str, image_paths: List[str], img_prefi
 
 
 def dedupe_content_images(html: str) -> str:
-    """Remove consecutive figures that point at the same image file (same basename)."""
+    """Drop duplicate figures: same basename, or visually same photo (avg-hash)."""
     if not html:
         return html
     pattern = re.compile(
-        r"(<figure>\s*<img\b[^>]*\bsrc=[\"']([^\"']+)[\"'][^>]*>\s*</figure>)",
+        r"(<figure\b[^>]*>\s*<img\b[^>]*\bsrc=[\"']([^\"']+)[\"'][^>]*>\s*</figure>)",
         re.I | re.S,
     )
     parts: List[str] = []
-    last_base = None
+    seen_bases: set = set()
+    seen_fps: List[str] = []
     pos = 0
     for m in pattern.finditer(html):
         parts.append(html[pos : m.start()])
-        base = os.path.basename((m.group(2) or "").split("?")[0])
-        if base and base == last_base:
+        src = m.group(2) or ""
+        base = os.path.basename(src.split("?")[0])
+        drop = False
+        if base and base in seen_bases:
+            drop = True
+        fp = None
+        if not drop and base:
+            fp = image_fingerprint_file(local_image_path(src))
+            if fp and any(fingerprints_similar(fp, prev) for prev in seen_fps):
+                drop = True
+        if drop:
             pos = m.end()
             continue
-        last_base = base or last_base
+        if base:
+            seen_bases.add(base)
+        if fp:
+            seen_fps.append(fp)
         parts.append(m.group(1))
         pos = m.end()
     parts.append(html[pos:])
@@ -731,11 +781,22 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                     continue
                 other_images = []
                 seen_paths = {local_cover} if local_cover else set()
+                seen_fps: List[str] = []
+                if local_cover:
+                    cfp = image_fingerprint_file(local_image_path(local_cover))
+                    if cfp:
+                        seen_fps.append(cfp)
                 for img_url in [u for u in all_image_urls if u != chosen_cover_url][:8]:
                     path = download_image(img_url, min_width=300, min_height=200)
-                    if path and path not in seen_paths:
-                        seen_paths.add(path)
-                        other_images.append(path)
+                    if not path or path in seen_paths:
+                        continue
+                    fp = image_fingerprint_file(local_image_path(path))
+                    if fp and any(fingerprints_similar(fp, prev) for prev in seen_fps):
+                        continue
+                    seen_paths.add(path)
+                    if fp:
+                        seen_fps.append(fp)
+                    other_images.append(path)
                 if not full_text:
                     full_text = clean_html(org_summary)
                 ai_result = call_deepseek_compile(org_title, full_text, conf["name"])
@@ -775,6 +836,13 @@ def regen_from_db(cur) -> List[Dict[str, Any]]:
     items = load_all_items(cur)
     print(f"从数据库重生成 {len(items)} 条详情页…")
     for item in items:
+        cleaned = dedupe_content_images(item.get("content") or "")
+        if cleaned != (item.get("content") or ""):
+            item["content"] = cleaned
+            cur.execute(
+                "UPDATE news_articles SET content_html=%s WHERE source_url=%s",
+                (cleaned, item["original_link"]),
+            )
         generate_detail_page(item)
     return items
 
