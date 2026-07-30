@@ -32,7 +32,13 @@
     };
   }
 
+  function hideBootLoading() {
+    var el = document.getElementById('boot-loading');
+    if (el) el.classList.add('hidden');
+  }
+
   function showGate(msg) {
+    hideBootLoading();
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
     var gateMsg = document.getElementById('gate-msg');
@@ -51,6 +57,7 @@
   }
 
   function showApp(user) {
+    hideBootLoading();
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
     var authLabel = document.getElementById('auth-label');
@@ -282,9 +289,14 @@
       showGate('请先登录管理员账号');
       return;
     }
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = setTimeout(function () {
+      if (ctrl) ctrl.abort();
+    }, 12000);
     fetch(apiBase() + '/auth/me', {
       headers: { Accept: 'application/json', Authorization: 'Bearer ' + tok },
-      cache: 'no-store'
+      cache: 'no-store',
+      signal: ctrl ? ctrl.signal : undefined
     })
       .then(function (res) {
         if (res.status === 401 || res.status === 403) throw new Error('forbidden');
@@ -317,8 +329,13 @@
           setStatus('加载 Notebookcheck 状态失败：' + (err && err.message ? err.message : err), true);
         });
       })
-      .catch(function () {
-        showGate('需要管理员登录后查看');
+      .catch(function (err) {
+        var msg = '需要管理员登录后查看';
+        if (err && err.name === 'AbortError') msg = '登录校验超时，请刷新或重新登录';
+        showGate(msg);
+      })
+      .finally(function () {
+        clearTimeout(timer);
       });
   }
 

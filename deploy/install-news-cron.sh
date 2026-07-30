@@ -44,3 +44,6 @@ fi
 
 echo "News install OK. Ensure DEEPSEEK_API_KEY is in /etc/toolbasecamp-api.env then run:"
 echo "  sudo /opt/toolbasecamp-news/run_news.sh"
+echo "  sudo /opt/toolbasecamp-news/run_news.sh --regen-only"
+ln -sfn "$NEWS_HOME/run_news.sh" /usr/local/bin/tbc-news
+echo "Shortcut: tbc-news   or   tbc-news --regen-only"
