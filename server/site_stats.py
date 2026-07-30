@@ -17,7 +17,7 @@ security = HTTPBearer(auto_error=False)
 
 # Bumped when geo daily write/overview fields change — health must expose this so
 # deploy can detect a stale orphan process still serving pre-geo site_stats.
-STATS_GEO_REV = 1
+STATS_GEO_REV = 2
 
 _get_conn: Optional[Callable[[], Any]] = None
 _require_db: Optional[Callable[[], None]] = None
@@ -182,9 +182,9 @@ def _read_totals(cur) -> dict:
 
 def _country_to_region(country: str) -> str:
     cc = (country or "").strip().upper()
-    if cc == "CN":
+    if cc in ("CN", "CHN", "CHINA"):
         return "cn"
-    if cc and cc not in ("XX", "T1", "A1", "A2"):
+    if cc and cc not in ("XX", "T1", "A1", "A2", "ZZ"):
         return "overseas"
     return "unknown"
 

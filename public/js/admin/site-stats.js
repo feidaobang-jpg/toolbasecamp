@@ -23,6 +23,7 @@
 
   var MODULE_LABELS = {
     page: { zh: '站点页面', en: 'Site pages' },
+    portal: { zh: '子站门户', en: 'Portals' },
     action: { zh: '关键操作', en: 'Key actions' },
     'tool.calc': { zh: '计算', en: 'Calc' },
     'tool.convert': { zh: '转换', en: 'Convert' },
@@ -33,7 +34,20 @@
     'tool.dev': { zh: '开发', en: 'Dev' },
     'tool.diagram': { zh: '图表', en: 'Diagram' },
     'tool.game': { zh: '游戏', en: 'Games' },
-    'tool.auth': { zh: '账户', en: 'Auth' }
+    'tool.auth': { zh: '账户', en: 'Auth' },
+    'tool.ladder': { zh: '硬件跑分', en: 'Benchmarks' },
+    'tool.admin': { zh: '后台', en: 'Admin' }
+  };
+
+  var PORTAL_LABELS = {
+    'portal.news': { zh: '科技资讯 · 列表', en: 'News · List' },
+    'portal.news.article': { zh: '科技资讯 · 文章', en: 'News · Article' },
+    'portal.news.list': { zh: '科技资讯 · 分页', en: 'News · Page' },
+    'portal.pdf': { zh: 'PDF 工具站', en: 'PDF portal' },
+    'portal.dev': { zh: '开发工具站', en: 'Dev portal' },
+    'portal.chef': { zh: 'CyberChef', en: 'CyberChef' },
+    'portal.hoppscotch': { zh: 'API 调试站', en: 'Hoppscotch' },
+    'portal.translate': { zh: '翻译站', en: 'Translate' }
   };
 
   var ACTION_LABELS = {
@@ -107,8 +121,16 @@
 
   function labelForEvent(name) {
     if (PAGE_LABELS[name]) return pickLocale(PAGE_LABELS[name]);
+    if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
     if (ACTION_LABELS[name]) return pickLocale(ACTION_LABELS[name]);
     if (MODULE_LABELS[name]) return pickLocale(MODULE_LABELS[name]);
+
+    if ((name || '').indexOf('portal.') === 0) {
+      var portalKey = 'portal.' + (name.split('.')[1] || '');
+      if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
+      if (PORTAL_LABELS[portalKey]) return pickLocale(PORTAL_LABELS[portalKey]);
+      return langIsZh() ? '子站 · ' + (name.split('.').slice(1).join(' · ') || name) : name;
+    }
 
     var m = /^tool\.([a-z0-9_-]+)\.([a-z0-9_-]+)$/i.exec(name || '');
     if (m) {
@@ -164,10 +186,11 @@
 
   function nameCellHtml(name) {
     var label = labelForEvent(name);
+    var showKey = label && label !== name;
     return (
       '<div class="event-name">' +
-        '<div class="event-label">' + escapeHtml(label) + '</div>' +
-        '<div class="event-key">' + escapeHtml(name) + '</div>' +
+        '<div class="event-label">' + escapeHtml(label || name) + '</div>' +
+        (showKey ? '<div class="event-key">' + escapeHtml(name) + '</div>' : '') +
       '</div>'
     );
   }

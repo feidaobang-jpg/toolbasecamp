@@ -410,7 +410,7 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"stats_geo_rev":1' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"stats_geo_rev":2' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"stocks_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"ladder_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"nbcheck_api":true' >/dev/null \
@@ -455,7 +455,7 @@ jobs:
             echo "$HEALTH_JSON" | grep -F '"fx_api":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_thb_twd":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"fx_allowed_rev":2' >/dev/null || exit 1
-            echo "$HEALTH_JSON" | grep -F '"stats_geo_rev":1' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"stats_geo_rev":2' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"auth_phone_login":true' >/dev/null || exit 1
             echo "$HEALTH_JSON" | grep -F '"auth_phone_rev":3' >/dev/null || exit 1
             bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
@@ -1029,7 +1029,7 @@ jobs:
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"stats_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"stats_events_api":true' >/dev/null \
-              && echo "$HEALTH" | grep -F '"stats_geo_rev":1' >/dev/null
+              && echo "$HEALTH" | grep -F '"stats_geo_rev":2' >/dev/null
           }
           HIT="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/hit?cb=$RANDOM" \
             -H 'Content-Type: application/json' \
@@ -1063,7 +1063,7 @@ jobs:
           fi
           HEALTH2="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
           echo "$HEALTH2" | grep -F '"stats_events_api":true' >/dev/null || exit 1
-          echo "$HEALTH2" | grep -F '"stats_geo_rev":1' >/dev/null || exit 1
+          echo "$HEALTH2" | grep -F '"stats_geo_rev":2' >/dev/null || exit 1
           echo "Site stats API public OK (incl. geo)."
 
       - name: Verify life-plans API route (public URL)

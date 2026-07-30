@@ -521,6 +521,11 @@ def _mask_account(user_or_email) -> str:
 
 
 def _client_ip(request: Request) -> str:
+    # Prefer Cloudflare / CDN true client IP when present
+    for header in ("cf-connecting-ip", "true-client-ip"):
+        raw = (request.headers.get(header) or "").strip()
+        if raw and raw.lower() not in ("unknown",):
+            return raw.split(",")[0].strip()
     forwarded = (request.headers.get("x-forwarded-for") or "").split(",")[0].strip()
     if forwarded:
         return forwarded

@@ -12,6 +12,10 @@ location /api/ {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
+    # Preserve Cloudflare geo / client IP for site_stats region
+    proxy_set_header CF-IPCountry $http_cf_ipcountry;
+    proxy_set_header CF-Connecting-IP $http_cf_connecting_ip;
+    proxy_set_header True-Client-IP $http_true_client_ip;
     client_max_body_size 50M;
     proxy_read_timeout 300s;
     proxy_connect_timeout 60s;
