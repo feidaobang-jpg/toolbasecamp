@@ -801,7 +801,9 @@ def health():
         # FastAPI registers path params as /nbcheck/{list_id}, not /nbcheck/nb_gpu
         "nbcheck_api": "/nbcheck/refresh" in paths and "/nbcheck/status" in paths and "/nbcheck/{list_id}" in paths,
         "nbcheck_api_rev": NBCHECK_API_REV,
-        "news_api": "/news/refresh" in paths and "/news/status" in paths,
+        "news_api": "/news/refresh" in paths
+        and "/news/status" in paths
+        and "/news/regen" in paths,
         "news_api_rev": NEWS_API_REV,
         "stocks_api": (
             "/stocks/recommend-tail-buy" in paths
