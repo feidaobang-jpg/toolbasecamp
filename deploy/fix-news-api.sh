@@ -27,6 +27,7 @@ paths=sorted(getattr(r,'path','') for r in app.routes)
 print([p for p in paths if 'news' in p])
 assert '/news/status' in paths, paths
 assert '/news/refresh' in paths, paths
+assert '/news/regen' in paths, paths
 print('news routes OK on disk')
 "
 )
@@ -71,8 +72,13 @@ echo "$HEALTH" | grep -q '"news_api":true' || {
   ss -lntp 2>/dev/null | grep 8001 || true
   exit 1
 }
-curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/news/status' >/dev/null || {
-  echo "FAILED: openapi missing /news/status"
+echo "$HEALTH" | grep -q '"news_api_rev":2' || {
+  echo "FAILED: health news_api_rev!=2 (disk may be old — redeploy server/ then re-run)"
+  journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
-echo "OK: news API live"
+curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/news/regen' >/dev/null || {
+  echo "FAILED: openapi missing /news/regen"
+  exit 1
+}
+echo "OK: news API live (status/refresh/regen)"
