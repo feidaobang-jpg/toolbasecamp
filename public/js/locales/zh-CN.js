@@ -2338,6 +2338,8 @@ window.TB_LOCALES['zh-CN'] = {
             empty: '暂无装机方案',
             loadFail: '加载失败',
             count: '方案数',
+            countFiltered: '当前',
+            countTotal: '共',
             filterAll: '全部',
             tierEntry: '低配',
             tierMid: '中配',

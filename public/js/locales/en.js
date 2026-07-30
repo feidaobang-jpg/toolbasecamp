@@ -2339,6 +2339,8 @@ window.TB_LOCALES.en = {
             empty: 'No builds yet',
             loadFail: 'Failed to load',
             count: 'Builds',
+            countFiltered: 'Showing',
+            countTotal: 'of',
             filterAll: 'All',
             tierEntry: 'Entry',
             tierMid: 'Mid',
