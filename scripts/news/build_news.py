@@ -730,9 +730,11 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                     print(f"  - 跳过无封面: {org_title[:40]}")
                     continue
                 other_images = []
-                for img_url in [u for u in all_image_urls if u != chosen_cover_url][:5]:
+                seen_paths = {local_cover} if local_cover else set()
+                for img_url in [u for u in all_image_urls if u != chosen_cover_url][:8]:
                     path = download_image(img_url, min_width=300, min_height=200)
-                    if path:
+                    if path and path not in seen_paths:
+                        seen_paths.add(path)
                         other_images.append(path)
                 if not full_text:
                     full_text = clean_html(org_summary)
@@ -743,13 +745,19 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                 item["title"] = (ai_result.get("title") or org_title).strip()
                 item["desc"] = (ai_result.get("summary") or clean_html(org_summary)).strip()
                 content_html = ai_result.get("content") or ""
-                display_imgs = []
-                if item["cover_image"]:
-                    display_imgs.append(item["cover_image"])
-                display_imgs.extend(other_images)
-                if display_imgs:
-                    content_html = insert_images_into_html(content_html, display_imgs, "../images/")
-                item["content"] = content_html
+                # Cover is for list cards; body gets unique extras only.
+                # If no extras, prepend cover once (avoid cover+same-file twice).
+                if other_images:
+                    content_html = insert_images_into_html(
+                        content_html, other_images, "../images/"
+                    )
+                elif item["cover_image"]:
+                    name = os.path.basename(item["cover_image"])
+                    content_html = (
+                        f'<figure><img src="../images/{name}" alt="" loading="lazy"></figure>\n'
+                        + content_html
+                    )
+                item["content"] = dedupe_content_images(content_html)
                 item["local_url"] = generate_detail_page(item)
                 upsert_article(cur, item)
                 existing.add(link)
