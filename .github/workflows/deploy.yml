@@ -369,6 +369,7 @@ jobs:
           bash /opt/toolbasecamp-deploy/fix-stocks-api.sh || true
           bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
           bash /opt/toolbasecamp-deploy/fix-news-api.sh || true
+          bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh || true
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
@@ -413,8 +414,10 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"stocks_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"ladder_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"nbcheck_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"nbcheck_api_rev":2' >/dev/null; then
-              echo "health OK with recipe/records/todos/reset/logs/watermark/wan/general_cutout/life_plans_ready/prompt_rev/fx_thb_twd/auth_phone/stats_geo/stocks/ladder/nbcheck"
+              && echo "$HEALTH_JSON" | grep -F '"nbcheck_api_rev":2' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"pc_builds_api":true' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"pc_builds_api_rev":2' >/dev/null; then
+              echo "health OK with recipe/records/.../nbcheck/pc_builds"
               HEALTH_OK=1
               break
             fi
