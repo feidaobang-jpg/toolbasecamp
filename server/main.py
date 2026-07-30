@@ -44,7 +44,7 @@ from site_stats import STATS_GEO_REV
 from site_stats import ensure_site_stats_tables
 from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
-from news_articles import ensure_news_tables
+from news_articles import ensure_news_tables, router as news_router, wire as wire_news
 from stocks import router as stocks_router
 from stocks import wire as wire_stocks
 from ladder import router as ladder_router
@@ -536,6 +536,8 @@ wire_ladder(get_current_user, require_admin)
 app.include_router(ladder_router)
 wire_nbcheck(get_current_user, require_admin)
 app.include_router(nbcheck_router)
+wire_news(get_conn, require_db, get_current_user, require_admin)
+app.include_router(news_router)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
 

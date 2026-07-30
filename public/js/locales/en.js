@@ -36,11 +36,17 @@ window.TB_LOCALES.en = {
         },
         ops: {
             siteStatsTitle: 'Site stats',
-            siteStatsDesc: 'Views, visitors, and feature usage ranking'
+            siteStatsDesc: 'Views, visitors, and feature usage ranking',
+            refreshTitle: 'Backend updates',
+            refreshDesc: 'Manually run crawlers and compile jobs (tech news, benchmark ranks, …)',
+            newsTitle: 'Tech news',
+            newsDesc: 'RSS crawl + DeepSeek rewrite, publish static pages on the news subdomain',
+            newsRefresh: 'Refresh news'
         },
         ladder: {
-            updateTitle: 'Benchmark rank refresh',
-            updateDesc: 'Manually scrape Notebookcheck rankings and update public pages',
+            updateTitle: 'Backend updates',
+            updateDesc: 'Scrape Notebookcheck rankings into cache and public JSON',
+            sectionTitle: 'Benchmark ranks',
             refreshAll: 'Refresh all'
         },
         stock: {

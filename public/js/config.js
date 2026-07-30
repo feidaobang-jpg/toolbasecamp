@@ -301,8 +301,8 @@ const privateToolsConfig = {
                     url: 'html/admin/site-stats.html'
                 },
                 {
-                    titleKey: 'privateHub.ladder.updateTitle',
-                    descriptionKey: 'privateHub.ladder.updateDesc',
+                    titleKey: 'privateHub.ops.refreshTitle',
+                    descriptionKey: 'privateHub.ops.refreshDesc',
                     url: 'html/admin/private/ladder-update.html'
                 }
             ]

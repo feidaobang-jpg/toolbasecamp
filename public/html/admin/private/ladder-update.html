@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>性能跑分榜更新 - 自用</title>
+  <title>后台更新 - 自用</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="../../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
-  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=2" />
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
   <script src="../../../js/locales/en.js"></script>
   <script src="../../../js/locales/zh-CN.js"></script>
   <script src="../../../js/i18n.js?v=stats1"></script>
@@ -23,7 +23,7 @@
       <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ladder.updateTitle">性能跑分榜更新</h1>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.refreshTitle">后台更新</h1>
       <div class="ml-auto flex items-center gap-3 text-sm">
         <span id="auth-label" class="text-gray-500"></span>
         <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fladder-update.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
@@ -38,18 +38,34 @@
     </div>
 
     <div id="app" class="ladder-update-wrap hidden">
-      <h2 data-i18n="privateHub.ladder.updateTitle">性能跑分榜更新</h2>
-      <p class="ladder-update-desc" data-i18n="privateHub.ladder.updateDesc">
-        从 Notebookcheck 抓取跑分并写入缓存与公开 JSON。无定时任务，请手动更新。
+      <p class="ladder-update-desc" data-i18n="privateHub.ops.refreshDesc">
+        手动触发爬虫与编译任务（科技资讯、性能跑分榜等）。无宝塔定时；资讯另有 Linux cron 日更。
       </p>
-      <div class="ladder-toolbar action-row">
-        <button type="button" id="btn-refresh-nbcheck" class="tb-btn" data-i18n="privateHub.ladder.refreshAll">全部更新</button>
-      </div>
-      <div id="status" class="ladder-status"></div>
-      <div id="nbcheck-list" class="ladder-list"></div>
+
+      <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.newsTitle">科技资讯</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.newsDesc">RSS 抓取 + DeepSeek 中文编译，写入数据库并生成 news 子站静态页。</p>
+        <div class="ladder-toolbar action-row">
+          <button type="button" id="btn-refresh-news" class="tb-btn" data-i18n="privateHub.ops.newsRefresh">更新资讯</button>
+          <a id="news-public-link" class="ladder-row-link" href="https://news.toolbasecamp.com/" target="_blank" rel="noopener">查看公开页</a>
+        </div>
+        <div id="news-status" class="ladder-status"></div>
+      </section>
+
+      <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ladder.sectionTitle">性能跑分榜</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ladder.updateDesc">
+          从 Notebookcheck 抓取跑分并写入缓存与公开 JSON。
+        </p>
+        <div class="ladder-toolbar action-row">
+          <button type="button" id="btn-refresh-nbcheck" class="tb-btn" data-i18n="privateHub.ladder.refreshAll">全部更新</button>
+        </div>
+        <div id="status" class="ladder-status"></div>
+        <div id="nbcheck-list" class="ladder-list"></div>
+      </section>
     </div>
   </main>
 
-  <script src="../../../js/admin/ladder-update.js?v=4"></script>
+  <script src="../../../js/admin/ladder-update.js?v=5"></script>
 </body>
 </html>

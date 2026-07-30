@@ -35,11 +35,17 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ops: {
             siteStatsTitle: '站点统计',
-            siteStatsDesc: '浏览量、访客与功能使用排行'
+            siteStatsDesc: '浏览量、访客与功能使用排行',
+            refreshTitle: '后台更新',
+            refreshDesc: '手动触发爬虫与编译任务（科技资讯、性能跑分榜等）',
+            newsTitle: '科技资讯',
+            newsDesc: 'RSS 抓取 + DeepSeek 中文编译，生成 news 子站静态页',
+            newsRefresh: '更新资讯'
         },
         ladder: {
-            updateTitle: '性能跑分榜更新',
-            updateDesc: '手动抓取 Notebookcheck 跑分并更新公开页',
+            updateTitle: '后台更新',
+            updateDesc: '从 Notebookcheck 抓取跑分并写入缓存与公开 JSON',
+            sectionTitle: '性能跑分榜',
             refreshAll: '全部更新'
         },
         stock: {

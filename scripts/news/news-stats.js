@@ -4,7 +4,12 @@
  */
 (function () {
   'use strict';
-  var API = 'https://toolbasecamp.com/api';
+  var API =
+    location.hostname === 'news.toolbasecamp.com' || location.hostname.endsWith('.toolbasecamp.com')
+      ? location.origin + '/api'
+      : location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+        ? 'http://127.0.0.1:8001'
+        : 'https://toolbasecamp.com/api';
   var EXCLUDE_KEY = 'tb-stats-exclude';
   var TOKEN_KEY = 'auth_token';
   var VID_KEY = 'tb-visitor-id';

@@ -194,6 +194,88 @@
       });
   }
 
+  function setNewsStatus(text, isErr) {
+    var el = document.getElementById('news-status');
+    if (!el) return;
+    el.textContent = text || '';
+    el.classList.toggle('is-error', !!isErr);
+  }
+
+  function loadNewsStatus() {
+    return fetch(apiBase() + '/news/status', {
+      headers: authHeaders(),
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        var parts = [];
+        if (data.running) parts.push('正在更新…');
+        else if (data.count != null) parts.push('已缓存 ' + data.count + ' 条');
+        if (data.index_updated_at) parts.push('页面 ' + fmtTime(data.index_updated_at));
+        if (data.last_ok === false && data.last_error) parts.push(data.last_error);
+        setNewsStatus(parts.join(' · ') || '—', data.last_ok === false);
+        var link = document.getElementById('news-public-link');
+        if (link && data.public_url) link.href = data.public_url;
+        return data;
+      });
+  }
+
+  function pollNewsUntilIdle(triesLeft) {
+    var left = triesLeft == null ? 60 : triesLeft;
+    return loadNewsStatus()
+      .then(function (data) {
+        if (data && data.running && left > 0) {
+          return new Promise(function (resolve) {
+            setTimeout(function () {
+              resolve(pollNewsUntilIdle(left - 1));
+            }, 5000);
+          });
+        }
+        if (data && data.running) {
+          setNewsStatus('仍在后台运行，请稍后刷新查看', false);
+        } else if (data && data.last_ok) {
+          setNewsStatus(
+            '更新完成 · 已缓存 ' + (data.count || 0) + ' 条 · 页面 ' + fmtTime(data.index_updated_at),
+            false
+          );
+        }
+        return data;
+      })
+      .catch(function (err) {
+        setNewsStatus('读取资讯状态失败：' + (err && err.message ? err.message : err), true);
+      });
+  }
+
+  function runNewsRefresh() {
+    var btn = document.getElementById('btn-refresh-news');
+    if (btn) btn.disabled = true;
+    setNewsStatus('已提交资讯更新任务…');
+    fetch(apiBase() + '/news/refresh', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: '{}',
+      cache: 'no-store'
+    })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          if (!res.ok) throw new Error((body && body.detail) || 'HTTP ' + res.status);
+          return body;
+        });
+      })
+      .then(function () {
+        return pollNewsUntilIdle(60);
+      })
+      .catch(function (err) {
+        setNewsStatus('资讯更新失败：' + (err && err.message ? err.message : err), true);
+      })
+      .finally(function () {
+        if (btn) btn.disabled = false;
+      });
+  }
+
   function boot() {
     var tok = token();
     if (!tok) {
@@ -222,6 +304,15 @@
             runNbcheckRefresh('all');
           });
         }
+        var btnNews = document.getElementById('btn-refresh-news');
+        if (btnNews) {
+          btnNews.addEventListener('click', function () {
+            runNewsRefresh();
+          });
+        }
+        loadNewsStatus().catch(function (err) {
+          setNewsStatus('加载资讯状态失败：' + (err && err.message ? err.message : err), true);
+        });
         return loadNbcheckStatus().catch(function (err) {
           setStatus('加载 Notebookcheck 状态失败：' + (err && err.message ? err.message : err), true);
         });

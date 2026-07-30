@@ -13,7 +13,25 @@
 .ladder-update-desc {
   font-size: 0.875rem;
   color: #6b7280;
-  margin: 0 0 1rem;
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+
+.ladder-section {
+  margin-bottom: 1.75rem;
+}
+
+.ladder-section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.35rem;
+}
+
+.ladder-section-desc {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin: 0 0 0.75rem;
   line-height: 1.5;
 }
 
