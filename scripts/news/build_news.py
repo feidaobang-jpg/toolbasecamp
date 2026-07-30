@@ -137,8 +137,72 @@ def url_looks_like_author_or_avatar(url: str) -> bool:
         "favicon",
         "sprite",
         "badge",
+        "blurple",  # The Verge author portraits
+        "sponsor",
+        "logo",
+        "icon",
     )
     return any(k in u for k in keys)
+
+
+def img_tag_looks_like_author_or_chrome(img) -> bool:
+    """Reject byline avatars / sponsor chrome using alt/class, not only URL."""
+    alt = (img.get("alt") or "").strip().lower()
+    cls = " ".join(img.get("class") or []).lower()
+    src = (img.get("data-src") or img.get("src") or "").lower()
+    if url_looks_like_author_or_avatar(src):
+        return True
+    chrome = ("sponsor", "logo", "icon", "avatar", "author", "byline", "headshot")
+    if any(k in cls for k in chrome):
+        return True
+    if any(k in alt for k in ("sponsor", "logo", "icon", "avatar")):
+        return True
+    # Person-name alts on The Verge bylines (e.g. "Jay Peters") — short, no scene words
+    if alt and len(alt) <= 40 and " " in alt and not any(
+        w in alt
+        for w in (
+            "graphic",
+            "collage",
+            "photo",
+            "image",
+            "screenshot",
+            "review",
+            "hands-on",
+            "versus",
+            "vs",
+            "chip",
+            "phone",
+            "laptop",
+            "gpu",
+            "cpu",
+            "ai",
+            "meta",
+            "apple",
+            "google",
+            "microsoft",
+            "nvidia",
+            "amd",
+            "intel",
+            "samsung",
+        )
+    ):
+        # Two/three capitalized-looking name tokens in original alt
+        raw_alt = (img.get("alt") or "").strip()
+        tokens = raw_alt.split()
+        if 2 <= len(tokens) <= 4 and all(t[:1].isupper() for t in tokens if t):
+            return True
+    return False
+
+
+def image_is_square_like(path: str, lo: float = 0.85, hi: float = 1.18) -> bool:
+    try:
+        with Image.open(path) as img:
+            if img.height <= 0:
+                return False
+            ar = img.width / img.height
+            return lo <= ar <= hi
+    except Exception:
+        return False
 
 
 def image_fingerprint(img: Image.Image) -> str:
@@ -183,13 +247,34 @@ def download_image(
     min_width: int = 200,
     min_height: int = 100,
     reject_square_hero: bool = False,
+    reject_square: bool = False,
 ) -> str:
     """Download/compress image; return web-relative path images/xxx.jpg or ''."""
-    if not url:
+    if not url or url_looks_like_author_or_avatar(url):
         return ""
     filename = hashlib.md5(url.encode()).hexdigest() + ".jpg"
     filepath = os.path.join(IMAGES_DIR, filename)
     rel = f"images/{filename}"
+
+    def _passes_geometry(img: Image.Image) -> bool:
+        if img.width < min_width or img.height < min_height:
+            return False
+        aspect_ratio = img.width / img.height
+        is_square_like = 0.85 <= aspect_ratio <= 1.18
+        if reject_square and is_square_like:
+            return False
+        is_small_square = is_square_like and img.width < 600
+        if min_width >= 300:
+            if is_small_square:
+                return False
+            if 1.2 <= aspect_ratio <= 1.5 and img.width < 400:
+                return False
+        if reject_square_hero and is_square_like and max(img.width, img.height) <= 900:
+            return False
+        # Author headshots are often large squares; never use as cover/body when square.
+        if reject_square_hero and is_square_like:
+            return False
+        return True
 
     def _valid(path: str) -> bool:
         try:
@@ -201,7 +286,14 @@ def download_image(
 
     if os.path.exists(filepath):
         if _valid(filepath):
-            return rel
+            try:
+                with Image.open(filepath) as cached:
+                    if _passes_geometry(cached):
+                        return rel
+            except Exception:
+                pass
+            # Cached file fails current filters (e.g. old avatar) — don't reuse.
+            return ""
         try:
             os.remove(filepath)
         except OSError:
@@ -233,17 +325,7 @@ def download_image(
             elif img.mode != "RGB":
                 img = img.convert("RGB")
 
-            if img.width < min_width or img.height < min_height:
-                return ""
-            aspect_ratio = img.width / img.height
-            is_square_like = 0.8 <= aspect_ratio <= 1.25
-            is_small_square = is_square_like and img.width < 600
-            if min_width >= 300:
-                if is_small_square:
-                    return ""
-                if 1.2 <= aspect_ratio <= 1.5 and img.width < 400:
-                    return ""
-            if reject_square_hero and is_square_like and max(img.width, img.height) <= 900:
+            if not _passes_geometry(img):
                 return ""
             if img.width > 1200:
                 ratio = 1200 / img.width
@@ -281,12 +363,17 @@ def fetch_article_content(url: str) -> Tuple[str, str, List[str]]:
             for tag in soup(["script", "style", "nav", "footer", "header"]):
                 tag.decompose()
 
+            # Prefer <article> so related-story / sidebar thumbs are not pulled in.
+            scope = soup.find("article") or soup.find("main") or soup
+
             all_images: List[str] = []
             seen = set()
             if cover_image_url:
                 all_images.append(cover_image_url)
                 seen.add(cover_image_url)
-            for img in soup.find_all("img"):
+            for img in scope.find_all("img"):
+                if img_tag_looks_like_author_or_chrome(img):
+                    continue
                 src = img.get("data-src") or img.get("src") or ""
                 src_lower = src.lower()
                 if not src or src.startswith("data:") or src.endswith(".svg"):
@@ -309,6 +396,8 @@ def fetch_article_content(url: str) -> Tuple[str, str, List[str]]:
                     "favicon",
                     "googleusercontent",
                     "twimg.com/profile",
+                    "blurple",
+                    "sponsor",
                 ]
                 if any(kw in src_lower for kw in skip_keywords):
                     continue
@@ -318,13 +407,15 @@ def fetch_article_content(url: str) -> Tuple[str, str, List[str]]:
                     src = urljoin(url, src)
                 elif not src.startswith("http"):
                     continue
+                if url_looks_like_author_or_avatar(src):
+                    continue
                 if src not in seen:
                     all_images.append(src)
                     seen.add(src)
             if not cover_image_url and all_images:
                 cover_image_url = all_images[0]
             paragraphs = []
-            for p in soup.find_all("p"):
+            for p in scope.find_all("p"):
                 text = p.get_text().strip()
                 if len(text) > 50:
                     paragraphs.append(text)
@@ -362,7 +453,7 @@ def insert_images_into_html(html_content: str, image_paths: List[str], img_prefi
 
 
 def dedupe_content_images(html: str) -> str:
-    """Drop duplicate figures: same basename, or visually same photo (avg-hash)."""
+    """Drop duplicate / non-content figures (same visual, or square author-style)."""
     if not html:
         return html
     pattern = re.compile(
@@ -378,11 +469,15 @@ def dedupe_content_images(html: str) -> str:
         src = m.group(2) or ""
         base = os.path.basename(src.split("?")[0])
         drop = False
+        local = local_image_path(src)
         if base and base in seen_bases:
+            drop = True
+        if not drop and local and os.path.isfile(local) and image_is_square_like(local):
+            # Author blurple portraits etc. should never stay in body.
             drop = True
         fp = None
         if not drop and base:
-            fp = image_fingerprint_file(local_image_path(src))
+            fp = image_fingerprint_file(local) if local else None
             if fp and any(fingerprints_similar(fp, prev) for prev in seen_fps):
                 drop = True
         if drop:
@@ -787,7 +882,12 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                     if cfp:
                         seen_fps.append(cfp)
                 for img_url in [u for u in all_image_urls if u != chosen_cover_url][:8]:
-                    path = download_image(img_url, min_width=300, min_height=200)
+                    path = download_image(
+                        img_url,
+                        min_width=300,
+                        min_height=200,
+                        reject_square=True,
+                    )
                     if not path or path in seen_paths:
                         continue
                     fp = image_fingerprint_file(local_image_path(path))
@@ -797,6 +897,8 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                     if fp:
                         seen_fps.append(fp)
                     other_images.append(path)
+                    if len(other_images) >= 2:
+                        break
                 if not full_text:
                     full_text = clean_html(org_summary)
                 ai_result = call_deepseek_compile(org_title, full_text, conf["name"])
