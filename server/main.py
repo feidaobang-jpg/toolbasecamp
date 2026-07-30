@@ -59,7 +59,7 @@ from nbcheck import wire as wire_nbcheck
 
 NBCHECK_API_REV = 2
 NEWS_API_REV = 2
-PC_BUILDS_API_REV = 3
+PC_BUILDS_API_REV = 4
 
 _wan_import_error = ""
 try:

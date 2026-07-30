@@ -290,54 +290,59 @@ def _deepseek_json(prompt: str, system: str, timeout: int = 180) -> str:
     return content.replace("```json", "").replace("```", "").strip()
 
 
-def analyze_trends_and_generate() -> None:
+def generate_builds_with_ai(*, use_zol: bool = False) -> None:
     n = BUILDS_PER_TIER
-    print(f">>> [分析] DeepSeek 生成 {ZOL_YEAR} 年低/中/高配各 {n} 套（无长点评）…")
-    if not os.path.exists(ZOL_RAW_FILE):
-        print(f"    缺少原始数据: {ZOL_RAW_FILE}")
-        return
-    with open(ZOL_RAW_FILE, "r", encoding="utf-8") as f:
-        builds = json.load(f)
-    if not builds:
-        print("    数据为空")
-        return
+    print(f">>> [AI] DeepSeek 直接生成 {ZOL_YEAR} 年低/中/高配各 {n} 套…")
 
-    parts_pool: List[str] = []
-    monitors_pool: List[str] = []
-    for build in builds:
-        for part in build.get("parts", []):
-            name = part["name"].strip()
-            if len(name) > 50:
-                name = name[:50]
-            parts_pool.append(name)
-            if "显示器" in name:
-                monitors_pool.append(name)
-    top_parts_str = "\n".join(
-        [f"- {n} (出现 {c} 次)" for n, c in Counter(parts_pool).most_common(50)]
-    )
-    top_monitors_str = "\n".join(
-        [f"- {n} (出现 {c} 次)" for n, c in Counter(monitors_pool).most_common(20)]
-    )
-
-    prompt = f"""
-你是电脑硬件分析师。以下是 {ZOL_YEAR} 年 ZOL 网友配置热门配件统计。
+    zol_block = ""
+    if use_zol and os.path.exists(ZOL_RAW_FILE):
+        with open(ZOL_RAW_FILE, "r", encoding="utf-8") as f:
+            builds = json.load(f)
+        if builds:
+            parts_pool: List[str] = []
+            monitors_pool: List[str] = []
+            for build in builds:
+                for part in build.get("parts", []):
+                    name = part["name"].strip()
+                    if len(name) > 50:
+                        name = name[:50]
+                    parts_pool.append(name)
+                    if "显示器" in name:
+                        monitors_pool.append(name)
+            top_parts_str = "\n".join(
+                [f"- {name} (出现 {c} 次)" for name, c in Counter(parts_pool).most_common(50)]
+            )
+            top_monitors_str = "\n".join(
+                [f"- {name} (出现 {c} 次)" for name, c in Counter(monitors_pool).most_common(20)]
+            )
+            zol_block = f"""
+以下是 {ZOL_YEAR} 年 ZOL 网友配置热门配件统计（仅作参考，过时型号请换成更优新品）：
 
 【热门通用配件】
 {top_parts_str}
 
 【热门显示器】
 {top_monitors_str}
+"""
+            print("    已附带 ZOL 热门统计作参考")
+        else:
+            print("    ZOL 数据为空，改为纯 AI 生成")
+    else:
+        print("    不爬 ZOL，按当年行情直接生成")
 
+    prompt = f"""
+你是电脑硬件分析师，熟悉中国大陆 {ZOL_YEAR} 年装机市场（京东/淘宝常见在售型号与大致价位）。
+{zol_block}
 请输出 JSON 数组，共 {n * 3} 套方案：
 - 低配 entry：约 2500–4500 元，{n} 套，偏办公/网游
 - 中配 mid：约 5000–8500 元，{n} 套，偏 1080P/2K 游戏
 - 高配 high：约 10000–18000 元，{n} 套，偏高画质/轻生产力
 
 要求：
-1. 参考热门配件，过时型号换成同价位更优新品。
+1. 型号尽量真实在售，价格用人民币约价（可带 ¥）。
 2. 每套字段：id, title, summary(40字内), price_range, tier(entry|mid|high), tags, parts([name,model,price]), recommended_monitor({{model,price}})
 3. 不要写长点评 / review 字段。
-4. 直接输出 JSON 数组。
+4. 直接输出 JSON 数组，不要 markdown。
 """
     try:
         content = _deepseek_json(prompt, "你是一个只输出标准 JSON 的硬件助手。")
@@ -349,7 +354,13 @@ def analyze_trends_and_generate() -> None:
             json.dump(recommendations, f, ensure_ascii=False, indent=2)
         print(f"    已写入 {len(recommendations)} 套 → {AI_TREND_FILE}")
     except Exception as e:
-        print(f"    分析失败: {e}")
+        print(f"    生成失败: {e}")
+        raise
+
+
+def analyze_trends_and_generate() -> None:
+    """兼容旧名：有 ZOL 原始文件则带参考，否则纯 AI。"""
+    generate_builds_with_ai(use_zol=os.path.exists(ZOL_RAW_FILE))
 
 
 def merge_into_db() -> None:
@@ -396,8 +407,21 @@ def clean_temp_data() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=f"Tool Basecamp {ZOL_YEAR} 装机推荐 → MySQL")
-    parser.add_argument("--crawl", action="store_true", help="爬 ZOL → AI → 入库")
-    parser.add_argument("--analyze", action="store_true", help="跳过爬取：AI → 入库")
+    parser.add_argument(
+        "--ai",
+        action="store_true",
+        help="默认推荐：不爬 ZOL，DeepSeek 直接生成并入库（云服务器可用）",
+    )
+    parser.add_argument(
+        "--crawl",
+        action="store_true",
+        help="可选：先爬 ZOL 再 AI（云 IP 易被拦，建议仅本地）",
+    )
+    parser.add_argument(
+        "--analyze",
+        action="store_true",
+        help="跳过爬取：若有 zol_raw 则带参考，否则纯 AI → 入库",
+    )
     parser.add_argument("--generate", action="store_true", help="仅确保表存在（兼容旧按钮）")
     parser.add_argument("--clean", action="store_true", help="清理临时文件")
     args = parser.parse_args()
@@ -406,12 +430,12 @@ def main() -> None:
 
     if args.crawl:
         crawl_zol_data()
-        analyze_trends_and_generate()
+        generate_builds_with_ai(use_zol=True)
         merge_into_db()
         if args.clean:
             clean_temp_data()
-    elif args.analyze:
-        analyze_trends_and_generate()
+    elif args.ai or args.analyze:
+        generate_builds_with_ai(use_zol=args.analyze and os.path.exists(ZOL_RAW_FILE))
         merge_into_db()
         if args.clean:
             clean_temp_data()
@@ -425,7 +449,11 @@ def main() -> None:
         finally:
             conn.close()
     else:
-        parser.print_help()
+        # 无参数时默认走纯 AI（后台按钮 / 服务器）
+        generate_builds_with_ai(use_zol=False)
+        merge_into_db()
+        if args.clean:
+            clean_temp_data()
 
     print("\n>>> 完成")
 

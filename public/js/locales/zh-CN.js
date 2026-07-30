@@ -43,7 +43,7 @@ window.TB_LOCALES['zh-CN'] = {
             newsRefresh: '更新资讯',
             newsRegen: '重生静态页',
             pcBuildsTitle: '装机推荐',
-            pcBuildsDesc: '「更新装机」爬 ZOL+AI 写入数据库（云 IP 可能失败，宜本地跑脚本）；「检查数据库」确保表与种子数据就绪',
+            pcBuildsDesc: '「更新装机」用 DeepSeek 直接生成当年低/中/高配并写入数据库（不爬 ZOL，云服务器可用）；「检查数据库」确保表就绪',
             pcBuildsRefresh: '更新装机',
             pcBuildsGenerate: '检查数据库'
         },

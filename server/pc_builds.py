@@ -308,7 +308,7 @@ def _run_job(extra_args: Optional[list] = None, timeout: int = 900) -> None:
         env["PC_HOME"] = PC_HOME
         env["PC_WEB_ROOT"] = PC_WEB_ROOT
         env["PC_BUILDS_USE_DB"] = "1"
-        cmd = ["bash", RUN_SCRIPT] + list(extra_args or ["--crawl", "--clean"])
+        cmd = ["bash", RUN_SCRIPT] + list(extra_args or ["--ai", "--clean"])
         proc = subprocess.run(
             cmd,
             cwd=PC_HOME,
@@ -402,9 +402,9 @@ def pcbuilds_status(_admin: dict = Depends(_admin_user)):
 def pcbuilds_refresh(_admin: dict = Depends(_admin_user)):
     _ = _admin
     return _start_job(
-        ["--crawl", "--clean"],
-        "已开始更新装机（写入数据库；云 IP 爬 ZOL 可能失败）",
-        timeout=900,
+        ["--ai", "--clean"],
+        "正在用 DeepSeek 生成装机方案…",
+        timeout=600,
     )
 
 

@@ -44,7 +44,7 @@ window.TB_LOCALES.en = {
             newsRefresh: 'Refresh news',
             newsRegen: 'Rebuild pages',
             pcBuildsTitle: 'PC builds',
-            pcBuildsDesc: '“Update builds” crawls ZOL + AI into MySQL (cloud IPs may be blocked); “Check DB” ensures table/seed ready',
+            pcBuildsDesc: '“Update builds” uses DeepSeek to generate entry/mid/high builds into MySQL (no ZOL crawl; works on cloud); “Check DB” ensures the table is ready',
             pcBuildsRefresh: 'Update builds',
             pcBuildsGenerate: 'Check database'
         },
