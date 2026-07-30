@@ -2311,6 +2311,8 @@ window.TB_LOCALES.en = {
             loading: 'Loading…',
             loadFail: 'Failed to load',
             filterAll: 'All',
+            searchPlaceholder: 'Search model…',
+            noMatch: 'No matches',
             scoreLabel: 'Score'
         },
         ladderGpu: {
@@ -2328,6 +2330,8 @@ window.TB_LOCALES.en = {
             loading: 'Loading…',
             loadFail: 'Failed to load',
             filterAll: 'All',
+            searchPlaceholder: 'Search model…',
+            noMatch: 'No matches',
             scoreLabel: 'Score'
         },
         ladderSoc: {
@@ -2345,6 +2349,8 @@ window.TB_LOCALES.en = {
             loading: 'Loading…',
             loadFail: 'Failed to load',
             filterAll: 'All',
+            searchPlaceholder: 'Search model…',
+            noMatch: 'No matches',
             scoreLabel: 'Score'
         },
         ladderNbCpu: {
@@ -2362,6 +2368,8 @@ window.TB_LOCALES.en = {
             loading: 'Loading…',
             loadFail: 'Failed to load',
             filterAll: 'All',
+            searchPlaceholder: 'Search model…',
+            noMatch: 'No matches',
             scoreLabel: 'Score'
         },
         ladderNbGpu: {
@@ -2382,6 +2390,8 @@ window.TB_LOCALES.en = {
             loading: 'Loading…',
             loadFail: 'Failed to load',
             filterAll: 'All',
+            searchPlaceholder: 'Search model…',
+            noMatch: 'No matches',
             scoreLabel: 'Score'
         },
         mindmap: {

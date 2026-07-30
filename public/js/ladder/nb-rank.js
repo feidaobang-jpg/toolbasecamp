@@ -53,6 +53,7 @@
   var state = {
     items: [],
     brand: 'all',
+    query: '',
     sourceUrl: '',
     updatedAt: '',
     scoreLabel: ''
@@ -69,7 +70,13 @@
           state.updatedAt.replace('T', ' ').replace('Z', ' UTC')
       );
     }
-    parts.push(tr(i18nKey('count'), '条目') + '：' + state.items.length);
+    var shown = filtered().length;
+    var total = state.items.length;
+    if (state.query || state.brand !== 'all') {
+      parts.push(tr(i18nKey('count'), '条目') + '：' + shown + ' / ' + total);
+    } else {
+      parts.push(tr(i18nKey('count'), '条目') + '：' + total);
+    }
     if (state.scoreLabel) {
       parts.push(tr(i18nKey('scoreLabel'), '分数') + '：' + state.scoreLabel);
     }
@@ -77,9 +84,17 @@
   }
 
   function filtered() {
-    if (state.brand === 'all') return state.items.slice();
+    var q = String(state.query || '')
+      .trim()
+      .toLowerCase();
     return state.items.filter(function (it) {
-      return String(it.brand || '').toLowerCase() === state.brand;
+      if (state.brand !== 'all' && String(it.brand || '').toLowerCase() !== state.brand) {
+        return false;
+      }
+      if (!q) return true;
+      return String(it.model || '')
+        .toLowerCase()
+        .indexOf(q) >= 0;
     });
   }
 
@@ -93,9 +108,13 @@
   function render() {
     var root = document.getElementById('nb-rank-list');
     if (!root) return;
+    setMeta();
     var list = filtered();
     if (!list.length) {
-      root.innerHTML = '<div class="nb-rank-empty">' + tr(i18nKey('empty'), '暂无数据') + '</div>';
+      root.innerHTML =
+        '<div class="nb-rank-empty">' +
+        tr(i18nKey(state.items.length ? 'noMatch' : 'empty'), state.items.length ? '无匹配结果' : '暂无数据') +
+        '</div>';
       return;
     }
     var top = list[0] && list[0].perf_rating ? Number(list[0].perf_rating) : 1;
@@ -121,6 +140,30 @@
         '</div>';
       row.querySelector('.nb-rank-name').textContent = it.model || '';
       root.appendChild(row);
+    });
+  }
+
+  function ensureSearch() {
+    if (document.getElementById('nb-rank-search')) return;
+    var filters = document.getElementById('nb-rank-filters');
+    var input = document.createElement('input');
+    input.type = 'search';
+    input.id = 'nb-rank-search';
+    input.className = 'nb-rank-search';
+    input.autocomplete = 'off';
+    input.placeholder = tr(i18nKey('searchPlaceholder'), '搜索型号…');
+    input.setAttribute('aria-label', tr(i18nKey('searchPlaceholder'), '搜索型号…'));
+    if (filters && filters.parentNode) {
+      filters.parentNode.insertBefore(input, filters);
+    }
+  }
+
+  function bindSearch() {
+    var input = document.getElementById('nb-rank-search');
+    if (!input) return;
+    input.addEventListener('input', function () {
+      state.query = input.value || '';
+      render();
     });
   }
 
@@ -163,7 +206,6 @@
     state.sourceUrl = data.source_url || '';
     state.updatedAt = data.updated_at || '';
     state.scoreLabel = data.score_label || cfg().scoreLabel || '';
-    setMeta();
     render();
   }
 
@@ -242,6 +284,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    ensureSearch();
+    bindSearch();
     ensureFilters();
     bindFilters();
     load();

@@ -2310,6 +2310,8 @@ window.TB_LOCALES['zh-CN'] = {
             loading: '加载中…',
             loadFail: '加载失败',
             filterAll: '全部',
+            searchPlaceholder: '搜索型号…',
+            noMatch: '无匹配结果',
             scoreLabel: '分数'
         },
         ladderGpu: {
@@ -2327,6 +2329,8 @@ window.TB_LOCALES['zh-CN'] = {
             loading: '加载中…',
             loadFail: '加载失败',
             filterAll: '全部',
+            searchPlaceholder: '搜索型号…',
+            noMatch: '无匹配结果',
             scoreLabel: '分数'
         },
         ladderSoc: {
@@ -2344,6 +2348,8 @@ window.TB_LOCALES['zh-CN'] = {
             loading: '加载中…',
             loadFail: '加载失败',
             filterAll: '全部',
+            searchPlaceholder: '搜索型号…',
+            noMatch: '无匹配结果',
             scoreLabel: '分数'
         },
         ladderNbCpu: {
@@ -2361,6 +2367,8 @@ window.TB_LOCALES['zh-CN'] = {
             loading: '加载中…',
             loadFail: '加载失败',
             filterAll: '全部',
+            searchPlaceholder: '搜索型号…',
+            noMatch: '无匹配结果',
             scoreLabel: '分数'
         },
         ladderNbGpu: {
@@ -2381,6 +2389,8 @@ window.TB_LOCALES['zh-CN'] = {
             loading: '加载中…',
             loadFail: '加载失败',
             filterAll: '全部',
+            searchPlaceholder: '搜索型号…',
+            noMatch: '无匹配结果',
             scoreLabel: '分数'
         },
         mindmap: {

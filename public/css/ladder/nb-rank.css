@@ -28,6 +28,27 @@
   color: #64748b;
 }
 
+.nb-rank-search {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 0 12px;
+  padding: 9px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.nb-rank-search:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
 .nb-rank-filters {
   display: flex;
   flex-wrap: wrap;
