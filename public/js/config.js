@@ -45,13 +45,6 @@ const portalsConfig = [
         theme: 'news'
     },
     {
-        titleKey: 'portals.pdf.title',
-        descriptionKey: 'portals.pdf.description',
-        url: 'https://pdf.toolbasecamp.com',
-        ctaKey: 'portals.pdf.cta',
-        theme: 'pdf'
-    },
-    {
         titleKey: 'portals.dev.title',
         descriptionKey: 'portals.dev.description',
         url: 'https://dev.toolbasecamp.com',
@@ -71,6 +64,13 @@ const portalsConfig = [
         url: 'https://hoppscotch.toolbasecamp.com',
         ctaKey: 'portals.hoppscotch.cta',
         theme: 'hoppscotch'
+    },
+    {
+        titleKey: 'portals.pdf.title',
+        descriptionKey: 'portals.pdf.description',
+        url: 'https://pdf.toolbasecamp.com',
+        ctaKey: 'portals.pdf.cta',
+        theme: 'pdf'
     },
     {
         titleKey: 'portals.translate.title',
