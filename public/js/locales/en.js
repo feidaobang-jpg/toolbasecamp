@@ -185,7 +185,7 @@ window.TB_LOCALES.en = {
         empty: 'No results',
         needKeyword: 'Please enter a keyword',
         fetchFail: 'Request failed. Try again later.',
-        upstreamFail: 'Server cannot reach TianAPI (often blocked from overseas VPS). On the server run: curl -m 8 https://apis.tianapi.com/',
+            upstreamFail: 'Server cannot reach TianAPI. On the server run: curl -m 8 https://apis.tianapi.com/',
         notConfigured: 'TianAPI key not configured (TIANAPI_KEY)',
         unknown: 'Feature not found',
         groups: {

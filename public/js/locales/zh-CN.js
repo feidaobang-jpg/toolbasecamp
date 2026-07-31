@@ -184,7 +184,7 @@ window.TB_LOCALES['zh-CN'] = {
         empty: '暂无结果',
         needKeyword: '请先输入关键字',
         fetchFail: '请求失败，请稍后重试',
-        upstreamFail: '服务器访问天行接口失败（多为海外 VPS 网络不通）。请在服务器上测试：curl -m 8 https://apis.tianapi.com/',
+            upstreamFail: '服务器访问天行接口失败。请在服务器上测试：curl -m 8 https://apis.tianapi.com/',
         notConfigured: '未配置天行密钥（TIANAPI_KEY）',
         unknown: '未找到该功能',
         groups: {
