@@ -145,6 +145,82 @@ def url_looks_like_author_or_avatar(url: str) -> bool:
     return any(k in u for k in keys)
 
 
+def url_looks_like_ad_or_promo(url: str) -> bool:
+    """Reject affiliate / deal banners (Wccftech Newegg, etc.)."""
+    if not url or not isinstance(url, str):
+        return True
+    u = url.lower()
+    keys = (
+        "newegg",
+        "doubleclick",
+        "googlesyndication",
+        "googleadservices",
+        "amazon-adsystem",
+        "adservice",
+        "/ads/",
+        "/ad/",
+        "advert",
+        "affiliate",
+        "taboola",
+        "outbrain",
+        "mgid",
+        "revcontent",
+        "dealofday",
+        "deal-of-the-day",
+        "dealoftheday",
+        "bundle-now",
+        "bundlenow",
+        "sponsored",
+        "promo-banner",
+        "promobanner",
+        "aorus",
+        "x870e-aorus",
+    )
+    return any(k in u for k in keys)
+
+
+def img_in_ad_or_related_block(img) -> bool:
+    """Skip imgs inside Deal of the Day / related / aside chrome."""
+    for p in getattr(img, "parents", []) or []:
+        name = getattr(p, "name", None) or ""
+        if name in ("aside",):
+            return True
+        bits = " ".join(
+            [
+                " ".join(p.get("class") or []),
+                str(p.get("id") or ""),
+                str(p.get("data-widget") or ""),
+                str(p.get("aria-label") or ""),
+            ]
+        ).lower()
+        for k in (
+            "ad-",
+            "ads-",
+            "advert",
+            "sponsor",
+            "affiliate",
+            "deal-of",
+            "dealofday",
+            "related",
+            "further-reading",
+            "further_reading",
+            "recommended",
+            "sidebar",
+            "promo",
+            "outbrain",
+            "taboola",
+            "mgid",
+            "newegg",
+            "partner",
+            "noskim",  # Skimlinks affiliate wrapper on Wccftech
+            "skimlinks",
+            "post-thumb",  # related-story thumbs
+        ):
+            if k in bits:
+                return True
+    return False
+
+
 def img_tag_looks_like_author_or_chrome(img) -> bool:
     """Reject byline avatars / sponsor chrome using alt/class, not only URL."""
     alt = (img.get("alt") or "").strip().lower()
@@ -152,10 +228,30 @@ def img_tag_looks_like_author_or_chrome(img) -> bool:
     src = (img.get("data-src") or img.get("src") or "").lower()
     if url_looks_like_author_or_avatar(src):
         return True
-    chrome = ("sponsor", "logo", "icon", "avatar", "author", "byline", "headshot")
+    if url_looks_like_ad_or_promo(src):
+        return True
+    if img_in_ad_or_related_block(img):
+        return True
+    # Wccftech desktop/mobile promo pair classes
+    if "only-desktop" in cls or "only-mobile" in cls:
+        return True
+    chrome = ("sponsor", "logo", "icon", "avatar", "author", "byline", "headshot", "promo", "deal")
     if any(k in cls for k in chrome):
         return True
-    if any(k in alt for k in ("sponsor", "logo", "icon", "avatar")):
+    if any(
+        k in alt
+        for k in (
+            "sponsor",
+            "logo",
+            "icon",
+            "avatar",
+            "bundle",
+            "newegg",
+            "deal of",
+            "aorus",
+            "gigabyte",
+        )
+    ):
         return True
     # Person-name alts on The Verge bylines (e.g. "Jay Peters") — short, no scene words
     if alt and len(alt) <= 40 and " " in alt and not any(
@@ -250,7 +346,7 @@ def download_image(
     reject_square: bool = False,
 ) -> str:
     """Download/compress image; return web-relative path images/xxx.jpg or ''."""
-    if not url or url_looks_like_author_or_avatar(url):
+    if not url or url_looks_like_author_or_avatar(url) or url_looks_like_ad_or_promo(url):
         return ""
     filename = hashlib.md5(url.encode()).hexdigest() + ".jpg"
     filepath = os.path.join(IMAGES_DIR, filename)
@@ -358,7 +454,11 @@ def fetch_article_content(url: str) -> Tuple[str, str, List[str]]:
             meta_image = soup.find("meta", property="og:image")
             if meta_image:
                 og_candidate = (meta_image.get("content") or "").strip()
-                if og_candidate and not url_looks_like_author_or_avatar(og_candidate):
+                if (
+                    og_candidate
+                    and not url_looks_like_author_or_avatar(og_candidate)
+                    and not url_looks_like_ad_or_promo(og_candidate)
+                ):
                     cover_image_url = og_candidate
             for tag in soup(["script", "style", "nav", "footer", "header"]):
                 tag.decompose()
@@ -398,6 +498,8 @@ def fetch_article_content(url: str) -> Tuple[str, str, List[str]]:
                     "twimg.com/profile",
                     "blurple",
                     "sponsor",
+                    "newegg",
+                    "aorus",
                 ]
                 if any(kw in src_lower for kw in skip_keywords):
                     continue
@@ -860,7 +962,12 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                 seen_c = set()
                 candidates = []
                 for u in [cover_image_url] + list(all_image_urls):
-                    if not u or u in seen_c or url_looks_like_author_or_avatar(u):
+                    if (
+                        not u
+                        or u in seen_c
+                        or url_looks_like_author_or_avatar(u)
+                        or url_looks_like_ad_or_promo(u)
+                    ):
                         continue
                     seen_c.add(u)
                     candidates.append(u)
@@ -882,6 +989,8 @@ def fetch_and_process(cur) -> Tuple[List[Dict[str, Any]], int]:
                     if cfp:
                         seen_fps.append(cfp)
                 for img_url in [u for u in all_image_urls if u != chosen_cover_url][:8]:
+                    if url_looks_like_ad_or_promo(img_url):
+                        continue
                     path = download_image(
                         img_url,
                         min_width=300,
