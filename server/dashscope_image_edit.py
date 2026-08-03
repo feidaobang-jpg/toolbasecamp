@@ -11,7 +11,25 @@ from fastapi import HTTPException
 
 from recipe_ai import DASHSCOPE_API_KEY, DASHSCOPE_BASE_URL
 
-QWEN_IMAGE_EDIT_MODEL = os.environ.get("QWEN_IMAGE_EDIT_MODEL", "qwen-image-edit")
+
+def _default_edit_model() -> str:
+    """US Virginia has wan2.6-image; Beijing typically uses qwen-image-edit."""
+    explicit = (os.environ.get("QWEN_IMAGE_EDIT_MODEL") or "").strip()
+    if explicit:
+        return explicit
+    blob = " ".join(
+        [
+            DASHSCOPE_BASE_URL or "",
+            os.environ.get("IMAGE_EDIT_DASHSCOPE_API_URL") or "",
+            os.environ.get("DASHSCOPE_HTTP_API_URL") or "",
+        ]
+    ).lower()
+    if "dashscope-us" in blob:
+        return "wan2.6-image"
+    return "qwen-image-edit"
+
+
+QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
 EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "120"))
 
 
@@ -111,7 +129,7 @@ async def edit_image_with_instruction(
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image")
 
-    use_model = (model or QWEN_IMAGE_EDIT_MODEL).strip() or "qwen-image-edit"
+    use_model = (model or QWEN_IMAGE_EDIT_MODEL or _default_edit_model()).strip() or _default_edit_model()
     url = _api_root().rstrip("/") + "/services/aigc/multimodal-generation/generation"
     payload: dict[str, Any] = {
         "model": use_model,
