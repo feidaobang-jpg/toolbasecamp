@@ -25,6 +25,7 @@ from dashscope_image_edit import (
     QWEN_IMAGE_EDIT_MODEL,
     dashscope_image_edit_configured,
     edit_image_with_instruction,
+    generate_image_from_text,
     resolve_edit_prompt,
 )
 
@@ -64,6 +65,32 @@ INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
 INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "3"))
 INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.0"))
 
+# Text-to-image models (Beijing). z-image-turbo = cheap/fast default.
+TEXT_TO_IMAGE_MODELS = (
+    {
+        "id": "z-image-turbo",
+        "priceCny": 0.04,
+        "labelKey": "tools.textToImage.modelZTurbo",
+        "default": True,
+    },
+    {
+        "id": "wan2.7-image",
+        "priceCny": 0.3,
+        "labelKey": "tools.textToImage.modelWan27",
+    },
+    {
+        "id": "wan2.7-image-pro",
+        "priceCny": 0.6,
+        "labelKey": "tools.textToImage.modelWan27pro",
+    },
+    {
+        "id": "qwen-image-2.0",
+        "priceCny": 0.2,
+        "labelKey": "tools.textToImage.model20",
+    },
+)
+TEXT_TO_IMAGE_MODEL_IDS = {m["id"] for m in TEXT_TO_IMAGE_MODELS}
+
 try:
     from general_cutout import rembg_available, segment_general
 except Exception as exc:  # pragma: no cover — keep image tools up if rembg stack breaks
@@ -94,6 +121,7 @@ LIMITS = {
     "general_cutout": int(os.environ.get("IMAGE_LIMIT_GENERAL_CUTOUT", "15")),
     "to_pdf": int(os.environ.get("IMAGE_LIMIT_TO_PDF", "20")),
     "instruct_edit": int(os.environ.get("IMAGE_LIMIT_INSTRUCT_EDIT", "8")),
+    "text_to_image": int(os.environ.get("IMAGE_LIMIT_TEXT_TO_IMAGE", "10")),
 }
 
 
@@ -248,6 +276,8 @@ def image_status(user: dict = Depends(_user)):
                 {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
+            "textToImageConfigured": dashscope_image_edit_configured(),
+            "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": True,
             "quotas": items,
             "enhanceTasks": [
@@ -288,6 +318,8 @@ def image_status(user: dict = Depends(_user)):
                 {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
+            "textToImageConfigured": dashscope_image_edit_configured(),
+            "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": False,
             "quotas": items,
             "enhanceTasks": [
@@ -475,7 +507,13 @@ async def api_instruct_edit(
 
     def _is_rate_limit(exc: BaseException) -> bool:
         detail = _exc_detail(exc).lower()
-        return "rate limit" in detail or "throttl" in detail or "too many request" in detail
+        return (
+            "rate limit" in detail
+            or "throttl" in detail
+            or "too many request" in detail
+            or "timed out" in detail
+            or "timeout" in detail
+        )
 
     async def _one(idx: int, blob: bytes, mid: str) -> dict:
         out, ctype = await edit_image_with_instruction(blob, text, model=mid)
@@ -540,6 +578,141 @@ async def api_instruct_edit(
         "preset": (preset or "").strip() or None,
         "batch": len(blobs),
         "compare": len(model_ids) > 1,
+    }
+    if errors:
+        out["partialErrors"] = errors
+    return out
+
+
+def _resolve_t2i_models(model: Optional[str], models: Optional[List[str]]) -> list[str]:
+    raw: list[str] = []
+    if models:
+        for item in models:
+            if not item:
+                continue
+            for part in str(item).replace(";", ",").split(","):
+                p = part.strip()
+                if p:
+                    raw.append(p)
+    if not raw and model:
+        raw = [(model or "").strip()]
+    if not raw:
+        raw = ["z-image-turbo"]
+    out: list[str] = []
+    seen: set[str] = set()
+    for mid in raw:
+        if mid not in TEXT_TO_IMAGE_MODEL_IDS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported model '{mid}'. Use one of: {', '.join(sorted(TEXT_TO_IMAGE_MODEL_IDS))}",
+            )
+        if mid in seen:
+            continue
+        seen.add(mid)
+        out.append(mid)
+    return out
+
+
+def _t2i_price_for(model_id: str) -> float:
+    for m in TEXT_TO_IMAGE_MODELS:
+        if m["id"] == model_id:
+            return float(m["priceCny"])
+    return 0.0
+
+
+@router.post("/text-to-image")
+async def api_text_to_image(
+    prompt: str = Form(...),
+    model: Optional[str] = Form(None),
+    models: List[str] = Form(default=[]),
+    size: str = Form("square"),
+    user: dict = Depends(_user),
+):
+    if not dashscope_image_edit_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+        )
+    text = (prompt or "").strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Please enter a prompt.")
+    model_ids = _resolve_t2i_models(model, models)
+    size_preset = (size or "square").strip().lower() or "square"
+    if size_preset not in ("square", "portrait", "landscape", "hd"):
+        size_preset = "square"
+
+    amount = len(model_ids)
+    quota = _consume_quota(user, "text_to_image", amount=amount)
+    est_price = round(sum(_t2i_price_for(m) for m in model_ids), 2)
+
+    def _is_retryable(exc: BaseException) -> bool:
+        detail = _exc_detail(exc).lower()
+        return (
+            "rate limit" in detail
+            or "throttl" in detail
+            or "too many request" in detail
+            or "timed out" in detail
+            or "timeout" in detail
+        )
+
+    async def _one(mid: str) -> dict:
+        out, ctype = await generate_image_from_text(text, model=mid, size_preset=size_preset)
+        return {
+            "model": mid,
+            "priceCny": _t2i_price_for(mid),
+            "imageBase64": base64.b64encode(out).decode("ascii"),
+            "contentType": ctype or "image/png",
+        }
+
+    async def _one_with_retry(mid: str) -> dict:
+        last: Optional[BaseException] = None
+        for attempt in range(INSTRUCT_EDIT_RATE_RETRIES + 1):
+            try:
+                return await _one(mid)
+            except HTTPException as exc:
+                last = exc
+                if _is_retryable(exc) and attempt < INSTRUCT_EDIT_RATE_RETRIES:
+                    await asyncio.sleep(INSTRUCT_EDIT_RATE_BACKOFF * (attempt + 1))
+                    continue
+                raise
+            except Exception as exc:
+                last = exc
+                if _is_retryable(exc) and attempt < INSTRUCT_EDIT_RATE_RETRIES:
+                    await asyncio.sleep(INSTRUCT_EDIT_RATE_BACKOFF * (attempt + 1))
+                    continue
+                raise
+        assert last is not None
+        raise last
+
+    images: list[dict] = []
+    errors: list[str] = []
+    first_job = True
+    for mid in model_ids:
+        if not first_job and INSTRUCT_EDIT_GAP_SEC > 0:
+            await asyncio.sleep(INSTRUCT_EDIT_GAP_SEC)
+        first_job = False
+        try:
+            images.append(await _one_with_retry(mid))
+        except Exception as exc:
+            errors.append(f"{mid}: {_exc_detail(exc)}")
+    if not images:
+        raise HTTPException(
+            status_code=502,
+            detail="Image generation failed: " + "; ".join(errors) if errors else "no images",
+        )
+    order = {m: i for i, m in enumerate(model_ids)}
+    images.sort(key=lambda x: order.get(x.get("model") or "", 99))
+    first = images[0]
+    out = {
+        "model": first["model"],
+        "models": model_ids,
+        "priceCny": first["priceCny"],
+        "estimatedPriceCny": est_price,
+        "imageBase64": first["imageBase64"],
+        "contentType": first["contentType"],
+        "images": images,
+        "quota": quota,
+        "size": size_preset,
     }
     if errors:
         out["partialErrors"] = errors

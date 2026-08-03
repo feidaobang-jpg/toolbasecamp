@@ -47,6 +47,7 @@ def _default_edit_model() -> str:
 
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
 EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "180"))
+EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "300"))
 
 
 def dashscope_image_edit_configured() -> bool:
@@ -201,8 +202,9 @@ async def edit_image_with_instruction(
         "Authorization": f"Bearer {DASHSCOPE_API_KEY}",
         "Content-Type": "application/json",
     }
+    timeout = EDIT_PRO_TIMEOUT if "pro" in use_model.lower() else EDIT_TIMEOUT
     try:
-        async with httpx.AsyncClient(timeout=EDIT_TIMEOUT) as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(url, headers=headers, json=payload)
             data = resp.json() if resp.content else {}
             if resp.status_code >= 400:
@@ -241,3 +243,102 @@ async def edit_image_with_instruction(
         raise HTTPException(status_code=504, detail="Image edit timed out") from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Image edit failed: {exc}") from exc
+
+
+async def generate_image_from_text(
+    prompt: str,
+    *,
+    model: Optional[str] = None,
+    size_preset: Optional[str] = None,
+) -> Tuple[bytes, str]:
+    """Text-to-image via DashScope multimodal generation. Returns (bytes, mime)."""
+    if not DASHSCOPE_API_KEY:
+        raise HTTPException(status_code=503, detail="DashScope is not configured (DASHSCOPE_API_KEY).")
+    text = (prompt or "").strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Please enter a prompt.")
+    if len(text) > 2000:
+        raise HTTPException(status_code=400, detail="Prompt is too long (max 2000 characters).")
+    use_model = (model or "z-image-turbo").strip() or "z-image-turbo"
+    preset = (size_preset or "square").strip().lower() or "square"
+
+    parameters: dict[str, Any] = {"n": 1, "watermark": False}
+    low = use_model.lower()
+    if low.startswith("z-image"):
+        size_map = {
+            "square": "1024*1024",
+            "portrait": "1024*1536",
+            "landscape": "1536*1024",
+        }
+        parameters["size"] = size_map.get(preset, "1024*1024")
+        parameters["prompt_extend"] = False
+    elif low.startswith("wan2.7"):
+        # Wan text-to-image uses 1K/2K/4K (pro only for 4K)
+        if preset == "hd" and "pro" in low:
+            parameters["size"] = "4K"
+        elif preset in ("landscape", "portrait", "hd"):
+            parameters["size"] = "2K"
+        else:
+            parameters["size"] = "2K"
+    elif low.startswith("qwen-image"):
+        size_map = {
+            "square": "1024*1024",
+            "portrait": "1024*1536",
+            "landscape": "1536*1024",
+        }
+        parameters["size"] = size_map.get(preset, "1024*1024")
+        parameters["prompt_extend"] = True
+    else:
+        parameters["size"] = "1024*1024"
+
+    url = _api_root().rstrip("/") + "/services/aigc/multimodal-generation/generation"
+    payload: dict[str, Any] = {
+        "model": use_model,
+        "input": {"messages": [{"role": "user", "content": [{"text": text}]}]},
+        "parameters": parameters,
+    }
+    headers = {
+        "Authorization": f"Bearer {DASHSCOPE_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    timeout = EDIT_PRO_TIMEOUT if "pro" in low else EDIT_TIMEOUT
+    try:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            resp = await client.post(url, headers=headers, json=payload)
+            data = resp.json() if resp.content else {}
+            if resp.status_code >= 400:
+                detail = (
+                    (data.get("message") if isinstance(data, dict) else None)
+                    or (data.get("code") if isinstance(data, dict) else None)
+                    or resp.text[:300]
+                    or f"HTTP {resp.status_code}"
+                )
+                raise HTTPException(status_code=502, detail=f"Image generation failed: {detail}")
+            out_ref = _extract_image_url(data if isinstance(data, dict) else {})
+            if not out_ref:
+                raise HTTPException(
+                    status_code=502,
+                    detail="Image generation returned no image. Check model access on DashScope.",
+                )
+            if out_ref.startswith("data:"):
+                try:
+                    header, b64 = out_ref.split(",", 1)
+                    mime = "image/png"
+                    if "image/" in header:
+                        mime = header.split(";")[0].split(":")[1] or mime
+                    return base64.b64decode(b64), mime
+                except Exception as exc:
+                    raise HTTPException(status_code=502, detail="Invalid data-URI image") from exc
+            img_resp = await client.get(out_ref)
+            if img_resp.status_code >= 400 or not img_resp.content:
+                raise HTTPException(status_code=502, detail="Failed to download generated image")
+            ctype = (img_resp.headers.get("content-type") or "image/png").split(";")[0].strip()
+            if not ctype.startswith("image/"):
+                ctype = "image/png"
+            return img_resp.content, ctype
+    except HTTPException:
+        raise
+    except httpx.TimeoutException as exc:
+        raise HTTPException(status_code=504, detail="Image generation timed out") from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Image generation failed: {exc}") from exc
