@@ -30,6 +30,9 @@ set_kv() {
 set_kv DASHSCOPE_BASE_URL "https://dashscope.aliyuncs.com/compatible-mode/v1"
 set_kv QWEN_VL_MODEL "qwen-vl-plus"
 set_kv QWEN_MODEL "qwen-plus"
+set_kv IMAGE_EDIT_DASHSCOPE_API_URL "https://dashscope.aliyuncs.com/api/v1"
+set_kv QWEN_IMAGE_EDIT_MODEL "qwen-image-2.0"
+set_kv WAN_I2V_MODEL "wan2.6-i2v-flash"
 
 echo ""
 echo "=== After ==="

@@ -13,7 +13,7 @@ from recipe_ai import DASHSCOPE_API_KEY, DASHSCOPE_BASE_URL
 
 
 def _default_edit_model() -> str:
-    """US Virginia has wan2.6-image; Beijing typically uses qwen-image-edit."""
+    """US Virginia: wan2.6-image; Beijing: qwen-image-2.0 (successor to qwen-image-edit)."""
     explicit = (os.environ.get("QWEN_IMAGE_EDIT_MODEL") or "").strip()
     if explicit:
         return explicit
@@ -26,7 +26,7 @@ def _default_edit_model() -> str:
     ).lower()
     if "dashscope-us" in blob:
         return "wan2.6-image"
-    return "qwen-image-edit"
+    return "qwen-image-2.0"
 
 
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
