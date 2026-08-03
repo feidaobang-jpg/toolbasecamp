@@ -25,6 +25,7 @@ from dashscope_image_edit import (
     QWEN_IMAGE_EDIT_MODEL,
     dashscope_image_edit_configured,
     edit_image_with_instruction,
+    resolve_edit_prompt,
 )
 
 # Instruct-edit model menu (Beijing). Prices are indicative; official billing may change.
@@ -39,8 +40,16 @@ INSTRUCT_EDIT_MODELS = (
         "priceCny": 0.5,
         "labelKey": "tools.instructEdit.model20pro",
     },
+    {
+        "id": "wan2.6-image",
+        "priceCny": 0.2,
+        "labelKey": "tools.instructEdit.modelWan",
+    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
+# Compare mode only pits the two Qwen tiers (not Wan).
+INSTRUCT_COMPARE_MODELS = ("qwen-image-2.0", "qwen-image-2.0-pro")
+MAX_INSTRUCT_BATCH = 4
 
 try:
     from general_cutout import rembg_available, segment_general
@@ -221,6 +230,11 @@ def image_status(user: dict = Depends(_user)):
             "generalCutoutAvailable": rembg_available(),
             "instructEditConfigured": dashscope_image_edit_configured(),
             "instructEditModels": list(INSTRUCT_EDIT_MODELS),
+            "instructEditPresets": [
+                {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
+                {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
+            ],
+            "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
             "isAdmin": True,
             "quotas": items,
             "enhanceTasks": [
@@ -256,6 +270,11 @@ def image_status(user: dict = Depends(_user)):
             "generalCutoutAvailable": rembg_available(),
             "instructEditConfigured": dashscope_image_edit_configured(),
             "instructEditModels": list(INSTRUCT_EDIT_MODELS),
+            "instructEditPresets": [
+                {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
+                {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
+            ],
+            "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
             "isAdmin": False,
             "quotas": items,
             "enhanceTasks": [
@@ -349,7 +368,7 @@ async def api_general_cutout_segment(
 
 def _resolve_instruct_models(model: Optional[str], compare: bool) -> list[str]:
     if compare:
-        return [m["id"] for m in INSTRUCT_EDIT_MODELS]
+        return list(INSTRUCT_COMPARE_MODELS)
     mid = (model or "").strip() or (QWEN_IMAGE_EDIT_MODEL or "qwen-image-2.0")
     if mid not in INSTRUCT_EDIT_MODEL_IDS:
         raise HTTPException(
@@ -366,12 +385,21 @@ def _price_for(model_id: str) -> float:
     return 0.0
 
 
+def _exc_detail(exc: BaseException) -> str:
+    detail = getattr(exc, "detail", None)
+    if detail is None:
+        return str(exc)
+    return str(detail)
+
+
 @router.post("/instruct-edit")
 async def api_instruct_edit(
-    file: UploadFile = File(...),
-    prompt: str = Form(...),
+    prompt: str = Form(""),
+    preset: Optional[str] = Form(None),
     model: Optional[str] = Form(None),
     compare: str = Form("0"),
+    file: Optional[UploadFile] = File(None),
+    files: List[UploadFile] = File(default=[]),
     user: dict = Depends(_user),
 ):
     if not dashscope_image_edit_configured():
@@ -379,38 +407,56 @@ async def api_instruct_edit(
             status_code=503,
             detail="DashScope is not configured (DASHSCOPE_API_KEY).",
         )
-    do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
-    models = _resolve_instruct_models(model, do_compare)
-    quota = _consume_quota(user, "instruct_edit", amount=len(models))
-    data = await _read_upload(file)
+    text = resolve_edit_prompt(prompt, preset)
+    if not text.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Please enter an edit instruction or choose a style preset.",
+        )
+    uploads: list[UploadFile] = []
+    if files:
+        uploads.extend([f for f in files if f is not None and getattr(f, "filename", None)])
+    if file is not None and getattr(file, "filename", None):
+        uploads.append(file)
+    if not uploads:
+        raise HTTPException(status_code=400, detail="No images")
+    if len(uploads) > MAX_INSTRUCT_BATCH:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Too many images (max {MAX_INSTRUCT_BATCH})",
+        )
 
-    async def _one(mid: str) -> dict:
-        out, ctype = await edit_image_with_instruction(data, prompt, model=mid)
+    do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
+    if do_compare and len(uploads) > 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Compare mode supports only one image. Clear extra images or turn off compare.",
+        )
+    models = _resolve_instruct_models(model, do_compare)
+    blobs: list[bytes] = []
+    for up in uploads:
+        blobs.append(await _read_upload(up))
+
+    amount = len(blobs) * len(models)
+    quota = _consume_quota(user, "instruct_edit", amount=amount)
+
+    async def _one(idx: int, blob: bytes, mid: str) -> dict:
+        out, ctype = await edit_image_with_instruction(blob, text, model=mid)
         return {
+            "index": idx,
             "model": mid,
             "priceCny": _price_for(mid),
             "imageBase64": base64.b64encode(out).decode("ascii"),
             "contentType": ctype or "image/png",
         }
 
-    if len(models) == 1:
-        item = await _one(models[0])
-        return {
-            "model": item["model"],
-            "priceCny": item["priceCny"],
-            "imageBase64": item["imageBase64"],
-            "contentType": item["contentType"],
-            "images": [item],
-            "quota": quota,
-        }
-
-    results = await asyncio.gather(*[_one(m) for m in models], return_exceptions=True)
+    jobs = [(_one(i, blob, mid)) for i, blob in enumerate(blobs) for mid in models]
+    results = await asyncio.gather(*jobs, return_exceptions=True)
     images: list[dict] = []
     errors: list[str] = []
-    for mid, res in zip(models, results):
+    for res in results:
         if isinstance(res, Exception):
-            detail = getattr(res, "detail", None) or str(res)
-            errors.append(f"{mid}: {detail}")
+            errors.append(_exc_detail(res))
             continue
         images.append(res)
     if not images:
@@ -426,7 +472,9 @@ async def api_instruct_edit(
         "contentType": first["contentType"],
         "images": images,
         "quota": quota,
-        "compare": True,
+        "preset": (preset or "").strip() or None,
+        "batch": len(blobs),
+        "compare": do_compare,
     }
     if errors:
         out["partialErrors"] = errors
