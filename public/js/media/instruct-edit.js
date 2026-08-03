@@ -151,8 +151,9 @@
   }
 
   function modelTitle(mid) {
+    if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
+    if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     if (mid === 'qwen-image-2.0-pro') return tr('tools.instructEdit.model20pro');
-    if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan');
     return tr('tools.instructEdit.model20');
   }
 
@@ -443,7 +444,7 @@
       if (promptEl) promptEl.value = '';
       var inputs = modelInputs();
       for (var i = 0; i < inputs.length; i++) {
-        inputs[i].checked = inputs[i].value === 'qwen-image-2.0';
+        inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
       syncSelectAllLabel();

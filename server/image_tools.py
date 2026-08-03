@@ -28,8 +28,19 @@ from dashscope_image_edit import (
     resolve_edit_prompt,
 )
 
-# Instruct-edit model menu (Beijing). Prices are indicative; official billing may change.
+# Instruct-edit model menu (Beijing). Order = UI recommendation. Prices indicative.
 INSTRUCT_EDIT_MODELS = (
+    {
+        "id": "wan2.6-image",
+        "priceCny": 0.2,
+        "labelKey": "tools.instructEdit.modelWan26",
+        "default": True,
+    },
+    {
+        "id": "wan2.7-image",
+        "priceCny": 0.3,
+        "labelKey": "tools.instructEdit.modelWan27",
+    },
     {
         "id": "qwen-image-2.0",
         "priceCny": 0.2,
@@ -40,16 +51,13 @@ INSTRUCT_EDIT_MODELS = (
         "priceCny": 0.5,
         "labelKey": "tools.instructEdit.model20pro",
     },
-    {
-        "id": "wan2.6-image",
-        "priceCny": 0.2,
-        "labelKey": "tools.instructEdit.modelWan",
-    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
-# Compare mode only pits the two Qwen tiers (not Wan).
-INSTRUCT_COMPARE_MODELS = ("qwen-image-2.0", "qwen-image-2.0-pro")
+INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "qwen-image-2.0")
 MAX_INSTRUCT_BATCH = 4
+INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
+INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "3"))
+INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.0"))
 
 try:
     from general_cutout import rembg_available, segment_general
@@ -460,6 +468,10 @@ async def api_instruct_edit(
     quota = _consume_quota(user, "instruct_edit", amount=amount)
     est_price = round(sum(_price_for(m) for m in model_ids) * len(blobs), 2)
 
+    def _is_rate_limit(exc: BaseException) -> bool:
+        detail = _exc_detail(exc).lower()
+        return "rate limit" in detail or "throttl" in detail or "too many request" in detail
+
     async def _one(idx: int, blob: bytes, mid: str) -> dict:
         out, ctype = await edit_image_with_instruction(blob, text, model=mid)
         return {
@@ -470,21 +482,44 @@ async def api_instruct_edit(
             "contentType": ctype or "image/png",
         }
 
-    jobs = [(_one(i, blob, mid)) for i, blob in enumerate(blobs) for mid in model_ids]
-    results = await asyncio.gather(*jobs, return_exceptions=True)
+    async def _one_with_retry(idx: int, blob: bytes, mid: str) -> dict:
+        last: Optional[BaseException] = None
+        for attempt in range(INSTRUCT_EDIT_RATE_RETRIES + 1):
+            try:
+                return await _one(idx, blob, mid)
+            except HTTPException as exc:
+                last = exc
+                if _is_rate_limit(exc) and attempt < INSTRUCT_EDIT_RATE_RETRIES:
+                    await asyncio.sleep(INSTRUCT_EDIT_RATE_BACKOFF * (attempt + 1))
+                    continue
+                raise
+            except Exception as exc:
+                last = exc
+                if _is_rate_limit(exc) and attempt < INSTRUCT_EDIT_RATE_RETRIES:
+                    await asyncio.sleep(INSTRUCT_EDIT_RATE_BACKOFF * (attempt + 1))
+                    continue
+                raise
+        assert last is not None
+        raise last
+
+    # Serial calls + gap to avoid DashScope rate limits on multi image × multi model.
     images: list[dict] = []
     errors: list[str] = []
-    for res in results:
-        if isinstance(res, Exception):
-            errors.append(_exc_detail(res))
-            continue
-        images.append(res)
+    first_job = True
+    for i, blob in enumerate(blobs):
+        for mid in model_ids:
+            if not first_job and INSTRUCT_EDIT_GAP_SEC > 0:
+                await asyncio.sleep(INSTRUCT_EDIT_GAP_SEC)
+            first_job = False
+            try:
+                images.append(await _one_with_retry(i, blob, mid))
+            except Exception as exc:
+                errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
     if not images:
         raise HTTPException(
             status_code=502,
             detail="Image edit failed: " + "; ".join(errors) if errors else "no images",
         )
-    # Keep stable order: by source index, then model menu order.
     order = {m: i for i, m in enumerate(model_ids)}
     images.sort(key=lambda x: (int(x.get("index") or 0), order.get(x.get("model") or "", 99)))
     first = images[0]
