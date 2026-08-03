@@ -62,8 +62,8 @@ INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "qwen-image-2.0")
 MAX_INSTRUCT_BATCH = 4
 INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
-INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "3"))
-INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.0"))
+INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "4"))
+INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.5"))
 
 # Text-to-image models (Beijing). z-image-turbo = cheap/fast default.
 TEXT_TO_IMAGE_MODELS = (

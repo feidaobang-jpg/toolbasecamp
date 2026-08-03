@@ -47,7 +47,7 @@ def _default_edit_model() -> str:
 
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
 EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "180"))
-EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "300"))
+EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "360"))
 
 
 def dashscope_image_edit_configured() -> bool:
