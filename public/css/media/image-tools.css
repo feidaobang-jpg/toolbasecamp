@@ -649,3 +649,66 @@
   opacity: 0.55;
 }
 
+.instruct-compare-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0 12px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  line-height: 1.45;
+}
+
+.instruct-compare-label input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.instruct-model-row.is-disabled {
+  opacity: 0.45;
+}
+
+.instruct-results {
+  margin-top: 20px;
+}
+
+.instruct-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.instruct-result-card {
+  text-align: center;
+}
+
+.instruct-result-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.instruct-result-card img {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  margin: 0 auto 10px;
+}
+
+.instruct-result-card .tb-btn {
+  width: 100%;
+}
+
+.instruct-partial-err {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #b45309;
+  line-height: 1.4;
+}
+

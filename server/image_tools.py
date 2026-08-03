@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import os
 from datetime import datetime, timezone
@@ -21,9 +22,25 @@ from tencent_image import (
     tencent_configured,
 )
 from dashscope_image_edit import (
+    QWEN_IMAGE_EDIT_MODEL,
     dashscope_image_edit_configured,
     edit_image_with_instruction,
 )
+
+# Instruct-edit model menu (Beijing). Prices are indicative; official billing may change.
+INSTRUCT_EDIT_MODELS = (
+    {
+        "id": "qwen-image-2.0",
+        "priceCny": 0.2,
+        "labelKey": "tools.instructEdit.model20",
+    },
+    {
+        "id": "qwen-image-2.0-pro",
+        "priceCny": 0.5,
+        "labelKey": "tools.instructEdit.model20pro",
+    },
+)
+INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 
 try:
     from general_cutout import rembg_available, segment_general
@@ -114,7 +131,9 @@ def ensure_image_quota_table(cur):
     )
 
 
-def _consume_quota(user: dict, action: str) -> dict:
+def _consume_quota(user: dict, action: str, amount: int = 1) -> dict:
+    if amount < 1:
+        amount = 1
     if _is_admin(user):
         return _unlimited_quota()
     user_id = int(user["id"])
@@ -135,7 +154,7 @@ def _consume_quota(user: dict, action: str) -> dict:
             )
             row = cur.fetchone()
             current = int(row["usage_count"]) if row else 0
-            if current >= max_count:
+            if current + amount > max_count:
                 raise HTTPException(
                     status_code=429,
                     detail="Daily limit reached. Please try again tomorrow.",
@@ -143,20 +162,20 @@ def _consume_quota(user: dict, action: str) -> dict:
             if row:
                 cur.execute(
                     """
-                    UPDATE image_tool_quotas SET usage_count = usage_count + 1
+                    UPDATE image_tool_quotas SET usage_count = usage_count + %s
                     WHERE user_id=%s AND action_type=%s AND usage_date=%s
                     """,
-                    (user_id, action, today),
+                    (amount, user_id, action, today),
                 )
             else:
                 cur.execute(
                     """
                     INSERT INTO image_tool_quotas (user_id, action_type, usage_date, usage_count)
-                    VALUES (%s, %s, %s, 1)
+                    VALUES (%s, %s, %s, %s)
                     """,
-                    (user_id, action, today),
+                    (user_id, action, today, amount),
                 )
-            used = current + 1
+            used = current + amount
         return {"used": used, "limit": max_count, "remaining": max(0, max_count - used)}
     finally:
         conn.close()
@@ -201,6 +220,7 @@ def image_status(user: dict = Depends(_user)):
             "tencentConfigured": tencent_configured(),
             "generalCutoutAvailable": rembg_available(),
             "instructEditConfigured": dashscope_image_edit_configured(),
+            "instructEditModels": list(INSTRUCT_EDIT_MODELS),
             "isAdmin": True,
             "quotas": items,
             "enhanceTasks": [
@@ -235,6 +255,7 @@ def image_status(user: dict = Depends(_user)):
             "tencentConfigured": tencent_configured(),
             "generalCutoutAvailable": rembg_available(),
             "instructEditConfigured": dashscope_image_edit_configured(),
+            "instructEditModels": list(INSTRUCT_EDIT_MODELS),
             "isAdmin": False,
             "quotas": items,
             "enhanceTasks": [
@@ -326,10 +347,31 @@ async def api_general_cutout_segment(
     }
 
 
+def _resolve_instruct_models(model: Optional[str], compare: bool) -> list[str]:
+    if compare:
+        return [m["id"] for m in INSTRUCT_EDIT_MODELS]
+    mid = (model or "").strip() or (QWEN_IMAGE_EDIT_MODEL or "qwen-image-2.0")
+    if mid not in INSTRUCT_EDIT_MODEL_IDS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported model. Use one of: {', '.join(sorted(INSTRUCT_EDIT_MODEL_IDS))}",
+        )
+    return [mid]
+
+
+def _price_for(model_id: str) -> float:
+    for m in INSTRUCT_EDIT_MODELS:
+        if m["id"] == model_id:
+            return float(m["priceCny"])
+    return 0.0
+
+
 @router.post("/instruct-edit")
 async def api_instruct_edit(
     file: UploadFile = File(...),
     prompt: str = Form(...),
+    model: Optional[str] = Form(None),
+    compare: str = Form("0"),
     user: dict = Depends(_user),
 ):
     if not dashscope_image_edit_configured():
@@ -337,14 +379,58 @@ async def api_instruct_edit(
             status_code=503,
             detail="DashScope is not configured (DASHSCOPE_API_KEY).",
         )
-    quota = _consume_quota(user, "instruct_edit")
+    do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
+    models = _resolve_instruct_models(model, do_compare)
+    quota = _consume_quota(user, "instruct_edit", amount=len(models))
     data = await _read_upload(file)
-    out, ctype = await edit_image_with_instruction(data, prompt)
-    return {
-        "imageBase64": base64.b64encode(out).decode("ascii"),
-        "contentType": ctype or "image/png",
+
+    async def _one(mid: str) -> dict:
+        out, ctype = await edit_image_with_instruction(data, prompt, model=mid)
+        return {
+            "model": mid,
+            "priceCny": _price_for(mid),
+            "imageBase64": base64.b64encode(out).decode("ascii"),
+            "contentType": ctype or "image/png",
+        }
+
+    if len(models) == 1:
+        item = await _one(models[0])
+        return {
+            "model": item["model"],
+            "priceCny": item["priceCny"],
+            "imageBase64": item["imageBase64"],
+            "contentType": item["contentType"],
+            "images": [item],
+            "quota": quota,
+        }
+
+    results = await asyncio.gather(*[_one(m) for m in models], return_exceptions=True)
+    images: list[dict] = []
+    errors: list[str] = []
+    for mid, res in zip(models, results):
+        if isinstance(res, Exception):
+            detail = getattr(res, "detail", None) or str(res)
+            errors.append(f"{mid}: {detail}")
+            continue
+        images.append(res)
+    if not images:
+        raise HTTPException(
+            status_code=502,
+            detail="Image edit failed: " + "; ".join(errors) if errors else "no images",
+        )
+    first = images[0]
+    out = {
+        "model": first["model"],
+        "priceCny": first["priceCny"],
+        "imageBase64": first["imageBase64"],
+        "contentType": first["contentType"],
+        "images": images,
         "quota": quota,
+        "compare": True,
     }
+    if errors:
+        out["partialErrors"] = errors
+    return out
 
 
 @router.post("/to-pdf-advanced")

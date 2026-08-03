@@ -7,7 +7,7 @@
   <meta name="description" content="Edit an image with a text instruction via DashScope. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=14" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
 </head>
 <body>
@@ -42,13 +42,29 @@
             <label class="field-label" for="prompt" data-i18n="tools.instructEdit.prompt">Edit instruction</label>
             <textarea id="prompt" rows="3" maxlength="800" data-i18n-placeholder="tools.instructEdit.promptPh" placeholder="e.g. Make the sky blue, remove the person on the left…"></textarea>
           </div>
+          <div class="field-row" id="model-wrap" hidden>
+            <span class="field-label" data-i18n="tools.instructEdit.modelLabel">Model</span>
+            <div class="tb-radio-row instruct-model-row" id="model-row">
+              <label>
+                <input type="radio" name="instruct-model" value="qwen-image-2.0" checked />
+                <span data-i18n="tools.instructEdit.model20">2.0 · ≈¥0.2/image</span>
+              </label>
+              <label>
+                <input type="radio" name="instruct-model" value="qwen-image-2.0-pro" />
+                <span data-i18n="tools.instructEdit.model20pro">2.0-Pro · ≈¥0.5/image</span>
+              </label>
+            </div>
+            <label class="instruct-compare-label">
+              <input type="checkbox" id="compare-both" />
+              <span data-i18n="tools.instructEdit.compareBoth">Compare both (2 images, uses 2 quota · ≈¥0.7)</span>
+            </label>
+          </div>
           <div class="tip-box">
             <b data-i18n="tools.instructEdit.tip">Tip:</b>
-            <span data-i18n="tools.instructEdit.tipBody">Be specific. Each run uses one quota. Result URLs from the API expire; download promptly.</span>
+            <span data-i18n="tools.instructEdit.tipBody">Be specific. Single model uses 1 quota; compare uses 2. Prices are approximate.</span>
           </div>
           <div class="action-row">
             <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.lifePlans.generate">Generate</button>
-            <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.instructEdit.download">Download</button>
             <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.instructEdit.clear">Clear</button>
           </div>
           <div class="img-cloud-busy" id="busy" hidden>
@@ -56,19 +72,17 @@
             <span data-i18n="tools.imageCloud.processing">Processing...</span>
           </div>
           <div class="error-box" id="error-box" role="alert"></div>
-          <div class="img-tool-preview" id="preview-wrap" hidden>
-            <img id="preview-img" alt="" />
-          </div>
+          <div class="instruct-results" id="results-wrap" hidden></div>
         </div>
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=tools1"></script>
-  <script src="../../js/locales/zh-CN.js?v=tools1"></script>
+  <script src="../../js/locales/en.js?v=tools2"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools2"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
   <script src="../../js/media/image-cloud-client.js?v=8"></script>
-  <script src="../../js/media/instruct-edit.js?v=1"></script>
+  <script src="../../js/media/instruct-edit.js?v=2"></script>
 </body>
 </html>
