@@ -185,8 +185,8 @@ async def edit_image_with_instruction(
         parameters["prompt_extend"] = True
         parameters["size"] = "1K"
     elif low_model.startswith("wan2.7"):
-        # Wan 2.7 edit: size + n; avoid 2.6-only enable_interleave.
-        parameters["size"] = "1K"
+        # Wan 2.7 / 2.7-pro edit: size + n
+        parameters["size"] = "2K" if "pro" in low_model else "1K"
     elif _is_wan_model(use_model):
         parameters["enable_interleave"] = False
         parameters["size"] = "1K"

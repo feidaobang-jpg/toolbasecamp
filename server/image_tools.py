@@ -42,6 +42,11 @@ INSTRUCT_EDIT_MODELS = (
         "labelKey": "tools.instructEdit.modelWan27",
     },
     {
+        "id": "wan2.7-image-pro",
+        "priceCny": 0.6,
+        "labelKey": "tools.instructEdit.modelWan27pro",
+    },
+    {
         "id": "qwen-image-2.0",
         "priceCny": 0.2,
         "labelKey": "tools.instructEdit.model20",

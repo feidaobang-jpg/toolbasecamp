@@ -1972,6 +1972,7 @@ window.TB_LOCALES.en = {
             modelLabel: 'Model',
             modelWan26: 'Wan 2.6 · ≈¥0.2/image (recommended)',
             modelWan27: 'Wan 2.7 · ≈¥0.3/image',
+            modelWan27pro: 'Wan 2.7-Pro · ≈¥0.6/image',
             model20: '2.0 · ≈¥0.2/image',
             model20pro: '2.0-Pro · ≈¥0.5/image',
             selectAllModels: 'Select all',

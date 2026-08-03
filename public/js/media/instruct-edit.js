@@ -151,6 +151,7 @@
   }
 
   function modelTitle(mid) {
+    if (mid === 'wan2.7-image-pro') return tr('tools.instructEdit.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
     if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     if (mid === 'qwen-image-2.0-pro') return tr('tools.instructEdit.model20pro');

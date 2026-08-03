@@ -1971,6 +1971,7 @@ window.TB_LOCALES['zh-CN'] = {
             modelLabel: '模型',
             modelWan26: '万相 2.6 · 约 ¥0.2/张（推荐）',
             modelWan27: '万相 2.7 · 约 ¥0.3/张',
+            modelWan27pro: '万相 2.7-Pro · 约 ¥0.6/张',
             model20: '2.0 · 约 ¥0.2/张',
             model20pro: '2.0-Pro · 约 ¥0.5/张',
             selectAllModels: '全选',
