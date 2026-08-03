@@ -15,8 +15,8 @@
   var presetRow = document.getElementById('preset-row');
   var modelWrap = document.getElementById('model-wrap');
   var modelRow = document.getElementById('model-row');
-  var compareWrap = document.getElementById('compare-wrap');
-  var compareBoth = document.getElementById('compare-both');
+  var selectAllBtn = document.getElementById('select-all-models');
+  var costHint = document.getElementById('cost-hint');
   var promptEl = document.getElementById('prompt');
   var runBtn = document.getElementById('run-btn');
   var clearBtn = document.getElementById('clear-btn');
@@ -33,49 +33,71 @@
     return C.tr(key, params);
   }
 
-  function selectedModel() {
-    var el = document.querySelector('input[name="instruct-model"]:checked');
-    return (el && el.value) || 'qwen-image-2.0';
+  function modelInputs() {
+    return modelRow ? modelRow.querySelectorAll('input[name="instruct-model"]') : [];
   }
 
-  function isCompare() {
-    return !!(compareBoth && compareBoth.checked);
+  function selectedModels() {
+    var out = [];
+    var inputs = modelInputs();
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].checked) {
+        out.push({
+          id: inputs[i].value,
+          price: parseFloat(inputs[i].getAttribute('data-price') || '0') || 0
+        });
+      }
+    }
+    return out;
   }
 
   function canRun() {
     if (!files.length) return false;
+    if (!selectedModels().length) return false;
     if (activePreset) return true;
     return !!(promptEl && promptEl.value.trim());
   }
 
-  function syncModelUi() {
-    var multi = files.length > 1;
-    if (multi && compareBoth && compareBoth.checked) {
-      compareBoth.checked = false;
+  function updateCostHint() {
+    if (!costHint) return;
+    var models = selectedModels();
+    var nImg = files.length || 0;
+    var nMod = models.length;
+    if (!nImg || !nMod) {
+      costHint.textContent = tr('tools.instructEdit.costHintEmpty');
+      return;
     }
-    if (compareWrap) {
-      compareWrap.classList.toggle('is-disabled', multi);
-      if (compareBoth) compareBoth.disabled = multi;
+    var unit = 0;
+    for (var i = 0; i < models.length; i++) unit += models[i].price;
+    var total = Math.round(unit * nImg * 100) / 100;
+    var runs = nImg * nMod;
+    costHint.textContent = tr('tools.instructEdit.costHint', {
+      images: nImg,
+      models: nMod,
+      runs: runs,
+      price: total
+    });
+  }
+
+  function syncSelectAllLabel() {
+    if (!selectAllBtn) return;
+    var inputs = modelInputs();
+    var all = inputs.length > 0;
+    for (var i = 0; i < inputs.length; i++) {
+      if (!inputs[i].checked) { all = false; break; }
     }
-    var off = isCompare();
-    if (modelRow) {
-      var inputs = modelRow.querySelectorAll('input[type="radio"]');
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = off;
-      }
-      modelRow.classList.toggle('is-disabled', off);
-    }
+    selectAllBtn.textContent = all
+      ? tr('tools.instructEdit.deselectAllModels')
+      : tr('tools.instructEdit.selectAllModels');
   }
 
   function setBusy(on) {
     if (busyEl) busyEl.hidden = !on;
     if (runBtn) runBtn.disabled = !!on || !canRun();
     if (clearBtn) clearBtn.disabled = !!on;
-    if (compareBoth) compareBoth.disabled = !!on || files.length > 1;
-    if (modelRow && !isCompare()) {
-      var inputs = modelRow.querySelectorAll('input[type="radio"]');
-      for (var i = 0; i < inputs.length; i++) inputs[i].disabled = !!on;
-    }
+    if (selectAllBtn) selectAllBtn.disabled = !!on;
+    var inputs = modelInputs();
+    for (var i = 0; i < inputs.length; i++) inputs[i].disabled = !!on;
     if (presetRow) {
       var chips = presetRow.querySelectorAll('.rec-chip');
       for (var j = 0; j < chips.length; j++) chips[j].disabled = !!on;
@@ -139,6 +161,7 @@
     sourceWrap.innerHTML = '';
     if (!files.length) {
       sourceWrap.hidden = true;
+      updateCostHint();
       return;
     }
     revokePreviews();
@@ -160,7 +183,6 @@
           files.splice(idx, 1);
           renderSources();
           syncControlsVisible();
-          syncModelUi();
           setBusy(false);
         });
         card.appendChild(img);
@@ -169,6 +191,7 @@
       })(i, files[i]);
     }
     sourceWrap.hidden = false;
+    updateCostHint();
   }
 
   function syncControlsVisible() {
@@ -178,46 +201,69 @@
     if (presetWrap) presetWrap.hidden = !has;
     if (modelWrap) modelWrap.hidden = !has;
     if (!has && dropZone) dropZone.hidden = false;
+    updateCostHint();
+  }
+
+  function appendResultCard(grid, item) {
+    var card = document.createElement('div');
+    card.className = 'instruct-result-card';
+    var title = document.createElement('div');
+    title.className = 'instruct-result-title';
+    title.textContent = modelTitle(item.model);
+    var img = document.createElement('img');
+    img.alt = item.model || '';
+    img.src = b64ToBlobUrl(item.imageBase64, item.contentType);
+    var dl = document.createElement('button');
+    dl.type = 'button';
+    dl.className = 'tb-btn';
+    dl.textContent = tr('tools.instructEdit.download');
+    dl.addEventListener('click', function () {
+      var a = document.createElement('a');
+      a.href = img.src;
+      var name = 'instruct-edit-' + String(item.model || 'out').replace(/[^\w.-]+/g, '-');
+      if (typeof item.index === 'number') name += '-' + (item.index + 1);
+      a.download = name + '.png';
+      a.click();
+    });
+    card.appendChild(title);
+    card.appendChild(img);
+    card.appendChild(dl);
+    grid.appendChild(card);
   }
 
   function renderResults(images, partialErrors) {
     revokeResults();
     if (!resultsWrap || !images || !images.length) return;
-    var grid = document.createElement('div');
-    grid.className = 'instruct-results-grid';
+
+    var byIndex = {};
+    var order = [];
     for (var i = 0; i < images.length; i++) {
-      (function (item) {
-        var card = document.createElement('div');
-        card.className = 'instruct-result-card';
-        var title = document.createElement('div');
-        title.className = 'instruct-result-title';
-        var parts = [modelTitle(item.model)];
-        if (typeof item.index === 'number' && files.length > 1) {
-          parts.unshift(tr('tools.instructEdit.imageN', { n: item.index + 1 }));
-        }
-        title.textContent = parts.join(' · ');
-        var img = document.createElement('img');
-        img.alt = item.model || '';
-        img.src = b64ToBlobUrl(item.imageBase64, item.contentType);
-        var dl = document.createElement('button');
-        dl.type = 'button';
-        dl.className = 'tb-btn';
-        dl.textContent = tr('tools.instructEdit.download');
-        dl.addEventListener('click', function () {
-          var a = document.createElement('a');
-          a.href = img.src;
-          var name = 'instruct-edit-' + String(item.model || 'out').replace(/[^\w.-]+/g, '-');
-          if (typeof item.index === 'number') name += '-' + (item.index + 1);
-          a.download = name + '.png';
-          a.click();
-        });
-        card.appendChild(title);
-        card.appendChild(img);
-        card.appendChild(dl);
-        grid.appendChild(card);
-      })(images[i]);
+      var item = images[i];
+      var idx = typeof item.index === 'number' ? item.index : 0;
+      if (!byIndex[idx]) {
+        byIndex[idx] = [];
+        order.push(idx);
+      }
+      byIndex[idx].push(item);
     }
-    resultsWrap.appendChild(grid);
+    order.sort(function (a, b) { return a - b; });
+
+    for (var g = 0; g < order.length; g++) {
+      var gi = order[g];
+      var group = document.createElement('div');
+      group.className = 'instruct-result-group';
+      var head = document.createElement('div');
+      head.className = 'instruct-result-group-title';
+      head.textContent = tr('tools.instructEdit.imageN', { n: gi + 1 });
+      var grid = document.createElement('div');
+      grid.className = 'instruct-results-grid';
+      var list = byIndex[gi];
+      for (var j = 0; j < list.length; j++) appendResultCard(grid, list[j]);
+      group.appendChild(head);
+      group.appendChild(grid);
+      resultsWrap.appendChild(group);
+    }
+
     if (partialErrors && partialErrors.length) {
       var note = document.createElement('p');
       note.className = 'instruct-partial-err';
@@ -261,7 +307,6 @@
     revokeResults();
     renderSources();
     syncControlsVisible();
-    syncModelUi();
     setBusy(false);
   }
 
@@ -285,7 +330,8 @@
     }
     if (gate) gate.hidden = true;
     if (app) app.hidden = false;
-    syncModelUi();
+    syncSelectAllLabel();
+    updateCostHint();
     loadStatus();
   }
 
@@ -311,9 +357,23 @@
   if (promptEl) {
     promptEl.addEventListener('input', function () { setBusy(false); });
   }
-  if (compareBoth) {
-    compareBoth.addEventListener('change', function () {
-      syncModelUi();
+  if (modelRow) {
+    modelRow.addEventListener('change', function () {
+      syncSelectAllLabel();
+      updateCostHint();
+      setBusy(false);
+    });
+  }
+  if (selectAllBtn) {
+    selectAllBtn.addEventListener('click', function () {
+      var inputs = modelInputs();
+      var all = true;
+      for (var i = 0; i < inputs.length; i++) {
+        if (!inputs[i].checked) { all = false; break; }
+      }
+      for (var j = 0; j < inputs.length; j++) inputs[j].checked = !all;
+      syncSelectAllLabel();
+      updateCostHint();
       setBusy(false);
     });
   }
@@ -327,6 +387,12 @@
 
   if (runBtn) {
     runBtn.addEventListener('click', function () {
+      var models = selectedModels();
+      if (!files.length) return;
+      if (!models.length) {
+        C.setError(errorBox, tr('tools.instructEdit.needModel'));
+        return;
+      }
       if (!canRun()) {
         C.setError(errorBox, tr('tools.instructEdit.needPromptOrPreset'));
         return;
@@ -339,15 +405,14 @@
       }
       fd.append('prompt', (promptEl && promptEl.value) || '');
       if (activePreset) fd.append('preset', activePreset);
-      fd.append('compare', isCompare() ? '1' : '0');
-      if (!isCompare()) fd.append('model', selectedModel());
+      for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       C.apiJson('/image/instruct-edit', { method: 'POST', body: fd }).then(function (data) {
         if (data.quota && quotaLine) quotaLine.textContent = formatQuota(data.quota);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {
           images = [{
             index: 0,
-            model: data.model || selectedModel(),
+            model: data.model || models[0].id,
             imageBase64: data.imageBase64,
             contentType: data.contentType || 'image/png'
           }];
@@ -376,9 +441,13 @@
       if (presetWrap) presetWrap.hidden = true;
       if (modelWrap) modelWrap.hidden = true;
       if (promptEl) promptEl.value = '';
-      if (compareBoth) compareBoth.checked = false;
+      var inputs = modelInputs();
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].checked = inputs[i].value === 'qwen-image-2.0';
+      }
       setPreset('');
-      syncModelUi();
+      syncSelectAllLabel();
+      updateCostHint();
       C.setError(errorBox, '');
       setBusy(false);
     });

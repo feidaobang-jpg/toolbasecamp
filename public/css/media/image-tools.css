@@ -778,3 +778,48 @@
   pointer-events: none;
 }
 
+.instruct-model-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.instruct-model-head .field-label {
+  margin-bottom: 0;
+}
+
+.instruct-select-all {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.instruct-cost-hint {
+  margin: 4px 0 12px;
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.instruct-result-group {
+  margin-top: 18px;
+}
+
+.instruct-result-group:first-child {
+  margin-top: 0;
+}
+
+.instruct-result-group-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+

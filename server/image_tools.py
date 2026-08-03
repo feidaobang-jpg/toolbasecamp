@@ -366,16 +366,39 @@ async def api_general_cutout_segment(
     }
 
 
-def _resolve_instruct_models(model: Optional[str], compare: bool) -> list[str]:
-    if compare:
-        return list(INSTRUCT_COMPARE_MODELS)
-    mid = (model or "").strip() or (QWEN_IMAGE_EDIT_MODEL or "qwen-image-2.0")
-    if mid not in INSTRUCT_EDIT_MODEL_IDS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Unsupported model. Use one of: {', '.join(sorted(INSTRUCT_EDIT_MODEL_IDS))}",
-        )
-    return [mid]
+def _resolve_instruct_models(
+    model: Optional[str],
+    models: Optional[List[str]],
+    compare: bool,
+) -> list[str]:
+    raw: list[str] = []
+    if models:
+        for item in models:
+            if not item:
+                continue
+            for part in str(item).replace(";", ",").split(","):
+                p = part.strip()
+                if p:
+                    raw.append(p)
+    if not raw and compare:
+        raw = list(INSTRUCT_COMPARE_MODELS)
+    if not raw and model:
+        raw = [(model or "").strip()]
+    if not raw:
+        raw = [(QWEN_IMAGE_EDIT_MODEL or "qwen-image-2.0").strip()]
+    out: list[str] = []
+    seen: set[str] = set()
+    for mid in raw:
+        if mid not in INSTRUCT_EDIT_MODEL_IDS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported model '{mid}'. Use one of: {', '.join(sorted(INSTRUCT_EDIT_MODEL_IDS))}",
+            )
+        if mid in seen:
+            continue
+        seen.add(mid)
+        out.append(mid)
+    return out
 
 
 def _price_for(model_id: str) -> float:
@@ -397,6 +420,7 @@ async def api_instruct_edit(
     prompt: str = Form(""),
     preset: Optional[str] = Form(None),
     model: Optional[str] = Form(None),
+    models: List[str] = Form(default=[]),
     compare: str = Form("0"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
@@ -427,18 +451,14 @@ async def api_instruct_edit(
         )
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
-    if do_compare and len(uploads) > 1:
-        raise HTTPException(
-            status_code=400,
-            detail="Compare mode supports only one image. Clear extra images or turn off compare.",
-        )
-    models = _resolve_instruct_models(model, do_compare)
+    model_ids = _resolve_instruct_models(model, models, do_compare)
     blobs: list[bytes] = []
     for up in uploads:
         blobs.append(await _read_upload(up))
 
-    amount = len(blobs) * len(models)
+    amount = len(blobs) * len(model_ids)
     quota = _consume_quota(user, "instruct_edit", amount=amount)
+    est_price = round(sum(_price_for(m) for m in model_ids) * len(blobs), 2)
 
     async def _one(idx: int, blob: bytes, mid: str) -> dict:
         out, ctype = await edit_image_with_instruction(blob, text, model=mid)
@@ -450,7 +470,7 @@ async def api_instruct_edit(
             "contentType": ctype or "image/png",
         }
 
-    jobs = [(_one(i, blob, mid)) for i, blob in enumerate(blobs) for mid in models]
+    jobs = [(_one(i, blob, mid)) for i, blob in enumerate(blobs) for mid in model_ids]
     results = await asyncio.gather(*jobs, return_exceptions=True)
     images: list[dict] = []
     errors: list[str] = []
@@ -464,17 +484,22 @@ async def api_instruct_edit(
             status_code=502,
             detail="Image edit failed: " + "; ".join(errors) if errors else "no images",
         )
+    # Keep stable order: by source index, then model menu order.
+    order = {m: i for i, m in enumerate(model_ids)}
+    images.sort(key=lambda x: (int(x.get("index") or 0), order.get(x.get("model") or "", 99)))
     first = images[0]
     out = {
         "model": first["model"],
+        "models": model_ids,
         "priceCny": first["priceCny"],
+        "estimatedPriceCny": est_price,
         "imageBase64": first["imageBase64"],
         "contentType": first["contentType"],
         "images": images,
         "quota": quota,
         "preset": (preset or "").strip() or None,
         "batch": len(blobs),
-        "compare": do_compare,
+        "compare": len(model_ids) > 1,
     }
     if errors:
         out["partialErrors"] = errors
