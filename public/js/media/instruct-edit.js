@@ -262,7 +262,8 @@
   function syncControlsVisible() {
     var has = files.length > 0;
     if (dropZone) dropZone.hidden = has && files.length >= MAX_BATCH;
-    if (promptWrap) promptWrap.hidden = !has;
+    // Prompt + background presets are useful before uploading; keep visible.
+    if (promptWrap) promptWrap.hidden = false;
     if (presetWrap) presetWrap.hidden = !has;
     if (modelWrap) modelWrap.hidden = !has;
     if (!has && dropZone) dropZone.hidden = false;
@@ -419,6 +420,7 @@
     }
     syncSelectAllLabel();
     updateCostHint();
+    syncControlsVisible();
     loadStatus();
   }
 
@@ -541,6 +543,7 @@
       setPreset('');
       setBgPanelExpanded(true);
       setBgTime('day');
+      if (promptWrap) promptWrap.hidden = false;
       syncSelectAllLabel();
       updateCostHint();
       C.setError(errorBox, '');
