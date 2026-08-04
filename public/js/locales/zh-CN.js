@@ -2018,6 +2018,8 @@ window.TB_LOCALES['zh-CN'] = {
             bgTimeDay: '白天',
             bgTimeDusk: '黄昏',
             bgTimeNight: '夜景',
+            bgExpand: '展开',
+            bgCollapse: '收起',
             presetLabel: '风格预设',
             presetCustom: '自定义',
             presetMangaToReal: '漫画 → 真人',

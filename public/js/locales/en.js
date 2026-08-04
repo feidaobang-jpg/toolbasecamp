@@ -2019,6 +2019,8 @@ window.TB_LOCALES.en = {
             bgTimeDay: 'Day',
             bgTimeDusk: 'Dusk',
             bgTimeNight: 'Night',
+            bgExpand: 'Expand',
+            bgCollapse: 'Collapse',
             presetLabel: 'Style preset',
             presetCustom: 'Custom',
             presetMangaToReal: 'Manga → Real',

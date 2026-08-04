@@ -28,6 +28,9 @@
   var wechatTip = document.getElementById('wechat-tip');
   var historyHint = document.getElementById('history-hint');
   var bgTimeRow = document.getElementById('bg-time-row');
+  var bgPanelEl = document.getElementById('bg-toggle-panel');
+  var bgToggleBtn = document.getElementById('bg-toggle-btn');
+  var bgExpanded = false;
   var bgPresetButtons = null;
   var bgTime = 'day';
   var files = [];
@@ -120,6 +123,14 @@
       chips[i].classList.toggle('is-active', t === bgTime);
     }
     setBusy(false);
+  }
+
+  function setBgPanelExpanded(on) {
+    bgExpanded = !!on;
+    if (bgPanelEl) bgPanelEl.hidden = !bgExpanded;
+    if (bgToggleBtn) {
+      bgToggleBtn.textContent = tr(bgExpanded ? 'tools.instructEdit.bgCollapse' : 'tools.instructEdit.bgExpand');
+    }
   }
 
   function applyBackgroundPreset(place) {
@@ -528,6 +539,7 @@
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
+      setBgPanelExpanded(false);
       setBgTime('day');
       syncSelectAllLabel();
       updateCostHint();
@@ -537,6 +549,11 @@
   }
 
   // Background preset chips wiring (optional)
+  if (bgToggleBtn) {
+    bgToggleBtn.addEventListener('click', function () {
+      setBgPanelExpanded(!bgExpanded);
+    });
+  }
   if (bgTimeRow) {
     var timeChips = bgTimeRow.querySelectorAll('button[data-bg-time]');
     for (var i = 0; i < timeChips.length; i++) {
@@ -548,6 +565,7 @@
       })(timeChips[i]);
     }
   }
+  setBgPanelExpanded(false);
   // Location chips (everything with data-bg-place)
   bgPresetButtons = document.querySelectorAll('button[data-bg-place]');
   if (bgPresetButtons && bgPresetButtons.length) {
@@ -566,6 +584,7 @@
 
   document.addEventListener('tb:locale', function () {
     applyLocaleBits();
+    setBgPanelExpanded(bgExpanded);
     syncSelectAllLabel();
     updateCostHint();
     if (histPanel) histPanel.refresh();
