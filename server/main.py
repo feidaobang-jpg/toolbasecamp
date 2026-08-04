@@ -28,7 +28,6 @@ from user_records import ensure_record_tables, router as records_router, _wire a
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from ai_wallet_api import router as wallet_router, _wire as wire_wallet
-from wechat_auth import router as wechat_router, _wire as wire_wechat, ensure_wechat_tables
 from life_plans import (
     router as life_plans_router,
     _wire as wire_life_plans,
@@ -266,7 +265,6 @@ def ensure_tables():
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
-            ensure_wechat_tables(cur)
             if ADMIN_PHONE:
                 try:
                     cur.execute(
@@ -418,8 +416,6 @@ wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
 wire_image(get_conn, require_db, get_current_user)
 app.include_router(image_router)
-wire_wechat(get_conn, create_access_token)
-app.include_router(wechat_router)
 # life_plans wired after get_optional_user + _client_ip
 app.include_router(life_router)
 app.include_router(watermark_router)

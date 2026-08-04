@@ -178,9 +178,7 @@ window.TB_LOCALES.en = {
         unknownError: 'Unknown error',
         openMenu: 'Open account menu',
         closeMenu: 'Close',
-        phoneNote: 'Phone login needs no SMS code — keep your password safe',
-        wechatLogin: 'WeChat login',
-        wechatHint: 'Quick login inside WeChat'
+        phoneNote: 'Phone login needs no SMS code — keep your password safe'
     },
     hub: {
         portalsTitle: 'Portals',
