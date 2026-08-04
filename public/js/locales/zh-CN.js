@@ -2020,7 +2020,7 @@ window.TB_LOCALES['zh-CN'] = {
             bgTimeNight: '夜景',
             bgExpand: '展开',
             bgCollapse: '收起',
-            bgHint: '可选：点景点 chips 会追加到提示词；也可以切换白天/黄昏/夜景。',
+            bgHint: '背景可替换成世界各地著名旅游景点，点击展开可以看到选项（也可切换白天/黄昏/夜景）。',
             presetLabel: '风格预设',
             presetCustom: '自定义',
             presetMangaToReal: '漫画 → 真人',

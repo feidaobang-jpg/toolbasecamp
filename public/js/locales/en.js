@@ -2021,7 +2021,7 @@ window.TB_LOCALES.en = {
             bgTimeNight: 'Night',
             bgExpand: 'Expand',
             bgCollapse: 'Collapse',
-            bgHint: 'Optional: click a place chip to append it to the prompt (and switch Day/Dusk/Night).',
+            bgHint: 'Background can be replaced with famous travel spots worldwide. Click Expand to see options (also switch Day/Dusk/Night).',
             presetLabel: 'Style preset',
             presetCustom: 'Custom',
             presetMangaToReal: 'Manga → Real',
