@@ -198,7 +198,8 @@ window.TB_LOCALES.en = {
         searchLifePlaceholder: 'Search content…',
         open: 'Open',
         loginRequired: 'Sign-in',
-        paidRequired: 'Paid'
+        paidRequired: 'Paid',
+        dailyLimitRequired: 'Daily limit'
     },
     games: {
         groups: {

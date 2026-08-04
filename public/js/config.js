@@ -163,17 +163,17 @@ const toolsConfig = {
                 { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
                 { titleKey: 'tools.addWatermark.title', url: 'html/media/add-watermark.html' },
                 { titleKey: 'tools.addBackground.title', url: 'html/media/add-background.html' },
-                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true },
-                { titleKey: 'tools.generalCutout.title', url: 'html/media/general-cutout.html', authRequired: true },
+                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.generalCutout.title', url: 'html/media/general-cutout.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
                 { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
                 { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
-                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true },
+                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
-                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true },
+                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
                 { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true },
-                { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true },
+                { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]
         },
@@ -183,10 +183,10 @@ const toolsConfig = {
                 { titleKey: 'tools.pdfToWord.title', url: 'html/docs/pdf-to-word.html' },
                 { titleKey: 'tools.wordToPdf.title', url: 'html/docs/word-to-pdf.html' },
                 { titleKey: 'tools.imagesToPdf.title', url: 'html/docs/images-to-pdf.html' },
-                { titleKey: 'tools.imagesToPdfAdvanced.title', url: 'html/media/images-to-pdf-advanced.html', authRequired: true },
-                { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true },
-                { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true },
-                { titleKey: 'tools.drugLabel.title', url: 'html/docs/drug-label.html', authRequired: true }
+                { titleKey: 'tools.imagesToPdfAdvanced.title', url: 'html/media/images-to-pdf-advanced.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.drugLabel.title', url: 'html/docs/drug-label.html', authRequired: true, dailyLimit: true }
             ]
         },
         {

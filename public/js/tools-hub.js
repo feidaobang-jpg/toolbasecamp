@@ -213,6 +213,10 @@
                     card.innerHTML =
                         '<h3>' + escapeHtml(label) + '</h3>' +
                         '<span class="hub-tool-badge hub-tool-badge-paid">' + escapeHtml(tr('hub.paidRequired')) + '</span>';
+                } else if (item.dailyLimit) {
+                    card.innerHTML =
+                        '<h3>' + escapeHtml(label) + '</h3>' +
+                        '<span class="hub-tool-badge hub-tool-badge-limit">' + escapeHtml(tr('hub.dailyLimitRequired')) + '</span>';
                 } else if (item.authRequired) {
                     card.innerHTML =
                         '<h3>' + escapeHtml(label) + '</h3>' +
