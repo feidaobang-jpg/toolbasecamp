@@ -31,6 +31,7 @@
             if (status === 502 || status === 504) return tr('tools.imageCloud.serviceUnavailable');
             return tr('tools.imageCloud.unknownError');
         }
+        var text = String(msg || '');
         if (String(msg).indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
         if (msg === 'Bad Gateway' || msg === 'Gateway Timeout') {
             return tr('tools.imageCloud.serviceUnavailable');
@@ -76,6 +77,14 @@
             'Plan generation failed': 'tools.lifePlans.genFailed'
         };
         if (map[msg]) return tr(map[msg]);
+        if (
+            text.indexOf('Green net check failed') !== -1
+            || text.indexOf('Input data may contain inappropriate content') !== -1
+            || text.indexOf('inappropriate content') !== -1
+            || text.indexOf('content moderation') !== -1
+        ) {
+            return tr('tools.imageCloud.contentBlocked');
+        }
         if (String(msg).indexOf('Insufficient balance') === 0 || String(msg).indexOf('Insufficient AI balance') === 0) {
             return tr('tools.imageCloud.insufficientBalance');
         }

@@ -1919,6 +1919,7 @@ window.TB_LOCALES['zh-CN'] = {
             balanceLine: '余额 ¥{balance}',
             balanceUnlimited: '管理员账号：余额不限',
             insufficientBalance: '余额不足，请充值或改选更便宜/更少的模型。',
+            contentBlocked: '当前描述触发内容审核，请换一种更中性、日常的表述后再试。',
             genServiceMissing: '生图服务暂未就绪，请稍后再试。',
             dailyLimit: '今日次数已用完，请明天再试。',
             notConfigured: '服务端尚未配置腾讯云密钥（TENCENT_SECRET_ID / TENCENT_SECRET_KEY）。',
