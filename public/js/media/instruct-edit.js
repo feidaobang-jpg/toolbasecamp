@@ -539,7 +539,7 @@
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
-      setBgPanelExpanded(false);
+      setBgPanelExpanded(true);
       setBgTime('day');
       syncSelectAllLabel();
       updateCostHint();
@@ -565,7 +565,7 @@
       })(timeChips[i]);
     }
   }
-  setBgPanelExpanded(false);
+  setBgPanelExpanded(true);
   // Location chips (everything with data-bg-place)
   bgPresetButtons = document.querySelectorAll('button[data-bg-place]');
   if (bgPresetButtons && bgPresetButtons.length) {
