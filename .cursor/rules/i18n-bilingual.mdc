@@ -1,0 +1,11 @@
+---
+description: 站内文案继续中英双语，不要只写中文再攒一批英文
+alwaysApply: true
+---
+
+# i18n 约定
+
+- 用户可见文案同时改 `public/js/locales/zh-CN.js` 与 `en.js`（同一 key）。
+- **不要**「先只写中文、以后统一补英文」：站点有语言切换，缺英文会回退成 key 或英文包空缺。
+- HTML 静态文案优先 `data-i18n`；JS 动态赋值用 `t()` / `TBImageCloud.tr()`，并在 `tb:locale` 时重刷。
+- `i18n.js` 在脚本加载时就会检测语言；动态文案不要依赖「默认 en 再等 DOMContentLoaded」。

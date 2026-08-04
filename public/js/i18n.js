@@ -7,15 +7,21 @@
 
     var STORAGE_KEY = 'tb-locale';
     var SUPPORTED = ['en', 'zh-CN'];
-    var currentLocale = 'en';
+    // Detect immediately so scripts that call t() before DOMContentLoaded
+    // (e.g. tool boot) already see the user's language — not the 'en' default.
+    var currentLocale = detectLocaleEager();
 
-    function detectLocale() {
+    function detectLocaleEager() {
         try {
             var saved = localStorage.getItem(STORAGE_KEY);
             if (saved && SUPPORTED.indexOf(saved) !== -1) return saved;
         } catch (e) { /* ignore */ }
         var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
         return nav.indexOf('zh') === 0 ? 'zh-CN' : 'en';
+    }
+
+    function detectLocale() {
+        return detectLocaleEager();
     }
 
     function getMessages(locale) {

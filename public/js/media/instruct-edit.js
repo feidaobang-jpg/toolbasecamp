@@ -342,6 +342,15 @@
     setBusy(false);
   }
 
+  function applyLocaleBits() {
+    C.showWeChatBanner(wechatTip);
+    if (historyHint) {
+      historyHint.textContent = tr('tools.imageCloud.historyHint', {
+        max: (Hist && Hist.MAX_PER_TOOL) || 24
+      });
+    }
+  }
+
   function boot() {
     if (!C.getToken()) {
       if (gate) gate.hidden = false;
@@ -351,13 +360,8 @@
     }
     if (gate) gate.hidden = true;
     if (app) app.hidden = false;
-    C.showWeChatBanner(wechatTip);
-    if (historyHint) {
-      historyHint.textContent = tr('tools.imageCloud.historyHint', {
-        max: (Hist && Hist.MAX_PER_TOOL) || 24
-      });
-    }
-    if (Hist) {
+    applyLocaleBits();
+    if (Hist && !histPanel) {
       histPanel = Hist.bindPanel({
         tool: 'instruct_edit',
         gridEl: document.getElementById('history-grid'),
@@ -369,6 +373,8 @@
           doDownload(blob, row);
         }
       });
+      histPanel.refresh();
+    } else if (histPanel) {
       histPanel.refresh();
     }
     syncSelectAllLabel();
@@ -500,6 +506,13 @@
       setBusy(false);
     });
   }
+
+  document.addEventListener('tb:locale', function () {
+    applyLocaleBits();
+    syncSelectAllLabel();
+    updateCostHint();
+    if (histPanel) histPanel.refresh();
+  });
 
   boot();
 })();
