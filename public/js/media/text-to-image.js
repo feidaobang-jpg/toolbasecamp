@@ -33,7 +33,15 @@
   }
 
   function doDownload(blobOrUrl, item) {
-    C.downloadBlob(blobOrUrl, downloadName(item || {}), wechatTip);
+    C.downloadBlob(blobOrUrl, downloadName(item || {}), {
+      tipEl: wechatTip,
+      errorEl: errorBox
+    });
+  }
+
+  function resultSrc(b64, ctype) {
+    if (C.isWeChat && C.isWeChat()) return C.b64ToDataUrl(b64, ctype);
+    return b64ToBlobUrl(b64, ctype);
   }
 
   function modelInputs() {
@@ -170,7 +178,7 @@
         title.textContent = modelTitle(item.model);
         var img = document.createElement('img');
         img.alt = item.model || '';
-        img.src = b64ToBlobUrl(item.imageBase64, item.contentType);
+        img.src = resultSrc(item.imageBase64, item.contentType);
         var dl = document.createElement('button');
         dl.type = 'button';
         dl.className = 'tb-btn';

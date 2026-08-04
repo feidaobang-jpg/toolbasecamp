@@ -211,9 +211,20 @@
             title.textContent = modelTitle(row.model) + (row.createdAt ? ' · ' + formatTime(row.createdAt) : '');
             var img = document.createElement('img');
             img.alt = row.model || '';
-            var url = URL.createObjectURL(row.blob);
-            objectUrls.push(url);
-            img.src = url;
+            var url;
+            if (global.TBImageCloud && global.TBImageCloud.isWeChat && global.TBImageCloud.isWeChat()) {
+              url = '';
+              // Convert blob → data URL for WeChat long-press save/share
+              var reader = new FileReader();
+              reader.onload = function () {
+                img.src = String(reader.result || '');
+              };
+              reader.readAsDataURL(row.blob);
+            } else {
+              url = URL.createObjectURL(row.blob);
+              objectUrls.push(url);
+              img.src = url;
+            }
             if (row.prompt) img.title = row.prompt;
             var actions = document.createElement('div');
             actions.className = 'img-hist-actions';

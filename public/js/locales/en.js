@@ -1918,8 +1918,12 @@ window.TB_LOCALES.en = {
             historyClear: 'Clear history',
             historyDownload: 'Download',
             historyDelete: 'Delete',
-            wechatBanner: 'Downloads often fail inside WeChat. Tap ··· → Open in browser, or long-press the image to save.',
-            wechatSaveTip: 'Download is blocked in WeChat. Long-press to save, or open this page in your system browser.'
+            wechatBanner: 'In WeChat, long-press the image to Save / Forward. Tap Download to open a larger image for long-press, or ··· → Open in browser.',
+            wechatSaveTip: 'Direct download is blocked in WeChat. Long-press the large image and choose Save or Forward.',
+            longPressSave: 'Long-press the image, then choose Save or Forward',
+            iosSaveTip: 'If nothing downloaded, long-press to save or use the system share sheet.',
+            saveFailed: 'Save failed. Long-press the image, or open this page in your system browser.',
+            closePreview: 'Close'
         },
         ocrText: {
             title: 'Extract Text',

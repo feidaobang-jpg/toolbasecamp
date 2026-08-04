@@ -1917,8 +1917,12 @@ window.TB_LOCALES['zh-CN'] = {
             historyClear: '清空历史',
             historyDownload: '下载',
             historyDelete: '删除',
-            wechatBanner: '微信内下载常不可用：请点右上角 ··· → 在浏览器中打开；或长按图片保存到相册。',
-            wechatSaveTip: '微信内无法使用下载按钮。请长按图片保存，或用系统浏览器打开本页后再下载。'
+            wechatBanner: '微信内请长按图片「保存到手机 / 转发给朋友」。点下载会打开大图便于长按；也可右上角 ··· → 在浏览器中打开。',
+            wechatSaveTip: '微信内无法直接下载。请长按下方大图，选择「保存到手机」或「转发给朋友」。',
+            longPressSave: '请长按图片，选择「保存到手机」或「转发给朋友」',
+            iosSaveTip: '若未开始下载，请长按图片保存，或用系统分享。',
+            saveFailed: '保存失败，请长按图片重试，或换用系统浏览器打开本页。',
+            closePreview: '关闭'
         },
         ocrText: {
             title: '识别文字',

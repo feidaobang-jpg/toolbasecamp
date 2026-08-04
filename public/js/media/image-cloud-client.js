@@ -212,35 +212,166 @@
         return URL.createObjectURL(new Blob([arr], { type: contentType || 'image/png' }));
     }
 
+    function b64ToDataUrl(b64, contentType) {
+        return 'data:' + (contentType || 'image/png') + ';base64,' + String(b64 || '');
+    }
+
+    /** Prefer data URL in WeChat so long-press save/share works; blob elsewhere. */
+    function displayImageSrc(b64, contentType) {
+        if (isWeChat()) return b64ToDataUrl(b64, contentType);
+        return b64ToObjectUrl(b64, contentType);
+    }
+
     function isWeChat() {
         return /MicroMessenger/i.test(global.navigator.userAgent || '');
     }
 
-    function downloadBlob(blobOrUrl, filename, tipEl) {
-        if (isWeChat()) {
-            if (tipEl) {
-                tipEl.hidden = false;
-                tipEl.textContent = tr('tools.imageCloud.wechatSaveTip');
+    function isMobile() {
+        return /Android|iPhone|iPad|iPod|Mobile/i.test(global.navigator.userAgent || '');
+    }
+
+    function blobFromSource(blobOrUrl) {
+        if (!blobOrUrl) return Promise.reject(new Error('empty'));
+        if (typeof Blob !== 'undefined' && blobOrUrl instanceof Blob) {
+            return Promise.resolve(blobOrUrl);
+        }
+        if (typeof blobOrUrl === 'string') {
+            return fetch(blobOrUrl).then(function (res) {
+                if (!res.ok) throw new Error('fetch failed');
+                return res.blob();
+            });
+        }
+        return Promise.reject(new Error('unsupported'));
+    }
+
+    function closeSavePreview() {
+        var el = document.getElementById('tb-img-save-preview');
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+    }
+
+    function openSavePreview(src, message) {
+        closeSavePreview();
+        var wrap = document.createElement('div');
+        wrap.id = 'tb-img-save-preview';
+        wrap.className = 'tb-img-save-preview';
+        wrap.setAttribute('role', 'dialog');
+        wrap.setAttribute('aria-modal', 'true');
+        var panel = document.createElement('div');
+        panel.className = 'tb-img-save-preview-panel';
+        var tip = document.createElement('p');
+        tip.className = 'tb-img-save-preview-tip';
+        tip.textContent = message || tr('tools.imageCloud.longPressSave');
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        // Help WeChat recognize as image for long-press menu
+        img.setAttribute('referrerpolicy', 'no-referrer');
+        var close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'tb-btn';
+        close.textContent = tr('tools.imageCloud.closePreview');
+        close.addEventListener('click', closeSavePreview);
+        wrap.addEventListener('click', function (e) {
+            if (e.target === wrap) closeSavePreview();
+        });
+        panel.appendChild(tip);
+        panel.appendChild(img);
+        panel.appendChild(close);
+        wrap.appendChild(panel);
+        document.body.appendChild(wrap);
+    }
+
+    function notifySave(msg, tipEl, errorEl) {
+        if (tipEl) {
+            tipEl.hidden = false;
+            tipEl.textContent = msg;
+            try { tipEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
+        }
+        if (errorEl) setError(errorEl, msg);
+    }
+
+    /**
+     * Save / share image with feedback.
+     * opts: { tipEl, errorEl, title }
+     * Returns Promise<boolean> — true if share/download started.
+     */
+    function downloadBlob(blobOrUrl, filename, tipElOrOpts) {
+        var opts = tipElOrOpts && tipElOrOpts.nodeType ? { tipEl: tipElOrOpts } : (tipElOrOpts || {});
+        var tipEl = opts.tipEl;
+        var errorEl = opts.errorEl;
+        var name = filename || 'image.png';
+
+        return blobFromSource(blobOrUrl).then(function (blob) {
+            var dataUrlPromise = new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function () { resolve(String(reader.result || '')); };
+                reader.onerror = function () { reject(reader.error); };
+                reader.readAsDataURL(blob);
+            });
+
+            // Mobile: try native share sheet first (also works outside WeChat on many phones)
+            if (global.navigator.share && global.navigator.canShare && typeof File !== 'undefined') {
+                try {
+                    var file = new File([blob], name, { type: blob.type || 'image/png' });
+                    if (global.navigator.canShare({ files: [file] })) {
+                        return global.navigator.share({
+                            files: [file],
+                            title: opts.title || name
+                        }).then(function () {
+                            if (errorEl) setError(errorEl, '');
+                            return true;
+                        }).catch(function (err) {
+                            // User cancelled — still show WeChat help if needed
+                            if (err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) {
+                                return false;
+                            }
+                            return dataUrlPromise.then(function (dataUrl) {
+                                return fallbackSave(dataUrl, blob, name, tipEl, errorEl);
+                            });
+                        });
+                    }
+                } catch (shareErr) { /* fall through */ }
             }
+
+            return dataUrlPromise.then(function (dataUrl) {
+                return fallbackSave(dataUrl, blob, name, tipEl, errorEl);
+            });
+        }).catch(function () {
+            var msg = tr('tools.imageCloud.saveFailed');
+            notifySave(msg, tipEl, errorEl);
+            return false;
+        });
+    }
+
+    function fallbackSave(dataUrl, blob, name, tipEl, errorEl) {
+        if (isWeChat()) {
+            var msg = tr('tools.imageCloud.wechatSaveTip');
+            notifySave(msg, tipEl, errorEl);
+            openSavePreview(dataUrl, tr('tools.imageCloud.longPressSave'));
             return false;
         }
-        var url = blobOrUrl;
-        var revoke = false;
-        if (blobOrUrl && typeof blobOrUrl !== 'string') {
-            url = URL.createObjectURL(blobOrUrl);
-            revoke = true;
-        }
+
+        // Standard download
+        var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = filename || 'image.png';
+        a.download = name;
+        a.rel = 'noopener';
         document.body.appendChild(a);
         a.click();
         a.remove();
-        if (revoke) {
-            setTimeout(function () {
-                try { URL.revokeObjectURL(url); } catch (e) {}
-            }, 1500);
+        setTimeout(function () {
+            try { URL.revokeObjectURL(url); } catch (e) {}
+        }, 2000);
+
+        // iOS Safari often ignores download — open preview so user can long-press / share
+        if (isMobile() && /iPhone|iPad|iPod/i.test(global.navigator.userAgent || '')) {
+            notifySave(tr('tools.imageCloud.iosSaveTip'), tipEl, errorEl);
+            openSavePreview(dataUrl, tr('tools.imageCloud.longPressSave'));
+            return false;
         }
+
+        if (errorEl) setError(errorEl, '');
         return true;
     }
 
@@ -274,8 +405,11 @@
         formatWallet: formatWallet,
         walletMarkup: walletMarkup,
         b64ToObjectUrl: b64ToObjectUrl,
+        b64ToDataUrl: b64ToDataUrl,
+        displayImageSrc: displayImageSrc,
         isWeChat: isWeChat,
         downloadBlob: downloadBlob,
+        openSavePreview: openSavePreview,
         showWeChatBanner: showWeChatBanner,
         translateDetail: translateDetail
     };
