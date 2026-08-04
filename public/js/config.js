@@ -110,7 +110,7 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.food',
             items: [
-                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html' }
+                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html', dailyLimit: true }
             ]
         },
         {
