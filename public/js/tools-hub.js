@@ -209,7 +209,11 @@
                 card.href = item.url || '#';
                 card.className = 'hub-tool-card';
                 card.dataset.search = groupLabel + ' ' + label;
-                if (item.authRequired) {
+                if (item.paid) {
+                    card.innerHTML =
+                        '<h3>' + escapeHtml(label) + '</h3>' +
+                        '<span class="hub-tool-badge hub-tool-badge-paid">' + escapeHtml(tr('hub.paidRequired')) + '</span>';
+                } else if (item.authRequired) {
                     card.innerHTML =
                         '<h3>' + escapeHtml(label) + '</h3>' +
                         '<span class="hub-tool-badge">' + escapeHtml(tr('hub.loginRequired')) + '</span>';

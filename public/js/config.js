@@ -171,8 +171,8 @@ const toolsConfig = {
                 { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
                 { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true },
-                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true },
-                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true },
+                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
+                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true },
                 { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]

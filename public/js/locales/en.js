@@ -197,7 +197,8 @@ window.TB_LOCALES.en = {
         searchGamesPlaceholder: 'Search games…',
         searchLifePlaceholder: 'Search content…',
         open: 'Open',
-        loginRequired: 'Sign-in'
+        loginRequired: 'Sign-in',
+        paidRequired: 'Paid'
     },
     games: {
         groups: {

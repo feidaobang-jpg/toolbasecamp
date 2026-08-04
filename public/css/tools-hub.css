@@ -275,6 +275,12 @@
     white-space: nowrap;
 }
 
+.hub-tool-badge-paid {
+    color: #b45309;
+    background: #fffbeb;
+    border-color: #fcd34d;
+}
+
 .hub-tool-card:hover {
     border-color: #93c5fd;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);

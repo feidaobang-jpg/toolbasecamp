@@ -196,7 +196,8 @@ window.TB_LOCALES['zh-CN'] = {
         searchGamesPlaceholder: '搜索游戏…',
         searchLifePlaceholder: '搜索内容…',
         open: '打开',
-        loginRequired: '需登录'
+        loginRequired: '需登录',
+        paidRequired: '收费'
     },
     games: {
         groups: {
