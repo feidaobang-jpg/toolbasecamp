@@ -179,6 +179,7 @@
         var img = document.createElement('img');
         img.alt = item.model || '';
         img.src = resultSrc(item.imageBase64, item.contentType);
+        C.bindImagePreview(img);
         var dl = document.createElement('button');
         dl.type = 'button';
         dl.className = 'tb-btn';

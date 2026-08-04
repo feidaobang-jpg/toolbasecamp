@@ -309,7 +309,15 @@
                 reader.readAsDataURL(blob);
             });
 
-            // Mobile: try native share sheet first (also works outside WeChat on many phones)
+            // WeChat: no share sheet / no auto preview — tip only; preview is via image click.
+            if (isWeChat()) {
+                return dataUrlPromise.then(function () {
+                    notifySave(tr('tools.imageCloud.wechatSaveTip'), tipEl, errorEl);
+                    return false;
+                });
+            }
+
+            // Mobile (non-WeChat): try native share sheet first
             if (global.navigator.share && global.navigator.canShare && typeof File !== 'undefined') {
                 try {
                     var file = new File([blob], name, { type: blob.type || 'image/png' });
@@ -321,7 +329,6 @@
                             if (errorEl) setError(errorEl, '');
                             return true;
                         }).catch(function (err) {
-                            // User cancelled — still show WeChat help if needed
                             if (err && (err.name === 'AbortError' || err.name === 'NotAllowedError')) {
                                 return false;
                             }
@@ -344,14 +351,7 @@
     }
 
     function fallbackSave(dataUrl, blob, name, tipEl, errorEl) {
-        if (isWeChat()) {
-            var msg = tr('tools.imageCloud.wechatSaveTip');
-            notifySave(msg, tipEl, errorEl);
-            openSavePreview(dataUrl, tr('tools.imageCloud.longPressSave'));
-            return false;
-        }
-
-        // Standard download
+        // Standard download — never auto-open preview (preview is image-click only).
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
@@ -364,15 +364,23 @@
             try { URL.revokeObjectURL(url); } catch (e) {}
         }, 2000);
 
-        // iOS Safari often ignores download — open preview so user can long-press / share
+        // iOS Safari often ignores download — tip only, no popup.
         if (isMobile() && /iPhone|iPad|iPod/i.test(global.navigator.userAgent || '')) {
             notifySave(tr('tools.imageCloud.iosSaveTip'), tipEl, errorEl);
-            openSavePreview(dataUrl, tr('tools.imageCloud.longPressSave'));
             return false;
         }
 
         if (errorEl) setError(errorEl, '');
         return true;
+    }
+
+    /** Bind tap-to-preview (long-press save/share works inside the preview). */
+    function bindImagePreview(img, src) {
+        if (!img) return;
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', function () {
+            openSavePreview(src || img.src, tr('tools.imageCloud.longPressSave'));
+        });
     }
 
     function showWeChatBanner(el) {
@@ -410,6 +418,7 @@
         isWeChat: isWeChat,
         downloadBlob: downloadBlob,
         openSavePreview: openSavePreview,
+        bindImagePreview: bindImagePreview,
         showWeChatBanner: showWeChatBanner,
         translateDetail: translateDetail
     };
