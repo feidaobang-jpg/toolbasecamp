@@ -27,6 +27,9 @@
   var busyEl = document.getElementById('busy');
   var wechatTip = document.getElementById('wechat-tip');
   var historyHint = document.getElementById('history-hint');
+  var bgTimeRow = document.getElementById('bg-time-row');
+  var bgPresetButtons = null;
+  var bgTime = 'day';
   var files = [];
   var previewUrls = [];
   var resultUrls = [];
@@ -100,6 +103,43 @@
       runs: runs,
       price: total
     });
+  }
+
+  function timePhrase() {
+    if (bgTime === 'dusk') return '黄昏金色光，电影感自然光';
+    if (bgTime === 'night') return '夜景霓虹，低照度，电影感';
+    return '白天晴朗，自然光，旅行摄影写实';
+  }
+
+  function setBgTime(time) {
+    bgTime = time || 'day';
+    if (!bgTimeRow) return;
+    var chips = bgTimeRow.querySelectorAll('.rec-chip');
+    for (var i = 0; i < chips.length; i++) {
+      var t = chips[i].getAttribute('data-bg-time') || 'day';
+      chips[i].classList.toggle('is-active', t === bgTime);
+    }
+    setBusy(false);
+  }
+
+  function applyBackgroundPreset(place) {
+    if (!promptEl) return;
+    if (!place) return;
+    var snippet = '背景：' + place + '，写实旅游摄影，' + timePhrase();
+    var v = (promptEl.value || '').trim();
+    // Remove previously inserted background line(s) (we always add as a separate line).
+    var lines = v ? v.split(/\n/) : [];
+    var out = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = (lines[i] || '').trim();
+      if (!line) continue;
+      if (line.indexOf('背景：') === 0) continue;
+      out.push(line);
+    }
+    out.push(snippet);
+    promptEl.value = out.join('\n');
+    setBusy(false);
+    updateCostHint();
   }
 
   function applyWallet(wallet) {
@@ -488,11 +528,40 @@
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
+      setBgTime('day');
       syncSelectAllLabel();
       updateCostHint();
       C.setError(errorBox, '');
       setBusy(false);
     });
+  }
+
+  // Background preset chips wiring (optional)
+  if (bgTimeRow) {
+    var timeChips = bgTimeRow.querySelectorAll('button[data-bg-time]');
+    for (var i = 0; i < timeChips.length; i++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          var t = btn.getAttribute('data-bg-time') || 'day';
+          setBgTime(t);
+        });
+      })(timeChips[i]);
+    }
+  }
+  // Location chips (everything with data-bg-place)
+  bgPresetButtons = document.querySelectorAll('button[data-bg-place]');
+  if (bgPresetButtons && bgPresetButtons.length) {
+    for (var b = 0; b < bgPresetButtons.length; b++) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          var place = btn.getAttribute('data-bg-place') || btn.textContent || '';
+          place = place.trim();
+          applyBackgroundPreset(place);
+          // prompt input listener will update busy state; still safe to force.
+          setBusy(false);
+        });
+      })(bgPresetButtons[b]);
+    }
   }
 
   document.addEventListener('tb:locale', function () {
