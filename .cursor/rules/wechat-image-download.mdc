@@ -10,7 +10,9 @@ alwaysApply: true
 ## 统一交互（结果图 / 可下载图片）
 
 1. **点「下载」**  
-   - 微信内：**只弹窗提示**（`tbNotify`），**不要**自动弹预览，**不要**只改页面内 tip / error 嵌入条（易被当成「没反应」）。  
+   - **桌面浏览器**：直接 `a.download` / `tbTriggerDownload` 保存文件，**不要**调 `navigator.share`（Windows 会弹出「共享」而非下载）。  
+   - **手机/平板**（非微信）：可用系统分享；失败再回退下载。  
+   - **微信内**：**只弹窗提示**（`tbNotify`），**不要**自动弹预览，**不要**只改页面内 tip / error 嵌入条（易被当成「没反应」）。  
    - 提示文案要点：长按图片「保存到手机 / 转发给朋友」，或右上角 ··· → **在浏览器中打开**再下载。  
    - 图片：`TBImageCloud.downloadBlob` 或 `tbTriggerDownload`；非图片文件：`tbTriggerDownload`（文案用 `common.wechatFileDownloadTip`）。
 

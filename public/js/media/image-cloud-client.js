@@ -321,8 +321,14 @@
                 });
             }
 
-            // Mobile (non-WeChat): try native share sheet first
-            if (global.navigator.share && global.navigator.canShare && typeof File !== 'undefined') {
+            // Phone/tablet only: system share sheet. Desktop Windows also has
+            // navigator.share — that opens「共享」instead of saving, so skip it.
+            if (
+                isMobile()
+                && global.navigator.share
+                && global.navigator.canShare
+                && typeof File !== 'undefined'
+            ) {
                 try {
                     var file = new File([blob], name, { type: blob.type || 'image/png' });
                     if (global.navigator.canShare({ files: [file] })) {
