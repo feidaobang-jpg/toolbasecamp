@@ -76,7 +76,7 @@
             'Plan generation failed': 'tools.lifePlans.genFailed'
         };
         if (map[msg]) return tr(map[msg]);
-        if (String(msg).indexOf('Insufficient AI balance') === 0) {
+        if (String(msg).indexOf('Insufficient balance') === 0 || String(msg).indexOf('Insufficient AI balance') === 0) {
             return tr('tools.imageCloud.insufficientBalance');
         }
         if (String(msg).indexOf('Plan generation failed') === 0) return tr('tools.lifePlans.genFailed');

@@ -117,7 +117,7 @@ def user_redeem(body: RedeemBody, user: dict = Depends(_user)):
     if router.is_admin(user):  # type: ignore[attr-defined]
         raise HTTPException(
             status_code=400,
-            detail="Admin accounts have unlimited AI balance; redeem is not needed.",
+            detail="Admin accounts have unlimited balance; redeem is not needed.",
         )
     conn = _conn()
     try:

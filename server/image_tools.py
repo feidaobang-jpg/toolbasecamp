@@ -293,7 +293,7 @@ def _charge_success(user: dict, list_price: float, *, reason: str, meta: dict) -
         if new_bal is None:
             raise HTTPException(
                 status_code=402,
-                detail="Insufficient AI balance. Please top up.",
+                detail="Insufficient balance. Please top up.",
             )
         return float(new_bal)
     finally:
@@ -580,7 +580,7 @@ async def api_instruct_edit(
     for up in uploads:
         blobs.append(await _read_upload(up))
 
-    # Soft daily cap still applies; AI balance is billed per successful image.
+    # Soft daily cap still applies; user balance is billed per successful image.
     planned = len(blobs) * len(model_ids)
     if not _is_admin(user):
         conn = _conn()

@@ -174,7 +174,7 @@ def require_positive_balance(conn, user_id: int) -> Decimal:
     if bal <= 0:
         raise HTTPException(
             status_code=402,
-            detail="Insufficient AI balance. Please top up.",
+            detail="Insufficient balance. Please top up.",
         )
     return bal
 
@@ -187,7 +187,7 @@ def require_can_afford(conn, user_id: int, list_price: Any) -> Decimal:
         raise HTTPException(
             status_code=402,
             detail=(
-                f"Insufficient AI balance. Need ¥{need}, have ¥{bal}. "
+                f"Insufficient balance. Need ¥{need}, have ¥{bal}. "
                 "Please top up or select fewer/cheaper models."
             ),
         )
