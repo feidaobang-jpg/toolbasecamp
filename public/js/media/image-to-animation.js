@@ -250,10 +250,14 @@
 
     function downloadMp4() {
         if (!videoBlobUrl) return;
-        var a = document.createElement('a');
-        a.href = videoBlobUrl;
-        a.download = 'wan-animation.mp4';
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(videoBlobUrl, 'wan-animation.mp4');
+    } else {
+      var a = document.createElement("a");
+      a.href = videoBlobUrl;
+      a.download = 'wan-animation.mp4';
+      a.click();
+    }
     }
 
     function captureFramesZip() {
@@ -276,10 +280,14 @@
             if (i >= frameCount) {
                 zip.generateAsync({ type: 'blob' }).then(function (blob) {
                     var url = URL.createObjectURL(blob);
-                    var a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'wan-frames.zip';
-                    a.click();
+                    if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(url, 'wan-frames.zip');
+    } else {
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = 'wan-frames.zip';
+      a.click();
+    }
                     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
                     setBusy(false);
                     scrollBottom();

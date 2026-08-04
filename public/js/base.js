@@ -387,3 +387,120 @@ function clearCodeContent(elementIds) {
 
 window.setCodeContent = setCodeContent;
 window.clearCodeContent = clearCodeContent;
+
+/** WeChat in-app browser — a.download is unreliable. */
+function tbIsWeChat() {
+    return /MicroMessenger/i.test(navigator.userAgent || '');
+}
+
+function tbNotifyEnsureStyles() {
+    if (document.getElementById('tb-notify-style')) return;
+    var s = document.createElement('style');
+    s.id = 'tb-notify-style';
+    s.textContent =
+        '.tb-notify-mask{position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box}' +
+        '.tb-notify-panel{width:min(100%,360px);background:#fff;border-radius:12px;padding:18px 16px 14px;box-shadow:0 12px 40px rgba(0,0,0,.2)}' +
+        '.tb-notify-msg{margin:0 0 14px;font-size:15px;line-height:1.55;color:#0f172a;white-space:pre-wrap;word-break:break-word}' +
+        '.tb-notify-panel .tb-btn{width:100%}';
+    document.head.appendChild(s);
+}
+
+/**
+ * Modal alert (action feedback). Prefer this over embedding tips in the page body.
+ * @param {string} message
+ * @param {{okLabel?: string}} [opts]
+ */
+function tbNotify(message, opts) {
+    opts = opts || {};
+    var msg = String(message || '').trim();
+    if (!msg) return;
+    tbNotifyEnsureStyles();
+    var existing = document.getElementById('tb-notify-mask');
+    if (existing) existing.remove();
+
+    var mask = document.createElement('div');
+    mask.id = 'tb-notify-mask';
+    mask.className = 'tb-notify-mask';
+    mask.setAttribute('role', 'alertdialog');
+    mask.setAttribute('aria-modal', 'true');
+
+    var panel = document.createElement('div');
+    panel.className = 'tb-notify-panel';
+
+    var text = document.createElement('p');
+    text.className = 'tb-notify-msg';
+    text.textContent = msg;
+
+    var ok = document.createElement('button');
+    ok.type = 'button';
+    ok.className = 'tb-btn';
+    ok.textContent = opts.okLabel
+        || (typeof window.t === 'function' ? window.t('common.gotIt') : null)
+        || (typeof window.t === 'function' ? window.t('common.ok') : null)
+        || 'OK';
+
+    function close() {
+        if (mask.parentNode) mask.parentNode.removeChild(mask);
+        document.removeEventListener('keydown', onKey);
+    }
+    function onKey(e) {
+        if (e.key === 'Escape' || e.key === 'Enter') close();
+    }
+    ok.addEventListener('click', close);
+    mask.addEventListener('click', function (e) {
+        if (e.target === mask) close();
+    });
+    document.addEventListener('keydown', onKey);
+
+    panel.appendChild(text);
+    panel.appendChild(ok);
+    mask.appendChild(panel);
+    document.body.appendChild(mask);
+    try { ok.focus(); } catch (e) {}
+}
+
+/**
+ * Trigger file download; in WeChat show modal tip instead (no silent fail).
+ * @returns {boolean} true if download click was attempted
+ */
+function tbTriggerDownload(src, filename) {
+    var name = filename || 'download';
+    if (tbIsWeChat()) {
+        var isImage = false;
+        if (typeof Blob !== 'undefined' && src instanceof Blob) {
+            isImage = String(src.type || '').indexOf('image/') === 0;
+        } else if (typeof src === 'string') {
+            isImage = /^data:image\//i.test(src)
+                || /\.(png|jpe?g|gif|webp|bmp|svg)(\?|#|$)/i.test(name)
+                || /\.(png|jpe?g|gif|webp|bmp|svg)(\?|#|$)/i.test(src);
+        }
+        var key = isImage ? 'common.wechatDownloadTip' : 'common.wechatFileDownloadTip';
+        var tip = typeof window.t === 'function' ? window.t(key) : key;
+        tbNotify(tip);
+        return false;
+    }
+
+    var url = src;
+    var revoke = false;
+    if (typeof Blob !== 'undefined' && src instanceof Blob) {
+        url = URL.createObjectURL(src);
+        revoke = true;
+    }
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    if (revoke) {
+        setTimeout(function () {
+            try { URL.revokeObjectURL(url); } catch (e) {}
+        }, 2000);
+    }
+    return true;
+}
+
+window.tbIsWeChat = tbIsWeChat;
+window.tbNotify = tbNotify;
+window.tbTriggerDownload = tbTriggerDownload;

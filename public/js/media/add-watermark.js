@@ -455,10 +455,14 @@ document.addEventListener('DOMContentLoaded', function () {
     out.toBlob(function (blob) {
       if (!blob) return;
       var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
+      if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(url, state.name || 'watermarked.png');
+    } else {
+      var a = document.createElement("a");
       a.href = url;
       a.download = state.name || 'watermarked.png';
       a.click();
+    }
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     }, 'image/png');
   });

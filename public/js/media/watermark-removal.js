@@ -221,10 +221,14 @@ document.addEventListener('DOMContentLoaded', function () {
         off.width = state.image.naturalWidth;
         off.height = state.image.naturalHeight;
         off.getContext('2d').drawImage(state.image, 0, 0);
-        var a = document.createElement('a');
-        a.href = off.toDataURL('image/png');
-        a.download = 'cleaned_' + Date.now() + '.png';
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(off.toDataURL('image/png'), 'cleaned_' + Date.now() + '.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = off.toDataURL('image/png');
+      a.download = 'cleaned_' + Date.now() + '.png';
+      a.click();
+    }
     });
 
     clearBtn.addEventListener('click', function () {

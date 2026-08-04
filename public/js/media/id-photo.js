@@ -316,10 +316,14 @@
             drag = wasDrag;
             if (!blob) return;
             var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'id-photo.png';
-            a.click();
+            if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(url, 'id-photo.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = 'id-photo.png';
+      a.click();
+    }
             URL.revokeObjectURL(url);
         }, 'image/png');
     });

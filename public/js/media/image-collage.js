@@ -317,6 +317,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function download() {
     if (!resultBlob || !resultUrl) return;
+    if (typeof window.tbTriggerDownload === 'function') {
+      window.tbTriggerDownload(resultUrl, 'collage.png');
+      return;
+    }
     var a = document.createElement('a');
     a.href = resultUrl;
     a.download = 'collage.png';

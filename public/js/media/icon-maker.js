@@ -145,10 +145,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function download() {
         if (!lastDataUrl) return;
-        var a = document.createElement('a');
-        a.href = lastDataUrl;
-        a.download = 'icon.png';
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(lastDataUrl, 'icon.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = lastDataUrl;
+      a.download = 'icon.png';
+      a.click();
+    }
     }
 
     function clearAll() {

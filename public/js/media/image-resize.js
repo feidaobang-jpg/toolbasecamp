@@ -171,10 +171,14 @@ document.addEventListener('DOMContentLoaded', function () {
         var quality = mime === 'image/jpeg' || mime === 'image/webp' ? 0.92 : undefined;
         var dataUrl = canvas.toDataURL(mime, quality);
         var ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
-        var a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = 'resized_' + w + 'x' + h + '_' + Date.now() + '.' + ext;
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(dataUrl, 'resized_' + w + 'x' + h + '_' + Date.now() + '.' + ext);
+    } else {
+      var a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = 'resized_' + w + 'x' + h + '_' + Date.now() + '.' + ext;
+      a.click();
+    }
     });
 
     clearBtn.addEventListener('click', function () {

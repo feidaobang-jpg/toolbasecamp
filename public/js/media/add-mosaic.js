@@ -205,10 +205,14 @@ document.addEventListener('DOMContentLoaded', function () {
     work.toBlob(function (blob) {
       if (!blob) return;
       var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
+      if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(url, state.name || 'mosaic.png');
+    } else {
+      var a = document.createElement("a");
       a.href = url;
       a.download = state.name || 'mosaic.png';
       a.click();
+    }
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     }, 'image/png');
   }

@@ -10,25 +10,36 @@ alwaysApply: true
 ## 统一交互（结果图 / 可下载图片）
 
 1. **点「下载」**  
-   - 微信内：**只提示**，**不要**自动弹预览。  
+   - 微信内：**只弹窗提示**（`tbNotify`），**不要**自动弹预览，**不要**只改页面内 tip / error 嵌入条（易被当成「没反应」）。  
    - 提示文案要点：长按图片「保存到手机 / 转发给朋友」，或右上角 ··· → **在浏览器中打开**再下载。  
-   - 用 `TBImageCloud.downloadBlob(src, name, { tipEl, errorEl })`，保证 `errorEl`/`tipEl` 有可见反馈。
+   - 图片：`TBImageCloud.downloadBlob` 或 `tbTriggerDownload`；非图片文件：`tbTriggerDownload`（文案用 `common.wechatFileDownloadTip`）。
 
-2. **点图片** → 打开大图预览（`TBImageCloud.bindImagePreview(img)` / `openSavePreview`）。  
+2. **点图片** → 打开大图预览（`TBImageCloud.bindImagePreview` / `openSavePreview`）。  
    - 预览里可长按，使用微信原生「保存到手机 / 转发给朋友」。
 
 3. **展示用 URL**  
-   - 微信内优先 **data URL**（`b64ToDataUrl` / `displayImageSrc`），避免 `blob:` 导致长按保存失败。  
-   - 非微信可用 object URL。
+   - 微信内优先 **data URL**，避免 `blob:` 导致长按保存失败。
 
 4. **不要**在下载按钮里自动 `openSavePreview`。
 
+5. **页面顶部微信说明条**（`#wechat-tip`）可作常驻提示；**点击下载的反馈必须走弹窗** `tbNotify`。
+
+## 提示形态约定
+
+| 场景 | 形态 |
+|------|------|
+| 点击下载 / 保存失败等**操作反馈** | **弹窗** `tbNotify(msg)`（带「知道了」） |
+| 进入页的微信常驻说明 | 可嵌入 tip 条 |
+| 表单校验错误（未选图等） | 仍可用页面内 `error-box` |
+
 ## 适用范围
 
-- **以后新增**带图片下载的工具 / 模块：必须按本规则实现（复用 `image-cloud-client.js`）。  
-- **已有模块**：改到下载相关代码时一并迁到上述 API；未改动的旧页保持原样，不要求一次性全站重写。  
-- PDF / ZIP 等非图片文件：微信内同样无法强制下载时，至少提示「请在浏览器中打开」；不要套图片长按逻辑。
+- **以后新增**带下载的工具：必须用 `tbTriggerDownload` / `downloadBlob` + 上述弹窗规则。  
+- **已有模块**：凡带 `a.download` 的下载按钮，应改为 `tbTriggerDownload`（或等价逻辑）；改下载相关代码时必须带上。  
+- PDF / ZIP 等：微信内弹窗提示「浏览器打开」，不要套图片长按逻辑。
 
-## 文案 key（中英都要有）
+## API / 文案
 
+- `tbNotify` / `tbTriggerDownload` / `tbIsWeChat`（`public/js/base.js`）
+- `common.gotIt` / `common.wechatDownloadTip` / `common.wechatFileDownloadTip`
 - `tools.imageCloud.wechatBanner` / `wechatSaveTip` / `longPressSave` / `iosSaveTip` / `saveFailed` / `closePreview`

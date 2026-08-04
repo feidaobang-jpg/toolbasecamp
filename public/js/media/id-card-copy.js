@@ -258,10 +258,14 @@ document.addEventListener('DOMContentLoaded', function () {
             setError(tr('tools.idCardCopy.needFront'));
             return;
         }
-        var a = document.createElement('a');
-        a.href = canvas.toDataURL('image/png');
-        a.download = 'id_card_copy_' + Date.now() + '.png';
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(canvas.toDataURL('image/png'), 'id_card_copy_' + Date.now() + '.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'id_card_copy_' + Date.now() + '.png';
+      a.click();
+    }
     });
 
     clearBtn.addEventListener('click', function () {

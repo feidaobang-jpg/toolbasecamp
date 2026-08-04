@@ -303,10 +303,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function download(blob, name) {
         if (!blob) return;
         var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = name;
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(url, name);
+    } else {
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      a.click();
+    }
         setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
     }
 

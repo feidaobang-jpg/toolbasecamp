@@ -113,10 +113,14 @@
         fd.append('remove_shadow', removeShadow.checked ? 'true' : 'false');
         C.apiBlob('/image/to-pdf-advanced', { method: 'POST', body: fd }).then(function (res) {
             var url = URL.createObjectURL(res.blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'images_advanced.pdf';
-            a.click();
+            if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(url, 'images_advanced.pdf');
+    } else {
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = 'images_advanced.pdf';
+      a.click();
+    }
             URL.revokeObjectURL(url);
             return loadStatus();
         }).catch(function (err) {

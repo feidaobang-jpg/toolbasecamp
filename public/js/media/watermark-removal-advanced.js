@@ -350,10 +350,14 @@ document.addEventListener('DOMContentLoaded', function () {
     processBtn.addEventListener('click', process);
     downloadBtn.addEventListener('click', function () {
         if (!state.resultDataUrl) return;
-        var a = document.createElement('a');
-        a.href = state.resultDataUrl;
-        a.download = state.resultName;
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(state.resultDataUrl, state.resultName);
+    } else {
+      var a = document.createElement("a");
+      a.href = state.resultDataUrl;
+      a.download = state.resultName;
+      a.click();
+    }
     });
     clearBtn.addEventListener('click', clearAll);
     window.addEventListener('resize', function () {

@@ -1332,13 +1332,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const hour = String(now.getHours()).padStart(2, '0');
             const minute = String(now.getMinutes()).padStart(2, '0');
             const zipName = `${year}-${month}-${day}_${hour}-${minute}.zip`;
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(content);
-            link.download = zipName;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            if (typeof window.tbTriggerDownload === 'function') {
+                window.tbTriggerDownload(content, zipName);
+            } else {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = zipName;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
             
             showToast('Saved ' + selectedFrames.length + ' frames as ZIP');
         }).catch(function(error) {

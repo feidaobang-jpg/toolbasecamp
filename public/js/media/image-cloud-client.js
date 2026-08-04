@@ -282,10 +282,14 @@
     }
 
     function notifySave(msg, tipEl, errorEl) {
+        // Action feedback: modal popup (not embedded tip/error in the form).
+        if (typeof global.tbNotify === 'function') {
+            global.tbNotify(msg);
+            return;
+        }
         if (tipEl) {
             tipEl.hidden = false;
             tipEl.textContent = msg;
-            try { tipEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
         }
         if (errorEl) setError(errorEl, msg);
     }
@@ -351,7 +355,17 @@
     }
 
     function fallbackSave(dataUrl, blob, name, tipEl, errorEl) {
-        // Standard download — never auto-open preview (preview is image-click only).
+        if (typeof global.tbTriggerDownload === 'function') {
+            var ok = global.tbTriggerDownload(blob, name);
+            if (isWeChat()) return false;
+            if (isMobile() && /iPhone|iPad|iPod/i.test(global.navigator.userAgent || '')) {
+                notifySave(tr('tools.imageCloud.iosSaveTip'), tipEl, errorEl);
+                return false;
+            }
+            if (errorEl) setError(errorEl, '');
+            return !!ok;
+        }
+
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
@@ -364,7 +378,6 @@
             try { URL.revokeObjectURL(url); } catch (e) {}
         }, 2000);
 
-        // iOS Safari often ignores download — tip only, no popup.
         if (isMobile() && /iPhone|iPad|iPod/i.test(global.navigator.userAgent || '')) {
             notifySave(tr('tools.imageCloud.iosSaveTip'), tipEl, errorEl);
             return false;

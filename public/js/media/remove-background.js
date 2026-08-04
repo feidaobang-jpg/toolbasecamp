@@ -125,10 +125,14 @@
 
   downloadBtn.addEventListener('click', function () {
     if (!resultUrl) return;
-    var a = document.createElement('a');
-    a.href = resultUrl;
-    a.download = 'portrait_cutout_' + Date.now() + '.png';
-    a.click();
+    if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(resultUrl, 'portrait_cutout_' + Date.now() + '.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = resultUrl;
+      a.download = 'portrait_cutout_' + Date.now() + '.png';
+      a.click();
+    }
   });
 
   C.requireLogin(gate, app).then(function (user) {

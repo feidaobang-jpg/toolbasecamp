@@ -2498,6 +2498,9 @@ window.TB_LOCALES.en = {
         serviceUnavailable: 'Service unavailable',
         serviceUnavailableBody: 'The API server is not responding. Please try again later.',
         ok: 'OK',
+        gotIt: 'Got it',
+        wechatDownloadTip: 'Downloads are blocked in WeChat. Tap the image to enlarge, then long-press to Save / Forward — or ··· → Open in browser.',
+        wechatFileDownloadTip: 'Downloads are blocked in WeChat. Tap ··· → Open in browser, then download again.',
         backToTop: 'Back to top',
         mainNav: 'Main navigation',
         loading: 'Loading...'

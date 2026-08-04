@@ -57,9 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     downloadBtn.addEventListener('click', function () {
         if (!lastDataUrl) return;
-        var a = document.createElement('a');
-        a.href = lastDataUrl;
-        a.download = 'qrcode_' + Date.now() + '.png';
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(lastDataUrl, 'qrcode_' + Date.now() + '.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = lastDataUrl;
+      a.download = 'qrcode_' + Date.now() + '.png';
+      a.click();
+    }
     });
 });

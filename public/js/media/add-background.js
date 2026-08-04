@@ -258,10 +258,14 @@ document.addEventListener('DOMContentLoaded', function () {
   generateBtn.addEventListener('click', generate);
   downloadBtn.addEventListener('click', function () {
     if (!state.resultUrl) return;
-    var a = document.createElement('a');
-    a.href = state.resultUrl;
-    a.download = state.name || 'with-background.png';
-    a.click();
+    if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(state.resultUrl, state.name || 'with-background.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = state.resultUrl;
+      a.download = state.name || 'with-background.png';
+      a.click();
+    }
   });
   clearBtn.addEventListener('click', clearAll);
 

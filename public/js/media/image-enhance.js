@@ -147,10 +147,14 @@
 
     downloadBtn.addEventListener('click', function () {
         if (!resultUrl) return;
-        var a = document.createElement('a');
-        a.href = resultUrl;
-        a.download = 'enhanced.png';
-        a.click();
+        if (typeof window.tbTriggerDownload === "function") {
+      window.tbTriggerDownload(resultUrl, 'enhanced.png');
+    } else {
+      var a = document.createElement("a");
+      a.href = resultUrl;
+      a.download = 'enhanced.png';
+      a.click();
+    }
     });
 
     C.requireLogin(gate, app).then(function (user) {
