@@ -114,6 +114,28 @@ document.addEventListener('DOMContentLoaded', () => {
     return '';
   }
 
+  function setupWechatLogin() {
+    const wrap = document.getElementById('wechat-login-wrap');
+    const btn = document.getElementById('btn-wechat-login');
+    if (!wrap || !btn) return;
+
+    const locale = typeof window.tbGetLocale === 'function' ? window.tbGetLocale() : 'en';
+    if (locale !== 'zh-CN') return;
+
+    fetch(`${AUTH_BASE_URL}/auth/wechat/config`, { cache: 'no-store' })
+      .then((res) => res.json().catch(() => ({})))
+      .then((data) => {
+        if (!data || !data.configured) return;
+        wrap.classList.remove('hidden');
+      })
+      .catch(() => {});
+
+    btn.addEventListener('click', () => {
+      const next = getSafeNextUrl() || '/html/auth/profile.html';
+      window.location.href = `${AUTH_BASE_URL}/auth/wechat/start?next=${encodeURIComponent(next)}`;
+    });
+  }
+
   function redirectAfterAuth() {
     const next = getSafeNextUrl();
     if (next) {
@@ -198,4 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => { window.location.href = 'login.html'; }, 1000);
     });
   }
+
+  setupWechatLogin();
 });

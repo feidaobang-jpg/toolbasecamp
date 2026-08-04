@@ -177,7 +177,9 @@ window.TB_LOCALES['zh-CN'] = {
         unknownError: '未知错误',
         openMenu: '打开账户菜单',
         closeMenu: '关闭',
-        phoneNote: '手机号登录无需短信验证码，请自行保管密码'
+        phoneNote: '手机号登录无需短信验证码，请自行保管密码',
+        wechatLogin: '微信登录',
+        wechatHint: '微信内可一键登录'
     },
     hub: {
         portalsTitle: '子站入口',
