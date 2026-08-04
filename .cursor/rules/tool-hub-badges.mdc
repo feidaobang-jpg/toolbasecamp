@@ -1,0 +1,42 @@
+---
+description: 工具首页角标三类（收费 / 日限 / 需登录）与新增工具接入约定
+alwaysApply: true
+---
+
+# 工具首页角标与接入
+
+首页卡片角标由 `public/js/config.js` 的 `toolsConfig` 显式字段控制，**不会**按功能自动推断。渲染逻辑在 `public/js/tools-hub.js`（优先级：`paid` > `dailyLimit` > `authRequired`）。
+
+## 三类角标
+
+| 字段 | 中文角标 | 英文 | 何时用 |
+|------|----------|------|--------|
+| `paid: true` | 收费 | Paid | 成功调用扣**用户余额**（如指令改图、文生图） |
+| `dailyLimit: true` | 日限 | Daily limit | 有**每日次数**（含游客 IP 限次）；可不登录也可登录 |
+| `authRequired: true`（且非上两项） | 需登录 | Sign-in | 仅需登录存账号数据，不扣余额、不限次（待办/记事等） |
+| 均不设 | （无角标） | — | 纯本地或轻量只读；无登录、无日限、无扣费 |
+
+`paid` / `dailyLimit` 工具通常同时带 `authRequired: true`（余额与多数云端额度要登录）；角标只显示一类，不叠两个。
+
+文案键：`hub.paidRequired` / `hub.dailyLimitRequired` / `hub.loginRequired`（`zh-CN.js` + `en.js` 同步）。
+
+## 新增工具必须做的（角标 ≠ 逻辑）
+
+角标只影响首页展示。真正限次/扣费要在**服务端**实现，并与前端一致：
+
+1. **收费**：接入钱包扣费（成功才扣）；`config` 标 `paid: true`；页内显示余额，勿再显示日限次数。
+2. **日限**：服务端 `_consume_quota` / IP 日限等；`config` 标 `dailyLimit: true`；页内可显示今日剩余。
+3. **需登录**：API `Depends` 鉴权 + 账号存储；`config` 仅 `authRequired: true`。
+4. **无限制**：本地处理或廉价只读；`config` 不加上述字段；「内容」天行类默认无角标（滥用再加 IP 限流，不必先标日限）。
+
+禁止：只加角标不写后端限制，或后端已日限/扣费但 `config` 漏标。
+
+## 示例
+
+```js
+{ titleKey: 'tools.foo.title', url: 'html/.../foo.html', authRequired: true, paid: true }
+{ titleKey: 'tools.bar.title', url: 'html/.../bar.html', authRequired: true, dailyLimit: true }
+{ titleKey: 'tools.baz.title', url: 'html/.../baz.html', dailyLimit: true } // 游客也可，仅日限
+{ titleKey: 'tools.todo.title', url: 'html/record/todo-list.html', authRequired: true }
+{ titleKey: 'tools.local.title', url: 'html/media/qr-code.html' }
+```
