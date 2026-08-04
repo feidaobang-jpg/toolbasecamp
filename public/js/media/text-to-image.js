@@ -1,6 +1,7 @@
 (function () {
   'use strict';
   var C = window.TBImageCloud;
+  var Hist = window.TBImageGenHistory;
   if (!C) return;
 
   var gate = document.getElementById('login-gate');
@@ -17,11 +18,22 @@
   var errorBox = document.getElementById('error-box');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
+  var wechatTip = document.getElementById('wechat-tip');
+  var historyHint = document.getElementById('history-hint');
   var resultUrls = [];
   var priceMarkup = 2;
+  var histPanel = null;
 
   function tr(key, params) {
     return C.tr(key, params);
+  }
+
+  function downloadName(item) {
+    return 'text-to-image-' + String((item && item.model) || 'out').replace(/[^\w.-]+/g, '-') + '.png';
+  }
+
+  function doDownload(blobOrUrl, item) {
+    C.downloadBlob(blobOrUrl, downloadName(item || {}), wechatTip);
   }
 
   function modelInputs() {
@@ -164,10 +176,7 @@
         dl.className = 'tb-btn';
         dl.textContent = tr('tools.textToImage.download');
         dl.addEventListener('click', function () {
-          var a = document.createElement('a');
-          a.href = img.src;
-          a.download = 'text-to-image-' + String(item.model || 'out').replace(/[^\w.-]+/g, '-') + '.png';
-          a.click();
+          doDownload(img.src, item);
         });
         card.appendChild(title);
         card.appendChild(img);
@@ -206,6 +215,26 @@
     }
     if (gate) gate.hidden = true;
     if (app) app.hidden = false;
+    C.showWeChatBanner(wechatTip);
+    if (historyHint) {
+      historyHint.textContent = tr('tools.imageCloud.historyHint', {
+        max: (Hist && Hist.MAX_PER_TOOL) || 24
+      });
+    }
+    if (Hist) {
+      histPanel = Hist.bindPanel({
+        tool: 'text_to_image',
+        gridEl: document.getElementById('history-grid'),
+        emptyEl: document.getElementById('history-empty'),
+        clearBtn: document.getElementById('history-clear'),
+        tr: tr,
+        modelTitle: modelTitle,
+        onDownload: function (blob, row) {
+          doDownload(blob, row);
+        }
+      });
+      histPanel.refresh();
+    }
     syncSelectAllLabel();
     updateCostHint();
     setBusy(false);
@@ -267,6 +296,7 @@
         }
         if (!images || !images.length) throw new Error(tr('tools.textToImage.failed'));
         renderResults(images, data.partialErrors);
+        if (histPanel) histPanel.save(images, { prompt: prompt });
       }).catch(function (err) {
         C.setError(errorBox, err.message);
       }).finally(function () {

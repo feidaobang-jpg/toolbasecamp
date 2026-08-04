@@ -1,6 +1,7 @@
 (function () {
   'use strict';
   var C = window.TBImageCloud;
+  var Hist = window.TBImageGenHistory;
   if (!C) return;
 
   var MAX_BATCH = 4;
@@ -25,14 +26,27 @@
   var errorBox = document.getElementById('error-box');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
+  var wechatTip = document.getElementById('wechat-tip');
+  var historyHint = document.getElementById('history-hint');
   var files = [];
   var previewUrls = [];
   var resultUrls = [];
   var activePreset = '';
   var priceMarkup = 2;
+  var histPanel = null;
 
   function tr(key, params) {
     return C.tr(key, params);
+  }
+
+  function downloadName(item) {
+    var name = 'instruct-edit-' + String(item.model || 'out').replace(/[^\w.-]+/g, '-');
+    if (typeof item.index === 'number') name += '-' + (item.index + 1);
+    return name + '.png';
+  }
+
+  function doDownload(blobOrUrl, item) {
+    C.downloadBlob(blobOrUrl, downloadName(item || {}), wechatTip);
   }
 
   function modelInputs() {
@@ -229,12 +243,7 @@
     dl.className = 'tb-btn';
     dl.textContent = tr('tools.instructEdit.download');
     dl.addEventListener('click', function () {
-      var a = document.createElement('a');
-      a.href = img.src;
-      var name = 'instruct-edit-' + String(item.model || 'out').replace(/[^\w.-]+/g, '-');
-      if (typeof item.index === 'number') name += '-' + (item.index + 1);
-      a.download = name + '.png';
-      a.click();
+      doDownload(img.src, item);
     });
     card.appendChild(title);
     card.appendChild(img);
@@ -342,6 +351,26 @@
     }
     if (gate) gate.hidden = true;
     if (app) app.hidden = false;
+    C.showWeChatBanner(wechatTip);
+    if (historyHint) {
+      historyHint.textContent = tr('tools.imageCloud.historyHint', {
+        max: (Hist && Hist.MAX_PER_TOOL) || 24
+      });
+    }
+    if (Hist) {
+      histPanel = Hist.bindPanel({
+        tool: 'instruct_edit',
+        gridEl: document.getElementById('history-grid'),
+        emptyEl: document.getElementById('history-empty'),
+        clearBtn: document.getElementById('history-clear'),
+        tr: tr,
+        modelTitle: modelTitle,
+        onDownload: function (blob, row) {
+          doDownload(blob, row);
+        }
+      });
+      histPanel.refresh();
+    }
     syncSelectAllLabel();
     updateCostHint();
     loadStatus();
@@ -432,6 +461,12 @@
         }
         if (!images || !images.length) throw new Error(tr('tools.instructEdit.failed'));
         renderResults(images, data.partialErrors);
+        if (histPanel) {
+          var promptText = (promptEl && promptEl.value) || '';
+          if (activePreset === 'manga_to_real') promptText = tr('tools.instructEdit.presetMangaToReal');
+          else if (activePreset === 'real_to_manga') promptText = tr('tools.instructEdit.presetRealToManga');
+          histPanel.save(images, { prompt: promptText });
+        }
       }).catch(function (err) {
         C.setError(errorBox, err.message);
       }).finally(function () {

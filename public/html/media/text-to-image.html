@@ -7,7 +7,7 @@
   <meta name="description" content="Generate an image from a text prompt via DashScope. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=17" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=18" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
 </head>
 <body>
@@ -28,6 +28,7 @@
 
       <div id="app" hidden>
         <div class="tool-card tb-form">
+          <div class="tip-box img-wechat-tip" id="wechat-tip" hidden></div>
           <p class="img-cloud-quota" id="balance-line"></p>
           <p class="img-cloud-quota" id="quota-line"></p>
           <div class="field-row">
@@ -81,16 +82,26 @@
           </div>
           <div class="error-box" id="error-box" role="alert"></div>
           <div class="instruct-results" id="results-wrap" hidden></div>
+          <div class="img-hist" id="history-wrap">
+            <div class="instruct-model-head">
+              <span class="field-label" data-i18n="tools.imageCloud.historyTitle">Local history</span>
+              <button type="button" class="instruct-select-all" id="history-clear" hidden data-i18n="tools.imageCloud.historyClear">Clear history</button>
+            </div>
+            <p class="img-hist-hint" id="history-hint"></p>
+            <p class="img-hist-empty" id="history-empty" data-i18n="tools.imageCloud.historyEmpty">No history yet</p>
+            <div class="instruct-results-grid" id="history-grid"></div>
+          </div>
         </div>
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=tools8"></script>
-  <script src="../../js/locales/zh-CN.js?v=tools8"></script>
+  <script src="../../js/locales/en.js?v=tools9"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools9"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js"></script>
-  <script src="../../js/media/image-cloud-client.js?v=10"></script>
-  <script src="../../js/media/text-to-image.js?v=2"></script>
+  <script src="../../js/media/image-cloud-client.js?v=11"></script>
+  <script src="../../js/media/image-gen-history.js?v=1"></script>
+  <script src="../../js/media/text-to-image.js?v=3"></script>
 </body>
 </html>

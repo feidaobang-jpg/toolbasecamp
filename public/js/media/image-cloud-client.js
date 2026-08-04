@@ -212,6 +212,44 @@
         return URL.createObjectURL(new Blob([arr], { type: contentType || 'image/png' }));
     }
 
+    function isWeChat() {
+        return /MicroMessenger/i.test(global.navigator.userAgent || '');
+    }
+
+    function downloadBlob(blobOrUrl, filename, tipEl) {
+        if (isWeChat()) {
+            if (tipEl) {
+                tipEl.hidden = false;
+                tipEl.textContent = tr('tools.imageCloud.wechatSaveTip');
+            }
+            return false;
+        }
+        var url = blobOrUrl;
+        var revoke = false;
+        if (blobOrUrl && typeof blobOrUrl !== 'string') {
+            url = URL.createObjectURL(blobOrUrl);
+            revoke = true;
+        }
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'image.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        if (revoke) {
+            setTimeout(function () {
+                try { URL.revokeObjectURL(url); } catch (e) {}
+            }, 1500);
+        }
+        return true;
+    }
+
+    function showWeChatBanner(el) {
+        if (!el || !isWeChat()) return;
+        el.hidden = false;
+        el.textContent = tr('tools.imageCloud.wechatBanner');
+    }
+
     function setBusy(busyEl, textEl, on, msg) {
         if (busyEl) {
             busyEl.hidden = !on;
@@ -236,6 +274,9 @@
         formatWallet: formatWallet,
         walletMarkup: walletMarkup,
         b64ToObjectUrl: b64ToObjectUrl,
+        isWeChat: isWeChat,
+        downloadBlob: downloadBlob,
+        showWeChatBanner: showWeChatBanner,
         translateDetail: translateDetail
     };
 })(window);
