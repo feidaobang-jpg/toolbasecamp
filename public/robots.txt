@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /html/admin/
+Disallow: /html/auth/
+
+Sitemap: https://toolbasecamp.com/sitemap.xml
