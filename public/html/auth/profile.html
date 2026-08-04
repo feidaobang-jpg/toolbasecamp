@@ -9,8 +9,8 @@
     <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/base.css?v=9">
     <link rel="stylesheet" href="../../css/site-mobile-nav.css">
-    <script src="../../js/locales/en.js?v=auth4"></script>
-    <script src="../../js/locales/zh-CN.js?v=auth4"></script>
+    <script src="../../js/locales/en.js?v=auth5"></script>
+    <script src="../../js/locales/zh-CN.js?v=auth5"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
     <script src="../../js/common_ui.js?v=6"></script>
@@ -37,6 +37,22 @@
                 </div>
                 <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-email" data-i18n="auth.loading">Loading...</h2>
                 <span class="text-xs text-gray-400">UID: <span id="profile-uid">--</span></span>
+                <p class="mt-3 text-sm text-gray-600">
+                    <span data-i18n="auth.aiBalance">AI balance</span>：
+                    <span id="profile-balance" class="font-semibold text-gray-900">--</span>
+                </p>
+            </div>
+
+            <div class="px-6 pb-2 space-y-3 border-b border-gray-50" id="redeem-section">
+                <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.redeemTitle">Redeem code</h3>
+                <p class="text-xs text-gray-500" data-i18n="auth.redeemHint">Enter a code from an admin to top up your AI image balance.</p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="redeem-code" maxlength="40" autocomplete="off"
+                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono uppercase"
+                        data-i18n-placeholder="auth.redeemCode" placeholder="Redeem code" />
+                    <button type="button" id="btn-redeem" class="tb-btn whitespace-nowrap" data-i18n="auth.redeemBtn">Redeem</button>
+                </div>
+                <div id="redeem-msg" class="text-sm hidden"></div>
             </div>
 
             <div class="p-6 space-y-3">
@@ -117,11 +133,33 @@
                     'Session expired. Please log in again.': 'auth.sessionExpired',
                     'User not found': 'auth.userNotFound',
                     'Admin access required': 'auth.adminRequired',
-                    'Update failed': 'auth.updateFailed'
+                    'Update failed': 'auth.updateFailed',
+                    'Invalid redeem code': 'auth.redeemInvalid',
+                    'Redeem code already used': 'auth.redeemUsed',
+                    'Redeem code is required': 'auth.redeemNeedCode',
+                    'Admin accounts have unlimited AI balance; redeem is not needed.': 'auth.redeemAdminSkip'
                 };
                 if (map[msg]) return tr(map[msg]);
                 if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return tr('auth.networkError');
                 return msg;
+            }
+
+            function renderBalance(wallet) {
+                var el = document.getElementById('profile-balance');
+                var redeemSec = document.getElementById('redeem-section');
+                if (!el) return;
+                if (!wallet) {
+                    el.textContent = '--';
+                    return;
+                }
+                if (wallet.unlimited) {
+                    el.textContent = tr('auth.aiBalanceUnlimited');
+                    if (redeemSec) redeemSec.classList.add('hidden');
+                    return;
+                }
+                var bal = Number(wallet.balanceCny);
+                el.textContent = Number.isFinite(bal) ? ('¥' + bal.toFixed(2)) : '--';
+                if (redeemSec) redeemSec.classList.remove('hidden');
             }
 
             const token = localStorage.getItem('auth_token');
@@ -164,9 +202,56 @@
                     document.getElementById('profile-created-at').textContent =
                         String(user.created_at).replace('T', ' ').replace(/\.\d+$/, '');
                 }
+                renderBalance(user.aiWallet);
             } catch (e) {
                 if (e.message !== 'Unauthorized') console.error(e);
             }
+
+            document.getElementById('btn-redeem').addEventListener('click', async () => {
+                const code = (document.getElementById('redeem-code').value || '').trim();
+                const msgEl = document.getElementById('redeem-msg');
+                const btn = document.getElementById('btn-redeem');
+                msgEl.classList.add('hidden');
+                if (!code) {
+                    msgEl.textContent = tr('auth.redeemNeedCode');
+                    msgEl.classList.remove('hidden');
+                    msgEl.classList.remove('text-emerald-600');
+                    msgEl.classList.add('text-red-600');
+                    return;
+                }
+                btn.disabled = true;
+                btn.textContent = tr('auth.processing');
+                try {
+                    const res = await fetch(`${AUTH_BASE_URL}/wallet/redeem`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        const detail = Array.isArray(data.detail)
+                            ? data.detail.map((x) => x.msg || JSON.stringify(x)).join('; ')
+                            : (data.detail || tr('auth.unknownError'));
+                        throw new Error(detail);
+                    }
+                    const amount = Number(data.creditedCny || 0).toFixed(2);
+                    const balance = Number(data.balanceCny || 0).toFixed(2);
+                    msgEl.textContent = tr('auth.redeemOk')
+                        .replace('{amount}', amount)
+                        .replace('{balance}', balance);
+                    msgEl.classList.remove('hidden', 'text-red-600');
+                    msgEl.classList.add('text-emerald-600');
+                    document.getElementById('redeem-code').value = '';
+                    renderBalance(data.aiWallet || { unlimited: false, balanceCny: data.balanceCny });
+                } catch (e) {
+                    msgEl.textContent = translateAuthError(e.message);
+                    msgEl.classList.remove('hidden', 'text-emerald-600');
+                    msgEl.classList.add('text-red-600');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = tr('auth.redeemBtn');
+                }
+            });
 
             document.getElementById('btn-logout-profile').addEventListener('click', () => {
                 localStorage.removeItem('auth_token');

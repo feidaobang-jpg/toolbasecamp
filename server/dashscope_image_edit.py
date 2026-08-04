@@ -18,14 +18,64 @@ INSTRUCT_EDIT_PRESETS: dict[str, str] = {
         "保持人物面部特征、发型、服装、姿态、构图与主体身份一致。"
         "使用真实皮肤质感、毛孔与自然光影，真实环境背景；"
         "去掉赛璐璐平涂、夸张线稿与二次元阴影。"
+        "输出必须为全彩照片风格，禁止黑白或灰度。"
     ),
     "real_to_manga": (
         "将这张真人照片转换为日式动漫/漫画风格插画。"
         "保持人物面部特征、发型、服装、姿态、构图与主体身份一致。"
-        "使用清晰线稿、赛璐璐上色、干净阴影与动漫角色质感；"
+        "使用清晰线稿、彩色赛璐璐上色、干净阴影与动漫角色质感；"
         "不要写成实摄影，不要过度写实。"
+        "输出必须为全彩上色插画，禁止纯黑白线稿、灰度素描或未上色线稿。"
     ),
 }
+
+# Appended unless the user clearly asks for B&W / line art / grayscale.
+_COLOR_FULL_HINT = (
+    "输出必须为全彩（full color）图片；"
+    "禁止黑白、灰度、单色、未上色线稿或素描。"
+)
+
+_MONO_MARKERS = (
+    "黑白",
+    "灰度",
+    "单色",
+    "线稿",
+    "素描",
+    "铅笔画",
+    "炭笔",
+    "墨线",
+    "未上色",
+    "black and white",
+    "black & white",
+    "b&w",
+    "bw ",
+    "grayscale",
+    "greyscale",
+    "monochrome",
+    "line art",
+    "lineart",
+    "line-art",
+    "sketch only",
+    "pencil sketch",
+)
+
+
+def _wants_monochrome(prompt: str) -> bool:
+    low = (prompt or "").lower()
+    for m in _MONO_MARKERS:
+        if m.lower() in low:
+            return True
+    return False
+
+
+def apply_color_hint(prompt: str) -> str:
+    """Prefer full-color output unless the user asked for mono/line-art."""
+    text = (prompt or "").strip()
+    if not text or _wants_monochrome(text):
+        return text
+    if "全彩" in text or "彩色" in text or "full color" in text.lower():
+        return text
+    return f"{text}\n{_COLOR_FULL_HINT}"
 
 
 def _default_edit_model() -> str:
@@ -60,10 +110,10 @@ def resolve_edit_prompt(prompt: Optional[str], preset: Optional[str]) -> str:
     if key and key in INSTRUCT_EDIT_PRESETS:
         base = INSTRUCT_EDIT_PRESETS[key]
         if not text:
-            return base
+            return apply_color_hint(base)
         # User added notes after picking a preset.
-        return f"{base}\n补充要求：{text}"
-    return text
+        return apply_color_hint(f"{base}\n补充要求：{text}")
+    return apply_color_hint(text)
 
 
 def _api_root() -> str:
@@ -259,6 +309,7 @@ async def generate_image_from_text(
         raise HTTPException(status_code=400, detail="Please enter a prompt.")
     if len(text) > 2000:
         raise HTTPException(status_code=400, detail="Prompt is too long (max 2000 characters).")
+    text = apply_color_hint(text)
     use_model = (model or "z-image-turbo").strip() or "z-image-turbo"
     preset = (size_preset or "square").strip().lower() or "square"
 

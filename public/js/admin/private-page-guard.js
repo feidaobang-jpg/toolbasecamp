@@ -31,11 +31,12 @@
     var loginLink = document.getElementById('login-link');
     var gateLogin = document.getElementById('gate-login');
     var next = encodeURIComponent(window.location.pathname || '/html/admin/private.html');
-    var href = '../../../auth/login.html?next=' + next;
-    // pages under private/android/ are one level deeper
+    var href = '../../auth/login.html?next=' + next;
     if ((window.location.pathname || '').indexOf('/private/android/') !== -1) {
       href = '../../../auth/login.html?next=' + next;
     }
+    var boot = document.getElementById('boot-loading');
+    if (boot) boot.classList.add('hidden');
     if (gateMsg && msg) gateMsg.textContent = msg;
     if (gate) gate.classList.remove('hidden');
     if (app) app.classList.add('hidden');
@@ -51,6 +52,8 @@
     var app = document.getElementById('app');
     var authLabel = document.getElementById('auth-label');
     var loginLink = document.getElementById('login-link');
+    var boot = document.getElementById('boot-loading');
+    if (boot) boot.classList.add('hidden');
     if (gate) gate.classList.add('hidden');
     if (app) app.classList.remove('hidden');
     if (loginLink) loginLink.classList.add('hidden');

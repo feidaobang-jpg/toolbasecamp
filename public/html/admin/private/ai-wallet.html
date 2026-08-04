@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>AI 余额 - 自用</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../vendor/tailwindcss.js?v=2"></script>
+  <link href="../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../css/base.css?v=9" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
+  <script src="../../../js/locales/en.js?v=tools14"></script>
+  <script src="../../../js/locales/zh-CN.js?v=tools14"></script>
+  <script src="../../../js/i18n.js?v=locale1"></script>
+  <script src="../../../js/config.js"></script>
+  <script src="../../../js/common_ui.js?v=8"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.walletTitle">AI 余额</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <div id="boot-loading" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">
+      加载中…
+    </div>
+    <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="tb-btn inline-flex">去登录</a>
+    </div>
+
+    <div id="app" class="ladder-update-wrap hidden max-w-2xl mx-auto space-y-6">
+      <p class="ladder-update-desc" data-i18n="privateHub.ops.walletDesc">
+        给用户加 AI 余额，或生成兑换码发给用户在个人中心兑换。
+      </p>
+
+      <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCreditTitle">后台加余额</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCreditDesc">填写用户登录邮箱或手机号，以及金额（元）。</p>
+        <div class="space-y-3">
+          <label class="block text-sm">
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletAccount">账号</span>
+            <input id="credit-account" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="email@example.com / 手机号" />
+          </label>
+          <label class="block text-sm">
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
+            <input id="credit-amount" type="number" min="0.01" step="0.01" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="10" />
+          </label>
+          <label class="block text-sm">
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletNote">备注（可选）</span>
+            <input id="credit-note" type="text" maxlength="128" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </label>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="btn-credit" data-i18n="privateHub.ops.walletCreditBtn">加余额</button>
+          </div>
+          <div id="credit-status" class="ladder-status"></div>
+        </div>
+      </section>
+
+      <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCodesTitle">生成兑换码</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCodesDesc">一次最多 50 个。用户在「个人中心」输入兑换码充值。</p>
+        <div class="space-y-3">
+          <label class="block text-sm">
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
+            <input id="code-amount" type="number" min="0.01" step="0.01" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="10" />
+          </label>
+          <label class="block text-sm">
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletCodeCount">数量</span>
+            <input id="code-count" type="number" min="1" max="50" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="5" />
+          </label>
+          <label class="block text-sm">
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletNote">备注（可选）</span>
+            <input id="code-note" type="text" maxlength="128" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </label>
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="btn-codes" data-i18n="privateHub.ops.walletCodesBtn">生成</button>
+            <button type="button" class="tb-btn" id="btn-refresh-codes" data-i18n="privateHub.ops.walletCodesRefresh">刷新列表</button>
+          </div>
+          <div id="codes-status" class="ladder-status"></div>
+          <pre id="codes-new" class="text-xs bg-slate-50 border border-slate-100 rounded-lg p-3 overflow-auto hidden whitespace-pre-wrap"></pre>
+          <div id="codes-list" class="text-sm space-y-2"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../../js/admin/private-page-guard.js?v=1"></script>
+  <script src="../../../js/admin/ai-wallet.js?v=1"></script>
+</body>
+</html>

@@ -27,6 +27,7 @@ from recipe_ai import (
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
+from ai_wallet_api import router as wallet_router, _wire as wire_wallet
 from life_plans import (
     router as life_plans_router,
     _wire as wire_life_plans,
@@ -482,6 +483,10 @@ def _ensure_admin_role(user: dict) -> dict:
 def require_admin(user: dict):
     if not is_admin(user):
         raise HTTPException(status_code=403, detail="Admin access required")
+
+
+wire_wallet(get_conn, require_db, get_current_user, require_admin, is_admin)
+app.include_router(wallet_router)
 
 
 def _mask_email(email: str) -> str:

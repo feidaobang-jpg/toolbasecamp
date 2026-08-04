@@ -295,6 +295,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.refreshTitle',
                     descriptionKey: 'privateHub.ops.refreshDesc',
                     url: 'html/admin/private/ladder-update.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.walletTitle',
+                    descriptionKey: 'privateHub.ops.walletDesc',
+                    url: 'html/admin/private/ai-wallet.html'
                 }
             ]
         },
