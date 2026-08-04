@@ -28,6 +28,13 @@ from dashscope_image_edit import (
     generate_image_from_text,
     resolve_edit_prompt,
 )
+from ai_wallet import (
+    require_can_afford,
+    require_positive_balance,
+    try_charge,
+    user_price_cny,
+    wallet_public,
+)
 
 # Instruct-edit model menu (Beijing). Order = UI recommendation. Prices indicative.
 INSTRUCT_EDIT_MODELS = (
@@ -251,16 +258,86 @@ def _require_tencent():
         )
 
 
-class QuotaItem(BaseModel):
-    action: str
-    used: int
-    limit: int
-    remaining: int
+def _wallet_for(user: dict) -> dict:
+    admin = _is_admin(user)
+    conn = _conn()
+    try:
+        return wallet_public(conn, user, is_admin=admin)
+    finally:
+        conn.close()
+
+
+def _assert_can_afford(user: dict, list_price: float) -> None:
+    if _is_admin(user):
+        return
+    conn = _conn()
+    try:
+        require_can_afford(conn, int(user["id"]), list_price)
+    finally:
+        conn.close()
+
+
+def _charge_success(user: dict, list_price: float, *, reason: str, meta: dict) -> Optional[float]:
+    if _is_admin(user):
+        return None
+    charge = user_price_cny(list_price)
+    conn = _conn()
+    try:
+        new_bal = try_charge(
+            conn,
+            int(user["id"]),
+            charge,
+            reason=reason,
+            meta={**meta, "listPriceCny": float(list_price), "chargedCny": float(charge)},
+        )
+        if new_bal is None:
+            raise HTTPException(
+                status_code=402,
+                detail="Insufficient AI balance. Please top up.",
+            )
+        return float(new_bal)
+    finally:
+        conn.close()
+
+
+def _quota_snapshot(user: dict, action: str) -> dict:
+    if _is_admin(user):
+        return _unlimited_quota()
+    today = _today()
+    lim = LIMITS.get(action, 0)
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            ensure_image_quota_table(cur)
+            cur.execute(
+                """
+                SELECT usage_count FROM image_tool_quotas
+                WHERE user_id=%s AND action_type=%s AND usage_date=%s
+                """,
+                (int(user["id"]), action, today),
+            )
+            row = cur.fetchone()
+            used = int(row["usage_count"]) if row else 0
+        return {"used": used, "limit": lim, "remaining": max(0, lim - used)}
+    finally:
+        conn.close()
+
+
+def _assert_quota_remaining(user: dict, action: str) -> None:
+    if _is_admin(user):
+        return
+    snap = _quota_snapshot(user, action)
+    if int(snap.get("remaining") or 0) < 1:
+        raise HTTPException(
+            status_code=429,
+            detail="Daily limit reached. Please try again tomorrow.",
+        )
 
 
 @router.get("/status")
 def image_status(user: dict = Depends(_user)):
     admin = _is_admin(user)
+    wallet = _wallet_for(user)
     if admin:
         items = [
             {"action": action, "used": 0, "limit": 0, "remaining": 0, "unlimited": True}
@@ -279,6 +356,7 @@ def image_status(user: dict = Depends(_user)):
             "textToImageConfigured": dashscope_image_edit_configured(),
             "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": True,
+            "aiWallet": wallet,
             "quotas": items,
             "enhanceTasks": [
                 {"taskType": k, "id": v} for k, v in sorted(ENHANCE_TASKS.items())
@@ -321,6 +399,7 @@ def image_status(user: dict = Depends(_user)):
             "textToImageConfigured": dashscope_image_edit_configured(),
             "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": False,
+            "aiWallet": wallet,
             "quotas": items,
             "enhanceTasks": [
                 {"taskType": k, "id": v} for k, v in sorted(ENHANCE_TASKS.items())
@@ -501,9 +580,23 @@ async def api_instruct_edit(
     for up in uploads:
         blobs.append(await _read_upload(up))
 
-    amount = len(blobs) * len(model_ids)
-    quota = _consume_quota(user, "instruct_edit", amount=amount)
-    est_price = round(sum(_price_for(m) for m in model_ids) * len(blobs), 2)
+    # Soft daily cap still applies; AI balance is billed per successful image.
+    planned = len(blobs) * len(model_ids)
+    if not _is_admin(user):
+        conn = _conn()
+        try:
+            require_positive_balance(conn, int(user["id"]))
+        finally:
+            conn.close()
+        # Ensure at least one generation is affordable (cheapest selected model).
+        min_list = min(_price_for(m) for m in model_ids)
+        _assert_can_afford(user, min_list)
+
+    est_list = round(sum(_price_for(m) for m in model_ids) * len(blobs), 2)
+    est_user = round(
+        sum(float(user_price_cny(_price_for(m))) for m in model_ids) * len(blobs),
+        2,
+    )
 
     def _is_rate_limit(exc: BaseException) -> bool:
         detail = _exc_detail(exc).lower()
@@ -521,6 +614,7 @@ async def api_instruct_edit(
             "index": idx,
             "model": mid,
             "priceCny": _price_for(mid),
+            "userPriceCny": float(user_price_cny(_price_for(mid))),
             "imageBase64": base64.b64encode(out).decode("ascii"),
             "contentType": ctype or "image/png",
         }
@@ -545,24 +639,54 @@ async def api_instruct_edit(
         assert last is not None
         raise last
 
-    # Serial calls + gap to avoid DashScope rate limits on multi image × multi model.
     images: list[dict] = []
     errors: list[str] = []
+    charged_total = 0.0
+    balance_after: Optional[float] = None
     first_job = True
+    stop_all = False
     for i, blob in enumerate(blobs):
+        if stop_all:
+            break
         for mid in model_ids:
+            list_p = _price_for(mid)
+            try:
+                _assert_quota_remaining(user, "instruct_edit")
+                if not _is_admin(user):
+                    _assert_can_afford(user, list_p)
+            except HTTPException as exc:
+                errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
+                stop_all = True
+                break
             if not first_job and INSTRUCT_EDIT_GAP_SEC > 0:
                 await asyncio.sleep(INSTRUCT_EDIT_GAP_SEC)
             first_job = False
             try:
-                images.append(await _one_with_retry(i, blob, mid))
+                item = await _one_with_retry(i, blob, mid)
+                bal = _charge_success(
+                    user,
+                    list_p,
+                    reason="instruct_edit",
+                    meta={"model": mid, "index": i},
+                )
+                if bal is not None:
+                    balance_after = bal
+                    charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
+                _consume_quota(user, "instruct_edit", amount=1)
+                images.append(item)
+            except HTTPException as exc:
+                if exc.status_code in (402, 429):
+                    errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
+                    stop_all = True
+                    break
+                errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
             except Exception as exc:
                 errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
+
     if not images:
-        raise HTTPException(
-            status_code=502,
-            detail="Image edit failed: " + "; ".join(errors) if errors else "no images",
-        )
+        detail = "Image edit failed: " + "; ".join(errors) if errors else "no images"
+        code = 402 if any("Insufficient" in e for e in errors) else 502
+        raise HTTPException(status_code=code, detail=detail)
     order = {m: i for i, m in enumerate(model_ids)}
     images.sort(key=lambda x: (int(x.get("index") or 0), order.get(x.get("model") or "", 99)))
     first = images[0]
@@ -570,15 +694,20 @@ async def api_instruct_edit(
         "model": first["model"],
         "models": model_ids,
         "priceCny": first["priceCny"],
-        "estimatedPriceCny": est_price,
+        "estimatedPriceCny": est_list,
+        "estimatedUserPriceCny": est_user,
+        "chargedCny": charged_total,
         "imageBase64": first["imageBase64"],
         "contentType": first["contentType"],
         "images": images,
-        "quota": quota,
+        "quota": _quota_snapshot(user, "instruct_edit"),
         "preset": (preset or "").strip() or None,
         "batch": len(blobs),
         "compare": len(model_ids) > 1,
+        "aiWallet": _wallet_for(user),
     }
+    if balance_after is not None:
+        out["balanceCny"] = balance_after
     if errors:
         out["partialErrors"] = errors
     return out
@@ -641,9 +770,20 @@ async def api_text_to_image(
     if size_preset not in ("square", "portrait", "landscape", "hd"):
         size_preset = "square"
 
-    amount = len(model_ids)
-    quota = _consume_quota(user, "text_to_image", amount=amount)
-    est_price = round(sum(_t2i_price_for(m) for m in model_ids), 2)
+    if not _is_admin(user):
+        conn = _conn()
+        try:
+            require_positive_balance(conn, int(user["id"]))
+        finally:
+            conn.close()
+        min_list = min(_t2i_price_for(m) for m in model_ids)
+        _assert_can_afford(user, min_list)
+
+    est_list = round(sum(_t2i_price_for(m) for m in model_ids), 2)
+    est_user = round(
+        sum(float(user_price_cny(_t2i_price_for(m))) for m in model_ids),
+        2,
+    )
 
     def _is_retryable(exc: BaseException) -> bool:
         detail = _exc_detail(exc).lower()
@@ -660,6 +800,7 @@ async def api_text_to_image(
         return {
             "model": mid,
             "priceCny": _t2i_price_for(mid),
+            "userPriceCny": float(user_price_cny(_t2i_price_for(mid))),
             "imageBase64": base64.b64encode(out).decode("ascii"),
             "contentType": ctype or "image/png",
         }
@@ -686,20 +827,44 @@ async def api_text_to_image(
 
     images: list[dict] = []
     errors: list[str] = []
+    charged_total = 0.0
+    balance_after: Optional[float] = None
     first_job = True
     for mid in model_ids:
+        list_p = _t2i_price_for(mid)
+        try:
+            _assert_quota_remaining(user, "text_to_image")
+            if not _is_admin(user):
+                _assert_can_afford(user, list_p)
+        except HTTPException as exc:
+            errors.append(f"{mid}: {_exc_detail(exc)}")
+            break
         if not first_job and INSTRUCT_EDIT_GAP_SEC > 0:
             await asyncio.sleep(INSTRUCT_EDIT_GAP_SEC)
         first_job = False
         try:
-            images.append(await _one_with_retry(mid))
+            item = await _one_with_retry(mid)
+            bal = _charge_success(
+                user,
+                list_p,
+                reason="text_to_image",
+                meta={"model": mid},
+            )
+            if bal is not None:
+                balance_after = bal
+                charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
+            _consume_quota(user, "text_to_image", amount=1)
+            images.append(item)
+        except HTTPException as exc:
+            errors.append(f"{mid}: {_exc_detail(exc)}")
+            if exc.status_code in (402, 429):
+                break
         except Exception as exc:
             errors.append(f"{mid}: {_exc_detail(exc)}")
     if not images:
-        raise HTTPException(
-            status_code=502,
-            detail="Image generation failed: " + "; ".join(errors) if errors else "no images",
-        )
+        detail = "Image generation failed: " + "; ".join(errors) if errors else "no images"
+        code = 402 if any("Insufficient" in e for e in errors) else 502
+        raise HTTPException(status_code=code, detail=detail)
     order = {m: i for i, m in enumerate(model_ids)}
     images.sort(key=lambda x: order.get(x.get("model") or "", 99))
     first = images[0]
@@ -707,13 +872,18 @@ async def api_text_to_image(
         "model": first["model"],
         "models": model_ids,
         "priceCny": first["priceCny"],
-        "estimatedPriceCny": est_price,
+        "estimatedPriceCny": est_list,
+        "estimatedUserPriceCny": est_user,
+        "chargedCny": charged_total,
         "imageBase64": first["imageBase64"],
         "contentType": first["contentType"],
         "images": images,
-        "quota": quota,
+        "quota": _quota_snapshot(user, "text_to_image"),
         "size": size_preset,
+        "aiWallet": _wallet_for(user),
     }
+    if balance_after is not None:
+        out["balanceCny"] = balance_after
     if errors:
         out["partialErrors"] = errors
     return out

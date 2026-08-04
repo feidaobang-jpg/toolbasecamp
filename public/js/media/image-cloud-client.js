@@ -76,6 +76,9 @@
             'Plan generation failed': 'tools.lifePlans.genFailed'
         };
         if (map[msg]) return tr(map[msg]);
+        if (String(msg).indexOf('Insufficient AI balance') === 0) {
+            return tr('tools.imageCloud.insufficientBalance');
+        }
         if (String(msg).indexOf('Plan generation failed') === 0) return tr('tools.lifePlans.genFailed');
         if (String(msg).indexOf('Structuring failed') === 0) return tr('tools.lifePlans.genFailed');
         if (String(msg).indexOf('OCR failed') === 0) return tr('tools.imageCloud.unknownError');
@@ -185,6 +188,23 @@
         return formatQuotaItem(item);
     }
 
+    function walletMarkup(wallet) {
+        var m = wallet && wallet.markup != null ? Number(wallet.markup) : 2;
+        return Number.isFinite(m) && m > 0 ? m : 2;
+    }
+
+    function formatWallet(wallet) {
+        if (!wallet) return '';
+        if (wallet.unlimited) return tr('tools.imageCloud.balanceUnlimited');
+        var bal = wallet.balanceCny != null ? Number(wallet.balanceCny) : 0;
+        if (!Number.isFinite(bal)) bal = 0;
+        return tr('tools.imageCloud.balanceLine', {
+            balance: bal.toFixed(2),
+            gift: wallet.giftCny != null ? Number(wallet.giftCny) : 3,
+            markup: walletMarkup(wallet)
+        });
+    }
+
     function b64ToObjectUrl(b64, contentType) {
         var bin = atob(b64);
         var arr = new Uint8Array(bin.length);
@@ -213,6 +233,8 @@
         setBusy: setBusy,
         formatQuota: formatQuota,
         formatQuotaItem: formatQuotaItem,
+        formatWallet: formatWallet,
+        walletMarkup: walletMarkup,
         b64ToObjectUrl: b64ToObjectUrl,
         translateDetail: translateDetail
     };

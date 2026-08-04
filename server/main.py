@@ -261,6 +261,9 @@ def ensure_tables():
             ensure_site_stats_tables(cur)
             ensure_news_tables(cur)
             ensure_pc_builds_tables(cur)
+            from ai_wallet import ensure_wallet_schema
+
+            ensure_wallet_schema(cur)
             if ADMIN_PHONE:
                 try:
                     cur.execute(
@@ -916,6 +919,17 @@ def register(body: RegisterBody):
     if not user_id:
         raise HTTPException(status_code=500, detail="Registration failed. Please try again.")
 
+    try:
+        from ai_wallet import ensure_signup_gift
+
+        gift_conn = get_conn()
+        try:
+            ensure_signup_gift(gift_conn, int(user_id))
+        finally:
+            gift_conn.close()
+    except Exception as exc:
+        print(f"[register] ai gift: {exc}")
+
     token = create_access_token(int(user_id), email=email, phone=phone)
     return {"success": True, "token": token}
 
@@ -998,6 +1012,17 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     user = get_current_user(creds)
     email = user.get("email") or ""
     phone = user.get("phone") or ""
+    wallet = None
+    try:
+        from ai_wallet import wallet_public
+
+        conn = get_conn()
+        try:
+            wallet = wallet_public(conn, user, is_admin=is_admin(user))
+        finally:
+            conn.close()
+    except Exception as exc:
+        print(f"[auth/me] wallet: {exc}")
     return {
         "success": True,
         "user": {
@@ -1008,6 +1033,7 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
             "role": user["role"],
             "created_at": user["created_at"],
             "updated_at": user["updated_at"],
+            "aiWallet": wallet,
         },
     }
 

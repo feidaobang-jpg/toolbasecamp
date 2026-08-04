@@ -12,11 +12,13 @@
   var promptEl = document.getElementById('prompt');
   var runBtn = document.getElementById('run-btn');
   var clearBtn = document.getElementById('clear-btn');
+  var balanceLine = document.getElementById('balance-line');
   var quotaLine = document.getElementById('quota-line');
   var errorBox = document.getElementById('error-box');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
   var resultUrls = [];
+  var priceMarkup = 2;
 
   function tr(key, params) {
     return C.tr(key, params);
@@ -58,13 +60,20 @@
     }
     var total = 0;
     for (var i = 0; i < models.length; i++) total += models[i].price;
-    total = Math.round(total * 100) / 100;
+    total = Math.round(total * priceMarkup * 100) / 100;
     costHint.textContent = tr('tools.textToImage.costHint', {
       models: models.length,
       runs: models.length,
       price: total
     });
   }
+
+  function applyWallet(wallet) {
+    if (wallet && wallet.markup != null) priceMarkup = C.walletMarkup(wallet);
+    if (balanceLine) balanceLine.textContent = C.formatWallet(wallet);
+    updateCostHint();
+  }
+
 
   function syncSelectAllLabel() {
     if (!selectAllBtn) return;
@@ -178,6 +187,7 @@
 
   function loadStatus() {
     return C.apiJson('/image/status').then(function (s) {
+      applyWallet(s.aiWallet);
       if (quotaLine) quotaLine.textContent = formatQuota(pickQuota(s));
       if (s.textToImageConfigured === false) {
         C.setError(errorBox, tr('tools.textToImage.dashscopeMissing'));
@@ -245,6 +255,7 @@
       fd.append('size', selectedSize());
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       C.apiJson('/image/text-to-image', { method: 'POST', body: fd }).then(function (data) {
+        if (data.aiWallet) applyWallet(data.aiWallet);
         if (data.quota && quotaLine) quotaLine.textContent = formatQuota(data.quota);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {

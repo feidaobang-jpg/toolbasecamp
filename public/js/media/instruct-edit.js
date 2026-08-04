@@ -20,6 +20,7 @@
   var promptEl = document.getElementById('prompt');
   var runBtn = document.getElementById('run-btn');
   var clearBtn = document.getElementById('clear-btn');
+  var balanceLine = document.getElementById('balance-line');
   var quotaLine = document.getElementById('quota-line');
   var errorBox = document.getElementById('error-box');
   var resultsWrap = document.getElementById('results-wrap');
@@ -28,6 +29,7 @@
   var previewUrls = [];
   var resultUrls = [];
   var activePreset = '';
+  var priceMarkup = 2;
 
   function tr(key, params) {
     return C.tr(key, params);
@@ -69,7 +71,7 @@
     }
     var unit = 0;
     for (var i = 0; i < models.length; i++) unit += models[i].price;
-    var total = Math.round(unit * nImg * 100) / 100;
+    var total = Math.round(unit * priceMarkup * nImg * 100) / 100;
     var runs = nImg * nMod;
     costHint.textContent = tr('tools.instructEdit.costHint', {
       images: nImg,
@@ -78,6 +80,13 @@
       price: total
     });
   }
+
+  function applyWallet(wallet) {
+    if (wallet && wallet.markup != null) priceMarkup = C.walletMarkup(wallet);
+    if (balanceLine) balanceLine.textContent = C.formatWallet(wallet);
+    updateCostHint();
+  }
+
 
   function syncSelectAllLabel() {
     if (!selectAllBtn) return;
@@ -277,6 +286,7 @@
 
   function loadStatus() {
     return C.apiJson('/image/status').then(function (s) {
+      applyWallet(s.aiWallet);
       if (quotaLine) quotaLine.textContent = formatQuota(pickQuota(s));
       if (s.instructEditMaxBatch) MAX_BATCH = s.instructEditMaxBatch;
       if (s.instructEditConfigured === false) {
@@ -409,6 +419,7 @@
       if (activePreset) fd.append('preset', activePreset);
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       C.apiJson('/image/instruct-edit', { method: 'POST', body: fd }).then(function (data) {
+        if (data.aiWallet) applyWallet(data.aiWallet);
         if (data.quota && quotaLine) quotaLine.textContent = formatQuota(data.quota);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {
