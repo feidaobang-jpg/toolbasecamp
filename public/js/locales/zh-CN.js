@@ -1911,12 +1911,13 @@ window.TB_LOCALES['zh-CN'] = {
             loadFailed: '图片加载失败'
         },
         imageCloud: {
-            loginRequired: '请先登录后再使用云端图片工具。用量计入每日限额。',
+            loginRequired: '请先登录后再使用云端图片工具。',
             quotaLine: '今日已用 {used} / {limit}，剩余 {remaining}',
             quotaUnlimited: '管理员账号：今日次数不限',
-            balanceLine: '用户余额 ¥{balance}（新用户赠送 ¥{gift}，成功出图按目录价×{markup} 扣费）',
-            balanceUnlimited: '管理员账号：余额不限（不扣费）',
+            balanceLine: '余额 ¥{balance}',
+            balanceUnlimited: '管理员账号：余额不限',
             insufficientBalance: '余额不足，请充值或改选更便宜/更少的模型。',
+            genServiceMissing: '生图服务暂未就绪，请稍后再试。',
             dailyLimit: '今日次数已用完，请明天再试。',
             notConfigured: '服务端尚未配置腾讯云密钥（TENCENT_SECRET_ID / TENCENT_SECRET_KEY）。',
             notConfiguredHint: '服务端尚未配置腾讯云密钥，去阴影等 AI 能力暂不可用。',
@@ -2005,7 +2006,7 @@ window.TB_LOCALES['zh-CN'] = {
 
         instructEdit: {
             title: '指令改图',
-            desc: '上传图片并用文字描述修改，支持风格预设与最多 4 张批量。使用阿里云 DashScope。需登录，计入每日限额。',
+            desc: '上传图片并用文字描述修改，支持风格预设与最多 4 张批量。需登录，成功出图扣余额。',
             dropTitle: '点击或拖入图片（可多选）',
             dropHint: 'JPG / PNG / WebP，单张最大 8MB，最多 4 张',
             prompt: '修改说明',
@@ -2022,10 +2023,10 @@ window.TB_LOCALES['zh-CN'] = {
             model20pro: '2.0-Pro · 约 ¥1.0/张',
             selectAllModels: '全选',
             deselectAllModels: '取消全选',
-            costHintEmpty: '请选择至少一个模型；费用 = 所选模型用户价之和 × 图片张数（目录价×2）。',
+            costHintEmpty: '请选择至少一个模型。',
             costHint: '本次约扣 ¥{price}（{images} 张图 × {models} 个模型 = {runs} 次，成功才扣费）',
             tip: '提示：',
-            tipBody: '新用户赠送 ¥3。成功出图按目录价×2 扣余额；失败不扣。结果会保存在本机历史，可稍后下载。默认输出全彩（除非你要求黑白/线稿）。默认推荐万相 2.6。',
+            tipBody: '成功出图才扣余额，失败不扣。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。推荐万相 2.6。',
             download: '下载',
             clear: '清除',
             needPrompt: '请填写修改说明',
@@ -2036,11 +2037,11 @@ window.TB_LOCALES['zh-CN'] = {
             imageN: '图{n}',
             failed: '改图失败',
             partialFail: '部分失败：',
-            dashscopeMissing: '服务端尚未配置 DashScope（DASHSCOPE_API_KEY）。'
+            dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },
         textToImage: {
             title: '文生图',
-            desc: '用文字描述生成图片。使用阿里云 DashScope。需登录，计入每日限额。',
+            desc: '用文字描述生成图片。需登录，成功出图扣余额。',
             prompt: '提示词',
             promptPh: '例如：一间有精致窗户的花店，木质门，窗边摆满鲜花，柔和日光…',
             sizeLabel: '尺寸',
@@ -2057,14 +2058,14 @@ window.TB_LOCALES['zh-CN'] = {
             costHintEmpty: '请选择至少一个模型。',
             costHint: '本次约扣 ¥{price}（{models} 个模型 = {runs} 次，成功才扣费）',
             tip: '提示：',
-            tipBody: '新用户赠送 ¥3。成功出图按目录价×2 扣余额；失败不扣。结果会保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。默认可只用 Z-Image Turbo。',
+            tipBody: '成功出图才扣余额，失败不扣。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。可优先用 Z-Image Turbo。',
             download: '下载',
             clear: '清除',
             needPrompt: '请填写提示词',
             needModel: '请至少选择一个模型',
             failed: '生成失败',
             partialFail: '部分失败：',
-            dashscopeMissing: '服务端尚未配置 DashScope（DASHSCOPE_API_KEY）。'
+            dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },
         idPhoto: {
             title: '制作证件照',

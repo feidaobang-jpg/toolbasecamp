@@ -1912,12 +1912,13 @@ window.TB_LOCALES.en = {
             loadFailed: 'Failed to load image'
         },
         imageCloud: {
-            loginRequired: 'Please sign in to use this cloud tool. Usage counts against your daily quota.',
+            loginRequired: 'Please sign in to use this cloud tool.',
             quotaLine: 'Today: {used} / {limit} used, {remaining} left',
             quotaUnlimited: 'Admin account: unlimited today',
-            balanceLine: 'Balance ¥{balance} (¥{gift} signup gift; successful images billed at list ×{markup})',
-            balanceUnlimited: 'Admin account: unlimited balance (not charged)',
+            balanceLine: 'Balance ¥{balance}',
+            balanceUnlimited: 'Admin account: unlimited balance',
             insufficientBalance: 'Insufficient balance. Top up or pick fewer/cheaper models.',
+            genServiceMissing: 'Image service is not ready. Please try again later.',
             dailyLimit: 'Daily limit reached. Please try again tomorrow.',
             notConfigured: 'Tencent Cloud is not configured on the server (TENCENT_SECRET_ID / TENCENT_SECRET_KEY).',
             notConfiguredHint: 'Tencent Cloud keys are not configured yet. AI features like shadow removal are unavailable.',
@@ -2006,7 +2007,7 @@ window.TB_LOCALES.en = {
 
         instructEdit: {
             title: 'Instruct Image Edit',
-            desc: 'Upload photos and describe the change. Style presets and up to 4 images. Uses Alibaba DashScope. Requires sign-in and daily quota.',
+            desc: 'Upload photos and describe the change. Style presets and up to 4 images. Sign-in required; charged from balance on success.',
             dropTitle: 'Click or drop images (multi-select)',
             dropHint: 'JPG / PNG / WebP — max 8MB each, up to 4 images',
             prompt: 'Edit instruction',
@@ -2023,10 +2024,10 @@ window.TB_LOCALES.en = {
             model20pro: '2.0-Pro · ≈¥1.0/image',
             selectAllModels: 'Select all',
             deselectAllModels: 'Deselect all',
-            costHintEmpty: 'Select at least one model. Cost ≈ sum of user prices × image count (list ×2).',
-            costHint: 'This run ≈ ¥{price} charged ({images} images × {models} models = {runs} calls; billed on success)',
+            costHintEmpty: 'Select at least one model.',
+            costHint: 'This run ≈ ¥{price} ({images} images × {models} models = {runs} calls; billed on success)',
             tip: 'Tip:',
-            tipBody: 'New users get ¥3. Successful images bill at list ×2; failures are free. Results are saved in local history. Full color by default (unless you ask for B&W/line art). Wan 2.6 recommended.',
+            tipBody: 'Charged only on success. Results saved in local history. Full color by default (unless you ask for B&W/line art). Wan 2.6 recommended.',
             download: 'Download',
             clear: 'Clear',
             needPrompt: 'Please enter an edit instruction',
@@ -2037,11 +2038,11 @@ window.TB_LOCALES.en = {
             imageN: 'Image {n}',
             failed: 'Edit failed',
             partialFail: 'Some failed:',
-            dashscopeMissing: 'DashScope is not configured on the server (DASHSCOPE_API_KEY).'
+            dashscopeMissing: 'Image service is not ready. Please try again later.'
         },
         textToImage: {
             title: 'Text to Image',
-            desc: 'Generate an image from a text prompt via Alibaba DashScope. Requires sign-in and daily quota.',
+            desc: 'Generate an image from a text prompt. Sign-in required; charged from balance on success.',
             prompt: 'Prompt',
             promptPh: 'e.g. A cozy flower shop with wooden door and soft daylight…',
             sizeLabel: 'Size',
@@ -2056,16 +2057,16 @@ window.TB_LOCALES.en = {
             selectAllModels: 'Select all',
             deselectAllModels: 'Deselect all',
             costHintEmpty: 'Select at least one model.',
-            costHint: 'This run ≈ ¥{price} charged ({models} models = {runs} calls; billed on success)',
+            costHint: 'This run ≈ ¥{price} ({models} models = {runs} calls; billed on success)',
             tip: 'Tip:',
-            tipBody: 'New users get ¥3. Successful images bill at list ×2; failures are free. Results are saved in local history. Full color by default (unless you ask for B&W/line art). Default to Z-Image Turbo.',
+            tipBody: 'Charged only on success. Results saved in local history. Full color by default (unless you ask for B&W/line art). Prefer Z-Image Turbo.',
             download: 'Download',
             clear: 'Clear',
             needPrompt: 'Please enter a prompt',
             needModel: 'Select at least one model',
             failed: 'Generation failed',
             partialFail: 'Some failed:',
-            dashscopeMissing: 'DashScope is not configured on the server (DASHSCOPE_API_KEY).'
+            dashscopeMissing: 'Image service is not ready. Please try again later.'
         },
         idPhoto: {
             title: 'ID Photo',
