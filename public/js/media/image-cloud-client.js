@@ -41,7 +41,7 @@
             'Daily limit reached. Please try again tomorrow.': 'tools.imageCloud.dailyLimit',
             'Daily limit reached. Please try again tomorrow or log in for a higher limit.': 'tools.lifePlans.dailyLimitGuest',
             'Tencent Cloud is not configured (TENCENT_SECRET_ID / TENCENT_SECRET_KEY).': 'tools.imageCloud.notConfigured',
-            'DashScope is not configured (DASHSCOPE_API_KEY).': 'tools.imageToAnimation.notConfigured',
+            'DashScope is not configured (DASHSCOPE_API_KEY).': 'tools.imageCloud.genServiceMissing',
             'Please enter a prompt.': 'tools.textToImage.needPrompt',
             'Please enter a prompt': 'tools.textToImage.needPrompt',
             'Please enter an edit instruction or choose a style preset.': 'tools.instructEdit.needPromptOrPreset',
@@ -199,9 +199,7 @@
         var bal = wallet.balanceCny != null ? Number(wallet.balanceCny) : 0;
         if (!Number.isFinite(bal)) bal = 0;
         return tr('tools.imageCloud.balanceLine', {
-            balance: bal.toFixed(2),
-            gift: wallet.giftCny != null ? Number(wallet.giftCny) : 3,
-            markup: walletMarkup(wallet)
+            balance: bal.toFixed(2)
         });
     }
 

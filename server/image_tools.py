@@ -127,8 +127,7 @@ LIMITS = {
     "id_photo": int(os.environ.get("IMAGE_LIMIT_ID_PHOTO", "10")),
     "general_cutout": int(os.environ.get("IMAGE_LIMIT_GENERAL_CUTOUT", "15")),
     "to_pdf": int(os.environ.get("IMAGE_LIMIT_TO_PDF", "20")),
-    "instruct_edit": int(os.environ.get("IMAGE_LIMIT_INSTRUCT_EDIT", "8")),
-    "text_to_image": int(os.environ.get("IMAGE_LIMIT_TEXT_TO_IMAGE", "10")),
+    # instruct_edit / text_to_image: billed via user balance only (no daily count).
 }
 
 
@@ -580,8 +579,7 @@ async def api_instruct_edit(
     for up in uploads:
         blobs.append(await _read_upload(up))
 
-    # Soft daily cap still applies; user balance is billed per successful image.
-    planned = len(blobs) * len(model_ids)
+    # Billed via user balance only (no daily count).
     if not _is_admin(user):
         conn = _conn()
         try:
@@ -651,7 +649,6 @@ async def api_instruct_edit(
         for mid in model_ids:
             list_p = _price_for(mid)
             try:
-                _assert_quota_remaining(user, "instruct_edit")
                 if not _is_admin(user):
                     _assert_can_afford(user, list_p)
             except HTTPException as exc:
@@ -672,7 +669,6 @@ async def api_instruct_edit(
                 if bal is not None:
                     balance_after = bal
                     charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
-                _consume_quota(user, "instruct_edit", amount=1)
                 images.append(item)
             except HTTPException as exc:
                 if exc.status_code in (402, 429):
@@ -700,7 +696,6 @@ async def api_instruct_edit(
         "imageBase64": first["imageBase64"],
         "contentType": first["contentType"],
         "images": images,
-        "quota": _quota_snapshot(user, "instruct_edit"),
         "preset": (preset or "").strip() or None,
         "batch": len(blobs),
         "compare": len(model_ids) > 1,
@@ -833,7 +828,6 @@ async def api_text_to_image(
     for mid in model_ids:
         list_p = _t2i_price_for(mid)
         try:
-            _assert_quota_remaining(user, "text_to_image")
             if not _is_admin(user):
                 _assert_can_afford(user, list_p)
         except HTTPException as exc:
@@ -853,7 +847,6 @@ async def api_text_to_image(
             if bal is not None:
                 balance_after = bal
                 charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
-            _consume_quota(user, "text_to_image", amount=1)
             images.append(item)
         except HTTPException as exc:
             errors.append(f"{mid}: {_exc_detail(exc)}")
@@ -878,7 +871,6 @@ async def api_text_to_image(
         "imageBase64": first["imageBase64"],
         "contentType": first["contentType"],
         "images": images,
-        "quota": _quota_snapshot(user, "text_to_image"),
         "size": size_preset,
         "aiWallet": _wallet_for(user),
     }

@@ -14,7 +14,6 @@
   var runBtn = document.getElementById('run-btn');
   var clearBtn = document.getElementById('clear-btn');
   var balanceLine = document.getElementById('balance-line');
-  var quotaLine = document.getElementById('quota-line');
   var errorBox = document.getElementById('error-box');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
@@ -118,24 +117,6 @@
     for (var s = 0; s < sizes.length; s++) sizes[s].disabled = !!on;
   }
 
-  function formatQuota(item) {
-    if (!item) return '';
-    if (item.unlimited) return tr('tools.imageCloud.quotaUnlimited');
-    return tr('tools.imageCloud.quotaLine', {
-      used: item.used,
-      limit: item.limit,
-      remaining: item.remaining
-    });
-  }
-
-  function pickQuota(status) {
-    var list = (status && status.quotas) || [];
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].action === 'text_to_image') return list[i];
-    }
-    return null;
-  }
-
   function revokeResults() {
     for (var i = 0; i < resultUrls.length; i++) {
       try { URL.revokeObjectURL(resultUrls[i]); } catch (e) {}
@@ -206,7 +187,6 @@
   function loadStatus() {
     return C.apiJson('/image/status').then(function (s) {
       applyWallet(s.aiWallet);
-      if (quotaLine) quotaLine.textContent = formatQuota(pickQuota(s));
       if (s.textToImageConfigured === false) {
         C.setError(errorBox, tr('tools.textToImage.dashscopeMissing'));
       }
@@ -300,7 +280,6 @@
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       C.apiJson('/image/text-to-image', { method: 'POST', body: fd }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
-        if (data.quota && quotaLine) quotaLine.textContent = formatQuota(data.quota);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {
           images = [{

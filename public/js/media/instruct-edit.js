@@ -22,7 +22,6 @@
   var runBtn = document.getElementById('run-btn');
   var clearBtn = document.getElementById('clear-btn');
   var balanceLine = document.getElementById('balance-line');
-  var quotaLine = document.getElementById('quota-line');
   var errorBox = document.getElementById('error-box');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
@@ -133,24 +132,6 @@
       var chips = presetRow.querySelectorAll('.rec-chip');
       for (var j = 0; j < chips.length; j++) chips[j].disabled = !!on;
     }
-  }
-
-  function formatQuota(item) {
-    if (!item) return '';
-    if (item.unlimited) return tr('tools.imageCloud.quotaUnlimited');
-    return tr('tools.imageCloud.quotaLine', {
-      used: item.used,
-      limit: item.limit,
-      remaining: item.remaining
-    });
-  }
-
-  function pickQuota(status) {
-    var list = (status && status.quotas) || [];
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].action === 'instruct_edit') return list[i];
-    }
-    return null;
   }
 
   function revokePreviews() {
@@ -305,7 +286,6 @@
   function loadStatus() {
     return C.apiJson('/image/status').then(function (s) {
       applyWallet(s.aiWallet);
-      if (quotaLine) quotaLine.textContent = formatQuota(pickQuota(s));
       if (s.instructEditMaxBatch) MAX_BATCH = s.instructEditMaxBatch;
       if (s.instructEditConfigured === false) {
         C.setError(errorBox, tr('tools.instructEdit.dashscopeMissing'));
@@ -464,7 +444,6 @@
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       C.apiJson('/image/instruct-edit', { method: 'POST', body: fd }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
-        if (data.quota && quotaLine) quotaLine.textContent = formatQuota(data.quota);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {
           images = [{
