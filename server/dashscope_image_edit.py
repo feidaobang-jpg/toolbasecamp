@@ -29,10 +29,12 @@ INSTRUCT_EDIT_PRESETS: dict[str, str] = {
     ),
 }
 
-# Appended unless the user clearly asks for B&W / line art / grayscale.
+# Prepended unless the user clearly asks for B&W / line art / grayscale.
+# Put at the start: short turbo models often ignore trailing constraints.
 _COLOR_FULL_HINT = (
-    "输出必须为全彩（full color）图片；"
-    "禁止黑白、灰度、单色、未上色线稿或素描。"
+    "【画面要求】必须输出全彩上色成品（full color），"
+    "有自然肤色、服装色彩与环境色彩；"
+    "禁止黑白、灰度、单色、未上色线稿、纯线描、素描或只有轮廓的漫画线稿。"
 )
 
 _MONO_MARKERS = (
@@ -75,7 +77,9 @@ def apply_color_hint(prompt: str) -> str:
         return text
     if "全彩" in text or "彩色" in text or "full color" in text.lower():
         return text
-    return f"{text}\n{_COLOR_FULL_HINT}"
+    if "【画面要求】" in text:
+        return text
+    return f"{_COLOR_FULL_HINT}\n{text}"
 
 
 def _default_edit_model() -> str:
