@@ -2128,6 +2128,7 @@ window.TB_LOCALES.en = {
             clear: 'Clear',
             needPrompt: 'Please enter a prompt',
             needModel: 'Select at least one model',
+            promptTooLong: 'Prompt is too long. Please shorten it.',
             failed: 'Generation failed',
             partialFail: 'Some failed:',
             dashscopeMissing: 'Image service is not ready. Please try again later.'
