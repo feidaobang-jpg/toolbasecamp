@@ -442,39 +442,60 @@ def list_redeem_codes(
     pg = max(1, int(page or 1))
     offset = (pg - 1) * size
 
+    def _account_label(email, phone) -> Optional[str]:
+        ph = str(phone or "").strip()
+        em = str(email or "").strip()
+        return ph or em or None
+
     def _run(cur):
         ensure_wallet_schema(cur)
         where = ""
         if st == "unused":
-            where = "WHERE r.redeemed_by IS NULL"
+            where = "WHERE redeemed_by IS NULL"
         elif st == "used":
-            where = "WHERE r.redeemed_by IS NOT NULL"
+            where = "WHERE redeemed_by IS NOT NULL"
 
-        cur.execute(f"SELECT COUNT(*) AS c FROM ai_redeem_codes r {where}")
+        cur.execute(f"SELECT COUNT(*) AS c FROM ai_redeem_codes {where}")
         total_row = cur.fetchone() or {}
         total = int(total_row.get("c") or 0)
 
         cur.execute(
             f"""
-            SELECT
-                r.code, r.amount, r.note, r.created_at,
-                r.redeemed_by, r.redeemed_at,
-                u.email AS user_email, u.phone AS user_phone
-            FROM ai_redeem_codes r
-            LEFT JOIN users u ON u.id = r.redeemed_by
+            SELECT code, amount, note, created_at, redeemed_by, redeemed_at
+            FROM ai_redeem_codes
             {where}
-            ORDER BY r.id DESC
+            ORDER BY id DESC
             LIMIT %s OFFSET %s
             """,
             (size, offset),
         )
         rows = cur.fetchall() or []
+
+        uids = sorted(
+            {
+                int(r["redeemed_by"])
+                for r in rows
+                if isinstance(r, dict) and r.get("redeemed_by")
+            }
+        )
+        account_by_uid: dict[int, Optional[str]] = {}
+        if uids:
+            placeholders = ",".join(["%s"] * len(uids))
+            cur.execute(
+                f"SELECT id, email, phone FROM users WHERE id IN ({placeholders})",
+                uids,
+            )
+            for u in cur.fetchall() or []:
+                if not isinstance(u, dict):
+                    continue
+                account_by_uid[int(u["id"])] = _account_label(
+                    u.get("email"), u.get("phone")
+                )
+
         items = []
         for r in rows:
             uid = int(r["redeemed_by"]) if r.get("redeemed_by") else None
-            email = (r.get("user_email") or "").strip() if isinstance(r, dict) else ""
-            phone = (r.get("user_phone") or "").strip() if isinstance(r, dict) else ""
-            account = email or phone or None
+            account = account_by_uid.get(uid) if uid else None
             items.append(
                 {
                     "code": r.get("code"),
