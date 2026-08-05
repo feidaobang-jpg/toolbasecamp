@@ -140,7 +140,7 @@ window.TB_LOCALES.en = {
         aiBalance: 'Balance',
         aiBalanceUnlimited: 'Admin: unlimited',
         redeemTitle: 'Redeem code',
-        redeemHint: 'After purchase you get a redeem code. Enter it here to top up, then use Instruct Image Edit (charged only on success).',
+        redeemHint: 'After purchase you get a redeem code. Enter it here to top up, then use Image-to-Image / Instruct Edit (charged only on success).',
         redeemCode: 'Redeem code',
         redeemBtn: 'Redeem',
         redeemOk: 'Redeemed ¥{amount}. Balance now ¥{balance}',
@@ -201,9 +201,9 @@ window.TB_LOCALES.en = {
         paidRequired: 'Paid',
         dailyLimitRequired: 'Daily limit',
         howtoTitle: 'How to use a redeem code',
-        howtoBody: '1) Sign in → 2) Open Profile (top right) and redeem your code → 3) Open Instruct Image Edit, upload, and generate. Charged only on success.',
+        howtoBody: '1) Sign in → 2) Open Profile (top right) and redeem your code → 3) Open Image-to-Image (Instruct Edit), upload, and generate. Charged only on success.',
         howtoRedeem: 'Redeem',
-        howtoInstruct: 'Instruct Edit'
+        howtoInstruct: 'Image-to-Image'
     },
     games: {
         groups: {
@@ -2013,8 +2013,8 @@ window.TB_LOCALES.en = {
         },
 
         instructEdit: {
-            title: 'Instruct Image Edit',
-            desc: 'Upload photos and describe the change. Style presets and up to 4 images. Sign-in required; charged from balance on success.',
+            title: 'Image-to-Image (Instruct Edit)',
+            desc: 'Upload photos and describe the change (img2img). Style presets, travel backgrounds, up to 4 images. Sign-in required; charged from balance on success.',
             dropTitle: 'Click or drop images (multi-select)',
             dropHint: 'JPG / PNG / WebP — max 8MB each, up to 4 images',
             prompt: 'Edit instruction',
@@ -2056,9 +2056,18 @@ window.TB_LOCALES.en = {
         },
         textToImage: {
             title: 'Text to Image',
-            desc: 'Generate an image from a text prompt. Sign-in required; charged from balance on success.',
+            desc: 'Generate an image from a text prompt. Style presets available. Sign-in required; charged from balance on success.',
             prompt: 'Prompt',
             promptPh: 'e.g. A cozy flower shop with wooden door and soft daylight…',
+            styleLabel: 'Style preset',
+            styleHint: 'Optional: tap a style to append it to the prompt (editable).',
+            stylePhoto: 'Photo realist',
+            styleFilm: 'Film look',
+            styleAnime: 'Color anime',
+            styleProduct: 'Product shot',
+            styleLandscape: 'Landscape',
+            stylePortrait: 'Portrait',
+            stylePoster: 'Poster',
             sizeLabel: 'Size',
             sizeSquare: '1:1 square',
             sizePortrait: 'Portrait',

@@ -19,12 +19,48 @@
   var busyEl = document.getElementById('busy');
   var wechatTip = document.getElementById('wechat-tip');
   var historyHint = document.getElementById('history-hint');
+  var styleRow = document.getElementById('style-row');
   var resultUrls = [];
   var priceMarkup = 2;
   var histPanel = null;
+  var activeStyle = '';
+
+  var STYLE_SNIPPETS = {
+    photo: '风格：写实摄影，自然光，真实细节，全彩',
+    film: '风格：胶片摄影，轻微颗粒，暖色调，全彩',
+    anime: '风格：日式动漫插画，全彩赛璐璐上色，禁止未上色线稿',
+    product: '风格：电商产品主图，干净背景，工作室灯光，全彩',
+    landscape: '风格：风景大片，广角通透，大气构图，全彩',
+    portrait: '风格：人像写真，浅景深，柔和光影，全彩',
+    poster: '风格：平面海报，构图清晰，视觉冲击力，全彩'
+  };
 
   function tr(key, params) {
     return C.tr(key, params);
+  }
+
+  function applyStylePreset(id) {
+    if (!promptEl || !id || !STYLE_SNIPPETS[id]) return;
+    activeStyle = id;
+    if (styleRow) {
+      var chips = styleRow.querySelectorAll('.rec-chip');
+      for (var i = 0; i < chips.length; i++) {
+        chips[i].classList.toggle('is-active', (chips[i].getAttribute('data-style') || '') === id);
+      }
+    }
+    var snippet = STYLE_SNIPPETS[id];
+    var v = (promptEl.value || '').trim();
+    var lines = v ? v.split(/\n/) : [];
+    var out = [];
+    for (var j = 0; j < lines.length; j++) {
+      var line = (lines[j] || '').trim();
+      if (!line) continue;
+      if (line.indexOf('风格：') === 0) continue;
+      out.push(line);
+    }
+    out.push(snippet);
+    promptEl.value = out.join('\n');
+    setBusy(false);
   }
 
   function downloadName(item) {
@@ -115,6 +151,10 @@
     for (var i = 0; i < inputs.length; i++) inputs[i].disabled = !!on;
     var sizes = document.querySelectorAll('input[name="t2i-size"]');
     for (var s = 0; s < sizes.length; s++) sizes[s].disabled = !!on;
+    if (styleRow) {
+      var chips = styleRow.querySelectorAll('.rec-chip');
+      for (var c = 0; c < chips.length; c++) chips[c].disabled = !!on;
+    }
   }
 
   function revokeResults() {
@@ -309,10 +349,23 @@
       }
       var sq = document.querySelector('input[name="t2i-size"][value="square"]');
       if (sq) sq.checked = true;
+      activeStyle = '';
+      if (styleRow) {
+        var chips = styleRow.querySelectorAll('.rec-chip');
+        for (var c = 0; c < chips.length; c++) chips[c].classList.remove('is-active');
+      }
       syncSelectAllLabel();
       updateCostHint();
       C.setError(errorBox, '');
       setBusy(false);
+    });
+  }
+
+  if (styleRow) {
+    styleRow.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
+      if (!btn || btn.disabled) return;
+      applyStylePreset(btn.getAttribute('data-style') || '');
     });
   }
 

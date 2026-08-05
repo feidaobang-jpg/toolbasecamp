@@ -139,7 +139,7 @@ window.TB_LOCALES['zh-CN'] = {
         aiBalance: '用户余额',
         aiBalanceUnlimited: '管理员：不限',
         redeemTitle: '兑换码充值',
-        redeemHint: '咸鱼下单后会收到兑换码。在此输入即可充值；再到「指令改图」上传出图（成功才扣余额）。',
+        redeemHint: '咸鱼下单后会收到兑换码。在此输入即可充值；再到「图生图（指令改图）」上传出图（成功才扣余额）。',
         redeemCode: '兑换码',
         redeemBtn: '兑换',
         redeemOk: '兑换成功，到账 ¥{amount}，当前余额 ¥{balance}',
@@ -200,9 +200,9 @@ window.TB_LOCALES['zh-CN'] = {
         paidRequired: '收费',
         dailyLimitRequired: '日限',
         howtoTitle: '咸鱼兑换码怎么用',
-        howtoBody: '① 注册/登录 → ② 右上角「个人中心」输入兑换码充值 → ③ 打开「指令改图」上传图片并生成。成功出图才扣余额。',
+        howtoBody: '① 注册/登录 → ② 右上角「个人中心」输入兑换码充值 → ③ 打开「图生图（指令改图）」上传图片并生成。成功出图才扣余额。',
         howtoRedeem: '去兑换',
-        howtoInstruct: '指令改图'
+        howtoInstruct: '图生图'
     },
     games: {
         groups: {
@@ -2012,8 +2012,8 @@ window.TB_LOCALES['zh-CN'] = {
         },
 
         instructEdit: {
-            title: '指令改图',
-            desc: '上传图片并用文字描述修改，支持风格预设与最多 4 张批量。需登录，成功出图扣余额。',
+            title: '图生图（指令改图）',
+            desc: '上传图片并用文字描述修改（图生图）。支持风格预设、旅游背景与最多 4 张批量。需登录，成功出图扣余额。',
             dropTitle: '点击或拖入图片（可多选）',
             dropHint: 'JPG / PNG / WebP，单张最大 8MB，最多 4 张',
             prompt: '修改说明',
@@ -2055,9 +2055,18 @@ window.TB_LOCALES['zh-CN'] = {
         },
         textToImage: {
             title: '文生图',
-            desc: '用文字描述生成图片。需登录，成功出图扣余额。',
+            desc: '用文字描述生成图片。支持风格预设。需登录，成功出图扣余额。',
             prompt: '提示词',
             promptPh: '例如：一间有精致窗户的花店，木质门，窗边摆满鲜花，柔和日光…',
+            styleLabel: '风格预设',
+            styleHint: '可选：点风格会追加到提示词（可再改）。',
+            stylePhoto: '写实摄影',
+            styleFilm: '胶片感',
+            styleAnime: '全彩动漫',
+            styleProduct: '电商主图',
+            styleLandscape: '风景大片',
+            stylePortrait: '人像写真',
+            stylePoster: '海报设计',
             sizeLabel: '尺寸',
             sizeSquare: '1:1 方形',
             sizePortrait: '竖版',

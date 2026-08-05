@@ -35,6 +35,19 @@
             <textarea id="prompt" rows="4" maxlength="2000" data-i18n-placeholder="tools.textToImage.promptPh" placeholder="e.g. A cozy cafe with wooden door and flowers by the window, soft daylight…"></textarea>
           </div>
           <div class="field-row">
+            <span class="field-label" data-i18n="tools.textToImage.styleLabel">Style preset</span>
+            <div class="instruct-preset-row" id="style-row">
+              <button type="button" class="rec-chip" data-style="photo" data-i18n="tools.textToImage.stylePhoto">Photo</button>
+              <button type="button" class="rec-chip" data-style="film" data-i18n="tools.textToImage.styleFilm">Film</button>
+              <button type="button" class="rec-chip" data-style="anime" data-i18n="tools.textToImage.styleAnime">Anime</button>
+              <button type="button" class="rec-chip" data-style="product" data-i18n="tools.textToImage.styleProduct">Product</button>
+              <button type="button" class="rec-chip" data-style="landscape" data-i18n="tools.textToImage.styleLandscape">Landscape</button>
+              <button type="button" class="rec-chip" data-style="portrait" data-i18n="tools.textToImage.stylePortrait">Portrait</button>
+              <button type="button" class="rec-chip" data-style="poster" data-i18n="tools.textToImage.stylePoster">Poster</button>
+            </div>
+            <p class="instruct-cost-hint" data-i18n="tools.textToImage.styleHint">Optional: tap a style to append it to the prompt.</p>
+          </div>
+          <div class="field-row">
             <span class="field-label" data-i18n="tools.textToImage.sizeLabel">Size</span>
             <div class="tb-radio-row" id="size-row">
               <label><input type="radio" name="t2i-size" value="square" checked /> <span data-i18n="tools.textToImage.sizeSquare">1:1</span></label>
@@ -94,13 +107,13 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=tools18"></script>
-  <script src="../../js/locales/zh-CN.js?v=tools18"></script>
+  <script src="../../js/locales/en.js?v=tools23"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools23"></script>
   <script src="../../js/i18n.js?v=locale1"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
   <script src="../../js/media/image-cloud-client.js?v=18"></script>
   <script src="../../js/media/image-gen-history.js?v=3"></script>
-  <script src="../../js/media/text-to-image.js?v=9"></script>
+  <script src="../../js/media/text-to-image.js?v=10"></script>
 </body>
 </html>
