@@ -513,7 +513,14 @@
             contentType: data.contentType || 'image/png'
           }];
         }
-        if (!images || !images.length) throw new Error(tr('tools.instructEdit.failed'));
+        if (!images || !images.length) {
+          var raw = '';
+          try {
+            raw = JSON.stringify(data || {});
+          } catch (e) {}
+          if (raw && raw.length > 220) raw = raw.slice(0, 220) + '...';
+          throw new Error(tr('tools.instructEdit.failed') + (raw ? '：' + raw : ''));
+        }
         renderResults(images, data.partialErrors);
         if (histPanel) {
           var promptText = (promptEl && promptEl.value) || '';

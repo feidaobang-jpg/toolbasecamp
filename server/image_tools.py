@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import base64
 import os
+import time
 from datetime import datetime, timezone
 from typing import List, Optional
 
@@ -71,6 +72,7 @@ MAX_INSTRUCT_BATCH = 4
 INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
 INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "1"))
 INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.5"))
+IMAGE_DEBUG = os.environ.get("IMAGE_DEBUG", "1").strip().lower() not in ("0", "false", "no", "off")
 
 # Text-to-image models (Beijing). z-image-turbo = cheap/fast default.
 TEXT_TO_IMAGE_MODELS = (
@@ -549,6 +551,8 @@ async def api_instruct_edit(
     files: List[UploadFile] = File(default=[]),
     user: dict = Depends(_user),
 ):
+    t0 = time.perf_counter()
+    req_user_id = int(user["id"])
     if not dashscope_image_edit_configured():
         raise HTTPException(
             status_code=503,
@@ -575,6 +579,19 @@ async def api_instruct_edit(
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
     model_ids = _resolve_instruct_models(model, models, do_compare)
+    if IMAGE_DEBUG:
+        print(
+            "[instruct-edit] start",
+            {
+                "userId": req_user_id,
+                "uploadCount": len(uploads),
+                "models": model_ids,
+                "compare": do_compare,
+                "preset": (preset or "").strip() or None,
+                "promptLen": len(text),
+            },
+            flush=True,
+        )
     blobs: list[bytes] = []
     for up in uploads:
         blobs.append(await _read_upload(up))
@@ -605,7 +622,27 @@ async def api_instruct_edit(
         )
 
     async def _one(idx: int, blob: bytes, mid: str) -> dict:
+        one_t0 = time.perf_counter()
+        if IMAGE_DEBUG:
+            print(
+                "[instruct-edit] job_start",
+                {"userId": req_user_id, "index": idx, "model": mid, "size": len(blob)},
+                flush=True,
+            )
         out, ctype = await edit_image_with_instruction(blob, text, model=mid)
+        if IMAGE_DEBUG:
+            print(
+                "[instruct-edit] job_ok",
+                {
+                    "userId": req_user_id,
+                    "index": idx,
+                    "model": mid,
+                    "elapsedMs": int((time.perf_counter() - one_t0) * 1000),
+                    "contentType": ctype or "image/png",
+                    "outBytes": len(out or b""),
+                },
+                flush=True,
+            )
         return {
             "index": idx,
             "model": mid,
@@ -621,12 +658,37 @@ async def api_instruct_edit(
             try:
                 return await _one(idx, blob, mid)
             except HTTPException as exc:
+                if IMAGE_DEBUG:
+                    print(
+                        "[instruct-edit] job_http_error",
+                        {
+                            "userId": req_user_id,
+                            "index": idx,
+                            "model": mid,
+                            "attempt": attempt + 1,
+                            "status": exc.status_code,
+                            "detail": _exc_detail(exc),
+                        },
+                        flush=True,
+                    )
                 last = exc
                 if _is_rate_limit(exc) and attempt < INSTRUCT_EDIT_RATE_RETRIES:
                     await asyncio.sleep(INSTRUCT_EDIT_RATE_BACKOFF * (attempt + 1))
                     continue
                 raise
             except Exception as exc:
+                if IMAGE_DEBUG:
+                    print(
+                        "[instruct-edit] job_error",
+                        {
+                            "userId": req_user_id,
+                            "index": idx,
+                            "model": mid,
+                            "attempt": attempt + 1,
+                            "detail": _exc_detail(exc),
+                        },
+                        flush=True,
+                    )
                 last = exc
                 if _is_rate_limit(exc) and attempt < INSTRUCT_EDIT_RATE_RETRIES:
                     await asyncio.sleep(INSTRUCT_EDIT_RATE_BACKOFF * (attempt + 1))
@@ -680,6 +742,18 @@ async def api_instruct_edit(
     if not images:
         detail = "Image edit failed: " + "; ".join(errors) if errors else "no images"
         code = 402 if any("Insufficient" in e for e in errors) else 502
+        if IMAGE_DEBUG:
+            print(
+                "[instruct-edit] fail",
+                {
+                    "userId": req_user_id,
+                    "models": model_ids,
+                    "uploadCount": len(blobs),
+                    "errors": errors,
+                    "elapsedMs": int((time.perf_counter() - t0) * 1000),
+                },
+                flush=True,
+            )
         raise HTTPException(status_code=code, detail=detail)
     order = {m: i for i, m in enumerate(model_ids)}
     images.sort(key=lambda x: (int(x.get("index") or 0), order.get(x.get("model") or "", 99)))
@@ -703,6 +777,17 @@ async def api_instruct_edit(
         out["balanceCny"] = balance_after
     if errors:
         out["partialErrors"] = errors
+    if IMAGE_DEBUG:
+        print(
+            "[instruct-edit] done",
+            {
+                "userId": req_user_id,
+                "imageCount": len(images),
+                "errorCount": len(errors),
+                "elapsedMs": int((time.perf_counter() - t0) * 1000),
+            },
+            flush=True,
+        )
     return out
 
 
