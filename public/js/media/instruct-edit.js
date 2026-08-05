@@ -569,6 +569,9 @@
       }
       C.setError(errorBox, '');
       if (resultMeta) resultMeta.textContent = '';
+      if (C.isWeChat && C.isWeChat() && typeof window.tbNotify === 'function') {
+        window.tbNotify(tr('tools.instructEdit.stayOnPageTip'));
+      }
       setBusy(true);
       runStartedAt = Date.now();
       var fd = new FormData();

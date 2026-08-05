@@ -2076,6 +2076,7 @@ window.TB_LOCALES.en = {
             imageN: 'Image {n}',
             failed: 'Edit failed',
             elapsed: 'Completed in {seconds}s',
+            stayOnPageTip: 'WeChat is slower here. Please stay on this page and do not switch back to chat, lock the screen, or open another app.',
             partialFail: 'Some failed:',
             dashscopeMissing: 'Image service is not ready. Please try again later.'
         },

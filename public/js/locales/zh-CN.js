@@ -2075,6 +2075,7 @@ window.TB_LOCALES['zh-CN'] = {
             imageN: '图{n}',
             failed: '改图失败',
             elapsed: '本次耗时 {seconds} 秒',
+            stayOnPageTip: '微信内生成较慢，请停留在当前页面，不要切回聊天、锁屏或切到别的应用。',
             partialFail: '部分失败：',
             dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },
