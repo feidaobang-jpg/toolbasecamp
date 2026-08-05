@@ -407,9 +407,13 @@ def list_redeem_codes(
         items = []
         for r in rows:
             uid = int(r["redeemed_by"]) if r.get("redeemed_by") else None
-            email = (r.get("user_email") or "").strip()
-            phone = (r.get("user_phone") or "").strip()
-            account = email or phone or (f"UID:{uid}" if uid else None)
+            email = (r.get("user_email") or "").strip() if isinstance(r, dict) else ""
+            phone = (r.get("user_phone") or "").strip() if isinstance(r, dict) else ""
+            account = email or phone
+            if uid and account:
+                account = f"{account} (UID:{uid})"
+            elif uid:
+                account = f"UID:{uid}"
             items.append(
                 {
                     "code": r.get("code"),

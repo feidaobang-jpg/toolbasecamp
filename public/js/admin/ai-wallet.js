@@ -93,30 +93,55 @@
     }
     box.innerHTML = list.map(function (c) {
       var used = c.redeemed
-        ? ('<span class="text-amber-600">' + tr('privateHub.ops.walletCodeUsed') + '</span>')
-        : ('<span class="text-emerald-600">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
-      var who = '';
-      if (c.redeemed && (c.redeemedAccount || c.redeemedAt)) {
-        var bits = [];
-        if (c.redeemedAccount) {
-          bits.push(tr('privateHub.ops.walletCodeBy').replace('{account}', String(c.redeemedAccount)));
+        ? ('<span class="text-amber-600 whitespace-nowrap">' + tr('privateHub.ops.walletCodeUsed') + '</span>')
+        : ('<span class="text-emerald-600 whitespace-nowrap">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
+      var meta = '';
+      if (c.redeemed) {
+        var account = c.redeemedAccount || (c.redeemedBy ? ('UID:' + c.redeemedBy) : '');
+        var lines = [];
+        if (account) {
+          lines.push(
+            '<div class="text-xs text-gray-500 break-all mt-1">' +
+              tr('privateHub.ops.walletCodeBy').replace('{account}', String(account)) +
+            '</div>'
+          );
         }
         if (c.redeemedAt) {
-          bits.push(tr('privateHub.ops.walletCodeAt').replace('{time}', String(c.redeemedAt).replace('T', ' ').replace(/\.\d+$/, '')));
+          lines.push(
+            '<div class="text-xs text-gray-500 mt-0.5">' +
+              tr('privateHub.ops.walletCodeAt').replace(
+                '{time}',
+                String(c.redeemedAt).replace('T', ' ').replace(/\.\d+$/, '')
+              ) +
+            '</div>'
+          );
         }
-        who = '<span class="text-xs text-gray-500 break-all">' + bits.join(' · ') + '</span>';
+        meta = lines.join('');
       }
       return (
-        '<div class="flex flex-wrap items-center justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
-          '<div class="min-w-0 flex-1 space-y-0.5">' +
+        '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
+          '<div class="min-w-0 flex-1">' +
             '<code class="text-sm font-mono">' + String(c.code || '') + '</code>' +
-            who +
+            meta +
           '</div>' +
-          '<span>¥' + Number(c.amountCny || 0).toFixed(2) + '</span>' +
-          used +
+          '<div class="flex items-center gap-3 flex-shrink-0 pt-0.5">' +
+            '<span>¥' + Number(c.amountCny || 0).toFixed(2) + '</span>' +
+            used +
+          '</div>' +
         '</div>'
       );
     }).join('');
+  }
+
+  function filterCodesClient(list) {
+    var arr = list || [];
+    if (codesStatus === 'unused') {
+      return arr.filter(function (c) { return !c.redeemed; });
+    }
+    if (codesStatus === 'used') {
+      return arr.filter(function (c) { return !!c.redeemed; });
+    }
+    return arr;
   }
 
   function loadCodes() {
@@ -125,10 +150,20 @@
       '&page=' + encodeURIComponent(String(codesPage)) +
       '&page_size=' + encodeURIComponent(String(PAGE_SIZE));
     return apiJson(q).then(function (data) {
-      codesTotal = Number(data.total || 0) || 0;
-      codesPage = Number(data.page || codesPage) || 1;
-      codesPages = Number(data.pages || 1) || 1;
-      renderCodes(data.codes || []);
+      var serverStatus = data.status;
+      var list = data.codes || [];
+      // If API not upgraded yet, it ignores status — filter on client as fallback.
+      if (!serverStatus || serverStatus !== codesStatus) {
+        list = filterCodesClient(list);
+        codesTotal = list.length;
+        codesPages = 1;
+        codesPage = 1;
+      } else {
+        codesTotal = Number(data.total || 0) || 0;
+        codesPage = Number(data.page || codesPage) || 1;
+        codesPages = Number(data.pages || 1) || 1;
+      }
+      renderCodes(list);
       syncPager();
     }).catch(function (err) {
       setStatus(document.getElementById('codes-status'), err.message, true);
