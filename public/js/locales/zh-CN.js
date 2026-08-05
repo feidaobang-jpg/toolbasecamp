@@ -2589,6 +2589,7 @@ window.TB_LOCALES['zh-CN'] = {
         builtTitle: '中英双语',
         builtDesc: '界面支持中文 / English，简洁无干扰，专注好用。',
         questions: '账号、充值或建议可私聊管理员（仅双方可见）。',
+        qqGroup: 'QQ 群：691386237（用于交流讨论）',
         visitGuestbook: '去留言',
         contactAdmin: '联系管理员'
     },

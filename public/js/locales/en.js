@@ -2590,6 +2590,7 @@ window.TB_LOCALES.en = {
         builtTitle: 'Bilingual',
         builtDesc: 'Chinese / English UI — clean, focused, no clutter.',
         questions: 'For account, top-up, or feedback, chat privately with the admin (only you and admins can see it).',
+        qqGroup: 'QQ Group: 691386237 (community chat)',
         visitGuestbook: 'Leave a message',
         contactAdmin: 'Contact admin'
     },
