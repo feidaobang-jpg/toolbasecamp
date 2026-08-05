@@ -32,6 +32,7 @@
   var bgPanelEl = document.getElementById('bg-toggle-panel');
   var bgToggleBtn = document.getElementById('bg-toggle-btn');
   var bgGroupsEl = document.getElementById('bg-groups');
+  var bgSelectWrap = document.getElementById('bg-select-wrap');
   var bgRegionSelect = document.getElementById('bg-region-select');
   var bgPlaceSelect = document.getElementById('bg-place-select');
   var bgExpanded = false;
@@ -571,6 +572,8 @@
     if (gate) gate.hidden = true;
     if (app) app.hidden = false;
     applyLocaleBits();
+    // UI choice: keep the direct chip buttons (bg-groups) and hide the dropdown wrapper.
+    if (bgSelectWrap) bgSelectWrap.hidden = true;
     if (Hist && !histPanel) {
       histPanel = Hist.bindPanel({
         tool: 'instruct_edit',
