@@ -101,12 +101,18 @@
         : ('<span class="text-emerald-600 whitespace-nowrap">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
       var meta = '';
       if (c.redeemed) {
-        var account = c.redeemedAccount || (c.redeemedBy ? ('UID:' + c.redeemedBy) : '');
+        var account = c.redeemedAccount || '';
         var lines = [];
         if (account) {
           lines.push(
             '<div class="text-xs text-gray-500 break-all mt-1">' +
               tr('privateHub.ops.walletCodeBy').replace('{account}', String(account)) +
+            '</div>'
+          );
+        } else {
+          lines.push(
+            '<div class="text-xs text-gray-400 mt-1">' +
+              tr('privateHub.ops.walletCodeByUnknown') +
             '</div>'
           );
         }

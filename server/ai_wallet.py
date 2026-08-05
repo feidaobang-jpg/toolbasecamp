@@ -474,11 +474,7 @@ def list_redeem_codes(
             uid = int(r["redeemed_by"]) if r.get("redeemed_by") else None
             email = (r.get("user_email") or "").strip() if isinstance(r, dict) else ""
             phone = (r.get("user_phone") or "").strip() if isinstance(r, dict) else ""
-            account = email or phone
-            if uid and account:
-                account = f"{account} (UID:{uid})"
-            elif uid:
-                account = f"UID:{uid}"
+            account = email or phone or None
             items.append(
                 {
                     "code": r.get("code"),
