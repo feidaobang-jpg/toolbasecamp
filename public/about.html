@@ -11,8 +11,8 @@
     <script src="vendor/tailwindcss.js?v=2"></script>
     <link href="vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
-    <script src="js/locales/en.js"></script>
-    <script src="js/locales/zh-CN.js"></script>
+    <script src="js/locales/en.js?v=about2"></script>
+    <script src="js/locales/zh-CN.js?v=about2"></script>
     <script src="js/i18n.js?v=stats1"></script>
     <script src="js/config.js"></script>
     <script src="js/common_ui.js?v=5"></script>
@@ -47,6 +47,21 @@
                     <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.documentTitle">Document Tools</h3>
                     <p class="text-sm text-gray-600" data-i18n="about.documentDesc">PDF to Word, Word to PDF, and Images to PDF.</p>
                 </div>
+                <div class="p-5 bg-violet-50 rounded-xl">
+                    <i class="fas fa-magic text-violet-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.aiTitle">AI Images</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.aiDesc">Image-to-Image and Text-to-Image.</p>
+                </div>
+                <div class="p-5 bg-teal-50 rounded-xl">
+                    <i class="fas fa-leaf text-teal-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.lifeTitle">Life & Content</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.lifeDesc">Life plans, recipes, todos, and more.</p>
+                </div>
+                <div class="p-5 bg-amber-50 rounded-xl">
+                    <i class="fas fa-gamepad text-amber-600 text-2xl mb-3"></i>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.gamesTitle">Casual Games</h3>
+                    <p class="text-sm text-gray-600" data-i18n="about.gamesDesc">Browser games for phone and desktop.</p>
+                </div>
                 <div class="p-5 bg-indigo-50 rounded-xl">
                     <i class="fas fa-code text-indigo-600 text-2xl mb-3"></i>
                     <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.developerTitle">Developer Tools</h3>
@@ -57,27 +72,18 @@
                     <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.privacyTitle">Privacy-friendly</h3>
                     <p class="text-sm text-gray-600" data-i18n="about.privacyDesc">Client-side tools run in your browser.</p>
                 </div>
-                <div class="p-5 bg-orange-50 rounded-xl">
+                <div class="p-5 bg-orange-50 rounded-xl sm:col-span-2">
                     <i class="fas fa-globe text-orange-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.builtTitle">Built for everyone</h3>
+                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.builtTitle">Bilingual</h3>
                     <p class="text-sm text-gray-600" data-i18n="about.builtDesc">Clean UI in English and Chinese.</p>
                 </div>
             </div>
 
             <div class="mt-12 pt-8 border-t border-gray-100 text-center">
                 <p class="text-gray-500 text-sm mb-4" data-i18n="about.questions">Questions or feedback?</p>
-                <a href="guestbook.html" class="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700">
-                    <i class="fas fa-comment-dots"></i> <span data-i18n="about.visitGuestbook">Visit the guestbook</span>
-                </a>
-            </div>
-
-            <div class="mt-10 pt-8 border-t border-gray-100 text-center">
-                <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4" data-i18n="about.friendLinks">Friend links</h2>
-                <p class="text-sm text-gray-600 mb-3" data-i18n="about.friendLinksLead">Related sites</p>
-                <a href="https://www.zhengxiaohui.cn/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700">
-                    <i class="fas fa-link"></i>
-                    <span data-i18n="about.friendGeek">极客前沿</span>
-                    <span class="text-gray-400 font-normal text-xs">zhengxiaohui.cn</span>
+                <a href="guestbook.html" class="tb-btn inline-flex items-center gap-2">
+                    <i class="fas fa-comment-dots"></i>
+                    <span data-i18n="about.contactAdmin">Contact admin</span>
                 </a>
             </div>
         </div>

@@ -17,7 +17,7 @@ window.TB_LOCALES.en = {
         life: 'Content',
         games: 'Games',
         sites: 'Directory',
-        guestbook: 'Guestbook',
+        guestbook: 'Messages',
         about: 'About',
         siteStats: 'Stats',
         private: 'Private'
@@ -2526,7 +2526,7 @@ window.TB_LOCALES.en = {
         backLife: 'Back to content'
     },
     guestbook: {
-        title: 'Guestbook',
+        title: 'Messages',
         subtitle: 'Share ideas, feedback, or a quick hello. No login required — sign in to post with your account name.',
         writeTitle: 'Write a message',
         postingAs: 'Posting as',
@@ -2551,20 +2551,24 @@ window.TB_LOCALES.en = {
     },
     about: {
         title: 'About Tool Basecamp',
-        lead: 'A global productivity toolkit — starting with document conversion and expanding to developer utilities.',
+        lead: 'A global productivity toolkit — documents, AI images, life utilities, casual games, and developer helpers, in Chinese and English.',
         documentTitle: 'Document Tools',
-        documentDesc: 'PDF to Word, Word to PDF, and Images to PDF — fast and straightforward.',
+        documentDesc: 'PDF to Word, Word to PDF, Images to PDF, and more — fast and straightforward.',
+        aiTitle: 'AI Images',
+        aiDesc: 'Image-to-Image (instruct edit) and Text-to-Image. Top up with a Xianyu redeem code; charged only on success.',
+        lifeTitle: 'Life & Content',
+        lifeDesc: 'Life plans, recipes, todos, notes, and everyday productivity tools.',
+        gamesTitle: 'Casual Games',
+        gamesDesc: 'Browser games that work on phone and desktop.',
         developerTitle: 'Developer Tools',
-        developerDesc: 'JSON to Java entity generator and more utilities for everyday dev work.',
+        developerDesc: 'JSON to Java entities, QR codes, and other day-to-day utilities.',
         privacyTitle: 'Privacy-friendly',
-        privacyDesc: 'Client-side tools run in your browser. Server tools process files and discard them after conversion.',
-        builtTitle: 'Built for everyone',
-        builtDesc: 'Clean UI in English and Chinese — no clutter, just tools that work.',
-        questions: 'Questions or feedback?',
-        visitGuestbook: 'Visit the guestbook',
-        friendLinks: 'Friend links',
-        friendLinksLead: 'Related sites',
-        friendGeek: 'Geek Frontier'
+        privacyDesc: 'Local tools run in your browser. Upload-based tools process files and discard them afterward.',
+        builtTitle: 'Bilingual',
+        builtDesc: 'Chinese / English UI — clean, focused, no clutter.',
+        questions: 'Questions, feedback, or need to reach the admin? Leave a message and we will see it.',
+        visitGuestbook: 'Leave a message',
+        contactAdmin: 'Contact admin (message)'
     },
     common: {
         serviceUnavailable: 'Service unavailable',

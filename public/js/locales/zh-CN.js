@@ -16,7 +16,7 @@ window.TB_LOCALES['zh-CN'] = {
         life: '内容',
         games: '游戏',
         sites: '导航',
-        guestbook: '留言板',
+        guestbook: '留言',
         about: '关于',
         siteStats: '统计',
         private: '自用'
@@ -2525,7 +2525,7 @@ window.TB_LOCALES['zh-CN'] = {
         backLife: '返回内容'
     },
     guestbook: {
-        title: '留言板',
+        title: '留言',
         subtitle: '分享想法、反馈或打个招呼。无需登录即可留言；登录后以账户名发布。',
         writeTitle: '写留言',
         postingAs: '发布身份',
@@ -2550,20 +2550,24 @@ window.TB_LOCALES['zh-CN'] = {
     },
     about: {
         title: '关于工具大本营',
-        lead: '面向全球用户的效率工具集 — 从文档转换起步，持续扩展开发者实用功能。',
+        lead: '面向全球用户的效率工具集 — 文档转换、AI 出图、生活内容、休闲游戏与开发小工具，中英文可用。',
         documentTitle: '文档工具',
-        documentDesc: 'PDF 转 Word、Word 转 PDF、图片转 PDF — 快速简洁。',
+        documentDesc: 'PDF 转 Word、Word 转 PDF、图片转 PDF 等，快速简洁。',
+        aiTitle: 'AI 出图',
+        aiDesc: '图生图（指令改图）、文生图；可用咸鱼兑换码充值，成功出图才扣余额。',
+        lifeTitle: '内容与生活',
+        lifeDesc: '生活计划、菜谱、待办记事等日常效率工具。',
+        gamesTitle: '休闲游戏',
+        gamesDesc: '网页即可玩的小游戏，支持手机与桌面。',
         developerTitle: '开发者工具',
-        developerDesc: 'JSON 转 Java 实体生成器等日常开发小工具。',
+        developerDesc: 'JSON 转 Java 实体、二维码等日常开发与实用小工具。',
         privacyTitle: '注重隐私',
-        privacyDesc: '客户端工具在浏览器中运行；服务端工具处理完文件后即丢弃。',
-        builtTitle: '为所有人打造',
-        builtDesc: '中英文界面，简洁无干扰 — 专注好用的工具。',
-        questions: '有问题或建议？',
-        visitGuestbook: '前往留言板',
-        friendLinks: '友情链接',
-        friendLinksLead: '相关站点',
-        friendGeek: '极客前沿'
+        privacyDesc: '本地工具在浏览器运行；需上传的服务处理完即丢弃，不另存你的文件。',
+        builtTitle: '中英双语',
+        builtDesc: '界面支持中文 / English，简洁无干扰，专注好用。',
+        questions: '有问题、建议或要联系管理员？请在留言区留言，我们会看到。',
+        visitGuestbook: '去留言',
+        contactAdmin: '联系管理员（留言）'
     },
     common: {
         serviceUnavailable: '服务不可用',
