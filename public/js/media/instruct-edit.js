@@ -31,8 +31,12 @@
   var bgTimeRow = document.getElementById('bg-time-row');
   var bgPanelEl = document.getElementById('bg-toggle-panel');
   var bgToggleBtn = document.getElementById('bg-toggle-btn');
+  var bgGroupsEl = document.getElementById('bg-groups');
+  var bgRegionSelect = document.getElementById('bg-region-select');
+  var bgPlaceSelect = document.getElementById('bg-place-select');
   var bgExpanded = false;
   var bgPresetButtons = null;
+  var bgGroupsData = [];
   var bgTime = 'day';
   var files = [];
   var previewUrls = [];
@@ -227,6 +231,72 @@
     promptEl.value = out.join('\n');
     setBusy(false);
     updateCostHint();
+  }
+
+  function collectBgGroups() {
+    if (!bgGroupsEl) return [];
+    var groups = bgGroupsEl.children || [];
+    var out = [];
+    for (var i = 0; i < groups.length; i++) {
+      var box = groups[i];
+      if (!box || !box.querySelectorAll) continue;
+      var titleEl = box.querySelector('.text-xs');
+      var btns = box.querySelectorAll('button[data-bg-place]');
+      var items = [];
+      for (var j = 0; j < btns.length; j++) {
+        var btn = btns[j];
+        items.push({
+          value: btn.getAttribute('data-bg-place') || btn.textContent || '',
+          label: (btn.textContent || '').trim()
+        });
+      }
+      if (titleEl && items.length) {
+        out.push({
+          label: (titleEl.textContent || '').trim(),
+          items: items
+        });
+      }
+    }
+    return out;
+  }
+
+  function renderBgPlaceOptions(regionIdx) {
+    if (!bgPlaceSelect) return;
+    bgPlaceSelect.innerHTML = '';
+    var ph = document.createElement('option');
+    ph.value = '';
+    ph.textContent = tr('tools.instructEdit.bgPlacePlaceholder');
+    bgPlaceSelect.appendChild(ph);
+    var group = bgGroupsData[regionIdx] || null;
+    if (!group) {
+      bgPlaceSelect.disabled = true;
+      return;
+    }
+    for (var i = 0; i < group.items.length; i++) {
+      var opt = document.createElement('option');
+      opt.value = group.items[i].value;
+      opt.textContent = group.items[i].label;
+      bgPlaceSelect.appendChild(opt);
+    }
+    bgPlaceSelect.disabled = false;
+  }
+
+  function renderBgRegionOptions() {
+    if (!bgRegionSelect) return;
+    bgGroupsData = collectBgGroups();
+    bgRegionSelect.innerHTML = '';
+    var ph = document.createElement('option');
+    ph.value = '';
+    ph.textContent = tr('tools.instructEdit.bgRegionPlaceholder');
+    bgRegionSelect.appendChild(ph);
+    for (var i = 0; i < bgGroupsData.length; i++) {
+      var opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = bgGroupsData[i].label;
+      bgRegionSelect.appendChild(opt);
+    }
+    bgRegionSelect.value = '';
+    renderBgPlaceOptions(-1);
   }
 
   function applyWallet(wallet) {
@@ -467,6 +537,7 @@
 
   function applyLocaleBits() {
     C.showWeChatBanner(wechatTip);
+    renderBgRegionOptions();
     if (historyHint) {
       historyHint.textContent = tr('tools.imageCloud.historyHint', {
         max: (Hist && Hist.MAX_PER_TOOL) || 24
@@ -674,6 +745,19 @@
     }
   }
   setBgPanelExpanded(false);
+  if (bgRegionSelect) {
+    bgRegionSelect.addEventListener('change', function () {
+      renderBgPlaceOptions(parseInt(bgRegionSelect.value || '-1', 10));
+    });
+  }
+  if (bgPlaceSelect) {
+    bgPlaceSelect.addEventListener('change', function () {
+      var place = (bgPlaceSelect.value || '').trim();
+      if (!place) return;
+      applyBackgroundPreset(place);
+      setBusy(false);
+    });
+  }
   // Location chips (everything with data-bg-place)
   bgPresetButtons = document.querySelectorAll('button[data-bg-place]');
   if (bgPresetButtons && bgPresetButtons.length) {
