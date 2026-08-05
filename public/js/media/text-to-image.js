@@ -325,7 +325,7 @@
       fd.append('prompt', prompt);
       fd.append('size', selectedSize());
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
-      C.apiJson('/image/text-to-image', { method: 'POST', body: fd, timeoutMs: 240000 }).then(function (data) {
+      C.apiJson('/image/text-to-image', { method: 'POST', body: fd, timeoutMs: 60000 }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {
