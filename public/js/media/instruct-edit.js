@@ -427,13 +427,13 @@
     imgWrap.className = 'instruct-result-img-wrap';
     var img = document.createElement('img');
     img.alt = '';
+    imgWrap.appendChild(img);
     var displaySrc = resultSrc(item);
     if (C.isWeChat && C.isWeChat() && item.imageUrl && !item.imageBase64 && C.applyWeChatResultImage) {
       C.applyWeChatResultImage(img, item, displaySrc);
     } else {
       img.src = displaySrc;
     }
-    imgWrap.appendChild(img);
     var dl = document.createElement('button');
     dl.type = 'button';
     dl.className = 'tb-btn';

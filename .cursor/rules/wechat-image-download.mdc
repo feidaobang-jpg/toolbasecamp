@@ -22,7 +22,7 @@ alwaysApply: true
 
 3. **展示用 URL**  
    - 微信内优先 **data URL**，避免 `blob:` 导致长按保存失败。  
-   - 异步转 data URL 期间：灰底框 + 居中转圈，**禁止**空 `src` + 模型名 `alt`（会出破图图标），也**不要**用刷刷骨架动画。
+   - 异步转 data URL 期间：灰底框 + 居中真实 DOM 转圈（不要只靠 `::after`，微信可能不显示），**禁止**空 `src` + 模型名 `alt`。先把 `img` 挂进 `.instruct-result-img-wrap` 再调 `applyWeChatResultImage`。
 
 4. **不要**在下载按钮里自动 `openSavePreview`。
 

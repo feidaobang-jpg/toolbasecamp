@@ -737,30 +737,31 @@
 }
 
 .instruct-result-img-wrap.is-loading {
-  min-height: 160px;
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
+  min-height: 180px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
 }
 
 .instruct-result-img-wrap.is-loading img {
   border: none;
-  min-height: 160px;
+  min-height: 180px;
   opacity: 0;
 }
 
-.instruct-result-img-wrap.is-loading::after {
-  content: '';
+.instruct-result-spinner {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 28px;
-  height: 28px;
-  margin: -14px 0 0 -14px;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
   border: 3px solid #cbd5e1;
   border-top-color: #2563eb;
   border-radius: 50%;
   animation: img-cloud-spin 0.7s linear infinite;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .instruct-result-card .tb-btn {

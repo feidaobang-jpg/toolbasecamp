@@ -292,13 +292,26 @@
     function applyWeChatResultImage(img, item, fallbackSrc) {
         if (!img || !item) return;
         var url = item.imageUrl;
-        var wrap = img.parentElement && img.parentElement.classList.contains('instruct-result-img-wrap')
+        var wrap = (img.parentElement && img.parentElement.classList.contains('instruct-result-img-wrap'))
             ? img.parentElement
             : null;
+
         function setLoading(on) {
-            if (wrap) wrap.classList.toggle('is-loading', !!on);
-            else img.classList.toggle('is-loading', !!on);
+            if (!wrap) return;
+            wrap.classList.toggle('is-loading', !!on);
+            var spin = wrap.querySelector('.instruct-result-spinner');
+            if (on) {
+                if (!spin) {
+                    spin = document.createElement('span');
+                    spin.className = 'instruct-result-spinner';
+                    spin.setAttribute('aria-hidden', 'true');
+                    wrap.appendChild(spin);
+                }
+            } else if (spin && spin.parentNode) {
+                spin.parentNode.removeChild(spin);
+            }
         }
+
         if (!isWeChat() || item.imageBase64 || !url) {
             img.src = fallbackSrc || '';
             setLoading(false);
