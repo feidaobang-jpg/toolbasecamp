@@ -19,7 +19,7 @@ window.TB_LOCALES.en = {
         sites: 'Directory',
         guestbook: 'Messages',
         about: 'About',
-        chat: 'Chat',
+        chat: 'Chat admin',
         siteStats: 'Stats',
         private: 'Private'
     },
@@ -2586,9 +2586,9 @@ window.TB_LOCALES.en = {
         privacyDesc: 'Local tools run in your browser. Upload-based tools process files and discard them afterward.',
         builtTitle: 'Bilingual',
         builtDesc: 'Chinese / English UI — clean, focused, no clutter.',
-        questions: 'Questions or feedback? Use public messages, or private chat for account / top-up issues (only you and admins can see it).',
+        questions: 'For account, top-up, or feedback, chat privately with the admin (only you and admins can see it).',
         visitGuestbook: 'Leave a message',
-        contactAdmin: 'Private chat with admin'
+        contactAdmin: 'Chat with admin'
     },
     common: {
         serviceUnavailable: 'Service unavailable',

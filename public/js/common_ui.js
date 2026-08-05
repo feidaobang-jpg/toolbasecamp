@@ -673,7 +673,7 @@
     function injectChatLink(user, wrap) {
         if (!user) return;
         const href = chatHrefForUser(user);
-        const label = tr('nav.chat') === 'nav.chat' ? '私聊' : tr('nav.chat');
+        const label = tr('nav.chat') === 'nav.chat' ? '私聊管理员' : tr('nav.chat');
 
         if (wrap && !document.getElementById('tb-chat-link')) {
             const a = document.createElement('a');

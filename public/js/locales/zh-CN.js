@@ -18,7 +18,7 @@ window.TB_LOCALES['zh-CN'] = {
         sites: '导航',
         guestbook: '留言',
         about: '关于',
-        chat: '私聊',
+        chat: '私聊管理员',
         siteStats: '统计',
         private: '自用'
     },
@@ -2585,7 +2585,7 @@ window.TB_LOCALES['zh-CN'] = {
         privacyDesc: '本地工具在浏览器运行；需上传的服务处理完即丢弃，不另存你的文件。',
         builtTitle: '中英双语',
         builtDesc: '界面支持中文 / English，简洁无干扰，专注好用。',
-        questions: '有问题、建议？可公开留言；账号/充值等请私聊管理员（仅双方可见）。',
+        questions: '账号、充值或建议可私聊管理员（仅双方可见）。',
         visitGuestbook: '去留言',
         contactAdmin: '私聊管理员'
     },
