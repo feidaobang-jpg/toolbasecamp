@@ -264,7 +264,7 @@
     if (dropZone) dropZone.hidden = has && files.length >= MAX_BATCH;
     // Prompt + background presets are useful before uploading; keep visible.
     if (promptWrap) promptWrap.hidden = false;
-    if (presetWrap) presetWrap.hidden = !has;
+    if (presetWrap) presetWrap.hidden = false;
     if (modelWrap) modelWrap.hidden = !has;
     if (!has && dropZone) dropZone.hidden = false;
     updateCostHint();
@@ -532,9 +532,6 @@
         sourceWrap.hidden = true;
       }
       if (dropZone) dropZone.hidden = false;
-      if (promptWrap) promptWrap.hidden = true;
-      if (presetWrap) presetWrap.hidden = true;
-      if (modelWrap) modelWrap.hidden = true;
       if (promptEl) promptEl.value = '';
       var inputs = modelInputs();
       for (var i = 0; i < inputs.length; i++) {
@@ -543,7 +540,7 @@
       setPreset('');
       setBgPanelExpanded(false);
       setBgTime('day');
-      if (promptWrap) promptWrap.hidden = false;
+      syncControlsVisible();
       syncSelectAllLabel();
       updateCostHint();
       C.setError(errorBox, '');

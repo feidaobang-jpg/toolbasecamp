@@ -2042,7 +2042,7 @@ window.TB_LOCALES.en = {
             dropTitle: 'Click or drop images (multi-select)',
             dropHint: 'JPG / PNG / WebP — max 8MB each, up to 4 images',
             prompt: 'Edit instruction',
-            promptPh: 'e.g. Make the sky blue… Or pick a style preset above.',
+            promptPh: 'e.g. Make the sky blue… Or pick a style preset.',
             bgChangeTitle: 'Background change',
             bgTimeDay: 'Day',
             bgTimeDusk: 'Dusk',

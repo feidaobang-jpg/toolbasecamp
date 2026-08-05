@@ -2041,7 +2041,7 @@ window.TB_LOCALES['zh-CN'] = {
             dropTitle: '点击或拖入图片（可多选）',
             dropHint: 'JPG / PNG / WebP，单张最大 8MB，最多 4 张',
             prompt: '修改说明',
-            promptPh: '例如：把天空改成蓝色… 或先选上方风格预设',
+            promptPh: '例如：把天空改成蓝色… 或先选风格预设',
             bgChangeTitle: '背景改变',
             bgTimeDay: '白天',
             bgTimeDusk: '黄昏',
