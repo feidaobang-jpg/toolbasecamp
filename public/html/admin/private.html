@@ -11,21 +11,22 @@
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/site-mobile-nav.css" />
   <link rel="stylesheet" href="../../css/admin/private-hub.css?v=1" />
-  <script src="../../js/locales/en.js"></script>
-  <script src="../../js/locales/zh-CN.js"></script>
+  <script src="../../js/locales/en.js?v=chat4"></script>
+  <script src="../../js/locales/zh-CN.js?v=chat4"></script>
   <script src="../../js/i18n.js?v=stats1"></script>
   <script src="../../js/config.js"></script>
-  <script src="../../js/common_ui.js?v=8"></script>
+  <script src="../../js/common_ui.js?v=chat4"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-      <a href="../../index.html" class="flex items-center gap-2 flex-shrink-0 group">
-        <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md">TB</div>
-        <h1 class="text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate" data-i18n="privateHub.title">自用</h1>
+      <a href="../../index.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i>
+        <span data-i18n="privateHub.backHome">返回首页</span>
       </a>
-      <div class="ml-auto flex items-center gap-3 text-sm">
-        <span id="auth-label" class="text-gray-500"></span>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.title">自用</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm min-w-0">
+        <span id="auth-label" class="text-gray-500 truncate"></span>
         <a id="login-link" href="../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
       </div>
     </div>

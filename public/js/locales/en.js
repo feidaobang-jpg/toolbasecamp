@@ -19,12 +19,14 @@ window.TB_LOCALES.en = {
         sites: 'Directory',
         guestbook: 'Messages',
         about: 'About',
-        chat: 'Chat admin',
+        chat: 'Contact admin',
+        chatInbox: 'Chat inbox',
         siteStats: 'Stats',
         private: 'Private'
     },
     privateHub: {
         title: 'Private',
+        backHome: 'Back to home',
         heading: 'Admin private tools',
         subtitle: 'Admins only · hidden from public nav and SEO',
         needLogin: 'Please sign in as admin',
@@ -2553,7 +2555,7 @@ window.TB_LOCALES.en = {
         deleteFailed: 'Delete failed'
     },
     chat: {
-        title: 'Chat with admin',
+        title: 'Contact admin',
         subtitle: 'Private — only you and admins can see it.',
         needLogin: 'Please sign in to chat with the admin.',
         placeholder: 'Type a message…',
@@ -2588,7 +2590,7 @@ window.TB_LOCALES.en = {
         builtDesc: 'Chinese / English UI — clean, focused, no clutter.',
         questions: 'For account, top-up, or feedback, chat privately with the admin (only you and admins can see it).',
         visitGuestbook: 'Leave a message',
-        contactAdmin: 'Chat with admin'
+        contactAdmin: 'Contact admin'
     },
     common: {
         serviceUnavailable: 'Service unavailable',

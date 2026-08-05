@@ -18,12 +18,14 @@ window.TB_LOCALES['zh-CN'] = {
         sites: '导航',
         guestbook: '留言',
         about: '关于',
-        chat: '私聊管理员',
+        chat: '联系管理员',
+        chatInbox: '私聊收件箱',
         siteStats: '统计',
         private: '自用'
     },
     privateHub: {
         title: '自用',
+        backHome: '返回首页',
         heading: '管理员自用工具',
         subtitle: '仅管理员可见 · 不进公开导航与 SEO',
         needLogin: '请先登录管理员账号',
@@ -2552,7 +2554,7 @@ window.TB_LOCALES['zh-CN'] = {
         deleteFailed: '删除失败'
     },
     chat: {
-        title: '私聊管理员',
+        title: '联系管理员',
         subtitle: '仅你与管理员可见，不会公开。',
         needLogin: '请先登录后再私聊管理员。',
         placeholder: '输入消息…',
@@ -2587,7 +2589,7 @@ window.TB_LOCALES['zh-CN'] = {
         builtDesc: '界面支持中文 / English，简洁无干扰，专注好用。',
         questions: '账号、充值或建议可私聊管理员（仅双方可见）。',
         visitGuestbook: '去留言',
-        contactAdmin: '私聊管理员'
+        contactAdmin: '联系管理员'
     },
     common: {
         serviceUnavailable: '服务不可用',

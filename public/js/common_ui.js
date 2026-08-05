@@ -616,6 +616,9 @@
 
     function injectAdminLinks(user, wrap) {
         if (!isAdminUser(user)) return;
+        const path = String(window.location.pathname || '');
+        // Already on private hub / private tools — don't add another「自用」link
+        if (/\/admin\/private(\.html|\/)/.test(path)) return;
         const base = getSiteRootPrefix();
         const privateLabel = tr('nav.private') === 'nav.private' ? '自用' : tr('nav.private');
 
@@ -670,10 +673,19 @@
         } catch (e) { /* ignore */ }
     }
 
+    function chatLabelForUser(user) {
+        if (isAdminUser(user)) {
+            const inbox = tr('nav.chatInbox');
+            return inbox === 'nav.chatInbox' ? '私聊收件箱' : inbox;
+        }
+        const label = tr('nav.chat');
+        return label === 'nav.chat' ? '联系管理员' : label;
+    }
+
     function injectChatLink(user, wrap) {
         if (!user) return;
         const href = chatHrefForUser(user);
-        const label = tr('nav.chat') === 'nav.chat' ? '私聊管理员' : tr('nav.chat');
+        const label = chatLabelForUser(user);
 
         if (wrap && !document.getElementById('tb-chat-link')) {
             const a = document.createElement('a');
