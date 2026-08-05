@@ -103,11 +103,18 @@ def admin_create_codes(body: CreateCodesBody, admin: dict = Depends(_admin)):
 
 
 @router.get("/admin/codes")
-def admin_list_codes(limit: int = 40, admin: dict = Depends(_admin)):
+def admin_list_codes(
+    status: str = "unused",
+    page: int = 1,
+    page_size: int = 20,
+    admin: dict = Depends(_admin),
+):
     _ = admin
     conn = _conn()
     try:
-        return {"success": True, "codes": list_redeem_codes(conn, limit=limit)}
+        out = list_redeem_codes(conn, status=status, page=page, page_size=page_size)
+        out["success"] = True
+        return out
     finally:
         conn.close()
 

@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
-  <script src="../../../js/locales/en.js?v=tools15"></script>
-  <script src="../../../js/locales/zh-CN.js?v=tools15"></script>
+  <script src="../../../js/locales/en.js?v=wallet2"></script>
+  <script src="../../../js/locales/zh-CN.js?v=wallet2"></script>
   <script src="../../../js/i18n.js?v=locale1"></script>
   <script src="../../../js/config.js"></script>
   <script src="../../../js/common_ui.js?v=8"></script>
@@ -90,13 +90,23 @@
           </div>
           <div id="codes-status" class="ladder-status"></div>
           <pre id="codes-new" class="text-xs bg-slate-50 border border-slate-100 rounded-lg p-3 overflow-auto hidden whitespace-pre-wrap"></pre>
-          <div id="codes-list" class="text-sm space-y-2"></div>
+          <div class="flex flex-wrap gap-2 mt-3" id="codes-filter">
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-blue-600 bg-blue-50 text-blue-700 is-active" data-status="unused" data-i18n="privateHub.ops.walletFilterUnused">未用</button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="used" data-i18n="privateHub.ops.walletFilterUsed">已用</button>
+          </div>
+          <div id="codes-list" class="text-sm space-y-2 mt-3"></div>
+          <div class="action-row mt-3" id="codes-pager" hidden>
+            <button type="button" class="tb-btn" id="codes-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
+            <span class="text-sm text-gray-500 self-center" id="codes-page-label"></span>
+            <button type="button" class="tb-btn" id="codes-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
+          </div>
         </div>
       </section>
     </div>
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=1"></script>
-  <script src="../../../js/admin/ai-wallet.js?v=1"></script>
+  <script src="../../../js/admin/ai-wallet.js?v=2"></script>
 </body>
 </html>

@@ -64,6 +64,13 @@ window.TB_LOCALES['zh-CN'] = {
             walletCodesEmpty: '暂无兑换码',
             walletCodeUsed: '已用',
             walletCodeUnused: '未用',
+            walletCodeBy: '使用者：{account}',
+            walletFilterAll: '全部',
+            walletFilterUnused: '未用',
+            walletFilterUsed: '已用',
+            walletPagePrev: '上一页',
+            walletPageNext: '下一页',
+            walletPageLabel: '第 {page}/{pages} 页 · 共 {total} 条',
             walletNeedFields: '请填写账号与有效金额'
         },
         ladder: {

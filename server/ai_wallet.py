@@ -359,35 +359,78 @@ def create_redeem_codes(
     return _tx(conn, _run)
 
 
-def list_redeem_codes(conn, *, limit: int = 40) -> list[dict]:
-    lim = max(1, min(int(limit or 40), 100))
+def list_redeem_codes(
+    conn,
+    *,
+    status: str = "unused",
+    page: int = 1,
+    page_size: int = 20,
+) -> dict:
+    """List redeem codes with filter + pagination.
+
+    status: all | unused | used
+    """
+    st = (status or "unused").strip().lower()
+    if st not in ("all", "unused", "used"):
+        st = "unused"
+    size = max(1, min(int(page_size or 20), 50))
+    pg = max(1, int(page or 1))
+    offset = (pg - 1) * size
 
     def _run(cur):
         ensure_wallet_schema(cur)
+        where = ""
+        if st == "unused":
+            where = "WHERE r.redeemed_by IS NULL"
+        elif st == "used":
+            where = "WHERE r.redeemed_by IS NOT NULL"
+
+        cur.execute(f"SELECT COUNT(*) AS c FROM ai_redeem_codes r {where}")
+        total_row = cur.fetchone() or {}
+        total = int(total_row.get("c") or 0)
+
         cur.execute(
-            """
-            SELECT code, amount, note, created_at, redeemed_by, redeemed_at
-            FROM ai_redeem_codes
-            ORDER BY id DESC
-            LIMIT %s
+            f"""
+            SELECT
+                r.code, r.amount, r.note, r.created_at,
+                r.redeemed_by, r.redeemed_at,
+                u.email AS user_email, u.phone AS user_phone
+            FROM ai_redeem_codes r
+            LEFT JOIN users u ON u.id = r.redeemed_by
+            {where}
+            ORDER BY r.id DESC
+            LIMIT %s OFFSET %s
             """,
-            (lim,),
+            (size, offset),
         )
         rows = cur.fetchall() or []
         items = []
         for r in rows:
+            uid = int(r["redeemed_by"]) if r.get("redeemed_by") else None
+            email = (r.get("user_email") or "").strip()
+            phone = (r.get("user_phone") or "").strip()
+            account = email or phone or (f"UID:{uid}" if uid else None)
             items.append(
                 {
                     "code": r.get("code"),
                     "amountCny": float(money(r.get("amount"))),
                     "note": r.get("note"),
                     "createdAt": str(r.get("created_at") or ""),
-                    "redeemed": bool(r.get("redeemed_by")),
-                    "redeemedBy": int(r["redeemed_by"]) if r.get("redeemed_by") else None,
+                    "redeemed": bool(uid),
+                    "redeemedBy": uid,
+                    "redeemedAccount": account,
                     "redeemedAt": str(r.get("redeemed_at") or "") if r.get("redeemed_at") else None,
                 }
             )
-        return items
+        pages = max(1, (total + size - 1) // size) if total else 1
+        return {
+            "codes": items,
+            "total": total,
+            "page": pg,
+            "pageSize": size,
+            "pages": pages,
+            "status": st,
+        }
 
     return _tx(conn, _run)
 

@@ -65,6 +65,13 @@ window.TB_LOCALES.en = {
             walletCodesEmpty: 'No codes yet',
             walletCodeUsed: 'Used',
             walletCodeUnused: 'Unused',
+            walletCodeBy: 'By: {account}',
+            walletFilterAll: 'All',
+            walletFilterUnused: 'Unused',
+            walletFilterUsed: 'Used',
+            walletPagePrev: 'Prev',
+            walletPageNext: 'Next',
+            walletPageLabel: 'Page {page}/{pages} · {total} total',
             walletNeedFields: 'Enter account and a valid amount'
         },
         ladder: {

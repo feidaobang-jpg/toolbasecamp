@@ -1,6 +1,12 @@
 (function () {
   'use strict';
 
+  var codesStatus = 'unused';
+  var codesPage = 1;
+  var codesPages = 1;
+  var codesTotal = 0;
+  var PAGE_SIZE = 20;
+
   function apiBase() {
     if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) return siteConfig.apiBase;
     var host = window.location.hostname;
@@ -45,6 +51,39 @@
     });
   }
 
+  function syncFilterChips() {
+    var row = document.getElementById('codes-filter');
+    if (!row) return;
+    var chips = row.querySelectorAll('button[data-status]');
+    for (var i = 0; i < chips.length; i++) {
+      var st = chips[i].getAttribute('data-status') || 'unused';
+      var on = st === codesStatus;
+      chips[i].classList.toggle('is-active', on);
+      chips[i].classList.toggle('border-blue-600', on);
+      chips[i].classList.toggle('bg-blue-50', on);
+      chips[i].classList.toggle('text-blue-700', on);
+      chips[i].classList.toggle('border-gray-300', !on);
+      chips[i].classList.toggle('bg-white', !on);
+      chips[i].classList.toggle('text-gray-700', !on);
+    }
+  }
+
+  function syncPager() {
+    var pager = document.getElementById('codes-pager');
+    var label = document.getElementById('codes-page-label');
+    var prev = document.getElementById('codes-prev');
+    var next = document.getElementById('codes-next');
+    if (pager) pager.hidden = codesTotal <= 0;
+    if (label) {
+      label.textContent = tr('privateHub.ops.walletPageLabel')
+        .replace('{page}', String(codesPage))
+        .replace('{pages}', String(codesPages))
+        .replace('{total}', String(codesTotal));
+    }
+    if (prev) prev.disabled = codesPage <= 1;
+    if (next) next.disabled = codesPage >= codesPages;
+  }
+
   function renderCodes(list) {
     var box = document.getElementById('codes-list');
     if (!box) return;
@@ -56,9 +95,18 @@
       var used = c.redeemed
         ? ('<span class="text-amber-600">' + tr('privateHub.ops.walletCodeUsed') + '</span>')
         : ('<span class="text-emerald-600">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
+      var who = '';
+      if (c.redeemed && c.redeemedAccount) {
+        who = '<span class="text-xs text-gray-500 break-all">' +
+          tr('privateHub.ops.walletCodeBy').replace('{account}', String(c.redeemedAccount)) +
+          '</span>';
+      }
       return (
         '<div class="flex flex-wrap items-center justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
-          '<code class="text-sm font-mono">' + String(c.code || '') + '</code>' +
+          '<div class="min-w-0 flex-1 space-y-0.5">' +
+            '<code class="text-sm font-mono">' + String(c.code || '') + '</code>' +
+            who +
+          '</div>' +
           '<span>¥' + Number(c.amountCny || 0).toFixed(2) + '</span>' +
           used +
         '</div>'
@@ -67,8 +115,16 @@
   }
 
   function loadCodes() {
-    return apiJson('/wallet/admin/codes?limit=40').then(function (data) {
+    syncFilterChips();
+    var q = '/wallet/admin/codes?status=' + encodeURIComponent(codesStatus) +
+      '&page=' + encodeURIComponent(String(codesPage)) +
+      '&page_size=' + encodeURIComponent(String(PAGE_SIZE));
+    return apiJson(q).then(function (data) {
+      codesTotal = Number(data.total || 0) || 0;
+      codesPage = Number(data.page || codesPage) || 1;
+      codesPages = Number(data.pages || 1) || 1;
       renderCodes(data.codes || []);
+      syncPager();
     }).catch(function (err) {
       setStatus(document.getElementById('codes-status'), err.message, true);
     });
@@ -80,6 +136,9 @@
     var creditBtn = document.getElementById('btn-credit');
     var codesBtn = document.getElementById('btn-codes');
     var refreshBtn = document.getElementById('btn-refresh-codes');
+    var filterRow = document.getElementById('codes-filter');
+    var prevBtn = document.getElementById('codes-prev');
+    var nextBtn = document.getElementById('codes-next');
 
     if (creditBtn) {
       creditBtn.addEventListener('click', function () {
@@ -136,12 +195,40 @@
             neo.classList.remove('hidden');
             neo.textContent = codes.join('\n');
           }
+          codesStatus = 'unused';
+          codesPage = 1;
           return loadCodes();
         }).catch(function (err) {
           setStatus(st, err.message, true);
         }).finally(function () {
           codesBtn.disabled = false;
         });
+      });
+    }
+
+    if (filterRow) {
+      filterRow.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('button[data-status]') : null;
+        if (!btn) return;
+        var st = btn.getAttribute('data-status') || 'unused';
+        if (st === codesStatus) return;
+        codesStatus = st;
+        codesPage = 1;
+        loadCodes();
+      });
+    }
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function () {
+        if (codesPage <= 1) return;
+        codesPage -= 1;
+        loadCodes();
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        if (codesPage >= codesPages) return;
+        codesPage += 1;
+        loadCodes();
       });
     }
 
