@@ -426,6 +426,22 @@
     img.alt = item.model || '';
     img.src = resultSrc(item);
     img.addEventListener('click', function () {
+      if (C.isWeChat && C.isWeChat() && !item.imageBase64 && item.imageUrl) {
+        // For WeChat: build a data: URL on demand so long-press "Forward/Save" works reliably.
+        fetch(item.imageUrl).then(function (res) {
+          return res.blob();
+        }).then(function (blob) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            C.openSavePreview(String(reader.result || img.src), tr('tools.imageCloud.longPressSave'));
+          };
+          reader.readAsDataURL(blob);
+        }).catch(function () {
+          C.openSavePreview(img.src, tr('tools.imageCloud.longPressSave'));
+        });
+        return;
+      }
+
       var longPressSrc = img.src;
       if (C.isWeChat && C.isWeChat() && item.imageBase64) {
         longPressSrc = C.b64ToDataUrl(item.imageBase64, item.contentType);
