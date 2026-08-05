@@ -191,6 +191,26 @@ def _save_tmp_image(data: bytes, ctype: str) -> str:
     return name
 
 
+def _compress_for_mobile(data: bytes, ctype: str) -> tuple[bytes, str]:
+    """Smaller JPEG for mobile light-response downloads."""
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+
+        im = Image.open(BytesIO(data))
+        if im.mode in ("RGBA", "P", "LA"):
+            im = im.convert("RGB")
+        buf = BytesIO()
+        im.save(buf, format="JPEG", quality=85, optimize=True)
+        out = buf.getvalue()
+        if out and len(out) < len(data):
+            return out, "image/jpeg"
+    except Exception:
+        pass
+    return data, ctype or "image/png"
+
+
 @router.get("/tmp/{name}")
 def image_tmp(name: str):
     safe = os.path.basename(name or "")
@@ -678,7 +698,10 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
-        tmp_name = _save_tmp_image(out, ctype or "image/png")
+        save_data, save_ctype = out, ctype or "image/png"
+        if light_response:
+            save_data, save_ctype = _compress_for_mobile(out, save_ctype)
+        tmp_name = _save_tmp_image(save_data, save_ctype)
         return {
             "index": idx,
             "model": mid,
@@ -686,7 +709,7 @@ async def api_instruct_edit(
             "userPriceCny": float(user_price_cny(_price_for(mid))),
             "imageBase64": None if light_response else base64.b64encode(out).decode("ascii"),
             "imageUrl": f"/api/image/tmp/{tmp_name}",
-            "contentType": ctype or "image/png",
+            "contentType": save_ctype,
         }
 
     async def _one_with_retry(idx: int, blob: bytes, mid: str) -> dict:

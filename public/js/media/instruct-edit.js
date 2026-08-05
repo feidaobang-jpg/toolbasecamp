@@ -425,29 +425,18 @@
     title.textContent = modelTitle(item.model);
     var img = document.createElement('img');
     img.alt = item.model || '';
-    img.src = resultSrc(item);
+    var displaySrc = resultSrc(item);
+    if (C.isWeChat && C.isWeChat() && item.imageUrl && !item.imageBase64 && C.applyWeChatResultImage) {
+      C.applyWeChatResultImage(img, item, displaySrc);
+    } else {
+      img.src = displaySrc;
+    }
     img.addEventListener('click', function () {
-      if (C.isWeChat && C.isWeChat() && !item.imageBase64 && item.imageUrl) {
-        // For WeChat: build a data: URL on demand so long-press "Forward/Save" works reliably.
-        fetch(item.imageUrl).then(function (res) {
-          return res.blob();
-        }).then(function (blob) {
-          var reader = new FileReader();
-          reader.onload = function () {
-            C.openSavePreview(String(reader.result || img.src), tr('tools.imageCloud.longPressSave'));
-          };
-          reader.readAsDataURL(blob);
-        }).catch(function () {
-          C.openSavePreview(img.src, tr('tools.imageCloud.longPressSave'));
-        });
-        return;
-      }
-
-      var longPressSrc = img.src;
+      var previewSrc = item._wechatDataUrl || img.src;
       if (C.isWeChat && C.isWeChat() && item.imageBase64) {
-        longPressSrc = C.b64ToDataUrl(item.imageBase64, item.contentType);
+        previewSrc = C.b64ToDataUrl(item.imageBase64, item.contentType);
       }
-      C.openSavePreview(longPressSrc, tr('tools.imageCloud.longPressSave'));
+      C.openSavePreview(previewSrc, tr('tools.imageCloud.longPressSave'));
     });
     var dl = document.createElement('button');
     dl.type = 'button';

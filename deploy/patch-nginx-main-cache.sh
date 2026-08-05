@@ -9,6 +9,10 @@ cat > "$SNIPPET" << 'EOF'
 location ~ ^/(js|css)/ {
     add_header Cache-Control "no-cache, must-revalidate" always;
 }
+
+location ~ \.html$ {
+    add_header Cache-Control "no-cache, must-revalidate" always;
+}
 EOF
 
 echo "OK: static cache snippet at $SNIPPET"

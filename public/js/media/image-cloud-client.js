@@ -270,6 +270,40 @@
         return Promise.reject(new Error('unsupported'));
     }
 
+    /** Fetch image URL and return data: URL (for WeChat long-press save/forward). */
+    function urlToDataUrl(url) {
+        return blobFromSource(url).then(function (blob) {
+            return new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function () { resolve(String(reader.result || '')); };
+                reader.onerror = function () { reject(reader.error || new Error('read failed')); };
+                reader.readAsDataURL(blob);
+            });
+        });
+    }
+
+    /**
+     * WeChat: show result images as data: URLs so long-press save/forward works
+     * and images appear at once (no progressive top-to-bottom paint).
+     */
+    function applyWeChatResultImage(img, item, fallbackSrc) {
+        if (!img || !item) return;
+        var url = item.imageUrl;
+        if (!isWeChat() || item.imageBase64 || !url) {
+            img.src = fallbackSrc || '';
+            return;
+        }
+        img.classList.add('is-loading');
+        urlToDataUrl(url).then(function (dataUrl) {
+            item._wechatDataUrl = dataUrl;
+            img.src = dataUrl;
+            img.classList.remove('is-loading');
+        }).catch(function () {
+            img.src = fallbackSrc || url;
+            img.classList.remove('is-loading');
+        });
+    }
+
     function closeSavePreview() {
         var el = document.getElementById('tb-img-save-preview');
         if (el && el.parentNode) el.parentNode.removeChild(el);
@@ -461,6 +495,8 @@
         b64ToDataUrl: b64ToDataUrl,
         displayImageSrc: displayImageSrc,
         isWeChat: isWeChat,
+        urlToDataUrl: urlToDataUrl,
+        applyWeChatResultImage: applyWeChatResultImage,
         downloadBlob: downloadBlob,
         openSavePreview: openSavePreview,
         bindImagePreview: bindImagePreview,
