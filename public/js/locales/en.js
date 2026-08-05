@@ -1979,6 +1979,7 @@ window.TB_LOCALES.en = {
             networkError: 'Network error. Please try again.',
             unknownError: 'Something went wrong. Please try again.',
             processing: 'Processing...',
+            loadingGenerated: 'Loading generated image…',
             historyTitle: 'Local history',
             historyHint: 'Recent images are kept in this browser (up to {max}). Clearing site data or switching devices removes them.',
             historyEmpty: 'No history yet',

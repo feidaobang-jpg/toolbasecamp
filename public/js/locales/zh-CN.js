@@ -1978,6 +1978,7 @@ window.TB_LOCALES['zh-CN'] = {
             networkError: '网络异常，请稍后重试',
             unknownError: '操作失败，请稍后重试',
             processing: '处理中...',
+            loadingGenerated: '正在加载生成的图片…',
             historyTitle: '本机历史',
             historyHint: '最近生成的图片保存在本机浏览器（最多 {max} 张），换设备或清缓存会丢失。',
             historyEmpty: '暂无历史记录',

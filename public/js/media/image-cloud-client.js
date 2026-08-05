@@ -376,16 +376,23 @@
         function setLoading(on) {
             if (!wrap) return;
             wrap.classList.toggle('is-loading', !!on);
-            var spin = wrap.querySelector('.instruct-result-spinner');
+            var box = wrap.querySelector('.instruct-result-loading');
             if (on) {
-                if (!spin) {
-                    spin = document.createElement('span');
+                if (!box) {
+                    box = document.createElement('div');
+                    box.className = 'instruct-result-loading';
+                    var spin = document.createElement('span');
                     spin.className = 'instruct-result-spinner';
                     spin.setAttribute('aria-hidden', 'true');
-                    wrap.appendChild(spin);
+                    var tip = document.createElement('p');
+                    tip.className = 'instruct-result-loading-text';
+                    tip.textContent = tr('tools.imageCloud.loadingGenerated');
+                    box.appendChild(spin);
+                    box.appendChild(tip);
+                    wrap.appendChild(box);
                 }
-            } else if (spin && spin.parentNode) {
-                spin.parentNode.removeChild(spin);
+            } else if (box && box.parentNode) {
+                box.parentNode.removeChild(box);
             }
         }
 
