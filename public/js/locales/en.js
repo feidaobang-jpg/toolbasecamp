@@ -140,7 +140,7 @@ window.TB_LOCALES.en = {
         aiBalance: 'Balance',
         aiBalanceUnlimited: 'Admin: unlimited',
         redeemTitle: 'Redeem code',
-        redeemHint: 'Enter a code from an admin to top up your account balance.',
+        redeemHint: 'After purchase you get a redeem code. Enter it here to top up, then use Instruct Image Edit (charged only on success).',
         redeemCode: 'Redeem code',
         redeemBtn: 'Redeem',
         redeemOk: 'Redeemed ¥{amount}. Balance now ¥{balance}',
@@ -199,7 +199,11 @@ window.TB_LOCALES.en = {
         open: 'Open',
         loginRequired: 'Sign-in',
         paidRequired: 'Paid',
-        dailyLimitRequired: 'Daily limit'
+        dailyLimitRequired: 'Daily limit',
+        howtoTitle: 'How to use a redeem code',
+        howtoBody: '1) Sign in → 2) Open Profile (top right) and redeem your code → 3) Open Instruct Image Edit, upload, and generate. Charged only on success.',
+        howtoRedeem: 'Redeem',
+        howtoInstruct: 'Instruct Edit'
     },
     games: {
         groups: {

@@ -238,6 +238,20 @@
         containerEl.appendChild(emptyEl);
     }
 
+    function renderHowtoBanner(containerEl) {
+        if (!containerEl) return;
+        const box = document.createElement('div');
+        box.className = 'hub-howto';
+        box.innerHTML =
+            '<div class="hub-howto-title">' + escapeHtml(tr('hub.howtoTitle')) + '</div>' +
+            '<p class="hub-howto-body">' + escapeHtml(tr('hub.howtoBody')) + '</p>' +
+            '<div class="hub-howto-actions">' +
+                '<a class="tb-btn" href="html/auth/profile.html">' + escapeHtml(tr('hub.howtoRedeem')) + '</a>' +
+                '<a class="tb-btn" href="html/media/instruct-edit.html">' + escapeHtml(tr('hub.howtoInstruct')) + '</a>' +
+            '</div>';
+        containerEl.appendChild(box);
+    }
+
     function renderToolsHub() {
         const centerEl = document.getElementById('main-content');
         const rightEl = document.getElementById('hub-sidebar-right');
@@ -257,6 +271,7 @@
 
         renderRightPortals(rightEl);
         renderMobileSearch(mobileToolbar);
+        renderHowtoBanner(centerEl);
         renderToolGroups(centerEl, groups);
 
         // 手机端子站入口放在工具列表最下方，不占首屏
