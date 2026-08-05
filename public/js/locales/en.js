@@ -2038,6 +2038,7 @@ window.TB_LOCALES.en = {
         instructEdit: {
             title: 'Image-to-Image (Instruct Edit)',
             desc: 'Upload photos and describe the change (img2img). Style presets, travel backgrounds, up to 4 images. Sign-in required; charged from balance on success.',
+            redeemTip: 'Top up: search seller feidaobang on Xianyu for a redeem code → redeem in Profile (top right). Charged only on success.',
             dropTitle: 'Click or drop images (multi-select)',
             dropHint: 'JPG / PNG / WebP — max 8MB each, up to 4 images',
             prompt: 'Edit instruction',

@@ -2037,6 +2037,7 @@ window.TB_LOCALES['zh-CN'] = {
         instructEdit: {
             title: '图生图（指令改图）',
             desc: '上传图片并用文字描述修改（图生图）。支持风格预设、旅游背景与最多 4 张批量。需登录，成功出图扣余额。',
+            redeemTip: '充值：咸鱼搜索卖家 feidaobang 下单获兑换码 → 右上角「个人中心」兑换（成功出图才扣余额）。',
             dropTitle: '点击或拖入图片（可多选）',
             dropHint: 'JPG / PNG / WebP，单张最大 8MB，最多 4 张',
             prompt: '修改说明',
