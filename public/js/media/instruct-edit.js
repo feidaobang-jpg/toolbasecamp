@@ -23,6 +23,7 @@
   var clearBtn = document.getElementById('clear-btn');
   var balanceLine = document.getElementById('balance-line');
   var errorBox = document.getElementById('error-box');
+  var resultMeta = document.getElementById('result-meta');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
   var wechatTip = document.getElementById('wechat-tip');
@@ -39,6 +40,7 @@
   var activePreset = '';
   var priceMarkup = 2;
   var histPanel = null;
+  var runStartedAt = 0;
 
   function tr(key, params) {
     return C.tr(key, params);
@@ -494,7 +496,9 @@
         return;
       }
       C.setError(errorBox, '');
+      if (resultMeta) resultMeta.textContent = '';
       setBusy(true);
+      runStartedAt = Date.now();
       var fd = new FormData();
       for (var i = 0; i < files.length; i++) {
         fd.append('files', files[i], files[i].name || ('image-' + (i + 1) + '.jpg'));
@@ -502,7 +506,8 @@
       fd.append('prompt', (promptEl && promptEl.value) || '');
       if (activePreset) fd.append('preset', activePreset);
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
-      C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, timeoutMs: 60000 }).then(function (data) {
+      var timeoutMs = (C.isWeChat && C.isWeChat()) ? 300000 : 60000;
+      C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, timeoutMs: timeoutMs }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {
@@ -522,6 +527,10 @@
           throw new Error(tr('tools.instructEdit.failed') + (raw ? '：' + raw : ''));
         }
         renderResults(images, data.partialErrors);
+        if (resultMeta && runStartedAt) {
+          var seconds = Math.max(1, Math.round((Date.now() - runStartedAt) / 1000));
+          resultMeta.textContent = tr('tools.instructEdit.elapsed', { seconds: seconds });
+        }
         if (histPanel) {
           var promptText = (promptEl && promptEl.value) || '';
           if (activePreset === 'manga_to_real') promptText = tr('tools.instructEdit.presetMangaToReal');
@@ -530,7 +539,12 @@
         }
       }).catch(function (err) {
         C.setError(errorBox, err.message);
+        if (resultMeta && runStartedAt) {
+          var failSeconds = Math.max(1, Math.round((Date.now() - runStartedAt) / 1000));
+          resultMeta.textContent = tr('tools.instructEdit.elapsed', { seconds: failSeconds });
+        }
       }).finally(function () {
+        runStartedAt = 0;
         setBusy(false);
       });
     });
@@ -558,6 +572,7 @@
       syncSelectAllLabel();
       updateCostHint();
       C.setError(errorBox, '');
+      if (resultMeta) resultMeta.textContent = '';
       setBusy(false);
     });
   }

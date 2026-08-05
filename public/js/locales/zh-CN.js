@@ -2074,6 +2074,7 @@ window.TB_LOCALES['zh-CN'] = {
             tooMany: '最多上传 {max} 张图片',
             imageN: '图{n}',
             failed: '改图失败',
+            elapsed: '本次耗时 {seconds} 秒',
             partialFail: '部分失败：',
             dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },

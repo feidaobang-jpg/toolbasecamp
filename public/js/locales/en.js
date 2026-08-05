@@ -2075,6 +2075,7 @@ window.TB_LOCALES.en = {
             tooMany: 'Up to {max} images',
             imageN: 'Image {n}',
             failed: 'Edit failed',
+            elapsed: 'Completed in {seconds}s',
             partialFail: 'Some failed:',
             dashscopeMissing: 'Image service is not ready. Please try again later.'
         },
