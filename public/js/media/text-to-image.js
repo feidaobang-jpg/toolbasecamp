@@ -75,7 +75,8 @@
   }
 
   function resultSrc(b64, ctype) {
-    if (C.isWeChat && C.isWeChat()) return C.b64ToDataUrl(b64, ctype);
+    // Performance: on WeChat, converting every image to data:URL can be very slow.
+    // Use object URL for in-page rendering; switch to data:URL only in preview (click).
     return b64ToBlobUrl(b64, ctype);
   }
 
@@ -200,7 +201,13 @@
         var img = document.createElement('img');
         img.alt = item.model || '';
         img.src = resultSrc(item.imageBase64, item.contentType);
-        C.bindImagePreview(img);
+        img.addEventListener('click', function () {
+          var longPressSrc = img.src;
+          if (C.isWeChat && C.isWeChat()) {
+            longPressSrc = C.b64ToDataUrl(item.imageBase64, item.contentType);
+          }
+          C.openSavePreview(longPressSrc, tr('tools.imageCloud.longPressSave'));
+        });
         var dl = document.createElement('button');
         dl.type = 'button';
         dl.className = 'tb-btn';
@@ -318,7 +325,7 @@
       fd.append('prompt', prompt);
       fd.append('size', selectedSize());
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
-      C.apiJson('/image/text-to-image', { method: 'POST', body: fd }).then(function (data) {
+      C.apiJson('/image/text-to-image', { method: 'POST', body: fd, timeoutMs: 240000 }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
         var images = data.images;
         if ((!images || !images.length) && data.imageBase64) {

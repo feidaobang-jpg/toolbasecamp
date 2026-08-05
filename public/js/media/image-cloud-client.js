@@ -32,6 +32,9 @@
             return tr('tools.imageCloud.unknownError');
         }
         var text = String(msg || '');
+        if (text.toLowerCase().indexOf('aborted') !== -1 || text.toLowerCase().indexOf('aborterror') !== -1) {
+            return tr('tools.imageCloud.serviceUnavailable');
+        }
         if (String(msg).indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
         if (msg === 'Bad Gateway' || msg === 'Gateway Timeout') {
             return tr('tools.imageCloud.serviceUnavailable');
@@ -111,13 +114,27 @@
         var token = getToken();
         if (token) headers.Authorization = 'Bearer ' + token;
         options.headers = headers;
+        var timeoutMs = options.timeoutMs;
+        var timer = null;
+        if (timeoutMs && typeof AbortController !== 'undefined' && !options.signal) {
+            var controller = new AbortController();
+            options.signal = controller.signal;
+            timer = setTimeout(function () {
+                try { controller.abort(); } catch (e) {}
+            }, timeoutMs);
+        }
+
         return fetch(apiBase() + path, options).then(function (res) {
+            if (timer) clearTimeout(timer);
             // Only treat opaque gateway HTML 502 as site-wide outage; JSON 502 may be API detail.
             var ct = (res.headers && res.headers.get('content-type')) || '';
             if (res.status === 502 && ct.indexOf('application/json') === -1) {
                 if (typeof global.check502Error === 'function') global.check502Error(res);
             }
             return res;
+        }).catch(function (err) {
+            if (timer) clearTimeout(timer);
+            throw err;
         });
     }
 
