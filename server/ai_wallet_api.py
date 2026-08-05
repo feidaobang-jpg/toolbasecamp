@@ -13,6 +13,7 @@ from ai_wallet import (
     credit_balance,
     find_user_id_by_account,
     list_redeem_codes,
+    list_users_wallet,
     redeem_code,
     wallet_public,
 )
@@ -82,6 +83,23 @@ def admin_credit(body: CreditBody, admin: dict = Depends(_admin)):
             "creditedCny": float(body.amountCny),
             "balanceCny": float(bal),
         }
+    finally:
+        conn.close()
+
+
+@router.get("/admin/users")
+def admin_list_users(
+    q: str = "",
+    page: int = 1,
+    page_size: int = 20,
+    admin: dict = Depends(_admin),
+):
+    _ = admin
+    conn = _conn()
+    try:
+        out = list_users_wallet(conn, q=q, page=page, page_size=page_size)
+        out["success"] = True
+        return out
     finally:
         conn.close()
 

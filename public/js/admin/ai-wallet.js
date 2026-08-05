@@ -6,6 +6,10 @@
   var codesPages = 1;
   var codesTotal = 0;
   var PAGE_SIZE = 20;
+  var usersPage = 1;
+  var usersPages = 1;
+  var usersTotal = 0;
+  var usersQ = '';
 
   function apiBase() {
     if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) return siteConfig.apiBase;
@@ -170,6 +174,69 @@
     });
   }
 
+  function syncUsersPager() {
+    var pager = document.getElementById('users-pager');
+    var label = document.getElementById('users-page-label');
+    var prev = document.getElementById('users-prev');
+    var next = document.getElementById('users-next');
+    if (pager) pager.hidden = usersTotal <= 0;
+    if (label) {
+      label.textContent = tr('privateHub.ops.walletPageLabel')
+        .replace('{page}', String(usersPage))
+        .replace('{pages}', String(usersPages))
+        .replace('{total}', String(usersTotal));
+    }
+    if (prev) prev.disabled = usersPage <= 1;
+    if (next) next.disabled = usersPage >= usersPages;
+  }
+
+  function renderUsers(list) {
+    var box = document.getElementById('users-list');
+    if (!box) return;
+    if (!list || !list.length) {
+      box.innerHTML = '<p class="text-gray-400 text-sm">' + tr('privateHub.ops.walletUsersEmpty') + '</p>';
+      return;
+    }
+    box.innerHTML = list.map(function (u) {
+      var role = (u.role === 'admin')
+        ? ('<span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
+        : '';
+      var fillAcc = u.email || u.phone || String(u.id || '');
+      return (
+        '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
+          '<div class="min-w-0 flex-1">' +
+            '<div class="text-sm font-medium break-all">' + String(u.account || '') + '</div>' +
+            '<div class="text-xs text-gray-500 mt-0.5">UID:' + String(u.id || '') +
+              (role ? (' · ' + role) : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="flex flex-col items-end gap-1 flex-shrink-0">' +
+            '<span class="font-semibold">¥' + Number(u.balanceCny || 0).toFixed(2) + '</span>' +
+            '<button type="button" class="text-xs text-blue-600 hover:underline" data-fill-account="' +
+              String(fillAcc).replace(/"/g, '&quot;') + '">' +
+              tr('privateHub.ops.walletUsersFillCredit') +
+            '</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  function loadUsers() {
+    var q = '/wallet/admin/users?page=' + encodeURIComponent(String(usersPage)) +
+      '&page_size=' + encodeURIComponent(String(PAGE_SIZE)) +
+      '&q=' + encodeURIComponent(usersQ || '');
+    return apiJson(q).then(function (data) {
+      usersTotal = Number(data.total || 0) || 0;
+      usersPage = Number(data.page || usersPage) || 1;
+      usersPages = Number(data.pages || 1) || 1;
+      renderUsers(data.users || []);
+      syncUsersPager();
+    }).catch(function (err) {
+      setStatus(document.getElementById('users-status'), err.message, true);
+    });
+  }
+
   function bootApp() {
     var boot = document.getElementById('boot-loading');
     if (boot) boot.classList.add('hidden');
@@ -203,6 +270,7 @@
               .replace('{balance}', Number(data.balanceCny || 0).toFixed(2)),
             false
           );
+          return loadUsers();
         }).catch(function (err) {
           setStatus(st, err.message, true);
         }).finally(function () {
@@ -273,7 +341,59 @@
     }
 
     if (refreshBtn) refreshBtn.addEventListener('click', loadCodes);
+
+    var usersSearchBtn = document.getElementById('btn-users-search');
+    var usersRefreshBtn = document.getElementById('btn-users-refresh');
+    var usersPrev = document.getElementById('users-prev');
+    var usersNext = document.getElementById('users-next');
+    var usersList = document.getElementById('users-list');
+    var usersQInput = document.getElementById('users-q');
+
+    function doUsersSearch() {
+      usersQ = usersQInput ? (usersQInput.value || '').trim() : '';
+      usersPage = 1;
+      loadUsers();
+    }
+    if (usersSearchBtn) usersSearchBtn.addEventListener('click', doUsersSearch);
+    if (usersQInput) {
+      usersQInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          doUsersSearch();
+        }
+      });
+    }
+    if (usersRefreshBtn) usersRefreshBtn.addEventListener('click', loadUsers);
+    if (usersPrev) {
+      usersPrev.addEventListener('click', function () {
+        if (usersPage <= 1) return;
+        usersPage -= 1;
+        loadUsers();
+      });
+    }
+    if (usersNext) {
+      usersNext.addEventListener('click', function () {
+        if (usersPage >= usersPages) return;
+        usersPage += 1;
+        loadUsers();
+      });
+    }
+    if (usersList) {
+      usersList.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-fill-account]') : null;
+        if (!btn) return;
+        var acc = btn.getAttribute('data-fill-account') || '';
+        var input = document.getElementById('credit-account');
+        if (input) {
+          input.value = acc;
+          input.focus();
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    }
+
     loadCodes();
+    loadUsers();
   }
 
   document.addEventListener('tb:private-ready', bootApp);

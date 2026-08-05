@@ -310,6 +310,75 @@ def find_user_id_by_account(conn, account: str) -> int:
     return _tx(conn, _run)
 
 
+def list_users_wallet(
+    conn,
+    *,
+    q: str = "",
+    page: int = 1,
+    page_size: int = 20,
+) -> dict:
+    """Admin list of users with balance. Optional search by email/phone/uid."""
+    size = max(1, min(int(page_size or 20), 50))
+    pg = max(1, int(page or 1))
+    offset = (pg - 1) * size
+    keyword = (q or "").strip()
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        where = ""
+        params: list = []
+        if keyword:
+            like = f"%{keyword}%"
+            where = """
+                WHERE CAST(id AS CHAR) = %s
+                   OR email LIKE %s
+                   OR phone LIKE %s
+            """
+            params = [keyword, like, like]
+
+        cur.execute(f"SELECT COUNT(*) AS c FROM users {where}", params)
+        total = int((cur.fetchone() or {}).get("c") or 0)
+
+        cur.execute(
+            f"""
+            SELECT id, email, phone, role, ai_balance, created_at
+            FROM users
+            {where}
+            ORDER BY id DESC
+            LIMIT %s OFFSET %s
+            """,
+            params + [size, offset],
+        )
+        rows = cur.fetchall() or []
+        items = []
+        for r in rows:
+            email = (r.get("email") or "").strip()
+            phone = (r.get("phone") or "").strip()
+            account = email or phone or f"UID:{r.get('id')}"
+            items.append(
+                {
+                    "id": int(r["id"]),
+                    "account": account,
+                    "email": email or None,
+                    "phone": phone or None,
+                    "role": r.get("role") or "user",
+                    "balanceCny": float(money(r.get("ai_balance"))),
+                    "createdAt": str(r.get("created_at") or ""),
+                }
+            )
+        pages = max(1, (total + size - 1) // size) if total else 1
+        return {
+            "users": items,
+            "total": total,
+            "page": pg,
+            "pageSize": size,
+            "pages": pages,
+            "q": keyword,
+        }
+
+    return _tx(conn, _run)
+
+
 def _gen_code() -> str:
     alphabet = string.ascii_uppercase + string.digits
     # Avoid ambiguous chars

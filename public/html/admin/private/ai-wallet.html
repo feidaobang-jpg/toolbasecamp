@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
-  <script src="../../../js/locales/en.js?v=wallet3"></script>
-  <script src="../../../js/locales/zh-CN.js?v=wallet3"></script>
+  <script src="../../../js/locales/en.js?v=wallet4"></script>
+  <script src="../../../js/locales/zh-CN.js?v=wallet4"></script>
   <script src="../../../js/i18n.js?v=locale1"></script>
   <script src="../../../js/config.js"></script>
   <script src="../../../js/common_ui.js?v=8"></script>
@@ -69,6 +69,25 @@
       </section>
 
       <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletUsersTitle">用户余额列表</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletUsersDesc">查看全部用户账号与余额，可按邮箱/手机号/UID 搜索。</p>
+        <div class="space-y-3">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="users-q" type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" data-i18n-placeholder="privateHub.ops.walletUsersSearchPh" placeholder="邮箱 / 手机号 / UID" />
+            <button type="button" class="tb-btn" id="btn-users-search" data-i18n="privateHub.ops.walletUsersSearch">查询</button>
+            <button type="button" class="tb-btn" id="btn-users-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
+          </div>
+          <div id="users-status" class="ladder-status"></div>
+          <div id="users-list" class="text-sm space-y-2"></div>
+          <div class="action-row mt-3" id="users-pager" hidden>
+            <button type="button" class="tb-btn" id="users-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
+            <span class="text-sm text-gray-500 self-center" id="users-page-label"></span>
+            <button type="button" class="tb-btn" id="users-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCodesTitle">生成兑换码</h2>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCodesDesc">一次最多 50 个。用户在「个人中心」输入兑换码充值。</p>
         <div class="space-y-3">
@@ -107,6 +126,6 @@
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=1"></script>
-  <script src="../../../js/admin/ai-wallet.js?v=4"></script>
+  <script src="../../../js/admin/ai-wallet.js?v=5"></script>
 </body>
 </html>
