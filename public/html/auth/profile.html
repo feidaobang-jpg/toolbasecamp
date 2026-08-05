@@ -9,11 +9,11 @@
     <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/base.css?v=9">
     <link rel="stylesheet" href="../../css/site-mobile-nav.css">
-    <script src="../../js/locales/en.js?v=howto4"></script>
-    <script src="../../js/locales/zh-CN.js?v=howto4"></script>
+    <script src="../../js/locales/en.js?v=chat2"></script>
+    <script src="../../js/locales/zh-CN.js?v=chat2"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
-    <script src="../../js/common_ui.js?v=6"></script>
+    <script src="../../js/common_ui.js?v=chat2"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
     <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
@@ -56,6 +56,9 @@
             </div>
 
             <div class="p-6 space-y-3">
+                <a href="chat.html" class="tb-btn w-full inline-flex items-center justify-center gap-2">
+                    <i class="fas fa-comments"></i> <span data-i18n="nav.chat">私聊</span>
+                </a>
                 <button type="button" onclick="document.getElementById('modal-password').classList.remove('hidden')"
                     class="w-full py-2.5 px-4 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
                     <i class="fas fa-key text-gray-400"></i> <span data-i18n="auth.changePassword">Change password</span>

@@ -19,6 +19,7 @@ window.TB_LOCALES.en = {
         sites: 'Directory',
         guestbook: 'Messages',
         about: 'About',
+        chat: 'Chat',
         siteStats: 'Stats',
         private: 'Private'
     },
@@ -49,6 +50,8 @@ window.TB_LOCALES.en = {
             pcBuildsGenerate: 'Check database',
             walletTitle: 'User balance',
             walletDesc: 'Credit users and create redeem codes',
+            chatInboxTitle: 'Chat inbox',
+            chatInboxDesc: 'Private 1:1 support chat with users; unread badges included',
             walletCreditTitle: 'Credit balance',
             walletCreditDesc: 'Enter the user’s login email or phone and amount (CNY).',
             walletAccount: 'Account',
@@ -2549,6 +2552,23 @@ window.TB_LOCALES.en = {
         postFailed: 'Failed to post message',
         deleteFailed: 'Delete failed'
     },
+    chat: {
+        title: 'Chat with admin',
+        subtitle: 'Private — only you and admins can see it.',
+        needLogin: 'Please sign in to chat with the admin.',
+        placeholder: 'Type a message…',
+        send: 'Send',
+        online: 'Connected',
+        reconnecting: 'Reconnecting…',
+        polling: 'Polling…',
+        loadFailed: 'Failed to load',
+        inboxThreads: 'Threads',
+        inboxPick: 'Pick a thread',
+        inboxEmpty: 'No threads yet',
+        refresh: 'Refresh',
+        noPreview: 'No messages',
+        unreadCount: '{n} unread'
+    },
     about: {
         title: 'About Tool Basecamp',
         lead: 'A global productivity toolkit — documents, AI images, life utilities, casual games, and developer helpers, in Chinese and English.',
@@ -2566,9 +2586,9 @@ window.TB_LOCALES.en = {
         privacyDesc: 'Local tools run in your browser. Upload-based tools process files and discard them afterward.',
         builtTitle: 'Bilingual',
         builtDesc: 'Chinese / English UI — clean, focused, no clutter.',
-        questions: 'Questions, feedback, or need to reach the admin? Leave a message and we will see it.',
+        questions: 'Questions or feedback? Use public messages, or private chat for account / top-up issues (only you and admins can see it).',
         visitGuestbook: 'Leave a message',
-        contactAdmin: 'Contact admin (message)'
+        contactAdmin: 'Private chat with admin'
     },
     common: {
         serviceUnavailable: 'Service unavailable',

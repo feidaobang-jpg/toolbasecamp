@@ -18,6 +18,7 @@ window.TB_LOCALES['zh-CN'] = {
         sites: '导航',
         guestbook: '留言',
         about: '关于',
+        chat: '私聊',
         siteStats: '统计',
         private: '自用'
     },
@@ -48,6 +49,8 @@ window.TB_LOCALES['zh-CN'] = {
             pcBuildsGenerate: '检查数据库',
             walletTitle: '用户余额',
             walletDesc: '后台加余额、生成兑换码',
+            chatInboxTitle: '私聊收件箱',
+            chatInboxDesc: '与用户一对一私聊，仅双方可见；支持未读提示',
             walletCreditTitle: '后台加余额',
             walletCreditDesc: '填写用户登录邮箱或手机号，以及金额（元）。',
             walletAccount: '账号',
@@ -2548,6 +2551,23 @@ window.TB_LOCALES['zh-CN'] = {
         postFailed: '发布失败',
         deleteFailed: '删除失败'
     },
+    chat: {
+        title: '私聊管理员',
+        subtitle: '仅你与管理员可见，不会公开。',
+        needLogin: '请先登录后再私聊管理员。',
+        placeholder: '输入消息…',
+        send: '发送',
+        online: '已连接',
+        reconnecting: '重连中…',
+        polling: '轮询同步中…',
+        loadFailed: '加载失败',
+        inboxThreads: '会话',
+        inboxPick: '选择左侧会话',
+        inboxEmpty: '暂无会话',
+        refresh: '刷新',
+        noPreview: '暂无消息',
+        unreadCount: '未读 {n}'
+    },
     about: {
         title: '关于工具大本营',
         lead: '面向全球用户的效率工具集 — 文档转换、AI 出图、生活内容、休闲游戏与开发小工具，中英文可用。',
@@ -2565,9 +2585,9 @@ window.TB_LOCALES['zh-CN'] = {
         privacyDesc: '本地工具在浏览器运行；需上传的服务处理完即丢弃，不另存你的文件。',
         builtTitle: '中英双语',
         builtDesc: '界面支持中文 / English，简洁无干扰，专注好用。',
-        questions: '有问题、建议或要联系管理员？请在留言区留言，我们会看到。',
+        questions: '有问题、建议？可公开留言；账号/充值等请私聊管理员（仅双方可见）。',
         visitGuestbook: '去留言',
-        contactAdmin: '联系管理员（留言）'
+        contactAdmin: '私聊管理员'
     },
     common: {
         serviceUnavailable: '服务不可用',

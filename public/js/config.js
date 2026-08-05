@@ -300,6 +300,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.walletTitle',
                     descriptionKey: 'privateHub.ops.walletDesc',
                     url: 'html/admin/private/ai-wallet.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.chatInboxTitle',
+                    descriptionKey: 'privateHub.ops.chatInboxDesc',
+                    url: 'html/admin/private/chat-inbox.html'
                 }
             ]
         },

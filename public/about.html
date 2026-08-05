@@ -11,11 +11,11 @@
     <script src="vendor/tailwindcss.js?v=2"></script>
     <link href="vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
-    <script src="js/locales/en.js?v=about2"></script>
-    <script src="js/locales/zh-CN.js?v=about2"></script>
+    <script src="js/locales/en.js?v=chat2"></script>
+    <script src="js/locales/zh-CN.js?v=chat2"></script>
     <script src="js/i18n.js?v=stats1"></script>
     <script src="js/config.js"></script>
-    <script src="js/common_ui.js?v=5"></script>
+    <script src="js/common_ui.js?v=chat2"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
     <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
@@ -81,10 +81,16 @@
 
             <div class="mt-12 pt-8 border-t border-gray-100 text-center">
                 <p class="text-gray-500 text-sm mb-4" data-i18n="about.questions">Questions or feedback?</p>
-                <a href="guestbook.html" class="tb-btn inline-flex items-center gap-2">
-                    <i class="fas fa-comment-dots"></i>
-                    <span data-i18n="about.contactAdmin">Contact admin</span>
+                <a href="html/auth/chat.html" class="tb-btn inline-flex items-center gap-2">
+                    <i class="fas fa-comments"></i>
+                    <span data-i18n="about.contactAdmin">Private chat with admin</span>
                 </a>
+                <div class="mt-3">
+                    <a href="guestbook.html" class="inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 text-sm">
+                        <i class="fas fa-comment-dots"></i>
+                        <span data-i18n="about.visitGuestbook">Leave a message</span>
+                    </a>
+                </div>
             </div>
         </div>
     </main>

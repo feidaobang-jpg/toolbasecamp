@@ -28,6 +28,7 @@ from user_records import ensure_record_tables, router as records_router, _wire a
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from ai_wallet_api import router as wallet_router, _wire as wire_wallet
+from chat_api import router as chat_router, _wire as wire_chat
 from life_plans import (
     router as life_plans_router,
     _wire as wire_life_plans,
@@ -265,6 +266,9 @@ def ensure_tables():
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
+            from chat import ensure_chat_schema
+
+            ensure_chat_schema(cur)
             if ADMIN_PHONE:
                 try:
                     cur.execute(
@@ -487,6 +491,16 @@ def require_admin(user: dict):
 
 wire_wallet(get_conn, require_db, get_current_user, require_admin, is_admin)
 app.include_router(wallet_router)
+wire_chat(
+    get_conn,
+    require_db,
+    get_current_user,
+    require_admin,
+    is_admin,
+    decode_token,
+    _fetch_user_by_id,
+)
+app.include_router(chat_router)
 
 
 def _mask_email(email: str) -> str:

@@ -215,6 +215,8 @@
                     mobileUserSpan.textContent = label;
                 }
                 injectAdminLinks(user, wrap);
+                injectChatLink(user, wrap);
+                startChatUnreadPolling();
                 if (isAdminUser(user)) {
                     try {
                         localStorage.setItem('tb-stats-exclude', '1');
@@ -631,6 +633,115 @@
             label: privateLabel
         });
     }
+
+    function chatHrefForUser(user) {
+        const base = getSiteRootPrefix();
+        if (isAdminUser(user)) {
+            return `${base}html/admin/private/chat-inbox.html`;
+        }
+        return `${base}html/auth/chat.html`;
+    }
+
+    function ensureChatBadge(anchor) {
+        if (!anchor) return null;
+        let badge = anchor.querySelector('.tb-chat-unread');
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'tb-chat-unread hidden ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none';
+            anchor.appendChild(badge);
+        }
+        return badge;
+    }
+
+    function setChatUnreadBadges(n) {
+        const count = Math.max(0, Number(n) || 0);
+        document.querySelectorAll('.tb-chat-unread').forEach((badge) => {
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : String(count);
+                badge.classList.remove('hidden');
+            } else {
+                badge.textContent = '';
+                badge.classList.add('hidden');
+            }
+        });
+        try {
+            const title = document.title.replace(/^\(\d+\+?\)\s*/, '');
+            document.title = count > 0 ? `(${count > 99 ? '99+' : count}) ${title}` : title;
+        } catch (e) { /* ignore */ }
+    }
+
+    function injectChatLink(user, wrap) {
+        if (!user) return;
+        const href = chatHrefForUser(user);
+        const label = tr('nav.chat') === 'nav.chat' ? '私聊' : tr('nav.chat');
+
+        if (wrap && !document.getElementById('tb-chat-link')) {
+            const a = document.createElement('a');
+            a.id = 'tb-chat-link';
+            a.href = href;
+            a.className = 'text-sm text-gray-600 hover:text-blue-600 transition-colors inline-flex items-center';
+            a.innerHTML = '<i class="fas fa-comments mr-1"></i><span>' + label + '</span>';
+            ensureChatBadge(a);
+            const logout = wrap.querySelector('button');
+            if (logout) wrap.insertBefore(a, logout);
+            else wrap.appendChild(a);
+        } else {
+            const existing = document.getElementById('tb-chat-link');
+            if (existing) {
+                existing.href = href;
+                ensureChatBadge(existing);
+            }
+        }
+
+        const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
+        if (mobileAuthSlot && !mobileAuthSlot.querySelector('#tb-chat-link-m')) {
+            const a = document.createElement('a');
+            a.id = 'tb-chat-link-m';
+            a.href = href;
+            a.className = 'block w-full rounded-lg border border-gray-200 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center justify-center gap-1';
+            a.innerHTML = '<i class="fas fa-comments"></i><span>' + label + '</span>';
+            ensureChatBadge(a);
+            const logout = mobileAuthSlot.querySelector('button');
+            if (logout) mobileAuthSlot.insertBefore(a, logout);
+            else mobileAuthSlot.appendChild(a);
+        } else {
+            const m = mobileAuthSlot && mobileAuthSlot.querySelector('#tb-chat-link-m');
+            if (m) {
+                m.href = href;
+                ensureChatBadge(m);
+            }
+        }
+
+        refreshChatUnread();
+    }
+
+    let chatUnreadTimer = null;
+    function refreshChatUnread() {
+        const tok = localStorage.getItem('auth_token') || '';
+        if (!tok) {
+            setChatUnreadBadges(0);
+            return Promise.resolve(0);
+        }
+        return fetch(`${getAuthBaseUrl()}/chat/unread`, {
+            headers: { Authorization: `Bearer ${tok}`, Accept: 'application/json' },
+            cache: 'no-store'
+        })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((data) => {
+                const n = data && data.success ? Number(data.unread || 0) : 0;
+                setChatUnreadBadges(n);
+                return n;
+            })
+            .catch(() => 0);
+    }
+
+    function startChatUnreadPolling() {
+        if (chatUnreadTimer) return;
+        refreshChatUnread();
+        chatUnreadTimer = setInterval(refreshChatUnread, 30000);
+    }
+
+    window.tbRefreshChatUnread = refreshChatUnread;
 
     function ensureTbStatsScript() {
         if (window.TBStats || document.getElementById('tb-stats-script')) return;
