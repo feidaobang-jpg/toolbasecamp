@@ -82,8 +82,13 @@
     if (!file) return false;
     if (!(C.isWeChat && C.isWeChat()) && !isMobileUA()) return false;
     var type = String(file.type || '').toLowerCase();
-    if (type !== 'image/jpeg' && type !== 'image/jpg' && type !== 'image/webp') return false;
-    return file.size >= MOBILE_COMPRESS_MIN_BYTES;
+    if (
+      type !== 'image/jpeg'
+      && type !== 'image/jpg'
+      && type !== 'image/webp'
+      && type !== 'image/png'
+    ) return false;
+    return file.size >= MOBILE_COMPRESS_MIN_BYTES || type === 'image/png';
   }
 
   function loadImageFromFile(file) {

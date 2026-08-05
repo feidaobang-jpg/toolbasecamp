@@ -151,14 +151,94 @@ def _guess_mime(image_bytes: bytes) -> str:
     return "image/jpeg"
 
 
-def _data_uri(image_bytes: bytes) -> str:
-    mime = _guess_mime(image_bytes)
+def _data_uri(image_bytes: bytes, mime: Optional[str] = None) -> str:
+    use_mime = mime or _guess_mime(image_bytes)
     b64 = base64.b64encode(image_bytes).decode("ascii")
-    return f"data:{mime};base64,{b64}"
+    return f"data:{use_mime};base64,{b64}"
 
 
 def _is_wan_model(model: str) -> bool:
     return model.lower().startswith("wan")
+
+
+def _normalize_edit_image(image_bytes: bytes, *, for_wan: bool) -> tuple[bytes, str]:
+    """
+    Prepare image for DashScope edit APIs.
+    Wan rejects PNG with alpha; also enforce width/height in [240, 8000].
+    """
+    from io import BytesIO
+
+    from PIL import Image
+
+    try:
+        im = Image.open(BytesIO(image_bytes))
+        im.load()
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Image decode failed") from exc
+
+    w, h = im.size
+    if w < 240 or h < 240:
+        raise HTTPException(status_code=400, detail="Image resolution is too small")
+    if w > 8000 or h > 8000:
+        raise HTTPException(status_code=400, detail="Image resolution is too large")
+
+    src_mime = _guess_mime(image_bytes)
+    has_alpha = im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in (im.info or {}))
+    force_jpeg = for_wan or has_alpha or src_mime == "image/png"
+
+    if has_alpha:
+        rgba = im.convert("RGBA")
+        bg = Image.new("RGB", rgba.size, (255, 255, 255))
+        bg.paste(rgba, mask=rgba.split()[-1])
+        im = bg
+    elif im.mode != "RGB":
+        im = im.convert("RGB")
+
+    if not force_jpeg:
+        return image_bytes, src_mime
+
+    # Keep mobile-friendly size for Wan (still within API limits).
+    max_edge = 2048 if for_wan else 4096
+    scale = min(1.0, max_edge / float(max(w, h)))
+    if scale < 1.0:
+        nw = max(240, int(round(w * scale)))
+        nh = max(240, int(round(h * scale)))
+        im = im.resize((nw, nh), Image.LANCZOS)
+
+    buf = BytesIO()
+    im.save(buf, format="JPEG", quality=92, optimize=True)
+    out = buf.getvalue()
+    if not out:
+        raise HTTPException(status_code=400, detail="Image decode failed")
+    return out, "image/jpeg"
+
+
+def _parse_dashscope_response(resp: httpx.Response) -> dict:
+    """Parse DashScope body; surface plain-text InvalidParameter cleanly."""
+    raw = (resp.content or b"").decode("utf-8", errors="replace").strip()
+    if not raw:
+        return {}
+    try:
+        data = resp.json()
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        low = raw.lower()
+        if "invalidparameter" in low.replace(" ", ""):
+            return {"code": "InvalidParameter", "message": raw[:300]}
+        return {"message": raw[:300]}
+
+
+def _dashscope_error_detail(data: dict, resp: httpx.Response, *, action: str) -> str:
+    code = str((data or {}).get("code") or "").strip()
+    message = str((data or {}).get("message") or "").strip()
+    if code == "InvalidParameter" or "invalidparameter" in (message or "").lower().replace(" ", ""):
+        return (
+            f"{action} failed: InvalidParameter "
+            "(image may have transparency / unsupported format / bad size). "
+            "Try JPG without alpha, 240–8000px."
+        )
+    detail = message or code or (resp.text or "")[:300] or f"HTTP {resp.status_code}"
+    return f"{action} failed: {detail}"
 
 
 def _extract_image_url(data: dict) -> Optional[str]:
@@ -230,8 +310,12 @@ async def edit_image_with_instruction(
     if not _is_wan_model(use_model) and len(refs) > 3:
         raise HTTPException(status_code=400, detail="This model supports at most 3 reference images.")
 
-    content: list[dict[str, str]] = [{"image": _data_uri(b)} for b in refs]
-    content.append({"text": text})
+    for_wan = _is_wan_model(use_model)
+    norm_refs: list[tuple[bytes, str]] = [_normalize_edit_image(b, for_wan=for_wan) for b in refs]
+
+    # Official Wan examples put text first, then image(s).
+    content: list[dict[str, str]] = [{"text": text}]
+    content.extend({"image": _data_uri(b, mime)} for b, mime in norm_refs)
 
     parameters: dict[str, Any] = {"n": 1, "watermark": False}
     low_model = use_model.lower()
@@ -260,16 +344,13 @@ async def edit_image_with_instruction(
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(url, headers=headers, json=payload)
-            data = resp.json() if resp.content else {}
-            if resp.status_code >= 400:
-                detail = (
-                    (data.get("message") if isinstance(data, dict) else None)
-                    or (data.get("code") if isinstance(data, dict) else None)
-                    or resp.text[:300]
-                    or f"HTTP {resp.status_code}"
+            data = _parse_dashscope_response(resp)
+            if resp.status_code >= 400 or data.get("code"):
+                raise HTTPException(
+                    status_code=502,
+                    detail=_dashscope_error_detail(data, resp, action="Image edit"),
                 )
-                raise HTTPException(status_code=502, detail=f"Image edit failed: {detail}")
-            out_ref = _extract_image_url(data if isinstance(data, dict) else {})
+            out_ref = _extract_image_url(data)
             if not out_ref:
                 raise HTTPException(
                     status_code=502,
@@ -360,16 +441,13 @@ async def generate_image_from_text(
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(url, headers=headers, json=payload)
-            data = resp.json() if resp.content else {}
-            if resp.status_code >= 400:
-                detail = (
-                    (data.get("message") if isinstance(data, dict) else None)
-                    or (data.get("code") if isinstance(data, dict) else None)
-                    or resp.text[:300]
-                    or f"HTTP {resp.status_code}"
+            data = _parse_dashscope_response(resp)
+            if resp.status_code >= 400 or data.get("code"):
+                raise HTTPException(
+                    status_code=502,
+                    detail=_dashscope_error_detail(data, resp, action="Image generation"),
                 )
-                raise HTTPException(status_code=502, detail=f"Image generation failed: {detail}")
-            out_ref = _extract_image_url(data if isinstance(data, dict) else {})
+            out_ref = _extract_image_url(data)
             if not out_ref:
                 raise HTTPException(
                     status_code=502,

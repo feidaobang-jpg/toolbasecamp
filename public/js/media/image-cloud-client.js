@@ -90,6 +90,17 @@
         ) {
             return tr('tools.imageCloud.contentBlocked');
         }
+        if (text.indexOf('InvalidParameter') !== -1) {
+            return tr('tools.imageCloud.invalidParameter');
+        }
+        if (text.indexOf('Unexpected token') !== -1 && text.indexOf('InvalidPa') !== -1) {
+            return tr('tools.imageCloud.invalidParameter');
+        }
+        if (text.indexOf('Image edit failed') === 0 || text.indexOf('Image generation failed') === 0) {
+            if (text.indexOf('InvalidParameter') !== -1) {
+                return tr('tools.imageCloud.invalidParameter');
+            }
+        }
         if (String(msg).indexOf('Insufficient balance') === 0 || String(msg).indexOf('Insufficient AI balance') === 0) {
             return tr('tools.imageCloud.insufficientBalance');
         }

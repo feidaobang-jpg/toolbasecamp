@@ -1948,6 +1948,7 @@ window.TB_LOCALES.en = {
             balanceUnlimited: 'Admin account: unlimited balance',
             insufficientBalance: 'Insufficient balance. Top up or pick fewer/cheaper models.',
             contentBlocked: 'This prompt was blocked by content review. Please try a more neutral everyday description.',
+            invalidParameter: 'The model rejected this image (often PNG with transparency or invalid size). Try a JPG photo and retry.',
             genServiceMissing: 'Image service is not ready. Please try again later.',
             dailyLimit: 'Daily limit reached. Please try again tomorrow.',
             notConfigured: 'Tencent Cloud is not configured on the server (TENCENT_SECRET_ID / TENCENT_SECRET_KEY).',
