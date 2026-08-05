@@ -423,6 +423,8 @@
     var title = document.createElement('div');
     title.className = 'instruct-result-title';
     title.textContent = modelTitle(item.model);
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'instruct-result-img-wrap';
     var img = document.createElement('img');
     img.alt = '';
     var displaySrc = resultSrc(item);
@@ -431,6 +433,7 @@
     } else {
       img.src = displaySrc;
     }
+    imgWrap.appendChild(img);
     var dl = document.createElement('button');
     dl.type = 'button';
     dl.className = 'tb-btn';
@@ -439,7 +442,7 @@
       doDownload(img.src, item);
     });
     card.appendChild(title);
-    card.appendChild(img);
+    card.appendChild(imgWrap);
     if (C.isWeChat && C.isWeChat()) {
       var tip = document.createElement('p');
       tip.className = 'instruct-result-save-tip';

@@ -292,20 +292,28 @@
     function applyWeChatResultImage(img, item, fallbackSrc) {
         if (!img || !item) return;
         var url = item.imageUrl;
+        var wrap = img.parentElement && img.parentElement.classList.contains('instruct-result-img-wrap')
+            ? img.parentElement
+            : null;
+        function setLoading(on) {
+            if (wrap) wrap.classList.toggle('is-loading', !!on);
+            else img.classList.toggle('is-loading', !!on);
+        }
         if (!isWeChat() || item.imageBase64 || !url) {
             img.src = fallbackSrc || '';
+            setLoading(false);
             return;
         }
         img.alt = '';
         img.src = TRANSPARENT_PIXEL;
-        img.classList.add('is-loading');
+        setLoading(true);
         urlToDataUrl(url).then(function (dataUrl) {
             item._wechatDataUrl = dataUrl;
             img.src = dataUrl;
-            img.classList.remove('is-loading');
+            setLoading(false);
         }).catch(function () {
             img.src = fallbackSrc || url;
-            img.classList.remove('is-loading');
+            setLoading(false);
         });
     }
 

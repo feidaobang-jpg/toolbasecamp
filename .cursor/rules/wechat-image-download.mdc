@@ -22,7 +22,7 @@ alwaysApply: true
 
 3. **展示用 URL**  
    - 微信内优先 **data URL**，避免 `blob:` 导致长按保存失败。  
-   - 异步转 data URL 期间：用透明占位图 + `.is-loading` 骨架，**禁止**空 `src` + 模型名 `alt`（会出破图图标）。
+   - 异步转 data URL 期间：灰底框 + 居中转圈，**禁止**空 `src` + 模型名 `alt`（会出破图图标），也**不要**用刷刷骨架动画。
 
 4. **不要**在下载按钮里自动 `openSavePreview`。
 
