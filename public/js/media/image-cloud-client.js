@@ -64,6 +64,8 @@
             'Portrait cutout service unavailable': 'tools.imageCloud.serviceUnavailable',
             'Portrait cutout failed': 'tools.imageCloud.segmentFailed',
             'General cutout failed': 'tools.imageCloud.segmentFailed',
+            'Image edit timed out': 'tools.imageCloud.serviceUnavailable',
+            'Image generation timed out': 'tools.imageCloud.serviceUnavailable',
             'General cutout is not available (rembg not installed).': 'tools.generalCutout.notAvailable',
             'Tencent Cloud service is not enabled': 'tools.imageCloud.serviceNotEnabled',
             'Tencent Cloud account is in arrears': 'tools.imageCloud.accountArrears',

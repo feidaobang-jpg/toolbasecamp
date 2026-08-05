@@ -69,7 +69,7 @@ INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "qwen-image-2.0")
 MAX_INSTRUCT_BATCH = 4
 INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
-INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "4"))
+INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "1"))
 INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.5"))
 
 # Text-to-image models (Beijing). z-image-turbo = cheap/fast default.
@@ -602,8 +602,6 @@ async def api_instruct_edit(
             "rate limit" in detail
             or "throttl" in detail
             or "too many request" in detail
-            or "timed out" in detail
-            or "timeout" in detail
         )
 
     async def _one(idx: int, blob: bytes, mid: str) -> dict:
@@ -671,7 +669,7 @@ async def api_instruct_edit(
                     charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
                 images.append(item)
             except HTTPException as exc:
-                if exc.status_code in (402, 429):
+                if exc.status_code in (402, 429, 504):
                     errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
                     stop_all = True
                     break
@@ -786,8 +784,6 @@ async def api_text_to_image(
             "rate limit" in detail
             or "throttl" in detail
             or "too many request" in detail
-            or "timed out" in detail
-            or "timeout" in detail
         )
 
     async def _one(mid: str) -> dict:
@@ -850,7 +846,7 @@ async def api_text_to_image(
             images.append(item)
         except HTTPException as exc:
             errors.append(f"{mid}: {_exc_detail(exc)}")
-            if exc.status_code in (402, 429):
+            if exc.status_code in (402, 429, 504):
                 break
         except Exception as exc:
             errors.append(f"{mid}: {_exc_detail(exc)}")
