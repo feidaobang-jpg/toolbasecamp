@@ -282,6 +282,9 @@
         });
     }
 
+    /** 1×1 transparent GIF — avoids WeChat broken-image icon while data URL loads. */
+    var TRANSPARENT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
     /**
      * WeChat: show result images as data: URLs so long-press save/forward works
      * and images appear at once (no progressive top-to-bottom paint).
@@ -293,6 +296,8 @@
             img.src = fallbackSrc || '';
             return;
         }
+        img.alt = '';
+        img.src = TRANSPARENT_PIXEL;
         img.classList.add('is-loading');
         urlToDataUrl(url).then(function (dataUrl) {
             item._wechatDataUrl = dataUrl;

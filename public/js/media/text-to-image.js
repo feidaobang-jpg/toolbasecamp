@@ -199,15 +199,8 @@
         title.className = 'instruct-result-title';
         title.textContent = modelTitle(item.model);
         var img = document.createElement('img');
-        img.alt = item.model || '';
+        img.alt = '';
         img.src = resultSrc(item.imageBase64, item.contentType);
-        img.addEventListener('click', function () {
-          var longPressSrc = img.src;
-          if (C.isWeChat && C.isWeChat()) {
-            longPressSrc = C.b64ToDataUrl(item.imageBase64, item.contentType);
-          }
-          C.openSavePreview(longPressSrc, tr('tools.imageCloud.longPressSave'));
-        });
         var dl = document.createElement('button');
         dl.type = 'button';
         dl.className = 'tb-btn';
@@ -217,6 +210,12 @@
         });
         card.appendChild(title);
         card.appendChild(img);
+        if (C.isWeChat && C.isWeChat()) {
+          var tip = document.createElement('p');
+          tip.className = 'instruct-result-save-tip';
+          tip.textContent = tr('tools.imageCloud.longPressSave');
+          card.appendChild(tip);
+        }
         card.appendChild(dl);
         grid.appendChild(card);
       })(images[i]);

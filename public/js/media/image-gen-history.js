@@ -88,6 +88,39 @@
     });
   }
 
+  function dataUrlToBlob(dataUrl) {
+    try {
+      var parts = String(dataUrl || '').split(',');
+      if (parts.length < 2) return null;
+      var meta = parts[0] || '';
+      var b64 = parts[1] || '';
+      var ctypeMatch = /data:([^;]+)/i.exec(meta);
+      return b64ToBlob(b64, (ctypeMatch && ctypeMatch[1]) || 'image/png');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function itemToBlob(item) {
+    if (!item) return Promise.resolve(null);
+    if (item.imageBase64) {
+      return Promise.resolve(b64ToBlob(item.imageBase64, item.contentType || 'image/png'));
+    }
+    if (item._wechatDataUrl) {
+      var fromData = dataUrlToBlob(item._wechatDataUrl);
+      if (fromData) return Promise.resolve(fromData);
+    }
+    if (item.imageUrl) {
+      return fetch(item.imageUrl).then(function (res) {
+        if (!res.ok) throw new Error('fetch failed');
+        return res.blob();
+      }).catch(function () {
+        return null;
+      });
+    }
+    return Promise.resolve(null);
+  }
+
   function addFromBase64(tool, images, meta) {
     meta = meta || {};
     var prompt = trimPrompt(meta.prompt || '');
@@ -95,31 +128,38 @@
     var listIn = images || [];
     if (!listIn.length) return Promise.resolve();
 
-    return openDb().then(function (db) {
-      return new Promise(function (resolve, reject) {
-        var tx = db.transaction(STORE, 'readwrite');
-        var store = tx.objectStore(STORE);
-        for (var i = 0; i < listIn.length; i++) {
-          var item = listIn[i];
-          if (!item || !item.imageBase64) continue;
-          store.add({
-            tool: tool,
-            createdAt: now + i,
-            model: item.model || '',
-            prompt: prompt,
-            contentType: item.contentType || 'image/png',
-            blob: b64ToBlob(item.imageBase64, item.contentType || 'image/png'),
-            index: typeof item.index === 'number' ? item.index : null
-          });
-        }
-        tx.oncomplete = function () {
-          db.close();
-          pruneTool(tool).then(resolve).catch(function () { resolve(); });
-        };
-        tx.onerror = function () {
-          db.close();
-          reject(tx.error);
-        };
+    return Promise.all(listIn.map(itemToBlob)).then(function (blobs) {
+      var rows = [];
+      for (var i = 0; i < listIn.length; i++) {
+        var item = listIn[i];
+        var blob = blobs[i];
+        if (!item || !blob) continue;
+        rows.push({
+          tool: tool,
+          createdAt: now + i,
+          model: item.model || '',
+          prompt: prompt,
+          contentType: blob.type || item.contentType || 'image/png',
+          blob: blob,
+          index: typeof item.index === 'number' ? item.index : null
+        });
+      }
+      if (!rows.length) return Promise.resolve();
+
+      return openDb().then(function (db) {
+        return new Promise(function (resolve, reject) {
+          var tx = db.transaction(STORE, 'readwrite');
+          var store = tx.objectStore(STORE);
+          for (var j = 0; j < rows.length; j++) store.add(rows[j]);
+          tx.oncomplete = function () {
+            db.close();
+            pruneTool(tool).then(resolve).catch(function () { resolve(); });
+          };
+          tx.onerror = function () {
+            db.close();
+            reject(tx.error);
+          };
+        });
       });
     });
   }
@@ -210,25 +250,18 @@
             title.className = 'instruct-result-title';
             title.textContent = modelTitle(row.model) + (row.createdAt ? ' · ' + formatTime(row.createdAt) : '');
             var img = document.createElement('img');
-            img.alt = row.model || '';
+            img.alt = '';
             if (row.prompt) img.title = row.prompt;
-            function afterSrc() {
-              if (global.TBImageCloud && global.TBImageCloud.bindImagePreview) {
-                global.TBImageCloud.bindImagePreview(img);
-              }
-            }
             if (global.TBImageCloud && global.TBImageCloud.isWeChat && global.TBImageCloud.isWeChat()) {
               var reader = new FileReader();
               reader.onload = function () {
                 img.src = String(reader.result || '');
-                afterSrc();
               };
               reader.readAsDataURL(row.blob);
             } else {
               var url = URL.createObjectURL(row.blob);
               objectUrls.push(url);
               img.src = url;
-              afterSrc();
             }
             var actions = document.createElement('div');
             actions.className = 'img-hist-actions';
@@ -250,6 +283,12 @@
             actions.appendChild(rm);
             card.appendChild(title);
             card.appendChild(img);
+            if (global.TBImageCloud && global.TBImageCloud.isWeChat && global.TBImageCloud.isWeChat()) {
+              var tip = document.createElement('p');
+              tip.className = 'instruct-result-save-tip';
+              tip.textContent = tr('tools.imageCloud.longPressSave');
+              card.appendChild(tip);
+            }
             card.appendChild(actions);
             gridEl.appendChild(card);
           })(rows[i]);

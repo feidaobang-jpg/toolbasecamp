@@ -30,3 +30,6 @@ server/data/ladder/meta.json
 node_modules/
 dist/
 build/
+
+# CodeGraph local index
+.codegraph/

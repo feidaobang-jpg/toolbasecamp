@@ -16,11 +16,13 @@ alwaysApply: true
    - 提示文案要点：长按图片「保存到手机 / 转发给朋友」，或右上角 ··· → **在浏览器中打开**再下载。  
    - 图片：`TBImageCloud.downloadBlob` 或 `tbTriggerDownload`；非图片文件：`tbTriggerDownload`（文案用 `common.wechatFileDownloadTip`）。
 
-2. **点图片** → 打开大图预览（`TBImageCloud.bindImagePreview` / `openSavePreview`）。  
-   - 预览里可长按，使用微信原生「保存到手机 / 转发给朋友」。
+2. **点图片** → **不要**弹出大图预览。  
+   - 在下载按钮**上方**放长按说明（`tools.imageCloud.longPressSave`）。  
+   - 用户直接在结果图上长按，使用微信原生「保存到手机 / 转发给朋友」。
 
 3. **展示用 URL**  
-   - 微信内优先 **data URL**，避免 `blob:` 导致长按保存失败。
+   - 微信内优先 **data URL**，避免 `blob:` 导致长按保存失败。  
+   - 异步转 data URL 期间：用透明占位图 + `.is-loading` 骨架，**禁止**空 `src` + 模型名 `alt`（会出破图图标）。
 
 4. **不要**在下载按钮里自动 `openSavePreview`。
 
@@ -32,6 +34,7 @@ alwaysApply: true
 |------|------|
 | 点击下载 / 保存失败等**操作反馈** | **弹窗** `tbNotify(msg)`（带「知道了」） |
 | 进入页的微信常驻说明 | 可嵌入 tip 条 |
+| 结果图下方、下载前的长按说明 | 嵌入文案（`longPressSave`） |
 | 表单校验错误（未选图等） | 仍可用页面内 `error-box` |
 
 ## 适用范围

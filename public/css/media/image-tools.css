@@ -731,11 +731,6 @@
   margin: 0 auto 10px;
 }
 
-.instruct-result-card img.is-loading {
-  min-height: 120px;
-  opacity: 0.45;
-}
-
 .instruct-result-card .tb-btn {
   width: 100%;
 }
@@ -876,7 +871,28 @@
 }
 
 #result-meta {
-  margin-top: 32px;
+  margin-top: 16px;
+}
+
+.instruct-result-save-tip {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.instruct-result-card img.is-loading {
+  min-height: 160px;
+  opacity: 1;
+  background:
+    linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%) 0 0 / 200% 100%;
+  animation: instruct-img-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes instruct-img-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
 
 .img-hist-empty {
