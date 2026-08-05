@@ -31,15 +31,39 @@
             if (status === 502 || status === 504) return tr('tools.imageCloud.serviceUnavailable');
             return tr('tools.imageCloud.unknownError');
         }
-        var text = String(msg || '');
-        if (text.toLowerCase().indexOf('aborted') !== -1 || text.toLowerCase().indexOf('aborterror') !== -1) {
+        var text = String(msg || '').trim();
+        if (!text) return tr('tools.imageCloud.unknownError');
+
+        var lower = text.toLowerCase();
+        if (lower.indexOf('aborted') !== -1 || lower.indexOf('aborterror') !== -1) {
             return tr('tools.imageCloud.serviceUnavailable');
         }
-        if (String(msg).indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
-        if (msg === 'Bad Gateway' || msg === 'Gateway Timeout') {
+        if (text.indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
+        if (text === 'Bad Gateway' || text === 'Gateway Timeout') {
             return tr('tools.imageCloud.serviceUnavailable');
         }
-        var map = {
+        if (
+            text.indexOf('Green net check failed') !== -1
+            || text.indexOf('Input data may contain inappropriate content') !== -1
+            || text.indexOf('inappropriate content') !== -1
+            || text.indexOf('content moderation') !== -1
+        ) {
+            return tr('tools.imageCloud.contentBlocked');
+        }
+        if (text.indexOf('Insufficient balance') === 0 || text.indexOf('Insufficient AI balance') === 0) {
+            return tr('tools.imageCloud.insufficientBalance');
+        }
+        if (text.indexOf('Plan generation failed') === 0 || text.indexOf('Structuring failed') === 0) {
+            return tr('tools.lifePlans.genFailed');
+        }
+        if (text.indexOf('OCR failed') === 0) return tr('tools.imageCloud.unknownError');
+        if (text.indexOf('InvalidParameter') !== -1) return tr('tools.imageCloud.invalidParameter');
+        if (text.indexOf('Unexpected token') !== -1 && text.indexOf('InvalidPa') !== -1) {
+            return tr('tools.imageCloud.invalidParameter');
+        }
+
+        // Exact phrase → i18n key
+        var exact = {
             'Authentication required': 'auth.authRequired',
             'Session expired. Please log in again.': 'auth.sessionExpired',
             'Daily limit reached. Please try again tomorrow.': 'tools.imageCloud.dailyLimit',
@@ -48,10 +72,12 @@
             'DashScope is not configured (DASHSCOPE_API_KEY).': 'tools.imageCloud.genServiceMissing',
             'Please enter a prompt.': 'tools.textToImage.needPrompt',
             'Please enter a prompt': 'tools.textToImage.needPrompt',
+            'Please enter an edit instruction.': 'tools.instructEdit.needPrompt',
             'Please enter an edit instruction or choose a style preset.': 'tools.instructEdit.needPromptOrPreset',
             'Please enter a motion prompt': 'tools.imageToAnimation.needPrompt',
             'Please upload an image file': 'tools.imageCloud.invalidFile',
             'Empty file': 'tools.imageCloud.invalidFile',
+            'Empty image': 'tools.imageCloud.invalidFile',
             'Image is too large (max 8MB)': 'tools.imageCloud.tooLarge',
             'Image is too large for portrait segment (max 5MB)': 'tools.imageCloud.tooLarge',
             'Image content is too large': 'tools.imageCloud.tooLarge',
@@ -67,8 +93,8 @@
             'Portrait cutout service unavailable': 'tools.imageCloud.serviceUnavailable',
             'Portrait cutout failed': 'tools.imageCloud.segmentFailed',
             'General cutout failed': 'tools.imageCloud.segmentFailed',
-            'Image edit timed out': 'tools.imageCloud.serviceUnavailable',
-            'Image generation timed out': 'tools.imageCloud.serviceUnavailable',
+            'Image edit timed out': 'tools.imageCloud.editTimeout',
+            'Image generation timed out': 'tools.imageCloud.genTimeout',
             'General cutout is not available (rembg not installed).': 'tools.generalCutout.notAvailable',
             'Tencent Cloud service is not enabled': 'tools.imageCloud.serviceNotEnabled',
             'Tencent Cloud account is in arrears': 'tools.imageCloud.accountArrears',
@@ -79,35 +105,75 @@
             'Please fill in the form fields': 'tools.lifePlans.needFields',
             'Invalid plan kind': 'tools.lifePlans.invalidKind',
             'Provide a city or temperature for outfit advice': 'tools.outfitPlan.needTemp',
-            'Plan generation failed': 'tools.lifePlans.genFailed'
+            'Plan generation failed': 'tools.lifePlans.genFailed',
+            'Image edit returned no image. Check model access on DashScope.': 'tools.imageCloud.editNoImage',
+            'Image generation returned no image. Check model access on DashScope.': 'tools.imageCloud.genNoImage',
+            'Failed to download edited image': 'tools.imageCloud.downloadResultFailed',
+            'Failed to download generated image': 'tools.imageCloud.downloadResultFailed',
+            'Invalid data-URI image': 'tools.imageCloud.decodeFailed',
+            'Wan edit supports at most 4 reference images.': 'tools.instructEdit.tooManyRefs',
+            'This model supports at most 3 reference images.': 'tools.instructEdit.tooManyRefsQwen'
         };
-        if (map[msg]) return tr(map[msg]);
-        if (
-            text.indexOf('Green net check failed') !== -1
-            || text.indexOf('Input data may contain inappropriate content') !== -1
-            || text.indexOf('inappropriate content') !== -1
-            || text.indexOf('content moderation') !== -1
-        ) {
-            return tr('tools.imageCloud.contentBlocked');
+        if (exact[text]) return tr(exact[text]);
+
+        // Strip wrappers like "Image edit failed: wan2.6-image#1: ..."
+        var core = text
+            .replace(/^Image edit failed:\s*/i, '')
+            .replace(/^Image generation failed:\s*/i, '')
+            .trim();
+        var segments = core.split(/\s*;\s*/);
+        var out = [];
+        var seen = {};
+
+        function translateOne(part) {
+            var p = String(part || '').trim();
+            if (!p) return '';
+            p = p.replace(/^[A-Za-z0-9._-]+#\d+:\s*/, '').replace(/^[A-Za-z0-9._-]+:\s*/, '').trim();
+            if (exact[p]) return tr(exact[p]);
+
+            var rules = [
+                [/resolution is too small/i, 'tools.imageCloud.resolutionTooSmall'],
+                [/resolution is too large/i, 'tools.imageCloud.resolutionTooLarge'],
+                [/Image decode failed/i, 'tools.imageCloud.decodeFailed'],
+                [/Image is too large/i, 'tools.imageCloud.tooLarge'],
+                [/Instruction is too long/i, 'tools.instructEdit.promptTooLong'],
+                [/Prompt is too long/i, 'tools.textToImage.promptTooLong'],
+                [/Too many images/i, 'tools.instructEdit.tooManyGeneric'],
+                [/Unsupported model/i, 'tools.imageCloud.unsupportedModel'],
+                [/InvalidParameter/i, 'tools.imageCloud.invalidParameter'],
+                [/timed out/i, 'tools.imageCloud.editTimeout'],
+                [/returned no image/i, 'tools.imageCloud.editNoImage'],
+                [/Failed to download/i, 'tools.imageCloud.downloadResultFailed'],
+                [/Insufficient balance/i, 'tools.imageCloud.insufficientBalance'],
+                [/Daily limit reached/i, 'tools.imageCloud.dailyLimit'],
+                [/DashScope is not configured/i, 'tools.imageCloud.genServiceMissing'],
+                [/Please enter an edit instruction/i, 'tools.instructEdit.needPromptOrPreset'],
+                [/Please enter a prompt/i, 'tools.textToImage.needPrompt'],
+                [/Empty image|Empty file|upload an image/i, 'tools.imageCloud.invalidFile']
+            ];
+            for (var i = 0; i < rules.length; i++) {
+                if (rules[i][0].test(p) || rules[i][0].test(text)) return tr(rules[i][1]);
+            }
+            // Already Chinese — keep
+            if (/[\u4e00-\u9fff]/.test(p)) return p;
+            // Remaining English technical text → friendly fallback
+            if (/[A-Za-z]{3,}/.test(p)) {
+                if (/edit/i.test(text)) return tr('tools.instructEdit.failed');
+                if (/generat/i.test(text)) return tr('tools.textToImage.failed');
+                return tr('tools.imageCloud.unknownError');
+            }
+            return p;
         }
-        if (text.indexOf('InvalidParameter') !== -1) {
-            return tr('tools.imageCloud.invalidParameter');
-        }
-        if (text.indexOf('Unexpected token') !== -1 && text.indexOf('InvalidPa') !== -1) {
-            return tr('tools.imageCloud.invalidParameter');
-        }
-        if (text.indexOf('Image edit failed') === 0 || text.indexOf('Image generation failed') === 0) {
-            if (text.indexOf('InvalidParameter') !== -1) {
-                return tr('tools.imageCloud.invalidParameter');
+
+        for (var s = 0; s < segments.length; s++) {
+            var zh = translateOne(segments[s]);
+            if (zh && !seen[zh]) {
+                seen[zh] = true;
+                out.push(zh);
             }
         }
-        if (String(msg).indexOf('Insufficient balance') === 0 || String(msg).indexOf('Insufficient AI balance') === 0) {
-            return tr('tools.imageCloud.insufficientBalance');
-        }
-        if (String(msg).indexOf('Plan generation failed') === 0) return tr('tools.lifePlans.genFailed');
-        if (String(msg).indexOf('Structuring failed') === 0) return tr('tools.lifePlans.genFailed');
-        if (String(msg).indexOf('OCR failed') === 0) return tr('tools.imageCloud.unknownError');
-        return msg;
+        if (out.length) return out.join('；');
+        return tr('tools.imageCloud.unknownError');
     }
 
     function detailFromData(data) {
