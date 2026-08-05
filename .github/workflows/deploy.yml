@@ -296,31 +296,37 @@ jobs:
           cp /opt/toolbasecamp-deploy/toolbasecamp-api.service /etc/systemd/system/toolbasecamp-api.service
           systemctl daemon-reload
           systemctl enable toolbasecamp-api
-          bash /opt/toolbasecamp-deploy/patch-nginx-api.sh
-          bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh
-          bash /opt/toolbasecamp-deploy/patch-nginx-main.sh
-          bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh
-          bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
-          bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh
-          bash /opt/toolbasecamp-deploy/patch-stirling-config.sh
+          # API first: nginx API patch + DB + nuclear restart (do not let portal scripts block this)
+          bash /opt/toolbasecamp-deploy/patch-nginx-api.sh || true
+          bash /opt/toolbasecamp-deploy/ensure-api-db.sh || true
+          bash /opt/toolbasecamp-deploy/restart-api-core.sh
+          # From here, portal/fix scripts are best-effort; final wallet check re-enables -e
+          set +e
+          # Portal / secondary nginx (best-effort; must not block API deploy)
+          bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh || true
+          bash /opt/toolbasecamp-deploy/patch-nginx-main.sh || true
+          bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh || true
+          bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh || true
+          bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh || true
+          bash /opt/toolbasecamp-deploy/patch-stirling-config.sh || true
           if [[ ! -f /opt/toolbasecamp-deploy/pdf-on-nas.flag ]]; then
-            bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
-            bash /opt/toolbasecamp-deploy/install-stirling-warmup-cron.sh
-            bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
+            bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh || true
+            bash /opt/toolbasecamp-deploy/install-stirling-warmup-cron.sh || true
+            bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh || true
           else
             echo "pdf-on-nas.flag set  - skip Stirling PDF on VPS"
             bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh || true
           fi
           if [[ ! -f /var/www/toolbasecamp-chef/index.html ]]; then
-            bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh
+            bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh || true
           fi
-          bash /opt/toolbasecamp-deploy/patch-nginx-chef.sh
-          bash /opt/toolbasecamp-deploy/install-hoppscotch.sh
-          bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh
+          bash /opt/toolbasecamp-deploy/patch-nginx-chef.sh || true
+          bash /opt/toolbasecamp-deploy/install-hoppscotch.sh || true
+          bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh || true
           if [[ ! -f /opt/toolbasecamp-deploy/translate-on-nas.flag ]]; then
-            bash /opt/toolbasecamp-deploy/install-libretranslate.sh
+            bash /opt/toolbasecamp-deploy/install-libretranslate.sh || true
             bash /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh || true
-            bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh
+            bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh || true
           else
             echo "translate-on-nas.flag set  - skip LibreTranslate on VPS"
             bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
@@ -331,7 +337,6 @@ jobs:
           else
             echo "news crawler not present  - skip news portal"
           fi
-          bash /opt/toolbasecamp-deploy/ensure-api-db.sh
           bash /opt/toolbasecamp-deploy/install-mysql-backup-cron.sh || true
           bash /opt/toolbasecamp-deploy/install-api-health-cron.sh || true
           echo "=== Nuclear restart before start ==="
@@ -361,15 +366,17 @@ jobs:
           ss -lntp 2>/dev/null | grep 8001 || netstat -lntp 2>/dev/null | grep 8001 || true
           # Always nuke once more  - DEPLOY_SHA on disk can update while an orphan keeps old PLAN_KINDS.
           echo "=== Force life-plans process reload ==="
-          bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh
-          bash /opt/toolbasecamp-deploy/fix-fx-api.sh
-          bash /opt/toolbasecamp-deploy/fix-stats-api.sh
-          bash /opt/toolbasecamp-deploy/fix-auth-api.sh
-          bash /opt/toolbasecamp-deploy/fix-records-api.sh
+          bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh || true
+          bash /opt/toolbasecamp-deploy/fix-fx-api.sh || true
+          bash /opt/toolbasecamp-deploy/fix-stats-api.sh || true
+          bash /opt/toolbasecamp-deploy/fix-auth-api.sh || true
+          bash /opt/toolbasecamp-deploy/fix-records-api.sh || true
           bash /opt/toolbasecamp-deploy/fix-stocks-api.sh || true
-          bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
+          bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh || true
           bash /opt/toolbasecamp-deploy/fix-news-api.sh || true
-          bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh
+          bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh || true
+          # Re-assert wallet after optional fix scripts (they may restart API)
+          bash /opt/toolbasecamp-deploy/restart-api-core.sh
           # Prove the *listening* process is the new code (not a stale orphan)
           HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
           echo "health immediately after start: $HEALTH_JSON"
@@ -626,6 +633,8 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             exit 1
           fi
+          set -e
+          bash /opt/toolbasecamp-deploy/restart-api-core.sh
           REMOTE
 
       - name: Verify main site assets (public URL)
