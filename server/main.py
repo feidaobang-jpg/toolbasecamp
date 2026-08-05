@@ -16,6 +16,8 @@ from jose import JWTError, jwt
 import bcrypt
 from pydantic import BaseModel
 
+from feishu_notify import SITE_BASE_URL, mask_contact, notify_feishu_text_sync
+
 from recipe_ai import (
     MAX_INGREDIENTS_TEXT_LEN,
     MAX_RECIPE_IMAGES,
@@ -1142,6 +1144,28 @@ def guestbook_send_message(
             row = cur.fetchone()
     finally:
         conn.close()
+
+    # Feishu notify: ping admin about new guestbook messages (rate-limited).
+    try:
+        sender_label = mask_contact(
+            email=row.get("email"),
+            phone=row.get("phone"),
+            guest_name=row.get("guest_name"),
+        )
+        snippet = (text or "").strip().replace("\n", " ")
+        if len(snippet) > 120:
+            snippet = snippet[:120] + "…"
+        key = f"guestbook:{user_id or (row.get('guest_name') or 'guest')}"
+        notify_feishu_text_sync(
+            text=(
+                f"[留言] 新消息：{sender_label}\n"
+                f"{snippet}\n"
+                f"后台：{SITE_BASE_URL}/guestbook.html"
+            ),
+            key=key,
+        )
+    except Exception:
+        pass
 
     return {"success": True, "message": _serialize_guestbook_row(row)}
 

@@ -29,6 +29,8 @@ from chat import (
     user_unread_total,
 )
 
+from feishu_notify import SITE_BASE_URL, mask_contact, notify_feishu_text_async
+
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -184,6 +186,26 @@ async def send_my_message(body: SendBody, user: dict = Depends(_user)):
     finally:
         conn.close()
     await hub.broadcast_message(msg, int(user["id"]))
+
+    # Feishu notify: ping admin about new incoming user messages (rate-limited).
+    try:
+        sender_label = mask_contact(
+            email=user.get("email"),
+            phone=user.get("phone"),
+        )
+        snippet = (msg.get("body") or "").strip().replace("\n", " ")
+        if len(snippet) > 120:
+            snippet = snippet[:120] + "…"
+        text = (
+            f"[私聊] 新消息：{sender_label}\n"
+            f"{snippet}\n"
+            f"后台：{SITE_BASE_URL}/html/admin/private/chat-inbox.html"
+        )
+        asyncio.create_task(
+            notify_feishu_text_async(text, key=f"chat:{int(user['id'])}")
+        )
+    except Exception:
+        pass
     return {"success": True, "message": msg}
 
 
