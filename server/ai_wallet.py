@@ -317,7 +317,7 @@ def list_users_wallet(
     page: int = 1,
     page_size: int = 20,
 ) -> dict:
-    """Admin list of users with balance. Optional search by email/phone/uid."""
+    """Admin list of users with balance. Search by email or phone only."""
     size = max(1, min(int(page_size or 20), 50))
     pg = max(1, int(page or 1))
     offset = (pg - 1) * size
@@ -329,12 +329,8 @@ def list_users_wallet(
         params: list = []
         if keyword:
             like = f"%{keyword}%"
-            where = """
-                WHERE CAST(id AS CHAR) = %s
-                   OR email LIKE %s
-                   OR phone LIKE %s
-            """
-            params = [keyword, like, like]
+            where = "WHERE email LIKE %s OR phone LIKE %s"
+            params = [like, like]
 
         cur.execute(f"SELECT COUNT(*) AS c FROM users {where}", params)
         total = int((cur.fetchone() or {}).get("c") or 0)
@@ -354,7 +350,7 @@ def list_users_wallet(
         for r in rows:
             email = (r.get("email") or "").strip()
             phone = (r.get("phone") or "").strip()
-            account = email or phone or f"UID:{r.get('id')}"
+            account = email or phone or "—"
             items.append(
                 {
                     "id": int(r["id"]),

@@ -199,23 +199,23 @@
     }
     box.innerHTML = list.map(function (u) {
       var role = (u.role === 'admin')
-        ? ('<span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
+        ? (' · <span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
         : '';
-      var fillAcc = u.email || u.phone || String(u.id || '');
+      var fillAcc = u.email || u.phone || '';
+      var fillBtn = fillAcc
+        ? ('<button type="button" class="text-xs text-blue-600 hover:underline" data-fill-account="' +
+            String(fillAcc).replace(/"/g, '&quot;') + '">' +
+            tr('privateHub.ops.walletUsersFillCredit') +
+          '</button>')
+        : '';
       return (
         '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
           '<div class="min-w-0 flex-1">' +
-            '<div class="text-sm font-medium break-all">' + String(u.account || '') + '</div>' +
-            '<div class="text-xs text-gray-500 mt-0.5">UID:' + String(u.id || '') +
-              (role ? (' · ' + role) : '') +
-            '</div>' +
+            '<div class="text-sm font-medium break-all">' + String(u.account || '') + role + '</div>' +
           '</div>' +
           '<div class="flex flex-col items-end gap-1 flex-shrink-0">' +
             '<span class="font-semibold">¥' + Number(u.balanceCny || 0).toFixed(2) + '</span>' +
-            '<button type="button" class="text-xs text-blue-600 hover:underline" data-fill-account="' +
-              String(fillAcc).replace(/"/g, '&quot;') + '">' +
-              tr('privateHub.ops.walletUsersFillCredit') +
-            '</button>' +
+            fillBtn +
           '</div>' +
         '</div>'
       );
