@@ -5,12 +5,15 @@ from __future__ import annotations
 import asyncio
 import base64
 import os
+import secrets
+import tempfile
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from fastapi.responses import Response
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
@@ -119,6 +122,8 @@ router = APIRouter(prefix="/image", tags=["image"])
 
 MAX_UPLOAD = 8 * 1024 * 1024
 MAX_IMAGES_PDF = 12
+TMP_IMAGE_DIR = Path(tempfile.gettempdir()) / "toolbasecamp-image-results"
+TMP_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
 # Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
@@ -168,6 +173,31 @@ def _user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
 def _conn():
     router.require_db()  # type: ignore[attr-defined]
     return router.get_conn()  # type: ignore[attr-defined]
+
+
+def _tmp_suffix(ctype: str) -> str:
+    low = (ctype or "").lower()
+    if "jpeg" in low or "jpg" in low:
+        return ".jpg"
+    if "webp" in low:
+        return ".webp"
+    return ".png"
+
+
+def _save_tmp_image(data: bytes, ctype: str) -> str:
+    name = secrets.token_hex(16) + _tmp_suffix(ctype)
+    path = TMP_IMAGE_DIR / name
+    path.write_bytes(data)
+    return name
+
+
+@router.get("/tmp/{name}")
+def image_tmp(name: str):
+    safe = os.path.basename(name or "")
+    path = TMP_IMAGE_DIR / safe
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Image not found")
+    return FileResponse(str(path))
 
 
 def _today() -> str:
@@ -549,10 +579,15 @@ async def api_instruct_edit(
     compare: str = Form("0"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
+    request: Request = None,
     user: dict = Depends(_user),
 ):
     t0 = time.perf_counter()
     req_user_id = int(user["id"])
+    light_response = False
+    if request is not None:
+        hdr = (request.headers.get("X-TB-Light-Response") or "").strip().lower()
+        light_response = hdr in ("1", "true", "yes", "on")
     if not dashscope_image_edit_configured():
         raise HTTPException(
             status_code=503,
@@ -643,12 +678,14 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
+        tmp_name = _save_tmp_image(out, ctype or "image/png")
         return {
             "index": idx,
             "model": mid,
             "priceCny": _price_for(mid),
             "userPriceCny": float(user_price_cny(_price_for(mid))),
-            "imageBase64": base64.b64encode(out).decode("ascii"),
+            "imageBase64": None if light_response else base64.b64encode(out).decode("ascii"),
+            "imageUrl": f"/api/image/tmp/{tmp_name}",
             "contentType": ctype or "image/png",
         }
 

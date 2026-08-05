@@ -62,10 +62,11 @@
     });
   }
 
-  function resultSrc(b64, ctype) {
+  function resultSrc(item) {
+    if (item && item.imageUrl) return item.imageUrl;
     // Performance: on WeChat, converting every image to data:URL can be very slow.
     // Use object URL for in-page rendering; switch to data:URL only in preview (click).
-    return b64ToBlobUrl(b64, ctype);
+    return b64ToBlobUrl(item && item.imageBase64, item && item.contentType);
   }
 
   function isMobileUA() {
@@ -353,10 +354,10 @@
     title.textContent = modelTitle(item.model);
     var img = document.createElement('img');
     img.alt = item.model || '';
-    img.src = resultSrc(item.imageBase64, item.contentType);
+    img.src = resultSrc(item);
     img.addEventListener('click', function () {
       var longPressSrc = img.src;
-      if (C.isWeChat && C.isWeChat()) {
+      if (C.isWeChat && C.isWeChat() && item.imageBase64) {
         longPressSrc = C.b64ToDataUrl(item.imageBase64, item.contentType);
       }
       C.openSavePreview(longPressSrc, tr('tools.imageCloud.longPressSave'));
@@ -581,15 +582,18 @@
       fd.append('prompt', (promptEl && promptEl.value) || '');
       if (activePreset) fd.append('preset', activePreset);
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
+      var headers = {};
+      if ((C.isWeChat && C.isWeChat()) || isMobileUA()) headers['X-TB-Light-Response'] = '1';
       var timeoutMs = (C.isWeChat && C.isWeChat()) ? 300000 : 60000;
-      C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, timeoutMs: timeoutMs }).then(function (data) {
+      C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, headers: headers, timeoutMs: timeoutMs }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
         var images = data.images;
-        if ((!images || !images.length) && data.imageBase64) {
+        if ((!images || !images.length) && (data.imageBase64 || data.imageUrl)) {
           images = [{
             index: 0,
             model: data.model || models[0].id,
             imageBase64: data.imageBase64,
+            imageUrl: data.imageUrl,
             contentType: data.contentType || 'image/png'
           }];
         }
