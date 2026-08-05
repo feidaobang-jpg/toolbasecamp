@@ -65,6 +65,7 @@ window.TB_LOCALES['zh-CN'] = {
             walletCodeUsed: '已用',
             walletCodeUnused: '未用',
             walletCodeBy: '使用者：{account}',
+            walletCodeAt: '兑换时间：{time}',
             walletFilterAll: '全部',
             walletFilterUnused: '未用',
             walletFilterUsed: '已用',

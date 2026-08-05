@@ -96,10 +96,15 @@
         ? ('<span class="text-amber-600">' + tr('privateHub.ops.walletCodeUsed') + '</span>')
         : ('<span class="text-emerald-600">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
       var who = '';
-      if (c.redeemed && c.redeemedAccount) {
-        who = '<span class="text-xs text-gray-500 break-all">' +
-          tr('privateHub.ops.walletCodeBy').replace('{account}', String(c.redeemedAccount)) +
-          '</span>';
+      if (c.redeemed && (c.redeemedAccount || c.redeemedAt)) {
+        var bits = [];
+        if (c.redeemedAccount) {
+          bits.push(tr('privateHub.ops.walletCodeBy').replace('{account}', String(c.redeemedAccount)));
+        }
+        if (c.redeemedAt) {
+          bits.push(tr('privateHub.ops.walletCodeAt').replace('{time}', String(c.redeemedAt).replace('T', ' ').replace(/\.\d+$/, '')));
+        }
+        who = '<span class="text-xs text-gray-500 break-all">' + bits.join(' · ') + '</span>';
       }
       return (
         '<div class="flex flex-wrap items-center justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +

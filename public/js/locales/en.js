@@ -66,6 +66,7 @@ window.TB_LOCALES.en = {
             walletCodeUsed: 'Used',
             walletCodeUnused: 'Unused',
             walletCodeBy: 'By: {account}',
+            walletCodeAt: 'Redeemed at: {time}',
             walletFilterAll: 'All',
             walletFilterUnused: 'Unused',
             walletFilterUsed: 'Used',
