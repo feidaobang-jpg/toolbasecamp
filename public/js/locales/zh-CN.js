@@ -139,7 +139,7 @@ window.TB_LOCALES['zh-CN'] = {
         aiBalance: '用户余额',
         aiBalanceUnlimited: '管理员：不限',
         redeemTitle: '兑换码充值',
-        redeemHint: '咸鱼下单后会收到兑换码。在此输入即可充值；再到「图生图（指令改图）」上传出图（成功才扣余额）。',
+        redeemHint: '咸鱼下单后会收到兑换码。在此输入即可充值；再到「图生图」或「文生图」出图（成功才扣余额）。',
         redeemCode: '兑换码',
         redeemBtn: '兑换',
         redeemOk: '兑换成功，到账 ¥{amount}，当前余额 ¥{balance}',
@@ -200,9 +200,10 @@ window.TB_LOCALES['zh-CN'] = {
         paidRequired: '收费',
         dailyLimitRequired: '日限',
         howtoTitle: '咸鱼兑换码怎么用',
-        howtoBody: '① 注册/登录 → ② 右上角「个人中心」输入兑换码充值 → ③ 打开「图生图（指令改图）」上传图片并生成。成功出图才扣余额。',
+        howtoBody: '① 注册/登录 → ② 右上角「个人中心」输入兑换码充值 → ③ 用「图生图」改已有照片，或用「文生图」按文字出图。成功出图才扣余额。',
         howtoRedeem: '去兑换',
-        howtoInstruct: '图生图'
+        howtoInstruct: '图生图',
+        howtoTextToImage: '文生图'
     },
     games: {
         groups: {

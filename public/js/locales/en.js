@@ -140,7 +140,7 @@ window.TB_LOCALES.en = {
         aiBalance: 'Balance',
         aiBalanceUnlimited: 'Admin: unlimited',
         redeemTitle: 'Redeem code',
-        redeemHint: 'After purchase you get a redeem code. Enter it here to top up, then use Image-to-Image / Instruct Edit (charged only on success).',
+        redeemHint: 'After purchase you get a redeem code. Enter it here to top up, then use Image-to-Image or Text-to-Image (charged only on success).',
         redeemCode: 'Redeem code',
         redeemBtn: 'Redeem',
         redeemOk: 'Redeemed ¥{amount}. Balance now ¥{balance}',
@@ -201,9 +201,10 @@ window.TB_LOCALES.en = {
         paidRequired: 'Paid',
         dailyLimitRequired: 'Daily limit',
         howtoTitle: 'How to use a redeem code',
-        howtoBody: '1) Sign in → 2) Open Profile (top right) and redeem your code → 3) Open Image-to-Image (Instruct Edit), upload, and generate. Charged only on success.',
+        howtoBody: '1) Sign in → 2) Open Profile (top right) and redeem your code → 3) Use Image-to-Image to edit a photo, or Text-to-Image to generate from text. Charged only on success.',
         howtoRedeem: 'Redeem',
-        howtoInstruct: 'Image-to-Image'
+        howtoInstruct: 'Image-to-Image',
+        howtoTextToImage: 'Text to Image'
     },
     games: {
         groups: {
