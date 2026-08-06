@@ -59,19 +59,9 @@ INSTRUCT_EDIT_MODELS = (
         "priceCny": 0.6,
         "labelKey": "tools.instructEdit.modelWan27pro",
     },
-    {
-        "id": "qwen-image-2.0",
-        "priceCny": 0.2,
-        "labelKey": "tools.instructEdit.model20",
-    },
-    {
-        "id": "qwen-image-2.0-pro",
-        "priceCny": 0.5,
-        "labelKey": "tools.instructEdit.model20pro",
-    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
-INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "qwen-image-2.0")
+INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "wan2.7-image")
 MAX_INSTRUCT_BATCH = 4
 INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
 INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "1"))
@@ -577,7 +567,7 @@ def _resolve_instruct_models(
     if not raw and model:
         raw = [(model or "").strip()]
     if not raw:
-        raw = [(QWEN_IMAGE_EDIT_MODEL or "qwen-image-2.0").strip()]
+        raw = ["wan2.6-image"]
     out: list[str] = []
     seen: set[str] = set()
     for mid in raw:
