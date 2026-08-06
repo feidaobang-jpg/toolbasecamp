@@ -26,7 +26,6 @@ from tencent_image import (
     tencent_configured,
 )
 from dashscope_image_edit import (
-    QWEN_IMAGE_EDIT_MODEL,
     _is_wan_model,
     dashscope_image_edit_configured,
     edit_image_with_instruction,
