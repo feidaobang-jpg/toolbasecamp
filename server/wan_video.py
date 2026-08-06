@@ -85,7 +85,52 @@ def _default_model() -> str:
     root = _dashscope_api_root().lower()
     if "dashscope-us" in root:
         return "wan2.6-i2v-us"
-    return "wan2.6-i2v-flash"
+    # China / intl: Wan 2.7 image-to-video (media[] API)
+    return "wan2.7-i2v-2026-04-25"
+
+
+def _uses_media_api(model: str) -> bool:
+    """Wan 2.7+ uses input.media[]; 2.6 and earlier use img_url."""
+    m = (model or "").lower()
+    return m.startswith("wan2.7") or m.startswith("wan2.8") or "happyhorse" in m
+
+
+def _build_i2v_payload(
+    *,
+    model: str,
+    prompt: str,
+    img_url: str,
+    duration: int,
+    resolution: str,
+    want_audio: bool,
+) -> dict:
+    parameters: Dict[str, Any] = {
+        "resolution": resolution,
+        "duration": duration,
+        "prompt_extend": True,
+        "watermark": False,
+    }
+    if _uses_media_api(model):
+        # Auto soundtrack when no driving_audio; audio=false is mainly for flash/legacy.
+        if not want_audio:
+            parameters["audio"] = False
+        return {
+            "model": model,
+            "input": {
+                "prompt": prompt,
+                "media": [{"type": "first_frame", "url": img_url}],
+            },
+            "parameters": parameters,
+        }
+    parameters["audio"] = bool(want_audio)
+    return {
+        "model": model,
+        "input": {
+            "prompt": prompt,
+            "img_url": img_url,
+        },
+        "parameters": parameters,
+    }
 
 
 def wan_configured() -> bool:
@@ -383,10 +428,13 @@ def _extract_video_url(output: Any) -> str:
 
 @router.get("/status")
 def wan_status(user: dict = Depends(_user)):
+    model = _default_model()
     return {
         "configured": wan_configured(),
         "isAdmin": _is_admin(user),
-        "model": _default_model(),
+        "model": model,
+        "apiRoot": _dashscope_api_root(),
+        "usesMediaApi": _uses_media_api(model),
         "wallet": _wallet_for(user),
         "pricing": pricing_public(),
         "audioDefault": True,
@@ -425,8 +473,9 @@ async def wan_i2v_submit(
     prompt = (prompt or "").strip()
     if not prompt:
         raise HTTPException(status_code=400, detail="Please enter a motion prompt")
-    if len(prompt) > 1500:
-        prompt = prompt[:1500]
+    max_prompt = 5000 if _uses_media_api(_default_model()) else 1500
+    if len(prompt) > max_prompt:
+        prompt = prompt[:max_prompt]
     duration = int(duration)
     if duration not in ALLOWED_DURATIONS:
         raise HTTPException(status_code=400, detail="Duration must be 5 or 10 seconds")
@@ -450,22 +499,14 @@ async def wan_i2v_submit(
     img_url, _ = _prepare_image_data_uri(raw, image.filename or "image.jpg", ctype)
 
     model = _default_model()
-    # Default: with audio (auto BGM/SFX/voice). Explicit audio=false for silent clips
-    # (mainly documented on wan2.6-i2v-flash; US model is audio-capable).
-    payload = {
-        "model": model,
-        "input": {
-            "prompt": prompt,
-            "img_url": img_url,
-        },
-        "parameters": {
-            "resolution": resolution,
-            "duration": duration,
-            "prompt_extend": True,
-            "watermark": False,
-            "audio": want_audio,
-        },
-    }
+    payload = _build_i2v_payload(
+        model=model,
+        prompt=prompt,
+        img_url=img_url,
+        duration=duration,
+        resolution=resolution,
+        want_audio=want_audio,
+    )
 
     data = await _dashscope_post("/services/aigc/video-generation/video-synthesis", payload)
 

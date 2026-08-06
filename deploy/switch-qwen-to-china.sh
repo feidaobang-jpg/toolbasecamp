@@ -1,6 +1,8 @@
 #!/bin/bash
-# Switch DashScope (Qwen vision) from US to China region on the VPS.
+# Switch DashScope from US to China (Beijing) on the VPS.
 # Run on server: bash /opt/toolbasecamp-deploy/switch-qwen-to-china.sh
+#
+# Does NOT rewrite DASHSCOPE_API_KEY — you must paste a 百炼华北2（北京） key first.
 set -euo pipefail
 
 ENV_FILE=/etc/toolbasecamp-api.env
@@ -11,13 +13,12 @@ if [[ ! -f "$ENV_FILE" ]]; then
 fi
 
 echo "=== Before ==="
-grep -E '^(DASHSCOPE_|QWEN_)' "$ENV_FILE" || true
+grep -E '^(DASHSCOPE_|QWEN_|WAN_|IMAGE_EDIT_)' "$ENV_FILE" || true
 
 backup="${ENV_FILE}.bak.$(date +%Y%m%d%H%M%S)"
 cp "$ENV_FILE" "$backup"
 echo "Backup: $backup"
 
-# Update or append China endpoints (does NOT change API key — you must set a Beijing key manually)
 set_kv() {
   local key="$1" val="$2"
   if grep -q "^${key}=" "$ENV_FILE"; then
@@ -32,21 +33,24 @@ set_kv QWEN_VL_MODEL "qwen-vl-plus"
 set_kv QWEN_MODEL "qwen-plus"
 set_kv IMAGE_EDIT_DASHSCOPE_API_URL "https://dashscope.aliyuncs.com/api/v1"
 set_kv QWEN_IMAGE_EDIT_MODEL "qwen-image-2.0"
-set_kv WAN_I2V_MODEL "wan2.6-i2v-flash"
+# Image-to-video: Wan 2.7 (China). Snapshot id matches 百炼推荐列表.
+set_kv WAN_I2V_MODEL "wan2.7-i2v-2026-04-25"
+set_kv WAN_DASHSCOPE_API_URL "https://dashscope.aliyuncs.com/api/v1"
 
 echo ""
 echo "=== After ==="
-grep -E '^(DASHSCOPE_|QWEN_)' "$ENV_FILE" || true
+grep -E '^(DASHSCOPE_|QWEN_|WAN_|IMAGE_EDIT_)' "$ENV_FILE" || true
 
 echo ""
 echo "IMPORTANT:"
 echo "  1. Replace DASHSCOPE_API_KEY with a key from 百炼 → 华北2（北京） region."
 echo "  2. US-region keys usually do NOT work with dashscope.aliyuncs.com."
-echo "  3. VPS is in US — China endpoint may add latency on image detect."
+echo "  3. VPS is in US — China endpoint may add latency."
+echo "  4. Wan i2v model is now wan2.7-i2v-2026-04-25 (media[] API)."
 echo ""
 systemctl restart toolbasecamp-api
 sleep 2
 echo "=== Health ==="
 curl -s http://127.0.0.1:8001/health
 echo ""
-echo "Done. Expect recipe.dashscope_region=cn"
+echo "Done. Expect recipe.dashscope_region=cn and wan model wan2.7-i2v-*"

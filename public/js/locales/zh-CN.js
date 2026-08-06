@@ -1967,7 +1967,7 @@ window.TB_LOCALES['zh-CN'] = {
             costNote: '按官方价×2 计费：720P 约 ¥1.2/秒、1080P 约 ¥2/秒。仅成功生成才扣费。默认有声。',
             estimateLine: '本次约 ¥{price}（{duration} 秒 · {resolution}）',
             tip: '提示：',
-            tipBody: '通常 1–5 分钟出片。试提示词请优先 5 秒 + 720P；不需要声音可关掉配音。',
+            tipBody: '万相 2.7 图生视频，通常 1–5 分钟出片。试提示词请优先 5 秒 + 720P；默认自动配音。',
             run: '生成',
             downloadMp4: '下载 MP4',
             downloadFrames: '下载序列帧 ZIP',
