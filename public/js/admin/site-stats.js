@@ -24,7 +24,8 @@
     'page.games': { zh: '游戏中心', en: 'Games hub' },
     'page.guestbook': { zh: '留言', en: 'Messages' },
     'page.cool-sites': { zh: '导航', en: 'Directory' },
-    'page.about': { zh: '关于', en: 'About' }
+    'page.about': { zh: '关于', en: 'About' },
+    'page.top-up': { zh: '充值', en: 'Top up' }
   };
 
   var MODULE_LABELS = {
@@ -43,6 +44,13 @@
     'tool.auth': { zh: '账户', en: 'Auth' },
     'tool.ladder': { zh: '硬件跑分', en: 'Benchmarks' },
     'tool.admin': { zh: '后台', en: 'Admin' }
+  };
+
+  var AUTH_LABELS = {
+    'tool.auth.login': { zh: '登录', en: 'Log in' },
+    'tool.auth.register': { zh: '注册', en: 'Sign up' },
+    'tool.auth.profile': { zh: '个人中心', en: 'Profile' },
+    'tool.auth.chat': { zh: '私聊', en: 'Chat' }
   };
 
   var PORTAL_LABELS = {
@@ -135,6 +143,7 @@
     name = (name || '').trim();
     if (!name) return '';
     if (PAGE_LABELS[name]) return pickLocale(PAGE_LABELS[name]);
+    if (AUTH_LABELS[name]) return pickLocale(AUTH_LABELS[name]);
     if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
     if (ACTION_LABELS[name]) return pickLocale(ACTION_LABELS[name]);
     if (MODULE_LABELS[name]) return pickLocale(MODULE_LABELS[name]);
@@ -152,7 +161,17 @@
       var titleKey = maps().toolByFile[key];
       var title = titleKey ? trKey(titleKey) : '';
       if (title) return title;
+      var authKey = 'tool.' + m[1] + '.' + m[2];
+      if (AUTH_LABELS[authKey]) return pickLocale(AUTH_LABELS[authKey]);
+      if (m[1] === 'auth') {
+        return langIsZh() ? ('账户 · ' + m[2]) : ('Auth · ' + m[2]);
+      }
       return m[2].replace(/-/g, ' ');
+    }
+
+    if (name.indexOf('page.') === 0) {
+      var pageFile = name.slice(5).replace(/-/g, ' ');
+      return langIsZh() ? ('页面 · ' + pageFile) : name;
     }
 
     if (name.indexOf('tool.') === 0) {
