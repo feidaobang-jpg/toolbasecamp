@@ -402,6 +402,7 @@ def image_status(user: dict = Depends(_user)):
             "instructEditPresets": [
                 {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
                 {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
+                {"id": "restore_old_photo", "labelKey": "tools.instructEdit.presetRestoreOldPhoto"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
             "textToImageConfigured": dashscope_image_edit_configured(),
@@ -445,6 +446,7 @@ def image_status(user: dict = Depends(_user)):
             "instructEditPresets": [
                 {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
                 {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
+                {"id": "restore_old_photo", "labelKey": "tools.instructEdit.presetRestoreOldPhoto"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
             "textToImageConfigured": dashscope_image_edit_configured(),

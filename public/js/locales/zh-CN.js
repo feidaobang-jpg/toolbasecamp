@@ -2122,6 +2122,7 @@ window.TB_LOCALES['zh-CN'] = {
             presetCustom: '自定义',
             presetMangaToReal: '漫画 → 真人',
             presetRealToManga: '真人 → 漫画',
+            presetRestoreOldPhoto: '老照片修复',
             modelLabel: '模型',
             modelWan26: '万相 2.6 · 约 ¥0.4/张（推荐）',
             modelWan27: '万相 2.7 · 约 ¥0.6/张',

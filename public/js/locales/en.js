@@ -2123,6 +2123,7 @@ window.TB_LOCALES.en = {
             presetCustom: 'Custom',
             presetMangaToReal: 'Manga → Real',
             presetRealToManga: 'Real → Manga',
+            presetRestoreOldPhoto: 'Restore old photo',
             modelLabel: 'Model',
             modelWan26: 'Wan 2.6 · ≈¥0.4/image (recommended)',
             modelWan27: 'Wan 2.7 · ≈¥0.6/image',

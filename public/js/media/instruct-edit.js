@@ -700,6 +700,7 @@
           var promptText = (promptEl && promptEl.value) || '';
           if (activePreset === 'manga_to_real') promptText = tr('tools.instructEdit.presetMangaToReal');
           else if (activePreset === 'real_to_manga') promptText = tr('tools.instructEdit.presetRealToManga');
+          else if (activePreset === 'restore_old_photo') promptText = tr('tools.instructEdit.presetRestoreOldPhoto');
           histPanel.save(images, { prompt: promptText });
         }
       }).catch(function (err) {
