@@ -1965,7 +1965,7 @@ window.TB_LOCALES.en = {
             duration10: '10s',
             res720: '720P · ~¥1.2/s (recommended)',
             res1080: '1080P · ~¥2/s',
-            costNote: 'Billed at official list ×2: ~¥1.2/s at 720P, ~¥2/s at 1080P. Charged only on success. Audio on by default.',
+            costNote: '~¥1.2/s at 720P, ~¥2/s at 1080P. Charged only on success. Audio on by default.',
             estimateLine: 'This run ≈ ¥{price} ({duration}s · {resolution})',
             tip: 'Tip:',
             tipBody: 'Wan 2.7 image-to-video, usually 1–5 min. Prefer 5s + 720P when testing; auto audio on by default.',
