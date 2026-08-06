@@ -31,14 +31,11 @@ from ai_wallet import (
     user_price_cny,
     wallet_public,
 )
+from recipe_ai import DASHSCOPE_API_KEY, DASHSCOPE_BASE_URL
 
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/wan", tags=["wan"])
 
-DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
-DASHSCOPE_BASE_URL = os.environ.get(
-    "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
-).rstrip("/")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
 WAN_I2V_TIMEOUT = float(os.environ.get("WAN_I2V_TIMEOUT", "60"))
 MAX_UPLOAD = 6 * 1024 * 1024
@@ -57,8 +54,9 @@ _task_owners: Dict[str, Dict[str, Any]] = {}
 
 
 def _dashscope_api_root() -> str:
+    """Same HTTP API root as instruct-edit (IMAGE_EDIT_DASHSCOPE_API_URL → DASHSCOPE_BASE_URL)."""
     explicit = (
-        os.environ.get("WAN_DASHSCOPE_API_URL")
+        os.environ.get("IMAGE_EDIT_DASHSCOPE_API_URL")
         or os.environ.get("DASHSCOPE_HTTP_API_URL")
         or ""
     ).strip().rstrip("/")

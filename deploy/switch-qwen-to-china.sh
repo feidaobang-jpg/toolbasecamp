@@ -33,9 +33,13 @@ set_kv QWEN_VL_MODEL "qwen-vl-plus"
 set_kv QWEN_MODEL "qwen-plus"
 set_kv IMAGE_EDIT_DASHSCOPE_API_URL "https://dashscope.aliyuncs.com/api/v1"
 set_kv QWEN_IMAGE_EDIT_MODEL "qwen-image-2.0"
-# Image-to-video: Wan 2.7 (China). Snapshot id matches 百炼推荐列表.
+# Image-to-video: same KEY + IMAGE_EDIT_DASHSCOPE_API_URL as 图生图; model only:
 set_kv WAN_I2V_MODEL "wan2.7-i2v-2026-04-25"
-set_kv WAN_DASHSCOPE_API_URL "https://dashscope.aliyuncs.com/api/v1"
+# Drop legacy separate video API URL if present
+if grep -q "^WAN_DASHSCOPE_API_URL=" "$ENV_FILE"; then
+  sed -i '/^WAN_DASHSCOPE_API_URL=/d' "$ENV_FILE"
+  echo "Removed obsolete WAN_DASHSCOPE_API_URL (video now uses IMAGE_EDIT_DASHSCOPE_API_URL)."
+fi
 
 echo ""
 echo "=== After ==="
@@ -43,10 +47,10 @@ grep -E '^(DASHSCOPE_|QWEN_|WAN_|IMAGE_EDIT_)' "$ENV_FILE" || true
 
 echo ""
 echo "IMPORTANT:"
-echo "  1. Replace DASHSCOPE_API_KEY with a key from 百炼 → 华北2（北京） region."
+echo "  1. DASHSCOPE_API_KEY is shared (识图 / 图生图 / 图生视频). Use 百炼华北2（北京） key."
 echo "  2. US-region keys usually do NOT work with dashscope.aliyuncs.com."
 echo "  3. VPS is in US — China endpoint may add latency."
-echo "  4. Wan i2v model is now wan2.7-i2v-2026-04-25 (media[] API)."
+echo "  4. Wan i2v: wan2.7-i2v-2026-04-25 via IMAGE_EDIT_DASHSCOPE_API_URL."
 echo ""
 systemctl restart toolbasecamp-api
 sleep 2

@@ -196,11 +196,11 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | Alibaba Model Studio — Qwen VL / image edit / Wan I2V (use **Beijing** key for China endpoints) |
-| `DASHSCOPE_BASE_URL` | Compatible-mode root. China: `https://dashscope.aliyuncs.com/compatible-mode/v1`; US: `…dashscope-us…` |
+| `DASHSCOPE_API_KEY` | **One key** for Qwen VL, instruct-edit, text-to-image, and Wan I2V (Beijing key for China endpoints) |
+| `DASHSCOPE_BASE_URL` | Compatible-mode root. China: `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| `IMAGE_EDIT_DASHSCOPE_API_URL` | HTTP API root for **图生图 + 图生视频** (e.g. `https://dashscope.aliyuncs.com/api/v1`) |
 | `WAN_I2V_MODEL` | Default CN: `wan2.7-i2v-2026-04-25`; US fallback: `wan2.6-i2v-us` |
-| `WAN_DASHSCOPE_API_URL` | Optional HTTP API root override (e.g. `https://dashscope.aliyuncs.com/api/v1`) |
-| `AI_PRICE_MARKUP` | Wallet markup on vendor list (default `2`); Wan i2v list ¥0.6/s 720P / ¥1/s 1080P |
+| `AI_PRICE_MARKUP` | Wallet markup on vendor list (default `2`); Wan i2v ¥0.6/s 720P · ¥1/s 1080P |
 | `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
 | `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** |
 | `DEEPSEEK_MODEL` | Default `deepseek-chat` |
