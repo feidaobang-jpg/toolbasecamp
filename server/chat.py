@@ -67,7 +67,16 @@ def _tx(conn, fn):
             pass
 
 
-def _account_label(email, phone) -> str:
+def _account_label(email, phone, nickname=None) -> str:
+    nick = str(nickname or "").strip()
+    if nick:
+        return nick
+    ph = str(phone or "").strip()
+    em = str(email or "").strip()
+    return ph or em or "—"
+
+
+def _login_label(email, phone) -> str:
     ph = str(phone or "").strip()
     em = str(email or "").strip()
     return ph or em or "—"
@@ -332,7 +341,7 @@ def list_threads_admin(conn, *, page: int = 1, page_size: int = LIST_LIMIT) -> d
             """
             SELECT t.id, t.user_id, t.last_message_at, t.last_preview,
                    t.user_last_read_id, t.admin_last_read_id,
-                   u.email, u.phone
+                   u.email, u.phone, u.nickname
             FROM chat_threads t
             JOIN users u ON u.id = t.user_id
             ORDER BY COALESCE(t.last_message_at, t.created_at) DESC
@@ -344,11 +353,15 @@ def list_threads_admin(conn, *, page: int = 1, page_size: int = LIST_LIMIT) -> d
         items = []
         for r in rows:
             unread = _unread_for_admin(cur, r)
+            login = _login_label(r.get("email"), r.get("phone"))
+            display = _account_label(r.get("email"), r.get("phone"), r.get("nickname"))
             items.append(
                 {
                     "threadId": int(r["id"]),
                     "userId": int(r["user_id"]),
-                    "account": _account_label(r.get("email"), r.get("phone")),
+                    "account": display,
+                    "loginAccount": login,
+                    "nickname": (str(r.get("nickname") or "").strip() or None),
                     "lastPreview": r.get("last_preview") or "",
                     "lastMessageAt": str(r.get("last_message_at") or ""),
                     "unread": unread,
@@ -373,7 +386,7 @@ def get_thread_for_admin(conn, thread_id: int) -> dict:
             """
             SELECT t.id, t.user_id, t.last_message_at, t.last_preview,
                    t.user_last_read_id, t.admin_last_read_id,
-                   u.email, u.phone
+                   u.email, u.phone, u.nickname
             FROM chat_threads t
             JOIN users u ON u.id = t.user_id
             WHERE t.id=%s
@@ -383,10 +396,14 @@ def get_thread_for_admin(conn, thread_id: int) -> dict:
         r = cur.fetchone()
         if not r:
             raise HTTPException(status_code=404, detail="Thread not found")
+        login = _login_label(r.get("email"), r.get("phone"))
+        display = _account_label(r.get("email"), r.get("phone"), r.get("nickname"))
         return {
             "threadId": int(r["id"]),
             "userId": int(r["user_id"]),
-            "account": _account_label(r.get("email"), r.get("phone")),
+            "account": display,
+            "loginAccount": login,
+            "nickname": (str(r.get("nickname") or "").strip() or None),
             "lastPreview": r.get("last_preview") or "",
             "lastMessageAt": str(r.get("last_message_at") or ""),
             "unread": _unread_for_admin(cur, r),

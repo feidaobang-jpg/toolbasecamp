@@ -329,15 +329,15 @@ def list_users_wallet(
         params: list = []
         if keyword:
             like = f"%{keyword}%"
-            where = "WHERE email LIKE %s OR phone LIKE %s"
-            params = [like, like]
+            where = "WHERE email LIKE %s OR phone LIKE %s OR nickname LIKE %s"
+            params = [like, like, like]
 
         cur.execute(f"SELECT COUNT(*) AS c FROM users {where}", params)
         total = int((cur.fetchone() or {}).get("c") or 0)
 
         cur.execute(
             f"""
-            SELECT id, email, phone, role, ai_balance, created_at
+            SELECT id, email, phone, nickname, role, ai_balance, created_at
             FROM users
             {where}
             ORDER BY id DESC
@@ -377,7 +377,9 @@ def list_users_wallet(
         for r in rows:
             email = (r.get("email") or "").strip()
             phone = (r.get("phone") or "").strip()
-            account = email or phone or "—"
+            nickname = (r.get("nickname") or "").strip()
+            login = email or phone or "—"
+            account = nickname or login
             uid = int(r["id"])
             st = stats_by_uid.get(
                 uid,
@@ -392,6 +394,8 @@ def list_users_wallet(
                 {
                     "id": uid,
                     "account": account,
+                    "loginAccount": login,
+                    "nickname": nickname or None,
                     "email": email or None,
                     "phone": phone or None,
                     "role": r.get("role") or "user",

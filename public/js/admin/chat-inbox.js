@@ -120,6 +120,9 @@
               '</span>'
             : '') +
         '</div>' +
+        (th.loginAccount && th.nickname
+          ? '<div class="text-[11px] text-gray-400 truncate">' + String(th.loginAccount) + '</div>'
+          : '') +
         '<div class="text-xs text-gray-400 truncate mt-0.5">' +
           String(th.lastPreview || tr('chat.noPreview')) +
         '</div>';
@@ -162,6 +165,9 @@
     seen = {};
     logEl.innerHTML = '';
     titleEl.textContent = th.account || ('#' + activeThreadId);
+    if (th.nickname && th.loginAccount) {
+      titleEl.textContent = th.account + ' · ' + th.loginAccount;
+    }
     composer.classList.remove('hidden');
     loadThreads();
     return fetch(apiBase() + '/chat/admin/threads/' + activeThreadId + '/messages?limit=50', {

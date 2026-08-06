@@ -9,8 +9,8 @@
     <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/base.css?v=9">
     <link rel="stylesheet" href="../../css/site-mobile-nav.css">
-    <script src="../../js/locales/en.js?v=chat4"></script>
-    <script src="../../js/locales/zh-CN.js?v=chat4"></script>
+    <script src="../../js/locales/en.js?v=nick1"></script>
+    <script src="../../js/locales/zh-CN.js?v=nick1"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
     <script src="../../js/common_ui.js?v=chat4"></script>
@@ -32,15 +32,28 @@
     <main class="flex-1 w-full max-w-lg mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="p-8 flex flex-col items-center text-center border-b border-gray-50">
-                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 text-3xl mb-4">
+                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 text-3xl mb-4" id="profile-avatar-fallback">
                     <i class="fas fa-user"></i>
                 </div>
-                <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-email" data-i18n="auth.loading">Loading...</h2>
-                <span class="text-xs text-gray-400">UID: <span id="profile-uid">--</span></span>
+                <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-display" data-i18n="auth.loading">Loading...</h2>
+                <p class="text-sm text-gray-500 break-all" id="profile-account"></p>
+                <span class="text-xs text-gray-400 mt-1">UID: <span id="profile-uid">--</span></span>
                 <p class="mt-3 text-sm text-gray-600">
                     <span data-i18n="auth.aiBalance">Balance</span>：
                     <span id="profile-balance" class="font-semibold text-gray-900">--</span>
                 </p>
+            </div>
+
+            <div class="px-6 py-4 space-y-3 border-b border-gray-50">
+                <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.nicknameTitle">Nickname</h3>
+                <p class="text-xs text-gray-500" data-i18n="auth.nicknameHint">Shown in chat and admin lists. Leave empty to use phone/email.</p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="nickname-input" maxlength="32" autocomplete="nickname"
+                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        data-i18n-placeholder="auth.nicknamePh" placeholder="Your nickname" />
+                    <button type="button" id="btn-save-nickname" class="tb-btn whitespace-nowrap" data-i18n="auth.saveNickname">Save</button>
+                </div>
+                <div id="nickname-msg" class="text-sm hidden"></div>
             </div>
 
             <div class="px-6 pb-2 space-y-3 border-b border-gray-50" id="redeem-section">
@@ -140,7 +153,9 @@
                     'Invalid redeem code': 'auth.redeemInvalid',
                     'Redeem code already used': 'auth.redeemUsed',
                     'Redeem code is required': 'auth.redeemNeedCode',
-                    'Admin accounts have unlimited balance; redeem is not needed.': 'auth.redeemAdminSkip'
+                    'Admin accounts have unlimited balance; redeem is not needed.': 'auth.redeemAdminSkip',
+                    'Nickname too long': 'auth.nicknameTooLong',
+                    'Invalid nickname': 'auth.nicknameInvalid'
                 };
                 if (map[msg]) return tr(map[msg]);
                 if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return tr('auth.networkError');
@@ -198,8 +213,21 @@
                 const data = await fetchWithAuth('/auth/me');
                 if (!data.success) throw new Error(data.detail || tr('auth.loadProfileFailed'));
                 const user = data.user;
-                document.getElementById('profile-email').textContent =
-                    user.display || user.phone || user.email || '--';
+                const login = user.phone || user.email || '';
+                const display = user.display || user.nickname || login || '--';
+                document.getElementById('profile-display').textContent = display;
+                const accEl = document.getElementById('profile-account');
+                if (accEl) {
+                    if (user.nickname && login && user.nickname !== login) {
+                        accEl.textContent = login;
+                        accEl.classList.remove('hidden');
+                    } else {
+                        accEl.textContent = '';
+                        accEl.classList.add('hidden');
+                    }
+                }
+                const nickInput = document.getElementById('nickname-input');
+                if (nickInput) nickInput.value = user.nickname || '';
                 document.getElementById('profile-uid').textContent = user.id || '--';
                 if (user.created_at) {
                     document.getElementById('profile-created-at').textContent =
@@ -209,6 +237,47 @@
             } catch (e) {
                 if (e.message !== 'Unauthorized') console.error(e);
             }
+
+            document.getElementById('btn-save-nickname').addEventListener('click', async () => {
+                const input = document.getElementById('nickname-input');
+                const msgEl = document.getElementById('nickname-msg');
+                const btn = document.getElementById('btn-save-nickname');
+                const nick = (input && input.value || '').trim();
+                msgEl.classList.add('hidden');
+                btn.disabled = true;
+                btn.textContent = tr('auth.saving');
+                try {
+                    const data = await fetchWithAuth('/auth/profile', {
+                        method: 'PATCH',
+                        body: JSON.stringify({ nickname: nick })
+                    });
+                    if (!data.success) throw new Error(data.detail || tr('auth.updateFailed'));
+                    const user = data.user || {};
+                    const login = user.phone || user.email || '';
+                    const display = user.display || user.nickname || login || '--';
+                    document.getElementById('profile-display').textContent = display;
+                    const accEl = document.getElementById('profile-account');
+                    if (accEl) {
+                        if (user.nickname && login && user.nickname !== login) {
+                            accEl.textContent = login;
+                            accEl.classList.remove('hidden');
+                        } else {
+                            accEl.textContent = '';
+                            accEl.classList.add('hidden');
+                        }
+                    }
+                    msgEl.textContent = tr('auth.nicknameSaved');
+                    msgEl.classList.remove('hidden', 'text-red-600');
+                    msgEl.classList.add('text-emerald-600');
+                } catch (e) {
+                    msgEl.textContent = translateAuthError(e.message || '') || tr('auth.updateFailed');
+                    msgEl.classList.remove('hidden', 'text-emerald-600');
+                    msgEl.classList.add('text-red-600');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = tr('auth.saveNickname');
+                }
+            });
 
             document.getElementById('btn-redeem').addEventListener('click', async () => {
                 const code = (document.getElementById('redeem-code').value || '').trim();

@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 import bcrypt
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from feishu_notify import SITE_BASE_URL, mask_contact, notify_feishu_text_sync
 
@@ -152,6 +152,10 @@ class ChangePasswordBody(BaseModel):
     new_password: str
 
 
+class UpdateProfileBody(BaseModel):
+    nickname: str = Field(..., min_length=0, max_length=32)
+
+
 class GuestbookSendBody(BaseModel):
     content: str
     guest_name: Optional[str] = None
@@ -215,6 +219,22 @@ def ensure_tables():
                     )
                 except Exception as exc:
                     print(f"[migrate] uq_users_phone: {exc}")
+            # nickname for profile / chat display
+            cur.execute(
+                """
+                SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'users'
+                  AND COLUMN_NAME = 'nickname'
+                """
+            )
+            if int((cur.fetchone() or {}).get("c") or 0) == 0:
+                try:
+                    cur.execute(
+                        "ALTER TABLE users ADD COLUMN nickname VARCHAR(32) NULL"
+                    )
+                except Exception as exc:
+                    print(f"[migrate] users.nickname: {exc}")
             # email may still be NOT NULL UNIQUE from older schema
             cur.execute(
                 """
@@ -382,13 +402,35 @@ def decode_token(token: str) -> dict:
     return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
 
 
+def user_display_label(user: Optional[dict]) -> str:
+    """Prefer nickname; fall back to phone / email."""
+    if not user:
+        return "—"
+    nick = str(user.get("nickname") or "").strip()
+    if nick:
+        return nick
+    ph = str(user.get("phone") or "").strip()
+    em = str(user.get("email") or "").strip()
+    return ph or em or "—"
+
+
+def normalize_nickname(raw: str) -> str:
+    s = " ".join(str(raw or "").split()).strip()
+    if len(s) > 32:
+        raise HTTPException(status_code=400, detail="Nickname too long")
+    # Disallow control / weird separators; keep CJK and common punctuation lightly.
+    if any(ord(ch) < 32 for ch in s):
+        raise HTTPException(status_code=400, detail="Invalid nickname")
+    return s
+
+
 def _fetch_user_by_id(user_id: int) -> Optional[dict]:
     conn = get_conn()
     try:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, email, phone, role, password_hash, created_at, updated_at
+                SELECT id, email, phone, nickname, role, password_hash, created_at, updated_at
                 FROM users WHERE id=%s
                 """,
                 (user_id,),
@@ -1027,12 +1069,48 @@ def change_password(
     return {"success": True}
 
 
+@app.patch("/auth/profile")
+def update_profile(
+    body: UpdateProfileBody,
+    creds: Optional[HTTPAuthorizationCredentials] = Depends(security),
+):
+    require_db()
+    user = get_current_user(creds)
+    nick = normalize_nickname(body.nickname)
+    conn = get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE users SET nickname=%s WHERE id=%s",
+                (nick or None, int(user["id"])),
+            )
+            conn.commit()
+    finally:
+        conn.close()
+    refreshed = _fetch_user_by_id(int(user["id"])) or user
+    email = refreshed.get("email") or ""
+    phone = refreshed.get("phone") or ""
+    nickname = (refreshed.get("nickname") or "").strip()
+    return {
+        "success": True,
+        "user": {
+            "id": refreshed["id"],
+            "email": email,
+            "phone": phone,
+            "nickname": nickname or None,
+            "display": user_display_label(refreshed),
+            "role": refreshed.get("role") or user.get("role"),
+        },
+    }
+
+
 @app.get("/auth/me")
 def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     require_db()
     user = get_current_user(creds)
     email = user.get("email") or ""
     phone = user.get("phone") or ""
+    nickname = (user.get("nickname") or "").strip()
     wallet = None
     try:
         from ai_wallet import wallet_public
@@ -1050,7 +1128,8 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
             "id": user["id"],
             "email": email,
             "phone": phone,
-            "display": phone or email,
+            "nickname": nickname or None,
+            "display": user_display_label(user),
             "role": user["role"],
             "created_at": user["created_at"],
             "updated_at": user["updated_at"],
