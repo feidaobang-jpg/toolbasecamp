@@ -2108,7 +2108,7 @@ window.TB_LOCALES.en = {
         instructEdit: {
             title: 'Image-to-Image (Instruct Edit)',
             desc: 'Upload photos and describe the change (img2img). Single-image batch or multi-image reference. Sign-in required; charged from balance on success.',
-            redeemTip: 'Top up: search seller feidaobang on Xianyu for a redeem code → redeem in Profile (top right). Charged only on success.',
+            redeemTip: 'Need more balance? Open Top up (WeChat pay) or redeem a code in Profile. Charged only on success.',
             refModeLabel: 'Reference mode',
             refModeSingle: 'Single (batch)',
             refModeMulti: 'Multi-reference',

@@ -2107,7 +2107,7 @@ window.TB_LOCALES['zh-CN'] = {
         instructEdit: {
             title: '图生图（指令改图）',
             desc: '上传图片并用文字描述修改（图生图）。支持单图批量或多图参考合成。需登录，成功出图扣余额。',
-            redeemTip: '充值：咸鱼搜索卖家 feidaobang 下单获兑换码 → 右上角「个人中心」兑换（成功出图才扣余额）。',
+            redeemTip: '余额不足请前往充值页（微信扫码）；也可在个人中心兑换码充值。成功生成才扣费。',
             refModeLabel: '供图模式',
             refModeSingle: '单图参考',
             refModeMulti: '多图参考',
