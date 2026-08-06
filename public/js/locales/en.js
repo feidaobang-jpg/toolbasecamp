@@ -279,7 +279,7 @@ window.TB_LOCALES.en = {
         paidRequired: 'Paid',
         dailyLimitRequired: 'Daily limit',
         howtoTitle: 'How to top up',
-        howtoBody: 'New accounts get ¥5 balance. When it runs out: Option A — open Top up, pay via WeChat QR, then contact the admin; Option B — buy a redeem code from Xianyu seller feidaobang → redeem in Profile. Then use Image-to-Image or Text-to-Image (charged only on success).',
+        howtoBody: 'New accounts get ¥5 balance. When it runs out: Option A — open Top up, pay via WeChat QR, then contact the admin; Option B — buy a redeem code from Xianyu seller feidaobang → redeem in Profile. Then use Image-to-Image or Text-to-Image (charged only on success). Invite friends to top up and earn 10% commission (copy your link in Profile).',
         howtoRedeem: 'Redeem',
         howtoAboutPay: 'Top up',
         howtoInstruct: 'Image-to-Image',

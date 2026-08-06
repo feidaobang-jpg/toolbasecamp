@@ -278,7 +278,7 @@ window.TB_LOCALES['zh-CN'] = {
         paidRequired: '收费',
         dailyLimitRequired: '日限',
         howtoTitle: '怎么充值',
-        howtoBody: '新用户注册送 ¥5 余额。用完后：方式一 → 顶部「充值」页微信扫码付款后联系管理员到账；方式二 → 咸鱼搜索卖家 feidaobang 获兑换码，在「个人中心」兑换。然后用「图生图」或「文生图」（成功才扣余额）。',
+        howtoBody: '新用户注册送 ¥5 余额。用完后：方式一 → 顶部「充值」页微信扫码付款后联系管理员到账；方式二 → 咸鱼搜索卖家 feidaobang 获兑换码，在「个人中心」兑换。然后用「图生图」或「文生图」（成功才扣余额）。邀请好友充值可得 10% 佣金（个人中心复制推广链接）。',
         howtoRedeem: '去兑换',
         howtoAboutPay: '去充值',
         howtoInstruct: '图生图',
