@@ -2698,6 +2698,7 @@ window.TB_LOCALES.en = {
     },
     topUp: {
         title: 'Top up',
+        goTopUp: 'Top up',
         lead: 'Add balance for Image-to-Image and Text-to-Image. Charged only on success. New accounts get ¥5.',
         signupGift: 'New accounts get ¥5 balance — try first, top up when needed.',
         wechatTitle: 'Option 1: WeChat Pay',

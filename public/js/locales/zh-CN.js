@@ -2697,6 +2697,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     topUp: {
         title: '充值',
+        goTopUp: '去充值',
         lead: '为「图生图」「文生图」充值余额；成功出图才扣费。新用户注册送 ¥5。',
         signupGift: '新用户注册即送 ¥5 余额，可先试用再充值。',
         wechatTitle: '方式一：微信扫码',

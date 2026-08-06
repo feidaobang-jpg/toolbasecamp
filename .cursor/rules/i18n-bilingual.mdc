@@ -9,3 +9,17 @@ alwaysApply: true
 - **不要**「先只写中文、以后统一补英文」：站点有语言切换，缺英文会回退成 key 或英文包空缺。
 - HTML 静态文案优先 `data-i18n`；JS 动态赋值用 `t()` / `TBImageCloud.tr()`，并在 `tb:locale` 时重刷。
 - `i18n.js` 在脚本加载时就会检测语言；动态文案不要依赖「默认 en 再等 DOMContentLoaded」。
+
+## 禁止 key 当文案（中文环境出现英文 key 的根因）
+
+`t(key)` / `data-i18n` 在 **zh-CN.js 与 en.js 都找不到该路径** 时，会 **原样返回 key**（如 `topUp.goTopUp`），中文用户就会看到一串英文标识符。
+
+**新增或改 `data-i18n` / `t('…')` 前必须：**
+
+1. 在 `zh-CN.js` 与 `en.js` **同一嵌套路径** 各写一条（例如 `topUp.goTopUp`，不是只写在 `about.goTopUp`）。
+2. 用 Grep 确认 key 存在：`grep "goTopUp" public/js/locales/zh-CN.js public/js/locales/en.js`。
+3. HTML 里 `data-i18n` 的 **fallback 内文** 与 `en.js` 一致（作加载前/英文兜底）；**不要**在中文页只写英文 fallback 却指望用户永远看不到——未解析的 key 比英文 fallback 更糟。
+
+**命名：** 工具页按钮/说明优先 `tools.<toolId>.*`；跨页复用才用 `hub.*` / `topUp.*` / `about.*`，用之前先 Grep 确认路径。
+
+**改 locales 后：** 递增引用页的 `locales/*.js?v=`，避免浏览器缓存旧包。
