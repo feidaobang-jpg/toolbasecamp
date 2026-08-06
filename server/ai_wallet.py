@@ -417,7 +417,11 @@ def list_users_wallet(
 
 
 def delete_user_account(conn, user_id: int, *, actor_admin_id: int) -> dict:
-    """Hard-delete a non-admin user. Related rows cascade / SET NULL via FKs."""
+    """Hard-delete a user. Related rows cascade / SET NULL via FKs.
+
+    Guards: cannot delete self; cannot delete the last remaining admin.
+    Pre-clears record_goods that would block category CASCADE (ON DELETE RESTRICT).
+    """
     uid = int(user_id)
     actor = int(actor_admin_id)
     if uid == actor:
@@ -434,11 +438,32 @@ def delete_user_account(conn, user_id: int, *, actor_admin_id: int) -> dict:
             raise HTTPException(status_code=404, detail="User not found")
         role = (row.get("role") or "user").strip().lower()
         if role == "admin":
-            raise HTTPException(status_code=400, detail="Cannot delete admin accounts")
+            cur.execute("SELECT COUNT(*) AS c FROM users WHERE role='admin'")
+            admin_count = int((cur.fetchone() or {}).get("c") or 0)
+            if admin_count <= 1:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Cannot delete the last admin account",
+                )
         email = (row.get("email") or "").strip()
         phone = (row.get("phone") or "").strip()
         account = email or phone or str(uid)
-        cur.execute("DELETE FROM users WHERE id=%s AND role<>'admin'", (uid,))
+
+        # record_goods.category_id is ON DELETE RESTRICT — clear before user CASCADE.
+        try:
+            cur.execute(
+                """
+                DELETE g FROM record_goods g
+                INNER JOIN record_goods_categories c ON c.id = g.category_id
+                WHERE g.user_id=%s OR c.user_id=%s
+                """,
+                (uid, uid),
+            )
+        except Exception:
+            # Table may not exist on older DBs
+            pass
+
+        cur.execute("DELETE FROM users WHERE id=%s", (uid,))
         if cur.rowcount != 1:
             raise HTTPException(status_code=400, detail="Delete failed")
         return {"deletedUserId": uid, "account": account}

@@ -249,13 +249,13 @@
             tr('privateHub.ops.walletUsersFillCredit') +
           '</button>')
         : '';
-      var delBtn = !isAdmin
-        ? ('<button type="button" class="text-xs text-red-600 hover:underline" data-delete-user="' +
-            String(u.id) + '" data-delete-account="' +
-            String(u.account || '').replace(/"/g, '&quot;') + '">' +
-            tr('privateHub.ops.walletUsersDelete') +
-          '</button>')
-        : '';
+      var delBtn = (
+        '<button type="button" class="text-xs text-red-600 hover:underline" data-delete-user="' +
+          String(u.id) + '" data-delete-account="' +
+          String(u.account || '').replace(/"/g, '&quot;') + '">' +
+          tr('privateHub.ops.walletUsersDelete') +
+        '</button>'
+      );
       var stats = tr('privateHub.ops.walletUsersStats')
         .replace('{credited}', money(u.creditedCny))
         .replace('{redeemed}', money(u.redeemedCny))
