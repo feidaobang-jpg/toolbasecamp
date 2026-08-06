@@ -9,7 +9,7 @@
   <script src="../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../css/site-mobile-nav.css" />
-  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=3" />
+  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=4" />
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -34,22 +34,42 @@
     <div id="app" class="hidden space-y-6">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 class="text-xl font-bold text-gray-900">功能使用概览</h2>
-          <p class="text-sm text-gray-500 mt-1">匿名聚合 · 不记录具体用户</p>
+          <h2 class="text-xl font-bold text-gray-900">每日运营概览</h2>
+          <p class="text-sm text-gray-500 mt-1">选具体日期看访问、注册邀请、充值、消费与生图；也可切换近 N 天汇总</p>
         </div>
-        <div class="flex items-center gap-2">
-          <label class="text-sm text-gray-600" for="range-days">区间</label>
-          <select id="range-days" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
-            <option value="7" selected>近 7 天</option>
-            <option value="30">近 30 天</option>
-            <option value="90">近 90 天</option>
-            <option value="365">近 1 年</option>
-          </select>
+        <div class="flex flex-wrap items-end gap-3">
+          <div class="flex items-center gap-2" id="day-chips">
+            <button type="button" class="day-chip" data-offset="0">今天</button>
+            <button type="button" class="day-chip" data-offset="1">昨天</button>
+            <button type="button" class="day-chip" data-offset="2">前天</button>
+          </div>
+          <div>
+            <label class="block text-xs text-gray-500 mb-1" for="stat-date">日期</label>
+            <input type="date" id="stat-date" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs text-gray-500 mb-1" for="range-days">或区间</label>
+            <select id="range-days" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
+              <option value="">按日查看</option>
+              <option value="7">近 7 天</option>
+              <option value="30">近 30 天</option>
+              <option value="90">近 90 天</option>
+              <option value="365">近 1 年</option>
+            </select>
+          </div>
           <button type="button" id="refresh-btn" class="tb-btn text-sm px-3 py-2">刷新</button>
         </div>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="stat-card">
+          <div class="stat-label" id="label-day-pv">当日浏览</div>
+          <div class="stat-value" id="day-pv">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="label-day-uv">当日访客</div>
+          <div class="stat-value" id="day-uv">—</div>
+        </div>
         <div class="stat-card">
           <div class="stat-label">累计浏览</div>
           <div class="stat-value" id="site-pv">—</div>
@@ -58,22 +78,20 @@
           <div class="stat-label">累计访客</div>
           <div class="stat-value" id="site-uv">—</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">区间事件总数</div>
-          <div class="stat-value" id="event-sum">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">有数据的功能数</div>
-          <div class="stat-value" id="event-kinds">—</div>
-        </div>
       </div>
+
+      <section class="bg-white rounded-2xl border border-gray-100 p-5">
+        <h3 class="font-semibold text-gray-900 mb-1">业务指标</h3>
+        <p class="text-xs text-gray-400 mb-4">来自注册、余额流水与佣金表（非匿名埋点）</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="biz-cards"></div>
+      </section>
 
       <p id="range-label" class="text-xs text-gray-400"></p>
       <p id="error-box" class="error-box" hidden></p>
 
       <section class="bg-white rounded-2xl border border-gray-100 p-5">
         <h3 class="font-semibold text-gray-900 mb-1">国内 / 海外</h3>
-        <p class="text-xs text-gray-400 mb-4">按访问 IP / Cloudflare 国家头粗分（仅中国大陆计为国内）。管理员与排除 IP 不计入，所以你自己浏览通常看不到「国内」。爬虫与海外节点常会把区间拉成「全海外」。未知多为内网或解析失败；上线地区统计之前的历史无法回填。</p>
+        <p class="text-xs text-gray-400 mb-4">按访问 IP / Cloudflare 国家头粗分（仅中国大陆计为国内）。管理员与排除 IP 不计入。访客按首次出现地区。</p>
         <p id="geo-empty-note" class="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-4 hidden"></p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -90,7 +108,7 @@
       </section>
 
       <section class="bg-white rounded-2xl border border-gray-100 p-5">
-        <h3 class="font-semibold text-gray-900 mb-4">模块汇总</h3>
+        <h3 class="font-semibold text-gray-900 mb-4">模块汇总（页面/工具打开）</h3>
         <div id="module-list" class="space-y-2"></div>
       </section>
 
@@ -109,7 +127,7 @@
             <tbody id="top-body"></tbody>
           </table>
         </div>
-        <p id="top-empty" class="text-sm text-gray-400 py-6 text-center hidden">该区间暂无事件数据</p>
+        <p id="top-empty" class="text-sm text-gray-400 py-6 text-center hidden">该日/区间暂无页面事件数据</p>
       </section>
     </div>
   </main>
@@ -118,6 +136,6 @@
   <script src="../../js/locales/zh-CN.js"></script>
   <script src="../../js/i18n.js?v=stats2"></script>
   <script src="../../js/config.js"></script>
-  <script src="../../js/admin/site-stats.js?v=6"></script>
+  <script src="../../js/admin/site-stats.js?v=7"></script>
 </body>
 </html>

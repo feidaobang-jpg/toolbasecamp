@@ -18,6 +18,30 @@
   font-variant-numeric: tabular-nums;
 }
 
+.stat-sub {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.day-chip {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.day-chip.is-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
 .stats-table {
   width: 100%;
   border-collapse: collapse;

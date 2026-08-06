@@ -8,9 +8,15 @@
   var loginLink = document.getElementById('login-link');
   var authLabel = document.getElementById('auth-label');
   var rangeSelect = document.getElementById('range-days');
+  var dateInput = document.getElementById('stat-date');
+  var dayChips = document.getElementById('day-chips');
   var refreshBtn = document.getElementById('refresh-btn');
   var errorBox = document.getElementById('error-box');
   var labelMaps = null;
+
+  /** @type {'day'|'range'} */
+  var mode = 'day';
+  var selectedDate = '';
 
   var PAGE_LABELS = {
     'page.home': { zh: '首页', en: 'Home' },
@@ -69,7 +75,6 @@
   }
 
   function langIsZh() {
-    // 自用统计页默认中文；仅在明确选 EN 时用英文标签
     try {
       if (typeof window.tbGetLocale === 'function') {
         var loc = String(window.tbGetLocale() || '').toLowerCase();
@@ -187,6 +192,29 @@
     return String(n == null ? 0 : n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  function money(n) {
+    return '¥' + Number(n || 0).toFixed(2);
+  }
+
+  function pad2(n) {
+    return n < 10 ? '0' + n : String(n);
+  }
+
+  function formatLocalDate(d) {
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  function todayStr() {
+    return formatLocalDate(new Date());
+  }
+
+  function dateOffset(daysBack) {
+    var d = new Date();
+    d.setHours(12, 0, 0, 0);
+    d.setDate(d.getDate() - (daysBack || 0));
+    return formatLocalDate(d);
+  }
+
   function escapeHtml(text) {
     var d = document.createElement('div');
     d.textContent = text || '';
@@ -289,10 +317,10 @@
     fill(pvBars, pv, pvShare);
     fill(uvBars, uv, uvShare);
     if (pvSum) {
-      pvSum.textContent = '区间浏览合计 ' + fmt(pvTotal);
+      pvSum.textContent = '浏览合计 ' + fmt(pvTotal);
     }
     if (uvSum) {
-      uvSum.textContent = '区间访客合计 ' + fmt(geo.uv_total || 0) + '（按首次访客地区）';
+      uvSum.textContent = '访客合计 ' + fmt(geo.uv_total || 0) + '（按首次访客地区）';
     }
     if (emptyNote) {
       if (pvTotal <= 0 && (sitePv || 0) > 0) {
@@ -311,11 +339,107 @@
     }
   }
 
+  function bizCard(label, value, sub) {
+    return (
+      '<div class="stat-card">' +
+        '<div class="stat-label">' + escapeHtml(label) + '</div>' +
+        '<div class="stat-value" style="font-size:18px">' + escapeHtml(value) + '</div>' +
+        (sub ? '<div class="stat-sub">' + escapeHtml(sub) + '</div>' : '') +
+      '</div>'
+    );
+  }
+
+  function renderBusiness(biz, isDay) {
+    var box = document.getElementById('biz-cards');
+    if (!box) return;
+    biz = biz || {};
+    var scope = isDay ? '当日' : '区间';
+    box.innerHTML = [
+      bizCard(
+        scope + '新注册',
+        fmt(biz.registrations),
+        '其中邀请注册 ' + fmt(biz.invitedRegistrations)
+      ),
+      bizCard(
+        scope + '充值',
+        money(biz.topUpCny),
+        '后台 ¥' + Number(biz.adminCreditCny || 0).toFixed(2) +
+          ' · 兑码 ¥' + Number(biz.redeemCny || 0).toFixed(2) +
+          ' · ' + fmt(biz.topUpCount) + ' 笔'
+      ),
+      bizCard(
+        scope + '消费',
+        money(biz.spentCny),
+        '生图 ' + fmt(biz.spentCount) + ' 次（图生图 ' +
+          fmt(biz.instructEditCount) + ' / 文生图 ' +
+          fmt(biz.textToImageCount) + '）'
+      ),
+      bizCard(
+        scope + '佣金入账',
+        money(biz.referralEarnCny),
+        fmt(biz.referralEarnCount) + ' 笔 · 提现申请 ' +
+          fmt(biz.withdrawRequestCount) + ' / 已兑 ' +
+          fmt(biz.withdrawPaidCount)
+      ),
+      bizCard(
+        '注册赠送',
+        money(biz.signupGiftCny),
+        fmt(biz.signupGiftCount) + ' 笔'
+      ),
+      bizCard(
+        '图生图扣费',
+        money(biz.instructEditCny),
+        fmt(biz.instructEditCount) + ' 次'
+      ),
+      bizCard(
+        '文生图扣费',
+        money(biz.textToImageCny),
+        fmt(biz.textToImageCount) + ' 次'
+      ),
+      bizCard(
+        '提现申请金额',
+        money(biz.withdrawRequestCny),
+        '已兑现 ' + money(biz.withdrawPaidCny)
+      )
+    ].join('');
+  }
+
+  function syncDayChips() {
+    if (!dayChips) return;
+    var chips = dayChips.querySelectorAll('.day-chip');
+    for (var i = 0; i < chips.length; i++) {
+      var off = parseInt(chips[i].getAttribute('data-offset') || '0', 10);
+      var active = mode === 'day' && selectedDate === dateOffset(off);
+      chips[i].classList.toggle('is-active', active);
+    }
+  }
+
+  function setDayMode(ymd) {
+    mode = 'day';
+    selectedDate = ymd || todayStr();
+    if (dateInput) dateInput.value = selectedDate;
+    if (rangeSelect) rangeSelect.value = '';
+    syncDayChips();
+  }
+
+  function setRangeMode(days) {
+    mode = 'range';
+    if (rangeSelect) rangeSelect.value = String(days);
+    syncDayChips();
+  }
+
   function loadOverview() {
     showError('');
     labelMaps = null;
-    var days = parseInt(rangeSelect.value, 10) || 7;
-    return fetch(apiBase() + '/stats/overview?days=' + days, {
+    var q;
+    if (mode === 'day') {
+      if (!selectedDate) selectedDate = todayStr();
+      q = '/stats/overview?date=' + encodeURIComponent(selectedDate);
+    } else {
+      var days = parseInt(rangeSelect && rangeSelect.value, 10) || 7;
+      q = '/stats/overview?days=' + days;
+    }
+    return fetch(apiBase() + q, {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + token()
@@ -328,22 +452,37 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     }).then(function (data) {
+      var isDay = (data.mode || mode) === 'day';
+      var day = data.day || {};
+      document.getElementById('day-pv').textContent = fmt(day.pv);
+      document.getElementById('day-uv').textContent = fmt(day.uv);
+      var lpv = document.getElementById('label-day-pv');
+      var luv = document.getElementById('label-day-uv');
+      if (lpv) lpv.textContent = isDay ? '当日浏览' : '区间浏览';
+      if (luv) luv.textContent = isDay ? '当日访客' : '区间访客';
+
       document.getElementById('site-pv').textContent = fmt(data.site_pv);
       document.getElementById('site-uv').textContent = fmt(data.site_uv);
-      var top = data.events_top || [];
-      var sum = top.reduce(function (a, b) { return a + (b.count || 0); }, 0);
-      document.getElementById('event-sum').textContent = fmt(sum);
-      document.getElementById('event-kinds').textContent = fmt(top.length);
-      var tip = (data.from || '') + ' → ' + (data.to || '') + ' · 共 ' + (data.days || days) + ' 天';
+
+      renderBusiness(data.business, isDay);
+
+      var tip;
+      if (isDay) {
+        tip = '日期 ' + (data.date || data.from || selectedDate);
+      } else {
+        tip = (data.from || '') + ' → ' + (data.to || '') + ' · 共 ' + (data.days || '') + ' 天';
+      }
       var ips = data.exclude_ips_configured || [];
       if (ips.length) tip += ' · 已排除 IP ' + ips.length + ' 个';
-      tip += ' · 管理员访问不计入';
+      tip += ' · 管理员访问不计入浏览';
       document.getElementById('range-label').textContent = tip;
+
       renderGeo(data.geo, data.site_pv, data.geo_rev);
       var modules = data.modules || [];
       var maxMod = modules.length ? modules[0].count : 0;
       renderBars(document.getElementById('module-list'), modules, maxMod);
-      renderTop(top);
+      renderTop(data.events_top || []);
+      syncDayChips();
     }).catch(function (err) {
       if (err && err.message === 'forbidden') {
         showGate('需要管理员账号登录');
@@ -377,6 +516,11 @@
       showGate('请先登录管理员账号');
       return;
     }
+    if (dateInput) {
+      dateInput.max = todayStr();
+      dateInput.value = todayStr();
+    }
+    setDayMode(todayStr());
     fetch(apiBase() + '/auth/me', {
       headers: { Authorization: 'Bearer ' + t, Accept: 'application/json' },
       cache: 'no-store'
@@ -397,7 +541,39 @@
   }
 
   if (refreshBtn) refreshBtn.addEventListener('click', loadOverview);
-  if (rangeSelect) rangeSelect.addEventListener('change', loadOverview);
+
+  if (dayChips) {
+    dayChips.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.day-chip') : null;
+      if (!btn) return;
+      var off = parseInt(btn.getAttribute('data-offset') || '0', 10);
+      setDayMode(dateOffset(off));
+      loadOverview();
+    });
+  }
+
+  if (dateInput) {
+    dateInput.addEventListener('change', function () {
+      var v = (dateInput.value || '').trim();
+      if (!v) return;
+      setDayMode(v);
+      loadOverview();
+    });
+  }
+
+  if (rangeSelect) {
+    rangeSelect.addEventListener('change', function () {
+      var v = (rangeSelect.value || '').trim();
+      if (!v) {
+        setDayMode(selectedDate || todayStr());
+        loadOverview();
+        return;
+      }
+      setRangeMode(parseInt(v, 10) || 7);
+      loadOverview();
+    });
+  }
+
   document.addEventListener('tb:locale', function () {
     if (!app.classList.contains('hidden')) loadOverview();
   });

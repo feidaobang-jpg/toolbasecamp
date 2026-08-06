@@ -69,10 +69,26 @@ def ensure_wallet_schema(cur) -> None:
             meta_json TEXT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             INDEX idx_ai_ledger_user (user_id, id),
+            INDEX idx_ai_ledger_created (created_at),
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    try:
+        cur.execute(
+            """
+            SELECT COUNT(*) AS c FROM information_schema.STATISTICS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = 'ai_balance_ledger'
+              AND INDEX_NAME = 'idx_ai_ledger_created'
+            """
+        )
+        if int((cur.fetchone() or {}).get("c") or 0) == 0:
+            cur.execute(
+                "CREATE INDEX idx_ai_ledger_created ON ai_balance_ledger (created_at)"
+            )
+    except Exception as exc:
+        print(f"[migrate] idx_ai_ledger_created: {exc}")
     cur.execute(
         """
         CREATE TABLE IF NOT EXISTS ai_redeem_codes (

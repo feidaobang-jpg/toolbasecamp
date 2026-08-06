@@ -406,14 +406,33 @@ def record_event(
 @router.get("/overview")
 def stats_overview(
     days: int = Query(default=7, ge=1, le=366),
+    date_str: Optional[str] = Query(default=None, alias="date"),
     _admin: dict = Depends(_admin_user),
 ):
-    """Admin-only: totals + event ranking for the last N days."""
+    """Admin-only: totals + event ranking.
+
+    - ``days``: trailing window ending today (default).
+    - ``date``: single calendar day ``YYYY-MM-DD`` (overrides days).
+    """
     if _require_db is None or _get_conn is None:
         raise HTTPException(status_code=503, detail="Stats unavailable")
     _require_db()
-    end = date.today()
-    start = end - timedelta(days=days - 1)
+    if date_str:
+        try:
+            day = date.fromisoformat(str(date_str).strip()[:10])
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=400, detail="Invalid date (use YYYY-MM-DD)"
+            ) from exc
+        if day > date.today():
+            raise HTTPException(status_code=400, detail="Date cannot be in the future")
+        start = end = day
+        days = 1
+        mode = "day"
+    else:
+        end = date.today()
+        start = end - timedelta(days=days - 1)
+        mode = "range"
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
@@ -508,12 +527,21 @@ def stats_overview(
                 },
             }
 
+            business = _business_snapshot(cur, start, end)
+
         return {
             "site_pv": totals["site_pv"],
             "site_uv": totals["site_uv"],
+            "mode": mode,
             "days": days,
             "from": start.isoformat(),
             "to": end.isoformat(),
+            "date": start.isoformat() if mode == "day" else None,
+            "day": {
+                "pv": pv_total,
+                "uv": uv_total,
+            },
+            "business": business,
             "events_top": top,
             "events_daily": daily,
             "modules": modules,
@@ -523,3 +551,161 @@ def stats_overview(
         }
     finally:
         conn.close()
+
+
+def _table_exists(cur, name: str) -> bool:
+    cur.execute(
+        """
+        SELECT COUNT(*) AS c FROM information_schema.TABLES
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s
+        """,
+        (name,),
+    )
+    return int((cur.fetchone() or {}).get("c") or 0) > 0
+
+
+def _money_f(v: Any) -> float:
+    try:
+        return round(float(v or 0), 2)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _business_snapshot(cur, start: date, end: date) -> dict:
+    """Registrations / invites / top-ups / spend / image gen for [start, end]."""
+    start_s = start.isoformat()
+    end_s = end.isoformat()
+    # Inclusive day range as [start 00:00, end+1 00:00)
+    end_excl = (end + timedelta(days=1)).isoformat()
+
+    out: dict[str, Any] = {
+        "registrations": 0,
+        "invitedRegistrations": 0,
+        "topUpCount": 0,
+        "topUpCny": 0.0,
+        "adminCreditCount": 0,
+        "adminCreditCny": 0.0,
+        "redeemCount": 0,
+        "redeemCny": 0.0,
+        "signupGiftCount": 0,
+        "signupGiftCny": 0.0,
+        "spentCount": 0,
+        "spentCny": 0.0,
+        "instructEditCount": 0,
+        "instructEditCny": 0.0,
+        "textToImageCount": 0,
+        "textToImageCny": 0.0,
+        "referralEarnCount": 0,
+        "referralEarnCny": 0.0,
+        "withdrawRequestCount": 0,
+        "withdrawRequestCny": 0.0,
+        "withdrawPaidCount": 0,
+        "withdrawPaidCny": 0.0,
+    }
+
+    try:
+        cur.execute(
+            """
+            SELECT
+              COUNT(*) AS regs,
+              SUM(CASE WHEN invited_by IS NOT NULL THEN 1 ELSE 0 END) AS invited
+            FROM users
+            WHERE created_at >= %s AND created_at < %s
+            """,
+            (start_s, end_excl),
+        )
+        row = cur.fetchone() or {}
+        out["registrations"] = int(row.get("regs") or 0)
+        out["invitedRegistrations"] = int(row.get("invited") or 0)
+    except Exception as exc:
+        print(f"[stats] business users: {exc}")
+
+    if _table_exists(cur, "ai_balance_ledger"):
+        try:
+            cur.execute(
+                """
+                SELECT reason,
+                       COUNT(*) AS cnt,
+                       COALESCE(SUM(delta), 0) AS amt
+                FROM ai_balance_ledger
+                WHERE created_at >= %s AND created_at < %s
+                GROUP BY reason
+                """,
+                (start_s, end_excl),
+            )
+            for r in cur.fetchall() or []:
+                reason = (r.get("reason") or "").strip()
+                cnt = int(r.get("cnt") or 0)
+                amt = _money_f(r.get("amt"))
+                if reason == "admin_credit":
+                    out["adminCreditCount"] = cnt
+                    out["adminCreditCny"] = amt
+                elif reason == "redeem_code":
+                    out["redeemCount"] = cnt
+                    out["redeemCny"] = amt
+                elif reason == "signup_gift":
+                    out["signupGiftCount"] = cnt
+                    out["signupGiftCny"] = amt
+                elif reason == "instruct_edit":
+                    out["instructEditCount"] = cnt
+                    out["instructEditCny"] = abs(amt)
+                elif reason == "text_to_image":
+                    out["textToImageCount"] = cnt
+                    out["textToImageCny"] = abs(amt)
+            out["topUpCount"] = out["adminCreditCount"] + out["redeemCount"]
+            out["topUpCny"] = _money_f(out["adminCreditCny"] + out["redeemCny"])
+            out["spentCount"] = out["instructEditCount"] + out["textToImageCount"]
+            out["spentCny"] = _money_f(
+                out["instructEditCny"] + out["textToImageCny"]
+            )
+        except Exception as exc:
+            print(f"[stats] business ledger: {exc}")
+
+    if _table_exists(cur, "commission_ledger"):
+        try:
+            cur.execute(
+                """
+                SELECT COUNT(*) AS cnt, COALESCE(SUM(delta), 0) AS amt
+                FROM commission_ledger
+                WHERE reason='referral_earn'
+                  AND created_at >= %s AND created_at < %s
+                """,
+                (start_s, end_excl),
+            )
+            row = cur.fetchone() or {}
+            out["referralEarnCount"] = int(row.get("cnt") or 0)
+            out["referralEarnCny"] = _money_f(row.get("amt"))
+        except Exception as exc:
+            print(f"[stats] business commission: {exc}")
+
+    if _table_exists(cur, "commission_withdrawals"):
+        try:
+            cur.execute(
+                """
+                SELECT
+                  SUM(CASE WHEN created_at >= %s AND created_at < %s THEN 1 ELSE 0 END) AS req_cnt,
+                  COALESCE(SUM(CASE WHEN created_at >= %s AND created_at < %s THEN amount ELSE 0 END), 0) AS req_amt,
+                  SUM(CASE WHEN status='paid' AND settled_at >= %s AND settled_at < %s THEN 1 ELSE 0 END) AS paid_cnt,
+                  COALESCE(SUM(CASE WHEN status='paid' AND settled_at >= %s AND settled_at < %s THEN amount ELSE 0 END), 0) AS paid_amt
+                FROM commission_withdrawals
+                """,
+                (
+                    start_s,
+                    end_excl,
+                    start_s,
+                    end_excl,
+                    start_s,
+                    end_excl,
+                    start_s,
+                    end_excl,
+                ),
+            )
+            row = cur.fetchone() or {}
+            out["withdrawRequestCount"] = int(row.get("req_cnt") or 0)
+            out["withdrawRequestCny"] = _money_f(row.get("req_amt"))
+            out["withdrawPaidCount"] = int(row.get("paid_cnt") or 0)
+            out["withdrawPaidCny"] = _money_f(row.get("paid_amt"))
+        except Exception as exc:
+            print(f"[stats] business withdrawals: {exc}")
+
+    return out
