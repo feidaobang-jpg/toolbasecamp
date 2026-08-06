@@ -346,20 +346,61 @@ def list_users_wallet(
             params + [size, offset],
         )
         rows = cur.fetchall() or []
+        uids = [int(r["id"]) for r in rows]
+        stats_by_uid: dict[int, dict] = {}
+        if uids:
+            placeholders = ",".join(["%s"] * len(uids))
+            cur.execute(
+                f"""
+                SELECT user_id,
+                       COALESCE(SUM(CASE WHEN reason='admin_credit' THEN delta ELSE 0 END), 0) AS credited,
+                       COALESCE(SUM(CASE WHEN reason='redeem_code' THEN delta ELSE 0 END), 0) AS redeemed,
+                       COALESCE(SUM(CASE WHEN reason='signup_gift' THEN delta ELSE 0 END), 0) AS gifted,
+                       COALESCE(SUM(CASE WHEN delta < 0 THEN -delta ELSE 0 END), 0) AS spent
+                FROM ai_balance_ledger
+                WHERE user_id IN ({placeholders})
+                GROUP BY user_id
+                """,
+                uids,
+            )
+            for s in cur.fetchall() or []:
+                if not isinstance(s, dict):
+                    continue
+                stats_by_uid[int(s["user_id"])] = {
+                    "creditedCny": float(money(s.get("credited"))),
+                    "redeemedCny": float(money(s.get("redeemed"))),
+                    "giftedCny": float(money(s.get("gifted"))),
+                    "spentCny": float(money(s.get("spent"))),
+                }
+
         items = []
         for r in rows:
             email = (r.get("email") or "").strip()
             phone = (r.get("phone") or "").strip()
             account = email or phone or "—"
+            uid = int(r["id"])
+            st = stats_by_uid.get(
+                uid,
+                {
+                    "creditedCny": 0.0,
+                    "redeemedCny": 0.0,
+                    "giftedCny": 0.0,
+                    "spentCny": 0.0,
+                },
+            )
             items.append(
                 {
-                    "id": int(r["id"]),
+                    "id": uid,
                     "account": account,
                     "email": email or None,
                     "phone": phone or None,
                     "role": r.get("role") or "user",
                     "balanceCny": float(money(r.get("ai_balance"))),
                     "createdAt": str(r.get("created_at") or ""),
+                    "creditedCny": st["creditedCny"],
+                    "redeemedCny": st["redeemedCny"],
+                    "giftedCny": st["giftedCny"],
+                    "spentCny": st["spentCny"],
                 }
             )
         pages = max(1, (total + size - 1) // size) if total else 1
@@ -371,6 +412,36 @@ def list_users_wallet(
             "pages": pages,
             "q": keyword,
         }
+
+    return _tx(conn, _run)
+
+
+def delete_user_account(conn, user_id: int, *, actor_admin_id: int) -> dict:
+    """Hard-delete a non-admin user. Related rows cascade / SET NULL via FKs."""
+    uid = int(user_id)
+    actor = int(actor_admin_id)
+    if uid == actor:
+        raise HTTPException(status_code=400, detail="Cannot delete your own account")
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            "SELECT id, email, phone, role FROM users WHERE id=%s FOR UPDATE",
+            (uid,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="User not found")
+        role = (row.get("role") or "user").strip().lower()
+        if role == "admin":
+            raise HTTPException(status_code=400, detail="Cannot delete admin accounts")
+        email = (row.get("email") or "").strip()
+        phone = (row.get("phone") or "").strip()
+        account = email or phone or str(uid)
+        cur.execute("DELETE FROM users WHERE id=%s AND role<>'admin'", (uid,))
+        if cur.rowcount != 1:
+            raise HTTPException(status_code=400, detail="Delete failed")
+        return {"deletedUserId": uid, "account": account}
 
     return _tx(conn, _run)
 

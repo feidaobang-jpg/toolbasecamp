@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from ai_wallet import (
     create_redeem_codes,
     credit_balance,
+    delete_user_account,
     find_user_id_by_account,
     list_redeem_codes,
     list_users_wallet,
@@ -98,6 +99,17 @@ def admin_list_users(
     conn = _conn()
     try:
         out = list_users_wallet(conn, q=q, page=page, page_size=page_size)
+        out["success"] = True
+        return out
+    finally:
+        conn.close()
+
+
+@router.delete("/admin/users/{user_id}")
+def admin_delete_user(user_id: int, admin: dict = Depends(_admin)):
+    conn = _conn()
+    try:
+        out = delete_user_account(conn, int(user_id), actor_admin_id=int(admin["id"]))
         out["success"] = True
         return out
     finally:

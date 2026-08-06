@@ -5,6 +5,7 @@
   var codesPage = 1;
   var codesPages = 1;
   var codesTotal = 0;
+  var codesCache = [];
   var PAGE_SIZE = 20;
   var usersPage = 1;
   var usersPages = 1;
@@ -30,6 +31,35 @@
     if (!el) return;
     el.textContent = msg || '';
     el.style.color = isErr ? '#b91c1c' : '#334155';
+  }
+
+  function money(n) {
+    return Number(n || 0).toFixed(2);
+  }
+
+  function copyText(text) {
+    var s = String(text || '');
+    if (!s) return Promise.reject(new Error('empty'));
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(s);
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement('textarea');
+      ta.value = s;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        if (!document.execCommand('copy')) reject(new Error('copy failed'));
+        else resolve();
+      } catch (e) {
+        reject(e);
+      } finally {
+        document.body.removeChild(ta);
+      }
+    });
   }
 
   function apiJson(path, opts) {
@@ -91,6 +121,7 @@
   function renderCodes(list) {
     var box = document.getElementById('codes-list');
     if (!box) return;
+    codesCache = list || [];
     if (!list || !list.length) {
       box.innerHTML = '<p class="text-gray-400 text-sm">' + tr('privateHub.ops.walletCodesEmpty') + '</p>';
       return;
@@ -128,6 +159,7 @@
         }
         meta = lines.join('');
       }
+      var codeEsc = String(c.code || '').replace(/"/g, '&quot;');
       return (
         '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
           '<div class="min-w-0 flex-1">' +
@@ -135,8 +167,11 @@
             meta +
           '</div>' +
           '<div class="flex items-center gap-3 flex-shrink-0 pt-0.5">' +
-            '<span>¥' + Number(c.amountCny || 0).toFixed(2) + '</span>' +
+            '<span>¥' + money(c.amountCny) + '</span>' +
             used +
+            '<button type="button" class="text-xs text-blue-600 hover:underline" data-copy-code="' + codeEsc + '">' +
+              tr('privateHub.ops.walletCodesCopy') +
+            '</button>' +
           '</div>' +
         '</div>'
       );
@@ -162,7 +197,6 @@
     return apiJson(q).then(function (data) {
       var serverStatus = data.status;
       var list = data.codes || [];
-      // If API not upgraded yet, it ignores status — filter on client as fallback.
       if (!serverStatus || serverStatus !== codesStatus) {
         list = filterCodesClient(list);
         codesTotal = list.length;
@@ -204,7 +238,8 @@
       return;
     }
     box.innerHTML = list.map(function (u) {
-      var role = (u.role === 'admin')
+      var isAdmin = u.role === 'admin';
+      var role = isAdmin
         ? (' · <span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
         : '';
       var fillAcc = u.email || u.phone || '';
@@ -214,14 +249,28 @@
             tr('privateHub.ops.walletUsersFillCredit') +
           '</button>')
         : '';
+      var delBtn = !isAdmin
+        ? ('<button type="button" class="text-xs text-red-600 hover:underline" data-delete-user="' +
+            String(u.id) + '" data-delete-account="' +
+            String(u.account || '').replace(/"/g, '&quot;') + '">' +
+            tr('privateHub.ops.walletUsersDelete') +
+          '</button>')
+        : '';
+      var stats = tr('privateHub.ops.walletUsersStats')
+        .replace('{credited}', money(u.creditedCny))
+        .replace('{redeemed}', money(u.redeemedCny))
+        .replace('{gifted}', money(u.giftedCny))
+        .replace('{spent}', money(u.spentCny));
       return (
         '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
           '<div class="min-w-0 flex-1">' +
             '<div class="text-sm font-medium break-all">' + String(u.account || '') + role + '</div>' +
+            '<div class="text-xs text-gray-500 mt-1 leading-relaxed">' + stats + '</div>' +
           '</div>' +
           '<div class="flex flex-col items-end gap-1 flex-shrink-0">' +
-            '<span class="font-semibold">¥' + Number(u.balanceCny || 0).toFixed(2) + '</span>' +
+            '<span class="font-semibold">¥' + money(u.balanceCny) + '</span>' +
             fillBtn +
+            delBtn +
           '</div>' +
         '</div>'
       );
@@ -249,9 +298,11 @@
     var creditBtn = document.getElementById('btn-credit');
     var codesBtn = document.getElementById('btn-codes');
     var refreshBtn = document.getElementById('btn-refresh-codes');
+    var copyPageBtn = document.getElementById('btn-copy-page-codes');
     var filterRow = document.getElementById('codes-filter');
     var prevBtn = document.getElementById('codes-prev');
     var nextBtn = document.getElementById('codes-next');
+    var codesList = document.getElementById('codes-list');
 
     if (creditBtn) {
       creditBtn.addEventListener('click', function () {
@@ -272,8 +323,8 @@
           setStatus(
             st,
             tr('privateHub.ops.walletCreditOk')
-              .replace('{amount}', Number(data.creditedCny || amount).toFixed(2))
-              .replace('{balance}', Number(data.balanceCny || 0).toFixed(2)),
+              .replace('{amount}', money(data.creditedCny || amount))
+              .replace('{balance}', money(data.balanceCny)),
             false
           );
           return loadUsers();
@@ -348,6 +399,36 @@
 
     if (refreshBtn) refreshBtn.addEventListener('click', loadCodes);
 
+    if (copyPageBtn) {
+      copyPageBtn.addEventListener('click', function () {
+        var st = document.getElementById('codes-status');
+        var text = (codesCache || []).map(function (c) { return c.code; }).filter(Boolean).join('\n');
+        if (!text) {
+          setStatus(st, tr('privateHub.ops.walletCodesEmpty'), true);
+          return;
+        }
+        copyText(text).then(function () {
+          setStatus(st, tr('privateHub.ops.walletCodesCopied'), false);
+        }).catch(function () {
+          setStatus(st, tr('privateHub.ops.walletCodesCopyFail'), true);
+        });
+      });
+    }
+
+    if (codesList) {
+      codesList.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-copy-code]') : null;
+        if (!btn) return;
+        var code = btn.getAttribute('data-copy-code') || '';
+        var st = document.getElementById('codes-status');
+        copyText(code).then(function () {
+          setStatus(st, tr('privateHub.ops.walletCodesCopied') + ': ' + code, false);
+        }).catch(function () {
+          setStatus(st, tr('privateHub.ops.walletCodesCopyFail'), true);
+        });
+      });
+    }
+
     var usersSearchBtn = document.getElementById('btn-users-search');
     var usersRefreshBtn = document.getElementById('btn-users-refresh');
     var usersPrev = document.getElementById('users-prev');
@@ -386,15 +467,41 @@
     }
     if (usersList) {
       usersList.addEventListener('click', function (e) {
-        var btn = e.target && e.target.closest ? e.target.closest('[data-fill-account]') : null;
-        if (!btn) return;
-        var acc = btn.getAttribute('data-fill-account') || '';
-        var input = document.getElementById('credit-account');
-        if (input) {
-          input.value = acc;
-          input.focus();
-          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var fillBtn = e.target && e.target.closest ? e.target.closest('[data-fill-account]') : null;
+        if (fillBtn) {
+          var acc = fillBtn.getAttribute('data-fill-account') || '';
+          var input = document.getElementById('credit-account');
+          if (input) {
+            input.value = acc;
+            input.focus();
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
         }
+        var delBtn = e.target && e.target.closest ? e.target.closest('[data-delete-user]') : null;
+        if (!delBtn) return;
+        var uid = delBtn.getAttribute('data-delete-user') || '';
+        var account = delBtn.getAttribute('data-delete-account') || uid;
+        var st = document.getElementById('users-status');
+        var msg = tr('privateHub.ops.walletUsersDeleteConfirm').replace('{account}', account);
+        if (!window.confirm(msg)) return;
+        delBtn.disabled = true;
+        setStatus(st, tr('common.loading'), false);
+        apiJson('/wallet/admin/users/' + encodeURIComponent(uid), { method: 'DELETE' })
+          .then(function (data) {
+            setStatus(
+              st,
+              tr('privateHub.ops.walletUsersDeleteOk').replace('{account}', data.account || account),
+              false
+            );
+            return loadUsers();
+          })
+          .catch(function (err) {
+            setStatus(st, err.message, true);
+          })
+          .finally(function () {
+            delBtn.disabled = false;
+          });
       });
     }
 
