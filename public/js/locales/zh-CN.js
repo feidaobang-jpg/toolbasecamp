@@ -76,7 +76,7 @@ window.TB_LOCALES['zh-CN'] = {
             walletUsersStats: '后台加 ¥{credited} · 兑换 ¥{redeemed} · 赠送 ¥{gifted} · 已消费 ¥{spent}',
             walletUsersJoined: '注册日期：{time}',
             walletCodesTitle: '生成兑换码',
-            walletCodesDesc: '一次最多 50 个。用户在「个人中心」输入兑换码充值。',
+            walletCodesDesc: '一次最多 50 个。用户在「个人中心」兑换。经销商批发 8 折：对方微信打款后在此批量生成，再通过微信或站内信发给对方。',
             walletCodeCount: '数量',
             walletCodesBtn: '生成',
             walletCodesRefresh: '刷新列表',
@@ -278,7 +278,7 @@ window.TB_LOCALES['zh-CN'] = {
         paidRequired: '收费',
         dailyLimitRequired: '日限',
         howtoTitle: '怎么充值',
-        howtoBody: '新用户注册送 ¥5 余额。用完后：方式一 → 顶部「充值」页微信扫码付款后联系管理员到账；方式二 → 咸鱼搜索卖家 feidaobang 获兑换码，在「个人中心」兑换。然后用「图生图」或「文生图」（成功才扣余额）。邀请好友充值可得 10% 佣金（个人中心复制推广链接）。',
+        howtoBody: '新用户注册送 ¥5 余额。用完后：方式一 → 顶部「充值」页微信扫码付款后联系管理员到账；方式二 → 咸鱼搜索卖家 feidaobang 获兑换码，在「个人中心」兑换。然后用「图生图」或「文生图」（成功才扣余额）。邀请好友充值可得 10% 佣金（个人中心复制推广链接）。经销商一次批发几十个兑码享 8 折，微信打款后由管理员发码。',
         howtoRedeem: '去兑换',
         howtoAboutPay: '去充值',
         howtoInstruct: '图生图',
@@ -2683,7 +2683,9 @@ window.TB_LOCALES['zh-CN'] = {
         xianyuTip: '咸鱼搜索卖家 feidaobang 下单获兑换码，在右上角「个人中心」自行兑换。',
         goRedeem: '去个人中心兑换',
         goInstruct: '图生图',
-        goTextToImage: '文生图'
+        goTextToImage: '文生图',
+        dealerTitle: '方式三：经销商批发（8 折）',
+        dealerTip: '一次采购几十个兑换码可享零售价 8 折。请微信打款后联系管理员，人工生成兑换码，再通过微信或站内信发给你，方便转售给普通用户。'
     },
     common: {
         serviceUnavailable: '服务不可用',
