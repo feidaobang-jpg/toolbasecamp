@@ -548,6 +548,17 @@
   line-height: 1.5;
 }
 
+.wan-audio-hint {
+  margin: -8px 0 4px;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.img-tool-fields .img-tool-check {
+  margin-top: 8px;
+}
+
 .wan-presets {
   display: flex;
   flex-wrap: wrap;

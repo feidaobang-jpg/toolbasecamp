@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Image to Video - Tool Basecamp</title>
-  <meta name="description" content="Turn an image into a short video with Alibaba Wan image-to-video. Sign-in required; billed from balance on success.">
+  <meta name="description" content="Turn any image into a short video with Alibaba Wan. Audio on by default. Sign-in required; billed from balance on success.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=13" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=14" />
 </head>
 <body>
   <div class="container">
@@ -15,7 +15,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.imageToAnimation.title">Image to Video</h1>
-        <p data-i18n="tools.imageToAnimation.desc">Upload an image, describe the motion, and generate a short Wan clip. Sign-in required; billed from balance on success.</p>
+        <p data-i18n="tools.imageToAnimation.desc">Upload any image, describe the scene, and generate a short Wan clip (audio on by default). Sign-in required; billed from balance on success.</p>
       </div>
 
       <div class="tool-card img-cloud-gate" id="login-gate" hidden>
@@ -36,7 +36,7 @@
           <div class="drop-zone" id="drop-zone">
             <div class="drop-icon">+</div>
             <div class="drop-title" data-i18n="tools.imageToAnimation.dropTitle">Click or drop an image</div>
-            <div class="drop-hint" data-i18n="tools.imageToAnimation.dropHint">JPG, PNG, WebP — max 6MB. Character / subject works best.</div>
+            <div class="drop-hint" data-i18n="tools.imageToAnimation.dropHint">JPG, PNG, WebP — max 6MB. Portraits, products, scenery, pets all work.</div>
           </div>
           <input type="file" id="file-input" accept="image/*" style="display:none" />
 
@@ -46,17 +46,24 @@
 
           <div class="img-tool-fields" id="controls" hidden>
             <label class="wan-prompt-label">
-              <span data-i18n="tools.imageToAnimation.promptLabel">Motion prompt</span>
+              <span data-i18n="tools.imageToAnimation.promptLabel">Scene prompt</span>
               <div class="wan-presets" id="prompt-presets" role="group" aria-label="Prompt presets">
-                <button type="button" class="wan-preset" data-preset="wave" data-i18n="tools.imageToAnimation.presetWave">Wave</button>
-                <button type="button" class="wan-preset" data-preset="idle" data-i18n="tools.imageToAnimation.presetIdle">Idle</button>
-                <button type="button" class="wan-preset" data-preset="walk" data-i18n="tools.imageToAnimation.presetWalk">Walk</button>
-                <button type="button" class="wan-preset" data-preset="nod" data-i18n="tools.imageToAnimation.presetNod">Nod</button>
+                <button type="button" class="wan-preset" data-preset="talk" data-i18n="tools.imageToAnimation.presetTalk">Smile & talk</button>
+                <button type="button" class="wan-preset" data-preset="product" data-i18n="tools.imageToAnimation.presetProduct">Product spin</button>
+                <button type="button" class="wan-preset" data-preset="scenery" data-i18n="tools.imageToAnimation.presetScenery">Scenery breeze</button>
+                <button type="button" class="wan-preset" data-preset="pet" data-i18n="tools.imageToAnimation.presetPet">Pet motion</button>
+                <button type="button" class="wan-preset" data-preset="zoom" data-i18n="tools.imageToAnimation.presetZoom">Slow zoom-in</button>
+                <button type="button" class="wan-preset" data-preset="breathe" data-i18n="tools.imageToAnimation.presetBreathe">Subtle breathe</button>
               </div>
               <textarea id="prompt-input" class="rec-input wan-prompt" rows="3" maxlength="1500"
                 data-i18n-placeholder="tools.imageToAnimation.promptPlaceholder"
-                placeholder="e.g. The character waves one hand gently, idle loop friendly motion"></textarea>
+                placeholder="e.g. Soft breeze in the hair, gentle smile, natural light, smooth motion"></textarea>
             </label>
+            <label class="img-tool-check">
+              <input type="checkbox" id="audio-check" checked />
+              <span data-i18n="tools.imageToAnimation.audioLabel">Audio (auto soundtrack)</span>
+            </label>
+            <p class="wan-audio-hint" data-i18n="tools.imageToAnimation.audioHint">On: model adds BGM / SFX / voice. Off: silent clip.</p>
             <label>
               <span data-i18n="tools.imageToAnimation.durationLabel">Duration</span>
               <select id="duration-select">
@@ -75,7 +82,7 @@
 
           <div class="tip-box">
             <b data-i18n="tools.imageToAnimation.tip">Tip:</b>
-            <span data-i18n="tools.imageToAnimation.tipBody">Silent Wan clip, usually 1–5 min. Prefer 5s + 720P + presets when testing prompts.</span>
+            <span data-i18n="tools.imageToAnimation.tipBody">Audio on by default. Usually 1–5 min. Prefer 5s + 720P + presets when testing.</span>
           </div>
 
           <div class="action-row">
@@ -100,12 +107,12 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="../../js/locales/en.js?v=i2v1"></script>
-  <script src="../../js/locales/zh-CN.js?v=i2v1"></script>
+  <script src="../../js/locales/en.js?v=i2v2"></script>
+  <script src="../../js/locales/zh-CN.js?v=i2v2"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
   <script src="../../js/media/image-cloud-client.js?v=5"></script>
-  <script src="../../js/media/image-to-animation.js?v=3"></script>
+  <script src="../../js/media/image-to-animation.js?v=4"></script>
 </body>
 </html>

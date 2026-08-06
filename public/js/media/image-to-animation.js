@@ -12,6 +12,7 @@
     var promptInput = document.getElementById('prompt-input');
     var durationSelect = document.getElementById('duration-select');
     var resolutionSelect = document.getElementById('resolution-select');
+    var audioCheck = document.getElementById('audio-check');
     var runBtn = document.getElementById('run-btn');
     var downloadBtn = document.getElementById('download-btn');
     var framesBtn = document.getElementById('frames-btn');
@@ -87,6 +88,7 @@
         promptInput.disabled = on;
         durationSelect.disabled = on;
         resolutionSelect.disabled = on;
+        if (audioCheck) audioCheck.disabled = on;
         if (promptPresets) {
             promptPresets.querySelectorAll('.wan-preset').forEach(function (btn) {
                 btn.disabled = !!on;
@@ -232,6 +234,7 @@
         form.append('prompt', prompt);
         form.append('duration', durationSelect.value || '5');
         form.append('resolution', resolutionSelect.value || '720P');
+        form.append('audio', audioCheck && audioCheck.checked ? '1' : '0');
 
         C.apiJson('/wan/i2v/submit', { method: 'POST', body: form })
             .then(function (data) {

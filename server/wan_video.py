@@ -128,6 +128,7 @@ def get_wan_config() -> dict:
         "api_root": _dashscope_api_root(),
         "paid": True,
         "pricing": pricing_public(),
+        "audioDefault": True,
         "durations": sorted(ALLOWED_DURATIONS),
         "resolutions": sorted(ALLOWED_RESOLUTIONS),
     }
@@ -193,6 +194,7 @@ def _ensure_charged(meta: Dict[str, Any], user: dict, task_id: str) -> Optional[
                 "taskId": task_id,
                 "duration": meta.get("duration"),
                 "resolution": meta.get("resolution"),
+                "audio": bool(meta.get("audio", True)),
                 "model": meta.get("model") or _default_model(),
                 "listPriceCny": float(list_price),
                 "chargedCny": float(charge),
@@ -226,6 +228,7 @@ def _remember_task(
     duration: int,
     resolution: str,
     model: str,
+    audio: bool = True,
 ):
     _purge_tasks()
     _task_owners[task_id] = {
@@ -236,6 +239,7 @@ def _remember_task(
         "duration": int(duration),
         "resolution": resolution,
         "model": model,
+        "audio": bool(audio),
         "charged": False,
         "charged_cny": None,
         "balance_after": None,
@@ -385,9 +389,23 @@ def wan_status(user: dict = Depends(_user)):
         "model": _default_model(),
         "wallet": _wallet_for(user),
         "pricing": pricing_public(),
+        "audioDefault": True,
         "durations": sorted(ALLOWED_DURATIONS),
         "resolutions": sorted(ALLOWED_RESOLUTIONS),
     }
+
+
+def _parse_bool_form(value: Any, *, default: bool = True) -> bool:
+    if value is None:
+        return default
+    s = str(value).strip().lower()
+    if s in ("",):
+        return default
+    if s in ("1", "true", "yes", "on", "y"):
+        return True
+    if s in ("0", "false", "no", "off", "n"):
+        return False
+    return default
 
 
 @router.post("/i2v/submit")
@@ -396,6 +414,7 @@ async def wan_i2v_submit(
     prompt: str = Form(""),
     duration: int = Form(5),
     resolution: str = Form("720P"),
+    audio: str = Form("1"),
     user: dict = Depends(_user),
 ):
     if not wan_configured():
@@ -414,6 +433,7 @@ async def wan_i2v_submit(
     resolution = (resolution or "720P").upper()
     if resolution not in ALLOWED_RESOLUTIONS:
         raise HTTPException(status_code=400, detail="Resolution must be 720P or 1080P")
+    want_audio = _parse_bool_form(audio, default=True)
 
     list_price = list_price_cny(duration, resolution)
     _assert_can_afford(user, list_price)
@@ -430,6 +450,8 @@ async def wan_i2v_submit(
     img_url, _ = _prepare_image_data_uri(raw, image.filename or "image.jpg", ctype)
 
     model = _default_model()
+    # Default: with audio (auto BGM/SFX/voice). Explicit audio=false for silent clips
+    # (mainly documented on wan2.6-i2v-flash; US model is audio-capable).
     payload = {
         "model": model,
         "input": {
@@ -441,7 +463,7 @@ async def wan_i2v_submit(
             "duration": duration,
             "prompt_extend": True,
             "watermark": False,
-            "audio": False,
+            "audio": want_audio,
         },
     }
 
@@ -462,6 +484,7 @@ async def wan_i2v_submit(
         duration=duration,
         resolution=resolution,
         model=model,
+        audio=want_audio,
     )
     user_charge = float(user_price_cny(list_price))
     return {
@@ -470,6 +493,7 @@ async def wan_i2v_submit(
         "model": model,
         "duration": duration,
         "resolution": resolution,
+        "audio": want_audio,
         "listPriceCny": list_price,
         "userPriceCny": user_charge,
         "wallet": _wallet_for(user),
