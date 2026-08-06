@@ -77,7 +77,7 @@ window.TB_LOCALES.en = {
             walletUsersStats: 'Admin credit ¥{credited} · Redeemed ¥{redeemed} · Gift ¥{gifted} · Spent ¥{spent}',
             walletUsersJoined: 'Registered: {time}',
             walletCodesTitle: 'Create redeem codes',
-            walletCodesDesc: 'Up to 50 at once. Users redeem in Profile. Dealer wholesale at 20% off: after WeChat payment, generate codes here and send via WeChat or site chat.',
+            walletCodesDesc: 'Up to 50 at once. Users redeem in Profile. Dealer wholesale tiers: ¥100→10% off, ¥300→20% off, ¥500→30% off; after WeChat payment, generate codes here and send via WeChat or site chat.',
             walletCodeCount: 'Count',
             walletCodesBtn: 'Generate',
             walletCodesRefresh: 'Refresh list',
@@ -279,7 +279,7 @@ window.TB_LOCALES.en = {
         paidRequired: 'Paid',
         dailyLimitRequired: 'Daily limit',
         howtoTitle: 'How to top up',
-        howtoBody: 'New accounts get ¥5 balance. When it runs out: Option A — open Top up, pay via WeChat QR, then contact the admin; Option B — buy a redeem code from Xianyu seller feidaobang → redeem in Profile. Then use Image-to-Image or Text-to-Image (charged only on success). Invite friends to top up and earn 10% commission (copy your link in Profile). Dealers: buy dozens of codes at 20% off — pay via WeChat, admin sends codes.',
+        howtoBody: 'New accounts get ¥5 balance. When it runs out: Option A — open Top up, pay via WeChat QR, then contact the admin; Option B — buy a redeem code from Xianyu seller feidaobang → redeem in Profile. Then use Image-to-Image or Text-to-Image (charged only on success). Invite friends to top up and earn 10% commission (copy your link in Profile). Dealers: volume tiers ¥100→10% off / ¥300→20% off / ¥500→30% off — pay via WeChat, then admin sends codes (WeChat or site chat).',
         howtoRedeem: 'Redeem',
         howtoAboutPay: 'Top up',
         howtoInstruct: 'Image-to-Image',
@@ -2704,8 +2704,8 @@ window.TB_LOCALES.en = {
         goRedeem: 'Redeem in Profile',
         goInstruct: 'Image-to-Image',
         goTextToImage: 'Text to Image',
-        dealerTitle: 'Option 3: Dealer wholesale (20% off)',
-        dealerTip: 'Buy dozens of redeem codes at 80% of retail. Pay via WeChat, then contact the admin — codes are created manually and sent by WeChat or site chat for you to resell.'
+        dealerTitle: 'Option 3: Dealer wholesale',
+        dealerTip: 'Volume tiers by face value per order: ¥100 → 10% off, ¥300 → 20% off, ¥500 → 30% off. Pay via WeChat, then contact the admin — codes are created manually and sent by WeChat or site chat for you to resell.'
     },
     common: {
         serviceUnavailable: 'Service unavailable',
