@@ -75,7 +75,7 @@ window.TB_LOCALES.en = {
             walletUsersDeleteOk: 'Deleted {account}',
             walletUsersDeleteAdminBlock: 'Cannot delete the last admin',
             walletUsersStats: 'Admin credit ¥{credited} · Redeemed ¥{redeemed} · Gift ¥{gifted} · Spent ¥{spent}',
-            walletUsersJoined: 'Joined: {time}',
+            walletUsersJoined: 'Registered: {time}',
             walletCodesTitle: 'Create redeem codes',
             walletCodesDesc: 'Up to 50 at once. Users redeem in Profile.',
             walletCodeCount: 'Count',

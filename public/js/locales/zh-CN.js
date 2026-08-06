@@ -74,7 +74,7 @@ window.TB_LOCALES['zh-CN'] = {
             walletUsersDeleteOk: '已删除 {account}',
             walletUsersDeleteAdminBlock: '不能删除最后一个管理员',
             walletUsersStats: '后台加 ¥{credited} · 兑换 ¥{redeemed} · 赠送 ¥{gifted} · 已消费 ¥{spent}',
-            walletUsersJoined: '注册：{time}',
+            walletUsersJoined: '注册日期：{time}',
             walletCodesTitle: '生成兑换码',
             walletCodesDesc: '一次最多 50 个。用户在「个人中心」输入兑换码充值。',
             walletCodeCount: '数量',

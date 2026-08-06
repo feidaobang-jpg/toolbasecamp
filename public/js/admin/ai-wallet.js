@@ -263,12 +263,11 @@
         .replace('{spent}', money(u.spentCny));
       var joined = '';
       if (u.createdAt) {
+        var raw = String(u.createdAt).replace('T', ' ').replace(/\.\d+$/, '');
+        var dayOnly = raw.slice(0, 10);
         joined =
           '<div class="text-xs text-gray-400 mt-0.5">' +
-            tr('privateHub.ops.walletUsersJoined').replace(
-              '{time}',
-              String(u.createdAt).replace('T', ' ').replace(/\.\d+$/, '')
-            ) +
+            tr('privateHub.ops.walletUsersJoined').replace('{time}', dayOnly) +
           '</div>';
       }
       return (
