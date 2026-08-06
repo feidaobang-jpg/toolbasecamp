@@ -115,6 +115,12 @@ RECIPE_DETECT_LIMIT_USER = 60
 RECIPE_GENERATE_LIMIT_GUEST = 10
 RECIPE_GENERATE_LIMIT_USER = 30
 
+# Anti-abuse for /auth/register (signup gift is granted on success).
+# Cloudflare should already be protecting bots, but we still keep server-side IP limits
+# so "infinite registration" can't trivially drain the ¥5 signup gift.
+AUTH_REGISTER_LIMIT_IP_PER_DAY = int(os.environ.get("AUTH_REGISTER_LIMIT_IP_PER_DAY", "10"))
+AUTH_REGISTER_LIMIT_PHONE_PER_DAY = int(os.environ.get("AUTH_REGISTER_LIMIT_PHONE_PER_DAY", "3"))
+
 security = HTTPBearer(auto_error=False)
 
 _db_available = False
@@ -929,12 +935,16 @@ def health():
 
 
 @app.post("/auth/register")
-def register(body: RegisterBody):
+def register(body: RegisterBody, request: Request):
     require_db()
     password = body.password or ""
     email, phone = parse_account_fields(
         email=body.email or "", phone=body.phone or "", account=body.account or ""
     )
+
+    # Only phone registration is allowed (attackers can create fake email accounts otherwise).
+    if email:
+        raise HTTPException(status_code=400, detail="Only phone registration is allowed")
 
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
@@ -947,6 +957,12 @@ def register(body: RegisterBody):
     role = ROLE_USER
     if phone and ADMIN_PHONE and phone == ADMIN_PHONE:
         role = ROLE_ADMIN
+
+    # Server-side IP throttling for signup gift abuse.
+    ip = (_client_ip(request) or "").strip()
+    if ip:
+        _check_rate_limit(f"ip:{ip}", "auth_register", AUTH_REGISTER_LIMIT_IP_PER_DAY)
+    _check_rate_limit(f"phone:{phone or ''}", "auth_register_phone", AUTH_REGISTER_LIMIT_PHONE_PER_DAY)
 
     conn = get_conn()
     user_id = None

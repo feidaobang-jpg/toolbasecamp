@@ -68,6 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
       'Phone already registered': 'auth.phoneRegistered',
       'This account cannot be registered': 'auth.accountBlocked',
       'Registration failed. Please try again.': 'auth.registerFailed',
+      'Only phone registration is allowed': 'auth.onlyPhoneRegister',
+      'Daily limit reached. Please try again tomorrow or log in for a higher limit.': 'auth.registerRateLimited',
       'Current password is incorrect': 'auth.currentPasswordWrong',
       'New password must be at least 6 characters': 'auth.passwordTooShort',
       'Authentication required': 'auth.authRequired',

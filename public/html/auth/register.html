@@ -28,20 +28,20 @@
             <div class="p-8">
                 <div class="text-center mb-8">
                     <h2 class="text-2xl font-bold text-gray-900" data-i18n="auth.createAccount">Create account</h2>
-                    <p class="text-gray-500 mt-2 text-sm" data-i18n="auth.registerSubtitle">Sign up with your email</p>
+                    <p class="text-gray-500 mt-2 text-sm" data-i18n="auth.registerSubtitle">Sign up with phone only (no SMS code)</p>
                     <p class="text-blue-600 mt-3 text-sm font-medium" data-i18n="auth.registerGiftTip">New accounts get ¥5 balance for Image-to-Image / Text-to-Image (charged only on success).</p>
                 </div>
 
                 <div class="space-y-5">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.accountLabel">Phone / Email</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.accountLabel">Phone</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-user text-gray-400"></i>
                             </div>
-                            <input id="account" type="text" autocomplete="username" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white" data-i18n-placeholder="auth.accountPlaceholder" placeholder="Phone or email" />
+                            <input id="account" type="text" autocomplete="username" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white" data-i18n-placeholder="auth.accountPlaceholder" placeholder="Phone number" inputmode="tel" />
                         </div>
-                        <p class="mt-1.5 text-xs text-gray-400" data-i18n="auth.phoneNote">Phone login needs no SMS code — keep your password safe</p>
+                        <p class="mt-1.5 text-xs text-gray-400" data-i18n="auth.phoneNote">Phone registration needs no SMS code — keep your password safe</p>
                     </div>
 
                     <div>
@@ -75,11 +75,11 @@
         </div>
     </main>
 
-    <script src="../../js/locales/en.js?v=ref1"></script>
-    <script src="../../js/locales/zh-CN.js?v=ref1"></script>
+    <script src="../../js/locales/en.js?v=ref2"></script>
+    <script src="../../js/locales/zh-CN.js?v=ref2"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
     <script src="../../js/common_ui.js?v=6"></script>
-    <script src="../../js/auth/auth.js?v=5"></script>
+    <script src="../../js/auth/auth.js?v=6"></script>
 </body>
 </html>
