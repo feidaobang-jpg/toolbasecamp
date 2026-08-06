@@ -698,9 +698,21 @@
         }
         if (histPanel) {
           var promptText = (promptEl && promptEl.value) || '';
-          if (activePreset === 'manga_to_real') promptText = tr('tools.instructEdit.presetMangaToReal');
-          else if (activePreset === 'real_to_manga') promptText = tr('tools.instructEdit.presetRealToManga');
-          else if (activePreset === 'restore_old_photo') promptText = tr('tools.instructEdit.presetRestoreOldPhoto');
+          var presetLabelKeys = {
+            manga_to_real: 'tools.instructEdit.presetMangaToReal',
+            real_to_manga: 'tools.instructEdit.presetRealToManga',
+            restore_old_photo: 'tools.instructEdit.presetRestoreOldPhoto',
+            id_photo_white: 'tools.instructEdit.presetIdPhotoWhite',
+            remove_watermark: 'tools.instructEdit.presetRemoveWatermark',
+            beauty_light: 'tools.instructEdit.presetBeautyLight',
+            colorize_bw: 'tools.instructEdit.presetColorizeBw',
+            product_white_bg: 'tools.instructEdit.presetProductWhiteBg',
+            lineart_colorize: 'tools.instructEdit.presetLineartColorize',
+            expand_edges: 'tools.instructEdit.presetExpandEdges'
+          };
+          if (activePreset && presetLabelKeys[activePreset]) {
+            promptText = tr(presetLabelKeys[activePreset]);
+          }
           histPanel.save(images, { prompt: promptText });
         }
       }).catch(function (err) {
