@@ -10,11 +10,12 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <script src="vendor/tailwindcss.js?v=2"></script>
     <link href="vendor/font-awesome/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=9">
     <link rel="stylesheet" href="css/site-mobile-nav.css">
-    <script src="js/locales/en.js?v=chat6"></script>
-    <script src="js/locales/zh-CN.js?v=chat6"></script>
+    <script src="js/locales/en.js?v=topup1"></script>
+    <script src="js/locales/zh-CN.js?v=topup1"></script>
     <script src="js/i18n.js?v=stats1"></script>
-    <script src="js/config.js"></script>
+    <script src="js/config.js?v=topup1"></script>
     <script src="js/common_ui.js?v=chat4"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
@@ -79,29 +80,19 @@
                 </div>
             </div>
 
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <h2 class="text-lg font-bold text-gray-900 text-center mb-2" data-i18n="about.topUpTitle">Top up</h2>
-                <p class="text-sm text-gray-600 text-center max-w-xl mx-auto mb-6" data-i18n="about.wechatPayTip">
-                    Scan the WeChat Pay QR to top up, then contact the admin with your account so balance can be credited. You can also buy a redeem code from Xianyu seller feidaobang and redeem in Profile.
+            <div class="mt-12 pt-8 border-t border-gray-100 text-center">
+                <p class="text-sm text-gray-600 mb-4 max-w-xl mx-auto" data-i18n="about.topUpHint">
+                    Need balance? Open Top up: pay via WeChat and message the admin, or redeem a Xianyu code.
                 </p>
-                <div class="flex flex-col items-center gap-3 mb-8">
-                    <img
-                        src="images/wechat-pay-qr.png"
-                        alt="WeChat Pay QR"
-                        class="w-56 max-w-full rounded-xl border border-gray-200 shadow-sm bg-white"
-                        width="224"
-                        height="280"
-                    />
-                    <p class="text-xs text-gray-500" data-i18n="about.wechatPayCaption">WeChat Pay — scan to pay, then message admin</p>
+                <div class="flex flex-wrap justify-center gap-3 mb-8">
+                    <a href="top-up.html" class="tb-btn" data-i18n="about.goTopUp">Top up</a>
                 </div>
-                <div class="text-center">
-                    <p class="text-gray-500 text-sm mb-4" data-i18n="about.questions">Questions or feedback?</p>
-                    <p class="text-gray-500 text-sm mb-4" data-i18n="about.qqGroup">QQ Group: 691386237 (community chat)</p>
-                    <a href="html/auth/chat.html" class="tb-btn inline-flex items-center gap-2">
-                        <i class="fas fa-comments"></i>
-                        <span data-i18n="about.contactAdmin">Private chat with admin</span>
-                    </a>
-                </div>
+                <p class="text-gray-500 text-sm mb-4" data-i18n="about.questions">Questions or feedback?</p>
+                <p class="text-gray-500 text-sm mb-4" data-i18n="about.qqGroup">QQ Group: 691386237 (community chat)</p>
+                <a href="html/auth/chat.html" class="tb-btn inline-flex items-center gap-2">
+                    <i class="fas fa-comments"></i>
+                    <span data-i18n="about.contactAdmin">Private chat with admin</span>
+                </a>
             </div>
         </div>
     </main>

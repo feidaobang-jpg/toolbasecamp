@@ -31,6 +31,7 @@
         { nameKey: 'nav.games', url: 'games.html' },
         { nameKey: 'nav.sites', url: 'cool-sites.html' },
         { nameKey: 'nav.guestbook', url: 'guestbook.html' },
+        { nameKey: 'nav.topUp', url: 'top-up.html' },
         { nameKey: 'nav.about', url: 'about.html' }
     ]
 };

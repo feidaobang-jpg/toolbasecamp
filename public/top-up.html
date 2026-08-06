@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top up - Tool Basecamp</title>
+    <meta name="description" content="Top up balance via WeChat Pay or Xianyu redeem code">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <script src="vendor/tailwindcss.js?v=2"></script>
+    <link href="vendor/font-awesome/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=9">
+    <link rel="stylesheet" href="css/site-mobile-nav.css">
+    <script src="js/locales/en.js?v=topup1"></script>
+    <script src="js/locales/zh-CN.js?v=topup1"></script>
+    <script src="js/i18n.js?v=stats1"></script>
+    <script src="js/config.js?v=topup1"></script>
+    <script src="js/common_ui.js?v=chat4"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
+                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
+                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">Tool Basecamp</h1>
+            </a>
+            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
+            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-3" data-i18n="topUp.title">Top up</h1>
+                <p class="text-gray-600 max-w-xl mx-auto" data-i18n="topUp.lead">
+                    Add balance for Image-to-Image and Text-to-Image. Charged only on success.
+                </p>
+            </div>
+
+            <section class="mb-10">
+                <h2 class="text-base font-bold text-gray-900 mb-2" data-i18n="topUp.wechatTitle">1. WeChat Pay</h2>
+                <p class="text-sm text-gray-600 mb-5" data-i18n="topUp.wechatTip">
+                    Scan the QR below to pay, then contact the admin with your login account so balance can be credited.
+                </p>
+                <div class="flex flex-col items-center gap-3">
+                    <img
+                        src="images/wechat-pay-qr.png"
+                        alt="WeChat Pay QR"
+                        class="w-56 max-w-full rounded-xl border border-gray-200 shadow-sm bg-white"
+                        width="224"
+                        height="280"
+                    />
+                    <p class="text-xs text-gray-500" data-i18n="topUp.wechatCaption">WeChat Pay — scan to pay, then message admin</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-3 mt-5">
+                    <a href="html/auth/chat.html" class="tb-btn inline-flex items-center gap-2">
+                        <i class="fas fa-comments"></i>
+                        <span data-i18n="topUp.contactAdmin">Contact admin</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="pt-8 border-t border-gray-100">
+                <h2 class="text-base font-bold text-gray-900 mb-2" data-i18n="topUp.xianyuTitle">2. Xianyu redeem code</h2>
+                <p class="text-sm text-gray-600 mb-5" data-i18n="topUp.xianyuTip">
+                    Search seller feidaobang on Xianyu, buy a code, then redeem in Profile (top right).
+                </p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <a href="html/auth/profile.html" class="tb-btn" data-i18n="topUp.goRedeem">Redeem in Profile</a>
+                    <a href="html/media/instruct-edit.html" class="tb-btn" data-i18n="topUp.goInstruct">Image-to-Image</a>
+                    <a href="html/media/text-to-image.html" class="tb-btn" data-i18n="topUp.goTextToImage">Text to Image</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
