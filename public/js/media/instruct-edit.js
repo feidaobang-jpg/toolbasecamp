@@ -5,15 +5,19 @@
   if (!C) return;
 
   var MAX_BATCH = 4;
+  var refMode = 'single';
   var gate = document.getElementById('login-gate');
   var app = document.getElementById('app');
   var loginLink = document.getElementById('login-link');
   var dropZone = document.getElementById('drop-zone');
+  var dropHint = document.getElementById('drop-hint');
   var fileInput = document.getElementById('file-input');
   var sourceWrap = document.getElementById('source-wrap');
   var promptWrap = document.getElementById('prompt-wrap');
   var presetWrap = document.getElementById('preset-wrap');
   var presetRow = document.getElementById('preset-row');
+  var refModeRow = document.getElementById('ref-mode-row');
+  var refModeHint = document.getElementById('ref-mode-hint');
   var modelWrap = document.getElementById('model-wrap');
   var modelRow = document.getElementById('model-row');
   var selectAllBtn = document.getElementById('select-all-models');
@@ -168,6 +172,7 @@
 
   function canRun() {
     if (!files.length) return false;
+    if (refMode === 'multi' && files.length < 2) return false;
     if (!selectedModels().length) return false;
     if (activePreset) return true;
     return !!(promptEl && promptEl.value.trim());
@@ -182,8 +187,22 @@
       costHint.textContent = tr('tools.instructEdit.costHintEmpty');
       return;
     }
+    if (refMode === 'multi' && nImg < 2) {
+      costHint.textContent = tr('tools.instructEdit.needMultiRefs');
+      return;
+    }
     var unit = 0;
     for (var i = 0; i < models.length; i++) unit += models[i].price;
+    if (refMode === 'multi') {
+      var totalM = Math.round(unit * priceMarkup * 100) / 100;
+      costHint.textContent = tr('tools.instructEdit.costHintMulti', {
+        refs: nImg,
+        models: nMod,
+        runs: nMod,
+        price: totalM
+      });
+      return;
+    }
     var total = Math.round(unit * priceMarkup * nImg * 100) / 100;
     var runs = nImg * nMod;
     costHint.textContent = tr('tools.instructEdit.costHint', {
@@ -192,6 +211,56 @@
       runs: runs,
       price: total
     });
+  }
+
+  function syncRefModeUi() {
+    if (refModeRow) {
+      var chips = refModeRow.querySelectorAll('.rec-chip');
+      for (var i = 0; i < chips.length; i++) {
+        var m = chips[i].getAttribute('data-ref-mode') || 'single';
+        chips[i].classList.toggle('is-active', m === refMode);
+      }
+    }
+    if (refModeHint) {
+      refModeHint.setAttribute(
+        'data-i18n',
+        refMode === 'multi'
+          ? 'tools.instructEdit.refModeMultiHint'
+          : 'tools.instructEdit.refModeSingleHint'
+      );
+      refModeHint.textContent = tr(
+        refMode === 'multi'
+          ? 'tools.instructEdit.refModeMultiHint'
+          : 'tools.instructEdit.refModeSingleHint'
+      );
+    }
+    if (dropHint) {
+      dropHint.setAttribute(
+        'data-i18n',
+        refMode === 'multi' ? 'tools.instructEdit.dropHintMulti' : 'tools.instructEdit.dropHint'
+      );
+      dropHint.textContent = tr(
+        refMode === 'multi' ? 'tools.instructEdit.dropHintMulti' : 'tools.instructEdit.dropHint'
+      );
+    }
+    if (promptEl) {
+      var phKey = refMode === 'multi'
+        ? 'tools.instructEdit.promptPhMulti'
+        : 'tools.instructEdit.promptPh';
+      promptEl.setAttribute('data-i18n-placeholder', phKey);
+      promptEl.setAttribute('placeholder', tr(phKey));
+    }
+    updateCostHint();
+  }
+
+  function setRefMode(mode) {
+    var next = mode === 'multi' ? 'multi' : 'single';
+    if (next === refMode) return;
+    refMode = next;
+    syncRefModeUi();
+    renderSources();
+    syncControlsVisible();
+    setBusy(false);
   }
 
   function timePhrase() {
@@ -391,6 +460,14 @@
         previewUrls.push(url);
         img.src = url;
         img.alt = f.name || '';
+        if (refMode === 'multi') {
+          var badge = document.createElement('span');
+          badge.className = 'instruct-source-badge';
+          badge.textContent = idx === 0
+            ? tr('tools.instructEdit.sourceMain')
+            : tr('tools.instructEdit.sourceRef', { n: idx });
+          card.appendChild(badge);
+        }
         var rm = document.createElement('button');
         rm.type = 'button';
         rm.className = 'instruct-source-remove';
@@ -587,6 +664,7 @@
       histPanel.refresh();
     }
     syncSelectAllLabel();
+    syncRefModeUi();
     updateCostHint();
     syncControlsVisible();
     loadStatus();
@@ -642,10 +720,22 @@
     });
   }
 
+  if (refModeRow) {
+    refModeRow.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
+      if (!btn || btn.disabled) return;
+      setRefMode(btn.getAttribute('data-ref-mode') || 'single');
+    });
+  }
+
   if (runBtn) {
     runBtn.addEventListener('click', function () {
       var models = selectedModels();
       if (!files.length) return;
+      if (refMode === 'multi' && files.length < 2) {
+        C.setError(errorBox, tr('tools.instructEdit.needMultiRefs'));
+        return;
+      }
       if (!models.length) {
         C.setError(errorBox, tr('tools.instructEdit.needModel'));
         return;
@@ -666,6 +756,7 @@
         fd.append('files', files[i], files[i].name || ('image-' + (i + 1) + '.jpg'));
       }
       fd.append('prompt', (promptEl && promptEl.value) || '');
+      fd.append('ref_mode', refMode);
       if (activePreset) fd.append('preset', activePreset);
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       var headers = {};
@@ -806,6 +897,8 @@
     applyLocaleBits();
     setBgPanelExpanded(bgExpanded);
     syncSelectAllLabel();
+    syncRefModeUi();
+    renderSources();
     updateCostHint();
     if (histPanel) histPanel.refresh();
   });

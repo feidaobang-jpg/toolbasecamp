@@ -27,6 +27,7 @@ from tencent_image import (
 )
 from dashscope_image_edit import (
     QWEN_IMAGE_EDIT_MODEL,
+    _is_wan_model,
     dashscope_image_edit_configured,
     edit_image_with_instruction,
     generate_image_from_text,
@@ -613,6 +614,7 @@ async def api_instruct_edit(
     model: Optional[str] = Form(None),
     models: List[str] = Form(default=[]),
     compare: str = Form("0"),
+    ref_mode: str = Form("single"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
     request: Request = None,
@@ -635,6 +637,9 @@ async def api_instruct_edit(
             status_code=400,
             detail="Please enter an edit instruction or choose a style preset.",
         )
+    mode = (ref_mode or "single").strip().lower()
+    if mode not in ("single", "multi"):
+        mode = "single"
     uploads: list[UploadFile] = []
     if files:
         uploads.extend([f for f in files if f is not None and getattr(f, "filename", None)])
@@ -647,6 +652,11 @@ async def api_instruct_edit(
             status_code=400,
             detail=f"Too many images (max {MAX_INSTRUCT_BATCH})",
         )
+    if mode == "multi" and len(uploads) < 2:
+        raise HTTPException(
+            status_code=400,
+            detail="Multi-reference mode needs at least 2 images",
+        )
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
     model_ids = _resolve_instruct_models(model, models, do_compare)
@@ -656,6 +666,7 @@ async def api_instruct_edit(
             {
                 "userId": req_user_id,
                 "uploadCount": len(uploads),
+                "refMode": mode,
                 "models": model_ids,
                 "compare": do_compare,
                 "preset": (preset or "").strip() or None,
@@ -667,7 +678,17 @@ async def api_instruct_edit(
     for up in uploads:
         blobs.append(await _read_upload(up))
 
+    # Multi-ref: Qwen models accept at most 3 images.
+    if mode == "multi":
+        for mid in model_ids:
+            if not _is_wan_model(mid) and len(blobs) > 3:
+                raise HTTPException(
+                    status_code=400,
+                    detail="This model supports at most 3 reference images.",
+                )
+
     # Billed via user balance only (no daily count).
+    job_count = len(model_ids) if mode == "multi" else len(blobs) * len(model_ids)
     if not _is_admin(user):
         conn = _conn()
         try:
@@ -678,9 +699,10 @@ async def api_instruct_edit(
         min_list = min(_price_for(m) for m in model_ids)
         _assert_can_afford(user, min_list)
 
-    est_list = round(sum(_price_for(m) for m in model_ids) * len(blobs), 2)
+    est_list = round(sum(_price_for(m) for m in model_ids) * (1 if mode == "multi" else len(blobs)), 2)
     est_user = round(
-        sum(float(user_price_cny(_price_for(m))) for m in model_ids) * len(blobs),
+        sum(float(user_price_cny(_price_for(m))) for m in model_ids)
+        * (1 if mode == "multi" else len(blobs)),
         2,
     )
 
@@ -692,15 +714,26 @@ async def api_instruct_edit(
             or "too many request" in detail
         )
 
-    async def _one(idx: int, blob: bytes, mid: str) -> dict:
+    async def _one(idx: int, mid: str, *, refs: list[bytes]) -> dict:
         one_t0 = time.perf_counter()
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_start",
-                {"userId": req_user_id, "index": idx, "model": mid, "size": len(blob)},
+                {
+                    "userId": req_user_id,
+                    "index": idx,
+                    "model": mid,
+                    "refCount": len(refs),
+                    "size": sum(len(b) for b in refs),
+                },
                 flush=True,
             )
-        out, ctype = await edit_image_with_instruction(blob, text, model=mid)
+        out, ctype = await edit_image_with_instruction(
+            refs[0],
+            text,
+            model=mid,
+            images=refs if len(refs) > 1 else None,
+        )
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_ok",
@@ -728,11 +761,11 @@ async def api_instruct_edit(
             "contentType": save_ctype,
         }
 
-    async def _one_with_retry(idx: int, blob: bytes, mid: str) -> dict:
+    async def _one_with_retry(idx: int, mid: str, *, refs: list[bytes]) -> dict:
         last: Optional[BaseException] = None
         for attempt in range(INSTRUCT_EDIT_RATE_RETRIES + 1):
             try:
-                return await _one(idx, blob, mid)
+                return await _one(idx, mid, refs=refs)
             except HTTPException as exc:
                 if IMAGE_DEBUG:
                     print(
@@ -779,41 +812,56 @@ async def api_instruct_edit(
     balance_after: Optional[float] = None
     first_job = True
     stop_all = False
-    for i, blob in enumerate(blobs):
+
+    # Jobs: multi = one set of refs × each model; single = each blob × each model.
+    jobs: list[tuple[int, list[bytes], str]] = []
+    if mode == "multi":
+        for mid in model_ids:
+            jobs.append((0, blobs, mid))
+    else:
+        for i, blob in enumerate(blobs):
+            for mid in model_ids:
+                jobs.append((i, [blob], mid))
+
+    for job_i, (img_idx, refs, mid) in enumerate(jobs):
         if stop_all:
             break
-        for mid in model_ids:
-            list_p = _price_for(mid)
-            try:
-                if not _is_admin(user):
-                    _assert_can_afford(user, list_p)
-            except HTTPException as exc:
-                errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
+        list_p = _price_for(mid)
+        try:
+            if not _is_admin(user):
+                _assert_can_afford(user, list_p)
+        except HTTPException as exc:
+            errors.append(f"{mid}#{img_idx + 1}: {_exc_detail(exc)}")
+            stop_all = True
+            break
+        if not first_job and INSTRUCT_EDIT_GAP_SEC > 0:
+            await asyncio.sleep(INSTRUCT_EDIT_GAP_SEC)
+        first_job = False
+        try:
+            item = await _one_with_retry(img_idx, mid, refs=refs)
+            bal = _charge_success(
+                user,
+                list_p,
+                reason="instruct_edit",
+                meta={
+                    "model": mid,
+                    "index": img_idx,
+                    "refMode": mode,
+                    "refCount": len(refs),
+                },
+            )
+            if bal is not None:
+                balance_after = bal
+                charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
+            images.append(item)
+        except HTTPException as exc:
+            if exc.status_code in (402, 429, 504):
+                errors.append(f"{mid}#{img_idx + 1}: {_exc_detail(exc)}")
                 stop_all = True
                 break
-            if not first_job and INSTRUCT_EDIT_GAP_SEC > 0:
-                await asyncio.sleep(INSTRUCT_EDIT_GAP_SEC)
-            first_job = False
-            try:
-                item = await _one_with_retry(i, blob, mid)
-                bal = _charge_success(
-                    user,
-                    list_p,
-                    reason="instruct_edit",
-                    meta={"model": mid, "index": i},
-                )
-                if bal is not None:
-                    balance_after = bal
-                    charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
-                images.append(item)
-            except HTTPException as exc:
-                if exc.status_code in (402, 429, 504):
-                    errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
-                    stop_all = True
-                    break
-                errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
-            except Exception as exc:
-                errors.append(f"{mid}#{i + 1}: {_exc_detail(exc)}")
+            errors.append(f"{mid}#{img_idx + 1}: {_exc_detail(exc)}")
+        except Exception as exc:
+            errors.append(f"{mid}#{img_idx + 1}: {_exc_detail(exc)}")
 
     if not images:
         detail = "Image edit failed: " + "; ".join(errors) if errors else "no images"
@@ -825,6 +873,7 @@ async def api_instruct_edit(
                     "userId": req_user_id,
                     "models": model_ids,
                     "uploadCount": len(blobs),
+                    "refMode": mode,
                     "errors": errors,
                     "elapsedMs": int((time.perf_counter() - t0) * 1000),
                 },
@@ -845,7 +894,8 @@ async def api_instruct_edit(
         "contentType": first["contentType"],
         "images": images,
         "preset": (preset or "").strip() or None,
-        "batch": len(blobs),
+        "refMode": mode,
+        "batch": 1 if mode == "multi" else len(blobs),
         "compare": len(model_ids) > 1,
         "aiWallet": _wallet_for(user),
     }
@@ -860,6 +910,8 @@ async def api_instruct_edit(
                 "userId": req_user_id,
                 "imageCount": len(images),
                 "errorCount": len(errors),
+                "refMode": mode,
+                "jobCount": job_count,
                 "elapsedMs": int((time.perf_counter() - t0) * 1000),
             },
             flush=True,

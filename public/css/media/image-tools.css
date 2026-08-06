@@ -807,6 +807,20 @@
   aspect-ratio: 1;
 }
 
+.instruct-source-badge {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 1;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
 .instruct-source-card img {
   width: 100%;
   height: 100%;

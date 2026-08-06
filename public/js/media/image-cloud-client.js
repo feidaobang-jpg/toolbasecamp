@@ -112,7 +112,8 @@
             'Failed to download generated image': 'tools.imageCloud.downloadResultFailed',
             'Invalid data-URI image': 'tools.imageCloud.decodeFailed',
             'Wan edit supports at most 4 reference images.': 'tools.instructEdit.tooManyRefs',
-            'This model supports at most 3 reference images.': 'tools.instructEdit.tooManyRefsQwen'
+            'This model supports at most 3 reference images.': 'tools.instructEdit.tooManyRefsQwen',
+            'Multi-reference mode needs at least 2 images': 'tools.instructEdit.needMultiRefs'
         };
         if (exact[text]) return tr(exact[text]);
 
