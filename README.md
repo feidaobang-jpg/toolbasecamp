@@ -196,10 +196,10 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | Alibaba Model Studio — Qwen VL (recipe photos) + Wan I2V (image→animation) |
+| `DASHSCOPE_API_KEY` | Alibaba Model Studio — Qwen VL (recipe photos) + Wan I2V (image→video) |
 | `DASHSCOPE_BASE_URL` | Default `https://dashscope-us.aliyuncs.com/compatible-mode/v1` (US region) |
 | `WAN_I2V_MODEL` | Optional. Default `wan2.6-i2v-us` on US API root, else `wan2.6-i2v-flash` |
-| `WAN_I2V_LIMIT` | Optional daily per-user Wan I2V quota (default `2`; admins unlimited) |
+| `AI_PRICE_MARKUP` | Wallet markup on vendor list (default `2`); Wan i2v list ¥0.6/s 720P / ¥1/s 1080P |
 | `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
 | `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** |
 | `DEEPSEEK_MODEL` | Default `deepseek-chat` |

@@ -169,7 +169,7 @@ const toolsConfig = {
                 { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
                 { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
                 { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
-                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, paid: true },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
                 { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },

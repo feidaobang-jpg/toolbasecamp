@@ -16,9 +16,8 @@
     var downloadBtn = document.getElementById('download-btn');
     var framesBtn = document.getElementById('frames-btn');
     var clearBtn = document.getElementById('clear-btn');
-    var quotaLine = document.getElementById('quota-line');
-    var costNote = document.getElementById('cost-note');
-    var tierHint = document.getElementById('tier-hint');
+    var balanceLine = document.getElementById('balance-line');
+    var estimateLine = document.getElementById('estimate-line');
     var promptPresets = document.getElementById('prompt-presets');
     var errorBox = document.getElementById('error-box');
     var busyEl = document.getElementById('busy');
@@ -32,6 +31,9 @@
     var videoBlobUrl = '';
     var polling = false;
     var pollTimer = null;
+    var priceMarkup = 2;
+    // Vendor list CNY / sec (same as server); UI shows list × markup
+    var listPerSec = { '720P': 0.6, '1080P': 1.0 };
 
     if (loginLink) loginLink.href = C.loginUrl();
 
@@ -46,39 +48,34 @@
         }
     }
 
-    function updateTierHint() {
-        if (!tierHint) return;
-        var dur = durationSelect.value || '5';
+    function currentEstimate() {
+        var dur = Number(durationSelect.value || 5);
         var res = resolutionSelect.value || '720P';
-        var expensive = dur === '10' || res === '1080P';
-        tierHint.hidden = !expensive;
-        tierHint.textContent = expensive
-            ? C.tr('tools.imageToAnimation.tierMid')
-            : C.tr('tools.imageToAnimation.tierCheap');
-        if (!expensive) tierHint.hidden = true;
+        var listRate = listPerSec[res] != null ? listPerSec[res] : 0.6;
+        var listTotal = listRate * dur;
+        var userTotal = listTotal * priceMarkup;
+        return {
+            duration: dur,
+            resolution: res,
+            price: userTotal
+        };
     }
 
-    function scrollBottom() {
-        requestAnimationFrame(function () {
-            var scroller = document.querySelector('.content') || document.scrollingElement;
-            if (scroller) scroller.scrollTop = scroller.scrollHeight;
+    function updateEstimate() {
+        if (!estimateLine) return;
+        var est = currentEstimate();
+        estimateLine.hidden = false;
+        estimateLine.textContent = C.tr('tools.imageToAnimation.estimateLine', {
+            price: est.price.toFixed(2),
+            duration: String(est.duration),
+            resolution: est.resolution
         });
     }
 
-    function setQuota(q) {
-        if (!q) {
-            quotaLine.textContent = '';
-            return;
-        }
-        if (q.unlimited) {
-            quotaLine.textContent = C.tr('tools.imageCloud.quotaUnlimited');
-            return;
-        }
-        quotaLine.textContent = C.tr('tools.imageCloud.quotaLine', {
-            used: q.used,
-            limit: q.limit,
-            remaining: q.remaining
-        });
+    function applyWallet(wallet) {
+        if (wallet && wallet.markup != null) priceMarkup = C.walletMarkup(wallet);
+        if (balanceLine) balanceLine.textContent = C.formatWallet(wallet);
+        updateEstimate();
     }
 
     function setBusy(on, msg) {
@@ -120,7 +117,10 @@
             if (!s.configured) {
                 C.setError(errorBox, C.tr('tools.imageToAnimation.notConfigured'));
             }
-            setQuota(s.quota);
+            if (s.pricing && s.pricing.listPerSec) {
+                listPerSec = s.pricing.listPerSec;
+            }
+            applyWallet(s.wallet);
         }).catch(function (err) {
             C.setError(errorBox, err.message);
         });
@@ -147,7 +147,7 @@
         controls.hidden = false;
         dropZone.hidden = true;
         setBusy(false);
-        scrollBottom();
+        updateEstimate();
     }
 
     function clearAll() {
@@ -176,7 +176,6 @@
             resultWrap.hidden = false;
             downloadBtn.disabled = false;
             framesBtn.disabled = false;
-            scrollBottom();
         });
     }
 
@@ -187,6 +186,7 @@
                 var status = String(data.status || '').toUpperCase();
                 if (status === 'SUCCEEDED') {
                     stopPoll();
+                    if (data.wallet) applyWallet(data.wallet);
                     setBusy(true, C.tr('tools.imageToAnimation.downloading'));
                     return fetchVideoBlob().then(function () {
                         setBusy(false);
@@ -210,6 +210,7 @@
                 stopPoll();
                 setBusy(false);
                 C.setError(errorBox, err.message);
+                loadStatus();
             });
     }
 
@@ -235,11 +236,10 @@
         C.apiJson('/wan/i2v/submit', { method: 'POST', body: form })
             .then(function (data) {
                 taskId = data.task_id;
-                setQuota(data.quota);
+                if (data.wallet) applyWallet(data.wallet);
                 polling = true;
                 setBusy(true, C.tr('tools.imageToAnimation.queued'));
                 pollOnce();
-                scrollBottom();
             })
             .catch(function (err) {
                 setBusy(false);
@@ -250,14 +250,14 @@
 
     function downloadMp4() {
         if (!videoBlobUrl) return;
-        if (typeof window.tbTriggerDownload === "function") {
-      window.tbTriggerDownload(videoBlobUrl, 'wan-animation.mp4');
-    } else {
-      var a = document.createElement("a");
-      a.href = videoBlobUrl;
-      a.download = 'wan-animation.mp4';
-      a.click();
-    }
+        if (typeof window.tbTriggerDownload === 'function') {
+            window.tbTriggerDownload(videoBlobUrl, 'wan-video.mp4');
+        } else {
+            var a = document.createElement('a');
+            a.href = videoBlobUrl;
+            a.download = 'wan-video.mp4';
+            a.click();
+        }
     }
 
     function captureFramesZip() {
@@ -280,17 +280,16 @@
             if (i >= frameCount) {
                 zip.generateAsync({ type: 'blob' }).then(function (blob) {
                     var url = URL.createObjectURL(blob);
-                    if (typeof window.tbTriggerDownload === "function") {
-      window.tbTriggerDownload(url, 'wan-frames.zip');
-    } else {
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = 'wan-frames.zip';
-      a.click();
-    }
+                    if (typeof window.tbTriggerDownload === 'function') {
+                        window.tbTriggerDownload(url, 'wan-frames.zip');
+                    } else {
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'wan-frames.zip';
+                        a.click();
+                    }
                     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
                     setBusy(false);
-                    scrollBottom();
                 }).catch(function () {
                     setBusy(false);
                     C.setError(errorBox, C.tr('tools.imageToAnimation.framesUnavailable'));
@@ -338,8 +337,8 @@
     promptInput.addEventListener('input', function () {
         if (!polling) setBusy(false);
     });
-    durationSelect.addEventListener('change', updateTierHint);
-    resolutionSelect.addEventListener('change', updateTierHint);
+    durationSelect.addEventListener('change', updateEstimate);
+    resolutionSelect.addEventListener('change', updateEstimate);
     if (promptPresets) {
         promptPresets.addEventListener('click', function (e) {
             var btn = e.target.closest('.wan-preset');
@@ -356,8 +355,14 @@
     framesBtn.addEventListener('click', captureFramesZip);
     clearBtn.addEventListener('click', clearAll);
 
+    document.addEventListener('tb:locale', function () {
+        localizeSelectOptions();
+        updateEstimate();
+        if (balanceLine && balanceLine.textContent) loadStatus();
+    });
+
     localizeSelectOptions();
-    updateTierHint();
+    updateEstimate();
 
     C.requireLogin(gate, app).then(function (user) {
         if (!user) return;

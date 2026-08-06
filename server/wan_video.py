@@ -1,5 +1,7 @@
 """Wan image-to-video (DashScope) — async submit + poll + proxy download.
 
+Billing: vendor list (¥0.6/s 720P, ¥1/s 1080P) × AI_PRICE_MARKUP; charge on success only.
+
 Deploy note: if /api/wan/* is 404 while deploy_sha is new, run:
   bash /opt/toolbasecamp-deploy/fix-wan-api.sh
 """
@@ -11,7 +13,7 @@ import io
 import os
 import re
 import time
-from datetime import datetime, timezone
+from decimal import Decimal
 from typing import Any, Dict, Optional, Tuple
 from urllib.parse import urlparse
 
@@ -21,6 +23,15 @@ from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from PIL import Image
 
+from ai_wallet import (
+    AI_MARKUP,
+    money,
+    require_can_afford,
+    try_charge,
+    user_price_cny,
+    wallet_public,
+)
+
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/wan", tags=["wan"])
 
@@ -29,15 +40,19 @@ DASHSCOPE_BASE_URL = os.environ.get(
     "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
-WAN_I2V_LIMIT = int(os.environ.get("WAN_I2V_LIMIT", "2"))
 WAN_I2V_TIMEOUT = float(os.environ.get("WAN_I2V_TIMEOUT", "60"))
 MAX_UPLOAD = 6 * 1024 * 1024
 MAX_IMAGE_EDGE = 1280
 ALLOWED_DURATIONS = {5, 10}
 ALLOWED_RESOLUTIONS = {"720P", "1080P"}
+# Official Wan 2.6 i2v list rates (CNY per output second)
+LIST_RATE_PER_SEC = {
+    "720P": Decimal("0.6"),
+    "1080P": Decimal("1.0"),
+}
 TASK_TTL_SEC = 24 * 3600
 
-# task_id -> {user_id, created, video_url?}
+# task_id -> {user_id, created, video_url?, list_price, duration, resolution, charged, ...}
 _task_owners: Dict[str, Dict[str, Any]] = {}
 
 
@@ -77,12 +92,42 @@ def wan_configured() -> bool:
     return bool(DASHSCOPE_API_KEY)
 
 
+def list_price_cny(duration: int, resolution: str) -> float:
+    rate = LIST_RATE_PER_SEC.get(resolution, LIST_RATE_PER_SEC["720P"])
+    return float(money(rate * int(duration)))
+
+
+def pricing_public() -> dict:
+    list_720 = float(LIST_RATE_PER_SEC["720P"])
+    list_1080 = float(LIST_RATE_PER_SEC["1080P"])
+    markup = float(AI_MARKUP)
+    return {
+        "listPerSec": {"720P": list_720, "1080P": list_1080},
+        "userPerSec": {
+            "720P": float(user_price_cny(list_720)),
+            "1080P": float(user_price_cny(list_1080)),
+        },
+        "markup": markup,
+        "examples": [
+            {
+                "duration": d,
+                "resolution": r,
+                "listPriceCny": list_price_cny(d, r),
+                "userPriceCny": float(user_price_cny(list_price_cny(d, r))),
+            }
+            for d in sorted(ALLOWED_DURATIONS)
+            for r in ("720P", "1080P")
+        ],
+    }
+
+
 def get_wan_config() -> dict:
     return {
         "configured": wan_configured(),
         "model": _default_model(),
         "api_root": _dashscope_api_root(),
-        "daily_limit": WAN_I2V_LIMIT,
+        "paid": True,
+        "pricing": pricing_public(),
         "durations": sorted(ALLOWED_DURATIONS),
         "resolutions": sorted(ALLOWED_RESOLUTIONS),
     }
@@ -107,99 +152,61 @@ def _is_admin(user: dict) -> bool:
     return user.get("role") == "admin" or (user.get("email") or "").lower() == ADMIN_EMAIL
 
 
-def _today() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
-
-
-def ensure_image_quota_table(cur):
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS image_tool_quotas (
-            user_id BIGINT NOT NULL,
-            action_type VARCHAR(32) NOT NULL,
-            usage_date CHAR(10) NOT NULL,
-            usage_count INT NOT NULL DEFAULT 0,
-            PRIMARY KEY (user_id, action_type, usage_date),
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-        """
-    )
-
-
-def _quota_snapshot(user: dict) -> dict:
-    if _is_admin(user):
-        return {"used": 0, "limit": 0, "remaining": 0, "unlimited": True}
-    user_id = int(user["id"])
-    today = _today()
+def _wallet_for(user: dict) -> dict:
     conn = _conn()
     try:
-        with conn.cursor() as cur:
-            ensure_image_quota_table(cur)
-            cur.execute(
-                """
-                SELECT usage_count FROM image_tool_quotas
-                WHERE user_id=%s AND action_type=%s AND usage_date=%s
-                """,
-                (user_id, "wan_i2v", today),
-            )
-            row = cur.fetchone()
-            used = int(row["usage_count"]) if row else 0
-        return {
-            "used": used,
-            "limit": WAN_I2V_LIMIT,
-            "remaining": max(0, WAN_I2V_LIMIT - used),
-        }
+        return wallet_public(conn, user, is_admin=_is_admin(user))
     finally:
         conn.close()
 
 
-def _consume_quota(user: dict) -> dict:
+def _assert_can_afford(user: dict, list_price: float) -> None:
     if _is_admin(user):
-        return {"used": 0, "limit": 0, "remaining": 0, "unlimited": True}
-    if WAN_I2V_LIMIT <= 0:
-        raise HTTPException(status_code=503, detail="Wan image-to-video is disabled")
-    user_id = int(user["id"])
-    today = _today()
+        return
     conn = _conn()
     try:
-        with conn.cursor() as cur:
-            ensure_image_quota_table(cur)
-            cur.execute(
-                """
-                SELECT usage_count FROM image_tool_quotas
-                WHERE user_id=%s AND action_type=%s AND usage_date=%s
-                """,
-                (user_id, "wan_i2v", today),
+        require_can_afford(conn, int(user["id"]), list_price)
+    finally:
+        conn.close()
+
+
+def _ensure_charged(meta: Dict[str, Any], user: dict, task_id: str) -> Optional[float]:
+    """Charge once when generation succeeded. Returns balance after charge (None for admin)."""
+    if meta.get("charged"):
+        bal = meta.get("balance_after")
+        return float(bal) if bal is not None else None
+    list_price = float(meta.get("list_price") or 0)
+    if _is_admin(user):
+        meta["charged"] = True
+        meta["charged_cny"] = 0.0
+        meta["balance_after"] = None
+        return None
+    charge = user_price_cny(list_price)
+    conn = _conn()
+    try:
+        new_bal = try_charge(
+            conn,
+            int(user["id"]),
+            charge,
+            reason="wan_i2v",
+            meta={
+                "taskId": task_id,
+                "duration": meta.get("duration"),
+                "resolution": meta.get("resolution"),
+                "model": meta.get("model") or _default_model(),
+                "listPriceCny": float(list_price),
+                "chargedCny": float(charge),
+            },
+        )
+        if new_bal is None:
+            raise HTTPException(
+                status_code=402,
+                detail="Insufficient balance. Please top up.",
             )
-            row = cur.fetchone()
-            current = int(row["usage_count"]) if row else 0
-            if current >= WAN_I2V_LIMIT:
-                raise HTTPException(
-                    status_code=429,
-                    detail="Daily limit reached. Please try again tomorrow.",
-                )
-            if row:
-                cur.execute(
-                    """
-                    UPDATE image_tool_quotas SET usage_count = usage_count + 1
-                    WHERE user_id=%s AND action_type=%s AND usage_date=%s
-                    """,
-                    (user_id, "wan_i2v", today),
-                )
-            else:
-                cur.execute(
-                    """
-                    INSERT INTO image_tool_quotas (user_id, action_type, usage_date, usage_count)
-                    VALUES (%s, %s, %s, 1)
-                    """,
-                    (user_id, "wan_i2v", today),
-                )
-            used = current + 1
-        return {
-            "used": used,
-            "limit": WAN_I2V_LIMIT,
-            "remaining": max(0, WAN_I2V_LIMIT - used),
-        }
+        meta["charged"] = True
+        meta["charged_cny"] = float(charge)
+        meta["balance_after"] = float(new_bal)
+        return float(new_bal)
     finally:
         conn.close()
 
@@ -211,9 +218,28 @@ def _purge_tasks():
         _task_owners.pop(k, None)
 
 
-def _remember_task(task_id: str, user_id: int):
+def _remember_task(
+    task_id: str,
+    user_id: int,
+    *,
+    list_price: float,
+    duration: int,
+    resolution: str,
+    model: str,
+):
     _purge_tasks()
-    _task_owners[task_id] = {"user_id": int(user_id), "created": time.time(), "video_url": None}
+    _task_owners[task_id] = {
+        "user_id": int(user_id),
+        "created": time.time(),
+        "video_url": None,
+        "list_price": float(list_price),
+        "duration": int(duration),
+        "resolution": resolution,
+        "model": model,
+        "charged": False,
+        "charged_cny": None,
+        "balance_after": None,
+    }
 
 
 def _require_task_owner(task_id: str, user: dict) -> Dict[str, Any]:
@@ -357,7 +383,8 @@ def wan_status(user: dict = Depends(_user)):
         "configured": wan_configured(),
         "isAdmin": _is_admin(user),
         "model": _default_model(),
-        "quota": _quota_snapshot(user),
+        "wallet": _wallet_for(user),
+        "pricing": pricing_public(),
         "durations": sorted(ALLOWED_DURATIONS),
         "resolutions": sorted(ALLOWED_RESOLUTIONS),
     }
@@ -388,6 +415,9 @@ async def wan_i2v_submit(
     if resolution not in ALLOWED_RESOLUTIONS:
         raise HTTPException(status_code=400, detail="Resolution must be 720P or 1080P")
 
+    list_price = list_price_cny(duration, resolution)
+    _assert_can_afford(user, list_price)
+
     raw = await image.read()
     if not raw:
         raise HTTPException(status_code=400, detail="Empty file")
@@ -398,7 +428,6 @@ async def wan_i2v_submit(
         raise HTTPException(status_code=400, detail="Please upload an image file")
 
     img_url, _ = _prepare_image_data_uri(raw, image.filename or "image.jpg", ctype)
-    quota = _consume_quota(user)
 
     model = _default_model()
     payload = {
@@ -416,11 +445,7 @@ async def wan_i2v_submit(
         },
     }
 
-    try:
-        data = await _dashscope_post("/services/aigc/video-generation/video-synthesis", payload)
-    except HTTPException:
-        # Quota already consumed; keep it to discourage retries that hammer paid API mid-outage.
-        raise
+    data = await _dashscope_post("/services/aigc/video-generation/video-synthesis", payload)
 
     output = data.get("output") if isinstance(data.get("output"), dict) else {}
     task_id = str((output or {}).get("task_id") or data.get("task_id") or "").strip()
@@ -430,14 +455,24 @@ async def wan_i2v_submit(
             detail="Wan API did not return a task_id. Check model / region settings.",
         )
 
-    _remember_task(task_id, int(user["id"]))
+    _remember_task(
+        task_id,
+        int(user["id"]),
+        list_price=list_price,
+        duration=duration,
+        resolution=resolution,
+        model=model,
+    )
+    user_charge = float(user_price_cny(list_price))
     return {
         "success": True,
         "task_id": task_id,
         "model": model,
         "duration": duration,
         "resolution": resolution,
-        "quota": quota,
+        "listPriceCny": list_price,
+        "userPriceCny": user_charge,
+        "wallet": _wallet_for(user),
     }
 
 
@@ -461,6 +496,11 @@ async def wan_i2v_task(task_id: str, user: dict = Depends(_user)):
             or data.get("code")
             or "Generation failed"
         )
+    balance_after = None
+    charged_cny = None
+    if status == "SUCCEEDED" and (video_url or meta.get("video_url")):
+        balance_after = _ensure_charged(meta, user, task_id)
+        charged_cny = meta.get("charged_cny")
     return {
         "success": True,
         "task_id": task_id,
@@ -469,6 +509,11 @@ async def wan_i2v_task(task_id: str, user: dict = Depends(_user)):
         "proxy_url": f"/wan/i2v/proxy/{task_id}" if video_url or status == "SUCCEEDED" else None,
         "message": message,
         "usage": data.get("usage"),
+        "listPriceCny": meta.get("list_price"),
+        "userPriceCny": float(user_price_cny(meta.get("list_price") or 0)),
+        "chargedCny": charged_cny,
+        "wallet": _wallet_for(user) if status == "SUCCEEDED" else None,
+        "balanceAfter": balance_after,
     }
 
 
@@ -491,6 +536,9 @@ async def wan_i2v_proxy(task_id: str, user: dict = Depends(_user)):
                 raise HTTPException(status_code=409, detail=f"Video not ready ({status or 'PENDING'})")
             raise HTTPException(status_code=404, detail="Video URL not available")
 
+    # Must bill before download (same as task poll success path)
+    _ensure_charged(meta, user, task_id)
+
     parsed = urlparse(str(video_url))
     if parsed.scheme not in ("http", "https"):
         raise HTTPException(status_code=400, detail="Invalid video URL")
@@ -505,7 +553,7 @@ async def wan_i2v_proxy(task_id: str, user: dict = Depends(_user)):
 
     media = upstream.headers.get("content-type") or "video/mp4"
     headers = {
-        "Content-Disposition": 'attachment; filename="wan-animation.mp4"',
+        "Content-Disposition": 'attachment; filename="wan-video.mp4"',
         "Cache-Control": "private, max-age=300",
     }
     return StreamingResponse(iter([upstream.content]), media_type=media, headers=headers)
