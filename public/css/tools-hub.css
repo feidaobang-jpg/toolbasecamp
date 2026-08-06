@@ -490,6 +490,10 @@
 
 @media (max-width: 768px) {
     .hub-howto {
-        margin: 0.5rem 0.75rem 0.25rem;
+        margin: 0.5rem 0.75rem 1.5rem;
+    }
+
+    .hub-howto + .hub-group {
+        margin-top: 0.25rem;
     }
 }
