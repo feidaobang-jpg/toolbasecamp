@@ -51,6 +51,15 @@ if [[ ! -f "$ENV_FILE" ]]; then
   fi
 fi
 
+# Signup gift: keep VPS env in sync with product default (¥5)
+if [[ -f "$ENV_FILE" ]]; then
+  if grep -qE '^AI_BALANCE_GIFT=' "$ENV_FILE"; then
+    sed -i 's/^AI_BALANCE_GIFT=.*/AI_BALANCE_GIFT=5/' "$ENV_FILE"
+  else
+    printf '\nAI_BALANCE_GIFT=5\n' >> "$ENV_FILE"
+  fi
+fi
+
 if [[ ! -x "$APP_DIR/venv/bin/python" ]]; then
   echo "WARNING: $APP_DIR/venv not ready — skip ensure_tables."
   exit 0

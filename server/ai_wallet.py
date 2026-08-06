@@ -11,7 +11,7 @@ from typing import Any, Optional
 
 from fastapi import HTTPException
 
-AI_GIFT_CNY = Decimal(os.environ.get("AI_BALANCE_GIFT", "3"))
+AI_GIFT_CNY = Decimal(os.environ.get("AI_BALANCE_GIFT", "5"))
 AI_MARKUP = Decimal(os.environ.get("AI_PRICE_MARKUP", "2"))
 MONEY_Q = Decimal("0.01")
 
