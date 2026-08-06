@@ -2016,7 +2016,7 @@ window.TB_LOCALES.en = {
             unsupportedFormat: 'Unsupported image format. Use JPG or PNG.',
             resolutionTooLarge: 'Image resolution is too large. Please downscale and retry.',
             resolutionTooSmall: 'Image is too small (min 240×240). Please use a clearer, larger photo.',
-            editTimeout: 'Image edit timed out. Retry or use a smaller image.',
+            editTimeout: 'Image edit timed out (multi-model runs take longer). Try fewer models, or retry later. You are only charged on success.',
             genTimeout: 'Image generation timed out. Please try again.',
             editNoImage: 'The model returned no image. Try another prompt or photo.',
             genNoImage: 'The model returned no image. Try another prompt.',

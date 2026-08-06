@@ -761,7 +761,17 @@
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       var headers = {};
       if ((C.isWeChat && C.isWeChat()) || isMobileUA()) headers['X-TB-Light-Response'] = '1';
-      var timeoutMs = (C.isWeChat && C.isWeChat()) ? 300000 : 60000;
+      // Multi-model / multi-ref jobs are sequential on the server; 60s is too short on desktop.
+      var nMod = models.length;
+      var nImg = files.length;
+      var timeoutMs;
+      if (C.isWeChat && C.isWeChat()) {
+        timeoutMs = Math.min(900000, Math.max(300000, nMod * (refMode === 'multi' ? 120000 : nImg * 90000)));
+      } else if (refMode === 'multi') {
+        timeoutMs = Math.min(600000, Math.max(180000, nMod * 100000));
+      } else {
+        timeoutMs = Math.min(600000, Math.max(120000, nImg * nMod * 70000));
+      }
       C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, headers: headers, timeoutMs: timeoutMs }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
         var images = data.images;

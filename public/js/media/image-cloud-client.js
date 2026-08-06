@@ -35,8 +35,13 @@
         if (!text) return tr('tools.imageCloud.unknownError');
 
         var lower = text.toLowerCase();
-        if (lower.indexOf('aborted') !== -1 || lower.indexOf('aborterror') !== -1) {
-            return tr('tools.imageCloud.serviceUnavailable');
+        if (
+            lower.indexOf('aborted') !== -1
+            || lower.indexOf('aborterror') !== -1
+            || lower.indexOf('signal is aborted') !== -1
+            || lower.indexOf('the operation was aborted') !== -1
+        ) {
+            return tr('tools.imageCloud.editTimeout');
         }
         if (text.indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
         if (text === 'Bad Gateway' || text === 'Gateway Timeout') {
@@ -251,6 +256,10 @@
                 }
                 return data;
             });
+        }).catch(function (err) {
+            if (err && err.status) throw err;
+            var msg = (err && err.message) || String(err || '');
+            throw new Error(translateDetail(msg, 0));
         });
     }
 
