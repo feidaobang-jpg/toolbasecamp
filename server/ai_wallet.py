@@ -13,7 +13,9 @@ from fastapi import HTTPException
 
 AI_GIFT_CNY = Decimal(os.environ.get("AI_BALANCE_GIFT", "5"))
 AI_MARKUP = Decimal(os.environ.get("AI_PRICE_MARKUP", "2"))
+REFERRAL_COMMISSION_RATE = Decimal(os.environ.get("REFERRAL_COMMISSION_RATE", "0.10"))
 MONEY_Q = Decimal("0.01")
+REFERRAL_CREDIT_REASONS = frozenset({"admin_credit", "redeem_code"})
 
 
 def _d(value: Any) -> Decimal:
@@ -88,6 +90,72 @@ def ensure_wallet_schema(cur) -> None:
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    for col, col_sql in (
+        ("invite_code", "invite_code VARCHAR(16) NULL"),
+        ("invited_by", "invited_by BIGINT NULL"),
+        ("commission_cny", "commission_cny DECIMAL(12,2) NOT NULL DEFAULT 0"),
+    ):
+        cur.execute(
+            """
+            SELECT COUNT(*) AS c FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME = 'users'
+              AND COLUMN_NAME = %s
+            """,
+            (col,),
+        )
+        if int((cur.fetchone() or {}).get("c") or 0) == 0:
+            try:
+                cur.execute(f"ALTER TABLE users ADD COLUMN {col_sql}")
+            except Exception as exc:
+                print(f"[migrate] users.{col}: {exc}")
+    cur.execute(
+        """
+        SELECT COUNT(*) AS c FROM information_schema.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'users'
+          AND INDEX_NAME = 'uq_users_invite_code'
+        """
+    )
+    if int((cur.fetchone() or {}).get("c") or 0) == 0:
+        try:
+            cur.execute(
+                "CREATE UNIQUE INDEX uq_users_invite_code ON users (invite_code)"
+            )
+        except Exception as exc:
+            print(f"[migrate] uq_users_invite_code: {exc}")
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS commission_ledger (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            user_id BIGINT NOT NULL,
+            delta DECIMAL(12,2) NOT NULL,
+            balance_after DECIMAL(12,2) NOT NULL,
+            reason VARCHAR(64) NOT NULL,
+            meta_json TEXT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_commission_ledger_user (user_id, id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS commission_withdrawals (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            user_id BIGINT NOT NULL,
+            amount DECIMAL(12,2) NOT NULL,
+            status VARCHAR(16) NOT NULL DEFAULT 'pending',
+            note VARCHAR(255) NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            settled_at TIMESTAMP NULL DEFAULT NULL,
+            settled_by BIGINT NULL,
+            INDEX idx_commission_wd_status (status, id),
+            INDEX idx_commission_wd_user (user_id, id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
 
 
 def _ledger(cur, user_id: int, delta: Decimal, balance_after: Decimal, reason: str, meta: Optional[dict] = None):
@@ -104,6 +172,79 @@ def _ledger(cur, user_id: int, delta: Decimal, balance_after: Decimal, reason: s
             json.dumps(meta or {}, ensure_ascii=False),
         ),
     )
+
+
+def _commission_ledger(
+    cur, user_id: int, delta: Decimal, balance_after: Decimal, reason: str, meta: Optional[dict] = None
+):
+    cur.execute(
+        """
+        INSERT INTO commission_ledger (user_id, delta, balance_after, reason, meta_json)
+        VALUES (%s, %s, %s, %s, %s)
+        """,
+        (
+            user_id,
+            str(money(delta)),
+            str(money(balance_after)),
+            reason,
+            json.dumps(meta or {}, ensure_ascii=False),
+        ),
+    )
+
+
+def _maybe_grant_referral_commission(
+    cur,
+    payer_user_id: int,
+    amount: Decimal,
+    *,
+    source_reason: str,
+    meta: Optional[dict] = None,
+) -> None:
+    """Credit inviter commission when invitee tops up (same DB transaction)."""
+    if source_reason not in REFERRAL_CREDIT_REASONS:
+        return
+    amt = money(amount)
+    if amt <= 0:
+        return
+    rate = money(REFERRAL_COMMISSION_RATE)
+    if rate <= 0:
+        return
+    commission = money(amt * rate)
+    if commission <= 0:
+        return
+    cur.execute(
+        "SELECT invited_by FROM users WHERE id=%s",
+        (int(payer_user_id),),
+    )
+    row = cur.fetchone() or {}
+    inviter_id = row.get("invited_by")
+    if not inviter_id:
+        return
+    inviter_id = int(inviter_id)
+    if inviter_id == int(payer_user_id):
+        return
+    cur.execute(
+        "SELECT commission_cny FROM users WHERE id=%s FOR UPDATE",
+        (inviter_id,),
+    )
+    irow = cur.fetchone()
+    if not irow:
+        return
+    bal = money(money(irow.get("commission_cny")) + commission)
+    cur.execute(
+        "UPDATE users SET commission_cny=%s WHERE id=%s",
+        (str(bal), inviter_id),
+    )
+    pay_meta = dict(meta or {})
+    pay_meta.update(
+        {
+            "fromUserId": int(payer_user_id),
+            "baseCny": float(amt),
+            "rate": float(rate),
+            "sourceReason": source_reason,
+        }
+    )
+    _commission_ledger(cur, inviter_id, commission, bal, "referral_earn", pay_meta)
 
 
 def _tx(conn, fn):
@@ -238,16 +379,28 @@ def wallet_public(conn, user: dict, *, is_admin: bool) -> dict:
         return {
             "unlimited": True,
             "balanceCny": None,
+            "commissionCny": 0.0,
             "giftCny": float(money(AI_GIFT_CNY)),
             "markup": float(AI_MARKUP),
+            "referralRate": float(money(REFERRAL_COMMISSION_RATE)),
         }
     uid = int(user["id"])
     bal = ensure_signup_gift(conn, uid)
+
+    def _comm(cur):
+        ensure_wallet_schema(cur)
+        cur.execute("SELECT commission_cny FROM users WHERE id=%s", (uid,))
+        row = cur.fetchone() or {}
+        return money(row.get("commission_cny"))
+
+    commission = _tx(conn, _comm)
     return {
         "unlimited": False,
         "balanceCny": float(bal),
+        "commissionCny": float(commission),
         "giftCny": float(money(AI_GIFT_CNY)),
         "markup": float(AI_MARKUP),
+        "referralRate": float(money(REFERRAL_COMMISSION_RATE)),
     }
 
 
@@ -279,6 +432,9 @@ def credit_balance(
             (str(bal), user_id),
         )
         _ledger(cur, user_id, amt, bal, reason, meta)
+        _maybe_grant_referral_commission(
+            cur, int(user_id), amt, source_reason=reason, meta=meta
+        )
         return bal
 
     return _tx(conn, _run)
@@ -337,7 +493,7 @@ def list_users_wallet(
 
         cur.execute(
             f"""
-            SELECT id, email, phone, nickname, role, ai_balance, created_at
+            SELECT id, email, phone, nickname, role, ai_balance, commission_cny, created_at
             FROM users
             {where}
             ORDER BY id DESC
@@ -400,6 +556,7 @@ def list_users_wallet(
                     "phone": phone or None,
                     "role": r.get("role") or "user",
                     "balanceCny": float(money(r.get("ai_balance"))),
+                    "commissionCny": float(money(r.get("commission_cny"))),
                     "createdAt": str(r.get("created_at") or ""),
                     "creditedCny": st["creditedCny"],
                     "redeemedCny": st["redeemedCny"],
@@ -452,6 +609,15 @@ def delete_user_account(conn, user_id: int, *, actor_admin_id: int) -> dict:
         email = (row.get("email") or "").strip()
         phone = (row.get("phone") or "").strip()
         account = email or phone or str(uid)
+
+        # Clear invitee bindings pointing at this user (no FK on invited_by).
+        try:
+            cur.execute(
+                "UPDATE users SET invited_by=NULL WHERE invited_by=%s",
+                (uid,),
+            )
+        except Exception:
+            pass
 
         # record_goods.category_id is ON DELETE RESTRICT — clear before user CASCADE.
         try:
@@ -673,6 +839,363 @@ def redeem_code(conn, user_id: int, code: str) -> dict:
             "redeem_code",
             {"code": raw, "amountCny": float(amt)},
         )
+        _maybe_grant_referral_commission(
+            cur,
+            int(user_id),
+            amt,
+            source_reason="redeem_code",
+            meta={"code": raw, "amountCny": float(amt)},
+        )
         return {"balanceCny": float(bal), "creditedCny": float(amt), "code": raw}
+
+    return _tx(conn, _run)
+
+
+def _gen_invite_code() -> str:
+    alphabet = string.ascii_uppercase + string.digits
+    alphabet = alphabet.replace("O", "").replace("0", "").replace("I", "").replace("1", "")
+    raw = "".join(secrets.choice(alphabet) for _ in range(8))
+    return f"TB{raw[:4]}{raw[4:]}"
+
+
+def resolve_inviter_id(conn, invite_code: str) -> Optional[int]:
+    code = (invite_code or "").strip().upper().replace(" ", "")
+    if not code:
+        return None
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            "SELECT id FROM users WHERE UPPER(invite_code)=%s LIMIT 1",
+            (code,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=400, detail="Invalid invite code")
+        return int(row["id"])
+
+    return _tx(conn, _run)
+
+
+def bind_invited_by(conn, user_id: int, inviter_id: int) -> None:
+    uid = int(user_id)
+    iid = int(inviter_id)
+    if uid == iid:
+        raise HTTPException(status_code=400, detail="Cannot use your own invite code")
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            "SELECT id, invited_by FROM users WHERE id=%s FOR UPDATE",
+            (uid,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="User not found")
+        if row.get("invited_by"):
+            return
+        cur.execute("SELECT id FROM users WHERE id=%s", (iid,))
+        if not cur.fetchone():
+            raise HTTPException(status_code=400, detail="Invalid invite code")
+        cur.execute(
+            "UPDATE users SET invited_by=%s WHERE id=%s AND invited_by IS NULL",
+            (iid, uid),
+        )
+
+    _tx(conn, _run)
+
+
+def ensure_invite_code(conn, user_id: int) -> str:
+    uid = int(user_id)
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            "SELECT invite_code FROM users WHERE id=%s FOR UPDATE",
+            (uid,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="User not found")
+        existing = (row.get("invite_code") or "").strip()
+        if existing:
+            return existing
+        for _ in range(12):
+            code = _gen_invite_code()
+            cur.execute("SELECT id FROM users WHERE invite_code=%s", (code,))
+            if cur.fetchone():
+                continue
+            cur.execute(
+                "UPDATE users SET invite_code=%s WHERE id=%s",
+                (code, uid),
+            )
+            return code
+        raise HTTPException(status_code=500, detail="Failed to generate invite code")
+
+    return _tx(conn, _run)
+
+
+def referral_me(conn, user_id: int, *, site_base: str = "https://toolbasecamp.com") -> dict:
+    uid = int(user_id)
+    code = ensure_invite_code(conn, uid)
+    base = (site_base or "https://toolbasecamp.com").rstrip("/")
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            "SELECT commission_cny, invited_by FROM users WHERE id=%s",
+            (uid,),
+        )
+        row = cur.fetchone() or {}
+        commission = money(row.get("commission_cny"))
+        cur.execute(
+            """
+            SELECT COALESCE(SUM(delta), 0) AS earned
+            FROM commission_ledger
+            WHERE user_id=%s AND reason='referral_earn'
+            """,
+            (uid,),
+        )
+        earned = money((cur.fetchone() or {}).get("earned"))
+        cur.execute(
+            """
+            SELECT id, amount, status, note, created_at, settled_at
+            FROM commission_withdrawals
+            WHERE user_id=%s
+            ORDER BY id DESC
+            LIMIT 20
+            """,
+            (uid,),
+        )
+        wds = []
+        for r in cur.fetchall() or []:
+            wds.append(
+                {
+                    "id": int(r["id"]),
+                    "amountCny": float(money(r.get("amount"))),
+                    "status": r.get("status") or "pending",
+                    "note": r.get("note"),
+                    "createdAt": str(r.get("created_at") or ""),
+                    "settledAt": str(r.get("settled_at") or "") if r.get("settled_at") else None,
+                }
+            )
+        cur.execute("SELECT COUNT(*) AS c FROM users WHERE invited_by=%s", (uid,))
+        invitee_count = int((cur.fetchone() or {}).get("c") or 0)
+        return {
+            "inviteCode": code,
+            "inviteUrl": f"{base}/html/auth/register.html?invite={code}",
+            "commissionCny": float(commission),
+            "earnedTotalCny": float(earned),
+            "inviteeCount": invitee_count,
+            "referralRate": float(money(REFERRAL_COMMISSION_RATE)),
+            "withdrawals": wds,
+            "invitedBy": int(row["invited_by"]) if row.get("invited_by") else None,
+        }
+
+    return _tx(conn, _run)
+
+
+def request_commission_withdraw(conn, user_id: int, amount: Any, *, note: str = "") -> dict:
+    uid = int(user_id)
+    amt = money(amount)
+    if amt <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            "SELECT commission_cny, email, phone, nickname FROM users WHERE id=%s FOR UPDATE",
+            (uid,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="User not found")
+        bal = money(row.get("commission_cny"))
+        if amt > bal:
+            raise HTTPException(status_code=400, detail="Insufficient commission")
+        # Pending requests already reserved? Keep simple: allow request up to current commission;
+        # admin must settle promptly. Optionally sum pending:
+        cur.execute(
+            """
+            SELECT COALESCE(SUM(amount), 0) AS pending
+            FROM commission_withdrawals
+            WHERE user_id=%s AND status='pending'
+            """,
+            (uid,),
+        )
+        pending = money((cur.fetchone() or {}).get("pending"))
+        if money(pending + amt) > bal:
+            raise HTTPException(
+                status_code=400,
+                detail="Insufficient commission (pending withdrawals reserved)",
+            )
+        cur.execute(
+            """
+            INSERT INTO commission_withdrawals (user_id, amount, status, note)
+            VALUES (%s, %s, 'pending', %s)
+            """,
+            (uid, str(amt), (note or "").strip()[:255] or None),
+        )
+        wid = int(cur.lastrowid)
+        email = (row.get("email") or "").strip()
+        phone = (row.get("phone") or "").strip()
+        nick = (row.get("nickname") or "").strip()
+        account = nick or phone or email or str(uid)
+        return {
+            "id": wid,
+            "amountCny": float(amt),
+            "status": "pending",
+            "commissionCny": float(bal),
+            "account": account,
+            "phone": phone or None,
+            "email": email or None,
+        }
+
+    return _tx(conn, _run)
+
+
+def list_commission_withdrawals(
+    conn,
+    *,
+    status: str = "pending",
+    page: int = 1,
+    page_size: int = 20,
+) -> dict:
+    st = (status or "pending").strip().lower()
+    if st not in ("all", "pending", "paid", "rejected"):
+        st = "pending"
+    size = max(1, min(int(page_size or 20), 50))
+    pg = max(1, int(page or 1))
+    offset = (pg - 1) * size
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        where = ""
+        params: list = []
+        if st != "all":
+            where = "WHERE w.status=%s"
+            params = [st]
+        cur.execute(
+            f"SELECT COUNT(*) AS c FROM commission_withdrawals w {where}",
+            params,
+        )
+        total = int((cur.fetchone() or {}).get("c") or 0)
+        cur.execute(
+            f"""
+            SELECT w.id, w.user_id, w.amount, w.status, w.note, w.created_at, w.settled_at,
+                   u.email, u.phone, u.nickname, u.commission_cny
+            FROM commission_withdrawals w
+            JOIN users u ON u.id = w.user_id
+            {where}
+            ORDER BY w.id DESC
+            LIMIT %s OFFSET %s
+            """,
+            params + [size, offset],
+        )
+        items = []
+        for r in cur.fetchall() or []:
+            email = (r.get("email") or "").strip()
+            phone = (r.get("phone") or "").strip()
+            nick = (r.get("nickname") or "").strip()
+            items.append(
+                {
+                    "id": int(r["id"]),
+                    "userId": int(r["user_id"]),
+                    "account": nick or phone or email or str(r["user_id"]),
+                    "loginAccount": phone or email or None,
+                    "amountCny": float(money(r.get("amount"))),
+                    "commissionCny": float(money(r.get("commission_cny"))),
+                    "status": r.get("status") or "pending",
+                    "note": r.get("note"),
+                    "createdAt": str(r.get("created_at") or ""),
+                    "settledAt": str(r.get("settled_at") or "") if r.get("settled_at") else None,
+                }
+            )
+        pages = max(1, (total + size - 1) // size) if total else 1
+        return {
+            "withdrawals": items,
+            "total": total,
+            "page": pg,
+            "pageSize": size,
+            "pages": pages,
+            "status": st,
+        }
+
+    return _tx(conn, _run)
+
+
+def settle_commission_withdrawal(
+    conn,
+    withdrawal_id: int,
+    *,
+    amount: Any,
+    admin_id: int,
+    note: str = "",
+) -> dict:
+    wid = int(withdrawal_id)
+    amt = money(amount)
+    if amt <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
+
+    def _run(cur):
+        ensure_wallet_schema(cur)
+        cur.execute(
+            """
+            SELECT id, user_id, amount, status
+            FROM commission_withdrawals
+            WHERE id=%s FOR UPDATE
+            """,
+            (wid,),
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Withdrawal not found")
+        if (row.get("status") or "") != "pending":
+            raise HTTPException(status_code=400, detail="Withdrawal already settled")
+        uid = int(row["user_id"])
+        cur.execute(
+            "SELECT commission_cny FROM users WHERE id=%s FOR UPDATE",
+            (uid,),
+        )
+        urow = cur.fetchone()
+        if not urow:
+            raise HTTPException(status_code=404, detail="User not found")
+        bal = money(urow.get("commission_cny"))
+        if amt > bal:
+            raise HTTPException(status_code=400, detail="Amount exceeds commission balance")
+        bal = money(bal - amt)
+        cur.execute(
+            "UPDATE users SET commission_cny=%s WHERE id=%s",
+            (str(bal), uid),
+        )
+        settle_note = (note or "").strip()[:255] or None
+        cur.execute(
+            """
+            UPDATE commission_withdrawals
+            SET status='paid', amount=%s, note=COALESCE(%s, note),
+                settled_at=CURRENT_TIMESTAMP, settled_by=%s
+            WHERE id=%s
+            """,
+            (str(amt), settle_note, int(admin_id), wid),
+        )
+        _commission_ledger(
+            cur,
+            uid,
+            -amt,
+            bal,
+            "withdraw_settle",
+            {
+                "withdrawalId": wid,
+                "byAdminId": int(admin_id),
+                "note": settle_note,
+            },
+        )
+        return {
+            "id": wid,
+            "userId": uid,
+            "amountCny": float(amt),
+            "commissionCny": float(bal),
+            "status": "paid",
+        }
 
     return _tx(conn, _run)

@@ -9,8 +9,8 @@
     <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/base.css?v=9">
     <link rel="stylesheet" href="../../css/site-mobile-nav.css">
-    <script src="../../js/locales/en.js?v=nick1"></script>
-    <script src="../../js/locales/zh-CN.js?v=nick1"></script>
+    <script src="../../js/locales/en.js?v=ref1"></script>
+    <script src="../../js/locales/zh-CN.js?v=ref1"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
     <script src="../../js/common_ui.js?v=chat4"></script>
@@ -66,6 +66,41 @@
                     <button type="button" id="btn-redeem" class="tb-btn whitespace-nowrap" data-i18n="auth.redeemBtn">Redeem</button>
                 </div>
                 <div id="redeem-msg" class="text-sm hidden"></div>
+            </div>
+
+            <div class="px-6 py-4 space-y-3 border-b border-gray-50" id="referral-section">
+                <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.referralTitle">Earn commission</h3>
+                <p class="text-xs text-gray-500" data-i18n="auth.referralHint">Share your invite link. When friends top up, you earn 10% as commission (separate from AI balance).</p>
+                <div class="text-sm text-gray-700 space-y-1">
+                    <p>
+                        <span data-i18n="auth.commissionBalance">Commission</span>：
+                        <span id="referral-commission" class="font-semibold text-gray-900">--</span>
+                    </p>
+                    <p class="text-xs text-gray-500">
+                        <span data-i18n="auth.commissionEarned">Earned total</span>：
+                        <span id="referral-earned">--</span>
+                        · <span data-i18n="auth.inviteeCount">Invitees</span>：
+                        <span id="referral-invitees">0</span>
+                    </p>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1" data-i18n="auth.inviteCodeLabel">Invite code</label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="referral-code" readonly
+                            class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono bg-gray-50" />
+                        <button type="button" id="btn-copy-invite" class="tb-btn whitespace-nowrap" data-i18n="auth.copyInviteLink">Copy link</button>
+                    </div>
+                    <p id="referral-url" class="mt-1.5 text-xs text-gray-400 break-all"></p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="number" id="withdraw-amount" min="0.01" step="0.01"
+                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        data-i18n-placeholder="auth.withdrawAmountPh" placeholder="Amount (CNY)" />
+                    <button type="button" id="btn-withdraw" class="tb-btn whitespace-nowrap" data-i18n="auth.withdrawBtn">Withdraw</button>
+                </div>
+                <p class="text-xs text-gray-400" data-i18n="auth.withdrawHint">We notify an admin; after WeChat payout they settle it in the admin panel.</p>
+                <div id="referral-msg" class="text-sm hidden"></div>
+                <div id="referral-withdrawals" class="text-xs text-gray-500 space-y-1"></div>
             </div>
 
             <div class="p-6 space-y-3">
@@ -155,7 +190,13 @@
                     'Redeem code is required': 'auth.redeemNeedCode',
                     'Admin accounts have unlimited balance; redeem is not needed.': 'auth.redeemAdminSkip',
                     'Nickname too long': 'auth.nicknameTooLong',
-                    'Invalid nickname': 'auth.nicknameInvalid'
+                    'Invalid nickname': 'auth.nicknameInvalid',
+                    'Invalid invite code': 'auth.inviteInvalid',
+                    'Cannot use your own invite code': 'auth.inviteSelf',
+                    'Insufficient commission': 'auth.commissionInsufficient',
+                    'Insufficient commission (pending withdrawals reserved)': 'auth.commissionPendingReserved',
+                    'Amount must be positive': 'auth.amountPositive',
+                    'Admin accounts do not use commission withdraw.': 'auth.withdrawAdminSkip'
                 };
                 if (map[msg]) return tr(map[msg]);
                 if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) return tr('auth.networkError');
@@ -206,7 +247,14 @@
                     window.location.href = 'login.html';
                     throw new Error('Unauthorized');
                 }
-                return res.json();
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    const detail = Array.isArray(data.detail)
+                        ? data.detail.map((x) => x.msg || JSON.stringify(x)).join('; ')
+                        : (data.detail || tr('auth.unknownError'));
+                    throw new Error(detail);
+                }
+                return data;
             }
 
             try {
@@ -234,9 +282,128 @@
                         String(user.created_at).replace('T', ' ').replace(/\.\d+$/, '');
                 }
                 renderBalance(user.aiWallet);
+                if (user.aiWallet && user.aiWallet.unlimited) {
+                    var refSec = document.getElementById('referral-section');
+                    if (refSec) refSec.classList.add('hidden');
+                } else {
+                    loadReferral();
+                }
             } catch (e) {
                 if (e.message !== 'Unauthorized') console.error(e);
             }
+
+            async function loadReferral() {
+                var msgEl = document.getElementById('referral-msg');
+                try {
+                    const data = await fetchWithAuth('/wallet/referral/me');
+                    if (!data.success) throw new Error(data.detail || tr('auth.loadProfileFailed'));
+                    document.getElementById('referral-commission').textContent =
+                        '¥' + Number(data.commissionCny || 0).toFixed(2);
+                    document.getElementById('referral-earned').textContent =
+                        '¥' + Number(data.earnedTotalCny || 0).toFixed(2);
+                    document.getElementById('referral-invitees').textContent =
+                        String(data.inviteeCount || 0);
+                    document.getElementById('referral-code').value = data.inviteCode || '';
+                    document.getElementById('referral-url').textContent = data.inviteUrl || '';
+                    var box = document.getElementById('referral-withdrawals');
+                    var list = data.withdrawals || [];
+                    if (!box) return;
+                    if (!list.length) {
+                        box.innerHTML = '';
+                        return;
+                    }
+                    var statusMap = {
+                        pending: tr('auth.wdPending'),
+                        paid: tr('auth.wdPaid'),
+                        rejected: tr('auth.wdRejected')
+                    };
+                    box.innerHTML = list.slice(0, 5).map(function (w) {
+                        var st = statusMap[w.status] || w.status;
+                        var t = String(w.createdAt || '').replace('T', ' ').replace(/\.\d+$/, '');
+                        return '<div>#' + w.id + ' ¥' + Number(w.amountCny || 0).toFixed(2) +
+                            ' · ' + st + (t ? ' · ' + t : '') + '</div>';
+                    }).join('');
+                } catch (e) {
+                    if (msgEl && e.message !== 'Unauthorized') {
+                        msgEl.textContent = translateAuthError(e.message || '') || tr('auth.loadProfileFailed');
+                        msgEl.classList.remove('hidden', 'text-emerald-600');
+                        msgEl.classList.add('text-red-600');
+                    }
+                }
+            }
+
+            function copyText(text) {
+                var s = String(text || '');
+                if (!s) return Promise.reject(new Error('empty'));
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    return navigator.clipboard.writeText(s);
+                }
+                return new Promise(function (resolve, reject) {
+                    var ta = document.createElement('textarea');
+                    ta.value = s;
+                    ta.setAttribute('readonly', '');
+                    ta.style.position = 'fixed';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try {
+                        if (!document.execCommand('copy')) reject(new Error('copy failed'));
+                        else resolve();
+                    } catch (err) {
+                        reject(err);
+                    } finally {
+                        document.body.removeChild(ta);
+                    }
+                });
+            }
+
+            document.getElementById('btn-copy-invite').addEventListener('click', function () {
+                var url = document.getElementById('referral-url').textContent || '';
+                var msgEl = document.getElementById('referral-msg');
+                copyText(url).then(function () {
+                    msgEl.textContent = tr('auth.inviteLinkCopied');
+                    msgEl.classList.remove('hidden', 'text-red-600');
+                    msgEl.classList.add('text-emerald-600');
+                }).catch(function () {
+                    msgEl.textContent = tr('auth.inviteLinkCopyFail');
+                    msgEl.classList.remove('hidden', 'text-emerald-600');
+                    msgEl.classList.add('text-red-600');
+                });
+            });
+
+            document.getElementById('btn-withdraw').addEventListener('click', async function () {
+                var amount = parseFloat(document.getElementById('withdraw-amount').value || '0');
+                var msgEl = document.getElementById('referral-msg');
+                var btn = document.getElementById('btn-withdraw');
+                msgEl.classList.add('hidden');
+                if (!(amount > 0)) {
+                    msgEl.textContent = tr('auth.withdrawNeedAmount');
+                    msgEl.classList.remove('hidden', 'text-emerald-600');
+                    msgEl.classList.add('text-red-600');
+                    return;
+                }
+                btn.disabled = true;
+                btn.textContent = tr('auth.processing');
+                try {
+                    const data = await fetchWithAuth('/wallet/referral/withdraw', {
+                        method: 'POST',
+                        body: JSON.stringify({ amountCny: amount })
+                    });
+                    if (!data.success) throw new Error(data.detail || tr('auth.updateFailed'));
+                    msgEl.textContent = tr('auth.withdrawOk');
+                    msgEl.classList.remove('hidden', 'text-red-600');
+                    msgEl.classList.add('text-emerald-600');
+                    document.getElementById('withdraw-amount').value = '';
+                    await loadReferral();
+                } catch (e) {
+                    msgEl.textContent = translateAuthError(e.message || '') || tr('auth.updateFailed');
+                    msgEl.classList.remove('hidden', 'text-emerald-600');
+                    msgEl.classList.add('text-red-600');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = tr('auth.withdrawBtn');
+                }
+            });
 
             document.getElementById('btn-save-nickname').addEventListener('click', async () => {
                 const input = document.getElementById('nickname-input');

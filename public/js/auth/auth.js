@@ -73,7 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
       'Authentication required': 'auth.authRequired',
       'Session expired. Please log in again.': 'auth.sessionExpired',
       'User not found': 'auth.userNotFound',
-      'Admin access required': 'auth.adminRequired'
+      'Admin access required': 'auth.adminRequired',
+      'Invalid invite code': 'auth.inviteInvalid',
+      'Cannot use your own invite code': 'auth.inviteSelf'
     };
     if (map[msg]) return tr(map[msg]);
     return msg;
@@ -139,22 +141,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const accountInput = document.getElementById('account') || document.getElementById('email');
   const passwordInput = document.getElementById('password');
+  const inviteInput = document.getElementById('invite-code');
   const registerBtn = document.getElementById('btn-register');
   const loginBtn = document.getElementById('btn-login');
   const logoutBtn = document.getElementById('btn-logout');
+
+  const INVITE_LS_KEY = 'tbc_invite_code';
+  if (inviteInput) {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const fromUrl = (params.get('invite') || '').trim().toUpperCase();
+      if (fromUrl) localStorage.setItem(INVITE_LS_KEY, fromUrl);
+      const saved = (localStorage.getItem(INVITE_LS_KEY) || fromUrl || '').trim().toUpperCase();
+      if (saved) inviteInput.value = saved;
+    } catch (e) {}
+  }
 
   if (registerBtn) {
     const handleRegister = async () => {
       setStatus('');
       const account = (accountInput?.value || '').trim();
       const password = passwordInput?.value || '';
+      const inviteCode = (inviteInput?.value || '').trim();
       if (!account) { setStatus(tr('auth.enterAccount'), true); return; }
       if (!password) { setStatus(tr('auth.enterPassword'), true); return; }
 
       setLoading(registerBtn, true);
       try {
-        const data = await postJson('/auth/register', authPayload(account, password));
+        const body = authPayload(account, password);
+        if (inviteCode) body.inviteCode = inviteCode;
+        const data = await postJson('/auth/register', body);
         if (data.token) setToken(data.token);
+        try { localStorage.removeItem(INVITE_LS_KEY); } catch (e) {}
         setStatus(tr('auth.accountCreated'));
         setTimeout(() => { redirectAfterAuth(); }, 1000);
       } catch (e) {

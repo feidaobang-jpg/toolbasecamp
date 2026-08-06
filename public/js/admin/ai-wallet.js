@@ -11,6 +11,10 @@
   var usersPages = 1;
   var usersTotal = 0;
   var usersQ = '';
+  var wdStatus = 'pending';
+  var wdPage = 1;
+  var wdPages = 1;
+  var wdTotal = 0;
 
   function apiBase() {
     if (typeof siteConfig !== 'undefined' && siteConfig.apiBase) return siteConfig.apiBase;
@@ -282,12 +286,105 @@
           '</div>' +
           '<div class="flex flex-col items-end gap-1 flex-shrink-0">' +
             '<span class="font-semibold">¥' + money(u.balanceCny) + '</span>' +
+            '<span class="text-xs text-gray-500">' +
+              tr('privateHub.ops.walletWdCommission').replace('{amount}', money(u.commissionCny)) +
+            '</span>' +
             fillBtn +
             delBtn +
           '</div>' +
         '</div>'
       );
     }).join('');
+  }
+
+  function syncWdFilterChips() {
+    var row = document.getElementById('wd-filter');
+    if (!row) return;
+    var chips = row.querySelectorAll('button[data-status]');
+    for (var i = 0; i < chips.length; i++) {
+      var st = chips[i].getAttribute('data-status') || 'pending';
+      var on = st === wdStatus;
+      chips[i].classList.toggle('is-active', on);
+      chips[i].classList.toggle('border-blue-600', on);
+      chips[i].classList.toggle('bg-blue-50', on);
+      chips[i].classList.toggle('text-blue-700', on);
+      chips[i].classList.toggle('border-gray-300', !on);
+      chips[i].classList.toggle('bg-white', !on);
+      chips[i].classList.toggle('text-gray-700', !on);
+    }
+  }
+
+  function syncWdPager() {
+    var pager = document.getElementById('wd-pager');
+    var label = document.getElementById('wd-page-label');
+    var prev = document.getElementById('wd-prev');
+    var next = document.getElementById('wd-next');
+    if (pager) pager.hidden = wdTotal <= 0;
+    if (label) {
+      label.textContent = tr('privateHub.ops.walletPageLabel')
+        .replace('{page}', String(wdPage))
+        .replace('{pages}', String(wdPages))
+        .replace('{total}', String(wdTotal));
+    }
+    if (prev) prev.disabled = wdPage <= 1;
+    if (next) next.disabled = wdPage >= wdPages;
+  }
+
+  function renderWithdrawals(list) {
+    var box = document.getElementById('wd-list');
+    if (!box) return;
+    if (!list || !list.length) {
+      box.innerHTML = '<p class="text-gray-400 text-sm">' + tr('privateHub.ops.walletWdEmpty') + '</p>';
+      return;
+    }
+    box.innerHTML = list.map(function (w) {
+      var pending = (w.status || '') === 'pending';
+      var stLabel = pending
+        ? tr('privateHub.ops.walletWdStatusPending')
+        : tr('privateHub.ops.walletWdStatusPaid');
+      var t = String(w.createdAt || '').replace('T', ' ').replace(/\.\d+$/, '');
+      var login = w.loginAccount
+        ? ('<div class="text-xs text-gray-400 break-all mt-0.5">' + String(w.loginAccount) + '</div>')
+        : '';
+      var settleBtn = pending
+        ? ('<button type="button" class="tb-btn text-xs px-3 py-1.5" data-settle-wd="' +
+            String(w.id) + '" data-settle-amount="' + money(w.amountCny) +
+            '" data-settle-account="' + String(w.account || '').replace(/"/g, '&quot;') + '">' +
+            tr('privateHub.ops.walletWdSettle') +
+          '</button>')
+        : '';
+      return (
+        '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
+          '<div class="min-w-0 flex-1">' +
+            '<div class="text-sm font-medium break-all">#' + w.id + ' · ' + String(w.account || '') + '</div>' +
+            login +
+            '<div class="text-xs text-gray-500 mt-1">' +
+              tr('privateHub.ops.walletWdAmount').replace('{amount}', money(w.amountCny)) +
+              ' · ' + tr('privateHub.ops.walletWdCommission').replace('{amount}', money(w.commissionCny)) +
+              ' · ' + stLabel +
+              (t ? ' · ' + t : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="flex-shrink-0">' + settleBtn + '</div>' +
+        '</div>'
+      );
+    }).join('');
+  }
+
+  function loadWithdrawals() {
+    syncWdFilterChips();
+    var q = '/wallet/admin/withdrawals?status=' + encodeURIComponent(wdStatus) +
+      '&page=' + encodeURIComponent(String(wdPage)) +
+      '&page_size=' + encodeURIComponent(String(PAGE_SIZE));
+    return apiJson(q).then(function (data) {
+      wdTotal = Number(data.total || 0) || 0;
+      wdPage = Number(data.page || wdPage) || 1;
+      wdPages = Number(data.pages || 1) || 1;
+      renderWithdrawals(data.withdrawals || []);
+      syncWdPager();
+    }).catch(function (err) {
+      setStatus(document.getElementById('wd-status'), err.message, true);
+    });
   }
 
   function loadUsers() {
@@ -520,6 +617,73 @@
 
     loadCodes();
     loadUsers();
+    loadWithdrawals();
+
+    var wdFilter = document.getElementById('wd-filter');
+    var wdRefresh = document.getElementById('btn-wd-refresh');
+    var wdPrev = document.getElementById('wd-prev');
+    var wdNext = document.getElementById('wd-next');
+    var wdList = document.getElementById('wd-list');
+
+    if (wdFilter) {
+      wdFilter.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('button[data-status]') : null;
+        if (!btn) return;
+        var st = btn.getAttribute('data-status') || 'pending';
+        if (st === wdStatus) return;
+        wdStatus = st;
+        wdPage = 1;
+        loadWithdrawals();
+      });
+    }
+    if (wdRefresh) wdRefresh.addEventListener('click', loadWithdrawals);
+    if (wdPrev) {
+      wdPrev.addEventListener('click', function () {
+        if (wdPage <= 1) return;
+        wdPage -= 1;
+        loadWithdrawals();
+      });
+    }
+    if (wdNext) {
+      wdNext.addEventListener('click', function () {
+        if (wdPage >= wdPages) return;
+        wdPage += 1;
+        loadWithdrawals();
+      });
+    }
+    if (wdList) {
+      wdList.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-settle-wd]') : null;
+        if (!btn) return;
+        var wid = btn.getAttribute('data-settle-wd') || '';
+        var amount = parseFloat(btn.getAttribute('data-settle-amount') || '0');
+        var account = btn.getAttribute('data-settle-account') || '';
+        var st = document.getElementById('wd-status');
+        var msg = tr('privateHub.ops.walletWdSettleConfirm')
+          .replace('{amount}', money(amount))
+          .replace('{account}', account);
+        if (!window.confirm(msg)) return;
+        btn.disabled = true;
+        setStatus(st, tr('common.loading'), false);
+        apiJson('/wallet/admin/withdrawals/' + encodeURIComponent(wid) + '/settle', {
+          method: 'POST',
+          body: { amountCny: amount }
+        }).then(function (data) {
+          setStatus(
+            st,
+            tr('privateHub.ops.walletWdSettleOk')
+              .replace('{amount}', money(data.amountCny || amount))
+              .replace('{commission}', money(data.commissionCny)),
+            false
+          );
+          return Promise.all([loadWithdrawals(), loadUsers()]);
+        }).catch(function (err) {
+          setStatus(st, err.message, true);
+        }).finally(function () {
+          btn.disabled = false;
+        });
+      });
+    }
   }
 
   document.addEventListener('tb:private-ready', bootApp);

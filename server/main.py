@@ -138,6 +138,7 @@ class RegisterBody(BaseModel):
     phone: str = ""
     account: str = ""
     password: str
+    inviteCode: str = ""
 
 
 class LoginBody(BaseModel):
@@ -949,8 +950,24 @@ def register(body: RegisterBody):
 
     conn = get_conn()
     user_id = None
+    inviter_id = None
+    invite_raw = (body.inviteCode or "").strip()
     try:
         with conn.cursor() as cur:
+            if invite_raw:
+                from ai_wallet import ensure_wallet_schema
+
+                ensure_wallet_schema(cur)
+                code = invite_raw.upper().replace(" ", "")
+                cur.execute(
+                    "SELECT id FROM users WHERE UPPER(invite_code)=%s LIMIT 1",
+                    (code,),
+                )
+                inv = cur.fetchone()
+                if not inv:
+                    raise HTTPException(status_code=400, detail="Invalid invite code")
+                inviter_id = int(inv["id"])
+
             if email:
                 cur.execute("SELECT id FROM users WHERE email=%s", (email,))
                 if cur.fetchone():
@@ -967,13 +984,24 @@ def register(body: RegisterBody):
                 raise HTTPException(status_code=500, detail="Registration failed. Please try again.") from exc
 
             cur.execute(
-                "INSERT INTO users (email, phone, password_hash, role) VALUES (%s, %s, %s, %s)",
-                (email, phone, pw_hash, role),
+                "INSERT INTO users (email, phone, password_hash, role, invited_by) VALUES (%s, %s, %s, %s, %s)",
+                (email, phone, pw_hash, role, inviter_id),
             )
             user_id = cur.lastrowid
+            if inviter_id and int(user_id) == int(inviter_id):
+                raise HTTPException(status_code=400, detail="Cannot use your own invite code")
+            conn.commit()
     except HTTPException:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
         raise
     except Exception as exc:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
         print(f"[register] database error: {exc}")
         raise HTTPException(status_code=500, detail="Registration failed. Please try again.") from exc
     finally:

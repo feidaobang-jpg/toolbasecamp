@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
-  <script src="../../../js/locales/en.js?v=nick3"></script>
-  <script src="../../../js/locales/zh-CN.js?v=nick3"></script>
+  <script src="../../../js/locales/en.js?v=ref1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=ref1"></script>
   <script src="../../../js/i18n.js?v=locale1"></script>
   <script src="../../../js/config.js"></script>
   <script src="../../../js/common_ui.js?v=8"></script>
@@ -88,6 +88,26 @@
       </section>
 
       <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletWdTitle">佣金兑现</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletWdDesc">用户申请提现后，微信打款完成再在此核销扣减佣金。</p>
+        <div class="space-y-3">
+          <div class="flex flex-wrap gap-2" id="wd-filter">
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-blue-600 bg-blue-50 text-blue-700 is-active" data-status="pending" data-i18n="privateHub.ops.walletWdPending">待处理</button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="paid" data-i18n="privateHub.ops.walletWdPaid">已兑现</button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
+            <button type="button" class="tb-btn ml-auto" id="btn-wd-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
+          </div>
+          <div id="wd-status" class="ladder-status"></div>
+          <div id="wd-list" class="text-sm space-y-2"></div>
+          <div class="action-row mt-3" id="wd-pager" hidden>
+            <button type="button" class="tb-btn" id="wd-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
+            <span class="text-sm text-gray-500 self-center" id="wd-page-label"></span>
+            <button type="button" class="tb-btn" id="wd-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCodesTitle">生成兑换码</h2>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCodesDesc">一次最多 50 个。用户在「个人中心」输入兑换码充值。</p>
         <div class="space-y-3">
@@ -127,6 +147,6 @@
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=1"></script>
-  <script src="../../../js/admin/ai-wallet.js?v=12"></script>
+  <script src="../../../js/admin/ai-wallet.js?v=13"></script>
 </body>
 </html>
