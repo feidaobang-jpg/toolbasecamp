@@ -25,6 +25,10 @@
     var busyText = document.getElementById('busy-text');
     var resultWrap = document.getElementById('result-wrap');
     var resultVideo = document.getElementById('result-video');
+    var wechatCoverWrap = document.getElementById('wechat-cover-wrap');
+    var wechatCoverImg = document.getElementById('wechat-cover-img');
+    var wechatFileDownloadTip = document.getElementById('wechat-file-download-tip');
+    var wechatCoverCaptured = false;
 
     var file = null;
     var previewUrl = '';
@@ -119,7 +123,30 @@
         }
         resultVideo.removeAttribute('src');
         resultVideo.load();
+        if (wechatCoverImg) wechatCoverImg.removeAttribute('src');
+        if (wechatCoverWrap) wechatCoverWrap.hidden = true;
+        wechatCoverCaptured = false;
         resultWrap.hidden = true;
+    }
+
+    function tbIsWeChatNow() {
+        return typeof window.tbIsWeChat === 'function' ? window.tbIsWeChat() : false;
+    }
+
+    function maybeShowWeChatFileDownloadTip() {
+        if (!wechatFileDownloadTip) return;
+        if (tbIsWeChatNow()) {
+            wechatFileDownloadTip.hidden = false;
+        } else {
+            wechatFileDownloadTip.hidden = true;
+        }
+    }
+
+    function maybeCaptureWeChatCover() {
+        // User request: WeChat tip first, do not show cover long-press (cover share is not useful anyway).
+        if (wechatCoverWrap) wechatCoverWrap.hidden = true;
+        if (wechatCoverImg) wechatCoverImg.removeAttribute('src');
+        wechatCoverCaptured = false;
     }
 
     function stopPoll() {
@@ -194,6 +221,7 @@
             revokeVideo();
             videoBlobUrl = URL.createObjectURL(res.blob);
             resultVideo.src = videoBlobUrl;
+            maybeCaptureWeChatCover();
             resultWrap.hidden = false;
             downloadBtn.disabled = false;
             framesBtn.disabled = false;
@@ -397,12 +425,14 @@
     document.addEventListener('tb:locale', function () {
         localizeSelectOptions();
         updateEstimate();
+        maybeShowWeChatFileDownloadTip();
         if (balanceLine && balanceLine.textContent) loadStatus();
     });
 
     syncDurationInput();
     localizeSelectOptions();
     updateEstimate();
+    maybeShowWeChatFileDownloadTip();
 
     C.requireLogin(gate, app).then(function (user) {
         if (!user) return;

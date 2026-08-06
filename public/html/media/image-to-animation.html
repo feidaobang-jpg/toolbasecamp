@@ -7,7 +7,7 @@
   <meta name="description" content="Turn any image into a short video with Alibaba Wan. Audio on by default. Sign-in required; billed from balance on success.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=15" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=17" />
 </head>
 <body>
   <div class="container">
@@ -83,6 +83,11 @@
             <span data-i18n="tools.imageToAnimation.tipBody">Usually 1–5 min. Prefer 5s + 720P + presets when testing.</span>
           </div>
 
+          <div class="tip-box" id="wechat-file-download-tip" hidden>
+            <b>WeChat:</b>
+            <span data-i18n="common.wechatFileDownloadTip">Downloads are blocked in WeChat. Please open in your system browser and download again.</span>
+          </div>
+
           <div class="action-row">
             <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.imageToAnimation.run">Generate</button>
             <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.imageToAnimation.downloadMp4">Download MP4</button>
@@ -97,6 +102,10 @@
           <div class="error-box" id="error-box" role="alert"></div>
 
           <div class="wan-result" id="result-wrap" hidden>
+            <div id="wechat-cover-wrap" class="wan-wechat-cover" hidden>
+              <p id="wechat-cover-hint" class="wan-wechat-cover-hint" data-i18n="tools.imageCloud.longPressSave">Long-press the image, then choose Save or Forward</p>
+              <img id="wechat-cover-img" alt="" />
+            </div>
             <video id="result-video" controls playsinline></video>
           </div>
         </div>
@@ -111,6 +120,6 @@
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
   <script src="../../js/media/image-cloud-client.js?v=5"></script>
-  <script src="../../js/media/image-to-animation.js?v=5"></script>
+  <script src="../../js/media/image-to-animation.js?v=8"></script>
 </body>
 </html>
