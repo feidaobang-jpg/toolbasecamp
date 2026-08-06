@@ -7,7 +7,7 @@
   <meta name="description" content="Turn any image into a short video with Alibaba Wan. Audio on by default. Sign-in required; billed from balance on success.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=14" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=15" />
 </head>
 <body>
   <div class="container">
@@ -66,10 +66,8 @@
             <p class="wan-audio-hint" data-i18n="tools.imageToAnimation.audioHint">On: model adds BGM / SFX / voice. Off: silent clip.</p>
             <label>
               <span data-i18n="tools.imageToAnimation.durationLabel">Duration</span>
-              <select id="duration-select">
-                <option value="5" selected data-i18n="tools.imageToAnimation.duration5">5s · recommended</option>
-                <option value="10" data-i18n="tools.imageToAnimation.duration10">10s</option>
-              </select>
+              <input type="number" id="duration-input" class="rec-input wan-duration" min="2" max="15" step="1" value="5" />
+              <span class="wan-field-hint" data-i18n="tools.imageToAnimation.durationHint">2–15 seconds (integer)</span>
             </label>
             <label>
               <span data-i18n="tools.imageToAnimation.resolutionLabel">Resolution</span>
@@ -82,7 +80,7 @@
 
           <div class="tip-box">
             <b data-i18n="tools.imageToAnimation.tip">Tip:</b>
-            <span data-i18n="tools.imageToAnimation.tipBody">Audio on by default. Usually 1–5 min. Prefer 5s + 720P + presets when testing.</span>
+            <span data-i18n="tools.imageToAnimation.tipBody">Usually 1–5 min. Prefer 5s + 720P + presets when testing.</span>
           </div>
 
           <div class="action-row">
@@ -107,12 +105,12 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="../../js/locales/en.js?v=i2v4"></script>
-  <script src="../../js/locales/zh-CN.js?v=i2v4"></script>
+  <script src="../../js/locales/en.js?v=i2v5"></script>
+  <script src="../../js/locales/zh-CN.js?v=i2v5"></script>
   <script src="../../js/i18n.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
   <script src="../../js/media/image-cloud-client.js?v=5"></script>
-  <script src="../../js/media/image-to-animation.js?v=4"></script>
+  <script src="../../js/media/image-to-animation.js?v=5"></script>
 </body>
 </html>

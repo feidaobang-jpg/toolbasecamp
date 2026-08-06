@@ -10,7 +10,7 @@
     var sourceImg = document.getElementById('source-img');
     var controls = document.getElementById('controls');
     var promptInput = document.getElementById('prompt-input');
-    var durationSelect = document.getElementById('duration-select');
+    var durationInput = document.getElementById('duration-input');
     var resolutionSelect = document.getElementById('resolution-select');
     var audioCheck = document.getElementById('audio-check');
     var runBtn = document.getElementById('run-btn');
@@ -33,16 +33,32 @@
     var polling = false;
     var pollTimer = null;
     var priceMarkup = 2;
+    var minDuration = 2;
+    var maxDuration = 15;
     // Vendor list CNY / sec (same as server); UI shows list × markup
     var listPerSec = { '720P': 0.6, '1080P': 1.0 };
 
     if (loginLink) loginLink.href = C.loginUrl();
 
+    function clampDuration(raw) {
+        var n = parseInt(String(raw || '5'), 10);
+        if (!Number.isFinite(n)) n = 5;
+        return Math.min(maxDuration, Math.max(minDuration, n));
+    }
+
+    function readDuration() {
+        if (!durationInput) return 5;
+        return clampDuration(durationInput.value);
+    }
+
+    function syncDurationInput() {
+        if (!durationInput) return;
+        durationInput.min = String(minDuration);
+        durationInput.max = String(maxDuration);
+        durationInput.value = String(readDuration());
+    }
+
     function localizeSelectOptions() {
-        if (durationSelect && durationSelect.options.length >= 2) {
-            durationSelect.options[0].textContent = C.tr('tools.imageToAnimation.duration5');
-            durationSelect.options[1].textContent = C.tr('tools.imageToAnimation.duration10');
-        }
         if (resolutionSelect && resolutionSelect.options.length >= 2) {
             resolutionSelect.options[0].textContent = C.tr('tools.imageToAnimation.res720');
             resolutionSelect.options[1].textContent = C.tr('tools.imageToAnimation.res1080');
@@ -50,7 +66,7 @@
     }
 
     function currentEstimate() {
-        var dur = Number(durationSelect.value || 5);
+        var dur = readDuration();
         var res = resolutionSelect.value || '720P';
         var listRate = listPerSec[res] != null ? listPerSec[res] : 0.6;
         var listTotal = listRate * dur;
@@ -86,7 +102,7 @@
         downloadBtn.disabled = on || !videoBlobUrl;
         framesBtn.disabled = on || !videoBlobUrl;
         promptInput.disabled = on;
-        durationSelect.disabled = on;
+        if (durationInput) durationInput.disabled = on;
         resolutionSelect.disabled = on;
         if (audioCheck) audioCheck.disabled = on;
         if (promptPresets) {
@@ -122,6 +138,9 @@
             if (s.pricing && s.pricing.listPerSec) {
                 listPerSec = s.pricing.listPerSec;
             }
+            if (s.minDuration != null) minDuration = Number(s.minDuration) || minDuration;
+            if (s.maxDuration != null) maxDuration = Number(s.maxDuration) || maxDuration;
+            syncDurationInput();
             applyWallet(s.wallet);
         }).catch(function (err) {
             C.setError(errorBox, err.message);
@@ -223,6 +242,17 @@
             C.setError(errorBox, C.tr('tools.imageToAnimation.needPrompt'));
             return;
         }
+        var dur = readDuration();
+        if (String(dur) !== String(durationInput && durationInput.value)) {
+            if (durationInput) durationInput.value = String(dur);
+        }
+        if (dur < minDuration || dur > maxDuration) {
+            C.setError(errorBox, C.tr('tools.imageToAnimation.invalidDuration', {
+                min: String(minDuration),
+                max: String(maxDuration)
+            }));
+            return;
+        }
         C.setError(errorBox, '');
         stopPoll();
         revokeVideo();
@@ -232,7 +262,7 @@
         var form = new FormData();
         form.append('image', file);
         form.append('prompt', prompt);
-        form.append('duration', durationSelect.value || '5');
+        form.append('duration', String(readDuration()));
         form.append('resolution', resolutionSelect.value || '720P');
         form.append('audio', audioCheck && audioCheck.checked ? '1' : '0');
 
@@ -273,7 +303,7 @@
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         var frameCount = 8;
-        var duration = Math.max(0.1, video.duration || Number(durationSelect.value) || 5);
+        var duration = Math.max(0.1, video.duration || readDuration());
         var i = 0;
 
         setBusy(true, C.tr('tools.imageToAnimation.extractingFrames'));
@@ -340,7 +370,13 @@
     promptInput.addEventListener('input', function () {
         if (!polling) setBusy(false);
     });
-    durationSelect.addEventListener('change', updateEstimate);
+    if (durationInput) {
+        durationInput.addEventListener('input', updateEstimate);
+        durationInput.addEventListener('change', function () {
+            durationInput.value = String(readDuration());
+            updateEstimate();
+        });
+    }
     resolutionSelect.addEventListener('change', updateEstimate);
     if (promptPresets) {
         promptPresets.addEventListener('click', function (e) {
@@ -364,6 +400,7 @@
         if (balanceLine && balanceLine.textContent) loadStatus();
     });
 
+    syncDurationInput();
     localizeSelectOptions();
     updateEstimate();
 

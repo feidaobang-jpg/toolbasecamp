@@ -40,7 +40,8 @@ ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
 WAN_I2V_TIMEOUT = float(os.environ.get("WAN_I2V_TIMEOUT", "60"))
 MAX_UPLOAD = 6 * 1024 * 1024
 MAX_IMAGE_EDGE = 1280
-ALLOWED_DURATIONS = {5, 10}
+MIN_DURATION = 2
+MAX_DURATION = 15
 ALLOWED_RESOLUTIONS = {"720P", "1080P"}
 # Official Wan 2.6 i2v list rates (CNY per output second)
 LIST_RATE_PER_SEC = {
@@ -140,6 +141,10 @@ def list_price_cny(duration: int, resolution: str) -> float:
     return float(money(rate * int(duration)))
 
 
+def _valid_duration(duration: int) -> bool:
+    return MIN_DURATION <= int(duration) <= MAX_DURATION
+
+
 def pricing_public() -> dict:
     list_720 = float(LIST_RATE_PER_SEC["720P"])
     list_1080 = float(LIST_RATE_PER_SEC["1080P"])
@@ -158,9 +163,10 @@ def pricing_public() -> dict:
                 "listPriceCny": list_price_cny(d, r),
                 "userPriceCny": float(user_price_cny(list_price_cny(d, r))),
             }
-            for d in sorted(ALLOWED_DURATIONS)
-            for r in ("720P", "1080P")
+            for d, r in ((5, "720P"), (10, "720P"), (15, "1080P"))
         ],
+        "minDuration": MIN_DURATION,
+        "maxDuration": MAX_DURATION,
     }
 
 
@@ -172,7 +178,8 @@ def get_wan_config() -> dict:
         "paid": True,
         "pricing": pricing_public(),
         "audioDefault": True,
-        "durations": sorted(ALLOWED_DURATIONS),
+        "minDuration": MIN_DURATION,
+        "maxDuration": MAX_DURATION,
         "resolutions": sorted(ALLOWED_RESOLUTIONS),
     }
 
@@ -436,7 +443,8 @@ def wan_status(user: dict = Depends(_user)):
         "wallet": _wallet_for(user),
         "pricing": pricing_public(),
         "audioDefault": True,
-        "durations": sorted(ALLOWED_DURATIONS),
+        "minDuration": MIN_DURATION,
+        "maxDuration": MAX_DURATION,
         "resolutions": sorted(ALLOWED_RESOLUTIONS),
     }
 
@@ -475,8 +483,11 @@ async def wan_i2v_submit(
     if len(prompt) > max_prompt:
         prompt = prompt[:max_prompt]
     duration = int(duration)
-    if duration not in ALLOWED_DURATIONS:
-        raise HTTPException(status_code=400, detail="Duration must be 5 or 10 seconds")
+    if not _valid_duration(duration):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Duration must be {MIN_DURATION}–{MAX_DURATION} seconds",
+        )
     resolution = (resolution or "720P").upper()
     if resolution not in ALLOWED_RESOLUTIONS:
         raise HTTPException(status_code=400, detail="Resolution must be 720P or 1080P")

@@ -607,6 +607,20 @@
   line-height: 1.45;
 }
 
+.wan-duration {
+  width: 100%;
+  max-width: 8rem;
+  margin-top: 4px;
+}
+
+.wan-field-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
 .wan-result {
   margin-top: 16px;
 }
