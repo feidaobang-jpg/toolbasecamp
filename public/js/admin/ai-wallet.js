@@ -246,6 +246,12 @@
       var role = isAdmin
         ? (' · <span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
         : '';
+      var displayName = (u.nickname && String(u.nickname).trim())
+        ? String(u.nickname).trim()
+        : tr('privateHub.ops.walletUsersNoNickname');
+      var deleteLabel = (u.nickname && String(u.nickname).trim())
+        ? String(u.nickname).trim()
+        : (u.loginAccount || String(u.id));
       var fillAcc = u.phone || u.email || '';
       var fillBtn = fillAcc
         ? ('<button type="button" class="text-xs text-blue-600 hover:underline" data-fill-account="' +
@@ -256,7 +262,7 @@
       var delBtn = (
         '<button type="button" class="text-xs text-red-600 hover:underline" data-delete-user="' +
           String(u.id) + '" data-delete-account="' +
-          String(u.account || '').replace(/"/g, '&quot;') + '">' +
+          String(deleteLabel).replace(/"/g, '&quot;') + '">' +
           tr('privateHub.ops.walletUsersDelete') +
         '</button>'
       );
@@ -277,8 +283,8 @@
       return (
         '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
           '<div class="min-w-0 flex-1">' +
-            '<div class="text-sm font-medium break-all">' + String(u.account || '') + role + '</div>' +
-            (u.nickname && u.loginAccount
+            '<div class="text-sm font-medium break-all">' + displayName + role + '</div>' +
+            (u.loginAccount
               ? ('<div class="text-xs text-gray-400 break-all mt-0.5">' + String(u.loginAccount) + '</div>')
               : '') +
             joined +

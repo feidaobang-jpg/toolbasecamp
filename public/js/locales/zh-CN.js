@@ -76,6 +76,7 @@ window.TB_LOCALES['zh-CN'] = {
             walletUsersDeleteAdminBlock: '不能删除最后一个管理员',
             walletUsersStats: '后台加 ¥{credited} · 兑换 ¥{redeemed} · 赠送 ¥{gifted} · 已消费 ¥{spent}',
             walletUsersJoined: '注册日期：{time}',
+            walletUsersNoNickname: '未设置昵称',
             walletCodesTitle: '生成兑换码',
             walletCodesDesc: '一次最多 50 个。用户在「个人中心」兑换。经销商批发：满 ¥100→9 折、满 ¥300→8 折、满 ¥500→7 折；对方微信打款后在此批量生成，再通过微信或站内信发给对方。',
             walletCodeCount: '数量',

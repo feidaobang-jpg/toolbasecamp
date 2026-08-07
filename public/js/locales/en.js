@@ -77,6 +77,7 @@ window.TB_LOCALES.en = {
             walletUsersDeleteAdminBlock: 'Cannot delete the last admin',
             walletUsersStats: 'Admin credit ¥{credited} · Redeemed ¥{redeemed} · Gift ¥{gifted} · Spent ¥{spent}',
             walletUsersJoined: 'Registered: {time}',
+            walletUsersNoNickname: 'No nickname set',
             walletCodesTitle: 'Create redeem codes',
             walletCodesDesc: 'Up to 50 at once. Users redeem in Profile. Dealer wholesale tiers: ¥100→10% off, ¥300→20% off, ¥500→30% off; after WeChat payment, generate codes here and send via WeChat or site chat.',
             walletCodeCount: 'Count',
