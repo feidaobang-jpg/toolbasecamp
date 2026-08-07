@@ -188,7 +188,6 @@ window.TB_LOCALES['zh-CN'] = {
         aiBalanceUnlimited: '管理员：不限',
         nicknameTitle: '昵称',
         nicknameHint: '用于私聊收件箱等列表展示；留空则显示手机号。',
-        nicknamePh: '例如：小辉',
         saveNickname: '保存昵称',
         nicknameSaved: '昵称已保存',
         nicknameTooLong: '昵称过长（最多 32 字）',

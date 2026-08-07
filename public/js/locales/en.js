@@ -189,7 +189,6 @@ window.TB_LOCALES.en = {
         aiBalanceUnlimited: 'Admin: unlimited',
         nicknameTitle: 'Nickname',
         nicknameHint: 'Shown in chat inbox and admin lists. Leave empty to use phone number.',
-        nicknamePh: 'e.g. Alex',
         saveNickname: 'Save nickname',
         nicknameSaved: 'Nickname saved',
         nicknameTooLong: 'Nickname is too long (max 32 characters)',
