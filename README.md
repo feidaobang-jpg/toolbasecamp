@@ -196,11 +196,13 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | **One key** for Qwen VL, instruct-edit, text-to-image, and Wan I2V（百炼华北2 北京） |
+| `DASHSCOPE_API_KEY` | **One key** for Qwen VL, instruct-edit, text-to-image, Wan I2V, **Fun Music**（百炼华北2 北京） |
 | `DASHSCOPE_BASE_URL` | Compatible-mode root. Default: `https://dashscope.aliyuncs.com/compatible-mode/v1` |
 | `IMAGE_EDIT_DASHSCOPE_API_URL` | HTTP API root for **图生图 + 图生视频** (e.g. `https://dashscope.aliyuncs.com/api/v1`) |
 | `WAN_I2V_MODEL` | Default: `wan2.7-i2v-2026-04-25` |
-| `AI_PRICE_MARKUP` | Wallet markup on vendor list (default `2`); Wan i2v ¥0.6/s 720P · ¥1/s 1080P |
+| `FUN_MUSIC_WORKSPACE_ID` | Optional 百炼业务空间 ID（推荐 MaaS 域名）；也可用 `FUN_MUSIC_API_URL` |
+| `FUN_MUSIC_MODEL` | Default `fun-music-v1`（刊例约 ¥0.002/秒） |
+| `AI_PRICE_MARKUP` | Wallet markup on vendor list (default `2`); Wan i2v ¥0.6/s 720P · ¥1/s 1080P；Fun Music × 时长 |
 | `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
 | `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** |
 | `DEEPSEEK_MODEL` | Default `deepseek-chat` |

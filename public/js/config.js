@@ -174,6 +174,7 @@ const toolsConfig = {
                 { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
                 { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true },
+                { titleKey: 'tools.aiMusic.title', url: 'html/media/ai-music.html', authRequired: true, paid: true },
                 { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
             ]

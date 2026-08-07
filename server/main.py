@@ -81,6 +81,28 @@ except Exception as exc:  # pragma: no cover - surface on /health when deploy br
         return False
 
     _wan_import_error = str(exc)
+
+_music_import_error = ""
+try:
+    from fun_music import (
+        router as music_router,
+        _wire as wire_music,
+        get_fun_music_config,
+        fun_music_configured,
+    )
+except Exception as exc:  # pragma: no cover
+    music_router = None
+
+    def wire_music(*_a, **_k):
+        return None
+
+    def get_fun_music_config():
+        return {"configured": False, "error": str(exc)}
+
+    def fun_music_configured():
+        return False
+
+    _music_import_error = str(exc)
     print(f"[wan] import failed: {exc}")
 
 app = FastAPI(title="Tool Basecamp API")
@@ -482,6 +504,11 @@ if wan_router is not None:
     app.include_router(wan_router)
 else:
     print("[wan] router not mounted:", _wan_import_error or "unknown")
+if music_router is not None:
+    wire_music(get_conn, require_db, get_current_user)
+    app.include_router(music_router)
+else:
+    print("[music] router not mounted:", _music_import_error or "unknown")
 
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:
@@ -926,7 +953,11 @@ def health():
         "wan_i2v": get_wan_config(),
         "wan_configured": wan_configured(),
         "wan_import_error": _wan_import_error or None,
-        "api_features": ["wan_i2v"],
+        "fun_music_api": "/music/generate" in paths,
+        "fun_music": get_fun_music_config(),
+        "fun_music_configured": fun_music_configured(),
+        "fun_music_import_error": _music_import_error or None,
+        "api_features": ["wan_i2v", "fun_music"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

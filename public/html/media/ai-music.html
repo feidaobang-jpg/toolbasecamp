@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Music - Tool Basecamp</title>
+  <meta name="description" content="Generate songs or instrumental tracks with Alibaba Fun Music. Sign-in required; billed from balance on success.">
+  <link rel="stylesheet" href="../../css/base.css?v=9" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=28" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
+  <style>
+    .ai-music-audio {
+      width: 100%;
+      margin: 12px 0 8px;
+    }
+    .ai-music-lyrics {
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #334155;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 8px 0 12px;
+      max-height: 280px;
+      overflow: auto;
+    }
+    .ai-music-mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.aiMusic.title">AI Music</h1>
+        <p data-i18n="tools.aiMusic.desc">Describe a song or paste lyrics. Sign-in required; billed from balance on success.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card tb-form">
+          <div class="tip-box img-wechat-tip" id="wechat-file-download-tip" hidden data-i18n="common.wechatFileDownloadTip">
+            In WeChat, open this page in your system browser to download the audio file.
+          </div>
+          <p class="img-cloud-quota" id="balance-line"></p>
+          <p class="instruct-cost-hint" id="cost-note"></p>
+          <p class="instruct-cost-hint" id="estimate-line"></p>
+
+          <div class="field-row">
+            <span class="field-label" data-i18n="tools.aiMusic.modeLabel">Mode</span>
+            <div class="ai-music-mode-row instruct-preset-row" id="mode-row">
+              <button type="button" class="rec-chip is-active" data-mode="prompt" data-i18n="tools.aiMusic.modePrompt">Prompt song</button>
+              <button type="button" class="rec-chip" data-mode="lyrics" data-i18n="tools.aiMusic.modeLyrics">Custom lyrics</button>
+              <button type="button" class="rec-chip" data-mode="instrumental" data-i18n="tools.aiMusic.modeInstrumental">Instrumental</button>
+            </div>
+          </div>
+
+          <div class="field-row" id="prompt-wrap">
+            <label class="field-label" for="prompt" data-i18n="tools.aiMusic.prompt">Prompt</label>
+            <textarea id="prompt" rows="3" maxlength="2000"
+              data-i18n-placeholder="tools.aiMusic.promptPh"
+              placeholder="e.g. Summer folk, acoustic guitar, light mood for a travel vlog"></textarea>
+            <div class="instruct-preset-row" id="style-row" style="margin-top:8px">
+              <button type="button" class="rec-chip" data-style="folk" data-i18n="tools.aiMusic.styleFolk">Folk</button>
+              <button type="button" class="rec-chip" data-style="pop" data-i18n="tools.aiMusic.stylePop">Pop</button>
+              <button type="button" class="rec-chip" data-style="lofi" data-i18n="tools.aiMusic.styleLofi">Lo-fi</button>
+              <button type="button" class="rec-chip" data-style="edm" data-i18n="tools.aiMusic.styleEdm">EDM</button>
+              <button type="button" class="rec-chip" data-style="cinematic" data-i18n="tools.aiMusic.styleCinematic">Cinematic</button>
+            </div>
+          </div>
+
+          <div class="field-row" id="lyrics-wrap" hidden>
+            <label class="field-label" for="lyrics" data-i18n="tools.aiMusic.lyrics">Lyrics</label>
+            <textarea id="lyrics" rows="8" maxlength="3500"
+              data-i18n-placeholder="tools.aiMusic.lyricsPh"
+              placeholder="[Verse]&#10;...&#10;[Chorus]&#10;..."></textarea>
+          </div>
+
+          <div class="field-row" id="gender-wrap">
+            <span class="field-label" data-i18n="tools.aiMusic.genderLabel">Voice</span>
+            <div class="tb-radio-row" id="gender-row">
+              <label><input type="radio" name="music-gender" value="female" checked /> <span data-i18n="tools.aiMusic.genderFemale">Female</span></label>
+              <label><input type="radio" name="music-gender" value="male" /> <span data-i18n="tools.aiMusic.genderMale">Male</span></label>
+            </div>
+          </div>
+
+          <div class="tip-box">
+            <b data-i18n="tools.aiMusic.tip">Tip:</b>
+            <span data-i18n="tools.aiMusic.tipBody">Generation may take 1–3 minutes. Charged only on success by actual audio length.</span>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.lifePlans.generate">Generate</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.aiMusic.clear">Clear</button>
+          </div>
+
+          <div class="img-cloud-busy" id="busy" hidden>
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.aiMusic.generating">Generating music…</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+
+          <div id="result-wrap" hidden>
+            <p class="instruct-cost-hint" id="result-meta"></p>
+            <audio id="result-audio" class="ai-music-audio" controls preload="metadata"></audio>
+            <pre class="ai-music-lyrics" id="result-lyrics" hidden></pre>
+            <div class="action-row">
+              <button type="button" class="tb-btn" id="download-btn" data-i18n="tools.aiMusic.download">Download</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="../../js/locales/en.js?v=tools41"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools41"></script>
+  <script src="../../js/i18n.js?v=locale1"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/base.js?v=notify1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=30"></script>
+  <script src="../../js/media/ai-music.js?v=1"></script>
+</body>
+</html>
