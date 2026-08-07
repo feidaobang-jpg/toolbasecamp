@@ -7,7 +7,7 @@
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=29" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=30" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
 </head>
 <body>
@@ -190,6 +190,19 @@
                 </div>
               </div>
               <div class="instruct-model-group">
+                <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupQwen">Qwen Image</div>
+                <div class="tb-radio-row instruct-model-row">
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="qwen-image-3.0" data-price="0.2" />
+                    <span data-i18n="tools.instructEdit.modelQwen30">Qwen Image 3.0 · ≈¥0.4/image</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="qwen-image-3.0-pro" data-price="0.52" />
+                    <span data-i18n="tools.instructEdit.modelQwen30pro">Qwen Image 3.0 Pro · ≈¥1.0/image</span>
+                  </label>
+                </div>
+              </div>
+              <div class="instruct-model-group">
                 <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupSeedream">Doubao Seedream</div>
                 <div class="tb-radio-row instruct-model-row">
                   <label>
@@ -233,13 +246,13 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=tools46"></script>
-  <script src="../../js/locales/zh-CN.js?v=tools46"></script>
+  <script src="../../js/locales/en.js?v=tools47"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools47"></script>
   <script src="../../js/i18n.js?v=locale1"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
   <script src="../../js/media/image-cloud-client.js?v=31"></script>
   <script src="../../js/media/image-gen-history.js?v=5"></script>
-  <script src="../../js/media/instruct-edit.js?v=46"></script>
+  <script src="../../js/media/instruct-edit.js?v=47"></script>
 </body>
 </html>

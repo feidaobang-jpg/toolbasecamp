@@ -202,6 +202,19 @@ def _is_wan_model(model: str) -> bool:
     return model.lower().startswith("wan")
 
 
+def _is_qwen_image_model(model: str) -> bool:
+    return model.lower().startswith("qwen-image")
+
+
+def _edit_prompt_max_len(model: str) -> int:
+    low = (model or "").lower()
+    if _is_wan_model(low):
+        return 2000
+    if low.startswith("qwen-image-3"):
+        return 2000
+    return 1300
+
+
 def _normalize_edit_image(image_bytes: bytes, *, for_wan: bool) -> tuple[bytes, str]:
     """
     Prepare image for DashScope edit APIs.
@@ -332,7 +345,7 @@ async def edit_image_with_instruction(
     if not text:
         raise HTTPException(status_code=400, detail="Please enter an edit instruction.")
     use_model = (model or QWEN_IMAGE_EDIT_MODEL or _default_edit_model()).strip() or _default_edit_model()
-    max_len = 2000 if _is_wan_model(use_model) else 1300
+    max_len = _edit_prompt_max_len(use_model)
     if len(text) > max_len:
         raise HTTPException(
             status_code=400,
@@ -354,13 +367,18 @@ async def edit_image_with_instruction(
     for_wan = _is_wan_model(use_model)
     norm_refs: list[tuple[bytes, str]] = [_normalize_edit_image(b, for_wan=for_wan) for b in refs]
 
-    # Official Wan examples put text first, then image(s).
-    content: list[dict[str, str]] = [{"text": text}]
-    content.extend({"image": _data_uri(b, mime)} for b, mime in norm_refs)
+    image_parts = [{"image": _data_uri(b, mime)} for b, mime in norm_refs]
+    # Qwen Image: images then text; Wan official examples use text first.
+    if _is_qwen_image_model(use_model):
+        content: list[dict[str, str]] = image_parts + [{"text": text}]
+    else:
+        content = [{"text": text}] + image_parts
 
     parameters: dict[str, Any] = {"n": 1, "watermark": False}
     low_model = use_model.lower()
-    if low_model.startswith("wan2.6"):
+    if low_model.startswith("qwen-image-3"):
+        parameters["prompt_extend"] = True
+    elif low_model.startswith("wan2.6"):
         parameters["enable_interleave"] = False
         parameters["prompt_extend"] = True
         parameters["size"] = "1K"

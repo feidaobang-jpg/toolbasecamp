@@ -64,6 +64,16 @@ INSTRUCT_EDIT_MODELS = (
         "labelKey": "tools.instructEdit.modelWan27pro",
     },
     {
+        "id": "qwen-image-3.0",
+        "priceCny": 0.2,
+        "labelKey": "tools.instructEdit.modelQwen30",
+    },
+    {
+        "id": "qwen-image-3.0-pro",
+        "priceCny": 0.52,
+        "labelKey": "tools.instructEdit.modelQwen30pro",
+    },
+    {
         "id": "doubao-seedream-5-0-260128",
         "priceCny": 0.22,
         "labelKey": "tools.instructEdit.modelSeedream50lite",

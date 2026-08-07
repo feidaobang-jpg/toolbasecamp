@@ -522,6 +522,10 @@
     if (mid === 'doubao-seedream-5-0-260128' || String(mid || '').indexOf('seedream') >= 0) {
       return tr('tools.instructEdit.modelSeedream50lite');
     }
+    if (mid === 'qwen-image-3.0-pro') return tr('tools.instructEdit.modelQwen30pro');
+    if (mid === 'qwen-image-3.0' || String(mid || '').indexOf('qwen-image-3') >= 0) {
+      return tr('tools.instructEdit.modelQwen30');
+    }
     if (mid === 'wan2.7-image-pro') return tr('tools.instructEdit.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
     return tr('tools.instructEdit.modelWan26');

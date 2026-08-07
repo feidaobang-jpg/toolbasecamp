@@ -909,16 +909,30 @@
 }
 
 .instruct-model-groups {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+@media (min-width: 640px) {
+  .instruct-model-groups {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 14px;
+    align-items: start;
+  }
+}
+
+.instruct-model-group .tb-radio-row {
+  margin-bottom: 0;
+  gap: 10px 12px;
 }
 
 .instruct-model-group-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   color: #64748b;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
 }
 
 .instruct-select-all {
