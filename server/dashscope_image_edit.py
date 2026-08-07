@@ -148,7 +148,7 @@ def _default_edit_model() -> str:
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
 # Non-pro default 360s: multi-ref + 2K Qwen often exceeds the old 180s floor.
 EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "360"))
-EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "480"))
+EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "600"))
 
 
 def dashscope_image_edit_configured() -> bool:
@@ -329,8 +329,20 @@ def _extract_image_url(data: dict) -> Optional[str]:
     return None
 
 
-def _qwen_pixel_size(output_size: str) -> str:
-    return "1024*1024" if _normalize_output_size(output_size) == "1K" else "2048*2048"
+def _qwen_pixel_size(output_size: str, *, model: Optional[str] = None) -> str:
+    """
+    DashScope Qwen I2I size as W*H.
+    Billing tier: area > 2_250_000 → qima_output_2k; else 1k.
+    Pro at 2048*2048 is valid but often exceeds proxy idle windows (ERR_EMPTY_RESPONSE);
+    use a still-2K-tier square that finishes more reliably. Official samples often omit size.
+    """
+    low = (model or "").lower()
+    if _normalize_output_size(output_size) == "1K":
+        return "1024*1024"
+    if "pro" in low:
+        # 1664² ≈ 2.77M > 2.25M → still billed as 2K; much less likely to hang than 2048².
+        return "1664*1664"
+    return "2048*2048"
 
 
 def _normalize_output_size(raw: Optional[str]) -> str:
@@ -390,7 +402,7 @@ async def edit_image_with_instruction(
     low_model = use_model.lower()
     if low_model.startswith("qwen-image-3"):
         parameters["prompt_extend"] = True
-        parameters["size"] = _qwen_pixel_size(size_key)
+        parameters["size"] = _qwen_pixel_size(size_key, model=use_model)
     elif low_model.startswith("wan2.6"):
         parameters["enable_interleave"] = False
         parameters["prompt_extend"] = True
@@ -411,8 +423,9 @@ async def edit_image_with_instruction(
         "Authorization": f"Bearer {DASHSCOPE_API_KEY}",
         "Content-Type": "application/json",
     }
-    timeout = EDIT_PRO_TIMEOUT if "pro" in use_model.lower() else EDIT_TIMEOUT
-    if len(norm_refs) > 1 or size_key == "2K":
+    # Pro + high-res can need several minutes; keep httpx above gateway floors.
+    timeout = EDIT_PRO_TIMEOUT if "pro" in low_model else EDIT_TIMEOUT
+    if len(norm_refs) > 1 or size_key == "2K" or "pro" in low_model:
         timeout = max(timeout, EDIT_PRO_TIMEOUT)
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:

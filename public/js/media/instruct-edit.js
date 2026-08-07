@@ -485,12 +485,14 @@
   }
 
   function oneModelTimeoutMs(modelId) {
-    var seedream = String(modelId || '').toLowerCase().indexOf('seedream') >= 0;
+    var id = String(modelId || '').toLowerCase();
+    var seedream = id.indexOf('seedream') >= 0;
+    var isPro = id.indexOf('-pro') >= 0 || id.indexOf('pro-') >= 0 || /pro$/.test(id);
     var ms;
     if (refMode === 'multi') {
-      ms = seedream ? 240000 : 420000;
+      ms = seedream ? 240000 : (isPro ? 600000 : 420000);
     } else {
-      ms = seedream ? 240000 : 300000;
+      ms = seedream ? 240000 : (isPro ? 540000 : 300000);
     }
     if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 300000);
     return Math.min(900000, ms);
