@@ -20,9 +20,6 @@
   var presetRow = document.getElementById('preset-row');
   var refModeRow = document.getElementById('ref-mode-row');
   var refModeHint = document.getElementById('ref-mode-hint');
-  var outputSizeWrap = document.getElementById('output-size-wrap');
-  var outputSizeRow = document.getElementById('output-size-row');
-  var outputSizeHint = document.getElementById('output-size-hint');
   var modelWrap = document.getElementById('model-wrap');
   var modelRow = document.getElementById('model-row');
   var selectAllBtn = document.getElementById('select-all-models');
@@ -169,25 +166,13 @@
     return s.indexOf('seedream') >= 0 || s.indexOf('doubao-seedream') >= 0;
   }
 
-  function billableOutputSize(modelId, size) {
-    var sz = size || outputSize;
-    if (isSeedreamModel(modelId) && sz === '1K') return '2K';
-    return sz;
-  }
-
-  function modelListPrice(modelId, size) {
-    var sz = billableOutputSize(modelId, size);
+  function modelListPrice(modelId) {
     var m = modelCatalog[modelId];
-    if (m) {
-      return sz === '1K'
-        ? (parseFloat(m.priceCny1K) || 0)
-        : (parseFloat(m.priceCny2K) || 0);
-    }
+    if (m) return parseFloat(m.priceCny2K) || 0;
     var inputs = modelInputs();
     for (var i = 0; i < inputs.length; i++) {
       if (inputs[i].value !== modelId) continue;
-      var attr = sz === '1K' ? 'data-price-1k' : 'data-price-2k';
-      return parseFloat(inputs[i].getAttribute(attr) || '0') || 0;
+      return parseFloat(inputs[i].getAttribute('data-price-2k') || '0') || 0;
     }
     return 0;
   }
@@ -216,7 +201,7 @@
         var cat = modelCatalog[id];
         out.push({
           id: id,
-          price: modelListPrice(id, outputSize),
+          price: modelListPrice(id),
           maxRefs: cat
             ? (parseInt(cat.maxRefs, 10) || parseInt(inputs[i].getAttribute('data-max-refs') || '3', 10))
             : (parseInt(inputs[i].getAttribute('data-max-refs') || '3', 10) || 3)
@@ -247,7 +232,7 @@
       costHint.textContent = tr('tools.instructEdit.needMultiRefs');
       return;
     }
-    var sizeNote = outputSize === '1K' ? ' · 1K' : ' · 2K';
+    var sizeNote = ' · 2K';
     var unit = 0;
     for (var i = 0; i < models.length; i++) unit += models[i].price;
     if (refMode === 'multi') {
@@ -268,28 +253,6 @@
       runs: runs,
       price: total
     }) + sizeNote;
-  }
-
-  function syncOutputSizeUi() {
-    if (outputSizeRow) {
-      var chips = outputSizeRow.querySelectorAll('.rec-chip');
-      for (var i = 0; i < chips.length; i++) {
-        var s = chips[i].getAttribute('data-output-size') || '2K';
-        chips[i].classList.toggle('is-active', s === outputSize);
-      }
-    }
-    if (outputSizeHint) {
-      outputSizeHint.textContent = tr('tools.instructEdit.outputSizeHint');
-    }
-  }
-
-  function setOutputSize(size) {
-    var next = size === '1K' ? '1K' : '2K';
-    if (next === outputSize) return;
-    outputSize = next;
-    syncOutputSizeUi();
-    updateCostHint();
-    setBusy(false);
   }
 
   function syncDropHints() {
@@ -519,20 +482,15 @@
       var chips = presetRow.querySelectorAll('.rec-chip');
       for (var j = 0; j < chips.length; j++) chips[j].disabled = !!on;
     }
-    if (outputSizeRow) {
-      var sizeChips = outputSizeRow.querySelectorAll('.rec-chip');
-      for (var k = 0; k < sizeChips.length; k++) sizeChips[k].disabled = !!on;
-    }
   }
 
   function oneModelTimeoutMs(modelId) {
     var seedream = String(modelId || '').toLowerCase().indexOf('seedream') >= 0;
-    var is2K = outputSize === '2K';
     var ms;
     if (refMode === 'multi') {
-      ms = seedream ? (is2K ? 240000 : 180000) : (is2K ? 420000 : 300000);
+      ms = seedream ? 240000 : 420000;
     } else {
-      ms = seedream ? (is2K ? 240000 : 180000) : (is2K ? 300000 : 180000);
+      ms = seedream ? 240000 : 300000;
     }
     if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 300000);
     return Math.min(900000, ms);
@@ -761,7 +719,6 @@
     // Prompt + background presets are useful before uploading; keep visible.
     if (promptWrap) promptWrap.hidden = false;
     if (presetWrap) presetWrap.hidden = false;
-    if (outputSizeWrap) outputSizeWrap.hidden = !has;
     if (modelWrap) modelWrap.hidden = !has;
     if (!has && dropZone) dropZone.hidden = false;
     updateCostHint();
@@ -963,7 +920,6 @@
     }
     syncSelectAllLabel();
     syncRefModeUi();
-    syncOutputSizeUi();
     syncDropHints();
     updateCostHint();
     syncControlsVisible();
@@ -1029,14 +985,6 @@
       var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
       if (!btn || btn.disabled) return;
       setRefMode(btn.getAttribute('data-ref-mode') || 'single');
-    });
-  }
-
-  if (outputSizeRow) {
-    outputSizeRow.addEventListener('click', function (e) {
-      var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
-      if (!btn || btn.disabled) return;
-      setOutputSize(btn.getAttribute('data-output-size') || '2K');
     });
   }
 
@@ -1153,8 +1101,6 @@
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
-      outputSize = '2K';
-      syncOutputSizeUi();
       setBgPanelExpanded(false);
       setBgTime('day');
       syncControlsVisible();
@@ -1218,7 +1164,6 @@
     setBgPanelExpanded(bgExpanded);
     syncSelectAllLabel();
     syncRefModeUi();
-    syncOutputSizeUi();
     syncDropHints();
     renderSources();
     updateCostHint();
