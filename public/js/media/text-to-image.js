@@ -75,8 +75,15 @@
   }
 
   function resultSrc(b64, ctype) {
-    // Performance: on WeChat, converting every image to data:URL can be very slow.
-    // Use object URL for in-page rendering; switch to data:URL only in preview (click).
+    // WeChat: data: URL required for long-press save/forward — never blob:.
+    if (C.displayImageSrc) {
+      var src = C.displayImageSrc(b64, ctype);
+      if (String(src).indexOf('blob:') === 0) resultUrls.push(src);
+      return src;
+    }
+    if (C.isWeChat && C.isWeChat() && C.b64ToDataUrl) {
+      return C.b64ToDataUrl(b64, ctype);
+    }
     return b64ToBlobUrl(b64, ctype);
   }
 

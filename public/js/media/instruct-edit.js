@@ -75,8 +75,19 @@
   }
 
   function resultSrc(item) {
-    // Prefer inline base64 so results still show if /api/image/tmp briefly 502s.
+    // WeChat: MUST use data: URL (not blob:) so long-press save/forward works.
+    // Prefer displayImageSrc whenever base64 is present.
     if (item && item.imageBase64) {
+      if (C.displayImageSrc) {
+        var src = C.displayImageSrc(item.imageBase64, item.contentType);
+        if (String(src).indexOf('blob:') === 0) resultUrls.push(src);
+        if (String(src).indexOf('data:') === 0) item._wechatDataUrl = src;
+        return src;
+      }
+      if (C.isWeChat && C.isWeChat() && C.b64ToDataUrl) {
+        item._wechatDataUrl = C.b64ToDataUrl(item.imageBase64, item.contentType);
+        return item._wechatDataUrl;
+      }
       return b64ToBlobUrl(item.imageBase64, item.contentType);
     }
     if (item && item.imageUrl) return item.imageUrl;
@@ -738,6 +749,8 @@
     img.alt = '';
     imgWrap.appendChild(img);
     var displaySrc = resultSrc(item);
+    // WeChat + remote URL only (no base64): convert URL → data: asynchronously.
+    // When base64 exists, resultSrc already returns data: via displayImageSrc.
     if (C.isWeChat && C.isWeChat() && item.imageUrl && !item.imageBase64 && C.applyWeChatResultImage) {
       C.applyWeChatResultImage(img, item, displaySrc);
     } else {

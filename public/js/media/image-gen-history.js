@@ -263,10 +263,15 @@
             var title = document.createElement('div');
             title.className = 'instruct-result-title';
             title.textContent = modelTitle(row.model) + (row.createdAt ? ' · ' + formatTime(row.createdAt) : '');
+            var imgWrap = document.createElement('div');
+            imgWrap.className = 'instruct-result-img-wrap';
             var img = document.createElement('img');
             img.alt = '';
             if (row.prompt) img.title = row.prompt;
+            imgWrap.appendChild(img);
             if (global.TBImageCloud && global.TBImageCloud.isWeChat && global.TBImageCloud.isWeChat()) {
+              // Never use blob: in WeChat — long-press save/forward breaks.
+              img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
               var reader = new FileReader();
               reader.onload = function () {
                 img.src = String(reader.result || '');
@@ -306,7 +311,7 @@
             actions.appendChild(dl);
             actions.appendChild(rm);
             card.appendChild(title);
-            card.appendChild(img);
+            card.appendChild(imgWrap);
             if (global.TBImageCloud && global.TBImageCloud.isWeChat && global.TBImageCloud.isWeChat()) {
               var tip = document.createElement('p');
               tip.className = 'instruct-result-save-tip';

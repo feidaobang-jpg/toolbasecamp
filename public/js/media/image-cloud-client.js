@@ -422,7 +422,9 @@
         }
 
         if (!isWeChat() || item.imageBase64 || !url) {
-            img.src = fallbackSrc || '';
+            // When base64 is present, callers must pass a data: URL via displayImageSrc —
+            // never leave WeChat on blob: (breaks long-press save/forward).
+            img.src = fallbackSrc || (item.imageBase64 ? b64ToDataUrl(item.imageBase64, item.contentType) : '');
             setLoading(false);
             return;
         }

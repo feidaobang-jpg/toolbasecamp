@@ -20,9 +20,14 @@ alwaysApply: true
    - 在下载按钮**上方**放长按说明（`tools.imageCloud.longPressSave`）。  
    - 用户直接在结果图上长按，使用微信原生「保存到手机 / 转发给朋友」。
 
-3. **展示用 URL**  
-   - 微信内优先 **data URL**，避免 `blob:` 导致长按保存失败。  
-   - 异步转 data URL 期间：灰底框 + 居中真实 DOM 转圈（不要只靠 `::after`，微信可能不显示），**禁止**空 `src` + 模型名 `alt`。先把 `img` 挂进 `.instruct-result-img-wrap` 再调 `applyWeChatResultImage`。
+3. **展示用 URL（禁止回归 — 曾两次因「性能」改回 blob 导致长按失效）**  
+   - 微信内结果图 **必须** 用 **data URL**（`TBImageCloud.displayImageSrc` / `b64ToDataUrl`）。  
+   - **禁止**在微信里给结果 `<img>` 设 `blob:`（`URL.createObjectURL` / `b64ToObjectUrl`）——长按「保存到手机 / 转发给朋友」会失效。  
+   - **禁止**以「微信转 data URL 太慢」为由改回 blob 展示；慢可接受，长按失效不可接受。  
+   - 有 `imageBase64` 时：直接 `displayImageSrc(b64)`，不要先转 blob 再展示。  
+   - 仅有 `imageUrl`、无 base64 时：用 `applyWeChatResultImage` 异步拉成 data URL；转码期间灰底框 + 真实 DOM 转圈（不要只靠 `::after`）。  
+   - **禁止**空 `src` + 模型名 `alt`。先把 `img` 挂进 `.instruct-result-img-wrap` 再调 `applyWeChatResultImage`。  
+   - 改 instruct-edit / text-to-image / 历史结果图展示时必须自测微信长按菜单。
 
 4. **不要**在下载按钮里自动 `openSavePreview`。
 

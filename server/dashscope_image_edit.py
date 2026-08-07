@@ -329,20 +329,82 @@ def _extract_image_url(data: dict) -> Optional[str]:
     return None
 
 
-def _qwen_pixel_size(output_size: str, *, model: Optional[str] = None) -> str:
+def _qwen_pixel_size(
+    output_size: str,
+    *,
+    model: Optional[str] = None,
+    ref_wh: Optional[Tuple[int, int]] = None,
+) -> str:
     """
-    DashScope Qwen I2I size as W*H.
-    Billing tier: area > 2_250_000 → qima_output_2k; else 1k.
-    Pro at 2048*2048 is valid but often exceeds proxy idle windows (ERR_EMPTY_RESPONSE);
-    use a still-2K-tier square that finishes more reliably. Official samples often omit size.
+    DashScope Qwen I2I size as W*H, preserving the input aspect ratio.
+
+    Never force a square: square 2048*2048 / 1664*1664 makes portrait/landscape
+    look short or stretched. Limits (docs): total pixels in [512², 2048²],
+    aspect 1:8–8:1. 2K billing needs area > 2_250_000.
     """
+    import math
+
     low = (model or "").lower()
-    if _normalize_output_size(output_size) == "1K":
-        return "1024*1024"
-    if "pro" in low:
-        # 1664² ≈ 2.77M > 2.25M → still billed as 2K; much less likely to hang than 2048².
-        return "1664*1664"
-    return "2048*2048"
+    want_2k = _normalize_output_size(output_size) != "1K"
+    # Pro: slightly smaller target area to reduce timeout risk, still 2K-billed.
+    if want_2k:
+        target_area = float(1664 * 1664) if "pro" in low else float(2048 * 2048)
+        target_area = max(target_area, 2_250_001.0)
+    else:
+        target_area = float(1024 * 1024)
+
+    rw, rh = 1024, 1024
+    if ref_wh and ref_wh[0] > 0 and ref_wh[1] > 0:
+        rw, rh = int(ref_wh[0]), int(ref_wh[1])
+    aspect = rw / float(rh)
+
+    # Clamp aspect to API 1:8 .. 8:1
+    aspect = max(1.0 / 8.0, min(8.0, aspect))
+
+    ow = int(round(math.sqrt(target_area * aspect)))
+    oh = int(round(math.sqrt(target_area / aspect)))
+    ow = max(64, ow)
+    oh = max(64, oh)
+
+    max_area = 2048 * 2048
+    min_area = 512 * 512
+    area = ow * oh
+    if area > max_area:
+        scale = math.sqrt(max_area / float(area))
+        ow = max(64, int(round(ow * scale)))
+        oh = max(64, int(round(oh * scale)))
+        area = ow * oh
+    if area < min_area:
+        scale = math.sqrt(min_area / float(max(area, 1)))
+        ow = max(64, int(round(ow * scale)))
+        oh = max(64, int(round(oh * scale)))
+        area = ow * oh
+
+    # Keep 2K billing tier when requested (area > 2.25M), if ratio allows.
+    if want_2k and area <= 2_250_000:
+        scale = math.sqrt(2_250_001.0 / float(area))
+        ow2 = max(64, int(math.ceil(ow * scale)))
+        oh2 = max(64, int(math.ceil(oh * scale)))
+        if ow2 * oh2 <= max_area:
+            ow, oh = ow2, oh2
+
+    return f"{ow}*{oh}"
+
+
+def _ref_image_wh(image_bytes: bytes) -> Optional[Tuple[int, int]]:
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+
+        im = Image.open(BytesIO(image_bytes))
+        im.load()
+        w, h = im.size
+        if w > 0 and h > 0:
+            return int(w), int(h)
+    except Exception:
+        return None
+    return None
 
 
 def _normalize_output_size(raw: Optional[str]) -> str:
@@ -402,7 +464,17 @@ async def edit_image_with_instruction(
     low_model = use_model.lower()
     if low_model.startswith("qwen-image-3"):
         parameters["prompt_extend"] = True
-        parameters["size"] = _qwen_pixel_size(size_key, model=use_model)
+        # Prefer original upload dimensions (before JPEG normalize) for aspect.
+        ref_wh = _ref_image_wh(refs[0]) if refs else None
+        if ref_wh is None and norm_refs:
+            ref_wh = _ref_image_wh(norm_refs[0][0])
+        if ref_wh:
+            parameters["size"] = _qwen_pixel_size(
+                size_key,
+                model=use_model,
+                ref_wh=ref_wh,
+            )
+        # No size → DashScope auto-picks from input (avoids forced square).
     elif low_model.startswith("wan2.6"):
         parameters["enable_interleave"] = False
         parameters["prompt_extend"] = True
