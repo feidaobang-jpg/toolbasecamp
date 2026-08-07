@@ -2172,7 +2172,7 @@ window.TB_LOCALES['zh-CN'] = {
             costHint: '本次约扣 ¥{price}（{images} 张图 × {models} 个模型 = {runs} 次，成功才扣费）',
             costHintMulti: '本次约扣 ¥{price}（{refs} 张参考合成 × {models} 个模型 = {runs} 次，成功才扣费）',
             tip: '提示：',
-            tipBody: '成功出图才扣余额，失败不扣。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。推荐万相 2.6。',
+            tipBody: '成功出图才扣余额，失败不扣。多模型会逐个生成并展示。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。推荐万相 2.6。',
             download: '下载',
             editAgain: '再改',
             editAgainFailed: '无法将结果图设为输入，请重试或重新上传',
