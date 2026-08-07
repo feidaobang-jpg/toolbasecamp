@@ -65,12 +65,12 @@ INSTRUCT_EDIT_MODELS = (
     },
     {
         "id": "wan2.7-image",
-        "priceCny": 0.3,
+        "priceCny": 0.2,
         "labelKey": "tools.instructEdit.modelWan27",
     },
     {
         "id": "wan2.7-image-pro",
-        "priceCny": 0.6,
+        "priceCny": 0.5,
         "labelKey": "tools.instructEdit.modelWan27pro",
     },
 )
@@ -92,12 +92,12 @@ TEXT_TO_IMAGE_MODELS = (
     },
     {
         "id": "wan2.7-image",
-        "priceCny": 0.3,
+        "priceCny": 0.2,
         "labelKey": "tools.textToImage.modelWan27",
     },
     {
         "id": "wan2.7-image-pro",
-        "priceCny": 0.6,
+        "priceCny": 0.5,
         "labelKey": "tools.textToImage.modelWan27pro",
     },
 )
