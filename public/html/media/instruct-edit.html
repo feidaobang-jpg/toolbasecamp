@@ -166,6 +166,14 @@
               </div>
             </div>
           </div>
+          <div class="field-row" id="output-size-wrap" hidden>
+            <span class="field-label" data-i18n="tools.instructEdit.outputSizeLabel">Output resolution</span>
+            <div class="instruct-preset-row" id="output-size-row">
+              <button type="button" class="rec-chip" data-output-size="1K" data-i18n="tools.instructEdit.outputSize1K">1K</button>
+              <button type="button" class="rec-chip is-active" data-output-size="2K" data-i18n="tools.instructEdit.outputSize2K">2K (recommended)</button>
+            </div>
+            <p class="instruct-cost-hint" id="output-size-hint" data-i18n="tools.instructEdit.outputSizeHint">Qwen Pro and Seedream Pro charge by output tier; Wan / Qwen 3.0 same price for 1K and 2K.</p>
+          </div>
           <div class="field-row" id="model-wrap" hidden>
             <div class="instruct-model-head">
               <span class="field-label" data-i18n="tools.instructEdit.modelLabel">Model</span>
@@ -176,15 +184,15 @@
                 <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupWan">Wan (Alibaba)</div>
                 <div class="tb-radio-row instruct-model-row">
                   <label>
-                    <input type="checkbox" name="instruct-model" value="wan2.6-image" data-price="0.2" checked />
+                    <input type="checkbox" name="instruct-model" value="wan2.6-image" data-price-1k="0.2" data-price-2k="0.2" data-max-refs="4" checked />
                     <span data-i18n="tools.instructEdit.modelWan26">Wan 2.6 · ≈¥0.4/image (recommended)</span>
                   </label>
                   <label>
-                    <input type="checkbox" name="instruct-model" value="wan2.7-image" data-price="0.2" />
+                    <input type="checkbox" name="instruct-model" value="wan2.7-image" data-price-1k="0.2" data-price-2k="0.2" data-max-refs="4" />
                     <span data-i18n="tools.instructEdit.modelWan27">Wan 2.7 · ≈¥0.4/image</span>
                   </label>
                   <label>
-                    <input type="checkbox" name="instruct-model" value="wan2.7-image-pro" data-price="0.5" />
+                    <input type="checkbox" name="instruct-model" value="wan2.7-image-pro" data-price-1k="0.5" data-price-2k="0.5" data-max-refs="4" />
                     <span data-i18n="tools.instructEdit.modelWan27pro">Wan 2.7-Pro · ≈¥1.0/image</span>
                   </label>
                 </div>
@@ -193,12 +201,12 @@
                 <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupQwen">Qwen Image</div>
                 <div class="tb-radio-row instruct-model-row">
                   <label>
-                    <input type="checkbox" name="instruct-model" value="qwen-image-3.0" data-price="0.2" />
+                    <input type="checkbox" name="instruct-model" value="qwen-image-3.0" data-price-1k="0.2" data-price-2k="0.2" data-max-refs="3" />
                     <span data-i18n="tools.instructEdit.modelQwen30">Qwen Image 3.0 · ≈¥0.4/image</span>
                   </label>
                   <label>
-                    <input type="checkbox" name="instruct-model" value="qwen-image-3.0-pro" data-price="0.52" />
-                    <span data-i18n="tools.instructEdit.modelQwen30pro">Qwen Image 3.0 Pro · ≈¥1.0/image</span>
+                    <input type="checkbox" name="instruct-model" value="qwen-image-3.0-pro" data-price-1k="0.27" data-price-2k="0.52" data-max-refs="3" />
+                    <span data-i18n="tools.instructEdit.modelQwen30pro">Qwen Image 3.0 Pro · 1K ≈¥0.54 / 2K ≈¥1.0</span>
                   </label>
                 </div>
               </div>
@@ -206,12 +214,12 @@
                 <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupSeedream">Doubao Seedream</div>
                 <div class="tb-radio-row instruct-model-row">
                   <label>
-                    <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-260128" data-price="0.22" />
+                    <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-260128" data-price-1k="0.22" data-price-2k="0.22" data-max-refs="4" />
                     <span data-i18n="tools.instructEdit.modelSeedream50lite">Seedream 5.0 Lite · ≈¥0.44/image</span>
                   </label>
                   <label>
-                    <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-pro-260628" data-price="0.3" />
-                    <span data-i18n="tools.instructEdit.modelSeedream50pro">Seedream 5.0 Pro · ≈¥0.6/image</span>
+                    <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-pro-260628" data-price-1k="0.15" data-price-2k="0.3" data-max-refs="4" />
+                    <span data-i18n="tools.instructEdit.modelSeedream50pro">Seedream 5.0 Pro · 1K ≈¥0.3 / 2K ≈¥0.6</span>
                   </label>
                 </div>
               </div>
@@ -246,13 +254,13 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=tools47"></script>
-  <script src="../../js/locales/zh-CN.js?v=tools47"></script>
+  <script src="../../js/locales/en.js?v=tools49"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools49"></script>
   <script src="../../js/i18n.js?v=locale1"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
   <script src="../../js/media/image-cloud-client.js?v=31"></script>
   <script src="../../js/media/image-gen-history.js?v=5"></script>
-  <script src="../../js/media/instruct-edit.js?v=47"></script>
+  <script src="../../js/media/instruct-edit.js?v=49"></script>
 </body>
 </html>

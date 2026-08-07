@@ -22,8 +22,8 @@ SEEDREAM_IMAGE_MODEL = (
 SEEDREAM_TIMEOUT = float(os.environ.get("SEEDREAM_IMAGE_TIMEOUT", "180"))
 SEEDREAM_PRO_TIMEOUT = float(os.environ.get("SEEDREAM_PRO_TIMEOUT", "240"))
 SEEDREAM_SIZE = (os.environ.get("SEEDREAM_IMAGE_SIZE") or "2K").strip() or "2K"
-# Official docs: up to 14 refs; we still clamp via instruct-edit batch max.
-SEEDREAM_MAX_REFS = int(os.environ.get("SEEDREAM_MAX_REFS", "14"))
+# UI caps multi-ref at 4; API allows more — keep server clamp aligned with instruct-edit batch.
+SEEDREAM_MAX_REFS = int(os.environ.get("SEEDREAM_MAX_REFS", "4"))
 
 
 def volc_ark_configured() -> bool:
@@ -77,6 +77,7 @@ async def edit_image_with_seedream(
     *,
     model: Optional[str] = None,
     images: Optional[Sequence[bytes]] = None,
+    output_size: Optional[str] = None,
 ) -> Tuple[bytes, str]:
     """
     Image-to-image via POST /images/generations.
@@ -111,6 +112,9 @@ async def edit_image_with_seedream(
         )
 
     use_model = (model or _default_model()).strip() or _default_model()
+    size_key = (output_size or SEEDREAM_SIZE or "2K").strip().upper()
+    if size_key not in ("1K", "2K"):
+        size_key = "2K"
     norm_refs = [_normalize_edit_image(b, for_wan=False) for b in refs]
     data_uris = [_data_uri(b, mime) for b, mime in norm_refs]
     image_field: Any = data_uris[0] if len(data_uris) == 1 else data_uris
@@ -121,7 +125,7 @@ async def edit_image_with_seedream(
         "prompt": text,
         "image": image_field,
         "response_format": "url",
-        "size": SEEDREAM_SIZE,
+        "size": size_key,
         "stream": False,
         "watermark": False,
     }

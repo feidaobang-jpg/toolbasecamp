@@ -26,7 +26,6 @@ from tencent_image import (
     tencent_configured,
 )
 from dashscope_image_edit import (
-    _is_wan_model,
     dashscope_image_edit_configured,
     edit_image_with_instruction,
     generate_image_from_text,
@@ -45,46 +44,64 @@ from ai_wallet import (
     wallet_public,
 )
 
-# Instruct-edit model menu. Order = UI recommendation. Prices = vendor list (× AI_PRICE_MARKUP).
+# Instruct-edit model menu. Order = UI recommendation.
+# priceCny1K / priceCny2K = vendor list (× AI_PRICE_MARKUP for users).
+# Wan: flat per image (Beijing list). Qwen 3.0: flat; Qwen Pro: tiered (0.02 input + output).
+INSTRUCT_OUTPUT_SIZES = ("1K", "2K")
 INSTRUCT_EDIT_MODELS = (
     {
         "id": "wan2.6-image",
-        "priceCny": 0.2,
+        "priceCny1K": 0.2,
+        "priceCny2K": 0.2,
+        "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelWan26",
         "default": True,
     },
     {
         "id": "wan2.7-image",
-        "priceCny": 0.2,
+        "priceCny1K": 0.2,
+        "priceCny2K": 0.2,
+        "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelWan27",
     },
     {
         "id": "wan2.7-image-pro",
-        "priceCny": 0.5,
+        "priceCny1K": 0.5,
+        "priceCny2K": 0.5,
+        "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelWan27pro",
     },
     {
         "id": "qwen-image-3.0",
-        "priceCny": 0.2,
+        "priceCny1K": 0.2,
+        "priceCny2K": 0.2,
+        "maxRefs": 3,
         "labelKey": "tools.instructEdit.modelQwen30",
     },
     {
         "id": "qwen-image-3.0-pro",
-        "priceCny": 0.52,
+        "priceCny1K": 0.27,
+        "priceCny2K": 0.52,
+        "maxRefs": 3,
         "labelKey": "tools.instructEdit.modelQwen30pro",
     },
     {
         "id": "doubao-seedream-5-0-260128",
-        "priceCny": 0.22,
+        "priceCny1K": 0.22,
+        "priceCny2K": 0.22,
+        "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
     {
         "id": "doubao-seedream-5-0-pro-260628",
-        "priceCny": 0.3,
+        "priceCny1K": 0.15,
+        "priceCny2K": 0.3,
+        "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50pro",
     },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
+INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "wan2.7-image")
 MAX_INSTRUCT_BATCH = 4
 INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
@@ -409,6 +426,7 @@ def image_status(user: dict = Depends(_user)):
             "generalCutoutAvailable": rembg_available(),
             "instructEditConfigured": instruct_edit_configured(),
             "instructEditModels": list(INSTRUCT_EDIT_MODELS),
+            "instructEditOutputSizes": list(INSTRUCT_OUTPUT_SIZES),
             "instructEditPresets": [
                 {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
                 {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
@@ -460,6 +478,7 @@ def image_status(user: dict = Depends(_user)):
             "generalCutoutAvailable": rembg_available(),
             "instructEditConfigured": instruct_edit_configured(),
             "instructEditModels": list(INSTRUCT_EDIT_MODELS),
+            "instructEditOutputSizes": list(INSTRUCT_OUTPUT_SIZES),
             "instructEditPresets": [
                 {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
                 {"id": "real_to_manga", "labelKey": "tools.instructEdit.presetRealToManga"},
@@ -602,11 +621,31 @@ def _resolve_instruct_models(
     return out
 
 
-def _price_for(model_id: str) -> float:
-    for m in INSTRUCT_EDIT_MODELS:
-        if m["id"] == model_id:
-            return float(m["priceCny"])
-    return 0.0
+def _normalize_output_size(raw: Optional[str]) -> str:
+    s = (raw or "2K").strip().upper()
+    return s if s in INSTRUCT_OUTPUT_SIZES else "2K"
+
+
+def _price_for(model_id: str, output_size: str = "2K") -> float:
+    m = INSTRUCT_EDIT_MODEL_BY_ID.get(model_id)
+    if not m:
+        return 0.0
+    size = _normalize_output_size(output_size)
+    key = "priceCny1K" if size == "1K" else "priceCny2K"
+    return float(m.get(key) or m.get("priceCny2K") or 0.0)
+
+
+def _max_refs_for_model(model_id: str) -> int:
+    m = INSTRUCT_EDIT_MODEL_BY_ID.get(model_id)
+    if not m:
+        return 3
+    return int(m.get("maxRefs") or 3)
+
+
+def _max_refs_for_models(model_ids: list[str]) -> int:
+    if not model_ids:
+        return MAX_INSTRUCT_BATCH
+    return min(_max_refs_for_model(mid) for mid in model_ids)
 
 
 def instruct_edit_configured() -> bool:
@@ -634,20 +673,24 @@ async def _run_instruct_edit(
     text: str,
     *,
     model: str,
+    output_size: str = "2K",
 ) -> tuple[bytes, str]:
     _model_provider_ready(model)
+    size = _normalize_output_size(output_size)
     if is_seedream_model(model):
         return await edit_image_with_seedream(
             refs[0],
             text,
             model=model,
             images=refs if len(refs) > 1 else None,
+            output_size=size,
         )
     return await edit_image_with_instruction(
         refs[0],
         text,
         model=model,
         images=refs if len(refs) > 1 else None,
+        output_size=size,
     )
 
 
@@ -666,6 +709,7 @@ async def api_instruct_edit(
     models: List[str] = Form(default=[]),
     compare: str = Form("0"),
     ref_mode: str = Form("single"),
+    output_size: str = Form("2K"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
     request: Request = None,
@@ -691,6 +735,7 @@ async def api_instruct_edit(
     mode = (ref_mode or "single").strip().lower()
     if mode not in ("single", "multi"):
         mode = "single"
+    out_size = _normalize_output_size(output_size)
     uploads: list[UploadFile] = []
     if files:
         uploads.extend([f for f in files if f is not None and getattr(f, "filename", None)])
@@ -729,16 +774,13 @@ async def api_instruct_edit(
     for up in uploads:
         blobs.append(await _read_upload(up))
 
-    # Multi-ref limits by provider.
-    if mode == "multi":
-        for mid in model_ids:
-            if is_seedream_model(mid):
-                continue  # Seedream allows many refs; batch max already applied.
-            if not _is_wan_model(mid) and len(blobs) > 3:
-                raise HTTPException(
-                    status_code=400,
-                    detail="This model supports at most 3 reference images.",
-                )
+    # Multi-ref limits: min(maxRefs) across selected models (Wan 4, Qwen 3, Seedream 4).
+    max_refs = _max_refs_for_models(model_ids)
+    if mode == "multi" and len(blobs) > max_refs:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Selected models support at most {max_refs} reference images.",
+        )
 
     # Billed via user balance only (no daily count).
     job_count = len(model_ids) if mode == "multi" else len(blobs) * len(model_ids)
@@ -749,12 +791,15 @@ async def api_instruct_edit(
         finally:
             conn.close()
         # Ensure at least one generation is affordable (cheapest selected model).
-        min_list = min(_price_for(m) for m in model_ids)
+        min_list = min(_price_for(m, out_size) for m in model_ids)
         _assert_can_afford(user, min_list)
 
-    est_list = round(sum(_price_for(m) for m in model_ids) * (1 if mode == "multi" else len(blobs)), 2)
+    est_list = round(
+        sum(_price_for(m, out_size) for m in model_ids) * (1 if mode == "multi" else len(blobs)),
+        2,
+    )
     est_user = round(
-        sum(float(user_price_cny(_price_for(m))) for m in model_ids)
+        sum(float(user_price_cny(_price_for(m, out_size))) for m in model_ids)
         * (1 if mode == "multi" else len(blobs)),
         2,
     )
@@ -781,7 +826,7 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
-        out, ctype = await _run_instruct_edit(refs, text, model=mid)
+        out, ctype = await _run_instruct_edit(refs, text, model=mid, output_size=out_size)
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_ok",
@@ -802,8 +847,9 @@ async def api_instruct_edit(
         return {
             "index": idx,
             "model": mid,
-            "priceCny": _price_for(mid),
-            "userPriceCny": float(user_price_cny(_price_for(mid))),
+            "priceCny": _price_for(mid, out_size),
+            "userPriceCny": float(user_price_cny(_price_for(mid, out_size))),
+            "outputSize": out_size,
             "imageBase64": None if light_response else base64.b64encode(out).decode("ascii"),
             "imageUrl": f"/api/image/tmp/{tmp_name}",
             "contentType": save_ctype,
@@ -874,7 +920,7 @@ async def api_instruct_edit(
     for job_i, (img_idx, refs, mid) in enumerate(jobs):
         if stop_all:
             break
-        list_p = _price_for(mid)
+        list_p = _price_for(mid, out_size)
         try:
             if not _is_admin(user):
                 _assert_can_afford(user, list_p)
@@ -943,6 +989,7 @@ async def api_instruct_edit(
         "images": images,
         "preset": (preset or "").strip() or None,
         "refMode": mode,
+        "outputSize": out_size,
         "batch": 1 if mode == "multi" else len(blobs),
         "compare": len(model_ids) > 1,
         "aiWallet": _wallet_for(user),

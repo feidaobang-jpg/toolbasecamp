@@ -328,12 +328,22 @@ def _extract_image_url(data: dict) -> Optional[str]:
     return None
 
 
+def _qwen_pixel_size(output_size: str) -> str:
+    return "1024*1024" if _normalize_output_size(output_size) == "1K" else "2048*2048"
+
+
+def _normalize_output_size(raw: Optional[str]) -> str:
+    s = (raw or "2K").strip().upper()
+    return s if s in ("1K", "2K") else "2K"
+
+
 async def edit_image_with_instruction(
     image_bytes: bytes,
     prompt: str,
     *,
     model: Optional[str] = None,
     images: Optional[Sequence[bytes]] = None,
+    output_size: Optional[str] = None,
 ) -> Tuple[bytes, str]:
     """
     Returns (image_bytes, mime_type).
@@ -374,20 +384,21 @@ async def edit_image_with_instruction(
     else:
         content = [{"text": text}] + image_parts
 
+    size_key = _normalize_output_size(output_size)
     parameters: dict[str, Any] = {"n": 1, "watermark": False}
     low_model = use_model.lower()
     if low_model.startswith("qwen-image-3"):
         parameters["prompt_extend"] = True
+        parameters["size"] = _qwen_pixel_size(size_key)
     elif low_model.startswith("wan2.6"):
         parameters["enable_interleave"] = False
         parameters["prompt_extend"] = True
-        parameters["size"] = "1K"
+        parameters["size"] = size_key
     elif low_model.startswith("wan2.7"):
-        # Wan 2.7 / 2.7-pro edit: size + n
-        parameters["size"] = "2K" if "pro" in low_model else "1K"
+        parameters["size"] = size_key
     elif _is_wan_model(use_model):
         parameters["enable_interleave"] = False
-        parameters["size"] = "1K"
+        parameters["size"] = size_key
 
     url = _api_root().rstrip("/") + "/services/aigc/multimodal-generation/generation"
     payload: dict[str, Any] = {

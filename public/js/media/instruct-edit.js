@@ -6,6 +6,8 @@
 
   var MAX_BATCH = 4;
   var refMode = 'single';
+  var outputSize = '2K';
+  var modelCatalog = {};
   var gate = document.getElementById('login-gate');
   var app = document.getElementById('app');
   var loginLink = document.getElementById('login-link');
@@ -18,6 +20,9 @@
   var presetRow = document.getElementById('preset-row');
   var refModeRow = document.getElementById('ref-mode-row');
   var refModeHint = document.getElementById('ref-mode-hint');
+  var outputSizeWrap = document.getElementById('output-size-wrap');
+  var outputSizeRow = document.getElementById('output-size-row');
+  var outputSizeHint = document.getElementById('output-size-hint');
   var modelWrap = document.getElementById('model-wrap');
   var modelRow = document.getElementById('model-row');
   var selectAllBtn = document.getElementById('select-all-models');
@@ -156,14 +161,51 @@
     return modelRow ? modelRow.querySelectorAll('input[name="instruct-model"]') : [];
   }
 
+  function modelListPrice(modelId, size) {
+    var sz = size || outputSize;
+    var m = modelCatalog[modelId];
+    if (m) {
+      return sz === '1K'
+        ? (parseFloat(m.priceCny1K) || 0)
+        : (parseFloat(m.priceCny2K) || 0);
+    }
+    var inputs = modelInputs();
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].value !== modelId) continue;
+      var attr = sz === '1K' ? 'data-price-1k' : 'data-price-2k';
+      return parseFloat(inputs[i].getAttribute(attr) || '0') || 0;
+    }
+    return 0;
+  }
+
+  function maxRefsForSelectedModels() {
+    var models = selectedModels();
+    if (!models.length) return MAX_BATCH;
+    var min = MAX_BATCH;
+    for (var i = 0; i < models.length; i++) {
+      var n = models[i].maxRefs;
+      if (n > 0 && n < min) min = n;
+    }
+    return min;
+  }
+
+  function uploadLimit() {
+    return refMode === 'multi' ? maxRefsForSelectedModels() : MAX_BATCH;
+  }
+
   function selectedModels() {
     var out = [];
     var inputs = modelInputs();
     for (var i = 0; i < inputs.length; i++) {
       if (inputs[i].checked) {
+        var id = inputs[i].value;
+        var cat = modelCatalog[id];
         out.push({
-          id: inputs[i].value,
-          price: parseFloat(inputs[i].getAttribute('data-price') || '0') || 0
+          id: id,
+          price: modelListPrice(id, outputSize),
+          maxRefs: cat
+            ? (parseInt(cat.maxRefs, 10) || parseInt(inputs[i].getAttribute('data-max-refs') || '3', 10))
+            : (parseInt(inputs[i].getAttribute('data-max-refs') || '3', 10) || 3)
         });
       }
     }
@@ -191,6 +233,7 @@
       costHint.textContent = tr('tools.instructEdit.needMultiRefs');
       return;
     }
+    var sizeNote = outputSize === '1K' ? ' · 1K' : ' · 2K';
     var unit = 0;
     for (var i = 0; i < models.length; i++) unit += models[i].price;
     if (refMode === 'multi') {
@@ -200,7 +243,7 @@
         models: nMod,
         runs: nMod,
         price: totalM
-      });
+      }) + sizeNote;
       return;
     }
     var total = Math.round(unit * priceMarkup * nImg * 100) / 100;
@@ -210,7 +253,41 @@
       models: nMod,
       runs: runs,
       price: total
-    });
+    }) + sizeNote;
+  }
+
+  function syncOutputSizeUi() {
+    if (outputSizeRow) {
+      var chips = outputSizeRow.querySelectorAll('.rec-chip');
+      for (var i = 0; i < chips.length; i++) {
+        var s = chips[i].getAttribute('data-output-size') || '2K';
+        chips[i].classList.toggle('is-active', s === outputSize);
+      }
+    }
+    if (outputSizeHint) {
+      outputSizeHint.textContent = tr('tools.instructEdit.outputSizeHint');
+    }
+  }
+
+  function setOutputSize(size) {
+    var next = size === '1K' ? '1K' : '2K';
+    if (next === outputSize) return;
+    outputSize = next;
+    syncOutputSizeUi();
+    updateCostHint();
+    setBusy(false);
+  }
+
+  function syncDropHints() {
+    if (!dropHint) return;
+    var max = uploadLimit();
+    if (refMode === 'multi') {
+      dropHint.setAttribute('data-i18n', 'tools.instructEdit.dropHintMulti');
+      dropHint.textContent = tr('tools.instructEdit.dropHintMulti', { max: max });
+    } else {
+      dropHint.setAttribute('data-i18n', 'tools.instructEdit.dropHint');
+      dropHint.textContent = tr('tools.instructEdit.dropHint', { max: max });
+    }
   }
 
   function syncRefModeUi() {
@@ -222,6 +299,7 @@
       }
     }
     if (refModeHint) {
+      var maxR = maxRefsForSelectedModels();
       refModeHint.setAttribute(
         'data-i18n',
         refMode === 'multi'
@@ -231,18 +309,11 @@
       refModeHint.textContent = tr(
         refMode === 'multi'
           ? 'tools.instructEdit.refModeMultiHint'
-          : 'tools.instructEdit.refModeSingleHint'
+          : 'tools.instructEdit.refModeSingleHint',
+        refMode === 'multi' ? { max: maxR } : undefined
       );
     }
-    if (dropHint) {
-      dropHint.setAttribute(
-        'data-i18n',
-        refMode === 'multi' ? 'tools.instructEdit.dropHintMulti' : 'tools.instructEdit.dropHint'
-      );
-      dropHint.textContent = tr(
-        refMode === 'multi' ? 'tools.instructEdit.dropHintMulti' : 'tools.instructEdit.dropHint'
-      );
-    }
+    if (dropHint) syncDropHints();
     if (promptEl) {
       var phKey = refMode === 'multi'
         ? 'tools.instructEdit.promptPhMulti'
@@ -257,6 +328,7 @@
     var next = mode === 'multi' ? 'multi' : 'single';
     if (next === refMode) return;
     refMode = next;
+    if (trimFilesToLimit()) renderSources();
     syncRefModeUi();
     renderSources();
     syncControlsVisible();
@@ -374,6 +446,30 @@
     renderBgPlaceOptions(-1);
   }
 
+  function applyModelCatalog(models) {
+    modelCatalog = {};
+    if (!models || !models.length) return;
+    for (var i = 0; i < models.length; i++) {
+      var m = models[i];
+      if (!m || !m.id) continue;
+      modelCatalog[m.id] = m;
+      var inputs = modelInputs();
+      for (var j = 0; j < inputs.length; j++) {
+        if (inputs[j].value !== m.id) continue;
+        if (m.priceCny1K != null) inputs[j].setAttribute('data-price-1k', String(m.priceCny1K));
+        if (m.priceCny2K != null) inputs[j].setAttribute('data-price-2k', String(m.priceCny2K));
+        if (m.maxRefs != null) inputs[j].setAttribute('data-max-refs', String(m.maxRefs));
+      }
+    }
+  }
+
+  function trimFilesToLimit() {
+    var limit = uploadLimit();
+    if (files.length <= limit) return false;
+    while (files.length > limit) files.pop();
+    return true;
+  }
+
   function applyWallet(wallet) {
     if (wallet && wallet.markup != null) priceMarkup = C.walletMarkup(wallet);
     if (balanceLine) balanceLine.textContent = C.formatWallet(wallet);
@@ -403,6 +499,10 @@
     if (presetRow) {
       var chips = presetRow.querySelectorAll('.rec-chip');
       for (var j = 0; j < chips.length; j++) chips[j].disabled = !!on;
+    }
+    if (outputSizeRow) {
+      var sizeChips = outputSizeRow.querySelectorAll('.rec-chip');
+      for (var k = 0; k < sizeChips.length; k++) sizeChips[k].disabled = !!on;
     }
   }
 
@@ -579,10 +679,11 @@
 
   function syncControlsVisible() {
     var has = files.length > 0;
-    if (dropZone) dropZone.hidden = has && files.length >= MAX_BATCH;
+    if (dropZone) dropZone.hidden = has && files.length >= uploadLimit();
     // Prompt + background presets are useful before uploading; keep visible.
     if (promptWrap) promptWrap.hidden = false;
     if (presetWrap) presetWrap.hidden = false;
+    if (outputSizeWrap) outputSizeWrap.hidden = !has;
     if (modelWrap) modelWrap.hidden = !has;
     if (!has && dropZone) dropZone.hidden = false;
     updateCostHint();
@@ -694,9 +795,12 @@
     return C.apiJson('/image/status').then(function (s) {
       applyWallet(s.aiWallet);
       if (s.instructEditMaxBatch) MAX_BATCH = s.instructEditMaxBatch;
+      applyModelCatalog(s.instructEditModels);
       if (s.instructEditConfigured === false) {
         C.setError(errorBox, tr('tools.instructEdit.dashscopeMissing'));
       }
+      syncDropHints();
+      updateCostHint();
     }).catch(function (err) {
       C.setError(errorBox, err.message);
     });
@@ -715,8 +819,8 @@
         C.setError(errorBox, tr('tools.instructEdit.tooLarge'));
         continue;
       }
-      if (files.length >= MAX_BATCH) {
-        C.setError(errorBox, tr('tools.instructEdit.tooMany', { max: MAX_BATCH }));
+      if (files.length >= uploadLimit()) {
+        C.setError(errorBox, tr('tools.instructEdit.tooMany', { max: uploadLimit() }));
         break;
       }
       files.push(await compressFileIfNeeded(f));
@@ -781,6 +885,8 @@
     }
     syncSelectAllLabel();
     syncRefModeUi();
+    syncOutputSizeUi();
+    syncDropHints();
     updateCostHint();
     syncControlsVisible();
     loadStatus();
@@ -810,7 +916,9 @@
   }
   if (modelRow) {
     modelRow.addEventListener('change', function () {
+      if (trimFilesToLimit()) renderSources();
       syncSelectAllLabel();
+      syncDropHints();
       updateCostHint();
       setBusy(false);
     });
@@ -823,7 +931,9 @@
         if (!inputs[i].checked) { all = false; break; }
       }
       for (var j = 0; j < inputs.length; j++) inputs[j].checked = !all;
+      if (trimFilesToLimit()) renderSources();
       syncSelectAllLabel();
+      syncDropHints();
       updateCostHint();
       setBusy(false);
     });
@@ -841,6 +951,14 @@
       var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
       if (!btn || btn.disabled) return;
       setRefMode(btn.getAttribute('data-ref-mode') || 'single');
+    });
+  }
+
+  if (outputSizeRow) {
+    outputSizeRow.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
+      if (!btn || btn.disabled) return;
+      setOutputSize(btn.getAttribute('data-output-size') || '2K');
     });
   }
 
@@ -873,6 +991,7 @@
       }
       fd.append('prompt', (promptEl && promptEl.value) || '');
       fd.append('ref_mode', refMode);
+      fd.append('output_size', outputSize);
       if (activePreset) fd.append('preset', activePreset);
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       var headers = {};
@@ -969,6 +1088,8 @@
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
+      outputSize = '2K';
+      syncOutputSizeUi();
       setBgPanelExpanded(false);
       setBgTime('day');
       syncControlsVisible();
@@ -1032,6 +1153,8 @@
     setBgPanelExpanded(bgExpanded);
     syncSelectAllLabel();
     syncRefModeUi();
+    syncOutputSizeUi();
+    syncDropHints();
     renderSources();
     updateCostHint();
     if (histPanel) histPanel.refresh();
