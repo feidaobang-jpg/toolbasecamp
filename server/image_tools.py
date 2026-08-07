@@ -92,13 +92,6 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
-    {
-        "id": "doubao-seedream-5-0-pro-260628",
-        "priceCny1K": 0.15,
-        "priceCny2K": 0.3,
-        "maxRefs": 4,
-        "labelKey": "tools.instructEdit.modelSeedream50pro",
-    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
