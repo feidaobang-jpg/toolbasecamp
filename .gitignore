@@ -19,6 +19,9 @@ server/DEPLOY_SHA
 # Fun Music temp audio
 server/tmp_music/
 
+# Instruct-edit result cache (runtime)
+server/var/
+
 # OS / editor
 .DS_Store
 Thumbs.db

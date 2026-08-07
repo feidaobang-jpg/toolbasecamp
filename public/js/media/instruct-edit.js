@@ -77,10 +77,12 @@
   }
 
   function resultSrc(item) {
+    // Prefer inline base64 so results still show if /api/image/tmp briefly 502s.
+    if (item && item.imageBase64) {
+      return b64ToBlobUrl(item.imageBase64, item.contentType);
+    }
     if (item && item.imageUrl) return item.imageUrl;
-    // Performance: on WeChat, converting every image to data:URL can be very slow.
-    // Use object URL for in-page rendering; switch to data:URL only in preview (click).
-    return b64ToBlobUrl(item && item.imageBase64, item && item.contentType);
+    return '';
   }
 
   function isMobileUA() {

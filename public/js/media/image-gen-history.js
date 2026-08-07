@@ -111,9 +111,22 @@
       if (fromData) return Promise.resolve(fromData);
     }
     if (item.imageUrl) {
-      return fetch(item.imageUrl).then(function (res) {
-        if (!res.ok) throw new Error('fetch failed');
-        return res.blob();
+      function fetchOnce() {
+        return fetch(item.imageUrl).then(function (res) {
+          if (!res.ok) {
+            var err = new Error('fetch failed');
+            err.status = res.status;
+            throw err;
+          }
+          return res.blob();
+        });
+      }
+      return fetchOnce().catch(function (err) {
+        // Brief API restart during deploy → 502; one retry usually recovers.
+        if (err && (err.status === 502 || err.status === 503 || err.status === 504)) {
+          return new Promise(function (resolve) { setTimeout(resolve, 800); }).then(fetchOnce);
+        }
+        throw err;
       }).catch(function () {
         return null;
       });

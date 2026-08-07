@@ -149,8 +149,18 @@ router = APIRouter(prefix="/image", tags=["image"])
 
 MAX_UPLOAD = 8 * 1024 * 1024
 MAX_IMAGES_PDF = 12
-TMP_IMAGE_DIR = Path(tempfile.gettempdir()) / "toolbasecamp-image-results"
-TMP_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+# Prefer app-local dir so results survive /tmp cleanup and are not lost across brief restarts.
+_TMP_ENV = (os.environ.get("IMAGE_TMP_DIR") or "").strip()
+TMP_IMAGE_DIR = (
+    Path(_TMP_ENV)
+    if _TMP_ENV
+    else Path(__file__).resolve().parent / "var" / "image-results"
+)
+try:
+    TMP_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+except OSError:
+    TMP_IMAGE_DIR = Path(tempfile.gettempdir()) / "toolbasecamp-image-results"
+    TMP_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
 # Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
@@ -850,6 +860,8 @@ async def api_instruct_edit(
             )
         save_data, save_ctype = out, ctype or "image/png"
         if light_response:
+            # Compress for mobile, but still embed base64 so UI/history do not depend
+            # solely on /api/image/tmp (502 during deploy restart used to blank results).
             save_data, save_ctype = _compress_for_mobile(out, save_ctype)
         tmp_name = _save_tmp_image(save_data, save_ctype)
         return {
@@ -858,7 +870,7 @@ async def api_instruct_edit(
             "priceCny": _price_for(mid, out_size),
             "userPriceCny": float(user_price_cny(_price_for(mid, out_size))),
             "outputSize": out_size,
-            "imageBase64": None if light_response else base64.b64encode(out).decode("ascii"),
+            "imageBase64": base64.b64encode(save_data).decode("ascii"),
             "imageUrl": f"/api/image/tmp/{tmp_name}",
             "contentType": save_ctype,
         }
