@@ -6,10 +6,10 @@ from typing import List, Optional, Tuple
 
 import httpx
 
-# Qwen VL (DashScope US) — image ingredient recognition
+# Qwen VL (DashScope 华北2 北京) — image ingredient recognition
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
 DASHSCOPE_BASE_URL = os.environ.get(
-    "DASHSCOPE_BASE_URL", "https://dashscope-us.aliyuncs.com/compatible-mode/v1"
+    "DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"
 ).rstrip("/")
 QWEN_VL_MODEL = os.environ.get("QWEN_VL_MODEL", "qwen3-vl-plus")
 
@@ -201,22 +201,13 @@ async def _call_chat_completions(
     return content
 
 
-def _dashscope_region_label() -> str:
-    url = DASHSCOPE_BASE_URL.lower()
-    if "dashscope-us" in url or "us-east" in url:
-        return "us"
-    if "dashscope-intl" in url or "ap-southeast" in url:
-        return "sg"
-    return "cn"
-
-
 def get_recipe_config() -> dict:
     return {
         "vision_provider": "qwen",
         "text_provider": "deepseek",
         "dashscope_configured": bool(DASHSCOPE_API_KEY),
         "deepseek_configured": bool(DEEPSEEK_API_KEY),
-        "dashscope_region": _dashscope_region_label(),
+        "dashscope_region": "cn",
         "dashscope_base_url": DASHSCOPE_BASE_URL,
         "qwen_vl_model": QWEN_VL_MODEL,
         "deepseek_model": DEEPSEEK_MODEL,

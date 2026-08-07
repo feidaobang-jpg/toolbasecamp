@@ -68,12 +68,6 @@ def _dashscope_api_root() -> str:
         return base.split("/compatible-mode/")[0] + "/api/v1"
     if base.endswith("/api/v1"):
         return base
-    # Fallbacks by region hint
-    low = base.lower()
-    if "dashscope-us" in low:
-        return "https://dashscope-us.aliyuncs.com/api/v1"
-    if "dashscope-intl" in low:
-        return "https://dashscope-intl.aliyuncs.com/api/v1"
     return "https://dashscope.aliyuncs.com/api/v1"
 
 
@@ -81,10 +75,7 @@ def _default_model() -> str:
     env = (os.environ.get("WAN_I2V_MODEL") or "").strip()
     if env:
         return env
-    root = _dashscope_api_root().lower()
-    if "dashscope-us" in root:
-        return "wan2.6-i2v-us"
-    # China / intl: Wan 2.7 image-to-video (media[] API)
+    # Wan 2.7 image-to-video (media[] API) on Beijing DashScope
     return "wan2.7-i2v-2026-04-25"
 
 

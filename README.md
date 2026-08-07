@@ -196,10 +196,10 @@ systemctl restart toolbasecamp-api
 | `DB_*` | MySQL connection |
 | `JWT_SECRET` | Change in production |
 | `ADMIN_EMAIL` | Guestbook admin |
-| `DASHSCOPE_API_KEY` | **One key** for Qwen VL, instruct-edit, text-to-image, and Wan I2V (Beijing key for China endpoints) |
-| `DASHSCOPE_BASE_URL` | Compatible-mode root. China: `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| `DASHSCOPE_API_KEY` | **One key** for Qwen VL, instruct-edit, text-to-image, and Wan I2V（百炼华北2 北京） |
+| `DASHSCOPE_BASE_URL` | Compatible-mode root. Default: `https://dashscope.aliyuncs.com/compatible-mode/v1` |
 | `IMAGE_EDIT_DASHSCOPE_API_URL` | HTTP API root for **图生图 + 图生视频** (e.g. `https://dashscope.aliyuncs.com/api/v1`) |
-| `WAN_I2V_MODEL` | Default CN: `wan2.7-i2v-2026-04-25`; US fallback: `wan2.6-i2v-us` |
+| `WAN_I2V_MODEL` | Default: `wan2.7-i2v-2026-04-25` |
 | `AI_PRICE_MARKUP` | Wallet markup on vendor list (default `2`); Wan i2v ¥0.6/s 720P · ¥1/s 1080P |
 | `QWEN_VL_MODEL` | Default `qwen3-vl-plus` (vision) |
 | `DEEPSEEK_API_KEY` | [DeepSeek](https://platform.deepseek.com) API key — **recipe text generation** |
@@ -220,21 +220,21 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/register` | Email sign-up |
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
-| POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL US) |
+| POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL) |
 | POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek) |
 
-### AI Recipe (Qwen US + DeepSeek)
+### AI Recipe (Qwen + DeepSeek)
 
-- **识图 / detect**: Qwen VL US (`DASHSCOPE_API_KEY`, `dashscope-us.aliyuncs.com`)
+- **识图 / detect**: Qwen VL（`DASHSCOPE_API_KEY`，北京 `dashscope.aliyuncs.com`）
 - **生成菜谱 / generate**: DeepSeek (`DEEPSEEK_API_KEY`)
 
 **1. DeepSeek（文字生成）**
 
 Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys → top up balance.
 
-**2. 千问美国区（识图，上传图片时必需）**
+**2. 千问 / 万相（识图、图生图、图生视频）**
 
-[阿里云百炼](https://bailian.console.aliyun.com/) → API Key → **美国（弗吉尼亚）** region.
+[阿里云百炼](https://bailian.console.aliyun.com/) → API Key → **华北2（北京）**。
 
 **3. Server env** (`/etc/toolbasecamp-api.env`):
 
@@ -243,9 +243,10 @@ Register at [platform.deepseek.com](https://platform.deepseek.com) → API Keys 
 DEEPSEEK_API_KEY=sk-xxxxxxxx
 DEEPSEEK_MODEL=deepseek-chat
 
-# Qwen US — image recognition
+# DashScope Beijing — vision / image / video
 DASHSCOPE_API_KEY=sk-xxxxxxxx
-DASHSCOPE_BASE_URL=https://dashscope-us.aliyuncs.com/compatible-mode/v1
+DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+IMAGE_EDIT_DASHSCOPE_API_URL=https://dashscope.aliyuncs.com/api/v1
 QWEN_VL_MODEL=qwen3-vl-plus
 ```
 

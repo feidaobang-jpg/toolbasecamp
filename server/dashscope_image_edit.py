@@ -134,19 +134,10 @@ def apply_color_hint(prompt: str) -> str:
 
 
 def _default_edit_model() -> str:
-    """US Virginia: wan2.6-image; Beijing: qwen-image-2.0 (successor to qwen-image-edit)."""
+    """Beijing default: qwen-image-2.0 (successor to qwen-image-edit)."""
     explicit = (os.environ.get("QWEN_IMAGE_EDIT_MODEL") or "").strip()
     if explicit:
         return explicit
-    blob = " ".join(
-        [
-            DASHSCOPE_BASE_URL or "",
-            os.environ.get("IMAGE_EDIT_DASHSCOPE_API_URL") or "",
-            os.environ.get("DASHSCOPE_HTTP_API_URL") or "",
-        ]
-    ).lower()
-    if "dashscope-us" in blob:
-        return "wan2.6-image"
     return "qwen-image-2.0"
 
 
@@ -184,11 +175,6 @@ def _api_root() -> str:
         return base.split("/compatible-mode/")[0] + "/api/v1"
     if base.endswith("/api/v1"):
         return base
-    low = base.lower()
-    if "dashscope-us" in low:
-        return "https://dashscope-us.aliyuncs.com/api/v1"
-    if "dashscope-intl" in low:
-        return "https://dashscope-intl.aliyuncs.com/api/v1"
     return "https://dashscope.aliyuncs.com/api/v1"
 
 
