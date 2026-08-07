@@ -2173,7 +2173,7 @@ window.TB_LOCALES.en = {
             costHint: 'This run ≈ ¥{price} ({images} images × {models} models = {runs} calls; billed on success)',
             costHintMulti: 'This run ≈ ¥{price} ({refs} refs combined × {models} models = {runs} calls; billed on success)',
             tip: 'Tip:',
-            tipBody: 'Charged only on success. Results saved in local history. Full color by default (unless you ask for B&W/line art). Wan 2.6 recommended.',
+            tipBody: 'Charged only on success. Multiple models run one by one. Results saved in local history. Full color by default (unless you ask for B&W/line art). Wan 2.6 recommended.',
             download: 'Download',
             editAgain: 'Edit again',
             editAgainFailed: 'Could not use this image as input. Please retry or upload again.',
