@@ -85,11 +85,6 @@ TEXT_TO_IMAGE_MODELS = (
         "priceCny": 0.6,
         "labelKey": "tools.textToImage.modelWan27pro",
     },
-    {
-        "id": "qwen-image-2.0",
-        "priceCny": 0.2,
-        "labelKey": "tools.textToImage.model20",
-    },
 )
 TEXT_TO_IMAGE_MODEL_IDS = {m["id"] for m in TEXT_TO_IMAGE_MODELS}
 

@@ -134,11 +134,15 @@ def apply_color_hint(prompt: str) -> str:
 
 
 def _default_edit_model() -> str:
-    """Beijing default: qwen-image-2.0 (successor to qwen-image-edit)."""
-    explicit = (os.environ.get("QWEN_IMAGE_EDIT_MODEL") or "").strip()
+    """Default instruct-edit model: 万相 Wan 2.6 (Beijing DashScope)."""
+    explicit = (
+        os.environ.get("WAN_IMAGE_EDIT_MODEL")
+        or os.environ.get("QWEN_IMAGE_EDIT_MODEL")
+        or ""
+    ).strip()
     if explicit:
         return explicit
-    return "qwen-image-2.0"
+    return "wan2.6-image"
 
 
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
@@ -445,7 +449,7 @@ async def generate_image_from_text(
         }
         parameters["size"] = size_map.get(preset, "1024*1024")
         parameters["prompt_extend"] = False
-    elif low.startswith("wan2.7"):
+    elif low.startswith("wan2.7") or low.startswith("wan2.6"):
         # Wan text-to-image uses 1K/2K/4K (pro only for 4K)
         if preset == "hd" and "pro" in low:
             parameters["size"] = "4K"
@@ -453,14 +457,6 @@ async def generate_image_from_text(
             parameters["size"] = "2K"
         else:
             parameters["size"] = "2K"
-    elif low.startswith("qwen-image"):
-        size_map = {
-            "square": "1024*1024",
-            "portrait": "1024*1536",
-            "landscape": "1536*1024",
-        }
-        parameters["size"] = size_map.get(preset, "1024*1024")
-        parameters["prompt_extend"] = True
     else:
         parameters["size"] = "1024*1024"
 

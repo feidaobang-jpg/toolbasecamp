@@ -33,7 +33,12 @@ set_kv DASHSCOPE_BASE_URL "https://dashscope.aliyuncs.com/compatible-mode/v1"
 set_kv QWEN_VL_MODEL "qwen-vl-plus"
 set_kv QWEN_MODEL "qwen-plus"
 set_kv IMAGE_EDIT_DASHSCOPE_API_URL "https://dashscope.aliyuncs.com/api/v1"
-set_kv QWEN_IMAGE_EDIT_MODEL "qwen-image-2.0"
+set_kv WAN_IMAGE_EDIT_MODEL "wan2.6-image"
+# Drop obsolete qwen-image default if present
+if grep -q "^QWEN_IMAGE_EDIT_MODEL=" "$ENV_FILE"; then
+  sed -i '/^QWEN_IMAGE_EDIT_MODEL=/d' "$ENV_FILE"
+  echo "Removed obsolete QWEN_IMAGE_EDIT_MODEL (edit uses WAN_IMAGE_EDIT_MODEL)."
+fi
 set_kv WAN_I2V_MODEL "wan2.7-i2v-2026-04-25"
 if grep -q "^WAN_DASHSCOPE_API_URL=" "$ENV_FILE"; then
   sed -i '/^WAN_DASHSCOPE_API_URL=/d' "$ENV_FILE"

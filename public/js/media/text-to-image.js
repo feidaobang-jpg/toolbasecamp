@@ -182,7 +182,7 @@
   function modelTitle(mid) {
     if (mid === 'wan2.7-image-pro') return tr('tools.textToImage.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.textToImage.modelWan27');
-    if (mid === 'qwen-image-2.0') return tr('tools.textToImage.model20');
+    if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     return tr('tools.textToImage.modelZTurbo');
   }
 
