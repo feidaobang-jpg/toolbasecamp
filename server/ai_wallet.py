@@ -489,7 +489,7 @@ def list_users_wallet(
     page: int = 1,
     page_size: int = 20,
 ) -> dict:
-    """Admin list of users with balance. Search by email or phone only."""
+    """Admin list of users with balance. Search by phone, email, or nickname."""
     size = max(1, min(int(page_size or 20), 50))
     pg = max(1, int(page or 1))
     offset = (pg - 1) * size
