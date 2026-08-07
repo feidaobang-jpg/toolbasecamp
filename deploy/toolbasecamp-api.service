@@ -12,6 +12,8 @@ EnvironmentFile=-/etc/toolbasecamp-api.env
 ExecStart=/opt/toolbasecamp-api/venv/bin/python -B run.py
 Restart=always
 RestartSec=3
+# Instruct-edit / Seedream can run 2–4 minutes; avoid SIGKILL mid-request on deploy.
+TimeoutStopSec=600
 
 [Install]
 WantedBy=multi-user.target

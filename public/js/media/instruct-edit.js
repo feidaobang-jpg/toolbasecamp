@@ -860,16 +860,24 @@
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       var headers = {};
       if ((C.isWeChat && C.isWeChat()) || isMobileUA()) headers['X-TB-Light-Response'] = '1';
-      // Multi-model / multi-ref jobs are sequential on the server; 60s is too short on desktop.
+      // Multi-model / multi-ref jobs are sequential on the server; Seedream Pro can take ~2 min each.
       var nMod = models.length;
       var nImg = files.length;
+      var hasSeedream = false;
+      for (var si = 0; si < models.length; si++) {
+        if (String(models[si].id || '').indexOf('seedream') >= 0) {
+          hasSeedream = true;
+          break;
+        }
+      }
+      var perJobMs = hasSeedream ? 150000 : 70000;
       var timeoutMs;
       if (C.isWeChat && C.isWeChat()) {
-        timeoutMs = Math.min(900000, Math.max(300000, nMod * (refMode === 'multi' ? 120000 : nImg * 90000)));
+        timeoutMs = Math.min(900000, Math.max(300000, nMod * (refMode === 'multi' ? 180000 : nImg * Math.max(90000, perJobMs))));
       } else if (refMode === 'multi') {
-        timeoutMs = Math.min(600000, Math.max(180000, nMod * 100000));
+        timeoutMs = Math.min(900000, Math.max(240000, nMod * Math.max(100000, perJobMs)));
       } else {
-        timeoutMs = Math.min(600000, Math.max(120000, nImg * nMod * 70000));
+        timeoutMs = Math.min(900000, Math.max(hasSeedream ? 240000 : 120000, nImg * nMod * perJobMs));
       }
       C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, headers: headers, timeoutMs: timeoutMs }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);
