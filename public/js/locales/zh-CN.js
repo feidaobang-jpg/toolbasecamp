@@ -2148,6 +2148,8 @@ window.TB_LOCALES['zh-CN'] = {
             presetLineartColorize: '线稿上色',
             presetExpandEdges: '扩图补全',
             modelLabel: '模型',
+            modelGroupWan: '万相（阿里）',
+            modelGroupSeedream: '豆包 Seedream',
             modelWan26: '万相 2.6 · 约 ¥0.4/张（推荐）',
             modelSeedream50lite: '豆包 Seedream 5.0 Lite · 约 ¥0.44/张',
             modelSeedream50pro: '豆包 Seedream 5.0 Pro · 约 ¥0.6/张',

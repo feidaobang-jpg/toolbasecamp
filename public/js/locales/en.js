@@ -2149,6 +2149,8 @@ window.TB_LOCALES.en = {
             presetLineartColorize: 'Colorize line art',
             presetExpandEdges: 'Expand / fill edges',
             modelLabel: 'Model',
+            modelGroupWan: 'Wan (Alibaba)',
+            modelGroupSeedream: 'Doubao Seedream',
             modelWan26: 'Wan 2.6 · ≈¥0.4/image (recommended)',
             modelSeedream50lite: 'Doubao Seedream 5.0 Lite · ≈¥0.44/image',
             modelSeedream50pro: 'Doubao Seedream 5.0 Pro · ≈¥0.6/image',

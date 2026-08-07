@@ -908,6 +908,19 @@
   margin-bottom: 0;
 }
 
+.instruct-model-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.instruct-model-group-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
 .instruct-select-all {
   border: none;
   background: transparent;

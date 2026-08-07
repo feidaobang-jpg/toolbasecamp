@@ -54,16 +54,6 @@ INSTRUCT_EDIT_MODELS = (
         "default": True,
     },
     {
-        "id": "doubao-seedream-5-0-260128",
-        "priceCny": 0.22,
-        "labelKey": "tools.instructEdit.modelSeedream50lite",
-    },
-    {
-        "id": "doubao-seedream-5-0-pro-260628",
-        "priceCny": 0.3,
-        "labelKey": "tools.instructEdit.modelSeedream50pro",
-    },
-    {
         "id": "wan2.7-image",
         "priceCny": 0.2,
         "labelKey": "tools.instructEdit.modelWan27",
@@ -72,6 +62,16 @@ INSTRUCT_EDIT_MODELS = (
         "id": "wan2.7-image-pro",
         "priceCny": 0.5,
         "labelKey": "tools.instructEdit.modelWan27pro",
+    },
+    {
+        "id": "doubao-seedream-5-0-260128",
+        "priceCny": 0.22,
+        "labelKey": "tools.instructEdit.modelSeedream50lite",
+    },
+    {
+        "id": "doubao-seedream-5-0-pro-260628",
+        "priceCny": 0.3,
+        "labelKey": "tools.instructEdit.modelSeedream50pro",
     },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}

@@ -7,7 +7,7 @@
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=9" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=28" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=29" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=1" />
 </head>
 <body>
@@ -171,27 +171,37 @@
               <span class="field-label" data-i18n="tools.instructEdit.modelLabel">Model</span>
               <button type="button" class="instruct-select-all" id="select-all-models" data-i18n="tools.instructEdit.selectAllModels">Select all</button>
             </div>
-            <div class="tb-radio-row instruct-model-row" id="model-row">
-              <label>
-                <input type="checkbox" name="instruct-model" value="wan2.6-image" data-price="0.2" checked />
-                <span data-i18n="tools.instructEdit.modelWan26">Wan 2.6 · ≈¥0.4/image (recommended)</span>
-              </label>
-              <label>
-                <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-260128" data-price="0.22" />
-                <span data-i18n="tools.instructEdit.modelSeedream50lite">Seedream 5.0 Lite · ≈¥0.44/image</span>
-              </label>
-              <label>
-                <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-pro-260628" data-price="0.3" />
-                <span data-i18n="tools.instructEdit.modelSeedream50pro">Seedream 5.0 Pro · ≈¥0.6/image</span>
-              </label>
-              <label>
-                <input type="checkbox" name="instruct-model" value="wan2.7-image" data-price="0.2" />
-                <span data-i18n="tools.instructEdit.modelWan27">Wan 2.7 · ≈¥0.4/image</span>
-              </label>
-              <label>
-                <input type="checkbox" name="instruct-model" value="wan2.7-image-pro" data-price="0.5" />
-                <span data-i18n="tools.instructEdit.modelWan27pro">Wan 2.7-Pro · ≈¥1.0/image</span>
-              </label>
+            <div class="instruct-model-groups" id="model-row">
+              <div class="instruct-model-group">
+                <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupWan">Wan (Alibaba)</div>
+                <div class="tb-radio-row instruct-model-row">
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="wan2.6-image" data-price="0.2" checked />
+                    <span data-i18n="tools.instructEdit.modelWan26">Wan 2.6 · ≈¥0.4/image (recommended)</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="wan2.7-image" data-price="0.2" />
+                    <span data-i18n="tools.instructEdit.modelWan27">Wan 2.7 · ≈¥0.4/image</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="wan2.7-image-pro" data-price="0.5" />
+                    <span data-i18n="tools.instructEdit.modelWan27pro">Wan 2.7-Pro · ≈¥1.0/image</span>
+                  </label>
+                </div>
+              </div>
+              <div class="instruct-model-group">
+                <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupSeedream">Doubao Seedream</div>
+                <div class="tb-radio-row instruct-model-row">
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-260128" data-price="0.22" />
+                    <span data-i18n="tools.instructEdit.modelSeedream50lite">Seedream 5.0 Lite · ≈¥0.44/image</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="doubao-seedream-5-0-pro-260628" data-price="0.3" />
+                    <span data-i18n="tools.instructEdit.modelSeedream50pro">Seedream 5.0 Pro · ≈¥0.6/image</span>
+                  </label>
+                </div>
+              </div>
             </div>
             <p class="instruct-cost-hint" id="cost-hint"></p>
           </div>
@@ -223,8 +233,8 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=tools45"></script>
-  <script src="../../js/locales/zh-CN.js?v=tools45"></script>
+  <script src="../../js/locales/en.js?v=tools46"></script>
+  <script src="../../js/locales/zh-CN.js?v=tools46"></script>
   <script src="../../js/i18n.js?v=locale1"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/base.js?v=notify1"></script>
