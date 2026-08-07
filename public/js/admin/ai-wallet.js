@@ -246,7 +246,7 @@
       var role = isAdmin
         ? (' · <span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
         : '';
-      var fillAcc = u.email || u.phone || '';
+      var fillAcc = u.phone || u.email || '';
       var fillBtn = fillAcc
         ? ('<button type="button" class="text-xs text-blue-600 hover:underline" data-fill-account="' +
             String(fillAcc).replace(/"/g, '&quot;') + '">' +
