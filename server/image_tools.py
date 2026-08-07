@@ -55,7 +55,7 @@ INSTRUCT_EDIT_MODELS = (
     },
     {
         "id": "doubao-seedream-5-0-260128",
-        "priceCny": 0.15,
+        "priceCny": 0.22,
         "labelKey": "tools.instructEdit.modelSeedream50",
     },
     {

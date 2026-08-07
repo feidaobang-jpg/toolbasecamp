@@ -2150,7 +2150,7 @@ window.TB_LOCALES.en = {
             presetExpandEdges: 'Expand / fill edges',
             modelLabel: 'Model',
             modelWan26: 'Wan 2.6 · ≈¥0.4/image (recommended)',
-            modelSeedream50: 'Doubao Seedream 5.0 · ≈¥0.3/image',
+            modelSeedream50: 'Doubao Seedream 5.0 · ≈¥0.44/image',
             modelWan27: 'Wan 2.7 · ≈¥0.6/image',
             modelWan27pro: 'Wan 2.7-Pro · ≈¥1.2/image',
             model20: 'Qwen 2.0 · ≈¥0.4/image',
