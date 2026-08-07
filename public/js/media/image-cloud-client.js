@@ -75,6 +75,8 @@
             'Daily limit reached. Please try again tomorrow or log in for a higher limit.': 'tools.lifePlans.dailyLimitGuest',
             'Tencent Cloud is not configured (TENCENT_SECRET_ID / TENCENT_SECRET_KEY).': 'tools.imageCloud.notConfigured',
             'DashScope is not configured (DASHSCOPE_API_KEY).': 'tools.imageCloud.genServiceMissing',
+            'Volcengine Ark is not configured (VOLC_ARK_API_KEY).': 'tools.imageCloud.genServiceMissing',
+            'Image edit is not configured (DASHSCOPE_API_KEY or VOLC_ARK_API_KEY).': 'tools.imageCloud.genServiceMissing',
             'Please enter a prompt.': 'tools.textToImage.needPrompt',
             'Please enter a prompt': 'tools.textToImage.needPrompt',
             'Please enter a music prompt for instrumental.': 'tools.aiMusic.needPrompt',
@@ -120,12 +122,14 @@
             'Provide a city or temperature for outfit advice': 'tools.outfitPlan.needTemp',
             'Plan generation failed': 'tools.lifePlans.genFailed',
             'Image edit returned no image. Check model access on DashScope.': 'tools.imageCloud.editNoImage',
+            'Image edit returned no image. Check Seedream model access on Volcengine Ark.': 'tools.imageCloud.editNoImage',
             'Image generation returned no image. Check model access on DashScope.': 'tools.imageCloud.genNoImage',
             'Failed to download edited image': 'tools.imageCloud.downloadResultFailed',
             'Failed to download generated image': 'tools.imageCloud.downloadResultFailed',
             'Invalid data-URI image': 'tools.imageCloud.decodeFailed',
             'Wan edit supports at most 4 reference images.': 'tools.instructEdit.tooManyRefs',
             'This model supports at most 3 reference images.': 'tools.instructEdit.tooManyRefsQwen',
+            'Seedream supports at most 14 reference images.': 'tools.instructEdit.tooManyRefs',
             'Multi-reference mode needs at least 2 images': 'tools.instructEdit.needMultiRefs'
         };
         if (exact[text]) return tr(exact[text]);
@@ -161,6 +165,8 @@
                 [/Insufficient balance/i, 'tools.imageCloud.insufficientBalance'],
                 [/Daily limit reached/i, 'tools.imageCloud.dailyLimit'],
                 [/DashScope is not configured/i, 'tools.imageCloud.genServiceMissing'],
+                [/Volcengine Ark is not configured/i, 'tools.imageCloud.genServiceMissing'],
+                [/Image edit is not configured/i, 'tools.imageCloud.genServiceMissing'],
                 [/Please enter an edit instruction/i, 'tools.instructEdit.needPromptOrPreset'],
                 [/Please enter a prompt/i, 'tools.textToImage.needPrompt'],
                 [/Empty image|Empty file|upload an image/i, 'tools.imageCloud.invalidFile']

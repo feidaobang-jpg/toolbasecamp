@@ -516,6 +516,9 @@
   }
 
   function modelTitle(mid) {
+    if (mid === 'doubao-seedream-5-0-260128' || String(mid || '').indexOf('seedream') >= 0) {
+      return tr('tools.instructEdit.modelSeedream50');
+    }
     if (mid === 'wan2.7-image-pro') return tr('tools.instructEdit.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
     return tr('tools.instructEdit.modelWan26');

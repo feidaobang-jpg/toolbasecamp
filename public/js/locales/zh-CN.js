@@ -2149,6 +2149,7 @@ window.TB_LOCALES['zh-CN'] = {
             presetExpandEdges: '扩图补全',
             modelLabel: '模型',
             modelWan26: '万相 2.6 · 约 ¥0.4/张（推荐）',
+            modelSeedream50: '豆包 Seedream 5.0 · 约 ¥0.3/张',
             modelWan27: '万相 2.7 · 约 ¥0.6/张',
             modelWan27pro: '万相 2.7-Pro · 约 ¥1.2/张',
             model20: '千问 2.0 · 约 ¥0.4/张',

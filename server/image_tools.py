@@ -32,6 +32,11 @@ from dashscope_image_edit import (
     generate_image_from_text,
     resolve_edit_prompt,
 )
+from volc_ark_image import (
+    edit_image_with_seedream,
+    is_seedream_model,
+    volc_ark_configured,
+)
 from ai_wallet import (
     require_can_afford,
     require_positive_balance,
@@ -40,13 +45,18 @@ from ai_wallet import (
     wallet_public,
 )
 
-# Instruct-edit model menu (Beijing). Order = UI recommendation. Prices indicative.
+# Instruct-edit model menu. Order = UI recommendation. Prices = vendor list (× AI_PRICE_MARKUP).
 INSTRUCT_EDIT_MODELS = (
     {
         "id": "wan2.6-image",
         "priceCny": 0.2,
         "labelKey": "tools.instructEdit.modelWan26",
         "default": True,
+    },
+    {
+        "id": "doubao-seedream-5-0-260128",
+        "priceCny": 0.15,
+        "labelKey": "tools.instructEdit.modelSeedream50",
     },
     {
         "id": "wan2.7-image",
@@ -382,7 +392,7 @@ def image_status(user: dict = Depends(_user)):
         return {
             "tencentConfigured": tencent_configured(),
             "generalCutoutAvailable": rembg_available(),
-            "instructEditConfigured": dashscope_image_edit_configured(),
+            "instructEditConfigured": instruct_edit_configured(),
             "instructEditModels": list(INSTRUCT_EDIT_MODELS),
             "instructEditPresets": [
                 {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
@@ -433,7 +443,7 @@ def image_status(user: dict = Depends(_user)):
         return {
             "tencentConfigured": tencent_configured(),
             "generalCutoutAvailable": rembg_available(),
-            "instructEditConfigured": dashscope_image_edit_configured(),
+            "instructEditConfigured": instruct_edit_configured(),
             "instructEditModels": list(INSTRUCT_EDIT_MODELS),
             "instructEditPresets": [
                 {"id": "manga_to_real", "labelKey": "tools.instructEdit.presetMangaToReal"},
@@ -584,6 +594,48 @@ def _price_for(model_id: str) -> float:
     return 0.0
 
 
+def instruct_edit_configured() -> bool:
+    return dashscope_image_edit_configured() or volc_ark_configured()
+
+
+def _model_provider_ready(model_id: str) -> None:
+    """Raise 503 if the backend for this model id is not configured."""
+    if is_seedream_model(model_id):
+        if not volc_ark_configured():
+            raise HTTPException(
+                status_code=503,
+                detail="Volcengine Ark is not configured (VOLC_ARK_API_KEY).",
+            )
+        return
+    if not dashscope_image_edit_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+        )
+
+
+async def _run_instruct_edit(
+    refs: list[bytes],
+    text: str,
+    *,
+    model: str,
+) -> tuple[bytes, str]:
+    _model_provider_ready(model)
+    if is_seedream_model(model):
+        return await edit_image_with_seedream(
+            refs[0],
+            text,
+            model=model,
+            images=refs if len(refs) > 1 else None,
+        )
+    return await edit_image_with_instruction(
+        refs[0],
+        text,
+        model=model,
+        images=refs if len(refs) > 1 else None,
+    )
+
+
 def _exc_detail(exc: BaseException) -> str:
     detail = getattr(exc, "detail", None)
     if detail is None:
@@ -610,10 +662,10 @@ async def api_instruct_edit(
     if request is not None:
         hdr = (request.headers.get("X-TB-Light-Response") or "").strip().lower()
         light_response = hdr in ("1", "true", "yes", "on")
-    if not dashscope_image_edit_configured():
+    if not instruct_edit_configured():
         raise HTTPException(
             status_code=503,
-            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+            detail="Image edit is not configured (DASHSCOPE_API_KEY or VOLC_ARK_API_KEY).",
         )
     text = resolve_edit_prompt(prompt, preset)
     if not text.strip():
@@ -662,9 +714,11 @@ async def api_instruct_edit(
     for up in uploads:
         blobs.append(await _read_upload(up))
 
-    # Multi-ref: Qwen models accept at most 3 images.
+    # Multi-ref limits by provider.
     if mode == "multi":
         for mid in model_ids:
+            if is_seedream_model(mid):
+                continue  # Seedream allows many refs; batch max already applied.
             if not _is_wan_model(mid) and len(blobs) > 3:
                 raise HTTPException(
                     status_code=400,
@@ -712,12 +766,7 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
-        out, ctype = await edit_image_with_instruction(
-            refs[0],
-            text,
-            model=mid,
-            images=refs if len(refs) > 1 else None,
-        )
+        out, ctype = await _run_instruct_edit(refs, text, model=mid)
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_ok",
