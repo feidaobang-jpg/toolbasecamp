@@ -232,7 +232,7 @@
       costHint.textContent = tr('tools.instructEdit.needMultiRefs');
       return;
     }
-    var sizeNote = ' · 2K';
+    var sizeNote = '';
     var unit = 0;
     for (var i = 0; i < models.length; i++) unit += models[i].price;
     if (refMode === 'multi') {
