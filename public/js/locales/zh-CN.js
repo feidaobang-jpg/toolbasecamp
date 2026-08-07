@@ -2024,7 +2024,7 @@ window.TB_LOCALES['zh-CN'] = {
             unsupportedFormat: '不支持的图片格式，请使用 JPG 或 PNG',
             resolutionTooLarge: '图片分辨率过大，请缩小后重试',
             resolutionTooSmall: '图片分辨率过小（宽高需至少 240 像素），请换更清晰的大图',
-            editTimeout: '改图超时（多模型要更久）。请少选几个模型，或稍后重试；成功出图才会扣费。',
+            editTimeout: '改图超时。多图合成或 2K 更慢，可改 1K、减少参考图，或稍后重试；成功出图才会扣费。',
             genTimeout: '生图超时，请稍后重试',
             editNoImage: '模型未返回图片，请换描述或图片再试',
             genNoImage: '模型未返回图片，请换描述再试',

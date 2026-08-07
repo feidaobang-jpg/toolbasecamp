@@ -1007,7 +1007,7 @@
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       var headers = {};
       if ((C.isWeChat && C.isWeChat()) || isMobileUA()) headers['X-TB-Light-Response'] = '1';
-      // Multi-model / multi-ref jobs are sequential on the server; Seedream Pro can take ~2 min each.
+      // Jobs run sequentially on the server. Multi-ref + 2K (esp. Qwen 3.0) often needs 4–8 min.
       var nMod = models.length;
       var nImg = files.length;
       var hasSeedream = false;
@@ -1017,14 +1017,17 @@
           break;
         }
       }
-      var perJobMs = hasSeedream ? 150000 : 70000;
+      var is2K = outputSize === '2K';
+      var perJobMs = hasSeedream ? (is2K ? 180000 : 150000) : (is2K ? 120000 : 70000);
+      // One multi-ref synthesis per model (not per image); heavier than single-ref.
+      var multiJobMs = hasSeedream ? (is2K ? 240000 : 180000) : (is2K ? 360000 : 240000);
       var timeoutMs;
       if (C.isWeChat && C.isWeChat()) {
-        timeoutMs = Math.min(900000, Math.max(300000, nMod * (refMode === 'multi' ? 180000 : nImg * Math.max(90000, perJobMs))));
+        timeoutMs = Math.min(900000, Math.max(420000, nMod * (refMode === 'multi' ? multiJobMs : nImg * Math.max(90000, perJobMs))));
       } else if (refMode === 'multi') {
-        timeoutMs = Math.min(900000, Math.max(240000, nMod * Math.max(100000, perJobMs)));
+        timeoutMs = Math.min(900000, Math.max(420000, nMod * multiJobMs));
       } else {
-        timeoutMs = Math.min(900000, Math.max(hasSeedream ? 240000 : 120000, nImg * nMod * perJobMs));
+        timeoutMs = Math.min(900000, Math.max(hasSeedream || is2K ? 240000 : 120000, nImg * nMod * perJobMs));
       }
       C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, headers: headers, timeoutMs: timeoutMs }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);

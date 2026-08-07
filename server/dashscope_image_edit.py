@@ -146,8 +146,9 @@ def _default_edit_model() -> str:
 
 
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
-EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "180"))
-EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "360"))
+# Non-pro default 360s: multi-ref + 2K Qwen often exceeds the old 180s floor.
+EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "360"))
+EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "480"))
 
 
 def dashscope_image_edit_configured() -> bool:
@@ -411,6 +412,8 @@ async def edit_image_with_instruction(
         "Content-Type": "application/json",
     }
     timeout = EDIT_PRO_TIMEOUT if "pro" in use_model.lower() else EDIT_TIMEOUT
+    if len(norm_refs) > 1 or size_key == "2K":
+        timeout = max(timeout, EDIT_PRO_TIMEOUT)
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(url, headers=headers, json=payload)
