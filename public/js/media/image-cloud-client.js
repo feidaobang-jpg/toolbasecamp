@@ -167,6 +167,7 @@
                 [/DashScope is not configured/i, 'tools.imageCloud.genServiceMissing'],
                 [/Volcengine Ark is not configured/i, 'tools.imageCloud.genServiceMissing'],
                 [/Image edit is not configured/i, 'tools.imageCloud.genServiceMissing'],
+                [/copyright/i, 'tools.instructEdit.copyrightBlocked'],
                 [/Please enter an edit instruction/i, 'tools.instructEdit.needPromptOrPreset'],
                 [/Please enter a prompt/i, 'tools.textToImage.needPrompt'],
                 [/Empty image|Empty file|upload an image/i, 'tools.imageCloud.invalidFile']
