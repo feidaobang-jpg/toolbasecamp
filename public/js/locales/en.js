@@ -2162,6 +2162,8 @@ window.TB_LOCALES.en = {
             tip: 'Tip:',
             tipBody: 'Charged only on success. Results saved in local history. Full color by default (unless you ask for B&W/line art). Wan 2.6 recommended.',
             download: 'Download',
+            editAgain: 'Edit again',
+            editAgainFailed: 'Could not use this image as input. Please retry or upload again.',
             clear: 'Clear',
             needPrompt: 'Please enter an edit instruction',
             needPromptOrPreset: 'Enter an instruction or choose a style preset',

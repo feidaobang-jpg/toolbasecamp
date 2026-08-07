@@ -216,7 +216,7 @@
 
   /**
    * Bind a history panel.
-   * opts: { tool, gridEl, emptyEl, clearBtn, tr, modelTitle, onDownload }
+   * opts: { tool, gridEl, emptyEl, clearBtn, tr, modelTitle, onDownload, onEditAgain? }
    */
   function bindPanel(opts) {
     var tool = opts.tool;
@@ -226,6 +226,7 @@
     var tr = opts.tr;
     var modelTitle = opts.modelTitle || function (m) { return m; };
     var onDownload = opts.onDownload;
+    var onEditAgain = opts.onEditAgain;
     var objectUrls = [];
 
     function revoke() {
@@ -265,6 +266,16 @@
             }
             var actions = document.createElement('div');
             actions.className = 'img-hist-actions';
+            if (typeof onEditAgain === 'function') {
+              var again = document.createElement('button');
+              again.type = 'button';
+              again.className = 'tb-btn';
+              again.textContent = tr('tools.instructEdit.editAgain');
+              again.addEventListener('click', function () {
+                onEditAgain(row.blob, row);
+              });
+              actions.appendChild(again);
+            }
             var dl = document.createElement('button');
             dl.type = 'button';
             dl.className = 'tb-btn';

@@ -2161,6 +2161,8 @@ window.TB_LOCALES['zh-CN'] = {
             tip: '提示：',
             tipBody: '成功出图才扣余额，失败不扣。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。推荐万相 2.6。',
             download: '下载',
+            editAgain: '再改',
+            editAgainFailed: '无法将结果图设为输入，请重试或重新上传',
             clear: '清除',
             needPrompt: '请填写修改说明',
             needPromptOrPreset: '请填写修改说明，或选择风格预设',

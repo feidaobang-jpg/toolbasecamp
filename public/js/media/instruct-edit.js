@@ -424,11 +424,92 @@
     }
   }
 
-  function b64ToBlobUrl(b64, ctype) {
+  function b64ToBlob(b64, ctype) {
     var bin = atob(b64);
     var arr = new Uint8Array(bin.length);
     for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-    var blob = new Blob([arr], { type: ctype || 'image/png' });
+    return new Blob([arr], { type: ctype || 'image/png' });
+  }
+
+  function blobToFile(blob, name) {
+    var n = name || 'edit-again.png';
+    var type = (blob && blob.type) || 'image/png';
+    try {
+      return new File([blob], n, { type: type });
+    } catch (e) {
+      try {
+        blob.name = n;
+      } catch (e2) {}
+      return blob;
+    }
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    try {
+      var parts = String(dataUrl || '').split(',');
+      if (parts.length < 2) return null;
+      var meta = parts[0] || '';
+      var b64 = parts[1] || '';
+      var m = /data:([^;]+)/i.exec(meta);
+      return b64ToBlob(b64, (m && m[1]) || 'image/png');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function resolveImageBlob(item, imgSrc) {
+    if (item && item.imageBase64) {
+      return Promise.resolve(b64ToBlob(item.imageBase64, item.contentType || 'image/png'));
+    }
+    if (item && item._wechatDataUrl) {
+      var fromWx = dataUrlToBlob(item._wechatDataUrl);
+      if (fromWx) return Promise.resolve(fromWx);
+    }
+    var src = imgSrc || (item && item.imageUrl) || '';
+    if (!src) return Promise.reject(new Error('no image'));
+    if (String(src).indexOf('data:') === 0) {
+      var fromData = dataUrlToBlob(src);
+      if (fromData) return Promise.resolve(fromData);
+      return Promise.reject(new Error('bad data url'));
+    }
+    return fetch(src).then(function (res) {
+      if (!res.ok) throw new Error('fetch failed');
+      return res.blob();
+    });
+  }
+
+  function useAsInput(item, imgSrc, blobDirect) {
+    C.setError(errorBox, '');
+    setBusy(true);
+    var ready = blobDirect
+      ? Promise.resolve(blobDirect)
+      : resolveImageBlob(item, imgSrc);
+    return ready.then(function (blob) {
+      if (!blob || !blob.size) throw new Error('empty');
+      if (blob.size > 8 * 1024 * 1024) {
+        C.setError(errorBox, tr('tools.instructEdit.tooLarge'));
+        setBusy(false);
+        return;
+      }
+      files = [];
+      revokePreviews();
+      refMode = 'single';
+      syncRefModeUi();
+      files.push(blobToFile(blob, 'edit-again.png'));
+      renderSources();
+      syncControlsVisible();
+      setBusy(false);
+      if (promptEl) {
+        try { promptEl.focus(); } catch (e) {}
+      }
+    }).catch(function () {
+      C.setError(errorBox, tr('tools.instructEdit.editAgainFailed'));
+      setBusy(false);
+    });
+  }
+
+  function b64ToBlobUrl(b64, ctype) {
+    var blob = b64ToBlob(b64, ctype);
     var url = URL.createObjectURL(blob);
     resultUrls.push(url);
     return url;
@@ -514,6 +595,15 @@
     } else {
       img.src = displaySrc;
     }
+    var actions = document.createElement('div');
+    actions.className = 'img-hist-actions';
+    var again = document.createElement('button');
+    again.type = 'button';
+    again.className = 'tb-btn';
+    again.textContent = tr('tools.instructEdit.editAgain');
+    again.addEventListener('click', function () {
+      useAsInput(item, img.src);
+    });
     var dl = document.createElement('button');
     dl.type = 'button';
     dl.className = 'tb-btn';
@@ -521,6 +611,8 @@
     dl.addEventListener('click', function () {
       doDownload(img.src, item);
     });
+    actions.appendChild(again);
+    actions.appendChild(dl);
     card.appendChild(title);
     card.appendChild(imgWrap);
     if (C.isWeChat && C.isWeChat()) {
@@ -529,7 +621,7 @@
       tip.textContent = tr('tools.imageCloud.longPressSave');
       card.appendChild(tip);
     }
-    card.appendChild(dl);
+    card.appendChild(actions);
     grid.appendChild(card);
   }
 
@@ -653,6 +745,9 @@
         clearBtn: document.getElementById('history-clear'),
         tr: tr,
         modelTitle: modelTitle,
+        onEditAgain: function (blob) {
+          useAsInput(null, null, blob);
+        },
         onDownload: function (blob, row) {
           doDownload(blob, row);
         }
