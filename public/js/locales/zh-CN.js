@@ -2180,6 +2180,7 @@ window.TB_LOCALES['zh-CN'] = {
             elapsed: '本次耗时 {seconds} 秒',
             stayOnPageTip: '微信内生成较慢，请停留在当前页面，不要切回聊天、锁屏或切到别的应用。',
             partialFail: '部分失败：',
+            copyrightBlocked: '因版权/内容限制未能生成，可换图、改说明，或换其他模型再试。',
             dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },
         textToImage: {

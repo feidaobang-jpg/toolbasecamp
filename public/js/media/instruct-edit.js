@@ -667,7 +667,20 @@
     if (partialErrors && partialErrors.length) {
       var note = document.createElement('p');
       note.className = 'instruct-partial-err';
-      note.textContent = tr('tools.instructEdit.partialFail') + ' ' + partialErrors.join('; ');
+      var parts = [];
+      for (var pe = 0; pe < partialErrors.length; pe++) {
+        var raw = String(partialErrors[pe] || '').trim();
+        if (!raw) continue;
+        var modelTag = '';
+        var m = raw.match(/^([A-Za-z0-9._-]+)#\d+:\s*/);
+        if (m) {
+          modelTag = modelTitle(m[1]) + '：';
+          raw = raw.slice(m[0].length);
+        }
+        var friendly = C.translateDetail ? C.translateDetail(raw, 502) : raw;
+        parts.push(modelTag + friendly);
+      }
+      note.textContent = tr('tools.instructEdit.partialFail') + ' ' + parts.join('；');
       resultsWrap.appendChild(note);
     }
     resultsWrap.hidden = false;

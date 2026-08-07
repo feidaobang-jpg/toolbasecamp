@@ -2181,6 +2181,7 @@ window.TB_LOCALES.en = {
             elapsed: 'Completed in {seconds}s',
             stayOnPageTip: 'WeChat is slower here. Please stay on this page and do not switch back to chat, lock the screen, or open another app.',
             partialFail: 'Some failed:',
+            copyrightBlocked: 'Blocked by copyright/content policy. Try another image, prompt, or model.',
             dashscopeMissing: 'Image service is not ready. Please try again later.'
         },
         textToImage: {
