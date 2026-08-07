@@ -11,8 +11,8 @@
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
-  <script src="../../../js/locales/en.js?v=dealer3"></script>
-  <script src="../../../js/locales/zh-CN.js?v=dealer3"></script>
+  <script src="../../../js/locales/en.js?v=dealer4"></script>
+  <script src="../../../js/locales/zh-CN.js?v=dealer4"></script>
   <script src="../../../js/i18n.js?v=locale1"></script>
   <script src="../../../js/config.js"></script>
   <script src="../../../js/common_ui.js?v=8"></script>
@@ -47,11 +47,11 @@
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCreditTitle">后台加余额</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCreditDesc">填写用户登录邮箱或手机号，以及金额（元）。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCreditDesc">填写用户登录手机号，以及金额（元）。</p>
         <div class="space-y-3">
           <label class="block text-sm">
             <span class="text-gray-600" data-i18n="privateHub.ops.walletAccount">账号</span>
-            <input id="credit-account" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="email@example.com / 手机号" />
+            <input id="credit-account" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" inputmode="tel" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletAccountPh" placeholder="手机号" />
           </label>
           <label class="block text-sm">
             <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
