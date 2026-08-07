@@ -56,7 +56,12 @@ INSTRUCT_EDIT_MODELS = (
     {
         "id": "doubao-seedream-5-0-260128",
         "priceCny": 0.22,
-        "labelKey": "tools.instructEdit.modelSeedream50",
+        "labelKey": "tools.instructEdit.modelSeedream50lite",
+    },
+    {
+        "id": "doubao-seedream-5-0-pro-260628",
+        "priceCny": 0.3,
+        "labelKey": "tools.instructEdit.modelSeedream50pro",
     },
     {
         "id": "wan2.7-image",

@@ -20,6 +20,7 @@ SEEDREAM_IMAGE_MODEL = (
     os.environ.get("SEEDREAM_IMAGE_MODEL") or "doubao-seedream-5-0-260128"
 ).strip()
 SEEDREAM_TIMEOUT = float(os.environ.get("SEEDREAM_IMAGE_TIMEOUT", "180"))
+SEEDREAM_PRO_TIMEOUT = float(os.environ.get("SEEDREAM_PRO_TIMEOUT", "240"))
 SEEDREAM_SIZE = (os.environ.get("SEEDREAM_IMAGE_SIZE") or "2K").strip() or "2K"
 # Official docs: up to 14 refs; we still clamp via instruct-edit batch max.
 SEEDREAM_MAX_REFS = int(os.environ.get("SEEDREAM_MAX_REFS", "14"))
@@ -113,25 +114,30 @@ async def edit_image_with_seedream(
     norm_refs = [_normalize_edit_image(b, for_wan=False) for b in refs]
     data_uris = [_data_uri(b, mime) for b, mime in norm_refs]
     image_field: Any = data_uris[0] if len(data_uris) == 1 else data_uris
+    is_pro = "pro" in use_model.lower()
 
     payload: dict[str, Any] = {
         "model": use_model,
         "prompt": text,
         "image": image_field,
-        "sequential_image_generation": "disabled",
         "response_format": "url",
         "size": SEEDREAM_SIZE,
         "stream": False,
         "watermark": False,
     }
+    # Pro does not support sequential / group generation; lite accepts disabled.
+    if not is_pro:
+        payload["sequential_image_generation"] = "disabled"
+
     url = f"{VOLC_ARK_BASE_URL}/images/generations"
     headers = {
         "Authorization": f"Bearer {VOLC_ARK_API_KEY}",
         "Content-Type": "application/json",
     }
+    timeout = SEEDREAM_PRO_TIMEOUT if is_pro else SEEDREAM_TIMEOUT
 
     try:
-        async with httpx.AsyncClient(timeout=SEEDREAM_TIMEOUT) as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             resp = await client.post(url, headers=headers, json=payload)
             try:
                 data = resp.json() if resp.content else {}
