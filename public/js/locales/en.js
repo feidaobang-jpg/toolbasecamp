@@ -2191,7 +2191,9 @@ window.TB_LOCALES.en = {
             failed: 'Edit failed',
             elapsed: 'Completed in {seconds}s',
             stayOnPageTip: 'WeChat is slower here. Please stay on this page and do not switch back to chat, lock the screen, or open another app.',
+            progressModel: 'Generating {current}/{total}: {model}',
             partialFail: 'Some failed:',
+            multiModelTip: 'Multiple models run one by one (avoids gateway timeouts); each success appears as it finishes. Charged only on success.',
             copyrightBlocked: 'Blocked by copyright/content policy. Try another image, prompt, or model.',
             dashscopeMissing: 'Image service is not ready. Please try again later.'
         },

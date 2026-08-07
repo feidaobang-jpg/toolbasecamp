@@ -2190,7 +2190,9 @@ window.TB_LOCALES['zh-CN'] = {
             failed: '改图失败',
             elapsed: '本次耗时 {seconds} 秒',
             stayOnPageTip: '微信内生成较慢，请停留在当前页面，不要切回聊天、锁屏或切到别的应用。',
+            progressModel: '正在生成 {current}/{total}：{model}',
             partialFail: '部分失败：',
+            multiModelTip: '多模型会逐个请求（避免网关超时），成功一个展示一个；成功出图才扣费。',
             copyrightBlocked: '因版权/内容限制未能生成，可换图、改说明，或换其他模型再试。',
             dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },

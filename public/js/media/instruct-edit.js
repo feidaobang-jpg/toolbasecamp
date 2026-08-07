@@ -35,6 +35,7 @@
   var resultMeta = document.getElementById('result-meta');
   var resultsWrap = document.getElementById('results-wrap');
   var busyEl = document.getElementById('busy');
+  var busyTextEl = document.getElementById('busy-text');
   var wechatTip = document.getElementById('wechat-tip');
   var historyHint = document.getElementById('history-hint');
   var bgTimeRow = document.getElementById('bg-time-row');
@@ -502,8 +503,13 @@
       : tr('tools.instructEdit.selectAllModels');
   }
 
-  function setBusy(on) {
+  function setBusy(on, msg) {
     if (busyEl) busyEl.hidden = !on;
+    if (busyTextEl) {
+      busyTextEl.textContent = on && msg
+        ? msg
+        : tr('tools.imageCloud.processing');
+    }
     if (runBtn) runBtn.disabled = !!on || !canRun();
     if (clearBtn) clearBtn.disabled = !!on;
     if (selectAllBtn) selectAllBtn.disabled = !!on;
@@ -517,6 +523,68 @@
       var sizeChips = outputSizeRow.querySelectorAll('.rec-chip');
       for (var k = 0; k < sizeChips.length; k++) sizeChips[k].disabled = !!on;
     }
+  }
+
+  function oneModelTimeoutMs(modelId) {
+    var seedream = String(modelId || '').toLowerCase().indexOf('seedream') >= 0;
+    var is2K = outputSize === '2K';
+    var ms;
+    if (refMode === 'multi') {
+      ms = seedream ? (is2K ? 240000 : 180000) : (is2K ? 420000 : 300000);
+    } else {
+      ms = seedream ? (is2K ? 240000 : 180000) : (is2K ? 300000 : 180000);
+    }
+    if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 300000);
+    return Math.min(900000, ms);
+  }
+
+  function buildEditFormData(modelList) {
+    var fd = new FormData();
+    for (var i = 0; i < files.length; i++) {
+      fd.append('files', files[i], files[i].name || ('image-' + (i + 1) + '.jpg'));
+    }
+    fd.append('prompt', (promptEl && promptEl.value) || '');
+    fd.append('ref_mode', refMode);
+    fd.append('output_size', outputSize);
+    if (activePreset) fd.append('preset', activePreset);
+    for (var m = 0; m < modelList.length; m++) {
+      fd.append('models', modelList[m].id);
+    }
+    return fd;
+  }
+
+  function normalizeResultImages(data, fallbackModelId) {
+    var images = data && data.images;
+    if ((!images || !images.length) && data && (data.imageBase64 || data.imageUrl)) {
+      images = [{
+        index: 0,
+        model: data.model || fallbackModelId,
+        imageBase64: data.imageBase64,
+        imageUrl: data.imageUrl,
+        contentType: data.contentType || 'image/png'
+      }];
+    }
+    return images || [];
+  }
+
+  function historyPromptText() {
+    var promptText = (promptEl && promptEl.value) || '';
+    var presetLabelKeys = {
+      manga_to_real: 'tools.instructEdit.presetMangaToReal',
+      real_to_manga: 'tools.instructEdit.presetRealToManga',
+      restore_old_photo: 'tools.instructEdit.presetRestoreOldPhoto',
+      id_photo_white: 'tools.instructEdit.presetIdPhotoWhite',
+      remove_watermark: 'tools.instructEdit.presetRemoveWatermark',
+      beauty_light: 'tools.instructEdit.presetBeautyLight',
+      colorize_bw: 'tools.instructEdit.presetColorizeBw',
+      product_white_bg: 'tools.instructEdit.presetProductWhiteBg',
+      lineart_colorize: 'tools.instructEdit.presetLineartColorize',
+      expand_edges: 'tools.instructEdit.presetExpandEdges'
+    };
+    if (activePreset && presetLabelKeys[activePreset]) {
+      promptText = tr(presetLabelKeys[activePreset]);
+    }
+    return promptText;
   }
 
   function revokePreviews() {
@@ -996,91 +1064,75 @@
       if (C.isWeChat && C.isWeChat() && typeof window.tbNotify === 'function') {
         window.tbNotify(tr('tools.instructEdit.stayOnPageTip'));
       }
-      setBusy(true);
+      // One HTTP call per model — a single multi-model request can exceed gateway
+      // idle limits (~2–4 min) with ERR_EMPTY_RESPONSE even though each model works alone.
+      setBusy(true, models.length > 1
+        ? tr('tools.instructEdit.progressModel', {
+          current: 1,
+          total: models.length,
+          model: modelTitle(models[0].id)
+        })
+        : tr('tools.imageCloud.processing'));
       runStartedAt = Date.now();
-      var fd = new FormData();
-      for (var i = 0; i < files.length; i++) {
-        fd.append('files', files[i], files[i].name || ('image-' + (i + 1) + '.jpg'));
-      }
-      fd.append('prompt', (promptEl && promptEl.value) || '');
-      fd.append('ref_mode', refMode);
-      fd.append('output_size', outputSize);
-      if (activePreset) fd.append('preset', activePreset);
-      for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       var headers = {};
       if ((C.isWeChat && C.isWeChat()) || isMobileUA()) headers['X-TB-Light-Response'] = '1';
-      // Jobs run sequentially on the server. Multi-ref + 2K (esp. Qwen 3.0) often needs 4–8 min.
-      var nMod = models.length;
-      var nImg = files.length;
-      var hasSeedream = false;
-      for (var si = 0; si < models.length; si++) {
-        if (String(models[si].id || '').indexOf('seedream') >= 0) {
-          hasSeedream = true;
-          break;
-        }
-      }
-      var is2K = outputSize === '2K';
-      var perJobMs = hasSeedream ? (is2K ? 180000 : 150000) : (is2K ? 120000 : 70000);
-      // One multi-ref synthesis per model (not per image); heavier than single-ref.
-      var multiJobMs = hasSeedream ? (is2K ? 240000 : 180000) : (is2K ? 360000 : 240000);
-      var timeoutMs;
-      if (C.isWeChat && C.isWeChat()) {
-        timeoutMs = Math.min(900000, Math.max(420000, nMod * (refMode === 'multi' ? multiJobMs : nImg * Math.max(90000, perJobMs))));
-      } else if (refMode === 'multi') {
-        timeoutMs = Math.min(900000, Math.max(420000, nMod * multiJobMs));
-      } else {
-        timeoutMs = Math.min(900000, Math.max(hasSeedream || is2K ? 240000 : 120000, nImg * nMod * perJobMs));
-      }
-      C.apiJson('/image/instruct-edit', { method: 'POST', body: fd, headers: headers, timeoutMs: timeoutMs }).then(function (data) {
-        if (data.aiWallet) applyWallet(data.aiWallet);
-        var images = data.images;
-        if ((!images || !images.length) && (data.imageBase64 || data.imageUrl)) {
-          images = [{
-            index: 0,
-            model: data.model || models[0].id,
-            imageBase64: data.imageBase64,
-            imageUrl: data.imageUrl,
-            contentType: data.contentType || 'image/png'
-          }];
-        }
-        if (!images || !images.length) {
-          var raw = '';
-          try {
-            raw = JSON.stringify(data || {});
-          } catch (e) {}
-          if (raw && raw.length > 220) raw = raw.slice(0, 220) + '...';
-          throw new Error(tr('tools.instructEdit.failed') + (raw ? '：' + raw : ''));
-        }
-        renderResults(images, data.partialErrors);
+
+      var allImages = [];
+      var partialErrors = [];
+      var lastErrMsg = '';
+
+      function finishElapsed() {
         if (resultMeta && runStartedAt) {
           var seconds = Math.max(1, Math.round((Date.now() - runStartedAt) / 1000));
           resultMeta.textContent = tr('tools.instructEdit.elapsed', { seconds: seconds });
         }
-        if (histPanel) {
-          var promptText = (promptEl && promptEl.value) || '';
-          var presetLabelKeys = {
-            manga_to_real: 'tools.instructEdit.presetMangaToReal',
-            real_to_manga: 'tools.instructEdit.presetRealToManga',
-            restore_old_photo: 'tools.instructEdit.presetRestoreOldPhoto',
-            id_photo_white: 'tools.instructEdit.presetIdPhotoWhite',
-            remove_watermark: 'tools.instructEdit.presetRemoveWatermark',
-            beauty_light: 'tools.instructEdit.presetBeautyLight',
-            colorize_bw: 'tools.instructEdit.presetColorizeBw',
-            product_white_bg: 'tools.instructEdit.presetProductWhiteBg',
-            lineart_colorize: 'tools.instructEdit.presetLineartColorize',
-            expand_edges: 'tools.instructEdit.presetExpandEdges'
-          };
-          if (activePreset && presetLabelKeys[activePreset]) {
-            promptText = tr(presetLabelKeys[activePreset]);
+      }
+
+      (async function () {
+        for (var mi = 0; mi < models.length; mi++) {
+          var mid = models[mi].id;
+          setBusy(true, tr('tools.instructEdit.progressModel', {
+            current: mi + 1,
+            total: models.length,
+            model: modelTitle(mid)
+          }));
+          try {
+            var data = await C.apiJson('/image/instruct-edit', {
+              method: 'POST',
+              body: buildEditFormData([models[mi]]),
+              headers: headers,
+              timeoutMs: oneModelTimeoutMs(mid)
+            });
+            if (data.aiWallet) applyWallet(data.aiWallet);
+            var images = normalizeResultImages(data, mid);
+            if (!images.length) {
+              throw new Error(tr('tools.instructEdit.failed'));
+            }
+            for (var ii = 0; ii < images.length; ii++) allImages.push(images[ii]);
+            if (data.partialErrors && data.partialErrors.length) {
+              for (var pe = 0; pe < data.partialErrors.length; pe++) {
+                partialErrors.push(data.partialErrors[pe]);
+              }
+            }
+            renderResults(allImages, partialErrors);
+          } catch (err) {
+            lastErrMsg = (err && err.message) || tr('tools.instructEdit.failed');
+            partialErrors.push(mid + '#1: ' + lastErrMsg);
+            if (allImages.length) renderResults(allImages, partialErrors);
           }
-          histPanel.save(images, { prompt: promptText });
         }
-      }).catch(function (err) {
-        C.setError(errorBox, err.message);
-        if (resultMeta && runStartedAt) {
-          var failSeconds = Math.max(1, Math.round((Date.now() - runStartedAt) / 1000));
-          resultMeta.textContent = tr('tools.instructEdit.elapsed', { seconds: failSeconds });
+
+        if (!allImages.length) {
+          throw new Error(lastErrMsg || tr('tools.instructEdit.failed'));
         }
+        C.setError(errorBox, '');
+        finishElapsed();
+        if (histPanel) {
+          histPanel.save(allImages, { prompt: historyPromptText() });
+        }
+      })().catch(function (err) {
+        C.setError(errorBox, (err && err.message) || tr('tools.instructEdit.failed'));
+        finishElapsed();
       }).finally(function () {
         runStartedAt = 0;
         setBusy(false);
