@@ -2159,7 +2159,7 @@ window.TB_LOCALES['zh-CN'] = {
             outputSizeLabel: '输出分辨率',
             outputSize1K: '1K（较快）',
             outputSize2K: '2K（推荐）',
-            outputSizeHint: '千问 Pro、Seedream Pro 按输出档位计费；万相 / 千问 3.0 两档同价。默认 2K。',
+            outputSizeHint: '千问 Pro、Seedream Pro 按输出档位计费；Seedream 最低 2K，选 1K 时仍按 2K 出图与计价。万相 / 千问 3.0 两档同价。默认 2K。',
             modelWan27: '万相 2.7 · 约 ¥0.4/张',
             modelWan27pro: '万相 2.7-Pro · 约 ¥1.0/张',
             modelQwen30: '千问 Image 3.0 · 约 ¥0.4/张',

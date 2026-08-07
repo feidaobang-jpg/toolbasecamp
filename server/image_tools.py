@@ -626,11 +626,19 @@ def _normalize_output_size(raw: Optional[str]) -> str:
     return s if s in INSTRUCT_OUTPUT_SIZES else "2K"
 
 
+def _billable_output_size(model_id: str, output_size: str) -> str:
+    """User-selected size; Seedream API minimum is 2k — bill 2K when UI says 1K."""
+    size = _normalize_output_size(output_size)
+    if is_seedream_model(model_id) and size == "1K":
+        return "2K"
+    return size
+
+
 def _price_for(model_id: str, output_size: str = "2K") -> float:
     m = INSTRUCT_EDIT_MODEL_BY_ID.get(model_id)
     if not m:
         return 0.0
-    size = _normalize_output_size(output_size)
+    size = _billable_output_size(model_id, output_size)
     key = "priceCny1K" if size == "1K" else "priceCny2K"
     return float(m.get(key) or m.get("priceCny2K") or 0.0)
 
@@ -942,6 +950,8 @@ async def api_instruct_edit(
                     "index": img_idx,
                     "refMode": mode,
                     "refCount": len(refs),
+                    "outputSize": out_size,
+                    "billedSize": _billable_output_size(mid, out_size),
                 },
             )
             if bal is not None:

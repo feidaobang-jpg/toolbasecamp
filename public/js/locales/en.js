@@ -2160,7 +2160,7 @@ window.TB_LOCALES.en = {
             outputSizeLabel: 'Output resolution',
             outputSize1K: '1K (faster)',
             outputSize2K: '2K (recommended)',
-            outputSizeHint: 'Qwen Pro and Seedream Pro charge by output tier; Wan / Qwen 3.0 same price for 1K and 2K. Default 2K.',
+            outputSizeHint: 'Qwen Pro and Seedream Pro charge by output tier. Seedream minimum is 2K — choosing 1K still outputs and bills as 2K. Wan / Qwen 3.0 same price for both tiers. Default 2K.',
             modelWan27: 'Wan 2.7 · ≈¥0.4/image',
             modelWan27pro: 'Wan 2.7-Pro · ≈¥1.0/image',
             modelQwen30: 'Qwen Image 3.0 · ≈¥0.4/image',

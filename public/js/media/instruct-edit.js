@@ -161,8 +161,19 @@
     return modelRow ? modelRow.querySelectorAll('input[name="instruct-model"]') : [];
   }
 
-  function modelListPrice(modelId, size) {
+  function isSeedreamModel(modelId) {
+    var s = String(modelId || '').toLowerCase();
+    return s.indexOf('seedream') >= 0 || s.indexOf('doubao-seedream') >= 0;
+  }
+
+  function billableOutputSize(modelId, size) {
     var sz = size || outputSize;
+    if (isSeedreamModel(modelId) && sz === '1K') return '2K';
+    return sz;
+  }
+
+  function modelListPrice(modelId, size) {
+    var sz = billableOutputSize(modelId, size);
     var m = modelCatalog[modelId];
     if (m) {
       return sz === '1K'

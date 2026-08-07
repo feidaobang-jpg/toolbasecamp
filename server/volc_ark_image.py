@@ -35,6 +35,16 @@ def is_seedream_model(model: Optional[str]) -> bool:
     return mid.startswith("doubao-seedream") or mid.startswith("seedream")
 
 
+def seedream_api_size(output_size: Optional[str]) -> str:
+    """Map UI 1K/2K to Ark API size (2k/3k/4k — lowercase k). Minimum 2k."""
+    key = (output_size or SEEDREAM_SIZE or "2K").strip().upper()
+    if key not in ("1K", "2K", "3K", "4K"):
+        return "2k"
+    if key == "1K":
+        return "2k"
+    return key.lower()
+
+
 def _default_model() -> str:
     return SEEDREAM_IMAGE_MODEL or "doubao-seedream-5-0-260128"
 
@@ -112,9 +122,7 @@ async def edit_image_with_seedream(
         )
 
     use_model = (model or _default_model()).strip() or _default_model()
-    size_key = (output_size or SEEDREAM_SIZE or "2K").strip().upper()
-    if size_key not in ("1K", "2K"):
-        size_key = "2K"
+    api_size = seedream_api_size(output_size or SEEDREAM_SIZE)
     norm_refs = [_normalize_edit_image(b, for_wan=False) for b in refs]
     data_uris = [_data_uri(b, mime) for b, mime in norm_refs]
     image_field: Any = data_uris[0] if len(data_uris) == 1 else data_uris
@@ -125,7 +133,7 @@ async def edit_image_with_seedream(
         "prompt": text,
         "image": image_field,
         "response_format": "url",
-        "size": size_key,
+        "size": api_size,
         "stream": False,
         "watermark": False,
     }
