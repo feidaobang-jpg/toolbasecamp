@@ -285,7 +285,7 @@
           '<div class="min-w-0 flex-1">' +
             '<div class="text-sm font-medium break-all">' + displayName + role + '</div>' +
             (u.loginAccount
-              ? ('<div class="text-xs text-gray-400 break-all mt-0.5">' + String(u.loginAccount) + '</div>')
+              ? ('<div class="text-sm font-medium break-all mt-0.5">' + String(u.loginAccount) + '</div>')
               : '') +
             joined +
             '<div class="text-xs text-gray-500 mt-1 leading-relaxed">' + stats + '</div>' +
