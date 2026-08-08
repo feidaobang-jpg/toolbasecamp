@@ -676,6 +676,10 @@ window.TB_LOCALES.en = {
             title: 'Steel Battle',
             desc: 'Battle City homage: bricks, steel, water, defend the base through enemy waves.'
         },
+        tank1990: {
+            title: 'Tank 1990',
+            desc: 'Battle City (Yan Shan-style): stars, pistol, boat power-ups; campaign + endless; landscape dual controls.'
+        },
         blastParty: {
             title: 'Blast Party',
             desc: 'Bomberman homage: bombs, soft blocks, power-ups, clear each stage.'

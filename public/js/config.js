@@ -266,6 +266,7 @@ const gamesConfig = {
                 { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=13' },
                 { titleKey: 'tools.superMario.title', url: 'html/game/super-mario.html?v=4' },
                 { titleKey: 'tools.steelBattle.title', url: 'html/game/steel-battle.html?v=2' },
+                { titleKey: 'tools.tank1990.title', url: 'html/game/tank-1990.html?v=1' },
                 { titleKey: 'tools.blastParty.title', url: 'html/game/blast-party.html?v=3' },
                 { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html?v=3' },
                 { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=3' },
