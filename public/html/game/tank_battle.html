@@ -69,13 +69,12 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       <div class="coop-actions">
         <button type="button" class="tb-btn" id="coopCreate">创建房间</button>
         <button type="button" class="tb-btn" id="coopJoin">加入房间</button>
-        <button type="button" class="tb-btn" id="coopReady">准备</button>
         <button type="button" class="tb-btn" id="coopStart">开始（房主）</button>
         <button type="button" class="tb-btn" id="coopClose">关闭</button>
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">最多 8 人合作打关。支持开局后中途加入；结束画面全员可见，仅房主可重开。</p>
+      <p class="coop-hint">最多 8 人合作打关。人齐后由房主点「开始」；支持开局后中途加入；结束画面全员可见，仅房主可重开。</p>
     </div>
   </div>
 </div>
@@ -840,7 +839,7 @@ const Game = (() => {
       case PU.GRENADE:
         for(const e of enemies) if(!e.dead){ e.dead=true; enemiesKilled++; score+=100;
           boom(e.cx,e.cy,26); }
-        SFX.bigExplode(); shake=0.4; flash("💣 地雷！全场清除"); break;
+        SFX.bigExplode(); shake=0.4; flash("地雷！全场清除"); break;
       case PU.HELMET:
         player.shield=Math.max(player.shield,10); SFX.shield(); flash("🛡 无敌护盾 10 秒"); break;
       case PU.TANK:
@@ -866,9 +865,9 @@ const Game = (() => {
         e.boat=true; flash("⚠ 敌军上船：可渡水"); break;
       case PU.GRENADE:
         if(player&&!player.dead){
-          if(player.shield>0){ player.shield=0; flash("💣 敌军地雷被护盾挡下"); }
-          else if(player.bulk>0){ hurtPlayerBulk(); flash("💣 敌军地雷打掉装甲外形"); }
-          else { killTank(player,false); flash("💣 敌军地雷！"); }
+          if(player.shield>0){ player.shield=0; flash("敌军地雷被护盾挡下"); }
+          else if(player.bulk>0){ hurtPlayerBulk(); flash("敌军地雷打掉装甲外形"); }
+          else { killTank(player,false); flash("敌军地雷！"); }
         }
         SFX.bigExplode(); shake=0.35; break;
       case PU.HELMET:
@@ -1046,7 +1045,7 @@ const Game = (() => {
         coopGridSent=msg.grid;
       }
     }
-    // players：复用对象；自己的坦克软校正（本地预测）
+    // players：直接贴房主坐标（客机不做本地预测，避免拉扯抖动）
     // 客机无本地碰撞权威：用 dead/bulk/boat 变化轻量补受击/爆炸声（每事件最多一声）
     const seen={};
     let guestFriendBoom=false, guestFriendHit=false;
@@ -1057,19 +1056,9 @@ const Game = (() => {
         t=spawnAtSlot(ps.slot|0, ps.pid, ps.name);
         if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
       }
-      const isSelf = ps.pid===coopMyPid;
       const px=ps.x|0, py=ps.y|0;
       const wasDead=!!t.dead, prevBulk=t.bulk|0, prevBoat=!!t.boat;
-      if(isSelf && player && !ps.dead && stateName==="playing"){
-        const dx=px-t.x, dy=py-t.y, dist=Math.hypot(dx,dy);
-        if(dist>36){ t.x=px; t.y=py; }
-        else { t.x+=dx*0.25; t.y+=dy*0.25; }
-      } else {
-        // 队友：写目标点，帧间插值，避免 12~20Hz 硬贴像幻灯片
-        t._tx=px; t._ty=py;
-        if(t._hasNet==null || Math.hypot(px-t.x,py-t.y)>56){ t.x=px; t.y=py; }
-        t._hasNet=1;
-      }
+      t.x=px; t.y=py;
       t.dir=ps.dir; t.dead=!!ps.dead;
       const starsChanged=(t.stars|0)!==(ps.stars|0) || (t.bulk|0)!==(ps.bulk|0);
       t.stars=ps.stars|0; t.boat=!!ps.boat; t.bulk=ps.bulk|0;
@@ -1650,23 +1639,7 @@ const Game = (() => {
         g.fillStyle="#7ab8e8"; g.beginPath(); g.moveTo(-10,3); g.lineTo(10,3); g.lineTo(5,9); g.lineTo(-5,9); g.closePath(); g.fill();
         g.fillStyle="#fff"; g.beginPath(); g.moveTo(0,-9); g.lineTo(0,2); g.lineTo(8,2); g.closePath(); g.fill(); break;
       case PU.GRENADE:
-        // 地雷：圆盘 + 触角 + 危险标
-        g.fillStyle="#3a3f48";
-        g.beginPath(); g.arc(0,2,10,0,Math.PI*2); g.fill();
-        g.fillStyle="#5a6470";
-        g.beginPath(); g.arc(0,2,7,0,Math.PI*2); g.fill();
-        g.fillStyle="#2a3038";
-        g.beginPath(); g.arc(0,2,3.5,0,Math.PI*2); g.fill();
-        g.strokeStyle="#c9a24a"; g.lineWidth=1.5;
-        g.beginPath(); g.arc(0,2,10,0,Math.PI*2); g.stroke();
-        // 四根触须
-        g.strokeStyle="#d8dde8"; g.lineWidth=2;
-        [[-11,-4],[11,-4],[-8,12],[8,12]].forEach(([x,y])=>{
-          g.beginPath(); g.moveTo(0,2); g.lineTo(x,y); g.stroke();
-          g.fillStyle="#ffd24a"; g.beginPath(); g.arc(x,y,1.6,0,Math.PI*2); g.fill();
-        });
-        g.fillStyle="#ff6b4a"; g.font="bold 9px sans-serif"; g.textAlign="center";
-        g.fillText("!",0,5);
+        drawMineIcon(0,1,1);
         break;
       case PU.HELMET:
         g.fillStyle="#9ad0ff"; g.beginPath(); g.arc(0,2,8,Math.PI,0); g.fill();
@@ -1698,6 +1671,52 @@ const Game = (() => {
     for(let i=0;i<10;i++){ const a=-Math.PI/2+i*Math.PI/5, rr=i%2===0?r:r*0.45;
       g[i===0?"moveTo":"lineTo"](cx+Math.cos(a)*rr,cy+Math.sin(a)*rr); }
     g.closePath(); g.fill();
+  }
+  /** 地雷图标：军绿圆壳 + 十字刺钉 + 短引信（掉落道具用） */
+  function drawMineIcon(cx,cy,sc){
+    sc=sc||1;
+    g.save();
+    g.translate(cx,cy);
+    g.scale(sc,sc);
+    // 底座阴影
+    g.fillStyle="rgba(0,0,0,.35)";
+    g.beginPath(); g.ellipse(0,6,11,3.2,0,0,Math.PI*2); g.fill();
+    // 圆壳（军绿→深灰）
+    const shell=g.createRadialGradient(-3,-3,1,0,1,11);
+    shell.addColorStop(0,"#6b7a4e");
+    shell.addColorStop(0.5,"#3e4a32");
+    shell.addColorStop(1,"#1c2418");
+    g.fillStyle=shell;
+    g.beginPath(); g.arc(0,1,10,0,Math.PI*2); g.fill();
+    g.strokeStyle="#12180e"; g.lineWidth=1.4;
+    g.beginPath(); g.arc(0,1,10,0,Math.PI*2); g.stroke();
+    // 金属压环
+    g.strokeStyle="#8a9278"; g.lineWidth=1.3;
+    g.beginPath(); g.arc(0,1,7.2,0,Math.PI*2); g.stroke();
+    // 顶盖压盘
+    g.fillStyle="#2a3224";
+    g.beginPath(); g.arc(0,0,4.2,0,Math.PI*2); g.fill();
+    g.strokeStyle="#5a6448"; g.lineWidth=1;
+    g.beginPath(); g.arc(0,0,4.2,0,Math.PI*2); g.stroke();
+    // 十字刺钉（四面触角）
+    g.lineCap="round";
+    g.strokeStyle="#c4c8b4"; g.lineWidth=2.2;
+    g.fillStyle="#aeb2a0";
+    for(let i=0;i<4;i++){
+      const a=i*Math.PI/2+Math.PI/4;
+      const x0=Math.cos(a)*4.5, y0=Math.sin(a)*4.5+0.5;
+      const x1=Math.cos(a)*12, y1=Math.sin(a)*12+0.5;
+      g.beginPath(); g.moveTo(x0,y0); g.lineTo(x1,y1); g.stroke();
+      g.beginPath(); g.arc(x1,y1,1.7,0,Math.PI*2); g.fill();
+    }
+    // 短引信 + 火头
+    g.strokeStyle="#c9a24a"; g.lineWidth=2;
+    g.beginPath(); g.moveTo(0,-3); g.quadraticCurveTo(2,-7,0,-11); g.stroke();
+    g.fillStyle="#ff6b3a";
+    g.beginPath(); g.arc(0,-12,2.1,0,Math.PI*2); g.fill();
+    g.fillStyle="#ffe08a";
+    g.beginPath(); g.arc(-0.5,-12.5,0.9,0,Math.PI*2); g.fill();
+    g.restore();
   }
 
   function drawHUD(){
