@@ -1090,12 +1090,16 @@ const Game = (() => {
       Input.consume(); return;
     }
     if(stateName==="gameover"||stateName==="levelClear"){
+      // 结束画面：震屏迅速停住，不要一直抖
+      shake = Math.max(0, shake - dt * 2.5);
+      if(stateTime>0.45) shake = 0;
+      flashTime=Math.max(0,flashTime-dt);
       if(stateTime>1.2 && Input.state.startPressed){
         if(stateName==="levelClear"){
           if(!endless && level>=CAMPAIGN_LEVELS){ stateName="menu"; menuSel=0; coopMode=false; }
           else { level++; newLevel(); stateName="playing"; }
         }
-        else { stateName="menu"; menuSel=0; coopMode=false; }
+        else { stateName="menu"; menuSel=0; coopMode=false; shake=0; }
       }
       Input.consume(); return;
     }
@@ -1271,7 +1275,8 @@ const Game = (() => {
   let menuMoved=false;
   function doGameOver(baseDestroyed){
     stateName="gameover"; stateTime=0; overReason=baseDestroyed?"基地被摧毁！":"生命耗尽"; SFX.gameOver();
-    if(baseDestroyed){ shake=0.6; boom(OFF_X+13*TILE,OFF_Y+25*TILE,60); SFX.bigExplode(); }
+    if(baseDestroyed){ shake=0.55; boom(OFF_X+13*TILE,OFF_Y+25*TILE,60); SFX.bigExplode(); }
+    else shake=Math.min(shake, 0.2);
     if(score>hiScore){ hiScore=score; localStorage.tbHiScore=hiScore; }
   }
 
