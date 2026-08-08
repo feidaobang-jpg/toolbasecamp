@@ -211,12 +211,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://toolbasecamp.com/html/game/blast-party.html</loc>
-    <lastmod>2026-08-04T09:45:32Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://toolbasecamp.com/html/game/blitz-run.html</loc>
     <lastmod>2026-08-04T09:45:32Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -224,12 +218,6 @@
   </url>
   <url>
     <loc>https://toolbasecamp.com/html/game/breakout.html</loc>
-    <lastmod>2026-08-04T09:45:32Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://toolbasecamp.com/html/game/bubble-shot.html</loc>
     <lastmod>2026-08-04T09:45:32Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
@@ -301,12 +289,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://toolbasecamp.com/html/game/marble-path.html</loc>
-    <lastmod>2026-08-04T09:45:32Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://toolbasecamp.com/html/game/memory.html</loc>
     <lastmod>2026-08-04T09:45:32Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -349,19 +331,7 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://toolbasecamp.com/html/game/steel-battle.html</loc>
-    <lastmod>2026-08-04T09:45:32Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://toolbasecamp.com/html/game/sudoku.html</loc>
-    <lastmod>2026-08-04T09:45:32Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://toolbasecamp.com/html/game/super-mario.html</loc>
     <lastmod>2026-08-04T09:45:32Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
