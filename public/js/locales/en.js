@@ -668,6 +668,10 @@ window.TB_LOCALES.en = {
             title: 'Blitz Run',
             desc: 'Contra-style side-scroller. Landscape view on desktop; mobile suggests landscape (not forced).'
         },
+        tankBattle: {
+            title: 'Tank Battle',
+            desc: 'Classic Battle City style: defend the base, bricks/steel/water/grass, power-ups, landscape dual controls.'
+        },
         starSerpent: {
             title: 'Star Serpent',
             desc: 'Salamander homage vertical shmup. Arcade landscape frame; mobile suggests landscape (not forced).'
