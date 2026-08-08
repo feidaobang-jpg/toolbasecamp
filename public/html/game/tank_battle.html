@@ -1074,7 +1074,7 @@ const Game = (() => {
     if(guestFriendBoom) SFX.friendlyExplode();
     else if(guestFriendHit) SFX.hitFriendly();
     for(const pid in coopAllies){ if(!seen[pid] && pid!==coopMyPid) delete coopAllies[pid]; }
-    // enemies / bullets / powerups：支持紧凑数组；目标点 + 帧间外推
+    // enemies / bullets / powerups：紧凑数组 + 硬贴坐标
     const elist=msg.enemies||[];
     let prevEnemyHp=0;
     for(const e of enemies){ if(e&&!e.dead) prevEnemyHp+=e.hp|0; }
@@ -1088,13 +1088,10 @@ const Game = (() => {
         spawnGhost:raw[7],shield:raw[8],frozen:raw[9]
       }:raw;
       let e=enemies[i];
-      if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; e._hasNet=0; }
-      e.dead=false; e.dir=es.dir; e.hp=es.hp;
+      if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; }
+      e.dead=false; e.x=es.x; e.y=es.y; e.dir=es.dir; e.hp=es.hp;
       e.type=es.type||"normal"; e.speed=es.speed||60;
       e.spawnGhost=es.spawnGhost||0; e.shield=es.shield||0; e.frozen=es.frozen||0;
-      e._tx=es.x; e._ty=es.y;
-      if(!e._hasNet || Math.hypot(es.x-e.x,es.y-e.y)>48){ e.x=es.x; e.y=es.y; }
-      e._hasNet=1;
       if((e.stars|0)!==(es.stars|0)){ e.stars=es.stars|0; e.applyStars(); }
       newEnemyHp+=e.hp|0;
     }
@@ -1109,11 +1106,8 @@ const Game = (() => {
       let b=bullets[i];
       if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1); bullets[i]=b; }
       else {
-        b.dead=false; b.dir=bs.dir; b.power=bs.power||1;
+        b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1;
         b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
-        // 子弹快：大偏差才硬贴，否则外推纠正
-        if(Math.hypot(bs.x-b.x,bs.y-b.y)>24){ b.x=bs.x; b.y=bs.y; }
-        else { b.x=bs.x; b.y=bs.y; }
       }
     }
     const plist=msg.powerups||[];
@@ -1125,36 +1119,6 @@ const Game = (() => {
       if(!pu){ pu=new PowerUp(ps.type, ps.x, ps.y); powerups[i]=pu; }
       else { pu.type=ps.type; pu.x=ps.x; pu.y=ps.y; }
       pu.dead=false; pu.life=ps.life||10;
-    }
-  }
-  /** 客机帧间：外推敌军/子弹 + 插值队友，把 20Hz 快照拉成 60fps 观感 */
-  function coopGuestPresent(dt){
-    const k=Math.min(1, 18*dt);
-    for(const pid in coopAllies){
-      const t=coopAllies[pid];
-      if(!t||t.dead||t._tx==null) continue;
-      t.x+=(t._tx-t.x)*k; t.y+=(t._ty-t.y)*k;
-      t.shield=Math.max(0,(t.shield||0)-dt);
-      t.spawnGhost=Math.max(0,(t.spawnGhost||0)-dt);
-      t.frozen=Math.max(0,(t.frozen||0)-dt);
-    }
-    for(const e of enemies){
-      if(!e||e.dead) continue;
-      e.spawnGhost=Math.max(0,(e.spawnGhost||0)-dt);
-      e.shield=Math.max(0,(e.shield||0)-dt);
-      e.anim=(e.anim||0)+dt*10;
-      if((e.frozen||0)>0){ e.frozen-=dt; continue; }
-      const spd=e.speed||60;
-      if(e._tx!=null){
-        e._tx+=DXY[e.dir][0]*spd*dt;
-        e._ty+=DXY[e.dir][1]*spd*dt;
-        e.x+=(e._tx-e.x)*k;
-        e.y+=(e._ty-e.y)*k;
-      }
-    }
-    for(const b of bullets){
-      if(!b||b.dead) continue;
-      b.update(dt);
     }
   }
   function onCoopRoster(list){
@@ -1247,7 +1211,7 @@ const Game = (() => {
     if(stateName==="paused"){ Input.consume(); return; }
     if(document.hidden){ Input.consume(); return; }
 
-    /* --- 联机客机：节流输入 + 本地预测 + 帧间外推呈现 --- */
+    /* --- 联机客机：只发输入，画面完全跟房主快照（不做本地预测，避免飘抖） --- */
     if(coopMode && !coopIsHost){
       if(coopSend && stateName==="playing"){
         const mx=inp.mx|0, my=inp.my|0;
@@ -1256,16 +1220,12 @@ const Game = (() => {
         coopFireHeld=holding;
         coopInputAcc+=dt;
         const moved=mx!==coopLastIn.mx || my!==coopLastIn.my;
-        // 方向变化/开火边沿立刻发；其余最多 10Hz（避免 60Hz 打爆中继）
-        // fire 只在发包时带上按住状态，由房主冷却决定连发
         if(fireEdge || moved || coopInputAcc>=0.1){
           coopInputAcc=0;
           coopLastIn={mx,my};
           coopSend({type:"input", mx, my, fire:holding});
         }
-        if(player&&!player.dead) driveTank(player, mx, my, false, dt);
       }
-      coopGuestPresent(dt);
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
       shake=Math.max(0,shake-dt);
@@ -1922,7 +1882,7 @@ const Game = (() => {
   const panel = document.getElementById("coopPanel");
   const rosterEl = document.getElementById("coopRoster");
   const msgEl = document.getElementById("coopMsg");
-  let ws = null, myPid = "", room = null, ready = false, hostPid = "";
+  let ws = null, myPid = "", room = null, hostPid = "";
 
   function apiBase(){
     if(typeof siteConfig!=="undefined" && siteConfig.apiBase) return siteConfig.apiBase;
@@ -1939,7 +1899,7 @@ const Game = (() => {
     if(!room){ rosterEl.textContent = "尚未进入房间"; return; }
     const lines = ["房间 "+room.code+" · "+(room.players||[]).length+"/"+room.maxPlayers];
     (room.players||[]).forEach(p=>{
-      lines.push((p.host?"👑 ":"· ")+p.name+(p.ready?" ✓准备":"")+(p.pid===myPid?"（我）":""));
+      lines.push((p.host?"👑 ":"· ")+p.name+(p.pid===myPid?"（我）":""));
     });
     rosterEl.textContent = lines.join("\n");
     const codeInp = document.getElementById("coopCode");
@@ -2041,11 +2001,6 @@ const Game = (() => {
       await ensureWs();
       send({type:"join", code, name:name(), password:password()});
     }catch(e){ setMsg("连接失败"); }
-  };
-  document.getElementById("coopReady").onclick = ()=>{
-    ready = !ready;
-    send({type:"ready", ready});
-    setMsg(ready?"已准备":"取消准备");
   };
   document.getElementById("coopStart").onclick = ()=>{
     send({type:"start", level:1});
