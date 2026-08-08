@@ -49,6 +49,13 @@ body.cssRotate #rotWrap{position:fixed;top:0;left:0;width:100vh;height:100vw;
 <div id="playTools">
   <button type="button" id="btnFs" title="全屏">全屏</button>
 </div>
+<div id="wxTip" style="display:none;position:fixed;left:50%;top:52px;transform:translateX(-50%);z-index:70;max-width:min(92%,360px);padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.94);border:1px solid #fbbf24;color:#e2e8f0;font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+  <div>微信内无法系统级全屏/锁横屏。可点「横屏」用画面旋转游玩；或点右上角 ··· → <b>在浏览器中打开</b> 再旋转手机。</div>
+  <div style="margin-top:8px;display:flex;gap:8px;justify-content:center">
+    <button type="button" id="btnWxLand" style="font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#2563eb;color:#fff;cursor:pointer">横屏游玩</button>
+    <button type="button" id="btnWxTipOk" style="font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#1e293b;border:1px solid #475569;color:#fff;cursor:pointer">知道了</button>
+  </div>
+</div>
 <div id="rotWrap">
 <div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
 <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
@@ -431,12 +438,36 @@ const Levels = (() => {
   const charMap={'.':T_EMPTY,'B':T_BRICK,'S':T_STEEL,'W':T_WATER,'G':T_GRASS};
   /** 闯关总关数；地形逐步解锁 */
   const CAMPAIGN_LEVELS = 20;
-  // 1–4 仅砖；5–8 +铁；9–12 +草；13–20 +水（全地形）
+  // 1–4 仅砖（地图里的铁/草/水先关掉）；5–8 +铁；9–12 +草；13–20 +水
+  // 注意：build 末尾 fortifyMidLane 会强制加中间铁墙，与关卡递进无关
   function gateTerrain(cell, level){
     if(cell===T_STEEL && level < 5) return T_EMPTY;
     if(cell===T_GRASS && level < 9) return T_EMPTY;
     if(cell===T_WATER && level < 13) return T_EMPTY;
     return cell;
+  }
+
+  /** 每关强制中间通道铁墙，防止敌军从中央一路直通基地 */
+  function fortifyMidLane(grid){
+    const put = (r,c,t)=>{
+      if(r<0||r>=FIELD_H||c<0||c>=FIELD_W) return;
+      if(grid[r][c]===T_BASE) return;
+      grid[r][c]=t;
+    };
+    // 上中：挡住从顶部中央出生点直下的炮线
+    for(let c=11;c<=14;c++) put(6,c,T_STEEL);
+    put(7,11,T_STEEL); put(7,14,T_STEEL);
+    // 中段岔口：两侧铁、中间留缝可绕行
+    for(let c=10;c<=15;c++){
+      if(c===12||c===13) continue;
+      put(11,c,T_STEEL);
+    }
+    put(12,10,T_STEEL); put(12,15,T_STEEL);
+    put(13,11,T_STEEL); put(13,14,T_STEEL);
+    // 接近基地前再拦一道
+    for(let c=11;c<=14;c++) put(17,c,T_STEEL);
+    put(18,11,T_BRICK); put(18,14,T_BRICK);
+    put(19,12,T_BRICK); put(19,13,T_BRICK);
   }
 
   function build(levelIdx,endless){
@@ -460,6 +491,9 @@ const Levels = (() => {
       if(grid[i]&&grid[i][j]!==undefined&&grid[i][j]!==T_BASE) grid[i][j]=T_EMPTY; };
     clear(0,0); clear(0,12); clear(0,24);          // 敌人出生点
     clear(24,8); clear(24,16);                      // 玩家出生点两侧
+    fortifyMidLane(grid);
+    // 铁墙不要挡住出生格（fortify 可能写到边缘时再清一次顶行）
+    clear(0,0); clear(0,12); clear(0,24);
     return grid;
   }
   // 关卡敌人配置：数量与种类随关卡递增
@@ -486,6 +520,7 @@ const Game = (() => {
   let menuSel=0; // 0=闯关 1=无尽 2=敌人吃道具 3=测试
   let debugMode=false; // 测试模式：大幅提高道具掉落概率
   let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
+  let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   const MENU_COUNT=4;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
 
@@ -547,7 +582,9 @@ const Game = (() => {
     enemyPlanObj = endless ? Levels.enemyPlan(level) : Levels.enemyPlan(level);
     enemyQueue = endless ? Infinity : enemyPlanObj.total;
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
+    bossSpawned=false;
     spawnPlayer();
+    if(level%5===0) flash("⚠ Boss 关：本关将出现强化敌军", 2.2);
   }
   function spawnPlayer(){
     const keepStars = player? player.stars:0, keepBoat = player? player.boat:false;
@@ -566,13 +603,21 @@ const Game = (() => {
     const r={x,y,w:TILE*2-2,h:TILE*2-2};
     for(const o of [player,...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
     const e=new Tank(x,y,false);
-    // 敌人种类分配
-    const p=enemyPlanObj, kRoll=Math.random();
-    if(kRoll<0.18 && p.armor>0){ e.type="armor"; e.hp=4; e.speed=52; }
-    else if(kRoll<0.42 && p.fast>0){ e.type="fast"; e.speed=105; }
-    else if(kRoll<0.62 && p.power>0){ e.type="power"; e.bulletSpeed=320; }
-    e.speed += Math.min(level*2,26);            // 关卡越高越快
-    if(Math.random()<(debugMode?1:0.22)) e.carriesPowerup=true; // 闪烁坦克掉道具（测试模式必掉）
+    // 每 5 关刷一只 Boss（厚血+可打铁，偏慢）
+    const wantBoss = (level%5===0) && !bossSpawned && (endless || enemyQueue<=Math.max(3, (enemyPlanObj.total/2)|0));
+    if(wantBoss){
+      bossSpawned=true;
+      e.type="boss"; e.hp=8; e.speed=48; e.stars=3; e.applyStars();
+      e.carriesPowerup=true; e.bulletSpeed=300;
+      flash("💀 Boss 坦克出现！", 1.8);
+    } else {
+      const p=enemyPlanObj, kRoll=Math.random();
+      if(kRoll<0.18 && p.armor>0){ e.type="armor"; e.hp=4; e.speed=52; }
+      else if(kRoll<0.42 && p.fast>0){ e.type="fast"; e.speed=105; }
+      else if(kRoll<0.62 && p.power>0){ e.type="power"; e.bulletSpeed=320; }
+      e.speed += Math.min(level*2,26);
+      if(Math.random()<(debugMode?1:0.22)) e.carriesPowerup=true;
+    }
     if(freezeTimer>0) e.frozen=freezeTimer;
     enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
     SFX.spawn();
@@ -685,7 +730,7 @@ const Game = (() => {
     t.dead=true; boom(t.cx,t.cy,26); SFX.explode(); shake=Math.max(shake,0.25);
     if(!t.isPlayer){
       enemiesKilled++;
-      if(byPlayer){ const pts={normal:100,fast:200,power:300,armor:400}[t.type]||100; score+=pts;
+      if(byPlayer){ const pts={normal:100,fast:200,power:300,armor:400,boss:1000}[t.type]||100; score+=pts;
         flashScore(t.cx,t.cy,pts); }
       if(t.carriesPowerup) dropPowerup(t.cx,t.cy);
     }
@@ -968,6 +1013,7 @@ const Game = (() => {
     // 车身（渐变高光）
     let c1,c2;
     if(t.isPlayer){ c1="#d8c84a"; c2="#8a7a1e"; }
+    else if(t.type==="boss"){ c1="#ff6b4a"; c2="#7a1020"; }
     else if(t.type==="fast"){ c1="#7ac0e8"; c2="#2a6a9a"; }
     else if(t.type==="power"){ c1="#e88a7a"; c2="#9a3a2a"; }
     else if(t.type==="armor"){ c1="#b8c4d8"; c2="#5a6478"; }
@@ -976,13 +1022,19 @@ const Game = (() => {
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
     g.fillStyle=gr; g.fillRect(-w/2+5,-h/2+3,w-10,h-6);
     // 炮塔
-    g.fillStyle=t.isPlayer?"#eadb6a":"#d8dde8";
-    g.beginPath(); g.arc(0,1,7,0,Math.PI*2); g.fill();
+    g.fillStyle=t.isPlayer?"#eadb6a":(t.type==="boss"?"#ffd24a":"#d8dde8");
+    g.beginPath(); g.arc(0,1,t.type==="boss"?8:7,0,Math.PI*2); g.fill();
     g.fillStyle=t.isPlayer?"#6a5c14":"#404858";
     g.fillRect(-2.5,-h/2-4,5,h/2+5);
-    // 装甲坦克血量提示
+    // 装甲/Boss 血量提示
     if(t.type==="armor"&&t.hp<4){ g.fillStyle="rgba(255,80,80,.85)";
       g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/4),3); }
+    if(t.type==="boss"){
+      g.fillStyle="rgba(255,210,74,.95)";
+      g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/8),3);
+      g.fillStyle="#ffd24a"; g.font="bold 8px sans-serif"; g.textAlign="center";
+      g.fillText("BOSS",0,-h/2+8);
+    }
     g.restore();
     // 船：圆角矩形光圈围住整辆坦克
     if(t.isPlayer&&t.boat){
@@ -1038,8 +1090,19 @@ const Game = (() => {
         g.fillStyle="#7ab8e8"; g.beginPath(); g.moveTo(-10,3); g.lineTo(10,3); g.lineTo(5,9); g.lineTo(-5,9); g.closePath(); g.fill();
         g.fillStyle="#fff"; g.beginPath(); g.moveTo(0,-9); g.lineTo(0,2); g.lineTo(8,2); g.closePath(); g.fill(); break;
       case PU.GRENADE:
-        g.fillStyle="#556"; g.beginPath(); g.arc(0,2,7,0,Math.PI*2); g.fill();
-        g.fillStyle="#ffb02e"; g.fillRect(-2,-9,4,5); break;
+        // 经典手雷：深绿弹体 + 顶盖 + 拉环
+        g.fillStyle="#2f6b3a";
+        g.beginPath(); g.arc(0, 3, 8, 0, Math.PI*2); g.fill();
+        g.fillStyle="#3f8a4a";
+        g.beginPath(); g.arc(-2.5, 0, 3.2, 0, Math.PI*2); g.fill();
+        g.fillStyle="#1e4a28";
+        g.fillRect(-6, 8, 12, 3);
+        g.fillStyle="#cfd6e0"; g.fillRect(-3, -10, 6, 6);
+        g.fillStyle="#8a939e"; g.fillRect(-2, -13, 4, 4);
+        g.strokeStyle="#ffd24a"; g.lineWidth=1.8;
+        g.beginPath(); g.arc(6, -12, 4, -0.3, Math.PI*1.15); g.stroke();
+        g.fillStyle="#ffb02e"; g.beginPath(); g.arc(8.5, -14.5, 1.8, 0, Math.PI*2); g.fill();
+        break;
       case PU.HELMET:
         g.fillStyle="#9ad0ff"; g.beginPath(); g.arc(0,2,8,Math.PI,0); g.fill();
         g.fillRect(-8,2,16,3); break;
@@ -1196,7 +1259,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("地形递进：1–4砖 → 5–8铁 → 9–12草 → 13–20水　　敌人吃道具：敌军可抢星/枪/船等",CANVAS_W/2,418);
+    g.fillText("地形：1–4砖 → 5–8铁 → 9–12草 → 13–20水　·　每关中间有铁墙　·　每5关 Boss",CANVAS_W/2,418);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
@@ -1224,14 +1287,17 @@ const Game = (() => {
   const cvs=document.getElementById("gameCanvas");
   const playTools=document.getElementById("playTools");
   const btnFs=document.getElementById("btnFs");
+  const wxTip=document.getElementById("wxTip");
   let cssRot=false;
 
+  function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent||""); }
   function isFs(){
     return !!(document.fullscreenElement || document.webkitFullscreenElement);
   }
   function updateFsBtn(){
     if(!btnFs) return;
-    btnFs.textContent = (isFs() || cssRot) ? "退出全屏" : "全屏";
+    if(isWeChat()) btnFs.textContent = cssRot ? "退出横屏" : "横屏";
+    else btnFs.textContent = (isFs() || cssRot) ? "退出全屏" : "全屏";
   }
   function resize(){
     let vw=window.innerWidth, vh=window.innerHeight;
@@ -1246,27 +1312,41 @@ const Game = (() => {
   document.addEventListener("fullscreenchange", () => setTimeout(resize, 60));
   document.addEventListener("webkitfullscreenchange", () => setTimeout(resize, 60));
 
+  function applyCssLandscape(on){
+    if(on){
+      document.body.classList.add("cssRotate");
+      cssRot=true;
+    } else {
+      document.body.classList.remove("cssRotate");
+      cssRot=false;
+    }
+    setTimeout(resize, 40);
+  }
+
   async function enterFs(){
     SFX.unlock();
+    // 微信/多数 iOS：系统 Fullscreen + orientation.lock 不可用 → 直接 CSS 横屏
+    if(isWeChat() || !document.documentElement.requestFullscreen){
+      applyCssLandscape(true);
+      return true;
+    }
     const root=document.documentElement;
+    let ok=false;
     try{
-      if(root.requestFullscreen) await root.requestFullscreen();
-      else if(root.webkitRequestFullscreen) root.webkitRequestFullscreen();
-    }catch(e){}
+      if(root.requestFullscreen){ await root.requestFullscreen(); ok=true; }
+      else if(root.webkitRequestFullscreen){ root.webkitRequestFullscreen(); ok=true; }
+    }catch(e){ ok=false; }
     try{
       if(screen.orientation && screen.orientation.lock){
         await screen.orientation.lock("landscape");
       }
     }catch(e){}
     setTimeout(()=>{
-      // iOS 等不支持全屏/锁方向时：CSS 横屏回退
       if(window.innerHeight>window.innerWidth && !isFs()){
-        document.body.classList.add("cssRotate");
-        cssRot=true;
-      }
-      resize();
+        applyCssLandscape(true);
+      } else resize();
     }, 280);
-    return isFs() || cssRot;
+    return ok || cssRot;
   }
   async function exitFs(){
     try{
@@ -1275,9 +1355,7 @@ const Game = (() => {
         else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
       }
     }catch(e){}
-    document.body.classList.remove("cssRotate");
-    cssRot=false;
-    setTimeout(resize, 60);
+    applyCssLandscape(false);
   }
   async function toggleFs(){
     if(isFs() || cssRot) await exitFs();
@@ -1285,7 +1363,6 @@ const Game = (() => {
     updateFsBtn();
   }
 
-  // 触屏设备显示虚拟控件与全屏按钮（参考冲锋行动）
   const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints|0)>0
     || window.matchMedia("(pointer: coarse)").matches;
   if(isTouch){
@@ -1299,6 +1376,20 @@ const Game = (() => {
         e.preventDefault();
         e.stopPropagation();
         toggleFs();
+      });
+    }
+    if(isWeChat() && wxTip){
+      try{
+        if(!localStorage.tbWxTipHide) wxTip.style.display="block";
+      }catch(e){ wxTip.style.display="block"; }
+      const hideTip=()=>{ wxTip.style.display="none"; };
+      document.getElementById("btnWxLand").addEventListener("click", (e)=>{
+        e.preventDefault(); e.stopPropagation();
+        applyCssLandscape(true); hideTip();
+      });
+      document.getElementById("btnWxTipOk").addEventListener("click", ()=>{
+        try{ localStorage.tbWxTipHide="1"; }catch(e){}
+        hideTip();
       });
     }
   }
