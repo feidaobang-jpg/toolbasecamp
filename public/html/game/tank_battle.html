@@ -107,21 +107,36 @@ const rand  = (a,b)=>a+Math.random()*(b-a);
 const randi = (a,b)=>a+Math.floor(Math.random()*(b-a+1));
 
 /* ---------------- 2) 音效系统（WebAudio 程序生成） ---------------- */
+/* AudioContext 仅在用户手势 unlock 后创建/resume；游戏循环与定时器禁止 resume（避免自动播放警告刷屏） */
 const SFX = (() => {
-  let ctx = null;
-  function ac(){ if(!ctx) ctx = new (window.AudioContext||window.webkitAudioContext)(); 
-    if(ctx.state==="suspended") ctx.resume(); return ctx; }
+  let ctx = null, unlocked = false, resumeInFlight = null;
+  /** 只返回已有 ctx，不创建、不 resume */
+  function ac(){ return ctx; }
+  function unlock(){
+    unlocked = true;
+    try{
+      if(!ctx) ctx = new (window.AudioContext||window.webkitAudioContext)();
+    }catch(e){ return; }
+    if(ctx.state==="running" || resumeInFlight) return;
+    try{
+      const p = ctx.resume();
+      resumeInFlight = Promise.resolve(p).then(()=>{ resumeInFlight=null; }).catch(()=>{ resumeInFlight=null; });
+    }catch(e){}
+  }
+  function live(){ return unlocked && ctx && ctx.state==="running"; }
   function env(g,t0,a,d,peak){ g.gain.setValueAtTime(0,t0);
     g.gain.linearRampToValueAtTime(peak,t0+a);
     g.gain.exponentialRampToValueAtTime(0.0001,t0+a+d); }
   function tone(type,f0,f1,dur,peak=0.18){
-    const c=ac(),t=c.currentTime,o=c.createOscillator(),g=c.createGain();
+    if(!live()) return;
+    const c=ctx,t=c.currentTime,o=c.createOscillator(),g=c.createGain();
     o.type=type;o.frequency.setValueAtTime(f0,t);
     o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),t+dur);
     env(g,t,0.005,dur,peak);o.connect(g).connect(c.destination);
     o.start(t);o.stop(t+dur+0.05);}
   function noise(dur,peak=0.2,fLow=400){
-    const c=ac(),t=c.currentTime,n=c.sampleRate*dur|0,buf=c.createBuffer(1,n,c.sampleRate);
+    if(!live()) return;
+    const c=ctx,t=c.currentTime,n=c.sampleRate*dur|0,buf=c.createBuffer(1,n,c.sampleRate);
     const d=buf.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;
     const s=c.createBufferSource();s.buffer=buf;
     const f=c.createBiquadFilter();f.type="lowpass";f.frequency.value=fLow;
@@ -129,7 +144,7 @@ const SFX = (() => {
     s.connect(f).connect(g).connect(c.destination);s.start(t);}
   return {
     ac,
-    unlock(){ ac(); },
+    unlock,
     shoot(){ tone("square",880,220,0.09,0.12); },
     shootBig(){ tone("square",520,120,0.14,0.16); noise(0.06,0.08,1200); },
     hitWall(){ noise(0.07,0.12,900); },
@@ -181,7 +196,8 @@ const BGM = (() => {
   let cur=null, idx=0, nextT=0, timer=null, finished=false, audioPaused=false;
   function note(freq,t,dur,type,vol){
     if(!freq) return;
-    const c=SFX.ac(), o=c.createOscillator(), g=c.createGain();
+    const c=SFX.ac(); if(!c || c.state!=="running") return;
+    const o=c.createOscillator(), g=c.createGain();
     o.type=type; o.frequency.value=freq;
     g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.01);
     g.gain.setValueAtTime(vol,t+dur*0.7); g.gain.linearRampToValueAtTime(0,t+dur);
@@ -189,7 +205,7 @@ const BGM = (() => {
   }
   function schedule(){
     if(audioPaused) return;
-    const c=SFX.ac(); if(c.state!=="running"){ return; }
+    const c=SFX.ac(); if(!c || c.state!=="running") return;
     const tr=TRACKS[cur]; if(!tr) return;
     if(nextT < c.currentTime) nextT = c.currentTime + 0.05; // 恢复播放时防止补音爆发
     while(nextT < c.currentTime + 0.35){
@@ -206,14 +222,16 @@ const BGM = (() => {
   function play(name){
     if(audioPaused){ cur=name; idx=0; finished=false; return; }
     cur=name; idx=0; finished=false;
-    nextT = SFX.ac().currentTime + 0.08;
+    const c=SFX.ac();
+    nextT = (c && c.state==="running") ? c.currentTime + 0.08 : 0;
     if(timer) clearInterval(timer);
-    timer=setInterval(schedule,90); schedule();
+    timer=setInterval(schedule,90);
+    if(c && c.state==="running") schedule();
   }
   // ensure：每帧调用，同名曲目不重复启动；非循环曲播完后保持静音
   function ensure(name){ if(cur===name) return; play(name); }
   function stop(){ if(timer) clearInterval(timer); timer=null; cur=null; }
-  /** 暂停：停调度并 suspend AudioContext（暂停键 / 切后台） */
+  /** 暂停：停调度并 suspend；恢复时不在此处 resume（须用户手势 SFX.unlock） */
   function setPaused(on){
     if(on){
       if(audioPaused) return;
@@ -223,11 +241,14 @@ const BGM = (() => {
     } else {
       if(!audioPaused) return;
       audioPaused=false;
-      try{ const c=SFX.ac(); if(c && c.state==="suspended") c.resume(); }catch(e){}
+      // 不在 rAF/可见性回调里 resume，避免自动播放警告；下一用户手势 unlock 后 schedule 会接上
       if(cur){
-        nextT = SFX.ac().currentTime + 0.08;
+        const c=SFX.ac();
+        if(c && c.state==="running") nextT = c.currentTime + 0.08;
+        else nextT = 0;
         if(timer) clearInterval(timer);
-        timer=setInterval(schedule,90); schedule();
+        timer=setInterval(schedule,90);
+        if(c && c.state==="running") schedule();
       }
     }
   }
@@ -252,6 +273,8 @@ const Input = (() => {
     keys[e.code]=true; SFX.unlock();
   });
   window.addEventListener("keyup",e=>{ keys[e.code]=false; });
+  // 鼠标点击也算手势（仅 unlock，不开始游戏）
+  window.addEventListener("pointerdown",()=>{ SFX.unlock(); },{passive:true});
 
   // 触屏：左侧摇杆
   const joyBase=document.getElementById("joyBase"), joyKnob=document.getElementById("joyKnob");
