@@ -695,7 +695,7 @@ window.TB_LOCALES.en = {
         },
         tankBattle: {
             title: 'Tank Battle',
-            desc: 'Battle City style: 20 stages with terrain unlock, enemy loot mode, landscape dual controls.'
+            desc: 'Battle City style: 20 stages with terrain unlock, enemy-side loot mode, landscape dual controls.'
         },
         starSerpent: {
             title: 'Star Serpent',

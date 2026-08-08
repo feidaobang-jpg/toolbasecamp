@@ -585,9 +585,9 @@ const Game = (() => {
   let enemyQueue=0, enemyPlanObj=null, enemiesKilled=0;
   let spawnTimer=0, freezeTimer=0, shovelTimer=0, baseAlive=true;
   let shake=0, flashMsg="", flashTime=0, stateTime=0, overReason="";
-  let menuSel=0; // 0=闯关 1=无尽 2=敌人吃道具 3=测试 4=合作联机
+  let menuSel=0; // 0=闯关 1=无尽 2=敌方吃道具 3=测试 4=合作联机
   let debugMode=false; // 测试模式：大幅提高道具掉落概率
-  let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
+  let enemyLootMode=false; // 仅「敌方吃道具」：敌军可拾取道具
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   let clearGrace=0; // 敌军清空后的拾取缓冲秒数
   // 合作联机
@@ -764,10 +764,21 @@ const Game = (() => {
     // 阵亡重生：装备清空（过关才保留星/船/火力）
     const slot=t.coopSlot|0, pid=t.coopPid, name=t.coopName;
     const tint=t.coopTint;
+    // 单机 player 无 coopPid：必须替换 player，否则旧尸体每帧继续扣命
+    const isLocal = !coopMode || t===player || !pid || pid===coopMyPid;
+    if(isLocal){
+      if(coopMode){
+        const nt=spawnAtSlot(slot, pid||coopMyPid, name, null);
+        if(tint) nt.coopTint=tint;
+        player=nt;
+      } else {
+        spawnPlayer({});
+      }
+      return;
+    }
     const nt=spawnAtSlot(slot, pid, name, null);
     if(tint) nt.coopTint=tint;
-    if(pid===coopMyPid) player=nt;
-    else coopAllies[pid]=nt;
+    coopAllies[pid]=nt;
   }
   const SPAWN_COLS=[0,12,24];
   function trySpawnEnemy(){
@@ -862,7 +873,7 @@ const Game = (() => {
         shovelTimer=12; setBaseWall(T_STEEL); flash("🛠 基地加固（钢墙）"); break;
     }
   }
-  /** 敌人吃到道具时的负面/强化效果（敌人吃道具模式） */
+  /** 敌方吃到道具时的负面/强化效果（仅敌方吃道具模式） */
   function applyEnemyPowerup(e, pu){
     SFX.powerup();
     switch(pu.type){
@@ -1228,7 +1239,7 @@ const Game = (() => {
         endless=menuSel===1;
         enemyLootMode=menuSel===2;
         debugMode=menuSel===3;
-        if(menuSel===2) endless=false; // 敌人吃道具以闯关形式进行
+        if(menuSel===2) endless=false; // 敌方吃道具以闯关形式进行
         level=1; score=0; lives=30; player=null; coopAllies={};
         newLevel(); stateName="playing"; SFX.levelUp();
       }
@@ -1322,7 +1333,7 @@ const Game = (() => {
       e.aiT=(e.aiT||0)-dt;
       if(e.aiT<=0){
         e.aiT=rand(0.6,2.2);
-        // 敌人吃道具模式：优先冲向场上道具
+        // 仅敌方吃道具模式：优先冲向场上道具
         let chasedPu=false;
         if(enemyLootMode){
           let best=null, bestD=1e9;
@@ -1356,7 +1367,7 @@ const Game = (() => {
       if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
       else e.aiT=0; // 撞墙立刻换向
       if(Math.random()<dt*0.9) fire(e);
-      // 敌人拾取道具
+      // 仅敌方吃道具模式才允许敌军拾取
       if(enemyLootMode){
         for(const pu of powerups){
           if(pu.dead) continue;
@@ -1405,9 +1416,10 @@ const Game = (() => {
     shake=Math.max(0,shake-dt);
     flashTime=Math.max(0,flashTime-dt);
 
-    // 友军死亡（共享生命）
+    // 友军死亡（共享生命）；lifeTaken 防止同一尸体多帧重复扣命
     for(const t of friendlyTanks()){
-      if(t&&t.dead){
+      if(t&&t.dead && !t.lifeTaken){
+        t.lifeTaken=true;
         lives--;
         if(lives>0){ respawnFriendly(t); }
         else { doGameOver(); Input.consume(); return; }
@@ -1753,7 +1765,7 @@ const Game = (() => {
     g.font="bold 26px sans-serif"; g.fillStyle="#ffd24a";
     g.fillText(endless?"∞":(level+"/"+CAMPAIGN_LEVELS),lx,OFF_Y+54);
     if(endless){ g.font="11px sans-serif"; g.fillStyle="#9fb0d0"; g.fillText("难度 Lv"+level,lx,OFF_Y+72); }
-    else if(enemyLootMode){ g.font="11px sans-serif"; g.fillStyle="#ff9d7a"; g.fillText("敌可吃道具",lx,OFF_Y+72); }
+    else if(enemyLootMode){ g.font="11px sans-serif"; g.fillStyle="#ff9d7a"; g.fillText("敌方可吃道具",lx,OFF_Y+72); }
     g.font="bold 15px sans-serif"; g.fillStyle="#dfe6f5";
     g.fillText("生命",lx,OFF_Y+108);
     g.fillStyle="#ff7a6a"; g.font="bold 22px sans-serif"; g.fillText("♥ ×"+Math.max(0,lives),lx,OFF_Y+134);
@@ -1874,7 +1886,7 @@ const Game = (() => {
     const items=[
       "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
       "♾ 无尽模式",
-      "😈 敌人吃道具",
+      "😈 敌方吃道具",
       "🧪 测试模式（道具必掉）",
       "🌐 合作联机（最多 8 人）"
     ];
