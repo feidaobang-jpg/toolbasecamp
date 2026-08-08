@@ -74,7 +74,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">联机节点：<span id="coopNode">—</span><br>双方必须打开<strong>同一个网址</strong>。客机已开轻量预测试验（若飘抖告诉我回退）。</p>
+      <p class="coop-hint">联机节点：<span id="coopNode">—</span><br>双方必须打开<strong>同一个网址</strong>。客机跟房主权威同步（已关本地预测，避免子弹/走位发歪）。</p>
     </div>
   </div>
 </div>
@@ -601,11 +601,11 @@ const Game = (() => {
   let coopFireHeld=false;
   let coopGridSent="";
   let coopRoster=[];
-  // 客机预测试验开关：测到飘抖可整段关掉（设 false）或 git 回退
-  const COOP_PREDICT=true;
-  const COOP_PRED_DEAD=14;  // 死区加大：小偏差完全信本地，少拉扯
-  const COOP_PRED_SOFT=28;  // 超过此值才硬贴
-  const COOP_PRED_BLEND=0.10; // 软跟减弱，减少飘感
+  // 客机预测：关——预测会让子弹/朝向相对房主权威「看起来歪」
+  const COOP_PREDICT=false;
+  const COOP_PRED_DEAD=14;
+  const COOP_PRED_SOFT=28;
+  const COOP_PRED_BLEND=0.10;
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
