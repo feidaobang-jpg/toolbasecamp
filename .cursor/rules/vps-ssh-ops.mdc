@@ -9,25 +9,38 @@ alwaysApply: true
 
 ## 主机
 
-- **生产 API / 主站（腾讯云轻量）**
-  - 公网 IP：`43.129.179.173`
-  - 实例：`lhins-95e4c9an`（Lighthouse）
-  - SSH 别名：`toolbasecamp-hk`
-  - 用户：`ubuntu`
-  - 端口：`22`
-  - 本机密钥：`~/.ssh/toolbasecamp_deploy`（`BatchMode=yes`，勿用密码登录做自动化）
+- **生产 API / 主站（腾讯云轻量 · 香港）**
+ - 公网 IP：`43.129.179.173`
+ - 实例：`lhins-95e4c9an`（Lighthouse）
+ - SSH 别名：`toolbasecamp-hk`
+ - 用户：`ubuntu`
+ - 端口：`22`
+ - 本机密钥：`~/.ssh/toolbasecamp_deploy`（`BatchMode=yes`，勿用密码登录做自动化）
 - 路径：`/opt/toolbasecamp-api`（代码）、`/etc/toolbasecamp-api.env`（环境变量）
 - 服务：`systemctl restart|reload toolbasecamp-api`；Nginx：`/etc/nginx/snippets/toolbasecamp-api.conf` 等
+
+- **国内联机测试机（腾讯云轻量 · 勿当生产 DNS）**
+ - 公网 IP：`111.229.172.111`
+ - SSH 别名：`toolbasecamp-cn`
+ - 坦克联机试玩：`http://111.229.172.111/tank-cn`（HTTP 同机同源，绕过 HTTPS 混用限制）
+ - 部署脚本：`deploy/setup-tank-coop-cn.sh`
 
 本机 `~/.ssh/config` 应含：
 
 ```
 Host toolbasecamp-hk
-  HostName 43.129.179.173
-  User ubuntu
-  IdentityFile ~/.ssh/toolbasecamp_deploy
-  IdentitiesOnly yes
-  BatchMode yes
+ HostName 43.129.179.173
+ User ubuntu
+ IdentityFile ~/.ssh/toolbasecamp_deploy
+ IdentitiesOnly yes
+ BatchMode yes
+
+Host toolbasecamp-cn
+ HostName 111.229.172.111
+ User ubuntu
+ IdentityFile ~/.ssh/toolbasecamp_deploy
+ IdentitiesOnly yes
+ BatchMode yes
 ```
 
 若不确定哪台机在跑 API，先 `ssh toolbasecamp-hk` 查 `systemctl is-active toolbasecamp-api` 与 `curl http://127.0.0.1:8001/health`。
