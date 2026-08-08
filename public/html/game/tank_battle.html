@@ -603,9 +603,9 @@ const Game = (() => {
   let coopRoster=[];
   // 客机预测试验开关：测到飘抖可整段关掉（设 false）或 git 回退
   const COOP_PREDICT=true;
-  const COOP_PRED_DEAD=8;   // 小于此偏差不校正
-  const COOP_PRED_SOFT=32;  // 小于此软跟
-  const COOP_PRED_BLEND=0.18;
+  const COOP_PRED_DEAD=14;  // 死区加大：小偏差完全信本地，少拉扯
+  const COOP_PRED_SOFT=28;  // 超过此值才硬贴
+  const COOP_PRED_BLEND=0.10; // 软跟减弱，减少飘感
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
