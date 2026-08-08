@@ -17,12 +17,6 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
 #gameWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 #gameCanvas{display:block;background:#000;box-shadow:0 0 40px rgba(80,160,255,.25),0 0 120px rgba(0,0,0,.8);
   border-radius:6px;max-width:100%;max-height:100%;}
-#playTools{position:absolute;right:10px;top:10px;z-index:60;display:none;}
-#playTools button{
-  font:inherit;border:0;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:700;
-  background:rgba(37,99,235,.92);color:#fff;cursor:pointer;
-  box-shadow:0 4px 14px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
 /* 虚拟摇杆与按钮（仅触屏显示）——坐标相对旋转后的舞台 */
 .touchUI{position:absolute;z-index:40;display:none;}
 #joyBase{left:3%;bottom:5%;width:28%;max-width:140px;aspect-ratio:1;border-radius:50%;
@@ -43,9 +37,6 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
 <body>
 <div id="rotWrap">
   <div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
-  <div id="playTools">
-    <button type="button" id="btnFs" title="横屏">横屏</button>
-  </div>
   <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
   <div id="btnFire" class="tBtn touchUI">开火</div>
   <div id="btnPause" class="tBtn touchUI">暂停</div>
@@ -1373,47 +1364,38 @@ const Game = (() => {
   return {};
 })();
 
-/* ---------------- 画布缩放 + 微信横屏铺满（JS 舞台旋转，不依赖系统全屏） ---------------- */
+/* ---------------- 画布缩放：PC 普通横屏 / 手机竖屏自动旋转横屏 ---------------- */
 (() => {
   const cvs = document.getElementById("gameCanvas");
   const stage = document.getElementById("rotWrap");
-  const playTools = document.getElementById("playTools");
-  const btnFs = document.getElementById("btnFs");
-
-  /** 用户强制开关：微信/触屏竖屏默认开；点按钮可关 */
-  let landForced = true;
   window.__tbCssLand = false;
 
   function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent || ""); }
-  function isTouchDev(){
-    // 仅粗指针/真触屏，避免 PC 误显示「横屏」
-    if(window.matchMedia("(pointer: coarse)").matches) return true;
+  /** 手机/平板触屏（不含普通 PC） */
+  function isMobile(){
     if(isWeChat()) return true;
+    if(window.matchMedia("(pointer: coarse)").matches) return true;
+    if(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "")) return true;
     return ("ontouchstart" in window) && (navigator.maxTouchPoints|0) > 1
       && window.matchMedia("(hover: none)").matches;
   }
-  function isFs(){
-    return !!(document.fullscreenElement || document.webkitFullscreenElement);
-  }
-  function updateFsBtn(){
-    if(!btnFs) return;
-    btnFs.textContent = window.__tbCssLand ? "退出横屏" : "横屏";
-  }
 
   /**
-   * 竖屏手机：舞台做成横屏尺寸再顺时针转 90° 铺满。
-   * 微信无系统全屏/锁方向，只能靠这套。
+   * PC：窗口内等比适配，不旋转。
+   * 手机竖屏：舞台旋转 90° 铺满（微信无法系统横屏时靠这个）。
+   * 手机已横持：也不旋转，直接铺满。
    */
   function layout(){
     const vw = window.innerWidth || document.documentElement.clientWidth;
     const vh = window.innerHeight || document.documentElement.clientHeight;
     const portrait = vh > vw;
-    const useCssLand = portrait && landForced && (isWeChat() || isTouchDev());
+    const useCssLand = isMobile() && portrait;
     window.__tbCssLand = useCssLand;
     document.body.classList.toggle("cssRotate", useCssLand);
 
+    stage.style.position = "fixed";
+    stage.style.overflow = "hidden";
     if(useCssLand){
-      stage.style.position = "fixed";
       stage.style.left = "0";
       stage.style.top = "0";
       stage.style.right = "auto";
@@ -1422,12 +1404,10 @@ const Game = (() => {
       stage.style.height = vw + "px";
       stage.style.transformOrigin = "0 0";
       stage.style.transform = "translate(" + vw + "px,0) rotate(90deg)";
-      stage.style.overflow = "hidden";
       const scale = Math.min(vh / CANVAS_W, vw / CANVAS_H);
       cvs.style.width = Math.floor(CANVAS_W * scale) + "px";
       cvs.style.height = Math.floor(CANVAS_H * scale) + "px";
     } else {
-      stage.style.position = "fixed";
       stage.style.left = "0";
       stage.style.top = "0";
       stage.style.right = "0";
@@ -1435,71 +1415,22 @@ const Game = (() => {
       stage.style.width = "auto";
       stage.style.height = "auto";
       stage.style.transform = "none";
-      stage.style.overflow = "hidden";
       const scale = Math.min(vw / CANVAS_W, vh / CANVAS_H);
       cvs.style.width = Math.floor(CANVAS_W * scale) + "px";
       cvs.style.height = Math.floor(CANVAS_H * scale) + "px";
     }
-    updateFsBtn();
-  }
-
-  async function tryNativeFs(){
-    if(isWeChat()) return false;
-    const root = document.documentElement;
-    try{
-      if(root.requestFullscreen) await root.requestFullscreen();
-      else if(root.webkitRequestFullscreen) root.webkitRequestFullscreen();
-      else return false;
-    }catch(e){ return false; }
-    try{
-      if(screen.orientation && screen.orientation.lock) await screen.orientation.lock("landscape");
-    }catch(e){}
-    return isFs();
-  }
-
-  async function toggleLand(e){
-    if(e){ e.preventDefault(); e.stopPropagation(); }
-    SFX.unlock();
-    if(isWeChat() || isTouchDev()){
-      landForced = !landForced;
-      layout();
-      return;
-    }
-    if(isFs()){
-      try{
-        if(document.exitFullscreen) await document.exitFullscreen();
-        else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-      }catch(err){}
-    } else {
-      const ok = await tryNativeFs();
-      if(!ok) landForced = true;
-    }
-    layout();
   }
 
   window.addEventListener("resize", layout);
   window.addEventListener("orientationchange", () => setTimeout(layout, 120));
   if(window.visualViewport) window.visualViewport.addEventListener("resize", layout);
-  document.addEventListener("fullscreenchange", () => setTimeout(layout, 60));
-  document.addEventListener("webkitfullscreenchange", () => setTimeout(layout, 60));
 
-  if(isTouchDev() || isWeChat()){
+  if(isMobile()){
     document.querySelectorAll(".touchUI").forEach(el => { el.style.display = "block"; });
     const bf = document.getElementById("btnFire");
     const bp = document.getElementById("btnPause");
     if(bf) bf.style.display = "flex";
     if(bp) bp.style.display = "flex";
-    if(playTools) playTools.style.display = "block";
-    if(btnFs){
-      btnFs.style.display = "block";
-      btnFs.addEventListener("click", toggleLand);
-      btnFs.addEventListener("touchend", (e) => { e.preventDefault(); toggleLand(e); }, { passive:false });
-    }
-    if(isWeChat()) landForced = true;
-  } else {
-    // PC：不显示横屏按钮
-    if(playTools) playTools.style.display = "none";
-    if(btnFs) btnFs.style.display = "none";
   }
 
   layout();
