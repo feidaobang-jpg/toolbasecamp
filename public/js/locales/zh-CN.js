@@ -310,6 +310,7 @@ window.TB_LOCALES['zh-CN'] = {
             wave: '海浪轻摇',
             waveDesc: '流动琶音，偏热带休闲风。'
         }
+    },
     games: {
         groups: {
             polished: '高完成度',
