@@ -14,9 +14,16 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
 #gameCanvas{display:block;background:#000;box-shadow:0 0 40px rgba(80,160,255,.25),0 0 120px rgba(0,0,0,.8);
   border-radius:6px;}
 /* 移动端全屏旋转按钮 */
-#rotateBtn{position:fixed;top:10px;right:10px;z-index:50;display:none;
+#rotateBtn,#btnFs{position:fixed;top:10px;right:10px;z-index:50;
   background:linear-gradient(135deg,#2b6cb0,#4299e1);color:#fff;border:none;border-radius:24px;
-  padding:10px 18px;font-size:14px;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.5);}
+  padding:10px 18px;font-size:14px;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:pointer;
+  display:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+#playTools{position:fixed;right:10px;top:10px;z-index:60;display:none;gap:6px;}
+#playTools button{
+  font:inherit;border:0;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:700;
+  background:rgba(37,99,235,.92);color:#fff;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
 /* 虚拟摇杆与按钮（仅触屏显示） */
 .touchUI{position:fixed;z-index:40;display:none;}
 #joyBase{left:4%;bottom:6%;width:34vmin;height:34vmin;border-radius:50%;
@@ -39,9 +46,11 @@ body.cssRotate #rotWrap{position:fixed;top:0;left:0;width:100vh;height:100vw;
 </style>
 </head>
 <body>
+<div id="playTools">
+  <button type="button" id="btnFs" title="全屏">全屏</button>
+</div>
 <div id="rotWrap">
 <div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
-<button id="rotateBtn">⛶ 全屏横屏</button>
 <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
 <div id="btnFire" class="tBtn touchUI">开火</div>
 <div id="btnPause" class="tBtn touchUI">暂停</div>
@@ -136,7 +145,7 @@ const BGM = (() => {
       mel:[7,null,3,null, 0,null,-2,null, -4,-5,-7,null, -9,null,-9,null],
       bass:[-17,null,-21,null, -24,null,-26,null, -28,null,-31,null, -33,null,-33,null] }
   };
-  let cur=null, idx=0, nextT=0, timer=null, finished=false;
+  let cur=null, idx=0, nextT=0, timer=null, finished=false, audioPaused=false;
   function note(freq,t,dur,type,vol){
     if(!freq) return;
     const c=SFX.ac(), o=c.createOscillator(), g=c.createGain();
@@ -146,6 +155,7 @@ const BGM = (() => {
     o.connect(g).connect(c.destination); o.start(t); o.stop(t+dur+0.02);
   }
   function schedule(){
+    if(audioPaused) return;
     const c=SFX.ac(); if(c.state!=="running"){ return; }
     const tr=TRACKS[cur]; if(!tr) return;
     if(nextT < c.currentTime) nextT = c.currentTime + 0.05; // 恢复播放时防止补音爆发
@@ -161,6 +171,7 @@ const BGM = (() => {
     }
   }
   function play(name){
+    if(audioPaused){ cur=name; idx=0; finished=false; return; }
     cur=name; idx=0; finished=false;
     nextT = SFX.ac().currentTime + 0.08;
     if(timer) clearInterval(timer);
@@ -169,7 +180,25 @@ const BGM = (() => {
   // ensure：每帧调用，同名曲目不重复启动；非循环曲播完后保持静音
   function ensure(name){ if(cur===name) return; play(name); }
   function stop(){ if(timer) clearInterval(timer); timer=null; cur=null; }
-  return { ensure, stop };
+  /** 暂停：停调度并 suspend AudioContext（暂停键 / 切后台） */
+  function setPaused(on){
+    if(on){
+      if(audioPaused) return;
+      audioPaused=true;
+      if(timer){ clearInterval(timer); timer=null; }
+      try{ const c=SFX.ac(); if(c && c.state==="running") c.suspend(); }catch(e){}
+    } else {
+      if(!audioPaused) return;
+      audioPaused=false;
+      try{ const c=SFX.ac(); if(c && c.state==="suspended") c.resume(); }catch(e){}
+      if(cur){
+        nextT = SFX.ac().currentTime + 0.08;
+        if(timer) clearInterval(timer);
+        timer=setInterval(schedule,90); schedule();
+      }
+    }
+  }
+  return { ensure, stop, setPaused };
 })();
 
 /* ---------------- 3) 输入系统（键盘 + 触屏） ---------------- */
@@ -296,10 +325,11 @@ class Tank{
     this.shield=0;            // 无敌护盾剩余时间
     this.spawnGhost=1.6;      // 出生保护/闪烁
     this.hp=1;
-    this.frozen=0;            // 被时钟冻结（敌人）
+    this.frozen=0;            // 被时钟冻结（敌人/玩家）
     this.type="normal";       // 敌人种类
     this.carriesPowerup=false;
     this.anim=0;
+    this.eject=null;
   }
   get cx(){ return this.x+this.w/2; } get cy(){ return this.y+this.h/2; }
   rect(){ return {x:this.x,y:this.y,w:this.w,h:this.h}; }
@@ -399,12 +429,26 @@ const Levels = (() => {
     ".........................."];
   const maps=[L1,L2,L3];
   const charMap={'.':T_EMPTY,'B':T_BRICK,'S':T_STEEL,'W':T_WATER,'G':T_GRASS};
+  /** 闯关总关数；地形逐步解锁 */
+  const CAMPAIGN_LEVELS = 20;
+  // 1–4 仅砖；5–8 +铁；9–12 +草；13–20 +水（全地形）
+  function gateTerrain(cell, level){
+    if(cell===T_STEEL && level < 5) return T_EMPTY;
+    if(cell===T_GRASS && level < 9) return T_EMPTY;
+    if(cell===T_WATER && level < 13) return T_EMPTY;
+    return cell;
+  }
 
   function build(levelIdx,endless){
+    const lv = endless ? Math.max(1, levelIdx) : levelIdx;
     const src = maps[endless ? randi(0,maps.length-1) : (levelIdx-1)%maps.length];
     const grid=[];
     for(let r=0;r<FIELD_H;r++){ grid[r]=[];
-      for(let c=0;c<FIELD_W;c++) grid[r][c]=charMap[src[r][c]]??T_EMPTY; }
+      for(let c=0;c<FIELD_W;c++){
+        const raw=charMap[src[r][c]]??T_EMPTY;
+        grid[r][c]=endless ? raw : gateTerrain(raw, lv);
+      }
+    }
     // 基地（老鹰）位于底部中央 2x2，并用砖围起
     const bx=12, by=24;
     for(let r=by;r<by+2;r++) for(let c=bx;c<bx+2;c++) grid[r][c]=T_BASE;
@@ -426,7 +470,7 @@ const Levels = (() => {
     const armor = Math.min(level, 8);
     return { total, fast, power, armor };
   }
-  return { build, enemyPlan, count:maps.length };
+  return { build, enemyPlan, count:maps.length, CAMPAIGN_LEVELS };
 })();
 
 /* ---------------- 6) 游戏主控 ---------------- */
@@ -439,8 +483,11 @@ const Game = (() => {
   let enemyQueue=0, enemyPlanObj=null, enemiesKilled=0;
   let spawnTimer=0, freezeTimer=0, shovelTimer=0, baseAlive=true;
   let shake=0, flashMsg="", flashTime=0, stateTime=0, overReason="";
-  let menuSel=0; // 0=闯关 1=无尽 2=测试
+  let menuSel=0; // 0=闯关 1=无尽 2=敌人吃道具 3=测试
   let debugMode=false; // 测试模式：大幅提高道具掉落概率
+  let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
+  const MENU_COUNT=4;
+  const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
 
   /* ---- 碰撞辅助 ---- */
   function rectHit(a,b){ return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y; }
@@ -454,7 +501,7 @@ const Game = (() => {
     for(const [px,py] of pts){
       const tt=tileAt(px,py);
       if(tt===T_BRICK||tt===T_STEEL||tt===T_BASE) return true;
-      if(tt===T_WATER && !(t.isPlayer&&t.boat)) return true;
+      if(tt===T_WATER && !t.boat) return true;
     }
     // 战场边界
     if(nx<OFF_X||ny<OFF_Y||nx+t.w>OFF_X+FIELD_PX||ny+t.h>OFF_Y+FIELD_H*TILE) return true;
@@ -575,6 +622,38 @@ const Game = (() => {
         shovelTimer=12; setBaseWall(T_STEEL); flash("🛠 基地加固（钢墙）"); break;
     }
   }
+  /** 敌人吃到道具时的负面/强化效果（敌人吃道具模式） */
+  function applyEnemyPowerup(e, pu){
+    SFX.powerup();
+    switch(pu.type){
+      case PU.STAR:
+        e.stars=Math.min((e.stars||0)+1,4); e.applyStars();
+        flash("⚠ 敌军火力提升！"); break;
+      case PU.GUN:
+        e.stars = (e.stars||0)>=3 ? 4 : 3; e.applyStars();
+        e.hp=Math.max(e.hp,3);
+        flash("⚠ 敌军拿到手枪！可打铁"); break;
+      case PU.BOAT:
+        e.boat=true; flash("⚠ 敌军上船：可渡水"); break;
+      case PU.GRENADE:
+        if(player&&!player.dead){
+          if(player.shield>0){ player.shield=0; flash("💥 敌军手雷被护盾挡下"); }
+          else if(player.armor>0){ player.armor=0; flash("💥 敌军手雷打掉装甲"); }
+          else { killTank(player,false); flash("💥 敌军手雷！"); }
+        }
+        SFX.bigExplode(); shake=0.35; break;
+      case PU.HELMET:
+        e.shield=Math.max(e.shield||0,8); flash("⚠ 敌军无敌护盾"); break;
+      case PU.TANK:
+        enemyQueue = endless ? enemyQueue : enemyQueue+1;
+        flash("⚠ 敌军增援 +1"); break;
+      case PU.CLOCK:
+        if(player&&!player.dead){ player.frozen=6; flash("⏱ 你被冻结 6 秒！"); }
+        break;
+      case PU.SHOVEL: // 敌军铲子：扒掉基地围墙
+        shovelTimer=0; setBaseWall(T_EMPTY); flash("⚠ 基地围墙被敌军铲子挖空！"); break;
+    }
+  }
   function setBaseWall(t){
     const bx=12,by=24;
     for(let c=bx-1;c<=bx+2;c++) if(grid[by-1][c]!==T_BASE) grid[by-1][c]=t;
@@ -618,35 +697,55 @@ const Game = (() => {
   function update(dt){
     const inp=Input.poll();
     stateTime+=dt;
-    // 背景音乐跟随状态切换
-    BGM.ensure({menu:"menu",playing:"play",paused:"play",levelClear:"clear",gameover:"over"}[stateName]);
+
+    // 暂停 / 切后台：停 BGM；恢复后继续
+    const wantPauseAudio = stateName==="paused" || document.hidden;
+    BGM.setPaused(wantPauseAudio);
+    if(!wantPauseAudio){
+      const track={menu:"menu",playing:"play",paused:"play",levelClear:"clear",gameover:"over"}[stateName];
+      if(track) BGM.ensure(track);
+    }
+
     if(stateName==="menu"){
-      if(inp.my<0&&!menuMoved){ menuSel=(menuSel+2)%3; menuMoved=true; }
-      else if(inp.my>0&&!menuMoved){ menuSel=(menuSel+1)%3; menuMoved=true; }
+      if(inp.my<0&&!menuMoved){ menuSel=(menuSel+MENU_COUNT-1)%MENU_COUNT; menuMoved=true; }
+      else if(inp.my>0&&!menuMoved){ menuSel=(menuSel+1)%MENU_COUNT; menuMoved=true; }
       else if(!inp.my) menuMoved=false;
-      if(Input.state.startPressed){ endless=menuSel===1; debugMode=menuSel===2;
+      if(Input.state.startPressed){
+        endless=menuSel===1;
+        enemyLootMode=menuSel===2;
+        debugMode=menuSel===3;
+        if(menuSel===2) endless=false; // 敌人吃道具以闯关形式进行
         level=1; score=0; lives=30; player=null;
-        newLevel(); stateName="playing"; SFX.levelUp(); }
+        newLevel(); stateName="playing"; SFX.levelUp();
+      }
       Input.consume(); return;
     }
     if(stateName==="gameover"||stateName==="levelClear"){
       if(stateTime>1.2 && Input.state.startPressed){
-        if(stateName==="levelClear"){ level++; newLevel(); stateName="playing"; }
+        if(stateName==="levelClear"){
+          if(!endless && level>=CAMPAIGN_LEVELS){ stateName="menu"; menuSel=0; }
+          else { level++; newLevel(); stateName="playing"; }
+        }
         else { stateName="menu"; menuSel=0; }
       }
       Input.consume(); return;
     }
     if(Input.state.pausePressed){
-      stateName = stateName==="paused" ? "playing" : "paused"; SFX.pause();
+      if(stateName==="playing"||stateName==="paused"){
+        stateName = stateName==="paused" ? "playing" : "paused"; SFX.pause();
+      }
       Input.consume(); return;
     }
     if(stateName==="paused"){ Input.consume(); return; }
+    if(document.hidden){ Input.consume(); return; }
 
     /* --- playing --- */
     // 玩家
     if(player&&!player.dead){
       const p=player; p.cool-=dt; p.shield-=dt; p.spawnGhost-=dt;
+      if(p.frozen>0){ p.frozen-=dt; }
       let vx=inp.mx, vy=inp.my;
+      if(p.frozen>0){ vx=vy=0; }
       // 船被击毁后的自动滑出水域：接管移动直到到达陆地
       if(p.eject){
         const dx=p.eject.x-p.x, dy=p.eject.y-p.y, dist=Math.hypot(dx,dy);
@@ -674,7 +773,7 @@ const Game = (() => {
           if(d){ const step=Math.sign(d)*Math.min(Math.abs(d),p.speed*dt);
             if(!tankBlocked(p,p.x,p.y+step)) p.y+=step; } }
       }
-      if(inp.fire) fire(p);
+      if(inp.fire && !(p.frozen>0)) fire(p);
       // 吃道具
       for(const pu of powerups){
         if(!pu.dead&&rectHit(p.rect(),{x:pu.x,y:pu.y,w:TILE*2,h:TILE*2})){ pu.dead=true; applyPowerup(pu); }
@@ -689,24 +788,51 @@ const Game = (() => {
     // 敌人AI：随机游走 + 概率朝基地/玩家 + 随机开火
     for(const e of enemies){
       if(e.dead) continue;
-      e.cool-=dt; e.spawnGhost-=dt; e.anim+=dt*10;
+      e.cool-=dt; e.spawnGhost-=dt; e.shield=Math.max(0,(e.shield||0)-dt); e.anim+=dt*10;
       if(e.frozen>0){ e.frozen-=dt; continue; }
       e.aiT=(e.aiT||0)-dt;
       if(e.aiT<=0){
         e.aiT=rand(0.6,2.2);
-        const roll=Math.random();
-        if(roll<0.45){ e.dir=randi(0,3); }
-        else if(roll<0.75){ // 朝基地
-          e.dir = Math.abs(e.cx-(OFF_X+13*TILE))>TILE ? (e.cx<OFF_X+13*TILE?DIR.RIGHT:DIR.LEFT) : DIR.DOWN;
-        } else if(player&&!player.dead){ // 朝玩家
-          e.dir = Math.abs(e.cx-player.cx)>Math.abs(e.cy-player.cy)
-            ? (e.cx<player.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<player.cy?DIR.DOWN:DIR.UP);
+        // 敌人吃道具模式：优先冲向场上道具
+        let chasedPu=false;
+        if(enemyLootMode){
+          let best=null, bestD=1e9;
+          for(const pu of powerups){
+            if(pu.dead) continue;
+            const d=Math.hypot(e.cx-(pu.x+TILE), e.cy-(pu.y+TILE));
+            if(d<bestD){ bestD=d; best=pu; }
+          }
+          if(best && bestD<220){
+            chasedPu=true;
+            e.dir = Math.abs(e.cx-(best.x+TILE))>Math.abs(e.cy-(best.y+TILE))
+              ? (e.cx<best.x+TILE?DIR.RIGHT:DIR.LEFT)
+              : (e.cy<best.y+TILE?DIR.DOWN:DIR.UP);
+          }
+        }
+        if(!chasedPu){
+          const roll=Math.random();
+          if(roll<0.45){ e.dir=randi(0,3); }
+          else if(roll<0.75){ // 朝基地
+            e.dir = Math.abs(e.cx-(OFF_X+13*TILE))>TILE ? (e.cx<OFF_X+13*TILE?DIR.RIGHT:DIR.LEFT) : DIR.DOWN;
+          } else if(player&&!player.dead){ // 朝玩家
+            e.dir = Math.abs(e.cx-player.cx)>Math.abs(e.cy-player.cy)
+              ? (e.cx<player.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<player.cy?DIR.DOWN:DIR.UP);
+          }
         }
       }
       const nx=e.x+DXY[e.dir][0]*e.speed*dt, ny=e.y+DXY[e.dir][1]*e.speed*dt;
       if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
       else e.aiT=0; // 撞墙立刻换向
       if(Math.random()<dt*0.9) fire(e);
+      // 敌人拾取道具
+      if(enemyLootMode){
+        for(const pu of powerups){
+          if(pu.dead) continue;
+          if(rectHit(e.rect(),{x:pu.x,y:pu.y,w:TILE*2,h:TILE*2})){
+            pu.dead=true; applyEnemyPowerup(e, pu); break;
+          }
+        }
+      }
     }
 
     // 子弹
@@ -722,8 +848,11 @@ const Game = (() => {
         for(const e of enemies){
           if(e.dead||e.spawnGhost>0.8) continue;
           if(rectHit(b,e.rect())){ b.dead=true;
-            e.hp-=1; if(e.hp<=0) killTank(e,true);
-            else { SFX.hitSteel(); boom(b.x+3,b.y+3,5,["#cfd6e4","#fff"]); }
+            if((e.shield||0)>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); }
+            else {
+              e.hp-=1; if(e.hp<=0) killTank(e,true);
+              else { SFX.hitSteel(); boom(b.x+3,b.y+3,5,["#cfd6e4","#fff"]); }
+            }
             break; }
         }
       } else if(player&&!player.dead&&rectHit(b,player.rect())){
@@ -765,6 +894,9 @@ const Game = (() => {
     if(!endless && enemyQueue<=0 && enemies.length===0){
       stateName="levelClear"; stateTime=0; score+=1000; SFX.levelUp();
       if(score>hiScore){ hiScore=score; localStorage.tbHiScore=hiScore; }
+      if(level>=CAMPAIGN_LEVELS){
+        flash("🏆 通关全部 "+CAMPAIGN_LEVELS+" 关！");
+      }
     }
     // 无尽模式：每杀15个升一级难度
     if(endless && enemiesKilled>=level*15){ level++; flash("〰 无尽模式 · 难度提升至 Lv"+level); SFX.levelUp(); }
@@ -939,8 +1071,9 @@ const Game = (() => {
     const lx=(OFF_X-8)/2+4;
     g.fillText("关卡",lx,OFF_Y+26);
     g.font="bold 26px sans-serif"; g.fillStyle="#ffd24a";
-    g.fillText(endless?"∞":level,lx,OFF_Y+54);
+    g.fillText(endless?"∞":(level+"/"+CAMPAIGN_LEVELS),lx,OFF_Y+54);
     if(endless){ g.font="11px sans-serif"; g.fillStyle="#9fb0d0"; g.fillText("难度 Lv"+level,lx,OFF_Y+72); }
+    else if(enemyLootMode){ g.font="11px sans-serif"; g.fillStyle="#ff9d7a"; g.fillText("敌可吃道具",lx,OFF_Y+72); }
     g.font="bold 15px sans-serif"; g.fillStyle="#dfe6f5";
     g.fillText("生命",lx,OFF_Y+108);
     g.fillStyle="#ff7a6a"; g.font="bold 22px sans-serif"; g.fillText("♥ ×"+Math.max(0,lives),lx,OFF_Y+134);
@@ -1014,8 +1147,12 @@ const Game = (() => {
     }
     // 覆盖层
     if(stateName==="menu") drawMenu();
-    else if(stateName==="paused") drawOverlay("暂停","按 L / P 或点击暂停键继续");
-    else if(stateName==="levelClear") drawOverlay("关卡 "+level+" 通过！","得分 "+score+"　·　按 开火键 进入下一关");
+    else if(stateName==="paused") drawOverlay("暂停","按 L / P 或点击暂停键继续（背景音乐已暂停）");
+    else if(stateName==="levelClear"){
+      const done=!endless && level>=CAMPAIGN_LEVELS;
+      drawOverlay(done?"全部通关！":("关卡 "+level+" 通过！"),
+        done?("得分 "+score+"　·　按 开火键 回标题"):("得分 "+score+"　·　按 开火键 进入下一关"));
+    }
     else if(stateName==="gameover") drawOverlay("游 戏 结 束",
       overReason+"　·　得分 "+score+(score>=hiScore?"（新纪录！）":"　·　最高 "+hiScore)+"　·　按 开火键 重新开始",true);
   }
@@ -1043,21 +1180,27 @@ const Game = (() => {
     g.fillStyle="#9fb0d0"; g.font="16px sans-serif";
     g.fillText("TANK BATTLE · 经典改版",CANVAS_W/2,200);
     // 菜单项
-    const items=["🎮 闯关模式","♾ 无尽模式","🧪 测试模式（道具必掉）"];
-    g.font="bold 24px sans-serif";
+    const items=[
+      "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
+      "♾ 无尽模式",
+      "😈 敌人吃道具",
+      "🧪 测试模式（道具必掉）"
+    ];
+    g.font="bold 22px sans-serif";
     items.forEach((it,i)=>{
-      const y=258+i*48, sel=menuSel===i;
+      const y=248+i*42, sel=menuSel===i;
       if(sel){ g.fillStyle="rgba(255,210,74,.12)";
-        g.fillRect(CANVAS_W/2-150,y-30,300,42);
-        g.fillStyle="#ffd24a"; g.fillText("▶",CANVAS_W/2-170,y); }
+        g.fillRect(CANVAS_W/2-180,y-28,360,38);
+        g.fillStyle="#ffd24a"; g.fillText("▶",CANVAS_W/2-200,y); }
       g.fillStyle=sel?"#ffe9a0":"#8a94ac";
       g.fillText(it,CANVAS_W/2,y);
     });
-    g.fillStyle="#6a748c"; g.font="13px sans-serif";
-    g.fillText("移动：WASD / 方向键 / 左侧摇杆　　开火：J / 回车 / K / 空格 / 右侧按钮　　暂停：L / P",CANVAS_W/2,420);
-    g.fillText("道具改版：⛵船=渡水+护盾一层　🔫手枪=火力直升3星可打铁，再吃一个=4星可除草",CANVAS_W/2,444);
-    if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 16px sans-serif";
-      g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,486); }
+    g.fillStyle="#6a748c"; g.font="12px sans-serif";
+    g.fillText("地形递进：1–4砖 → 5–8铁 → 9–12草 → 13–20水　　敌人吃道具：敌军可抢星/枪/船等",CANVAS_W/2,418);
+    g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
+    g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
+    if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
+      g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,488); }
     g.fillStyle="#ffd24a"; g.font="bold 15px sans-serif";
     g.fillText("最高分："+hiScore,CANVAS_W/2,516);
   }
@@ -1079,49 +1222,87 @@ const Game = (() => {
 /* ---------------- 画布缩放 + 移动端适配 ---------------- */
 (() => {
   const cvs=document.getElementById("gameCanvas");
+  const playTools=document.getElementById("playTools");
+  const btnFs=document.getElementById("btnFs");
+  let cssRot=false;
+
+  function isFs(){
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function updateFsBtn(){
+    if(!btnFs) return;
+    btnFs.textContent = (isFs() || cssRot) ? "退出全屏" : "全屏";
+  }
   function resize(){
     let vw=window.innerWidth, vh=window.innerHeight;
     if(document.body.classList.contains("cssRotate")){ const t=vw; vw=vh; vh=t; }
     const scale=Math.min(vw/CANVAS_W, vh/CANVAS_H);
     cvs.style.width=(CANVAS_W*scale)+"px";
     cvs.style.height=(CANVAS_H*scale)+"px";
+    updateFsBtn();
   }
-  window.addEventListener("resize",resize); resize();
+  window.addEventListener("resize",resize);
+  window.addEventListener("orientationchange", () => setTimeout(resize, 120));
+  document.addEventListener("fullscreenchange", () => setTimeout(resize, 60));
+  document.addEventListener("webkitfullscreenchange", () => setTimeout(resize, 60));
 
-  // 触屏设备显示虚拟控件与全屏旋转按钮
-  const isTouch = "ontouchstart" in window || navigator.maxTouchPoints>0;
+  async function enterFs(){
+    SFX.unlock();
+    const root=document.documentElement;
+    try{
+      if(root.requestFullscreen) await root.requestFullscreen();
+      else if(root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+    }catch(e){}
+    try{
+      if(screen.orientation && screen.orientation.lock){
+        await screen.orientation.lock("landscape");
+      }
+    }catch(e){}
+    setTimeout(()=>{
+      // iOS 等不支持全屏/锁方向时：CSS 横屏回退
+      if(window.innerHeight>window.innerWidth && !isFs()){
+        document.body.classList.add("cssRotate");
+        cssRot=true;
+      }
+      resize();
+    }, 280);
+    return isFs() || cssRot;
+  }
+  async function exitFs(){
+    try{
+      if(isFs()){
+        if(document.exitFullscreen) await document.exitFullscreen();
+        else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    }catch(e){}
+    document.body.classList.remove("cssRotate");
+    cssRot=false;
+    setTimeout(resize, 60);
+  }
+  async function toggleFs(){
+    if(isFs() || cssRot) await exitFs();
+    else await enterFs();
+    updateFsBtn();
+  }
+
+  // 触屏设备显示虚拟控件与全屏按钮（参考冲锋行动）
+  const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints|0)>0
+    || window.matchMedia("(pointer: coarse)").matches;
   if(isTouch){
     document.querySelectorAll(".touchUI").forEach(el=>el.style.display="block");
     document.getElementById("btnFire").style.display="flex";
     document.getElementById("btnPause").style.display="flex";
-    const rb=document.getElementById("rotateBtn");
-    rb.style.display="block";
-    let cssRot=false;
-    rb.addEventListener("click",async()=>{
-      if(cssRot){ // 退出 CSS 横屏
-        document.body.classList.remove("cssRotate"); cssRot=false;
-        rb.textContent="⛶ 全屏横屏";
-        if(document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-        setTimeout(resize,100); return;
-      }
-      // 优先尝试原生全屏 + 方向锁定
-      try{
-        const el=document.documentElement;
-        if(el.requestFullscreen) await el.requestFullscreen();
-        else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        if(screen.orientation&&screen.orientation.lock)
-          await screen.orientation.lock("landscape");
-      }catch(e){ /* 不支持时走 CSS 旋转回退 */ }
-      setTimeout(()=>{
-        // 若仍是竖屏（锁定失败或不支持全屏），启用 CSS 旋转回退
-        if(window.innerHeight>window.innerWidth){
-          document.body.classList.add("cssRotate"); cssRot=true;
-          rb.textContent="⤴ 退出横屏";
-        }
-        resize();
-      },400);
-    });
+    if(playTools) playTools.style.display="flex";
+    if(btnFs){
+      btnFs.style.display="block";
+      btnFs.addEventListener("click", (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFs();
+      });
+    }
   }
+  resize();
 })();
 </script>
 </body>

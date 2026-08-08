@@ -669,7 +669,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         tankBattle: {
             title: '坦克大战',
-            desc: '经典坦克大战：守护基地、砖铁水草、改版道具，横屏双端操控。'
+            desc: '经典坦克大战：20 关地形递进、敌人吃道具模式，横屏双端操控。'
         },
         starSerpent: {
             title: '星蛇突击',
