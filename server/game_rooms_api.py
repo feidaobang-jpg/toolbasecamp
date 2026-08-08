@@ -74,17 +74,30 @@ def _new_code() -> str:
 
 
 async def _broadcast(room: Room, payload: dict, exclude: Optional[str] = None) -> None:
-    dead: List[str] = []
-    raw = json.dumps(payload, ensure_ascii=False)
-    for pid, p in list(room.players.items()):
-        if exclude and pid == exclude:
-            continue
+    """Fan-out in parallel so one slow client does not delay the rest."""
+    raw = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    await _broadcast_raw(room, raw, exclude=exclude)
+
+
+async def _broadcast_raw(room: Room, raw: str, exclude: Optional[str] = None) -> None:
+    targets = [
+        (pid, p) for pid, p in list(room.players.items())
+        if not exclude or pid != exclude
+    ]
+    if not targets:
+        return
+
+    async def _one(pid: str, p: Player) -> Optional[str]:
         try:
             await p.ws.send_text(raw)
+            return None
         except Exception:
-            dead.append(pid)
-    for pid in dead:
-        room.players.pop(pid, None)
+            return pid
+
+    results = await asyncio.gather(*(_one(pid, p) for pid, p in targets))
+    for pid in results:
+        if pid:
+            room.players.pop(pid, None)
 
 
 async def _send(ws: WebSocket, payload: dict) -> None:
@@ -242,7 +255,7 @@ async def tank_coop_ws(websocket: WebSocket):
                         host = room.host()
                         if host and host.pid != pid:
                             try:
-                                await host.ws.send_text(json.dumps(payload, ensure_ascii=False))
+                                await host.ws.send_text(json.dumps(payload, separators=(",", ":"), ensure_ascii=False))
                             except Exception:
                                 pass
                         else:

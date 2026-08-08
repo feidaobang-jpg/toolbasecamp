@@ -75,7 +75,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">房主权威同步战场（约 12 次/秒）。支持开局后中途加入。结束画面全员可见，仅房主可重开。</p>
+      <p class="coop-hint">房主权威同步（约 20 次/秒）+ 客机本地预测/外推。支持中途加入；结束全员可见，仅房主重开。</p>
     </div>
   </div>
 </div>
@@ -584,9 +584,11 @@ const Game = (() => {
   let coopAllies={};           // pid -> Tank（不含本地 player）
   let coopRemoteInput={};      // pid -> {mx,my,fire}
   let coopStateAcc=0;
+  let coopInputAcc=0;
+  let coopLastIn={mx:0,my:0};
+  let coopFireHeld=false;
   let coopGridSent="";
   let coopRoster=[];
-  let coopPredictUntil=0; // 本地预测校正用
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
@@ -993,32 +995,28 @@ const Game = (() => {
   function buildNetState(){
     const packT=t=>({
       pid:t.coopPid||"", name:t.coopName||"", slot:t.coopSlot|0,
-      x:Math.round(t.x), y:Math.round(t.y), dir:t.dir, dead:!!t.dead,
-      stars:t.stars|0, boat:!!t.boat, bulk:t.bulk|0, shield:+(t.shield||0).toFixed(1),
-      spawnGhost:+(t.spawnGhost||0).toFixed(1), frozen:+(t.frozen||0).toFixed(1)
+      x:t.x|0, y:t.y|0, dir:t.dir, dead:t.dead?1:0,
+      stars:t.stars|0, boat:t.boat?1:0, bulk:t.bulk|0,
+      sh:+(t.shield||0).toFixed(1), sg:+(t.spawnGhost||0).toFixed(1), fz:+(t.frozen||0).toFixed(1)
     });
     const friends=friendlyTanks().map(packT);
     const fullGrid = grid ? grid.map(row=>row.join("")).join("|") : "";
     const gridChanged = fullGrid !== coopGridSent;
     if(gridChanged) coopGridSent = fullGrid;
+    // 紧凑字段：客机 JSON.parse 更轻；地图仅变化时附带
     return {
       type:"state",
-      level, score, lives, enemyQueue, enemiesKilled, baseAlive,
+      level, score, lives, enemyQueue, enemiesKilled, baseAlive:baseAlive?1:0,
       freezeTimer:+freezeTimer.toFixed(2), shovelTimer:+shovelTimer.toFixed(2),
       clearGrace:+clearGrace.toFixed(2), stateName, overReason: overReason||"",
-      // 地图只在变化时下发，大幅减轻手机流量与解析
       grid: gridChanged ? fullGrid : undefined,
       players: friends,
-      enemies: enemies.filter(e=>!e.dead).map(e=>({
-        x:Math.round(e.x), y:Math.round(e.y), dir:e.dir, hp:e.hp, type:e.type,
-        stars:e.stars|0, speed:Math.round(e.speed), spawnGhost:+(e.spawnGhost||0).toFixed(1),
-        shield:+(e.shield||0).toFixed(1), frozen:+(e.frozen||0).toFixed(1)
-      })),
-      bullets: bullets.filter(b=>!b.dead).map(b=>({
-        x:Math.round(b.x), y:Math.round(b.y), dir:b.dir, power:b.power,
-        friend:!!(b.owner&&b.owner.isPlayer)
-      })),
-      powerups: powerups.filter(p=>!p.dead).map(p=>({type:p.type,x:Math.round(p.x),y:Math.round(p.y),life:+p.life.toFixed(1)}))
+      enemies: enemies.filter(e=>!e.dead).map(e=>([
+        e.x|0, e.y|0, e.dir, e.hp|0, e.type||"n", e.stars|0, e.speed|0,
+        +(e.spawnGhost||0).toFixed(1), +(e.shield||0).toFixed(1), +(e.frozen||0).toFixed(1)
+      ])),
+      bullets: bullets.filter(b=>!b.dead).map(b=>([b.x|0,b.y|0,b.dir,b.power|0,b.owner&&b.owner.isPlayer?1:0])),
+      powerups: powerups.filter(p=>!p.dead).map(p=>([p.type,p.x|0,p.y|0,+p.life.toFixed(1)]))
     };
   }
   function applyNetState(msg){
@@ -1050,53 +1048,101 @@ const Game = (() => {
         if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
       }
       const isSelf = ps.pid===coopMyPid;
+      const px=ps.x|0, py=ps.y|0;
       if(isSelf && player && !ps.dead && stateName==="playing"){
-        const dx=ps.x-t.x, dy=ps.y-t.y, dist=Math.hypot(dx,dy);
-        if(dist>28){ t.x=ps.x; t.y=ps.y; }
-        else { t.x+=dx*0.4; t.y+=dy*0.4; }
+        const dx=px-t.x, dy=py-t.y, dist=Math.hypot(dx,dy);
+        if(dist>36){ t.x=px; t.y=py; }
+        else { t.x+=dx*0.25; t.y+=dy*0.25; }
       } else {
-        t.x=ps.x; t.y=ps.y;
+        // 队友：写目标点，帧间插值，避免 12~20Hz 硬贴像幻灯片
+        t._tx=px; t._ty=py;
+        if(t._hasNet==null || Math.hypot(px-t.x,py-t.y)>56){ t.x=px; t.y=py; }
+        t._hasNet=1;
       }
       t.dir=ps.dir; t.dead=!!ps.dead;
       const starsChanged=(t.stars|0)!==(ps.stars|0) || (t.bulk|0)!==(ps.bulk|0);
       t.stars=ps.stars|0; t.boat=!!ps.boat; t.bulk=ps.bulk|0;
-      t.shield=ps.shield||0; t.spawnGhost=ps.spawnGhost||0; t.frozen=ps.frozen||0;
+      t.shield=(ps.sh!=null?ps.sh:ps.shield)||0;
+      t.spawnGhost=(ps.sg!=null?ps.sg:ps.spawnGhost)||0;
+      t.frozen=(ps.fz!=null?ps.fz:ps.frozen)||0;
       t.coopName=ps.name||t.coopName;
       if(starsChanged){ t.applyStars(); t.applyBulk(); }
       if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
     });
     for(const pid in coopAllies){ if(!seen[pid] && pid!==coopMyPid) delete coopAllies[pid]; }
-    // enemies / bullets / powerups：复用数组槽位，减少 GC
+    // enemies / bullets / powerups：支持紧凑数组；目标点 + 帧间外推
     const elist=msg.enemies||[];
     while(enemies.length>elist.length) enemies.pop();
     for(let i=0;i<elist.length;i++){
-      const es=elist[i];
+      const raw=elist[i];
+      const es=Array.isArray(raw)?{
+        x:raw[0],y:raw[1],dir:raw[2],hp:raw[3],type:raw[4],stars:raw[5],speed:raw[6],
+        spawnGhost:raw[7],shield:raw[8],frozen:raw[9]
+      }:raw;
       let e=enemies[i];
-      if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; }
-      e.dead=false; e.x=es.x; e.y=es.y; e.dir=es.dir; e.hp=es.hp;
+      if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; e._hasNet=0; }
+      e.dead=false; e.dir=es.dir; e.hp=es.hp;
       e.type=es.type||"normal"; e.speed=es.speed||60;
       e.spawnGhost=es.spawnGhost||0; e.shield=es.shield||0; e.frozen=es.frozen||0;
+      e._tx=es.x; e._ty=es.y;
+      if(!e._hasNet || Math.hypot(es.x-e.x,es.y-e.y)>48){ e.x=es.x; e.y=es.y; }
+      e._hasNet=1;
       if((e.stars|0)!==(es.stars|0)){ e.stars=es.stars|0; e.applyStars(); }
     }
     const blist=msg.bullets||[];
     while(bullets.length>blist.length) bullets.pop();
     for(let i=0;i<blist.length;i++){
-      const bs=blist[i];
+      const raw=blist[i];
+      const bs=Array.isArray(raw)?{x:raw[0],y:raw[1],dir:raw[2],power:raw[3],friend:!!raw[4]}:raw;
       let b=bullets[i];
       if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1); bullets[i]=b; }
       else {
-        b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1;
+        b.dead=false; b.dir=bs.dir; b.power=bs.power||1;
         b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
+        // 子弹快：大偏差才硬贴，否则外推纠正
+        if(Math.hypot(bs.x-b.x,bs.y-b.y)>24){ b.x=bs.x; b.y=bs.y; }
+        else { b.x=bs.x; b.y=bs.y; }
       }
     }
     const plist=msg.powerups||[];
     while(powerups.length>plist.length) powerups.pop();
     for(let i=0;i<plist.length;i++){
-      const ps=plist[i];
+      const raw=plist[i];
+      const ps=Array.isArray(raw)?{type:raw[0],x:raw[1],y:raw[2],life:raw[3]}:raw;
       let pu=powerups[i];
       if(!pu){ pu=new PowerUp(ps.type, ps.x, ps.y); powerups[i]=pu; }
       else { pu.type=ps.type; pu.x=ps.x; pu.y=ps.y; }
       pu.dead=false; pu.life=ps.life||10;
+    }
+  }
+  /** 客机帧间：外推敌军/子弹 + 插值队友，把 20Hz 快照拉成 60fps 观感 */
+  function coopGuestPresent(dt){
+    const k=Math.min(1, 18*dt);
+    for(const pid in coopAllies){
+      const t=coopAllies[pid];
+      if(!t||t.dead||t._tx==null) continue;
+      t.x+=(t._tx-t.x)*k; t.y+=(t._ty-t.y)*k;
+      t.shield=Math.max(0,(t.shield||0)-dt);
+      t.spawnGhost=Math.max(0,(t.spawnGhost||0)-dt);
+      t.frozen=Math.max(0,(t.frozen||0)-dt);
+    }
+    for(const e of enemies){
+      if(!e||e.dead) continue;
+      e.spawnGhost=Math.max(0,(e.spawnGhost||0)-dt);
+      e.shield=Math.max(0,(e.shield||0)-dt);
+      e.anim=(e.anim||0)+dt*10;
+      if((e.frozen||0)>0){ e.frozen-=dt; continue; }
+      const spd=e.speed||60;
+      if(e._tx!=null){
+        e._tx+=DXY[e.dir][0]*spd*dt;
+        e._ty+=DXY[e.dir][1]*spd*dt;
+        e.x+=(e._tx-e.x)*k;
+        e.y+=(e._ty-e.y)*k;
+      }
+    }
+    for(const b of bullets){
+      if(!b||b.dead) continue;
+      b.update(dt);
     }
   }
   function onCoopRoster(list){
@@ -1189,13 +1235,25 @@ const Game = (() => {
     if(stateName==="paused"){ Input.consume(); return; }
     if(document.hidden){ Input.consume(); return; }
 
-    /* --- 联机客机：发输入 + 本地预测移动；状态由房主校正 --- */
+    /* --- 联机客机：节流输入 + 本地预测 + 帧间外推呈现 --- */
     if(coopMode && !coopIsHost){
       if(coopSend && stateName==="playing"){
-        coopSend({type:"input", mx:inp.mx|0, my:inp.my|0, fire:!!inp.fire});
-        // 本地预测自己坦克位移（开火仍以房主为准，避免双发）
-        if(player&&!player.dead) driveTank(player, inp.mx, inp.my, false, dt);
+        const mx=inp.mx|0, my=inp.my|0;
+        const holding=!!inp.fire;
+        const fireEdge=holding && !coopFireHeld;
+        coopFireHeld=holding;
+        coopInputAcc+=dt;
+        const moved=mx!==coopLastIn.mx || my!==coopLastIn.my;
+        // 方向变化/开火边沿立刻发；其余最多 10Hz（避免 60Hz 打爆中继）
+        // fire 只在发包时带上按住状态，由房主冷却决定连发
+        if(fireEdge || moved || coopInputAcc>=0.1){
+          coopInputAcc=0;
+          coopLastIn={mx,my};
+          coopSend({type:"input", mx, my, fire:holding});
+        }
+        if(player&&!player.dead) driveTank(player, mx, my, false, dt);
       }
+      coopGuestPresent(dt);
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
       shake=Math.max(0,shake-dt);
@@ -1341,10 +1399,10 @@ const Game = (() => {
     // 无尽模式：每杀15个升一级难度
     if(endless && enemiesKilled>=level*15){ level++; flash("〰 无尽模式 · 难度提升至 Lv"+level); SFX.levelUp(); }
 
-    // 房主广播状态（约 12Hz；地图仅变化时带上）
+    // 房主广播状态（约 20Hz；地图仅变化时带上）
     if(coopMode && coopIsHost && coopSend){
       coopStateAcc+=dt;
-      if(coopStateAcc>=0.08){
+      if(coopStateAcc>=0.05){
         coopStateAcc=0;
         try{ coopSend(buildNetState()); }catch(e){}
       }
@@ -1795,7 +1853,7 @@ const Game = (() => {
       coopSend=typeof opts.send==="function" ? opts.send : null;
       coopRoster=Array.isArray(opts.roster)?opts.roster.slice():[];
       coopRemoteInput={};
-      coopStateAcc=0;
+      coopStateAcc=0; coopInputAcc=0; coopLastIn={mx:0,my:0}; coopFireHeld=false;
       coopGridSent="";
       endless=false; enemyLootMode=false; debugMode=false;
       level=1; score=0; lives=30; player=null; coopAllies={}; overReason="";
