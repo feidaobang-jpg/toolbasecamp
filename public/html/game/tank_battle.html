@@ -75,7 +75,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">房主权威同步（约 20 次/秒）+ 客机本地预测/外推。支持中途加入；结束全员可见，仅房主重开。</p>
+      <p class="coop-hint">最多 8 人合作打关。支持开局后中途加入；结束画面全员可见，仅房主可重开。</p>
     </div>
   </div>
 </div>
@@ -135,8 +135,18 @@ const SFX = (() => {
     shootBig(){ tone("square",520,120,0.14,0.16); noise(0.06,0.08,1200); },
     hitWall(){ noise(0.07,0.12,900); },
     hitSteel(){ tone("triangle",1400,900,0.06,0.10); },
-    explode(){ noise(0.35,0.30,500); tone("sawtooth",160,40,0.35,0.12); },
+    /** 敌军未打死：清晰受击（区别于打钢墙的尖鸣） */
+    hitEnemy(){ tone("square",380,140,0.09,0.15); noise(0.055,0.11,1200); },
+    /** 友军未打死（装甲剥落/船体等）：更沉的受击 */
+    hitFriendly(){ tone("sawtooth",240,80,0.11,0.17); noise(0.08,0.14,700); },
+    /** 敌军炸毁：短促简单爆炸 */
+    explode(){ noise(0.28,0.26,520); tone("sawtooth",180,45,0.28,0.11); },
     bigExplode(){ noise(0.6,0.35,320); tone("sawtooth",120,30,0.6,0.16); },
+    /** 友军/自己被打死：双层轰鸣，更震撼 */
+    friendlyExplode(){
+      noise(0.72,0.40,260); tone("sawtooth",95,22,0.72,0.18);
+      setTimeout(()=>{ noise(0.38,0.22,180); tone("sawtooth",70,18,0.35,0.12); },70);
+    },
     powerup(){ tone("sine",600,1200,0.12,0.15); setTimeout(()=>tone("sine",900,1600,0.15,0.15),90); },
     shield(){ tone("sine",300,900,0.25,0.12); },
     levelUp(){ [440,554,659,880].forEach((f,i)=>setTimeout(()=>tone("square",f,f,0.12,0.12),i*110)); },
@@ -578,16 +588,12 @@ const Game = (() => {
   let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   let clearGrace=0; // 敌军清空后的拾取缓冲秒数
-  // 合作联机（房主权威）
+  // 合作联机
   let coopMode=false, coopIsHost=false, coopMyPid="", coopHostPid="";
   let coopSend=null;           // (obj)=>void
   let coopAllies={};           // pid -> Tank（不含本地 player）
   let coopRemoteInput={};      // pid -> {mx,my,fire}
   let coopStateAcc=0;
-  let coopInputAcc=0;
-  let coopLastIn={mx:0,my:0};
-  let coopFireHeld=false;
-  let coopGridSent="";
   let coopRoster=[];
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
@@ -888,7 +894,7 @@ const Game = (() => {
     player.bulk--;
     player.applyBulk();
     player.shield = Math.max(player.shield, 1.2);
-    SFX.hitSteel();
+    SFX.hitFriendly();
     boom(player.cx, player.cy, 10, ["#ffd24a","#ffb02e","#fff"]);
     flash(player.bulk>0 ? "装甲受损！" : "装甲剥落！");
     return true;
@@ -921,7 +927,9 @@ const Game = (() => {
     return hit;
   }
   function killTank(t,byPlayer){
-    t.dead=true; boom(t.cx,t.cy,26); SFX.explode(); shake=Math.max(shake,0.25);
+    t.dead=true; boom(t.cx,t.cy,26);
+    if(t.isPlayer){ SFX.friendlyExplode(); shake=Math.max(shake,0.45); }
+    else { SFX.explode(); shake=Math.max(shake,0.25); }
     if(!t.isPlayer){
       enemiesKilled++;
       if(byPlayer){ const pts={normal:100,fast:200,power:300,mid:350,armor:450}[t.type]||100; score+=pts;
@@ -976,12 +984,12 @@ const Game = (() => {
   function hurtFriendly(t, b){
     if(t.shield>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); return; }
     if(t.bulk>0){
-      t.bulk-=1; t.applyBulk(); SFX.hitSteel(); boom(b.x+3,b.y+3,8,["#ffd24a","#fff"]);
+      t.bulk-=1; t.applyBulk(); SFX.hitFriendly(); boom(b.x+3,b.y+3,8,["#ffd24a","#fff"]);
       if(t===player) flash("装甲被打掉一层！");
       return;
     }
     if(t.boat){
-      t.boat=false; SFX.hitWall();
+      t.boat=false; SFX.hitFriendly();
       if(t===player) flash("⛵ 船体护盾抵挡了攻击！");
       boom(t.cx,t.cy,10,["#7ad0ff","#3f7fd0","#fff"]);
       if(onWater(t)){
@@ -1039,7 +1047,9 @@ const Game = (() => {
       }
     }
     // players：复用对象；自己的坦克软校正（本地预测）
+    // 客机无本地碰撞权威：用 dead/bulk/boat 变化轻量补受击/爆炸声（每事件最多一声）
     const seen={};
+    let guestFriendBoom=false, guestFriendHit=false;
     (msg.players||[]).forEach(ps=>{
       seen[ps.pid]=true;
       let t = (ps.pid===coopMyPid) ? player : coopAllies[ps.pid];
@@ -1049,6 +1059,7 @@ const Game = (() => {
       }
       const isSelf = ps.pid===coopMyPid;
       const px=ps.x|0, py=ps.y|0;
+      const wasDead=!!t.dead, prevBulk=t.bulk|0, prevBoat=!!t.boat;
       if(isSelf && player && !ps.dead && stateName==="playing"){
         const dx=px-t.x, dy=py-t.y, dist=Math.hypot(dx,dy);
         if(dist>36){ t.x=px; t.y=py; }
@@ -1067,12 +1078,20 @@ const Game = (() => {
       t.frozen=(ps.fz!=null?ps.fz:ps.frozen)||0;
       t.coopName=ps.name||t.coopName;
       if(starsChanged){ t.applyStars(); t.applyBulk(); }
+      if(!wasDead && t.dead) guestFriendBoom=true;
+      else if(!t.dead && ((t.bulk|0)<prevBulk || (prevBoat && !t.boat))) guestFriendHit=true;
       if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
     });
+    if(guestFriendBoom) SFX.friendlyExplode();
+    else if(guestFriendHit) SFX.hitFriendly();
     for(const pid in coopAllies){ if(!seen[pid] && pid!==coopMyPid) delete coopAllies[pid]; }
     // enemies / bullets / powerups：支持紧凑数组；目标点 + 帧间外推
     const elist=msg.enemies||[];
+    let prevEnemyHp=0;
+    for(const e of enemies){ if(e&&!e.dead) prevEnemyHp+=e.hp|0; }
+    const prevEnemyN=enemies.length;
     while(enemies.length>elist.length) enemies.pop();
+    let newEnemyHp=0;
     for(let i=0;i<elist.length;i++){
       const raw=elist[i];
       const es=Array.isArray(raw)?{
@@ -1088,7 +1107,11 @@ const Game = (() => {
       if(!e._hasNet || Math.hypot(es.x-e.x,es.y-e.y)>48){ e.x=es.x; e.y=es.y; }
       e._hasNet=1;
       if((e.stars|0)!==(es.stars|0)){ e.stars=es.stars|0; e.applyStars(); }
+      newEnemyHp+=e.hp|0;
     }
+    // 客机：敌人数减少→简单爆炸；仅掉血→受击（每包最多一声，避免叠吵）
+    if(elist.length < prevEnemyN) SFX.explode();
+    else if(newEnemyHp < prevEnemyHp) SFX.hitEnemy();
     const blist=msg.bullets||[];
     while(bullets.length>blist.length) bullets.pop();
     for(let i=0;i<blist.length;i++){
@@ -1348,7 +1371,7 @@ const Game = (() => {
             if((e.shield||0)>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); }
             else {
               e.hp-=1; if(e.hp<=0) killTank(e,true);
-              else { SFX.hitSteel(); boom(b.x+3,b.y+3,5,["#cfd6e4","#fff"]); }
+              else { SFX.hitEnemy(); boom(b.x+3,b.y+3,5,["#cfd6e4","#fff"]); }
             }
             break; }
         }
