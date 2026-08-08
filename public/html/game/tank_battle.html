@@ -38,30 +38,13 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   background:radial-gradient(circle at 35% 30%,#ff9d7a,#c2402a);}
 #btnPause{right:22%;bottom:18%;width:11%;max-width:60px;aspect-ratio:1;font-size:12px;
   background:radial-gradient(circle at 35% 30%,#c9c9e8,#565688);}
-#wxTip{
-  display:none;position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:70;
-  max-width:min(92%,380px);padding:12px 14px;border-radius:12px;
-  background:rgba(15,23,42,.95);border:1px solid #fbbf24;color:#e2e8f0;
-  font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;
-  box-shadow:0 8px 24px rgba(0,0,0,.45);
-}
-#wxTip button{
-  font:inherit;border:0;border-radius:999px;padding:8px 14px;cursor:pointer;color:#fff;
-}
 </style>
 </head>
 <body>
 <div id="rotWrap">
   <div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
   <div id="playTools">
-    <button type="button" id="btnFs" title="横屏">横屏铺满</button>
-  </div>
-  <div id="wxTip">
-    <div>微信内已用<strong>画面横屏铺满</strong>（系统无法真全屏）。竖着手机即可横屏开玩；点「横屏铺满」可开关。</div>
-    <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-      <button type="button" id="btnWxLand" style="background:#2563eb">确认横屏</button>
-      <button type="button" id="btnWxTipOk" style="background:#1e293b;border:1px solid #475569">知道了</button>
-    </div>
+    <button type="button" id="btnFs" title="横屏">横屏</button>
   </div>
   <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
   <div id="btnFire" class="tBtn touchUI">开火</div>
@@ -1381,7 +1364,6 @@ const Game = (() => {
   const stage = document.getElementById("rotWrap");
   const playTools = document.getElementById("playTools");
   const btnFs = document.getElementById("btnFs");
-  const wxTip = document.getElementById("wxTip");
 
   /** 用户强制开关：微信/触屏竖屏默认开；点按钮可关 */
   let landForced = true;
@@ -1389,19 +1371,18 @@ const Game = (() => {
 
   function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent || ""); }
   function isTouchDev(){
-    return ("ontouchstart" in window) || (navigator.maxTouchPoints|0) > 0
-      || window.matchMedia("(pointer: coarse)").matches;
+    // 仅粗指针/真触屏，避免 PC 误显示「横屏」
+    if(window.matchMedia("(pointer: coarse)").matches) return true;
+    if(isWeChat()) return true;
+    return ("ontouchstart" in window) && (navigator.maxTouchPoints|0) > 1
+      && window.matchMedia("(hover: none)").matches;
   }
   function isFs(){
     return !!(document.fullscreenElement || document.webkitFullscreenElement);
   }
   function updateFsBtn(){
     if(!btnFs) return;
-    if(isWeChat() || isTouchDev()){
-      btnFs.textContent = window.__tbCssLand ? "退出横屏" : "横屏铺满";
-    } else {
-      btnFs.textContent = isFs() ? "退出全屏" : "全屏";
-    }
+    btnFs.textContent = window.__tbCssLand ? "退出横屏" : "横屏";
   }
 
   /**
@@ -1499,22 +1480,11 @@ const Game = (() => {
       btnFs.addEventListener("click", toggleLand);
       btnFs.addEventListener("touchend", (e) => { e.preventDefault(); toggleLand(e); }, { passive:false });
     }
-    if(isWeChat()){
-      landForced = true;
-      if(wxTip){
-        try{ if(!localStorage.tbWxLandTip) wxTip.style.display = "block"; }
-        catch(err){ wxTip.style.display = "block"; }
-        document.getElementById("btnWxLand").addEventListener("click", (e) => {
-          e.preventDefault(); e.stopPropagation();
-          landForced = true; layout(); wxTip.style.display = "none";
-          try{ localStorage.tbWxLandTip = "1"; }catch(err){}
-        });
-        document.getElementById("btnWxTipOk").addEventListener("click", () => {
-          wxTip.style.display = "none";
-          try{ localStorage.tbWxLandTip = "1"; }catch(err){}
-        });
-      }
-    }
+    if(isWeChat()) landForced = true;
+  } else {
+    // PC：不显示横屏按钮
+    if(playTools) playTools.style.display = "none";
+    if(btnFs) btnFs.style.display = "none";
   }
 
   layout();
