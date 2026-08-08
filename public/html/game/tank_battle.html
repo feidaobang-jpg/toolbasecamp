@@ -324,7 +324,7 @@ class Tank{
     this.cool=0; this.dead=false;
     this.stars=0;             // 星级：0基础 1快弹 2双发 3打铁 4除草
     this.boat=false;          // 船：可过水 + 抵挡一次攻击的船体护盾
-    this.bulk=0;              // 装甲体型：0普通 1加粗(≥3星/枪) 2更粗(≥4星)；被打会降级变小
+    this.bulk=0;              // 装甲外观：0普通 1加厚(≥3星/枪) 2更厚(≥4星)；碰撞体积不变，被打降级
     this.shield=0;            // 无敌护盾剩余时间
     this.spawnGhost=1.6;      // 出生保护/闪烁
     this.hp=1;
@@ -342,18 +342,17 @@ class Tank{
     this.maxBullets  = this.stars>=2 ? 2 : 1;
     this.bulletPower = this.stars>=3 ? 3 : 1;   // 3星可打铁
     if(this.stars>=4) this.bulletPower = 4;     // 4星可除草（额外星/手枪）
-    // 3星/枪 → 变粗；4星再粗一点（可再吃回来）
+    // 3星/枪 → 装甲外观加厚；4星更厚（碰撞格始终不变）
     if(this.stars>=4) this.bulk = Math.max(this.bulk, 2);
     else if(this.stars>=3) this.bulk = Math.max(this.bulk, 1);
     this.applyBulk();
   }
-  /** 按 bulk 调整体型（中心不变） */
+  /** 锁定标准碰撞体积（装甲只改外观，不撑大 hitbox） */
   applyBulk(){
     const base = TILE*2-2;
-    const add = this.bulk>=2 ? 7 : (this.bulk>=1 ? 4 : 0);
     const cx=this.cx, cy=this.cy;
-    this.w = base + add;
-    this.h = base + add;
+    this.w = base;
+    this.h = base;
     this.x = cx - this.w/2;
     this.y = cy - this.h/2;
   }
@@ -681,7 +680,7 @@ const Game = (() => {
         player.stars = player.stars>=3 ? 4 : 3;
         player.bulk = player.stars>=4 ? 2 : Math.max(player.bulk, 1);
         player.applyStars();
-        flash(player.stars>=4?"🔫 满级火力！装甲加厚可抗弹":"🔫 手枪！可打铁 · 坦克变粗");
+        flash(player.stars>=4?"🔫 满级火力！装甲加厚可抗弹":"🔫 手枪！可打铁 · 装甲加厚");
         break;
       case PU.BOAT: // 船：护盾一层 + 可在水上行走
         player.boat=true; SFX.boat(); flash("⛵ 获得船：可渡水+船体护盾"); break;
@@ -744,7 +743,7 @@ const Game = (() => {
     player.shield = Math.max(player.shield, 1.2);
     SFX.hitSteel();
     boom(player.cx, player.cy, 10, ["#ffd24a","#ffb02e","#fff"]);
-    flash(player.bulk>0 ? "装甲受损！体型缩小" : "装甲剥落！变回原型");
+    flash(player.bulk>0 ? "装甲受损！" : "装甲剥落！");
     return true;
   }
 
@@ -1054,15 +1053,27 @@ const Game = (() => {
     if(t.spawnGhost>0 && Math.floor(t.spawnGhost*10)%2===0 && !t.isPlayer) return;
     g.save(); g.translate(t.cx,t.cy); g.rotate(t.dir*Math.PI/2);
     const w=t.w,h=t.h;
-    // 履带
+    const bulk = (t.isPlayer && t.bulk) ? t.bulk : 0;
+    // 履带（装甲时画得更厚实，不改碰撞）
+    const trackW = bulk>=2 ? 8 : (bulk>=1 ? 7 : 6);
     const trackShift = Math.floor(t.anim)%2===0?0:2;
-    g.fillStyle=t.isPlayer?"#3a4a2a":"#333844";
-    g.fillRect(-w/2,-h/2,6,h); g.fillRect(w/2-6,-h/2,6,h);
+    g.fillStyle=t.isPlayer?(bulk?"#2a3520":"#3a4a2a"):"#333844";
+    g.fillRect(-w/2,-h/2,trackW,h); g.fillRect(w/2-trackW,-h/2,trackW,h);
+    if(bulk){
+      g.fillStyle="rgba(255,210,100,.35)";
+      g.fillRect(-w/2,-h/2,2,h); g.fillRect(w/2-2,-h/2,2,h);
+    }
     g.fillStyle="rgba(255,255,255,.18)";
-    for(let i=-h/2+trackShift;i<h/2;i+=5){ g.fillRect(-w/2+1,i,4,2); g.fillRect(w/2-5,i,4,2); }
+    for(let i=-h/2+trackShift;i<h/2;i+=5){
+      g.fillRect(-w/2+1,i,trackW-2,2); g.fillRect(w/2-trackW+1,i,trackW-2,2);
+    }
     // 车身（渐变高光）
     let c1,c2;
-    if(t.isPlayer){ c1="#d8c84a"; c2="#8a7a1e"; }
+    if(t.isPlayer){
+      if(bulk>=2){ c1="#ffe08a"; c2="#a07818"; }
+      else if(bulk>=1){ c1="#edd45a"; c2="#8a6a14"; }
+      else { c1="#d8c84a"; c2="#8a7a1e"; }
+    }
     else if(t.type==="boss"){ c1="#ff6b4a"; c2="#7a1020"; }
     else if(t.type==="fast"){ c1="#7ac0e8"; c2="#2a6a9a"; }
     else if(t.type==="power"){ c1="#e88a7a"; c2="#9a3a2a"; }
@@ -1070,16 +1081,20 @@ const Game = (() => {
     else { c1="#b0b8a0"; c2="#5a6050"; }
     const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
-    g.fillStyle=gr; g.fillRect(-w/2+5,-h/2+3,w-10,h-6);
-    // 装甲加厚时描边更粗
-    if(t.isPlayer && t.bulk>0){
-      g.strokeStyle = t.bulk>=2 ? "rgba(255,200,60,.9)" : "rgba(255,210,120,.7)";
-      g.lineWidth = t.bulk>=2 ? 3 : 2;
-      g.strokeRect(-w/2+4,-h/2+2,w-8,h-4);
+    g.fillStyle=gr; g.fillRect(-w/2+trackW-1,-h/2+3,w-trackW*2+2,h-6);
+    // 装甲加厚：内板 + 铆钉（纯外观）
+    if(bulk>0){
+      g.strokeStyle = bulk>=2 ? "rgba(255,200,60,.95)" : "rgba(255,210,120,.8)";
+      g.lineWidth = bulk>=2 ? 2.5 : 2;
+      g.strokeRect(-w/2+trackW,-h/2+4,w-trackW*2,h-8);
+      g.fillStyle="#c9a24a";
+      const rivets=[[-6,-6],[6,-6],[-6,6],[6,6],[0,-8],[0,8]];
+      for(const [rx,ry] of rivets){ g.beginPath(); g.arc(rx,ry,bulk>=2?1.6:1.2,0,Math.PI*2); g.fill(); }
     }
     // 炮塔
-    g.fillStyle=t.isPlayer?"#eadb6a":(t.type==="boss"?"#ffd24a":"#d8dde8");
-    g.beginPath(); g.arc(0,1,t.type==="boss"?8:(t.isPlayer&&t.bulk?8:7),0,Math.PI*2); g.fill();
+    g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a"):(t.type==="boss"?"#ffd24a":"#d8dde8");
+    g.beginPath(); g.arc(0,1,t.type==="boss"?8:(bulk?8:7),0,Math.PI*2); g.fill();
+    if(bulk){ g.strokeStyle="rgba(180,120,20,.7)"; g.lineWidth=1.5; g.stroke(); }
     g.fillStyle=t.isPlayer?"#6a5c14":"#404858";
     g.fillRect(-2.5,-h/2-4,5,h/2+5);
     // 装甲/Boss 血量提示
@@ -1100,11 +1115,11 @@ const Game = (() => {
       g.strokeStyle="rgba(160,220,255,.35)"; g.lineWidth=1.5;
       g.beginPath(); g.roundRect(t.x-pad-3,t.y-pad-3,t.w+pad*2+6,t.h+pad*2+6,10); g.stroke();
     }
-    // 装甲（体型加厚时的外框）
+    // 装甲外框（贴着原体积，不外扩过多）
     if(t.isPlayer&&t.bulk>0){
-      g.strokeStyle=t.bulk>=2?"rgba(255,200,60,.85)":"rgba(255,210,120,.65)";
-      g.lineWidth=t.bulk>=2?3:2;
-      g.strokeRect(t.x-3,t.y-3,t.w+6,t.h+6);
+      g.strokeStyle=t.bulk>=2?"rgba(255,200,60,.9)":"rgba(255,210,120,.7)";
+      g.lineWidth=t.bulk>=2?2.5:2;
+      g.strokeRect(t.x+1,t.y+1,t.w-2,t.h-2);
     }
     // 护盾
     if(t.shield>0){
@@ -1335,7 +1350,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("地形递进 + 中/左/右路铁墙　·　3星或枪变粗可抗弹　·　卤鸭=加命",CANVAS_W/2,418);
+    g.fillText("地形递进 + 中/左/右路铁墙　·　3星或枪装甲加厚可抗弹　·　卤鸭=加命",CANVAS_W/2,418);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
