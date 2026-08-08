@@ -511,12 +511,14 @@ const Levels = (() => {
     return grid;
   }
   // 关卡敌人配置：数量与种类随关卡递增
+  // 类型：fast冲锋 / normal普通 / power火力 / armor重甲(3血) / elite精锐(2血) / boss
   function enemyPlan(level){
     const total = Math.min(12 + level*2, 30);
     const fast  = Math.min(2+level, 10);
     const power = Math.min(1+level, 8);
     const armor = Math.min(level, 8);
-    return { total, fast, power, armor };
+    const elite = Math.min(Math.floor(level/2), 6);
+    return { total, fast, power, armor, elite };
   }
   return { build, enemyPlan, count:maps.length, CAMPAIGN_LEVELS };
 })();
@@ -629,9 +631,22 @@ const Game = (() => {
       flash("💀 Boss 坦克出现！", 1.8);
     } else {
       const p=enemyPlanObj, kRoll=Math.random();
-      if(kRoll<0.18 && p.armor>0){ e.type="armor"; e.hp=4; e.speed=52; }
-      else if(kRoll<0.42 && p.fast>0){ e.type="fast"; e.speed=105; }
-      else if(kRoll<0.62 && p.power>0){ e.type="power"; e.bulletSpeed=320; }
+      if(kRoll<0.14 && p.armor>0){
+        // 重甲：慢、抗 3 发（外观更大，碰撞不变）
+        e.type="armor"; e.hp=3; e.speed=45;
+      } else if(kRoll<0.28 && p.elite>0){
+        // 精锐：略快、抗 2 发
+        e.type="elite"; e.hp=2; e.speed=72; e.bulletSpeed=260;
+      } else if(kRoll<0.48 && p.fast>0){
+        // 冲锋：瘦小快车
+        e.type="fast"; e.speed=118; e.cool=-0.15;
+      } else if(kRoll<0.66 && p.power>0){
+        // 火力：长炮、弹速高，后期可双发
+        e.type="power"; e.speed=55; e.bulletSpeed=340;
+        if(level>=8) e.maxBullets=2;
+      } else {
+        e.type="normal"; e.speed=60;
+      }
       e.speed += Math.min(level*2,26);
       if(Math.random()<(debugMode?1:0.22)) e.carriesPowerup=true;
     }
@@ -763,7 +778,7 @@ const Game = (() => {
     t.dead=true; boom(t.cx,t.cy,26); SFX.explode(); shake=Math.max(shake,0.25);
     if(!t.isPlayer){
       enemiesKilled++;
-      if(byPlayer){ const pts={normal:100,fast:200,power:300,armor:400,boss:1000}[t.type]||100; score+=pts;
+      if(byPlayer){ const pts={normal:100,fast:200,power:300,elite:350,armor:400,boss:1000}[t.type]||100; score+=pts;
         flashScore(t.cx,t.cy,pts); }
       if(t.carriesPowerup) dropPowerup(t.cx,t.cy);
     }
@@ -1039,16 +1054,29 @@ const Game = (() => {
     g.fillRect(x+2,y+2,5,5); g.fillRect(x+11,y+4,6,5); g.fillRect(x+5,y+11,6,6);
     g.fillStyle="#61bd54"; g.fillRect(x+13,y+13,4,4); g.fillRect(x+3,y+8,3,3);
   }
+  /** 敌人外观缩放（仅绘制，不影响碰撞体积） */
+  function enemyVis(t){
+    switch(t.type){
+      case "fast":  return {sx:0.68, sy:0.78, track:4, barrel:0.82, turret:5.0, maxHp:1};
+      case "power": return {sx:0.95, sy:1.02, track:6, barrel:1.45, turret:6.5, maxHp:1};
+      case "elite": return {sx:1.12, sy:1.08, track:7, barrel:1.12, turret:7.5, maxHp:2};
+      case "armor": return {sx:1.28, sy:1.18, track:9, barrel:1.0,  turret:9.0, maxHp:3};
+      case "boss":  return {sx:1.36, sy:1.28, track:9, barrel:1.22, turret:10,  maxHp:8};
+      default:      return {sx:1.0,  sy:1.0,  track:6, barrel:1.0,  turret:7.0, maxHp:1};
+    }
+  }
   function drawTank(t){
     if(t.dead) return;
     if(t.spawnGhost>0 && Math.floor(t.spawnGhost*10)%2===0 && !t.isPlayer) return;
     g.save(); g.translate(t.cx,t.cy); g.rotate(t.dir*Math.PI/2);
     const w=t.w,h=t.h;
     const bulk = (t.isPlayer && t.bulk) ? t.bulk : 0;
-    // 履带（装甲时画得更厚实，不改碰撞）
-    const trackW = bulk>=2 ? 8 : (bulk>=1 ? 7 : 6);
+    const vis = t.isPlayer ? {sx:1,sy:1,track:bulk>=2?8:(bulk>=1?7:6),barrel:1,turret:bulk?8:7,maxHp:1} : enemyVis(t);
+    // 仅放大/缩小贴图，碰撞仍用 t.w/t.h
+    g.scale(vis.sx, vis.sy);
+    const trackW = vis.track;
     const trackShift = Math.floor(t.anim)%2===0?0:2;
-    g.fillStyle=t.isPlayer?(bulk?"#2a3520":"#3a4a2a"):"#333844";
+    g.fillStyle=t.isPlayer?(bulk?"#2a3520":"#3a4a2a"):(t.type==="armor"||t.type==="boss"?"#2a2e38":"#333844");
     g.fillRect(-w/2,-h/2,trackW,h); g.fillRect(w/2-trackW,-h/2,trackW,h);
     if(bulk){
       g.fillStyle="rgba(255,210,100,.35)";
@@ -1066,34 +1094,49 @@ const Game = (() => {
       else { c1="#d8c84a"; c2="#8a7a1e"; }
     }
     else if(t.type==="boss"){ c1="#ff6b4a"; c2="#7a1020"; }
-    else if(t.type==="fast"){ c1="#7ac0e8"; c2="#2a6a9a"; }
+    else if(t.type==="fast"){ c1="#7ac0e8"; c2="#1e5a8a"; }
     else if(t.type==="power"){ c1="#e88a7a"; c2="#9a3a2a"; }
-    else if(t.type==="armor"){ c1="#b8c4d8"; c2="#5a6478"; }
+    else if(t.type==="elite"){ c1="#c9a0e8"; c2="#5a2a8a"; }
+    else if(t.type==="armor"){ c1="#c8d0e0"; c2="#4a5468"; }
     else { c1="#b0b8a0"; c2="#5a6050"; }
     const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
     g.fillStyle=gr; g.fillRect(-w/2+trackW-1,-h/2+3,w-trackW*2+2,h-6);
-    // 装甲加厚：内板 + 铆钉（纯外观）
-    if(bulk>0){
-      g.strokeStyle = bulk>=2 ? "rgba(255,200,60,.95)" : "rgba(255,210,120,.8)";
-      g.lineWidth = bulk>=2 ? 2.5 : 2;
+    // 装甲/重甲/Boss：铆钉外壳（纯外观）
+    if(bulk>0 || t.type==="armor" || t.type==="boss" || t.type==="elite"){
+      const thick = bulk>=2 || t.type==="boss" || t.type==="armor";
+      g.strokeStyle = t.isPlayer
+        ? (bulk>=2 ? "rgba(255,200,60,.95)" : "rgba(255,210,120,.8)")
+        : (t.type==="elite" ? "rgba(220,160,255,.75)" : "rgba(200,220,255,.7)");
+      g.lineWidth = thick ? 2.5 : 2;
       g.strokeRect(-w/2+trackW,-h/2+4,w-trackW*2,h-8);
-      g.fillStyle="#c9a24a";
+      g.fillStyle=t.isPlayer?"#c9a24a":(t.type==="elite"?"#b080d0":"#98a8c0");
       const rivets=[[-6,-6],[6,-6],[-6,6],[6,6],[0,-8],[0,8]];
-      for(const [rx,ry] of rivets){ g.beginPath(); g.arc(rx,ry,bulk>=2?1.6:1.2,0,Math.PI*2); g.fill(); }
+      for(const [rx,ry] of rivets){ g.beginPath(); g.arc(rx,ry,thick?1.6:1.2,0,Math.PI*2); g.fill(); }
+    }
+    // 冲锋车：细侧条纹暗示速度
+    if(t.type==="fast"){
+      g.fillStyle="rgba(180,230,255,.55)";
+      g.fillRect(-2,-h/2+6,4,h-12);
+      g.fillStyle="rgba(255,255,255,.35)";
+      g.fillRect(-w/2+trackW+1,-4,w-trackW*2-2,2);
     }
     // 炮塔
-    g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a"):(t.type==="boss"?"#ffd24a":"#d8dde8");
-    g.beginPath(); g.arc(0,1,t.type==="boss"?8:(bulk?8:7),0,Math.PI*2); g.fill();
+    g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a")
+      :(t.type==="boss"?"#ffd24a":t.type==="elite"?"#e8d0ff":"#d8dde8");
+    g.beginPath(); g.arc(0,1,vis.turret,0,Math.PI*2); g.fill();
     if(bulk){ g.strokeStyle="rgba(180,120,20,.7)"; g.lineWidth=1.5; g.stroke(); }
-    g.fillStyle=t.isPlayer?"#6a5c14":"#404858";
-    g.fillRect(-2.5,-h/2-4,5,h/2+5);
-    // 装甲/Boss 血量提示
-    if(t.type==="armor"&&t.hp<4){ g.fillStyle="rgba(255,80,80,.85)";
-      g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/4),3); }
+    // 炮管（火力型更长）
+    const barrelH = (h/2+4)*vis.barrel;
+    g.fillStyle=t.isPlayer?"#6a5c14":(t.type==="power"?"#5a2020":"#404858");
+    const bw = t.type==="power" ? 3.6 : (t.type==="fast" ? 2.2 : 2.5);
+    g.fillRect(-bw,-barrelH,bw*2,barrelH+5);
+    // 多血敌人：血条（Boss 常显；其余受伤后显示）
+    if(!t.isPlayer && vis.maxHp>1 && (t.type==="boss" || t.hp<vis.maxHp)){
+      g.fillStyle = t.type==="boss" ? "rgba(255,210,74,.95)" : "rgba(255,80,80,.85)";
+      g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/vis.maxHp),3);
+    }
     if(t.type==="boss"){
-      g.fillStyle="rgba(255,210,74,.95)";
-      g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/8),3);
       g.fillStyle="#ffd24a"; g.font="bold 8px sans-serif"; g.textAlign="center";
       g.fillText("BOSS",0,-h/2+8);
     }
@@ -1112,7 +1155,6 @@ const Game = (() => {
       g.lineWidth=t.bulk>=2?2.5:2;
       g.strokeRect(t.x+1,t.y+1,t.w-2,t.h-2);
     }
-    // 护盾
     if(t.shield>0){
       const a=0.35+0.25*Math.sin(performance.now()/90);
       g.strokeStyle=`rgba(120,210,255,${a})`; g.lineWidth=2.5;
@@ -1338,7 +1380,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("地形递进 + 中/左/右路铁墙　·　3星或枪装甲加厚可抗弹　·　小坦克=加命",CANVAS_W/2,418);
+    g.fillText("敌军：蓝瘦冲锋 / 绿普通 / 红长炮 / 紫精锐(2血) / 灰重甲(3血)　·　小坦克=加命",CANVAS_W/2,418);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
