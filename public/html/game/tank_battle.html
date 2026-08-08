@@ -2,31 +2,30 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>坦克大战 · Tank Battle</title>
 <style>
 /* ========== 全局样式 ========== */
 html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:hidden;
   font-family:"Segoe UI",Arial,"Microsoft YaHei",sans-serif;touch-action:none;
-  -webkit-user-select:none;user-select:none;}
-#gameWrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at center,#141428 0%,#07070d 100%);}
+  -webkit-user-select:none;user-select:none;
+  height:100dvh;width:100dvw;}
+#rotWrap{
+  position:fixed;inset:0;overflow:hidden;
+  background:radial-gradient(ellipse at center,#141428 0%,#07070d 100%);
+}
+#gameWrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 #gameCanvas{display:block;background:#000;box-shadow:0 0 40px rgba(80,160,255,.25),0 0 120px rgba(0,0,0,.8);
-  border-radius:6px;}
-/* 移动端全屏旋转按钮 */
-#rotateBtn,#btnFs{position:fixed;top:10px;right:10px;z-index:50;
-  background:linear-gradient(135deg,#2b6cb0,#4299e1);color:#fff;border:none;border-radius:24px;
-  padding:10px 18px;font-size:14px;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:pointer;
-  display:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
-#playTools{position:fixed;right:10px;top:10px;z-index:60;display:none;gap:6px;}
+  border-radius:6px;max-width:100%;max-height:100%;}
+#playTools{position:absolute;right:10px;top:10px;z-index:60;display:none;}
 #playTools button{
   font:inherit;border:0;border-radius:999px;padding:10px 16px;font-size:14px;font-weight:700;
   background:rgba(37,99,235,.92);color:#fff;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-/* 虚拟摇杆与按钮（仅触屏显示） */
-.touchUI{position:fixed;z-index:40;display:none;}
-#joyBase{left:4%;bottom:6%;width:34vmin;height:34vmin;border-radius:50%;
+/* 虚拟摇杆与按钮（仅触屏显示）——坐标相对旋转后的舞台 */
+.touchUI{position:absolute;z-index:40;display:none;}
+#joyBase{left:3%;bottom:5%;width:28%;max-width:140px;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(255,255,255,.10),rgba(255,255,255,.04));
   border:2px solid rgba(255,255,255,.25);}
 #joyKnob{position:absolute;left:50%;top:50%;width:40%;height:40%;border-radius:50%;
@@ -35,32 +34,38 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   box-shadow:0 0 14px rgba(90,170,255,.7);}
 .tBtn{border-radius:50%;border:2px solid rgba(255,255,255,.3);color:#fff;font-weight:800;
   display:flex;align-items:center;justify-content:center;text-shadow:0 1px 2px #000;}
-#btnFire{right:5%;bottom:8%;width:20vmin;height:20vmin;font-size:4.4vmin;
+#btnFire{right:4%;bottom:6%;width:16%;max-width:88px;aspect-ratio:1;font-size:15px;
   background:radial-gradient(circle at 35% 30%,#ff9d7a,#c2402a);}
-#btnPause{right:27%;bottom:22%;width:12vmin;height:12vmin;font-size:3vmin;
+#btnPause{right:22%;bottom:18%;width:11%;max-width:60px;aspect-ratio:1;font-size:12px;
   background:radial-gradient(circle at 35% 30%,#c9c9e8,#565688);}
-/* CSS 旋转回退（不支持全屏/方向锁定的手机，如 iOS Safari） */
-body.cssRotate #rotWrap{position:fixed;top:0;left:0;width:100vh;height:100vw;
-  transform:rotate(90deg) translateY(-100%);transform-origin:top left;}
-#rotWrap{position:fixed;inset:0;}
+#wxTip{
+  display:none;position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:70;
+  max-width:min(92%,380px);padding:12px 14px;border-radius:12px;
+  background:rgba(15,23,42,.95);border:1px solid #fbbf24;color:#e2e8f0;
+  font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;
+  box-shadow:0 8px 24px rgba(0,0,0,.45);
+}
+#wxTip button{
+  font:inherit;border:0;border-radius:999px;padding:8px 14px;cursor:pointer;color:#fff;
+}
 </style>
 </head>
 <body>
-<div id="playTools">
-  <button type="button" id="btnFs" title="全屏">全屏</button>
-</div>
-<div id="wxTip" style="display:none;position:fixed;left:50%;top:52px;transform:translateX(-50%);z-index:70;max-width:min(92%,360px);padding:10px 14px;border-radius:12px;background:rgba(15,23,42,.94);border:1px solid #fbbf24;color:#e2e8f0;font-size:13px;line-height:1.45;text-align:center;pointer-events:auto;box-shadow:0 8px 24px rgba(0,0,0,.4)">
-  <div>微信内无法系统级全屏/锁横屏。可点「横屏」用画面旋转游玩；或点右上角 ··· → <b>在浏览器中打开</b> 再旋转手机。</div>
-  <div style="margin-top:8px;display:flex;gap:8px;justify-content:center">
-    <button type="button" id="btnWxLand" style="font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#2563eb;color:#fff;cursor:pointer">横屏游玩</button>
-    <button type="button" id="btnWxTipOk" style="font:inherit;border:0;border-radius:999px;padding:8px 14px;background:#1e293b;border:1px solid #475569;color:#fff;cursor:pointer">知道了</button>
-  </div>
-</div>
 <div id="rotWrap">
-<div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
-<div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
-<div id="btnFire" class="tBtn touchUI">开火</div>
-<div id="btnPause" class="tBtn touchUI">暂停</div>
+  <div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
+  <div id="playTools">
+    <button type="button" id="btnFs" title="横屏">横屏铺满</button>
+  </div>
+  <div id="wxTip">
+    <div>微信内已用<strong>画面横屏铺满</strong>（系统无法真全屏）。竖着手机即可横屏开玩；点「横屏铺满」可开关。</div>
+    <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button type="button" id="btnWxLand" style="background:#2563eb">确认横屏</button>
+      <button type="button" id="btnWxTipOk" style="background:#1e293b;border:1px solid #475569">知道了</button>
+    </div>
+  </div>
+  <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
+  <div id="btnFire" class="tBtn touchUI">开火</div>
+  <div id="btnPause" class="tBtn touchUI">暂停</div>
 </div>
 
 <script>
@@ -230,16 +235,24 @@ const Input = (() => {
   // 触屏：左侧摇杆
   const joyBase=document.getElementById("joyBase"), joyKnob=document.getElementById("joyKnob");
   let joyId=null, joyVec=[0,0];
+  /** 屏幕坐标 → 舞台本地坐标（CSS 横屏旋转时用） */
+  function screenToStage(clientX, clientY){
+    if(!window.__tbCssLand) return { x:clientX, y:clientY };
+    const vw = window.innerWidth;
+    // 逆变换 translate(vw,0) rotate(90deg)：lx=sy, ly=vw-sx
+    return { x: clientY, y: vw - clientX };
+  }
   function joyMove(t){
-    const r=joyBase.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
-    let dx=t.clientX-cx, dy=t.clientY-cy; const max=r.width/2;
-    // CSS 旋转回退模式下，把屏幕坐标换算为游戏局部坐标
-    if(document.body.classList.contains("cssRotate")){ const u=dy, v=-dx; dx=u; dy=v; }
+    const p = screenToStage(t.clientX, t.clientY);
+    const cx = joyBase.offsetLeft + joyBase.offsetWidth/2;
+    const cy = joyBase.offsetTop + joyBase.offsetHeight/2;
+    const max = joyBase.offsetWidth/2;
+    let dx = p.x - cx, dy = p.y - cy;
     const len=Math.hypot(dx,dy)||1; const cl=Math.min(len,max);
     dx=dx/len*cl; dy=dy/len*cl;
-    joyKnob.style.left=(50+dx/r.width*100)+"%"; joyKnob.style.top=(50+dy/r.height*100)+"%";
+    joyKnob.style.left=(50+dx/joyBase.offsetWidth*100)+"%";
+    joyKnob.style.top=(50+dy/joyBase.offsetHeight*100)+"%";
     joyVec=[Math.abs(dx)>max*0.25?Math.sign(dx):0, Math.abs(dy)>max*0.25?Math.sign(dy):0];
-    // 摇杆取主导轴，避免斜向抖动
     if(Math.abs(dx)>Math.abs(dy)) joyVec[1]=0; else joyVec[0]=0;
   }
   function joyEnd(){ joyId=null; joyVec=[0,0]; joyKnob.style.left="50%"; joyKnob.style.top="50%"; }
@@ -1362,118 +1375,149 @@ const Game = (() => {
   return {};
 })();
 
-/* ---------------- 画布缩放 + 移动端适配 ---------------- */
+/* ---------------- 画布缩放 + 微信横屏铺满（JS 舞台旋转，不依赖系统全屏） ---------------- */
 (() => {
-  const cvs=document.getElementById("gameCanvas");
-  const playTools=document.getElementById("playTools");
-  const btnFs=document.getElementById("btnFs");
-  const wxTip=document.getElementById("wxTip");
-  let cssRot=false;
+  const cvs = document.getElementById("gameCanvas");
+  const stage = document.getElementById("rotWrap");
+  const playTools = document.getElementById("playTools");
+  const btnFs = document.getElementById("btnFs");
+  const wxTip = document.getElementById("wxTip");
 
-  function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent||""); }
+  /** 用户强制开关：微信/触屏竖屏默认开；点按钮可关 */
+  let landForced = true;
+  window.__tbCssLand = false;
+
+  function isWeChat(){ return /MicroMessenger/i.test(navigator.userAgent || ""); }
+  function isTouchDev(){
+    return ("ontouchstart" in window) || (navigator.maxTouchPoints|0) > 0
+      || window.matchMedia("(pointer: coarse)").matches;
+  }
   function isFs(){
     return !!(document.fullscreenElement || document.webkitFullscreenElement);
   }
   function updateFsBtn(){
     if(!btnFs) return;
-    if(isWeChat()) btnFs.textContent = cssRot ? "退出横屏" : "横屏";
-    else btnFs.textContent = (isFs() || cssRot) ? "退出全屏" : "全屏";
+    if(isWeChat() || isTouchDev()){
+      btnFs.textContent = window.__tbCssLand ? "退出横屏" : "横屏铺满";
+    } else {
+      btnFs.textContent = isFs() ? "退出全屏" : "全屏";
+    }
   }
-  function resize(){
-    let vw=window.innerWidth, vh=window.innerHeight;
-    if(document.body.classList.contains("cssRotate")){ const t=vw; vw=vh; vh=t; }
-    const scale=Math.min(vw/CANVAS_W, vh/CANVAS_H);
-    cvs.style.width=(CANVAS_W*scale)+"px";
-    cvs.style.height=(CANVAS_H*scale)+"px";
+
+  /**
+   * 竖屏手机：舞台做成横屏尺寸再顺时针转 90° 铺满。
+   * 微信无系统全屏/锁方向，只能靠这套。
+   */
+  function layout(){
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const portrait = vh > vw;
+    const useCssLand = portrait && landForced && (isWeChat() || isTouchDev());
+    window.__tbCssLand = useCssLand;
+    document.body.classList.toggle("cssRotate", useCssLand);
+
+    if(useCssLand){
+      stage.style.position = "fixed";
+      stage.style.left = "0";
+      stage.style.top = "0";
+      stage.style.right = "auto";
+      stage.style.bottom = "auto";
+      stage.style.width = vh + "px";
+      stage.style.height = vw + "px";
+      stage.style.transformOrigin = "0 0";
+      stage.style.transform = "translate(" + vw + "px,0) rotate(90deg)";
+      stage.style.overflow = "hidden";
+      const scale = Math.min(vh / CANVAS_W, vw / CANVAS_H);
+      cvs.style.width = Math.floor(CANVAS_W * scale) + "px";
+      cvs.style.height = Math.floor(CANVAS_H * scale) + "px";
+    } else {
+      stage.style.position = "fixed";
+      stage.style.left = "0";
+      stage.style.top = "0";
+      stage.style.right = "0";
+      stage.style.bottom = "0";
+      stage.style.width = "auto";
+      stage.style.height = "auto";
+      stage.style.transform = "none";
+      stage.style.overflow = "hidden";
+      const scale = Math.min(vw / CANVAS_W, vh / CANVAS_H);
+      cvs.style.width = Math.floor(CANVAS_W * scale) + "px";
+      cvs.style.height = Math.floor(CANVAS_H * scale) + "px";
+    }
     updateFsBtn();
   }
-  window.addEventListener("resize",resize);
-  window.addEventListener("orientationchange", () => setTimeout(resize, 120));
-  document.addEventListener("fullscreenchange", () => setTimeout(resize, 60));
-  document.addEventListener("webkitfullscreenchange", () => setTimeout(resize, 60));
 
-  function applyCssLandscape(on){
-    if(on){
-      document.body.classList.add("cssRotate");
-      cssRot=true;
-    } else {
-      document.body.classList.remove("cssRotate");
-      cssRot=false;
-    }
-    setTimeout(resize, 40);
-  }
-
-  async function enterFs(){
-    SFX.unlock();
-    // 微信/多数 iOS：系统 Fullscreen + orientation.lock 不可用 → 直接 CSS 横屏
-    if(isWeChat() || !document.documentElement.requestFullscreen){
-      applyCssLandscape(true);
-      return true;
-    }
-    const root=document.documentElement;
-    let ok=false;
+  async function tryNativeFs(){
+    if(isWeChat()) return false;
+    const root = document.documentElement;
     try{
-      if(root.requestFullscreen){ await root.requestFullscreen(); ok=true; }
-      else if(root.webkitRequestFullscreen){ root.webkitRequestFullscreen(); ok=true; }
-    }catch(e){ ok=false; }
+      if(root.requestFullscreen) await root.requestFullscreen();
+      else if(root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+      else return false;
+    }catch(e){ return false; }
     try{
-      if(screen.orientation && screen.orientation.lock){
-        await screen.orientation.lock("landscape");
-      }
+      if(screen.orientation && screen.orientation.lock) await screen.orientation.lock("landscape");
     }catch(e){}
-    setTimeout(()=>{
-      if(window.innerHeight>window.innerWidth && !isFs()){
-        applyCssLandscape(true);
-      } else resize();
-    }, 280);
-    return ok || cssRot;
+    return isFs();
   }
-  async function exitFs(){
-    try{
-      if(isFs()){
+
+  async function toggleLand(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    SFX.unlock();
+    if(isWeChat() || isTouchDev()){
+      landForced = !landForced;
+      layout();
+      return;
+    }
+    if(isFs()){
+      try{
         if(document.exitFullscreen) await document.exitFullscreen();
         else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
-      }
-    }catch(e){}
-    applyCssLandscape(false);
-  }
-  async function toggleFs(){
-    if(isFs() || cssRot) await exitFs();
-    else await enterFs();
-    updateFsBtn();
+      }catch(err){}
+    } else {
+      const ok = await tryNativeFs();
+      if(!ok) landForced = true;
+    }
+    layout();
   }
 
-  const isTouch = ("ontouchstart" in window) || (navigator.maxTouchPoints|0)>0
-    || window.matchMedia("(pointer: coarse)").matches;
-  if(isTouch){
-    document.querySelectorAll(".touchUI").forEach(el=>el.style.display="block");
-    document.getElementById("btnFire").style.display="flex";
-    document.getElementById("btnPause").style.display="flex";
-    if(playTools) playTools.style.display="flex";
+  window.addEventListener("resize", layout);
+  window.addEventListener("orientationchange", () => setTimeout(layout, 120));
+  if(window.visualViewport) window.visualViewport.addEventListener("resize", layout);
+  document.addEventListener("fullscreenchange", () => setTimeout(layout, 60));
+  document.addEventListener("webkitfullscreenchange", () => setTimeout(layout, 60));
+
+  if(isTouchDev() || isWeChat()){
+    document.querySelectorAll(".touchUI").forEach(el => { el.style.display = "block"; });
+    const bf = document.getElementById("btnFire");
+    const bp = document.getElementById("btnPause");
+    if(bf) bf.style.display = "flex";
+    if(bp) bp.style.display = "flex";
+    if(playTools) playTools.style.display = "block";
     if(btnFs){
-      btnFs.style.display="block";
-      btnFs.addEventListener("click", (e)=>{
-        e.preventDefault();
-        e.stopPropagation();
-        toggleFs();
-      });
+      btnFs.style.display = "block";
+      btnFs.addEventListener("click", toggleLand);
+      btnFs.addEventListener("touchend", (e) => { e.preventDefault(); toggleLand(e); }, { passive:false });
     }
-    if(isWeChat() && wxTip){
-      try{
-        if(!localStorage.tbWxTipHide) wxTip.style.display="block";
-      }catch(e){ wxTip.style.display="block"; }
-      const hideTip=()=>{ wxTip.style.display="none"; };
-      document.getElementById("btnWxLand").addEventListener("click", (e)=>{
-        e.preventDefault(); e.stopPropagation();
-        applyCssLandscape(true); hideTip();
-      });
-      document.getElementById("btnWxTipOk").addEventListener("click", ()=>{
-        try{ localStorage.tbWxTipHide="1"; }catch(e){}
-        hideTip();
-      });
+    if(isWeChat()){
+      landForced = true;
+      if(wxTip){
+        try{ if(!localStorage.tbWxLandTip) wxTip.style.display = "block"; }
+        catch(err){ wxTip.style.display = "block"; }
+        document.getElementById("btnWxLand").addEventListener("click", (e) => {
+          e.preventDefault(); e.stopPropagation();
+          landForced = true; layout(); wxTip.style.display = "none";
+          try{ localStorage.tbWxLandTip = "1"; }catch(err){}
+        });
+        document.getElementById("btnWxTipOk").addEventListener("click", () => {
+          wxTip.style.display = "none";
+          try{ localStorage.tbWxLandTip = "1"; }catch(err){}
+        });
+      }
     }
   }
-  resize();
+
+  layout();
 })();
 </script>
 </body>
