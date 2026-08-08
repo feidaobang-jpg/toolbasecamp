@@ -332,6 +332,13 @@
     border-bottom: 1px solid #f3f4f6;
 }
 
+.hub-music-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 0 0.75rem;
+}
+
 @media (min-width: 1024px) {
     .hub-mobile-toolbar {
         display: none !important;

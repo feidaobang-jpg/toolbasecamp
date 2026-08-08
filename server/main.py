@@ -510,6 +510,12 @@ if music_router is not None:
 else:
     print("[music] router not mounted:", _music_import_error or "unknown")
 
+try:
+    from game_rooms_api import router as tank_coop_router
+    app.include_router(tank_coop_router)
+except Exception as _tank_coop_exc:  # noqa: BLE001
+    print("[tank-coop] router not mounted:", _tank_coop_exc)
+
 
 def get_optional_user(creds: Optional[HTTPAuthorizationCredentials]) -> Optional[dict]:
     if creds is None:

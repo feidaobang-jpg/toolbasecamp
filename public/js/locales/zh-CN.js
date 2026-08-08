@@ -286,8 +286,30 @@ window.TB_LOCALES['zh-CN'] = {
         howtoRedeem: '去兑换',
         howtoAboutPay: '去充值',
         howtoInstruct: '图生图',
-        howtoTextToImage: '文生图'
-    },
+        howtoTextToImage: '文生图',
+        musicSelect: '音乐选择',
+        music: {
+            title: '音乐选择',
+            sub: '选择游戏背景音乐，设置会保存在本机，进入各游戏时自动沿用。',
+            tip: '均为程序合成的原创循环曲（无版权风险）。点选即可试听并设为当前曲目。',
+            playing: '正在播放',
+            backHome: '返回首页',
+            backGames: '返回游戏',
+            catchy: '轻快跳跃',
+            catchyDesc: '明亮大调，节奏跳脱，适合休闲闯关。',
+            chill: '轻松漫步',
+            chillDesc: '慢速五声音阶，放松舒缓。',
+            battle: '激战进行曲',
+            battleDesc: '小调紧张推进，适合对战与坦克。',
+            pixel: '像素街机',
+            pixelDesc: '8-bit 琶音，复古街机感。',
+            night: '夜色宁静',
+            nightDesc: '柔和慢板，适合解谜与安静时刻。',
+            march: '阅兵进行曲',
+            marchDesc: '稳健军鼓节奏，堂堂正正。',
+            wave: '海浪轻摇',
+            waveDesc: '流动琶音，偏热带休闲风。'
+        }
     games: {
         groups: {
             polished: '高完成度',

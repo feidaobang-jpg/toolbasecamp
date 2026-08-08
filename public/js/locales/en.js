@@ -287,7 +287,30 @@ window.TB_LOCALES.en = {
         howtoRedeem: 'Redeem',
         howtoAboutPay: 'Top up',
         howtoInstruct: 'Image-to-Image',
-        howtoTextToImage: 'Text to Image'
+        howtoTextToImage: 'Text to Image',
+        musicSelect: 'Music',
+        music: {
+            title: 'Music',
+            sub: 'Choose background music for games. Saved on this device and used across games.',
+            tip: 'Original procedural loops (no copyrighted tracks). Tap a card to preview and apply.',
+            playing: 'Now playing',
+            backHome: 'Home',
+            backGames: 'Games',
+            catchy: 'Bouncy',
+            catchyDesc: 'Bright major hook — good for casual levels.',
+            chill: 'Chill Walk',
+            chillDesc: 'Slow pentatonic, relaxed and soft.',
+            battle: 'Battle March',
+            battleDesc: 'Tense minor drive — tanks and action.',
+            pixel: 'Pixel Arcade',
+            pixelDesc: '8-bit arpeggios with a retro feel.',
+            night: 'Quiet Night',
+            nightDesc: 'Gentle slow tempo for puzzles.',
+            march: 'Parade March',
+            marchDesc: 'Steady marching pulse.',
+            wave: 'Ocean Wave',
+            waveDesc: 'Flowing arpeggios, laid-back vibe.'
+        }
     },
     games: {
         groups: {

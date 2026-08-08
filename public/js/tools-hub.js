@@ -246,6 +246,7 @@
             '<div class="hub-howto-title">' + escapeHtml(tr('hub.howtoTitle')) + '</div>' +
             '<p class="hub-howto-body">' + escapeHtml(tr('hub.howtoBody')) + '</p>' +
             '<div class="hub-howto-actions">' +
+                '<a class="tb-btn" href="html/game/music-select.html">' + escapeHtml(tr('hub.musicSelect')) + '</a>' +
                 '<a class="tb-btn" href="top-up.html">' + escapeHtml(tr('hub.howtoAboutPay')) + '</a>' +
                 '<a class="tb-btn" href="html/auth/profile.html">' + escapeHtml(tr('hub.howtoRedeem')) + '</a>' +
                 '<a class="tb-btn" href="html/media/instruct-edit.html">' + escapeHtml(tr('hub.howtoInstruct')) + '</a>' +

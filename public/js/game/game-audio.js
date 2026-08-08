@@ -7,6 +7,7 @@
 
     var STORAGE_KEY = 'tb-game-audio-muted';
     var VOLUME_KEY = 'tb-game-audio-volume';
+    var THEME_KEY = 'tb-game-audio-theme';
     var ctx = null;
     var master = null;
     var sfxGain = null;
@@ -19,6 +20,7 @@
     var bgmStep = 0;
     var bgmTheme = 'catchy';
     var bgmWanted = false;
+    var preferredTheme = 'catchy';
     var muteBtns = [];
     var volumeSliders = [];
     var pendingSfx = null;
@@ -28,6 +30,8 @@
         muted = localStorage.getItem(STORAGE_KEY) === '1';
         var savedVol = parseFloat(localStorage.getItem(VOLUME_KEY));
         if (!isNaN(savedVol)) volume = Math.max(0, Math.min(2, savedVol));
+        var savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme) preferredTheme = savedTheme;
     } catch (e) { /* ignore */ }
 
     function masterLevel() {
@@ -371,44 +375,98 @@
         }
     };
 
-    // Bright C major platformer vibe — original composition (not Nintendo copyright)
-    // C4 D4 E4 F4 G4 A4 B4 C5 D5 E5 F5 G5
+    // Scales (Hz) — original procedural loops, no copyrighted melodies
     var SCALE_C = [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25, 698.46, 783.99];
+    var SCALE_A_MIN = [220.0, 246.94, 261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33, 659.25];
+    var SCALE_D_MIN = [146.83, 164.81, 174.61, 196.0, 220.0, 233.08, 261.63, 293.66, 329.63, 349.23, 392.0, 440.0];
+    var SCALE_G = [196.0, 220.0, 246.94, 261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25, 587.33];
+    var SCALE_PENTA = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25, 783.99, 880.0, 1046.5, 1174.7];
 
-    // Bouncy major hook ×3 — cheerful, skippy, Mario-era feel (original notes)
     var MARIOISH_HOOK = [
-        // bounce up
         2, 4, 7, 4, 3, 5, 4, 2,
         0, 2, 4, 7, 6, 4, 5, 4,
-        // higher reply then land
         2, 4, 7, 9, 8, 6, 7, 5,
         4, 2, 0, 2, 4, -1, 4, -1
     ];
 
     var THEMES = {
-        // Cheerful major FC platformer BGM (era-inspired, original)
         catchy: {
-            bpm: 158,
-            scale: SCALE_C,
-            voice: 'square',
-            lead: MARIOISH_HOOK.concat(MARIOISH_HOOK, MARIOISH_HOOK),
-            // skippy root–fifth bass
-            bass: [
-                0, -1, 4, -1, 0, -1, 4, -1,
-                5, -1, 4, -1, 0, -1, 4, -1,
-                0, -1, 4, -1, 0, -1, 4, -1,
-                3, -1, 4, -1, 0, -1, 4, -1
-            ],
-            // light sparkle arpeggio
+            bpm: 158, scale: SCALE_C, voice: 'square',
+            lead: MARIOISH_HOOK.concat(MARIOISH_HOOK),
+            bass: [0, -1, 4, -1, 0, -1, 4, -1, 5, -1, 4, -1, 0, -1, 4, -1, 0, -1, 4, -1, 0, -1, 4, -1, 3, -1, 4, -1, 0, -1, 4, -1],
             hop: [7, -1, 9, -1, 11, -1, 9, -1, 7, -1, 4, -1, 7, -1, 9, -1]
         },
-        calm: null,
-        upbeat: null,
-        arcade: null
+        chill: {
+            bpm: 92, scale: SCALE_PENTA, voice: 'triangle',
+            lead: [0, -1, -1, 2, -1, 4, -1, -1, 3, -1, 2, -1, 0, -1, -1, 4, 2, -1, -1, 0, -1, 3, -1, -1, 4, -1, 2, -1, 0, -1, -1, -1],
+            bass: [0, -1, -1, -1, 3, -1, -1, -1, 0, -1, -1, -1, 4, -1, -1, -1],
+            hop: [4, -1, -1, 7, -1, -1, 5, -1, 4, -1, -1, 2, -1, -1, 0, -1]
+        },
+        battle: {
+            bpm: 148, scale: SCALE_D_MIN, voice: 'sawtooth',
+            lead: [0, 2, 3, 2, 0, -1, 3, 5, 7, 5, 3, 2, 0, 2, -1, 3, 5, 7, 8, 7, 5, 3, 2, 0, 3, -1, 5, -1, 7, 5, 3, 0],
+            bass: [0, -1, 0, -1, 3, -1, 0, -1, 0, -1, 0, -1, 5, -1, 3, -1],
+            hop: [7, -1, 5, -1, 8, -1, 7, -1, 5, -1, 3, -1, 7, -1, 5, -1]
+        },
+        pixel: {
+            bpm: 132, scale: SCALE_C, voice: 'square',
+            lead: [0, 2, 4, 7, 4, 2, 0, 4, 5, 7, 9, 7, 5, 4, 2, 0, 4, 5, 7, 11, 9, 7, 5, 4, 2, 4, 5, 7, 4, 2, 0, -1],
+            bass: [0, -1, -1, 4, 0, -1, -1, 4, 5, -1, -1, 4, 0, -1, -1, 4],
+            hop: [12, 11, 9, 7, 9, 7, 5, 4, 7, 5, 4, 2, 4, 2, 0, -1]
+        },
+        night: {
+            bpm: 84, scale: SCALE_G, voice: 'sine',
+            lead: [4, -1, -1, 7, -1, -1, 5, -1, 4, -1, -1, 2, -1, -1, 0, -1, 2, -1, 4, -1, 5, -1, 7, -1, 5, -1, 4, -1, 2, -1, 0, -1],
+            bass: [0, -1, -1, -1, -1, -1, 4, -1, 0, -1, -1, -1, -1, -1, 5, -1],
+            hop: [-1, 9, -1, -1, 7, -1, -1, 11, -1, 9, -1, -1, 7, -1, -1, 5]
+        },
+        march: {
+            bpm: 118, scale: SCALE_C, voice: 'triangle',
+            lead: [0, -1, 0, 2, 4, -1, 4, -1, 5, -1, 4, 2, 0, -1, 0, -1, 2, -1, 4, 5, 7, -1, 7, -1, 5, 4, 2, 0, 4, -1, 0, -1],
+            bass: [0, -1, 0, -1, 0, -1, 4, -1, 0, -1, 0, -1, 5, -1, 4, -1],
+            hop: [7, -1, 7, -1, 9, -1, 7, -1, 5, -1, 4, -1, 7, -1, 4, -1]
+        },
+        wave: {
+            bpm: 110, scale: SCALE_PENTA, voice: 'triangle',
+            lead: [0, 2, 4, 2, 3, 4, 7, 4, 2, 0, 2, 4, 5, 4, 2, 0, 4, 5, 7, 5, 4, 2, 4, 7, 5, 4, 2, 0, 2, -1, 0, -1],
+            bass: [0, -1, 4, -1, 0, -1, 5, -1, 0, -1, 4, -1, 3, -1, 0, -1],
+            hop: [7, 9, 7, 4, 9, 11, 9, 7, 4, 7, 5, 4, 2, 4, 0, -1]
+        }
     };
-    THEMES.calm = THEMES.catchy;
+    // Legacy aliases used by older games
+    THEMES.calm = THEMES.night;
     THEMES.upbeat = THEMES.catchy;
-    THEMES.arcade = THEMES.catchy;
+    THEMES.arcade = THEMES.pixel;
+
+    /** Catalog for the music picker UI (id must exist in THEMES). */
+    var THEME_CATALOG = [
+        { id: 'catchy', titleKey: 'hub.music.catchy', descKey: 'hub.music.catchyDesc' },
+        { id: 'chill', titleKey: 'hub.music.chill', descKey: 'hub.music.chillDesc' },
+        { id: 'battle', titleKey: 'hub.music.battle', descKey: 'hub.music.battleDesc' },
+        { id: 'pixel', titleKey: 'hub.music.pixel', descKey: 'hub.music.pixelDesc' },
+        { id: 'night', titleKey: 'hub.music.night', descKey: 'hub.music.nightDesc' },
+        { id: 'march', titleKey: 'hub.music.march', descKey: 'hub.music.marchDesc' },
+        { id: 'wave', titleKey: 'hub.music.wave', descKey: 'hub.music.waveDesc' }
+    ];
+
+    function normalizeTheme(id) {
+        if (id && THEMES[id]) return id;
+        return 'catchy';
+    }
+
+    function getPreferredTheme() {
+        return normalizeTheme(preferredTheme);
+    }
+
+    function setPreferredTheme(id) {
+        preferredTheme = normalizeTheme(id);
+        try { localStorage.setItem(THEME_KEY, preferredTheme); } catch (e) { /* ignore */ }
+        return preferredTheme;
+    }
+
+    function listThemes() {
+        return THEME_CATALOG.slice();
+    }
 
     function playVoice(freq, dur, type, gain, when) {
         var c = ensure(false);
@@ -508,9 +566,8 @@
             }
 
             if (li >= 0) {
-                // bright short square lead
-                playVoice(theme.scale[li % theme.scale.length], beat * 0.7, theme.voice || 'square', 0.34, t0);
-                // soft octave sparkle for "platformer" bounce
+                var leadGain = theme.voice === 'sawtooth' ? 0.18 : 0.34;
+                playVoice(theme.scale[li % theme.scale.length], beat * 0.7, theme.voice || 'square', leadGain, t0);
                 if (step % 4 === 0) {
                     playVoice(theme.scale[li % theme.scale.length] * 2, beat * 0.35, 'triangle', 0.08, t0);
                 }
@@ -583,14 +640,24 @@
     }
 
     function startBgm(theme) {
-        // All game themes map to the same catchy earworm loop
-        bgmTheme = 'catchy';
-        if (theme && THEMES[theme]) bgmTheme = theme === 'calm' || theme === 'upbeat' || theme === 'arcade'
-            ? 'catchy'
-            : theme;
+        bgmTheme = normalizeTheme(theme || getPreferredTheme());
         bgmWanted = true;
         bindGestureUnlock();
         if (unlocked && !muted) startBgmInternal();
+    }
+
+    function setTheme(id, andPlay) {
+        var next = setPreferredTheme(id);
+        if (andPlay !== false) {
+            bgmTheme = next;
+            bgmWanted = true;
+            bindGestureUnlock();
+            if (unlocked && !muted) startBgmInternal();
+            else unlock().then(function () {
+                if (bgmWanted && !muted) startBgmInternal();
+            });
+        }
+        return next;
     }
 
     function stopBgm() {
@@ -739,13 +806,13 @@
         });
     }
 
-    /** Call once from each game: inject mute/volume UI + start BGM. */
+    /** Call once from each game: inject mute/volume UI + start BGM (honors user preference). */
     function boot(theme) {
         var run = function () {
             bindLifecycle();
             bindGestureUnlock();
             injectToolbarControls();
-            startBgm(theme || 'catchy');
+            startBgm(getPreferredTheme() || theme || 'catchy');
             refreshInjectedLabels();
         };
         // After i18n init when possible (DOMContentLoaded listener order = script order)
@@ -771,6 +838,9 @@
         sfx: sfx,
         startBgm: startBgm,
         stopBgm: stopBgm,
+        setTheme: setTheme,
+        getTheme: getPreferredTheme,
+        listThemes: listThemes,
         setMuted: setMasterMute,
         isMuted: function () { return muted; },
         setVolume: setVolume,

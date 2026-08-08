@@ -32,6 +32,23 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   background:radial-gradient(circle at 35% 30%,#ff9d7a,#c2402a);}
 #btnPause{right:22%;bottom:18%;width:11%;max-width:60px;aspect-ratio:1;font-size:12px;
   background:radial-gradient(circle at 35% 30%,#c9c9e8,#565688);}
+/* 合作联机大厅 */
+#coopPanel{display:none;position:absolute;inset:0;z-index:50;align-items:center;justify-content:center;
+  background:rgba(5,6,14,.88);padding:16px;box-sizing:border-box;}
+#coopPanel.open{display:flex;}
+.coop-box{width:min(420px,96vw);background:#15182a;border:1px solid rgba(255,210,74,.35);border-radius:14px;
+  padding:18px 16px;color:#e8ecf8;font-size:14px;}
+.coop-box h2{margin:0 0 10px;font-size:18px;color:#ffd24a;text-align:center;}
+.coop-box label{display:block;margin:8px 0 4px;color:#9fb0d0;font-size:12px;}
+.coop-box input{width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid #3a4158;
+  background:#0e1220;color:#fff;font-size:14px;}
+.coop-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.coop-actions .tb-btn{flex:1;min-width:110px;background:#2563eb;color:#fff;border:0;border-radius:999px;
+  padding:10px 12px;font-weight:700;cursor:pointer;}
+.coop-roster{margin-top:12px;background:#0e1220;border-radius:8px;padding:8px 10px;min-height:80px;
+  font-size:13px;line-height:1.5;color:#c8d0e8;}
+.coop-msg{margin-top:8px;color:#ff9d7a;font-size:12px;min-height:1.2em;}
+.coop-hint{margin-top:10px;font-size:11px;color:#7a849c;line-height:1.4;}
 </style>
 </head>
 <body>
@@ -40,6 +57,27 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
   <div id="btnFire" class="tBtn touchUI">开火</div>
   <div id="btnPause" class="tBtn touchUI">暂停</div>
+  <div id="coopPanel" aria-hidden="true">
+    <div class="coop-box">
+      <h2>合作联机（最多 8 人）</h2>
+      <label>昵称</label>
+      <input id="coopName" maxlength="16" placeholder="Player" autocomplete="off">
+      <label>房间密码（可空）</label>
+      <input id="coopPass" maxlength="32" placeholder="可选" autocomplete="off">
+      <label>房间号（加入时填写）</label>
+      <input id="coopCode" maxlength="8" placeholder="例如 AB12CD" autocomplete="off" style="text-transform:uppercase">
+      <div class="coop-actions">
+        <button type="button" class="tb-btn" id="coopCreate">创建房间</button>
+        <button type="button" class="tb-btn" id="coopJoin">加入房间</button>
+        <button type="button" class="tb-btn" id="coopReady">准备</button>
+        <button type="button" class="tb-btn" id="coopStart">开始（房主）</button>
+        <button type="button" class="tb-btn" id="coopClose">关闭</button>
+      </div>
+      <div class="coop-roster" id="coopRoster">尚未连接</div>
+      <div class="coop-msg" id="coopMsg"></div>
+      <p class="coop-hint">建房/加房/准备已可用。开战会进入闯关；同屏多坦克同步仍在完善，请先约好友测房间连通。</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -534,12 +572,12 @@ const Game = (() => {
   let enemyQueue=0, enemyPlanObj=null, enemiesKilled=0;
   let spawnTimer=0, freezeTimer=0, shovelTimer=0, baseAlive=true;
   let shake=0, flashMsg="", flashTime=0, stateTime=0, overReason="";
-  let menuSel=0; // 0=闯关 1=无尽 2=敌人吃道具 3=测试
+  let menuSel=0; // 0=闯关 1=无尽 2=敌人吃道具 3=测试 4=合作联机
   let debugMode=false; // 测试模式：大幅提高道具掉落概率
   let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   let clearGrace=0; // 敌军清空后的拾取缓冲秒数
-  const MENU_COUNT=4;
+  const MENU_COUNT=5;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
   const CLEAR_GRACE_SEC=4.5;
 
@@ -810,6 +848,10 @@ const Game = (() => {
       else if(inp.my>0&&!menuMoved){ menuSel=(menuSel+1)%MENU_COUNT; menuMoved=true; }
       else if(!inp.my) menuMoved=false;
       if(Input.state.startPressed){
+        if(menuSel===4){
+          if(window.TankCoop) window.TankCoop.open();
+          Input.consume(); return;
+        }
         endless=menuSel===1;
         enemyLootMode=menuSel===2;
         debugMode=menuSel===3;
@@ -1376,25 +1418,26 @@ const Game = (() => {
       "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
       "♾ 无尽模式",
       "😈 敌人吃道具",
-      "🧪 测试模式（道具必掉）"
+      "🧪 测试模式（道具必掉）",
+      "🌐 合作联机（最多 8 人）"
     ];
-    g.font="bold 22px sans-serif";
+    g.font="bold 20px sans-serif";
     items.forEach((it,i)=>{
-      const y=248+i*42, sel=menuSel===i;
+      const y=236+i*38, sel=menuSel===i;
       if(sel){ g.fillStyle="rgba(255,210,74,.12)";
-        g.fillRect(CANVAS_W/2-180,y-28,360,38);
-        g.fillStyle="#ffd24a"; g.fillText("▶",CANVAS_W/2-200,y); }
+        g.fillRect(CANVAS_W/2-200,y-26,400,34);
+        g.fillStyle="#ffd24a"; g.fillText("▶",CANVAS_W/2-220,y); }
       g.fillStyle=sel?"#ffe9a0":"#8a94ac";
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("敌军血量：蓝/绿/红=1　紫×2　灰×3　红重装×5　·　贴图不超过格子",CANVAS_W/2,418);
-    g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
-    g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
+    g.fillText("敌军血量：蓝/绿/红=1　紫×2　灰×3　红重装×5　·　贴图不超过格子",CANVAS_W/2,430);
+    g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
+    g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
-      g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,488); }
+      g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,496); }
     g.fillStyle="#ffd24a"; g.font="bold 15px sans-serif";
-    g.fillText("最高分："+hiScore,CANVAS_W/2,516);
+    g.fillText("最高分："+hiScore,CANVAS_W/2,520);
   }
 
   /* ---- 主循环 ---- */
@@ -1408,7 +1451,125 @@ const Game = (() => {
   }
   requestAnimationFrame(loop);
 
-  return {};
+  return {
+    beginCampaignFromCoop: function(){
+      endless=false; enemyLootMode=false; debugMode=false;
+      level=1; score=0; lives=30; player=null;
+      newLevel(); stateName="playing"; SFX.levelUp();
+    }
+  };
+})();
+
+/* ---------------- 合作联机 WebSocket 大厅 ---------------- */
+(() => {
+  const panel = document.getElementById("coopPanel");
+  const rosterEl = document.getElementById("coopRoster");
+  const msgEl = document.getElementById("coopMsg");
+  let ws = null, myPid = "", room = null, ready = false;
+
+  function apiBase(){
+    if(typeof siteConfig!=="undefined" && siteConfig.apiBase) return siteConfig.apiBase;
+    const host = location.hostname;
+    if(host==="localhost"||host==="127.0.0.1") return "http://127.0.0.1:8001";
+    return location.origin + "/api";
+  }
+  function wsUrl(){
+    return apiBase().replace(/^http/, "ws") + "/game/tank-coop/ws";
+  }
+  function setMsg(t){ if(msgEl) msgEl.textContent = t||""; }
+  function renderRoster(){
+    if(!rosterEl) return;
+    if(!room){ rosterEl.textContent = "尚未进入房间"; return; }
+    const lines = ["房间 "+room.code+" · "+(room.players||[]).length+"/"+room.maxPlayers];
+    (room.players||[]).forEach(p=>{
+      lines.push((p.host?"👑 ":"· ")+p.name+(p.ready?" ✓准备":"")+(p.pid===myPid?"（我）":""));
+    });
+    rosterEl.textContent = lines.join("\n");
+    const codeInp = document.getElementById("coopCode");
+    if(codeInp && room.code) codeInp.value = room.code;
+  }
+  function ensureWs(){
+    return new Promise((resolve, reject)=>{
+      if(ws && ws.readyState===1){ resolve(ws); return; }
+      try{
+        ws = new WebSocket(wsUrl());
+      }catch(e){ reject(e); return; }
+      ws.onopen = ()=> resolve(ws);
+      ws.onerror = ()=>{ setMsg("无法连接服务器"); reject(new Error("ws")); };
+      ws.onclose = ()=>{ setMsg("连接已断开"); room=null; renderRoster(); };
+      ws.onmessage = (ev)=>{
+        let msg; try{ msg=JSON.parse(ev.data); }catch(e){ return; }
+        if(msg.type==="hello"){ myPid=msg.pid; }
+        else if(msg.type==="joined"){ myPid=msg.you; room=msg.room; setMsg("已进入房间 "+room.code); renderRoster(); }
+        else if(msg.type==="roster"){ room=msg.room; renderRoster(); }
+        else if(msg.type==="start"){
+          room=msg.room; setMsg("开战！");
+          closePanel();
+          if(typeof Game!=="undefined" && Game.beginCampaignFromCoop) Game.beginCampaignFromCoop();
+        }
+        else if(msg.type==="error"){
+          const map={room_not_found:"房间不存在",bad_password:"密码错误",room_full:"房间已满",
+            already_started:"已开局",host_only:"仅房主可开始",already_in_room:"已在房间中"};
+          setMsg(map[msg.message]||msg.message||"错误");
+        }
+      };
+    });
+  }
+  function flashStart(){ /* unused */ }
+  function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
+  function open(){
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden","false");
+    const nameInp=document.getElementById("coopName");
+    if(nameInp && !nameInp.value){
+      try{ nameInp.value = localStorage.getItem("tb_tank_coop_name")||("P"+Math.floor(Math.random()*90+10)); }catch(e){}
+    }
+    setMsg(""); renderRoster();
+  }
+  function closePanel(){
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden","true");
+  }
+  function name(){
+    const n=(document.getElementById("coopName").value||"Player").trim().slice(0,16);
+    try{ localStorage.setItem("tb_tank_coop_name", n); }catch(e){}
+    return n;
+  }
+  function password(){ return (document.getElementById("coopPass").value||"").slice(0,32); }
+
+  document.getElementById("coopCreate").onclick = async ()=>{
+    try{
+      await ensureWs();
+      send({type:"create", name:name(), password:password()});
+    }catch(e){ setMsg("连接失败"); }
+  };
+  document.getElementById("coopJoin").onclick = async ()=>{
+    const code=(document.getElementById("coopCode").value||"").toUpperCase().trim();
+    if(!code){ setMsg("请填写房间号"); return; }
+    try{
+      await ensureWs();
+      send({type:"join", code, name:name(), password:password()});
+    }catch(e){ setMsg("连接失败"); }
+  };
+  document.getElementById("coopReady").onclick = ()=>{
+    ready = !ready;
+    send({type:"ready", ready});
+    setMsg(ready?"已准备":"取消准备");
+  };
+  document.getElementById("coopStart").onclick = ()=>{
+    send({type:"start", level:1});
+  };
+  document.getElementById("coopClose").onclick = ()=>{
+    send({type:"leave"});
+    try{ if(ws) ws.close(); }catch(e){}
+    ws=null; room=null; closePanel();
+  };
+
+  // 阻止触控穿透到游戏
+  panel.addEventListener("touchstart", e=>e.stopPropagation(), {passive:true});
+  panel.addEventListener("pointerdown", e=>e.stopPropagation());
+
+  window.TankCoop = { open, close: closePanel };
 })();
 
 /* ---------------- 画布缩放：PC 普通横屏 / 手机竖屏自动旋转横屏 ---------------- */

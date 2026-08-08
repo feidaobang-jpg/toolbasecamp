@@ -129,6 +129,17 @@
         containerEl.appendChild(emptyEl);
     }
 
+    function renderMusicBar(containerEl) {
+        if (!containerEl) return;
+        var bar = document.createElement('div');
+        bar.className = 'hub-music-bar';
+        bar.innerHTML =
+            '<a class="tb-btn" href="html/game/music-select.html">' +
+                escapeHtml(tr('hub.musicSelect')) +
+            '</a>';
+        containerEl.appendChild(bar);
+    }
+
     function renderGamesHub() {
         var centerEl = document.getElementById('main-content');
         var mobileToolbar = document.getElementById('hub-mobile-toolbar');
@@ -144,6 +155,7 @@
         }
 
         renderMobileSearch(mobileToolbar);
+        renderMusicBar(centerEl);
         renderGameGroups(centerEl, groups);
         if (searchQuery) applySearchFilter(searchQuery);
     }
