@@ -9,9 +9,26 @@ alwaysApply: true
 
 ## 主机
 
-- **生产 API / 主站**：SSH 别名 `toolbasecamp-hk`（`BatchMode=yes`，密钥已在本地配置）
+- **生产 API / 主站（腾讯云轻量）**
+  - 公网 IP：`43.129.179.173`
+  - 实例：`lhins-95e4c9an`（Lighthouse）
+  - SSH 别名：`toolbasecamp-hk`
+  - 用户：`ubuntu`
+  - 端口：`22`
+  - 本机密钥：`~/.ssh/toolbasecamp_deploy`（`BatchMode=yes`，勿用密码登录做自动化）
 - 路径：`/opt/toolbasecamp-api`（代码）、`/etc/toolbasecamp-api.env`（环境变量）
 - 服务：`systemctl restart|reload toolbasecamp-api`；Nginx：`/etc/nginx/snippets/toolbasecamp-api.conf` 等
+
+本机 `~/.ssh/config` 应含：
+
+```
+Host toolbasecamp-hk
+  HostName 43.129.179.173
+  User ubuntu
+  IdentityFile ~/.ssh/toolbasecamp_deploy
+  IdentitiesOnly yes
+  BatchMode yes
+```
 
 若不确定哪台机在跑 API，先 `ssh toolbasecamp-hk` 查 `systemctl is-active toolbasecamp-api` 与 `curl http://127.0.0.1:8001/health`。
 
@@ -28,10 +45,10 @@ alwaysApply: true
 |------|------|
 | Nginx API 超时等 | 跑 `deploy/patch-nginx-api.sh` → reload nginx |
 | 新增 env | 编辑 `/etc/toolbasecamp-api.env`（python 脚本 upsert）→ restart api |
-| 代码已 push | GitHub Actions 会自动 deploy；仅 **配置//nginx/systemd** 需 SSH 补跑 |
+| 代码已 push | GitHub Actions 会自动 deploy；仅 **配置/nginx/systemd** 需 SSH 补跑 |
 | 长任务被 kill | 检查 `TimeoutStopSec`（service）、`proxy_read_timeout`（nginx） |
 
 ## 禁止
 
 - 把「请在 VPS 上执行以下命令」当作完成项而不自己执行（用户未明确说「只要文档/命令、不要连服务器」时）
-- 在 chat 或 commit 里写入明文密钥
+- 在 chat 或 commit 里写入明文密钥 / 登录密码
