@@ -596,6 +596,10 @@ const Game = (() => {
   let coopAllies={};           // pid -> Tank（不含本地 player）
   let coopRemoteInput={};      // pid -> {mx,my,fire}
   let coopStateAcc=0;
+  let coopInputAcc=0;
+  let coopLastIn={mx:0,my:0};
+  let coopFireHeld=false;
+  let coopGridSent="";
   let coopRoster=[];
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
