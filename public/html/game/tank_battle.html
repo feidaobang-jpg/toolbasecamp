@@ -75,7 +75,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">房主模拟战场并同步画面；其他人只传操作。最多 8 人合作打关。</p>
+      <p class="coop-hint">房主权威同步战场（约 12 次/秒）。支持开局后中途加入。结束画面全员可见，仅房主可重开。</p>
     </div>
   </div>
 </div>
@@ -532,20 +532,22 @@ const Levels = (() => {
         grid[r][c]=endless ? raw : gateTerrain(raw, lv);
       }
     }
-    // 基地（老鹰）位于底部中央 2x2，并用砖围起
+    // 基地（美国鹰）位于底部中央 2x2，并用砖围起
     const bx=12, by=24;
     for(let r=by;r<by+2;r++) for(let c=bx;c<bx+2;c++) grid[r][c]=T_BASE;
     for(let c=bx-1;c<=bx+2;c++){ if(grid[by-1]) grid[by-1][c]=T_BRICK; }
     grid[by][bx-1]=T_BRICK; grid[by][bx+2]=T_BRICK;
     grid[by+1][bx-1]=T_BRICK; grid[by+1][bx+2]=T_BRICK;
-    // 清理出生点区域
+    // 清理出生点：基地左右对称空地（避开砖墙 11/14）
     const clear=(r,c)=>{ for(let i=r;i<r+2;i++) for(let j=c;j<c+2;j++)
       if(grid[i]&&grid[i][j]!==undefined&&grid[i][j]!==T_BASE) grid[i][j]=T_EMPTY; };
     clear(0,0); clear(0,12); clear(0,24);          // 敌人出生点
-    clear(24,8); clear(24,16);                      // 玩家出生点两侧
+    // 友军出生：8/16 为主，再往外对称扩展
+    [8,16,6,18,4,20,2,22].forEach(c=>clear(24,c));
     fortifyMidLane(grid);
-    // 铁墙不要挡住出生格（fortify 可能写到边缘时再清一次顶行）
+    // 铁墙不要挡住出生格
     clear(0,0); clear(0,12); clear(0,24);
+    [8,16,6,18,4,20,2,22].forEach(c=>clear(24,c));
     return grid;
   }
   // 关卡敌人配置：数量与种类随关卡递增
@@ -582,12 +584,14 @@ const Game = (() => {
   let coopAllies={};           // pid -> Tank（不含本地 player）
   let coopRemoteInput={};      // pid -> {mx,my,fire}
   let coopStateAcc=0;
+  let coopGridSent="";
   let coopRoster=[];
+  let coopPredictUntil=0; // 本地预测校正用
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
   ];
-  const COOP_SPAWN=[[8,24],[10,24],[6,24],[12,24],[4,24],[14,24],[2,24],[16,24]];
+  const COOP_SPAWN=[[8,24],[16,24],[6,24],[18,24],[4,24],[20,24],[2,24],[22,24]];
   const MENU_COUNT=5;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
   const CLEAR_GRACE_SEC=4.5;
@@ -904,7 +908,12 @@ const Game = (() => {
         if(b.power>=3){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,8,["#cfd6e4","#9aa4b8","#fff"]); SFX.hitSteel(); }
         else SFX.hitSteel(); }
       else if(t===T_GRASS && b.power>=4){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#2c6e2f"]); }
-      else if(t===T_BASE){ hit=true; baseAlive=false; }
+      else if(t===T_BASE){
+        // 友军子弹撞基地只挡下，不摧毁；敌军可毁
+        hit=true;
+        if(!(b.owner && b.owner.isPlayer)) baseAlive=false;
+        else SFX.hitSteel();
+      }
     }
     if(hit&&baseAlive!==false) SFX.hitWall();
     return hit;
@@ -989,12 +998,16 @@ const Game = (() => {
       spawnGhost:+(t.spawnGhost||0).toFixed(1), frozen:+(t.frozen||0).toFixed(1)
     });
     const friends=friendlyTanks().map(packT);
+    const fullGrid = grid ? grid.map(row=>row.join("")).join("|") : "";
+    const gridChanged = fullGrid !== coopGridSent;
+    if(gridChanged) coopGridSent = fullGrid;
     return {
       type:"state",
       level, score, lives, enemyQueue, enemiesKilled, baseAlive,
       freezeTimer:+freezeTimer.toFixed(2), shovelTimer:+shovelTimer.toFixed(2),
-      clearGrace:+clearGrace.toFixed(2), stateName,
-      grid: grid ? grid.map(row=>row.join("")).join("|") : "",
+      clearGrace:+clearGrace.toFixed(2), stateName, overReason: overReason||"",
+      // 地图只在变化时下发，大幅减轻手机流量与解析
+      grid: gridChanged ? fullGrid : undefined,
       players: friends,
       enemies: enemies.filter(e=>!e.dead).map(e=>({
         x:Math.round(e.x), y:Math.round(e.y), dir:e.dir, hp:e.hp, type:e.type,
@@ -1014,14 +1027,20 @@ const Game = (() => {
     enemyQueue=msg.enemyQueue; enemiesKilled=msg.enemiesKilled|0;
     baseAlive=!!msg.baseAlive; freezeTimer=msg.freezeTimer||0; shovelTimer=msg.shovelTimer||0;
     clearGrace=msg.clearGrace||0;
-    if(msg.stateName && msg.stateName!=="menu") stateName=msg.stateName;
+    if(msg.overReason!=null && msg.overReason!=="") overReason=msg.overReason;
+    if(msg.stateName && msg.stateName!=="menu"){
+      const prev=stateName;
+      stateName=msg.stateName;
+      if(stateName!==prev && (stateName==="gameover"||stateName==="levelClear")) stateTime=0;
+    }
     if(msg.grid){
       const rows=String(msg.grid).split("|");
       if(rows.length===FIELD_H){
         grid=rows.map(r=>r.split("").map(ch=>+ch));
+        coopGridSent=msg.grid;
       }
     }
-    // players
+    // players：复用对象；自己的坦克软校正（本地预测）
     const seen={};
     (msg.players||[]).forEach(ps=>{
       seen[ps.pid]=true;
@@ -1030,28 +1049,72 @@ const Game = (() => {
         t=spawnAtSlot(ps.slot|0, ps.pid, ps.name);
         if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
       }
-      t.x=ps.x; t.y=ps.y; t.dir=ps.dir; t.dead=!!ps.dead;
+      const isSelf = ps.pid===coopMyPid;
+      if(isSelf && player && !ps.dead && stateName==="playing"){
+        const dx=ps.x-t.x, dy=ps.y-t.y, dist=Math.hypot(dx,dy);
+        if(dist>28){ t.x=ps.x; t.y=ps.y; }
+        else { t.x+=dx*0.4; t.y+=dy*0.4; }
+      } else {
+        t.x=ps.x; t.y=ps.y;
+      }
+      t.dir=ps.dir; t.dead=!!ps.dead;
+      const starsChanged=(t.stars|0)!==(ps.stars|0) || (t.bulk|0)!==(ps.bulk|0);
       t.stars=ps.stars|0; t.boat=!!ps.boat; t.bulk=ps.bulk|0;
       t.shield=ps.shield||0; t.spawnGhost=ps.spawnGhost||0; t.frozen=ps.frozen||0;
-      t.coopName=ps.name||t.coopName; t.applyStars(); t.applyBulk();
+      t.coopName=ps.name||t.coopName;
+      if(starsChanged){ t.applyStars(); t.applyBulk(); }
       if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
     });
     for(const pid in coopAllies){ if(!seen[pid] && pid!==coopMyPid) delete coopAllies[pid]; }
-    enemies=(msg.enemies||[]).map(es=>{
-      const e=new Tank(es.x,es.y,false);
-      e.dir=es.dir; e.hp=es.hp; e.type=es.type||"normal"; e.stars=es.stars|0;
-      e.speed=es.speed||60; e.spawnGhost=es.spawnGhost||0; e.shield=es.shield||0;
-      e.frozen=es.frozen||0; e.applyStars();
-      return e;
-    });
-    bullets=(msg.bullets||[]).map(bs=>{
-      const owner={isPlayer:!!bs.friend};
-      return new Bullet(owner, bs.x, bs.y, bs.dir, 220, bs.power||1);
-    });
-    powerups=(msg.powerups||[]).map(ps=>{
-      const pu=new PowerUp(ps.type, ps.x, ps.y);
-      pu.life=ps.life||10;
-      return pu;
+    // enemies / bullets / powerups：复用数组槽位，减少 GC
+    const elist=msg.enemies||[];
+    while(enemies.length>elist.length) enemies.pop();
+    for(let i=0;i<elist.length;i++){
+      const es=elist[i];
+      let e=enemies[i];
+      if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; }
+      e.dead=false; e.x=es.x; e.y=es.y; e.dir=es.dir; e.hp=es.hp;
+      e.type=es.type||"normal"; e.speed=es.speed||60;
+      e.spawnGhost=es.spawnGhost||0; e.shield=es.shield||0; e.frozen=es.frozen||0;
+      if((e.stars|0)!==(es.stars|0)){ e.stars=es.stars|0; e.applyStars(); }
+    }
+    const blist=msg.bullets||[];
+    while(bullets.length>blist.length) bullets.pop();
+    for(let i=0;i<blist.length;i++){
+      const bs=blist[i];
+      let b=bullets[i];
+      if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1); bullets[i]=b; }
+      else {
+        b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1;
+        b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
+      }
+    }
+    const plist=msg.powerups||[];
+    while(powerups.length>plist.length) powerups.pop();
+    for(let i=0;i<plist.length;i++){
+      const ps=plist[i];
+      let pu=powerups[i];
+      if(!pu){ pu=new PowerUp(ps.type, ps.x, ps.y); powerups[i]=pu; }
+      else { pu.type=ps.type; pu.x=ps.x; pu.y=ps.y; }
+      pu.dead=false; pu.life=ps.life||10;
+    }
+  }
+  function onCoopRoster(list){
+    if(!coopMode||!coopIsHost||stateName!=="playing") return;
+    coopRoster=Array.isArray(list)?list.slice():coopRoster;
+    const have={}; friendlyTanks().forEach(t=>{ if(t&&t.coopPid) have[t.coopPid]=true; });
+    let used=Object.keys(have).length;
+    (list||[]).forEach((p)=>{
+      if(!p||!p.pid||have[p.pid]) return;
+      const slot=Math.min(used, COOP_SPAWN.length-1);
+      const t=spawnAtSlot(slot, p.pid, p.name, null);
+      used++;
+      if(p.pid===coopMyPid) player=t;
+      else coopAllies[p.pid]=t;
+      have[p.pid]=true;
+      flash("➕ "+(p.name||"玩家")+" 中途加入", 1.4);
+      // 强制下一包带全地图
+      coopGridSent="";
     });
   }
 
@@ -1094,12 +1157,26 @@ const Game = (() => {
       shake = Math.max(0, shake - dt * 2.5);
       if(stateTime>0.45) shake = 0;
       flashTime=Math.max(0,flashTime-dt);
+      // 联机客机：只看结算，不能自行重开/进下一关
+      if(coopMode && !coopIsHost){
+        Input.consume(); return;
+      }
       if(stateTime>1.2 && Input.state.startPressed){
         if(stateName==="levelClear"){
           if(!endless && level>=CAMPAIGN_LEVELS){ stateName="menu"; menuSel=0; coopMode=false; }
-          else { level++; newLevel(); stateName="playing"; }
+          else { level++; newLevel(); stateName="playing"; coopGridSent=""; }
         }
-        else { stateName="menu"; menuSel=0; coopMode=false; shake=0; }
+        else {
+          // 游戏结束：房主重开本局；单机回菜单
+          if(coopMode && coopIsHost){
+            level=1; score=0; lives=30; overReason="";
+            newLevel(); stateName="playing"; coopGridSent="";
+            if(coopSend) coopSend({type:"event", name:"restart"});
+            flash("房主已重开", 1.2);
+          } else {
+            stateName="menu"; menuSel=0; coopMode=false; shake=0;
+          }
+        }
       }
       Input.consume(); return;
     }
@@ -1112,10 +1189,12 @@ const Game = (() => {
     if(stateName==="paused"){ Input.consume(); return; }
     if(document.hidden){ Input.consume(); return; }
 
-    /* --- 联机客机：只发输入，等房主状态 --- */
+    /* --- 联机客机：发输入 + 本地预测移动；状态由房主校正 --- */
     if(coopMode && !coopIsHost){
       if(coopSend && stateName==="playing"){
         coopSend({type:"input", mx:inp.mx|0, my:inp.my|0, fire:!!inp.fire});
+        // 本地预测自己坦克位移（开火仍以房主为准，避免双发）
+        if(player&&!player.dead) driveTank(player, inp.mx, inp.my, false, dt);
       }
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
@@ -1262,10 +1341,10 @@ const Game = (() => {
     // 无尽模式：每杀15个升一级难度
     if(endless && enemiesKilled>=level*15){ level++; flash("〰 无尽模式 · 难度提升至 Lv"+level); SFX.levelUp(); }
 
-    // 房主广播状态
+    // 房主广播状态（约 12Hz；地图仅变化时带上）
     if(coopMode && coopIsHost && coopSend){
       coopStateAcc+=dt;
-      if(coopStateAcc>=0.05){
+      if(coopStateAcc>=0.08){
         coopStateAcc=0;
         try{ coopSend(buildNetState()); }catch(e){}
       }
@@ -1305,17 +1384,41 @@ const Game = (() => {
       const w=Math.sin(ph+r*0.9+c*1.3)*3;
       g.fillRect(x+3,y+6+w,TILE-6,2);
     } else if(t===T_BASE){
-      // 老鹰基地（2x2 只在左上角格绘制一次）
+      // 美国鹰基地（2x2 只在左上角格绘制一次）
       if(r>0&&grid[r-1][c]===T_BASE) return;
       if(c>0&&grid[r][c-1]===T_BASE) return;
       const s=TILE*2;
-      g.fillStyle="#20242e"; g.fillRect(x,y,s,s);
-      // 鹰
-      g.fillStyle=baseAlive?"#e8c14a":"#555";
-      g.beginPath(); g.moveTo(x+s/2,y+4); g.lineTo(x+s-5,y+s/2);
-      g.lineTo(x+s/2+4,y+s/2); g.lineTo(x+s/2+6,y+s-4); g.lineTo(x+s/2-6,y+s-4);
-      g.lineTo(x+s/2-4,y+s/2); g.lineTo(x+5,y+s/2); g.closePath(); g.fill();
-      g.fillStyle=baseAlive?"#7a3020":"#333"; g.fillRect(x+6,y+s-6,s-12,4);
+      const alive=baseAlive;
+      g.fillStyle=alive?"#1a2438":"#2a2a2a"; g.fillRect(x,y,s,s);
+      g.strokeStyle=alive?"rgba(232,193,74,.55)":"rgba(80,80,80,.5)"; g.lineWidth=1.5;
+      g.strokeRect(x+1,y+1,s-2,s-2);
+      const cx=x+s/2, cy=y+s/2;
+      // 翅
+      g.fillStyle=alive?"#6b3e1f":"#444";
+      g.beginPath();
+      g.moveTo(cx, cy-2);
+      g.lineTo(cx-16, cy+2); g.lineTo(cx-14, cy+8); g.lineTo(cx-4, cy+4);
+      g.lineTo(cx+4, cy+4); g.lineTo(cx+14, cy+8); g.lineTo(cx+16, cy+2);
+      g.closePath(); g.fill();
+      // 身
+      g.fillStyle=alive?"#8a5528":"#555";
+      g.beginPath(); g.arc(cx, cy+3, 6.5, 0, Math.PI*2); g.fill();
+      // 白头（秃鹰）
+      g.fillStyle=alive?"#f2f2f0":"#777";
+      g.beginPath(); g.arc(cx, cy-6, 5.2, 0, Math.PI*2); g.fill();
+      // 喙
+      g.fillStyle=alive?"#e8a040":"#666";
+      g.beginPath(); g.moveTo(cx+3, cy-6); g.lineTo(cx+9, cy-5); g.lineTo(cx+3, cy-3); g.closePath(); g.fill();
+      // 眼
+      g.fillStyle="#111"; g.beginPath(); g.arc(cx+1.5, cy-7, 0.9, 0, Math.PI*2); g.fill();
+      // 爪/座
+      g.fillStyle=alive?"#c9a24a":"#555";
+      g.fillRect(cx-7, y+s-7, 14, 3);
+      if(!alive){
+        g.strokeStyle="rgba(255,80,80,.7)"; g.lineWidth=2;
+        g.beginPath(); g.moveTo(x+6,y+6); g.lineTo(x+s-6,y+s-6);
+        g.moveTo(x+s-6,y+6); g.lineTo(x+6,y+s-6); g.stroke();
+      }
     }
   }
   function drawGrass(r,c){
@@ -1610,11 +1713,15 @@ const Game = (() => {
     else if(stateName==="paused") drawOverlay("暂停","按 L / P 或点击暂停键继续（背景音乐已暂停）");
     else if(stateName==="levelClear"){
       const done=!endless && level>=CAMPAIGN_LEVELS;
-      drawOverlay(done?"全部通关！":("关卡 "+level+" 通过！"),
-        done?("得分 "+score+"　·　按 开火键 回标题"):("得分 "+score+"　·　按 开火键 进入下一关"));
+      const waitGuest=coopMode && !coopIsHost;
+      let sub;
+      if(done) sub=waitGuest?("得分 "+score+"　·　等待房主回标题"):("得分 "+score+"　·　按 开火键 回标题");
+      else sub=waitGuest?("得分 "+score+"　·　等待房主进入下一关"):("得分 "+score+"　·　按 开火键 进入下一关");
+      drawOverlay(done?"全部通关！":("关卡 "+level+" 通过！"), sub);
     }
     else if(stateName==="gameover") drawOverlay("游 戏 结 束",
-      overReason+"　·　得分 "+score+(score>=hiScore?"（新纪录！）":"　·　最高 "+hiScore)+"　·　按 开火键 重新开始",true);
+      overReason+"　·　得分 "+score+(score>=hiScore?"（新纪录！）":"　·　最高 "+hiScore)+
+      (coopMode?(coopIsHost?"　·　房主按 开火键 重开":"　·　等待房主重开"):"　·　按 开火键 重新开始"),true);
   }
   function drawOverlay(title,sub,isOver){
     g.fillStyle="rgba(5,6,12,.72)"; g.fillRect(0,0,CANVAS_W,CANVAS_H);
@@ -1625,7 +1732,8 @@ const Game = (() => {
     g.fillText(title,CANVAS_W/2,CANVAS_H/2-20);
     g.fillStyle="#dfe6f5"; g.font="16px sans-serif";
     g.fillText(sub,CANVAS_W/2,CANVAS_H/2+30);
-    if(stateTime%1<0.6){ g.fillStyle="#ffd24a"; g.font="bold 15px sans-serif";
+    const guestWait=coopMode && !coopIsHost && (stateName==="gameover"||stateName==="levelClear");
+    if(!guestWait && stateTime%1<0.6){ g.fillStyle="#ffd24a"; g.font="bold 15px sans-serif";
       g.fillText("▶ 开火键 / 点击屏幕 继续",CANVAS_W/2,CANVAS_H/2+72); }
   }
   function drawMenu(){
@@ -1688,10 +1796,12 @@ const Game = (() => {
       coopRoster=Array.isArray(opts.roster)?opts.roster.slice():[];
       coopRemoteInput={};
       coopStateAcc=0;
+      coopGridSent="";
       endless=false; enemyLootMode=false; debugMode=false;
-      level=1; score=0; lives=30; player=null; coopAllies={};
+      level=1; score=0; lives=30; player=null; coopAllies={}; overReason="";
+      // 中途加入：先进入 playing，等房主 state 覆盖
       newLevel(); stateName="playing"; SFX.levelUp();
-      flash(coopIsHost?"联机房主 · 同步中":"联机加入 · 等待房主同步", 1.6);
+      flash(opts.lateJoin ? "中途加入 · 同步战场中…" : (coopIsHost?"联机房主 · 同步中":"联机加入 · 等待房主同步"), 1.6);
     },
     onRemoteInput: function(pid, data){
       if(!coopMode||!coopIsHost||!pid) return;
@@ -1702,6 +1812,7 @@ const Game = (() => {
       };
     },
     applyNetState: applyNetState,
+    onCoopRoster: onCoopRoster,
     isCoopHost: function(){ return coopMode&&coopIsHost; }
   };
 })();
@@ -1741,13 +1852,14 @@ const Game = (() => {
   function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
   function startGame(msg){
     room=msg.room||room;
-    hostPid=msg.hostPid||hostPid;
+    hostPid=msg.hostPid||hostPid||((room.players||[]).find(p=>p.host)||{}).pid||"";
     const roster=(room&&room.players)||[];
     const isHost = myPid && myPid===hostPid;
     closePanel();
     if(typeof Game!=="undefined" && Game.beginCampaignFromCoop){
       Game.beginCampaignFromCoop({
         myPid, hostPid, isHost, roster,
+        lateJoin: !!msg.lateJoin,
         send: function(payload){ send(payload); }
       });
     }
@@ -1764,14 +1876,28 @@ const Game = (() => {
       ws.onmessage = (ev)=>{
         let msg; try{ msg=JSON.parse(ev.data); }catch(e){ return; }
         if(msg.type==="hello"){ myPid=msg.pid; }
-        else if(msg.type==="joined"){ myPid=msg.you; room=msg.room; setMsg("已进入房间 "+room.code); renderRoster(); }
-        else if(msg.type==="roster"){ room=msg.room; renderRoster(); }
+        else if(msg.type==="joined"){
+          myPid=msg.you; room=msg.room;
+          if(msg.hostPid) hostPid=msg.hostPid;
+          setMsg((msg.lateJoin?"中途加入 ":"已进入房间 ")+room.code);
+          renderRoster();
+          if(msg.lateJoin) startGame({ room, hostPid, lateJoin:true });
+        }
+        else if(msg.type==="roster"){
+          room=msg.room; renderRoster();
+          if(typeof Game!=="undefined" && Game.onCoopRoster) Game.onCoopRoster((room&&room.players)||[]);
+        }
         else if(msg.type==="start"){ setMsg("开战！"); startGame(msg); }
         else if(msg.type==="input"){
           if(typeof Game!=="undefined" && Game.onRemoteInput) Game.onRemoteInput(msg.from, msg);
         }
         else if(msg.type==="state"){
           if(typeof Game!=="undefined" && Game.applyNetState && !Game.isCoopHost()) Game.applyNetState(msg);
+        }
+        else if(msg.type==="event"){
+          if(msg.name==="restart" && typeof Game!=="undefined" && Game.beginCampaignFromCoop && !Game.isCoopHost()){
+            startGame({ room, hostPid, lateJoin:false });
+          }
         }
         else if(msg.type==="error"){
           const map={room_not_found:"房间不存在",bad_password:"密码错误",room_full:"房间已满",

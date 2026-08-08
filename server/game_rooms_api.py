@@ -150,7 +150,13 @@ async def tank_coop_ws(websocket: WebSocket):
                     room.players[pid] = me
                     _rooms[code] = room
                     room.updated_at = time.time()
-                    await _send(websocket, {"type": "joined", "you": pid, "room": _room_public(room)})
+                    await _send(websocket, {
+                        "type": "joined",
+                        "you": pid,
+                        "room": _room_public(room),
+                        "hostPid": pid,
+                        "lateJoin": False,
+                    })
                     continue
 
                 if mtype == "join":
@@ -172,15 +178,24 @@ async def tank_coop_ws(websocket: WebSocket):
                     if len(r.players) >= MAX_PLAYERS:
                         await _send(websocket, {"type": "error", "message": "room_full"})
                         continue
-                    if r.started:
-                        await _send(websocket, {"type": "error", "message": "already_started"})
-                        continue
+                    # 允许开局后中途加入（房主收到 roster 后刷出新坦克）
                     room = r
-                    me = Player(pid=pid, name=name, ws=websocket, is_host=False)
+                    me = Player(pid=pid, name=name, ws=websocket, is_host=False, ready=False)
                     room.players[pid] = me
                     room.updated_at = time.time()
-                    await _send(websocket, {"type": "joined", "you": pid, "room": _room_public(room)})
-                    await _broadcast(room, {"type": "roster", "room": _room_public(room)})
+                    host = room.host()
+                    await _send(websocket, {
+                        "type": "joined",
+                        "you": pid,
+                        "room": _room_public(room),
+                        "hostPid": host.pid if host else "",
+                        "lateJoin": bool(room.started),
+                    })
+                    await _broadcast(room, {
+                        "type": "roster",
+                        "room": _room_public(room),
+                        "lateJoinPid": pid if room.started else "",
+                    }, exclude=pid)
                     continue
 
                 if mtype == "ready":
