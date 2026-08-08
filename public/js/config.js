@@ -264,14 +264,8 @@ const gamesConfig = {
                 { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html?v=2' },
                 { titleKey: 'tools.gardenDefense.title', url: 'html/game/garden-defense.html?v=2' },
                 { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=13' },
-                { titleKey: 'tools.superMario.title', url: 'html/game/super-mario.html?v=4' },
-                { titleKey: 'tools.steelBattle.title', url: 'html/game/steel-battle.html?v=2' },
-                { titleKey: 'tools.tank1990.title', url: 'html/game/tank-1990.html?v=1' },
-                { titleKey: 'tools.blastParty.title', url: 'html/game/blast-party.html?v=3' },
                 { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html?v=3' },
-                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=3' },
-                { titleKey: 'tools.bubbleShot.title', url: 'html/game/bubble-shot.html?v=3' },
-                { titleKey: 'tools.marblePath.title', url: 'html/game/marble-path.html?v=3' }
+                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=3' }
             ]
         }
     ]

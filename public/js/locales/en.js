@@ -668,22 +668,6 @@ window.TB_LOCALES.en = {
             title: 'Blitz Run',
             desc: 'Contra-style side-scroller. Landscape view on desktop; mobile suggests landscape (not forced).'
         },
-        superMario: {
-            title: 'Super Mario',
-            desc: 'Classic side-scrolling platformer: stomp Goombas, kick shells, collect coins, power-ups and reach the flagpole.'
-        },
-        steelBattle: {
-            title: 'Steel Battle',
-            desc: 'Battle City homage: bricks, steel, water, defend the base through enemy waves.'
-        },
-        tank1990: {
-            title: 'Tank 1990',
-            desc: 'Battle City (Yan Shan-style): stars, pistol, boat power-ups; campaign + endless; landscape dual controls.'
-        },
-        blastParty: {
-            title: 'Blast Party',
-            desc: 'Bomberman homage: bombs, soft blocks, power-ups, clear each stage.'
-        },
         starSerpent: {
             title: 'Star Serpent',
             desc: 'Salamander homage vertical shmup. Arcade landscape frame; mobile suggests landscape (not forced).'
@@ -691,14 +675,6 @@ window.TB_LOCALES.en = {
         fishFeast: {
             title: 'Fish Feast',
             desc: 'Eat smaller fish to grow, avoid bigger ones. Upgrade speed and shields between stages.'
-        },
-        bubbleShot: {
-            title: 'Bubble Shot',
-            desc: 'Aim and pop matching bubbles. Multi-stage layouts with bomb and color-swap items.'
-        },
-        marblePath: {
-            title: 'Marble Path',
-            desc: 'Zuma-style path marbles: shoot matches of three, use slow and bomb items.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

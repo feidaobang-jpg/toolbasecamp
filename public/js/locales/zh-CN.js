@@ -667,22 +667,6 @@ window.TB_LOCALES['zh-CN'] = {
             title: '冲锋行动',
             desc: '魂斗罗风格横版射击：八向射击与道具。桌面横屏视野，手机建议横屏（不强制）。'
         },
-        superMario: {
-            title: '超级玛丽',
-            desc: '经典横版闯关：踩蘑菇怪、踢龟壳、吃金币、拿道具、冲向旗杆！'
-        },
-        steelBattle: {
-            title: '钢铁大战',
-            desc: '坦克大战致敬：砖墙/钢墙/水面，守护基地，波次敌军。'
-        },
-        tank1990: {
-            title: '坦克 1990',
-            desc: '烟山改版风坦克大战：星星/手枪/船等道具，战役与无尽，横屏双端操控。'
-        },
-        blastParty: {
-            title: '炸弹奇兵',
-            desc: '炸弹人致敬：摆炸弹清软墙与怪物，捡范围/数量道具。'
-        },
         starSerpent: {
             title: '星蛇突击',
             desc: '沙罗曼蛇致敬：纵版射击与 Boss。街机横屏视野，手机建议横屏（不强制）。'
@@ -690,14 +674,6 @@ window.TB_LOCALES['zh-CN'] = {
         fishFeast: {
             title: '大鱼吃小鱼',
             desc: '吃小鱼长大、躲开大鱼；过关升级游速与护盾。程序化绘制，本地可玩。'
-        },
-        bubbleShot: {
-            title: '泡泡龙',
-            desc: '角度发射同色消除，多关布局，炸弹与换色道具。'
-        },
-        marblePath: {
-            title: '彩珠巡游',
-            desc: '轨道彩珠射击消三连（祖玛风），减速与炸弹道具过关。'
         },
         rmbUppercase: {
             title: '人民币大写',
