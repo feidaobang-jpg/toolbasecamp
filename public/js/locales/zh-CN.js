@@ -315,6 +315,7 @@ window.TB_LOCALES['zh-CN'] = {
         groups: {
             polished: '高完成度',
             draft: '低完成度',
+            developing: '正在开发',
             casual: '休闲游戏'
         }
     },
