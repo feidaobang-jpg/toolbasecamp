@@ -682,7 +682,7 @@ const Game = (() => {
       case PU.HELMET:
         player.shield=Math.max(player.shield,10); SFX.shield(); flash("🛡 无敌护盾 10 秒"); break;
       case PU.TANK:
-        lives++; flash("🦆 卤鸭！生命 +1"); break;
+        lives++; flash("🚗 小坦克！生命 +1"); break;
       case PU.CLOCK:
         freezeTimer=8; for(const e of enemies) e.frozen=8; flash("⏱ 敌方冻结 8 秒"); break;
       case PU.SHOVEL: // 铲子：基地围墙变铁 12 秒
@@ -1170,20 +1170,17 @@ const Game = (() => {
         g.fillStyle="#9ad0ff"; g.beginPath(); g.arc(0,2,8,Math.PI,0); g.fill();
         g.fillRect(-8,2,16,3); break;
       case PU.TANK:
-        // 卤鸭（无 ellipse，兼容性更好）
-        g.fillStyle="#6b3a18";
-        g.save(); g.translate(0,3); g.scale(1.35,1); g.beginPath(); g.arc(0,0,7,0,Math.PI*2); g.fill(); g.restore();
-        g.fillStyle="#8a5028";
-        g.save(); g.translate(-2,1); g.scale(1.2,0.85); g.beginPath(); g.arc(0,0,4,0,Math.PI*2); g.fill(); g.restore();
-        g.fillStyle="#5a2e12";
-        g.beginPath(); g.arc(6,-2,4.2,0,Math.PI*2); g.fill();
-        g.fillStyle="#3a1c0c";
-        g.beginPath(); g.arc(9,-5,2.8,0,Math.PI*2); g.fill();
-        g.fillStyle="#e8a040";
-        g.beginPath(); g.moveTo(11,-5); g.lineTo(15.5,-3.8); g.lineTo(11,-2.5); g.closePath(); g.fill();
-        g.fillStyle="#fff"; g.beginPath(); g.arc(9.5,-5.5,0.8,0,Math.PI*2); g.fill();
-        g.fillStyle="rgba(255,200,120,.5)";
-        g.beginPath(); g.arc(-1,2,2.5,0,Math.PI*2); g.fill();
+        // 小坦克（加命）
+        g.fillStyle="#3a4a2a";
+        g.fillRect(-10,-6,4,14); g.fillRect(6,-6,4,14);
+        g.fillStyle="#d8c84a";
+        g.fillRect(-7,-4,14,10);
+        g.fillStyle="#8a7a1e";
+        g.fillRect(-7,5,14,3);
+        g.fillStyle="#eadb6a";
+        g.beginPath(); g.arc(0,0,3.5,0,Math.PI*2); g.fill();
+        g.fillStyle="#6a5c14";
+        g.fillRect(-1.5,-11,3,8);
         break;
       case PU.CLOCK:
         g.strokeStyle="#fff"; g.lineWidth=2; g.beginPath(); g.arc(0,0,8,0,Math.PI*2); g.stroke();
@@ -1341,7 +1338,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("地形递进 + 中/左/右路铁墙　·　3星或枪装甲加厚可抗弹　·　卤鸭=加命",CANVAS_W/2,418);
+    g.fillText("地形递进 + 中/左/右路铁墙　·　3星或枪装甲加厚可抗弹　·　小坦克=加命",CANVAS_W/2,418);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
