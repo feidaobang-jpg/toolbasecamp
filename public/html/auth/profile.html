@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,12 +8,12 @@
     <script src="../../vendor/tailwindcss.js?v=2"></script>
     <link href="../../vendor/font-awesome/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/base.css?v=9">
-    <link rel="stylesheet" href="../../css/site-mobile-nav.css">
+    <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=icp1">
     <script src="../../js/locales/en.js?v=auth8"></script>
     <script src="../../js/locales/zh-CN.js?v=auth8"></script>
     <script src="../../js/i18n.js"></script>
     <script src="../../js/config.js"></script>
-    <script src="../../js/common_ui.js?v=chat4"></script>
+    <script src="../../js/common_ui.js?v=icp1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
     <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
@@ -38,14 +38,14 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-display" data-i18n="auth.loading">Loading...</h2>
                 <p class="text-sm text-gray-500 break-all" id="profile-account"></p>
                 <p class="mt-3 text-sm text-gray-600">
-                    <span data-i18n="auth.aiBalance">Balance</span>ï¼š
+                    <span data-i18n="auth.aiBalance">Balance</span>£º
                     <span id="profile-balance" class="font-semibold text-gray-900">--</span>
                 </p>
             </div>
 
             <div class="px-6 py-4 space-y-3 border-b border-gray-50">
                 <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.nicknameTitle">Nickname</h3>
-                <p class="text-xs text-gray-500" data-i18n="auth.nicknameHint">ç”¨äºç§èŠæ”¶ä»¶ç®±ç­‰åˆ—è¡¨å±•ç¤ºï¼›ç•™ç©ºåˆ™æ˜¾ç¤ºæ‰‹æœºå·ã€‚</p>
+                <p class="text-xs text-gray-500" data-i18n="auth.nicknameHint">ÓÃÓÚË½ÁÄÊÕ¼şÏäµÈÁĞ±íÕ¹Ê¾£»Áô¿ÕÔòÏÔÊ¾ÊÖ»úºÅ¡£</p>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <input type="text" id="nickname-input" maxlength="32" autocomplete="nickname"
                         class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" />
@@ -71,13 +71,13 @@
                 <p class="text-xs text-gray-500" data-i18n="auth.referralHint">Share your invite link. When friends top up, you earn 10% as commission (separate from AI balance).</p>
                 <div class="text-sm text-gray-700 space-y-1">
                     <p>
-                        <span data-i18n="auth.commissionBalance">Commission</span>ï¼š
+                        <span data-i18n="auth.commissionBalance">Commission</span>£º
                         <span id="referral-commission" class="font-semibold text-gray-900">--</span>
                     </p>
                     <p class="text-xs text-gray-500">
-                        <span data-i18n="auth.commissionEarned">Earned total</span>ï¼š
+                        <span data-i18n="auth.commissionEarned">Earned total</span>£º
                         <span id="referral-earned">--</span>
-                        Â· <span data-i18n="auth.inviteeCount">Invitees</span>ï¼š
+                        ¡¤ <span data-i18n="auth.inviteeCount">Invitees</span>£º
                         <span id="referral-invitees">0</span>
                     </p>
                 </div>
@@ -103,7 +103,7 @@
 
             <div class="p-6 space-y-3">
                 <a href="chat.html" class="tb-btn w-full inline-flex items-center justify-center gap-2">
-                    <i class="fas fa-comments"></i> <span data-i18n="nav.chat">ç§èŠ</span>
+                    <i class="fas fa-comments"></i> <span data-i18n="nav.chat">Ë½ÁÄ</span>
                 </a>
                 <button type="button" onclick="document.getElementById('modal-password').classList.remove('hidden')"
                     class="w-full py-2.5 px-4 bg-white border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
@@ -215,7 +215,7 @@
                     return;
                 }
                 var bal = Number(wallet.balanceCny);
-                el.textContent = Number.isFinite(bal) ? ('Â¥' + bal.toFixed(2)) : '--';
+                el.textContent = Number.isFinite(bal) ? ('£¤' + bal.toFixed(2)) : '--';
                 if (redeemSec) redeemSec.classList.remove('hidden');
             }
 
@@ -295,9 +295,9 @@
                     const data = await fetchWithAuth('/wallet/referral/me');
                     if (!data.success) throw new Error(data.detail || tr('auth.loadProfileFailed'));
                     document.getElementById('referral-commission').textContent =
-                        'Â¥' + Number(data.commissionCny || 0).toFixed(2);
+                        '£¤' + Number(data.commissionCny || 0).toFixed(2);
                     document.getElementById('referral-earned').textContent =
-                        'Â¥' + Number(data.earnedTotalCny || 0).toFixed(2);
+                        '£¤' + Number(data.earnedTotalCny || 0).toFixed(2);
                     document.getElementById('referral-invitees').textContent =
                         String(data.inviteeCount || 0);
                     document.getElementById('referral-code').value = data.inviteCode || '';
@@ -317,8 +317,8 @@
                     box.innerHTML = list.slice(0, 5).map(function (w) {
                         var st = statusMap[w.status] || w.status;
                         var t = String(w.createdAt || '').replace('T', ' ').replace(/\.\d+$/, '');
-                        return '<div>#' + w.id + ' Â¥' + Number(w.amountCny || 0).toFixed(2) +
-                            ' Â· ' + st + (t ? ' Â· ' + t : '') + '</div>';
+                        return '<div>#' + w.id + ' £¤' + Number(w.amountCny || 0).toFixed(2) +
+                            ' ¡¤ ' + st + (t ? ' ¡¤ ' + t : '') + '</div>';
                     }).join('');
                 } catch (e) {
                     if (msgEl && e.message !== 'Unauthorized') {

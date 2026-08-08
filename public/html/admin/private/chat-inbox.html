@@ -1,20 +1,20 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>私聊收件箱 - 自用</title>
+  <title>˽���ռ��� - ����</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="../../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
-  <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=icp1" />
   <script src="../../../js/locales/en.js?v=nick1"></script>
   <script src="../../../js/locales/zh-CN.js?v=nick1"></script>
   <script src="../../../js/i18n.js"></script>
   <script src="../../../js/config.js"></script>
-  <script src="../../../js/common_ui.js?v=chat4"></script>
+  <script src="../../../js/common_ui.js?v=icp1"></script>
   <style>
     .chat-bubble-me { background: #2563eb; color: #fff; }
     .chat-bubble-them { background: #f3f4f6; color: #111827; }
@@ -25,9 +25,9 @@
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
       <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
-        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">����</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.chatInboxTitle">私聊收件箱</h1>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.chatInboxTitle">˽���ռ���</h1>
       <span id="inbox-unread" class="text-xs text-amber-600 font-medium"></span>
       <div class="ml-auto flex items-center gap-3 text-sm">
         <span id="auth-label" class="text-gray-500"></span>
@@ -36,24 +36,24 @@
   </header>
 
   <main class="flex-1 px-4 sm:px-6 lg:px-8 py-4 w-full max-w-5xl mx-auto flex flex-col min-h-0" style="height: calc(100vh - 4rem);">
-    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">加载中…</div>
+    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">�����С�</div>
     <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
-      <p class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
-      <a href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fchat-inbox.html" class="tb-btn inline-flex" data-i18n="auth.login">登录</a>
+      <p class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">��Ҫ����Ա��¼��鿴</p>
+      <a href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fchat-inbox.html" class="tb-btn inline-flex" data-i18n="auth.login">��¼</a>
     </div>
 
     <div id="app" class="hidden flex-1 min-h-0 grid grid-cols-1 md:grid-cols-[240px_1fr] gap-3">
       <aside class="bg-white rounded-2xl border border-gray-100 flex flex-col min-h-0 overflow-hidden">
         <div class="px-3 py-2 border-b border-gray-100 flex items-center justify-between">
-          <span class="text-sm font-semibold" data-i18n="chat.inboxThreads">会话</span>
-          <button type="button" id="btn-refresh-threads" class="text-xs text-blue-600 hover:underline" data-i18n="chat.refresh">刷新</button>
+          <span class="text-sm font-semibold" data-i18n="chat.inboxThreads">�Ự</span>
+          <button type="button" id="btn-refresh-threads" class="text-xs text-blue-600 hover:underline" data-i18n="chat.refresh">ˢ��</button>
         </div>
         <div id="thread-list" class="flex-1 overflow-y-auto p-2 space-y-1"></div>
       </aside>
       <section class="bg-white rounded-2xl border border-gray-100 flex flex-col min-h-0 overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2">
           <div>
-            <div id="thread-title" class="text-sm font-semibold text-gray-900" data-i18n="chat.inboxPick">选择左侧会话</div>
+            <div id="thread-title" class="text-sm font-semibold text-gray-900" data-i18n="chat.inboxPick">ѡ�����Ự</div>
             <div id="chat-status" class="text-xs text-gray-400"></div>
           </div>
         </div>
@@ -61,8 +61,8 @@
         <div id="composer" class="hidden border-t border-gray-100 p-3 flex gap-2">
           <textarea id="chat-input" rows="2" maxlength="2000"
             class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none"
-            data-i18n-placeholder="chat.placeholder" placeholder="输入消息…"></textarea>
-          <button type="button" id="chat-send" class="tb-btn self-end whitespace-nowrap" data-i18n="chat.send">发送</button>
+            data-i18n-placeholder="chat.placeholder" placeholder="������Ϣ��"></textarea>
+          <button type="button" id="chat-send" class="tb-btn self-end whitespace-nowrap" data-i18n="chat.send">����</button>
         </div>
       </section>
     </div>

@@ -9,13 +9,13 @@
   <script src="../../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
-  <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=icp1" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=3" />
   <script src="../../../js/locales/en.js?v=dealer8"></script>
   <script src="../../../js/locales/zh-CN.js?v=dealer8"></script>
   <script src="../../../js/i18n.js?v=locale1"></script>
   <script src="../../../js/config.js"></script>
-  <script src="../../../js/common_ui.js?v=8"></script>
+  <script src="../../../js/common_ui.js?v=icp1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -33,28 +33,26 @@
 
   <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
     <div id="boot-loading" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">
-      加载中…
-    </div>
+      加载中�?    </div>
     <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
-      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查看</p>
-      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="tb-btn inline-flex">去登录</a>
+      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查�?/p>
+      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="tb-btn inline-flex">去登�?/a>
     </div>
 
     <div id="app" class="ladder-update-wrap hidden max-w-2xl mx-auto space-y-6">
       <p class="ladder-update-desc" data-i18n="privateHub.ops.walletDesc">
-        给用户加余额，或生成兑换码发给用户在个人中心兑换。
-      </p>
+        给用户加余额，或生成兑换码发给用户在个人中心兑换�?      </p>
 
       <section class="ladder-section">
-        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCreditTitle">后台加余额</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCreditDesc">填写用户登录手机号，以及金额（元）。</p>
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCreditTitle">后台加余�?/h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCreditDesc">填写用户登录手机号，以及金额（元）�?/p>
         <div class="space-y-3">
           <label class="block text-sm">
             <span class="text-gray-600" data-i18n="privateHub.ops.walletAccount">账号</span>
-            <input id="credit-account" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" inputmode="tel" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletAccountPh" placeholder="手机号" />
+            <input id="credit-account" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" inputmode="tel" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletAccountPh" placeholder="手机�? />
           </label>
           <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元�?/span>
             <input id="credit-amount" type="number" min="0.01" step="0.01" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="10" />
           </label>
           <label class="block text-sm">
@@ -62,7 +60,7 @@
             <input id="credit-note" type="text" maxlength="128" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </label>
           <div class="action-row">
-            <button type="button" class="tb-btn" id="btn-credit" data-i18n="privateHub.ops.walletCreditBtn">加余额</button>
+            <button type="button" class="tb-btn" id="btn-credit" data-i18n="privateHub.ops.walletCreditBtn">加余�?/button>
           </div>
           <div id="credit-status" class="ladder-status"></div>
         </div>
@@ -70,49 +68,49 @@
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletUsersTitle">用户余额列表</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletUsersDesc">查看全部用户账号与余额，可按手机号或昵称搜索。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletUsersDesc">查看全部用户账号与余额，可按手机号或昵称搜索�?/p>
         <div class="space-y-3">
           <div class="flex flex-col sm:flex-row gap-2">
-            <input id="users-q" type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletUsersSearchPh" placeholder="手机号/昵称" />
+            <input id="users-q" type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletUsersSearchPh" placeholder="手机�?昵称" />
             <button type="button" class="tb-btn" id="btn-users-search" data-i18n="privateHub.ops.walletUsersSearch">查询</button>
             <button type="button" class="tb-btn" id="btn-users-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
           </div>
           <div id="users-status" class="ladder-status"></div>
           <div id="users-list" class="text-sm space-y-2"></div>
           <div class="action-row mt-3" id="users-pager" hidden>
-            <button type="button" class="tb-btn" id="users-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
+            <button type="button" class="tb-btn" id="users-prev" data-i18n="privateHub.ops.walletPagePrev">上一�?/button>
             <span class="text-sm text-gray-500 self-center" id="users-page-label"></span>
-            <button type="button" class="tb-btn" id="users-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
+            <button type="button" class="tb-btn" id="users-next" data-i18n="privateHub.ops.walletPageNext">下一�?/button>
           </div>
         </div>
       </section>
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletWdTitle">佣金兑现</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletWdDesc">用户申请提现后，微信打款完成再在此核销扣减佣金。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletWdDesc">用户申请提现后，微信打款完成再在此核销扣减佣金�?/p>
         <div class="space-y-3">
           <div class="flex flex-wrap gap-2" id="wd-filter">
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-blue-600 bg-blue-50 text-blue-700 is-active" data-status="pending" data-i18n="privateHub.ops.walletWdPending">待处理</button>
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="paid" data-i18n="privateHub.ops.walletWdPaid">已兑现</button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-blue-600 bg-blue-50 text-blue-700 is-active" data-status="pending" data-i18n="privateHub.ops.walletWdPending">待处�?/button>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="paid" data-i18n="privateHub.ops.walletWdPaid">已兑�?/button>
             <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
             <button type="button" class="tb-btn ml-auto" id="btn-wd-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
           </div>
           <div id="wd-status" class="ladder-status"></div>
           <div id="wd-list" class="text-sm space-y-2"></div>
           <div class="action-row mt-3" id="wd-pager" hidden>
-            <button type="button" class="tb-btn" id="wd-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
+            <button type="button" class="tb-btn" id="wd-prev" data-i18n="privateHub.ops.walletPagePrev">上一�?/button>
             <span class="text-sm text-gray-500 self-center" id="wd-page-label"></span>
-            <button type="button" class="tb-btn" id="wd-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
+            <button type="button" class="tb-btn" id="wd-next" data-i18n="privateHub.ops.walletPageNext">下一�?/button>
           </div>
         </div>
       </section>
 
       <section class="ladder-section">
-        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCodesTitle">生成兑换码</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCodesDesc">一次最多 50 个。用户在「个人中心」输入兑换码充值。</p>
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCodesTitle">生成兑换�?/h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCodesDesc">一次最�?50 个。用户在「个人中心」输入兑换码充值�?/p>
         <div class="space-y-3">
           <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
+            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元�?/span>
             <input id="code-amount" type="number" min="0.01" step="0.01" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="10" />
           </label>
           <label class="block text-sm">
@@ -137,9 +135,9 @@
           </div>
           <div id="codes-list" class="text-sm space-y-2 mt-3"></div>
           <div class="action-row mt-3" id="codes-pager" hidden>
-            <button type="button" class="tb-btn" id="codes-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
+            <button type="button" class="tb-btn" id="codes-prev" data-i18n="privateHub.ops.walletPagePrev">上一�?/button>
             <span class="text-sm text-gray-500 self-center" id="codes-page-label"></span>
-            <button type="button" class="tb-btn" id="codes-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
+            <button type="button" class="tb-btn" id="codes-next" data-i18n="privateHub.ops.walletPageNext">下一�?/button>
           </div>
         </div>
       </section>

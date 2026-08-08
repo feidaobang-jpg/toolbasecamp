@@ -10,6 +10,9 @@ const siteConfig = {
     descriptionKey: 'site.description',
     keywordsKey: 'site.keywords',
     footerKey: 'site.footer',
+    /** ICP filing number shown in site footer (link to MIIT). */
+    icpBeianNumber: '闽ICP备2025116294号-2',
+    icpBeianUrl: 'https://beian.miit.gov.cn/',
     adminEmail: 'admin@toolbasecamp.com',
     adminPhone: '15859130726',
     devPortalUrl: 'https://dev.toolbasecamp.com',

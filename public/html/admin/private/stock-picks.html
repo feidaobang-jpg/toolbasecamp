@@ -9,13 +9,13 @@
   <script src="../../../vendor/tailwindcss.js?v=2"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=9" />
-  <link rel="stylesheet" href="../../../css/site-mobile-nav.css" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=icp1" />
   <link rel="stylesheet" href="../../../css/admin/stock-picks.css?v=2" />
   <script src="../../../js/locales/en.js"></script>
   <script src="../../../js/locales/zh-CN.js"></script>
   <script src="../../../js/i18n.js?v=stats1"></script>
   <script src="../../../js/config.js"></script>
-  <script src="../../../js/common_ui.js?v=8"></script>
+  <script src="../../../js/common_ui.js?v=icp1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -33,8 +33,8 @@
 
   <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
     <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
-      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查看</p>
-      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fstock-picks.html" class="tb-btn inline-flex">去登录</a>
+      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查�?/p>
+      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fstock-picks.html" class="tb-btn inline-flex">去登�?/a>
     </div>
 
     <div id="app" class="stock-page-wrap hidden">
@@ -43,7 +43,7 @@
           <input id="onlyBasic" type="checkbox" checked />
           <span>只看普通股</span>
         </label>
-        <div class="hint">默认排除：科创/创业/北交所、ST 等。按匹配度排序展示达标标的；卡片会标注沪市/深市，及可能的账号权限限制。</div>
+        <div class="hint">默认排除：科�?创业/北交所、ST 等。按匹配度排序展示达标标的；卡片会标注沪�?深市，及可能的账号权限限制�?/div>
       </div>
 
       <div class="tab-nav">
@@ -54,7 +54,7 @@
       <div class="tab-panel active" id="panel-monthly-recovery">
         <div class="stock-container">
           <div class="strategy-desc">
-            <b>月K底部启动策略</b>（已加强「超跌底部 + 无退市 + 负面公告过滤」）：在<b>沪深300 + 中证500</b>成分内筛选。要求相对 <b>18 个月高点有明显回撤</b>、月K仍处偏低位置，同时近月有<b>企稳/启动迹象</b>（避免长期趴底）。强制主板普通股，排除 ST、退市整理、创业板、科创板、北交所及过低价/低流动性标的；并过滤近期公告含退市/立案/造假等<strong>严重负面关键词</strong>的标的。<b>大盘偏弱时不推荐</b>。建议观察约 <b>3~12 个月</b>，需止损与仓位控制。<b>不能保证无退市，也不能保证一年内大涨。</b>
+            <b>月K底部启动策略</b>（已加强「超跌底�?+ 无退�?+ 负面公告过滤」）：在<b>沪深300 + 中证500</b>成分内筛选。要求相�?<b>18 个月高点有明显回�?/b>、月K仍处偏低位置，同时近月有<b>企稳/启动迹象</b>（避免长期趴底）。强制主板普通股，排�?ST、退市整理、创业板、科创板、北交所及过低价/低流动性标的；并过滤近期公告含退�?立案/造假�?strong>严重负面关键�?/strong>的标的�?b>大盘偏弱时不推荐</b>。建议观察约 <b>3~12 个月</b>，需止损与仓位控制�?b>不能保证无退市，也不能保证一年内大涨�?/b>
           </div>
           <div class="toolbar">
             <button type="button" id="btnMonthlyRecovery" class="tb-btn">推荐月K启动</button>
@@ -67,7 +67,7 @@
       <div class="tab-panel" id="panel-tail-buy">
         <div class="stock-container">
           <div class="strategy-desc">
-            <b>尾盘低吸（v2 新路线）</b>：已弃用旧版「追当日温和上涨、赌次日高开」。新逻辑是在大盘尚可时，于成分股中找<strong>今日偏弱/平盘、贴近 MA20 支撑、未靠近阶段高点、未连涨</strong>的承接标的；强制主板并过滤严重负面公告。<b>建议时点</b>：买入 <b>当日 14:50~14:59</b>；卖出 <b>次日 9:30~10:00</b>。非尾盘时段也可预览，正式下单请到点再确认。<b>隔夜博弈，不保证次日上涨。</b>
+            <b>尾盘低吸（v2 新路线）</b>：已弃用旧版「追当日温和上涨、赌次日高开」。新逻辑是在大盘尚可时，于成分股中找<strong>今日偏弱/平盘、贴�?MA20 支撑、未靠近阶段高点、未连涨</strong>的承接标的；强制主板并过滤严重负面公告�?b>建议时点</b>：买�?<b>当日 14:50~14:59</b>；卖�?<b>次日 9:30~10:00</b>。非尾盘时段也可预览，正式下单请到点再确认�?b>隔夜博弈，不保证次日上涨�?/b>
           </div>
           <div class="toolbar">
             <button type="button" id="btnTailBuy" class="tb-btn">推荐尾盘低吸</button>

@@ -10,6 +10,7 @@ window.TB_LOCALES.en = {
         description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
         keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
         footer: 'All rights reserved.',
+        icpBeian: '闽ICP备2025116294号-2',
         pageTitleSuffix: 'Tool Basecamp'
     },
     nav: {

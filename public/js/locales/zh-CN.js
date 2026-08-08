@@ -9,6 +9,7 @@ window.TB_LOCALES['zh-CN'] = {
         description: '工具大本营 — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
         keywords: '效率工具, PDF 转换, JSON 转 Java, 开发者工具, 文档工具',
         footer: '保留所有权利。',
+        icpBeian: '闽ICP备2025116294号-2',
         pageTitleSuffix: '工具大本营'
     },
     nav: {
