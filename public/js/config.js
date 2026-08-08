@@ -264,7 +264,7 @@ const gamesConfig = {
                 { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html?v=2' },
                 { titleKey: 'tools.gardenDefense.title', url: 'html/game/garden-defense.html?v=2' },
                 { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=13' },
-                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=11' },
+                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=12' },
                 { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html?v=3' },
                 { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=3' }
             ]
