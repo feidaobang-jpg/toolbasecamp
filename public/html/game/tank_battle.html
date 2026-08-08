@@ -74,7 +74,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">最多 8 人合作打关。人齐后由房主点「开始」；支持开局后中途加入；结束画面全员可见，仅房主可重开。</p>
+      <p class="coop-hint">联机节点：<span id="coopNode">—</span><br>双方必须打开<strong>同一个网址</strong>（主站与国内测试机房间不互通）。人齐后由房主点「开始」。</p>
     </div>
   </div>
 </div>
@@ -286,7 +286,10 @@ const Input = (() => {
         if(el===joyBase||el===joyKnob){ joyId=t.identifier; joyMove(t); }
         else if(el&&el.id==="btnFire"){ touchFire=true; state.firePressed=true; state.startPressed=true; }
         else if(el&&el.id==="btnPause"){ state.pausePressed=true; }
-        else { state.startPressed=true; }
+        else if(!(window.TankCoop && TankCoop.isOpen && TankCoop.isOpen())){
+          // 联机大厅打开时，点按钮不要当成菜单「开火开始」
+          state.startPressed=true;
+        }
       }
       e.preventDefault();
     },{passive:false});
@@ -1156,6 +1159,10 @@ const Game = (() => {
     }
 
     if(stateName==="menu"){
+      // 联机大厅打开时冻结菜单，避免点「开始」被当成闯关开局又回到标题
+      if(window.TankCoop && TankCoop.isOpen && TankCoop.isOpen()){
+        Input.consume(); return;
+      }
       if(inp.my<0&&!menuMoved){ menuSel=(menuSel+MENU_COUNT-1)%MENU_COUNT; menuMoved=true; }
       else if(inp.my>0&&!menuMoved){ menuSel=(menuSel+1)%MENU_COUNT; menuMoved=true; }
       else if(!inp.my) menuMoved=false;
@@ -1894,6 +1901,17 @@ const Game = (() => {
     return apiBase().replace(/^http/, "ws") + "/game/tank-coop/ws";
   }
   function setMsg(t){ if(msgEl) msgEl.textContent = t||""; }
+  function nodeLabel(){
+    const h=location.hostname||"";
+    if(h==="111.229.172.111") return "国内测试机 "+h;
+    if(/toolbasecamp\.com$/i.test(h)) return "主站 "+h;
+    if(h==="localhost"||h==="127.0.0.1") return "本地开发";
+    return h||"未知";
+  }
+  function refreshNode(){
+    const el=document.getElementById("coopNode");
+    if(el) el.textContent=nodeLabel()+" · "+wsUrl();
+  }
   function renderRoster(){
     if(!rosterEl) return;
     if(!room){ rosterEl.textContent = "尚未进入房间"; return; }
@@ -1909,12 +1927,18 @@ const Game = (() => {
     const digits=String(raw||"").replace(/\D/g,"");
     return digits ? digits.padStart(6,"0").slice(-6) : "";
   }
-  function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
+  function send(obj){
+    if(!ws||ws.readyState!==1){ setMsg("未连接服务器，请先创建/加入房间"); return false; }
+    ws.send(JSON.stringify(obj));
+    return true;
+  }
   function startGame(msg){
     room=msg.room||room;
+    if(!room){ setMsg("开战失败：房间数据丢失，请重进房间"); return; }
     hostPid=msg.hostPid||hostPid||((room.players||[]).find(p=>p.host)||{}).pid||"";
     const roster=(room&&room.players)||[];
     const isHost = myPid && myPid===hostPid;
+    if(typeof Input!=="undefined" && Input.consume) Input.consume();
     closePanel();
     if(typeof Game!=="undefined" && Game.beginCampaignFromCoop){
       Game.beginCampaignFromCoop({
@@ -1927,24 +1951,37 @@ const Game = (() => {
   function ensureWs(){
     return new Promise((resolve, reject)=>{
       if(ws && ws.readyState===1){ resolve(ws); return; }
+      if(ws && ws.readyState===0){
+        const onOpen=()=>{ ws.removeEventListener("error", onErr); resolve(ws); };
+        const onErr=()=>{ setMsg("无法连接服务器"); reject(new Error("ws")); };
+        ws.addEventListener("open", onOpen, {once:true});
+        ws.addEventListener("error", onErr, {once:true});
+        return;
+      }
       try{
         ws = new WebSocket(wsUrl());
       }catch(e){ reject(e); return; }
       ws.onopen = ()=> resolve(ws);
       ws.onerror = ()=>{ setMsg("无法连接服务器"); reject(new Error("ws")); };
-      ws.onclose = ()=>{ setMsg("连接已断开"); room=null; renderRoster(); };
+      ws.onclose = ()=>{ setMsg("连接已断开（请重新创建/加入房间）"); room=null; hostPid=""; renderRoster(); };
       ws.onmessage = (ev)=>{
         let msg; try{ msg=JSON.parse(ev.data); }catch(e){ return; }
         if(msg.type==="hello"){ myPid=msg.pid; }
         else if(msg.type==="joined"){
           myPid=msg.you; room=msg.room;
           if(msg.hostPid) hostPid=msg.hostPid;
-          setMsg((msg.lateJoin?"中途加入 ":"已进入房间 ")+room.code);
+          setMsg((msg.lateJoin?"中途加入 ":"已进入房间 ")+room.code+" · 节点 "+nodeLabel());
           renderRoster();
           if(msg.lateJoin) startGame({ room, hostPid, lateJoin:true });
         }
         else if(msg.type==="roster"){
+          const prevN=(room&&room.players||[]).length;
           room=msg.room; renderRoster();
+          const n=(room.players||[]).length;
+          if(n>prevN){
+            const names=(room.players||[]).map(p=>p.name).join("、");
+            setMsg("房间人数 "+n+"/"+room.maxPlayers+" · "+names);
+          }
           if(typeof Game!=="undefined" && Game.onCoopRoster) Game.onCoopRoster((room&&room.players)||[]);
         }
         else if(msg.type==="start"){ setMsg("开战！"); startGame(msg); }
@@ -1960,8 +1997,9 @@ const Game = (() => {
           }
         }
         else if(msg.type==="error"){
-          const map={room_not_found:"房间不存在",bad_password:"密码错误",room_full:"房间已满",
-            already_started:"已开局",host_only:"仅房主可开始",already_in_room:"已在房间中"};
+          const map={room_not_found:"房间不存在（是否双方网址不同？）",bad_password:"密码错误",room_full:"房间已满",
+            already_started:"已开局",host_only:"仅房主可开始",already_in_room:"已在房间中",
+            not_in_room:"未在房间中，请重新创建/加入"};
           setMsg(map[msg.message]||msg.message||"错误");
         }
       };
@@ -1970,6 +2008,7 @@ const Game = (() => {
   function open(){
     panel.classList.add("open");
     panel.setAttribute("aria-hidden","false");
+    refreshNode();
     const nameInp=document.getElementById("coopName");
     if(nameInp && !nameInp.value){
       try{ nameInp.value = localStorage.getItem("tb_tank_coop_name")||("P"+Math.floor(Math.random()*90+10)); }catch(e){}
@@ -1980,6 +2019,7 @@ const Game = (() => {
     panel.classList.remove("open");
     panel.setAttribute("aria-hidden","true");
   }
+  function isOpen(){ return !!(panel && panel.classList.contains("open")); }
   function name(){
     const n=(document.getElementById("coopName").value||"Player").trim().slice(0,16);
     try{ localStorage.setItem("tb_tank_coop_name", n); }catch(e){}
@@ -1987,34 +2027,50 @@ const Game = (() => {
   }
   function password(){ return (document.getElementById("coopPass").value||"").slice(0,32); }
 
-  document.getElementById("coopCreate").onclick = async ()=>{
+  document.getElementById("coopCreate").onclick = async (e)=>{
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    if(typeof Input!=="undefined" && Input.consume) Input.consume();
     try{
       await ensureWs();
-      send({type:"create", name:name(), password:password()});
-    }catch(e){ setMsg("连接失败"); }
+      if(!send({type:"create", name:name(), password:password()})) return;
+      setMsg("正在创建房间…");
+    }catch(err){ setMsg("连接失败"); }
   };
-  document.getElementById("coopJoin").onclick = async ()=>{
+  document.getElementById("coopJoin").onclick = async (e)=>{
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    if(typeof Input!=="undefined" && Input.consume) Input.consume();
     const code=normalizeCode(document.getElementById("coopCode").value);
     if(!code){ setMsg("请填写 6 位房间号"); return; }
     document.getElementById("coopCode").value=code;
     try{
       await ensureWs();
-      send({type:"join", code, name:name(), password:password()});
-    }catch(e){ setMsg("连接失败"); }
+      if(!send({type:"join", code, name:name(), password:password()})) return;
+      setMsg("正在加入 "+code+"…");
+    }catch(err){ setMsg("连接失败"); }
   };
-  document.getElementById("coopStart").onclick = ()=>{
-    send({type:"start", level:1});
+  document.getElementById("coopStart").onclick = (e)=>{
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    if(typeof Input!=="undefined" && Input.consume) Input.consume();
+    if(!room){ setMsg("请先创建或加入房间"); return; }
+    if(!(myPid && (myPid===hostPid || (room.players||[]).some(p=>p.pid===myPid&&p.host)))){
+      setMsg("仅房主可开始"); return;
+    }
+    if(!send({type:"start", level:1})) return;
+    setMsg("正在开战…");
   };
-  document.getElementById("coopClose").onclick = ()=>{
+  document.getElementById("coopClose").onclick = (e)=>{
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    if(typeof Input!=="undefined" && Input.consume) Input.consume();
     send({type:"leave"});
-    try{ if(ws) ws.close(); }catch(e){}
-    ws=null; room=null; closePanel();
+    try{ if(ws) ws.close(); }catch(err){}
+    ws=null; room=null; hostPid=""; closePanel();
   };
 
-  panel.addEventListener("touchstart", e=>e.stopPropagation(), {passive:true});
+  panel.addEventListener("touchstart", e=>e.stopPropagation(), {passive:false});
   panel.addEventListener("pointerdown", e=>e.stopPropagation());
+  panel.addEventListener("click", e=>e.stopPropagation());
 
-  window.TankCoop = { open, close: closePanel };
+  window.TankCoop = { open, close: closePanel, isOpen };
 })();
 
 /* ---------------- 画布缩放：PC 普通横屏 / 手机竖屏自动旋转横屏 ---------------- */
