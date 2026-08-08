@@ -328,7 +328,7 @@ class Tank{
     this.cool=0; this.dead=false;
     this.stars=0;             // 星级：0基础 1快弹 2双发 3打铁 4除草
     this.boat=false;          // 船：可过水 + 抵挡一次攻击的船体护盾
-    this.armor=0;             // 装甲：吃手枪获得，可抵挡3发子弹
+    this.bulk=0;              // 装甲体型：0普通 1加粗(≥3星/枪) 2更粗(≥4星)；被打会降级变小
     this.shield=0;            // 无敌护盾剩余时间
     this.spawnGhost=1.6;      // 出生保护/闪烁
     this.hp=1;
@@ -346,6 +346,20 @@ class Tank{
     this.maxBullets  = this.stars>=2 ? 2 : 1;
     this.bulletPower = this.stars>=3 ? 3 : 1;   // 3星可打铁
     if(this.stars>=4) this.bulletPower = 4;     // 4星可除草（额外星/手枪）
+    // 3星/枪 → 变粗；4星再粗一点（可再吃回来）
+    if(this.stars>=4) this.bulk = Math.max(this.bulk, 2);
+    else if(this.stars>=3) this.bulk = Math.max(this.bulk, 1);
+    this.applyBulk();
+  }
+  /** 按 bulk 调整体型（中心不变） */
+  applyBulk(){
+    const base = TILE*2-2;
+    const add = this.bulk>=2 ? 7 : (this.bulk>=1 ? 4 : 0);
+    const cx=this.cx, cy=this.cy;
+    this.w = base + add;
+    this.h = base + add;
+    this.x = cx - this.w/2;
+    this.y = cy - this.h/2;
   }
 }
 
@@ -447,27 +461,41 @@ const Levels = (() => {
     return cell;
   }
 
-  /** 每关强制中间通道铁墙，防止敌军从中央一路直通基地 */
+  /** 每关强制中路 + 最左/最右路铁砖，防止直通与侧翼偷袭 */
   function fortifyMidLane(grid){
     const put = (r,c,t)=>{
       if(r<0||r>=FIELD_H||c<0||c>=FIELD_W) return;
       if(grid[r][c]===T_BASE) return;
       grid[r][c]=t;
     };
-    // 上中：挡住从顶部中央出生点直下的炮线
+    // —— 中路 ——
     for(let c=11;c<=14;c++) put(6,c,T_STEEL);
     put(7,11,T_STEEL); put(7,14,T_STEEL);
-    // 中段岔口：两侧铁、中间留缝可绕行
     for(let c=10;c<=15;c++){
       if(c===12||c===13) continue;
       put(11,c,T_STEEL);
     }
     put(12,10,T_STEEL); put(12,15,T_STEEL);
     put(13,11,T_STEEL); put(13,14,T_STEEL);
-    // 接近基地前再拦一道
     for(let c=11;c<=14;c++) put(17,c,T_STEEL);
     put(18,11,T_BRICK); put(18,14,T_BRICK);
     put(19,12,T_BRICK); put(19,13,T_BRICK);
+
+    // —— 最左路（挡左侧出生点直下）——
+    put(5,0,T_STEEL); put(5,1,T_STEEL); put(5,2,T_BRICK);
+    put(8,0,T_BRICK); put(8,1,T_STEEL); put(8,2,T_STEEL);
+    put(12,0,T_STEEL); put(12,1,T_BRICK);
+    put(15,0,T_BRICK); put(15,1,T_STEEL); put(15,2,T_STEEL);
+    put(19,0,T_STEEL); put(19,1,T_STEEL); put(19,2,T_BRICK);
+    put(21,1,T_BRICK); put(21,2,T_STEEL);
+
+    // —— 最右路 ——
+    put(5,23,T_BRICK); put(5,24,T_STEEL); put(5,25,T_STEEL);
+    put(8,23,T_STEEL); put(8,24,T_STEEL); put(8,25,T_BRICK);
+    put(12,24,T_BRICK); put(12,25,T_STEEL);
+    put(15,23,T_STEEL); put(15,24,T_STEEL); put(15,25,T_BRICK);
+    put(19,23,T_BRICK); put(19,24,T_STEEL); put(19,25,T_STEEL);
+    put(21,23,T_STEEL); put(21,24,T_BRICK);
   }
 
   function build(levelIdx,endless){
@@ -521,8 +549,10 @@ const Game = (() => {
   let debugMode=false; // 测试模式：大幅提高道具掉落概率
   let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
+  let clearGrace=0; // 敌军清空后的拾取缓冲秒数
   const MENU_COUNT=4;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
+  const CLEAR_GRACE_SEC=4.5;
 
   /* ---- 碰撞辅助 ---- */
   function rectHit(a,b){ return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y; }
@@ -583,13 +613,14 @@ const Game = (() => {
     enemyQueue = endless ? Infinity : enemyPlanObj.total;
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
     bossSpawned=false;
+    clearGrace=0;
     spawnPlayer();
     if(level%5===0) flash("⚠ Boss 关：本关将出现强化敌军", 2.2);
   }
   function spawnPlayer(){
     const keepStars = player? player.stars:0, keepBoat = player? player.boat:false;
     player=new Tank(OFF_X+8*TILE+1, OFF_Y+24*TILE+1, true);
-    player.stars=0; player.applyStars();
+    player.stars=0; player.bulk=0; player.applyStars();
     player.shield=3; SFX.spawn();
   }
   const SPAWN_COLS=[0,12,24];
@@ -646,11 +677,16 @@ const Game = (() => {
     switch(pu.type){
       case PU.STAR:
         player.stars=Math.min(player.stars+1,4); player.applyStars();
-        flash(player.stars>=4?"★ 火力全开！可除草":"★ 火力提升 Lv"+player.stars); break;
-      case PU.GUN: // 手枪：直接拉满3星（可打铁）+ 装甲可抵3发；若已3星以上则升到4星（可除草）
-        player.stars = player.stars>=3 ? 4 : 3; player.applyStars();
-        player.armor = 3;
-        flash(player.stars>=4?"🔫 满级火力！可除草 + 装甲×3":"🔫 手枪！可打铁 + 装甲可抗3发"); break;
+        if(player.bulk>=2) flash("★ 火力全开！装甲加厚");
+        else if(player.bulk>=1) flash("★ 火力提升 · 装甲变厚");
+        else flash("★ 火力提升 Lv"+player.stars);
+        break;
+      case PU.GUN: // 手枪：直升 3/4 星 + 立刻变粗装甲体
+        player.stars = player.stars>=3 ? 4 : 3;
+        player.bulk = player.stars>=4 ? 2 : Math.max(player.bulk, 1);
+        player.applyStars();
+        flash(player.stars>=4?"🔫 满级火力！装甲加厚可抗弹":"🔫 手枪！可打铁 · 坦克变粗");
+        break;
       case PU.BOAT: // 船：护盾一层 + 可在水上行走
         player.boat=true; SFX.boat(); flash("⛵ 获得船：可渡水+船体护盾"); break;
       case PU.GRENADE:
@@ -660,7 +696,7 @@ const Game = (() => {
       case PU.HELMET:
         player.shield=Math.max(player.shield,10); SFX.shield(); flash("🛡 无敌护盾 10 秒"); break;
       case PU.TANK:
-        lives++; flash("🚗 生命 +1"); break;
+        lives++; flash("🦆 卤鸭！生命 +1"); break;
       case PU.CLOCK:
         freezeTimer=8; for(const e of enemies) e.frozen=8; flash("⏱ 敌方冻结 8 秒"); break;
       case PU.SHOVEL: // 铲子：基地围墙变铁 12 秒
@@ -683,7 +719,7 @@ const Game = (() => {
       case PU.GRENADE:
         if(player&&!player.dead){
           if(player.shield>0){ player.shield=0; flash("💥 敌军手雷被护盾挡下"); }
-          else if(player.armor>0){ player.armor=0; flash("💥 敌军手雷打掉装甲"); }
+          else if(player.bulk>0){ hurtPlayerBulk(); flash("💥 敌军手雷打掉装甲外形"); }
           else { killTank(player,false); flash("💥 敌军手雷！"); }
         }
         SFX.bigExplode(); shake=0.35; break;
@@ -703,6 +739,17 @@ const Game = (() => {
     const bx=12,by=24;
     for(let c=bx-1;c<=bx+2;c++) if(grid[by-1][c]!==T_BASE) grid[by-1][c]=t;
     for(const [r,c] of [[by,bx-1],[by,bx+2],[by+1,bx-1],[by+1,bx+2]]) if(grid[r][c]!==T_BASE) grid[r][c]=t;
+  }
+  /** 装甲体型被打：变小一级，短暂无敌；火力星级保留，可再吃星/枪变粗 */
+  function hurtPlayerBulk(){
+    if(!player || player.bulk<=0) return false;
+    player.bulk--;
+    player.applyBulk();
+    player.shield = Math.max(player.shield, 1.2);
+    SFX.hitSteel();
+    boom(player.cx, player.cy, 10, ["#ffd24a","#ffb02e","#fff"]);
+    flash(player.bulk>0 ? "装甲受损！体型缩小" : "装甲剥落！变回原型");
+    return true;
   }
 
   /* ---- 子弹与地形/实体交互 ---- */
@@ -746,8 +793,10 @@ const Game = (() => {
     // 暂停 / 切后台：停 BGM；恢复后继续
     const wantPauseAudio = stateName==="paused" || document.hidden;
     BGM.setPaused(wantPauseAudio);
+    // 背景音乐：清理缓冲期播 clear，其余跟状态
     if(!wantPauseAudio){
-      const track={menu:"menu",playing:"play",paused:"play",levelClear:"clear",gameover:"over"}[stateName];
+      let track={menu:"menu",playing:"play",paused:"play",levelClear:"clear",gameover:"over"}[stateName];
+      if(stateName==="playing" && clearGrace>0) track="clear";
       if(track) BGM.ensure(track);
     }
 
@@ -903,12 +952,9 @@ const Game = (() => {
       } else if(player&&!player.dead&&rectHit(b,player.rect())){
         b.dead=true;
         if(player.shield>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); }
-        else if(player.armor>0){ player.armor--; SFX.hitSteel();
-          flash("🔫 装甲抵挡！剩余 "+player.armor+" 发");
-          boom(b.x+3,b.y+3,8,["#ffd24a","#ffb02e","#fff"]); }
+        else if(player.bulk>0){ hurtPlayerBulk(); }
         else if(player.boat){ player.boat=false; SFX.hitWall(); flash("⛵ 船体护盾抵挡了攻击！");
           boom(player.cx,player.cy,10,["#7ad0ff","#3f7fd0","#fff"]);
-          // 若此时正在水上，自动滑回最近的陆地（滑行期间短暂无敌）
           if(onWater(player)){
             const spot=findLandSpot(player);
             if(spot){ player.eject=spot; player.shield=Math.max(player.shield,1.5);
@@ -935,12 +981,20 @@ const Game = (() => {
     }
     // 基地被毁
     if(!baseAlive){ doGameOver(true); return; }
-    // 关卡通过（非无尽）
+    // 关卡通过：先播通关音，留几秒继续移动/捡道具，再进结算
     if(!endless && enemyQueue<=0 && enemies.length===0){
-      stateName="levelClear"; stateTime=0; score+=1000; SFX.levelUp();
-      if(score>hiScore){ hiScore=score; localStorage.tbHiScore=hiScore; }
-      if(level>=CAMPAIGN_LEVELS){
-        flash("🏆 通关全部 "+CAMPAIGN_LEVELS+" 关！");
+      if(clearGrace<=0){
+        clearGrace = CLEAR_GRACE_SEC;
+        score+=1000; SFX.levelUp();
+        BGM.ensure("clear");
+        flash("敌军肃清！还可拾取道具…", CLEAR_GRACE_SEC);
+        if(score>hiScore){ hiScore=score; localStorage.tbHiScore=hiScore; }
+      } else {
+        clearGrace -= dt;
+        if(clearGrace<=0){
+          stateName="levelClear"; stateTime=0;
+          if(level>=CAMPAIGN_LEVELS) flash("🏆 通关全部 "+CAMPAIGN_LEVELS+" 关！");
+        }
       }
     }
     // 无尽模式：每杀15个升一级难度
@@ -1021,9 +1075,15 @@ const Game = (() => {
     const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
     g.fillStyle=gr; g.fillRect(-w/2+5,-h/2+3,w-10,h-6);
+    // 装甲加厚时描边更粗
+    if(t.isPlayer && t.bulk>0){
+      g.strokeStyle = t.bulk>=2 ? "rgba(255,200,60,.9)" : "rgba(255,210,120,.7)";
+      g.lineWidth = t.bulk>=2 ? 3 : 2;
+      g.strokeRect(-w/2+4,-h/2+2,w-8,h-4);
+    }
     // 炮塔
     g.fillStyle=t.isPlayer?"#eadb6a":(t.type==="boss"?"#ffd24a":"#d8dde8");
-    g.beginPath(); g.arc(0,1,t.type==="boss"?8:7,0,Math.PI*2); g.fill();
+    g.beginPath(); g.arc(0,1,t.type==="boss"?8:(t.isPlayer&&t.bulk?8:7),0,Math.PI*2); g.fill();
     g.fillStyle=t.isPlayer?"#6a5c14":"#404858";
     g.fillRect(-2.5,-h/2-4,5,h/2+5);
     // 装甲/Boss 血量提示
@@ -1044,9 +1104,10 @@ const Game = (() => {
       g.strokeStyle="rgba(160,220,255,.35)"; g.lineWidth=1.5;
       g.beginPath(); g.roundRect(t.x-pad-3,t.y-pad-3,t.w+pad*2+6,t.h+pad*2+6,10); g.stroke();
     }
-    // 装甲（吃手枪获得，金色方框）
-    if(t.isPlayer&&t.armor>0){
-      g.strokeStyle="rgba(255,200,60,.75)"; g.lineWidth=2;
+    // 装甲（体型加厚时的外框）
+    if(t.isPlayer&&t.bulk>0){
+      g.strokeStyle=t.bulk>=2?"rgba(255,200,60,.85)":"rgba(255,210,120,.65)";
+      g.lineWidth=t.bulk>=2?3:2;
       g.strokeRect(t.x-3,t.y-3,t.w+6,t.h+6);
     }
     // 护盾
@@ -1107,8 +1168,21 @@ const Game = (() => {
         g.fillStyle="#9ad0ff"; g.beginPath(); g.arc(0,2,8,Math.PI,0); g.fill();
         g.fillRect(-8,2,16,3); break;
       case PU.TANK:
-        g.fillStyle="#d8c84a"; g.fillRect(-8,-4,16,10);
-        g.fillRect(-2,-9,4,6); g.fillStyle="#8a7a1e"; g.fillRect(-8,6,16,3); break;
+        // 卤鸭（无 ellipse，兼容性更好）
+        g.fillStyle="#6b3a18";
+        g.save(); g.translate(0,3); g.scale(1.35,1); g.beginPath(); g.arc(0,0,7,0,Math.PI*2); g.fill(); g.restore();
+        g.fillStyle="#8a5028";
+        g.save(); g.translate(-2,1); g.scale(1.2,0.85); g.beginPath(); g.arc(0,0,4,0,Math.PI*2); g.fill(); g.restore();
+        g.fillStyle="#5a2e12";
+        g.beginPath(); g.arc(6,-2,4.2,0,Math.PI*2); g.fill();
+        g.fillStyle="#3a1c0c";
+        g.beginPath(); g.arc(9,-5,2.8,0,Math.PI*2); g.fill();
+        g.fillStyle="#e8a040";
+        g.beginPath(); g.moveTo(11,-5); g.lineTo(15.5,-3.8); g.lineTo(11,-2.5); g.closePath(); g.fill();
+        g.fillStyle="#fff"; g.beginPath(); g.arc(9.5,-5.5,0.8,0,Math.PI*2); g.fill();
+        g.fillStyle="rgba(255,200,120,.5)";
+        g.beginPath(); g.arc(-1,2,2.5,0,Math.PI*2); g.fill();
+        break;
       case PU.CLOCK:
         g.strokeStyle="#fff"; g.lineWidth=2; g.beginPath(); g.arc(0,0,8,0,Math.PI*2); g.stroke();
         g.beginPath(); g.moveTo(0,0); g.lineTo(0,-5); g.moveTo(0,0); g.lineTo(4,2); g.stroke(); break;
@@ -1157,8 +1231,8 @@ const Game = (() => {
     g.fillStyle="#dfe6f5"; g.font="bold 15px sans-serif"; g.fillText("火力",rx,OFF_Y+150);
     for(let i=0;i<4;i++) star(rx-27+i*18,OFF_Y+170,7,i<(player?player.stars:0)?"#ffd24a":"#3a4258");
     if(player&&player.boat){ g.fillStyle="#7ab8e8"; g.font="bold 14px sans-serif"; g.fillText("⛵ 船",rx,OFF_Y+200); }
-    if(player&&player.armor>0){ g.fillStyle="#ffd24a"; g.font="bold 13px sans-serif";
-      g.fillText("甲 ×"+player.armor,rx,OFF_Y+242); }
+    if(player&&player.bulk>0){ g.fillStyle="#ffd24a"; g.font="bold 13px sans-serif";
+      g.fillText(player.bulk>=2?"装甲厚":"装甲",rx,OFF_Y+242); }
     if(player&&player.shield>0){ g.fillStyle="#9ad0ff"; g.font="bold 13px sans-serif";
       g.fillText("🛡 "+player.shield.toFixed(0)+"s",rx,OFF_Y+222); }
     // 暂停提示
@@ -1207,6 +1281,12 @@ const Game = (() => {
       g.fillRect(CANVAS_W/2-w/2,6,w,26);
       g.fillStyle="#ffe9a0"; g.font="bold 14px sans-serif"; g.textAlign="center";
       g.fillText(flashMsg,CANVAS_W/2,24); g.globalAlpha=1;
+    }
+    if(stateName==="playing" && clearGrace>0){
+      g.fillStyle="rgba(10,14,28,.72)";
+      g.fillRect(CANVAS_W/2-90, CANVAS_H-36, 180, 26);
+      g.fillStyle="#7ae0a0"; g.font="bold 14px sans-serif"; g.textAlign="center";
+      g.fillText("过关倒计时 "+clearGrace.toFixed(1)+"s", CANVAS_W/2, CANVAS_H-18);
     }
     // 覆盖层
     if(stateName==="menu") drawMenu();
@@ -1259,7 +1339,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("地形：1–4砖 → 5–8铁 → 9–12草 → 13–20水　·　每关中间有铁墙　·　每5关 Boss",CANVAS_W/2,418);
+    g.fillText("地形递进 + 中/左/右路铁墙　·　3星或枪变粗可抗弹　·　卤鸭=加命",CANVAS_W/2,418);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,440);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,460);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
