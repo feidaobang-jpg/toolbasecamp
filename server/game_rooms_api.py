@@ -66,9 +66,9 @@ _lock = asyncio.Lock()
 
 
 def _new_code() -> str:
-    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    """6-digit numeric room code, e.g. 482017."""
     while True:
-        code = "".join(secrets.choice(alphabet) for _ in range(CODE_LEN))
+        code = f"{secrets.randbelow(1_000_000):06d}"
         if code not in _rooms:
             return code
 
@@ -157,7 +157,9 @@ async def tank_coop_ws(websocket: WebSocket):
                     if room is not None:
                         await _send(websocket, {"type": "error", "message": "already_in_room"})
                         continue
-                    code = str(msg.get("code") or "").upper().strip()
+                    raw_code = str(msg.get("code") or "").strip()
+                    digits = "".join(ch for ch in raw_code if ch.isdigit())
+                    code = digits.zfill(6)[-6:] if digits else ""
                     password = str(msg.get("password") or "")[:32]
                     name = str(msg.get("name") or "Player")[:16]
                     r = _rooms.get(code)

@@ -64,8 +64,8 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       <input id="coopName" maxlength="16" placeholder="Player" autocomplete="off">
       <label>房间密码（可空）</label>
       <input id="coopPass" maxlength="32" placeholder="可选" autocomplete="off">
-      <label>房间号（加入时填写）</label>
-      <input id="coopCode" maxlength="8" placeholder="例如 AB12CD" autocomplete="off" style="text-transform:uppercase">
+      <label>房间号（6位数字，加入时填写）</label>
+      <input id="coopCode" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="例如 482017" autocomplete="off">
       <div class="coop-actions">
         <button type="button" class="tb-btn" id="coopCreate">创建房间</button>
         <button type="button" class="tb-btn" id="coopJoin">加入房间</button>
@@ -75,7 +75,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">建房/加房/准备已可用。开战会进入闯关；同屏多坦克同步仍在完善，请先约好友测房间连通。</p>
+      <p class="coop-hint">房主模拟战场并同步画面；其他人只传操作。最多 8 人合作打关。</p>
     </div>
   </div>
 </div>
@@ -549,15 +549,14 @@ const Levels = (() => {
     return grid;
   }
   // 关卡敌人配置：数量与种类随关卡递增
-  // 血量档：fast/normal/power=1 · mid=2 · armor=3 · heavy(Boss)=5
+  // 血量档：fast/normal/power=1 · mid=2 · armor=3（已去掉抗5发）
   function enemyPlan(level){
     const total = Math.min(12 + level*2, 30);
     const fast  = Math.min(2+level, 10);
     const power = Math.min(1+level, 8);
     const mid   = Math.min(1+Math.floor(level/2), 8); // 抗 2 发
     const armor = Math.min(level, 8);                 // 抗 3 发
-    const heavy = Math.min(Math.floor(level/5), 4);   // 抗 5 发（非 Boss 关少量）
-    return { total, fast, power, mid, armor, heavy };
+    return { total, fast, power, mid, armor };
   }
   return { build, enemyPlan, count:maps.length, CAMPAIGN_LEVELS };
 })();
@@ -577,6 +576,18 @@ const Game = (() => {
   let enemyLootMode=false; // 敌人可拾取道具（烟山后期玩法）
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   let clearGrace=0; // 敌军清空后的拾取缓冲秒数
+  // 合作联机（房主权威）
+  let coopMode=false, coopIsHost=false, coopMyPid="", coopHostPid="";
+  let coopSend=null;           // (obj)=>void
+  let coopAllies={};           // pid -> Tank（不含本地 player）
+  let coopRemoteInput={};      // pid -> {mx,my,fire}
+  let coopStateAcc=0;
+  let coopRoster=[];
+  const COOP_TINTS=[
+    ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
+    ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
+  ];
+  const COOP_SPAWN=[[8,24],[10,24],[6,24],[12,24],[4,24],[14,24],[2,24],[16,24]];
   const MENU_COUNT=5;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
   const CLEAR_GRACE_SEC=4.5;
@@ -586,6 +597,21 @@ const Game = (() => {
   function tileAt(px,py){ const c=Math.floor((px-OFF_X)/TILE), r=Math.floor((py-OFF_Y)/TILE);
     if(r<0||r>=FIELD_H||c<0||c>=FIELD_W) return T_STEEL; // 边界视为铁
     return grid[r][c]; }
+  function friendlyTanks(){
+    const list=[];
+    if(player) list.push(player);
+    for(const pid in coopAllies){ const t=coopAllies[pid]; if(t) list.push(t); }
+    return list;
+  }
+  function nearestFriendly(from){
+    let best=null, bd=1e9;
+    for(const t of friendlyTanks()){
+      if(!t||t.dead) continue;
+      const d=Math.hypot(from.cx-t.cx, from.cy-t.cy);
+      if(d<bd){ bd=d; best=t; }
+    }
+    return best;
+  }
   function tankBlocked(t,nx,ny){
     // 检查坦克矩形四角+边中点的地形；水面：有船可通过
     const pts=[[nx+1,ny+1],[nx+t.w-1,ny+1],[nx+1,ny+t.h-1],[nx+t.w-1,ny+t.h-1],
@@ -599,7 +625,7 @@ const Game = (() => {
     if(nx<OFF_X||ny<OFF_Y||nx+t.w>OFF_X+FIELD_PX||ny+t.h>OFF_Y+FIELD_H*TILE) return true;
     // 坦克互撞
     const r={x:nx,y:ny,w:t.w,h:t.h};
-    const all=[player,...enemies];
+    const all=[...friendlyTanks(),...enemies];
     for(const o of all){ if(!o||o===t||o.dead) continue; if(rectHit(r,o.rect())) return true; }
     return false;
   }
@@ -633,6 +659,30 @@ const Game = (() => {
   }
 
   /* ---- 生成 ---- */
+  function spawnAtSlot(slot, pid, name){
+    const sp=COOP_SPAWN[slot%COOP_SPAWN.length];
+    const t=new Tank(OFF_X+sp[0]*TILE+1, OFF_Y+sp[1]*TILE+1, true);
+    t.stars=0; t.bulk=0; t.applyStars();
+    t.shield=3; t.coopPid=pid; t.coopName=name||("P"+(slot+1));
+    t.coopTint=COOP_TINTS[slot%COOP_TINTS.length];
+    t.coopSlot=slot;
+    return t;
+  }
+  function setupCoopPlayers(){
+    coopAllies={};
+    player=null;
+    const roster = coopRoster.slice(0,8);
+    roster.forEach((p,i)=>{
+      const t=spawnAtSlot(i, p.pid, p.name);
+      if(p.pid===coopMyPid) player=t;
+      else coopAllies[p.pid]=t;
+    });
+    if(!player && roster.length){
+      // 兜底：把自己设为第一个
+      player=spawnAtSlot(0, coopMyPid, "Me");
+    }
+    SFX.spawn();
+  }
   function newLevel(){
     grid=Levels.build(level,endless);
     bullets=[]; powerups=[]; particles=[]; enemies=[];
@@ -641,39 +691,49 @@ const Game = (() => {
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
     bossSpawned=false;
     clearGrace=0;
-    spawnPlayer();
+    if(coopMode) setupCoopPlayers();
+    else spawnPlayer();
     if(level%5===0) flash("⚠ Boss 关：本关将出现强化敌军", 2.2);
   }
   function spawnPlayer(){
+    if(coopMode && player){
+      const slot=player.coopSlot|0, pid=player.coopPid||coopMyPid, name=player.coopName;
+      player=spawnAtSlot(slot, pid, name);
+      return;
+    }
     const keepStars = player? player.stars:0, keepBoat = player? player.boat:false;
     player=new Tank(OFF_X+8*TILE+1, OFF_Y+24*TILE+1, true);
     player.stars=0; player.bulk=0; player.applyStars();
     player.shield=3; SFX.spawn();
   }
+  function respawnFriendly(t){
+    if(!t) return;
+    const slot=t.coopSlot|0, pid=t.coopPid, name=t.coopName;
+    const nt=spawnAtSlot(slot, pid, name);
+    if(pid===coopMyPid) player=nt;
+    else coopAllies[pid]=nt;
+  }
   const SPAWN_COLS=[0,12,24];
   function trySpawnEnemy(){
     if(enemyQueue<=0) return;
     const alive=enemies.filter(e=>!e.dead).length;
-    const maxAlive = endless ? Math.min(4+Math.floor(level/2),8) : 4;
+    const maxAlive = endless ? Math.min(4+Math.floor(level/2),8) : Math.min(4 + (coopMode?Math.max(0,friendlyTanks().length-1):0), 8);
     if(alive>=maxAlive) return;
     const col=SPAWN_COLS[randi(0,2)];
     const x=OFF_X+col*TILE+1, y=OFF_Y+1;
     const r={x,y,w:TILE*2-2,h:TILE*2-2};
-    for(const o of [player,...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
+    for(const o of [...friendlyTanks(),...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
     const e=new Tank(x,y,false);
-    // 每 5 关刷一只重装 Boss（抗 5 发 + 可打铁，偏慢）
+    // 每 5 关刷一只强化重甲（抗 3 发 + 可打铁，偏慢）
     const wantBoss = (level%5===0) && !bossSpawned && (endless || enemyQueue<=Math.max(3, (enemyPlanObj.total/2)|0));
     if(wantBoss){
       bossSpawned=true;
-      e.type="heavy"; e.hp=5; e.speed=42; e.stars=3; e.applyStars();
+      e.type="armor"; e.hp=3; e.speed=42; e.stars=3; e.applyStars();
       e.carriesPowerup=true; e.bulletSpeed=300;
-      flash("💀 重装坦克出现！抗 5 发", 1.8);
+      flash("💀 强化重甲出现！抗 3 发可打铁", 1.8);
     } else {
       const p=enemyPlanObj, kRoll=Math.random();
-      if(kRoll<0.10 && p.heavy>0){
-        // 重装：抗 5 发、最慢（贴图≤格子）
-        e.type="heavy"; e.hp=5; e.speed=40;
-      } else if(kRoll<0.24 && p.armor>0){
+      if(kRoll<0.22 && p.armor>0){
         // 重甲：抗 3 发
         e.type="armor"; e.hp=3; e.speed=48;
       } else if(kRoll<0.40 && p.mid>0){
@@ -820,13 +880,147 @@ const Game = (() => {
     t.dead=true; boom(t.cx,t.cy,26); SFX.explode(); shake=Math.max(shake,0.25);
     if(!t.isPlayer){
       enemiesKilled++;
-      if(byPlayer){ const pts={normal:100,fast:200,power:300,mid:350,armor:450,heavy:800}[t.type]||100; score+=pts;
+      if(byPlayer){ const pts={normal:100,fast:200,power:300,mid:350,armor:450}[t.type]||100; score+=pts;
         flashScore(t.cx,t.cy,pts); }
       if(t.carriesPowerup) dropPowerup(t.cx,t.cy);
     }
   }
   const scorePops=[];
   function flashScore(x,y,v){ scorePops.push({x,y,v,t:0.9}); }
+
+  function driveTank(p, vx, vy, fireNow, dt){
+    if(!p||p.dead) return;
+    p.cool-=dt; p.shield-=dt; p.spawnGhost-=dt;
+    if(p.frozen>0){ p.frozen-=dt; vx=0; vy=0; }
+    if(p.eject){
+      const dx=p.eject.x-p.x, dy=p.eject.y-p.y, dist=Math.hypot(dx,dy);
+      const sp=p.speed*1.6*dt;
+      if(dist<=sp){ p.x=p.eject.x; p.y=p.eject.y; p.eject=null; }
+      else { p.x+=dx/dist*sp; p.y+=dy/dist*sp;
+        if(Math.random()<0.5) boom(p.cx,p.cy+p.h/2,2,["#7ad0ff","#a0d8ff"]); }
+      vx=vy=0;
+    }
+    if(vx||vy){
+      p.dir = vx>0?DIR.RIGHT:vx<0?DIR.LEFT:vy>0?DIR.DOWN:DIR.UP;
+      p.anim+=dt*10;
+      const nx=p.x+vx*p.speed*dt, ny=p.y+vy*p.speed*dt;
+      if(!tankBlocked(p,nx,p.y)) p.x=nx;
+      if(!tankBlocked(p,p.x,ny)) p.y=ny;
+      if(vy&&!vx){ const snap=Math.round((p.x-OFF_X-1)/(TILE/2))*(TILE/2)+OFF_X+1;
+        const d=snap-p.x;
+        if(d){ const step=Math.sign(d)*Math.min(Math.abs(d),p.speed*dt);
+          if(!tankBlocked(p,p.x+step,p.y)) p.x+=step; } }
+      if(vx&&!vy){ const snap=Math.round((p.y-OFF_Y-1)/(TILE/2))*(TILE/2)+OFF_Y+1;
+        const d=snap-p.y;
+        if(d){ const step=Math.sign(d)*Math.min(Math.abs(d),p.speed*dt);
+          if(!tankBlocked(p,p.x,p.y+step)) p.y+=step; } }
+    }
+    if(fireNow && !(p.frozen>0)) fire(p);
+    for(const pu of powerups){
+      if(pu.dead||!rectHit(p.rect(),{x:pu.x,y:pu.y,w:TILE*2,h:TILE*2})) continue;
+      pu.dead=true;
+      if(p===player){ applyPowerup(pu); continue; }
+      // 队友拾取：个人强化给该车，全局效果走原逻辑
+      if(pu.type===PU.STAR){ p.stars=Math.min(4,(p.stars||0)+1); p.applyStars(); flash("⭐ 队友升星"); }
+      else if(pu.type===PU.GUN){ p.stars=Math.max(p.stars||0,3); p.applyStars(); flash("🔫 队友拿到手枪"); }
+      else if(pu.type===PU.HELMET){ p.shield=Math.max(p.shield,12); }
+      else if(pu.type===PU.BOAT){ p.boat=true; }
+      else if(pu.type===PU.TANK){ lives++; flash("🚗 生命 +1"); }
+      else applyPowerup(pu);
+    }
+  }
+  function hurtFriendly(t, b){
+    if(t.shield>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); return; }
+    if(t.bulk>0){
+      t.bulk-=1; t.applyBulk(); SFX.hitSteel(); boom(b.x+3,b.y+3,8,["#ffd24a","#fff"]);
+      if(t===player) flash("装甲被打掉一层！");
+      return;
+    }
+    if(t.boat){
+      t.boat=false; SFX.hitWall();
+      if(t===player) flash("⛵ 船体护盾抵挡了攻击！");
+      boom(t.cx,t.cy,10,["#7ad0ff","#3f7fd0","#fff"]);
+      if(onWater(t)){
+        const spot=findLandSpot(t);
+        if(spot){ t.eject=spot; t.shield=Math.max(t.shield,1.5); }
+      }
+      return;
+    }
+    killTank(t,false);
+  }
+  function buildNetState(){
+    const packT=t=>({
+      pid:t.coopPid||"", name:t.coopName||"", slot:t.coopSlot|0,
+      x:Math.round(t.x), y:Math.round(t.y), dir:t.dir, dead:!!t.dead,
+      stars:t.stars|0, boat:!!t.boat, bulk:t.bulk|0, shield:+(t.shield||0).toFixed(1),
+      spawnGhost:+(t.spawnGhost||0).toFixed(1), frozen:+(t.frozen||0).toFixed(1)
+    });
+    const friends=friendlyTanks().map(packT);
+    return {
+      type:"state",
+      level, score, lives, enemyQueue, enemiesKilled, baseAlive,
+      freezeTimer:+freezeTimer.toFixed(2), shovelTimer:+shovelTimer.toFixed(2),
+      clearGrace:+clearGrace.toFixed(2), stateName,
+      grid: grid ? grid.map(row=>row.join("")).join("|") : "",
+      players: friends,
+      enemies: enemies.filter(e=>!e.dead).map(e=>({
+        x:Math.round(e.x), y:Math.round(e.y), dir:e.dir, hp:e.hp, type:e.type,
+        stars:e.stars|0, speed:Math.round(e.speed), spawnGhost:+(e.spawnGhost||0).toFixed(1),
+        shield:+(e.shield||0).toFixed(1), frozen:+(e.frozen||0).toFixed(1)
+      })),
+      bullets: bullets.filter(b=>!b.dead).map(b=>({
+        x:Math.round(b.x), y:Math.round(b.y), dir:b.dir, power:b.power,
+        friend:!!(b.owner&&b.owner.isPlayer)
+      })),
+      powerups: powerups.filter(p=>!p.dead).map(p=>({type:p.type,x:Math.round(p.x),y:Math.round(p.y),life:+p.life.toFixed(1)}))
+    };
+  }
+  function applyNetState(msg){
+    if(!msg) return;
+    level=msg.level|level; score=msg.score|0; lives=msg.lives|0;
+    enemyQueue=msg.enemyQueue; enemiesKilled=msg.enemiesKilled|0;
+    baseAlive=!!msg.baseAlive; freezeTimer=msg.freezeTimer||0; shovelTimer=msg.shovelTimer||0;
+    clearGrace=msg.clearGrace||0;
+    if(msg.stateName && msg.stateName!=="menu") stateName=msg.stateName;
+    if(msg.grid){
+      const rows=String(msg.grid).split("|");
+      if(rows.length===FIELD_H){
+        grid=rows.map(r=>r.split("").map(ch=>+ch));
+      }
+    }
+    // players
+    const seen={};
+    (msg.players||[]).forEach(ps=>{
+      seen[ps.pid]=true;
+      let t = (ps.pid===coopMyPid) ? player : coopAllies[ps.pid];
+      if(!t){
+        t=spawnAtSlot(ps.slot|0, ps.pid, ps.name);
+        if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
+      }
+      t.x=ps.x; t.y=ps.y; t.dir=ps.dir; t.dead=!!ps.dead;
+      t.stars=ps.stars|0; t.boat=!!ps.boat; t.bulk=ps.bulk|0;
+      t.shield=ps.shield||0; t.spawnGhost=ps.spawnGhost||0; t.frozen=ps.frozen||0;
+      t.coopName=ps.name||t.coopName; t.applyStars(); t.applyBulk();
+      if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
+    });
+    for(const pid in coopAllies){ if(!seen[pid] && pid!==coopMyPid) delete coopAllies[pid]; }
+    enemies=(msg.enemies||[]).map(es=>{
+      const e=new Tank(es.x,es.y,false);
+      e.dir=es.dir; e.hp=es.hp; e.type=es.type||"normal"; e.stars=es.stars|0;
+      e.speed=es.speed||60; e.spawnGhost=es.spawnGhost||0; e.shield=es.shield||0;
+      e.frozen=es.frozen||0; e.applyStars();
+      return e;
+    });
+    bullets=(msg.bullets||[]).map(bs=>{
+      const owner={isPlayer:!!bs.friend};
+      return new Bullet(owner, bs.x, bs.y, bs.dir, 220, bs.power||1);
+    });
+    powerups=(msg.powerups||[]).map(ps=>{
+      const pu=new PowerUp(ps.type, ps.x, ps.y);
+      pu.life=ps.life||10;
+      return pu;
+    });
+  }
 
   /* ---- 更新逻辑 ---- */
   function update(dt){
@@ -852,11 +1046,12 @@ const Game = (() => {
           if(window.TankCoop) window.TankCoop.open();
           Input.consume(); return;
         }
+        coopMode=false; coopSend=null;
         endless=menuSel===1;
         enemyLootMode=menuSel===2;
         debugMode=menuSel===3;
         if(menuSel===2) endless=false; // 敌人吃道具以闯关形式进行
-        level=1; score=0; lives=30; player=null;
+        level=1; score=0; lives=30; player=null; coopAllies={};
         newLevel(); stateName="playing"; SFX.levelUp();
       }
       Input.consume(); return;
@@ -864,10 +1059,10 @@ const Game = (() => {
     if(stateName==="gameover"||stateName==="levelClear"){
       if(stateTime>1.2 && Input.state.startPressed){
         if(stateName==="levelClear"){
-          if(!endless && level>=CAMPAIGN_LEVELS){ stateName="menu"; menuSel=0; }
+          if(!endless && level>=CAMPAIGN_LEVELS){ stateName="menu"; menuSel=0; coopMode=false; }
           else { level++; newLevel(); stateName="playing"; }
         }
-        else { stateName="menu"; menuSel=0; }
+        else { stateName="menu"; menuSel=0; coopMode=false; }
       }
       Input.consume(); return;
     }
@@ -880,44 +1075,28 @@ const Game = (() => {
     if(stateName==="paused"){ Input.consume(); return; }
     if(document.hidden){ Input.consume(); return; }
 
-    /* --- playing --- */
-    // 玩家
-    if(player&&!player.dead){
-      const p=player; p.cool-=dt; p.shield-=dt; p.spawnGhost-=dt;
-      if(p.frozen>0){ p.frozen-=dt; }
-      let vx=inp.mx, vy=inp.my;
-      if(p.frozen>0){ vx=vy=0; }
-      // 船被击毁后的自动滑出水域：接管移动直到到达陆地
-      if(p.eject){
-        const dx=p.eject.x-p.x, dy=p.eject.y-p.y, dist=Math.hypot(dx,dy);
-        const sp=p.speed*1.6*dt;
-        if(dist<=sp){ p.x=p.eject.x; p.y=p.eject.y; p.eject=null; }
-        else { p.x+=dx/dist*sp; p.y+=dy/dist*sp;
-          if(Math.random()<0.5) boom(p.cx,p.cy+p.h/2,2,["#7ad0ff","#a0d8ff"]); }
-        vx=vy=0;
+    /* --- 联机客机：只发输入，等房主状态 --- */
+    if(coopMode && !coopIsHost){
+      if(coopSend && stateName==="playing"){
+        coopSend({type:"input", mx:inp.mx|0, my:inp.my|0, fire:!!inp.fire});
       }
-      if(vx||vy){
-        p.dir = vx>0?DIR.RIGHT:vx<0?DIR.LEFT:vy>0?DIR.DOWN:DIR.UP;
-        p.anim+=dt*10;
-        const nx=p.x+vx*p.speed*dt, ny=p.y+vy*p.speed*dt;
-        // 分轴移动，避免卡角
-        if(!tankBlocked(p,nx,p.y)) p.x=nx;
-        if(!tankBlocked(p,p.x,ny)) p.y=ny;
-        // FC式半格对齐：垂直移动时水平方向滑向最近的半个身位，反之亦然
-        // 这样坐标始终落在半格网上，不会错开子弹、也不容易卡角
-        if(vy&&!vx){ const snap=Math.round((p.x-OFF_X-1)/(TILE/2))*(TILE/2)+OFF_X+1;
-          const d=snap-p.x;
-          if(d){ const step=Math.sign(d)*Math.min(Math.abs(d),p.speed*dt);
-            if(!tankBlocked(p,p.x+step,p.y)) p.x+=step; } }
-        if(vx&&!vy){ const snap=Math.round((p.y-OFF_Y-1)/(TILE/2))*(TILE/2)+OFF_Y+1;
-          const d=snap-p.y;
-          if(d){ const step=Math.sign(d)*Math.min(Math.abs(d),p.speed*dt);
-            if(!tankBlocked(p,p.x,p.y+step)) p.y+=step; } }
-      }
-      if(inp.fire && !(p.frozen>0)) fire(p);
-      // 吃道具
-      for(const pu of powerups){
-        if(!pu.dead&&rectHit(p.rect(),{x:pu.x,y:pu.y,w:TILE*2,h:TILE*2})){ pu.dead=true; applyPowerup(pu); }
+      for(const pt of particles) pt.update(dt);
+      particles=particles.filter(p=>p.life>0);
+      shake=Math.max(0,shake-dt);
+      flashTime=Math.max(0,flashTime-dt);
+      Input.consume();
+      return;
+    }
+
+    /* --- playing（单机 / 房主） --- */
+    driveTank(player, inp.mx, inp.my, inp.fire, dt);
+    if(coopMode && coopIsHost){
+      for(const pid in coopAllies){
+        const t=coopAllies[pid];
+        const ri=coopRemoteInput[pid]||{mx:0,my:0,fire:false};
+        driveTank(t, ri.mx|0, ri.my|0, !!ri.fire, dt);
+        // 开火是边沿：避免每帧连发，清掉 fire 等下一次 input
+        if(ri.fire) ri.fire=false;
       }
     }
     // 敌人生成
@@ -955,9 +1134,12 @@ const Game = (() => {
           if(roll<0.45){ e.dir=randi(0,3); }
           else if(roll<0.75){ // 朝基地
             e.dir = Math.abs(e.cx-(OFF_X+13*TILE))>TILE ? (e.cx<OFF_X+13*TILE?DIR.RIGHT:DIR.LEFT) : DIR.DOWN;
-          } else if(player&&!player.dead){ // 朝玩家
-            e.dir = Math.abs(e.cx-player.cx)>Math.abs(e.cy-player.cy)
-              ? (e.cx<player.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<player.cy?DIR.DOWN:DIR.UP);
+          } else { // 朝最近友军
+            const tgt=nearestFriendly(e);
+            if(tgt){
+              e.dir = Math.abs(e.cx-tgt.cx)>Math.abs(e.cy-tgt.cy)
+                ? (e.cx<tgt.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<tgt.cy?DIR.DOWN:DIR.UP);
+            }
           }
         }
       }
@@ -996,17 +1178,11 @@ const Game = (() => {
             }
             break; }
         }
-      } else if(player&&!player.dead&&rectHit(b,player.rect())){
-        b.dead=true;
-        if(player.shield>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); }
-        else if(player.bulk>0){ hurtPlayerBulk(); }
-        else if(player.boat){ player.boat=false; SFX.hitWall(); flash("⛵ 船体护盾抵挡了攻击！");
-          boom(player.cx,player.cy,10,["#7ad0ff","#3f7fd0","#fff"]);
-          if(onWater(player)){
-            const spot=findLandSpot(player);
-            if(spot){ player.eject=spot; player.shield=Math.max(player.shield,1.5);
-              flash("⛵ 船没了！自动滑回岸边…"); SFX.boat(); } } }
-        else { killTank(player,false); }
+      } else {
+        for(const t of friendlyTanks()){
+          if(!t||t.dead||t.spawnGhost>0.8) continue;
+          if(rectHit(b,t.rect())){ b.dead=true; hurtFriendly(t,b); break; }
+        }
       }
     }
     bullets=bullets.filter(b=>!b.dead);
@@ -1020,14 +1196,16 @@ const Game = (() => {
     shake=Math.max(0,shake-dt);
     flashTime=Math.max(0,flashTime-dt);
 
-    // 玩家死亡
-    if(player&&player.dead){
-      lives--;
-      if(lives>0){ spawnPlayer(); }
-      else { doGameOver(); return; }
+    // 友军死亡（共享生命）
+    for(const t of friendlyTanks()){
+      if(t&&t.dead){
+        lives--;
+        if(lives>0){ respawnFriendly(t); }
+        else { doGameOver(); Input.consume(); return; }
+      }
     }
     // 基地被毁
-    if(!baseAlive){ doGameOver(true); return; }
+    if(!baseAlive){ doGameOver(true); Input.consume(); return; }
     // 关卡通过：先播通关音，留几秒继续移动/捡道具，再进结算
     if(!endless && enemyQueue<=0 && enemies.length===0){
       if(clearGrace<=0){
@@ -1046,6 +1224,15 @@ const Game = (() => {
     }
     // 无尽模式：每杀15个升一级难度
     if(endless && enemiesKilled>=level*15){ level++; flash("〰 无尽模式 · 难度提升至 Lv"+level); SFX.levelUp(); }
+
+    // 房主广播状态
+    if(coopMode && coopIsHost && coopSend){
+      coopStateAcc+=dt;
+      if(coopStateAcc>=0.05){
+        coopStateAcc=0;
+        try{ coopSend(buildNetState()); }catch(e){}
+      }
+    }
     Input.consume();
   }
   let menuMoved=false;
@@ -1110,7 +1297,6 @@ const Game = (() => {
       case "power": return {sx:0.90, sy:0.92, track:5.5, barrel:1.0,  turret:6.0, maxHp:1}; // 炮管不伸出格外
       case "mid":   return {sx:0.92, sy:0.94, track:7,   barrel:0.95, turret:6.8, maxHp:2};
       case "armor": return {sx:1.0,  sy:1.0,  track:8,   barrel:0.95, turret:7.2, maxHp:3};
-      case "heavy": return {sx:1.0,  sy:1.0,  track:8.5, barrel:1.0,  turret:7.5, maxHp:5};
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
   }
@@ -1127,7 +1313,7 @@ const Game = (() => {
     g.scale(Math.min(1, vis.sx), Math.min(1, vis.sy));
     const trackW = Math.min(vis.track, w/2-1);
     const trackShift = Math.floor(t.anim)%2===0?0:2;
-    const thickBody = t.type==="armor" || t.type==="heavy" || t.type==="mid";
+    const thickBody = t.type==="armor" || t.type==="mid";
     g.fillStyle=t.isPlayer?(bulk?"#2a3520":"#3a4a2a"):(thickBody?"#2a2e38":"#333844");
     g.fillRect(-w/2,-h/2,trackW,h); g.fillRect(w/2-trackW,-h/2,trackW,h);
     if(bulk){
@@ -1140,11 +1326,11 @@ const Game = (() => {
     }
     let c1,c2;
     if(t.isPlayer){
-      if(bulk>=2){ c1="#ffe08a"; c2="#a07818"; }
+      if(t.coopTint){ c1=t.coopTint[0]; c2=t.coopTint[1]; }
+      else if(bulk>=2){ c1="#ffe08a"; c2="#a07818"; }
       else if(bulk>=1){ c1="#edd45a"; c2="#8a6a14"; }
       else { c1="#d8c84a"; c2="#8a7a1e"; }
     }
-    else if(t.type==="heavy"){ c1="#ff7a4a"; c2="#6a1018"; }
     else if(t.type==="fast"){ c1="#7ac0e8"; c2="#1e5a8a"; }
     else if(t.type==="power"){ c1="#e88a7a"; c2="#9a3a2a"; }
     else if(t.type==="mid"){ c1="#c9a0e8"; c2="#5a2a8a"; }
@@ -1154,7 +1340,7 @@ const Game = (() => {
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
     g.fillStyle=gr; g.fillRect(-w/2+trackW-1,-h/2+3,w-trackW*2+2,h-6);
     if(bulk>0 || thickBody){
-      const thick = bulk>=2 || t.type==="heavy" || t.type==="armor";
+      const thick = bulk>=2 || t.type==="armor";
       g.strokeStyle = t.isPlayer
         ? (bulk>=2 ? "rgba(255,200,60,.95)" : "rgba(255,210,120,.8)")
         : (t.type==="mid" ? "rgba(220,160,255,.75)" : "rgba(200,220,255,.7)");
@@ -1171,7 +1357,7 @@ const Game = (() => {
       g.fillRect(-w/2+trackW+1,-4,w-trackW*2-2,2);
     }
     g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a")
-      :(t.type==="heavy"?"#ffd24a":t.type==="mid"?"#e8d0ff":"#d8dde8");
+      :(t.type==="mid"?"#e8d0ff":"#d8dde8");
     g.beginPath(); g.arc(0,1,vis.turret,0,Math.PI*2); g.fill();
     if(bulk){ g.strokeStyle="rgba(180,120,20,.7)"; g.lineWidth=1.5; g.stroke(); }
     // 炮管：末端不超过格子边缘（-h/2）
@@ -1179,19 +1365,20 @@ const Game = (() => {
     g.fillStyle=t.isPlayer?"#6a5c14":(t.type==="power"?"#5a2020":"#404858");
     const bw = t.type==="power" ? 3.2 : (t.type==="fast" ? 2.0 : 2.4);
     g.fillRect(-bw, -barrelLen, bw*2, barrelLen+4);
-    if(!t.isPlayer && vis.maxHp>1 && (t.type==="heavy" || t.hp<vis.maxHp)){
-      g.fillStyle = t.type==="heavy" ? "rgba(255,210,74,.95)" : "rgba(255,80,80,.85)";
+    if(!t.isPlayer && vis.maxHp>1 && t.hp<vis.maxHp){
+      g.fillStyle = "rgba(255,80,80,.85)";
       g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/vis.maxHp),3);
     }
-    if(t.type==="heavy"){
-      g.fillStyle="#ffd24a"; g.font="bold 7px sans-serif"; g.textAlign="center";
-      g.fillText("×5",0,-h/2+7);
-    } else if(t.type==="armor"){
+    if(t.type==="armor"){
       g.fillStyle="rgba(220,230,255,.9)"; g.font="bold 7px sans-serif"; g.textAlign="center";
       g.fillText("×3",0,-h/2+7);
     } else if(t.type==="mid"){
       g.fillStyle="rgba(230,200,255,.9)"; g.font="bold 7px sans-serif"; g.textAlign="center";
       g.fillText("×2",0,-h/2+7);
+    }
+    if(t.isPlayer && t.coopName){
+      g.fillStyle="#fff"; g.font="bold 7px sans-serif"; g.textAlign="center";
+      g.fillText(String(t.coopName).slice(0,6),0,-h/2+7);
     }
     g.restore();
     if(t.isPlayer&&t.boat){
@@ -1350,7 +1537,7 @@ const Game = (() => {
         if(grid[r][c]!==T_EMPTY&&grid[r][c]!==T_GRASS) drawTile(r,c);
       for(const pu of powerups) drawPowerup(pu);
       for(const e of enemies) drawTank(e);
-      if(player) drawTank(player);
+      for(const t of friendlyTanks()) drawTank(t);
       for(const b of bullets) drawBullet(b);
       // 草最后画（遮挡坦克）
       for(let r=0;r<FIELD_H;r++) for(let c=0;c<FIELD_W;c++)
@@ -1431,7 +1618,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("敌军血量：蓝/绿/红=1　紫×2　灰×3　红重装×5　·　贴图不超过格子",CANVAS_W/2,430);
+    g.fillText("敌军血量：蓝/绿/红=1　紫×2　灰×3　·　贴图不超过格子",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
@@ -1452,11 +1639,31 @@ const Game = (() => {
   requestAnimationFrame(loop);
 
   return {
-    beginCampaignFromCoop: function(){
+    beginCampaignFromCoop: function(opts){
+      opts=opts||{};
+      coopMode=true;
+      coopMyPid=opts.myPid||"";
+      coopHostPid=opts.hostPid||"";
+      coopIsHost=!!opts.isHost || (coopMyPid && coopMyPid===coopHostPid);
+      coopSend=typeof opts.send==="function" ? opts.send : null;
+      coopRoster=Array.isArray(opts.roster)?opts.roster.slice():[];
+      coopRemoteInput={};
+      coopStateAcc=0;
       endless=false; enemyLootMode=false; debugMode=false;
-      level=1; score=0; lives=30; player=null;
+      level=1; score=0; lives=30; player=null; coopAllies={};
       newLevel(); stateName="playing"; SFX.levelUp();
-    }
+      flash(coopIsHost?"联机房主 · 同步中":"联机加入 · 等待房主同步", 1.6);
+    },
+    onRemoteInput: function(pid, data){
+      if(!coopMode||!coopIsHost||!pid) return;
+      coopRemoteInput[pid]={
+        mx:data&&data.mx|0,
+        my:data&&data.my|0,
+        fire:!!(data&&data.fire)
+      };
+    },
+    applyNetState: applyNetState,
+    isCoopHost: function(){ return coopMode&&coopIsHost; }
   };
 })();
 
@@ -1465,7 +1672,7 @@ const Game = (() => {
   const panel = document.getElementById("coopPanel");
   const rosterEl = document.getElementById("coopRoster");
   const msgEl = document.getElementById("coopMsg");
-  let ws = null, myPid = "", room = null, ready = false;
+  let ws = null, myPid = "", room = null, ready = false, hostPid = "";
 
   function apiBase(){
     if(typeof siteConfig!=="undefined" && siteConfig.apiBase) return siteConfig.apiBase;
@@ -1488,6 +1695,24 @@ const Game = (() => {
     const codeInp = document.getElementById("coopCode");
     if(codeInp && room.code) codeInp.value = room.code;
   }
+  function normalizeCode(raw){
+    const digits=String(raw||"").replace(/\D/g,"");
+    return digits ? digits.padStart(6,"0").slice(-6) : "";
+  }
+  function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
+  function startGame(msg){
+    room=msg.room||room;
+    hostPid=msg.hostPid||hostPid;
+    const roster=(room&&room.players)||[];
+    const isHost = myPid && myPid===hostPid;
+    closePanel();
+    if(typeof Game!=="undefined" && Game.beginCampaignFromCoop){
+      Game.beginCampaignFromCoop({
+        myPid, hostPid, isHost, roster,
+        send: function(payload){ send(payload); }
+      });
+    }
+  }
   function ensureWs(){
     return new Promise((resolve, reject)=>{
       if(ws && ws.readyState===1){ resolve(ws); return; }
@@ -1502,10 +1727,12 @@ const Game = (() => {
         if(msg.type==="hello"){ myPid=msg.pid; }
         else if(msg.type==="joined"){ myPid=msg.you; room=msg.room; setMsg("已进入房间 "+room.code); renderRoster(); }
         else if(msg.type==="roster"){ room=msg.room; renderRoster(); }
-        else if(msg.type==="start"){
-          room=msg.room; setMsg("开战！");
-          closePanel();
-          if(typeof Game!=="undefined" && Game.beginCampaignFromCoop) Game.beginCampaignFromCoop();
+        else if(msg.type==="start"){ setMsg("开战！"); startGame(msg); }
+        else if(msg.type==="input"){
+          if(typeof Game!=="undefined" && Game.onRemoteInput) Game.onRemoteInput(msg.from, msg);
+        }
+        else if(msg.type==="state"){
+          if(typeof Game!=="undefined" && Game.applyNetState && !Game.isCoopHost()) Game.applyNetState(msg);
         }
         else if(msg.type==="error"){
           const map={room_not_found:"房间不存在",bad_password:"密码错误",room_full:"房间已满",
@@ -1515,8 +1742,6 @@ const Game = (() => {
       };
     });
   }
-  function flashStart(){ /* unused */ }
-  function send(obj){ if(ws&&ws.readyState===1) ws.send(JSON.stringify(obj)); }
   function open(){
     panel.classList.add("open");
     panel.setAttribute("aria-hidden","false");
@@ -1544,8 +1769,9 @@ const Game = (() => {
     }catch(e){ setMsg("连接失败"); }
   };
   document.getElementById("coopJoin").onclick = async ()=>{
-    const code=(document.getElementById("coopCode").value||"").toUpperCase().trim();
-    if(!code){ setMsg("请填写房间号"); return; }
+    const code=normalizeCode(document.getElementById("coopCode").value);
+    if(!code){ setMsg("请填写 6 位房间号"); return; }
+    document.getElementById("coopCode").value=code;
     try{
       await ensureWs();
       send({type:"join", code, name:name(), password:password()});
@@ -1565,7 +1791,6 @@ const Game = (() => {
     ws=null; room=null; closePanel();
   };
 
-  // 阻止触控穿透到游戏
   panel.addEventListener("touchstart", e=>e.stopPropagation(), {passive:true});
   panel.addEventListener("pointerdown", e=>e.stopPropagation());
 
