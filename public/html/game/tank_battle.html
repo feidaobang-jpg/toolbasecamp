@@ -74,7 +74,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
       </div>
       <div class="coop-roster" id="coopRoster">尚未连接</div>
       <div class="coop-msg" id="coopMsg"></div>
-      <p class="coop-hint">联机节点：<span id="coopNode">—</span><br>双方必须打开<strong>同一个网址</strong>（主站与国内测试机房间不互通）。人齐后由房主点「开始」。</p>
+      <p class="coop-hint">联机节点：<span id="coopNode">—</span><br>双方必须打开<strong>同一个网址</strong>。客机已开轻量预测试验（若飘抖告诉我回退）。</p>
     </div>
   </div>
 </div>
@@ -601,6 +601,11 @@ const Game = (() => {
   let coopFireHeld=false;
   let coopGridSent="";
   let coopRoster=[];
+  // 客机预测试验开关：测到飘抖可整段关掉（设 false）或 git 回退
+  const COOP_PREDICT=true;
+  const COOP_PRED_DEAD=8;   // 小于此偏差不校正
+  const COOP_PRED_SOFT=32;  // 小于此软跟
+  const COOP_PRED_BLEND=0.18;
   const COOP_TINTS=[
     ["#d8c84a","#8a7a1e"],["#7ac0e8","#2a6a9a"],["#e88a7a","#9a3a2a"],["#c9a0e8","#5a2a8a"],
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
@@ -1052,7 +1057,7 @@ const Game = (() => {
         coopGridSent=msg.grid;
       }
     }
-    // players：直接贴房主坐标（客机不做本地预测，避免拉扯抖动）
+    // players：客机对自己坦克做「死区 + 软跟 + 大偏差硬贴」；队友硬贴目标点供插值
     // 客机无本地碰撞权威：用 dead/bulk/boat 变化轻量补受击/爆炸声（每事件最多一声）
     const seen={};
     let guestFriendBoom=false, guestFriendHit=false;
@@ -1063,9 +1068,21 @@ const Game = (() => {
         t=spawnAtSlot(ps.slot|0, ps.pid, ps.name);
         if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
       }
+      const isSelf = ps.pid===coopMyPid;
       const px=ps.x|0, py=ps.y|0;
       const wasDead=!!t.dead, prevBulk=t.bulk|0, prevBoat=!!t.boat;
-      t.x=px; t.y=py;
+      if(isSelf && COOP_PREDICT && player && !ps.dead && stateName==="playing"){
+        const dx=px-t.x, dy=py-t.y, dist=Math.hypot(dx,dy);
+        if(dist>COOP_PRED_SOFT){ t.x=px; t.y=py; }
+        else if(dist>COOP_PRED_DEAD){ t.x+=dx*COOP_PRED_BLEND; t.y+=dy*COOP_PRED_BLEND; }
+        // else 死区内完全相信本地预测
+      } else if(!isSelf && COOP_PREDICT){
+        t._tx=px; t._ty=py;
+        if(t._hasNet==null || Math.hypot(px-t.x,py-t.y)>48){ t.x=px; t.y=py; }
+        t._hasNet=1;
+      } else {
+        t.x=px; t.y=py;
+      }
       t.dir=ps.dir; t.dead=!!ps.dead;
       const starsChanged=(t.stars|0)!==(ps.stars|0) || (t.bulk|0)!==(ps.bulk|0);
       t.stars=ps.stars|0; t.boat=!!ps.boat; t.bulk=ps.bulk|0;
@@ -1081,7 +1098,7 @@ const Game = (() => {
     if(guestFriendBoom) SFX.friendlyExplode();
     else if(guestFriendHit) SFX.hitFriendly();
     for(const pid in coopAllies){ if(!seen[pid] && pid!==coopMyPid) delete coopAllies[pid]; }
-    // enemies / bullets / powerups：紧凑数组 + 硬贴坐标
+    // enemies / bullets / powerups
     const elist=msg.enemies||[];
     let prevEnemyHp=0;
     for(const e of enemies){ if(e&&!e.dead) prevEnemyHp+=e.hp|0; }
@@ -1096,13 +1113,19 @@ const Game = (() => {
       }:raw;
       let e=enemies[i];
       if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; }
-      e.dead=false; e.x=es.x; e.y=es.y; e.dir=es.dir; e.hp=es.hp;
+      e.dead=false; e.dir=es.dir; e.hp=es.hp;
       e.type=es.type||"normal"; e.speed=es.speed||60;
       e.spawnGhost=es.spawnGhost||0; e.shield=es.shield||0; e.frozen=es.frozen||0;
+      if(COOP_PREDICT){
+        e._tx=es.x; e._ty=es.y;
+        if(e._hasNet==null || Math.hypot(es.x-e.x,es.y-e.y)>40){ e.x=es.x; e.y=es.y; }
+        e._hasNet=1;
+      } else {
+        e.x=es.x; e.y=es.y;
+      }
       if((e.stars|0)!==(es.stars|0)){ e.stars=es.stars|0; e.applyStars(); }
       newEnemyHp+=e.hp|0;
     }
-    // 客机：敌人数减少→简单爆炸；仅掉血→受击（每包最多一声，避免叠吵）
     if(elist.length < prevEnemyN) SFX.explode();
     else if(newEnemyHp < prevEnemyHp) SFX.hitEnemy();
     const blist=msg.bullets||[];
@@ -1126,6 +1149,32 @@ const Game = (() => {
       if(!pu){ pu=new PowerUp(ps.type, ps.x, ps.y); powerups[i]=pu; }
       else { pu.type=ps.type; pu.x=ps.x; pu.y=ps.y; }
       pu.dead=false; pu.life=ps.life||10;
+    }
+  }
+  /** 客机：队友插值 + 敌军沿朝向外推（仅 COOP_PREDICT） */
+  function coopGuestPresent(dt){
+    if(!COOP_PREDICT) return;
+    const k=Math.min(1, 14*dt);
+    for(const pid in coopAllies){
+      const t=coopAllies[pid];
+      if(!t||t.dead||t._tx==null) continue;
+      t.x+=(t._tx-t.x)*k; t.y+=(t._ty-t.y)*k;
+    }
+    for(const e of enemies){
+      if(!e||e.dead) continue;
+      e.anim=(e.anim||0)+dt*10;
+      if((e.frozen||0)>0){ e.frozen-=dt; continue; }
+      const spd=e.speed||60;
+      if(e._tx!=null){
+        e._tx+=DXY[e.dir][0]*spd*dt*0.9;
+        e._ty+=DXY[e.dir][1]*spd*dt*0.9;
+        e.x+=(e._tx-e.x)*k;
+        e.y+=(e._ty-e.y)*k;
+      }
+    }
+    for(const b of bullets){
+      if(!b||b.dead) continue;
+      b.update(dt);
     }
   }
   function onCoopRoster(list){
@@ -1222,7 +1271,7 @@ const Game = (() => {
     if(stateName==="paused"){ Input.consume(); return; }
     if(document.hidden){ Input.consume(); return; }
 
-    /* --- 联机客机：只发输入，画面完全跟房主快照（不做本地预测，避免飘抖） --- */
+    /* --- 联机客机：发输入 + 可选本地预测（COOP_PREDICT） --- */
     if(coopMode && !coopIsHost){
       if(coopSend && stateName==="playing"){
         const mx=inp.mx|0, my=inp.my|0;
@@ -1236,7 +1285,10 @@ const Game = (() => {
           coopLastIn={mx,my};
           coopSend({type:"input", mx, my, fire:holding});
         }
+        // 只预测移动，开火仍以房主为准
+        if(COOP_PREDICT && player&&!player.dead) driveTank(player, mx, my, false, dt);
       }
+      coopGuestPresent(dt);
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
       shake=Math.max(0,shake-dt);
