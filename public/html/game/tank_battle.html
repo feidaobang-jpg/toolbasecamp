@@ -659,31 +659,58 @@ const Game = (() => {
   }
 
   /* ---- 生成 ---- */
-  function spawnAtSlot(slot, pid, name){
+  function snapGear(t){
+    if(!t) return null;
+    return {
+      stars:t.stars|0, boat:!!t.boat, bulk:t.bulk|0,
+      pid:t.coopPid, name:t.coopName, slot:t.coopSlot|0, tint:t.coopTint
+    };
+  }
+  function applyGear(t, gear){
+    if(!t||!gear) return;
+    t.stars = gear.stars|0;
+    t.boat = !!gear.boat;
+    t.bulk = gear.bulk|0;
+    t.applyStars(); // 子弹威力/双发等随星级恢复
+    // 被打掉的装甲层：若星级仍够，外观至少回到对应厚度
+    if(t.stars>=4) t.bulk = Math.max(t.bulk, 2);
+    else if(t.stars>=3) t.bulk = Math.max(t.bulk, 1);
+    t.applyBulk();
+  }
+  function spawnAtSlot(slot, pid, name, gear){
     const sp=COOP_SPAWN[slot%COOP_SPAWN.length];
     const t=new Tank(OFF_X+sp[0]*TILE+1, OFF_Y+sp[1]*TILE+1, true);
-    t.stars=0; t.bulk=0; t.applyStars();
-    t.shield=3; t.coopPid=pid; t.coopName=name||("P"+(slot+1));
-    t.coopTint=COOP_TINTS[slot%COOP_TINTS.length];
+    t.coopPid=pid; t.coopName=name||("P"+(slot+1));
+    t.coopTint=(gear&&gear.tint)||COOP_TINTS[slot%COOP_TINTS.length];
     t.coopSlot=slot;
+    if(gear) applyGear(t, gear);
+    else { t.stars=0; t.bulk=0; t.boat=false; t.applyStars(); }
+    t.shield=3;
     return t;
   }
-  function setupCoopPlayers(){
+  function setupCoopPlayers(keepGear){
+    const prev={};
+    if(keepGear){
+      for(const t of friendlyTanks()){
+        if(t&&t.coopPid) prev[t.coopPid]=snapGear(t);
+      }
+    }
     coopAllies={};
     player=null;
     const roster = coopRoster.slice(0,8);
     roster.forEach((p,i)=>{
-      const t=spawnAtSlot(i, p.pid, p.name);
+      const t=spawnAtSlot(i, p.pid, p.name, keepGear?prev[p.pid]:null);
       if(p.pid===coopMyPid) player=t;
       else coopAllies[p.pid]=t;
     });
     if(!player && roster.length){
-      // 兜底：把自己设为第一个
-      player=spawnAtSlot(0, coopMyPid, "Me");
+      player=spawnAtSlot(0, coopMyPid, "Me", keepGear?prev[coopMyPid]:null);
     }
     SFX.spawn();
   }
   function newLevel(){
+    // 过关保留星/枪/船/装甲外观与火力
+    const keepSolo = !coopMode ? snapGear(player) : null;
     grid=Levels.build(level,endless);
     bullets=[]; powerups=[]; particles=[]; enemies=[];
     enemyPlanObj = endless ? Levels.enemyPlan(level) : Levels.enemyPlan(level);
@@ -691,25 +718,31 @@ const Game = (() => {
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
     bossSpawned=false;
     clearGrace=0;
-    if(coopMode) setupCoopPlayers();
-    else spawnPlayer();
+    if(coopMode) setupCoopPlayers(true);
+    else spawnPlayer({ keep: keepSolo });
     if(level%5===0) flash("⚠ Boss 关：本关将出现强化敌军", 2.2);
   }
-  function spawnPlayer(){
+  function spawnPlayer(opts){
+    opts=opts||{};
     if(coopMode && player){
+      const gear = opts.keep ? snapGear(player) : null;
       const slot=player.coopSlot|0, pid=player.coopPid||coopMyPid, name=player.coopName;
-      player=spawnAtSlot(slot, pid, name);
+      player=spawnAtSlot(slot, pid, name, gear);
       return;
     }
-    const keepStars = player? player.stars:0, keepBoat = player? player.boat:false;
+    const gear = opts.keep ? (opts.keep===true ? snapGear(player) : opts.keep) : null;
     player=new Tank(OFF_X+8*TILE+1, OFF_Y+24*TILE+1, true);
-    player.stars=0; player.bulk=0; player.applyStars();
+    if(gear) applyGear(player, gear);
+    else { player.stars=0; player.bulk=0; player.boat=false; player.applyStars(); }
     player.shield=3; SFX.spawn();
   }
   function respawnFriendly(t){
     if(!t) return;
+    // 阵亡重生：装备清空（过关才保留星/船/火力）
     const slot=t.coopSlot|0, pid=t.coopPid, name=t.coopName;
-    const nt=spawnAtSlot(slot, pid, name);
+    const tint=t.coopTint;
+    const nt=spawnAtSlot(slot, pid, name, null);
+    if(tint) nt.coopTint=tint;
     if(pid===coopMyPid) player=nt;
     else coopAllies[pid]=nt;
   }
@@ -795,7 +828,7 @@ const Game = (() => {
       case PU.GRENADE:
         for(const e of enemies) if(!e.dead){ e.dead=true; enemiesKilled++; score+=100;
           boom(e.cx,e.cy,26); }
-        SFX.bigExplode(); shake=0.4; flash("💥 手雷！全场清除"); break;
+        SFX.bigExplode(); shake=0.4; flash("💣 地雷！全场清除"); break;
       case PU.HELMET:
         player.shield=Math.max(player.shield,10); SFX.shield(); flash("🛡 无敌护盾 10 秒"); break;
       case PU.TANK:
@@ -821,9 +854,9 @@ const Game = (() => {
         e.boat=true; flash("⚠ 敌军上船：可渡水"); break;
       case PU.GRENADE:
         if(player&&!player.dead){
-          if(player.shield>0){ player.shield=0; flash("💥 敌军手雷被护盾挡下"); }
-          else if(player.bulk>0){ hurtPlayerBulk(); flash("💥 敌军手雷打掉装甲外形"); }
-          else { killTank(player,false); flash("💥 敌军手雷！"); }
+          if(player.shield>0){ player.shield=0; flash("💣 敌军地雷被护盾挡下"); }
+          else if(player.bulk>0){ hurtPlayerBulk(); flash("💣 敌军地雷打掉装甲外形"); }
+          else { killTank(player,false); flash("💣 敌军地雷！"); }
         }
         SFX.bigExplode(); shake=0.35; break;
       case PU.HELMET:
@@ -1388,11 +1421,7 @@ const Game = (() => {
       g.strokeStyle="rgba(160,220,255,.35)"; g.lineWidth=1.5;
       g.beginPath(); g.roundRect(t.x-pad-3,t.y-pad-3,t.w+pad*2+6,t.h+pad*2+6,10); g.stroke();
     }
-    if(t.isPlayer&&t.bulk>0){
-      g.strokeStyle=t.bulk>=2?"rgba(255,200,60,.9)":"rgba(255,210,120,.7)";
-      g.lineWidth=t.bulk>=2?2.5:2;
-      g.strokeRect(t.x+1,t.y+1,t.w-2,t.h-2);
-    }
+    // 装甲：只改车身样式，不外围加圈（避免像船）
     if(t.shield>0){
       const a=0.35+0.25*Math.sin(performance.now()/90);
       g.strokeStyle=`rgba(120,210,255,${a})`; g.lineWidth=2.5;
@@ -1432,18 +1461,23 @@ const Game = (() => {
         g.fillStyle="#7ab8e8"; g.beginPath(); g.moveTo(-10,3); g.lineTo(10,3); g.lineTo(5,9); g.lineTo(-5,9); g.closePath(); g.fill();
         g.fillStyle="#fff"; g.beginPath(); g.moveTo(0,-9); g.lineTo(0,2); g.lineTo(8,2); g.closePath(); g.fill(); break;
       case PU.GRENADE:
-        // 经典手雷：深绿弹体 + 顶盖 + 拉环
-        g.fillStyle="#2f6b3a";
-        g.beginPath(); g.arc(0, 3, 8, 0, Math.PI*2); g.fill();
-        g.fillStyle="#3f8a4a";
-        g.beginPath(); g.arc(-2.5, 0, 3.2, 0, Math.PI*2); g.fill();
-        g.fillStyle="#1e4a28";
-        g.fillRect(-6, 8, 12, 3);
-        g.fillStyle="#cfd6e0"; g.fillRect(-3, -10, 6, 6);
-        g.fillStyle="#8a939e"; g.fillRect(-2, -13, 4, 4);
-        g.strokeStyle="#ffd24a"; g.lineWidth=1.8;
-        g.beginPath(); g.arc(6, -12, 4, -0.3, Math.PI*1.15); g.stroke();
-        g.fillStyle="#ffb02e"; g.beginPath(); g.arc(8.5, -14.5, 1.8, 0, Math.PI*2); g.fill();
+        // 地雷：圆盘 + 触角 + 危险标
+        g.fillStyle="#3a3f48";
+        g.beginPath(); g.arc(0,2,10,0,Math.PI*2); g.fill();
+        g.fillStyle="#5a6470";
+        g.beginPath(); g.arc(0,2,7,0,Math.PI*2); g.fill();
+        g.fillStyle="#2a3038";
+        g.beginPath(); g.arc(0,2,3.5,0,Math.PI*2); g.fill();
+        g.strokeStyle="#c9a24a"; g.lineWidth=1.5;
+        g.beginPath(); g.arc(0,2,10,0,Math.PI*2); g.stroke();
+        // 四根触须
+        g.strokeStyle="#d8dde8"; g.lineWidth=2;
+        [[-11,-4],[11,-4],[-8,12],[8,12]].forEach(([x,y])=>{
+          g.beginPath(); g.moveTo(0,2); g.lineTo(x,y); g.stroke();
+          g.fillStyle="#ffd24a"; g.beginPath(); g.arc(x,y,1.6,0,Math.PI*2); g.fill();
+        });
+        g.fillStyle="#ff6b4a"; g.font="bold 9px sans-serif"; g.textAlign="center";
+        g.fillText("!",0,5);
         break;
       case PU.HELMET:
         g.fillStyle="#9ad0ff"; g.beginPath(); g.arc(0,2,8,Math.PI,0); g.fill();
