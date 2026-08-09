@@ -507,12 +507,94 @@ const Levels = (() => {
     "..........................",
     "..........................",
     ".........................."];
-  const maps=[L1,L2,L3];
+  /* 额外底图：砖块骨架差异大，过关一眼能看出换图 */
+  const L4 = [
+    "..........................",
+    "BB....BB....BB....BB....BB",
+    "BB....BB....BB....BB....BB",
+    "....BB....BB....BB....BB..",
+    "....BB....BB....BB....BB..",
+    "BBBB......GGGG......BBBB..",
+    "BBBB......GGGG......BBBB..",
+    "......BB........BB........",
+    "......BB..SSSS..BB........",
+    "WW..BB......SS......BB..WW",
+    "WW..BB......SS......BB..WW",
+    "....BBBB..........BBBB....",
+    "....BBBB..BBBBBB..BBBB....",
+    "..........BB..BB..........",
+    "..SS......BB..BB......SS..",
+    "..SS..GG..........GG..SS..",
+    "......GG..BBBBBB..GG......",
+    "BB........BBBBBB........BB",
+    "BB..BB..............BB..BB",
+    "....BB..BB......BB..BB....",
+    "....BB..BB......BB..BB....",
+    "BB......................BB",
+    "BB......................BB",
+    "..........................",
+    "..........................",
+    ".........................."];
+  const L5 = [
+    "..........................",
+    "....BBBBBB......BBBBBB....",
+    "....BB..BB......BB..BB....",
+    "....BB..BB..SS..BB..BB....",
+    "........BB..SS..BB........",
+    "GGGG....BB......BB....GGGG",
+    "GGGG..........BB......GGGG",
+    "....BBBB....BBBB....BBBB..",
+    "....BB..............BB....",
+    "WWWW....BB......BB....WWWW",
+    "WWWW....BBBB..BBBB....WWWW",
+    "..SS................SS....",
+    "..SS..BBBB......BBBB..SS..",
+    "......BB..GGGG..BB........",
+    "BB....BB..GGGG..BB....BB..",
+    "BB..........SS..........BB",
+    "....BBBB....SS....BBBB....",
+    "....BB..............BB....",
+    "GG......BBBBBBBB......GG..",
+    "GG......BB....BB......GG..",
+    "....BB..........BB........",
+    "....BB..BB..BB..BB........",
+    "........BB..BB............",
+    "..........................",
+    "..........................",
+    ".........................."];
+  const L6 = [
+    "..........................",
+    "..BB..SS..BB..BB..SS..BB..",
+    "..BB......BB..BB......BB..",
+    "......BB..........BB......",
+    "BBBB..BB..WWWWWW..BB..BBBB",
+    "BBBB......WWWWWW......BBBB",
+    "....GGGG..........GGGG....",
+    "....GG..BBBBBBBB..GG......",
+    "........BB....BB..........",
+    "SS......BB....BB......SS..",
+    "SS..BB..............BB..SS",
+    "....BB..BBBBBBBB..BB......",
+    "........BBSSSSBB..........",
+    "BB......BBSSSSBB......BB..",
+    "BB..GG..............GG..BB",
+    "....GG..BB......BB..GG....",
+    "........BB..BB..BB........",
+    "..BBBB......BB......BBBB..",
+    "..BB........BB........BB..",
+    "WW....BB..........BB....WW",
+    "WW....BBBB......BBBB....WW",
+    "......BB..........BB......",
+    "......BB..........BB......",
+    "..........................",
+    "..........................",
+    ".........................."];
+  const maps=[L1,L2,L3,L4,L5,L6];
   const charMap={'.':T_EMPTY,'B':T_BRICK,'S':T_STEEL,'W':T_WATER,'G':T_GRASS};
   /** 闯关总关数；地形逐步解锁 */
   const CAMPAIGN_LEVELS = 20;
-  // 1–4 仅砖（地图里的铁/草/水先关掉）；5–8 +铁；9–12 +草；13–20 +水
-  // 注意：build 末尾 fortifyMidLane 会强制加中间铁墙，与关卡递进无关
+  // 1–4 仅砖（地图模板里的铁/草/水先关掉）；5–8 +铁；9–12 +草；13–20 +水
+  // 三路稀疏铁块在 fortifyLanes 另加，不受此门控影响
   function gateTerrain(cell, level){
     if(cell===T_STEEL && level < 5) return T_EMPTY;
     if(cell===T_GRASS && level < 9) return T_EMPTY;
@@ -520,46 +602,108 @@ const Levels = (() => {
     return cell;
   }
 
-  /** 每关强制中路 + 最左/最右路铁砖，防止直通与侧翼偷袭 */
-  function fortifyMidLane(grid){
+  /** 稳定伪随机（同关同布局，过关必变） */
+  function laneRng(seed){
+    let s = (seed >>> 0) || 1;
+    return ()=>{
+      s = (s * 1664525 + 1013904223) >>> 0;
+      return s / 4294967296;
+    };
+  }
+
+  /**
+   * 底图变换：镜像/上下翻/平移/开走廊/砖块扰动
+   * 同底图循环时也能一眼看出换关；endless 用更大种子
+   */
+  function mutateMap(src, seed){
+    let cells = src.map(row => row.split(""));
+    const rnd = laneRng(seed * 9973 + 13);
+    const mode = ((seed % 6) + 6) % 6;
+    if(mode===0 || mode===3) cells = cells.map(r => r.slice().reverse());
+    if(mode===1 || mode===4){
+      const mid = cells.slice(1, 23).reverse();
+      cells = [cells[0]].concat(mid, cells.slice(23));
+    }
+    const shift = (seed * 3 + mode) % 6;
+    if(shift){
+      cells = cells.map(r => r.slice(shift).concat(r.slice(0, shift)));
+    }
+    // 开几条缝，避免墙型永远一样
+    const gaps = 2 + (seed % 3);
+    for(let i=0;i<gaps;i++){
+      const r = 4 + Math.floor(rnd()*16);
+      const c0 = 3 + Math.floor(rnd()*18);
+      for(let c=c0;c<c0+3 && c<FIELD_W;c++){
+        if(cells[r][c]==="B") cells[r][c]=".";
+      }
+    }
+    const bumps = 8 + (seed % 7);
+    for(let i=0;i<bumps;i++){
+      const r = 2 + Math.floor(rnd()*20);
+      const c = 2 + Math.floor(rnd()*22);
+      if(r>=23) continue;
+      const ch = cells[r][c];
+      if(ch===".") cells[r][c] = "B";
+      else if(ch==="B" && rnd()<0.55) cells[r][c] = ".";
+    }
+    return cells.map(r => r.join(""));
+  }
+
+  /**
+   * 左 / 中 / 右三路各放 1–3 块铁（不要成墙），挡直通但不堵死
+   * 列：左 0–2 · 中 12–13 · 右 23–25；行避开出生与基地
+   */
+  function fortifyLanes(grid, level){
     const put = (r,c,t)=>{
       if(r<0||r>=FIELD_H||c<0||c>=FIELD_W) return;
       if(grid[r][c]===T_BASE) return;
       grid[r][c]=t;
     };
-    // —— 中路 ——
-    for(let c=11;c<=14;c++) put(6,c,T_STEEL);
-    put(7,11,T_STEEL); put(7,14,T_STEEL);
-    for(let c=10;c<=15;c++){
-      if(c===12||c===13) continue;
-      put(11,c,T_STEEL);
+    const rnd = laneRng(level * 7919 + 42);
+    const rowsPool = [5,7,9,11,13,15,17,19];
+    const laneCols = [[0,1,2],[12,13],[23,24,25]];
+    // 先清掉三路走廊原有铁（模板里常成片），再只放 1–3，避免越叠越多
+    for(const cols of laneCols){
+      for(let r=2;r<=22;r++){
+        for(const c of cols){
+          if(grid[r][c]===T_STEEL) grid[r][c]=T_EMPTY;
+        }
+      }
     }
-    put(12,10,T_STEEL); put(12,15,T_STEEL);
-    put(13,11,T_STEEL); put(13,14,T_STEEL);
-    for(let c=11;c<=14;c++) put(17,c,T_STEEL);
-    put(18,11,T_BRICK); put(18,14,T_BRICK);
-    put(19,12,T_BRICK); put(19,13,T_BRICK);
-
-    // —— 最左路（挡左侧出生点直下）——
-    put(5,0,T_STEEL); put(5,1,T_STEEL); put(5,2,T_BRICK);
-    put(8,0,T_BRICK); put(8,1,T_STEEL); put(8,2,T_STEEL);
-    put(12,0,T_STEEL); put(12,1,T_BRICK);
-    put(15,0,T_BRICK); put(15,1,T_STEEL); put(15,2,T_STEEL);
-    put(19,0,T_STEEL); put(19,1,T_STEEL); put(19,2,T_BRICK);
-    put(21,1,T_BRICK); put(21,2,T_STEEL);
-
-    // —— 最右路 ——
-    put(5,23,T_BRICK); put(5,24,T_STEEL); put(5,25,T_STEEL);
-    put(8,23,T_STEEL); put(8,24,T_STEEL); put(8,25,T_BRICK);
-    put(12,24,T_BRICK); put(12,25,T_STEEL);
-    put(15,23,T_STEEL); put(15,24,T_STEEL); put(15,25,T_BRICK);
-    put(19,23,T_BRICK); put(19,24,T_STEEL); put(19,25,T_STEEL);
-    put(21,23,T_STEEL); put(21,24,T_BRICK);
+    function sprinkle(cols, count){
+      const pool = rowsPool.slice();
+      for(let i=pool.length-1;i>0;i--){
+        const j = Math.floor(rnd()*(i+1));
+        const t = pool[i]; pool[i]=pool[j]; pool[j]=t;
+      }
+      const n = Math.max(1, Math.min(3, count|0));
+      for(let i=0;i<n;i++){
+        const r = pool[i];
+        const c = cols[Math.floor(rnd()*cols.length)];
+        put(r, c, T_STEEL);
+        // 偶发旁贴一块砖，不额外加铁
+        if(rnd()<0.35){
+          const dc = rnd()<0.5 ? -1 : 1;
+          const nc = c+dc;
+          if(nc>=0 && nc<FIELD_W) put(r, nc, T_BRICK);
+        }
+      }
+    }
+    const nL = 1 + (level + 0) % 3; // 1..3
+    const nM = 1 + (level + 1) % 3;
+    const nR = 1 + (level + 2) % 3;
+    sprinkle(laneCols[0], nL);
+    sprinkle(laneCols[1], nM);
+    sprinkle(laneCols[2], nR);
   }
 
   function build(levelIdx,endless){
-    const lv = endless ? Math.max(1, levelIdx) : levelIdx;
-    const src = maps[endless ? randi(0,maps.length-1) : (levelIdx-1)%maps.length];
+    const lv = Math.max(1, levelIdx|0);
+    // 闯关/敌方吃道具/测试/联机：按关序轮换底图；无尽：错位轮换，避免与闯关同序
+    const baseIdx = endless
+      ? ((lv - 1 + Math.floor(lv/2)) % maps.length)
+      : ((lv - 1) % maps.length);
+    const src = mutateMap(maps[baseIdx], lv + (endless ? 100 : 0));
     const grid=[];
     for(let r=0;r<FIELD_H;r++){ grid[r]=[];
       for(let c=0;c<FIELD_W;c++){
@@ -579,7 +723,7 @@ const Levels = (() => {
     clear(0,0); clear(0,12); clear(0,24);          // 敌人出生点
     // 友军出生：8/16 为主，再往外对称扩展
     [8,16,6,18,4,20,2,22].forEach(c=>clear(24,c));
-    fortifyMidLane(grid);
+    fortifyLanes(grid, lv);
     // 铁墙不要挡住出生格
     clear(0,0); clear(0,12); clear(0,24);
     [8,16,6,18,4,20,2,22].forEach(c=>clear(24,c));
@@ -1466,8 +1610,16 @@ const Game = (() => {
         }
       }
     }
-    // 无尽模式：每杀15个升一级难度
-    if(endless && enemiesKilled>=level*15){ level++; flash("〰 无尽模式 · 难度提升至 Lv"+level); SFX.levelUp(); }
+    // 无尽模式：每杀够一波升难度并换地图（此前只升 Lv 不 rebuild，一直像第一关）
+    if(endless && enemiesKilled>=level*15){
+      level++;
+      flash("〰 无尽模式 · 难度提升至 Lv"+level);
+      SFX.levelUp();
+      newLevel();
+      coopGridSent="";
+      Input.consume();
+      return;
+    }
 
     // 房主广播状态（约 20Hz；地图仅变化时带上）
     if(coopMode && coopIsHost && coopSend){
