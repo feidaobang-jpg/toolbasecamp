@@ -925,27 +925,34 @@ const Game = (() => {
   function bossTierOfLevel(lv){
     return Math.max(1, Math.min(BOSS_TIERS, Math.floor((lv|0)/5)));
   }
-  /** 10 阶 Boss 外形/火力差异（炮管、装甲层、弹体外观倍率；碰撞始终约 4 格） */
+  /**
+   * 10 只 Boss（关卡 5/10/…/50）外形递进：
+   * barrels 炮管数 · armor 装甲层 · bodyVis 车体外观缩放 · bulletVis 弹体外观缩放
+   * 碰撞体积始终 BOSS_SIZE（约 4 格），便于移动与占位一致
+   */
   function bossProfile(tier){
     const t = Math.max(1, Math.min(BOSS_TIERS, tier|0));
     const barrels = t<=2 ? 1 : (t<=4 ? 2 : (t<=7 ? 3 : 4));
-    const armor = Math.min(5, Math.floor((t+1)/2)); // 1..5 装甲层
-    const bulletVis = 0.28 + (t-1)/(BOSS_TIERS-1) * 0.72; // 外观 0.28→1，碰撞仍满宽
-    const ammo = t>=9 ? "flame" : (t%2===0 ? "flame" : "ap");
+    const armor = Math.min(6, 1 + Math.floor((t-1)/2)); // 1→6
+    const bodyVis = 0.62 + (t-1)/(BOSS_TIERS-1) * 0.38;   // 外观车体 0.62→1
+    const bulletVis = 0.22 + (t-1)/(BOSS_TIERS-1) * 0.78; // 外观弹体 0.22→1，碰撞仍满 4 格
+    const ammo = t>=8 ? "flame" : (t%2===0 ? "flame" : "ap");
+    const names = ["侦察型","巡猎型","重装型","裂甲型","赤焰型","霜锋型","要塞型","暗影型","炼狱型","终焉型"];
     const palettes = [
-      ["#5a6a78","#2a3340","#9ab0c4"], // 1 浅钢
-      ["#4a5a48","#1e2a1c","#8aaa7a"], // 2 墨绿
-      ["#6a5a40","#2a2218","#c4a86a"], // 3 沙黄
-      ["#5a4a68","#241828","#b090d0"], // 4 紫灰
-      ["#6a3a3a","#281414","#d08070"], // 5 赤铁
-      ["#3a4a5a","#121820","#70b0d0"], // 6 冷青
-      ["#5a5030","#201808","#e0c060"], // 7 黄铜
-      ["#403848","#141018","#c080a0"], // 8 暗紫
-      ["#4a2820","#180c08","#ff8040"], // 9 火铁
-      ["#2a1818","#0a0404","#ffd24a"]  // 10 最终
+      ["#7a8a98","#3a4450","#c8d4e0"],
+      ["#5a7a58","#243028","#a8d090"],
+      ["#8a7a50","#3a3020","#e0c878"],
+      ["#6a5a7a","#2a2038","#c8a0e8"],
+      ["#8a4a48","#3a1818","#f0a090"],
+      ["#4a6a7a","#183040","#90d0e8"],
+      ["#8a7840","#3a2810","#ffe080"],
+      ["#5a4060","#201028","#e0a0c8"],
+      ["#8a4028","#301008","#ff9040"],
+      ["#3a2020","#100808","#ffd24a"]
     ];
     const [c1,c2,accent] = palettes[t-1];
-    return { tier:t, barrels, armor, bulletVis, ammo, c1, c2, accent };
+    const style = t; // 1..10 造型分支
+    return { tier:t, name:names[t-1], barrels, armor, bodyVis, bulletVis, ammo, c1, c2, accent, style };
   }
   /** 测试模式：切到下一 Boss 关卡并准备刷怪 */
   function advanceDebugBossLevel(){
@@ -974,15 +981,20 @@ const Game = (() => {
   }
   function onDebugBossDefeated(){
     if(!debugMode || debugBossCleared || debugBossDelay>0) return;
+    // 清场等待，避免杂兵干扰连刷
+    enemies=[];
+    bullets = bullets.filter(b=>b.owner && b.owner.isPlayer && !b.dead);
     if(debugBossWave >= BOSS_TIERS){
       debugBossCleared = true;
       bossSpawned = true;
       debugBossDelay = 0;
-      flash("🏆 最终大 Boss 击破！不再刷新 Boss", 3.2);
+      flash("🏆 最终大 Boss「终焉型」击破！不再刷新", 3.2);
       return;
     }
     debugBossDelay = 3;
-    flash("下一只 Boss 将在 3 秒后出现…（"+debugBossWave+"/"+BOSS_TIERS+"）", 2.8);
+    const next = debugBossWave + 1;
+    const np = bossProfile(next);
+    flash("下一只："+np.name+"（"+next+"/"+BOSS_TIERS+"）· 3 秒后出现", 2.8);
   }
   function tickDebugBossDelay(dt){
     if(!debugMode || debugBossCleared || debugBossDelay<=0) return;
@@ -1039,9 +1051,12 @@ const Game = (() => {
     const tier = debugMode ? debugBossWave : bossTierOfLevel(level);
     const p = bossProfile(tier);
     e.bossTier = p.tier;
+    e.bossName = p.name;
     e.bossBarrels = p.barrels;
     e.bossArmor = p.armor;
+    e.bossBodyVis = p.bodyVis;
     e.bossBulletVis = p.bulletVis;
+    e.bossStyle = p.style;
     e.bossC1 = p.c1; e.bossC2 = p.c2; e.bossAccent = p.accent;
     e.bossAmmo = p.ammo;
     e.hp = Math.min(40, 8 + p.tier*3);
@@ -1059,9 +1074,11 @@ const Game = (() => {
   }
   function trySpawnEnemy(){
     if(enemyQueue<=0) return;
+    // 测试模式等待下一只 Boss 时不刷怪
+    if(debugMode && debugBossDelay>0) return;
     const alive=enemies.filter(e=>!e.dead).length;
     const hasBoss = enemies.some(e=>!e.dead&&e.type==="boss");
-    // 测试模式：Boss 连锁至最终关；正式每 5 关一只
+    // 测试模式：10 只连锁；正式每 5 关一只（共 10 只）
     const wantBoss = !bossSpawned && !hasBoss && (
       debugMode ? !debugBossCleared : (level%5===0)
     );
@@ -1080,7 +1097,7 @@ const Game = (() => {
       enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
       SFX.spawn();
       const ammoName = e.bossAmmo==="flame" ? "火焰弹" : "穿甲弹";
-      flash("💀 Boss "+e.bossTier+"/"+BOSS_TIERS+" · "+e.bossBarrels+" 管 · "+ammoName+" · HP "+e.hp, 2.4);
+      flash("💀 "+(e.bossName||"Boss")+" "+e.bossTier+"/"+BOSS_TIERS+" · "+e.bossBarrels+" 管 · "+ammoName+" · HP "+e.hp, 2.4);
       return;
     }
 
@@ -1548,8 +1565,9 @@ const Game = (() => {
         e.bulletPower=1;
         const tier = es.bossTier || e.bossTier || bossTierOfLevel(level);
         const p = bossProfile(tier);
-        e.bossTier=p.tier; e.bossBarrels=p.barrels; e.bossArmor=p.armor;
-        e.bossBulletVis=p.bulletVis; e.bossC1=p.c1; e.bossC2=p.c2; e.bossAccent=p.accent;
+        e.bossTier=p.tier; e.bossName=p.name; e.bossBarrels=p.barrels; e.bossArmor=p.armor;
+        e.bossBodyVis=p.bodyVis; e.bossBulletVis=p.bulletVis; e.bossStyle=p.style;
+        e.bossC1=p.c1; e.bossC2=p.c2; e.bossAccent=p.accent;
         if(es.bossAmmo==="flame"||es.bossAmmo==="ap") e.bossAmmo=es.bossAmmo;
         else e.bossAmmo = p.ammo;
       } else if(e.w!==TILE*2-2){ e.applyBulk(); }
@@ -2031,93 +2049,148 @@ const Game = (() => {
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
   }
-  /** 10 阶 Boss：炮管数 / 装甲层 / 配色递进，碰撞体积不变 */
+  /** 10 只 Boss：外观缩放/炮管/装甲递进，碰撞框仍用完整 w/h */
   function drawBossTankBody(t, w, h){
     const tier = t.bossTier || 1;
     const p = bossProfile(tier);
     const barrels = t.bossBarrels || p.barrels;
     const armor = t.bossArmor || p.armor;
+    const bodyVis = t.bossBodyVis!=null ? t.bossBodyVis : p.bodyVis;
     const c1 = t.bossC1 || p.c1, c2 = t.bossC2 || p.c2, accent = t.bossAccent || p.accent;
     const isFlame = t.bossAmmo==="flame";
-    const trackW = Math.min(16, w*0.22);
+    const style = t.bossStyle || p.style;
+    // 早期 Boss 画小一点（仍占 4 格碰撞，方便挪位观感）
+    g.save();
+    g.scale(bodyVis, bodyVis);
+    const trackW = Math.min(15, w*0.2);
     const trackShift = Math.floor(t.anim)%2===0 ? 0 : 3;
-    // 履带
     g.fillStyle="#0a0c10";
-    g.fillRect(-w/2, -h/2+2, trackW, h-4);
-    g.fillRect(w/2-trackW, -h/2+2, trackW, h-4);
-    g.fillStyle="#303840";
-    for(let i=-h/2+6+trackShift; i<h/2-6; i+=6){
-      g.fillRect(-w/2+2, i, trackW-4, 3);
-      g.fillRect(w/2-trackW+2, i, trackW-4, 3);
+    g.beginPath(); g.roundRect(-w/2, -h/2+3, trackW, h-6, 2); g.fill();
+    g.beginPath(); g.roundRect(w/2-trackW, -h/2+3, trackW, h-6, 2); g.fill();
+    g.fillStyle="#3a424c";
+    for(let i=-h/2+8+trackShift; i<h/2-8; i+=6){
+      g.fillRect(-w/2+2, i, trackW-4, 2.8);
+      g.fillRect(w/2-trackW+2, i, trackW-4, 2.8);
     }
-    // 车体（随阶位加厚轮廓）
-    const pad = 2 + armor*0.6;
-    const hx = -w/2+trackW-1, hy = -h/2+6, hw = w-trackW*2+2, hh = h-12;
+    // 负重轮数量随装甲增加
+    g.fillStyle="#1a2028";
+    const wheels = 2 + Math.min(3, armor);
+    for(let i=0;i<wheels;i++){
+      const wy = -h/2+14 + i*((h-28)/Math.max(1,wheels-1));
+      g.beginPath(); g.arc(-w/2+trackW/2, wy, 4.2, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.arc(w/2-trackW/2, wy, 4.2, 0, Math.PI*2); g.fill();
+    }
+    const hx = -w/2+trackW, hy = -h/2+8, hw = w-trackW*2, hh = h-16;
     const hull = g.createLinearGradient(hx, hy, hx+hw, hy+hh);
     hull.addColorStop(0, c1); hull.addColorStop(1, c2);
     g.fillStyle = hull;
+    // 造型分支：不同车体剪影
     g.beginPath();
-    g.moveTo(hx+4, hy); g.lineTo(hx+hw-4, hy);
-    g.lineTo(hx+hw+pad*0.3, hy+8); g.lineTo(hx+hw, hy+hh-6);
-    g.lineTo(hx+hw-6, hy+hh); g.lineTo(hx+6, hy+hh);
-    g.lineTo(hx, hy+hh-6); g.lineTo(hx-pad*0.3, hy+8);
-    g.closePath(); g.fill();
-    g.strokeStyle = accent; g.lineWidth = 1.2 + armor*0.25; g.stroke();
-    // 装甲板层数
-    g.strokeStyle = "rgba(0,0,0,.4)"; g.lineWidth = 1;
+    if(style<=2){
+      // 圆角轻坦
+      g.roundRect(hx, hy, hw, hh, 8);
+    } else if(style<=4){
+      // 楔形前倾
+      g.moveTo(hx+8, hy); g.lineTo(hx+hw-8, hy);
+      g.lineTo(hx+hw+2, hy+hh*0.35); g.lineTo(hx+hw, hy+hh);
+      g.lineTo(hx, hy+hh); g.lineTo(hx-2, hy+hh*0.35); g.closePath();
+    } else if(style<=6){
+      // 六边形重坦
+      g.moveTo(hx+hw*0.2, hy); g.lineTo(hx+hw*0.8, hy);
+      g.lineTo(hx+hw+3, hy+hh*0.45); g.lineTo(hx+hw*0.75, hy+hh);
+      g.lineTo(hx+hw*0.25, hy+hh); g.lineTo(hx-3, hy+hh*0.45); g.closePath();
+    } else if(style<=8){
+      // 阶梯装甲
+      g.moveTo(hx+4, hy+6); g.lineTo(hx+hw-4, hy+6);
+      g.lineTo(hx+hw, hy+hh*0.4); g.lineTo(hx+hw-6, hy+hh);
+      g.lineTo(hx+6, hy+hh); g.lineTo(hx, hy+hh*0.4); g.closePath();
+    } else {
+      // 最终：尖刺棱角
+      g.moveTo(hx+10, hy); g.lineTo(hx+hw-10, hy);
+      g.lineTo(hx+hw+4, hy+12); g.lineTo(hx+hw, hy+hh-8);
+      g.lineTo(hx+hw*0.55, hy+hh+2); g.lineTo(hx+hw*0.45, hy+hh+2);
+      g.lineTo(hx, hy+hh-8); g.lineTo(hx-4, hy+12); g.closePath();
+    }
+    g.fill();
+    g.strokeStyle = accent; g.lineWidth = 1.4 + armor*0.2; g.stroke();
+    // 装甲横线
+    g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1;
     for(let i=0;i<armor;i++){
-      const y = hy + 10 + i*5;
+      const y = hy + 8 + i*((hh-16)/Math.max(1,armor));
       g.beginPath(); g.moveTo(hx+6, y); g.lineTo(hx+hw-6, y); g.stroke();
     }
-    // 侧翼装甲块（高阶更多）
+    // 侧裙
     g.fillStyle = c2;
-    for(let i=0;i<Math.min(3, armor);i++){
-      const sy = hy + hh*0.2 + i*10;
-      g.fillRect(hx-3-i, sy, 4+i, 8);
-      g.fillRect(hx+hw-1, sy, 4+i, 8);
+    for(let i=0;i<Math.min(4, armor);i++){
+      const sy = hy + hh*0.18 + i*8;
+      g.fillRect(hx-2-i*0.8, sy, 3.5+i*0.5, 7);
+      g.fillRect(hx+hw-1.5, sy, 3.5+i*0.5, 7);
     }
-    // 炮塔随装甲变大
-    const tw = w*(0.38 + armor*0.03), th = h*(0.28 + armor*0.02);
+    // 炮塔
+    const tw = w*(0.34 + armor*0.035), th = h*(0.24 + armor*0.025);
     g.fillStyle = c1;
-    g.beginPath(); g.roundRect(-tw/2, -th*0.1, tw, th, 6); g.fill();
+    if(style>=9){
+      g.beginPath();
+      g.moveTo(-tw*0.5, th*0.55); g.lineTo(-tw*0.35, -th*0.15);
+      g.lineTo(0, -th*0.35); g.lineTo(tw*0.35, -th*0.15);
+      g.lineTo(tw*0.5, th*0.55); g.closePath(); g.fill();
+    } else if(style>=5){
+      g.beginPath(); g.ellipse(0, th*0.15, tw*0.55, th*0.55, 0, 0, Math.PI*2); g.fill();
+    } else {
+      g.beginPath(); g.roundRect(-tw/2, -th*0.05, tw, th, 5); g.fill();
+    }
     g.strokeStyle = accent; g.lineWidth = 1.8; g.stroke();
-    // 阶位徽记
+    // 徽记 / 名称首字
     g.fillStyle = accent;
-    g.font = "bold "+Math.floor(8+armor)+"px sans-serif";
+    g.font = "bold "+Math.floor(9+armor*0.8)+"px sans-serif";
     g.textAlign="center"; g.textBaseline="middle";
-    g.fillText(String(tier), 0, th*0.35);
-    // 多联炮管（1→4）
-    const barrelLen = h/2 - 2;
-    const gap = Math.min(10, (w*0.42)/(barrels+1));
-    const startX = -((barrels-1)*gap)/2;
-    const tubeW = Math.max(3.5, 7 - barrels*0.6);
+    g.fillText(String(tier), 0, th*0.28);
+    // 多联炮管：管径随阶位略增
+    const barrelLen = h/2 - 4;
+    const spread = Math.min(w*0.5, 8 + barrels*7 + armor);
+    const startX = barrels===1 ? 0 : -spread/2;
+    const step = barrels===1 ? 0 : spread/(barrels-1);
+    const tubeW = 3.2 + armor*0.55;
     for(let i=0;i<barrels;i++){
-      const bx = startX + i*gap - tubeW/2;
-      g.fillStyle = "#12161c";
-      g.fillRect(bx, -barrelLen, tubeW, barrelLen+8);
-      g.fillStyle = isFlame ? "#ff6a20" : "#d0d8e4";
-      g.fillRect(bx-0.5, -barrelLen-1, tubeW+1, 4);
+      const bx = startX + i*step - tubeW/2;
+      g.fillStyle = "#10141a";
+      g.fillRect(bx, -barrelLen, tubeW, barrelLen+10);
+      // 炮口环
+      g.fillStyle = isFlame ? "#ff6a20" : "#d8e0ec";
+      g.fillRect(bx-0.8, -barrelLen-2, tubeW+1.6, 4);
+      if(armor>=4){
+        g.fillStyle = "#2a3038";
+        g.fillRect(bx-1, -barrelLen*0.55, tubeW+2, 3);
+      }
     }
-    // 高阶加装顶部副塔
-    if(armor>=4){
+    // 高阶饰件
+    if(style>=6){
       g.fillStyle = c2;
-      g.beginPath(); g.arc(tw*0.28, -th*0.05, 5, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.arc(tw*0.3, 0, 4.5, 0, Math.PI*2); g.fill();
       g.fillStyle = accent;
-      g.beginPath(); g.arc(tw*0.28, -th*0.05, 2, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.arc(tw*0.3, 0, 2, 0, Math.PI*2); g.fill();
     }
-    if(tier>=10){
-      // 最终 Boss：角刺冠
+    if(style>=9){
       g.fillStyle = accent;
-      g.beginPath(); g.moveTo(-tw*0.45, -th*0.1); g.lineTo(-tw*0.2, -th*0.55); g.lineTo(-tw*0.05, -th*0.1); g.fill();
-      g.beginPath(); g.moveTo(tw*0.45, -th*0.1); g.lineTo(tw*0.2, -th*0.55); g.lineTo(tw*0.05, -th*0.1); g.fill();
+      g.beginPath(); g.moveTo(-tw*0.4, -th*0.1); g.lineTo(-tw*0.15, -th*0.7); g.lineTo(0, -th*0.2); g.fill();
+      g.beginPath(); g.moveTo(tw*0.4, -th*0.1); g.lineTo(tw*0.15, -th*0.7); g.lineTo(0, -th*0.2); g.fill();
     }
-    // 血条
+    if(style>=10){
+      const pulse = 0.35+0.3*Math.sin(performance.now()/120);
+      g.strokeStyle = `rgba(255,210,74,${pulse})`; g.lineWidth = 2.5;
+      g.beginPath(); g.ellipse(0, 0, w*0.42, h*0.42, 0, 0, Math.PI*2); g.stroke();
+    }
+    g.restore();
+    // 血条 / 名称不随 bodyVis 缩小（读得清）
     const maxHp = t.maxHp||t.hp||1;
     const ratio = Math.max(0, Math.min(1, t.hp/maxHp));
-    g.fillStyle = "rgba(0,0,0,.65)";
-    g.fillRect(-w*0.4, h/2-10, w*0.8, 6);
+    g.fillStyle = "rgba(0,0,0,.7)";
+    g.fillRect(-w*0.42, h/2-12, w*0.84, 7);
     g.fillStyle = ratio>0.5 ? "#6ad4a0" : (ratio>0.25 ? "#e0c060" : "#e05050");
-    g.fillRect(-w*0.4, h/2-10, w*0.8*ratio, 6);
+    g.fillRect(-w*0.42, h/2-12, w*0.84*ratio, 7);
+    g.fillStyle = accent;
+    g.font = "bold 9px sans-serif"; g.textAlign="center"; g.textBaseline="bottom";
+    g.fillText((t.bossName||p.name)+" "+tier+"/"+BOSS_TIERS, 0, h/2-13);
   }
   /** 我方：加粗条纹履带 + 塔式炮塔（区别敌军） */
   function drawPlayerTankBody(t, w, h, bulk){
@@ -2432,7 +2505,10 @@ const Game = (() => {
     g.fillText("关卡",lx,OFF_Y+26);
     g.font="bold 26px sans-serif"; g.fillStyle="#ffd24a";
     g.fillText(endless?"∞":(level+"/"+CAMPAIGN_LEVELS),lx,OFF_Y+54);
-    if(endless){ g.font="11px sans-serif"; g.fillStyle="#9fb0d0"; g.fillText("难度 Lv"+level,lx,OFF_Y+72); }
+    if(debugMode){
+      g.font="11px sans-serif"; g.fillStyle="#ffb060";
+      g.fillText(debugBossCleared?"Boss 已肃清":("Boss "+debugBossWave+"/"+BOSS_TIERS),lx,OFF_Y+72);
+    } else if(endless){ g.font="11px sans-serif"; g.fillStyle="#9fb0d0"; g.fillText("难度 Lv"+level,lx,OFF_Y+72); }
     else if(enemyLootMode){ g.font="11px sans-serif"; g.fillStyle="#ff9d7a"; g.fillText("敌方可吃道具",lx,OFF_Y+72); }
     g.font="bold 15px sans-serif"; g.fillStyle="#dfe6f5";
     g.fillText("生命",lx,OFF_Y+108);
@@ -2510,6 +2586,18 @@ const Game = (() => {
       g.fillRect(CANVAS_W/2-90, CANVAS_H-36, 180, 26);
       g.fillStyle="#7ae0a0"; g.font="bold 14px sans-serif"; g.textAlign="center";
       g.fillText("过关倒计时 "+clearGrace.toFixed(1)+"s", CANVAS_W/2, CANVAS_H-18);
+    }
+    if(stateName==="playing" && debugMode && debugBossDelay>0){
+      const sec = Math.ceil(debugBossDelay);
+      const next = Math.min(BOSS_TIERS, debugBossWave+1);
+      const np = bossProfile(next);
+      g.fillStyle="rgba(10,14,28,.78)";
+      g.fillRect(CANVAS_W/2-150, CANVAS_H/2-36, 300, 72);
+      g.strokeStyle="#ffd24a"; g.lineWidth=2; g.strokeRect(CANVAS_W/2-150, CANVAS_H/2-36, 300, 72);
+      g.fillStyle="#ffd24a"; g.font="bold 28px sans-serif"; g.textAlign="center";
+      g.fillText(String(sec), CANVAS_W/2, CANVAS_H/2-2);
+      g.fillStyle="#c8d0e0"; g.font="bold 13px sans-serif";
+      g.fillText("下一只："+np.name+"（"+next+"/"+BOSS_TIERS+"）", CANVAS_W/2, CANVAS_H/2+24);
     }
     // 覆盖层
     if(stateName==="menu") drawMenu();
