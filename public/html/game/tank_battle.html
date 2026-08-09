@@ -2084,7 +2084,7 @@ const Game = (() => {
     }
     // 覆盖层
     if(stateName==="menu") drawMenu();
-    else if(stateName==="paused") drawOverlay("暂停","按 L / P 或点击暂停键继续（背景音乐已暂停）");
+    else if(stateName==="paused") drawOverlay("暂停","按 L / P 或点击暂停键继续");
     else if(stateName==="levelClear"){
       const done=!endless && level>=CAMPAIGN_LEVELS;
       const waitGuest=coopMode && !coopIsHost;
