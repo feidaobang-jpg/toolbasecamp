@@ -350,13 +350,17 @@ class Particle{
     g.beginPath(); g.arc(this.x,this.y,this.size*a+0.5,0,Math.PI*2); g.fill(); g.globalAlpha=1; }
 }
 
-/** 子弹 */
+/** 子弹；kind: normal | ap | flame（Boss 巨型穿甲/火焰） */
 class Bullet{
-  constructor(owner,x,y,dir,speed,power){
-    Object.assign(this,{owner,x,y,dir,speed,power,dead:false});
-    this.w=6; this.h=6;
+  constructor(owner,x,y,dir,speed,power,kind){
+    Object.assign(this,{owner,x,y,dir,speed,power,dead:false,kind:kind||"normal"});
+    if(this.kind==="ap" || this.kind==="flame"){ this.w=14; this.h=14; }
+    else { this.w=6; this.h=6; }
   }
-  update(dt){ this.x+=DXY[this.dir][0]*this.speed*dt; this.y+=DXY[this.dir][1]*this.speed*dt; }
+  update(dt){
+    this.x+=DXY[this.dir][0]*this.speed*dt;
+    this.y+=DXY[this.dir][1]*this.speed*dt;
+  }
 }
 
 /** 道具类型 */
@@ -401,9 +405,9 @@ class Tank{
     else if(this.stars>=3) this.bulk = Math.max(this.bulk, 1);
     this.applyBulk();
   }
-  /** 锁定标准碰撞体积（装甲只改外观，不撑大 hitbox） */
+  /** 锁定碰撞体积（装甲只改外观；Boss 保持巨型） */
   applyBulk(){
-    const base = TILE*2-2;
+    const base = this.type==="boss" ? (TILE*4-2) : (TILE*2-2);
     const cx=this.cx, cy=this.cy;
     this.w = base;
     this.h = base;
@@ -582,13 +586,13 @@ const Levels = (() => {
   const maps=[L1,L2,L3,L4,L5,L6];
   const charMap={'.':T_EMPTY,'B':T_BRICK,'S':T_STEEL,'W':T_WATER,'G':T_GRASS};
   /** 闯关总关数；地形逐步解锁 */
-  const CAMPAIGN_LEVELS = 20;
-  // 1–4 仅砖（地图模板里的铁/草/水先关掉）；5–8 +铁；9–12 +草；13–20 +水
+  const CAMPAIGN_LEVELS = 50;
+  // 地形解锁（50 关）：1–4 仅砖；5–10 +铁；11–20 +草；21–50 全地形
   // 三路稀疏铁块在 fortifyLanes 另加，不受此门控影响
   function gateTerrain(cell, level){
     if(cell===T_STEEL && level < 5) return T_EMPTY;
-    if(cell===T_GRASS && level < 9) return T_EMPTY;
-    if(cell===T_WATER && level < 13) return T_EMPTY;
+    if(cell===T_GRASS && level < 11) return T_EMPTY;
+    if(cell===T_WATER && level < 21) return T_EMPTY;
     return cell;
   }
 
@@ -711,22 +715,29 @@ const Levels = (() => {
     const clear=(r,c)=>{ for(let i=r;i<r+2;i++) for(let j=c;j<c+2;j++)
       if(grid[i]&&grid[i][j]!==undefined&&grid[i][j]!==T_BASE) grid[i][j]=T_EMPTY; };
     clear(0,0); clear(0,12); clear(0,24);          // 敌人出生点
+    // Boss 顶部中央 4×4 空地（约 4 辆普通坦克占地）
+    for(let r=0;r<4;r++) for(let c=11;c<=14;c++)
+      if(grid[r]&&grid[r][c]!==undefined&&grid[r][c]!==T_BASE) grid[r][c]=T_EMPTY;
     // 友军出生：8/16 为主，再往外对称扩展
     [8,16,6,18,4,20,2,22].forEach(c=>clear(24,c));
     fortifyLanes(grid, lv);
     // 铁墙不要挡住出生格
     clear(0,0); clear(0,12); clear(0,24);
+    for(let r=0;r<4;r++) for(let c=11;c<=14;c++)
+      if(grid[r]&&grid[r][c]!==undefined&&grid[r][c]!==T_BASE) grid[r][c]=T_EMPTY;
     [8,16,6,18,4,20,2,22].forEach(c=>clear(24,c));
     return grid;
   }
-  // 关卡敌人配置：数量与种类随关卡递增
-  // 血量档：fast/normal/power=1 · mid=2 · armor=3（已去掉抗5发）
+  // 50 关难度递进：总量与精英占比随关卡上升
+  // 血量档：fast/normal/power=1 · mid=2 · armor=3 · boss 另算
   function enemyPlan(level){
-    const total = Math.min(12 + level*2, 30);
-    const fast  = Math.min(2+level, 10);
-    const power = Math.min(1+level, 8);
-    const mid   = Math.min(1+Math.floor(level/2), 8); // 抗 2 发
-    const armor = Math.min(level, 8);                 // 抗 3 发
+    const lv = Math.max(1, level|0);
+    // 总量缓升；中后期精英占比更高
+    const total = Math.min(10 + Math.floor(lv*0.85), 40);
+    const fast  = Math.min(1 + Math.floor(lv/3), 12);
+    const power = Math.min(Math.floor(lv/4), 12);
+    const mid   = Math.min(Math.floor((lv+2)/5), 12);
+    const armor = Math.min(Math.floor(lv/6), 14);
     return { total, fast, power, mid, armor };
   }
   return { build, enemyPlan, count:maps.length, CAMPAIGN_LEVELS };
@@ -901,7 +912,8 @@ const Game = (() => {
     if(coopMode) setupCoopPlayers(true);
     else spawnPlayer({ keep: keepSolo });
     SFX.levelStart();
-    if(level%5===0) flash("⚠ Boss 关：本关将出现强化敌军", 2.2);
+    if(debugMode) flash("⚠ 测试模式：本关有巨型 Boss", 2.0);
+    else if(level%5===0) flash("⚠ Boss 关：巨型 Boss 将出现在顶部中央", 2.2);
   }
   function spawnPlayer(opts){
     opts=opts||{};
@@ -939,50 +951,86 @@ const Game = (() => {
     coopAllies[pid]=nt;
   }
   const SPAWN_COLS=[0,12,24];
+  const BOSS_SIZE = TILE*4-2; // ≈ 4 辆普通坦克占地（2×2 排列）
+  function makeBoss(e){
+    e.type="boss";
+    e.w=BOSS_SIZE; e.h=BOSS_SIZE;
+    // 顶部正中（约占 4 辆普通坦克面积）
+    e.x = OFF_X + 11*TILE + 1;
+    e.y = OFF_Y + 1;
+    e.dir = DIR.DOWN;
+    // 第 5/10/…/50 关共 10 只；测试模式按关号估算强度
+    const bossIndex = debugMode
+      ? Math.max(1, Math.min(10, Math.ceil(level/5)))
+      : Math.max(1, Math.floor(level/5));
+    e.hp = Math.min(36, 10 + bossIndex*2 + Math.floor(level/8));
+    e.maxHp = e.hp;
+    e.speed = Math.max(26, 44 - Math.floor(level/12));
+    e.stars = 4; e.applyStars();
+    e.bulletSpeed = 280 + Math.min(level*2, 100);
+    e.bulletPower = 4;
+    e.maxBullets = 2;
+    e.carriesPowerup = true;
+    e.bossAmmo = Math.random()<0.5 ? "flame" : "ap"; // 火焰弹 / 巨型穿甲
+    e.cool = 0.35;
+    e.spawnGhost = 0.2;
+    return e;
+  }
   function trySpawnEnemy(){
     if(enemyQueue<=0) return;
     const alive=enemies.filter(e=>!e.dead).length;
+    const hasBoss = enemies.some(e=>!e.dead&&e.type==="boss");
+    // 测试模式每关都有；正式每 5 关一只；尽早刷出
+    const wantBoss = !bossSpawned && !hasBoss && (debugMode || level%5===0);
     const maxAlive = endless ? Math.min(4+Math.floor(level/2),8) : Math.min(4 + (coopMode?Math.max(0,friendlyTanks().length-1):0), 8);
+    if(!wantBoss && alive>=maxAlive) return;
+
+    if(wantBoss){
+      const bw=BOSS_SIZE, bh=BOSS_SIZE;
+      const bx=OFF_X+11*TILE+1, by=OFF_Y+1;
+      const r={x:bx,y:by,w:bw,h:bh};
+      for(const o of [...friendlyTanks(),...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
+      const e=new Tank(bx,by,false);
+      makeBoss(e);
+      bossSpawned=true;
+      if(freezeTimer>0) e.frozen=freezeTimer;
+      enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
+      SFX.spawn();
+      flash(e.bossAmmo==="flame"
+        ? "💀 巨型 Boss！火焰弹 · 血量 "+e.hp
+        : "💀 巨型 Boss！穿甲弹 · 血量 "+e.hp, 2.4);
+      return;
+    }
+
     if(alive>=maxAlive) return;
     const col=SPAWN_COLS[randi(0,2)];
     const x=OFF_X+col*TILE+1, y=OFF_Y+1;
     const r={x,y,w:TILE*2-2,h:TILE*2-2};
     for(const o of [...friendlyTanks(),...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
     const e=new Tank(x,y,false);
-    // 每 5 关刷一只强化重甲（抗 3 发 + 可打铁，偏慢）
-    const wantBoss = (level%5===0) && !bossSpawned && (endless || enemyQueue<=Math.max(3, (enemyPlanObj.total/2)|0));
-    if(wantBoss){
-      bossSpawned=true;
-      e.type="armor"; e.hp=3; e.speed=42; e.stars=3; e.applyStars();
-      e.carriesPowerup=true; e.bulletSpeed=300;
-      flash("💀 强化重甲出现！抗 3 发可打铁", 1.8);
+    const p=enemyPlanObj, kRoll=Math.random();
+    // 后期提高精英占比
+    const armorBias = Math.min(0.35, 0.12 + level*0.004);
+    const midBias = Math.min(0.55, 0.28 + level*0.003);
+    if(kRoll<armorBias && p.armor>0){
+      e.type="armor"; e.hp=3; e.speed=48;
+    } else if(kRoll<midBias && p.mid>0){
+      e.type="mid"; e.hp=2; e.speed=68; e.bulletSpeed=250;
+    } else if(kRoll<midBias+0.18 && p.fast>0){
+      e.type="fast"; e.hp=1; e.speed=118; e.cool=-0.15;
+    } else if(kRoll<midBias+0.34 && p.power>0){
+      e.type="power"; e.hp=1; e.speed=55; e.bulletSpeed=340;
+      if(level>=8) e.maxBullets=2;
     } else {
-      const p=enemyPlanObj, kRoll=Math.random();
-      if(kRoll<0.22 && p.armor>0){
-        // 重甲：抗 3 发
-        e.type="armor"; e.hp=3; e.speed=48;
-      } else if(kRoll<0.40 && p.mid>0){
-        // 中甲：抗 2 发
-        e.type="mid"; e.hp=2; e.speed=68; e.bulletSpeed=250;
-      } else if(kRoll<0.58 && p.fast>0){
-        // 冲锋：瘦小快车，1 血
-        e.type="fast"; e.hp=1; e.speed=118; e.cool=-0.15;
-      } else if(kRoll<0.74 && p.power>0){
-        // 火力：长炮、弹速高，1 血
-        e.type="power"; e.hp=1; e.speed=55; e.bulletSpeed=340;
-        if(level>=8) e.maxBullets=2;
-      } else {
-        e.type="normal"; e.hp=1; e.speed=60;
-      }
-      e.speed += Math.min(level*2,26);
-      // FC：只有红闪坦克掉道具。测试必带；其余约每 4 辆带 1 辆（含随机抖动）
-      if(debugMode) e.carriesPowerup=true;
-      else {
-        const killedOrQueued = endless
-          ? (enemiesKilled + enemies.filter(x=>!x.dead).length)
-          : Math.max(0, (enemyPlanObj.total|0) - (enemyQueue|0));
-        e.carriesPowerup = ((killedOrQueued + 1) % 4 === 0) || Math.random()<0.04;
-      }
+      e.type="normal"; e.hp=1; e.speed=60;
+    }
+    e.speed += Math.min(level*1.2, 36);
+    if(debugMode) e.carriesPowerup=true;
+    else {
+      const killedOrQueued = endless
+        ? (enemiesKilled + enemies.filter(x=>!x.dead).length)
+        : Math.max(0, (enemyPlanObj.total|0) - (enemyQueue|0));
+      e.carriesPowerup = ((killedOrQueued + 1) % 4 === 0) || Math.random()<0.04;
     }
     if(freezeTimer>0) e.frozen=freezeTimer;
     enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
@@ -994,10 +1042,16 @@ const Game = (() => {
     if(t.cool>0) return;
     const mine=bullets.filter(b=>b.owner===t&&!b.dead).length;
     if(mine>=t.maxBullets) return;
-    const bx=t.cx+DXY[t.dir][0]*(t.w/2+4)-3, by=t.cy+DXY[t.dir][1]*(t.h/2+4)-3;
-    bullets.push(new Bullet(t,bx,by,t.dir,t.bulletSpeed,t.bulletPower));
-    t.cool = t.isPlayer ? (t.stars>=1?0.28:0.42) : rand(0.8,1.8);
+    const kind = (!t.isPlayer && t.type==="boss") ? (t.bossAmmo||"ap") : "normal";
+    const muzzle = (kind==="ap"||kind==="flame") ? 10 : 3;
+    const bx=t.cx+DXY[t.dir][0]*(t.w/2+4)-muzzle, by=t.cy+DXY[t.dir][1]*(t.h/2+4)-muzzle;
+    const b=new Bullet(t,bx,by,t.dir,t.bulletSpeed,t.bulletPower,kind);
+    bullets.push(b);
+    if(t.isPlayer) t.cool = t.stars>=1?0.28:0.42;
+    else if(t.type==="boss") t.cool = rand(0.55,1.05);
+    else t.cool = rand(0.8,1.8);
     if(t.isPlayer) (t.bulletPower>=3?SFX.shootBig:SFX.shoot)();
+    else if(t.type==="boss") SFX.shootBig();
   }
 
   /* ---- 道具 ---- */
@@ -1046,9 +1100,20 @@ const Game = (() => {
       case PU.BOAT: // 船：护盾一层 + 可在水上行走
         player.boat=true; SFX.boat(); flash("⛵ 获得船：可渡水+船体护盾"); break;
       case PU.GRENADE:
-        for(const e of enemies) if(!e.dead){ e.dead=true; enemiesKilled++; score+=100;
-          boom(e.cx,e.cy,26); }
-        SFX.bigExplode(); shake=0.4; flash("地雷！全场清除"); break;
+        for(const e of enemies){
+          if(e.dead) continue;
+          if(e.type==="boss"){
+            // 强力 Boss 不被地雷秒杀，重创约一半血
+            const dmg = Math.max(4, Math.ceil((e.maxHp||e.hp)*0.45));
+            e.hp -= dmg;
+            boom(e.cx,e.cy,36,["#ff6a20","#ffd24a","#fff"]);
+            if(e.hp<=0) killTank(e,true);
+            else flash("地雷重创 Boss！剩余 "+e.hp, 1.4);
+          } else {
+            e.dead=true; enemiesKilled++; score+=100; boom(e.cx,e.cy,26);
+          }
+        }
+        SFX.bigExplode(); shake=0.4; flash("地雷！普通敌军清除"); break;
       case PU.HELMET:
         player.shield=Math.max(player.shield,10); SFX.shield(); flash("🛡 无敌护盾 10 秒"); break;
       case PU.TANK:
@@ -1110,20 +1175,24 @@ const Game = (() => {
 
   /* ---- 子弹与地形/实体交互 ---- */
   function bulletHitTerrain(b){
-    // 子弹前端检测两个采样点（覆盖宽度）
+    // 子弹前端检测采样点（巨型弹加宽）
     const fx=b.x+b.w/2+DXY[b.dir][0]*b.w/2, fy=b.y+b.h/2+DXY[b.dir][1]*b.h/2;
-    const side = b.dir===DIR.UP||b.dir===DIR.DOWN ? [[-6,0],[6,0]] : [[0,-6],[0,6]];
+    const span = (b.kind==="ap"||b.kind==="flame") ? 10 : 6;
+    const side = b.dir===DIR.UP||b.dir===DIR.DOWN ? [[-span,0],[span,0]] : [[0,-span],[0,span]];
     let hit=false;
     for(const [ox,oy] of [[0,0],...side]){
       const px=fx+ox, py=fy+oy;
       const c=Math.floor((px-OFF_X)/TILE), r=Math.floor((py-OFF_Y)/TILE);
       if(c<0||c>=FIELD_W||r<0||r>=FIELD_H){ hit=true; continue; }
       const t=grid[r][c];
-      if(t===T_BRICK){ grid[r][c]=T_EMPTY; hit=true; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,5,["#c96f3b","#8a4a26","#e0a070"]); }
+      if(t===T_BRICK){ grid[r][c]=T_EMPTY; hit=true;
+        const cols = b.kind==="flame" ? ["#ff6a20","#ff4020","#ffd24a"] : ["#c96f3b","#8a4a26","#e0a070"];
+        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2, b.kind==="flame"?8:5, cols);
+      }
       else if(t===T_STEEL){ hit=true;
-        if(b.power>=3){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,8,["#cfd6e4","#9aa4b8","#fff"]); SFX.hitSteel(); }
+        if(b.power>=3 || b.kind==="ap"){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,8,["#cfd6e4","#9aa4b8","#fff"]); SFX.hitSteel(); }
         else SFX.hitSteel(); }
-      else if(t===T_GRASS && b.power>=4){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#2c6e2f"]); }
+      else if(t===T_GRASS && (b.power>=4 || b.kind==="flame")){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#ff8a20"]); }
       else if(t===T_BASE){
         // 友军子弹撞基地只挡下，不摧毁；敌军可毁
         hit=true;
@@ -1135,13 +1204,18 @@ const Game = (() => {
     return hit;
   }
   function killTank(t,byPlayer){
-    t.dead=true; boom(t.cx,t.cy,26);
+    t.dead=true;
+    if(t.type==="boss"){ boom(t.cx,t.cy,48); SFX.bigExplode(); shake=Math.max(shake,0.7); }
+    else boom(t.cx,t.cy,26);
     if(t.isPlayer){ SFX.friendlyExplode(); shake=Math.max(shake,0.45); }
-    else { SFX.explode(); shake=Math.max(shake,0.25); }
+    else if(t.type!=="boss"){ SFX.explode(); shake=Math.max(shake,0.25); }
     if(!t.isPlayer){
       enemiesKilled++;
-      if(byPlayer){ const pts={normal:100,fast:200,power:300,mid:350,armor:450}[t.type]||100; score+=pts;
-        flashScore(t.cx,t.cy,pts); }
+      if(byPlayer){
+        const pts={normal:100,fast:200,power:300,mid:350,armor:450,boss:2500}[t.type]||100;
+        score+=pts; flashScore(t.cx,t.cy,pts);
+        if(t.type==="boss") flash("🏆 巨型 Boss 击破！", 1.8);
+      }
       // 道具只在命中时掉，击杀不再多掉一次
     }
   }
@@ -1231,9 +1305,10 @@ const Game = (() => {
       players: friends,
       enemies: enemies.filter(e=>!e.dead).map(e=>([
         e.x|0, e.y|0, e.dir, e.hp|0, e.type||"n", e.stars|0, e.speed|0,
-        +(e.spawnGhost||0).toFixed(1), +(e.shield||0).toFixed(1), +(e.frozen||0).toFixed(1)
+        +(e.spawnGhost||0).toFixed(1), +(e.shield||0).toFixed(1), +(e.frozen||0).toFixed(1),
+        e.maxHp|0, e.bossAmmo||""
       ])),
-      bullets: bullets.filter(b=>!b.dead).map(b=>([b.x|0,b.y|0,b.dir,b.power|0,b.owner&&b.owner.isPlayer?1:0])),
+      bullets: bullets.filter(b=>!b.dead).map(b=>([b.x|0,b.y|0,b.dir,b.power|0,b.owner&&b.owner.isPlayer?1:0, b.kind||"n"])),
       powerups: powerups.filter(p=>!p.dead).map(p=>([p.type,p.x|0,p.y|0,+p.life.toFixed(1)]))
     };
   }
@@ -1308,7 +1383,7 @@ const Game = (() => {
       const raw=elist[i];
       const es=Array.isArray(raw)?{
         x:raw[0],y:raw[1],dir:raw[2],hp:raw[3],type:raw[4],stars:raw[5],speed:raw[6],
-        spawnGhost:raw[7],shield:raw[8],frozen:raw[9]
+        spawnGhost:raw[7],shield:raw[8],frozen:raw[9],maxHp:raw[10],bossAmmo:raw[11]
       }:raw;
       let e=enemies[i];
       if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; }
@@ -1323,6 +1398,12 @@ const Game = (() => {
         e.x=es.x; e.y=es.y;
       }
       if((e.stars|0)!==(es.stars|0)){ e.stars=es.stars|0; e.applyStars(); }
+      if(e.type==="boss"){
+        e.w=BOSS_SIZE; e.h=BOSS_SIZE;
+        e.maxHp = es.maxHp || e.maxHp || e.hp;
+        if(es.bossAmmo==="flame"||es.bossAmmo==="ap") e.bossAmmo=es.bossAmmo;
+        else if(!e.bossAmmo) e.bossAmmo = Math.random()<0.5 ? "flame" : "ap";
+      } else if(e.w!==TILE*2-2){ e.applyBulk(); }
       newEnemyHp+=e.hp|0;
     }
     if(elist.length < prevEnemyN) SFX.explode();
@@ -1331,11 +1412,13 @@ const Game = (() => {
     while(bullets.length>blist.length) bullets.pop();
     for(let i=0;i<blist.length;i++){
       const raw=blist[i];
-      const bs=Array.isArray(raw)?{x:raw[0],y:raw[1],dir:raw[2],power:raw[3],friend:!!raw[4]}:raw;
+      const bs=Array.isArray(raw)?{x:raw[0],y:raw[1],dir:raw[2],power:raw[3],friend:!!raw[4],kind:raw[5]||"normal"}:raw;
+      const kind = bs.kind==="ap"||bs.kind==="flame" ? bs.kind : "normal";
       let b=bullets[i];
-      if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1); bullets[i]=b; }
+      if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1, kind); bullets[i]=b; }
       else {
-        b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1;
+        b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1; b.kind=kind;
+        if(kind==="ap"||kind==="flame"){ b.w=14; b.h=14; } else { b.w=6; b.h=6; }
         b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
       }
     }
@@ -1527,17 +1610,16 @@ const Game = (() => {
     freezeTimer=Math.max(0,freezeTimer-dt);
     if(shovelTimer>0){ shovelTimer-=dt; if(shovelTimer<=0) setBaseWall(T_BRICK); }
 
-    // 敌人AI：随机游走 + 概率朝基地/玩家 + 随机开火
+    // 敌人AI：随机游走 + 概率朝基地/玩家 + 随机开火；Boss 更霸气、更爱压基地
     for(const e of enemies){
       if(e.dead) continue;
       e.cool-=dt; e.spawnGhost-=dt; e.shield=Math.max(0,(e.shield||0)-dt); e.anim+=dt*10;
       if(e.frozen>0){ e.frozen-=dt; continue; }
       e.aiT=(e.aiT||0)-dt;
       if(e.aiT<=0){
-        e.aiT=rand(0.6,2.2);
-        // 仅敌方吃道具模式：优先冲向场上道具
+        e.aiT = e.type==="boss" ? rand(0.45,1.2) : rand(0.6,2.2);
         let chasedPu=false;
-        if(enemyLootMode){
+        if(enemyLootMode && e.type!=="boss"){
           let best=null, bestD=1e9;
           for(const pu of powerups){
             if(pu.dead) continue;
@@ -1553,10 +1635,22 @@ const Game = (() => {
         }
         if(!chasedPu){
           const roll=Math.random();
-          if(roll<0.45){ e.dir=randi(0,3); }
-          else if(roll<0.75){ // 朝基地
+          if(e.type==="boss"){
+            // Boss：多朝基地/玩家压进，少瞎转
+            if(roll<0.55){
+              e.dir = Math.abs(e.cx-(OFF_X+13*TILE))>TILE*1.2
+                ? (e.cx<OFF_X+13*TILE?DIR.RIGHT:DIR.LEFT) : DIR.DOWN;
+            } else if(roll<0.9){
+              const tgt=nearestFriendly(e);
+              if(tgt){
+                e.dir = Math.abs(e.cx-tgt.cx)>Math.abs(e.cy-tgt.cy)
+                  ? (e.cx<tgt.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<tgt.cy?DIR.DOWN:DIR.UP);
+              } else e.dir=DIR.DOWN;
+            } else e.dir=randi(0,3);
+          } else if(roll<0.45){ e.dir=randi(0,3); }
+          else if(roll<0.75){
             e.dir = Math.abs(e.cx-(OFF_X+13*TILE))>TILE ? (e.cx<OFF_X+13*TILE?DIR.RIGHT:DIR.LEFT) : DIR.DOWN;
-          } else { // 朝最近友军
+          } else {
             const tgt=nearestFriendly(e);
             if(tgt){
               e.dir = Math.abs(e.cx-tgt.cx)>Math.abs(e.cy-tgt.cy)
@@ -1567,8 +1661,8 @@ const Game = (() => {
       }
       const nx=e.x+DXY[e.dir][0]*e.speed*dt, ny=e.y+DXY[e.dir][1]*e.speed*dt;
       if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
-      else e.aiT=0; // 撞墙立刻换向
-      if(Math.random()<dt*0.9) fire(e);
+      else e.aiT=0;
+      if(Math.random()<(e.type==="boss"?dt*1.35:dt*0.9)) fire(e);
       // 仅敌方吃道具模式才允许敌军拾取
       if(enemyLootMode){
         for(const pu of powerups){
@@ -1586,7 +1680,20 @@ const Game = (() => {
     for(const b of bullets){
       if(b.dead) continue;
       b.update(dt);
-      if(bulletHitTerrain(b)){ b.dead=true; boom(b.x+3,b.y+3,4); continue; }
+      if(b.kind==="flame" && Math.random()<dt*18){
+        particles.push(new Particle(
+          b.x+b.w/2+rand(-4,4), b.y+b.h/2+rand(-4,4),
+          rand(-20,20), rand(-40,-10), rand(0.15,0.35),
+          Math.random()<0.5?"#ff8a20":"#ff5020", rand(2,5)
+        ));
+      }
+      if(bulletHitTerrain(b)){
+        b.dead=true;
+        if(b.kind==="flame") boom(b.x+b.w/2,b.y+b.h/2,14,["#ff6a20","#ffd24a","#ff4020"]);
+        else if(b.kind==="ap") boom(b.x+b.w/2,b.y+b.h/2,10,["#e8eef8","#ffd24a","#fff"]);
+        else boom(b.x+3,b.y+3,4);
+        continue;
+      }
       // 子弹对撞
       for(const ob of bullets){ if(ob!==b&&!ob.dead&&ob.owner.isPlayer!==b.owner.isPlayer&&rectHit(b,ob)){ b.dead=ob.dead=true; } }
       if(b.dead) continue;
@@ -1752,12 +1859,66 @@ const Game = (() => {
    */
   function enemyVis(t){
     switch(t.type){
+      case "boss":  return {sx:1.0, sy:1.0, track:12, barrel:1.0, turret:14, maxHp:t.maxHp||12};
       case "fast":  return {sx:0.62, sy:0.72, track:3.5, barrel:0.78, turret:4.5, maxHp:1};
       case "power": return {sx:0.90, sy:0.92, track:5.5, barrel:1.0,  turret:6.0, maxHp:1}; // 炮管不伸出格外
       case "mid":   return {sx:0.92, sy:0.94, track:7,   barrel:0.95, turret:6.8, maxHp:2};
       case "armor": return {sx:1.0,  sy:1.0,  track:8,   barrel:0.95, turret:7.2, maxHp:3};
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
+  }
+  /** 巨型 Boss：约 4 辆普通坦克大小，黑红装甲 + 双联主炮 */
+  function drawBossTankBody(t, w, h){
+    const trackW = Math.min(16, w*0.24);
+    const trackShift = Math.floor(t.anim)%2===0?0:3;
+    g.fillStyle="#120808";
+    g.fillRect(-w/2,-h/2,trackW,h); g.fillRect(w/2-trackW,-h/2,trackW,h);
+    g.fillStyle="rgba(255,90,40,.4)";
+    for(let i=-h/2+trackShift;i<h/2;i+=6){
+      g.fillRect(-w/2+2,i,trackW-4,3.5); g.fillRect(w/2-trackW+2,i,trackW-4,3.5);
+    }
+    const flash = t.carriesPowerup && Math.floor(performance.now()/100)%2===0;
+    const c1 = flash ? "#ff4028" : "#6a1414";
+    const c2 = flash ? "#8a1008" : "#140404";
+    const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
+    gr.addColorStop(0,c1); gr.addColorStop(1,c2);
+    g.fillStyle=gr;
+    g.fillRect(-w/2+trackW-2,-h/2+6,w-trackW*2+4,h-12);
+    // 侧翼尖刺（霸气）
+    g.fillStyle=flash?"#ff6040":"#3a1010";
+    g.beginPath(); g.moveTo(-w/2+trackW, -h*0.15); g.lineTo(-w/2-4, 0); g.lineTo(-w/2+trackW, h*0.15); g.fill();
+    g.beginPath(); g.moveTo(w/2-trackW, -h*0.15); g.lineTo(w/2+4, 0); g.lineTo(w/2-trackW, h*0.15); g.fill();
+    g.strokeStyle="rgba(255,210,80,.95)"; g.lineWidth=3.5;
+    g.strokeRect(-w/2+trackW,-h/2+8,w-trackW*2,h-16);
+    g.strokeStyle="rgba(0,0,0,.45)"; g.lineWidth=1.5;
+    g.beginPath(); g.moveTo(0,-h/2+10); g.lineTo(0,h/2-10); g.stroke();
+    g.beginPath(); g.moveTo(-w/4,0); g.lineTo(w/4,0); g.stroke();
+    // 巨型炮塔 + 冠饰
+    g.fillStyle=flash?"#ff8060":"#3a2020";
+    g.beginPath(); g.roundRect(-w*0.3,-h*0.14,w*0.6,h*0.46,7); g.fill();
+    g.strokeStyle="#ffd24a"; g.lineWidth=2.4; g.stroke();
+    g.fillStyle="#ffd24a";
+    g.beginPath(); g.moveTo(-8,-h*0.14); g.lineTo(0,-h*0.28); g.lineTo(8,-h*0.14); g.closePath(); g.fill();
+    g.font="bold "+Math.floor(w*0.15)+"px sans-serif"; g.textAlign="center"; g.textBaseline="middle";
+    g.fillText("BOSS",0,h*0.08);
+    // 双联巨型炮管
+    const barrelLen = h/2-2;
+    g.fillStyle="#2a1810";
+    g.fillRect(-11, -barrelLen, 8, barrelLen+10);
+    g.fillRect(3, -barrelLen, 8, barrelLen+10);
+    g.fillStyle=t.bossAmmo==="flame"?"#ff6a20":"#e8eef8";
+    g.fillRect(-12, -barrelLen, 10, 7);
+    g.fillRect(2, -barrelLen, 10, 7);
+    // 血条
+    const maxHp = t.maxHp||t.hp||1;
+    const ratio = Math.max(0, Math.min(1, t.hp/maxHp));
+    g.fillStyle="rgba(0,0,0,.6)";
+    g.fillRect(-w*0.38, h/2-11, w*0.76, 7);
+    g.fillStyle=ratio>0.5?"#7ae0a0":(ratio>0.25?"#ffd24a":"#ff5a4a");
+    g.fillRect(-w*0.38, h/2-11, w*0.76*ratio, 7);
+    const pulse=0.45+0.4*Math.sin(performance.now()/70);
+    g.strokeStyle=`rgba(255,40,20,${pulse})`; g.lineWidth=3.5;
+    g.beginPath(); g.arc(0,0,w/2+4,0,Math.PI*2); g.stroke();
   }
   /** 我方：加粗条纹履带 + 塔式炮塔（区别敌军） */
   function drawPlayerTankBody(t, w, h, bulk){
@@ -1843,6 +2004,17 @@ const Game = (() => {
       if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
       return;
     }
+    if(t.type==="boss"){
+      drawBossTankBody(t, w, h);
+      g.restore();
+      if(t.shield>0){
+        const a=0.35+0.25*Math.sin(performance.now()/90);
+        g.strokeStyle=`rgba(120,210,255,${a})`; g.lineWidth=2.5;
+        g.beginPath(); g.arc(t.cx,t.cy,t.w/2+6,0,Math.PI*2); g.stroke();
+      }
+      if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
+      return;
+    }
     // —— 敌军：方壳 + 圆炮塔（灰/黄/绿）——
     const vis = enemyVis(t);
     g.scale(Math.min(1, vis.sx), Math.min(1, vis.sy));
@@ -1904,6 +2076,24 @@ const Game = (() => {
     if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
   }
   function drawBullet(b){
+    if(b.kind==="flame"){
+      const cx=b.x+b.w/2, cy=b.y+b.h/2;
+      const gr=g.createRadialGradient(cx,cy,1,cx,cy,16);
+      gr.addColorStop(0,"#fff6c8"); gr.addColorStop(0.35,"#ff8a20"); gr.addColorStop(1,"rgba(255,40,0,0)");
+      g.fillStyle=gr; g.beginPath(); g.arc(cx,cy,15,0,Math.PI*2); g.fill();
+      g.fillStyle="#ff5020"; g.beginPath(); g.ellipse(cx,cy,5,7,0,0,Math.PI*2); g.fill();
+      return;
+    }
+    if(b.kind==="ap"){
+      const cx=b.x+b.w/2, cy=b.y+b.h/2;
+      g.save(); g.translate(cx,cy); g.rotate(b.dir*Math.PI/2);
+      g.fillStyle="#e8eef8";
+      g.beginPath(); g.moveTo(0,-10); g.lineTo(5,6); g.lineTo(0,10); g.lineTo(-5,6); g.closePath(); g.fill();
+      g.fillStyle="#ffd24a"; g.fillRect(-2.5,-2,5,8);
+      g.strokeStyle="rgba(255,255,255,.7)"; g.lineWidth=1; g.stroke();
+      g.restore();
+      return;
+    }
     const gr=g.createRadialGradient(b.x+3,b.y+3,0,b.x+3,b.y+3,6);
     if(b.power>=3){ gr.addColorStop(0,"#fff"); gr.addColorStop(0.4,"#ffd24a"); gr.addColorStop(1,"rgba(255,120,40,0)"); }
     else { gr.addColorStop(0,"#fff"); gr.addColorStop(0.5,"#ffe9a0"); gr.addColorStop(1,"rgba(255,220,120,0)"); }
@@ -2142,7 +2332,7 @@ const Game = (() => {
       "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
       "♾ 无尽模式",
       "😈 敌方吃道具",
-      "🧪 测试模式（道具必掉）",
+      "🧪 测试模式（每关Boss·道具必掉）",
       "🌐 合作联机（最多 8 人）"
     ];
     g.font="bold 20px sans-serif";
@@ -2155,7 +2345,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("敌军：灰弱→黄→绿强　红闪=每中一发随机掉道具（未死继续闪）",CANVAS_W/2,430);
+    g.fillText("闯关50关 · 每5关巨型Boss（穿甲/火焰）· 测试模式每关都有Boss",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
