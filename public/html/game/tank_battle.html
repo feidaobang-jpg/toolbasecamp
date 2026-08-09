@@ -30,7 +30,8 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   display:flex;align-items:center;justify-content:center;text-shadow:0 1px 2px #000;}
 #btnFire{right:4%;bottom:6%;width:16%;max-width:88px;aspect-ratio:1;font-size:15px;
   background:radial-gradient(circle at 35% 30%,#ff9d7a,#c2402a);}
-#btnPause{right:22%;bottom:18%;width:11%;max-width:60px;aspect-ratio:1;font-size:12px;
+/* 暂停叠在开火正上方（同中心，开火高 + 间距） */
+#btnPause{right:6.5%;bottom:calc(6% + min(16vw,88px) + 10px);width:11%;max-width:60px;aspect-ratio:1;font-size:12px;
   background:radial-gradient(circle at 35% 30%,#c9c9e8,#565688);}
 /* 合作联机大厅 */
 #coopPanel{display:none;position:absolute;inset:0;z-index:50;align-items:center;justify-content:center;
@@ -1033,9 +1034,8 @@ const Game = (() => {
         e.type="normal"; e.hp=1; e.speed=60;
       }
       e.speed += Math.min(level*2,26);
-      // 掉落：测试必掉；其余模式原 22% 偏低，统一 ×5（封顶 100%）
-      // 「敌方吃道具」更吃场上道具密度，与其它模式共用提高后的概率
-      const dropChance = debugMode ? 1 : Math.min(1, 0.22 * 5);
+      // 掉落：测试必掉；其余约 33%（原 22%，×5 过高）
+      const dropChance = debugMode ? 1 : 0.33;
       if(Math.random() < dropChance) e.carriesPowerup=true;
     }
     if(freezeTimer>0) e.frozen=freezeTimer;
@@ -1523,7 +1523,7 @@ const Game = (() => {
         if(COOP_PREDICT && player&&!player.dead) driveTank(player, mx, my, false, dt);
       }
       coopGuestPresent(dt);
-      // 客机：按场上坦克位移估移动音量（权威状态插值）
+      // 客机：仅友军位移触发履带音（敌军移动不播，避免战场吵杂）
       {
         let movers=0;
         for(const t of friendlyTanks()){
@@ -1532,13 +1532,7 @@ const Game = (() => {
           if(Math.abs(t.x-t._lx)+Math.abs(t.y-t._ly)>0.08) movers++;
           t._lx=t.x; t._ly=t.y;
         }
-        for(const e of enemies){
-          if(!e||e.dead) continue;
-          if(e._lx==null){ e._lx=e.x; e._ly=e.y; }
-          if(Math.abs(e.x-e._lx)+Math.abs(e.y-e._ly)>0.08) movers++;
-          e._lx=e.x; e._ly=e.y;
-        }
-        SFX.setEngine(movers ? Math.min(1.3, 0.45 + movers*0.12) : 0);
+        SFX.setEngine(movers ? Math.min(1.1, 0.55 + movers*0.15) : 0);
       }
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
@@ -1605,7 +1599,7 @@ const Game = (() => {
         }
       }
       const nx=e.x+DXY[e.dir][0]*e.speed*dt, ny=e.y+DXY[e.dir][1]*e.speed*dt;
-      if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; movers++; }
+      if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
       else e.aiT=0; // 撞墙立刻换向
       if(Math.random()<dt*0.9) fire(e);
       // 仅敌方吃道具模式才允许敌军拾取
@@ -1618,8 +1612,8 @@ const Game = (() => {
         }
       }
     }
-    // 履带/引擎：任意坦克实际位移时循环轰鸣，车越多略响
-    SFX.setEngine(movers ? Math.min(1.3, 0.45 + movers*0.12) : 0);
+    // 履带音：仅己方（含联机友军）移动；敌军不播
+    SFX.setEngine(movers ? Math.min(1.1, 0.55 + movers*0.15) : 0);
 
     // 子弹
     for(const b of bullets){

@@ -274,7 +274,7 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.developing',
             items: [
-                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=32' }
+                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=33' }
             ]
         }
     ]
