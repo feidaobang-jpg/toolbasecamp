@@ -984,7 +984,10 @@ const Game = (() => {
         e.type="normal"; e.hp=1; e.speed=60;
       }
       e.speed += Math.min(level*2,26);
-      if(Math.random()<(debugMode?1:0.22)) e.carriesPowerup=true;
+      // 掉落：测试必掉；其余模式原 22% 偏低，统一 ×5（封顶 100%）
+      // 「敌方吃道具」更吃场上道具密度，与其它模式共用提高后的概率
+      const dropChance = debugMode ? 1 : Math.min(1, 0.22 * 5);
+      if(Math.random() < dropChance) e.carriesPowerup=true;
     }
     if(freezeTimer>0) e.frozen=freezeTimer;
     enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
