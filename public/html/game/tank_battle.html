@@ -1060,11 +1060,33 @@ const Game = (() => {
   }
 
   /* ---- 道具 ---- */
-  function dropPowerup(x,y){
+  /** 在地图随机空地掉道具（FC：不在坦克尸体处） */
+  function dropPowerupRandom(){
     const type=PU_LIST[randi(0,PU_LIST.length-1)];
-    // 落点对齐空地附近
-    const px=clamp(x-TILE,OFF_X,OFF_X+FIELD_PX-TILE*2), py=clamp(y-TILE,OFF_Y,OFF_Y+FIELD_H*TILE-TILE*2);
+    const candidates=[];
+    if(grid){
+      for(let r=2;r<=21;r++){
+        for(let c=2;c<=22;c++){
+          const t=grid[r][c];
+          if(t===T_EMPTY || t===T_GRASS) candidates.push([r,c]);
+        }
+      }
+    }
+    let r=randi(4,18), c=randi(4,20);
+    if(candidates.length){
+      const pick=candidates[randi(0,candidates.length-1)];
+      r=pick[0]; c=pick[1];
+    }
+    const px=OFF_X+c*TILE, py=OFF_Y+r*TILE;
     powerups.push(new PowerUp(type,px,py));
+    SFX.powerup();
+    flash("✦ 道具出现！", 1.1);
+  }
+  /** 红闪坦克被打中：立刻在随机位置掉道具，并取消红闪 */
+  function popCarrierPowerup(e){
+    if(!e || e.isPlayer || !e.carriesPowerup) return;
+    e.carriesPowerup=false;
+    dropPowerupRandom();
   }
   function applyPowerup(pu){
     SFX.powerup(); score+=500;
@@ -1180,7 +1202,8 @@ const Game = (() => {
       enemiesKilled++;
       if(byPlayer){ const pts={normal:100,fast:200,power:300,mid:350,armor:450}[t.type]||100; score+=pts;
         flashScore(t.cx,t.cy,pts); }
-      if(t.carriesPowerup) dropPowerup(t.cx,t.cy);
+      // 道具已在首发命中时弹出；此处兜底（万一漏了）
+      if(t.carriesPowerup) popCarrierPowerup(t);
     }
   }
   const scorePops=[];
@@ -1635,6 +1658,8 @@ const Game = (() => {
           if(rectHit(b,e.rect())){ b.dead=true;
             if((e.shield||0)>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); }
             else {
+              // 红闪：中一发就在地图随机处掉道具（不在坦克脚下）
+              popCarrierPowerup(e);
               e.hp-=1; if(e.hp<=0) killTank(e,true);
               else { SFX.hitEnemy(); boom(b.x+3,b.y+3,5,["#cfd6e4","#fff"]); }
             }
@@ -1827,11 +1852,11 @@ const Game = (() => {
       else if(bulk>=1){ c1="#edd45a"; c2="#8a6a14"; }
       else { c1="#d8c84a"; c2="#8a7a1e"; }
     } else {
-      // 敌军强度色：白(弱1血)→黄(2)→绿(强3)；受伤随血量降色
+      // 敌军强度色：灰(弱1血)→黄(2)→绿(强3)；受伤随血量降色
       const hpTier = Math.max(1, Math.min(3, t.hp|0));
       if(hpTier>=3){ c1="#4a9a32"; c2="#163a14"; }
       else if(hpTier>=2){ c1="#ffd84a"; c2="#a07000"; }
-      else { c1="#ffffff"; c2="#b8b8c4"; }
+      else { c1="#c8c8d0"; c2="#5a5a68"; }
       // FC：带道具 → 红闪（打掉才掉道具）
       if(t.carriesPowerup && Math.floor(performance.now()/100)%2===0){
         c1="#ff3a2a"; c2="#7a0808";
@@ -1858,8 +1883,8 @@ const Game = (() => {
       g.fillRect(-w/2+trackW+1,-4,w-trackW*2-2,2);
     }
     g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a")
-      :(t.carriesPowerup && Math.floor(performance.now()/110)%2===0 ? "#ffb0a0"
-        : (t.hp>=3?"#c8e8b0":(t.hp>=2?"#ffe9a0":"#ffffff")));
+      :(t.carriesPowerup && Math.floor(performance.now()/100)%2===0 ? "#ff9080"
+        : (t.hp>=3?"#b8e898":(t.hp>=2?"#ffe080":"#c8c8d0")));
     g.beginPath(); g.arc(0,1,vis.turret,0,Math.PI*2); g.fill();
     if(bulk){ g.strokeStyle="rgba(180,120,20,.7)"; g.lineWidth=1.5; g.stroke(); }
     // 炮管：末端不超过格子边缘（-h/2）
@@ -2147,7 +2172,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("敌军：白=1血　黄=2血　绿=3血　红闪=打掉掉道具",CANVAS_W/2,430);
+    g.fillText("敌军：灰弱→黄→绿强　红闪=中一发就在地图随机掉道具",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
