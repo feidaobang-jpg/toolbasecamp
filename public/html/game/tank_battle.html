@@ -110,6 +110,9 @@ const randi = (a,b)=>a+Math.floor(Math.random()*(b-a+1));
 /* AudioContext 仅在用户手势 unlock 后创建/resume；游戏循环与定时器禁止 resume（避免自动播放警告刷屏） */
 const SFX = (() => {
   let ctx = null, unlocked = false, resumeInFlight = null;
+  /** 履带/引擎循环：任意坦克移动时响起 */
+  let eng = null; // { gain, o1, o2, src, filt }
+  let engLevel = 0;
   /** 只返回已有 ctx，不创建、不 resume */
   function ac(){ return ctx; }
   function unlock(){
@@ -142,9 +145,55 @@ const SFX = (() => {
     const f=c.createBiquadFilter();f.type="lowpass";f.frequency.value=fLow;
     const g=c.createGain();env(g,t,0.005,dur,peak);
     s.connect(f).connect(g).connect(c.destination);s.start(t);}
+  function ensureEngine(){
+    if(!live()) return null;
+    if(eng) return eng;
+    const c=ctx;
+    const gain=c.createGain(); gain.gain.value=0;
+    const o1=c.createOscillator(); o1.type="sawtooth"; o1.frequency.value=52;
+    const o2=c.createOscillator(); o2.type="square"; o2.frequency.value=78;
+    const g1=c.createGain(); g1.gain.value=0.32;
+    const g2=c.createGain(); g2.gain.value=0.16;
+    const n=Math.max(1, c.sampleRate*1.2|0), buf=c.createBuffer(1,n,c.sampleRate);
+    const data=buf.getChannelData(0);
+    for(let i=0;i<n;i++) data[i]=(Math.random()*2-1)*0.55;
+    const src=c.createBufferSource(); src.buffer=buf; src.loop=true;
+    const filt=c.createBiquadFilter(); filt.type="bandpass"; filt.frequency.value=220; filt.Q.value=0.7;
+    const gn=c.createGain(); gn.gain.value=0.22;
+    o1.connect(g1).connect(gain);
+    o2.connect(g2).connect(gain);
+    src.connect(filt).connect(gn).connect(gain);
+    gain.connect(c.destination);
+    o1.start(); o2.start(); src.start();
+    eng={ gain, o1, o2, src, filt };
+    return eng;
+  }
+  /** level: 0=停；>0 有坦克在动，越大越响（多车叠加） */
+  function setEngine(level){
+    level = Math.max(0, Math.min(1.4, +level||0));
+    engLevel = level;
+    if(level<=0.001){
+      if(eng && ctx){
+        try{ eng.gain.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.04); }catch(e){}
+      }
+      return;
+    }
+    const e=ensureEngine();
+    if(!e || !ctx) return;
+    const t=ctx.currentTime;
+    try{
+      e.gain.gain.setTargetAtTime(0.028 + level*0.055, t, 0.05);
+      e.o1.frequency.setTargetAtTime(46 + level*22, t, 0.06);
+      e.o2.frequency.setTargetAtTime(68 + level*28, t, 0.06);
+      e.filt.frequency.setTargetAtTime(180 + level*140, t, 0.08);
+    }catch(err){}
+  }
+  function stopEngine(){ setEngine(0); }
   return {
     ac,
     unlock,
+    setEngine,
+    stopEngine,
     shoot(){ tone("square",880,220,0.09,0.12); },
     shootBig(){ tone("square",520,120,0.14,0.16); noise(0.06,0.08,1200); },
     hitWall(){ noise(0.07,0.12,900); },
@@ -164,7 +213,7 @@ const SFX = (() => {
     powerup(){ tone("sine",600,1200,0.12,0.15); setTimeout(()=>tone("sine",900,1600,0.15,0.15),90); },
     shield(){ tone("sine",300,900,0.25,0.12); },
     levelUp(){ [440,554,659,880].forEach((f,i)=>setTimeout(()=>tone("square",f,f,0.12,0.12),i*110)); },
-    gameOver(){ [523,392,330,262].forEach((f,i)=>setTimeout(()=>tone("sawtooth",f,f*0.8,0.25,0.13),i*180)); },
+    gameOver(){ [523,392,330,262].forEach((f,i)=>setTimeout(()=>tone("sawtooth",f,f*0.8,0.25,0.13),i*180)); stopEngine(); },
     pause(){ tone("square",700,700,0.05,0.10); },
     spawn(){ tone("sine",200,500,0.15,0.08); },
     boat(){ tone("sine",250,120,0.3,0.12); noise(0.25,0.06,300); }
@@ -1133,7 +1182,8 @@ const Game = (() => {
   function flashScore(x,y,v){ scorePops.push({x,y,v,t:0.9}); }
 
   function driveTank(p, vx, vy, fireNow, dt){
-    if(!p||p.dead) return;
+    if(!p||p.dead) return false;
+    const ox=p.x, oy=p.y;
     p.cool-=dt; p.shield-=dt; p.spawnGhost-=dt;
     if(p.frozen>0){ p.frozen-=dt; vx=0; vy=0; }
     if(p.eject){
@@ -1172,6 +1222,7 @@ const Game = (() => {
       else if(pu.type===PU.TANK){ lives++; flash("🚗 生命 +1"); }
       else applyPowerup(pu);
     }
+    return (Math.abs(p.x-ox)+Math.abs(p.y-oy)) > 0.05;
   }
   function hurtFriendly(t, b){
     if(t.shield>0){ SFX.hitSteel(); boom(b.x+3,b.y+3,6,["#7ad0ff","#fff"]); return; }
@@ -1385,6 +1436,8 @@ const Game = (() => {
     // 暂停 / 切后台：停 BGM；恢复后继续
     const wantPauseAudio = stateName==="paused" || document.hidden;
     BGM.setPaused(wantPauseAudio);
+    // 非对战帧停履带音（菜单/暂停/结算/切后台）
+    if(wantPauseAudio || stateName!=="playing") SFX.stopEngine();
     // 背景音乐：清理缓冲期播 clear，其余跟状态
     if(!wantPauseAudio){
       let track={menu:"menu",playing:"play",paused:"play",levelClear:"clear",gameover:"over"}[stateName];
@@ -1470,6 +1523,23 @@ const Game = (() => {
         if(COOP_PREDICT && player&&!player.dead) driveTank(player, mx, my, false, dt);
       }
       coopGuestPresent(dt);
+      // 客机：按场上坦克位移估移动音量（权威状态插值）
+      {
+        let movers=0;
+        for(const t of friendlyTanks()){
+          if(!t||t.dead) continue;
+          if(t._lx==null){ t._lx=t.x; t._ly=t.y; }
+          if(Math.abs(t.x-t._lx)+Math.abs(t.y-t._ly)>0.08) movers++;
+          t._lx=t.x; t._ly=t.y;
+        }
+        for(const e of enemies){
+          if(!e||e.dead) continue;
+          if(e._lx==null){ e._lx=e.x; e._ly=e.y; }
+          if(Math.abs(e.x-e._lx)+Math.abs(e.y-e._ly)>0.08) movers++;
+          e._lx=e.x; e._ly=e.y;
+        }
+        SFX.setEngine(movers ? Math.min(1.3, 0.45 + movers*0.12) : 0);
+      }
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
       shake=Math.max(0,shake-dt);
@@ -1479,12 +1549,13 @@ const Game = (() => {
     }
 
     /* --- playing（单机 / 房主） --- */
-    driveTank(player, inp.mx, inp.my, inp.fire, dt);
+    let movers=0;
+    if(driveTank(player, inp.mx, inp.my, inp.fire, dt)) movers++;
     if(coopMode && coopIsHost){
       for(const pid in coopAllies){
         const t=coopAllies[pid];
         const ri=coopRemoteInput[pid]||{mx:0,my:0,fire:false};
-        driveTank(t, ri.mx|0, ri.my|0, !!ri.fire, dt);
+        if(driveTank(t, ri.mx|0, ri.my|0, !!ri.fire, dt)) movers++;
         // 开火是边沿：避免每帧连发，清掉 fire 等下一次 input
         if(ri.fire) ri.fire=false;
       }
@@ -1534,7 +1605,7 @@ const Game = (() => {
         }
       }
       const nx=e.x+DXY[e.dir][0]*e.speed*dt, ny=e.y+DXY[e.dir][1]*e.speed*dt;
-      if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
+      if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; movers++; }
       else e.aiT=0; // 撞墙立刻换向
       if(Math.random()<dt*0.9) fire(e);
       // 仅敌方吃道具模式才允许敌军拾取
@@ -1547,6 +1618,8 @@ const Game = (() => {
         }
       }
     }
+    // 履带/引擎：任意坦克实际位移时循环轰鸣，车越多略响
+    SFX.setEngine(movers ? Math.min(1.3, 0.45 + movers*0.12) : 0);
 
     // 子弹
     for(const b of bullets){
