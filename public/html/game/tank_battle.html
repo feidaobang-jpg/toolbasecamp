@@ -212,6 +212,22 @@ const SFX = (() => {
       setTimeout(()=>{ noise(0.38,0.22,180); tone("sawtooth",70,18,0.35,0.12); },70);
     },
     powerup(){ tone("sine",600,1200,0.12,0.15); setTimeout(()=>tone("sine",900,1600,0.15,0.15),90); },
+    /** 道具掉落：叮叮叮 */
+    dropDing(){
+      [1046,1318,1568].forEach((f,i)=>setTimeout(()=>{
+        tone("sine",f,f,0.11,0.18);
+        tone("triangle",f*2,f*2,0.08,0.06);
+      }, i*95));
+    },
+    /** 每关开始固定开场短曲（非循环 BGM） */
+    levelStart(){
+      const seq=[
+        [392,0,0.12],[523,110,0.12],[659,220,0.12],[784,330,0.16],
+        [659,520,0.10],[784,620,0.10],[1047,720,0.22],
+        [784,980,0.12],[1047,1100,0.28]
+      ];
+      seq.forEach(([f,d,dur])=>setTimeout(()=>tone("square",f,f,dur,0.13),d));
+    },
     shield(){ tone("sine",300,900,0.25,0.12); },
     levelUp(){ [440,554,659,880].forEach((f,i)=>setTimeout(()=>tone("square",f,f,0.12,0.12),i*110)); },
     gameOver(){ [523,392,330,262].forEach((f,i)=>setTimeout(()=>tone("sawtooth",f,f*0.8,0.25,0.13),i*180)); stopEngine(); },
@@ -884,6 +900,7 @@ const Game = (() => {
     clearGrace=0;
     if(coopMode) setupCoopPlayers(true);
     else spawnPlayer({ keep: keepSolo });
+    SFX.levelStart();
     if(level%5===0) flash("⚠ Boss 关：本关将出现强化敌军", 2.2);
   }
   function spawnPlayer(opts){
@@ -1003,7 +1020,7 @@ const Game = (() => {
     }
     const px=OFF_X+c*TILE, py=OFF_Y+r*TILE;
     powerups.push(new PowerUp(type,px,py));
-    SFX.powerup();
+    SFX.dropDing();
     flash("✦ 道具出现！", 1.1);
   }
   /** 红闪坦克被打中：随机位置掉道具；坦克未死则继续红闪，再打还能掉 */
@@ -1414,7 +1431,7 @@ const Game = (() => {
         debugMode=menuSel===3;
         if(menuSel===2) endless=false; // 敌方吃道具以闯关形式进行
         level=1; score=0; lives=30; player=null; coopAllies={};
-        newLevel(); stateName="playing"; SFX.levelUp();
+        newLevel(); stateName="playing";
       }
       Input.consume(); return;
     }
@@ -1636,7 +1653,6 @@ const Game = (() => {
     if(endless && enemiesKilled>=level*15){
       level++;
       flash("〰 无尽模式 · 难度提升至 Lv"+level);
-      SFX.levelUp();
       newLevel();
       coopGridSent="";
       Input.consume();
@@ -2174,7 +2190,7 @@ const Game = (() => {
       endless=false; enemyLootMode=false; debugMode=false;
       level=1; score=0; lives=30; player=null; coopAllies={}; overReason="";
       // 中途加入：先进入 playing，等房主 state 覆盖
-      newLevel(); stateName="playing"; SFX.levelUp();
+      newLevel(); stateName="playing";
       flash(opts.lateJoin ? "中途加入 · 同步战场中…" : (coopIsHost?"联机房主 · 同步中":"联机加入 · 等待房主同步"), 1.6);
     },
     onRemoteInput: function(pid, data){
