@@ -381,9 +381,10 @@ class Tank{
     this.bulletSpeed=220; this.bulletPower=1; this.maxBullets=1;
     this.cool=0; this.dead=false;
     this.stars=0;             // 星级：0基础 1快弹 2双发 3打铁 4除草
-    this.boat=false;          // 船：可过水 + 抵挡一次攻击的船体护盾
+    this.boat=false;          // 船：可过水（boatLayers>0）
+    this.boatLayers=0;        // 船护盾层数，最多 3，每层抵挡一次伤害
     this.bulk=0;              // 装甲外观：0普通 1加厚(≥3星/枪) 2更厚(≥4星)；碰撞体积不变，被打降级
-    this.shield=0;            // 无敌护盾剩余时间
+    this.shield=0;            // 无敌护盾剩余时间（可叠加）
     this.spawnGhost=1.6;      // 出生保护/闪烁
     this.hp=1;
     this.frozen=0;            // 被时钟冻结（敌人/玩家）
@@ -414,6 +415,7 @@ class Tank{
     this.x = cx - this.w/2;
     this.y = cy - this.h/2;
   }
+  syncBoatFlag(){ this.boat = (this.boatLayers|0) > 0; }
 }
 
 /* ---------------- 5) 地图与关卡 ---------------- */
@@ -857,14 +859,15 @@ const Game = (() => {
   function snapGear(t){
     if(!t) return null;
     return {
-      stars:t.stars|0, boat:!!t.boat, bulk:t.bulk|0,
+      stars:t.stars|0, boat:!!t.boat, boatLayers:t.boatLayers|0, bulk:t.bulk|0,
       pid:t.coopPid, name:t.coopName, slot:t.coopSlot|0, tint:t.coopTint
     };
   }
   function applyGear(t, gear){
     if(!t||!gear) return;
     t.stars = gear.stars|0;
-    t.boat = !!gear.boat;
+    t.boatLayers = Math.min(3, gear.boatLayers!=null ? (gear.boatLayers|0) : (gear.boat?1:0));
+    t.syncBoatFlag();
     t.bulk = gear.bulk|0;
     t.applyStars(); // 子弹威力/双发等随星级恢复
     // 被打掉的装甲层：若星级仍够，外观至少回到对应厚度
@@ -879,7 +882,7 @@ const Game = (() => {
     t.coopTint=(gear&&gear.tint)||COOP_TINTS[slot%COOP_TINTS.length];
     t.coopSlot=slot;
     if(gear) applyGear(t, gear);
-    else { t.stars=0; t.bulk=0; t.boat=false; t.applyStars(); }
+    else { t.stars=0; t.bulk=0; t.boatLayers=0; t.boat=false; t.applyStars(); }
     t.shield=3;
     return t;
   }
@@ -1016,7 +1019,7 @@ const Game = (() => {
     const gear = opts.keep ? (opts.keep===true ? snapGear(player) : opts.keep) : null;
     player=new Tank(OFF_X+8*TILE+1, OFF_Y+24*TILE+1, true);
     if(gear) applyGear(player, gear);
-    else { player.stars=0; player.bulk=0; player.boat=false; player.applyStars(); }
+    else { player.stars=0; player.bulk=0; player.boatLayers=0; player.boat=false; player.applyStars(); }
     player.shield=3; SFX.spawn();
   }
   function respawnFriendly(t){
@@ -1108,10 +1111,15 @@ const Game = (() => {
     for(const o of [...friendlyTanks(),...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
     const e=new Tank(x,y,false);
     const p=enemyPlanObj, kRoll=Math.random();
+    const hasFlameCar = enemies.some(x=>!x.dead&&x.type==="flamecar");
+    // 火焰车小 Boss：3 关起出现，场上最多 1 辆
+    const flameChance = level>=3 ? Math.min(0.22, 0.08 + level*0.004) : 0;
     // 后期提高精英占比
     const armorBias = Math.min(0.35, 0.12 + level*0.004);
     const midBias = Math.min(0.55, 0.28 + level*0.003);
-    if(kRoll<armorBias && p.armor>0){
+    if(!hasFlameCar && kRoll<flameChance){
+      makeFlameCar(e);
+    } else if(kRoll<armorBias && p.armor>0){
       e.type="armor"; e.hp=3; e.speed=48;
     } else if(kRoll<midBias && p.mid>0){
       e.type="mid"; e.hp=2; e.speed=68; e.bulletSpeed=250;
@@ -1123,7 +1131,7 @@ const Game = (() => {
     } else {
       e.type="normal"; e.hp=1; e.speed=60;
     }
-    e.speed += Math.min(level*1.2, 36);
+    if(e.type!=="flamecar") e.speed += Math.min(level*1.2, 36);
     if(debugMode) e.carriesPowerup=true;
     else {
       const killedOrQueued = endless
@@ -1136,16 +1144,35 @@ const Game = (() => {
     SFX.spawn();
   }
 
+  function makeFlameCar(e){
+    e.type="flamecar";
+    e.w=TILE*2-2; e.h=TILE*2-2;
+    e.hp=5; e.maxHp=5;
+    e.speed=50 + Math.min(level, 20);
+    e.bulletSpeed=190 + Math.min(level, 40);
+    e.bulletPower=1;
+    e.maxBullets=1;
+    e.stars=0;
+    e.bossAmmo="flame";
+    e.bossBulletVis=1;
+    e.carriesPowerup = debugMode || Math.random()<0.25;
+    e.cool=0.6;
+    e.spawnGhost=0.25;
+    return e;
+  }
   /* ---- 射击 ---- */
   function fire(t){
     if(t.cool>0) return;
     const mine=bullets.filter(b=>b.owner===t&&!b.dead).length;
     if(mine>=t.maxBullets) return;
-    const kind = (!t.isPlayer && t.type==="boss") ? (t.bossAmmo||"ap") : "normal";
+    const isBoss = !t.isPlayer && t.type==="boss";
+    const isFlameCar = !t.isPlayer && t.type==="flamecar";
+    const kind = isBoss ? (t.bossAmmo||"ap") : (isFlameCar ? "flame" : "normal");
     let bx, by, b;
     if(kind==="ap"||kind==="flame"){
-      // 碰撞始终约 4 格宽；外观倍率由 Boss 阶位决定（前期小、后期大）
-      const wide = TILE*4 - 4, thick = 18;
+      // 大 Boss：碰撞约 4 格；火焰车小 Boss：碰撞约 2 格
+      const tileSpan = isBoss ? 4 : 2;
+      const wide = TILE*tileSpan - 4, thick = isBoss ? 18 : 14;
       const bw = (t.dir===DIR.UP||t.dir===DIR.DOWN) ? wide : thick;
       const bh = (t.dir===DIR.UP||t.dir===DIR.DOWN) ? thick : wide;
       bx = t.cx + DXY[t.dir][0]*(t.w/2+6) - bw/2;
@@ -1153,18 +1180,23 @@ const Game = (() => {
       b = new Bullet(t, bx, by, t.dir, t.bulletSpeed, t.bulletPower, kind);
       b.w = bw; b.h = bh;
       b.bossBulletVis = t.bossBulletVis!=null ? t.bossBulletVis : 1;
-      b.bossTier = t.bossTier||1;
+      b.bossTier = t.bossTier||0;
+      // 抵消：大 Boss 弹需 4 发，火焰车弹需 2 发
+      b.blockHp = isBoss ? 4 : 2;
+      b.fromFlameCar = isFlameCar;
     } else {
       bx = t.cx+DXY[t.dir][0]*(t.w/2+4)-3;
       by = t.cy+DXY[t.dir][1]*(t.h/2+4)-3;
       b = new Bullet(t, bx, by, t.dir, t.bulletSpeed, t.bulletPower, kind);
+      b.blockHp = 1;
     }
     bullets.push(b);
     if(t.isPlayer) t.cool = t.stars>=1?0.28:0.42;
-    else if(t.type==="boss") t.cool = rand(1.2, 2.2); // 射速约一半
+    else if(t.type==="boss") t.cool = rand(1.2, 2.2);
+    else if(t.type==="flamecar") t.cool = rand(0.9, 1.6);
     else t.cool = rand(0.8,1.8);
     if(t.isPlayer) (t.bulletPower>=3?SFX.shootBig:SFX.shoot)();
-    else if(t.type==="boss") SFX.shootBig();
+    else if(t.type==="boss"||t.type==="flamecar") SFX.shootBig();
   }
 
   /* ---- 道具 ---- */
@@ -1210,29 +1242,39 @@ const Game = (() => {
         player.applyStars();
         flash(player.stars>=4?"🔫 满级火力！装甲加厚可抗弹":"🔫 手枪！可打铁 · 装甲加厚");
         break;
-      case PU.BOAT: // 船：护盾一层 + 可在水上行走
-        player.boat=true; SFX.boat(); flash("⛵ 获得船：可渡水+船体护盾"); break;
+      case PU.BOAT: // 船：最多叠 3 层，每层挡一次伤害 + 可渡水
+        player.boatLayers = Math.min(3, (player.boatLayers|0) + 1);
+        player.syncBoatFlag();
+        SFX.boat();
+        flash("⛵ 船 ×"+player.boatLayers+"（最多3层，可渡水）"); break;
       case PU.GRENADE:
         for(const e of enemies){
           if(e.dead) continue;
           if(e.type==="boss"){
-            // 强力 Boss 不被地雷秒杀，重创约一半血
             const dmg = Math.max(4, Math.ceil((e.maxHp||e.hp)*0.45));
             e.hp -= dmg;
             boom(e.cx,e.cy,36,["#ff6a20","#ffd24a","#fff"]);
             if(e.hp<=0) killTank(e,true);
             else flash("地雷重创 Boss！剩余 "+e.hp, 1.4);
+          } else if(e.type==="flamecar"){
+            e.hp -= 3;
+            boom(e.cx,e.cy,28,["#ff6a20","#ffd24a","#fff"]);
+            if(e.hp<=0) killTank(e,true);
+            else flash("地雷重创火焰车！剩余 "+e.hp, 1.2);
           } else {
             e.dead=true; enemiesKilled++; score+=100; boom(e.cx,e.cy,26);
           }
         }
         SFX.bigExplode(); shake=0.4; flash("地雷！普通敌军清除"); break;
       case PU.HELMET:
-        player.shield=Math.max(player.shield,10); SFX.shield(); flash("🛡 无敌护盾 10 秒"); break;
+        player.shield = (player.shield||0) + 10;
+        SFX.shield(); flash("🛡 无敌 +10 秒（合计 "+player.shield.toFixed(0)+"s）"); break;
       case PU.TANK:
         lives++; flash("🚗 小坦克！生命 +1"); break;
       case PU.CLOCK:
-        freezeTimer=8; for(const e of enemies) e.frozen=8; flash("⏱ 敌方冻结 8 秒"); break;
+        freezeTimer = (freezeTimer||0) + 8;
+        for(const e of enemies) e.frozen = (e.frozen||0) + 8;
+        flash("⏱ 敌方冻结 +8 秒（合计 "+freezeTimer.toFixed(0)+"s）"); break;
       case PU.SHOVEL: // 铲子：基地围墙变铁 12 秒
         shovelTimer=12; setBaseWall(T_STEEL); flash("🛠 基地加固（钢墙）"); break;
     }
@@ -1249,21 +1291,26 @@ const Game = (() => {
         e.hp=Math.max(e.hp,3);
         flash("⚠ 敌军拿到手枪！可打铁"); break;
       case PU.BOAT:
-        e.boat=true; flash("⚠ 敌军上船：可渡水"); break;
+        e.boatLayers = Math.min(3, (e.boatLayers|0) + 1); e.syncBoatFlag();
+        flash("⚠ 敌军上船 ×"+e.boatLayers); break;
       case PU.GRENADE:
         if(player&&!player.dead){
           if(player.shield>0){ player.shield=0; flash("敌军地雷被护盾挡下"); }
+          else if((player.boatLayers|0)>0){
+            player.boatLayers--; player.syncBoatFlag();
+            flash("⛵ 船体挡下敌军地雷（剩 "+player.boatLayers+" 层）");
+          }
           else if(player.bulk>0){ hurtPlayerBulk(); flash("敌军地雷打掉装甲外形"); }
           else { killTank(player,false); flash("敌军地雷！"); }
         }
         SFX.bigExplode(); shake=0.35; break;
       case PU.HELMET:
-        e.shield=Math.max(e.shield||0,8); flash("⚠ 敌军无敌护盾"); break;
+        e.shield=(e.shield||0)+8; flash("⚠ 敌军无敌护盾叠加"); break;
       case PU.TANK:
         enemyQueue = endless ? enemyQueue : enemyQueue+1;
         flash("⚠ 敌军增援 +1"); break;
       case PU.CLOCK:
-        if(player&&!player.dead){ player.frozen=6; flash("⏱ 你被冻结 6 秒！"); }
+        if(player&&!player.dead){ player.frozen=(player.frozen||0)+6; flash("⏱ 你被冻结 +6 秒！"); }
         break;
       case PU.SHOVEL: // 敌军铲子：扒掉基地围墙
         shovelTimer=0; setBaseWall(T_EMPTY); flash("⚠ 基地围墙被敌军铲子挖空！"); break;
@@ -1319,7 +1366,8 @@ const Game = (() => {
   }
   function sizeBossBullet(b){
     if(!b || (b.kind!=="ap" && b.kind!=="flame")) return;
-    const wide = TILE*4 - 4, thick = 18;
+    const tileSpan = b.fromFlameCar ? 2 : 4;
+    const wide = TILE*tileSpan - 4, thick = b.fromFlameCar ? 14 : 18;
     if(b.dir===DIR.UP||b.dir===DIR.DOWN){ b.w=wide; b.h=thick; }
     else { b.w=thick; b.h=wide; }
   }
@@ -1368,9 +1416,10 @@ const Game = (() => {
     if(!t.isPlayer){
       enemiesKilled++;
       if(byPlayer){
-        const pts={normal:100,fast:200,power:300,mid:350,armor:450,boss:2500}[t.type]||100;
+        const pts={normal:100,fast:200,power:300,mid:350,armor:450,flamecar:800,boss:2500}[t.type]||100;
         score+=pts; flashScore(t.cx,t.cy,pts);
         if(t.type==="boss" && !debugMode) flash("🏆 巨型 Boss 击破！", 1.8);
+        if(t.type==="flamecar") flash("🔥 火焰车击破！", 1.4);
       }
       // 测试模式：击破后等 3 秒刷下一只，直到第 10 只最终 Boss
       if(t.type==="boss" && debugMode) onDebugBossDefeated();
@@ -1415,8 +1464,11 @@ const Game = (() => {
       // 队友拾取：个人强化给该车，全局效果走原逻辑
       if(pu.type===PU.STAR){ p.stars=Math.min(4,(p.stars||0)+1); p.applyStars(); flash("⭐ 队友升星"); }
       else if(pu.type===PU.GUN){ p.stars=Math.max(p.stars||0,3); p.applyStars(); flash("🔫 队友拿到手枪"); }
-      else if(pu.type===PU.HELMET){ p.shield=Math.max(p.shield,12); }
-      else if(pu.type===PU.BOAT){ p.boat=true; }
+      else if(pu.type===PU.HELMET){ p.shield=(p.shield||0)+12; flash("🛡 队友护盾叠加"); }
+      else if(pu.type===PU.BOAT){
+        p.boatLayers=Math.min(3,(p.boatLayers|0)+1); p.syncBoatFlag();
+        flash("⛵ 队友船 ×"+p.boatLayers);
+      }
       else if(pu.type===PU.TANK){ lives++; flash("🚗 生命 +1"); }
       else applyPowerup(pu);
     }
@@ -1429,11 +1481,11 @@ const Game = (() => {
       if(t===player) flash("装甲被打掉一层！");
       return;
     }
-    if(t.boat){
-      t.boat=false; SFX.hitFriendly();
-      if(t===player) flash("⛵ 船体护盾抵挡了攻击！");
+    if((t.boatLayers|0)>0){
+      t.boatLayers--; t.syncBoatFlag(); SFX.hitFriendly();
+      if(t===player) flash(t.boatLayers>0 ? ("⛵ 船体抵挡！剩 "+t.boatLayers+" 层") : "⛵ 船体护盾耗尽！");
       boom(t.cx,t.cy,10,["#7ad0ff","#3f7fd0","#fff"]);
-      if(onWater(t)){
+      if(!t.boat && onWater(t)){
         const spot=findLandSpot(t);
         if(spot){ t.eject=spot; t.shield=Math.max(t.shield,1.5); }
       }
@@ -1445,7 +1497,7 @@ const Game = (() => {
     const packT=t=>({
       pid:t.coopPid||"", name:t.coopName||"", slot:t.coopSlot|0,
       x:t.x|0, y:t.y|0, dir:t.dir, dead:t.dead?1:0,
-      stars:t.stars|0, boat:t.boat?1:0, bulk:t.bulk|0,
+      stars:t.stars|0, boat:t.boat?1:0, boatLayers:t.boatLayers|0, bulk:t.bulk|0,
       sh:+(t.shield||0).toFixed(1), sg:+(t.spawnGhost||0).toFixed(1), fz:+(t.frozen||0).toFixed(1)
     });
     const friends=friendlyTanks().map(packT);
@@ -1467,7 +1519,8 @@ const Game = (() => {
       ])),
       bullets: bullets.filter(b=>!b.dead).map(b=>([
         b.x|0,b.y|0,b.dir,b.power|0,b.owner&&b.owner.isPlayer?1:0, b.kind||"n",
-        +(b.bossBulletVis!=null?b.bossBulletVis:1).toFixed(2)
+        +(b.bossBulletVis!=null?b.bossBulletVis:1).toFixed(2),
+        b.blockHp|0, b.fromFlameCar?1:0
       ])),
       powerups: powerups.filter(p=>!p.dead).map(p=>([p.type,p.x|0,p.y|0,+p.life.toFixed(1)]))
     };
@@ -1504,7 +1557,7 @@ const Game = (() => {
       }
       const isSelf = ps.pid===coopMyPid;
       const px=ps.x|0, py=ps.y|0;
-      const wasDead=!!t.dead, prevBulk=t.bulk|0, prevBoat=!!t.boat;
+      const wasDead=!!t.dead, prevBulk=t.bulk|0, prevBoatLayers=t.boatLayers|0;
       if(isSelf && COOP_PREDICT && player && !ps.dead && stateName==="playing"){
         const dx=px-t.x, dy=py-t.y, dist=Math.hypot(dx,dy);
         if(dist>COOP_PRED_SOFT){ t.x=px; t.y=py; }
@@ -1519,14 +1572,16 @@ const Game = (() => {
       }
       t.dir=ps.dir; t.dead=!!ps.dead;
       const starsChanged=(t.stars|0)!==(ps.stars|0) || (t.bulk|0)!==(ps.bulk|0);
-      t.stars=ps.stars|0; t.boat=!!ps.boat; t.bulk=ps.bulk|0;
+      t.stars=ps.stars|0; t.bulk=ps.bulk|0;
+      t.boatLayers = ps.boatLayers!=null ? (ps.boatLayers|0) : (ps.boat?1:0);
+      t.syncBoatFlag();
       t.shield=(ps.sh!=null?ps.sh:ps.shield)||0;
       t.spawnGhost=(ps.sg!=null?ps.sg:ps.spawnGhost)||0;
       t.frozen=(ps.fz!=null?ps.fz:ps.frozen)||0;
       t.coopName=ps.name||t.coopName;
       if(starsChanged){ t.applyStars(); t.applyBulk(); }
       if(!wasDead && t.dead) guestFriendBoom=true;
-      else if(!t.dead && ((t.bulk|0)<prevBulk || (prevBoat && !t.boat))) guestFriendHit=true;
+      else if(!t.dead && ((t.bulk|0)<prevBulk || (t.boatLayers|0)<prevBoatLayers)) guestFriendHit=true;
       if(ps.pid===coopMyPid) player=t; else coopAllies[ps.pid]=t;
     });
     if(guestFriendBoom) SFX.friendlyExplode();
@@ -1570,6 +1625,10 @@ const Game = (() => {
         e.bossC1=p.c1; e.bossC2=p.c2; e.bossAccent=p.accent;
         if(es.bossAmmo==="flame"||es.bossAmmo==="ap") e.bossAmmo=es.bossAmmo;
         else e.bossAmmo = p.ammo;
+      } else if(e.type==="flamecar"){
+        e.w=TILE*2-2; e.h=TILE*2-2;
+        e.maxHp = es.maxHp || e.maxHp || 5;
+        e.bossAmmo="flame"; e.bossBulletVis=1; e.bulletPower=1;
       } else if(e.w!==TILE*2-2){ e.applyBulk(); }
       newEnemyHp+=e.hp|0;
     }
@@ -1581,21 +1640,23 @@ const Game = (() => {
       const raw=blist[i];
       const bs=Array.isArray(raw)?{
         x:raw[0],y:raw[1],dir:raw[2],power:raw[3],friend:!!raw[4],kind:raw[5]||"normal",
-        bossBulletVis: raw[6]
+        bossBulletVis: raw[6], blockHp: raw[7], fromFlameCar: !!raw[8]
       }:raw;
       const kind = bs.kind==="ap"||bs.kind==="flame" ? bs.kind : "normal";
       let b=bullets[i];
       if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1, kind); bullets[i]=b; }
       else {
         b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1; b.kind=kind;
-        if(kind==="ap"||kind==="flame") sizeBossBullet(b);
-        else { b.w=6; b.h=6; }
         b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
       }
+      b.fromFlameCar = !!bs.fromFlameCar;
+      if(bs.blockHp!=null) b.blockHp=bs.blockHp|0;
+      else if(kind==="ap"||kind==="flame") b.blockHp = b.fromFlameCar ? 2 : 4;
+      else b.blockHp = 1;
       if(kind==="ap"||kind==="flame"){
         sizeBossBullet(b);
         if(bs.bossBulletVis!=null) b.bossBulletVis=+bs.bossBulletVis;
-      }
+      } else { b.w=6; b.h=6; }
     }
     const plist=msg.powerups||[];
     while(powerups.length>plist.length) powerups.pop();
@@ -1799,9 +1860,9 @@ const Game = (() => {
       if(e.frozen>0){ e.frozen-=dt; continue; }
       e.aiT=(e.aiT||0)-dt;
       if(e.aiT<=0){
-        e.aiT = e.type==="boss" ? rand(0.45,1.2) : rand(0.6,2.2);
+        e.aiT = e.type==="boss" ? rand(0.45,1.2) : (e.type==="flamecar" ? rand(0.4,1.0) : rand(0.6,2.2));
         let chasedPu=false;
-        if(enemyLootMode && e.type!=="boss"){
+        if(enemyLootMode && e.type!=="boss" && e.type!=="flamecar"){
           let best=null, bestD=1e9;
           for(const pu of powerups){
             if(pu.dead) continue;
@@ -1829,6 +1890,16 @@ const Game = (() => {
                   ? (e.cx<tgt.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<tgt.cy?DIR.DOWN:DIR.UP);
               } else e.dir=DIR.DOWN;
             } else e.dir=randi(0,3);
+          } else if(e.type==="flamecar"){
+            // 火焰车：优先追玩家，其次压基地
+            if(roll<0.7){
+              const tgt=nearestFriendly(e);
+              if(tgt){
+                e.dir = Math.abs(e.cx-tgt.cx)>Math.abs(e.cy-tgt.cy)
+                  ? (e.cx<tgt.cx?DIR.RIGHT:DIR.LEFT) : (e.cy<tgt.cy?DIR.DOWN:DIR.UP);
+              } else e.dir=DIR.DOWN;
+            } else if(roll<0.9) e.dir=DIR.DOWN;
+            else e.dir=randi(0,3);
           } else if(roll<0.45){ e.dir=randi(0,3); }
           else if(roll<0.75){
             e.dir = Math.abs(e.cx-(OFF_X+13*TILE))>TILE ? (e.cx<OFF_X+13*TILE?DIR.RIGHT:DIR.LEFT) : DIR.DOWN;
@@ -1844,7 +1915,7 @@ const Game = (() => {
       const nx=e.x+DXY[e.dir][0]*e.speed*dt, ny=e.y+DXY[e.dir][1]*e.speed*dt;
       if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
       else e.aiT=0;
-      if(Math.random()<(e.type==="boss"?dt*0.55:dt*0.9)) fire(e);
+      if(Math.random()<(e.type==="boss"?dt*0.55:(e.type==="flamecar"?dt*1.05:dt*0.9))) fire(e);
       // 仅敌方吃道具模式才允许敌军拾取
       if(enemyLootMode){
         for(const pu of powerups){
@@ -1876,8 +1947,21 @@ const Game = (() => {
         else boom(b.x+3,b.y+3,4);
         continue;
       }
-      // 子弹对撞
-      for(const ob of bullets){ if(ob!==b&&!ob.dead&&ob.owner.isPlayer!==b.owner.isPlayer&&rectHit(b,ob)){ b.dead=ob.dead=true; } }
+      // 子弹对撞：普通弹 1 发抵消；火焰车弹需 2；大 Boss 弹需 4
+      for(const ob of bullets){
+        if(ob===b||ob.dead||b.dead) continue;
+        if(!ob.owner||!b.owner) continue;
+        if(!!ob.owner.isPlayer === !!b.owner.isPlayer) continue;
+        if(!rectHit(b,ob)) continue;
+        // 只由我方弹发起结算，避免双次处理
+        if(!b.owner.isPlayer) continue;
+        b.dead=true;
+        const left = (ob.blockHp!=null ? ob.blockHp : 1) - 1;
+        ob.blockHp = left;
+        boom(b.x+b.w/2, b.y+b.h/2, left>0?6:10, ["#fff","#ffd24a","#7ad0ff"]);
+        if(left<=0){ ob.dead=true; SFX.hitSteel(); }
+        else SFX.hitWall();
+      }
       if(b.dead) continue;
       // 命中坦克
       if(b.owner.isPlayer){
@@ -2042,12 +2126,69 @@ const Game = (() => {
   function enemyVis(t){
     switch(t.type){
       case "boss":  return {sx:1.0, sy:1.0, track:12, barrel:1.0, turret:14, maxHp:t.maxHp||12};
+      case "flamecar": return {sx:1.0, sy:1.0, track:7, barrel:1.0, turret:7, maxHp:5};
       case "fast":  return {sx:0.62, sy:0.72, track:3.5, barrel:0.78, turret:4.5, maxHp:1};
       case "power": return {sx:0.90, sy:0.92, track:5.5, barrel:1.0,  turret:6.0, maxHp:1}; // 炮管不伸出格外
       case "mid":   return {sx:0.92, sy:0.94, track:7,   barrel:0.95, turret:6.8, maxHp:2};
       case "armor": return {sx:1.0,  sy:1.0,  track:8,   barrel:0.95, turret:7.2, maxHp:3};
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
+  }
+  /** 火焰车小 Boss：2 格体型，橙红焰纹 + 宽焰口 */
+  function drawFlameCarBody(t, w, h){
+    const trackW = 7;
+    const trackShift = Math.floor(t.anim)%2===0 ? 0 : 2;
+    g.fillStyle="#1a0c08";
+    g.fillRect(-w/2, -h/2+2, trackW, h-4);
+    g.fillRect(w/2-trackW, -h/2+2, trackW, h-4);
+    g.fillStyle="#ff6a20";
+    for(let i=-h/2+6+trackShift;i<h/2-6;i+=5){
+      g.fillRect(-w/2+1.5, i, trackW-3, 2);
+      g.fillRect(w/2-trackW+1.5, i, trackW-3, 2);
+    }
+    const hull = g.createLinearGradient(-w/2, -h/2, w/2, h/2);
+    hull.addColorStop(0, "#ff8a40");
+    hull.addColorStop(0.45, "#c04018");
+    hull.addColorStop(1, "#401008");
+    g.fillStyle = hull;
+    g.beginPath();
+    g.moveTo(-w/2+trackW, -h/2+6);
+    g.lineTo(w/2-trackW, -h/2+6);
+    g.lineTo(w/2-trackW+2, h/2-6);
+    g.lineTo(-w/2+trackW-2, h/2-6);
+    g.closePath(); g.fill();
+    g.strokeStyle="#ffd24a"; g.lineWidth=1.6; g.stroke();
+    // 焰纹
+    g.strokeStyle="rgba(255,220,100,.55)"; g.lineWidth=1.2;
+    g.beginPath();
+    g.moveTo(-6, -h/2+10); g.quadraticCurveTo(-2, 0, -6, h/2-10);
+    g.moveTo(6, -h/2+10); g.quadraticCurveTo(2, 0, 6, h/2-10);
+    g.stroke();
+    // 炮塔
+    g.fillStyle="#ff6020";
+    g.beginPath(); g.ellipse(0, 2, 9, 8, 0, 0, Math.PI*2); g.fill();
+    g.strokeStyle="#ffe080"; g.lineWidth=1.4; g.stroke();
+    g.fillStyle="#fff2a0";
+    g.beginPath(); g.arc(0, 1, 3, 0, Math.PI*2); g.fill();
+    // 宽焰炮口（约 2 格宽感）
+    const barrelLen = h/2-2;
+    const muzzle = g.createLinearGradient(-w*0.28, 0, w*0.28, 0);
+    muzzle.addColorStop(0, "#5a1808");
+    muzzle.addColorStop(0.5, "#ff8020");
+    muzzle.addColorStop(1, "#5a1808");
+    g.fillStyle="#2a1008";
+    g.fillRect(-w*0.28, -barrelLen, w*0.56, 8);
+    g.fillStyle = muzzle;
+    g.fillRect(-w*0.26, -barrelLen-1, w*0.52, 5);
+    // 血条
+    const maxHp = t.maxHp||5;
+    const ratio = Math.max(0, Math.min(1, t.hp/maxHp));
+    g.fillStyle="rgba(0,0,0,.65)";
+    g.fillRect(-w*0.4, h/2-9, w*0.8, 5);
+    g.fillStyle=ratio>0.4?"#ff9040":"#ff5040";
+    g.fillRect(-w*0.4, h/2-9, w*0.8*ratio, 5);
+    g.fillStyle="#ffe080"; g.font="bold 8px sans-serif"; g.textAlign="center"; g.textBaseline="bottom";
+    g.fillText("火焰车", 0, h/2-10);
   }
   /** 10 只 Boss：外观缩放/炮管/装甲递进，碰撞框仍用完整 w/h */
   function drawBossTankBody(t, w, h){
@@ -2259,12 +2400,15 @@ const Game = (() => {
     if(t.isPlayer){
       drawPlayerTankBody(t, w, h, bulk);
       g.restore();
-      if(t.boat){
-        const pad=5, pulse=0.65+0.25*Math.sin(performance.now()/200);
-        g.strokeStyle=`rgba(90,190,255,${pulse})`; g.lineWidth=3;
+      if((t.boatLayers|0)>0){
+        const layers=t.boatLayers|0;
+        const pad=4+layers, pulse=0.65+0.25*Math.sin(performance.now()/200);
+        g.strokeStyle=`rgba(90,190,255,${pulse})`; g.lineWidth=2+layers*0.5;
         g.beginPath(); g.roundRect(t.x-pad,t.y-pad,t.w+pad*2,t.h+pad*2,8); g.stroke();
         g.strokeStyle="rgba(160,220,255,.35)"; g.lineWidth=1.5;
         g.beginPath(); g.roundRect(t.x-pad-3,t.y-pad-3,t.w+pad*2+6,t.h+pad*2+6,10); g.stroke();
+        g.fillStyle="#7ab8e8"; g.font="bold 10px sans-serif"; g.textAlign="center";
+        g.fillText("⛵×"+layers, t.cx, t.y-pad-4);
       }
       if(t.shield>0){
         const a=0.35+0.25*Math.sin(performance.now()/90);
@@ -2284,6 +2428,12 @@ const Game = (() => {
         g.strokeStyle=`rgba(120,210,255,${a})`; g.lineWidth=2.5;
         g.beginPath(); g.arc(t.cx,t.cy,t.w/2+6,0,Math.PI*2); g.stroke();
       }
+      if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
+      return;
+    }
+    if(t.type==="flamecar"){
+      drawFlameCarBody(t, w, h);
+      g.restore();
       if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
       return;
     }
@@ -2386,6 +2536,15 @@ const Game = (() => {
         g.fillStyle = "#ffd24a";
         g.fillRect(-halfW*0.5, -halfH*0.3, halfW, halfH*0.6);
         g.strokeStyle = "rgba(255,255,255,.5)"; g.lineWidth = 1; g.stroke();
+      }
+      // 抵消耐久提示（大 Boss 4 / 火焰车 2）
+      const bh = b.blockHp|0;
+      if(bh>1){
+        g.fillStyle="rgba(0,0,0,.45)";
+        g.fillRect(-halfW*0.6, halfH+2, halfW*1.2, 3);
+        g.fillStyle="#ffe080";
+        const maxB = b.fromFlameCar ? 2 : 4;
+        g.fillRect(-halfW*0.6, halfH+2, halfW*1.2*(bh/maxB), 3);
       }
       g.restore();
       return;
@@ -2529,7 +2688,10 @@ const Game = (() => {
     // 火力星级
     g.fillStyle="#dfe6f5"; g.font="bold 15px sans-serif"; g.fillText("火力",rx,OFF_Y+150);
     for(let i=0;i<4;i++) star(rx-27+i*18,OFF_Y+170,7,i<(player?player.stars:0)?"#ffd24a":"#3a4258");
-    if(player&&player.boat){ g.fillStyle="#7ab8e8"; g.font="bold 14px sans-serif"; g.fillText("⛵ 船",rx,OFF_Y+200); }
+    if(player&&(player.boatLayers|0)>0){
+      g.fillStyle="#7ab8e8"; g.font="bold 14px sans-serif";
+      g.fillText("⛵ ×"+(player.boatLayers|0),rx,OFF_Y+200);
+    }
     if(player&&player.bulk>0){ g.fillStyle="#ffd24a"; g.font="bold 13px sans-serif";
       g.fillText(player.bulk>=2?"装甲厚":"装甲",rx,OFF_Y+242); }
     if(player&&player.shield>0){ g.fillStyle="#9ad0ff"; g.font="bold 13px sans-serif";
@@ -2656,9 +2818,9 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("50关·每5关一只共10 Boss · 测试：击破后等3秒刷下一只至最终Boss",CANVAS_W/2,430);
+    g.fillText("船最多3层 · 时钟/头盔可叠时间 · 大Boss弹需4发抵消 · 火焰车弹需2发",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
-    g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
+    g.fillText("道具：⛵船=渡水+多层护盾　⏱时钟/🛡头盔可叠加　🔥火焰车=5血小Boss",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
       g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,496); }
     g.fillStyle="#ffd24a"; g.font="bold 15px sans-serif";
