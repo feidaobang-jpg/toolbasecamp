@@ -754,11 +754,14 @@ const Game = (() => {
   let spawnTimer=0, freezeTimer=0, shovelTimer=0, baseAlive=true;
   let shake=0, flashMsg="", flashTime=0, stateTime=0, overReason="";
   let menuSel=0; // 0=闯关 1=无尽 2=敌方吃道具 3=测试 4=合作联机
-  let debugMode=false; // 测试模式：道具必掉 + Boss 连锁
-  let debugBossCleared=false; // 测试模式：最终 Boss 已击破，不再刷 Boss
+  let debugMode=false; // 测试模式：道具必掉 + 10 Boss 连锁
+  let debugBossCleared=false; // 测试模式：最终大 Boss 已击破
+  let debugBossWave=1; // 测试模式当前 Boss 序号 1..BOSS_TIERS
+  let debugBossDelay=0; // 击破后等待再刷下一只（秒）
   let enemyLootMode=false; // 仅「敌方吃道具」：敌军可拾取道具
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   let clearGrace=0; // 敌军清空后的拾取缓冲秒数
+  const BOSS_TIERS = 10; // 50 关 / 每 5 关一只
   // 合作联机
   let coopMode=false, coopIsHost=false, coopMyPid="", coopHostPid="";
   let coopSend=null;           // (obj)=>void
@@ -909,17 +912,42 @@ const Game = (() => {
     enemyQueue = endless ? Infinity : enemyPlanObj.total;
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
     bossSpawned=false;
-    if(!debugMode) debugBossCleared=false;
+    if(!debugMode){ debugBossCleared=false; debugBossWave=1; debugBossDelay=0; }
     clearGrace=0;
     if(coopMode) setupCoopPlayers(true);
     else spawnPlayer({ keep: keepSolo });
     SFX.levelStart();
     if(debugMode){
-      if(debugBossCleared) flash("⚠ 测试模式：最终 Boss 已肃清", 2.0);
-      else flash("⚠ 测试模式：Boss 连锁 "+level+"/"+CAMPAIGN_LEVELS, 2.0);
-    } else if(level%5===0) flash("⚠ Boss 关：巨型 Boss 将出现在顶部中央", 2.2);
+      if(debugBossCleared) flash("⚠ 测试模式：10 只 Boss 已全部肃清", 2.0);
+      else flash("⚠ 测试模式：Boss "+debugBossWave+"/"+BOSS_TIERS+"（第 "+level+" 关）", 2.0);
+    } else if(level%5===0) flash("⚠ Boss 关：第 "+bossTierOfLevel(level)+"/"+BOSS_TIERS+" 号 Boss", 2.2);
   }
-  /** 测试模式：击破 Boss 后切到下一关并立刻刷下一只 */
+  function bossTierOfLevel(lv){
+    return Math.max(1, Math.min(BOSS_TIERS, Math.floor((lv|0)/5)));
+  }
+  /** 10 阶 Boss 外形/火力差异（炮管、装甲层、弹体外观倍率；碰撞始终约 4 格） */
+  function bossProfile(tier){
+    const t = Math.max(1, Math.min(BOSS_TIERS, tier|0));
+    const barrels = t<=2 ? 1 : (t<=4 ? 2 : (t<=7 ? 3 : 4));
+    const armor = Math.min(5, Math.floor((t+1)/2)); // 1..5 装甲层
+    const bulletVis = 0.28 + (t-1)/(BOSS_TIERS-1) * 0.72; // 外观 0.28→1，碰撞仍满宽
+    const ammo = t>=9 ? "flame" : (t%2===0 ? "flame" : "ap");
+    const palettes = [
+      ["#5a6a78","#2a3340","#9ab0c4"], // 1 浅钢
+      ["#4a5a48","#1e2a1c","#8aaa7a"], // 2 墨绿
+      ["#6a5a40","#2a2218","#c4a86a"], // 3 沙黄
+      ["#5a4a68","#241828","#b090d0"], // 4 紫灰
+      ["#6a3a3a","#281414","#d08070"], // 5 赤铁
+      ["#3a4a5a","#121820","#70b0d0"], // 6 冷青
+      ["#5a5030","#201808","#e0c060"], // 7 黄铜
+      ["#403848","#141018","#c080a0"], // 8 暗紫
+      ["#4a2820","#180c08","#ff8040"], // 9 火铁
+      ["#2a1818","#0a0404","#ffd24a"]  // 10 最终
+    ];
+    const [c1,c2,accent] = palettes[t-1];
+    return { tier:t, barrels, armor, bulletVis, ammo, c1, c2, accent };
+  }
+  /** 测试模式：切到下一 Boss 关卡并准备刷怪 */
   function advanceDebugBossLevel(){
     const keep = player && !player.dead ? snapGear(player) : null;
     grid = Levels.build(level, false);
@@ -929,7 +957,7 @@ const Game = (() => {
     enemyQueue = enemyPlanObj.total;
     enemiesKilled=0;
     bossSpawned=false;
-    spawnTimer=0.25;
+    spawnTimer=0.2;
     freezeTimer=0; shovelTimer=0; clearGrace=0; baseAlive=true;
     if(player && !player.dead){
       applyGear(player, keep);
@@ -942,17 +970,27 @@ const Game = (() => {
       spawnPlayer({ keep });
     }
     SFX.levelStart();
-    flash("⚔ 第 "+level+" 关 Boss（"+level+"/"+CAMPAIGN_LEVELS+"）", 2.2);
+    flash("⚔ Boss "+debugBossWave+"/"+BOSS_TIERS+"（第 "+level+" 关）", 2.2);
   }
   function onDebugBossDefeated(){
-    if(!debugMode || debugBossCleared) return;
-    if(level >= CAMPAIGN_LEVELS){
+    if(!debugMode || debugBossCleared || debugBossDelay>0) return;
+    if(debugBossWave >= BOSS_TIERS){
       debugBossCleared = true;
       bossSpawned = true;
-      flash("🏆 最终 Boss 击破！不再刷新 Boss", 3.0);
+      debugBossDelay = 0;
+      flash("🏆 最终大 Boss 击破！不再刷新 Boss", 3.2);
       return;
     }
-    level++;
+    debugBossDelay = 3;
+    flash("下一只 Boss 将在 3 秒后出现…（"+debugBossWave+"/"+BOSS_TIERS+"）", 2.8);
+  }
+  function tickDebugBossDelay(dt){
+    if(!debugMode || debugBossCleared || debugBossDelay<=0) return;
+    debugBossDelay -= dt;
+    if(debugBossDelay > 0) return;
+    debugBossDelay = 0;
+    debugBossWave++;
+    level = debugBossWave * 5; // 5,10,…,50
     advanceDebugBossLevel();
   }
   function spawnPlayer(opts){
@@ -991,29 +1029,31 @@ const Game = (() => {
     coopAllies[pid]=nt;
   }
   const SPAWN_COLS=[0,12,24];
-  const BOSS_SIZE = TILE*4-2; // ≈ 4 辆普通坦克占地（2×2 排列）
+  const BOSS_SIZE = TILE*4-2; // 碰撞始终 ≈ 4 格
   function makeBoss(e){
     e.type="boss";
     e.w=BOSS_SIZE; e.h=BOSS_SIZE;
-    // 顶部正中（约占 4 辆普通坦克面积）
     e.x = OFF_X + 11*TILE + 1;
     e.y = OFF_Y + 1;
     e.dir = DIR.DOWN;
-    // 第 5/10/…/50 关共 10 只；测试模式按关号估算强度
-    const bossIndex = debugMode
-      ? Math.max(1, Math.min(10, Math.ceil(level/5)))
-      : Math.max(1, Math.floor(level/5));
-    e.hp = Math.min(36, 10 + bossIndex*2 + Math.floor(level/8));
+    const tier = debugMode ? debugBossWave : bossTierOfLevel(level);
+    const p = bossProfile(tier);
+    e.bossTier = p.tier;
+    e.bossBarrels = p.barrels;
+    e.bossArmor = p.armor;
+    e.bossBulletVis = p.bulletVis;
+    e.bossC1 = p.c1; e.bossC2 = p.c2; e.bossAccent = p.accent;
+    e.bossAmmo = p.ammo;
+    e.hp = Math.min(40, 8 + p.tier*3);
     e.maxHp = e.hp;
-    // 移动约为普通敌一半
-    e.speed = Math.max(12, Math.floor((44 - Math.floor(level/12)) * 0.5));
+    // 前期略快便于挪位，后期更沉
+    e.speed = Math.max(10, 28 - Math.floor(p.tier*1.4));
     e.stars = 1; e.applyStars();
-    e.bulletSpeed = 140 + Math.min(level, 50); // 弹速也略慢
-    e.bulletPower = 1;           // Boss 不能打铁
+    e.bulletSpeed = 120 + p.tier*8;
+    e.bulletPower = 1;
     e.maxBullets = 1;
-    e.carriesPowerup = false;    // 不红闪、不掉道具
-    e.bossAmmo = Math.random()<0.5 ? "flame" : "ap";
-    e.cool = 1.2;                // 开局先蓄力，射速约一半
+    e.carriesPowerup = false;
+    e.cool = 1.2;
     e.spawnGhost = 0.2;
     return e;
   }
@@ -1039,9 +1079,8 @@ const Game = (() => {
       if(freezeTimer>0) e.frozen=freezeTimer;
       enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
       SFX.spawn();
-      flash(e.bossAmmo==="flame"
-        ? "💀 巨型 Boss！火焰弹 · 血量 "+e.hp
-        : "💀 巨型 Boss！穿甲弹 · 血量 "+e.hp, 2.4);
+      const ammoName = e.bossAmmo==="flame" ? "火焰弹" : "穿甲弹";
+      flash("💀 Boss "+e.bossTier+"/"+BOSS_TIERS+" · "+e.bossBarrels+" 管 · "+ammoName+" · HP "+e.hp, 2.4);
       return;
     }
 
@@ -1088,7 +1127,7 @@ const Game = (() => {
     const kind = (!t.isPlayer && t.type==="boss") ? (t.bossAmmo||"ap") : "normal";
     let bx, by, b;
     if(kind==="ap"||kind==="flame"){
-      // 约 4 格宽的巨型弹幕（垂直于射击方向）
+      // 碰撞始终约 4 格宽；外观倍率由 Boss 阶位决定（前期小、后期大）
       const wide = TILE*4 - 4, thick = 18;
       const bw = (t.dir===DIR.UP||t.dir===DIR.DOWN) ? wide : thick;
       const bh = (t.dir===DIR.UP||t.dir===DIR.DOWN) ? thick : wide;
@@ -1096,6 +1135,8 @@ const Game = (() => {
       by = t.cy + DXY[t.dir][1]*(t.h/2+6) - bh/2;
       b = new Bullet(t, bx, by, t.dir, t.bulletSpeed, t.bulletPower, kind);
       b.w = bw; b.h = bh;
+      b.bossBulletVis = t.bossBulletVis!=null ? t.bossBulletVis : 1;
+      b.bossTier = t.bossTier||1;
     } else {
       bx = t.cx+DXY[t.dir][0]*(t.w/2+4)-3;
       by = t.cy+DXY[t.dir][1]*(t.h/2+4)-3;
@@ -1314,7 +1355,7 @@ const Game = (() => {
         score+=pts; flashScore(t.cx,t.cy,pts);
         if(t.type==="boss" && !debugMode) flash("🏆 巨型 Boss 击破！", 1.8);
       }
-      // 测试模式：打完一只立刻出下一关 Boss，直到最终关
+      // 测试模式：击破后等 3 秒刷下一只，直到第 10 只最终 Boss
       if(t.type==="boss" && debugMode) onDebugBossDefeated();
     }
   }
@@ -1405,9 +1446,12 @@ const Game = (() => {
       enemies: enemies.filter(e=>!e.dead).map(e=>([
         e.x|0, e.y|0, e.dir, e.hp|0, e.type||"n", e.stars|0, e.speed|0,
         +(e.spawnGhost||0).toFixed(1), +(e.shield||0).toFixed(1), +(e.frozen||0).toFixed(1),
-        e.maxHp|0, e.bossAmmo||""
+        e.maxHp|0, e.bossAmmo||"", e.bossTier|0
       ])),
-      bullets: bullets.filter(b=>!b.dead).map(b=>([b.x|0,b.y|0,b.dir,b.power|0,b.owner&&b.owner.isPlayer?1:0, b.kind||"n"])),
+      bullets: bullets.filter(b=>!b.dead).map(b=>([
+        b.x|0,b.y|0,b.dir,b.power|0,b.owner&&b.owner.isPlayer?1:0, b.kind||"n",
+        +(b.bossBulletVis!=null?b.bossBulletVis:1).toFixed(2)
+      ])),
       powerups: powerups.filter(p=>!p.dead).map(p=>([p.type,p.x|0,p.y|0,+p.life.toFixed(1)]))
     };
   }
@@ -1482,7 +1526,7 @@ const Game = (() => {
       const raw=elist[i];
       const es=Array.isArray(raw)?{
         x:raw[0],y:raw[1],dir:raw[2],hp:raw[3],type:raw[4],stars:raw[5],speed:raw[6],
-        spawnGhost:raw[7],shield:raw[8],frozen:raw[9],maxHp:raw[10],bossAmmo:raw[11]
+        spawnGhost:raw[7],shield:raw[8],frozen:raw[9],maxHp:raw[10],bossAmmo:raw[11],bossTier:raw[12]
       }:raw;
       let e=enemies[i];
       if(!e){ e=new Tank(es.x,es.y,false); enemies[i]=e; }
@@ -1501,9 +1545,13 @@ const Game = (() => {
         e.w=BOSS_SIZE; e.h=BOSS_SIZE;
         e.maxHp = es.maxHp || e.maxHp || e.hp;
         e.carriesPowerup=false;
-        e.bulletPower=1; // 联机同步也禁止 Boss 打铁
+        e.bulletPower=1;
+        const tier = es.bossTier || e.bossTier || bossTierOfLevel(level);
+        const p = bossProfile(tier);
+        e.bossTier=p.tier; e.bossBarrels=p.barrels; e.bossArmor=p.armor;
+        e.bossBulletVis=p.bulletVis; e.bossC1=p.c1; e.bossC2=p.c2; e.bossAccent=p.accent;
         if(es.bossAmmo==="flame"||es.bossAmmo==="ap") e.bossAmmo=es.bossAmmo;
-        else if(!e.bossAmmo) e.bossAmmo = Math.random()<0.5 ? "flame" : "ap";
+        else e.bossAmmo = p.ammo;
       } else if(e.w!==TILE*2-2){ e.applyBulk(); }
       newEnemyHp+=e.hp|0;
     }
@@ -1513,7 +1561,10 @@ const Game = (() => {
     while(bullets.length>blist.length) bullets.pop();
     for(let i=0;i<blist.length;i++){
       const raw=blist[i];
-      const bs=Array.isArray(raw)?{x:raw[0],y:raw[1],dir:raw[2],power:raw[3],friend:!!raw[4],kind:raw[5]||"normal"}:raw;
+      const bs=Array.isArray(raw)?{
+        x:raw[0],y:raw[1],dir:raw[2],power:raw[3],friend:!!raw[4],kind:raw[5]||"normal",
+        bossBulletVis: raw[6]
+      }:raw;
       const kind = bs.kind==="ap"||bs.kind==="flame" ? bs.kind : "normal";
       let b=bullets[i];
       if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1, kind); bullets[i]=b; }
@@ -1523,7 +1574,10 @@ const Game = (() => {
         else { b.w=6; b.h=6; }
         b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
       }
-      if(kind==="ap"||kind==="flame") sizeBossBullet(b);
+      if(kind==="ap"||kind==="flame"){
+        sizeBossBullet(b);
+        if(bs.bossBulletVis!=null) b.bossBulletVis=+bs.bossBulletVis;
+      }
     }
     const plist=msg.powerups||[];
     while(powerups.length>plist.length) powerups.pop();
@@ -1616,8 +1670,12 @@ const Game = (() => {
         enemyLootMode=menuSel===2;
         debugMode=menuSel===3;
         debugBossCleared=false;
+        debugBossDelay=0;
+        debugBossWave=1;
         if(menuSel===2) endless=false; // 敌方吃道具以闯关形式进行
-        level=1; score=0; lives=30; player=null; coopAllies={};
+        // 测试模式从第 1 只 Boss 关（第 5 关）开始连刷 10 只
+        level = debugMode ? 5 : 1;
+        score=0; lives=30; player=null; coopAllies={};
         newLevel(); stateName="playing";
       }
       Input.consume(); return;
@@ -1708,6 +1766,8 @@ const Game = (() => {
         if(ri.fire) ri.fire=false;
       }
     }
+    // 测试模式：Boss 击破后的 3 秒间隔
+    tickDebugBossDelay(dt);
     // 敌人生成
     spawnTimer-=dt;
     if(spawnTimer<=0){ trySpawnEnemy(); spawnTimer = endless? Math.max(0.9,2.4-level*0.1) : 2.0; }
@@ -1971,100 +2031,86 @@ const Game = (() => {
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
   }
-  /** 巨型 Boss：铁灰重型战车 + 宽口主炮（不红闪、无文字） */
+  /** 10 阶 Boss：炮管数 / 装甲层 / 配色递进，碰撞体积不变 */
   function drawBossTankBody(t, w, h){
-    const trackW = Math.min(18, w*0.26);
-    const trackShift = Math.floor(t.anim)%2===0 ? 0 : 3;
+    const tier = t.bossTier || 1;
+    const p = bossProfile(tier);
+    const barrels = t.bossBarrels || p.barrels;
+    const armor = t.bossArmor || p.armor;
+    const c1 = t.bossC1 || p.c1, c2 = t.bossC2 || p.c2, accent = t.bossAccent || p.accent;
     const isFlame = t.bossAmmo==="flame";
+    const trackW = Math.min(16, w*0.22);
+    const trackShift = Math.floor(t.anim)%2===0 ? 0 : 3;
     // 履带
-    g.fillStyle="#0c0e12";
-    g.beginPath(); g.roundRect(-w/2, -h/2+2, trackW, h-4, 3); g.fill();
-    g.beginPath(); g.roundRect(w/2-trackW, -h/2+2, trackW, h-4, 3); g.fill();
-    g.fillStyle="#2a3038";
-    for(let i=-h/2+6+trackShift; i<h/2-6; i+=7){
-      g.fillRect(-w/2+3, i, trackW-6, 3.5);
-      g.fillRect(w/2-trackW+3, i, trackW-6, 3.5);
+    g.fillStyle="#0a0c10";
+    g.fillRect(-w/2, -h/2+2, trackW, h-4);
+    g.fillRect(w/2-trackW, -h/2+2, trackW, h-4);
+    g.fillStyle="#303840";
+    for(let i=-h/2+6+trackShift; i<h/2-6; i+=6){
+      g.fillRect(-w/2+2, i, trackW-4, 3);
+      g.fillRect(w/2-trackW+2, i, trackW-4, 3);
     }
-    // 负重轮
-    g.fillStyle="#1a1e24";
-    for(let i=0;i<4;i++){
-      const wy = -h/2+12 + i*((h-24)/3);
-      g.beginPath(); g.arc(-w/2+trackW/2, wy, 5, 0, Math.PI*2); g.fill();
-      g.beginPath(); g.arc(w/2-trackW/2, wy, 5, 0, Math.PI*2); g.fill();
-    }
-    // 倾斜车体（枪灰色）
-    const hx = -w/2+trackW-1, hy = -h/2+8, hw = w-trackW*2+2, hh = h-16;
+    // 车体（随阶位加厚轮廓）
+    const pad = 2 + armor*0.6;
+    const hx = -w/2+trackW-1, hy = -h/2+6, hw = w-trackW*2+2, hh = h-12;
     const hull = g.createLinearGradient(hx, hy, hx+hw, hy+hh);
-    hull.addColorStop(0, "#4a5564");
-    hull.addColorStop(0.45, "#2c3340");
-    hull.addColorStop(1, "#1a1f28");
+    hull.addColorStop(0, c1); hull.addColorStop(1, c2);
     g.fillStyle = hull;
     g.beginPath();
-    g.moveTo(hx+6, hy); g.lineTo(hx+hw-6, hy);
-    g.lineTo(hx+hw, hy+10); g.lineTo(hx+hw, hy+hh-8);
-    g.lineTo(hx+hw-8, hy+hh); g.lineTo(hx+8, hy+hh);
-    g.lineTo(hx, hy+hh-8); g.lineTo(hx, hy+10);
+    g.moveTo(hx+4, hy); g.lineTo(hx+hw-4, hy);
+    g.lineTo(hx+hw+pad*0.3, hy+8); g.lineTo(hx+hw, hy+hh-6);
+    g.lineTo(hx+hw-6, hy+hh); g.lineTo(hx+6, hy+hh);
+    g.lineTo(hx, hy+hh-6); g.lineTo(hx-pad*0.3, hy+8);
     g.closePath(); g.fill();
-    g.strokeStyle = "rgba(180,200,220,.35)"; g.lineWidth = 1.5;
-    g.stroke();
-    // 装甲线 / 铆钉
-    g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1;
-    g.beginPath(); g.moveTo(hx+8, hy+hh*0.38); g.lineTo(hx+hw-8, hy+hh*0.38); g.stroke();
-    g.fillStyle = "#8a94a4";
-    for(let i=0;i<5;i++){
-      const rx = hx+10 + i*((hw-20)/4);
-      g.beginPath(); g.arc(rx, hy+8, 1.6, 0, Math.PI*2); g.fill();
-      g.beginPath(); g.arc(rx, hy+hh-8, 1.6, 0, Math.PI*2); g.fill();
+    g.strokeStyle = accent; g.lineWidth = 1.2 + armor*0.25; g.stroke();
+    // 装甲板层数
+    g.strokeStyle = "rgba(0,0,0,.4)"; g.lineWidth = 1;
+    for(let i=0;i<armor;i++){
+      const y = hy + 10 + i*5;
+      g.beginPath(); g.moveTo(hx+6, y); g.lineTo(hx+hw-6, y); g.stroke();
     }
-    // 侧裙装甲
-    g.fillStyle = "#252b34";
-    g.fillRect(hx-2, hy+hh*0.25, 5, hh*0.5);
-    g.fillRect(hx+hw-3, hy+hh*0.25, 5, hh*0.5);
-    // 炮塔
-    const tw = w*0.52, th = h*0.36;
-    const turret = g.createLinearGradient(-tw/2, -th*0.2, tw/2, th*0.7);
-    turret.addColorStop(0, "#5a6574");
-    turret.addColorStop(1, "#222830");
-    g.fillStyle = turret;
-    g.beginPath(); g.roundRect(-tw/2, -th*0.15, tw, th, 8); g.fill();
-    g.strokeStyle = "rgba(220,180,80,.55)"; g.lineWidth = 2;
-    g.stroke();
-    // 指挥塔
-    g.fillStyle = "#3a424e";
-    g.beginPath(); g.arc(tw*0.18, th*0.2, 7, 0, Math.PI*2); g.fill();
-    g.fillStyle = isFlame ? "#ff6a28" : "#7ad0ff";
-    g.beginPath(); g.arc(tw*0.18, th*0.2, 2.5, 0, Math.PI*2); g.fill();
-    // 盾徽（替代 BOSS 文字）
-    g.fillStyle = "#1a1010";
-    g.beginPath();
-    g.moveTo(0, th*0.05); g.lineTo(9, th*0.18); g.lineTo(0, th*0.42); g.lineTo(-9, th*0.18);
-    g.closePath(); g.fill();
-    g.strokeStyle = "#d4a84a"; g.lineWidth = 1.4; g.stroke();
-    g.fillStyle = "#d4a84a";
-    g.beginPath(); g.moveTo(0, th*0.14); g.lineTo(3.5, th*0.22); g.lineTo(0, th*0.32); g.lineTo(-3.5, th*0.22);
-    g.closePath(); g.fill();
-    // 超宽炮口（对应 4 格宽弹）
-    const barrelLen = h/2 - 4;
-    g.fillStyle = "#141820";
-    g.fillRect(-w*0.28, -barrelLen, w*0.56, 11);
-    g.fillStyle = "#0a0c10";
-    g.fillRect(-w*0.26, -barrelLen-2, w*0.52, 8);
-    // 炮口内膛高亮
-    const muzzle = g.createLinearGradient(-w*0.24, 0, w*0.24, 0);
-    if(isFlame){
-      muzzle.addColorStop(0, "#5a1808"); muzzle.addColorStop(0.5, "#ff6a20"); muzzle.addColorStop(1, "#5a1808");
-    } else {
-      muzzle.addColorStop(0, "#2a3440"); muzzle.addColorStop(0.5, "#c8d4e4"); muzzle.addColorStop(1, "#2a3440");
+    // 侧翼装甲块（高阶更多）
+    g.fillStyle = c2;
+    for(let i=0;i<Math.min(3, armor);i++){
+      const sy = hy + hh*0.2 + i*10;
+      g.fillRect(hx-3-i, sy, 4+i, 8);
+      g.fillRect(hx+hw-1, sy, 4+i, 8);
     }
-    g.fillStyle = muzzle;
-    g.fillRect(-w*0.24, -barrelLen-1, w*0.48, 5);
-    // 排气管
-    g.fillStyle = "#1c222c";
-    g.fillRect(hx+6, hy+hh-14, 7, 10);
-    g.fillRect(hx+hw-13, hy+hh-14, 7, 10);
-    g.fillStyle = "rgba(80,90,100,.7)";
-    g.fillRect(hx+7, hy+hh-13, 5, 3);
-    g.fillRect(hx+hw-12, hy+hh-13, 5, 3);
+    // 炮塔随装甲变大
+    const tw = w*(0.38 + armor*0.03), th = h*(0.28 + armor*0.02);
+    g.fillStyle = c1;
+    g.beginPath(); g.roundRect(-tw/2, -th*0.1, tw, th, 6); g.fill();
+    g.strokeStyle = accent; g.lineWidth = 1.8; g.stroke();
+    // 阶位徽记
+    g.fillStyle = accent;
+    g.font = "bold "+Math.floor(8+armor)+"px sans-serif";
+    g.textAlign="center"; g.textBaseline="middle";
+    g.fillText(String(tier), 0, th*0.35);
+    // 多联炮管（1→4）
+    const barrelLen = h/2 - 2;
+    const gap = Math.min(10, (w*0.42)/(barrels+1));
+    const startX = -((barrels-1)*gap)/2;
+    const tubeW = Math.max(3.5, 7 - barrels*0.6);
+    for(let i=0;i<barrels;i++){
+      const bx = startX + i*gap - tubeW/2;
+      g.fillStyle = "#12161c";
+      g.fillRect(bx, -barrelLen, tubeW, barrelLen+8);
+      g.fillStyle = isFlame ? "#ff6a20" : "#d0d8e4";
+      g.fillRect(bx-0.5, -barrelLen-1, tubeW+1, 4);
+    }
+    // 高阶加装顶部副塔
+    if(armor>=4){
+      g.fillStyle = c2;
+      g.beginPath(); g.arc(tw*0.28, -th*0.05, 5, 0, Math.PI*2); g.fill();
+      g.fillStyle = accent;
+      g.beginPath(); g.arc(tw*0.28, -th*0.05, 2, 0, Math.PI*2); g.fill();
+    }
+    if(tier>=10){
+      // 最终 Boss：角刺冠
+      g.fillStyle = accent;
+      g.beginPath(); g.moveTo(-tw*0.45, -th*0.1); g.lineTo(-tw*0.2, -th*0.55); g.lineTo(-tw*0.05, -th*0.1); g.fill();
+      g.beginPath(); g.moveTo(tw*0.45, -th*0.1); g.lineTo(tw*0.2, -th*0.55); g.lineTo(tw*0.05, -th*0.1); g.fill();
+    }
     // 血条
     const maxHp = t.maxHp||t.hp||1;
     const ratio = Math.max(0, Math.min(1, t.hp/maxHp));
@@ -2232,9 +2278,11 @@ const Game = (() => {
     if(b.kind==="flame"||b.kind==="ap"){
       const cx=b.x+b.w/2, cy=b.y+b.h/2;
       g.save(); g.translate(cx, cy); g.rotate(b.dir*Math.PI/2);
-      // 本地坐标：竖直为前进方向；横向为约 4 格宽
-      const halfW = ((b.dir===DIR.UP||b.dir===DIR.DOWN) ? b.w : b.h) / 2;
-      const halfH = ((b.dir===DIR.UP||b.dir===DIR.DOWN) ? b.h : b.w) / 2;
+      // 碰撞框始终满宽；外观按 bossBulletVis 缩小（前期小弹便于辨认/Boss 挪位）
+      const fullW = ((b.dir===DIR.UP||b.dir===DIR.DOWN) ? b.w : b.h) / 2;
+      const fullH = ((b.dir===DIR.UP||b.dir===DIR.DOWN) ? b.h : b.w) / 2;
+      const vis = Math.max(0.25, Math.min(1, b.bossBulletVis!=null ? b.bossBulletVis : 1));
+      const halfW = fullW * vis, halfH = fullH * (0.7 + vis*0.3);
       if(b.kind==="flame"){
         const glow = g.createLinearGradient(-halfW, 0, halfW, 0);
         glow.addColorStop(0, "rgba(255,40,0,0)");
@@ -2243,11 +2291,11 @@ const Game = (() => {
         glow.addColorStop(0.8, "rgba(255,100,20,.55)");
         glow.addColorStop(1, "rgba(255,40,0,0)");
         g.fillStyle = glow;
-        g.fillRect(-halfW-4, -halfH-6, halfW*2+8, halfH*2+14);
+        g.fillRect(-halfW-3, -halfH-4, halfW*2+6, halfH*2+10);
         g.fillStyle = "#ff6a20";
-        g.beginPath(); g.roundRect(-halfW*0.92, -halfH, halfW*1.84, halfH*2, 4); g.fill();
+        g.beginPath(); g.roundRect(-halfW*0.92, -halfH, halfW*1.84, halfH*2, 3); g.fill();
         g.fillStyle = "#fff2a0";
-        g.fillRect(-halfW*0.7, -halfH*0.5, halfW*1.4, halfH);
+        g.fillRect(-halfW*0.65, -halfH*0.45, halfW*1.3, halfH*0.9);
       } else {
         const steel = g.createLinearGradient(-halfW, 0, halfW, 0);
         steel.addColorStop(0, "#5a6574");
@@ -2263,8 +2311,8 @@ const Game = (() => {
         g.lineTo(-halfW*0.7, halfH);
         g.closePath(); g.fill();
         g.fillStyle = "#ffd24a";
-        g.fillRect(-halfW*0.55, -halfH*0.35, halfW*1.1, halfH*0.7);
-        g.strokeStyle = "rgba(255,255,255,.5)"; g.lineWidth = 1.2; g.stroke();
+        g.fillRect(-halfW*0.5, -halfH*0.3, halfW, halfH*0.6);
+        g.strokeStyle = "rgba(255,255,255,.5)"; g.lineWidth = 1; g.stroke();
       }
       g.restore();
       return;
@@ -2507,7 +2555,7 @@ const Game = (() => {
       "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
       "♾ 无尽模式",
       "😈 敌方吃道具",
-      "🧪 测试模式（Boss连锁·道具必掉）",
+      "🧪 测试模式（10 Boss连锁·道具必掉）",
       "🌐 合作联机（最多 8 人）"
     ];
     g.font="bold 20px sans-serif";
@@ -2520,7 +2568,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("闯关50关 · 每5关Boss · 测试模式击破后连刷下一关Boss至最终关",CANVAS_W/2,430);
+    g.fillText("50关·每5关一只共10 Boss · 测试：击破后等3秒刷下一只至最终Boss",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
