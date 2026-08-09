@@ -754,7 +754,8 @@ const Game = (() => {
   let spawnTimer=0, freezeTimer=0, shovelTimer=0, baseAlive=true;
   let shake=0, flashMsg="", flashTime=0, stateTime=0, overReason="";
   let menuSel=0; // 0=闯关 1=无尽 2=敌方吃道具 3=测试 4=合作联机
-  let debugMode=false; // 测试模式：大幅提高道具掉落概率
+  let debugMode=false; // 测试模式：道具必掉 + Boss 连锁
+  let debugBossCleared=false; // 测试模式：最终 Boss 已击破，不再刷 Boss
   let enemyLootMode=false; // 仅「敌方吃道具」：敌军可拾取道具
   let bossSpawned=false; // 本关是否已刷过 Boss（每 5 关一只）
   let clearGrace=0; // 敌军清空后的拾取缓冲秒数
@@ -908,12 +909,51 @@ const Game = (() => {
     enemyQueue = endless ? Infinity : enemyPlanObj.total;
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
     bossSpawned=false;
+    if(!debugMode) debugBossCleared=false;
     clearGrace=0;
     if(coopMode) setupCoopPlayers(true);
     else spawnPlayer({ keep: keepSolo });
     SFX.levelStart();
-    if(debugMode) flash("⚠ 测试模式：本关有巨型 Boss", 2.0);
-    else if(level%5===0) flash("⚠ Boss 关：巨型 Boss 将出现在顶部中央", 2.2);
+    if(debugMode){
+      if(debugBossCleared) flash("⚠ 测试模式：最终 Boss 已肃清", 2.0);
+      else flash("⚠ 测试模式：Boss 连锁 "+level+"/"+CAMPAIGN_LEVELS, 2.0);
+    } else if(level%5===0) flash("⚠ Boss 关：巨型 Boss 将出现在顶部中央", 2.2);
+  }
+  /** 测试模式：击破 Boss 后切到下一关并立刻刷下一只 */
+  function advanceDebugBossLevel(){
+    const keep = player && !player.dead ? snapGear(player) : null;
+    grid = Levels.build(level, false);
+    bullets=[]; powerups=[]; particles=[];
+    enemies=[];
+    enemyPlanObj = Levels.enemyPlan(level);
+    enemyQueue = enemyPlanObj.total;
+    enemiesKilled=0;
+    bossSpawned=false;
+    spawnTimer=0.25;
+    freezeTimer=0; shovelTimer=0; clearGrace=0; baseAlive=true;
+    if(player && !player.dead){
+      applyGear(player, keep);
+      player.x = OFF_X+8*TILE+1;
+      player.y = OFF_Y+24*TILE+1;
+      player.dir = DIR.UP;
+      player.shield = Math.max(player.shield||0, 2.5);
+      player.spawnGhost = Math.max(player.spawnGhost||0, 0.8);
+    } else if(!coopMode){
+      spawnPlayer({ keep });
+    }
+    SFX.levelStart();
+    flash("⚔ 第 "+level+" 关 Boss（"+level+"/"+CAMPAIGN_LEVELS+"）", 2.2);
+  }
+  function onDebugBossDefeated(){
+    if(!debugMode || debugBossCleared) return;
+    if(level >= CAMPAIGN_LEVELS){
+      debugBossCleared = true;
+      bossSpawned = true;
+      flash("🏆 最终 Boss 击破！不再刷新 Boss", 3.0);
+      return;
+    }
+    level++;
+    advanceDebugBossLevel();
   }
   function spawnPlayer(opts){
     opts=opts||{};
@@ -981,8 +1021,10 @@ const Game = (() => {
     if(enemyQueue<=0) return;
     const alive=enemies.filter(e=>!e.dead).length;
     const hasBoss = enemies.some(e=>!e.dead&&e.type==="boss");
-    // 测试模式每关都有；正式每 5 关一只；尽早刷出
-    const wantBoss = !bossSpawned && !hasBoss && (debugMode || level%5===0);
+    // 测试模式：Boss 连锁至最终关；正式每 5 关一只
+    const wantBoss = !bossSpawned && !hasBoss && (
+      debugMode ? !debugBossCleared : (level%5===0)
+    );
     const maxAlive = endless ? Math.min(4+Math.floor(level/2),8) : Math.min(4 + (coopMode?Math.max(0,friendlyTanks().length-1):0), 8);
     if(!wantBoss && alive>=maxAlive) return;
 
@@ -1270,9 +1312,10 @@ const Game = (() => {
       if(byPlayer){
         const pts={normal:100,fast:200,power:300,mid:350,armor:450,boss:2500}[t.type]||100;
         score+=pts; flashScore(t.cx,t.cy,pts);
-        if(t.type==="boss") flash("🏆 巨型 Boss 击破！", 1.8);
+        if(t.type==="boss" && !debugMode) flash("🏆 巨型 Boss 击破！", 1.8);
       }
-      // 道具只在命中时掉，击杀不再多掉一次
+      // 测试模式：打完一只立刻出下一关 Boss，直到最终关
+      if(t.type==="boss" && debugMode) onDebugBossDefeated();
     }
   }
   const scorePops=[];
@@ -1572,6 +1615,7 @@ const Game = (() => {
         endless=menuSel===1;
         enemyLootMode=menuSel===2;
         debugMode=menuSel===3;
+        debugBossCleared=false;
         if(menuSel===2) endless=false; // 敌方吃道具以闯关形式进行
         level=1; score=0; lives=30; player=null; coopAllies={};
         newLevel(); stateName="playing";
@@ -2463,7 +2507,7 @@ const Game = (() => {
       "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
       "♾ 无尽模式",
       "😈 敌方吃道具",
-      "🧪 测试模式（每关Boss·道具必掉）",
+      "🧪 测试模式（Boss连锁·道具必掉）",
       "🌐 合作联机（最多 8 人）"
     ];
     g.font="bold 20px sans-serif";
@@ -2476,7 +2520,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("闯关50关 · 每5关巨型Boss（穿甲/火焰）· 测试模式每关都有Boss",CANVAS_W/2,430);
+    g.fillText("闯关50关 · 每5关Boss · 测试模式击破后连刷下一关Boss至最终关",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
