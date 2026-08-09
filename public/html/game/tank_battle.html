@@ -1034,9 +1034,14 @@ const Game = (() => {
         e.type="normal"; e.hp=1; e.speed=60;
       }
       e.speed += Math.min(level*2,26);
-      // 掉落：测试必掉；其余约 33%（原 22%，×5 过高）
-      const dropChance = debugMode ? 1 : 0.33;
-      if(Math.random() < dropChance) e.carriesPowerup=true;
+      // FC：只有红闪坦克掉道具。测试必带；其余约每 4 辆带 1 辆（含随机抖动）
+      if(debugMode) e.carriesPowerup=true;
+      else {
+        const killedOrQueued = endless
+          ? (enemiesKilled + enemies.filter(x=>!x.dead).length)
+          : Math.max(0, (enemyPlanObj.total|0) - (enemyQueue|0));
+        e.carriesPowerup = ((killedOrQueued + 1) % 4 === 0) || Math.random()<0.04;
+      }
     }
     if(freezeTimer>0) e.frozen=freezeTimer;
     enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
@@ -1821,12 +1826,17 @@ const Game = (() => {
       else if(bulk>=2){ c1="#ffe08a"; c2="#a07818"; }
       else if(bulk>=1){ c1="#edd45a"; c2="#8a6a14"; }
       else { c1="#d8c84a"; c2="#8a7a1e"; }
+    } else {
+      // 敌军强度色：白(弱1血)→黄(2)→绿(强3)；受伤随血量降色
+      const hpTier = Math.max(1, Math.min(3, t.hp|0));
+      if(hpTier>=3){ c1="#4a9a32"; c2="#163a14"; }
+      else if(hpTier>=2){ c1="#ffd84a"; c2="#a07000"; }
+      else { c1="#ffffff"; c2="#b8b8c4"; }
+      // FC：带道具 → 红闪（打掉才掉道具）
+      if(t.carriesPowerup && Math.floor(performance.now()/100)%2===0){
+        c1="#ff3a2a"; c2="#7a0808";
+      }
     }
-    else if(t.type==="fast"){ c1="#7ac0e8"; c2="#1e5a8a"; }
-    else if(t.type==="power"){ c1="#e88a7a"; c2="#9a3a2a"; }
-    else if(t.type==="mid"){ c1="#c9a0e8"; c2="#5a2a8a"; }
-    else if(t.type==="armor"){ c1="#c8d0e0"; c2="#4a5468"; }
-    else { c1="#b0b8a0"; c2="#5a6050"; }
     const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
     g.fillStyle=gr; g.fillRect(-w/2+trackW-1,-h/2+3,w-trackW*2+2,h-6);
@@ -1834,38 +1844,34 @@ const Game = (() => {
       const thick = bulk>=2 || t.type==="armor";
       g.strokeStyle = t.isPlayer
         ? (bulk>=2 ? "rgba(255,200,60,.95)" : "rgba(255,210,120,.8)")
-        : (t.type==="mid" ? "rgba(220,160,255,.75)" : "rgba(200,220,255,.7)");
+        : (t.hp>=3 ? "rgba(120,200,90,.75)" : (t.hp>=2 ? "rgba(240,200,60,.75)" : "rgba(220,220,230,.55)"));
       g.lineWidth = thick ? 2.2 : 1.6;
       g.strokeRect(-w/2+trackW,-h/2+4,w-trackW*2,h-8);
-      g.fillStyle=t.isPlayer?"#c9a24a":(t.type==="mid"?"#b080d0":"#98a8c0");
+      g.fillStyle=t.isPlayer?"#c9a24a":(t.hp>=3?"#4a8a3a":(t.hp>=2?"#c9a24a":"#b0b0b8"));
       const rivets=[[-6,-6],[6,-6],[-6,6],[6,6],[0,-7],[0,7]];
       for(const [rx,ry] of rivets){ g.beginPath(); g.arc(rx,ry,thick?1.5:1.1,0,Math.PI*2); g.fill(); }
     }
     if(t.type==="fast"){
-      g.fillStyle="rgba(180,230,255,.55)";
+      g.fillStyle="rgba(255,255,255,.45)";
       g.fillRect(-2,-h/2+6,4,h-12);
-      g.fillStyle="rgba(255,255,255,.35)";
+      g.fillStyle="rgba(255,255,255,.3)";
       g.fillRect(-w/2+trackW+1,-4,w-trackW*2-2,2);
     }
     g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a")
-      :(t.type==="mid"?"#e8d0ff":"#d8dde8");
+      :(t.carriesPowerup && Math.floor(performance.now()/110)%2===0 ? "#ffb0a0"
+        : (t.hp>=3?"#c8e8b0":(t.hp>=2?"#ffe9a0":"#ffffff")));
     g.beginPath(); g.arc(0,1,vis.turret,0,Math.PI*2); g.fill();
     if(bulk){ g.strokeStyle="rgba(180,120,20,.7)"; g.lineWidth=1.5; g.stroke(); }
     // 炮管：末端不超过格子边缘（-h/2）
     const barrelLen = Math.min((h/2-1)*vis.barrel, h/2-1);
-    g.fillStyle=t.isPlayer?"#6a5c14":(t.type==="power"?"#5a2020":"#404858");
+    g.fillStyle=t.isPlayer?"#6a5c14":(t.type==="power"?"#3a3030":"#404858");
     const bw = t.type==="power" ? 3.2 : (t.type==="fast" ? 2.0 : 2.4);
     g.fillRect(-bw, -barrelLen, bw*2, barrelLen+4);
-    if(!t.isPlayer && vis.maxHp>1 && t.hp<vis.maxHp){
-      g.fillStyle = "rgba(255,80,80,.85)";
-      g.fillRect(-w/2+5,h/2-5,(w-10)*(t.hp/vis.maxHp),3);
-    }
-    if(t.type==="armor"){
-      g.fillStyle="rgba(220,230,255,.9)"; g.font="bold 7px sans-serif"; g.textAlign="center";
-      g.fillText("×3",0,-h/2+7);
-    } else if(t.type==="mid"){
-      g.fillStyle="rgba(230,200,255,.9)"; g.font="bold 7px sans-serif"; g.textAlign="center";
-      g.fillText("×2",0,-h/2+7);
+    if(!t.isPlayer && t.carriesPowerup){
+      // 红光外圈，一眼认出「打掉掉道具」
+      const pulse=0.35+0.35*Math.sin(performance.now()/90);
+      g.strokeStyle=`rgba(255,60,40,${pulse})`; g.lineWidth=2.2;
+      g.beginPath(); g.arc(0,0,w/2+2,0,Math.PI*2); g.stroke();
     }
     if(t.isPlayer && t.coopName){
       g.fillStyle="#fff"; g.font="bold 7px sans-serif"; g.textAlign="center";
@@ -1952,50 +1958,46 @@ const Game = (() => {
       g[i===0?"moveTo":"lineTo"](cx+Math.cos(a)*rr,cy+Math.sin(a)*rr); }
     g.closePath(); g.fill();
   }
-  /** 地雷图标：军绿圆壳 + 十字刺钉 + 短引信（掉落道具用） */
+  /** 触角水雷：黑圆球 + 长触角钉，一眼是雷不是手雷 */
   function drawMineIcon(cx,cy,sc){
     sc=sc||1;
     g.save();
     g.translate(cx,cy);
     g.scale(sc,sc);
-    // 底座阴影
-    g.fillStyle="rgba(0,0,0,.35)";
-    g.beginPath(); g.ellipse(0,6,11,3.2,0,0,Math.PI*2); g.fill();
-    // 圆壳（军绿→深灰）
-    const shell=g.createRadialGradient(-3,-3,1,0,1,11);
-    shell.addColorStop(0,"#6b7a4e");
-    shell.addColorStop(0.5,"#3e4a32");
-    shell.addColorStop(1,"#1c2418");
-    g.fillStyle=shell;
-    g.beginPath(); g.arc(0,1,10,0,Math.PI*2); g.fill();
-    g.strokeStyle="#12180e"; g.lineWidth=1.4;
-    g.beginPath(); g.arc(0,1,10,0,Math.PI*2); g.stroke();
-    // 金属压环
-    g.strokeStyle="#8a9278"; g.lineWidth=1.3;
-    g.beginPath(); g.arc(0,1,7.2,0,Math.PI*2); g.stroke();
-    // 顶盖压盘
-    g.fillStyle="#2a3224";
-    g.beginPath(); g.arc(0,0,4.2,0,Math.PI*2); g.fill();
-    g.strokeStyle="#5a6448"; g.lineWidth=1;
-    g.beginPath(); g.arc(0,0,4.2,0,Math.PI*2); g.stroke();
-    // 十字刺钉（四面触角）
-    g.lineCap="round";
-    g.strokeStyle="#c4c8b4"; g.lineWidth=2.2;
-    g.fillStyle="#aeb2a0";
-    for(let i=0;i<4;i++){
-      const a=i*Math.PI/2+Math.PI/4;
-      const x0=Math.cos(a)*4.5, y0=Math.sin(a)*4.5+0.5;
-      const x1=Math.cos(a)*12, y1=Math.sin(a)*12+0.5;
+    // 阴影
+    g.fillStyle="rgba(0,0,0,.4)";
+    g.beginPath(); g.ellipse(0,10,10,2.8,0,0,Math.PI*2); g.fill();
+    // 先画触角（从球心伸出）
+    for(let i=0;i<8;i++){
+      const a=-Math.PI/2 + i*(Math.PI/4);
+      const x0=Math.cos(a)*5.2, y0=Math.sin(a)*5.2;
+      const x1=Math.cos(a)*12.5, y1=Math.sin(a)*12.5;
+      g.strokeStyle="#2a2e34"; g.lineWidth=2.6; g.lineCap="round";
       g.beginPath(); g.moveTo(x0,y0); g.lineTo(x1,y1); g.stroke();
-      g.beginPath(); g.arc(x1,y1,1.7,0,Math.PI*2); g.fill();
+      g.strokeStyle="#8a909c"; g.lineWidth=1.4;
+      g.beginPath(); g.moveTo(x0,y0); g.lineTo(x1*0.92,y1*0.92); g.stroke();
+      g.fillStyle="#d0d4dc";
+      g.beginPath(); g.arc(x1,y1,1.8,0,Math.PI*2); g.fill();
+      g.strokeStyle="#1a1e24"; g.lineWidth=0.8;
+      g.beginPath(); g.arc(x1,y1,1.8,0,Math.PI*2); g.stroke();
     }
-    // 短引信 + 火头
-    g.strokeStyle="#c9a24a"; g.lineWidth=2;
-    g.beginPath(); g.moveTo(0,-3); g.quadraticCurveTo(2,-7,0,-11); g.stroke();
-    g.fillStyle="#ff6b3a";
-    g.beginPath(); g.arc(0,-12,2.1,0,Math.PI*2); g.fill();
-    g.fillStyle="#ffe08a";
-    g.beginPath(); g.arc(-0.5,-12.5,0.9,0,Math.PI*2); g.fill();
+    // 主体黑钢球
+    const ball=g.createRadialGradient(-3,-4,1,0,1,11);
+    ball.addColorStop(0,"#6a7080");
+    ball.addColorStop(0.35,"#2e3440");
+    ball.addColorStop(1,"#0a0c10");
+    g.fillStyle=ball;
+    g.beginPath(); g.arc(0,0,8.2,0,Math.PI*2); g.fill();
+    g.strokeStyle="#9aa0ae"; g.lineWidth=1.2;
+    g.beginPath(); g.arc(0,0,8.2,0,Math.PI*2); g.stroke();
+    // 高光
+    g.fillStyle="rgba(255,255,255,.22)";
+    g.beginPath(); g.ellipse(-2.5,-3.2,3.2,2.2, -0.5,0,Math.PI*2); g.fill();
+    // 顶盖螺丝
+    g.fillStyle="#4a505c";
+    g.beginPath(); g.arc(0,-1,2.6,0,Math.PI*2); g.fill();
+    g.fillStyle="#c8ccd6";
+    g.beginPath(); g.arc(0,-1.4,1.1,0,Math.PI*2); g.fill();
     g.restore();
   }
 
@@ -2145,7 +2147,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("敌军血量：蓝/绿/红=1　紫×2　灰×3　·　贴图不超过格子",CANVAS_W/2,430);
+    g.fillText("敌军：白=1血　黄=2血　绿=3血　红闪=打掉掉道具",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
