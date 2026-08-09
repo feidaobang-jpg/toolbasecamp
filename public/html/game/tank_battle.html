@@ -966,11 +966,11 @@ const Game = (() => {
     e.hp = Math.min(36, 10 + bossIndex*2 + Math.floor(level/8));
     e.maxHp = e.hp;
     e.speed = Math.max(26, 44 - Math.floor(level/12));
-    e.stars = 4; e.applyStars();
+    e.stars = 2; e.applyStars(); // 双发，但不可打铁
     e.bulletSpeed = 280 + Math.min(level*2, 100);
-    e.bulletPower = 4;
+    e.bulletPower = 1;           // Boss 不能打铁（避免顶部直穿地堡钢墙）
     e.maxBullets = 2;
-    e.carriesPowerup = true;
+    e.carriesPowerup = false;    // 不红闪、不掉道具
     e.bossAmmo = Math.random()<0.5 ? "flame" : "ap"; // 火焰弹 / 巨型穿甲
     e.cool = 0.35;
     e.spawnGhost = 0.2;
@@ -1174,27 +1174,67 @@ const Game = (() => {
   }
 
   /* ---- 子弹与地形/实体交互 ---- */
+  /** Boss 弹：沿射击方向清掉最多 4 格砖/草障碍；遇铁/基地/水即停且不破坏 */
+  function bossClearObstacles(b, c0, r0){
+    const dc=DXY[b.dir][0], dr=DXY[b.dir][1];
+    let cleared=0;
+    for(let i=0; i<10 && cleared<4; i++){
+      const c=c0+dc*i, r=r0+dr*i;
+      if(c<0||c>=FIELD_W||r<0||r>=FIELD_H) break;
+      const t=grid[r][c];
+      if(t===T_BRICK){
+        grid[r][c]=T_EMPTY; cleared++;
+        const cols = b.kind==="flame" ? ["#ff6a20","#ff4020","#ffd24a"] : ["#c96f3b","#8a4a26","#e0a070"];
+        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2, b.kind==="flame"?8:5, cols);
+      } else if(t===T_GRASS && b.kind==="flame"){
+        grid[r][c]=T_EMPTY; cleared++;
+        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#ff8a20"]);
+      } else if(t===T_STEEL || t===T_BASE || t===T_WATER) break;
+      // 空地继续往前找障碍
+    }
+    return cleared;
+  }
   function bulletHitTerrain(b){
     // 子弹前端检测采样点（巨型弹加宽）
     const fx=b.x+b.w/2+DXY[b.dir][0]*b.w/2, fy=b.y+b.h/2+DXY[b.dir][1]*b.h/2;
-    const span = (b.kind==="ap"||b.kind==="flame") ? 10 : 6;
+    const isBossShot = b.kind==="ap"||b.kind==="flame";
+    const span = isBossShot ? 10 : 6;
     const side = b.dir===DIR.UP||b.dir===DIR.DOWN ? [[-span,0],[span,0]] : [[0,-span],[0,span]];
     let hit=false;
+    let bossCleared=false;
     for(const [ox,oy] of [[0,0],...side]){
       const px=fx+ox, py=fy+oy;
       const c=Math.floor((px-OFF_X)/TILE), r=Math.floor((py-OFF_Y)/TILE);
       if(c<0||c>=FIELD_W||r<0||r>=FIELD_H){ hit=true; continue; }
       const t=grid[r][c];
-      if(t===T_BRICK){ grid[r][c]=T_EMPTY; hit=true;
-        const cols = b.kind==="flame" ? ["#ff6a20","#ff4020","#ffd24a"] : ["#c96f3b","#8a4a26","#e0a070"];
-        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2, b.kind==="flame"?8:5, cols);
+      if(t===T_BRICK){
+        hit=true;
+        if(isBossShot){
+          if(!bossCleared){ bossClearObstacles(b, c, r); bossCleared=true; }
+        } else {
+          grid[r][c]=T_EMPTY;
+          boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,5,["#c96f3b","#8a4a26","#e0a070"]);
+        }
       }
       else if(t===T_STEEL){ hit=true;
-        if(b.power>=3 || b.kind==="ap"){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,8,["#cfd6e4","#9aa4b8","#fff"]); SFX.hitSteel(); }
-        else SFX.hitSteel(); }
-      else if(t===T_GRASS && (b.power>=4 || b.kind==="flame")){ grid[r][c]=T_EMPTY; boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#ff8a20"]); }
+        // Boss 穿甲/火焰不能打铁；仅玩家等高火力可毁铁
+        if(!isBossShot && b.power>=3){
+          grid[r][c]=T_EMPTY;
+          boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,8,["#cfd6e4","#9aa4b8","#fff"]);
+          SFX.hitSteel();
+        } else SFX.hitSteel();
+      }
+      else if(t===T_GRASS && (b.power>=4 || b.kind==="flame")){
+        if(isBossShot){
+          hit=true;
+          if(!bossCleared){ bossClearObstacles(b, c, r); bossCleared=true; }
+        } else {
+          grid[r][c]=T_EMPTY;
+          boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#2c6e2f"]);
+        }
+      }
       else if(t===T_BASE){
-        // 友军子弹撞基地只挡下，不摧毁；敌军可毁
+        // 友军子弹撞基地只挡下，不摧毁；敌军可毁（Boss 需先破砖，遇铁则停）
         hit=true;
         if(!(b.owner && b.owner.isPlayer)) baseAlive=false;
         else SFX.hitSteel();
@@ -1401,6 +1441,8 @@ const Game = (() => {
       if(e.type==="boss"){
         e.w=BOSS_SIZE; e.h=BOSS_SIZE;
         e.maxHp = es.maxHp || e.maxHp || e.hp;
+        e.carriesPowerup=false;
+        e.bulletPower=1; // 联机同步也禁止 Boss 打铁
         if(es.bossAmmo==="flame"||es.bossAmmo==="ap") e.bossAmmo=es.bossAmmo;
         else if(!e.bossAmmo) e.bossAmmo = Math.random()<0.5 ? "flame" : "ap";
       } else if(e.w!==TILE*2-2){ e.applyBulk(); }
@@ -1877,15 +1919,12 @@ const Game = (() => {
     for(let i=-h/2+trackShift;i<h/2;i+=6){
       g.fillRect(-w/2+2,i,trackW-4,3.5); g.fillRect(w/2-trackW+2,i,trackW-4,3.5);
     }
-    const flash = t.carriesPowerup && Math.floor(performance.now()/100)%2===0;
-    const c1 = flash ? "#ff4028" : "#6a1414";
-    const c2 = flash ? "#8a1008" : "#140404";
+    // 固定暗血红装甲（不红闪）
     const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
-    gr.addColorStop(0,c1); gr.addColorStop(1,c2);
+    gr.addColorStop(0,"#6a1414"); gr.addColorStop(1,"#140404");
     g.fillStyle=gr;
     g.fillRect(-w/2+trackW-2,-h/2+6,w-trackW*2+4,h-12);
-    // 侧翼尖刺（霸气）
-    g.fillStyle=flash?"#ff6040":"#3a1010";
+    g.fillStyle="#3a1010";
     g.beginPath(); g.moveTo(-w/2+trackW, -h*0.15); g.lineTo(-w/2-4, 0); g.lineTo(-w/2+trackW, h*0.15); g.fill();
     g.beginPath(); g.moveTo(w/2-trackW, -h*0.15); g.lineTo(w/2+4, 0); g.lineTo(w/2-trackW, h*0.15); g.fill();
     g.strokeStyle="rgba(255,210,80,.95)"; g.lineWidth=3.5;
@@ -1893,15 +1932,13 @@ const Game = (() => {
     g.strokeStyle="rgba(0,0,0,.45)"; g.lineWidth=1.5;
     g.beginPath(); g.moveTo(0,-h/2+10); g.lineTo(0,h/2-10); g.stroke();
     g.beginPath(); g.moveTo(-w/4,0); g.lineTo(w/4,0); g.stroke();
-    // 巨型炮塔 + 冠饰
-    g.fillStyle=flash?"#ff8060":"#3a2020";
+    g.fillStyle="#3a2020";
     g.beginPath(); g.roundRect(-w*0.3,-h*0.14,w*0.6,h*0.46,7); g.fill();
     g.strokeStyle="#ffd24a"; g.lineWidth=2.4; g.stroke();
     g.fillStyle="#ffd24a";
     g.beginPath(); g.moveTo(-8,-h*0.14); g.lineTo(0,-h*0.28); g.lineTo(8,-h*0.14); g.closePath(); g.fill();
     g.font="bold "+Math.floor(w*0.15)+"px sans-serif"; g.textAlign="center"; g.textBaseline="middle";
     g.fillText("BOSS",0,h*0.08);
-    // 双联巨型炮管
     const barrelLen = h/2-2;
     g.fillStyle="#2a1810";
     g.fillRect(-11, -barrelLen, 8, barrelLen+10);
@@ -1909,15 +1946,14 @@ const Game = (() => {
     g.fillStyle=t.bossAmmo==="flame"?"#ff6a20":"#e8eef8";
     g.fillRect(-12, -barrelLen, 10, 7);
     g.fillRect(2, -barrelLen, 10, 7);
-    // 血条
     const maxHp = t.maxHp||t.hp||1;
     const ratio = Math.max(0, Math.min(1, t.hp/maxHp));
     g.fillStyle="rgba(0,0,0,.6)";
     g.fillRect(-w*0.38, h/2-11, w*0.76, 7);
     g.fillStyle=ratio>0.5?"#7ae0a0":(ratio>0.25?"#ffd24a":"#ff5a4a");
     g.fillRect(-w*0.38, h/2-11, w*0.76*ratio, 7);
-    const pulse=0.45+0.4*Math.sin(performance.now()/70);
-    g.strokeStyle=`rgba(255,40,20,${pulse})`; g.lineWidth=3.5;
+    const pulse=0.35+0.25*Math.sin(performance.now()/180);
+    g.strokeStyle=`rgba(255,180,60,${pulse})`; g.lineWidth=2.5;
     g.beginPath(); g.arc(0,0,w/2+4,0,Math.PI*2); g.stroke();
   }
   /** 我方：加粗条纹履带 + 塔式炮塔（区别敌军） */
