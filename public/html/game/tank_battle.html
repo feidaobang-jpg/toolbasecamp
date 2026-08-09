@@ -965,14 +965,15 @@ const Game = (() => {
       : Math.max(1, Math.floor(level/5));
     e.hp = Math.min(36, 10 + bossIndex*2 + Math.floor(level/8));
     e.maxHp = e.hp;
-    e.speed = Math.max(26, 44 - Math.floor(level/12));
-    e.stars = 2; e.applyStars(); // 双发，但不可打铁
-    e.bulletSpeed = 280 + Math.min(level*2, 100);
-    e.bulletPower = 1;           // Boss 不能打铁（避免顶部直穿地堡钢墙）
-    e.maxBullets = 2;
+    // 移动约为普通敌一半
+    e.speed = Math.max(12, Math.floor((44 - Math.floor(level/12)) * 0.5));
+    e.stars = 1; e.applyStars();
+    e.bulletSpeed = 140 + Math.min(level, 50); // 弹速也略慢
+    e.bulletPower = 1;           // Boss 不能打铁
+    e.maxBullets = 1;
     e.carriesPowerup = false;    // 不红闪、不掉道具
-    e.bossAmmo = Math.random()<0.5 ? "flame" : "ap"; // 火焰弹 / 巨型穿甲
-    e.cool = 0.35;
+    e.bossAmmo = Math.random()<0.5 ? "flame" : "ap";
+    e.cool = 1.2;                // 开局先蓄力，射速约一半
     e.spawnGhost = 0.2;
     return e;
   }
@@ -1043,12 +1044,24 @@ const Game = (() => {
     const mine=bullets.filter(b=>b.owner===t&&!b.dead).length;
     if(mine>=t.maxBullets) return;
     const kind = (!t.isPlayer && t.type==="boss") ? (t.bossAmmo||"ap") : "normal";
-    const muzzle = (kind==="ap"||kind==="flame") ? 10 : 3;
-    const bx=t.cx+DXY[t.dir][0]*(t.w/2+4)-muzzle, by=t.cy+DXY[t.dir][1]*(t.h/2+4)-muzzle;
-    const b=new Bullet(t,bx,by,t.dir,t.bulletSpeed,t.bulletPower,kind);
+    let bx, by, b;
+    if(kind==="ap"||kind==="flame"){
+      // 约 4 格宽的巨型弹幕（垂直于射击方向）
+      const wide = TILE*4 - 4, thick = 18;
+      const bw = (t.dir===DIR.UP||t.dir===DIR.DOWN) ? wide : thick;
+      const bh = (t.dir===DIR.UP||t.dir===DIR.DOWN) ? thick : wide;
+      bx = t.cx + DXY[t.dir][0]*(t.w/2+6) - bw/2;
+      by = t.cy + DXY[t.dir][1]*(t.h/2+6) - bh/2;
+      b = new Bullet(t, bx, by, t.dir, t.bulletSpeed, t.bulletPower, kind);
+      b.w = bw; b.h = bh;
+    } else {
+      bx = t.cx+DXY[t.dir][0]*(t.w/2+4)-3;
+      by = t.cy+DXY[t.dir][1]*(t.h/2+4)-3;
+      b = new Bullet(t, bx, by, t.dir, t.bulletSpeed, t.bulletPower, kind);
+    }
     bullets.push(b);
     if(t.isPlayer) t.cool = t.stars>=1?0.28:0.42;
-    else if(t.type==="boss") t.cool = rand(0.55,1.05);
+    else if(t.type==="boss") t.cool = rand(1.2, 2.2); // 射速约一半
     else t.cool = rand(0.8,1.8);
     if(t.isPlayer) (t.bulletPower>=3?SFX.shootBig:SFX.shoot)();
     else if(t.type==="boss") SFX.shootBig();
@@ -1174,67 +1187,70 @@ const Game = (() => {
   }
 
   /* ---- 子弹与地形/实体交互 ---- */
-  /** Boss 弹：沿射击方向清掉最多 4 格砖/草障碍；遇铁/基地/水即停且不破坏 */
-  function bossClearObstacles(b, c0, r0){
-    const dc=DXY[b.dir][0], dr=DXY[b.dir][1];
-    let cleared=0;
-    for(let i=0; i<10 && cleared<4; i++){
-      const c=c0+dc*i, r=r0+dr*i;
-      if(c<0||c>=FIELD_W||r<0||r>=FIELD_H) break;
-      const t=grid[r][c];
-      if(t===T_BRICK){
-        grid[r][c]=T_EMPTY; cleared++;
-        const cols = b.kind==="flame" ? ["#ff6a20","#ff4020","#ffd24a"] : ["#c96f3b","#8a4a26","#e0a070"];
-        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2, b.kind==="flame"?8:5, cols);
-      } else if(t===T_GRASS && b.kind==="flame"){
-        grid[r][c]=T_EMPTY; cleared++;
-        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#ff8a20"]);
-      } else if(t===T_STEEL || t===T_BASE || t===T_WATER) break;
-      // 空地继续往前找障碍
+  /** Boss 宽弹：覆盖子弹矩形内全部格（约 4 格宽）；毁砖/草，遇铁/基地停且不毁铁 */
+  function bossHitTerrainWide(b){
+    const c0 = Math.floor((b.x - OFF_X) / TILE);
+    const c1 = Math.floor((b.x + b.w - 1 - OFF_X) / TILE);
+    const r0 = Math.floor((b.y - OFF_Y) / TILE);
+    const r1 = Math.floor((b.y + b.h - 1 - OFF_Y) / TILE);
+    let hit = false;
+    for(let r=r0; r<=r1; r++){
+      for(let c=c0; c<=c1; c++){
+        if(c<0||c>=FIELD_W||r<0||r>=FIELD_H){ hit=true; continue; }
+        const t = grid[r][c];
+        if(t===T_BRICK){
+          hit=true; grid[r][c]=T_EMPTY;
+          const cols = b.kind==="flame" ? ["#ff6a20","#ff4020","#ffd24a"] : ["#c96f3b","#8a4a26","#e0a070"];
+          boom(OFF_X+c*TILE+TILE/2, OFF_Y+r*TILE+TILE/2, b.kind==="flame"?7:5, cols);
+        } else if(t===T_GRASS && b.kind==="flame"){
+          hit=true; grid[r][c]=T_EMPTY;
+          boom(OFF_X+c*TILE+TILE/2, OFF_Y+r*TILE+TILE/2, 5, ["#3f9b41","#7ac96a","#ff8a20"]);
+        } else if(t===T_STEEL){
+          hit=true; SFX.hitSteel();
+        } else if(t===T_BASE){
+          hit=true;
+          if(!(b.owner && b.owner.isPlayer)) baseAlive=false;
+          else SFX.hitSteel();
+        }
+      }
     }
-    return cleared;
+    if(hit && baseAlive!==false) SFX.hitWall();
+    return hit;
+  }
+  function sizeBossBullet(b){
+    if(!b || (b.kind!=="ap" && b.kind!=="flame")) return;
+    const wide = TILE*4 - 4, thick = 18;
+    if(b.dir===DIR.UP||b.dir===DIR.DOWN){ b.w=wide; b.h=thick; }
+    else { b.w=thick; b.h=wide; }
   }
   function bulletHitTerrain(b){
-    // 子弹前端检测采样点（巨型弹加宽）
-    const fx=b.x+b.w/2+DXY[b.dir][0]*b.w/2, fy=b.y+b.h/2+DXY[b.dir][1]*b.h/2;
     const isBossShot = b.kind==="ap"||b.kind==="flame";
-    const span = isBossShot ? 10 : 6;
-    const side = b.dir===DIR.UP||b.dir===DIR.DOWN ? [[-span,0],[span,0]] : [[0,-span],[0,span]];
+    if(isBossShot) return bossHitTerrainWide(b);
+    // 普通弹：前端采样点
+    const fx=b.x+b.w/2+DXY[b.dir][0]*b.w/2, fy=b.y+b.h/2+DXY[b.dir][1]*b.h/2;
+    const side = b.dir===DIR.UP||b.dir===DIR.DOWN ? [[-6,0],[6,0]] : [[0,-6],[0,6]];
     let hit=false;
-    let bossCleared=false;
     for(const [ox,oy] of [[0,0],...side]){
       const px=fx+ox, py=fy+oy;
       const c=Math.floor((px-OFF_X)/TILE), r=Math.floor((py-OFF_Y)/TILE);
       if(c<0||c>=FIELD_W||r<0||r>=FIELD_H){ hit=true; continue; }
       const t=grid[r][c];
       if(t===T_BRICK){
-        hit=true;
-        if(isBossShot){
-          if(!bossCleared){ bossClearObstacles(b, c, r); bossCleared=true; }
-        } else {
-          grid[r][c]=T_EMPTY;
-          boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,5,["#c96f3b","#8a4a26","#e0a070"]);
-        }
+        grid[r][c]=T_EMPTY; hit=true;
+        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,5,["#c96f3b","#8a4a26","#e0a070"]);
       }
       else if(t===T_STEEL){ hit=true;
-        // Boss 穿甲/火焰不能打铁；仅玩家等高火力可毁铁
-        if(!isBossShot && b.power>=3){
+        if(b.power>=3){
           grid[r][c]=T_EMPTY;
           boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,8,["#cfd6e4","#9aa4b8","#fff"]);
           SFX.hitSteel();
         } else SFX.hitSteel();
       }
-      else if(t===T_GRASS && (b.power>=4 || b.kind==="flame")){
-        if(isBossShot){
-          hit=true;
-          if(!bossCleared){ bossClearObstacles(b, c, r); bossCleared=true; }
-        } else {
-          grid[r][c]=T_EMPTY;
-          boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#2c6e2f"]);
-        }
+      else if(t===T_GRASS && b.power>=4){
+        grid[r][c]=T_EMPTY;
+        boom(OFF_X+c*TILE+TILE/2,OFF_Y+r*TILE+TILE/2,6,["#3f9b41","#7ac96a","#2c6e2f"]);
       }
       else if(t===T_BASE){
-        // 友军子弹撞基地只挡下，不摧毁；敌军可毁（Boss 需先破砖，遇铁则停）
         hit=true;
         if(!(b.owner && b.owner.isPlayer)) baseAlive=false;
         else SFX.hitSteel();
@@ -1460,9 +1476,11 @@ const Game = (() => {
       if(!b){ b=new Bullet({isPlayer:!!bs.friend}, bs.x, bs.y, bs.dir, 220, bs.power||1, kind); bullets[i]=b; }
       else {
         b.dead=false; b.x=bs.x; b.y=bs.y; b.dir=bs.dir; b.power=bs.power||1; b.kind=kind;
-        if(kind==="ap"||kind==="flame"){ b.w=14; b.h=14; } else { b.w=6; b.h=6; }
+        if(kind==="ap"||kind==="flame") sizeBossBullet(b);
+        else { b.w=6; b.h=6; }
         b.owner=b.owner||{}; b.owner.isPlayer=!!bs.friend;
       }
+      if(kind==="ap"||kind==="flame") sizeBossBullet(b);
     }
     const plist=msg.powerups||[];
     while(powerups.length>plist.length) powerups.pop();
@@ -1704,7 +1722,7 @@ const Game = (() => {
       const nx=e.x+DXY[e.dir][0]*e.speed*dt, ny=e.y+DXY[e.dir][1]*e.speed*dt;
       if(!tankBlocked(e,nx,ny)){ e.x=nx; e.y=ny; }
       else e.aiT=0;
-      if(Math.random()<(e.type==="boss"?dt*1.35:dt*0.9)) fire(e);
+      if(Math.random()<(e.type==="boss"?dt*0.55:dt*0.9)) fire(e);
       // 仅敌方吃道具模式才允许敌军拾取
       if(enemyLootMode){
         for(const pu of powerups){
@@ -1722,11 +1740,11 @@ const Game = (() => {
     for(const b of bullets){
       if(b.dead) continue;
       b.update(dt);
-      if(b.kind==="flame" && Math.random()<dt*18){
+      if(b.kind==="flame" && Math.random()<dt*28){
         particles.push(new Particle(
-          b.x+b.w/2+rand(-4,4), b.y+b.h/2+rand(-4,4),
-          rand(-20,20), rand(-40,-10), rand(0.15,0.35),
-          Math.random()<0.5?"#ff8a20":"#ff5020", rand(2,5)
+          b.x+rand(0,b.w), b.y+rand(0,b.h),
+          rand(-30,30), rand(-50,-10), rand(0.12,0.3),
+          Math.random()<0.5?"#ff8a20":"#ff5020", rand(3,7)
         ));
       }
       if(bulletHitTerrain(b)){
@@ -1909,52 +1927,107 @@ const Game = (() => {
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
   }
-  /** 巨型 Boss：约 4 辆普通坦克大小，黑红装甲 + 双联主炮 */
+  /** 巨型 Boss：铁灰重型战车 + 宽口主炮（不红闪、无文字） */
   function drawBossTankBody(t, w, h){
-    const trackW = Math.min(16, w*0.24);
-    const trackShift = Math.floor(t.anim)%2===0?0:3;
-    g.fillStyle="#120808";
-    g.fillRect(-w/2,-h/2,trackW,h); g.fillRect(w/2-trackW,-h/2,trackW,h);
-    g.fillStyle="rgba(255,90,40,.4)";
-    for(let i=-h/2+trackShift;i<h/2;i+=6){
-      g.fillRect(-w/2+2,i,trackW-4,3.5); g.fillRect(w/2-trackW+2,i,trackW-4,3.5);
+    const trackW = Math.min(18, w*0.26);
+    const trackShift = Math.floor(t.anim)%2===0 ? 0 : 3;
+    const isFlame = t.bossAmmo==="flame";
+    // 履带
+    g.fillStyle="#0c0e12";
+    g.beginPath(); g.roundRect(-w/2, -h/2+2, trackW, h-4, 3); g.fill();
+    g.beginPath(); g.roundRect(w/2-trackW, -h/2+2, trackW, h-4, 3); g.fill();
+    g.fillStyle="#2a3038";
+    for(let i=-h/2+6+trackShift; i<h/2-6; i+=7){
+      g.fillRect(-w/2+3, i, trackW-6, 3.5);
+      g.fillRect(w/2-trackW+3, i, trackW-6, 3.5);
     }
-    // 固定暗血红装甲（不红闪）
-    const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
-    gr.addColorStop(0,"#6a1414"); gr.addColorStop(1,"#140404");
-    g.fillStyle=gr;
-    g.fillRect(-w/2+trackW-2,-h/2+6,w-trackW*2+4,h-12);
-    g.fillStyle="#3a1010";
-    g.beginPath(); g.moveTo(-w/2+trackW, -h*0.15); g.lineTo(-w/2-4, 0); g.lineTo(-w/2+trackW, h*0.15); g.fill();
-    g.beginPath(); g.moveTo(w/2-trackW, -h*0.15); g.lineTo(w/2+4, 0); g.lineTo(w/2-trackW, h*0.15); g.fill();
-    g.strokeStyle="rgba(255,210,80,.95)"; g.lineWidth=3.5;
-    g.strokeRect(-w/2+trackW,-h/2+8,w-trackW*2,h-16);
-    g.strokeStyle="rgba(0,0,0,.45)"; g.lineWidth=1.5;
-    g.beginPath(); g.moveTo(0,-h/2+10); g.lineTo(0,h/2-10); g.stroke();
-    g.beginPath(); g.moveTo(-w/4,0); g.lineTo(w/4,0); g.stroke();
-    g.fillStyle="#3a2020";
-    g.beginPath(); g.roundRect(-w*0.3,-h*0.14,w*0.6,h*0.46,7); g.fill();
-    g.strokeStyle="#ffd24a"; g.lineWidth=2.4; g.stroke();
-    g.fillStyle="#ffd24a";
-    g.beginPath(); g.moveTo(-8,-h*0.14); g.lineTo(0,-h*0.28); g.lineTo(8,-h*0.14); g.closePath(); g.fill();
-    g.font="bold "+Math.floor(w*0.15)+"px sans-serif"; g.textAlign="center"; g.textBaseline="middle";
-    g.fillText("BOSS",0,h*0.08);
-    const barrelLen = h/2-2;
-    g.fillStyle="#2a1810";
-    g.fillRect(-11, -barrelLen, 8, barrelLen+10);
-    g.fillRect(3, -barrelLen, 8, barrelLen+10);
-    g.fillStyle=t.bossAmmo==="flame"?"#ff6a20":"#e8eef8";
-    g.fillRect(-12, -barrelLen, 10, 7);
-    g.fillRect(2, -barrelLen, 10, 7);
+    // 负重轮
+    g.fillStyle="#1a1e24";
+    for(let i=0;i<4;i++){
+      const wy = -h/2+12 + i*((h-24)/3);
+      g.beginPath(); g.arc(-w/2+trackW/2, wy, 5, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.arc(w/2-trackW/2, wy, 5, 0, Math.PI*2); g.fill();
+    }
+    // 倾斜车体（枪灰色）
+    const hx = -w/2+trackW-1, hy = -h/2+8, hw = w-trackW*2+2, hh = h-16;
+    const hull = g.createLinearGradient(hx, hy, hx+hw, hy+hh);
+    hull.addColorStop(0, "#4a5564");
+    hull.addColorStop(0.45, "#2c3340");
+    hull.addColorStop(1, "#1a1f28");
+    g.fillStyle = hull;
+    g.beginPath();
+    g.moveTo(hx+6, hy); g.lineTo(hx+hw-6, hy);
+    g.lineTo(hx+hw, hy+10); g.lineTo(hx+hw, hy+hh-8);
+    g.lineTo(hx+hw-8, hy+hh); g.lineTo(hx+8, hy+hh);
+    g.lineTo(hx, hy+hh-8); g.lineTo(hx, hy+10);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(180,200,220,.35)"; g.lineWidth = 1.5;
+    g.stroke();
+    // 装甲线 / 铆钉
+    g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(hx+8, hy+hh*0.38); g.lineTo(hx+hw-8, hy+hh*0.38); g.stroke();
+    g.fillStyle = "#8a94a4";
+    for(let i=0;i<5;i++){
+      const rx = hx+10 + i*((hw-20)/4);
+      g.beginPath(); g.arc(rx, hy+8, 1.6, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.arc(rx, hy+hh-8, 1.6, 0, Math.PI*2); g.fill();
+    }
+    // 侧裙装甲
+    g.fillStyle = "#252b34";
+    g.fillRect(hx-2, hy+hh*0.25, 5, hh*0.5);
+    g.fillRect(hx+hw-3, hy+hh*0.25, 5, hh*0.5);
+    // 炮塔
+    const tw = w*0.52, th = h*0.36;
+    const turret = g.createLinearGradient(-tw/2, -th*0.2, tw/2, th*0.7);
+    turret.addColorStop(0, "#5a6574");
+    turret.addColorStop(1, "#222830");
+    g.fillStyle = turret;
+    g.beginPath(); g.roundRect(-tw/2, -th*0.15, tw, th, 8); g.fill();
+    g.strokeStyle = "rgba(220,180,80,.55)"; g.lineWidth = 2;
+    g.stroke();
+    // 指挥塔
+    g.fillStyle = "#3a424e";
+    g.beginPath(); g.arc(tw*0.18, th*0.2, 7, 0, Math.PI*2); g.fill();
+    g.fillStyle = isFlame ? "#ff6a28" : "#7ad0ff";
+    g.beginPath(); g.arc(tw*0.18, th*0.2, 2.5, 0, Math.PI*2); g.fill();
+    // 盾徽（替代 BOSS 文字）
+    g.fillStyle = "#1a1010";
+    g.beginPath();
+    g.moveTo(0, th*0.05); g.lineTo(9, th*0.18); g.lineTo(0, th*0.42); g.lineTo(-9, th*0.18);
+    g.closePath(); g.fill();
+    g.strokeStyle = "#d4a84a"; g.lineWidth = 1.4; g.stroke();
+    g.fillStyle = "#d4a84a";
+    g.beginPath(); g.moveTo(0, th*0.14); g.lineTo(3.5, th*0.22); g.lineTo(0, th*0.32); g.lineTo(-3.5, th*0.22);
+    g.closePath(); g.fill();
+    // 超宽炮口（对应 4 格宽弹）
+    const barrelLen = h/2 - 4;
+    g.fillStyle = "#141820";
+    g.fillRect(-w*0.28, -barrelLen, w*0.56, 11);
+    g.fillStyle = "#0a0c10";
+    g.fillRect(-w*0.26, -barrelLen-2, w*0.52, 8);
+    // 炮口内膛高亮
+    const muzzle = g.createLinearGradient(-w*0.24, 0, w*0.24, 0);
+    if(isFlame){
+      muzzle.addColorStop(0, "#5a1808"); muzzle.addColorStop(0.5, "#ff6a20"); muzzle.addColorStop(1, "#5a1808");
+    } else {
+      muzzle.addColorStop(0, "#2a3440"); muzzle.addColorStop(0.5, "#c8d4e4"); muzzle.addColorStop(1, "#2a3440");
+    }
+    g.fillStyle = muzzle;
+    g.fillRect(-w*0.24, -barrelLen-1, w*0.48, 5);
+    // 排气管
+    g.fillStyle = "#1c222c";
+    g.fillRect(hx+6, hy+hh-14, 7, 10);
+    g.fillRect(hx+hw-13, hy+hh-14, 7, 10);
+    g.fillStyle = "rgba(80,90,100,.7)";
+    g.fillRect(hx+7, hy+hh-13, 5, 3);
+    g.fillRect(hx+hw-12, hy+hh-13, 5, 3);
+    // 血条
     const maxHp = t.maxHp||t.hp||1;
     const ratio = Math.max(0, Math.min(1, t.hp/maxHp));
-    g.fillStyle="rgba(0,0,0,.6)";
-    g.fillRect(-w*0.38, h/2-11, w*0.76, 7);
-    g.fillStyle=ratio>0.5?"#7ae0a0":(ratio>0.25?"#ffd24a":"#ff5a4a");
-    g.fillRect(-w*0.38, h/2-11, w*0.76*ratio, 7);
-    const pulse=0.35+0.25*Math.sin(performance.now()/180);
-    g.strokeStyle=`rgba(255,180,60,${pulse})`; g.lineWidth=2.5;
-    g.beginPath(); g.arc(0,0,w/2+4,0,Math.PI*2); g.stroke();
+    g.fillStyle = "rgba(0,0,0,.65)";
+    g.fillRect(-w*0.4, h/2-10, w*0.8, 6);
+    g.fillStyle = ratio>0.5 ? "#6ad4a0" : (ratio>0.25 ? "#e0c060" : "#e05050");
+    g.fillRect(-w*0.4, h/2-10, w*0.8*ratio, 6);
   }
   /** 我方：加粗条纹履带 + 塔式炮塔（区别敌军） */
   function drawPlayerTankBody(t, w, h, bulk){
@@ -2112,21 +2185,43 @@ const Game = (() => {
     if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
   }
   function drawBullet(b){
-    if(b.kind==="flame"){
+    if(b.kind==="flame"||b.kind==="ap"){
       const cx=b.x+b.w/2, cy=b.y+b.h/2;
-      const gr=g.createRadialGradient(cx,cy,1,cx,cy,16);
-      gr.addColorStop(0,"#fff6c8"); gr.addColorStop(0.35,"#ff8a20"); gr.addColorStop(1,"rgba(255,40,0,0)");
-      g.fillStyle=gr; g.beginPath(); g.arc(cx,cy,15,0,Math.PI*2); g.fill();
-      g.fillStyle="#ff5020"; g.beginPath(); g.ellipse(cx,cy,5,7,0,0,Math.PI*2); g.fill();
-      return;
-    }
-    if(b.kind==="ap"){
-      const cx=b.x+b.w/2, cy=b.y+b.h/2;
-      g.save(); g.translate(cx,cy); g.rotate(b.dir*Math.PI/2);
-      g.fillStyle="#e8eef8";
-      g.beginPath(); g.moveTo(0,-10); g.lineTo(5,6); g.lineTo(0,10); g.lineTo(-5,6); g.closePath(); g.fill();
-      g.fillStyle="#ffd24a"; g.fillRect(-2.5,-2,5,8);
-      g.strokeStyle="rgba(255,255,255,.7)"; g.lineWidth=1; g.stroke();
+      g.save(); g.translate(cx, cy); g.rotate(b.dir*Math.PI/2);
+      // 本地坐标：竖直为前进方向；横向为约 4 格宽
+      const halfW = ((b.dir===DIR.UP||b.dir===DIR.DOWN) ? b.w : b.h) / 2;
+      const halfH = ((b.dir===DIR.UP||b.dir===DIR.DOWN) ? b.h : b.w) / 2;
+      if(b.kind==="flame"){
+        const glow = g.createLinearGradient(-halfW, 0, halfW, 0);
+        glow.addColorStop(0, "rgba(255,40,0,0)");
+        glow.addColorStop(0.2, "rgba(255,100,20,.55)");
+        glow.addColorStop(0.5, "rgba(255,220,120,.9)");
+        glow.addColorStop(0.8, "rgba(255,100,20,.55)");
+        glow.addColorStop(1, "rgba(255,40,0,0)");
+        g.fillStyle = glow;
+        g.fillRect(-halfW-4, -halfH-6, halfW*2+8, halfH*2+14);
+        g.fillStyle = "#ff6a20";
+        g.beginPath(); g.roundRect(-halfW*0.92, -halfH, halfW*1.84, halfH*2, 4); g.fill();
+        g.fillStyle = "#fff2a0";
+        g.fillRect(-halfW*0.7, -halfH*0.5, halfW*1.4, halfH);
+      } else {
+        const steel = g.createLinearGradient(-halfW, 0, halfW, 0);
+        steel.addColorStop(0, "#5a6574");
+        steel.addColorStop(0.5, "#e8eef8");
+        steel.addColorStop(1, "#5a6574");
+        g.fillStyle = steel;
+        g.beginPath();
+        g.moveTo(-halfW, halfH*0.3);
+        g.lineTo(-halfW*0.85, -halfH);
+        g.lineTo(halfW*0.85, -halfH);
+        g.lineTo(halfW, halfH*0.3);
+        g.lineTo(halfW*0.7, halfH);
+        g.lineTo(-halfW*0.7, halfH);
+        g.closePath(); g.fill();
+        g.fillStyle = "#ffd24a";
+        g.fillRect(-halfW*0.55, -halfH*0.35, halfW*1.1, halfH*0.7);
+        g.strokeStyle = "rgba(255,255,255,.5)"; g.lineWidth = 1.2; g.stroke();
+      }
       g.restore();
       return;
     }
