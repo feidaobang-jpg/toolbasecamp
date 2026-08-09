@@ -190,44 +190,11 @@ const SFX = (() => {
     }catch(err){}
   }
   function stopEngine(){ setEngine(0); }
-  /** 红闪坦克：救护车式高低交替警报（轻量，场上有红闪才响） */
-  let siren = null; // { o, g, lfo, lfoG }
-  function ensureSiren(){
-    if(!live()) return null;
-    if(siren) return siren;
-    const c=ctx;
-    const o=c.createOscillator(); o.type="square"; o.frequency.value=880;
-    const g=c.createGain(); g.gain.value=0;
-    const lfo=c.createOscillator(); lfo.type="square"; lfo.frequency.value=1.6; // 高低切换节奏
-    const lfoG=c.createGain(); lfoG.gain.value=140;
-    lfo.connect(lfoG); lfoG.connect(o.frequency);
-    o.connect(g).connect(c.destination);
-    o.start(); lfo.start();
-    siren={ o, g, lfo, lfoG };
-    return siren;
-  }
-  function setSiren(on){
-    if(!on){
-      if(siren && ctx){
-        try{ siren.g.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.08); }catch(e){}
-      }
-      return;
-    }
-    const s=ensureSiren();
-    if(!s || !ctx) return;
-    try{
-      s.o.frequency.setTargetAtTime(760, ctx.currentTime, 0.05);
-      s.g.gain.setTargetAtTime(0.035, ctx.currentTime, 0.1);
-    }catch(e){}
-  }
-  function stopSiren(){ setSiren(false); }
   return {
     ac,
     unlock,
     setEngine,
     stopEngine,
-    setSiren,
-    stopSiren,
     shoot(){ tone("square",880,220,0.09,0.12); },
     shootBig(){ tone("square",520,120,0.14,0.16); noise(0.06,0.08,1200); },
     hitWall(){ noise(0.07,0.12,900); },
@@ -247,94 +214,18 @@ const SFX = (() => {
     powerup(){ tone("sine",600,1200,0.12,0.15); setTimeout(()=>tone("sine",900,1600,0.15,0.15),90); },
     shield(){ tone("sine",300,900,0.25,0.12); },
     levelUp(){ [440,554,659,880].forEach((f,i)=>setTimeout(()=>tone("square",f,f,0.12,0.12),i*110)); },
-    gameOver(){ [523,392,330,262].forEach((f,i)=>setTimeout(()=>tone("sawtooth",f,f*0.8,0.25,0.13),i*180)); stopEngine(); stopSiren(); },
+    gameOver(){ [523,392,330,262].forEach((f,i)=>setTimeout(()=>tone("sawtooth",f,f*0.8,0.25,0.13),i*180)); stopEngine(); },
     pause(){ tone("square",700,700,0.05,0.10); },
     spawn(){ tone("sine",200,500,0.15,0.08); },
     boat(){ tone("sine",250,120,0.3,0.12); noise(0.25,0.06,300); }
   };
 })();
 
-/* ---------------- 2.5) 背景音乐（WebAudio 程序生成 8bit 风格） ---------------- */
+/* ---------------- 2.5) 背景音乐（已关闭，保留空实现以免调用报错） ---------------- */
 const BGM = (() => {
-  // 音高辅助：以 A4=440 为基准的半音偏移（null=休止符）
-  const N = s => 440*Math.pow(2,s/12);
-  // 每轨：旋律/贝斯为等长步序列（半音偏移，null=休止），step=每步秒数，loop=是否循环
-  const TRACKS = {
-    menu: { step:0.22, loop:true, vol:0.045,
-      mel:[0,4,7,12, 7,4,0,null, -2,2,5,10, 5,2,-2,null, 0,4,7,12, 14,12,7,4, 5,7,9,10, 12,null,7,null],
-      bass:[-24,null,-17,null, -24,null,-17,null, -26,null,-19,null, -26,null,-19,null,
-            -24,null,-17,null, -24,null,-17,null, -19,null,-14,null, -12,null,-12,null] },
-    play: { step:0.19, loop:true, vol:0.035,
-      mel:[null,null,12,null, 10,null,7,null, null,null,10,null, 7,null,5,null,
-           null,null,12,null, 14,null,15,null, 14,null,12,null, 10,null,7,null],
-      bass:[-24,-24,null,-24, null,-24,-22,null, -26,-26,null,-26, null,-26,-24,null,
-            -24,-24,null,-24, null,-24,-22,null, -19,-19,null,-19, -21,null,-22,null] },
-    clear:{ step:0.16, loop:false, vol:0.06,
-      mel:[0,4,7,12, null,12,16,19, null,19,24,null, 24,24,24,null],
-      bass:[-24,null,-12,null, -17,null,-5,null, -12,null,0,null, 0,null,0,null] },
-    over: { step:0.28, loop:false, vol:0.055,
-      mel:[7,null,3,null, 0,null,-2,null, -4,-5,-7,null, -9,null,-9,null],
-      bass:[-17,null,-21,null, -24,null,-26,null, -28,null,-31,null, -33,null,-33,null] }
-  };
-  let cur=null, idx=0, nextT=0, timer=null, finished=false, audioPaused=false;
-  function note(freq,t,dur,type,vol){
-    if(!freq) return;
-    const c=SFX.ac(); if(!c || c.state!=="running") return;
-    const o=c.createOscillator(), g=c.createGain();
-    o.type=type; o.frequency.value=freq;
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.01);
-    g.gain.setValueAtTime(vol,t+dur*0.7); g.gain.linearRampToValueAtTime(0,t+dur);
-    o.connect(g).connect(c.destination); o.start(t); o.stop(t+dur+0.02);
-  }
-  function schedule(){
-    if(audioPaused) return;
-    const c=SFX.ac(); if(!c || c.state!=="running") return;
-    const tr=TRACKS[cur]; if(!tr) return;
-    if(nextT < c.currentTime) nextT = c.currentTime + 0.05; // 恢复播放时防止补音爆发
-    while(nextT < c.currentTime + 0.35){
-      if(idx>=tr.mel.length){
-        if(tr.loop) idx=0;
-        else { finished=true; clearInterval(timer); timer=null; return; }
-      }
-      const m=tr.mel[idx], b=tr.bass[idx];
-      if(m!==null) note(N(m), nextT, tr.step*0.92, "square", tr.vol);
-      if(b!==null) note(N(b), nextT, tr.step*0.95, "triangle", tr.vol*1.5);
-      nextT += tr.step; idx++;
-    }
-  }
-  function play(name){
-    if(audioPaused){ cur=name; idx=0; finished=false; return; }
-    cur=name; idx=0; finished=false;
-    const c=SFX.ac();
-    nextT = (c && c.state==="running") ? c.currentTime + 0.08 : 0;
-    if(timer) clearInterval(timer);
-    timer=setInterval(schedule,90);
-    if(c && c.state==="running") schedule();
-  }
-  // ensure：每帧调用，同名曲目不重复启动；非循环曲播完后保持静音
-  function ensure(name){ if(cur===name) return; play(name); }
-  function stop(){ if(timer) clearInterval(timer); timer=null; cur=null; }
-  /** 暂停：停调度并 suspend；恢复时不在此处 resume（须用户手势 SFX.unlock） */
-  function setPaused(on){
-    if(on){
-      if(audioPaused) return;
-      audioPaused=true;
-      if(timer){ clearInterval(timer); timer=null; }
-      try{ const c=SFX.ac(); if(c && c.state==="running") c.suspend(); }catch(e){}
-    } else {
-      if(!audioPaused) return;
-      audioPaused=false;
-      // 不在 rAF/可见性回调里 resume，避免自动播放警告；下一用户手势 unlock 后 schedule 会接上
-      if(cur){
-        const c=SFX.ac();
-        if(c && c.state==="running") nextT = c.currentTime + 0.08;
-        else nextT = 0;
-        if(timer) clearInterval(timer);
-        timer=setInterval(schedule,90);
-        if(c && c.state==="running") schedule();
-      }
-    }
-  }
+  function ensure(){}
+  function stop(){}
+  function setPaused(){}
   return { ensure, stop, setPaused };
 })();
 
@@ -1496,7 +1387,7 @@ const Game = (() => {
     const wantPauseAudio = stateName==="paused" || document.hidden;
     BGM.setPaused(wantPauseAudio);
     // 非对战帧停履带音（菜单/暂停/结算/切后台）
-    if(wantPauseAudio || stateName!=="playing"){ SFX.stopEngine(); SFX.stopSiren(); }
+    if(wantPauseAudio || stateName!=="playing") SFX.stopEngine();
     // 背景音乐：清理缓冲期播 clear，其余跟状态
     if(!wantPauseAudio){
       let track={menu:"menu",playing:"play",paused:"play",levelClear:"clear",gameover:"over"}[stateName];
@@ -1592,7 +1483,6 @@ const Game = (() => {
           t._lx=t.x; t._ly=t.y;
         }
         SFX.setEngine(movers ? Math.min(1.1, 0.55 + movers*0.15) : 0);
-        SFX.setSiren(enemies.some(e=>e&&!e.dead&&e.carriesPowerup));
       }
       for(const pt of particles) pt.update(dt);
       particles=particles.filter(p=>p.life>0);
@@ -1674,8 +1564,6 @@ const Game = (() => {
     }
     // 履带音：仅己方（含联机友军）移动；敌军不播
     SFX.setEngine(movers ? Math.min(1.1, 0.55 + movers*0.15) : 0);
-    // 红闪在场：救护车式警报
-    SFX.setSiren(enemies.some(e=>e&&!e.dead&&e.carriesPowerup));
 
     // 子弹
     for(const b of bullets){
@@ -1855,31 +1743,20 @@ const Game = (() => {
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
   }
-  /** 我方：负重轮履带 + 塔式炮塔（区别敌军条纹履带/扁圆塔） */
+  /** 我方：加粗条纹履带 + 塔式炮塔（区别敌军） */
   function drawPlayerTankBody(t, w, h, bulk){
-    const trackW = bulk>=2 ? 7.8 : 7;
-    const spin = (t.anim|0);
-    // 履带外框
-    g.fillStyle = "#1a2814";
-    g.fillRect(-w/2, -h/2+1, trackW, h-2);
-    g.fillRect(w/2-trackW, -h/2+1, trackW, h-2);
-    g.strokeStyle = "#3a5030"; g.lineWidth=1;
-    g.strokeRect(-w/2+0.5, -h/2+1.5, trackW-1, h-3);
-    g.strokeRect(w/2-trackW+0.5, -h/2+1.5, trackW-1, h-3);
-    // 一排负重轮（敌军没有）
-    const wheelN = 4;
-    for(let side=-1; side<=1; side+=2){
-      const cx = side<0 ? (-w/2 + trackW/2) : (w/2 - trackW/2);
-      for(let i=0;i<wheelN;i++){
-        const yy = -h/2 + 4 + i*((h-8)/(wheelN-1));
-        const rot = (spin + i) % 2;
-        g.fillStyle = "#2a3a22";
-        g.beginPath(); g.arc(cx, yy, 2.6, 0, Math.PI*2); g.fill();
-        g.strokeStyle = "#c8b060"; g.lineWidth=1;
-        g.beginPath(); g.arc(cx, yy, 2.6, 0, Math.PI*2); g.stroke();
-        g.fillStyle = rot ? "#ffe08a" : "#a89040";
-        g.beginPath(); g.arc(cx, yy, 1.1, 0, Math.PI*2); g.fill();
-      }
+    const trackW = bulk>=2 ? 9 : (bulk>=1 ? 8.5 : 8);
+    const trackShift = Math.floor(t.anim)%2===0 ? 0 : 2;
+    // 加粗深绿履带 + 金黄条纹（不用负重轮）
+    g.fillStyle = bulk ? "#1e3a18" : "#243820";
+    g.beginPath();
+    g.roundRect(-w/2, -h/2, trackW, h, 2); g.fill();
+    g.beginPath();
+    g.roundRect(w/2-trackW, -h/2, trackW, h, 2); g.fill();
+    g.fillStyle = "rgba(255,230,120,.4)";
+    for(let i=-h/2+2+trackShift;i<h/2-2;i+=4){
+      g.fillRect(-w/2+1.5, i, trackW-3, 2.2);
+      g.fillRect(w/2-trackW+1.5, i, trackW-3, 2.2);
     }
     // 车身金黄
     let c1,c2;
@@ -1891,7 +1768,6 @@ const Game = (() => {
     hull.addColorStop(0,c1); hull.addColorStop(1,c2);
     g.fillStyle=hull;
     g.fillRect(-w/2+trackW-1, -h/2+5, w-trackW*2+2, h-10);
-    // 前斜面
     g.fillStyle="rgba(255,255,210,.4)";
     g.fillRect(-w/2+trackW, -h/2+5, w-trackW*2, 4);
     g.strokeStyle = bulk>=2 ? "rgba(255,220,80,.95)" : "rgba(255,200,60,.8)";
@@ -1903,19 +1779,15 @@ const Game = (() => {
     g.fillRect(-baseR*0.85, -2, baseR*1.7, baseR*1.15);
     g.strokeStyle="#a07010"; g.lineWidth=1.3;
     g.strokeRect(-baseR*0.85, -2, baseR*1.7, baseR*1.15);
-    // 圆顶
     g.fillStyle = bulk ? "#fff8d0" : "#ffefb0";
     g.beginPath(); g.arc(0, 1, baseR*0.72, Math.PI, 0); g.fill();
     g.strokeStyle="#b88820"; g.lineWidth=1.1;
     g.beginPath(); g.arc(0, 1, baseR*0.72, Math.PI, 0); g.stroke();
-    // 指挥塔小圆盖
     g.fillStyle="#fffaf0";
     g.beginPath(); g.arc(2.2, -1.5, 2.2, 0, Math.PI*2); g.fill();
     g.strokeStyle="#906818"; g.lineWidth=0.9;
     g.beginPath(); g.arc(2.2, -1.5, 2.2, 0, Math.PI*2); g.stroke();
-    // 白星
     star(-1.2, 2.2, bulk?3.4:2.9, "#ffffff");
-    // 炮管 + 双挡烟板
     const barrelLen = Math.min((h/2-1)*0.95, h/2-1);
     g.fillStyle="#4a3c10";
     g.fillRect(-2.2, -barrelLen, 4.4, barrelLen+2);
