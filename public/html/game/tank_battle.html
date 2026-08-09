@@ -1082,10 +1082,9 @@ const Game = (() => {
     SFX.powerup();
     flash("✦ 道具出现！", 1.1);
   }
-  /** 红闪坦克被打中：立刻在随机位置掉道具，并取消红闪 */
+  /** 红闪坦克被打中：随机位置掉道具；坦克未死则继续红闪，再打还能掉 */
   function popCarrierPowerup(e){
     if(!e || e.isPlayer || !e.carriesPowerup) return;
-    e.carriesPowerup=false;
     dropPowerupRandom();
   }
   function applyPowerup(pu){
@@ -1821,58 +1820,136 @@ const Game = (() => {
       default:      return {sx:1.0,  sy:1.0,  track:6,   barrel:0.92, turret:6.5, maxHp:1}; // normal
     }
   }
+  /** 我方坦克：金黄圆润造型 + 白星标识，和敌军灰方壳明显区分 */
+  function drawPlayerTankBody(t, w, h, bulk){
+    const trackW = bulk>=2 ? 7.5 : (bulk>=1 ? 7 : 6.5);
+    const trackShift = Math.floor(t.anim)%2===0 ? 0 : 2;
+    // 深绿履带（敌军是深灰）
+    g.fillStyle = bulk ? "#1e3a18" : "#243820";
+    g.beginPath();
+    g.roundRect(-w/2, -h/2, trackW, h, 2); g.fill();
+    g.beginPath();
+    g.roundRect(w/2-trackW, -h/2, trackW, h, 2); g.fill();
+    g.fillStyle = "rgba(255,230,120,.35)";
+    for(let i=-h/2+2+trackShift;i<h/2-2;i+=4){
+      g.fillRect(-w/2+1.5, i, trackW-3, 1.8);
+      g.fillRect(w/2-trackW+1.5, i, trackW-3, 1.8);
+    }
+    // 车身：金黄圆角壳体
+    let c1,c2;
+    if(t.coopTint){ c1=t.coopTint[0]; c2=t.coopTint[1]; }
+    else if(bulk>=2){ c1="#ffe66a"; c2="#c88810"; }
+    else if(bulk>=1){ c1="#ffd84a"; c2="#b87808"; }
+    else { c1="#ffcc33"; c2="#d09018"; }
+    const hull=g.createLinearGradient(-w/2, -h/2, w/2, h/2);
+    hull.addColorStop(0,c1); hull.addColorStop(1,c2);
+    g.fillStyle=hull;
+    g.beginPath();
+    g.moveTo(-w/2+trackW-1, -h/2+5);
+    g.lineTo(w/2-trackW+1, -h/2+5);
+    g.lineTo(w/2-trackW+1, h/2-4);
+    g.lineTo(-w/2+trackW-1, h/2-4);
+    g.closePath(); g.fill();
+    // 前装甲斜面
+    g.fillStyle = "rgba(255,255,200,.35)";
+    g.beginPath();
+    g.moveTo(-w/2+trackW, -h/2+5);
+    g.lineTo(w/2-trackW, -h/2+5);
+    g.lineTo(w/2-trackW-2, -h/2+10);
+    g.lineTo(-w/2+trackW+2, -h/2+10);
+    g.closePath(); g.fill();
+    // 金色描边
+    g.strokeStyle = bulk>=2 ? "rgba(255,220,80,.95)" : "rgba(255,200,60,.75)";
+    g.lineWidth = bulk ? 2 : 1.5;
+    g.strokeRect(-w/2+trackW, -h/2+6, w-trackW*2, h-11);
+    // 六角炮塔（敌军是圆炮塔）
+    const tr = bulk ? 7.6 : 6.8;
+    g.fillStyle = bulk>=2 ? "#fff0a8" : "#ffe080";
+    g.beginPath();
+    for(let i=0;i<6;i++){
+      const a=-Math.PI/2 + i*Math.PI/3;
+      const x=Math.cos(a)*tr, y=Math.sin(a)*tr+1;
+      if(i===0) g.moveTo(x,y); else g.lineTo(x,y);
+    }
+    g.closePath(); g.fill();
+    g.strokeStyle = "#a07010"; g.lineWidth=1.2; g.stroke();
+    // 白星标识
+    star(0, 1.2, bulk?4.2:3.6, "#fffaf0");
+    g.strokeStyle="rgba(160,100,20,.5)"; g.lineWidth=0.7;
+    g.beginPath();
+    for(let i=0;i<10;i++){
+      const a=-Math.PI/2+i*Math.PI/5, rr=i%2===0?(bulk?4.2:3.6):(bulk?1.9:1.6);
+      g[i===0?"moveTo":"lineTo"](Math.cos(a)*rr, 1.2+Math.sin(a)*rr);
+    }
+    g.closePath(); g.stroke();
+    // 炮管：粗短 + 枪口制退器
+    const barrelLen = Math.min((h/2-1)*0.95, h/2-1);
+    g.fillStyle = "#5a4810";
+    g.fillRect(-2.6, -barrelLen, 5.2, barrelLen+3);
+    g.fillStyle = "#ffe08a";
+    g.fillRect(-3.4, -barrelLen, 6.8, 3.2);
+    g.fillStyle = "#8a7018";
+    g.fillRect(-2.2, -barrelLen+3.2, 4.4, 2);
+    if(t.coopName){
+      g.fillStyle="#fff"; g.font="bold 7px sans-serif"; g.textAlign="center";
+      g.fillText(String(t.coopName).slice(0,6),0,-h/2+7);
+    }
+  }
   function drawTank(t){
     if(t.dead) return;
     if(t.spawnGhost>0 && Math.floor(t.spawnGhost*10)%2===0 && !t.isPlayer) return;
     g.save(); g.translate(t.cx,t.cy); g.rotate(t.dir*Math.PI/2);
     const w=t.w,h=t.h;
     const bulk = (t.isPlayer && t.bulk) ? t.bulk : 0;
-    // 玩家也不放大出格：装甲只加厚履带/铆钉，scale 固定 1
-    const vis = t.isPlayer
-      ? {sx:1, sy:1, track:bulk>=2?8:(bulk>=1?7:6), barrel:0.92, turret:bulk?7.2:6.5, maxHp:1}
-      : enemyVis(t);
+    if(t.isPlayer){
+      drawPlayerTankBody(t, w, h, bulk);
+      g.restore();
+      if(t.boat){
+        const pad=5, pulse=0.65+0.25*Math.sin(performance.now()/200);
+        g.strokeStyle=`rgba(90,190,255,${pulse})`; g.lineWidth=3;
+        g.beginPath(); g.roundRect(t.x-pad,t.y-pad,t.w+pad*2,t.h+pad*2,8); g.stroke();
+        g.strokeStyle="rgba(160,220,255,.35)"; g.lineWidth=1.5;
+        g.beginPath(); g.roundRect(t.x-pad-3,t.y-pad-3,t.w+pad*2+6,t.h+pad*2+6,10); g.stroke();
+      }
+      if(t.shield>0){
+        const a=0.35+0.25*Math.sin(performance.now()/90);
+        g.strokeStyle=`rgba(120,210,255,${a})`; g.lineWidth=2.5;
+        g.beginPath(); g.arc(t.cx,t.cy,t.w/2+6,0,Math.PI*2); g.stroke();
+        g.strokeStyle=`rgba(255,255,255,${a*0.6})`;
+        g.beginPath(); g.arc(t.cx,t.cy,t.w/2+9,performance.now()/300,performance.now()/300+Math.PI); g.stroke();
+      }
+      if(t.frozen>0){ g.fillStyle="rgba(150,220,255,.25)"; g.fillRect(t.x,t.y,t.w,t.h); }
+      return;
+    }
+    // —— 敌军：方壳 + 圆炮塔（灰/黄/绿）——
+    const vis = enemyVis(t);
     g.scale(Math.min(1, vis.sx), Math.min(1, vis.sy));
     const trackW = Math.min(vis.track, w/2-1);
     const trackShift = Math.floor(t.anim)%2===0?0:2;
     const thickBody = t.type==="armor" || t.type==="mid";
-    g.fillStyle=t.isPlayer?(bulk?"#2a3520":"#3a4a2a"):(thickBody?"#2a2e38":"#333844");
+    g.fillStyle=thickBody?"#2a2e38":"#333844";
     g.fillRect(-w/2,-h/2,trackW,h); g.fillRect(w/2-trackW,-h/2,trackW,h);
-    if(bulk){
-      g.fillStyle="rgba(255,210,100,.35)";
-      g.fillRect(-w/2,-h/2,2,h); g.fillRect(w/2-2,-h/2,2,h);
-    }
     g.fillStyle="rgba(255,255,255,.18)";
     for(let i=-h/2+trackShift;i<h/2;i+=5){
       g.fillRect(-w/2+1,i,trackW-2,2); g.fillRect(w/2-trackW+1,i,trackW-2,2);
     }
     let c1,c2;
-    if(t.isPlayer){
-      if(t.coopTint){ c1=t.coopTint[0]; c2=t.coopTint[1]; }
-      else if(bulk>=2){ c1="#ffe08a"; c2="#a07818"; }
-      else if(bulk>=1){ c1="#edd45a"; c2="#8a6a14"; }
-      else { c1="#d8c84a"; c2="#8a7a1e"; }
-    } else {
-      // 敌军强度色：灰(弱1血)→黄(2)→绿(强3)；受伤随血量降色
-      const hpTier = Math.max(1, Math.min(3, t.hp|0));
-      if(hpTier>=3){ c1="#4a9a32"; c2="#163a14"; }
-      else if(hpTier>=2){ c1="#ffd84a"; c2="#a07000"; }
-      else { c1="#c8c8d0"; c2="#5a5a68"; }
-      // FC：带道具 → 红闪（打掉才掉道具）
-      if(t.carriesPowerup && Math.floor(performance.now()/100)%2===0){
-        c1="#ff3a2a"; c2="#7a0808";
-      }
+    const hpTier = Math.max(1, Math.min(3, t.hp|0));
+    if(hpTier>=3){ c1="#4a9a32"; c2="#163a14"; }
+    else if(hpTier>=2){ c1="#ffd84a"; c2="#a07000"; }
+    else { c1="#c8c8d0"; c2="#5a5a68"; }
+    if(t.carriesPowerup && Math.floor(performance.now()/100)%2===0){
+      c1="#ff3a2a"; c2="#7a0808";
     }
     const gr=g.createLinearGradient(-w/2,-h/2,w/2,h/2);
     gr.addColorStop(0,c1); gr.addColorStop(1,c2);
     g.fillStyle=gr; g.fillRect(-w/2+trackW-1,-h/2+3,w-trackW*2+2,h-6);
-    if(bulk>0 || thickBody){
-      const thick = bulk>=2 || t.type==="armor";
-      g.strokeStyle = t.isPlayer
-        ? (bulk>=2 ? "rgba(255,200,60,.95)" : "rgba(255,210,120,.8)")
-        : (t.hp>=3 ? "rgba(120,200,90,.75)" : (t.hp>=2 ? "rgba(240,200,60,.75)" : "rgba(220,220,230,.55)"));
+    if(thickBody){
+      const thick = t.type==="armor";
+      g.strokeStyle = t.hp>=3 ? "rgba(120,200,90,.75)" : (t.hp>=2 ? "rgba(240,200,60,.75)" : "rgba(220,220,230,.55)");
       g.lineWidth = thick ? 2.2 : 1.6;
       g.strokeRect(-w/2+trackW,-h/2+4,w-trackW*2,h-8);
-      g.fillStyle=t.isPlayer?"#c9a24a":(t.hp>=3?"#4a8a3a":(t.hp>=2?"#c9a24a":"#b0b0b8"));
+      g.fillStyle=t.hp>=3?"#4a8a3a":(t.hp>=2?"#c9a24a":"#b0b0b8");
       const rivets=[[-6,-6],[6,-6],[-6,6],[6,6],[0,-7],[0,7]];
       for(const [rx,ry] of rivets){ g.beginPath(); g.arc(rx,ry,thick?1.5:1.1,0,Math.PI*2); g.fill(); }
     }
@@ -1882,35 +1959,19 @@ const Game = (() => {
       g.fillStyle="rgba(255,255,255,.3)";
       g.fillRect(-w/2+trackW+1,-4,w-trackW*2-2,2);
     }
-    g.fillStyle=t.isPlayer?(bulk?"#ffe9a0":"#eadb6a")
-      :(t.carriesPowerup && Math.floor(performance.now()/100)%2===0 ? "#ff9080"
-        : (t.hp>=3?"#b8e898":(t.hp>=2?"#ffe080":"#c8c8d0")));
+    g.fillStyle=t.carriesPowerup && Math.floor(performance.now()/100)%2===0 ? "#ff9080"
+      : (t.hp>=3?"#b8e898":(t.hp>=2?"#ffe080":"#c8c8d0"));
     g.beginPath(); g.arc(0,1,vis.turret,0,Math.PI*2); g.fill();
-    if(bulk){ g.strokeStyle="rgba(180,120,20,.7)"; g.lineWidth=1.5; g.stroke(); }
-    // 炮管：末端不超过格子边缘（-h/2）
     const barrelLen = Math.min((h/2-1)*vis.barrel, h/2-1);
-    g.fillStyle=t.isPlayer?"#6a5c14":(t.type==="power"?"#3a3030":"#404858");
+    g.fillStyle=t.type==="power"?"#3a3030":"#404858";
     const bw = t.type==="power" ? 3.2 : (t.type==="fast" ? 2.0 : 2.4);
     g.fillRect(-bw, -barrelLen, bw*2, barrelLen+4);
-    if(!t.isPlayer && t.carriesPowerup){
-      // 红光外圈，一眼认出「打掉掉道具」
+    if(t.carriesPowerup){
       const pulse=0.35+0.35*Math.sin(performance.now()/90);
       g.strokeStyle=`rgba(255,60,40,${pulse})`; g.lineWidth=2.2;
       g.beginPath(); g.arc(0,0,w/2+2,0,Math.PI*2); g.stroke();
     }
-    if(t.isPlayer && t.coopName){
-      g.fillStyle="#fff"; g.font="bold 7px sans-serif"; g.textAlign="center";
-      g.fillText(String(t.coopName).slice(0,6),0,-h/2+7);
-    }
     g.restore();
-    if(t.isPlayer&&t.boat){
-      const pad=5, pulse=0.65+0.25*Math.sin(performance.now()/200);
-      g.strokeStyle=`rgba(90,190,255,${pulse})`; g.lineWidth=3;
-      g.beginPath(); g.roundRect(t.x-pad,t.y-pad,t.w+pad*2,t.h+pad*2,8); g.stroke();
-      g.strokeStyle="rgba(160,220,255,.35)"; g.lineWidth=1.5;
-      g.beginPath(); g.roundRect(t.x-pad-3,t.y-pad-3,t.w+pad*2+6,t.h+pad*2+6,10); g.stroke();
-    }
-    // 装甲：只改车身样式，不外围加圈（避免像船）
     if(t.shield>0){
       const a=0.35+0.25*Math.sin(performance.now()/90);
       g.strokeStyle=`rgba(120,210,255,${a})`; g.lineWidth=2.5;
@@ -2172,7 +2233,7 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("敌军：灰弱→黄→绿强　红闪=中一发就在地图随机掉道具",CANVAS_W/2,430);
+    g.fillText("敌军：灰弱→黄→绿强　红闪=每中一发随机掉道具（未死继续闪）",CANVAS_W/2,430);
     g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+护盾　🔫手枪=火力直升打铁，再吃一个可除草",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
