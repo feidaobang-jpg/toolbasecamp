@@ -2275,7 +2275,8 @@ window.TB_LOCALES['zh-CN'] = {
             rateLimited: 'MiniMax 请求过于频繁，请稍后再试，或改用 Music-3.0。',
             resultMeta: '{model} · 时长 {duration} 秒 · 本次扣费 ¥{price}',
             wechatPlayTip: '微信内可直接播放。保存或转发给朋友请点下方按钮按提示操作，或右上角 ··· → 在浏览器中打开。',
-            wechatShareTip: '微信内无法直接调起系统分享文件。请点「下载」查看说明，或右上角 ··· → 在浏览器中打开后再保存/分享。'
+            wechatShareTip: '微信内无法直接调起系统分享文件。请点「下载」查看说明，或右上角 ··· → 在浏览器中打开后再保存/分享。',
+            desktopShareTip: '电脑端请先「下载」到本地，再用微信发送文件给朋友。'
         },
         idPhoto: {
             title: '制作证件照',

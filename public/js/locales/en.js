@@ -2276,7 +2276,8 @@ window.TB_LOCALES.en = {
             rateLimited: 'MiniMax rate limited. Retry later, or switch to Music-3.0.',
             resultMeta: '{model} · {duration}s · charged ¥{price}',
             wechatPlayTip: 'In WeChat you can play here. To save or forward the file, use the buttons below or open this page in your system browser.',
-            wechatShareTip: 'WeChat cannot share the audio file directly. Tap Download for instructions, or open in your system browser to save/share.'
+            wechatShareTip: 'WeChat cannot share the audio file directly. Tap Download for instructions, or open in your system browser to save/share.',
+            desktopShareTip: 'On desktop, download the file first, then send it via WeChat.'
         },
         idPhoto: {
             title: 'ID Photo',

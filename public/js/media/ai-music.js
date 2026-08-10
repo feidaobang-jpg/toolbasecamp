@@ -247,6 +247,7 @@
             });
           }
           showWeChatTip();
+          syncShareVisibility();
           if (resultWrap) resultWrap.hidden = false;
         });
       })
@@ -257,6 +258,18 @@
         setBusy(false);
         syncRunLabel();
       });
+  }
+
+  function isMobileUa() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+  }
+
+  function syncShareVisibility() {
+    if (!shareBtn) return;
+    // Desktop Windows Share → WeChat often hangs on「发送给朋友」; site also avoids share on desktop.
+    // Keep share only on real mobile browsers (not in-WeChat H5).
+    var show = isMobileUa() && !isWeChat() && typeof navigator.share === 'function';
+    shareBtn.hidden = !show;
   }
 
   function doDownload() {
@@ -274,9 +287,9 @@
 
   function doShare() {
     if (!audioBlob) return;
-    if (isWeChat()) {
+    if (!isMobileUa() || isWeChat()) {
       if (typeof tbNotify === 'function') {
-        tbNotify(tr('tools.aiMusic.wechatShareTip'));
+        tbNotify(tr(isWeChat() ? 'tools.aiMusic.wechatShareTip' : 'tools.aiMusic.desktopShareTip'));
       }
       return;
     }
@@ -289,13 +302,6 @@
     if (navigator.share && file && navigator.canShare && navigator.canShare({ files: [file] })) {
       navigator.share({
         files: [file],
-        title: lastFilename,
-        text: tr('tools.aiMusic.shareText')
-      }).catch(function () {});
-      return;
-    }
-    if (navigator.share) {
-      navigator.share({
         title: lastFilename,
         text: tr('tools.aiMusic.shareText')
       }).catch(function () {});
@@ -316,6 +322,7 @@
     showWeChatTip();
     syncInstrumentalUi();
     syncModelUi();
+    syncShareVisibility();
     updateCharCounts();
     setBusy(false);
     loadStatus();
@@ -382,6 +389,7 @@
     updateEstimate();
     syncModelUi();
     syncRunLabel();
+    syncShareVisibility();
   });
 
   boot();
