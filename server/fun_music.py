@@ -208,6 +208,39 @@ def _sanitize_title(raw: str, *, max_len: int = 40) -> str:
     return t
 
 
+def _short_title_from_prompt(prompt: str) -> str:
+    """First style tag only — never use the whole prompt as song title."""
+    raw = (prompt or "").strip()
+    if not raw:
+        return "AI Music"
+    first = re.split(r"[,，、;/｜|]+", raw, maxsplit=1)[0].strip()
+    t = _sanitize_title(first, max_len=16)
+    return t or "AI Music"
+
+
+def _display_title_and_prompt(title: Any, prompt: Any) -> tuple:
+    """Return (song_title, prompt) for API/UI; heal legacy rows that stored prompt as title."""
+    t = (str(title) if title is not None else "").strip()
+    p = (str(prompt) if prompt is not None else "").strip()
+    legacy = False
+    if not t:
+        legacy = True
+    elif p and (t == p or t.rstrip("…") == p[: len(t.rstrip("…"))]):
+        # title was copied from prompt (full or truncated with …)
+        legacy = True
+    elif len(t) >= 24 and ("," in t or "，" in t) and not p:
+        # very old: only title field filled with style dump
+        p = t
+        legacy = True
+    elif p and len(t) >= 28 and t in p:
+        legacy = True
+    if legacy:
+        t = _short_title_from_prompt(p) if p else "AI Music"
+    if not t:
+        t = "AI Music"
+    return t, p
+
+
 def _fallback_title_from_lyrics_or_prompt(lyrics: str, prompt: str) -> str:
     for line in (lyrics or "").splitlines():
         s = line.strip()
@@ -220,10 +253,7 @@ def _fallback_title_from_lyrics_or_prompt(lyrics: str, prompt: str) -> str:
         s = _sanitize_title(s, max_len=24)
         if s and len(s) >= 2:
             return s
-    p = _sanitize_title(prompt or "", max_len=24)
-    if p:
-        return p
-    return "AI Music"
+    return _short_title_from_prompt(prompt)
 
 
 async def _auto_title_deepseek(*, lyrics: str, prompt: str, instrumental: bool) -> str:
@@ -717,11 +747,12 @@ def music_public_list(limit: int = 50, offset: int = 0):
             continue
         created = row.get("created_at")
         ly = (row.get("lyrics") or "").strip()
+        song_title, song_prompt = _display_title_and_prompt(row.get("title"), row.get("prompt"))
         items.append(
             {
                 "id": tid,
-                "title": row.get("title") or "AI Music",
-                "prompt": (row.get("prompt") or "")[:200],
+                "title": song_title,
+                "prompt": song_prompt[:400],
                 "lyrics": ly,
                 "model": row.get("model") or "",
                 "duration": int(row.get("duration_sec") or 0),

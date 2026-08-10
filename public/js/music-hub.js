@@ -260,6 +260,7 @@
       card.innerHTML =
         '<div class="music-track-main">' +
           '<div class="music-track-title"></div>' +
+          '<div class="music-track-prompt" hidden></div>' +
           '<div class="music-track-meta"></div>' +
         '</div>' +
         '<div class="music-track-actions action-row">' +
@@ -267,6 +268,12 @@
           '<button type="button" class="tb-btn" data-music-dl=""></button>' +
         '</div>';
       card.querySelector('.music-track-title').textContent = item.title || tr('hub.musicPage.untitled');
+      var promptEl = card.querySelector('.music-track-prompt');
+      var promptText = (item.prompt || '').trim();
+      if (promptText) {
+        promptEl.hidden = false;
+        promptEl.textContent = tr('hub.musicPage.promptLabel') + ': ' + promptText;
+      }
       var hasLy = !!(item.lyrics && String(item.lyrics).trim());
       card.querySelector('.music-track-meta').textContent =
         (item.model || '') + ' · ' + formatDuration(item.duration) +

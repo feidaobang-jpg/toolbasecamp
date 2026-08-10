@@ -8,12 +8,12 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=mp1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=mp1" rel="stylesheet">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=mp1">
-    <link rel="stylesheet" href="css/tools-hub.css?v=mp1">
-    <link rel="stylesheet" href="css/base.css?v=mp1">
-    <link rel="stylesheet" href="css/docs/docs-common.css?v=mp1">
+    <script src="vendor/tailwindcss.js?v=mpTitlePrompt1"></script>
+    <link href="vendor/font-awesome/css/all.min.css?v=mpTitlePrompt1" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=mpTitlePrompt1">
+    <link rel="stylesheet" href="css/tools-hub.css?v=mpTitlePrompt1">
+    <link rel="stylesheet" href="css/base.css?v=mpTitlePrompt1">
+    <link rel="stylesheet" href="css/docs/docs-common.css?v=mpTitlePrompt1">
     <style>
       .music-hub { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
       .music-hub-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
@@ -27,6 +27,10 @@
         align-items: center; justify-content: space-between;
       }
       .music-track-title { font-weight: 700; color: #0f172a; font-size: 1rem; }
+      .music-track-prompt {
+        font-size: 0.85rem; color: #475569; margin-top: 4px; line-height: 1.45;
+        word-break: break-word;
+      }
       .music-track-meta { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
       .music-track-actions { margin: 0; }
       .error-box { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
@@ -53,14 +57,14 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=mp1"></script>
-    <script src="js/locales/zh-CN.js?v=mp1"></script>
-    <script src="js/i18n.js?v=mp1"></script>
-    <script src="js/config.js?v=mp1"></script>
-    <script src="js/base.js?v=mp1"></script>
-    <script src="js/common_ui.js?v=mp1"></script>
-    <script src="js/media/music-player.js?v=mp1"></script>
-    <script src="js/music-hub.js?v=mp1"></script>
+    <script src="js/locales/en.js?v=mpTitlePrompt1"></script>
+    <script src="js/locales/zh-CN.js?v=mpTitlePrompt1"></script>
+    <script src="js/i18n.js?v=mpTitlePrompt1"></script>
+    <script src="js/config.js?v=mpTitlePrompt1"></script>
+    <script src="js/base.js?v=mpTitlePrompt1"></script>
+    <script src="js/common_ui.js?v=mpTitlePrompt1"></script>
+    <script src="js/media/music-player.js?v=mpTitlePrompt1"></script>
+    <script src="js/music-hub.js?v=mpTitlePrompt1"></script>
     <script>
       (function () {
         function go() { if (typeof renderMusicHub === 'function') renderMusicHub(); }

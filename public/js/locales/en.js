@@ -301,6 +301,7 @@ window.TB_LOCALES.en = {
             download: 'Download',
             downloadLyrics: 'Lyrics',
             hasLyrics: 'Has lyrics',
+            promptLabel: 'Style',
             loading: 'Loading…',
             empty: 'No public songs yet. Generation defaults to publishing to this list.',
             loadFailed: 'Failed to load the list. Please try again.',

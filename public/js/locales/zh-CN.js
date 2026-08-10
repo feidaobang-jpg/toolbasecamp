@@ -300,6 +300,7 @@ window.TB_LOCALES['zh-CN'] = {
             download: '下载',
             downloadLyrics: '下载歌词',
             hasLyrics: '有歌词',
+            promptLabel: '风格',
             loading: '加载中…',
             empty: '暂无公开歌曲。生成音乐时默认勾选「公开到音乐列表」。',
             loadFailed: '列表加载失败，请稍后重试。',
