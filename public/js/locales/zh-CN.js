@@ -311,7 +311,7 @@ window.TB_LOCALES['zh-CN'] = {
             empty: '暂无公开歌曲。生成音乐时默认勾选「公开到音乐列表」。',
             loadFailed: '列表加载失败，请稍后重试。',
             playFailed: '播放失败，请稍后重试或换一首。',
-            cacheTip: '点「播放」可试听；歌词为全文静态展示（MiniMax 无时间轴，无法与进度精确对齐）。',
+            cacheTip: '点「播放」试听。歌词是生成稿，演唱可能与稿略有出入；重新生成时系统会优化歌词格式以提高贴合度。',
             wechatDownloadTip: '微信内请点右上角 ··· → 在浏览器中打开后再下载。',
             untitled: '未命名',
             noLyrics: '暂无歌词'
@@ -2834,7 +2834,7 @@ window.TB_LOCALES['zh-CN'] = {
             noLyrics: '暂无歌词（纯音乐或未保存歌词）',
             playFailed: '播放失败，请稍后重试',
             untitled: '未命名',
-            staticHint: '无时间轴，以下为歌词全文（播放时不滚动对齐）。',
+            staticHint: '以下为生成时提交的歌词稿；AI 演唱可能改词/漏句，与听到的不一定逐字一致。',
             lrcHint: '带时间戳歌词，播放时会高亮当前行。'
         }
     }

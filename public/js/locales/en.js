@@ -312,7 +312,7 @@ window.TB_LOCALES.en = {
             empty: 'No public songs yet. Generation defaults to publishing to this list.',
             loadFailed: 'Failed to load the list. Please try again.',
             playFailed: 'Playback failed. Retry or try another track.',
-            cacheTip: 'Tap Play to listen. Lyrics show in full (MiniMax has no timestamps — no precise sync with playback).',
+            cacheTip: 'Tap Play to listen. Lyrics are the generation draft; vocals may differ slightly. New songs use formatted lyrics for better fit.',
             wechatDownloadTip: 'In WeChat, tap ··· → Open in browser to download the file.',
             untitled: 'Untitled',
             noLyrics: 'No lyrics'
@@ -2835,7 +2835,7 @@ window.TB_LOCALES.en = {
             noLyrics: 'No lyrics (instrumental or not saved)',
             playFailed: 'Playback failed. Please try again.',
             untitled: 'Untitled',
-            staticHint: 'No timestamps — full lyrics below (static, not synced while playing).',
+            staticHint: 'Lyrics shown are the submitted draft; AI vocals may differ from what you hear.',
             lrcHint: 'Timed lyrics — current line highlights during playback.'
         }
     }

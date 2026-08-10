@@ -265,6 +265,85 @@ def _sanitize_title(raw: str, *, max_len: int = 40) -> str:
     return t
 
 
+def _normalize_lyrics_for_minimax(raw: str) -> str:
+    """
+    Format lyrics before MiniMax music_generation to reduce sing-vs-text drift.
+    - Canonical structure tags ([Verse] not [verse])
+    - Blank line after each tag
+    - Split overly long lines at Chinese punctuation
+    """
+    tag_keys = {
+        "intro": "Intro",
+        "verse": "Verse",
+        "pre-chorus": "Pre-Chorus",
+        "pre chorus": "Pre-Chorus",
+        "prechorus": "Pre-Chorus",
+        "chorus": "Chorus",
+        "hook": "Hook",
+        "bridge": "Bridge",
+        "outro": "Outro",
+        "interlude": "Interlude",
+        "inst": "Inst",
+        "instrumental": "Instrumental",
+        "solo": "Solo",
+        "drop": "Drop",
+        "break": "Break",
+        "breakdown": "Breakdown",
+        "build-up": "Build-up",
+        "build up": "Build-up",
+        "transition": "Transition",
+        "post-chorus": "Post-Chorus",
+        "post chorus": "Post-Chorus",
+    }
+    out: list[str] = []
+    for line in str(raw or "").replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+        t = line.strip()
+        if not t:
+            if out and out[-1] != "":
+                out.append("")
+            continue
+        m = re.match(r"^\[([^\]]+)\]\s*$", t, re.I)
+        if m:
+            inner = m.group(1).strip()
+            rest = ""
+            m2 = re.match(r"^([A-Za-z][A-Za-z\s-]*?)(?:\s+(\d+.*))?$", inner)
+            if m2:
+                key = m2.group(1).strip().lower().replace(" ", "-")
+                canon = tag_keys.get(key, m2.group(1).strip().title())
+                if m2.group(2):
+                    rest = " " + m2.group(2).strip()
+                t = f"[{canon}{rest}]"
+            else:
+                t = f"[{inner}]"
+            if out and out[-1] != "":
+                out.append("")
+            out.append(t)
+            out.append("")
+            continue
+        if t.startswith("(") and t.endswith(")"):
+            out.append(t)
+            continue
+        if len(t) > 40:
+            chunks = re.split(r"([，。！？；、])", t)
+            buf = ""
+            for i in range(0, len(chunks), 2):
+                piece = chunks[i] + (chunks[i + 1] if i + 1 < len(chunks) else "")
+                piece = piece.strip()
+                if not piece:
+                    continue
+                if len(buf) + len(piece) > 36 and buf:
+                    out.append(buf)
+                    buf = piece
+                else:
+                    buf = (buf + piece) if buf else piece
+            if buf:
+                out.append(buf)
+        else:
+            out.append(t)
+    text = "\n".join(out).strip()
+    return text[:3500]
+
+
 def _short_title_from_prompt(prompt: str) -> str:
     """First style tag only — never use the whole prompt as song title."""
     raw = (prompt or "").strip()
@@ -711,6 +790,7 @@ async def music_generate(
 
             if not is_instrumental:
                 if lyrics_text:
+                    lyrics_text = _normalize_lyrics_for_minimax(lyrics_text)
                     body["lyrics"] = lyrics_text
                 elif use_lyrics_optimizer:
                     # Last resort: vendor may still sing, but we cannot display lyrics.
