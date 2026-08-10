@@ -301,6 +301,7 @@ window.TB_LOCALES['zh-CN'] = {
             loading: '加载中…',
             empty: '暂无公开歌曲。生成音乐时默认勾选「公开到音乐列表」。',
             loadFailed: '列表加载失败，请稍后重试。',
+            playFailed: '播放失败，请稍后重试或换一首。',
             cacheTip: '已播放或下载过的曲目优先走本机缓存，节省流量。',
             untitled: '未命名'
         },

@@ -593,6 +593,20 @@ def music_public_list(limit: int = 50, offset: int = 0):
     return {"success": True, "items": items, "limit": lim, "offset": off}
 
 
+def _ascii_filename(stem: str, ext: str, *, fallback: str = "ai-music") -> str:
+    """HTTP Content-Disposition must be latin-1 safe; keep ASCII-only names."""
+    import re
+
+    e = str(ext or ".mp3")
+    if not e.startswith("."):
+        e = "." + e
+    raw = str(stem or "").strip()
+    ascii_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", raw).strip("-._")[:60]
+    if not ascii_stem:
+        ascii_stem = fallback
+    return f"{ascii_stem}{e}"
+
+
 @router.get("/public/{track_id}")
 def music_public_file(track_id: str, download: int = 0):
     tid = "".join(ch for ch in str(track_id or "") if ch.isalnum())
@@ -620,19 +634,19 @@ def music_public_file(track_id: str, download: int = 0):
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Music file missing")
     ext = row.get("file_ext") or path.suffix or ".mp3"
-    safe_title = "".join(c for c in str(row.get("title") or "ai-music") if c.isalnum() or c in ("-", "_", " "))[:40].strip() or "ai-music"
-    filename = f"{safe_title}{ext}"
-    headers = {}
-    if download:
-        headers["Content-Disposition"] = f'attachment; filename="{filename}"'
-    else:
-        headers["Content-Disposition"] = f'inline; filename="{filename}"'
+    # Prefer stable id for header safety; Chinese titles break latin-1 headers.
+    filename = _ascii_filename(f"ai-music-{tid}", ext, fallback=f"ai-music-{tid}")
+    headers = {
+        "Content-Disposition": (
+            f'{"attachment" if download else "inline"}; filename="{filename}"'
+        ),
+    }
+    if not download:
         headers["Cache-Control"] = "public, max-age=86400"
     return FileResponse(
         path,
         media_type=str(row.get("content_type") or "audio/mpeg"),
         headers=headers,
-        filename=filename if download else None,
     )
 
 

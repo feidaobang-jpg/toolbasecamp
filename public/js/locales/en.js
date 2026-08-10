@@ -302,6 +302,7 @@ window.TB_LOCALES.en = {
             loading: 'Loading…',
             empty: 'No public songs yet. Generation defaults to publishing to this list.',
             loadFailed: 'Failed to load the list. Please try again.',
+            playFailed: 'Playback failed. Retry or try another track.',
             cacheTip: 'Played or downloaded tracks reuse the local cache when possible.',
             untitled: 'Untitled'
         },

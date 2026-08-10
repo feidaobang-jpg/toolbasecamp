@@ -132,7 +132,7 @@
       var box = document.getElementById('music-error');
       if (box) {
         box.hidden = false;
-        box.textContent = (err && err.message) || tr('hub.musicPage.loadFailed');
+        box.textContent = (err && err.message) || tr('hub.musicPage.playFailed');
       }
     });
   }
