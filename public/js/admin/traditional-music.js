@@ -5,6 +5,16 @@
   'use strict';
 
   var activeTab = 'traditional';
+  var existingSources = new Set();
+
+  function normFileName(name) {
+    var s = String(name || '').trim();
+    var i = s.lastIndexOf('\\');
+    if (i >= 0) s = s.slice(i + 1);
+    i = s.lastIndexOf('/');
+    if (i >= 0) s = s.slice(i + 1);
+    return s.toLowerCase();
+  }
 
   function tr(k, params) {
     return typeof window.t === 'function' ? window.t(k, params) : k;
@@ -86,6 +96,10 @@
       })
       .then(function (data) {
         var items = (data && data.items) || [];
+        existingSources = new Set();
+        items.forEach(function (item) {
+          if (item.source) existingSources.add(normFileName(item.source));
+        });
         var ffmpeg = data && data.ffmpegAvailable;
         setStatus(
           meta,
@@ -225,15 +239,43 @@
     var progress = document.getElementById('upload-progress');
     var fetchLyrics = document.getElementById('fetch-lyrics');
     if (!files || !files.length) return;
-    var queue = Array.prototype.slice.call(files);
+    var picked = Array.prototype.slice.call(files);
+    var skipped = 0;
+    var skippedNames = [];
+    var seen = new Set(existingSources);
+    var queue = [];
+    picked.forEach(function (file) {
+      var key = normFileName(file.name);
+      if (seen.has(key)) {
+        skipped += 1;
+        skippedNames.push(file.name);
+        return;
+      }
+      seen.add(key);
+      queue.push(file);
+    });
+    if (!queue.length) {
+      setStatus(status, tr('privateHub.ops.tradMusicUploadSkipAll', { skip: skipped }));
+      if (progress) progress.hidden = true;
+      return;
+    }
     var total = queue.length;
     var done = 0;
     var ok = 0;
     var fail = 0;
+    var serverSkip = 0;
 
     function next() {
       if (!queue.length) {
-        setStatus(status, tr('privateHub.ops.tradMusicUploadDone', { ok: ok, fail: fail, total: total }));
+        setStatus(
+          status,
+          tr('privateHub.ops.tradMusicUploadDone', {
+            ok: ok,
+            skip: skipped + serverSkip,
+            fail: fail,
+            total: picked.length
+          })
+        );
         if (progress) progress.hidden = true;
         loadTradList();
         return;
@@ -257,11 +299,20 @@
         body: fd
       }).then(function (res) {
         return res.json().then(function (data) {
+          if (res.status === 409) {
+            serverSkip += 1;
+            return { skipped: true };
+          }
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
           return data;
         });
-      }).then(function () {
+      }).then(function (data) {
+        if (data && data.skipped) {
+          next();
+          return;
+        }
         ok += 1;
+        existingSources.add(normFileName(file.name));
         next();
       }).catch(function (err) {
         fail += 1;
@@ -269,7 +320,17 @@
         next();
       });
     }
-    setStatus(status, tr('privateHub.ops.tradMusicUploadStart', { total: total }));
+    if (skipped) {
+      setStatus(
+        status,
+        tr('privateHub.ops.tradMusicUploadSkippedPreflight', {
+          skip: skipped,
+          names: skippedNames.join('、')
+        })
+      );
+    } else {
+      setStatus(status, tr('privateHub.ops.tradMusicUploadStart', { total: total }));
+    }
     next();
   }
 

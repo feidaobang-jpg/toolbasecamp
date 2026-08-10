@@ -1180,6 +1180,20 @@ def _next_traditional_id(items: list) -> str:
     return f"t{max_n + 1:03d}"
 
 
+def _normalize_source_name(name: str) -> str:
+    return Path(str(name or "")).name.strip().lower()
+
+
+def _traditional_source_exists(items: list, orig_name: str) -> bool:
+    key = _normalize_source_name(orig_name)
+    if not key:
+        return False
+    for row in items:
+        if _normalize_source_name(str(row.get("source") or "")) == key:
+            return True
+    return False
+
+
 def _parse_upload_filename(name: str) -> tuple[str, str]:
     stem = Path(str(name or "")).stem.strip()
     if not stem:
@@ -1418,6 +1432,8 @@ async def music_traditional_admin_upload(
         raise HTTPException(status_code=400, detail="File too small")
 
     items = _load_traditional_manifest()
+    if _traditional_source_exists(items, orig_name):
+        raise HTTPException(status_code=409, detail=f"Already uploaded: {orig_name}")
     tid = _next_traditional_id(items)
     artist, title = _parse_upload_filename(orig_name)
     full_name = f"{tid}.mp3"
