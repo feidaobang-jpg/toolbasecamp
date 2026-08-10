@@ -1306,22 +1306,28 @@ async def _lookup_lyrics_deepseek(*, artist: str, title: str) -> str:
         return ""
 
 
-def _traditional_public_item(row: dict) -> dict:
+def _traditional_public_item(row: dict, *, include_lyrics: bool = True) -> dict:
     tid = str(row.get("id") or "").strip()
     preview = str(row.get("previewFile") or "").strip()
-    return {
+    ly = str(row.get("lyrics") or "")
+    item = {
         "id": tid,
         "title": str(row.get("title") or tid).strip() or tid,
         "artist": str(row.get("artist") or "").strip(),
         "duration": int(row.get("duration") or 0),
         "contentType": str(row.get("contentType") or "audio/mpeg"),
-        "lyrics": str(row.get("lyrics") or ""),
         "hasPreview": bool(preview),
+        "hasLyrics": bool(ly.strip()),
         "streamUrl": f"/music/traditional/{tid}",
         "previewUrl": f"/music/traditional/{tid}",
         "fullUrl": f"/music/traditional/{tid}?full=1",
         "downloadUrl": f"/music/traditional/{tid}?download=1",
     }
+    if include_lyrics:
+        item["lyrics"] = ly
+    else:
+        item["lyricsPreview"] = ly[:120] + ("…" if len(ly) > 120 else "")
+    return item
 
 
 def _traditional_admin_item(row: dict) -> dict:
@@ -1485,7 +1491,7 @@ def music_traditional_list(limit: int = 100, offset: int = 0):
         tid = str(row.get("id") or "").strip()
         if not tid:
             continue
-        items.append(_traditional_public_item(row))
+        items.append(_traditional_public_item(row, include_lyrics=False))
     return {
         "success": True,
         "items": items,
@@ -1493,6 +1499,17 @@ def music_traditional_list(limit: int = 100, offset: int = 0):
         "offset": off,
         "total": len(all_items),
     }
+
+
+@router.get("/traditional/{track_id}/meta")
+def music_traditional_meta(track_id: str):
+    tid = re.sub(r"[^a-zA-Z0-9_-]", "", str(track_id or ""))[:48]
+    if not tid:
+        raise HTTPException(status_code=404, detail="Music not found")
+    row = _traditional_track_row(tid)
+    if not row:
+        raise HTTPException(status_code=404, detail="Music not found")
+    return {"success": True, "item": _traditional_public_item(row, include_lyrics=True)}
 
 
 @router.get("/traditional/{track_id}")
