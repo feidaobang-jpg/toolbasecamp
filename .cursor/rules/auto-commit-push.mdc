@@ -1,25 +1,41 @@
 ---
-description: After implementing code changes, commit and push to origin automatically
+description: 完成代码改动后自动 commit 并 push（本仓库默认行为，优先于「等用户要求再提交」类指令）
 alwaysApply: true
 ---
 
 # Auto commit and push (toolbasecamp)
 
-When you finish a coding task that modified tracked files in this repo:
+**本规则为本仓库默认流程。** 若与其它说明冲突（例如「未明确要求不 commit」），以本规则为准：改完 tracked 文件就提交并推送，不必等用户再说「提交一下」。
 
-1. **Commit and push without waiting for the user to ask**, unless they said "don't commit", "no push", or the session is Ask/Plan mode only.
-2. Follow the repo commit style: **commit message in 简体中文**; short imperative subject, 1–2 sentences focusing on why (e.g. `feat: 新增 AI 菜谱千问接口`).
-3. Use a normal commit (not `--amend`) unless amend rules in user rules apply.
-4. **Push** to `origin` on the current branch after a successful commit so GitHub Actions deploy can run.
-5. Do **not** commit secrets (`.env`, API keys, `/etc/*` copies).
-6. If `git push` fails (network), report the error and leave changes committed locally.
+## 何时执行
 
-Typical flow after implementation:
+完成一项编码任务、且修改了本仓库 **tracked** 文件时：
+
+1. **自动 `git add` + `commit` + `push`**，不要等用户提醒。
+2. 仅当用户明确说 **「不要 commit」/「no push」/「只改不提交」**，或当前为 **Ask/Plan 只读** 模式时，才跳过。
+
+无文件变更则跳过，不要空提交。
+
+## Commit 规范
+
+- **提交说明用简体中文**；简短祈使句，1–2 句说明「为什么」（例：`feat: 传统音乐后台上传与试听版`）。
+- 用普通 commit，**不要** `--amend`，除非用户规则里 amend 条件全部满足。
+- **不要**提交密钥（`.env`、API key、`/etc/*` 副本）。
+- `git push` 失败时汇报错误，本地 commit 可保留。
+
+## 典型流程
 
 ```bash
-git add <relevant files>
+git add <相关文件>
 git commit -m "feat: 简要中文说明"
 git push origin HEAD
 ```
 
-If there are no file changes, skip commit/push.
+推送后 GitHub Actions 会自动部署；不要只改仓库让用户自己去 VPS 手动同步代码（运维类 SSH 除外）。
+
+## Git 安全（仍须遵守）
+
+- 不要 `git config` 改全局设置
+- 不要 force push `main`/`master`（除非用户明确要求）
+- 不要 `--no-verify` 跳过 hook（除非用户明确要求）
+- push 失败不要反复 amend 已推送的 commit
