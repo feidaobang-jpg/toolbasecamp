@@ -293,19 +293,22 @@ window.TB_LOCALES.en = {
         musicSelect: 'Music',
         musicPage: {
             title: 'Music',
-            sub: 'Public AI-generated songs. Play, pause, download — cached in this browser after first play or download.',
+            sub: 'Public AI-generated songs. Play with scrolling lyrics, download audio or lyrics — cached after first play or download.',
             create: 'Create',
             refresh: 'Refresh',
             play: 'Play',
             pause: 'Pause',
             download: 'Download',
+            downloadLyrics: 'Lyrics',
+            hasLyrics: 'Has lyrics',
             loading: 'Loading…',
             empty: 'No public songs yet. Generation defaults to publishing to this list.',
             loadFailed: 'Failed to load the list. Please try again.',
             playFailed: 'Playback failed. Retry or try another track.',
-            cacheTip: 'Played or downloaded tracks reuse the local cache when possible.',
+            cacheTip: 'Tap Play to open the player with scrolling lyrics (estimated from duration). Played or downloaded tracks reuse local cache when possible.',
             wechatDownloadTip: 'In WeChat, tap ··· → Open in browser to download the file.',
-            untitled: 'Untitled'
+            untitled: 'Untitled',
+            noLyrics: 'No lyrics'
         },
         music: {
             title: 'Music',
@@ -2282,6 +2285,9 @@ window.TB_LOCALES.en = {
             tipBody: 'Generation often takes 1–3 minutes. Stay on this page. Charged only on success. The free model has a lower RPM.',
             clear: 'Clear',
             download: 'Download',
+            downloadLyrics: 'Download lyrics',
+            noLyrics: 'No lyrics (instrumental or not returned)',
+            openPlayer: 'Lyrics player',
             share: 'Share',
             shareText: 'AI music made with Tool Basecamp',
             generating: 'Generating music…',
@@ -2813,6 +2819,15 @@ window.TB_LOCALES.en = {
         wechatFileDownloadTip: 'Downloads are blocked in WeChat. Tap ··· → Open in browser, then download again.',
         backToTop: 'Back to top',
         mainNav: 'Main navigation',
-        loading: 'Loading...'
+        loading: 'Loading...',
+        musicPlayer: {
+            play: 'Play',
+            pause: 'Pause',
+            downloadLyrics: 'Download lyrics',
+            noLyrics: 'No lyrics (instrumental or not saved)',
+            playFailed: 'Playback failed. Please try again.',
+            untitled: 'Untitled',
+            syncHint: 'Timed LRC lyrics sync precisely; otherwise lines are estimated from duration.'
+        }
     }
 };

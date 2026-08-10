@@ -445,6 +445,21 @@ async def music_generate(
             if duration < 1:
                 duration = max(1, int(len(audio_bytes) / 32000))
 
+            # Prefer model-returned lyrics when auto-generated
+            out_lyrics = lyrics_text
+            for candidate in (
+                payload.get("lyrics"),
+                payload.get("lyric"),
+                extra.get("lyrics") if isinstance(extra, dict) else None,
+                (data.get("analysis_info") or {}).get("lyrics")
+                if isinstance(data.get("analysis_info"), dict)
+                else None,
+            ):
+                if candidate and str(candidate).strip():
+                    out_lyrics = str(candidate).strip()
+                    break
+            lyrics_text = out_lyrics
+
             if fmt == "wav":
                 ctype = "audio/wav"
                 ext = ".wav"
@@ -562,7 +577,7 @@ def music_public_list(limit: int = 50, offset: int = 0):
             _ensure_music_schema(cur)
             cur.execute(
                 """
-                SELECT id, title, prompt, model, duration_sec, content_type, created_at, file_name
+                SELECT id, title, prompt, lyrics, model, duration_sec, content_type, created_at, file_name
                 FROM music_tracks
                 WHERE is_public=1
                 ORDER BY created_at DESC
@@ -585,11 +600,13 @@ def music_public_list(limit: int = 50, offset: int = 0):
             # Orphan DB row after deploy wipe — hide from list
             continue
         created = row.get("created_at")
+        ly = (row.get("lyrics") or "").strip()
         items.append(
             {
                 "id": tid,
                 "title": row.get("title") or "AI Music",
                 "prompt": (row.get("prompt") or "")[:200],
+                "lyrics": ly,
                 "model": row.get("model") or "",
                 "duration": int(row.get("duration_sec") or 0),
                 "contentType": row.get("content_type") or "audio/mpeg",

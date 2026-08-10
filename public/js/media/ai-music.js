@@ -20,20 +20,19 @@
   var lyricsCount = document.getElementById('lyrics-count');
   var runBtn = document.getElementById('run-btn');
   var clearBtn = document.getElementById('clear-btn');
-  var downloadBtn = document.getElementById('download-btn');
   var shareBtn = document.getElementById('share-btn');
   var busyEl = document.getElementById('busy');
   var busyText = document.getElementById('busy-text');
   var errorBox = document.getElementById('error-box');
   var resultWrap = document.getElementById('result-wrap');
-  var resultAudio = document.getElementById('result-audio');
-  var resultLyrics = document.getElementById('result-lyrics');
+  var resultPlayerEl = document.getElementById('result-player');
   var resultMeta = document.getElementById('result-meta');
   var wechatTip = document.getElementById('wechat-file-download-tip');
   var longPressTip = document.getElementById('long-press-tip');
   var desktopDownloadTip = document.getElementById('desktop-download-tip');
   var publicToggle = document.getElementById('public-toggle');
   var histPanel = null;
+  var player = null;
 
   var modelId = 'music-3.0-free';
   var modelPrices = {
@@ -141,26 +140,42 @@
     return !!lyrics;
   }
 
+  function destroyPlayer() {
+    if (player && typeof player.destroy === 'function') {
+      try { player.destroy(); } catch (e) {}
+    }
+    player = null;
+  }
+
   function revokeAudio() {
+    destroyPlayer();
     if (audioBlobUrl) {
       try { URL.revokeObjectURL(audioBlobUrl); } catch (e) {}
     }
     audioBlobUrl = '';
     audioBlob = null;
-    if (resultAudio) {
-      resultAudio.removeAttribute('src');
-      try { resultAudio.load(); } catch (e2) {}
-    }
   }
 
   function clearResult() {
     revokeAudio();
     if (resultWrap) resultWrap.hidden = true;
-    if (resultLyrics) {
-      resultLyrics.textContent = '';
-      resultLyrics.hidden = true;
-    }
     if (resultMeta) resultMeta.textContent = '';
+  }
+
+  function showPlayer(opts) {
+    if (!resultPlayerEl || !window.TBMusicPlayer) return;
+    destroyPlayer();
+    player = window.TBMusicPlayer.mount(resultPlayerEl, {
+      src: opts.src,
+      title: opts.title || lastFilename,
+      lyrics: opts.lyrics || '',
+      durationHint: Number(opts.duration) || 0,
+      audioName: String(lastFilename || 'ai-music').replace(/\.(mp3|wav)$/i, ''),
+      onDownloadAudio: function () { doDownload(); }
+    });
+    if (opts.autoplay && player && player.audio) {
+      try { player.play(); } catch (e) {}
+    }
   }
 
   function showWeChatTip() {
@@ -243,14 +258,6 @@
           revokeAudio();
           audioBlob = pack.blob;
           audioBlobUrl = URL.createObjectURL(pack.blob);
-          if (resultAudio) {
-            resultAudio.src = audioBlobUrl;
-          }
-          if (resultLyrics) {
-            var ly = (res.lyrics || '').trim();
-            resultLyrics.textContent = ly;
-            resultLyrics.hidden = !ly;
-          }
           if (resultMeta) {
             resultMeta.textContent = tr('tools.aiMusic.resultMeta', {
               duration: res.duration || '—',
@@ -261,6 +268,13 @@
           showWeChatTip();
           syncShareVisibility();
           if (resultWrap) resultWrap.hidden = false;
+          showPlayer({
+            src: audioBlobUrl,
+            title: res.title || (titleEl && titleEl.value) || lastFilename,
+            lyrics: res.lyrics || '',
+            duration: res.duration || 0,
+            autoplay: false
+          });
           if (histPanel && audioBlob) {
             histPanel.save(audioBlob, {
               model: res.model || modelId,
@@ -362,12 +376,6 @@
           audioBlobUrl = URL.createObjectURL(row.blob);
           lastExt = '.mp3';
           lastFilename = ((row.title || 'ai-music') + '.mp3').replace(/[\\/:*?"<>|]+/g, '');
-          if (resultAudio) resultAudio.src = audioBlobUrl;
-          if (resultLyrics) {
-            var ly = (row.lyrics || '').trim();
-            resultLyrics.textContent = ly;
-            resultLyrics.hidden = !ly;
-          }
           if (resultMeta) {
             resultMeta.textContent = tr('tools.aiMusic.resultMeta', {
               duration: row.duration || '—',
@@ -378,7 +386,13 @@
           showWeChatTip();
           syncShareVisibility();
           if (resultWrap) resultWrap.hidden = false;
-          try { resultAudio && resultAudio.play(); } catch (e) {}
+          showPlayer({
+            src: audioBlobUrl,
+            title: row.title || lastFilename,
+            lyrics: row.lyrics || '',
+            duration: row.duration || 0,
+            autoplay: true
+          });
         }
       });
       histPanel.refresh();
@@ -426,7 +440,6 @@
     });
   }
   if (runBtn) runBtn.addEventListener('click', runGenerate);
-  if (downloadBtn) downloadBtn.addEventListener('click', doDownload);
   if (shareBtn) shareBtn.addEventListener('click', doShare);
   if (clearBtn) {
     clearBtn.addEventListener('click', function () {

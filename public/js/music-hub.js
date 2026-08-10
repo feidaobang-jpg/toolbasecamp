@@ -1,14 +1,15 @@
 /**
- * Public music hub — list / play / pause / download with Cache API reuse.
+ * Public music hub — list + shared player (scrolling lyrics) / download / Cache API.
  * Play uses direct stream URL (WeChat cannot wait for full-file blob fetch).
  */
 (function () {
   'use strict';
 
   var CACHE_NAME = 'tbc-public-music-v1';
-  var currentAudio = null;
-  var currentId = '';
   var objectUrls = {};
+  var player = null;
+  var currentId = '';
+  var currentItem = null;
 
   function tr(k, params) {
     return typeof window.t === 'function' ? window.t(k, params) : k;
@@ -59,7 +60,6 @@
     }).catch(function () {});
   }
 
-  /** Warm cache in background; never block play UI. */
   function warmCache(id, contentType) {
     if (isWeChat() || !cacheAvailable()) return;
     getCachedBlob(id).then(function (cached) {
@@ -94,22 +94,6 @@
     }
   }
 
-  function stopCurrent() {
-    if (currentAudio) {
-      try {
-        currentAudio.pause();
-        currentAudio.removeAttribute('src');
-        currentAudio.load();
-      } catch (e) {}
-      currentAudio = null;
-    }
-    currentId = '';
-    document.querySelectorAll('[data-music-play]').forEach(function (btn) {
-      btn.textContent = tr('hub.musicPage.play');
-      btn.setAttribute('data-playing', '0');
-    });
-  }
-
   function setPlayingUi(id, playing) {
     document.querySelectorAll('[data-music-play]').forEach(function (btn) {
       var bid = btn.getAttribute('data-music-play');
@@ -123,79 +107,82 @@
     });
   }
 
-  function bindAudioEvents(audio, id) {
-    audio.addEventListener('playing', function () {
-      setPlayingUi(id, true);
-    });
-    audio.addEventListener('pause', function () {
-      if (currentId === id && audio.paused) setPlayingUi(id, false);
-    });
-    audio.addEventListener('ended', function () {
-      setPlayingUi(id, false);
-    });
-    audio.addEventListener('error', function () {
-      setPlayingUi(id, false);
-      var box = document.getElementById('music-error');
-      if (box) {
-        box.hidden = false;
-        box.textContent = tr('hub.musicPage.playFailed');
-      }
-    });
+  function destroyPlayer() {
+    if (player && typeof player.destroy === 'function') {
+      try { player.destroy(); } catch (e) {}
+    }
+    player = null;
+    currentId = '';
+    currentItem = null;
+    setPlayingUi('', false);
   }
 
-  function playFromSrc(id, src, contentType) {
-    var audio = new Audio();
-    audio.preload = 'auto';
-    try {
-      audio.setAttribute('playsinline', 'true');
-      audio.setAttribute('webkit-playsinline', 'true');
-      audio.playsInline = true;
-    } catch (e) {}
-    audio.src = src;
-    currentAudio = audio;
-    currentId = id;
-    bindAudioEvents(audio, id);
-    warmCache(id, contentType);
-    var p = audio.play();
-    if (p && typeof p.then === 'function') {
-      return p.then(function () {
-        setPlayingUi(id, true);
-      }).catch(function (err) {
-        setPlayingUi(id, false);
+  function mountPlayer(item, src, autoplay) {
+    var dock = document.getElementById('music-player-dock');
+    if (!dock || !window.TBMusicPlayer) return;
+    if (player) {
+      try { player.destroy(); } catch (e) {}
+      player = null;
+    }
+    currentId = item.id;
+    currentItem = item;
+    var audioName = String(item.title || 'ai-music').replace(/[\\/:*?"<>|]+/g, '').trim() || 'ai-music';
+    player = window.TBMusicPlayer.mount(dock, {
+      src: src,
+      title: item.title || tr('hub.musicPage.untitled'),
+      lyrics: item.lyrics || '',
+      durationHint: Number(item.duration) || 0,
+      audioName: audioName,
+      onDownloadAudio: function () { downloadTrack(item); },
+      onPlayState: function (playing) {
+        setPlayingUi(item.id, !!playing);
+      },
+      onError: function () {
+        setPlayingUi(item.id, false);
         var box = document.getElementById('music-error');
         if (box) {
           box.hidden = false;
-          box.textContent = (err && err.message) || tr('hub.musicPage.playFailed');
+          box.textContent = tr('hub.musicPage.playFailed');
         }
+      }
+    });
+    warmCache(item.id, item.contentType);
+    if (autoplay && player) {
+      player.play().then(function () {
+        setPlayingUi(item.id, true);
+      }).catch(function () {
+        setPlayingUi(item.id, false);
       });
     }
-    setPlayingUi(id, true);
-    return Promise.resolve();
   }
 
   function playTrack(item) {
     var id = item.id;
     var btn = document.querySelector('[data-music-play="' + id + '"]');
-    if (currentId === id && currentAudio && !currentAudio.paused) {
-      currentAudio.pause();
-      setPlayingUi(id, false);
-      return;
-    }
-    if (currentId === id && currentAudio && currentAudio.paused) {
-      currentAudio.play().then(function () {
-        setPlayingUi(id, true);
-      }).catch(function () {
-        setPlayingUi(id, false);
-      });
-      return;
-    }
-    stopCurrent();
-    if (btn) btn.textContent = tr('hub.musicPage.loading');
 
-    // Stream directly — do NOT full-download before play (WeChat hangs on 6–8MB blob).
+    if (currentId === id && player && player.audio) {
+      if (!player.audio.paused) {
+        player.pause();
+        setPlayingUi(id, false);
+      } else {
+        player.play().then(function () {
+          setPlayingUi(id, true);
+        }).catch(function () {
+          setPlayingUi(id, false);
+        });
+      }
+      return;
+    }
+
+    if (btn) btn.textContent = tr('hub.musicPage.loading');
     var streamUrl = fileUrl(id);
+
+    function go(src) {
+      mountPlayer(item, src, true);
+    }
+
     if (isWeChat()) {
-      playFromSrc(id, streamUrl, item.contentType);
+      go(streamUrl);
       return;
     }
 
@@ -204,11 +191,12 @@
         revokeUrl(id);
         var blobUrl = URL.createObjectURL(cached);
         objectUrls[id] = blobUrl;
-        return playFromSrc(id, blobUrl, item.contentType);
+        go(blobUrl);
+        return;
       }
-      return playFromSrc(id, streamUrl, item.contentType);
+      go(streamUrl);
     }).catch(function () {
-      return playFromSrc(id, streamUrl, item.contentType);
+      go(streamUrl);
     });
   }
 
@@ -260,6 +248,9 @@
     list.innerHTML = '';
     if (!items || !items.length) {
       if (empty) empty.hidden = false;
+      destroyPlayer();
+      var dock = document.getElementById('music-player-dock');
+      if (dock) dock.innerHTML = '';
       return;
     }
     if (empty) empty.hidden = true;
@@ -276,8 +267,10 @@
           '<button type="button" class="tb-btn" data-music-dl=""></button>' +
         '</div>';
       card.querySelector('.music-track-title').textContent = item.title || tr('hub.musicPage.untitled');
+      var hasLy = !!(item.lyrics && String(item.lyrics).trim());
       card.querySelector('.music-track-meta').textContent =
         (item.model || '') + ' · ' + formatDuration(item.duration) +
+        (hasLy ? (' · ' + tr('hub.musicPage.hasLyrics')) : '') +
         (item.createdAt ? (' · ' + item.createdAt) : '');
       var playBtn = card.querySelector('[data-music-play]');
       var dlBtn = card.querySelector('[data-music-dl]');
@@ -324,6 +317,7 @@
   window.renderMusicHub = function () {
     var main = document.getElementById('main-content');
     if (!main) return;
+    destroyPlayer();
     main.innerHTML =
       '<div class="music-hub">' +
         '<div class="music-hub-head">' +
@@ -335,6 +329,7 @@
           '</div>' +
         '</div>' +
         '<p class="music-hub-tip">' + escapeHtml(tr('hub.musicPage.cacheTip')) + '</p>' +
+        '<div id="music-player-dock"></div>' +
         '<div id="music-busy" class="music-hub-busy" hidden>' + escapeHtml(tr('hub.musicPage.loading')) + '</div>' +
         '<div id="music-error" class="error-box" role="alert" hidden></div>' +
         '<p id="music-empty" class="music-hub-empty" hidden>' + escapeHtml(tr('hub.musicPage.empty')) + '</p>' +

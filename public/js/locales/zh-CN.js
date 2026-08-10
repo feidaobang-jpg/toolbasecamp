@@ -292,19 +292,22 @@ window.TB_LOCALES['zh-CN'] = {
         musicSelect: '音乐选择',
         musicPage: {
             title: '音乐',
-            sub: '公开的 AI 生成歌曲。可播放、暂停、下载；播放或下载后会缓存在本机浏览器。',
+            sub: '公开的 AI 生成歌曲。可播放（带滚动歌词）、下载音频与歌词；播放或下载后会缓存在本机浏览器。',
             create: '去生成',
             refresh: '刷新',
             play: '播放',
             pause: '暂停',
             download: '下载',
+            downloadLyrics: '下载歌词',
+            hasLyrics: '有歌词',
             loading: '加载中…',
             empty: '暂无公开歌曲。生成音乐时默认勾选「公开到音乐列表」。',
             loadFailed: '列表加载失败，请稍后重试。',
             playFailed: '播放失败，请稍后重试或换一首。',
-            cacheTip: '已播放或下载过的曲目优先走本机缓存，节省流量。',
+            cacheTip: '点「播放」打开下方播放器，歌词会随进度高亮滚动（按时长估算）。已播放或下载的曲目优先走本机缓存。',
             wechatDownloadTip: '微信内请点右上角 ··· → 在浏览器中打开后再下载。',
-            untitled: '未命名'
+            untitled: '未命名',
+            noLyrics: '暂无歌词'
         },
         music: {
             title: '音乐选择',
@@ -2281,6 +2284,9 @@ window.TB_LOCALES['zh-CN'] = {
             tipBody: '生成通常需 1–3 分钟，请停留在本页。成功出歌才扣费。免费模型 RPM 较低，繁忙时可换 Music-3.0。',
             clear: '清除',
             download: '下载',
+            downloadLyrics: '下载歌词',
+            noLyrics: '暂无歌词（纯音乐或未返回歌词）',
+            openPlayer: '歌词播放器',
             share: '分享',
             shareText: '我用工具大本营生成的 AI 音乐',
             generating: '正在生成音乐，请稍候…',
@@ -2812,6 +2818,15 @@ window.TB_LOCALES['zh-CN'] = {
         wechatFileDownloadTip: '微信内无法直接下载文件。请点右上角 ··· → 在浏览器中打开后再下载。',
         backToTop: '回到顶部',
         mainNav: '主导航',
-        loading: '加载中...'
+        loading: '加载中...',
+        musicPlayer: {
+            play: '播放',
+            pause: '暂停',
+            downloadLyrics: '下载歌词',
+            noLyrics: '暂无歌词（纯音乐或未保存歌词）',
+            playFailed: '播放失败，请稍后重试',
+            untitled: '未命名',
+            syncHint: '有时间戳的歌词会精确跟随；其余按时长估算滚动，仅供参考。'
+        }
     }
 };
