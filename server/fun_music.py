@@ -54,7 +54,7 @@ TMP_DIR = Path(os.environ.get("FUN_MUSIC_TMP_DIR") or (Path(__file__).resolve().
 TMP_DIR.mkdir(parents=True, exist_ok=True)
 PUBLIC_DIR = Path(
     os.environ.get("MUSIC_PUBLIC_DIR")
-    or (Path(__file__).resolve().parent / "var" / "public-music")
+    or "/var/lib/toolbasecamp/public-music"
 )
 PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -562,7 +562,7 @@ def music_public_list(limit: int = 50, offset: int = 0):
             _ensure_music_schema(cur)
             cur.execute(
                 """
-                SELECT id, title, prompt, model, duration_sec, content_type, created_at
+                SELECT id, title, prompt, model, duration_sec, content_type, created_at, file_name
                 FROM music_tracks
                 WHERE is_public=1
                 ORDER BY created_at DESC
@@ -576,6 +576,14 @@ def music_public_list(limit: int = 50, offset: int = 0):
     items = []
     for row in rows:
         tid = str(row.get("id") or "")
+        file_name = str(row.get("file_name") or (tid + ".mp3"))
+        try:
+            path = _public_file_path(file_name)
+        except HTTPException:
+            continue
+        if not path.is_file():
+            # Orphan DB row after deploy wipe — hide from list
+            continue
         created = row.get("created_at")
         items.append(
             {

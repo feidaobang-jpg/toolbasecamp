@@ -5,6 +5,13 @@ alwaysApply: true
 
 # Tool Basecamp 全局 UI 约定
 
+## 样式引入（新页面）
+
+- **工具页**（`.container` + 侧栏 + `.tool-card`）：必须同时引入 `base.css` 与 `docs/docs-common.css`（顺序：base → docs-common → 页面专用 CSS）。
+- **门户 / Hub 页**（首页、游戏、内容、音乐等）：至少引入 `base.css`；若使用 `.action-row` / `.error-box` / `.tip-box` / `.tool-card` 等通用组件，**也应引入 `docs-common.css`**，不要只靠页面内联 CSS 补洞。
+- **单文件游戏页**可例外（自有 `games-common` 等），但仍须遵守 `.tb-btn` 与并列按钮间距约定。
+- 改了 `base.css` / `docs-common.css` 时，给引用处加或递增 `?v=` 缓存参数。
+
 ## 按钮（必须统一）
 
 - 所有操作按钮只用 `class="tb-btn"`（需要撑满时加 `w-full`）。

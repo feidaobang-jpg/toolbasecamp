@@ -113,12 +113,13 @@ jobs:
         run: |
           git rev-parse HEAD > server/DEPLOY_SHA
           rsync -avz --delete --exclude venv \
+            --exclude var/ --exclude tmp_music/ --exclude '__pycache__/' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             server/ \
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" \
-            'test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
+            'mkdir -p /var/lib/toolbasecamp/public-music /var/lib/toolbasecamp/image-results /opt/toolbasecamp-api/tmp_music && test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
 
       - name: Rsync deploy scripts
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
