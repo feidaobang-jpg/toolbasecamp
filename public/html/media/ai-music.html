@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Music - Tool Basecamp</title>
-  <meta name="description" content="Generate songs or instrumental tracks with Alibaba Fun Music. Sign-in required; billed from balance on success.">
-  <link rel="stylesheet" href="../../css/base.css?v=26178e4" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=26178e4" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=26178e4" />
-  <link rel="stylesheet" href="../../css/tools-form.css?v=26178e4" />
+  <meta name="description" content="Generate songs or instrumental tracks with MiniMax Music. Sign-in required; Music-3.0-free is ¥0, Music-3.0 is ¥2 per song.">
+  <link rel="stylesheet" href="../../css/base.css?v=media1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=media1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=media1" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=media1" />
   <style>
     .ai-music-audio {
       width: 100%;
@@ -33,6 +33,26 @@
       gap: 8px;
       margin-bottom: 4px;
     }
+    .ai-music-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #334155;
+    }
+    .ai-music-char {
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: right;
+      margin-top: 4px;
+    }
+    .ai-music-wechat-save {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0 0 10px;
+    }
   </style>
 </head>
 <body>
@@ -41,7 +61,7 @@
     <main class="content">
       <div class="tool-header">
         <h1 data-i18n="tools.aiMusic.title">AI Music</h1>
-        <p data-i18n="tools.aiMusic.desc">Describe a song or paste lyrics. Sign-in required; billed from balance on success.</p>
+        <p data-i18n="tools.aiMusic.desc">Generate songs with MiniMax Music-3.0. Sign-in required; free model ¥0, Music-3.0 ¥2 per song on success.</p>
       </div>
 
       <div class="tool-card img-cloud-gate" id="login-gate" hidden>
@@ -58,22 +78,21 @@
           </div>
           <p class="img-cloud-quota" id="balance-line"></p>
           <p class="instruct-cost-hint" id="cost-note"></p>
-          <p class="instruct-cost-hint" id="estimate-line"></p>
 
           <div class="field-row">
-            <span class="field-label" data-i18n="tools.aiMusic.modeLabel">Mode</span>
-            <div class="ai-music-mode-row instruct-preset-row" id="mode-row">
-              <button type="button" class="rec-chip is-active" data-mode="prompt" data-i18n="tools.aiMusic.modePrompt">Prompt song</button>
-              <button type="button" class="rec-chip" data-mode="lyrics" data-i18n="tools.aiMusic.modeLyrics">Custom lyrics</button>
-              <button type="button" class="rec-chip" data-mode="instrumental" data-i18n="tools.aiMusic.modeInstrumental">Instrumental</button>
+            <span class="field-label" data-i18n="tools.aiMusic.modelLabel">Model</span>
+            <div class="ai-music-mode-row instruct-preset-row" id="model-row">
+              <button type="button" class="rec-chip is-active" data-model="music-3.0-free" data-i18n="tools.aiMusic.modelFree">Music-3.0-free · ¥0</button>
+              <button type="button" class="rec-chip" data-model="music-3.0" data-i18n="tools.aiMusic.modelPaid">Music-3.0 · ¥2</button>
             </div>
           </div>
 
           <div class="field-row" id="prompt-wrap">
-            <label class="field-label" for="prompt" data-i18n="tools.aiMusic.prompt">Prompt</label>
+            <label class="field-label" for="prompt" data-i18n="tools.aiMusic.prompt">Style</label>
             <textarea id="prompt" rows="3" maxlength="2000"
               data-i18n-placeholder="tools.aiMusic.promptPh"
-              placeholder="e.g. Summer folk, acoustic guitar, light mood for a travel vlog"></textarea>
+              placeholder="e.g. Mandarin pop, melancholic, rainy day"></textarea>
+            <div class="ai-music-char"><span id="prompt-count">0</span> / 2000</div>
             <div class="instruct-preset-row" id="style-row" style="margin-top:8px">
               <button type="button" class="rec-chip" data-style="folk" data-i18n="tools.aiMusic.styleFolk">Folk</button>
               <button type="button" class="rec-chip" data-style="pop" data-i18n="tools.aiMusic.stylePop">Pop</button>
@@ -83,24 +102,30 @@
             </div>
           </div>
 
-          <div class="field-row" id="lyrics-wrap" hidden>
+          <div class="field-row" id="lyrics-wrap">
             <label class="field-label" for="lyrics" data-i18n="tools.aiMusic.lyrics">Lyrics</label>
+            <label class="ai-music-toggle">
+              <input type="checkbox" id="instrumental-toggle" />
+              <span data-i18n="tools.aiMusic.instrumentalToggle">Instrumental (no vocals)</span>
+            </label>
             <textarea id="lyrics" rows="8" maxlength="3500"
               data-i18n-placeholder="tools.aiMusic.lyricsPh"
               placeholder="[Verse]&#10;...&#10;[Chorus]&#10;..."></textarea>
+            <div class="ai-music-char"><span id="lyrics-count">0</span> / 3500</div>
+            <label class="ai-music-toggle" id="auto-lyrics-wrap">
+              <input type="checkbox" id="auto-lyrics-toggle" />
+              <span data-i18n="tools.aiMusic.autoLyrics">Auto-generate lyrics from style</span>
+            </label>
           </div>
 
-          <div class="field-row" id="gender-wrap">
-            <span class="field-label" data-i18n="tools.aiMusic.genderLabel">Voice</span>
-            <div class="tb-radio-row" id="gender-row">
-              <label><input type="radio" name="music-gender" value="female" checked /> <span data-i18n="tools.aiMusic.genderFemale">Female</span></label>
-              <label><input type="radio" name="music-gender" value="male" /> <span data-i18n="tools.aiMusic.genderMale">Male</span></label>
-            </div>
+          <div class="field-row">
+            <label class="field-label" for="title" data-i18n="tools.aiMusic.titleLabel">Song title (optional)</label>
+            <input type="text" id="title" maxlength="120" data-i18n-placeholder="tools.aiMusic.titlePh" placeholder="Optional title" />
           </div>
 
           <div class="tip-box">
             <b data-i18n="tools.aiMusic.tip">Tip:</b>
-            <span data-i18n="tools.aiMusic.tipBody">Generation may take 1–3 minutes. Charged only on success by actual audio length.</span>
+            <span data-i18n="tools.aiMusic.tipBody">Generation may take 1–3 minutes. Charged only on success. Free model has lower rate limits.</span>
           </div>
 
           <div class="action-row">
@@ -116,22 +141,26 @@
 
           <div id="result-wrap" hidden>
             <p class="instruct-cost-hint" id="result-meta"></p>
-            <audio id="result-audio" class="ai-music-audio" controls preload="metadata"></audio>
+            <p class="ai-music-wechat-save" id="long-press-tip" hidden data-i18n="tools.aiMusic.wechatPlayTip">
+              In WeChat you can play here. To save or share the file, use the buttons below or open in your system browser.
+            </p>
+            <audio id="result-audio" class="ai-music-audio" controls preload="metadata" playsinline></audio>
             <pre class="ai-music-lyrics" id="result-lyrics" hidden></pre>
             <div class="action-row">
               <button type="button" class="tb-btn" id="download-btn" data-i18n="tools.aiMusic.download">Download</button>
+              <button type="button" class="tb-btn" id="share-btn" data-i18n="tools.aiMusic.share">Share</button>
             </div>
           </div>
         </div>
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=media1"></script>
-  <script src="../../js/locales/zh-CN.js?v=media1"></script>
-  <script src="../../js/i18n.js?v=26178e4"></script>
-  <script src="../../js/config.js?v=26178e4"></script>
-  <script src="../../js/base.js?v=26178e4"></script>
-  <script src="../../js/media/image-cloud-client.js?v=26178e4"></script>
-  <script src="../../js/media/ai-music.js?v=26178e4"></script>
+  <script src="../../js/locales/en.js?v=music1"></script>
+  <script src="../../js/locales/zh-CN.js?v=music1"></script>
+  <script src="../../js/i18n.js?v=media1"></script>
+  <script src="../../js/config.js?v=media1"></script>
+  <script src="../../js/base.js?v=media1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=music1"></script>
+  <script src="../../js/media/ai-music.js?v=music1"></script>
 </body>
 </html>
