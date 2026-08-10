@@ -45,7 +45,11 @@ MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_MUSIC_API_URL = (
     os.environ.get("MINIMAX_MUSIC_API_URL") or "https://api.minimaxi.com/v1/music_generation"
 ).strip().rstrip("/")
+MINIMAX_LYRICS_API_URL = (
+    os.environ.get("MINIMAX_LYRICS_API_URL") or "https://api.minimaxi.com/v1/lyrics_generation"
+).strip().rstrip("/")
 MUSIC_TIMEOUT = float(os.environ.get("MINIMAX_MUSIC_TIMEOUT") or os.environ.get("FUN_MUSIC_TIMEOUT") or "360")
+LYRICS_TIMEOUT = float(os.environ.get("MINIMAX_LYRICS_TIMEOUT") or "90")
 DEFAULT_MODEL = (os.environ.get("MINIMAX_MUSIC_MODEL") or "music-3.0-free").strip() or "music-3.0-free"
 
 # Vendor list price CNY per song (MiniMax paygo)
@@ -302,6 +306,95 @@ async def _auto_title_deepseek(*, lyrics: str, prompt: str, instrumental: bool) 
     return _fallback_title_from_lyrics_or_prompt(lyrics, prompt)
 
 
+async def _auto_lyrics_deepseek(*, prompt: str) -> str:
+    """Fallback when MiniMax lyrics API is unavailable."""
+    if not DEEPSEEK_API_KEY:
+        return ""
+    style = (prompt or "").strip()[:500] or "华语流行"
+    try:
+        raw = await _call_deepseek(
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "你是华语流行作词人。请写完整歌词，使用结构标签如 [Verse]/[Chorus]/[Bridge]/[Outro]。"
+                        "只输出歌词正文，不要歌名、不要解释。"
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": f"请根据风格写一首可演唱的完整歌词：\n{style}",
+                },
+            ],
+            use_json_mode=False,
+            max_tokens=1200,
+            temperature=0.85,
+            timeout=60.0,
+        )
+        text = (raw or "").strip()
+        if len(text) >= 20:
+            return text[:3500]
+    except Exception:
+        pass
+    return ""
+
+
+async def _fetch_minimax_lyrics(
+    client: httpx.AsyncClient,
+    *,
+    prompt: str,
+    title: str,
+    headers: Dict[str, str],
+) -> Dict[str, str]:
+    """
+    MiniMax music_generation does NOT return lyric text even with lyrics_optimizer.
+    Call lyrics_generation first so we can store & display lyrics.
+    """
+    body: Dict[str, Any] = {
+        "mode": "write_full_song",
+        "prompt": (prompt or "").strip()[:2000] or "Mandarin pop song",
+    }
+    if title:
+        body["title"] = title[:120]
+    resp = await client.post(MINIMAX_LYRICS_API_URL, headers=headers, json=body, timeout=LYRICS_TIMEOUT)
+    try:
+        data = resp.json() if resp.content else {}
+    except Exception:
+        data = {}
+    base = data.get("base_resp") if isinstance(data.get("base_resp"), dict) else {}
+    if resp.status_code >= 400 or (isinstance(base, dict) and base.get("status_code") not in (None, 0)):
+        raise HTTPException(status_code=502, detail=_minimax_error_detail(data, resp))
+    lyrics = str(data.get("lyrics") or "").strip()
+    song_title = _sanitize_title(str(data.get("song_title") or ""), max_len=40)
+    style_tags = str(data.get("style_tags") or "").strip()
+    if not lyrics:
+        raise HTTPException(status_code=502, detail="MiniMax lyrics API returned empty lyrics.")
+    return {"lyrics": lyrics[:3500], "song_title": song_title, "style_tags": style_tags}
+
+
+async def _ensure_lyrics_text(
+    client: httpx.AsyncClient,
+    *,
+    prompt: str,
+    title: str,
+    headers: Dict[str, str],
+) -> Dict[str, str]:
+    """Return lyrics (+ optional title) for auto-lyrics mode."""
+    try:
+        return await _fetch_minimax_lyrics(client, prompt=prompt, title=title, headers=headers)
+    except HTTPException:
+        # Prefer DeepSeek over failing the whole song when lyrics API is down/paid-only.
+        ly = await _auto_lyrics_deepseek(prompt=prompt)
+        if ly:
+            return {"lyrics": ly, "song_title": "", "style_tags": ""}
+        raise
+    except Exception:
+        ly = await _auto_lyrics_deepseek(prompt=prompt)
+        if ly:
+            return {"lyrics": ly, "song_title": "", "style_tags": ""}
+        raise HTTPException(status_code=502, detail="Failed to generate lyrics before music.")
+
+
 def _list_price(model: str) -> Decimal:
     return money(LIST_PRICE_PER_SONG.get((model or "").strip(), LIST_PRICE_PER_SONG["music-3.0"]))
 
@@ -526,6 +619,11 @@ async def music_generate(
     list_price = _list_price(use_model)
     _assert_can_afford(user, list_price)
 
+    headers = {
+        "Authorization": f"Bearer {MINIMAX_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
     body: Dict[str, Any] = {
         "model": use_model,
         "stream": False,
@@ -542,19 +640,29 @@ async def music_generate(
         body["prompt"] = prompt_text
     if is_instrumental:
         body["prompt"] = prompt_text
-    else:
-        if lyrics_text:
-            body["lyrics"] = lyrics_text
-        if use_lyrics_optimizer:
-            body["lyrics_optimizer"] = True
-
-    headers = {
-        "Authorization": f"Bearer {MINIMAX_API_KEY}",
-        "Content-Type": "application/json",
-    }
 
     try:
         async with httpx.AsyncClient(timeout=MUSIC_TIMEOUT) as client:
+            # music_generation never returns lyric text — resolve lyrics first when auto mode.
+            if (not is_instrumental) and use_lyrics_optimizer and not lyrics_text:
+                pack = await _ensure_lyrics_text(
+                    client,
+                    prompt=prompt_text,
+                    title=title_text,
+                    headers=headers,
+                )
+                lyrics_text = pack.get("lyrics") or ""
+                if not title_text and pack.get("song_title"):
+                    title_text = pack["song_title"]
+                use_lyrics_optimizer = False
+
+            if not is_instrumental:
+                if lyrics_text:
+                    body["lyrics"] = lyrics_text
+                elif use_lyrics_optimizer:
+                    # Last resort: vendor may still sing, but we cannot display lyrics.
+                    body["lyrics_optimizer"] = True
+
             resp = await client.post(MINIMAX_MUSIC_API_URL, headers=headers, json=body)
             try:
                 data = resp.json() if resp.content else {}

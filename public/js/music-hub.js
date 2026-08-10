@@ -261,6 +261,7 @@
         '<div class="music-track-main">' +
           '<div class="music-track-title"></div>' +
           '<div class="music-track-prompt" hidden></div>' +
+          '<div class="music-track-lyrics" hidden></div>' +
           '<div class="music-track-meta"></div>' +
         '</div>' +
         '<div class="music-track-actions action-row">' +
@@ -274,10 +275,18 @@
         promptEl.hidden = false;
         promptEl.textContent = tr('hub.musicPage.promptLabel') + ': ' + promptText;
       }
-      var hasLy = !!(item.lyrics && String(item.lyrics).trim());
+      var lyricsPreview = card.querySelector('.music-track-lyrics');
+      var lyFull = (item.lyrics || '').trim();
+      if (lyFull) {
+        lyricsPreview.hidden = false;
+        var preview = lyFull.replace(/\r\n/g, '\n').split('\n').filter(Boolean).slice(0, 4).join(' / ');
+        if (preview.length > 120) preview = preview.slice(0, 118) + '…';
+        lyricsPreview.textContent = tr('hub.musicPage.lyricsLabel') + ': ' + preview;
+      }
+      var hasLy = !!lyFull;
       card.querySelector('.music-track-meta').textContent =
         (item.model || '') + ' · ' + formatDuration(item.duration) +
-        (hasLy ? (' · ' + tr('hub.musicPage.hasLyrics')) : '') +
+        (hasLy ? (' · ' + tr('hub.musicPage.hasLyrics')) : (' · ' + tr('hub.musicPage.noLyrics'))) +
         (item.createdAt ? (' · ' + item.createdAt) : '');
       var playBtn = card.querySelector('[data-music-play]');
       var dlBtn = card.querySelector('[data-music-dl]');
