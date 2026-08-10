@@ -10,9 +10,21 @@
   var player = null;
   var currentId = '';
   var currentItem = null;
+  var canAdmin = false;
 
   function tr(k, params) {
     return typeof window.t === 'function' ? window.t(k, params) : k;
+  }
+
+  function authToken() {
+    return localStorage.getItem('auth_token') || '';
+  }
+
+  function authHeaders() {
+    var h = { Accept: 'application/json' };
+    var tok = authToken();
+    if (tok) h.Authorization = 'Bearer ' + tok;
+    return h;
   }
 
   function escapeHtml(str) {
@@ -241,6 +253,30 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  function deleteTrack(item) {
+    if (!canAdmin || !item || !item.id) return;
+    var msg = tr('hub.musicPage.deleteConfirm');
+    if (!window.confirm(msg)) return;
+    var box = document.getElementById('music-error');
+    fetch(apiBase() + '/music/public/' + encodeURIComponent(item.id), {
+      method: 'DELETE',
+      headers: authHeaders()
+    }).then(function (res) {
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error((data && data.detail) || res.statusText);
+        return data;
+      });
+    }).then(function () {
+      if (currentId === item.id) destroyPlayer();
+      loadList();
+    }).catch(function (err) {
+      if (box) {
+        box.hidden = false;
+        box.textContent = (err && err.message) || tr('hub.musicPage.deleteFailed');
+      }
+    });
+  }
+
   function renderList(items) {
     var list = document.getElementById('music-list');
     var empty = document.getElementById('music-empty');
@@ -260,6 +296,7 @@
       card.innerHTML =
         '<div class="music-track-main">' +
           '<div class="music-track-title"></div>' +
+          '<div class="music-track-creator"></div>' +
           '<div class="music-track-prompt" hidden></div>' +
           '<div class="music-track-lyrics" hidden></div>' +
           '<div class="music-track-meta"></div>' +
@@ -267,8 +304,19 @@
         '<div class="music-track-actions action-row">' +
           '<button type="button" class="tb-btn" data-music-play=""></button>' +
           '<button type="button" class="tb-btn" data-music-dl=""></button>' +
+          '<button type="button" class="tb-btn" data-music-del="" hidden></button>' +
         '</div>';
       card.querySelector('.music-track-title').textContent = item.title || tr('hub.musicPage.untitled');
+      var creatorEl = card.querySelector('.music-track-creator');
+      var nick = (item.creatorNickname || '').trim();
+      var phone = (item.creatorPhone || '').trim();
+      if (nick || phone) {
+        creatorEl.textContent = tr('hub.musicPage.creatorLabel') + ': ' +
+          (nick || tr('hub.musicPage.untitled')) +
+          (phone && phone !== '—' ? (' · ' + phone) : '');
+      } else {
+        creatorEl.textContent = tr('hub.musicPage.creatorLabel') + ': —';
+      }
       var promptEl = card.querySelector('.music-track-prompt');
       var promptText = (item.prompt || '').trim();
       if (promptText) {
@@ -290,10 +338,17 @@
         (item.createdAt ? (' · ' + item.createdAt) : '');
       var playBtn = card.querySelector('[data-music-play]');
       var dlBtn = card.querySelector('[data-music-dl]');
+      var delBtn = card.querySelector('[data-music-del]');
       playBtn.setAttribute('data-music-play', item.id);
       dlBtn.setAttribute('data-music-dl', item.id);
       playBtn.textContent = tr('hub.musicPage.play');
       dlBtn.textContent = tr('hub.musicPage.download');
+      if (canAdmin && delBtn) {
+        delBtn.hidden = false;
+        delBtn.setAttribute('data-music-del', item.id);
+        delBtn.textContent = tr('hub.musicPage.delete');
+        delBtn.addEventListener('click', function () { deleteTrack(item); });
+      }
       playBtn.addEventListener('click', function () { playTrack(item); });
       dlBtn.addEventListener('click', function () { downloadTrack(item); });
       list.appendChild(card);
@@ -308,7 +363,7 @@
     }
     var busy = document.getElementById('music-busy');
     if (busy) busy.hidden = false;
-    fetch(apiBase() + '/music/public/list?limit=50')
+    fetch(apiBase() + '/music/public/list?limit=50', { headers: authHeaders() })
       .then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
@@ -316,6 +371,7 @@
         });
       })
       .then(function (data) {
+        canAdmin = !!(data && data.canAdmin);
         renderList((data && data.items) || []);
       })
       .catch(function (err) {

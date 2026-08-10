@@ -504,11 +504,6 @@ if wan_router is not None:
     app.include_router(wan_router)
 else:
     print("[wan] router not mounted:", _wan_import_error or "unknown")
-if music_router is not None:
-    wire_music(get_conn, require_db, get_current_user)
-    app.include_router(music_router)
-else:
-    print("[music] router not mounted:", _music_import_error or "unknown")
 
 try:
     from game_rooms_api import router as tank_coop_router
@@ -571,6 +566,13 @@ def _ensure_admin_role(user: dict) -> dict:
 def require_admin(user: dict):
     if not is_admin(user):
         raise HTTPException(status_code=403, detail="Admin access required")
+
+
+if music_router is not None:
+    wire_music(get_conn, require_db, get_current_user, require_admin, get_optional_user)
+    app.include_router(music_router)
+else:
+    print("[music] router not mounted:", _music_import_error or "unknown")
 
 
 wire_wallet(get_conn, require_db, get_current_user, require_admin, is_admin)

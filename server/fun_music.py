@@ -41,6 +41,7 @@ router = APIRouter(prefix="/music", tags=["music"])
 CN_TZ = ZoneInfo("Asia/Shanghai")
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_MUSIC_API_URL = (
     os.environ.get("MINIMAX_MUSIC_API_URL") or "https://api.minimaxi.com/v1/music_generation"
@@ -172,14 +173,33 @@ def _public_file_path(file_name: str) -> Path:
     return path
 
 
-def _wire(get_conn, require_db, get_current_user):
+def _wire(get_conn, require_db, get_current_user, require_admin=None, get_optional_user=None):
     router.get_conn = get_conn  # type: ignore[attr-defined]
     router.require_db = require_db  # type: ignore[attr-defined]
     router.get_current_user = get_current_user  # type: ignore[attr-defined]
+    router.require_admin = require_admin  # type: ignore[attr-defined]
+    router.get_optional_user = get_optional_user  # type: ignore[attr-defined]
 
 
 def _user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     return router.get_current_user(creds)  # type: ignore[attr-defined]
+
+
+def _optional_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    fn = getattr(router, "get_optional_user", None)
+    if fn:
+        return fn(creds)
+    return None
+
+
+def _admin_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    user = router.get_current_user(creds)  # type: ignore[attr-defined]
+    req = getattr(router, "require_admin", None)
+    if req:
+        req(user)
+    elif not _is_admin(user):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
 
 
 def _conn():
@@ -188,7 +208,40 @@ def _conn():
 
 
 def _is_admin(user: dict) -> bool:
-    return user.get("role") == "admin" or (user.get("email") or "").lower() == ADMIN_EMAIL
+    if not user:
+        return False
+    if user.get("role") == "admin":
+        return True
+    if (user.get("email") or "").lower() == ADMIN_EMAIL:
+        return True
+    if ADMIN_PHONE and (user.get("phone") or "").strip() == ADMIN_PHONE:
+        return True
+    return False
+
+
+def _mask_phone(raw: str) -> str:
+    """Public list: show 158****0726 style masking."""
+    s = re.sub(r"\D", "", str(raw or ""))
+    if len(s) >= 11:
+        return s[:3] + "****" + s[-4:]
+    if len(s) >= 7:
+        return s[:2] + "****" + s[-2:]
+    if s:
+        return "****"
+    return "—"
+
+
+def _creator_public(row: dict) -> Dict[str, str]:
+    nick = str(row.get("creator_nickname") or "").strip()
+    phone_raw = str(row.get("creator_phone") or "").strip()
+    email = str(row.get("creator_email") or "").strip()
+    if not nick:
+        nick = phone_raw or email or ""
+    phone = _mask_phone(phone_raw) if phone_raw else "—"
+    return {
+        "creatorNickname": nick or "—",
+        "creatorPhone": phone,
+    }
 
 
 def fun_music_configured() -> bool:
@@ -822,19 +875,29 @@ async def music_generate(
 
 
 @router.get("/public/list")
-def music_public_list(limit: int = 50, offset: int = 0):
+def music_public_list(
+    limit: int = 50,
+    offset: int = 0,
+    viewer: Optional[dict] = Depends(_optional_user),
+):
     lim = max(1, min(100, int(limit or 50)))
     off = max(0, int(offset or 0))
+    can_admin = _is_admin(viewer) if viewer else False
     conn = _conn()
     try:
         with conn.cursor() as cur:
             _ensure_music_schema(cur)
             cur.execute(
                 """
-                SELECT id, title, prompt, lyrics, model, duration_sec, content_type, created_at, file_name
-                FROM music_tracks
-                WHERE is_public=1
-                ORDER BY created_at DESC
+                SELECT m.id, m.title, m.prompt, m.lyrics, m.model, m.duration_sec,
+                       m.content_type, m.created_at, m.file_name, m.user_id,
+                       u.nickname AS creator_nickname,
+                       u.phone AS creator_phone,
+                       u.email AS creator_email
+                FROM music_tracks m
+                LEFT JOIN users u ON u.id = m.user_id
+                WHERE m.is_public=1
+                ORDER BY m.created_at DESC
                 LIMIT %s OFFSET %s
                 """,
                 (lim, off),
@@ -856,6 +919,7 @@ def music_public_list(limit: int = 50, offset: int = 0):
         created = row.get("created_at")
         ly = (row.get("lyrics") or "").strip()
         song_title, song_prompt = _display_title_and_prompt(row.get("title"), row.get("prompt"))
+        creator = _creator_public(row)
         items.append(
             {
                 "id": tid,
@@ -866,11 +930,49 @@ def music_public_list(limit: int = 50, offset: int = 0):
                 "duration": int(row.get("duration_sec") or 0),
                 "contentType": row.get("content_type") or "audio/mpeg",
                 "createdAt": _format_created_at_cn(created),
+                "creatorNickname": creator["creatorNickname"],
+                "creatorPhone": creator["creatorPhone"],
                 "streamUrl": f"/music/public/{tid}",
                 "downloadUrl": f"/music/public/{tid}?download=1",
             }
         )
-    return {"success": True, "items": items, "limit": lim, "offset": off}
+    return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
+
+
+@router.delete("/public/{track_id}")
+def music_public_delete(track_id: str, admin: dict = Depends(_admin_user)):
+    tid = "".join(ch for ch in str(track_id or "") if ch.isalnum())
+    if len(tid) < 16:
+        raise HTTPException(status_code=404, detail="Music not found")
+    conn = _conn()
+    file_name = ""
+    try:
+        with conn.cursor() as cur:
+            _ensure_music_schema(cur)
+            cur.execute(
+                """
+                SELECT file_name FROM music_tracks
+                WHERE id=%s AND is_public=1
+                LIMIT 1
+                """,
+                (tid,),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Music not found")
+            file_name = str(row.get("file_name") or "")
+            cur.execute("DELETE FROM music_tracks WHERE id=%s", (tid,))
+    finally:
+        conn.close()
+    if file_name:
+        try:
+            path = _public_file_path(file_name)
+            if path.is_file():
+                path.unlink()
+        except Exception:
+            pass
+    _results.pop(tid, None)
+    return {"success": True, "deletedId": tid}
 
 
 def _ascii_filename(stem: str, ext: str, *, fallback: str = "ai-music") -> str:
