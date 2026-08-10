@@ -28,7 +28,7 @@
 
     function translateDetail(msg, status) {
         if (!msg) {
-            if (status === 502 || status === 504) return tr('tools.imageCloud.serviceUnavailable');
+            if (status === 502 || status === 504) return tr('common.serviceUnavailable');
             return tr('tools.imageCloud.unknownError');
         }
         var text = String(msg || '').trim();
@@ -45,7 +45,7 @@
         }
         if (text.indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
         if (text === 'Bad Gateway' || text === 'Gateway Timeout') {
-            return tr('tools.imageCloud.serviceUnavailable');
+            return tr('common.serviceUnavailable');
         }
         if (
             text.indexOf('Green net check failed') !== -1

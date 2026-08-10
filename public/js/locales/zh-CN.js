@@ -2803,7 +2803,7 @@ window.TB_LOCALES['zh-CN'] = {
         dealerTip: '按单次采购兑换码面额累计：满 ¥100 → 9 折，满 ¥300 → 8 折，满 ¥500 → 7 折。微信打款后联系管理员，人工生成兑码并通过微信或站内信发给你，便于转售。'
     },
     common: {
-        serviceUnavailable: '服务不可用',
+        serviceUnavailable: '服务暂时不可用，请稍后重试',
         serviceUnavailableBody: 'API 服务无响应，请稍后重试。',
         ok: '确定',
         gotIt: '知道了',

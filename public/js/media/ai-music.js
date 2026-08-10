@@ -227,12 +227,19 @@
     C.apiJson('/music/generate', { method: 'POST', body: fd, timeoutMs: 400000 })
       .then(function (res) {
         applyWallet(res.wallet || res.aiWallet);
-        var proxy = res.proxyUrl || '';
+        var proxy = res.publicStreamUrl || res.proxyUrl || '';
         if (!proxy) throw new Error(tr('tools.aiMusic.failed'));
         lastExt = (String(res.contentType || '').indexOf('wav') >= 0) ? '.wav' : '.mp3';
         var safeTitle = String(res.title || '').replace(/[\\/:*?"<>|]+/g, '').trim();
         lastFilename = (safeTitle || 'ai-music') + lastExt;
-        return C.apiBlob(proxy).then(function (pack) {
+        // Public tracks: prefer open /music/public/{id} (survives API restart; no auth map).
+        var blobFetch = res.publicStreamUrl
+          ? fetch((typeof siteConfig !== 'undefined' && siteConfig.apiBase ? String(siteConfig.apiBase).replace(/\/$/, '') : '/api') + res.publicStreamUrl).then(function (r) {
+              if (!r.ok) throw new Error(tr('tools.aiMusic.failed'));
+              return r.blob().then(function (blob) { return { blob: blob }; });
+            })
+          : C.apiBlob(proxy);
+        return blobFetch.then(function (pack) {
           revokeAudio();
           audioBlob = pack.blob;
           audioBlobUrl = URL.createObjectURL(pack.blob);

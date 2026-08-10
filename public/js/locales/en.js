@@ -2804,7 +2804,7 @@ window.TB_LOCALES.en = {
         dealerTip: 'Volume tiers by face value per order: ¥100 → 10% off, ¥300 → 20% off, ¥500 → 30% off. Pay via WeChat, then contact the admin — codes are created manually and sent by WeChat or site chat for you to resell.'
     },
     common: {
-        serviceUnavailable: 'Service unavailable',
+        serviceUnavailable: 'Service temporarily unavailable. Please try again later.',
         serviceUnavailableBody: 'The API server is not responding. Please try again later.',
         ok: 'OK',
         gotIt: 'Got it',
