@@ -135,7 +135,7 @@
         bar.className = 'hub-music-bar';
         bar.innerHTML =
             '<a class="tb-btn" href="html/game/music-select.html">' +
-                escapeHtml(tr('hub.musicSelect')) +
+                escapeHtml(tr('hub.music.title')) +
             '</a>';
         containerEl.appendChild(bar);
     }
