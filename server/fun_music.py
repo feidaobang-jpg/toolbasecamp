@@ -10,6 +10,7 @@ Env: MINIMAX_API_KEY (required). Optional MINIMAX_MUSIC_API_URL, MINIMAX_MUSIC_T
 from __future__ import annotations
 
 import os
+import re
 import secrets
 import time
 from decimal import Decimal
@@ -30,6 +31,7 @@ from ai_wallet import (
     user_price_cny,
     wallet_public,
 )
+from recipe_ai import DEEPSEEK_API_KEY, _call_deepseek
 
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/music", tags=["music"])
@@ -162,6 +164,87 @@ def _is_admin(user: dict) -> bool:
 
 def fun_music_configured() -> bool:
     return bool(MINIMAX_API_KEY)
+
+
+def _sanitize_title(raw: str, *, max_len: int = 40) -> str:
+    t = (raw or "").strip()
+    t = t.strip("\"'`「」『』《》【】[]()（）").strip()
+    t = " ".join(t.split())
+    # Drop common model prefixes
+    for prefix in ("歌名：", "歌名:", "标题：", "标题:", "Title:", "title:"):
+        if t.lower().startswith(prefix.lower()):
+            t = t[len(prefix) :].strip()
+    if not t:
+        return ""
+    # One line only
+    t = t.splitlines()[0].strip()
+    if len(t) > max_len:
+        t = t[:max_len].rstrip("，,.-— ")
+    return t
+
+
+def _fallback_title_from_lyrics_or_prompt(lyrics: str, prompt: str) -> str:
+    for line in (lyrics or "").splitlines():
+        s = line.strip()
+        if not s:
+            continue
+        if re.match(r"^\[.+\]$", s):
+            continue
+        if s.startswith("(") and s.endswith(")"):
+            continue
+        s = _sanitize_title(s, max_len=24)
+        if s and len(s) >= 2:
+            return s
+    p = _sanitize_title(prompt or "", max_len=24)
+    if p:
+        return p
+    return "AI Music"
+
+
+async def _auto_title_deepseek(*, lyrics: str, prompt: str, instrumental: bool) -> str:
+    """When user left title empty: DeepSeek short title from lyrics/prompt. Free of MiniMax title."""
+    if not DEEPSEEK_API_KEY:
+        return _fallback_title_from_lyrics_or_prompt(lyrics, prompt)
+    style = (prompt or "").strip()[:400]
+    ly = (lyrics or "").strip()[:1200]
+    if instrumental:
+        user_msg = (
+            "请根据下面的纯音乐风格描述，起一个简短中文歌名（2–12字）。"
+            "只输出歌名本身，不要引号、不要解释、不要换行。\n\n"
+            f"风格：{style or '氛围纯音乐'}"
+        )
+    elif ly:
+        user_msg = (
+            "请根据下面的歌词（可参考风格），起一个简短中文歌名（2–12字）。"
+            "只输出歌名本身，不要引号、不要解释、不要换行。\n\n"
+            f"风格：{style or '未注明'}\n\n歌词：\n{ly}"
+        )
+    else:
+        user_msg = (
+            "请根据下面的歌曲风格描述，起一个简短中文歌名（2–12字）。"
+            "只输出歌名本身，不要引号、不要解释、不要换行。\n\n"
+            f"风格：{style or '流行歌曲'}"
+        )
+    try:
+        raw = await _call_deepseek(
+            [
+                {
+                    "role": "system",
+                    "content": "你是华语流行音乐企划，擅长起短而有画面感的歌名。",
+                },
+                {"role": "user", "content": user_msg},
+            ],
+            use_json_mode=False,
+            max_tokens=32,
+            temperature=0.8,
+            timeout=20.0,
+        )
+        title = _sanitize_title(raw or "", max_len=40)
+        if title:
+            return title
+    except Exception:
+        pass
+    return _fallback_title_from_lyrics_or_prompt(lyrics, prompt)
 
 
 def _list_price(model: str) -> Decimal:
@@ -460,6 +543,14 @@ async def music_generate(
                     break
             lyrics_text = out_lyrics
 
+            # MiniMax music_generation does not return a title. Empty title → DeepSeek (or fallback).
+            if not title_text:
+                title_text = await _auto_title_deepseek(
+                    lyrics=lyrics_text,
+                    prompt=prompt_text,
+                    instrumental=is_instrumental,
+                )
+
             if fmt == "wav":
                 ctype = "audio/wav"
                 ext = ".wav"
@@ -496,7 +587,7 @@ async def music_generate(
                 if not _is_admin(user):
                     charged_cny = float(user_price_cny(list_price))
                 if is_public:
-                    display_title = title_text or (prompt_text[:40] + ("…" if len(prompt_text) > 40 else "")) or "AI Music"
+                    display_title = title_text or "AI Music"
                     _insert_public_track(
                         track_id=result_id,
                         user_id=int(user["id"]),
