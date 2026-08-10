@@ -313,6 +313,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.chatInboxTitle',
                     descriptionKey: 'privateHub.ops.chatInboxDesc',
                     url: 'html/admin/private/chat-inbox.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.tradMusicTitle',
+                    descriptionKey: 'privateHub.ops.tradMusicDesc',
+                    url: 'html/admin/private/traditional-music.html'
                 }
             ]
         },

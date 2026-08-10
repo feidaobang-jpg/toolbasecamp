@@ -9,9 +9,12 @@ Env: MINIMAX_API_KEY (required). Optional MINIMAX_MUSIC_API_URL, MINIMAX_MUSIC_T
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import secrets
+import shutil
+import subprocess
 import time
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -20,7 +23,7 @@ from typing import Any, Dict, Optional
 from zoneinfo import ZoneInfo
 
 import httpx
-from fastapi import APIRouter, Depends, Form, HTTPException
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -68,6 +71,15 @@ PUBLIC_DIR = Path(
     or "/var/lib/toolbasecamp/public-music"
 )
 PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
+TRADITIONAL_DIR = Path(
+    os.environ.get("TRADITIONAL_MUSIC_DIR")
+    or "/var/lib/toolbasecamp/traditional-music"
+)
+TRADITIONAL_DIR.mkdir(parents=True, exist_ok=True)
+TRADITIONAL_MANIFEST = TRADITIONAL_DIR / "manifest.json"
+_traditional_manifest_cache: tuple[float, list] = (0.0, [])
+TRADITIONAL_PREVIEW_BITRATE = (os.environ.get("TRADITIONAL_PREVIEW_BITRATE") or "96k").strip()
+TRADITIONAL_UPLOAD_MAX_MB = max(5, int(os.environ.get("TRADITIONAL_UPLOAD_MAX_MB") or "50"))
 
 _results: Dict[str, Dict[str, Any]] = {}
 
@@ -1141,6 +1153,367 @@ def _ascii_filename(stem: str, ext: str, *, fallback: str = "ai-music") -> str:
     if not ascii_stem:
         ascii_stem = fallback
     return f"{ascii_stem}{e}"
+
+
+def _invalidate_traditional_cache() -> None:
+    global _traditional_manifest_cache
+    _traditional_manifest_cache = (0.0, [])
+
+
+def _save_traditional_manifest(items: list) -> None:
+    TRADITIONAL_DIR.mkdir(parents=True, exist_ok=True)
+    payload = {"version": 1, "items": items}
+    TRADITIONAL_MANIFEST.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    _invalidate_traditional_cache()
+
+
+def _next_traditional_id(items: list) -> str:
+    max_n = 0
+    for row in items:
+        tid = str(row.get("id") or "")
+        m = re.fullmatch(r"t(\d+)", tid)
+        if m:
+            max_n = max(max_n, int(m.group(1)))
+    return f"t{max_n + 1:03d}"
+
+
+def _parse_upload_filename(name: str) -> tuple[str, str]:
+    stem = Path(str(name or "")).stem.strip()
+    if not stem:
+        return "", "未命名"
+    if "-" in stem:
+        artist, title = stem.split("-", 1)
+        artist = artist.strip()
+        title = title.strip()
+        title = re.split(r"-(?=[《])|《", title)[0].strip() or title
+        return artist, title or stem
+    return "", stem
+
+
+def _ffmpeg_available() -> bool:
+    return bool(shutil.which("ffmpeg"))
+
+
+def _probe_duration_sync(path: Path) -> int:
+    ffprobe = shutil.which("ffprobe")
+    if not ffprobe or not path.is_file():
+        return 0
+    try:
+        out = subprocess.check_output(
+            [
+                ffprobe,
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                str(path),
+            ],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        return max(0, int(float(out or 0)))
+    except Exception:
+        return 0
+
+
+def _make_preview_mp3(src: Path, dst: Path) -> bool:
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg or not src.is_file():
+        return False
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        subprocess.run(
+            [
+                ffmpeg,
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-y",
+                "-i",
+                str(src),
+                "-codec:a",
+                "libmp3lame",
+                "-b:a",
+                TRADITIONAL_PREVIEW_BITRATE,
+                "-ac",
+                "2",
+                "-ar",
+                "44100",
+                str(dst),
+            ],
+            check=True,
+            timeout=600,
+        )
+        return dst.is_file() and dst.stat().st_size > 0
+    except Exception:
+        return False
+
+
+async def _lookup_lyrics_deepseek(*, artist: str, title: str) -> str:
+    """Best-effort lyrics via DeepSeek (no web crawler)."""
+    if not DEEPSEEK_API_KEY:
+        return ""
+    artist = (artist or "").strip()
+    title = (title or "").strip()
+    if not title:
+        return ""
+    label = f"{artist}《{title}》" if artist else f"《{title}》"
+    try:
+        raw = await _call_deepseek(
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "你是华语流行歌词助手。用户给出歌手与歌名时，若你知道该曲常见公开歌词，"
+                        "按行输出完整歌词正文；不要标题、不要解释、不要 Markdown。"
+                        "若不确定或无法提供可靠歌词，只输出一个空行。"
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": f"请输出歌曲 {label} 的歌词正文（仅歌词）：",
+                },
+            ],
+            use_json_mode=False,
+            max_tokens=2000,
+            temperature=0.2,
+            timeout=45.0,
+        )
+        text = (raw or "").strip()
+        if len(text) < 12:
+            return ""
+        return text[:8000]
+    except Exception:
+        return ""
+
+
+def _traditional_public_item(row: dict) -> dict:
+    tid = str(row.get("id") or "").strip()
+    preview = str(row.get("previewFile") or "").strip()
+    return {
+        "id": tid,
+        "title": str(row.get("title") or tid).strip() or tid,
+        "artist": str(row.get("artist") or "").strip(),
+        "duration": int(row.get("duration") or 0),
+        "contentType": str(row.get("contentType") or "audio/mpeg"),
+        "lyrics": str(row.get("lyrics") or ""),
+        "hasPreview": bool(preview),
+        "streamUrl": f"/music/traditional/{tid}",
+        "previewUrl": f"/music/traditional/{tid}",
+        "fullUrl": f"/music/traditional/{tid}?full=1",
+        "downloadUrl": f"/music/traditional/{tid}?download=1",
+    }
+
+
+def _traditional_admin_item(row: dict) -> dict:
+    tid = str(row.get("id") or "").strip()
+    full_name = str(row.get("file") or "").strip()
+    preview_name = str(row.get("previewFile") or "").strip()
+    full_path = TRADITIONAL_DIR / full_name if full_name else None
+    preview_path = TRADITIONAL_DIR / preview_name if preview_name else None
+    ly = str(row.get("lyrics") or "")
+    return {
+        **_traditional_public_item(row),
+        "source": str(row.get("source") or ""),
+        "createdAt": str(row.get("createdAt") or ""),
+        "fullBytes": full_path.stat().st_size if full_path and full_path.is_file() else 0,
+        "previewBytes": preview_path.stat().st_size if preview_path and preview_path.is_file() else 0,
+        "lyricsPreview": ly[:120] + ("…" if len(ly) > 120 else ""),
+        "hasLyrics": bool(ly.strip()),
+    }
+
+
+def _load_traditional_manifest() -> list:
+    global _traditional_manifest_cache
+    now = time.time()
+    cached_at, cached_items = _traditional_manifest_cache
+    if cached_items and now - cached_at < 30:
+        return cached_items
+    if not TRADITIONAL_MANIFEST.is_file():
+        _traditional_manifest_cache = (now, [])
+        return []
+    try:
+        raw = json.loads(TRADITIONAL_MANIFEST.read_text(encoding="utf-8"))
+        items = raw.get("items") if isinstance(raw, dict) else raw
+        if not isinstance(items, list):
+            items = []
+        _traditional_manifest_cache = (now, items)
+        return items
+    except Exception:
+        _traditional_manifest_cache = (now, [])
+        return []
+
+
+def _traditional_track_row(track_id: str) -> Optional[dict]:
+    tid = re.sub(r"[^a-zA-Z0-9_-]", "", str(track_id or ""))[:48]
+    if not tid:
+        return None
+    for row in _load_traditional_manifest():
+        if str(row.get("id") or "") == tid:
+            return row
+    return None
+
+
+@router.get("/traditional/admin/list")
+def music_traditional_admin_list(limit: int = 500, offset: int = 0, admin: dict = Depends(_admin_user)):
+    del admin
+    all_items = _load_traditional_manifest()
+    lim = max(1, min(int(limit or 500), 1000))
+    off = max(0, int(offset or 0))
+    items = [_traditional_admin_item(row) for row in all_items[off : off + lim] if row.get("id")]
+    return {
+        "success": True,
+        "items": items,
+        "limit": lim,
+        "offset": off,
+        "total": len(all_items),
+        "ffmpegAvailable": _ffmpeg_available(),
+    }
+
+
+@router.delete("/traditional/admin/{track_id}")
+def music_traditional_admin_delete(track_id: str, admin: dict = Depends(_admin_user)):
+    del admin
+    tid = re.sub(r"[^a-zA-Z0-9_-]", "", str(track_id or ""))[:48]
+    if not tid:
+        raise HTTPException(status_code=404, detail="Music not found")
+    items = _load_traditional_manifest()
+    row = _traditional_track_row(tid)
+    if not row:
+        raise HTTPException(status_code=404, detail="Music not found")
+    for fname in {str(row.get("file") or ""), str(row.get("previewFile") or "")}:
+        if not fname or fname != Path(fname).name or ".." in fname:
+            continue
+        path = TRADITIONAL_DIR / fname
+        if path.is_file():
+            try:
+                path.unlink()
+            except Exception:
+                pass
+    new_items = [it for it in items if str(it.get("id") or "") != tid]
+    _save_traditional_manifest(new_items)
+    return {"success": True, "deletedId": tid}
+
+
+@router.post("/traditional/admin/upload")
+async def music_traditional_admin_upload(
+    file: UploadFile = File(...),
+    fetch_lyrics: int = Form(1),
+    admin: dict = Depends(_admin_user),
+):
+    del admin
+    orig_name = Path(str(file.filename or "upload.mp3")).name
+    if not orig_name.lower().endswith(".mp3"):
+        raise HTTPException(status_code=400, detail="Only MP3 files are supported")
+    raw = await file.read()
+    max_bytes = TRADITIONAL_UPLOAD_MAX_MB * 1024 * 1024
+    if len(raw) > max_bytes:
+        raise HTTPException(status_code=400, detail=f"File too large (max {TRADITIONAL_UPLOAD_MAX_MB}MB)")
+    if len(raw) < 1024:
+        raise HTTPException(status_code=400, detail="File too small")
+
+    items = _load_traditional_manifest()
+    tid = _next_traditional_id(items)
+    artist, title = _parse_upload_filename(orig_name)
+    full_name = f"{tid}.mp3"
+    preview_name = f"{tid}.preview.mp3"
+    full_path = TRADITIONAL_DIR / full_name
+    preview_path = TRADITIONAL_DIR / preview_name
+    TRADITIONAL_DIR.mkdir(parents=True, exist_ok=True)
+    full_path.write_bytes(raw)
+
+    preview_ok = _make_preview_mp3(full_path, preview_path)
+    if not preview_ok:
+        preview_name = full_name
+
+    lyrics = ""
+    if int(fetch_lyrics or 0):
+        lyrics = await _lookup_lyrics_deepseek(artist=artist, title=title)
+
+    duration = _probe_duration_sync(full_path)
+    created = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    row = {
+        "id": tid,
+        "title": title,
+        "artist": artist,
+        "file": full_name,
+        "previewFile": preview_name,
+        "lyrics": lyrics,
+        "duration": duration,
+        "contentType": "audio/mpeg",
+        "source": orig_name,
+        "createdAt": _format_created_at_cn(created),
+    }
+    items.append(row)
+    _save_traditional_manifest(items)
+    return {
+        "success": True,
+        "item": _traditional_admin_item(row),
+        "previewGenerated": preview_ok,
+        "lyricsFetched": bool(lyrics.strip()),
+    }
+
+
+@router.get("/traditional/list")
+def music_traditional_list(limit: int = 100, offset: int = 0):
+    all_items = _load_traditional_manifest()
+    lim = max(1, min(int(limit or 100), 500))
+    off = max(0, int(offset or 0))
+    items = []
+    for row in all_items[off : off + lim]:
+        tid = str(row.get("id") or "").strip()
+        if not tid:
+            continue
+        items.append(_traditional_public_item(row))
+    return {
+        "success": True,
+        "items": items,
+        "limit": lim,
+        "offset": off,
+        "total": len(all_items),
+    }
+
+
+@router.get("/traditional/{track_id}")
+def music_traditional_file(track_id: str, download: int = 0, full: int = 0):
+    tid = re.sub(r"[^a-zA-Z0-9_-]", "", str(track_id or ""))[:48]
+    if not tid:
+        raise HTTPException(status_code=404, detail="Music not found")
+    row = _traditional_track_row(tid)
+    if not row:
+        raise HTTPException(status_code=404, detail="Music not found")
+    if download:
+        fname = str(row.get("file") or "").strip()
+    elif full:
+        fname = str(row.get("file") or "").strip()
+    else:
+        preview = str(row.get("previewFile") or "").strip()
+        fname = preview or str(row.get("file") or "").strip()
+    if not fname or fname != Path(fname).name or ".." in fname:
+        raise HTTPException(status_code=404, detail="Music file missing")
+    path = TRADITIONAL_DIR / fname
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Music file missing")
+    ext = path.suffix or ".mp3"
+    filename = _ascii_filename(tid, ext, fallback=f"traditional-{tid}")
+    headers = {
+        "Content-Disposition": (
+            f'{"attachment" if download else "inline"}; filename="{filename}"'
+        ),
+    }
+    if not download:
+        headers["Cache-Control"] = "public, max-age=86400"
+        headers["Accept-Ranges"] = "bytes"
+    return FileResponse(
+        path,
+        media_type=str(row.get("contentType") or "audio/mpeg"),
+        headers=headers,
+    )
 
 
 @router.get("/public/{track_id}")

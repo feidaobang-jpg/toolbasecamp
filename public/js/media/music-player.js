@@ -285,9 +285,10 @@
       renderLyricsBox(lyricsEl, 'static', staticLyricsPlain(opts.lyrics));
     } else {
       renderLyricsBox(lyricsEl, 'empty', '');
-      dlLyricsBtn.hidden = true;
+      if (dlLyricsBtn && dlLyricsBtn.parentNode) dlLyricsBtn.remove();
     }
 
+    audio.preload = opts.preload || 'metadata';
     audio.src = opts.src || '';
     var seeking = false;
     var lastActive = -1;
@@ -362,7 +363,20 @@
     });
     audio.addEventListener('error', function () {
       playBtn.textContent = labelPlay();
+      if (typeof opts.onBuffering === 'function') opts.onBuffering(false);
       if (typeof opts.onError === 'function') opts.onError();
+    });
+    audio.addEventListener('waiting', function () {
+      if (typeof opts.onBuffering === 'function') opts.onBuffering(true);
+    });
+    audio.addEventListener('stalled', function () {
+      if (typeof opts.onBuffering === 'function') opts.onBuffering(true);
+    });
+    audio.addEventListener('canplay', function () {
+      if (typeof opts.onBuffering === 'function') opts.onBuffering(false);
+    });
+    audio.addEventListener('playing', function () {
+      if (typeof opts.onBuffering === 'function') opts.onBuffering(false);
     });
     audio.addEventListener('timeupdate', tick);
     audio.addEventListener('loadedmetadata', tick);
@@ -457,6 +471,25 @@
     return {
       audio: audio,
       play: function () { return audio.play(); },
+      playWhenReady: function () {
+        if (audio.readyState >= 2) return audio.play();
+        return new Promise(function (resolve, reject) {
+          function cleanup() {
+            audio.removeEventListener('canplay', onReady);
+            audio.removeEventListener('error', onErr);
+          }
+          function onReady() {
+            cleanup();
+            audio.play().then(resolve).catch(reject);
+          }
+          function onErr() {
+            cleanup();
+            reject(new Error('audio load failed'));
+          }
+          audio.addEventListener('canplay', onReady, { once: true });
+          audio.addEventListener('error', onErr, { once: true });
+        });
+      },
       pause: function () { audio.pause(); },
       destroy: function () {
         try {

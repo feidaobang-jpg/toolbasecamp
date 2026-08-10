@@ -19,6 +19,11 @@ server/DEPLOY_SHA
 # Fun Music temp audio
 server/tmp_music/
 
+# Local classic MP3 library (upload via deploy/seed-traditional-music.py)
+music/
+deploy/.traditional-out/
+deploy/.traditional-build-state.json
+
 # Instruct-edit result cache (runtime)
 server/var/
 

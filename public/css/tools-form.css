@@ -140,6 +140,36 @@
   color: #fff;
 }
 
+/* Flat underline tabs (hub / portal — not pill buttons) */
+.tb-tabs--underline {
+  gap: 0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.tb-tabs--underline .tb-tab {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 18px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.tb-tabs--underline .tb-tab:hover {
+  color: #0f172a;
+}
+
+.tb-tabs--underline .tb-tab.active {
+  background: transparent;
+  border-color: transparent;
+  border-bottom-color: #2563eb;
+  color: #2563eb;
+}
+
 .tb-tab-panel[hidden] {
   display: none !important;
 }

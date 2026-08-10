@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>歌曲管理 - 自用</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../vendor/tailwindcss.js?v=songAdmin1"></script>
+  <link href="../../../vendor/font-awesome/css/all.min.css?v=songAdmin1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../css/base.css?v=songAdmin1" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=songAdmin1" />
+  <link rel="stylesheet" href="../../../css/tools-form.css?v=songAdmin1" />
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=songAdmin1" />
+  <script src="../../../js/locales/en.js?v=songAdmin1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=songAdmin1"></script>
+  <script src="../../../js/i18n.js?v=songAdmin1"></script>
+  <script src="../../../js/config.js?v=songAdmin1"></script>
+  <script src="../../../js/common_ui.js?v=songAdmin1"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.tradMusicTitle">歌曲管理</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
+    <div id="boot-loading" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500" data-i18n="privateHub.ops.tradMusicLoading">加载中…</div>
+
+    <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../auth/login.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
+    </div>
+
+    <div id="app" class="ladder-update-wrap hidden">
+      <p class="ladder-update-desc" data-i18n="privateHub.ops.tradMusicDesc">
+        管理公开音乐：传统歌曲可批量上传（自动生成试听版 + DeepSeek 歌词）；AI 公开歌曲可在此删除。
+      </p>
+
+      <div class="tb-tabs tb-tabs--underline" role="tablist">
+        <button type="button" class="tb-tab active" data-song-tab="traditional" role="tab" aria-selected="true" data-i18n="privateHub.ops.tradMusicTradTab">传统音乐</button>
+        <button type="button" class="tb-tab" data-song-tab="ai" role="tab" aria-selected="false" data-i18n="privateHub.ops.tradMusicAiTab">AI 音乐</button>
+      </div>
+
+      <div id="panel-traditional">
+        <section class="ladder-section">
+          <h2 class="ladder-section-title" data-i18n="privateHub.ops.tradMusicUploadTitle">批量上传</h2>
+          <p class="ladder-section-desc" data-i18n="privateHub.ops.tradMusicUploadDesc">选择本地 MP3（可多选），按文件名解析歌手与歌名，例如「周杰伦-晴天.mp3」。</p>
+          <div class="ladder-toolbar action-row" style="align-items:center">
+            <label class="tb-btn" style="cursor:pointer;margin:0">
+              <span data-i18n="privateHub.ops.tradMusicPick">选择文件</span>
+              <input type="file" id="upload-input" accept="audio/mpeg,.mp3" multiple hidden />
+            </label>
+            <label class="text-sm text-gray-600" style="display:flex;align-items:center;gap:6px">
+              <input type="checkbox" id="fetch-lyrics" checked />
+              <span data-i18n="privateHub.ops.tradMusicFetchLyrics">上传时获取歌词（DeepSeek）</span>
+            </label>
+            <button type="button" id="btn-refresh-trad" class="tb-btn" data-i18n="privateHub.ops.tradMusicRefresh">刷新列表</button>
+            <a class="ladder-row-link" href="../../../music.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.tradMusicPublic">查看公开页</a>
+          </div>
+          <div id="upload-status" class="ladder-status"></div>
+          <div id="upload-progress" class="ladder-status" hidden></div>
+        </section>
+
+        <section class="ladder-section">
+          <h2 class="ladder-section-title" data-i18n="privateHub.ops.tradMusicListTitle">传统歌曲列表</h2>
+          <div id="list-meta-trad" class="ladder-status"></div>
+          <div id="track-list-trad" class="ladder-list"></div>
+        </section>
+      </div>
+
+      <div id="panel-ai" hidden>
+        <section class="ladder-section">
+          <h2 class="ladder-section-title" data-i18n="privateHub.ops.tradMusicAiListTitle">AI 公开歌曲</h2>
+          <p class="ladder-section-desc" data-i18n="privateHub.ops.tradMusicAiListDesc">用户生成并公开到音乐列表的 AI 歌曲，可在此删除。</p>
+          <div class="ladder-toolbar action-row">
+            <button type="button" id="btn-refresh-ai" class="tb-btn" data-i18n="privateHub.ops.tradMusicRefresh">刷新列表</button>
+            <a class="ladder-row-link" href="../../../html/media/ai-music.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.tradMusicAiCreate">去生成页</a>
+            <a class="ladder-row-link" href="../../../music.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.tradMusicPublic">查看公开页</a>
+          </div>
+          <div id="list-meta-ai" class="ladder-status"></div>
+          <div id="track-list-ai" class="ladder-list"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../../js/admin/private-page-guard.js?v=songAdmin1"></script>
+  <script src="../../../js/admin/traditional-music.js?v=songAdmin1"></script>
+</body>
+</html>
