@@ -149,9 +149,7 @@
       playerInst._tbcUpgradedFull = true;
       audio.src = blobUrl;
       audio.currentTime = t;
-      if (wasPlaying) {
-        playerInst.playWhenReady().catch(function () {});
-      }
+      if (wasPlaying) playerInst.play().catch(function () {});
     }).catch(function () {});
   }
 
@@ -182,9 +180,8 @@
     setPlayingUi('', '', false);
   }
 
-  function mountPlayer(kind, item, src, autoplay) {
-    var dock = document.getElementById('music-player-dock');
-    if (!dock || !window.TBMusicPlayer) return;
+  function mountPlayer(kind, item, src, autoplay, mountEl) {
+    if (!mountEl || !window.TBMusicPlayer) return;
     if (player) {
       try { player.destroy(); } catch (e) {}
       player = null;
@@ -195,7 +192,7 @@
     var fallback = kind === 'traditional' ? 'traditional-music' : 'ai-music';
     var audioName = String(item.title || fallback).replace(/[\\/:*?"<>|]+/g, '').trim() || fallback;
     var isBlob = String(src || '').indexOf('blob:') === 0;
-    player = window.TBMusicPlayer.mount(dock, {
+    player = window.TBMusicPlayer.mount(mountEl, {
       src: src,
       preload: isBlob ? 'auto' : 'none',
       title: item.title || tr('hub.musicPage.untitled'),
@@ -230,7 +227,7 @@
       });
     }
     if (autoplay && player) {
-      player.playWhenReady().then(function () {
+      player.play().then(function () {
         setPlayingUi(kind, item.id, true);
       }).catch(function () {
         setPlayingUi(kind, item.id, false);
@@ -241,13 +238,21 @@
   function playTrack(kind, item) {
     var id = item.id;
     var btn = document.querySelector('[data-music-play="' + id + '"][data-music-kind="' + kind + '"]');
+    var card = btn ? btn.closest('.music-track-card') : null;
+    if (!card) return;
+    var playerHost = card.querySelector('.music-track-player');
+    if (!playerHost) {
+      playerHost = document.createElement('div');
+      playerHost.className = 'music-track-player';
+      card.appendChild(playerHost);
+    }
 
     if (currentKind === kind && currentId === id && player && player.audio) {
       if (!player.audio.paused) {
         player.pause();
         setPlayingUi(kind, id, false);
       } else {
-        player.playWhenReady().then(function () {
+        player.play().then(function () {
           setPlayingUi(kind, id, true);
         }).catch(function () {
           setPlayingUi(kind, id, false);
@@ -262,7 +267,10 @@
     function go(src, isFull) {
       if (started) return;
       started = true;
-      mountPlayer(kind, item, src, true);
+      document.querySelectorAll('.music-track-player').forEach(function (el) {
+        if (el !== playerHost) el.innerHTML = '';
+      });
+      mountPlayer(kind, item, src, true, playerHost);
       if (kind === 'traditional' && isFull && player) player._tbcUpgradedFull = true;
     }
 
@@ -396,8 +404,7 @@
       }
       if (activeTab === kind) {
         destroyPlayer();
-        var dock = document.getElementById('music-player-dock');
-        if (dock) dock.innerHTML = '';
+        document.querySelectorAll('.music-track-player').forEach(function (el) { el.innerHTML = ''; });
       }
       return;
     }
@@ -505,8 +512,7 @@
     if (tab === activeTab) return;
     activeTab = tab;
     destroyPlayer();
-    var dock = document.getElementById('music-player-dock');
-    if (dock) dock.innerHTML = '';
+    document.querySelectorAll('.music-track-player').forEach(function (el) { el.innerHTML = ''; });
     updateTabUi();
     loadList(tab);
   }
@@ -571,7 +577,6 @@
           '</div>' +
         '</div>' +
         '<p class="music-hub-tip">' + escapeHtml(tr('hub.musicPage.cacheTip')) + '</p>' +
-        '<div id="music-player-dock"></div>' +
         '<div id="music-busy" class="music-hub-busy" hidden>' + escapeHtml(tr('hub.musicPage.loading')) + '</div>' +
         '<div id="music-error" class="error-box" role="alert" hidden></div>' +
         '<p id="music-empty" class="music-hub-empty" hidden></p>' +

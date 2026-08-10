@@ -488,6 +488,7 @@
           }
           audio.addEventListener('canplay', onReady, { once: true });
           audio.addEventListener('error', onErr, { once: true });
+          try { audio.load(); } catch (e) {}
         });
       },
       pause: function () { audio.pause(); },
