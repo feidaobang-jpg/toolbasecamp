@@ -253,6 +253,30 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  function lyricsPreviewSnippet(raw, maxLines, maxLen) {
+    maxLines = maxLines || 2;
+    maxLen = maxLen || 100;
+    var sung = [];
+    if (window.TBMusicPlayer && typeof TBMusicPlayer.parseLines === 'function') {
+      TBMusicPlayer.parseLines(raw).forEach(function (ln) {
+        if (ln.isTag) return;
+        var t = (ln.text || '').trim();
+        if (!t || (/^\(.+\)$/.test(t) && t.length < 40)) return;
+        sung.push(t);
+      });
+    } else {
+      String(raw || '').replace(/\r\n/g, '\n').split('\n').forEach(function (line) {
+        var t = line.trim();
+        if (!t || /^\[.+\]$/.test(t)) return;
+        if (/^\(.+\)$/.test(t) && t.length < 40) return;
+        sung.push(t);
+      });
+    }
+    var preview = sung.slice(0, maxLines).join(' · ');
+    if (preview.length > maxLen) preview = preview.slice(0, maxLen - 1) + '…';
+    return preview;
+  }
+
   function deleteTrack(item) {
     if (!canAdmin || !item || !item.id) return;
     var msg = tr('hub.musicPage.deleteConfirm');
@@ -327,9 +351,12 @@
       var lyFull = (item.lyrics || '').trim();
       if (lyFull) {
         lyricsPreview.hidden = false;
-        var preview = lyFull.replace(/\r\n/g, '\n').split('\n').filter(Boolean).slice(0, 4).join(' / ');
-        if (preview.length > 120) preview = preview.slice(0, 118) + '…';
-        lyricsPreview.textContent = tr('hub.musicPage.lyricsLabel') + ': ' + preview;
+        var preview = lyricsPreviewSnippet(lyFull, 2, 100);
+        if (preview) {
+          lyricsPreview.textContent = tr('hub.musicPage.lyricsLabel') + ': ' + preview;
+        } else {
+          lyricsPreview.textContent = tr('hub.musicPage.lyricsLabel') + ': ' + tr('hub.musicPage.lyricsTagsOnly');
+        }
       }
       var hasLy = !!lyFull;
       card.querySelector('.music-track-meta').textContent =

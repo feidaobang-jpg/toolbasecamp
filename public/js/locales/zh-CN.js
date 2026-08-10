@@ -301,6 +301,7 @@ window.TB_LOCALES['zh-CN'] = {
             downloadLyrics: '下载歌词',
             hasLyrics: '有歌词',
             lyricsLabel: '歌词',
+            lyricsTagsOnly: '（段落标签，点播放看全文）',
             promptLabel: '风格',
             creatorLabel: '创作者',
             delete: '删除',

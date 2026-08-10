@@ -302,6 +302,7 @@ window.TB_LOCALES.en = {
             downloadLyrics: 'Lyrics',
             hasLyrics: 'Has lyrics',
             lyricsLabel: 'Lyrics',
+            lyricsTagsOnly: '(section tags only — tap Play for full lyrics)',
             promptLabel: 'Style',
             creatorLabel: 'Creator',
             delete: 'Delete',
