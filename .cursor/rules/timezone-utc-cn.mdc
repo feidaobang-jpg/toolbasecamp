@@ -1,0 +1,27 @@
+---
+description: 时间存储 UTC、对用户展示北京时间（Asia/Shanghai）
+alwaysApply: true
+---
+
+# 时间：UTC 存储 + 北京时间展示
+
+面向用户的日期时间（列表、详情、历史、账单等）统一遵守：
+
+1. **入库 / 日志基准**：用 **UTC**（`datetime.now(timezone.utc)` 或等价）。不要依赖 VPS「系统本地时区」。
+2. **接口返回给前端 / 页面展示**：转成 **Asia/Shanghai（UTC+8）**，格式优先 `YYYY-MM-DD HH:MM:SS`（无时区后缀亦可，但数值必须是北京时间）。
+3. **禁止**：把 UTC 裸字符串直接当北京时间展示（会差约 8 小时，公开音乐列表曾因此出错）。
+4. **禁止**：靠 `datetime.now()` / `datetime.utcnow()` 混用却不说明语义；新建代码优先显式 `timezone.utc` + `ZoneInfo("Asia/Shanghai")`。
+5. **已有 naive DATETIME**：若历史写入是 UTC naive，展示时按 UTC 解释再转上海；不要对同一批数据再「整库 +8」除非做过迁移说明。
+
+```python
+# ✅ 写入
+datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+# ✅ 展示（naive 按 UTC）
+dt.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+
+# ❌ 写入 UTC 却原样 isoformat 给国内用户当本地时间
+created.isoformat(sep=" ")
+```
+
+前端若自己格式化 ISO 时间戳，也按东八区或 `Asia/Shanghai` 显示，不要只 `toLocaleString` 却假定服务器已是北京时间。
