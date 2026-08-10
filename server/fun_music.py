@@ -344,6 +344,78 @@ def _normalize_lyrics_for_minimax(raw: str) -> str:
     return text[:3500]
 
 
+_LYRIC_SECTION_TAG_RE = re.compile(
+    r"^\[(Intro|Verse|Pre[-\s]?Chorus|Chorus|Interlude|Bridge|Outro|Post[-\s]?Chorus|"
+    r"Transition|Break|Hook|Build[-\s]?Up|Inst|Solo|Drop|Instrumental|Breakdown)[^\]]*\]\s*$",
+    re.I,
+)
+
+
+def _parse_lyric_sections(raw: str) -> list:
+    sections: list[dict] = []
+    tag: Optional[str] = None
+    lines: list[str] = []
+    for line in str(raw or "").replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+        t = line.strip()
+        if not t:
+            continue
+        if _LYRIC_SECTION_TAG_RE.match(t):
+            if tag is not None or lines:
+                sections.append({"tag": tag, "lines": lines})
+            tag = t
+            lines = []
+        else:
+            lines.append(t)
+    if tag is not None or lines:
+        sections.append({"tag": tag, "lines": lines})
+    return sections
+
+
+def _section_content_fp(lines: list[str]) -> str:
+    parts: list[str] = []
+    for ln in lines:
+        t = ln.strip()
+        if not t:
+            continue
+        if t.startswith("(") and t.endswith(")") and len(t) < 48:
+            continue
+        parts.append(re.sub(r"\s+", " ", t).casefold())
+    return "\n".join(parts)
+
+
+def _dedupe_identical_lyric_sections(raw: str) -> str:
+    """Drop 2nd/3rd sections whose sung text is identical to an earlier section."""
+    sections = _parse_lyric_sections(raw)
+    if len(sections) <= 1:
+        return str(raw or "").strip()
+    seen: set[str] = set()
+    out: list[str] = []
+    for sec in sections:
+        fp = _section_content_fp(sec["lines"])
+        if fp:
+            if fp in seen:
+                continue
+            seen.add(fp)
+        elif sec.get("tag"):
+            empty_key = sec["tag"].casefold() + "::empty"
+            if empty_key in seen:
+                continue
+            seen.add(empty_key)
+        tag = sec.get("tag")
+        if tag:
+            if out:
+                out.append("")
+            out.append(tag)
+        out.extend(sec["lines"])
+    return "\n".join(out).strip()
+
+
+def _finalize_lyrics_text(raw: str) -> str:
+    text = _normalize_lyrics_for_minimax(raw)
+    text = _dedupe_identical_lyric_sections(text)
+    return text[:3500]
+
+
 def _short_title_from_prompt(prompt: str) -> str:
     """First style tag only — never use the whole prompt as song title."""
     raw = (prompt or "").strip()
@@ -790,7 +862,7 @@ async def music_generate(
 
             if not is_instrumental:
                 if lyrics_text:
-                    lyrics_text = _normalize_lyrics_for_minimax(lyrics_text)
+                    lyrics_text = _finalize_lyrics_text(lyrics_text)
                     body["lyrics"] = lyrics_text
                 elif use_lyrics_optimizer:
                     # Last resort: vendor may still sing, but we cannot display lyrics.
@@ -998,6 +1070,8 @@ def music_public_list(
             continue
         created = row.get("created_at")
         ly = (row.get("lyrics") or "").strip()
+        if ly:
+            ly = _dedupe_identical_lyric_sections(ly)
         song_title, song_prompt = _display_title_and_prompt(row.get("title"), row.get("prompt"))
         creator = _creator_public(row)
         items.append(

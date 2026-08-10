@@ -258,6 +258,8 @@
     var plain = '';
     if (window.TBMusicPlayer && typeof TBMusicPlayer.staticLyricsPlain === 'function') {
       plain = TBMusicPlayer.staticLyricsPlain(raw);
+    } else if (window.TBMusicPlayer && typeof TBMusicPlayer.dedupeLyricSections === 'function') {
+      plain = TBMusicPlayer.sungTextLines(TBMusicPlayer.dedupeLyricSections(raw)).join(' ');
     } else if (window.TBMusicPlayer && typeof TBMusicPlayer.sungTextLines === 'function') {
       plain = TBMusicPlayer.sungTextLines(raw).join(' ');
     }

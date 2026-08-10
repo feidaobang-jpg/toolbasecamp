@@ -46,9 +46,68 @@
     return lines;
   }
 
+  function parseSections(lyrics) {
+    var sections = [];
+    var tag = null;
+    var lines = [];
+    var raw = String(lyrics || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+    raw.forEach(function (line) {
+      var t = line.trim();
+      if (!t) return;
+      if (STRUCTURE_RE.test(t)) {
+        if (tag !== null || lines.length) {
+          sections.push({ tag: tag, lines: lines.slice() });
+        }
+        tag = t;
+        lines = [];
+      } else {
+        lines.push(t);
+      }
+    });
+    if (tag !== null || lines.length) {
+      sections.push({ tag: tag, lines: lines });
+    }
+    return sections;
+  }
+
+  function sectionFingerprint(lines) {
+    var parts = [];
+    (lines || []).forEach(function (ln) {
+      var t = String(ln || '').trim();
+      if (!t) return;
+      if (/^\(.+\)$/.test(t) && t.length < 48) return;
+      parts.push(t.replace(/\s+/g, ' ').toLowerCase());
+    });
+    return parts.join('\n');
+  }
+
+  function dedupeLyricSections(lyrics) {
+    var sections = parseSections(lyrics);
+    if (sections.length <= 1) return String(lyrics || '').trim();
+    var seen = {};
+    var out = [];
+    sections.forEach(function (sec) {
+      var fp = sectionFingerprint(sec.lines);
+      if (fp) {
+        if (seen[fp]) return;
+        seen[fp] = true;
+      } else if (sec.tag) {
+        var ek = sec.tag.toLowerCase() + '::empty';
+        if (seen[ek]) return;
+        seen[ek] = true;
+      }
+      if (sec.tag) {
+        if (out.length) out.push('');
+        out.push(sec.tag);
+      }
+      sec.lines.forEach(function (ln) { out.push(ln); });
+    });
+    return out.join('\n').trim();
+  }
+
   function sungTextLines(lyrics) {
     var out = [];
-    parseLines(lyrics).forEach(function (ln) {
+    parseLines(dedupeLyricSections(lyrics)).forEach(function (ln) {
       if (ln.isTag) return;
       var t = (ln.text || '').trim();
       if (!t) return;
@@ -421,6 +480,7 @@
   global.TBMusicPlayer = {
     mount: mount,
     parseLines: parseLines,
+    dedupeLyricSections: dedupeLyricSections,
     sungTextLines: sungTextLines,
     staticLyricsPlain: staticLyricsPlain,
     buildApproxLrc: buildApproxLrc
