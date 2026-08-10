@@ -10,7 +10,9 @@ alwaysApply: true
 - 所有操作按钮只用 `class="tb-btn"`（需要撑满时加 `w-full`）。
 - **唯一样式源**：`public/css/base.css` 的 `.tb-btn`（蓝色 `#2563eb`、圆角胶囊）。
 - **禁止**在页面 CSS 里给 `.tb-btn` 改背景色（绿/红/灰等）。布局可用 flex/grid，不要覆盖 `background` / `color`。
-- 操作区容器用 `docs-common.css` 的 `.action-row`，不要为单页再造一套按钮类名。
+- 操作区容器用 `.action-row`（`base.css` / `docs-common.css`）：`display:flex; gap:12px; flex-wrap:wrap`。
+- **并列按钮必须有间距**：多个 `.tb-btn` / `a.tb-btn` 并排放时，外层必须包 `.action-row`（或等价 `gap: 12px` 的 flex/grid）。**禁止**两个蓝色按钮紧贴成一块；**禁止**用 margin 为 0 的相邻按钮硬挤。
+- 不要为单页再造一套按钮类名来改颜色；需要布局时仍用 `.action-row`。
 - **文案：主操作「生成」一律短写**。不要用「生成计划 / 生成菜单 / 生成穿搭」等「生成 + 产物名」；中文键值就写 `生成`，英文 `Generate`。菜谱等需区分产物的例外（如「生成菜谱」）须用户明确要求后再加后缀。
 
 ```html
@@ -19,6 +21,9 @@ alwaysApply: true
   <button type="button" class="tb-btn">计算</button>
   <button type="button" class="tb-btn">清空</button>
 </div>
+
+<!-- ❌ 不要：无间距、紧贴 -->
+<button class="tb-btn">播放</button><button class="tb-btn">下载</button>
 
 <!-- ❌ 不要 -->
 <button class="tb-btn my-green-btn">计算</button>

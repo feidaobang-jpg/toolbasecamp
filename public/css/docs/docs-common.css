@@ -139,7 +139,7 @@
     background: #fee2e2;
 }
 
-/* 操作按钮区 */
+/* 操作按钮区 — 间距以 base.css .action-row 为准（gap: 12px） */
 .action-row {
     display: flex;
     gap: 12px;

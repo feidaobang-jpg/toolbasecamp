@@ -44,6 +44,14 @@ a.tb-btn {
     color: #fff;
 }
 
+/* 并列操作按钮间距（全站）：必须用 .action-row，禁止按钮紧贴 */
+.action-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
 .tb-btn:hover {
     background: #2563eb;
     color: #fff;
