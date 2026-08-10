@@ -13,9 +13,11 @@ import os
 import re
 import secrets
 import time
+from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, Dict, Optional
+from zoneinfo import ZoneInfo
 
 import httpx
 from fastapi import APIRouter, Depends, Form, HTTPException
@@ -35,6 +37,8 @@ from recipe_ai import DEEPSEEK_API_KEY, _call_deepseek
 
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/music", tags=["music"])
+
+CN_TZ = ZoneInfo("Asia/Shanghai")
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
@@ -99,8 +103,6 @@ def _insert_public_track(
     file_ext: str,
     file_name: str,
 ) -> None:
-    from datetime import datetime
-
     conn = _conn()
     try:
         with conn.cursor() as cur:
@@ -126,11 +128,34 @@ def _insert_public_track(
                     content_type,
                     file_ext,
                     file_name,
-                    datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                    _now_utc_naive().strftime("%Y-%m-%d %H:%M:%S"),
                 ),
             )
     finally:
         conn.close()
+
+
+def _now_utc_naive() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def _format_created_at_cn(created: Any) -> str:
+    """DB stores UTC naive; show Asia/Shanghai for the music hub."""
+    if created is None:
+        return ""
+    if isinstance(created, str):
+        s = created.strip().replace("T", " ")
+        try:
+            created = datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return s
+    if not hasattr(created, "year"):
+        return str(created)
+    if getattr(created, "tzinfo", None) is not None:
+        dt = created.astimezone(CN_TZ)
+    else:
+        dt = created.replace(tzinfo=timezone.utc).astimezone(CN_TZ)
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _public_file_path(file_name: str) -> Path:
@@ -701,7 +726,7 @@ def music_public_list(limit: int = 50, offset: int = 0):
                 "model": row.get("model") or "",
                 "duration": int(row.get("duration_sec") or 0),
                 "contentType": row.get("content_type") or "audio/mpeg",
-                "createdAt": created.isoformat(sep=" ") if hasattr(created, "isoformat") else str(created or ""),
+                "createdAt": _format_created_at_cn(created),
                 "streamUrl": f"/music/public/{tid}",
                 "downloadUrl": f"/music/public/{tid}?download=1",
             }
