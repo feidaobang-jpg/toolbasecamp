@@ -206,6 +206,16 @@ def _minimax_error_detail(data: dict, resp: httpx.Response) -> str:
     base = data.get("base_resp") if isinstance(data.get("base_resp"), dict) else {}
     code = base.get("status_code")
     msg = (base.get("status_msg") or "").strip()
+    if code == 1008:
+        return (
+            "MiniMax provider balance insufficient (1008). "
+            "Top up the MiniMax account at platform.minimaxi.com "
+            "(even music-*-free still requires a funded MiniMax account)."
+        )
+    if code == 1002:
+        return "MiniMax rate limited (1002). Please retry later or use music-3.0."
+    if code == 2049 or code == 1004:
+        return "MiniMax API key invalid or unauthorized. Check MINIMAX_API_KEY."
     if code not in (None, 0) or msg:
         return f"MiniMax error {code}: {msg or 'failed'}"
     if resp.status_code >= 400:

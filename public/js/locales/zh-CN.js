@@ -2271,6 +2271,8 @@ window.TB_LOCALES['zh-CN'] = {
             needLyrics: '请填写歌词，或勾选「根据风格自动生成歌词」',
             notConfigured: '服务端未配置 MiniMax（MINIMAX_API_KEY）。',
             failed: '生成失败，请换风格/歌词再试。',
+            providerBalance: 'MiniMax 平台账号余额不足（与本站钱包无关）。请到 platform.minimaxi.com 充值后再试；免费模型也需要 MiniMax 账号有可用余额。',
+            rateLimited: 'MiniMax 请求过于频繁，请稍后再试，或改用 Music-3.0。',
             resultMeta: '{model} · 时长 {duration} 秒 · 本次扣费 ¥{price}',
             wechatPlayTip: '微信内可直接播放。保存或转发给朋友请点下方按钮按提示操作，或右上角 ··· → 在浏览器中打开。',
             wechatShareTip: '微信内无法直接调起系统分享文件。请点「下载」查看说明，或右上角 ··· → 在浏览器中打开后再保存/分享。'

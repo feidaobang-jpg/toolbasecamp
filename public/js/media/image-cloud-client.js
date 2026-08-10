@@ -55,6 +55,22 @@
         ) {
             return tr('tools.imageCloud.contentBlocked');
         }
+        if (
+            text.indexOf('MiniMax provider balance insufficient') === 0
+            || text.indexOf('MiniMax error 1008') === 0
+            || /MiniMax.*insufficient balance/i.test(text)
+        ) {
+            return tr('tools.aiMusic.providerBalance');
+        }
+        if (text.indexOf('MiniMax rate limited') === 0 || text.indexOf('MiniMax error 1002') === 0) {
+            return tr('tools.aiMusic.rateLimited');
+        }
+        if (
+            text.indexOf('MiniMax API key invalid') === 0
+            || text.indexOf('MiniMax is not configured') === 0
+        ) {
+            return tr('tools.aiMusic.notConfigured');
+        }
         if (text.indexOf('Insufficient balance') === 0 || text.indexOf('Insufficient AI balance') === 0) {
             return tr('tools.imageCloud.insufficientBalance');
         }
@@ -87,6 +103,9 @@
             'MiniMax returned empty audio.': 'tools.aiMusic.failed',
             'Music generation timed out': 'tools.aiMusic.failed',
             'Music generation failed': 'tools.aiMusic.failed',
+            'MiniMax provider balance insufficient (1008). Top up the MiniMax account at platform.minimaxi.com (even music-*-free still requires a funded MiniMax account).': 'tools.aiMusic.providerBalance',
+            'MiniMax rate limited (1002). Please retry later or use music-3.0.': 'tools.aiMusic.rateLimited',
+            'MiniMax API key invalid or unauthorized. Check MINIMAX_API_KEY.': 'tools.aiMusic.notConfigured',
             'Fun Music returned no audio URL. Check invite access on Model Studio.': 'tools.aiMusic.failed',
             'Fun Music returned no output.': 'tools.aiMusic.failed',
             'Failed to download generated audio.': 'tools.aiMusic.failed',
@@ -154,6 +173,9 @@
             if (exact[p]) return tr(exact[p]);
 
             var rules = [
+                [/MiniMax provider balance insufficient|MiniMax error 1008|MiniMax.*insufficient balance/i, 'tools.aiMusic.providerBalance'],
+                [/MiniMax rate limited|MiniMax error 1002/i, 'tools.aiMusic.rateLimited'],
+                [/MiniMax API key invalid|MiniMax is not configured/i, 'tools.aiMusic.notConfigured'],
                 [/resolution is too small/i, 'tools.imageCloud.resolutionTooSmall'],
                 [/resolution is too large/i, 'tools.imageCloud.resolutionTooLarge'],
                 [/Image decode failed/i, 'tools.imageCloud.decodeFailed'],
@@ -166,7 +188,7 @@
                 [/timed out/i, 'tools.imageCloud.editTimeout'],
                 [/returned no image/i, 'tools.imageCloud.editNoImage'],
                 [/Failed to download/i, 'tools.imageCloud.downloadResultFailed'],
-                [/Insufficient balance/i, 'tools.imageCloud.insufficientBalance'],
+                [/^Insufficient (AI )?balance/i, 'tools.imageCloud.insufficientBalance'],
                 [/Daily limit reached/i, 'tools.imageCloud.dailyLimit'],
                 [/DashScope is not configured/i, 'tools.imageCloud.genServiceMissing'],
                 [/Volcengine Ark is not configured/i, 'tools.imageCloud.genServiceMissing'],
