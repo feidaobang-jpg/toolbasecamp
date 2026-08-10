@@ -261,11 +261,14 @@
     var lyricsEl = root.querySelector('.tb-mp-lyrics');
     var dlAudioBtn = root.querySelector('.tb-mp-dl-audio');
     var dlLyricsBtn = root.querySelector('.tb-mp-dl-lyrics');
+    var actionsEl = root.querySelector('.tb-mp-actions');
 
     titleEl.textContent = opts.title || trFirst(['common.musicPlayer.untitled', 'hub.musicPage.untitled'], 'Untitled');
     playBtn.textContent = trFirst(['common.musicPlayer.play', 'hub.musicPage.play'], 'Play');
     dlAudioBtn.textContent = trFirst(['tools.aiMusic.download', 'hub.musicPage.download'], 'Download');
     dlLyricsBtn.textContent = trFirst(['common.musicPlayer.downloadLyrics', 'tools.aiMusic.downloadLyrics', 'hub.musicPage.downloadLyrics'], 'Download lyrics');
+    if (opts.hideTitle) titleEl.style.display = 'none';
+    if (opts.hideDownloadActions && actionsEl) actionsEl.style.display = 'none';
 
     if (hintEl) {
       if (lyricsMode === 'lrc') {

@@ -8,13 +8,13 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=songTab1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=songTab1" rel="stylesheet">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=songTab1">
-    <link rel="stylesheet" href="css/tools-hub.css?v=songTab1">
-    <link rel="stylesheet" href="css/base.css?v=songTab1">
-    <link rel="stylesheet" href="css/docs/docs-common.css?v=songTab1">
-    <link rel="stylesheet" href="css/tools-form.css?v=songTab1">
+    <script src="vendor/tailwindcss.js?v=songTab2"></script>
+    <link href="vendor/font-awesome/css/all.min.css?v=songTab2" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=songTab2">
+    <link rel="stylesheet" href="css/tools-hub.css?v=songTab2">
+    <link rel="stylesheet" href="css/base.css?v=songTab2">
+    <link rel="stylesheet" href="css/docs/docs-common.css?v=songTab2">
+    <link rel="stylesheet" href="css/tools-form.css?v=songTab2">
     <style>
       .music-hub { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
       .music-hub-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
@@ -42,6 +42,24 @@
       }
       .music-track-meta { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
       .music-track-actions { margin: 0; }
+      .music-track-card.is-player-open .music-track-actions,
+      .music-track-card.is-player-open .music-track-prompt,
+      .music-track-card.is-player-open .music-track-lyrics { display: none; }
+      .music-track-player { width: 100%; }
+      .music-track-player .tb-mp { margin-top: 4px; }
+      [data-music-play][data-loading="1"]::after {
+        content: ' ';
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-left: 8px;
+        border: 2px solid rgba(255,255,255,0.7);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: tbc-spin 0.8s linear infinite;
+        vertical-align: -2px;
+      }
+      @keyframes tbc-spin { to { transform: rotate(360deg); } }
       .error-box { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
     </style>
     <script>
@@ -66,14 +84,14 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=songTab1"></script>
-    <script src="js/locales/zh-CN.js?v=songTab1"></script>
-    <script src="js/i18n.js?v=songTab1"></script>
-    <script src="js/config.js?v=songTab1"></script>
-    <script src="js/base.js?v=songTab1"></script>
-    <script src="js/common_ui.js?v=songTab1"></script>
-    <script src="js/media/music-player.js?v=songTab1"></script>
-    <script src="js/music-hub.js?v=songTab1"></script>
+    <script src="js/locales/en.js?v=songTab2"></script>
+    <script src="js/locales/zh-CN.js?v=songTab2"></script>
+    <script src="js/i18n.js?v=songTab2"></script>
+    <script src="js/config.js?v=songTab2"></script>
+    <script src="js/base.js?v=songTab2"></script>
+    <script src="js/common_ui.js?v=songTab2"></script>
+    <script src="js/media/music-player.js?v=songTab2"></script>
+    <script src="js/music-hub.js?v=songTab2"></script>
     <script>
       (function () {
         function go() { if (typeof renderMusicHub === 'function') renderMusicHub(); }

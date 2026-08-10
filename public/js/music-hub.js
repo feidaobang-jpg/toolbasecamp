@@ -11,6 +11,7 @@
   var currentId = '';
   var currentKind = 'ai';
   var currentItem = null;
+  var currentCardEl = null;
   var activeTab = 'ai';
 
   function tr(k, params) {
@@ -160,12 +161,19 @@
       if (bkind === kind && bid === id && playing === true) {
         btn.textContent = tr('hub.musicPage.pause');
         btn.setAttribute('data-playing', '1');
+        btn.removeAttribute('data-loading');
       } else if (bkind === kind && bid === id && playing === 'buffering') {
         btn.textContent = tr('hub.musicPage.buffering');
         btn.setAttribute('data-playing', '0');
+        btn.setAttribute('data-loading', '1');
       } else {
         btn.textContent = tr('hub.musicPage.play');
         btn.setAttribute('data-playing', '0');
+        btn.removeAttribute('data-loading');
+      }
+      var card = btn.closest('.music-track-card');
+      if (card) {
+        card.classList.toggle('is-buffering', bkind === kind && bid === id && playing === 'buffering');
       }
     });
   }
@@ -177,6 +185,8 @@
     player = null;
     currentId = '';
     currentItem = null;
+    if (currentCardEl) currentCardEl.classList.remove('is-player-open', 'is-buffering');
+    currentCardEl = null;
     setPlayingUi('', '', false);
   }
 
@@ -197,6 +207,8 @@
       preload: isBlob ? 'auto' : 'none',
       title: item.title || tr('hub.musicPage.untitled'),
       lyrics: item.lyrics || '',
+      hideTitle: true,
+      hideDownloadActions: true,
       durationHint: Number(item.duration) || 0,
       audioName: audioName,
       onDownloadAudio: function () { downloadTrack(kind, item); },
@@ -267,14 +279,29 @@
     function go(src, isFull) {
       if (started) return;
       started = true;
+      document.querySelectorAll('.music-track-card').forEach(function (el) {
+        el.classList.remove('is-player-open', 'is-buffering');
+      });
       document.querySelectorAll('.music-track-player').forEach(function (el) {
         if (el !== playerHost) el.innerHTML = '';
       });
+      card.classList.add('is-player-open');
+      currentCardEl = card;
       mountPlayer(kind, item, src, true, playerHost);
       if (kind === 'traditional' && isFull && player) player._tbcUpgradedFull = true;
     }
 
     if (kind === 'traditional') {
+      if (isWeChat()) {
+        go(fileUrl(kind, id, { full: false }), false);
+        getCachedBlob(kind, id, false).then(function (preview) {
+          if (!preview || started) return;
+          revokeUrl(kind, id, false);
+          objectUrls[objectUrlKey(kind, id, false)] = URL.createObjectURL(preview);
+          go(objectUrls[objectUrlKey(kind, id, false)], false);
+        }).catch(function () {});
+        return;
+      }
       Promise.all([
         getCachedBlob(kind, id, false),
         getCachedBlob(kind, id, true)
@@ -297,11 +324,6 @@
       }).catch(function () {
         go(fileUrl(kind, id, { full: false }), false);
       });
-      if (isWeChat()) {
-        setTimeout(function () {
-          if (!started) go(fileUrl(kind, id, { full: false }), false);
-        }, 60);
-      }
       return;
     }
 
