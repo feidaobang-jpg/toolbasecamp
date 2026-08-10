@@ -2277,7 +2277,8 @@ window.TB_LOCALES.en = {
             resultMeta: '{model} · {duration}s · charged ¥{price}',
             wechatPlayTip: 'In WeChat you can play here. To save or forward the file, use the buttons below or open this page in your system browser.',
             wechatShareTip: 'WeChat cannot share the audio file directly. Tap Download for instructions, or open in your system browser to save/share.',
-            desktopShareTip: 'On desktop, download the file first, then send it via WeChat.'
+            desktopShareTip: 'On desktop, download the file first, then send it via WeChat.',
+            desktopDownloadTip: 'Desktop: download the MP3, then send the file in WeChat.'
         },
         idPhoto: {
             title: 'ID Photo',

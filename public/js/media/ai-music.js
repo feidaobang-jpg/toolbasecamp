@@ -31,6 +31,7 @@
   var resultMeta = document.getElementById('result-meta');
   var wechatTip = document.getElementById('wechat-file-download-tip');
   var longPressTip = document.getElementById('long-press-tip');
+  var desktopDownloadTip = document.getElementById('desktop-download-tip');
 
   var modelId = 'music-3.0-free';
   var modelPrices = {
@@ -164,6 +165,7 @@
     var wx = isWeChat();
     if (wechatTip) wechatTip.hidden = !wx;
     if (longPressTip) longPressTip.hidden = !wx;
+    if (desktopDownloadTip) desktopDownloadTip.hidden = wx || isMobileUa();
   }
 
   function loadStatus() {
