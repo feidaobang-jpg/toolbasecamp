@@ -254,27 +254,16 @@
   }
 
   function lyricsPreviewSnippet(raw, maxLines, maxLen) {
-    maxLines = maxLines || 2;
     maxLen = maxLen || 100;
-    var sung = [];
-    if (window.TBMusicPlayer && typeof TBMusicPlayer.parseLines === 'function') {
-      TBMusicPlayer.parseLines(raw).forEach(function (ln) {
-        if (ln.isTag) return;
-        var t = (ln.text || '').trim();
-        if (!t || (/^\(.+\)$/.test(t) && t.length < 40)) return;
-        sung.push(t);
-      });
-    } else {
-      String(raw || '').replace(/\r\n/g, '\n').split('\n').forEach(function (line) {
-        var t = line.trim();
-        if (!t || /^\[.+\]$/.test(t)) return;
-        if (/^\(.+\)$/.test(t) && t.length < 40) return;
-        sung.push(t);
-      });
+    var plain = '';
+    if (window.TBMusicPlayer && typeof TBMusicPlayer.staticLyricsPlain === 'function') {
+      plain = TBMusicPlayer.staticLyricsPlain(raw);
+    } else if (window.TBMusicPlayer && typeof TBMusicPlayer.sungTextLines === 'function') {
+      plain = TBMusicPlayer.sungTextLines(raw).join(' ');
     }
-    var preview = sung.slice(0, maxLines).join(' · ');
-    if (preview.length > maxLen) preview = preview.slice(0, maxLen - 1) + '…';
-    return preview;
+    if (!plain) return '';
+    if (plain.length > maxLen) plain = plain.slice(0, maxLen - 1) + '…';
+    return plain;
   }
 
   function deleteTrack(item) {
