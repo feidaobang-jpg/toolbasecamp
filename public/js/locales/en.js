@@ -304,6 +304,7 @@ window.TB_LOCALES.en = {
             loadFailed: 'Failed to load the list. Please try again.',
             playFailed: 'Playback failed. Retry or try another track.',
             cacheTip: 'Played or downloaded tracks reuse the local cache when possible.',
+            wechatDownloadTip: 'In WeChat, tap ··· → Open in browser to download the file.',
             untitled: 'Untitled'
         },
         music: {

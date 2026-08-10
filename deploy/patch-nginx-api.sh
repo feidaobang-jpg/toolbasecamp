@@ -32,6 +32,19 @@ location /api/game/tank-coop/ws {
     proxy_send_timeout 3600s;
 }
 
+location /api/music/public/ {
+    proxy_pass http://127.0.0.1:8001/music/public/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    # Stream audio to WeChat/mobile without waiting for full buffer
+    proxy_buffering off;
+    proxy_request_buffering off;
+    proxy_read_timeout 1800s;
+    proxy_send_timeout 1800s;
+}
+
 location /api/ {
     proxy_pass http://127.0.0.1:8001/;
     proxy_set_header Host $host;

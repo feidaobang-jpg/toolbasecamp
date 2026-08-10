@@ -303,6 +303,7 @@ window.TB_LOCALES['zh-CN'] = {
             loadFailed: '列表加载失败，请稍后重试。',
             playFailed: '播放失败，请稍后重试或换一首。',
             cacheTip: '已播放或下载过的曲目优先走本机缓存，节省流量。',
+            wechatDownloadTip: '微信内请点右上角 ··· → 在浏览器中打开后再下载。',
             untitled: '未命名'
         },
         music: {
