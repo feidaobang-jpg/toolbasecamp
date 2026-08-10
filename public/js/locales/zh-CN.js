@@ -477,7 +477,7 @@ window.TB_LOCALES['zh-CN'] = {
             food: '美食',
             lifePlans: '生活计划',
             record: '记录',
-            media: '图片',
+            media: '媒体',
             document: '文档',
             diagram: '图表',
             android: 'Android',

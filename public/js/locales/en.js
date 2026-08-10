@@ -478,7 +478,7 @@ window.TB_LOCALES.en = {
             food: 'Food',
             lifePlans: 'Life Plans',
             record: 'Records',
-            media: 'Images',
+            media: 'Media',
             document: 'Document',
             diagram: 'Diagram',
             android: 'Android',
