@@ -241,15 +241,29 @@
         tryUpgradeTraditionalFull(kind, item, player);
       });
     }
-    if (autoplay && player) {
-      var playPromise = typeof player.playWhenReady === 'function'
-        ? player.playWhenReady()
-        : player.play();
-      playPromise.then(function () {
-        setPlayingUi(kind, item.id, true);
-      }).catch(function () {
-        setPlayingUi(kind, item.id, false);
-      });
+    if (autoplay && player && player.audio) {
+      setPlayingUi(kind, item.id, 'buffering');
+      var audioEl = player.audio;
+      var startPlay = function () {
+        var chain = typeof player.playWhenReady === 'function'
+          ? player.playWhenReady()
+          : audioEl.play();
+        return chain.then(function () {
+          setPlayingUi(kind, item.id, true);
+        }).catch(function () {
+          setPlayingUi(kind, item.id, false);
+        });
+      };
+      var direct = audioEl.play();
+      if (direct && typeof direct.then === 'function') {
+        direct.then(function () {
+          setPlayingUi(kind, item.id, true);
+        }).catch(function () {
+          startPlay();
+        });
+      } else {
+        startPlay();
+      }
     }
   }
 
@@ -294,7 +308,10 @@
         player.pause();
         setPlayingUi(kind, id, false);
       } else {
-        player.play().then(function () {
+        var resume = typeof player.playWhenReady === 'function'
+          ? player.playWhenReady()
+          : player.play();
+        resume.then(function () {
           setPlayingUi(kind, id, true);
         }).catch(function () {
           setPlayingUi(kind, id, false);
@@ -304,11 +321,9 @@
     }
 
     if (btn) btn.textContent = tr('hub.musicPage.buffering');
-    var started = false;
+    setPlayingUi(kind, id, 'buffering');
 
     function go(src, isFull) {
-      if (started) return;
-      started = true;
       document.querySelectorAll('.music-track-card').forEach(function (el) {
         el.classList.remove('is-player-open', 'is-buffering');
       });
@@ -322,61 +337,39 @@
       if (kind === 'traditional') hydrateTraditionalLyrics(kind, item, player);
     }
 
-    if (kind === 'traditional') {
-      if (isWeChat()) {
-        go(fileUrl(kind, id, { full: false }), false);
-        return;
-      }
-      Promise.all([
-        getCachedBlob(kind, id, false),
-        getCachedBlob(kind, id, true)
-      ]).then(function (pack) {
-        var preview = pack[0];
-        var full = pack[1];
-        if (full) {
-          revokeUrl(kind, id, true);
-          objectUrls[objectUrlKey(kind, id, true)] = URL.createObjectURL(full);
-          go(objectUrls[objectUrlKey(kind, id, true)], true);
-          return;
+    var streamSrc = kind === 'traditional'
+      ? fileUrl(kind, id, { full: false })
+      : fileUrl(kind, id, { download: false });
+    go(streamSrc, false);
+
+    if (!isWeChat() && cacheAvailable()) {
+      var wantFull = kind !== 'traditional';
+      getCachedBlob(kind, id, wantFull).then(function (cached) {
+        if (!cached) {
+          if (kind === 'traditional') {
+            return getCachedBlob(kind, id, false);
+          }
+          return null;
         }
-        if (preview) {
-          revokeUrl(kind, id, false);
-          objectUrls[objectUrlKey(kind, id, false)] = URL.createObjectURL(preview);
-          go(objectUrls[objectUrlKey(kind, id, false)], false);
-          return;
+        return cached;
+      }).then(function (cached) {
+        if (!cached || currentId !== id || !player || !player.audio) return;
+        var audioEl = player.audio;
+        if (String(audioEl.src || '').indexOf('blob:') === 0) return;
+        var wasPlaying = !audioEl.paused;
+        var t = audioEl.currentTime || 0;
+        var useFull = wantFull || kind === 'traditional';
+        revokeUrl(kind, id, useFull);
+        var blobUrl = URL.createObjectURL(cached);
+        objectUrls[objectUrlKey(kind, id, useFull)] = blobUrl;
+        audioEl.src = blobUrl;
+        audioEl.currentTime = t;
+        if (kind === 'traditional' && useFull) player._tbcUpgradedFull = true;
+        if (wasPlaying) {
+          (typeof player.playWhenReady === 'function' ? player.playWhenReady() : player.play()).catch(function () {});
         }
-        go(fileUrl(kind, id, { full: false }), false);
-      }).catch(function () {
-        go(fileUrl(kind, id, { full: false }), false);
-      });
-      return;
+      }).catch(function () {});
     }
-
-    var cachePromise = getCachedBlob(kind, id, true).then(function (cached) {
-      if (cached) {
-        revokeUrl(kind, id, true);
-        objectUrls[objectUrlKey(kind, id, true)] = URL.createObjectURL(cached);
-        go(objectUrls[objectUrlKey(kind, id, true)], true);
-        return true;
-      }
-      return false;
-    });
-
-    if (isWeChat()) {
-      setTimeout(function () {
-        if (!started) go(fileUrl(kind, id, { download: false }), true);
-      }, 60);
-      cachePromise.catch(function () {
-        if (!started) go(fileUrl(kind, id, { download: false }), true);
-      });
-      return;
-    }
-
-    cachePromise.then(function (hit) {
-      if (!hit) go(fileUrl(kind, id, { download: false }), true);
-    }).catch(function () {
-      go(fileUrl(kind, id, { download: false }), true);
-    });
   }
 
   function downloadTrack(kind, item) {

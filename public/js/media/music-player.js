@@ -475,23 +475,42 @@
       audio: audio,
       play: function () { return audio.play(); },
       playWhenReady: function () {
-        if (audio.readyState >= 2) return audio.play();
         return new Promise(function (resolve, reject) {
+          var settled = false;
+          var timer = null;
           function cleanup() {
             audio.removeEventListener('canplay', onReady);
+            audio.removeEventListener('loadeddata', onReady);
             audio.removeEventListener('error', onErr);
+            if (timer) clearTimeout(timer);
+          }
+          function finish(promise) {
+            if (settled) return;
+            settled = true;
+            cleanup();
+            promise.then(resolve).catch(reject);
           }
           function onReady() {
-            cleanup();
-            audio.play().then(resolve).catch(reject);
+            finish(audio.play());
           }
           function onErr() {
+            if (settled) return;
+            settled = true;
             cleanup();
             reject(new Error('audio load failed'));
           }
           audio.addEventListener('canplay', onReady, { once: true });
+          audio.addEventListener('loadeddata', onReady, { once: true });
           audio.addEventListener('error', onErr, { once: true });
+          timer = setTimeout(function () {
+            finish(audio.play());
+          }, 12000);
+          if (audio.readyState >= 2) {
+            finish(audio.play());
+            return;
+          }
           try { audio.load(); } catch (e) {}
+          if (audio.readyState >= 2) finish(audio.play());
         });
       },
       pause: function () { audio.pause(); },
