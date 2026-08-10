@@ -1,0 +1,42 @@
+---
+description: HTML/静态资源必须保持合法 UTF-8，禁止截断中文导致 Deploy 失败
+globs: public/**/*.{html,js,css,md}
+alwaysApply: true
+---
+
+# HTML / 静态文件 UTF-8 完整性
+
+Deploy 的 `deploy/bust-html-cache.py` 会扫描 HTML；**中文被截断**（半个 UTF-8 字符）会导致 `</title>` 等闭合标签损坏，GitHub Actions **Rsync static site / cache-bust 直接失败**。
+
+## 必须遵守
+
+1. **所有 `public/**/*.html` 必须是合法 UTF-8（无 BOM）**。写入后用 Python 校验：
+   `Path(f).read_bytes().decode("utf-8")` 不得抛错。
+2. **禁止**在 Windows PowerShell 里用默认重定向 / `Set-Content` / `Out-File`（无 `-Encoding utf8`）改含中文的 HTML/JS/CSS。
+3. **禁止**用按字节截断的方式改中文（错误示例：把「工具大本营」截成「工具大本」+ 半字节）。改 `<title>` / 文案时必须整段替换完整 Unicode 字符串。
+4. **改完含中文的 HTML 后自检**：
+   - 文件可 `decode("utf-8")`
+   - 若有 `<title>`，必须存在完整的 `</title>`（字节序列里能找到 `b"</title>"`）
+   - 正文中不得出现 `` `?/p>` ``、`` `?/a>` ``、`` `?/title>` `` 这类「问号 + 半截闭合标签」
+5. 批量改版本号 / cache-bust 只用仓库脚本：`VER=xxx python deploy/bust-html-cache.py`（按字节安全替换 CSS/JS 的 `?v=`），**不要**用 `perl -pi` / `sed` 在 `LANG=C` 下直接改 HTML。
+6. 备案号等中文配置放在 `config.js` / locales，由 `common_ui.js` 注入；**不要**为挂 ICP 去用不安全编码批量改几十个 HTML 里的中文 fallback。
+
+## 常见坏例
+
+```html
+<!-- ❌ 截断后 </title> 被吃掉 -->
+<title>自用 - 工具大本?/title>
+
+<!-- ❌ 中文 fallback 半截 + 标签损坏 -->
+<p data-i18n="...">需要管理员登录后查?/p>
+```
+
+```html
+<!-- ✅ -->
+<title>自用 - 工具大本营</title>
+<p data-i18n="...">需要管理员登录后查看</p>
+```
+
+## 若已损坏
+
+从 git 历史取该文件**最后一个合法 UTF-8**版本恢复，再仅用 UTF-8 安全方式重做 ASCII 改动（如 `?v=icp1`）。不要在半损坏文件上继续 StrReplace 中文。

@@ -38,6 +38,20 @@ def main() -> int:
         if "\u684c\u9762".encode("utf-8") not in raw:
             print("ERROR: cpu_rank.html lost UTF-8 Chinese", file=sys.stderr)
             return 1
+    # Fail fast if any HTML is truncated mid-UTF-8 (breaks Deploy).
+    for path in root.rglob("*.html"):
+        raw = path.read_bytes()
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            print(f"ERROR: invalid UTF-8 in {path}: {exc}", file=sys.stderr)
+            return 1
+        if b"<title>" in raw and b"</title>" not in raw:
+            print(f"ERROR: {path} missing </title> (likely truncated CJK)", file=sys.stderr)
+            return 1
+        if "\ufffd" in text or re.search(r"\?/[a-zA-Z0-9]+>", text):
+            print(f"ERROR: {path} has corrupted CJK/HTML closer", file=sys.stderr)
+            return 1
     print(f"cache-bust ok ver={ver} files={n}")
     return 0
 
