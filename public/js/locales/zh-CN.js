@@ -16,6 +16,7 @@ window.TB_LOCALES['zh-CN'] = {
         tools: '工具',
         life: '内容',
         games: '游戏',
+        music: '音乐',
         sites: '导航',
         guestbook: '留言',
         topUp: '充值',
@@ -289,6 +290,20 @@ window.TB_LOCALES['zh-CN'] = {
         howtoInstruct: '图生图',
         howtoTextToImage: '文生图',
         musicSelect: '音乐选择',
+        musicPage: {
+            title: '音乐',
+            sub: '公开的 AI 生成歌曲。可播放、暂停、下载；播放或下载后会缓存在本机浏览器。',
+            create: '去生成',
+            refresh: '刷新',
+            play: '播放',
+            pause: '暂停',
+            download: '下载',
+            loading: '加载中…',
+            empty: '暂无公开歌曲。生成音乐时默认勾选「公开到音乐列表」。',
+            loadFailed: '列表加载失败，请稍后重试。',
+            cacheTip: '已播放或下载过的曲目优先走本机缓存，节省流量。',
+            untitled: '未命名'
+        },
         music: {
             title: '音乐选择',
             sub: '选择游戏背景音乐，设置会保存在本机，进入各游戏时自动沿用。',
@@ -2277,7 +2292,16 @@ window.TB_LOCALES['zh-CN'] = {
             wechatPlayTip: '微信内可直接播放。保存或转发给朋友请点下方按钮按提示操作，或右上角 ··· → 在浏览器中打开。',
             wechatShareTip: '微信内无法直接调起系统分享文件。请点「下载」查看说明，或右上角 ··· → 在浏览器中打开后再保存/分享。',
             desktopShareTip: '电脑端请先「下载」到本地，再用微信发送文件给朋友。',
-            desktopDownloadTip: '电脑端：先点「下载」保存 MP3，再用微信「发送文件」发给朋友。'
+            desktopDownloadTip: '电脑端：先点「下载」保存 MP3，再用微信「发送文件」发给朋友。',
+            publicLabel: '公开到顶部「音乐」列表',
+            publicHint: '默认公开，可取消。公开后所有人可在「音乐」页播放与下载。',
+            historyTitle: '本机历史',
+            historyHint: '最近生成保存在本机浏览器（最多 24 首），清缓存会丢失。',
+            historyEmpty: '暂无本机历史',
+            historyClear: '清空历史',
+            untitled: '未命名',
+            play: '播放',
+            delete: '删除'
         },
         idPhoto: {
             title: '制作证件照',

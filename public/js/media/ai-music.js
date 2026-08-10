@@ -32,6 +32,8 @@
   var wechatTip = document.getElementById('wechat-file-download-tip');
   var longPressTip = document.getElementById('long-press-tip');
   var desktopDownloadTip = document.getElementById('desktop-download-tip');
+  var publicToggle = document.getElementById('public-toggle');
+  var histPanel = null;
 
   var modelId = 'music-3.0-free';
   var modelPrices = {
@@ -203,6 +205,7 @@
     fd.append('prompt', (promptEl && promptEl.value || '').trim());
     fd.append('title', (titleEl && titleEl.value || '').trim());
     fd.append('format', 'mp3');
+    fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
     if (isInstrumental()) {
       fd.append('instrumental', '1');
       fd.append('lyrics', '');
@@ -251,6 +254,17 @@
           showWeChatTip();
           syncShareVisibility();
           if (resultWrap) resultWrap.hidden = false;
+          if (histPanel && audioBlob) {
+            histPanel.save(audioBlob, {
+              model: res.model || modelId,
+              title: res.title || (titleEl && titleEl.value) || '',
+              prompt: res.prompt || (promptEl && promptEl.value) || '',
+              lyrics: res.lyrics || '',
+              duration: res.duration || 0,
+              contentType: res.contentType || 'audio/mpeg',
+              publicId: res.publicId || ''
+            });
+          }
         });
       })
       .catch(function (err) {
@@ -327,6 +341,41 @@
     syncShareVisibility();
     updateCharCounts();
     setBusy(false);
+    if (window.TBAiMusicHistory && typeof TBAiMusicHistory.bindPanel === 'function') {
+      histPanel = TBAiMusicHistory.bindPanel({
+        wrap: document.getElementById('history-wrap'),
+        grid: document.getElementById('history-grid'),
+        empty: document.getElementById('history-empty'),
+        clearBtn: document.getElementById('history-clear'),
+        tr: tr,
+        onPlay: function (row) {
+          if (!row || !row.blob) return;
+          revokeAudio();
+          audioBlob = row.blob;
+          audioBlobUrl = URL.createObjectURL(row.blob);
+          lastExt = '.mp3';
+          lastFilename = ((row.title || 'ai-music') + '.mp3').replace(/[\\/:*?"<>|]+/g, '');
+          if (resultAudio) resultAudio.src = audioBlobUrl;
+          if (resultLyrics) {
+            var ly = (row.lyrics || '').trim();
+            resultLyrics.textContent = ly;
+            resultLyrics.hidden = !ly;
+          }
+          if (resultMeta) {
+            resultMeta.textContent = tr('tools.aiMusic.resultMeta', {
+              duration: row.duration || '—',
+              price: '—',
+              model: row.model || ''
+            });
+          }
+          showWeChatTip();
+          syncShareVisibility();
+          if (resultWrap) resultWrap.hidden = false;
+          try { resultAudio && resultAudio.play(); } catch (e) {}
+        }
+      });
+      histPanel.refresh();
+    }
     loadStatus();
   }
 

@@ -17,6 +17,7 @@ window.TB_LOCALES.en = {
         tools: 'Tools',
         life: 'Content',
         games: 'Games',
+        music: 'Music',
         sites: 'Directory',
         guestbook: 'Messages',
         topUp: 'Top up',
@@ -290,6 +291,20 @@ window.TB_LOCALES.en = {
         howtoInstruct: 'Image-to-Image',
         howtoTextToImage: 'Text to Image',
         musicSelect: 'Music',
+        musicPage: {
+            title: 'Music',
+            sub: 'Public AI-generated songs. Play, pause, download — cached in this browser after first play or download.',
+            create: 'Create',
+            refresh: 'Refresh',
+            play: 'Play',
+            pause: 'Pause',
+            download: 'Download',
+            loading: 'Loading…',
+            empty: 'No public songs yet. Generation defaults to publishing to this list.',
+            loadFailed: 'Failed to load the list. Please try again.',
+            cacheTip: 'Played or downloaded tracks reuse the local cache when possible.',
+            untitled: 'Untitled'
+        },
         music: {
             title: 'Music',
             sub: 'Choose background music for games. Saved on this device and used across games.',
@@ -2278,7 +2293,16 @@ window.TB_LOCALES.en = {
             wechatPlayTip: 'In WeChat you can play here. To save or forward the file, use the buttons below or open this page in your system browser.',
             wechatShareTip: 'WeChat cannot share the audio file directly. Tap Download for instructions, or open in your system browser to save/share.',
             desktopShareTip: 'On desktop, download the file first, then send it via WeChat.',
-            desktopDownloadTip: 'Desktop: download the MP3, then send the file in WeChat.'
+            desktopDownloadTip: 'Desktop: download the MP3, then send the file in WeChat.',
+            publicLabel: 'Publish to the Music page',
+            publicHint: 'On by default. Everyone can play and download it on the Music page.',
+            historyTitle: 'Local history',
+            historyHint: 'Recent generations are kept in this browser (max 24). Clearing site data removes them.',
+            historyEmpty: 'No local history yet',
+            historyClear: 'Clear history',
+            untitled: 'Untitled',
+            play: 'Play',
+            delete: 'Delete'
         },
         idPhoto: {
             title: 'ID Photo',

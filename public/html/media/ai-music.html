@@ -53,6 +53,20 @@
       line-height: 1.5;
       margin: 0 0 10px;
     }
+    .ai-music-hist-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .ai-music-hist-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+    }
+    .ai-music-hist-title { font-weight: 600; color: #0f172a; }
+    .ai-music-hist-meta { font-size: 12px; color: #64748b; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -123,6 +137,14 @@
             <input type="text" id="title" maxlength="120" data-i18n-placeholder="tools.aiMusic.titlePh" placeholder="Optional title" />
           </div>
 
+          <div class="field-row">
+            <label class="ai-music-toggle">
+              <input type="checkbox" id="public-toggle" checked />
+              <span data-i18n="tools.aiMusic.publicLabel">Publish to the Music page</span>
+            </label>
+            <p class="instruct-cost-hint" style="margin-top:6px" data-i18n="tools.aiMusic.publicHint">On by default. Everyone can play and download it on the Music page.</p>
+          </div>
+
           <div class="tip-box">
             <b data-i18n="tools.aiMusic.tip">Tip:</b>
             <span data-i18n="tools.aiMusic.tipBody">Generation may take 1–3 minutes. Charged only on success. Free model has lower rate limits.</span>
@@ -155,15 +177,26 @@
             </div>
           </div>
         </div>
+
+        <div class="tool-card tb-form" id="history-wrap" style="margin-top:16px">
+          <div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <span class="field-label" style="margin:0" data-i18n="tools.aiMusic.historyTitle">Local history</span>
+            <button type="button" class="tb-btn" id="history-clear" data-i18n="tools.aiMusic.historyClear">Clear history</button>
+          </div>
+          <p class="instruct-cost-hint" data-i18n="tools.aiMusic.historyHint">Recent generations are kept in this browser (max 24).</p>
+          <p id="history-empty" class="instruct-cost-hint" data-i18n="tools.aiMusic.historyEmpty">No local history yet</p>
+          <div id="history-grid" class="ai-music-hist-grid"></div>
+        </div>
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=music4"></script>
-  <script src="../../js/locales/zh-CN.js?v=music4"></script>
-  <script src="../../js/i18n.js?v=music4"></script>
-  <script src="../../js/config.js?v=music4"></script>
-  <script src="../../js/base.js?v=music4"></script>
-  <script src="../../js/media/image-cloud-client.js?v=music4"></script>
-  <script src="../../js/media/ai-music.js?v=music4"></script>
+  <script src="../../js/locales/en.js?v=music5"></script>
+  <script src="../../js/locales/zh-CN.js?v=music5"></script>
+  <script src="../../js/i18n.js?v=music5"></script>
+  <script src="../../js/config.js?v=music5"></script>
+  <script src="../../js/base.js?v=music5"></script>
+  <script src="../../js/media/image-cloud-client.js?v=music5"></script>
+  <script src="../../js/media/ai-music-history.js?v=music5"></script>
+  <script src="../../js/media/ai-music.js?v=music5"></script>
 </body>
 </html>

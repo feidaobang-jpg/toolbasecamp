@@ -52,8 +52,93 @@ ALLOWED_MODELS = frozenset(LIST_PRICE_PER_SONG.keys())
 RESULT_TTL_SEC = 24 * 3600
 TMP_DIR = Path(os.environ.get("FUN_MUSIC_TMP_DIR") or (Path(__file__).resolve().parent / "tmp_music"))
 TMP_DIR.mkdir(parents=True, exist_ok=True)
+PUBLIC_DIR = Path(
+    os.environ.get("MUSIC_PUBLIC_DIR")
+    or (Path(__file__).resolve().parent / "var" / "public-music")
+)
+PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
 
 _results: Dict[str, Dict[str, Any]] = {}
+
+
+def _ensure_music_schema(cur) -> None:
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS music_tracks (
+            id VARCHAR(32) PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            title VARCHAR(160) NOT NULL DEFAULT '',
+            prompt TEXT,
+            lyrics MEDIUMTEXT,
+            model VARCHAR(64) NOT NULL,
+            duration_sec INT NOT NULL DEFAULT 0,
+            content_type VARCHAR(64) NOT NULL DEFAULT 'audio/mpeg',
+            file_ext VARCHAR(8) NOT NULL DEFAULT '.mp3',
+            file_name VARCHAR(80) NOT NULL,
+            is_public TINYINT(1) NOT NULL DEFAULT 0,
+            created_at DATETIME NOT NULL,
+            INDEX idx_music_public_created (is_public, created_at),
+            INDEX idx_music_user (user_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+
+
+def _insert_public_track(
+    *,
+    track_id: str,
+    user_id: int,
+    title: str,
+    prompt: str,
+    lyrics: str,
+    model: str,
+    duration: int,
+    content_type: str,
+    file_ext: str,
+    file_name: str,
+) -> None:
+    from datetime import datetime
+
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_music_schema(cur)
+            cur.execute(
+                """
+                INSERT INTO music_tracks (
+                    id, user_id, title, prompt, lyrics, model, duration_sec,
+                    content_type, file_ext, file_name, is_public, created_at
+                ) VALUES (
+                    %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, 1, %s
+                )
+                """,
+                (
+                    track_id,
+                    int(user_id),
+                    (title or "")[:160],
+                    prompt or "",
+                    lyrics or "",
+                    model,
+                    int(duration or 0),
+                    content_type,
+                    file_ext,
+                    file_name,
+                    datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                ),
+            )
+    finally:
+        conn.close()
+
+
+def _public_file_path(file_name: str) -> Path:
+    name = Path(str(file_name or "")).name
+    if not name or name != str(file_name) or ".." in name:
+        raise HTTPException(status_code=400, detail="Invalid music file")
+    path = (PUBLIC_DIR / name).resolve()
+    if not str(path).startswith(str(PUBLIC_DIR.resolve())):
+        raise HTTPException(status_code=400, detail="Invalid music file")
+    return path
 
 
 def _wire(get_conn, require_db, get_current_user):
@@ -170,14 +255,23 @@ def _charge_success(user: dict, list_price: Decimal, *, meta: dict) -> Optional[
 def _purge_old_results() -> None:
     now = time.time()
     dead = [rid for rid, meta in _results.items() if now - float(meta.get("created") or 0) > RESULT_TTL_SEC]
+    public_root = str(PUBLIC_DIR.resolve())
     for rid in dead:
         meta = _results.pop(rid, None) or {}
         path = meta.get("path")
-        if path:
-            try:
-                Path(path).unlink(missing_ok=True)
-            except Exception:
-                pass
+        if not path:
+            continue
+        # Never delete durable public tracks from disk via TTL purge
+        try:
+            resolved = str(Path(path).resolve())
+            if resolved.startswith(public_root) or meta.get("public"):
+                continue
+        except Exception:
+            pass
+        try:
+            Path(path).unlink(missing_ok=True)
+        except Exception:
+            pass
 
 
 def _parse_bool(value: Any, *, default: bool = False) -> bool:
@@ -245,6 +339,7 @@ async def music_generate(
     format: str = Form("mp3"),
     model: str = Form(""),
     title: str = Form(""),
+    public: str = Form("1"),
     user: dict = Depends(_user),
 ):
     if not fun_music_configured():
@@ -265,6 +360,7 @@ async def music_generate(
     title_text = (title or "").strip()[:120]
     is_instrumental = _parse_bool(instrumental, default=False)
     use_lyrics_optimizer = _parse_bool(lyrics_optimizer, default=False)
+    is_public = _parse_bool(public, default=True)
     fmt = (format or "mp3").strip().lower()
     if fmt not in ("mp3", "wav", "pcm"):
         fmt = "mp3"
@@ -347,7 +443,6 @@ async def music_generate(
             duration_ms = int(extra.get("music_duration") or 0)
             duration = max(1, int(round(duration_ms / 1000.0))) if duration_ms > 0 else 0
             if duration < 1:
-                # Fallback estimate from size @ ~256kbps stereo mp3
                 duration = max(1, int(len(audio_bytes) / 32000))
 
             if fmt == "wav":
@@ -362,7 +457,11 @@ async def music_generate(
 
             _purge_old_results()
             result_id = secrets.token_hex(16)
-            path = TMP_DIR / f"{result_id}{ext}"
+            file_name = f"{result_id}{ext}"
+            if is_public:
+                path = PUBLIC_DIR / file_name
+            else:
+                path = TMP_DIR / file_name
             path.write_bytes(audio_bytes)
 
             charged_cny = 0.0
@@ -376,10 +475,25 @@ async def music_generate(
                         "instrumental": is_instrumental,
                         "resultId": result_id,
                         "title": title_text,
+                        "public": is_public,
                     },
                 )
                 if not _is_admin(user):
                     charged_cny = float(user_price_cny(list_price))
+                if is_public:
+                    display_title = title_text or (prompt_text[:40] + ("…" if len(prompt_text) > 40 else "")) or "AI Music"
+                    _insert_public_track(
+                        track_id=result_id,
+                        user_id=int(user["id"]),
+                        title=display_title,
+                        prompt=prompt_text,
+                        lyrics=lyrics_text,
+                        model=use_model,
+                        duration=duration,
+                        content_type=ctype,
+                        file_ext=ext,
+                        file_name=file_name,
+                    )
             except HTTPException:
                 try:
                     path.unlink(missing_ok=True)
@@ -400,6 +514,7 @@ async def music_generate(
                 "lyrics": lyrics_text,
                 "prompt": prompt_text,
                 "title": title_text,
+                "public": is_public,
                 "balance_after": bal_after,
             }
     except HTTPException:
@@ -410,7 +525,7 @@ async def music_generate(
         raise HTTPException(status_code=502, detail=f"Music generation failed: {exc}") from exc
 
     wallet = _wallet_for(user)
-    return {
+    out = {
         "success": True,
         "resultId": result_id,
         "provider": "minimax",
@@ -422,6 +537,7 @@ async def music_generate(
         "lyrics": lyrics_text,
         "prompt": prompt_text,
         "title": title_text,
+        "public": is_public,
         "contentType": ctype,
         "proxyUrl": f"/music/result/{result_id}",
         "downloadUrl": f"/music/result/{result_id}?download=1",
@@ -429,6 +545,95 @@ async def music_generate(
         "aiWallet": wallet,
         "balanceCny": wallet.get("balanceCny"),
     }
+    if is_public:
+        out["publicId"] = result_id
+        out["publicStreamUrl"] = f"/music/public/{result_id}"
+        out["publicDownloadUrl"] = f"/music/public/{result_id}?download=1"
+    return out
+
+
+@router.get("/public/list")
+def music_public_list(limit: int = 50, offset: int = 0):
+    lim = max(1, min(100, int(limit or 50)))
+    off = max(0, int(offset or 0))
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_music_schema(cur)
+            cur.execute(
+                """
+                SELECT id, title, prompt, model, duration_sec, content_type, created_at
+                FROM music_tracks
+                WHERE is_public=1
+                ORDER BY created_at DESC
+                LIMIT %s OFFSET %s
+                """,
+                (lim, off),
+            )
+            rows = cur.fetchall() or []
+    finally:
+        conn.close()
+    items = []
+    for row in rows:
+        tid = str(row.get("id") or "")
+        created = row.get("created_at")
+        items.append(
+            {
+                "id": tid,
+                "title": row.get("title") or "AI Music",
+                "prompt": (row.get("prompt") or "")[:200],
+                "model": row.get("model") or "",
+                "duration": int(row.get("duration_sec") or 0),
+                "contentType": row.get("content_type") or "audio/mpeg",
+                "createdAt": created.isoformat(sep=" ") if hasattr(created, "isoformat") else str(created or ""),
+                "streamUrl": f"/music/public/{tid}",
+                "downloadUrl": f"/music/public/{tid}?download=1",
+            }
+        )
+    return {"success": True, "items": items, "limit": lim, "offset": off}
+
+
+@router.get("/public/{track_id}")
+def music_public_file(track_id: str, download: int = 0):
+    tid = "".join(ch for ch in str(track_id or "") if ch.isalnum())
+    if len(tid) < 16:
+        raise HTTPException(status_code=404, detail="Music not found")
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_music_schema(cur)
+            cur.execute(
+                """
+                SELECT file_name, content_type, file_ext, title
+                FROM music_tracks
+                WHERE id=%s AND is_public=1
+                LIMIT 1
+                """,
+                (tid,),
+            )
+            row = cur.fetchone()
+    finally:
+        conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="Music not found")
+    path = _public_file_path(str(row.get("file_name") or ""))
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Music file missing")
+    ext = row.get("file_ext") or path.suffix or ".mp3"
+    safe_title = "".join(c for c in str(row.get("title") or "ai-music") if c.isalnum() or c in ("-", "_", " "))[:40].strip() or "ai-music"
+    filename = f"{safe_title}{ext}"
+    headers = {}
+    if download:
+        headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+    else:
+        headers["Content-Disposition"] = f'inline; filename="{filename}"'
+        headers["Cache-Control"] = "public, max-age=86400"
+    return FileResponse(
+        path,
+        media_type=str(row.get("content_type") or "audio/mpeg"),
+        headers=headers,
+        filename=filename if download else None,
+    )
 
 
 @router.get("/result/{result_id}")
@@ -440,7 +645,41 @@ def music_result(
     _purge_old_results()
     meta = _results.get(result_id)
     if not meta:
-        raise HTTPException(status_code=404, detail="Music result expired or not found")
+        # Fall back to durable public track owned by caller
+        tid = "".join(ch for ch in str(result_id or "") if ch.isalnum())
+        conn = _conn()
+        try:
+            with conn.cursor() as cur:
+                _ensure_music_schema(cur)
+                cur.execute(
+                    """
+                    SELECT user_id, file_name, content_type, file_ext
+                    FROM music_tracks WHERE id=%s LIMIT 1
+                    """,
+                    (tid,),
+                )
+                row = cur.fetchone()
+        finally:
+            conn.close()
+        if not row:
+            raise HTTPException(status_code=404, detail="Music result expired or not found")
+        if int(row.get("user_id") or 0) != int(user["id"]) and not _is_admin(user):
+            raise HTTPException(status_code=403, detail="Forbidden")
+        path = _public_file_path(str(row.get("file_name") or ""))
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Music file missing")
+        filename = f"ai-music-{tid}{row.get('file_ext') or '.mp3'}"
+        headers = {}
+        if download:
+            headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+        else:
+            headers["Content-Disposition"] = f'inline; filename="{filename}"'
+        return FileResponse(
+            path,
+            media_type=str(row.get("content_type") or "audio/mpeg"),
+            headers=headers,
+            filename=filename if download else None,
+        )
     if int(meta.get("user_id") or 0) != int(user["id"]) and not _is_admin(user):
         raise HTTPException(status_code=403, detail="Forbidden")
     path = Path(str(meta.get("path") or ""))
