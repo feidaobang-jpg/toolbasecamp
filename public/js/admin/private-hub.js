@@ -62,7 +62,7 @@
     if (app) app.classList.remove('hidden');
     if (loginLink) loginLink.classList.add('hidden');
     if (authLabel) {
-      authLabel.textContent = user.email || user.phone || user.display || 'admin';
+      authLabel.textContent = user.display || 'Admin';
     }
     renderGroups();
   }
