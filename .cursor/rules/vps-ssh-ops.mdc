@@ -57,11 +57,35 @@ Host toolbasecamp-cn
 | 场景 | 做法 |
 |------|------|
 | Nginx API 超时等 | 跑 `deploy/patch-nginx-api.sh` → reload nginx |
-| 新增 env | 编辑 `/etc/toolbasecamp-api.env`（python 脚本 upsert）→ restart api |
+| 新增 / 改 env | **必须**用 `deploy/upsert-api-env.py`（见下节），禁止手搓换行 |
 | 代码已 push | GitHub Actions 会自动 deploy；仅 **配置/nginx/systemd** 需 SSH 补跑 |
 | 长任务被 kill | 检查 `TimeoutStopSec`（service）、`proxy_read_timeout`（nginx） |
+
+## `/etc/toolbasecamp-api.env` 写入（禁止再犯）
+
+曾因 PowerShell / 远程 Python 把整文件写成**一行字面量 `\n`**，导致 `DB_HOST` 变成超长乱串 → MySQL 报 `label empty or too long` → 全站 API **503**。
+
+**必须：**
+
+1. 在本机改好 `deploy/upsert-api-env.py`（或等价脚本），**scp 到 VPS 再 `sudo python3` 执行**
+2. 写入后校验：真实换行数 ≥ 3；文件中不得出现字面量 `\\n`
+3. `systemctl restart toolbasecamp-api` 后确认：`curl -s http://127.0.0.1:8001/health` 里 **`"db": true`**
+
+```bash
+# 本机（PowerShell）
+scp deploy/upsert-api-env.py toolbasecamp-hk:~/
+ssh toolbasecamp-hk "sudo python3 ~/upsert-api-env.py TRADITIONAL_PREVIEW_BITRATE=48k && sudo systemctl restart toolbasecamp-api"
+ssh toolbasecamp-hk "curl -s http://127.0.0.1:8001/health"   # 确认 db:true
+```
+
+**禁止：**
+
+- 在 Windows PowerShell 里用含 `"\\n".join(...)` / 嵌套引号的远程 one-liner 改 env
+- 用 `echo KEY=val >>` 且不确认文件仍是「一行一个 KEY=」
+- 改完 env 不查 `health` 的 `db` 字段就收工
 
 ## 禁止
 
 - 把「请在 VPS 上执行以下命令」当作完成项而不自己执行（用户未明确说「只要文档/命令、不要连服务器」时）
 - 在 chat 或 commit 里写入明文密钥 / 登录密码
+- 把 `/etc/toolbasecamp-api.env` 写成字面量 `\n` 单行文件
