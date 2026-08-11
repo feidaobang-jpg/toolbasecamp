@@ -25,7 +25,9 @@
     'page.guestbook': { zh: '留言', en: 'Messages' },
     'page.cool-sites': { zh: '导航', en: 'Directory' },
     'page.about': { zh: '关于', en: 'About' },
-    'page.top-up': { zh: '充值', en: 'Top up' }
+    'page.top-up': { zh: '充值', en: 'Top up' },
+    'page.music':  { zh: 'AI 音乐', en: 'Music hub' },
+    'page.images': { zh: '图片广场', en: 'Images hub' }
   };
 
   var MODULE_LABELS = {
