@@ -26,7 +26,7 @@
     'page.cool-sites': { zh: '导航', en: 'Directory' },
     'page.about': { zh: '关于', en: 'About' },
     'page.top-up': { zh: '充值', en: 'Top up' },
-    'page.music':  { zh: 'AI 音乐', en: 'Music hub' },
+    'page.music':  { zh: '音乐广场', en: 'Music hub' },
     'page.images': { zh: '图片广场', en: 'Images hub' }
   };
 
