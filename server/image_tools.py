@@ -5,12 +5,14 @@ from __future__ import annotations
 import asyncio
 import base64
 import os
+import re
 import secrets
 import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, Response
@@ -155,8 +157,22 @@ except OSError:
     TMP_IMAGE_DIR = Path(tempfile.gettempdir()) / "toolbasecamp-image-results"
     TMP_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
+# Public gallery (mirrors MUSIC_PUBLIC_DIR pattern).
+PUBLIC_IMAGE_DIR = Path(
+    os.environ.get("IMAGE_PUBLIC_DIR")
+    or "/var/lib/toolbasecamp/public-images"
+)
+try:
+    PUBLIC_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+except OSError:
+    PUBLIC_IMAGE_DIR = Path(__file__).resolve().parent / "var" / "public-images"
+    PUBLIC_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+
+CN_TZ = ZoneInfo("Asia/Shanghai")
+
 # Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 LIMITS = {
     "ocr_text": int(os.environ.get("IMAGE_LIMIT_OCR_TEXT", "30")),
     "ocr_table": int(os.environ.get("IMAGE_LIMIT_OCR_TABLE", "20")),
@@ -168,12 +184,202 @@ LIMITS = {
 }
 
 
-def _is_admin(user: dict) -> bool:
-    return user.get("role") == "admin" or (user.get("email") or "").lower() == ADMIN_EMAIL
+def _is_admin(user: Optional[dict]) -> bool:
+    if not user:
+        return False
+    if user.get("role") == "admin":
+        return True
+    if (user.get("email") or "").lower() == ADMIN_EMAIL:
+        return True
+    if ADMIN_PHONE and (user.get("phone") or "").strip() == ADMIN_PHONE:
+        return True
+    return False
 
 
 def _unlimited_quota() -> dict:
     return {"used": 0, "limit": 0, "remaining": 0, "unlimited": True}
+
+
+def _parse_bool(value: Any, *, default: bool = False) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    s = str(value).strip().lower()
+    if s in ("1", "true", "yes", "on", "y"):
+        return True
+    if s in ("0", "false", "no", "off", "n", ""):
+        return False
+    return default
+
+
+def _now_utc_naive() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def _format_created_at_cn(created: Any) -> str:
+    """DB stores UTC naive; show Asia/Shanghai for the images hub."""
+    if created is None:
+        return ""
+    if isinstance(created, str):
+        s = created.strip().replace("T", " ")
+        try:
+            created = datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return s
+    if not hasattr(created, "year"):
+        return str(created)
+    if getattr(created, "tzinfo", None) is not None:
+        dt = created.astimezone(CN_TZ)
+    else:
+        dt = created.replace(tzinfo=timezone.utc).astimezone(CN_TZ)
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _mask_phone(raw: str) -> str:
+    s = re.sub(r"\D", "", str(raw or ""))
+    if len(s) >= 11:
+        return s[:3] + "****" + s[-4:]
+    if len(s) >= 7:
+        return s[:2] + "****" + s[-2:]
+    if s:
+        return "****"
+    return "—"
+
+
+def _creator_public(row: dict) -> dict:
+    nick = str(row.get("creator_nickname") or "").strip()
+    phone_raw = str(row.get("creator_phone") or "").strip()
+    email = str(row.get("creator_email") or "").strip()
+    if not nick:
+        nick = phone_raw or email or ""
+    phone = _mask_phone(phone_raw) if phone_raw else "—"
+    return {
+        "creatorNickname": nick or "—",
+        "creatorPhone": phone,
+    }
+
+
+def _ensure_public_images_schema(cur) -> None:
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS public_images (
+            id VARCHAR(32) PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            prompt TEXT,
+            model VARCHAR(96) NOT NULL DEFAULT '',
+            source VARCHAR(32) NOT NULL DEFAULT '',
+            content_type VARCHAR(64) NOT NULL DEFAULT 'image/png',
+            file_ext VARCHAR(8) NOT NULL DEFAULT '.png',
+            file_name VARCHAR(80) NOT NULL,
+            is_public TINYINT(1) NOT NULL DEFAULT 1,
+            created_at DATETIME NOT NULL,
+            INDEX idx_pubimg_public_created (is_public, created_at),
+            INDEX idx_pubimg_user (user_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+
+
+def _public_image_path(file_name: str) -> Path:
+    name = Path(str(file_name or "")).name
+    if not name or name != str(file_name) or ".." in name:
+        raise HTTPException(status_code=400, detail="Invalid image file")
+    path = (PUBLIC_IMAGE_DIR / name).resolve()
+    if not str(path).startswith(str(PUBLIC_IMAGE_DIR.resolve())):
+        raise HTTPException(status_code=400, detail="Invalid image file")
+    return path
+
+
+def _insert_public_image(
+    *,
+    image_id: str,
+    user_id: int,
+    prompt: str,
+    model: str,
+    source: str,
+    content_type: str,
+    file_ext: str,
+    file_name: str,
+) -> None:
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_public_images_schema(cur)
+            cur.execute(
+                """
+                INSERT INTO public_images (
+                    id, user_id, prompt, model, source,
+                    content_type, file_ext, file_name, is_public, created_at
+                ) VALUES (
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, 1, %s
+                )
+                """,
+                (
+                    image_id,
+                    int(user_id),
+                    prompt or "",
+                    (model or "")[:96],
+                    (source or "")[:32],
+                    content_type or "image/png",
+                    file_ext or ".png",
+                    file_name,
+                    _now_utc_naive().strftime("%Y-%m-%d %H:%M:%S"),
+                ),
+            )
+    finally:
+        conn.close()
+
+
+def _publish_public_image(
+    *,
+    user_id: int,
+    prompt: str,
+    model: str,
+    source: str,
+    data: bytes,
+    content_type: str,
+) -> dict:
+    """Persist bytes to public gallery. Returns publicId / URL fields."""
+    if not data:
+        raise HTTPException(status_code=500, detail="Empty image for publish")
+    image_id = secrets.token_hex(16)
+    ctype = content_type or "image/png"
+    ext = _tmp_suffix(ctype)
+    file_name = f"{image_id}{ext}"
+    path = PUBLIC_IMAGE_DIR / file_name
+    path.write_bytes(data)
+    try:
+        _insert_public_image(
+            image_id=image_id,
+            user_id=int(user_id),
+            prompt=prompt or "",
+            model=model or "",
+            source=source or "",
+            content_type=ctype,
+            file_ext=ext,
+            file_name=file_name,
+        )
+    except Exception:
+        try:
+            path.unlink(missing_ok=True)
+        except Exception:
+            pass
+        raise
+    return {
+        "publicId": image_id,
+        "publicUrl": f"/image/public/{image_id}",
+        "publicDownloadUrl": f"/image/public/{image_id}?download=1",
+    }
+
+
+def _ascii_image_filename(stem: str, ext: str) -> str:
+    e = str(ext or ".png")
+    if not e.startswith("."):
+        e = "." + e
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", str(stem or "ai-image")).strip("-._") or "ai-image"
+    return f"{safe[:80]}{e}"
 
 ENHANCE_TASKS = {
     1: "cutEnhance",
@@ -190,14 +396,33 @@ ENHANCE_TASKS = {
 }
 
 
-def _wire(get_conn, require_db, get_current_user):
+def _wire(get_conn, require_db, get_current_user, require_admin=None, get_optional_user=None):
     router.get_conn = get_conn  # type: ignore[attr-defined]
     router.require_db = require_db  # type: ignore[attr-defined]
     router.get_current_user = get_current_user  # type: ignore[attr-defined]
+    router.require_admin = require_admin  # type: ignore[attr-defined]
+    router.get_optional_user = get_optional_user  # type: ignore[attr-defined]
 
 
 def _user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     return router.get_current_user(creds)  # type: ignore[attr-defined]
+
+
+def _optional_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    fn = getattr(router, "get_optional_user", None)
+    if fn:
+        return fn(creds)
+    return None
+
+
+def _admin_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
+    user = router.get_current_user(creds)  # type: ignore[attr-defined]
+    req = getattr(router, "require_admin", None)
+    if req:
+        req(user)
+    elif not _is_admin(user):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
 
 
 def _conn():
@@ -248,6 +473,143 @@ def image_tmp(name: str):
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Image not found")
     return FileResponse(str(path))
+
+
+@router.get("/public/list")
+def image_public_list(
+    limit: int = 50,
+    offset: int = 0,
+    viewer: Optional[dict] = Depends(_optional_user),
+):
+    lim = max(1, min(100, int(limit or 50)))
+    off = max(0, int(offset or 0))
+    can_admin = _is_admin(viewer) if viewer else False
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_public_images_schema(cur)
+            cur.execute(
+                """
+                SELECT i.id, i.prompt, i.model, i.source, i.content_type,
+                       i.created_at, i.file_name, i.user_id,
+                       u.nickname AS creator_nickname,
+                       u.phone AS creator_phone,
+                       u.email AS creator_email
+                FROM public_images i
+                LEFT JOIN users u ON u.id = i.user_id
+                WHERE i.is_public=1
+                ORDER BY i.created_at DESC
+                LIMIT %s OFFSET %s
+                """,
+                (lim, off),
+            )
+            rows = cur.fetchall() or []
+    finally:
+        conn.close()
+    items = []
+    for row in rows:
+        iid = str(row.get("id") or "")
+        file_name = str(row.get("file_name") or (iid + ".png"))
+        try:
+            path = _public_image_path(file_name)
+        except HTTPException:
+            continue
+        if not path.is_file():
+            continue
+        creator = _creator_public(row)
+        prompt = (row.get("prompt") or "").strip()
+        items.append(
+            {
+                "id": iid,
+                "prompt": prompt[:400],
+                "model": row.get("model") or "",
+                "source": row.get("source") or "",
+                "contentType": row.get("content_type") or "image/png",
+                "createdAt": _format_created_at_cn(row.get("created_at")),
+                "creatorNickname": creator["creatorNickname"],
+                "creatorPhone": creator["creatorPhone"],
+                "imageUrl": f"/image/public/{iid}",
+                "downloadUrl": f"/image/public/{iid}?download=1",
+            }
+        )
+    return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
+
+
+@router.delete("/public/{image_id}")
+def image_public_delete(image_id: str, admin: dict = Depends(_admin_user)):
+    iid = "".join(ch for ch in str(image_id or "") if ch.isalnum())
+    if len(iid) < 16:
+        raise HTTPException(status_code=404, detail="Image not found")
+    conn = _conn()
+    file_name = ""
+    try:
+        with conn.cursor() as cur:
+            _ensure_public_images_schema(cur)
+            cur.execute(
+                """
+                SELECT file_name FROM public_images
+                WHERE id=%s AND is_public=1
+                LIMIT 1
+                """,
+                (iid,),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Image not found")
+            file_name = str(row.get("file_name") or "")
+            cur.execute("DELETE FROM public_images WHERE id=%s", (iid,))
+    finally:
+        conn.close()
+    if file_name:
+        try:
+            path = _public_image_path(file_name)
+            if path.is_file():
+                path.unlink()
+        except Exception:
+            pass
+    return {"success": True, "deletedId": iid}
+
+
+@router.get("/public/{image_id}")
+def image_public_file(image_id: str, download: int = 0):
+    iid = "".join(ch for ch in str(image_id or "") if ch.isalnum())
+    if len(iid) < 16:
+        raise HTTPException(status_code=404, detail="Image not found")
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            _ensure_public_images_schema(cur)
+            cur.execute(
+                """
+                SELECT file_name, content_type, file_ext
+                FROM public_images
+                WHERE id=%s AND is_public=1
+                LIMIT 1
+                """,
+                (iid,),
+            )
+            row = cur.fetchone()
+    finally:
+        conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="Image not found")
+    path = _public_image_path(str(row.get("file_name") or ""))
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Image file missing")
+    ext = row.get("file_ext") or path.suffix or ".png"
+    filename = _ascii_image_filename(f"ai-image-{iid}", ext)
+    headers = {
+        "Content-Disposition": (
+            f'{"attachment" if download else "inline"}; filename="{filename}"'
+        ),
+    }
+    if not download:
+        headers["Cache-Control"] = "public, max-age=86400"
+    return FileResponse(
+        path,
+        media_type=str(row.get("content_type") or "image/png"),
+        headers=headers,
+    )
 
 
 def _today() -> str:
@@ -721,6 +1083,7 @@ async def api_instruct_edit(
     compare: str = Form("0"),
     ref_mode: str = Form("single"),
     output_size: str = Form("2K"),
+    public: str = Form("0"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
     request: Request = None,
@@ -728,6 +1091,7 @@ async def api_instruct_edit(
 ):
     t0 = time.perf_counter()
     req_user_id = int(user["id"])
+    is_public = _parse_bool(public, default=False)
     light_response = False
     if request is not None:
         hdr = (request.headers.get("X-TB-Light-Response") or "").strip().lower()
@@ -957,11 +1321,31 @@ async def api_instruct_edit(
                     "refCount": len(refs),
                     "outputSize": out_size,
                     "billedSize": _billable_output_size(mid, out_size),
+                    "public": is_public,
                 },
             )
             if bal is not None:
                 balance_after = bal
                 charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
+            if is_public:
+                try:
+                    raw = base64.b64decode(item.get("imageBase64") or "")
+                    pub = _publish_public_image(
+                        user_id=req_user_id,
+                        prompt=text,
+                        model=mid,
+                        source="instruct_edit",
+                        data=raw,
+                        content_type=str(item.get("contentType") or "image/png"),
+                    )
+                    item.update(pub)
+                except Exception as pub_exc:
+                    if IMAGE_DEBUG:
+                        print(
+                            "[instruct-edit] public_publish_failed",
+                            {"userId": req_user_id, "model": mid, "err": str(pub_exc)},
+                            flush=True,
+                        )
             images.append(item)
         except HTTPException as exc:
             if exc.status_code in (402, 429, 504):
@@ -1007,6 +1391,7 @@ async def api_instruct_edit(
         "outputSize": out_size,
         "batch": 1 if mode == "multi" else len(blobs),
         "compare": len(model_ids) > 1,
+        "public": is_public,
         "aiWallet": _wallet_for(user),
     }
     if balance_after is not None:
@@ -1071,6 +1456,7 @@ async def api_text_to_image(
     model: Optional[str] = Form(None),
     models: List[str] = Form(default=[]),
     size: str = Form("square"),
+    public: str = Form("0"),
     user: dict = Depends(_user),
 ):
     if not dashscope_image_edit_configured():
@@ -1081,6 +1467,7 @@ async def api_text_to_image(
     text = (prompt or "").strip()
     if not text:
         raise HTTPException(status_code=400, detail="Please enter a prompt.")
+    is_public = _parse_bool(public, default=False)
     model_ids = _resolve_t2i_models(model, models)
     size_preset = (size or "square").strip().lower() or "square"
     if size_preset not in ("square", "portrait", "landscape", "hd"):
@@ -1166,6 +1553,25 @@ async def api_text_to_image(
             if bal is not None:
                 balance_after = bal
                 charged_total = round(charged_total + float(user_price_cny(list_p)), 2)
+            if is_public:
+                try:
+                    raw = base64.b64decode(item.get("imageBase64") or "")
+                    pub = _publish_public_image(
+                        user_id=int(user["id"]),
+                        prompt=text,
+                        model=mid,
+                        source="text_to_image",
+                        data=raw,
+                        content_type=str(item.get("contentType") or "image/png"),
+                    )
+                    item.update(pub)
+                except Exception as pub_exc:
+                    if IMAGE_DEBUG:
+                        print(
+                            "[text-to-image] public_publish_failed",
+                            {"userId": int(user["id"]), "model": mid, "err": str(pub_exc)},
+                            flush=True,
+                        )
             images.append(item)
         except HTTPException as exc:
             errors.append(f"{mid}: {_exc_detail(exc)}")
@@ -1191,6 +1597,7 @@ async def api_text_to_image(
         "contentType": first["contentType"],
         "images": images,
         "size": size_preset,
+        "public": is_public,
         "aiWallet": _wallet_for(user),
     }
     if balance_after is not None:

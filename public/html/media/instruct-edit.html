@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instruct Image Edit - Tool Basecamp</title>
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
-  <link rel="stylesheet" href="../../css/base.css?v=btnGap1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=btnGap1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=btnGap1" />
-  <link rel="stylesheet" href="../../css/tools-form.css?v=btnGap1" />
+  <link rel="stylesheet" href="../../css/base.css?v=imgHub1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgHub1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=imgHub1" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=imgHub1" />
 </head>
 <body>
   <div class="container">
@@ -214,6 +214,13 @@
             </div>
             <p class="instruct-cost-hint" id="cost-hint"></p>
           </div>
+          <div class="field-row">
+            <label class="ai-public-toggle">
+              <input type="checkbox" id="public-toggle" />
+              <span data-i18n="tools.instructEdit.publicLabel">Publish to the Images page</span>
+            </label>
+            <p class="instruct-cost-hint" style="margin-top:6px" data-i18n="tools.instructEdit.publicHint">Off by default. When on, everyone can browse and download it on Images.</p>
+          </div>
           <div class="tip-box">
             <b data-i18n="tools.instructEdit.tip">Tip:</b>
             <span data-i18n="tools.instructEdit.tipBody">Be specific. Multi-select models to compare side by side per image. Download promptly.</span>
@@ -242,13 +249,13 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=btnGap1"></script>
-  <script src="../../js/locales/zh-CN.js?v=btnGap1"></script>
-  <script src="../../js/i18n.js?v=btnGap1"></script>
-  <script src="../../js/config.js?v=btnGap1"></script>
-  <script src="../../js/base.js?v=btnGap1"></script>
-  <script src="../../js/media/image-cloud-client.js?v=btnGap1"></script>
-  <script src="../../js/media/image-gen-history.js?v=btnGap1"></script>
-  <script src="../../js/media/instruct-edit.js?v=btnGap1"></script>
+  <script src="../../js/locales/en.js?v=imgHub1"></script>
+  <script src="../../js/locales/zh-CN.js?v=imgHub1"></script>
+  <script src="../../js/i18n.js?v=imgHub1"></script>
+  <script src="../../js/config.js?v=imgHub1"></script>
+  <script src="../../js/base.js?v=imgHub1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=imgHub1"></script>
+  <script src="../../js/media/image-gen-history.js?v=imgHub1"></script>
+  <script src="../../js/media/instruct-edit.js?v=imgHub1"></script>
 </body>
 </html>

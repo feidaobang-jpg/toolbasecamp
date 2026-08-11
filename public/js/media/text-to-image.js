@@ -20,6 +20,7 @@
   var wechatTip = document.getElementById('wechat-tip');
   var historyHint = document.getElementById('history-hint');
   var styleRow = document.getElementById('style-row');
+  var publicToggle = document.getElementById('public-toggle');
   var resultUrls = [];
   var priceMarkup = 2;
   var histPanel = null;
@@ -330,6 +331,7 @@
       var fd = new FormData();
       fd.append('prompt', prompt);
       fd.append('size', selectedSize());
+      fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
       for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
       C.apiJson('/image/text-to-image', { method: 'POST', body: fd, timeoutMs: 60000 }).then(function (data) {
         if (data.aiWallet) applyWallet(data.aiWallet);

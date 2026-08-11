@@ -953,6 +953,21 @@
   line-height: 1.45;
 }
 
+.ai-public-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #334155;
+  line-height: 1.4;
+  cursor: pointer;
+  user-select: none;
+}
+.ai-public-toggle input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
 .instruct-result-group {
   margin-top: 18px;
 }

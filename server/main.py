@@ -491,9 +491,7 @@ def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
 
 wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
-wire_image(get_conn, require_db, get_current_user)
-app.include_router(image_router)
-# life_plans wired after get_optional_user + _client_ip
+# image_tools wired after get_optional_user + require_admin (public gallery)
 app.include_router(life_router)
 app.include_router(watermark_router)
 app.include_router(fx_router)
@@ -566,6 +564,10 @@ def _ensure_admin_role(user: dict) -> dict:
 def require_admin(user: dict):
     if not is_admin(user):
         raise HTTPException(status_code=403, detail="Admin access required")
+
+
+wire_image(get_conn, require_db, get_current_user, require_admin, get_optional_user)
+app.include_router(image_router)
 
 
 if music_router is not None:

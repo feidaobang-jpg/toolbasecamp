@@ -35,6 +35,7 @@
   var busyTextEl = document.getElementById('busy-text');
   var wechatTip = document.getElementById('wechat-tip');
   var historyHint = document.getElementById('history-hint');
+  var publicToggle = document.getElementById('public-toggle');
   var bgTimeRow = document.getElementById('bg-time-row');
   var bgPanelEl = document.getElementById('bg-toggle-panel');
   var bgToggleBtn = document.getElementById('bg-toggle-btn');
@@ -517,6 +518,7 @@
     fd.append('prompt', (promptEl && promptEl.value) || '');
     fd.append('ref_mode', refMode);
     fd.append('output_size', outputSize);
+    fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
     if (activePreset) fd.append('preset', activePreset);
     for (var m = 0; m < modelList.length; m++) {
       fd.append('models', modelList[m].id);
