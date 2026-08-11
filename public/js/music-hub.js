@@ -7,6 +7,7 @@
 
   var CACHE_NAME = 'tbc-music-hub-v2';
   var objectUrls = {};
+  var memoryBlobs = {};
   var player = null;
   var currentId = '';
   var currentKind = 'ai';
@@ -89,14 +90,19 @@
   }
 
   function warmCache(kind, id, contentType, audioEl, isNetworkStream, fullOnly) {
-    if (!cacheAvailable() || isWeChat()) return;
+    // 微信里预览流不要抢带宽；全曲预取走 prefetchTraditionalFull
+    if (!cacheAvailable() || (isWeChat() && !fullOnly)) return;
     var wantFull = !!fullOnly;
     getCachedBlob(kind, id, wantFull).then(function (cached) {
-      if (cached) return;
+      if (cached) {
+        memoryBlobs[objectUrlKey(kind, id, wantFull)] = cached;
+        return;
+      }
       var run = function () {
         fetch(cacheKey(kind, id, wantFull)).then(function (res) {
           if (!res.ok) return;
           return res.blob().then(function (blob) {
+            memoryBlobs[objectUrlKey(kind, id, wantFull)] = blob;
             return putCachedBlob(kind, id, blob, contentType || blob.type, wantFull);
           });
         }).catch(function () {});
@@ -106,10 +112,57 @@
         return;
       }
       audioEl.addEventListener('canplay', function () {
-        setTimeout(run, wantFull ? 4000 : 0);
+        setTimeout(run, wantFull ? (isWeChat() ? 6000 : 4000) : 0);
       }, { once: true });
       audioEl.addEventListener('ended', run, { once: true });
     }).catch(function () {});
+  }
+
+  function getFullBlob(kind, id) {
+    var key = objectUrlKey(kind, id, true);
+    if (memoryBlobs[key]) return Promise.resolve(memoryBlobs[key]);
+    return getCachedBlob(kind, id, true).then(function (cached) {
+      if (cached) memoryBlobs[key] = cached;
+      return cached;
+    });
+  }
+
+  function prefetchTraditionalFull(kind, item, playerInst) {
+    if (kind !== 'traditional' || !item || !item.id || !playerInst) return;
+    if (playerInst._tbcFullPrefetching || playerInst._tbcUpgradedFull) return;
+    var key = objectUrlKey(kind, item.id, true);
+    if (memoryBlobs[key]) return;
+    playerInst._tbcFullPrefetching = true;
+    var delay = isWeChat() ? 6000 : 3000;
+    var audioEl = playerInst.audio;
+    var started = false;
+    function run() {
+      if (started) return;
+      started = true;
+      if (memoryBlobs[key] || (playerInst && playerInst._tbcUpgradedFull)) {
+        if (playerInst) playerInst._tbcFullPrefetching = false;
+        return;
+      }
+      fetch(cacheKey(kind, item.id, true)).then(function (res) {
+        if (!res.ok) return null;
+        return res.blob();
+      }).then(function (blob) {
+        if (!blob) return;
+        memoryBlobs[key] = blob;
+        putCachedBlob(kind, item.id, blob, item.contentType || blob.type, true);
+        tryUpgradeTraditionalFull(kind, item, playerInst);
+      }).catch(function () {}).then(function () {
+        if (playerInst) playerInst._tbcFullPrefetching = false;
+      });
+    }
+    if (audioEl) {
+      audioEl.addEventListener('playing', function () {
+        setTimeout(run, delay);
+      }, { once: true });
+      audioEl.addEventListener('ended', run, { once: true });
+    } else {
+      setTimeout(run, delay);
+    }
   }
 
   function loadBlob(kind, id, contentType, full) {
@@ -118,6 +171,7 @@
       return fetch(cacheKey(kind, id, full)).then(function (res) {
         if (!res.ok) throw new Error(tr('hub.musicPage.loadFailed'));
         return res.blob().then(function (blob) {
+          memoryBlobs[objectUrlKey(kind, id, !!full)] = blob;
           return putCachedBlob(kind, id, blob, contentType || blob.type, full).then(function () {
             return { blob: blob, fromCache: false };
           });
@@ -139,20 +193,30 @@
   }
 
   function tryUpgradeTraditionalFull(kind, item, playerInst) {
-    if (isWeChat()) return;
     if (kind !== 'traditional' || !playerInst || !playerInst.audio || playerInst._tbcUpgradedFull) return;
-    getCachedBlob(kind, item.id, true).then(function (fullBlob) {
+    if (currentId !== item.id) return;
+    var audio = playerInst.audio;
+    var t = audio.currentTime || 0;
+    var ended = !!audio.ended;
+    var minSec = isWeChat() ? 15 : 8;
+    if (!ended && t < minSec) return;
+    getFullBlob(kind, item.id).then(function (fullBlob) {
       if (!fullBlob || !playerInst.audio || playerInst._tbcUpgradedFull) return;
-      var audio = playerInst.audio;
-      var t = audio.currentTime || 0;
-      var wasPlaying = !audio.paused;
+      if (currentId !== item.id) return;
+      var wasPlaying = !audio.paused && !audio.ended;
+      var seekTo = ended ? 0 : (audio.currentTime || 0);
       revokeUrl(kind, item.id, true);
       var blobUrl = URL.createObjectURL(fullBlob);
       objectUrls[objectUrlKey(kind, item.id, true)] = blobUrl;
       playerInst._tbcUpgradedFull = true;
       audio.src = blobUrl;
-      audio.currentTime = t;
-      if (wasPlaying) playerInst.play().catch(function () {});
+      try { audio.currentTime = seekTo; } catch (e) {}
+      if (wasPlaying) {
+        var playFn = typeof playerInst.playWhenReady === 'function'
+          ? playerInst.playWhenReady()
+          : playerInst.play();
+        playFn.catch(function () {});
+      }
     }).catch(function () {});
   }
 
@@ -232,12 +296,13 @@
       }
     });
     warmCache(kind, item.id, item.contentType, player && player.audio, isStream, false);
-    if (kind === 'traditional' && !isWeChat() && player && player.audio && item.hasPreview !== false) {
-      warmCache(kind, item.id, item.contentType, player.audio, isStream, true);
+    if (kind === 'traditional' && player && player.audio && item.hasPreview !== false) {
+      prefetchTraditionalFull(kind, item, player);
+      var upgradeAt = isWeChat() ? 15 : 8;
       player.audio.addEventListener('timeupdate', function onTick() {
-        if ((player.audio.currentTime || 0) > 8) tryUpgradeTraditionalFull(kind, item, player);
+        if ((player.audio.currentTime || 0) >= upgradeAt) tryUpgradeTraditionalFull(kind, item, player);
       });
-      player.audio.addEventListener('canplay', function () {
+      player.audio.addEventListener('ended', function () {
         tryUpgradeTraditionalFull(kind, item, player);
       });
     }
@@ -344,6 +409,18 @@
     var streamSrc = kind === 'traditional'
       ? fileUrl(kind, id, { full: false })
       : fileUrl(kind, id, { download: false });
+
+    // 本会话已拉过全曲：直接高码率起播（含微信第二次点同一首）
+    if (kind === 'traditional') {
+      var memFull = memoryBlobs[objectUrlKey(kind, id, true)];
+      if (memFull) {
+        revokeUrl(kind, id, true);
+        var fullUrl = URL.createObjectURL(memFull);
+        objectUrls[objectUrlKey(kind, id, true)] = fullUrl;
+        go(fullUrl, true);
+        return;
+      }
+    }
     go(streamSrc, false);
 
     if (!isWeChat() && cacheAvailable()) {
