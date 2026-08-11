@@ -15,6 +15,46 @@
   var activeTab = 'ai';
   var listCache = { ai: null, traditional: null };
   var tradSearchQuery = '';
+  var CONT_PLAY_KEY = 'tbc_music_cont_play_v1';
+  var continuousPlay = false;
+
+  function loadContinuousPref() {
+    try {
+      return localStorage.getItem(CONT_PLAY_KEY) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function saveContinuousPref(on) {
+    try {
+      localStorage.setItem(CONT_PLAY_KEY, on ? '1' : '0');
+    } catch (e) {}
+  }
+
+  function getQueueItems(kind) {
+    kind = kind || activeTab;
+    var items = listCache[kind] || [];
+    if (kind === 'traditional') return filterTraditionalItems(items);
+    return items.slice();
+  }
+
+  function playNextInQueue() {
+    if (!continuousPlay || !currentId || !currentKind) return;
+    var items = getQueueItems(currentKind);
+    if (!items.length) return;
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (String(items[i].id) === String(currentId)) {
+        idx = i;
+        break;
+      }
+    }
+    if (idx < 0 || idx >= items.length - 1) return;
+    var next = items[idx + 1];
+    if (!next || !next.id) return;
+    playTrack(currentKind, next);
+  }
 
   function normalizeSearch(s) {
     return String(s || '')
@@ -237,6 +277,9 @@
       onBuffering: function (loading) {
         if (loading) setPlayingUi(kind, item.id, 'buffering');
         else if (player && player.audio && !player.audio.paused) setPlayingUi(kind, item.id, true);
+      },
+      onEnded: function () {
+        playNextInQueue();
       },
       onError: function () {
         setPlayingUi(kind, item.id, false);
@@ -659,6 +702,13 @@
             'placeholder="' + escapeHtml(tr('hub.musicPage.searchPlaceholder')) + '" ' +
             'aria-label="' + escapeHtml(tr('hub.musicPage.searchPlaceholder')) + '">' +
         '</div>' +
+        '<label class="music-hub-cont" for="music-cont-play">' +
+          '<input type="checkbox" id="music-cont-play">' +
+          '<span class="music-hub-cont-text">' +
+            '<span>' + escapeHtml(tr('hub.musicPage.continuousPlay')) + '</span>' +
+            '<span class="music-hub-cont-tip">' + escapeHtml(tr('hub.musicPage.continuousPlayTip')) + '</span>' +
+          '</span>' +
+        '</label>' +
         '<div id="music-busy" class="music-hub-busy" hidden>' + escapeHtml(tr('hub.musicPage.loading')) + '</div>' +
         '<div id="music-error" class="error-box" role="alert" hidden></div>' +
         '<p id="music-empty" class="music-hub-empty" hidden></p>' +
@@ -669,6 +719,15 @@
         switchTab(btn.getAttribute('data-music-tab'));
       });
     });
+    continuousPlay = loadContinuousPref();
+    var contInput = document.getElementById('music-cont-play');
+    if (contInput) {
+      contInput.checked = continuousPlay;
+      contInput.addEventListener('change', function () {
+        continuousPlay = !!contInput.checked;
+        saveContinuousPref(continuousPlay);
+      });
+    }
     var searchInput = document.getElementById('music-search-input');
     if (searchInput) {
       var applySearch = function () {

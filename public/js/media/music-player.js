@@ -396,6 +396,7 @@
       lastActive = -1;
       syncLyrics(duration());
       if (typeof opts.onPlayState === 'function') opts.onPlayState(false);
+      if (typeof opts.onEnded === 'function') opts.onEnded();
     });
     audio.addEventListener('error', function () {
       setBuffering(false);

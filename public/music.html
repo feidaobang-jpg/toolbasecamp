@@ -23,6 +23,14 @@
       .music-hub-tip { font-size: 0.85rem; color: #94a3b8; margin: 8px 0 16px; line-height: 1.45; }
       .music-hub-search { margin: 0 0 12px; }
       .music-hub-search .tb-input { width: 100%; }
+      .music-hub-cont {
+        display: flex; align-items: flex-start; gap: 8px;
+        margin: 0 0 12px; font-size: 0.9rem; color: #334155; line-height: 1.4;
+        cursor: pointer; user-select: none;
+      }
+      .music-hub-cont input { margin-top: 3px; flex-shrink: 0; }
+      .music-hub-cont-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .music-hub-cont-tip { font-size: 0.8rem; color: #94a3b8; }
       .music-hub-busy, .music-hub-empty { color: #64748b; font-size: 0.95rem; margin: 12px 0; }
       .music-track-list { display: flex; flex-direction: column; gap: 12px; }
       .music-track-card {
@@ -86,14 +94,14 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=songTab13"></script>
-    <script src="js/locales/zh-CN.js?v=songTab13"></script>
-    <script src="js/i18n.js?v=songTab13"></script>
-    <script src="js/config.js?v=songTab13"></script>
-    <script src="js/base.js?v=songTab13"></script>
-    <script src="js/common_ui.js?v=songTab13"></script>
-    <script src="js/media/music-player.js?v=songTab13"></script>
-    <script src="js/music-hub.js?v=songTab13"></script>
+    <script src="js/locales/en.js?v=songTab14"></script>
+    <script src="js/locales/zh-CN.js?v=songTab14"></script>
+    <script src="js/i18n.js?v=songTab14"></script>
+    <script src="js/config.js?v=songTab14"></script>
+    <script src="js/base.js?v=songTab14"></script>
+    <script src="js/common_ui.js?v=songTab14"></script>
+    <script src="js/media/music-player.js?v=songTab14"></script>
+    <script src="js/music-hub.js?v=songTab14"></script>
     <script>
       (function () {
         function go() { if (typeof renderMusicHub === 'function') renderMusicHub(); }

@@ -335,6 +335,8 @@ window.TB_LOCALES['zh-CN'] = {
             traditionalEmpty: '暂无传统音乐，管理员上传后会显示在这里。',
             searchPlaceholder: '搜索歌名或歌手',
             searchEmpty: '没有匹配的歌曲，试试其他关键词',
+            continuousPlay: '连续播放',
+            continuousPlayTip: '播完当前列表下一首（到末尾停止）',
             create: '去生成',
             refresh: '刷新',
             play: '播放',

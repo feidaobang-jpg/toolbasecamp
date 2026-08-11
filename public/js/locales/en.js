@@ -336,6 +336,8 @@ window.TB_LOCALES.en = {
             traditionalEmpty: 'No classic tracks yet. They will appear here after upload.',
             searchPlaceholder: 'Search by title or artist',
             searchEmpty: 'No matching tracks. Try another keyword.',
+            continuousPlay: 'Play next',
+            continuousPlayTip: 'Auto-play the next track in the current list (stops at the end)',
             create: 'Create',
             refresh: 'Refresh',
             play: 'Play',
