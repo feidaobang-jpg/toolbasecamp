@@ -127,12 +127,6 @@
     flex-shrink: 0;
 }
 
-@media (min-width: 768px) {
-    #tb-site-stats {
-        display: flex;
-    }
-}
-
 #tb-lang-switcher {
     display: flex;
     align-items: center;
