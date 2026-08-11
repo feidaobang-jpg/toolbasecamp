@@ -144,6 +144,14 @@
           '<div class="action-row"></div>' +
         '</div>';
       var img = card.querySelector('.img-hub-thumb');
+      // Runtime hardening: enforce cover behavior even if stale CSS is cached.
+      img.style.position = 'absolute';
+      img.style.inset = '0';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.objectPosition = 'center center';
+      img.style.display = 'block';
       img.src = src;
       img.alt = (item.prompt || tr('hub.imagesPage.untitled')).slice(0, 80);
       var promptEl = card.querySelector('.img-hub-prompt');

@@ -8,13 +8,13 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=imgPub2"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=imgPub2" rel="stylesheet">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=imgPub2">
-    <link rel="stylesheet" href="css/tools-hub.css?v=imgPub2">
-    <link rel="stylesheet" href="css/base.css?v=imgPub2">
-    <link rel="stylesheet" href="css/docs/docs-common.css?v=imgPub2">
-    <link rel="stylesheet" href="css/tools-form.css?v=imgPub2">
+    <script src="vendor/tailwindcss.js?v=imgAlign3"></script>
+    <link href="vendor/font-awesome/css/all.min.css?v=imgAlign3" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=imgAlign3">
+    <link rel="stylesheet" href="css/tools-hub.css?v=imgAlign3">
+    <link rel="stylesheet" href="css/base.css?v=imgAlign3">
+    <link rel="stylesheet" href="css/docs/docs-common.css?v=imgAlign3">
+    <link rel="stylesheet" href="css/tools-form.css?v=imgAlign3">
     <style>
       .img-hub { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
       .img-hub-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
@@ -25,33 +25,61 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 12px;
+        align-items: stretch;
       }
       @media (min-width: 640px) {
         .img-hub-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
       }
       .img-hub-card {
         background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-        overflow: hidden; display: flex; flex-direction: column;
+        overflow: hidden; display: flex; flex-direction: column; height: 100%;
       }
       .img-hub-thumb-wrap {
-        position: relative; aspect-ratio: 1; background: #f1f5f9;
-        display: flex; align-items: center; justify-content: center;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        flex-shrink: 0;
+        background: #f1f5f9;
+        overflow: hidden;
       }
       .img-hub-thumb {
-        width: 100%; height: 100%; object-fit: cover; display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
         -webkit-touch-callout: default;
       }
-      .img-hub-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+      .img-hub-body {
+        padding: 10px 12px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+      }
       .img-hub-prompt {
         font-size: 0.82rem; color: #475569; line-height: 1.4;
         word-break: break-word;
-        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
         min-height: calc(1.4em * 2);
+        max-height: calc(1.4em * 2);
       }
       .img-hub-meta { font-size: 0.75rem; color: #94a3b8; line-height: 1.35;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
       .img-hub-creator { font-size: 0.78rem; color: #334155; line-height: 1.35;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+      .img-hub-card .action-row {
+        margin-top: auto;
+        padding-top: 8px;
+        flex-shrink: 0;
+      }
       .error-box { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
     </style>
     <script>
@@ -76,13 +104,13 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=imgPub2"></script>
-    <script src="js/locales/zh-CN.js?v=imgPub2"></script>
-    <script src="js/i18n.js?v=imgPub2"></script>
-    <script src="js/config.js?v=imgPub2"></script>
-    <script src="js/base.js?v=imgPub2"></script>
-    <script src="js/common_ui.js?v=imgPub2"></script>
-    <script src="js/image-hub.js?v=imgPub2"></script>
+    <script src="js/locales/en.js?v=imgAlign3"></script>
+    <script src="js/locales/zh-CN.js?v=imgAlign3"></script>
+    <script src="js/i18n.js?v=imgAlign3"></script>
+    <script src="js/config.js?v=imgAlign3"></script>
+    <script src="js/base.js?v=imgAlign3"></script>
+    <script src="js/common_ui.js?v=imgAlign3"></script>
+    <script src="js/image-hub.js?v=imgAlign3"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }
