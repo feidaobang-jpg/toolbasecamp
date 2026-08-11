@@ -2,7 +2,7 @@
 """Safely upsert KEY=VALUE lines into /etc/toolbasecamp-api.env on the VPS.
 
 Usage (on VPS):
-  sudo python3 upsert-api-env.py TRADITIONAL_PREVIEW_BITRATE=96k
+  sudo python3 upsert-api-env.py TRADITIONAL_PREVIEW_BITRATE=48k
   sudo python3 upsert-api-env.py KEY1=val1 KEY2=val2
 
 Never write literal backslash-n (\\\\n). Always use real newlines.

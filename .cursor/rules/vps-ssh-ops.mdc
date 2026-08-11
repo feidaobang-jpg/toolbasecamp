@@ -74,7 +74,7 @@ Host toolbasecamp-cn
 ```bash
 # 本机（PowerShell）
 scp deploy/upsert-api-env.py toolbasecamp-hk:~/
-ssh toolbasecamp-hk "sudo python3 ~/upsert-api-env.py TRADITIONAL_PREVIEW_BITRATE=96k && sudo systemctl restart toolbasecamp-api"
+ssh toolbasecamp-hk "sudo python3 ~/upsert-api-env.py TRADITIONAL_PREVIEW_BITRATE=48k && sudo systemctl restart toolbasecamp-api"
 ssh toolbasecamp-hk "curl -s http://127.0.0.1:8001/health"   # 确认 db:true
 ```
 
