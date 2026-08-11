@@ -75,6 +75,76 @@
     });
   }
 
+  function blobFromDataUrlOrFetch(src) {
+    if (!src) return Promise.reject(new Error('empty'));
+    if (String(src).indexOf('data:') === 0) {
+      try {
+        var parts = String(src).split(',');
+        var meta = parts[0] || '';
+        var b64 = parts[1] || '';
+        var m = /data:([^;]+)/i.exec(meta);
+        var bin = atob(b64);
+        var arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        return Promise.resolve(new Blob([arr], { type: (m && m[1]) || 'image/png' }));
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+    return fetch(src).then(function (res) {
+      if (!res.ok) throw new Error('fetch failed');
+      return res.blob();
+    });
+  }
+
+  function publishResult(item, imgSrc, btn) {
+    if (!item || !C.publishPublicImage) return;
+    if (item.publicId) {
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = tr('tools.imageCloud.published');
+      }
+      return;
+    }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = tr('tools.imageCloud.publishing');
+    }
+    var blobP;
+    if (item.imageBase64) {
+      try {
+        var bin = atob(item.imageBase64);
+        var arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        blobP = Promise.resolve(new Blob([arr], { type: item.contentType || 'image/png' }));
+      } catch (e) {
+        blobP = blobFromDataUrlOrFetch(imgSrc);
+      }
+    } else {
+      blobP = blobFromDataUrlOrFetch(imgSrc);
+    }
+    blobP.then(function (blob) {
+      return C.publishPublicImage(blob, {
+        prompt: (promptEl && promptEl.value) || '',
+        model: item.model || '',
+        source: 'text_to_image'
+      });
+    }).then(function (res) {
+      if (res && res.publicId) item.publicId = res.publicId;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = tr('tools.imageCloud.published');
+      }
+      if (typeof tbNotify === 'function') tbNotify(tr('tools.imageCloud.publishOk'));
+    }).catch(function (err) {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = tr('tools.imageCloud.publish');
+      }
+      C.setError(errorBox, (err && err.message) || tr('tools.imageCloud.publishFailed'));
+    });
+  }
+
   function resultSrc(b64, ctype) {
     // WeChat: data: URL required for long-press save/forward — never blob:.
     if (C.displayImageSrc) {
@@ -216,6 +286,22 @@
         dl.addEventListener('click', function () {
           doDownload(img.src, item);
         });
+        var pub = document.createElement('button');
+        pub.type = 'button';
+        pub.className = 'tb-btn';
+        if (item.publicId) {
+          pub.disabled = true;
+          pub.textContent = tr('tools.imageCloud.published');
+        } else {
+          pub.textContent = tr('tools.imageCloud.publish');
+          pub.addEventListener('click', function () {
+            publishResult(item, img.src, pub);
+          });
+        }
+        var actions = document.createElement('div');
+        actions.className = 'img-hist-actions';
+        actions.appendChild(dl);
+        actions.appendChild(pub);
         card.appendChild(title);
         card.appendChild(img);
         if (C.isWeChat && C.isWeChat()) {
@@ -224,7 +310,7 @@
           tip.textContent = tr('tools.imageCloud.longPressSave');
           card.appendChild(tip);
         }
-        card.appendChild(dl);
+        card.appendChild(actions);
         grid.appendChild(card);
       })(images[i]);
     }
@@ -278,6 +364,18 @@
         modelTitle: modelTitle,
         onDownload: function (blob, row) {
           doDownload(blob, row);
+        },
+        onPublish: function (blob, row) {
+          return C.publishPublicImage(blob, {
+            prompt: (row && row.prompt) || ((promptEl && promptEl.value) || ''),
+            model: (row && row.model) || '',
+            source: 'text_to_image'
+          }).then(function () {
+            if (typeof tbNotify === 'function') tbNotify(tr('tools.imageCloud.publishOk'));
+          }).catch(function (err) {
+            C.setError(errorBox, (err && err.message) || tr('tools.imageCloud.publishFailed'));
+            throw err;
+          });
         }
       });
       histPanel.refresh();

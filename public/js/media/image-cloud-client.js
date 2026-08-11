@@ -607,14 +607,34 @@
         setTimeout(function () {
             try { URL.revokeObjectURL(url); } catch (e) {}
         }, 2000);
-
-        if (isMobile() && /iPhone|iPad|iPod/i.test(global.navigator.userAgent || '')) {
-            notifySave(tr('tools.imageCloud.iosSaveTip'), tipEl, errorEl);
-            return false;
-        }
-
         if (errorEl) setError(errorEl, '');
         return true;
+    }
+
+    /**
+     * Publish an existing image blob to the public Images hub.
+     * meta: { prompt?, model?, source?, filename? }
+     */
+    function publishPublicImage(blob, meta) {
+        meta = meta || {};
+        if (!blob) {
+            return Promise.reject(new Error(tr('tools.imageCloud.noImages')));
+        }
+        var fd = new FormData();
+        var ctype = blob.type || 'image/png';
+        var ext = ctype.indexOf('jpeg') >= 0 || ctype.indexOf('jpg') >= 0
+            ? '.jpg'
+            : (ctype.indexOf('webp') >= 0 ? '.webp' : '.png');
+        var name = meta.filename || ('ai-image' + ext);
+        fd.append('file', blob, name);
+        fd.append('prompt', meta.prompt || '');
+        fd.append('model', meta.model || '');
+        fd.append('source', meta.source || 'manual');
+        return apiJson('/image/public/publish', {
+            method: 'POST',
+            body: fd,
+            timeoutMs: 120000
+        });
     }
 
     /** Bind tap-to-preview (long-press save/share works inside the preview). */
@@ -662,6 +682,7 @@
         urlToDataUrl: urlToDataUrl,
         applyWeChatResultImage: applyWeChatResultImage,
         downloadBlob: downloadBlob,
+        publishPublicImage: publishPublicImage,
         openSavePreview: openSavePreview,
         bindImagePreview: bindImagePreview,
         showWeChatBanner: showWeChatBanner,

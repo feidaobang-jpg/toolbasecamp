@@ -535,6 +535,38 @@ def image_public_list(
     return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
 
 
+@router.post("/public/publish")
+async def image_public_publish(
+    prompt: str = Form(""),
+    model: str = Form(""),
+    source: str = Form(""),
+    file: UploadFile = File(...),
+    user: dict = Depends(_user),
+):
+    """Publish an already-generated image to the public Images hub (no re-generation)."""
+    raw = await _read_upload(file)
+    if not raw:
+        raise HTTPException(status_code=400, detail="Empty image")
+    src = (source or "").strip() or "manual"
+    if src not in ("text_to_image", "instruct_edit", "manual"):
+        src = "manual"
+    ctype = (getattr(file, "content_type", None) or "").strip() or "image/png"
+    if not ctype.startswith("image/"):
+        ctype = "image/png"
+    # Keep mobile uploads smaller for the public wall.
+    if len(raw) > 2 * 1024 * 1024:
+        raw, ctype = _compress_for_mobile(raw, ctype)
+    pub = _publish_public_image(
+        user_id=int(user["id"]),
+        prompt=(prompt or "").strip()[:2000],
+        model=(model or "").strip()[:96],
+        source=src,
+        data=raw,
+        content_type=ctype,
+    )
+    return {"success": True, **pub}
+
+
 @router.delete("/public/{image_id}")
 def image_public_delete(image_id: str, admin: dict = Depends(_admin_user)):
     iid = "".join(ch for ch in str(image_id or "") if ch.isalnum())

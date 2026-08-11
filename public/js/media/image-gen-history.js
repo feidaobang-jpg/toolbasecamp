@@ -229,7 +229,7 @@
 
   /**
    * Bind a history panel.
-   * opts: { tool, gridEl, emptyEl, clearBtn, tr, modelTitle, onDownload, onEditAgain? }
+   * opts: { tool, gridEl, emptyEl, clearBtn, tr, modelTitle, onDownload, onEditAgain?, onPublish? }
    */
   function bindPanel(opts) {
     var tool = opts.tool;
@@ -240,6 +240,7 @@
     var modelTitle = opts.modelTitle || function (m) { return m; };
     var onDownload = opts.onDownload;
     var onEditAgain = opts.onEditAgain;
+    var onPublish = opts.onPublish;
     var objectUrls = [];
 
     function revoke() {
@@ -301,6 +302,24 @@
             dl.addEventListener('click', function () {
               if (typeof onDownload === 'function') onDownload(row.blob, row);
             });
+            if (typeof onPublish === 'function') {
+              var pub = document.createElement('button');
+              pub.type = 'button';
+              pub.className = 'tb-btn';
+              pub.textContent = tr('tools.imageCloud.publish');
+              pub.addEventListener('click', function () {
+                if (pub.disabled) return;
+                pub.disabled = true;
+                pub.textContent = tr('tools.imageCloud.publishing');
+                Promise.resolve(onPublish(row.blob, row)).then(function () {
+                  pub.textContent = tr('tools.imageCloud.published');
+                }).catch(function () {
+                  pub.disabled = false;
+                  pub.textContent = tr('tools.imageCloud.publish');
+                });
+              });
+              actions.appendChild(pub);
+            }
             var rm = document.createElement('button');
             rm.type = 'button';
             rm.className = 'tb-btn';
