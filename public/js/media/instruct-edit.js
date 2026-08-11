@@ -510,10 +510,11 @@
     return Math.min(900000, ms);
   }
 
-  function buildEditFormData(modelList) {
+  function buildEditFormData(modelList, fileList) {
+    var list = fileList && fileList.length ? fileList : files;
     var fd = new FormData();
-    for (var i = 0; i < files.length; i++) {
-      fd.append('files', files[i], files[i].name || ('image-' + (i + 1) + '.jpg'));
+    for (var i = 0; i < list.length; i++) {
+      fd.append('files', list[i], list[i].name || ('image-' + (i + 1) + '.jpg'));
     }
     fd.append('prompt', (promptEl && promptEl.value) || '');
     fd.append('ref_mode', refMode);
@@ -1026,15 +1027,22 @@
       if (C.isWeChat && C.isWeChat() && typeof window.tbNotify === 'function') {
         window.tbNotify(tr('tools.instructEdit.stayOnPageTip'));
       }
-      // One HTTP call per model — a single multi-model request can exceed gateway
-      // idle limits (~2–4 min) with ERR_EMPTY_RESPONSE even though each model works alone.
+      // One HTTP call per model. In single mode with multiple images, also one
+      // call per image — WeChat often drops a large multi-image JSON body even
+      // when the API already finished (server 200, client shows「改图失败」).
       setBusy(true, models.length > 1
         ? tr('tools.instructEdit.progressModel', {
           current: 1,
           total: models.length,
           model: modelTitle(models[0].id)
         })
-        : tr('tools.imageCloud.processing'));
+        : (files.length > 1 && refMode === 'single'
+          ? tr('tools.instructEdit.progressImage', {
+            current: 1,
+            total: files.length,
+            model: modelTitle(models[0].id)
+          })
+          : tr('tools.imageCloud.processing')));
       runStartedAt = Date.now();
       var headers = {};
       if ((C.isWeChat && C.isWeChat()) || isMobileUA()) headers['X-TB-Light-Response'] = '1';
@@ -1042,6 +1050,7 @@
       var allImages = [];
       var partialErrors = [];
       var lastErrMsg = '';
+      var splitImages = refMode === 'single' && files.length > 1;
 
       function finishElapsed() {
         if (resultMeta && runStartedAt) {
@@ -1050,37 +1059,81 @@
         }
       }
 
+      function pushNormalized(images, mid, indexOffset) {
+        for (var ii = 0; ii < images.length; ii++) {
+          var img = images[ii];
+          if (indexOffset != null && (img.index == null || img.index === 0)) {
+            img = Object.assign({}, img, { index: indexOffset });
+          }
+          allImages.push(img);
+        }
+      }
+
       (async function () {
         for (var mi = 0; mi < models.length; mi++) {
           var mid = models[mi].id;
-          setBusy(true, tr('tools.instructEdit.progressModel', {
-            current: mi + 1,
-            total: models.length,
-            model: modelTitle(mid)
-          }));
-          try {
-            var data = await C.apiJson('/image/instruct-edit', {
-              method: 'POST',
-              body: buildEditFormData([models[mi]]),
-              headers: headers,
-              timeoutMs: oneModelTimeoutMs(mid)
-            });
-            if (data.aiWallet) applyWallet(data.aiWallet);
-            var images = normalizeResultImages(data, mid);
-            if (!images.length) {
-              throw new Error(tr('tools.instructEdit.failed'));
-            }
-            for (var ii = 0; ii < images.length; ii++) allImages.push(images[ii]);
-            if (data.partialErrors && data.partialErrors.length) {
-              for (var pe = 0; pe < data.partialErrors.length; pe++) {
-                partialErrors.push(data.partialErrors[pe]);
+          if (splitImages) {
+            for (var fi = 0; fi < files.length; fi++) {
+              setBusy(true, tr('tools.instructEdit.progressImage', {
+                current: fi + 1,
+                total: files.length,
+                model: modelTitle(mid)
+              }));
+              try {
+                var dataOne = await C.apiJson('/image/instruct-edit', {
+                  method: 'POST',
+                  body: buildEditFormData([models[mi]], [files[fi]]),
+                  headers: headers,
+                  timeoutMs: oneModelTimeoutMs(mid)
+                });
+                if (dataOne.aiWallet) applyWallet(dataOne.aiWallet);
+                var imagesOne = normalizeResultImages(dataOne, mid);
+                if (!imagesOne.length) {
+                  throw new Error(tr('tools.instructEdit.failed'));
+                }
+                pushNormalized(imagesOne, mid, fi);
+                if (dataOne.partialErrors && dataOne.partialErrors.length) {
+                  for (var pe0 = 0; pe0 < dataOne.partialErrors.length; pe0++) {
+                    partialErrors.push(dataOne.partialErrors[pe0]);
+                  }
+                }
+                renderResults(allImages, partialErrors);
+              } catch (errOne) {
+                lastErrMsg = (errOne && errOne.message) || tr('tools.instructEdit.failed');
+                partialErrors.push(mid + '#' + (fi + 1) + ': ' + lastErrMsg);
+                if (allImages.length) renderResults(allImages, partialErrors);
               }
             }
-            renderResults(allImages, partialErrors);
-          } catch (err) {
-            lastErrMsg = (err && err.message) || tr('tools.instructEdit.failed');
-            partialErrors.push(mid + '#1: ' + lastErrMsg);
-            if (allImages.length) renderResults(allImages, partialErrors);
+          } else {
+            setBusy(true, tr('tools.instructEdit.progressModel', {
+              current: mi + 1,
+              total: models.length,
+              model: modelTitle(mid)
+            }));
+            try {
+              var data = await C.apiJson('/image/instruct-edit', {
+                method: 'POST',
+                body: buildEditFormData([models[mi]]),
+                headers: headers,
+                timeoutMs: oneModelTimeoutMs(mid)
+              });
+              if (data.aiWallet) applyWallet(data.aiWallet);
+              var images = normalizeResultImages(data, mid);
+              if (!images.length) {
+                throw new Error(tr('tools.instructEdit.failed'));
+              }
+              pushNormalized(images, mid, null);
+              if (data.partialErrors && data.partialErrors.length) {
+                for (var pe = 0; pe < data.partialErrors.length; pe++) {
+                  partialErrors.push(data.partialErrors[pe]);
+                }
+              }
+              renderResults(allImages, partialErrors);
+            } catch (err) {
+              lastErrMsg = (err && err.message) || tr('tools.instructEdit.failed');
+              partialErrors.push(mid + '#1: ' + lastErrMsg);
+              if (allImages.length) renderResults(allImages, partialErrors);
+            }
           }
         }
 

@@ -44,6 +44,9 @@
             return tr('tools.imageCloud.editTimeout');
         }
         if (text.indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');
+        if (/aborted|AbortError|The user aborted/i.test(text)) {
+            return tr('tools.imageCloud.requestTimeout');
+        }
         if (text === 'Bad Gateway' || text === 'Gateway Timeout') {
             return tr('common.serviceUnavailable');
         }
