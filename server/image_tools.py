@@ -38,6 +38,12 @@ from volc_ark_image import (
     is_seedream_model,
     volc_ark_configured,
 )
+from minimax_image import (
+    generate_minimax_image_to_image,
+    generate_minimax_text_to_image,
+    is_minimax_model,
+    minimax_configured,
+)
 from ai_wallet import (
     require_can_afford,
     require_positive_balance,
@@ -94,6 +100,20 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
+    {
+        "id": "image-01",
+        "priceCny1K": 0.025,
+        "priceCny2K": 0.025,
+        "maxRefs": 1,
+        "labelKey": "tools.instructEdit.modelMinimax01",
+    },
+    {
+        "id": "image-01-live",
+        "priceCny1K": 0.025,
+        "priceCny2K": 0.025,
+        "maxRefs": 1,
+        "labelKey": "tools.instructEdit.modelMinimax01live",
+    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
@@ -121,6 +141,16 @@ TEXT_TO_IMAGE_MODELS = (
         "id": "wan2.7-image-pro",
         "priceCny": 0.5,
         "labelKey": "tools.textToImage.modelWan27pro",
+    },
+    {
+        "id": "image-01",
+        "priceCny": 0.025,
+        "labelKey": "tools.textToImage.modelMinimax01",
+    },
+    {
+        "id": "image-01-live",
+        "priceCny": 0.025,
+        "labelKey": "tools.textToImage.modelMinimax01live",
     },
 )
 TEXT_TO_IMAGE_MODEL_IDS = {m["id"] for m in TEXT_TO_IMAGE_MODELS}
@@ -1059,6 +1089,13 @@ def instruct_edit_configured() -> bool:
 
 def _model_provider_ready(model_id: str) -> None:
     """Raise 503 if the backend for this model id is not configured."""
+    if is_minimax_model(model_id):
+        if not minimax_configured():
+            raise HTTPException(
+                status_code=503,
+                detail="MiniMax is not configured (MINIMAX_API_KEY).",
+            )
+        return
     if is_seedream_model(model_id):
         if not volc_ark_configured():
             raise HTTPException(
@@ -1082,6 +1119,14 @@ async def _run_instruct_edit(
 ) -> tuple[bytes, str]:
     _model_provider_ready(model)
     size = _normalize_output_size(output_size)
+    if is_minimax_model(model):
+        # MiniMax only uses the first reference image.
+        return await generate_minimax_image_to_image(
+            refs[0],
+            text,
+            model=model,
+            size_preset="square",
+        )
     if is_seedream_model(model):
         return await edit_image_with_seedream(
             refs[0],
@@ -1491,16 +1536,18 @@ async def api_text_to_image(
     public: str = Form("0"),
     user: dict = Depends(_user),
 ):
-    if not dashscope_image_edit_configured():
-        raise HTTPException(
-            status_code=503,
-            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
-        )
     text = (prompt or "").strip()
     if not text:
         raise HTTPException(status_code=400, detail="Please enter a prompt.")
     is_public = _parse_bool(public, default=False)
     model_ids = _resolve_t2i_models(model, models)
+    # Per-model provider check (deferred to _one; fail early for non-minimax if dashscope missing)
+    non_minimax = [m for m in model_ids if not is_minimax_model(m)]
+    if non_minimax and not dashscope_image_edit_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+        )
     size_preset = (size or "square").strip().lower() or "square"
     if size_preset not in ("square", "portrait", "landscape", "hd"):
         size_preset = "square"
@@ -1529,7 +1576,11 @@ async def api_text_to_image(
         )
 
     async def _one(mid: str) -> dict:
-        out, ctype = await generate_image_from_text(text, model=mid, size_preset=size_preset)
+        if is_minimax_model(mid):
+            _model_provider_ready(mid)
+            out, ctype = await generate_minimax_text_to_image(text, model=mid, size_preset=size_preset)
+        else:
+            out, ctype = await generate_image_from_text(text, model=mid, size_preset=size_preset)
         return {
             "model": mid,
             "priceCny": _t2i_price_for(mid),

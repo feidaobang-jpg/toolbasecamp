@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instruct Image Edit - Tool Basecamp</title>
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
-  <link rel="stylesheet" href="../../css/base.css?v=noPhone2" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=noPhone2" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=noPhone2" />
-  <link rel="stylesheet" href="../../css/tools-form.css?v=noPhone2" />
+  <link rel="stylesheet" href="../../css/base.css?v=minimax1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=minimax1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=minimax1" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=minimax1" />
 </head>
 <body>
   <div class="container">
@@ -211,6 +211,19 @@
                   </label>
                 </div>
               </div>
+              <div class="instruct-model-group">
+                <div class="instruct-model-group-label" data-i18n="tools.instructEdit.modelGroupMinimax">MiniMax</div>
+                <div class="tb-radio-row instruct-model-row">
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="image-01" data-price-1k="0.025" data-price-2k="0.025" data-max-refs="1" />
+                    <span data-i18n="tools.instructEdit.modelMinimax01">MiniMax Image-01 · ¥0.05/image</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="instruct-model" value="image-01-live" data-price-1k="0.025" data-price-2k="0.025" data-max-refs="1" />
+                    <span data-i18n="tools.instructEdit.modelMinimax01live">MiniMax Image-01-Live (anime/illustration) · ¥0.05/image</span>
+                  </label>
+                </div>
+              </div>
             </div>
             <p class="instruct-cost-hint" id="cost-hint"></p>
           </div>
@@ -249,13 +262,13 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=noPhone2"></script>
-  <script src="../../js/locales/zh-CN.js?v=noPhone2"></script>
-  <script src="../../js/i18n.js?v=noPhone2"></script>
-  <script src="../../js/config.js?v=noPhone2"></script>
-  <script src="../../js/base.js?v=noPhone2"></script>
-  <script src="../../js/media/image-cloud-client.js?v=noPhone2"></script>
-  <script src="../../js/media/image-gen-history.js?v=noPhone2"></script>
-  <script src="../../js/media/instruct-edit.js?v=noPhone2"></script>
+  <script src="../../js/locales/en.js?v=minimax1"></script>
+  <script src="../../js/locales/zh-CN.js?v=minimax1"></script>
+  <script src="../../js/i18n.js?v=minimax1"></script>
+  <script src="../../js/config.js?v=minimax1"></script>
+  <script src="../../js/base.js?v=minimax1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=minimax1"></script>
+  <script src="../../js/media/image-gen-history.js?v=minimax1"></script>
+  <script src="../../js/media/instruct-edit.js?v=minimax1"></script>
 </body>
 </html>
