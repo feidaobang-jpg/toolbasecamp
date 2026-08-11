@@ -1306,6 +1306,43 @@ async def _lookup_lyrics_deepseek(*, artist: str, title: str) -> str:
         return ""
 
 
+async def _lookup_artist_deepseek(*, title: str) -> str:
+    """Best-effort primary artist name for a song title."""
+    if not DEEPSEEK_API_KEY:
+        return ""
+    title = (title or "").strip()
+    if not title:
+        return ""
+    try:
+        raw = await _call_deepseek(
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "你是华语流行音乐资料助手。用户给出歌名时，只输出该曲最常见原唱歌手名"
+                        "（可含组合名），不要书名号、不要解释、不要多行。"
+                        "若不确定，只输出一个空行。"
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": f"歌名：{title}\n歌手名：",
+                },
+            ],
+            use_json_mode=False,
+            max_tokens=40,
+            temperature=0.1,
+            timeout=30.0,
+        )
+        text = (raw or "").strip().splitlines()[0].strip() if (raw or "").strip() else ""
+        text = re.sub(r"^[《\"'【\[]+|[》\"'】\]]+$", "", text).strip()
+        if not text or text == title or len(text) > 40:
+            return ""
+        return text[:80]
+    except Exception:
+        return ""
+
+
 def _traditional_public_item(row: dict, *, include_lyrics: bool = True) -> dict:
     tid = str(row.get("id") or "").strip()
     preview = str(row.get("previewFile") or "").strip()
@@ -1318,6 +1355,7 @@ def _traditional_public_item(row: dict, *, include_lyrics: bool = True) -> dict:
         "contentType": str(row.get("contentType") or "audio/mpeg"),
         "hasPreview": bool(preview),
         "hasLyrics": bool(ly.strip()),
+        "source": str(row.get("source") or "").strip(),
         "streamUrl": f"/music/traditional/{tid}",
         "previewUrl": f"/music/traditional/{tid}",
         "fullUrl": f"/music/traditional/{tid}?full=1",
@@ -1442,6 +1480,8 @@ async def music_traditional_admin_upload(
         raise HTTPException(status_code=409, detail=f"Already uploaded: {orig_name}")
     tid = _next_traditional_id(items)
     artist, title = _parse_upload_filename(orig_name)
+    if not artist and title:
+        artist = await _lookup_artist_deepseek(title=title)
     full_name = f"{tid}.mp3"
     preview_name = f"{tid}.preview.mp3"
     full_path = TRADITIONAL_DIR / full_name

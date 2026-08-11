@@ -17,16 +17,21 @@
   var tradSearchQuery = '';
 
   function normalizeSearch(s) {
-    return String(s || '').trim().toLowerCase();
+    return String(s || '')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/[《》【】\[\]()（）·・.\-_]/g, '');
   }
 
   function filterTraditionalItems(items) {
     var q = normalizeSearch(tradSearchQuery);
     if (!q) return items || [];
     return (items || []).filter(function (item) {
-      var title = normalizeSearch(item.title);
-      var artist = normalizeSearch(item.artist);
-      return title.indexOf(q) >= 0 || artist.indexOf(q) >= 0;
+      var hay = normalizeSearch(
+        [item.title, item.artist, item.source, item.lyricsPreview].filter(Boolean).join(' ')
+      );
+      return hay.indexOf(q) >= 0;
     });
   }
 
@@ -666,10 +671,13 @@
     });
     var searchInput = document.getElementById('music-search-input');
     if (searchInput) {
-      searchInput.addEventListener('input', function () {
+      var applySearch = function () {
         tradSearchQuery = searchInput.value || '';
         if (activeTab === 'traditional') showActiveList('traditional');
-      });
+      };
+      searchInput.addEventListener('input', applySearch);
+      searchInput.addEventListener('compositionend', applySearch);
+      searchInput.addEventListener('search', applySearch);
     }
     var refresh = document.getElementById('music-refresh');
     if (refresh) refresh.addEventListener('click', function () {
