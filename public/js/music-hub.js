@@ -242,6 +242,7 @@
       });
     }
     if (autoplay && player && player.audio) {
+      if (typeof player.setBuffering === 'function') player.setBuffering(true);
       setPlayingUi(kind, item.id, 'buffering');
       var audioEl = player.audio;
       var startPlay = function () {
@@ -249,14 +250,17 @@
           ? player.playWhenReady()
           : audioEl.play();
         return chain.then(function () {
+          if (typeof player.setBuffering === 'function') player.setBuffering(false);
           setPlayingUi(kind, item.id, true);
         }).catch(function () {
+          if (typeof player.setBuffering === 'function') player.setBuffering(false);
           setPlayingUi(kind, item.id, false);
         });
       };
       var direct = audioEl.play();
       if (direct && typeof direct.then === 'function') {
         direct.then(function () {
+          if (typeof player.setBuffering === 'function') player.setBuffering(false);
           setPlayingUi(kind, item.id, true);
         }).catch(function () {
           startPlay();

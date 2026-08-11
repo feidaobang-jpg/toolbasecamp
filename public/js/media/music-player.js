@@ -198,6 +198,11 @@
       '.tb-mp-line.is-active{background:#dbeafe;color:#1e3a8a;font-weight:700}' +
       '.tb-mp-empty{color:#94a3b8;font-size:13px;padding:8px;margin:0}' +
       '.tb-mp-actions{margin-top:10px}' +
+      '.tb-mp-status{font-size:12px;color:#2563eb;margin:8px 0 0;line-height:1.45;display:flex;align-items:center;gap:8px}' +
+      '.tb-mp-status[hidden]{display:none!important}' +
+      '.tb-mp-status::before{content:"";width:12px;height:12px;border:2px solid rgba(37,99,235,.35);border-top-color:#2563eb;border-radius:50%;animation:tb-mp-spin .8s linear infinite;flex-shrink:0}' +
+      '@keyframes tb-mp-spin{to{transform:rotate(360deg)}}' +
+      '.tb-mp-play[data-loading="1"]::after{content:" ";display:inline-block;width:12px;height:12px;margin-left:8px;border:2px solid rgba(255,255,255,.7);border-top-color:#fff;border-radius:50%;animation:tb-mp-spin .8s linear infinite;vertical-align:-2px}' +
       '.tb-mp audio{display:none}';
     document.head.appendChild(s);
   }
@@ -242,6 +247,7 @@
           '<span class="tb-mp-time"><span class="tb-mp-cur">0:00</span> / <span class="tb-mp-dur">0:00</span></span>' +
           '<input type="range" class="tb-mp-seek" min="0" max="1000" value="0" step="1" />' +
         '</div>' +
+        '<p class="tb-mp-status" hidden></p>' +
         '<p class="tb-mp-hint"></p>' +
         '<div class="tb-mp-lyrics" aria-live="polite"></div>' +
         '<div class="action-row tb-mp-actions">' +
@@ -258,10 +264,12 @@
     var durEl = root.querySelector('.tb-mp-dur');
     var seek = root.querySelector('.tb-mp-seek');
     var hintEl = root.querySelector('.tb-mp-hint');
+    var statusEl = root.querySelector('.tb-mp-status');
     var lyricsEl = root.querySelector('.tb-mp-lyrics');
     var dlAudioBtn = root.querySelector('.tb-mp-dl-audio');
     var dlLyricsBtn = root.querySelector('.tb-mp-dl-lyrics');
     var actionsEl = root.querySelector('.tb-mp-actions');
+    var buffering = false;
 
     titleEl.textContent = opts.title || trFirst(['common.musicPlayer.untitled', 'hub.musicPage.untitled'], 'Untitled');
     playBtn.textContent = trFirst(['common.musicPlayer.play', 'hub.musicPage.play'], 'Play');
@@ -269,6 +277,38 @@
     dlLyricsBtn.textContent = trFirst(['common.musicPlayer.downloadLyrics', 'tools.aiMusic.downloadLyrics', 'hub.musicPage.downloadLyrics'], 'Download lyrics');
     if (opts.hideTitle) titleEl.style.display = 'none';
     if (opts.hideDownloadActions && actionsEl) actionsEl.style.display = 'none';
+
+    function labelPlay() {
+      return trFirst(['common.musicPlayer.play', 'hub.musicPage.play'], 'Play');
+    }
+    function labelPause() {
+      return trFirst(['common.musicPlayer.pause', 'hub.musicPage.pause'], 'Pause');
+    }
+    function labelBuffering() {
+      return trFirst(['common.musicPlayer.buffering', 'hub.musicPage.buffering'], 'Buffering…');
+    }
+    function setBuffering(on) {
+      on = !!on;
+      var changed = buffering !== on;
+      buffering = on;
+      if (statusEl) {
+        if (buffering) {
+          statusEl.hidden = false;
+          statusEl.textContent = labelBuffering();
+        } else {
+          statusEl.hidden = true;
+          statusEl.textContent = '';
+        }
+      }
+      if (buffering) {
+        playBtn.textContent = labelBuffering();
+        playBtn.setAttribute('data-loading', '1');
+      } else {
+        playBtn.removeAttribute('data-loading');
+        playBtn.textContent = audio.paused ? labelPlay() : labelPause();
+      }
+      if (changed && typeof opts.onBuffering === 'function') opts.onBuffering(buffering);
+    }
 
     if (hintEl) {
       if (lyricsMode === 'lrc') {
@@ -330,56 +370,54 @@
       syncLyrics(t);
     }
 
-    function labelPlay() {
-      return trFirst(['common.musicPlayer.play', 'hub.musicPage.play'], 'Play');
-    }
-    function labelPause() {
-      return trFirst(['common.musicPlayer.pause', 'hub.musicPage.pause'], 'Pause');
-    }
-
     playBtn.addEventListener('click', function () {
       if (audio.paused) {
+        setBuffering(true);
         audio.play().then(function () {
+          setBuffering(false);
           playBtn.textContent = labelPause();
         }).catch(function () {
+          setBuffering(false);
           playBtn.textContent = labelPlay();
         });
       } else {
         audio.pause();
+        setBuffering(false);
         playBtn.textContent = labelPlay();
       }
     });
 
     audio.addEventListener('play', function () {
-      playBtn.textContent = labelPause();
+      if (!buffering) playBtn.textContent = labelPause();
       if (typeof opts.onPlayState === 'function') opts.onPlayState(true);
     });
     audio.addEventListener('pause', function () {
-      playBtn.textContent = labelPlay();
+      if (!buffering) playBtn.textContent = labelPlay();
       if (typeof opts.onPlayState === 'function') opts.onPlayState(false);
     });
     audio.addEventListener('ended', function () {
+      setBuffering(false);
       playBtn.textContent = labelPlay();
       lastActive = -1;
       syncLyrics(duration());
       if (typeof opts.onPlayState === 'function') opts.onPlayState(false);
     });
     audio.addEventListener('error', function () {
+      setBuffering(false);
       playBtn.textContent = labelPlay();
-      if (typeof opts.onBuffering === 'function') opts.onBuffering(false);
       if (typeof opts.onError === 'function') opts.onError();
     });
     audio.addEventListener('waiting', function () {
-      if (typeof opts.onBuffering === 'function') opts.onBuffering(true);
+      setBuffering(true);
     });
     audio.addEventListener('stalled', function () {
-      if (typeof opts.onBuffering === 'function') opts.onBuffering(true);
+      setBuffering(true);
     });
     audio.addEventListener('canplay', function () {
-      if (typeof opts.onBuffering === 'function') opts.onBuffering(false);
+      if (!audio.paused) setBuffering(false);
     });
     audio.addEventListener('playing', function () {
-      if (typeof opts.onBuffering === 'function') opts.onBuffering(false);
+      setBuffering(false);
     });
     audio.addEventListener('timeupdate', tick);
     audio.addEventListener('loadedmetadata', tick);
@@ -499,6 +537,7 @@
             cleanup();
             reject(new Error('audio load failed'));
           }
+          setBuffering(true);
           audio.addEventListener('canplay', onReady, { once: true });
           audio.addEventListener('loadeddata', onReady, { once: true });
           audio.addEventListener('error', onErr, { once: true });
@@ -511,9 +550,16 @@
           }
           try { audio.load(); } catch (e) {}
           if (audio.readyState >= 2) finish(audio.play());
+        }).then(function (v) {
+          setBuffering(false);
+          return v;
+        }).catch(function (err) {
+          setBuffering(false);
+          throw err;
         });
       },
       pause: function () { audio.pause(); },
+      setBuffering: setBuffering,
       destroy: function () {
         try {
           audio.pause();

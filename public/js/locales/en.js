@@ -2876,6 +2876,7 @@ window.TB_LOCALES.en = {
             noLyrics: 'No lyrics (instrumental or not saved)',
             playFailed: 'Playback failed. Please try again.',
             untitled: 'Untitled',
+            buffering: 'Buffering, please wait…',
             staticHint: 'Lyrics shown are the submitted draft; AI vocals may differ from what you hear.',
             lrcHint: 'Timed lyrics — current line highlights during playback.'
         }

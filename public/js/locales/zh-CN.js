@@ -2875,6 +2875,7 @@ window.TB_LOCALES['zh-CN'] = {
             noLyrics: '暂无歌词（纯音乐或未保存歌词）',
             playFailed: '播放失败，请稍后重试',
             untitled: '未命名',
+            buffering: '缓冲中，请稍候…',
             staticHint: '以下为生成时提交的歌词稿；AI 演唱可能改词/漏句，与听到的不一定逐字一致。',
             lrcHint: '带时间戳歌词，播放时会高亮当前行。'
         }
