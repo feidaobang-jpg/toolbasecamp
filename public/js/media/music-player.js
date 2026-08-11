@@ -202,7 +202,6 @@
       '.tb-mp-status[hidden]{display:none!important}' +
       '.tb-mp-status::before{content:"";width:12px;height:12px;border:2px solid rgba(37,99,235,.35);border-top-color:#2563eb;border-radius:50%;animation:tb-mp-spin .8s linear infinite;flex-shrink:0}' +
       '@keyframes tb-mp-spin{to{transform:rotate(360deg)}}' +
-      '.tb-mp-play[data-loading="1"]::after{content:" ";display:inline-block;width:12px;height:12px;margin-left:8px;border:2px solid rgba(255,255,255,.7);border-top-color:#fff;border-radius:50%;animation:tb-mp-spin .8s linear infinite;vertical-align:-2px}' +
       '.tb-mp audio{display:none}';
     document.head.appendChild(s);
   }
@@ -300,13 +299,9 @@
           statusEl.textContent = '';
         }
       }
-      if (buffering) {
-        playBtn.textContent = labelBuffering();
-        playBtn.setAttribute('data-loading', '1');
-      } else {
-        playBtn.removeAttribute('data-loading');
-        playBtn.textContent = audio.paused ? labelPlay() : labelPause();
-      }
+      // 缓冲文案只显示在下方 status，按钮保持播放/暂停，避免两处重复
+      playBtn.removeAttribute('data-loading');
+      playBtn.textContent = audio.paused ? labelPlay() : labelPause();
       if (changed && typeof opts.onBuffering === 'function') opts.onBuffering(buffering);
     }
 
