@@ -11,7 +11,7 @@ from fastapi import HTTPException
 
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_API_URL = (
-    os.environ.get("MINIMAX_API_URL") or "https://api.minimax.io/v1/image_generation"
+    os.environ.get("MINIMAX_API_URL") or "https://api.minimaxi.com/v1/image_generation"
 ).strip().rstrip("/")
 MINIMAX_TIMEOUT = float(os.environ.get("MINIMAX_IMAGE_TIMEOUT", "120"))
 
@@ -68,16 +68,19 @@ def _raise_minimax_error(data: dict, resp: httpx.Response) -> None:
 
 
 def _extract_image(data: dict) -> Tuple[bytes, str]:
-    """Extract (image_bytes, content_type) from MiniMax response."""
-    # Shape: { "data": { "image_urls": ["..."] } }  or  { "data": { "images": [{"b64_json": "..."}] } }
+    """Extract (image_bytes, content_type) from MiniMax response.
+
+    Official shape (base64): { "data": { "image_base64": ["<b64>", ...] } }
+    Official shape (url):    { "data": { "image_urls":   ["https://...", ...] } }
+    """
     d = data.get("data") or {}
     if isinstance(d, dict):
-        # base64 response
-        images = d.get("images") or []
-        if isinstance(images, list) and images:
-            b64 = (images[0] or {}).get("b64_json") or ""
-            if b64:
-                return base64.b64decode(b64), "image/png"
+        # base64 response (preferred)
+        b64_list = d.get("image_base64") or []
+        if isinstance(b64_list, list) and b64_list:
+            b64 = b64_list[0]
+            if isinstance(b64, str) and b64.strip():
+                return base64.b64decode(b64.strip()), "image/jpeg"
         # url response — download it
         urls = d.get("image_urls") or []
         if isinstance(urls, list) and urls:
@@ -90,7 +93,7 @@ def _extract_image(data: dict) -> Tuple[bytes, str]:
                     return r.content, ctype
                 except Exception as exc:
                     raise HTTPException(status_code=502, detail=f"Failed to download MiniMax image: {exc}") from exc
-    raise HTTPException(status_code=502, detail="MiniMax returned no image data.")
+    raise HTTPException(status_code=502, detail=f"MiniMax returned no image data. data keys: {list(d.keys()) if isinstance(d, dict) else type(d)}")
 
 
 async def generate_minimax_text_to_image(
