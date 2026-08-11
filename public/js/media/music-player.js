@@ -562,14 +562,23 @@
           audio.removeAttribute('src');
           audio.load();
         } catch (e) {}
-        mountEl.innerHTML = '';
+        var host = (root && root.parentNode) || mountEl;
+        if (host) host.innerHTML = '';
       },
       update: function (next) {
         next = next || {};
         if (next.title != null) titleEl.textContent = next.title;
-        if (next.src) audio.src = next.src;
+        if (next.audioName != null) opts.audioName = next.audioName;
+        if (next.src) {
+          audio.src = next.src;
+          try { audio.load(); } catch (e) {}
+          try { audio.currentTime = 0; } catch (e) {}
+        }
         if (next.lyrics != null) applyLyrics(next.lyrics);
         if (next.durationHint != null) durationHint = Number(next.durationHint) || 0;
+        lastActive = -1;
+        seeking = false;
+        try { seek.value = '0'; } catch (e) {}
         tick();
       }
     };

@@ -39,23 +39,6 @@
     return items.slice();
   }
 
-  function playNextInQueue() {
-    if (!continuousPlay || !currentId || !currentKind) return;
-    var items = getQueueItems(currentKind);
-    if (!items.length) return;
-    var idx = -1;
-    for (var i = 0; i < items.length; i++) {
-      if (String(items[i].id) === String(currentId)) {
-        idx = i;
-        break;
-      }
-    }
-    if (idx < 0 || idx >= items.length - 1) return;
-    var next = items[idx + 1];
-    if (!next || !next.id) return;
-    playTrack(currentKind, next);
-  }
-
   function normalizeSearch(s) {
     return String(s || '')
       .trim()
@@ -212,6 +195,109 @@
     }
   }
 
+  function findTrackCard(kind, id) {
+    var want = String(id || '');
+    var nodes = document.querySelectorAll('[data-music-play][data-music-kind]');
+    for (var i = 0; i < nodes.length; i++) {
+      var btn = nodes[i];
+      if ((btn.getAttribute('data-music-kind') || 'ai') !== kind) continue;
+      if (String(btn.getAttribute('data-music-play') || '') !== want) continue;
+      return btn.closest('.music-track-card');
+    }
+    return null;
+  }
+
+  function ensurePlayerHost(card) {
+    var playerHost = card.querySelector('.music-track-player');
+    if (!playerHost) {
+      playerHost = document.createElement('div');
+      playerHost.className = 'music-track-player';
+      card.appendChild(playerHost);
+    }
+    return playerHost;
+  }
+
+  function playNextInQueue() {
+    if (!continuousPlay || !currentId || !currentKind) return;
+    var kind = currentKind;
+    var curId = currentId;
+    var items = getQueueItems(kind);
+    if (!items.length) return;
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (String(items[i].id) === String(curId)) {
+        idx = i;
+        break;
+      }
+    }
+    if (idx < 0 || idx >= items.length - 1) return;
+    var next = items[idx + 1];
+    if (!next || !next.id) return;
+    // Defer so the ended handler finishes; reuse the same <audio> to keep autoplay permission.
+    setTimeout(function () {
+      advanceToTrack(kind, next);
+    }, 80);
+  }
+
+  function advanceToTrack(kind, item) {
+    if (!item || !item.id) return;
+    if (!player || !player.audio || typeof player.update !== 'function') {
+      playTrack(kind, item);
+      return;
+    }
+    var card = findTrackCard(kind, item.id);
+    if (!card) {
+      playTrack(kind, item);
+      return;
+    }
+    var playerHost = ensurePlayerHost(card);
+    var root = player.audio.closest('.tb-mp');
+    if (root && root.parentNode !== playerHost) {
+      playerHost.appendChild(root);
+    }
+    document.querySelectorAll('.music-track-card').forEach(function (el) {
+      el.classList.remove('is-player-open', 'is-buffering');
+    });
+    document.querySelectorAll('.music-track-player').forEach(function (el) {
+      if (el !== playerHost) el.innerHTML = '';
+    });
+    card.classList.add('is-player-open');
+    currentCardEl = card;
+    currentKind = kind;
+    currentId = item.id;
+    currentItem = item;
+
+    var streamSrc = kind === 'traditional'
+      ? fileUrl(kind, item.id, { full: false })
+      : fileUrl(kind, item.id, { download: false });
+    var fallback = kind === 'traditional' ? 'traditional-music' : 'ai-music';
+    var audioName = String(item.title || fallback).replace(/[\\/:*?"<>|]+/g, '').trim() || fallback;
+
+    player.update({
+      src: streamSrc,
+      title: item.title || tr('hub.musicPage.untitled'),
+      lyrics: item.lyrics || '',
+      durationHint: Number(item.duration) || 0,
+      audioName: audioName
+    });
+
+    if (typeof player.setBuffering === 'function') player.setBuffering(true);
+    setPlayingUi(kind, item.id, 'buffering');
+    var playChain = typeof player.playWhenReady === 'function'
+      ? player.playWhenReady()
+      : player.play();
+    playChain.then(function () {
+      if (typeof player.setBuffering === 'function') player.setBuffering(false);
+      setPlayingUi(kind, item.id, true);
+    }).catch(function () {
+      // Fallback: full remount (may still be blocked without gesture)
+      if (typeof player.setBuffering === 'function') player.setBuffering(false);
+      playTrack(kind, item);
+    });
+    warmCache(kind, item.id, item.contentType, player.audio, true);
+    if (kind === 'traditional') hydrateTraditionalLyrics(kind, item, player);
+  }
+
   function setPlayingUi(kind, id, playing) {
     document.querySelectorAll('[data-music-play]').forEach(function (btn) {
       var bid = btn.getAttribute('data-music-play');
@@ -270,19 +356,21 @@
       hideDownloadActions: true,
       durationHint: Number(item.duration) || 0,
       audioName: audioName,
-      onDownloadAudio: function () { downloadTrack(kind, item); },
+      onDownloadAudio: function () {
+        if (currentItem) downloadTrack(currentKind, currentItem);
+      },
       onPlayState: function (playing) {
-        setPlayingUi(kind, item.id, !!playing);
+        setPlayingUi(currentKind, currentId, !!playing);
       },
       onBuffering: function (loading) {
-        if (loading) setPlayingUi(kind, item.id, 'buffering');
-        else if (player && player.audio && !player.audio.paused) setPlayingUi(kind, item.id, true);
+        if (loading) setPlayingUi(currentKind, currentId, 'buffering');
+        else if (player && player.audio && !player.audio.paused) setPlayingUi(currentKind, currentId, true);
       },
       onEnded: function () {
         playNextInQueue();
       },
       onError: function () {
-        setPlayingUi(kind, item.id, false);
+        setPlayingUi(currentKind, currentId, false);
         var box = document.getElementById('music-error');
         if (box) {
           box.hidden = false;
@@ -347,15 +435,9 @@
 
   function playTrack(kind, item) {
     var id = item.id;
-    var btn = document.querySelector('[data-music-play="' + id + '"][data-music-kind="' + kind + '"]');
-    var card = btn ? btn.closest('.music-track-card') : null;
+    var card = findTrackCard(kind, id);
     if (!card) return;
-    var playerHost = card.querySelector('.music-track-player');
-    if (!playerHost) {
-      playerHost = document.createElement('div');
-      playerHost.className = 'music-track-player';
-      card.appendChild(playerHost);
-    }
+    var playerHost = ensurePlayerHost(card);
 
     if (currentKind === kind && currentId === id && player && player.audio) {
       if (!player.audio.paused) {
@@ -374,7 +456,6 @@
       return;
     }
 
-    if (btn) btn.textContent = tr('hub.musicPage.buffering');
     setPlayingUi(kind, id, 'buffering');
 
     function go(src) {
