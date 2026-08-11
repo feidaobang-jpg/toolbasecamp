@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  var CACHE_NAME = 'tbc-music-hub-v5';
+  var CACHE_NAME = 'tbc-music-hub-v6';
   var objectUrls = {};
   var player = null;
   var currentId = '';

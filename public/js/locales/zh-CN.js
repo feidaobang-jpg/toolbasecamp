@@ -330,7 +330,7 @@ window.TB_LOCALES['zh-CN'] = {
             aiTab: 'AI 音乐',
             traditionalTab: '传统音乐',
             aiSub: '公开的 AI 生成歌曲。可播放（带滚动歌词）、下载音频；播放或下载后会缓存在本机浏览器。',
-            traditionalSub: '经典歌曲在线试听与下载。播放为 64k 试听版；下载为原文件高音质。',
+            traditionalSub: '经典歌曲在线试听与下载。播放为 48k 试听版（更顺畅）；下载为原文件高音质。',
             traditionalLabel: '传统音乐',
             traditionalEmpty: '暂无传统音乐，管理员上传后会显示在这里。',
             create: '去生成',
@@ -352,7 +352,7 @@ window.TB_LOCALES['zh-CN'] = {
             empty: '暂无公开歌曲。生成音乐时默认勾选「公开到音乐列表」。',
             loadFailed: '列表加载失败，请稍后重试。',
             playFailed: '播放失败，请稍后重试或换一首。',
-            cacheTip: '传统音乐：点「播放」听 64k 试听版；点「下载」保存原文件。非微信浏览器会缓存试听以便下次更快开播。',
+            cacheTip: '传统音乐：点「播放」听 48k 试听版（利于微信流畅）；点「下载」保存原文件。非微信浏览器会缓存试听以便下次更快开播。',
             wechatDownloadTip: '微信内请点右上角 ··· → 在浏览器中打开后再下载。',
             untitled: '未命名',
             noLyrics: '暂无歌词'
