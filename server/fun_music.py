@@ -78,7 +78,7 @@ TRADITIONAL_DIR = Path(
 TRADITIONAL_DIR.mkdir(parents=True, exist_ok=True)
 TRADITIONAL_MANIFEST = TRADITIONAL_DIR / "manifest.json"
 _traditional_manifest_cache: tuple[float, list] = (0.0, [])
-TRADITIONAL_PREVIEW_BITRATE = (os.environ.get("TRADITIONAL_PREVIEW_BITRATE") or "48k").strip()
+TRADITIONAL_PREVIEW_BITRATE = (os.environ.get("TRADITIONAL_PREVIEW_BITRATE") or "96k").strip()
 TRADITIONAL_UPLOAD_MAX_MB = max(5, int(os.environ.get("TRADITIONAL_UPLOAD_MAX_MB") or "50"))
 
 _results: Dict[str, Dict[str, Any]] = {}

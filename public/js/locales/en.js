@@ -331,7 +331,7 @@ window.TB_LOCALES.en = {
             aiTab: 'AI Music',
             traditionalTab: 'Classic',
             aiSub: 'Public AI-generated songs. Play with scrolling lyrics and download — cached in your browser after first play or download.',
-            traditionalSub: 'Classic tracks to stream or download. After the first play, audio is read from browser cache.',
+            traditionalSub: 'Classic tracks to stream or download. Playback uses a 96k preview; download is the original high-quality file.',
             traditionalLabel: 'Classic',
             traditionalEmpty: 'No classic tracks yet. They will appear here after upload.',
             create: 'Create',
@@ -353,7 +353,7 @@ window.TB_LOCALES.en = {
             empty: 'No public songs yet. Generation defaults to publishing to this list.',
             loadFailed: 'Failed to load the list. Please try again.',
             playFailed: 'Playback failed. Retry or try another track.',
-            cacheTip: 'Tap Play to listen. Outside WeChat, audio is cached after the first play. In WeChat the first play may buffer — replays use cache when available.',
+            cacheTip: 'Traditional music: Play streams a 96k preview; Download saves the original file. Outside WeChat, previews are cached for faster replays.',
             wechatDownloadTip: 'In WeChat, tap ··· → Open in browser to download the file.',
             untitled: 'Untitled',
             noLyrics: 'No lyrics'
