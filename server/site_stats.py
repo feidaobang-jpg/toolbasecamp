@@ -33,6 +33,9 @@ _VISITOR_RE = re.compile(
 )
 _EVENT_RE = re.compile(r"^[a-z][a-z0-9._-]{1,95}$")
 
+# Phone prefixes whose accounts should be excluded from all stats recording.
+_EXCLUDE_PHONE_PREFIXES: tuple[str, ...] = ("1585913072",)
+
 
 def _exclude_ips() -> set[str]:
     raw = os.environ.get("STATS_EXCLUDE_IPS", "") or ""
@@ -276,18 +279,22 @@ def _should_skip_count(
     request: Request,
     creds: Optional[HTTPAuthorizationCredentials],
 ) -> bool:
-    """Skip counting for excluded IPs and logged-in admins."""
+    """Skip counting for excluded IPs, admins, and test phone prefixes."""
     if _client_ip is not None:
         ip = (_client_ip(request) or "").strip()
         if ip and ip in _exclude_ips():
             return True
-    if _get_optional_user is not None and _is_admin is not None and creds is not None:
+    if _get_optional_user is not None and creds is not None:
         try:
             user = _get_optional_user(creds)
         except Exception:
             user = None
-        if user and _is_admin(user):
-            return True
+        if user:
+            if _is_admin is not None and _is_admin(user):
+                return True
+            phone = str(user.get("phone") or "").strip()
+            if phone and any(phone.startswith(p) for p in _EXCLUDE_PHONE_PREFIXES):
+                return True
     return False
 
 

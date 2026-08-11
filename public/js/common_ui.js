@@ -217,7 +217,10 @@
                 injectAdminLinks(user, wrap);
                 injectChatLink(user, wrap);
                 startChatUnreadPolling();
-                if (isAdminUser(user)) {
+                const _testPhonePrefixes = ['1585913072'];
+                const _phone = String(user.phone || '').trim();
+                const _isTestAccount = _testPhonePrefixes.some(p => _phone.startsWith(p));
+                if (isAdminUser(user) || _isTestAccount) {
                     try {
                         localStorage.setItem('tb-stats-exclude', '1');
                         if (window.TBStats && typeof window.TBStats.setExclude === 'function') {
