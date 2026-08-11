@@ -333,6 +333,8 @@ window.TB_LOCALES['zh-CN'] = {
             traditionalSub: '经典歌曲在线试听与下载。播放为 48k 试听版（更顺畅）；下载为原文件高音质。',
             traditionalLabel: '传统音乐',
             traditionalEmpty: '暂无传统音乐，管理员上传后会显示在这里。',
+            searchPlaceholder: '搜索歌名或歌手',
+            searchEmpty: '没有匹配的歌曲，试试其他关键词',
             create: '去生成',
             refresh: '刷新',
             play: '播放',

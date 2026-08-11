@@ -334,6 +334,8 @@ window.TB_LOCALES.en = {
             traditionalSub: 'Classic tracks to stream or download. Playback uses a 48k preview for smoother streaming; download is the original high-quality file.',
             traditionalLabel: 'Classic',
             traditionalEmpty: 'No classic tracks yet. They will appear here after upload.',
+            searchPlaceholder: 'Search by title or artist',
+            searchEmpty: 'No matching tracks. Try another keyword.',
             create: 'Create',
             refresh: 'Refresh',
             play: 'Play',

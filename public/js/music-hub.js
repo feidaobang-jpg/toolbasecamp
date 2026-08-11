@@ -14,6 +14,34 @@
   var currentCardEl = null;
   var activeTab = 'ai';
   var listCache = { ai: null, traditional: null };
+  var tradSearchQuery = '';
+
+  function normalizeSearch(s) {
+    return String(s || '').trim().toLowerCase();
+  }
+
+  function filterTraditionalItems(items) {
+    var q = normalizeSearch(tradSearchQuery);
+    if (!q) return items || [];
+    return (items || []).filter(function (item) {
+      var title = normalizeSearch(item.title);
+      var artist = normalizeSearch(item.artist);
+      return title.indexOf(q) >= 0 || artist.indexOf(q) >= 0;
+    });
+  }
+
+  function showActiveList(kind) {
+    kind = kind || activeTab;
+    var items = listCache[kind] || [];
+    if (kind === 'traditional') {
+      var filtered = filterTraditionalItems(items);
+      renderList(kind, filtered, {
+        isFilterEmpty: !!(normalizeSearch(tradSearchQuery) && items.length && !filtered.length)
+      });
+      return;
+    }
+    renderList(kind, items);
+  }
 
   function tr(k, params) {
     return typeof window.t === 'function' ? window.t(k, params) : k;
@@ -413,7 +441,8 @@
     return plain;
   }
 
-  function renderList(kind, items) {
+  function renderList(kind, items, opts) {
+    opts = opts || {};
     var list = document.getElementById('music-list');
     var empty = document.getElementById('music-empty');
     if (!list) return;
@@ -421,11 +450,15 @@
     if (!items || !items.length) {
       if (empty) {
         empty.hidden = false;
-        empty.textContent = kind === 'traditional'
-          ? tr('hub.musicPage.traditionalEmpty')
-          : tr('hub.musicPage.empty');
+        if (opts.isFilterEmpty) {
+          empty.textContent = tr('hub.musicPage.searchEmpty');
+        } else {
+          empty.textContent = kind === 'traditional'
+            ? tr('hub.musicPage.traditionalEmpty')
+            : tr('hub.musicPage.empty');
+        }
       }
-      if (activeTab === kind) {
+      if (activeTab === kind && !opts.isFilterEmpty) {
         destroyPlayer();
         document.querySelectorAll('.music-track-player').forEach(function (el) { el.innerHTML = ''; });
       }
@@ -531,6 +564,8 @@
     }
     var createRow = document.getElementById('music-create-row');
     if (createRow) createRow.hidden = activeTab !== 'ai';
+    var searchWrap = document.getElementById('music-trad-search');
+    if (searchWrap) searchWrap.hidden = activeTab !== 'traditional';
   }
 
   function switchTab(tab) {
@@ -541,7 +576,7 @@
     document.querySelectorAll('.music-track-player').forEach(function (el) { el.innerHTML = ''; });
     updateTabUi();
     if (listCache[tab]) {
-      renderList(tab, listCache[tab]);
+      showActiveList(tab);
       var busy = document.getElementById('music-busy');
       if (busy) busy.hidden = true;
     }
@@ -572,7 +607,7 @@
       .then(function (data) {
         var items = (data && data.items) || [];
         listCache[kind] = items;
-        if (activeTab === kind) renderList(kind, items);
+        if (activeTab === kind) showActiveList(kind);
       })
       .catch(function (err) {
         if (activeTab === kind && !listCache[kind]) {
@@ -580,7 +615,7 @@
             box.hidden = false;
             box.textContent = (err && err.message) || tr('hub.musicPage.loadFailed');
           }
-          renderList(kind, []);
+          showActiveList(kind);
         }
       })
       .then(function () {
@@ -593,6 +628,7 @@
     if (!main) return;
     activeTab = 'ai';
     listCache = { ai: null, traditional: null };
+    tradSearchQuery = '';
     destroyPlayer();
     main.innerHTML =
       '<div class="music-hub">' +
@@ -613,6 +649,11 @@
           '</div>' +
         '</div>' +
         '<p class="music-hub-tip">' + escapeHtml(tr('hub.musicPage.cacheTip')) + '</p>' +
+        '<div id="music-trad-search" class="music-hub-search" hidden>' +
+          '<input type="search" class="tb-input" id="music-search-input" autocomplete="off" ' +
+            'placeholder="' + escapeHtml(tr('hub.musicPage.searchPlaceholder')) + '" ' +
+            'aria-label="' + escapeHtml(tr('hub.musicPage.searchPlaceholder')) + '">' +
+        '</div>' +
         '<div id="music-busy" class="music-hub-busy" hidden>' + escapeHtml(tr('hub.musicPage.loading')) + '</div>' +
         '<div id="music-error" class="error-box" role="alert" hidden></div>' +
         '<p id="music-empty" class="music-hub-empty" hidden></p>' +
@@ -623,6 +664,13 @@
         switchTab(btn.getAttribute('data-music-tab'));
       });
     });
+    var searchInput = document.getElementById('music-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        tradSearchQuery = searchInput.value || '';
+        if (activeTab === 'traditional') showActiveList('traditional');
+      });
+    }
     var refresh = document.getElementById('music-refresh');
     if (refresh) refresh.addEventListener('click', function () {
       listCache[activeTab] = null;
