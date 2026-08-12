@@ -100,20 +100,6 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
-    {
-        "id": "image-01",
-        "priceCny1K": 0.025,
-        "priceCny2K": 0.025,
-        "maxRefs": 1,
-        "labelKey": "tools.instructEdit.modelMinimax01",
-    },
-    {
-        "id": "image-01-live",
-        "priceCny1K": 0.025,
-        "priceCny2K": 0.025,
-        "maxRefs": 1,
-        "labelKey": "tools.instructEdit.modelMinimax01live",
-    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
