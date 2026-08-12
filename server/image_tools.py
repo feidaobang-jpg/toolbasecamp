@@ -124,13 +124,23 @@ INSTRUCT_EDIT_RATE_RETRIES = int(os.environ.get("IMAGE_EDIT_RATE_RETRIES", "1"))
 INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.5"))
 IMAGE_DEBUG = os.environ.get("IMAGE_DEBUG", "1").strip().lower() not in ("0", "false", "no", "off")
 
-# Text-to-image models (Beijing). z-image-turbo = cheap/fast default.
+# Text-to-image models — price ascending; MiniMax Image-01 = default.
 TEXT_TO_IMAGE_MODELS = (
+    {
+        "id": "image-01",
+        "priceCny": 0.025,
+        "labelKey": "tools.textToImage.modelMinimax01",
+        "default": True,
+    },
+    {
+        "id": "image-01-live",
+        "priceCny": 0.025,
+        "labelKey": "tools.textToImage.modelMinimax01live",
+    },
     {
         "id": "z-image-turbo",
         "priceCny": 0.04,
         "labelKey": "tools.textToImage.modelZTurbo",
-        "default": True,
     },
     {
         "id": "wan2.7-image",
@@ -141,16 +151,6 @@ TEXT_TO_IMAGE_MODELS = (
         "id": "wan2.7-image-pro",
         "priceCny": 0.5,
         "labelKey": "tools.textToImage.modelWan27pro",
-    },
-    {
-        "id": "image-01",
-        "priceCny": 0.025,
-        "labelKey": "tools.textToImage.modelMinimax01",
-    },
-    {
-        "id": "image-01-live",
-        "priceCny": 0.025,
-        "labelKey": "tools.textToImage.modelMinimax01live",
     },
 )
 TEXT_TO_IMAGE_MODEL_IDS = {m["id"] for m in TEXT_TO_IMAGE_MODELS}
@@ -1504,7 +1504,7 @@ def _resolve_t2i_models(model: Optional[str], models: Optional[List[str]]) -> li
     if not raw and model:
         raw = [(model or "").strip()]
     if not raw:
-        raw = ["z-image-turbo"]
+        raw = ["image-01"]
     out: list[str] = []
     seen: set[str] = set()
     for mid in raw:
