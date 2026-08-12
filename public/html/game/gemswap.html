@@ -1,56 +1,936 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gem Match - Tool Basecamp</title>
-  <meta name="description" content="Match-3 gem puzzle. Swap adjacent gems to make lines of three or more.">
-  <link rel="stylesheet" href="../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/game/games-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/game/gemswap.css?v=minimax1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>宝石迷阵 - Gem Blitz</title>
+<style>
+/* ============================================================
+   全局样式（竖屏 9:16，PC与手机均无需旋转，直接游玩）
+   ============================================================ */
+html,body{
+  margin:0;padding:0;width:100%;height:100%;
+  background:#0a0616;overflow:hidden;
+  touch-action:none;-webkit-user-select:none;user-select:none;
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+#wrap{
+  position:fixed;left:0;top:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,#1a0f38 0%,#0a0616 70%);
+}
+canvas{display:block;background:#0d0920;box-shadow:0 0 60px rgba(160,80,255,.3);}
+</style>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar"></aside>
-    <main class="content">
-      <div class="tool-header">
-        <h1 data-i18n="tools.gemswap.title">Gem Match</h1>
-        <p data-i18n="tools.gemswap.desc">Swap adjacent gems to clear matches of three or more. Runs locally.</p>
-      </div>
+<div id="wrap"><canvas id="game"></canvas></div>
+<script>
+"use strict";
+/* ============================================================
+ * 宝石迷阵 Gem Blitz
+ * 单文件 2D Canvas 三消游戏（竖屏 9:16 基准 540x960）
+ * 结构分层：
+ *   1. 常量与工具
+ *   2. 音频系统 (WebAudio 程序生成音效 + BGM)
+ *   3. 输入系统 (键盘光标 + 触控点击/滑动，双端适配)
+ *   4. 粒子与浮动文字系统
+ *   5. 游戏核心逻辑 (棋盘、消除、连锁、关卡、无尽模式)
+ *   6. 渲染系统 (宝石绘制、UI、界面)
+ *   7. 缩放适配与主循环
+ * ============================================================ */
 
-      <div class="tool-card game-card">
-        <div class="game-toolbar">
-          <div class="game-stats">
-            <span><span data-i18n="tools.game.level">Level</span>: <strong id="level">1</strong></span>
-            <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
-            <span><span data-i18n="tools.gemswap.goal">Goal</span>: <strong id="goal">580</strong></span>
-            <span><span data-i18n="tools.gemswap.moves">Moves</span>: <strong id="moves">23</strong></span>
-          </div>
-          <div class="action-row">
-            <button type="button" class="tb-btn" id="sound-btn" data-i18n="tools.game.soundOn">静音</button>
-            <label class="game-volume">
-              <span data-i18n="tools.game.volume">音量</span>
-              <input type="range" id="volume-slider" min="0" max="100" value="50" aria-label="Volume" />
-            </label>
-            <button type="button" class="tb-btn" id="hint-btn" data-i18n="tools.gemswap.hint">Hint</button>
-            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Start</button>
-          </div>
-        </div>
-        <div class="game-status is-idle" id="status" data-i18n="tools.gemswap.hintPlay">Select a gem, then an adjacent gem to swap.</div>
-        <div class="game-board-wrap">
-          <div class="gem-board" id="board"></div>
-        </div>
-      </div>
-    </main>
-  </div>
+/* ---------------- 1. 常量与工具 ---------------- */
+const BASE_W = 540, BASE_H = 960;            // 竖屏基准 9:16
+const N = 8;                                  // 8x8 棋盘
+const CELL = 62;                              // 格子尺寸
+const BOARD_W = N*CELL;                       // 496
+const BOARD_X = (BASE_W-BOARD_W)/2;           // 22
+const BOARD_Y = 250;
 
-  <script src="../../js/locales/en.js?v=minimax1"></script>
-  <script src="../../js/locales/zh-CN.js?v=minimax1"></script>
-  <script src="../../js/i18n.js?v=minimax1"></script>
-  <script src="../../js/config.js?v=minimax1"></script>
-  <script src="../../js/base.js?v=minimax1"></script>
-  <script src="../../js/game/game-audio.js?v=minimax1"></script>
-  <script src="../../js/game/gemswap.js?v=minimax1"></script>
+const STATE = { MENU:0, PLAY:1, PAUSE:2, OVER:3, LEVELCLEAR:4 };
+
+// 宝石类型（颜色与形状代码绘制）
+const GEMS = [
+  {c1:"#ff6b81", c2:"#c0263f", shape:"heart"},   // 红-心形
+  {c1:"#ffd93d", c2:"#c79a00", shape:"diamond"}, // 黄-菱形
+  {c1:"#6bffb0", c2:"#0f9d58", shape:"hex"},     // 绿-六边形
+  {c1:"#6bc5ff", c2:"#1467c7", shape:"circle"},  // 蓝-圆形
+  {c1:"#c58bff", c2:"#7a2fd0", shape:"square"},  // 紫-方形
+  {c1:"#ff9f43", c2:"#c25e00", shape:"tri"},     // 橙-三角
+];
+
+// 递进关卡：目标分数、限定步数、宝石种类数
+const LEVELS = [
+  {target: 600,  moves: 20, kinds: 5, name:"第 1 关"},
+  {target: 1000, moves: 20, kinds: 5, name:"第 2 关"},
+  {target: 1500, moves: 22, kinds: 6, name:"第 3 关"},
+  {target: 2200, moves: 22, kinds: 6, name:"第 4 关"},
+  {target: 3000, moves: 24, kinds: 6, name:"第 5 关"},
+];
+
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const rndi=(a,b)=>Math.floor(rnd(a,b+1));
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
+const ease=t=>t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+
+/* ---------------- 2. 音频系统 ---------------- */
+const Audio2=(()=>{
+  let ctx=null,master=null,bgmGain=null,bgmTimer=null,bgmStep=0;
+  function init(){
+    if(ctx)return;
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain();master.gain.value=0.5;master.connect(ctx.destination);
+    bgmGain=ctx.createGain();bgmGain.gain.value=0.14;bgmGain.connect(master);
+  }
+  function resume(){init();if(ctx.state==="suspended")ctx.resume();}
+  function tone(freq,dur,type="square",vol=0.25,dest=null,slide=0){
+    if(!ctx)return;
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type;o.frequency.value=freq;
+    if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,freq+slide),ctx.currentTime+dur);
+    g.gain.setValueAtTime(vol,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur);
+    o.connect(g);g.connect(dest||master);
+    o.start();o.stop(ctx.currentTime+dur+0.02);
+  }
+  function noise(dur,vol=0.3){
+    if(!ctx)return;
+    const len=ctx.sampleRate*dur,buf=ctx.createBuffer(1,len,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*(1-i/len);
+    const s=ctx.createBufferSource();s.buffer=buf;
+    const g=ctx.createGain();g.gain.value=vol;
+    s.connect(g);g.connect(master);s.start();
+  }
+  const sfx={
+    select(){tone(700,0.06,"square",0.15);},                                  // 选中
+    swap(){tone(420,0.08,"triangle",0.2,null,180);},                          // 交换(跳跃感)
+    bad(){tone(200,0.15,"sawtooth",0.2,null,-80);noise(0.08,0.12);},          // 无效交换(碰撞感)
+    match(chain){                                                              // 消除(攻击感,连锁升调)
+      const base=520+chain*90;
+      tone(base,0.1,"square",0.22);tone(base*1.5,0.14,"square",0.16);
+    },
+    fall(){tone(260,0.05,"sine",0.08);},                                      // 下落
+    levelup(){[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,0.2,"triangle",0.25),i*100));} , // 通关
+    over(){[392,330,262,196].forEach((f,i)=>setTimeout(()=>tone(f,0.3,"sawtooth",0.2),i*180));},            // 失败
+    click(){tone(800,0.05,"square",0.15);},
+    hint(){tone(1000,0.1,"sine",0.15);},
+  };
+  const seq=[330,392,440,523, 330,392,494,587, 294,349,440,523, 262,330,392,494];
+  function startBGM(){
+    resume();
+    if(bgmTimer)return;
+    bgmStep=0;
+    bgmTimer=setInterval(()=>{
+      const f=seq[bgmStep%seq.length];
+      tone(f,0.24,"triangle",1,bgmGain);
+      if(bgmStep%4===0)tone(f/2,0.45,"sine",0.8,bgmGain);
+      bgmStep++;
+    },240);
+  }
+  function stopBGM(){if(bgmTimer){clearInterval(bgmTimer);bgmTimer=null;}}
+  return {resume,sfx,startBGM,stopBGM};
+})();
+
+/* ---------------- 3. 输入系统 ---------------- */
+const Input=(()=>{
+  const keys={};
+  // 键盘：WASD/方向键移动光标，J/回车选中交换，K/空格暂停
+  window.addEventListener("keydown",e=>{
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();
+    if(keys[e.code])return;
+    keys[e.code]=true;
+    Audio2.resume();
+    Game.onKey(e.code);
+  });
+  window.addEventListener("keyup",e=>{keys[e.code]=false;});
+
+  /* 触控/鼠标：点击选择、拖动交换 */
+  let dragStart=null;
+  function press(px,py){
+    Audio2.resume();
+    const p=Screen.pointToBase(px,py);
+    dragStart=p;
+    Game.onPress(p.x,p.y);
+  }
+  function move(px,py){
+    if(!dragStart)return;
+    const p=Screen.pointToBase(px,py);
+    const dx=p.x-dragStart.x,dy=p.y-dragStart.y;
+    if(Math.hypot(dx,dy)>28){
+      Game.onSwipe(dragStart.x,dragStart.y,dx,dy);
+      dragStart=null;
+    }
+  }
+  function release(){dragStart=null;}
+  window.addEventListener("touchstart",e=>{press(e.changedTouches[0].clientX,e.changedTouches[0].clientY);e.preventDefault();},{passive:false});
+  window.addEventListener("touchmove",e=>{move(e.changedTouches[0].clientX,e.changedTouches[0].clientY);e.preventDefault();},{passive:false});
+  window.addEventListener("touchend",e=>{release();e.preventDefault();},{passive:false});
+  window.addEventListener("mousedown",e=>press(e.clientX,e.clientY));
+  window.addEventListener("mousemove",e=>{if(e.buttons)move(e.clientX,e.clientY);});
+  window.addEventListener("mouseup",release);
+  return {};
+})();
+
+/* ---------------- 4. 粒子与浮动文字系统 ---------------- */
+const Particles=(()=>{
+  const list=[],texts=[];
+  function burst(x,y,color,n=12,spd=160){
+    for(let i=0;i<n;i++){
+      const a=rnd(0,Math.PI*2),s=rnd(spd*0.3,spd);
+      list.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-40,life:rnd(0.4,0.9),t:0,color,size:rnd(2,6),grav:220});
+    }
+  }
+  function sparkle(x,y,color){
+    list.push({x:x+rnd(-20,20),y:y+rnd(-20,20),vx:0,vy:rnd(-30,-10),life:0.5,t:0,color,size:rnd(1.5,3),grav:0});
+  }
+  function floatText(x,y,txt,color,size=26){
+    texts.push({x,y,txt,color,size,t:0,life:0.9});
+  }
+  function update(dt){
+    for(let i=list.length-1;i>=0;i--){
+      const p=list[i];p.t+=dt;
+      if(p.t>=p.life){list.splice(i,1);continue;}
+      p.vy+=p.grav*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=0.97;
+    }
+    for(let i=texts.length-1;i>=0;i--){
+      const f=texts[i];f.t+=dt;
+      if(f.t>=f.life)texts.splice(i,1);
+    }
+  }
+  function draw(ctx){
+    for(const p of list){
+      const k=1-p.t/p.life;
+      ctx.globalAlpha=k;ctx.fillStyle=p.color;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*k,0,Math.PI*2);ctx.fill();
+    }
+    for(const f of texts){
+      const k=f.t/f.life;
+      ctx.globalAlpha=1-k;
+      ctx.font=`bold ${f.size}px sans-serif`;
+      ctx.textAlign="center";ctx.textBaseline="middle";
+      ctx.shadowColor=f.color;ctx.shadowBlur=10;
+      ctx.fillStyle=f.color;
+      ctx.fillText(f.txt,f.x,f.y-40*k);
+      ctx.shadowBlur=0;
+    }
+    ctx.globalAlpha=1;
+  }
+  function clear(){list.length=0;texts.length=0;}
+  return {burst,sparkle,floatText,update,draw,clear};
+})();
+
+/* ---------------- 5. 游戏核心逻辑 ---------------- */
+const Game=(()=>{
+  let state=STATE.MENU;
+  let endless=false, level=0;
+  let score=0, best=+(localStorage.getItem("gemBlitzBest")||0);
+  let movesLeft=0, kinds=5;
+  let lives=3;                        // 生命：关卡失败扣1，扣完结束
+  let board=[];                       // board[r][c] = {type, y偏移(下落动画), scale(消除动画)}
+  let cursor={r:3,c:3};               // 键盘光标
+  let selected=null;                  // 选中的格子 {r,c}
+  let busy=false;                     // 动画锁：交换/消除/下落过程中禁止输入
+  let chain=0;                        // 当前连锁数
+  let hue=0, shake=0, flashMsg="", flashT=0;
+  let hintTimer=0, hintCells=null;    // 长时间无操作给提示
+  let animQueue=Promise.resolve();
+
+  const cellXY=(r,c)=>[BOARD_X+c*CELL+CELL/2, BOARD_Y+r*CELL+CELL/2];
+
+  function targetScore(){return endless?Infinity:LEVELS[level].target;}
+
+  /* ---- 棋盘生成：保证初始无三连且有可行步 ---- */
+  function newGem(){return {type:rndi(0,kinds-1),fall:0,scale:1,pop:0};}
+  function makesMatch(r,c,t){
+    // 检查放置 t 后是否立即三连
+    if(c>=2&&board[r][c-1]&&board[r][c-2]&&board[r][c-1].type===t&&board[r][c-2].type===t)return true;
+    if(r>=2&&board[r-1][c]&&board[r-2][c]&&board[r-1][c].type===t&&board[r-2][c].type===t)return true;
+    return false;
+  }
+  function fillBoard(){
+    board=[];
+    for(let r=0;r<N;r++){
+      board.push([]);
+      for(let c=0;c<N;c++){
+        let g=newGem();
+        let tries=0;
+        while(makesMatch(r,c,g.type)&&tries++<20)g.type=rndi(0,kinds-1);
+        board[r].push(g);
+      }
+    }
+    if(!findAnyMove())fillBoard(); // 保证有可行步
+  }
+
+  /* ---- 匹配检测 ---- */
+  function findMatches(){
+    const marked=new Set();
+    // 横向
+    for(let r=0;r<N;r++){
+      let run=1;
+      for(let c=1;c<=N;c++){
+        if(c<N&&board[r][c].type===board[r][c-1].type)run++;
+        else{
+          if(run>=3)for(let k=c-run;k<c;k++)marked.add(r*N+k);
+          run=1;
+        }
+      }
+    }
+    // 纵向
+    for(let c=0;c<N;c++){
+      let run=1;
+      for(let r=1;r<=N;r++){
+        if(r<N&&board[r][c].type===board[r-1][c].type)run++;
+        else{
+          if(run>=3)for(let k=r-run;k<r;k++)marked.add(k*N+c);
+          run=1;
+        }
+      }
+    }
+    return marked;
+  }
+  function wouldMatch(r1,c1,r2,c2){
+    const t=board[r1][c1].type;
+    board[r1][c1].type=board[r2][c2].type;board[r2][c2].type=t;
+    const m=findMatches().size>0;
+    board[r2][c2].type=board[r1][c1].type;board[r1][c1].type=t;
+    return m;
+  }
+  function findAnyMove(){
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      if(c<N-1&&wouldMatch(r,c,r,c+1))return [{r,c},{r,c:c+1}];
+      if(r<N-1&&wouldMatch(r,c,r+1,c))return [{r,c},{r:r+1,c}];
+    }
+    return null;
+  }
+
+  /* ---- 动画辅助 ---- */
+  const sleep=ms=>new Promise(res=>setTimeout(res,ms));
+
+  /* ---- 交换流程 ---- */
+  async function trySwap(a,b){
+    if(busy)return;
+    if(Math.abs(a.r-b.r)+Math.abs(a.c-b.c)!==1)return;
+    busy=true;selected=null;hintCells=null;hintTimer=0;
+    Audio2.sfx.swap();
+    await animSwap(a,b);
+    swapCells(a,b);
+    if(findMatches().size===0){
+      // 无效交换：换回去
+      Audio2.sfx.bad();
+      await animSwap(a,b);
+      swapCells(a,b);
+      busy=false;
+      return;
+    }
+    if(!endless)movesLeft--;
+    chain=0;
+    await resolveBoard();
+    afterMove();
+    busy=false;
+  }
+  function swapCells(a,b){
+    const t=board[a.r][a.c];board[a.r][a.c]=board[b.r][b.c];board[b.r][b.c]=t;
+  }
+  // 交换动画：用swapAnim记录两格插值
+  let swapAnim=null;
+  function animSwap(a,b){
+    return new Promise(res=>{
+      swapAnim={a,b,t:0,dur:0.18,done:res};
+    });
+  }
+
+  /* ---- 消除→下落→补充 循环 ---- */
+  async function resolveBoard(){
+    for(;;){
+      const m=findMatches();
+      if(m.size===0)break;
+      chain++;
+      Audio2.sfx.match(chain);
+      shake=Math.min(10,3+chain*2);
+      const gain=m.size*10*chain;
+      score+=gain;
+      // 粒子与浮字
+      let cx=0,cy=0;
+      m.forEach(idx=>{
+        const r=Math.floor(idx/N),c=idx%N;
+        const [x,y]=cellXY(r,c);cx+=x;cy+=y;
+        Particles.burst(x,y,GEMS[board[r][c].type].c1,10,150);
+        board[r][c].pop=1; // 触发缩小动画
+      });
+      cx/=m.size;cy/=m.size;
+      Particles.floatText(cx,cy,"+"+gain,chain>1?"#ffd93d":"#ffffff",chain>1?32:24);
+      if(chain>1)Particles.floatText(BASE_W/2,BOARD_Y-40,"连锁 x"+chain+"!","#ff9f43",30);
+      await sleep(220);
+      // 真正移除
+      m.forEach(idx=>{board[Math.floor(idx/N)][idx%N]=null;});
+      // 下落
+      applyGravity();
+      Audio2.sfx.fall();
+      await sleep(260);
+      if(!endless&&score>=targetScore())break; // 达标即停
+    }
+    // 死局洗牌
+    if(!findAnyMove()){
+      Particles.floatText(BASE_W/2,BASE_H/2,"无可消除，重排！","#6bc5ff",28);
+      await sleep(500);
+      reshuffle();
+    }
+  }
+  function applyGravity(){
+    for(let c=0;c<N;c++){
+      let write=N-1;
+      for(let r=N-1;r>=0;r--){
+        if(board[r][c]){
+          if(write!==r){
+            board[write][c]=board[r][c];
+            board[write][c].fall=(write-r)*CELL; // 从上方落下
+            board[r][c]=null;
+          }
+          write--;
+        }
+      }
+      for(let r=write;r>=0;r--){
+        board[r][c]=newGem();
+        board[r][c].fall=(write+1)*CELL+CELL*(write-r+1);
+      }
+    }
+  }
+  function reshuffle(){
+    const types=[];
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)types.push(board[r][c].type);
+    do{
+      // Fisher-Yates
+      for(let i=types.length-1;i>0;i--){const j=rndi(0,i);[types[i],types[j]]=[types[j],types[i]];}
+      let i=0;
+      for(let r=0;r<N;r++)for(let c=0;c<N;c++)board[r][c].type=types[i++];
+    }while(findMatches().size>0||!findAnyMove());
+  }
+
+  /* ---- 步数用尽/达标判定 ---- */
+  function afterMove(){
+    if(endless)return;
+    if(score>=targetScore()){
+      state=STATE.LEVELCLEAR;
+      Audio2.sfx.levelup();
+      Particles.burst(BASE_W/2,BASE_H/2,"#ffd93d",40,300);
+      return;
+    }
+    if(movesLeft<=0){
+      lives--;
+      if(lives<=0){
+        gameOver();
+      }else{
+        flash("未达标！剩余生命 "+lives+"，重试本关");
+        movesLeft=LEVELS[level].moves;
+        score=levelStartScore;
+        fillBoard();
+      }
+    }
+  }
+  function gameOver(){
+    state=STATE.OVER;
+    Audio2.sfx.over();
+    Audio2.stopBGM();
+    if(score>best){best=score;localStorage.setItem("gemBlitzBest",best);}
+  }
+
+  let levelStartScore=0;
+  function startGame(isEndless){
+    endless=isEndless;level=0;score=0;lives=3;chain=0;
+    kinds=endless?6:LEVELS[0].kinds;
+    movesLeft=endless?Infinity:LEVELS[0].moves;
+    levelStartScore=0;
+    selected=null;busy=false;hintTimer=0;hintCells=null;
+    fillBoard();
+    Particles.clear();
+    state=STATE.PLAY;
+    Audio2.startBGM();
+    flash(endless?"无尽模式 开始！":"第 1 关 开始！");
+  }
+  function nextLevel(){
+    level++;
+    if(level>=LEVELS.length){
+      endless=true;kinds=6;movesLeft=Infinity;
+      flash("全关通关！进入无尽模式！");
+    }else{
+      kinds=LEVELS[level].kinds;
+      movesLeft=LEVELS[level].moves;
+      levelStartScore=score;
+      flash(LEVELS[level].name+" 开始！");
+    }
+    fillBoard();
+    state=STATE.PLAY;
+  }
+  function flash(msg){flashMsg=msg;flashT=2.2;}
+
+  /* ---- 输入响应 ---- */
+  function cellAt(x,y){
+    const c=Math.floor((x-BOARD_X)/CELL),r=Math.floor((y-BOARD_Y)/CELL);
+    if(r<0||r>=N||c<0||c>=N)return null;
+    return {r,c};
+  }
+  function onPress(x,y){
+    if(state!==STATE.PLAY){onTap(x,y);return;}
+    if(hitHudPause(x,y)){togglePause();return;}
+    if(busy)return;
+    const cel=cellAt(x,y);
+    if(!cel)return;
+    cursor={r:cel.r,c:cel.c};
+    if(selected){
+      if(selected.r===cel.r&&selected.c===cel.c){selected=null;return;}
+      if(Math.abs(selected.r-cel.r)+Math.abs(selected.c-cel.c)===1){
+        trySwap(selected,cel);
+      }else{
+        selected=cel;Audio2.sfx.select();
+      }
+    }else{
+      selected=cel;Audio2.sfx.select();
+    }
+  }
+  function onSwipe(x,y,dx,dy){
+    if(state!==STATE.PLAY||busy)return;
+    const cel=cellAt(x,y);
+    if(!cel)return;
+    const d=Math.abs(dx)>Math.abs(dy)?{r:0,c:Math.sign(dx)}:{r:Math.sign(dy),c:0};
+    const tgt={r:cel.r+d.r,c:cel.c+d.c};
+    if(tgt.r<0||tgt.r>=N||tgt.c<0||tgt.c>=N)return;
+    selected=null;
+    trySwap(cel,tgt);
+  }
+  function onKey(code){
+    if(state===STATE.MENU){
+      if(code==="Enter"||code==="KeyJ")startGame(false);
+      if(code==="KeyL")startGame(true);
+      return;
+    }
+    if(state===STATE.OVER){
+      if(code==="Enter"||code==="KeyJ"||code==="Space")startGame(endless);
+      if(code==="Escape"){state=STATE.MENU;Audio2.stopBGM();}
+      return;
+    }
+    if(state===STATE.LEVELCLEAR){
+      if(code==="Enter"||code==="KeyJ"||code==="Space")nextLevel();
+      return;
+    }
+    if(state===STATE.PAUSE){
+      if(code==="KeyK"||code==="Space"||code==="Escape")state=STATE.PLAY;
+      return;
+    }
+    // PLAY
+    if(code==="KeyK"||code==="Space"||code==="Escape"){togglePause();return;}
+    if(busy)return;
+    const mv={KeyW:[-1,0],ArrowUp:[-1,0],KeyS:[1,0],ArrowDown:[1,0],
+              KeyA:[0,-1],ArrowLeft:[0,-1],KeyD:[0,1],ArrowRight:[0,1]}[code];
+    if(mv){
+      cursor.r=clamp(cursor.r+mv[0],0,N-1);
+      cursor.c=clamp(cursor.c+mv[1],0,N-1);
+      // 已选中时，方向键直接朝该方向交换
+      if(selected&&Math.abs(selected.r-cursor.r)+Math.abs(selected.c-cursor.c)===1){
+        trySwap(selected,{r:cursor.r,c:cursor.c});
+      }
+      return;
+    }
+    if(code==="KeyJ"||code==="Enter"){
+      if(selected&&selected.r===cursor.r&&selected.c===cursor.c){selected=null;}
+      else{selected={r:cursor.r,c:cursor.c};Audio2.sfx.select();}
+      return;
+    }
+    if(code==="KeyL"){ // L:显示提示
+      const mv2=findAnyMove();
+      if(mv2){hintCells=mv2;Audio2.sfx.hint();}
+      return;
+    }
+    // U/I/O 预留拓展按键
+  }
+
+  /* ---- 界面按钮 ---- */
+  const menuBtns=[
+    {label:"关卡模式",x:BASE_W/2,y:520,w:260,h:64,act:()=>startGame(false)},
+    {label:"无尽模式",x:BASE_W/2,y:610,w:260,h:64,act:()=>startGame(true)},
+  ];
+  const overBtns=[
+    {label:"重新开始",x:BASE_W/2,y:600,w:260,h:64,act:()=>startGame(endless)},
+    {label:"返回菜单",x:BASE_W/2,y:690,w:260,h:64,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
+  ];
+  const pauseBtns=[
+    {label:"继续游戏",x:BASE_W/2,y:460,w:260,h:64,act:()=>{state=STATE.PLAY;}},
+    {label:"重新开始",x:BASE_W/2,y:550,w:260,h:64,act:()=>startGame(endless)},
+    {label:"返回菜单",x:BASE_W/2,y:640,w:260,h:64,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
+  ];
+  const clearBtns=[
+    {label:"下一关",x:BASE_W/2,y:620,w:260,h:64,act:nextLevel},
+  ];
+  function activeBtns(){
+    if(state===STATE.MENU)return menuBtns;
+    if(state===STATE.OVER)return overBtns;
+    if(state===STATE.PAUSE)return pauseBtns;
+    if(state===STATE.LEVELCLEAR)return clearBtns;
+    return [];
+  }
+  function onTap(x,y){
+    for(const b of activeBtns()){
+      if(Math.abs(x-b.x)<b.w/2&&Math.abs(y-b.y)<b.h/2){
+        Audio2.sfx.click();b.act();return;
+      }
+    }
+  }
+  function togglePause(){
+    if(state===STATE.PLAY){state=STATE.PAUSE;Audio2.sfx.click();}
+    else if(state===STATE.PAUSE){state=STATE.PLAY;Audio2.sfx.click();}
+  }
+  function hitHudPause(x,y){return x>BASE_W-64&&x<BASE_W-8&&y>10&&y<58;}
+
+  /* ---- 每帧更新 ---- */
+  function update(dt){
+    hue=(hue+dt*18)%360;
+    if(flashT>0)flashT-=dt;
+    if(shake>0)shake=Math.max(0,shake-dt*35);
+    Particles.update(dt);
+    if(state!==STATE.PLAY)return;
+    // 交换动画推进
+    if(swapAnim){
+      swapAnim.t+=dt;
+      if(swapAnim.t>=swapAnim.dur){const d=swapAnim.done;swapAnim=null;d();}
+    }
+    // 下落动画推进
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const g=board[r][c];
+      if(!g)continue;
+      if(g.fall>0)g.fall=Math.max(0,g.fall-dt*900);
+      if(g.pop>0)g.pop=Math.min(1.6,g.pop+dt*6);
+    }
+    // 提示计时(8秒无操作)
+    if(!busy){
+      hintTimer+=dt;
+      if(hintTimer>8&&!hintCells){
+        hintCells=findAnyMove();
+      }
+    }
+  }
+  function resetHint(){hintTimer=0;hintCells=null;}
+
+  return {
+    update,onPress,onSwipe,onKey,onTap,togglePause,hitHudPause,activeBtns,resetHint,
+    get state(){return state;},get score(){return score;},get best(){return best;},
+    get lives(){return lives;},get level(){return level;},get endless(){return endless;},
+    get movesLeft(){return movesLeft;},get board(){return board;},
+    get cursor(){return cursor;},get selected(){return selected;},
+    get swapAnim(){return swapAnim;},get hintCells(){return hintCells;},
+    get shake(){return shake;},get flashMsg(){return flashMsg;},get flashT(){return flashT;},
+    get hue(){return hue;},get target(){return targetScore();},
+    get chain(){return chain;},
+    cellXY,
+  };
+})();
+
+/* ---------------- 6. 渲染系统 ---------------- */
+const Render=(()=>{
+  const cv=document.getElementById("game");
+  const ctx=cv.getContext("2d");
+  cv.width=BASE_W;cv.height=BASE_H;
+
+  const stars=[];
+  for(let i=0;i<70;i++)stars.push({x:rnd(0,BASE_W),y:rnd(0,BASE_H),r:rnd(0.5,1.8),p:rnd(0,Math.PI*2)});
+
+  function roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  function drawBG(t){
+    const g=ctx.createLinearGradient(0,0,0,BASE_H);
+    g.addColorStop(0,"#170b33");g.addColorStop(0.55,"#120a2e");g.addColorStop(1,"#1e0d33");
+    ctx.fillStyle=g;ctx.fillRect(0,0,BASE_W,BASE_H);
+    for(const s of stars){
+      const a=0.25+0.5*Math.abs(Math.sin(t*0.7+s.p));
+      ctx.globalAlpha=a;ctx.fillStyle="#e0d0ff";
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+
+  /* 宝石绘制：全部代码绘制，径向渐变+高光 */
+  function drawGem(x,y,type,size,alpha=1){
+    const gm=GEMS[type];
+    const s=size*0.42;
+    ctx.save();
+    ctx.globalAlpha=alpha;
+    ctx.translate(x,y);
+    ctx.shadowColor=gm.c1;ctx.shadowBlur=10;
+    const grad=ctx.createRadialGradient(-s*0.3,-s*0.3,s*0.1,0,0,s*1.3);
+    grad.addColorStop(0,"#ffffff");
+    grad.addColorStop(0.25,gm.c1);
+    grad.addColorStop(1,gm.c2);
+    ctx.fillStyle=grad;
+    ctx.beginPath();
+    switch(gm.shape){
+      case "circle":
+        ctx.arc(0,0,s,0,Math.PI*2);break;
+      case "square":
+        roundRectPath(-s*0.9,-s*0.9,s*1.8,s*1.8,s*0.35);break;
+      case "diamond":
+        ctx.moveTo(0,-s*1.1);ctx.lineTo(s*0.85,0);ctx.lineTo(0,s*1.1);ctx.lineTo(-s*0.85,0);ctx.closePath();break;
+      case "tri":
+        ctx.moveTo(0,-s);ctx.lineTo(s*0.95,s*0.75);ctx.lineTo(-s*0.95,s*0.75);ctx.closePath();break;
+      case "hex":
+        for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;ctx[i===0?"moveTo":"lineTo"](Math.cos(a)*s,Math.sin(a)*s);}ctx.closePath();break;
+      case "heart":
+        ctx.moveTo(0,s*0.7);
+        ctx.bezierCurveTo(-s*1.2,-s*0.2,-s*0.5,-s*1.1,0,-s*0.35);
+        ctx.bezierCurveTo(s*0.5,-s*1.1,s*1.2,-s*0.2,0,s*0.7);
+        ctx.closePath();break;
+    }
+    ctx.fill();
+    ctx.shadowBlur=0;
+    // 高光
+    ctx.globalAlpha=alpha*0.55;
+    ctx.fillStyle="#ffffff";
+    ctx.beginPath();ctx.ellipse(-s*0.32,-s*0.4,s*0.28,s*0.16,-0.6,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+  function roundRectPath(x,y,w,h,r){
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  function drawBoard(t){
+    // 底板
+    ctx.fillStyle="rgba(10,6,26,0.8)";
+    roundRect(BOARD_X-10,BOARD_Y-10,BOARD_W+20,N*CELL+20,16);ctx.fill();
+    ctx.strokeStyle=`hsla(${Game.hue},85%,62%,0.85)`;
+    ctx.lineWidth=2.5;
+    ctx.shadowColor=`hsla(${Game.hue},85%,62%,1)`;ctx.shadowBlur=16;
+    roundRect(BOARD_X-10,BOARD_Y-10,BOARD_W+20,N*CELL+20,16);ctx.stroke();
+    ctx.shadowBlur=0;
+    // 棋盘格
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      if((r+c)%2===0){
+        ctx.fillStyle="rgba(140,110,255,0.06)";
+        ctx.fillRect(BOARD_X+c*CELL,BOARD_Y+r*CELL,CELL,CELL);
+      }
+    }
+    // 提示高亮
+    if(Game.hintCells){
+      const a=0.3+0.3*Math.sin(t*6);
+      for(const h of Game.hintCells){
+        ctx.strokeStyle=`rgba(255,255,120,${a})`;ctx.lineWidth=3;
+        roundRect(BOARD_X+h.c*CELL+4,BOARD_Y+h.r*CELL+4,CELL-8,CELL-8,10);ctx.stroke();
+      }
+    }
+    // 宝石
+    const sa=Game.swapAnim;
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const g=Game.board[r]&&Game.board[r][c];
+      if(!g)continue;
+      let [x,y]=Game.cellXY(r,c);
+      y-=g.fall;                                   // 下落动画偏移
+      // 交换动画插值
+      if(sa){
+        const k=ease(clamp(sa.t/sa.dur,0,1));
+        if(sa.a.r===r&&sa.a.c===c){
+          const [bx,by]=Game.cellXY(sa.b.r,sa.b.c);
+          x+=(bx-x)*k;y+=(by-y)*k;
+        }else if(sa.b.r===r&&sa.b.c===c){
+          const [ax,ay]=Game.cellXY(sa.a.r,sa.a.c);
+          x+=(ax-x)*k;y+=(ay-y)*k;
+        }
+      }
+      let size=CELL;
+      let alpha=1;
+      if(g.pop>0){size=CELL*(1+g.pop*0.3);alpha=Math.max(0,1-g.pop);}
+      drawGem(x,y,g.type,size,alpha);
+      if(Math.random()<0.003)Particles.sparkle(x,y,GEMS[g.type].c1);
+    }
+    // 选中框
+    if(Game.selected){
+      const s=Game.selected;
+      const pulse=1+0.06*Math.sin(t*8);
+      ctx.strokeStyle="#ffffff";ctx.lineWidth=3.5;
+      ctx.shadowColor="#fff";ctx.shadowBlur=12;
+      roundRect(BOARD_X+s.c*CELL+3,BOARD_Y+s.r*CELL+3,(CELL-6)*pulse,(CELL-6)*pulse,10);ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+    // 键盘光标
+    const cu=Game.cursor;
+    ctx.strokeStyle=`hsla(${Game.hue},90%,70%,0.8)`;ctx.lineWidth=2;
+    roundRect(BOARD_X+cu.c*CELL+1,BOARD_Y+cu.r*CELL+1,CELL-2,CELL-2,8);ctx.stroke();
+  }
+
+  function drawHUD(){
+    ctx.textBaseline="middle";
+    // 标题小字
+    ctx.textAlign="left";
+    ctx.font="bold 26px sans-serif";
+    ctx.fillStyle="#fff";
+    ctx.fillText("分数 "+Game.score,24,40);
+    ctx.font="17px sans-serif";ctx.fillStyle="#b9a5ff";
+    ctx.fillText("最高 "+Game.best,24,72);
+    // 生命
+    for(let i=0;i<3;i++){
+      ctx.fillStyle=i<Game.lives?"#ff6b81":"rgba(255,107,129,0.18)";
+      drawHeart(220+i*36,42,11);
+    }
+    // 模式/关卡信息
+    ctx.textAlign="left";
+    ctx.font="bold 19px sans-serif";ctx.fillStyle="#ffd93d";
+    if(Game.endless){
+      ctx.fillText("无尽模式",24,110);
+    }else{
+      ctx.fillText(LEVELS[Game.level].name+"  目标 "+Game.target,24,110);
+      ctx.fillStyle="#6bffb0";
+      ctx.fillText("剩余步数 "+Game.movesLeft,24,142);
+      // 进度条
+      const pw=BASE_W-48,ph=10,px=24,py=170;
+      ctx.fillStyle="rgba(255,255,255,0.12)";
+      roundRect(px,py,pw,ph,5);ctx.fill();
+      const k=clamp(Game.score/Game.target,0,1);
+      const g=ctx.createLinearGradient(px,0,px+pw*k,0);
+      g.addColorStop(0,"#6bffb0");g.addColorStop(1,"#ffd93d");
+      ctx.fillStyle=g;
+      if(k>0){roundRect(px,py,Math.max(10,pw*k),ph,5);ctx.fill();}
+    }
+    // 暂停按钮
+    ctx.fillStyle="rgba(255,255,255,0.12)";
+    roundRect(BASE_W-60,14,48,40,10);ctx.fill();
+    ctx.fillStyle="#fff";
+    ctx.fillRect(BASE_W-47,24,6,20);ctx.fillRect(BASE_W-33,24,6,20);
+    // 底部操作提示
+    ctx.textAlign="center";ctx.font="15px sans-serif";
+    ctx.fillStyle="rgba(200,180,255,0.5)";
+    ctx.fillText("点击/滑动交换宝石 · WASD移动光标 J选择 · L提示 · K/空格暂停",BASE_W/2,BASE_H-24);
+  }
+  function drawHeart(x,y,s){
+    ctx.beginPath();
+    ctx.moveTo(x,y+s*0.35);
+    ctx.bezierCurveTo(x-s,y-s*0.6,x-s*0.4,y-s*1.1,x,y-s*0.35);
+    ctx.bezierCurveTo(x+s*0.4,y-s*1.1,x+s,y-s*0.6,x,y+s*0.35);
+    ctx.fill();
+  }
+
+  function drawButton(b,t){
+    const glow=0.5+0.5*Math.sin(t*3);
+    ctx.shadowColor=`hsla(${Game.hue},90%,60%,${0.6+glow*0.4})`;ctx.shadowBlur=18;
+    const g=ctx.createLinearGradient(b.x-b.w/2,b.y-b.h/2,b.x+b.w/2,b.y+b.h/2);
+    g.addColorStop(0,`hsl(${Game.hue},70%,40%)`);
+    g.addColorStop(1,`hsl(${(Game.hue+60)%360},70%,30%)`);
+    ctx.fillStyle=g;
+    roundRect(b.x-b.w/2,b.y-b.h/2,b.w,b.h,16);ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,0.6)";ctx.lineWidth=2;
+    roundRect(b.x-b.w/2,b.y-b.h/2,b.w,b.h,16);ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.fillStyle="#fff";ctx.font="bold 26px sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillText(b.label,b.x,b.y+1);
+  }
+  function overlay(alpha=0.7){
+    ctx.fillStyle=`rgba(8,4,20,${alpha})`;
+    ctx.fillRect(0,0,BASE_W,BASE_H);
+  }
+  function title(txt,y,size,color){
+    ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.font=`bold ${size}px sans-serif`;
+    ctx.shadowColor=color;ctx.shadowBlur=26;
+    ctx.fillStyle=color;
+    ctx.fillText(txt,BASE_W/2,y);
+    ctx.shadowBlur=0;
+  }
+
+  // 菜单展示用旋转宝石
+  function drawMenuGems(t){
+    for(let i=0;i<6;i++){
+      const a=t*0.5+i*Math.PI/3;
+      const x=BASE_W/2+Math.cos(a)*170;
+      const y=300+Math.sin(a)*60;
+      drawGem(x,y,i,54+8*Math.sin(t*2+i),0.9);
+    }
+  }
+
+  function draw(t){
+    ctx.save();
+    if(Game.shake>0)ctx.translate(rnd(-Game.shake,Game.shake)*0.5,rnd(-Game.shake,Game.shake)*0.5);
+    drawBG(t);
+    const st=Game.state;
+    if(st!==STATE.MENU){
+      drawBoard(t);
+      drawHUD();
+    }
+    Particles.draw(ctx);
+
+    if(st===STATE.MENU){
+      title("宝 石 迷 阵",180,58,`hsl(${Game.hue},95%,70%)`);
+      drawMenuGems(t);
+      ctx.fillStyle="#c9b8ff";ctx.font="17px sans-serif";ctx.textAlign="center";
+      ctx.fillText("点击或滑动交换相邻宝石，三连消除得分",BASE_W/2,420);
+      ctx.fillText("键盘: WASD/方向键移动 · J/回车选择 · L提示 · K/空格暂停",BASE_W/2,450);
+      for(const b of Game.activeBtns())drawButton(b,t);
+      ctx.fillStyle="rgba(200,180,255,0.6)";ctx.font="16px sans-serif";
+      ctx.fillText("最高分: "+Game.best,BASE_W/2,700);
+    }else if(st===STATE.PAUSE){
+      overlay();
+      title("已 暂 停",320,54,"#8fb8ff");
+      for(const b of Game.activeBtns())drawButton(b,t);
+    }else if(st===STATE.OVER){
+      overlay();
+      title("游 戏 结 束",300,56,"#ff6b81");
+      ctx.fillStyle="#fff";ctx.font="bold 34px sans-serif";ctx.textAlign="center";
+      ctx.fillText("得分: "+Game.score,BASE_W/2,410);
+      ctx.fillStyle="#ffd93d";ctx.font="22px sans-serif";
+      ctx.fillText("最高分: "+Game.best+(Game.score>=Game.best?"  新纪录!":""),BASE_W/2,465);
+      for(const b of Game.activeBtns())drawButton(b,t);
+    }else if(st===STATE.LEVELCLEAR){
+      overlay();
+      title("关 卡 完 成 !",310,56,"#ffd93d");
+      ctx.fillStyle="#fff";ctx.font="bold 28px sans-serif";ctx.textAlign="center";
+      ctx.fillText("当前得分: "+Game.score,BASE_W/2,430);
+      for(const b of Game.activeBtns())drawButton(b,t);
+    }
+
+    if(Game.flashT>0&&st===STATE.PLAY){
+      ctx.globalAlpha=clamp(Game.flashT,0,1);
+      title(Game.flashMsg,215,30,"#ffd93d");
+      ctx.globalAlpha=1;
+    }
+    ctx.restore();
+  }
+  return {draw,cv};
+})();
+
+/* ---------------- 7. 缩放适配与主循环 ---------------- */
+const Screen=(()=>{
+  const cv=Render.cv;
+  function resize(){
+    const w=window.innerWidth,h=window.innerHeight;
+    const scale=Math.min(w/BASE_W,h/BASE_H);
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    cv.width=BASE_W*dpr;cv.height=BASE_H*dpr;
+    cv.getContext("2d").setTransform(dpr,0,0,dpr,0,0);
+    cv.style.width=(BASE_W*scale)+"px";
+    cv.style.height=(BASE_H*scale)+"px";
+  }
+  function pointToBase(px,py){
+    const rect=cv.getBoundingClientRect();
+    return {x:(px-rect.left)*BASE_W/rect.width, y:(py-rect.top)*BASE_H/rect.height};
+  }
+  window.addEventListener("resize",resize);
+  window.addEventListener("orientationchange",()=>setTimeout(resize,300));
+  resize();
+  return {pointToBase};
+})();
+
+let last=performance.now();
+function loop(now){
+  let dt=(now-last)/1000;last=now;
+  if(dt>0.1)dt=0.1;
+  Game.update(dt);
+  Render.draw(now/1000);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
 </body>
 </html>
