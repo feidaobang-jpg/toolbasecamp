@@ -104,6 +104,29 @@ except Exception as exc:  # pragma: no cover
 
     _mm_video_import_error = str(exc)
 
+_hh_import_error = ""
+try:
+    from happyhorse_video import (
+        router as hh_router,
+        _wire as wire_hh,
+        get_happyhorse_config,
+        happyhorse_configured,
+    )
+except Exception as exc:  # pragma: no cover
+    hh_router = None
+
+    def wire_hh(*_a, **_k):
+        return None
+
+    def get_happyhorse_config():
+        return {"configured": False, "error": str(exc)}
+
+    def happyhorse_configured():
+        return False
+
+    _hh_import_error = str(exc)
+    print(f"[happyhorse] import failed: {exc}")
+
 _music_import_error = ""
 try:
     from fun_music import (
@@ -558,6 +581,12 @@ if mm_video_router is not None:
     app.include_router(mm_video_router)
 else:
     print("[minimax-video] router not mounted:", _mm_video_import_error or "unknown")
+
+if hh_router is not None:
+    wire_hh(get_conn, require_db, get_current_user)
+    app.include_router(hh_router)
+else:
+    print("[happyhorse] router not mounted:", _hh_import_error or "unknown")
 
 try:
     from game_rooms_api import router as tank_coop_router
@@ -1029,6 +1058,10 @@ def health():
         "minimax_h3": get_minimax_video_config(),
         "minimax_h3_configured": minimax_video_configured(),
         "minimax_h3_import_error": _mm_video_import_error or None,
+        "happyhorse_t2v_api": "/happyhorse/t2v/submit" in paths,
+        "happyhorse_t2v": get_happyhorse_config(),
+        "happyhorse_t2v_configured": happyhorse_configured(),
+        "happyhorse_t2v_import_error": _hh_import_error or None,
         "fun_music_api": "/music/generate" in paths,
         "fun_music": get_fun_music_config(),
         "fun_music_configured": fun_music_configured(),
@@ -1037,7 +1070,7 @@ def health():
         "tts": get_tts_config(),
         "tts_configured": tts_configured(),
         "tts_import_error": _tts_import_error or None,
-        "api_features": ["wan_i2v", "minimax_h3", "fun_music", "tts"],
+        "api_features": ["wan_i2v", "minimax_h3", "happyhorse_t2v", "fun_music", "tts"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

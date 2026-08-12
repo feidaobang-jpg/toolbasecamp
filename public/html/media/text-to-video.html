@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text to Video - Tool Basecamp</title>
+  <meta name="description" content="Generate a short video from a text prompt with HappyHorse 1.1. Sign-in required; billed from balance on success.">
+  <link rel="stylesheet" href="../../css/base.css?v=hht2v1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=hht2v1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=hht2v1" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=hht2v1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.textToVideo.title">Text to Video</h1>
+        <p data-i18n="tools.textToVideo.desc">Describe a scene in text and generate a short HappyHorse clip (with audio). Sign-in required; billed from balance on success.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in to use this cloud tool.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card tb-form">
+          <p class="img-cloud-quota" id="balance-line"></p>
+          <p class="wan-cost-note" id="cost-note" data-i18n="tools.textToVideo.costNote">
+            HappyHorse 1.1: 480P ~¥0.9/s, 720P ~¥1.8/s, 1080P ~¥2.4/s. Charged only on success.
+          </p>
+          <p class="wan-tier-hint" id="estimate-line"></p>
+          <p class="instruct-cost-hint" id="model-line" data-i18n="tools.textToVideo.modelLine">Model: happyhorse-1.1-t2v · dynamics / texture / audio upgrade</p>
+
+          <div class="field-row">
+            <label class="field-label" for="prompt-input" data-i18n="tools.textToVideo.promptLabel">Prompt</label>
+            <div class="wan-presets" id="prompt-presets" role="group" aria-label="Prompt presets">
+              <button type="button" class="wan-preset" data-preset="city" data-i18n="tools.textToVideo.presetCity">City rain</button>
+              <button type="button" class="wan-preset" data-preset="nature" data-i18n="tools.textToVideo.presetNature">Nature breeze</button>
+              <button type="button" class="wan-preset" data-preset="product" data-i18n="tools.textToVideo.presetProduct">Product shine</button>
+              <button type="button" class="wan-preset" data-preset="portrait" data-i18n="tools.textToVideo.presetPortrait">Portrait talk</button>
+              <button type="button" class="wan-preset" data-preset="fantasy" data-i18n="tools.textToVideo.presetFantasy">Fantasy flight</button>
+            </div>
+            <textarea id="prompt-input" class="rec-input wan-prompt" rows="4" maxlength="2500"
+              data-i18n-placeholder="tools.textToVideo.promptPlaceholder"
+              placeholder="e.g. A golden retriever running on a beach at sunset, waves sparkling, cinematic camera tracking"></textarea>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="duration-input" data-i18n="tools.textToVideo.durationLabel">Duration</label>
+            <input type="number" id="duration-input" class="rec-input wan-duration" min="3" max="15" step="1" value="5" />
+            <span class="wan-field-hint" id="duration-hint" data-i18n="tools.textToVideo.durationHint">3–15 seconds (integer)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="resolution-select" data-i18n="tools.textToVideo.resolutionLabel">Resolution</label>
+            <select id="resolution-select">
+              <option value="480P" data-i18n="tools.textToVideo.res480">480P · cheaper</option>
+              <option value="720P" selected data-i18n="tools.textToVideo.res720">720P · recommended</option>
+              <option value="1080P" data-i18n="tools.textToVideo.res1080">1080P · sharper</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="ratio-select" data-i18n="tools.textToVideo.ratioLabel">Aspect ratio</label>
+            <select id="ratio-select">
+              <option value="16:9" selected>16:9</option>
+              <option value="9:16">9:16</option>
+              <option value="1:1">1:1</option>
+              <option value="4:3">4:3</option>
+              <option value="3:4">3:4</option>
+            </select>
+          </div>
+
+          <div class="tip-box">
+            <b data-i18n="tools.textToVideo.tip">Tip:</b>
+            <span data-i18n="tools.textToVideo.tipBody">Usually 1–5 min. Start with 5s · 720P · 16:9. Charged only on success.</span>
+          </div>
+
+          <div class="tip-box" id="wechat-file-download-tip" hidden>
+            <b>WeChat:</b>
+            <span data-i18n="common.wechatFileDownloadTip">Downloads are blocked in WeChat. Please open in your system browser and download again.</span>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" data-i18n="tools.textToVideo.run">Generate</button>
+            <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.textToVideo.downloadMp4">Download MP4</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.textToVideo.clear">Clear</button>
+          </div>
+
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+
+          <div class="wan-result" id="result-wrap" hidden>
+            <video id="result-video" controls playsinline></video>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js?v=hht2v1"></script>
+  <script src="../../js/locales/zh-CN.js?v=hht2v1"></script>
+  <script src="../../js/i18n.js?v=hht2v1"></script>
+  <script src="../../js/config.js?v=hht2v1"></script>
+  <script src="../../js/base.js?v=hht2v1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=hht2v1"></script>
+  <script src="../../js/media/text-to-video.js?v=hht2v1"></script>
+</body>
+</html>

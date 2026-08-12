@@ -117,6 +117,8 @@
             'Please enter an edit instruction.': 'tools.instructEdit.needPrompt',
             'Please enter an edit instruction or choose a style preset.': 'tools.instructEdit.needPromptOrPreset',
             'Please enter a motion prompt': 'tools.imageToAnimation.needPrompt',
+            'Please enter a prompt': 'tools.textToVideo.needPrompt',
+            'Please enter a scene prompt': 'tools.imageToAnimation.needPrompt',
             'Please upload an image file': 'tools.imageCloud.invalidFile',
             'Empty file': 'tools.imageCloud.invalidFile',
             'Empty image': 'tools.imageCloud.invalidFile',
