@@ -2128,7 +2128,8 @@ window.TB_LOCALES.en = {
             resolutionTooLarge: 'Image resolution is too large. Please downscale and retry.',
             resolutionTooSmall: 'Image is too small (min 240×240). Please use a clearer, larger photo.',
             editTimeout: 'Image edit timed out. Multi-reference is slower — try fewer refs or retry later. Charged only on success.',
-            requestTimeout: 'Request timed out or the connection dropped. In WeChat, stay on this page; multi-image runs one-by-one now — please retry.',
+            requestTimeout: 'Request timed out or the connection dropped. Please retry. Multi-model runs take longer — try fewer models.',
+            requestTimeoutWeChat: 'Request timed out or the connection dropped. In WeChat, stay on this page; multi-image runs one-by-one now — please retry.',
             genTimeout: 'Image generation timed out. Please try again.',
             editNoImage: 'The model returned no image. Try another prompt or photo.',
             genNoImage: 'The model returned no image. Try another prompt.',
@@ -2336,7 +2337,7 @@ window.TB_LOCALES.en = {
             costHintEmpty: 'Select at least one model.',
             costHint: 'This run ¥{price} ({models} models = {runs} calls; billed on success)',
             tip: 'Tip:',
-            tipBody: 'Charged only on success. Results saved in local history. Full color by default (unless you ask for B&W/line art). MiniMax Image-01 recommended.',
+            tipBody: 'Charged only on success. Results saved in local history. Full color by default (unless you ask for B&W/line art). MiniMax Image-01 recommended. Multiple models run one by one.',
             publicLabel: 'Publish to the Images page',
             publicHint: 'Off by default. When on, everyone can browse and download it on Images.',
             download: 'Download',
@@ -2346,6 +2347,7 @@ window.TB_LOCALES.en = {
             promptTooLong: 'Prompt is too long. Please shorten it.',
             failed: 'Generation failed',
             partialFail: 'Some failed:',
+            progressModel: 'Generating {current}/{total}: {model}',
             dashscopeMissing: 'Image service is not ready. Please try again later.'
         },
         aiMusic: {

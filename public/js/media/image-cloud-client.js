@@ -42,6 +42,9 @@
             || lower.indexOf('the operation was aborted') !== -1
             || lower.indexOf('the user aborted') !== -1
         ) {
+            if (isWeChat()) {
+                return tr('tools.imageCloud.requestTimeoutWeChat');
+            }
             return tr('tools.imageCloud.requestTimeout');
         }
         if (text.indexOf('Failed to fetch') !== -1) return tr('tools.imageCloud.networkError');

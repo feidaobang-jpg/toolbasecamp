@@ -221,8 +221,14 @@
       : tr('tools.textToImage.selectAllModels');
   }
 
-  function setBusy(on) {
-    if (busyEl) busyEl.hidden = !on;
+  function setBusy(on, msg) {
+    if (busyEl) {
+      busyEl.hidden = !on;
+      var label = busyEl.querySelector('span:not(.img-cloud-spinner)');
+      if (label) {
+        label.textContent = msg || tr('tools.imageCloud.processing');
+      }
+    }
     if (runBtn) runBtn.disabled = !!on || !canRun();
     if (clearBtn) clearBtn.disabled = !!on;
     if (selectAllBtn) selectAllBtn.disabled = !!on;
@@ -234,6 +240,13 @@
       var chips = styleRow.querySelectorAll('.rec-chip');
       for (var c = 0; c < chips.length; c++) chips[c].disabled = !!on;
     }
+  }
+
+  function oneModelTimeoutMs(modelId) {
+    var id = String(modelId || '').toLowerCase();
+    var isPro = id.indexOf('-pro') >= 0;
+    var ms = isPro ? 240000 : 180000;
+    return Math.min(600000, ms);
   }
 
   function revokeResults() {
@@ -428,26 +441,74 @@
         return;
       }
       C.setError(errorBox, '');
-      setBusy(true);
-      var fd = new FormData();
-      fd.append('prompt', prompt);
-      fd.append('size', selectedSize());
-      fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
-      for (var m = 0; m < models.length; m++) fd.append('models', models[m].id);
-      C.apiJson('/image/text-to-image', { method: 'POST', body: fd, timeoutMs: 60000 }).then(function (data) {
-        if (data.aiWallet) applyWallet(data.aiWallet);
-        var images = data.images;
-        if ((!images || !images.length) && data.imageBase64) {
-          images = [{
-            model: data.model || models[0].id,
-            imageBase64: data.imageBase64,
-            contentType: data.contentType || 'image/png'
-          }];
+      // One HTTP call per model — avoids gateway/client timeouts when comparing many models.
+      setBusy(true, models.length > 1
+        ? tr('tools.textToImage.progressModel', {
+          current: 1,
+          total: models.length,
+          model: modelTitle(models[0].id)
+        })
+        : tr('tools.imageCloud.processing'));
+
+      var allImages = [];
+      var partialErrors = [];
+
+      (async function () {
+        for (var mi = 0; mi < models.length; mi++) {
+          var mid = models[mi].id;
+          if (models.length > 1) {
+            setBusy(true, tr('tools.textToImage.progressModel', {
+              current: mi + 1,
+              total: models.length,
+              model: modelTitle(mid)
+            }));
+          }
+          var fd = new FormData();
+          fd.append('prompt', prompt);
+          fd.append('size', selectedSize());
+          fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
+          fd.append('models', mid);
+          try {
+            var data = await C.apiJson('/image/text-to-image', {
+              method: 'POST',
+              body: fd,
+              timeoutMs: oneModelTimeoutMs(mid)
+            });
+            if (data.aiWallet) applyWallet(data.aiWallet);
+            var images = data.images;
+            if ((!images || !images.length) && data.imageBase64) {
+              images = [{
+                model: data.model || mid,
+                imageBase64: data.imageBase64,
+                contentType: data.contentType || 'image/png'
+              }];
+            }
+            if (!images || !images.length) {
+              throw new Error(tr('tools.textToImage.failed'));
+            }
+            for (var ii = 0; ii < images.length; ii++) {
+              if (!images[ii].model) images[ii].model = mid;
+              allImages.push(images[ii]);
+            }
+            if (data.partialErrors && data.partialErrors.length) {
+              for (var pe = 0; pe < data.partialErrors.length; pe++) {
+                partialErrors.push(data.partialErrors[pe]);
+              }
+            }
+            renderResults(allImages, partialErrors);
+          } catch (errOne) {
+            var msg = (errOne && errOne.message) || String(errOne || '');
+            partialErrors.push(modelTitle(mid) + ': ' + msg);
+            if (allImages.length) renderResults(allImages, partialErrors);
+          }
         }
-        if (!images || !images.length) throw new Error(tr('tools.textToImage.failed'));
-        renderResults(images, data.partialErrors);
-        if (histPanel) histPanel.save(images, { prompt: prompt });
-      }).catch(function (err) {
+        if (!allImages.length) {
+          throw new Error(partialErrors.length
+            ? (tr('tools.textToImage.partialFail') + ' ' + partialErrors.join('; '))
+            : tr('tools.textToImage.failed'));
+        }
+        if (histPanel) histPanel.save(allImages, { prompt: prompt });
+      })().catch(function (err) {
         C.setError(errorBox, err.message);
       }).finally(function () {
         setBusy(false);
@@ -461,7 +522,7 @@
       revokeResults();
       var inputs = modelInputs();
       for (var i = 0; i < inputs.length; i++) {
-        inputs[i].checked = inputs[i].value === 'z-image-turbo';
+        inputs[i].checked = inputs[i].value === 'image-01';
       }
       var sq = document.querySelector('input[name="t2i-size"][value="square"]');
       if (sq) sq.checked = true;

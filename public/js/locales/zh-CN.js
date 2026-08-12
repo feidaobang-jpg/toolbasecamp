@@ -2127,7 +2127,8 @@ window.TB_LOCALES['zh-CN'] = {
             resolutionTooLarge: '图片分辨率过大，请缩小后重试',
             resolutionTooSmall: '图片分辨率过小（宽高需至少 240 像素），请换更清晰的大图',
             editTimeout: '改图超时。多图合成较慢，可减少参考图或稍后重试；成功出图才会扣费。',
-            requestTimeout: '请求超时或连接中断。微信内多张图请保持页面不要切换；已改为逐张处理，可再试一次。',
+            requestTimeout: '请求超时或连接中断，请稍后重试。多模型生成较慢，可少勾几个模型再试。',
+            requestTimeoutWeChat: '请求超时或连接中断。微信内请保持页面不要切换；多张图已改为逐张处理，可再试一次。',
             genTimeout: '生图超时，请稍后重试',
             editNoImage: '模型未返回图片，请换描述或图片再试',
             genNoImage: '模型未返回图片，请换描述再试',
@@ -2335,7 +2336,7 @@ window.TB_LOCALES['zh-CN'] = {
             costHintEmpty: '请选择至少一个模型。',
             costHint: '本次扣 ¥{price}（{models} 个模型 = {runs} 次，成功才扣费）',
             tip: '提示：',
-            tipBody: '成功出图才扣余额，失败不扣。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。推荐 MiniMax Image-01。',
+            tipBody: '成功出图才扣余额，失败不扣。结果保存在本机历史。默认输出全彩（除非你要求黑白/线稿）。推荐 MiniMax Image-01。多模型会逐个生成并展示。',
             publicLabel: '公开到顶部「图片」列表',
             publicHint: '默认不公开。勾选后所有人可在「图片」页浏览与下载。',
             download: '下载',
@@ -2345,6 +2346,7 @@ window.TB_LOCALES['zh-CN'] = {
             promptTooLong: '提示词过长，请缩短后再试',
             failed: '生成失败',
             partialFail: '部分失败：',
+            progressModel: '正在生成 {current}/{total}：{model}',
             dashscopeMissing: '生图服务暂未就绪，请稍后再试。'
         },
         aiMusic: {
