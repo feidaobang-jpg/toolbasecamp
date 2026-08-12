@@ -623,6 +623,10 @@ window.TB_LOCALES['zh-CN'] = {
             cropApply: '确认裁切',
             cropCancel: '取消'
         },
+        brickBreaker: {
+            title: '打砖块',
+            desc: '竖屏霓虹打砖块：挡板弹球清砖块，道具与关卡挑战。触屏可玩，本地运行。'
+        },
         gemswap: {
             title: '宝石迷阵',
             desc: '交换相邻宝石消三连；达成目标分过关，颜色种类递增、步数收紧。本地运行。',

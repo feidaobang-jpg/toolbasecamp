@@ -624,6 +624,10 @@ window.TB_LOCALES.en = {
             cropApply: 'Use this crop',
             cropCancel: 'Cancel'
         },
+        brickBreaker: {
+            title: 'Brick Breaker',
+            desc: 'Neon portrait brick breaker: bounce the ball, clear bricks, grab power-ups. Touch-friendly, runs locally.'
+        },
         gemswap: {
             title: 'Gem Match',
             desc: 'Swap gems to match three+. Reach the score goal to clear; more colors and fewer moves each level.',

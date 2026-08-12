@@ -241,6 +241,12 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://toolbasecamp.com/html/game/brick_breaker.html</loc>
+    <lastmod>2026-08-12T11:45:00Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://toolbasecamp.com/html/game/fish-feast.html</loc>
     <lastmod>2026-08-04T09:45:32Z</lastmod>
     <changefreq>weekly</changefreq>

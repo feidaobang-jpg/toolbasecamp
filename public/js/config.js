@@ -258,7 +258,7 @@ const gamesConfig = {
                 { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=2' },
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=6' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
-                
+                { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=1' }
             ]
         },
         {
