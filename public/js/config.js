@@ -253,31 +253,19 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.polished',
             items: [
-                { titleKey: 'tools.sudoku.title', url: 'html/game/sudoku.html?v=4' },
                 { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
                 { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=3' },
                 { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=2' },
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=6' },
-                { titleKey: 'tools.breakout.title', url: 'html/game/breakout.html?v=2' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
-                { titleKey: 'tools.goldminer.title', url: 'html/game/goldminer.html?v=12' },
-                { titleKey: 'tools.descent.title', url: 'html/game/descent.html?v=3' },
-                { titleKey: 'tools.g2048.title', url: 'html/game/g2048.html?v=2' }
+                
             ]
         },
         {
             titleKey: 'games.groups.draft',
             items: [
-                { titleKey: 'tools.snake.title', url: 'html/game/snake.html?v=4' },
-                { titleKey: 'tools.catcher.title', url: 'html/game/catcher.html?v=8' },
-                { titleKey: 'tools.memory.title', url: 'html/game/memory.html?v=3' },
-                { titleKey: 'tools.mines.title', url: 'html/game/mines.html?v=3' },
                 { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=5' },
-                { titleKey: 'tools.diverDave.title', url: 'html/game/diver-dave.html?v=2' },
-                { titleKey: 'tools.gardenDefense.title', url: 'html/game/garden-defense.html?v=2' },
-                { titleKey: 'tools.blitzRun3d.title', url: 'html/game/blitz-run.html?v=13' },
-                { titleKey: 'tools.starSerpent.title', url: 'html/game/star-serpent.html?v=3' },
                 { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=3' }
             ]
         },
