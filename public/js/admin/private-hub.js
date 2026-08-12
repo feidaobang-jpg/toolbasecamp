@@ -53,20 +53,6 @@
     if (gateLogin) gateLogin.href = loginHref;
   }
 
-  function maskAccountLabel(user) {
-    if (!user) return 'Admin';
-    var phone = String(user.phone || '').trim();
-    if (phone.length >= 7) return phone.slice(0, 3) + '****' + phone.slice(-4);
-    if (phone) return phone;
-    var email = String(user.email || '').trim();
-    if (email) {
-      var at = email.indexOf('@');
-      if (at > 1) return email.slice(0, 2) + '***' + email.slice(at);
-      return email;
-    }
-    return 'Admin';
-  }
-
   function showApp(user) {
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
@@ -76,7 +62,8 @@
     if (app) app.classList.remove('hidden');
     if (loginLink) loginLink.classList.add('hidden');
     if (authLabel) {
-      authLabel.textContent = maskAccountLabel(user);
+      authLabel.textContent = '';
+      authLabel.classList.add('hidden');
     }
     renderGroups();
   }
