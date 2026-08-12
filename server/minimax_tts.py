@@ -211,15 +211,13 @@ def ensure_tts_tables(cur) -> None:
         """
         CREATE TABLE IF NOT EXISTS tts_cloned_voices (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
+            user_id BIGINT NOT NULL,
             voice_id VARCHAR(128) NOT NULL,
             label VARCHAR(128) NULL,
             clone_fee_charged TINYINT NOT NULL DEFAULT 0,
             created_at DATETIME NOT NULL,
             UNIQUE KEY uq_tts_voice (voice_id),
-            KEY idx_tts_user (user_id),
-            CONSTRAINT fk_tts_user FOREIGN KEY (user_id)
-                REFERENCES users(id) ON DELETE CASCADE
+            KEY idx_tts_user (user_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
