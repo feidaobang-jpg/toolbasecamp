@@ -10,6 +10,8 @@
   var costNote = document.getElementById('cost-note');
   var modelRow = document.getElementById('model-row');
   var voiceList = document.getElementById('voice-list');
+  var voiceSelected = document.getElementById('voice-selected');
+  var voiceFilter = document.getElementById('voice-filter');
   var textEl = document.getElementById('text');
   var charCount = document.getElementById('char-count');
   var charMax = document.getElementById('char-max');
@@ -143,17 +145,80 @@
     }
   }
 
+  function voiceLabelOf(vid) {
+    var i;
+    for (i = 0; i < clonedVoices.length; i++) {
+      if (clonedVoices[i].voice_id === vid) {
+        return (clonedVoices[i].label || vid) + (clonedVoices[i].cloneFeeCharged ? '' : ' *');
+      }
+    }
+    for (i = 0; i < systemVoices.length; i++) {
+      if (systemVoices[i].voice_id === vid) {
+        return systemVoices[i].voice_name || vid;
+      }
+    }
+    return vid || '—';
+  }
+
+  function updateSelectedVoiceLine() {
+    if (!voiceSelected) return;
+    voiceSelected.innerHTML =
+      tr('tools.speechTts.voiceSelectedPrefix') +
+      ' <strong>' +
+      escapeHtml(voiceLabelOf(voiceId)) +
+      '</strong>';
+  }
+
+  function escapeHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function syncVoiceActiveOnly() {
+    if (!voiceList) return;
+    var chips = voiceList.querySelectorAll('.rec-chip');
+    for (var i = 0; i < chips.length; i++) {
+      var on = (chips[i].getAttribute('data-voice') || '') === voiceId;
+      chips[i].classList.toggle('is-active', on);
+      chips[i].setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+    updateSelectedVoiceLine();
+  }
+
+  function filterQuery() {
+    return ((voiceFilter && voiceFilter.value) || '').trim().toLowerCase();
+  }
+
+  function voiceMatches(label, vid, q) {
+    if (!q) return true;
+    return String(label || '').toLowerCase().indexOf(q) !== -1
+      || String(vid || '').toLowerCase().indexOf(q) !== -1;
+  }
+
   function renderVoices() {
     if (!voiceList) return;
+    var q = filterQuery();
+    var scrollTop = voiceList.scrollTop;
     voiceList.innerHTML = '';
+    var shown = 0;
+
     function addChip(vid, label, extraClass) {
+      if (!voiceMatches(label, vid, q)) return;
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'rec-chip' + (vid === voiceId ? ' is-active' : '') + (extraClass ? ' ' + extraClass : '');
       btn.setAttribute('data-voice', vid);
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('aria-selected', vid === voiceId ? 'true' : 'false');
+      btn.title = vid;
       btn.textContent = label;
       voiceList.appendChild(btn);
+      shown += 1;
     }
+
     for (var c = 0; c < clonedVoices.length; c++) {
       var cv = clonedVoices[c];
       var lab = (cv.label || cv.voice_id) + (cv.cloneFeeCharged ? '' : ' *');
@@ -163,11 +228,19 @@
       var sv = systemVoices[s];
       addChip(sv.voice_id, sv.voice_name || sv.voice_id);
     }
+
+    if (!shown) {
+      var empty = document.createElement('div');
+      empty.className = 'tts-voice-empty';
+      empty.textContent = tr('tools.speechTts.voiceFilterEmpty');
+      voiceList.appendChild(empty);
+    }
+
     if (!voiceId && systemVoices.length) {
       voiceId = systemVoices[0].voice_id;
-      renderVoices();
-      return;
     }
+    updateSelectedVoiceLine();
+    voiceList.scrollTop = scrollTop;
   }
 
   function loadStatus() {
@@ -201,10 +274,16 @@
   if (voiceList) {
     voiceList.addEventListener('click', function (e) {
       var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
-      if (!btn) return;
+      if (!btn || btn.disabled) return;
       voiceId = btn.getAttribute('data-voice') || voiceId;
-      renderVoices();
+      syncVoiceActiveOnly();
       updateCostNote();
+    });
+  }
+
+  if (voiceFilter) {
+    voiceFilter.addEventListener('input', function () {
+      renderVoices();
     });
   }
 
@@ -329,7 +408,8 @@
 
   document.addEventListener('tb:locale', function () {
     updateCostNote();
-    updateBalance();
+    updateSelectedVoiceLine();
+    renderVoices();
   });
 
   C.requireLogin(gate, app).then(function (user) {

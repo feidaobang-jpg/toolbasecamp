@@ -5,14 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Speech TTS - Tool Basecamp</title>
   <meta name="description" content="Text-to-speech and voice cloning with MiniMax speech-2.8. Sign-in required; charged from wallet on success.">
-  <link rel="stylesheet" href="../../css/base.css?v=tts1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=tts1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=tts1" />
-  <link rel="stylesheet" href="../../css/tools-form.css?v=tts1" />
+  <link rel="stylesheet" href="../../css/base.css?v=tts2" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=tts2" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=tts2" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=tts2" />
   <style>
     .tts-audio { width: 100%; margin: 12px 0 8px; }
+    .tts-voice-toolbar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px;
+    }
+    .tts-voice-toolbar input[type="search"] {
+      flex: 1 1 160px; min-width: 140px; max-width: 320px;
+      border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 10px; font-size: 14px;
+    }
+    .tts-voice-selected {
+      font-size: 13px; color: #475569; margin: 0 0 8px;
+    }
+    .tts-voice-selected strong { color: #0f172a; font-weight: 600; }
     .tts-voice-list {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; max-height: 160px; overflow: auto;
+      display: flex; flex-wrap: wrap; gap: 8px;
+      max-height: 200px; overflow: auto;
+      padding: 10px; margin-bottom: 4px;
+      border: 1px solid #e2e8f0; border-radius: 10px; background: #fff;
+    }
+    .tts-voice-list .rec-chip {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      line-height: 1.3;
+      cursor: pointer;
+    }
+    .tts-voice-list .rec-chip.is-active {
+      border-color: #2563eb;
+      color: #2563eb;
+      background: #eff6ff;
+      box-shadow: inset 0 0 0 1px #2563eb;
+    }
+    .tts-voice-list .rec-chip.is-clone {
+      border-style: dashed;
+    }
+    .tts-voice-empty {
+      font-size: 13px; color: #94a3b8; padding: 8px 4px;
     }
     .tts-clone-box {
       border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; background: #f8fafc; margin-top: 12px;
@@ -54,7 +90,12 @@
 
           <div class="field-row">
             <span class="field-label" data-i18n="tools.speechTts.voiceLabel">Voice</span>
-            <div class="tts-voice-list" id="voice-list"></div>
+            <p class="tts-voice-selected" id="voice-selected"></p>
+            <div class="tts-voice-toolbar">
+              <input type="search" id="voice-filter" data-i18n-placeholder="tools.speechTts.voiceFilterPh" placeholder="Search voices…" autocomplete="off" />
+            </div>
+            <div class="tts-voice-list" id="voice-list" role="listbox" aria-label="voices"></div>
+            <p class="drop-hint" data-i18n="tools.speechTts.voiceHint">Single select — pick one voice for synthesis (not multi-select, not a prompt).</p>
           </div>
 
           <div class="field-row">
@@ -108,12 +149,12 @@
     </main>
   </div>
 
-  <script src="../../js/locales/en.js?v=tts1"></script>
-  <script src="../../js/locales/zh-CN.js?v=tts1"></script>
+  <script src="../../js/locales/en.js?v=tts2"></script>
+  <script src="../../js/locales/zh-CN.js?v=tts2"></script>
   <script src="../../js/i18n.js?v=tts1"></script>
   <script src="../../js/config.js?v=tts1"></script>
   <script src="../../js/base.js?v=tts1"></script>
   <script src="../../js/media/image-cloud-client.js?v=tts1"></script>
-  <script src="../../js/media/speech-tts.js?v=tts1"></script>
+  <script src="../../js/media/speech-tts.js?v=tts2"></script>
 </body>
 </html>
