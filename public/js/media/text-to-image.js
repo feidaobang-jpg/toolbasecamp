@@ -258,10 +258,13 @@
   }
 
   function modelTitle(mid) {
+    if (mid === 'image-01-live') return tr('tools.textToImage.modelMinimax01live');
+    if (mid === 'image-01') return tr('tools.textToImage.modelMinimax01');
     if (mid === 'wan2.7-image-pro') return tr('tools.textToImage.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.textToImage.modelWan27');
     if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
-    return tr('tools.textToImage.modelZTurbo');
+    if (mid === 'z-image-turbo') return tr('tools.textToImage.modelZTurbo');
+    return mid || tr('tools.textToImage.modelZTurbo');
   }
 
   function renderResults(images, partialErrors) {
