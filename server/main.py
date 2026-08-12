@@ -125,7 +125,34 @@ except Exception as exc:  # pragma: no cover
         return False
 
     _music_import_error = str(exc)
-    print(f"[wan] import failed: {exc}")
+    print(f"[music] import failed: {exc}")
+
+_tts_import_error = ""
+try:
+    from minimax_tts import (
+        router as tts_router,
+        _wire as wire_tts,
+        get_tts_config,
+        tts_configured,
+        ensure_tts_tables,
+    )
+except Exception as exc:  # pragma: no cover
+    tts_router = None
+
+    def wire_tts(*_a, **_k):
+        return None
+
+    def get_tts_config():
+        return {"configured": False, "error": str(exc)}
+
+    def tts_configured():
+        return False
+
+    def ensure_tts_tables(_cur):
+        return None
+
+    _tts_import_error = str(exc)
+    print(f"[tts] import failed: {exc}")
 
 app = FastAPI(title="Tool Basecamp API")
 
@@ -333,6 +360,7 @@ def ensure_tables():
             )
             ensure_record_tables(cur)
             ensure_image_quota_table(cur)
+            ensure_tts_tables(cur)
             ensure_site_stats_tables(cur)
             ensure_news_tables(cur)
             ensure_pc_builds_tables(cur)
@@ -603,6 +631,12 @@ if music_router is not None:
     app.include_router(music_router)
 else:
     print("[music] router not mounted:", _music_import_error or "unknown")
+
+if tts_router is not None:
+    wire_tts(get_conn, require_db, get_current_user)
+    app.include_router(tts_router)
+else:
+    print("[tts] router not mounted:", _tts_import_error or "unknown")
 
 
 wire_wallet(get_conn, require_db, get_current_user, require_admin, is_admin)
@@ -999,7 +1033,11 @@ def health():
         "fun_music": get_fun_music_config(),
         "fun_music_configured": fun_music_configured(),
         "fun_music_import_error": _music_import_error or None,
-        "api_features": ["wan_i2v", "minimax_h3", "fun_music"],
+        "tts_api": "/tts/synthesize" in paths,
+        "tts": get_tts_config(),
+        "tts_configured": tts_configured(),
+        "tts_import_error": _tts_import_error or None,
+        "api_features": ["wan_i2v", "minimax_h3", "fun_music", "tts"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

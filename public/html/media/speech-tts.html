@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speech TTS - Tool Basecamp</title>
+  <meta name="description" content="Text-to-speech and voice cloning with MiniMax speech-2.8. Sign-in required; charged from wallet on success.">
+  <link rel="stylesheet" href="../../css/base.css?v=tts1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=tts1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=tts1" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=tts1" />
+  <style>
+    .tts-audio { width: 100%; margin: 12px 0 8px; }
+    .tts-voice-list {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; max-height: 160px; overflow: auto;
+    }
+    .tts-clone-box {
+      border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; background: #f8fafc; margin-top: 12px;
+    }
+    .tts-char { font-size: 12px; color: #94a3b8; text-align: right; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.speechTts.title">Speech Synthesis</h1>
+        <p data-i18n="tools.speechTts.desc">Text-to-speech with MiniMax speech-2.8, plus voice cloning. Sign-in required; charged on success.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card tb-form">
+          <div class="tip-box img-wechat-tip" id="wechat-file-download-tip" hidden data-i18n="common.wechatFileDownloadTip">
+            In WeChat, open this page in your system browser to download the audio file.
+          </div>
+          <p class="img-cloud-quota" id="balance-line"></p>
+          <p class="instruct-cost-hint" id="cost-note"></p>
+
+          <div class="field-row">
+            <span class="field-label" data-i18n="tools.speechTts.modelLabel">Model</span>
+            <div class="instruct-preset-row" id="model-row">
+              <button type="button" class="rec-chip is-active" data-model="speech-2.8-turbo">Turbo</button>
+              <button type="button" class="rec-chip" data-model="speech-2.8-hd">HD</button>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <span class="field-label" data-i18n="tools.speechTts.voiceLabel">Voice</span>
+            <div class="tts-voice-list" id="voice-list"></div>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="text" data-i18n="tools.speechTts.textLabel">Text</label>
+            <textarea id="text" rows="6" data-i18n-placeholder="tools.speechTts.textPh" placeholder="Enter text to synthesize…"></textarea>
+            <div class="tts-char"><span id="char-count">0</span> / <span id="char-max">5000</span></div>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="speed" data-i18n="tools.speechTts.speedLabel">Speed</label>
+            <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1" />
+            <span id="speed-val">1.0</span>
+          </div>
+
+          <div class="tip-box">
+            <b data-i18n="tools.speechTts.tip">Tip:</b>
+            <span data-i18n="tools.speechTts.tipBody">Charged by characters × model rate after success. First use of a cloned voice also charges the clone fee.</span>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" data-i18n="tools.speechTts.run">Generate</button>
+            <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.speechTts.download">Download</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.speechTts.clear">Clear</button>
+          </div>
+
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.speechTts.generating">Synthesizing…</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+
+          <div id="result-wrap" hidden>
+            <audio class="tts-audio" id="result-audio" controls></audio>
+            <p class="img-cloud-quota" id="result-meta"></p>
+          </div>
+
+          <div class="tts-clone-box">
+            <div class="field-label" data-i18n="tools.speechTts.cloneTitle">Voice cloning</div>
+            <p class="drop-hint" data-i18n="tools.speechTts.cloneHint">Upload mp3 / m4a / wav, 10s–5min, max 15MB. Preview charges TTS only; clone fee is charged on first synthesis.</p>
+            <div class="field-row" style="margin-top:10px">
+              <label class="field-label" for="clone-label" data-i18n="tools.speechTts.cloneLabel">Name</label>
+              <input type="text" id="clone-label" data-i18n-placeholder="tools.speechTts.cloneLabelPh" placeholder="My voice" />
+            </div>
+            <input type="file" id="clone-file" accept="audio/mpeg,audio/mp4,audio/wav,audio/x-m4a,.mp3,.m4a,.wav" />
+            <div class="action-row" style="margin-top:10px">
+              <button type="button" class="tb-btn" id="clone-btn" data-i18n="tools.speechTts.cloneRun">Clone &amp; preview</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js?v=tts1"></script>
+  <script src="../../js/locales/zh-CN.js?v=tts1"></script>
+  <script src="../../js/i18n.js?v=tts1"></script>
+  <script src="../../js/config.js?v=tts1"></script>
+  <script src="../../js/base.js?v=tts1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=tts1"></script>
+  <script src="../../js/media/speech-tts.js?v=tts1"></script>
+</body>
+</html>
