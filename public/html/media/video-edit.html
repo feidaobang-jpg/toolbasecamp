@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Edit - Tool Basecamp</title>
+  <meta name="description" content="Edit an existing MP4 with text instructions and optional reference images. HappyHorse Video-Edit. Keeps original timing better than full remakes.">
+  <link rel="stylesheet" href="../../css/base.css?v=hhedit1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=hhedit1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=hhedit1" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=hhedit1" />
+  <style>
+    .r2v-thumbs { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+    .r2v-thumb {
+      position: relative; width: 88px; height: 88px; border-radius: 10px;
+      overflow: hidden; background: #e5e7eb; border: 1px solid #d1d5db;
+    }
+    .r2v-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .r2v-thumb .r2v-idx {
+      position: absolute; left: 4px; top: 4px; font-size: 11px; font-weight: 600;
+      background: rgba(0,0,0,.65); color: #fff; padding: 1px 6px; border-radius: 999px;
+    }
+    .r2v-thumb .r2v-rm {
+      position: absolute; right: 2px; top: 2px; border: 0; background: rgba(0,0,0,.55);
+      color: #fff; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; line-height: 1;
+    }
+    .edit-source-name { font-size: 13px; color: #64748b; margin: 8px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.videoEdit.title">Video Edit</h1>
+        <p data-i18n="tools.videoEdit.desc">Upload an original MP4 and describe what to change (face, clothes, background…). Better for “same clip, tweak a few parts” than full remakes. Output ≤15s.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in to use this cloud tool.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card tb-form">
+          <p class="img-cloud-quota" id="balance-line"></p>
+          <p class="wan-cost-note" id="cost-note" data-i18n="tools.videoEdit.costNote">
+            HappyHorse Video-Edit: ~¥1.8/s at 720P, ~¥2.4/s at 1080P. Charged by output length (≤15s). Keep original audio by default.
+          </p>
+          <p class="wan-tier-hint" id="estimate-line"></p>
+          <p class="instruct-cost-hint" data-i18n="tools.videoEdit.modelLine">Model: happyhorse-1.0-video-edit · original video + optional refs</p>
+
+          <div class="drop-zone" id="video-drop">
+            <div class="drop-icon">+</div>
+            <div class="drop-title" data-i18n="tools.videoEdit.dropVideo">Click or drop source MP4 / MOV</div>
+            <div class="drop-hint" data-i18n="tools.videoEdit.dropVideoHint">3–60s recommended · ≤45MB · longer inputs are trimmed to first 15s for output</div>
+          </div>
+          <input type="file" id="video-input" accept="video/mp4,video/quicktime,.mp4,.mov" style="display:none" />
+          <p class="edit-source-name" id="video-name" hidden></p>
+
+          <div class="field-row">
+            <span class="field-label" data-i18n="tools.videoEdit.refsLabel">Reference images (optional)</span>
+            <div class="drop-zone" id="img-drop" style="padding:18px">
+              <div class="drop-title" data-i18n="tools.videoEdit.dropRefs">Add 0–5 refs (new face / clothes…)</div>
+            </div>
+            <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp,image/*" multiple style="display:none" />
+            <div class="r2v-thumbs" id="thumbs"></div>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="prompt-input" data-i18n="tools.videoEdit.promptLabel">Edit instruction</label>
+            <div class="wan-presets" id="prompt-presets" role="group">
+              <button type="button" class="wan-preset" data-preset="face" data-i18n="tools.videoEdit.presetFace">Swap face</button>
+              <button type="button" class="wan-preset" data-preset="clothes" data-i18n="tools.videoEdit.presetClothes">Change clothes</button>
+              <button type="button" class="wan-preset" data-preset="bg" data-i18n="tools.videoEdit.presetBg">Change background</button>
+            </div>
+            <textarea id="prompt-input" class="rec-input wan-prompt" rows="4" maxlength="2500"
+              data-i18n-placeholder="tools.videoEdit.promptPlaceholder"
+              placeholder="e.g. Replace the buyer with the person in the reference image; keep the melon stall and dialogue timing"></textarea>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="resolution-select" data-i18n="tools.videoEdit.resolutionLabel">Resolution</label>
+            <select id="resolution-select">
+              <option value="720P" selected data-i18n="tools.videoEdit.res720">720P · recommended</option>
+              <option value="1080P" data-i18n="tools.videoEdit.res1080">1080P · sharper</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <label class="field-label" for="audio-select" data-i18n="tools.videoEdit.audioLabel">Audio</label>
+            <select id="audio-select">
+              <option value="origin" selected data-i18n="tools.videoEdit.audioOrigin">Keep original audio</option>
+              <option value="auto" data-i18n="tools.videoEdit.audioAuto">Let model decide</option>
+            </select>
+          </div>
+
+          <div class="tip-box">
+            <b data-i18n="tools.videoEdit.tip">Tip:</b>
+            <span data-i18n="tools.videoEdit.tipBody">Best for same timing/shot as the source. For a full new remake with character refs, use Reference to Video instead.</span>
+          </div>
+
+          <div class="tip-box" id="wechat-file-download-tip" hidden>
+            <b>WeChat:</b>
+            <span data-i18n="common.wechatFileDownloadTip">Downloads are blocked in WeChat. Please open in your system browser and download again.</span>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.videoEdit.run">Generate</button>
+            <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="tools.videoEdit.downloadMp4">Download MP4</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.videoEdit.clear">Clear</button>
+          </div>
+
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+
+          <div class="wan-result" id="result-wrap" hidden>
+            <video id="result-video" controls playsinline></video>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js?v=hhedit1"></script>
+  <script src="../../js/locales/zh-CN.js?v=hhedit1"></script>
+  <script src="../../js/i18n.js?v=hhedit1"></script>
+  <script src="../../js/config.js?v=hhedit1"></script>
+  <script src="../../js/base.js?v=hhedit1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=hhedit1"></script>
+  <script src="../../js/media/video-edit.js?v=hhedit1"></script>
+</body>
+</html>

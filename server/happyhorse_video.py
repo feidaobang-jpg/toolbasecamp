@@ -1,25 +1,28 @@
-"""HappyHorse 1.1 T2V + R2V (DashScope) — async submit + poll + proxy download.
+"""HappyHorse T2V + R2V + Video-Edit (DashScope) — async submit + poll + proxy.
 
 Billing: vendor list × AI_PRICE_MARKUP; charge on success only.
-  480P ¥0.45/s · 720P ¥0.9/s · 1080P ¥1.2/s (Beijing list; R2V same tiers).
-Models: happyhorse-1.1-t2v · happyhorse-1.1-r2v
-Duration: API max 15s per clip (not 2 minutes).
+  480P ¥0.45/s · 720P ¥0.9/s · 1080P ¥1.2/s (Beijing list).
+Models: happyhorse-1.1-t2v · happyhorse-1.1-r2v · happyhorse-1.0-video-edit
+Duration: generate/edit output capped at 15s by API.
 """
 
 from __future__ import annotations
 
 import base64
 import io
+import math
 import os
 import re
+import secrets
 import time
 from decimal import Decimal
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
 import httpx
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from ai_wallet import (
@@ -30,6 +33,7 @@ from ai_wallet import (
     user_price_cny,
     wallet_public,
 )
+from feishu_notify import SITE_BASE_URL
 from recipe_ai import DASHSCOPE_API_KEY, DASHSCOPE_BASE_URL
 
 security = HTTPBearer(auto_error=False)
@@ -41,6 +45,7 @@ MIN_DURATION = 3
 MAX_DURATION = 15
 DEFAULT_DURATION = 5
 ALLOWED_RESOLUTIONS = {"480P", "720P", "1080P"}
+EDIT_RESOLUTIONS = {"720P", "1080P"}
 ALLOWED_RATIOS = {"16:9", "9:16", "1:1", "4:3", "3:4", "4:5", "5:4", "9:21", "21:9"}
 LIST_RATE_PER_SEC = {
     "480P": Decimal("0.45"),
@@ -49,15 +54,27 @@ LIST_RATE_PER_SEC = {
 }
 HH_T2V_MODEL = (os.environ.get("HAPPYHORSE_T2V_MODEL") or "happyhorse-1.1-t2v").strip()
 HH_R2V_MODEL = (os.environ.get("HAPPYHORSE_R2V_MODEL") or "happyhorse-1.1-r2v").strip()
-# Back-compat alias used by older callers / health
+HH_EDIT_MODEL = (os.environ.get("HAPPYHORSE_EDIT_MODEL") or "happyhorse-1.0-video-edit").strip()
 HH_MODEL = HH_T2V_MODEL
 MAX_PROMPT_CHARS = 2500
 MAX_REF_IMAGES = 9
+MAX_EDIT_REF_IMAGES = 5
 MAX_UPLOAD_BYTES = 8 * 1024 * 1024
+MAX_VIDEO_UPLOAD_BYTES = 45 * 1024 * 1024  # under nginx 50M; API allows 100MB
 MAX_IMAGE_EDGE = 2048
 TASK_TTL_SEC = 24 * 3600
+TEMP_TTL_SEC = 2 * 3600
+
+_TMP_ENV = (os.environ.get("HAPPYHORSE_TMP_DIR") or "").strip()
+TEMP_DIR = Path(_TMP_ENV) if _TMP_ENV else Path(__file__).resolve().parent / "var" / "happyhorse-temp"
+try:
+    TEMP_DIR.mkdir(parents=True, exist_ok=True)
+except OSError:
+    TEMP_DIR = Path("/tmp") / "toolbasecamp-happyhorse"
+    TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 _task_owners: Dict[str, Dict[str, Any]] = {}
+_temp_files: Dict[str, Dict[str, Any]] = {}
 
 
 def _dashscope_api_root() -> str:
@@ -112,15 +129,69 @@ def get_happyhorse_config() -> dict:
         "model": HH_T2V_MODEL,
         "t2vModel": HH_T2V_MODEL,
         "r2vModel": HH_R2V_MODEL,
+        "editModel": HH_EDIT_MODEL,
         "api_root": _dashscope_api_root(),
         "paid": True,
         "pricing": pricing_public(),
         "minDuration": MIN_DURATION,
         "maxDuration": MAX_DURATION,
         "maxRefImages": MAX_REF_IMAGES,
+        "maxEditRefImages": MAX_EDIT_REF_IMAGES,
+        "maxVideoUploadMb": MAX_VIDEO_UPLOAD_BYTES // (1024 * 1024),
+        "editResolutions": ["720P", "1080P"],
         "resolutions": ["480P", "720P", "1080P"],
         "ratios": list(ALLOWED_RATIOS),
     }
+
+
+def _public_api_base() -> str:
+    explicit = (os.environ.get("API_PUBLIC_BASE") or "").strip().rstrip("/")
+    if explicit:
+        return explicit
+    return f"{SITE_BASE_URL.rstrip('/')}/api"
+
+
+def _purge_temp_files() -> None:
+    now = time.time()
+    dead = [k for k, v in _temp_files.items() if now - float(v.get("created", 0)) > TEMP_TTL_SEC]
+    for k in dead:
+        meta = _temp_files.pop(k, None) or {}
+        try:
+            Path(str(meta.get("path") or "")).unlink(missing_ok=True)
+        except Exception:
+            pass
+
+
+def _store_temp_video(raw: bytes, *, user_id: int, filename: str = "") -> str:
+    _purge_temp_files()
+    if not raw:
+        raise HTTPException(status_code=400, detail="Empty video")
+    if len(raw) > MAX_VIDEO_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Video must be ≤ {MAX_VIDEO_UPLOAD_BYTES // (1024 * 1024)}MB",
+        )
+    name = (filename or "").lower()
+    ext = ".mov" if name.endswith(".mov") else ".mp4"
+    token = secrets.token_urlsafe(18)
+    path = TEMP_DIR / f"{token}{ext}"
+    path.write_bytes(raw)
+    _temp_files[token] = {
+        "path": str(path),
+        "created": time.time(),
+        "user_id": int(user_id),
+        "ext": ext,
+    }
+    return f"{_public_api_base()}/happyhorse/temp/{token}{ext}"
+
+
+def _validate_public_video_url(url: str) -> str:
+    u = (url or "").strip()
+    parsed = urlparse(u)
+    if parsed.scheme not in ("http", "https") or not parsed.netloc:
+        raise HTTPException(status_code=400, detail="Video URL must be http(s)")
+    return u
+
 
 
 def _wire(get_conn, require_db, get_current_user):
@@ -240,7 +311,7 @@ def _remember_task(
     }
 
 
-def _image_to_data_url(raw: bytes, filename: str = "") -> str:
+def _image_to_data_url(raw: bytes, filename: str = "", *, min_side: int = 400) -> str:
     if not raw:
         raise HTTPException(status_code=400, detail="Empty image")
     if len(raw) > MAX_UPLOAD_BYTES:
@@ -259,10 +330,10 @@ def _image_to_data_url(raw: bytes, filename: str = "") -> str:
         if img.mode not in ("RGB", "RGBA"):
             img = img.convert("RGBA" if "A" in img.getbands() else "RGB")
         w, h = img.size
-        if min(w, h) < 400:
+        if min(w, h) < min_side:
             raise HTTPException(
                 status_code=400,
-                detail="Reference image short side must be ≥ 400px",
+                detail=f"Reference image short side must be ≥ {min_side}px",
             )
         scale = min(1.0, MAX_IMAGE_EDGE / float(max(w, h)))
         if scale < 1.0:
@@ -314,6 +385,7 @@ async def _poll_and_charge(task_id: str, user: dict, proxy_prefix: str) -> dict:
     meta = _require_task_owner(task_id, user)
     data = await _dashscope_get_task(task_id)
     output = data.get("output") if isinstance(data.get("output"), dict) else {}
+    usage = data.get("usage") if isinstance(data.get("usage"), dict) else {}
     status = str((output or {}).get("task_status") or data.get("task_status") or "").upper()
     video_url = _extract_video_url(output)
     if video_url:
@@ -329,6 +401,21 @@ async def _poll_and_charge(task_id: str, user: dict, proxy_prefix: str) -> dict:
     balance_after = None
     charged_cny = None
     if status == "SUCCEEDED" and (video_url or meta.get("video_url")):
+        if meta.get("mode") == "edit" and usage and not meta.get("charged"):
+            try:
+                actual = float(
+                    usage.get("output_video_duration")
+                    or usage.get("duration")
+                    or meta.get("duration")
+                    or DEFAULT_DURATION
+                )
+                actual_sec = max(MIN_DURATION, min(MAX_DURATION, int(math.ceil(actual))))
+                meta["duration"] = actual_sec
+                meta["list_price"] = list_price_cny(
+                    actual_sec, str(meta.get("resolution") or "720P")
+                )
+            except Exception:
+                pass
         balance_after = _ensure_charged(meta, user, task_id)
         charged_cny = meta.get("charged_cny")
     return {
@@ -344,6 +431,7 @@ async def _poll_and_charge(task_id: str, user: dict, proxy_prefix: str) -> dict:
         "wallet": _wallet_for(user) if status == "SUCCEEDED" else None,
         "balanceAfter": balance_after,
     }
+
 
 
 async def _proxy_video(task_id: str, user: dict, filename: str) -> StreamingResponse:
@@ -645,3 +733,147 @@ async def hh_r2v_proxy(task_id: str, user: dict = Depends(_user)):
     if not re.match(r"^[\w\-]{8,128}$", task_id):
         raise HTTPException(status_code=400, detail="Invalid task id")
     return await _proxy_video(task_id, user, "happyhorse-r2v.mp4")
+
+
+@router.get("/temp/{name}")
+def hh_temp_file(name: str):
+    """Public short-lived source video for DashScope to fetch (no auth)."""
+    _purge_temp_files()
+    m = re.match(r"^([A-Za-z0-9_\-]{16,64})(\.mp4|\.mov)$", name or "")
+    if not m:
+        raise HTTPException(status_code=404, detail="Not found")
+    token, ext = m.group(1), m.group(2)
+    meta = _temp_files.get(token)
+    if not meta:
+        raise HTTPException(status_code=404, detail="Not found or expired")
+    path = Path(str(meta.get("path") or ""))
+    if not path.is_file():
+        _temp_files.pop(token, None)
+        raise HTTPException(status_code=404, detail="Not found or expired")
+    media = "video/quicktime" if ext == ".mov" else "video/mp4"
+    return FileResponse(path, media_type=media, filename=f"source{ext}")
+
+
+@router.post("/edit/submit")
+async def hh_edit_submit(
+    prompt: str = Form(...),
+    resolution: str = Form("720P"),
+    audio_setting: str = Form("origin"),
+    duration: int = Form(10),
+    video_url: str = Form(""),
+    video: Optional[UploadFile] = File(None),
+    images: Optional[List[UploadFile]] = File(None),
+    user: dict = Depends(_user),
+):
+    if not happyhorse_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+        )
+    plain = (prompt or "").strip()
+    if not plain:
+        raise HTTPException(status_code=400, detail="Please enter a prompt")
+    if len(plain) > MAX_PROMPT_CHARS:
+        plain = plain[:MAX_PROMPT_CHARS]
+
+    resolution = (resolution or "720P").upper()
+    if resolution not in EDIT_RESOLUTIONS:
+        raise HTTPException(status_code=400, detail="Resolution must be 720P or 1080P")
+    audio = (audio_setting or "origin").strip().lower()
+    if audio not in ("origin", "auto"):
+        audio = "origin"
+
+    # Bill estimate for afford; actual charged from usage on success (≤15s).
+    duration = int(duration)
+    if duration < MIN_DURATION or duration > MAX_DURATION:
+        duration = 10
+    # Afford worst-case 15s so usage-based charge won't surprise.
+    _assert_can_afford(user, list_price_cny(MAX_DURATION, resolution))
+
+    source_url = (video_url or "").strip()
+    if video is not None and (getattr(video, "filename", None) or getattr(video, "content_type", None)):
+        raw = await video.read()
+        if raw:
+            source_url = _store_temp_video(raw, user_id=int(user["id"]), filename=video.filename or "")
+    if source_url and not source_url.startswith(_public_api_base()):
+        # user-provided external URL
+        if not source_url.startswith("http"):
+            raise HTTPException(status_code=400, detail="Please upload a video or provide a video URL")
+        source_url = _validate_public_video_url(source_url)
+    if not source_url:
+        raise HTTPException(status_code=400, detail="Please upload a video or provide a video URL")
+
+    media: List[Dict[str, str]] = [{"type": "video", "url": source_url}]
+    refs = [f for f in (images or []) if f is not None and (getattr(f, "filename", None) or getattr(f, "content_type", None))]
+    if len(refs) > MAX_EDIT_REF_IMAGES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"At most {MAX_EDIT_REF_IMAGES} reference images",
+        )
+    for f in refs:
+        raw = await f.read()
+        media.append(
+            {
+                "type": "reference_image",
+                "url": _image_to_data_url(raw, f.filename or "", min_side=300),
+            }
+        )
+
+    list_price = list_price_cny(duration, resolution)
+    payload = {
+        "model": HH_EDIT_MODEL,
+        "input": {"prompt": plain, "media": media},
+        "parameters": {
+            "resolution": resolution,
+            "watermark": False,
+            "audio_setting": audio,
+        },
+    }
+    data = await _dashscope_post("/services/aigc/video-generation/video-synthesis", payload)
+    output = data.get("output") if isinstance(data.get("output"), dict) else {}
+    task_id = str((output or {}).get("task_id") or data.get("task_id") or "").strip()
+    if not task_id:
+        raise HTTPException(
+            status_code=502,
+            detail="HappyHorse API did not return a task_id.",
+        )
+
+    _remember_task(
+        task_id,
+        int(user["id"]),
+        list_price=list_price,
+        duration=duration,
+        resolution=resolution,
+        ratio="",
+        model=HH_EDIT_MODEL,
+        mode="edit",
+        charge_reason="happyhorse_edit",
+    )
+    return {
+        "success": True,
+        "task_id": task_id,
+        "model": HH_EDIT_MODEL,
+        "duration": duration,
+        "resolution": resolution,
+        "audioSetting": audio,
+        "refCount": len(refs),
+        "listPriceCny": list_price,
+        "userPriceCny": float(user_price_cny(list_price)),
+        "wallet": _wallet_for(user),
+    }
+
+
+@router.get("/edit/task/{task_id}")
+async def hh_edit_task(task_id: str, user: dict = Depends(_user)):
+    task_id = (task_id or "").strip()
+    if not re.match(r"^[\w\-]{8,128}$", task_id):
+        raise HTTPException(status_code=400, detail="Invalid task id")
+    return await _poll_and_charge(task_id, user, "/happyhorse/edit/proxy")
+
+
+@router.get("/edit/proxy/{task_id}")
+async def hh_edit_proxy(task_id: str, user: dict = Depends(_user)):
+    task_id = (task_id or "").strip()
+    if not re.match(r"^[\w\-]{8,128}$", task_id):
+        raise HTTPException(status_code=400, detail="Invalid task id")
+    return await _proxy_video(task_id, user, "happyhorse-edit.mp4")

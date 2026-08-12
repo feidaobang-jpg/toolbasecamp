@@ -55,7 +55,7 @@ location /api/ {
     proxy_set_header CF-IPCountry $http_cf_ipcountry;
     proxy_set_header CF-Connecting-IP $http_cf_connecting_ip;
     proxy_set_header True-Client-IP $http_true_client_ip;
-    client_max_body_size 50M;
+    client_max_body_size 110M;
     # Instruct-edit / multi-model / music / video can run many minutes
     proxy_read_timeout 1800s;
     proxy_connect_timeout 60s;

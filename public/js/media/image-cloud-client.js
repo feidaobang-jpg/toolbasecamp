@@ -118,6 +118,7 @@
             'Please enter an edit instruction or choose a style preset.': 'tools.instructEdit.needPromptOrPreset',
             'Please enter a motion prompt': 'tools.imageToAnimation.needPrompt',
             'Please enter a prompt': 'tools.textToVideo.needPrompt',
+            'Please upload a video or provide a video URL': 'tools.videoEdit.needVideo',
             'Please upload 1–9 reference images': 'tools.refToVideo.needImages',
             'At most 9 reference images': 'tools.refToVideo.tooMany',
             'Please enter a scene prompt': 'tools.imageToAnimation.needPrompt',
