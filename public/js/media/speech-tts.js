@@ -8,6 +8,7 @@
   var loginLink = document.getElementById('login-link');
   var balanceLine = document.getElementById('balance-line');
   var costNote = document.getElementById('cost-note');
+  var providerRow = document.getElementById('provider-row');
   var modelRow = document.getElementById('model-row');
   var voiceList = document.getElementById('voice-list');
   var voiceSelected = document.getElementById('voice-selected');
@@ -15,6 +16,7 @@
   var textEl = document.getElementById('text');
   var charCount = document.getElementById('char-count');
   var charMax = document.getElementById('char-max');
+  var speedRow = document.getElementById('speed-row');
   var speedEl = document.getElementById('speed');
   var speedVal = document.getElementById('speed-val');
   var runBtn = document.getElementById('run-btn');
@@ -31,15 +33,24 @@
   var resultMeta = document.getElementById('result-meta');
   var wechatTip = document.getElementById('wechat-file-download-tip');
 
-  var modelId = 'speech-2.8-turbo';
+  var providerId = 'qwen';
+  var modelId = 'qwen3-tts-flash';
   var voiceId = '';
-  var maxChars = 5000;
+  var maxChars = 600;
   var pricing = null;
-  var systemVoices = [];
+  var providersMeta = [];
+  var systemByProvider = { qwen: [], minimax: [] };
   var clonedVoices = [];
   var processing = false;
   var audioUrl = '';
   var audioBlob = null;
+
+  var MODEL_LABELS = {
+    'qwen3-tts-flash': 'Qwen Flash',
+    'qwen3-tts-vc-2026-01-22': 'Qwen VC',
+    'speech-2.8-turbo': 'MiniMax Turbo',
+    'speech-2.8-hd': 'MiniMax HD'
+  };
 
   if (loginLink) loginLink.href = C.loginUrl();
   if (wechatTip && typeof tbIsWeChat === 'function' && tbIsWeChat()) {
@@ -48,6 +59,14 @@
 
   function tr(key, params) {
     return C.tr(key, params);
+  }
+
+  function escapeHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   function setBusy(on, msg) {
@@ -95,23 +114,59 @@
     balanceLine.textContent = C.formatWallet(wallet);
   }
 
-  function userPer10k(mid) {
-    if (!pricing || !pricing.models) return mid === 'speech-2.8-hd' ? 7 : 4;
+  function modelInfo(mid) {
+    if (!pricing || !pricing.models) return null;
     for (var i = 0; i < pricing.models.length; i++) {
-      if (pricing.models[i].id === mid) return Number(pricing.models[i].userPer10kCny) || 0;
+      if (pricing.models[i].id === mid) return pricing.models[i];
     }
-    return 0;
+    return null;
+  }
+
+  function userPer10k(mid) {
+    var m = modelInfo(mid);
+    if (m) return Number(m.userPer10kCny) || 0;
+    return providerId === 'qwen' ? 1.6 : 4;
   }
 
   function cloneFeeUser() {
-    return pricing && pricing.cloneFeeUserCny != null ? Number(pricing.cloneFeeUserCny) : 0;
+    var cf = pricing && pricing.cloneFee && pricing.cloneFee[providerId];
+    return cf && cf.userCny != null ? Number(cf.userCny) : 0;
+  }
+
+  function cloneFeeWhen() {
+    var cf = pricing && pricing.cloneFee && pricing.cloneFee[providerId];
+    return (cf && cf.when) || (providerId === 'qwen' ? 'create' : 'first_synth');
+  }
+
+  function systemVoices() {
+    return systemByProvider[providerId] || [];
+  }
+
+  function clonesForProvider() {
+    return (clonedVoices || []).filter(function (c) {
+      return (c.provider || 'minimax') === providerId;
+    });
   }
 
   function selectedClone() {
-    for (var i = 0; i < clonedVoices.length; i++) {
-      if (clonedVoices[i].voice_id === voiceId) return clonedVoices[i];
+    var list = clonesForProvider();
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].voice_id === voiceId) return list[i];
     }
     return null;
+  }
+
+  function providerModels() {
+    for (var i = 0; i < providersMeta.length; i++) {
+      if (providersMeta[i].id === providerId) return providersMeta[i].models || [];
+    }
+    return providerId === 'qwen' ? ['qwen3-tts-flash'] : ['speech-2.8-turbo', 'speech-2.8-hd'];
+  }
+
+  function syncMaxChars() {
+    var m = modelInfo(modelId);
+    maxChars = (m && m.maxChars) || (providerId === 'qwen' ? 600 : 5000);
+    if (charMax) charMax.textContent = String(maxChars);
   }
 
   function estimateUser() {
@@ -121,7 +176,9 @@
     var synth = chars > 0 ? (chars / 10000) * rate : 0;
     var fee = 0;
     var cl = selectedClone();
-    if (cl && !cl.cloneFeeCharged) fee = cloneFeeUser();
+    if (cl && !cl.cloneFeeCharged && cloneFeeWhen() === 'first_synth') {
+      fee = cloneFeeUser();
+    }
     return { chars: chars, total: synth + fee, fee: fee };
   }
 
@@ -129,33 +186,58 @@
     if (!costNote) return;
     var est = estimateUser();
     costNote.textContent = tr('tools.speechTts.costNote', {
-      model: modelId,
+      provider: providerId === 'qwen' ? 'Qwen' : 'MiniMax',
+      model: MODEL_LABELS[modelId] || modelId,
       rate: userPer10k(modelId).toFixed(2),
       estimate: est.total.toFixed(3),
-      cloneFee: cloneFeeUser().toFixed(2)
+      cloneFee: cloneFeeUser().toFixed(2),
+      max: maxChars
     });
     if (charCount) charCount.textContent = String((textEl.value || '').length);
+    if (speedRow) speedRow.hidden = providerId === 'qwen';
   }
 
-  function syncModelChips() {
-    if (!modelRow) return;
-    var chips = modelRow.querySelectorAll('.rec-chip');
+  function syncProviderChips() {
+    if (!providerRow) return;
+    var chips = providerRow.querySelectorAll('.rec-chip');
     for (var i = 0; i < chips.length; i++) {
-      chips[i].classList.toggle('is-active', (chips[i].getAttribute('data-model') || '') === modelId);
+      chips[i].classList.toggle(
+        'is-active',
+        (chips[i].getAttribute('data-provider') || '') === providerId
+      );
     }
+  }
+
+  function renderModels() {
+    if (!modelRow) return;
+    var models = providerModels();
+    if (models.indexOf(modelId) < 0) modelId = models[0];
+    modelRow.innerHTML = '';
+    for (var i = 0; i < models.length; i++) {
+      var mid = models[i];
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'rec-chip' + (mid === modelId ? ' is-active' : '');
+      btn.setAttribute('data-model', mid);
+      var info = modelInfo(mid);
+      var price = info ? Number(info.userPer10kCny).toFixed(2) : '';
+      btn.textContent = (MODEL_LABELS[mid] || mid) + (price ? ' · ¥' + price + '/万字' : '');
+      modelRow.appendChild(btn);
+    }
+    syncMaxChars();
   }
 
   function voiceLabelOf(vid) {
     var i;
-    for (i = 0; i < clonedVoices.length; i++) {
-      if (clonedVoices[i].voice_id === vid) {
-        return (clonedVoices[i].label || vid) + (clonedVoices[i].cloneFeeCharged ? '' : ' *');
+    var clones = clonesForProvider();
+    for (i = 0; i < clones.length; i++) {
+      if (clones[i].voice_id === vid) {
+        return (clones[i].label || vid) + (clones[i].cloneFeeCharged ? '' : ' *');
       }
     }
-    for (i = 0; i < systemVoices.length; i++) {
-      if (systemVoices[i].voice_id === vid) {
-        return systemVoices[i].voice_name || vid;
-      }
+    var sys = systemVoices();
+    for (i = 0; i < sys.length; i++) {
+      if (sys[i].voice_id === vid) return sys[i].voice_name || vid;
     }
     return vid || '—';
   }
@@ -167,14 +249,6 @@
       ' <strong>' +
       escapeHtml(voiceLabelOf(voiceId)) +
       '</strong>';
-  }
-
-  function escapeHtml(s) {
-    return String(s || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
   }
 
   function syncVoiceActiveOnly() {
@@ -204,6 +278,8 @@
     var scrollTop = voiceList.scrollTop;
     voiceList.innerHTML = '';
     var shown = 0;
+    var clones = clonesForProvider();
+    var sys = systemVoices();
 
     function addChip(vid, label, extraClass) {
       if (!voiceMatches(label, vid, q)) return;
@@ -219,14 +295,12 @@
       shown += 1;
     }
 
-    for (var c = 0; c < clonedVoices.length; c++) {
-      var cv = clonedVoices[c];
-      var lab = (cv.label || cv.voice_id) + (cv.cloneFeeCharged ? '' : ' *');
-      addChip(cv.voice_id, lab, 'is-clone');
+    for (var c = 0; c < clones.length; c++) {
+      var cv = clones[c];
+      addChip(cv.voice_id, (cv.label || cv.voice_id) + (cv.cloneFeeCharged ? '' : ' *'), 'is-clone');
     }
-    for (var s = 0; s < systemVoices.length; s++) {
-      var sv = systemVoices[s];
-      addChip(sv.voice_id, sv.voice_name || sv.voice_id);
+    for (var s = 0; s < sys.length; s++) {
+      addChip(sys[s].voice_id, sys[s].voice_name || sys[s].voice_id);
     }
 
     if (!shown) {
@@ -236,23 +310,41 @@
       voiceList.appendChild(empty);
     }
 
-    if (!voiceId && systemVoices.length) {
-      voiceId = systemVoices[0].voice_id;
+    var stillValid = false;
+    if (voiceId) {
+      for (var i = 0; i < clones.length; i++) if (clones[i].voice_id === voiceId) stillValid = true;
+      for (var j = 0; j < sys.length; j++) if (sys[j].voice_id === voiceId) stillValid = true;
+    }
+    if (!stillValid) {
+      voiceId = (clones[0] && clones[0].voice_id) || (sys[0] && sys[0].voice_id) || '';
     }
     updateSelectedVoiceLine();
     voiceList.scrollTop = scrollTop;
   }
 
+  function applyProvider(pid, keepVoice) {
+    providerId = pid || 'qwen';
+    var models = providerModels();
+    if (models.indexOf(modelId) < 0) modelId = models[0];
+    syncProviderChips();
+    renderModels();
+    if (!keepVoice) voiceId = '';
+    renderVoices();
+    updateCostNote();
+  }
+
   function loadStatus() {
     return C.apiJson('/tts/status').then(function (s) {
       pricing = s.pricing || null;
-      maxChars = s.maxTextChars || 5000;
-      if (charMax) charMax.textContent = String(maxChars);
-      systemVoices = s.systemVoices || [];
+      providersMeta = s.providers || [];
+      systemByProvider = s.systemVoicesByProvider || { qwen: [], minimax: [] };
       clonedVoices = s.clonedVoices || [];
-      if (s.defaultVoiceId && !voiceId) voiceId = s.defaultVoiceId;
+      if (s.defaultProvider) providerId = s.defaultProvider;
       if (s.defaultModel) modelId = s.defaultModel;
-      syncModelChips();
+      if (s.qwenConfigured === false && s.minimaxConfigured) providerId = 'minimax';
+      if (s.minimaxConfigured === false && s.qwenConfigured) providerId = 'qwen';
+      applyProvider(providerId, true);
+      if (s.defaultVoiceId && !voiceId) voiceId = s.defaultVoiceId;
       renderVoices();
       updateBalance(s.aiWallet);
       updateCostNote();
@@ -261,12 +353,20 @@
     });
   }
 
+  if (providerRow) {
+    providerRow.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
+      if (!btn) return;
+      applyProvider(btn.getAttribute('data-provider') || 'qwen', false);
+    });
+  }
+
   if (modelRow) {
     modelRow.addEventListener('click', function (e) {
       var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
       if (!btn) return;
       modelId = btn.getAttribute('data-model') || modelId;
-      syncModelChips();
+      renderModels();
       updateCostNote();
     });
   }
@@ -276,20 +376,19 @@
       var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
       if (!btn || btn.disabled) return;
       voiceId = btn.getAttribute('data-voice') || voiceId;
+      var cl = selectedClone();
+      if (cl && cl.synthModel && providerId === 'qwen') {
+        // cloned qwen voices use VC model server-side; keep UI on flash label
+      }
       syncVoiceActiveOnly();
       updateCostNote();
     });
   }
 
   if (voiceFilter) {
-    voiceFilter.addEventListener('input', function () {
-      renderVoices();
-    });
+    voiceFilter.addEventListener('input', function () { renderVoices(); });
   }
-
-  if (textEl) {
-    textEl.addEventListener('input', updateCostNote);
-  }
+  if (textEl) textEl.addEventListener('input', updateCostNote);
   if (speedEl) {
     speedEl.addEventListener('input', function () {
       if (speedVal) speedVal.textContent = Number(speedEl.value).toFixed(1);
@@ -316,6 +415,7 @@
     var fd = new FormData();
     fd.append('text', text);
     fd.append('model', modelId);
+    fd.append('provider', providerId);
     fd.append('voice_id', voiceId);
     fd.append('speed', speedEl ? speedEl.value : '1');
     fd.append('language_boost', 'Chinese');
@@ -356,6 +456,7 @@
     var fd = new FormData();
     fd.append('file', f, f.name || 'clone.mp3');
     fd.append('label', (cloneLabel && cloneLabel.value) || '');
+    fd.append('provider', providerId);
     fd.append('model', modelId);
     C.apiJson('/tts/clone', { method: 'POST', body: fd }).then(function (data) {
       updateBalance(data.aiWallet);
@@ -369,14 +470,20 @@
           data.contentType,
           tr('tools.speechTts.cloneOk', {
             price: (data.chargedCny != null ? Number(data.chargedCny) : 0).toFixed(3),
-            fee: (data.cloneFeePendingUserCny != null ? Number(data.cloneFeePendingUserCny) : cloneFeeUser()).toFixed(2)
+            fee: (data.cloneFeePendingUserCny != null ? Number(data.cloneFeePendingUserCny) : 0).toFixed(2)
           })
         );
       }
       if (typeof tbNotify === 'function') {
-        tbNotify(tr('tools.speechTts.cloneOkNotify', {
-          fee: (data.cloneFeePendingUserCny != null ? Number(data.cloneFeePendingUserCny) : cloneFeeUser()).toFixed(2)
-        }));
+        if (data.cloneFeeCharged) {
+          tbNotify(tr('tools.speechTts.cloneOkQwen', {
+            price: (data.chargedCny != null ? Number(data.chargedCny) : 0).toFixed(3)
+          }));
+        } else {
+          tbNotify(tr('tools.speechTts.cloneOkNotify', {
+            fee: (data.cloneFeePendingUserCny != null ? Number(data.cloneFeePendingUserCny) : cloneFeeUser()).toFixed(2)
+          }));
+        }
       }
     }).catch(function (err) {
       C.setError(errorBox, err.message);
@@ -388,7 +495,7 @@
 
   downloadBtn.addEventListener('click', function () {
     if (!audioBlob && !audioUrl) return;
-    var name = 'speech-tts.mp3';
+    var name = 'speech-tts.' + ((audioBlob && audioBlob.type && audioBlob.type.indexOf('wav') >= 0) ? 'wav' : 'mp3');
     if (typeof tbTriggerDownload === 'function') {
       tbTriggerDownload(audioBlob || audioUrl, name);
     } else {
@@ -410,6 +517,7 @@
     updateCostNote();
     updateSelectedVoiceLine();
     renderVoices();
+    renderModels();
   });
 
   C.requireLogin(gate, app).then(function (user) {
