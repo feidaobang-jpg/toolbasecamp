@@ -192,6 +192,7 @@ ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 LIMITS = {
     "ocr_text": int(os.environ.get("IMAGE_LIMIT_OCR_TEXT", "30")),
     "ocr_table": int(os.environ.get("IMAGE_LIMIT_OCR_TABLE", "20")),
+    "image_understand": int(os.environ.get("IMAGE_LIMIT_IMAGE_UNDERSTAND", "20")),
     "enhance": int(os.environ.get("IMAGE_LIMIT_ENHANCE", "20")),
     "id_photo": int(os.environ.get("IMAGE_LIMIT_ID_PHOTO", "10")),
     "general_cutout": int(os.environ.get("IMAGE_LIMIT_GENERAL_CUTOUT", "15")),
@@ -986,6 +987,110 @@ async def api_ocr_table(
     result = ocr_table(data)
     result["quota"] = quota
     return result
+
+
+_UNDERSTAND_MODES = ("brief", "detailed", "t2i_prompt")
+
+
+def _understand_prompt(mode: str, locale: str) -> str:
+    zh = locale.startswith("zh")
+    if mode == "t2i_prompt":
+        if zh:
+            return (
+                "根据这张图片，写一段适合文生图模型的提示词（中英文均可，优先中文）。"
+                "只输出提示词本身，不要编号、标题或解释。"
+                "覆盖主体、构图、风格、光线与氛围，约 40–120 字。"
+            )
+        return (
+            "Based on this image, write one text-to-image prompt. "
+            "Output only the prompt, no titles or explanations. "
+            "Cover subject, composition, style, lighting and mood (about 40–120 words)."
+        )
+    if mode == "detailed":
+        if zh:
+            return (
+                "请详细解读这张图片：主体与人物、场景环境、动作关系、颜色与光线、"
+                "可见文字（如有）、风格与氛围。用中文分段说明，不要编造图中不存在的细节。"
+            )
+        return (
+            "Describe this image in detail: subjects/people, setting, actions, colors/lighting, "
+            "visible text if any, style and mood. Use clear paragraphs. Do not invent details."
+        )
+    # brief
+    if zh:
+        return (
+            "用 2–4 句中文简要说明这张图的内容（主体、场景、氛围）。"
+            "不要编造图中没有的信息，不要用 markdown。"
+        )
+    return (
+        "In 2–4 sentences, briefly describe this image (subject, scene, mood). "
+        "Do not invent details. No markdown."
+    )
+
+
+@router.post("/image-understand")
+async def api_image_understand(
+    file: UploadFile = File(...),
+    mode: str = Form("brief"),
+    locale: str = Form("zh-CN"),
+    user: dict = Depends(_user),
+):
+    """Describe an image with Qwen VL (not OCR — understanding / caption / T2I prompt)."""
+    from recipe_ai import (
+        DASHSCOPE_API_KEY,
+        QWEN_VL_MODEL,
+        _call_qwen,
+        _image_data_url,
+    )
+
+    if not DASHSCOPE_API_KEY:
+        raise HTTPException(
+            status_code=503,
+            detail="DashScope is not configured (DASHSCOPE_API_KEY).",
+        )
+    mid = (mode or "brief").strip().lower()
+    if mid not in _UNDERSTAND_MODES:
+        mid = "brief"
+    loc = (locale or "zh-CN").strip() or "zh-CN"
+    quota = _consume_quota(user, "image_understand")
+    data = await _read_upload(file)
+    ctype = (getattr(file, "content_type", None) or "image/jpeg").split(";")[0].strip()
+    if not ctype.startswith("image/"):
+        ctype = "image/jpeg"
+    data_url = _image_data_url(data, ctype)
+    prompt = _understand_prompt(mid, loc)
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image_url", "image_url": {"url": data_url}},
+                {"type": "text", "text": prompt},
+            ],
+        }
+    ]
+    try:
+        text = await _call_qwen(
+            messages,
+            model=QWEN_VL_MODEL,
+            use_json_mode=False,
+            max_tokens=1200 if mid == "detailed" else 600,
+            temperature=0.4,
+            timeout=90.0,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        print(f"[image-understand] {exc}")
+        raise HTTPException(status_code=502, detail=f"Image understand failed: {exc}") from exc
+    out = (text or "").strip()
+    if not out:
+        raise HTTPException(status_code=502, detail="Model returned empty description")
+    return {
+        "text": out,
+        "mode": mid,
+        "model": QWEN_VL_MODEL,
+        "quota": quota,
+    }
 
 
 @router.post("/enhance")

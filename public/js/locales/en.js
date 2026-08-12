@@ -2191,6 +2191,22 @@ window.TB_LOCALES.en = {
             copy: 'Copy text',
             clear: 'Clear'
         },
+        imageUnderstand: {
+            title: 'Image Understand',
+            desc: 'Describe an image with vision AI: brief, detailed, or a text-to-image prompt. Requires sign-in and daily quota.',
+            dropTitle: 'Click or drop an image',
+            dropHint: 'JPG, PNG, WebP — max 8MB',
+            modeLabel: 'Mode',
+            modeBrief: 'Brief',
+            modeDetailed: 'Detailed',
+            modeT2i: 'Text-to-image prompt',
+            tip: 'Tip:',
+            tipBody: 'This explains the scene and style — not OCR. Use Extract Text to copy wording from the image.',
+            run: 'Start',
+            copy: 'Copy',
+            useForT2i: 'Use for text-to-image',
+            clear: 'Clear'
+        },
         ocrTable: {
             title: 'Extract Table',
             desc: 'Recognize table structure and copy as TSV for Excel. Requires sign-in and daily quota.',

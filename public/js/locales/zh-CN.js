@@ -2190,6 +2190,22 @@ window.TB_LOCALES['zh-CN'] = {
             copy: '复制文字',
             clear: '清除'
         },
+        imageUnderstand: {
+            title: '图片理解',
+            desc: '用视觉模型解读图片内容：简述、详解或生成文生图提示词。需登录，计入每日限额。',
+            dropTitle: '点击或拖入图片',
+            dropHint: '支持 JPG、PNG、WebP，最大 8MB',
+            modeLabel: '模式',
+            modeBrief: '简述',
+            modeDetailed: '详解',
+            modeT2i: '文生图提示词',
+            tip: '提示：',
+            tipBody: '这是画面理解（场景与风格），不是文字 OCR。要抄录图中文字请用「识别文字」。',
+            run: '开始',
+            copy: '复制',
+            useForT2i: '用于文生图',
+            clear: '清除'
+        },
         ocrTable: {
             title: '识别表格',
             desc: '识别图片中的表格结构，复制为 TSV 可贴入 Excel。需登录，计入每日限额。',

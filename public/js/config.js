@@ -195,6 +195,7 @@ const toolsConfig = {
                 { titleKey: 'tools.imagesToPdfAdvanced.title', url: 'html/media/images-to-pdf-advanced.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.imageUnderstand.title', url: 'html/media/image-understand.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.drugLabel.title', url: 'html/docs/drug-label.html', authRequired: true, dailyLimit: true }
             ]
         },

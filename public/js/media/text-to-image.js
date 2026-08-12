@@ -360,6 +360,32 @@
     }
   }
 
+  function applyIncomingPrompt() {
+    if (!promptEl) return;
+    var incoming = '';
+    try {
+      var sp = new URLSearchParams(window.location.search || '');
+      incoming = (sp.get('prompt') || '').trim();
+    } catch (e) { /* ignore */ }
+    if (!incoming) {
+      try {
+        incoming = (localStorage.getItem('tbc_t2i_prompt_v1') || '').trim();
+      } catch (e2) { /* ignore */ }
+    }
+    if (!incoming) return;
+    promptEl.value = incoming;
+    try {
+      localStorage.removeItem('tbc_t2i_prompt_v1');
+    } catch (e3) { /* ignore */ }
+    try {
+      if (window.history && window.history.replaceState) {
+        var u = new URL(window.location.href);
+        u.searchParams.delete('prompt');
+        window.history.replaceState({}, '', u.pathname + u.search + u.hash);
+      }
+    } catch (e4) { /* ignore */ }
+  }
+
   function boot() {
     if (!C.getToken()) {
       if (gate) gate.hidden = false;
@@ -369,6 +395,7 @@
     }
     if (gate) gate.hidden = true;
     if (app) app.hidden = false;
+    applyIncomingPrompt();
     applyLocaleBits();
     if (Hist && !histPanel) {
       histPanel = Hist.bindPanel({
