@@ -18,6 +18,11 @@ alwaysApply: true
 
 `paid` / `dailyLimit` 工具通常同时带 `authRequired: true`（余额与多数云端额度要登录）；角标只显示一类，不叠两个。
 
+## 组内排序（首页 + 侧栏）
+
+每个 `toolsConfig.groups[].items` 按角标档位排：**普通 → 需登录 → 日限 → 收费**。  
+由 `config.js` 的 `sortToolsByAccessBadge` 在加载时统一排序（同档保持原相对顺序）。新增工具只需标对字段，不必手排到列表末尾。
+
 文案键：`hub.paidRequired` / `hub.dailyLimitRequired` / `hub.loginRequired`（`zh-CN.js` + `en.js` 同步）。
 
 ## 新增工具必须做的（角标 ≠ 逻辑）

@@ -150,10 +150,11 @@ const toolsConfig = {
         {
             titleKey: 'tools.groups.record',
             items: [
+                // 普通 → 需登录 → 日限 → 收费（组内由 sortToolsByAccessBadge 再统一排）
                 { titleKey: 'tools.cardScore.title', url: 'html/record/card-score.html' },
+                { titleKey: 'tools.k510Score.title', url: 'html/record/510k-score.html' },
                 { titleKey: 'tools.onlineCardScore.title', url: 'html/record/online-card-score.html', authRequired: true },
                 { titleKey: 'tools.todoList.title', url: 'html/record/todo-list.html?v=4', authRequired: true },
-                { titleKey: 'tools.k510Score.title', url: 'html/record/510k-score.html' },
                 { titleKey: 'tools.importantDays.title', url: 'html/record/important-days.html', authRequired: true },
                 { titleKey: 'tools.dailyClock.title', url: 'html/record/daily-clock.html', authRequired: true },
                 { titleKey: 'tools.deposit.title', url: 'html/record/deposit.html', authRequired: true },
@@ -171,19 +172,20 @@ const toolsConfig = {
                 { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
                 { titleKey: 'tools.addWatermark.title', url: 'html/media/add-watermark.html' },
                 { titleKey: 'tools.addBackground.title', url: 'html/media/add-background.html' },
-                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.generalCutout.title', url: 'html/media/general-cutout.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.iconMaker.title', url: 'html/media/icon-maker.html' },
                 { titleKey: 'tools.coverMaker.title', url: 'html/media/cover-maker.html' },
                 { titleKey: 'tools.imageCollage.title', url: 'html/media/image-collage.html' },
-                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, paid: true },
                 { titleKey: 'tools.idCardCopy.title', url: 'html/media/id-card-copy.html' },
-                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
-                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true },
+                { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' },
                 { titleKey: 'tools.aiMusic.title', url: 'html/media/ai-music.html', authRequired: true },
+                { titleKey: 'tools.removeBackground.title', url: 'html/media/remove-background.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.generalCutout.title', url: 'html/media/general-cutout.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.imageEnhance.title', url: 'html/media/image-enhance.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.idPhoto.title', url: 'html/media/id-photo.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.videoToImages.title', url: 'html/media/video-to-images.html' }
+                { titleKey: 'tools.imageUnderstand.title', url: 'html/media/image-understand.html', authRequired: true, dailyLimit: true },
+                { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, paid: true },
+                { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
+                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true }
             ]
         },
         {
@@ -195,7 +197,6 @@ const toolsConfig = {
                 { titleKey: 'tools.imagesToPdfAdvanced.title', url: 'html/media/images-to-pdf-advanced.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.ocrText.title', url: 'html/media/ocr-text.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.ocrTable.title', url: 'html/media/ocr-table.html', authRequired: true, dailyLimit: true },
-                { titleKey: 'tools.imageUnderstand.title', url: 'html/media/image-understand.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.drugLabel.title', url: 'html/docs/drug-label.html', authRequired: true, dailyLimit: true }
             ]
         },
@@ -284,6 +285,26 @@ const gamesConfig = {
         }
     ]
 };
+
+/** Hub / sidebar order within each group: plain → sign-in → daily limit → paid */
+function toolAccessBadgeRank(item) {
+    if (!item) return 0;
+    if (item.paid) return 3;
+    if (item.dailyLimit) return 2;
+    if (item.authRequired) return 1;
+    return 0;
+}
+function sortToolsByAccessBadge(config) {
+    if (!config || !config.groups) return config;
+    config.groups.forEach(function (group) {
+        if (!group || !Array.isArray(group.items)) return;
+        group.items = group.items.slice().sort(function (a, b) {
+            return toolAccessBadgeRank(a) - toolAccessBadgeRank(b);
+        });
+    });
+    return config;
+}
+sortToolsByAccessBadge(toolsConfig);
 
 window.siteConfig = siteConfig;
 window.portalsConfig = portalsConfig;
