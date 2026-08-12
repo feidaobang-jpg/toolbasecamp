@@ -496,6 +496,43 @@ def _compress_for_mobile(data: bytes, ctype: str) -> tuple[bytes, str]:
     return data, ctype or "image/png"
 
 
+def _compress_for_public(data: bytes, ctype: str) -> tuple[bytes, str]:
+    """Aggressive JPEG shrink for public gallery (Wan PNG can be 10MB+)."""
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+
+        im = Image.open(BytesIO(data))
+        if im.mode in ("RGBA", "P", "LA"):
+            im = im.convert("RGB")
+        # Cap long edge so 2K/4K AI outputs stay reasonable on the wall.
+        max_edge = 2048
+        w, h = im.size
+        if max(w, h) > max_edge:
+            if w >= h:
+                nh = max(1, int(round(h * max_edge / w)))
+                im = im.resize((max_edge, nh), Image.Resampling.LANCZOS)
+            else:
+                nw = max(1, int(round(w * max_edge / h)))
+                im = im.resize((nw, max_edge), Image.Resampling.LANCZOS)
+        best = data
+        best_ctype = ctype or "image/png"
+        for quality in (85, 75, 65, 55):
+            buf = BytesIO()
+            im.save(buf, format="JPEG", quality=quality, optimize=True)
+            out = buf.getvalue()
+            if not out:
+                continue
+            if len(out) < len(best):
+                best, best_ctype = out, "image/jpeg"
+            if len(out) <= 2 * 1024 * 1024:
+                return out, "image/jpeg"
+        return best, best_ctype
+    except Exception:
+        return data, ctype or "image/png"
+
+
 @router.get("/tmp/{name}")
 def image_tmp(name: str):
     safe = os.path.basename(name or "")
@@ -574,18 +611,26 @@ async def image_public_publish(
     user: dict = Depends(_user),
 ):
     """Publish an already-generated image to the public Images hub (no re-generation)."""
-    raw = await _read_upload(file)
+    # AI outputs (esp. Wan PNG) can exceed the normal 8MB tool upload cap; accept
+    # up to 25MB then compress for the public wall.
+    raw = await file.read()
     if not raw:
         raise HTTPException(status_code=400, detail="Empty image")
+    if len(raw) > 25 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Image is too large (max 8MB)")
+    ctype = (getattr(file, "content_type", None) or "").strip() or "image/png"
+    if ctype and not ctype.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Please upload an image file")
+    if not ctype.startswith("image/"):
+        ctype = "image/png"
     src = (source or "").strip() or "manual"
     if src not in ("text_to_image", "instruct_edit", "manual"):
         src = "manual"
-    ctype = (getattr(file, "content_type", None) or "").strip() or "image/png"
-    if not ctype.startswith("image/"):
-        ctype = "image/png"
-    # Keep mobile uploads smaller for the public wall.
-    if len(raw) > 2 * 1024 * 1024:
-        raw, ctype = _compress_for_mobile(raw, ctype)
+    # Always shrink large AI PNGs for the public gallery.
+    if len(raw) > 1024 * 1024:
+        raw, ctype = _compress_for_public(raw, ctype)
+    if len(raw) > MAX_UPLOAD:
+        raise HTTPException(status_code=400, detail="Image is too large (max 8MB)")
     pub = _publish_public_image(
         user_id=int(user["id"]),
         prompt=(prompt or "").strip()[:2000],
