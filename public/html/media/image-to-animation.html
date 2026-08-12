@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Image to Video - Tool Basecamp</title>
   <meta name="description" content="Turn any image into a short video with Alibaba Wan. Audio on by default. Sign-in required; billed from balance on success.">
-  <link rel="stylesheet" href="../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=minimax1" />
+  <link rel="stylesheet" href="../../css/base.css?v=h3v1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=h3v1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=h3v1" />
 </head>
 <body>
   <div class="container">
@@ -45,6 +45,13 @@
           </div>
 
           <div class="img-tool-fields" id="controls" hidden>
+            <label>
+              <span data-i18n="tools.imageToAnimation.modelLabel">Model</span>
+              <select id="model-select">
+                <option value="minimax-h3" selected data-i18n="tools.imageToAnimation.modelH3">MiniMax-H3 · cheaper / up to 2K</option>
+                <option value="wan2.7" data-i18n="tools.imageToAnimation.modelWan27">Wan 2.7 · stable I2V</option>
+              </select>
+            </label>
             <label class="wan-prompt-label">
               <span data-i18n="tools.imageToAnimation.promptLabel">Scene prompt</span>
               <div class="wan-presets" id="prompt-presets" role="group" aria-label="Prompt presets">
@@ -59,21 +66,21 @@
                 data-i18n-placeholder="tools.imageToAnimation.promptPlaceholder"
                 placeholder="e.g. Soft breeze in the hair, gentle smile, natural light, smooth motion"></textarea>
             </label>
-            <label class="img-tool-check">
+            <label class="img-tool-check" id="audio-row">
               <input type="checkbox" id="audio-check" checked />
               <span data-i18n="tools.imageToAnimation.audioLabel">Audio (auto soundtrack)</span>
             </label>
-            <p class="wan-audio-hint" data-i18n="tools.imageToAnimation.audioHint">On: model adds BGM / SFX / voice. Off: silent clip.</p>
+            <p class="wan-audio-hint" id="audio-hint" data-i18n="tools.imageToAnimation.audioHint">On: model adds BGM / SFX / voice. Off: silent clip.</p>
             <label>
               <span data-i18n="tools.imageToAnimation.durationLabel">Duration</span>
-              <input type="number" id="duration-input" class="rec-input wan-duration" min="2" max="15" step="1" value="5" />
-              <span class="wan-field-hint" data-i18n="tools.imageToAnimation.durationHint">2–15 seconds (integer)</span>
+              <input type="number" id="duration-input" class="rec-input wan-duration" min="4" max="15" step="1" value="5" />
+              <span class="wan-field-hint" id="duration-hint" data-i18n="tools.imageToAnimation.durationHintH3">4–15 seconds (integer)</span>
             </label>
             <label>
               <span data-i18n="tools.imageToAnimation.resolutionLabel">Resolution</span>
               <select id="resolution-select">
-                <option value="720P" selected data-i18n="tools.imageToAnimation.res720">720P · ~¥1.2/s (recommended)</option>
-                <option value="1080P" data-i18n="tools.imageToAnimation.res1080">1080P · ~¥2/s</option>
+                <option value="768P" selected data-i18n="tools.imageToAnimation.res768">768P · ~¥1.0/s (recommended)</option>
+                <option value="2K" data-i18n="tools.imageToAnimation.res2k">2K · ~¥1.6/s</option>
               </select>
             </label>
           </div>
@@ -113,13 +120,13 @@
     </main>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=minimax1"></script>
-  <script src="../../js/locales/en.js?v=minimax1"></script>
-  <script src="../../js/locales/zh-CN.js?v=minimax1"></script>
-  <script src="../../js/i18n.js?v=minimax1"></script>
-  <script src="../../js/config.js?v=minimax1"></script>
-  <script src="../../js/base.js?v=minimax1"></script>
-  <script src="../../js/media/image-cloud-client.js?v=minimax1"></script>
-  <script src="../../js/media/image-to-animation.js?v=minimax1"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=h3v1"></script>
+  <script src="../../js/locales/en.js?v=h3v1"></script>
+  <script src="../../js/locales/zh-CN.js?v=h3v1"></script>
+  <script src="../../js/i18n.js?v=h3v1"></script>
+  <script src="../../js/config.js?v=h3v1"></script>
+  <script src="../../js/base.js?v=h3v1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=h3v1"></script>
+  <script src="../../js/media/image-to-animation.js?v=h3v1"></script>
 </body>
 </html>

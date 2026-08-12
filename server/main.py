@@ -82,6 +82,28 @@ except Exception as exc:  # pragma: no cover - surface on /health when deploy br
 
     _wan_import_error = str(exc)
 
+_mm_video_import_error = ""
+try:
+    from minimax_video import (
+        router as mm_video_router,
+        _wire as wire_mm_video,
+        get_minimax_video_config,
+        minimax_video_configured,
+    )
+except Exception as exc:  # pragma: no cover
+    mm_video_router = None
+
+    def wire_mm_video(*_a, **_k):
+        return None
+
+    def get_minimax_video_config():
+        return {"configured": False, "error": str(exc)}
+
+    def minimax_video_configured():
+        return False
+
+    _mm_video_import_error = str(exc)
+
 _music_import_error = ""
 try:
     from fun_music import (
@@ -502,6 +524,12 @@ if wan_router is not None:
     app.include_router(wan_router)
 else:
     print("[wan] router not mounted:", _wan_import_error or "unknown")
+
+if mm_video_router is not None:
+    wire_mm_video(get_conn, require_db, get_current_user)
+    app.include_router(mm_video_router)
+else:
+    print("[minimax-video] router not mounted:", _mm_video_import_error or "unknown")
 
 try:
     from game_rooms_api import router as tank_coop_router
@@ -963,11 +991,15 @@ def health():
         "wan_i2v": get_wan_config(),
         "wan_configured": wan_configured(),
         "wan_import_error": _wan_import_error or None,
+        "minimax_h3_api": "/minimax/i2v/submit" in paths,
+        "minimax_h3": get_minimax_video_config(),
+        "minimax_h3_configured": minimax_video_configured(),
+        "minimax_h3_import_error": _mm_video_import_error or None,
         "fun_music_api": "/music/generate" in paths,
         "fun_music": get_fun_music_config(),
         "fun_music_configured": fun_music_configured(),
         "fun_music_import_error": _music_import_error or None,
-        "api_features": ["wan_i2v", "fun_music"],
+        "api_features": ["wan_i2v", "minimax_h3", "fun_music"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

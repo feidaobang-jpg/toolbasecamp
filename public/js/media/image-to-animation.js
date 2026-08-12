@@ -12,7 +12,12 @@
     var promptInput = document.getElementById('prompt-input');
     var durationInput = document.getElementById('duration-input');
     var resolutionSelect = document.getElementById('resolution-select');
+    var modelSelect = document.getElementById('model-select');
     var audioCheck = document.getElementById('audio-check');
+    var audioRow = document.getElementById('audio-row');
+    var audioHint = document.getElementById('audio-hint');
+    var durationHint = document.getElementById('duration-hint');
+    var costNote = document.getElementById('cost-note');
     var runBtn = document.getElementById('run-btn');
     var downloadBtn = document.getElementById('download-btn');
     var framesBtn = document.getElementById('frames-btn');
@@ -37,12 +42,55 @@
     var polling = false;
     var pollTimer = null;
     var priceMarkup = 2;
-    var minDuration = 2;
+    var minDuration = 4;
     var maxDuration = 15;
+    var apiPrefix = '/minimax';
+    var providerConfigured = { wan: true, h3: true };
     // Vendor list CNY / sec (same as server); UI shows list × markup
-    var listPerSec = { '720P': 0.6, '1080P': 1.0 };
+    var listPerSec = { '768P': 0.5, '2K': 0.8, '720P': 0.6, '1080P': 1.0 };
 
     if (loginLink) loginLink.href = C.loginUrl();
+
+    function selectedModel() {
+        return (modelSelect && modelSelect.value) || 'minimax-h3';
+    }
+
+    function isH3() {
+        return selectedModel() === 'minimax-h3';
+    }
+
+    function syncProviderUi() {
+        var h3 = isH3();
+        apiPrefix = h3 ? '/minimax' : '/wan';
+        minDuration = h3 ? 4 : 2;
+        maxDuration = 15;
+        if (audioRow) audioRow.hidden = !!h3;
+        if (audioHint) {
+            audioHint.hidden = false;
+            audioHint.textContent = C.tr(h3 ? 'tools.imageToAnimation.audioHintH3' : 'tools.imageToAnimation.audioHint');
+        }
+        if (durationHint) {
+            durationHint.textContent = C.tr(h3 ? 'tools.imageToAnimation.durationHintH3' : 'tools.imageToAnimation.durationHint');
+        }
+        if (costNote) {
+            costNote.textContent = C.tr(h3 ? 'tools.imageToAnimation.costNoteH3' : 'tools.imageToAnimation.costNoteWan');
+        }
+        if (resolutionSelect) {
+            var cur = resolutionSelect.value;
+            resolutionSelect.innerHTML = '';
+            if (h3) {
+                resolutionSelect.appendChild(new Option(C.tr('tools.imageToAnimation.res768'), '768P'));
+                resolutionSelect.appendChild(new Option(C.tr('tools.imageToAnimation.res2k'), '2K'));
+                resolutionSelect.value = (cur === '2K' || cur === '1080P') ? '2K' : '768P';
+            } else {
+                resolutionSelect.appendChild(new Option(C.tr('tools.imageToAnimation.res720'), '720P'));
+                resolutionSelect.appendChild(new Option(C.tr('tools.imageToAnimation.res1080'), '1080P'));
+                resolutionSelect.value = (cur === '1080P' || cur === '2K') ? '1080P' : '720P';
+            }
+        }
+        syncDurationInput();
+        updateEstimate();
+    }
 
     function clampDuration(raw) {
         var n = parseInt(String(raw || '5'), 10);
@@ -63,16 +111,17 @@
     }
 
     function localizeSelectOptions() {
-        if (resolutionSelect && resolutionSelect.options.length >= 2) {
-            resolutionSelect.options[0].textContent = C.tr('tools.imageToAnimation.res720');
-            resolutionSelect.options[1].textContent = C.tr('tools.imageToAnimation.res1080');
+        if (modelSelect && modelSelect.options.length >= 2) {
+            modelSelect.options[0].textContent = C.tr('tools.imageToAnimation.modelH3');
+            modelSelect.options[1].textContent = C.tr('tools.imageToAnimation.modelWan27');
         }
+        syncProviderUi();
     }
 
     function currentEstimate() {
         var dur = readDuration();
-        var res = resolutionSelect.value || '720P';
-        var listRate = listPerSec[res] != null ? listPerSec[res] : 0.6;
+        var res = (resolutionSelect && resolutionSelect.value) || (isH3() ? '768P' : '720P');
+        var listRate = listPerSec[res] != null ? listPerSec[res] : (isH3() ? 0.5 : 0.6);
         var listTotal = listRate * dur;
         var userTotal = listTotal * priceMarkup;
         return {
@@ -107,6 +156,7 @@
         framesBtn.disabled = on || !videoBlobUrl;
         promptInput.disabled = on;
         if (durationInput) durationInput.disabled = on;
+        if (modelSelect) modelSelect.disabled = on;
         resolutionSelect.disabled = on;
         if (audioCheck) audioCheck.disabled = on;
         if (promptPresets) {
@@ -158,17 +208,47 @@
     }
 
     function loadStatus() {
-        return C.apiJson('/wan/status').then(function (s) {
-            if (!s.configured) {
-                C.setError(errorBox, C.tr('tools.imageToAnimation.notConfigured'));
-            }
+        var wanP = C.apiJson('/wan/status').then(function (s) {
+            providerConfigured.wan = !!s.configured;
             if (s.pricing && s.pricing.listPerSec) {
-                listPerSec = s.pricing.listPerSec;
+                Object.assign(listPerSec, s.pricing.listPerSec);
             }
-            if (s.minDuration != null) minDuration = Number(s.minDuration) || minDuration;
-            if (s.maxDuration != null) maxDuration = Number(s.maxDuration) || maxDuration;
-            syncDurationInput();
-            applyWallet(s.wallet);
+            if (!isH3()) {
+                if (s.minDuration != null) minDuration = Number(s.minDuration) || minDuration;
+                if (s.maxDuration != null) maxDuration = Number(s.maxDuration) || maxDuration;
+                syncDurationInput();
+                applyWallet(s.wallet);
+            } else if (s.wallet) {
+                applyWallet(s.wallet);
+            }
+            return s;
+        }).catch(function () {
+            providerConfigured.wan = false;
+        });
+        var h3P = C.apiJson('/minimax/status').then(function (s) {
+            providerConfigured.h3 = !!s.configured;
+            if (s.pricing && s.pricing.listPerSec) {
+                Object.assign(listPerSec, s.pricing.listPerSec);
+            }
+            if (isH3()) {
+                if (s.minDuration != null) minDuration = Number(s.minDuration) || minDuration;
+                if (s.maxDuration != null) maxDuration = Number(s.maxDuration) || maxDuration;
+                syncDurationInput();
+                applyWallet(s.wallet);
+            } else if (s.wallet) {
+                applyWallet(s.wallet);
+            }
+            return s;
+        }).catch(function () {
+            providerConfigured.h3 = false;
+        });
+        return Promise.all([wanP, h3P]).then(function () {
+            syncProviderUi();
+            if (isH3() && !providerConfigured.h3) {
+                C.setError(errorBox, C.tr('tools.imageToAnimation.notConfiguredH3'));
+            } else if (!isH3() && !providerConfigured.wan) {
+                C.setError(errorBox, C.tr('tools.imageToAnimation.notConfiguredWan'));
+            }
         }).catch(function (err) {
             C.setError(errorBox, err.message);
         });
@@ -217,7 +297,7 @@
     }
 
     function fetchVideoBlob() {
-        return C.apiBlob('/wan/i2v/proxy/' + encodeURIComponent(taskId)).then(function (res) {
+        return C.apiBlob(apiPrefix + '/i2v/proxy/' + encodeURIComponent(taskId)).then(function (res) {
             revokeVideo();
             videoBlobUrl = URL.createObjectURL(res.blob);
             resultVideo.src = videoBlobUrl;
@@ -230,7 +310,7 @@
 
     function pollOnce() {
         if (!polling || !taskId) return;
-        C.apiJson('/wan/i2v/task/' + encodeURIComponent(taskId))
+        C.apiJson(apiPrefix + '/i2v/task/' + encodeURIComponent(taskId))
             .then(function (data) {
                 var status = String(data.status || '').toUpperCase();
                 if (status === 'SUCCEEDED') {
@@ -291,10 +371,12 @@
         form.append('image', file);
         form.append('prompt', prompt);
         form.append('duration', String(readDuration()));
-        form.append('resolution', resolutionSelect.value || '720P');
-        form.append('audio', audioCheck && audioCheck.checked ? '1' : '0');
+        form.append('resolution', resolutionSelect.value || (isH3() ? '768P' : '720P'));
+        if (!isH3()) {
+            form.append('audio', audioCheck && audioCheck.checked ? '1' : '0');
+        }
 
-        C.apiJson('/wan/i2v/submit', { method: 'POST', body: form })
+        C.apiJson(apiPrefix + '/i2v/submit', { method: 'POST', body: form })
             .then(function (data) {
                 taskId = data.task_id;
                 if (data.wallet) applyWallet(data.wallet);
@@ -312,11 +394,11 @@
     function downloadMp4() {
         if (!videoBlobUrl) return;
         if (typeof window.tbTriggerDownload === 'function') {
-            window.tbTriggerDownload(videoBlobUrl, 'wan-video.mp4');
+            window.tbTriggerDownload(videoBlobUrl, isH3() ? 'minimax-h3.mp4' : 'wan-video.mp4');
         } else {
             var a = document.createElement('a');
             a.href = videoBlobUrl;
-            a.download = 'wan-video.mp4';
+            a.download = isH3() ? 'minimax-h3.mp4' : 'wan-video.mp4';
             a.click();
         }
     }
@@ -406,6 +488,17 @@
         });
     }
     resolutionSelect.addEventListener('change', updateEstimate);
+    if (modelSelect) {
+        modelSelect.addEventListener('change', function () {
+            C.setError(errorBox, '');
+            syncProviderUi();
+            if (isH3() && !providerConfigured.h3) {
+                C.setError(errorBox, C.tr('tools.imageToAnimation.notConfiguredH3'));
+            } else if (!isH3() && !providerConfigured.wan) {
+                C.setError(errorBox, C.tr('tools.imageToAnimation.notConfiguredWan'));
+            }
+        });
+    }
     if (promptPresets) {
         promptPresets.addEventListener('click', function (e) {
             var btn = e.target.closest('.wan-preset');
