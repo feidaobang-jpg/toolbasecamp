@@ -1,56 +1,923 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lianliankan - Tool Basecamp</title>
-  <meta name="description" content="Match identical emoji tiles with a path of at most two turns. Classic Lianliankan, runs locally.">
-  <link rel="stylesheet" href="../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/game/games-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/game/lianliankan.css?v=minimax1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>炫彩连连看</title>
+<style>
+/* ============ 全局样式 ============ */
+html,body{
+  margin:0;padding:0;width:100%;height:100%;
+  background:#0b0d1a;overflow:hidden;
+  touch-action:none;
+  -webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+}
+#wrap{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 30%,#1a1f3d 0%,#0b0d1a 70%);
+}
+canvas{
+  display:block;
+  box-shadow:0 0 40px rgba(80,120,255,.25);
+  border-radius:8px;
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar"></aside>
-    <main class="content">
-      <div class="tool-header">
-        <h1 data-i18n="tools.lianliankan.title">Lianliankan</h1>
-        <p data-i18n="tools.lianliankan.desc">Match identical emoji tiles with a path of at most two turns. Runs locally.</p>
-      </div>
+<div id="wrap"><canvas id="game"></canvas></div>
+<script>
+"use strict";
+/* ======================================================================
+ * 炫彩连连看  —— 单文件 2D Canvas 游戏
+ * 竖屏模式：基准 540 × 960（9:16），PC / 手机无需旋转直接游玩
+ * 分层结构：
+ *   [1] 画布与缩放适配   [2] 音频系统(WebAudio SFX + BGM)
+ *   [3] 图案绘制(纯代码) [4] 棋盘与连通算法
+ *   [5] 粒子/特效系统    [6] 游戏状态机与关卡
+ *   [7] 输入(键盘/触控/虚拟按键) [8] UI 渲染  [9] 主循环
+ * ==================================================================== */
 
-      <div class="tool-card game-card">
-        <div class="game-toolbar">
-          <div class="game-stats">
-            <span><span data-i18n="tools.game.score">Score</span>: <strong id="score">0</strong></span>
-            <span><span data-i18n="tools.lianliankan.level">Level</span>: <strong id="level">1</strong></span>
-            <span><span data-i18n="tools.lianliankan.time">Time</span>: <strong id="time">0</strong></span>
-            <span><span data-i18n="tools.lianliankan.pairs">Pairs left</span>: <strong id="pairs">0</strong></span>
-            <span><span data-i18n="tools.lianliankan.best">Best</span>: <strong id="best">1</strong></span>
-          </div>
-          <div class="action-row">
-            <button type="button" class="tb-btn" id="hint-btn" data-i18n="tools.lianliankan.hint">Hint</button>
-            <button type="button" class="tb-btn" id="shuffle-btn" data-i18n="tools.lianliankan.shuffle">Shuffle</button>
-            <button type="button" class="tb-btn" id="restart-btn" data-i18n="tools.game.restart">Start</button>
-          </div>
-        </div>
-        <div class="game-status is-idle" id="status" aria-live="polite"></div>
-        <div class="game-board-wrap">
-          <div class="llk-board" id="board">
-            <svg class="llk-path-layer" id="path-layer" aria-hidden="true"></svg>
-            <div class="llk-grid" id="grid"></div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
+/* ---------------------------------------------------------------
+ * [1] 画布与缩放适配（逻辑尺寸固定 540x960，等比缩放至屏幕）
+ * ------------------------------------------------------------- */
+const BASE_W = 540, BASE_H = 960;
+const cvs = document.getElementById("game");
+const ctx = cvs.getContext("2d");
+let viewScale = 1;
 
-  <script src="../../js/locales/en.js?v=minimax1"></script>
-  <script src="../../js/locales/zh-CN.js?v=minimax1"></script>
-  <script src="../../js/i18n.js?v=minimax1"></script>
-  <script src="../../js/config.js?v=minimax1"></script>
-  <script src="../../js/base.js?v=minimax1"></script>
-  <script src="../../js/game/game-audio.js?v=minimax1"></script>
-  <script src="../../js/game/lianliankan.js?v=minimax1"></script>
+function fitCanvas(){
+  const ww = window.innerWidth, wh = window.innerHeight;
+  viewScale = Math.min(ww / BASE_W, wh / BASE_H);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cvs.width  = Math.round(BASE_W * viewScale * dpr);
+  cvs.height = Math.round(BASE_H * viewScale * dpr);
+  cvs.style.width  = Math.round(BASE_W * viewScale) + "px";
+  cvs.style.height = Math.round(BASE_H * viewScale) + "px";
+  ctx.setTransform(viewScale * dpr, 0, 0, viewScale * dpr, 0, 0);
+}
+window.addEventListener("resize", fitCanvas);
+window.addEventListener("orientationchange", ()=>setTimeout(fitCanvas,120));
+fitCanvas();
+
+/* 将屏幕坐标转换为逻辑坐标 */
+function toLogic(clientX, clientY){
+  const r = cvs.getBoundingClientRect();
+  return { x:(clientX - r.left) / viewScale, y:(clientY - r.top) / viewScale };
+}
+
+/* ---------------------------------------------------------------
+ * [2] 音频系统：WebAudio 程序生成音效 + 循环 BGM
+ * ------------------------------------------------------------- */
+const AudioSys = (()=>{
+  let ac = null, master = null, bgmGain = null, bgmTimer = null, bgmOn = true, sfxOn = true;
+  function ensure(){
+    if(!ac){
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      master = ac.createGain(); master.gain.value = 0.55; master.connect(ac.destination);
+      bgmGain = ac.createGain(); bgmGain.gain.value = 0.16; bgmGain.connect(master);
+    }
+    if(ac.state === "suspended") ac.resume();
+  }
+  /* 通用音符 */
+  function tone(freq, dur, type, vol, when, dest){
+    const t = ac.currentTime + (when||0);
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = type||"sine"; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol||0.3, t+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(dest||master);
+    o.start(t); o.stop(t+dur+0.05);
+  }
+  /* 噪声（碰撞/失败用） */
+  function noise(dur, vol, when){
+    const t = ac.currentTime + (when||0);
+    const len = Math.floor(ac.sampleRate * dur);
+    const buf = ac.createBuffer(1, len, ac.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i] = (Math.random()*2-1) * (1-i/len);
+    const src = ac.createBufferSource(); src.buffer = buf;
+    const g = ac.createGain(); g.gain.value = vol||0.2;
+    src.connect(g); g.connect(master); src.start(t);
+  }
+  const S = {
+    ensure,
+    select(){ if(!sfxOn) return; ensure(); tone(660,0.08,"square",0.15); },          // 选中
+    match(){  if(!sfxOn) return; ensure(); tone(880,0.1,"triangle",0.28); tone(1320,0.14,"triangle",0.22,0.08); }, // 消除成功
+    wrong(){  if(!sfxOn) return; ensure(); tone(200,0.15,"sawtooth",0.18); noise(0.08,0.08); },  // 不匹配
+    hint(){   if(!sfxOn) return; ensure(); tone(520,0.1,"sine",0.2); tone(780,0.12,"sine",0.2,0.1); },
+    shuffle(){if(!sfxOn) return; ensure(); for(let i=0;i<5;i++) tone(300+i*120,0.06,"square",0.12,i*0.05); },
+    win(){    if(!sfxOn) return; ensure(); [523,659,784,1047].forEach((f,i)=>tone(f,0.25,"triangle",0.28,i*0.13)); },
+    lose(){   if(!sfxOn) return; ensure(); [440,370,311,262].forEach((f,i)=>tone(f,0.28,"sawtooth",0.16,i*0.16)); noise(0.35,0.1,0.6); },
+    click(){  if(!sfxOn) return; ensure(); tone(500,0.06,"square",0.12); },
+    tick(){   if(!sfxOn) return; ensure(); tone(1000,0.05,"sine",0.1); },
+  };
+  /* BGM：简单和弦琶音循环 */
+  const bgmSeq = [
+    [261.63,329.63,392.00],[220.00,261.63,329.63],
+    [174.61,220.00,261.63],[196.00,246.94,293.66]
+  ];
+  let bar = 0;
+  function playBar(){
+    if(!ac || !bgmOn) return;
+    const chord = bgmSeq[bar % bgmSeq.length]; bar++;
+    for(let i=0;i<8;i++){
+      const f = chord[i % 3] * (i>=6?2:1);
+      tone(f, 0.22, "sine", 0.5, i*0.25, bgmGain);
+    }
+    tone(chord[0]/2, 1.9, "triangle", 0.35, 0, bgmGain); // 低音铺底
+  }
+  S.startBGM = ()=>{
+    ensure();
+    if(bgmTimer) return;
+    playBar();
+    bgmTimer = setInterval(playBar, 2000);
+  };
+  S.stopBGM = ()=>{ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer=null; } };
+  S.toggleBGM = ()=>{ bgmOn = !bgmOn; if(bgmOn){S.startBGM();} else {S.stopBGM();} return bgmOn; };
+  S.toggleSFX = ()=>{ sfxOn = !sfxOn; return sfxOn; };
+  S.bgmOn = ()=>bgmOn; S.sfxOn = ()=>sfxOn;
+  return S;
+})();
+
+/* ---------------------------------------------------------------
+ * [3] 图案绘制 —— 全部代码绘制，无外部图片
+ * ------------------------------------------------------------- */
+const ICON_COLORS = [
+  ["#ff6b6b","#c0392b"],["#ffa94d","#d35400"],["#ffd43b","#b7950b"],
+  ["#69db7c","#1e8449"],["#38d9a9","#0e6655"],["#4dabf7","#1a5276"],
+  ["#748ffc","#3b3f8f"],["#da77f2","#7d3c98"],["#f783ac","#a93261"],
+  ["#a9e34b","#5d7a12"],["#66d9e8","#117a8b"],["#e599f7","#8e44ad"]
+];
+/* 每种图案一个绘制函数：在 (0,0) 为中心、半径 r 内绘制 */
+const ICON_DRAWERS = [
+  // 0 心形
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    c.moveTo(0,r*0.85);
+    c.bezierCurveTo(-r*1.1,r*0.1,-r*0.6,-r*0.9,0,-r*0.25);
+    c.bezierCurveTo(r*0.6,-r*0.9,r*1.1,r*0.1,0,r*0.85);
+    c.fill(); },
+  // 1 星形
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    for(let i=0;i<10;i++){ const a=-Math.PI/2+i*Math.PI/5, rr=i%2?r*0.42:r;
+      c.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); }
+    c.closePath(); c.fill(); },
+  // 2 月亮
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath(); c.arc(0,0,r,0,Math.PI*2); c.fill();
+    c.globalCompositeOperation="destination-out";
+    c.beginPath(); c.arc(r*0.45,-r*0.25,r*0.85,0,Math.PI*2); c.fill();
+    c.globalCompositeOperation="source-over"; },
+  // 3 菱形
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    c.moveTo(0,-r); c.lineTo(r*0.75,0); c.lineTo(0,r); c.lineTo(-r*0.75,0);
+    c.closePath(); c.fill();
+    c.fillStyle="rgba(255,255,255,.35)"; c.beginPath();
+    c.moveTo(0,-r); c.lineTo(r*0.75,0); c.lineTo(0,0); c.closePath(); c.fill(); },
+  // 4 三叶草
+  (c,r,co)=>{ c.fillStyle=co[0];
+    for(let i=0;i<3;i++){ const a=-Math.PI/2+i*Math.PI*2/3;
+      c.beginPath(); c.arc(Math.cos(a)*r*0.45,Math.sin(a)*r*0.45,r*0.5,0,Math.PI*2); c.fill(); }
+    c.strokeStyle=co[1]; c.lineWidth=r*0.14;
+    c.beginPath(); c.moveTo(0,r*0.2); c.lineTo(0,r); c.stroke(); },
+  // 5 闪电
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    c.moveTo(r*0.15,-r); c.lineTo(-r*0.55,r*0.15); c.lineTo(-r*0.05,r*0.15);
+    c.lineTo(-r*0.15,r); c.lineTo(r*0.55,-r*0.15); c.lineTo(r*0.05,-r*0.15);
+    c.closePath(); c.fill(); },
+  // 6 圆环
+  (c,r,co)=>{ c.strokeStyle=co[0]; c.lineWidth=r*0.42;
+    c.beginPath(); c.arc(0,0,r*0.65,0,Math.PI*2); c.stroke();
+    c.fillStyle=co[1]; c.beginPath(); c.arc(0,0,r*0.2,0,Math.PI*2); c.fill(); },
+  // 7 六边形
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    for(let i=0;i<6;i++){ const a=Math.PI/6+i*Math.PI/3;
+      c.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+    c.closePath(); c.fill();
+    c.strokeStyle="rgba(255,255,255,.4)"; c.lineWidth=r*0.1; c.stroke(); },
+  // 8 水滴
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    c.moveTo(0,-r);
+    c.bezierCurveTo(r*0.8,-r*0.1,r*0.7,r*0.9,0,r*0.9);
+    c.bezierCurveTo(-r*0.7,r*0.9,-r*0.8,-r*0.1,0,-r);
+    c.fill();
+    c.fillStyle="rgba(255,255,255,.4)";
+    c.beginPath(); c.arc(-r*0.25,r*0.25,r*0.18,0,Math.PI*2); c.fill(); },
+  // 9 十字花
+  (c,r,co)=>{ c.fillStyle=co[0];
+    c.fillRect(-r*0.3,-r,r*0.6,r*2); c.fillRect(-r,-r*0.3,r*2,r*0.6);
+    c.fillStyle=co[1]; c.beginPath(); c.arc(0,0,r*0.28,0,Math.PI*2); c.fill(); },
+  // 10 三角形
+  (c,r,co)=>{ c.fillStyle=co[0]; c.beginPath();
+    c.moveTo(0,-r); c.lineTo(r*0.9,r*0.75); c.lineTo(-r*0.9,r*0.75);
+    c.closePath(); c.fill();
+    c.fillStyle="rgba(255,255,255,.3)"; c.beginPath();
+    c.moveTo(0,-r); c.lineTo(r*0.9,r*0.75); c.lineTo(0,r*0.75); c.closePath(); c.fill(); },
+  // 11 太阳
+  (c,r,co)=>{ c.strokeStyle=co[0]; c.lineWidth=r*0.16;
+    for(let i=0;i<8;i++){ const a=i*Math.PI/4;
+      c.beginPath(); c.moveTo(Math.cos(a)*r*0.62,Math.sin(a)*r*0.62);
+      c.lineTo(Math.cos(a)*r,Math.sin(a)*r); c.stroke(); }
+    c.fillStyle=co[0]; c.beginPath(); c.arc(0,0,r*0.42,0,Math.PI*2); c.fill(); }
+];
+const ICON_COUNT = ICON_DRAWERS.length;
+
+/* 预渲染图案到离屏画布（含圆角底板与光影），提高帧率 */
+const TILE_CACHE = {};
+function getTileSprite(type, size, state){
+  const key = type+"_"+size+"_"+state;
+  if(TILE_CACHE[key]) return TILE_CACHE[key];
+  const off = document.createElement("canvas");
+  off.width = off.height = size*2; // 2x 供高清缩放
+  const c = off.getContext("2d");
+  c.scale(2,2);
+  const s = size, rad = s*0.18;
+  const co = ICON_COLORS[type % ICON_COLORS.length];
+  // 底板渐变
+  const g = c.createLinearGradient(0,0,0,s);
+  if(state==="sel"){ g.addColorStop(0,"#fff8d6"); g.addColorStop(1,"#ffe08a"); }
+  else{ g.addColorStop(0,"#3a4368"); g.addColorStop(1,"#252c4a"); }
+  c.beginPath();
+  c.moveTo(rad,1); c.arcTo(s-1,1,s-1,s-1,rad); c.arcTo(s-1,s-1,1,s-1,rad);
+  c.arcTo(1,s-1,1,1,rad); c.arcTo(1,1,s-1,1,rad); c.closePath();
+  c.fillStyle = g; c.fill();
+  c.strokeStyle = state==="sel" ? "#ffcf3f" : "rgba(140,160,255,.45)";
+  c.lineWidth = state==="sel" ? 2.5 : 1.4; c.stroke();
+  // 顶部高光
+  c.fillStyle = "rgba(255,255,255,.10)";
+  c.beginPath(); c.moveTo(rad,2); c.arcTo(s-2,2,s-2,s*0.4,rad);
+  c.lineTo(s-2,s*0.35); c.quadraticCurveTo(s/2,s*0.5,2,s*0.35);
+  c.closePath(); c.fill();
+  // 图案
+  c.save(); c.translate(s/2, s/2);
+  c.shadowColor = "rgba(0,0,0,.4)"; c.shadowBlur = 3; c.shadowOffsetY = 2;
+  ICON_DRAWERS[type % ICON_COUNT](c, s*0.3, co);
+  c.restore();
+  TILE_CACHE[key] = off;
+  return off;
+}
+
+/* ---------------------------------------------------------------
+ * [4] 棋盘数据与连通算法（最多两次转折）
+ * ------------------------------------------------------------- */
+const Board = {
+  cols:0, rows:0, grid:[],   // grid 含外围一圈空白：尺寸 (cols+2)x(rows+2)，值 -1 为空
+  tileSize:0, ox:0, oy:0,    // 绘制偏移
+  remain:0,
+
+  init(cols, rows, typeCount){
+    this.cols = cols; this.rows = rows;
+    const total = cols * rows;
+    // 生成成对图案
+    const pool = [];
+    for(let i=0;i<total/2;i++){ const t = i % typeCount; pool.push(t,t); }
+    // 洗牌
+    for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+    // 填入带边框网格
+    this.grid = [];
+    for(let y=0;y<rows+2;y++){
+      const row=[];
+      for(let x=0;x<cols+2;x++){
+        if(x===0||y===0||x===cols+1||y===rows+1) row.push(-1);
+        else row.push(pool[(y-1)*cols+(x-1)]);
+      }
+      this.grid.push(row);
+    }
+    this.remain = total;
+    // 计算格子尺寸（棋盘区域：全宽、垂直居中于游戏区）
+    const areaW = BASE_W - 30, areaH = 700;
+    this.tileSize = Math.floor(Math.min(areaW/cols, areaH/rows));
+    this.ox = (BASE_W - this.tileSize*cols)/2;
+    this.oy = 120 + (areaH - this.tileSize*rows)/2;
+    // 保证开局有解
+    if(!this.findPair()) this.shuffle();
+  },
+
+  at(x,y){ return this.grid[y] && this.grid[y][x] !== undefined ? this.grid[y][x] : -1; },
+  isEmpty(x,y){ return this.at(x,y) === -1; },
+
+  /* 直线畅通检测（不含端点） */
+  clearLine(x1,y1,x2,y2){
+    if(x1===x2){
+      const [a,b] = y1<y2?[y1,y2]:[y2,y1];
+      for(let y=a+1;y<b;y++) if(!this.isEmpty(x1,y)) return false;
+      return true;
+    }
+    if(y1===y2){
+      const [a,b] = x1<x2?[x1,x2]:[x2,x1];
+      for(let x=a+1;x<b;x++) if(!this.isEmpty(x,y1)) return false;
+      return true;
+    }
+    return false;
+  },
+
+  /* 连通检测：返回路径点数组（网格坐标）或 null。最多两个转折点 */
+  connect(x1,y1,x2,y2){
+    if(x1===x2 && y1===y2) return null;
+    if(this.at(x1,y1) !== this.at(x2,y2)) return null;
+    if(this.at(x1,y1) === -1) return null;
+    // 0 转折
+    if(this.clearLine(x1,y1,x2,y2)) return [[x1,y1],[x2,y2]];
+    // 1 转折：拐点 (x1,y2) 或 (x2,y1)
+    if(this.isEmpty(x1,y2) && this.clearLine(x1,y1,x1,y2) && this.clearLine(x1,y2,x2,y2))
+      return [[x1,y1],[x1,y2],[x2,y2]];
+    if(this.isEmpty(x2,y1) && this.clearLine(x1,y1,x2,y1) && this.clearLine(x2,y1,x2,y2))
+      return [[x1,y1],[x2,y1],[x2,y2]];
+    // 2 转折：沿水平/垂直方向扫描中转线
+    const W = this.cols+2, H = this.rows+2;
+    for(let x=0;x<W;x++){ // 垂直中转线 x
+      if(x===x1||x===x2) continue;
+      if(this.isEmpty(x,y1) && this.isEmpty(x,y2) &&
+         this.clearLine(x1,y1,x,y1) && this.clearLine(x,y1,x,y2) && this.clearLine(x,y2,x2,y2))
+        return [[x1,y1],[x,y1],[x,y2],[x2,y2]];
+    }
+    for(let y=0;y<H;y++){ // 水平中转线 y
+      if(y===y1||y===y2) continue;
+      if(this.isEmpty(x1,y) && this.isEmpty(x2,y) &&
+         this.clearLine(x1,y1,x1,y) && this.clearLine(x1,y,x2,y) && this.clearLine(x2,y,x2,y2))
+        return [[x1,y1],[x1,y],[x2,y],[x2,y2]];
+    }
+    return null;
+  },
+
+  remove(x1,y1,x2,y2){
+    this.grid[y1][x1] = -1; this.grid[y2][x2] = -1;
+    this.remain -= 2;
+  },
+
+  /* 查找任意一对可消除的组合（提示 / 死局检测用） */
+  findPair(){
+    const cells = [];
+    for(let y=1;y<=this.rows;y++) for(let x=1;x<=this.cols;x++)
+      if(!this.isEmpty(x,y)) cells.push([x,y]);
+    for(let i=0;i<cells.length;i++)
+      for(let j=i+1;j<cells.length;j++){
+        const [ax,ay]=cells[i], [bx,by]=cells[j];
+        if(this.at(ax,ay)===this.at(bx,by) && this.connect(ax,ay,bx,by))
+          return [cells[i],cells[j]];
+      }
+    return null;
+  },
+
+  /* 洗牌：重排剩余图案直到有解 */
+  shuffle(){
+    const cells=[], types=[];
+    for(let y=1;y<=this.rows;y++) for(let x=1;x<=this.cols;x++)
+      if(!this.isEmpty(x,y)){ cells.push([x,y]); types.push(this.at(x,y)); }
+    let guard = 0;
+    do{
+      for(let i=types.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [types[i],types[j]]=[types[j],types[i]]; }
+      cells.forEach(([x,y],i)=>{ this.grid[y][x]=types[i]; });
+      guard++;
+    }while(!this.findPair() && guard < 60);
+  },
+
+  /* 网格坐标 → 屏幕像素中心 */
+  cellCenter(gx,gy){
+    return { x: this.ox + (gx-1)*this.tileSize + this.tileSize/2,
+             y: this.oy + (gy-1)*this.tileSize + this.tileSize/2 };
+  },
+  /* 屏幕像素 → 网格坐标（无效返回 null） */
+  pickCell(px,py){
+    const gx = Math.floor((px - this.ox)/this.tileSize)+1;
+    const gy = Math.floor((py - this.oy)/this.tileSize)+1;
+    if(gx>=1 && gx<=this.cols && gy>=1 && gy<=this.rows) return {gx,gy};
+    return null;
+  }
+};
+
+/* ---------------------------------------------------------------
+ * [5] 粒子 / 特效系统
+ * ------------------------------------------------------------- */
+const FX = {
+  particles: [], paths: [], floats: [],
+  burst(x,y,color){
+    for(let i=0;i<16;i++){
+      const a = Math.random()*Math.PI*2, sp = 60+Math.random()*180;
+      this.particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        life:0.6+Math.random()*0.4, t:0, color, size:2+Math.random()*4});
+    }
+  },
+  /* 连接线动画 */
+  showPath(points){
+    const pts = points.map(([gx,gy])=>Board.cellCenter(gx,gy));
+    this.paths.push({pts, t:0, life:0.35});
+  },
+  floatText(x,y,text,color){
+    this.floats.push({x,y,text,color,t:0,life:1});
+  },
+  update(dt){
+    this.particles = this.particles.filter(p=>{
+      p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=260*dt; return p.t<p.life;
+    });
+    this.paths = this.paths.filter(p=>{ p.t+=dt; return p.t<p.life; });
+    this.floats = this.floats.filter(f=>{ f.t+=dt; f.y-=40*dt; return f.t<f.life; });
+  },
+  draw(c){
+    // 连接线（发光）
+    for(const p of this.paths){
+      const alpha = 1 - p.t/p.life;
+      c.save();
+      c.strokeStyle = "rgba(120,255,220,"+alpha+")";
+      c.lineWidth = 5; c.lineCap="round"; c.lineJoin="round";
+      c.shadowColor = "#5ff5c8"; c.shadowBlur = 14;
+      c.beginPath();
+      p.pts.forEach((pt,i)=> i?c.lineTo(pt.x,pt.y):c.moveTo(pt.x,pt.y));
+      c.stroke(); c.restore();
+    }
+    // 粒子
+    for(const p of this.particles){
+      const alpha = 1 - p.t/p.life;
+      c.globalAlpha = alpha;
+      c.fillStyle = p.color;
+      c.beginPath(); c.arc(p.x,p.y,p.size*alpha,0,Math.PI*2); c.fill();
+    }
+    c.globalAlpha = 1;
+    // 漂浮文字
+    for(const f of this.floats){
+      c.globalAlpha = 1 - f.t/f.life;
+      c.fillStyle = f.color; c.font = "bold 24px sans-serif"; c.textAlign="center";
+      c.fillText(f.text, f.x, f.y);
+    }
+    c.globalAlpha = 1;
+  }
+};
+
+/* 背景星星（氛围光效） */
+const stars = [];
+for(let i=0;i<50;i++) stars.push({x:Math.random()*BASE_W, y:Math.random()*BASE_H,
+  r:0.5+Math.random()*1.8, ph:Math.random()*Math.PI*2, sp:0.5+Math.random()});
+
+/* ---------------------------------------------------------------
+ * [6] 游戏状态机与关卡配置
+ * ------------------------------------------------------------- */
+/* 递进关卡：列/行/图案种类/时间 逐步提升难度 */
+const LEVELS = [
+  {cols:4, rows:5,  types:5,  time:120},
+  {cols:5, rows:6,  types:7,  time:130},
+  {cols:6, rows:7,  types:8,  time:140},
+  {cols:6, rows:8,  types:10, time:150},
+  {cols:7, rows:8,  types:11, time:160},
+  {cols:8, rows:9,  types:12, time:170},
+];
+/* 无尽模式：轮数无限，时间随轮数缩短 */
+function endlessConfig(round){
+  const cols = Math.min(4 + Math.floor(round/2), 8);
+  const rows = Math.min(5 + Math.floor(round/2), 9);
+  return {cols: cols%2||rows%2? cols : cols, rows,
+    types: Math.min(5+round, ICON_COUNT),
+    time: Math.max(150 - round*8, 60)};
+}
+/* 保证格子总数为偶数 */
+function evenize(cfg){
+  if((cfg.cols*cfg.rows)%2===1) cfg.rows += 1;
+  return cfg;
+}
+
+const Game = {
+  state: "menu",       // menu | playing | paused | levelClear | gameover | victory
+  mode: "level",       // level | endless
+  level: 0, round: 0,
+  score: 0, lives: 3, combo: 0, comboTimer: 0,
+  timeLeft: 0, timeMax: 1,
+  sel: null,           // 已选中格 {gx,gy}
+  cursor: {gx:1, gy:1},// 键盘光标
+  hintPair: null, hintTimer: 0,
+  hints: 3, shuffles: 2,
+  shake: 0,
+  best: +(localStorage.getItem("llk_best")||0),
+
+  startLevel(){
+    const cfg = evenize(this.mode==="level"
+      ? {...LEVELS[this.level]}
+      : endlessConfig(this.round));
+    Board.init(cfg.cols, cfg.rows, cfg.types);
+    this.timeLeft = cfg.time; this.timeMax = cfg.time;
+    this.sel = null; this.hintPair = null; this.combo = 0;
+    this.cursor = {gx:1, gy:1};
+    this.state = "playing";
+  },
+  newGame(mode){
+    this.mode = mode; this.level = 0; this.round = 0;
+    this.score = 0; this.lives = 3; this.hints = 3; this.shuffles = 2;
+    AudioSys.startBGM();
+    this.startLevel();
+  },
+
+  /* 选择一个格子（点击 / 键盘确认共用） */
+  pick(gx,gy){
+    if(this.state!=="playing") return;
+    if(Board.isEmpty(gx,gy)) return;
+    if(!this.sel){
+      this.sel = {gx,gy}; AudioSys.select(); return;
+    }
+    if(this.sel.gx===gx && this.sel.gy===gy){ this.sel = null; AudioSys.click(); return; }
+    const path = Board.connect(this.sel.gx,this.sel.gy,gx,gy);
+    if(path){
+      // 消除成功
+      const type = Board.at(gx,gy);
+      const c1 = Board.cellCenter(this.sel.gx,this.sel.gy), c2 = Board.cellCenter(gx,gy);
+      Board.remove(this.sel.gx,this.sel.gy,gx,gy);
+      FX.showPath(path);
+      const col = ICON_COLORS[type % ICON_COLORS.length][0];
+      FX.burst(c1.x,c1.y,col); FX.burst(c2.x,c2.y,col);
+      this.combo = (this.comboTimer>0) ? this.combo+1 : 1;
+      this.comboTimer = 3;
+      const gain = 10 + (this.combo-1)*5;
+      this.score += gain;
+      FX.floatText((c1.x+c2.x)/2,(c1.y+c2.y)/2, "+"+gain+(this.combo>1?" x"+this.combo:""), "#ffe27a");
+      AudioSys.match();
+      this.sel = null; this.hintPair = null;
+      if(Board.remain===0){ this.onClear(); return; }
+      if(!Board.findPair()){ // 死局自动洗牌
+        Board.shuffle(); AudioSys.shuffle();
+        FX.floatText(BASE_W/2, BASE_H/2, "无可消除，自动洗牌！", "#8fd6ff");
+      }
+    }else{
+      // 不匹配：扣分并震动
+      AudioSys.wrong();
+      this.shake = 0.25;
+      this.score = Math.max(0, this.score-2);
+      this.sel = {gx,gy}; // 切换选中到新格子
+    }
+  },
+
+  onClear(){
+    AudioSys.win();
+    // 剩余时间奖励
+    const bonus = Math.floor(this.timeLeft)*2;
+    this.score += bonus;
+    if(this.mode==="level"){
+      if(this.level >= LEVELS.length-1){ this.state="victory"; this.saveBest(); }
+      else this.state="levelClear";
+    }else{
+      this.state="levelClear";
+    }
+  },
+  nextLevel(){
+    if(this.mode==="level") this.level++;
+    else this.round++;
+    this.startLevel();
+  },
+  loseLife(){
+    this.lives--;
+    if(this.lives<=0){ this.state="gameover"; AudioSys.lose(); this.saveBest(); }
+    else{ this.startLevel(); } // 重开本关
+  },
+  saveBest(){
+    if(this.score > this.best){ this.best = this.score; localStorage.setItem("llk_best", this.best); }
+  },
+
+  useHint(){
+    if(this.state!=="playing" || this.hints<=0) return;
+    const pair = Board.findPair();
+    if(pair){ this.hints--; this.hintPair = pair; this.hintTimer = 2.5; AudioSys.hint(); }
+  },
+  useShuffle(){
+    if(this.state!=="playing" || this.shuffles<=0) return;
+    this.shuffles--; Board.shuffle(); this.sel=null; this.hintPair=null; AudioSys.shuffle();
+  },
+  togglePause(){
+    if(this.state==="playing"){ this.state="paused"; AudioSys.click(); }
+    else if(this.state==="paused"){ this.state="playing"; AudioSys.click(); }
+  },
+
+  update(dt){
+    if(this.state!=="playing") return;
+    this.timeLeft -= dt;
+    if(this.comboTimer>0) this.comboTimer-=dt;
+    if(this.hintTimer>0){ this.hintTimer-=dt; if(this.hintTimer<=0) this.hintPair=null; }
+    if(this.shake>0) this.shake-=dt;
+    if(this.timeLeft<=0){ this.timeLeft=0; this.loseLife(); }
+    else if(this.timeLeft<10 && Math.floor(this.timeLeft*2)!==Math.floor((this.timeLeft+dt)*2)) AudioSys.tick();
+  }
+};
+
+/* ---------------------------------------------------------------
+ * [7] 输入：键盘（WASD/方向键/J/K/L/U/I/O）+ 触控 + UI 按钮
+ * ------------------------------------------------------------- */
+/* UI 按钮注册表：每帧由渲染层填充，输入层统一命中检测 */
+let uiButtons = [];
+function addButton(id, x, y, w, h){ uiButtons.push({id,x,y,w,h}); }
+function hitButton(px,py){
+  for(const b of uiButtons)
+    if(px>=b.x && px<=b.x+b.w && py>=b.y && py<=b.y+b.h) return b.id;
+  return null;
+}
+function handleAction(id){
+  switch(id){
+    case "start_level": AudioSys.ensure(); Game.newGame("level"); break;
+    case "start_endless": AudioSys.ensure(); Game.newGame("endless"); break;
+    case "pause": Game.togglePause(); break;
+    case "resume": Game.togglePause(); break;
+    case "restart": AudioSys.click(); Game.newGame(Game.mode); break;
+    case "menu": AudioSys.click(); AudioSys.stopBGM(); Game.state="menu"; break;
+    case "next": AudioSys.click(); Game.nextLevel(); break;
+    case "hint": Game.useHint(); break;
+    case "shuffle": Game.useShuffle(); break;
+    case "bgm": AudioSys.toggleBGM(); break;
+    case "sfx": AudioSys.toggleSFX(); break;
+  }
+}
+
+/* 键盘 */
+const keyMap = {
+  "w":"up","arrowup":"up","s":"down","arrowdown":"down",
+  "a":"left","arrowleft":"left","d":"right","arrowright":"right",
+  "j":"ok","enter":"ok","k":"ok"," ":"ok",           // 攻击/跳跃键都作为“确认选择”
+  "l":"hint","u":"shuffle","i":"pause","o":"restart", // 拓展功能键
+  "escape":"pause","p":"pause"
+};
+window.addEventListener("keydown",(e)=>{
+  const act = keyMap[e.key.toLowerCase()];
+  if(!act) return;
+  e.preventDefault();
+  AudioSys.ensure();
+  if(Game.state==="menu"){
+    if(act==="ok") handleAction("start_level");
+    return;
+  }
+  if(Game.state==="levelClear"){ if(act==="ok") handleAction("next"); return; }
+  if(Game.state==="gameover"||Game.state==="victory"){ if(act==="ok") handleAction("restart"); return; }
+  if(act==="pause"){ Game.togglePause(); return; }
+  if(Game.state!=="playing") { if(act==="ok") Game.togglePause(); return; }
+  const c = Game.cursor;
+  switch(act){
+    case "up":    c.gy = c.gy>1?c.gy-1:Board.rows; AudioSys.click(); break;
+    case "down":  c.gy = c.gy<Board.rows?c.gy+1:1; AudioSys.click(); break;
+    case "left":  c.gx = c.gx>1?c.gx-1:Board.cols; AudioSys.click(); break;
+    case "right": c.gx = c.gx<Board.cols?c.gx+1:1; AudioSys.click(); break;
+    case "ok":    Game.pick(c.gx,c.gy); break;
+    case "hint":  Game.useHint(); break;
+    case "shuffle": Game.useShuffle(); break;
+    case "restart": handleAction("restart"); break;
+  }
+},{passive:false});
+
+/* 触控 / 鼠标：直接点选格子或按钮 */
+function onPointer(clientX, clientY){
+  AudioSys.ensure();
+  const p = toLogic(clientX, clientY);
+  const btn = hitButton(p.x, p.y);
+  if(btn){ handleAction(btn); return; }
+  if(Game.state==="playing"){
+    const cell = Board.pickCell(p.x, p.y);
+    if(cell){ Game.cursor = {gx:cell.gx, gy:cell.gy}; Game.pick(cell.gx, cell.gy); }
+  }
+}
+cvs.addEventListener("pointerdown",(e)=>{ e.preventDefault(); onPointer(e.clientX,e.clientY); },{passive:false});
+/* 防止 iOS 双击缩放 */
+document.addEventListener("dblclick",(e)=>e.preventDefault(),{passive:false});
+
+/* ---------------------------------------------------------------
+ * [8] UI 渲染
+ * ------------------------------------------------------------- */
+function roundRect(c,x,y,w,h,r){
+  c.beginPath();
+  c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+  c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath();
+}
+function drawButton(id,x,y,w,h,text,color,fontSize){
+  addButton(id,x,y,w,h);
+  const g = ctx.createLinearGradient(0,y,0,y+h);
+  g.addColorStop(0, color[0]); g.addColorStop(1, color[1]);
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,.4)"; ctx.shadowBlur = 8; ctx.shadowOffsetY = 3;
+  roundRect(ctx,x,y,w,h,h*0.28); ctx.fillStyle=g; ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle="rgba(255,255,255,.35)"; ctx.lineWidth=1.5;
+  roundRect(ctx,x,y,w,h,h*0.28); ctx.stroke();
+  ctx.fillStyle="#fff"; ctx.font="bold "+(fontSize||22)+"px sans-serif";
+  ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillText(text, x+w/2, y+h/2+1);
+}
+function drawBackground(t){
+  const g = ctx.createLinearGradient(0,0,0,BASE_H);
+  g.addColorStop(0,"#141a38"); g.addColorStop(0.5,"#101430"); g.addColorStop(1,"#0a0d20");
+  ctx.fillStyle=g; ctx.fillRect(0,0,BASE_W,BASE_H);
+  // 闪烁星星
+  for(const s of stars){
+    const a = 0.25 + 0.6*Math.abs(Math.sin(t*s.sp + s.ph));
+    ctx.globalAlpha = a; ctx.fillStyle="#aecbff";
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  // 顶部柔光
+  const rg = ctx.createRadialGradient(BASE_W/2,-80,50,BASE_W/2,-80,420);
+  rg.addColorStop(0,"rgba(110,140,255,.18)"); rg.addColorStop(1,"rgba(110,140,255,0)");
+  ctx.fillStyle=rg; ctx.fillRect(0,0,BASE_W,360);
+}
+function drawHUD(){
+  // 顶部面板
+  ctx.save();
+  roundRect(ctx,12,10,BASE_W-24,96,14);
+  ctx.fillStyle="rgba(20,26,58,.85)"; ctx.fill();
+  ctx.strokeStyle="rgba(120,150,255,.35)"; ctx.stroke();
+  ctx.textAlign="left"; ctx.textBaseline="middle";
+  // 分数
+  ctx.fillStyle="#ffe27a"; ctx.font="bold 26px sans-serif";
+  ctx.fillText("分数 "+Game.score, 26, 36);
+  // 关卡 / 模式
+  ctx.fillStyle="#9fd0ff"; ctx.font="bold 18px sans-serif";
+  const modeText = Game.mode==="level" ? ("第 "+(Game.level+1)+" / "+LEVELS.length+" 关") : ("无尽 · 第 "+(Game.round+1)+" 轮");
+  ctx.fillText(modeText, 26, 66);
+  // 生命值（心形）
+  for(let i=0;i<3;i++){
+    ctx.save(); ctx.translate(230+i*34, 36); ctx.scale(1,1);
+    ctx.fillStyle = i<Game.lives ? "#ff5d7a" : "rgba(255,255,255,.15)";
+    ctx.beginPath();
+    ctx.moveTo(0,10);
+    ctx.bezierCurveTo(-14,0,-8,-12,0,-4);
+    ctx.bezierCurveTo(8,-12,14,0,0,10);
+    ctx.fill(); ctx.restore();
+  }
+  // 剩余牌数
+  ctx.fillStyle="#8ef0c8"; ctx.font="bold 16px sans-serif";
+  ctx.fillText("剩余 "+Board.remain, 230, 66);
+  // 时间条
+  const barX=340, barY=28, barW=120, barH=14;
+  const pct = Math.max(0, Game.timeLeft/Game.timeMax);
+  roundRect(ctx,barX,barY,barW,barH,7); ctx.fillStyle="rgba(255,255,255,.12)"; ctx.fill();
+  const tg = ctx.createLinearGradient(barX,0,barX+barW,0);
+  if(pct>0.3){ tg.addColorStop(0,"#41d98d"); tg.addColorStop(1,"#25b4ff"); }
+  else{ tg.addColorStop(0,"#ff7043"); tg.addColorStop(1,"#ff4181"); }
+  if(pct>0){ roundRect(ctx,barX,barY,barW*pct,barH,7); ctx.fillStyle=tg; ctx.fill(); }
+  ctx.fillStyle="#cfe0ff"; ctx.font="bold 15px sans-serif";
+  ctx.fillText("时间 "+Math.ceil(Game.timeLeft)+"s", barX, 66);
+  ctx.restore();
+  // 暂停按钮
+  drawButton("pause", BASE_W-62, 20, 44, 44, "⏸", ["#5a6acf","#3d478f"], 20);
+}
+function drawBoard(t){
+  ctx.save();
+  if(Game.shake>0){
+    ctx.translate((Math.random()-0.5)*8*Game.shake*4,(Math.random()-0.5)*8*Game.shake*4);
+  }
+  const s = Board.tileSize;
+  for(let gy=1;gy<=Board.rows;gy++){
+    for(let gx=1;gx<=Board.cols;gx++){
+      const type = Board.at(gx,gy);
+      if(type===-1) continue;
+      const x = Board.ox+(gx-1)*s, y = Board.oy+(gy-1)*s;
+      const isSel = Game.sel && Game.sel.gx===gx && Game.sel.gy===gy;
+      const sprite = getTileSprite(type, s-4, isSel?"sel":"norm");
+      let dy = 0;
+      if(isSel) dy = Math.sin(t*8)*3; // 选中浮动动画
+      ctx.drawImage(sprite, x+2, y+2+dy, s-4, s-4);
+      // 提示高亮
+      if(Game.hintPair){
+        const hit = Game.hintPair.some(([hx,hy])=>hx===gx&&hy===gy);
+        if(hit){
+          ctx.save();
+          ctx.strokeStyle = "rgba(120,255,180,"+(0.5+0.5*Math.sin(t*6))+")";
+          ctx.lineWidth = 3; ctx.shadowColor="#7dffb4"; ctx.shadowBlur=10;
+          roundRect(ctx,x+2,y+2,s-4,s-4,(s-4)*0.18); ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
+  }
+  // 键盘光标
+  const cc = Game.cursor;
+  const cx = Board.ox+(cc.gx-1)*s, cy = Board.oy+(cc.gy-1)*s;
+  ctx.save();
+  ctx.strokeStyle = "rgba(120,190,255,.9)"; ctx.lineWidth = 3;
+  ctx.shadowColor="#6db9ff"; ctx.shadowBlur=8;
+  roundRect(ctx,cx+1,cy+1,s-2,s-2,s*0.18); ctx.stroke();
+  ctx.restore();
+  ctx.restore();
+}
+function drawBottomBar(){
+  // 底部功能按钮（触控友好，双端共用）
+  const y = BASE_H-100, bw=115, bh=64, gap=(BASE_W-bw*4)/5;
+  drawButton("hint",    gap, y, bw, bh, "提示 x"+Game.hints+" (L)", ["#38b6ff","#1f6fd0"], 17);
+  drawButton("shuffle", gap*2+bw, y, bw, bh, "洗牌 x"+Game.shuffles+" (U)", ["#b06cf5","#7538c9"], 17);
+  drawButton("bgm",     gap*3+bw*2, y, bw, bh, AudioSys.bgmOn()?"音乐:开":"音乐:关", ["#42c98d","#1d8a5c"], 17);
+  drawButton("sfx",     gap*4+bw*3, y, bw, bh, AudioSys.sfxOn()?"音效:开":"音效:关", ["#f2a13c","#c96f14"], 17);
+}
+function drawOverlayPanel(title, titleColor, lines, buttons){
+  ctx.fillStyle="rgba(5,8,20,.72)"; ctx.fillRect(0,0,BASE_W,BASE_H);
+  const pw=420, ph=380+buttons.length*0, px=(BASE_W-pw)/2, py=250;
+  ctx.save();
+  ctx.shadowColor="rgba(90,120,255,.5)"; ctx.shadowBlur=30;
+  roundRect(ctx,px,py,pw,ph,22);
+  const g = ctx.createLinearGradient(0,py,0,py+ph);
+  g.addColorStop(0,"#232b56"); g.addColorStop(1,"#161c3a");
+  ctx.fillStyle=g; ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle="rgba(140,170,255,.4)"; roundRect(ctx,px,py,pw,ph,22); ctx.stroke();
+  ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillStyle=titleColor; ctx.font="bold 40px sans-serif";
+  ctx.fillText(title, BASE_W/2, py+62);
+  ctx.font="bold 21px sans-serif";
+  lines.forEach((ln,i)=>{
+    ctx.fillStyle = ln.color||"#cfe0ff";
+    ctx.fillText(ln.text, BASE_W/2, py+120+i*36);
+  });
+  const bw=280, bh=56;
+  buttons.forEach((b,i)=>{
+    drawButton(b.id,(BASE_W-bw)/2, py+ph-70-(buttons.length-1-i)*72, bw, bh, b.text, b.color, 22);
+  });
+}
+function drawMenu(t){
+  // 标题
+  ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.save();
+  ctx.shadowColor="#6d8cff"; ctx.shadowBlur=24;
+  const tg = ctx.createLinearGradient(0,180,0,280);
+  tg.addColorStop(0,"#9fd0ff"); tg.addColorStop(1,"#ff9ae0");
+  ctx.fillStyle=tg; ctx.font="bold 72px sans-serif";
+  ctx.fillText("连 连 看", BASE_W/2, 220 + Math.sin(t*1.5)*6);
+  ctx.restore();
+  ctx.fillStyle="#8fa5e8"; ctx.font="bold 20px sans-serif";
+  ctx.fillText("消除所有配对图案，路径转折不超过两次", BASE_W/2, 300);
+  // 装饰图案
+  for(let i=0;i<6;i++){
+    const a = t*0.6 + i*Math.PI/3;
+    ctx.save();
+    ctx.translate(BASE_W/2+Math.cos(a)*190, 220+Math.sin(a)*95);
+    ctx.rotate(Math.sin(t+i)*0.3);
+    ICON_DRAWERS[i%ICON_COUNT](ctx, 18, ICON_COLORS[i%ICON_COLORS.length]);
+    ctx.restore();
+  }
+  drawButton("start_level",(BASE_W-320)/2, 420, 320, 70, "闯 关 模 式", ["#4a8cff","#2b56c9"], 28);
+  drawButton("start_endless",(BASE_W-320)/2, 515, 320, 70, "无 尽 模 式", ["#c14af0","#7a25b5"], 28);
+  ctx.fillStyle="#ffd76e"; ctx.font="bold 22px sans-serif";
+  ctx.fillText("最高分：" + Game.best, BASE_W/2, 630);
+  ctx.fillStyle="#7788bb"; ctx.font="16px sans-serif";
+  ctx.fillText("PC：WASD/方向键移动光标  J/回车/空格/K 选择", BASE_W/2, 700);
+  ctx.fillText("L 提示  U 洗牌  I 暂停  O 重开", BASE_W/2, 728);
+  ctx.fillText("手机：直接点击方块即可游玩", BASE_W/2, 756);
+  drawButton("bgm",(BASE_W-320)/2, 800, 152, 52, AudioSys.bgmOn()?"音乐:开":"音乐:关", ["#42c98d","#1d8a5c"], 19);
+  drawButton("sfx",(BASE_W-320)/2+168, 800, 152, 52, AudioSys.sfxOn()?"音效:开":"音效:关", ["#f2a13c","#c96f14"], 19);
+}
+
+/* ---------------------------------------------------------------
+ * [9] 主循环
+ * ------------------------------------------------------------- */
+let lastTime = performance.now();
+function frame(now){
+  let dt = (now - lastTime)/1000;
+  lastTime = now;
+  if(dt > 0.1) dt = 0.1; // 防止切后台后大步长
+  const t = now/1000;
+
+  Game.update(dt);
+  FX.update(dt);
+
+  uiButtons = []; // 每帧重建按钮命中区
+  drawBackground(t);
+
+  switch(Game.state){
+    case "menu":
+      drawMenu(t);
+      break;
+    case "playing":
+      drawHUD(); drawBoard(t); drawBottomBar(); FX.draw(ctx);
+      break;
+    case "paused":
+      drawHUD(); drawBoard(t); drawBottomBar();
+      drawOverlayPanel("暂 停","#9fd0ff",
+        [{text:"当前分数："+Game.score,color:"#ffe27a"}],
+        [{id:"resume",text:"继续游戏 (I)",color:["#4a8cff","#2b56c9"]},
+         {id:"restart",text:"重新开始 (O)",color:["#f2a13c","#c96f14"]},
+         {id:"menu",text:"返回主菜单",color:["#8a94b8","#565e80"]}]);
+      break;
+    case "levelClear":
+      drawHUD(); drawBoard(t); FX.draw(ctx);
+      drawOverlayPanel("通 关 !","#7dffb4",
+        [{text:"分数："+Game.score,color:"#ffe27a"},
+         {text:"时间奖励已结算",color:"#9fd0ff"}],
+        [{id:"next",text: Game.mode==="level"?"下一关 (J)":"下一轮 (J)",color:["#41d98d","#1d8a5c"]},
+         {id:"menu",text:"返回主菜单",color:["#8a94b8","#565e80"]}]);
+      break;
+    case "victory":
+      drawOverlayPanel("全部通关 !","#ffd76e",
+        [{text:"最终分数："+Game.score,color:"#ffe27a"},
+         {text:"最高分："+Game.best,color:"#9fd0ff"},
+         {text:"恭喜你完成所有关卡！",color:"#7dffb4"}],
+        [{id:"start_endless",text:"挑战无尽模式",color:["#c14af0","#7a25b5"]},
+         {id:"restart",text:"再玩一次 (J)",color:["#4a8cff","#2b56c9"]},
+         {id:"menu",text:"返回主菜单",color:["#8a94b8","#565e80"]}]);
+      break;
+    case "gameover":
+      drawOverlayPanel("游戏结束","#ff7a9a",
+        [{text:"最终分数："+Game.score,color:"#ffe27a"},
+         {text:"最高分："+Game.best,color:"#9fd0ff"}],
+        [{id:"restart",text:"重新开始 (J)",color:["#4a8cff","#2b56c9"]},
+         {id:"menu",text:"返回主菜单",color:["#8a94b8","#565e80"]}]);
+      break;
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* 切后台自动暂停，防止计时不公平 */
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden && Game.state==="playing") Game.state="paused";
+});
+</script>
 </body>
 </html>
