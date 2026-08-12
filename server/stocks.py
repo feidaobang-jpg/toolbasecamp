@@ -34,6 +34,8 @@ def _admin_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security
 STOCK_FIT_MIN = 10
 
 STOCK_PICK_MAX = 0  # 0 = 不截断数量，按匹配度返回全部达标标的
+# 页面希望展示“尽量凑够 20 条”
+STOCK_PICK_TARGET = 20
 
 STRATEGY_FIT_MIN = {
     "short_term": (52.0, 46.0),
@@ -520,6 +522,65 @@ def _apply_sorted_picks(
         if not _pass_basic(r):
             continue
         out.append(r)
+    return out
+
+def _pick_to_target_tail_sorted(
+    *,
+    candidates: List[dict],
+    only_basic: bool,
+    strategy: str,
+    is_trade_time: bool,
+    start_min_score: float,
+    target: int,
+    allow_negative_news: bool,
+) -> List[dict]:
+    """
+    兜底：当严格 min_score 导致候选不足时，逐步放宽 min_score 以尽量凑满 target。
+    - allow_negative_news=False：对 symbol 做负面公告排雷（尾盘策略需要）
+    """
+    used_symbols: set = set()
+    out: List[dict] = []
+    neg_cache: Dict[str, Optional[str]] = {}
+
+    min_allowed = float(_fit_min_score(is_trade_time))
+    step = 2.5
+    min_score = float(start_min_score)
+
+    def _neg_hit(symbol: str) -> bool:
+        if allow_negative_news:
+            return False
+        symbol = str(symbol or "").strip()
+        if not symbol:
+            return True
+        if symbol in neg_cache:
+            return neg_cache[symbol] is not None
+        reason = _stock_negative_news_hit(symbol)
+        neg_cache[symbol] = reason
+        return reason is not None
+
+    while min_score >= min_allowed and len(out) < target:
+        top = _apply_sorted_picks(
+            candidates,
+            only_basic=only_basic,
+            min_score=min_score,
+            is_trade_time=is_trade_time,
+            strategy=strategy,
+            max_results=max(target * 2, 30),
+        )
+        for r in top:
+            sym = str(r.get("symbol") or "").strip()
+            if not sym or sym in used_symbols:
+                continue
+            if _neg_hit(sym):
+                continue
+            used_symbols.add(sym)
+            out.append(r)
+            if len(out) >= target:
+                break
+        if len(out) >= target:
+            break
+        min_score -= step
+
     return out
 
 def _round_match_score(score: Optional[float]) -> Optional[float]:
@@ -1291,19 +1352,20 @@ def _compute_tail_buy(only_basic: bool = True):
     fit_min = _strategy_fit_min("tail_buy", is_trade_time)
     if caution:
         fit_min = float(fit_min) + 3.0
-    top = _apply_sorted_picks(
-        candidates,
+
+    # 尽量凑够 20 条：逐步放宽 min_score，但仍保持“基本过滤框架 + 负面公告排雷”
+    top = _pick_to_target_tail_sorted(
+        candidates=candidates,
         only_basic=True,
-        min_score=fit_min,
-        is_trade_time=is_trade_time,
         strategy="tail_buy",
+        is_trade_time=is_trade_time,
+        start_min_score=fit_min,
+        target=STOCK_PICK_TARGET,
+        allow_negative_news=False,
     )
 
     items = []
-    for r in top:
-        # 对入选标的再做负面公告排雷（只查最终候选，控制耗时）
-        if _stock_negative_news_hit(r.get("symbol")):
-            continue
+    for r in top[:STOCK_PICK_TARGET]:
         metrics = {
             "last_price": r["price"],
             "pct_change": r["pct"],
@@ -1342,7 +1404,7 @@ def _compute_tail_buy(only_basic: bool = True):
         else "【预览模式】非 14:50~14:59，数据非尾盘实时；正式下单请到点再点一次确认。"
     )
     if items:
-        msg_core = f"共 {len(items)} 只（尾盘低吸 v2，隔夜博弈）"
+        msg_core = f"共 {len(items)} 只（尾盘低吸 v2，隔夜博弈，尽量凑够 {STOCK_PICK_TARGET} 条）"
     else:
         msg_core = "当前暂无符合尾盘低吸条件的标的"
     msg_parts = [window_note, f"【{pool_note}】", msg_core]
@@ -1609,19 +1671,24 @@ def _compute_monthly_recovery(only_basic: bool = True):
     scan_rows = [row for _, row in df_scan.iterrows()]
     candidates = _parallel_row_scan(scan_rows, _monthly_recovery_eval_row, max_workers=8)
 
-    fit_min = _strategy_fit_min("monthly_recovery")
+    is_trade_time = _is_a_share_trade_time()
+    fit_min = _strategy_fit_min("monthly_recovery", is_trade_time)
     if market.get("regime") == "caution":
         fit_min = float(fit_min) + 3.0
-    # 月K结果始终走 basic 兜底（主板 + 非ST + 非两融黑名单）
-    top = _apply_sorted_picks(
-        candidates,
+
+    # 月K结果在 eval_row 内已完成负面公告排雷；这里只做“尽量凑够 20 条”
+    top = _pick_to_target_tail_sorted(
+        candidates=candidates,
         only_basic=True,
-        min_score=fit_min,
         strategy="monthly_recovery",
+        is_trade_time=is_trade_time,
+        start_min_score=fit_min,
+        target=STOCK_PICK_TARGET,
+        allow_negative_news=True,
     )
 
     items = []
-    for r in top:
+    for r in top[:STOCK_PICK_TARGET]:
         metrics = {
             "last_price": r["price"],
             "pct_change": r["pct"],
@@ -1663,7 +1730,7 @@ def _compute_monthly_recovery(only_basic: bool = True):
 
     market_msg = (market.get("message") or "").strip()
     if items:
-        msg_extra = f"共 {len(items)} 只"
+        msg_extra = f"共 {len(items)} 只（尽量凑够 {STOCK_PICK_TARGET} 条）"
     else:
         msg_extra = "当前暂无符合「超跌底部+企稳启动+无退市加强」条件的标的"
     msg_parts = [f"【{pool_note}·超跌底部·无退市加强】", msg_extra]

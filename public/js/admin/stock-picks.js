@@ -238,6 +238,7 @@
     var btnEl = opts.btnEl;
     var statusEl = opts.statusEl;
     var resultsEl = opts.resultsEl;
+    var pickListEl = opts.pickListEl;
     var renderFn = opts.renderFn;
     var url = opts.url;
     if (!btnEl || !resultsEl) return;
@@ -294,6 +295,7 @@
         var market = data.market_regime || null;
         var marketNote = (market && market.message) ? String(market.message).trim() : '';
         if (!items.length) {
+          if (pickListEl) pickListEl.innerHTML = '';
           var empty = pickEmptyStatus(data);
           setStatus(statusEl, empty.text, { weak: empty.weak });
           return;
@@ -302,6 +304,19 @@
         var doneMsg = data.message || (marketNote ? baseMsg + ' · ' + marketNote : baseMsg);
         var weakDone = market && market.regime === 'weak';
         setStatus(statusEl, doneMsg, { weak: !!weakDone });
+
+        if (pickListEl) {
+          var chips = items.map(function (it) {
+            var name = it && it.name ? escapeHtml(it.name) : '';
+            var sym = it && it.symbol ? escapeHtml(it.symbol) : '';
+            if (!name && !sym) return '';
+            return '<span class="picked-chip">' + name + '（' + sym + '）</span>';
+          }).filter(Boolean).join('');
+          pickListEl.innerHTML =
+            '<div class="picked-title">已选股票（' + items.length + '）</div>' +
+            '<div class="picked-chips">' + chips + '</div>';
+        }
+
         items.forEach(function (it, idx) {
           var merged = Object.assign({}, it, { generated_at: data.generated_at });
           resultsEl.appendChild(renderFn(merged, idx));
@@ -325,6 +340,7 @@
           url: '/stocks/recommend-monthly-recovery',
           btnEl: btnMonthlyRecovery,
           statusEl: document.getElementById('statusMonthlyRecovery'),
+          pickListEl: document.getElementById('pickedListMonthlyRecovery'),
           resultsEl: document.getElementById('resultsMonthlyRecovery'),
           renderFn: renderMonthlyCard
         });
@@ -337,6 +353,7 @@
           url: '/stocks/recommend-tail-buy',
           btnEl: btnTailBuy,
           statusEl: document.getElementById('statusTailBuy'),
+          pickListEl: document.getElementById('pickedListTailBuy'),
           resultsEl: document.getElementById('resultsTailBuy'),
           renderFn: renderTailCard
         });

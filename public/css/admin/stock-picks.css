@@ -196,6 +196,38 @@
   gap: 20px;
 }
 
+/* 顶部“已选股票”一眼看清 */
+.picked-summary{
+  margin: 12px 0 18px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.picked-summary:empty{ display:none; }
+.picked-title{
+  font-size: 13px;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+.picked-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.picked-chip{
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
 .stock-card {
   background: #fff;
   border: 1px solid #e5e7eb;
