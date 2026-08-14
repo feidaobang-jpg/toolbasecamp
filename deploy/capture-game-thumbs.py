@@ -23,6 +23,7 @@ GAME_DIR = PUBLIC / "html" / "game"
 OUT_DIR = PUBLIC / "assets" / "game" / "thumbs"
 THUMB_W, THUMB_H = 480, 270
 JPEG_QUALITY = 85
+META_PATH = OUT_DIR / "meta.json"
 
 EDGE_CANDIDATES = [
     Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
@@ -110,11 +111,40 @@ def game_slugs() -> list[str]:
     return sorted(p.stem for p in GAME_DIR.glob("*.html"))
 
 
+def write_meta(mode: str, ok: int, fail: int) -> None:
+    import json
+    from datetime import datetime, timezone
+
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    prev = 1
+    if META_PATH.is_file():
+        try:
+            prev = int(json.loads(META_PATH.read_text(encoding="utf-8")).get("v") or 1)
+        except Exception:
+            prev = 1
+    payload = {
+        "v": prev + 1 if ok else prev,
+        "mode": mode,
+        "captured": ok,
+        "failed": fail,
+        "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    META_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Capture game hub thumbnails")
-    parser.add_argument("--budget", type=int, default=5000, help="virtual-time-budget ms")
+    parser.add_argument(
+        "--menu",
+        action="store_true",
+        help="capture main menu (default: in-game after hubThumb=1 auto-start)",
+    )
+    parser.add_argument("--budget", type=int, default=0, help="virtual-time-budget ms (0=auto)")
     parser.add_argument("--only", nargs="*", help="slug names without .html")
     args = parser.parse_args()
+
+    mode = "menu" if args.menu else "play"
+    budget = args.budget or (5000 if mode == "menu" else 10000)
 
     slugs = args.only if args.only else game_slugs()
     if not slugs:
@@ -135,17 +165,20 @@ def main() -> int:
                 fail += 1
                 continue
             url = f"{base}/{slug}.html"
+            if mode == "play":
+                url += "?thumb=1"
             out = OUT_DIR / f"{slug}.jpg"
             try:
-                print(f"capture {slug} …")
-                capture_png(browser, url, out, args.budget)
+                print(f"capture {slug} ({mode}) …")
+                capture_png(browser, url, out, budget)
                 to_thumb(out.with_suffix(".png"), out)
                 print(f"  -> {out.relative_to(ROOT)} ({out.stat().st_size} bytes)")
                 ok += 1
             except Exception as exc:
                 print(f"  FAIL {slug}: {exc}", file=sys.stderr)
                 fail += 1
-        print(f"done: {ok} ok, {fail} failed")
+        write_meta(mode, ok, fail)
+        print(f"done: {ok} ok, {fail} failed ({mode})")
         return 0 if fail == 0 else 1
     finally:
         server.terminate()

@@ -66,6 +66,7 @@
     if (app) app.classList.remove('hidden');
     if (loginLink) loginLink.classList.add('hidden');
     if (authLabel) authLabel.textContent = user.email || user.phone || user.display || 'admin';
+    document.dispatchEvent(new CustomEvent('tb:private-ready', { detail: { user: user } }));
   }
 
   function setStatus(text, isErr) {

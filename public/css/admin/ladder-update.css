@@ -59,6 +59,19 @@
   gap: 0.65rem;
 }
 
+pre.game-thumbs-list {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: #374151;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 .ladder-row {
   display: flex;
   align-items: center;

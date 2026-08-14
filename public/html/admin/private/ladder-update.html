@@ -10,11 +10,11 @@
   <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=minimax1" />
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=gameThumbs1" />
   <script src="../../../js/locales/en.js?v=minimax1"></script>
   <script src="../../../js/locales/zh-CN.js?v=minimax1"></script>
   <script src="../../../js/i18n.js?v=minimax1"></script>
-  <script src="../../../js/config.js?v=minimax1"></script>
+  <script src="../../../js/config.js?v=games8"></script>
   <script src="../../../js/common_ui.js?v=minimax1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
@@ -69,7 +69,20 @@
       </section>
 
       <section class="ladder-section">
-        <h2 class="ladder-section-title" data-i18n="privateHub.ladder.sectionTitle">性能跑分榜</h2>
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.gameThumbsTitle">游戏中心截图</h2>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.gameThumbsDesc">
+          在本页用浏览器打开各游戏并上传缩略图到站点（推荐「刷新玩法截图」）。本地开发需 API 已启动；线上写入 /var/www/toolbasecamp/assets/game/thumbs/。
+        </p>
+        <div class="ladder-toolbar action-row">
+          <button type="button" id="btn-game-thumbs-gameplay" class="tb-btn" data-i18n="privateHub.ops.gameThumbsGameplay">刷新玩法截图</button>
+          <button type="button" id="btn-game-thumbs-menu" class="tb-btn" data-i18n="privateHub.ops.gameThumbsMenu">刷新菜单截图</button>
+          <a class="ladder-row-link" href="../../../games.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.gameThumbsOpenHub">查看游戏中心</a>
+        </div>
+        <div id="game-thumbs-status" class="ladder-status"></div>
+        <pre id="game-thumbs-list" class="ladder-list game-thumbs-list"></pre>
+      </section>
+
+      <section class="ladder-section">
         <p class="ladder-section-desc" data-i18n="privateHub.ladder.updateDesc">
           从 Notebookcheck 抓取跑分并写入缓存与公开 JSON。
         </p>
@@ -82,6 +95,7 @@
     </div>
   </main>
 
-  <script src="../../../js/admin/ladder-update.js?v=minimax1"></script>
+  <script src="../../../js/admin/ladder-update.js?v=gameThumbs1"></script>
+  <script src="../../../js/admin/game-thumbs.js?v=gameThumbs1"></script>
 </body>
 </html>

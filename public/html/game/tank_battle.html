@@ -3129,7 +3129,20 @@ const Game = (() => {
   }
 
   layout();
+
+  window.__tbThumbAutoStart = function () {
+    if (stateName === "menu") {
+      menuSel = 0;
+      endless = false;
+      enemyLootMode = false;
+      debugMode = false;
+      coopMode = false;
+      newLevel();
+      stateName = "playing";
+    }
+  };
 })();
 </script>
+<script src="../../js/game/thumb-preview.js"></script>
 </body>
 </html>
