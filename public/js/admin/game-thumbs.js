@@ -77,6 +77,55 @@
     });
   }
 
+  function densityCropCanvas(canvas, minDensity, thr) {
+    var w = canvas.width;
+    var h = canvas.height;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return canvas;
+    var data = ctx.getImageData(0, 0, w, h).data;
+    var colD = [];
+    var rowD = [];
+    var x;
+    var y;
+    for (x = 0; x < w; x++) {
+      var c = 0;
+      for (y = 0; y < h; y++) {
+        var i = (y * w + x) * 4;
+        if (data[i] + data[i + 1] + data[i + 2] > thr) c++;
+      }
+      colD.push(c / h);
+    }
+    for (y = 0; y < h; y++) {
+      var r = 0;
+      for (x = 0; x < w; x++) {
+        var j = (y * w + x) * 4;
+        if (data[j] + data[j + 1] + data[j + 2] > thr) r++;
+      }
+      rowD.push(r / w);
+    }
+    var ax = [];
+    var ay = [];
+    for (x = 0; x < w; x++) if (colD[x] >= minDensity) ax.push(x);
+    for (y = 0; y < h; y++) if (rowD[y] >= minDensity) ay.push(y);
+    if (!ax.length || !ay.length) return canvas;
+    var left = ax[0];
+    var right = ax[ax.length - 1];
+    var top = ay[0];
+    var bottom = ay[ay.length - 1];
+    var pad = 4;
+    left = Math.max(0, left - pad);
+    top = Math.max(0, top - pad);
+    right = Math.min(w - 1, right + pad);
+    bottom = Math.min(h - 1, bottom + pad);
+    var tw = right - left + 1;
+    var th = bottom - top + 1;
+    var fin = document.createElement('canvas');
+    fin.width = tw;
+    fin.height = th;
+    fin.getContext('2d').drawImage(canvas, left, top, tw, th, 0, 0, tw, th);
+    return fin;
+  }
+
   function trimCanvasSource(canvas) {
     var w = canvas.width;
     var h = canvas.height;
@@ -119,39 +168,7 @@
     out.width = tw;
     out.height = th;
     out.getContext('2d').drawImage(canvas, left, top, tw, th, 0, 0, tw, th);
-
-    var minX = tw;
-    var minY = th;
-    var maxX = 0;
-    var maxY = 0;
-    var found = false;
-    var d2 = out.getContext('2d').getImageData(0, 0, tw, th).data;
-    for (var y2 = 0; y2 < th; y2++) {
-      for (var x2 = 0; x2 < tw; x2++) {
-        var j = (y2 * tw + x2) * 4;
-        var sum2 = d2[j] + d2[j + 1] + d2[j + 2];
-        if (sum2 > thr) {
-          found = true;
-          if (x2 < minX) minX = x2;
-          if (y2 < minY) minY = y2;
-          if (x2 > maxX) maxX = x2;
-          if (y2 > maxY) maxY = y2;
-        }
-      }
-    }
-    if (!found) return out;
-    var pad = 4;
-    minX = Math.max(0, minX - pad);
-    minY = Math.max(0, minY - pad);
-    maxX = Math.min(tw - 1, maxX + pad);
-    maxY = Math.min(th - 1, maxY + pad);
-    var fw = maxX - minX + 1;
-    var fh = maxY - minY + 1;
-    var fin = document.createElement('canvas');
-    fin.width = fw;
-    fin.height = fh;
-    fin.getContext('2d').drawImage(out, minX, minY, fw, fh, 0, 0, fw, fh);
-    return fin;
+    return densityCropCanvas(out, 0.1, thr);
   }
 
   function cropCover(img, w, h) {

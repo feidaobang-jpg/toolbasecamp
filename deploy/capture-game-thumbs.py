@@ -143,6 +143,36 @@ def trim_dark_edges(im: Image.Image, threshold: int = 20) -> Image.Image:
     return rgb.crop((left, top, right, bottom))
 
 
+def crop_dense_core(im: Image.Image, min_density: float = 0.10, threshold: int = 20) -> Image.Image:
+    """Keep columns/rows with enough gameplay pixels (fixes portrait pillarbox)."""
+    rgb = im.convert("RGB")
+    w, h = rgb.size
+    px = rgb.load()
+    thr = threshold * 3
+
+    col_density = [
+        sum(1 for y in range(h) if px[x, y][0] + px[x, y][1] + px[x, y][2] > thr) / h
+        for x in range(w)
+    ]
+    row_density = [
+        sum(1 for x in range(w) if px[x, y][0] + px[x, y][1] + px[x, y][2] > thr) / w
+        for y in range(h)
+    ]
+    active_x = [i for i, d in enumerate(col_density) if d >= min_density]
+    active_y = [i for i, d in enumerate(row_density) if d >= min_density]
+    if not active_x or not active_y:
+        return im
+    left, right = active_x[0], active_x[-1]
+    top, bottom = active_y[0], active_y[-1]
+    pad = 4
+    return rgb.crop((
+        max(0, left - pad),
+        max(0, top - pad),
+        min(w, right + 1 + pad),
+        min(h, bottom + 1 + pad),
+    ))
+
+
 DOM_BOARD_SLUGS = frozenset({"gomoku", "puzzle", "klotski"})
 
 
@@ -150,17 +180,18 @@ def square_crop(im: Image.Image, slug: str | None = None) -> Image.Image:
     box = content_bbox(im)
     im = im.crop(box)
     im = trim_dark_edges(im)
+    im = crop_dense_core(im)
     w, h = im.size
     if slug in DOM_BOARD_SLUGS and h > int(w * 1.08):
         top = int(h * 0.18)
         im = im.crop((0, top, w, h))
         im = trim_dark_edges(im)
+        im = crop_dense_core(im)
         w, h = im.size
     side = min(w, h)
     left = max(0, (w - side) // 2)
     top = max(0, (h - side) // 2)
     im = im.crop((left, top, left + side, top + side))
-    im = trim_dark_edges(im)
     return im
 
 
