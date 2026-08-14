@@ -77,6 +77,46 @@
     });
   }
 
+  function trimCanvasSource(canvas) {
+    var w = canvas.width;
+    var h = canvas.height;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return canvas;
+    var data = ctx.getImageData(0, 0, w, h).data;
+    var thr = 72;
+    var minX = w;
+    var minY = h;
+    var maxX = 0;
+    var maxY = 0;
+    var found = false;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var i = (y * w + x) * 4;
+        var sum = data[i] + data[i + 1] + data[i + 2];
+        if (sum > thr) {
+          found = true;
+          if (x < minX) minX = x;
+          if (y < minY) minY = y;
+          if (x > maxX) maxX = x;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (!found) return canvas;
+    var pad = 6;
+    minX = Math.max(0, minX - pad);
+    minY = Math.max(0, minY - pad);
+    maxX = Math.min(w - 1, maxX + pad);
+    maxY = Math.min(h - 1, maxY + pad);
+    var tw = maxX - minX + 1;
+    var th = maxY - minY + 1;
+    var out = document.createElement('canvas');
+    out.width = tw;
+    out.height = th;
+    out.getContext('2d').drawImage(canvas, minX, minY, tw, th, 0, 0, tw, th);
+    return out;
+  }
+
   function cropCover(img, w, h) {
     var c = document.createElement('canvas');
     c.width = w;
@@ -198,7 +238,7 @@
   function captureFromDoc(doc) {
     var canvas = doc.querySelector('canvas');
     if (canvas) {
-      return Promise.resolve(cropCover(canvas, THUMB_W, THUMB_H));
+      return Promise.resolve(cropCover(trimCanvasSource(canvas), THUMB_W, THUMB_H));
     }
     var target = doc.querySelector('.game-board-wrap, .klotski-board, .puzzle-board, #board, #wrap');
     if (!target) target = doc.body;

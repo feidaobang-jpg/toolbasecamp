@@ -87,9 +87,40 @@ def capture_png(browser: Path, url: str, dest: Path, budget_ms: int) -> None:
         raise RuntimeError(f"Screenshot too small or missing: {tmp}")
 
 
+def content_bbox(im: Image.Image, threshold: int = 22) -> tuple[int, int, int, int]:
+    """Trim letterbox/pillarbox before square crop."""
+    rgb = im.convert("RGB")
+    w, h = rgb.size
+    px = rgb.load()
+    min_x, min_y = w, h
+    max_x, max_y = 0, 0
+    found = False
+    thr = threshold * 3
+    for y in range(h):
+        for x in range(w):
+            r, g, b = px[x, y]
+            if r + g + b > thr:
+                found = True
+                min_x = min(min_x, x)
+                min_y = min(min_y, y)
+                max_x = max(max_x, x)
+                max_y = max(max_y, y)
+    if not found:
+        return 0, 0, w, h
+    pad = 6
+    return (
+        max(0, min_x - pad),
+        max(0, min_y - pad),
+        min(w, max_x + 1 + pad),
+        min(h, max_y + 1 + pad),
+    )
+
+
 def to_thumb(src_png: Path, dest_jpg: Path) -> None:
     with Image.open(src_png) as im:
         im = im.convert("RGB")
+        box = content_bbox(im)
+        im = im.crop(box)
         w, h = im.size
         side = min(w, h)
         left = (w - side) // 2
@@ -138,7 +169,7 @@ def main() -> int:
     args = parser.parse_args()
 
     mode = "menu" if args.menu else "play"
-    budget = args.budget or (5000 if mode == "menu" else 10000)
+    budget = args.budget or (5000 if mode == "menu" else 14000)
 
     slugs = args.only if args.only else game_slugs()
     if not slugs:

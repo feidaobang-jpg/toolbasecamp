@@ -2836,6 +2836,33 @@ const Game = (() => {
     drawFrame();
     requestAnimationFrame(loop);
   }
+  if (/[?&]thumb=1(?:&|$)/.test(location.search)) {
+    menuSel = 0;
+    endless = false;
+    enemyLootMode = false;
+    debugMode = false;
+    coopMode = false;
+    newLevel();
+    stateName = "playing";
+    flashMsg = "";
+    flashTime = 0;
+    drawFrame();
+  }
+  window.__tbThumbAutoStart = function () {
+    if (stateName !== "playing") {
+      menuSel = 0;
+      endless = false;
+      enemyLootMode = false;
+      debugMode = false;
+      coopMode = false;
+      newLevel();
+      stateName = "playing";
+      flashMsg = "";
+      flashTime = 0;
+    }
+    window.__tbThumbStateName = stateName;
+    drawFrame();
+  };
   requestAnimationFrame(loop);
 
   return {
@@ -3129,19 +3156,6 @@ const Game = (() => {
   }
 
   layout();
-
-  window.__tbThumbAutoStart = function () {
-    if (stateName === "menu") {
-      menuSel = 0;
-      endless = false;
-      enemyLootMode = false;
-      debugMode = false;
-      coopMode = false;
-      newLevel();
-      stateName = "playing";
-    }
-    window.__tbThumbStateName = stateName;
-  };
 })();
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
