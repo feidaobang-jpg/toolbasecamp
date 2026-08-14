@@ -12,13 +12,23 @@
     'html.tb-thumb-capture .sidebar, html.tb-thumb-capture .tool-header,',
     'html.tb-thumb-capture .tool-mobile-bar, html.tb-thumb-capture .game-toolbar,',
     'html.tb-thumb-capture .game-diff-row, html.tb-thumb-capture .game-status,',
-    'html.tb-thumb-capture .action-row, html.tb-thumb-capture #topBar { display: none !important; }',
+    'html.tb-thumb-capture .action-row, html.tb-thumb-capture #topBar,',
+    'html.tb-thumb-capture .puzzle-preview-row, html.tb-thumb-capture .puzzle-upload,',
+    'html.tb-thumb-capture .puzzle-audio, html.tb-thumb-capture .puzzle-crop,',
+    'html.tb-thumb-capture .game-hint, html.tb-thumb-capture .game-stats,',
+    'html.tb-thumb-capture .field-label { display: none !important; }',
     'html.tb-thumb-capture .container { max-width: none !important; padding: 0 !important; margin: 0 !important; }',
     'html.tb-thumb-capture .content, html.tb-thumb-capture .tool-card, html.tb-thumb-capture .game-card {',
     '  margin: 0 !important; width: 100% !important; max-width: none !important;',
-    '  box-shadow: none !important; border: none !important; padding: 0 !important; }',
+    '  box-shadow: none !important; border: none !important; padding: 0 !important;',
+    '  display: flex !important; flex-direction: column !important;',
+    '  align-items: center !important; justify-content: center !important;',
+    '  min-height: 100vh !important; background: #0b1c2c !important; }',
     'html.tb-thumb-capture #wrap { max-width: none !important; margin: 0 auto !important; }',
-    'html.tb-thumb-capture .game-board-wrap { margin: 0 auto !important; }'
+    'html.tb-thumb-capture .game-board-wrap {',
+    '  margin: 0 auto !important; width: min(92vw, 520px) !important; max-width: 520px !important; }',
+    'html.tb-thumb-capture .gomoku-board, html.tb-thumb-capture .puzzle-board,',
+    'html.tb-thumb-capture .klotski-board { margin: 0 auto !important; }'
   ].join('\n');
   document.head.appendChild(style);
 

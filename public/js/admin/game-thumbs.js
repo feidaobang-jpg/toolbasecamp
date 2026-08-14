@@ -235,16 +235,30 @@
     });
   }
 
+  function boardCaptureTarget(doc) {
+    return doc.querySelector('.gomoku-board, .puzzle-board, .klotski-board')
+      || doc.querySelector('.game-board-wrap')
+      || doc.querySelector('#wrap')
+      || doc.body;
+  }
+
+  function boardCaptureBg(el) {
+    if (!el) return '#111827';
+    if (el.classList.contains('klotski-board')) return '#e2e8f0';
+    if (el.classList.contains('gomoku-board')) return '#c8a86a';
+    if (el.classList.contains('puzzle-board')) return '#1a1a2e';
+    return '#0b1c2c';
+  }
+
   function captureFromDoc(doc) {
     var canvas = doc.querySelector('canvas');
     if (canvas) {
       return Promise.resolve(cropCover(trimCanvasSource(canvas), THUMB_W, THUMB_H));
     }
-    var target = doc.querySelector('.game-board-wrap, .klotski-board, .puzzle-board, #board, #wrap');
-    if (!target) target = doc.body;
+    var target = boardCaptureTarget(doc);
     return loadHtml2Canvas().then(function (html2canvas) {
       return html2canvas(target, {
-        backgroundColor: target.classList && target.classList.contains('klotski-board') ? '#e2e8f0' : '#111827',
+        backgroundColor: boardCaptureBg(target),
         scale: Math.min(2, window.devicePixelRatio || 1),
         logging: false,
         useCORS: true

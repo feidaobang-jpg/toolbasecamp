@@ -83,7 +83,7 @@ def capture_png(browser: Path, url: str, dest: Path, budget_ms: int) -> None:
         url,
     ]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    if not tmp.is_file() or tmp.stat().st_size < 5000:
+    if not tmp.is_file() or tmp.stat().st_size < 3500:
         raise RuntimeError(f"Screenshot too small or missing: {tmp}")
 
 
@@ -116,16 +116,27 @@ def content_bbox(im: Image.Image, threshold: int = 22) -> tuple[int, int, int, i
     )
 
 
-def to_thumb(src_png: Path, dest_jpg: Path) -> None:
+DOM_BOARD_SLUGS = frozenset({"gomoku", "puzzle", "klotski"})
+
+
+def square_crop(im: Image.Image, slug: str | None = None) -> Image.Image:
+    box = content_bbox(im)
+    im = im.crop(box)
+    w, h = im.size
+    if slug in DOM_BOARD_SLUGS and h > int(w * 1.08):
+        top = int(h * 0.24)
+        im = im.crop((0, top, w, h))
+        w, h = im.size
+    side = min(w, h)
+    left = max(0, (w - side) // 2)
+    top = max(0, (h - side) // 2)
+    return im.crop((left, top, left + side, top + side))
+
+
+def to_thumb(src_png: Path, dest_jpg: Path, slug: str | None = None) -> None:
     with Image.open(src_png) as im:
         im = im.convert("RGB")
-        box = content_bbox(im)
-        im = im.crop(box)
-        w, h = im.size
-        side = min(w, h)
-        left = (w - side) // 2
-        top = (h - side) // 2
-        im = im.crop((left, top, left + side, top + side))
+        im = square_crop(im, slug)
         im = im.resize((THUMB_W, THUMB_H), Image.Resampling.LANCZOS)
         dest_jpg.parent.mkdir(parents=True, exist_ok=True)
         im.save(dest_jpg, "JPEG", quality=JPEG_QUALITY, optimize=True)
@@ -196,7 +207,7 @@ def main() -> int:
             try:
                 print(f"capture {slug} ({mode}) …")
                 capture_png(browser, url, out, budget)
-                to_thumb(out.with_suffix(".png"), out)
+                to_thumb(out.with_suffix(".png"), out, slug)
                 print(f"  -> {out.relative_to(ROOT)} ({out.stat().st_size} bytes)")
                 ok += 1
             except Exception as exc:
