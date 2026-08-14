@@ -550,6 +550,7 @@
       id_photo_white: 'tools.instructEdit.presetIdPhotoWhite',
       remove_watermark: 'tools.instructEdit.presetRemoveWatermark',
       beauty_light: 'tools.instructEdit.presetBeautyLight',
+      slim_body: 'tools.instructEdit.presetSlimBody',
       colorize_bw: 'tools.instructEdit.presetColorizeBw',
       product_white_bg: 'tools.instructEdit.presetProductWhiteBg',
       lineart_colorize: 'tools.instructEdit.presetLineartColorize',

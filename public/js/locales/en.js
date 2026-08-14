@@ -2415,6 +2415,7 @@ window.TB_LOCALES.en = {
             presetIdPhotoWhite: 'ID photo (white bg)',
             presetRemoveWatermark: 'Remove watermark',
             presetBeautyLight: 'Light beauty',
+            presetSlimBody: 'Slim body',
             presetColorizeBw: 'Colorize B&W',
             presetProductWhiteBg: 'Product white bg',
             presetLineartColorize: 'Colorize line art',

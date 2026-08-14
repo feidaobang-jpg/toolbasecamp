@@ -2414,6 +2414,7 @@ window.TB_LOCALES['zh-CN'] = {
             presetIdPhotoWhite: '证件照白底',
             presetRemoveWatermark: '去水印/杂物',
             presetBeautyLight: '人像轻美颜',
+            presetSlimBody: '瘦身',
             presetColorizeBw: '黑白上色',
             presetProductWhiteBg: '商品白底图',
             presetLineartColorize: '线稿上色',
