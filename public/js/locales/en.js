@@ -1978,13 +1978,14 @@ window.TB_LOCALES.en = {
             needText: 'Please enter some text'
         },
         imageCollage: {
-            title: 'Collage',
+            title: 'Merge images',
             desc: 'Merge multiple images into one grid (2×2, 3×3, custom rows/cols). Runs locally.',
             addImages: 'Add images',
             tip: 'Tip:',
             tipBody: 'Drag thumbnails to reorder. Extra images beyond the grid are ignored. Nothing is uploaded.',
             preset2: '2 images',
             preset4: '2×2',
+            preset2x3: '2×3',
             preset9: '3×3',
             preset6: '3×2',
             colsLabel: 'Columns',

@@ -1977,13 +1977,14 @@ window.TB_LOCALES['zh-CN'] = {
             needText: '请输入文字'
         },
         imageCollage: {
-            title: '合成',
+            title: '多图合并',
             desc: '将多张图片合并为一张（支持 2×2、九宫格、自定义行列）。本地处理，不上传。',
             addImages: '添加图片',
             tip: '提示：',
             tipBody: '拖动缩略图可调整顺序；超出格子数量的图片会被忽略。全部在浏览器本地完成。',
             preset2: '2 图',
             preset4: '2×2',
+            preset2x3: '2×3',
             preset9: '九宫格',
             preset6: '3×2',
             colsLabel: '列数',
