@@ -1984,6 +1984,7 @@ window.TB_LOCALES.en = {
             tip: 'Tip:',
             tipBody: 'Drag thumbnails to reorder. Extra images beyond the grid are ignored. Nothing is uploaded.',
             preset2: '2×1',
+            preset1x2: '1×2',
             preset4: '2×2',
             preset2x3: '2×3',
             preset9: '3×3',

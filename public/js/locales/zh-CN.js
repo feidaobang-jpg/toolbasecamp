@@ -1983,6 +1983,7 @@ window.TB_LOCALES['zh-CN'] = {
             tip: '提示：',
             tipBody: '拖动缩略图可调整顺序；超出格子数量的图片会被忽略。全部在浏览器本地完成。',
             preset2: '2×1',
+            preset1x2: '1×2',
             preset4: '2×2',
             preset2x3: '2×3',
             preset9: '九宫格',
