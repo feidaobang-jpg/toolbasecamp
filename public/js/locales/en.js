@@ -840,6 +840,18 @@ window.TB_LOCALES.en = {
             title: 'Fish Feast',
             desc: 'Eat smaller fish to grow, avoid bigger ones. Upgrade speed and shields between stages.'
         },
+        bomberman: {
+            title: 'Bomberman',
+            desc: 'Maze bomber action: blast bricks, find the exit, dodge enemies, collect power-ups. Touch joystick; levels and endless mode.'
+        },
+        diving: {
+            title: 'Deep Sea Dive',
+            desc: 'Dive deep, harpoon fish, manage oxygen and cargo; upgrade gear for deeper runs.'
+        },
+        pvz: {
+            title: 'Plants vs Zombies',
+            desc: 'Lane defense: plant sunflowers for sun, deploy peas and nuts to stop zombie waves.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',
