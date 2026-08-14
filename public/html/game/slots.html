@@ -552,6 +552,16 @@ renderBets();
 resize();
 requestAnimationFrame(() => { resize(); draw(); });
 if (window.GameAudio) GameAudio.boot('catchy');
+window.__tbThumbAutoStart = function () {
+  KINDS.forEach(function (k) { bets[k.id] = 1; });
+  credits = 100;
+  cursor = 4;
+  litSet = new Set([2, 3, 4, 5, 6, 7, 8, 9]);
+  centerMsg = '66';
+  hud();
+  renderBets();
+  draw();
+};
 requestAnimationFrame(loop);
 })();
 </script>

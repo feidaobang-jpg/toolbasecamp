@@ -1024,6 +1024,7 @@ requestAnimationFrame(loop);
 document.addEventListener("visibilitychange",()=>{
   if(document.hidden && Game.state==="play") Game.state="pause";
 });
+window.__tbThumbAutoStart = function () { Game.startGame('level'); };
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
 </body>

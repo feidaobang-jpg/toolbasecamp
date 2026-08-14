@@ -930,6 +930,7 @@ function loop(now){
   Render.draw(now/1000);
   requestAnimationFrame(loop);
 }
+window.__tbThumbAutoStart = function () { startGame(false); };
 requestAnimationFrame(loop);
 </script>
 <script src="../../js/game/thumb-preview.js"></script>

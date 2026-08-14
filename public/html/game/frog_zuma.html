@@ -1068,6 +1068,7 @@ function mainLoop(now){
 }
 Game.init();
 requestAnimationFrame(mainLoop);
+window.__tbThumbAutoStart = function () { Game.startGame('level'); };
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
 </body>
