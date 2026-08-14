@@ -408,6 +408,7 @@ window.TB_LOCALES.en = {
     },
     games: {
         groups: {
+            all: 'Games',
             polished: 'Polished',
             draft: 'Early drafts',
             developing: 'In development',
@@ -627,6 +628,34 @@ window.TB_LOCALES.en = {
         brickBreaker: {
             title: 'Brick Breaker',
             desc: 'Neon portrait brick breaker: bounce the ball, clear bricks, grab power-ups. Touch-friendly, runs locally.'
+        },
+        angryBirds: {
+            title: 'Angry Birds',
+            desc: 'Slingshot birds to smash pigs and structures. Levels and endless mode; touch-friendly.'
+        },
+        bubbleDragon: {
+            title: 'Bubble Shooter',
+            desc: 'Classic bubble shooter: match three of the same color. Runs locally; touch-friendly.'
+        },
+        flyBird: {
+            title: 'Flappy Bird',
+            desc: 'Tap to fly through gaps and beat your distance score. Portrait-friendly.'
+        },
+        frogZuma: {
+            title: 'Zuma Frog',
+            desc: 'Marble-chain shooter: match three before balls reach the hole. Touch aim and fire.'
+        },
+        hundredFloors: {
+            title: 'Down 100 Floors',
+            desc: 'Move left/right, fall through platforms, dodge hazards. Portrait touch controls.'
+        },
+        roadRash: {
+            title: 'Road Rash',
+            desc: 'Top-down bike racing and ramming, pick up boosts. Adapts to portrait and landscape.'
+        },
+        worms: {
+            title: 'Worms',
+            desc: 'Turn-based artillery: angle and power to knock out the enemy. Solo vs AI.'
         },
         gemswap: {
             title: 'Gem Match',

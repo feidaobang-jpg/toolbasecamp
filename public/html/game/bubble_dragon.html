@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>街机泡泡龙</title>
+<style>
+/* ========== 全局样式 ========== */
+html,body{
+  margin:0;padding:0;width:100%;height:100%;
+  background:#0a0a1a;overflow:hidden;
+  touch-action:none;-webkit-user-select:none;user-select:none;
+  font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+}
+#gameWrap{
+  position:fixed;left:0;top:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+#gameCanvas{
+  display:block;background:#0a0a1a;
+  box-shadow:0 0 40px rgba(80,120,255,.25);
+}
+</style>
+</head>
+<body>
+<div id="gameWrap"><canvas id="gameCanvas" width="540" height="960"></canvas></div>
+<script>
+"use strict";
+/* =====================================================================
+ * 街机泡泡龙 —— 单文件 HTML5 Canvas 游戏
+ * ---------------------------------------------------------------------
+ * 代码结构分层：
+ *   1. 常量与工具函数        (CONST / Utils)
+ *   2. 画布缩放适配          (ViewScaler)
+ *   3. 音频系统 WebAudio     (AudioSys)  —— 音效 + 程序化BGM
+ *   4. 输入系统              (Input)     —— 键盘 + 虚拟摇杆/按钮
+ *   5. 粒子特效              (Particles)
+ *   6. 泡泡网格与物理        (Grid / Shooter)
+ *   7. 游戏主逻辑与状态机    (Game)      —— 关卡/无尽/暂停/结算
+ *   8. 主循环                (mainLoop)
+ * ===================================================================== */
+
+/* ---------------- 1. 常量与工具 ---------------- */
+const W = 540, H = 960;                 // 竖屏基准尺寸 9:16
+const R = 22;                           // 泡泡半径
+const COLS = 12;                        // 偶数行列数(奇数行为11)
+const ROW_H = R * Math.sqrt(3);         // 行高
+const GRID_TOP = 90;                    // 网格顶部起始Y(天花板初始)
+const DEADLINE_Y = 780;                 // 死亡线
+const SHOOTER_Y = 860;                  // 发射器位置
+const GRID_LEFT = (W - COLS * R * 2) / 2 + R;  // 网格左侧第一列圆心X
+const COLORS = [
+  {main:"#ff4d6d", light:"#ffb3c1", dark:"#c9184a"}, // 红
+  {main:"#ffd60a", light:"#fff3b0", dark:"#e09f00"}, // 黄
+  {main:"#38b000", light:"#b7efc5", dark:"#1d6d00"}, // 绿
+  {main:"#4895ef", light:"#bde0fe", dark:"#1f5fbf"}, // 蓝
+  {main:"#b5179e", light:"#f1c0e8", dark:"#7209b7"}, // 紫
+  {main:"#ff8500", light:"#ffd8a8", dark:"#cc5803"}, // 橙
+  {main:"#00c2d1", light:"#bdf7ff", dark:"#007a85"}, // 青
+];
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const rand  = (a,b)=>a+Math.random()*(b-a);
+const irand = (a,b)=>Math.floor(rand(a,b+1));
+
+/* ---------------- 2. 画布缩放适配 ---------------- */
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const View = {
+  scale:1, offX:0, offY:0, rotated:false,
+  resize(){
+    const ww = window.innerWidth, wh = window.innerHeight;
+    // 竖屏内容：若窗口是横屏(如PC宽屏)则居中等比缩放；无需旋转
+    const s = Math.min(ww / W, wh / H);
+    canvas.style.width  = (W * s) + "px";
+    canvas.style.height = (H * s) + "px";
+    this.scale = s;
+    const rect = () => canvas.getBoundingClientRect();
+    this._rect = rect;
+  },
+  // 屏幕坐标 -> 游戏坐标
+  toGame(cx, cy){
+    const r = canvas.getBoundingClientRect();
+    return { x:(cx - r.left) / r.width * W, y:(cy - r.top) / r.height * H };
+  }
+};
+window.addEventListener("resize", ()=>View.resize());
+View.resize();
+
+/* ---------------- 3. 音频系统 ---------------- */
+const AudioSys = {
+  ctx:null, master:null, bgmGain:null, sfxGain:null,
+  bgmTimer:null, bgmStep:0, enabled:true, bgmOn:true,
+  init(){
+    if(this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AC();
+    this.master = this.ctx.createGain(); this.master.gain.value = 0.9;
+    this.master.connect(this.ctx.destination);
+    this.sfxGain = this.ctx.createGain(); this.sfxGain.gain.value = 0.6;
+    this.sfxGain.connect(this.master);
+    this.bgmGain = this.ctx.createGain(); this.bgmGain.gain.value = 0.16;
+    this.bgmGain.connect(this.master);
+    this.startBGM();
+  },
+  resume(){ if(this.ctx && this.ctx.state === "suspended") this.ctx.resume(); },
+  // 通用音符
+  tone(freq, dur, type, vol, when, dest, slideTo){
+    if(!this.ctx || !this.enabled) return;
+    const t = (when!==undefined?when:this.ctx.currentTime);
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type||"sine"; o.frequency.setValueAtTime(freq, t);
+    if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+dur);
+    g.gain.setValueAtTime(vol||0.3, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    o.connect(g); g.connect(dest||this.sfxGain);
+    o.start(t); o.stop(t+dur+0.02);
+  },
+  noise(dur, vol){
+    if(!this.ctx || !this.enabled) return;
+    const t = this.ctx.currentTime;
+    const len = Math.floor(this.ctx.sampleRate * dur);
+    const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i] = (Math.random()*2-1) * (1 - i/len);
+    const src = this.ctx.createBufferSource(); src.buffer = buf;
+    const g = this.ctx.createGain(); g.gain.value = vol||0.2;
+    src.connect(g); g.connect(this.sfxGain); src.start(t);
+  },
+  /* --- 各类音效 --- */
+  shoot(){ this.tone(520, .12, "square", .18, undefined, undefined, 880); },
+  bounce(){ this.tone(300, .08, "triangle", .2, undefined, undefined, 200); },
+  snap(){ this.tone(220, .06, "sine", .25); },
+  pop(n){ // 消除，音高随连消数量上升
+    for(let i=0;i<Math.min(n,6);i++)
+      this.tone(440*Math.pow(1.12,i), .12, "sine", .22, this.ctx.currentTime+i*0.05);
+    this.noise(.12,.12);
+  },
+  drop(){ this.tone(600,.25,"sine",.18,undefined,undefined,150); },
+  swap(){ this.tone(660,.07,"square",.12); },
+  hurt(){ this.tone(180,.4,"sawtooth",.25,undefined,undefined,60); this.noise(.25,.2); },
+  win(){
+    const t = this.ctx.currentTime;
+    [523,659,784,1046].forEach((f,i)=>this.tone(f,.3,"triangle",.25,t+i*0.14));
+  },
+  lose(){
+    const t = this.ctx.currentTime;
+    [392,330,262,196].forEach((f,i)=>this.tone(f,.35,"sawtooth",.2,t+i*0.18));
+  },
+  /* --- 程序化BGM：轻快琶音循环 --- */
+  startBGM(){
+    if(this.bgmTimer) return;
+    const scale = [261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25]; // C大调五声扩展
+    const bassLine = [130.81,98.00,110.00,146.83];
+    const pattern = [0,2,4,7,4,2,5,3, 0,2,4,7,5,4,2,1];
+    const stepDur = 0.22;
+    this.bgmTimer = setInterval(()=>{
+      if(!this.ctx || !this.bgmOn || this.ctx.state!=="running") return;
+      const t = this.ctx.currentTime + 0.05;
+      const i = this.bgmStep % pattern.length;
+      // 主旋律琶音
+      this.tone(scale[pattern[i]], stepDur*0.9, "triangle", .5, t, this.bgmGain);
+      // 低音(每4步)
+      if(i % 4 === 0)
+        this.tone(bassLine[(this.bgmStep>>2)%bassLine.length], stepDur*3.5, "sine", .6, t, this.bgmGain);
+      // 轻打击(每2步)
+      if(i % 2 === 0){
+        const g = this.ctx.createGain(); g.gain.value = .08; g.connect(this.bgmGain);
+        this.tone(1200, .04, "square", .5, t, g);
+      }
+      this.bgmStep++;
+    }, stepDur*1000);
+  },
+  toggleBGM(){ this.bgmOn = !this.bgmOn; }
+};
+
+/* ---------------- 4. 输入系统 ---------------- */
+const Input = {
+  keys:{},
+  joy:{active:false, id:-1, cx:0, cy:0, dx:0, dy:0}, // 虚拟摇杆
+  btns:{fire:false, swap:false},                       // 虚拟按钮按下态
+  btnRects:{},   // 按钮区域(游戏坐标)
+  firePressed:false, swapPressed:false, pausePressed:false, // 单帧触发
+  init(){
+    window.addEventListener("keydown", e=>{
+      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      const k = e.key.toLowerCase();
+      if(!this.keys[k]){
+        // 单帧触发键：攻击(J/回车/K/空格) 换弹(L) 暂停(U/P/Esc) 音乐(I) 音效(O)
+        if(k==="j"||k==="enter"||k==="k"||k===" ") this.firePressed = true;
+        if(k==="l") this.swapPressed = true;
+        if(k==="u"||k==="p"||k==="escape") this.pausePressed = true;
+        if(k==="i") AudioSys.toggleBGM();
+        if(k==="o") AudioSys.enabled = !AudioSys.enabled;
+      }
+      this.keys[k] = true;
+      AudioSys.init(); AudioSys.resume();
+    });
+    window.addEventListener("keyup", e=>{ this.keys[e.key.toLowerCase()] = false; });
+
+    // 触控
+    const opts = {passive:false};
+    canvas.addEventListener("touchstart", e=>this.onTouch(e,"start"), opts);
+    canvas.addEventListener("touchmove",  e=>this.onTouch(e,"move"),  opts);
+    canvas.addEventListener("touchend",   e=>this.onTouch(e,"end"),   opts);
+    canvas.addEventListener("touchcancel",e=>this.onTouch(e,"end"),   opts);
+    // 鼠标(PC上也可点按钮/瞄准)
+    canvas.addEventListener("mousedown", e=>{
+      AudioSys.init(); AudioSys.resume();
+      const p = View.toGame(e.clientX, e.clientY);
+      Game.onPointerDown(p.x, p.y, -99);
+    });
+    canvas.addEventListener("mousemove", e=>{
+      const p = View.toGame(e.clientX, e.clientY);
+      Game.onPointerMove(p.x, p.y, -99);
+    });
+    canvas.addEventListener("mouseup", e=>{ Game.onPointerUp(-99); });
+  },
+  onTouch(e, phase){
+    e.preventDefault();
+    AudioSys.init(); AudioSys.resume();
+    const list = (phase==="start") ? e.changedTouches
+               : (phase==="move")  ? e.changedTouches : e.changedTouches;
+    for(const t of list){
+      const p = View.toGame(t.clientX, t.clientY);
+      if(phase==="start") Game.onPointerDown(p.x, p.y, t.identifier);
+      else if(phase==="move") Game.onPointerMove(p.x, p.y, t.identifier);
+      else Game.onPointerUp(t.identifier);
+    }
+  },
+  // 移动方向合成：键盘 + 摇杆  (返回 -1..1 的水平量, 垂直量)
+  axis(){
+    let dx=0, dy=0;
+    if(this.keys["a"]||this.keys["arrowleft"])  dx -= 1;
+    if(this.keys["d"]||this.keys["arrowright"]) dx += 1;
+    if(this.keys["w"]||this.keys["arrowup"])    dy -= 1;
+    if(this.keys["s"]||this.keys["arrowdown"])  dy += 1;
+    if(this.joy.active){ dx += this.joy.dx; dy += this.joy.dy; }
+    return {x:clamp(dx,-1,1), y:clamp(dy,-1,1)};
+  },
+  consume(){ // 每帧结束清空单帧触发
+    this.firePressed = false; this.swapPressed = false; this.pausePressed = false;
+  }
+};
+
+/* ---------------- 5. 粒子特效 ---------------- */
+const Particles = {
+  list:[],
+  burst(x,y,color,n){ // 泡泡爆裂
+    for(let i=0;i<n;i++){
+      const a = rand(0,Math.PI*2), sp = rand(60,320);
+      this.list.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        life:rand(.3,.7),t:0,r:rand(2,5),color,g:300,type:"dot"});
+    }
+    // 光环
+    this.list.push({x,y,life:.35,t:0,r:R*0.8,color,type:"ring"});
+  },
+  sparkle(x,y,color){ // 命中吸附小火花
+    for(let i=0;i<6;i++){
+      const a = rand(0,Math.PI*2), sp = rand(30,120);
+      this.list.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        life:rand(.2,.4),t:0,r:rand(1.5,3),color,g:100,type:"dot"});
+    }
+  },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p = this.list[i];
+      p.t += dt;
+      if(p.t >= p.life){ this.list.splice(i,1); continue; }
+      if(p.type==="dot"){
+        p.vy += (p.g||0)*dt; p.x += p.vx*dt; p.y += p.vy*dt;
+      }
+    }
+  },
+  draw(ctx){
+    for(const p of this.list){
+      const k = 1 - p.t/p.life;
+      ctx.globalAlpha = k;
+      if(p.type==="dot"){
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r*k,0,Math.PI*2); ctx.fill();
+      }else if(p.type==="ring"){
+        ctx.strokeStyle = p.color; ctx.lineWidth = 3*k;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r*(1+(1-k)*1.6),0,Math.PI*2); ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+};
+
+/* ---------------- 6. 泡泡网格与发射器 ---------------- */
+const Grid = {
+  cells:[],       // cells[row][col] = 颜色索引 或 -1
+  rows:0,
+  ceilOffset:0,   // 天花板下移量(像素, 为ROW_H的整数倍)
+  falling:[],     // 掉落中的泡泡(动画)
+  init(){ this.cells=[]; this.rows=0; this.ceilOffset=0; this.falling=[]; },
+  colsInRow(r){ return (r % 2 === 0) ? COLS : COLS-1; },
+  cellPos(r,c){
+    const x = GRID_LEFT + c*R*2 + ((r%2)?R:0);
+    const y = GRID_TOP + this.ceilOffset + r*ROW_H;
+    return {x,y};
+  },
+  get(r,c){
+    if(r<0||r>=this.cells.length||c<0||c>=this.colsInRow(r)) return -1;
+    return this.cells[r][c];
+  },
+  set(r,c,v){
+    while(this.cells.length<=r){
+      const rr = this.cells.length;
+      this.cells.push(new Array(this.colsInRow(rr)).fill(-1));
+    }
+    this.cells[r][c] = v;
+  },
+  neighbors(r,c){
+    const odd = r%2;
+    const deltas = odd
+      ? [[0,-1],[0,1],[-1,0],[-1,1],[1,0],[1,1]]
+      : [[0,-1],[0,1],[-1,-1],[-1,0],[1,-1],[1,0]];
+    const out = [];
+    for(const [dr,dc] of deltas){
+      const nr=r+dr, nc=c+dc;
+      if(nr>=0 && nr<this.cells.length && nc>=0 && nc<this.colsInRow(nr))
+        out.push([nr,nc]);
+    }
+    return out;
+  },
+  // 生成初始行
+  addRows(n, colorCount, atTop){
+    for(let i=0;i<n;i++){
+      if(atTop){
+        // 无尽模式：顶部插入一行，其余行下移（用ceilOffset代替物理位移）
+        const newRow = new Array(this.colsInRow(0)).fill(-1)
+          .map(()=>irand(0,colorCount-1));
+        // 由于奇偶交替，顶插会破坏奇偶结构 → 改为整体行号+1的方式:
+        this.cells.unshift(newRow);
+        // 修正各行列数(奇偶翻转): 简化处理——重建每行长度
+        for(let r=0;r<this.cells.length;r++){
+          const want = this.colsInRow(r);
+          const row = this.cells[r];
+          if(row.length>want) row.length = want;
+          while(row.length<want) row.push(-1);
+        }
+      }else{
+        const r = this.cells.length;
+        const row = new Array(this.colsInRow(r)).fill(-1)
+          .map(()=>irand(0,colorCount-1));
+        this.cells.push(row);
+      }
+    }
+  },
+  // 找到与(x,y)最近的空格
+  snapCell(x,y){
+    const relY = y - (GRID_TOP + this.ceilOffset);
+    let r = Math.round(relY / ROW_H);
+    r = Math.max(0, r);
+    let best=null, bd=Infinity;
+    for(let rr=Math.max(0,r-2); rr<=r+2; rr++){
+      const nCols = this.colsInRow(rr);
+      for(let cc=0; cc<nCols; cc++){
+        if(this.get(rr,cc) !== -1) continue;
+        const p = this.cellPos(rr,cc);
+        const d = (p.x-x)**2 + (p.y-y)**2;
+        if(d<bd){ bd=d; best=[rr,cc]; }
+      }
+    }
+    return best;
+  },
+  // 相同颜色连通块
+  matchGroup(r,c){
+    const color = this.get(r,c);
+    if(color===-1) return [];
+    const seen = new Set([r+","+c]);
+    const stack = [[r,c]], out = [[r,c]];
+    while(stack.length){
+      const [cr,cc] = stack.pop();
+      for(const [nr,nc] of this.neighbors(cr,cc)){
+        const key = nr+","+nc;
+        if(seen.has(key)) continue;
+        if(this.get(nr,nc)===color){
+          seen.add(key); stack.push([nr,nc]); out.push([nr,nc]);
+        }
+      }
+    }
+    return out;
+  },
+  // 找出悬空泡泡(未连接天花板)
+  findFloating(){
+    const connected = new Set();
+    const stack = [];
+    for(let c=0;c<this.colsInRow(0);c++)
+      if(this.get(0,c)!==-1){ connected.add("0,"+c); stack.push([0,c]); }
+    while(stack.length){
+      const [cr,cc] = stack.pop();
+      for(const [nr,nc] of this.neighbors(cr,cc)){
+        const key = nr+","+nc;
+        if(!connected.has(key) && this.get(nr,nc)!==-1){
+          connected.add(key); stack.push([nr,nc]);
+        }
+      }
+    }
+    const floats = [];
+    for(let r=0;r<this.cells.length;r++)
+      for(let c=0;c<this.colsInRow(r);c++)
+        if(this.get(r,c)!==-1 && !connected.has(r+","+c)) floats.push([r,c]);
+    return floats;
+  },
+  remove(r,c){ if(this.cells[r]) this.cells[r][c] = -1; },
+  // 场上剩余颜色集合(供发射器补弹用)
+  activeColors(){
+    const s = new Set();
+    for(let r=0;r<this.cells.length;r++)
+      for(let c=0;c<this.colsInRow(r);c++){
+        const v = this.get(r,c); if(v!==-1) s.add(v);
+      }
+    return [...s];
+  },
+  count(){
+    let n=0;
+    for(let r=0;r<this.cells.length;r++)
+      for(let c=0;c<this.colsInRow(r);c++) if(this.get(r,c)!==-1) n++;
+    return n;
+  },
+  lowestY(){
+    let ly = -Infinity;
+    for(let r=this.cells.length-1;r>=0;r--)
+      for(let c=0;c<this.colsInRow(r);c++)
+        if(this.get(r,c)!==-1){ ly = Math.max(ly, this.cellPos(r,c).y); }
+    return ly;
+  },
+  updateFalling(dt){
+    for(let i=this.falling.length-1;i>=0;i--){
+      const f = this.falling[i];
+      f.vy += 900*dt; f.y += f.vy*dt; f.x += f.vx*dt; f.rot += f.vr*dt;
+      if(f.y > H + R*2){ this.falling.splice(i,1); }
+    }
+  }
+};
+
+// 泡泡绘制(带高光渐变)
+function drawBubble(ctx, x, y, colorIdx, radius, alpha){
+  const col = COLORS[colorIdx];
+  if(!col) return;
+  const r = radius || R;
+  ctx.globalAlpha = alpha===undefined?1:alpha;
+  const g = ctx.createRadialGradient(x-r*0.35, y-r*0.4, r*0.1, x, y, r);
+  g.addColorStop(0, col.light);
+  g.addColorStop(0.55, col.main);
+  g.addColorStop(1, col.dark);
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x,y,r-1,0,Math.PI*2); ctx.fill();
+  // 高光
+  ctx.fillStyle = "rgba(255,255,255,.55)";
+  ctx.beginPath(); ctx.ellipse(x-r*0.32, y-r*0.42, r*0.24, r*0.15, -0.6, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+/* 发射器 */
+const Shooter = {
+  angle:-Math.PI/2,   // 朝上
+  current:0, next:0,
+  flying:null,        // {x,y,vx,vy,color}
+  SPEED:900,
+  MINA:-Math.PI+0.18, MAXA:-0.18,
+  reset(colorCount){
+    this.angle = -Math.PI/2;
+    this.current = irand(0, colorCount-1);
+    this.next = irand(0, colorCount-1);
+    this.flying = null;
+  },
+  pickColor(){
+    const act = Grid.activeColors();
+    if(act.length===0) return 0;
+    return act[irand(0, act.length-1)];
+  },
+  swap(){
+    if(this.flying) return;
+    [this.current, this.next] = [this.next, this.current];
+    AudioSys.swap();
+  },
+  fire(){
+    if(this.flying) return;
+    this.flying = {
+      x:W/2, y:SHOOTER_Y,
+      vx:Math.cos(this.angle)*this.SPEED,
+      vy:Math.sin(this.angle)*this.SPEED,
+      color:this.current
+    };
+    this.current = this.next;
+    this.next = this.pickColor();
+    AudioSys.shoot();
+    Game.onShotFired();
+  },
+  update(dt){
+    // 瞄准: 水平轴旋转, 垂直轴微调
+    const ax = Input.axis();
+    const rotSpeed = 2.2;
+    this.angle += ax.x * rotSpeed * dt;
+    this.angle += ax.y * rotSpeed * 0.5 * dt * (this.angle>-Math.PI/2?1:-1) * -1;
+    this.angle = clamp(this.angle, this.MINA, this.MAXA);
+
+    if(!this.flying) return;
+    const b = this.flying;
+    // 分步移动防止穿透(高速物体)
+    const steps = Math.ceil(Math.max(Math.abs(b.vx),Math.abs(b.vy))*dt / (R*0.5)) || 1;
+    const sdt = dt/steps;
+    for(let s=0;s<steps && this.flying;s++){
+      b.x += b.vx*sdt; b.y += b.vy*sdt;
+      // 墙壁反弹
+      if(b.x < R){ b.x = R; b.vx = Math.abs(b.vx); AudioSys.bounce(); }
+      if(b.x > W-R){ b.x = W-R; b.vx = -Math.abs(b.vx); AudioSys.bounce(); }
+      // 天花板
+      const ceilY = GRID_TOP + Grid.ceilOffset - R;
+      if(b.y <= ceilY + R){ this.land(); break; }
+      // 与网格泡泡碰撞
+      const relY = b.y - (GRID_TOP + Grid.ceilOffset);
+      const rGuess = Math.round(relY / ROW_H);
+      let hit = false;
+      for(let rr=Math.max(0,rGuess-2); rr<=rGuess+2 && !hit; rr++){
+        if(rr>=Grid.cells.length) break;
+        for(let cc=0; cc<Grid.colsInRow(rr); cc++){
+          if(Grid.get(rr,cc)===-1) continue;
+          const p = Grid.cellPos(rr,cc);
+          const d2 = (p.x-b.x)**2 + (p.y-b.y)**2;
+          if(d2 < (R*1.82)**2){ hit = true; break; }
+        }
+      }
+      if(hit){ this.land(); break; }
+    }
+  },
+  land(){
+    const b = this.flying;
+    if(!b) return;
+    const cell = Grid.snapCell(b.x, b.y);
+    this.flying = null;
+    if(!cell){ Game.checkLoseLife(true); return; }
+    const [r,c] = cell;
+    Grid.set(r,c,b.color);
+    const p = Grid.cellPos(r,c);
+    Particles.sparkle(p.x, p.y, COLORS[b.color].light);
+    AudioSys.snap();
+    Game.onBubbleLanded(r,c);
+  },
+  draw(ctx){
+    // 底座
+    const grd = ctx.createLinearGradient(0, SHOOTER_Y-40, 0, H);
+    grd.addColorStop(0,"rgba(30,40,80,0)");
+    grd.addColorStop(1,"rgba(30,40,80,.9)");
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, SHOOTER_Y-40, W, H-SHOOTER_Y+40);
+
+    // 瞄准虚线(带一次反弹预测)
+    ctx.save();
+    ctx.setLineDash([4,10]);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(255,255,255,.45)";
+    let px = W/2, py = SHOOTER_Y;
+    let dx = Math.cos(this.angle), dy = Math.sin(this.angle);
+    ctx.beginPath(); ctx.moveTo(px,py);
+    for(let seg=0; seg<3; seg++){
+      // 射线求交: 左右墙 or 到达网格顶部区域即停
+      let tWall = Infinity;
+      if(dx<0) tWall = (R - px)/dx;
+      else if(dx>0) tWall = (W-R - px)/dx;
+      const tTop = (GRID_TOP + Grid.ceilOffset + 40 - py)/dy; // dy<0
+      const t = Math.min(tWall, tTop>0?tTop:Infinity, 500);
+      px += dx*t; py += dy*t;
+      ctx.lineTo(px,py);
+      if(t===tTop || t===500) break;
+      dx = -dx; // 反弹
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // 炮管
+    ctx.save();
+    ctx.translate(W/2, SHOOTER_Y);
+    ctx.rotate(this.angle + Math.PI/2);
+    const bg = ctx.createLinearGradient(-10,0,10,0);
+    bg.addColorStop(0,"#5b6bff"); bg.addColorStop(1,"#2a2f80");
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.moveTo(-11, 6); ctx.lineTo(11, 6); ctx.lineTo(7, -42); ctx.lineTo(-7, -42);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    // 当前泡泡
+    drawBubble(ctx, W/2, SHOOTER_Y, this.current);
+    // 下一个泡泡(小)
+    ctx.fillStyle = "rgba(255,255,255,.6)";
+    ctx.font = "14px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("下一个", W/2+70, SHOOTER_Y+34);
+    drawBubble(ctx, W/2+70, SHOOTER_Y+4, this.next, R*0.62);
+
+    // 飞行中的泡泡
+    if(this.flying){
+      drawBubble(ctx, this.flying.x, this.flying.y, this.flying.color);
+      // 尾迹
+      ctx.globalAlpha=.25;
+      drawBubble(ctx, this.flying.x-this.flying.vx*0.015, this.flying.y-this.flying.vy*0.015, this.flying.color, R*0.8);
+      ctx.globalAlpha=1;
+    }
+  }
+};
+
+/* ---------------- 7. 游戏主逻辑 ---------------- */
+const Game = {
+  state:"menu",   // menu | playing | paused | levelclear | gameover | win
+  mode:"level",   // level | endless
+  level:1, score:0, lives:3, best:0,
+  shotsSinceDrop:0, dropEvery:8,
+  colorCount:4,
+  endlessTimer:0, endlessInterval:12,
+  combo:0, msgText:"", msgTimer:0,
+  shake:0,
+  // 触控指针追踪
+  pointers:{},   // id -> {zone:"joy"|"btn"|"aim"}
+  stars:[],      // 背景星星
+
+  init(){
+    this.best = +(localStorage.getItem("bubble_best")||0);
+    for(let i=0;i<70;i++)
+      this.stars.push({x:rand(0,W),y:rand(0,H),r:rand(0.5,2),tw:rand(0,Math.PI*2),sp:rand(1,3)});
+    Input.init();
+  },
+  startGame(mode){
+    this.mode = mode;
+    this.level = 1; this.score = 0; this.lives = 3;
+    this.startLevel();
+    AudioSys.init(); AudioSys.resume();
+  },
+  startLevel(){
+    Grid.init(); Particles.list = [];
+    if(this.mode==="level"){
+      this.colorCount = Math.min(4 + Math.floor((this.level-1)/2), COLORS.length);
+      const rows = Math.min(4 + this.level, 9);
+      Grid.addRows(rows, this.colorCount, false);
+      this.dropEvery = Math.max(9 - this.level, 4);
+    }else{
+      this.colorCount = 5;
+      Grid.addRows(5, this.colorCount, false);
+      this.dropEvery = 8;
+      this.endlessInterval = 12;
+      this.endlessTimer = 0;
+    }
+    this.shotsSinceDrop = 0;
+    this.combo = 0;
+    Shooter.reset(this.colorCount);
+    this.state = "playing";
+    this.showMsg(this.mode==="level" ? ("第 "+this.level+" 关") : "无尽模式", 1.5);
+  },
+  showMsg(t,d){ this.msgText = t; this.msgTimer = d; },
+
+  onShotFired(){
+    this.shotsSinceDrop++;
+    if(this.shotsSinceDrop >= this.dropEvery){
+      this.shotsSinceDrop = 0;
+      this.pendingDrop = true; // 落地后执行下压，避免飞行中网格移动
+    }
+  },
+  onBubbleLanded(r,c){
+    const group = Grid.matchGroup(r,c);
+    if(group.length >= 3){
+      // 消除
+      for(const [gr,gc] of group){
+        const p = Grid.cellPos(gr,gc);
+        Particles.burst(p.x,p.y,COLORS[Grid.get(gr,gc)].main, 10);
+        Grid.remove(gr,gc);
+      }
+      this.combo++;
+      const gain = group.length * 10 * this.combo;
+      this.score += gain;
+      AudioSys.pop(group.length);
+      // 悬空泡泡掉落
+      const floats = Grid.findFloating();
+      if(floats.length){
+        for(const [fr,fc] of floats){
+          const p = Grid.cellPos(fr,fc);
+          Grid.falling.push({x:p.x,y:p.y,vx:rand(-60,60),vy:rand(-80,0),
+            vr:rand(-4,4),rot:0,color:Grid.get(fr,fc)});
+          Grid.remove(fr,fc);
+        }
+        this.score += floats.length * 20;
+        AudioSys.drop();
+      }
+      if(group.length>=5 || floats.length>=3) this.shake = 0.25;
+    }else{
+      this.combo = 0;
+    }
+    // 下压
+    if(this.pendingDrop){
+      this.pendingDrop = false;
+      Grid.ceilOffset += ROW_H;
+      this.showMsg("泡泡下压!", 0.8);
+    }
+    this.checkLoseLife(false);
+    // 过关判定
+    if(Grid.count()===0){
+      if(this.mode==="level"){
+        this.score += 500 + this.level*100;
+        AudioSys.win();
+        if(this.level >= 10){ this.state = "win"; this.saveBest(); }
+        else this.state = "levelclear";
+      }else{
+        // 无尽模式清空则奖励并加新行
+        this.score += 1000;
+        AudioSys.win();
+        Grid.ceilOffset = 0;
+        Grid.addRows(5, this.colorCount, false);
+        this.showMsg("清空奖励 +1000!", 1.5);
+      }
+    }
+  },
+  checkLoseLife(force){
+    if(this.state!=="playing") return;
+    if(force || Grid.lowestY() > DEADLINE_Y - R){
+      this.lives--;
+      AudioSys.hurt();
+      this.shake = 0.4;
+      if(this.lives <= 0){
+        this.state = "gameover"; this.saveBest(); AudioSys.lose();
+      }else{
+        // 移除最下方2行泡泡作为惩罚缓冲
+        let removed = 0;
+        for(let r=Grid.cells.length-1; r>=0 && removed<2; r--){
+          let has = false;
+          for(let c=0;c<Grid.colsInRow(r);c++){
+            if(Grid.get(r,c)!==-1){
+              const p = Grid.cellPos(r,c);
+              Particles.burst(p.x,p.y,COLORS[Grid.get(r,c)].main,6);
+              Grid.remove(r,c);
+              has = true;
+            }
+          }
+          if(has) removed++;
+        }
+        this.showMsg("危险! 生命 -1", 1.2);
+      }
+    }
+  },
+  saveBest(){
+    if(this.score > this.best){
+      this.best = this.score;
+      localStorage.setItem("bubble_best", this.best);
+    }
+  },
+
+  /* ---- 指针(触控/鼠标)分区处理 ---- */
+  onPointerDown(x,y,id){
+    if(this.state==="menu"){
+      // 菜单按钮
+      if(this.hitRect(x,y,W/2-130,520,260,64)) this.startGame("level");
+      else if(this.hitRect(x,y,W/2-130,610,260,64)) this.startGame("endless");
+      return;
+    }
+    if(this.state==="paused"){
+      if(this.hitRect(x,y,W/2-130,470,260,60)){ this.state="playing"; }
+      else if(this.hitRect(x,y,W/2-130,550,260,60)){ this.startLevel(); }
+      else if(this.hitRect(x,y,W/2-130,630,260,60)){ this.state="menu"; }
+      return;
+    }
+    if(this.state==="gameover" || this.state==="win"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)){
+        this.startGame(this.mode);
+      }else if(this.hitRect(x,y,W/2-130,650,260,64)){ this.state="menu"; }
+      return;
+    }
+    if(this.state==="levelclear"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)){ this.level++; this.startLevel(); }
+      return;
+    }
+    // playing 状态
+    // 暂停按钮(右上角)
+    if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
+    // 虚拟摇杆区(左下)
+    if(x < W*0.42 && y > H*0.72){
+      Input.joy.active = true; Input.joy.id = id;
+      Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
+      this.pointers[id] = "joy";
+      return;
+    }
+    // 虚拟按钮区(右下)
+    if(x > W*0.58 && y > H*0.72){
+      if(this.hitCircle(x,y,W-80,H-90,44)){ Shooter.fire(); this.pointers[id]="btn"; return; }
+      if(this.hitCircle(x,y,W-170,H-60,36)){ Shooter.swap(); this.pointers[id]="btn"; return; }
+    }
+    // 其余区域: 直接瞄准 (点哪儿瞄哪儿)
+    this.aimAt(x,y);
+    this.pointers[id] = "aim";
+  },
+  onPointerMove(x,y,id){
+    if(this.state!=="playing") return;
+    if(this.pointers[id]==="joy" && Input.joy.active && Input.joy.id===id){
+      const dx = x - Input.joy.cx, dy = y - Input.joy.cy;
+      const len = Math.hypot(dx,dy), max = 55;
+      const k = len>max ? max/len : 1;
+      Input.joy.dx = dx*k/max; Input.joy.dy = dy*k/max;
+      return;
+    }
+    if(this.pointers[id]==="aim") this.aimAt(x,y);
+  },
+  onPointerUp(id){
+    if(this.pointers[id]==="joy"){
+      Input.joy.active = false; Input.joy.dx = 0; Input.joy.dy = 0; Input.joy.id = -1;
+    }else if(this.pointers[id]==="aim" && this.state==="playing"){
+      Shooter.fire(); // 松手发射
+    }
+    delete this.pointers[id];
+  },
+  aimAt(x,y){
+    if(y > SHOOTER_Y - 10) y = SHOOTER_Y - 10;
+    const a = Math.atan2(y - SHOOTER_Y, x - W/2);
+    Shooter.angle = clamp(a, Shooter.MINA, Shooter.MAXA);
+  },
+  hitRect(x,y,rx,ry,rw,rh){ return x>=rx && x<=rx+rw && y>=ry && y<=ry+rh; },
+  hitCircle(x,y,cx,cy,r){ return (x-cx)**2 + (y-cy)**2 <= r*r; },
+
+  /* ---- 更新 ---- */
+  update(dt){
+    // 背景星星
+    for(const s of this.stars){ s.tw += dt*s.sp; }
+    if(this.msgTimer>0) this.msgTimer -= dt;
+    if(this.shake>0) this.shake -= dt;
+    Particles.update(dt);
+    Grid.updateFalling(dt);
+
+    if(this.state!=="playing"){
+      if(Input.pausePressed && this.state==="paused") this.state="playing";
+      else if(Input.firePressed){
+        if(this.state==="menu") this.startGame("level");
+        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
+        else if(this.state==="gameover"||this.state==="win") this.startGame(this.mode);
+      }
+      Input.consume();
+      return;
+    }
+    if(Input.pausePressed){ this.state="paused"; Input.consume(); return; }
+    if(Input.firePressed) Shooter.fire();
+    if(Input.swapPressed) Shooter.swap();
+    Shooter.update(dt);
+
+    // 无尽模式定时加行
+    if(this.mode==="endless"){
+      this.endlessTimer += dt;
+      if(this.endlessTimer >= this.endlessInterval){
+        this.endlessTimer = 0;
+        this.endlessInterval = Math.max(6, this.endlessInterval - 0.3); // 难度渐增
+        Grid.addRows(1, this.colorCount, true);
+        this.showMsg("新泡泡来袭!", 0.8);
+        AudioSys.bounce();
+        this.checkLoseLife(false);
+      }
+    }
+    Input.consume();
+  },
+
+  /* ---- 绘制 ---- */
+  draw(){
+    ctx.save();
+    if(this.shake>0){
+      ctx.translate(rand(-1,1)*this.shake*14, rand(-1,1)*this.shake*14);
+    }
+    // 背景渐变
+    const bg = ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,"#141433"); bg.addColorStop(0.5,"#1a1040"); bg.addColorStop(1,"#0a0a1a");
+    ctx.fillStyle = bg; ctx.fillRect(-20,-20,W+40,H+40);
+    // 星星
+    for(const s of this.stars){
+      ctx.globalAlpha = 0.3 + 0.7*Math.abs(Math.sin(s.tw));
+      ctx.fillStyle = "#cdd6ff";
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    if(this.state==="menu"){ this.drawMenu(); ctx.restore(); return; }
+
+    // 天花板
+    const ceilY = GRID_TOP + Grid.ceilOffset - R - 4;
+    const cg = ctx.createLinearGradient(0, 0, 0, ceilY);
+    cg.addColorStop(0,"#3a3a6e"); cg.addColorStop(1,"#23234d");
+    ctx.fillStyle = cg; ctx.fillRect(0, 0, W, ceilY);
+    ctx.fillStyle = "#5b5bb0";
+    for(let x=8; x<W; x+=28) ctx.fillRect(x, ceilY-6, 16, 6);
+
+    // 死亡线
+    ctx.setLineDash([10,8]);
+    ctx.strokeStyle = "rgba(255,80,80,.5)"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0,DEADLINE_Y); ctx.lineTo(W,DEADLINE_Y); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 网格泡泡
+    for(let r=0;r<Grid.cells.length;r++)
+      for(let c=0;c<Grid.colsInRow(r);c++){
+        const v = Grid.get(r,c);
+        if(v===-1) continue;
+        const p = Grid.cellPos(r,c);
+        drawBubble(ctx, p.x, p.y, v);
+      }
+    // 掉落的泡泡
+    for(const f of Grid.falling) drawBubble(ctx, f.x, f.y, f.color);
+
+    Particles.draw(ctx);
+    Shooter.draw(ctx);
+    this.drawHUD();
+    this.drawTouchUI();
+
+    // 中央提示文字
+    if(this.msgTimer>0){
+      ctx.globalAlpha = Math.min(1, this.msgTimer*2);
+      ctx.fillStyle = "#fff"; ctx.font = "bold 40px sans-serif"; ctx.textAlign = "center";
+      ctx.shadowColor = "#6a7bff"; ctx.shadowBlur = 18;
+      ctx.fillText(this.msgText, W/2, 430);
+      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+    }
+
+    if(this.state==="paused") this.drawPaused();
+    else if(this.state==="levelclear") this.drawLevelClear();
+    else if(this.state==="gameover") this.drawGameOver(false);
+    else if(this.state==="win") this.drawGameOver(true);
+    ctx.restore();
+  },
+  drawHUD(){
+    ctx.textAlign = "left";
+    ctx.font = "bold 22px sans-serif";
+    ctx.fillStyle = "#fff";
+    ctx.fillText("分数 " + this.score, 14, 34);
+    ctx.font = "14px sans-serif"; ctx.fillStyle = "#9aa4ff";
+    ctx.fillText("最高 " + this.best, 14, 56);
+    // 关卡/模式
+    ctx.textAlign = "center"; ctx.font = "bold 20px sans-serif"; ctx.fillStyle = "#ffd60a";
+    ctx.fillText(this.mode==="level" ? ("第 "+this.level+" 关") : "无尽", W/2, 34);
+    // 生命(心形)
+    for(let i=0;i<3;i++){
+      const hx = W/2 - 40 + i*40, hy = 56;
+      ctx.fillStyle = i < this.lives ? "#ff4d6d" : "rgba(255,255,255,.15)";
+      this.heart(hx, hy, 9);
+    }
+    // 暂停按钮
+    ctx.fillStyle = "rgba(255,255,255,.12)";
+    this.roundRect(W-64,10,54,54,12); ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(W-64+16,24,8,26); ctx.fillRect(W-64+30,24,8,26);
+    // 下压进度条
+    ctx.fillStyle = "rgba(255,255,255,.15)";
+    this.roundRect(W-150, 74, 136, 8, 4); ctx.fill();
+    ctx.fillStyle = "#ff8500";
+    this.roundRect(W-150, 74, 136*(this.shotsSinceDrop/this.dropEvery), 8, 4); ctx.fill();
+    ctx.textAlign="right"; ctx.font="12px sans-serif"; ctx.fillStyle="#ffb377";
+    ctx.fillText("下压倒计时", W-14, 70);
+  },
+  heart(x,y,s){
+    ctx.beginPath();
+    ctx.moveTo(x, y+s*0.9);
+    ctx.bezierCurveTo(x-s*1.4, y-s*0.1, x-s*0.7, y-s*1.1, x, y-s*0.3);
+    ctx.bezierCurveTo(x+s*0.7, y-s*1.1, x+s*1.4, y-s*0.1, x, y+s*0.9);
+    ctx.fill();
+  },
+  roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+  },
+  drawTouchUI(){
+    // 左下: 虚拟摇杆
+    const jx = Input.joy.active ? Input.joy.cx : 100;
+    const jy = Input.joy.active ? Input.joy.cy : H-100;
+    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = "#8fa0ff"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(jx,jy,55,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle = "#8fa0ff";
+    ctx.beginPath();
+    ctx.arc(jx+Input.joy.dx*40, jy+Input.joy.dy*40, 24, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.font = "13px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("摇杆瞄准", jx, jy+80);
+
+    // 右下: 发射按钮
+    ctx.globalAlpha = 0.5;
+    const fg = ctx.createRadialGradient(W-80,H-90,5,W-80,H-90,44);
+    fg.addColorStop(0,"#ff8fa8"); fg.addColorStop(1,"#c9184a");
+    ctx.fillStyle = fg;
+    ctx.beginPath(); ctx.arc(W-80,H-90,44,0,Math.PI*2); ctx.fill();
+    // 换弹按钮
+    const sg = ctx.createRadialGradient(W-170,H-60,4,W-170,H-60,36);
+    sg.addColorStop(0,"#9ad0ff"); sg.addColorStop(1,"#1f5fbf");
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.arc(W-170,H-60,36,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#fff"; ctx.font = "bold 18px sans-serif";
+    ctx.fillText("发射", W-80, H-84);
+    ctx.font = "bold 15px sans-serif";
+    ctx.fillText("换弹", W-170, H-55);
+  },
+  /* --- 各覆盖界面 --- */
+  overlay(){
+    ctx.fillStyle = "rgba(8,8,24,.78)"; ctx.fillRect(0,0,W,H);
+  },
+  bigBtn(y, text, color){
+    const g = ctx.createLinearGradient(W/2-130,y,W/2+130,y+64);
+    g.addColorStop(0, color[0]); g.addColorStop(1, color[1]);
+    ctx.fillStyle = g;
+    this.roundRect(W/2-130, y, 260, 64, 16); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.font = "bold 26px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text, W/2, y+42);
+  },
+  drawMenu(){
+    // 标题装饰泡泡
+    const t = performance.now()/1000;
+    for(let i=0;i<7;i++){
+      const x = 70 + i*66, y = 240 + Math.sin(t*1.3+i)*18;
+      drawBubble(ctx, x, y, i%COLORS.length, 26, .9);
+    }
+    ctx.fillStyle = "#fff"; ctx.textAlign="center";
+    ctx.font = "bold 64px sans-serif";
+    ctx.shadowColor = "#6a7bff"; ctx.shadowBlur = 24;
+    ctx.fillText("街机泡泡龙", W/2, 370);
+    ctx.shadowBlur = 0;
+    ctx.font = "18px sans-serif"; ctx.fillStyle = "#9aa4ff";
+    ctx.fillText("三连同色即可消除 · 小心泡泡越过红线", W/2, 415);
+
+    this.bigBtn(520, "关卡模式", ["#ff6b8b","#c9184a"]);
+    this.bigBtn(610, "无尽模式", ["#5b8bff","#2a3f9f"]);
+
+    ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "15px sans-serif";
+    ctx.fillText("PC: A/D或←→瞄准  J/回车/K/空格发射  L换弹  U/P暂停", W/2, 740);
+    ctx.fillText("I 音乐开关  O 音效开关  |  也可鼠标点击瞄准发射", W/2, 768);
+    ctx.fillText("手机: 左摇杆瞄准 · 右侧按钮发射/换弹 · 点屏幕瞄准松手发射", W/2, 796);
+    ctx.fillStyle = "rgba(255,255,255,.35)";
+    ctx.fillText("最高分: " + this.best, W/2, 850);
+  },
+  drawPaused(){
+    this.overlay();
+    ctx.fillStyle="#fff"; ctx.font="bold 52px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停", W/2, 400);
+    this.bigBtn(470, "继续游戏", ["#38b000","#1d6d00"]);
+    this.bigBtn(550, "重新开始", ["#ff8500","#cc5803"]);
+    this.bigBtn(630, "返回菜单", ["#5b8bff","#2a3f9f"]);
+  },
+  drawLevelClear(){
+    this.overlay();
+    ctx.fillStyle="#ffd60a"; ctx.font="bold 52px sans-serif"; ctx.textAlign="center";
+    ctx.shadowColor="#ffd60a"; ctx.shadowBlur=20;
+    ctx.fillText("过关!", W/2, 400);
+    ctx.shadowBlur=0;
+    ctx.fillStyle="#fff"; ctx.font="24px sans-serif";
+    ctx.fillText("分数: " + this.score, W/2, 470);
+    this.bigBtn(560, "下一关 ▶", ["#38b000","#1d6d00"]);
+  },
+  drawGameOver(win){
+    this.overlay();
+    ctx.textAlign="center";
+    if(win){
+      ctx.fillStyle="#ffd60a"; ctx.font="bold 52px sans-serif";
+      ctx.shadowColor="#ffd60a"; ctx.shadowBlur=22;
+      ctx.fillText("恭喜通关全部10关!", W/2, 390);
+      ctx.shadowBlur=0;
+    }else{
+      ctx.fillStyle="#ff4d6d"; ctx.font="bold 56px sans-serif";
+      ctx.fillText("游戏结束", W/2, 390);
+    }
+    ctx.fillStyle="#fff"; ctx.font="26px sans-serif";
+    ctx.fillText("最终分数: " + this.score, W/2, 460);
+    ctx.fillStyle="#9aa4ff"; ctx.font="18px sans-serif";
+    ctx.fillText("最高分: " + this.best, W/2, 495);
+    this.bigBtn(560, "一键重新开始", ["#ff6b8b","#c9184a"]);
+    this.bigBtn(650, "返回菜单", ["#5b8bff","#2a3f9f"]);
+  }
+};
+
+/* ---------------- 8. 主循环 ---------------- */
+let lastT = performance.now();
+function mainLoop(now){
+  let dt = (now - lastT) / 1000;
+  lastT = now;
+  dt = Math.min(dt, 0.05); // 防止切后台后大步长导致穿透
+  Game.update(dt);
+  Game.draw();
+  requestAnimationFrame(mainLoop);
+}
+Game.init();
+requestAnimationFrame(mainLoop);
+</script>
+</body>
+</html>

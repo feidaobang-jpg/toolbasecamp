@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>下一百层</title>
+<style>
+  /* ---------- 页面与画布布局 ---------- */
+  html,body{margin:0;padding:0;height:100%;background:#0b0e1d;overflow:hidden;
+    -webkit-user-select:none;user-select:none;touch-action:none;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;background:#0b0e1d;}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<script>
+"use strict";
+/* =====================================================================
+ * 下一百层  · 单文件 HTML5 Canvas 游戏
+ * ---------------------------------------------------------------------
+ * 结构分层:
+ *   1. 常量与工具
+ *   2. 视图缩放 (View)
+ *   3. 音频系统 WebAudio (AudioSys) —— 音效 + 程序化BGM
+ *   4. 输入系统 (Input) —— 键盘 + 虚拟摇杆/按钮
+ *   5. 粒子与飘字 (Particles / Popups)
+ *   6. 平台系统 (Floors) —— 普通/尖刺/传送带/弹簧/碎裂/移动
+ *   7. 玩家 (Player)
+ *   8. 游戏主逻辑与状态机 (Game)
+ *   9. 主循环 (mainLoop)
+ * ===================================================================== */
+
+/* ---------------- 1. 常量与工具 ---------------- */
+const W = 540, H = 960;                 // 竖屏基准 9:16
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const rand  = (a,b)=>a+Math.random()*(b-a);
+const irand = (a,b)=>Math.floor(rand(a,b+1));
+
+// 平台类型
+const F_NORMAL=0, F_SPIKE=1, F_BELT_L=2, F_BELT_R=3, F_SPRING=4, F_FRAGILE=5, F_MOVE=6;
+
+/* ---------------- 2. 视图缩放 ---------------- */
+const canvas = document.getElementById("cv");
+const ctx = canvas.getContext("2d");
+const View = {
+  scale:1, ox:0, oy:0,
+  resize(){
+    const s = Math.min(window.innerWidth / W, window.innerHeight / H);
+    this.scale = s;
+    canvas.style.width  = (W*s) + "px";
+    canvas.style.height = (H*s) + "px";
+    const r = canvas.getBoundingClientRect();
+    this.ox = r.left; this.oy = r.top;
+  },
+  toGame(cx,cy){
+    const r = canvas.getBoundingClientRect();
+    return [ (cx-r.left)/this.scale, (cy-r.top)/this.scale ];
+  }
+};
+window.addEventListener("resize", ()=>View.resize());
+View.resize();
+
+/* ---------------- 3. 音频系统 ---------------- */
+const AudioSys = {
+  ctx:null, musicOn:true, sfxOn:true, bgmTimer:null, step:0,
+  init(){
+    if(this.ctx) return;
+    this.ctx = new (window.AudioContext||window.webkitAudioContext)();
+    this.startBGM();
+  },
+  resume(){ if(this.ctx && this.ctx.state==="suspended") this.ctx.resume(); },
+  tone(freq,dur,type,vol,when,slide){
+    if(!this.ctx) return;
+    const t = when!==undefined ? when : this.ctx.currentTime;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type||"square"; o.frequency.setValueAtTime(freq,t);
+    if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide,1), t+dur);
+    g.gain.setValueAtTime(vol||0.2, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(this.ctx.destination);
+    o.start(t); o.stop(t+dur+0.02);
+  },
+  noise(dur,vol){
+    if(!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const len = Math.floor(this.ctx.sampleRate*dur);
+    const buf = this.ctx.createBuffer(1,len,this.ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i] = (Math.random()*2-1)*(1-i/len);
+    const src = this.ctx.createBufferSource(); src.buffer = buf;
+    const g = this.ctx.createGain(); g.gain.value = vol||0.2;
+    src.connect(g); g.connect(this.ctx.destination); src.start(t);
+  },
+  sfx(fn){ if(this.sfxOn && this.ctx) fn(); },
+  land(){ this.sfx(()=>this.tone(220,.06,"triangle",.15)); },
+  hurt(){ this.sfx(()=>{ this.tone(160,.2,"sawtooth",.25,undefined,60); this.noise(.12,.15); }); },
+  spring(){ this.sfx(()=>this.tone(400,.18,"square",.2,undefined,900)); },
+  crack(){ this.sfx(()=>this.noise(.1,.18)); },
+  heal(){ this.sfx(()=>this.tone(660,.1,"sine",.15,undefined,990)); },
+  win(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [523,659,784,1046].forEach((f,i)=>this.tone(f,.25,"triangle",.22,t+i*0.12)); }); },
+  lose(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [392,330,262,196].forEach((f,i)=>this.tone(f,.3,"sawtooth",.2,t+i*0.15)); }); },
+  floor10(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [660,880].forEach((f,i)=>this.tone(f,.12,"square",.15,t+i*0.08)); }); },
+  // 程序化BGM: 小调分解和弦循环
+  startBGM(){
+    if(this.bgmTimer) return;
+    const bass = [110,110,98,98,87,87,131,123];
+    const arp  = [220,262,330,262, 196,247,294,247, 175,220,262,220, 262,330,392,330];
+    let bi=0, ai=0;
+    this.bgmTimer = setInterval(()=>{
+      if(!this.musicOn || !this.ctx) return;
+      const t = this.ctx.currentTime;
+      if(ai%2===0) this.tone(bass[bi%bass.length],.28,"triangle",.10,t);
+      this.tone(arp[ai%arp.length],.14,"square",.05,t);
+      if(ai%2===0) bi++;
+      ai++;
+    }, 170);
+  }
+};
+
+/* ---------------- 4. 输入系统 ---------------- */
+const Input = {
+  keys:{},
+  joy:{active:false,id:-1,cx:0,cy:0,dx:0,dy:0},
+  dashPressed:false, pausePressed:false,
+  init(){
+    window.addEventListener("keydown", e=>{
+      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      const k = e.key.toLowerCase();
+      if(this.keys[k]) return;
+      this.keys[k] = true;
+      AudioSys.init(); AudioSys.resume();
+      if(k==="j"||k==="enter"||k==="k"||k===" ") this.dashPressed = true;
+      if(k==="u"||k==="p"||k==="escape") this.pausePressed = true;
+      if(k==="i") AudioSys.musicOn = !AudioSys.musicOn;
+      if(k==="o") AudioSys.sfxOn = !AudioSys.sfxOn;
+    });
+    window.addEventListener("keyup", e=>{ this.keys[e.key.toLowerCase()] = false; });
+
+    const down = (x,y,id)=>{ AudioSys.init(); AudioSys.resume(); Game.onPointerDown(x,y,id); };
+    canvas.addEventListener("mousedown", e=>{ const [x,y]=View.toGame(e.clientX,e.clientY); down(x,y,"m"); });
+    window.addEventListener("mousemove", e=>{ const [x,y]=View.toGame(e.clientX,e.clientY); Game.onPointerMove(x,y,"m"); });
+    window.addEventListener("mouseup", ()=>Game.onPointerUp("m"));
+    canvas.addEventListener("touchstart", e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const [x,y]=View.toGame(t.clientX,t.clientY); down(x,y,t.identifier); } },{passive:false});
+    canvas.addEventListener("touchmove", e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const [x,y]=View.toGame(t.clientX,t.clientY); Game.onPointerMove(x,y,t.identifier); } },{passive:false});
+    const endT = e=>{ for(const t of e.changedTouches) Game.onPointerUp(t.identifier); };
+    canvas.addEventListener("touchend", endT); canvas.addEventListener("touchcancel", endT);
+  },
+  axisX(){
+    let x = 0;
+    if(this.keys["a"]||this.keys["arrowleft"]) x -= 1;
+    if(this.keys["d"]||this.keys["arrowright"]) x += 1;
+    if(this.joy.active && Math.abs(this.joy.dx)>0.25) x = clamp(this.joy.dx*1.4,-1,1);
+    return x;
+  },
+  consume(){ this.dashPressed = false; this.pausePressed = false; }
+};
+
+/* ---------------- 5. 粒子与飘字 ---------------- */
+const Particles = {
+  list:[],
+  burst(x,y,color,n,sp){
+    for(let i=0;i<n;i++){
+      const a = rand(0,Math.PI*2), v = rand(sp*0.3,sp);
+      this.list.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:rand(.3,.7),T:.7,r:rand(1.5,4),color});
+    }
+  },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p = this.list[i];
+      p.x += p.vx*dt; p.y += p.vy*dt; p.vy += 500*dt; p.t -= dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    for(const p of this.list){
+      ctx.globalAlpha = Math.max(p.t/p.T,0);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+};
+const Popups = {
+  list:[],
+  add(x,y,text,color){ this.list.push({x,y,text,color,t:1}); },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p = this.list[i]; p.y -= 36*dt; p.t -= dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    ctx.textAlign = "center"; ctx.font = "bold 20px sans-serif";
+    for(const p of this.list){
+      ctx.globalAlpha = Math.max(p.t,0);
+      ctx.fillStyle = p.color; ctx.fillText(p.text, p.x, p.y);
+    }
+    ctx.globalAlpha = 1;
+  }
+};
+
+/* ---------------- 6. 平台系统 ----------------
+ * 平台从下方生成, 随镜头上移滚出屏幕顶端后回收。
+ * y 使用世界坐标, 镜头 camY 随时间增加(向下看)。 */
+const Floors = {
+  list:[],           // {x,y,w,type,vx,timer,broken}
+  nextY:0,           // 下一块平台生成的世界 y
+  gapMin:105, gapMax:150,
+  count:0,           // 已生成层数(第几层)
+  reset(){
+    this.list = []; this.count = 0;
+    this.nextY = 480;
+    // 起始平台(玩家脚下)
+    this.list.push({x:W/2-70, y:400, w:140, type:F_NORMAL, vx:0, timer:0, broken:false, idx:0});
+    while(this.nextY < Game.camY + H + 200) this.spawn();
+  },
+  // 关卡难度参数
+  diff(){
+    const lv = Game.mode==="endless" ? 1 + Math.floor(this.count/30)*0.5 : Game.level;
+    return clamp((lv-1)/9, 0, 1);
+  },
+  spawn(){
+    this.count++;
+    const d = this.diff();
+    const w = rand(120,180) - d*50;                 // 难度越高平台越窄
+    const x = rand(30, W-30-w);
+    // 类型权重: 难度越高特殊平台越多
+    let type = F_NORMAL;
+    const roll = Math.random();
+    if(roll < 0.10+d*0.12) type = F_SPIKE;
+    else if(roll < 0.20+d*0.18) type = Math.random()<0.5 ? F_BELT_L : F_BELT_R;
+    else if(roll < 0.26+d*0.22) type = F_FRAGILE;
+    else if(roll < 0.30+d*0.26) type = F_MOVE;
+    else if(roll < 0.36+d*0.28) type = F_SPRING;
+    // 每10层保底一块普通平台, 避免连续尖刺
+    if(this.count%10===0) type = F_NORMAL;
+    this.list.push({x, y:this.nextY, w, type,
+      vx: type===F_MOVE ? (Math.random()<0.5?-1:1)*rand(50,90+d*60) : 0,
+      timer:0, broken:false, idx:this.count});
+    this.nextY += rand(this.gapMin, this.gapMax - d*20);
+  },
+  update(dt){
+    // 补充下方平台
+    while(this.nextY < Game.camY + H + 200) this.spawn();
+    for(let i=this.list.length-1;i>=0;i--){
+      const f = this.list[i];
+      // 移动平台
+      if(f.type===F_MOVE){
+        f.x += f.vx*dt;
+        if(f.x<10){ f.x=10; f.vx=Math.abs(f.vx); }
+        if(f.x+f.w>W-10){ f.x=W-10-f.w; f.vx=-Math.abs(f.vx); }
+      }
+      // 碎裂平台倒计时
+      if(f.type===F_FRAGILE && f.timer>0){
+        f.timer -= dt;
+        if(f.timer<=0 && !f.broken){
+          f.broken = true;
+          AudioSys.crack();
+          Particles.burst(f.x+f.w/2, f.y, "#b08968", 10, 160);
+        }
+      }
+      // 回收滚出顶端的平台
+      if(f.y < Game.camY - 60) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    for(const f of this.list){
+      if(f.broken) continue;
+      const y = f.y - Game.camY;
+      if(y < -30 || y > H+30) continue;
+      const x = f.x, w = f.w;
+      ctx.save();
+      if(f.type===F_SPIKE){
+        // 尖刺平台
+        const g = ctx.createLinearGradient(0,y,0,y+14);
+        g.addColorStop(0,"#6d1f2c"); g.addColorStop(1,"#3d1119");
+        ctx.fillStyle = g; ctx.fillRect(x,y,w,14);
+        ctx.fillStyle = "#ff4d6d";
+        for(let sx=x+4; sx<x+w-6; sx+=12){
+          ctx.beginPath(); ctx.moveTo(sx,y); ctx.lineTo(sx+6,y-10); ctx.lineTo(sx+12,y); ctx.fill();
+        }
+      }else if(f.type===F_BELT_L || f.type===F_BELT_R){
+        const g = ctx.createLinearGradient(0,y,0,y+14);
+        g.addColorStop(0,"#2f5d8a"); g.addColorStop(1,"#1b3a5c");
+        ctx.fillStyle = g; ctx.fillRect(x,y,w,14);
+        // 滚动箭头
+        const t = performance.now()/1000;
+        const dirn = f.type===F_BELT_L ? -1 : 1;
+        ctx.fillStyle = "#8ecae6";
+        const off = ((t*40)%16)*dirn;
+        for(let sx=x+8; sx<x+w-8; sx+=16){
+          const ax = x + ((sx-x+off+w*2)%(w-16)) + 8;
+          ctx.beginPath();
+          ctx.moveTo(ax-4*dirn, y+3); ctx.lineTo(ax+4*dirn, y+7); ctx.lineTo(ax-4*dirn, y+11);
+          ctx.fill();
+        }
+      }else if(f.type===F_SPRING){
+        const g = ctx.createLinearGradient(0,y,0,y+14);
+        g.addColorStop(0,"#3f8e50"); g.addColorStop(1,"#1e4d2b");
+        ctx.fillStyle = g; ctx.fillRect(x,y,w,14);
+        ctx.strokeStyle = "#95d5b2"; ctx.lineWidth = 2;
+        for(let sx=x+10; sx<x+w-10; sx+=22){
+          ctx.beginPath();
+          ctx.moveTo(sx,y+2); ctx.lineTo(sx+5,y-4); ctx.lineTo(sx+10,y+2);
+          ctx.stroke();
+        }
+      }else if(f.type===F_FRAGILE){
+        const g = ctx.createLinearGradient(0,y,0,y+14);
+        g.addColorStop(0,"#a9865e"); g.addColorStop(1,"#6f5436");
+        ctx.fillStyle = g; ctx.fillRect(x,y,w,14);
+        ctx.strokeStyle = "rgba(0,0,0,.35)"; ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x+w*0.3,y); ctx.lineTo(x+w*0.4,y+7); ctx.lineTo(x+w*0.35,y+14);
+        ctx.moveTo(x+w*0.7,y); ctx.lineTo(x+w*0.62,y+8); ctx.lineTo(x+w*0.7,y+14);
+        ctx.stroke();
+        if(f.timer>0 && Math.floor(performance.now()/80)%2) ctx.globalAlpha = 0.6;
+      }else{
+        // 普通/移动平台
+        const g = ctx.createLinearGradient(0,y,0,y+14);
+        if(f.type===F_MOVE){ g.addColorStop(0,"#7b5ce0"); g.addColorStop(1,"#4a3599"); }
+        else{ g.addColorStop(0,"#5b6c8f"); g.addColorStop(1,"#39445e"); }
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.roundRect(x,y,w,14,4); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,.12)"; ctx.fillRect(x+2,y+1,w-4,3);
+      }
+      ctx.restore();
+    }
+  }
+};
+
+/* ---------------- 7. 玩家 ---------------- */
+const Player = {
+  x:W/2, y:0, vx:0, vy:0, r:14,
+  onFloor:null, hp:10, maxHp:10,
+  invinc:0, dead:false, face:1,
+  dashCD:0,
+  reset(){
+    this.x = W/2; this.y = 360; this.vx = 0; this.vy = 0;
+    this.onFloor = null; this.hp = this.maxHp; this.invinc = 1;
+    this.dead = false; this.dashCD = 0;
+  },
+  damage(n,why){
+    if(this.invinc>0 || this.dead) return;
+    this.hp -= n; this.invinc = 1.2;
+    AudioSys.hurt();
+    Game.shake = 0.3;
+    Particles.burst(this.x, this.y, "#ff4d6d", 14, 240);
+    Popups.add(this.x, this.y-24, "-"+n, "#ff4d6d");
+    if(this.hp<=0) Game.onPlayerDeath(why);
+  },
+  heal(n){
+    if(this.hp >= this.maxHp) return;
+    this.hp = Math.min(this.hp+n, this.maxHp);
+    AudioSys.heal();
+    Popups.add(this.x, this.y-24, "+"+n, "#95d5b2");
+  },
+  update(dt){
+    if(this.dead) return;
+    if(this.invinc>0) this.invinc -= dt;
+    if(this.dashCD>0) this.dashCD -= dt;
+
+    // 水平操控
+    const ax = Input.axisX();
+    if(ax!==0) this.face = Math.sign(ax);
+    const targetV = ax*260;
+    this.vx += (targetV - this.vx) * Math.min(1, 12*dt);
+    // 冲刺(J/回车/K/空格): 短促水平加速
+    if(Input.dashPressed && this.dashCD<=0){
+      this.vx = this.face*520;
+      this.dashCD = 0.8;
+      AudioSys.spring();
+      Particles.burst(this.x - this.face*10, this.y, "#8ecae6", 8, 160);
+    }
+
+    // 重力
+    this.vy += 900*dt;
+    this.vy = Math.min(this.vy, 620);
+
+    // 分步移动防穿透
+    const steps = Math.ceil(Math.max(Math.abs(this.vy),Math.abs(this.vx))*dt / 8) || 1;
+    let landed = null;
+    for(let s=0;s<steps;s++){
+      const px = this.x, py = this.y;
+      this.x += this.vx*dt/steps;
+      this.y += this.vy*dt/steps;
+      this.x = clamp(this.x, this.r, W-this.r);
+      // 只在下落时检测平台
+      if(this.vy > 0){
+        for(const f of Floors.list){
+          if(f.broken) continue;
+          if(px + this.r <= f.x || px - this.r >= f.x+f.w) continue;
+          if(py + this.r <= f.y && this.y + this.r >= f.y){
+            this.y = f.y - this.r; this.vy = 0; landed = f; break;
+          }
+        }
+      }
+      if(landed) break;
+    }
+
+    // 落地处理
+    if(landed){
+      if(this.onFloor !== landed){
+        this.onFloor = landed;
+        AudioSys.land();
+        // 记录最深层数
+        if(landed.idx > Game.depth){
+          Game.depth = landed.idx;
+          Game.score = Math.max(Game.score, Game.depth*10);
+          if(Game.depth>0 && Game.depth%10===0){
+            AudioSys.floor10();
+            Popups.add(W/2, this.y-40, "第 "+Game.depth+" 层!", "#ffd60a");
+          }
+        }
+        switch(landed.type){
+          case F_SPIKE: this.damage(3,"尖刺"); this.vy = -260; break;
+          case F_SPRING: this.vy = -560; AudioSys.spring();
+            Particles.burst(this.x, this.y+10, "#95d5b2", 10, 200); break;
+          case F_FRAGILE: if(landed.timer<=0) landed.timer = 0.45; break;
+          case F_NORMAL: case F_MOVE: case F_BELT_L: case F_BELT_R:
+            this.heal(1); break;
+        }
+      }
+      // 站立时持续效果
+      if(landed.type===F_BELT_L) this.x -= 90*dt;
+      if(landed.type===F_BELT_R) this.x += 90*dt;
+      if(landed.type===F_MOVE)   this.x += landed.vx*dt;
+    }else{
+      this.onFloor = null;
+    }
+
+    // 顶端尖刺伤害
+    const topY = Game.camY + 42;
+    if(this.y - this.r < topY){
+      this.y = topY + this.r; this.vy = Math.max(this.vy, 120);
+      this.damage(2,"天花板尖刺");
+    }
+    // 掉出屏幕底部 = 直接死亡
+    if(this.y - Game.camY > H + 40){
+      this.hp = 0;
+      Game.onPlayerDeath("坠落深渊");
+    }
+  },
+  draw(ctx){
+    if(this.dead) return;
+    const y = this.y - Game.camY;
+    if(this.invinc>0 && Math.floor(performance.now()/90)%2) ctx.globalAlpha = 0.4;
+    // 阴影光晕
+    ctx.fillStyle = "rgba(142,202,230,.15)";
+    ctx.beginPath(); ctx.arc(this.x, y, this.r+6, 0, Math.PI*2); ctx.fill();
+    // 身体
+    const g = ctx.createRadialGradient(this.x-4, y-5, 2, this.x, y, this.r);
+    g.addColorStop(0,"#cfe9ff"); g.addColorStop(0.5,"#6db3f2"); g.addColorStop(1,"#2d6cdf");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(this.x, y, this.r, 0, Math.PI*2); ctx.fill();
+    // 眼睛
+    ctx.fillStyle = "#0b0e1d";
+    ctx.beginPath();
+    ctx.arc(this.x + this.face*5, y-3, 2.6, 0, Math.PI*2);
+    ctx.arc(this.x + this.face*(-2), y-3, 2.6, 0, Math.PI*2);
+    ctx.fill();
+    // 围巾飘带
+    ctx.strokeStyle = "#ff9e5e"; ctx.lineWidth = 4; ctx.lineCap="round";
+    ctx.beginPath();
+    ctx.moveTo(this.x, y+4);
+    ctx.quadraticCurveTo(this.x - this.face*12 - this.vx*0.02, y+10, this.x - this.face*16 - this.vx*0.03, y+6);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+};
+
+/* ---------------- 8. 游戏主逻辑 ---------------- */
+const Game = {
+  state:"menu", mode:"level",
+  level:1, score:0, depth:0, best:0,
+  camY:0, camSpeed:60,
+  target:0,            // 本关目标层数
+  shake:0, msgText:"", msgTimer:0,
+  pointers:{}, stars:[],
+  init(){
+    this.best = +(localStorage.getItem("hundred_best")||0);
+    for(let i=0;i<50;i++)
+      this.stars.push({x:rand(0,W), y:rand(0,H), r:rand(0.5,1.8), tw:rand(0,Math.PI*2)});
+    Input.init();
+  },
+  startGame(mode){
+    this.mode = mode; this.level = 1; this.score = 0;
+    this.startLevel();
+    AudioSys.init(); AudioSys.resume();
+  },
+  startLevel(){
+    this.depth = 0;
+    this.camY = 0;
+    this.camSpeed = this.mode==="endless" ? 65 : 55 + (this.level-1)*9;
+    this.target = this.mode==="endless" ? Infinity : 60 + (this.level-1)*10;
+    Player.reset();
+    Floors.reset();
+    Particles.list = []; Popups.list = [];
+    this.state = "playing";
+    this.showMsg(this.mode==="level" ? ("第 "+this.level+" 关 · 目标 "+this.target+" 层") : "无尽模式", 1.6);
+  },
+  showMsg(t,d){ this.msgText=t; this.msgTimer=d; },
+  onPlayerDeath(why){
+    Player.dead = true;
+    AudioSys.lose();
+    this.shake = 0.5;
+    Particles.burst(Player.x, Player.y-this.camY+this.camY, "#fff", 20, 300);
+    this.saveBest();
+    this.deathWhy = why||"";
+    this.state = "gameover";
+  },
+  saveBest(){
+    if(this.score > this.best){ this.best = this.score; localStorage.setItem("hundred_best", this.best); }
+  },
+  /* ---- 指针分区 ---- */
+  onPointerDown(x,y,id){
+    if(this.state==="menu"){
+      if(this.hitRect(x,y,W/2-130,520,260,64)) this.startGame("level");
+      else if(this.hitRect(x,y,W/2-130,610,260,64)) this.startGame("endless");
+      return;
+    }
+    if(this.state==="paused"){
+      if(this.hitRect(x,y,W/2-130,470,260,60)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,550,260,60)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,630,260,60)) this.state="menu";
+      return;
+    }
+    if(this.state==="gameover" || this.state==="win"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,650,260,64)) this.state="menu";
+      return;
+    }
+    if(this.state==="levelclear"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)){ this.level++; this.startLevel(); }
+      return;
+    }
+    // playing
+    if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
+    if(x < W*0.45 && y > H*0.72){ // 左侧摇杆
+      Input.joy.active = true; Input.joy.id = id;
+      Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
+      this.pointers[id] = "joy";
+      return;
+    }
+    if(x > W*0.55 && y > H*0.72){ // 右侧冲刺按钮
+      if(this.hitCircle(x,y,W-84,H-110,50)){ Input.dashPressed = true; this.pointers[id]="btn"; return; }
+    }
+  },
+  onPointerMove(x,y,id){
+    if(this.state!=="playing") return;
+    if(this.pointers[id]==="joy" && Input.joy.active && Input.joy.id===id){
+      const dx = x - Input.joy.cx, dy = y - Input.joy.cy;
+      const len = Math.hypot(dx,dy), max = 55;
+      const k = len>max ? max/len : 1;
+      Input.joy.dx = dx*k/max; Input.joy.dy = dy*k/max;
+    }
+  },
+  onPointerUp(id){
+    if(this.pointers[id]==="joy"){
+      Input.joy.active=false; Input.joy.dx=0; Input.joy.dy=0; Input.joy.id=-1;
+    }
+    delete this.pointers[id];
+  },
+  hitRect(x,y,rx,ry,rw,rh){ return x>=rx&&x<=rx+rw&&y>=ry&&y<=ry+rh; },
+  hitCircle(x,y,cx,cy,r){ return (x-cx)**2+(y-cy)**2<=r*r; },
+
+  /* ---- 更新 ---- */
+  update(dt){
+    for(const s of this.stars) s.tw += dt*2;
+    if(this.msgTimer>0) this.msgTimer -= dt;
+    if(this.shake>0) this.shake -= dt;
+    Particles.update(dt);
+    Popups.update(dt);
+
+    if(this.state!=="playing"){
+      if(Input.pausePressed && this.state==="paused") this.state="playing";
+      else if(Input.dashPressed){
+        if(this.state==="menu") this.startGame("level");
+        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
+        else if(this.state==="gameover"||this.state==="win") this.startGame(this.mode);
+      }
+      Input.consume();
+      return;
+    }
+    if(Input.pausePressed){ this.state="paused"; Input.consume(); return; }
+
+    // 镜头持续上滚(向下推进) + 随深度轻微加速
+    const accel = this.mode==="endless" ? Math.min(this.depth*0.35, 55) : Math.min(this.depth*0.25, 35);
+    this.camY += (this.camSpeed + accel)*dt;
+    // 玩家低于屏幕中部时镜头快速跟进
+    const py = Player.y - this.camY;
+    if(py > H*0.62) this.camY += (py - H*0.62)*4*dt;
+
+    Floors.update(dt);
+    Player.update(dt);
+    Input.consume();
+
+    // 通关判定
+    if(this.mode==="level" && this.depth >= this.target){
+      this.saveBest();
+      AudioSys.win();
+      this.state = this.level>=10 ? "win" : "levelclear";
+    }
+  },
+
+  /* ---- 绘制 ---- */
+  draw(){
+    ctx.save();
+    if(this.shake>0) ctx.translate(rand(-5,5)*this.shake, rand(-5,5)*this.shake);
+    // 背景渐变(随深度变深)
+    const deep = clamp(this.depth/150, 0, 1);
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0, `rgb(${18-10*deep},${16-8*deep},${45-20*deep})`);
+    g.addColorStop(1, `rgb(${8-4*deep},${10-6*deep},${26-12*deep})`);
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    // 星光
+    for(const s of this.stars){
+      ctx.globalAlpha = 0.3 + Math.sin(s.tw)*0.25;
+      ctx.fillStyle = "#8ecae6";
+      ctx.beginPath(); ctx.arc(s.x, (s.y - this.camY*0.15)%H<0?((s.y-this.camY*0.15)%H)+H:(s.y-this.camY*0.15)%H, s.r, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // 两侧砖墙
+    ctx.fillStyle = "#141a30";
+    ctx.fillRect(0,0,10,H); ctx.fillRect(W-10,0,10,H);
+
+    if(this.state==="menu"){ this.drawMenu(); ctx.restore(); return; }
+
+    Floors.draw(ctx);
+    Player.draw(ctx);
+    Particles.draw(ctx);
+    Popups.draw(ctx);
+
+    // 顶端尖刺
+    ctx.fillStyle = "#ff4d6d";
+    for(let sx=0; sx<W; sx+=20){
+      ctx.beginPath(); ctx.moveTo(sx,42); ctx.lineTo(sx+10,20); ctx.lineTo(sx+20,42); ctx.fill();
+    }
+    const gg = ctx.createLinearGradient(0,0,0,42);
+    gg.addColorStop(0,"#42121f"); gg.addColorStop(1,"#7a2237");
+    ctx.fillStyle = gg; ctx.fillRect(0,0,W,22);
+
+    this.drawHUD();
+    if(this.msgTimer>0){
+      ctx.globalAlpha = Math.min(this.msgTimer,1);
+      ctx.fillStyle = "#fff"; ctx.font = "bold 34px sans-serif"; ctx.textAlign="center";
+      ctx.fillText(this.msgText, W/2, H*0.4);
+      ctx.globalAlpha = 1;
+    }
+    if(this.state==="playing") this.drawTouchUI();
+    if(this.state==="paused") this.drawPaused();
+    if(this.state==="gameover") this.drawGameover();
+    if(this.state==="levelclear") this.drawClear(false);
+    if(this.state==="win") this.drawClear(true);
+    ctx.restore();
+  },
+  drawHUD(){
+    // 顶部信息条
+    ctx.fillStyle = "rgba(10,12,28,.55)";
+    ctx.fillRect(0,42,W,52);
+    ctx.textAlign="left";
+    ctx.fillStyle = "#fff"; ctx.font = "bold 22px sans-serif";
+    ctx.fillText("深度 "+this.depth+" 层", 16, 76);
+    ctx.font = "13px sans-serif"; ctx.fillStyle="#8ecae6";
+    ctx.fillText("最高分 "+this.best, 16, 91);
+    ctx.textAlign="center"; ctx.fillStyle="#ffd60a"; ctx.font="bold 20px sans-serif";
+    ctx.fillText(this.mode==="level" ? ("第"+this.level+"关 / 目标"+this.target) : ("无尽 · 分数"+this.score), W/2, 76);
+    // 生命条
+    const bw = 120, bx = W-16-bw;
+    ctx.fillStyle="rgba(255,255,255,.15)";
+    ctx.beginPath(); ctx.roundRect(bx,60,bw,14,7); ctx.fill();
+    const ratio = Math.max(Player.hp/Player.maxHp,0);
+    const hg = ctx.createLinearGradient(bx,0,bx+bw,0);
+    hg.addColorStop(0,"#ff4d6d"); hg.addColorStop(1,"#ff9e5e");
+    ctx.fillStyle = hg;
+    ctx.beginPath(); ctx.roundRect(bx,60,bw*ratio,14,7); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 12px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("HP "+Math.max(Player.hp,0)+"/"+Player.maxHp, bx+bw/2, 71);
+    // 暂停按钮(游戏中)
+    if(this.state==="playing"){
+      ctx.fillStyle="rgba(255,255,255,.14)";
+      ctx.beginPath(); ctx.roundRect(W-64,10,54,26,8); ctx.fill();
+      ctx.fillStyle="#fff";
+      ctx.fillRect(W-64+18,15,5,16); ctx.fillRect(W-64+30,15,5,16);
+    }
+  },
+  drawTouchUI(){
+    // 左摇杆
+    ctx.globalAlpha = 0.35;
+    const jx = Input.joy.active ? Input.joy.cx : 100, jy = Input.joy.active ? Input.joy.cy : H-120;
+    ctx.strokeStyle="#8ecae6"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(jx,jy,52,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle="#8ecae6";
+    ctx.beginPath(); ctx.arc(jx+Input.joy.dx*38, jy+Input.joy.dy*38, 22,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 0.5; ctx.fillStyle="#cfe9ff"; ctx.font="12px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("摇杆移动", jx, jy+78);
+    // 右冲刺按钮
+    ctx.globalAlpha = 0.4;
+    const bg = ctx.createRadialGradient(W-84,H-110,6,W-84,H-110,50);
+    bg.addColorStop(0,"#ffd60a"); bg.addColorStop(1,"#b8860b");
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.arc(W-84,H-110,50,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 0.85; ctx.fillStyle="#1d1600"; ctx.font="bold 18px sans-serif";
+    ctx.fillText("冲刺", W-84, H-104);
+    ctx.globalAlpha = 1;
+  },
+  overlay(){
+    ctx.fillStyle = "rgba(6,8,20,.72)"; ctx.fillRect(0,0,W,H);
+  },
+  bigBtn(y,text,colors){
+    const g = ctx.createLinearGradient(0,y,0,y+64);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.roundRect(W/2-130,y,260,64,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 26px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text, W/2, y+42);
+  },
+  midBtn(y,text,colors){
+    const g = ctx.createLinearGradient(0,y,0,y+60);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.roundRect(W/2-130,y,260,60,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 24px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text, W/2, y+40);
+  },
+  drawMenu(){
+    // 标题装饰: 下坠的小平台
+    const t = performance.now()/1000;
+    for(let i=0;i<6;i++){
+      const y = ((t*40 + i*160)%(H+80))-40;
+      ctx.fillStyle = "rgba(91,108,143,.35)";
+      ctx.beginPath(); ctx.roundRect(60+((i*97)%(W-180)), y, 90, 12, 4); ctx.fill();
+    }
+    ctx.fillStyle = "#fff"; ctx.font = "bold 64px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("下一百层", W/2, 300);
+    ctx.font = "18px sans-serif"; ctx.fillStyle = "#8ecae6";
+    ctx.fillText("不断下落 · 躲开尖刺 · 越深越强", W/2, 345);
+    this.bigBtn(520, "关卡模式", ["#ff9e5e","#d1495b"]);
+    this.bigBtn(610, "无尽模式", ["#5b8bff","#2a3f9f"]);
+    ctx.fillStyle = "#9aa5c1"; ctx.font = "14px sans-serif";
+    ctx.fillText("PC: A/D或←→移动  J/回车/K/空格冲刺", W/2, 720);
+    ctx.fillText("U/P暂停  I音乐开关  O音效开关", W/2, 744);
+    ctx.fillText("手机: 左摇杆移动 · 右侧冲刺按钮", W/2, 768);
+    ctx.fillStyle = "#667"; ctx.fillText("最高分: "+this.best, W/2, 812);
+  },
+  drawPaused(){
+    this.overlay();
+    ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停", W/2, 380);
+    this.midBtn(470, "继续游戏", ["#3f8e50","#1e4d2b"]);
+    this.midBtn(550, "重新开始", ["#ff9e5e","#d1495b"]);
+    this.midBtn(630, "返回菜单", ["#5b8bff","#2a3f9f"]);
+  },
+  drawGameover(){
+    this.overlay();
+    ctx.fillStyle="#ff4d6d"; ctx.font="bold 48px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("游戏结束", W/2, 370);
+    ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
+    ctx.fillText((this.deathWhy?("死因: "+this.deathWhy+"  ·  "):"")+"深度 "+this.depth+" 层", W/2, 420);
+    ctx.fillText("最终分数: "+this.score, W/2, 455);
+    ctx.fillStyle="#ffd60a"; ctx.font="16px sans-serif";
+    ctx.fillText("最高分: "+this.best, W/2, 488);
+    this.bigBtn(560, "一键重新开始", ["#ff6b8b","#c9184a"]);
+    this.bigBtn(650, "返回菜单", ["#5b8bff","#2a3f9f"]);
+  },
+  drawClear(final){
+    this.overlay();
+    ctx.fillStyle="#95d5b2"; ctx.font="bold 46px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(final ? "全部通关!" : "过关!", W/2, 380);
+    ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
+    ctx.fillText("到达 "+this.depth+" 层 · 分数 "+this.score, W/2, 430);
+    if(final){
+      this.bigBtn(560, "再玩一次", ["#3f8e50","#1e4d2b"]);
+      this.bigBtn(650, "返回菜单", ["#5b8bff","#2a3f9f"]);
+    }else{
+      this.bigBtn(560, "下一关", ["#3f8e50","#1e4d2b"]);
+      ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
+      ctx.fillText("(按 J/回车 亦可继续)", W/2, 660);
+    }
+  }
+};
+
+/* ---------------- 9. 主循环 ---------------- */
+let lastT = performance.now();
+function mainLoop(now){
+  let dt = (now - lastT)/1000;
+  lastT = now;
+  dt = Math.min(dt, 0.05); // 防切后台大步长
+  Game.update(dt);
+  Game.draw();
+  requestAnimationFrame(mainLoop);
+}
+Game.init();
+requestAnimationFrame(mainLoop);
+</script>
+</body>
+</html>

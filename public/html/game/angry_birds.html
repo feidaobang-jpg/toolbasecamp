@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>愤怒的小鸟</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#0b1c2c;overflow:hidden;
+    -webkit-user-select:none;user-select:none;touch-action:none;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;background:#0b1c2c;transform-origin:center center;}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv" width="960" height="540"></canvas></div>
+<script>
+"use strict";
+/* =====================================================================
+ * 愤怒的小鸟 · 单文件 HTML5 Canvas 弹弓物理游戏 (街机简化版)
+ * ---------------------------------------------------------------------
+ * 玩法: 拖拽弹弓瞄准发射小鸟, 砸毁木/玻璃/石块结构, 消灭全部绿猪过关。
+ *       每关小鸟数量有限; 无尽模式一波接一波拼总分。
+ * 结构分层:
+ *   1. 常量与工具  2. 视图  3. 音频  4. 输入  5. 粒子/飘字
+ *   6. 物理世界 (World: 小鸟/方块/绿猪)  7. 关卡生成  8. 游戏主逻辑  9. 主循环
+ * ===================================================================== */
+
+/* ---------------- 1. 常量与工具 ---------------- */
+const W=960, H=540;             // 横屏 16:9 基准尺寸
+const GROUND_Y=H-90;            // 地面高度
+const GRAV=760;                 // 重力
+const SLING={x:120,y:GROUND_Y-118}; // 弹弓位置
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const irand=(a,b)=>Math.floor(rand(a,b+1));
+// 材质: 血量 / 颜色
+const MATS={
+  wood:  {hp:36, main:"#c98a3d", dark:"#8a5a22", light:"#e8b878"},
+  glass: {hp:16, main:"#9ad7e8", dark:"#5aa2b8", light:"#d8f4fc"},
+  stone: {hp:80, main:"#9a9aa5", dark:"#63636e", light:"#c8c8d2"},
+};
+
+/* ---------------- 2. 视图 ---------------- */
+const canvas=document.getElementById("cv");
+const ctx=canvas.getContext("2d");
+const View={
+  scale:1, rotated:false,
+  resize(){
+    // 手机竖持时自动旋转画布90°, 实现微信内自动横屏
+    const vw=window.innerWidth, vh=window.innerHeight;
+    this.rotated = vh>vw;
+    const s=this.rotated ? Math.min(vw/H, vh/W) : Math.min(vw/W, vh/H);
+    this.scale=s;
+    canvas.style.width=(W*s)+"px"; canvas.style.height=(H*s)+"px";
+    canvas.style.transform=this.rotated?"rotate(90deg)":"";
+  },
+  toGame(cx,cy){
+    const r=canvas.getBoundingClientRect();
+    if(this.rotated)
+      return [(cy-r.top)/this.scale, H-(cx-r.left)/this.scale];
+    return [(cx-r.left)/this.scale,(cy-r.top)/this.scale];
+  }
+};
+window.addEventListener("orientationchange",()=>setTimeout(()=>View.resize(),120));
+window.addEventListener("resize",()=>View.resize());
+View.resize();
+
+/* ---------------- 3. 音频 ---------------- */
+const AudioSys={
+  ctx:null, musicOn:true, sfxOn:true, bgmTimer:null,
+  init(){
+    if(this.ctx) return;
+    this.ctx=new (window.AudioContext||window.webkitAudioContext)();
+    this.startBGM();
+  },
+  resume(){ if(this.ctx&&this.ctx.state==="suspended") this.ctx.resume(); },
+  tone(f,d,ty,v,when,slide){
+    if(!this.ctx) return;
+    const t=when!==undefined?when:this.ctx.currentTime;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.type=ty||"square"; o.frequency.setValueAtTime(f,t);
+    if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide,1),t+d);
+    g.gain.setValueAtTime(v||0.2,t);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t+d+0.02);
+  },
+  noise(d,v){
+    if(!this.ctx) return;
+    const t=this.ctx.currentTime,len=Math.floor(this.ctx.sampleRate*d);
+    const buf=this.ctx.createBuffer(1,len,this.ctx.sampleRate),dd=buf.getChannelData(0);
+    for(let i=0;i<len;i++) dd[i]=(Math.random()*2-1)*(1-i/len);
+    const s=this.ctx.createBufferSource(); s.buffer=buf;
+    const g=this.ctx.createGain(); g.gain.value=v||0.2;
+    s.connect(g); g.connect(this.ctx.destination); s.start(t);
+  },
+  sfx(fn){ if(this.sfxOn&&this.ctx) fn(); },
+  stretch(){ this.sfx(()=>this.tone(180,.08,"sine",.08)); },
+  launch(){ this.sfx(()=>{ this.tone(300,.2,"square",.16,undefined,900); this.noise(.1,.1); }); },
+  thud(){ this.sfx(()=>{ this.noise(.1,.18); this.tone(110,.12,"sine",.2,undefined,50); }); },
+  breakWood(){ this.sfx(()=>{ this.noise(.16,.24); this.tone(240,.12,"square",.14,undefined,90); }); },
+  breakGlass(){ this.sfx(()=>{ this.noise(.1,.15); this.tone(1400,.14,"triangle",.16,undefined,500); }); },
+  pigPop(){ this.sfx(()=>{ this.tone(500,.12,"square",.18,undefined,150); this.tone(750,.1,"square",.14,this.ctx.currentTime+0.08,220); }); },
+  win(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [523,659,784,1046,1318].forEach((f,i)=>this.tone(f,.25,"triangle",.2,t+i*0.11)); }); },
+  lose(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [392,330,262,196].forEach((f,i)=>this.tone(f,.3,"sawtooth",.18,t+i*0.15)); }); },
+  startBGM(){
+    if(this.bgmTimer) return;
+    const mel=[262,330,392,330, 294,370,440,370, 262,330,392,523, 494,392,330,262];
+    let i=0;
+    this.bgmTimer=setInterval(()=>{
+      if(!this.musicOn||!this.ctx) return;
+      this.tone(mel[i%mel.length],.18,"triangle",.055);
+      if(i%4===2) this.tone(mel[i%mel.length]*1.5,.1,"square",.03);
+      i++;
+    },250);
+  }
+};
+
+/* ---------------- 4. 输入 ---------------- */
+const Input={
+  keys:{}, firePressed:false, pausePressed:false,
+  init(){
+    window.addEventListener("keydown",e=>{
+      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      const k=e.key.toLowerCase();
+      if(this.keys[k]) return;
+      this.keys[k]=true;
+      AudioSys.init(); AudioSys.resume();
+      if(k==="j"||k==="enter"||k==="k"||k===" ") this.firePressed=true;
+      if(k==="u"||k==="p"||k==="escape") this.pausePressed=true;
+      if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
+      if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
+    });
+    window.addEventListener("keyup",e=>{ this.keys[e.key.toLowerCase()]=false; });
+    const down=(x,y,id)=>{ AudioSys.init(); AudioSys.resume(); Game.onPointerDown(x,y,id); };
+    canvas.addEventListener("mousedown",e=>{ const[x,y]=View.toGame(e.clientX,e.clientY); down(x,y,"m"); });
+    window.addEventListener("mousemove",e=>{ const[x,y]=View.toGame(e.clientX,e.clientY); Game.onPointerMove(x,y,"m"); });
+    window.addEventListener("mouseup",()=>Game.onPointerUp("m"));
+    canvas.addEventListener("touchstart",e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const[x,y]=View.toGame(t.clientX,t.clientY); down(x,y,t.identifier); } },{passive:false});
+    canvas.addEventListener("touchmove",e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const[x,y]=View.toGame(t.clientX,t.clientY); Game.onPointerMove(x,y,t.identifier); } },{passive:false});
+    const endT=e=>{ for(const t of e.changedTouches) Game.onPointerUp(t.identifier); };
+    canvas.addEventListener("touchend",endT); canvas.addEventListener("touchcancel",endT);
+  },
+  consume(){ this.firePressed=false; this.pausePressed=false; }
+};
+
+/* ---------------- 5. 粒子与飘字 ---------------- */
+const Particles={
+  list:[],
+  burst(x,y,color,n,sp){
+    for(let i=0;i<n;i++){
+      const a=rand(0,Math.PI*2),v=rand(sp*0.3,sp);
+      this.list.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-60,t:rand(.35,.8),T:.8,r:rand(2,5),color});
+    }
+  },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i];
+      p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=400*dt; p.t-=dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    for(const p of this.list){
+      ctx.globalAlpha=Math.max(p.t/p.T,0);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(p.x-p.r/2,p.y-p.r/2,p.r,p.r);
+    }
+    ctx.globalAlpha=1;
+  }
+};
+const Popups={
+  list:[],
+  add(x,y,text,color){ this.list.push({x,y,text,color,t:1}); },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i]; p.y-=36*dt; p.t-=dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    ctx.textAlign="center"; ctx.font="bold 20px sans-serif";
+    for(const p of this.list){
+      ctx.globalAlpha=Math.max(Math.min(p.t,1),0);
+      ctx.fillStyle=p.color; ctx.fillText(p.text,p.x,p.y);
+    }
+    ctx.globalAlpha=1;
+  }
+};
+
+/* ---------------- 6. 物理世界 ----------------
+ * 简化物理: 方块为轴对齐矩形(不旋转), 支持下落/堆叠/被撞击破坏;
+ * 小鸟与绿猪为圆形, 受重力, 与方块和地面碰撞。 */
+const World={
+  bird:null,       // 当前飞行中的小鸟 {x,y,vx,vy,r,live,restT,flightT,angle}
+  blocks:[],       // {x,y,w,h,vx,vy,mat,hp}
+  pigs:[],         // {x,y,r,vx,vy,hp,dead}
+  reset(){ this.bird=null; this.blocks=[]; this.pigs=[]; },
+  launchBird(vx,vy){
+    this.bird={x:SLING.x,y:SLING.y,vx,vy,r:15,live:true,restT:0,flightT:0,angle:Math.atan2(vy,vx||1),trail:[]};
+    AudioSys.launch();
+  },
+  birdSupported(b){
+    if(b.y+b.r>=GROUND_Y-3) return true;
+    for(const bl of this.blocks){
+      if(b.x>bl.x-b.r*0.4&&b.x<bl.x+bl.w+b.r*0.4&&b.y+b.r>=bl.y-2&&b.y+b.r<=bl.y+bl.h*0.55) return true;
+    }
+    return false;
+  },
+  update(dt){
+    this.updateBlocks(dt);
+    this.updatePigs(dt);
+    this.updateBird(dt);
+  },
+  /* --- 方块 --- */
+  updateBlocks(dt){
+    for(const b of this.blocks){
+      b.vy+=GRAV*dt;
+      b.x+=b.vx*dt; b.y+=b.vy*dt;
+      b.vx*=Math.pow(0.4,dt);   // 水平摩擦
+      // 地面
+      if(b.y+b.h>GROUND_Y){
+        b.y=GROUND_Y-b.h;
+        if(b.vy>140) AudioSys.thud();
+        if(b.vy>0) b.vy=0;
+        b.vx*=0.6;
+      }
+    }
+    // 方块堆叠: 简单自上而下支撑(两轮迭代趋稳)
+    for(let iter=0;iter<2;iter++){
+      for(const b of this.blocks){
+        for(const o of this.blocks){
+          if(b===o) continue;
+          if(b.x+b.w>o.x+4 && b.x<o.x+o.w-4){
+            // b 在 o 上方且穿透
+            if(b.y+b.h>o.y && b.y+b.h<o.y+o.h*0.6 && b.vy>=0){
+              b.y=o.y-b.h; b.vy=0; b.vx*=0.7;
+            }
+          }
+        }
+      }
+    }
+    // 移除出界方块
+    this.blocks=this.blocks.filter(b=>b.x>-100&&b.x<W+100);
+  },
+  damageBlock(b,dmg,px,py){
+    b.hp-=dmg;
+    if(b.hp<=0){
+      const m=MATS[b.mat];
+      Particles.burst(b.x+b.w/2,b.y+b.h/2,m.main,12,220);
+      if(b.mat==="glass") AudioSys.breakGlass(); else AudioSys.breakWood();
+      Game.addScore(b.mat==="stone"?15:10, b.x+b.w/2, b.y, "+"+(b.mat==="stone"?15:10));
+      this.blocks.splice(this.blocks.indexOf(b),1);
+    }else{
+      Particles.burst(px,py,MATS[b.mat].light,5,140);
+      AudioSys.thud();
+    }
+  },
+  /* --- 绿猪 --- */
+  updatePigs(dt){
+    for(let i=this.pigs.length-1;i>=0;i--){
+      const g=this.pigs[i];
+      g.vy+=GRAV*dt;
+      g.x+=g.vx*dt; g.y+=g.vy*dt;
+      g.vx*=Math.pow(0.5,dt);
+      // 地面
+      if(g.y+g.r>GROUND_Y){
+        g.y=GROUND_Y-g.r;
+        if(g.vy>430){ this.hurtPig(g,Math.round((g.vy-380)*0.06)); } // 高空坠落伤害
+        g.vy=0; g.vx*=0.7;
+      }
+      // 站在方块上
+      for(const b of this.blocks){
+        if(g.x>b.x-6&&g.x<b.x+b.w+6 && g.y+g.r>b.y && g.y+g.r<b.y+b.h*0.6 && g.vy>=0){
+          if(g.vy>430) this.hurtPig(g,Math.round((g.vy-380)*0.06));
+          g.y=b.y-g.r; g.vy=0;
+        }
+      }
+      if(g.hp<=0&&!g.dead){
+        g.dead=true;
+        AudioSys.pigPop();
+        Particles.burst(g.x,g.y,"#79c257",16,260);
+        Popups.add(g.x,g.y-24,"+100","#ffd60a");
+        Game.addScore(100);
+        this.pigs.splice(i,1);
+      }
+    }
+  },
+  hurtPig(g,dmg){ if(dmg>0){ g.hp-=dmg; g.hurtT=0.3; } },
+  /* --- 小鸟 --- */
+  updateBird(dt){
+    const b=this.bird;
+    if(!b||!b.live) return;
+    b.vy+=GRAV*dt;
+    b.x+=b.vx*dt; b.y+=b.vy*dt;
+    b.trail.push({x:b.x,y:b.y,t:0.5});
+    for(let i=b.trail.length-1;i>=0;i--){ b.trail[i].t-=dt; if(b.trail[i].t<=0) b.trail.splice(i,1); }
+    const speed=Math.hypot(b.vx,b.vy);
+    // 撞方块
+    for(const bl of this.blocks){
+      const cx=clamp(b.x,bl.x,bl.x+bl.w), cy=clamp(b.y,bl.y,bl.y+bl.h);
+      const dx=b.x-cx, dy=b.y-cy, d=Math.hypot(dx,dy);
+      if(d<b.r){
+        if(speed>110){
+          const dmg=speed*0.16*(bl.mat==="stone"?0.5:1);
+          this.damageBlock(bl,dmg,cx,cy);
+          // 撞击给方块施加速度
+          bl.vx+=b.vx*0.25; bl.vy+=b.vy*0.12;
+        }
+        // 反弹衰减
+        const nx=d>0.01?dx/d:0, ny=d>0.01?dy/d:-1;
+        const dot=b.vx*nx+b.vy*ny;
+        if(dot<0){ b.vx-=1.5*dot*nx; b.vy-=1.5*dot*ny; }
+        b.vx*=0.55; b.vy*=0.55;
+        b.x=cx+nx*(b.r+0.5); b.y=cy+ny*(b.r+0.5);
+      }
+    }
+    // 撞绿猪
+    for(const g of this.pigs){
+      const d=Math.hypot(b.x-g.x,b.y-g.y);
+      if(d<b.r+g.r && speed>90){
+        this.hurtPig(g,Math.round(speed*0.22));
+        g.vx+=b.vx*0.4; g.vy+=b.vy*0.25-60;
+        b.vx*=0.5; b.vy*=0.5;
+        AudioSys.thud();
+      }
+    }
+    // 地面
+    if(b.y+b.r>GROUND_Y){
+      b.y=GROUND_Y-b.r;
+      if(Math.abs(b.vy)>120){ b.vy=-b.vy*0.42; b.vx*=0.7; AudioSys.thud(); Particles.burst(b.x,b.y+8,"#c9a227",6,120); }
+      else { b.vy=0; b.vx*=Math.pow(0.05,dt); }
+    }
+    // 停稳：有支撑且低速时冻结朝向、强阻尼，避免 vx≈0 时 atan2 乱转导致一直不切换下一只
+    const spd=Math.hypot(b.vx,b.vy);
+    if(spd>28) b.angle=Math.atan2(b.vy,b.vx||0.001);
+    b.flightT=(b.flightT||0)+dt;
+    if(b.flightT>9){ b.live=false; return; }
+    const supported=this.birdSupported(b);
+    if(supported&&spd<48){
+      b.vx*=Math.pow(0.03,dt);
+      if(Math.abs(b.vy)<100) b.vy=0;
+    }
+    if(b.x<-40||b.x>W+40){ b.live=false; return; }
+    if((supported&&spd<36)||(spd<28&&b.y+b.r>=GROUND_Y-2)){
+      b.restT+=dt;
+      if(b.restT>0.4) b.live=false;
+    }else b.restT=0;
+  },
+  /* --- 绘制 --- */
+  draw(ctx){
+    // 方块
+    for(const b of this.blocks){
+      const m=MATS[b.mat];
+      const g=ctx.createLinearGradient(b.x,b.y,b.x,b.y+b.h);
+      g.addColorStop(0,m.light); g.addColorStop(0.35,m.main); g.addColorStop(1,m.dark);
+      ctx.fillStyle=g;
+      ctx.fillRect(b.x,b.y,b.w,b.h);
+      ctx.strokeStyle=m.dark; ctx.lineWidth=2;
+      ctx.strokeRect(b.x+1,b.y+1,b.w-2,b.h-2);
+      // 裂纹
+      const k=b.hp/MATS[b.mat].hp;
+      if(k<0.55){
+        ctx.strokeStyle="rgba(0,0,0,.4)"; ctx.lineWidth=1.5;
+        ctx.beginPath();
+        ctx.moveTo(b.x+b.w*0.3,b.y+2); ctx.lineTo(b.x+b.w*0.5,b.y+b.h*0.5); ctx.lineTo(b.x+b.w*0.25,b.y+b.h-2);
+        if(k<0.3){ ctx.moveTo(b.x+b.w*0.7,b.y+3); ctx.lineTo(b.x+b.w*0.6,b.y+b.h*0.6); }
+        ctx.stroke();
+      }
+    }
+    // 绿猪
+    for(const g of this.pigs){
+      if(g.hurtT>0) g.hurtT-=1/60;
+      ctx.save(); ctx.translate(g.x,g.y);
+      const bg=ctx.createRadialGradient(-4,-5,3,0,0,g.r+2);
+      bg.addColorStop(0,"#b7e29a"); bg.addColorStop(0.6,g.hurtT>0?"#d9f0a0":"#79c257"); bg.addColorStop(1,"#4a8c34");
+      ctx.fillStyle=bg;
+      ctx.beginPath(); ctx.arc(0,0,g.r,0,Math.PI*2); ctx.fill();
+      // 耳朵
+      ctx.fillStyle="#5ea23f";
+      ctx.beginPath(); ctx.arc(-g.r*0.5,-g.r*0.9,g.r*0.25,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(g.r*0.5,-g.r*0.9,g.r*0.25,0,Math.PI*2); ctx.fill();
+      // 鼻子
+      ctx.fillStyle="#5ea23f";
+      ctx.beginPath(); ctx.ellipse(0,g.r*0.15,g.r*0.45,g.r*0.32,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#38622a";
+      ctx.beginPath(); ctx.arc(-g.r*0.16,g.r*0.15,2.4,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(g.r*0.16,g.r*0.15,2.4,0,Math.PI*2); ctx.fill();
+      // 眼睛
+      ctx.fillStyle="#fff";
+      ctx.beginPath(); ctx.arc(-g.r*0.42,-g.r*0.3,g.r*0.22,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(g.r*0.42,-g.r*0.3,g.r*0.22,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#222";
+      ctx.beginPath(); ctx.arc(-g.r*0.38,-g.r*0.3,g.r*0.1,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(g.r*0.46,-g.r*0.3,g.r*0.1,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+      // 血条
+      ctx.fillStyle="rgba(0,0,0,.45)"; ctx.fillRect(g.x-16,g.y-g.r-12,32,4);
+      ctx.fillStyle="#95d5b2"; ctx.fillRect(g.x-16,g.y-g.r-12,32*clamp(g.hp/g.maxHp,0,1),4);
+    }
+    // 小鸟轨迹
+    if(this.bird){
+      for(const t of this.bird.trail){
+        ctx.globalAlpha=t.t;
+        ctx.fillStyle="rgba(255,255,255,.6)";
+        ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      drawBird(ctx,this.bird.x,this.bird.y,15,this.bird.angle||0);
+    }
+  }
+};
+// 红色小鸟绘制(共用)
+function drawBird(ctx,x,y,r,rot){
+  ctx.save(); ctx.translate(x,y); ctx.rotate(rot||0);
+  const g=ctx.createRadialGradient(-r*0.25,-r*0.3,2,0,0,r+2);
+  g.addColorStop(0,"#ff8f8f"); g.addColorStop(0.55,"#e63946"); g.addColorStop(1,"#9e1520");
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+  // 肚皮
+  ctx.fillStyle="#f6e3c5";
+  ctx.beginPath(); ctx.ellipse(r*0.15,r*0.45,r*0.55,r*0.4,0,0,Math.PI*2); ctx.fill();
+  // 眉毛+眼睛
+  ctx.fillStyle="#fff";
+  ctx.beginPath(); ctx.arc(r*0.3,-r*0.2,r*0.3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="#222";
+  ctx.beginPath(); ctx.arc(r*0.4,-r*0.2,r*0.13,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="#3d0a0a";
+  ctx.fillRect(-r*0.15,-r*0.55,r*0.85,r*0.2);
+  // 嘴
+  ctx.fillStyle="#f9a620";
+  ctx.beginPath(); ctx.moveTo(r*0.75,-r*0.05); ctx.lineTo(r*1.35,r*0.12); ctx.lineTo(r*0.72,r*0.32); ctx.fill();
+  // 头羽
+  ctx.strokeStyle="#9e1520"; ctx.lineWidth=3; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(-r*0.1,-r*0.9); ctx.quadraticCurveTo(-r*0.5,-r*1.5,-r*0.15,-r*1.45); ctx.stroke();
+  ctx.restore();
+}
+
+/* ---------------- 7. 关卡生成 ----------------
+ * 依据关卡号生成塔式结构: 层数/材质随难度提升 */
+const Levels={
+  build(lv){
+    World.reset();
+    const baseX=520;
+    // 塔数量与层数
+    const towers = lv<=2?1 : lv<=6?2 : 3;
+    const floors = clamp(1+Math.ceil(lv/2), 2, 5);
+    const mats = lv<=2?["wood","glass"] : lv<=5?["wood","glass","wood","stone"] : ["stone","wood","stone","glass"];
+    let pigCount=0;
+    for(let t=0;t<towers;t++){
+      const tx=baseX+t*140;
+      let y=GROUND_Y;
+      for(let f=0;f<floors;f++){
+        const mat=mats[irand(0,mats.length-1)];
+        const colH=52, beamH=16, colW=14, span=76;
+        // 两根立柱
+        World.blocks.push({x:tx,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat,hp:MATS[mat].hp});
+        World.blocks.push({x:tx+span-colW,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat,hp:MATS[mat].hp});
+        // 层内绿猪(隔层)
+        if(f%2===0 && pigCount<2+Math.ceil(lv/2)){
+          const hp=40+lv*6;
+          World.pigs.push({x:tx+span/2,y:y-16,r:15,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0});
+          pigCount++;
+        }
+        // 横梁
+        const bmat=mats[irand(0,mats.length-1)];
+        World.blocks.push({x:tx-8,y:y-colH-beamH,w:span+16,h:beamH,vx:0,vy:0,mat:bmat,hp:MATS[bmat].hp});
+        y-=colH+beamH;
+      }
+      // 塔顶绿猪
+      const hp=40+lv*6;
+      World.pigs.push({x:tx+38,y:y-16,r:15,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0});
+    }
+    return World.pigs.length;
+  }
+};
+
+/* ---------------- 8. 游戏主逻辑 ---------------- */
+const Game={
+  state:"menu", mode:"level",
+  level:1, score:0, best:0,
+  birdsLeft:0, waitT:0,
+  aiming:false, aimX:SLING.x, aimY:SLING.y, aimId:null,
+  menuBtns:{level:[W/2-280,330,260,64], endless:[W/2+20,330,260,64]},
+  kbAngle:135, kbPower:0.7, kbAiming:false,   // 键盘瞄准(角度: 度, 相对x正向逆时针)
+  shake:0, msgText:"", msgTimer:0, endWhy:"",
+  clouds:[],
+  init(){
+    this.best=+(localStorage.getItem("angry_best")||0);
+    for(let i=0;i<5;i++)
+      this.clouds.push({x:rand(0,W),y:rand(50,180),w:rand(70,140),sp:rand(8,20)});
+    Input.init();
+  },
+  startGame(mode){
+    this.mode=mode; this.level=1; this.score=0;
+    this.startLevel();
+    AudioSys.init(); AudioSys.resume();
+  },
+  startLevel(){
+    const lv=this.mode==="endless"?irand(3,8):this.level;
+    const pigs=Levels.build(lv);
+    this.birdsLeft = this.mode==="endless" ? this.birdsLeft||6 : pigs+2;
+    Particles.list=[]; Popups.list=[];
+    this.aiming=false; this.waitT=0;
+    this.state="playing";
+    this.showMsg(this.mode==="level"
+      ? ("第 "+this.level+" 关 · 消灭全部绿猪!")
+      : ("无尽波次 · 剩余小鸟 "+this.birdsLeft), 2);
+  },
+  showMsg(t,d){ this.msgText=t; this.msgTimer=d; },
+  addScore(n,x,y,label){
+    this.score+=n;
+    if(label!==undefined&&x!==undefined) Popups.add(x,y-14,label,"#ffd60a");
+  },
+  saveBest(){ if(this.score>this.best){ this.best=this.score; localStorage.setItem("angry_best",this.best); } },
+  /* ---- 发射 ---- */
+  fire(vx,vy){
+    if(this.birdsLeft<=0||World.bird&&World.bird.live) return;
+    this.birdsLeft--;
+    World.launchBird(vx,vy);
+  },
+  aimVel(){
+    // 由拖拽位移计算初速(反向弹射)
+    const dx=SLING.x-this.aimX, dy=SLING.y-this.aimY;
+    const len=Math.hypot(dx,dy), max=110;
+    const k=Math.min(len,max)/max;
+    return [dx/(len||1)*k*980, dy/(len||1)*k*980];
+  },
+  kbVel(){
+    const a=this.kbAngle*Math.PI/180;
+    return [Math.cos(a)*this.kbPower*980*-1, -Math.sin(a)*this.kbPower*980];
+  },
+  /* ---- 指针 ---- */
+  onPointerDown(x,y,id){
+    if(this.state==="menu"){
+      const b=this.menuBtns;
+      if(this.hitRect(x,y,...b.level)) this.startGame("level");
+      else if(this.hitRect(x,y,...b.endless)) this.startGame("endless");
+      return;
+    }
+    if(this.state==="paused"){
+      if(this.hitRect(x,y,W/2-130,250,260,60)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,330,260,60)){ this.birdsLeft=0; this.startGame(this.mode); }
+      else if(this.hitRect(x,y,W/2-130,410,260,60)) this.state="menu";
+      return;
+    }
+    if(this.state==="gameover"||this.state==="win"){
+      if(this.hitRect(x,y,W/2-280,380,260,64)){ this.birdsLeft=0; this.startGame(this.mode); }
+      else if(this.hitRect(x,y,W/2+20,380,260,64)) this.state="menu";
+      return;
+    }
+    if(this.state==="levelclear"){
+      if(this.hitRect(x,y,W/2-130,340,260,64)){ this.level++; this.startLevel(); }
+      return;
+    }
+    // playing
+    if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
+    // 弹弓附近按下 → 开始拖拽瞄准
+    if(!World.bird||!World.bird.live){
+      if(Math.hypot(x-SLING.x,y-SLING.y)<150){
+        this.aiming=true; this.aimId=id;
+        this.aimX=x; this.aimY=y;
+        AudioSys.stretch();
+      }
+    }
+  },
+  onPointerMove(x,y,id){
+    if(this.aiming&&this.aimId===id){
+      const dx=x-SLING.x, dy=y-SLING.y;
+      const len=Math.hypot(dx,dy), max=110;
+      const k=len>max?max/len:1;
+      this.aimX=SLING.x+dx*k; this.aimY=SLING.y+dy*k;
+    }
+  },
+  onPointerUp(id){
+    if(this.aiming&&this.aimId===id){
+      this.aiming=false;
+      const [vx,vy]=this.aimVel();
+      if(Math.hypot(vx,vy)>140) this.fire(vx,vy);
+    }
+  },
+  hitRect(x,y,rx,ry,rw,rh){ return x>=rx&&x<=rx+rw&&y>=ry&&y<=ry+rh; },
+  /* ---- 更新 ---- */
+  update(dt){
+    for(const c of this.clouds){ c.x-=c.sp*dt; if(c.x<-c.w) c.x=W+c.w; }
+    if(this.msgTimer>0) this.msgTimer-=dt;
+    if(this.shake>0) this.shake-=dt;
+    Particles.update(dt); Popups.update(dt);
+    if(this.state!=="playing"){
+      if(Input.pausePressed&&this.state==="paused") this.state="playing";
+      else if(Input.firePressed){
+        if(this.state==="menu") this.startGame("level");
+        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
+        else if(this.state==="gameover"||this.state==="win"){ this.birdsLeft=0; this.startGame(this.mode); }
+      }
+      Input.consume(); return;
+    }
+    if(Input.pausePressed){ this.state="paused"; Input.consume(); return; }
+    // 键盘瞄准: A/D或←→调角度, W/S或↑↓调力度, J/回车发射
+    const canAim=!World.bird||!World.bird.live;
+    if(canAim){
+      if(Input.keys["a"]||Input.keys["arrowleft"]) this.kbAngle=clamp(this.kbAngle+70*dt,95,175);
+      if(Input.keys["d"]||Input.keys["arrowright"]) this.kbAngle=clamp(this.kbAngle-70*dt,95,175);
+      if(Input.keys["w"]||Input.keys["arrowup"]) this.kbPower=clamp(this.kbPower+0.8*dt,0.2,1);
+      if(Input.keys["s"]||Input.keys["arrowdown"]) this.kbPower=clamp(this.kbPower-0.8*dt,0.2,1);
+      this.kbAiming = Input.keys["a"]||Input.keys["d"]||Input.keys["w"]||Input.keys["s"]||
+                      Input.keys["arrowleft"]||Input.keys["arrowright"]||Input.keys["arrowup"]||Input.keys["arrowdown"]||this.kbAiming;
+      if(Input.firePressed){
+        const [vx,vy]=this.kbVel();
+        this.fire(vx,vy);
+        this.kbAiming=false;
+      }
+    }
+    World.update(dt);
+    // 回合结算
+    const flying=World.bird&&World.bird.live;
+    if(!flying){
+      if(World.pigs.length===0){
+        // 过关
+        this.waitT+=dt;
+        if(this.waitT>0.6){
+          this.addScore(this.birdsLeft*50);
+          if(this.mode==="endless"){
+            this.birdsLeft+=3;   // 无尽: 每波补3只
+            this.level++;
+            this.startLevel();
+          }else{
+            this.saveBest(); AudioSys.win();
+            this.state = this.level>=10 ? "win" : "levelclear";
+          }
+        }
+      }else if(this.birdsLeft<=0){
+        this.waitT+=dt;
+        if(this.waitT>1.2){
+          this.endWhy="小鸟用完了, 还剩 "+World.pigs.length+" 只绿猪";
+          this.saveBest(); AudioSys.lose();
+          this.state="gameover";
+        }
+      }else this.waitT=0;
+    }else this.waitT=0;
+    Input.consume();
+  },
+  /* ---- 绘制 ---- */
+  draw(){
+    ctx.save();
+    if(this.shake>0) ctx.translate(rand(-5,5)*this.shake,rand(-5,5)*this.shake);
+    // 天空
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,"#69c8f0"); g.addColorStop(0.62,"#bfe8f7"); g.addColorStop(1,"#d9f3d0");
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // 太阳
+    const sg=ctx.createRadialGradient(840,90,8,840,90,64);
+    sg.addColorStop(0,"#fff8cf"); sg.addColorStop(0.5,"rgba(255,224,120,.6)"); sg.addColorStop(1,"transparent");
+    ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(840,90,64,0,Math.PI*2); ctx.fill();
+    // 云
+    ctx.fillStyle="rgba(255,255,255,.85)";
+    for(const c of this.clouds){
+      ctx.beginPath();
+      ctx.ellipse(c.x,c.y,c.w*0.5,c.w*0.17,0,0,Math.PI*2);
+      ctx.ellipse(c.x-c.w*0.24,c.y+5,c.w*0.3,c.w*0.12,0,0,Math.PI*2);
+      ctx.ellipse(c.x+c.w*0.26,c.y+4,c.w*0.3,c.w*0.12,0,0,Math.PI*2);
+      ctx.fill();
+    }
+    // 远山
+    ctx.fillStyle="rgba(120,170,120,.4)";
+    ctx.beginPath(); ctx.moveTo(0,GROUND_Y);
+    ctx.quadraticCurveTo(190,GROUND_Y-120,400,GROUND_Y);
+    ctx.quadraticCurveTo(600,GROUND_Y-160,780,GROUND_Y);
+    ctx.quadraticCurveTo(880,GROUND_Y-90,960,GROUND_Y); ctx.fill();
+    // 地面
+    const gg=ctx.createLinearGradient(0,GROUND_Y,0,H);
+    gg.addColorStop(0,"#8bc34a"); gg.addColorStop(0.15,"#689f38"); gg.addColorStop(1,"#3d5c1f");
+    ctx.fillStyle=gg; ctx.fillRect(0,GROUND_Y,W,H-GROUND_Y);
+    ctx.fillStyle="rgba(255,255,255,.15)"; ctx.fillRect(0,GROUND_Y,W,4);
+    if(this.state==="menu"){ this.drawMenu(); ctx.restore(); return; }
+    // 弹弓与瞄准
+    this.drawSling();
+    World.draw(ctx);
+    Particles.draw(ctx);
+    Popups.draw(ctx);
+    this.drawHUD();
+    if(this.msgTimer>0){
+      ctx.globalAlpha=Math.min(this.msgTimer,1);
+      ctx.fillStyle="#083d5c"; ctx.font="bold 28px sans-serif"; ctx.textAlign="center";
+      ctx.fillText(this.msgText,W/2,H*0.2);
+      ctx.globalAlpha=1;
+    }
+    if(this.state==="paused") this.drawPaused();
+    if(this.state==="gameover") this.drawGameover();
+    if(this.state==="levelclear") this.drawClear(false);
+    if(this.state==="win") this.drawClear(true);
+    ctx.restore();
+  },
+  drawSling(){
+    // 支架
+    ctx.strokeStyle="#6d4325"; ctx.lineWidth=10; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(SLING.x-14,SLING.y+6); ctx.lineTo(SLING.x-16,GROUND_Y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(SLING.x+14,SLING.y+6); ctx.lineTo(SLING.x+16,GROUND_Y); ctx.stroke();
+    const canAim=(!World.bird||!World.bird.live)&&this.birdsLeft>0&&this.state==="playing";
+    // 瞄准中的橡皮筋与小鸟
+    let bx=SLING.x, by=SLING.y;
+    if(this.aiming){ bx=this.aimX; by=this.aimY; }
+    else if(this.kbAiming&&canAim){
+      const a=this.kbAngle*Math.PI/180;
+      bx=SLING.x+Math.cos(a)*this.kbPower*95;
+      by=SLING.y+Math.sin(a)*this.kbPower*95;
+    }
+    if(canAim){
+      ctx.strokeStyle="#4a2c12"; ctx.lineWidth=6;
+      ctx.beginPath(); ctx.moveTo(SLING.x-14,SLING.y+4); ctx.lineTo(bx,by); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(SLING.x+14,SLING.y+4); ctx.lineTo(bx,by); ctx.stroke();
+      drawBird(ctx,bx,by,15,0);
+      // 预测轨迹
+      if(this.aiming||this.kbAiming){
+        let [vx,vy]=this.aiming?this.aimVel():this.kbVel();
+        let px=SLING.x,py=SLING.y;
+        ctx.fillStyle="rgba(255,255,255,.75)";
+        for(let i=0;i<14;i++){
+          px+=vx*0.07; vy+=GRAV*0.07; py+=vy*0.07;
+          if(py>GROUND_Y) break;
+          ctx.beginPath(); ctx.arc(px,py,3.4-i*0.15,0,Math.PI*2); ctx.fill();
+        }
+      }
+    }
+    // 待命小鸟排队(最多显示3只)
+    const queue=Math.min(this.birdsLeft-(canAim?1:0),3);
+    for(let i=0;i<queue;i++)
+      drawBird(ctx, 30+28*i, GROUND_Y-12, 11, 0);
+  },
+  drawHUD(){
+    ctx.fillStyle="rgba(8,30,50,.45)"; ctx.fillRect(0,0,W,64);
+    ctx.textAlign="left"; ctx.fillStyle="#ffd60a"; ctx.font="bold 22px sans-serif";
+    ctx.fillText("分数 "+this.score,14,30);
+    ctx.font="12px sans-serif"; ctx.fillStyle="#e8f4ff";
+    ctx.fillText("最高 "+this.best,14,50);
+    ctx.textAlign="center"; ctx.fillStyle="#fff"; ctx.font="bold 18px sans-serif";
+    ctx.fillText(this.mode==="level"?("第"+this.level+"关"):("第"+this.level+"波"),W/2,26);
+    ctx.font="14px sans-serif"; ctx.fillStyle="#b7e29a";
+    ctx.fillText("绿猪 "+World.pigs.length,W/2,48);
+    // 剩余小鸟(生命面板)
+    ctx.textAlign="right"; ctx.fillStyle="#ff8f8f"; ctx.font="bold 17px sans-serif";
+    ctx.fillText("小鸟 ×"+this.birdsLeft,W-80,38);
+    // 暂停
+    ctx.fillStyle="rgba(255,255,255,.22)";
+    ctx.beginPath(); ctx.roundRect(W-64,10,54,44,10); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.fillRect(W-64+17,21,6,22); ctx.fillRect(W-64+31,21,6,22);
+    // 底部操作提示
+    ctx.textAlign="center"; ctx.fillStyle="rgba(8,40,60,.65)"; ctx.font="13px sans-serif";
+    ctx.fillText("拖拽弹弓发射 · 或 A/D调角度 W/S调力度 J发射",W/2,H-16);
+  },
+  overlay(){ ctx.fillStyle="rgba(10,16,30,.7)"; ctx.fillRect(0,0,W,H); },
+  bigBtn(x,y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+64);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(x,y,260,64,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 26px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,x+130,y+42);
+  },
+  midBtn(y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+60);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,60,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 24px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,W/2,y+40);
+  },
+  drawMenu(){
+    ctx.fillStyle="#c9184a"; ctx.font="bold 58px sans-serif"; ctx.textAlign="center";
+    ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=3;
+    ctx.strokeText("愤怒的小鸟",W/2,130); ctx.fillText("愤怒的小鸟",W/2,130);
+    ctx.font="18px sans-serif"; ctx.fillStyle="#083d5c";
+    ctx.fillText("弹弓发射 · 砸毁堡垒 · 消灭绿猪",W/2,172);
+    const t=performance.now()/1000;
+    drawBird(ctx,W/2-70,245+Math.sin(t*3)*8,34,Math.sin(t*2)*0.15);
+    // 装饰绿猪
+    ctx.save(); ctx.translate(W/2+80,252);
+    const pg=ctx.createRadialGradient(-4,-5,3,0,0,30);
+    pg.addColorStop(0,"#b7e29a"); pg.addColorStop(0.6,"#79c257"); pg.addColorStop(1,"#4a8c34");
+    ctx.fillStyle=pg; ctx.beginPath(); ctx.arc(0,0,28,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#5ea23f";
+    ctx.beginPath(); ctx.ellipse(0,4,12,9,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#fff";
+    ctx.beginPath(); ctx.arc(-11,-8,6,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(11,-8,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#222";
+    ctx.beginPath(); ctx.arc(-10,-8,2.6,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(12,-8,2.6,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    this.bigBtn(this.menuBtns.level[0],this.menuBtns.level[1],"关卡模式",["#ff9e5e","#d1495b"]);
+    this.bigBtn(this.menuBtns.endless[0],this.menuBtns.endless[1],"无尽模式",["#5b8bff","#2a3f9f"]);
+    ctx.fillStyle="#0b3550"; ctx.font="14px sans-serif";
+    ctx.fillText("PC: 鼠标拖拽弹弓 或 A/D调角度 W/S调力度 J/回车发射 · U/P暂停 · I/O音乐音效开关",W/2,438);
+    ctx.fillText("手机: 手指拖拽弹弓瞄准, 松手发射 (竖屏会自动旋转横屏)",W/2,462);
+    ctx.fillStyle="#0b3550"; ctx.fillText("最高分: "+this.best,W/2,498);
+  },
+  drawPaused(){
+    this.overlay();
+    ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停",W/2,190);
+    this.midBtn(250,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(330,"重新开始",["#ff9e5e","#d1495b"]);
+    this.midBtn(410,"返回菜单",["#5b8bff","#2a3f9f"]);
+  },
+  drawGameover(){
+    this.overlay();
+    ctx.fillStyle="#ff4d6d"; ctx.font="bold 48px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("挑战失败",W/2,200);
+    ctx.fillStyle="#fff"; ctx.font="19px sans-serif";
+    if(this.endWhy) ctx.fillText(this.endWhy,W/2,250);
+    ctx.fillText("分数 "+this.score,W/2,286);
+    ctx.fillStyle="#ffd60a"; ctx.font="16px sans-serif";
+    ctx.fillText("最高分: "+this.best,W/2,318);
+    this.bigBtn(W/2-280,380,"一键重新开始",["#ff6b8b","#c9184a"]);
+    this.bigBtn(W/2+20,380,"返回菜单",["#5b8bff","#2a3f9f"]);
+  },
+  drawClear(final){
+    this.overlay();
+    ctx.fillStyle="#95d5b2"; ctx.font="bold 46px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(final?"全部通关!":"过关!",W/2,210);
+    ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
+    ctx.fillText("分数: "+this.score+" (剩余小鸟奖励已计入)",W/2,262);
+    if(final){
+      this.bigBtn(W/2-280,340,"再玩一次",["#3f8e50","#1e4d2b"]);
+      this.bigBtn(W/2+20,340,"返回菜单",["#5b8bff","#2a3f9f"]);
+    }else{
+      this.bigBtn(W/2-130,340,"下一关",["#3f8e50","#1e4d2b"]);
+      ctx.fillStyle="#e8f4ff"; ctx.font="14px sans-serif";
+      ctx.fillText("(按 J/回车 亦可继续)",W/2,438);
+    }
+  }
+};
+
+/* ---------------- 9. 主循环 ---------------- */
+let lastT=performance.now();
+function mainLoop(now){
+  let dt=(now-lastT)/1000;
+  lastT=now;
+  dt=Math.min(dt,0.05);
+  Game.update(dt);
+  Game.draw();
+  requestAnimationFrame(mainLoop);
+}
+Game.init();
+requestAnimationFrame(mainLoop);
+</script>
+</body>
+</html>

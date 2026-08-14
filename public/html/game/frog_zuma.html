@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>青蛙祖玛</title>
+<style>
+/* ========== 全局样式 ========== */
+html,body{
+  margin:0;padding:0;width:100%;height:100%;
+  background:#07120a;overflow:hidden;
+  touch-action:none;-webkit-user-select:none;user-select:none;
+  font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+}
+#gameWrap{
+  position:fixed;left:0;top:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+#gameCanvas{
+  display:block;background:#07120a;
+  box-shadow:0 0 40px rgba(60,200,120,.25);
+}
+</style>
+</head>
+<body>
+<div id="gameWrap"><canvas id="gameCanvas" width="540" height="960"></canvas></div>
+<script>
+"use strict";
+/* =====================================================================
+ * 青蛙祖玛 —— 单文件 HTML5 Canvas 游戏 (竖屏 540x960)
+ * ---------------------------------------------------------------------
+ * 代码结构分层：
+ *   1. 常量与工具函数        (CONST / Utils)
+ *   2. 画布缩放适配          (View)
+ *   3. 音频系统 WebAudio     (AudioSys)  —— 音效 + 程序化BGM
+ *   4. 输入系统              (Input)     —— 键盘 + 虚拟摇杆/按钮
+ *   5. 粒子与飘字特效        (Particles / Popups)
+ *   6. 轨道路径              (Path)      —— Catmull-Rom + 等距采样
+ *   7. 珠链系统              (Chain)     —— 推进/插入/消除/回吸
+ *   8. 青蛙发射器            (Frog)
+ *   9. 游戏主逻辑与状态机    (Game)      —— 关卡/无尽/暂停/结算
+ *  10. 主循环                (mainLoop)
+ * ===================================================================== */
+
+/* ---------------- 1. 常量与工具 ---------------- */
+const W = 540, H = 960;              // 竖屏基准尺寸 9:16
+const BR = 16;                       // 珠子半径
+const BD = BR * 2;                   // 珠子直径(链上间距)
+const FROG = {x:270, y:845};         // 青蛙位置
+const COLORS = [
+  {main:"#ff4d6d", light:"#ffb3c1", dark:"#c9184a"}, // 红
+  {main:"#ffd60a", light:"#fff3b0", dark:"#e09f00"}, // 黄
+  {main:"#38b000", light:"#b7efc5", dark:"#1d6d00"}, // 绿
+  {main:"#4895ef", light:"#bde0fe", dark:"#1f5fbf"}, // 蓝
+  {main:"#b5179e", light:"#f1c0e8", dark:"#7209b7"}, // 紫
+  {main:"#ff8500", light:"#ffd8a8", dark:"#cc5803"}, // 橙
+];
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const rand  = (a,b)=>a+Math.random()*(b-a);
+const irand = (a,b)=>Math.floor(rand(a,b+1));
+
+/* ---------------- 2. 画布缩放适配 ---------------- */
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const View = {
+  resize(){
+    const s = Math.min(window.innerWidth / W, window.innerHeight / H);
+    canvas.style.width  = (W * s) + "px";
+    canvas.style.height = (H * s) + "px";
+  },
+  toGame(cx, cy){
+    const r = canvas.getBoundingClientRect();
+    return { x:(cx - r.left) / r.width * W, y:(cy - r.top) / r.height * H };
+  }
+};
+window.addEventListener("resize", ()=>View.resize());
+View.resize();
+
+/* ---------------- 3. 音频系统 ---------------- */
+const AudioSys = {
+  ctx:null, master:null, bgmGain:null, sfxGain:null,
+  bgmTimer:null, bgmStep:0, enabled:true, bgmOn:true,
+  init(){
+    if(this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AC();
+    this.master = this.ctx.createGain(); this.master.gain.value = 0.9;
+    this.master.connect(this.ctx.destination);
+    this.sfxGain = this.ctx.createGain(); this.sfxGain.gain.value = 0.6;
+    this.sfxGain.connect(this.master);
+    this.bgmGain = this.ctx.createGain(); this.bgmGain.gain.value = 0.15;
+    this.bgmGain.connect(this.master);
+    this.startBGM();
+  },
+  resume(){ if(this.ctx && this.ctx.state === "suspended") this.ctx.resume(); },
+  tone(freq, dur, type, vol, when, dest, slideTo){
+    if(!this.ctx || !this.enabled) return;
+    const t = (when!==undefined?when:this.ctx.currentTime);
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type||"sine"; o.frequency.setValueAtTime(freq, t);
+    if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+dur);
+    g.gain.setValueAtTime(vol||0.3, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    o.connect(g); g.connect(dest||this.sfxGain);
+    o.start(t); o.stop(t+dur+0.02);
+  },
+  noise(dur, vol){
+    if(!this.ctx || !this.enabled) return;
+    const t = this.ctx.currentTime;
+    const len = Math.floor(this.ctx.sampleRate * dur);
+    const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i] = (Math.random()*2-1) * (1 - i/len);
+    const src = this.ctx.createBufferSource(); src.buffer = buf;
+    const g = this.ctx.createGain(); g.gain.value = vol||0.2;
+    src.connect(g); g.connect(this.sfxGain); src.start(t);
+  },
+  /* --- 音效 --- */
+  shoot(){ // 青蛙吐珠(呱)
+    this.tone(240,.1,"square",.2,undefined,undefined,520);
+    this.tone(140,.12,"sawtooth",.1);
+  },
+  insert(){ this.tone(320,.06,"sine",.28); },
+  pop(n){
+    for(let i=0;i<Math.min(n,7);i++)
+      this.tone(480*Math.pow(1.13,i), .13, "sine", .22, this.ctx.currentTime+i*0.045);
+    this.noise(.1,.12);
+  },
+  pull(){ this.tone(200,.2,"triangle",.14,undefined,undefined,420); },
+  danger(){ this.tone(880,.15,"square",.15,undefined,undefined,660); },
+  hurt(){ this.tone(180,.45,"sawtooth",.25,undefined,undefined,55); this.noise(.3,.2); },
+  swap(){ this.tone(660,.07,"square",.12); },
+  win(){
+    const t = this.ctx.currentTime;
+    [523,659,784,1046,1318].forEach((f,i)=>this.tone(f,.3,"triangle",.24,t+i*0.13));
+  },
+  lose(){
+    const t = this.ctx.currentTime;
+    [392,330,262,196].forEach((f,i)=>this.tone(f,.35,"sawtooth",.2,t+i*0.18));
+  },
+  /* --- 程序化BGM：丛林风琶音 --- */
+  startBGM(){
+    if(this.bgmTimer) return;
+    const scale = [220.00,261.63,293.66,329.63,392.00,440.00,523.25,587.33]; // A小调五声
+    const bassLine = [110.00,82.41,98.00,73.42];
+    const pattern = [0,3,5,7,5,3,4,2, 0,3,5,7,6,5,3,1];
+    const stepDur = 0.24;
+    this.bgmTimer = setInterval(()=>{
+      if(!this.ctx || !this.bgmOn || this.ctx.state!=="running") return;
+      const t = this.ctx.currentTime + 0.05;
+      const i = this.bgmStep % pattern.length;
+      this.tone(scale[pattern[i]], stepDur*0.9, "triangle", .5, t, this.bgmGain);
+      if(i % 4 === 0)
+        this.tone(bassLine[(this.bgmStep>>2)%bassLine.length], stepDur*3.6, "sine", .6, t, this.bgmGain);
+      if(i % 2 === 1){
+        const g = this.ctx.createGain(); g.gain.value = .07; g.connect(this.bgmGain);
+        this.tone(1500, .03, "square", .5, t, g);
+      }
+      this.bgmStep++;
+    }, stepDur*1000);
+  },
+  toggleBGM(){ this.bgmOn = !this.bgmOn; }
+};
+
+/* ---------------- 4. 输入系统 ---------------- */
+const Input = {
+  keys:{},
+  joy:{active:false, id:-1, cx:0, cy:0, dx:0, dy:0},
+  firePressed:false, swapPressed:false, pausePressed:false,
+  init(){
+    window.addEventListener("keydown", e=>{
+      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      const k = e.key.toLowerCase();
+      if(!this.keys[k]){
+        if(k==="j"||k==="enter"||k==="k"||k===" ") this.firePressed = true;
+        if(k==="l") this.swapPressed = true;
+        if(k==="u"||k==="p"||k==="escape") this.pausePressed = true;
+        if(k==="i") AudioSys.toggleBGM();
+        if(k==="o") AudioSys.enabled = !AudioSys.enabled;
+      }
+      this.keys[k] = true;
+      AudioSys.init(); AudioSys.resume();
+    });
+    window.addEventListener("keyup", e=>{ this.keys[e.key.toLowerCase()] = false; });
+    const opts = {passive:false};
+    canvas.addEventListener("touchstart", e=>this.onTouch(e,"start"), opts);
+    canvas.addEventListener("touchmove",  e=>this.onTouch(e,"move"),  opts);
+    canvas.addEventListener("touchend",   e=>this.onTouch(e,"end"),   opts);
+    canvas.addEventListener("touchcancel",e=>this.onTouch(e,"end"),   opts);
+    canvas.addEventListener("mousedown", e=>{
+      AudioSys.init(); AudioSys.resume();
+      const p = View.toGame(e.clientX, e.clientY);
+      Game.onPointerDown(p.x, p.y, -99);
+    });
+    canvas.addEventListener("mousemove", e=>{
+      const p = View.toGame(e.clientX, e.clientY);
+      Game.onPointerMove(p.x, p.y, -99);
+    });
+    canvas.addEventListener("mouseup", ()=>{ Game.onPointerUp(-99); });
+  },
+  onTouch(e, phase){
+    e.preventDefault();
+    AudioSys.init(); AudioSys.resume();
+    for(const t of e.changedTouches){
+      const p = View.toGame(t.clientX, t.clientY);
+      if(phase==="start") Game.onPointerDown(p.x, p.y, t.identifier);
+      else if(phase==="move") Game.onPointerMove(p.x, p.y, t.identifier);
+      else Game.onPointerUp(t.identifier);
+    }
+  },
+  axis(){
+    let dx=0, dy=0;
+    if(this.keys["a"]||this.keys["arrowleft"])  dx -= 1;
+    if(this.keys["d"]||this.keys["arrowright"]) dx += 1;
+    if(this.keys["w"]||this.keys["arrowup"])    dy -= 1;
+    if(this.keys["s"]||this.keys["arrowdown"])  dy += 1;
+    if(this.joy.active){ dx += this.joy.dx; dy += this.joy.dy; }
+    return {x:clamp(dx,-1,1), y:clamp(dy,-1,1)};
+  },
+  consume(){ this.firePressed = false; this.swapPressed = false; this.pausePressed = false; }
+};
+
+/* ---------------- 5. 粒子与飘字特效 ---------------- */
+const Particles = {
+  list:[],
+  burst(x,y,color,n){
+    for(let i=0;i<n;i++){
+      const a = rand(0,Math.PI*2), sp = rand(60,300);
+      this.list.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        life:rand(.3,.7),t:0,r:rand(2,5),color,g:260,type:"dot"});
+    }
+    this.list.push({x,y,life:.35,t:0,r:BR*0.9,color,type:"ring"});
+  },
+  sparkle(x,y,color){
+    for(let i=0;i<6;i++){
+      const a = rand(0,Math.PI*2), sp = rand(30,120);
+      this.list.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        life:rand(.2,.4),t:0,r:rand(1.5,3),color,g:80,type:"dot"});
+    }
+  },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p = this.list[i];
+      p.t += dt;
+      if(p.t >= p.life){ this.list.splice(i,1); continue; }
+      if(p.type==="dot"){ p.vy += (p.g||0)*dt; p.x += p.vx*dt; p.y += p.vy*dt; }
+    }
+  },
+  draw(ctx){
+    for(const p of this.list){
+      const k = 1 - p.t/p.life;
+      ctx.globalAlpha = k;
+      if(p.type==="dot"){
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r*k,0,Math.PI*2); ctx.fill();
+      }else{
+        ctx.strokeStyle = p.color; ctx.lineWidth = 3*k;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r*(1+(1-k)*1.8),0,Math.PI*2); ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+};
+const Popups = { // 飘字(+分数/连击)
+  list:[],
+  add(x,y,text,color){ this.list.push({x,y,text,color:color||"#fff",t:0,life:.9}); },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p = this.list[i]; p.t += dt;
+      if(p.t>=p.life) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    ctx.textAlign="center"; ctx.font="bold 20px sans-serif";
+    for(const p of this.list){
+      const k = p.t/p.life;
+      ctx.globalAlpha = 1-k;
+      ctx.fillStyle = p.color;
+      ctx.fillText(p.text, p.x, p.y - k*44);
+    }
+    ctx.globalAlpha = 1;
+  }
+};
+
+/* ---------------- 6. 轨道路径 ---------------- */
+const Path = {
+  pts:[], len:0, STEP:3,
+  // 蛇形轨道控制点(从屏幕左上入场, 蜿蜒至右下骷髅洞)
+  waypoints: [
+    [-60,150],[-20,150],[430,150],[495,218],[430,286],
+    [110,286],[45,352],[110,418],[430,418],[495,484],
+    [430,550],[110,550],[45,614],[110,678],[420,678],[478,700],[478,702]
+  ],
+  build(){
+    // Catmull-Rom 平滑采样
+    const raw = [];
+    const P = this.waypoints;
+    for(let i=0;i<P.length-1;i++){
+      const p0 = P[Math.max(0,i-1)], p1 = P[i], p2 = P[i+1], p3 = P[Math.min(P.length-1,i+2)];
+      for(let t=0;t<1;t+=0.02){
+        const t2=t*t, t3=t2*t;
+        raw.push([
+          0.5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),
+          0.5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
+        ]);
+      }
+    }
+    raw.push(P[P.length-1].slice());
+    // 等弧长重采样
+    this.pts = [raw[0]];
+    let acc = 0;
+    for(let i=1;i<raw.length;i++){
+      const dx = raw[i][0]-raw[i-1][0], dy = raw[i][1]-raw[i-1][1];
+      let d = Math.hypot(dx,dy);
+      acc += d;
+      while(acc >= this.STEP){
+        acc -= this.STEP;
+        const k = 1 - acc/d;
+        this.pts.push([raw[i-1][0]+dx*k, raw[i-1][1]+dy*k]);
+      }
+    }
+    this.len = (this.pts.length-1) * this.STEP;
+  },
+  pos(d){ // 距离 -> 坐标
+    d = clamp(d, 0, this.len);
+    const f = d / this.STEP, i = Math.floor(f), k = f - i;
+    const a = this.pts[i], b = this.pts[Math.min(i+1, this.pts.length-1)];
+    return {x:a[0]+(b[0]-a[0])*k, y:a[1]+(b[1]-a[1])*k};
+  },
+  tangent(d){
+    const a = this.pos(Math.max(0,d-2)), b = this.pos(Math.min(this.len,d+2));
+    const l = Math.hypot(b.x-a.x, b.y-a.y)||1;
+    return {x:(b.x-a.x)/l, y:(b.y-a.y)/l};
+  },
+  draw(ctx){
+    // 轨道底槽
+    ctx.save();
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(this.pts[0][0], this.pts[0][1]);
+    for(let i=1;i<this.pts.length;i+=3) ctx.lineTo(this.pts[i][0], this.pts[i][1]);
+    ctx.strokeStyle = "rgba(20,50,30,.9)"; ctx.lineWidth = BD + 8; ctx.stroke();
+    ctx.strokeStyle = "rgba(70,120,80,.5)"; ctx.lineWidth = BD + 2; ctx.stroke();
+    ctx.setLineDash([2,14]);
+    ctx.strokeStyle = "rgba(180,230,190,.35)"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.restore();
+  }
+};
+
+/* 珠子绘制(渐变+高光) */
+function drawBall(ctx, x, y, colorIdx, radius, alpha){
+  const col = COLORS[colorIdx];
+  if(!col) return;
+  const r = radius || BR;
+  ctx.globalAlpha = alpha===undefined?1:alpha;
+  const g = ctx.createRadialGradient(x-r*0.35, y-r*0.4, r*0.1, x, y, r);
+  g.addColorStop(0, col.light);
+  g.addColorStop(0.55, col.main);
+  g.addColorStop(1, col.dark);
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,.5)";
+  ctx.beginPath(); ctx.ellipse(x-r*0.3, y-r*0.42, r*0.26, r*0.15, -0.6, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+/* ---------------- 7. 珠链系统 ----------------
+ * balls[0] 为最前(靠洞), d 沿路径递减排列
+ * ------------------------------------------------ */
+const Chain = {
+  balls:[],          // {d, color}
+  toSpawn:0,         // 待入场数量
+  speed:26,          // 后端推进速度 px/s
+  colorCount:4,
+  draining:false,    // 到洞失败: 快速吸入动画
+  reset(total, colorCount, speed, rushCount){
+    this.balls = [];
+    this.toSpawn = total;
+    this.colorCount = colorCount;
+    this.speed = speed;
+    this.draining = false;
+    // 开局快速入场的珠数(之后恢复正常速度)
+    this.rushUntil = Math.max(0, total - (rushCount||Math.min(30, Math.floor(total*0.6))));
+  },
+  randColor(){ return irand(0, this.colorCount-1); },
+  // 场上仍存在的颜色(供青蛙补弹)
+  activeColors(){
+    const s = new Set();
+    for(const b of this.balls) s.add(b.color);
+    return [...s];
+  },
+  update(dt){
+    const n = this.balls.length;
+    if(this.draining){ // 失败吸入动画
+      for(const b of this.balls) b.d += 620*dt;
+      while(this.balls.length && this.balls[0].d >= Path.len){
+        const b = this.balls.shift();
+        const p = Path.pos(Path.len);
+        Particles.sparkle(p.x, p.y, COLORS[b.color].main);
+      }
+      if(!this.balls.length) Game.onDrainDone();
+      return;
+    }
+    // (1) 入场: 尾部有空间则生成新珠
+    if(this.toSpawn > 0){
+      const tail = this.balls[this.balls.length-1];
+      if(!tail || tail.d >= BD){
+        // 避免入场即3连: 若与前两颗同色则重掷一次
+        let c = this.randColor();
+        const m = this.balls.length;
+        if(m>=2 && this.balls[m-1].color===c && this.balls[m-2].color===c) c = this.randColor();
+        this.balls.push({d: tail ? Math.min(0, tail.d - BD) : 0, color:c});
+        this.toSpawn--;
+      }
+    }
+    // (2) 分段: 找出所有缝隙(gap)位置
+    //     尾段以 speed 前进; 缝隙两侧同色 → 前段回吸
+    const gaps = [];
+    for(let i=1;i<this.balls.length;i++)
+      if(this.balls[i-1].d - this.balls[i].d > BD + 1) gaps.push(i);
+    // 尾段推进(尾段 = 最后一个缝隙之后的所有珠; 无缝隙则全链)
+    const tailStart = gaps.length ? gaps[gaps.length-1] : 0;
+    const rushing = this.toSpawn > this.rushUntil;   // 开局快速入场
+    const spd = rushing ? 320 : this.speed;
+    for(let i=tailStart;i<this.balls.length;i++) this.balls[i].d += spd*dt;
+    // (3) 缝隙回吸: 两侧同色时前段整体后退
+    for(const g of gaps){
+      const front = this.balls[g-1], back = this.balls[g];
+      if(front.color === back.color){
+        const gap = front.d - back.d - BD;
+        const move = Math.min(180*dt, gap);
+        for(let i=0;i<g;i++) this.balls[i].d -= move;
+        if(gap - move <= 0.5){
+          AudioSys.pull();
+          Game.combo++;
+          this.checkMatch(g-1, true); // 接合处连锁检查
+        }
+        break; // 每帧只处理一个回吸
+      }
+    }
+    // (4) 推挤修正: 从尾向前传播, 消除重叠
+    for(let i=this.balls.length-2;i>=0;i--){
+      if(this.balls[i+1].d + BD > this.balls[i].d)
+        this.balls[i].d = this.balls[i+1].d + BD;
+    }
+    // (5) 到洞判定
+    if(this.balls.length && this.balls[0].d >= Path.len - 4){
+      this.draining = true;
+      Game.onReachHole();
+    }
+  },
+  // 从 idx 处向两侧找同色连续段, >=3 则消除
+  checkMatch(idx, isChain){
+    if(idx<0 || idx>=this.balls.length) return false;
+    const color = this.balls[idx].color;
+    let lo = idx, hi = idx;
+    while(lo>0 && this.balls[lo-1].color===color &&
+          this.balls[lo-1].d - this.balls[lo].d <= BD+2) lo--;
+    while(hi<this.balls.length-1 && this.balls[hi+1].color===color &&
+          this.balls[hi].d - this.balls[hi+1].d <= BD+2) hi++;
+    const cnt = hi - lo + 1;
+    if(cnt < 3) return false;
+    // 爆裂特效与得分
+    let sx=0, sy=0;
+    for(let i=lo;i<=hi;i++){
+      const p = Path.pos(this.balls[i].d);
+      sx += p.x; sy += p.y;
+      Particles.burst(p.x, p.y, COLORS[color].main, 9);
+    }
+    this.balls.splice(lo, cnt);
+    const mult = Math.max(1, Game.combo);
+    const gain = cnt * 10 * mult;
+    Game.score += gain;
+    Popups.add(sx/cnt, sy/cnt, "+"+gain + (mult>1 ? "  x"+mult+"连锁!" : ""),
+               mult>1 ? "#ffd60a" : "#fff");
+    AudioSys.pop(cnt + (isChain?2:0));
+    if(cnt>=5) Game.shake = 0.25;
+    return true;
+  },
+  // 发射珠命中链 → 插入
+  tryInsert(x, y, color){
+    for(let i=0;i<this.balls.length;i++){
+      const p = Path.pos(this.balls[i].d);
+      const d2 = (p.x-x)**2 + (p.y-y)**2;
+      if(d2 < (BR*1.9)**2){
+        const t = Path.tangent(this.balls[i].d);
+        const ahead = (x-p.x)*t.x + (y-p.y)*t.y > 0; // 命中点在前方 → 插到前面
+        const idx = ahead ? i : i+1;
+        const nd = ahead ? this.balls[i].d + BD : this.balls[i].d - BD;
+        this.balls.splice(idx, 0, {d:nd, color});
+        // 立即推挤修正(把前方推开)
+        for(let j=this.balls.length-2;j>=0;j--)
+          if(this.balls[j+1].d + BD > this.balls[j].d)
+            this.balls[j].d = this.balls[j+1].d + BD;
+        AudioSys.insert();
+        const np = Path.pos(this.balls[idx].d);
+        Particles.sparkle(np.x, np.y, COLORS[color].light);
+        if(!this.checkMatch(idx, false)){
+          Game.combo = 0; // 未消除则连锁中断
+        }
+        return true;
+      }
+    }
+    return false;
+  },
+  draw(ctx){
+    for(let i=this.balls.length-1;i>=0;i--){
+      const b = this.balls[i];
+      if(b.d < -BR) continue;
+      const p = Path.pos(b.d);
+      drawBall(ctx, p.x, p.y, b.color);
+    }
+  },
+  frontDanger(){ // 最前珠的路径进度 0~1
+    return this.balls.length ? this.balls[0].d / Path.len : 0;
+  }
+};
+
+/* ---------------- 8. 青蛙发射器 ---------------- */
+const Frog = {
+  angle:-Math.PI/2,
+  current:0, next:0,
+  flying:null,       // {x,y,vx,vy,color}
+  SPEED:860,
+  MINA:-Math.PI+0.12, MAXA:-0.12,
+  mouth:0,           // 吐珠嘴巴动画
+  reset(colorCount){
+    this.angle = -Math.PI/2;
+    this.current = irand(0, colorCount-1);
+    this.next = irand(0, colorCount-1);
+    this.flying = null; this.mouth = 0;
+  },
+  pickColor(){
+    const act = Chain.activeColors();
+    if(act.length===0) return irand(0, Chain.colorCount-1);
+    return act[irand(0, act.length-1)];
+  },
+  swap(){
+    if(this.flying) return;
+    [this.current, this.next] = [this.next, this.current];
+    AudioSys.swap();
+  },
+  fire(){
+    if(this.flying || Chain.draining) return;
+    this.flying = {
+      x:FROG.x + Math.cos(this.angle)*34,
+      y:FROG.y + Math.sin(this.angle)*34,
+      vx:Math.cos(this.angle)*this.SPEED,
+      vy:Math.sin(this.angle)*this.SPEED,
+      color:this.current
+    };
+    this.current = this.next;
+    this.next = this.pickColor();
+    this.mouth = 0.18;
+    AudioSys.shoot();
+  },
+  update(dt){
+    const ax = Input.axis();
+    this.angle += ax.x * 2.4 * dt;
+    // W/S(上下) 垂直微调: 向上使角度趋向正上方, 向下则远离正上方
+    if(ax.y < 0) this.angle += ((-Math.PI/2) - this.angle) * (-ax.y) * 2.2 * dt;
+    else if(ax.y > 0) this.angle += (this.angle < -Math.PI/2 ? -1 : 1) * ax.y * 1.4 * dt;
+    this.angle = clamp(this.angle, this.MINA, this.MAXA);
+    if(this.mouth > 0) this.mouth -= dt;
+
+    if(!this.flying) return;
+    const b = this.flying;
+    // 分步移动防穿透
+    const steps = Math.ceil(this.SPEED*dt / (BR*0.6)) || 1;
+    const sdt = dt/steps;
+    for(let s=0;s<steps && this.flying;s++){
+      b.x += b.vx*sdt; b.y += b.vy*sdt;
+      if(Chain.tryInsert(b.x, b.y, b.color)){ this.flying = null; break; }
+      if(b.x < -BD || b.x > W+BD || b.y < -BD || b.y > H+BD){
+        this.flying = null; Game.combo = 0; break; // 脱靶
+      }
+    }
+  },
+  draw(ctx){
+    const t = performance.now()/1000;
+    // 荷叶底座
+    ctx.fillStyle = "rgba(30,90,50,.9)";
+    ctx.beginPath(); ctx.ellipse(FROG.x, FROG.y+6, 52, 40, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "rgba(40,120,65,.9)";
+    ctx.beginPath(); ctx.ellipse(FROG.x, FROG.y+2, 46, 34, 0, 0.25, Math.PI*2-0.25); ctx.fill();
+
+    ctx.save();
+    ctx.translate(FROG.x, FROG.y);
+    ctx.rotate(this.angle + Math.PI/2);
+    // 身体
+    const bg = ctx.createRadialGradient(-6,-10,4, 0,0,34);
+    bg.addColorStop(0,"#8ede6a"); bg.addColorStop(0.7,"#4caf50"); bg.addColorStop(1,"#256d29");
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.ellipse(0, 4, 26, 30, 0, 0, Math.PI*2); ctx.fill();
+    // 肚皮
+    ctx.fillStyle = "#d8f3c9";
+    ctx.beginPath(); ctx.ellipse(0, 12, 14, 16, 0, 0, Math.PI*2); ctx.fill();
+    // 眼睛
+    for(const s of [-1,1]){
+      ctx.fillStyle = "#3f8f3f";
+      ctx.beginPath(); ctx.arc(s*14, -22, 9, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.arc(s*14, -23, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#222";
+      ctx.beginPath(); ctx.arc(s*14, -25, 2.8, 0, Math.PI*2); ctx.fill();
+    }
+    // 嘴巴(吐珠时张开)
+    const open = this.mouth>0 ? 8 : 2 + Math.sin(t*2)*1;
+    ctx.strokeStyle = "#1d4d20"; ctx.lineWidth = 3; ctx.lineCap="round";
+    ctx.beginPath(); ctx.ellipse(0, -30, 8, open, 0, 0, Math.PI); ctx.stroke();
+    ctx.restore();
+
+    // 瞄准虚线
+    ctx.save();
+    ctx.setLineDash([4,12]);
+    ctx.strokeStyle = "rgba(255,255,255,.35)"; ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(FROG.x + Math.cos(this.angle)*44, FROG.y + Math.sin(this.angle)*44);
+    ctx.lineTo(FROG.x + Math.cos(this.angle)*820, FROG.y + Math.sin(this.angle)*820);
+    ctx.stroke();
+    ctx.restore();
+
+    // 嘴里的当前珠
+    drawBall(ctx, FROG.x + Math.cos(this.angle)*40, FROG.y + Math.sin(this.angle)*40, this.current);
+    // 下一颗(背上)
+    ctx.fillStyle = "rgba(255,255,255,.55)";
+    ctx.font = "13px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("下一颗", FROG.x+74, FROG.y+40);
+    drawBall(ctx, FROG.x+74, FROG.y+14, this.next, BR*0.72);
+
+    // 飞行中的珠
+    if(this.flying){
+      drawBall(ctx, this.flying.x, this.flying.y, this.flying.color);
+      ctx.globalAlpha=.25;
+      drawBall(ctx, this.flying.x-this.flying.vx*0.016, this.flying.y-this.flying.vy*0.016, this.flying.color, BR*0.8);
+      ctx.globalAlpha=1;
+    }
+  }
+};
+
+/* ---------------- 9. 游戏主逻辑 ---------------- */
+const Game = {
+  state:"menu",   // menu | playing | paused | levelclear | gameover | win
+  mode:"level",
+  level:1, score:0, lives:3, best:0,
+  combo:0, msgText:"", msgTimer:0, shake:0,
+  rushing:false,      // 关卡珠子发完后加速收尾(无珠可发时旁观)
+  endlessTimer:0,
+  dangerCd:0,
+  pointers:{},
+  fireflies:[],       // 背景萤火虫
+
+  init(){
+    this.best = +(localStorage.getItem("zuma_best")||0);
+    for(let i=0;i<26;i++)
+      this.fireflies.push({x:rand(0,W),y:rand(0,H),a:rand(0,Math.PI*2),
+        sp:rand(.3,.9),tw:rand(0,Math.PI*2),r:rand(1,2.5)});
+    Path.build();
+    Input.init();
+  },
+  startGame(mode){
+    this.mode = mode;
+    this.level = 1; this.score = 0; this.lives = 3;
+    this.startLevel();
+    AudioSys.init(); AudioSys.resume();
+  },
+  levelCfg(){
+    if(this.mode==="endless")
+      return {total:Infinity, colors:5, speed:26};
+    const n = this.level;
+    return {
+      total: 34 + n*8,
+      colors: Math.min(3 + Math.ceil(n/2), COLORS.length),
+      speed: 22 + n*3.5
+    };
+  },
+  startLevel(){
+    const cfg = this.levelCfg();
+    Chain.reset(cfg.total===Infinity ? 999999 : cfg.total, cfg.colors, cfg.speed);
+    Frog.reset(cfg.colors);
+    Particles.list = []; Popups.list = [];
+    this.combo = 0; this.rushing = false;
+    this.endlessTimer = 0;
+    this.state = "playing";
+    this.showMsg(this.mode==="level" ? ("第 "+this.level+" 关") : "无尽模式", 1.5);
+  },
+  showMsg(t,d){ this.msgText = t; this.msgTimer = d; },
+
+  onReachHole(){ // 珠链抵达骷髅洞
+    AudioSys.hurt();
+    this.shake = 0.45;
+    this.showMsg("珠链入洞!", 1.2);
+  },
+  onDrainDone(){ // 吸入动画结束
+    this.lives--;
+    if(this.lives <= 0){
+      this.state = "gameover"; this.saveBest(); AudioSys.lose();
+    }else{
+      // 重建本关剩余珠链(保留分数)
+      const cfg = this.levelCfg();
+      Chain.reset(cfg.total===Infinity ? 999999 : Math.max(24, Math.floor(cfg.total*0.7)),
+                  cfg.colors, cfg.speed);
+      Frog.reset(cfg.colors);
+      this.showMsg("生命 -1", 1.2);
+    }
+  },
+  saveBest(){
+    if(this.score > this.best){
+      this.best = this.score;
+      localStorage.setItem("zuma_best", this.best);
+    }
+  },
+
+  /* ---- 指针分区 ---- */
+  onPointerDown(x,y,id){
+    if(this.state==="menu"){
+      if(this.hitRect(x,y,W/2-130,520,260,64)) this.startGame("level");
+      else if(this.hitRect(x,y,W/2-130,610,260,64)) this.startGame("endless");
+      return;
+    }
+    if(this.state==="paused"){
+      if(this.hitRect(x,y,W/2-130,470,260,60)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,550,260,60)) this.startLevel();
+      else if(this.hitRect(x,y,W/2-130,630,260,60)) this.state="menu";
+      return;
+    }
+    if(this.state==="gameover" || this.state==="win"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,650,260,64)) this.state="menu";
+      return;
+    }
+    if(this.state==="levelclear"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)){ this.level++; this.startLevel(); }
+      return;
+    }
+    // playing
+    if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
+    if(x < W*0.40 && y > H*0.76){ // 摇杆
+      Input.joy.active = true; Input.joy.id = id;
+      Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
+      this.pointers[id] = "joy";
+      return;
+    }
+    if(x > W*0.60 && y > H*0.76){ // 按钮
+      if(this.hitCircle(x,y,W-72,H-86,44)){ Frog.fire(); this.pointers[id]="btn"; return; }
+      if(this.hitCircle(x,y,W-158,H-52,34)){ Frog.swap(); this.pointers[id]="btn"; return; }
+    }
+    this.aimAt(x,y);
+    this.pointers[id] = "aim";
+  },
+  onPointerMove(x,y,id){
+    if(this.state!=="playing") return;
+    if(this.pointers[id]==="joy" && Input.joy.active && Input.joy.id===id){
+      const dx = x - Input.joy.cx, dy = y - Input.joy.cy;
+      const len = Math.hypot(dx,dy), max = 55;
+      const k = len>max ? max/len : 1;
+      Input.joy.dx = dx*k/max; Input.joy.dy = dy*k/max;
+      return;
+    }
+    if(this.pointers[id]==="aim") this.aimAt(x,y);
+  },
+  onPointerUp(id){
+    if(this.pointers[id]==="joy"){
+      Input.joy.active = false; Input.joy.dx = 0; Input.joy.dy = 0; Input.joy.id = -1;
+    }else if(this.pointers[id]==="aim" && this.state==="playing"){
+      Frog.fire();
+    }
+    delete this.pointers[id];
+  },
+  aimAt(x,y){
+    if(y > FROG.y - 6) y = FROG.y - 6;
+    Frog.angle = clamp(Math.atan2(y - FROG.y, x - FROG.x), Frog.MINA, Frog.MAXA);
+  },
+  hitRect(x,y,rx,ry,rw,rh){ return x>=rx && x<=rx+rw && y>=ry && y<=ry+rh; },
+  hitCircle(x,y,cx,cy,r){ return (x-cx)**2 + (y-cy)**2 <= r*r; },
+
+  /* ---- 更新 ---- */
+  update(dt){
+    const t = performance.now()/1000;
+    for(const f of this.fireflies){
+      f.a += rand(-1,1)*dt; f.tw += dt*3;
+      f.x += Math.cos(f.a)*f.sp*30*dt; f.y += Math.sin(f.a)*f.sp*30*dt;
+      if(f.x<0) f.x=W; if(f.x>W) f.x=0; if(f.y<0) f.y=H; if(f.y>H) f.y=0;
+    }
+    if(this.msgTimer>0) this.msgTimer -= dt;
+    if(this.shake>0) this.shake -= dt;
+    if(this.dangerCd>0) this.dangerCd -= dt;
+    Particles.update(dt);
+    Popups.update(dt);
+
+    if(this.state!=="playing"){
+      if(Input.pausePressed && this.state==="paused") this.state="playing";
+      else if(Input.firePressed){
+        if(this.state==="menu") this.startGame("level");
+        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
+        else if(this.state==="gameover"||this.state==="win") this.startGame(this.mode);
+      }
+      Input.consume();
+      return;
+    }
+    if(Input.pausePressed){ this.state="paused"; Input.consume(); return; }
+    if(Input.firePressed) Frog.fire();
+    if(Input.swapPressed) Frog.swap();
+
+    Frog.update(dt);
+    Chain.update(dt);
+
+    // 危险警报
+    if(!Chain.draining && Chain.frontDanger() > 0.82 && this.dangerCd<=0){
+      AudioSys.danger(); this.dangerCd = 1.2;
+    }
+    // 无尽模式难度渐增
+    if(this.mode==="endless"){
+      this.endlessTimer += dt;
+      Chain.speed = 26 + Math.floor(this.endlessTimer/15)*3;
+    }
+    // 过关判定: 珠全部消除且不再入场
+    if(this.mode==="level" && !Chain.draining &&
+       Chain.toSpawn===0 && Chain.balls.length===0){
+      this.score += 400 + this.level*100;
+      AudioSys.win();
+      this.saveBest();
+      if(this.level >= 10) this.state = "win";
+      else this.state = "levelclear";
+    }
+    Input.consume();
+  },
+
+  /* ---- 绘制 ---- */
+  draw(){
+    ctx.save();
+    if(this.shake>0) ctx.translate(rand(-1,1)*this.shake*14, rand(-1,1)*this.shake*14);
+    // 丛林夜色背景
+    const bg = ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,"#0d2818"); bg.addColorStop(0.5,"#0a1f14"); bg.addColorStop(1,"#07120a");
+    ctx.fillStyle = bg; ctx.fillRect(-20,-20,W+40,H+40);
+    // 萤火虫
+    for(const f of this.fireflies){
+      const a = 0.25 + 0.55*Math.abs(Math.sin(f.tw));
+      ctx.globalAlpha = a;
+      ctx.fillStyle = "#d4f5a0";
+      ctx.shadowColor = "#d4f5a0"; ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    ctx.globalAlpha = 1;
+
+    if(this.state==="menu"){ this.drawMenu(); ctx.restore(); return; }
+
+    Path.draw(ctx);
+    this.drawHole();
+    Chain.draw(ctx);
+    Particles.draw(ctx);
+    Frog.draw(ctx);
+    Popups.draw(ctx);
+    this.drawHUD();
+    this.drawTouchUI();
+
+    if(this.msgTimer>0){
+      ctx.globalAlpha = Math.min(1, this.msgTimer*2);
+      ctx.fillStyle = "#fff"; ctx.font = "bold 40px sans-serif"; ctx.textAlign = "center";
+      ctx.shadowColor = "#7bff9e"; ctx.shadowBlur = 18;
+      ctx.fillText(this.msgText, W/2, 480);
+      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+    }
+
+    if(this.state==="paused") this.drawPaused();
+    else if(this.state==="levelclear") this.drawLevelClear();
+    else if(this.state==="gameover") this.drawGameOver(false);
+    else if(this.state==="win") this.drawGameOver(true);
+    ctx.restore();
+  },
+  drawHole(){
+    const p = Path.pos(Path.len);
+    const t = performance.now()/1000;
+    const danger = Chain.frontDanger();
+    const pulse = danger>0.82 ? 1+Math.sin(t*10)*0.15 : 1;
+    // 洞
+    const g = ctx.createRadialGradient(p.x,p.y,2, p.x,p.y,30*pulse);
+    g.addColorStop(0,"#000");
+    g.addColorStop(0.7, danger>0.82 ? "#5c1010" : "#1a2f1e");
+    g.addColorStop(1,"rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(p.x,p.y,30*pulse,0,Math.PI*2); ctx.fill();
+    // 骷髅记号
+    ctx.fillStyle = danger>0.82 ? "#ff7b7b" : "#9fd8a8";
+    ctx.beginPath(); ctx.arc(p.x, p.y-3, 8, 0, Math.PI*2); ctx.fill();
+    ctx.fillRect(p.x-6, p.y+2, 12, 6);
+    ctx.fillStyle = "#000";
+    ctx.beginPath(); ctx.arc(p.x-3, p.y-4, 2.2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(p.x+3, p.y-4, 2.2, 0, Math.PI*2); ctx.fill();
+  },
+  drawHUD(){
+    ctx.textAlign = "left";
+    ctx.font = "bold 22px sans-serif"; ctx.fillStyle = "#fff";
+    ctx.fillText("分数 " + this.score, 14, 34);
+    ctx.font = "14px sans-serif"; ctx.fillStyle = "#9fd8a8";
+    ctx.fillText("最高 " + this.best, 14, 56);
+    ctx.textAlign = "center"; ctx.font = "bold 20px sans-serif"; ctx.fillStyle = "#ffd60a";
+    ctx.fillText(this.mode==="level" ? ("第 "+this.level+" 关") : "无尽", W/2, 34);
+    // 生命
+    for(let i=0;i<3;i++){
+      ctx.fillStyle = i < this.lives ? "#ff4d6d" : "rgba(255,255,255,.15)";
+      this.heart(W/2 - 40 + i*40, 56, 9);
+    }
+    // 暂停按钮
+    ctx.fillStyle = "rgba(255,255,255,.12)";
+    this.roundRect(W-64,10,54,54,12); ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(W-48,24,8,26); ctx.fillRect(W-34,24,8,26);
+    // 剩余珠进度(关卡)
+    if(this.mode==="level"){
+      const cfg = this.levelCfg();
+      const remain = Chain.toSpawn + Chain.balls.length;
+      const k = clamp(1 - remain/cfg.total, 0, 1);
+      ctx.fillStyle = "rgba(255,255,255,.15)";
+      this.roundRect(W-150, 92, 136, 8, 4); ctx.fill();
+      ctx.fillStyle = "#7bff9e";
+      this.roundRect(W-150, 92, 136*k, 8, 4); ctx.fill();
+      ctx.textAlign="right"; ctx.font="12px sans-serif"; ctx.fillStyle="#9fd8a8";
+      ctx.fillText("清珠进度", W-14, 88);
+    }else{
+      ctx.textAlign="right"; ctx.font="12px sans-serif"; ctx.fillStyle="#9fd8a8";
+      ctx.fillText("速度 " + Chain.speed.toFixed(0), W-14, 88);
+    }
+  },
+  heart(x,y,s){
+    ctx.beginPath();
+    ctx.moveTo(x, y+s*0.9);
+    ctx.bezierCurveTo(x-s*1.4, y-s*0.1, x-s*0.7, y-s*1.1, x, y-s*0.3);
+    ctx.bezierCurveTo(x+s*0.7, y-s*1.1, x+s*1.4, y-s*0.1, x, y+s*0.9);
+    ctx.fill();
+  },
+  roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+  },
+  drawTouchUI(){
+    // 左下: 虚拟摇杆
+    const jx = Input.joy.active ? Input.joy.cx : 88;
+    const jy = Input.joy.active ? Input.joy.cy : H-92;
+    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = "#9fe8a8"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(jx,jy,55,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle = "#9fe8a8";
+    ctx.beginPath();
+    ctx.arc(jx+Input.joy.dx*40, jy+Input.joy.dy*40, 24, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.font = "13px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("摇杆瞄准", jx, jy+80);
+    // 右下: 发射/换珠
+    ctx.globalAlpha = 0.55;
+    const fg = ctx.createRadialGradient(W-72,H-86,5,W-72,H-86,44);
+    fg.addColorStop(0,"#a8f0b0"); fg.addColorStop(1,"#1d6d00");
+    ctx.fillStyle = fg;
+    ctx.beginPath(); ctx.arc(W-72,H-86,44,0,Math.PI*2); ctx.fill();
+    const sg = ctx.createRadialGradient(W-158,H-52,4,W-158,H-52,34);
+    sg.addColorStop(0,"#9ad0ff"); sg.addColorStop(1,"#1f5fbf");
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.arc(W-158,H-52,34,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#fff"; ctx.font = "bold 18px sans-serif";
+    ctx.fillText("发射", W-72, H-80);
+    ctx.font = "bold 14px sans-serif";
+    ctx.fillText("换珠", W-158, H-47);
+  },
+  overlay(){ ctx.fillStyle = "rgba(4,12,7,.8)"; ctx.fillRect(0,0,W,H); },
+  bigBtn(y, text, color){
+    const g = ctx.createLinearGradient(W/2-130,y,W/2+130,y+64);
+    g.addColorStop(0, color[0]); g.addColorStop(1, color[1]);
+    ctx.fillStyle = g;
+    this.roundRect(W/2-130, y, 260, 64, 16); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.font = "bold 26px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text, W/2, y+42);
+  },
+  drawMenu(){
+    const t = performance.now()/1000;
+    // 装饰珠链弧线
+    for(let i=0;i<9;i++){
+      const a = t*0.6 + i*0.5;
+      drawBall(ctx, W/2 + Math.cos(a)*150, 250 + Math.sin(a)*56, i%COLORS.length, 18, .9);
+    }
+    // 大青蛙
+    ctx.save(); ctx.translate(W/2, 260); ctx.scale(1.5,1.5);
+    const bg2 = ctx.createRadialGradient(-6,-10,4, 0,0,34);
+    bg2.addColorStop(0,"#8ede6a"); bg2.addColorStop(0.7,"#4caf50"); bg2.addColorStop(1,"#256d29");
+    ctx.fillStyle = bg2;
+    ctx.beginPath(); ctx.ellipse(0, 4, 26, 30, 0, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#d8f3c9";
+    ctx.beginPath(); ctx.ellipse(0, 12, 14, 16, 0, 0, Math.PI*2); ctx.fill();
+    for(const s of [-1,1]){
+      ctx.fillStyle = "#3f8f3f";
+      ctx.beginPath(); ctx.arc(s*14, -22, 9, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.arc(s*14, -23, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#222";
+      ctx.beginPath(); ctx.arc(s*14 + Math.sin(t*1.5)*2, -25, 2.8, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.fillStyle = "#fff"; ctx.textAlign="center";
+    ctx.font = "bold 64px sans-serif";
+    ctx.shadowColor = "#7bff9e"; ctx.shadowBlur = 24;
+    ctx.fillText("青蛙祖玛", W/2, 400);
+    ctx.shadowBlur = 0;
+    ctx.font = "18px sans-serif"; ctx.fillStyle = "#9fd8a8";
+    ctx.fillText("吐珠入链 · 三连同色消除 · 别让珠链滚进骷髅洞", W/2, 442);
+
+    this.bigBtn(520, "关卡模式", ["#38b000","#1d6d00"]);
+    this.bigBtn(610, "无尽模式", ["#5b8bff","#2a3f9f"]);
+
+    ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "15px sans-serif";
+    ctx.fillText("PC: A/D或←→瞄准  J/回车/K/空格发射  L换珠  U/P暂停", W/2, 740);
+    ctx.fillText("I 音乐开关  O 音效开关  |  也可鼠标点击瞄准松手发射", W/2, 768);
+    ctx.fillText("手机: 左摇杆瞄准 · 右侧按钮发射/换珠 · 点屏瞄准松手发射", W/2, 796);
+    ctx.fillStyle = "rgba(255,255,255,.35)";
+    ctx.fillText("最高分: " + this.best, W/2, 850);
+  },
+  drawPaused(){
+    this.overlay();
+    ctx.fillStyle="#fff"; ctx.font="bold 52px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停", W/2, 400);
+    this.bigBtn(470, "继续游戏", ["#38b000","#1d6d00"]);
+    this.bigBtn(550, "重新开始", ["#ff8500","#cc5803"]);
+    this.bigBtn(630, "返回菜单", ["#5b8bff","#2a3f9f"]);
+  },
+  drawLevelClear(){
+    this.overlay();
+    ctx.fillStyle="#ffd60a"; ctx.font="bold 52px sans-serif"; ctx.textAlign="center";
+    ctx.shadowColor="#ffd60a"; ctx.shadowBlur=20;
+    ctx.fillText("过关!", W/2, 400);
+    ctx.shadowBlur=0;
+    ctx.fillStyle="#fff"; ctx.font="24px sans-serif";
+    ctx.fillText("分数: " + this.score, W/2, 470);
+    this.bigBtn(560, "下一关 ▶", ["#38b000","#1d6d00"]);
+  },
+  drawGameOver(win){
+    this.overlay();
+    ctx.textAlign="center";
+    if(win){
+      ctx.fillStyle="#ffd60a"; ctx.font="bold 50px sans-serif";
+      ctx.shadowColor="#ffd60a"; ctx.shadowBlur=22;
+      ctx.fillText("恭喜通关全部10关!", W/2, 390);
+      ctx.shadowBlur=0;
+    }else{
+      ctx.fillStyle="#ff4d6d"; ctx.font="bold 56px sans-serif";
+      ctx.fillText("游戏结束", W/2, 390);
+    }
+    ctx.fillStyle="#fff"; ctx.font="26px sans-serif";
+    ctx.fillText("最终分数: " + this.score, W/2, 460);
+    ctx.fillStyle="#9fd8a8"; ctx.font="18px sans-serif";
+    ctx.fillText("最高分: " + this.best, W/2, 495);
+    this.bigBtn(560, "一键重新开始", ["#ff6b8b","#c9184a"]);
+    this.bigBtn(650, "返回菜单", ["#5b8bff","#2a3f9f"]);
+  }
+};
+
+/* ---------------- 10. 主循环 ---------------- */
+let lastT = performance.now();
+function mainLoop(now){
+  let dt = (now - lastT) / 1000;
+  lastT = now;
+  dt = Math.min(dt, 0.05); // 防切后台大步长
+  Game.update(dt);
+  Game.draw();
+  requestAnimationFrame(mainLoop);
+}
+Game.init();
+requestAnimationFrame(mainLoop);
+</script>
+</body>
+</html>

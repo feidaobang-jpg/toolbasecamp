@@ -101,8 +101,10 @@
 
             var headerEl = document.createElement('h3');
             headerEl.className = 'hub-group-head';
-            headerEl.textContent = tr(group.titleKey);
-            sectionEl.appendChild(headerEl);
+            if (groups.length > 1) {
+                headerEl.textContent = tr(group.titleKey);
+                sectionEl.appendChild(headerEl);
+            }
 
             var gridEl = document.createElement('div');
             gridEl.className = 'hub-tools-grid';

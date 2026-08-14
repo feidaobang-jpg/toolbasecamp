@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Fly Bird</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#0b1c2c;overflow:hidden;
+    -webkit-user-select:none;user-select:none;touch-action:none;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;background:#0b1c2c;}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<script>
+"use strict";
+/* =====================================================================
+ * Fly Bird · 单文件 HTML5 Canvas 飞翔小鸟
+ * ---------------------------------------------------------------------
+ * 玩法: 点按/按键拍翅膀穿越管道缝隙, 吃金币加分,
+ *       关卡模式每关穿越指定管道数(缝隙渐窄速度渐快); 无尽模式拼纪录。
+ * 结构分层:
+ *   1. 常量与工具  2. 视图  3. 音频  4. 输入  5. 粒子/飘字
+ *   6. 管道与金币 (Pipes)  7. 小鸟 (Bird)  8. 游戏主逻辑 (Game)  9. 主循环
+ * ===================================================================== */
+
+/* ---------------- 1. 常量与工具 ---------------- */
+const W=540, H=960;
+const GROUND_H=110;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const irand=(a,b)=>Math.floor(rand(a,b+1));
+
+/* ---------------- 2. 视图 ---------------- */
+const canvas=document.getElementById("cv");
+const ctx=canvas.getContext("2d");
+const View={
+  scale:1,
+  resize(){
+    const s=Math.min(window.innerWidth/W, window.innerHeight/H);
+    this.scale=s;
+    canvas.style.width=(W*s)+"px"; canvas.style.height=(H*s)+"px";
+  },
+  toGame(cx,cy){
+    const r=canvas.getBoundingClientRect();
+    return [(cx-r.left)/this.scale,(cy-r.top)/this.scale];
+  }
+};
+window.addEventListener("resize",()=>View.resize());
+View.resize();
+
+/* ---------------- 3. 音频 ---------------- */
+const AudioSys={
+  ctx:null, musicOn:true, sfxOn:true, bgmTimer:null,
+  init(){
+    if(this.ctx) return;
+    this.ctx=new (window.AudioContext||window.webkitAudioContext)();
+    this.startBGM();
+  },
+  resume(){ if(this.ctx&&this.ctx.state==="suspended") this.ctx.resume(); },
+  tone(f,d,ty,v,when,slide){
+    if(!this.ctx) return;
+    const t=when!==undefined?when:this.ctx.currentTime;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.type=ty||"square"; o.frequency.setValueAtTime(f,t);
+    if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide,1),t+d);
+    g.gain.setValueAtTime(v||0.2,t);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t+d+0.02);
+  },
+  noise(d,v){
+    if(!this.ctx) return;
+    const t=this.ctx.currentTime,len=Math.floor(this.ctx.sampleRate*d);
+    const buf=this.ctx.createBuffer(1,len,this.ctx.sampleRate),dd=buf.getChannelData(0);
+    for(let i=0;i<len;i++) dd[i]=(Math.random()*2-1)*(1-i/len);
+    const s=this.ctx.createBufferSource(); s.buffer=buf;
+    const g=this.ctx.createGain(); g.gain.value=v||0.2;
+    s.connect(g); g.connect(this.ctx.destination); s.start(t);
+  },
+  sfx(fn){ if(this.sfxOn&&this.ctx) fn(); },
+  flap(){ this.sfx(()=>this.tone(500,.1,"square",.12,undefined,900)); },
+  pass(){ this.sfx(()=>{ this.tone(880,.08,"square",.13); this.tone(1175,.12,"square",.12,this.ctx.currentTime+0.06); }); },
+  coin(){ this.sfx(()=>{ this.tone(988,.06,"square",.12); this.tone(1319,.12,"square",.12,this.ctx.currentTime+0.05); }); },
+  crash(){ this.sfx(()=>{ this.noise(.3,.3); this.tone(120,.3,"sawtooth",.25,undefined,40); }); },
+  win(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [523,659,784,1046,1318].forEach((f,i)=>this.tone(f,.25,"triangle",.2,t+i*0.11)); }); },
+  lose(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [392,330,262,196].forEach((f,i)=>this.tone(f,.3,"sawtooth",.18,t+i*0.15)); }); },
+  startBGM(){
+    if(this.bgmTimer) return;
+    const mel=[392,440,494,587, 494,440,392,330, 349,392,440,523, 494,440,392,330];
+    let i=0;
+    this.bgmTimer=setInterval(()=>{
+      if(!this.musicOn||!this.ctx) return;
+      this.tone(mel[i%mel.length],.16,"triangle",.06);
+      if(i%4===0) this.tone(mel[i%mel.length]/2,.32,"sine",.05);
+      i++;
+    },230);
+  }
+};
+
+/* ---------------- 4. 输入 ---------------- */
+const Input={
+  keys:{}, flapPressed:false, pausePressed:false,
+  init(){
+    window.addEventListener("keydown",e=>{
+      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      const k=e.key.toLowerCase();
+      if(this.keys[k]) return;
+      this.keys[k]=true;
+      AudioSys.init(); AudioSys.resume();
+      // 拍翅: 跳跃键+攻击键+方向上 全部支持
+      if(k==="k"||k===" "||k==="j"||k==="enter"||k==="w"||k==="arrowup") this.flapPressed=true;
+      if(k==="u"||k==="p"||k==="escape") this.pausePressed=true;
+      if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
+      if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
+    });
+    window.addEventListener("keyup",e=>{ this.keys[e.key.toLowerCase()]=false; });
+    const down=(x,y)=>{ AudioSys.init(); AudioSys.resume(); Game.onPointerDown(x,y); };
+    canvas.addEventListener("mousedown",e=>{ const[x,y]=View.toGame(e.clientX,e.clientY); down(x,y); });
+    canvas.addEventListener("touchstart",e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const[x,y]=View.toGame(t.clientX,t.clientY); down(x,y); } },{passive:false});
+  },
+  consume(){ this.flapPressed=false; this.pausePressed=false; }
+};
+
+/* ---------------- 5. 粒子与飘字 ---------------- */
+const Particles={
+  list:[],
+  burst(x,y,color,n,sp){
+    for(let i=0;i<n;i++){
+      const a=rand(0,Math.PI*2),v=rand(sp*0.3,sp);
+      this.list.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:rand(.3,.7),T:.7,r:rand(1.5,4.5),color});
+    }
+  },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i];
+      p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=300*dt; p.t-=dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    for(const p of this.list){
+      ctx.globalAlpha=Math.max(p.t/p.T,0);
+      ctx.fillStyle=p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+};
+const Popups={
+  list:[],
+  add(x,y,text,color){ this.list.push({x,y,text,color,t:1}); },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i]; p.y-=36*dt; p.t-=dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    ctx.textAlign="center"; ctx.font="bold 20px sans-serif";
+    for(const p of this.list){
+      ctx.globalAlpha=Math.max(Math.min(p.t,1),0);
+      ctx.fillStyle=p.color; ctx.fillText(p.text,p.x,p.y);
+    }
+    ctx.globalAlpha=1;
+  }
+};
+
+/* ---------------- 6. 管道与金币 ---------------- */
+const Pipes={
+  list:[], coins:[], spawnX:0,
+  reset(){ this.list=[]; this.coins=[]; this.spawnX=W+80; },
+  diff(){
+    const lv=Game.mode==="endless" ? 1+Game.passed/8 : Game.level;
+    return {
+      gap:   clamp(250-lv*9, 168, 250),     // 缝隙
+      speed: clamp(150+lv*10, 150, 260),    // 移动速度
+      dist:  clamp(320-lv*6, 250, 320)      // 管道水平间距
+    };
+  },
+  update(dt){
+    const d=this.diff();
+    // 生成
+    this.spawnX-=d.speed*dt;
+    if(this.spawnX<=W+40){
+      const gapY=rand(160+d.gap/2, H-GROUND_H-120-d.gap/2);
+      this.list.push({x:W+60, gapY, gap:d.gap, passed:false, w:78});
+      // 30%概率在缝隙中放金币
+      if(Math.random()<0.45)
+        this.coins.push({x:W+60+39, y:gapY+rand(-d.gap*0.25,d.gap*0.25), t:0, taken:false});
+      this.spawnX=W+60+d.dist;
+    }
+    // 移动
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i];
+      p.x-=d.speed*dt;
+      // 计分
+      if(!p.passed && p.x+p.w<Bird.x-Bird.r){
+        p.passed=true;
+        Game.passed++; Game.addScore(10);
+        AudioSys.pass();
+        Popups.add(Bird.x,Bird.y-40,"+10","#fff");
+      }
+      if(p.x+p.w<-20) this.list.splice(i,1);
+    }
+    for(let i=this.coins.length-1;i>=0;i--){
+      const c=this.coins[i];
+      c.x-=d.speed*dt; c.t+=dt;
+      if(!c.taken && Math.hypot(c.x-Bird.x,c.y-Bird.y)<Bird.r+14){
+        c.taken=true;
+        Game.addScore(5);
+        AudioSys.coin();
+        Popups.add(c.x,c.y-16,"+5","#ffd60a");
+        Particles.burst(c.x,c.y,"#ffd60a",8,160);
+        this.coins.splice(i,1);
+        continue;
+      }
+      if(c.x<-30) this.coins.splice(i,1);
+    }
+  },
+  // 小鸟碰撞检测
+  hit(bx,by,br){
+    for(const p of this.list){
+      if(bx+br>p.x && bx-br<p.x+p.w){
+        if(by-br<p.gapY-p.gap/2 || by+br>p.gapY+p.gap/2) return true;
+      }
+    }
+    return false;
+  },
+  draw(ctx){
+    for(const p of this.list){
+      this.drawPipe(ctx,p.x,0,p.w,p.gapY-p.gap/2,true);
+      this.drawPipe(ctx,p.x,p.gapY+p.gap/2,p.w,H-GROUND_H-(p.gapY+p.gap/2),false);
+    }
+    for(const c of this.coins){
+      const bob=Math.sin(c.t*6)*4;
+      const g=ctx.createRadialGradient(c.x-3,c.y+bob-3,2,c.x,c.y+bob,12);
+      g.addColorStop(0,"#fff3c4"); g.addColorStop(0.5,"#ffd60a"); g.addColorStop(1,"#b8860b");
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(c.x,c.y+bob,11,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle="#8a6d00"; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(c.x,c.y+bob,7,0,Math.PI*2); ctx.stroke();
+    }
+  },
+  drawPipe(ctx,x,y,w,h,isTop){
+    if(h<=0) return;
+    const g=ctx.createLinearGradient(x,0,x+w,0);
+    g.addColorStop(0,"#1e6b30"); g.addColorStop(0.3,"#4dbd63"); g.addColorStop(0.7,"#2f9e48"); g.addColorStop(1,"#175424");
+    ctx.fillStyle=g;
+    ctx.fillRect(x,y,w,h);
+    // 管口
+    const capH=30, capY=isTop? y+h-capH : y;
+    const cg=ctx.createLinearGradient(x-5,0,x+w+5,0);
+    cg.addColorStop(0,"#25813a"); cg.addColorStop(0.3,"#5fd678"); cg.addColorStop(0.7,"#37b354"); cg.addColorStop(1,"#1b622b");
+    ctx.fillStyle=cg;
+    ctx.beginPath(); ctx.roundRect(x-6,capY,w+12,capH,6); ctx.fill();
+    // 高光
+    ctx.fillStyle="rgba(255,255,255,.18)";
+    ctx.fillRect(x+8,y,10,h);
+  }
+};
+
+/* ---------------- 7. 小鸟 ---------------- */
+const Bird={
+  x:170, y:H/2, vy:0, r:17, rot:0, flapAnim:0, invinc:0, dead:false,
+  reset(){ this.y=H/2; this.vy=0; this.rot=0; this.invinc=0; this.dead=false; },
+  flap(){
+    if(this.dead) return;
+    this.vy=-380;
+    this.flapAnim=0.22;
+    AudioSys.flap();
+    Particles.burst(this.x-14,this.y+8,"rgba(255,255,255,.8)",4,90);
+  },
+  update(dt){
+    if(this.invinc>0) this.invinc-=dt;
+    if(this.flapAnim>0) this.flapAnim-=dt;
+    this.vy+=1150*dt;
+    this.vy=Math.min(this.vy,640);
+    this.y+=this.vy*dt;
+    this.rot += (clamp(this.vy/640,-0.5,1)*1.15 - this.rot)*Math.min(dt*10,1);
+    // 顶部限制
+    if(this.y<this.r){ this.y=this.r; this.vy=0; }
+    // 碰撞: 地面 / 管道
+    if(this.invinc<=0 && !this.dead){
+      if(this.y+this.r>=H-GROUND_H){ this.y=H-GROUND_H-this.r; Game.onHit("摔到地上"); }
+      else if(Pipes.hit(this.x,this.y,this.r-2)) Game.onHit("撞上管道");
+    }else if(this.y+this.r>H-GROUND_H){ this.y=H-GROUND_H-this.r; this.vy=0; }
+  },
+  draw(ctx){
+    const x=this.x,y=this.y;
+    if(this.invinc>0 && Math.floor(performance.now()/80)%2) ctx.globalAlpha=0.45;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(this.rot);
+    // 身体
+    const g=ctx.createRadialGradient(-4,-5,3,0,0,18);
+    g.addColorStop(0,"#ffe89e"); g.addColorStop(0.55,"#ffc93c"); g.addColorStop(1,"#e09f00");
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.ellipse(0,0,18,15,0,0,Math.PI*2); ctx.fill();
+    // 翅膀(拍动)
+    const wingUp=this.flapAnim>0;
+    ctx.fillStyle="#ffb703";
+    ctx.beginPath();
+    if(wingUp) ctx.ellipse(-4,-6,10,7,-0.7,0,Math.PI*2);
+    else ctx.ellipse(-4,5,10,7,0.5,0,Math.PI*2);
+    ctx.fill();
+    // 肚皮
+    ctx.fillStyle="#fff3d6";
+    ctx.beginPath(); ctx.ellipse(2,6,10,7,0,0,Math.PI*2); ctx.fill();
+    // 眼睛
+    ctx.fillStyle="#fff";
+    ctx.beginPath(); ctx.arc(8,-5,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#222";
+    ctx.beginPath(); ctx.arc(10,-5,3,0,Math.PI*2); ctx.fill();
+    // 嘴
+    ctx.fillStyle="#ff6d00";
+    ctx.beginPath(); ctx.moveTo(15,0); ctx.lineTo(26,2); ctx.lineTo(15,7); ctx.fill();
+    ctx.restore();
+    ctx.globalAlpha=1;
+  }
+};
+
+/* ---------------- 8. 游戏主逻辑 ---------------- */
+const Game={
+  state:"menu", mode:"level",
+  level:1, score:0, best:0, lives:3,
+  passed:0, targetPipes:0,
+  groundOff:0, shake:0, msgText:"", msgTimer:0, endWhy:"",
+  clouds:[], stars:[],
+  init(){
+    this.best=+(localStorage.getItem("flybird_best")||0);
+    for(let i=0;i<5;i++)
+      this.clouds.push({x:rand(0,W),y:rand(60,300),w:rand(60,130),sp:rand(10,24)});
+    Input.init();
+  },
+  startGame(mode){
+    this.mode=mode; this.level=1; this.score=0;
+    this.startLevel();
+    AudioSys.init(); AudioSys.resume();
+  },
+  startLevel(){
+    this.lives=3; this.passed=0;
+    this.targetPipes = this.mode==="endless" ? Infinity : 8+(this.level-1)*3;
+    Bird.reset(); Pipes.reset();
+    Particles.list=[]; Popups.list=[];
+    this.state="ready";
+    this.showMsg(this.mode==="level"
+      ? ("第 "+this.level+" 关 · 穿越 "+this.targetPipes+" 根管道")
+      : "无尽模式 · 挑战纪录!", 2);
+  },
+  showMsg(t,d){ this.msgText=t; this.msgTimer=d; },
+  addScore(n){ this.score+=n; },
+  saveBest(){ if(this.score>this.best){ this.best=this.score; localStorage.setItem("flybird_best",this.best); } },
+  onHit(why){
+    AudioSys.crash();
+    this.shake=0.4;
+    Particles.burst(Bird.x,Bird.y,"#ffc93c",16,260);
+    this.lives--;
+    if(this.lives<=0){
+      Bird.dead=true;
+      this.endWhy=why;
+      this.saveBest(); AudioSys.lose();
+      this.state="gameover";
+    }else{
+      // 复活: 回到中间高度并短暂无敌
+      Bird.y=H/2; Bird.vy=0; Bird.invinc=2;
+      Popups.add(Bird.x,Bird.y-46,why+" -1生命","#ff4d6d");
+    }
+  },
+  onPointerDown(x,y){
+    if(this.state==="menu"){
+      if(this.hitRect(x,y,W/2-130,520,260,64)) this.startGame("level");
+      else if(this.hitRect(x,y,W/2-130,610,260,64)) this.startGame("endless");
+      return;
+    }
+    if(this.state==="paused"){
+      if(this.hitRect(x,y,W/2-130,470,260,60)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,550,260,60)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,630,260,60)) this.state="menu";
+      return;
+    }
+    if(this.state==="gameover"||this.state==="win"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,650,260,64)) this.state="menu";
+      return;
+    }
+    if(this.state==="levelclear"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)){ this.level++; this.startLevel(); }
+      return;
+    }
+    if(this.state==="ready"){ this.state="playing"; Bird.flap(); return; }
+    // playing: 暂停按钮 or 拍翅
+    if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
+    Bird.flap();
+  },
+  hitRect(x,y,rx,ry,rw,rh){ return x>=rx&&x<=rx+rw&&y>=ry&&y<=ry+rh; },
+  update(dt){
+    for(const c of this.clouds){ c.x-=c.sp*dt; if(c.x<-c.w) c.x=W+c.w; }
+    if(this.msgTimer>0) this.msgTimer-=dt;
+    if(this.shake>0) this.shake-=dt;
+    Particles.update(dt); Popups.update(dt);
+    if(this.state==="ready"){
+      // 悬停待机
+      Bird.y=H/2+Math.sin(performance.now()/300)*12;
+      if(Input.flapPressed){ this.state="playing"; Bird.flap(); }
+      Input.consume(); return;
+    }
+    if(this.state!=="playing"){
+      if(Input.pausePressed&&this.state==="paused") this.state="playing";
+      else if(Input.flapPressed){
+        if(this.state==="menu") this.startGame("level");
+        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
+        else if(this.state==="gameover"||this.state==="win") this.startGame(this.mode);
+      }
+      Input.consume(); return;
+    }
+    if(Input.pausePressed){ this.state="paused"; Input.consume(); return; }
+    if(Input.flapPressed) Bird.flap();
+    this.groundOff=(this.groundOff+Pipes.diff().speed*dt)%40;
+    Bird.update(dt);
+    Pipes.update(dt);
+    // 过关判定
+    if(this.mode==="level" && this.passed>=this.targetPipes){
+      this.addScore(50);
+      this.saveBest(); AudioSys.win();
+      this.state = this.level>=10 ? "win" : "levelclear";
+    }
+    Input.consume();
+  },
+  draw(){
+    ctx.save();
+    if(this.shake>0) ctx.translate(rand(-6,6)*this.shake,rand(-6,6)*this.shake);
+    // 天空(随关卡渐变黄昏)
+    const lv=this.mode==="level"?this.level:1+Math.floor(this.passed/10);
+    const dusk=clamp((lv-1)/9,0,1);
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0, dusk<0.5 ? "#4fc3f7" : "#7b5ea7");
+    g.addColorStop(0.6, dusk<0.5 ? "#b3e5fc" : "#ff9e7d");
+    g.addColorStop(1,"#ffe0b2");
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // 太阳/夕阳
+    const sy=140+dusk*120;
+    const sg=ctx.createRadialGradient(430,sy,10,430,sy,60);
+    sg.addColorStop(0,"rgba(255,245,180,1)"); sg.addColorStop(0.5,"rgba(255,210,90,.5)"); sg.addColorStop(1,"transparent");
+    ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(430,sy,60,0,Math.PI*2); ctx.fill();
+    // 云
+    ctx.fillStyle="rgba(255,255,255,.8)";
+    for(const c of this.clouds){
+      ctx.beginPath();
+      ctx.ellipse(c.x,c.y,c.w*0.5,c.w*0.17,0,0,Math.PI*2);
+      ctx.ellipse(c.x-c.w*0.24,c.y+5,c.w*0.3,c.w*0.12,0,0,Math.PI*2);
+      ctx.ellipse(c.x+c.w*0.26,c.y+4,c.w*0.3,c.w*0.12,0,0,Math.PI*2);
+      ctx.fill();
+    }
+    // 远景城市剪影
+    ctx.fillStyle="rgba(90,110,140,.35)";
+    for(let i=0;i<9;i++){
+      const bw=60, bh=60+((i*53)%110);
+      ctx.fillRect(i*bw,H-GROUND_H-bh,bw-8,bh);
+    }
+    if(this.state!=="menu"){
+      Pipes.draw(ctx);
+      Bird.draw(ctx);
+      Particles.draw(ctx);
+      Popups.draw(ctx);
+    }
+    // 地面
+    const gg=ctx.createLinearGradient(0,H-GROUND_H,0,H);
+    gg.addColorStop(0,"#8bc34a"); gg.addColorStop(0.18,"#689f38"); gg.addColorStop(1,"#33691e");
+    ctx.fillStyle=gg; ctx.fillRect(0,H-GROUND_H,W,GROUND_H);
+    ctx.fillStyle="rgba(255,255,255,.25)";
+    for(let x=-40+ (40-this.groundOff);x<W+40;x+=40){
+      ctx.beginPath();
+      ctx.moveTo(x,H-GROUND_H); ctx.lineTo(x+20,H-GROUND_H); ctx.lineTo(x+10,H-GROUND_H+12); ctx.fill();
+    }
+    if(this.state==="menu"){ this.drawMenu(); ctx.restore(); return; }
+    this.drawHUD();
+    if(this.msgTimer>0){
+      ctx.globalAlpha=Math.min(this.msgTimer,1);
+      ctx.fillStyle="#fff"; ctx.font="bold 30px sans-serif"; ctx.textAlign="center";
+      ctx.strokeStyle="rgba(0,0,0,.5)"; ctx.lineWidth=5;
+      ctx.strokeText(this.msgText,W/2,H*0.3);
+      ctx.fillText(this.msgText,W/2,H*0.3);
+      ctx.globalAlpha=1;
+    }
+    if(this.state==="ready"){
+      ctx.fillStyle="rgba(0,0,0,.35)";
+      ctx.beginPath(); ctx.roundRect(W/2-150,H*0.56,300,54,12); ctx.fill();
+      ctx.fillStyle="#fff"; ctx.font="bold 22px sans-serif"; ctx.textAlign="center";
+      ctx.fillText("点击屏幕 / 按K·空格 起飞",W/2,H*0.56+35);
+    }
+    if(this.state==="paused") this.drawPaused();
+    if(this.state==="gameover") this.drawGameover();
+    if(this.state==="levelclear") this.drawClear(false);
+    if(this.state==="win") this.drawClear(true);
+    ctx.restore();
+  },
+  drawHUD(){
+    ctx.fillStyle="rgba(0,0,0,.32)"; ctx.fillRect(0,0,W,64);
+    ctx.textAlign="left"; ctx.fillStyle="#ffd60a"; ctx.font="bold 22px sans-serif";
+    ctx.fillText("分数 "+this.score,14,30);
+    ctx.font="12px sans-serif"; ctx.fillStyle="#e8f4ff";
+    ctx.fillText("最高 "+this.best,14,50);
+    ctx.textAlign="center"; ctx.fillStyle="#fff"; ctx.font="bold 18px sans-serif";
+    ctx.fillText(this.mode==="level"
+      ? ("第"+this.level+"关 · 管道 "+this.passed+"/"+this.targetPipes)
+      : ("无尽 · 已过 "+this.passed+" 管"), W/2, 28);
+    // 生命
+    ctx.font="20px sans-serif";
+    for(let i=0;i<3;i++){
+      ctx.fillStyle=i<this.lives?"#ff4d6d":"rgba(255,255,255,.25)";
+      ctx.fillText("♥",W/2-30+i*30,54);
+    }
+    // 暂停
+    ctx.fillStyle="rgba(255,255,255,.25)";
+    ctx.beginPath(); ctx.roundRect(W-64,10,54,44,10); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.fillRect(W-64+17,21,6,22); ctx.fillRect(W-64+31,21,6,22);
+  },
+  overlay(){ ctx.fillStyle="rgba(10,16,30,.7)"; ctx.fillRect(0,0,W,H); },
+  bigBtn(y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+64);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,64,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 26px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,W/2,y+42);
+  },
+  midBtn(y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+60);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,60,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 24px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,W/2,y+40);
+  },
+  drawMenu(){
+    ctx.fillStyle="#fff"; ctx.font="bold 72px sans-serif"; ctx.textAlign="center";
+    ctx.strokeStyle="rgba(0,60,110,.55)"; ctx.lineWidth=9;
+    ctx.strokeText("Fly Bird",W/2,280); ctx.fillText("Fly Bird",W/2,280);
+    ctx.font="18px sans-serif"; ctx.fillStyle="#083d5c";
+    ctx.fillText("拍翅飞行 · 穿越管道 · 吃金币",W/2,325);
+    // 装饰小鸟
+    const t=performance.now()/1000;
+    ctx.save(); ctx.translate(W/2,420+Math.sin(t*3)*10); ctx.scale(2,2);
+    const bg2=ctx.createRadialGradient(-4,-5,3,0,0,18);
+    bg2.addColorStop(0,"#ffe89e"); bg2.addColorStop(0.55,"#ffc93c"); bg2.addColorStop(1,"#e09f00");
+    ctx.fillStyle=bg2;
+    ctx.beginPath(); ctx.ellipse(0,0,18,15,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#ffb703";
+    ctx.beginPath(); ctx.ellipse(-4,Math.sin(t*10)>0?-6:5,10,7,-0.4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#fff3d6";
+    ctx.beginPath(); ctx.ellipse(2,6,10,7,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#fff";
+    ctx.beginPath(); ctx.arc(8,-5,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#222";
+    ctx.beginPath(); ctx.arc(10,-5,3,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle="#ff6d00";
+    ctx.beginPath(); ctx.moveTo(15,0); ctx.lineTo(26,2); ctx.lineTo(15,7); ctx.fill();
+    ctx.restore();
+    this.bigBtn(520,"关卡模式",["#ff9e5e","#d1495b"]);
+    this.bigBtn(610,"无尽模式",["#5b8bff","#2a3f9f"]);
+    ctx.fillStyle="#0b3550"; ctx.font="14px sans-serif";
+    ctx.fillText("PC: K/空格/J/回车/W/↑ 拍翅  U/P暂停  I/O音乐音效",W/2,718);
+    ctx.fillText("手机: 点按屏幕任意位置拍翅",W/2,742);
+    ctx.fillStyle="#0b3550"; ctx.fillText("最高分: "+this.best,W/2,786);
+  },
+  drawPaused(){
+    this.overlay();
+    ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停",W/2,380);
+    this.midBtn(470,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(550,"重新开始",["#ff9e5e","#d1495b"]);
+    this.midBtn(630,"返回菜单",["#5b8bff","#2a3f9f"]);
+  },
+  drawGameover(){
+    this.overlay();
+    ctx.fillStyle="#ff4d6d"; ctx.font="bold 48px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("游戏结束",W/2,370);
+    ctx.fillStyle="#fff"; ctx.font="19px sans-serif";
+    if(this.endWhy) ctx.fillText(this.endWhy,W/2,418);
+    ctx.fillText("穿越 "+this.passed+" 管道 · 分数 "+this.score,W/2,452);
+    ctx.fillStyle="#ffd60a"; ctx.font="16px sans-serif";
+    ctx.fillText("最高分: "+this.best,W/2,486);
+    this.bigBtn(560,"一键重新开始",["#ff6b8b","#c9184a"]);
+    this.bigBtn(650,"返回菜单",["#5b8bff","#2a3f9f"]);
+  },
+  drawClear(final){
+    this.overlay();
+    ctx.fillStyle="#95d5b2"; ctx.font="bold 46px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(final?"全部通关!":"过关!",W/2,380);
+    ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
+    ctx.fillText("分数: "+this.score,W/2,430);
+    if(final){
+      this.bigBtn(560,"再玩一次",["#3f8e50","#1e4d2b"]);
+      this.bigBtn(650,"返回菜单",["#5b8bff","#2a3f9f"]);
+    }else{
+      this.bigBtn(560,"下一关",["#3f8e50","#1e4d2b"]);
+      ctx.fillStyle="#e8f4ff"; ctx.font="14px sans-serif";
+      ctx.fillText("(按 K/空格 亦可继续)",W/2,660);
+    }
+  }
+};
+
+/* ---------------- 9. 主循环 ---------------- */
+let lastT=performance.now();
+function mainLoop(now){
+  let dt=(now-lastT)/1000;
+  lastT=now;
+  dt=Math.min(dt,0.05);
+  Game.update(dt);
+  Game.draw();
+  requestAnimationFrame(mainLoop);
+}
+Game.init();
+requestAnimationFrame(mainLoop);
+</script>
+</body>
+</html>

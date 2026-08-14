@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>暴力摩托</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#101018;overflow:hidden;
+    -webkit-user-select:none;user-select:none;touch-action:none;}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;background:#101018;}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<script>
+"use strict";
+/* =====================================================================
+ * 暴力摩托 · 单文件 HTML5 Canvas 竞速格斗游戏
+ * ---------------------------------------------------------------------
+ * 玩法: 纵版公路竞速, 加减速+左右变道, 贴近敌车出拳把对手打翻,
+ *       躲避汽车/路障, 限时抵达终点过关; 无尽模式拼里程。
+ * 结构分层:
+ *   1. 常量与工具  2. 视图  3. 音频  4. 输入  5. 粒子/飘字
+ *   6. 道路 (Road)  7. 玩家 (Player)  8. 敌人与障碍 (Traffic)
+ *   9. 游戏主逻辑 (Game)  10. 主循环
+ * ===================================================================== */
+
+/* ---------------- 1. 常量与工具 ---------------- */
+const W=540, H=960;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const irand=(a,b)=>Math.floor(rand(a,b+1));
+const ROAD_L=70, ROAD_R=W-70;   // 路面左右边界
+
+/* ---------------- 2. 视图 ---------------- */
+const canvas=document.getElementById("cv");
+const ctx=canvas.getContext("2d");
+const View={
+  scale:1,
+  resize(){
+    const s=Math.min(window.innerWidth/W, window.innerHeight/H);
+    this.scale=s;
+    canvas.style.width=(W*s)+"px"; canvas.style.height=(H*s)+"px";
+  },
+  toGame(cx,cy){
+    const r=canvas.getBoundingClientRect();
+    return [(cx-r.left)/this.scale,(cy-r.top)/this.scale];
+  }
+};
+window.addEventListener("resize",()=>View.resize());
+View.resize();
+
+/* ---------------- 3. 音频 ---------------- */
+const AudioSys={
+  ctx:null, musicOn:true, sfxOn:true, bgmTimer:null, engine:null, engineGain:null,
+  init(){
+    if(this.ctx) return;
+    this.ctx=new (window.AudioContext||window.webkitAudioContext)();
+    // 持续引擎声
+    this.engine=this.ctx.createOscillator();
+    this.engine.type="sawtooth";
+    this.engineGain=this.ctx.createGain();
+    this.engineGain.gain.value=0;
+    this.engine.connect(this.engineGain);
+    this.engineGain.connect(this.ctx.destination);
+    this.engine.start();
+    this.startBGM();
+  },
+  resume(){ if(this.ctx&&this.ctx.state==="suspended") this.ctx.resume(); },
+  setEngine(speed,on){
+    if(!this.ctx) return;
+    const v = on&&this.sfxOn ? 0.035 : 0;
+    this.engineGain.gain.setTargetAtTime(v,this.ctx.currentTime,0.1);
+    this.engine.frequency.setTargetAtTime(40+speed*0.28,this.ctx.currentTime,0.08);
+  },
+  tone(f,d,ty,v,when,slide){
+    if(!this.ctx) return;
+    const t=when!==undefined?when:this.ctx.currentTime;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.type=ty||"square"; o.frequency.setValueAtTime(f,t);
+    if(slide) o.frequency.exponentialRampToValueAtTime(Math.max(slide,1),t+d);
+    g.gain.setValueAtTime(v||0.2,t);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g); g.connect(this.ctx.destination); o.start(t); o.stop(t+d+0.02);
+  },
+  noise(d,v){
+    if(!this.ctx) return;
+    const t=this.ctx.currentTime,len=Math.floor(this.ctx.sampleRate*d);
+    const buf=this.ctx.createBuffer(1,len,this.ctx.sampleRate),dd=buf.getChannelData(0);
+    for(let i=0;i<len;i++) dd[i]=(Math.random()*2-1)*(1-i/len);
+    const s=this.ctx.createBufferSource(); s.buffer=buf;
+    const g=this.ctx.createGain(); g.gain.value=v||0.2;
+    s.connect(g); g.connect(this.ctx.destination); s.start(t);
+  },
+  sfx(fn){ if(this.sfxOn&&this.ctx) fn(); },
+  punch(){ this.sfx(()=>{ this.noise(.08,.2); this.tone(150,.1,"square",.2,undefined,60); }); },
+  hitEnemy(){ this.sfx(()=>{ this.noise(.12,.25); this.tone(400,.12,"sawtooth",.2,undefined,100); }); },
+  crash(){ this.sfx(()=>{ this.noise(.35,.3); this.tone(80,.35,"sine",.3,undefined,30); }); },
+  hurt(){ this.sfx(()=>this.tone(200,.18,"sawtooth",.2,undefined,80)); },
+  pickup(){ this.sfx(()=>{ this.tone(880,.08,"square",.14); this.tone(1319,.14,"square",.14,this.ctx.currentTime+0.06); }); },
+  win(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [523,659,784,1046,1318].forEach((f,i)=>this.tone(f,.25,"triangle",.2,t+i*0.11)); }); },
+  lose(){ this.sfx(()=>{ const t=this.ctx.currentTime;
+    [392,330,262,196].forEach((f,i)=>this.tone(f,.3,"sawtooth",.18,t+i*0.15)); }); },
+  startBGM(){
+    if(this.bgmTimer) return;
+    const bass=[110,110,131,131,98,98,110,110];
+    const mel=[440,523,659,523, 587,523,440,392];
+    let i=0;
+    this.bgmTimer=setInterval(()=>{
+      if(!this.musicOn||!this.ctx) return;
+      this.tone(bass[i%bass.length],.16,"square",.06);
+      if(i%2===0) this.tone(mel[(i/2)%mel.length],.14,"square",.05);
+      i++;
+    },170);
+  }
+};
+
+/* ---------------- 4. 输入 ---------------- */
+const Input={
+  keys:{},
+  joy:{active:false,id:-1,cx:0,cy:0,dx:0,dy:0},
+  atkPressed:false, jumpPressed:false, pausePressed:false,
+  init(){
+    window.addEventListener("keydown",e=>{
+      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+      const k=e.key.toLowerCase();
+      if(this.keys[k]) return;
+      this.keys[k]=true;
+      AudioSys.init(); AudioSys.resume();
+      if(k==="j"||k==="enter") this.atkPressed=true;
+      if(k==="k"||k===" ") this.jumpPressed=true;
+      if(k==="u"||k==="p"||k==="escape") this.pausePressed=true;
+      if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
+      if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
+    });
+    window.addEventListener("keyup",e=>{ this.keys[e.key.toLowerCase()]=false; });
+    const down=(x,y,id)=>{ AudioSys.init(); AudioSys.resume(); Game.onPointerDown(x,y,id); };
+    canvas.addEventListener("mousedown",e=>{ const[x,y]=View.toGame(e.clientX,e.clientY); down(x,y,"m"); });
+    window.addEventListener("mousemove",e=>{ const[x,y]=View.toGame(e.clientX,e.clientY); Game.onPointerMove(x,y,"m"); });
+    window.addEventListener("mouseup",()=>Game.onPointerUp("m"));
+    canvas.addEventListener("touchstart",e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const[x,y]=View.toGame(t.clientX,t.clientY); down(x,y,t.identifier); } },{passive:false});
+    canvas.addEventListener("touchmove",e=>{ e.preventDefault();
+      for(const t of e.changedTouches){ const[x,y]=View.toGame(t.clientX,t.clientY); Game.onPointerMove(x,y,t.identifier); } },{passive:false});
+    const endT=e=>{ for(const t of e.changedTouches) Game.onPointerUp(t.identifier); };
+    canvas.addEventListener("touchend",endT); canvas.addEventListener("touchcancel",endT);
+  },
+  axis(){
+    let x=0,y=0;
+    if(this.keys["a"]||this.keys["arrowleft"]) x-=1;
+    if(this.keys["d"]||this.keys["arrowright"]) x+=1;
+    if(this.keys["w"]||this.keys["arrowup"]) y-=1;
+    if(this.keys["s"]||this.keys["arrowdown"]) y+=1;
+    if(this.joy.active){
+      if(Math.abs(this.joy.dx)>0.2) x=this.joy.dx;
+      if(Math.abs(this.joy.dy)>0.25) y=this.joy.dy;
+    }
+    return {x:clamp(x,-1,1),y:clamp(y,-1,1)};
+  },
+  consume(){ this.atkPressed=false; this.jumpPressed=false; this.pausePressed=false; }
+};
+
+/* ---------------- 5. 粒子与飘字 ---------------- */
+const Particles={
+  list:[],
+  burst(x,y,color,n,sp){
+    for(let i=0;i<n;i++){
+      const a=rand(0,Math.PI*2),v=rand(sp*0.3,sp);
+      this.list.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:rand(.3,.7),T:.7,r:rand(1.5,4.5),color});
+    }
+  },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i];
+      p.x+=p.vx*dt; p.y+=p.vy*dt+Game.scrollSpeed()*dt; p.t-=dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    for(const p of this.list){
+      ctx.globalAlpha=Math.max(p.t/p.T,0);
+      ctx.fillStyle=p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+};
+const Popups={
+  list:[],
+  add(x,y,text,color){ this.list.push({x,y,text,color,t:1}); },
+  update(dt){
+    for(let i=this.list.length-1;i>=0;i--){
+      const p=this.list[i]; p.y-=36*dt; p.t-=dt;
+      if(p.t<=0) this.list.splice(i,1);
+    }
+  },
+  draw(ctx){
+    ctx.textAlign="center"; ctx.font="bold 19px sans-serif";
+    for(const p of this.list){
+      ctx.globalAlpha=Math.max(Math.min(p.t,1),0);
+      ctx.fillStyle=p.color; ctx.fillText(p.text,p.x,p.y);
+    }
+    ctx.globalAlpha=1;
+  }
+};
+
+/* ---------------- 6. 道路 ---------------- */
+const Road={
+  dashOff:0, sceneOff:0,
+  update(dt){
+    const s=Game.scrollSpeed();
+    this.dashOff=(this.dashOff+s*dt)%80;
+    this.sceneOff=(this.sceneOff+s*dt)%160;
+  },
+  draw(ctx){
+    // 路侧草地
+    const gl=ctx.createLinearGradient(0,0,ROAD_L,0);
+    gl.addColorStop(0,"#1e3d1a"); gl.addColorStop(1,"#2c5423");
+    ctx.fillStyle=gl; ctx.fillRect(0,0,ROAD_L,H);
+    const gr=ctx.createLinearGradient(ROAD_R,0,W,0);
+    gr.addColorStop(0,"#2c5423"); gr.addColorStop(1,"#1e3d1a");
+    ctx.fillStyle=gr; ctx.fillRect(ROAD_R,0,W-ROAD_R,H);
+    // 树木(随滚动)
+    ctx.fillStyle="#173312";
+    for(let y=-160+this.sceneOff;y<H+160;y+=160){
+      ctx.beginPath(); ctx.arc(34,y,22,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W-34,y+80,22,0,Math.PI*2); ctx.fill();
+    }
+    // 路面
+    const rg=ctx.createLinearGradient(ROAD_L,0,ROAD_R,0);
+    rg.addColorStop(0,"#33333d"); rg.addColorStop(0.5,"#3f3f4b"); rg.addColorStop(1,"#33333d");
+    ctx.fillStyle=rg; ctx.fillRect(ROAD_L,0,ROAD_R-ROAD_L,H);
+    // 路缘
+    ctx.fillStyle="#c9c9c9";
+    ctx.fillRect(ROAD_L-6,0,6,H); ctx.fillRect(ROAD_R,0,6,H);
+    // 红白路肩条纹
+    for(let y=-80+this.dashOff;y<H+80;y+=80){
+      ctx.fillStyle="#d1495b";
+      ctx.fillRect(ROAD_L-6,y,6,40); ctx.fillRect(ROAD_R,y,6,40);
+    }
+    // 车道虚线 (3车道)
+    ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=5;
+    ctx.setLineDash([34,46]);
+    ctx.lineDashOffset=-this.dashOff;
+    const laneW=(ROAD_R-ROAD_L)/3;
+    for(let i=1;i<3;i++){
+      ctx.beginPath();
+      ctx.moveTo(ROAD_L+laneW*i,-20); ctx.lineTo(ROAD_L+laneW*i,H+20);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+  }
+};
+
+/* ---------------- 7. 玩家 ---------------- */
+const Player={
+  x:W/2, y:H-260, speed:180, minSp:120, maxSp:430,
+  hp:100, maxHp:100, lean:0, punchT:0, punchDir:1, invinc:0, dead:false,
+  reset(){
+    this.x=W/2; this.speed=180; this.hp=100;
+    this.lean=0; this.punchT=0; this.invinc=0; this.dead=false;
+  },
+  damage(n,why){
+    if(this.invinc>0||this.dead) return;
+    this.hp-=n; this.invinc=0.8;
+    Game.shake=0.35;
+    AudioSys.hurt();
+    Popups.add(this.x,this.y-46,"-"+n,"#ff4d6d");
+    if(this.hp<=0){
+      this.dead=true;
+      AudioSys.crash();
+      Particles.burst(this.x,this.y,"#ffb347",26,320);
+      Game.onPlayerDeath(why);
+    }
+  },
+  update(dt){
+    if(this.dead) return;
+    if(this.invinc>0) this.invinc-=dt;
+    if(this.punchT>0) this.punchT-=dt;
+    const ax=Input.axis();
+    // 加减速
+    if(ax.y<0) this.speed=Math.min(this.speed+180*dt,this.maxSp);
+    else if(ax.y>0) this.speed=Math.max(this.speed-260*dt,this.minSp);
+    else this.speed=Math.max(this.speed-30*dt,this.minSp+40);
+    // 横向
+    const steer=ax.x*(240+this.speed*0.25);
+    this.x+=steer*dt;
+    this.lean+= (ax.x*0.4-this.lean)*Math.min(dt*8,1);
+    // 撞护栏
+    if(this.x<ROAD_L+16){ this.x=ROAD_L+16; if(Math.abs(steer)>60) this.damage(6,"撞上护栏"); this.speed=Math.max(this.speed*0.9,this.minSp); }
+    if(this.x>ROAD_R-16){ this.x=ROAD_R-16; if(Math.abs(steer)>60) this.damage(6,"撞上护栏"); this.speed=Math.max(this.speed*0.9,this.minSp); }
+    // 出拳
+    if(Input.atkPressed && this.punchT<=0){
+      this.punchT=0.28;
+      AudioSys.punch();
+      // 找左右最近的敌车
+      let best=null,bd=1e9;
+      for(const e of Traffic.riders){
+        if(e.dead) continue;
+        const dx=e.x-this.x, dy=e.y-this.y;
+        if(Math.abs(dy)<54 && Math.abs(dx)<70){
+          const d=Math.abs(dx);
+          if(d<bd){bd=d;best=e;}
+        }
+      }
+      if(best){
+        this.punchDir=Math.sign(best.x-this.x)||1;
+        riderHit(best, 26, this.punchDir);
+      }else this.punchDir=this.lean>=0?1:-1;
+    }
+    AudioSys.setEngine(this.speed, Game.state==="playing");
+  },
+  draw(ctx){
+    if(this.dead) return;
+    const x=this.x,y=this.y;
+    if(this.invinc>0 && Math.floor(performance.now()/80)%2) ctx.globalAlpha=0.45;
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(this.lean*0.5);
+    // 影子
+    ctx.fillStyle="rgba(0,0,0,.3)";
+    ctx.beginPath(); ctx.ellipse(2,6,15,26,0,0,Math.PI*2); ctx.fill();
+    // 车轮
+    ctx.fillStyle="#111";
+    ctx.beginPath(); ctx.roundRect(-5,-34,10,16,4); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(-5,18,10,16,4); ctx.fill();
+    // 车身
+    const bg=ctx.createLinearGradient(-10,0,10,0);
+    bg.addColorStop(0,"#8f1636"); bg.addColorStop(0.5,"#ff4d6d"); bg.addColorStop(1,"#8f1636");
+    ctx.fillStyle=bg;
+    ctx.beginPath(); ctx.roundRect(-9,-26,18,48,7); ctx.fill();
+    // 车头灯
+    ctx.fillStyle="#ffe8a3";
+    ctx.beginPath(); ctx.roundRect(-5,-30,10,6,2); ctx.fill();
+    // 骑手身体
+    ctx.fillStyle="#1d3557";
+    ctx.beginPath(); ctx.roundRect(-8,-8,16,22,6); ctx.fill();
+    // 头盔
+    const hg=ctx.createRadialGradient(-2,-14,2,0,-12,8);
+    hg.addColorStop(0,"#8ecae6"); hg.addColorStop(1,"#1b4965");
+    ctx.fillStyle=hg;
+    ctx.beginPath(); ctx.arc(0,-12,8,0,Math.PI*2); ctx.fill();
+    // 出拳手臂
+    if(this.punchT>0){
+      ctx.strokeStyle="#f4a261"; ctx.lineWidth=6; ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(this.punchDir*6,-2);
+      ctx.lineTo(this.punchDir*(20+18*(this.punchT/0.28)),-4); ctx.stroke();
+    }
+    ctx.restore();
+    ctx.globalAlpha=1;
+  }
+};
+
+/* ---------------- 8. 敌人与障碍 ----------------
+ * riders: 敌方摩托(可被打翻, 也会打你/撞你)
+ * cars:   汽车障碍(撞上大伤)
+ * items:  扳手(回血) */
+const Traffic={
+  riders:[], cars:[], items:[],
+  rT:0, cT:0, iT:0,
+  reset(){
+    this.riders=[]; this.cars=[]; this.items=[];
+    this.rT=1.5; this.cT=2.5; this.iT=8;
+  },
+  diff(){
+    const lv=Game.mode==="endless" ? 1+Game.dist/1200 : Game.level;
+    return {
+      riderGap: clamp(4.2-lv*0.32, 1.3, 4.2),
+      carGap:   clamp(5-lv*0.3, 1.8, 5),
+      riderHp:  26+lv*7,
+      aggr:     clamp(0.3+lv*0.08, 0.3, 1)
+    };
+  },
+  laneX(i){ const laneW=(ROAD_R-ROAD_L)/3; return ROAD_L+laneW*(i+0.5); },
+  update(dt){
+    const d=this.diff();
+    const scroll=Game.scrollSpeed();
+    // 生成敌车
+    this.rT-=dt;
+    if(this.rT<=0){
+      this.rT=d.riderGap*rand(0.8,1.3);
+      const fromBottom=Math.random()<0.45;
+      this.riders.push({
+        x:this.laneX(irand(0,2))+rand(-20,20),
+        y:fromBottom?H+60:-60,
+        speed:fromBottom?Player.speed+rand(40,110):Player.speed-rand(30,80),
+        hp:d.riderHp, dead:false, lean:0, punchT:0, hurtT:0,
+        color:["#2a9d8f","#e9c46a","#9d4edd","#3a86ff"][irand(0,3)],
+        atkCD:rand(1,2)
+      });
+    }
+    // 生成汽车
+    this.cT-=dt;
+    if(this.cT<=0){
+      this.cT=d.carGap*rand(0.8,1.4);
+      this.cars.push({
+        x:this.laneX(irand(0,2)), y:-90,
+        speed:rand(60,140),
+        color:["#6c757d","#bc4749","#457b9d","#ce7e2b"][irand(0,3)],
+        w:44,h:76
+      });
+    }
+    // 生成扳手(回血)
+    this.iT-=dt;
+    if(this.iT<=0){
+      this.iT=rand(9,14);
+      this.items.push({x:this.laneX(irand(0,2)),y:-40,t:0});
+    }
+    // 敌方摩托
+    for(let i=this.riders.length-1;i>=0;i--){
+      const e=this.riders[i];
+      // 相对滚动
+      e.y += (scroll - e.speed)*dt;
+      if(e.hurtT>0) e.hurtT-=dt;
+      if(e.dead){
+        e.y+=60*dt; e.lean+=dt*6;
+        if(e.y>H+120||e.y<-160) this.riders.splice(i,1);
+        continue;
+      }
+      // AI: 靠近玩家所在车道, 距离近时攻击
+      const dx=Player.x-e.x, dy=Player.y-e.y;
+      if(Math.abs(dy)<180) e.x += clamp(dx,-1,1)*70*d.aggr*dt;
+      e.x=clamp(e.x,ROAD_L+16,ROAD_R-16);
+      e.lean += (clamp(dx,-60,60)/60*0.3 - e.lean)*Math.min(dt*6,1);
+      // 速度趋近玩家(保持缠斗)
+      if(Math.abs(dy)<220) e.speed += clamp(Player.speed-e.speed,-60,60)*dt*0.8;
+      e.atkCD-=dt;
+      if(e.punchT>0) e.punchT-=dt;
+      if(e.atkCD<=0 && Math.abs(dy)<50 && Math.abs(dx)<62 && !Player.dead){
+        e.atkCD=rand(1.2,2.2)/d.aggr;
+        e.punchT=0.25;
+        Player.damage(8,"被对手击倒");
+        Particles.burst(Player.x,Player.y-10,"#fff",6,150);
+      }
+      // 与玩家碰撞(车身)
+      if(Math.abs(dy)<40 && Math.abs(dx)<26 && !Player.dead){
+        Player.damage(5,"撞车");
+        e.x -= Math.sign(dx||1)*30;
+      }
+      if(e.y>H+140||e.y<-200) this.riders.splice(i,1);
+    }
+    // 汽车
+    for(let i=this.cars.length-1;i>=0;i--){
+      const c=this.cars[i];
+      c.y += (scroll - c.speed)*dt;
+      // 玩家碰撞
+      if(!Player.dead &&
+         Math.abs(c.y-Player.y)<c.h/2+26 && Math.abs(c.x-Player.x)<c.w/2+14){
+        Player.damage(22,"撞上汽车");
+        Player.speed=Player.minSp;
+        Player.x += (Player.x<c.x?-1:1)*36;
+      }
+      // 敌车撞汽车直接翻车
+      for(const e of this.riders){
+        if(e.dead) continue;
+        if(Math.abs(c.y-e.y)<c.h/2+22 && Math.abs(c.x-e.x)<c.w/2+12){
+          e.dead=true; Game.addScore(30,e.x,e.y,"撞车 +30");
+          Particles.burst(e.x,e.y,"#ffb347",14,240);
+          AudioSys.crash();
+        }
+      }
+      if(c.y>H+140) this.cars.splice(i,1);
+    }
+    // 道具
+    for(let i=this.items.length-1;i>=0;i--){
+      const it=this.items[i];
+      it.y += scroll*dt; it.t+=dt;
+      if(!Player.dead && Math.abs(it.y-Player.y)<34 && Math.abs(it.x-Player.x)<30){
+        Player.hp=Math.min(Player.hp+22,Player.maxHp);
+        AudioSys.pickup();
+        Popups.add(it.x,it.y,"+22 HP","#95d5b2");
+        this.items.splice(i,1);
+        continue;
+      }
+      if(it.y>H+60) this.items.splice(i,1);
+    }
+  },
+  draw(ctx){
+    // 道具
+    for(const it of this.items){
+      const bob=Math.sin(it.t*5)*3;
+      const g=ctx.createRadialGradient(it.x,it.y+bob,2,it.x,it.y+bob,18);
+      g.addColorStop(0,"rgba(149,213,178,.7)"); g.addColorStop(1,"transparent");
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(it.x,it.y+bob,18,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#95d5b2"; ctx.font="bold 20px sans-serif"; ctx.textAlign="center";
+      ctx.fillText("✚",it.x,it.y+bob+7);
+    }
+    // 汽车
+    for(const c of this.cars){
+      ctx.save(); ctx.translate(c.x,c.y);
+      ctx.fillStyle="rgba(0,0,0,.3)";
+      ctx.beginPath(); ctx.ellipse(3,5,c.w/2+3,c.h/2+3,0,0,Math.PI*2); ctx.fill();
+      const g=ctx.createLinearGradient(-c.w/2,0,c.w/2,0);
+      g.addColorStop(0,"#222"); g.addColorStop(0.15,c.color); g.addColorStop(0.85,c.color); g.addColorStop(1,"#222");
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.roundRect(-c.w/2,-c.h/2,c.w,c.h,10); ctx.fill();
+      // 车窗
+      ctx.fillStyle="rgba(180,220,255,.8)";
+      ctx.beginPath(); ctx.roundRect(-c.w/2+6,-c.h/2+10,c.w-12,16,4); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(-c.w/2+6,c.h/2-24,c.w-12,14,4); ctx.fill();
+      ctx.restore();
+    }
+    // 敌方摩托
+    for(const e of this.riders){
+      ctx.save(); ctx.translate(e.x,e.y);
+      ctx.rotate(e.lean*(e.dead?3:0.5)+(e.dead?e.lean:0));
+      if(e.hurtT>0) ctx.globalAlpha=0.6;
+      ctx.fillStyle="rgba(0,0,0,.3)";
+      ctx.beginPath(); ctx.ellipse(2,5,14,24,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#111";
+      ctx.beginPath(); ctx.roundRect(-5,-32,10,15,4); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(-5,17,10,15,4); ctx.fill();
+      ctx.fillStyle=e.color;
+      ctx.beginPath(); ctx.roundRect(-9,-24,18,44,7); ctx.fill();
+      ctx.fillStyle="#212529";
+      ctx.beginPath(); ctx.roundRect(-8,-8,16,20,6); ctx.fill();
+      ctx.fillStyle="#495057";
+      ctx.beginPath(); ctx.arc(0,-11,7.5,0,Math.PI*2); ctx.fill();
+      if(e.punchT>0){
+        ctx.strokeStyle="#f4a261"; ctx.lineWidth=5; ctx.lineCap="round";
+        const dir=Math.sign(Player.x-e.x)||1;
+        ctx.beginPath(); ctx.moveTo(dir*6,-2); ctx.lineTo(dir*24,-4); ctx.stroke();
+      }
+      ctx.restore();
+      ctx.globalAlpha=1;
+      // 血条
+      if(!e.dead){
+        ctx.fillStyle="rgba(0,0,0,.5)"; ctx.fillRect(e.x-14,e.y-42,28,4);
+        ctx.fillStyle="#ffd60a";
+        ctx.fillRect(e.x-14,e.y-42,28*clamp(e.hp/this.diff().riderHp,0,1),4);
+      }
+    }
+  }
+};
+// 敌车受击
+function riderHit(e,dmg,dir){
+  e.hp-=dmg; e.hurtT=0.25;
+  e.x+=dir*26;
+  AudioSys.hitEnemy();
+  Particles.burst(e.x,e.y-8,"#fff",7,180);
+  if(e.hp<=0){
+    e.dead=true;
+    Game.addScore(50,e.x,e.y,"击倒 +50");
+    Particles.burst(e.x,e.y,"#ffb347",16,260);
+    AudioSys.crash();
+    Game.shake=0.25;
+  }
+}
+
+/* ---------------- 9. 游戏主逻辑 ---------------- */
+const Game={
+  state:"menu", mode:"level",
+  level:1, score:0, best:0,
+  dist:0, target:0, timeLeft:0,
+  shake:0, msgText:"", msgTimer:0, endWhy:"",
+  pointers:{},
+  init(){
+    this.best=+(localStorage.getItem("rash_best")||0);
+    Input.init();
+  },
+  scrollSpeed(){ return Player.speed*1.15; },
+  startGame(mode){
+    this.mode=mode; this.level=1; this.score=0;
+    this.startLevel();
+    AudioSys.init(); AudioSys.resume();
+  },
+  startLevel(){
+    this.dist=0;
+    this.target = this.mode==="endless" ? Infinity : 1200+(this.level-1)*400;
+    // 以约 250km/h 平均速度(每秒15米)估算并留余量
+    this.timeLeft = this.mode==="endless" ? Infinity : Math.ceil(this.target/(250*0.06))+14;
+    Player.reset(); Traffic.reset();
+    // Traffic.reset 重新赋值数组时保持 Proxy 行为
+    Particles.list=[]; Popups.list=[];
+    this.state="playing";
+    this.showMsg(this.mode==="level"
+      ? ("第 "+this.level+" 关 · 冲刺 "+this.target+"m")
+      : "无尽狂飙 · 打翻对手拿分!", 1.8);
+  },
+  showMsg(t,d){ this.msgText=t; this.msgTimer=d; },
+  addScore(n,x,y,label){
+    this.score+=n;
+    if(label!==undefined&&x!==undefined) Popups.add(x,y-20,label,"#ffd60a");
+  },
+  saveBest(){ if(this.score>this.best){ this.best=this.score; localStorage.setItem("rash_best",this.best); } },
+  onPlayerDeath(why){
+    this.endWhy=why||"";
+    this.saveBest(); AudioSys.lose(); AudioSys.setEngine(0,false);
+    this.state="gameover";
+  },
+  /* ---- 指针 ---- */
+  onPointerDown(x,y,id){
+    if(this.state==="menu"){
+      if(this.hitRect(x,y,W/2-130,520,260,64)) this.startGame("level");
+      else if(this.hitRect(x,y,W/2-130,610,260,64)) this.startGame("endless");
+      return;
+    }
+    if(this.state==="paused"){
+      if(this.hitRect(x,y,W/2-130,470,260,60)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,550,260,60)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,630,260,60)){ this.state="menu"; AudioSys.setEngine(0,false); }
+      return;
+    }
+    if(this.state==="gameover"||this.state==="win"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame(this.mode);
+      else if(this.hitRect(x,y,W/2-130,650,260,64)){ this.state="menu"; AudioSys.setEngine(0,false); }
+      return;
+    }
+    if(this.state==="levelclear"){
+      if(this.hitRect(x,y,W/2-130,560,260,64)){ this.level++; this.startLevel(); }
+      return;
+    }
+    // playing
+    if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; AudioSys.setEngine(0,false); return; }
+    if(x<W*0.42 && y>H*0.7){
+      Input.joy.active=true; Input.joy.id=id;
+      Input.joy.cx=x; Input.joy.cy=y; Input.joy.dx=0; Input.joy.dy=0;
+      this.pointers[id]="joy"; return;
+    }
+    if(x>W*0.55 && y>H*0.7){
+      if(this.hitCircle(x,y,W-80,H-130,50)){ Input.atkPressed=true; this.pointers[id]="btn"; return; }
+    }
+  },
+  onPointerMove(x,y,id){
+    if(this.state!=="playing") return;
+    if(this.pointers[id]==="joy"&&Input.joy.active&&Input.joy.id===id){
+      const dx=x-Input.joy.cx, dy=y-Input.joy.cy;
+      const len=Math.hypot(dx,dy), max=55;
+      const k=len>max?max/len:1;
+      Input.joy.dx=dx*k/max; Input.joy.dy=dy*k/max;
+    }
+  },
+  onPointerUp(id){
+    if(this.pointers[id]==="joy"){
+      Input.joy.active=false; Input.joy.dx=0; Input.joy.dy=0; Input.joy.id=-1;
+    }
+    delete this.pointers[id];
+  },
+  hitRect(x,y,rx,ry,rw,rh){ return x>=rx&&x<=rx+rw&&y>=ry&&y<=ry+rh; },
+  hitCircle(x,y,cx,cy,r){ return (x-cx)**2+(y-cy)**2<=r*r; },
+  /* ---- 更新 ---- */
+  update(dt){
+    if(this.msgTimer>0) this.msgTimer-=dt;
+    if(this.shake>0) this.shake-=dt;
+    Particles.update(dt); Popups.update(dt);
+    if(this.state!=="playing"){
+      AudioSys.setEngine(0,false);
+      if(Input.pausePressed&&this.state==="paused") this.state="playing";
+      else if(Input.atkPressed){
+        if(this.state==="menu") this.startGame("level");
+        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
+        else if(this.state==="gameover"||this.state==="win") this.startGame(this.mode);
+      }
+      Input.consume(); return;
+    }
+    if(Input.pausePressed){ this.state="paused"; Input.consume(); return; }
+    Road.update(dt);
+    Player.update(dt);
+    Traffic.update(dt);
+    // 里程与得分
+    this.dist += Player.speed*dt*0.06;   // 换算为米
+    if(this.mode==="endless") this.score=Math.max(this.score,0)+Math.floor(Player.speed*dt*0.02);
+    if(this.mode==="level"){
+      this.timeLeft-=dt;
+      if(this.dist>=this.target){
+        this.addScore(100+Math.ceil(this.timeLeft)*5);
+        this.saveBest(); AudioSys.win(); AudioSys.setEngine(0,false);
+        this.state = this.level>=10 ? "win" : "levelclear";
+        Input.consume(); return;
+      }
+      if(this.timeLeft<=0){
+        this.endWhy="超时未到终点";
+        this.saveBest(); AudioSys.lose(); AudioSys.setEngine(0,false);
+        this.state="gameover";
+      }
+    }
+    Input.consume();
+  },
+  /* ---- 绘制 ---- */
+  draw(){
+    ctx.save();
+    if(this.shake>0) ctx.translate(rand(-6,6)*this.shake,rand(-6,6)*this.shake);
+    Road.draw(ctx);
+    if(this.state==="menu"){ this.drawMenu(); ctx.restore(); return; }
+    // 终点线
+    if(this.mode==="level"){
+      const remain=this.target-this.dist;
+      const fy=Player.y-remain*19.2; // 1米≈19.2像素(与滚动速率一致)
+      if(fy>-80&&fy<H){
+        for(let x=ROAD_L;x<ROAD_R;x+=24){
+          ctx.fillStyle=((x/24)|0)%2?"#fff":"#111";
+          ctx.fillRect(x,fy,24,14);
+          ctx.fillStyle=((x/24)|0)%2?"#111":"#fff";
+          ctx.fillRect(x,fy+14,24,14);
+        }
+      }
+    }
+    Traffic.draw(ctx);
+    Player.draw(ctx);
+    Particles.draw(ctx);
+    Popups.draw(ctx);
+    // 速度线特效
+    if(Player.speed>330){
+      ctx.strokeStyle="rgba(255,255,255,.08)"; ctx.lineWidth=2;
+      for(let i=0;i<6;i++){
+        const x=rand(ROAD_L,ROAD_R);
+        ctx.beginPath(); ctx.moveTo(x,rand(0,H)); ctx.lineTo(x,rand(0,H)+60); ctx.stroke();
+      }
+    }
+    this.drawHUD();
+    if(this.msgTimer>0){
+      ctx.globalAlpha=Math.min(this.msgTimer,1);
+      ctx.fillStyle="#fff"; ctx.font="bold 32px sans-serif"; ctx.textAlign="center";
+      ctx.strokeStyle="rgba(0,0,0,.6)"; ctx.lineWidth=5;
+      ctx.strokeText(this.msgText,W/2,H*0.35);
+      ctx.fillText(this.msgText,W/2,H*0.35);
+      ctx.globalAlpha=1;
+    }
+    if(this.state==="playing") this.drawTouchUI();
+    if(this.state==="paused") this.drawPaused();
+    if(this.state==="gameover") this.drawGameover();
+    if(this.state==="levelclear") this.drawClear(false);
+    if(this.state==="win") this.drawClear(true);
+    ctx.restore();
+  },
+  drawHUD(){
+    ctx.fillStyle="rgba(8,8,16,.6)"; ctx.fillRect(0,0,W,70);
+    ctx.textAlign="left"; ctx.fillStyle="#ffd60a"; ctx.font="bold 20px sans-serif";
+    ctx.fillText("分数 "+this.score,14,28);
+    ctx.font="12px sans-serif"; ctx.fillStyle="#8ecae6";
+    ctx.fillText("最高 "+this.best,14,48);
+    ctx.textAlign="center"; ctx.fillStyle="#fff"; ctx.font="bold 17px sans-serif";
+    if(this.mode==="level"){
+      ctx.fillText("第"+this.level+"关 ⏱"+Math.max(Math.ceil(this.timeLeft),0)+"s",W/2,24);
+      const k=clamp(this.dist/this.target,0,1);
+      ctx.fillStyle="rgba(255,255,255,.15)"; ctx.fillRect(W/2-90,34,180,10);
+      ctx.fillStyle="#95d5b2"; ctx.fillRect(W/2-90,34,180*k,10);
+      ctx.fillStyle="#cde8ff"; ctx.font="12px sans-serif";
+      ctx.fillText(Math.floor(this.dist)+" / "+this.target+" m",W/2,60);
+    }else{
+      ctx.fillText("无尽狂飙",W/2,24);
+      ctx.fillStyle="#cde8ff"; ctx.font="13px sans-serif";
+      ctx.fillText(Math.floor(this.dist)+" m",W/2,46);
+    }
+    // 速度表
+    ctx.textAlign="right"; ctx.fillStyle="#ff9e5e"; ctx.font="bold 18px sans-serif";
+    ctx.fillText(Math.round(Player.speed)+" km/h",W-78,26);
+    // HP条
+    ctx.fillStyle="rgba(255,255,255,.15)"; ctx.fillRect(W-208,38,130,12);
+    const hg=ctx.createLinearGradient(W-208,0,W-78,0);
+    hg.addColorStop(0,"#ff4d6d"); hg.addColorStop(1,"#ff9e5e");
+    ctx.fillStyle=hg; ctx.fillRect(W-208,38,130*clamp(Player.hp/Player.maxHp,0,1),12);
+    ctx.fillStyle="#fff"; ctx.font="10px sans-serif"; ctx.textAlign="right";
+    ctx.fillText("HP "+Math.max(Player.hp,0)+"/"+Player.maxHp,W-82,62);
+    // 暂停按钮
+    ctx.fillStyle="rgba(255,255,255,.15)";
+    ctx.beginPath(); ctx.roundRect(W-64,10,54,44,10); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.fillRect(W-64+17,21,6,22); ctx.fillRect(W-64+31,21,6,22);
+  },
+  drawTouchUI(){
+    ctx.globalAlpha=0.38;
+    const jx=Input.joy.active?Input.joy.cx:96, jy=Input.joy.active?Input.joy.cy:H-130;
+    ctx.strokeStyle="#8ecae6"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(jx,jy,52,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle="#8ecae6";
+    ctx.beginPath(); ctx.arc(jx+Input.joy.dx*38,jy+Input.joy.dy*38,22,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=0.55; ctx.fillStyle="#cfe9ff"; ctx.font="12px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("摇杆: 左右转向 上加速 下刹车",jx,jy+80);
+    ctx.globalAlpha=0.45;
+    const ag=ctx.createRadialGradient(W-80,H-130,6,W-80,H-130,50);
+    ag.addColorStop(0,"#ff8fa3"); ag.addColorStop(1,"#c9184a");
+    ctx.fillStyle=ag; ctx.beginPath(); ctx.arc(W-80,H-130,50,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=0.95; ctx.fillStyle="#3d0716"; ctx.font="bold 17px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("出拳",W-80,H-124);
+    ctx.globalAlpha=1;
+  },
+  overlay(){ ctx.fillStyle="rgba(6,6,14,.72)"; ctx.fillRect(0,0,W,H); },
+  bigBtn(y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+64);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,64,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 26px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,W/2,y+42);
+  },
+  midBtn(y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+60);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,60,14); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 24px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,W/2,y+40);
+  },
+  drawMenu(){
+    ctx.fillStyle="rgba(8,8,16,.55)"; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle="#ff4d6d"; ctx.font="bold 64px sans-serif"; ctx.textAlign="center";
+    ctx.strokeStyle="rgba(255,255,255,.3)"; ctx.lineWidth=2;
+    ctx.strokeText("暴力摩托",W/2,290); ctx.fillText("暴力摩托",W/2,290);
+    ctx.font="18px sans-serif"; ctx.fillStyle="#8ecae6";
+    ctx.fillText("狂飙公路 · 出拳打翻对手 · 冲向终点",W/2,335);
+    // 装饰摩托
+    const t=performance.now()/1000;
+    ctx.save(); ctx.translate(W/2,440+Math.sin(t*3)*4); ctx.rotate(Math.sin(t*2)*0.06); ctx.scale(1.8,1.8);
+    ctx.fillStyle="#111";
+    ctx.beginPath(); ctx.roundRect(-5,-32,10,15,4); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(-5,17,10,15,4); ctx.fill();
+    ctx.fillStyle="#ff4d6d";
+    ctx.beginPath(); ctx.roundRect(-9,-24,18,44,7); ctx.fill();
+    ctx.fillStyle="#1d3557";
+    ctx.beginPath(); ctx.roundRect(-8,-8,16,20,6); ctx.fill();
+    ctx.fillStyle="#8ecae6";
+    ctx.beginPath(); ctx.arc(0,-11,7.5,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    this.bigBtn(520,"关卡模式",["#ff9e5e","#d1495b"]);
+    this.bigBtn(610,"无尽模式",["#5b8bff","#2a3f9f"]);
+    ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
+    ctx.fillText("PC: A/D或←→转向  W/↑加速 S/↓刹车  J/回车出拳",W/2,718);
+    ctx.fillText("U/P暂停  I/O音乐音效开关",W/2,742);
+    ctx.fillText("手机: 左摇杆(上推加速下拉刹车) · 右侧出拳按钮",W/2,766);
+    ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best,W/2,810);
+  },
+  drawPaused(){
+    this.overlay();
+    ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停",W/2,380);
+    this.midBtn(470,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(550,"重新开始",["#ff9e5e","#d1495b"]);
+    this.midBtn(630,"返回菜单",["#5b8bff","#2a3f9f"]);
+  },
+  drawGameover(){
+    this.overlay();
+    ctx.fillStyle="#ff4d6d"; ctx.font="bold 48px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("翻车了!",W/2,370);
+    ctx.fillStyle="#fff"; ctx.font="19px sans-serif";
+    if(this.endWhy) ctx.fillText(this.endWhy,W/2,418);
+    ctx.fillText("里程 "+Math.floor(this.dist)+"m · 分数 "+this.score,W/2,452);
+    ctx.fillStyle="#ffd60a"; ctx.font="16px sans-serif";
+    ctx.fillText("最高分: "+this.best,W/2,486);
+    this.bigBtn(560,"一键重新开始",["#ff6b8b","#c9184a"]);
+    this.bigBtn(650,"返回菜单",["#5b8bff","#2a3f9f"]);
+  },
+  drawClear(final){
+    this.overlay();
+    ctx.fillStyle="#95d5b2"; ctx.font="bold 46px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(final?"全程冠军!":"冲线!",W/2,380);
+    ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
+    ctx.fillText("分数: "+this.score,W/2,430);
+    if(final){
+      this.bigBtn(560,"再玩一次",["#3f8e50","#1e4d2b"]);
+      this.bigBtn(650,"返回菜单",["#5b8bff","#2a3f9f"]);
+    }else{
+      this.bigBtn(560,"下一关",["#3f8e50","#1e4d2b"]);
+      ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
+      ctx.fillText("(按 J/回车 亦可继续)",W/2,660);
+    }
+  }
+};
+
+/* ---------------- 10. 主循环 ---------------- */
+let lastT=performance.now();
+function mainLoop(now){
+  let dt=(now-lastT)/1000;
+  lastT=now;
+  dt=Math.min(dt,0.05);
+  Game.update(dt);
+  Game.draw();
+  requestAnimationFrame(mainLoop);
+}
+Game.init();
+requestAnimationFrame(mainLoop);
+</script>
+</body>
+</html>

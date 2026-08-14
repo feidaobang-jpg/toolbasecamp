@@ -407,6 +407,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     games: {
         groups: {
+            all: '游戏',
             polished: '高完成度',
             draft: '低完成度',
             developing: '正在开发',
@@ -626,6 +627,34 @@ window.TB_LOCALES['zh-CN'] = {
         brickBreaker: {
             title: '打砖块',
             desc: '竖屏霓虹打砖块：挡板弹球清砖块，道具与关卡挑战。触屏可玩，本地运行。'
+        },
+        angryBirds: {
+            title: '愤怒的小鸟',
+            desc: '弹弓发射小鸟摧毁绿猪与方块结构。闯关与无尽模式，触屏可玩。'
+        },
+        bubbleDragon: {
+            title: '泡泡龙',
+            desc: '经典泡泡龙射击消除，三连同色消掉。本地运行，触屏可玩。'
+        },
+        flyBird: {
+            title: '飞行鸟',
+            desc: '点击/flap 穿越障碍，比拼距离与分数。竖屏触屏友好。'
+        },
+        frogZuma: {
+            title: '青蛙祖玛',
+            desc: '祖玛式滚球射击，三连消除不让球链进洞。触屏瞄准发射。'
+        },
+        hundredFloors: {
+            title: '下一百层',
+            desc: '左右移动踩平台向下落，躲开障碍挑战层数。竖屏触屏。'
+        },
+        roadRash: {
+            title: '暴力摩托',
+            desc: '俯视角摩托竞速与碰撞，吃道具、撞对手。横竖屏自适应。'
+        },
+        worms: {
+            title: '百战天虫',
+            desc: '回合制炮弹射击，调整角度力度消灭对手。单机对战 AI。'
         },
         gemswap: {
             title: '宝石迷阵',
