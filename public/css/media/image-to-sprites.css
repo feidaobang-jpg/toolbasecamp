@@ -1,0 +1,14 @@
+.frame-item.is-selected {
+  outline: 2px solid #2563eb;
+}
+
+.frame-item img {
+  cursor: pointer;
+}
+
+#result-wrap video {
+  width: 100%;
+  max-height: 360px;
+  background: #000;
+  border-radius: 10px;
+}

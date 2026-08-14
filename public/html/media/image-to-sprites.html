@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to Sprite Frames - Tool Basecamp</title>
+  <meta name="description" content="Turn one image into a short video, extract frames, preview a GIF, and download ZIP or GIF. Sign-in required; billed from balance on success.">
+  <link rel="stylesheet" href="../../css/base.css?v=sprites1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=sprites1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=sprites1" />
+  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=sprites1" />
+  <link rel="stylesheet" href="../../css/media/image-to-sprites.css?v=sprites1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.imageToSprites.title">Image to GIF / frames</h1>
+        <p data-i18n="tools.imageToSprites.desc">Generate a short clip from one image, extract frames, auto-keep distinct poses, preview, then download ZIP or GIF. Sign-in required; billed from balance on success.</p>
+      </div>
+
+      <div class="tool-card img-cloud-gate" id="login-gate" hidden>
+        <p data-i18n="tools.imageCloud.loginRequired">Please sign in to use this cloud tool.</p>
+        <div class="action-row" style="justify-content:center">
+          <a class="tb-btn" id="login-link" href="../auth/login.html" data-i18n="auth.login">Log in</a>
+        </div>
+      </div>
+
+      <div id="app" hidden>
+        <div class="tool-card">
+          <p class="img-cloud-quota" id="balance-line"></p>
+          <p class="wan-cost-note" id="cost-note"></p>
+          <p class="wan-tier-hint" id="estimate-line"></p>
+
+          <div class="drop-zone" id="drop-zone">
+            <div class="drop-icon">+</div>
+            <div class="drop-title" data-i18n="tools.imageToSprites.dropTitle">Click or drop an image</div>
+            <div class="drop-hint" data-i18n="tools.imageToSprites.dropHint">JPG, PNG, WebP — max 6MB. Best with a clear character or subject.</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" style="display:none" />
+
+          <div class="img-tool-source" id="source-wrap" hidden>
+            <img id="source-img" alt="" />
+          </div>
+
+          <div class="img-tool-fields" id="controls" hidden>
+            <label>
+              <span data-i18n="tools.imageToAnimation.modelLabel">Model</span>
+              <select id="model-select">
+                <option value="minimax-h3" selected data-i18n="tools.imageToAnimation.modelH3">MiniMax-H3 · cheaper / up to 2K</option>
+                <option value="wan2.7" data-i18n="tools.imageToAnimation.modelWan27">Wan 2.7 · stable I2V</option>
+              </select>
+            </label>
+            <label class="wan-prompt-label">
+              <span data-i18n="tools.imageToSprites.promptLabel">Action prompt</span>
+              <div class="wan-presets" id="prompt-presets" role="group">
+                <button type="button" class="wan-preset" data-preset="walk" data-i18n="tools.imageToSprites.presetWalk">Walk</button>
+                <button type="button" class="wan-preset" data-preset="jump" data-i18n="tools.imageToSprites.presetJump">Jump</button>
+                <button type="button" class="wan-preset" data-preset="wave" data-i18n="tools.imageToSprites.presetWave">Wave</button>
+                <button type="button" class="wan-preset" data-preset="turn" data-i18n="tools.imageToSprites.presetTurn">Turn</button>
+                <button type="button" class="wan-preset" data-preset="attack" data-i18n="tools.imageToSprites.presetAttack">Attack</button>
+                <button type="button" class="wan-preset" data-preset="idle" data-i18n="tools.imageToSprites.presetIdle">Idle</button>
+              </div>
+              <textarea id="prompt-input" class="rec-input wan-prompt" rows="3" maxlength="1500"
+                data-i18n-placeholder="tools.imageToSprites.promptPlaceholder"
+                placeholder="e.g. Character walks in place, looping, camera locked, keep appearance"></textarea>
+            </label>
+            <label>
+              <span data-i18n="tools.imageToAnimation.durationLabel">Duration</span>
+              <input type="number" id="duration-input" class="rec-input wan-duration" min="4" max="15" step="1" value="5" />
+              <span class="wan-field-hint" id="duration-hint"></span>
+            </label>
+            <label>
+              <span data-i18n="tools.imageToAnimation.resolutionLabel">Resolution</span>
+              <select id="resolution-select"></select>
+            </label>
+          </div>
+
+          <div class="tip-box">
+            <b data-i18n="tools.imageToSprites.tip">Tip:</b>
+            <span data-i18n="tools.imageToSprites.tipBody">After the clip is ready, frames are extracted and similar poses are unchecked. You can re-check frames, preview, then download ZIP or GIF.</span>
+          </div>
+          <div class="tip-box" id="wechat-file-download-tip" hidden>
+            <b>WeChat:</b>
+            <span data-i18n="common.wechatFileDownloadTip">Downloads are blocked in WeChat. Please open in your system browser and download again.</span>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="tools.imageToSprites.run">Generate</button>
+            <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.imageToSprites.clear">Clear</button>
+          </div>
+
+          <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+            <span class="img-cloud-spinner" aria-hidden="true"></span>
+            <span id="busy-text" data-i18n="tools.imageCloud.processing">Processing...</span>
+          </div>
+          <div class="error-box" id="error-box" role="alert"></div>
+
+          <div class="wan-result" id="result-wrap" hidden>
+            <video id="result-video" controls playsinline muted></video>
+          </div>
+        </div>
+
+        <section class="media-section hidden" id="frames-section">
+          <h3 class="section-title">
+            <span data-i18n="tools.imageToSprites.framesTitle">Frames</span>
+            (<span id="frame-count">0</span> / <span id="selected-count">0</span>)
+          </h3>
+          <div class="settings-row">
+            <label>
+              <span data-i18n="tools.imageToSprites.similarityLabel">Similarity</span>
+              <input type="range" id="similarity-threshold" min="80" max="99" value="90" />
+              <span id="threshold-value">90%</span>
+            </label>
+            <button type="button" class="tb-btn" id="dedupe-btn" data-i18n="tools.imageToSprites.dedupe">Keep distinct frames</button>
+            <button type="button" class="tb-btn" id="select-all-btn" data-i18n="tools.imageToSprites.selectAll">Select all</button>
+          </div>
+          <div class="frames-container" id="frames-container"></div>
+          <div class="action-row" style="margin-top:12px">
+            <button type="button" class="tb-btn" id="preview-btn" data-i18n="tools.imageToSprites.preview">Preview GIF</button>
+            <button type="button" class="tb-btn" id="zip-btn" data-i18n="tools.imageToSprites.downloadZip">Download ZIP</button>
+            <button type="button" class="tb-btn" id="gif-btn" data-i18n="tools.imageToSprites.downloadGif">Download GIF</button>
+          </div>
+        </section>
+
+        <section class="media-section hidden" id="preview-section">
+          <h3 class="section-title" data-i18n="tools.imageToSprites.previewTitle">Animation preview</h3>
+          <div class="animation-container" id="animation-container"></div>
+          <div class="animation-controls">
+            <button type="button" class="tb-btn" id="play-pause-btn" data-i18n="tools.imageToSprites.pause">Pause</button>
+            <label>
+              FPS: <span id="speed-value">8</span>
+              <input type="range" id="speed-control" min="2" max="16" value="8" />
+            </label>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=sprites1"></script>
+  <script src="../../vendor/gif.js?v=sprites1"></script>
+  <script src="../../js/locales/en.js?v=sprites1"></script>
+  <script src="../../js/locales/zh-CN.js?v=sprites1"></script>
+  <script src="../../js/i18n.js?v=sprites1"></script>
+  <script src="../../js/config.js?v=sprites1"></script>
+  <script src="../../js/base.js?v=sprites1"></script>
+  <script src="../../js/media/image-cloud-client.js?v=sprites1"></script>
+  <script src="../../js/media/image-to-sprites.js?v=sprites1"></script>
+</body>
+</html>

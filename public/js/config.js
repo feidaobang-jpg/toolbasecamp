@@ -185,6 +185,7 @@ const toolsConfig = {
                 { titleKey: 'tools.imageUnderstand.title', url: 'html/media/image-understand.html', authRequired: true, dailyLimit: true },
                 { titleKey: 'tools.speechTts.title', url: 'html/media/speech-tts.html', authRequired: true, paid: true },
                 { titleKey: 'tools.imageToAnimation.title', url: 'html/media/image-to-animation.html', authRequired: true, paid: true },
+                { titleKey: 'tools.imageToSprites.title', url: 'html/media/image-to-sprites.html', authRequired: true, paid: true },
                 { titleKey: 'tools.textToVideo.title', url: 'html/media/text-to-video.html', authRequired: true, paid: true },
                 { titleKey: 'tools.refToVideo.title', url: 'html/media/ref-to-video.html', authRequired: true, paid: true },
                 { titleKey: 'tools.videoEdit.title', url: 'html/media/video-edit.html', authRequired: true, paid: true },
