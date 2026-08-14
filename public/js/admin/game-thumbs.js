@@ -166,6 +166,7 @@
         var board = doc.querySelector('.klotski-board .klotski-tile, .gomoku-cell, .puzzle-piece');
         if (board) return true;
       }
+      if (win && typeof Game !== 'undefined' && win.Game && win.Game.state === 2) return false;
       return false;
     }
     if (win && win.__tbThumbReady) return true;

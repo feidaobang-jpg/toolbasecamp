@@ -40,6 +40,10 @@
     } catch (e) {}
   }
 
+  function isPausedState(s) {
+    return s === 2 || s === 'pause' || s === 'paused';
+  }
+
   function isMenuState(s) {
     return s === 0 || s === 'menu' || !!MENU_STATES[s];
   }
@@ -72,7 +76,7 @@
   function gameplayActive() {
     if (typeof Game !== 'undefined' && Game && typeof Game.state !== 'undefined') {
       var s = Game.state;
-      if (isMenuState(s)) return false;
+      if (isMenuState(s) || isPausedState(s)) return false;
       if (s === 'ready') return false;
       if (isPlayState(s)) return true;
     }
@@ -123,8 +127,11 @@
         try { startGame('level'); } catch (e5) {}
       }
     }
-    fireKey('Enter');
-    fireKey('Space');
+    if (typeof Game !== 'undefined' && Game && isPausedState(Game.state)) {
+      fireKey('Space');
+    } else if (typeof Game !== 'undefined' && Game && isMenuState(Game.state)) {
+      fireKey('Enter');
+    }
     if (typeof Game !== 'undefined' && Game && Game.state === 'ready') Game.state = 'playing';
     clickRestart();
     return gameplayActive();
