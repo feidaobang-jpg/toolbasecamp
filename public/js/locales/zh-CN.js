@@ -1982,7 +1982,7 @@ window.TB_LOCALES['zh-CN'] = {
             addImages: '添加图片',
             tip: '提示：',
             tipBody: '拖动缩略图可调整顺序；超出格子数量的图片会被忽略。全部在浏览器本地完成。',
-            preset2: '2 图',
+            preset2: '2×1',
             preset4: '2×2',
             preset2x3: '2×3',
             preset9: '九宫格',
@@ -2000,7 +2000,7 @@ window.TB_LOCALES['zh-CN'] = {
             widthLabel: '宽度（像素）',
             heightLabel: '高度（像素）',
             cellMaxLabel: '单格最长边（像素）',
-            generate: '开始合成',
+            generate: '开始合并',
             download: '下载',
             clear: '清除',
             remove: '移除',
@@ -2012,7 +2012,7 @@ window.TB_LOCALES['zh-CN'] = {
             tooMany: '最多添加 {max} 张图片',
             extraIgnored: '当前网格只用前 {used} 张（共 {total} 张）',
             invalidSize: '请输入有效尺寸（并检查间距是否过大）',
-            generateFail: '合成失败，请减少图片数量或改用较小尺寸后重试。'
+            generateFail: '合并失败，请减少图片数量或改用较小尺寸后重试。'
         },
         coverMaker: {
             title: '封面制作',
