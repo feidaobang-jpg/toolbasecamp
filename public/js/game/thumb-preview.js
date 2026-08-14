@@ -72,8 +72,24 @@
   }
 
   var attempts = 0;
+  var started = false;
+
+  function signalReady() {
+    var n = 0;
+    (function frame() {
+      n++;
+      if (n >= 6) window.__tbThumbReady = true;
+      else requestAnimationFrame(frame);
+    })();
+  }
+
   function tick() {
-    if (tryStart() || attempts++ > 80) return;
+    if (!started && tryStart()) {
+      started = true;
+      signalReady();
+      return;
+    }
+    if (started || attempts++ > 80) return;
     requestAnimationFrame(tick);
   }
 

@@ -54,6 +54,7 @@ window.TB_LOCALES.en = {
             gameThumbsProgress: 'Processing {n}/{total}: {name}',
             gameThumbsDone: 'Done: {ok} ok, {fail} failed',
             gameThumbsMissing: 'Missing',
+            gameThumbsCapturing: 'Capturing: {name}',
             newsTitle: 'Tech news',
             newsDesc: '“Refresh news” crawls & rewrites; “Rebuild pages” regenerates HTML from DB only',
             newsRefresh: 'Refresh news',

@@ -33,7 +33,7 @@
         var url = item.url || '';
         var m = url.match(/html\/game\/([^/?]+)\.html/i);
         if (!m) return '';
-        return 'assets/game/thumbs/' + m[1] + '.jpg?v=2';
+        return 'assets/game/thumbs/' + m[1] + '.jpg?v=3';
     }
 
     function bindSearch(toolbarEl) {

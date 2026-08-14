@@ -1,12 +1,15 @@
 /**
  * Admin: capture games hub thumbnails in-browser and upload to API.
+ * Iframe must stay on-screen — hidden/off-screen iframes are rAF-throttled → black canvas.
  */
 (function () {
   'use strict';
 
   var THUMB_W = 480;
   var THUMB_H = 270;
-  var WAIT_MS = 3800;
+  var MIN_WAIT_MS = 2500;
+  var MAX_WAIT_MS = 16000;
+  var POLL_MS = 180;
 
   function tr(key, fb) {
     if (typeof window.t === 'function') {
@@ -81,6 +84,7 @@
     var ctx = c.getContext('2d');
     var sw = img.naturalWidth || img.width;
     var sh = img.naturalHeight || img.height;
+    if (!sw || !sh) throw new Error('empty image');
     var tr = w / h;
     var cr = sw / sh;
     var sx = 0;
@@ -103,18 +107,93 @@
     return i >= 0 ? dataUrl.slice(i + 1) : dataUrl;
   }
 
-  function captureFromIframe(iframe, gameplay) {
-    var doc = iframe.contentDocument;
-    if (!doc) throw new Error('iframe blocked');
+  function avgBrightness(dataUrl) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () {
+        var c = document.createElement('canvas');
+        c.width = 48;
+        c.height = 48;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, 48, 48);
+        var d = ctx.getImageData(0, 0, 48, 48).data;
+        var sum = 0;
+        var n = 0;
+        for (var i = 0; i < d.length; i += 4) {
+          sum += d[i] + d[i + 1] + d[i + 2];
+          n++;
+        }
+        resolve(n ? sum / n / 3 : 0);
+      };
+      img.onerror = function () { resolve(0); };
+      img.src = dataUrl;
+    });
+  }
+
+  function canvasScore(canvas) {
+    try {
+      var w = canvas.width;
+      var h = canvas.height;
+      if (w < 4 || h < 4) return 0;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return 0;
+      var sw = Math.min(48, w);
+      var sh = Math.min(48, h);
+      var d = ctx.getImageData(0, 0, sw, sh).data;
+      var sum = 0;
+      var maxDiff = 0;
+      var base = d[0] + d[1] + d[2];
+      for (var i = 0; i < d.length; i += 4) {
+        var px = d[i] + d[i + 1] + d[i + 2];
+        sum += px;
+        maxDiff = Math.max(maxDiff, Math.abs(px - base));
+      }
+      var avg = sum / (d.length / 4) / 3;
+      return avg + maxDiff * 0.35;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  function docReady(doc, gameplay) {
+    if (!doc) return false;
+    var win = doc.defaultView;
+    if (gameplay && win && win.__tbThumbReady) return true;
+    var canvas = doc.querySelector('canvas');
+    if (canvas && canvasScore(canvas) > 14) return true;
+    var board = doc.querySelector('.klotski-board, .gomoku-board, .puzzle-board, #board');
+    if (board && board.children && board.children.length > 0) return true;
+    if (!gameplay && doc.body && doc.body.innerText && doc.body.innerText.length > 20) return true;
+    return false;
+  }
+
+  function waitForReady(doc, gameplay) {
+    var start = Date.now();
+    return new Promise(function (resolve) {
+      (function poll() {
+        if (docReady(doc, gameplay) && Date.now() - start >= MIN_WAIT_MS) {
+          resolve();
+          return;
+        }
+        if (Date.now() - start >= MAX_WAIT_MS) {
+          resolve();
+          return;
+        }
+        setTimeout(poll, POLL_MS);
+      })();
+    });
+  }
+
+  function captureFromDoc(doc) {
     var canvas = doc.querySelector('canvas');
     if (canvas) {
-      return cropCover(canvas, THUMB_W, THUMB_H);
+      return Promise.resolve(cropCover(canvas, THUMB_W, THUMB_H));
     }
     var target = doc.querySelector('.game-board-wrap, .klotski-board, .puzzle-board, #board, #wrap');
     if (!target) target = doc.body;
     return loadHtml2Canvas().then(function (html2canvas) {
       return html2canvas(target, {
-        backgroundColor: null,
+        backgroundColor: '#111827',
         scale: Math.min(2, window.devicePixelRatio || 1),
         logging: false,
         useCORS: true
@@ -124,40 +203,77 @@
     });
   }
 
-  function wait(ms) {
-    return new Promise(function (r) { setTimeout(r, ms); });
+  function ensureCaptureStage(label) {
+    var stage = document.getElementById('game-thumbs-capture-stage');
+    if (!stage) {
+      stage = document.createElement('div');
+      stage.id = 'game-thumbs-capture-stage';
+      stage.innerHTML =
+        '<div class="game-thumbs-capture-inner">' +
+          '<p id="game-thumbs-capture-label"></p>' +
+          '<div id="game-thumbs-capture-frame"></div>' +
+        '</div>';
+      document.body.appendChild(stage);
+    }
+    var lab = document.getElementById('game-thumbs-capture-label');
+    if (lab) lab.textContent = label || '';
+    stage.style.display = 'flex';
+    return stage;
+  }
+
+  function hideCaptureStage() {
+    var stage = document.getElementById('game-thumbs-capture-stage');
+    if (!stage) return;
+    stage.style.display = 'none';
+    var frame = document.getElementById('game-thumbs-capture-frame');
+    if (frame) frame.innerHTML = '';
   }
 
   function captureOne(item, gameplay) {
     var origin = window.location.origin;
     var src = origin + '/' + item.url.replace(/^\/?/, '') + (gameplay ? '?thumb=1' : '');
+    ensureCaptureStage(
+      tr('privateHub.ops.gameThumbsCapturing', '正在截取：{name}').replace('{name}', item.label)
+    );
+    var frameHost = document.getElementById('game-thumbs-capture-frame');
+    if (!frameHost) return Promise.reject(new Error('capture frame missing'));
+
     return new Promise(function (resolve, reject) {
       var iframe = document.createElement('iframe');
       iframe.setAttribute('aria-hidden', 'true');
-      iframe.style.cssText = 'position:fixed;left:-9999px;top:0;width:960px;height:540px;border:0;opacity:0;pointer-events:none;';
+      iframe.style.cssText = 'width:960px;height:540px;border:0;display:block;background:#000;';
       iframe.src = src;
       var done = false;
+
       function finish(err, dataUrl) {
         if (done) return;
         done = true;
-        iframe.remove();
+        hideCaptureStage();
         if (err) reject(err);
         else resolve(dataUrl);
       }
+
       iframe.onerror = function () { finish(new Error('iframe load error')); };
       iframe.onload = function () {
-        wait(WAIT_MS).then(function () {
-          return captureFromIframe(iframe, gameplay);
-        }).then(function (dataUrl) {
-          finish(null, dataUrl);
-        }).catch(function (err) {
-          finish(err);
-        });
+        var doc = iframe.contentDocument;
+        waitForReady(doc, gameplay)
+          .then(function () { return captureFromDoc(doc); })
+          .then(function (dataUrl) {
+            return avgBrightness(dataUrl).then(function (b) {
+              if (gameplay && b < 10) {
+                throw new Error('capture too dark (' + Math.round(b) + ')');
+              }
+              return dataUrl;
+            });
+          })
+          .then(function (dataUrl) { finish(null, dataUrl); })
+          .catch(function (err) { finish(err); });
       };
-      document.body.appendChild(iframe);
+
+      frameHost.appendChild(iframe);
       setTimeout(function () {
         if (!done) finish(new Error('timeout'));
-      }, WAIT_MS + 12000);
+      }, MAX_WAIT_MS + 8000);
     });
   }
 
@@ -202,17 +318,18 @@
     var items = gameItems();
     var ok = 0;
     var fail = 0;
+    var fails = [];
 
     (function next(i) {
       if (i >= items.length) {
+        hideCaptureStage();
         if (btnPlay) btnPlay.disabled = false;
         if (btnMenu) btnMenu.disabled = false;
-        setStatus(
-          tr('privateHub.ops.gameThumbsDone', '完成：{ok} 成功，{fail} 失败')
-            .replace('{ok}', String(ok))
-            .replace('{fail}', String(fail)),
-          fail > 0
-        );
+        var msg = tr('privateHub.ops.gameThumbsDone', '完成：{ok} 成功，{fail} 失败')
+          .replace('{ok}', String(ok))
+          .replace('{fail}', String(fail));
+        if (fails.length) msg += ' — ' + fails.join(', ');
+        setStatus(msg, fail > 0);
         refreshList();
         return;
       }
@@ -228,6 +345,7 @@
         .then(function () { ok += 1; next(i + 1); })
         .catch(function (err) {
           fail += 1;
+          fails.push(item.slug);
           console.warn('thumb fail', item.slug, err);
           next(i + 1);
         });
@@ -238,14 +356,10 @@
     var btnPlay = document.getElementById('btn-game-thumbs-gameplay');
     var btnMenu = document.getElementById('btn-game-thumbs-menu');
     if (btnPlay) {
-      btnPlay.addEventListener('click', function () {
-        runAll(true);
-      });
+      btnPlay.addEventListener('click', function () { runAll(true); });
     }
     if (btnMenu) {
-      btnMenu.addEventListener('click', function () {
-        runAll(false);
-      });
+      btnMenu.addEventListener('click', function () { runAll(false); });
     }
     document.addEventListener('tb:private-ready', refreshList);
     refreshList();

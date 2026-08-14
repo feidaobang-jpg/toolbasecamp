@@ -53,6 +53,7 @@ window.TB_LOCALES['zh-CN'] = {
             gameThumbsProgress: '正在处理 {n}/{total}：{name}',
             gameThumbsDone: '完成：{ok} 成功，{fail} 失败',
             gameThumbsMissing: '未生成',
+            gameThumbsCapturing: '正在截取：{name}',
             newsTitle: '科技资讯',
             newsDesc: '「更新资讯」抓取编译新文；「重生静态页」只按库重写 HTML',
             newsRefresh: '更新资讯',
