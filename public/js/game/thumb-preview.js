@@ -22,6 +22,71 @@
   ].join('\n');
   document.head.appendChild(style);
 
+  var MENU_STATES = {
+    menu: 1,
+    pause: 1,
+    paused: 1,
+    gameover: 1,
+    over: 1,
+    win: 1,
+    levelclear: 1
+  };
+
+  function fireKey(code) {
+    var opts = { code: code, key: code === 'Enter' ? 'Enter' : ' ', bubbles: true, cancelable: true };
+    try {
+      document.dispatchEvent(new KeyboardEvent('keydown', opts));
+      window.dispatchEvent(new KeyboardEvent('keydown', opts));
+    } catch (e) {}
+  }
+
+  function isMenuState(s) {
+    return s === 0 || s === 'menu' || !!MENU_STATES[s];
+  }
+
+  function isPlayState(s) {
+    return s === 1 || s === 'play' || s === 'playing';
+  }
+
+  function canvasLooksLive() {
+    var canvas = document.querySelector('canvas');
+    if (!canvas || canvas.width < 16 || canvas.height < 16) return false;
+    try {
+      var ctx = canvas.getContext('2d');
+      var d = ctx.getImageData(0, 0, Math.min(64, canvas.width), Math.min(64, canvas.height)).data;
+      var sum = 0;
+      var maxDiff = 0;
+      var base = d[0] + d[1] + d[2];
+      for (var i = 0; i < d.length; i += 4) {
+        var px = d[i] + d[i + 1] + d[i + 2];
+        sum += px;
+        maxDiff = Math.max(maxDiff, Math.abs(px - base));
+      }
+      var avg = sum / (d.length / 4) / 3;
+      return avg > 8 && maxDiff > 18;
+    } catch (e2) {
+      return false;
+    }
+  }
+
+  function gameplayActive() {
+    if (typeof Game !== 'undefined' && Game && typeof Game.state !== 'undefined') {
+      var s = Game.state;
+      if (isMenuState(s)) return false;
+      if (s === 'ready') return false;
+      if (isPlayState(s)) return true;
+    }
+    if (typeof window.__tbThumbStateName === 'string') {
+      if (window.__tbThumbStateName === 'menu') return false;
+      if (window.__tbThumbStateName === 'playing') return true;
+    }
+    if (document.querySelector('.klotski-board .klotski-tile, .gomoku-cell .gomoku-stone, .puzzle-piece')) {
+      return true;
+    }
+    if (document.querySelector('.gomoku-board .gomoku-cell')) return true;
+    return canvasLooksLive();
+  }
+
   function clickRestart() {
     var btn = document.getElementById('restart-btn');
     if (btn) {
@@ -35,66 +100,83 @@
     if (typeof window.__tbThumbAutoStart === 'function') {
       try {
         window.__tbThumbAutoStart();
-        return true;
       } catch (e) {}
     }
-    if (typeof Game !== 'undefined') {
-      if (typeof Game.startGame === 'function') {
+    if (typeof Game !== 'undefined' && Game) {
+      if (typeof Game.startGame === 'function' && isMenuState(Game.state)) {
         try {
-          Game.startGame(Game.mode || 'level');
-          return true;
+          Game.startGame('level');
+          if (Game.state === 'ready') Game.state = 'playing';
         } catch (e1) {
           try {
-            Game.startGame('level');
-            return true;
+            Game.startGame(Game.mode || 'level');
+            if (Game.state === 'ready') Game.state = 'playing';
           } catch (e2) {}
         }
       }
-      if (typeof Game.newGame === 'function') {
-        try {
-          Game.newGame('level');
-          return true;
-        } catch (e3) {}
+      if (typeof Game.newGame === 'function' && isMenuState(Game.state)) {
+        try { Game.newGame('level'); } catch (e3) {}
       }
     }
-    if (typeof startGame === 'function') {
-      try {
-        startGame(false);
-        return true;
-      } catch (e4) {
-        try {
-          startGame('level');
-          return true;
-        } catch (e5) {}
+    if (typeof startGame === 'function' && typeof Game !== 'undefined' && Game && isMenuState(Game.state)) {
+      try { startGame(false); } catch (e4) {
+        try { startGame('level'); } catch (e5) {}
       }
     }
-    return clickRestart();
+    fireKey('Enter');
+    fireKey('Space');
+    if (typeof Game !== 'undefined' && Game && Game.state === 'ready') Game.state = 'playing';
+    clickRestart();
+    return gameplayActive();
   }
 
   var attempts = 0;
-  var started = false;
+  var playSince = 0;
 
   function signalReady() {
-    var n = 0;
+    var frames = 0;
     (function frame() {
-      n++;
-      if (n >= 6) window.__tbThumbReady = true;
-      else requestAnimationFrame(frame);
+      frames++;
+      if (gameplayActive()) {
+        if (!playSince) playSince = Date.now();
+        if (Date.now() - playSince >= 2200) {
+          window.__tbThumbReady = true;
+          window.__tbThumbGameplay = true;
+          return;
+        }
+      } else {
+        playSince = 0;
+      }
+      if (frames >= 160) {
+        window.__tbThumbReady = gameplayActive();
+        window.__tbThumbGameplay = window.__tbThumbReady;
+        return;
+      }
+      requestAnimationFrame(frame);
     })();
   }
 
   function tick() {
-    if (!started && tryStart()) {
-      started = true;
+    if (!gameplayActive()) {
+      tryStart();
+    }
+    if (gameplayActive()) {
       signalReady();
       return;
     }
-    if (started || attempts++ > 80) return;
+    if (attempts++ > 120) {
+      if (!window.__tbThumbReady) signalReady();
+      return;
+    }
     requestAnimationFrame(tick);
   }
 
   function boot() {
-    setTimeout(tick, 150);
+    window.dispatchEvent(new Event('resize'));
+    setTimeout(tick, 250);
+    setTimeout(function () {
+      if (!gameplayActive()) tick();
+    }, 1200);
   }
 
   if (document.readyState === 'loading') {

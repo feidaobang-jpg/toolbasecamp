@@ -47,7 +47,7 @@ window.TB_LOCALES.en = {
             refreshTitle: 'Backend updates',
             refreshDesc: 'Manually run crawlers and compile jobs (tech news, benchmark ranks, game thumbs, …)',
             gameThumbsTitle: 'Games hub thumbnails',
-            gameThumbsDesc: 'Capture each game in your browser and upload JPEG thumbs. Prefer “Refresh gameplay shots”.',
+            gameThumbsDesc: 'Capture each game in your browser and upload JPEG thumbs. Prefer “Refresh gameplay shots”; wait until each level starts. Too dark or still on menu counts as failed and keeps the old thumb.',
             gameThumbsGameplay: 'Refresh gameplay shots',
             gameThumbsMenu: 'Refresh menu shots',
             gameThumbsOpenHub: 'Open games hub',

@@ -7,8 +7,8 @@
 
   var THUMB_W = 480;
   var THUMB_H = 270;
-  var MIN_WAIT_MS = 2500;
-  var MAX_WAIT_MS = 16000;
+  var MIN_WAIT_MS = 5000;
+  var MAX_WAIT_MS = 22000;
   var POLL_MS = 180;
 
   function tr(key, fb) {
@@ -158,12 +158,22 @@
   function docReady(doc, gameplay) {
     if (!doc) return false;
     var win = doc.defaultView;
-    if (gameplay && win && win.__tbThumbReady) return true;
+    if (gameplay) {
+      if (win && win.__tbThumbReady && win.__tbThumbGameplay) return true;
+      if (win && win.__tbThumbReady) {
+        var canvas = doc.querySelector('canvas');
+        if (canvas && canvasScore(canvas) > 20) return true;
+        var board = doc.querySelector('.klotski-board .klotski-tile, .gomoku-cell, .puzzle-piece');
+        if (board) return true;
+      }
+      return false;
+    }
+    if (win && win.__tbThumbReady) return true;
     var canvas = doc.querySelector('canvas');
     if (canvas && canvasScore(canvas) > 14) return true;
     var board = doc.querySelector('.klotski-board, .gomoku-board, .puzzle-board, #board');
     if (board && board.children && board.children.length > 0) return true;
-    if (!gameplay && doc.body && doc.body.innerText && doc.body.innerText.length > 20) return true;
+    if (doc.body && doc.body.innerText && doc.body.innerText.length > 20) return true;
     return false;
   }
 
@@ -193,7 +203,7 @@
     if (!target) target = doc.body;
     return loadHtml2Canvas().then(function (html2canvas) {
       return html2canvas(target, {
-        backgroundColor: '#111827',
+        backgroundColor: target.classList && target.classList.contains('klotski-board') ? '#e2e8f0' : '#111827',
         scale: Math.min(2, window.devicePixelRatio || 1),
         logging: false,
         useCORS: true
@@ -256,12 +266,17 @@
       iframe.onerror = function () { finish(new Error('iframe load error')); };
       iframe.onload = function () {
         var doc = iframe.contentDocument;
+        var win = iframe.contentWindow;
+        if (win) win.dispatchEvent(new Event('resize'));
         waitForReady(doc, gameplay)
           .then(function () { return captureFromDoc(doc); })
           .then(function (dataUrl) {
             return avgBrightness(dataUrl).then(function (b) {
-              if (gameplay && b < 10) {
-                throw new Error('capture too dark (' + Math.round(b) + ')');
+              if (!gameplay) return dataUrl;
+              var canvas = doc.querySelector('canvas');
+              var score = canvas ? canvasScore(canvas) : 0;
+              if (b < 6 && score < 14) {
+                throw new Error('capture too dark (avg ' + Math.round(b) + ', score ' + Math.round(score) + ')');
               }
               return dataUrl;
             });

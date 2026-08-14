@@ -46,6 +46,12 @@
   <script src="../../js/base.js?v=minimax1"></script>
   <script src="../../js/game/game-audio.js?v=minimax1"></script>
   <script src="../../js/game/gomoku.js?v=minimax1"></script>
-<script src="../../js/game/thumb-preview.js"></script>
+  <script>
+  window.__tbThumbAutoStart = function () {
+    var btn = document.getElementById('restart-btn');
+    if (btn) btn.click();
+  };
+  </script>
+  <script src="../../js/game/thumb-preview.js"></script>
 </body>
 </html>

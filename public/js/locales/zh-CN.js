@@ -46,7 +46,7 @@ window.TB_LOCALES['zh-CN'] = {
             refreshTitle: '后台更新',
             refreshDesc: '手动触发爬虫与编译任务（科技资讯、性能跑分榜、游戏截图等）',
             gameThumbsTitle: '游戏中心截图',
-            gameThumbsDesc: '在本页用浏览器截取各游戏画面并上传缩略图。推荐「刷新玩法截图」；菜单截图用于标题页展示。',
+            gameThumbsDesc: '在本页用浏览器打开各游戏并上传缩略图到站点（推荐「刷新玩法截图」）。需等游戏进入关卡后再截；过暗或未进关卡记为失败并保留原图。',
             gameThumbsGameplay: '刷新玩法截图',
             gameThumbsMenu: '刷新菜单截图',
             gameThumbsOpenHub: '查看游戏中心',
