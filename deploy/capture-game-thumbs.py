@@ -116,21 +116,52 @@ def content_bbox(im: Image.Image, threshold: int = 22) -> tuple[int, int, int, i
     )
 
 
+def trim_dark_edges(im: Image.Image, threshold: int = 20) -> Image.Image:
+    """Remove letterbox/pillarbox bands so square thumbs fill the frame."""
+    rgb = im.convert("RGB")
+    w, h = rgb.size
+    px = rgb.load()
+    thr = threshold * 3
+
+    def row_avg(y: int) -> float:
+        return sum(px[x, y][0] + px[x, y][1] + px[x, y][2] for x in range(w)) / w
+
+    def col_avg(x: int) -> float:
+        return sum(px[x, y][0] + px[x, y][1] + px[x, y][2] for y in range(h)) / h
+
+    top, bottom, left, right = 0, h, 0, w
+    while top < bottom - 8 and row_avg(top) < thr:
+        top += 1
+    while bottom > top + 8 and row_avg(bottom - 1) < thr:
+        bottom -= 1
+    while left < right - 8 and col_avg(left) < thr:
+        left += 1
+    while right > left + 8 and col_avg(right - 1) < thr:
+        right -= 1
+    if bottom <= top + 8 or right <= left + 8:
+        return im
+    return rgb.crop((left, top, right, bottom))
+
+
 DOM_BOARD_SLUGS = frozenset({"gomoku", "puzzle", "klotski"})
 
 
 def square_crop(im: Image.Image, slug: str | None = None) -> Image.Image:
     box = content_bbox(im)
     im = im.crop(box)
+    im = trim_dark_edges(im)
     w, h = im.size
     if slug in DOM_BOARD_SLUGS and h > int(w * 1.08):
-        top = int(h * 0.24)
+        top = int(h * 0.18)
         im = im.crop((0, top, w, h))
+        im = trim_dark_edges(im)
         w, h = im.size
     side = min(w, h)
     left = max(0, (w - side) // 2)
     top = max(0, (h - side) // 2)
-    return im.crop((left, top, left + side, top + side))
+    im = im.crop((left, top, left + side, top + side))
+    im = trim_dark_edges(im)
+    return im
 
 
 def to_thumb(src_png: Path, dest_jpg: Path, slug: str | None = None) -> None:

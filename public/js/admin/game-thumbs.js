@@ -84,37 +84,74 @@
     if (!ctx) return canvas;
     var data = ctx.getImageData(0, 0, w, h).data;
     var thr = 72;
-    var minX = w;
-    var minY = h;
-    var maxX = 0;
-    var maxY = 0;
-    var found = false;
-    for (var y = 0; y < h; y++) {
+
+    function rowAvg(y) {
+      var sum = 0;
       for (var x = 0; x < w; x++) {
         var i = (y * w + x) * 4;
-        var sum = data[i] + data[i + 1] + data[i + 2];
-        if (sum > thr) {
-          found = true;
-          if (x < minX) minX = x;
-          if (y < minY) minY = y;
-          if (x > maxX) maxX = x;
-          if (y > maxY) maxY = y;
-        }
+        sum += data[i] + data[i + 1] + data[i + 2];
       }
+      return sum / w;
     }
-    if (!found) return canvas;
-    var pad = 6;
-    minX = Math.max(0, minX - pad);
-    minY = Math.max(0, minY - pad);
-    maxX = Math.min(w - 1, maxX + pad);
-    maxY = Math.min(h - 1, maxY + pad);
-    var tw = maxX - minX + 1;
-    var th = maxY - minY + 1;
+
+    function colAvg(x) {
+      var sum = 0;
+      for (var y = 0; y < h; y++) {
+        var i = (y * w + x) * 4;
+        sum += data[i] + data[i + 1] + data[i + 2];
+      }
+      return sum / h;
+    }
+
+    var top = 0;
+    var bottom = h;
+    var left = 0;
+    var right = w;
+    while (top < bottom - 8 && rowAvg(top) < thr) top++;
+    while (bottom > top + 8 && rowAvg(bottom - 1) < thr) bottom--;
+    while (left < right - 8 && colAvg(left) < thr) left++;
+    while (right > left + 8 && colAvg(right - 1) < thr) right--;
+    if (bottom <= top + 8 || right <= left + 8) return canvas;
+
+    var tw = right - left;
+    var th = bottom - top;
     var out = document.createElement('canvas');
     out.width = tw;
     out.height = th;
-    out.getContext('2d').drawImage(canvas, minX, minY, tw, th, 0, 0, tw, th);
-    return out;
+    out.getContext('2d').drawImage(canvas, left, top, tw, th, 0, 0, tw, th);
+
+    var minX = tw;
+    var minY = th;
+    var maxX = 0;
+    var maxY = 0;
+    var found = false;
+    var d2 = out.getContext('2d').getImageData(0, 0, tw, th).data;
+    for (var y2 = 0; y2 < th; y2++) {
+      for (var x2 = 0; x2 < tw; x2++) {
+        var j = (y2 * tw + x2) * 4;
+        var sum2 = d2[j] + d2[j + 1] + d2[j + 2];
+        if (sum2 > thr) {
+          found = true;
+          if (x2 < minX) minX = x2;
+          if (y2 < minY) minY = y2;
+          if (x2 > maxX) maxX = x2;
+          if (y2 > maxY) maxY = y2;
+        }
+      }
+    }
+    if (!found) return out;
+    var pad = 4;
+    minX = Math.max(0, minX - pad);
+    minY = Math.max(0, minY - pad);
+    maxX = Math.min(tw - 1, maxX + pad);
+    maxY = Math.min(th - 1, maxY + pad);
+    var fw = maxX - minX + 1;
+    var fh = maxY - minY + 1;
+    var fin = document.createElement('canvas');
+    fin.width = fw;
+    fin.height = fh;
+    fin.getContext('2d').drawImage(out, minX, minY, fw, fh, 0, 0, fw, fh);
+    return fin;
   }
 
   function cropCover(img, w, h) {
