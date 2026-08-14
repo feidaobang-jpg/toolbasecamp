@@ -27,6 +27,15 @@
             .replace(/</g, '&lt;');
     }
 
+    function gameThumbSrc(item) {
+        if (!item) return '';
+        if (item.thumb) return item.thumb;
+        var url = item.url || '';
+        var m = url.match(/html\/game\/([^/?]+)\.html/i);
+        if (!m) return '';
+        return 'assets/game/thumbs/' + m[1] + '.jpg?v=1';
+    }
+
     function bindSearch(toolbarEl) {
         var input = toolbarEl.querySelector('#hub-search-input');
         var clearBtn = toolbarEl.querySelector('#hub-search-clear');
@@ -107,16 +116,23 @@
             }
 
             var gridEl = document.createElement('div');
-            gridEl.className = 'hub-tools-grid';
+            gridEl.className = 'hub-games-grid';
 
             group.items.forEach(function (item) {
                 var label = item.titleKey ? tr(item.titleKey) : (item.title || '');
                 var groupLabel = tr(group.titleKey);
+                var thumb = gameThumbSrc(item);
                 var card = document.createElement('a');
                 card.href = item.url || '#';
-                card.className = 'hub-tool-card';
+                card.className = 'hub-tool-card hub-game-card';
                 card.dataset.search = groupLabel + ' ' + label;
-                card.innerHTML = '<h3>' + escapeHtml(label) + '</h3>';
+                card.innerHTML =
+                    (thumb
+                        ? '<span class="hub-game-card-thumb">' +
+                            '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async">' +
+                          '</span>'
+                        : '') +
+                    '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3></span>';
                 gridEl.appendChild(card);
             });
 
