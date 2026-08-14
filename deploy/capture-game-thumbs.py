@@ -144,22 +144,37 @@ def trim_dark_edges(im: Image.Image, threshold: int = 20) -> Image.Image:
 
 
 def crop_dense_core(im: Image.Image, min_density: float = 0.10, threshold: int = 20) -> Image.Image:
-    """Keep columns/rows with enough gameplay pixels (fixes portrait pillarbox)."""
+    """Keep rows/cols with gameplay signal; variance helps portrait starfields."""
+    import statistics
+
     rgb = im.convert("RGB")
     w, h = rgb.size
     px = rgb.load()
     thr = threshold * 3
 
-    col_density = [
-        sum(1 for y in range(h) if px[x, y][0] + px[x, y][1] + px[x, y][2] > thr) / h
-        for x in range(w)
-    ]
-    row_density = [
-        sum(1 for x in range(w) if px[x, y][0] + px[x, y][1] + px[x, y][2] > thr) / w
-        for y in range(h)
-    ]
-    active_x = [i for i, d in enumerate(col_density) if d >= min_density]
-    active_y = [i for i, d in enumerate(row_density) if d >= min_density]
+    col_vals = [[px[x, y][0] + px[x, y][1] + px[x, y][2] for y in range(h)] for x in range(w)]
+    row_vals = [[px[x, y][0] + px[x, y][1] + px[x, y][2] for x in range(w)] for y in range(h)]
+
+    col_density = [sum(1 for v in col if v > thr) / h for col in col_vals]
+    row_density = [sum(1 for v in row if v > thr) / w for row in row_vals]
+    col_var = [statistics.pstdev(col) if len(col) > 1 else 0.0 for col in col_vals]
+    row_var = [statistics.pstdev(row) if len(row) > 1 else 0.0 for row in row_vals]
+
+    max_col_var = max(col_var) if col_var else 0.0
+    max_row_var = max(row_var) if row_var else 0.0
+
+    if max_col_var > 12:
+        var_thr = max_col_var * 0.32
+        active_x = [i for i, v in enumerate(col_var) if v >= var_thr]
+    else:
+        active_x = [i for i, d in enumerate(col_density) if d >= min_density]
+
+    if max_row_var > 12:
+        var_thr = max_row_var * 0.32
+        active_y = [i for i, v in enumerate(row_var) if v >= var_thr]
+    else:
+        active_y = [i for i, d in enumerate(row_density) if d >= min_density]
+
     if not active_x or not active_y:
         return im
     left, right = active_x[0], active_x[-1]

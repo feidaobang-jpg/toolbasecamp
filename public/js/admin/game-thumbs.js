@@ -85,28 +85,59 @@
     var data = ctx.getImageData(0, 0, w, h).data;
     var colD = [];
     var rowD = [];
+    var colV = [];
+    var rowV = [];
     var x;
     var y;
+
+    function stdev(vals) {
+      if (!vals.length) return 0;
+      var mean = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+      var sq = vals.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / vals.length;
+      return Math.sqrt(sq);
+    }
+
     for (x = 0; x < w; x++) {
+      var col = [];
       var c = 0;
       for (y = 0; y < h; y++) {
         var i = (y * w + x) * 4;
-        if (data[i] + data[i + 1] + data[i + 2] > thr) c++;
+        var sum = data[i] + data[i + 1] + data[i + 2];
+        col.push(sum);
+        if (sum > thr) c++;
       }
       colD.push(c / h);
+      colV.push(stdev(col));
     }
     for (y = 0; y < h; y++) {
+      var row = [];
       var r = 0;
       for (x = 0; x < w; x++) {
         var j = (y * w + x) * 4;
-        if (data[j] + data[j + 1] + data[j + 2] > thr) r++;
+        var sum2 = data[j] + data[j + 1] + data[j + 2];
+        row.push(sum2);
+        if (sum2 > thr) r++;
       }
       rowD.push(r / w);
+      rowV.push(stdev(row));
     }
+
+    var maxColV = colV.reduce(function (a, b) { return Math.max(a, b); }, 0);
+    var maxRowV = rowV.reduce(function (a, b) { return Math.max(a, b); }, 0);
     var ax = [];
     var ay = [];
-    for (x = 0; x < w; x++) if (colD[x] >= minDensity) ax.push(x);
-    for (y = 0; y < h; y++) if (rowD[y] >= minDensity) ay.push(y);
+    if (maxColV > 12) {
+      var vthr = maxColV * 0.32;
+      for (x = 0; x < w; x++) if (colV[x] >= vthr) ax.push(x);
+    } else {
+      for (x = 0; x < w; x++) if (colD[x] >= minDensity) ax.push(x);
+    }
+    if (maxRowV > 12) {
+      var rthr = maxRowV * 0.32;
+      for (y = 0; y < h; y++) if (rowV[y] >= rthr) ay.push(y);
+    } else {
+      for (y = 0; y < h; y++) if (rowD[y] >= minDensity) ay.push(y);
+    }
     if (!ax.length || !ay.length) return canvas;
     var left = ax[0];
     var right = ax[ax.length - 1];
