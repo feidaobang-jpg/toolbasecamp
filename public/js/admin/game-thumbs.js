@@ -5,8 +5,8 @@
 (function () {
   'use strict';
 
-  var THUMB_W = 480;
-  var THUMB_H = 270;
+  var THUMB_W = 512;
+  var THUMB_H = 512;
   var MIN_WAIT_MS = 5000;
   var MAX_WAIT_MS = 22000;
   var POLL_MS = 180;

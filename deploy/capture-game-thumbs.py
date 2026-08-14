@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 GAME_DIR = PUBLIC / "html" / "game"
 OUT_DIR = PUBLIC / "assets" / "game" / "thumbs"
-THUMB_W, THUMB_H = 480, 270
+THUMB_W, THUMB_H = 512, 512
 JPEG_QUALITY = 85
 META_PATH = OUT_DIR / "meta.json"
 
@@ -91,16 +91,10 @@ def to_thumb(src_png: Path, dest_jpg: Path) -> None:
     with Image.open(src_png) as im:
         im = im.convert("RGB")
         w, h = im.size
-        target_ratio = THUMB_W / THUMB_H
-        cur_ratio = w / h
-        if cur_ratio > target_ratio:
-            new_w = int(h * target_ratio)
-            left = (w - new_w) // 2
-            im = im.crop((left, 0, left + new_w, h))
-        elif cur_ratio < target_ratio:
-            new_h = int(w / target_ratio)
-            top = (h - new_h) // 2
-            im = im.crop((0, top, w, top + new_h))
+        side = min(w, h)
+        left = (w - side) // 2
+        top = (h - side) // 2
+        im = im.crop((left, top, left + side, top + side))
         im = im.resize((THUMB_W, THUMB_H), Image.Resampling.LANCZOS)
         dest_jpg.parent.mkdir(parents=True, exist_ok=True)
         im.save(dest_jpg, "JPEG", quality=JPEG_QUALITY, optimize=True)

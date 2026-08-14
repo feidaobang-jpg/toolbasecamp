@@ -505,11 +505,11 @@
     }
 }
 
-/* Games hub: card grid with screenshots */
+/* Games hub: square card grid with screenshots */
 .hub-games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+    gap: 0.875rem;
 }
 
 .hub-game-card {
@@ -525,7 +525,7 @@
 
 .hub-game-card-thumb {
     display: block;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1 / 1;
     background: #0f172a;
     overflow: hidden;
 }
@@ -547,6 +547,7 @@
     white-space: normal;
     text-align: center;
     line-height: 1.35;
+    font-size: 0.9375rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -555,7 +556,18 @@
 
 @media (min-width: 640px) {
     .hub-games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-        gap: 0.875rem;
+        grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+        gap: 1rem;
+    }
+
+    .hub-game-card-body h3 {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hub-games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+        gap: 1.125rem;
     }
 }
