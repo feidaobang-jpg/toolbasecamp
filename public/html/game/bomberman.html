@@ -419,6 +419,11 @@ function solidFor(tx,ty,ghost,ignoreBombs){
   if(!ignoreBombs && bombAt(tx,ty)) return true;
   return false;
 }
+/** 玩家包围盒是否仍与炸弹格相交 */
+function playerOverlapsBombTile(p, b){
+  const L=BX+b.tx*TS, T=BY+b.ty*TS, R=L+TS, B=T+TS;
+  return p.x+PR>L && p.x-PR<R && p.y+PR>T && p.y-PR<B;
+}
 function canPlace(x,y,r,ghost,ignoreSet){
   /* 检查四角所在格 */
   const pts=[[x-r,y-r],[x+r,y-r],[x-r,y+r],[x+r,y+r]];
@@ -435,10 +440,15 @@ function canPlace(x,y,r,ghost,ignoreSet){
 function movePlayer(dt,ax,ay){
   const p=G.p;
   const sp=G.speed*(p.dash>0?2.6:1);
-  /* 自己脚下的炸弹可以走出去 */
+  /* 刚放下的炸弹：身体尚未完全离开该格前可穿过，否则会卡在格缝上 */
   const ig={};
-  const ptx=Math.floor((p.x-BX)/TS), pty=Math.floor((p.y-BY)/TS);
-  G.bombs.forEach(b=>{ if(b.own && b.tx===ptx && b.ty===pty) ig[b.tx+','+b.ty]=1; });
+  G.bombs.forEach(b=>{
+    if(!b.own) return;
+    if(b.soft){
+      if(playerOverlapsBombTile(p,b)) ig[b.tx+','+b.ty]=1;
+      else b.soft=false;
+    }
+  });
   if(ax){
     const nx=p.x+ax*sp*dt;
     if(canPlace(nx,p.y,PR,false,ig)) p.x=nx;
@@ -466,7 +476,7 @@ function placeBomb(){
   if(bombAt(tx,ty)){ Snd.err(); return; }
   const mine=G.bombs.filter(b=>b.own).length;
   if(mine>=G.maxBombs){ Snd.err(); toast('炸弹数量已达上限 '+G.maxBombs); return; }
-  G.bombs.push({tx:tx,ty:ty,t:0,fuse:2.6,fire:G.fire,own:true});
+  G.bombs.push({tx:tx,ty:ty,t:0,fuse:2.6,fire:G.fire,own:true,soft:true});
   Snd.place();
 }
 function detonateAll(){
