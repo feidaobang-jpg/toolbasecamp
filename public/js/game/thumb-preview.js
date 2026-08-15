@@ -17,6 +17,8 @@
     'html.tb-thumb-capture .puzzle-audio, html.tb-thumb-capture .puzzle-crop,',
     'html.tb-thumb-capture .game-hint, html.tb-thumb-capture .game-stats,',
     'html.tb-thumb-capture .field-label { display: none !important; }',
+    'html.tb-thumb-capture .overlay, html.tb-thumb-capture #ovMenu,',
+    'html.tb-thumb-capture #ovPause, html.tb-thumb-capture #ovOver { display: none !important; }',
     'html.tb-thumb-capture .container { max-width: none !important; padding: 0 !important; margin: 0 !important; }',
     'html.tb-thumb-capture .content, html.tb-thumb-capture .tool-card, html.tb-thumb-capture .game-card {',
     '  margin: 0 !important; width: 100% !important; max-width: none !important;',
@@ -83,13 +85,44 @@
     }
   }
 
-  function gameplayActive() {
-    if (typeof Game !== 'undefined' && Game && typeof Game.state !== 'undefined') {
-      var s = Game.state;
-      if (isMenuState(s) || isPausedState(s)) return false;
-      if (s === 'ready') return false;
-      if (isPlayState(s)) return true;
+  /** 菜单层是否真的盖住画面（CSS 强制隐藏不算） */
+  function menuOverlayVisible() {
+    var ids = ['ovMenu', 'ovPause', 'ovOver'];
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (!el || el.classList.contains('hide')) continue;
+      try {
+        var cs = window.getComputedStyle(el);
+        if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) === 0) continue;
+      } catch (e) {}
+      return true;
     }
+    return false;
+  }
+
+  function readPlayState(obj) {
+    if (!obj || typeof obj.state === 'undefined') return null;
+    var s = obj.state;
+    if (isMenuState(s) || isPausedState(s) || s === 'ready') return false;
+    if (isPlayState(s)) return true;
+    return null;
+  }
+
+  function hasStateMachine() {
+    return (typeof Game !== 'undefined' && Game && typeof Game.state !== 'undefined')
+      || (typeof G !== 'undefined' && G && typeof G.state !== 'undefined');
+  }
+
+  function gameplayActive() {
+    var gState = readPlayState(typeof Game !== 'undefined' ? Game : null);
+    if (gState === false) return false;
+    var legacy = readPlayState(typeof G !== 'undefined' ? G : null);
+    if (legacy === false) return false;
+
+    if (menuOverlayVisible()) return false;
+
+    if (gState === true || legacy === true) return true;
+
     if (typeof window.__tbThumbStateName === 'string') {
       if (window.__tbThumbStateName === 'menu') return false;
       if (window.__tbThumbStateName === 'playing') return true;
@@ -98,6 +131,8 @@
       return true;
     }
     if (document.querySelector('.gomoku-board .gomoku-cell')) return true;
+    /* 有状态机时不要用 canvas 像素把「菜单底图」误判成已开局 */
+    if (hasStateMachine()) return false;
     return canvasLooksLive();
   }
 
@@ -115,6 +150,12 @@
       try {
         window.__tbThumbAutoStart();
       } catch (e) {}
+    }
+    if (typeof resetGame === 'function') {
+      var g = typeof G !== 'undefined' ? G : null;
+      if (!g || isMenuState(g.state)) {
+        try { resetGame(0, false); } catch (e0) {}
+      }
     }
     if (typeof Game !== 'undefined' && Game) {
       if (typeof Game.startGame === 'function' && isMenuState(Game.state)) {
@@ -144,6 +185,7 @@
     }
     if (typeof Game !== 'undefined' && Game && Game.state === 'ready') Game.state = 'playing';
     clickRestart();
+    if (gameplayActive()) window.__tbThumbStateName = 'playing';
     return gameplayActive();
   }
 
@@ -163,6 +205,7 @@
         }
       } else {
         playSince = 0;
+        tryStart();
       }
       if (frames >= 160) {
         window.__tbThumbReady = gameplayActive();
@@ -190,6 +233,7 @@
 
   function boot() {
     window.dispatchEvent(new Event('resize'));
+    tryStart();
     setTimeout(tick, 250);
     setTimeout(function () {
       if (!gameplayActive()) tick();

@@ -1049,7 +1049,32 @@ finish=function(win){
   _finishOrig(win);
   if(G.score>bestScore){ bestScore=G.score; try{localStorage.setItem(LS_BEST,String(bestScore));}catch(e){} }
 };
-window.__tbThumbAutoStart=function(){ resetGame(0,false); };
+window.__tbThumbAutoStart=function(){
+  if(G.state!=='play') resetGame(0,false);
+  /* 截图：预置防线 + 僵尸，避免空草坪 */
+  G.sun=180; G.score=420; G.kills=4; G.wave=2; G.waveT=40; G.sunT=8;
+  const addP=function(idx,r,c){
+    const def=PLANTS[idx];
+    G.plants.push({def:def,r:r,c:c,hp:def.hp,maxHp:def.hp,t:1,fire:0.25,arm:0,fuse:0,anim:0});
+  };
+  addP(0,0,0); addP(0,1,0); addP(0,2,0); addP(0,3,0);
+  addP(2,0,1); addP(2,2,1);
+  addP(1,0,2); addP(1,1,2); addP(1,2,2); addP(1,3,2); addP(1,4,2);
+  G.zombies=[];
+  const addZ=function(type,r,col){
+    const def=ZOMBIES[type];
+    G.zombies.push({
+      type:type,def:def,r:r, x:cellX(col)+CW*0.5, y:cellY(r)+CH-16,
+      hp:def.hp, maxHp:def.hp, sp:def.sp*0.4, slow:0, flash:0,
+      eat:null, t:0, dead:false, deadT:0, delay:0
+    });
+  };
+  addZ('normal',0,6); addZ('cone',1,7); addZ('normal',2,5);
+  addZ('bucket',3,7); addZ('fast',4,6);
+  spawnSun(cellX(4)+CW/2, cellY(1)+CH/2, false);
+  spawnSun(cellX(3)+CW/2, cellY(3)+20, false);
+  window.__tbThumbStateName='playing';
+};
 })();
 </script>
 <script src="../../js/game/thumb-preview.js"></script>

@@ -987,7 +987,21 @@ finish=function(win){
   _finishOrig(win);
   if(G.score>bestScore){ bestScore=G.score; try{localStorage.setItem(LS_BEST,String(bestScore));}catch(e){} }
 };
-window.__tbThumbAutoStart=function(){ resetGame(0,false); };
+window.__tbThumbAutoStart=function(){
+  if(G.state!=='play') resetGame(0,false);
+  /* 截图：把潜水员与鱼群摆到画面中央，降低游速以免虚拟时间跑偏 */
+  G.diver.x=W*0.42; G.diver.y=SEA_Y+150; G.diver.dir=1; G.diver.aim={x:1,y:0.12};
+  G.fishes.forEach((f,i)=>{
+    f.x=W*0.25+(i%7)*78;
+    f.y=SEA_Y+95+Math.floor(i/7)*58+(i%3)*10;
+    f.sp=Math.min(f.sp,10);
+    f.dir=(i%2)?1:-1;
+  });
+  G.jellies.forEach((j,i)=>{ j.x=W*0.55+(i%3)*90; j.y=SEA_Y+110+i*36; j.vx=0; j.vy=-4; });
+  if(G.sharks[0]){ G.sharks[0].x=W*0.74; G.sharks[0].y=H*0.6; G.sharks[0].sp=18; G.sharks[0].dir=-1; }
+  G.bag=[FISH[0],FISH[1],FISH[2]]; G.got=95; G.score=180;
+  window.__tbThumbStateName='playing';
+};
 })();
 </script>
 <script src="../../js/game/thumb-preview.js"></script>

@@ -1028,7 +1028,14 @@ finish=function(win){
   _finishOrig(win);
   if(G.score>bestScore){ bestScore=G.score; try{localStorage.setItem(LS_BEST,String(bestScore));}catch(e){} }
 };
-window.__tbThumbAutoStart=function(){ resetGame(0,false); };
+window.__tbThumbAutoStart=function(){
+  if(G.state!=='play') resetGame(0,false);
+  /* 截图：摆一枚炸弹，场面更有辨识度 */
+  if(G.bombs.length===0){
+    G.bombs.push({tx:3,ty:1,t:1.2,fuse:2.6,fire:G.fire,own:true,soft:true});
+  }
+  window.__tbThumbStateName='playing';
+};
 })();
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
