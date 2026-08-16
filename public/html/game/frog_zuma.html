@@ -24,6 +24,7 @@ html,body{
 </head>
 <body>
 <div id="gameWrap"><canvas id="gameCanvas" width="540" height="960"></canvas></div>
+<script src="../../js/game/touch-ui.js?v=1"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -735,15 +736,19 @@ const Game = {
     }
     // playing
     if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
-    if(x < W*0.40 && y > H*0.76){ // 摇杆
-      Input.joy.active = true; Input.joy.id = id;
-      Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
-      this.pointers[id] = "joy";
-      return;
-    }
-    if(x > W*0.60 && y > H*0.76){ // 按钮
-      if(this.hitCircle(x,y,W-72,H-86,44)){ Frog.fire(); this.pointers[id]="btn"; return; }
-      if(this.hitCircle(x,y,W-158,H-52,34)){ Frog.swap(); this.pointers[id]="btn"; return; }
+    if(typeof TBTouchUI!=='undefined'&&TBTouchUI.wantTouchUI()){
+      const pad=TBTouchUI?TBTouchUI.arcadePad(W,H,{size:50,gap:10,marginRight:12,marginBottom:14}):null;
+      if(x < W*0.40 && y > H*0.76){
+        Input.joy.active = true; Input.joy.id = id;
+        Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
+        this.pointers[id] = "joy";
+        return;
+      }
+      if(pad){
+        const r=pad.size/2+6;
+        if(this.hitCircle(x,y,pad.A.x,pad.A.y,r)){ Frog.fire(); this.pointers[id]="btn"; return; }
+        if(this.hitCircle(x,y,pad.B.x,pad.B.y,r)){ Frog.swap(); this.pointers[id]="btn"; return; }
+      }
     }
     this.aimAt(x,y);
     this.pointers[id] = "aim";
@@ -854,7 +859,7 @@ const Game = {
     Frog.draw(ctx);
     Popups.draw(ctx);
     this.drawHUD();
-    this.drawTouchUI();
+    if(typeof TBTouchUI!=='undefined'&&TBTouchUI.wantTouchUI()) this.drawTouchUI();
 
     if(this.msgTimer>0){
       ctx.globalAlpha = Math.min(1, this.msgTimer*2);
@@ -937,33 +942,30 @@ const Game = {
     ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
   },
   drawTouchUI(){
-    // 左下: 虚拟摇杆
-    const jx = Input.joy.active ? Input.joy.cx : 88;
-    const jy = Input.joy.active ? Input.joy.cy : H-92;
-    ctx.globalAlpha = 0.35;
+    const sh=TBTouchUI.stickHome(H,{r:44,marginLeft:12,marginBottom:14});
+    const pad=TBTouchUI.arcadePad(W,H,{size:50,gap:10,marginRight:12,marginBottom:14});
+    const jx = Input.joy.active ? Input.joy.cx : sh.x;
+    const jy = Input.joy.active ? Input.joy.cy : sh.y;
+    ctx.globalAlpha = 0.32;
     ctx.strokeStyle = "#9fe8a8"; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(jx,jy,55,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(jx,jy,sh.r,0,Math.PI*2); ctx.stroke();
     ctx.fillStyle = "#9fe8a8";
     ctx.beginPath();
-    ctx.arc(jx+Input.joy.dx*40, jy+Input.joy.dy*40, 24, 0, Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.font = "13px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("摇杆瞄准", jx, jy+80);
-    // 右下: 发射/换珠
-    ctx.globalAlpha = 0.55;
-    const fg = ctx.createRadialGradient(W-72,H-86,5,W-72,H-86,44);
+    ctx.arc(jx+Input.joy.dx*32, jy+Input.joy.dy*32, 18, 0, Math.PI*2); ctx.fill();
+    const r=pad.size/2;
+    ctx.globalAlpha = 0.5;
+    const fg = ctx.createRadialGradient(pad.A.x,pad.A.y,5,pad.A.x,pad.A.y,r);
     fg.addColorStop(0,"#a8f0b0"); fg.addColorStop(1,"#1d6d00");
     ctx.fillStyle = fg;
-    ctx.beginPath(); ctx.arc(W-72,H-86,44,0,Math.PI*2); ctx.fill();
-    const sg = ctx.createRadialGradient(W-158,H-52,4,W-158,H-52,34);
+    ctx.beginPath(); ctx.arc(pad.A.x,pad.A.y,r,0,Math.PI*2); ctx.fill();
+    const sg = ctx.createRadialGradient(pad.B.x,pad.B.y,4,pad.B.x,pad.B.y,r);
     sg.addColorStop(0,"#9ad0ff"); sg.addColorStop(1,"#1f5fbf");
     ctx.fillStyle = sg;
-    ctx.beginPath(); ctx.arc(W-158,H-52,34,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(pad.B.x,pad.B.y,r,0,Math.PI*2); ctx.fill();
     ctx.globalAlpha = 1;
-    ctx.fillStyle = "#fff"; ctx.font = "bold 18px sans-serif";
-    ctx.fillText("发射", W-72, H-80);
-    ctx.font = "bold 14px sans-serif";
-    ctx.fillText("换珠", W-158, H-47);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 14px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("发射", pad.A.x, pad.A.y+5);
+    ctx.fillText("换珠", pad.B.x, pad.B.y+5);
   },
   overlay(){ ctx.fillStyle = "rgba(4,12,7,.8)"; ctx.fillRect(0,0,W,H); },
   bigBtn(y, text, color){

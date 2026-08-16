@@ -27,6 +27,7 @@ html,body{
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
+<script src="../../js/game/touch-ui.js?v=1"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -212,7 +213,7 @@ const Input = {
   // 虚拟按钮: attack(J), jump/launch(K), L,U,I,O 备用
   btns:{}, // name -> {x,y,r,label,pressed,id}
   pointers:{}, // 触摸点追踪
-  isTouch:false,
+  isTouch:(typeof TBTouchUI!=='undefined'&&TBTouchUI.wantTouchUI()),
 
   init(canvas){
     window.addEventListener("keydown",e=>{
@@ -229,7 +230,7 @@ const Input = {
     canvas.addEventListener("pointerdown",ev=>{
       ev.preventDefault();
       AudioSys.init(); AudioSys.resume();
-      if(ev.pointerType!=="mouse") this.isTouch=true;
+      /* PC 不因触控板/笔切换虚拟键；仅 TBTouchUI 决定 */
       const p=getPos(ev);
       this.pointers[ev.pointerId]=p;
       // 优先判定 UI 点击（菜单按钮等）
@@ -629,11 +630,14 @@ const Game = {
     this.setupTouchBtns();
   },
   setupTouchBtns(){
-    // 右侧虚拟按钮（游戏中）
+    const pad=(typeof TBTouchUI!=='undefined')
+      ? TBTouchUI.arcadePad(BASE_W,BASE_H,{size:52,gap:10,marginRight:12,marginBottom:12})
+      : {size:52,A:{x:BASE_W-38,y:BASE_H-110},B:{x:BASE_W-38,y:BASE_H-38},C:{x:BASE_W-110,y:BASE_H-110},D:{x:BASE_W-110,y:BASE_H-38}};
+    const r=pad.size/2;
     Input.btns={
-      attack:{x:BASE_W-60, y:BASE_H-70, r:34, label:"攻", pressed:false, id:-1},
-      jump:  {x:BASE_W-135,y:BASE_H-105,r:30, label:"发", pressed:false, id:-1},
-      pause: {x:BASE_W-32, y:HUD_H+28,  r:22, label:"⏸", pressed:false, id:-1},
+      attack:{x:pad.A.x,y:pad.A.y,r:r,label:"攻",pressed:false,id:-1},
+      jump:  {x:pad.B.x,y:pad.B.y,r:r,label:"发",pressed:false,id:-1},
+      pause: {x:BASE_W-32,y:HUD_H+28,r:22,label:"⏸",pressed:false,id:-1},
     };
   },
   startGame(mode){
@@ -840,7 +844,7 @@ const Game = {
     c.restore();
 
     this.drawHUD(c);
-    if(Input.isTouch && this.state==="play") this.drawTouchUI(c);
+    if(Input.isTouch && this.state==="play" && (typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI())) this.drawTouchUI(c);
 
     if(this.state==="pause") this.drawOverlay(c,"已暂停","点击继续 / L键继续",[
       {label:"继续游戏",action:()=>this.state="play"},
@@ -902,10 +906,11 @@ const Game = {
       c.fillStyle="#9fc0ff";
       c.beginPath(); c.arc(Input.joy.cx+Input.joy.dx*55,Input.joy.cy+Input.joy.dy*55,24,0,TAU); c.fill();
     } else {
+      const sh=(typeof TBTouchUI!=='undefined')?TBTouchUI.stickHome(BASE_H,{r:44,marginLeft:12,marginBottom:12}):{x:95,y:BASE_H-90,r:44};
       c.strokeStyle="rgba(127,168,255,.6)"; c.lineWidth=2;
-      c.beginPath(); c.arc(95,BASE_H-90,50,0,TAU); c.stroke();
+      c.beginPath(); c.arc(sh.x,sh.y,sh.r,0,TAU); c.stroke();
       c.fillStyle="rgba(159,192,255,.4)";
-      c.beginPath(); c.arc(95,BASE_H-90,20,0,TAU); c.fill();
+      c.beginPath(); c.arc(sh.x,sh.y,18,0,TAU); c.fill();
     }
     // 按钮
     for(const name in Input.btns){

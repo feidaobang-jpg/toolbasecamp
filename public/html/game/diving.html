@@ -16,19 +16,23 @@ canvas{position:absolute;left:0;top:0;width:960px;height:540px;display:block;}
 /* ================= 虚拟操控 ================= */
 #touch{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;}
 .tc{pointer-events:auto;position:absolute;user-select:none;touch-action:none;}
-#stick{left:24px;bottom:24px;width:150px;height:150px;border-radius:50%;
+#stick{left:10px;bottom:10px;width:118px;height:118px;border-radius:50%;
   background:radial-gradient(circle at 50% 50%,rgba(180,240,255,.18),rgba(180,240,255,.05) 60%,rgba(0,0,0,0) 72%);
   border:2px solid rgba(200,240,255,.25);}
-#stickKnob{position:absolute;left:45px;top:45px;width:60px;height:60px;border-radius:50%;
+#stickKnob{position:absolute;left:35px;top:35px;width:48px;height:48px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%,#fff,#8fd8ff 60%,#2b74a8);opacity:.85;pointer-events:none;}
-.btn{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);
-  border:2px solid rgba(255,255,255,.3);background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),rgba(255,255,255,.06));}
-.btn:active{transform:scale(.92);filter:brightness(1.3);}
-#bA{right:30px;bottom:96px;background:radial-gradient(circle at 35% 30%,#a8f0ff,#1f6f9c);}
-#bB{right:118px;bottom:34px;background:radial-gradient(circle at 35% 30%,#ffe6a0,#c1741d);}
-#bC{right:206px;bottom:96px;width:64px;height:64px;background:radial-gradient(circle at 35% 30%,#c8b0ff,#5b3fa8);}
-#bD{right:30px;bottom:190px;width:64px;height:64px;background:radial-gradient(circle at 35% 30%,#b6ffcf,#1f9a5c);}
+#btnPad{position:absolute;right:10px;bottom:10px;width:122px;height:122px;
+  display:grid;grid-template-columns:56px 56px;grid-template-rows:56px 56px;gap:10px;
+  pointer-events:auto;z-index:5;}
+#btnPad .btn{position:static;width:56px;height:56px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.3);
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),rgba(255,255,255,.06));}
+#btnPad .btn:active{transform:scale(.92);filter:brightness(1.3);}
+#bA{background:radial-gradient(circle at 35% 30%,#a8f0ff,#1f6f9c);}
+#bB{background:radial-gradient(circle at 35% 30%,#ffe6a0,#c1741d);}
+#bC{background:radial-gradient(circle at 35% 30%,#c8b0ff,#5b3fa8);}
+#bD{background:radial-gradient(circle at 35% 30%,#b6ffcf,#1f9a5c);}
 #topBtns{position:absolute;right:12px;top:8px;display:flex;gap:8px;pointer-events:auto;}
 .sbtn{pointer-events:auto;padding:6px 12px;border-radius:14px;font-size:13px;color:#eaf9ff;background:rgba(0,0,0,.42);
   border:1px solid rgba(255,255,255,.28);}
@@ -54,22 +58,24 @@ canvas{position:absolute;left:0;top:0;width:960px;height:540px;display:block;}
   background:rgba(255,255,255,.08);color:#fff;font-size:18px;font-weight:800;}
 .lvbtn.on{background:linear-gradient(180deg,#bff0ff,#28a4d8);color:#03202e;border-color:#fff;}
 /* 非触屏设备（PC）隐藏虚拟摇杆与虚拟按钮，触屏/窄屏自动显示 */
-body.notouch #stick,body.notouch .btn{display:none;}
+body.notouch #stick,body.notouch #btnPad{display:none!important;}
 #toast{position:absolute;left:50%;top:70px;transform:translateX(-50%);padding:8px 18px;border-radius:16px;
   background:rgba(0,0,0,.55);color:#fff;font-size:14px;opacity:0;transition:opacity .25s;z-index:15;pointer-events:none;}
 </style>
 </head>
-<body>
+<body class="notouch">
 <div id="stage">
   <canvas id="cv" width="960" height="540"></canvas>
   <div id="toast"></div>
 
   <div id="touch">
     <div id="stick" class="tc"><div id="stickKnob"></div></div>
-    <div id="bA" class="tc btn" data-act="attack">鱼叉</div>
-    <div id="bB" class="tc btn" data-act="jump">冲刺</div>
-    <div id="bC" class="tc btn" data-act="act1">撒网</div>
-    <div id="bD" class="tc btn" data-act="act3">上浮</div>
+    <div id="btnPad" class="tc">
+      <div id="bC" class="btn" data-act="act1">撒网</div>
+      <div id="bA" class="btn" data-act="attack">鱼叉</div>
+      <div id="bD" class="btn" data-act="act3">上浮</div>
+      <div id="bB" class="btn" data-act="jump">冲刺</div>
+    </div>
     <div id="topBtns">
       <div class="sbtn" id="btnPause">暂停</div>
       <div class="sbtn" id="btnSound">音效:开</div>
@@ -113,6 +119,7 @@ body.notouch #stick,body.notouch .btn{display:none;}
   </div>
 </div>
 
+<script src="../../js/game/touch-ui.js?v=1"></script>
 <script>
 /* =========================================================================
    潜水捕鱼 · 深海猎手   单文件实现
@@ -145,8 +152,8 @@ window.addEventListener('orientationchange',()=>setTimeout(layout,120));
 layout();
 /* 触屏检测：PC 端隐藏虚拟操控，移动端/触屏自动显示 */
 function syncTouchUI(){
-  const touch = ('ontouchstart' in window) || navigator.maxTouchPoints>0;
-  document.body.classList.toggle('notouch', !touch);
+  if(window.TBTouchUI) TBTouchUI.applyNotouchClass();
+  else document.body.classList.add('notouch');
 }
 syncTouchUI();
 window.addEventListener('touchstart', syncTouchUI, {once:true});
@@ -260,7 +267,7 @@ window.addEventListener('blur',()=>{Input.keys={};});
 (function(){
   const el=document.getElementById('stick'), knob=document.getElementById('stickKnob');
   let id=null,cx=0,cy=0,R=52;
-  function center(){ cx=el.offsetLeft+el.offsetWidth/2; cy=el.offsetTop+el.offsetHeight/2; }
+  function center(){ cx=el.offsetLeft+el.offsetWidth/2; cy=el.offsetTop+el.offsetHeight/2; R=Math.max(28,el.offsetWidth*0.35); }
   function move(p){ const l=toLocal(p.clientX,p.clientY);
     let dx=l.x-cx, dy=l.y-cy; const d=Math.hypot(dx,dy)||1, k=Math.min(1,d/R);
     Input.axis.x=dx/d*k; Input.axis.y=dy/d*k;

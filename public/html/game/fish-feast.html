@@ -24,6 +24,7 @@ canvas{display:block;background:#032a44;box-shadow:0 0 60px rgba(60,180,255,.25)
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
+<script src="../../js/game/touch-ui.js?v=1"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -146,11 +147,17 @@ const Input=(()=>{
   }
 
   /* 虚拟摇杆与按钮（基准坐标系） */
-  const isTouch="ontouchstart" in window||navigator.maxTouchPoints>0;
-  const joy={cx:130,cy:BASE_H-110,r:70,knobX:0,knobY:0,active:false,id:-1};
+  const isTouch=(typeof TBTouchUI!=='undefined')?TBTouchUI.wantTouchUI():false;
+  const _pad=(typeof TBTouchUI!=='undefined')
+    ? TBTouchUI.arcadePad(BASE_W,BASE_H,{size:52,gap:10,marginRight:12,marginBottom:12})
+    : {size:52,A:{x:BASE_W-38,y:BASE_H-110},B:{x:BASE_W-38,y:BASE_H-38}};
+  const _stick=(typeof TBTouchUI!=='undefined')
+    ? TBTouchUI.stickHome(BASE_H,{r:52,marginLeft:14,marginBottom:14})
+    : {x:130,y:BASE_H-110,r:52};
+  const joy={cx:_stick.x,cy:_stick.y,r:_stick.r,knobX:0,knobY:0,active:false,id:-1};
   const btns=[
-    {id:"attack",label:"冲刺",x:BASE_W-80, y:BASE_H-150,r:42,down:false,tid:-1,col:"#ff5577"},
-    {id:"jump",  label:"暂停",x:BASE_W-170,y:BASE_H-75, r:42,down:false,tid:-1,col:"#55aaff"},
+    {id:"attack",label:"冲刺",x:_pad.A.x,y:_pad.A.y,r:_pad.size/2,down:false,tid:-1,col:"#ff5577"},
+    {id:"jump",  label:"暂停",x:_pad.B.x,y:_pad.B.y,r:_pad.size/2,down:false,tid:-1,col:"#55aaff"},
   ];
   function handleTouchStart(e){
     Audio2.resume();

@@ -14,6 +14,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<script src="../../js/game/touch-ui.js?v=1"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -541,14 +542,15 @@ const Game = {
     }
     // playing
     if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
-    if(x < W*0.45 && y > H*0.72){ // 左侧摇杆
-      Input.joy.active = true; Input.joy.id = id;
-      Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
-      this.pointers[id] = "joy";
-      return;
-    }
-    if(x > W*0.55 && y > H*0.72){ // 右侧冲刺按钮
-      if(this.hitCircle(x,y,W-84,H-110,50)){ Input.dashPressed = true; this.pointers[id]="btn"; return; }
+    if(typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI()){
+      const pad=TBTouchUI?TBTouchUI.arcadePad(W,H,{size:52,gap:10,marginRight:12,marginBottom:14}):null;
+      if(x < W*0.45 && y > H*0.72){ // 左侧摇杆
+        Input.joy.active = true; Input.joy.id = id;
+        Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
+        this.pointers[id] = "joy";
+        return;
+      }
+      if(pad && this.hitCircle(x,y,pad.B.x,pad.B.y,pad.size/2+8)){ Input.dashPressed = true; this.pointers[id]="btn"; return; }
     }
   },
   onPointerMove(x,y,id){
@@ -652,7 +654,7 @@ const Game = {
       ctx.fillText(this.msgText, W/2, H*0.4);
       ctx.globalAlpha = 1;
     }
-    if(this.state==="playing") this.drawTouchUI();
+    if(this.state==="playing" && (typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI())) this.drawTouchUI();
     if(this.state==="paused") this.drawPaused();
     if(this.state==="gameover") this.drawGameover();
     if(this.state==="levelclear") this.drawClear(false);
@@ -690,23 +692,22 @@ const Game = {
     }
   },
   drawTouchUI(){
-    // 左摇杆
-    ctx.globalAlpha = 0.35;
-    const jx = Input.joy.active ? Input.joy.cx : 100, jy = Input.joy.active ? Input.joy.cy : H-120;
+    const sh=TBTouchUI.stickHome(H,{r:44,marginLeft:12,marginBottom:14});
+    const pad=TBTouchUI.arcadePad(W,H,{size:52,gap:10,marginRight:12,marginBottom:14});
+    ctx.globalAlpha = 0.32;
+    const jx = Input.joy.active ? Input.joy.cx : sh.x, jy = Input.joy.active ? Input.joy.cy : sh.y;
     ctx.strokeStyle="#8ecae6"; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.arc(jx,jy,52,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(jx,jy,sh.r,0,Math.PI*2); ctx.stroke();
     ctx.fillStyle="#8ecae6";
-    ctx.beginPath(); ctx.arc(jx+Input.joy.dx*38, jy+Input.joy.dy*38, 22,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 0.5; ctx.fillStyle="#cfe9ff"; ctx.font="12px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("摇杆移动", jx, jy+78);
-    // 右冲刺按钮
+    ctx.beginPath(); ctx.arc(jx+Input.joy.dx*32, jy+Input.joy.dy*32, 18,0,Math.PI*2); ctx.fill();
     ctx.globalAlpha = 0.4;
-    const bg = ctx.createRadialGradient(W-84,H-110,6,W-84,H-110,50);
+    const bx=pad.B.x, by=pad.B.y, br=pad.size/2;
+    const bg = ctx.createRadialGradient(bx,by,6,bx,by,br);
     bg.addColorStop(0,"#ffd60a"); bg.addColorStop(1,"#b8860b");
     ctx.fillStyle = bg;
-    ctx.beginPath(); ctx.arc(W-84,H-110,50,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha = 0.85; ctx.fillStyle="#1d1600"; ctx.font="bold 18px sans-serif";
-    ctx.fillText("冲刺", W-84, H-104);
+    ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 0.85; ctx.fillStyle="#1d1600"; ctx.font="bold 15px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("冲刺", bx, by+5);
     ctx.globalAlpha = 1;
   },
   overlay(){

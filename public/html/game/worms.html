@@ -13,6 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<script src="../../js/game/touch-ui.js?v=1"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -655,20 +656,18 @@ const Game = {
     // playing
     if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
     const myTurn = this.cur() && this.cur().team===0 && this.phase==="move";
-    if(x<W*0.42 && y>H*0.72){
-      Input.joy.active=true; Input.joy.id=id;
-      Input.joy.cx=x; Input.joy.cy=y; Input.joy.dx=0; Input.joy.dy=0;
-      this.pointers[id]="joy"; return;
-    }
-    if(x>W*0.55 && y>H*0.72 && myTurn){
-      if(this.hitCircle(x,y,W-80,H-120,48)){ // 开火(按住蓄力)
-        this.charging=true; Input.fireHeld=true; this.pointers[id]="fire"; return;
+    if(typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI()){
+      const pad=TBTouchUI?TBTouchUI.arcadePad(W,H,{size:50,gap:10,marginRight:12,marginBottom:14}):null;
+      if(x<W*0.42 && y>H*0.72){
+        Input.joy.active=true; Input.joy.id=id;
+        Input.joy.cx=x; Input.joy.cy=y; Input.joy.dx=0; Input.joy.dy=0;
+        this.pointers[id]="joy"; return;
       }
-      if(this.hitCircle(x,y,W-178,H-70,36)){ // 跳跃
-        Input.jumpPressed=true; this.pointers[id]="btn"; return;
-      }
-      if(this.hitCircle(x,y,W-80,H-228,34)){ // 换武器
-        Input.weaponPressed=true; this.pointers[id]="btn"; return;
+      if(pad && myTurn){
+        const r=pad.size/2+6;
+        if(this.hitCircle(x,y,pad.A.x,pad.A.y,r)){ this.charging=true; Input.fireHeld=true; this.pointers[id]="fire"; return; }
+        if(this.hitCircle(x,y,pad.B.x,pad.B.y,r)){ Input.jumpPressed=true; this.pointers[id]="btn"; return; }
+        if(this.hitCircle(x,y,pad.C.x,pad.C.y,r)){ Input.weaponPressed=true; this.pointers[id]="btn"; return; }
       }
     }
   },
@@ -830,7 +829,7 @@ const Game = {
       ctx.fillText(this.msgText, W/2, H*0.35);
       ctx.globalAlpha=1;
     }
-    if(this.state==="playing") this.drawTouchUI();
+    if(this.state==="playing" && (typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI())) this.drawTouchUI();
     if(this.state==="paused") this.drawPaused();
     if(this.state==="gameover") this.drawGameover();
     if(this.state==="levelclear") this.drawClear(false);
@@ -877,32 +876,30 @@ const Game = {
   },
   drawTouchUI(){
     const myTurn=this.cur()&&this.cur().team===0&&this.phase==="move";
-    ctx.globalAlpha=0.35;
-    const jx=Input.joy.active?Input.joy.cx:96, jy=Input.joy.active?Input.joy.cy:H-120;
+    const sh=TBTouchUI.stickHome(H,{r:44,marginLeft:12,marginBottom:14});
+    const pad=TBTouchUI.arcadePad(W,H,{size:50,gap:10,marginRight:12,marginBottom:14});
+    ctx.globalAlpha=0.32;
+    const jx=Input.joy.active?Input.joy.cx:sh.x, jy=Input.joy.active?Input.joy.cy:sh.y;
     ctx.strokeStyle="#8ecae6"; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.arc(jx,jy,52,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(jx,jy,sh.r,0,Math.PI*2); ctx.stroke();
     ctx.fillStyle="#8ecae6";
-    ctx.beginPath(); ctx.arc(jx+Input.joy.dx*38,jy+Input.joy.dy*38,22,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha=0.5; ctx.fillStyle="#cfe9ff"; ctx.font="12px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("移动/瞄准", jx, jy+78);
+    ctx.beginPath(); ctx.arc(jx+Input.joy.dx*32,jy+Input.joy.dy*32,18,0,Math.PI*2); ctx.fill();
     if(myTurn){
+      const r=pad.size/2;
       ctx.globalAlpha=0.42;
-      // 开火
-      const fg=ctx.createRadialGradient(W-80,H-120,6,W-80,H-120,48);
+      const fg=ctx.createRadialGradient(pad.A.x,pad.A.y,6,pad.A.x,pad.A.y,r);
       fg.addColorStop(0,"#ff8fa3"); fg.addColorStop(1,"#c9184a");
-      ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(W-80,H-120,48,0,Math.PI*2); ctx.fill();
-      // 跳跃
-      const jg=ctx.createRadialGradient(W-178,H-70,4,W-178,H-70,36);
+      ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(pad.A.x,pad.A.y,r,0,Math.PI*2); ctx.fill();
+      const jg=ctx.createRadialGradient(pad.B.x,pad.B.y,4,pad.B.x,pad.B.y,r);
       jg.addColorStop(0,"#b5e48c"); jg.addColorStop(1,"#2d6a4f");
-      ctx.fillStyle=jg; ctx.beginPath(); ctx.arc(W-178,H-70,36,0,Math.PI*2); ctx.fill();
-      // 换武器
-      const wg=ctx.createRadialGradient(W-80,H-228,4,W-80,H-228,34);
+      ctx.fillStyle=jg; ctx.beginPath(); ctx.arc(pad.B.x,pad.B.y,r,0,Math.PI*2); ctx.fill();
+      const wg=ctx.createRadialGradient(pad.C.x,pad.C.y,4,pad.C.x,pad.C.y,r);
       wg.addColorStop(0,"#cfe9ff"); wg.addColorStop(1,"#2a3f9f");
-      ctx.fillStyle=wg; ctx.beginPath(); ctx.arc(W-80,H-228,34,0,Math.PI*2); ctx.fill();
-      ctx.globalAlpha=0.9; ctx.font="bold 15px sans-serif"; ctx.textAlign="center";
-      ctx.fillStyle="#3d0716"; ctx.fillText("开火", W-80, H-114);
-      ctx.fillStyle="#0f2417"; ctx.fillText("跳", W-178, H-65);
-      ctx.fillStyle="#0d1233"; ctx.fillText("武器", W-80, H-223);
+      ctx.fillStyle=wg; ctx.beginPath(); ctx.arc(pad.C.x,pad.C.y,r,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=0.9; ctx.font="bold 13px sans-serif"; ctx.textAlign="center";
+      ctx.fillStyle="#3d0716"; ctx.fillText("开火", pad.A.x, pad.A.y+4);
+      ctx.fillStyle="#0f2417"; ctx.fillText("跳", pad.B.x, pad.B.y+4);
+      ctx.fillStyle="#0d1233"; ctx.fillText("武器", pad.C.x, pad.C.y+4);
     }
     ctx.globalAlpha=1;
   },
