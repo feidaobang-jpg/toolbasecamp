@@ -224,7 +224,7 @@ const Input=(()=>{
   }
   function consumeAction(n){const v=action[n];action[n]=false;return v;}
   return {axis,consumeAction,joy,btns,isTouch,
-          get dashHeld(){return keys["KeyJ"]||keys["Enter"]||btns[0].down;}};
+          get dashHeld(){return keys["KeyJ"]||keys["Enter"]||keys["KeyK"]||keys["Space"]||btns[0].down;}};
 })();
 
 /* ---------------- 4. 粒子与气泡系统 ---------------- */
