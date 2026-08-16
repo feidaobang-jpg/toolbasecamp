@@ -105,7 +105,6 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
     <div class="rowb">
       <button class="big" id="btnContinue">继续旅程</button>
       <button class="big" id="btnStart">新周目</button>
-      <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
     <div class="rowb" style="margin-top:8px">
       <button class="big alt" id="btnSaveMenu">存档</button>
@@ -435,8 +434,8 @@ function resetGame(levelOrOpt, endless, keep){
   }
   G.state='play'; G.level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
   G.cycle=cycle; G.chapter=chapter; G.stage=stage; G.endless=!!endless;
-  G.cfg = endless ? {name:'无尽模式',waves:9999,gap:8.5,sunGap:7,types:['normal','cone'],perWave:[1,2],boss:null}
-                  : campaignCfg(cycle,chapter,stage);
+  endless=false;
+  G.cfg = campaignCfg(cycle,chapter,stage);
   if(keep && fromSave){ G.score=fromSave.score|0; G.sun=fromSave.sun!=null?fromSave.sun:(endless?100:75); G.kills=fromSave.kills|0; }
   else { G.sun = endless?100:75; G.score=0; G.kills=0; }
   G.plants=[]; G.zombies=[]; G.bullets=[]; G.suns=[]; G.parts=[];
@@ -1069,27 +1068,24 @@ function pickSlot(promptText){
   const i=(parseInt(n,10)|0)-1; return (i>=0&&i<5)?i:-1;
 }
 function doSaveSlot(){
-  if(G.endless){ toast('无尽模式请用继续旅程'); return; }
-  const i=pickSlot('存到第几个档位'); if(i<0) return;
+    const i=pickSlot('存到第几个档位'); if(i<0) return;
   Slots.save(i, snapshotProgress()); Cont.save(snapshotProgress()); toast('已存档 '+(i+1)); refreshSlotHelp();
 }
 function doLoadSlot(){
   const i=pickSlot('读取第几个档位'); if(i<0) return;
   const s=Slots.load(i); if(!s){ toast('空档'); return; } resetGame(s,false,true);
 }
-bind('btnStart', ()=>resetGame({cycle:1,chapter:1,stage:1},false,false));
-bind('btnContinue', ()=>{ const s=Cont.load(); if(!s){ toast('没有进度'); return; } resetGame(s,!!s.endless,true); });
-bind('btnEndless',()=>resetGame({cycle:1,chapter:1,stage:1,endless:true},true,false));
+bind('btnStart', ()=>resetGame({cycle:1,chapter:1,stage:1,endless:false},false,false));
+bind('btnContinue', ()=>{ const s=Cont.load(); if(!s){ toast('没有进度'); return; } resetGame(Object.assign({},s,{endless:false}),false,true); });
 bind('btnSaveMenu', doSaveSlot); bind('btnLoadMenu', doLoadSlot); bind('btnSavePause', doSaveSlot);
 bind('btnResume', doResume);
-bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
-bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
+bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:false},false,false));
+bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:false},false,false));
 bind('btnMenu1', toMenu);
 bind('btnMenu2', toMenu);
 bind('btnNext', ()=>{
-  if(G.endless){ resetGame({cycle:1,chapter:1,stage:1,endless:true,score:G.score,sun:G.sun,kills:G.kills},true,true); return; }
   const n=TBGameProgress.nextProgress(G.cycle,G.chapter,G.stage,CHAPTERS);
-  const keep=snapshotProgress(); keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage;
+  const keep=snapshotProgress(); keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage; keep.endless=false;
   resetGame(keep,false,true);
 });
 bind('btnPause', ()=>{ if(G.state==='play') doPause(); else if(G.state==='pause') doResume(); });

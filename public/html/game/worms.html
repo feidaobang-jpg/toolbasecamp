@@ -13,6 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -484,9 +485,14 @@ class Projectile {
 }
 
 /* ---------------- 8. 游戏主逻辑 ---------------- */
+const CHAPTERS=10;
+const Slots=TBGameProgress.createSlots('tbc_worms_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_worms_continue_v1');
+function progLabel(g){return TBGameProgress.label(g.cycle,g.chapter,g.stage,true);}
+function snapProg(g){return {cycle:g.cycle,chapter:g.chapter,stage:g.stage,score:g.score,weapon:g.weapon|0};}
 const Game = {
   state:"menu", mode:"level",
-  level:1, score:0, best:0,
+  cycle:1, chapter:1, stage:1, level:1, score:0, best:0,
   worms:[], curIdx:0, proj:null,
   weapon:0, charge:0, charging:false,
   turnTime:20, turnLeft:20, phase:"move", // move/proj/settle
@@ -500,16 +506,24 @@ const Game = {
       this.clouds.push({x:rand(0,W),y:rand(40,260),w:rand(70,140),sp:rand(6,16)});
     Input.init();
   },
-  startGame(mode){
-    this.mode=mode; this.level=1; this.score=0; this.wave=1;
+  startGame(opt){
+    if(opt&&typeof opt==='object'){
+      this.cycle=opt.cycle||1; this.chapter=opt.chapter||1; this.stage=opt.stage||1;
+      this.score=opt.score|0; this.weapon=opt.weapon|0;
+    } else { this.cycle=1; this.chapter=1; this.stage=1; this.score=0; this.weapon=0; }
+    this.mode='level'; this.wave=1;
+    this.level=TBGameProgress.flatIndex(this.cycle,this.chapter,this.stage,CHAPTERS)+1;
     this.startLevel();
     AudioSys.init(); AudioSys.resume();
   },
   startLevel(){
     Terrain.build();
     this.worms=[];
-    const n=this.mode==="endless" ? 3 : this.level;
-    const enemyN=this.mode==="endless" ? Math.min(2+this.wave,5) : Math.min(1+Math.ceil(n/2),5);
+    const n=this.level;
+    const role=TBGameProgress.roleOfStage(this.stage);
+    let enemyN=Math.min(1+Math.ceil(this.stage/2)+Math.floor((this.chapter-1)/2),6);
+    if(role==='miniboss') enemyN=Math.min(enemyN+1,6);
+    if(role==='boss') enemyN=Math.min(enemyN+2,7);
     // 玩家小队 3 只
     const names=["小红","小粉","小桃"];
     for(let i=0;i<3;i++) this.spawnWorm(60+i*70+rand(-14,14), 0, names[i]);
@@ -517,13 +531,20 @@ const Game = {
     const enames=["蓝一","蓝二","蓝三","蓝四","蓝五"];
     for(let i=0;i<enemyN;i++) this.spawnWorm(W-60-i*70+rand(-14,14), 1, enames[i]);
     this.curIdx=this.firstAlive(0);
-    this.weapon=0; this.proj=null;
+    if(this.weapon==null) this.weapon=0; this.proj=null;
     this.turnLeft=this.turnTime; this.phase="move";
     this.wind=rand(-4,4);
     this.charge=0; this.charging=false;
     Particles.list=[]; Popups.list=[];
     this.state="playing";
-    this.showMsg(this.mode==="level"?("第 "+this.level+" 关"):("无尽 · 第 "+this.wave+" 波"),1.5);
+    this.showMsg(progLabel(this),1.5);
+    Cont.save(snapProg(this));
+  },
+  advanceStage(){
+    const n=TBGameProgress.nextProgress(this.cycle,this.chapter,this.stage,CHAPTERS);
+    this.cycle=n.cycle; this.chapter=n.chapter; this.stage=n.stage;
+    this.level=TBGameProgress.flatIndex(this.cycle,this.chapter,this.stage,CHAPTERS)+1;
+    Cont.save(snapProg(this)); this.startLevel();
   },
   spawnWorm(x,team,name){
     x=clamp(x,20,W-20);
@@ -547,8 +568,7 @@ const Game = {
     if(this.aliveCount(1)===0){
       this.score += 100*this.level + this.worms.filter(w=>w.team===0&&!w.dead).length*50;
       this.saveBest(); AudioSys.win();
-      if(this.mode==="endless"){ this.wave++; this.startLevel(); return; }
-      this.state = this.level>=10 ? "win" : "levelclear";
+      this.state = "levelclear"; Cont.save(snapProg(this));
       return;
     }
     if(this.aliveCount(0)===0){
@@ -594,7 +614,7 @@ const Game = {
       }
       if(!best){ this.nextTurn(); return; }
       // 弹道求解(迭代尝试): 固定速度扫描角度
-      const acc = clamp(0.55 + this.level*0.05 + (this.mode==="endless"?this.wave*0.04:0), 0.55, 0.95);
+      const acc = clamp(0.55 + this.level*0.04, 0.55, 0.95);
       const err = (1-acc)*90;
       const tx = best.x + rand(-err,err), ty = best.y + rand(-err*0.5,err*0.5);
       let found=null;
@@ -634,23 +654,35 @@ const Game = {
   /* ---- 指针分区 ---- */
   onPointerDown(x,y,id){
     if(this.state==="menu"){
-      if(this.hitRect(x,y,W/2-130,520,260,64)) this.startGame("level");
-      else if(this.hitRect(x,y,W/2-130,610,260,64)) this.startGame("endless");
+      if(this.hitRect(x,y,W/2-130,470,260,52)) this.startGame({cycle:1,chapter:1,stage:1,score:0,weapon:0});
+      else if(this.hitRect(x,y,W/2-130,530,260,52)){
+        const s=Cont.load(); if(!s){ this.showMsg('没有进度',1.2); return; } this.startGame(s);
+      } else if(this.hitRect(x,y,W/2-130,590,260,52)){
+        const n=prompt('存到第几个档位（1-5）','1'); const i=(parseInt(n,10)|0)-1;
+        if(i>=0&&i<5){ Slots.save(i,snapProg(this)); Cont.save(snapProg(this)); this.showMsg('已存档 '+(i+1),1.2); }
+      } else if(this.hitRect(x,y,W/2-130,650,260,52)){
+        const n=prompt('读取第几个档位（1-5）','1'); const i=(parseInt(n,10)|0)-1;
+        const s=i>=0?Slots.load(i):null; if(!s){ this.showMsg('空档',1.2); return; } this.startGame(s);
+      }
       return;
     }
     if(this.state==="paused"){
-      if(this.hitRect(x,y,W/2-130,470,260,60)) this.state="playing";
-      else if(this.hitRect(x,y,W/2-130,550,260,60)) this.startGame(this.mode);
-      else if(this.hitRect(x,y,W/2-130,630,260,60)) this.state="menu";
+      if(this.hitRect(x,y,W/2-130,430,260,52)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,490,260,52)){
+        const n=prompt('存到第几个档位（1-5）','1'); const i=(parseInt(n,10)|0)-1;
+        if(i>=0&&i<5){Slots.save(i,snapProg(this));Cont.save(snapProg(this));this.showMsg('已存档',1);}
+      }
+      else if(this.hitRect(x,y,W/2-130,550,260,52)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
+      else if(this.hitRect(x,y,W/2-130,610,260,52)) this.state="menu";
       return;
     }
     if(this.state==="gameover"||this.state==="win"){
-      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame(this.mode);
+      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
       else if(this.hitRect(x,y,W/2-130,650,260,64)) this.state="menu";
       return;
     }
     if(this.state==="levelclear"){
-      if(this.hitRect(x,y,W/2-130,560,260,64)){ this.level++; this.startLevel(); }
+      if(this.hitRect(x,y,W/2-130,560,260,64)) this.advanceStage();
       return;
     }
     // playing
@@ -706,9 +738,9 @@ const Game = {
     if(this.state!=="playing"){
       if(Input.pausePressed && this.state==="paused") this.state="playing";
       else if(Input.firePressed){
-        if(this.state==="menu") this.startGame("level");
-        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
-        else if(this.state==="gameover"||this.state==="win") this.startGame(this.mode);
+        if(this.state==="menu") this.startGame({cycle:1,chapter:1,stage:1,score:0,weapon:0});
+        else if(this.state==="levelclear") this.advanceStage();
+        else if(this.state==="gameover"||this.state==="win") this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
       }
       Input.consume(); return;
     }
@@ -848,7 +880,7 @@ const Game = {
     ctx.font="12px sans-serif"; ctx.fillStyle="#8ecae6";
     ctx.fillText("最高 "+this.best, 14, 48);
     ctx.textAlign="center"; ctx.fillStyle="#ffd60a"; ctx.font="bold 18px sans-serif";
-    ctx.fillText(this.mode==="level"?("第 "+this.level+" 关"):("无尽 第 "+this.wave+" 波"), W/2, 26);
+    ctx.fillText(progLabel(this), W/2, 26);
     // 回合信息
     const w=this.cur();
     if(w){
@@ -939,21 +971,24 @@ const Game = {
       ctx.fillStyle="#111";
       ctx.beginPath(); ctx.arc(x+5,y-7,2,0,Math.PI*2); ctx.arc(x-1,y-7,2,0,Math.PI*2); ctx.fill();
     }
-    this.bigBtn(520,"关卡模式",["#ff9e5e","#d1495b"]);
-    this.bigBtn(610,"无尽模式",["#5b8bff","#2a3f9f"]);
-    ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
-    ctx.fillText("PC: A/D移动  W/S瞄准  J/回车按住蓄力开火", W/2, 718);
-    ctx.fillText("J/回车开火  K/空格跳跃  U换武器  P/B暂停  I/O音乐音效", W/2, 742);
-    ctx.fillText("手机: 左摇杆 · 右上 J/K、下排 U，上方 P/B 暂停", W/2, 766);
-    ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best, W/2, 810);
+    this.midBtn(470,"新周目",["#ff9e5e","#d1495b"]);
+    this.midBtn(530,"继续旅程",["#3f8e50","#1e4d2b"]);
+    this.midBtn(590,"存档",["#5b8bff","#2a3f9f"]);
+    this.midBtn(650,"读档",["#8a6cff","#3a2a8a"]);
+    ctx.fillStyle="#9aa5c1"; ctx.font="13px sans-serif";
+    ctx.fillText("10章×10关·无限周目 · 武器进度可存档", W/2, 720);
+    ctx.fillText("PC: WASD · J开火 K跳 U武器 · P/B暂停", W/2, 744);
+    ctx.fillText("手机: 左摇杆 · 右 J/K/U · 上 P", W/2, 766);
+    ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best, W/2, 800);
   },
   drawPaused(){
     this.overlay();
     ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
     ctx.fillText("已暂停", W/2, 380);
-    this.midBtn(470,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(430,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(490,"快速存档",["#8a6cff","#3a2a8a"]);
     this.midBtn(550,"重新开始",["#ff9e5e","#d1495b"]);
-    this.midBtn(630,"返回菜单",["#5b8bff","#2a3f9f"]);
+    this.midBtn(610,"返回菜单",["#5b8bff","#2a3f9f"]);
   },
   drawGameover(){
     this.overlay();
@@ -995,7 +1030,7 @@ function mainLoop(now){
 }
 Game.init();
 requestAnimationFrame(mainLoop);
-window.__tbThumbAutoStart = function () { Game.startGame('level'); Game.msgTimer = 0; };
+window.__tbThumbAutoStart = function () { Game.startGame({cycle:1,chapter:1,stage:1,score:0,weapon:0}); Game.msgTimer = 0; };
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
 </body>

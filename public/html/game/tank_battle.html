@@ -797,7 +797,7 @@ const Game = (() => {
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
   ];
   const COOP_SPAWN=[[8,24],[16,24],[6,24],[18,24],[4,24],[20,24],[2,24],[22,24]];
-  const MENU_COUNT=8;
+  const MENU_COUNT=7;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
   const CHAPTERS=10;
   const TankSlots=typeof TBGameProgress!=='undefined'?TBGameProgress.createSlots('tbc_tank_slots_v1'):null;
@@ -1760,11 +1760,11 @@ const Game = (() => {
       else if(inp.my>0&&!menuMoved){ menuSel=(menuSel+1)%MENU_COUNT; menuMoved=true; }
       else if(!inp.my) menuMoved=false;
       if(Input.state.startPressed){
-        if(menuSel===7){
+        if(menuSel===6){
           if(window.TankCoop) window.TankCoop.open();
           Input.consume(); return;
         }
-        if(menuSel===5){ // save
+        if(menuSel===4){ // save
           if(!TankSlots){ flash("存档不可用",1.2); Input.consume(); return; }
           const n=prompt("存到第几个档位（1-5）","1");
           const i=(parseInt(n,10)|0)-1;
@@ -1778,13 +1778,13 @@ const Game = (() => {
           }
           Input.consume(); return;
         }
-        if(menuSel===6){ // load
+        if(menuSel===5){ // load
           if(!TankSlots){ flash("读档不可用",1.2); Input.consume(); return; }
           const n=prompt("读取第几个档位（1-5）","1");
           const i=(parseInt(n,10)|0)-1;
           const s=i>=0?TankSlots.load(i):null;
           if(!s){ flash("该档位为空",1.2); Input.consume(); return; }
-          coopMode=false; coopSend=null; endless=!!s.endless; enemyLootMode=false; debugMode=false;
+          coopMode=false; coopSend=null; endless=false; enemyLootMode=false; debugMode=false;
           level=Math.max(1,s.level|0); score=s.score|0; lives=Math.max(1,s.lives|0);
           player=null; coopAllies={}; newLevel(); stateName="playing";
           flash("已读档 W"+(s.cycle||1)+" C"+(s.chapter||1)+"-"+(s.stage||1),1.6);
@@ -1793,19 +1793,18 @@ const Game = (() => {
         if(menuSel===1){ // continue
           const s=TankCont&&TankCont.load();
           if(!s){ flash("没有可继续的进度",1.4); Input.consume(); return; }
-          coopMode=false; coopSend=null; endless=!!s.endless; enemyLootMode=false; debugMode=false;
+          coopMode=false; coopSend=null; endless=false; enemyLootMode=false; debugMode=false;
           level=Math.max(1,s.level|0); score=s.score|0; lives=Math.max(1,s.lives|0);
           player=null; coopAllies={}; newLevel(); stateName="playing";
           Input.consume(); return;
         }
         coopMode=false; coopSend=null;
-        endless=menuSel===2;
-        enemyLootMode=menuSel===3;
-        debugMode=menuSel===4;
+        endless=false;
+        enemyLootMode=menuSel===2;
+        debugMode=menuSel===3;
         debugBossCleared=false;
         debugBossDelay=0;
         debugBossWave=1;
-        if(menuSel===3) endless=false; // 敌方吃道具以闯关形式进行
         // 测试模式从第 1 只 Boss 关（第 5 关）开始连刷 10 只
         level = debugMode ? 5 : 1;
         score=0; lives=30; player=null; coopAllies={};
@@ -2880,7 +2879,6 @@ const Game = (() => {
     const items=[
       "🎮 新周目闯关（10章×10关·无限周目）",
       "▶ 继续旅程"+(cont?(" · W"+(cont.cycle||1)+" C"+(cont.chapter||1)+"-"+(cont.stage||1)):"（无）"),
-      "♾ 无尽模式",
       "😈 敌方吃道具",
       "🧪 测试模式（10 Boss连锁·道具必掉）",
       "💾 存档（5 槽）",

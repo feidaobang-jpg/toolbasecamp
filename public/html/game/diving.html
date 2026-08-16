@@ -102,7 +102,6 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
     <div class="rowb">
       <button class="big" id="btnContinue">继续旅程</button>
       <button class="big" id="btnStart">新周目</button>
-      <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
     <div class="rowb" style="margin-top:8px">
       <button class="big alt" id="btnSaveMenu">存档</button>
@@ -372,8 +371,8 @@ function resetGame(levelOrOpt,endless,keep){
     fromSave=levelOrOpt; if(arguments.length<2) endless=!!levelOrOpt.endless; else endless=!!endless; if(arguments.length<3) keep=true;
     cycle=fromSave.cycle||1; chapter=fromSave.chapter||1; stage=fromSave.stage||1;
   }
-  const cfg = endless ? {name:'无尽模式',quota:1e9,time:1e9,jelly:4,shark:1,urchin:4,o2:30,fish:18,bag:10}
-    : campaignCfg(cycle,chapter,stage);
+  endless=false;
+  const cfg = campaignCfg(cycle,chapter,stage);
   G.state='play'; G.level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
   G.cycle=cycle; G.chapter=chapter; G.stage=stage;
   G.endless=!!endless; G.cfg=cfg;
@@ -1021,27 +1020,24 @@ function pickSlot(promptText){
   const i=(parseInt(n,10)|0)-1; return (i>=0&&i<5)?i:-1;
 }
 function doSaveSlot(){
-  if(G.endless){ toast('无尽模式请用继续旅程'); return; }
-  const i=pickSlot('存到第几个档位'); if(i<0) return;
+    const i=pickSlot('存到第几个档位'); if(i<0) return;
   Slots.save(i, snapshotProgress()); Cont.save(snapshotProgress()); toast('已存档 '+(i+1)); refreshSlotHelp();
 }
 function doLoadSlot(){
   const i=pickSlot('读取第几个档位'); if(i<0) return;
   const s=Slots.load(i); if(!s){ toast('空档'); return; } resetGame(s,false,true);
 }
-bind('btnStart',()=>resetGame({cycle:1,chapter:1,stage:1},false,false));
-bind('btnContinue',()=>{ const s=Cont.load(); if(!s){ toast('没有进度'); return; } resetGame(s,!!s.endless,true); });
-bind('btnEndless',()=>resetGame({cycle:1,chapter:1,stage:1,endless:true},true,false));
+bind('btnStart',()=>resetGame({cycle:1,chapter:1,stage:1,endless:false},false,false));
+bind('btnContinue',()=>{ const s=Cont.load(); if(!s){ toast('没有进度'); return; } resetGame(Object.assign({},s,{endless:false}),false,true); });
 bind('btnSaveMenu',doSaveSlot); bind('btnLoadMenu',doLoadSlot); bind('btnSavePause',doSaveSlot);
 bind('btnResume',doResume);
-bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
-bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
+bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:false},false,false));
+bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:false},false,false));
 bind('btnMenu1',()=>{ refreshSlotHelp(); toMenu(); });
 bind('btnMenu2',()=>{ refreshSlotHelp(); toMenu(); });
 bind('btnNext',()=>{
-  if(G.endless){ resetGame({cycle:1,chapter:1,stage:1,endless:true,score:G.score,lives:G.lives,o2Tanks:G.o2Tanks,bagMax:G.bagMax},true,true); return; }
   const n=TBGameProgress.nextProgress(G.cycle,G.chapter,G.stage,CHAPTERS);
-  const keep=snapshotProgress(); keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage;
+  const keep=snapshotProgress(); keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage; keep.endless=false;
   resetGame(keep,false,true);
 });
 refreshSlotHelp();
