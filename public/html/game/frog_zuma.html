@@ -24,7 +24,7 @@ html,body{
 </head>
 <body>
 <div id="gameWrap"><canvas id="gameCanvas" width="540" height="960"></canvas></div>
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -173,9 +173,9 @@ const Input = {
       if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
       const k = e.key.toLowerCase();
       if(!this.keys[k]){
-        if(k==="j"||k==="enter"||k==="k"||k===" ") this.firePressed = true;
-        if(k==="l") this.swapPressed = true;
-        if(k==="u"||k==="p"||k==="escape") this.pausePressed = true;
+        if(k==="j"||k==="enter") this.firePressed = true;
+        if(k==="k"||k===" ") this.swapPressed = true;
+        if(k==="p"||k==="escape") this.pausePressed = true;
         if(k==="i") AudioSys.toggleBGM();
         if(k==="o") AudioSys.enabled = !AudioSys.enabled;
       }
@@ -737,17 +737,22 @@ const Game = {
     // playing
     if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; return; }
     if(typeof TBTouchUI!=='undefined'&&TBTouchUI.wantTouchUI()){
-      const pad=TBTouchUI?TBTouchUI.arcadePad(W,H,{size:50,gap:10,marginRight:12,marginBottom:14}):null;
       if(x < W*0.40 && y > H*0.76){
         Input.joy.active = true; Input.joy.id = id;
         Input.joy.cx = x; Input.joy.cy = y; Input.joy.dx = 0; Input.joy.dy = 0;
         this.pointers[id] = "joy";
         return;
       }
-      if(pad){
-        const r=pad.size/2+6;
-        if(this.hitCircle(x,y,pad.A.x,pad.A.y,r)){ Frog.fire(); this.pointers[id]="btn"; return; }
-        if(this.hitCircle(x,y,pad.B.x,pad.B.y,r)){ Frog.swap(); this.pointers[id]="btn"; return; }
+      {
+        const lay=TBTouchUI.layoutButtons(W,H,[
+          {key:'J',label:'发射'},{key:'K',label:'换珠'}
+        ],{size:50,gap:10,marginRight:12,marginBottom:14});
+        for(const b of lay.buttons){
+          if(!this.hitCircle(x,y,b.x,b.y,b.r+6)) continue;
+          if(b.key==='J'){ Frog.fire(); this.pointers[id]="btn"; return; }
+          if(b.key==='K'){ Frog.swap(); this.pointers[id]="btn"; return; }
+        }
+        if(lay.pause && this.hitCircle(x,y,lay.pause.x,lay.pause.y,lay.pause.r+6)){ this.state="paused"; this.pointers[id]="btn"; return; }
       }
     }
     this.aimAt(x,y);
@@ -908,6 +913,8 @@ const Game = {
       ctx.fillStyle = i < this.lives ? "#ff4d6d" : "rgba(255,255,255,.15)";
       this.heart(W/2 - 40 + i*40, 56, 9);
     }
+    ctx.fillStyle='rgba(200,220,255,.75)'; ctx.font='12px sans-serif'; ctx.textAlign='left';
+    ctx.fillText('J 发射 ｜ K 换珠 ｜ P 暂停', 12, H-12);
     // 暂停按钮
     ctx.fillStyle = "rgba(255,255,255,.12)";
     this.roundRect(W-64,10,54,54,12); ctx.fill();
@@ -943,29 +950,26 @@ const Game = {
   },
   drawTouchUI(){
     const sh=TBTouchUI.stickHome(H,{r:44,marginLeft:12,marginBottom:14});
-    const pad=TBTouchUI.arcadePad(W,H,{size:50,gap:10,marginRight:12,marginBottom:14});
+    const lay=TBTouchUI.layoutButtons(W,H,[{key:'J',label:'发射'},{key:'K',label:'换珠'}],{size:50,gap:10,marginRight:12,marginBottom:14});
     const jx = Input.joy.active ? Input.joy.cx : sh.x;
     const jy = Input.joy.active ? Input.joy.cy : sh.y;
     ctx.globalAlpha = 0.32;
-    ctx.strokeStyle = "#9fe8a8"; ctx.lineWidth = 3;
+    ctx.strokeStyle = "#8fa0ff"; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(jx,jy,sh.r,0,Math.PI*2); ctx.stroke();
-    ctx.fillStyle = "#9fe8a8";
+    ctx.fillStyle = "#8fa0ff";
     ctx.beginPath();
     ctx.arc(jx+Input.joy.dx*32, jy+Input.joy.dy*32, 18, 0, Math.PI*2); ctx.fill();
-    const r=pad.size/2;
-    ctx.globalAlpha = 0.5;
-    const fg = ctx.createRadialGradient(pad.A.x,pad.A.y,5,pad.A.x,pad.A.y,r);
-    fg.addColorStop(0,"#a8f0b0"); fg.addColorStop(1,"#1d6d00");
-    ctx.fillStyle = fg;
-    ctx.beginPath(); ctx.arc(pad.A.x,pad.A.y,r,0,Math.PI*2); ctx.fill();
-    const sg = ctx.createRadialGradient(pad.B.x,pad.B.y,4,pad.B.x,pad.B.y,r);
-    sg.addColorStop(0,"#9ad0ff"); sg.addColorStop(1,"#1f5fbf");
-    ctx.fillStyle = sg;
-    ctx.beginPath(); ctx.arc(pad.B.x,pad.B.y,r,0,Math.PI*2); ctx.fill();
+    lay.buttons.concat(lay.pause?[lay.pause]:[]).forEach(b=>{
+      ctx.globalAlpha=0.48;
+      const g=ctx.createRadialGradient(b.x,b.y,4,b.x,b.y,b.r);
+      if(b.key==='P'){ g.addColorStop(0,'#d0d4e8'); g.addColorStop(1,'#4a4e6a'); }
+      else if(b.key==='J'){ g.addColorStop(0,'#ff8fa8'); g.addColorStop(1,'#c9184a'); }
+      else { g.addColorStop(0,'#9ad0ff'); g.addColorStop(1,'#1f5fbf'); }
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle='#fff'; ctx.font='bold 13px sans-serif'; ctx.textAlign='center';
+      ctx.fillText(b.label, b.x, b.y+5);
+    });
     ctx.globalAlpha = 1;
-    ctx.fillStyle = "#fff"; ctx.font = "bold 14px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("发射", pad.A.x, pad.A.y+5);
-    ctx.fillText("换珠", pad.B.x, pad.B.y+5);
   },
   overlay(){ ctx.fillStyle = "rgba(4,12,7,.8)"; ctx.fillRect(0,0,W,H); },
   bigBtn(y, text, color){
@@ -1013,9 +1017,9 @@ const Game = {
     this.bigBtn(610, "无尽模式", ["#5b8bff","#2a3f9f"]);
 
     ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "15px sans-serif";
-    ctx.fillText("PC: A/D或←→瞄准  J/回车/K/空格发射  L换珠  U/P暂停", W/2, 740);
+    ctx.fillText("PC: A/D或←→瞄准  J/回车发射  K/空格换珠  P暂停", W/2, 740);
     ctx.fillText("I 音乐开关  O 音效开关  |  也可鼠标点击瞄准松手发射", W/2, 768);
-    ctx.fillText("手机: 左摇杆瞄准 · 右侧按钮发射/换珠 · 点屏瞄准松手发射", W/2, 796);
+    ctx.fillText("手机: 左摇杆瞄准 · 右上 J/K 发射/换珠 · 上方 P 暂停", W/2, 796);
     ctx.fillStyle = "rgba(255,255,255,.35)";
     ctx.fillText("最高分: " + this.best, W/2, 850);
   },

@@ -21,18 +21,26 @@ canvas{position:absolute;left:0;top:0;width:960px;height:540px;display:block;}
   border:2px solid rgba(255,225,190,.24);}
 #stickKnob{position:absolute;left:35px;top:35px;width:48px;height:48px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%,#fff,#ffc98f 60%,#b8622a);opacity:.85;pointer-events:none;}
-#btnPad{position:absolute;right:10px;bottom:10px;width:122px;height:122px;
-  display:grid;grid-template-columns:56px 56px;grid-template-rows:56px 56px;gap:10px;
-  pointer-events:auto;z-index:5;}
-#btnPad .btn{position:static;width:56px;height:56px;border-radius:50%;display:flex;
+#btnPad{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;pointer-events:auto;z-index:5;}
+#btnExtra{display:flex;gap:8px;justify-content:center;}
+#btnExtra .btn{width:44px;height:44px;font-size:11px;}
+#btnPause{position:static;width:48px;height:48px;font-size:12px;
+  background:radial-gradient(circle at 35% 30%,#d0d4e8,#4a4e6a)!important;}
+#btnGrid{display:grid;grid-template-columns:56px 56px;grid-template-rows:56px 56px;gap:10px;}
+#btnGrid .btn,#btnExtra .btn,#btnPause.btn{position:static;width:56px;height:56px;border-radius:50%;display:flex;
   align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.3);
   background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),rgba(255,255,255,.06));}
-#btnPad .btn:active{transform:scale(.92);filter:brightness(1.3);}
-#bA{background:radial-gradient(circle at 35% 30%,#ffb3a0,#b02a2a);}
-#bB{background:radial-gradient(circle at 35% 30%,#a9e6ff,#2c6ea8);}
-#bC{background:radial-gradient(circle at 35% 30%,#ffe9a0,#c9a419);}
-#bD{background:radial-gradient(circle at 35% 30%,#c9b6ff,#5b3fa8);}
+#btnExtra .btn,#btnPause.btn{width:44px;height:44px;}
+#btnPause.btn{width:48px;height:48px;}
+#btnGrid .btn:active,#btnExtra .btn:active,#btnPause.btn:active{transform:scale(.92);filter:brightness(1.3);}
+#bJ{background:radial-gradient(circle at 35% 30%,#ffb3a0,#b02a2a);}
+#bK{background:radial-gradient(circle at 35% 30%,#a9e6ff,#2c6ea8);}
+#bU{background:radial-gradient(circle at 35% 30%,#ffe9a0,#c9a419);}
+#bI{background:radial-gradient(circle at 35% 30%,#c9b6ff,#5b3fa8);}
+#bL{background:radial-gradient(circle at 35% 30%,#b8ffd0,#2a8a55);}
+#bO{background:radial-gradient(circle at 35% 30%,#ffd0f0,#a03a7a);}
 #topBtns{position:absolute;right:12px;top:6px;display:flex;gap:8px;pointer-events:auto;}
 .sbtn{pointer-events:auto;padding:6px 12px;border-radius:14px;font-size:13px;color:#fff2e6;background:rgba(0,0,0,.45);
   border:1px solid rgba(255,255,255,.28);}
@@ -71,13 +79,19 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   <div id="touch">
     <div id="stick" class="tc"><div id="stickKnob"></div></div>
     <div id="btnPad" class="tc">
-      <div id="bC" class="btn" data-act="act1">引爆</div>
-      <div id="bA" class="btn" data-act="attack">放炸弹</div>
-      <div id="bD" class="btn" data-act="act2">护盾</div>
-      <div id="bB" class="btn" data-act="jump">冲刺</div>
+      <div id="btnExtra">
+        <div id="bL" class="btn" data-act="act3">出口</div>
+        <div id="bO" class="btn" data-act="act4">说明</div>
+      </div>
+      <div id="btnPause" class="btn">暂停</div>
+      <div id="btnGrid">
+        <div id="bJ" class="btn" data-act="attack">炸弹</div>
+        <div id="bK" class="btn" data-act="jump">冲刺</div>
+        <div id="bU" class="btn" data-act="act1">引爆</div>
+        <div id="bI" class="btn" data-act="act2">护盾</div>
+      </div>
     </div>
     <div id="topBtns">
-      <div class="sbtn" id="btnPause">暂停</div>
       <div class="sbtn" id="btnSound">音效:开</div>
     </div>
   </div>
@@ -91,9 +105,9 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
       <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
     <div class="help">
-      <b>PC：</b>WASD / ↑↓←→ 移动 &nbsp;|&nbsp; <b>J / 回车</b> 放置炸弹 &nbsp;|&nbsp; <b>K / 空格</b> 冲刺（短距翻滚）<br>
-      <b>L</b> 遥控引爆（需道具）&nbsp;|&nbsp; <b>U</b> 开启护盾（需道具）&nbsp;|&nbsp; <b>I</b> 标记出口位置 &nbsp;|&nbsp; <b>O</b> 显示/隐藏道具说明 &nbsp;|&nbsp; <b>P / ESC</b> 暂停<br>
-      <b>手机：</b>左摇杆移动，右侧按钮放炸弹/冲刺/引爆/护盾（竖屏自动旋转横屏）<br>
+      <b>PC：</b>WASD / ↑↓←→ 移动 ｜ <b>J / 回车</b> 放炸弹 ｜ <b>K / 空格</b> 冲刺<br>
+      <b>U</b> 遥控引爆 ｜ <b>I</b> 护盾 ｜ <b>L</b> 标记出口 ｜ <b>O</b> 道具说明 ｜ <b>P / ESC</b> 暂停<br>
+      <b>手机：</b>左摇杆移动；右侧上排 J/K、下排 U/I，上方 P 暂停，再上为 L/O（竖屏自动转横屏）<br>
       炸掉砖块寻找道具与<b>出口</b>；消灭全部敌人后出口开启，走上出口即通关。小心自己的爆炸！
     </div>
   </div>
@@ -119,7 +133,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
    街机炸弹人 · 爆破迷城   单文件实现
@@ -263,7 +277,7 @@ const Input={ keys:{},hits:{},axis:{x:0,y:0},
   clearHits(){ this.hits={}; } };
 const KEYMAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',
   KeyD:'right',ArrowRight:'right',KeyK:'jump',Space:'jump',KeyJ:'attack',Enter:'attack',NumpadEnter:'attack',
-  KeyL:'act1',KeyU:'act2',KeyI:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
+  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
 window.addEventListener('keydown',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Snd.resume();
   if(!Input.keys[a]) Input.hits[a]=1; Input.keys[a]=1; },{passive:false});
 window.addEventListener('keyup',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Input.keys[a]=0; },{passive:false});
@@ -666,8 +680,8 @@ function applyItem(def){
   if(def.id==='fire'){ G.fire=Math.min(8,G.fire+1); toast('火力 +1（'+G.fire+'）'); }
   else if(def.id==='bomb'){ G.maxBombs=Math.min(8,G.maxBombs+1); toast('炸弹上限 +1（'+G.maxBombs+'）'); }
   else if(def.id==='speed'){ G.speed=Math.min(190,G.speed+18); toast('移动速度提升'); }
-  else if(def.id==='remote'){ G.remote+=2; toast('获得遥控引爆 x2（按 L）'); }
-  else if(def.id==='shield'){ G.shields++; toast('获得护盾（按 U 开启）'); }
+  else if(def.id==='remote'){ G.remote+=2; toast('获得遥控引爆 x2（按 U）'); }
+  else if(def.id==='shield'){ G.shields++; toast('获得护盾（按 I 开启）'); }
   else if(def.id==='life'){ G.lives++; toast('生命 +1'); }
   G.score+=50;
 }
@@ -958,7 +972,7 @@ function drawHud(){
   ctx.fillText(G.endless? ('无尽 · 第 '+G.wave+' 波') : ('剩余 '+Math.max(0,Math.ceil(G.left))+'s'), 709, 26);
   /* 底部提示 */
   ctx.textAlign='left'; ctx.font='11px sans-serif'; ctx.fillStyle='rgba(255,255,255,.7)';
-  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 放炸弹 ｜ K 冲刺'+(G.p.dashCD>0?'('+G.p.dashCD.toFixed(1)+')':'')+' ｜ L 遥控引爆 ｜ U 护盾 ｜ I 标记出口 ｜ O 道具说明 ｜ P 暂停', 14, H-8);
+  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 放炸弹 ｜ K 冲刺'+(G.p.dashCD>0?'('+G.p.dashCD.toFixed(1)+')':'')+' ｜ U 遥控引爆 ｜ I 护盾 ｜ L 标记出口 ｜ O 道具说明 ｜ P 暂停', 14, H-8);
   /* 道具说明面板 */
   if(G.showHelp){
     ctx.fillStyle='rgba(10,6,16,.94)'; rr(ctx,W-262,60,248,166,10); ctx.fill();

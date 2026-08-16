@@ -24,7 +24,7 @@ canvas{display:block;background:#032a44;box-shadow:0 0 60px rgba(60,180,255,.25)
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -130,8 +130,8 @@ const Input=(()=>{
     if(keys[e.code])return;
     keys[e.code]=true;
     Audio2.resume();
-    if(e.code==="KeyJ"||e.code==="Enter")action.attack=true;   // 冲刺
-    if(e.code==="KeyK"||e.code==="Space")action.jump=true;     // 暂停
+    if(e.code==="KeyJ"||e.code==="Enter"||e.code==="KeyK"||e.code==="Space")action.attack=true; // 冲刺
+    if(e.code==="KeyP"||e.code==="Escape")action.jump=true;     // 暂停(P)
     Game.onAnyKey(e.code);
   });
   window.addEventListener("keyup",e=>{keys[e.code]=false;});
@@ -148,16 +148,18 @@ const Input=(()=>{
 
   /* 虚拟摇杆与按钮（基准坐标系） */
   const isTouch=(typeof TBTouchUI!=='undefined')?TBTouchUI.wantTouchUI():false;
-  const _pad=(typeof TBTouchUI!=='undefined')
-    ? TBTouchUI.arcadePad(BASE_W,BASE_H,{size:52,gap:10,marginRight:12,marginBottom:12})
-    : {size:52,A:{x:BASE_W-38,y:BASE_H-110},B:{x:BASE_W-38,y:BASE_H-38}};
+  const _lay=(typeof TBTouchUI!=='undefined')
+    ? TBTouchUI.layoutButtons(BASE_W,BASE_H,[{key:'J',id:'attack',label:'冲刺',col:'#ff5577'}],{size:52,gap:10,marginRight:12,marginBottom:12})
+    : null;
   const _stick=(typeof TBTouchUI!=='undefined')
     ? TBTouchUI.stickHome(BASE_H,{r:52,marginLeft:14,marginBottom:14})
     : {x:130,y:BASE_H-110,r:52};
   const joy={cx:_stick.x,cy:_stick.y,r:_stick.r,knobX:0,knobY:0,active:false,id:-1};
-  const btns=[
-    {id:"attack",label:"冲刺",x:_pad.A.x,y:_pad.A.y,r:_pad.size/2,down:false,tid:-1,col:"#ff5577"},
-    {id:"jump",  label:"暂停",x:_pad.B.x,y:_pad.B.y,r:_pad.size/2,down:false,tid:-1,col:"#55aaff"},
+  const btns=_lay ? _lay.buttons.map(b=>({id:b.id,label:b.label,x:b.x,y:b.y,r:b.r,down:false,tid:-1,col:b.col||'#ff5577'})).concat(
+    _lay.pause?[{id:'jump',label:_lay.pause.label,x:_lay.pause.x,y:_lay.pause.y,r:_lay.pause.r,down:false,tid:-1,col:'#55aaff'}]:[]
+  ) : [
+    {id:"attack",label:"冲刺",x:BASE_W-38,y:BASE_H-110,r:26,down:false,tid:-1,col:"#ff5577"},
+    {id:"jump",  label:"暂停",x:BASE_W-74,y:BASE_H-170,r:22,down:false,tid:-1,col:"#55aaff"},
   ];
   function handleTouchStart(e){
     Audio2.resume();
@@ -525,7 +527,7 @@ const Game=(()=>{
     }else if(state===STATE.LEVELCLEAR){
       if(code==="Enter"||code==="KeyJ"||code==="Space")nextLevel();
     }else if(state===STATE.PAUSE){
-      if(code==="KeyK"||code==="Space"||code==="Escape")state=STATE.PLAY;
+      if(code==="KeyP"||code==="Escape")state=STATE.PLAY;
     }else if(state===STATE.PLAY){
       if(code==="Escape")togglePause();
     }
@@ -790,7 +792,7 @@ const Render=(()=>{
       }
       ctx.fillStyle="#bfe8ff";ctx.font="17px sans-serif";ctx.textAlign="center";
       ctx.fillText("吃比自己小的鱼成长，躲避大鱼(红圈警示)",BASE_W/2,225);
-      ctx.fillText("WASD/方向键 移动 · J/回车 冲刺(短暂无敌) · K/空格 暂停 · 手机摇杆+按钮",BASE_W/2,252);
+      ctx.fillText("WASD/方向键移动 · J/回车/K/空格冲刺 · P暂停 · 手机摇杆+右侧J/上方P",BASE_W/2,252);
       for(const b of Game.activeBtns())drawButton(b,t);
       ctx.fillStyle="rgba(190,230,255,0.6)";ctx.font="15px sans-serif";
       ctx.fillText("最高分: "+Game.best,BASE_W/2,470);

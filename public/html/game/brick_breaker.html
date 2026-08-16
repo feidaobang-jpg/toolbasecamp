@@ -27,7 +27,7 @@ html,body{
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -630,15 +630,27 @@ const Game = {
     this.setupTouchBtns();
   },
   setupTouchBtns(){
-    const pad=(typeof TBTouchUI!=='undefined')
-      ? TBTouchUI.arcadePad(BASE_W,BASE_H,{size:52,gap:10,marginRight:12,marginBottom:12})
-      : {size:52,A:{x:BASE_W-38,y:BASE_H-110},B:{x:BASE_W-38,y:BASE_H-38},C:{x:BASE_W-110,y:BASE_H-110},D:{x:BASE_W-110,y:BASE_H-38}};
-    const r=pad.size/2;
-    Input.btns={
-      attack:{x:pad.A.x,y:pad.A.y,r:r,label:"攻",pressed:false,id:-1},
-      jump:  {x:pad.B.x,y:pad.B.y,r:r,label:"发",pressed:false,id:-1},
-      pause: {x:BASE_W-32,y:HUD_H+28,r:22,label:"⏸",pressed:false,id:-1},
-    };
+    const lay=(typeof TBTouchUI!=='undefined')
+      ? TBTouchUI.layoutButtons(BASE_W,BASE_H,[
+          {key:'J',id:'attack',label:'攻'},
+          {key:'K',id:'jump',label:'发'}
+        ],{size:52,gap:10,marginRight:12,marginBottom:12})
+      : null;
+    Input.btns={};
+    if(lay){
+      lay.buttons.forEach(b=>{
+        Input.btns[b.id]={x:b.x,y:b.y,r:b.r,label:b.label,pressed:false,id:-1,key:b.key};
+      });
+      if(lay.pause){
+        Input.btns.pause={x:lay.pause.x,y:lay.pause.y,r:lay.pause.r,label:'暂停',pressed:false,id:-1,key:'P'};
+      }
+    } else {
+      Input.btns={
+        attack:{x:BASE_W-110,y:BASE_H-110,r:26,label:"攻",pressed:false,id:-1},
+        jump:  {x:BASE_W-38,y:BASE_H-110,r:26,label:"发",pressed:false,id:-1},
+        pause: {x:BASE_W-74,y:BASE_H-170,r:22,label:"暂停",pressed:false,id:-1},
+      };
+    }
   },
   startGame(mode){
     AudioSys.unlock();
@@ -726,12 +738,12 @@ const Game = {
     if(this.state==="play"){
       if(code==="Space"||code==="KeyK") this.launchBalls();      // 跳跃键=发射
       if(code==="KeyJ"||code==="Enter"){ if(!this.launchBalls()) this.tryShoot(true); }
-      if(code==="KeyL"||code==="Escape") this.state="pause";     // L=暂停
+      if(code==="KeyP"||code==="Escape") this.state="pause";     // P=暂停
       if(code==="KeyO"){ this.startGame(this.mode); }            // O=重开
       if(code==="KeyI"){ AudioSys.toggleMute(); }   // I=静音
       // U 备用
     } else if(this.state==="pause"){
-      if(code==="KeyL"||code==="Escape"||code==="Enter"||code==="KeyJ") this.state="play";
+      if(code==="KeyP"||code==="Escape"||code==="Enter"||code==="KeyJ") this.state="play";
       if(code==="KeyO") this.startGame(this.mode);
     } else if(this.state==="over"||this.state==="win"){
       if(code==="Enter"||code==="KeyJ"||code==="KeyO") this.startGame(this.mode);
@@ -846,7 +858,7 @@ const Game = {
     this.drawHUD(c);
     if(Input.isTouch && this.state==="play" && (typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI())) this.drawTouchUI(c);
 
-    if(this.state==="pause") this.drawOverlay(c,"已暂停","点击继续 / L键继续",[
+    if(this.state==="pause") this.drawOverlay(c,"已暂停","点击继续 / P键继续",[
       {label:"继续游戏",action:()=>this.state="play"},
       {label:"重新开始",action:()=>this.startGame(this.mode)},
       {label:"返回菜单",action:()=>{this.state="menu";AudioSys.stopBGM();}},
@@ -888,6 +900,8 @@ const Game = {
     // 生命(爱心)
     c.textAlign="right";
     for(let i=0;i<this.lives;i++) drawHeart(c, BASE_W-24-i*26, HUD_H/2, 9);
+    c.fillStyle="#8fa8d8"; c.font="12px sans-serif"; c.textAlign="left";
+    c.fillText("J 攻击 ｜ K 发射 ｜ P 暂停", 12, BASE_H-10);
     // PC暂停按钮（点击）
     if(!Input.isTouch){
       const bx=BASE_W-66,by=HUD_H+12,bw=56,bh=30;
@@ -956,9 +970,9 @@ const Game = {
     mkBtn(460,"无尽模式",()=>this.startGame("endless"),false);
     // 操作说明
     c.fillStyle="#8fa8d8"; c.font="15px sans-serif";
-    c.fillText("PC：A/D 或 ←/→ 移动　K/空格 发射", BASE_W/2, 590);
-    c.fillText("J/回车 发射与射击　L 暂停　O 重开　I 静音", BASE_W/2, 618);
-    c.fillText("手机：左侧摇杆移动　右侧按钮发射/攻击", BASE_W/2, 646);
+    c.fillText("PC：A/D 或 ←/→ 移动　J/回车 攻击　K/空格 发射", BASE_W/2, 590);
+    c.fillText("P 暂停　O 重开　I 静音　｜ 手机：左摇杆　右上 J/K　上方 P", BASE_W/2, 618);
+    c.fillText("局内底栏也会显示按键提示", BASE_W/2, 646);
     c.fillStyle="#5f7ab8"; c.font="13px sans-serif";
     c.fillText(`历史最高分：${this.best}`, BASE_W/2, 700);
   },

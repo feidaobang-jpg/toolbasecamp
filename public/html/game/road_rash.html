@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -130,9 +130,8 @@ const Input={
       if(this.keys[k]) return;
       this.keys[k]=true;
       AudioSys.init(); AudioSys.resume();
-      if(k==="j"||k==="enter") this.atkPressed=true;
-      if(k==="k"||k===" ") this.jumpPressed=true;
-      if(k==="u"||k==="p"||k==="escape") this.pausePressed=true;
+      if(k==="j"||k==="enter"||k==="k"||k===" ") this.atkPressed=true;
+      if(k==="p"||k==="escape") this.pausePressed=true;
       if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
       if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
     });
@@ -617,13 +616,16 @@ const Game={
     // playing
     if(this.hitRect(x,y,W-64,10,54,54)){ this.state="paused"; AudioSys.setEngine(0,false); return; }
     if(typeof TBTouchUI!=="undefined"&&TBTouchUI.wantTouchUI()){
-      const pad=TBTouchUI?TBTouchUI.arcadePad(W,H,{size:52,gap:10,marginRight:12,marginBottom:14}):null;
       if(x<W*0.42 && y>H*0.7){
         Input.joy.active=true; Input.joy.id=id;
         Input.joy.cx=x; Input.joy.cy=y; Input.joy.dx=0; Input.joy.dy=0;
         this.pointers[id]="joy"; return;
       }
-      if(pad && this.hitCircle(x,y,pad.B.x,pad.B.y,pad.size/2+8)){ Input.atkPressed=true; this.pointers[id]="btn"; return; }
+      const lay=TBTouchUI.layoutButtons(W,H,[{key:'J',label:'出拳'}],{size:52,gap:10,marginRight:12,marginBottom:14});
+      for(const b of lay.buttons){
+        if(this.hitCircle(x,y,b.x,b.y,b.r+8)){ Input.atkPressed=true; this.pointers[id]="btn"; return; }
+      }
+      if(lay.pause && this.hitCircle(x,y,lay.pause.x,lay.pause.y,lay.pause.r+6)){ this.state="paused"; AudioSys.setEngine(0,false); this.pointers[id]="btn"; return; }
     }
   },
   onPointerMove(x,y,id){
@@ -757,6 +759,8 @@ const Game={
     ctx.fillStyle=hg; ctx.fillRect(W-208,38,130*clamp(Player.hp/Player.maxHp,0,1),12);
     ctx.fillStyle="#fff"; ctx.font="10px sans-serif"; ctx.textAlign="right";
     ctx.fillText("HP "+Math.max(Player.hp,0)+"/"+Player.maxHp,W-82,62);
+    ctx.fillStyle='rgba(200,220,255,.75)'; ctx.font='12px sans-serif'; ctx.textAlign='left';
+    ctx.fillText('J 出拳 ｜ P 暂停', 12, H-12);
     // 暂停按钮
     ctx.fillStyle="rgba(255,255,255,.15)";
     ctx.beginPath(); ctx.roundRect(W-64,10,54,44,10); ctx.fill();
@@ -764,20 +768,22 @@ const Game={
   },
   drawTouchUI(){
     const sh=TBTouchUI.stickHome(H,{r:44,marginLeft:12,marginBottom:14});
-    const pad=TBTouchUI.arcadePad(W,H,{size:52,gap:10,marginRight:12,marginBottom:14});
+    const lay=TBTouchUI.layoutButtons(W,H,[{key:'J',label:'出拳'}],{size:52,gap:10,marginRight:12,marginBottom:14});
     ctx.globalAlpha=0.32;
     const jx=Input.joy.active?Input.joy.cx:sh.x, jy=Input.joy.active?Input.joy.cy:sh.y;
     ctx.strokeStyle="#8ecae6"; ctx.lineWidth=2;
     ctx.beginPath(); ctx.arc(jx,jy,sh.r,0,Math.PI*2); ctx.stroke();
     ctx.fillStyle="#8ecae6";
     ctx.beginPath(); ctx.arc(jx+Input.joy.dx*32,jy+Input.joy.dy*32,18,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha=0.42;
-    const bx=pad.B.x, by=pad.B.y, br=pad.size/2;
-    const ag=ctx.createRadialGradient(bx,by,6,bx,by,br);
-    ag.addColorStop(0,"#ff8fa3"); ag.addColorStop(1,"#c9184a");
-    ctx.fillStyle=ag; ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2); ctx.fill();
-    ctx.globalAlpha=0.95; ctx.fillStyle="#3d0716"; ctx.font="bold 15px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("出拳",bx,by+5);
+    lay.buttons.concat(lay.pause?[lay.pause]:[]).forEach(b=>{
+      ctx.globalAlpha=0.45;
+      const ag=ctx.createRadialGradient(b.x,b.y,4,b.x,b.y,b.r);
+      if(b.key==='P'){ ag.addColorStop(0,'#d0d4e8'); ag.addColorStop(1,'#4a4e6a'); }
+      else { ag.addColorStop(0,'#ff8fa3'); ag.addColorStop(1,'#c9184a'); }
+      ctx.fillStyle=ag; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=0.95; ctx.fillStyle='#fff'; ctx.font='bold 13px sans-serif'; ctx.textAlign='center';
+      ctx.fillText(b.label,b.x,b.y+4);
+    });
     ctx.globalAlpha=1;
   },
   overlay(){ ctx.fillStyle="rgba(6,6,14,.72)"; ctx.fillRect(0,0,W,H); },
@@ -818,9 +824,9 @@ const Game={
     this.bigBtn(520,"关卡模式",["#ff9e5e","#d1495b"]);
     this.bigBtn(610,"无尽模式",["#5b8bff","#2a3f9f"]);
     ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
-    ctx.fillText("PC: A/D或←→转向  W/↑加速 S/↓刹车  J/回车出拳",W/2,718);
-    ctx.fillText("U/P暂停  I/O音乐音效开关",W/2,742);
-    ctx.fillText("手机: 左摇杆(上推加速下拉刹车) · 右侧出拳按钮",W/2,766);
+    ctx.fillText("PC: A/D或←→转向  W/↑加速 S/↓刹车  J/回车/K/空格出拳",W/2,718);
+    ctx.fillText("J/回车 出拳 ｜ P 暂停 ｜ I/O 音乐音效",W/2,742);
+    ctx.fillText("手机: 左摇杆(上加速下刹车) · 右侧 J 出拳、上方 P 暂停",W/2,766);
     ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best,W/2,810);
   },
   drawPaused(){

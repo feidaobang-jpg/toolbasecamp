@@ -21,18 +21,26 @@ canvas{position:absolute;left:0;top:0;width:960px;height:540px;display:block;}
   border:2px solid rgba(200,240,255,.25);}
 #stickKnob{position:absolute;left:35px;top:35px;width:48px;height:48px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%,#fff,#8fd8ff 60%,#2b74a8);opacity:.85;pointer-events:none;}
-#btnPad{position:absolute;right:10px;bottom:10px;width:122px;height:122px;
-  display:grid;grid-template-columns:56px 56px;grid-template-rows:56px 56px;gap:10px;
-  pointer-events:auto;z-index:5;}
-#btnPad .btn{position:static;width:56px;height:56px;border-radius:50%;display:flex;
+#btnPad{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;pointer-events:auto;z-index:5;}
+#btnExtra{display:flex;gap:8px;justify-content:center;}
+#btnExtra .btn{width:44px;height:44px;font-size:11px;}
+#btnPause{position:static;width:48px;height:48px;font-size:12px;
+  background:radial-gradient(circle at 35% 30%,#d0d4e8,#4a4e6a)!important;}
+#btnGrid{display:grid;grid-template-columns:56px 56px;grid-template-rows:56px 56px;gap:10px;}
+#btnGrid .btn,#btnExtra .btn,#btnPause.btn{position:static;width:56px;height:56px;border-radius:50%;display:flex;
   align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.3);
   background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.32),rgba(255,255,255,.06));}
-#btnPad .btn:active{transform:scale(.92);filter:brightness(1.3);}
-#bA{background:radial-gradient(circle at 35% 30%,#a8f0ff,#1f6f9c);}
-#bB{background:radial-gradient(circle at 35% 30%,#ffe6a0,#c1741d);}
-#bC{background:radial-gradient(circle at 35% 30%,#c8b0ff,#5b3fa8);}
-#bD{background:radial-gradient(circle at 35% 30%,#b6ffcf,#1f9a5c);}
+#btnExtra .btn,#btnPause.btn{width:44px;height:44px;}
+#btnPause.btn{width:48px;height:48px;}
+#btnGrid .btn:active,#btnExtra .btn:active,#btnPause.btn:active{transform:scale(.92);filter:brightness(1.3);}
+#bJ{background:radial-gradient(circle at 35% 30%,#a8f0ff,#1f6f9c);}
+#bK{background:radial-gradient(circle at 35% 30%,#ffe6a0,#c1741d);}
+#bU{background:radial-gradient(circle at 35% 30%,#c8b0ff,#5b3fa8);}
+#bI{background:radial-gradient(circle at 35% 30%,#b6ffcf,#1f9a5c);}
+#bL{background:radial-gradient(circle at 35% 30%,#ffc9a0,#b85a2a);}
+#bO{background:radial-gradient(circle at 35% 30%,#a0e0ff,#1a6a9a);}
 #topBtns{position:absolute;right:12px;top:8px;display:flex;gap:8px;pointer-events:auto;}
 .sbtn{pointer-events:auto;padding:6px 12px;border-radius:14px;font-size:13px;color:#eaf9ff;background:rgba(0,0,0,.42);
   border:1px solid rgba(255,255,255,.28);}
@@ -71,13 +79,19 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   <div id="touch">
     <div id="stick" class="tc"><div id="stickKnob"></div></div>
     <div id="btnPad" class="tc">
-      <div id="bC" class="btn" data-act="act1">撒网</div>
-      <div id="bA" class="btn" data-act="attack">鱼叉</div>
-      <div id="bD" class="btn" data-act="act3">上浮</div>
-      <div id="bB" class="btn" data-act="jump">冲刺</div>
+      <div id="btnExtra">
+        <div id="bL" class="btn" data-act="act3">氧气</div>
+        <div id="bO" class="btn" data-act="act4">声呐</div>
+      </div>
+      <div id="btnPause" class="btn">暂停</div>
+      <div id="btnGrid">
+        <div id="bJ" class="btn" data-act="attack">鱼叉</div>
+        <div id="bK" class="btn" data-act="jump">冲刺</div>
+        <div id="bU" class="btn" data-act="act1">撒网</div>
+        <div id="bI" class="btn" data-act="act2">上浮</div>
+      </div>
     </div>
     <div id="topBtns">
-      <div class="sbtn" id="btnPause">暂停</div>
       <div class="sbtn" id="btnSound">音效:开</div>
     </div>
   </div>
@@ -91,10 +105,10 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
       <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
     <div class="help">
-      <b>PC：</b>WASD / ↑↓←→ 游动 &nbsp;|&nbsp; <b>J / 回车</b> 发射鱼叉 &nbsp;|&nbsp; <b>K / 空格</b> 冲刺加速<br>
-      <b>L</b> 撒网（范围捕获，有冷却）&nbsp;|&nbsp; <b>U</b> 使用氧气瓶 &nbsp;|&nbsp; <b>I</b> 快速上浮回船 &nbsp;|&nbsp; <b>O</b> 声呐标记 &nbsp;|&nbsp; <b>P / ESC</b> 暂停<br>
-      <b>手机：</b>左摇杆游动，右侧按钮鱼叉/冲刺/撒网/上浮（竖屏自动旋转横屏）<br>
-      鱼叉命中鱼即入鱼篓（容量有限），<b>浮出水面靠近渔船卸货才会计入渔获</b>；氧气耗尽或碰到水母、鲨鱼会损失生命。
+      <b>PC：</b>WASD / ↑↓←→ 游动 ｜ <b>J / 回车</b> 发射鱼叉 ｜ <b>K / 空格</b> 冲刺<br>
+      <b>U</b> 撒网 ｜ <b>I</b> 上浮 ｜ <b>L</b> 氧气瓶 ｜ <b>O</b> 声呐 ｜ <b>P / ESC</b> 暂停<br>
+      <b>手机：</b>左摇杆游动；右侧上排 J/K、下排 U/I，上方 P 暂停，再上为 L/O<br>
+      回船卸货累计渔获达标过关；注意氧气，尽快上浮换气。
     </div>
   </div>
 
@@ -119,7 +133,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
    潜水捕鱼 · 深海猎手   单文件实现
@@ -259,7 +273,7 @@ const Input={ keys:{},hits:{},axis:{x:0,y:0},
   clearHits(){this.hits={};} };
 const KEYMAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',
   KeyD:'right',ArrowRight:'right',KeyK:'jump',Space:'jump',KeyJ:'attack',Enter:'attack',NumpadEnter:'attack',
-  KeyL:'act1',KeyU:'act2',KeyI:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
+  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
 window.addEventListener('keydown',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Snd.resume();
   if(!Input.keys[a]) Input.hits[a]=1; Input.keys[a]=1; },{passive:false});
 window.addEventListener('keyup',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Input.keys[a]=0; },{passive:false});
@@ -601,8 +615,8 @@ function handleInput(dt){
     else Snd.err();
   }
   if(Input.hit('act1')) castNet();
-  if(Input.hit('act2')) useTank();
-  if(Input.hit('act3')){ G.diver.vy-=210; G.diver.dash=0.2; Snd.dash(); toast('快速上浮'); }
+  if(Input.hit('act2')){ G.diver.vy-=210; G.diver.dash=0.2; Snd.dash(); toast('快速上浮'); }
+  if(Input.hit('act3')) useTank();
   if(Input.hit('act4')){ G.sonar=4.5; Snd.sonar(); toast('声呐启动：标记全部目标'); }
   Input.clearHits();
 }
@@ -927,13 +941,13 @@ function drawHud(){
   }
   /* 冷却提示 */
   ctx.textAlign='left'; ctx.font='11px sans-serif'; ctx.fillStyle='rgba(255,255,255,.75)';
-  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 鱼叉 ｜ K 冲刺'+(G.dashCD>0?'('+G.dashCD.toFixed(1)+')':'')+' ｜ L 撒网'+(G.netCD>0?'('+G.netCD.toFixed(1)+')':'')+' ｜ U 氧气瓶 ｜ I 上浮 ｜ O 声呐', 16, H-24);
+  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 鱼叉 ｜ K 冲刺'+(G.dashCD>0?'('+G.dashCD.toFixed(1)+')':'')+' ｜ U 撒网'+(G.netCD>0?'('+G.netCD.toFixed(1)+')':'')+' ｜ I 上浮 ｜ L 氧气瓶 ｜ O 声呐 ｜ P 暂停', 16, H-24);
   /* 低氧警告 */
   if(G.o2<G.o2Max*0.25 && G.state==='play'){
     ctx.fillStyle='rgba(255,60,60,'+(0.12+0.12*Math.sin(G.time*10))+')'; ctx.fillRect(0,0,W,H);
     ctx.fillStyle='rgba(255,220,220,'+(0.6+0.4*Math.sin(G.time*10))+')';
     ctx.font='bold 20px sans-serif'; ctx.textAlign='center';
-    ctx.fillText('氧气不足！尽快上浮（I）', W/2, 80);
+    ctx.fillText('氧气不足！尽快上浮（I 键）', W/2, 80);
   }
   ctx.restore();
 }

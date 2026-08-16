@@ -28,11 +28,13 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   box-shadow:0 0 14px rgba(90,170,255,.7);}
 .tBtn{border-radius:50%;border:2px solid rgba(255,255,255,.3);color:#fff;font-weight:800;
   display:flex;align-items:center;justify-content:center;text-shadow:0 1px 2px #000;}
-#btnPadTouch{right:2%;bottom:2.5%;width:min(26vw,128px);aspect-ratio:1;
-  display:none;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;z-index:40;}
-#btnPadTouch .tBtn{position:static;width:100%;height:100%;font-size:12px;max-width:none;}
+#btnPadTouch{right:2%;bottom:2.5%;width:min(26vw,128px);
+  display:none;flex-direction:column;align-items:center;gap:8px;z-index:40;}
+#btnPadTouch .tBtn{position:static;width:min(14vw,64px);aspect-ratio:1;font-size:12px;max-width:none;}
+#btnGridTouch{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;width:100%;}
+#btnGridTouch .tBtn{width:100%;}
 #btnFire{background:radial-gradient(circle at 35% 30%,#ff9d7a,#c2402a);font-size:14px;}
-#btnPause{background:radial-gradient(circle at 35% 30%,#c9c9e8,#565688);font-size:12px;}
+#btnPause{background:radial-gradient(circle at 35% 30%,#c9c9e8,#565688);font-size:12px;width:min(12vw,52px)!important;}
 /* 合作联机大厅 */
 #coopPanel{display:none;position:absolute;inset:0;z-index:50;align-items:center;justify-content:center;
   background:rgba(5,6,14,.88);padding:16px;box-sizing:border-box;}
@@ -57,8 +59,13 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   <div id="gameWrap"><canvas id="gameCanvas" width="960" height="540"></canvas></div>
   <div id="joyBase" class="touchUI"><div id="joyKnob"></div></div>
   <div id="btnPadTouch" class="touchUI">
-    <div></div><div id="btnPause" class="tBtn">暂停</div>
-    <div></div><div id="btnFire" class="tBtn">开火</div>
+    <div id="btnPause" class="tBtn">暂停</div>
+    <div id="btnGridTouch">
+      <div id="btnFire" class="tBtn">开火</div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
   <div id="coopPanel" aria-hidden="true">
     <div class="coop-box">
@@ -82,7 +89,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   </div>
 </div>
 
-<script src="../../js/game/touch-ui.js?v=1"></script>
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -260,8 +267,9 @@ const Input = (() => {
   window.addEventListener("keydown",e=>{
     if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space","Enter"].includes(e.code)) e.preventDefault();
     if(!keys[e.code]){
-      if(e.code==="KeyJ"||e.code==="Enter"||e.code==="KeyK"||e.code==="Space"){ state.firePressed=true; state.startPressed=true; }
-      if(e.code==="KeyL"||e.code==="KeyP"||e.code==="Escape") state.pausePressed=true;
+      if(e.code==="KeyJ"||e.code==="Enter"){ state.firePressed=true; state.startPressed=true; }
+      if(e.code==="KeyK"||e.code==="Space"){ state.firePressed=true; state.startPressed=true; }
+      if(e.code==="KeyP"||e.code==="Escape") state.pausePressed=true;
     }
     keys[e.code]=true; SFX.unlock();
   });
@@ -2701,7 +2709,7 @@ const Game = (() => {
       g.fillText("🛡 "+player.shield.toFixed(0)+"s",rx,OFF_Y+222); }
     // 暂停提示
     g.fillStyle="#5a6478"; g.font="11px sans-serif";
-    g.fillText("L/P 暂停",rx,OFF_Y+FIELD_H*TILE-14);
+    g.fillText("J/K 开火 ｜ P 暂停",rx,OFF_Y+FIELD_H*TILE-14);
   }
 
   function drawFrame(){
@@ -2766,7 +2774,7 @@ const Game = (() => {
     }
     // 覆盖层
     if(stateName==="menu") drawMenu();
-    else if(stateName==="paused") drawOverlay("暂停","按 L / P 或点击暂停键继续");
+    else if(stateName==="paused") drawOverlay("暂停","按 P 或点击暂停键继续");
     else if(stateName==="levelClear"){
       const done=!endless && level>=CAMPAIGN_LEVELS;
       const waitGuest=coopMode && !coopIsHost;
@@ -2822,7 +2830,7 @@ const Game = (() => {
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
     g.fillText("船最多3层 · 时钟/头盔可叠时间 · 大Boss弹需4发抵消 · 火焰车弹需2发",CANVAS_W/2,430);
-    g.fillText("移动：WASD / 方向键 / 摇杆　　开火：J / 回车 / K / 空格　　暂停：L / P",CANVAS_W/2,450);
+    g.fillText("移动：WASD / 方向键　　开火：J/回车（K/空格同）　　暂停：P　　手机：左摇杆+右侧 J/上方 P",CANVAS_W/2,450);
     g.fillText("道具：⛵船=渡水+多层护盾　⏱时钟/🛡头盔可叠加　🔥火焰车=5血小Boss",CANVAS_W/2,470);
     if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
       g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,496); }
@@ -3154,7 +3162,7 @@ const Game = (() => {
     const joy = document.getElementById("joyBase");
     const pad = document.getElementById("btnPadTouch");
     if(joy) joy.style.display = "block";
-    if(pad) pad.style.display = "grid";
+    if(pad) pad.style.display = "flex";
     const bf = document.getElementById("btnFire");
     const bp = document.getElementById("btnPause");
     if(bf) bf.style.display = "flex";
