@@ -770,17 +770,12 @@ const Game={
     ctx.font="12px sans-serif"; ctx.fillStyle="#8ecae6";
     ctx.fillText("最高 "+this.best,14,48);
     ctx.textAlign="center"; ctx.fillStyle="#fff"; ctx.font="bold 17px sans-serif";
-    if(true){
-      ctx.fillText(progLabel(this)+" ⏱"+Math.max(Math.ceil(this.timeLeft),0)+"s",W/2,24);
-      const k=clamp(this.dist/this.target,0,1);
-      ctx.fillStyle="rgba(255,255,255,.15)"; ctx.fillRect(W/2-90,34,180,10);
-      ctx.fillStyle="#95d5b2"; ctx.fillRect(W/2-90,34,180*k,10);
-      ctx.fillStyle="#cde8ff"; ctx.font="12px sans-serif";
-      ctx.fillText(Math.floor(this.dist)+" / "+this.target+" m",W/2,60);
-    }else{
-      ctx.fillStyle="#cde8ff"; ctx.font="13px sans-serif";
-      ctx.fillText(Math.floor(this.dist)+" m",W/2,46);
-    }
+    ctx.fillText(progLabel(this)+" ⏱"+Math.max(Math.ceil(this.timeLeft),0)+"s",W/2,24);
+    const k=clamp(this.dist/this.target,0,1);
+    ctx.fillStyle="rgba(255,255,255,.15)"; ctx.fillRect(W/2-90,34,180,10);
+    ctx.fillStyle="#95d5b2"; ctx.fillRect(W/2-90,34,180*k,10);
+    ctx.fillStyle="#cde8ff"; ctx.font="12px sans-serif";
+    ctx.fillText(Math.floor(this.dist)+" / "+this.target+" m",W/2,60);
     // 速度表
     ctx.textAlign="right"; ctx.fillStyle="#ff9e5e"; ctx.font="bold 18px sans-serif";
     ctx.fillText(Math.round(Player.speed)+" km/h",W-78,26);
