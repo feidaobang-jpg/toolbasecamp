@@ -854,7 +854,7 @@ window.TB_LOCALES.en = {
         },
         journeyWest: {
             title: 'Westward Demons',
-            desc: 'Top-down demon-slaying RPG: auto-aim, manual movement, 12 chapters with endless cycles; keyboard and touch stick.'
+            desc: 'Top-down demon RPG: unique mobs and bosses each chapter; clear all 12 to start endless harder cycles.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',

@@ -853,7 +853,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         journeyWest: {
             title: '西游降魔',
-            desc: '俯视角刷妖 RPG：自动攻击、手动走位，十二章无限周目，键鼠与触屏摇杆均可。'
+            desc: '俯视角刷妖 RPG：十二章各有不同小怪与妖王，通关后无限周目递增难度；键鼠与触屏均可。'
         },
         rmbUppercase: {
             title: '人民币大写',

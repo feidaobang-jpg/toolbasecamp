@@ -95,7 +95,7 @@
         <div>手机：左侧摇杆 360° 移动</div><div>手机：右侧 J/K/U/I 方阵，上方 L/O 与 P</div>
       </div>
       <div class="center" style="margin-top:8px;color:#9fb4e0;font-size:12px;">
-        每章 10 关：1-2 普通 → 3 小妖王 → 4-5 普通 → 6 小妖王 → 7-8 普通 → 9 小妖王 → 10 单独决战大妖王。共 12 章，通关后进入下一周目，难度递增，无限循环。
+        每章 10 关：1-2 普通 → 3 小妖王 → 4-5 普通 → 6 小妖王 → 7-8 普通 → 9 小妖王 → 10 单独决战大妖王。共 12 章，每章小怪/小妖王/大妖王外观与技能均不同且后章更强；通关后从第一章开启新周目，周目无限、难度持续递增。
       </div>
     </div>
   </div>
@@ -359,19 +359,69 @@ bindBtn('bL','l'); bindBtn('bO','o'); bindBtn('bP','p');
 
 /* =========================== 数据 =========================== */
 const CHAPTERS = [
-  {name:'第一章 · 五指山下', bg:'#1b2436', accent:'#6fa8ff', boss:'镇山石魔'},
-  {name:'第二章 · 鹰愁涧', bg:'#122a2a', accent:'#4ce0c0', boss:'涧底恶蛟'},
-  {name:'第三章 · 高老庄', bg:'#2a2415', accent:'#ffd06a', boss:'猪妖头目'},
-  {name:'第四章 · 流沙河', bg:'#101d33', accent:'#7fd6ff', boss:'沙浪水怪'},
-  {name:'第五章 · 五庄观', bg:'#221833', accent:'#c79bff', boss:'人参精魅'},
-  {name:'第六章 · 白骨岭', bg:'#23232b', accent:'#e8e8f5', boss:'白骨夫人'},
-  {name:'第七章 · 黑风山', bg:'#161320', accent:'#9a8cff', boss:'黑风大王'},
-  {name:'第八章 · 黄风岭', bg:'#2b2312', accent:'#ffc247', boss:'黄风妖帅'},
-  {name:'第九章 · 火云洞', bg:'#2e1410', accent:'#ff7a4d', boss:'红孩儿'},
-  {name:'第十章 · 盘丝洞', bg:'#251127', accent:'#ff7ad0', boss:'蛛母妖后'},
-  {name:'第十一章 · 火焰山', bg:'#33150a', accent:'#ff5a2b', boss:'牛魔王'},
-  {name:'第十二章 · 雷音寺前', bg:'#0f1d2b', accent:'#7ef0ff', boss:'六耳魔猿'}
+  /* 每章：小怪/小妖王/大妖王独立外观与技能；后章基础更强，周目无限递增 */
+  {name:'第一章 · 五指山下', bg:'#1b2436', accent:'#6fa8ff',
+    mob:'山石喽啰', mini:'石魔先锋', boss:'镇山石魔',
+    mobArt:'rock', miniArt:'stone', bossArt:'stone',
+    mobSkill:'melee', miniSkill:'slam', bossSkill:'quake',
+    mobCol:'#8fa0b4', miniCol:'#7a8fa8'},
+  {name:'第二章 · 鹰愁涧', bg:'#122a2a', accent:'#4ce0c0',
+    mob:'涧底水蝠', mini:'碧浪蛟卫', boss:'涧底恶蛟',
+    mobArt:'flyer', miniArt:'dragon', bossArt:'dragon',
+    mobSkill:'flyer', miniSkill:'torrent', bossSkill:'torrent',
+    mobCol:'#4ecfbb', miniCol:'#3ab8a8'},
+  {name:'第三章 · 高老庄', bg:'#2a2415', accent:'#ffd06a',
+    mob:'猪鬃小妖', mini:'钉耙队长', boss:'猪妖头目',
+    mobArt:'piglet', miniArt:'pig', bossArt:'pig',
+    mobSkill:'charge', miniSkill:'rake', bossSkill:'rake',
+    mobCol:'#d4a070', miniCol:'#c88850'},
+  {name:'第四章 · 流沙河', bg:'#101d33', accent:'#7fd6ff',
+    mob:'流沙射手', mini:'沙浪校尉', boss:'沙浪水怪',
+    mobArt:'sand', miniArt:'fish', bossArt:'fish',
+    mobSkill:'shoot', miniSkill:'sand', bossSkill:'sand',
+    mobCol:'#7ec8e8', miniCol:'#5eb0d8'},
+  {name:'第五章 · 五庄观', bg:'#221833', accent:'#c79bff',
+    mob:'人参精卒', mini:'灵根护法', boss:'人参精魅',
+    mobArt:'sprout', miniArt:'root', bossArt:'root',
+    mobSkill:'spread', miniSkill:'vine', bossSkill:'vine',
+    mobCol:'#9a7ad0', miniCol:'#8860c0'},
+  {name:'第六章 · 白骨岭', bg:'#23232b', accent:'#e8e8f5',
+    mob:'白骨游魂', mini:'骷髅祭师', boss:'白骨夫人',
+    mobArt:'bone', miniArt:'skull', bossArt:'skull',
+    mobSkill:'dash', miniSkill:'bone', bossSkill:'bone',
+    mobCol:'#d8d8e8', miniCol:'#c0c0d4'},
+  {name:'第七章 · 黑风山', bg:'#161320', accent:'#9a8cff',
+    mob:'黑风狼妖', mini:'风爪统领', boss:'黑风大王',
+    mobArt:'wolf', miniArt:'bear', bossArt:'bear',
+    mobSkill:'orbit', miniSkill:'gale', bossSkill:'gale',
+    mobCol:'#8a7ad0', miniCol:'#7060b8'},
+  {name:'第八章 · 黄风岭', bg:'#2b2312', accent:'#ffc247',
+    mob:'黄沙枪妖', mini:'风刃将军', boss:'黄风妖帅',
+    mobArt:'lancer', miniArt:'general', bossArt:'general',
+    mobSkill:'pierce', miniSkill:'dust', bossSkill:'dust',
+    mobCol:'#e0b050', miniCol:'#d09830'},
+  {name:'第九章 · 火云洞', bg:'#2e1410', accent:'#ff7a4d',
+    mob:'火云童子', mini:'三昧先锋', boss:'红孩儿',
+    mobArt:'ember', miniArt:'flame', bossArt:'flame',
+    mobSkill:'burn', miniSkill:'inferno', bossSkill:'inferno',
+    mobCol:'#ff8050', miniCol:'#ff6030'},
+  {name:'第十章 · 盘丝洞', bg:'#251127', accent:'#ff7ad0',
+    mob:'盘丝幼蛛', mini:'蛛网女卫', boss:'蛛母妖后',
+    mobArt:'spiderling', miniArt:'spider', bossArt:'spider',
+    mobSkill:'web', miniSkill:'web', bossSkill:'web',
+    mobCol:'#e070b8', miniCol:'#d050a0'},
+  {name:'第十一章 · 火焰山', bg:'#33150a', accent:'#ff5a2b',
+    mob:'熔岩蛮妖', mini:'铁角先锋', boss:'牛魔王',
+    mobArt:'brute', miniArt:'bull', bossArt:'bull',
+    mobSkill:'brute', miniSkill:'stomp', bossSkill:'stomp',
+    mobCol:'#e05030', miniCol:'#c84020'},
+  {name:'第十二章 · 雷音寺前', bg:'#0f1d2b', accent:'#7ef0ff',
+    mob:'六耳残影', mini:'魔猿煞卫', boss:'六耳魔猿',
+    mobArt:'shadow', miniArt:'ape', bossArt:'ape',
+    mobSkill:'zap', miniSkill:'mirror', bossSkill:'mirror',
+    mobCol:'#70e0f0', miniCol:'#50c8e0'}
 ];
+function chapterOf(){ return CHAPTERS[(Math.max(1,P.chapter|0)-1) % CHAPTERS.length]; }
 const WEAPONS = [
   {name:'灵猴弱弹', type:'range', dmg:8,  cd:0.16, speed:640, range:330, color:'#8fe3ff', pierce:0, desc:'射速极快'},
   {name:'破魔强弹', type:'range', dmg:34, cd:0.62, speed:520, range:430, color:'#ffb84d', pierce:2, desc:'高伤穿透'},
@@ -491,7 +541,7 @@ const cam = {x:0, y:0, shake:0};
 const player = {
   x:0,y:0,r:16,vx:0,vy:0,face:0,speed:210,
   hp:100,maxHp:100,shield:0,inv:0,dashCd:0,dashT:0,
-  atkCd:0, blockT:0, blockCd:0, spdT:0, flash:0, anim:0
+  atkCd:0, blockT:0, blockCd:0, spdT:0, slowT:0, flash:0, anim:0
 };
 let enemies=[], bullets=[], ebullets=[], items=[], parts=[], texts=[], slashes=[], rocks=[];
 let level = {need:0, killed:0, spawned:0, total:0, boss:null, timer:0, clearT:0, spawnT:0, wave:0};
@@ -500,7 +550,11 @@ let saveAcc = 0;
 
 /* =========================== 关卡生成 =========================== */
 function levelKind(l){ return (l===10) ? 'boss' : ((l===3||l===6||l===9) ? 'mini' : 'normal'); }
-function diffMul(){ return 1 + (P.loop-1)*0.55 + (P.chapter-1)*0.13; }
+/* 章递增 × 周目递增：后章必强于前章，周目无限循环加难 */
+function diffMul(){
+  const ch = Math.max(1, P.chapter|0), lp = Math.max(1, P.loop|0), lv = Math.max(1, P.level|0);
+  return (1 + (ch-1)*0.10) * (1 + (lp-1)*0.42) * (1 + (lv-1)*0.015);
+}
 
 function startLevel(){
   const kind = levelKind(P.level);
@@ -508,7 +562,7 @@ function startLevel(){
   WORLD.w = 1500 + P.chapter*40; WORLD.h = 1000 + P.chapter*28;
   player.x = WORLD.w/2; player.y = WORLD.h/2; player.vx=player.vy=0;
   player.hp = clamp(P.hp, 1, P.maxHp); player.maxHp = P.maxHp;
-  player.shield = 0; player.inv = 1.2; player.dashCd=0; player.atkCd=0; player.blockT=0; player.blockCd=0; player.spdT=0;
+  player.shield = 0; player.inv = 1.2; player.dashCd=0; player.atkCd=0; player.blockT=0; player.blockCd=0; player.spdT=0; player.slowT=0;
   genTerrain();
   // 障碍：山峰 / 巨岩
   rocks = [];
@@ -550,45 +604,154 @@ function farPos(){
   return {x,y};
 }
 
-const ETYPES = [
-  {id:'imp',   name:'小妖',   hp:26, spd:78,  r:14, dmg:8,  color:'#7ee08a', score:10},
-  {id:'bat',   name:'魅蝠',   hp:18, spd:132, r:12, dmg:7,  color:'#c69bff', score:12},
-  {id:'archer',name:'弓妖',   hp:30, spd:62,  r:14, dmg:10, color:'#ff9a6b', score:16, ranged:true},
-  {id:'tank',  name:'铁甲妖', hp:78, spd:52,  r:20, dmg:14, color:'#9fb0c8', score:22},
-  {id:'mage',  name:'幻术妖', hp:34, spd:70,  r:15, dmg:11, color:'#6bc8ff', score:20, ranged:true, spread:3}
-];
+const MOB_BASE = {
+  melee:  {hp:28, spd:78,  r:14, dmg:9,  score:12},
+  flyer:  {hp:20, spd:138, r:12, dmg:8,  score:14, fly:true},
+  charge: {hp:34, spd:96,  r:15, dmg:11, score:16},
+  shoot:  {hp:26, spd:68,  r:14, dmg:10, score:16, ranged:true, spread:1},
+  spread: {hp:30, spd:64,  r:15, dmg:10, score:18, ranged:true, spread:3},
+  dash:   {hp:24, spd:124, r:13, dmg:9,  score:15},
+  orbit:  {hp:32, spd:100, r:14, dmg:10, score:17},
+  pierce: {hp:30, spd:72,  r:14, dmg:12, score:18, ranged:true, spread:1},
+  burn:   {hp:28, spd:88,  r:14, dmg:11, score:17},
+  web:    {hp:22, spd:92,  r:13, dmg:8,  score:16, ranged:true, spread:1},
+  brute:  {hp:78, spd:52,  r:20, dmg:15, score:24},
+  zap:    {hp:30, spd:112, r:14, dmg:10, score:20}
+};
 function spawnEnemy(){
-  const pool = [];
-  pool.push(ETYPES[0], ETYPES[0]);
-  if (P.chapter>=1 || P.loop>1) pool.push(ETYPES[1]);
-  if (P.chapter>=2 || P.loop>1) pool.push(ETYPES[2]);
-  if (P.chapter>=4 || P.loop>1) pool.push(ETYPES[3]);
-  if (P.chapter>=6 || P.loop>1) pool.push(ETYPES[4]);
-  const t = pool[rndi(0,pool.length-1)];
+  const c = chapterOf();
+  const base = MOB_BASE[c.mobSkill] || MOB_BASE.melee;
   const p = farPos();
   const m = diffMul();
+  const spd = base.spd * (0.92 + P.chapter*0.012);
   enemies.push({
-    x:p.x, y:p.y, r:t.r, hp:t.hp*m, maxHp:t.hp*m, spd:t.spd*(0.85+0.05*P.chapter*0.3), baseSpd:t.spd*(0.85+0.05*P.chapter*0.3),
-    dmg:t.dmg*m*0.8, color:t.color, type:t.id, score:t.score, ranged:!!t.ranged, spread:t.spread||1,
-    shootCd:rnd(0.6,2), hitT:0, kb:{x:0,y:0}, anim:rnd(0,6), boss:false, name:t.name
+    x:p.x, y:p.y, r:base.r, hp:base.hp*m, maxHp:base.hp*m, spd:spd, baseSpd:spd,
+    dmg:base.dmg*m*0.85, color:c.mobCol||c.accent, type:c.mobArt, art:c.mobArt,
+    score:Math.round(base.score*(1+(P.chapter-1)*0.08)), ranged:!!base.ranged, spread:base.spread||1,
+    fly:!!base.fly, skill:c.mobSkill, shootCd:rnd(0.5,1.8), hitT:0, kb:{x:0,y:0},
+    anim:rnd(0,6), boss:false, name:c.mob, chargeT:0, chargeDir:{x:0,y:0}, skillCd:rnd(1.2,2.4)
   });
   level.spawned++;
 }
 function spawnBoss(kind){
-  const c = CHAPTERS[(P.chapter-1)%CHAPTERS.length];
+  const c = chapterOf();
   const m = diffMul();
   const big = kind==='boss';
-  const hp = (big?900:380) * m * (1 + P.level*0.02);
+  const hp = (big?920:400) * m * (1 + P.level*0.02);
+  const spd = (big?70:86) * (0.95 + P.chapter*0.01);
   const p = {x:player.x, y:clamp(player.y-380, 80, WORLD.h-80)};
   enemies.push({
-    x:p.x, y:p.y, r: big?42:30, hp, maxHp:hp, spd: big?74:88, baseSpd: big?74:88, dmg:(big?26:18)*m*0.8,
-    color:c.accent, type:'boss', score: big?600:220, ranged:true, spread: big?7:4,
-    shootCd:1.6, hitT:0, kb:{x:0,y:0}, anim:0, boss:true, big,
-    name: big ? c.boss : ('小妖王·' + c.name.slice(4)),
-    phase:0, skillCd:3.2, chargeT:0, chargeDir:{x:0,y:0}, art:(P.chapter-1)%12
+    x:p.x, y:p.y, r: big?44:31, hp, maxHp:hp, spd:spd, baseSpd:spd, dmg:(big?28:19)*m*0.85,
+    color: big ? c.accent : (c.miniCol||c.accent), type:'boss', score: big?650:240,
+    ranged:true, spread: big?7:4, shootCd:1.5, hitT:0, kb:{x:0,y:0}, anim:0, boss:true, big,
+    name: big ? c.boss : c.mini,
+    phase:0, skillCd:2.8, chargeT:0, chargeDir:{x:0,y:0},
+    art: big ? c.bossArt : c.miniArt,
+    skill: big ? c.bossSkill : c.miniSkill
   });
   level.boss = enemies[enemies.length-1];
   level.bossSpawned = true;
+}
+function pushEBullet(x,y,ang,spd,r,dmg,life,color,extra){
+  const b = {x:x,y:y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,r:r,dmg:dmg,life:life,color:color};
+  if (extra) Object.assign(b, extra);
+  ebullets.push(b);
+}
+function fireBossSkill(e, dirx, diry, d){
+  const sk = e.skill || 'quake';
+  const big = e.big ? 1.15 : 1;
+  const ang0 = Math.atan2(diry, dirx);
+  if (sk==='quake' || sk==='slam'){
+    const n = Math.round((e.spread+3)*big);
+    for (let i=0;i<n;i++){
+      const a = i/n*Math.PI*2;
+      pushEBullet(e.x,e.y,a,160*big,8,e.dmg*0.65,3.5,e.color);
+    }
+    e.chargeT = 0.55; e.chargeDir = {x:dirx,y:diry}; Audio2.sfx.heavy();
+  } else if (sk==='torrent'){
+    for (let k=0;k<3;k++){
+      for (let i=0;i<8;i++){
+        const a = ang0 + i/8*Math.PI*2 + k*0.35;
+        pushEBullet(e.x,e.y,a,140+k*30,6,e.dmg*0.5,3.8,e.color);
+      }
+    }
+    Audio2.sfx.heavy();
+  } else if (sk==='rake'){
+    for (let i=0;i<9;i++){
+      const a = ang0 + (i-4)*0.14;
+      pushEBullet(e.x,e.y,a,250,6,e.dmg*0.7,2.6,e.color);
+    }
+    e.chargeT = 0.65; e.chargeDir = {x:dirx,y:diry}; Audio2.sfx.dash();
+  } else if (sk==='sand'){
+    for (let i=0;i<14;i++){
+      const a = e.anim + i/14*Math.PI*2;
+      pushEBullet(e.x+Math.cos(a)*40, e.y+Math.sin(a)*40, a+1.2, 120, 5, e.dmg*0.45, 4.2, e.color, {orbit:true, ox:e.x, oy:e.y, oa:a, or:90+i*4});
+    }
+    Audio2.sfx.heavy();
+  } else if (sk==='vine'){
+    for (let i=0;i<6;i++){
+      const a = ang0 + (i-2.5)*0.22;
+      pushEBullet(e.x,e.y,a,170,7,e.dmg*0.4,3.5,e.color,{slow:0.55});
+    }
+    e.hp = Math.min(e.maxHp, e.hp + e.maxHp*0.04); Audio2.sfx.pick();
+  } else if (sk==='bone'){
+    e.x = clamp(player.x + rnd(-180,180), e.r, WORLD.w-e.r);
+    e.y = clamp(player.y + rnd(-180,180), e.r, WORLD.h-e.r);
+    for (let i=0;i<12;i++){
+      const a = rnd(0,Math.PI*2);
+      pushEBullet(e.x,e.y,a,90+rnd(0,80),5,e.dmg*0.55,3.2,e.color);
+    }
+    cam.shake = Math.max(cam.shake, 8); Audio2.sfx.dash();
+  } else if (sk==='gale'){
+    e.chargeT = 0.9; e.chargeDir = {x:dirx,y:diry};
+    for (let i=0;i<5;i++){
+      const a = ang0 + (i-2)*0.2;
+      pushEBullet(e.x,e.y,a,280,5,e.dmg*0.5,2.2,e.color);
+    }
+    Audio2.sfx.dash();
+  } else if (sk==='dust'){
+    for (let i=0;i<5;i++){
+      const a = ang0 + (i-2)*0.1;
+      pushEBullet(e.x,e.y,a,320,5,e.dmg*0.75,3.5,e.color,{pierce:2});
+    }
+    Audio2.sfx.heavy();
+  } else if (sk==='inferno'){
+    for (let ring=1; ring<=3; ring++){
+      const n = 6+ring*2;
+      for (let i=0;i<n;i++){
+        const a = i/n*Math.PI*2 + ring*0.2;
+        pushEBullet(e.x,e.y,a,90+ring*40,6+ring,e.dmg*0.45,3.0,e.color);
+      }
+    }
+    Audio2.sfx.boom();
+  } else if (sk==='web'){
+    for (let i=0;i<8;i++){
+      const a = ang0 + i/8*Math.PI*2;
+      pushEBullet(e.x,e.y,a,150,6,e.dmg*0.4,3.6,e.color,{slow:0.7});
+    }
+    Audio2.sfx.heavy();
+  } else if (sk==='stomp'){
+    for (let i=0;i<16;i++){
+      const a = i/16*Math.PI*2;
+      pushEBullet(e.x,e.y,a,200,8,e.dmg*0.7,2.4,e.color);
+    }
+    e.chargeT = 0.75; e.chargeDir = {x:dirx,y:diry};
+    cam.shake = Math.max(cam.shake, 12); Audio2.sfx.boom();
+  } else if (sk==='mirror'){
+    for (let i=0;i<e.spread;i++){
+      const a = ang0 + (i-(e.spread-1)/2)*0.18;
+      pushEBullet(e.x,e.y,a,240,6,e.dmg*0.6,3.0,e.color);
+      pushEBullet(e.x,e.y,a+Math.PI,220,6,e.dmg*0.5,3.0,e.color);
+    }
+    e.chargeT = 0.5; e.chargeDir = {x:dirx,y:diry}; Audio2.sfx.dash();
+  } else {
+    const n = e.spread + 3;
+    for (let i=0;i<n;i++){
+      const a = i/n*Math.PI*2;
+      pushEBullet(e.x,e.y,a,180,7,e.dmg*0.6,3.5,e.color);
+    }
+    Audio2.sfx.heavy();
+  }
 }
 
 /* =========================== 玩家动作 =========================== */
@@ -835,7 +998,7 @@ function update(dt){
     parts.push({x:player.x+rnd(-60,60), y:player.y+rnd(-40,40), vx:rnd(120,260), vy:rnd(-40,40), life:.5, max:.5, r:rnd(1,2.6), c:'#cfe0ff'});
   }
   // 移动
-  const spd = player.speed * (player.spdT>0?1.45:1) * tmul;
+  const spd = player.speed * (player.spdT>0?1.45:1) * (player.slowT>0?0.55:1) * tmul;
   if (player.dashT>0){
     player.dashT -= dt;
     player.x += player.ddx * 720 * dt; player.y += player.ddy * 720 * dt;
@@ -865,6 +1028,7 @@ function update(dt){
   player.blockT = Math.max(0, player.blockT-dt);
   player.blockCd = Math.max(0, player.blockCd-dt);
   player.spdT = Math.max(0, player.spdT-dt);
+  player.slowT = Math.max(0, player.slowT-dt);
   player.flash = Math.max(0, player.flash-dt);
   if (P.weapon>=0) P.hp = player.hp;
 
@@ -893,29 +1057,20 @@ function update(dt){
     // 地形影响妙怪移速（飞行类不受影响）
     const et = terrainAt(e.x, e.y);
     e.terr = et;
-    e.spd = (e.baseSpd || e.spd) * (e.type==='bat' ? 1 : TERRAIN[et].spd);
+    e.spd = (e.baseSpd || e.spd) * ((e.fly || e.skill==='flyer') ? 1 : TERRAIN[et].spd);
     const d = dist(e, player) || 1;
     let dirx = (player.x-e.x)/d, diry = (player.y-e.y)/d;
     if (e.boss){
       e.skillCd -= dt;
       if (e.chargeT>0){
         e.chargeT -= dt;
-        e.x += e.chargeDir.x*380*dt; e.y += e.chargeDir.y*380*dt;
+        const cs = (e.skill==='gale'||e.skill==='stomp') ? 460 : 380;
+        e.x += e.chargeDir.x*cs*dt; e.y += e.chargeDir.y*cs*dt;
         parts.push({x:e.x,y:e.y,vx:rnd(-30,30),vy:rnd(-30,30),life:.4,max:.4,r:rnd(3,7),c:e.color});
       } else {
         if (e.skillCd<=0){
-          if (Math.random()<0.5){
-            // 弹幕环
-            const n = e.spread + 4 + Math.floor(P.loop);
-            for (let i=0;i<n;i++){
-              const a = i/n*Math.PI*2 + rnd(0,0.4);
-              ebullets.push({x:e.x,y:e.y,vx:Math.cos(a)*180,vy:Math.sin(a)*180,r:7,dmg:e.dmg*0.7,life:4,color:e.color});
-            }
-            Audio2.sfx.heavy();
-          } else {
-            e.chargeT = 0.7; e.chargeDir = {x:dirx, y:diry}; Audio2.sfx.dash();
-          }
-          e.skillCd = Math.max(1.6, 3.4 - P.loop*0.2);
+          fireBossSkill(e, dirx, diry, d);
+          e.skillCd = Math.max(1.35, (e.big?3.3:2.5) - P.loop*0.16 - P.chapter*0.05);
         }
         e.x += dirx*e.spd*dt; e.y += diry*e.spd*dt;
       }
@@ -923,25 +1078,46 @@ function update(dt){
       if (e.shootCd<=0 && d<640){
         for (let i=0;i<e.spread;i++){
           const a = Math.atan2(diry,dirx) + (i-(e.spread-1)/2)*0.16;
-          ebullets.push({x:e.x,y:e.y,vx:Math.cos(a)*230,vy:Math.sin(a)*230,r:6,dmg:e.dmg*0.55,life:3.2,color:e.color});
+          pushEBullet(e.x,e.y,a,230,6,e.dmg*0.55,3.2,e.color);
         }
-        e.shootCd = Math.max(0.9, 2.0 - P.loop*0.1);
+        e.shootCd = Math.max(0.75, 2.05 - P.loop*0.1 - P.chapter*0.03);
       }
     } else if (e.ranged){
       if (d > 260) { e.x += dirx*e.spd*dt; e.y += diry*e.spd*dt; }
       else if (d < 180){ e.x -= dirx*e.spd*0.6*dt; e.y -= diry*e.spd*0.6*dt; }
       e.shootCd -= dt;
       if (e.shootCd<=0 && d<420){
-        for (let i=0;i<e.spread;i++){
-          const a = Math.atan2(diry,dirx) + (i-(e.spread-1)/2)*0.18;
-          ebullets.push({x:e.x,y:e.y,vx:Math.cos(a)*210,vy:Math.sin(a)*210,r:5,dmg:e.dmg*0.8,life:3,color:e.color});
+        const extra = (e.skill==='web') ? {slow:0.55} : (e.skill==='pierce' ? {pierce:1} : null);
+        for (let i=0;i<(e.spread||1);i++){
+          const a = Math.atan2(diry,dirx) + (i-((e.spread||1)-1)/2)*0.18;
+          pushEBullet(e.x,e.y,a, e.skill==='pierce'?260:210, 5, e.dmg*0.8, 3, e.color, extra);
         }
-        e.shootCd = Math.max(0.8, 2.2 - P.chapter*0.06 - P.loop*0.1);
+        e.shootCd = Math.max(0.7, 2.15 - P.chapter*0.07 - P.loop*0.1);
       }
     } else {
-      const wob = e.type==='bat' ? Math.sin(e.anim*1.6)*0.6 : 0;
-      const ca = Math.cos(wob), sa = Math.sin(wob);
-      e.x += (dirx*ca - diry*sa)*e.spd*dt; e.y += (dirx*sa + diry*ca)*e.spd*dt;
+      // 近战小怪：按章技能差异化
+      if (e.skill==='charge' || e.skill==='dash' || e.skill==='zap'){
+        e.skillCd = (e.skillCd||0) - dt;
+        if (e.chargeT>0){
+          e.chargeT -= dt;
+          e.x += e.chargeDir.x*e.spd*2.4*dt; e.y += e.chargeDir.y*e.spd*2.4*dt;
+        } else {
+          if (e.skillCd<=0 && d<280){
+            e.chargeT = 0.35; e.chargeDir={x:dirx,y:diry}; e.skillCd = Math.max(1.4, 2.8-P.chapter*0.08);
+          } else {
+            e.x += dirx*e.spd*dt; e.y += diry*e.spd*dt;
+          }
+        }
+      } else if (e.skill==='orbit' || e.fly || e.skill==='flyer'){
+        const wob = Math.sin(e.anim*1.6)*0.7;
+        const ca=Math.cos(wob), sa=Math.sin(wob);
+        e.x += (dirx*ca - diry*sa)*e.spd*dt; e.y += (dirx*sa + diry*ca)*e.spd*dt;
+      } else if (e.skill==='burn'){
+        e.x += dirx*e.spd*dt; e.y += diry*e.spd*dt;
+        if (d < e.r+player.r+8) hurtPlayer(e.dmg*0.35*dt, e);
+      } else {
+        e.x += dirx*e.spd*dt; e.y += diry*e.spd*dt;
+      }
     }
     // 击退
     e.x += e.kb.x*dt; e.y += e.kb.y*dt;
@@ -965,7 +1141,7 @@ function update(dt){
   for (let i=enemies.length-1;i>=0;i--){
     const e = enemies[i];
     const eT = TERRAIN[e.terr || 'plain'];
-    if (!eT.dot || e.type==='bat'){ e.envT = 0; continue; }
+    if (!eT.dot || e.fly || e.skill==='flyer'){ e.envT = 0; continue; }
     e.envT = (e.envT||0) + dt;
     if (e.envT >= 0.5){
       e.envT = 0;
@@ -1008,16 +1184,29 @@ function update(dt){
     }
     if (removed) continue;
   }
-  // 敌弹
+  // 敌弹（含缠绕减速 / 环绕砂弹 / 穿透）
   for (let i=ebullets.length-1;i>=0;i--){
     const b = ebullets[i];
-    const bm = TERRAIN[terrainAt(b.x,b.y)].wet ? 0.55 : 1;
-    b.x += b.vx*bm*dt; b.y += b.vy*bm*dt; b.life -= dt;
+    if (b.orbit){
+      b.oa = (b.oa||0) + dt*2.2;
+      b.or = (b.or||80) + dt*18;
+      b.x = (b.ox||b.x) + Math.cos(b.oa)*b.or;
+      b.y = (b.oy||b.y) + Math.sin(b.oa)*b.or;
+    } else {
+      const bm = TERRAIN[terrainAt(b.x,b.y)].wet ? 0.55 : 1;
+      b.x += b.vx*bm*dt; b.y += b.vy*bm*dt;
+    }
+    b.life -= dt;
     if (b.life<=0 || b.x<-40||b.y<-40||b.x>WORLD.w+40||b.y>WORLD.h+40){ ebullets.splice(i,1); continue; }
     if (Math.random()<0.35) parts.push({x:b.x,y:b.y,vx:0,vy:0,life:.2,max:.2,r:b.r*0.6,c:b.color});
-    if (Math.hypot(b.x-player.x,b.y-player.y) < b.r+player.r){ hurtPlayer(b.dmg); ebullets.splice(i,1); continue; }
+    if (Math.hypot(b.x-player.x,b.y-player.y) < b.r+player.r){
+      hurtPlayer(b.dmg);
+      if (b.slow) player.slowT = Math.max(player.slowT||0, b.slow);
+      if (b.pierce && (b.pierce|0)>0){ b.pierce--; }
+      else { ebullets.splice(i,1); continue; }
+    }
     let hr=false; for (const rk of rocks) if (Math.hypot(b.x-rk.x,b.y-rk.y)<rk.r){ hr=true; break; }
-    if (hr) ebullets.splice(i,1);
+    if (hr && !(b.pierce>0)) ebullets.splice(i,1);
   }
   // 道具
   for (let i=items.length-1;i>=0;i--){
@@ -1509,9 +1698,11 @@ function eyes(r,y,col,sep){
 
 function drawMinion(e,hit){
   const r=e.r, base=hit?'#ffffff':e.color, t=performance.now()/1000;
+  const art = e.art || e.type || 'rock';
   const bodyGrad=(c)=>{ const g=ctx.createLinearGradient(0,-r,0,r*0.9);
     g.addColorStop(0,'rgba(255,255,255,.55)'); g.addColorStop(0.35,c); g.addColorStop(1,'rgba(0,0,0,.55)'); return g; };
-  if (e.type==='bat'){
+  /* 飞行类：水蝠 / 残影 */
+  if (art==='flyer' || art==='bat' || art==='shadow'){
     const f=Math.sin(e.anim*4)*r*0.55;
     ctx.fillStyle=hit?'#fff':base; ctx.globalAlpha=.9;
     for (const s of [-1,1]){
@@ -1520,102 +1711,134 @@ function drawMinion(e,hit){
       ctx.quadraticCurveTo(s*r*1.3,r*0.1, s*r*0.45,r*0.35); ctx.closePath(); ctx.fill();
       ctx.strokeStyle='rgba(0,0,0,.4)'; ctx.lineWidth=1.2; ctx.stroke();
     }
-    ctx.globalAlpha=1;
+    ctx.globalAlpha= art==='shadow' ? 0.75 : 1;
     el(0,0,r*0.55,r*0.7,bodyGrad(base),'rgba(0,0,0,.5)',1.4);
     for (const s of [-1,1]){ ctx.fillStyle=hit?'#fff':base;
       ctx.beginPath(); ctx.moveTo(s*r*0.2,-r*0.55); ctx.lineTo(s*r*0.5,-r*1.05); ctx.lineTo(s*r*0.52,-r*0.5); ctx.closePath(); ctx.fill(); }
-    eyes(r,-r*0.25,'#ffe14a',0.22);
-    ctx.strokeStyle='#fff'; ctx.lineWidth=1.2;
-    ctx.beginPath(); ctx.moveTo(-r*0.12,-r*0.02); ctx.lineTo(-r*0.16,r*0.18); ctx.moveTo(r*0.12,-r*0.02); ctx.lineTo(r*0.16,r*0.18); ctx.stroke();
-    return;
+    eyes(r,-r*0.25, art==='shadow'?'#7ef0ff':'#ffe14a',0.22);
+    if (art==='shadow'){
+      ctx.strokeStyle='#7ef0ff'; ctx.lineWidth=1.4;
+      for (const s of [-1,1]) for (let i=0;i<2;i++)
+        el(s*r*(0.55+i*0.12),-r*(0.9-i*0.2),r*0.1,r*0.12,base,'rgba(0,0,0,.4)',1);
+    }
+    ctx.globalAlpha=1; return;
   }
-  if (e.type==='tank'){ // 铁甲妖
-    for (const s of [-1,1]) rrect(s*r*0.34-3,r*0.35,6,r*0.55,2.6,'#4a4238','#241f18');
+  /* 铁甲 / 熔岩蛮妖 */
+  if (art==='brute' || art==='tank'){
+    for (const s of [-1,1]) rrect(s*r*0.34-3,r*0.35,6,r*0.55,2.6,hit?'#fff':'#4a4238','#241f18');
     el(0,-r*0.1,r*0.78,r*0.78,bodyGrad(base),'rgba(0,0,0,.55)',2);
-    // 铠甲板
-    ctx.strokeStyle='rgba(220,232,255,.75)'; ctx.lineWidth=2.2;
+    ctx.strokeStyle= art==='brute' ? 'rgba(255,140,60,.85)' : 'rgba(220,232,255,.75)'; ctx.lineWidth=2.2;
     ctx.beginPath(); ctx.moveTo(-r*0.6,-r*0.1); ctx.lineTo(r*0.6,-r*0.1); ctx.moveTo(0,-r*0.55); ctx.lineTo(0,r*0.5); ctx.stroke();
-    for (const s of [-1,1]) el(s*r*0.72,-r*0.45,r*0.28,r*0.22,'#8f9aab','#2c3140',1.4);
-    // 头盔
-    el(0,-r*0.85,r*0.42,r*0.4,'#7f8898','#2c3140',1.6);
-    ctx.fillStyle='#c8202a';
-    ctx.beginPath(); ctx.moveTo(0,-r*1.2); ctx.lineTo(r*0.12,-r*1.7); ctx.lineTo(-r*0.12,-r*1.7); ctx.closePath(); ctx.fill();
-    ctx.fillStyle='#12161f'; ctx.fillRect(-r*0.36,-r*0.9,r*0.72,r*0.16);
-    eyes(r,-r*0.82,'#ff6a3c',0.2);
-    // 盾
-    el(r*1.0,r*0.05,r*0.3,r*0.5,'#6c7484','#2c3140',1.6);
+    el(0,-r*0.85,r*0.42,r*0.4, art==='brute'?'#8a4030':'#7f8898','#2c3140',1.6);
+    eyes(r,-r*0.82, art==='brute'?'#ff5a2a':'#ff6a3c',0.2);
+    if (art==='brute'){ for (const s of [-1,1]){ ctx.strokeStyle='#ffb070'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(s*r*0.3,-r*1.1); ctx.quadraticCurveTo(s*r*0.85,-r*1.2,s*r*0.95,-r*1.55); ctx.stroke(); } }
+    else el(r*1.0,r*0.05,r*0.3,r*0.5,'#6c7484','#2c3140',1.6);
     return;
   }
-  if (e.type==='archer'){ // 弓妖
+  /* 射手 / 黄沙枪妖 */
+  if (art==='sand' || art==='lancer' || art==='archer'){
     for (const s of [-1,1]) rrect(s*r*0.3-2.4,r*0.3,4.8,r*0.6,2.2,'#6b4a22','#2f1e0a');
     el(0,-r*0.15,r*0.5,r*0.62,bodyGrad(base),'rgba(0,0,0,.5)',1.5);
-    el(0,-r*0.85,r*0.42,r*0.4,hit?'#fff':'#9ac06a','#2f4a1c',1.4);
-    for (const s of [-1,1]){ el(s*r*0.5,-r*0.85,r*0.2,r*0.13,hit?'#fff':'#9ac06a','#2f4a1c',1.1); }
-    for (const s of [-1,1]){ ctx.fillStyle='#e8e0c8';
-      ctx.beginPath(); ctx.moveTo(s*r*0.22,-r*1.18); ctx.lineTo(s*r*0.34,-r*1.6); ctx.lineTo(s*r*0.4,-r*1.1); ctx.closePath(); ctx.fill(); }
+    el(0,-r*0.85,r*0.42,r*0.4,bodyGrad(base),'#2f4a1c',1.4);
     eyes(r,-r*0.85,'#ffd34a',0.2);
-    ctx.strokeStyle='#8c5a22'; ctx.lineWidth=2.4; ctx.lineCap='round';
-    ctx.beginPath(); ctx.arc(r*0.95,-r*0.1,r*0.62,-1.8,1.8); ctx.stroke();
-    ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(r*0.8,-r*0.72); ctx.lineTo(r*0.8,r*0.52); ctx.stroke();
+    if (art==='lancer'){
+      ctx.strokeStyle='#dfe8ff'; ctx.lineWidth=2.6;
+      ctx.beginPath(); ctx.moveTo(r*0.7,r*0.7); ctx.lineTo(r*1.35,-r*1.1); ctx.stroke();
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(r*1.35,-r*1.15); ctx.lineTo(r*1.55,-r*1.55); ctx.lineTo(r*1.15,-r*1.4); ctx.closePath(); ctx.fill();
+    } else {
+      ctx.strokeStyle='#8c5a22'; ctx.lineWidth=2.4; ctx.lineCap='round';
+      ctx.beginPath(); ctx.arc(r*0.95,-r*0.1,r*0.62,-1.8,1.8); ctx.stroke();
+    }
     return;
   }
-  if (e.type==='mage'){ // 幻术妖
+  /* 人参精卒 / 幻术 */
+  if (art==='sprout' || art==='mage'){
     ctx.beginPath();
     ctx.moveTo(-r*0.2,-r*0.6); ctx.lineTo(r*0.2,-r*0.6);
     ctx.lineTo(r*0.85,r*0.85); ctx.lineTo(-r*0.85,r*0.85); ctx.closePath();
     ctx.fillStyle=bodyGrad(base); ctx.fill(); ctx.strokeStyle='rgba(0,0,0,.5)'; ctx.lineWidth=1.5; ctx.stroke();
-    ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=1.2;
-    ctx.beginPath(); ctx.moveTo(0,-r*0.55); ctx.lineTo(0,r*0.8); ctx.stroke();
-    // 兜帽
-    ctx.beginPath(); ctx.moveTo(-r*0.48,-r*0.55);
-    ctx.quadraticCurveTo(0,-r*1.5, r*0.48,-r*0.55); ctx.closePath();
-    ctx.fillStyle=hit?'#fff':'#2b2350'; ctx.fill(); ctx.strokeStyle='rgba(0,0,0,.6)'; ctx.stroke();
-    el(0,-r*0.62,r*0.3,r*0.26,'#150f24');
-    eyes(r,-r*0.62,'#8ff0ff',0.16);
-    // 法杖 + 光球
-    ctx.strokeStyle='#6b4a22'; ctx.lineWidth=2.4;
-    ctx.beginPath(); ctx.moveTo(r*0.7,r*0.7); ctx.lineTo(r*0.95,-r*0.9); ctx.stroke();
-    const g=ctx.createRadialGradient(r*0.98,-r*1.0,0,r*0.98,-r*1.0,r*0.45);
-    g.addColorStop(0,'#ffffff'); g.addColorStop(0.4,'#8ff0ff'); g.addColorStop(1,'rgba(120,240,255,0)');
-    el(r*0.98,-r*1.0,r*0.45,r*0.45,g);
+    for (let i=0;i<4;i++){ const a=-1.8+i*0.45; ctx.fillStyle='#4f9a3c';
+      ctx.save(); ctx.translate(0,-r*0.7); ctx.rotate(a);
+      ctx.beginPath(); ctx.ellipse(0,-r*0.4,r*0.1,r*0.4,0,0,6.283); ctx.fill(); ctx.restore(); }
+    el(0,-r*0.55,r*0.32,r*0.28,bodyGrad(base),'rgba(0,0,0,.5)',1.2);
+    eyes(r,-r*0.55,'#8ff0ff',0.16); return;
+  }
+  /* 白骨游魂 */
+  if (art==='bone'){
+    ctx.beginPath(); ctx.moveTo(-r*0.25,-r*0.4); ctx.lineTo(r*0.25,-r*0.4);
+    ctx.lineTo(r*0.7,r*0.85); ctx.lineTo(-r*0.7,r*0.85); ctx.closePath();
+    ctx.fillStyle=bodyGrad(base); ctx.fill(); ctx.strokeStyle='rgba(0,0,0,.5)'; ctx.lineWidth=1.4; ctx.stroke();
+    el(0,-r*0.7,r*0.38,r*0.4,'#f2eee0','rgba(60,50,40,.7)',1.4);
+    el(-r*0.14,-r*0.75,r*0.1,r*0.12,'#20161c'); el(r*0.14,-r*0.75,r*0.1,r*0.12,'#20161c');
+    el(-r*0.14,-r*0.75,r*0.045,r*0.05,'#7ce8ff'); el(r*0.14,-r*0.75,r*0.045,r*0.05,'#7ce8ff');
     return;
   }
-  // 小妖（imp）
-  for (const s of [-1,1]) rrect(s*r*0.3-2.6,r*0.32,5.2,r*0.55,2.4,hit?'#fff':'#5f7a2c','#26340f');
-  el(0,-r*0.1,r*0.6,r*0.66,bodyGrad(base),'rgba(0,0,0,.5)',1.5);
-  // 兽皮腰布
-  ctx.fillStyle='#8a5a2a';
-  ctx.beginPath(); ctx.moveTo(-r*0.5,r*0.24); ctx.lineTo(r*0.5,r*0.24); ctx.lineTo(r*0.56,r*0.55); ctx.lineTo(-r*0.56,r*0.55); ctx.closePath(); ctx.fill();
-  // 大耳朵
-  for (const s of [-1,1]){
-    ctx.fillStyle=hit?'#fff':base;
-    ctx.beginPath(); ctx.moveTo(s*r*0.5,-r*0.85);
-    ctx.quadraticCurveTo(s*r*1.25,-r*1.15, s*r*0.55,-r*0.45); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle='rgba(0,0,0,.45)'; ctx.lineWidth=1.1; ctx.stroke();
+  /* 黑风狼妖 */
+  if (art==='wolf'){
+    el(0,r*0.05,r*0.7,r*0.55,bodyGrad(base),'rgba(0,0,0,.5)',1.6);
+    el(r*0.55,0,r*0.42,r*0.32,bodyGrad(base),'rgba(0,0,0,.5)',1.3);
+    for (const s of [-1,1]){ ctx.fillStyle=base;
+      ctx.beginPath(); ctx.moveTo(r*0.35+s*r*0.15,-r*0.35); ctx.lineTo(r*0.45+s*r*0.25,-r*0.85); ctx.lineTo(r*0.6+s*r*0.1,-r*0.25); ctx.closePath(); ctx.fill(); }
+    eyes(r*0.7,-r*0.05,'#ffd24a',0.18);
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(r*0.85,r*0.05); ctx.lineTo(r*1.15,r*0.12); ctx.lineTo(r*0.85,r*0.18); ctx.closePath(); ctx.fill();
+    return;
   }
-  el(0,-r*0.85,r*0.46,r*0.44,bodyGrad(base),'rgba(0,0,0,.5)',1.4);
-  // 角
-  for (const s of [-1,1]){
-    ctx.strokeStyle='#e6dcc0'; ctx.lineWidth=2.6; ctx.lineCap='round';
-    ctx.beginPath(); ctx.moveTo(s*r*0.26,-r*1.16);
-    ctx.quadraticCurveTo(s*r*0.5,-r*1.55, s*r*0.2,-r*1.62); ctx.stroke();
+  /* 火云童子 */
+  if (art==='ember'){
+    for (let i=0;i<6;i++){
+      const a=i/6*6.283+t*2, rr=r*(0.9+Math.sin(t*5+i)*0.1);
+      const fg=ctx.createRadialGradient(Math.cos(a)*rr*0.5,Math.sin(a)*rr*0.5,0,Math.cos(a)*rr*0.5,Math.sin(a)*rr*0.5,r*0.35);
+      fg.addColorStop(0,'rgba(255,220,120,.7)'); fg.addColorStop(1,'rgba(255,80,20,0)');
+      el(Math.cos(a)*rr*0.5,Math.sin(a)*rr*0.5,r*0.35,r*0.35,fg);
+    }
+    el(0,0,r*0.55,r*0.6,bodyGrad(base),'rgba(0,0,0,.5)',1.4);
+    el(0,-r*0.7,r*0.38,r*0.36,bodyGrad(base),'rgba(0,0,0,.5)',1.2);
+    eyes(r,-r*0.7,'#ffea6a',0.2); return;
   }
-  eyes(r,-r*0.88,'#ffe14a',0.19);
-  // 獠牙 + 嘴
-  ctx.fillStyle='#1c1208';
-  ctx.beginPath(); ctx.ellipse(0,-r*0.58,r*0.2,r*0.1,0,0,6.283); ctx.fill();
-  ctx.fillStyle='#fff';
-  ctx.beginPath(); ctx.moveTo(-r*0.14,-r*0.6); ctx.lineTo(-r*0.06,-r*0.42); ctx.lineTo(-r*0.02,-r*0.6); ctx.closePath();
-  ctx.moveTo(r*0.14,-r*0.6); ctx.lineTo(r*0.06,-r*0.42); ctx.lineTo(r*0.02,-r*0.6); ctx.closePath(); ctx.fill();
-  // 木棒
-  ctx.strokeStyle='#7a5220'; ctx.lineWidth=3.2; ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(r*0.6,r*0.35); ctx.lineTo(r*1.15,-r*0.5); ctx.stroke();
+  /* 盘丝幼蛛 */
+  if (art==='spiderling'){
+    ctx.strokeStyle=hit?'#fff':'#4a2c52'; ctx.lineWidth=2.2; ctx.lineCap='round';
+    for (let i=0;i<6;i++){
+      const s=i<3?-1:1, k=i%3;
+      ctx.beginPath(); ctx.moveTo(s*r*0.2,0);
+      ctx.quadraticCurveTo(s*r*(0.9+k*0.1),-r*(0.3-k*0.15), s*r*(1.2+k*0.1), r*(0.35+k*0.1));
+      ctx.stroke();
+    }
+    el(0,r*0.1,r*0.55,r*0.45,bodyGrad(base),'rgba(0,0,0,.55)',1.5);
+    el(0,-r*0.35,r*0.35,r*0.32,bodyGrad(base),'rgba(0,0,0,.55)',1.3);
+    eyes(r*0.8,-r*0.4,'#ff4d6a',0.2); return;
+  }
+  /* 猪鬃小妖 */
+  if (art==='piglet'){
+    for (const s of [-1,1]) rrect(s*r*0.32-3,r*0.35,6,r*0.5,2.4,'#6b4a3a','#2c1c14');
+    el(0,-r*0.05,r*0.7,r*0.65,bodyGrad(base),'rgba(0,0,0,.5)',1.6);
+    el(0,-r*0.75,r*0.4,r*0.36,bodyGrad(base),'rgba(0,0,0,.5)',1.3);
+    for (const s of [-1,1]){ ctx.fillStyle=base;
+      ctx.beginPath(); ctx.moveTo(s*r*0.3,-r*0.95); ctx.quadraticCurveTo(s*r*0.85,-r*0.9,s*r*0.4,-r*0.5); ctx.closePath(); ctx.fill(); }
+    el(0,-r*0.6,r*0.2,r*0.14,'#f0a8a8','#5a2a2a',1); eyes(r,-r*0.85,'#3a2010',0.2);
+    ctx.strokeStyle='#6b4a22'; ctx.lineWidth=2.6;
+    ctx.beginPath(); ctx.moveTo(r*0.55,r*0.4); ctx.lineTo(r*1.0,-r*0.4); ctx.stroke(); return;
+  }
+  /* 山石喽啰（默认 rock） */
+  ctx.beginPath();
+  for (let i=0;i<7;i++){
+    const a=i/7*6.283, rr=r*(i%2?0.75:0.95);
+    const px=Math.cos(a)*rr, py=Math.sin(a)*rr*0.9;
+    i?ctx.lineTo(px,py):ctx.moveTo(px,py);
+  }
+  ctx.closePath(); ctx.fillStyle=bodyGrad(base); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.5)'; ctx.lineWidth=1.6; ctx.stroke();
+  for (const s of [-1,1]) rrect(s*r*0.28-2.4,r*0.35,4.8,r*0.45,2,hit?'#fff':'#5a5040','#2a2418');
+  el(0,-r*0.75,r*0.4,r*0.38,bodyGrad(base),'rgba(0,0,0,.5)',1.3);
+  eyes(r,-r*0.75,'#ffb03a',0.2);
+  ctx.strokeStyle='#7a5220'; ctx.lineWidth=2.8; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(r*0.5,r*0.25); ctx.lineTo(r*1.05,-r*0.35); ctx.stroke();
 }
 
 function drawBossBody(e,hit){
   const r=e.r, base=hit?'#ffffff':e.color, t=performance.now()/1000;
-  const kind = BOSS_ART[(e.art!=null ? e.art : (P.chapter-1)) % BOSS_ART.length];
+  const kind = (typeof e.art==='string') ? e.art : BOSS_ART[((e.art!=null?e.art:(P.chapter-1))|0) % BOSS_ART.length];
   const g=ctx.createLinearGradient(0,-r*1.1,0,r);
   g.addColorStop(0,'rgba(255,255,255,.5)'); g.addColorStop(0.35,base); g.addColorStop(1,'rgba(0,0,0,.6)');
   // 光环
@@ -1900,7 +2123,7 @@ function drawHUD(ch){
   // 当前地形
   const T = TERRAIN[player.terr||'plain'];
   const tag = T.name + (player.slopeDir? ('·'+player.slopeDir) : '') +
-    '　速度' + Math.round(T.spd*100) + '%' + (T.slip?'　打滑':'') + (T.dot?'　灼伤':'') + (T.wet?'　弹速降':'');
+    '　速度' + Math.round(T.spd*100) + '%' + (T.slip?'　打滑':'') + (T.dot?'　灼伤':'') + (T.wet?'　弹速降':'') + (player.slowT>0?'　缠绕':'');
   ctx.textAlign='left'; ctx.font='12px "Microsoft YaHei",sans-serif';
   ctx.fillStyle='rgba(6,10,18,.55)'; ctx.fillRect(10,56,ctx.measureText(tag).width+22,22);
   ctx.fillStyle=T.c1; ctx.fillRect(14,60,14,14);
