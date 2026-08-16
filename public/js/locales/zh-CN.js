@@ -831,6 +831,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '坦克大战',
             desc: '经典坦克大战：20 关地形递进、敌方吃道具模式，横屏双端操控。'
         },
+        starshipDefense: {
+            title: '星河战队',
+            desc: '3D 守卫基地：刷怪攒金、建造炮塔抵御虫潮；章节 BOSS 与无限周目，键鼠与触屏均可。'
+        },
         starSerpent: {
             title: '星蛇突击',
             desc: '沙罗曼蛇致敬：纵版射击与 Boss。街机横屏视野，手机建议横屏（不强制）。'

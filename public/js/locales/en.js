@@ -832,6 +832,10 @@ window.TB_LOCALES.en = {
             title: 'Tank Battle',
             desc: 'Battle City style: 20 stages with terrain unlock, enemy-side loot mode, landscape dual controls.'
         },
+        starshipDefense: {
+            title: 'Starship Defense',
+            desc: '3D base defense: farm gold, build turrets, hold insect waves; chapter bosses and endless cycles. Keyboard and touch.'
+        },
         starSerpent: {
             title: 'Star Serpent',
             desc: 'Salamander homage vertical shmup. Arcade landscape frame; mobile suggests landscape (not forced).'

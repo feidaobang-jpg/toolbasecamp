@@ -189,13 +189,16 @@ def crop_dense_core(im: Image.Image, min_density: float = 0.10, threshold: int =
 
 
 DOM_BOARD_SLUGS = frozenset({"gomoku", "puzzle", "klotski"})
+# Wide 3D scenes: dense-core crop zooms onto a single bright mesh.
+SKIP_DENSE_CROP = frozenset({"starship_defense"})
 
 
 def square_crop(im: Image.Image, slug: str | None = None) -> Image.Image:
     box = content_bbox(im)
     im = im.crop(box)
     im = trim_dark_edges(im)
-    im = crop_dense_core(im)
+    if slug not in SKIP_DENSE_CROP:
+        im = crop_dense_core(im)
     w, h = im.size
     if slug in DOM_BOARD_SLUGS and h > int(w * 1.08):
         top = int(h * 0.18)
