@@ -135,7 +135,7 @@ const Audio2=(()=>{
 /* ---------------- 3. 输入系统 ---------------- */
 const Input=(()=>{
   const keys={};
-  // 键盘：WASD/方向键移动光标，J/回车选中，K/空格/U提示，P暂停
+  // 键盘：WASD/方向键移动光标，J/回车选中，K/空格/U提示，P/B暂停
   window.addEventListener("keydown",e=>{
     if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code))e.preventDefault();
     if(keys[e.code])return;
@@ -514,11 +514,11 @@ const Game=(()=>{
       return;
     }
     if(state===STATE.PAUSE){
-      if(code==="KeyP"||code==="Escape")state=STATE.PLAY;
+      if(code==="KeyP"||code==="KeyB"||code==="Escape")state=STATE.PLAY;
       return;
     }
     // PLAY
-    if(code==="KeyP"||code==="Escape"){togglePause();return;}
+    if(code==="KeyP"||code==="KeyB"||code==="Escape"){togglePause();return;}
     if(busy)return;
     const mv={KeyW:[-1,0],ArrowUp:[-1,0],KeyS:[1,0],ArrowDown:[1,0],
               KeyA:[0,-1],ArrowLeft:[0,-1],KeyD:[0,1],ArrowRight:[0,1]}[code];
@@ -803,7 +803,7 @@ const Render=(()=>{
     // 底部操作提示
     ctx.textAlign="center";ctx.font="15px sans-serif";
     ctx.fillStyle="rgba(200,180,255,0.5)";
-    ctx.fillText("点击/滑动交换 · WASD光标 · J选择 · K/空格/U提示 · P暂停",BASE_W/2,BASE_H-24);
+    ctx.fillText("点击/滑动交换 · WASD光标 · J选择 · K/空格/U提示 · P/B暂停",BASE_W/2,BASE_H-24);
   }
   function drawHeart(x,y,s){
     ctx.beginPath();
@@ -866,7 +866,7 @@ const Render=(()=>{
       drawMenuGems(t);
       ctx.fillStyle="#c9b8ff";ctx.font="17px sans-serif";ctx.textAlign="center";
       ctx.fillText("点击或滑动交换相邻宝石，三连消除得分",BASE_W/2,420);
-      ctx.fillText("键盘: WASD移动 · J/回车选择 · K/空格/U提示 · P暂停",BASE_W/2,450);
+      ctx.fillText("键盘: WASD移动 · J/回车选择 · K/空格/U提示 · P/B暂停",BASE_W/2,450);
       for(const b of Game.activeBtns())drawButton(b,t);
       ctx.fillStyle="rgba(200,180,255,0.6)";ctx.font="16px sans-serif";
       ctx.fillText("最高分: "+Game.best,BASE_W/2,700);

@@ -131,7 +131,7 @@ const Input=(()=>{
     keys[e.code]=true;
     Audio2.resume();
     if(e.code==="KeyJ"||e.code==="Enter"||e.code==="KeyK"||e.code==="Space")action.attack=true; // 冲刺
-    if(e.code==="KeyP"||e.code==="Escape")action.jump=true;     // 暂停(P)
+    if(e.code==="KeyP"||e.code==="KeyB"||e.code==="Escape")action.jump=true;     // 暂停(P)
     Game.onAnyKey(e.code);
   });
   window.addEventListener("keyup",e=>{keys[e.code]=false;});
@@ -527,7 +527,7 @@ const Game=(()=>{
     }else if(state===STATE.LEVELCLEAR){
       if(code==="Enter"||code==="KeyJ"||code==="Space")nextLevel();
     }else if(state===STATE.PAUSE){
-      if(code==="KeyP"||code==="Escape")state=STATE.PLAY;
+      if(code==="KeyP"||code==="KeyB"||code==="Escape")state=STATE.PLAY;
     }else if(state===STATE.PLAY){
       if(code==="Escape")togglePause();
     }
@@ -792,7 +792,7 @@ const Render=(()=>{
       }
       ctx.fillStyle="#bfe8ff";ctx.font="17px sans-serif";ctx.textAlign="center";
       ctx.fillText("吃比自己小的鱼成长，躲避大鱼(红圈警示)",BASE_W/2,225);
-      ctx.fillText("WASD/方向键移动 · J/回车/K/空格冲刺 · P暂停 · 手机摇杆+右侧J/上方P",BASE_W/2,252);
+      ctx.fillText("WASD/方向键移动 · J/回车/K/空格冲刺 · P/B暂停 · 手机摇杆+右侧J/上方P",BASE_W/2,252);
       for(const b of Game.activeBtns())drawButton(b,t);
       ctx.fillStyle="rgba(190,230,255,0.6)";ctx.font="15px sans-serif";
       ctx.fillText("最高分: "+Game.best,BASE_W/2,470);

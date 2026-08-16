@@ -9,7 +9,8 @@
  *        [U] [I]
  *
  * PC keys: WASD + arrows move; J/Enter primary; K/Space secondary;
- *          then U, I, L, O; P = pause. 3D: Q/E camera.
+ *          then U, I, L, O; P = pause (B also pause/resume, FC Start);
+ *          V = select/soft function (FC Select). 3D: Q/E camera.
  */
 (function (global) {
   'use strict';

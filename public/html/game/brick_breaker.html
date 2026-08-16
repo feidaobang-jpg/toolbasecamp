@@ -738,12 +738,12 @@ const Game = {
     if(this.state==="play"){
       if(code==="Space"||code==="KeyK") this.launchBalls();      // 跳跃键=发射
       if(code==="KeyJ"||code==="Enter"){ if(!this.launchBalls()) this.tryShoot(true); }
-      if(code==="KeyP"||code==="Escape") this.state="pause";     // P=暂停
+      if(code==="KeyP"||code==="KeyB"||code==="Escape") this.state="pause";     // P=暂停
       if(code==="KeyO"){ this.startGame(this.mode); }            // O=重开
       if(code==="KeyI"){ AudioSys.toggleMute(); }   // I=静音
       // U 备用
     } else if(this.state==="pause"){
-      if(code==="KeyP"||code==="Escape"||code==="Enter"||code==="KeyJ") this.state="play";
+      if(code==="KeyP"||code==="KeyB"||code==="Escape"||code==="Enter"||code==="KeyJ") this.state="play";
       if(code==="KeyO") this.startGame(this.mode);
     } else if(this.state==="over"||this.state==="win"){
       if(code==="Enter"||code==="KeyJ"||code==="KeyO") this.startGame(this.mode);
@@ -901,7 +901,7 @@ const Game = {
     c.textAlign="right";
     for(let i=0;i<this.lives;i++) drawHeart(c, BASE_W-24-i*26, HUD_H/2, 9);
     c.fillStyle="#8fa8d8"; c.font="12px sans-serif"; c.textAlign="left";
-    c.fillText("J 攻击 ｜ K 发射 ｜ P 暂停", 12, BASE_H-10);
+    c.fillText("J 攻击 ｜ K 发射 ｜ P/B 暂停", 12, BASE_H-10);
     // PC暂停按钮（点击）
     if(!Input.isTouch){
       const bx=BASE_W-66,by=HUD_H+12,bw=56,bh=30;
@@ -971,7 +971,7 @@ const Game = {
     // 操作说明
     c.fillStyle="#8fa8d8"; c.font="15px sans-serif";
     c.fillText("PC：A/D 或 ←/→ 移动　J/回车 攻击　K/空格 发射", BASE_W/2, 590);
-    c.fillText("P 暂停　O 重开　I 静音　｜ 手机：左摇杆　右上 J/K　上方 P", BASE_W/2, 618);
+    c.fillText("P/B 暂停　O 重开　I 静音　｜ 手机：左摇杆　右上 J/K　上方 P", BASE_W/2, 618);
     c.fillText("局内底栏也会显示按键提示", BASE_W/2, 646);
     c.fillStyle="#5f7ab8"; c.font="13px sans-serif";
     c.fillText(`历史最高分：${this.best}`, BASE_W/2, 700);

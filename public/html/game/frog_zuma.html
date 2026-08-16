@@ -175,7 +175,7 @@ const Input = {
       if(!this.keys[k]){
         if(k==="j"||k==="enter") this.firePressed = true;
         if(k==="k"||k===" ") this.swapPressed = true;
-        if(k==="p"||k==="escape") this.pausePressed = true;
+        if(k==="p"||k==="b"||k==="escape") this.pausePressed = true;
         if(k==="i") AudioSys.toggleBGM();
         if(k==="o") AudioSys.enabled = !AudioSys.enabled;
       }
@@ -914,7 +914,7 @@ const Game = {
       this.heart(W/2 - 40 + i*40, 56, 9);
     }
     ctx.fillStyle='rgba(200,220,255,.75)'; ctx.font='12px sans-serif'; ctx.textAlign='left';
-    ctx.fillText('J 发射 ｜ K 换珠 ｜ P 暂停', 12, H-12);
+    ctx.fillText('J 发射 ｜ K 换珠 ｜ P/B 暂停', 12, H-12);
     // 暂停按钮
     ctx.fillStyle = "rgba(255,255,255,.12)";
     this.roundRect(W-64,10,54,54,12); ctx.fill();
@@ -1017,9 +1017,9 @@ const Game = {
     this.bigBtn(610, "无尽模式", ["#5b8bff","#2a3f9f"]);
 
     ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "15px sans-serif";
-    ctx.fillText("PC: A/D或←→瞄准  J/回车发射  K/空格换珠  P暂停", W/2, 740);
+    ctx.fillText("PC: A/D或←→瞄准  J/回车发射  K/空格换珠  P/B暂停", W/2, 740);
     ctx.fillText("I 音乐开关  O 音效开关  |  也可鼠标点击瞄准松手发射", W/2, 768);
-    ctx.fillText("手机: 左摇杆瞄准 · 右上 J/K 发射/换珠 · 上方 P 暂停", W/2, 796);
+    ctx.fillText("手机: 左摇杆瞄准 · 右上 J/K 发射/换珠 · 上方 P/B 暂停", W/2, 796);
     ctx.fillStyle = "rgba(255,255,255,.35)";
     ctx.fillText("最高分: " + this.best, W/2, 850);
   },

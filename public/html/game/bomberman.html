@@ -98,17 +98,22 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
 
   <div class="overlay" id="ovMenu">
     <div class="title">街机炸弹人</div>
-    <div class="sub">爆破迷城 · 2D Canvas 横屏 · 3 关递进 + 无尽模式</div>
-    <div class="lvsel" id="lvSel"></div>
+    <div class="sub" id="menuSub">爆破迷城 · 10章×10关 · 无限周目 · 5存档</div>
     <div class="rowb">
-      <button class="big" id="btnStart">开始关卡</button>
+      <button class="big" id="btnContinue">继续旅程</button>
+      <button class="big" id="btnStart">新周目</button>
       <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
+    <div class="rowb" style="margin-top:8px">
+      <button class="big alt" id="btnSaveMenu">存档</button>
+      <button class="big alt" id="btnLoadMenu">读档</button>
+    </div>
+    <div class="help" id="slotHelp" style="margin-top:8px;font-size:12px"></div>
     <div class="help">
       <b>PC：</b>WASD / ↑↓←→ 移动 ｜ <b>J / 回车</b> 放炸弹 ｜ <b>K / 空格</b> 冲刺<br>
-      <b>U</b> 遥控引爆 ｜ <b>I</b> 护盾 ｜ <b>L</b> 标记出口 ｜ <b>O</b> 道具说明 ｜ <b>P / ESC</b> 暂停<br>
-      <b>手机：</b>左摇杆移动；右侧上排 J/K、下排 U/I，上方 P 暂停，再上为 L/O（竖屏自动转横屏）<br>
-      炸掉砖块寻找道具与<b>出口</b>；消灭全部敌人后出口开启，走上出口即通关。小心自己的爆炸！
+      <b>U</b> 遥控引爆 ｜ <b>I</b> 护盾 ｜ <b>L</b> 标记出口 ｜ <b>O</b> 道具说明 ｜ <b>P / B / ESC</b> 暂停<br>
+      <b>手机：</b>左摇杆移动；右侧 J/K/U/I，上方 P 暂停，再上 L/O（竖屏自动转横屏）<br>
+      每章 10 关（第4/8关小Boss，第10关大Boss）；通关全部章节进入下一周目并提升难度。
     </div>
   </div>
 
@@ -117,6 +122,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
     <div class="sub" id="pauseInfo"></div>
     <div class="rowb">
       <button class="big" id="btnResume">继续游戏</button>
+      <button class="big alt" id="btnSavePause">快速存档</button>
       <button class="big alt" id="btnRestart1">重新开始</button>
       <button class="big alt" id="btnMenu1">返回菜单</button>
     </div>
@@ -133,6 +139,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
@@ -277,7 +284,7 @@ const Input={ keys:{},hits:{},axis:{x:0,y:0},
   clearHits(){ this.hits={}; } };
 const KEYMAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',
   KeyD:'right',ArrowRight:'right',KeyK:'jump',Space:'jump',KeyJ:'attack',Enter:'attack',NumpadEnter:'attack',
-  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
+  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',KeyB:'pause',Escape:'pause',KeyV:'select'};
 window.addEventListener('keydown',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Snd.resume();
   if(!Input.keys[a]) Input.hits[a]=1; Input.keys[a]=1; },{passive:false});
 window.addEventListener('keyup',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Input.keys[a]=0; },{passive:false});
@@ -311,11 +318,34 @@ const tx2x = tx => BX + tx*TS + TS/2;             // 格心坐标
 const ty2y = ty => BY + ty*TS + TS/2;
 const EMPTY=0, HARD=1, BRICK=2;
 
-const LEVELS=[
-  {name:'第一关 · 砖石广场', brick:0.42, time:200, enemies:[['walker',4]],                power:2, bombs:1, fire:1},
-  {name:'第二关 · 熔岩工厂', brick:0.50, time:200, enemies:[['walker',4],['runner',3]],    power:2, bombs:2, fire:1},
-  {name:'第三关 · 幽灵地窖', brick:0.56, time:210, enemies:[['walker',4],['runner',3],['ghost',2]], power:3, bombs:2, fire:2}
+const CHAPTERS=10;
+const TEMPLATES=[
+  {name:'砖石广场', brick:0.42, time:200, enemies:[['walker',4]], power:2, bombs:1, fire:1},
+  {name:'熔岩工厂', brick:0.50, time:200, enemies:[['walker',4],['runner',3]], power:2, bombs:2, fire:1},
+  {name:'幽灵地窖', brick:0.56, time:210, enemies:[['walker',4],['runner',3],['ghost',2]], power:3, bombs:2, fire:2}
 ];
+const Slots=TBGameProgress.createSlots('tbc_bomberman_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_bomberman_continue_v1');
+function campaignCfg(cycle,chapter,stage){
+  return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const cfg=Object.assign({},base);
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
+    cfg.enemies=base.enemies.map(function(pair){
+      const t=pair[0]; let n=TBGameProgress.scaleNum(pair[1],diff,{min:1,max:16});
+      if(pos.role==='miniboss') n=Math.max(n,pair[1]+2);
+      if(pos.role==='boss') n=Math.max(n+3,Math.round(pair[1]*1.85));
+      return [t,n];
+    });
+    if(pos.role==='boss' && !cfg.enemies.some(function(e){return e[0]==='ghost';}))
+      cfg.enemies.push(['ghost',2+Math.floor((diff-1)*2)]);
+    cfg.brick=Math.min(0.72, base.brick+(diff-1)*0.035+(pos.role==='boss'?0.05:0));
+    cfg.time=TBGameProgress.scaleNum(base.time,1+(diff-1)*0.07,{min:160,max:340});
+    cfg.fire=Math.min(5, base.fire+Math.floor((pos.chapter-1)/3));
+    cfg.bombs=Math.min(5, base.bombs+Math.floor((pos.stage-1)/5));
+    return cfg;
+  });
+}
+const LEVELS=[campaignCfg(1,1,1)];
 const ENEMY_DEF={
   walker:{name:'蹒跚兵',sp:46, score:100, ghost:false, chase:0.0, c1:'#ff9b6b',c2:'#a33b1f'},
   runner:{name:'突击兵',sp:82, score:200, ghost:false, chase:0.55,c1:'#8fd3ff',c2:'#1f5fa3'},
@@ -335,6 +365,7 @@ function randItem(){ let r=Math.random()*ITEM_W; for(const i of ITEMS){ if((r-=i
 /* ----------------------- 5. 状态与游戏逻辑 ----------------------- */
 const G={
   state:'menu', level:0, endless:false, wave:1,
+  cycle:1, chapter:1, stage:1,
   grid:[], items:[], bombs:[], flames:[], enemies:[], parts:[],
   exit:{tx:1,ty:1,shown:false,open:false},
   p:{x:0,y:0,vx:0,vy:0,dir:'down', anim:0, dash:0, dashCD:0, inv:0, alive:true, dead:0},
@@ -342,7 +373,6 @@ const G={
   lives:3, score:0, left:200, time:0, shake:0, flash:0, showHelp:false, hintT:0,
   cfg:LEVELS[0], cleared:0
 };
-let selLevel=0;
 
 function inBoard(tx,ty){ return tx>=0&&tx<COLS&&ty>=0&&ty<ROWS; }
 function gridAt(tx,ty){ return inBoard(tx,ty)? G.grid[ty][tx] : HARD; }
@@ -405,17 +435,53 @@ function addEnemy(type,tx,ty){
   G.enemies.push({type:type,def:def,tx:tx,ty:ty,x:tx2x(tx),y:ty2y(ty),
     dir:pick(['up','down','left','right']), target:null, sp:def.sp, t:rnd(0,6), dead:0, alive:true});
 }
-function resetGame(level,endless){
+function snapshotProgress(){
+  return {cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:!!G.endless,wave:G.wave,
+    score:G.score,lives:G.lives,fire:G.fire,maxBombs:G.maxBombs,speed:G.speed,
+    remote:G.remote,shields:G.shields};
+}
+function applySnapshot(s,keepScore){
+  if(!s) return;
+  G.cycle=s.cycle||1; G.chapter=s.chapter||1; G.stage=s.stage||1;
+  if(keepScore!==false){ G.score=s.score|0; G.lives=Math.max(1,s.lives|0); }
+  G.fire=s.fire|0; G.maxBombs=s.maxBombs|0; G.speed=s.speed|0;
+  G.remote=s.remote|0; G.shields=s.shields|0;
+}
+function refreshSlotHelp(){
+  const el=document.getElementById('slotHelp'); if(!el) return;
+  const rows=Slots.list().map(function(s,i){ return (i+1)+'. '+Slots.formatMeta(s); });
+  const c=Cont.load();
+  el.innerHTML='<b>继续：</b>'+(c?Slots.formatMeta(c):'无')+'<br><b>五存档：</b><br>'+rows.join('<br>');
+}
+function resetGame(levelOrOpt,endless,keep){
+  let cycle=1,chapter=1,stage=1, fromSave=null;
+  if(levelOrOpt && typeof levelOrOpt==='object'){
+    fromSave=levelOrOpt; if(arguments.length<2) endless=!!levelOrOpt.endless; else endless=!!endless; if(arguments.length<3) keep=true;
+    cycle=fromSave.cycle||1; chapter=fromSave.chapter||1; stage=fromSave.stage||1;
+  } else if(typeof levelOrOpt==='number'){
+    /* legacy index → treat as stage in ch1 */
+    stage=Math.max(1,(levelOrOpt|0)+1);
+  }
   const cfg = endless
     ? {name:'无尽模式',brick:0.5,time:9999,enemies:[['walker',3],['runner',1]],power:2,bombs:1,fire:1}
-    : LEVELS[level];
-  G.state='play'; G.level=level; G.endless=!!endless; G.cfg=cfg; G.wave=1; G.cleared=0;
-  G.fire=cfg.fire; G.maxBombs=cfg.bombs; G.speed=112; G.remote=0; G.shields=0; G.shieldT=0;
-  G.lives=3; G.score=0; G.left=cfg.time; G.time=0; G.shake=0; G.flash=0; G.hintT=0;
+    : campaignCfg(cycle,chapter,stage);
+  G.state='play'; G.level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
+  G.cycle=cycle; G.chapter=chapter; G.stage=stage;
+  G.endless=!!endless; G.cfg=cfg; G.wave=fromSave&&fromSave.wave||1; G.cleared=0;
+  if(keep && fromSave){
+    applySnapshot(fromSave,true);
+  } else if(keep){
+    /* keep gear/score/lives across stages */
+  } else {
+    G.fire=cfg.fire; G.maxBombs=cfg.bombs; G.speed=112; G.remote=0; G.shields=0;
+    G.lives=3; G.score=0;
+  }
+  G.shieldT=0; G.left=cfg.time; G.time=0; G.shake=0; G.flash=0; G.hintT=0;
   G.bombs=[]; G.flames=[]; G.parts=[];
   buildMap(cfg); spawnEnemies(cfg);
   G.p={x:tx2x(1),y:ty2y(1),vx:0,vy:0,dir:'down',anim:0,dash:0,dashCD:0,inv:2,alive:true,dead:0};
   hideOverlays(); Snd.music();
+  if(!endless) Cont.save(snapshotProgress());
 }
 function nextWave(){                                   // 无尽模式：重建更难的地图
   G.wave++; G.cleared++;
@@ -700,6 +766,7 @@ function handleInput(dt){
   if(Input.hit('act3')){ G.hintT=3.5; Snd.click();
     toast(G.exit.shown?'出口已标记':'出口仍藏在某块砖下'); }
   if(Input.hit('act4')){ G.showHelp=!G.showHelp; Snd.click(); }
+  if(Input.hit('select')){ G.showHelp=!G.showHelp; Snd.click(); toast(G.showHelp?'说明(V)':'关闭说明'); }
   Input.clearHits();
 }
 function finish(win){
@@ -707,13 +774,13 @@ function finish(win){
   if(win) G.score += 800 + G.level*400 + Math.floor(G.left)*5;
   const t=document.getElementById('overTitle'), info=document.getElementById('overInfo');
   if(win){
-    t.textContent = (G.level>=LEVELS.length-1)? '全部关卡通过！':'关卡通过！';
+    t.textContent = (!G.endless && G.stage===10 && G.chapter===CHAPTERS)? '本章节与全书通关！进入新周目':'关卡通过！';
     info.innerHTML='得分 <b>'+G.score+'</b> ｜ 剩余时间 '+Math.max(0,Math.floor(G.left))+'s ｜ 生命 '+G.lives;
   } else {
     t.textContent = G.lives<=0? '爆破失败':'时间耗尽';
     info.innerHTML=(G.endless?'无尽模式 第 '+G.wave+' 波 ｜ ':'')+'得分 <b>'+G.score+'</b> ｜ 火力 '+G.fire+' ｜ 炸弹 '+G.maxBombs;
   }
-  document.getElementById('btnNext').style.display=(win&&!G.endless&&G.level<LEVELS.length-1)?'':'none';
+  document.getElementById('btnNext').style.display=(win&&!G.endless)?'':'none';
   show('ovOver');
 }
 
@@ -972,7 +1039,7 @@ function drawHud(){
   ctx.fillText(G.endless? ('无尽 · 第 '+G.wave+' 波') : ('剩余 '+Math.max(0,Math.ceil(G.left))+'s'), 709, 26);
   /* 底部提示 */
   ctx.textAlign='left'; ctx.font='11px sans-serif'; ctx.fillStyle='rgba(255,255,255,.7)';
-  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 放炸弹 ｜ K 冲刺'+(G.p.dashCD>0?'('+G.p.dashCD.toFixed(1)+')':'')+' ｜ U 遥控引爆 ｜ I 护盾 ｜ L 标记出口 ｜ O 道具说明 ｜ P 暂停', 14, H-8);
+  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J炸弹 K冲刺 U引爆 I护盾 L出口 O说明 ｜ P/B暂停', 14, H-8);
   /* 道具说明面板 */
   if(G.showHelp){
     ctx.fillStyle='rgba(10,6,16,.94)'; rr(ctx,W-262,60,248,166,10); ctx.fill();
@@ -999,25 +1066,53 @@ function doPause(){ if(G.state!=='play') return; G.state='pause'; Snd.stopMusic(
 function doResume(){ if(G.state!=='pause') return; hide('ovPause'); G.state='play'; Snd.music(); }
 function toMenu(){ G.state='menu'; Snd.stopMusic(); hideOverlays(); show('ovMenu'); }
 
-const lvSel=document.getElementById('lvSel');
-LEVELS.forEach((L,i)=>{
-  const b=document.createElement('div');
-  b.className='lvbtn'+(i===0?' on':''); b.textContent=i+1; b.title=L.name;
-  b.onclick=()=>{ selLevel=i; Snd.resume(); Snd.click();
-    [...lvSel.children].forEach((c,j)=>c.classList.toggle('on',j===i)); };
-  lvSel.appendChild(b);
-});
 function bind(id,fn){ const el=document.getElementById(id);
+  if(!el) return;
   el.addEventListener('click',e=>{ e.preventDefault(); Snd.resume(); Snd.click(); fn(); }); }
-bind('btnStart',()=>resetGame(selLevel,false));
-bind('btnEndless',()=>resetGame(0,true));
+function pickSlot(promptText){
+  const n=prompt(promptText+'（输入 1-5）','1');
+  const i=(parseInt(n,10)|0)-1; return (i>=0&&i<5)?i:-1;
+}
+function doSaveSlot(fromPause){
+  if(G.endless){ toast('无尽模式请用继续旅程存档'); return; }
+  const i=pickSlot('存到第几个档位');
+  if(i<0) return;
+  Slots.save(i, snapshotProgress()); Cont.save(snapshotProgress());
+  toast('已存档到 '+(i+1)); refreshSlotHelp();
+  if(fromPause) doResume();
+}
+function doLoadSlot(){
+  const i=pickSlot('读取第几个档位');
+  if(i<0) return;
+  const s=Slots.load(i); if(!s){ toast('该档位为空'); return; }
+  resetGame(s,false,true);
+}
+bind('btnStart',()=>resetGame({cycle:1,chapter:1,stage:1},false,false));
+bind('btnContinue',()=>{
+  const s=Cont.load(); if(!s){ toast('没有可继续的进度'); return; }
+  resetGame(s,!!s.endless,true);
+});
+bind('btnEndless',()=>resetGame({cycle:1,chapter:1,stage:1,endless:true},true,false));
+bind('btnSaveMenu',()=>doSaveSlot(false));
+bind('btnLoadMenu',doLoadSlot);
+bind('btnSavePause',()=>doSaveSlot(true));
 bind('btnResume',doResume);
-bind('btnRestart1',()=>resetGame(G.level,G.endless));
-bind('btnRestart2',()=>resetGame(G.level,G.endless));
-bind('btnMenu1',toMenu);
-bind('btnMenu2',toMenu);
-bind('btnNext',()=>resetGame(Math.min(LEVELS.length-1,G.level+1),false));
+bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless,
+  score:0,lives:3,fire:G.cfg.fire,maxBombs:G.cfg.bombs,speed:112,remote:0,shields:0},G.endless,true));
+bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless,
+  score:0,lives:3,fire:G.cfg.fire,maxBombs:G.cfg.bombs,speed:112,remote:0,shields:0},G.endless,true));
+bind('btnMenu1',()=>{ refreshSlotHelp(); toMenu(); });
+bind('btnMenu2',()=>{ refreshSlotHelp(); toMenu(); });
+bind('btnNext',()=>{
+  if(G.endless){ resetGame({cycle:1,chapter:1,stage:1,endless:true,score:G.score,lives:G.lives,
+    fire:G.fire,maxBombs:G.maxBombs,speed:G.speed,remote:G.remote,shields:G.shields,wave:G.wave},true,true); return; }
+  const n=TBGameProgress.nextProgress(G.cycle,G.chapter,G.stage,CHAPTERS);
+  const keep=snapshotProgress();
+  keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage;
+  resetGame(keep,false,true);
+});
 bind('btnPause',()=>{ if(G.state==='play') doPause(); else if(G.state==='pause') doResume(); });
+refreshSlotHelp();
 bind('btnSound',()=>{ const on=!Snd.on; Snd.set(on);
   document.getElementById('btnSound').textContent='音效:'+(on?'开':'关');
   if(on&&G.state==='play') Snd.music(); });
@@ -1039,8 +1134,9 @@ function loop(now){
 requestAnimationFrame(loop);
 
 /* 菜单地图（背景展示用） */
-buildMap(LEVELS[0]);
+buildMap(campaignCfg(1,1,1));
 show('ovMenu');
+refreshSlotHelp();
 
 const LS_BEST='tbc_bomberman_v1';
 let bestScore=+(localStorage.getItem(LS_BEST)||0);
@@ -1050,7 +1146,7 @@ finish=function(win){
   if(G.score>bestScore){ bestScore=G.score; try{localStorage.setItem(LS_BEST,String(bestScore));}catch(e){} }
 };
 window.__tbThumbAutoStart=function(){
-  if(G.state!=='play') resetGame(0,false);
+  if(G.state!=='play') resetGame({cycle:1,chapter:1,stage:1},false,false);
   /* 截图：摆一枚炸弹，场面更有辨识度 */
   if(G.bombs.length===0){
     G.bombs.push({tx:3,ty:1,t:1.2,fuse:2.6,fire:G.fire,own:true,soft:true});

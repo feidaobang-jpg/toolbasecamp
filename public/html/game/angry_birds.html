@@ -128,7 +128,7 @@ const Input={
       this.keys[k]=true;
       AudioSys.init(); AudioSys.resume();
       if(k==="j"||k==="enter"||k==="k"||k===" ") this.firePressed=true;
-      if(k==="p"||k==="escape") this.pausePressed=true;
+      if(k==="p"||k==="b"||k==="escape") this.pausePressed=true;
       if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
       if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
     });
@@ -791,7 +791,7 @@ const Game={
     this.bigBtn(this.menuBtns.level[0],this.menuBtns.level[1],"关卡模式",["#ff9e5e","#d1495b"]);
     this.bigBtn(this.menuBtns.endless[0],this.menuBtns.endless[1],"无尽模式",["#5b8bff","#2a3f9f"]);
     ctx.fillStyle="#0b3550"; ctx.font="14px sans-serif";
-    ctx.fillText("PC: 鼠标拖拽弹弓 或 A/D调角度 W/S调力度 J/回车/K/空格发射 · P暂停 · I/O音乐音效",W/2,438);
+    ctx.fillText("PC: 鼠标拖拽弹弓 或 A/D调角度 W/S调力度 J/回车/K/空格发射 · P/B暂停 · I/O音乐音效",W/2,438);
     ctx.fillText("手机: 手指拖拽弹弓瞄准, 松手发射 (竖屏会自动旋转横屏)",W/2,462);
     ctx.fillStyle="#0b3550"; ctx.fillText("最高分: "+this.best,W/2,498);
   },

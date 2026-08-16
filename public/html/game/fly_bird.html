@@ -112,7 +112,7 @@ const Input={
       AudioSys.init(); AudioSys.resume();
       // 拍翅: 跳跃键+攻击键+方向上 全部支持
       if(k==="k"||k===" "||k==="j"||k==="enter"||k==="w"||k==="arrowup") this.flapPressed=true;
-      if(k==="p"||k==="escape") this.pausePressed=true;
+      if(k==="p"||k==="b"||k==="escape") this.pausePressed=true;
       if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
       if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
     });
@@ -559,7 +559,7 @@ const Game={
     this.bigBtn(520,"关卡模式",["#ff9e5e","#d1495b"]);
     this.bigBtn(610,"无尽模式",["#5b8bff","#2a3f9f"]);
     ctx.fillStyle="#0b3550"; ctx.font="14px sans-serif";
-    ctx.fillText("PC: J/回车/K/空格/W/↑ 拍翅  P暂停  I/O音乐音效",W/2,718);
+    ctx.fillText("PC: J/回车/K/空格/W/↑ 拍翅  P/B暂停  I/O音乐音效",W/2,718);
     ctx.fillText("手机: 点按屏幕任意位置拍翅",W/2,742);
     ctx.fillStyle="#0b3550"; ctx.fillText("最高分: "+this.best,W/2,786);
   },

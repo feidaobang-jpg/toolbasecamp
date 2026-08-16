@@ -497,10 +497,10 @@ const Game=(()=>{
       return;
     }
     if(state===STATE.PAUSE){
-      if(code==="KeyP"||code==="Escape")state=STATE.PLAY;
+      if(code==="KeyP"||code==="KeyB"||code==="Escape")state=STATE.PLAY;
       return;
     }
-    if(code==="KeyP"||code==="Escape"){togglePause();return;}
+    if(code==="KeyP"||code==="KeyB"||code==="Escape"){togglePause();return;}
     const list=clickable();
     if(!list.length)return;
     cursorIdx=clamp(cursorIdx,0,list.length-1);
@@ -910,7 +910,7 @@ const Render=(()=>{
     // 操作提示
     ctx.textAlign="center";ctx.font="13px sans-serif";
     ctx.fillStyle="rgba(160,200,255,0.45)";
-    ctx.fillText("点击牌放入卡槽 · WASD移动 · J拾取 · U/I/L/O道具 · P暂停",BASE_W/2,146);
+    ctx.fillText("点击牌放入卡槽 · WASD移动 · J拾取 · U/I/L/O道具 · P/B暂停",BASE_W/2,146);
   }
   function drawHeart(x,y,s){
     ctx.beginPath();
@@ -970,7 +970,7 @@ const Render=(()=>{
       });
       ctx.fillStyle="#90c8f0";ctx.font="17px sans-serif";ctx.textAlign="center";
       ctx.fillText("点击未被覆盖的牌放入卡槽，集齐3张相同即可消除",BASE_W/2,420);
-      ctx.fillText("道具：U反悔 · I炸弹 · L提示 · O加时 | J拾取 · P暂停",BASE_W/2,450);
+      ctx.fillText("道具：U反悔 · I炸弹 · L提示 · O加时 | J拾取 · P/B暂停",BASE_W/2,450);
       for(const b of Game.activeBtns())drawButton(b,t);
       ctx.fillStyle="rgba(160,200,240,0.6)";ctx.font="16px sans-serif";
       ctx.fillText("最高分: "+Game.best,BASE_W/2,700);

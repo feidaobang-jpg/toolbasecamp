@@ -98,15 +98,20 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
 
   <div class="overlay" id="ovMenu">
     <div class="title">潜水捕鱼</div>
-    <div class="sub">深海猎手 · 2D Canvas 横屏 · 3 关递进 + 无尽模式</div>
-    <div class="lvsel" id="lvSel"></div>
+    <div class="sub" id="menuSub">深海猎手 · 10章×10关 · 无限周目 · 5存档</div>
     <div class="rowb">
-      <button class="big" id="btnStart">开始关卡</button>
+      <button class="big" id="btnContinue">继续旅程</button>
+      <button class="big" id="btnStart">新周目</button>
       <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
+    <div class="rowb" style="margin-top:8px">
+      <button class="big alt" id="btnSaveMenu">存档</button>
+      <button class="big alt" id="btnLoadMenu">读档</button>
+    </div>
+    <div class="help" id="slotHelp" style="margin-top:8px;font-size:12px"></div>
     <div class="help">
       <b>PC：</b>WASD / ↑↓←→ 游动 ｜ <b>J / 回车</b> 发射鱼叉 ｜ <b>K / 空格</b> 冲刺<br>
-      <b>U</b> 撒网 ｜ <b>I</b> 上浮 ｜ <b>L</b> 氧气瓶 ｜ <b>O</b> 声呐 ｜ <b>P / ESC</b> 暂停<br>
+      <b>U</b> 撒网 ｜ <b>I</b> 上浮 ｜ <b>L</b> 氧气瓶 ｜ <b>O</b> 声呐 ｜ <b>P / B / ESC</b> 暂停<br>
       <b>手机：</b>左摇杆游动；右侧上排 J/K、下排 U/I，上方 P 暂停，再上为 L/O<br>
       回船卸货累计渔获达标过关；注意氧气，尽快上浮换气。
     </div>
@@ -117,6 +122,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
     <div class="sub" id="pauseInfo"></div>
     <div class="rowb">
       <button class="big" id="btnResume">继续游戏</button>
+      <button class="big alt" id="btnSavePause">快速存档</button>
       <button class="big alt" id="btnRestart1">重新开始</button>
       <button class="big alt" id="btnMenu1">返回菜单</button>
     </div>
@@ -133,6 +139,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
@@ -273,7 +280,7 @@ const Input={ keys:{},hits:{},axis:{x:0,y:0},
   clearHits(){this.hits={};} };
 const KEYMAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',
   KeyD:'right',ArrowRight:'right',KeyK:'jump',Space:'jump',KeyJ:'attack',Enter:'attack',NumpadEnter:'attack',
-  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
+  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',KeyB:'pause',Escape:'pause',KeyV:'select'};
 window.addEventListener('keydown',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Snd.resume();
   if(!Input.keys[a]) Input.hits[a]=1; Input.keys[a]=1; },{passive:false});
 window.addEventListener('keyup',e=>{ const a=KEYMAP[e.code]; if(!a)return; e.preventDefault(); Input.keys[a]=0; },{passive:false});
@@ -313,15 +320,34 @@ const FISH=[
 const TOTAL_W = FISH.reduce((s,f)=>s+f.weight,0);
 function randFishDef(){ let r=Math.random()*TOTAL_W; for(const f of FISH){ if((r-=f.weight)<=0) return f; } return FISH[0]; }
 /* 关卡：目标渔获、时限、危险数量、氧气 */
-const LEVELS=[
-  {name:'第一关 · 浅海珊瑚', quota:320,  time:135, jelly:3, shark:0, urchin:2, o2:34, fish:16, bag:8},
-  {name:'第二关 · 暮色深沟', quota:650,  time:150, jelly:5, shark:1, urchin:4, o2:30, fish:18, bag:10},
-  {name:'第三关 · 深海鲨群', quota:1000, time:170, jelly:7, shark:3, urchin:6, o2:27, fish:20, bag:12}
+const CHAPTERS=10;
+const TEMPLATES=[
+  {name:'浅海珊瑚', quota:320,  time:135, jelly:3, shark:0, urchin:2, o2:34, fish:16, bag:8},
+  {name:'暮色深沟', quota:650,  time:150, jelly:5, shark:1, urchin:4, o2:30, fish:18, bag:10},
+  {name:'深海鲨群', quota:1000, time:170, jelly:7, shark:3, urchin:6, o2:27, fish:20, bag:12}
 ];
+const Slots=TBGameProgress.createSlots('tbc_diving_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_diving_continue_v1');
+function campaignCfg(cycle,chapter,stage){
+  return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const cfg=Object.assign({},base);
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
+    cfg.quota=TBGameProgress.scaleNum(base.quota,diff,{min:280,max:8000});
+    cfg.time=TBGameProgress.scaleNum(base.time,1+(diff-1)*0.05,{min:120,max:260});
+    cfg.jelly=TBGameProgress.scaleNum(base.jelly,diff,{min:2,max:18});
+    cfg.shark=TBGameProgress.scaleNum(base.shark+(pos.role==='boss'?2:pos.role==='miniboss'?1:0),diff,{min:0,max:10});
+    cfg.urchin=TBGameProgress.scaleNum(base.urchin,diff,{min:1,max:16});
+    cfg.o2=Math.max(18, Math.round(base.o2-(diff-1)*1.2));
+    cfg.fish=TBGameProgress.scaleNum(base.fish,1+(diff-1)*0.08,{min:12,max:36});
+    cfg.bag=Math.min(18, base.bag+Math.floor((pos.chapter-1)/2));
+    return cfg;
+  });
+}
+const LEVELS=[campaignCfg(1,1,1)];
 
 /* ----------------------- 5. 实体与游戏逻辑 ----------------------- */
 const G={
-  state:'menu', level:0, endless:false,
+  state:'menu', level:0, endless:false, cycle:1, chapter:1, stage:1,
   score:0, bag:[], bagMax:8, lives:3, o2:30, o2Max:30, o2Tanks:2,
   quota:0, got:0, time:0, left:0,
   fishes:[], jellies:[], sharks:[], urchins:[], harpoons:[], parts:[], bubbles:[], corals:[],
@@ -329,18 +355,42 @@ const G={
   diver:{x:120,y:SEA_Y+40,vx:0,vy:0,dir:1,aim:{x:1,y:0},kick:0,dash:0},
   cfg:LEVELS[0], depositT:0, wave:0
 };
-let selLevel=0;
 
-function resetGame(level,endless){
-  const cfg = endless ? {name:'无尽模式',quota:1e9,time:1e9,jelly:4,shark:1,urchin:4,o2:30,fish:18,bag:10} : LEVELS[level];
-  G.state='play'; G.level=level; G.endless=!!endless; G.cfg=cfg;
-  G.score=0; G.bag=[]; G.bagMax=cfg.bag; G.lives=3;
-  G.o2Max=cfg.o2; G.o2=cfg.o2; G.o2Tanks=2;
+function snapshotProgress(){
+  return {cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:!!G.endless,wave:G.wave,
+    score:G.score,lives:G.lives,o2Tanks:G.o2Tanks,bagMax:G.bagMax};
+}
+function refreshSlotHelp(){
+  const el=document.getElementById('slotHelp'); if(!el) return;
+  const rows=Slots.list().map(function(s,i){ return (i+1)+'. '+Slots.formatMeta(s); });
+  const c=Cont.load();
+  el.innerHTML='<b>继续：</b>'+(c?Slots.formatMeta(c):'无')+'<br><b>五存档：</b><br>'+rows.join('<br>');
+}
+function resetGame(levelOrOpt,endless,keep){
+  let cycle=1,chapter=1,stage=1, fromSave=null;
+  if(levelOrOpt && typeof levelOrOpt==='object'){
+    fromSave=levelOrOpt; if(arguments.length<2) endless=!!levelOrOpt.endless; else endless=!!endless; if(arguments.length<3) keep=true;
+    cycle=fromSave.cycle||1; chapter=fromSave.chapter||1; stage=fromSave.stage||1;
+  }
+  const cfg = endless ? {name:'无尽模式',quota:1e9,time:1e9,jelly:4,shark:1,urchin:4,o2:30,fish:18,bag:10}
+    : campaignCfg(cycle,chapter,stage);
+  G.state='play'; G.level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
+  G.cycle=cycle; G.chapter=chapter; G.stage=stage;
+  G.endless=!!endless; G.cfg=cfg;
+  if(keep && fromSave){
+    G.score=fromSave.score|0; G.lives=Math.max(1,fromSave.lives|0);
+    G.o2Tanks=fromSave.o2Tanks!=null?fromSave.o2Tanks:2;
+    G.bagMax=fromSave.bagMax||cfg.bag;
+  } else if(!keep){
+    G.score=0; G.lives=3; G.o2Tanks=2; G.bagMax=cfg.bag;
+  } else {
+    G.bagMax=Math.max(G.bagMax,cfg.bag);
+  }
+  G.bag=[]; G.o2Max=cfg.o2; G.o2=cfg.o2;
   G.quota=cfg.quota; G.got=0; G.time=0; G.left=cfg.time;
   G.fishes=[]; G.jellies=[]; G.sharks=[]; G.urchins=[]; G.harpoons=[]; G.parts=[]; G.bubbles=[];
   G.netCD=0; G.sonar=0; G.dashCD=0; G.hurtT=0; G.shake=0; G.flash=0; G.wave=0;
   G.diver={x:120,y:SEA_Y+40,vx:0,vy:0,dir:1,aim:{x:1,y:0},kick:0,dash:0};
-  /* 场景：珊瑚（随机但固定于本局） */
   G.corals=[];
   for(let i=0;i<16;i++) G.corals.push({x:rnd(20,W-20), h:rnd(24,70), w:rnd(16,40), c:pick(['#ff7fa0','#ff9d5c','#b98fff','#5ce0c0']), s:rnd(0,6)});
   for(let i=0;i<cfg.fish;i++) spawnFish();
@@ -348,6 +398,7 @@ function resetGame(level,endless){
   for(let i=0;i<cfg.shark;i++) spawnShark();
   for(let i=0;i<cfg.urchin;i++) spawnUrchin();
   hideOverlays(); Snd.music();
+  if(!endless) Cont.save(snapshotProgress());
 }
 function spawnFish(def){
   def = def || randFishDef();
@@ -626,13 +677,13 @@ function finish(win){
   if(win) G.score += 300 + G.level*250 + Math.floor(G.left)*3;
   const t=document.getElementById('overTitle'), info=document.getElementById('overInfo');
   if(win){
-    t.textContent = (G.level>=LEVELS.length-1)?'全部关卡通过！':'达成渔获目标！';
+    t.textContent = (!G.endless && G.stage===10 && G.chapter===CHAPTERS)?'全书通关！进入新周目':'达成渔获目标！';
     info.innerHTML='得分 <b>'+Math.floor(G.score)+'</b> ｜ 渔获 '+G.got+'/'+G.quota+' ｜ 剩余时间 '+Math.max(0,Math.floor(G.left))+'s';
   } else {
     t.textContent = G.lives<=0? '潜水员力竭' : '时间耗尽';
     info.innerHTML=(G.endless?'无尽模式 ':'')+'得分 <b>'+Math.floor(G.score)+'</b> ｜ 渔获 '+G.got+(G.endless?'':'/'+G.quota);
   }
-  document.getElementById('btnNext').style.display=(win&&!G.endless&&G.level<LEVELS.length-1)?'':'none';
+  document.getElementById('btnNext').style.display=(win&&!G.endless)?'':'none';
   show('ovOver');
 }
 
@@ -941,7 +992,7 @@ function drawHud(){
   }
   /* 冷却提示 */
   ctx.textAlign='left'; ctx.font='11px sans-serif'; ctx.fillStyle='rgba(255,255,255,.75)';
-  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 鱼叉 ｜ K 冲刺'+(G.dashCD>0?'('+G.dashCD.toFixed(1)+')':'')+' ｜ U 撒网'+(G.netCD>0?'('+G.netCD.toFixed(1)+')':'')+' ｜ I 上浮 ｜ L 氧气瓶 ｜ O 声呐 ｜ P 暂停', 16, H-24);
+  ctx.fillText((G.endless?'无尽模式':G.cfg.name)+' ｜ J 鱼叉 ｜ K 冲刺'+(G.dashCD>0?'('+G.dashCD.toFixed(1)+')':'')+' ｜ U 撒网'+(G.netCD>0?'('+G.netCD.toFixed(1)+')':'')+' ｜ I 上浮 ｜ L 氧气瓶 ｜ O 声呐 ｜ P/B暂停', 16, H-24);
   /* 低氧警告 */
   if(G.o2<G.o2Max*0.25 && G.state==='play'){
     ctx.fillStyle='rgba(255,60,60,'+(0.12+0.12*Math.sin(G.time*10))+')'; ctx.fillRect(0,0,W,H);
@@ -960,26 +1011,40 @@ function doPause(){ if(G.state!=='play')return; G.state='pause'; Snd.stopMusic()
   document.getElementById('pauseInfo').innerHTML='分数 <b>'+Math.floor(G.score)+'</b> ｜ 渔获 '+G.got+' ｜ 生命 '+G.lives;
   show('ovPause'); }
 function doResume(){ if(G.state!=='pause')return; hide('ovPause'); G.state='play'; Snd.music(); }
-function toMenu(){ G.state='menu'; Snd.stopMusic(); hideOverlays(); show('ovMenu'); }
+function toMenu(){ G.state='menu'; Snd.stopMusic(); hideOverlays(); show('ovMenu'); refreshSlotHelp(); }
 
-const lvSel=document.getElementById('lvSel');
-LEVELS.forEach((L,i)=>{
-  const b=document.createElement('div');
-  b.className='lvbtn'+(i===0?' on':''); b.textContent=i+1; b.title=L.name;
-  b.onclick=()=>{ selLevel=i; Snd.resume(); Snd.click();
-    [...lvSel.children].forEach((c,j)=>c.classList.toggle('on',j===i)); };
-  lvSel.appendChild(b);
-});
 function bind(id,fn){ const el=document.getElementById(id);
+  if(!el) return;
   el.addEventListener('click',e=>{ e.preventDefault(); Snd.resume(); Snd.click(); fn(); }); }
-bind('btnStart',()=>resetGame(selLevel,false));
-bind('btnEndless',()=>resetGame(0,true));
+function pickSlot(promptText){
+  const n=prompt(promptText+'（输入 1-5）','1');
+  const i=(parseInt(n,10)|0)-1; return (i>=0&&i<5)?i:-1;
+}
+function doSaveSlot(){
+  if(G.endless){ toast('无尽模式请用继续旅程'); return; }
+  const i=pickSlot('存到第几个档位'); if(i<0) return;
+  Slots.save(i, snapshotProgress()); Cont.save(snapshotProgress()); toast('已存档 '+(i+1)); refreshSlotHelp();
+}
+function doLoadSlot(){
+  const i=pickSlot('读取第几个档位'); if(i<0) return;
+  const s=Slots.load(i); if(!s){ toast('空档'); return; } resetGame(s,false,true);
+}
+bind('btnStart',()=>resetGame({cycle:1,chapter:1,stage:1},false,false));
+bind('btnContinue',()=>{ const s=Cont.load(); if(!s){ toast('没有进度'); return; } resetGame(s,!!s.endless,true); });
+bind('btnEndless',()=>resetGame({cycle:1,chapter:1,stage:1,endless:true},true,false));
+bind('btnSaveMenu',doSaveSlot); bind('btnLoadMenu',doLoadSlot); bind('btnSavePause',doSaveSlot);
 bind('btnResume',doResume);
-bind('btnRestart1',()=>resetGame(G.level,G.endless));
-bind('btnRestart2',()=>resetGame(G.level,G.endless));
-bind('btnMenu1',toMenu);
-bind('btnMenu2',toMenu);
-bind('btnNext',()=>resetGame(Math.min(LEVELS.length-1,G.level+1),false));
+bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
+bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
+bind('btnMenu1',()=>{ refreshSlotHelp(); toMenu(); });
+bind('btnMenu2',()=>{ refreshSlotHelp(); toMenu(); });
+bind('btnNext',()=>{
+  if(G.endless){ resetGame({cycle:1,chapter:1,stage:1,endless:true,score:G.score,lives:G.lives,o2Tanks:G.o2Tanks,bagMax:G.bagMax},true,true); return; }
+  const n=TBGameProgress.nextProgress(G.cycle,G.chapter,G.stage,CHAPTERS);
+  const keep=snapshotProgress(); keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage;
+  resetGame(keep,false,true);
+});
+refreshSlotHelp();
 bind('btnPause',()=>{ if(G.state==='play') doPause(); else if(G.state==='pause') doResume(); });
 bind('btnSound',()=>{ const on=!Snd.on; Snd.set(on);
   document.getElementById('btnSound').textContent='音效:'+(on?'开':'关');
@@ -1009,7 +1074,7 @@ finish=function(win){
   if(G.score>bestScore){ bestScore=G.score; try{localStorage.setItem(LS_BEST,String(bestScore));}catch(e){} }
 };
 window.__tbThumbAutoStart=function(){
-  if(G.state!=='play') resetGame(0,false);
+  if(G.state!=='play') resetGame({cycle:1,chapter:1,stage:1},false,false);
   /* 截图：把潜水员与鱼群摆到画面中央，降低游速以免虚拟时间跑偏 */
   G.diver.x=W*0.42; G.diver.y=SEA_Y+150; G.diver.dir=1; G.diver.aim={x:1,y:0.12};
   G.fishes.forEach((f,i)=>{

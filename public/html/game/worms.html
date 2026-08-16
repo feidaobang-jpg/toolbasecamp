@@ -125,7 +125,7 @@ const Input = {
         if(k==="j"||k==="enter"){ this.firePressed=true; this.fireHeld=true; }
         if(k==="k"||k===" ") this.jumpPressed=true;
         if(k==="u") this.weaponPressed=true;
-        if(k==="p"||k==="escape") this.pausePressed=true;
+        if(k==="p"||k==="b"||k==="escape") this.pausePressed=true;
         if(k==="i") AudioSys.musicOn=!AudioSys.musicOn;
         if(k==="o") AudioSys.sfxOn=!AudioSys.sfxOn;
       }
@@ -875,7 +875,7 @@ const Game = {
       ctx.fillText("武器: "+WEAPONS[this.weapon].name+" (U切换)", W-78, 30);
     }
     ctx.fillStyle='rgba(200,220,255,.75)'; ctx.font='12px sans-serif'; ctx.textAlign='left';
-    ctx.fillText('J 开火 ｜ K 跳 ｜ U 武器 ｜ P 暂停', 12, H-12);
+    ctx.fillText('J 开火 ｜ K 跳 ｜ U 武器 ｜ P/B 暂停', 12, H-12);
     // 暂停按钮
     ctx.fillStyle="rgba(255,255,255,.14)";
     ctx.beginPath(); ctx.roundRect(W-64,10,54,40,10); ctx.fill();
@@ -943,8 +943,8 @@ const Game = {
     this.bigBtn(610,"无尽模式",["#5b8bff","#2a3f9f"]);
     ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
     ctx.fillText("PC: A/D移动  W/S瞄准  J/回车按住蓄力开火", W/2, 718);
-    ctx.fillText("J/回车开火  K/空格跳跃  U换武器  P暂停  I/O音乐音效", W/2, 742);
-    ctx.fillText("手机: 左摇杆 · 右上 J/K、下排 U，上方 P 暂停", W/2, 766);
+    ctx.fillText("J/回车开火  K/空格跳跃  U换武器  P/B暂停  I/O音乐音效", W/2, 742);
+    ctx.fillText("手机: 左摇杆 · 右上 J/K、下排 U，上方 P/B 暂停", W/2, 766);
     ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best, W/2, 810);
   },
   drawPaused(){

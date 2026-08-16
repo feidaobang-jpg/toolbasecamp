@@ -101,15 +101,20 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   <!-- 开始界面 -->
   <div class="overlay" id="ovMenu">
     <div class="title">植物大战僵尸</div>
-    <div class="sub">草坪防线 · 2D Canvas 横屏 · 3 关递进 + 无尽模式</div>
-    <div class="lvsel" id="lvSel"></div>
+    <div class="sub" id="menuSub">植物防线 · 10章×10关 · 无限周目 · 5存档</div>
     <div class="rowb">
-      <button class="big" id="btnStart">开始关卡</button>
+      <button class="big" id="btnContinue">继续旅程</button>
+      <button class="big" id="btnStart">新周目</button>
       <button class="big alt" id="btnEndless">无尽模式</button>
     </div>
+    <div class="rowb" style="margin-top:8px">
+      <button class="big alt" id="btnSaveMenu">存档</button>
+      <button class="big alt" id="btnLoadMenu">读档</button>
+    </div>
+    <div class="help" id="slotHelp" style="margin-top:8px;font-size:12px"></div>
     <div class="help">
       <b>PC：</b>WASD / ↑↓←→ 移动光标 ｜ <b>J / 回车</b> 种植·收附近阳光 ｜ <b>K / 空格</b> 铲除<br>
-      <b>U</b> 下一张卡 ｜ <b>I</b> 收取全部阳光 ｜ <b>L</b> 上一张卡 ｜ <b>O</b> 二倍速 ｜ <b>P / ESC</b> 暂停<br>
+      <b>U</b> 下一张卡 ｜ <b>I</b> 收取全部阳光 ｜ <b>L</b> 上一张卡 ｜ <b>O</b> 二倍速 ｜ <b>P / B / ESC</b> 暂停<br>
       鼠标可点卡片与草坪；<b>手机：</b>左摇杆移光标；右侧上排 J/K、下排 U/I，上方 P，再上 L/O<br>
       每行末端小推车为最后防线，推车用尽后僵尸突破即失败。
     </div>
@@ -121,6 +126,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
     <div class="sub" id="pauseInfo"></div>
     <div class="rowb">
       <button class="big" id="btnResume">继续游戏</button>
+      <button class="big alt" id="btnSavePause">快速存档</button>
       <button class="big alt" id="btnRestart1">重新开始</button>
       <button class="big alt" id="btnMenu1">返回菜单</button>
     </div>
@@ -138,6 +144,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
@@ -300,7 +307,7 @@ const Input = {
 };
 const KEYMAP={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',
   KeyD:'right',ArrowRight:'right',KeyK:'jump',Space:'jump',KeyJ:'attack',Enter:'attack',NumpadEnter:'attack',
-  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',Escape:'pause'};
+  KeyU:'act1',KeyI:'act2',KeyL:'act3',KeyO:'act4',KeyP:'pause',KeyB:'pause',Escape:'pause',KeyV:'select'};
 window.addEventListener('keydown',e=>{
   const a=KEYMAP[e.code]; if(!a) return;
   e.preventDefault(); Snd.resume();
@@ -372,16 +379,36 @@ const ZOMBIES={
   giant  :{name:'巨人僵尸',hp:1600,sp:8,  dmg:120,w:64}
 };
 /* 关卡：波次数量、间隔、可出现僵尸、阳光掉落速度 */
-const LEVELS=[
-  {name:'第一关 · 白日草坪', waves:8,  gap:11.0, sunGap:6.5, types:['normal','normal','normal','cone'], perWave:[1,2], boss:null},
-  {name:'第二关 · 黄昏突袭', waves:11, gap:9.0,  sunGap:7.5, types:['normal','cone','cone','fast','bucket'], perWave:[2,3], boss:null},
-  {name:'第三关 · 巨人来袭', waves:14, gap:7.6,  sunGap:8.5, types:['normal','cone','bucket','fast','fast','bucket'], perWave:[2,4], boss:'giant'}
+const CHAPTERS=10;
+const TEMPLATES=[
+  {name:'白日草坪', waves:8,  gap:11.0, sunGap:6.5, types:['normal','normal','normal','cone'], perWave:[1,2], boss:null},
+  {name:'黄昏突袭', waves:11, gap:9.0,  sunGap:7.5, types:['normal','cone','cone','fast','bucket'], perWave:[2,3], boss:null},
+  {name:'巨人来袭', waves:14, gap:7.6,  sunGap:8.5, types:['normal','cone','bucket','fast','fast','bucket'], perWave:[2,4], boss:'giant'}
 ];
+const Slots=TBGameProgress.createSlots('tbc_pvz_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_pvz_continue_v1');
+function campaignCfg(cycle,chapter,stage){
+  return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const cfg=Object.assign({},base);
+    cfg.types=base.types.slice(); cfg.perWave=base.perWave.slice();
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
+    cfg.waves=TBGameProgress.scaleNum(base.waves,diff,{min:6,max:28});
+    cfg.gap=Math.max(4.5, base.gap-(diff-1)*0.35);
+    cfg.sunGap=Math.min(12, base.sunGap+(diff-1)*0.25);
+    cfg.perWave=[Math.min(6, base.perWave[0]+Math.floor((diff-1)*0.6)),
+                 Math.min(8, base.perWave[1]+Math.floor((diff-1)*0.8))];
+    if(pos.role==='miniboss') cfg.boss='bucket';
+    else if(pos.role==='boss') cfg.boss='giant';
+    else cfg.boss=base.boss;
+    return cfg;
+  });
+}
+const LEVELS=[campaignCfg(1,1,1)];
 
 /* ------------------------ 5. 游戏状态与逻辑 ------------------------ */
 const G = {
   state:'menu',            // menu / play / pause / over
-  level:0, endless:false,
+  level:0, endless:false, cycle:1, chapter:1, stage:1,
   sun:75, score:0, kills:0,
   plants:[], zombies:[], bullets:[], suns:[], parts:[], mowers:[],
   cd:[], card:0, cur:{r:2,c:2},
@@ -389,21 +416,38 @@ const G = {
   win:false, endT:0, shake:0, flash:0, hint:'',
   cfg: LEVELS[0]
 };
-let selLevel=0;
 
-function resetGame(level, endless){
-  G.state='play'; G.level=level; G.endless=!!endless;
-  G.sun = endless?100:75; G.score=0; G.kills=0;
+function snapshotProgress(){
+  return {cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:!!G.endless,
+    score:G.score,sun:G.sun,kills:G.kills};
+}
+function refreshSlotHelp(){
+  const el=document.getElementById('slotHelp'); if(!el) return;
+  const rows=Slots.list().map(function(s,i){ return (i+1)+'. '+Slots.formatMeta(s); });
+  const c=Cont.load();
+  el.innerHTML='<b>继续：</b>'+(c?Slots.formatMeta(c):'无')+'<br><b>五存档：</b><br>'+rows.join('<br>');
+}
+function resetGame(levelOrOpt, endless, keep){
+  let cycle=1,chapter=1,stage=1, fromSave=null;
+  if(levelOrOpt && typeof levelOrOpt==='object'){
+    fromSave=levelOrOpt; if(arguments.length<2) endless=!!levelOrOpt.endless; else endless=!!endless; if(arguments.length<3) keep=true;
+    cycle=fromSave.cycle||1; chapter=fromSave.chapter||1; stage=fromSave.stage||1;
+  }
+  G.state='play'; G.level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
+  G.cycle=cycle; G.chapter=chapter; G.stage=stage; G.endless=!!endless;
+  G.cfg = endless ? {name:'无尽模式',waves:9999,gap:8.5,sunGap:7,types:['normal','cone'],perWave:[1,2],boss:null}
+                  : campaignCfg(cycle,chapter,stage);
+  if(keep && fromSave){ G.score=fromSave.score|0; G.sun=fromSave.sun!=null?fromSave.sun:(endless?100:75); G.kills=fromSave.kills|0; }
+  else { G.sun = endless?100:75; G.score=0; G.kills=0; }
   G.plants=[]; G.zombies=[]; G.bullets=[]; G.suns=[]; G.parts=[];
   G.mowers=[]; for(let r=0;r<ROWS;r++) G.mowers.push({r:r,x:BX-46,used:false,run:false});
   G.cd = PLANTS.map(()=>0);
   G.card=0; G.cur={r:2,c:2};
   G.wave=0; G.waveT= endless?6:5; G.sunT=3; G.speed=1; G.time=0;
   G.win=false; G.endT=0; G.shake=0; G.flash=0;
-  G.cfg = endless ? {name:'无尽模式',waves:9999,gap:8.5,sunGap:7,types:['normal','cone'],perWave:[1,2],boss:null}
-                  : LEVELS[level];
   hideOverlays();
   Snd.music();
+  if(!endless) Cont.save(snapshotProgress());
 }
 function plantAt(r,c){ return G.plants.find(p=>p.r===r&&p.c===c&&p.hp>0); }
 
@@ -619,13 +663,13 @@ function finish(win){
   if(win) G.score += G.endless?0:500+G.level*300;
   const t=document.getElementById('overTitle'), info=document.getElementById('overInfo');
   if(win){
-    t.textContent = (G.level>=LEVELS.length-1 && !G.endless) ? '全部关卡通过！' : '关卡通过！';
+    t.textContent = ((G.stage===10&&G.chapter===CHAPTERS) && !G.endless) ? '全部关卡通过！' : '关卡通过！';
     info.innerHTML = '得分 <b>'+G.score+'</b> ｜ 击杀 '+G.kills+' ｜ 坚持 '+G.wave+' 波';
   } else {
     t.textContent='草坪失守';
     info.innerHTML = (G.endless?'无尽模式 ':'')+'得分 <b>'+G.score+'</b> ｜ 击杀 '+G.kills+' ｜ 到达第 '+G.wave+' 波';
   }
-  document.getElementById('btnNext').style.display = (win && !G.endless && G.level<LEVELS.length-1)?'':'none';
+  document.getElementById('btnNext').style.display = (win && !G.endless)?'':'none';
   show('ovOver');
 }
 
@@ -999,7 +1043,7 @@ function drawHud(){
   ctx.restore();
   /* 当前卡片名 */
   ctx.fillStyle='rgba(255,255,255,.85)'; ctx.font='12px sans-serif'; ctx.textAlign='left';
-  ctx.fillText('当前：'+PLANTS[G.card].name+'（J 种植 ｜ K 铲除 ｜ U 下卡 ｜ I 收阳 ｜ L 上卡 ｜ O 倍速 ｜ P 暂停）', 16, H-10);
+  ctx.fillText((G.endless?'无尽':G.cfg.name)+' ｜ '+PLANTS[G.card].name+' ｜ J种 K铲 U/L换卡 I收阳 O倍速 P/B暂停', 16, H-10);
 }
 
 /* --------------------- 7. UI绑定 与 主循环 --------------------- */
@@ -1014,27 +1058,42 @@ function doPause(){
   show('ovPause');
 }
 function doResume(){ if(G.state!=='pause') return; hide('ovPause'); G.state='play'; Snd.music(); }
-function toMenu(){ G.state='menu'; Snd.stopMusic(); hideOverlays(); show('ovMenu'); }
+function toMenu(){ G.state='menu'; Snd.stopMusic(); hideOverlays(); show('ovMenu');
+refreshSlotHelp(); refreshSlotHelp(); }
 
-/* 关卡选择按钮 */
-const lvSel=document.getElementById('lvSel');
-LEVELS.forEach((L,i)=>{
-  const b=document.createElement('div');
-  b.className='lvbtn'+(i===0?' on':''); b.textContent=i+1; b.title=L.name;
-  b.onclick=()=>{ selLevel=i; Snd.resume(); Snd.click();
-    [...lvSel.children].forEach((c,j)=>c.classList.toggle('on',j===i)); };
-  lvSel.appendChild(b);
-});
-function bind(id,fn){ const el=document.getElementById(id); el.addEventListener('click',e=>{e.preventDefault();Snd.resume();Snd.click();fn();}); }
-bind('btnStart', ()=>resetGame(selLevel,false));
-bind('btnEndless',()=>resetGame(0,true));
+function bind(id,fn){ const el=document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('click',e=>{e.preventDefault();Snd.resume();Snd.click();fn();}); }
+function pickSlot(promptText){
+  const n=prompt(promptText+'（输入 1-5）','1');
+  const i=(parseInt(n,10)|0)-1; return (i>=0&&i<5)?i:-1;
+}
+function doSaveSlot(){
+  if(G.endless){ toast('无尽模式请用继续旅程'); return; }
+  const i=pickSlot('存到第几个档位'); if(i<0) return;
+  Slots.save(i, snapshotProgress()); Cont.save(snapshotProgress()); toast('已存档 '+(i+1)); refreshSlotHelp();
+}
+function doLoadSlot(){
+  const i=pickSlot('读取第几个档位'); if(i<0) return;
+  const s=Slots.load(i); if(!s){ toast('空档'); return; } resetGame(s,false,true);
+}
+bind('btnStart', ()=>resetGame({cycle:1,chapter:1,stage:1},false,false));
+bind('btnContinue', ()=>{ const s=Cont.load(); if(!s){ toast('没有进度'); return; } resetGame(s,!!s.endless,true); });
+bind('btnEndless',()=>resetGame({cycle:1,chapter:1,stage:1,endless:true},true,false));
+bind('btnSaveMenu', doSaveSlot); bind('btnLoadMenu', doLoadSlot); bind('btnSavePause', doSaveSlot);
 bind('btnResume', doResume);
-bind('btnRestart1',()=>resetGame(G.level,G.endless));
-bind('btnRestart2',()=>resetGame(G.level,G.endless));
+bind('btnRestart1',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
+bind('btnRestart2',()=>resetGame({cycle:G.cycle,chapter:G.chapter,stage:G.stage,endless:G.endless},G.endless,false));
 bind('btnMenu1', toMenu);
 bind('btnMenu2', toMenu);
-bind('btnNext', ()=>resetGame(Math.min(LEVELS.length-1,G.level+1),false));
+bind('btnNext', ()=>{
+  if(G.endless){ resetGame({cycle:1,chapter:1,stage:1,endless:true,score:G.score,sun:G.sun,kills:G.kills},true,true); return; }
+  const n=TBGameProgress.nextProgress(G.cycle,G.chapter,G.stage,CHAPTERS);
+  const keep=snapshotProgress(); keep.cycle=n.cycle; keep.chapter=n.chapter; keep.stage=n.stage;
+  resetGame(keep,false,true);
+});
 bind('btnPause', ()=>{ if(G.state==='play') doPause(); else if(G.state==='pause') doResume(); });
+refreshSlotHelp();
 bind('btnSound', ()=>{ const on=!Snd.on; Snd.set(on);
   document.getElementById('btnSound').textContent='音效:'+(on?'开':'关');
   if(on && G.state==='play') Snd.music(); });
@@ -1067,7 +1126,7 @@ finish=function(win){
   if(G.score>bestScore){ bestScore=G.score; try{localStorage.setItem(LS_BEST,String(bestScore));}catch(e){} }
 };
 window.__tbThumbAutoStart=function(){
-  if(G.state!=='play') resetGame(0,false);
+  if(G.state!=='play') resetGame({cycle:1,chapter:1,stage:1},false,false);
   /* 截图：预置防线 + 僵尸，避免空草坪 */
   G.sun=180; G.score=420; G.kills=4; G.wave=2; G.waveT=40; G.sunT=8;
   const addP=function(idx,r,c){

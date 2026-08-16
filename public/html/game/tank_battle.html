@@ -89,6 +89,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   </div>
 </div>
 
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -269,7 +270,7 @@ const Input = (() => {
     if(!keys[e.code]){
       if(e.code==="KeyJ"||e.code==="Enter"){ state.firePressed=true; state.startPressed=true; }
       if(e.code==="KeyK"||e.code==="Space"){ state.firePressed=true; state.startPressed=true; }
-      if(e.code==="KeyP"||e.code==="Escape") state.pausePressed=true;
+      if(e.code==="KeyP"||e.code==="KeyB"||e.code==="Escape") state.pausePressed=true;
     }
     keys[e.code]=true; SFX.unlock();
   });
@@ -599,7 +600,7 @@ const Levels = (() => {
   const maps=[L1,L2,L3,L4,L5,L6];
   const charMap={'.':T_EMPTY,'B':T_BRICK,'S':T_STEEL,'W':T_WATER,'G':T_GRASS};
   /** 闯关总关数；地形逐步解锁 */
-  const CAMPAIGN_LEVELS = 50;
+  const CAMPAIGN_LEVELS = 100;
   // 地形解锁（50 关）：1–4 仅砖；5–10 +铁；11–20 +草；21–50 全地形
   // 三路稀疏铁块在 fortifyLanes 另加，不受此门控影响
   function gateTerrain(cell, level){
@@ -796,8 +797,11 @@ const Game = (() => {
     ["#7ae0a0","#2a7a4a"],["#ffb060","#a05020"],["#90d0ff","#3060a0"],["#f0a0c0","#903050"]
   ];
   const COOP_SPAWN=[[8,24],[16,24],[6,24],[18,24],[4,24],[20,24],[2,24],[22,24]];
-  const MENU_COUNT=5;
+  const MENU_COUNT=8;
   const CAMPAIGN_LEVELS=Levels.CAMPAIGN_LEVELS;
+  const CHAPTERS=10;
+  const TankSlots=typeof TBGameProgress!=='undefined'?TBGameProgress.createSlots('tbc_tank_slots_v1'):null;
+  const TankCont=typeof TBGameProgress!=='undefined'?TBGameProgress.createContinue('tbc_tank_continue_v1'):null;
   const CLEAR_GRACE_SEC=4.5;
 
   /* ---- 碰撞辅助 ---- */
@@ -934,7 +938,12 @@ const Game = (() => {
     if(debugMode){
       if(debugBossCleared) flash("⚠ 测试模式：10 只 Boss 已全部肃清", 2.0);
       else flash("⚠ 测试模式：Boss "+debugBossWave+"/"+BOSS_TIERS+"（第 "+level+" 关）", 2.0);
-    } else if(level%5===0) flash("⚠ Boss 关：第 "+bossTierOfLevel(level)+"/"+BOSS_TIERS+" 号 Boss", 2.2);
+    } else {
+      const st=((level-1)%10)+1;
+      if(st===10) flash("⚠ 大Boss 关 · "+(typeof TBGameProgress!=="undefined"?TBGameProgress.label(Math.floor((level-1)/100)+1, Math.floor(((level-1)%100)/10)+1, st, true):("关"+level)), 2.2);
+      else if(st===4||st===8) flash("⚠ 小Boss 关", 1.8);
+      else if(level%5===0) flash("⚠ Boss 关：第 "+bossTierOfLevel(level)+"/"+BOSS_TIERS+" 号 Boss", 2.2);
+    }
   }
   function bossTierOfLevel(lv){
     return Math.max(1, Math.min(BOSS_TIERS, Math.floor((lv|0)/5)));
@@ -1751,18 +1760,52 @@ const Game = (() => {
       else if(inp.my>0&&!menuMoved){ menuSel=(menuSel+1)%MENU_COUNT; menuMoved=true; }
       else if(!inp.my) menuMoved=false;
       if(Input.state.startPressed){
-        if(menuSel===4){
+        if(menuSel===7){
           if(window.TankCoop) window.TankCoop.open();
           Input.consume(); return;
         }
+        if(menuSel===5){ // save
+          if(!TankSlots){ flash("存档不可用",1.2); Input.consume(); return; }
+          const n=prompt("存到第几个档位（1-5）","1");
+          const i=(parseInt(n,10)|0)-1;
+          if(i>=0&&i<5){
+            const cyc=Math.floor((Math.max(1,level)-1)/CAMPAIGN_LEVELS)+1;
+            const rem=(Math.max(1,level)-1)%CAMPAIGN_LEVELS;
+            const ch=Math.floor(rem/10)+1, st=(rem%10)+1;
+            TankSlots.save(i,{cycle:cyc,chapter:ch,stage:st,level:level,score:score,lives:lives,endless:!!endless});
+            if(TankCont) TankCont.save({cycle:cyc,chapter:ch,stage:st,level:level,score:score,lives:lives});
+            flash("已存档到槽位 "+(i+1),1.4);
+          }
+          Input.consume(); return;
+        }
+        if(menuSel===6){ // load
+          if(!TankSlots){ flash("读档不可用",1.2); Input.consume(); return; }
+          const n=prompt("读取第几个档位（1-5）","1");
+          const i=(parseInt(n,10)|0)-1;
+          const s=i>=0?TankSlots.load(i):null;
+          if(!s){ flash("该档位为空",1.2); Input.consume(); return; }
+          coopMode=false; coopSend=null; endless=!!s.endless; enemyLootMode=false; debugMode=false;
+          level=Math.max(1,s.level|0); score=s.score|0; lives=Math.max(1,s.lives|0);
+          player=null; coopAllies={}; newLevel(); stateName="playing";
+          flash("已读档 W"+(s.cycle||1)+" C"+(s.chapter||1)+"-"+(s.stage||1),1.6);
+          Input.consume(); return;
+        }
+        if(menuSel===1){ // continue
+          const s=TankCont&&TankCont.load();
+          if(!s){ flash("没有可继续的进度",1.4); Input.consume(); return; }
+          coopMode=false; coopSend=null; endless=!!s.endless; enemyLootMode=false; debugMode=false;
+          level=Math.max(1,s.level|0); score=s.score|0; lives=Math.max(1,s.lives|0);
+          player=null; coopAllies={}; newLevel(); stateName="playing";
+          Input.consume(); return;
+        }
         coopMode=false; coopSend=null;
-        endless=menuSel===1;
-        enemyLootMode=menuSel===2;
-        debugMode=menuSel===3;
+        endless=menuSel===2;
+        enemyLootMode=menuSel===3;
+        debugMode=menuSel===4;
         debugBossCleared=false;
         debugBossDelay=0;
         debugBossWave=1;
-        if(menuSel===2) endless=false; // 敌方吃道具以闯关形式进行
+        if(menuSel===3) endless=false; // 敌方吃道具以闯关形式进行
         // 测试模式从第 1 只 Boss 关（第 5 关）开始连刷 10 只
         level = debugMode ? 5 : 1;
         score=0; lives=30; player=null; coopAllies={};
@@ -1781,8 +1824,15 @@ const Game = (() => {
       }
       if(stateTime>1.2 && Input.state.startPressed){
         if(stateName==="levelClear"){
-          if(!endless && level>=CAMPAIGN_LEVELS){ stateName="menu"; menuSel=0; coopMode=false; }
-          else { level++; newLevel(); stateName="playing"; coopGridSent=""; }
+          {
+            const prev=level;
+            level++;
+            if(!endless && prev%CAMPAIGN_LEVELS===0){
+              const cyc=Math.floor((level-1)/CAMPAIGN_LEVELS)+1;
+              flash("🏆 第 "+cyc+" 周目开始 · 难度提升", 2.4);
+            }
+            newLevel(); stateName="playing"; coopGridSent="";
+          }
         }
         else {
           // 游戏结束：房主重开本局；单机回菜单
@@ -2029,7 +2079,16 @@ const Game = (() => {
         clearGrace -= dt;
         if(clearGrace<=0){
           stateName="levelClear"; stateTime=0;
-          if(level>=CAMPAIGN_LEVELS) flash("🏆 通关全部 "+CAMPAIGN_LEVELS+" 关！");
+          if(!endless && level%CAMPAIGN_LEVELS===0){
+            const cyc=Math.floor((level-1)/CAMPAIGN_LEVELS)+1;
+            flash("🏆 第 "+cyc+" 周目通关！进入下一周目", 2.2);
+          }
+          if(TankCont&&!endless){
+            const cyc=Math.floor((level-1)/CAMPAIGN_LEVELS)+1;
+            const rem=(level-1)%CAMPAIGN_LEVELS;
+            const ch=Math.floor(rem/10)+1, st=(rem%10)+1;
+            TankCont.save({cycle:cyc,chapter:ch,stage:st,level:level,score:score,lives:lives});
+          }
         }
       }
     }
@@ -2674,7 +2733,11 @@ const Game = (() => {
     const lx=(OFF_X-8)/2+4;
     g.fillText("关卡",lx,OFF_Y+26);
     g.font="bold 26px sans-serif"; g.fillStyle="#ffd24a";
-    g.fillText(endless?"∞":(level+"/"+CAMPAIGN_LEVELS),lx,OFF_Y+54);
+    if(endless) g.fillText("∞",lx,OFF_Y+54);
+    else {
+      const cyc=Math.floor((level-1)/100)+1, rem=(level-1)%100, ch=Math.floor(rem/10)+1, st=(rem%10)+1;
+      g.fillText("W"+cyc+" C"+ch+"-"+st+" ("+level+"/"+CAMPAIGN_LEVELS+")",lx,OFF_Y+54);
+    }
     if(debugMode){
       g.font="11px sans-serif"; g.fillStyle="#ffb060";
       g.fillText(debugBossCleared?"Boss 已肃清":("Boss "+debugBossWave+"/"+BOSS_TIERS),lx,OFF_Y+72);
@@ -2774,14 +2837,15 @@ const Game = (() => {
     }
     // 覆盖层
     if(stateName==="menu") drawMenu();
-    else if(stateName==="paused") drawOverlay("暂停","按 P 或点击暂停键继续");
+    else if(stateName==="paused") drawOverlay("暂停","按 P / B 或点击暂停键继续");
     else if(stateName==="levelClear"){
-      const done=!endless && level>=CAMPAIGN_LEVELS;
+      const cycleDone=!endless && level%CAMPAIGN_LEVELS===0;
       const waitGuest=coopMode && !coopIsHost;
+      const cyc=Math.floor((level-1)/CAMPAIGN_LEVELS)+1;
+      const rem=(level-1)%CAMPAIGN_LEVELS, ch=Math.floor(rem/10)+1, st=(rem%10)+1;
       let sub;
-      if(done) sub=waitGuest?("得分 "+score+"　·　等待房主回标题"):("得分 "+score+"　·　按 开火键 回标题");
-      else sub=waitGuest?("得分 "+score+"　·　等待房主进入下一关"):("得分 "+score+"　·　按 开火键 进入下一关");
-      drawOverlay(done?"全部通关！":("关卡 "+level+" 通过！"), sub);
+      sub=waitGuest?("得分 "+score+"　·　等待房主进入下一关"):("得分 "+score+"　·　按 开火键 进入下一关");
+      drawOverlay(cycleDone?("第 "+cyc+" 周目通关！"):("W"+cyc+" C"+ch+"-"+st+" 通过"), sub);
     }
     else if(stateName==="gameover") drawOverlay("游 戏 结 束",
       overReason+"　·　得分 "+score+(score>=hiScore?"（新纪录！）":"　·　最高 "+hiScore)+
@@ -2812,16 +2876,20 @@ const Game = (() => {
     g.fillStyle="#9fb0d0"; g.font="16px sans-serif";
     g.fillText("TANK BATTLE · 经典改版",CANVAS_W/2,200);
     // 菜单项
+    const cont=TankCont&&TankCont.load();
     const items=[
-      "🎮 闯关模式（共 "+CAMPAIGN_LEVELS+" 关）",
+      "🎮 新周目闯关（10章×10关·无限周目）",
+      "▶ 继续旅程"+(cont?(" · W"+(cont.cycle||1)+" C"+(cont.chapter||1)+"-"+(cont.stage||1)):"（无）"),
       "♾ 无尽模式",
       "😈 敌方吃道具",
       "🧪 测试模式（10 Boss连锁·道具必掉）",
+      "💾 存档（5 槽）",
+      "📂 读档（5 槽）",
       "🌐 合作联机（最多 8 人）"
     ];
     g.font="bold 20px sans-serif";
     items.forEach((it,i)=>{
-      const y=236+i*38, sel=menuSel===i;
+      const y=228+i*30, sel=menuSel===i;
       if(sel){ g.fillStyle="rgba(255,210,74,.12)";
         g.fillRect(CANVAS_W/2-200,y-26,400,34);
         g.fillStyle="#ffd24a"; g.fillText("▶",CANVAS_W/2-220,y); }
@@ -2829,12 +2897,11 @@ const Game = (() => {
       g.fillText(it,CANVAS_W/2,y);
     });
     g.fillStyle="#6a748c"; g.font="12px sans-serif";
-    g.fillText("船最多3层 · 时钟/头盔可叠时间 · 大Boss弹需4发抵消 · 火焰车弹需2发",CANVAS_W/2,430);
-    g.fillText("移动：WASD / 方向键　　开火：J/回车（K/空格同）　　暂停：P　　手机：左摇杆+右侧 J/上方 P",CANVAS_W/2,450);
-    g.fillText("道具：⛵船=渡水+多层护盾　⏱时钟/🛡头盔可叠加　🔥火焰车=5血小Boss",CANVAS_W/2,470);
-    if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 15px sans-serif";
-      g.fillText("按 开火键 / 点击屏幕 开始（上下键切换模式）",CANVAS_W/2,496); }
-    g.fillStyle="#ffd24a"; g.font="bold 15px sans-serif";
+    g.fillText("船最多3层 · 时钟/头盔可叠 · Boss弹4发抵消 · 火焰车弹2发",CANVAS_W/2,458);
+    g.fillText("移动 WASD/方向　开火 J/回车/K/空格　暂停 P/B　手机：左摇杆+右 J/上 P",CANVAS_W/2,476);
+    if(t%1<0.6){ g.fillStyle="#7ae0a0"; g.font="bold 14px sans-serif";
+      g.fillText("按 开火键 / 点击屏幕 确认（上下键切换）",CANVAS_W/2,498); }
+    g.fillStyle="#ffd24a"; g.font="bold 14px sans-serif";
     g.fillText("最高分："+hiScore,CANVAS_W/2,520);
   }
 
