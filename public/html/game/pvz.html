@@ -143,7 +143,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
@@ -378,7 +378,7 @@ const ZOMBIES={
   giant  :{name:'巨人僵尸',hp:1600,sp:8,  dmg:120,w:64}
 };
 /* 关卡：波次数量、间隔、可出现僵尸、阳光掉落速度 */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const TEMPLATES=[
   {name:'白日草坪', waves:8,  gap:11.0, sunGap:6.5, types:['normal','normal','normal','cone'], perWave:[1,2], boss:null},
   {name:'黄昏突袭', waves:11, gap:9.0,  sunGap:7.5, types:['normal','cone','cone','fast','bucket'], perWave:[2,3], boss:null},
@@ -388,17 +388,36 @@ const Slots=TBGameProgress.createSlots('tbc_pvz_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_pvz_continue_v1');
 function campaignCfg(cycle,chapter,stage){
   return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const enc=TBGameProgress.encounter(pos.cycle,pos.chapter,pos.stage);
+    const theme=enc.theme, plan=enc.plan;
     const cfg=Object.assign({},base);
-    cfg.types=base.types.slice(); cfg.perWave=base.perWave.slice();
-    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
-    cfg.waves=TBGameProgress.scaleNum(base.waves,diff,{min:6,max:28});
-    cfg.gap=Math.max(4.5, base.gap-(diff-1)*0.35);
-    cfg.sunGap=Math.min(12, base.sunGap+(diff-1)*0.25);
-    cfg.perWave=[Math.min(6, base.perWave[0]+Math.floor((diff-1)*0.6)),
-                 Math.min(8, base.perWave[1]+Math.floor((diff-1)*0.8))];
-    if(pos.role==='miniboss') cfg.boss='bucket';
-    else if(pos.role==='boss') cfg.boss='giant';
-    else cfg.boss=base.boss;
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true)+' · '+theme.name;
+    cfg.theme=theme; cfg.plan=plan;
+    cfg.waves=plan.boss?1:TBGameProgress.scaleNum(base.waves||4, 1+(diff-1)*0.2, {min:3,max:10});
+    cfg.gap=Math.max(4, (base.gap||8)/Math.sqrt(diff*theme.mobMul));
+    cfg.sunGap=Math.max(5, (base.sunGap||10)/Math.sqrt(diff));
+    const pw0=(Array.isArray(base.perWave)?base.perWave[0]:2)|0;
+    const pw1=(Array.isArray(base.perWave)?base.perWave[1]:3)|0;
+    if(plan.boss){
+      cfg.perWave=[0,0];
+      cfg.types=['giant'];
+      cfg.boss='giant'; cfg.bossName=theme.boss; cfg.bossMul=theme.bossMul;
+    }else if(plan.miniboss){
+      cfg.perWave=[
+        Math.max(1, Math.round(pw0*theme.mobMul)),
+        Math.max(2, Math.round(pw1*theme.mobMul))
+      ];
+      cfg.types=(base.types||['normal','cone']).slice();
+      cfg.boss='bucket'; cfg.bossName=theme.mini; cfg.bossMul=theme.miniMul;
+    }else{
+      cfg.perWave=[
+        Math.max(1, Math.round(pw0*theme.mobMul)),
+        Math.max(2, Math.round(pw1*theme.mobMul))
+      ];
+      cfg.types=base.types||['normal'];
+      cfg.boss=null;
+    }
+    cfg.hpMul=theme.mobMul*diff;
     return cfg;
   });
 }
@@ -487,6 +506,12 @@ function hurtZombie(z,dmg,slow){
 }
 function spawnWave(){
   const cfg=G.cfg; G.wave++;
+  // 第10关：单独大Boss
+  if(cfg.plan && cfg.plan.boss){
+    toast('大Boss「'+(cfg.bossName||cfg.theme&&cfg.theme.boss||'巨人')+'」来袭！');
+    spawnZombie(cfg.boss||'giant', 0);
+    return;
+  }
   let n, types=cfg.types.slice();
   if(G.endless){
     n = 1 + Math.floor(G.wave*0.55);
@@ -495,24 +520,34 @@ function spawnWave(){
     if(G.wave>8) types.push('bucket','fast');
     if(G.wave>11) types.push('giant');
   } else {
-    n = rndi(cfg.perWave[0], cfg.perWave[1]) + Math.floor(G.wave/4);
+    const a=(cfg.perWave&&cfg.perWave[0])|0, b=(cfg.perWave&&cfg.perWave[1])|0;
+    n = rndi(Math.max(1,a), Math.max(a,b)) + Math.floor(G.wave/4);
   }
   const isBig = (G.wave%5===0);
   if(isBig){ n+=2; toast('一大波僵尸来袭！'); Snd.mower(); }
   for(let i=0;i<n;i++){
     let t=pick(types);
-    if(cfg.boss && G.wave>=cfg.waves-1 && i===0) t='giant';
+    // 小Boss关末波：额外铁桶小Boss（与小怪同场）
+    if(cfg.boss && G.wave>=cfg.waves-1 && i===0) t=cfg.boss;
     spawnZombie(t, i*rnd(0.2,1.1));
   }
 }
 function spawnZombie(type,delay){
-  const def=ZOMBIES[type];
-  const hpScale = G.endless ? (1 + G.wave*0.09) : (1 + G.level*0.12 + G.wave*0.02);
+  const def=ZOMBIES[type]||ZOMBIES.normal;
+  const cfg=G.cfg||{};
+  const theme=cfg.theme||{};
+  let hpScale = G.endless ? (1 + G.wave*0.09) : (1 + G.level*0.12 + G.wave*0.02);
+  hpScale *= (cfg.hpMul||1);
+  if(type==='giant'||type===(cfg.boss)) hpScale *= (cfg.bossMul||1.2);
   const r=rndi(0,ROWS-1);
+  const isBoss=!!(cfg.plan&&cfg.plan.boss&&(type==='giant'||type===cfg.boss));
+  const isMini=!!(cfg.plan&&cfg.plan.miniboss&&type===cfg.boss);
   G.zombies.push({
     type:type,def:def,r:r, x:W+30+ (delay||0)*60, y:cellY(r)+CH-16,
-    hp:def.hp*hpScale, maxHp:def.hp*hpScale, sp:def.sp, slow:0, flash:0,
-    eat:null, t:rnd(0,6), dead:false, deadT:0, delay:delay||0
+    hp:def.hp*hpScale, maxHp:def.hp*hpScale, sp:def.sp*(1+Math.min(0.35,(hpScale-1)*0.08)), slow:0, flash:0,
+    eat:null, t:rnd(0,6), dead:false, deadT:0, delay:delay||0,
+    boss:isBoss, mini:isMini, tint:theme.accent||null,
+    name:isBoss?(cfg.bossName||theme.boss): (isMini?(cfg.bossName||theme.mini):null)
   });
 }
 function spawnSun(x,y,fromSky){

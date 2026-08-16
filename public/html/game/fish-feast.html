@@ -24,7 +24,7 @@ canvas{display:block;background:#032a44;box-shadow:0 0 60px rgba(60,180,255,.25)
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -48,7 +48,7 @@ const BASE_W=960, BASE_H=540;               // 横屏基准 16:9
 const STATE={MENU:0,PLAY:1,PAUSE:2,OVER:3,LEVELCLEAR:4,WIN:5};
 
 /* 递进关卡：目标体型、敌鱼数量、敌鱼速度倍率 */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_fish_feast_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_fish_feast_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
@@ -61,13 +61,27 @@ function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage
 ];
 function campaignCfg(cycle,chapter,stage){
   return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const enc=TBGameProgress.encounter(pos.cycle,pos.chapter,pos.stage);
+    const theme=enc.theme, plan=enc.plan;
     const cfg=Object.assign({},base);
-    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
-    cfg.targetSize=TBGameProgress.scaleNum(base.targetSize,diff,{min:30,max:120});
-    cfg.fishCount=TBGameProgress.scaleNum(base.fishCount,diff,{min:8,max:28});
-    cfg.spdMul=+(base.spdMul*diff).toFixed(3);
-    if(pos.role==='miniboss'){ cfg.targetSize=Math.round(cfg.targetSize*1.15); cfg.fishCount+=3; cfg.spdMul*=1.08; }
-    if(pos.role==='boss'){ cfg.targetSize=Math.round(cfg.targetSize*1.35); cfg.fishCount+=6; cfg.spdMul*=1.18; }
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true)+' · '+theme.name;
+    cfg.theme=theme; cfg.plan=plan; cfg.enc=enc;
+    cfg.targetSize=TBGameProgress.scaleNum(base.targetSize,diff*theme.mobMul,{min:30,max:140});
+    cfg.spdMul=+(base.spdMul*diff*theme.mobMul).toFixed(3);
+    if(plan.boss){
+      cfg.fishCount=0; // 第10关只打大Boss鱼
+      cfg.bossOnly=true;
+      cfg.bossSize=Math.round(Math.min(110, 58*theme.bossMul));
+      cfg.bossHpLooks=theme.boss;
+      cfg.targetSize=Math.round(cfg.bossSize*0.92);
+    }else if(plan.miniboss){
+      cfg.fishCount=TBGameProgress.scaleNum(base.fishCount+2,diff*theme.mobMul,{min:8,max:26});
+      cfg.miniCount=1+(pos.stage===9?1:0);
+      cfg.miniSize=Math.round(Math.min(95, 42*theme.miniMul));
+    }else{
+      cfg.fishCount=TBGameProgress.scaleNum(base.fishCount,diff*theme.mobMul,{min:8,max:24});
+      cfg.miniCount=0;
+    }
     return cfg;
   });
 }
@@ -321,16 +335,39 @@ const Game=(()=>{
     return campaignCfg(cycle,chapter,stage);
   }
 
+  function spawnBossFish(){
+    const c=cfg(); const theme=c.theme||{};
+    const size=c.bossSize||72;
+    const fromLeft=Math.random()<0.5;
+    const spd=rnd(35,55)*(c.spdMul||1)*(18/Math.sqrt(size+8));
+    fishes.push({
+      x:fromLeft?-size*2.5:BASE_W+size*2.5, y:rnd(90,BASE_H-90),
+      vx:(fromLeft?1:-1)*spd, size, ci:0,
+      wob:rnd(0,Math.PI*2), turnT:rnd(2,5),
+      boss:true, mini:false, name:theme.boss||'大Boss',
+      tint:theme.accent||'#ffd60a'
+    });
+  }
+  function spawnMiniFish(){
+    const c=cfg(); const theme=c.theme||{};
+    const size=c.miniSize||48;
+    const fromLeft=Math.random()<0.5;
+    const spd=rnd(45,75)*(c.spdMul||1)*(20/Math.sqrt(size+8));
+    fishes.push({
+      x:fromLeft?-size*2.2:BASE_W+size*2.2, y:rnd(80,BASE_H-80),
+      vx:(fromLeft?1:-1)*spd, size, ci:1,
+      wob:rnd(0,Math.PI*2), turnT:rnd(2,6),
+      boss:false, mini:true, name:theme.mini||'小Boss',
+      tint:theme.c1||'#ff9f43'
+    });
+  }
   function spawnFish(initial){
     const c=cfg();
     const ps=player?player.size:START_SIZE;
-    // 大小分布：60%比玩家小、40%比玩家大(带上限)
     let size;
-    const role=TBGameProgress.roleOfStage(stage);
-    if(role==='boss'&&Math.random()<0.35) size=rnd(ps*1.8,Math.min(ps*2.6,110));
-    else if(role==='miniboss'&&Math.random()<0.28) size=rnd(ps*1.5,Math.min(ps*2.2,100));
-    else if(Math.random()<0.60)size=rnd(Math.max(7,ps*0.35),Math.max(9,ps*0.9));
-    else size=rnd(ps*1.15,Math.min(ps*1.9,90));
+    // 普通小怪：多数比玩家小，少数略大（非Boss）
+    if(Math.random()<0.62)size=rnd(Math.max(7,ps*0.35),Math.max(9,ps*0.9));
+    else size=rnd(ps*1.1,Math.min(ps*1.55,70));
     const fromLeft=Math.random()<0.5;
     const spd=rnd(40,90)*c.spdMul*(20/Math.sqrt(size+8));
     const f={
@@ -341,8 +378,9 @@ const Game=(()=>{
       wob:rnd(0,Math.PI*2), turnT:rnd(3,8),
     };
     if(initial)f.vx=(Math.random()<0.5?1:-1)*spd;
-    // 初始生成时避开玩家出生点
     if(initial&&player&&Math.hypot(f.x-player.x,f.y-player.y)<150){f.x=(f.x+300)%BASE_W+60;}
+    f.boss=false; f.mini=false;
+    if(c.theme) f.tint=c.theme.accent;
     fishes.push(f);
   }
 
@@ -361,11 +399,15 @@ const Game=(()=>{
     if(testMode){ player.size=48; player.inv=999; player.dashCd=0; }
     fishes=[];
     const c=cfg();
-    for(let i=0;i<c.fishCount;i++)spawnFish(true);
+    if(c.plan&&c.plan.boss){ spawnBossFish(); }
+    else {
+      for(let i=0;i<(c.fishCount||0);i++)spawnFish(true);
+      for(let i=0;i<(c.miniCount||0);i++)spawnMiniFish();
+    }
     Particles.clear();
     state=STATE.PLAY;
     Audio2.startBGM();
-    flash((testMode?'【测试】':'')+progLabel({cycle,chapter,stage,testMode}));
+    flash((testMode?'【测试】':'')+progLabel({cycle,chapter,stage,testMode})+(c.theme?' ·'+c.theme.name:''));
     Cont.save(snapProg({cycle,chapter,stage,score,testMode}));
   }
   function nextLevel(){
@@ -377,7 +419,14 @@ const Game=(()=>{
     resetPlayer();
     if(testMode){ player.size=48; player.inv=999; }
     fishes=[];
-    for(let i=0;i<cfg().fishCount;i++)spawnFish(true);
+    {
+      const c=cfg();
+      if(c.plan&&c.plan.boss) spawnBossFish();
+      else {
+        for(let i=0;i<(c.fishCount||0);i++)spawnFish(true);
+        for(let i=0;i<(c.miniCount||0);i++)spawnMiniFish();
+      }
+    }
     state=STATE.PLAY;
   }
   function flash(msg){flashMsg=msg;flashT=2.4;}
@@ -472,7 +521,7 @@ const Game=(()=>{
           if(Math.floor(oldSize/10)!==Math.floor(p.size/10)){Audio2.sfx.grow();flash("长大了！");}
           fishes.splice(i,1);
           // 过关判定
-          if(p.size>=c.targetSize){
+          if((c.plan&&c.plan.boss)?(!fishes.some(x=>x.boss)):(p.size>=c.targetSize)){
             state=STATE.LEVELCLEAR;
             Audio2.sfx.levelup();
             Particles.burst(p.x,p.y,"#ffd93d",40,300);
@@ -486,8 +535,16 @@ const Game=(()=>{
         // 体型接近：互不伤害擦身而过
       }
     }
-    // 补鱼
-    while(fishes.length<c.fishCount)spawnFish(false);
+    // 补鱼（Boss关不补小怪）
+    if(c.plan&&c.plan.boss){
+      if(!fishes.some(f=>f.boss)) spawnBossFish();
+    }else{
+      const mobs=fishes.filter(f=>!f.boss&&!f.mini).length;
+      while(mobs+0<c.fishCount && fishes.filter(f=>!f.boss&&!f.mini).length<c.fishCount)spawnFish(false);
+      if(c.plan&&c.plan.miniboss){
+        while(fishes.filter(f=>f.mini).length<(c.miniCount||1)) spawnMiniFish();
+      }
+    }
 
     // 环境气泡
     bubbleTimer-=dt;
@@ -776,8 +833,13 @@ const Render=(()=>{
     if(st!==STATE.MENU){
       // 敌鱼
       for(const f of Game.fishes){
-        const [c1,c2]=FISH_COLORS[f.ci];
+        let [c1,c2]=FISH_COLORS[f.ci%FISH_COLORS.length];
+        if(f.tint){ c1=f.tint; c2=f.boss?'#5a3a00':(f.mini?'#6a3010':c2); }
         drawFish(f.x,f.y,f.size,f.vx>=0?1:-1,c1,c2,t+f.wob,false,0);
+        if(f.boss||f.mini){
+          ctx.fillStyle='#fff'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center';
+          ctx.fillText(f.name||(f.boss?'大Boss':'小Boss'), f.x, f.y-f.size-8);
+        }
         // 危险鱼红色描边提示
         if(Game.player&&f.size>Game.player.size*1.12){
           ctx.strokeStyle="rgba(255,80,80,0.45)";ctx.lineWidth=2;

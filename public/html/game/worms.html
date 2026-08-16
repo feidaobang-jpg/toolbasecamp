@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -485,7 +485,7 @@ class Projectile {
 }
 
 /* ---------------- 8. 游戏主逻辑 ---------------- */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_worms_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_worms_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle,g.chapter,g.stage,true);}
@@ -520,10 +520,13 @@ const Game = {
     Terrain.build();
     this.worms=[];
     const n=this.level;
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const role=enc.role, theme=enc.theme, plan=enc.plan;
+    this._theme=theme; this._plan=plan;
     let enemyN=Math.min(1+Math.ceil(this.stage/2)+Math.floor((this.chapter-1)/2),6);
-    if(role==='miniboss') enemyN=Math.min(enemyN+1,6);
-    if(role==='boss') enemyN=Math.min(enemyN+2,7);
+    if(plan.boss){ enemyN=1; } // 第10关单独大Boss虫
+    else if(plan.miniboss) enemyN=Math.min(enemyN+1,6);
+    // 去掉重复的 boss +2（已由 plan.boss 处理）
     // 玩家小队 3 只
     const names=["小红","小粉","小桃"];
     for(let i=0;i<3;i++) this.spawnWorm(60+i*70+rand(-14,14), 0, names[i]);

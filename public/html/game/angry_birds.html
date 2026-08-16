@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="960" height="540"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -377,15 +377,17 @@ const World={
       if(g.hurtT>0) g.hurtT-=1/60;
       ctx.save(); ctx.translate(g.x,g.y);
       const bg=ctx.createRadialGradient(-4,-5,3,0,0,g.r+2);
-      bg.addColorStop(0,"#b7e29a"); bg.addColorStop(0.6,g.hurtT>0?"#d9f0a0":"#79c257"); bg.addColorStop(1,"#4a8c34");
+      const mid=g.tint||(g.hurtT>0?"#d9f0a0":"#79c257");
+      const dark=g.tint||"#4a8c34";
+      bg.addColorStop(0,g.tint?"#ffffff":"#b7e29a"); bg.addColorStop(0.6,g.hurtT>0?"#fff0a0":mid); bg.addColorStop(1,dark);
       ctx.fillStyle=bg;
       ctx.beginPath(); ctx.arc(0,0,g.r,0,Math.PI*2); ctx.fill();
       // 耳朵
-      ctx.fillStyle="#5ea23f";
+      ctx.fillStyle=g.tint||"#5ea23f";
       ctx.beginPath(); ctx.arc(-g.r*0.5,-g.r*0.9,g.r*0.25,0,Math.PI*2); ctx.fill();
       ctx.beginPath(); ctx.arc(g.r*0.5,-g.r*0.9,g.r*0.25,0,Math.PI*2); ctx.fill();
       // 鼻子
-      ctx.fillStyle="#5ea23f";
+      ctx.fillStyle=g.tint||"#5ea23f";
       ctx.beginPath(); ctx.ellipse(0,g.r*0.15,g.r*0.45,g.r*0.32,0,0,Math.PI*2); ctx.fill();
       ctx.fillStyle="#38622a";
       ctx.beginPath(); ctx.arc(-g.r*0.16,g.r*0.15,2.4,0,Math.PI*2); ctx.fill();
@@ -400,7 +402,11 @@ const World={
       ctx.restore();
       // 血条
       ctx.fillStyle="rgba(0,0,0,.45)"; ctx.fillRect(g.x-16,g.y-g.r-12,32,4);
-      ctx.fillStyle="#95d5b2"; ctx.fillRect(g.x-16,g.y-g.r-12,32*clamp(g.hp/g.maxHp,0,1),4);
+      ctx.fillStyle=g.boss?"#ffd60a":(g.mini?"#ff9e5e":"#95d5b2"); ctx.fillRect(g.x-16,g.y-g.r-12,32*clamp(g.hp/g.maxHp,0,1),4);
+      if(g.boss||g.mini){
+        ctx.fillStyle="#fff"; ctx.font="bold 11px sans-serif"; ctx.textAlign="center";
+        ctx.fillText(g.name||(g.boss?"大Boss":"小Boss"), g.x, g.y-g.r-18);
+      }
     }
     // 小鸟轨迹
     if(this.bird){
@@ -443,11 +449,27 @@ function drawBird(ctx,x,y,r,rot){
 /* ---------------- 7. 关卡生成 ----------------
  * 依据关卡号生成塔式结构: 层数/材质随难度提升 */
 const Levels={
-  build(lv){
+  build(lv, opt){
     World.reset();
+    opt=opt||{};
+    const plan=opt.plan||{mobs:true,miniboss:false,boss:false};
+    const theme=opt.theme||{mobMul:1,miniMul:1.2,bossMul:1.5,accent:'#7dce82',c1:'#3d8b40'};
     const baseX=520;
-    // 塔数量与层数
-    const towers = lv<=2?1 : lv<=6?2 : 3;
+    if(plan.boss){
+      // 第10关：单独大Boss猪 + 坚固石塔
+      const tx=baseX+80, span=100, colH=60, beamH=18, colW=18;
+      let y=GROUND_Y;
+      for(let f=0;f<3;f++){
+        World.blocks.push({x:tx,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat:'stone',hp:MATS.stone.hp*theme.bossMul});
+        World.blocks.push({x:tx+span-colW,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat:'stone',hp:MATS.stone.hp*theme.bossMul});
+        World.blocks.push({x:tx-10,y:y-colH-beamH,w:span+20,h:beamH,vx:0,vy:0,mat:'stone',hp:MATS.stone.hp*theme.bossMul});
+        y-=colH+beamH;
+      }
+      const hp=Math.round((160+lv*14)*theme.bossMul);
+      World.pigs.push({x:tx+span/2,y:y-22,r:26,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0,boss:true,tint:theme.accent,name:theme.boss});
+      return World.pigs.length;
+    }
+    const towers = plan.miniboss ? Math.min(3, lv<=4?2:3) : (lv<=2?1 : lv<=6?2 : 3);
     const floors = clamp(1+Math.ceil(lv/2), 2, 5);
     const mats = lv<=2?["wood","glass"] : lv<=5?["wood","glass","wood","stone"] : ["stone","wood","stone","glass"];
     let pigCount=0;
@@ -457,30 +479,33 @@ const Levels={
       for(let f=0;f<floors;f++){
         const mat=mats[irand(0,mats.length-1)];
         const colH=52, beamH=16, colW=14, span=76;
-        // 两根立柱
-        World.blocks.push({x:tx,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat,hp:MATS[mat].hp});
-        World.blocks.push({x:tx+span-colW,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat,hp:MATS[mat].hp});
-        // 层内绿猪(隔层)
-        if(f%2===0 && pigCount<2+Math.ceil(lv/2)){
-          const hp=40+lv*6;
-          World.pigs.push({x:tx+span/2,y:y-16,r:15,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0});
+        const hpMul=theme.mobMul||1;
+        World.blocks.push({x:tx,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat,hp:MATS[mat].hp*hpMul});
+        World.blocks.push({x:tx+span-colW,y:y-colH,w:colW,h:colH,vx:0,vy:0,mat,hp:MATS[mat].hp*hpMul});
+        if(plan.mobs && f%2===0 && pigCount<2+Math.ceil(lv/2)){
+          const hp=Math.round((40+lv*6)*theme.mobMul);
+          World.pigs.push({x:tx+span/2,y:y-16,r:15,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0,tint:theme.c1});
           pigCount++;
         }
-        // 横梁
         const bmat=mats[irand(0,mats.length-1)];
-        World.blocks.push({x:tx-8,y:y-colH-beamH,w:span+16,h:beamH,vx:0,vy:0,mat:bmat,hp:MATS[bmat].hp});
+        World.blocks.push({x:tx-8,y:y-colH-beamH,w:span+16,h:beamH,vx:0,vy:0,mat:bmat,hp:MATS[bmat].hp*hpMul});
         y-=colH+beamH;
       }
-      // 塔顶绿猪
-      const hp=40+lv*6;
-      World.pigs.push({x:tx+38,y:y-16,r:15,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0});
+      if(plan.mobs){
+        const hp=Math.round((40+lv*6)*theme.mobMul);
+        World.pigs.push({x:tx+38,y:y-16,r:15,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0,tint:theme.c1});
+      }
+    }
+    if(plan.miniboss){
+      const hp=Math.round((90+lv*10)*theme.miniMul);
+      World.pigs.push({x:baseX+70,y:GROUND_Y-28,r:20,vx:0,vy:0,hp,maxHp:hp,dead:false,hurtT:0,mini:true,tint:theme.accent,name:theme.mini});
     }
     return World.pigs.length;
   }
 };
 
 /* ---------------- 8. 游戏主逻辑 ---------------- */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_angry_birds_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_angry_birds_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
@@ -526,17 +551,19 @@ const Game={
     this.startLevel();
   },
   startLevel(){
-    const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const theme=enc.theme, plan=enc.plan, diff=enc.diff;
+    this._theme=theme; this._plan=plan;
     let lv = Math.min(2+this.stage+Math.floor((this.chapter-1)/2)+Math.floor((diff-1)*2), 12);
-    if(role==='miniboss') lv=Math.min(lv+2,14);
-    if(role==='boss') lv=Math.min(lv+4,16);
-    const pigs=Levels.build(lv);
-    this.birdsLeft = this.testMode ? 99 : Math.max(3, pigs+2);
+    if(plan.miniboss) lv=Math.min(lv+2,14);
+    if(plan.boss) lv=Math.min(lv+3,15);
+    const pigs=Levels.build(lv, {plan, theme});
+    this.birdsLeft = this.testMode ? 99 : (plan.boss ? Math.max(4, pigs+1) : Math.max(3, pigs+2));
     Particles.list=[]; Popups.list=[];
     this.aiming=false; this.waitT=0;
     this.state="playing";
-    this.showMsg(progLabel(this)+' · 消灭绿猪!', 2);
+    const tip=plan.boss?('击败大Boss「'+theme.boss+'」!'):(plan.miniboss?('清场并打倒小Boss「'+theme.mini+'」'):('消灭'+theme.mob));
+    this.showMsg(progLabel(this)+' · '+theme.name+' · '+tip, 2.2);
   },
   showMsg(t,d){ this.msgText=t; this.msgTimer=d; },
   addScore(n,x,y,label){

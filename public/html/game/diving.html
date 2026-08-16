@@ -138,7 +138,7 @@ body.notouch #stick,body.notouch #btnPad{display:none!important;}
   </div>
 </div>
 
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 /* =========================================================================
@@ -319,7 +319,7 @@ const FISH=[
 const TOTAL_W = FISH.reduce((s,f)=>s+f.weight,0);
 function randFishDef(){ let r=Math.random()*TOTAL_W; for(const f of FISH){ if((r-=f.weight)<=0) return f; } return FISH[0]; }
 /* 关卡：目标渔获、时限、危险数量、氧气 */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const TEMPLATES=[
   {name:'浅海珊瑚', quota:320,  time:135, jelly:3, shark:0, urchin:2, o2:34, fish:16, bag:8},
   {name:'暮色深沟', quota:650,  time:150, jelly:5, shark:1, urchin:4, o2:30, fish:18, bag:10},
@@ -329,16 +329,18 @@ const Slots=TBGameProgress.createSlots('tbc_diving_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_diving_continue_v1');
 function campaignCfg(cycle,chapter,stage){
   return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const enc=TBGameProgress.encounter(pos.cycle,pos.chapter,pos.stage);
+    const theme=enc.theme, plan=enc.plan;
     const cfg=Object.assign({},base);
-    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
-    cfg.quota=TBGameProgress.scaleNum(base.quota,diff,{min:280,max:8000});
-    cfg.time=TBGameProgress.scaleNum(base.time,1+(diff-1)*0.05,{min:120,max:260});
-    cfg.jelly=TBGameProgress.scaleNum(base.jelly,diff,{min:2,max:18});
-    cfg.shark=TBGameProgress.scaleNum(base.shark+(pos.role==='boss'?2:pos.role==='miniboss'?1:0),diff,{min:0,max:10});
-    cfg.urchin=TBGameProgress.scaleNum(base.urchin,diff,{min:1,max:16});
-    cfg.o2=Math.max(18, Math.round(base.o2-(diff-1)*1.2));
-    cfg.fish=TBGameProgress.scaleNum(base.fish,1+(diff-1)*0.08,{min:12,max:36});
-    cfg.bag=Math.min(18, base.bag+Math.floor((pos.chapter-1)/2));
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true)+' · '+theme.name;
+    cfg.theme=theme; cfg.plan=plan;
+    cfg.quota=TBGameProgress.scaleNum(base.quota||8, diff*theme.mobMul, {min:5,max:30});
+    cfg.time=Math.max(40, Math.round((base.time||90)/Math.sqrt(diff)));
+    cfg.jelly=TBGameProgress.scaleNum(base.jelly||2, diff*theme.mobMul, {min:1,max:12});
+    cfg.urchin=TBGameProgress.scaleNum(base.urchin||1, diff*theme.mobMul, {min:0,max:10});
+    if(plan.boss){ cfg.shark=1; cfg.jelly=0; cfg.urchin=0; cfg.quota=1; cfg.bossOnly=true; cfg.sharkMul=theme.bossMul; }
+    else if(plan.miniboss){ cfg.shark=TBGameProgress.scaleNum(1+Math.floor(pos.chapter/4), diff*theme.miniMul, {min:1,max:4}); cfg.sharkMul=theme.miniMul; }
+    else { cfg.shark=0; cfg.sharkMul=1; } // 普通关只有小怪（水母/海胆等），不刷鲨
     return cfg;
   });
 }

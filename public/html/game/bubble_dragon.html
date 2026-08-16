@@ -24,7 +24,7 @@ html,body{
 </head>
 <body>
 <div id="gameWrap"><canvas id="gameCanvas" width="540" height="960"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -605,7 +605,7 @@ const Shooter = {
 };
 
 /* ---------------- 7. 游戏主逻辑 ---------------- */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_bubble_dragon_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_bubble_dragon_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
@@ -653,8 +653,9 @@ const Game = {
   },
   startLevel(){
     Grid.init(); Particles.list = [];
-    const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const theme=enc.theme, plan=enc.plan, diff=enc.diff, role=enc.role;
+    this._theme=theme; this._plan=plan;
     let rows = Math.min(4 + this.stage + Math.floor((this.chapter-1)/2), 10);
     if(role==='miniboss') rows=Math.min(rows+1,10);
     if(role==='boss') rows=Math.min(rows+2,11);
@@ -666,7 +667,7 @@ const Game = {
     this.combo = 0;
     Shooter.reset(this.colorCount);
     this.state = "playing";
-    this.showMsg(progLabel(this), 1.5);
+    this.showMsg(progLabel(this)+(theme?' · '+theme.name:'')+(plan&&plan.boss?' ·大Boss关':(plan&&plan.miniboss?' ·小Boss关':'')), 1.5);
   },
   showMsg(t,d){ this.msgText = t; this.msgTimer = d; },
 

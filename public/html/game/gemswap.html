@@ -24,7 +24,7 @@ canvas{display:block;background:#0d0920;box-shadow:0 0 60px rgba(160,80,255,.3);
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -75,13 +75,16 @@ const TEMPLATES = [
 ];
 function campaignCfg(cycle,chapter,stage){
   return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const enc=TBGameProgress.encounter(pos.cycle,pos.chapter,pos.stage);
+    const theme=enc.theme, plan=enc.plan;
     const cfg=Object.assign({},base);
-    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
-    cfg.target=TBGameProgress.scaleNum(base.target,diff,{min:500,max:20000});
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true)+' · '+theme.name;
+    cfg.theme=theme; cfg.plan=plan;
+    cfg.target=TBGameProgress.scaleNum(base.target,diff*theme.mobMul,{min:500,max:20000});
     cfg.moves=Math.max(12, Math.round(base.moves-(diff-1)*0.8));
     cfg.kinds=Math.min(7, base.kinds+Math.floor((pos.chapter-1)/3));
-    if(pos.role==='miniboss') cfg.target=Math.round(cfg.target*1.2);
-    if(pos.role==='boss'){ cfg.target=Math.round(cfg.target*1.45); cfg.moves=Math.max(10,cfg.moves-2); }
+    if(plan.miniboss) cfg.target=Math.round(cfg.target*1.2);
+    if(plan.boss){ cfg.target=Math.round(cfg.target*1.45); cfg.moves=Math.max(10,cfg.moves-2); }
     return cfg;
   });
 }

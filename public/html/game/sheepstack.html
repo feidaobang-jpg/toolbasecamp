@@ -21,7 +21,7 @@ canvas{display:block;background:#0a1020;box-shadow:0 0 60px rgba(100,180,255,.22
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -62,13 +62,17 @@ function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stag
 function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage||1,score:g.score|0,testMode:!!g.testMode};}
 function campaignCfg(cycle,chapter,stage,testMode){
   return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const enc=TBGameProgress.encounter(pos.cycle,pos.chapter,pos.stage);
+    const theme=enc.theme, plan=enc.plan;
     const cfg=Object.assign({},base);
-    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true)+' · '+theme.name;
+    cfg.theme=theme; cfg.plan=plan;
     cfg.kinds=Math.min(8, (base.kinds||4)+Math.floor((pos.chapter-1)/2)+Math.floor((diff-1)));
-    cfg.layers=Math.min(9, (base.layers||3)+Math.floor(pos.stage/3)+(pos.role==='boss'?2:pos.role==='miniboss'?1:0));
-    cfg.groups=TBGameProgress.scaleNum(base.groups||12,diff,{min:10,max:60});
-    cfg.timeSec=Math.max(50, Math.round((base.timeSec||120)/Math.sqrt(diff))-(pos.role==='boss'?20:0));
+    cfg.layers=Math.min(9, (base.layers||3)+Math.floor(pos.stage/3)+(plan.boss?2:plan.miniboss?1:0));
+    cfg.groups=TBGameProgress.scaleNum(base.groups||12,diff*theme.mobMul,{min:10,max:60});
+    cfg.timeSec=Math.max(50, Math.round((base.timeSec||120)/Math.sqrt(diff))-(plan.boss?20:0));
     cfg.tools=testMode?99:Math.max(1,(base.tools||2));
+    if(plan.boss){ cfg.groups=Math.max(6, Math.round(8*theme.bossMul)); cfg.kinds=Math.min(8,cfg.kinds+1); }
     return cfg;
   });
 }

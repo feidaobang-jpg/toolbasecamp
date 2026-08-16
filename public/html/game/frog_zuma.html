@@ -24,7 +24,7 @@ html,body{
 </head>
 <body>
 <div id="gameWrap"><canvas id="gameCanvas" width="540" height="960"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -641,7 +641,7 @@ const Frog = {
 };
 
 /* ---------------- 9. 游戏主逻辑 ---------------- */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_frog_zuma_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_frog_zuma_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
@@ -688,8 +688,9 @@ const Game = {
     this.startLevel();
   },
   levelCfg(){
-    const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const theme=enc.theme, plan=enc.plan, diff=enc.diff, role=enc.role;
+    this._theme=theme; this._plan=plan;
     let total = Math.round((34 + this.stage*8 + (this.chapter-1)*6) * diff);
     let speed = (22 + this.stage*3.2 + (this.chapter-1)*1.2) * Math.sqrt(diff);
     if(role==='miniboss'){ total=Math.round(total*1.15); speed*=1.12; }
@@ -709,7 +710,7 @@ const Game = {
     this.combo = 0; this.rushing = false;
     this.endlessTimer = 0;
     this.state = "playing";
-    this.showMsg(progLabel(this), 1.5);
+    this.showMsg(progLabel(this)+(theme?' · '+theme.name:'')+(plan&&plan.boss?' ·大Boss关':(plan&&plan.miniboss?' ·小Boss关':'')), 1.5);
   },
   showMsg(t,d){ this.msgText = t; this.msgTimer = d; },
 

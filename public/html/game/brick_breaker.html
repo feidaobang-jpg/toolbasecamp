@@ -27,7 +27,7 @@ html,body{
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -507,6 +507,12 @@ class Bullet {
 const BRICK_COLORS=[null,
   ["#58e07c","#2fa155"], ["#ffd75e","#e09a2f"], ["#ff8a5e","#d8542f"],
   ["#ff5e8a","#c22f66"], ["#b98aff","#7a4fd8"]];
+function shadeHex(hex,k){
+  const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex||"");
+  if(!m) return hex||"#888";
+  const f=v=>Math.max(0,Math.min(255,Math.round(parseInt(v,16)*k)));
+  return "#"+[f(m[1]),f(m[2]),f(m[3])].map(n=>n.toString(16).padStart(2,"0")).join("");
+}
 
 class Brick {
   constructor(x,y,w,h,hp,type){ // type: 0普通 1加固 9不可摧毁(钢块)
@@ -525,12 +531,17 @@ class Brick {
     }
     const col=BRICK_COLORS[clamp(this.hp,1,5)];
     const g=c.createLinearGradient(this.x,this.y,this.x,this.y+this.h);
-    g.addColorStop(0,col[0]); g.addColorStop(1,col[1]);
+    const c0=this.tint||col[0], c1=this.tint?shadeHex(this.tint,0.65):col[1];
+    g.addColorStop(0,c0); g.addColorStop(1,c1);
     c.fillStyle=g;
     if(this.flash>0){ c.fillStyle="#ffffff"; this.flash-=0.05; }
     roundRect(c,this.x,this.y,this.w,this.h,4); c.fill();
     c.fillStyle="rgba(255,255,255,.25)";
     roundRect(c,this.x+2,this.y+2,this.w-4,this.h*0.35,3); c.fill();
+    if(this.boss||this.mini){
+      c.fillStyle="#fff"; c.font="bold 11px sans-serif"; c.textAlign="center"; c.textBaseline="middle";
+      c.fillText(this.name||(this.boss?"大Boss":"小Boss"), this.x+this.w/2, this.y+this.h/2);
+    }
   }
 }
 
@@ -587,8 +598,9 @@ const HUD_H = 46; // 顶部信息栏高度
 const Levels = {
   count:5,
   /* 生成第 n 关砖块; endless=true 时为无尽模式波次 */
-  build(n, endless){
-    const bricks=[];
+  build(n, endless, opt){
+    opt=opt||{}; const plan=opt.plan||{mobs:true,miniboss:false,boss:false}; const theme=opt.theme||{mobMul:1,miniMul:1.2,bossMul:1.5,c1:'#7df1ff',accent:'#ffd60a'};
+    let bricks=[];
     const cols=8, bw=(BASE_W-16-6*(cols-1))/cols, bh=26, gap=6;
     const top=HUD_H+40;
     const diff = endless? n : n; // 难度系数
@@ -611,12 +623,33 @@ const Levels = {
         bricks.push(new Brick(x,y,bw,bh, type===9?1:hp, type));
       }
     }
+    if(plan.boss){
+      // 第10关：单独大Boss砖墙（无小砖）
+      bricks=[];
+      const bbw=72,bbh=28,bcols=6,bgap=10;
+      const total=bcols*bbw+(bcols-1)*bgap;
+      const x0=(BASE_W-total)/2, y0=90;
+      for(let i=0;i<bcols;i++){
+        const hp=Math.round((6+Math.floor(n/2))*(theme.bossMul||1.5));
+        const b=new Brick(x0+i*(bbw+bgap), y0, bbw, bbh, hp, 0);
+        b.boss=true; b.tint=theme.accent; b.name=theme.boss;
+        bricks.push(b);
+      }
+    }else if(plan.miniboss){
+      // 小Boss砖：中央高血砖
+      const hp=Math.round((4+Math.floor(n/3))*theme.miniMul);
+      const b=new Brick(BASE_W/2-40, 70, 80, 28, hp, 0);
+      b.mini=true; b.tint=theme.c1; b.name=theme.mini;
+      bricks.push(b);
+    }
+    // 章节染色
+    bricks.forEach(b=>{ if(!b.tint && theme.accent && b.type!==9) b.tint=theme.c1; });
     return bricks;
   }
 };
 
 /* ==================== 8. 游戏主逻辑 ==================== */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_brick_breaker_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_brick_breaker_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
@@ -689,13 +722,14 @@ const Game = {
     this.powers=[]; this.bullets=[];
     const b=new Ball(this.paddle.x, this.paddle.y-20);
     this.balls.push(b);
-    const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const theme=enc.theme, plan=enc.plan, diff=enc.diff, role=enc.role;
+    this._theme=theme; this._plan=plan;
     let n = Math.min(1+this.stage+Math.floor((this.chapter-1)/2)+Math.floor((diff-1)*2), 14);
-    if(role==='miniboss') n=Math.min(n+2,16);
-    if(role==='boss') n=Math.min(n+4,18);
-    this.bricks=Levels.build(n, false);
-    this.balls[0].speed = 330+Math.min(this.stage*12+(this.chapter-1)*8+Math.floor((diff-1)*40), 520);
+    if(plan.miniboss) n=Math.min(n+2,16);
+    if(plan.boss) n=Math.min(n+3,17);
+    this.bricks=Levels.build(n, false, {plan, theme});
+    this.balls[0].speed = 330+Math.min(this.stage*12+(this.chapter-1)*8+Math.floor((diff-1)*40)+(theme.chapter||1)*4, 560);
     if(this.testMode){
       this.paddle.gun=true; this.paddle.gunTime=9999;
       this.paddle.w=Math.min(this.paddle.baseW*1.5,200); this.paddle.wideTime=9999;

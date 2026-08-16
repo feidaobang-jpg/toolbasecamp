@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -552,7 +552,7 @@ function riderHit(e,dmg,dir){
 }
 
 /* ---------------- 9. 游戏主逻辑 ---------------- */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_road_rash_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_road_rash_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle,g.chapter,g.stage,true);}
@@ -583,8 +583,9 @@ const Game={
   },
   startLevel(){
     this.dist=0;
-    const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const theme=enc.theme, plan=enc.plan, diff=enc.diff, role=enc.role;
+    this._theme=theme; this._plan=plan;
     let base=1200+(this.stage-1)*80+(this.chapter-1)*120;
     if(role==='miniboss') base=Math.round(base*1.15);
     if(role==='boss') base=Math.round(base*1.35);
@@ -593,7 +594,7 @@ const Game={
     Player.reset(); Traffic.reset();
     Particles.list=[]; Popups.list=[];
     this.state="playing";
-    this.showMsg(progLabel(this)+" · "+this.target+"m", 1.8);
+    this.showMsg(progLabel(this)+' · '+theme.name+(plan.boss?' ·大Boss车追击':(plan.miniboss?' ·小Boss车队':''))+' · '+this.target+'m', 1.8);
   },
   advanceStage(){
     const n=TBGameProgress.nextProgress(this.cycle,this.chapter,this.stage,CHAPTERS);

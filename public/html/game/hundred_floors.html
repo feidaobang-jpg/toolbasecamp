@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
-<script src="../../js/game/game-progress.js?v=2"></script>
+<script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -477,7 +477,7 @@ const Player = {
 };
 
 /* ---------------- 8. 游戏主逻辑 ---------------- */
-const CHAPTERS=10;
+const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_hundred_floors_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_hundred_floors_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle,g.chapter,g.stage,true);}
@@ -509,7 +509,9 @@ const Game = {
     this.depth = 0;
     this.camY = 0;
     const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
-    const role=TBGameProgress.roleOfStage(this.stage);
+    const enc=TBGameProgress.encounter(this.cycle,this.chapter,this.stage);
+    const theme=enc.theme, plan=enc.plan, role=enc.role;
+    this._theme=theme; this._plan=plan;
     this.camSpeed = TBGameProgress.scaleNum(55+(this.stage-1)*3+(this.chapter-1)*2, diff, {min:50,max:140});
     let tgt=60+(this.stage-1)*4+(this.chapter-1)*6;
     if(role==='miniboss') tgt=Math.round(tgt*1.2);
