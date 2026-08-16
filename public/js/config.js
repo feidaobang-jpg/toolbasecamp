@@ -273,6 +273,7 @@ const gamesConfig = {
                 { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
                 { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=7' },
                 { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=7' },
+                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=1' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' }
             ]
         }

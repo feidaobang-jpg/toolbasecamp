@@ -851,6 +851,10 @@ window.TB_LOCALES['zh-CN'] = {
             title: '植物大战僵尸',
             desc: '五路塔防：种向日葵攒阳光，部署豌豆、坚果等植物抵御僵尸波次。'
         },
+        journeyWest: {
+            title: '西游降魔',
+            desc: '俯视角刷妖 RPG：自动攻击、手动走位，十二章无限周目，键鼠与触屏摇杆均可。'
+        },
         rmbUppercase: {
             title: '人民币大写',
             desc: '将阿拉伯数字金额转换为财务规范的人民币大写。',

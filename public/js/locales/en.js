@@ -852,6 +852,10 @@ window.TB_LOCALES.en = {
             title: 'Plants vs Zombies',
             desc: 'Lane defense: plant sunflowers for sun, deploy peas and nuts to stop zombie waves.'
         },
+        journeyWest: {
+            title: 'Westward Demons',
+            desc: 'Top-down demon-slaying RPG: auto-aim, manual movement, 12 chapters with endless cycles; keyboard and touch stick.'
+        },
         rmbUppercase: {
             title: 'RMB Uppercase',
             desc: 'Convert a numeric amount to Chinese uppercase RMB wording for finance and contracts.',
