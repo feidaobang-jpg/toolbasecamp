@@ -24,6 +24,7 @@ canvas{display:block;background:#032a44;box-shadow:0 0 60px rgba(60,180,255,.25)
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -47,13 +48,31 @@ const BASE_W=960, BASE_H=540;               // 横屏基准 16:9
 const STATE={MENU:0,PLAY:1,PAUSE:2,OVER:3,LEVELCLEAR:4,WIN:5};
 
 /* 递进关卡：目标体型、敌鱼数量、敌鱼速度倍率 */
-const LEVELS=[
-  {targetSize:34, fishCount:10, spdMul:0.85, name:"第 1 关"},
-  {targetSize:42, fishCount:12, spdMul:1.0,  name:"第 2 关"},
-  {targetSize:50, fishCount:14, spdMul:1.12, name:"第 3 关"},
-  {targetSize:58, fishCount:16, spdMul:1.25, name:"第 4 关"},
-  {targetSize:68, fishCount:18, spdMul:1.4,  name:"第 5 关"},
+const CHAPTERS=10;
+const Slots=TBGameProgress.createSlots('tbc_fish_feast_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_fish_feast_continue_v1');
+function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
+function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage||1,score:g.score|0,testMode:!!g.testMode}const TEMPLATES=[
+  {targetSize:34, fishCount:10, spdMul:0.85},
+  {targetSize:42, fishCount:12, spdMul:1.0},
+  {targetSize:50, fishCount:14, spdMul:1.12},
+  {targetSize:58, fishCount:16, spdMul:1.25},
+  {targetSize:68, fishCount:18, spdMul:1.4},
 ];
+function campaignCfg(cycle,chapter,stage){
+  return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const cfg=Object.assign({},base);
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
+    cfg.targetSize=TBGameProgress.scaleNum(base.targetSize,diff,{min:30,max:120});
+    cfg.fishCount=TBGameProgress.scaleNum(base.fishCount,diff,{min:8,max:28});
+    cfg.spdMul=+(base.spdMul*diff).toFixed(3);
+    if(pos.role==='miniboss'){ cfg.targetSize=Math.round(cfg.targetSize*1.15); cfg.fishCount+=3; cfg.spdMul*=1.08; }
+    if(pos.role==='boss'){ cfg.targetSize=Math.round(cfg.targetSize*1.35); cfg.fishCount+=6; cfg.spdMul*=1.18; }
+    return cfg;
+  });
+}
+const LEVELS=[campaignCfg(1,1,1)];
+;}
 const START_SIZE=16;
 
 const FISH_COLORS=[
@@ -289,7 +308,7 @@ const Particles=(()=>{
 /* ---------------- 5. 游戏核心逻辑 ---------------- */
 const Game=(()=>{
   let state=STATE.MENU;
-  let endless=false,level=0;
+  let endless=false,level=0,cycle=1,chapter=1,stage=1,testMode=false;
   let score=0,best=+(localStorage.getItem("bigFishBest")||0);
   let lives=3;
   let player=null;          // {x,y,vx,vy,size,face(1右/-1左),dashCd,dashT,inv}
@@ -299,8 +318,7 @@ const Game=(()=>{
   let bubbleTimer=0;
 
   function cfg(){
-    if(!endless)return LEVELS[level];
-    return {targetSize:Infinity,fishCount:Math.min(24,12+Math.floor(endlessDiff)),spdMul:1+endlessDiff*0.08,name:"无尽模式"};
+    return campaignCfg(cycle,chapter,stage);
   }
 
   function spawnFish(initial){
@@ -308,7 +326,10 @@ const Game=(()=>{
     const ps=player?player.size:START_SIZE;
     // 大小分布：60%比玩家小、40%比玩家大(带上限)
     let size;
-    if(Math.random()<0.60)size=rnd(Math.max(7,ps*0.35),Math.max(9,ps*0.9));
+    const role=TBGameProgress.roleOfStage(stage);
+    if(role==='boss'&&Math.random()<0.35) size=rnd(ps*1.8,Math.min(ps*2.6,110));
+    else if(role==='miniboss'&&Math.random()<0.28) size=rnd(ps*1.5,Math.min(ps*2.2,100));
+    else if(Math.random()<0.60)size=rnd(Math.max(7,ps*0.35),Math.max(9,ps*0.9));
     else size=rnd(ps*1.15,Math.min(ps*1.9,90));
     const fromLeft=Math.random()<0.5;
     const spd=rnd(40,90)*c.spdMul*(20/Math.sqrt(size+8));
@@ -328,28 +349,33 @@ const Game=(()=>{
   function resetPlayer(){
     player={x:BASE_W/2,y:BASE_H/2,vx:0,vy:0,size:START_SIZE,face:1,dashCd:0,dashT:0,inv:2};
   }
-  function startGame(isEndless){
-    endless=isEndless;level=0;score=0;lives=3;
-    endlessTime=0;endlessDiff=0;
+  function startGame(opt){
+    endless=false;
+    if(opt&&typeof opt==='object'){
+      cycle=opt.cycle||1;chapter=opt.chapter||1;stage=opt.stage||1;
+      score=opt.score|0; testMode=!!opt.testMode;
+    }else{ cycle=1;chapter=1;stage=1;score=0;testMode=false; }
+    level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
+    lives=testMode?99:3; endlessTime=0;endlessDiff=0;
     resetPlayer();
+    if(testMode){ player.size=48; player.inv=999; player.dashCd=0; }
     fishes=[];
     const c=cfg();
     for(let i=0;i<c.fishCount;i++)spawnFish(true);
     Particles.clear();
     state=STATE.PLAY;
     Audio2.startBGM();
-    flash(endless?"无尽模式 开始！":"第 1 关 开始！吃小鱼长大");
+    flash((testMode?'【测试】':'')+progLabel({cycle,chapter,stage,testMode}));
+    Cont.save(snapProg({cycle,chapter,stage,score,testMode}));
   }
   function nextLevel(){
-    level++;
-    if(level>=LEVELS.length){
-      state=STATE.WIN;
-      Audio2.sfx.levelup();
-      if(score>best){best=score;localStorage.setItem("bigFishBest",best);}
-      return;
-    }
-    flash(LEVELS[level].name+" 开始！");
+    const n=TBGameProgress.nextProgress(cycle,chapter,stage,CHAPTERS);
+    cycle=n.cycle;chapter=n.chapter;stage=n.stage;
+    level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
+    Cont.save(snapProg({cycle,chapter,stage,score,testMode}));
+    flash(progLabel({cycle,chapter,stage,testMode})+' 开始！');
     resetPlayer();
+    if(testMode){ player.size=48; player.inv=999; }
     fishes=[];
     for(let i=0;i<cfg().fishCount;i++)spawnFish(true);
     state=STATE.PLAY;
@@ -384,11 +410,7 @@ const Game=(()=>{
     if(Input.consumeAction("jump")){togglePause();return;}
 
     const c=cfg();
-    if(endless){
-      endlessTime+=dt;
-      endlessDiff=endlessTime/25;
-      score+=dt*2; // 存活得分
-    }
+    if(testMode&&player){ player.dashCd=0; if(player.inv<1.5) player.inv=1.5; }
 
     /* ---- 玩家移动 ---- */
     const p=player;
@@ -450,7 +472,7 @@ const Game=(()=>{
           if(Math.floor(oldSize/10)!==Math.floor(p.size/10)){Audio2.sfx.grow();flash("长大了！");}
           fishes.splice(i,1);
           // 过关判定
-          if(!endless&&p.size>=c.targetSize){
+          if(p.size>=c.targetSize){
             state=STATE.LEVELCLEAR;
             Audio2.sfx.levelup();
             Particles.burst(p.x,p.y,"#ffd93d",40,300);
@@ -481,23 +503,27 @@ const Game=(()=>{
 
   /* ---- 界面 ---- */
   const menuBtns=[
-    {label:"关卡模式",x:BASE_W/2,y:300,w:240,h:56,act:()=>startGame(false)},
-    {label:"无尽模式",x:BASE_W/2,y:380,w:240,h:56,act:()=>startGame(true)},
+    {label:"新周目",x:BASE_W/2,y:250,w:240,h:48,act:()=>startGame({cycle:1,chapter:1,stage:1,score:0})},
+    {label:"继续旅程",x:BASE_W/2,y:308,w:240,h:48,act:()=>{const s=Cont.load();if(!s){flash('没有进度');return;}startGame(s);}},
+    {label:"存档",x:BASE_W/2-70,y:366,w:120,h:44,act:()=>{const i=(parseInt(prompt('存档位1-5','1'),10)|0)-1;if(i>=0&&i<5){Slots.save(i,snapProg({cycle,chapter,stage,score,testMode}));Cont.save(snapProg({cycle,chapter,stage,score,testMode}));flash('已存档'+(i+1));}}},
+    {label:"读档",x:BASE_W/2+70,y:366,w:120,h:44,act:()=>{const i=(parseInt(prompt('读档位1-5','1'),10)|0)-1;const s=i>=0?Slots.load(i):null;if(!s){flash('空档');return;}startGame(s);}},
+    {label:"测试模式",x:BASE_W/2,y:424,w:240,h:48,act:()=>startGame({cycle:1,chapter:1,stage:4,score:0,testMode:true})},
   ];
   const overBtns=[
-    {label:"重新开始",x:BASE_W/2-140,y:400,w:220,h:56,act:()=>startGame(endless)},
+    {label:"重新开始",x:BASE_W/2-140,y:400,w:220,h:56,act:()=>startGame({cycle,chapter,stage,score:0,testMode})},
     {label:"返回菜单",x:BASE_W/2+140,y:400,w:220,h:56,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
   ];
   const pauseBtns=[
-    {label:"继续游戏",x:BASE_W/2,y:280,w:240,h:56,act:()=>{state=STATE.PLAY;}},
-    {label:"重新开始",x:BASE_W/2,y:360,w:240,h:56,act:()=>startGame(endless)},
-    {label:"返回菜单",x:BASE_W/2,y:440,w:240,h:56,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
+    {label:"继续游戏",x:BASE_W/2,y:250,w:240,h:48,act:()=>{state=STATE.PLAY;}},
+    {label:"快速存档",x:BASE_W/2,y:310,w:240,h:48,act:()=>{Slots.save(0,snapProg({cycle,chapter,stage,score,testMode}));Cont.save(snapProg({cycle,chapter,stage,score,testMode}));flash('已存档1');}},
+    {label:"重新开始",x:BASE_W/2,y:370,w:240,h:48,act:()=>startGame({cycle,chapter,stage,score:0,testMode})},
+    {label:"返回菜单",x:BASE_W/2,y:430,w:240,h:48,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
   ];
   const clearBtns=[
     {label:"下一关",x:BASE_W/2,y:390,w:240,h:56,act:nextLevel},
   ];
   const winBtns=[
-    {label:"挑战无尽",x:BASE_W/2-140,y:400,w:220,h:56,act:()=>startGame(true)},
+    {label:"继续周目",x:BASE_W/2-140,y:400,w:220,h:56,act:nextLevel},
     {label:"返回菜单",x:BASE_W/2+140,y:400,w:220,h:56,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
   ];
   function activeBtns(){
@@ -519,10 +545,9 @@ const Game=(()=>{
   }
   function onAnyKey(code){
     if(state===STATE.MENU){
-      if(code==="Enter"||code==="KeyJ")startGame(false);
-      if(code==="KeyL")startGame(true);
+      if(code==="Enter"||code==="KeyJ")startGame({cycle:1,chapter:1,stage:1});
     }else if(state===STATE.OVER||state===STATE.WIN){
-      if(code==="Enter"||code==="KeyJ"||code==="Space")startGame(endless);
+      if(code==="Enter"||code==="KeyJ"||code==="Space")startGame({cycle,chapter,stage,score:0,testMode});
       if(code==="Escape"){state=STATE.MENU;Audio2.stopBGM();}
     }else if(state===STATE.LEVELCLEAR){
       if(code==="Enter"||code==="KeyJ"||code==="Space")nextLevel();
@@ -542,7 +567,8 @@ const Game=(()=>{
   return {
     update,onTap,onAnyKey,togglePause,hitHudPause,activeBtns,
     get state(){return state;},get score(){return Math.floor(score);},get best(){return best;},
-    get lives(){return lives;},get level(){return level;},get endless(){return endless;},
+    get lives(){return lives;},get level(){return level;},get endless(){return false;},
+    get cycle(){return cycle;},get chapter(){return chapter;},get stage(){return stage;},get testMode(){return testMode;},
     get player(){return player;},get fishes(){return fishes;},
     get shake(){return shake;},get flashMsg(){return flashMsg;},get flashT(){return flashT;},
     get hue(){return hue;},get targetSize(){return cfg().targetSize;},
@@ -673,7 +699,7 @@ const Render=(()=>{
     // 关卡与体型进度
     ctx.textAlign="right";ctx.fillStyle="#ffd93d";
     ctx.fillText(Game.levelName,BASE_W-70,24);
-    if(!Game.endless&&Game.player){
+    if(Game.player){
       const pw=220,px=BASE_W-70-pw,py=42;
       ctx.fillStyle="rgba(255,255,255,0.15)";
       roundRect(px,py,pw,9,4.5);ctx.fill();
@@ -882,7 +908,7 @@ function loop(now){
   Render.draw(now/1000);
   requestAnimationFrame(loop);
 }
-window.__tbThumbAutoStart = function () { startGame(false); };
+window.__tbThumbAutoStart = function () { startGame({cycle:1,chapter:1,stage:1}); };
 requestAnimationFrame(loop);
 </script>
 <script src="../../js/game/thumb-preview.js"></script>

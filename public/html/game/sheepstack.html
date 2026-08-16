@@ -21,6 +21,7 @@ canvas{display:block;background:#0a1020;box-shadow:0 0 60px rgba(100,180,255,.22
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -47,13 +48,32 @@ const ICON_COLORS={
 };
 
 /* 递进关卡：道具初始数量（道具栏4个，此处指每种道具初始次数） */
-const LEVELS=[
+const TEMPLATES=[
   {groups:12, kinds:4, layers:3, tools:2, timeSec:120, name:"第 1 关"},
   {groups:18, kinds:5, layers:4, tools:2, timeSec:150, name:"第 2 关"},
   {groups:24, kinds:6, layers:5, tools:3, timeSec:180, name:"第 3 关"},
   {groups:30, kinds:7, layers:6, tools:3, timeSec:200, name:"第 4 关"},
   {groups:36, kinds:8, layers:7, tools:3, timeSec:240, name:"第 5 关"},
 ];
+const CHAPTERS=10;
+const Slots=TBGameProgress.createSlots('tbc_sheepstack_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_sheepstack_continue_v1');
+function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
+function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage||1,score:g.score|0,testMode:!!g.testMode};}
+function campaignCfg(cycle,chapter,stage,testMode){
+  return TBGameProgress.makeLevelCfg(TEMPLATES,cycle,chapter,stage,CHAPTERS,function(pos,base,diff){
+    const cfg=Object.assign({},base);
+    cfg.name=TBGameProgress.label(pos.cycle,pos.chapter,pos.stage,true);
+    cfg.kinds=Math.min(8, (base.kinds||4)+Math.floor((pos.chapter-1)/2)+Math.floor((diff-1)));
+    cfg.layers=Math.min(9, (base.layers||3)+Math.floor(pos.stage/3)+(pos.role==='boss'?2:pos.role==='miniboss'?1:0));
+    cfg.groups=TBGameProgress.scaleNum(base.groups||12,diff,{min:10,max:60});
+    cfg.timeSec=Math.max(50, Math.round((base.timeSec||120)/Math.sqrt(diff))-(pos.role==='boss'?20:0));
+    cfg.tools=testMode?99:Math.max(1,(base.tools||2));
+    return cfg;
+  });
+}
+const LEVELS=[campaignCfg(1,1,1,false)];
+
 
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const rndi=(a,b)=>Math.floor(rnd(a,b+1));
@@ -184,7 +204,7 @@ const Particles=(()=>{
 /* ---------------- 5. 游戏核心逻辑 ---------------- */
 const Game=(()=>{
   let state=STATE.MENU;
-  let endless=false, level=0, endlessRound=0;
+  let endless=false, level=0, endlessRound=0, cycle=1, chapter=1, stage=1, testMode=false;
   let score=0, best=+(localStorage.getItem("stackBest")||0);
   let lives=3;
   let tiles=[];
@@ -202,16 +222,7 @@ const Game=(()=>{
   let timerActive=false;
 
   function levelCfg(){
-    if(!endless)return LEVELS[level];
-    const g=24+endlessRound*8;
-    return {
-      groups:Math.min(60,g),
-      kinds:Math.min(8,5+Math.floor(endlessRound/2)),
-      layers:Math.min(9,4+endlessRound),
-      tools:3,
-      timeSec:Math.max(60,180-endlessRound*10),
-      name:"无尽 第 "+(endlessRound+1)+" 轮"
-    };
+    return campaignCfg(cycle,chapter,stage,testMode);
   }
 
   function genTiles(){
@@ -319,7 +330,7 @@ const Game=(()=>{
     if(tiles.every(t=>t.removed)){
       score+=100;
       timerActive=false;
-      if(endless){
+      if(false){
         endlessRound++;
         Audio2.sfx.levelup();
         flash("第 "+endlessRound+" 轮完成！难度提升");
@@ -356,7 +367,7 @@ const Game=(()=>{
   /* 反悔：撤回最后一张入槽的牌 */
   function toolUndo(){
     if(toolsLeft.undo<=0||!lastPicked||!lastPicked.inSlot)return;
-    toolsLeft.undo--;
+    if(!testMode)toolsLeft.undo--;
     Audio2.sfx.tool();
     const t=lastPicked;
     slot.splice(slot.indexOf(t),1);
@@ -374,7 +385,7 @@ const Game=(()=>{
     let bestType=null,bestCnt=0;
     for(const [k,v] of Object.entries(cnt)){if(v>bestCnt){bestCnt=v;bestType=k;}}
     if(!bestType)return;
-    toolsLeft.bomb--;
+    if(!testMode)toolsLeft.bomb--;
     Audio2.sfx.bomb();
     shake=10;
     // 移除该类型在槽内的牌（最多3张）
@@ -410,7 +421,7 @@ const Game=(()=>{
     }
     if(!target&&free.length>0)target=free[0].type;
     if(!target)return;
-    toolsLeft.hint--;
+    if(!testMode)toolsLeft.hint--;
     Audio2.sfx.hint();
     hintType=target;hintT=2.5;
     flash("提示：放入 "+hintType+" ！");
@@ -419,7 +430,7 @@ const Game=(()=>{
   /* 加时：增加30秒 */
   function toolAddTime(){
     if(toolsLeft.addtime<=0)return;
-    toolsLeft.addtime--;
+    if(!testMode)toolsLeft.addtime--;
     Audio2.sfx.time();
     timeLeft+=30;
     Particles.floatText(BASE_W/2,200,"+30秒","#6bffb0",32);
@@ -428,25 +439,29 @@ const Game=(()=>{
 
   function flash(msg){flashMsg=msg;flashT=2.2;}
 
-  function startGame(isEndless){
-    endless=isEndless;level=0;endlessRound=0;score=0;lives=3;
+  function startGame(opt){
+    endless=false;
+    if(opt&&typeof opt==='object'){
+      cycle=opt.cycle||1;chapter=opt.chapter||1;stage=opt.stage||1;
+      score=opt.score|0; testMode=!!opt.testMode;
+    }else{ cycle=1;chapter=1;stage=1;score=0;testMode=false; }
+    level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);endlessRound=0;lives=testMode?99:3;
     genTiles();
     Particles.clear();
     state=STATE.PLAY;
     Audio2.startBGM();
-    flash(endless?"无尽模式 开始！":"第 1 关 开始！");
+    if(testMode) toolsLeft={undo:99,bomb:99,hint:99,addtime:99};
+    flash((testMode?'【测试】':'')+progLabel({cycle,chapter,stage,testMode}));
+    Cont.save(snapProg({cycle,chapter,stage,score,testMode}));
   }
   function nextLevel(){
-    level++;
-    if(level>=LEVELS.length){
-      state=STATE.WIN;
-      timerActive=false;
-      Audio2.sfx.levelup();
-      if(score>best){best=score;localStorage.setItem("stackBest",best);}
-      return;
-    }
-    flash(LEVELS[level].name+" 开始！");
+    const n=TBGameProgress.nextProgress(cycle,chapter,stage,CHAPTERS);
+    cycle=n.cycle;chapter=n.chapter;stage=n.stage;
+    level=TBGameProgress.flatIndex(cycle,chapter,stage,CHAPTERS);
+    Cont.save(snapProg({cycle,chapter,stage,score,testMode}));
     genTiles();
+    if(testMode) toolsLeft={undo:99,bomb:99,hint:99,addtime:99};
+    flash(progLabel({cycle,chapter,stage,testMode})+' 开始！');
     state=STATE.PLAY;
   }
 
@@ -483,12 +498,12 @@ const Game=(()=>{
 
   function onKey(code){
     if(state===STATE.MENU){
-      if(code==="Enter"||code==="KeyJ")startGame(false);
-      if(code==="KeyL")startGame(true);
+      if(code==="Enter"||code==="KeyJ")startGame({cycle:1,chapter:1,stage:1});
+      if(code==="KeyL")startGame({cycle:1,chapter:1,stage:4,testMode:true});
       return;
     }
     if(state===STATE.OVER||state===STATE.WIN){
-      if(code==="Enter"||code==="KeyJ"||code==="Space")startGame(endless);
+      if(code==="Enter"||code==="KeyJ"||code==="Space")startGame({cycle,chapter,stage,score:0,testMode});
       if(code==="Escape"){state=STATE.MENU;Audio2.stopBGM();}
       return;
     }
@@ -528,23 +543,26 @@ const Game=(()=>{
   }
 
   const menuBtns=[
-    {label:"关卡模式",x:BASE_W/2,y:520,w:260,h:64,act:()=>startGame(false)},
-    {label:"无尽模式",x:BASE_W/2,y:610,w:260,h:64,act:()=>startGame(true)},
+    {label:"新周目",x:BASE_W/2,y:470,w:260,h:52,act:()=>startGame({cycle:1,chapter:1,stage:1})},
+    {label:"继续旅程",x:BASE_W/2,y:530,w:260,h:52,act:()=>{const s=Cont.load();if(!s){flash('没有进度');return;}startGame(s);}},
+    {label:"存档",x:BASE_W/2-80,y:590,w:140,h:48,act:()=>{const i=(parseInt(prompt('存档1-5','1'),10)|0)-1;if(i>=0&&i<5){Slots.save(i,snapProg({cycle,chapter,stage,score,testMode}));flash('存档'+(i+1));}}},
+    {label:"读档",x:BASE_W/2+80,y:590,w:140,h:48,act:()=>{const i=(parseInt(prompt('读档1-5','1'),10)|0)-1;const s=i>=0?Slots.load(i):null;if(!s){flash('空');return;}startGame(s);}},
+    {label:"测试模式",x:BASE_W/2,y:650,w:260,h:52,act:()=>startGame({cycle:1,chapter:1,stage:4,testMode:true})},
   ];
   const overBtns=[
-    {label:"重新开始",x:BASE_W/2,y:600,w:260,h:64,act:()=>startGame(endless)},
+    {label:"重新开始",x:BASE_W/2,y:600,w:260,h:64,act:()=>startGame({cycle,chapter,stage,score:0,testMode})},
     {label:"返回菜单",x:BASE_W/2,y:690,w:260,h:64,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
   ];
   const pauseBtns=[
     {label:"继续游戏",x:BASE_W/2,y:460,w:260,h:64,act:()=>{state=STATE.PLAY;}},
-    {label:"重新开始",x:BASE_W/2,y:550,w:260,h:64,act:()=>startGame(endless)},
+    {label:"重新开始",x:BASE_W/2,y:550,w:260,h:64,act:()=>startGame({cycle,chapter,stage,score:0,testMode})},
     {label:"返回菜单",x:BASE_W/2,y:640,w:260,h:64,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
   ];
   const clearBtns=[
     {label:"下一关",x:BASE_W/2,y:620,w:260,h:64,act:nextLevel},
   ];
   const winBtns=[
-    {label:"挑战无尽",x:BASE_W/2,y:600,w:260,h:64,act:()=>startGame(true)},
+    {label:"继续周目",x:BASE_W/2,y:600,w:260,h:64,act:nextLevel},
     {label:"返回菜单",x:BASE_W/2,y:690,w:260,h:64,act:()=>{state=STATE.MENU;Audio2.stopBGM();}},
   ];
   function activeBtns(){
@@ -594,14 +612,15 @@ const Game=(()=>{
   return {
     update,onTap,onKey,togglePause,hitHudPause,activeBtns,clickable,isCovered,slotXY,
     get state(){return state;},get score(){return score;},get best(){return best;},
-    get lives(){return lives;},get level(){return level;},get endless(){return endless;},
+    get lives(){return lives;},get level(){return level;},get endless(){return false;},
+    get cycle(){return cycle;},get chapter(){return chapter;},get stage(){return stage;},get testMode(){return testMode;},
     get tiles(){return tiles;},get slot(){return slot;},
     get toolsLeft(){return toolsLeft;},get toolBtns(){return toolBtns;},
     get shake(){return shake;},get flashMsg(){return flashMsg;},get flashT(){return flashT;},
     get hue(){return hue;},get cursorIdx(){return cursorIdx;},
     get hintType(){return hintType;},get hintT(){return hintT;},
     get timeLeft(){return timeLeft;},
-    get levelName(){return endless?levelCfg().name:LEVELS[level].name;},
+    get levelName(){return levelCfg().name;},
     get remain(){return tiles.filter(t=>!t.removed).length;},
   };
 })();
@@ -1040,7 +1059,7 @@ function loop(now){
   Render.draw(now/1000);
   requestAnimationFrame(loop);
 }
-window.__tbThumbAutoStart = function () { startGame(false); };
+window.__tbThumbAutoStart = function () { startGame({cycle:1,chapter:1,stage:1}); };
 requestAnimationFrame(loop);
 </script>
 <script src="../../js/game/thumb-preview.js"></script>

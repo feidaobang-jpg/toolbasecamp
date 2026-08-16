@@ -13,6 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="960" height="540"></canvas></div>
+<script src="../../js/game/game-progress.js?v=1"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -479,12 +480,22 @@ const Levels={
 };
 
 /* ---------------- 8. 游戏主逻辑 ---------------- */
+const CHAPTERS=10;
+const Slots=TBGameProgress.createSlots('tbc_angry_birds_slots_v1');
+const Cont=TBGameProgress.createContinue('tbc_angry_birds_continue_v1');
+function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
+function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage||1,score:g.score|0,testMode:!!g.testMode};}
 const Game={
   state:"menu", mode:"level",
+  cycle:1, chapter:1, stage:1, testMode:false,
   level:1, score:0, best:0,
   birdsLeft:0, waitT:0,
   aiming:false, aimX:SLING.x, aimY:SLING.y, aimId:null,
-  menuBtns:{level:[W/2-280,330,260,64], endless:[W/2+20,330,260,64]},
+  menuBtns:{
+    neu:[W/2-280,250,260,48], cont:[W/2+20,250,260,48],
+    save:[W/2-280,310,260,48], load:[W/2+20,310,260,48],
+    test:[W/2-130,370,260,48]
+  },
   kbAngle:135, kbPower:0.7, kbAiming:false,   // 键盘瞄准(角度: 度, 相对x正向逆时针)
   shake:0, msgText:"", msgTimer:0, endWhy:"",
   clouds:[],
@@ -494,21 +505,38 @@ const Game={
       this.clouds.push({x:rand(0,W),y:rand(50,180),w:rand(70,140),sp:rand(8,20)});
     Input.init();
   },
-  startGame(mode){
-    this.mode=mode; this.level=1; this.score=0;
+  startGame(opt){
+    this.mode='level';
+    if(opt&&typeof opt==='object'){
+      this.cycle=opt.cycle||1; this.chapter=opt.chapter||1; this.stage=opt.stage||1;
+      this.score=opt.score|0; this.testMode=!!opt.testMode;
+    } else {
+      this.cycle=1; this.chapter=1; this.stage=1; this.score=0; this.testMode=false;
+    }
+    this.level=TBGameProgress.flatIndex(this.cycle,this.chapter,this.stage,CHAPTERS)+1;
     this.startLevel();
     AudioSys.init(); AudioSys.resume();
+    Cont.save(snapProg(this));
+  },
+  advanceStage(){
+    const n=TBGameProgress.nextProgress(this.cycle,this.chapter,this.stage,CHAPTERS);
+    this.cycle=n.cycle; this.chapter=n.chapter; this.stage=n.stage;
+    this.level=TBGameProgress.flatIndex(this.cycle,this.chapter,this.stage,CHAPTERS)+1;
+    Cont.save(snapProg(this));
+    this.startLevel();
   },
   startLevel(){
-    const lv=this.mode==="endless"?irand(3,8):this.level;
+    const diff=TBGameProgress.difficultyMul(this.cycle,this.chapter,this.stage);
+    const role=TBGameProgress.roleOfStage(this.stage);
+    let lv = Math.min(2+this.stage+Math.floor((this.chapter-1)/2)+Math.floor((diff-1)*2), 12);
+    if(role==='miniboss') lv=Math.min(lv+2,14);
+    if(role==='boss') lv=Math.min(lv+4,16);
     const pigs=Levels.build(lv);
-    this.birdsLeft = this.mode==="endless" ? this.birdsLeft||6 : pigs+2;
+    this.birdsLeft = this.testMode ? 99 : Math.max(3, pigs+2);
     Particles.list=[]; Popups.list=[];
     this.aiming=false; this.waitT=0;
     this.state="playing";
-    this.showMsg(this.mode==="level"
-      ? ("第 "+this.level+" 关 · 消灭全部绿猪!")
-      : ("无尽波次 · 剩余小鸟 "+this.birdsLeft), 2);
+    this.showMsg(progLabel(this)+' · 消灭绿猪!', 2);
   },
   showMsg(t,d){ this.msgText=t; this.msgTimer=d; },
   addScore(n,x,y,label){
@@ -537,23 +565,27 @@ const Game={
   onPointerDown(x,y,id){
     if(this.state==="menu"){
       const b=this.menuBtns;
-      if(this.hitRect(x,y,...b.level)) this.startGame("level");
-      else if(this.hitRect(x,y,...b.endless)) this.startGame("endless");
+      if(this.hitRect(x,y,...b.neu)) this.startGame({cycle:1,chapter:1,stage:1,score:0});
+      else if(this.hitRect(x,y,...b.cont)){ const s=Cont.load(); if(!s){ this.showMsg('没有进度',1.2); return; } this.startGame(s); }
+      else if(this.hitRect(x,y,...b.save)){ const i=(parseInt(prompt('存档位1-5','1'),10)|0)-1; if(i>=0&&i<5){ Slots.save(i,snapProg(this)); Cont.save(snapProg(this)); this.showMsg('已存档'+(i+1),1.2);} }
+      else if(this.hitRect(x,y,...b.load)){ const i=(parseInt(prompt('读档位1-5','1'),10)|0)-1; const s=i>=0?Slots.load(i):null; if(!s){ this.showMsg('空档',1.2); return; } this.startGame(s); }
+      else if(this.hitRect(x,y,...b.test)) this.startGame({cycle:1,chapter:1,stage:4,score:0,testMode:true});
       return;
     }
     if(this.state==="paused"){
-      if(this.hitRect(x,y,W/2-130,250,260,60)) this.state="playing";
-      else if(this.hitRect(x,y,W/2-130,330,260,60)){ this.birdsLeft=0; this.startGame(this.mode); }
-      else if(this.hitRect(x,y,W/2-130,410,260,60)) this.state="menu";
+      if(this.hitRect(x,y,W/2-130,220,260,52)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,280,260,52)){ Slots.save(0,snapProg(this)); Cont.save(snapProg(this)); this.showMsg('已存档1',1); }
+      else if(this.hitRect(x,y,W/2-130,340,260,52)){ this.birdsLeft=0; this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,testMode:this.testMode}); }
+      else if(this.hitRect(x,y,W/2-130,400,260,52)) this.state="menu";
       return;
     }
     if(this.state==="gameover"||this.state==="win"){
-      if(this.hitRect(x,y,W/2-280,380,260,64)){ this.birdsLeft=0; this.startGame(this.mode); }
+      if(this.hitRect(x,y,W/2-280,380,260,64)){ this.birdsLeft=0; this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,testMode:this.testMode}); }
       else if(this.hitRect(x,y,W/2+20,380,260,64)) this.state="menu";
       return;
     }
     if(this.state==="levelclear"){
-      if(this.hitRect(x,y,W/2-130,340,260,64)){ this.level++; this.startLevel(); }
+      if(this.hitRect(x,y,W/2-130,340,260,64)) this.advanceStage();
       return;
     }
     // playing
@@ -592,9 +624,9 @@ const Game={
     if(this.state!=="playing"){
       if(Input.pausePressed&&this.state==="paused") this.state="playing";
       else if(Input.firePressed){
-        if(this.state==="menu") this.startGame("level");
-        else if(this.state==="levelclear"){ this.level++; this.startLevel(); }
-        else if(this.state==="gameover"||this.state==="win"){ this.birdsLeft=0; this.startGame(this.mode); }
+        if(this.state==="menu") this.startGame({cycle:1,chapter:1,stage:1});
+        else if(this.state==="levelclear") this.advanceStage();
+        else if(this.state==="gameover"||this.state==="win"){ this.birdsLeft=0; this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,testMode:this.testMode}); }
       }
       Input.consume(); return;
     }
@@ -623,14 +655,9 @@ const Game={
         this.waitT+=dt;
         if(this.waitT>0.6){
           this.addScore(this.birdsLeft*50);
-          if(this.mode==="endless"){
-            this.birdsLeft+=3;   // 无尽: 每波补3只
-            this.level++;
-            this.startLevel();
-          }else{
-            this.saveBest(); AudioSys.win();
-            this.state = this.level>=10 ? "win" : "levelclear";
-          }
+          this.saveBest(); AudioSys.win();
+          Cont.save(snapProg(this));
+          this.state = "levelclear";
         }
       }else if(this.birdsLeft<=0){
         this.waitT+=dt;
@@ -788,8 +815,11 @@ const Game={
     ctx.beginPath(); ctx.arc(-10,-8,2.6,0,Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(12,-8,2.6,0,Math.PI*2); ctx.fill();
     ctx.restore();
-    this.bigBtn(this.menuBtns.level[0],this.menuBtns.level[1],"关卡模式",["#ff9e5e","#d1495b"]);
-    this.bigBtn(this.menuBtns.endless[0],this.menuBtns.endless[1],"无尽模式",["#5b8bff","#2a3f9f"]);
+    this.bigBtn(this.menuBtns.neu[0],this.menuBtns.neu[1],"新周目",["#ff9e5e","#d1495b"]);
+    this.bigBtn(this.menuBtns.cont[0],this.menuBtns.cont[1],"继续旅程",["#38b000","#1d6d00"]);
+    this.bigBtn(this.menuBtns.save[0],this.menuBtns.save[1],"存档",["#ff8500","#cc5803"]);
+    this.bigBtn(this.menuBtns.load[0],this.menuBtns.load[1],"读档",["#5b8bff","#2a3f9f"]);
+    this.bigBtn(this.menuBtns.test[0],this.menuBtns.test[1],"测试模式",["#9b5de5","#5a189a"]);
     ctx.fillStyle="#0b3550"; ctx.font="14px sans-serif";
     ctx.fillText("PC: 鼠标拖拽弹弓 或 A/D调角度 W/S调力度 J/回车/K/空格发射 · P/B暂停 · I/O音乐音效",W/2,438);
     ctx.fillText("手机: 手指拖拽弹弓瞄准, 松手发射 (竖屏会自动旋转横屏)",W/2,462);
@@ -798,10 +828,11 @@ const Game={
   drawPaused(){
     this.overlay();
     ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("已暂停",W/2,190);
-    this.midBtn(250,"继续游戏",["#3f8e50","#1e4d2b"]);
-    this.midBtn(330,"重新开始",["#ff9e5e","#d1495b"]);
-    this.midBtn(410,"返回菜单",["#5b8bff","#2a3f9f"]);
+    ctx.fillText("已暂停",W/2,170);
+    this.midBtn(220,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(280,"快速存档",["#ff8500","#cc5803"]);
+    this.midBtn(340,"重新开始",["#ff9e5e","#d1495b"]);
+    this.midBtn(400,"返回菜单",["#5b8bff","#2a3f9f"]);
   },
   drawGameover(){
     this.overlay();
@@ -844,7 +875,7 @@ function mainLoop(now){
 }
 Game.init();
 requestAnimationFrame(mainLoop);
-window.__tbThumbAutoStart = function () { Game.startGame('level'); };
+window.__tbThumbAutoStart = function () { Game.startGame({cycle:1,chapter:1,stage:1}); };
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
 </body>
