@@ -13,6 +13,8 @@
   /* 触控层 */
   #touch{position:absolute;left:0;top:0;width:960px;height:540px;display:none;}
   #touch.on{display:block;}
+  /* PC：隐藏虚拟摇杆/按键，仅用键位说明 */
+  body.notouch #touch,body.notouch #touch.on{display:none!important;}
   #stickZone{position:absolute;left:0;bottom:0;width:44%;height:78%;}
   #stickBase{position:absolute;width:150px;height:150px;border-radius:50%;
     background:radial-gradient(circle,rgba(255,255,255,.10),rgba(255,255,255,.03));
@@ -57,7 +59,7 @@
     align-items:center;justify-content:center;font-size:18px;text-align:center;z-index:99;padding:30px;}
 </style>
 </head>
-<body>
+<body class="notouch">
 <div id="stage">
   <canvas id="cv" width="960" height="540"></canvas>
 
@@ -164,6 +166,7 @@
 </div>
 <div id="rotTip">请将手机横屏，或稍等自动旋转…</div>
 
+<script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
 /* =========================================================
@@ -194,8 +197,18 @@ window.addEventListener('resize', layout);
 window.addEventListener('orientationchange', ()=>setTimeout(layout,180));
 layout();
 
-const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-if (isTouch) touchLayer.classList.add('on');
+/* PC 隐藏虚拟按键；仅手机/触屏显示摇杆与方阵 */
+function wantTouch(){
+  return (typeof TBTouchUI !== 'undefined') ? TBTouchUI.wantTouchUI() : false;
+}
+let isTouch = wantTouch();
+function syncTouchUI(){
+  isTouch = wantTouch();
+  if (typeof TBTouchUI !== 'undefined') TBTouchUI.applyNotouchClass();
+  else document.body.classList.add('notouch');
+}
+syncTouchUI();
+window.addEventListener('resize', syncTouchUI);
 
 /* 屏幕坐标 → 画布坐标（含旋转） */
 function toCanvas(cx, cy){
@@ -752,7 +765,7 @@ function envDamage(d){
 /* =========================== 流程 =========================== */
 function show(id){
   ['scMenu','scHelp','scSave','scPause','scOver'].forEach(s=>document.getElementById(s).classList.toggle('on', s===id));
-  touchLayer.classList.toggle('on', isTouch && id===null);
+  isTouch = wantTouch(); touchLayer.classList.toggle('on', isTouch && id===null);
 }
 function goPlay(){ state='playing'; show(null); Audio2.music(true); }
 function gameOver(){
@@ -1902,7 +1915,7 @@ function drawHUD(ch){
   ctx.fillText('爆气[U] x' + P.bombs + '　丹药[I] x' + P.pills +
     '　闪避[K]' + (player.dashCd>0?('冷却'+player.dashCd.toFixed(1)):'就绪') +
     '　护体[L]' + (player.blockCd>0?('冷却'+player.blockCd.toFixed(1)):'就绪'), 190, H-23);
-  if (!isTouch){ ctx.textAlign='right'; ctx.fillStyle='#93a6cc'; ctx.fillText('P/B 暂停　O 音效', W-14, H-23); }
+  if (!isTouch){ ctx.textAlign='right'; ctx.fillStyle='#93a6cc'; ctx.fillText('WASD移动　P/B暂停　O音效', W-14, H-23); }
   ctx.restore();
 }
 
