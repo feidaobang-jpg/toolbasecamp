@@ -254,13 +254,13 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.all',
             items: [
-                { titleKey: 'tools.angryBirds.title', url: 'html/game/angry_birds.html?v=5' },
+                { titleKey: 'tools.angryBirds.title', url: 'html/game/angry_birds.html?v=6' },
                 { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
                 { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html?v=3' },
                 { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },
                 { titleKey: 'tools.hundredFloors.title', url: 'html/game/hundred_floors.html?v=6' },
                 { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
-                { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=6' },
+                { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=7' },
                 { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
                 { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=3' },
                 { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=2' },

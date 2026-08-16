@@ -21,6 +21,7 @@
  * ---------------------------------------------------------------------
  * 玩法: 拖拽弹弓瞄准发射小鸟, 砸毁木/玻璃/石块结构, 消灭全部绿猪过关。
  *       每关小鸟数量有限; 无尽模式一波接一波拼总分。
+ * 物理: 自研 AABB+圆碰撞；结构按重心是否落在支撑面上判定倒塌（非 Box2D）。
  * 结构分层:
  *   1. 常量与工具  2. 视图  3. 音频  4. 输入  5. 粒子/飘字
  *   6. 物理世界 (World: 小鸟/方块/绿猪)  7. 关卡生成  8. 游戏主逻辑  9. 主循环
@@ -193,8 +194,8 @@ const Popups={
 };
 
 /* ---------------- 6. 物理世界 ----------------
- * 简化物理: 方块为轴对齐矩形(不旋转), 支持下落/堆叠/被撞击破坏;
- * 小鸟与绿猪为圆形, 受重力, 与方块和地面碰撞。 */
+ * 街机简化刚体：轴对齐矩形（不旋转）+ 圆形。
+ * 支撑按「底边接触宽度是否覆盖重心」判定——单柱撑不住横梁，断柱后会塌。 */
 const World={
   bird:null,       // 当前飞行中的小鸟 {x,y,vx,vy,r,live,restT,flightT,angle}
   blocks:[],       // {x,y,w,h,vx,vy,mat,hp}
@@ -211,6 +212,27 @@ const World={
     }
     return false;
   },
+  /** 方块底部支撑区间；重心落在区间内才算稳 */
+  blockSupport(b){
+    const bot=b.y+b.h, com=b.x+b.w*0.5;
+    let L=Infinity, R=-Infinity, hit=false;
+    if(bot>=GROUND_Y-2){
+      return {ok:true, tip:0, L:b.x, R:b.x+b.w};
+    }
+    for(const o of this.blocks){
+      if(b===o) continue;
+      const ol=Math.max(b.x,o.x), or=Math.min(b.x+b.w,o.x+o.w);
+      if(or-ol<3) continue;
+      // o 在 b 正下方且顶面接触
+      if(o.y>=bot-6 && o.y<=bot+10 && o.y+o.h>bot){
+        hit=true; L=Math.min(L,ol); R=Math.max(R,or);
+      }
+    }
+    if(!hit) return {ok:false, tip:0};
+    // 重心须落在支撑宽度内（允许极小边缘）；否则向悬空侧倾倒
+    if(com>=L-1 && com<=R+1) return {ok:true, tip:0, L, R};
+    return {ok:false, tip: com<(L+R)*0.5 ? -1 : 1, L, R};
+  },
   update(dt){
     this.updateBlocks(dt);
     this.updatePigs(dt);
@@ -218,36 +240,87 @@ const World={
   },
   /* --- 方块 --- */
   updateBlocks(dt){
+    // 先按支撑决定是否落地冻结，再积分，再解穿透
     for(const b of this.blocks){
-      b.vy+=GRAV*dt;
-      b.x+=b.vx*dt; b.y+=b.vy*dt;
-      b.vx*=Math.pow(0.4,dt);   // 水平摩擦
-      // 地面
-      if(b.y+b.h>GROUND_Y){
-        b.y=GROUND_Y-b.h;
-        if(b.vy>140) AudioSys.thud();
-        if(b.vy>0) b.vy=0;
-        b.vx*=0.6;
-      }
-    }
-    // 方块堆叠: 简单自上而下支撑(两轮迭代趋稳)
-    for(let iter=0;iter<2;iter++){
-      for(const b of this.blocks){
+      const sup=this.blockSupport(b);
+      if(sup.ok){
+        // 已稳：贴合支撑面，清垂速
+        let bestY=GROUND_Y-b.h;
+        let found=false;
         for(const o of this.blocks){
           if(b===o) continue;
-          if(b.x+b.w>o.x+4 && b.x<o.x+o.w-4){
-            // b 在 o 上方且穿透
-            if(b.y+b.h>o.y && b.y+b.h<o.y+o.h*0.6 && b.vy>=0){
-              b.y=o.y-b.h; b.vy=0; b.vx*=0.7;
+          const ol=Math.max(b.x,o.x), or=Math.min(b.x+b.w,o.x+o.w);
+          if(or-ol<3) continue;
+          if(o.y>=b.y+b.h-6 && o.y<=b.y+b.h+10){
+            bestY=Math.min(bestY, o.y-b.h); found=true;
+          }
+        }
+        if(found || b.y+b.h>=GROUND_Y-2){
+          if(b.y+b.h>=GROUND_Y-2) b.y=GROUND_Y-b.h;
+          else if(found) b.y=bestY;
+          if(b.vy>0) b.vy=0;
+        }
+        b.vx*=Math.pow(0.15,dt);
+        if(Math.abs(b.vx)<8) b.vx=0;
+      }else{
+        b.vy+=GRAV*dt;
+        // 悬臂倾覆：给水平速度，模拟「塌向没柱子的一侧」
+        if(sup.tip) b.vx+=sup.tip*420*dt;
+        b.x+=b.vx*dt; b.y+=b.vy*dt;
+        b.vx*=Math.pow(0.55,dt);
+      }
+      // 地面硬约束
+      if(b.y+b.h>GROUND_Y){
+        b.y=GROUND_Y-b.h;
+        if(b.vy>160) AudioSys.thud();
+        if(b.vy>0) b.vy=0;
+        b.vx*=0.55;
+      }
+    }
+    // 方块互撞：仅当上方块重心确实被下方支撑时才吸附；否则推开
+    for(let iter=0;iter<3;iter++){
+      const list=this.blocks.slice();
+      for(const b of list){
+        if(this.blocks.indexOf(b)<0) continue;
+        for(const o of list){
+          if(b===o || this.blocks.indexOf(o)<0) continue;
+          const ol=Math.max(b.x,o.x), or=Math.min(b.x+b.w,o.x+o.w);
+          const ow=or-ol;
+          if(ow<2) continue;
+          const ot=Math.max(b.y,o.y), ob=Math.min(b.y+b.h,o.y+o.h);
+          const oh=ob-ot;
+          if(oh<=0) continue;
+          if(b.y+b.h*0.5 <= o.y+o.h*0.5){
+            const com=b.x+b.w*0.5;
+            const supported = com>=ol-2 && com<=or+2 && ow>=Math.min(12, b.w*0.22);
+            if(supported && b.vy>=-20 && b.y+b.h>o.y-2 && b.y+b.h<o.y+o.h*0.55){
+              if(b.vy>220){
+                o._fallDmg=(o._fallDmg||0)+Math.min(22,(b.vy-180)*0.06);
+              }
+              b.y=o.y-b.h;
+              b.vy=0; b.vx*=0.65;
+            }else if(oh>2 && ow>2){
+              const push=Math.min(oh, ow)*0.35;
+              if(b.x+b.w*0.5 < o.x+o.w*0.5){ b.x-=push*0.5; o.x+=push*0.35; }
+              else { b.x+=push*0.5; o.x-=push*0.35; }
+              b.vx*=0.9; o.vx*=0.9;
             }
           }
         }
       }
     }
+    // 坠落砸伤延后结算，避免遍历中 splice
+    for(const b of this.blocks.slice()){
+      if(b._fallDmg>0){
+        const d=b._fallDmg; b._fallDmg=0;
+        this.damageBlock(b,d,b.x+b.w/2,b.y);
+      }
+    }
     // 移除出界方块
-    this.blocks=this.blocks.filter(b=>b.x>-100&&b.x<W+100);
+    this.blocks=this.blocks.filter(b=>b.x>-120&&b.x<W+120&&b.y<H+80);
   },
   damageBlock(b,dmg,px,py){
+    if(!b || this.blocks.indexOf(b)<0) return;
     b.hp-=dmg;
     if(b.hp<=0){
       const m=MATS[b.mat];
@@ -255,6 +328,10 @@ const World={
       if(b.mat==="glass") AudioSys.breakGlass(); else AudioSys.breakWood();
       Game.addScore(b.mat==="stone"?15:10, b.x+b.w/2, b.y, "+"+(b.mat==="stone"?15:10));
       this.blocks.splice(this.blocks.indexOf(b),1);
+      // 断柱后立刻唤醒上方结构（清零「假静止」）
+      for(const o of this.blocks){
+        if(o.y+o.h <= b.y+8 && o.x+o.w>b.x && o.x<b.x+b.w) o.vy=Math.max(o.vy, 40);
+      }
     }else{
       Particles.burst(px,py,MATS[b.mat].light,5,140);
       AudioSys.thud();
@@ -270,15 +347,19 @@ const World={
       // 地面
       if(g.y+g.r>GROUND_Y){
         g.y=GROUND_Y-g.r;
-        if(g.vy>430){ this.hurtPig(g,Math.round((g.vy-380)*0.06)); } // 高空坠落伤害
+        if(g.vy>430){ this.hurtPig(g,Math.round((g.vy-380)*0.06)); }
         g.vy=0; g.vx*=0.7;
       }
-      // 站在方块上
+      // 站在方块上：圆心投影须落在块上，避免「断柱后猪还浮在空中」
+      let onBlock=false;
       for(const b of this.blocks){
-        if(g.x>b.x-6&&g.x<b.x+b.w+6 && g.y+g.r>b.y && g.y+g.r<b.y+b.h*0.6 && g.vy>=0){
+        if(g.x>b.x+2&&g.x<b.x+b.w-2 && g.y+g.r>b.y-2 && g.y+g.r<b.y+b.h*0.55 && g.vy>=-10){
           if(g.vy>430) this.hurtPig(g,Math.round((g.vy-380)*0.06));
-          g.y=b.y-g.r; g.vy=0;
+          g.y=b.y-g.r; g.vy=0; onBlock=true;
         }
+      }
+      if(!onBlock && g.y+g.r<GROUND_Y-4){
+        // 失去脚下支撑，保持重力下落（已加）
       }
       if(g.hp<=0&&!g.dead){
         g.dead=true;

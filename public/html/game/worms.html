@@ -8,11 +8,11 @@
   html,body{margin:0;padding:0;height:100%;background:#0a1225;overflow:hidden;
     -webkit-user-select:none;user-select:none;touch-action:none;}
   #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
-  canvas{display:block;background:#0a1225;}
+  canvas{display:block;background:#0a1225;transform-origin:center center;}
 </style>
 </head>
 <body>
-<div id="wrap"><canvas id="cv" width="540" height="960"></canvas></div>
+<div id="wrap"><canvas id="cv" width="960" height="540"></canvas></div>
 <script src="../../js/game/game-progress.js?v=4"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
@@ -33,27 +33,33 @@
  * ===================================================================== */
 
 /* ---------------- 1. 常量与工具 ---------------- */
-const W = 540, H = 960;
+const W = 960, H = 540;             // 横屏 16:9
 const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
 const rand  = (a,b)=>a+Math.random()*(b-a);
 const irand = (a,b)=>Math.floor(rand(a,b+1));
 const GRAV = 340;
 
-/* ---------------- 2. 视图缩放 ---------------- */
+/* ---------------- 2. 视图缩放（手机竖持自动转横屏） ---------------- */
 const canvas = document.getElementById("cv");
 const ctx = canvas.getContext("2d");
 const View = {
-  scale:1,
+  scale:1, rotated:false,
   resize(){
-    const s = Math.min(window.innerWidth/W, window.innerHeight/H);
+    const vw=window.innerWidth, vh=window.innerHeight;
+    this.rotated = vh>vw;
+    const s=this.rotated ? Math.min(vw/H, vh/W) : Math.min(vw/W, vh/H);
     this.scale = s;
     canvas.style.width = (W*s)+"px"; canvas.style.height = (H*s)+"px";
+    canvas.style.transform = this.rotated ? "rotate(90deg)" : "";
   },
   toGame(cx,cy){
     const r = canvas.getBoundingClientRect();
+    if(this.rotated)
+      return [(cy-r.top)/this.scale, H-(cx-r.left)/this.scale];
     return [(cx-r.left)/this.scale, (cy-r.top)/this.scale];
   }
 };
+window.addEventListener("orientationchange", ()=>setTimeout(()=>View.resize(),120));
 window.addEventListener("resize", ()=>View.resize());
 View.resize();
 
@@ -217,15 +223,15 @@ const Terrain = {
     this.cv.width = W; this.cv.height = H;
     this.tctx = this.cv.getContext("2d");
     this.solid = new Uint8Array(W*H);
-    // 生成起伏地形高度线 (中下部)
-    const base = 640, amp = 90;
+    // 生成起伏地形高度线 (横屏中下部)
+    const base = 310, amp = 55;
     const hs = [];
     let ph = rand(0,Math.PI*2), ph2 = rand(0,Math.PI*2);
     for(let x=0;x<W;x++){
       const h = base
-        + Math.sin(x*0.012+ph)*amp
-        + Math.sin(x*0.03+ph2)*amp*0.4
-        + Math.sin(x*0.006-ph2)*amp*0.5;
+        + Math.sin(x*0.008+ph)*amp
+        + Math.sin(x*0.022+ph2)*amp*0.4
+        + Math.sin(x*0.004-ph2)*amp*0.5;
       hs.push(h);
     }
     // 填位图
@@ -496,6 +502,7 @@ const Game = {
   worms:[], curIdx:0, proj:null,
   weapon:0, charge:0, charging:false,
   turnTime:20, turnLeft:20, phase:"move", // move/proj/settle
+  settleT:0, settleMax:0,                 // settle 等待静止 / 强制超时
   wind:0, shake:0, msgText:"", msgTimer:0,
   aiTimer:0, aiPlan:null,
   pointers:{}, clouds:[],
@@ -503,7 +510,7 @@ const Game = {
   init(){
     this.best=+(localStorage.getItem("worms_best")||0);
     for(let i=0;i<5;i++)
-      this.clouds.push({x:rand(0,W),y:rand(40,260),w:rand(70,140),sp:rand(6,16)});
+      this.clouds.push({x:rand(0,W),y:rand(30,140),w:rand(70,140),sp:rand(6,16)});
     Input.init();
   },
   startGame(opt){
@@ -529,10 +536,10 @@ const Game = {
     // 去掉重复的 boss +2（已由 plan.boss 处理）
     // 玩家小队 3 只
     const names=["小红","小粉","小桃"];
-    for(let i=0;i<3;i++) this.spawnWorm(60+i*70+rand(-14,14), 0, names[i]);
+    for(let i=0;i<3;i++) this.spawnWorm(90+i*85+rand(-14,14), 0, names[i]);
     // 敌方
     const enames=["蓝一","蓝二","蓝三","蓝四","蓝五"];
-    for(let i=0;i<enemyN;i++) this.spawnWorm(W-60-i*70+rand(-14,14), 1, enames[i]);
+    for(let i=0;i<enemyN;i++) this.spawnWorm(W-90-i*85+rand(-14,14), 1, enames[i]);
     this.curIdx=this.firstAlive(0);
     if(this.weapon==null) this.weapon=0; this.proj=null;
     this.turnLeft=this.turnTime; this.phase="move";
@@ -577,24 +584,36 @@ const Game = {
     if(this.aliveCount(0)===0){
       this.saveBest(); AudioSys.lose(); this.state="gameover"; return;
     }
-    // 轮换队伍
-    const curTeam=this.cur() ? this.cur().team : 0;
-    const nextTeam=1-curTeam;
-    // 该队伍中轮流选虫
-    let idx=(this.curIdx+1)%this.worms.length, tries=0;
-    while(tries<this.worms.length*2){
-      if(this.worms[idx].team===nextTeam && !this.worms[idx].dead) break;
-      idx=(idx+1)%this.worms.length; tries++;
+    // 轮换队伍（跳过阵亡单位）
+    const cur = this.cur();
+    const curTeam = cur ? cur.team : 0;
+    const nextTeam = 1 - curTeam;
+    let idx = (this.curIdx + 1) % this.worms.length, tries = 0, found = -1;
+    while(tries < this.worms.length * 2){
+      if(this.worms[idx].team === nextTeam && !this.worms[idx].dead){ found = idx; break; }
+      idx = (idx + 1) % this.worms.length; tries++;
     }
-    this.curIdx=idx;
-    this.turnLeft=this.turnTime; this.phase="move";
-    this.charge=0; this.charging=false;
-    this.wind=rand(-4,4);
-    this.aiPlan=null; this.aiTimer=0;
-    this.proj=null;
+    if(found < 0) found = this.firstAlive(nextTeam);
+    if(found < 0){ // 兜底：同队轮换
+      found = this.firstAlive(curTeam);
+      if(found < 0) return;
+    }
+    this.curIdx = found;
+    this.turnLeft = this.turnTime; this.phase = "move";
+    this.settleT = 0; this.settleMax = 0;
+    this.charge = 0; this.charging = false;
+    this.wind = rand(-4, 4);
+    this.aiPlan = null; this.aiTimer = 0;
+    this.proj = null;
+  },
+  beginSettle(sec){
+    this.phase = "settle";
+    this.settleT = sec == null ? 0.85 : sec;
+    this.settleMax = 3.2; // 强制超时，防止微振/悬空永远等不到静止
   },
   fire(power){
     const w=this.cur();
+    if(!w || w.dead){ this.nextTurn(); return; }
     const wp=WEAPONS[this.weapon];
     const sp=250+power*430;
     const vx=Math.cos(w.aim)*sp, vy=Math.sin(w.aim)*sp;
@@ -645,47 +664,55 @@ const Game = {
       w.face = tx>w.x?1:-1;
     }
     this.aiTimer-=dt;
-    // 缓动瞄准
+    // 缓动瞄准；超时则强制开火，避免角度夹不住时永远卡住
     const da=this.aiPlan.aim - w.aim;
-    w.aim += clamp(da, -1.6*dt, 1.6*dt);
-    if(this.aiTimer<=0 && Math.abs(da)<0.05){
-      this.weapon=0;
-      this.fire(clamp(this.aiPlan.power,0.15,1));
+    w.aim += clamp(da, -2.2*dt, 2.2*dt);
+    if(this.aiTimer<=0){
+      if(Math.abs(da)<0.08 || this.aiTimer<-1.4){
+        w.aim = this.aiPlan.aim;
+        this.weapon=0;
+        this.fire(clamp(this.aiPlan.power,0.15,1));
+      }
     }
   },
 
   /* ---- 指针分区 ---- */
   onPointerDown(x,y,id){
     if(this.state==="menu"){
-      if(this.hitRect(x,y,W/2-130,470,260,52)) this.startGame({cycle:1,chapter:1,stage:1,score:0,weapon:0});
-      else if(this.hitRect(x,y,W/2-130,530,260,52)){
+      if(this.hitRect(x,y,W/2-130,250,260,48)) this.startGame({cycle:1,chapter:1,stage:1,score:0,weapon:0});
+      else if(this.hitRect(x,y,W/2-130,306,260,48)){
         const s=Cont.load(); if(!s){ this.showMsg('没有进度',1.2); return; } this.startGame(s);
-      } else if(this.hitRect(x,y,W/2-130,590,260,52)){
+      } else if(this.hitRect(x,y,W/2-130,362,260,48)){
         const n=prompt('存到第几个档位（1-5）','1'); const i=(parseInt(n,10)|0)-1;
         if(i>=0&&i<5){ Slots.save(i,snapProg(this)); Cont.save(snapProg(this)); this.showMsg('已存档 '+(i+1),1.2); }
-      } else if(this.hitRect(x,y,W/2-130,650,260,52)){
+      } else if(this.hitRect(x,y,W/2-130,418,260,48)){
         const n=prompt('读取第几个档位（1-5）','1'); const i=(parseInt(n,10)|0)-1;
         const s=i>=0?Slots.load(i):null; if(!s){ this.showMsg('空档',1.2); return; } this.startGame(s);
       }
       return;
     }
     if(this.state==="paused"){
-      if(this.hitRect(x,y,W/2-130,430,260,52)) this.state="playing";
-      else if(this.hitRect(x,y,W/2-130,490,260,52)){
+      if(this.hitRect(x,y,W/2-130,200,260,48)) this.state="playing";
+      else if(this.hitRect(x,y,W/2-130,256,260,48)){
         const n=prompt('存到第几个档位（1-5）','1'); const i=(parseInt(n,10)|0)-1;
         if(i>=0&&i<5){Slots.save(i,snapProg(this));Cont.save(snapProg(this));this.showMsg('已存档',1);}
       }
-      else if(this.hitRect(x,y,W/2-130,550,260,52)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
-      else if(this.hitRect(x,y,W/2-130,610,260,52)) this.state="menu";
+      else if(this.hitRect(x,y,W/2-130,312,260,48)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
+      else if(this.hitRect(x,y,W/2-130,368,260,48)) this.state="menu";
       return;
     }
-    if(this.state==="gameover"||this.state==="win"){
-      if(this.hitRect(x,y,W/2-130,560,260,64)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
-      else if(this.hitRect(x,y,W/2-130,650,260,64)) this.state="menu";
+    if(this.state==="gameover"){
+      if(this.hitRect(x,y,W/2-280,380,260,56)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
+      else if(this.hitRect(x,y,W/2+20,380,260,56)) this.state="menu";
+      return;
+    }
+    if(this.state==="win"){
+      if(this.hitRect(x,y,W/2-280,340,260,56)) this.startGame({cycle:this.cycle,chapter:this.chapter,stage:this.stage,score:0,weapon:this.weapon});
+      else if(this.hitRect(x,y,W/2+20,340,260,56)) this.state="menu";
       return;
     }
     if(this.state==="levelclear"){
-      if(this.hitRect(x,y,W/2-130,560,260,64)) this.advanceStage();
+      if(this.hitRect(x,y,W/2-130,340,260,56)) this.advanceStage();
       return;
     }
     // playing
@@ -753,7 +780,12 @@ const Game = {
     for(const w of this.worms) w.physics(dt);
 
     const w=this.cur();
-    if(this.phase==="move" && w && !w.dead){
+    if(this.phase==="move"){
+      // 当前虫已阵亡（坠落/摔死）或无效：立刻进入结算再换人，避免流程卡死
+      if(!w || w.dead){
+        this.beginSettle(0.35);
+        Input.consume(); return;
+      }
       this.turnLeft-=dt;
       if(this.turnLeft<=0){ this.nextTurn(); Input.consume(); return; }
       if(w.team===0){
@@ -805,13 +837,19 @@ const Game = {
     }else if(this.phase==="proj"){
       if(this.proj){
         this.proj.update(dt);
-        if(this.proj.exploded){ this.proj=null; this.phase="settle"; this.settleT=0.9; }
-      }else{ this.phase="settle"; this.settleT=0.9; }
+        if(this.proj.exploded){ this.proj=null; this.beginSettle(0.9); }
+      }else{ this.beginSettle(0.9); }
     }else if(this.phase==="settle"){
       this.settleT-=dt;
-      // 等待所有虫子静止
-      const moving=this.worms.some(x=>!x.dead && (Math.abs(x.vx)>6||Math.abs(x.vy)>6));
-      if(this.settleT<=0 && !moving) this.nextTurn();
+      this.settleMax-=dt;
+      // 衰减微振，避免 |v| 永远略高于阈值
+      for(const x of this.worms){
+        if(x.dead) continue;
+        if(x.onGround && Math.abs(x.vx)<12) x.vx=0;
+        if(x.onGround && Math.abs(x.vy)<12) x.vy=0;
+      }
+      const moving=this.worms.some(x=>!x.dead && (Math.abs(x.vx)>10||Math.abs(x.vy)>10));
+      if((this.settleT<=0 && !moving) || this.settleMax<=0) this.nextTurn();
     }
     Input.consume();
   },
@@ -825,9 +863,9 @@ const Game = {
     g.addColorStop(0,"#12213f"); g.addColorStop(0.5,"#1c3358"); g.addColorStop(1,"#0e1b33");
     ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
     // 月亮
-    const mg=ctx.createRadialGradient(440,110,8,440,110,46);
+    const mg=ctx.createRadialGradient(860,70,8,860,70,46);
     mg.addColorStop(0,"rgba(255,244,214,.95)"); mg.addColorStop(0.5,"rgba(255,244,214,.25)"); mg.addColorStop(1,"transparent");
-    ctx.fillStyle=mg; ctx.beginPath(); ctx.arc(440,110,46,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=mg; ctx.beginPath(); ctx.arc(860,70,46,0,Math.PI*2); ctx.fill();
     // 云
     ctx.fillStyle="rgba(180,200,230,.13)";
     for(const c of this.clouds){
@@ -941,29 +979,29 @@ const Game = {
     ctx.globalAlpha=1;
   },
   overlay(){ ctx.fillStyle="rgba(6,8,20,.72)"; ctx.fillRect(0,0,W,H); },
-  bigBtn(y,text,colors){
-    const g=ctx.createLinearGradient(0,y,0,y+64);
-    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
-    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,64,14); ctx.fill();
-    ctx.fillStyle="#fff"; ctx.font="bold 26px sans-serif"; ctx.textAlign="center";
-    ctx.fillText(text,W/2,y+42);
-  },
   midBtn(y,text,colors){
-    const g=ctx.createLinearGradient(0,y,0,y+60);
+    const g=ctx.createLinearGradient(0,y,0,y+48);
     g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
-    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,60,14); ctx.fill();
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(W/2-130,y,260,48,12); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 22px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(text,W/2,y+32);
+  },
+  bigBtn(x,y,text,colors){
+    const g=ctx.createLinearGradient(0,y,0,y+56);
+    g.addColorStop(0,colors[0]); g.addColorStop(1,colors[1]);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(x,y,260,56,12); ctx.fill();
     ctx.fillStyle="#fff"; ctx.font="bold 24px sans-serif"; ctx.textAlign="center";
-    ctx.fillText(text,W/2,y+40);
+    ctx.fillText(text,x+130,y+36);
   },
   drawMenu(){
-    ctx.fillStyle="#fff"; ctx.font="bold 62px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("百战天虫", W/2, 290);
-    ctx.font="18px sans-serif"; ctx.fillStyle="#8ecae6";
-    ctx.fillText("回合制炮术对决 · 炸塌地形 · 消灭敌虫", W/2, 335);
+    ctx.fillStyle="#fff"; ctx.font="bold 48px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("百战天虫", W/2, 88);
+    ctx.font="16px sans-serif"; ctx.fillStyle="#8ecae6";
+    ctx.fillText("回合制炮术对决 · 炸塌地形 · 消灭敌虫 · 横屏", W/2, 122);
     // 装饰虫子
     const t=performance.now()/1000;
     for(let i=0;i<2;i++){
-      const x=W/2-90+i*180, y=420+Math.sin(t*2+i)*8;
+      const x=W/2-90+i*180, y=175+Math.sin(t*2+i)*8;
       const col=i===0?["#ffd1dc","#e07b9a"]:["#cde8ff","#6da8dd"];
       const g2=ctx.createRadialGradient(x-3,y-4,2,x,y,14);
       g2.addColorStop(0,col[0]); g2.addColorStop(1,col[1]);
@@ -974,49 +1012,48 @@ const Game = {
       ctx.fillStyle="#111";
       ctx.beginPath(); ctx.arc(x+5,y-7,2,0,Math.PI*2); ctx.arc(x-1,y-7,2,0,Math.PI*2); ctx.fill();
     }
-    this.midBtn(470,"新周目",["#ff9e5e","#d1495b"]);
-    this.midBtn(530,"继续旅程",["#3f8e50","#1e4d2b"]);
-    this.midBtn(590,"存档",["#5b8bff","#2a3f9f"]);
-    this.midBtn(650,"读档",["#8a6cff","#3a2a8a"]);
+    this.midBtn(250,"新周目",["#ff9e5e","#d1495b"]);
+    this.midBtn(306,"继续旅程",["#3f8e50","#1e4d2b"]);
+    this.midBtn(362,"存档",["#5b8bff","#2a3f9f"]);
+    this.midBtn(418,"读档",["#8a6cff","#3a2a8a"]);
     ctx.fillStyle="#9aa5c1"; ctx.font="13px sans-serif";
-    ctx.fillText("10章×10关·无限周目 · 武器进度可存档", W/2, 720);
-    ctx.fillText("PC: WASD · J开火 K跳 U武器 · P/B暂停", W/2, 744);
-    ctx.fillText("手机: 左摇杆 · 右 J/K/U · 上 P", W/2, 766);
-    ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best, W/2, 800);
+    ctx.fillText("10章×10关·无限周目 · 武器进度可存档", W/2, 484);
+    ctx.fillText("PC: WASD · J开火 K跳 U武器 · P/B暂停 ｜ 手机竖屏自动横屏", W/2, 506);
+    ctx.fillStyle="#667"; ctx.fillText("最高分: "+this.best, W/2, 528);
   },
   drawPaused(){
     this.overlay();
-    ctx.fillStyle="#fff"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("已暂停", W/2, 380);
-    this.midBtn(430,"继续游戏",["#3f8e50","#1e4d2b"]);
-    this.midBtn(490,"快速存档",["#8a6cff","#3a2a8a"]);
-    this.midBtn(550,"重新开始",["#ff9e5e","#d1495b"]);
-    this.midBtn(610,"返回菜单",["#5b8bff","#2a3f9f"]);
+    ctx.fillStyle="#fff"; ctx.font="bold 40px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("已暂停", W/2, 160);
+    this.midBtn(200,"继续游戏",["#3f8e50","#1e4d2b"]);
+    this.midBtn(256,"快速存档",["#8a6cff","#3a2a8a"]);
+    this.midBtn(312,"重新开始",["#ff9e5e","#d1495b"]);
+    this.midBtn(368,"返回菜单",["#5b8bff","#2a3f9f"]);
   },
   drawGameover(){
     this.overlay();
-    ctx.fillStyle="#ff4d6d"; ctx.font="bold 48px sans-serif"; ctx.textAlign="center";
-    ctx.fillText("全军覆没", W/2, 380);
+    ctx.fillStyle="#ff4d6d"; ctx.font="bold 44px sans-serif"; ctx.textAlign="center";
+    ctx.fillText("全军覆没", W/2, 180);
     ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
-    ctx.fillText("最终分数: "+this.score, W/2, 435);
+    ctx.fillText("最终分数: "+this.score, W/2, 230);
     ctx.fillStyle="#ffd60a"; ctx.font="16px sans-serif";
-    ctx.fillText("最高分: "+this.best, W/2, 468);
-    this.bigBtn(560,"一键重新开始",["#ff6b8b","#c9184a"]);
-    this.bigBtn(650,"返回菜单",["#5b8bff","#2a3f9f"]);
+    ctx.fillText("最高分: "+this.best, W/2, 262);
+    this.bigBtn(W/2-280,380,"一键重新开始",["#ff6b8b","#c9184a"]);
+    this.bigBtn(W/2+20,380,"返回菜单",["#5b8bff","#2a3f9f"]);
   },
   drawClear(final){
     this.overlay();
-    ctx.fillStyle="#95d5b2"; ctx.font="bold 46px sans-serif"; ctx.textAlign="center";
-    ctx.fillText(final?"全部通关!":"胜利!", W/2, 380);
+    ctx.fillStyle="#95d5b2"; ctx.font="bold 42px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(final?"全部通关!":"胜利!", W/2, 180);
     ctx.fillStyle="#fff"; ctx.font="20px sans-serif";
-    ctx.fillText("分数: "+this.score, W/2, 430);
+    ctx.fillText("分数: "+this.score, W/2, 230);
     if(final){
-      this.bigBtn(560,"再玩一次",["#3f8e50","#1e4d2b"]);
-      this.bigBtn(650,"返回菜单",["#5b8bff","#2a3f9f"]);
+      this.bigBtn(W/2-280,340,"再玩一次",["#3f8e50","#1e4d2b"]);
+      this.bigBtn(W/2+20,340,"返回菜单",["#5b8bff","#2a3f9f"]);
     }else{
-      this.bigBtn(560,"下一关",["#3f8e50","#1e4d2b"]);
+      this.bigBtn(W/2-130,340,"下一关",["#3f8e50","#1e4d2b"]);
       ctx.fillStyle="#9aa5c1"; ctx.font="14px sans-serif";
-      ctx.fillText("(按 J/回车 亦可继续)", W/2, 660);
+      ctx.fillText("(按 J/回车 亦可继续)", W/2, 430);
     }
   }
 };
