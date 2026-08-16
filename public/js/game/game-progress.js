@@ -2,7 +2,7 @@
  * Shared campaign progress + 5-slot save/load for Tool Basecamp action games.
  *
  * Chapter layout (10 stages):
- *   1–3 normal → 4 mini-boss → 5–7 normal → 8 mini-boss → 9 normal → 10 big boss
+ *   1–2 normal → 3 mini-boss → 4–5 normal → 6 mini-boss → 7–8 normal → 9 mini-boss → 10 big boss
  * After all chapters clear → next cycle (infinite), difficulty rises each cycle.
  *
  * PC extras: P and B both pause/resume (FC-style Start). V = select / soft function.
@@ -24,7 +24,7 @@
   function roleOfStage(stage) {
     stage = clampInt(stage, 1, LEVELS_PER_CHAPTER);
     if (stage === 10) return 'boss';
-    if (stage === 4 || stage === 8) return 'miniboss';
+    if (stage === 3 || stage === 6 || stage === 9) return 'miniboss';
     return 'normal';
   }
 

@@ -89,7 +89,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0a12;overflow:
   </div>
 </div>
 
-<script src="../../js/game/game-progress.js?v=1"></script>
+<script src="../../js/game/game-progress.js?v=2"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -941,12 +941,19 @@ const Game = (() => {
     } else {
       const st=((level-1)%10)+1;
       if(st===10) flash("⚠ 大Boss 关 · "+(typeof TBGameProgress!=="undefined"?TBGameProgress.label(Math.floor((level-1)/100)+1, Math.floor(((level-1)%100)/10)+1, st, true):("关"+level)), 2.2);
-      else if(st===4||st===8) flash("⚠ 小Boss 关", 1.8);
-      else if(level%5===0) flash("⚠ Boss 关：第 "+bossTierOfLevel(level)+"/"+BOSS_TIERS+" 号 Boss", 2.2);
+      else if(st===3||st===6||st===9) flash("⚠ 小Boss 关", 1.8);
     }
   }
   function bossTierOfLevel(lv){
     return Math.max(1, Math.min(BOSS_TIERS, Math.floor((lv|0)/5)));
+  }
+  function stageOfLevel(lv){
+    return ((lv-1)%10)+1;
+  }
+  function stageRole(lv){
+    return (typeof TBGameProgress!=="undefined")
+      ? TBGameProgress.roleOfStage(stageOfLevel(lv))
+      : (stageOfLevel(lv)===10?"boss":(stageOfLevel(lv)===3||stageOfLevel(lv)===6||stageOfLevel(lv)===9?"miniboss":"normal"));
   }
   /**
    * 10 只 Boss（关卡 5/10/…/50）外形递进：
@@ -1101,9 +1108,10 @@ const Game = (() => {
     if(debugMode && debugBossDelay>0) return;
     const alive=enemies.filter(e=>!e.dead).length;
     const hasBoss = enemies.some(e=>!e.dead&&e.type==="boss");
-    // 测试模式：10 只连锁；正式每 5 关一只（共 10 只）
+    // 测试模式：10 只连锁；正式：第3/6/9关小Boss，第10关大Boss
+    const role = stageRole(level);
     const wantBoss = !bossSpawned && !hasBoss && (
-      debugMode ? !debugBossCleared : (level%5===0)
+      debugMode ? !debugBossCleared : (role==="boss" || role==="miniboss")
     );
     const maxAlive = endless ? Math.min(4+Math.floor(level/2),8) : Math.min(4 + (coopMode?Math.max(0,friendlyTanks().length-1):0), 8);
     if(!wantBoss && alive>=maxAlive) return;
@@ -1114,6 +1122,21 @@ const Game = (() => {
       const r={x:bx,y:by,w:bw,h:bh};
       for(const o of [...friendlyTanks(),...enemies]) if(o&&!o.dead&&rectHit(r,o.rect())) return;
       const e=new Tank(bx,by,false);
+      const role = stageRole(level);
+      if(!debugMode && role==="miniboss"){
+        // 小 Boss：火焰车加强版（体型与血量介于精英与大Boss之间）
+        makeFlameCar(e);
+        e.hp=Math.max(e.hp, 8+Math.floor(level/10)); e.maxHp=e.hp;
+        e.speed=Math.max(42, e.speed-8);
+        e.isMiniBoss=true;
+        e.bossName="火焰小Boss";
+        bossSpawned=true;
+        if(freezeTimer>0) e.frozen=freezeTimer;
+        enemies.push(e); if(enemyQueue!==Infinity) enemyQueue--;
+        SFX.spawn();
+        flash("🔥 小Boss 火焰战车 · HP "+e.hp, 2.2);
+        return;
+      }
       makeBoss(e);
       bossSpawned=true;
       if(freezeTimer>0) e.frozen=freezeTimer;

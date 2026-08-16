@@ -270,10 +270,10 @@ const gamesConfig = {
                 { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=8' },
                 { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=7' },
-                { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=7' },
+                { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=8' },
                 { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=6' },
                 { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=6' },
-                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=52' }
+                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=53' }
             ]
         }
     ]

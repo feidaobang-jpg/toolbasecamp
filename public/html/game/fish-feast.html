@@ -24,7 +24,7 @@ canvas{display:block;background:#032a44;box-shadow:0 0 60px rgba(60,180,255,.25)
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=1"></script>
+<script src="../../js/game/game-progress.js?v=2"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -507,7 +507,7 @@ const Game=(()=>{
     {label:"继续旅程",x:BASE_W/2,y:308,w:240,h:48,act:()=>{const s=Cont.load();if(!s){flash('没有进度');return;}startGame(s);}},
     {label:"存档",x:BASE_W/2-70,y:366,w:120,h:44,act:()=>{const i=(parseInt(prompt('存档位1-5','1'),10)|0)-1;if(i>=0&&i<5){Slots.save(i,snapProg({cycle,chapter,stage,score,testMode}));Cont.save(snapProg({cycle,chapter,stage,score,testMode}));flash('已存档'+(i+1));}}},
     {label:"读档",x:BASE_W/2+70,y:366,w:120,h:44,act:()=>{const i=(parseInt(prompt('读档位1-5','1'),10)|0)-1;const s=i>=0?Slots.load(i):null;if(!s){flash('空档');return;}startGame(s);}},
-    {label:"测试模式",x:BASE_W/2,y:424,w:240,h:48,act:()=>startGame({cycle:1,chapter:1,stage:4,score:0,testMode:true})},
+    {label:"测试模式",x:BASE_W/2,y:424,w:240,h:48,act:()=>startGame({cycle:1,chapter:1,stage:3,score:0,testMode:true})},
   ];
   const overBtns=[
     {label:"重新开始",x:BASE_W/2-140,y:400,w:220,h:56,act:()=>startGame({cycle,chapter,stage,score:0,testMode})},

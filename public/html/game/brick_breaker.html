@@ -27,7 +27,7 @@ html,body{
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=1"></script>
+<script src="../../js/game/game-progress.js?v=2"></script>
 <script src="../../js/game/touch-ui.js?v=2"></script>
 <script>
 "use strict";
@@ -767,7 +767,7 @@ const Game = {
     AudioSys.unlock();
     if(this.state==="menu"){
       if(code==="Enter"||code==="KeyJ"){ AudioSys.sfxClick(); this.startGame({cycle:1,chapter:1,stage:1}); }
-      if(code==="KeyU"){ AudioSys.sfxClick(); this.startGame({cycle:1,chapter:1,stage:4,testMode:true}); }
+      if(code==="KeyU"){ AudioSys.sfxClick(); this.startGame({cycle:1,chapter:1,stage:3,testMode:true}); }
       return;
     }
     if(this.state==="play"){
@@ -1002,7 +1002,7 @@ const Game = {
     mkBtn(360,"继续旅程",()=>{const s=Cont.load(); if(!s) return; this.startGame(s);},false);
     mkBtn(420,"存档",()=>{const i=(parseInt(prompt('存档1-5','1'),10)|0)-1; if(i>=0&&i<5){ Slots.save(i,snapProg(this)); Cont.save(snapProg(this)); }},false);
     mkBtn(480,"读档",()=>{const i=(parseInt(prompt('读档1-5','1'),10)|0)-1; const s=i>=0?Slots.load(i):null; if(s) this.startGame(s);},false);
-    mkBtn(540,"测试模式",()=>this.startGame({cycle:1,chapter:1,stage:4,testMode:true}),false);
+    mkBtn(540,"测试模式",()=>this.startGame({cycle:1,chapter:1,stage:3,testMode:true}),false);
     // 操作说明
     c.fillStyle="#8fa8d8"; c.font="15px sans-serif";
     c.fillText("PC：A/D 或 ←/→ 移动　J/回车 攻击　K/空格 发射", BASE_W/2, 590);

@@ -24,7 +24,7 @@ canvas{display:block;background:#0d0920;box-shadow:0 0 60px rgba(160,80,255,.3);
 </head>
 <body>
 <div id="wrap"><canvas id="game"></canvas></div>
-<script src="../../js/game/game-progress.js?v=1"></script>
+<script src="../../js/game/game-progress.js?v=2"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -575,7 +575,7 @@ const Game=(()=>{
     {label:"继续旅程",x:BASE_W/2,y:530,w:260,h:52,act:()=>{const s=Cont.load();if(!s){flash('没有进度');return;}startGame(s);}},
     {label:"存档",x:BASE_W/2-80,y:590,w:140,h:48,act:()=>{const i=(parseInt(prompt('存档1-5','1'),10)|0)-1;if(i>=0&&i<5){Slots.save(i,snapProg({cycle,chapter,stage,score,testMode}));flash('存档'+(i+1));}}},
     {label:"读档",x:BASE_W/2+80,y:590,w:140,h:48,act:()=>{const i=(parseInt(prompt('读档1-5','1'),10)|0)-1;const s=i>=0?Slots.load(i):null;if(!s){flash('空');return;}startGame(s);}},
-    {label:"测试模式",x:BASE_W/2,y:650,w:260,h:52,act:()=>startGame({cycle:1,chapter:1,stage:4,testMode:true})},
+    {label:"测试模式",x:BASE_W/2,y:650,w:260,h:52,act:()=>startGame({cycle:1,chapter:1,stage:3,testMode:true})},
   ];
   const overBtns=[
     {label:"重新开始",x:BASE_W/2,y:600,w:260,h:64,act:()=>startGame({cycle,chapter,stage,score:0,testMode})},

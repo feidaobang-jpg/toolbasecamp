@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="wrap"><canvas id="cv" width="960" height="540"></canvas></div>
-<script src="../../js/game/game-progress.js?v=1"></script>
+<script src="../../js/game/game-progress.js?v=2"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -569,7 +569,7 @@ const Game={
       else if(this.hitRect(x,y,...b.cont)){ const s=Cont.load(); if(!s){ this.showMsg('没有进度',1.2); return; } this.startGame(s); }
       else if(this.hitRect(x,y,...b.save)){ const i=(parseInt(prompt('存档位1-5','1'),10)|0)-1; if(i>=0&&i<5){ Slots.save(i,snapProg(this)); Cont.save(snapProg(this)); this.showMsg('已存档'+(i+1),1.2);} }
       else if(this.hitRect(x,y,...b.load)){ const i=(parseInt(prompt('读档位1-5','1'),10)|0)-1; const s=i>=0?Slots.load(i):null; if(!s){ this.showMsg('空档',1.2); return; } this.startGame(s); }
-      else if(this.hitRect(x,y,...b.test)) this.startGame({cycle:1,chapter:1,stage:4,score:0,testMode:true});
+      else if(this.hitRect(x,y,...b.test)) this.startGame({cycle:1,chapter:1,stage:3,score:0,testMode:true});
       return;
     }
     if(this.state==="paused"){
