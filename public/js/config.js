@@ -255,7 +255,7 @@ const gamesConfig = {
             titleKey: 'games.groups.action',
             items: [
                 { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
-                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=8' },
+                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=9' },
                 { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
                 { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=7' },
                 { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
