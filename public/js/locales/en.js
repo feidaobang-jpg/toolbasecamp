@@ -418,8 +418,8 @@ window.TB_LOCALES.en = {
     games: {
         groups: {
             all: 'Games',
-            action: 'Action',
-            puzzle: 'Puzzle & Board',
+            action: 'Action & Role',
+            puzzle: 'Puzzle & Casual',
             polished: 'Polished',
             draft: 'Early drafts',
             developing: 'In development',
@@ -794,7 +794,7 @@ window.TB_LOCALES.en = {
             desc: 'Jungle-chess animal slots: elephant–rat with big/small pays, cannon & train bonuses. GO reuses last bets. Fun only.'
         },
         sheepstack: {
-            title: 'Stack Match',
+            title: 'Stack Layers',
             desc: 'Tap free tiles into the tray. Three matching emoji clear. Later levels: more tiles, less time.',
             left: 'Left',
             undo: 'Undo',

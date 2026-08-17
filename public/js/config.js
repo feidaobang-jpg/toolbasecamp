@@ -254,18 +254,10 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.action',
             items: [
-                { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
-                { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html?v=3' },
-                { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },
-                { titleKey: 'tools.hundredFloors.title', url: 'html/game/hundred_floors.html?v=6' },
                 { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
-                { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=7' },
-                { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=7' },
-                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=9' },
                 { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=8' },
                 { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
                 { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=7' },
-                { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=7' },
                 { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
                 { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=1' }
@@ -279,7 +271,15 @@ const gamesConfig = {
                 { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=3' },
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=10' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
-                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' }
+                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
+                { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
+                { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html?v=3' },
+                { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },
+                { titleKey: 'tools.hundredFloors.title', url: 'html/game/hundred_floors.html?v=6' },
+                { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=7' },
+                { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=7' },
+                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=10' },
+                { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=7' }
             ]
         }
     ]

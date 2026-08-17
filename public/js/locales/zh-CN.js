@@ -417,8 +417,8 @@ window.TB_LOCALES['zh-CN'] = {
     games: {
         groups: {
             all: '游戏',
-            action: '动作休闲',
-            puzzle: '益智棋盘',
+            action: '动作扮演',
+            puzzle: '益智休闲',
             polished: '高完成度',
             draft: '低完成度',
             developing: '正在开发',
@@ -793,7 +793,7 @@ window.TB_LOCALES['zh-CN'] = {
             desc: '斗兽棋老虎机：象一大一小(底中小象)，其余一大两小；鼠10/2，左礼包右火车。仅供娱乐。'
         },
         sheepstack: {
-            title: '叠消消',
+            title: '叠叠乐',
             desc: '点开未被压住的图案放入槽位，三个相同消除。通关后牌更多、时间更紧。本地运行。',
             left: '剩余',
             undo: '撤销',
