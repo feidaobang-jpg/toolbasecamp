@@ -358,3 +358,47 @@ const privateToolsConfig = {
 };
 
 window.privateToolsConfig = privateToolsConfig;
+
+/** ICP filing footer — shared by base.js (tool pages) and common_ui.js (hub pages). */
+function tbIcpBeianNumber() {
+    if (typeof siteConfig !== 'undefined' && siteConfig.icpBeianNumber) {
+        return String(siteConfig.icpBeianNumber).trim();
+    }
+    return '';
+}
+
+function tbIcpBeianUrl() {
+    if (typeof siteConfig !== 'undefined' && siteConfig.icpBeianUrl) {
+        return String(siteConfig.icpBeianUrl).trim();
+    }
+    return 'https://beian.miit.gov.cn/';
+}
+
+function tbRenderIcpFooter() {
+    if (document.body && document.body.getAttribute('data-no-icp-footer') === '1') return;
+    var number = tbIcpBeianNumber();
+    if (!number && typeof t === 'function') {
+        number = t('site.icpBeian');
+    }
+    if (!number || number === 'site.icpBeian') return;
+
+    var footer = document.getElementById('site-icp-footer');
+    if (!footer) {
+        footer = document.createElement('footer');
+        footer.id = 'site-icp-footer';
+        footer.className = 'site-icp-footer';
+        footer.setAttribute('role', 'contentinfo');
+        document.body.appendChild(footer);
+    }
+
+    var href = tbIcpBeianUrl();
+    footer.innerHTML = '';
+    var a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = number;
+    footer.appendChild(a);
+}
+
+window.tbRenderIcpFooter = tbRenderIcpFooter;

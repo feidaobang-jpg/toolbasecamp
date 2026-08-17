@@ -168,24 +168,4 @@
     }
 }
 
-/* ICP filing footer (injected by common_ui.js) */
-.site-icp-footer {
-    flex-shrink: 0;
-    text-align: center;
-    padding: 8px 12px 10px;
-    font-size: 12px;
-    line-height: 1.4;
-    color: #9ca3af;
-    background: #f9fafb;
-    border-top: 1px solid #f3f4f6;
-}
-
-.site-icp-footer a {
-    color: #6b7280;
-    text-decoration: none;
-}
-
-.site-icp-footer a:hover {
-    color: #2563eb;
-    text-decoration: underline;
-}
+/* .site-icp-footer styles live in base.css (shared with tool pages) */

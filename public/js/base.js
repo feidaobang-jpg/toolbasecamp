@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initMenuEvents();
     initCopyButtons();
     ensureTbStats();
+    if (typeof window.tbRenderIcpFooter === 'function') window.tbRenderIcpFooter();
 });
 
 function ensureTbStats() {
@@ -45,6 +46,7 @@ document.addEventListener('tb:locale', function () {
     renderSiteTitle();
     renderMenu();
     if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);
+    if (typeof window.tbRenderIcpFooter === 'function') window.tbRenderIcpFooter();
 });
 
 function getToolRootPrefix() {

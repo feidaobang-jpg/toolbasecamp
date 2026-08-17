@@ -769,42 +769,10 @@
         document.head.appendChild(script);
     }
 
-    function icpBeianNumber() {
-        if (typeof siteConfig !== 'undefined' && siteConfig.icpBeianNumber) {
-            return String(siteConfig.icpBeianNumber).trim();
-        }
-        return '';
-    }
-
-    function icpBeianUrl() {
-        if (typeof siteConfig !== 'undefined' && siteConfig.icpBeianUrl) {
-            return String(siteConfig.icpBeianUrl).trim();
-        }
-        return 'https://beian.miit.gov.cn/';
-    }
-
     function renderIcpFooter() {
-        if (document.body && document.body.getAttribute('data-no-icp-footer') === '1') return;
-        const number = icpBeianNumber() || tr('site.icpBeian');
-        if (!number || number === 'site.icpBeian') return;
-
-        let footer = document.getElementById('site-icp-footer');
-        if (!footer) {
-            footer = document.createElement('footer');
-            footer.id = 'site-icp-footer';
-            footer.className = 'site-icp-footer';
-            footer.setAttribute('role', 'contentinfo');
-            document.body.appendChild(footer);
+        if (typeof window.tbRenderIcpFooter === 'function') {
+            window.tbRenderIcpFooter();
         }
-
-        const href = icpBeianUrl();
-        footer.innerHTML = '';
-        const a = document.createElement('a');
-        a.href = href;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = number;
-        footer.appendChild(a);
     }
 
     function runMainUiInit() {

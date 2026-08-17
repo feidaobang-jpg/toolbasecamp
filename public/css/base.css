@@ -610,4 +610,28 @@ label {
     .container > .sidebar ~ .content > .tool-header:not(:has(> p)) {
         display: none;
     }
+}
+
+/* ICP filing footer (injected by tbRenderIcpFooter in config.js) */
+.site-icp-footer {
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 10px 12px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #9ca3af;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.site-icp-footer a {
+    color: #6b7280;
+    text-decoration: none;
+}
+
+.site-icp-footer a:hover {
+    color: #2563eb;
+    text-decoration: underline;
 } 
