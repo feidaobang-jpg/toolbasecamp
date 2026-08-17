@@ -59,6 +59,14 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  function lyricsPreviewSnippet(raw, maxLen) {
+    maxLen = maxLen || 100;
+    var plain = String(raw || '').replace(/\s+/g, ' ').trim();
+    if (!plain) return '';
+    if (plain.length > maxLen) plain = plain.slice(0, maxLen - 1) + '…';
+    return plain;
+  }
+
   function setStatus(el, msg, isErr) {
     if (!el) return;
     el.textContent = msg || '';
@@ -171,18 +179,37 @@
           row.className = 'ladder-row';
           var nick = (item.creatorNickname || '').trim();
           var phone = (item.creatorPhone || '').trim();
-          var sub = [
-            item.id,
+          var promptText = (item.prompt || '').trim();
+          var lyFull = (item.lyrics || '').trim();
+          var subParts = [];
+
+          if (nick || phone) {
+            subParts.push(
+              tr('hub.musicPage.creatorLabel') + ': ' +
+              (nick || tr('hub.musicPage.untitled')) +
+              (phone && phone !== '—' ? (' · ' + phone) : '')
+            );
+          }
+          if (promptText) {
+            subParts.push(tr('hub.musicPage.promptLabel') + ': ' + promptText);
+          }
+          var lySnippet = lyricsPreviewSnippet(lyFull, 100);
+          if (lySnippet) {
+            subParts.push(tr('hub.musicPage.lyricsLabel') + ': ' + lySnippet);
+          }
+          subParts.push([
             item.model || '',
             fmtDuration(item.duration),
-            nick || phone ? (nick + (phone && phone !== '—' ? (' · ' + phone) : '')) : '',
+            lyFull ? tr('hub.musicPage.hasLyrics') : tr('hub.musicPage.noLyrics'),
             item.createdAt || ''
-          ].filter(Boolean).join(' · ');
+          ].filter(Boolean).join(' · '));
+
           row.innerHTML =
             '<div class="ladder-row-main">' +
               '<div class="ladder-row-title">' + escapeHtml(item.title || tr('hub.musicPage.untitled')) + '</div>' +
-              '<div class="ladder-row-sub">' + escapeHtml(sub) + '</div>' +
-              ((item.prompt || '').trim() ? ('<div class="ladder-row-sub">' + escapeHtml(tr('hub.musicPage.promptLabel') + ': ' + item.prompt) + '</div>') : '') +
+              subParts.map(function (line) {
+                return '<div class="ladder-row-sub">' + escapeHtml(line) + '</div>';
+              }).join('') +
             '</div>' +
             '<div class="action-row ladder-row-actions">' +
               '<button type="button" class="tb-btn" data-del-ai="' + escapeHtml(item.id) + '">' + escapeHtml(tr('privateHub.ops.tradMusicDelete')) + '</button>' +
