@@ -132,7 +132,7 @@
     items.forEach(function (item) {
       var card = document.createElement('article');
       card.className = 'img-hub-card';
-      var src = fullImageUrl(item.imageUrl);
+      var src = fullImageUrl(item.thumbnailUrl || item.imageUrl);
       card.innerHTML =
         '<div class="img-hub-thumb-wrap">' +
           '<img class="img-hub-thumb" alt="" loading="lazy" decoding="async" />' +
