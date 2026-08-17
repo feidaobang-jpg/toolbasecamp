@@ -9,10 +9,10 @@
   var objectUrls = {};
   var player = null;
   var currentId = '';
-  var currentKind = 'ai';
+  var currentKind = 'traditional';
   var currentItem = null;
   var currentCardEl = null;
-  var activeTab = 'ai';
+  var activeTab = 'traditional';
   var listCache = { ai: null, traditional: null };
   var tradSearchQuery = '';
   var CONT_PLAY_KEY = 'tbc_music_cont_play_v1';
@@ -755,7 +755,7 @@
   window.renderMusicHub = function () {
     var main = document.getElementById('main-content');
     if (!main) return;
-    activeTab = 'ai';
+    activeTab = 'traditional';
     listCache = { ai: null, traditional: null };
     tradSearchQuery = '';
     destroyPlayer();
@@ -765,11 +765,11 @@
           '<h2 class="music-hub-title">' + escapeHtml(tr('hub.musicPage.title')) + '</h2>' +
           '<p class="music-hub-sub" id="music-hub-sub"></p>' +
           '<div class="tb-tabs tb-tabs--underline music-hub-tabs" role="tablist">' +
-            '<button type="button" class="tb-tab active" data-music-tab="ai" role="tab" aria-selected="true">' +
-              escapeHtml(tr('hub.musicPage.aiTab')) +
-            '</button>' +
-            '<button type="button" class="tb-tab" data-music-tab="traditional" role="tab" aria-selected="false">' +
+            '<button type="button" class="tb-tab active" data-music-tab="traditional" role="tab" aria-selected="true">' +
               escapeHtml(tr('hub.musicPage.traditionalTab')) +
+            '</button>' +
+            '<button type="button" class="tb-tab" data-music-tab="ai" role="tab" aria-selected="false">' +
+              escapeHtml(tr('hub.musicPage.aiTab')) +
             '</button>' +
           '</div>' +
           '<div class="action-row" id="music-create-row" style="margin:12px 0 8px">' +
@@ -825,7 +825,7 @@
       loadList(activeTab);
     });
     updateTabUi();
-    loadList('ai');
-    loadList('traditional', { background: true });
+    loadList('traditional');
+    loadList('ai', { background: true });
   };
 })();
