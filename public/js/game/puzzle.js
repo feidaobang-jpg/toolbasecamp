@@ -11,6 +11,7 @@
     var restartBtn = document.getElementById('restart-btn');
     var diffRow = document.getElementById('diff-row');
     var fileInput = document.getElementById('file-input');
+    var presetGrid = document.getElementById('preset-grid');
     var cropPanel = document.getElementById('crop-panel');
     var cropStage = document.getElementById('crop-stage');
     var cropImg = document.getElementById('crop-img');
@@ -24,8 +25,15 @@
         if (audio) audio.sfx(name);
     }
 
+    var PRESET_BASE = '../../assets/game/puzzle/';
+    var PRESETS = [
+        '01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg',
+        '06.jpg', '07.jpg', '08.jpg', '09.jpg', '10.jpg'
+    ];
+
     var grid = 3;
     var imageUrl = '';
+    var activePreset = -1;
     var pieces = [];
     var selected = -1;
     var complete = false;
@@ -80,6 +88,57 @@
         ctx.textBaseline = 'middle';
         ctx.fillText('Tool Basecamp', 300, 300);
         return c.toDataURL('image/png');
+    }
+
+    function presetUrl(index) {
+        return PRESET_BASE + PRESETS[index] + '?v=1';
+    }
+
+    function syncPresetActive() {
+        if (!presetGrid) return;
+        Array.prototype.forEach.call(presetGrid.querySelectorAll('.puzzle-pick-btn'), function (btn) {
+            var idx = Number(btn.dataset.preset);
+            btn.classList.toggle('is-active', idx === activePreset);
+            btn.setAttribute('aria-selected', idx === activePreset ? 'true' : 'false');
+        });
+    }
+
+    function selectPreset(index, reshuffle) {
+        if (index < 0 || index >= PRESETS.length) return;
+        activePreset = index;
+        imageUrl = presetUrl(index);
+        syncPresetActive();
+        if (reshuffle !== false) build();
+        else {
+            previewEl.src = imageUrl;
+            if (pieces.length) render();
+        }
+    }
+
+    function renderPresetGrid() {
+        if (!presetGrid) return;
+        presetGrid.innerHTML = '';
+        PRESETS.forEach(function (name, index) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'puzzle-pick-btn';
+            btn.dataset.preset = String(index);
+            btn.setAttribute('role', 'option');
+            btn.setAttribute('aria-label', 'Image ' + (index + 1));
+            var img = document.createElement('img');
+            img.src = presetUrl(index);
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            btn.appendChild(img);
+            btn.addEventListener('click', function () {
+                play('click');
+                if (fileInput) fileInput.value = '';
+                selectPreset(index, true);
+            });
+            presetGrid.appendChild(btn);
+        });
+        syncPresetActive();
     }
 
     function scrollToBottom() {
@@ -402,6 +461,8 @@
     cropApply.addEventListener('click', function () {
         if (!cropSource) return;
         imageUrl = exportCrop();
+        activePreset = -1;
+        syncPresetActive();
         closeCropper();
         build();
     });
@@ -431,6 +492,17 @@
         }
     });
 
-    imageUrl = makeDefaultImage();
-    build();
+    renderPresetGrid();
+    activePreset = Math.floor(Math.random() * PRESETS.length);
+    imageUrl = presetUrl(activePreset);
+    syncPresetActive();
+    var bootImg = new Image();
+    bootImg.onload = function () { build(); };
+    bootImg.onerror = function () {
+        imageUrl = makeDefaultImage();
+        activePreset = -1;
+        syncPresetActive();
+        build();
+    };
+    bootImg.src = imageUrl;
 })();

@@ -417,6 +417,8 @@ window.TB_LOCALES['zh-CN'] = {
     games: {
         groups: {
             all: '游戏',
+            action: '动作休闲',
+            puzzle: '益智棋盘',
             polished: '高完成度',
             draft: '低完成度',
             developing: '正在开发',
@@ -624,8 +626,9 @@ window.TB_LOCALES['zh-CN'] = {
         },
         puzzle: {
             title: '拼图',
-            desc: '交换碎片还原整图。可用默认图或上传自己的照片。本地处理。',
+            desc: '交换碎片还原整图。可选预设图（默认随机）或上传自己的照片。本地处理。',
             hint: '拖到目标格互换，或依次点两块碎片交换。',
+            pickImage: '选择图片',
             upload: '自定义图片（可选）',
             win: '拼图完成！',
             loadFailed: '图片加载失败',
@@ -636,10 +639,6 @@ window.TB_LOCALES['zh-CN'] = {
         brickBreaker: {
             title: '打砖块',
             desc: '竖屏霓虹打砖块：挡板弹球清砖块，道具与关卡挑战。触屏可玩，本地运行。'
-        },
-        angryBirds: {
-            title: '愤怒的小鸟',
-            desc: '弹弓发射小鸟摧毁绿猪与方块结构。闯关与无尽模式，触屏可玩。'
         },
         bubbleDragon: {
             title: '泡泡龙',
