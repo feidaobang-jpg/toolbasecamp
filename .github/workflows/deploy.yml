@@ -108,6 +108,13 @@ jobs:
             public/ \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
 
+      - name: Ensure toolbasecamp.com migration notice
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" \
+            'test -f /var/www/toolbasecamp/migration-notice.html || (test -f /opt/toolbasecamp-deploy/install-migration-notice.sh && bash /opt/toolbasecamp-deploy/install-migration-notice.sh); curl -sf -H "Host: toolbasecamp.com" http://127.0.0.1/ | grep -q "站点已迁移" || { echo "::error:: toolbasecamp.com / missing migration notice"; exit 1; }'
+
       - name: Rsync API server
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |

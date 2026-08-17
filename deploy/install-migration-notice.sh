@@ -5,17 +5,20 @@ set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
 WEB="/var/www/toolbasecamp"
-NOTICE_SRC="$DEPLOY/migration-notice.html"
 NOTICE_DST="$WEB/migration-notice.html"
 
-if [[ ! -f "$NOTICE_SRC" ]]; then
-  echo "ERROR: $NOTICE_SRC not found"
-  exit 1
+mkdir -p "$WEB"
+
+# Primary: rsync deploys public/migration-notice.html. Fallback: deploy/ copy.
+if [[ ! -f "$NOTICE_DST" && -f "$DEPLOY/migration-notice.html" ]]; then
+  cp "$DEPLOY/migration-notice.html" "$NOTICE_DST"
+  chmod 644 "$NOTICE_DST"
 fi
 
-mkdir -p "$WEB"
-cp "$NOTICE_SRC" "$NOTICE_DST"
-chmod 644 "$NOTICE_DST"
+if [[ ! -f "$NOTICE_DST" ]]; then
+  echo "ERROR: $NOTICE_DST missing (add public/migration-notice.html to repo)"
+  exit 1
+fi
 
 bash "$DEPLOY/patch-nginx-main.sh"
 
