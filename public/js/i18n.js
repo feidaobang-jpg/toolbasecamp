@@ -64,10 +64,23 @@
         return item.name || item.title || item.description || item.cta || '';
     }
 
+    function localeCookieDomain() {
+        var host = (location.hostname || '').toLowerCase();
+        if (host === 'zhengxiaohui.cn' || host.endsWith('.zhengxiaohui.cn')) {
+            return '.zhengxiaohui.cn';
+        }
+        if (host === 'toolbasecamp.com' || host.endsWith('.toolbasecamp.com')) {
+            return '.toolbasecamp.com';
+        }
+        return '';
+    }
+
     function syncLocaleCookie(locale) {
         try {
+            var dom = localeCookieDomain();
+            var suffix = dom ? ('; domain=' + dom) : '';
             document.cookie = 'tb-locale=' + encodeURIComponent(locale) +
-                '; domain=.toolbasecamp.com; path=/; max-age=31536000; SameSite=Lax';
+                suffix + '; path=/; max-age=31536000; SameSite=Lax';
         } catch (e) { /* ignore */ }
     }
 

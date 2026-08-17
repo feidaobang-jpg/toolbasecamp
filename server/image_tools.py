@@ -184,6 +184,9 @@ except OSError:
     PUBLIC_IMAGE_DIR = Path(__file__).resolve().parent / "var" / "public-images"
     PUBLIC_IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
+PUBLIC_THUMB_MAX_WIDTH = max(120, int(os.environ.get("PUBLIC_IMAGE_THUMB_WIDTH") or "400"))
+PUBLIC_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("PUBLIC_IMAGE_THUMB_QUALITY") or "75")))
+
 CN_TZ = ZoneInfo("Asia/Shanghai")
 
 # Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
@@ -308,6 +311,64 @@ def _public_image_path(file_name: str) -> Path:
     return path
 
 
+def _public_thumb_file_name(image_id: str) -> str:
+    iid = "".join(ch for ch in str(image_id or "") if ch.isalnum())
+    if len(iid) < 16:
+        raise HTTPException(status_code=400, detail="Invalid image id")
+    return f"{iid}_thumb.jpg"
+
+
+def _public_thumb_path(image_id: str) -> Path:
+    return _public_image_path(_public_thumb_file_name(image_id))
+
+
+def _make_public_thumbnail_bytes(data: bytes) -> Optional[bytes]:
+    """Grid preview JPEG (~400px wide)."""
+    if not data:
+        return None
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+
+        im = Image.open(BytesIO(data))
+        if im.mode in ("RGBA", "P", "LA"):
+            im = im.convert("RGB")
+        w, h = im.size
+        max_w = PUBLIC_THUMB_MAX_WIDTH
+        if w > max_w:
+            nh = max(1, int(round(h * max_w / w)))
+            im = im.resize((max_w, nh), Image.Resampling.LANCZOS)
+        buf = BytesIO()
+        im.save(buf, format="JPEG", quality=PUBLIC_THUMB_JPEG_QUALITY, optimize=True)
+        out = buf.getvalue()
+        return out if out else None
+    except Exception:
+        return None
+
+
+def _write_public_thumbnail(image_id: str, source_data: bytes) -> bool:
+    thumb = _make_public_thumbnail_bytes(source_data)
+    if not thumb:
+        return False
+    try:
+        path = _public_thumb_path(image_id)
+        path.write_bytes(thumb)
+        return True
+    except Exception:
+        return False
+
+
+def _ensure_public_thumbnail(image_id: str, full_path: Path) -> Path:
+    """Return thumb path, generating from full image if missing."""
+    thumb_path = _public_thumb_path(image_id)
+    if thumb_path.is_file():
+        return thumb_path
+    if full_path.is_file():
+        _write_public_thumbnail(image_id, full_path.read_bytes())
+    return thumb_path
+
+
 def _insert_public_image(
     *,
     image_id: str,
@@ -367,6 +428,7 @@ def _publish_public_image(
     file_name = f"{image_id}{ext}"
     path = PUBLIC_IMAGE_DIR / file_name
     path.write_bytes(data)
+    _write_public_thumbnail(image_id, data)
     try:
         _insert_public_image(
             image_id=image_id,
@@ -381,6 +443,7 @@ def _publish_public_image(
     except Exception:
         try:
             path.unlink(missing_ok=True)
+            _public_thumb_path(image_id).unlink(missing_ok=True)
         except Exception:
             pass
         raise
@@ -388,6 +451,7 @@ def _publish_public_image(
         "publicId": image_id,
         "publicUrl": f"/image/public/{image_id}",
         "publicDownloadUrl": f"/image/public/{image_id}?download=1",
+        "publicThumbnailUrl": f"/pubimg/{image_id}_thumb.jpg",
     }
 
 
@@ -583,6 +647,7 @@ def image_public_list(
                 "creatorNickname": creator["creatorNickname"],
                 "creatorPhone": creator["creatorPhone"],
                 "imageUrl": f"/image/public/{iid}",
+                "thumbnailUrl": f"/pubimg/{iid}_thumb.jpg",
                 "downloadUrl": f"/image/public/{iid}?download=1",
             }
         )
@@ -661,11 +726,17 @@ def image_public_delete(image_id: str, admin: dict = Depends(_admin_user)):
                 path.unlink()
         except Exception:
             pass
+    try:
+        thumb = _public_thumb_path(iid)
+        if thumb.is_file():
+            thumb.unlink()
+    except Exception:
+        pass
     return {"success": True, "deletedId": iid}
 
 
 @router.get("/public/{image_id}")
-def image_public_file(image_id: str, download: int = 0):
+def image_public_file(image_id: str, download: int = 0, thumb: int = 0):
     iid = "".join(ch for ch in str(image_id or "") if ch.isalnum())
     if len(iid) < 16:
         raise HTTPException(status_code=404, detail="Image not found")
@@ -690,6 +761,15 @@ def image_public_file(image_id: str, download: int = 0):
     path = _public_image_path(str(row.get("file_name") or ""))
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Image file missing")
+    if thumb and not download:
+        thumb_path = _ensure_public_thumbnail(iid, path)
+        if thumb_path.is_file():
+            filename = _ascii_image_filename(f"ai-image-{iid}-thumb", ".jpg")
+            headers = {
+                "Content-Disposition": f'inline; filename="{filename}"',
+                "Cache-Control": "public, max-age=86400",
+            }
+            return FileResponse(thumb_path, media_type="image/jpeg", headers=headers)
     ext = row.get("file_ext") or path.suffix or ".png"
     filename = _ascii_image_filename(f"ai-image-{iid}", ext)
     headers = {

@@ -108,6 +108,13 @@ jobs:
             public/ \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
 
+      - name: Ensure toolbasecamp.com migration notice
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true' || steps.changes.outputs.deploy == 'true'
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" \
+            'test -f /var/www/toolbasecamp/migration-notice.html || (test -f /opt/toolbasecamp-deploy/install-migration-notice.sh && bash /opt/toolbasecamp-deploy/install-migration-notice.sh); curl -sf -H "Host: toolbasecamp.com" http://127.0.0.1/ | grep -q "站点已迁移" || { echo "::error:: toolbasecamp.com / missing migration notice"; exit 1; }'
+
       - name: Rsync API server
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
         run: |
@@ -269,7 +276,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" 'bash -s' << 'REMOTE'
           set -euo pipefail
           apt-get update -qq
-          apt-get install -y python3 python3-venv python3-pip libreoffice-writer rsync >/dev/null 2>&1 || true
+          apt-get install -y python3 python3-venv python3-pip libreoffice-writer rsync ffmpeg >/dev/null 2>&1 || true
           if ! command -v mysql >/dev/null 2>&1; then
             DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server >/dev/null 2>&1 || true
           fi
@@ -306,6 +313,7 @@ jobs:
           # Portal / secondary nginx (best-effort; must not block API deploy)
           bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh || true
           bash /opt/toolbasecamp-deploy/patch-nginx-main.sh || true
+          bash /opt/toolbasecamp-deploy/install-migration-notice.sh || true
           bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh || true
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh || true
           bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh || true
@@ -643,7 +651,7 @@ jobs:
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/main-base.js -w '%{http_code}' \
-            'https://toolbasecamp.com/js/base.js' || echo '000')"
+            'https://zhengxiaohui.cn/js/base.js' || echo '000')"
           echo "base.js HTTPS $HTTP_CODE"
           if [[ "$HTTP_CODE" == "200" ]] && ! grep -q 'sidebar-footer-nav' /tmp/main-base.js; then
             echo "::warning:: base.js missing sidebar navigation  - Cloudflare may still serve stale cache; HTML uses ?v= query bust."
@@ -651,12 +659,12 @@ jobs:
             echo "Main site base.js OK."
           fi
           HTTP_CODE="$(curl -s -o /tmp/main-vti.html -w '%{http_code}' \
-            'https://toolbasecamp.com/html/media/video-to-images.html' || echo '000')"
+            'https://zhengxiaohui.cn/html/media/video-to-images.html' || echo '000')"
           if [[ "$HTTP_CODE" == "200" ]] && grep -q 'base.js?v=' /tmp/main-vti.html; then
             echo "Tool page asset cache-bust OK."
           fi
           RECIPE_HTML_CODE="$(curl -s -o /tmp/ai-recipe.html -w '%{http_code}' \
-            'https://toolbasecamp.com/html/life/ai-recipe.html' || echo '000')"
+            'https://zhengxiaohui.cn/html/life/ai-recipe.html' || echo '000')"
           echo "ai-recipe.html HTTPS $RECIPE_HTML_CODE"
           if [[ "$RECIPE_HTML_CODE" == "200" ]] && ! grep -q 'recipe-ingredient-tags' /tmp/ai-recipe.html; then
             echo "::error:: ai-recipe.html is stale (missing tag UI)  - purge Cloudflare cache or check rsync deploy."
@@ -672,13 +680,13 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           check_nb() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"nbcheck_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"nbcheck_api_rev":2' >/dev/null
           }
           CODE="$(curl -sS -o /tmp/nbcheck-gpu.json -w '%{http_code}' \
-            "https://toolbasecamp.com/api/nbcheck/nb_gpu?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/nbcheck/nb_gpu?cb=$RANDOM" || echo '000')"
           echo "public GET /api/nbcheck/nb_gpu -> $CODE"
           head -c 200 /tmp/nbcheck-gpu.json || true
           echo ""
@@ -691,7 +699,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh'
           sleep 2
           CODE="$(curl -sS -o /tmp/nbcheck-gpu.json -w '%{http_code}' \
-            "https://toolbasecamp.com/api/nbcheck/nb_gpu?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/nbcheck/nb_gpu?cb=$RANDOM" || echo '000')"
           echo "retry GET /api/nbcheck/nb_gpu -> $CODE"
           check_nb || exit 1
           [[ "$CODE" != "404" && "$CODE" != "000" ]] || exit 1
@@ -702,7 +710,7 @@ jobs:
         run: |
           sleep 3
           HTTP_CODE="$(curl -s -o /tmp/gb-api.json -w '%{http_code}' \
-            'https://toolbasecamp.com/api/guestbook/messages?limit=1' || echo '000')"
+            'https://zhengxiaohui.cn/api/guestbook/messages?limit=1' || echo '000')"
           echo "guestbook API HTTPS $HTTP_CODE"
           head -c 200 /tmp/gb-api.json || true
           echo ""
@@ -717,13 +725,13 @@ jobs:
         run: |
           sleep 2
           check_auth_phone() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"auth_phone_login":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"auth_phone_rev":3' >/dev/null
           }
           LOGIN_CODE="$(curl -sS -o /tmp/auth-phone-login.json -w '%{http_code}' \
-            -X POST 'https://toolbasecamp.com/api/auth/login' \
+            -X POST 'https://zhengxiaohui.cn/api/auth/login' \
             -H 'Content-Type: application/json' \
             -d '{"account":"13800138000","password":"wrong-password-xx"}' || echo '000')"
           echo "public POST /api/auth/login (phone account) -> $LOGIN_CODE"
@@ -738,7 +746,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-auth-api.sh'
           sleep 3
           LOGIN_CODE="$(curl -sS -o /tmp/auth-phone-login2.json -w '%{http_code}' \
-            -X POST 'https://toolbasecamp.com/api/auth/login' \
+            -X POST 'https://zhengxiaohui.cn/api/auth/login' \
             -H 'Content-Type: application/json' \
             -d '{"account":"13800138000","password":"wrong-password-xx"}' || echo '000')"
           echo "retry login -> $LOGIN_CODE"
@@ -759,7 +767,7 @@ jobs:
         run: |
           sleep 2
           HTTP_CODE="$(curl -s -o /tmp/recipe-api.txt -w '%{http_code}' \
-            -X POST 'https://toolbasecamp.com/api/recipe/generate' || echo '000')"
+            -X POST 'https://zhengxiaohui.cn/api/recipe/generate' || echo '000')"
           echo "recipe/generate POST HTTPS $HTTP_CODE"
           head -c 200 /tmp/recipe-api.txt || true
           echo ""
@@ -768,7 +776,7 @@ jobs:
             exit 1
           fi
           DETECT_CODE="$(curl -s -o /tmp/recipe-detect-api.txt -w '%{http_code}' \
-            -X POST 'https://toolbasecamp.com/api/recipe/detect' \
+            -X POST 'https://zhengxiaohui.cn/api/recipe/detect' \
             -F 'ingredients_text=tomato' -F 'locale=en' || echo '000')"
           echo "recipe/detect POST HTTPS $DETECT_CODE"
           head -c 200 /tmp/recipe-detect-api.txt || true
@@ -787,7 +795,7 @@ jobs:
         run: |
           sleep 2
           check_wan() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"wan_i2v_api":true' >/dev/null
           }
@@ -806,7 +814,7 @@ jobs:
             exit 1
           fi
           CODE="$(curl -sS -o /tmp/wan-status.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/wan/status?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/wan/status?cb=$RANDOM" || echo '000')"
           echo "GET /api/wan/status -> $CODE"
           head -c 200 /tmp/wan-status.txt || true
           echo ""
@@ -817,7 +825,7 @@ jobs:
               'bash /opt/toolbasecamp-deploy/fix-wan-api.sh'
             sleep 3
             CODE="$(curl -sS -o /tmp/wan-status.txt -w '%{http_code}' \
-              "https://toolbasecamp.com/api/wan/status?cb=$RANDOM" || echo '000')"
+              "https://zhengxiaohui.cn/api/wan/status?cb=$RANDOM" || echo '000')"
             echo "retry GET /api/wan/status -> $CODE"
           fi
           if [[ "$CODE" != "401" && "$CODE" != "200" ]]; then
@@ -830,13 +838,13 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           sleep 3
-          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          HEALTH="$(curl -sS 'https://zhengxiaohui.cn/api/health' || true)"
           echo "public health: $HEALTH"
           DAYS_CODE="$(curl -sS -o /tmp/records-days-public.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/records/days?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/records/days?cb=$RANDOM" || echo '000')"
           echo "public GET /api/records/days -> $DAYS_CODE"
           TODOS_CODE="$(curl -sS -o /tmp/records-todos-public.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/records/todos?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/records/todos?cb=$RANDOM" || echo '000')"
           echo "public GET /api/records/todos -> $TODOS_CODE"
           head -c 200 /tmp/records-days-public.txt || true
           echo ""
@@ -860,13 +868,13 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-records-api.sh'
           sleep 3
-          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          HEALTH="$(curl -sS 'https://zhengxiaohui.cn/api/health' || true)"
           echo "public health after fix: $HEALTH"
           DAYS_CODE="$(curl -sS -o /tmp/records-days-public2.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/records/days?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/records/days?cb=$RANDOM" || echo '000')"
           echo "public GET /api/records/days after fix -> $DAYS_CODE"
           TODOS_CODE="$(curl -sS -o /tmp/records-todos-public2.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/records/todos?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/records/todos?cb=$RANDOM" || echo '000')"
           echo "public GET /api/records/todos after fix -> $TODOS_CODE"
           if ! echo "$HEALTH" | grep -F '"records_api":true' >/dev/null; then
             echo "::error:: public health still missing records_api after fix"
@@ -897,7 +905,7 @@ jobs:
             exit 1
           fi
           GUEST_JOIN="$(curl -sS -o /tmp/ocs-guest-join-public.json -w '%{http_code}' \
-            -X POST 'https://toolbasecamp.com/api/records/online-games/join' \
+            -X POST 'https://zhengxiaohui.cn/api/records/online-games/join' \
             -H 'Content-Type: application/json' \
             -d '{"code":"999999","display_name":"guest"}' || echo '000')"
           echo "public guest join -> $GUEST_JOIN"
@@ -922,14 +930,14 @@ jobs:
             exit 1
           fi
           RESET_CODE="$(curl -sS -o /tmp/clock-reset-public.txt -w '%{http_code}' \
-            -X POST "https://toolbasecamp.com/api/records/clocks/1/reset" || echo '000')"
+            -X POST "https://zhengxiaohui.cn/api/records/clocks/1/reset" || echo '000')"
           echo "public POST /api/records/clocks/1/reset -> $RESET_CODE"
           if [[ "$RESET_CODE" == "404" ]]; then
             echo "::error:: public clock reset route still 404 after fix"
             exit 1
           fi
           LOGS_CODE="$(curl -sS -o /tmp/clock-logs-public.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/records/clocks/1/logs" || echo '000')"
+            "https://zhengxiaohui.cn/api/records/clocks/1/logs" || echo '000')"
           echo "public GET /api/records/clocks/1/logs -> $LOGS_CODE"
           if [[ "$LOGS_CODE" == "404" ]]; then
             echo "::error:: public clock logs route still 404 after fix"
@@ -949,10 +957,10 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           sleep 2
-          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          HEALTH="$(curl -sS 'https://zhengxiaohui.cn/api/health' || true)"
           echo "public health: $HEALTH"
           WM_CODE="$(curl -sS -o /tmp/wm-health-public.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/watermark/health?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/watermark/health?cb=$RANDOM" || echo '000')"
           echo "public GET /api/watermark/health -> $WM_CODE"
           head -c 200 /tmp/wm-health-public.txt || true
           echo ""
@@ -965,10 +973,10 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-watermark-api.sh'
           sleep 3
-          HEALTH="$(curl -sS 'https://toolbasecamp.com/api/health' || true)"
+          HEALTH="$(curl -sS 'https://zhengxiaohui.cn/api/health' || true)"
           echo "public health after fix: $HEALTH"
           WM_CODE="$(curl -sS -o /tmp/wm-health-public2.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/watermark/health?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/watermark/health?cb=$RANDOM" || echo '000')"
           echo "public GET /api/watermark/health after fix -> $WM_CODE"
           if ! echo "$HEALTH" | grep -F '"watermark_api":true' >/dev/null; then
             echo "::error:: public health still missing watermark_api after fix"
@@ -985,12 +993,12 @@ jobs:
         run: |
           sleep 2
           check_gc() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"general_cutout_api":true' >/dev/null
           }
           GC_CODE="$(curl -sS -o /tmp/gc-seg.txt -w '%{http_code}' \
-            -X POST "https://toolbasecamp.com/api/image/general-cutout/segment?cb=$RANDOM" || echo '000')"
+            -X POST "https://zhengxiaohui.cn/api/image/general-cutout/segment?cb=$RANDOM" || echo '000')"
           echo "public POST /api/image/general-cutout/segment -> $GC_CODE"
           head -c 200 /tmp/gc-seg.txt || true
           echo ""
@@ -1003,7 +1011,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-general-cutout-api.sh'
           sleep 3
           GC_CODE="$(curl -sS -o /tmp/gc-seg2.txt -w '%{http_code}' \
-            -X POST "https://toolbasecamp.com/api/image/general-cutout/segment?cb=$RANDOM" || echo '000')"
+            -X POST "https://zhengxiaohui.cn/api/image/general-cutout/segment?cb=$RANDOM" || echo '000')"
           echo "retry POST -> $GC_CODE"
           if ! check_gc; then
             echo "::error:: public health still missing general_cutout_api after fix"
@@ -1023,24 +1031,24 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           check_fx() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"fx_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"fx_thb_twd":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"fx_allowed_rev":2' >/dev/null
           }
-          FX="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
+          FX="$(curl -sS "https://zhengxiaohui.cn/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
           echo "fx CNY->USD: $FX"
-          THB="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
+          THB="$(curl -sS "https://zhengxiaohui.cn/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
           echo "fx USD->THB: $THB"
           if ! check_fx || ! echo "$FX" | grep -F '"rate"' >/dev/null || ! echo "$THB" | grep -F '"rate"' >/dev/null; then
             echo "::warning:: public fx incomplete  - forcing fix-fx-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-fx-api.sh'
             sleep 2
-            FX="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
-            THB="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
-            TWD="$(curl -sS "https://toolbasecamp.com/api/fx/rate?from=USD&to=TWD&cb=$RANDOM" || true)"
+            FX="$(curl -sS "https://zhengxiaohui.cn/api/fx/rate?from=CNY&to=USD&cb=$RANDOM" || true)"
+            THB="$(curl -sS "https://zhengxiaohui.cn/api/fx/rate?from=USD&to=THB&cb=$RANDOM" || true)"
+            TWD="$(curl -sS "https://zhengxiaohui.cn/api/fx/rate?from=USD&to=TWD&cb=$RANDOM" || true)"
             echo "retry CNY->USD: $FX"
             echo "retry USD->THB: $THB"
             echo "retry USD->TWD: $TWD"
@@ -1055,17 +1063,17 @@ jobs:
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           check_stats() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"stats_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"stats_events_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"stats_geo_rev":2' >/dev/null
           }
-          HIT="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/hit?cb=$RANDOM" \
+          HIT="$(curl -sS -X POST "https://zhengxiaohui.cn/api/stats/hit?cb=$RANDOM" \
             -H 'Content-Type: application/json' \
             -d '{"visitor_id":"00000000-0000-4000-8000-0000000000aa"}' || true)"
           echo "stats hit: $HIT"
-          EV="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/event?cb=$RANDOM" \
+          EV="$(curl -sS -X POST "https://zhengxiaohui.cn/api/stats/event?cb=$RANDOM" \
             -H 'Content-Type: application/json' \
             -d '{"name":"page.home"}' || true)"
           echo "stats event: $EV"
@@ -1077,10 +1085,10 @@ jobs:
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
               "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-stats-api.sh'
             sleep 2
-            HIT="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/hit?cb=$RANDOM" \
+            HIT="$(curl -sS -X POST "https://zhengxiaohui.cn/api/stats/hit?cb=$RANDOM" \
               -H 'Content-Type: application/json' \
               -d '{"visitor_id":"00000000-0000-4000-8000-0000000000aa"}' || true)"
-            EV="$(curl -sS -X POST "https://toolbasecamp.com/api/stats/event?cb=$RANDOM" \
+            EV="$(curl -sS -X POST "https://zhengxiaohui.cn/api/stats/event?cb=$RANDOM" \
               -H 'Content-Type: application/json' \
               -d '{"name":"page.home"}' || true)"
             echo "retry hit: $HIT"
@@ -1091,7 +1099,7 @@ jobs:
             echo "$HIT" | grep -F '"geo_rev":1' >/dev/null || exit 1
             echo "$EV" | grep -F '"ok":true' >/dev/null || exit 1
           fi
-          HEALTH2="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+          HEALTH2="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
           echo "$HEALTH2" | grep -F '"stats_events_api":true' >/dev/null || exit 1
           echo "$HEALTH2" | grep -F '"stats_geo_rev":2' >/dev/null || exit 1
           echo "Site stats API public OK (incl. geo)."
@@ -1101,7 +1109,7 @@ jobs:
         run: |
           sleep 2
           check_lp() {
-            HEALTH="$(curl -sS "https://toolbasecamp.com/api/health?cb=$RANDOM" || true)"
+            HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"life_plans_api":true' >/dev/null \
               && echo "$HEALTH" | grep -F '"life_plans_ready":true' >/dev/null \
@@ -1111,13 +1119,13 @@ jobs:
               && echo "$HEALTH" | grep -F 'fitness_week' >/dev/null
           }
           LP_CODE="$(curl -sS -o /tmp/lp-status.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/life-plans/status?cb=$RANDOM" || echo '000')"
           echo "public GET /api/life-plans/status -> $LP_CODE"
           head -c 200 /tmp/lp-status.txt || true
           echo ""
           if check_lp && [[ "$LP_CODE" != "404" && "$LP_CODE" != "000" ]]; then
             # guest status must not be 401
-            ST_CODE="$(curl -sS -o /tmp/lp-guest-status.txt -w '%{http_code}' "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+            ST_CODE="$(curl -sS -o /tmp/lp-guest-status.txt -w '%{http_code}' "https://zhengxiaohui.cn/api/life-plans/status?cb=$RANDOM" || echo '000')"
             echo "public guest GET /api/life-plans/status -> $ST_CODE"
             if [[ "$ST_CODE" == "401" || "$ST_CODE" == "000" ]]; then
               echo "::error:: life-plans/status still requires auth ($ST_CODE)"
@@ -1131,7 +1139,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" 'bash /opt/toolbasecamp-deploy/fix-life-plans-api.sh'
           sleep 3
           LP_CODE="$(curl -sS -o /tmp/lp-status2.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/life-plans/status?cb=$RANDOM" || echo '000')"
           echo "retry GET -> $LP_CODE"
           if ! check_lp; then
             echo "::error:: public health still missing life_plans_api after fix"
@@ -1144,7 +1152,7 @@ jobs:
 
           # Prove anonymous /status works (no Authorization)
           ST_CODE="$(curl -sS -o /tmp/lp-guest-status.txt -w '%{http_code}' \
-            "https://toolbasecamp.com/api/life-plans/status?cb=$RANDOM" || echo '000')"
+            "https://zhengxiaohui.cn/api/life-plans/status?cb=$RANDOM" || echo '000')"
           echo "public guest GET /api/life-plans/status -> $ST_CODE"
           if [[ "$ST_CODE" == "401" || "$ST_CODE" == "000" ]]; then
             echo "::error:: life-plans/status still requires auth ($ST_CODE)"

@@ -418,6 +418,8 @@ window.TB_LOCALES.en = {
     games: {
         groups: {
             all: 'Games',
+            action: 'Action & Role',
+            puzzle: 'Puzzle & Casual',
             polished: 'Polished',
             draft: 'Early drafts',
             developing: 'In development',
@@ -625,8 +627,9 @@ window.TB_LOCALES.en = {
         },
         puzzle: {
             title: 'Jigsaw Puzzle',
-            desc: 'Swap tiles to restore the picture. Use the default image or upload your own. Runs locally.',
+            desc: 'Swap tiles to restore the picture. Pick a preset (random by default) or upload your own. Runs locally.',
             hint: 'Drag onto another tile to swap, or tap two tiles.',
+            pickImage: 'Choose image',
             upload: 'Custom image (optional)',
             win: 'Puzzle complete!',
             loadFailed: 'Failed to load image',
@@ -637,10 +640,6 @@ window.TB_LOCALES.en = {
         brickBreaker: {
             title: 'Brick Breaker',
             desc: 'Neon portrait brick breaker: bounce the ball, clear bricks, grab power-ups. Touch-friendly, runs locally.'
-        },
-        angryBirds: {
-            title: 'Angry Birds',
-            desc: 'Slingshot birds to smash pigs and structures. Levels and endless mode; touch-friendly.'
         },
         bubbleDragon: {
             title: 'Bubble Shooter',
@@ -795,7 +794,7 @@ window.TB_LOCALES.en = {
             desc: 'Jungle-chess animal slots: elephant–rat with big/small pays, cannon & train bonuses. GO reuses last bets. Fun only.'
         },
         sheepstack: {
-            title: 'Stack Match',
+            title: 'Stack Layers',
             desc: 'Tap free tiles into the tray. Three matching emoji clear. Later levels: more tiles, less time.',
             left: 'Left',
             undo: 'Undo',

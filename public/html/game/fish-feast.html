@@ -52,7 +52,8 @@ const CHAPTERS=12;
 const Slots=TBGameProgress.createSlots('tbc_fish_feast_slots_v1');
 const Cont=TBGameProgress.createContinue('tbc_fish_feast_continue_v1');
 function progLabel(g){return TBGameProgress.label(g.cycle||1,g.chapter||1,g.stage||1,true)+(g.testMode?' ·测试':'');}
-function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage||1,score:g.score|0,testMode:!!g.testMode}const TEMPLATES=[
+function snapProg(g){return {cycle:g.cycle||1,chapter:g.chapter||1,stage:g.stage||1,score:g.score|0,testMode:!!g.testMode};}
+const TEMPLATES=[
   {targetSize:34, fishCount:10, spdMul:0.85},
   {targetSize:42, fishCount:12, spdMul:1.0},
   {targetSize:50, fishCount:14, spdMul:1.12},
@@ -86,7 +87,6 @@ function campaignCfg(cycle,chapter,stage){
   });
 }
 const LEVELS=[campaignCfg(1,1,1)];
-;}
 const START_SIZE=16;
 
 const FISH_COLORS=[

@@ -15,7 +15,7 @@
     'html.tb-thumb-capture .action-row, html.tb-thumb-capture #topBar,',
     'html.tb-thumb-capture .puzzle-preview-row, html.tb-thumb-capture .puzzle-upload,',
     'html.tb-thumb-capture .puzzle-audio, html.tb-thumb-capture .puzzle-crop,',
-    'html.tb-thumb-capture .game-hint, html.tb-thumb-capture .game-stats,',
+    'html.tb-thumb-capture .puzzle-pick, html.tb-thumb-capture .game-hint,',
     'html.tb-thumb-capture .field-label { display: none !important; }',
     'html.tb-thumb-capture .overlay, html.tb-thumb-capture #ovMenu,',
     'html.tb-thumb-capture #ovPause, html.tb-thumb-capture #ovOver { display: none !important; }',

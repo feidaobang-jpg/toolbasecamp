@@ -7,6 +7,7 @@ CRON_FILE="/etc/cron.d/toolbasecamp-api-health"
 CRON_LINE="*/5 * * * * root $DEPLOY/check-api-health.sh >> /var/log/toolbasecamp-api-health.log 2>&1"
 
 chmod +x "$DEPLOY/check-api-health.sh" "$DEPLOY/notify-alert.sh" 2>/dev/null || true
+sudo chmod +x "$DEPLOY/check-api-health.sh" "$DEPLOY/notify-alert.sh" 2>/dev/null || true
 
 cat > "$CRON_FILE" << EOF
 # Managed by toolbasecamp deploy — API/MySQL health every 5 min

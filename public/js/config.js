@@ -8,7 +8,7 @@ const siteConfig = {
     gamesHubUrl: 'games.html',
     imagesHubUrl: 'images.html',
     musicHubUrl: 'music.html',
-    mainSiteOrigin: 'https://toolbasecamp.com',
+    mainSiteOrigin: 'https://zhengxiaohui.cn',
     descriptionKey: 'site.description',
     keywordsKey: 'site.keywords',
     footerKey: 'site.footer',
@@ -252,30 +252,34 @@ const gamesConfig = {
     sectionTitleKey: 'hub.gamesTitle',
     groups: [
         {
-            titleKey: 'games.groups.all',
+            titleKey: 'games.groups.action',
             items: [
-                { titleKey: 'tools.angryBirds.title', url: 'html/game/angry_birds.html?v=6' },
+                { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
+                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=10' },
+                { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
+                { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=7' },
+                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
+                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
+                { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=3' }
+            ]
+        },
+        {
+            titleKey: 'games.groups.puzzle',
+            items: [
+                { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
+                { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=3' },
+                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=4' },
+                { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=10' },
+                { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
+                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
                 { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
                 { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html?v=3' },
                 { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },
                 { titleKey: 'tools.hundredFloors.title', url: 'html/game/hundred_floors.html?v=6' },
-                { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
                 { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=7' },
-                { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
-                { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=3' },
-                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=2' },
-                { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=10' },
-                { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
                 { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=7' },
-                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
-                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=9' },
-                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=8' },
-                { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
-                { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=7' },
-                { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=7' },
-                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
-                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
-                { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=1' }
+                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=10' },
+                { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=7' }
             ]
         }
     ]
@@ -354,3 +358,47 @@ const privateToolsConfig = {
 };
 
 window.privateToolsConfig = privateToolsConfig;
+
+/** ICP filing footer — shared by base.js (tool pages) and common_ui.js (hub pages). */
+function tbIcpBeianNumber() {
+    if (typeof siteConfig !== 'undefined' && siteConfig.icpBeianNumber) {
+        return String(siteConfig.icpBeianNumber).trim();
+    }
+    return '';
+}
+
+function tbIcpBeianUrl() {
+    if (typeof siteConfig !== 'undefined' && siteConfig.icpBeianUrl) {
+        return String(siteConfig.icpBeianUrl).trim();
+    }
+    return 'https://beian.miit.gov.cn/';
+}
+
+function tbRenderIcpFooter() {
+    if (document.body && document.body.getAttribute('data-no-icp-footer') === '1') return;
+    var number = tbIcpBeianNumber();
+    if (!number && typeof t === 'function') {
+        number = t('site.icpBeian');
+    }
+    if (!number || number === 'site.icpBeian') return;
+
+    var footer = document.getElementById('site-icp-footer');
+    if (!footer) {
+        footer = document.createElement('footer');
+        footer.id = 'site-icp-footer';
+        footer.className = 'site-icp-footer';
+        footer.setAttribute('role', 'contentinfo');
+        document.body.appendChild(footer);
+    }
+
+    var href = tbIcpBeianUrl();
+    footer.innerHTML = '';
+    var a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = number;
+    footer.appendChild(a);
+}
+
+window.tbRenderIcpFooter = tbRenderIcpFooter;

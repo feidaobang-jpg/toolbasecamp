@@ -71,7 +71,9 @@ if [[ "${BYTES:-0}" -lt 200 ]]; then
 fi
 
 # Confirm gzip contains SQL text (not a truncated error-only stream).
-if ! gzip -dc "$OUT" | head -c 200 | grep -Eqi 'CREATE TABLE|MySQL dump|Database:'; then
+# Note: pipefail + head closes early → gzip SIGPIPE; sample to var first.
+DUMP_HEAD="$(gzip -dc "$OUT" | head -c 512 || true)"
+if ! printf '%s' "$DUMP_HEAD" | grep -Eqi 'CREATE TABLE|MySQL dump|Database:'; then
   rm -f "$OUT"
   MSG="[toolbasecamp] MySQL backup content invalid on ${HOST}"
   echo "$MSG" >&2

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>叠消消 - Stack Match</title>
+<title>叠叠乐 - Stack Layers</title>
 <style>
 html,body{
   margin:0;padding:0;width:100%;height:100%;
@@ -25,7 +25,7 @@ canvas{display:block;background:#0a1020;box-shadow:0 0 60px rgba(100,180,255,.22
 <script>
 "use strict";
 /* ============================================================
- * 叠消消 Stack Match（叠层三消卡牌）
+ * 叠叠乐 Stack Layers（叠层三消卡牌）
  * 单文件 2D Canvas 游戏（竖屏 9:16 基准 540x960）
  * 玩法：点击场上未被覆盖的图案牌放入底部卡槽，
  *       槽内3张相同自动消除；卡槽装满(7格)则扣生命。
@@ -985,7 +985,7 @@ const Render=(()=>{
     Particles.draw(ctx);
 
     if(st===STATE.MENU){
-      title("叠  消  消",170,58,`hsl(${Game.hue},90%,70%)`);
+      title("叠  叠  乐",170,58,`hsl(${Game.hue},90%,70%)`);
       const icons=["house","car","gem","sun","moon","star"];
       icons.forEach((ic,i)=>{
         const a=t*0.5+i*Math.PI/3;
