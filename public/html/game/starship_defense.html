@@ -1401,6 +1401,8 @@ function autoAimDir(from,facing,range){
 }
 function updPlayer(dt){
   if(player.dead)return;
+  const t=performance.now()/1000;
+  if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
   const ax=Input.axis();
   // 视角旋转
   if(Input.keys.Q)camYaw+=dt*2;
