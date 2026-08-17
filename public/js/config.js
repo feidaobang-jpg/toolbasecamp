@@ -8,7 +8,7 @@ const siteConfig = {
     gamesHubUrl: 'games.html',
     imagesHubUrl: 'images.html',
     musicHubUrl: 'music.html',
-    mainSiteOrigin: 'https://toolbasecamp.com',
+    mainSiteOrigin: 'https://zhengxiaohui.cn',
     descriptionKey: 'site.description',
     keywordsKey: 'site.keywords',
     footerKey: 'site.footer',

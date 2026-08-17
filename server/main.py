@@ -224,6 +224,8 @@ _db_available = False
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://zhengxiaohui.cn",
+        "https://www.zhengxiaohui.cn",
         "https://toolbasecamp.com",
         "https://www.toolbasecamp.com",
         "https://news.toolbasecamp.com",

@@ -2,7 +2,7 @@
   function inject() {
     if (document.getElementById('portal-home-bar') || !document.body) return;
 
-    var hubUrl = 'https://toolbasecamp.com/';
+    var hubUrl = 'https://zhengxiaohui.cn/';
     var bar = document.createElement('div');
     bar.id = 'portal-home-bar';
     bar.setAttribute('role', 'navigation');

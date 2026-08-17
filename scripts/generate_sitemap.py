@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_DIR = ROOT / "public"
 SITEMAP_PATH = PUBLIC_DIR / "sitemap.xml"
 ROBOTS_PATH = PUBLIC_DIR / "robots.txt"
-SITE_URL = "https://toolbasecamp.com"
+SITE_URL = "https://zhengxiaohui.cn"
 
 
 EXCLUDE_PREFIXES = (

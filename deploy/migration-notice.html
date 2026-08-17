@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="12;url=https://zhengxiaohui.cn/">
+    <title>站点已迁移 · Tool Basecamp</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 45%, #0f172a 100%);
+            color: #e2e8f0;
+        }
+        .card {
+            width: min(520px, 100%);
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 20px;
+            padding: 32px 28px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+            text-align: center;
+        }
+        .logo {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            border-radius: 14px;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 56px;
+        }
+        h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 10px; color: #f8fafc; }
+        p { font-size: 0.95rem; line-height: 1.65; color: #cbd5e1; margin-bottom: 14px; }
+        .count {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #60a5fa;
+            margin: 18px 0 8px;
+            font-variant-numeric: tabular-nums;
+        }
+        .hint { font-size: 0.85rem; color: #94a3b8; margin-bottom: 22px; }
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 999px;
+            background: #2563eb;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.15s;
+        }
+        .btn:hover { background: #1d4ed8; }
+        .en { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(148, 163, 184, 0.2); font-size: 0.88rem; color: #94a3b8; }
+        .domain { color: #93c5fd; font-weight: 600; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo" aria-hidden="true">TB</div>
+        <h1>工具大本营已迁移至国内服务器</h1>
+        <p>本站 <span class="domain">toolbasecamp.com</span> 已迁至备案域名 <span class="domain">zhengxiaohui.cn</span>，请收藏新地址。</p>
+        <div class="count" id="sec">10</div>
+        <p class="hint">秒后自动跳转到新站点</p>
+        <a class="btn" href="https://zhengxiaohui.cn/" id="go">立即前往 zhengxiaohui.cn</a>
+        <p class="en">Tool Basecamp has moved to <span class="domain">zhengxiaohui.cn</span> (China mainland). Redirecting in <span id="sec-en">10</span>s…</p>
+    </div>
+    <script>
+        (function () {
+            var left = 10;
+            var sec = document.getElementById('sec');
+            var secEn = document.getElementById('sec-en');
+            var target = 'https://zhengxiaohui.cn/';
+            var t = setInterval(function () {
+                left -= 1;
+                if (sec) sec.textContent = String(Math.max(left, 0));
+                if (secEn) secEn.textContent = String(Math.max(left, 0));
+                if (left <= 0) {
+                    clearInterval(t);
+                    window.location.replace(target);
+                }
+            }, 1000);
+            document.getElementById('go').addEventListener('click', function (e) {
+                e.preventDefault();
+                clearInterval(t);
+                window.location.replace(target);
+            });
+        })();
+    </script>
+</body>
+</html>
