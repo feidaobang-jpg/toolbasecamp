@@ -7,16 +7,21 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "server"))
+API_ROOT = Path(os.environ.get("TOOLBASECAMP_API_ROOT", str(ROOT / "server")))
+if (API_ROOT / "image_tools.py").is_file():
+    sys.path.insert(0, str(API_ROOT))
+elif (ROOT / "server" / "image_tools.py").is_file():
+    sys.path.insert(0, str(ROOT / "server"))
+else:
+    sys.path.insert(0, "/opt/toolbasecamp-api")
 
 from image_tools import (  # noqa: E402
     PUBLIC_IMAGE_DIR,
-    _ensure_public_images_schema,
-    _public_image_path,
     _public_thumb_path,
     _write_public_thumbnail,
-    _conn,
 )
+
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 def main() -> int:
@@ -27,38 +32,17 @@ def main() -> int:
 
     created = 0
     skipped = 0
-    missing = 0
+    failed = 0
 
-    conn = _conn()
-    try:
-        with conn.cursor() as cur:
-            _ensure_public_images_schema(cur)
-            cur.execute(
-                """
-                SELECT id, file_name
-                FROM public_images
-                WHERE is_public=1
-                ORDER BY created_at DESC
-                """
-            )
-            rows = cur.fetchall() or []
-    finally:
-        conn.close()
-
-    for row in rows:
-        iid = str(row.get("id") or "")
-        file_name = str(row.get("file_name") or "")
-        if not iid or not file_name:
-            continue
-        try:
-            full_path = _public_image_path(file_name)
-        except Exception:
-            missing += 1
-            print(f"skip invalid name: {iid}")
-            continue
+    for full_path in sorted(PUBLIC_IMAGE_DIR.iterdir()):
         if not full_path.is_file():
-            missing += 1
-            print(f"missing full file: {iid} ({file_name})")
+            continue
+        if full_path.name.endswith("_thumb.jpg"):
+            continue
+        if full_path.suffix.lower() not in IMAGE_SUFFIXES:
+            continue
+        iid = full_path.stem
+        if len(iid) < 16 or not iid.isalnum():
             continue
         thumb_path = _public_thumb_path(iid)
         if thumb_path.is_file():
@@ -68,11 +52,11 @@ def main() -> int:
             created += 1
             print(f"created: {thumb_path.name} ({thumb_path.stat().st_size} bytes)")
         else:
-            missing += 1
+            failed += 1
             print(f"failed: {iid}")
 
-    print(f"done: created={created} skipped={skipped} missing/failed={missing}")
-    return 0 if missing == 0 else 2
+    print(f"done: created={created} skipped={skipped} failed={failed}")
+    return 0 if failed == 0 else 2
 
 
 if __name__ == "__main__":
