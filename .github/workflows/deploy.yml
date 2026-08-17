@@ -306,6 +306,7 @@ jobs:
           # Portal / secondary nginx (best-effort; must not block API deploy)
           bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh || true
           bash /opt/toolbasecamp-deploy/patch-nginx-main.sh || true
+          bash /opt/toolbasecamp-deploy/install-migration-notice.sh || true
           bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh || true
           bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh || true
           bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh || true
