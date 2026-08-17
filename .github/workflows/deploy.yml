@@ -276,7 +276,7 @@ jobs:
             "${DO_USER}@${DO_HOST}" 'bash -s' << 'REMOTE'
           set -euo pipefail
           apt-get update -qq
-          apt-get install -y python3 python3-venv python3-pip libreoffice-writer rsync >/dev/null 2>&1 || true
+          apt-get install -y python3 python3-venv python3-pip libreoffice-writer rsync ffmpeg >/dev/null 2>&1 || true
           if ! command -v mysql >/dev/null 2>&1; then
             DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server >/dev/null 2>&1 || true
           fi
