@@ -91,7 +91,7 @@
     }
 
     function presetUrl(index) {
-        return PRESET_BASE + PRESETS[index] + '?v=1';
+        return PRESET_BASE + PRESETS[index] + '?v=2';
     }
 
     function syncPresetActive() {

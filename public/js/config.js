@@ -268,7 +268,7 @@ const gamesConfig = {
             items: [
                 { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
                 { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=3' },
-                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=3' },
+                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=4' },
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=10' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
                 { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
