@@ -451,7 +451,7 @@ def _publish_public_image(
         "publicId": image_id,
         "publicUrl": f"/image/public/{image_id}",
         "publicDownloadUrl": f"/image/public/{image_id}?download=1",
-        "publicThumbnailUrl": f"/image/public/{image_id}?thumb=1",
+        "publicThumbnailUrl": f"/pubimg/{image_id}_thumb.jpg",
     }
 
 
@@ -636,9 +636,6 @@ def image_public_list(
             continue
         creator = _creator_public(row)
         prompt = (row.get("prompt") or "").strip()
-        thumb_path = _public_thumb_path(iid)
-        if not thumb_path.is_file():
-            _ensure_public_thumbnail(iid, path)
         items.append(
             {
                 "id": iid,
@@ -650,7 +647,7 @@ def image_public_list(
                 "creatorNickname": creator["creatorNickname"],
                 "creatorPhone": creator["creatorPhone"],
                 "imageUrl": f"/image/public/{iid}",
-                "thumbnailUrl": f"/image/public/{iid}?thumb=1",
+                "thumbnailUrl": f"/pubimg/{iid}_thumb.jpg",
                 "downloadUrl": f"/image/public/{iid}?download=1",
             }
         )

@@ -45,6 +45,14 @@
     return apiBase() + (path.charAt(0) === '/' ? path : '/' + path);
   }
 
+  function gridImageUrl(path) {
+    if (!path) return '';
+    if (/^https?:\/\//i.test(path)) return path;
+    // Static nginx alias — do not prefix /api.
+    if (path.indexOf('/pubimg/') === 0) return path;
+    return fullImageUrl(path);
+  }
+
   function sourceLabel(source) {
     if (source === 'text_to_image') return tr('hub.imagesPage.sourceT2i');
     if (source === 'instruct_edit') return tr('hub.imagesPage.sourceInstruct');
@@ -132,7 +140,7 @@
     items.forEach(function (item) {
       var card = document.createElement('article');
       card.className = 'img-hub-card';
-      var src = fullImageUrl(item.thumbnailUrl || item.imageUrl);
+      var src = gridImageUrl(item.thumbnailUrl || item.imageUrl);
       card.innerHTML =
         '<div class="img-hub-thumb-wrap">' +
           '<img class="img-hub-thumb" alt="" loading="lazy" decoding="async" />' +
