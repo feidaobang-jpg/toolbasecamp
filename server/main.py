@@ -191,7 +191,7 @@ JWT_SECRET = os.environ.get("JWT_SECRET", "CHANGE_ME_IN_PRODUCTION")
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 JWT_EXPIRE_DAYS = int(os.environ.get("JWT_EXPIRE_DAYS", "30"))
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 ADMIN_PHONE = os.environ.get("ADMIN_PHONE", "15859130726").strip()
 ROLE_ADMIN = "admin"
 ROLE_USER = "user"
@@ -232,9 +232,6 @@ app.add_middleware(
         "https://pdf.zhengxiaohui.cn",
         "https://translate.zhengxiaohui.cn",
         "https://hoppscotch.zhengxiaohui.cn",
-        "https://toolbasecamp.com",
-        "https://www.toolbasecamp.com",
-        "https://news.toolbasecamp.com",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
     ],

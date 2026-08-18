@@ -5,7 +5,7 @@ from typing import Optional
 import httpx
 
 
-SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://toolbasecamp.com").rstrip("/")
+SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "https://zhengxiaohui.cn").rstrip("/")
 FEISHU_WEBHOOK_URL = os.environ.get("FEISHU_WEBHOOK_URL") or os.environ.get("ALERT_WEBHOOK_URL") or ""
 
 FEISHU_NOTIFY_ENABLE = os.environ.get("FEISHU_NOTIFY_ENABLE", "1").strip().lower() not in (

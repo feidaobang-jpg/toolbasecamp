@@ -190,7 +190,7 @@ PUBLIC_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("PUBLIC_IMAGE_THU
 CN_TZ = ZoneInfo("Asia/Shanghai")
 
 # Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 LIMITS = {
     "ocr_text": int(os.environ.get("IMAGE_LIMIT_OCR_TEXT", "30")),

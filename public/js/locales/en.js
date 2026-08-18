@@ -1,5 +1,5 @@
 /**
- * English strings for toolbasecamp.com (main site only).
+ * English strings for zhengxiaohui.cn (main site only).
  * When adding UI text, add the same key to locales/zh-CN.js.
  */
 window.TB_LOCALES = window.TB_LOCALES || {};

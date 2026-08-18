@@ -64,7 +64,7 @@
 
     function checkIsAdmin(user) {
         if (!user) return false;
-        var adminEmail = (typeof siteConfig !== 'undefined' && siteConfig.adminEmail) || 'admin@toolbasecamp.com';
+        var adminEmail = (typeof siteConfig !== 'undefined' && siteConfig.adminEmail) || 'admin@zhengxiaohui.cn';
         var adminPhone = (typeof siteConfig !== 'undefined' && siteConfig.adminPhone) || '15859130726';
         if (user.role === 'admin') return true;
         if ((user.email || '').toLowerCase() === adminEmail.toLowerCase()) return true;

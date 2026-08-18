@@ -1,5 +1,5 @@
 /**
- * Main-site i18n (toolbasecamp.com only — subdomains have their own i18n).
+ * Main-site i18n (zhengxiaohui.cn only — subdomains have their own i18n).
  * Usage: t('nav.tools'), data-i18n="guestbook.title" on HTML elements.
  */
 (function () {
@@ -68,9 +68,6 @@
         var host = (location.hostname || '').toLowerCase();
         if (host === 'zhengxiaohui.cn' || host.endsWith('.zhengxiaohui.cn')) {
             return '.zhengxiaohui.cn';
-        }
-        if (host === 'toolbasecamp.com' || host.endsWith('.toolbasecamp.com')) {
-            return '.toolbasecamp.com';
         }
         return '';
     }

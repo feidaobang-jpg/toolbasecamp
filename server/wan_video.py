@@ -36,7 +36,7 @@ from recipe_ai import DASHSCOPE_API_KEY, DASHSCOPE_BASE_URL
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/wan", tags=["wan"])
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 WAN_I2V_TIMEOUT = float(os.environ.get("WAN_I2V_TIMEOUT", "60"))
 MAX_UPLOAD = 6 * 1024 * 1024
 MAX_IMAGE_EDGE = 1280

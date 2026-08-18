@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function () {
         lines.push('---');
         const siteUrl = (typeof siteConfig !== 'undefined' && siteConfig.mainSiteOrigin)
             ? siteConfig.mainSiteOrigin.replace(/\/$/, '') + '/'
-            : 'https://toolbasecamp.com/';
+            : 'https://zhengxiaohui.cn/';
         const footerLabel = getLocale() === 'zh-CN'
             ? ('来自 ' + tr('site.name') + ' AI 菜谱')
             : ('From ' + tr('site.name') + ' AI Recipe');

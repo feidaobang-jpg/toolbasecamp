@@ -41,7 +41,7 @@ from recipe_ai import DASHSCOPE_API_KEY
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/tts", tags=["tts"])
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_API_BASE = (
     os.environ.get("MINIMAX_TTS_API_BASE")

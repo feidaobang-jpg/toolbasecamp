@@ -43,7 +43,7 @@ router = APIRouter(prefix="/music", tags=["music"])
 
 CN_TZ = ZoneInfo("Asia/Shanghai")
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_MUSIC_API_URL = (

@@ -1,5 +1,5 @@
 /**
- * 简体中文文案（仅 toolbasecamp.com 主站）。
+ * 简体中文文案（仅 zhengxiaohui.cn 主站）。
  * 新增 UI 文案时，请同步在 locales/en.js 添加相同 key。
  */
 window.TB_LOCALES['zh-CN'] = {

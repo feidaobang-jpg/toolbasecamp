@@ -32,7 +32,7 @@ from ai_wallet import (
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/minimax", tags=["minimax-video"])
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_API_BASE = (
     os.environ.get("MINIMAX_VIDEO_API_BASE") or "https://api.minimaxi.com"
