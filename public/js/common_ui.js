@@ -101,6 +101,15 @@
             return btn;
         };
 
+        const applyMobileDrawerActionStyle = (el, extraCssText = '') => {
+            if (!el) return;
+            el.style.cssText =
+                'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;' +
+                'padding:0 16px;border:1px solid #dbeafe;border-radius:0.5rem;background:#eff6ff;' +
+                'color:#1d4ed8;font-size:14px;font-weight:500;line-height:1;text-decoration:none;box-sizing:border-box;' +
+                extraCssText;
+        };
+
         const resolveAuthUrl = (pageName) => {
             return `${getSiteRootPrefix()}html/auth/${pageName}`;
         };
@@ -130,10 +139,12 @@
             box.className = 'flex flex-col gap-4';
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
-            userLink.className = 'box-border w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-sm font-medium leading-none text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
+            userLink.className = 'hover:bg-blue-100';
+            applyMobileDrawerActionStyle(userLink);
             userLink.innerHTML = '<i class="fas fa-user-circle text-base text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
             const logout = createBtn(tr('auth.logout'));
-            logout.className = 'box-border appearance-none w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-sm font-medium leading-none text-blue-700 hover:bg-blue-100 flex items-center justify-center';
+            logout.className = 'hover:bg-blue-100';
+            applyMobileDrawerActionStyle(logout, 'appearance:none;');
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
@@ -622,7 +633,24 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'mt-4 box-border w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-sm font-medium leading-none text-blue-700 hover:bg-blue-100 flex items-center justify-center';
+        a.className = 'mt-4 hover:bg-blue-100';
+        a.style.marginTop = '16px';
+        a.style.cursor = 'pointer';
+        a.style.display = 'flex';
+        a.style.alignItems = 'center';
+        a.style.justifyContent = 'center';
+        a.style.width = '100%';
+        a.style.height = '48px';
+        a.style.padding = '0 16px';
+        a.style.border = '1px solid #dbeafe';
+        a.style.borderRadius = '0.5rem';
+        a.style.background = '#eff6ff';
+        a.style.color = '#1d4ed8';
+        a.style.fontSize = '14px';
+        a.style.fontWeight = '500';
+        a.style.lineHeight = '1';
+        a.style.textDecoration = 'none';
+        a.style.boxSizing = 'border-box';
         mobileAuthSlot.appendChild(a);
     }
 
@@ -730,8 +758,9 @@
             const a = document.createElement('a');
             a.id = 'tb-chat-link-m';
             a.href = href;
-            a.className = 'block w-full rounded-lg border border-gray-200 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center justify-center gap-1';
-            a.innerHTML = '<i class="fas fa-comments"></i><span>' + label + '</span>';
+            a.className = 'hover:bg-blue-100';
+            applyMobileDrawerActionStyle(a);
+            a.innerHTML = '<i class="fas fa-comments text-base"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
             ensureChatBadge(a);
             const logout = mobileAuthSlot.querySelector('button');
             if (logout) mobileAuthSlot.insertBefore(a, logout);
@@ -740,6 +769,8 @@
             const m = mobileAuthSlot && mobileAuthSlot.querySelector('#tb-chat-link-m');
             if (m) {
                 m.href = href;
+                applyMobileDrawerActionStyle(m);
+                m.innerHTML = '<i class="fas fa-comments text-base"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
                 ensureChatBadge(m);
             }
         }
