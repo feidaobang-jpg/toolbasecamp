@@ -1,4 +1,4 @@
-# Tool Basecamp 资讯子站（news.toolbasecamp.com）
+# Tool Basecamp 资讯子站（news.zhengxiaohui.cn）
 
 ## 架构
 

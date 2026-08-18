@@ -1,6 +1,6 @@
 # Tool Basecamp
 
-Global site: **https://toolbasecamp.com**
+Global site: **https://zhengxiaohui.cn**
 
 ## Structure
 
@@ -9,9 +9,9 @@ toolbasecamp/
 ├── public/                 # Static site → /var/www/toolbasecamp
 ├── server/                 # FastAPI → /opt/toolbasecamp-api
 └── deploy/                 # nginx, systemd, server scripts
-    ├── nginx-toolbasecamp-dev.conf   # dev.toolbasecamp.com
-    ├── nginx-toolbasecamp-pdf.conf   # pdf.toolbasecamp.com → Stirling-PDF
-    ├── nginx-toolbasecamp-chef.conf  # chef.toolbasecamp.com → CyberChef static
+    ├── nginx-toolbasecamp-dev.conf   # dev.zhengxiaohui.cn
+    ├── nginx-toolbasecamp-pdf.conf   # pdf.zhengxiaohui.cn → Stirling-PDF
+    ├── nginx-toolbasecamp-chef.conf  # chef.zhengxiaohui.cn → CyberChef static
     ├── nginx-toolbasecamp-hoppscotch.conf
     ├── nginx-toolbasecamp-translate.conf
     ├── install-stirling-pdf.sh       # Docker Stirling-PDF
@@ -22,13 +22,13 @@ toolbasecamp/
     └── dev-portal-SOURCE.txt         # GPL source attribution
 ```
 
-## Main-site i18n (toolbasecamp.com only)
+## Main-site i18n (zhengxiaohui.cn only)
 
 English + 简体中文; browser language auto-detect; header **中文 / EN** toggle. Subdomains pdf/dev keep their own i18n.
 
 **New UI on the main site must add keys to both** `public/js/locales/en.js` and `public/js/locales/zh-CN.js`. See [docs/I18N.md](docs/I18N.md).
 
-## PDF portal (pdf.toolbasecamp.com)
+## PDF portal (pdf.zhengxiaohui.cn)
 
 **PDF Toolkit** runs [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) in Docker on the same server (`127.0.0.1:8080`), proxied by nginx.
 
@@ -57,7 +57,7 @@ Requires **~4GB RAM**. Login disabled; CSRF off for public tool POSTs; onboardin
 
 **HTTP 524 on large PDFs:** Cloudflare orange-cloud timeout (~100s). Split the PDF/OCR into smaller parts, or temporarily set `pdf` to grey cloud only for that job (if your network can reach the VPS IP).
 
-## Developer portal (dev.toolbasecamp.com)
+## Developer portal (dev.zhengxiaohui.cn)
 
 The **Developer Toolkit** is a self-hosted build of [next-tools](https://github.com/willjayyyy/next-tools) (GPL-3.0), deployed to `/var/www/toolbasecamp-dev` on the same server. The main site links to it via the Tools hub — no third-party tool site embeds or redirects.
 
@@ -83,9 +83,9 @@ Quick test without certbot: Cloudflare → **SSL/TLS** → **Overview** → **Fl
 
 Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
 
-**QR code, text diff, timestamp, color converter:** already in [next-tools](https://github.com/willjayyyy/next-tools) on `dev.toolbasecamp.com` — no duplicate on the main site.
+**QR code, text diff, timestamp, color converter:** already in [next-tools](https://github.com/willjayyyy/next-tools) on `dev.zhengxiaohui.cn` — no duplicate on the main site.
 
-## CyberChef portal (chef.toolbasecamp.com)
+## CyberChef portal (chef.zhengxiaohui.cn)
 
 Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), from the official **GitHub release zip** (pinned in `deploy/cyberchef.ref`) → `/var/www/toolbasecamp-chef`. No server-side Node build.
 
@@ -93,7 +93,7 @@ Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), fro
 |------|------|---------|-------|
 | `chef` | A | same server IP | Proxied OK |
 
-## Hoppscotch portal (hoppscotch.toolbasecamp.com)
+## Hoppscotch portal (hoppscotch.zhengxiaohui.cn)
 
 [Hoppscotch](https://github.com/hoppscotch/hoppscotch) Community Edition via Docker Compose (Postgres + AIO). API client for REST / GraphQL / WebSocket.
 
@@ -103,7 +103,7 @@ Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), fro
 
 Requires **~2GB RAM** for Postgres + app. First deploy generates `hoppscotch.env` on the server (do not commit).
 
-## LibreTranslate portal (translate.toolbasecamp.com)
+## LibreTranslate portal (translate.zhengxiaohui.cn)
 
 [LibreTranslate](https://github.com/LibreTranslate/LibreTranslate) (AGPL) in Docker on `127.0.0.1:5000`, languages **en + zh only** (`LT_LOAD_ONLY`) to limit memory (~2GB cap).
 
@@ -267,12 +267,12 @@ Example file: `deploy/toolbasecamp-api.env.example`
 
 ## Verify
 
-- https://toolbasecamp.com
-- https://toolbasecamp.com/html/life/ai-recipe.html
-- https://toolbasecamp.com/
-- https://dev.toolbasecamp.com
-- https://pdf.toolbasecamp.com
-- https://chef.toolbasecamp.com
-- https://hoppscotch.toolbasecamp.com
-- https://translate.toolbasecamp.com
-- `curl https://toolbasecamp.com/api/health`
+- https://zhengxiaohui.cn
+- https://zhengxiaohui.cn/html/life/ai-recipe.html
+- https://zhengxiaohui.cn/
+- https://dev.zhengxiaohui.cn
+- https://pdf.zhengxiaohui.cn
+- https://chef.zhengxiaohui.cn
+- https://hoppscotch.zhengxiaohui.cn
+- https://translate.zhengxiaohui.cn
+- `curl https://zhengxiaohui.cn/api/health`

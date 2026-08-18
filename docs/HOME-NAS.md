@@ -69,7 +69,7 @@ wsl --shutdown
 优先 **Cloudflare Tunnel**（`cloudflared` 容器或 Windows 服务）：
 
 - 家里 **不用开 443 端口**  
-- `pdf.toolbasecamp.com` 在 Cloudflare 指到 Tunnel  
+- `pdf.zhengxiaohui.cn` 在 Cloudflare 指到 Tunnel  
 - 国内手机访问与主站一致（橙云）  
 
 **分步清单：** [CLOUDFLARE-TUNNEL-NAS.md](./CLOUDFLARE-TUNNEL-NAS.md)（含 docker-compose 与 VPS 收尾脚本）
@@ -123,7 +123,7 @@ NAS 内存宽裕，可把 `--memory` / `-Xmx` 比 VPS 略调高，减少 OOM。
          │
     ┌────┴────────────────────┐
     │ VPS 1～2GB               │
-    │ toolbasecamp.com + API   │
+    │ zhengxiaohui.cn + API    │
     │ chef / dev 静态          │
     └────┬────────────────────┘
          │  Cloudflare Tunnel  或  Tailscale

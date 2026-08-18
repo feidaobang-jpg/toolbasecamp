@@ -1,6 +1,6 @@
 # Cloudflare Tunnel + Docker Desktop 分步清单
 
-把 **pdf.toolbasecamp.com** 从 VPS 迁到 Win11 NAS，通过 Cloudflare Tunnel 对外访问。家里 **不用开 443**，**不用 DDNS 端口转发**。
+把 **pdf.zhengxiaohui.cn** 从 VPS 迁到 Win11 NAS，通过 Cloudflare Tunnel 对外访问。家里 **不用开 443**，**不用 DDNS 端口转发**。
 
 配套文件：`deploy/home-nas/`（docker-compose、脚本）
 
@@ -28,7 +28,7 @@ VPS 继续跑：主站、API、chef、dev 等轻量服务。
 
 - [ ] Win11 NAS 已装 **Docker Desktop**，WSL2 后端正常
 - [ ] 已配置 `.wslconfig`（见 [HOME-NAS.md](./HOME-NAS.md)）
-- [ ] Cloudflare 账号能管理 **toolbasecamp.com**
+- [ ] Cloudflare 账号能管理 **zhengxiaohui.cn**
 - [ ] 域名 DNS 在 Cloudflare（Nameserver 已接入）
 
 ---
@@ -45,13 +45,13 @@ VPS 继续跑：主站、API、chef、dev 等轻量服务。
 | 字段 | 值 |
 |------|-----|
 | Subdomain | `pdf` |
-| Domain | `toolbasecamp.com` |
+| Domain | `zhengxiaohui.cn` |
 | Path | （留空） |
 | Type | **HTTP** |
 | URL | `pdf-proxy:80` |
 
 7. **Additional application settings**（可选）：
-   - HTTP Settings → **HTTP Host Header** 设为 `pdf.toolbasecamp.com`（一般默认即可）
+   - HTTP Settings → **HTTP Host Header** 设为 `pdf.zhengxiaohui.cn`（一般默认即可）
 8. **Save tunnel**
 
 > **说明：** `pdf-proxy` 是 docker-compose 里的 nginx 服务名。Tunnel 连接器与它在同一 Docker 网络内，用服务名访问。
@@ -139,7 +139,7 @@ docker compose exec pdf-proxy wget -q -O - http://127.0.0.1/ | Select-String -Pa
 ### 外网
 
 1. Cloudflare → **Caching → Purge Everything**
-2. 手机 **无痕模式** 打开：`https://pdf.toolbasecamp.com`
+2. 手机 **无痕模式** 打开：`https://pdf.zhengxiaohui.cn`
 3. 应看到 PDF Toolkit，顶部有 **← Tool Basecamp** 返回条
 
 ---
@@ -207,7 +207,7 @@ powershell -ExecutionPolicy Bypass -File .\setup-nginx-translate.ps1
 docker compose up -d
 ```
 
-等 `tbc-libretranslate` 就绪（首次 2～5 分钟），访问 `https://translate.toolbasecamp.com`。
+等 `tbc-libretranslate` 就绪（首次 2～5 分钟），访问 `https://translate.zhengxiaohui.cn`。
 
 ### VPS 收尾
 
