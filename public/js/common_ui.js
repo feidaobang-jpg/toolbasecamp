@@ -160,7 +160,7 @@
                 const loginA = document.createElement('a');
                 loginA.id = 'tb-mobile-login-btn';
                 loginA.href = loginUrl;
-                loginA.className = 'text-sm font-medium text-blue-600 border border-blue-200 rounded-full px-3 py-1 bg-blue-50 hover:bg-blue-100 transition-colors flex-shrink-0';
+                loginA.className = 'h-10 px-3 text-sm font-medium text-blue-600 border border-blue-200 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors flex-shrink-0 flex items-center justify-center';
                 loginA.textContent = tr('auth.login');
                 const menuBtn = document.getElementById('site-nav-menu-btn');
                 if (menuBtn) mobileSlot.insertBefore(loginA, menuBtn);
@@ -508,7 +508,7 @@
             const btn = document.createElement('button');
             btn.id = 'site-nav-menu-btn';
             btn.type = 'button';
-            btn.className = 'p-2 rounded-lg text-gray-600 hover:bg-gray-100 flex-shrink-0';
+            btn.className = 'h-10 w-10 p-0 rounded-lg text-gray-600 hover:bg-gray-100 flex-shrink-0 flex items-center justify-center';
             btn.setAttribute('aria-label', tr('auth.openMenu'));
             btn.innerHTML = '<span aria-hidden="true" style="font-size:1.35rem;line-height:1">☰</span>';
             mobileRow.insertBefore(btn, mobileRow.firstChild);
