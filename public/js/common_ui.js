@@ -727,6 +727,30 @@
         const href = chatHrefForUser(user);
         const label = chatLabelForUser(user);
 
+        const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
+        // 先插入手机端入口：即使桌面端插入中途异常，也不会影响手机端显示
+        if (mobileAuthSlot && !mobileAuthSlot.querySelector('#tb-chat-link-m')) {
+            const a = document.createElement('a');
+            a.id = 'tb-chat-link-m';
+            a.href = href;
+            a.className = 'hover:bg-blue-100';
+            applyMobileDrawerActionStyle(a);
+            a.innerHTML = '<i class="fas fa-comments text-base"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
+            ensureChatBadge(a);
+            const logout = mobileAuthSlot.querySelector('button');
+            if (logout) mobileAuthSlot.insertBefore(a, logout);
+            else mobileAuthSlot.appendChild(a);
+        } else {
+            const m = mobileAuthSlot && mobileAuthSlot.querySelector('#tb-chat-link-m');
+            if (m) {
+                m.href = href;
+                applyMobileDrawerActionStyle(m);
+                m.innerHTML = '<i class="fas fa-comments text-base"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
+                ensureChatBadge(m);
+            }
+        }
+
+        // 再插入桌面端入口
         if (wrap && !document.getElementById('tb-chat-link')) {
             const a = document.createElement('a');
             a.id = 'tb-chat-link';
@@ -750,28 +774,6 @@
                     ? '<i class="fas fa-comments text-base"></i><span class="text-sm font-medium">收件箱</span>'
                     : '<i class="fas fa-comments text-lg"></i>';
                 ensureChatBadge(existing);
-            }
-        }
-
-        const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
-        if (mobileAuthSlot && !mobileAuthSlot.querySelector('#tb-chat-link-m')) {
-            const a = document.createElement('a');
-            a.id = 'tb-chat-link-m';
-            a.href = href;
-            a.className = 'hover:bg-blue-100';
-            applyMobileDrawerActionStyle(a);
-            a.innerHTML = '<i class="fas fa-comments text-base"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
-            ensureChatBadge(a);
-            const logout = mobileAuthSlot.querySelector('button');
-            if (logout) mobileAuthSlot.insertBefore(a, logout);
-            else mobileAuthSlot.appendChild(a);
-        } else {
-            const m = mobileAuthSlot && mobileAuthSlot.querySelector('#tb-chat-link-m');
-            if (m) {
-                m.href = href;
-                applyMobileDrawerActionStyle(m);
-                m.innerHTML = '<i class="fas fa-comments text-base"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
-                ensureChatBadge(m);
             }
         }
 
