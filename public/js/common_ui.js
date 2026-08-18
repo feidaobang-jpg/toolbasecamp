@@ -134,7 +134,7 @@
             box.className = 'flex flex-col gap-3';
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
-            userLink.className = 'flex items-center gap-2 text-sm font-medium text-gray-800';
+            userLink.className = 'w-full rounded-lg bg-blue-50 border border-blue-100 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
             userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
             const logout = createBtn(tr('auth.logout'));
             logout.className = 'w-full rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
@@ -500,7 +500,7 @@
         if (!mobileRow) {
             mobileRow = document.createElement('div');
             mobileRow.id = 'site-header-mobile-slot';
-            mobileRow.className = 'flex items-center gap-1 flex-shrink-0 md:hidden ml-auto';
+            mobileRow.className = 'flex items-center gap-2 flex-shrink-0 md:hidden ml-auto';
             headerRow.appendChild(mobileRow);
         }
 
