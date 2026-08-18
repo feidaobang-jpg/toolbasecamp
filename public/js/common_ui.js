@@ -622,7 +622,7 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'mt-4 block w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center';
+        a.className = 'mt-4 w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center';
         mobileAuthSlot.appendChild(a);
     }
 
@@ -703,9 +703,11 @@
             const a = document.createElement('a');
             a.id = 'tb-chat-link';
             a.href = href;
-            a.className = 'text-gray-500 hover:text-blue-600 transition-colors inline-flex items-center relative';
+            a.className = 'text-gray-500 hover:text-blue-600 transition-colors inline-flex items-center gap-1 relative';
             a.title = label;
-            a.innerHTML = '<i class="fas fa-comments text-lg"></i>';
+            a.innerHTML = isAdminUser(user)
+                ? '<i class="fas fa-comments text-base"></i><span class="text-sm font-medium">收件箱</span>'
+                : '<i class="fas fa-comments text-lg"></i>';
             ensureChatBadge(a);
             const logout = wrap.querySelector('button');
             if (logout) wrap.insertBefore(a, logout);
@@ -714,6 +716,11 @@
             const existing = document.getElementById('tb-chat-link');
             if (existing) {
                 existing.href = href;
+                existing.title = label;
+                existing.className = 'text-gray-500 hover:text-blue-600 transition-colors inline-flex items-center' + (isAdminUser(user) ? ' gap-1' : '') + ' relative';
+                existing.innerHTML = isAdminUser(user)
+                    ? '<i class="fas fa-comments text-base"></i><span class="text-sm font-medium">收件箱</span>'
+                    : '<i class="fas fa-comments text-lg"></i>';
                 ensureChatBadge(existing);
             }
         }
