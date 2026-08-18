@@ -23,8 +23,8 @@ window.TB_LOCALES.en = {
         guestbook: 'Messages',
         topUp: 'Top up',
         about: 'About',
-        chat: 'Contact admin',
-        chatInbox: 'Chat inbox',
+        chat: 'Inbox',
+        chatInbox: 'Inbox',
         siteStats: 'Stats',
         private: 'Private'
     },

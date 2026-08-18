@@ -22,8 +22,8 @@ window.TB_LOCALES['zh-CN'] = {
         guestbook: '留言',
         topUp: '充值',
         about: '关于',
-        chat: '联系管理员',
-        chatInbox: '私聊收件箱',
+        chat: '收件箱',
+        chatInbox: '收件箱',
         siteStats: '统计',
         private: '自用'
     },
