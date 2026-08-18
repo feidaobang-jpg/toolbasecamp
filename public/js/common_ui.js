@@ -145,11 +145,20 @@
             const logout = createBtn(tr('auth.logout'));
             logout.className = 'hover:bg-blue-100';
             applyMobileDrawerActionStyle(logout, 'appearance:none;');
+
+            // 手机抽屉优先显示私聊入口：避免 auth/me 请求时序导致“收件箱”按钮短暂缺失。
+            // 后续 injectChatLink() 会根据管理员身份把 href/文案更新为“收件箱/私聊”。
+            const mobileChat = document.createElement('a');
+            mobileChat.id = 'tb-chat-link-m';
+            mobileChat.href = resolveAuthUrl('chat.html');
+            applyMobileDrawerActionStyle(mobileChat);
+            mobileChat.innerHTML = '<i class="fas fa-comments text-base text-blue-600"></i><span>联系管理员</span>';
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
             });
             box.appendChild(userLink);
+            box.appendChild(mobileChat);
             box.appendChild(logout);
             mobileAuthSlot.appendChild(box);
             return { userLink };
