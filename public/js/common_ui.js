@@ -131,13 +131,13 @@
             mobileAuthSlot.innerHTML = '';
             const profileUrl = resolveAuthUrl('profile.html');
             const box = document.createElement('div');
-            box.className = 'flex flex-col gap-3';
+            box.className = 'flex flex-col gap-4';
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
-            userLink.className = 'w-full rounded-lg bg-blue-50 border border-blue-100 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
+            userLink.className = 'w-full min-h-10 rounded-lg bg-blue-50 border border-blue-100 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
             userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
             const logout = createBtn(tr('auth.logout'));
-            logout.className = 'w-full rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
+            logout.className = 'w-full min-h-10 rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
