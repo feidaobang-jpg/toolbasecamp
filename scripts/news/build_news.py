@@ -33,7 +33,7 @@ from PIL import Image
 SITE_NAME = "Tool Basecamp 资讯"
 SITE_LOGO_TEXT = "TB"
 NEWS_SECTION_NAME = "科技资讯"
-SITE_BASE_URL = os.environ.get("NEWS_SITE_URL", "https://news.toolbasecamp.com").rstrip("/")
+SITE_BASE_URL = os.environ.get("NEWS_SITE_URL", "https://news.zhengxiaohui.cn").rstrip("/")
 KEYWORDS = "科技资讯,AI,硬件,显卡,手机,Tool Basecamp"
 DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由 Tool Basecamp 自动整理。"
 
@@ -725,7 +725,7 @@ def generate_detail_page(item: Dict[str, Any]) -> str:
         "{{source}}": item["source"],
         "{{date}}": item["date"],
         "{{original_link}}": item["original_link"],
-        "{{main_site}}": "https://toolbasecamp.com/",
+        "{{main_site}}": "https://zhengxiaohui.cn/",
     }
     for k, v in replacements.items():
         html = html.replace(k, v)
@@ -818,7 +818,7 @@ def write_list_page(items_slice: List[Dict[str, Any]], page: int, total_pages: i
     html = html.replace("{{keywords}}", KEYWORDS)
     html = html.replace("{{description}}", DESCRIPTION)
     html = html.replace("{{page_title}}", title)
-    html = html.replace("{{main_site}}", "https://toolbasecamp.com/")
+    html = html.replace("{{main_site}}", "https://zhengxiaohui.cn/")
     html = html.replace("{{home_href}}", f"{path_prefix}index.html" if path_prefix else "index.html")
     html = html.replace("{{asset_prefix}}", asset_prefix)
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)

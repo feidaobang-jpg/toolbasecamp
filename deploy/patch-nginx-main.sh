@@ -24,18 +24,21 @@ ln -sf "$SITE_AVAIL" "$SITE_ENABLED"
 if [[ -f "$DEPLOY/expand-portal-certs.sh" ]]; then
   bash "$DEPLOY/expand-portal-certs.sh" || true
 fi
+if [[ -f "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" ]]; then
+  bash "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" || true
+fi
 
 nginx -t
 systemctl reload nginx
 
 HTTP_CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: toolbasecamp.com' || echo 000)"
-HTTPS_TITLE="$(curl -sk https://127.0.0.1/ -H 'Host: toolbasecamp.com' | grep -oP '(?<=<title>)[^<]+' | head -1 || true)"
+LOC="$(curl -sI http://127.0.0.1/ -H 'Host: toolbasecamp.com' | grep -i '^Location:' | head -1 || true)"
 
 echo "toolbasecamp.com HTTP $HTTP_CODE"
-echo "toolbasecamp.com HTTPS title: ${HTTPS_TITLE:-"(none)"}"
+echo "toolbasecamp.com Location: ${LOC:-"(none)"}"
 
-if echo "$HTTPS_TITLE" | grep -qi 'cyberchef'; then
-  echo "ERROR: main site HTTPS still serves CyberChef"
+if [[ "$HTTP_CODE" != "301" ]] || ! echo "$LOC" | grep -q 'zhengxiaohui.cn'; then
+  echo "ERROR: toolbasecamp.com should 301 to zhengxiaohui.cn"
   exit 1
 fi
 

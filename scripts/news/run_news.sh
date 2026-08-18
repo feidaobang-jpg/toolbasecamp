@@ -25,7 +25,7 @@ if [[ -f "$NEWS_ENV" ]]; then
 fi
 
 export NEWS_WEB_ROOT="$WEB_ROOT"
-export NEWS_SITE_URL="${NEWS_SITE_URL:-https://news.toolbasecamp.com}"
+export NEWS_SITE_URL="${NEWS_SITE_URL:-https://news.zhengxiaohui.cn}"
 
 cd "$NEWS_HOME"
 

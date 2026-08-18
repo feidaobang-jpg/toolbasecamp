@@ -7,6 +7,11 @@ SITE="/etc/nginx/sites-available/toolbasecamp-chef"
 SNIPPET="$DEPLOY/chef-portal-inject.snippet"
 WEB_ROOT="/var/www/toolbasecamp-chef"
 
+if ! bash "$DEPLOY/require-zhengxiaohui-portal-san.sh" chef.zhengxiaohui.cn; then
+  echo "WARNING: skip chef hostname cutover until cert includes chef.zhengxiaohui.cn"
+  exit 0
+fi
+
 if [[ ! -f "$WEB_ROOT/index.html" ]]; then
   echo "ERROR: $WEB_ROOT/index.html missing — run install-cyberchef-release.sh first."
   echo "  sudo bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh"
@@ -20,6 +25,9 @@ if [[ ! -f "$SITE_SRC" || ! -f "$SNIPPET" ]]; then
 fi
 
 bash "$DEPLOY/expand-portal-certs.sh"
+if [[ -f "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" ]]; then
+  bash "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" || true
+fi
 
 python3 << PY
 from pathlib import Path
@@ -39,7 +47,7 @@ ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-chef
 nginx -t
 systemctl reload nginx
 
-HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: chef.toolbasecamp.com' || true)"
+HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: chef.zhengxiaohui.cn' || true)"
 if ! grep -q 'id="portal-home-bar"' <<< "$HTML"; then
   echo "ERROR: chef HTML missing inline portal-home-bar injection"
   exit 1
@@ -50,7 +58,7 @@ if grep -q 'portal-home-bar.js' <<< "$HTML"; then
 fi
 echo "OK: chef inline portal bar"
 
-CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: chef.toolbasecamp.com' || echo 000)"
-echo "chef.toolbasecamp.com HTTP $CODE"
+CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: chef.zhengxiaohui.cn' || echo 000)"
+echo "chef.zhengxiaohui.cn HTTP $CODE"
 [[ "$CODE" == "200" ]] || exit 1
-echo "OK: chef.toolbasecamp.com"
+echo "OK: chef.zhengxiaohui.cn"

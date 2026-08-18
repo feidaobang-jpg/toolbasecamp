@@ -6,7 +6,7 @@ DEPLOY="/opt/toolbasecamp-deploy"
 COMPOSE="$DEPLOY/hoppscotch-compose.yml"
 ENV_FILE="$DEPLOY/hoppscotch.env"
 REF_FILE="$DEPLOY/hoppscotch.ref"
-DOMAIN="hoppscotch.toolbasecamp.com"
+DOMAIN="hoppscotch.zhengxiaohui.cn"
 BASE_URL="https://${DOMAIN}"
 
 install_docker() {

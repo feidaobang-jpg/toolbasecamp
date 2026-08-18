@@ -148,7 +148,7 @@ def news_status(_admin: dict = Depends(_admin_user)):
         "ok": True,
         "count": _count_articles(),
         "index_updated_at": _index_mtime(),
-        "public_url": "https://news.toolbasecamp.com/",
+        "public_url": "https://news.zhengxiaohui.cn/",
         "running": _running,
         "last_started": _last_started or None,
         "last_finished": _last_finished or None,

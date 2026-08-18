@@ -226,6 +226,12 @@ app.add_middleware(
     allow_origins=[
         "https://zhengxiaohui.cn",
         "https://www.zhengxiaohui.cn",
+        "https://news.zhengxiaohui.cn",
+        "https://dev.zhengxiaohui.cn",
+        "https://chef.zhengxiaohui.cn",
+        "https://pdf.zhengxiaohui.cn",
+        "https://translate.zhengxiaohui.cn",
+        "https://hoppscotch.zhengxiaohui.cn",
         "https://toolbasecamp.com",
         "https://www.toolbasecamp.com",
         "https://news.toolbasecamp.com",

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Enable dev.toolbasecamp.com (next-tools SPA) on HTTP + HTTPS
+# Enable dev.zhengxiaohui.cn (next-tools SPA) on HTTP + HTTPS
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
@@ -10,6 +10,11 @@ WEB_ROOT="/var/www/toolbasecamp-dev"
 MAIN_SITE="/etc/nginx/sites-enabled/toolbasecamp"
 MARKER_BEGIN="# BEGIN toolbasecamp-dev"
 MARKER_END="# END toolbasecamp-dev"
+
+if ! bash "$DEPLOY/require-zhengxiaohui-portal-san.sh" dev.zhengxiaohui.cn; then
+  echo "WARNING: skip dev hostname cutover until cert includes dev.zhengxiaohui.cn"
+  exit 0
+fi
 
 mkdir -p "$WEB_ROOT"
 
@@ -24,6 +29,9 @@ if [[ -f "$MAIN_SITE" ]]; then
 fi
 
 bash "$DEPLOY/expand-portal-certs.sh"
+if [[ -f "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" ]]; then
+  bash "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" || true
+fi
 
 python3 << PY
 from pathlib import Path
@@ -43,7 +51,7 @@ ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-dev
 nginx -t
 systemctl reload nginx
 
-HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: dev.toolbasecamp.com' || true)"
+HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: dev.zhengxiaohui.cn' || true)"
 if ! grep -q 'id="portal-home-bar"' <<< "$HTML" && ! grep -q 'portal-has-home-bar' <<< "$HTML"; then
   echo "WARNING: dev HTML missing inline portal bar styles"
 fi
@@ -60,19 +68,19 @@ fi
 
 ASSET="$(grep -oP '/assets/index-[^.]+\.css' <<< "$HTML" | head -1 || true)"
 if [[ -n "$ASSET" ]]; then
-  CODE="$(curl -sk -o /dev/null -w '%{http_code}' "https://127.0.0.1${ASSET}" -H 'Host: dev.toolbasecamp.com' || echo 000)"
+  CODE="$(curl -sk -o /dev/null -w '%{http_code}' "https://127.0.0.1${ASSET}" -H 'Host: dev.zhengxiaohui.cn' || echo 000)"
   echo "dev asset ${ASSET} HTTPS $CODE"
   [[ "$CODE" == "200" ]] || exit 1
 fi
 
-HTTPS_BODY="$(curl -sk https://127.0.0.1/ -H 'Host: dev.toolbasecamp.com' || true)"
+HTTPS_BODY="$(curl -sk https://127.0.0.1/ -H 'Host: dev.zhengxiaohui.cn' || true)"
 if echo "$HTTPS_BODY" | grep -q 'Tool Basecamp — Productivity Tools Hub'; then
   echo "ERROR: HTTPS still serves main site — check certbot and nginx 443 vhost."
   exit 1
 fi
 
 if echo "$HTTPS_BODY" | grep -qi 'next tools'; then
-  echo "OK: dev.toolbasecamp.com serves next-tools on HTTP and HTTPS."
+  echo "OK: dev.zhengxiaohui.cn serves next-tools on HTTP and HTTPS."
 else
   echo "WARNING: HTTPS test did not return next-tools (cert or nginx issue)."
 fi

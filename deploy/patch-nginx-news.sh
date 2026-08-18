@@ -8,6 +8,11 @@ SNIPPET="$DEPLOY/news-portal-inject.snippet"
 WEB_ROOT="/var/www/toolbasecamp-news"
 NEWS_HOME="/opt/toolbasecamp-news"
 
+if ! bash "$DEPLOY/require-zhengxiaohui-portal-san.sh" news.zhengxiaohui.cn; then
+  echo "WARNING: skip news hostname cutover until cert includes news.zhengxiaohui.cn"
+  exit 0
+fi
+
 mkdir -p "$WEB_ROOT"
 
 if [[ ! -f "$WEB_ROOT/index.html" ]]; then
@@ -40,6 +45,9 @@ if [[ ! -f "$SITE_SRC" || ! -f "$SNIPPET" ]]; then
 fi
 
 bash "$DEPLOY/expand-portal-certs.sh"
+if [[ -f "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" ]]; then
+  bash "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" || true
+fi
 
 python3 << PY
 from pathlib import Path
@@ -59,12 +67,12 @@ ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-news
 nginx -t
 systemctl reload nginx
 
-HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: news.toolbasecamp.com' || true)"
+HTML="$(curl -sk "https://127.0.0.1/" -H 'Host: news.zhengxiaohui.cn' || true)"
 if ! grep -q 'id="portal-home-bar"' <<< "$HTML"; then
   echo "WARNING: news HTML missing inline portal-home-bar (cert/DNS may still be pending)"
 fi
 
-CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: news.toolbasecamp.com' || echo 000)"
-echo "news.toolbasecamp.com HTTP $CODE"
+CODE="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/ -H 'Host: news.zhengxiaohui.cn' || echo 000)"
+echo "news.zhengxiaohui.cn HTTP $CODE"
 [[ "$CODE" == "200" || "$CODE" == "503" ]] || exit 1
-echo "OK: news.toolbasecamp.com nginx"
+echo "OK: news.zhengxiaohui.cn nginx"

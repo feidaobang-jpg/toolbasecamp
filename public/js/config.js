@@ -17,12 +17,12 @@ const siteConfig = {
     icpBeianUrl: 'https://beian.miit.gov.cn/',
     adminEmail: 'admin@toolbasecamp.com',
     adminPhone: '15859130726',
-    devPortalUrl: 'https://dev.toolbasecamp.com',
-    pdfPortalUrl: 'https://pdf.toolbasecamp.com',
-    chefPortalUrl: 'https://chef.toolbasecamp.com',
-    hoppscotchPortalUrl: 'https://hoppscotch.toolbasecamp.com',
-    translatePortalUrl: 'https://translate.toolbasecamp.com',
-    newsPortalUrl: 'https://news.toolbasecamp.com',
+    devPortalUrl: 'https://dev.zhengxiaohui.cn',
+    pdfPortalUrl: 'https://pdf.zhengxiaohui.cn',
+    chefPortalUrl: 'https://chef.zhengxiaohui.cn',
+    hoppscotchPortalUrl: 'https://hoppscotch.zhengxiaohui.cn',
+    translatePortalUrl: 'https://translate.zhengxiaohui.cn',
+    newsPortalUrl: 'https://news.zhengxiaohui.cn',
     apiBase: (function () {
         const host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') {
@@ -48,42 +48,42 @@ const portalsConfig = [
     {
         titleKey: 'portals.news.title',
         descriptionKey: 'portals.news.description',
-        url: 'https://news.toolbasecamp.com',
+        url: 'https://news.zhengxiaohui.cn',
         ctaKey: 'portals.news.cta',
         theme: 'news'
     },
     {
         titleKey: 'portals.dev.title',
         descriptionKey: 'portals.dev.description',
-        url: 'https://dev.toolbasecamp.com',
+        url: 'https://dev.zhengxiaohui.cn',
         ctaKey: 'portals.dev.cta',
         theme: 'dev'
     },
     {
         titleKey: 'portals.chef.title',
         descriptionKey: 'portals.chef.description',
-        url: 'https://chef.toolbasecamp.com',
+        url: 'https://chef.zhengxiaohui.cn',
         ctaKey: 'portals.chef.cta',
         theme: 'chef'
     },
     {
         titleKey: 'portals.hoppscotch.title',
         descriptionKey: 'portals.hoppscotch.description',
-        url: 'https://hoppscotch.toolbasecamp.com',
+        url: 'https://hoppscotch.zhengxiaohui.cn',
         ctaKey: 'portals.hoppscotch.cta',
         theme: 'hoppscotch'
     },
     {
         titleKey: 'portals.pdf.title',
         descriptionKey: 'portals.pdf.description',
-        url: 'https://pdf.toolbasecamp.com',
+        url: 'https://pdf.zhengxiaohui.cn',
         ctaKey: 'portals.pdf.cta',
         theme: 'pdf'
     },
     {
         titleKey: 'portals.translate.title',
         descriptionKey: 'portals.translate.description',
-        url: 'https://translate.toolbasecamp.com',
+        url: 'https://translate.zhengxiaohui.cn',
         ctaKey: 'portals.translate.cta',
         theme: 'translate'
     }
