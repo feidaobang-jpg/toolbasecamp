@@ -16,8 +16,14 @@ chmod +x \
   "$DEPLOY/patch-nginx-main.sh" \
   "$DEPLOY/install-migration-notice.sh"
 
-echo "===== DNSPod A records ====="
-/opt/toolbasecamp-api/venv/bin/python "$DEPLOY/dnspod-upsert-zhengxiaohui-portals.py"
+if [[ "${SKIP_DNSPOD:-0}" != "1" ]]; then
+  echo "===== DNSPod A records (optional) ====="
+  if /opt/toolbasecamp-api/venv/bin/python "$DEPLOY/dnspod-upsert-zhengxiaohui-portals.py"; then
+    echo "DNSPod upsert OK"
+  else
+    echo "WARNING: DNSPod upsert skipped/failed — ensure A records exist in console"
+  fi
+fi
 
 echo "===== wait DNS ====="
 ok=0

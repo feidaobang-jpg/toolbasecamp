@@ -30,8 +30,12 @@ wait_certbot_idle() {
   return 1
 }
 
+ZHENG_ACCOUNT="${ZHENG_CERTBOT_ACCOUNT:-58d98f58ab709817fe23518a31ccb214}"
+
 run_expand() {
   certbot certonly --nginx \
+    --cert-name zhengxiaohui.cn \
+    --account "$ZHENG_ACCOUNT" \
     -d zhengxiaohui.cn -d www.zhengxiaohui.cn \
     -d dev.zhengxiaohui.cn -d chef.zhengxiaohui.cn \
     -d news.zhengxiaohui.cn -d hoppscotch.zhengxiaohui.cn \
