@@ -130,10 +130,10 @@
             box.className = 'flex flex-col gap-4';
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
-            userLink.className = 'w-full min-h-10 rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
-            userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
+            userLink.className = 'w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
+            userLink.innerHTML = '<i class="fas fa-user-circle text-base text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
             const logout = createBtn(tr('auth.logout'));
-            logout.className = 'w-full min-h-10 rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100';
+            logout.className = 'w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center';
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
@@ -622,7 +622,7 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'mt-4 min-h-10 block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center';
+        a.className = 'mt-4 block w-full h-12 rounded-lg border border-blue-100 bg-blue-50 px-4 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center';
         mobileAuthSlot.appendChild(a);
     }
 
