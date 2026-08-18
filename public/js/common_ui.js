@@ -61,6 +61,15 @@
         return maskPhone(s);
     }
 
+    function applyMobileDrawerActionStyle(el, extraCssText = '') {
+        if (!el) return;
+        el.style.cssText =
+            'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;' +
+            'padding:0 16px;border:1px solid #dbeafe;border-radius:0.5rem;background:#eff6ff;' +
+            'color:#1d4ed8;font-size:14px;font-weight:500;line-height:1;text-decoration:none;box-sizing:border-box;' +
+            extraCssText;
+    }
+
     function renderAuthStatus() {
         const headerContainer = document.querySelector('header .max-w-7xl');
         const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
@@ -99,15 +108,6 @@
             btn.textContent = text;
             btn.className = 'text-sm text-gray-600 hover:text-blue-600 transition-colors';
             return btn;
-        };
-
-        const applyMobileDrawerActionStyle = (el, extraCssText = '') => {
-            if (!el) return;
-            el.style.cssText =
-                'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;' +
-                'padding:0 16px;border:1px solid #dbeafe;border-radius:0.5rem;background:#eff6ff;' +
-                'color:#1d4ed8;font-size:14px;font-weight:500;line-height:1;text-decoration:none;box-sizing:border-box;' +
-                extraCssText;
         };
 
         const resolveAuthUrl = (pageName) => {
