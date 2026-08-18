@@ -152,7 +152,7 @@
             mobileChat.id = 'tb-chat-link-m';
             mobileChat.href = resolveAuthUrl('chat.html');
             applyMobileDrawerActionStyle(mobileChat);
-            mobileChat.innerHTML = '<i class="fas fa-comments text-base text-blue-600"></i><span>联系管理员</span>';
+            mobileChat.innerHTML = '<i class="fas fa-comments text-base text-blue-600"></i><span>收件箱</span>';
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
@@ -723,12 +723,14 @@
     }
 
     function chatLabelForUser(user) {
-        if (isAdminUser(user)) {
-            const inbox = tr('nav.chatInbox');
-            return inbox === 'nav.chatInbox' ? '私聊收件箱' : inbox;
+        // Unify all chat entry labels to a single word.
+        // zh-CN: 收件箱, else: Inbox
+        try {
+            const loc = (typeof tbGetLocale === 'function' ? tbGetLocale() : (document.documentElement.lang || '')).toString();
+            return loc === 'zh-CN' ? '收件箱' : 'Inbox';
+        } catch (e) {
+            return '收件箱';
         }
-        const label = tr('nav.chat');
-        return label === 'nav.chat' ? '联系管理员' : label;
     }
 
     function injectChatLink(user, wrap) {
