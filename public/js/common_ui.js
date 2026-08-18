@@ -32,15 +32,11 @@
     }
 
     function maskEmail(email) {
-        if (!email || !email.includes('@')) return email || 'User';
-        const [local] = email.split('@');
-        return (local.slice(0, 2) || local[0] || '') + '…';
+        return String(email || '').trim() || 'User';
     }
 
     function maskPhone(phone) {
-        const p = String(phone || '').trim();
-        if (p.length >= 4) return p.slice(-4);
-        return p || 'User';
+        return String(phone || '').trim() || 'User';
     }
 
     function clearAuthLocalState(tokenKey) {
@@ -134,10 +130,10 @@
             box.className = 'flex flex-col gap-4';
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
-            userLink.className = 'w-full min-h-10 rounded-lg bg-blue-50 border border-blue-100 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
+            userLink.className = 'w-full min-h-10 rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center gap-2';
             userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
             const logout = createBtn(tr('auth.logout'));
-            logout.className = 'w-full min-h-10 rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
+            logout.className = 'w-full min-h-10 rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-100';
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
@@ -626,7 +622,7 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'mt-3 min-h-10 block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700 flex items-center justify-center';
+        a.className = 'mt-4 min-h-10 block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700 hover:bg-blue-100 flex items-center justify-center';
         mobileAuthSlot.appendChild(a);
     }
 
