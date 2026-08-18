@@ -626,7 +626,7 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700';
+        a.className = 'mt-3 min-h-10 block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700 flex items-center justify-center';
         mobileAuthSlot.appendChild(a);
     }
 
