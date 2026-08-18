@@ -154,6 +154,18 @@
                 wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
             }
             fillMobileAuthLoggedOut();
+            // 手机顶栏：直接显示「登录」按钮
+            const mobileSlot = document.getElementById('site-header-mobile-slot');
+            if (mobileSlot && !document.getElementById('tb-mobile-login-btn')) {
+                const loginA = document.createElement('a');
+                loginA.id = 'tb-mobile-login-btn';
+                loginA.href = loginUrl;
+                loginA.className = 'text-sm font-medium text-blue-600 border border-blue-200 rounded-full px-3 py-1 bg-blue-50 hover:bg-blue-100 transition-colors flex-shrink-0';
+                loginA.textContent = tr('auth.login');
+                const menuBtn = document.getElementById('site-nav-menu-btn');
+                if (menuBtn) mobileSlot.insertBefore(loginA, menuBtn);
+                else mobileSlot.appendChild(loginA);
+            }
             return;
         }
 
