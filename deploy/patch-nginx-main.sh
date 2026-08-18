@@ -1,5 +1,5 @@
 #!/bin/bash
-# Restore main site nginx snippets (no toolbasecamp.com vhost).
+# Restore main site nginx snippets (no legacy vhost).
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"

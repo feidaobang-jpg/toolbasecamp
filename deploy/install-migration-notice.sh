@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verify zhengxiaohui.cn main site (toolbasecamp.com redirects removed).
+# Verify zhengxiaohui.cn main site (legacy redirects removed).
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
@@ -16,4 +16,4 @@ if echo "$MAIN_TITLE" | grep -q '站点已迁移'; then
   exit 1
 fi
 
-echo "OK: main site nginx (no toolbasecamp.com redirect)"
+echo "OK: main site nginx (no legacy redirect)"
