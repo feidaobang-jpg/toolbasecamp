@@ -33,14 +33,13 @@
 
     function maskEmail(email) {
         if (!email || !email.includes('@')) return email || 'User';
-        const [local, domain] = email.split('@');
-        if (local.length <= 2) return `${local[0]}***@${domain}`;
-        return `${local.slice(0, 2)}***@${domain}`;
+        const [local] = email.split('@');
+        return (local.slice(0, 2) || local[0] || '') + '…';
     }
 
     function maskPhone(phone) {
         const p = String(phone || '').trim();
-        if (p.length >= 7) return p.slice(0, 3) + '****' + p.slice(-4);
+        if (p.length >= 4) return p.slice(-4);
         return p || 'User';
     }
 
