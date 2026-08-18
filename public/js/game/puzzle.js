@@ -86,7 +86,7 @@
         ctx.font = 'bold 64px system-ui,sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('Tool Basecamp', 300, 300);
+        ctx.fillText('工具大本营', 300, 300);
         return c.toDataURL('image/png');
     }
 

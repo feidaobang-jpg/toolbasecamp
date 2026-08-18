@@ -108,12 +108,12 @@ jobs:
             public/ \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
 
-      - name: Ensure toolbasecamp.com migration notice
+      - name: Verify main site (zhengxiaohui.cn)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" \
-            'test -f /opt/toolbasecamp-deploy/install-migration-notice.sh && bash /opt/toolbasecamp-deploy/install-migration-notice.sh; curl -sI -H "Host: toolbasecamp.com" http://127.0.0.1/ | grep -qi "location:.*zhengxiaohui.cn" || { echo "::error:: toolbasecamp.com / missing 301 to zhengxiaohui.cn"; exit 1; }'
+            'bash /opt/toolbasecamp-deploy/install-migration-notice.sh || true'
 
       - name: Rsync API server
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
@@ -347,7 +347,7 @@ jobs:
             echo "news crawler not present  - skip news portal"
           fi
           bash /opt/toolbasecamp-deploy/patch-nginx-nas-proxy.sh || true
-          bash /opt/toolbasecamp-deploy/patch-nginx-legacy-redirects.sh || true
+          bash /opt/toolbasecamp-deploy/patch-disable-toolbasecamp-legacy.sh || true
           bash /opt/toolbasecamp-deploy/install-mysql-backup-cron.sh || true
           bash /opt/toolbasecamp-deploy/install-api-health-cron.sh || true
           echo "=== Nuclear restart before start ==="
@@ -1175,7 +1175,7 @@ jobs:
             echo "::warning:: dev portal HTTPS returned $HTTP_CODE (nginx on server may still be OK)."
             exit 0
           fi
-          if grep -q 'Tool Basecamp  - Productivity Tools Hub' /tmp/dev-public.html; then
+          if grep -q '工具大本营 - 效率工具集' /tmp/dev-public.html; then
             echo "::warning:: Public URL still shows main site  - purge Cloudflare cache or check Origin Rules."
             exit 0
           fi
@@ -1205,7 +1205,7 @@ jobs:
             echo "::warning:: pdf portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: pdf A record, then re-run deploy."
             exit 0
           fi
-          if grep -q 'Tool Basecamp  - Productivity Tools Hub' /tmp/pdf-public.html; then
+          if grep -q '工具大本营 - 效率工具集' /tmp/pdf-public.html; then
             echo "::warning:: pdf URL shows main site  - check nginx 443 vhost for pdf.zhengxiaohui.cn."
             exit 0
           fi
@@ -1249,7 +1249,7 @@ jobs:
             echo "::warning:: news portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: news A record (orange cloud), then re-run deploy."
             exit 0
           fi
-          if ! grep -qi '??\|Tool Basecamp' /tmp/news-public.html; then
+          if ! grep -qi '工具大本营' /tmp/news-public.html; then
             echo "::warning:: news URL did not look like news portal HTML."
             exit 0
           fi

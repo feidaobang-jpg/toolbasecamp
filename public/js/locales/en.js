@@ -5,13 +5,13 @@
 window.TB_LOCALES = window.TB_LOCALES || {};
 window.TB_LOCALES.en = {
     site: {
-        name: 'Tool Basecamp',
+        name: 'Tools Base Camp',
         logoBadge: 'TB',
-        description: 'Tool Basecamp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
+        description: 'Tools Base Camp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
         keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
         footer: 'All rights reserved.',
         icpBeian: '闽ICP备2025116294号-2',
-        pageTitleSuffix: 'Tool Basecamp'
+        pageTitleSuffix: 'Tools Base Camp'
     },
     nav: {
         tools: 'Tools',
@@ -311,7 +311,7 @@ window.TB_LOCALES.en = {
     },
     hub: {
         portalsTitle: 'Portals',
-        portalsSubtitle: 'Extended tool collections hosted under Tool Basecamp.',
+        portalsSubtitle: 'Extended tool collections hosted under Tools Base Camp.',
         basecampTools: 'Basecamp Tools',
         gamesTitle: 'Games',
         lifeTitle: 'Content',
@@ -1955,7 +1955,7 @@ window.TB_LOCALES.en = {
             modeSingle: 'Single',
             modeTile: 'Tile',
             textLabel: 'Watermark text',
-            textPlaceholder: 'e.g. © Tool Basecamp',
+            textPlaceholder: 'e.g. © Tools Base Camp',
             fontSizeLabel: 'Font size',
             opacityLabel: 'Opacity',
             colorLabel: 'Color',
@@ -2643,13 +2643,13 @@ window.TB_LOCALES.en = {
             noLyrics: 'No lyrics (instrumental or not returned)',
             openPlayer: 'Lyrics player',
             share: 'Share',
-            shareText: 'AI music made with Tool Basecamp',
+            shareText: 'AI music made with Tools Base Camp',
             generating: 'Generating music…',
             needPrompt: 'Please enter a style description',
             needLyrics: 'Please enter lyrics, or enable auto-generate lyrics',
             notConfigured: 'MiniMax is not configured (MINIMAX_API_KEY).',
             failed: 'Generation failed. Try another style or lyrics.',
-            providerBalance: 'MiniMax account has insufficient balance (not your Tool Basecamp wallet). Top up at platform.minimaxi.com — even free music models require a funded MiniMax account.',
+            providerBalance: 'MiniMax account has insufficient balance (not your Tools Base Camp wallet). Top up at platform.minimaxi.com — even free music models require a funded MiniMax account.',
             rateLimited: 'MiniMax rate limited. Retry later, or switch to Music-3.0.',
             resultMeta: '{model} · {duration}s · charged ¥{price}',
             wechatPlayTip: 'In WeChat you can play here. To save or forward the file, use the buttons below or open this page in your system browser.',
@@ -3161,7 +3161,7 @@ window.TB_LOCALES.en = {
         unreadCount: '{n} unread'
     },
     about: {
-        title: 'About Tool Basecamp',
+        title: 'About Tools Base Camp',
         lead: 'A global productivity toolkit — documents, AI images, life utilities, casual games, and developer helpers, in Chinese and English.',
         documentTitle: 'Document Tools',
         documentDesc: 'PDF to Word, Word to PDF, Images to PDF, and more — fast and straightforward.',

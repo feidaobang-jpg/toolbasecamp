@@ -5,8 +5,8 @@ map $http_x_forwarded_proto $forwarded_proto {
 
 map $http_referer $lt_portal_referer {
     default 0;
-    "~^https://translate\.toolbasecamp\.com" 1;
-    "~^http://translate\.toolbasecamp\.com" 1;
+    "~^https://translate\.zhengxiaohui\.cn" 1;
+    "~^http://translate\.zhengxiaohui\.cn" 1;
 }
 
 map "$request_method:$lt_portal_referer" $lt_block_api_post {

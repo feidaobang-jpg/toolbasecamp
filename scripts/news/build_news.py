@@ -30,12 +30,12 @@ from bs4 import BeautifulSoup
 from PIL import Image
 
 # --- Site branding ---
-SITE_NAME = "Tool Basecamp 资讯"
-SITE_LOGO_TEXT = "TB"
+SITE_NAME = "资讯"
+SITE_LOGO_TEXT = "资"
 NEWS_SECTION_NAME = "科技资讯"
 SITE_BASE_URL = os.environ.get("NEWS_SITE_URL", "https://news.zhengxiaohui.cn").rstrip("/")
-KEYWORDS = "科技资讯,AI,硬件,显卡,手机,Tool Basecamp"
-DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由 Tool Basecamp 自动整理。"
+KEYWORDS = "科技资讯,AI,硬件,显卡,手机,工具大本营"
+DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由工具大本营自动整理。"
 
 DEEPSEEK_API_KEY = (os.environ.get("DEEPSEEK_API_KEY") or "").strip()
 DEEPSEEK_API_URL = os.environ.get(

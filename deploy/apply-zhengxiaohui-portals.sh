@@ -7,7 +7,7 @@ export API_ENV="${API_ENV:-/etc/toolbasecamp-api.env}"
 chmod +x \
   "$DEPLOY/dnspod-upsert-zhengxiaohui-portals.py" \
   "$DEPLOY/expand-zhengxiaohui-portal-certs.sh" \
-  "$DEPLOY/patch-nginx-legacy-redirects.sh" \
+  "$DEPLOY/patch-disable-toolbasecamp-legacy.sh" \
   "$DEPLOY/patch-nginx-nas-proxy.sh" \
   "$DEPLOY/patch-nginx-dev.sh" \
   "$DEPLOY/patch-nginx-chef.sh" \
@@ -55,7 +55,7 @@ bash "$DEPLOY/patch-nginx-chef.sh"
 bash "$DEPLOY/patch-nginx-news.sh"
 bash "$DEPLOY/patch-nginx-hoppscotch.sh" || true
 bash "$DEPLOY/patch-nginx-nas-proxy.sh"
-bash "$DEPLOY/patch-nginx-legacy-redirects.sh"
+bash "$DEPLOY/patch-disable-toolbasecamp-legacy.sh"
 bash "$DEPLOY/install-migration-notice.sh"
 
 echo "===== local HTTPS titles ====="

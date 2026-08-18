@@ -33,7 +33,7 @@ print('ico bytes', os.path.getsize(ico_path))
 
 svg = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" '
-    'role="img" aria-label="Tool Basecamp">'
+    'role="img" aria-label="工具大本营">'
     '<rect width="64" height="64" rx="14" fill="#2563eb"/>'
     '<text x="32" y="42" text-anchor="middle" '
     'font-family="Arial, Helvetica, sans-serif" font-size="28" '
