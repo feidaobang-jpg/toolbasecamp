@@ -655,7 +655,7 @@
         let badge = anchor.querySelector('.tb-chat-unread');
         if (!badge) {
             badge = document.createElement('span');
-            badge.className = 'tb-chat-unread hidden ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none';
+            badge.className = 'tb-chat-unread hidden absolute -top-1.5 -right-2 inline-flex items-center justify-center min-w-[1rem] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none';
             anchor.appendChild(badge);
         }
         return badge;
@@ -696,8 +696,9 @@
             const a = document.createElement('a');
             a.id = 'tb-chat-link';
             a.href = href;
-            a.className = 'text-sm text-gray-600 hover:text-blue-600 transition-colors inline-flex items-center';
-            a.innerHTML = '<i class="fas fa-comments mr-1"></i><span>' + label + '</span>';
+            a.className = 'text-gray-500 hover:text-blue-600 transition-colors inline-flex items-center relative';
+            a.title = label;
+            a.innerHTML = '<i class="fas fa-comments text-lg"></i>';
             ensureChatBadge(a);
             const logout = wrap.querySelector('button');
             if (logout) wrap.insertBefore(a, logout);
