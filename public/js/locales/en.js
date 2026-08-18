@@ -65,7 +65,7 @@ window.TB_LOCALES.en = {
             pcBuildsGenerate: 'Check database',
             walletTitle: 'User balance',
             walletDesc: 'Credit users, create redeem codes, settle commission',
-            chatInboxTitle: 'Chat inbox',
+            chatInboxTitle: 'Inbox',
             chatInboxDesc: 'Private 1:1 support chat with users; unread badges included',
             tradMusicTitle: 'Song library',
             tradMusicDesc: 'Manage public music: upload classic tracks (preview + DeepSeek lyrics); delete AI public songs.',
