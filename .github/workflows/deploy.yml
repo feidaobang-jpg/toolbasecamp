@@ -1081,7 +1081,7 @@ jobs:
           echo "stats event: $EV"
           if ! check_stats || ! echo "$HIT" | grep -F '"site_pv"' >/dev/null \
             || ! echo "$HIT" | grep -F '"region"' >/dev/null \
-            || ! echo "$HIT" | grep -F '"geo_rev":1' >/dev/null \
+            || ! echo "$HIT" | grep -F '"geo_rev":2' >/dev/null \
             || ! echo "$EV" | grep -F '"ok":true' >/dev/null; then
             echo "::warning:: public stats incomplete  - forcing fix-stats-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
@@ -1098,7 +1098,7 @@ jobs:
             check_stats || exit 1
             echo "$HIT" | grep -F '"site_pv"' >/dev/null || exit 1
             echo "$HIT" | grep -F '"region"' >/dev/null || exit 1
-            echo "$HIT" | grep -F '"geo_rev":1' >/dev/null || exit 1
+            echo "$HIT" | grep -F '"geo_rev":2' >/dev/null || exit 1
             echo "$EV" | grep -F '"ok":true' >/dev/null || exit 1
           fi
           HEALTH2="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
