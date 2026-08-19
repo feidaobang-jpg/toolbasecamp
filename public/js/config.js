@@ -167,6 +167,7 @@ const toolsConfig = {
             items: [
                 { titleKey: 'tools.qrCode.title', url: 'html/media/qr-code.html' },
                 { titleKey: 'tools.imageResize.title', url: 'html/media/image-resize.html' },
+                { titleKey: 'tools.gifSticker.title', url: 'html/media/gif-sticker.html' },
                 { titleKey: 'tools.watermarkRemoval.title', url: 'html/media/watermark-removal.html' },
                 { titleKey: 'tools.watermarkRemovalAdvanced.title', url: 'html/media/watermark-removal-advanced.html' },
                 { titleKey: 'tools.addMosaic.title', url: 'html/media/add-mosaic.html' },
@@ -190,7 +191,8 @@ const toolsConfig = {
                 { titleKey: 'tools.refToVideo.title', url: 'html/media/ref-to-video.html', authRequired: true, paid: true },
                 { titleKey: 'tools.videoEdit.title', url: 'html/media/video-edit.html', authRequired: true, paid: true },
                 { titleKey: 'tools.instructEdit.title', url: 'html/media/instruct-edit.html', authRequired: true, paid: true },
-                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true }
+                { titleKey: 'tools.textToImage.title', url: 'html/media/text-to-image.html', authRequired: true, paid: true },
+                { titleKey: 'tools.aiMeme.title', url: 'html/media/ai-meme.html', authRequired: true, paid: true }
             ]
         },
         {

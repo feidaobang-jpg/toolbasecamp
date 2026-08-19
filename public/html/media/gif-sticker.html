@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GIF / Sticker Maker - 工具大本营</title>
+  <meta name="description" content="Crop and compress images or GIFs into WeChat-friendly square stickers locally.">
+  <link rel="stylesheet" href="../../css/base.css?v=gifstk1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=gifstk1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=gifstk1" />
+  <link rel="stylesheet" href="../../css/media/gif-sticker.css?v=gifstk1" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar"></aside>
+    <main class="content">
+      <div class="tool-header">
+        <h1 data-i18n="tools.gifSticker.title">GIF / Sticker Maker</h1>
+        <p data-i18n="tools.gifSticker.desc">Crop to square, add caption, compress for WeChat. All local — nothing uploaded.</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tip-box img-wechat-tip" id="wechat-tip" hidden></div>
+
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-icon">+</div>
+          <div class="drop-title" data-i18n="tools.gifSticker.dropTitle">Click or drop an image / GIF</div>
+          <div class="drop-hint" data-i18n="tools.gifSticker.dropHint">JPG, PNG, WebP, GIF</div>
+        </div>
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" />
+
+        <div class="gif-stk-workspace" id="workspace" hidden>
+          <div class="gif-stk-preview-wrap">
+            <canvas id="preview-canvas" aria-label="preview"></canvas>
+          </div>
+          <p class="img-tool-meta" id="source-meta"></p>
+
+          <div class="gif-stk-fields">
+            <label>
+              <span data-i18n="tools.gifSticker.sizeLabel">Output size</span>
+              <select id="size-select">
+                <option value="240" data-i18n="tools.gifSticker.size240">240 × 240 (WeChat sticker)</option>
+                <option value="512" selected data-i18n="tools.gifSticker.size512">512 × 512</option>
+                <option value="128">128 × 128</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="tools.gifSticker.focusX">Crop focus X</span>
+              <input type="range" id="focus-x" min="0" max="100" value="50" />
+            </label>
+            <label>
+              <span data-i18n="tools.gifSticker.focusY">Crop focus Y</span>
+              <input type="range" id="focus-y" min="0" max="100" value="50" />
+            </label>
+            <label>
+              <span data-i18n="tools.gifSticker.captionLabel">Caption (optional)</span>
+              <input type="text" id="caption-input" maxlength="40" data-i18n-placeholder="tools.gifSticker.captionPh" placeholder="Top / bottom meme text" />
+            </label>
+            <label>
+              <span data-i18n="tools.gifSticker.formatLabel">Export format</span>
+              <select id="format-select">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="gif">GIF</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="tools.gifSticker.qualityLabel">JPEG quality</span>
+              <input type="range" id="quality-range" min="40" max="95" value="82" />
+              <span id="quality-val">82</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          <b data-i18n="tools.gifSticker.tip">Tip:</b>
+          <span data-i18n="tools.gifSticker.tipBody">In WeChat, long-press the preview or use Download — save to phone, then forward in chat.</span>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="tb-btn" id="export-btn" disabled data-i18n="tools.gifSticker.export">Download</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.gifSticker.clear">Clear</button>
+        </div>
+        <div class="img-cloud-busy" id="busy" hidden>
+          <span class="img-cloud-spinner" aria-hidden="true"></span>
+          <span id="busy-text" data-i18n="tools.gifSticker.encoding">Encoding…</span>
+        </div>
+        <div class="error-box" id="error-box" role="alert"></div>
+        <div class="gif-stk-result" id="result-wrap" hidden>
+          <img id="result-img" alt="" />
+          <p class="gif-stk-save-tip" id="save-tip" hidden data-i18n="tools.imageCloud.longPressSave">Long-press the image to save or forward in WeChat.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../../js/locales/en.js?v=gifstk1"></script>
+  <script src="../../js/locales/zh-CN.js?v=gifstk1"></script>
+  <script src="../../js/i18n.js?v=gifstk1"></script>
+  <script src="../../js/config.js?v=hubsort1"></script>
+  <script src="../../js/base.js?v=gifstk1"></script>
+  <script src="../../vendor/gif.js?v=gifstk1"></script>
+  <script src="../../js/media/gif-sticker.js?v=gifstk1"></script>
+</body>
+</html>
