@@ -36,12 +36,14 @@
   var photoFile = null;
   var previewUrl = '';
 
+  var STICKER_LOCK = '硬性要求：只输出一张独立微信表情贴纸；画面正中仅一个主体；禁止九宫格、拼图、多角色合集、分镜、立绘海报；粗白描边，简洁或纯色背景，夸张表情，贴纸构图，全彩';
+
   var STYLE_SNIPPETS = {
-    sticker: '风格：表情包贴纸，1:1方形，透明或简洁背景，夸张表情，适合微信聊天，全彩',
-    meme: '风格：中文梗图，1:1方形，夸张表情，留白便于加字，网络 meme 感，全彩',
-    'q版': '风格：Q版卡通头像贴纸，1:1方形，可爱大头，适合聊天表情，全彩',
-    emoji: '风格：微信表情系列感，1:1方形，统一画风，单角色多情绪，全彩',
-    reaction: '风格：反应类表情，1:1方形，强烈情绪（震惊/无语/点赞），全彩'
+    sticker: '风格：单张聊天贴纸，粗白边，Q弹卡通，一个角色一个表情',
+    meme: '风格：单张中文梗图贴纸，夸张表情，底部可留加字空间，不要拼图',
+    'q版': '风格：单张Q版大头贴纸，圆滚滚，粗白描边，一个角色',
+    emoji: '风格：单张微信表情贴纸，圆脸或拟人，粗白边，只有一个表情',
+    reaction: '风格：单张反应贴纸，强烈情绪（震惊/无语/点赞），一个主体'
   };
 
   function tr(key, params) {
@@ -65,6 +67,7 @@
       var line = (lines[j] || '').trim();
       if (!line) continue;
       if (line.indexOf('风格：') === 0) continue;
+      if (line.indexOf('硬性要求：') === 0) continue;
       out.push(line);
     }
     out.push(snippet);
@@ -103,12 +106,13 @@
     var out = [];
     var inputs = modelInputs();
     for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].checked) {
-        out.push({
-          id: inputs[i].value,
-          price: parseFloat(inputs[i].getAttribute('data-price') || '0') || 0
-        });
-      }
+      if (!inputs[i].checked) continue;
+      var lab = inputs[i].closest ? inputs[i].closest('label') : null;
+      if (lab && lab.hidden) continue;
+      out.push({
+        id: inputs[i].value,
+        price: parseFloat(inputs[i].getAttribute('data-price') || '0') || 0
+      });
     }
     return out;
   }
@@ -156,6 +160,18 @@
         ? tr('tools.aiMeme.modePhotoHint')
         : tr('tools.aiMeme.modeTextHint');
     }
+    var labels = modelRow ? modelRow.querySelectorAll('label[data-meme-mode]') : [];
+    for (var L = 0; L < labels.length; L++) {
+      var forMode = labels[L].getAttribute('data-meme-mode') || 'text';
+      var match = forMode === mode;
+      labels[L].hidden = !match;
+      var inp = labels[L].querySelector('input[name="aimeme-model"]');
+      if (!inp) continue;
+      if (!match) inp.checked = false;
+      else if (mode === 'text') inp.checked = inp.value === 'z-image-turbo';
+      else inp.checked = inp.value === 'wan2.7-image';
+    }
+    updateCostHint();
     setBusy(false);
   }
 
@@ -232,9 +248,18 @@
   }
 
   function modelTitle(mid) {
+    if (mid === 'z-image-turbo') return tr('tools.aiMeme.modelZTurbo');
+    if (mid === 'wan2.7-image') return tr('tools.aiMeme.modelWan27');
     if (mid === 'image-01-live') return tr('tools.aiMeme.modelLive');
     if (mid === 'image-01') return tr('tools.aiMeme.model01');
-    return mid || tr('tools.aiMeme.modelLive');
+    return mid || tr('tools.aiMeme.modelZTurbo');
+  }
+
+  function finalPrompt() {
+    var p = (promptEl && promptEl.value || '').trim();
+    if (!p) return '';
+    if (p.indexOf('硬性要求：') >= 0) return p;
+    return p + '\n' + STICKER_LOCK;
   }
 
   function renderResults(images, partialErrors) {
@@ -284,10 +309,10 @@
     resultsWrap.hidden = false;
   }
 
-  function buildPhotoFormData(modelId) {
+  function buildPhotoFormData(modelId, prompt) {
     var fd = new FormData();
     fd.append('files', photoFile, photoFile.name || 'photo.jpg');
-    fd.append('prompt', (promptEl && promptEl.value) || '');
+    fd.append('prompt', prompt || '');
     fd.append('ref_mode', 'single');
     fd.append('output_size', '1K');
     fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
@@ -295,9 +320,9 @@
     return fd;
   }
 
-  function buildTextFormData(modelId) {
+  function buildTextFormData(modelId, prompt) {
     var fd = new FormData();
-    fd.append('prompt', (promptEl && promptEl.value) || '');
+    fd.append('prompt', prompt || '');
     fd.append('size', 'square');
     fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
     fd.append('models', modelId);
@@ -392,7 +417,7 @@
   if (runBtn) {
     runBtn.addEventListener('click', function () {
       var models = selectedModels();
-      var prompt = (promptEl && promptEl.value || '').trim();
+      var prompt = finalPrompt();
       if (!prompt) {
         C.setError(errorBox, tr('tools.aiMeme.needPrompt'));
         return;
@@ -424,7 +449,7 @@
               model: modelTitle(mid)
             }));
           }
-          var fd = mode === 'photo' ? buildPhotoFormData(mid) : buildTextFormData(mid);
+          var fd = mode === 'photo' ? buildPhotoFormData(mid, prompt) : buildTextFormData(mid, prompt);
           try {
             var data = await C.apiJson(endpoint, {
               method: 'POST',
@@ -480,7 +505,7 @@
       applyStylePreset('sticker');
       var inputs = modelInputs();
       for (var i = 0; i < inputs.length; i++) {
-        inputs[i].checked = inputs[i].value === 'image-01-live';
+        inputs[i].checked = inputs[i].value === 'z-image-turbo';
       }
       updateCostHint();
       C.setError(errorBox, '');

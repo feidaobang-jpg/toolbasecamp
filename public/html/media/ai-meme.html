@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Meme / Sticker - 工具大本营</title>
   <meta name="description" content="Generate meme stickers from text or a photo. Requires sign-in.">
-  <link rel="stylesheet" href="../../css/base.css?v=aimeme1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=aimeme1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=aimeme1" />
-  <link rel="stylesheet" href="../../css/tools-form.css?v=aimeme1" />
+  <link rel="stylesheet" href="../../css/base.css?v=aimeme2" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=aimeme2" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=aimeme2" />
+  <link rel="stylesheet" href="../../css/tools-form.css?v=aimeme2" />
 </head>
 <body>
   <div class="container">
@@ -73,13 +73,21 @@
           <div class="field-row">
             <span class="field-label" data-i18n="tools.aiMeme.modelLabel">Model</span>
             <div class="tb-radio-row instruct-model-row" id="model-row">
-              <label>
-                <input type="checkbox" name="aimeme-model" value="image-01-live" data-price="0.025" checked />
-                <span data-i18n="tools.aiMeme.modelLive">MiniMax Image-01-Live (anime/sticker) · ¥0.05</span>
+              <label data-meme-mode="text">
+                <input type="checkbox" name="aimeme-model" value="z-image-turbo" data-price="0.04" checked />
+                <span data-i18n="tools.aiMeme.modelZTurbo">Z-Image Turbo · ¥0.08 (recommended)</span>
               </label>
-              <label>
+              <label data-meme-mode="text">
+                <input type="checkbox" name="aimeme-model" value="image-01-live" data-price="0.025" />
+                <span data-i18n="tools.aiMeme.modelLive">MiniMax Image-01-Live (anime) · ¥0.05</span>
+              </label>
+              <label data-meme-mode="text">
                 <input type="checkbox" name="aimeme-model" value="image-01" data-price="0.025" />
                 <span data-i18n="tools.aiMeme.model01">MiniMax Image-01 · ¥0.05</span>
+              </label>
+              <label data-meme-mode="photo" hidden>
+                <input type="checkbox" name="aimeme-model" value="wan2.7-image" data-price="0.2" />
+                <span data-i18n="tools.aiMeme.modelWan27">Wan 2.7 · ¥0.4</span>
               </label>
             </div>
             <p class="instruct-cost-hint" id="cost-hint"></p>
@@ -120,13 +128,13 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=aimeme1"></script>
-  <script src="../../js/locales/zh-CN.js?v=aimeme1"></script>
-  <script src="../../js/i18n.js?v=aimeme1"></script>
+  <script src="../../js/locales/en.js?v=aimeme2"></script>
+  <script src="../../js/locales/zh-CN.js?v=aimeme2"></script>
+  <script src="../../js/i18n.js?v=aimeme2"></script>
   <script src="../../js/config.js?v=hubsort1"></script>
-  <script src="../../js/base.js?v=aimeme1"></script>
-  <script src="../../js/media/image-cloud-client.js?v=aimeme1"></script>
-  <script src="../../js/media/image-gen-history.js?v=aimeme1"></script>
-  <script src="../../js/media/ai-meme.js?v=aimeme1"></script>
+  <script src="../../js/base.js?v=aimeme2"></script>
+  <script src="../../js/media/image-cloud-client.js?v=aimeme2"></script>
+  <script src="../../js/media/image-gen-history.js?v=aimeme2"></script>
+  <script src="../../js/media/ai-meme.js?v=aimeme2"></script>
 </body>
 </html>
