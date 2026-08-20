@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>表情包管理 - 自用</title>
+  <title>传统图片管理 - 自用</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="../../../vendor/tailwindcss.js?v=minimax1"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/tools-form.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=minimax1" />
-  <script src="../../../js/locales/en.js?v=sticker1"></script>
-  <script src="../../../js/locales/zh-CN.js?v=sticker1"></script>
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=tradimg1" />
+  <script src="../../../js/locales/en.js?v=tradimg1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=tradimg1"></script>
   <script src="../../../js/i18n.js?v=minimax1"></script>
-  <script src="../../../js/config.js?v=sticker1"></script>
+  <script src="../../../js/config.js?v=tradimg1"></script>
   <script src="../../../js/common_ui.js?v=minimax1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
@@ -24,7 +24,7 @@
       <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.stickersTitle">表情包管理</h1>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.stickersTitle">传统图片管理</h1>
       <div class="ml-auto flex items-center gap-3 text-sm">
         <span id="auth-label" class="text-gray-500"></span>
         <a id="login-link" href="../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
@@ -42,7 +42,7 @@
 
     <div id="app" class="ladder-update-wrap hidden">
       <p class="ladder-update-desc" data-i18n="privateHub.ops.stickersDesc">
-        批量上传表情包图片，公开到图片模块的「表情包」Tab。微信内用户可长按保存或转发给朋友。
+        批量上传传统图片（表情包、精美图等），公开到图片模块「传统图片」Tab；微信内可长按保存或转发。
       </p>
 
       <section class="ladder-section">
@@ -65,7 +65,7 @@
       </section>
 
       <section class="ladder-section">
-        <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersListTitle">表情包列表</h2>
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersListTitle">传统图片列表</h2>
         <div id="list-meta" class="ladder-status"></div>
         <div id="sticker-list" class="ladder-list"></div>
       </section>
@@ -73,6 +73,6 @@
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=minimax1"></script>
-  <script src="../../../js/admin/stickers.js?v=sticker1"></script>
+  <script src="../../../js/admin/stickers.js?v=tradimg1"></script>
 </body>
 </html>

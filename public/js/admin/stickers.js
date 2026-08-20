@@ -82,12 +82,25 @@
         }
         items.forEach(function (item) {
           var row = document.createElement('div');
-          row.className = 'ladder-row';
+          row.className = 'ladder-row ladder-row--media';
           var subParts = [];
           if (item.category) subParts.push(tr('privateHub.ops.stickersCategoryLabel') + ': ' + item.category);
           subParts.push(fmtBytes(item.bytes));
           if (item.createdAt) subParts.push(item.createdAt);
+          var thumbSrc = '';
+          if (item.thumbnailUrl) {
+            thumbSrc = item.thumbnailUrl.indexOf('/pubsticker/') === 0
+              ? item.thumbnailUrl
+              : (apiBase() + (item.thumbnailUrl.charAt(0) === '/' ? item.thumbnailUrl : '/' + item.thumbnailUrl));
+          } else if (item.imageUrl) {
+            thumbSrc = apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
+          }
           row.innerHTML =
+            '<div class="ladder-row-thumb-wrap">' +
+              (thumbSrc
+                ? '<img class="ladder-row-thumb" alt="" loading="lazy" decoding="async" src="' + escapeHtml(thumbSrc) + '" />'
+                : '<div class="ladder-row-thumb ladder-row-thumb--empty"></div>') +
+            '</div>' +
             '<div class="ladder-row-main">' +
               '<div class="ladder-row-title">' + escapeHtml(item.title || item.id) + '</div>' +
               subParts.map(function (line) {
@@ -98,6 +111,14 @@
             '<div class="action-row ladder-row-actions">' +
               '<button type="button" class="tb-btn" data-del="' + escapeHtml(item.id) + '">' + escapeHtml(tr('privateHub.ops.stickersDelete')) + '</button>' +
             '</div>';
+          var thumbImg = row.querySelector('.ladder-row-thumb');
+          if (thumbImg && item.imageUrl) {
+            thumbImg.addEventListener('error', function () {
+              if (thumbImg.dataset.fallback) return;
+              thumbImg.dataset.fallback = '1';
+              thumbImg.src = apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
+            });
+          }
           row.querySelector('[data-del]').addEventListener('click', function () {
             deleteItem(item);
           });

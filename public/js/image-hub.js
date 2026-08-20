@@ -5,7 +5,7 @@
   'use strict';
 
   var canAdmin = false;
-  var activeTab = 'ai';
+  var activeTab = 'stickers';
   var listCache = { ai: null, stickers: null };
   var stickerCategory = '';
 
@@ -447,7 +447,7 @@
   window.renderImageHub = function () {
     var main = document.getElementById('main-content');
     if (!main) return;
-    activeTab = 'ai';
+    activeTab = 'stickers';
     stickerCategory = '';
     listCache = { ai: null, stickers: null };
     canAdmin = false;
@@ -457,14 +457,14 @@
           '<h2 class="img-hub-title">' + escapeHtml(tr('hub.imagesPage.title')) + '</h2>' +
           '<p class="img-hub-sub" id="img-hub-sub"></p>' +
           '<div class="tb-tabs tb-tabs--underline img-hub-tabs" role="tablist">' +
-            '<button type="button" class="tb-tab active" data-img-tab="ai" role="tab" aria-selected="true">' +
-              escapeHtml(tr('hub.imagesPage.tabAi')) +
-            '</button>' +
-            '<button type="button" class="tb-tab" data-img-tab="stickers" role="tab" aria-selected="false">' +
+            '<button type="button" class="tb-tab active" data-img-tab="stickers" role="tab" aria-selected="true">' +
               escapeHtml(tr('hub.imagesPage.tabStickers')) +
             '</button>' +
+            '<button type="button" class="tb-tab" data-img-tab="ai" role="tab" aria-selected="false">' +
+              escapeHtml(tr('hub.imagesPage.tabAi')) +
+            '</button>' +
           '</div>' +
-          '<div class="action-row" id="img-hub-ai-actions" style="margin:12px 0 8px">' +
+          '<div class="action-row" id="img-hub-ai-actions" style="margin:12px 0 8px" hidden>' +
             '<a class="tb-btn" href="html/media/text-to-image.html">' + escapeHtml(tr('hub.imagesPage.createT2i')) + '</a>' +
             '<a class="tb-btn" href="html/media/instruct-edit.html">' + escapeHtml(tr('hub.imagesPage.createInstruct')) + '</a>' +
           '</div>' +
@@ -497,7 +497,7 @@
       });
     }
     updateTabUi();
-    loadAiList();
-    loadStickerList({ background: true });
+    loadStickerList();
+    loadAiList({ background: true });
   };
 })();

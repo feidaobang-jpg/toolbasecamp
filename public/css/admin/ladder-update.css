@@ -113,6 +113,28 @@ pre.game-thumbs-list {
   border-radius: 12px;
 }
 
+.ladder-row-thumb-wrap {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: repeating-conic-gradient(#e5e7eb 0% 25%, #f9fafb 0% 50%) 50% / 12px 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.ladder-row-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.ladder-row-thumb--empty {
+  background: #f3f4f6;
+}
+
 .ladder-row.is-ok {
   border-color: #bfdbfe;
 }
@@ -132,7 +154,8 @@ pre.game-thumbs-list {
   color: #111827;
 }
 
-.ladder-row-meta {
+.ladder-row-meta,
+.ladder-row-sub {
   font-size: 0.75rem;
   color: #6b7280;
   margin-top: 0.2rem;
