@@ -75,6 +75,28 @@
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
       .img-hub-creator { font-size: 0.78rem; color: #334155; line-height: 1.35;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+      .img-hub-tabs { margin: 12px 0 4px; }
+      .img-hub-cats {
+        display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px;
+      }
+      .img-hub-cat-chip {
+        border: 1px solid #e2e8f0; background: #fff; color: #475569;
+        border-radius: 999px; padding: 6px 12px; font-size: 0.82rem; cursor: pointer;
+      }
+      .img-hub-cat-chip.active {
+        background: #2563eb; border-color: #2563eb; color: #fff;
+      }
+      .img-hub-thumb-wrap--sticker {
+        background: repeating-conic-gradient(#e2e8f0 0% 25%, #f8fafc 0% 50%) 50% / 16px 16px;
+      }
+      .img-hub-card--sticker .img-hub-sticker-img {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: contain; object-position: center; display: block;
+        -webkit-touch-callout: default;
+      }
+      .img-hub-sticker-hint {
+        font-size: 0.75rem; color: #94a3b8; margin: 0; line-height: 1.4;
+      }
       .img-hub-card .action-row {
         margin-top: auto;
         padding-top: 8px;
@@ -104,13 +126,13 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=minimax1"></script>
-    <script src="js/locales/zh-CN.js?v=minimax1"></script>
+    <script src="js/locales/en.js?v=sticker1"></script>
+    <script src="js/locales/zh-CN.js?v=sticker1"></script>
     <script src="js/i18n.js?v=minimax1"></script>
     <script src="js/config.js?v=minimax1"></script>
     <script src="js/base.js?v=minimax1"></script>
     <script src="js/common_ui.js?v=minimax1"></script>
-    <script src="js/image-hub.js?v=thumb1"></script>
+    <script src="js/image-hub.js?v=sticker1"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }

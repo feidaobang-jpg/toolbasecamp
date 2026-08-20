@@ -29,6 +29,7 @@ from recipe_ai import (
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
+from stickers import router as stickers_router, _wire as wire_stickers
 from ai_wallet_api import router as wallet_router, _wire as wire_wallet
 from chat_api import router as chat_router, _wire as wire_chat
 from life_plans import (
@@ -660,6 +661,8 @@ def require_admin(user: dict):
 
 wire_image(get_conn, require_db, get_current_user, require_admin, get_optional_user)
 app.include_router(image_router)
+wire_stickers(get_conn, require_db, get_current_user, require_admin, get_optional_user)
+app.include_router(stickers_router)
 
 
 if music_router is not None:

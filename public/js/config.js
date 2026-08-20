@@ -341,6 +341,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.tradMusicTitle',
                     descriptionKey: 'privateHub.ops.tradMusicDesc',
                     url: 'html/admin/private/traditional-music.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.stickersTitle',
+                    descriptionKey: 'privateHub.ops.stickersDesc',
+                    url: 'html/admin/private/stickers.html'
                 }
             ]
         },
