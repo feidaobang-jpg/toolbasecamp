@@ -50,6 +50,28 @@
     return (n / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
+  function sourceStem(name) {
+    var s = String(name || '').trim();
+    var dot = s.lastIndexOf('.');
+    if (dot > 0) s = s.slice(0, dot);
+    return s.toLowerCase();
+  }
+
+  function listTitle(item) {
+    var title = String(item.title || '').trim();
+    var source = String(item.source || '').trim();
+    if (source && title && sourceStem(source) === title.toLowerCase()) return source;
+    return title || source || item.id;
+  }
+
+  function showSourceLine(item) {
+    var title = String(item.title || '').trim();
+    var source = String(item.source || '').trim();
+    if (!source) return false;
+    if (!title) return false;
+    return sourceStem(source) !== title.toLowerCase();
+  }
+
   function setStatus(el, msg, isErr) {
     if (!el) return;
     el.textContent = msg || '';
@@ -102,11 +124,13 @@
                 : '<div class="ladder-row-thumb ladder-row-thumb--empty"></div>') +
             '</div>' +
             '<div class="ladder-row-main">' +
-              '<div class="ladder-row-title">' + escapeHtml(item.title || item.id) + '</div>' +
+              '<div class="ladder-row-title">' + escapeHtml(listTitle(item)) + '</div>' +
               subParts.map(function (line) {
                 return '<div class="ladder-row-sub">' + escapeHtml(line) + '</div>';
               }).join('') +
-              (item.source ? ('<div class="ladder-row-sub">' + escapeHtml(tr('privateHub.ops.stickersSource') + ': ' + item.source) + '</div>') : '') +
+              (showSourceLine(item)
+                ? ('<div class="ladder-row-sub">' + escapeHtml(tr('privateHub.ops.stickersSource') + ': ' + item.source) + '</div>')
+                : '') +
             '</div>' +
             '<div class="action-row ladder-row-actions">' +
               '<button type="button" class="tb-btn" data-del="' + escapeHtml(item.id) + '">' + escapeHtml(tr('privateHub.ops.stickersDelete')) + '</button>' +
