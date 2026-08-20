@@ -126,7 +126,7 @@ jobs:
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" \
-            'mkdir -p /var/lib/toolbasecamp/public-music /var/lib/toolbasecamp/image-results /opt/toolbasecamp-api/tmp_music && test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
+            'mkdir -p /var/lib/toolbasecamp/public-music /var/lib/toolbasecamp/image-results /var/lib/toolbasecamp/stickers /opt/toolbasecamp-api/tmp_music && test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
 
       - name: Rsync deploy scripts
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
@@ -306,6 +306,7 @@ jobs:
           systemctl enable toolbasecamp-api
           # API first: nginx API patch + DB + nuclear restart (do not let portal scripts block this)
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh || true
+          bash /opt/toolbasecamp-deploy/patch-nginx-pubsticker.sh || true
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh || true
           bash /opt/toolbasecamp-deploy/restart-api-core.sh
           # From here, portal/fix scripts are best-effort; final wallet check re-enables -e
