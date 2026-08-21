@@ -140,7 +140,7 @@ TEXT_TO_IMAGE_MODELS = (
         "labelKey": "tools.textToImage.modelGptImage2",
     },
     {
-        "id": "gemini-1-pro-image-preview",
+        "id": "gemini-3-pro-image-preview",
         "priceCny": 0.12,
         "labelKey": "tools.textToImage.modelNanoBananaPro",
     },

@@ -269,6 +269,8 @@ jobs:
             deploy/chef-portal-SOURCE.txt \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/SOURCE.txt"
 
+      # 逍遥 AI key: set repo secret LK888_API_KEY (never commit the key).
+      # Separate step — quoted remote heredoc cannot see GitHub Actions env.
       - name: Install API deps and restart
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
@@ -648,6 +650,23 @@ jobs:
           set -e
           bash /opt/toolbasecamp-deploy/restart-api-core.sh
           REMOTE
+
+      # 逍遥 AI key: set repo secret LK888_API_KEY (never commit the key).
+      # Runs after API install so upsert-api-env.py + service are present.
+      - name: Upsert LK888 API key
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        env:
+          LK888_API_KEY: ${{ secrets.LK888_API_KEY }}
+        run: |
+          if [[ -z "${LK888_API_KEY:-}" ]]; then
+            echo "LK888_API_KEY secret not set — skip (文生图 GPT Image 2 / Nano Banana Pro 需配置后可用)"
+            exit 0
+          fi
+          QKEY=$(printf %q "$LK888_API_KEY")
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" \
+            "python3 /opt/toolbasecamp-deploy/upsert-api-env.py LK888_API_KEY=${QKEY} LK888_BASE_URL=https://api.lk888.ai/v1 && systemctl restart toolbasecamp-api && curl -sf http://127.0.0.1:8001/health | head -c 200"
+
 
       - name: Verify main site assets (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
