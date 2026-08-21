@@ -13,6 +13,7 @@
   var listPage = 1;
   var PAGE_SIZE = 20;
   var gifObserver = null;
+  var playingGifs = [];
 
   var PRESET_CATS = [
     { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
@@ -122,28 +123,94 @@
       try { gifObserver.disconnect(); } catch (e) {}
       gifObserver = null;
     }
+    playingGifs = [];
   }
 
-  /** Admin: keep JPEG thumbs; play GIF only on hover so flipping pages stays fast. */
-  function bindGifHover(img, thumbSrc, playSrc) {
+  function maxGifPlaying() {
+    try {
+      if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 769) {
+        return 24;
+      }
+    } catch (e) {}
+    return 4;
+  }
+
+  function stopGifEl(el) {
+    if (!el) return;
+    var thumb = el.dataset.thumbSrc || '';
+    if (thumb) el.src = thumb;
+    el.dataset.playing = '0';
+    var i = playingGifs.indexOf(el);
+    if (i >= 0) playingGifs.splice(i, 1);
+  }
+
+  function startGifEl(el) {
+    if (!el || el.dataset.playing === '1') return;
+    var play = el.dataset.playSrc || '';
+    if (!play) return;
+    var cap = maxGifPlaying();
+    while (playingGifs.length >= cap) {
+      stopGifEl(playingGifs[0]);
+    }
+    el.src = play;
+    el.dataset.playing = '1';
+    playingGifs.push(el);
+  }
+
+  /** Thumb first; play when in viewport (PC: up to a full page; phone: ≥4). */
+  function bindGifViewport(img, thumbSrc, playSrc) {
     if (!img || !playSrc) return;
     img.dataset.thumbSrc = thumbSrc || '';
     img.dataset.playSrc = playSrc;
     img.dataset.playing = '0';
-    function play() {
-      if (img.dataset.playing === '1') return;
-      img.src = playSrc;
-      img.dataset.playing = '1';
+    img.dataset.thumbReady = '0';
+    img.dataset.inView = '0';
+
+    function tryPlay() {
+      if (img.dataset.thumbReady !== '1') return;
+      if (img.dataset.inView !== '1') return;
+      startGifEl(img);
     }
-    function stop() {
-      if (img.dataset.playing !== '1') return;
-      if (thumbSrc) img.src = thumbSrc;
-      img.dataset.playing = '0';
+
+    if (thumbSrc) {
+      if (img.complete && img.naturalWidth) {
+        img.dataset.thumbReady = '1';
+      } else {
+        img.addEventListener('load', function onThumb() {
+          img.removeEventListener('load', onThumb);
+          img.dataset.thumbReady = '1';
+          tryPlay();
+        });
+        img.addEventListener('error', function onErr() {
+          img.removeEventListener('error', onErr);
+          img.dataset.thumbReady = '1';
+          tryPlay();
+        });
+      }
+    } else {
+      img.dataset.thumbReady = '1';
     }
-    img.addEventListener('mouseenter', play);
-    img.addEventListener('mouseleave', stop);
-    img.addEventListener('focus', play);
-    img.addEventListener('blur', stop);
+
+    if (typeof IntersectionObserver === 'undefined') {
+      img.dataset.inView = '1';
+      tryPlay();
+      return;
+    }
+    if (!gifObserver) {
+      gifObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var el = entry.target;
+          if (entry.isIntersecting && entry.intersectionRatio > 0.12) {
+            el.dataset.inView = '1';
+            if (el.dataset.thumbReady === '1') startGifEl(el);
+          } else {
+            el.dataset.inView = '0';
+            stopGifEl(el);
+          }
+        });
+      }, { root: null, rootMargin: '40px 0px', threshold: [0, 0.12, 0.35] });
+    }
+    gifObserver.observe(img);
   }
 
   function filteredItems() {
@@ -358,7 +425,7 @@
       });
       var thumbImg = card.querySelector('.ladder-media-thumb');
       if (thumbImg && animated && play) {
-        bindGifHover(thumbImg, src, play);
+        bindGifViewport(thumbImg, src, play);
       }
       if (thumbImg && item.imageUrl) {
         thumbImg.addEventListener('error', function () {

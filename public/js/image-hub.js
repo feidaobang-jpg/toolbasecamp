@@ -13,7 +13,6 @@
   var pageState = { ai: 1, stickers: 1 };
   var totalState = { ai: 0, stickers: 0 };
   var gifObserver = null;
-  var MAX_GIF_PLAYING = 2;
   var playingGifs = [];
 
   function tr(key) {
@@ -85,6 +84,16 @@
     playingGifs = [];
   }
 
+  function maxGifPlaying() {
+    // PC: play all GIFs currently in the viewport; phone: at least 4.
+    try {
+      if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 769) {
+        return 24;
+      }
+    } catch (e) {}
+    return 4;
+  }
+
   function stopGifEl(el) {
     if (!el) return;
     var thumb = el.dataset.thumbSrc || '';
@@ -98,7 +107,8 @@
     if (!el || el.dataset.playing === '1') return;
     var play = el.dataset.playSrc || '';
     if (!play) return;
-    while (playingGifs.length >= MAX_GIF_PLAYING) {
+    var cap = maxGifPlaying();
+    while (playingGifs.length >= cap) {
       stopGifEl(playingGifs[0]);
     }
     el.src = play;
