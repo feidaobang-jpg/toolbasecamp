@@ -85,13 +85,8 @@
   }
 
   function maxGifPlaying() {
-    // PC: play all GIFs currently in the viewport; phone: at least 4.
-    try {
-      if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 769) {
-        return 24;
-      }
-    } catch (e) {}
-    return 4;
+    // Play all GIFs currently in the viewport (page size is typically ≤20).
+    return 24;
   }
 
   function stopGifEl(el) {

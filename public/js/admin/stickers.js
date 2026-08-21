@@ -127,12 +127,7 @@
   }
 
   function maxGifPlaying() {
-    try {
-      if (window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 769) {
-        return 24;
-      }
-    } catch (e) {}
-    return 4;
+    return 24;
   }
 
   function stopGifEl(el) {
