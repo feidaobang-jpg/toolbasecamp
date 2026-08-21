@@ -1,26 +1,49 @@
 ---
-description: 列表/网格分页约定 — 数据量增大时前后台统一分页
-globs: public/**/*.{js,html,css},server/**/*.py
+description: 列表分页双模式 — 动态 Hub 用 tb-pager，静态 SEO 站用页码链接
+globs: public/**/*.{js,html,css},server/**/*.py,scripts/news/**
 alwaysApply: false
 ---
 
 # 列表分页约定
 
-公开列表、管理后台列表（图片、音乐、以及以后同类 Hub）在数据可能超过一页时，**必须分页**，不要一次把全部条目渲到页面上。
+数据可能超过一页时，**必须分页**，禁止一次把全部条目渲进 DOM。
 
-## 规则
+全站统一的是「要分页」这条原则；**UI 分两种场景**，不要强行做成同一种。
 
-1. **默认每页条数**
+## 模式 A：动态列表（主站 Hub / 管理后台）
+
+适用：图片、音乐、钱包后台、以及以后同类 API 列表。
+
+1. **组件**：`public/js/tb-pager.js` 的 `tbRenderPager`（上一页 / 状态文案 / 下一页）。
+2. **样式**：`base.css` 的 `.tb-pager` / `.tb-pager-status`；按钮用 `.tb-btn`。
+3. **文案**：`common.pagerPrev` / `common.pagerNext` / `common.pagerStatus`（中英同步）。不要再为单页造 `walletPagePrev` 一类重复键（存量可逐步迁到 common）。
+4. **默认每页条数**
    - 图片网格（前台 / 后台）：**24**
    - 音乐列表（前台）：**20**
-   - 管理后台长列表（歌曲等）：**30**
-2. **UI**：统一用 `public/js/tb-pager.js` 的 `tbRenderPager`（上一页 / 状态 / 下一页）；样式用 `base.css` 的 `.tb-pager`。
-3. **文案**：`common.pagerPrev` / `common.pagerNext` / `common.pagerStatus`（中英同步）。
-4. **接口**：公开 list API 返回 `total` + 支持 `limit` / `offset`；切换页时带 offset 请求（或客户端切已缓存全集，但**屏幕上只显示当前页**）。
-5. **筛选 / 搜索**：换分类或改搜索词时**重置到第 1 页**。
-6. **仅一页时**：分页条可隐藏（`hideIfSingle` 默认 true）。
+   - 管理后台长列表（歌曲、钱包等）：**30**
+5. **接口**：list API 返回 `total`，支持 `limit` / `offset`；换页带 offset（或客户端切已缓存全集，但**屏幕上只显示当前页**）。
+6. **筛选 / 搜索**：换分类或改搜索词时**重置到第 1 页**。
+7. **仅一页时**：分页条可隐藏（`hideIfSingle` 默认 true）。
+
+## 模式 B：静态 SEO 列表（资讯等子站）
+
+适用：`news.zhengxiaohui.cn` 等爬虫生成的静态 HTML。
+
+1. **形态**：`上一页` + 页码（可含省略号）+ `下一页`；每页独立 URL（如 `index.html`、`page/2.html`）。
+2. **实现**：沿用 `scripts/news/build_news.py` 的 `pagination_html` + `news.css` 的 `.page-btn*`，不要改成只有上一页/下一页的 JS pager。
+3. **原因**：可收藏、可分享、搜索引擎可抓取分页。
+
+## 怎么选
+
+| 场景 | 模式 |
+|------|------|
+| API 实时列表、需登录的 Hub / 后台 | **A · tb-pager** |
+| 静态生成、要 SEO / 可分享某一页 | **B · 页码链接** |
+| 「加载更多」无限滚 | 仅留言板等明确产品需要时；默认不用 |
 
 ## 反例
 
-- 一次 `limit=500` 且全部插入 DOM 无分页
-- 各页自己造一套「加载更多」文案与按钮样式，不复用 `tb-pager`
+- 一次 `limit=500` 且全部插入 DOM、无分页
+- 动态列表各页自造一套分页按钮/文案，不复用 `tb-pager`
+- 把资讯改成 JS 上一页/下一页，丢掉可分享页码 URL
+- 把图片/音乐 Hub 改成静态多 HTML 页码（部署与实时数据不匹配）
