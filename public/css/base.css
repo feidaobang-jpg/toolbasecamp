@@ -34,6 +34,25 @@ body {
     width: 100%;
 }
 
+.tb-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.tb-pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 4px;
+}
+
+.tb-pager-status {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
 .tb-btn-sm {
     padding: 6px 16px;
     font-size: 13px;

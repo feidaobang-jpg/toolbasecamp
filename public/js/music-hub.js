@@ -14,6 +14,9 @@
   var currentCardEl = null;
   var activeTab = 'traditional';
   var listCache = { ai: null, traditional: null };
+  var totalState = { ai: 0, traditional: 0 };
+  var pageState = { ai: 1, traditional: 1 };
+  var PAGE_SIZE = 20;
   var tradSearchQuery = '';
   var CONT_PLAY_KEY = 'tbc_music_cont_play_v1';
   var continuousPlay = false;
@@ -61,14 +64,40 @@
   function showActiveList(kind) {
     kind = kind || activeTab;
     var items = listCache[kind] || [];
+    var total = 0;
+    var pageItems = items;
     if (kind === 'traditional') {
       var filtered = filterTraditionalItems(items);
-      renderList(kind, filtered, {
+      total = filtered.length;
+      if (typeof tbNormalizePage === 'function') {
+        pageState.traditional = tbNormalizePage(pageState.traditional, total, PAGE_SIZE);
+      }
+      var start = (pageState.traditional - 1) * PAGE_SIZE;
+      pageItems = filtered.slice(start, start + PAGE_SIZE);
+      renderList(kind, pageItems, {
         isFilterEmpty: !!(normalizeSearch(tradSearchQuery) && items.length && !filtered.length)
       });
-      return;
+    } else {
+      total = totalState.ai || items.length;
+      pageItems = items;
+      renderList(kind, pageItems);
     }
-    renderList(kind, items);
+    if (typeof tbRenderPager === 'function') {
+      tbRenderPager(document.getElementById('music-pager'), {
+        page: pageState[kind] || 1,
+        pageSize: PAGE_SIZE,
+        total: total,
+        onChange: function (p) {
+          pageState[kind] = p;
+          if (kind === 'ai') {
+            listCache.ai = null;
+            loadList('ai');
+          } else {
+            showActiveList('traditional');
+          }
+        }
+      });
+    }
   }
 
   function tr(k, params) {
@@ -723,9 +752,14 @@
     var busy = document.getElementById('music-busy');
     var showBusy = !opts.background && !listCache[kind];
     if (busy) busy.hidden = !showBusy;
-    var url = kind === 'traditional'
-      ? apiBase() + '/music/traditional/list?limit=200'
-      : apiBase() + '/music/public/list?limit=50';
+    var url;
+    if (kind === 'traditional') {
+      url = apiBase() + '/music/traditional/list?limit=500&offset=0';
+    } else {
+      var page = pageState.ai || 1;
+      var offset = (page - 1) * PAGE_SIZE;
+      url = apiBase() + '/music/public/list?limit=' + PAGE_SIZE + '&offset=' + offset;
+    }
     fetch(url, { headers: authHeaders() })
       .then(function (res) {
         return res.json().then(function (data) {
@@ -736,6 +770,14 @@
       .then(function (data) {
         var items = (data && data.items) || [];
         listCache[kind] = items;
+        if (kind === 'traditional') {
+          totalState.traditional = Number(data && data.total) || items.length;
+        } else {
+          totalState.ai = Number(data && data.total) || items.length;
+          if (typeof tbNormalizePage === 'function') {
+            pageState.ai = tbNormalizePage(pageState.ai, totalState.ai, PAGE_SIZE);
+          }
+        }
         if (activeTab === kind) showActiveList(kind);
       })
       .catch(function (err) {
@@ -757,6 +799,8 @@
     if (!main) return;
     activeTab = 'traditional';
     listCache = { ai: null, traditional: null };
+    totalState = { ai: 0, traditional: 0 };
+    pageState = { ai: 1, traditional: 1 };
     tradSearchQuery = '';
     destroyPlayer();
     main.innerHTML =
@@ -794,6 +838,7 @@
         '<div id="music-error" class="error-box" role="alert" hidden></div>' +
         '<p id="music-empty" class="music-hub-empty" hidden></p>' +
         '<div id="music-list" class="music-track-list"></div>' +
+        '<div class="tb-pager" id="music-pager" hidden></div>' +
       '</div>';
     document.querySelectorAll('[data-music-tab]').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -813,6 +858,7 @@
     if (searchInput) {
       var applySearch = function () {
         tradSearchQuery = searchInput.value || '';
+        pageState.traditional = 1;
         if (activeTab === 'traditional') showActiveList('traditional');
       };
       searchInput.addEventListener('input', applySearch);
@@ -822,6 +868,7 @@
     var refresh = document.getElementById('music-refresh');
     if (refresh) refresh.addEventListener('click', function () {
       listCache[activeTab] = null;
+      pageState[activeTab] = 1;
       loadList(activeTab);
     });
     updateTabUi();

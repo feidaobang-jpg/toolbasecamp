@@ -1,0 +1,26 @@
+---
+description: 列表/网格分页约定 — 数据量增大时前后台统一分页
+globs: public/**/*.{js,html,css},server/**/*.py
+alwaysApply: false
+---
+
+# 列表分页约定
+
+公开列表、管理后台列表（图片、音乐、以及以后同类 Hub）在数据可能超过一页时，**必须分页**，不要一次把全部条目渲到页面上。
+
+## 规则
+
+1. **默认每页条数**
+   - 图片网格（前台 / 后台）：**24**
+   - 音乐列表（前台）：**20**
+   - 管理后台长列表（歌曲等）：**30**
+2. **UI**：统一用 `public/js/tb-pager.js` 的 `tbRenderPager`（上一页 / 状态 / 下一页）；样式用 `base.css` 的 `.tb-pager`。
+3. **文案**：`common.pagerPrev` / `common.pagerNext` / `common.pagerStatus`（中英同步）。
+4. **接口**：公开 list API 返回 `total` + 支持 `limit` / `offset`；切换页时带 offset 请求（或客户端切已缓存全集，但**屏幕上只显示当前页**）。
+5. **筛选 / 搜索**：换分类或改搜索词时**重置到第 1 页**。
+6. **仅一页时**：分页条可隐藏（`hideIfSingle` 默认 true）。
+
+## 反例
+
+- 一次 `limit=500` 且全部插入 DOM 无分页
+- 各页自己造一套「加载更多」文案与按钮样式，不复用 `tb-pager`

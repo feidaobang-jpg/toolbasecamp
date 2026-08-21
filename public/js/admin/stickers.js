@@ -9,6 +9,8 @@
   var filterCategory = '';
   var allItems = [];
   var selectedIds = new Set();
+  var listPage = 1;
+  var PAGE_SIZE = 24;
 
   var PRESET_CATS = [
     { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
@@ -138,6 +140,7 @@
     allBtn.textContent = tr('privateHub.ops.stickersCategoryAll') + ' (' + allItems.length + ')';
     allBtn.addEventListener('click', function () {
       filterCategory = '';
+      listPage = 1;
       selectedIds = new Set();
       renderFilterChips();
       renderGrid();
@@ -152,6 +155,7 @@
       btn.textContent = tr(cat.key) + ' (' + n + ')';
       btn.addEventListener('click', function () {
         filterCategory = cat.value;
+        listPage = 1;
         selectedIds = new Set();
         renderFilterChips();
         renderGrid();
@@ -167,6 +171,7 @@
       btn.textContent = cat + ' (' + counts[cat] + ')';
       btn.addEventListener('click', function () {
         filterCategory = cat;
+        listPage = 1;
         selectedIds = new Set();
         renderFilterChips();
         renderGrid();
@@ -186,8 +191,14 @@
   function renderGrid() {
     var meta = document.getElementById('list-meta');
     var list = document.getElementById('sticker-list');
+    var pager = document.getElementById('list-pager');
     if (!list) return;
     var items = filteredItems();
+    if (typeof tbNormalizePage === 'function') {
+      listPage = tbNormalizePage(listPage, items.length, PAGE_SIZE);
+    }
+    var start = (listPage - 1) * PAGE_SIZE;
+    var pageItems = items.slice(start, start + PAGE_SIZE);
     list.innerHTML = '';
     if (filterCategory) {
       setStatus(meta, tr('privateHub.ops.stickersListMetaFiltered', {
@@ -198,13 +209,24 @@
       setStatus(meta, tr('privateHub.ops.stickersListMeta', { total: allItems.length }));
     }
     updateSelectMeta();
-    if (!items.length) {
+    if (typeof tbRenderPager === 'function') {
+      tbRenderPager(pager, {
+        page: listPage,
+        pageSize: PAGE_SIZE,
+        total: items.length,
+        onChange: function (p) {
+          listPage = p;
+          renderGrid();
+        }
+      });
+    }
+    if (!pageItems.length) {
       list.innerHTML = '<p class="ladder-row-empty">' + escapeHtml(
         allItems.length ? tr('privateHub.ops.stickersEmptyFilter') : tr('privateHub.ops.stickersEmpty')
       ) + '</p>';
       return;
     }
-    items.forEach(function (item) {
+    pageItems.forEach(function (item) {
       var card = document.createElement('div');
       card.className = 'ladder-media-card' + (selectedIds.has(item.id) ? ' is-selected' : '');
       var src = thumbUrl(item);

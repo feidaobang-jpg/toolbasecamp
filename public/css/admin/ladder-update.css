@@ -206,6 +206,7 @@ pre.game-thumbs-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 12px;
+  align-items: stretch;
 }
 
 @media (min-width: 768px) {
@@ -222,6 +223,7 @@ pre.game-thumbs-list {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .ladder-media-card.is-selected {
@@ -241,11 +243,17 @@ pre.game-thumbs-list {
 }
 
 .ladder-media-thumb-wrap {
+  position: relative;
+  width: 100%;
   aspect-ratio: 1;
+  flex-shrink: 0;
+  overflow: hidden;
   background: repeating-conic-gradient(#e5e7eb 0% 25%, #f9fafb 0% 50%) 50% / 12px 12px;
 }
 
 .ladder-media-thumb {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -262,6 +270,7 @@ pre.game-thumbs-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
   min-width: 0;
 }
 
@@ -272,6 +281,7 @@ pre.game-thumbs-list {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 1.2em;
 }
 
 .ladder-media-sub {
@@ -280,10 +290,12 @@ pre.game-thumbs-list {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 1.2em;
 }
 
 .ladder-media-body .action-row {
-  margin-top: 4px;
+  margin-top: auto;
+  padding-top: 4px;
 }
 
 .ladder-row-empty {

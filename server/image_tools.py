@@ -607,6 +607,11 @@ def image_public_list(
         with conn.cursor() as cur:
             _ensure_public_images_schema(cur)
             cur.execute(
+                "SELECT COUNT(*) AS c FROM public_images WHERE is_public=1"
+            )
+            total_row = cur.fetchone() or {}
+            total = int(total_row.get("c") or 0)
+            cur.execute(
                 """
                 SELECT i.id, i.prompt, i.model, i.source, i.content_type,
                        i.created_at, i.file_name, i.user_id,
@@ -651,7 +656,14 @@ def image_public_list(
                 "downloadUrl": f"/image/public/{iid}?download=1",
             }
         )
-    return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
+    return {
+        "success": True,
+        "items": items,
+        "limit": lim,
+        "offset": off,
+        "total": total,
+        "canAdmin": can_admin,
+    }
 
 
 @router.post("/public/publish")

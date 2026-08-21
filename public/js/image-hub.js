@@ -8,6 +8,9 @@
   var activeTab = 'stickers';
   var listCache = { ai: null, stickers: null };
   var stickerCategory = '';
+  var PAGE_SIZE = 24;
+  var pageState = { ai: 1, stickers: 1 };
+  var totalState = { ai: 0, stickers: 0 };
 
   function tr(key) {
     return typeof window.t === 'function' ? window.t(key) : key;
@@ -174,6 +177,7 @@
         empty.hidden = false;
         empty.textContent = tr('hub.imagesPage.empty');
       }
+      renderPagerFor('ai');
       return;
     }
     if (empty) empty.hidden = true;
@@ -232,6 +236,22 @@
       }
       grid.appendChild(card);
     });
+    renderPagerFor('ai');
+  }
+
+  function renderPagerFor(tab) {
+    var el = document.getElementById('img-hub-pager');
+    if (!el || typeof tbRenderPager !== 'function') return;
+    tbRenderPager(el, {
+      page: pageState[tab] || 1,
+      pageSize: PAGE_SIZE,
+      total: totalState[tab] || 0,
+      onChange: function (p) {
+        pageState[tab] = p;
+        if (tab === 'ai') loadAiList();
+        else loadStickerList();
+      }
+    });
   }
 
   function renderStickerCategories(categories) {
@@ -249,6 +269,7 @@
     allBtn.textContent = tr('hub.imagesPage.stickersAll');
     allBtn.addEventListener('click', function () {
       stickerCategory = '';
+      pageState.stickers = 1;
       loadStickerList();
       document.querySelectorAll('.img-hub-cat-chip').forEach(function (btn) {
         btn.classList.toggle('active', btn === allBtn);
@@ -262,6 +283,7 @@
       btn.textContent = cat;
       btn.addEventListener('click', function () {
         stickerCategory = cat;
+        pageState.stickers = 1;
         loadStickerList();
         document.querySelectorAll('.img-hub-cat-chip').forEach(function (el) {
           el.classList.toggle('active', el === btn);
@@ -282,6 +304,7 @@
         empty.hidden = false;
         empty.textContent = tr('hub.imagesPage.stickersEmpty');
       }
+      renderPagerFor('stickers');
       return;
     }
     if (empty) empty.hidden = true;
@@ -330,6 +353,7 @@
       actions.appendChild(dl);
       grid.appendChild(card);
     });
+    renderPagerFor('stickers');
   }
 
   function displayStickerTitle(item) {
@@ -439,7 +463,9 @@
     }
     var busy = document.getElementById('img-hub-busy');
     if (busy && activeTab === 'ai' && !opts.background) busy.hidden = false;
-    fetch(apiBase() + '/image/public/list?limit=60', { headers: authHeaders() })
+    var page = pageState.ai || 1;
+    var offset = (page - 1) * PAGE_SIZE;
+    fetch(apiBase() + '/image/public/list?limit=' + PAGE_SIZE + '&offset=' + offset, { headers: authHeaders() })
       .then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
@@ -449,6 +475,10 @@
       .then(function (data) {
         canAdmin = !!(data && data.canAdmin);
         listCache.ai = (data && data.items) || [];
+        totalState.ai = Number(data && data.total) || listCache.ai.length;
+        if (typeof tbNormalizePage === 'function') {
+          pageState.ai = tbNormalizePage(pageState.ai, totalState.ai, PAGE_SIZE);
+        }
         if (activeTab === 'ai') renderAiGrid(listCache.ai);
       })
       .catch(function (err) {
@@ -471,7 +501,9 @@
     }
     var busy = document.getElementById('img-hub-busy');
     if (busy && activeTab === 'stickers' && !opts.background) busy.hidden = false;
-    var url = apiBase() + '/image/stickers/list?limit=200';
+    var page = pageState.stickers || 1;
+    var offset = (page - 1) * PAGE_SIZE;
+    var url = apiBase() + '/image/stickers/list?limit=' + PAGE_SIZE + '&offset=' + offset;
     if (stickerCategory) url += '&category=' + encodeURIComponent(stickerCategory);
     fetch(url, { headers: authHeaders() })
       .then(function (res) {
@@ -485,6 +517,10 @@
           items: (data && data.items) || [],
           categories: (data && data.categories) || []
         };
+        totalState.stickers = Number(data && data.total) || listCache.stickers.items.length;
+        if (typeof tbNormalizePage === 'function') {
+          pageState.stickers = tbNormalizePage(pageState.stickers, totalState.stickers, PAGE_SIZE);
+        }
         if (activeTab === 'stickers') {
           renderStickerGrid(listCache.stickers.items, listCache.stickers.categories);
         }
@@ -506,6 +542,8 @@
     activeTab = 'stickers';
     stickerCategory = '';
     listCache = { ai: null, stickers: null };
+    pageState = { ai: 1, stickers: 1 };
+    totalState = { ai: 0, stickers: 0 };
     canAdmin = false;
     main.innerHTML =
       '<div class="img-hub">' +
@@ -534,6 +572,7 @@
         '<p class="img-hub-busy" id="img-hub-busy">' + escapeHtml(tr('hub.imagesPage.loading')) + '</p>' +
         '<p class="img-hub-empty" id="img-hub-empty" hidden></p>' +
         '<div class="img-hub-grid" id="img-hub-grid"></div>' +
+        '<div class="tb-pager" id="img-hub-pager" hidden></div>' +
       '</div>';
     document.querySelectorAll('[data-img-tab]').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -545,9 +584,11 @@
       refresh.addEventListener('click', function () {
         if (activeTab === 'ai') {
           listCache.ai = null;
+          pageState.ai = 1;
           loadAiList();
         } else {
           listCache.stickers = null;
+          pageState.stickers = 1;
           loadStickerList();
         }
       });

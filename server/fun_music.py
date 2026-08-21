@@ -1044,13 +1044,16 @@ def music_public_list(
     offset: int = 0,
     viewer: Optional[dict] = Depends(_optional_user),
 ):
-    lim = max(1, min(100, int(limit or 50)))
+    lim = max(1, min(500, int(limit or 50)))
     off = max(0, int(offset or 0))
     can_admin = _is_admin(viewer) if viewer else False
     conn = _conn()
     try:
         with conn.cursor() as cur:
             _ensure_music_schema(cur)
+            cur.execute("SELECT COUNT(*) AS c FROM music_tracks WHERE is_public=1")
+            total_row = cur.fetchone() or {}
+            total = int(total_row.get("c") or 0)
             cur.execute(
                 """
                 SELECT m.id, m.title, m.prompt, m.lyrics, m.model, m.duration_sec,
@@ -1102,7 +1105,14 @@ def music_public_list(
                 "downloadUrl": f"/music/public/{tid}?download=1",
             }
         )
-    return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
+    return {
+        "success": True,
+        "items": items,
+        "limit": lim,
+        "offset": off,
+        "total": total,
+        "canAdmin": can_admin,
+    }
 
 
 @router.delete("/public/{track_id}")
