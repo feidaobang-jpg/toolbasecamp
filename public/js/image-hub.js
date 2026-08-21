@@ -12,8 +12,6 @@
   var PAGE_SIZE = 20;
   var pageState = { ai: 1, stickers: 1 };
   var totalState = { ai: 0, stickers: 0 };
-  var gifObserver = null;
-  var playingGifs = [];
 
   function tr(key) {
     return typeof window.t === 'function' ? window.t(key) : key;
@@ -77,93 +75,19 @@
   }
 
   function disconnectGifObserver() {
-    if (gifObserver) {
-      try { gifObserver.disconnect(); } catch (e) {}
-      gifObserver = null;
+    if (window.TBGifViewport && typeof window.TBGifViewport.disconnectAll === 'function') {
+      window.TBGifViewport.disconnectAll();
     }
-    playingGifs = [];
-  }
-
-  function maxGifPlaying() {
-    // Play all GIFs currently in the viewport (page size is typically ≤20).
-    return 24;
-  }
-
-  function stopGifEl(el) {
-    if (!el) return;
-    var thumb = el.dataset.thumbSrc || '';
-    if (thumb) el.src = thumb;
-    el.dataset.playing = '0';
-    var i = playingGifs.indexOf(el);
-    if (i >= 0) playingGifs.splice(i, 1);
-  }
-
-  function startGifEl(el) {
-    if (!el || el.dataset.playing === '1') return;
-    var play = el.dataset.playSrc || '';
-    if (!play) return;
-    var cap = maxGifPlaying();
-    while (playingGifs.length >= cap) {
-      stopGifEl(playingGifs[0]);
-    }
-    el.src = play;
-    el.dataset.playing = '1';
-    playingGifs.push(el);
   }
 
   function bindGifViewport(img, thumbSrc, playSrc) {
-    if (!img || !playSrc) return;
-    img.dataset.thumbSrc = thumbSrc || '';
-    img.dataset.playSrc = playSrc;
-    img.dataset.playing = '0';
-    img.dataset.thumbReady = '0';
-    img.dataset.inView = '0';
-
-    function tryPlay() {
-      if (img.dataset.thumbReady !== '1') return;
-      if (img.dataset.inView !== '1') return;
-      startGifEl(img);
-    }
-
-    if (thumbSrc) {
-      if (img.complete && img.naturalWidth) {
-        img.dataset.thumbReady = '1';
-      } else {
-        img.addEventListener('load', function onThumb() {
-          img.removeEventListener('load', onThumb);
-          img.dataset.thumbReady = '1';
-          tryPlay();
-        });
-        img.addEventListener('error', function onErr() {
-          img.removeEventListener('error', onErr);
-          img.dataset.thumbReady = '1';
-          tryPlay();
-        });
-      }
-    } else {
-      img.dataset.thumbReady = '1';
-    }
-
-    if (typeof IntersectionObserver === 'undefined') {
-      img.dataset.inView = '1';
-      tryPlay();
+    if (window.TBGifViewport && typeof window.TBGifViewport.bind === 'function') {
+      window.TBGifViewport.bind(img, thumbSrc, playSrc);
       return;
     }
-    if (!gifObserver) {
-      gifObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          var el = entry.target;
-          if (entry.isIntersecting && entry.intersectionRatio > 0.12) {
-            el.dataset.inView = '1';
-            if (el.dataset.thumbReady === '1') startGifEl(el);
-          } else {
-            el.dataset.inView = '0';
-            stopGifEl(el);
-          }
-        });
-      }, { root: null, rootMargin: '40px 0px', threshold: [0, 0.12, 0.35] });
-    }
-    gifObserver.observe(img);
+    // Fallback if shared helper missing.
+    if (playSrc) img.src = playSrc;
+    else if (thumbSrc) img.src = thumbSrc;
   }
 
   function playSrcFor(item) {
