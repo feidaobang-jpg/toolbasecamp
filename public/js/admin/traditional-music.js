@@ -65,14 +65,6 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
-  function lyricsPreviewSnippet(raw, maxLen) {
-    maxLen = maxLen || 100;
-    var plain = String(raw || '').replace(/\s+/g, ' ').trim();
-    if (!plain) return '';
-    if (plain.length > maxLen) plain = plain.slice(0, maxLen - 1) + '…';
-    return plain;
-  }
-
   function setStatus(el, msg, isErr) {
     if (!el) return;
     el.textContent = msg || '';
@@ -145,7 +137,6 @@
         '<div class="ladder-row-main">' +
           '<div class="ladder-row-title">' + escapeHtml(title) + '</div>' +
           '<div class="ladder-row-sub">' + escapeHtml(sub) + '</div>' +
-          (item.lyricsPreview ? ('<div class="ladder-row-sub">' + escapeHtml(item.lyricsPreview) + '</div>') : '') +
           (item.source ? ('<div class="ladder-row-sub">' + escapeHtml(tr('privateHub.ops.tradMusicSource') + ': ' + item.source) + '</div>') : '') +
         '</div>' +
         '<div class="action-row ladder-row-actions">' +
@@ -231,10 +222,6 @@
       }
       if (promptText) {
         subParts.push(tr('hub.musicPage.promptLabel') + ': ' + promptText);
-      }
-      var lySnippet = lyricsPreviewSnippet(lyFull, 100);
-      if (lySnippet) {
-        subParts.push(tr('hub.musicPage.lyricsLabel') + ': ' + lySnippet);
       }
       subParts.push([
         item.model || '',
