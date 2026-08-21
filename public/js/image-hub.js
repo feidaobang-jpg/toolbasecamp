@@ -230,6 +230,17 @@
       if (item.createdAt) metaParts.push(item.createdAt);
       card.querySelector('.img-hub-meta').textContent = metaParts.join(' · ');
       var actions = card.querySelector('.action-row');
+      var hint = document.createElement('p');
+      hint.className = 'img-hub-sticker-hint';
+      hint.textContent = tr('hub.imagesPage.stickersTapOpen');
+      card.querySelector('.img-hub-body').insertBefore(hint, actions);
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', function () {
+        openHubPreview(item, {
+          alt: (item.prompt || '').trim() || tr('hub.imagesPage.untitled'),
+          onDownload: function () { downloadAiItem(item); }
+        });
+      });
       var dl = document.createElement('button');
       dl.type = 'button';
       dl.className = 'tb-btn';
@@ -355,7 +366,12 @@
         catEl.textContent = metaParts.join(' · ');
       }
       card.querySelector('.img-hub-sticker-hint').textContent = tr('hub.imagesPage.stickersTapOpen');
-      var openPreview = function () { openStickerPreview(item); };
+      var openPreview = function () {
+        openHubPreview(item, {
+          alt: displayStickerTitle(item) || tr('hub.imagesPage.stickersUntitled'),
+          onDownload: function () { downloadStickerItem(item); }
+        });
+      };
       img.style.cursor = 'zoom-in';
       img.addEventListener('click', openPreview);
       var actions = card.querySelector('.action-row');
@@ -379,8 +395,9 @@
     return title;
   }
 
-  function openStickerPreview(item) {
+  function openHubPreview(item, opts) {
     if (!item) return;
+    opts = opts || {};
     var fullSrc = fullImageUrl(item.imageUrl);
     var existing = document.getElementById('img-hub-preview');
     if (existing) existing.remove();
@@ -399,12 +416,12 @@
     overlay.querySelector('.img-hub-preview-tip').textContent = tr('hub.imagesPage.stickersLongPress');
     var img = overlay.querySelector('.img-hub-preview-img');
     img.src = fullSrc;
-    img.alt = displayStickerTitle(item) || tr('hub.imagesPage.stickersUntitled');
+    img.alt = opts.alt || tr('hub.imagesPage.untitled');
     var dlBtn = overlay.querySelector('[data-preview-dl]');
     dlBtn.textContent = tr('hub.imagesPage.download');
     dlBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      downloadStickerItem(item);
+      if (typeof opts.onDownload === 'function') opts.onDownload();
     });
     var closeBtn = overlay.querySelector('[data-preview-close]');
     closeBtn.textContent = tr('hub.imagesPage.closePreview');
