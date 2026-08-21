@@ -52,6 +52,43 @@
         display: block;
         -webkit-touch-callout: default;
       }
+      .img-hub-gif-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 1;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #fff;
+        background: rgba(15, 23, 42, 0.72);
+        border-radius: 6px;
+        padding: 3px 7px;
+        line-height: 1.2;
+        pointer-events: none;
+      }
+      .img-hub-kind {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 12px;
+      }
+      .img-hub-chip {
+        border: 1px solid #d1d5db;
+        background: #fff;
+        color: #374151;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .img-hub-chip.is-active {
+        border-color: #2563eb;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 600;
+      }
       .img-hub-body {
         padding: 10px 12px 12px;
         display: flex;
@@ -156,14 +193,14 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=thumbtip1"></script>
-    <script src="js/locales/zh-CN.js?v=thumbtip1"></script>
+    <script src="js/locales/en.js?v=imggif2"></script>
+    <script src="js/locales/zh-CN.js?v=imggif2"></script>
     <script src="js/i18n.js?v=minimax1"></script>
     <script src="js/config.js?v=minimax1"></script>
     <script src="js/base.js?v=minimax1"></script>
     <script src="js/common_ui.js?v=minimax1"></script>
     <script src="js/tb-pager.js?v=page1"></script>
-    <script src="js/image-hub.js?v=notipcard"></script>
+    <script src="js/image-hub.js?v=imggif2"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }

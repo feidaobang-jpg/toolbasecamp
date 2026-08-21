@@ -8,9 +8,11 @@
   var activeTab = 'stickers';
   var listCache = { ai: null, stickers: null };
   var stickerCategory = '';
+  var mediaKind = 'all'; // all | still | gif
   var PAGE_SIZE = 20;
   var pageState = { ai: 1, stickers: 1 };
   var totalState = { ai: 0, stickers: 0 };
+  var gifObserver = null;
 
   function tr(key) {
     return typeof window.t === 'function' ? window.t(key) : key;
@@ -64,6 +66,60 @@
     return source || '';
   }
 
+  function isAnimated(item) {
+    if (!item) return false;
+    if (item.animated === true) return true;
+    var ctype = String(item.contentType || '').toLowerCase();
+    if (ctype.indexOf('gif') >= 0) return true;
+    var u = String(item.staticUrl || item.imageUrl || item.thumbnailUrl || '');
+    return /\.gif(\?|$)/i.test(u);
+  }
+
+  function disconnectGifObserver() {
+    if (gifObserver) {
+      try { gifObserver.disconnect(); } catch (e) {}
+      gifObserver = null;
+    }
+  }
+
+  function bindGifViewport(img, thumbSrc, playSrc) {
+    if (!img || !playSrc) return;
+    img.dataset.thumbSrc = thumbSrc || '';
+    img.dataset.playSrc = playSrc;
+    img.dataset.playing = '0';
+    if (typeof IntersectionObserver === 'undefined') {
+      img.src = playSrc;
+      img.dataset.playing = '1';
+      return;
+    }
+    if (!gifObserver) {
+      gifObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var el = entry.target;
+          var thumb = el.dataset.thumbSrc || '';
+          var play = el.dataset.playSrc || '';
+          if (!play) return;
+          if (entry.isIntersecting && entry.intersectionRatio > 0.12) {
+            if (el.dataset.playing !== '1') {
+              el.src = play;
+              el.dataset.playing = '1';
+            }
+          } else if (el.dataset.playing === '1' && thumb) {
+            el.src = thumb;
+            el.dataset.playing = '0';
+          }
+        });
+      }, { root: null, rootMargin: '80px 0px', threshold: [0, 0.12, 0.35] });
+    }
+    gifObserver.observe(img);
+  }
+
+  function playSrcFor(item) {
+    if (!item) return '';
+    if (item.staticUrl) return gridImageUrl(item.staticUrl);
+    return fullImageUrl(item.imageUrl);
+  }
+
   function fmtBytes(n) {
     n = Number(n) || 0;
     if (n <= 0) return '';
@@ -76,7 +132,8 @@
     var id = item.id;
     var name = 'ai-image-' + id + '.png';
     var ctype = item.contentType || 'image/png';
-    if (ctype.indexOf('jpeg') >= 0 || ctype.indexOf('jpg') >= 0) name = 'ai-image-' + id + '.jpg';
+    if (ctype.indexOf('gif') >= 0 || isAnimated(item)) name = 'ai-image-' + id + '.gif';
+    else if (ctype.indexOf('jpeg') >= 0 || ctype.indexOf('jpg') >= 0) name = 'ai-image-' + id + '.jpg';
     else if (ctype.indexOf('webp') >= 0) name = 'ai-image-' + id + '.webp';
 
     if (isWeChat()) {
@@ -179,6 +236,7 @@
     var grid = document.getElementById('img-hub-grid');
     var empty = document.getElementById('img-hub-empty');
     if (!grid) return;
+    disconnectGifObserver();
     grid.innerHTML = '';
     if (!items || !items.length) {
       if (empty) {
@@ -192,10 +250,13 @@
     items.forEach(function (item) {
       var card = document.createElement('article');
       card.className = 'img-hub-card';
-      var src = gridImageUrl(item.thumbnailUrl || item.imageUrl);
+      var animated = isAnimated(item);
+      var thumbSrc = gridImageUrl(item.thumbnailUrl || item.imageUrl);
+      var playSrc = playSrcFor(item);
       card.innerHTML =
         '<div class="img-hub-thumb-wrap">' +
           '<img class="img-hub-thumb" alt="" loading="lazy" decoding="async" />' +
+          (animated ? '<span class="img-hub-gif-badge" aria-hidden="true">GIF</span>' : '') +
         '</div>' +
         '<div class="img-hub-body">' +
           '<div class="img-hub-prompt"></div>' +
@@ -211,8 +272,9 @@
       img.style.objectFit = 'cover';
       img.style.objectPosition = 'center center';
       img.style.display = 'block';
-      img.src = src;
+      img.src = thumbSrc;
       img.alt = (item.prompt || tr('hub.imagesPage.untitled')).slice(0, 80);
+      if (animated) bindGifViewport(img, thumbSrc, playSrc);
       var promptEl = card.querySelector('.img-hub-prompt');
       promptEl.textContent = (item.prompt || '').trim() || tr('hub.imagesPage.untitled');
       var nick = (item.creatorNickname || '').trim();
@@ -314,12 +376,16 @@
     var grid = document.getElementById('img-hub-grid');
     var empty = document.getElementById('img-hub-empty');
     if (!grid) return;
+    disconnectGifObserver();
     renderStickerCategories(categories);
+    syncKindChips();
     grid.innerHTML = '';
     if (!items || !items.length) {
       if (empty) {
         empty.hidden = false;
-        empty.textContent = tr('hub.imagesPage.stickersEmpty');
+        empty.textContent = mediaKind === 'all'
+          ? tr('hub.imagesPage.stickersEmpty')
+          : tr('hub.imagesPage.filterEmpty');
       }
       renderPagerFor('stickers');
       return;
@@ -328,12 +394,14 @@
     items.forEach(function (item) {
       var card = document.createElement('article');
       card.className = 'img-hub-card img-hub-card--sticker';
+      var animated = isAnimated(item);
       var thumbSrc = gridImageUrl(item.thumbnailUrl || item.imageUrl);
-      var fullSrc = fullImageUrl(item.imageUrl);
+      var playSrc = playSrcFor(item);
       var title = displayStickerTitle(item);
       card.innerHTML =
         '<div class="img-hub-thumb-wrap img-hub-thumb-wrap--sticker">' +
           '<img class="img-hub-thumb img-hub-sticker-img" alt="" loading="lazy" decoding="async" />' +
+          (animated ? '<span class="img-hub-gif-badge" aria-hidden="true">GIF</span>' : '') +
         '</div>' +
         '<div class="img-hub-body">' +
           '<div class="img-hub-prompt img-hub-sticker-title"></div>' +
@@ -341,9 +409,9 @@
           '<div class="action-row"></div>' +
         '</div>';
       var img = card.querySelector('.img-hub-sticker-img');
-      img.src = thumbSrc || fullSrc;
+      img.src = thumbSrc || playSrc;
       img.alt = title.slice(0, 80);
-      img.setAttribute('data-full-src', fullSrc);
+      if (animated) bindGifViewport(img, thumbSrc || playSrc, playSrc);
       var titleEl = card.querySelector('.img-hub-sticker-title');
       if (title) {
         titleEl.textContent = title;
@@ -392,7 +460,7 @@
   function openHubPreview(item, opts) {
     if (!item) return;
     opts = opts || {};
-    var fullSrc = fullImageUrl(item.imageUrl);
+    var fullSrc = playSrcFor(item) || fullImageUrl(item.imageUrl);
     var existing = document.getElementById('img-hub-preview');
     if (existing) existing.remove();
     var overlay = document.createElement('div');
@@ -430,6 +498,27 @@
     document.body.appendChild(overlay);
   }
 
+  function syncKindChips() {
+    var row = document.getElementById('img-hub-kind');
+    if (!row) return;
+    row.hidden = activeTab !== 'stickers';
+    row.querySelectorAll('[data-img-kind]').forEach(function (btn) {
+      var on = btn.getAttribute('data-img-kind') === mediaKind;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+
+  function setMediaKind(kind) {
+    if (kind !== 'all' && kind !== 'still' && kind !== 'gif') kind = 'all';
+    if (kind === mediaKind) return;
+    mediaKind = kind;
+    pageState.stickers = 1;
+    listCache.stickers = null;
+    syncKindChips();
+    loadStickerList();
+  }
+
   function updateTabUi() {
     document.querySelectorAll('[data-img-tab]').forEach(function (btn) {
       var tab = btn.getAttribute('data-img-tab');
@@ -452,6 +541,7 @@
     if (aiActions) aiActions.hidden = activeTab !== 'ai';
     var cats = document.getElementById('img-hub-sticker-cats');
     if (cats && activeTab !== 'stickers') cats.hidden = true;
+    syncKindChips();
   }
 
   function showActiveList() {
@@ -532,6 +622,7 @@
     var offset = (page - 1) * PAGE_SIZE;
     var url = apiBase() + '/image/stickers/list?limit=' + PAGE_SIZE + '&offset=' + offset;
     if (stickerCategory) url += '&category=' + encodeURIComponent(stickerCategory);
+    if (mediaKind === 'gif' || mediaKind === 'still') url += '&kind=' + encodeURIComponent(mediaKind);
     fetch(url, { headers: authHeaders() })
       .then(function (res) {
         return res.json().then(function (data) {
@@ -568,10 +659,12 @@
     if (!main) return;
     activeTab = 'stickers';
     stickerCategory = '';
+    mediaKind = 'all';
     listCache = { ai: null, stickers: null };
     pageState = { ai: 1, stickers: 1 };
     totalState = { ai: 0, stickers: 0 };
     canAdmin = false;
+    disconnectGifObserver();
     main.innerHTML =
       '<div class="img-hub">' +
         '<div class="img-hub-head">' +
@@ -594,6 +687,17 @@
           '</div>' +
         '</div>' +
         '<p class="img-hub-tip" id="img-hub-tip"></p>' +
+        '<div class="img-hub-kind" id="img-hub-kind" role="tablist">' +
+          '<button type="button" class="img-hub-chip is-active" data-img-kind="all" role="tab" aria-selected="true">' +
+            escapeHtml(tr('hub.imagesPage.filterAll')) +
+          '</button>' +
+          '<button type="button" class="img-hub-chip" data-img-kind="still" role="tab" aria-selected="false">' +
+            escapeHtml(tr('hub.imagesPage.filterStill')) +
+          '</button>' +
+          '<button type="button" class="img-hub-chip" data-img-kind="gif" role="tab" aria-selected="false">' +
+            escapeHtml(tr('hub.imagesPage.filterGif')) +
+          '</button>' +
+        '</div>' +
         '<div class="img-hub-cats" id="img-hub-sticker-cats" hidden></div>' +
         '<div class="error-box" id="img-hub-error" hidden></div>' +
         '<p class="img-hub-busy" id="img-hub-busy">' + escapeHtml(tr('hub.imagesPage.loading')) + '</p>' +
@@ -606,6 +710,14 @@
         switchTab(btn.getAttribute('data-img-tab'));
       });
     });
+    var kindRow = document.getElementById('img-hub-kind');
+    if (kindRow) {
+      kindRow.addEventListener('click', function (e) {
+        var btn = e.target && e.target.closest ? e.target.closest('[data-img-kind]') : null;
+        if (!btn) return;
+        setMediaKind(btn.getAttribute('data-img-kind'));
+      });
+    }
     var refresh = document.getElementById('img-hub-refresh');
     if (refresh) {
       refresh.addEventListener('click', function () {

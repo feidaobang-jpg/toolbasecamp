@@ -7,10 +7,12 @@
   var existingSources = new Set();
   var selectedPreset = '';
   var filterCategory = '';
+  var mediaKind = 'all'; // all | still | gif
   var allItems = [];
   var selectedIds = new Set();
   var listPage = 1;
   var PAGE_SIZE = 20;
+  var gifObserver = null;
 
   var PRESET_CATS = [
     { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
@@ -94,11 +96,79 @@
     return '';
   }
 
+  function isAnimated(item) {
+    if (!item) return false;
+    if (item.animated === true) return true;
+    var ctype = String(item.contentType || '').toLowerCase();
+    if (ctype.indexOf('gif') >= 0) return true;
+    var u = String(item.staticUrl || item.source || item.imageUrl || '');
+    return /\.gif(\?|$)/i.test(u);
+  }
+
+  function playUrl(item) {
+    if (!item) return '';
+    if (item.staticUrl) {
+      if (item.staticUrl.indexOf('/pubsticker/') === 0) return item.staticUrl;
+      return apiBase() + (item.staticUrl.charAt(0) === '/' ? item.staticUrl : '/' + item.staticUrl);
+    }
+    if (item.imageUrl) {
+      return apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
+    }
+    return '';
+  }
+
+  function disconnectGifObserver() {
+    if (gifObserver) {
+      try { gifObserver.disconnect(); } catch (e) {}
+      gifObserver = null;
+    }
+  }
+
+  function bindGifViewport(img, thumbSrc, playSrc) {
+    if (!img || !playSrc) return;
+    img.dataset.thumbSrc = thumbSrc || '';
+    img.dataset.playSrc = playSrc;
+    img.dataset.playing = '0';
+    if (typeof IntersectionObserver === 'undefined') {
+      img.src = playSrc;
+      img.dataset.playing = '1';
+      return;
+    }
+    if (!gifObserver) {
+      gifObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var el = entry.target;
+          var thumb = el.dataset.thumbSrc || '';
+          var play = el.dataset.playSrc || '';
+          if (!play) return;
+          if (entry.isIntersecting && entry.intersectionRatio > 0.12) {
+            if (el.dataset.playing !== '1') {
+              el.src = play;
+              el.dataset.playing = '1';
+            }
+          } else if (el.dataset.playing === '1' && thumb) {
+            el.src = thumb;
+            el.dataset.playing = '0';
+          }
+        });
+      }, { root: null, rootMargin: '60px 0px', threshold: [0, 0.12, 0.35] });
+    }
+    gifObserver.observe(img);
+  }
+
   function filteredItems() {
-    if (!filterCategory) return allItems.slice();
-    return allItems.filter(function (it) {
-      return String(it.category || '').trim() === filterCategory;
-    });
+    var list = allItems.slice();
+    if (filterCategory) {
+      list = list.filter(function (it) {
+        return String(it.category || '').trim() === filterCategory;
+      });
+    }
+    if (mediaKind === 'gif') {
+      list = list.filter(function (it) { return isAnimated(it); });
+    } else if (mediaKind === 'still') {
+      list = list.filter(function (it) { return !isAnimated(it); });
+    }
+    return list;
   }
 
   function syncUploadChips() {
@@ -137,6 +207,31 @@
       var c = String(it.category || '').trim() || '其他';
       counts[c] = (counts[c] || 0) + 1;
     });
+    var gifN = 0;
+    var stillN = 0;
+    allItems.forEach(function (it) {
+      if (isAnimated(it)) gifN += 1;
+      else stillN += 1;
+    });
+
+    function addKindBtn(kind, label, count) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ladder-cat-chip' + (mediaKind === kind ? ' active' : '');
+      btn.textContent = label + ' (' + count + ')';
+      btn.addEventListener('click', function () {
+        mediaKind = kind;
+        listPage = 1;
+        selectedIds = new Set();
+        renderFilterChips();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    }
+    addKindBtn('all', tr('hub.imagesPage.filterAll'), allItems.length);
+    addKindBtn('still', tr('hub.imagesPage.filterStill'), stillN);
+    addKindBtn('gif', tr('hub.imagesPage.filterGif'), gifN);
+
     var allBtn = document.createElement('button');
     allBtn.type = 'button';
     allBtn.className = 'ladder-cat-chip' + (filterCategory ? '' : ' active');
@@ -196,6 +291,7 @@
     var list = document.getElementById('sticker-list');
     var pager = document.getElementById('list-pager');
     if (!list) return;
+    disconnectGifObserver();
     var items = filteredItems();
     if (typeof tbNormalizePage === 'function') {
       listPage = tbNormalizePage(listPage, items.length, PAGE_SIZE);
@@ -203,7 +299,7 @@
     var start = (listPage - 1) * PAGE_SIZE;
     var pageItems = items.slice(start, start + PAGE_SIZE);
     list.innerHTML = '';
-    if (filterCategory) {
+    if (filterCategory || mediaKind !== 'all') {
       setStatus(meta, tr('privateHub.ops.stickersListMetaFiltered', {
         filtered: items.length,
         total: allItems.length
@@ -233,6 +329,8 @@
       var card = document.createElement('div');
       card.className = 'ladder-media-card' + (selectedIds.has(item.id) ? ' is-selected' : '');
       var src = thumbUrl(item);
+      var animated = isAnimated(item);
+      var play = playUrl(item);
       card.innerHTML =
         '<label class="ladder-media-check">' +
           '<input type="checkbox" data-id="' + escapeHtml(item.id) + '"' + (selectedIds.has(item.id) ? ' checked' : '') + ' />' +
@@ -241,6 +339,7 @@
           (src
             ? '<img class="ladder-media-thumb" alt="" loading="lazy" decoding="async" src="' + escapeHtml(src) + '" />'
             : '<div class="ladder-media-thumb ladder-media-thumb--empty"></div>') +
+          (animated ? '<span class="ladder-media-gif-badge" aria-hidden="true">GIF</span>' : '') +
         '</div>' +
         '<div class="ladder-media-body">' +
           '<div class="ladder-media-title"></div>' +
@@ -267,6 +366,9 @@
         deleteItem(item);
       });
       var thumbImg = card.querySelector('.ladder-media-thumb');
+      if (thumbImg && animated && play) {
+        bindGifViewport(thumbImg, src, play);
+      }
       if (thumbImg && item.imageUrl) {
         thumbImg.addEventListener('error', function () {
           if (thumbImg.dataset.fallback) return;

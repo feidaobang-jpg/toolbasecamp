@@ -271,6 +271,22 @@ pre.game-thumbs-list {
   background: #f3f4f6;
 }
 
+.ladder-media-gif-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.72);
+  border-radius: 6px;
+  padding: 3px 7px;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
 .ladder-media-body {
   padding: 8px 10px 10px;
   display: flex;

@@ -213,10 +213,22 @@ def _sticker_row(sticker_id: str) -> Optional[dict]:
     return None
 
 
+def _is_gif_row(row: dict) -> bool:
+    ctype = str(row.get("contentType") or "").lower()
+    file_name = str(row.get("file") or "").lower()
+    if "gif" in ctype or file_name.endswith(".gif"):
+        return True
+    return False
+
+
 def _public_item(row: dict) -> dict:
     sid = str(row.get("id") or "").strip()
     thumb = str(row.get("thumbFile") or "").strip()
     file_name = str(row.get("file") or "").strip()
+    ctype = str(row.get("contentType") or "image/png")
+    animated = _is_gif_row(row)
+    if animated and "gif" not in ctype.lower():
+        ctype = "image/gif"
     bytes_n = 0
     if file_name:
         try:
@@ -229,10 +241,12 @@ def _public_item(row: dict) -> dict:
         "id": sid,
         "title": str(row.get("title") or sid).strip() or sid,
         "category": str(row.get("category") or "").strip(),
-        "contentType": str(row.get("contentType") or "image/png"),
+        "contentType": ctype,
+        "animated": bool(animated),
         "createdAt": str(row.get("createdAt") or ""),
         "bytes": bytes_n,
         "imageUrl": f"/image/stickers/{sid}",
+        "staticUrl": f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}",
         "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
         "downloadUrl": f"/image/stickers/{sid}?download=1",
     }
@@ -272,9 +286,11 @@ def stickers_public_list(
     limit: int = 200,
     offset: int = 0,
     category: str = "",
+    kind: str = "",
 ):
     all_items = _load_sticker_manifest()
     cat_filter = (category or "").strip()
+    kind_filter = (kind or "").strip().lower()
     categories = []
     seen_cats = set()
     for row in all_items:
@@ -288,6 +304,10 @@ def stickers_public_list(
             row for row in all_items
             if str(row.get("category") or "").strip() == cat_filter
         ]
+    if kind_filter in ("gif", "animated"):
+        filtered = [row for row in filtered if _is_gif_row(row)]
+    elif kind_filter in ("still", "static"):
+        filtered = [row for row in filtered if not _is_gif_row(row)]
     lim = max(1, min(int(limit or 200), 500))
     off = max(0, int(offset or 0))
     items = []
@@ -312,6 +332,7 @@ def stickers_public_list(
         "limit": lim,
         "offset": off,
         "total": len(filtered),
+        "kind": kind_filter or "all",
     }
 
 
