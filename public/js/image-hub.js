@@ -290,6 +290,7 @@
       card.className = 'img-hub-card img-hub-card--sticker';
       var thumbSrc = gridImageUrl(item.thumbnailUrl || item.imageUrl);
       var fullSrc = fullImageUrl(item.imageUrl);
+      var title = displayStickerTitle(item);
       card.innerHTML =
         '<div class="img-hub-thumb-wrap img-hub-thumb-wrap--sticker">' +
           '<img class="img-hub-thumb img-hub-sticker-img" alt="" loading="lazy" decoding="async" />' +
@@ -301,17 +302,25 @@
           '<div class="action-row"></div>' +
         '</div>';
       var img = card.querySelector('.img-hub-sticker-img');
-      img.src = fullSrc;
-      img.alt = (item.title || tr('hub.imagesPage.stickersUntitled')).slice(0, 80);
+      img.src = thumbSrc || fullSrc;
+      img.alt = title.slice(0, 80);
       img.setAttribute('data-full-src', fullSrc);
-      card.querySelector('.img-hub-sticker-title').textContent =
-        (item.title || '').trim() || tr('hub.imagesPage.stickersUntitled');
+      var titleEl = card.querySelector('.img-hub-sticker-title');
+      if (title) {
+        titleEl.textContent = title;
+      } else {
+        titleEl.hidden = true;
+        titleEl.style.display = 'none';
+      }
       var catEl = card.querySelector('.img-hub-sticker-cat');
       if (item.category) {
         catEl.hidden = false;
         catEl.textContent = item.category;
       }
-      card.querySelector('.img-hub-sticker-hint').textContent = tr('hub.imagesPage.stickersLongPress');
+      card.querySelector('.img-hub-sticker-hint').textContent = tr('hub.imagesPage.stickersTapOpen');
+      var openPreview = function () { openStickerPreview(item); };
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', openPreview);
       var actions = card.querySelector('.action-row');
       var dl = document.createElement('button');
       dl.type = 'button';
@@ -321,6 +330,53 @@
       actions.appendChild(dl);
       grid.appendChild(card);
     });
+  }
+
+  function displayStickerTitle(item) {
+    var title = String((item && item.title) || '').trim();
+    if (!title) return '';
+    if (/^[a-f0-9]{28,64}$/i.test(title)) return '';
+    return title;
+  }
+
+  function openStickerPreview(item) {
+    if (!item) return;
+    var fullSrc = fullImageUrl(item.imageUrl);
+    var existing = document.getElementById('img-hub-preview');
+    if (existing) existing.remove();
+    var overlay = document.createElement('div');
+    overlay.id = 'img-hub-preview';
+    overlay.className = 'img-hub-preview';
+    overlay.innerHTML =
+      '<div class="img-hub-preview-panel">' +
+        '<p class="img-hub-preview-tip"></p>' +
+        '<img class="img-hub-preview-img" alt="" />' +
+        '<div class="action-row img-hub-preview-actions">' +
+          '<button type="button" class="tb-btn" data-preview-dl></button>' +
+          '<button type="button" class="tb-btn" data-preview-close></button>' +
+        '</div>' +
+      '</div>';
+    overlay.querySelector('.img-hub-preview-tip').textContent = tr('hub.imagesPage.stickersLongPress');
+    var img = overlay.querySelector('.img-hub-preview-img');
+    img.src = fullSrc;
+    img.alt = displayStickerTitle(item) || tr('hub.imagesPage.stickersUntitled');
+    var dlBtn = overlay.querySelector('[data-preview-dl]');
+    dlBtn.textContent = tr('hub.imagesPage.download');
+    dlBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      downloadStickerItem(item);
+    });
+    var closeBtn = overlay.querySelector('[data-preview-close]');
+    closeBtn.textContent = tr('hub.imagesPage.closePreview');
+    function close() { overlay.remove(); }
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      close();
+    });
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) close();
+    });
+    document.body.appendChild(overlay);
   }
 
   function updateTabUi() {

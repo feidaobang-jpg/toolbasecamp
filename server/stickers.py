@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Optional
 from zoneinfo import ZoneInfo
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -351,6 +351,40 @@ def stickers_admin_delete(sticker_id: str, admin: dict = Depends(_admin_user)):
     new_items = [it for it in items if str(it.get("id") or "") != sid]
     _save_sticker_manifest(new_items)
     return {"success": True, "deletedId": sid}
+
+
+@router.post("/admin/batch-delete")
+async def stickers_admin_batch_delete(request: Request, admin: dict = Depends(_admin_user)):
+    del admin
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    raw_ids = body.get("ids") if isinstance(body, dict) else None
+    if not isinstance(raw_ids, list) or not raw_ids:
+        raise HTTPException(status_code=400, detail="ids required")
+    items = _load_sticker_manifest()
+    by_id = {str(it.get("id") or ""): it for it in items if it.get("id")}
+    deleted = []
+    for raw in raw_ids[:200]:
+        sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(raw or ""))[:48]
+        if not sid or sid not in by_id:
+            continue
+        row = by_id.pop(sid)
+        for fname in {str(row.get("file") or ""), str(row.get("thumbFile") or "")}:
+            if not fname:
+                continue
+            try:
+                path = _safe_sticker_path(fname)
+                if path.is_file():
+                    path.unlink()
+            except HTTPException:
+                pass
+        deleted.append(sid)
+    if deleted:
+        new_items = [it for it in items if str(it.get("id") or "") not in set(deleted)]
+        _save_sticker_manifest(new_items)
+    return {"success": True, "deletedIds": deleted, "count": len(deleted)}
 
 
 @router.post("/admin/upload")

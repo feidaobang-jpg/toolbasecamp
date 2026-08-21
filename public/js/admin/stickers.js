@@ -6,6 +6,9 @@
 
   var existingSources = new Set();
   var selectedPreset = '';
+  var filterCategory = '';
+  var allItems = [];
+  var selectedIds = new Set();
 
   var PRESET_CATS = [
     { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
@@ -13,7 +16,6 @@
     { value: '漫画', key: 'privateHub.ops.stickersCatComic' },
     { value: '风景', key: 'privateHub.ops.stickersCatScenery' },
     { value: '人物', key: 'privateHub.ops.stickersCatPeople' },
-    { value: '明星', key: 'privateHub.ops.stickersCatCelebrity' },
     { value: '萌宠', key: 'privateHub.ops.stickersCatPet' },
     { value: '其他', key: 'privateHub.ops.stickersCatOther' }
   ];
@@ -68,25 +70,41 @@
     el.classList.toggle('is-error', !!isErr);
   }
 
-  function resolveCategory() {
-    var input = document.getElementById('upload-category');
-    var custom = input ? String(input.value || '').trim() : '';
-    if (custom) return custom.slice(0, 40);
-    return selectedPreset || '';
+  function displayTitle(item) {
+    var title = String((item && item.title) || '').trim();
+    if (!title) return item.id || '';
+    if (/^[a-f0-9]{28,64}$/i.test(title)) return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
+    return title;
   }
 
-  function syncCatChips() {
-    var custom = document.getElementById('upload-category');
-    var customVal = custom ? String(custom.value || '').trim() : '';
-    document.querySelectorAll('[data-cat-value]').forEach(function (btn) {
-      var val = btn.getAttribute('data-cat-value') || '';
-      var on = !customVal && selectedPreset === val;
+  function thumbUrl(item) {
+    if (!item) return '';
+    if (item.thumbnailUrl) {
+      if (item.thumbnailUrl.indexOf('/pubsticker/') === 0) return item.thumbnailUrl;
+      return apiBase() + (item.thumbnailUrl.charAt(0) === '/' ? item.thumbnailUrl : '/' + item.thumbnailUrl);
+    }
+    if (item.imageUrl) {
+      return apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
+    }
+    return '';
+  }
+
+  function filteredItems() {
+    if (!filterCategory) return allItems.slice();
+    return allItems.filter(function (it) {
+      return String(it.category || '').trim() === filterCategory;
+    });
+  }
+
+  function syncUploadChips() {
+    document.querySelectorAll('#upload-cat-chips [data-cat-value]').forEach(function (btn) {
+      var on = selectedPreset === (btn.getAttribute('data-cat-value') || '');
       btn.classList.toggle('active', on);
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
 
-  function renderCatChips() {
+  function renderUploadChips() {
     var wrap = document.getElementById('upload-cat-chips');
     if (!wrap) return;
     wrap.innerHTML = '';
@@ -97,21 +115,146 @@
       btn.setAttribute('data-cat-value', cat.value);
       btn.textContent = tr(cat.key);
       btn.addEventListener('click', function () {
-        var input = document.getElementById('upload-category');
-        if (input) input.value = '';
         selectedPreset = selectedPreset === cat.value ? '' : cat.value;
-        syncCatChips();
+        syncUploadChips();
       });
       wrap.appendChild(btn);
     });
-    syncCatChips();
+    syncUploadChips();
+  }
+
+  function renderFilterChips() {
+    var wrap = document.getElementById('filter-cat-chips');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    var counts = {};
+    allItems.forEach(function (it) {
+      var c = String(it.category || '').trim() || '其他';
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    var allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'ladder-cat-chip' + (filterCategory ? '' : ' active');
+    allBtn.textContent = tr('privateHub.ops.stickersCategoryAll') + ' (' + allItems.length + ')';
+    allBtn.addEventListener('click', function () {
+      filterCategory = '';
+      selectedIds = new Set();
+      renderFilterChips();
+      renderGrid();
+    });
+    wrap.appendChild(allBtn);
+    PRESET_CATS.forEach(function (cat) {
+      var n = counts[cat.value] || 0;
+      if (!n && filterCategory !== cat.value) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ladder-cat-chip' + (filterCategory === cat.value ? ' active' : '');
+      btn.textContent = tr(cat.key) + ' (' + n + ')';
+      btn.addEventListener('click', function () {
+        filterCategory = cat.value;
+        selectedIds = new Set();
+        renderFilterChips();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+    Object.keys(counts).forEach(function (cat) {
+      var known = PRESET_CATS.some(function (p) { return p.value === cat; });
+      if (known) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ladder-cat-chip' + (filterCategory === cat ? ' active' : '');
+      btn.textContent = cat + ' (' + counts[cat] + ')';
+      btn.addEventListener('click', function () {
+        filterCategory = cat;
+        selectedIds = new Set();
+        renderFilterChips();
+        renderGrid();
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
+  function updateSelectMeta() {
+    var el = document.getElementById('select-meta');
+    if (!el) return;
+    el.textContent = selectedIds.size
+      ? tr('privateHub.ops.stickersSelected', { n: selectedIds.size })
+      : '';
+  }
+
+  function renderGrid() {
+    var meta = document.getElementById('list-meta');
+    var list = document.getElementById('sticker-list');
+    if (!list) return;
+    var items = filteredItems();
+    list.innerHTML = '';
+    if (filterCategory) {
+      setStatus(meta, tr('privateHub.ops.stickersListMetaFiltered', {
+        filtered: items.length,
+        total: allItems.length
+      }));
+    } else {
+      setStatus(meta, tr('privateHub.ops.stickersListMeta', { total: allItems.length }));
+    }
+    updateSelectMeta();
+    if (!items.length) {
+      list.innerHTML = '<p class="ladder-row-empty">' + escapeHtml(
+        allItems.length ? tr('privateHub.ops.stickersEmptyFilter') : tr('privateHub.ops.stickersEmpty')
+      ) + '</p>';
+      return;
+    }
+    items.forEach(function (item) {
+      var card = document.createElement('div');
+      card.className = 'ladder-media-card' + (selectedIds.has(item.id) ? ' is-selected' : '');
+      var src = thumbUrl(item);
+      card.innerHTML =
+        '<label class="ladder-media-check">' +
+          '<input type="checkbox" data-id="' + escapeHtml(item.id) + '"' + (selectedIds.has(item.id) ? ' checked' : '') + ' />' +
+        '</label>' +
+        '<div class="ladder-media-thumb-wrap">' +
+          (src
+            ? '<img class="ladder-media-thumb" alt="" loading="lazy" decoding="async" src="' + escapeHtml(src) + '" />'
+            : '<div class="ladder-media-thumb ladder-media-thumb--empty"></div>') +
+        '</div>' +
+        '<div class="ladder-media-body">' +
+          '<div class="ladder-media-title"></div>' +
+          '<div class="ladder-media-sub"></div>' +
+          '<div class="action-row">' +
+            '<button type="button" class="tb-btn" data-del>' + escapeHtml(tr('privateHub.ops.stickersDelete')) + '</button>' +
+          '</div>' +
+        '</div>';
+      card.querySelector('.ladder-media-title').textContent = displayTitle(item);
+      var sub = [];
+      if (item.category) sub.push(item.category);
+      sub.push(fmtBytes(item.bytes));
+      card.querySelector('.ladder-media-sub').textContent = sub.join(' · ');
+      var cb = card.querySelector('input[type="checkbox"]');
+      cb.addEventListener('change', function () {
+        if (cb.checked) selectedIds.add(item.id);
+        else selectedIds.delete(item.id);
+        card.classList.toggle('is-selected', cb.checked);
+        updateSelectMeta();
+      });
+      card.querySelector('[data-del]').addEventListener('click', function () {
+        deleteItem(item);
+      });
+      var thumbImg = card.querySelector('.ladder-media-thumb');
+      if (thumbImg && item.imageUrl) {
+        thumbImg.addEventListener('error', function () {
+          if (thumbImg.dataset.fallback) return;
+          thumbImg.dataset.fallback = '1';
+          thumbImg.src = apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
+        });
+      }
+      list.appendChild(card);
+    });
   }
 
   function loadList() {
     var meta = document.getElementById('list-meta');
     var list = document.getElementById('sticker-list');
     if (!list) return Promise.resolve();
-    list.innerHTML = '';
     setStatus(meta, tr('privateHub.ops.stickersLoading'));
     return fetch(apiBase() + '/image/stickers/admin/list?limit=500', { headers: authHeaders() })
       .then(function (res) {
@@ -121,59 +264,18 @@
         });
       })
       .then(function (data) {
-        var items = (data && data.items) || [];
+        allItems = (data && data.items) || [];
         existingSources = new Set();
-        items.forEach(function (item) {
+        allItems.forEach(function (item) {
           if (item.source) existingSources.add(normFileName(item.source));
         });
-        setStatus(meta, tr('privateHub.ops.stickersListMeta', { total: items.length }));
-        if (!items.length) {
-          list.innerHTML = '<p class="ladder-row-empty">' + escapeHtml(tr('privateHub.ops.stickersEmpty')) + '</p>';
-          return;
-        }
-        items.forEach(function (item) {
-          var row = document.createElement('div');
-          row.className = 'ladder-row ladder-row--media';
-          var subParts = [];
-          if (item.category) subParts.push(tr('privateHub.ops.stickersCategoryLabel') + ': ' + item.category);
-          subParts.push(fmtBytes(item.bytes));
-          if (item.createdAt) subParts.push(item.createdAt);
-          var thumbSrc = '';
-          if (item.thumbnailUrl) {
-            thumbSrc = item.thumbnailUrl.indexOf('/pubsticker/') === 0
-              ? item.thumbnailUrl
-              : (apiBase() + (item.thumbnailUrl.charAt(0) === '/' ? item.thumbnailUrl : '/' + item.thumbnailUrl));
-          } else if (item.imageUrl) {
-            thumbSrc = apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
-          }
-          row.innerHTML =
-            '<div class="ladder-row-thumb-wrap">' +
-              (thumbSrc
-                ? '<img class="ladder-row-thumb" alt="" loading="lazy" decoding="async" src="' + escapeHtml(thumbSrc) + '" />'
-                : '<div class="ladder-row-thumb ladder-row-thumb--empty"></div>') +
-            '</div>' +
-            '<div class="ladder-row-main">' +
-              '<div class="ladder-row-title">' + escapeHtml(item.title || item.id) + '</div>' +
-              subParts.map(function (line) {
-                return '<div class="ladder-row-sub">' + escapeHtml(line) + '</div>';
-              }).join('') +
-            '</div>' +
-            '<div class="action-row ladder-row-actions">' +
-              '<button type="button" class="tb-btn" data-del="' + escapeHtml(item.id) + '">' + escapeHtml(tr('privateHub.ops.stickersDelete')) + '</button>' +
-            '</div>';
-          var thumbImg = row.querySelector('.ladder-row-thumb');
-          if (thumbImg && item.imageUrl) {
-            thumbImg.addEventListener('error', function () {
-              if (thumbImg.dataset.fallback) return;
-              thumbImg.dataset.fallback = '1';
-              thumbImg.src = apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
-            });
-          }
-          row.querySelector('[data-del]').addEventListener('click', function () {
-            deleteItem(item);
-          });
-          list.appendChild(row);
+        var keep = new Set();
+        allItems.forEach(function (it) {
+          if (selectedIds.has(it.id)) keep.add(it.id);
         });
+        selectedIds = keep;
+        renderFilterChips();
+        renderGrid();
       })
       .catch(function (err) {
         setStatus(meta, (err && err.message) || tr('privateHub.ops.stickersLoadFailed'), true);
@@ -182,7 +284,7 @@
 
   function deleteItem(item) {
     if (!item || !item.id) return;
-    if (!window.confirm(tr('privateHub.ops.stickersDeleteConfirm', { title: item.title || item.id }))) return;
+    if (!window.confirm(tr('privateHub.ops.stickersDeleteConfirm', { title: displayTitle(item) }))) return;
     fetch(apiBase() + '/image/stickers/admin/' + encodeURIComponent(item.id), {
       method: 'DELETE',
       headers: authHeaders()
@@ -192,6 +294,30 @@
         return data;
       });
     }).then(function () {
+      selectedIds.delete(item.id);
+      loadList();
+    }).catch(function (err) {
+      alert((err && err.message) || tr('privateHub.ops.stickersDeleteFailed'));
+    });
+  }
+
+  function batchDelete() {
+    var ids = Array.from(selectedIds);
+    if (!ids.length) return;
+    if (!window.confirm(tr('privateHub.ops.stickersBatchDeleteConfirm', { n: ids.length }))) return;
+    fetch(apiBase() + '/image/stickers/admin/batch-delete', {
+      method: 'POST',
+      headers: authHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ ids: ids })
+    }).then(function (res) {
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error((data && data.detail) || res.statusText);
+        return data;
+      });
+    }).then(function (data) {
+      selectedIds = new Set();
+      var status = document.getElementById('upload-status');
+      setStatus(status, tr('privateHub.ops.stickersBatchDeleteDone', { n: (data && data.count) || ids.length }));
       loadList();
     }).catch(function (err) {
       alert((err && err.message) || tr('privateHub.ops.stickersDeleteFailed'));
@@ -201,7 +327,11 @@
   function uploadFiles(files) {
     var status = document.getElementById('upload-status');
     var progress = document.getElementById('upload-progress');
-    var category = resolveCategory();
+    var category = selectedPreset;
+    if (!category) {
+      setStatus(status, tr('privateHub.ops.stickersNeedCategory'), true);
+      return;
+    }
     if (!files || !files.length) return;
     var picked = Array.prototype.slice.call(files);
     var skipped = 0;
@@ -256,7 +386,7 @@
       }
       var fd = new FormData();
       fd.append('file', file, file.name);
-      if (category) fd.append('category', category);
+      fd.append('category', category);
       fetch(apiBase() + '/image/stickers/admin/upload', {
         method: 'POST',
         headers: authHeaders(),
@@ -292,14 +422,7 @@
   }
 
   function bindUi() {
-    renderCatChips();
-    var catInput = document.getElementById('upload-category');
-    if (catInput) {
-      catInput.addEventListener('input', function () {
-        if (String(catInput.value || '').trim()) selectedPreset = '';
-        syncCatChips();
-      });
-    }
+    renderUploadChips();
     var uploadInput = document.getElementById('upload-input');
     if (uploadInput) {
       uploadInput.addEventListener('change', function () {
@@ -311,6 +434,22 @@
     }
     var refresh = document.getElementById('btn-refresh');
     if (refresh) refresh.addEventListener('click', loadList);
+    var selectAll = document.getElementById('btn-select-all');
+    if (selectAll) {
+      selectAll.addEventListener('click', function () {
+        filteredItems().forEach(function (it) { selectedIds.add(it.id); });
+        renderGrid();
+      });
+    }
+    var clearSelect = document.getElementById('btn-clear-select');
+    if (clearSelect) {
+      clearSelect.addEventListener('click', function () {
+        selectedIds = new Set();
+        renderGrid();
+      });
+    }
+    var batchBtn = document.getElementById('btn-batch-delete');
+    if (batchBtn) batchBtn.addEventListener('click', batchDelete);
     loadList();
   }
 

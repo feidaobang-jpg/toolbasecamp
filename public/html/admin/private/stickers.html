@@ -11,11 +11,11 @@
   <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/tools-form.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=imgcat1" />
-  <script src="../../../js/locales/en.js?v=imgcat1"></script>
-  <script src="../../../js/locales/zh-CN.js?v=imgcat1"></script>
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=imgopt1" />
+  <script src="../../../js/locales/en.js?v=imgopt1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=imgopt1"></script>
   <script src="../../../js/i18n.js?v=minimax1"></script>
-  <script src="../../../js/config.js?v=imgcat1"></script>
+  <script src="../../../js/config.js?v=imgopt1"></script>
   <script src="../../../js/common_ui.js?v=minimax1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
@@ -47,17 +47,13 @@
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersUploadTitle">批量上传</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.stickersUploadDesc">支持 PNG / JPG / GIF / WebP（可多选）。请先点选分类；也可填写自定义分类。文件名「分类-名称.png」在未选分类时会自动解析。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.stickersUploadDesc">支持 PNG / JPG / GIF / WebP（可多选）。请先点选分类再上传。</p>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.stickersCategoryHint">建议按分类批量上传，前台可筛选。</p>
-        <div class="ladder-cat-row" id="upload-cat-chips" role="group" aria-label="category"></div>
+        <div class="ladder-cat-row" id="upload-cat-chips" role="group" aria-label="upload-category"></div>
         <div class="ladder-toolbar action-row" style="align-items:center;flex-wrap:wrap">
           <label class="tb-btn" style="cursor:pointer;margin:0">
             <span data-i18n="privateHub.ops.stickersPick">选择图片</span>
             <input type="file" id="upload-input" accept="image/png,image/jpeg,image/gif,image/webp,.png,.jpg,.jpeg,.gif,.webp" multiple hidden />
-          </label>
-          <label class="text-sm text-gray-600" style="display:flex;align-items:center;gap:6px">
-            <span data-i18n="privateHub.ops.stickersCategoryCustom">自定义</span>
-            <input type="text" id="upload-category" class="tb-input" style="width:10rem" maxlength="40" placeholder="" />
           </label>
           <button type="button" id="btn-refresh" class="tb-btn" data-i18n="privateHub.ops.stickersRefresh">刷新列表</button>
           <a class="ladder-row-link" href="../../../images.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.stickersPublic">查看公开页</a>
@@ -68,13 +64,20 @@
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersListTitle">图片列表</h2>
+        <div class="ladder-cat-row" id="filter-cat-chips" role="group" aria-label="filter-category"></div>
+        <div class="ladder-toolbar action-row" style="align-items:center;flex-wrap:wrap;margin-bottom:10px">
+          <button type="button" id="btn-select-all" class="tb-btn" data-i18n="privateHub.ops.stickersSelectAll">全选当前</button>
+          <button type="button" id="btn-clear-select" class="tb-btn" data-i18n="privateHub.ops.stickersClearSelect">取消选择</button>
+          <button type="button" id="btn-batch-delete" class="tb-btn" data-i18n="privateHub.ops.stickersBatchDelete">批量删除</button>
+          <span id="select-meta" class="ladder-status" style="margin:0"></span>
+        </div>
         <div id="list-meta" class="ladder-status"></div>
-        <div id="sticker-list" class="ladder-list"></div>
+        <div id="sticker-list" class="ladder-media-grid"></div>
       </section>
     </div>
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=minimax1"></script>
-  <script src="../../../js/admin/stickers.js?v=imgcat1"></script>
+  <script src="../../../js/admin/stickers.js?v=imgopt1"></script>
 </body>
 </html>

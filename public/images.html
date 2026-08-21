@@ -97,6 +97,28 @@
       .img-hub-sticker-hint {
         font-size: 0.75rem; color: #94a3b8; margin: 0; line-height: 1.4;
       }
+      .img-hub-preview {
+        position: fixed; inset: 0; z-index: 80;
+        background: rgba(15, 23, 42, 0.72);
+        display: flex; align-items: center; justify-content: center;
+        padding: 16px;
+      }
+      .img-hub-preview-panel {
+        background: #fff; border-radius: 14px; padding: 14px;
+        max-width: min(92vw, 560px); width: 100%;
+        display: flex; flex-direction: column; gap: 10px;
+      }
+      .img-hub-preview-tip {
+        margin: 0; font-size: 0.85rem; color: #64748b; line-height: 1.4;
+      }
+      .img-hub-preview-img {
+        display: block; width: 100%; max-height: min(70vh, 520px);
+        object-fit: contain; background:
+          repeating-conic-gradient(#e2e8f0 0% 25%, #f8fafc 0% 50%) 50% / 16px 16px;
+        border-radius: 10px;
+        -webkit-touch-callout: default;
+      }
+      .img-hub-preview-actions { margin: 0; }
       .img-hub-card .action-row {
         margin-top: auto;
         padding-top: 8px;
@@ -126,13 +148,13 @@
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=imgcat1"></script>
-    <script src="js/locales/zh-CN.js?v=imgcat1"></script>
+    <script src="js/locales/en.js?v=imgopt1"></script>
+    <script src="js/locales/zh-CN.js?v=imgopt1"></script>
     <script src="js/i18n.js?v=minimax1"></script>
     <script src="js/config.js?v=minimax1"></script>
     <script src="js/base.js?v=minimax1"></script>
     <script src="js/common_ui.js?v=minimax1"></script>
-    <script src="js/image-hub.js?v=tradimg1"></script>
+    <script src="js/image-hub.js?v=imgopt1"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }
