@@ -92,6 +92,14 @@
 
   function playSrcFor(item) {
     if (!item) return '';
+    // Prefer small animated preview for grid playback.
+    if (item.previewUrl) return gridImageUrl(item.previewUrl);
+    if (item.staticUrl) return gridImageUrl(item.staticUrl);
+    return fullImageUrl(item.imageUrl);
+  }
+
+  function fullSrcFor(item) {
+    if (!item) return '';
     if (item.staticUrl) return gridImageUrl(item.staticUrl);
     return fullImageUrl(item.imageUrl);
   }
@@ -436,7 +444,7 @@
   function openHubPreview(item, opts) {
     if (!item) return;
     opts = opts || {};
-    var fullSrc = playSrcFor(item) || fullImageUrl(item.imageUrl);
+    var fullSrc = fullSrcFor(item) || fullImageUrl(item.imageUrl);
     var existing = document.getElementById('img-hub-preview');
     if (existing) existing.remove();
     var overlay = document.createElement('div');

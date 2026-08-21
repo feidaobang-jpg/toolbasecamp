@@ -106,9 +106,10 @@
 
   function playUrl(item) {
     if (!item) return '';
-    if (item.staticUrl) {
-      if (item.staticUrl.indexOf('/pubsticker/') === 0) return item.staticUrl;
-      return apiBase() + (item.staticUrl.charAt(0) === '/' ? item.staticUrl : '/' + item.staticUrl);
+    var u = item.previewUrl || item.staticUrl || '';
+    if (u) {
+      if (u.indexOf('/pubsticker/') === 0) return u;
+      return apiBase() + (u.charAt(0) === '/' ? u : '/' + u);
     }
     if (item.imageUrl) {
       return apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);

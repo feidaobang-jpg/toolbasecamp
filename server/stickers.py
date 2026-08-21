@@ -37,6 +37,11 @@ _sticker_manifest_cache: tuple[float, list] = (0.0, [])
 STICKER_UPLOAD_MAX_MB = max(1, int(os.environ.get("STICKER_UPLOAD_MAX_MB") or "8"))
 STICKER_THUMB_MAX_WIDTH = max(80, int(os.environ.get("STICKER_THUMB_MAX_WIDTH") or "240"))
 STICKER_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("STICKER_THUMB_JPEG_QUALITY") or "80")))
+# Stickers are for chat/forward — keep stored GIF small; grid uses an even smaller preview.
+STICKER_GIF_MAX_EDGE = max(120, int(os.environ.get("STICKER_GIF_MAX_EDGE") or "360"))
+STICKER_GIF_COLORS = max(32, min(256, int(os.environ.get("STICKER_GIF_COLORS") or "128")))
+STICKER_PREVIEW_MAX_EDGE = max(80, int(os.environ.get("STICKER_PREVIEW_MAX_EDGE") or "240"))
+STICKER_PREVIEW_COLORS = max(32, min(256, int(os.environ.get("STICKER_PREVIEW_COLORS") or "96")))
 
 _ALLOWED_EXT = frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp"})
 _CONTENT_BY_EXT = {
@@ -162,6 +167,81 @@ def _thumb_file_name(sticker_id: str) -> str:
     return f"{sid}_thumb.jpg"
 
 
+def _preview_file_name(sticker_id: str) -> str:
+    sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48]
+    if not sid:
+        raise HTTPException(status_code=400, detail="Invalid sticker id")
+    return f"{sid}_preview.gif"
+
+
+def _resize_rgba(im, max_edge: int):
+    from PIL import Image
+
+    w, h = im.size
+    if max(w, h) <= max_edge:
+        return im
+    scale = max_edge / float(max(w, h))
+    nw = max(1, int(round(w * scale)))
+    nh = max(1, int(round(h * scale)))
+    return im.resize((nw, nh), Image.Resampling.LANCZOS)
+
+
+def _compress_animated_gif(
+    data: bytes,
+    *,
+    max_edge: int,
+    colors: int,
+) -> Optional[bytes]:
+    """Resize + quantize animated GIF. Returns None on failure."""
+    if not data:
+        return None
+    try:
+        from PIL import Image, ImageSequence
+
+        im = Image.open(BytesIO(data))
+        frames = []
+        durations = []
+        for frame in ImageSequence.Iterator(im):
+            duration = int(frame.info.get("duration", 100) or 100)
+            rgba = frame.convert("RGBA")
+            rgba = _resize_rgba(rgba, max_edge)
+            try:
+                pal = rgba.convert(
+                    "P",
+                    palette=Image.Palette.ADAPTIVE,
+                    colors=max(2, int(colors)),
+                )
+            except Exception:
+                pal = rgba.convert(
+                    "P",
+                    palette=Image.ADAPTIVE,
+                    colors=max(2, int(colors)),
+                )
+            frames.append(pal)
+            durations.append(max(20, duration))
+        if not frames:
+            return None
+        buf = BytesIO()
+        frames[0].save(
+            buf,
+            format="GIF",
+            save_all=True,
+            append_images=frames[1:],
+            duration=durations,
+            loop=int(im.info.get("loop", 0) or 0),
+            optimize=True,
+            disposal=2,
+        )
+        out = buf.getvalue()
+        if not out:
+            return None
+        # Prefer smaller result; if larger, still return compressed for consistency
+        # when caller wants a preview (caller may compare sizes).
+        return out
+    except Exception:
+        return None
+
+
 def _make_thumbnail_bytes(data: bytes) -> Optional[bytes]:
     if not data:
         return None
@@ -203,6 +283,67 @@ def _write_thumbnail(sticker_id: str, source_data: bytes) -> str:
     return thumb_name
 
 
+def _write_preview_gif(sticker_id: str, source_data: bytes) -> str:
+    """Small animated GIF for grid playback (much lighter than full file)."""
+    preview = _compress_animated_gif(
+        source_data,
+        max_edge=STICKER_PREVIEW_MAX_EDGE,
+        colors=STICKER_PREVIEW_COLORS,
+    )
+    if not preview:
+        return ""
+    name = _preview_file_name(sticker_id)
+    path = _safe_sticker_path(name)
+    path.write_bytes(preview)
+    return name
+
+
+def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
+    """
+    Compress stickers for chat size.
+    Returns (bytes, content_type, file_ext).
+    """
+    ext = (ext or "").lower()
+    if ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8"):
+        compressed = _compress_animated_gif(
+            raw,
+            max_edge=STICKER_GIF_MAX_EDGE,
+            colors=STICKER_GIF_COLORS,
+        )
+        if compressed and len(compressed) < len(raw):
+            return compressed, "image/gif", ".gif"
+        return raw, "image/gif", ".gif"
+
+    if len(raw) > 400 * 1024:
+        try:
+            from PIL import Image
+
+            im = Image.open(BytesIO(raw))
+            has_alpha = im.mode in ("RGBA", "LA") or (
+                im.mode == "P" and "transparency" in im.info
+            )
+            if has_alpha:
+                rgba = im.convert("RGBA")
+                rgba = _resize_rgba(rgba, 1280)
+                buf = BytesIO()
+                rgba.save(buf, format="PNG", optimize=True)
+                out = buf.getvalue()
+                if out and len(out) < len(raw):
+                    return out, "image/png", ".png"
+            else:
+                rgb = im.convert("RGB")
+                rgb = _resize_rgba(rgb, 1280)
+                buf = BytesIO()
+                rgb.save(buf, format="JPEG", quality=82, optimize=True)
+                out = buf.getvalue()
+                if out and len(out) < len(raw):
+                    return out, "image/jpeg", ".jpg"
+        except Exception:
+            pass
+    ctype = _CONTENT_BY_EXT.get(ext, "image/png")
+    return raw, ctype, ext if ext in _ALLOWED_EXT else ".png"
+
+
 def _sticker_row(sticker_id: str) -> Optional[dict]:
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48]
     if not sid:
@@ -224,6 +365,7 @@ def _is_gif_row(row: dict) -> bool:
 def _public_item(row: dict) -> dict:
     sid = str(row.get("id") or "").strip()
     thumb = str(row.get("thumbFile") or "").strip()
+    preview = str(row.get("previewFile") or "").strip()
     file_name = str(row.get("file") or "").strip()
     ctype = str(row.get("contentType") or "image/png")
     animated = _is_gif_row(row)
@@ -237,6 +379,14 @@ def _public_item(row: dict) -> dict:
                 bytes_n = full_path.stat().st_size
         except HTTPException:
             pass
+    static_url = f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}"
+    # Grid playback prefers tiny animated preview; fall back to full file.
+    if preview:
+        play_url = f"/pubsticker/{preview}"
+    elif animated:
+        play_url = static_url
+    else:
+        play_url = static_url
     return {
         "id": sid,
         "title": str(row.get("title") or sid).strip() or sid,
@@ -246,7 +396,8 @@ def _public_item(row: dict) -> dict:
         "createdAt": str(row.get("createdAt") or ""),
         "bytes": bytes_n,
         "imageUrl": f"/image/stickers/{sid}",
-        "staticUrl": f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}",
+        "staticUrl": static_url,
+        "previewUrl": play_url if animated else "",
         "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
         "downloadUrl": f"/image/stickers/{sid}?download=1",
     }
@@ -370,7 +521,11 @@ def stickers_admin_delete(sticker_id: str, admin: dict = Depends(_admin_user)):
     row = _sticker_row(sid)
     if not row:
         raise HTTPException(status_code=404, detail="Sticker not found")
-    for fname in {str(row.get("file") or ""), str(row.get("thumbFile") or "")}:
+    for fname in {
+        str(row.get("file") or ""),
+        str(row.get("thumbFile") or ""),
+        str(row.get("previewFile") or ""),
+    }:
         if not fname:
             continue
         try:
@@ -402,7 +557,11 @@ async def stickers_admin_batch_delete(request: Request, admin: dict = Depends(_a
         if not sid or sid not in by_id:
             continue
         row = by_id.pop(sid)
-        for fname in {str(row.get("file") or ""), str(row.get("thumbFile") or "")}:
+        for fname in {
+            str(row.get("file") or ""),
+            str(row.get("thumbFile") or ""),
+            str(row.get("previewFile") or ""),
+        }:
             if not fname:
                 continue
             try:
@@ -442,12 +601,18 @@ async def stickers_admin_upload(
 
     sid = _next_sticker_id(items)
     cat, title = _parse_upload_meta(orig_name, category)
-    file_name = f"{sid}{ext}"
+    raw, ctype, out_ext = _prepare_sticker_bytes(raw, ext)
+    if out_ext not in _ALLOWED_EXT:
+        out_ext = ".gif" if "gif" in ctype else ".png"
+    file_name = f"{sid}{out_ext}"
     full_path = _safe_sticker_path(file_name)
     STICKER_DIR.mkdir(parents=True, exist_ok=True)
     full_path.write_bytes(raw)
 
     thumb_name = _write_thumbnail(sid, raw)
+    preview_name = ""
+    if out_ext == ".gif" or "gif" in ctype:
+        preview_name = _write_preview_gif(sid, raw)
     created = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     row = {
         "id": sid,
@@ -455,7 +620,8 @@ async def stickers_admin_upload(
         "category": cat,
         "file": file_name,
         "thumbFile": thumb_name,
-        "contentType": _guess_content_type(ext, getattr(file, "content_type", "") or ""),
+        "previewFile": preview_name,
+        "contentType": ctype,
         "source": orig_name,
         "createdAt": _format_created_at_cn(created),
     }
