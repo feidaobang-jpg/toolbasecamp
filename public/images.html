@@ -94,6 +94,17 @@
         object-fit: contain; object-position: center; display: block;
         -webkit-touch-callout: default;
       }
+      .img-hub-card--sticker .img-hub-sticker-title {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: normal;
+        min-height: 0;
+        max-height: none;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+      }
       .img-hub-sticker-hint {
         font-size: 0.75rem; color: #94a3b8; margin: 0; line-height: 1.4;
       }
@@ -155,7 +166,7 @@
     <script src="js/base.js?v=minimax1"></script>
     <script src="js/common_ui.js?v=minimax1"></script>
     <script src="js/tb-pager.js?v=page1"></script>
-    <script src="js/image-hub.js?v=bytes1"></script>
+    <script src="js/image-hub.js?v=title1"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }

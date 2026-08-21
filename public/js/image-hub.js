@@ -373,7 +373,9 @@
   function displayStickerTitle(item) {
     var title = String((item && item.title) || '').trim();
     if (!title) return '';
+    // Hash / CDN / Weibo-style file ids — not useful as a display name
     if (/^[a-f0-9]{28,64}$/i.test(title)) return '';
+    if (/^[a-z0-9_-]{20,}$/i.test(title) && !/[\u4e00-\u9fff]/.test(title)) return '';
     return title;
   }
 

@@ -74,8 +74,11 @@
 
   function displayTitle(item) {
     var title = String((item && item.title) || '').trim();
-    if (!title) return item.id || '';
+    if (!title) return item.category || item.id || '';
     if (/^[a-f0-9]{28,64}$/i.test(title)) return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
+    if (/^[a-z0-9_-]{20,}$/i.test(title) && !/[\u4e00-\u9fff]/.test(title)) {
+      return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
+    }
     return title;
   }
 
