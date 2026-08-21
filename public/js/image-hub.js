@@ -230,10 +230,6 @@
       if (item.createdAt) metaParts.push(item.createdAt);
       card.querySelector('.img-hub-meta').textContent = metaParts.join(' · ');
       var actions = card.querySelector('.action-row');
-      var hint = document.createElement('p');
-      hint.className = 'img-hub-sticker-hint';
-      hint.textContent = tr('hub.imagesPage.stickersTapOpen');
-      card.querySelector('.img-hub-body').insertBefore(hint, actions);
       img.style.cursor = 'zoom-in';
       img.addEventListener('click', function () {
         openHubPreview(item, {
@@ -342,7 +338,6 @@
         '<div class="img-hub-body">' +
           '<div class="img-hub-prompt img-hub-sticker-title"></div>' +
           '<div class="img-hub-meta img-hub-sticker-cat" hidden></div>' +
-          '<p class="img-hub-sticker-hint"></p>' +
           '<div class="action-row"></div>' +
         '</div>';
       var img = card.querySelector('.img-hub-sticker-img');
@@ -365,7 +360,6 @@
         catEl.hidden = false;
         catEl.textContent = metaParts.join(' · ');
       }
-      card.querySelector('.img-hub-sticker-hint').textContent = tr('hub.imagesPage.stickersTapOpen');
       var openPreview = function () {
         openHubPreview(item, {
           alt: displayStickerTitle(item) || tr('hub.imagesPage.stickersUntitled'),
