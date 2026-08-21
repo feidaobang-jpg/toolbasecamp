@@ -453,7 +453,11 @@ window.TB_LOCALES.en = {
             creatorLabel: 'Creator',
             sourceT2i: 'Text to Image',
             sourceInstruct: 'Image Edit',
-            untitled: 'No prompt'
+            untitled: 'No prompt',
+            filterAll: 'All',
+            filterStill: 'Still',
+            filterGif: 'GIF',
+            filterEmpty: 'No images match this filter.'
         },
         music: {
             title: 'Music',

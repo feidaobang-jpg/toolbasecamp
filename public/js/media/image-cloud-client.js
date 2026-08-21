@@ -630,9 +630,10 @@
         }
         var fd = new FormData();
         var ctype = blob.type || 'image/png';
-        var ext = ctype.indexOf('jpeg') >= 0 || ctype.indexOf('jpg') >= 0
-            ? '.jpg'
-            : (ctype.indexOf('webp') >= 0 ? '.webp' : '.png');
+        var ext = '.png';
+        if (ctype.indexOf('jpeg') >= 0 || ctype.indexOf('jpg') >= 0) ext = '.jpg';
+        else if (ctype.indexOf('webp') >= 0) ext = '.webp';
+        else if (ctype.indexOf('gif') >= 0) ext = '.gif';
         var name = meta.filename || ('ai-image' + ext);
         fd.append('file', blob, name);
         fd.append('prompt', meta.prompt || '');

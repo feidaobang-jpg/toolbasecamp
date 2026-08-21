@@ -452,7 +452,11 @@ window.TB_LOCALES['zh-CN'] = {
             creatorLabel: '创作者',
             sourceT2i: '文生图',
             sourceInstruct: '图生图',
-            untitled: '无提示词'
+            untitled: '无提示词',
+            filterAll: '全部',
+            filterStill: '静态',
+            filterGif: '动图',
+            filterEmpty: '当前筛选下没有图片。'
         },
         music: {
             title: '音乐选择',

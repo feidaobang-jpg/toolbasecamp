@@ -440,6 +440,8 @@ def _publish_public_image(
         raise HTTPException(status_code=500, detail="Empty image for publish")
     image_id = secrets.token_hex(16)
     ctype = content_type or "image/png"
+    if _is_gif(data, ctype):
+        ctype = "image/gif"
     ext = _tmp_suffix(ctype)
     file_name = f"{image_id}{ext}"
     path = PUBLIC_IMAGE_DIR / file_name
@@ -468,6 +470,8 @@ def _publish_public_image(
         "publicUrl": f"/image/public/{image_id}",
         "publicDownloadUrl": f"/image/public/{image_id}?download=1",
         "publicThumbnailUrl": f"/pubimg/{image_id}_thumb.jpg",
+        "publicStaticUrl": f"/pubimg/{file_name}",
+        "animated": _is_gif(data, ctype),
     }
 
 
@@ -527,12 +531,21 @@ def _conn():
     return router.get_conn()  # type: ignore[attr-defined]
 
 
+def _is_gif(data: Optional[bytes], ctype: str = "") -> bool:
+    low = (ctype or "").lower()
+    if "gif" in low:
+        return True
+    return bool(data and len(data) >= 4 and data[:4] == b"GIF8")
+
+
 def _tmp_suffix(ctype: str) -> str:
     low = (ctype or "").lower()
     if "jpeg" in low or "jpg" in low:
         return ".jpg"
     if "webp" in low:
         return ".webp"
+    if "gif" in low:
+        return ".gif"
     return ".png"
 
 
@@ -565,6 +578,9 @@ def _compress_for_mobile(data: bytes, ctype: str) -> tuple[bytes, str]:
 
 def _compress_for_public(data: bytes, ctype: str) -> tuple[bytes, str]:
     """Aggressive JPEG shrink for public gallery (Wan PNG can be 10MB+)."""
+    # Never flatten animated GIFs into a still JPEG.
+    if _is_gif(data, ctype):
+        return data, "image/gif"
     try:
         from io import BytesIO
 
@@ -657,18 +673,29 @@ def image_public_list(
             continue
         creator = _creator_public(row)
         prompt = (row.get("prompt") or "").strip()
+        ctype = row.get("content_type") or "image/png"
+        animated = _is_gif(None, str(ctype)) or file_name.lower().endswith(".gif")
+        if not animated:
+            try:
+                animated = _is_gif(path.read_bytes()[:6], "")
+            except Exception:
+                animated = False
+        if animated and "gif" not in str(ctype).lower():
+            ctype = "image/gif"
         items.append(
             {
                 "id": iid,
                 "prompt": prompt[:400],
                 "model": row.get("model") or "",
                 "source": row.get("source") or "",
-                "contentType": row.get("content_type") or "image/png",
+                "contentType": ctype,
+                "animated": bool(animated),
                 "createdAt": _format_created_at_cn(row.get("created_at")),
                 "creatorNickname": creator["creatorNickname"],
                 "creatorPhone": creator["creatorPhone"],
                 "bytes": path.stat().st_size,
                 "imageUrl": f"/image/public/{iid}",
+                "staticUrl": f"/pubimg/{file_name}",
                 "thumbnailUrl": f"/pubimg/{iid}_thumb.jpg",
                 "downloadUrl": f"/image/public/{iid}?download=1",
             }
@@ -704,11 +731,13 @@ async def image_public_publish(
         raise HTTPException(status_code=400, detail="Please upload an image file")
     if not ctype.startswith("image/"):
         ctype = "image/png"
+    if _is_gif(raw, ctype):
+        ctype = "image/gif"
     src = (source or "").strip() or "manual"
     if src not in ("text_to_image", "instruct_edit", "manual"):
         src = "manual"
-    # Always shrink large AI PNGs for the public gallery.
-    if len(raw) > 1024 * 1024:
+    # Shrink large AI PNGs for the public gallery; keep GIFs intact so they stay animated.
+    if len(raw) > 1024 * 1024 and not _is_gif(raw, ctype):
         raw, ctype = _compress_for_public(raw, ctype)
     if len(raw) > MAX_UPLOAD:
         raise HTTPException(status_code=400, detail="Image is too large (max 8MB)")
