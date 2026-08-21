@@ -39,6 +39,7 @@ STRATEGY_FIT_MIN = {
     "short_term": (52.0, 46.0),
     "tail_buy": (42.0, 38.0),
     "tail_buy_relaxed": (36.0, 32.0),
+    "strong_momentum": (48.0, 44.0),
     "volume_breakout": (50.0, 44.0),
     "monster_stock": (52.0, 46.0),
     "steady_low_watch": (12.0, 12.0),
@@ -353,54 +354,57 @@ def _count_consecutive_up_days(closes: List[float]) -> int:
             break
     return streak
 
-def _tail_buy_fit_score_v2(
+def _strong_momentum_fit_score(
     last_close, ma5, ma10, ma20, ret_3d, ret_5d, pct, vr,
-    near_high_ratio, prior_up_days, amount,
+    near_high_ratio, prior_up_days, amount, close_vs_high,
 ) -> float:
-    """尾盘低吸评分：偏弱承接、贴近支撑，不追当日强势。"""
+    """强势弹性评分：当日确认偏强、放量、收盘贴近日高，偏隔夜溢价。"""
     s = 0.0
-    # 当日涨跌：平盘/小绿/微红更好，大涨降权
-    s += _fit_in_range(pct, -1.2, 0.8, pad=0.8) * 22.0
-    # 量比温和，排除对倒/砸盘极端
-    s += _fit_in_range(vr, 0.7, 1.8, pad=0.6) * 14.0
-    if ma20 and ma20 > 0:
-        gap20 = (last_close - ma20) / ma20
-        if -0.02 <= gap20 <= 0.03:
-            s += 20.0
-        elif -0.04 <= gap20 < -0.02:
+    # 当日涨幅：要强，但留次日空间（避开贴板）
+    s += _fit_in_range(pct, 2.5, 6.8, pad=1.0) * 26.0
+    # 量比确认
+    s += _fit_in_range(vr, 1.3, 3.2, pad=0.8) * 16.0
+    # 尾盘仍靠近日内高点
+    if close_vs_high is not None:
+        if close_vs_high >= 0.985:
+            s += 16.0
+        elif close_vs_high >= 0.97:
             s += 12.0
-        elif 0.03 < gap20 <= 0.05:
-            s += 8.0
-    if ma5 and ma20 and last_close >= ma20 and last_close <= ma5 * 1.015:
-        s += 10.0
-    if ma5 and ma10 and ma5 >= ma10 * 0.99:
+        elif close_vs_high >= 0.955:
+            s += 6.0
+    if ma5 and ma10 and last_close >= ma5 * 0.998 and ma5 >= ma10 * 0.995:
+        s += 12.0
+    elif ma5 and last_close >= ma5:
+        s += 6.0
+    if ma20 and last_close >= ma20:
         s += 6.0
     if ret_5d is not None:
-        if -6.0 <= ret_5d <= 1.5:
+        if 2.0 <= ret_5d <= 14.0:
             s += 12.0
-        elif -8.0 <= ret_5d < -6.0:
+        elif 0.5 <= ret_5d < 2.0 or 14.0 < ret_5d <= 20.0:
             s += 6.0
-    if ret_3d is not None and -4.0 <= ret_3d <= 1.0:
+    if ret_3d is not None and ret_3d >= 0.5:
         s += 8.0
     if near_high_ratio is not None:
-        if near_high_ratio <= 0.82:
-            s += 12.0
-        elif near_high_ratio <= 0.88:
-            s += 7.0
-        elif near_high_ratio <= 0.92:
-            s += 2.0
-    if prior_up_days is not None and prior_up_days <= 1:
+        if 0.78 <= near_high_ratio <= 0.98:
+            s += 10.0
+        elif near_high_ratio >= 0.70:
+            s += 5.0
+    if prior_up_days is not None and 1 <= prior_up_days <= 3:
         s += 8.0
-    if amount is not None and amount >= 2e8:
-        s += 6.0
-    elif amount is not None and amount >= 1.2e8:
-        s += 3.0
+    elif prior_up_days == 0:
+        s += 4.0
+    if amount is not None and amount >= 3e8:
+        s += 8.0
+    elif amount is not None and amount >= 1.5e8:
+        s += 4.0
     return s
 
-def _tail_buy_eval_row_v2(row, is_trade_time: bool):
+
+def _strong_momentum_eval_row(row, is_trade_time: bool):
     """
-    新尾盘路线：尾盘低吸承接。
-    与旧版「当日温和上涨+贴近MA5隔夜博弈」相反，改为今日偏弱/平盘、靠近均线支撑、未靠近阶段高点。
+    强势弹性（隔夜）：当日温和偏强~较强、放量、收盘贴近日高，短均线多头。
+    尾盘确认后买入，博弈次日早盘溢价；不追已接近涨停板的标的。
     """
     code = str(row.get("代码") or "").strip()
     name = str(row.get("名称") or "").strip()
@@ -417,7 +421,7 @@ def _tail_buy_eval_row_v2(row, is_trade_time: bool):
     highs = [_safe_float(x[3]) for x in ohlc if isinstance(x, list) and len(x) >= 4]
     closes = [c for c in closes if c is not None]
     highs = [h for h in highs if h is not None]
-    if len(closes) < 30:
+    if len(closes) < 30 or not highs:
         return None
 
     ma5 = _calc_ma_list(closes, 5)
@@ -427,6 +431,7 @@ def _tail_buy_eval_row_v2(row, is_trade_time: bool):
         return None
 
     last_close = closes[-1]
+    day_high = highs[-1]
     pct = _safe_float(row.get("__pct"))
     turn = _safe_float(row.get("__turn"))
     vr = _effective_vr(_safe_float(row.get("__vr")), is_trade_time)
@@ -436,38 +441,44 @@ def _tail_buy_eval_row_v2(row, is_trade_time: bool):
     ret_5d = _calc_ret_pct_list(closes, 5)
     ret_20d = _calc_ret_pct_list(closes, 20)
 
-    # 不追涨：今日小跌~微涨
-    if pct is None or pct < -2.0 or pct > 1.5:
+    # 要强：避开弱势与贴板
+    if pct is None or pct < 2.0 or pct > 7.5:
         return None
-    if vr is not None and (vr < 0.55 or vr > 2.2):
+    if vr is not None and (vr < 1.15 or vr > 4.5):
         return None
-    # 贴近 MA20 支撑，不远离上沿乱追
-    if last_close < ma20 * 0.96 or last_close > ma20 * 1.05:
+    if turn is not None and (turn < 0.35 or turn > 18.0):
         return None
-    if last_close > ma5 * 1.03:
+    if last_close < ma5 * 0.997:
         return None
-    if ret_5d is not None and (ret_5d < -8.0 or ret_5d > 3.0):
+    if ma5 < ma10 * 0.99:
         return None
-    if ret_3d is not None and (ret_3d < -5.0 or ret_3d > 2.5):
+    if ret_5d is not None and (ret_5d < 0.5 or ret_5d > 22.0):
         return None
-    if ret_20d is not None and ret_20d > 18.0:
+    if ret_3d is not None and ret_3d < -1.0:
+        return None
+    if ret_20d is not None and ret_20d > 45.0:
+        return None
+
+    close_vs_high = (last_close / day_high) if day_high and day_high > 0 else None
+    if close_vs_high is None or close_vs_high < 0.955:
         return None
 
     prior_up_days = _count_consecutive_up_days(closes[:-1])
-    if prior_up_days > 1:
+    if prior_up_days > 4:
         return None
 
     win_highs = highs[-60:] if len(highs) >= 60 else highs
     recent_high = max(win_highs) if win_highs else None
     near_high_ratio = (last_close / recent_high) if recent_high and recent_high > 0 else None
-    if near_high_ratio is not None and near_high_ratio > 0.90:
+    # 过弱位置（远离阶段高点太多）更像反弹赌运气，强势弹性要有趋势身位
+    if near_high_ratio is not None and near_high_ratio < 0.62:
         return None
 
-    fit = _tail_buy_fit_score_v2(
+    fit = _strong_momentum_fit_score(
         last_close, ma5, ma10, ma20, ret_3d, ret_5d, pct, vr,
-        near_high_ratio, prior_up_days, amt,
+        near_high_ratio, prior_up_days, amt, close_vs_high,
     )
-    if fit < _strategy_fit_min("tail_buy", is_trade_time):
+    if fit < _strategy_fit_min("strong_momentum", is_trade_time):
         return None
     return {
         "symbol": code,
@@ -485,9 +496,11 @@ def _tail_buy_eval_row_v2(row, is_trade_time: bool):
         "ret_5d": ret_5d,
         "ret_20d": ret_20d,
         "near_high_ratio": round(near_high_ratio * 100.0, 2) if near_high_ratio is not None else None,
+        "close_vs_high": round(close_vs_high * 100.0, 2) if close_vs_high is not None else None,
         "prior_up_days": prior_up_days,
-        "match_tier": "v2_dip",
+        "match_tier": "strong_momentum",
     }
+
 
 def _apply_sorted_picks(
     candidates: List[dict],
@@ -1166,23 +1179,23 @@ def _is_tail_buy_live_window() -> bool:
 @router.get("/recommend-tail-buy")
 def stocks_recommend_tail_buy(only_basic: int = 1, _admin: dict = Depends(_admin_user)):
     """
-    尾盘低吸 v2：不追当日强势，改在大盘尚可时低吸贴近均线支撑的大盘成分股。
-    任意时段可预览；正式下单建议 14:50~14:59 再点一次确认。
+    强势弹性（隔夜）：当日确认偏强+放量+收盘贴高，尾盘买入博弈次日早盘溢价。
+    路径名保留 recommend-tail-buy 以兼容旧前端；策略字段为 strong_momentum。
     """
     _ = _admin
-    return _with_empty_result_retry(_compute_tail_buy, bool(int(only_basic or 0)))
+    return _with_empty_result_retry(_compute_strong_momentum, bool(int(only_basic or 0)))
 
 def _bg_update_tail_buy():
     try:
-        _compute_tail_buy(only_basic=True)
+        _compute_strong_momentum(only_basic=True)
     except Exception as e:
-        print(f"[BG] 尾盘买入更新失败: {e}")
+        print(f"[BG] 强势弹性更新失败: {e}")
         import traceback
         traceback.print_exc()
     finally:
         _TAIL_BUY_CACHE["updating"] = False
 
-def _compute_tail_buy(only_basic: bool = True):
+def _compute_strong_momentum(only_basic: bool = True):
     generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     market = _assess_hs300_market()
     in_live_window = _is_tail_buy_live_window()
@@ -1192,12 +1205,12 @@ def _compute_tail_buy(only_basic: bool = True):
         return {
             "success": False,
             "generated_at": generated_at,
-            "strategy": "tail_buy",
+            "strategy": "strong_momentum",
             "items": [],
             "no_retry": True,
             "in_live_window": in_live_window,
             "market_regime": market,
-            "message": market.get("message") or "大盘偏弱，暂不推荐尾盘低吸",
+            "message": market.get("message") or "大盘偏弱，暂不推荐强势弹性隔夜",
         }
 
     idx_codes = _get_hs300_zz500_universe()
@@ -1209,7 +1222,7 @@ def _compute_tail_buy(only_basic: bool = True):
         return {
             "success": False,
             "generated_at": generated_at,
-            "strategy": "tail_buy",
+            "strategy": "strong_momentum",
             "items": [],
             "in_live_window": in_live_window,
             "market_regime": market,
@@ -1222,7 +1235,7 @@ def _compute_tail_buy(only_basic: bool = True):
         return {
             "success": False,
             "generated_at": generated_at,
-            "strategy": "tail_buy",
+            "strategy": "strong_momentum",
             "items": [],
             "in_live_window": in_live_window,
             "market_regime": market,
@@ -1236,7 +1249,6 @@ def _compute_tail_buy(only_basic: bool = True):
     df["__amount"] = df["成交额"].map(_safe_float)
     df = df.dropna(subset=["__price"])
 
-    # 尾盘策略强制主板 + 非 ST
     try:
         df = df[df["代码"].map(_is_tradable_stock)]
     except Exception:
@@ -1257,47 +1269,46 @@ def _compute_tail_buy(only_basic: bool = True):
 
     is_trade_time = _is_a_share_trade_time()
     caution = market.get("regime") == "caution"
-    min_amount = 1.0e8 if use_index else 1.6e8
+    min_amount = 1.2e8 if use_index else 1.8e8
 
-    # 初筛：今日偏弱/平盘，不追涨
+    # 初筛：当日偏强（非贴板），放量
     if is_trade_time:
         df_scan = df[
             (df["__amount"].fillna(0) >= min_amount) &
             (df["__price"].fillna(0) >= 3.0) &
-            (df["__pct"].fillna(0) >= -2.0) &
-            (df["__pct"].fillna(0) <= 1.5) &
-            (df["__vr"].fillna(0) >= 0.55) &
-            (df["__vr"].fillna(0) <= 2.2) &
-            (df["__turn"].fillna(0) >= 0.1) &
-            (df["__turn"].fillna(0) <= 5.0)
+            (df["__pct"].fillna(0) >= 2.0) &
+            (df["__pct"].fillna(0) <= 7.5) &
+            (df["__vr"].fillna(0) >= 1.1) &
+            (df["__vr"].fillna(0) <= 4.8) &
+            (df["__turn"].fillna(0) >= 0.35) &
+            (df["__turn"].fillna(0) <= 18.0)
         ]
     else:
         df_scan = df[
             (df["__amount"].fillna(0) >= min_amount) &
             (df["__price"].fillna(0) >= 3.0) &
-            (df["__pct"].fillna(0) >= -2.0) &
-            (df["__pct"].fillna(0) <= 1.5) &
-            (df["__turn"].fillna(0) >= 0.1) &
-            (df["__turn"].fillna(0) <= 5.0)
+            (df["__pct"].fillna(0) >= 2.0) &
+            (df["__pct"].fillna(0) <= 7.5) &
+            (df["__turn"].fillna(0) >= 0.35) &
+            (df["__turn"].fillna(0) <= 18.0)
         ]
-    df_scan = df_scan.sort_values("__amount", ascending=False).head(80)
+    df_scan = df_scan.sort_values("__pct", ascending=False).head(90)
     scan_rows = [row for _, row in df_scan.iterrows()]
 
     candidates = _parallel_row_scan(
         scan_rows,
-        lambda row: _tail_buy_eval_row_v2(row, is_trade_time),
+        lambda row: _strong_momentum_eval_row(row, is_trade_time),
         max_workers=8,
     )
-    fit_min = _strategy_fit_min("tail_buy", is_trade_time)
+    fit_min = _strategy_fit_min("strong_momentum", is_trade_time)
     if caution:
         fit_min = float(fit_min) + 3.0
-    # 严格阈值，不放宽；多取一些再做负面公告过滤，最终最多 STOCK_PICK_MAX 条
     top = _apply_sorted_picks(
         candidates,
         only_basic=True,
         min_score=fit_min,
         is_trade_time=is_trade_time,
-        strategy="tail_buy",
+        strategy="strong_momentum",
         max_results=0,
     )
 
@@ -1317,6 +1328,7 @@ def _compute_tail_buy(only_basic: bool = True):
             "ret_5d": r["ret_5d"],
             "ret_20d": r.get("ret_20d"),
             "near_high_60d_pct": r.get("near_high_ratio"),
+            "close_vs_high_pct": r.get("close_vs_high"),
         }
         items.append(_attach_market_fields({
             "symbol": r["symbol"],
@@ -1324,15 +1336,15 @@ def _compute_tail_buy(only_basic: bool = True):
             "match_score": _round_match_score(r.get("score")),
             "metrics": metrics,
             "reason": _reason_text(metrics),
-            "buy_time_suggest": f"{buy_date} 14:50~14:59（尾盘低吸，确认分时未破位）",
-            "sell_time_suggest": f"{sell_date} 09:30~10:00（冲高优先了结，破位随时走）",
+            "buy_time_suggest": f"{buy_date} 14:50~14:59（确认分时仍强、未大幅回落）",
+            "sell_time_suggest": f"{sell_date} 09:30~10:00（冲高优先了结，走弱随时走）",
             "hold_days_suggest": "隔夜为主（最多观察至次日上午）",
             "summary": (
-                f"尾盘低吸 v2：{pool_note}；不追当日强势，偏好贴近 MA20 支撑、阶段不高位的承接票。"
-                f"建议 {buy_date} 尾盘买、{sell_date} 早盘卖。隔夜博弈，不保证次日上涨。"
+                f"强势弹性：{pool_note}；偏好当日涨约 2%~7.5%、放量、收盘贴近日高、短均线多头的标的。"
+                f"建议 {buy_date} 尾盘买、{sell_date} 早盘卖。搏次日溢价，波动更大，不保证上涨。"
             ),
             "prior_up_days": r.get("prior_up_days"),
-            "match_tier": "v2_dip",
+            "match_tier": "strong_momentum",
             "universe_note": pool_note,
         }))
         if len(items) >= STOCK_PICK_MAX:
@@ -1345,9 +1357,9 @@ def _compute_tail_buy(only_basic: bool = True):
         else "【预览模式】非 14:50~14:59，数据非尾盘实时；正式下单请到点再点一次确认。"
     )
     if items:
-        msg_core = f"共 {len(items)} 只（尾盘低吸 v2，隔夜博弈，最多 {STOCK_PICK_MAX} 条）"
+        msg_core = f"共 {len(items)} 只（强势弹性隔夜，最多 {STOCK_PICK_MAX} 条）"
     else:
-        msg_core = "当前暂无符合尾盘低吸条件的标的"
+        msg_core = "当前暂无符合强势弹性条件的标的"
     msg_parts = [window_note, f"【{pool_note}】", msg_core]
     if market_msg:
         msg_parts.append(market_msg)
@@ -1355,7 +1367,7 @@ def _compute_tail_buy(only_basic: bool = True):
     return {
         "success": True if items else False,
         "generated_at": generated_at,
-        "strategy": "tail_buy",
+        "strategy": "strong_momentum",
         "items": items,
         "no_retry": True,
         "is_trade_time": is_trade_time,

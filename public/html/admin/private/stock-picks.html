@@ -48,7 +48,7 @@
 
       <div class="tab-nav">
         <button type="button" class="tab-btn active" data-tab="monthly-recovery">月K启动<span class="tab-tag">长线</span></button>
-        <button type="button" class="tab-btn" data-tab="tail-buy">尾盘低吸<span class="tab-tag">隔夜</span></button>
+        <button type="button" class="tab-btn" data-tab="tail-buy">强势弹性<span class="tab-tag">隔夜</span></button>
       </div>
 
       <div class="tab-panel active" id="panel-monthly-recovery">
@@ -68,10 +68,10 @@
       <div class="tab-panel" id="panel-tail-buy">
         <div class="stock-container">
           <div class="strategy-desc">
-            <b>尾盘低吸（v2 新路线）</b>：已弃用旧版「追当日温和上涨、赌次日高开」。新逻辑是在大盘尚可时，于成分股中找<strong>今日偏弱/平盘、贴近 MA20 支撑、未靠近阶段高点、未连涨</strong>的承接标的；强制主板并过滤严重负面公告。<b>建议时点</b>：买入 <b>当日 14:50~14:59</b>；卖出 <b>次日 9:30~10:00</b>。非尾盘时段也可预览，正式下单请到点再确认。<b>隔夜博弈，不保证次日上涨。</b>
+            <b>强势弹性（隔夜）</b>：已改为搏强势，不再做低吸承接。在大盘尚可时，于成分股中找<strong>当日涨约 2%~7.5%、放量、收盘贴近日高、短均线多头</strong>的标的（避开已接近涨停）；强制主板并过滤严重负面公告。<b>建议时点</b>：买入 <b>当日 14:50~14:59</b>；卖出 <b>次日 9:30~10:00</b>。非尾盘时段也可预览，正式下单请到点再确认。<b>波动更大，不保证次日上涨；冲高优先了结。</b>
           </div>
           <div class="toolbar">
-            <button type="button" id="btnTailBuy" class="tb-btn">推荐尾盘低吸</button>
+            <button type="button" id="btnTailBuy" class="tb-btn">推荐强势弹性</button>
             <div id="statusTailBuy" class="status"></div>
           </div>
           <div class="picked-summary" id="pickedListTailBuy" aria-label="已选股票列表"></div>
@@ -81,6 +81,6 @@
     </div>
   </main>
 
-  <script src="../../../js/admin/stock-picks.js?v=minimax1"></script>
+  <script src="../../../js/admin/stock-picks.js?v=momentum1"></script>
 </body>
 </html>

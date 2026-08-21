@@ -1,5 +1,5 @@
 /**
- * Admin-only stock pick strategies (monthly recovery + tail buy).
+ * Admin-only stock pick strategies (monthly recovery + strong momentum overnight).
  */
 (function () {
   function apiBase() {
@@ -212,13 +212,16 @@
     card.className = 'stock-card';
     if (item.account_restricted) card.classList.add('stock-card-restricted');
     var metrics = item.metrics || {};
-    var head = renderBaseHeader(item, idx, '尾盘低吸', 'metrics-tb');
+    var head = renderBaseHeader(item, idx, '强势弹性', 'metrics-tb');
     card.innerHTML = head.html;
     var metricsEl = card.querySelector('#' + head.metricsId);
     metricsEl.appendChild(createMetric('最新价', fmt(metrics.last_price)));
     metricsEl.appendChild(createMetric('涨跌幅(%)', fmt(metrics.pct_change), pctClass(metrics.pct_change)));
     metricsEl.appendChild(createMetric('量比', fmt(metrics.volume_ratio)));
     metricsEl.appendChild(createMetric('近5日(%)', fmt(metrics.ret_5d), pctClass(metrics.ret_5d)));
+    if (metrics.close_vs_high_pct != null) {
+      metricsEl.appendChild(createMetric('收盘/日高(%)', fmt(metrics.close_vs_high_pct)));
+    }
     if (metrics.near_high_60d_pct != null) {
       metricsEl.appendChild(createMetric('距60日高(%)', fmt(metrics.near_high_60d_pct)));
     }

@@ -17,10 +17,10 @@ Server module: `server/ladder.py` (needs `requests`, `beautifulsoup4`).
 
 ## Stock picks
 
-- Page: `stock-picks.html` — 月K启动 / 尾盘低吸
+- Page: `stock-picks.html` — 月K启动 / 强势弹性（隔夜）
 - API (admin JWT required):
   - `GET /api/stocks/recommend-monthly-recovery`
-  - `GET /api/stocks/recommend-tail-buy`
+  - `GET /api/stocks/recommend-tail-buy`（强势弹性；strategy=`strong_momentum`）
 
 Server module: `server/stocks.py` (needs `requests`, `pandas` on the API host).
 

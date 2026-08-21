@@ -221,7 +221,7 @@ window.TB_LOCALES.en = {
         },
         stock: {
             picksTitle: 'Stock picks',
-            picksDesc: 'Monthly K start (long-term) and late-session low buy (overnight)'
+            picksDesc: 'Monthly K start (long-term) and strong-momentum overnight'
         }
     },
     coolSites: {

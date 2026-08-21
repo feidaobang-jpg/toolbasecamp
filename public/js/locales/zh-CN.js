@@ -220,7 +220,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         stock: {
             picksTitle: '选股策略',
-            picksDesc: '月K启动（长线）与尾盘低吸（隔夜）'
+            picksDesc: '月K启动（长线）与强势弹性（隔夜）'
         }
     },
     coolSites: {
