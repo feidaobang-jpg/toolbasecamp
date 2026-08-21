@@ -216,12 +216,22 @@ def _sticker_row(sticker_id: str) -> Optional[dict]:
 def _public_item(row: dict) -> dict:
     sid = str(row.get("id") or "").strip()
     thumb = str(row.get("thumbFile") or "").strip()
+    file_name = str(row.get("file") or "").strip()
+    bytes_n = 0
+    if file_name:
+        try:
+            full_path = _safe_sticker_path(file_name)
+            if full_path.is_file():
+                bytes_n = full_path.stat().st_size
+        except HTTPException:
+            pass
     return {
         "id": sid,
         "title": str(row.get("title") or sid).strip() or sid,
         "category": str(row.get("category") or "").strip(),
         "contentType": str(row.get("contentType") or "image/png"),
         "createdAt": str(row.get("createdAt") or ""),
+        "bytes": bytes_n,
         "imageUrl": f"/image/stickers/{sid}",
         "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
         "downloadUrl": f"/image/stickers/{sid}?download=1",

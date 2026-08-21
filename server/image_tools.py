@@ -651,6 +651,7 @@ def image_public_list(
                 "createdAt": _format_created_at_cn(row.get("created_at")),
                 "creatorNickname": creator["creatorNickname"],
                 "creatorPhone": creator["creatorPhone"],
+                "bytes": path.stat().st_size,
                 "imageUrl": f"/image/public/{iid}",
                 "thumbnailUrl": f"/pubimg/{iid}_thumb.jpg",
                 "downloadUrl": f"/image/public/{iid}?download=1",

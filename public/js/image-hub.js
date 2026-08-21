@@ -64,6 +64,14 @@
     return source || '';
   }
 
+  function fmtBytes(n) {
+    n = Number(n) || 0;
+    if (n <= 0) return '';
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
   function downloadAiItem(item) {
     var id = item.id;
     var name = 'ai-image-' + id + '.png';
@@ -217,6 +225,8 @@
       var srcLab = sourceLabel(item.source);
       if (srcLab) metaParts.push(srcLab);
       if (item.model) metaParts.push(item.model);
+      var sizeLab = fmtBytes(item.bytes);
+      if (sizeLab) metaParts.push(sizeLab);
       if (item.createdAt) metaParts.push(item.createdAt);
       card.querySelector('.img-hub-meta').textContent = metaParts.join(' · ');
       var actions = card.querySelector('.action-row');
@@ -336,9 +346,13 @@
         titleEl.style.display = 'none';
       }
       var catEl = card.querySelector('.img-hub-sticker-cat');
-      if (item.category) {
+      var metaParts = [];
+      if (item.category) metaParts.push(item.category);
+      var sizeLab = fmtBytes(item.bytes);
+      if (sizeLab) metaParts.push(sizeLab);
+      if (metaParts.length) {
         catEl.hidden = false;
-        catEl.textContent = item.category;
+        catEl.textContent = metaParts.join(' · ');
       }
       card.querySelector('.img-hub-sticker-hint').textContent = tr('hub.imagesPage.stickersTapOpen');
       var openPreview = function () { openStickerPreview(item); };
