@@ -277,6 +277,8 @@
     if (mid === 'wan2.7-image') return tr('tools.textToImage.modelWan27');
     if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     if (mid === 'z-image-turbo') return tr('tools.textToImage.modelZTurbo');
+    if (mid === 'gpt-image-2') return tr('tools.textToImage.modelGptImage2');
+    if (mid === 'gemini-1-pro-image-preview') return tr('tools.textToImage.modelNanoBananaPro');
     return mid || tr('tools.textToImage.modelZTurbo');
   }
 

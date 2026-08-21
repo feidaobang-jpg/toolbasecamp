@@ -44,6 +44,11 @@ from minimax_image import (
     is_minimax_model,
     minimax_configured,
 )
+from lk888_image import (
+    generate_lk888_text_to_image,
+    is_lk888_model,
+    lk888_configured,
+)
 from ai_wallet import (
     require_can_afford,
     require_positive_balance,
@@ -111,6 +116,7 @@ INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.
 IMAGE_DEBUG = os.environ.get("IMAGE_DEBUG", "1").strip().lower() not in ("0", "false", "no", "off")
 
 # Text-to-image models — price ascending; MiniMax Image-01 = default.
+# priceCny = vendor list (× AI_PRICE_MARKUP for users). lk888 mid-tier ~0.06–0.24.
 TEXT_TO_IMAGE_MODELS = (
     {
         "id": "image-01",
@@ -127,6 +133,16 @@ TEXT_TO_IMAGE_MODELS = (
         "id": "z-image-turbo",
         "priceCny": 0.04,
         "labelKey": "tools.textToImage.modelZTurbo",
+    },
+    {
+        "id": "gpt-image-2",
+        "priceCny": 0.12,
+        "labelKey": "tools.textToImage.modelGptImage2",
+    },
+    {
+        "id": "gemini-1-pro-image-preview",
+        "priceCny": 0.12,
+        "labelKey": "tools.textToImage.modelNanoBananaPro",
     },
     {
         "id": "wan2.7-image",
@@ -993,7 +1009,7 @@ def image_status(user: dict = Depends(_user)):
                 {"id": "expand_edges", "labelKey": "tools.instructEdit.presetExpandEdges"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
-            "textToImageConfigured": dashscope_image_edit_configured(),
+            "textToImageConfigured": text_to_image_configured(),
             "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": True,
             "aiWallet": wallet,
@@ -1046,7 +1062,7 @@ def image_status(user: dict = Depends(_user)):
                 {"id": "expand_edges", "labelKey": "tools.instructEdit.presetExpandEdges"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
-            "textToImageConfigured": dashscope_image_edit_configured(),
+            "textToImageConfigured": text_to_image_configured(),
             "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": False,
             "aiWallet": wallet,
@@ -1318,6 +1334,14 @@ def instruct_edit_configured() -> bool:
     return dashscope_image_edit_configured() or volc_ark_configured()
 
 
+def text_to_image_configured() -> bool:
+    return (
+        dashscope_image_edit_configured()
+        or minimax_configured()
+        or lk888_configured()
+    )
+
+
 def _model_provider_ready(model_id: str) -> None:
     """Raise 503 if the backend for this model id is not configured."""
     if is_minimax_model(model_id):
@@ -1325,6 +1349,13 @@ def _model_provider_ready(model_id: str) -> None:
             raise HTTPException(
                 status_code=503,
                 detail="MiniMax is not configured (MINIMAX_API_KEY).",
+            )
+        return
+    if is_lk888_model(model_id):
+        if not lk888_configured():
+            raise HTTPException(
+                status_code=503,
+                detail="逍遥 AI is not configured (LK888_API_KEY).",
             )
         return
     if is_seedream_model(model_id):
@@ -1772,9 +1803,11 @@ async def api_text_to_image(
         raise HTTPException(status_code=400, detail="Please enter a prompt.")
     is_public = _parse_bool(public, default=False)
     model_ids = _resolve_t2i_models(model, models)
-    # Per-model provider check (deferred to _one; fail early for non-minimax if dashscope missing)
-    non_minimax = [m for m in model_ids if not is_minimax_model(m)]
-    if non_minimax and not dashscope_image_edit_configured():
+    # Per-model provider check (deferred to _one; fail early for DashScope-only models)
+    need_dashscope = [
+        m for m in model_ids if not is_minimax_model(m) and not is_lk888_model(m)
+    ]
+    if need_dashscope and not dashscope_image_edit_configured():
         raise HTTPException(
             status_code=503,
             detail="DashScope is not configured (DASHSCOPE_API_KEY).",
@@ -1809,9 +1842,18 @@ async def api_text_to_image(
     async def _one(mid: str) -> dict:
         if is_minimax_model(mid):
             _model_provider_ready(mid)
-            out, ctype = await generate_minimax_text_to_image(text, model=mid, size_preset=size_preset)
+            out, ctype = await generate_minimax_text_to_image(
+                text, model=mid, size_preset=size_preset
+            )
+        elif is_lk888_model(mid):
+            _model_provider_ready(mid)
+            out, ctype = await generate_lk888_text_to_image(
+                text, model=mid, size_preset=size_preset
+            )
         else:
-            out, ctype = await generate_image_from_text(text, model=mid, size_preset=size_preset)
+            out, ctype = await generate_image_from_text(
+                text, model=mid, size_preset=size_preset
+            )
         return {
             "model": mid,
             "priceCny": _t2i_price_for(mid),
