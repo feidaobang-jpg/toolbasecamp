@@ -125,18 +125,16 @@
       row.className = 'ladder-row';
       var title = item.title || item.id;
       var artist = (item.artist || '').trim();
-      var sub = [
-        item.id,
-        artist,
+      var meta = [
         fmtDuration(item.duration),
         fmtBytes(item.previewBytes) + ' / ' + fmtBytes(item.fullBytes),
-        item.hasLyrics ? tr('privateHub.ops.tradMusicHasLyrics') : tr('privateHub.ops.tradMusicNoLyrics'),
         item.createdAt || ''
       ].filter(Boolean).join(' · ');
       row.innerHTML =
         '<div class="ladder-row-main">' +
           '<div class="ladder-row-title">' + escapeHtml(title) + '</div>' +
-          '<div class="ladder-row-sub">' + escapeHtml(sub) + '</div>' +
+          '<div class="ladder-row-sub">' + escapeHtml(artist || tr('privateHub.ops.tradMusicNoArtist')) + '</div>' +
+          (meta ? ('<div class="ladder-row-sub">' + escapeHtml(meta) + '</div>') : '') +
           (item.source ? ('<div class="ladder-row-sub">' + escapeHtml(tr('privateHub.ops.tradMusicSource') + ': ' + item.source) + '</div>') : '') +
         '</div>' +
         '<div class="action-row ladder-row-actions">' +
@@ -278,16 +276,8 @@
     if (!item || !item.id) return;
     var artist = window.prompt(tr('privateHub.ops.tradMusicEditArtist'), item.artist || '');
     if (artist === null) return;
-    var title = window.prompt(tr('privateHub.ops.tradMusicEditTitle'), item.title || '');
-    if (title === null) return;
-    title = String(title || '').trim();
-    if (!title) {
-      alert(tr('privateHub.ops.tradMusicEditTitleRequired'));
-      return;
-    }
     var fd = new FormData();
     fd.append('artist', String(artist || '').trim());
-    fd.append('title', title);
     fetch(apiBase() + '/music/traditional/admin/' + encodeURIComponent(item.id) + '/meta', {
       method: 'POST',
       headers: authHeaders(),

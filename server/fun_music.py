@@ -1488,9 +1488,9 @@ async def music_traditional_update_meta(
         raise HTTPException(status_code=404, detail="Music not found")
     new_title = (title or "").strip()
     new_artist = (artist or "").strip()
-    if not new_title:
-        raise HTTPException(status_code=400, detail="Title required")
-    row["title"] = new_title[:200]
+    # Title optional: admin “改歌手” only sends artist.
+    if new_title:
+        row["title"] = new_title[:200]
     row["artist"] = new_artist[:120]
     _save_traditional_manifest(items)
     return {"success": True, "item": _traditional_admin_item(row)}
