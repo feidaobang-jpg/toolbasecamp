@@ -628,8 +628,7 @@
           card.querySelector('.music-track-creator').hidden = false;
           card.querySelector('.music-track-creator').textContent = artist;
         }
-        card.querySelector('.music-track-meta').textContent =
-          tr('hub.musicPage.traditionalLabel') + ' · ' + formatDuration(item.duration);
+        card.querySelector('.music-track-meta').textContent = formatDuration(item.duration);
       }
 
       var playBtn = card.querySelector('[data-music-play]');
