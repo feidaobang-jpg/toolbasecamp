@@ -3,6 +3,11 @@
   margin: 0 auto;
 }
 
+/* 图片管理等媒体网格：与前台 images.html (.img-hub 960px) 对齐，避免同行少一列 */
+.ladder-update-wrap--media {
+  max-width: 960px;
+}
+
 .ladder-update-wrap h2 {
   font-size: 1.25rem;
   font-weight: 700;

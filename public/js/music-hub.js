@@ -584,21 +584,6 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
-  function lyricsPreviewSnippet(raw, maxLen) {
-    maxLen = maxLen || 100;
-    var plain = '';
-    if (window.TBMusicPlayer && typeof TBMusicPlayer.staticLyricsPlain === 'function') {
-      plain = TBMusicPlayer.staticLyricsPlain(raw);
-    } else if (window.TBMusicPlayer && typeof TBMusicPlayer.dedupeLyricSections === 'function') {
-      plain = TBMusicPlayer.sungTextLines(TBMusicPlayer.dedupeLyricSections(raw)).join(' ');
-    } else if (window.TBMusicPlayer && typeof TBMusicPlayer.sungTextLines === 'function') {
-      plain = TBMusicPlayer.sungTextLines(raw).join(' ');
-    }
-    if (!plain) return '';
-    if (plain.length > maxLen) plain = plain.slice(0, maxLen - 1) + '…';
-    return plain;
-  }
-
   function renderList(kind, items, opts) {
     opts = opts || {};
     var list = document.getElementById('music-list');
@@ -631,7 +616,6 @@
           '<div class="music-track-title"></div>' +
           '<div class="music-track-creator" hidden></div>' +
           '<div class="music-track-prompt" hidden></div>' +
-          '<div class="music-track-lyrics" hidden></div>' +
           '<div class="music-track-meta"></div>' +
         '</div>' +
         '<div class="music-track-actions action-row">' +
@@ -659,16 +643,7 @@
           promptEl.hidden = false;
           promptEl.textContent = tr('hub.musicPage.promptLabel') + ': ' + promptText;
         }
-        var lyricsPreview = card.querySelector('.music-track-lyrics');
-        var lyFull = (item.lyrics || '').trim();
-        if (lyFull) {
-          lyricsPreview.hidden = false;
-          var preview = lyricsPreviewSnippet(lyFull, 100);
-          lyricsPreview.textContent = preview
-            ? (tr('hub.musicPage.lyricsLabel') + ': ' + preview)
-            : (tr('hub.musicPage.lyricsLabel') + ': ' + tr('hub.musicPage.lyricsTagsOnly'));
-        }
-        var hasLy = !!lyFull;
+        var hasLy = !!(item.lyrics || '').trim();
         card.querySelector('.music-track-meta').textContent =
           (item.model || '') + ' · ' + formatDuration(item.duration) +
           (hasLy ? (' · ' + tr('hub.musicPage.hasLyrics')) : (' · ' + tr('hub.musicPage.noLyrics'))) +
@@ -679,19 +654,10 @@
           card.querySelector('.music-track-creator').hidden = false;
           card.querySelector('.music-track-creator').textContent = artist;
         }
-        var lyFull = (item.lyrics || '').trim();
-        var lyPreview = (item.lyricsPreview || '').trim();
-        if (lyFull || lyPreview) {
-          var lyricsPreview = card.querySelector('.music-track-lyrics');
-          lyricsPreview.hidden = false;
-          var preview = lyFull
-            ? lyricsPreviewSnippet(lyFull, 100)
-            : lyPreview;
-          lyricsPreview.textContent = tr('hub.musicPage.lyricsLabel') + ': ' + preview;
-        }
+        var hasLy = !!(item.lyrics || '').trim() || !!(item.lyricsPreview || '').trim() || !!item.hasLyrics;
         card.querySelector('.music-track-meta').textContent =
           tr('hub.musicPage.traditionalLabel') + ' · ' + formatDuration(item.duration) +
-          ((lyFull || lyPreview || item.hasLyrics) ? (' · ' + tr('hub.musicPage.hasLyrics')) : '');
+          (hasLy ? (' · ' + tr('hub.musicPage.hasLyrics')) : '');
       }
 
       var playBtn = card.querySelector('[data-music-play]');

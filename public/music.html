@@ -46,15 +46,10 @@
         font-size: 0.85rem; color: #475569; margin-top: 4px; line-height: 1.45;
         word-break: break-word;
       }
-      .music-track-lyrics {
-        font-size: 0.82rem; color: #64748b; margin-top: 4px; line-height: 1.45;
-        word-break: break-word;
-      }
       .music-track-meta { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
       .music-track-actions { margin: 0; }
       .music-track-card.is-player-open .music-track-actions,
-      .music-track-card.is-player-open .music-track-prompt,
-      .music-track-card.is-player-open .music-track-lyrics { display: none; }
+      .music-track-card.is-player-open .music-track-prompt { display: none; }
       .music-track-player { width: 100%; }
       .music-track-player .tb-mp { margin-top: 4px; }
       [data-music-play][data-loading="1"]::after {
@@ -102,7 +97,7 @@
     <script src="js/common_ui.js?v=minimax1"></script>
     <script src="js/media/music-player.js?v=minimax1"></script>
     <script src="js/tb-pager.js?v=page1"></script>
-    <script src="js/music-hub.js?v=page1"></script>
+    <script src="js/music-hub.js?v=nolyrics1"></script>
     <script>
       (function () {
         function go() { if (typeof renderMusicHub === 'function') renderMusicHub(); }
