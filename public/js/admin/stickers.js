@@ -246,9 +246,11 @@
             '<button type="button" class="tb-btn" data-del>' + escapeHtml(tr('privateHub.ops.stickersDelete')) + '</button>' +
           '</div>' +
         '</div>';
-      card.querySelector('.ladder-media-title').textContent = displayTitle(item);
+      var titleText = displayTitle(item);
+      card.querySelector('.ladder-media-title').textContent = titleText;
       var sub = [];
-      if (item.category) sub.push(item.category);
+      var cat = String(item.category || '').trim();
+      if (cat && cat !== titleText) sub.push(cat);
       sub.push(fmtBytes(item.bytes));
       card.querySelector('.ladder-media-sub').textContent = sub.join(' · ');
       var cb = card.querySelector('input[type="checkbox"]');
