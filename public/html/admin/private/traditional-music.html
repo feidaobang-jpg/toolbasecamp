@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/tools-form.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=pager20" />
-  <script src="../../../js/locales/en.js?v=meta3"></script>
-  <script src="../../../js/locales/zh-CN.js?v=meta3"></script>
+  <script src="../../../js/locales/en.js?v=reparse1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=reparse1"></script>
   <script src="../../../js/i18n.js?v=minimax1"></script>
   <script src="../../../js/config.js?v=minimax1"></script>
   <script src="../../../js/common_ui.js?v=minimax1"></script>
@@ -64,6 +64,7 @@
               <span data-i18n="privateHub.ops.tradMusicFetchLyrics">上传时尝试获取歌词（DeepSeek，常不准，默认关闭）</span>
             </label>
             <button type="button" id="btn-refresh-trad" class="tb-btn" data-i18n="privateHub.ops.tradMusicRefresh">刷新列表</button>
+            <button type="button" id="btn-reparse-trad" class="tb-btn" data-i18n="privateHub.ops.tradMusicReparse">按源文件名重解析</button>
             <a class="ladder-row-link" href="../../../music.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.tradMusicPublic">查看公开页</a>
           </div>
           <div id="upload-status" class="ladder-status"></div>
@@ -72,6 +73,7 @@
 
         <section class="ladder-section">
           <h2 class="ladder-section-title" data-i18n="privateHub.ops.tradMusicListTitle">传统歌曲列表</h2>
+          <p class="ladder-section-desc" data-i18n="privateHub.ops.tradMusicListHint">文件名本身写错的，请点「改名」手改，或删除后按「歌手-歌名.mp3」重传。</p>
           <div id="list-meta-trad" class="ladder-status"></div>
           <div id="track-list-trad" class="ladder-list"></div>
           <div class="tb-pager" id="pager-trad" hidden></div>
@@ -97,6 +99,6 @@
 
   <script src="../../../js/admin/private-page-guard.js?v=minimax1"></script>
   <script src="../../../js/tb-pager.js?v=page1"></script>
-  <script src="../../../js/admin/traditional-music.js?v=nolyricprev"></script>
+  <script src="../../../js/admin/traditional-music.js?v=reparse1"></script>
 </body>
 </html>

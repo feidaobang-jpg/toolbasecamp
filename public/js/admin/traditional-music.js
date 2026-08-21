@@ -140,8 +140,12 @@
           (item.source ? ('<div class="ladder-row-sub">' + escapeHtml(tr('privateHub.ops.tradMusicSource') + ': ' + item.source) + '</div>') : '') +
         '</div>' +
         '<div class="action-row ladder-row-actions">' +
+          '<button type="button" class="tb-btn" data-edit-trad="' + escapeHtml(item.id) + '">' + escapeHtml(tr('privateHub.ops.tradMusicEdit')) + '</button>' +
           '<button type="button" class="tb-btn" data-del-trad="' + escapeHtml(item.id) + '">' + escapeHtml(tr('privateHub.ops.tradMusicDelete')) + '</button>' +
         '</div>';
+      row.querySelector('[data-edit-trad]').addEventListener('click', function () {
+        editTradTrack(item);
+      });
       row.querySelector('[data-del-trad]').addEventListener('click', function () {
         deleteTradTrack(item);
       });
@@ -268,6 +272,63 @@
       .catch(function (err) {
         setStatus(meta, (err && err.message) || tr('privateHub.ops.tradMusicLoadFailed'), true);
       });
+  }
+
+  function editTradTrack(item) {
+    if (!item || !item.id) return;
+    var artist = window.prompt(tr('privateHub.ops.tradMusicEditArtist'), item.artist || '');
+    if (artist === null) return;
+    var title = window.prompt(tr('privateHub.ops.tradMusicEditTitle'), item.title || '');
+    if (title === null) return;
+    title = String(title || '').trim();
+    if (!title) {
+      alert(tr('privateHub.ops.tradMusicEditTitleRequired'));
+      return;
+    }
+    var fd = new FormData();
+    fd.append('artist', String(artist || '').trim());
+    fd.append('title', title);
+    fetch(apiBase() + '/music/traditional/admin/' + encodeURIComponent(item.id) + '/meta', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: fd
+    }).then(function (res) {
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error((data && data.detail) || res.statusText);
+        return data;
+      });
+    }).then(function () {
+      loadTradList();
+    }).catch(function (err) {
+      alert((err && err.message) || tr('privateHub.ops.tradMusicEditFailed'));
+    });
+  }
+
+  function reparseTradFromSource() {
+    var meta = document.getElementById('list-meta-trad');
+    if (!window.confirm(tr('privateHub.ops.tradMusicReparseConfirm'))) return;
+    setStatus(meta, tr('privateHub.ops.tradMusicReparseRunning'));
+    fetch(apiBase() + '/music/traditional/admin/reparse-from-source', {
+      method: 'POST',
+      headers: authHeaders()
+    }).then(function (res) {
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error((data && data.detail) || res.statusText);
+        return data;
+      });
+    }).then(function (data) {
+      setStatus(
+        meta,
+        tr('privateHub.ops.tradMusicReparseDone', {
+          changed: data.changed || 0,
+          total: data.total || 0,
+          skipped: data.skipped || 0
+        })
+      );
+      return loadTradList();
+    }).catch(function (err) {
+      setStatus(meta, (err && err.message) || tr('privateHub.ops.tradMusicReparseFailed'), true);
+    });
   }
 
   function deleteTradTrack(item) {
@@ -414,6 +475,7 @@
     });
     var input = document.getElementById('upload-input');
     var refreshTrad = document.getElementById('btn-refresh-trad');
+    var reparseTrad = document.getElementById('btn-reparse-trad');
     var refreshAi = document.getElementById('btn-refresh-ai');
     if (input) {
       input.addEventListener('change', function () {
@@ -422,6 +484,7 @@
       });
     }
     if (refreshTrad) refreshTrad.addEventListener('click', loadTradList);
+    if (reparseTrad) reparseTrad.addEventListener('click', reparseTradFromSource);
     if (refreshAi) refreshAi.addEventListener('click', loadAiList);
     switchTab('traditional');
   }

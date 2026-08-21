@@ -1436,6 +1436,66 @@ def music_traditional_admin_delete(track_id: str, admin: dict = Depends(_admin_u
     return {"success": True, "deletedId": tid}
 
 
+@router.post("/traditional/admin/reparse-from-source")
+def music_traditional_reparse_from_source(admin: dict = Depends(_admin_user)):
+    """Re-parse artist/title from stored source filename (歌手-歌名.mp3)."""
+    del admin
+    items = _load_traditional_manifest()
+    changed = 0
+    skipped = 0
+    for row in items:
+        src = str(row.get("source") or "").strip()
+        if not src:
+            skipped += 1
+            continue
+        artist, title = _parse_upload_filename(src)
+        old_artist = str(row.get("artist") or "").strip()
+        old_title = str(row.get("title") or "").strip()
+        if artist == old_artist and title == old_title:
+            continue
+        row["artist"] = artist
+        row["title"] = title
+        changed += 1
+    if changed:
+        _save_traditional_manifest(items)
+    return {
+        "success": True,
+        "changed": changed,
+        "skipped": skipped,
+        "total": len(items),
+    }
+
+
+@router.post("/traditional/admin/{track_id}/meta")
+async def music_traditional_update_meta(
+    track_id: str,
+    artist: str = Form(""),
+    title: str = Form(""),
+    admin: dict = Depends(_admin_user),
+):
+    """Manually set artist/title when source filename was wrong."""
+    del admin
+    tid = re.sub(r"[^a-zA-Z0-9_-]", "", str(track_id or ""))[:48]
+    if not tid:
+        raise HTTPException(status_code=404, detail="Music not found")
+    items = _load_traditional_manifest()
+    row = None
+    for it in items:
+        if str(it.get("id") or "") == tid:
+            row = it
+            break
+    if not row:
+        raise HTTPException(status_code=404, detail="Music not found")
+    new_title = (title or "").strip()
+    new_artist = (artist or "").strip()
+    if not new_title:
+        raise HTTPException(status_code=400, detail="Title required")
+    row["title"] = new_title[:200]
+    row["artist"] = new_artist[:120]
+    _save_traditional_manifest(items)
+    return {"success": True, "item": _traditional_admin_item(row)}
+
+
 @router.post("/traditional/admin/upload")
 async def music_traditional_admin_upload(
     file: UploadFile = File(...),
