@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>传统图片管理 - 自用</title>
+  <title>图片管理 - 自用</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="../../../vendor/tailwindcss.js?v=minimax1"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
   <link rel="stylesheet" href="../../../css/tools-form.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=tradimg1" />
-  <script src="../../../js/locales/en.js?v=tradimg1"></script>
-  <script src="../../../js/locales/zh-CN.js?v=tradimg1"></script>
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=imgcat1" />
+  <script src="../../../js/locales/en.js?v=imgcat1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=imgcat1"></script>
   <script src="../../../js/i18n.js?v=minimax1"></script>
-  <script src="../../../js/config.js?v=tradimg1"></script>
+  <script src="../../../js/config.js?v=imgcat1"></script>
   <script src="../../../js/common_ui.js?v=minimax1"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
@@ -24,7 +24,7 @@
       <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">自用</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.stickersTitle">传统图片管理</h1>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.stickersTitle">图片管理</h1>
       <div class="ml-auto flex items-center gap-3 text-sm">
         <span id="auth-label" class="text-gray-500"></span>
         <a id="login-link" href="../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
@@ -42,19 +42,21 @@
 
     <div id="app" class="ladder-update-wrap hidden">
       <p class="ladder-update-desc" data-i18n="privateHub.ops.stickersDesc">
-        批量上传传统图片（表情包、精美图等），公开到图片模块「传统图片」Tab；微信内可长按保存或转发。
+        批量上传图片到图片模块「传统图片」Tab（按分类筛选）；微信内可长按保存或转发。
       </p>
 
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersUploadTitle">批量上传</h2>
-        <p class="ladder-section-desc" data-i18n="privateHub.ops.stickersUploadDesc">支持 PNG / JPG / GIF / WebP（可多选）。文件名「分类-名称.png」会自动解析分类；也可在下方填写统一分类。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.stickersUploadDesc">支持 PNG / JPG / GIF / WebP（可多选）。请先点选分类；也可填写自定义分类。文件名「分类-名称.png」在未选分类时会自动解析。</p>
+        <p class="ladder-section-desc" data-i18n="privateHub.ops.stickersCategoryHint">建议按分类批量上传，前台可筛选。</p>
+        <div class="ladder-cat-row" id="upload-cat-chips" role="group" aria-label="category"></div>
         <div class="ladder-toolbar action-row" style="align-items:center;flex-wrap:wrap">
           <label class="tb-btn" style="cursor:pointer;margin:0">
             <span data-i18n="privateHub.ops.stickersPick">选择图片</span>
             <input type="file" id="upload-input" accept="image/png,image/jpeg,image/gif,image/webp,.png,.jpg,.jpeg,.gif,.webp" multiple hidden />
           </label>
           <label class="text-sm text-gray-600" style="display:flex;align-items:center;gap:6px">
-            <span data-i18n="privateHub.ops.stickersCategory">统一分类</span>
+            <span data-i18n="privateHub.ops.stickersCategoryCustom">自定义</span>
             <input type="text" id="upload-category" class="tb-input" style="width:10rem" maxlength="40" placeholder="" />
           </label>
           <button type="button" id="btn-refresh" class="tb-btn" data-i18n="privateHub.ops.stickersRefresh">刷新列表</button>
@@ -65,7 +67,7 @@
       </section>
 
       <section class="ladder-section">
-        <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersListTitle">传统图片列表</h2>
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.stickersListTitle">图片列表</h2>
         <div id="list-meta" class="ladder-status"></div>
         <div id="sticker-list" class="ladder-list"></div>
       </section>
@@ -73,6 +75,6 @@
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=minimax1"></script>
-  <script src="../../../js/admin/stickers.js?v=tradimg3"></script>
+  <script src="../../../js/admin/stickers.js?v=imgcat1"></script>
 </body>
 </html>

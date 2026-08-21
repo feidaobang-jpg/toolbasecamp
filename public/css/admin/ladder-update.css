@@ -177,3 +177,27 @@ pre.game-thumbs-list {
 .ladder-row-btn {
   flex-shrink: 0;
 }
+
+.ladder-cat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.ladder-cat-chip {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.ladder-cat-chip.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}

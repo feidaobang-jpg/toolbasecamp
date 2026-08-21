@@ -1,10 +1,22 @@
 /**
- * Admin — sticker library bulk upload
+ * Admin — image library bulk upload (classic / curated images)
  */
 (function () {
   'use strict';
 
   var existingSources = new Set();
+  var selectedPreset = '';
+
+  var PRESET_CATS = [
+    { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
+    { value: '壁纸', key: 'privateHub.ops.stickersCatWallpaper' },
+    { value: '漫画', key: 'privateHub.ops.stickersCatComic' },
+    { value: '风景', key: 'privateHub.ops.stickersCatScenery' },
+    { value: '人物', key: 'privateHub.ops.stickersCatPeople' },
+    { value: '明星', key: 'privateHub.ops.stickersCatCelebrity' },
+    { value: '萌宠', key: 'privateHub.ops.stickersCatPet' },
+    { value: '其他', key: 'privateHub.ops.stickersCatOther' }
+  ];
 
   function normFileName(name) {
     var s = String(name || '').trim();
@@ -54,6 +66,45 @@
     if (!el) return;
     el.textContent = msg || '';
     el.classList.toggle('is-error', !!isErr);
+  }
+
+  function resolveCategory() {
+    var input = document.getElementById('upload-category');
+    var custom = input ? String(input.value || '').trim() : '';
+    if (custom) return custom.slice(0, 40);
+    return selectedPreset || '';
+  }
+
+  function syncCatChips() {
+    var custom = document.getElementById('upload-category');
+    var customVal = custom ? String(custom.value || '').trim() : '';
+    document.querySelectorAll('[data-cat-value]').forEach(function (btn) {
+      var val = btn.getAttribute('data-cat-value') || '';
+      var on = !customVal && selectedPreset === val;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function renderCatChips() {
+    var wrap = document.getElementById('upload-cat-chips');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    PRESET_CATS.forEach(function (cat) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ladder-cat-chip';
+      btn.setAttribute('data-cat-value', cat.value);
+      btn.textContent = tr(cat.key);
+      btn.addEventListener('click', function () {
+        var input = document.getElementById('upload-category');
+        if (input) input.value = '';
+        selectedPreset = selectedPreset === cat.value ? '' : cat.value;
+        syncCatChips();
+      });
+      wrap.appendChild(btn);
+    });
+    syncCatChips();
   }
 
   function loadList() {
@@ -150,8 +201,7 @@
   function uploadFiles(files) {
     var status = document.getElementById('upload-status');
     var progress = document.getElementById('upload-progress');
-    var categoryInput = document.getElementById('upload-category');
-    var category = categoryInput ? String(categoryInput.value || '').trim() : '';
+    var category = resolveCategory();
     if (!files || !files.length) return;
     var picked = Array.prototype.slice.call(files);
     var skipped = 0;
@@ -242,6 +292,14 @@
   }
 
   function bindUi() {
+    renderCatChips();
+    var catInput = document.getElementById('upload-category');
+    if (catInput) {
+      catInput.addEventListener('input', function () {
+        if (String(catInput.value || '').trim()) selectedPreset = '';
+        syncCatChips();
+      });
+    }
     var uploadInput = document.getElementById('upload-input');
     if (uploadInput) {
       uploadInput.addEventListener('change', function () {
