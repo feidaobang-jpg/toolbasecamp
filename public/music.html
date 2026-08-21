@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/docs/docs-common.css?v=minimax1">
     <link rel="stylesheet" href="css/tools-form.css?v=minimax1">
     <style>
-      .music-hub { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
+      .music-hub { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
       .music-hub-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
       .music-hub-sub { color: #64748b; font-size: 0.95rem; margin: 0; line-height: 1.5; }
       .music-hub-tabs { margin: 12px 0 4px; }
@@ -35,47 +35,47 @@
       .music-track-list { display: flex; flex-direction: column; gap: 10px; }
       .music-track-card {
         background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-        padding: 12px 14px; display: flex; flex-direction: column; gap: 10px;
+        padding: 10px 12px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 10px;
+        row-gap: 8px;
       }
-      .music-track-main { min-width: 0; }
+      .music-track-main { min-width: 0; grid-column: 1; grid-row: 1; }
       .music-track-title {
-        font-weight: 700; color: #0f172a; font-size: 1rem;
+        font-weight: 700; color: #0f172a; font-size: 0.95rem;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .music-track-creator {
-        font-size: 0.82rem; color: #334155; margin-top: 2px; line-height: 1.4;
+        font-size: 0.8rem; color: #334155; margin-top: 2px; line-height: 1.35;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .music-track-prompt {
-        font-size: 0.85rem; color: #475569; margin-top: 2px; line-height: 1.4;
+        font-size: 0.8rem; color: #475569; margin-top: 2px; line-height: 1.35;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .music-track-meta {
-        font-size: 0.8rem; color: #64748b; margin-top: 2px;
+        font-size: 0.75rem; color: #64748b; margin-top: 2px;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
-      .music-track-actions { margin: 0; }
+      .music-track-actions {
+        margin: 0;
+        grid-column: 2; grid-row: 1;
+        flex-wrap: nowrap;
+        gap: 8px;
+        justify-content: flex-end;
+        align-self: center;
+      }
       .music-track-card.is-player-open .music-track-actions,
       .music-track-card.is-player-open .music-track-prompt { display: none; }
-      .music-track-player { width: 100%; }
-      .music-track-player .tb-mp { margin-top: 4px; }
+      .music-track-card.is-player-open .music-track-main { grid-column: 1 / -1; }
+      .music-track-player { width: 100%; grid-column: 1 / -1; grid-row: 2; }
+      .music-track-player .tb-mp { margin-top: 2px; }
       @media (min-width: 640px) {
-        .music-track-card {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) auto;
-          align-items: center;
-          column-gap: 16px;
-          row-gap: 10px;
-          padding: 12px 16px;
-        }
-        .music-track-main { grid-column: 1; grid-row: 1; }
-        .music-track-actions {
-          grid-column: 2; grid-row: 1;
-          flex-wrap: nowrap;
-          justify-content: flex-end;
-          align-self: center;
-        }
-        .music-track-player { grid-column: 1 / -1; grid-row: 2; }
+        .music-track-card { padding: 12px 14px; column-gap: 12px; }
+        .music-track-title { font-size: 1rem; }
+        .music-track-actions { gap: 12px; }
       }
       [data-music-play][data-loading="1"]::after {
         content: ' ';
