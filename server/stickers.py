@@ -40,8 +40,10 @@ STICKER_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("STICKER_THUMB_J
 # Stickers are for chat/forward — keep stored GIF small; grid uses an even smaller preview.
 STICKER_GIF_MAX_EDGE = max(120, int(os.environ.get("STICKER_GIF_MAX_EDGE") or "360"))
 STICKER_GIF_COLORS = max(32, min(256, int(os.environ.get("STICKER_GIF_COLORS") or "128")))
-STICKER_PREVIEW_MAX_EDGE = max(80, int(os.environ.get("STICKER_PREVIEW_MAX_EDGE") or "240"))
-STICKER_PREVIEW_COLORS = max(32, min(256, int(os.environ.get("STICKER_PREVIEW_COLORS") or "96")))
+STICKER_PREVIEW_MAX_EDGE = max(80, int(os.environ.get("STICKER_PREVIEW_MAX_EDGE") or "160"))
+STICKER_PREVIEW_COLORS = max(16, min(256, int(os.environ.get("STICKER_PREVIEW_COLORS") or "64")))
+STICKER_PREVIEW_FRAME_STEP = max(1, int(os.environ.get("STICKER_PREVIEW_FRAME_STEP") or "2"))
+STICKER_PREVIEW_MAX_BYTES = max(20 * 1024, int(os.environ.get("STICKER_PREVIEW_MAX_BYTES") or str(120 * 1024)))
 
 _ALLOWED_EXT = frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp"})
 _CONTENT_BY_EXT = {
@@ -191,6 +193,7 @@ def _compress_animated_gif(
     *,
     max_edge: int,
     colors: int,
+    frame_step: int = 1,
 ) -> Optional[bytes]:
     """Resize + quantize animated GIF. Returns None on failure."""
     if not data:
@@ -201,8 +204,13 @@ def _compress_animated_gif(
         im = Image.open(BytesIO(data))
         frames = []
         durations = []
-        for frame in ImageSequence.Iterator(im):
+        step = max(1, int(frame_step or 1))
+        for idx, frame in enumerate(ImageSequence.Iterator(im)):
+            if idx % step != 0:
+                continue
             duration = int(frame.info.get("duration", 100) or 100)
+            if step > 1:
+                duration = max(40, duration * step)
             rgba = frame.convert("RGBA")
             rgba = _resize_rgba(rgba, max_edge)
             try:
@@ -235,8 +243,6 @@ def _compress_animated_gif(
         out = buf.getvalue()
         if not out:
             return None
-        # Prefer smaller result; if larger, still return compressed for consistency
-        # when caller wants a preview (caller may compare sizes).
         return out
     except Exception:
         return None
@@ -285,11 +291,26 @@ def _write_thumbnail(sticker_id: str, source_data: bytes) -> str:
 
 def _write_preview_gif(sticker_id: str, source_data: bytes) -> str:
     """Small animated GIF for grid playback (much lighter than full file)."""
-    preview = _compress_animated_gif(
-        source_data,
-        max_edge=STICKER_PREVIEW_MAX_EDGE,
-        colors=STICKER_PREVIEW_COLORS,
-    )
+    attempts = [
+        (STICKER_PREVIEW_MAX_EDGE, STICKER_PREVIEW_COLORS, STICKER_PREVIEW_FRAME_STEP),
+        (120, 48, max(2, STICKER_PREVIEW_FRAME_STEP)),
+        (96, 32, max(3, STICKER_PREVIEW_FRAME_STEP + 1)),
+    ]
+    preview = None
+    for edge, colors, step in attempts:
+        cand = _compress_animated_gif(
+            source_data,
+            max_edge=edge,
+            colors=colors,
+            frame_step=step,
+        )
+        if not cand:
+            continue
+        if preview is None or len(cand) < len(preview):
+            preview = cand
+        if len(cand) <= STICKER_PREVIEW_MAX_BYTES:
+            preview = cand
+            break
     if not preview:
         return ""
     name = _preview_file_name(sticker_id)

@@ -17,7 +17,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "server"))
+for p in (ROOT / "server", Path("/opt/toolbasecamp-api"), ROOT):
+    if (p / "stickers.py").is_file():
+        sys.path.insert(0, str(p))
+        break
+else:
+    sys.path.insert(0, str(ROOT / "server"))
 
 from stickers import (  # noqa: E402
     STICKER_DIR,
