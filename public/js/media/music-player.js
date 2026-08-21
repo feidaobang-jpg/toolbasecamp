@@ -319,10 +319,13 @@
 
     if (lyricsMode === 'lrc') {
       renderLyricsBox(lyricsEl, 'lrc', lrcLines);
+      lyricsEl.hidden = false;
     } else if (lyricsMode === 'static') {
       renderLyricsBox(lyricsEl, 'static', staticLyricsPlain(opts.lyrics));
+      lyricsEl.hidden = false;
     } else {
-      renderLyricsBox(lyricsEl, 'empty', '');
+      lyricsEl.innerHTML = '';
+      lyricsEl.hidden = true;
       if (dlLyricsBtn && dlLyricsBtn.parentNode) dlLyricsBtn.remove();
     }
 
@@ -495,12 +498,15 @@
       }
       if (lyricsMode === 'lrc') {
         renderLyricsBox(lyricsEl, 'lrc', lrcLines);
+        lyricsEl.hidden = false;
         dlLyricsBtn.hidden = false;
       } else if (lyricsMode === 'static') {
         renderLyricsBox(lyricsEl, 'static', staticLyricsPlain(nextLyrics));
+        lyricsEl.hidden = false;
         dlLyricsBtn.hidden = false;
       } else {
-        renderLyricsBox(lyricsEl, 'empty', '');
+        lyricsEl.innerHTML = '';
+        lyricsEl.hidden = true;
         dlLyricsBtn.hidden = true;
       }
     }

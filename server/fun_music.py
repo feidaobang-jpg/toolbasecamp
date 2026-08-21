@@ -1471,7 +1471,7 @@ def music_traditional_admin_delete(track_id: str, admin: dict = Depends(_admin_u
 @router.post("/traditional/admin/upload")
 async def music_traditional_admin_upload(
     file: UploadFile = File(...),
-    fetch_lyrics: int = Form(1),
+    fetch_lyrics: int = Form(0),
     admin: dict = Depends(_admin_user),
 ):
     del admin

@@ -305,7 +305,7 @@
     player.update({
       src: streamSrc,
       title: item.title || tr('hub.musicPage.untitled'),
-      lyrics: item.lyrics || '',
+      lyrics: kind === 'traditional' ? '' : (item.lyrics || ''),
       durationHint: Number(item.duration) || 0,
       audioName: audioName
     });
@@ -324,7 +324,6 @@
       playTrack(kind, item);
     });
     warmCache(kind, item.id, item.contentType, player.audio, true);
-    if (kind === 'traditional') hydrateTraditionalLyrics(kind, item, player);
   }
 
   function setPlayingUi(kind, id, playing) {
@@ -380,7 +379,7 @@
       src: src,
       preload: isBlob || (isWeChat() && isStream) ? 'auto' : 'metadata',
       title: item.title || tr('hub.musicPage.untitled'),
-      lyrics: item.lyrics || '',
+      lyrics: kind === 'traditional' ? '' : (item.lyrics || ''),
       hideTitle: true,
       hideDownloadActions: true,
       durationHint: Number(item.duration) || 0,
@@ -438,30 +437,6 @@
     }
   }
 
-  function fetchTraditionalMeta(item) {
-    if (!item || !item.id) return Promise.resolve(item);
-    if ((item.lyrics || '').trim()) return Promise.resolve(item);
-    return fetch(apiBase() + '/music/traditional/' + encodeURIComponent(item.id) + '/meta', {
-      headers: authHeaders()
-    }).then(function (res) {
-      return res.json().then(function (data) {
-        if (!res.ok) throw new Error((data && data.detail) || res.statusText);
-        return (data && data.item) || item;
-      });
-    }).catch(function () { return item; });
-  }
-
-  function hydrateTraditionalLyrics(kind, item, playerInst) {
-    if (kind !== 'traditional' || !playerInst) return;
-    fetchTraditionalMeta(item).then(function (full) {
-      if (!full || !full.lyrics || !playerInst || currentId !== item.id) return;
-      currentItem = Object.assign({}, item, full);
-      if (typeof playerInst.update === 'function') {
-        playerInst.update({ lyrics: full.lyrics });
-      }
-    });
-  }
-
   function playTrack(kind, item) {
     var id = item.id;
     var card = findTrackCard(kind, id);
@@ -497,7 +472,6 @@
       card.classList.add('is-player-open');
       currentCardEl = card;
       mountPlayer(kind, item, src, true, playerHost);
-      if (kind === 'traditional') hydrateTraditionalLyrics(kind, item, player);
     }
 
     // 传统音乐播放固定试听(preview)；全曲仅下载
@@ -654,10 +628,8 @@
           card.querySelector('.music-track-creator').hidden = false;
           card.querySelector('.music-track-creator').textContent = artist;
         }
-        var hasLy = !!(item.lyrics || '').trim() || !!(item.lyricsPreview || '').trim() || !!item.hasLyrics;
         card.querySelector('.music-track-meta').textContent =
-          tr('hub.musicPage.traditionalLabel') + ' · ' + formatDuration(item.duration) +
-          (hasLy ? (' · ' + tr('hub.musicPage.hasLyrics')) : '');
+          tr('hub.musicPage.traditionalLabel') + ' · ' + formatDuration(item.duration);
       }
 
       var playBtn = card.querySelector('[data-music-play]');
