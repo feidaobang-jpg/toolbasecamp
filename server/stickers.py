@@ -40,10 +40,10 @@ STICKER_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("STICKER_THUMB_J
 # Stickers are for chat/forward — keep stored GIF small; grid uses an even smaller preview.
 STICKER_GIF_MAX_EDGE = max(120, int(os.environ.get("STICKER_GIF_MAX_EDGE") or "360"))
 STICKER_GIF_COLORS = max(32, min(256, int(os.environ.get("STICKER_GIF_COLORS") or "128")))
-STICKER_PREVIEW_MAX_EDGE = max(80, int(os.environ.get("STICKER_PREVIEW_MAX_EDGE") or "160"))
-STICKER_PREVIEW_COLORS = max(16, min(256, int(os.environ.get("STICKER_PREVIEW_COLORS") or "64")))
+STICKER_PREVIEW_MAX_EDGE = max(80, int(os.environ.get("STICKER_PREVIEW_MAX_EDGE") or "180"))
+STICKER_PREVIEW_COLORS = max(16, min(256, int(os.environ.get("STICKER_PREVIEW_COLORS") or "128")))
 STICKER_PREVIEW_FRAME_STEP = max(1, int(os.environ.get("STICKER_PREVIEW_FRAME_STEP") or "2"))
-STICKER_PREVIEW_MAX_BYTES = max(20 * 1024, int(os.environ.get("STICKER_PREVIEW_MAX_BYTES") or str(120 * 1024)))
+STICKER_PREVIEW_MAX_BYTES = max(20 * 1024, int(os.environ.get("STICKER_PREVIEW_MAX_BYTES") or str(150 * 1024)))
 
 _ALLOWED_EXT = frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp"})
 _CONTENT_BY_EXT = {
@@ -188,6 +188,33 @@ def _resize_rgba(im, max_edge: int):
     return im.resize((nw, nh), Image.Resampling.LANCZOS)
 
 
+def _flatten_rgba(rgba):
+    """Composite onto light gray — avoids Pillow's broken RGBA→P ADAPTIVE path."""
+    from PIL import Image
+
+    if rgba.mode != "RGBA":
+        rgba = rgba.convert("RGBA")
+    bg = Image.new("RGBA", rgba.size, (245, 245, 245, 255))
+    return Image.alpha_composite(bg, rgba).convert("RGB")
+
+
+def _quantize_rgb(rgb, colors: int, palette_img=None):
+    from PIL import Image
+
+    n = max(2, min(256, int(colors)))
+    if palette_img is not None:
+        return rgb.quantize(palette=palette_img, dither=Image.Dither.NONE)
+    # MEDIANCUT on RGB (not RGBA.convert("P", ADAPTIVE)) — ADAPTIVE caused neon/wrong colors.
+    try:
+        return rgb.quantize(
+            colors=n,
+            method=Image.Quantize.MEDIANCUT,
+            dither=Image.Dither.FLOYDSTEINBERG,
+        )
+    except Exception:
+        return rgb.quantize(colors=n, dither=Image.Dither.FLOYDSTEINBERG)
+
+
 def _compress_animated_gif(
     data: bytes,
     *,
@@ -195,40 +222,34 @@ def _compress_animated_gif(
     colors: int,
     frame_step: int = 1,
 ) -> Optional[bytes]:
-    """Resize + quantize animated GIF. Returns None on failure."""
+    """Resize + quantize animated GIF with a shared palette. Returns None on failure."""
     if not data:
         return None
     try:
         from PIL import Image, ImageSequence
 
         im = Image.open(BytesIO(data))
-        frames = []
-        durations = []
         step = max(1, int(frame_step or 1))
+        rgb_frames = []
+        durations = []
         for idx, frame in enumerate(ImageSequence.Iterator(im)):
             if idx % step != 0:
                 continue
             duration = int(frame.info.get("duration", 100) or 100)
             if step > 1:
                 duration = max(40, duration * step)
-            rgba = frame.convert("RGBA")
-            rgba = _resize_rgba(rgba, max_edge)
-            try:
-                pal = rgba.convert(
-                    "P",
-                    palette=Image.Palette.ADAPTIVE,
-                    colors=max(2, int(colors)),
-                )
-            except Exception:
-                pal = rgba.convert(
-                    "P",
-                    palette=Image.ADAPTIVE,
-                    colors=max(2, int(colors)),
-                )
-            frames.append(pal)
+            rgba = _resize_rgba(frame.convert("RGBA"), max_edge)
+            rgb_frames.append(_flatten_rgba(rgba))
             durations.append(max(20, duration))
-        if not frames:
+        if not rgb_frames:
             return None
+
+        # One adaptive palette from frame 0; remap later frames to it (stable colors).
+        base_p = _quantize_rgb(rgb_frames[0], colors)
+        frames = [base_p]
+        for rgb in rgb_frames[1:]:
+            frames.append(_quantize_rgb(rgb, colors, palette_img=base_p))
+
         buf = BytesIO()
         frames[0].save(
             buf,
@@ -237,13 +258,12 @@ def _compress_animated_gif(
             append_images=frames[1:],
             duration=durations,
             loop=int(im.info.get("loop", 0) or 0),
-            optimize=True,
+            # optimize=True can scramble multi-frame palettes → wrong colors
+            optimize=False,
             disposal=2,
         )
         out = buf.getvalue()
-        if not out:
-            return None
-        return out
+        return out or None
     except Exception:
         return None
 
@@ -321,18 +341,14 @@ def _write_preview_gif(sticker_id: str, source_data: bytes) -> str:
 
 def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     """
-    Compress stickers for chat size.
+    Prepare sticker bytes for storage.
+    GIFs: keep original frames/colors (do not recompress in place — Pillow palette
+    bugs previously destroyed colors). Grid uses a separate small preview GIF.
+    Large still images may be lightly recompressed as JPEG/PNG.
     Returns (bytes, content_type, file_ext).
     """
     ext = (ext or "").lower()
     if ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8"):
-        compressed = _compress_animated_gif(
-            raw,
-            max_edge=STICKER_GIF_MAX_EDGE,
-            colors=STICKER_GIF_COLORS,
-        )
-        if compressed and len(compressed) < len(raw):
-            return compressed, "image/gif", ".gif"
         return raw, "image/gif", ".gif"
 
     if len(raw) > 400 * 1024:
@@ -340,28 +356,43 @@ def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
             from PIL import Image
 
             im = Image.open(BytesIO(raw))
-            has_alpha = im.mode in ("RGBA", "LA") or (
-                im.mode == "P" and "transparency" in im.info
-            )
-            if has_alpha:
-                rgba = im.convert("RGBA")
-                rgba = _resize_rgba(rgba, 1280)
+            if im.mode in ("RGBA", "P"):
+                # Keep PNG for transparency
+                if im.mode == "P":
+                    im = im.convert("RGBA")
+                w, h = im.size
+                max_edge = 1280
+                if max(w, h) > max_edge:
+                    scale = max_edge / float(max(w, h))
+                    im = im.resize(
+                        (max(1, int(round(w * scale))), max(1, int(round(h * scale)))),
+                        Image.Resampling.LANCZOS,
+                    )
                 buf = BytesIO()
-                rgba.save(buf, format="PNG", optimize=True)
+                im.save(buf, format="PNG", optimize=True)
                 out = buf.getvalue()
                 if out and len(out) < len(raw):
                     return out, "image/png", ".png"
             else:
-                rgb = im.convert("RGB")
-                rgb = _resize_rgba(rgb, 1280)
+                if im.mode != "RGB":
+                    im = im.convert("RGB")
+                w, h = im.size
+                max_edge = 1280
+                if max(w, h) > max_edge:
+                    scale = max_edge / float(max(w, h))
+                    im = im.resize(
+                        (max(1, int(round(w * scale))), max(1, int(round(h * scale)))),
+                        Image.Resampling.LANCZOS,
+                    )
                 buf = BytesIO()
-                rgb.save(buf, format="JPEG", quality=82, optimize=True)
+                im.save(buf, format="JPEG", quality=85, optimize=True)
                 out = buf.getvalue()
                 if out and len(out) < len(raw):
                     return out, "image/jpeg", ".jpg"
         except Exception:
             pass
-    ctype = _CONTENT_BY_EXT.get(ext, "image/png")
+
+    ctype = _CONTENT_BY_EXT.get(ext, "application/octet-stream")
     return raw, ctype, ext if ext in _ALLOWED_EXT else ".png"
 
 
