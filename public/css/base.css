@@ -53,6 +53,38 @@ body {
     line-height: 1.4;
 }
 
+.tb-pager-jump {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.tb-pager-jump-label {
+    white-space: nowrap;
+}
+
+.tb-pager-input {
+    width: 4.2em;
+    padding: 4px 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.875rem;
+    color: #0f172a;
+    background: #fff;
+    text-align: center;
+}
+
+.tb-pager-input:focus {
+    outline: 2px solid #93c5fd;
+    outline-offset: 1px;
+    border-color: #2563eb;
+}
+
 .tb-btn-sm {
     padding: 6px 16px;
     font-size: 13px;

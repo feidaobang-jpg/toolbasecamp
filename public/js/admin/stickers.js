@@ -124,36 +124,26 @@
     }
   }
 
-  function bindGifViewport(img, thumbSrc, playSrc) {
+  /** Admin: keep JPEG thumbs; play GIF only on hover so flipping pages stays fast. */
+  function bindGifHover(img, thumbSrc, playSrc) {
     if (!img || !playSrc) return;
     img.dataset.thumbSrc = thumbSrc || '';
     img.dataset.playSrc = playSrc;
     img.dataset.playing = '0';
-    if (typeof IntersectionObserver === 'undefined') {
+    function play() {
+      if (img.dataset.playing === '1') return;
       img.src = playSrc;
       img.dataset.playing = '1';
-      return;
     }
-    if (!gifObserver) {
-      gifObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          var el = entry.target;
-          var thumb = el.dataset.thumbSrc || '';
-          var play = el.dataset.playSrc || '';
-          if (!play) return;
-          if (entry.isIntersecting && entry.intersectionRatio > 0.12) {
-            if (el.dataset.playing !== '1') {
-              el.src = play;
-              el.dataset.playing = '1';
-            }
-          } else if (el.dataset.playing === '1' && thumb) {
-            el.src = thumb;
-            el.dataset.playing = '0';
-          }
-        });
-      }, { root: null, rootMargin: '60px 0px', threshold: [0, 0.12, 0.35] });
+    function stop() {
+      if (img.dataset.playing !== '1') return;
+      if (thumbSrc) img.src = thumbSrc;
+      img.dataset.playing = '0';
     }
-    gifObserver.observe(img);
+    img.addEventListener('mouseenter', play);
+    img.addEventListener('mouseleave', stop);
+    img.addEventListener('focus', play);
+    img.addEventListener('blur', stop);
   }
 
   function filteredItems() {
@@ -350,6 +340,7 @@
       var line = [];
       var titleText = displayTitle(item);
       if (titleText) line.push(titleText);
+      if (animated) line.push('GIF');
       var cat = String(item.category || '').trim();
       if (cat && cat !== titleText) line.push(cat);
       var sizeLab = fmtBytes(item.bytes);
@@ -367,7 +358,7 @@
       });
       var thumbImg = card.querySelector('.ladder-media-thumb');
       if (thumbImg && animated && play) {
-        bindGifViewport(thumbImg, src, play);
+        bindGifHover(thumbImg, src, play);
       }
       if (thumbImg && item.imageUrl) {
         thumbImg.addEventListener('error', function () {

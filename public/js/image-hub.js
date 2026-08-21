@@ -13,6 +13,8 @@
   var pageState = { ai: 1, stickers: 1 };
   var totalState = { ai: 0, stickers: 0 };
   var gifObserver = null;
+  var MAX_GIF_PLAYING = 2;
+  var playingGifs = [];
 
   function tr(key) {
     return typeof window.t === 'function' ? window.t(key) : key;
@@ -80,6 +82,28 @@
       try { gifObserver.disconnect(); } catch (e) {}
       gifObserver = null;
     }
+    playingGifs = [];
+  }
+
+  function stopGifEl(el) {
+    if (!el) return;
+    var thumb = el.dataset.thumbSrc || '';
+    if (thumb) el.src = thumb;
+    el.dataset.playing = '0';
+    var i = playingGifs.indexOf(el);
+    if (i >= 0) playingGifs.splice(i, 1);
+  }
+
+  function startGifEl(el) {
+    if (!el || el.dataset.playing === '1') return;
+    var play = el.dataset.playSrc || '';
+    if (!play) return;
+    while (playingGifs.length >= MAX_GIF_PLAYING) {
+      stopGifEl(playingGifs[0]);
+    }
+    el.src = play;
+    el.dataset.playing = '1';
+    playingGifs.push(el);
   }
 
   function bindGifViewport(img, thumbSrc, playSrc) {
@@ -87,29 +111,52 @@
     img.dataset.thumbSrc = thumbSrc || '';
     img.dataset.playSrc = playSrc;
     img.dataset.playing = '0';
+    img.dataset.thumbReady = '0';
+    img.dataset.inView = '0';
+
+    function tryPlay() {
+      if (img.dataset.thumbReady !== '1') return;
+      if (img.dataset.inView !== '1') return;
+      startGifEl(img);
+    }
+
+    if (thumbSrc) {
+      if (img.complete && img.naturalWidth) {
+        img.dataset.thumbReady = '1';
+      } else {
+        img.addEventListener('load', function onThumb() {
+          img.removeEventListener('load', onThumb);
+          img.dataset.thumbReady = '1';
+          tryPlay();
+        });
+        img.addEventListener('error', function onErr() {
+          img.removeEventListener('error', onErr);
+          img.dataset.thumbReady = '1';
+          tryPlay();
+        });
+      }
+    } else {
+      img.dataset.thumbReady = '1';
+    }
+
     if (typeof IntersectionObserver === 'undefined') {
-      img.src = playSrc;
-      img.dataset.playing = '1';
+      img.dataset.inView = '1';
+      tryPlay();
       return;
     }
     if (!gifObserver) {
       gifObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           var el = entry.target;
-          var thumb = el.dataset.thumbSrc || '';
-          var play = el.dataset.playSrc || '';
-          if (!play) return;
           if (entry.isIntersecting && entry.intersectionRatio > 0.12) {
-            if (el.dataset.playing !== '1') {
-              el.src = play;
-              el.dataset.playing = '1';
-            }
-          } else if (el.dataset.playing === '1' && thumb) {
-            el.src = thumb;
-            el.dataset.playing = '0';
+            el.dataset.inView = '1';
+            if (el.dataset.thumbReady === '1') startGifEl(el);
+          } else {
+            el.dataset.inView = '0';
+            stopGifEl(el);
           }
         });
-      }, { root: null, rootMargin: '80px 0px', threshold: [0, 0.12, 0.35] });
+      }, { root: null, rootMargin: '40px 0px', threshold: [0, 0.12, 0.35] });
     }
     gifObserver.observe(img);
   }

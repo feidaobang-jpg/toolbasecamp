@@ -1,6 +1,6 @@
 /**
- * Shared list pager — prev / status / next.
- * Usage: tbRenderPager(el, { page, pageSize, total, onChange })
+ * Shared list pager — prev / jump / status / next.
+ * Usage: tbRenderPager(el, { page, pageSize, total, onChange, hideIfSingle? })
  */
 (function (global) {
   'use strict';
@@ -44,23 +44,56 @@
     }
     el.hidden = false;
 
+    function goTo(p) {
+      var next = normalizePage(p, total, pageSize);
+      if (next === page || typeof opts.onChange !== 'function') return;
+      opts.onChange(next);
+    }
+
     var prev = document.createElement('button');
     prev.type = 'button';
     prev.className = 'tb-btn';
     prev.textContent = tr('common.pagerPrev');
     prev.disabled = page <= 1;
     prev.addEventListener('click', function () {
-      if (page <= 1 || typeof opts.onChange !== 'function') return;
-      opts.onChange(page - 1);
+      if (page <= 1) return;
+      goTo(page - 1);
     });
 
-    var status = document.createElement('span');
-    status.className = 'tb-pager-status';
-    status.textContent = tr('common.pagerStatus', {
-      page: page,
-      pages: pages,
-      total: total
+    var jump = document.createElement('span');
+    jump.className = 'tb-pager-jump';
+    var jumpLabel = document.createElement('span');
+    jumpLabel.className = 'tb-pager-jump-label';
+    jumpLabel.textContent = tr('common.pagerJumpPrefix');
+    var input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'tb-pager-input';
+    input.min = '1';
+    input.max = String(pages);
+    input.value = String(page);
+    input.inputMode = 'numeric';
+    input.setAttribute('aria-label', tr('common.pagerJump'));
+    var jumpSuffix = document.createElement('span');
+    jumpSuffix.className = 'tb-pager-jump-label';
+    jumpSuffix.textContent = tr('common.pagerJumpSuffix', { pages: pages, total: total });
+    var goBtn = document.createElement('button');
+    goBtn.type = 'button';
+    goBtn.className = 'tb-btn tb-btn-sm';
+    goBtn.textContent = tr('common.pagerJump');
+    function submitJump() {
+      goTo(input.value);
+    }
+    goBtn.addEventListener('click', submitJump);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitJump();
+      }
     });
+    jump.appendChild(jumpLabel);
+    jump.appendChild(input);
+    jump.appendChild(jumpSuffix);
+    jump.appendChild(goBtn);
 
     var next = document.createElement('button');
     next.type = 'button';
@@ -68,12 +101,12 @@
     next.textContent = tr('common.pagerNext');
     next.disabled = page >= pages;
     next.addEventListener('click', function () {
-      if (page >= pages || typeof opts.onChange !== 'function') return;
-      opts.onChange(page + 1);
+      if (page >= pages) return;
+      goTo(page + 1);
     });
 
     el.appendChild(prev);
-    el.appendChild(status);
+    el.appendChild(jump);
     el.appendChild(next);
   }
 
