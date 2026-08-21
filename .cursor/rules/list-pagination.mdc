@@ -12,16 +12,13 @@ alwaysApply: false
 
 ## 模式 A：动态列表（主站 Hub / 管理后台）
 
-适用：图片、音乐、钱包后台、以及以后同类 API 列表。
+适用：图片、音乐、用户余额（钱包）后台、以及以后同类 API 列表。
 
 1. **组件**：`public/js/tb-pager.js` 的 `tbRenderPager`（上一页 / 状态文案 / 下一页）。
 2. **样式**：`base.css` 的 `.tb-pager` / `.tb-pager-status`；按钮用 `.tb-btn`。
-3. **文案**：`common.pagerPrev` / `common.pagerNext` / `common.pagerStatus`（中英同步）。不要再为单页造 `walletPagePrev` 一类重复键（存量可逐步迁到 common）。
-4. **默认每页条数**
-   - 图片网格（前台 / 后台）：**24**
-   - 音乐列表（前台）：**20**
-   - 管理后台长列表（歌曲、钱包等）：**30**
-5. **接口**：list API 返回 `total`，支持 `limit` / `offset`；换页带 offset（或客户端切已缓存全集，但**屏幕上只显示当前页**）。
+3. **文案**：`common.pagerPrev` / `common.pagerNext` / `common.pagerStatus`（中英同步）。不要再为单页造 `*PagePrev` 一类重复键（存量可逐步删掉）。
+4. **每页条数**：动态列表统一 **20**（图片网格、音乐、后台歌曲/钱包等）。
+5. **接口**：list API 返回 `total`，支持 `limit` / `offset`（或 `page` / `page_size`）；换页请求下一页（或客户端切已缓存全集，但**屏幕上只显示当前页**）。
 6. **筛选 / 搜索**：换分类或改搜索词时**重置到第 1 页**。
 7. **仅一页时**：分页条可隐藏（`hideIfSingle` 默认 true）。
 
@@ -32,6 +29,12 @@ alwaysApply: false
 1. **形态**：`上一页` + 页码（可含省略号）+ `下一页`；每页独立 URL（如 `index.html`、`page/2.html`）。
 2. **实现**：沿用 `scripts/news/build_news.py` 的 `pagination_html` + `news.css` 的 `.page-btn*`，不要改成只有上一页/下一页的 JS pager。
 3. **原因**：可收藏、可分享、搜索引擎可抓取分页。
+
+## 图片网格尺寸
+
+前台 `images.html` 与后台图片管理网格 **统一**：
+- 默认 `minmax(160px, 1fr)`
+- `min-width: 640px` 时 `minmax(200px, 1fr)`、`gap: 14px`
 
 ## 怎么选
 
@@ -46,4 +49,4 @@ alwaysApply: false
 - 一次 `limit=500` 且全部插入 DOM、无分页
 - 动态列表各页自造一套分页按钮/文案，不复用 `tb-pager`
 - 把资讯改成 JS 上一页/下一页，丢掉可分享页码 URL
-- 把图片/音乐 Hub 改成静态多 HTML 页码（部署与实时数据不匹配）
+- 前后台图片网格 minmax 不一致

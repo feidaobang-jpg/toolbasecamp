@@ -8,7 +8,7 @@
   var activeTab = 'stickers';
   var listCache = { ai: null, stickers: null };
   var stickerCategory = '';
-  var PAGE_SIZE = 24;
+  var PAGE_SIZE = 20;
   var pageState = { ai: 1, stickers: 1 };
   var totalState = { ai: 0, stickers: 0 };
 

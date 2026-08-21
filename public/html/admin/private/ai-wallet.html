@@ -8,14 +8,15 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script src="../../../vendor/tailwindcss.js?v=minimax1"></script>
   <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
-  <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
+  <link rel="stylesheet" href="../../../css/base.css?v=pager20" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=minimax1" />
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=pager20" />
   <script src="../../../js/locales/en.js?v=minimax1"></script>
   <script src="../../../js/locales/zh-CN.js?v=minimax1"></script>
   <script src="../../../js/i18n.js?v=minimax1"></script>
   <script src="../../../js/config.js?v=minimax1"></script>
   <script src="../../../js/common_ui.js?v=minimax1"></script>
+  <script src="../../../js/tb-pager.js?v=pager20"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -79,11 +80,7 @@
           </div>
           <div id="users-status" class="ladder-status"></div>
           <div id="users-list" class="text-sm space-y-2"></div>
-          <div class="action-row mt-3" id="users-pager" hidden>
-            <button type="button" class="tb-btn" id="users-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
-            <span class="text-sm text-gray-500 self-center" id="users-page-label"></span>
-            <button type="button" class="tb-btn" id="users-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
-          </div>
+          <div class="tb-pager" id="users-pager" hidden></div>
         </div>
       </section>
 
@@ -99,11 +96,7 @@
           </div>
           <div id="wd-status" class="ladder-status"></div>
           <div id="wd-list" class="text-sm space-y-2"></div>
-          <div class="action-row mt-3" id="wd-pager" hidden>
-            <button type="button" class="tb-btn" id="wd-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
-            <span class="text-sm text-gray-500 self-center" id="wd-page-label"></span>
-            <button type="button" class="tb-btn" id="wd-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
-          </div>
+          <div class="tb-pager" id="wd-pager" hidden></div>
         </div>
       </section>
 
@@ -136,17 +129,13 @@
             <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="used" data-i18n="privateHub.ops.walletFilterUsed">已用</button>
           </div>
           <div id="codes-list" class="text-sm space-y-2 mt-3"></div>
-          <div class="action-row mt-3" id="codes-pager" hidden>
-            <button type="button" class="tb-btn" id="codes-prev" data-i18n="privateHub.ops.walletPagePrev">上一页</button>
-            <span class="text-sm text-gray-500 self-center" id="codes-page-label"></span>
-            <button type="button" class="tb-btn" id="codes-next" data-i18n="privateHub.ops.walletPageNext">下一页</button>
-          </div>
+          <div class="tb-pager" id="codes-pager" hidden></div>
         </div>
       </section>
     </div>
   </main>
 
   <script src="../../../js/admin/private-page-guard.js?v=minimax1"></script>
-  <script src="../../../js/admin/ai-wallet.js?v=minimax1"></script>
+  <script src="../../../js/admin/ai-wallet.js?v=pager20"></script>
 </body>
 </html>

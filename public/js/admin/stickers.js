@@ -10,7 +10,7 @@
   var allItems = [];
   var selectedIds = new Set();
   var listPage = 1;
-  var PAGE_SIZE = 24;
+  var PAGE_SIZE = 20;
 
   var PRESET_CATS = [
     { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },

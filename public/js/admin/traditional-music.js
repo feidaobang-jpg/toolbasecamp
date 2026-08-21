@@ -10,7 +10,7 @@
   var aiItems = [];
   var tradPage = 1;
   var aiPage = 1;
-  var PAGE_SIZE = 30;
+  var PAGE_SIZE = 20;
   var lastFfmpegOk = false;
 
   function normFileName(name) {
