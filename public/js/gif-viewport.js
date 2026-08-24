@@ -29,9 +29,9 @@
     var play = el.dataset.playSrc || '';
     if (!play) return;
     while (playing.length >= CAP) stop(playing[0]);
-    // Assign on the visible <img> and restart timeline (Chrome may freeze otherwise).
-    el.src = play;
-    el.src = '';
+    if (el.dataset.playing === '1' && (el.currentSrc === play || el.getAttribute('src') === play)) {
+      return;
+    }
     el.src = play;
     el.dataset.playing = '1';
     if (playing.indexOf(el) < 0) playing.push(el);

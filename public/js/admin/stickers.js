@@ -338,6 +338,10 @@
       if (thumbImg && item.imageUrl) {
         thumbImg.addEventListener('error', function () {
           if (thumbImg.dataset.fallback) return;
+          // Only recover missing JPEG thumb — do not override GIF playback.
+          if (thumbImg.dataset.playing === '1') return;
+          var cur = thumbImg.getAttribute('src') || '';
+          if (thumbImg.dataset.playSrc && cur && cur !== thumbImg.dataset.thumbSrc) return;
           thumbImg.dataset.fallback = '1';
           thumbImg.src = apiBase() + (item.imageUrl.charAt(0) === '/' ? item.imageUrl : '/' + item.imageUrl);
         });
