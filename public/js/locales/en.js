@@ -116,7 +116,7 @@ window.TB_LOCALES.en = {
             stickersDesc: 'Batch-upload images to the Images hub “Classic” tab (filter by category). WeChat users can long-press to save or forward.',
             stickersLoading: 'Loading…',
             stickersUploadTitle: 'Batch upload',
-            stickersUploadDesc: 'PNG / JPG / GIF / WebP (multi-select). Single-frame GIFs go to Still; multi-frame to GIF. Pick a category first, then upload.',
+            stickersUploadDesc: 'PNG / JPG / GIF / WebP (multi-select). Single-frame GIFs go to Still; multi-frame to GIF. Generic names like (47) are auto-replaced with OCR text from the image. Pick a category first, then upload.',
             stickersPick: 'Choose images',
             stickersCategory: 'Category',
             stickersCategoryLabel: 'Category',

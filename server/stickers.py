@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
 from typing import Optional
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
@@ -46,6 +47,26 @@ STICKER_PREVIEW_FRAME_STEP = max(1, int(os.environ.get("STICKER_PREVIEW_FRAME_ST
 STICKER_PREVIEW_MAX_BYTES = max(20 * 1024, int(os.environ.get("STICKER_PREVIEW_MAX_BYTES") or str(150 * 1024)))
 # Cap per-frame hold on stored GIFs (centiseconds; 60 = 600ms).
 STICKER_GIF_MAX_FRAME_CS = max(1, int(os.environ.get("STICKER_GIF_MAX_FRAME_CS") or "60"))
+# OCR generic filenames (e.g. "(47).gif") into display titles via Tencent OCR.
+STICKER_OCR_TITLE = (os.environ.get("STICKER_OCR_TITLE") or "1").strip().lower() not in (
+    "0",
+    "false",
+    "no",
+    "off",
+)
+
+_GENERIC_TITLE_RE = re.compile(
+    r"^(?:"
+    r"\(\d+\)"
+    r"|\d{1,6}"
+    r"|img[_-]?\d+"
+    r"|image[_-]?\d+"
+    r"|sticker\d*"
+    r"|untitled"
+    r"|未命名"
+    r")$",
+    re.I,
+)
 
 _ALLOWED_EXT = frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp"})
 _CONTENT_BY_EXT = {
@@ -152,6 +173,83 @@ def _parse_upload_meta(orig_name: str, category_hint: str = "") -> tuple[str, st
             if cat and title:
                 return cat[:40], title[:80]
     return "", (stem or "sticker")[:80]
+
+
+def _is_generic_sticker_title(title: str) -> bool:
+    s = str(title or "").strip()
+    if not s:
+        return True
+    if _GENERIC_TITLE_RE.match(s):
+        return True
+    if re.fullmatch(r"[\d\(\)\s_\-\.]+", s):
+        return True
+    if len(s) <= 3 and not re.search(r"[\u4e00-\u9fff]", s):
+        return True
+    return False
+
+
+def _normalize_ocr_title(text: str) -> str:
+    parts = []
+    for line in str(text or "").splitlines():
+        t = line.strip()
+        if t:
+            parts.append(t)
+    if not parts:
+        return ""
+    if all(re.search(r"[\u4e00-\u9fff]", p) for p in parts):
+        out = "".join(parts)
+    else:
+        out = " ".join(parts)
+    out = re.sub(r"\s+", " ", out).strip()
+    return out[:80]
+
+
+def _ocr_sticker_title(image_bytes: bytes) -> str:
+    if not STICKER_OCR_TITLE:
+        return ""
+    try:
+        from tencent_image import ocr_general_text, tencent_configured
+
+        if not tencent_configured():
+            return ""
+        thumb = _make_thumbnail_bytes(image_bytes)
+        if not thumb:
+            return ""
+        return _normalize_ocr_title(ocr_general_text(thumb))
+    except Exception:
+        return ""
+
+
+def _safe_filename_stem(name: str) -> str:
+    s = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "", str(name or ""))
+    s = re.sub(r"\s+", " ", s).strip().strip(".")
+    return s[:60]
+
+
+def _ascii_filename(sticker_id: str, ext: str) -> str:
+    ext = ext if ext.startswith(".") else f".{ext}"
+    safe_ext = re.sub(r"[^a-zA-Z0-9.]", "", ext) or ".png"
+    return f"sticker-{sticker_id}{safe_ext}"
+
+
+def _sticker_download_filename(row: dict, ext: str) -> str:
+    sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(row.get("id") or ""))[:48] or "sticker"
+    title = str(row.get("title") or "").strip()
+    if title and not _is_generic_sticker_title(title):
+        safe = _safe_filename_stem(title)
+        if safe:
+            ext = ext if ext.startswith(".") else f".{ext}"
+            safe_ext = re.sub(r"[^a-zA-Z0-9.]", "", ext) or ".png"
+            return f"{safe}{safe_ext}"
+    return _ascii_filename(sid, ext)
+
+
+def _content_disposition_filename(name: str, attachment: bool) -> str:
+    name = str(name or "download").strip() or "download"
+    ascii_fb = re.sub(r"[^\w.\-]+", "_", name).strip("._") or "download"
+    encoded = quote(name, safe="")
+    disp = "attachment" if attachment else "inline"
+    return f'{disp}; filename="{ascii_fb}"; filename*=UTF-8\'\'{encoded}'
 
 
 def _safe_sticker_path(file_name: str) -> Path:
@@ -567,6 +665,7 @@ def _public_item(row: dict) -> dict:
     static_url = f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}"
     # Grid / modal playback always use the stored original.
     play_url = static_url
+    ext = Path(file_name).suffix if file_name else ".png"
     return {
         "id": sid,
         "title": str(row.get("title") or sid).strip() or sid,
@@ -580,6 +679,7 @@ def _public_item(row: dict) -> dict:
         "previewUrl": play_url if animated else "",
         "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
         "downloadUrl": f"/image/stickers/{sid}?download=1",
+        "downloadFilename": _sticker_download_filename(row, ext),
     }
 
 
@@ -604,12 +704,6 @@ def _guess_content_type(ext: str, upload_ctype: str) -> str:
     if low.startswith("image/"):
         return low
     return "image/png"
-
-
-def _ascii_filename(sticker_id: str, ext: str) -> str:
-    ext = ext if ext.startswith(".") else f".{ext}"
-    safe_ext = re.sub(r"[^a-zA-Z0-9.]", "", ext) or ".png"
-    return f"sticker-{sticker_id}{safe_ext}"
 
 
 @router.get("/list")
@@ -781,6 +875,10 @@ async def stickers_admin_upload(
 
     sid = _next_sticker_id(items)
     cat, title = _parse_upload_meta(orig_name, category)
+    if _is_generic_sticker_title(title):
+        ocr_title = _ocr_sticker_title(raw)
+        if ocr_title:
+            title = ocr_title
     is_gif_upload = ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8")
     animated = bool(is_gif_upload and _is_animated_gif_bytes(raw))
 
@@ -840,11 +938,9 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Sticker file missing")
     ext = path.suffix or ".png"
-    filename = _ascii_filename(sid, ext)
+    filename = _sticker_download_filename(row, ext)
     headers = {
-        "Content-Disposition": (
-            f'{"attachment" if download else "inline"}; filename="{filename}"'
-        ),
+        "Content-Disposition": _content_disposition_filename(filename, bool(download)),
     }
     if not download:
         headers["Cache-Control"] = "public, max-age=86400"

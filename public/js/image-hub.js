@@ -156,7 +156,14 @@
     if (ctype.indexOf('jpeg') >= 0 || ctype.indexOf('jpg') >= 0) ext = '.jpg';
     else if (ctype.indexOf('gif') >= 0) ext = '.gif';
     else if (ctype.indexOf('webp') >= 0) ext = '.webp';
-    var name = 'sticker-' + id + ext;
+    var name = String(item.downloadFilename || '').trim();
+    if (!name) {
+      var title = displayStickerTitle(item);
+      if (title) {
+        name = title.replace(/[<>:"/\\|?*\x00-\x1f]/g, '').trim().slice(0, 60) + ext;
+      }
+    }
+    if (!name) name = 'sticker-' + id + ext;
 
     if (isWeChat()) {
       if (typeof tbNotify === 'function') {
@@ -432,9 +439,22 @@
     renderPagerFor('stickers');
   }
 
+  function isGenericStickerTitle(title) {
+    var s = String(title || '').trim();
+    if (!s) return true;
+    if (/^\(\d+\)$/.test(s)) return true;
+    if (/^\d{1,6}$/.test(s)) return true;
+    if (/^img[_-]?\d+$/i.test(s)) return true;
+    if (/^image[_-]?\d+$/i.test(s)) return true;
+    if (/^sticker\d*$/i.test(s)) return true;
+    if (/^[\d()_\s.\-]+$/.test(s)) return true;
+    if (s.length <= 3 && !/[\u4e00-\u9fff]/.test(s)) return true;
+    return false;
+  }
+
   function displayStickerTitle(item) {
     var title = String((item && item.title) || '').trim();
-    if (!title) return '';
+    if (!title || isGenericStickerTitle(title)) return '';
     // Hash / CDN / Weibo-style file ids — not useful as a display name
     if (/^[a-f0-9]{28,64}$/i.test(title)) return '';
     if (/^[a-z0-9_-]{20,}$/i.test(title) && !/[\u4e00-\u9fff]/.test(title)) return '';

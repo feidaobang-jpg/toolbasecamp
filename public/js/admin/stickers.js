@@ -73,9 +73,24 @@
     el.classList.toggle('is-error', !!isErr);
   }
 
+  function isGenericStickerTitle(title) {
+    var s = String(title || '').trim();
+    if (!s) return true;
+    if (/^\(\d+\)$/.test(s)) return true;
+    if (/^\d{1,6}$/.test(s)) return true;
+    if (/^img[_-]?\d+$/i.test(s)) return true;
+    if (/^image[_-]?\d+$/i.test(s)) return true;
+    if (/^sticker\d*$/i.test(s)) return true;
+    if (/^[\d()_\s.\-]+$/.test(s)) return true;
+    if (s.length <= 3 && !/[\u4e00-\u9fff]/.test(s)) return true;
+    return false;
+  }
+
   function displayTitle(item) {
     var title = String((item && item.title) || '').trim();
-    if (!title) return item.category || item.id || '';
+    if (!title || isGenericStickerTitle(title)) {
+      return item.category || tr('hub.imagesPage.stickersUntitled') || item.id || '';
+    }
     if (/^[a-f0-9]{28,64}$/i.test(title)) return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
     if (/^[a-z0-9_-]{20,}$/i.test(title) && !/[\u4e00-\u9fff]/.test(title)) {
       return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
