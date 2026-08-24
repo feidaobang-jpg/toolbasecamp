@@ -776,6 +776,7 @@ def stickers_public_list(
             seen_cats.add(cat)
             categories.append(cat)
     filtered = _filter_sticker_rows(all_items, category=category, kind=kind, q=q)
+    kind_norm = (kind or "").strip().lower()
     lim = max(1, min(int(limit or 200), 500))
     off = max(0, int(offset or 0))
     items = []
@@ -800,7 +801,7 @@ def stickers_public_list(
         "limit": lim,
         "offset": off,
         "total": len(filtered),
-        "kind": kind_filter or "all",
+        "kind": kind_norm or "all",
     }
 
 

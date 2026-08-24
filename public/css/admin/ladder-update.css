@@ -207,6 +207,16 @@ pre.game-thumbs-list {
   color: #fff;
 }
 
+.ladder-list-search {
+  margin: 0 0 12px;
+  max-width: 360px;
+}
+
+.ladder-list-search-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .ladder-media-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
