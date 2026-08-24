@@ -601,7 +601,8 @@
           status,
           tr('privateHub.ops.stickersUploadDone', {
             ok: ok,
-            skip: skipped + serverSkip + skippedStatic,
+            dup: skipped + serverSkip,
+            static: skippedStatic,
             fail: fail,
             total: pickedTotal
           })
