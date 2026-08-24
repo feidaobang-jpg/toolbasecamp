@@ -457,7 +457,9 @@ window.TB_LOCALES.en = {
             filterAll: 'All',
             filterStill: 'Still',
             filterGif: 'GIF',
-            filterEmpty: 'No images match this filter.'
+            filterEmpty: 'No images match this filter.',
+            stickersSearchPlaceholder: 'Search by name or category',
+            stickersSearchEmpty: 'No matching images. Try another keyword.'
         },
         music: {
             title: 'Music',
