@@ -104,89 +104,6 @@
     return /\.gif(\?|$)/i.test(u);
   }
 
-  function isGifFile(file) {
-    if (!file) return false;
-    var name = String(file.name || '').toLowerCase();
-    if (/\.gif$/i.test(name)) return true;
-    var type = String(file.type || '').toLowerCase();
-    return type === 'image/gif';
-  }
-
-  function countGifFrames(bytes) {
-    if (!bytes || bytes.length < 13) return 0;
-    if (bytes[0] !== 0x47 || bytes[1] !== 0x49 || bytes[2] !== 0x46) return 0;
-    var pos = 13;
-    var packed = bytes[10];
-    if (packed & 0x80) {
-      pos += 3 * (2 << (packed & 0x07));
-    }
-    var frames = 0;
-    while (pos < bytes.length) {
-      var b = bytes[pos];
-      if (b === 0x21) {
-        pos += 2;
-        if (pos >= bytes.length) break;
-        while (pos < bytes.length) {
-          var extSize = bytes[pos++];
-          if (extSize === 0) break;
-          pos += extSize;
-        }
-      } else if (b === 0x2c) {
-        frames += 1;
-        pos += 10;
-        if (pos >= bytes.length) break;
-        pos += 1;
-        while (pos < bytes.length) {
-          var blockSize = bytes[pos++];
-          if (blockSize === 0) break;
-          pos += blockSize;
-        }
-      } else if (b === 0x3b) {
-        break;
-      } else {
-        pos += 1;
-      }
-    }
-    return frames;
-  }
-
-  function readFileBytes(file) {
-    return new Promise(function (resolve, reject) {
-      var reader = new FileReader();
-      reader.onload = function () { resolve(new Uint8Array(reader.result)); };
-      reader.onerror = function () { reject(reader.error || new Error('read failed')); };
-      reader.readAsArrayBuffer(file);
-    });
-  }
-
-  function isAnimatedGifFile(file) {
-    // Client only does a cheap frame-count check; server does pixel-diff.
-    // Single-frame GIFs can be skipped early; multi-frame still go to server.
-    if (!isGifFile(file)) return Promise.resolve(true);
-    return readFileBytes(file).then(function (bytes) {
-      return countGifFrames(bytes) > 1;
-    }).catch(function () {
-      // On read error, let the server decide.
-      return true;
-    });
-  }
-
-  function isStaticGifReject(res, data) {
-    if (!res || res.status !== 422) return false;
-    var detail = data && data.detail;
-    if (detail === 'not_animated_gif') return true;
-    if (typeof detail === 'string' && detail.indexOf('not_animated_gif') >= 0) return true;
-    if (Array.isArray(detail)) {
-      return detail.some(function (d) {
-        if (d === 'not_animated_gif') return true;
-        if (d && typeof d === 'object' && String(d.msg || d.detail || '').indexOf('not_animated_gif') >= 0) return true;
-        return false;
-      });
-    }
-    // This upload endpoint only uses 422 for static GIF reject.
-    return true;
-  }
-
   function playUrl(item) {
     if (!item) return '';
     var u = item.previewUrl || item.staticUrl || '';
@@ -525,8 +442,6 @@
     var picked = Array.prototype.slice.call(files);
     var skipped = 0;
     var skippedNames = [];
-    var skippedStatic = 0;
-    var skippedStaticNames = [];
     var seen = new Set(existingSources);
     var queue = [];
     picked.forEach(function (file) {
@@ -545,50 +460,7 @@
       return;
     }
 
-    function showPreflightStatus() {
-      var parts = [];
-      if (skipped && skippedNames.length) {
-        parts.push(tr('privateHub.ops.stickersUploadSkippedPreflight', {
-          skip: skipped,
-          names: skippedNames.slice(0, 5).join(', ') + (skippedNames.length > 5 ? '…' : '')
-        }));
-      }
-      if (skippedStatic && skippedStaticNames.length) {
-        parts.push(tr('privateHub.ops.stickersUploadSkipStaticGif', {
-          skip: skippedStatic,
-          names: skippedStaticNames.slice(0, 5).join(', ') + (skippedStaticNames.length > 5 ? '…' : '')
-        }));
-      }
-      if (parts.length) setStatus(status, parts.join(' '));
-      else setStatus(status, tr('privateHub.ops.stickersUploadStart', { total: queue.length }));
-    }
-
-    Promise.all(queue.map(function (file) {
-      return isAnimatedGifFile(file).then(function (animated) {
-        return { file: file, animated: animated };
-      });
-    })).then(function (checked) {
-      queue = [];
-      checked.forEach(function (row) {
-        if (!row.animated && isGifFile(row.file)) {
-          skippedStatic += 1;
-          skippedStaticNames.push(row.file.name);
-          return;
-        }
-        queue.push(row.file);
-      });
-      if (!queue.length) {
-        showPreflightStatus();
-        if (progress) progress.hidden = true;
-        return;
-      }
-      startUploadQueue();
-    }).catch(function () {
-      startUploadQueue();
-    });
-
-    function startUploadQueue() {
-    var pickedTotal = skipped + skippedStatic + queue.length;
+    var pickedTotal = skipped + queue.length;
     var uploadTotal = queue.length;
     var done = 0;
     var ok = 0;
@@ -602,7 +474,6 @@
           tr('privateHub.ops.stickersUploadDone', {
             ok: ok,
             dup: skipped + serverSkip,
-            static: skippedStatic,
             fail: fail,
             total: pickedTotal
           })
@@ -635,10 +506,6 @@
             existingSources.add(normFileName(file.name));
             return;
           }
-          if (isStaticGifReject(res, data)) {
-            skippedStatic += 1;
-            return;
-          }
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
           ok += 1;
           existingSources.add(normFileName(file.name));
@@ -648,9 +515,18 @@
       }).then(next);
     }
 
-    showPreflightStatus();
-    next();
+    if (skipped && skippedNames.length) {
+      setStatus(
+        status,
+        tr('privateHub.ops.stickersUploadSkippedPreflight', {
+          skip: skipped,
+          names: skippedNames.slice(0, 5).join(', ') + (skippedNames.length > 5 ? '…' : '')
+        })
+      );
+    } else {
+      setStatus(status, tr('privateHub.ops.stickersUploadStart', { total: uploadTotal }));
     }
+    next();
   }
 
   function bindUi() {

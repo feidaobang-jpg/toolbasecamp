@@ -216,28 +216,16 @@ def _quantize_rgb(rgb, colors: int, palette_img=None):
 
 
 def _is_animated_gif_bytes(data: bytes) -> bool:
-    """True only when GIF frames differ visually (not just by extension or frame count)."""
+    """True when GIF has more than one frame (browser will treat it as animated)."""
     if not data or len(data) < 4 or data[:4] != b"GIF8":
         return False
     try:
-        from PIL import Image, ImageChops
+        from PIL import Image
 
         im = Image.open(BytesIO(data))
-        n = int(getattr(im, "n_frames", 1) or 1)
-        if n <= 1:
-            return False
-        im.seek(0)
-        prev = im.convert("RGBA")
-        for idx in range(1, n):
-            im.seek(idx)
-            cur = im.convert("RGBA")
-            diff = ImageChops.difference(prev, cur)
-            if diff.getbbox() is not None:
-                lo_hi = diff.getextrema()
-                if any(int(hi or 0) > 0 for _, hi in lo_hi):
-                    return True
-            prev = cur
-        return False
+        if bool(getattr(im, "is_animated", False)):
+            return True
+        return int(getattr(im, "n_frames", 1) or 1) > 1
     except Exception:
         return False
 
@@ -697,8 +685,6 @@ async def stickers_admin_upload(
     cat, title = _parse_upload_meta(orig_name, category)
     is_gif_upload = ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8")
     animated = bool(is_gif_upload and _is_animated_gif_bytes(raw))
-    if is_gif_upload and not animated:
-        raise HTTPException(status_code=422, detail="not_animated_gif")
 
     raw, ctype, out_ext = _prepare_sticker_bytes(raw, ext)
     if out_ext not in _ALLOWED_EXT:
