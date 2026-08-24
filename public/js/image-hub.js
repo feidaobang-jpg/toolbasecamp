@@ -67,7 +67,7 @@
 
   function isAnimated(item) {
     if (!item) return false;
-    if (item.animated === true) return true;
+    if (typeof item.animated === 'boolean') return item.animated;
     var ctype = String(item.contentType || '').toLowerCase();
     if (ctype.indexOf('gif') >= 0) return true;
     var u = String(item.staticUrl || item.imageUrl || item.thumbnailUrl || '');

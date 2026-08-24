@@ -215,6 +215,33 @@ def _quantize_rgb(rgb, colors: int, palette_img=None):
         return rgb.quantize(colors=n, dither=Image.Dither.FLOYDSTEINBERG)
 
 
+def _is_animated_gif_bytes(data: bytes) -> bool:
+    """True only when GIF frames differ visually (not just by extension or frame count)."""
+    if not data or len(data) < 4 or data[:4] != b"GIF8":
+        return False
+    try:
+        from PIL import Image, ImageChops
+
+        im = Image.open(BytesIO(data))
+        n = int(getattr(im, "n_frames", 1) or 1)
+        if n <= 1:
+            return False
+        im.seek(0)
+        prev = im.convert("RGBA")
+        for idx in range(1, n):
+            im.seek(idx)
+            cur = im.convert("RGBA")
+            diff = ImageChops.difference(prev, cur)
+            if diff.getbbox() is not None:
+                lo_hi = diff.getextrema()
+                if any(int(hi or 0) > 0 for _, hi in lo_hi):
+                    return True
+            prev = cur
+        return False
+    except Exception:
+        return False
+
+
 def _compress_animated_gif(
     data: bytes,
     *,
@@ -406,11 +433,26 @@ def _sticker_row(sticker_id: str) -> Optional[dict]:
     return None
 
 
-def _is_gif_row(row: dict) -> bool:
+def _is_gif_extension_row(row: dict) -> bool:
     ctype = str(row.get("contentType") or "").lower()
     file_name = str(row.get("file") or "").lower()
-    if "gif" in ctype or file_name.endswith(".gif"):
-        return True
+    return "gif" in ctype or file_name.endswith(".gif")
+
+
+def _is_gif_row(row: dict) -> bool:
+    """True when sticker should play as animated GIF in the grid."""
+    if not _is_gif_extension_row(row):
+        return False
+    file_name = str(row.get("file") or "").strip()
+    if file_name:
+        try:
+            path = _safe_sticker_path(file_name)
+            if path.is_file():
+                return _is_animated_gif_bytes(path.read_bytes())
+        except HTTPException:
+            pass
+    if "animated" in row:
+        return bool(row.get("animated"))
     return False
 
 
@@ -653,6 +695,11 @@ async def stickers_admin_upload(
 
     sid = _next_sticker_id(items)
     cat, title = _parse_upload_meta(orig_name, category)
+    is_gif_upload = ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8")
+    animated = bool(is_gif_upload and _is_animated_gif_bytes(raw))
+    if is_gif_upload and not animated:
+        raise HTTPException(status_code=422, detail="not_animated_gif")
+
     raw, ctype, out_ext = _prepare_sticker_bytes(raw, ext)
     if out_ext not in _ALLOWED_EXT:
         out_ext = ".gif" if "gif" in ctype else ".png"
@@ -663,7 +710,7 @@ async def stickers_admin_upload(
 
     thumb_name = _write_thumbnail(sid, raw)
     preview_name = ""
-    if out_ext == ".gif" or "gif" in ctype:
+    if animated:
         preview_name = _write_preview_gif(sid, raw)
     created = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     row = {
@@ -674,6 +721,7 @@ async def stickers_admin_upload(
         "thumbFile": thumb_name,
         "previewFile": preview_name,
         "contentType": ctype,
+        "animated": bool(animated),
         "source": orig_name,
         "createdAt": _format_created_at_cn(created),
     }
