@@ -44,6 +44,8 @@ STICKER_PREVIEW_MAX_EDGE = max(80, int(os.environ.get("STICKER_PREVIEW_MAX_EDGE"
 STICKER_PREVIEW_COLORS = max(16, min(256, int(os.environ.get("STICKER_PREVIEW_COLORS") or "128")))
 STICKER_PREVIEW_FRAME_STEP = max(1, int(os.environ.get("STICKER_PREVIEW_FRAME_STEP") or "2"))
 STICKER_PREVIEW_MAX_BYTES = max(20 * 1024, int(os.environ.get("STICKER_PREVIEW_MAX_BYTES") or str(150 * 1024)))
+# Cap per-frame hold on stored GIFs (centiseconds; 60 = 600ms).
+STICKER_GIF_MAX_FRAME_CS = max(1, int(os.environ.get("STICKER_GIF_MAX_FRAME_CS") or "60"))
 
 _ALLOWED_EXT = frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp"})
 _CONTENT_BY_EXT = {
@@ -400,6 +402,61 @@ def _normalize_gif_loop_infinite(data: bytes) -> bytes:
     return bytes(out) if changed else data
 
 
+def _clamp_gif_frame_durations(data: bytes, max_centisecs: int | None = None) -> bytes:
+    """Cap Graphic Control Extension frame delays without recompressing pixels."""
+    if not data or len(data) < 16 or data[:4] != b"GIF8":
+        return data
+    if not _is_animated_gif_bytes(data):
+        return data
+    max_cs = max(1, min(65535, int(max_centisecs or STICKER_GIF_MAX_FRAME_CS)))
+    out = bytearray(data)
+    changed = False
+    pos = 13
+    packed = data[10]
+    if packed & 0x80:
+        pos += 3 * (2 << (packed & 0x07))
+    while pos < len(data):
+        b = data[pos]
+        if b == 0x21:
+            if pos + 2 < len(data) and data[pos + 1] == 0xF9 and data[pos + 2] == 0x04 and pos + 6 <= len(data):
+                cs = out[pos + 4] | (out[pos + 5] << 8)
+                if cs > max_cs:
+                    out[pos + 4] = max_cs & 0xFF
+                    out[pos + 5] = (max_cs >> 8) & 0xFF
+                    changed = True
+            pos += 2
+            if pos >= len(data):
+                break
+            while pos < len(data):
+                sz = data[pos]
+                pos += 1
+                if sz == 0:
+                    break
+                pos += sz
+        elif b == 0x2C:
+            pos += 10
+            if pos >= len(data):
+                break
+            pos += 1
+            while pos < len(data):
+                sz = data[pos]
+                pos += 1
+                if sz == 0:
+                    break
+                pos += sz
+        elif b == 0x3B:
+            break
+        else:
+            pos += 1
+    return bytes(out) if changed else data
+
+
+def _finalize_gif_bytes(raw: bytes) -> bytes:
+    out = _normalize_gif_loop_infinite(raw)
+    out = _clamp_gif_frame_durations(out)
+    return out
+
+
 def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     """
     Prepare sticker bytes for storage.
@@ -410,7 +467,7 @@ def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     """
     ext = (ext or "").lower()
     if ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8"):
-        return _normalize_gif_loop_infinite(raw), "image/gif", ".gif"
+        return _finalize_gif_bytes(raw), "image/gif", ".gif"
 
     if len(raw) > 400 * 1024:
         try:

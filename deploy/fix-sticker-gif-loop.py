@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Patch stored animated GIFs to NETSCAPE loop=0 (infinite)."""
+"""Patch stored animated GIFs: infinite loop + cap long frame delays."""
 from __future__ import annotations
 
 import json
@@ -14,8 +14,8 @@ for p in (ROOT / "server", Path("/opt/toolbasecamp-api"), ROOT):
 
 from stickers import (  # noqa: E402
     STICKER_MANIFEST,
+    _finalize_gif_bytes,
     _is_animated_gif_bytes,
-    _normalize_gif_loop_infinite,
     _safe_sticker_path,
 )
 
@@ -37,11 +37,11 @@ def main() -> int:
         data = path.read_bytes()
         if not _is_animated_gif_bytes(data):
             continue
-        fixed = _normalize_gif_loop_infinite(data)
+        fixed = _finalize_gif_bytes(data)
         if fixed != data:
             path.write_bytes(fixed)
             changed += 1
-            print("loop->inf", row.get("id"), row.get("source"))
+            print("fixed", row.get("id"), row.get("source"))
     print(f"done changed={changed}")
     return 0
 
