@@ -160,12 +160,31 @@
   }
 
   function isAnimatedGifFile(file) {
+    // Client only does a cheap frame-count check; server does pixel-diff.
+    // Single-frame GIFs can be skipped early; multi-frame still go to server.
     if (!isGifFile(file)) return Promise.resolve(true);
     return readFileBytes(file).then(function (bytes) {
       return countGifFrames(bytes) > 1;
     }).catch(function () {
+      // On read error, let the server decide.
       return true;
     });
+  }
+
+  function isStaticGifReject(res, data) {
+    if (!res || res.status !== 422) return false;
+    var detail = data && data.detail;
+    if (detail === 'not_animated_gif') return true;
+    if (typeof detail === 'string' && detail.indexOf('not_animated_gif') >= 0) return true;
+    if (Array.isArray(detail)) {
+      return detail.some(function (d) {
+        if (d === 'not_animated_gif') return true;
+        if (d && typeof d === 'object' && String(d.msg || d.detail || '').indexOf('not_animated_gif') >= 0) return true;
+        return false;
+      });
+    }
+    // This upload endpoint only uses 422 for static GIF reject.
+    return true;
   }
 
   function playUrl(item) {
@@ -569,7 +588,8 @@
     });
 
     function startUploadQueue() {
-    var total = queue.length;
+    var pickedTotal = skipped + skippedStatic + queue.length;
+    var uploadTotal = queue.length;
     var done = 0;
     var ok = 0;
     var fail = 0;
@@ -583,7 +603,7 @@
             ok: ok,
             skip: skipped + serverSkip + skippedStatic,
             fail: fail,
-            total: total
+            total: pickedTotal
           })
         );
         if (progress) progress.hidden = true;
@@ -596,7 +616,7 @@
         progress.hidden = false;
         progress.textContent = tr('privateHub.ops.stickersUploading', {
           current: done,
-          total: total,
+          total: uploadTotal,
           name: file.name
         });
       }
@@ -608,18 +628,15 @@
         headers: authHeaders(),
         body: fd
       }).then(function (res) {
-        return res.json().then(function (data) {
+        return res.json().catch(function () { return {}; }).then(function (data) {
           if (res.status === 409) {
             serverSkip += 1;
             existingSources.add(normFileName(file.name));
             return;
           }
-          if (res.status === 422) {
-            var detail = data && data.detail;
-            if (detail === 'not_animated_gif' || (Array.isArray(detail) && detail.indexOf('not_animated_gif') >= 0)) {
-              skippedStatic += 1;
-              return;
-            }
+          if (isStaticGifReject(res, data)) {
+            skippedStatic += 1;
+            return;
           }
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
           ok += 1;

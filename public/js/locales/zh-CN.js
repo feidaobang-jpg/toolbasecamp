@@ -141,7 +141,7 @@ window.TB_LOCALES['zh-CN'] = {
             stickersLoadFailed: '列表加载失败',
             stickersUploadStart: '开始上传 {total} 张…',
             stickersUploading: '上传 {current}/{total}：{name}',
-            stickersUploadDone: '上传完成：成功 {ok}，跳过 {skip}（已存在或非动图 GIF），失败 {fail}，共 {total}',
+            stickersUploadDone: '上传完成：成功 {ok}，跳过 {skip}（已存在 / 非动图 GIF），失败 {fail}，共选 {total}',
             stickersUploadSkipAll: '所选文件均已上传过，已跳过 {skip} 张',
             stickersUploadSkippedPreflight: '跳过 {skip} 张已存在：{names}',
             stickersUploadSkipStaticGif: '跳过 {skip} 张非动图 GIF：{names}',

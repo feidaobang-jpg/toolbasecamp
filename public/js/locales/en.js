@@ -142,7 +142,7 @@ window.TB_LOCALES.en = {
             stickersLoadFailed: 'Failed to load list',
             stickersUploadStart: 'Uploading {total} file(s)…',
             stickersUploading: 'Upload {current}/{total}: {name}',
-            stickersUploadDone: 'Done: {ok} ok, {skip} skipped (duplicate or static GIF), {fail} failed, {total} total',
+            stickersUploadDone: 'Done: {ok} ok, {skip} skipped (duplicate / static GIF), {fail} failed, {total} selected',
             stickersUploadSkipAll: 'All selected files were already uploaded; skipped {skip}',
             stickersUploadSkippedPreflight: 'Skipped {skip} already uploaded: {names}',
             stickersUploadSkipStaticGif: 'Skipped {skip} static GIF(s): {names}',
