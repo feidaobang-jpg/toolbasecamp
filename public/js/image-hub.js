@@ -462,6 +462,11 @@
     overlay.querySelector('.img-hub-preview-tip').textContent = tr('hub.imagesPage.stickersLongPress');
     var img = overlay.querySelector('.img-hub-preview-img');
     img.src = fullSrc;
+    // Force GIF timeline restart in browsers that cache a frozen first frame.
+    if (/\.gif(\?|$)/i.test(fullSrc)) {
+      img.src = '';
+      img.src = fullSrc;
+    }
     img.alt = opts.alt || tr('hub.imagesPage.untitled');
     var dlBtn = overlay.querySelector('[data-preview-dl]');
     dlBtn.textContent = tr('hub.imagesPage.download');

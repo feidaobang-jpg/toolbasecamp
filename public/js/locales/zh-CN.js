@@ -115,7 +115,7 @@ window.TB_LOCALES['zh-CN'] = {
             stickersDesc: '批量上传图片到图片模块「传统图片」Tab（按分类筛选）；微信内可长按保存或转发。',
             stickersLoading: '加载中…',
             stickersUploadTitle: '批量上传',
-            stickersUploadDesc: '支持 PNG / JPG / GIF / WebP（可多选）。单帧 GIF 会进「静态」，多帧进「动图」。请先点选分类再上传。',
+            stickersUploadDesc: '支持 PNG / JPG / GIF / WebP（可多选）。单帧 GIF 会进「静图」，多帧进「动图」。请先点选分类再上传。',
             stickersPick: '选择图片',
             stickersCategory: '分类',
             stickersCategoryLabel: '分类',
@@ -454,7 +454,7 @@ window.TB_LOCALES['zh-CN'] = {
             sourceInstruct: '图生图',
             untitled: '无提示词',
             filterAll: '全部',
-            filterStill: '静态',
+            filterStill: '静图',
             filterGif: '动图',
             filterEmpty: '当前筛选下没有图片。'
         },

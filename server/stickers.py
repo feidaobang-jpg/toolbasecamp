@@ -260,8 +260,8 @@ def _compress_animated_gif(
             duration = int(frame.info.get("duration", 100) or 100)
             if step > 1:
                 duration = max(40, duration * step)
-            # Grid preview: clamp long holds so loops look alive (e.g. 7800ms last frame).
-            duration = max(40, min(int(duration), 600))
+            # Grid preview: readable timing (some stickers use 40ms/frame) + cap long holds.
+            duration = max(100, min(int(duration), 600))
             rgba = _resize_rgba(frame.convert("RGBA"), max_edge)
             rgb_frames.append(_flatten_rgba(rgba))
             durations.append(max(20, duration))
@@ -283,7 +283,7 @@ def _compress_animated_gif(
             save_all=True,
             append_images=frames[1:],
             duration=durations,
-            loop=int(im.info.get("loop", 0) or 0),
+            loop=0,
             # optimize=True can scramble multi-frame palettes → wrong colors
             optimize=False,
             disposal=2,
