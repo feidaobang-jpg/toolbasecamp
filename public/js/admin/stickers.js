@@ -323,19 +323,31 @@
         '</div>' +
         '<div class="ladder-media-body">' +
           '<div class="ladder-media-title"></div>' +
+          '<div class="ladder-media-sub"></div>' +
           '<div class="action-row">' +
             '<button type="button" class="tb-btn" data-del>' + escapeHtml(tr('privateHub.ops.stickersDelete')) + '</button>' +
           '</div>' +
         '</div>';
-      var line = [];
       var titleText = displayTitle(item);
-      if (titleText) line.push(titleText);
-      if (animated) line.push('GIF');
+      var titleEl = card.querySelector('.ladder-media-title');
+      if (titleText) {
+        titleEl.textContent = titleText;
+      } else {
+        titleEl.hidden = true;
+        titleEl.style.display = 'none';
+      }
+      var metaParts = [];
       var cat = String(item.category || '').trim();
-      if (cat && cat !== titleText) line.push(cat);
+      if (cat) metaParts.push(cat);
       var sizeLab = fmtBytes(item.bytes);
-      if (sizeLab) line.push(sizeLab);
-      card.querySelector('.ladder-media-title').textContent = line.join(' · ');
+      if (sizeLab) metaParts.push(sizeLab);
+      var subEl = card.querySelector('.ladder-media-sub');
+      if (metaParts.length) {
+        subEl.textContent = metaParts.join(' · ');
+      } else {
+        subEl.hidden = true;
+        subEl.style.display = 'none';
+      }
       var cb = card.querySelector('input[type="checkbox"]');
       cb.addEventListener('change', function () {
         if (cb.checked) selectedIds.add(item.id);
