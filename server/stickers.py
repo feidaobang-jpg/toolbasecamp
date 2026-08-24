@@ -260,6 +260,8 @@ def _compress_animated_gif(
             duration = int(frame.info.get("duration", 100) or 100)
             if step > 1:
                 duration = max(40, duration * step)
+            # Grid preview: clamp long holds so loops look alive (e.g. 7800ms last frame).
+            duration = max(40, min(int(duration), 600))
             rgba = _resize_rgba(frame.convert("RGBA"), max_edge)
             rgb_frames.append(_flatten_rgba(rgba))
             durations.append(max(20, duration))

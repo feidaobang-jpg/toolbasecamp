@@ -1,6 +1,9 @@
 /**
- * GIF grid helper: show JPEG thumb immediately, preload GIF in parallel,
- * swap when ready. Pause (back to thumb) when leaving the viewport.
+ * GIF grid helper: show JPEG thumb first, swap to GIF when in viewport.
+ * Pause (back to thumb) when leaving the viewport.
+ *
+ * Important: do NOT decode the GIF in a detached Image() first — Chrome/Edge
+ * often then paint a frozen first frame when the same URL is assigned to <img>.
  */
 (function (global) {
   'use strict';
@@ -23,39 +26,16 @@
 
   function showGif(el) {
     if (!el || el.dataset.inView !== '1') return;
-    if (el.dataset.playing === '1') return;
     var play = el.dataset.playSrc || '';
     if (!play) return;
     while (playing.length >= CAP) stop(playing[0]);
+    // Assign on the visible <img> so the browser runs the animation timeline.
+    if (el.dataset.playing === '1' && (el.currentSrc === play || el.getAttribute('src') === play)) {
+      return;
+    }
     el.src = play;
     el.dataset.playing = '1';
     if (playing.indexOf(el) < 0) playing.push(el);
-  }
-
-  function preloadAndShow(el) {
-    if (!el || el.dataset.inView !== '1') return;
-    var play = el.dataset.playSrc || '';
-    if (!play) return;
-    if (el.dataset.playing === '1') return;
-
-    var decoded = el._gifDecoded;
-    if (decoded && decoded.complete && decoded.naturalWidth) {
-      showGif(el);
-      return;
-    }
-    if (el._gifLoader) return;
-
-    var loader = new Image();
-    el._gifLoader = loader;
-    loader.onload = function () {
-      el._gifDecoded = loader;
-      el._gifLoader = null;
-      showGif(el);
-    };
-    loader.onerror = function () {
-      el._gifLoader = null;
-    };
-    loader.src = play;
   }
 
   function ensureObserver() {
@@ -65,14 +45,13 @@
         var el = entry.target;
         if (entry.isIntersecting) {
           el.dataset.inView = '1';
-          preloadAndShow(el);
+          showGif(el);
         } else {
           stop(el);
         }
       });
     }, {
       root: null,
-      // Start a bit early so flips feel instant.
       rootMargin: '160px 0px',
       threshold: 0.01
     });
@@ -88,11 +67,11 @@
     img.dataset.thumbSrc = thumbSrc || '';
     img.dataset.playSrc = playSrc;
     img.dataset.playing = '0';
-    // Optimistic: current-page cards are usually on screen; IO corrects if not.
     img.dataset.inView = '1';
+    img.loading = 'eager';
     if (thumbSrc) img.src = thumbSrc;
-    // Kick off GIF download immediately (parallel for the whole page).
-    preloadAndShow(img);
+    // Start GIF on the real element (keeps animation).
+    showGif(img);
 
     if (typeof IntersectionObserver === 'undefined') return;
     ensureObserver();

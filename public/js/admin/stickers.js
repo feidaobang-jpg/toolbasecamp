@@ -208,18 +208,7 @@
     addKindBtn('still', tr('hub.imagesPage.filterStill'), stillN);
     addKindBtn('gif', tr('hub.imagesPage.filterGif'), gifN);
 
-    var allBtn = document.createElement('button');
-    allBtn.type = 'button';
-    allBtn.className = 'ladder-cat-chip' + (filterCategory ? '' : ' active');
-    allBtn.textContent = tr('privateHub.ops.stickersCategoryAll') + ' (' + allItems.length + ')';
-    allBtn.addEventListener('click', function () {
-      filterCategory = '';
-      listPage = 1;
-      selectedIds = new Set();
-      renderFilterChips();
-      renderGrid();
-    });
-    wrap.appendChild(allBtn);
+    // Category chips only (no second「全部」— clear by clicking the active category again).
     PRESET_CATS.forEach(function (cat) {
       var n = counts[cat.value] || 0;
       if (!n && filterCategory !== cat.value) return;
@@ -228,7 +217,7 @@
       btn.className = 'ladder-cat-chip' + (filterCategory === cat.value ? ' active' : '');
       btn.textContent = tr(cat.key) + ' (' + n + ')';
       btn.addEventListener('click', function () {
-        filterCategory = cat.value;
+        filterCategory = filterCategory === cat.value ? '' : cat.value;
         listPage = 1;
         selectedIds = new Set();
         renderFilterChips();
@@ -244,7 +233,7 @@
       btn.className = 'ladder-cat-chip' + (filterCategory === cat ? ' active' : '');
       btn.textContent = cat + ' (' + counts[cat] + ')';
       btn.addEventListener('click', function () {
-        filterCategory = cat;
+        filterCategory = filterCategory === cat ? '' : cat;
         listPage = 1;
         selectedIds = new Set();
         renderFilterChips();

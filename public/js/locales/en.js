@@ -437,7 +437,7 @@ window.TB_LOCALES.en = {
             stickersWechatTip: 'In WeChat, long-press to save/forward, or tap ··· → Open in browser to download.',
             stickersEmpty: 'No classic images yet.',
             stickersUntitled: 'Image',
-            stickersAll: 'All',
+            stickersAll: 'All categories',
             closePreview: 'Close',
             createT2i: 'Text to Image',
             createInstruct: 'Image Edit',

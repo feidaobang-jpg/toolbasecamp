@@ -436,7 +436,7 @@ window.TB_LOCALES['zh-CN'] = {
             stickersWechatTip: '微信内请长按图片「保存到手机 / 转发给朋友」，或右上角 ··· → 在浏览器中打开后再下载。',
             stickersEmpty: '暂无传统图片。',
             stickersUntitled: '图片',
-            stickersAll: '全部',
+            stickersAll: '全部分类',
             closePreview: '关闭',
             createT2i: '文生图',
             createInstruct: '图生图',
