@@ -685,4 +685,28 @@ label {
 .site-icp-footer a:hover {
     color: #2563eb;
     text-decoration: underline;
+}
+
+/* Media grid card title / meta (images hub + admin sticker grid) */
+.tb-media-card-title,
+.ladder-media-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.2em;
+    line-height: 1.2;
+}
+
+.tb-media-card-sub,
+.ladder-media-sub {
+    font-size: 0.72rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.2em;
+    line-height: 1.2;
 } 

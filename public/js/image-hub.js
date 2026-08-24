@@ -8,6 +8,8 @@
   var activeTab = 'stickers';
   var listCache = { ai: null, stickers: null };
   var stickerCategory = '';
+  var stickerSearch = '';
+  var stickerSearchTimer = null;
   var mediaKind = 'all'; // all | still | gif
   var PAGE_SIZE = 20;
   var pageState = { ai: 1, stickers: 1 };
@@ -374,9 +376,13 @@
     if (!items || !items.length) {
       if (empty) {
         empty.hidden = false;
-        empty.textContent = mediaKind === 'all'
-          ? tr('hub.imagesPage.stickersEmpty')
-          : tr('hub.imagesPage.filterEmpty');
+        if (stickerSearch.trim()) {
+          empty.textContent = tr('hub.imagesPage.stickersSearchEmpty');
+        } else {
+          empty.textContent = mediaKind === 'all'
+            ? tr('hub.imagesPage.stickersEmpty')
+            : tr('hub.imagesPage.filterEmpty');
+        }
       }
       renderPagerFor('stickers');
       return;
@@ -395,8 +401,8 @@
           (animated ? '<span class="img-hub-gif-badge" aria-hidden="true">GIF</span>' : '') +
         '</div>' +
         '<div class="img-hub-body">' +
-          '<div class="img-hub-prompt img-hub-sticker-title"></div>' +
-          '<div class="img-hub-meta img-hub-sticker-cat" hidden></div>' +
+          '<div class="tb-media-card-title img-hub-sticker-title"></div>' +
+          '<div class="tb-media-card-sub img-hub-sticker-cat" hidden></div>' +
           '<div class="action-row"></div>' +
         '</div>';
       var img = card.querySelector('.img-hub-sticker-img');
@@ -546,6 +552,8 @@
     if (aiActions) aiActions.hidden = activeTab !== 'ai';
     var cats = document.getElementById('img-hub-sticker-cats');
     if (cats && activeTab !== 'stickers') cats.hidden = true;
+    var searchWrap = document.getElementById('img-hub-sticker-search-wrap');
+    if (searchWrap) searchWrap.hidden = activeTab !== 'stickers';
     syncKindChips();
   }
 
@@ -628,6 +636,7 @@
     var url = apiBase() + '/image/stickers/list?limit=' + PAGE_SIZE + '&offset=' + offset;
     if (stickerCategory) url += '&category=' + encodeURIComponent(stickerCategory);
     if (mediaKind === 'gif' || mediaKind === 'still') url += '&kind=' + encodeURIComponent(mediaKind);
+    if (stickerSearch.trim()) url += '&q=' + encodeURIComponent(stickerSearch.trim());
     fetch(url, { headers: authHeaders() })
       .then(function (res) {
         return res.json().then(function (data) {
@@ -664,6 +673,7 @@
     if (!main) return;
     activeTab = 'stickers';
     stickerCategory = '';
+    stickerSearch = '';
     mediaKind = 'all';
     listCache = { ai: null, stickers: null };
     pageState = { ai: 1, stickers: 1 };
@@ -703,6 +713,10 @@
             escapeHtml(tr('hub.imagesPage.filterGif')) +
           '</button>' +
         '</div>' +
+        '<div class="img-hub-search-wrap" id="img-hub-sticker-search-wrap">' +
+          '<input type="search" class="tb-input img-hub-search" id="img-hub-sticker-search" ' +
+            'autocomplete="off" placeholder="' + escapeHtml(tr('hub.imagesPage.stickersSearchPlaceholder')) + '" />' +
+        '</div>' +
         '<div class="img-hub-cats" id="img-hub-sticker-cats" hidden></div>' +
         '<div class="error-box" id="img-hub-error" hidden></div>' +
         '<p class="img-hub-busy" id="img-hub-busy">' + escapeHtml(tr('hub.imagesPage.loading')) + '</p>' +
@@ -721,6 +735,25 @@
         var btn = e.target && e.target.closest ? e.target.closest('[data-img-kind]') : null;
         if (!btn) return;
         setMediaKind(btn.getAttribute('data-img-kind'));
+      });
+    }
+    var searchInput = document.getElementById('img-hub-sticker-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        var val = searchInput.value || '';
+        if (val === stickerSearch) return;
+        stickerSearch = val;
+        pageState.stickers = 1;
+        listCache.stickers = null;
+        clearTimeout(stickerSearchTimer);
+        stickerSearchTimer = setTimeout(function () { loadStickerList(); }, 280);
+      });
+      searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          clearTimeout(stickerSearchTimer);
+          loadStickerList();
+        }
       });
     }
     var refresh = document.getElementById('img-hub-refresh');

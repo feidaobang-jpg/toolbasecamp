@@ -456,7 +456,9 @@ window.TB_LOCALES['zh-CN'] = {
             filterAll: '全部',
             filterStill: '静图',
             filterGif: '动图',
-            filterEmpty: '当前筛选下没有图片。'
+            filterEmpty: '当前筛选下没有图片。',
+            stickersSearchPlaceholder: '搜索名称或分类',
+            stickersSearchEmpty: '没有匹配的图片，试试其他关键词'
         },
         music: {
             title: '音乐选择',

@@ -708,6 +708,47 @@ def _admin_item(row: dict) -> dict:
     }
 
 
+def _sticker_search_q(raw: str) -> str:
+    return re.sub(r"\s+", " ", str(raw or "").strip().lower())[:80]
+
+
+def _sticker_row_matches_q(row: dict, q: str) -> bool:
+    if not q:
+        return True
+    blob = " ".join(
+        [
+            str(row.get("title") or ""),
+            str(row.get("category") or ""),
+            str(row.get("id") or ""),
+            str(row.get("source") or ""),
+        ]
+    ).lower()
+    return q in blob
+
+
+def _filter_sticker_rows(
+    rows: list,
+    category: str = "",
+    kind: str = "",
+    q: str = "",
+) -> list:
+    cat_filter = (category or "").strip()
+    kind_filter = (kind or "").strip().lower()
+    q_norm = _sticker_search_q(q)
+    out = []
+    for row in rows:
+        if cat_filter and str(row.get("category") or "").strip() != cat_filter:
+            continue
+        if kind_filter in ("gif", "animated") and not _is_gif_row(row):
+            continue
+        if kind_filter in ("still", "static") and _is_gif_row(row):
+            continue
+        if not _sticker_row_matches_q(row, q_norm):
+            continue
+        out.append(row)
+    return out
+
+
 def _guess_content_type(ext: str, upload_ctype: str) -> str:
     ext = (ext or "").lower()
     if ext in _CONTENT_BY_EXT:
@@ -724,10 +765,9 @@ def stickers_public_list(
     offset: int = 0,
     category: str = "",
     kind: str = "",
+    q: str = "",
 ):
     all_items = _load_sticker_manifest()
-    cat_filter = (category or "").strip()
-    kind_filter = (kind or "").strip().lower()
     categories = []
     seen_cats = set()
     for row in all_items:
@@ -735,16 +775,7 @@ def stickers_public_list(
         if cat and cat not in seen_cats:
             seen_cats.add(cat)
             categories.append(cat)
-    filtered = all_items
-    if cat_filter:
-        filtered = [
-            row for row in all_items
-            if str(row.get("category") or "").strip() == cat_filter
-        ]
-    if kind_filter in ("gif", "animated"):
-        filtered = [row for row in filtered if _is_gif_row(row)]
-    elif kind_filter in ("still", "static"):
-        filtered = [row for row in filtered if not _is_gif_row(row)]
+    filtered = _filter_sticker_rows(all_items, category=category, kind=kind, q=q)
     lim = max(1, min(int(limit or 200), 500))
     off = max(0, int(offset or 0))
     items = []
@@ -774,12 +805,20 @@ def stickers_public_list(
 
 
 @router.get("/admin/list")
-def stickers_admin_list(limit: int = 500, offset: int = 0, admin: dict = Depends(_admin_user)):
+def stickers_admin_list(
+    limit: int = 500,
+    offset: int = 0,
+    category: str = "",
+    kind: str = "",
+    q: str = "",
+    admin: dict = Depends(_admin_user),
+):
     del admin
     all_items = _load_sticker_manifest()
+    filtered = _filter_sticker_rows(all_items, category=category, kind=kind, q=q)
     lim = max(1, min(int(limit or 500), 1000))
     off = max(0, int(offset or 0))
-    items = [_admin_item(row) for row in all_items[off : off + lim] if row.get("id")]
+    items = [_admin_item(row) for row in filtered[off : off + lim] if row.get("id")]
     categories = []
     seen = set()
     for row in all_items:
@@ -793,7 +832,7 @@ def stickers_admin_list(limit: int = 500, offset: int = 0, admin: dict = Depends
         "categories": categories,
         "limit": lim,
         "offset": off,
-        "total": len(all_items),
+        "total": len(filtered),
     }
 
 
