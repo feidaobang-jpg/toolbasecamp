@@ -377,6 +377,29 @@ def _write_preview_gif(sticker_id: str, source_data: bytes) -> str:
     return name
 
 
+def _normalize_gif_loop_infinite(data: bytes) -> bytes:
+    """Patch NETSCAPE loop count to 0 (infinite) without recompressing frames."""
+    if not data or len(data) < 16 or data[:4] != b"GIF8":
+        return data
+    if not _is_animated_gif_bytes(data):
+        return data
+    marker = b"NETSCAPE2.0\x03\x01"
+    out = bytearray(data)
+    changed = False
+    pos = 0
+    while True:
+        idx = data.find(marker, pos)
+        if idx < 0:
+            break
+        loop_pos = idx + len(marker)
+        if loop_pos + 2 <= len(out) and (out[loop_pos] != 0 or out[loop_pos + 1] != 0):
+            out[loop_pos] = 0
+            out[loop_pos + 1] = 0
+            changed = True
+        pos = idx + 1
+    return bytes(out) if changed else data
+
+
 def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     """
     Prepare sticker bytes for storage.
@@ -387,7 +410,7 @@ def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     """
     ext = (ext or "").lower()
     if ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8"):
-        return raw, "image/gif", ".gif"
+        return _normalize_gif_loop_infinite(raw), "image/gif", ".gif"
 
     if len(raw) > 400 * 1024:
         try:
