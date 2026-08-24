@@ -706,11 +706,11 @@
           '<button type="button" class="img-hub-chip is-active" data-img-kind="all" role="tab" aria-selected="true">' +
             escapeHtml(tr('hub.imagesPage.filterAll')) +
           '</button>' +
-          '<button type="button" class="img-hub-chip" data-img-kind="still" role="tab" aria-selected="false">' +
-            escapeHtml(tr('hub.imagesPage.filterStill')) +
-          '</button>' +
           '<button type="button" class="img-hub-chip" data-img-kind="gif" role="tab" aria-selected="false">' +
             escapeHtml(tr('hub.imagesPage.filterGif')) +
+          '</button>' +
+          '<button type="button" class="img-hub-chip" data-img-kind="still" role="tab" aria-selected="false">' +
+            escapeHtml(tr('hub.imagesPage.filterStill')) +
           '</button>' +
         '</div>' +
         '<div class="img-hub-search-wrap" id="img-hub-sticker-search-wrap">' +
