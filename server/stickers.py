@@ -485,16 +485,8 @@ def _public_item(row: dict) -> dict:
         except HTTPException:
             pass
     static_url = f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}"
-    # Grid playback prefers tiny animated preview; fall back to full file.
-    # Bad previews (抽帧后只剩 1 帧) must not replace a real animated original.
+    # Grid / modal playback always use the stored original.
     play_url = static_url
-    if animated and preview:
-        try:
-            preview_path = _safe_sticker_path(preview)
-            if preview_path.is_file() and _is_animated_gif_bytes(preview_path.read_bytes()):
-                play_url = f"/pubsticker/{preview}"
-        except HTTPException:
-            pass
     return {
         "id": sid,
         "title": str(row.get("title") or sid).strip() or sid,

@@ -106,7 +106,7 @@
 
   function playUrl(item) {
     if (!item) return '';
-    var u = item.previewUrl || item.staticUrl || '';
+    var u = item.staticUrl || item.previewUrl || '';
     if (u) {
       if (u.indexOf('/pubsticker/') === 0) return u;
       return apiBase() + (u.charAt(0) === '/' ? u : '/' + u);

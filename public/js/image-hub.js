@@ -92,9 +92,9 @@
 
   function playSrcFor(item) {
     if (!item) return '';
-    // Prefer small animated preview for grid playback.
-    if (item.previewUrl) return gridImageUrl(item.previewUrl);
+    // Always play the stored original GIF (preview recompress can look static).
     if (item.staticUrl) return gridImageUrl(item.staticUrl);
+    if (item.previewUrl) return gridImageUrl(item.previewUrl);
     return fullImageUrl(item.imageUrl);
   }
 
