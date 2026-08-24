@@ -237,8 +237,8 @@
       wrap.appendChild(btn);
     }
     addKindBtn('all', tr('hub.imagesPage.filterAll'), allItems.length);
-    addKindBtn('still', tr('hub.imagesPage.filterStill'), stillN);
     addKindBtn('gif', tr('hub.imagesPage.filterGif'), gifN);
+    addKindBtn('still', tr('hub.imagesPage.filterStill'), stillN);
 
     // Category chips only (no second「全部」— clear by clicking the active category again).
     PRESET_CATS.forEach(function (cat) {
