@@ -38,6 +38,8 @@ _sticker_manifest_cache: tuple[float, list] = (0.0, [])
 STICKER_UPLOAD_MAX_MB = max(1, int(os.environ.get("STICKER_UPLOAD_MAX_MB") or "8"))
 STICKER_THUMB_MAX_WIDTH = max(80, int(os.environ.get("STICKER_THUMB_MAX_WIDTH") or "240"))
 STICKER_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("STICKER_THUMB_JPEG_QUALITY") or "80")))
+# OCR uses a larger JPEG than grid thumb — meme text stays readable.
+STICKER_OCR_MAX_WIDTH = max(240, int(os.environ.get("STICKER_OCR_MAX_WIDTH") or "720"))
 # Stickers are for chat/forward — keep stored GIF small; grid uses an even smaller preview.
 STICKER_GIF_MAX_EDGE = max(120, int(os.environ.get("STICKER_GIF_MAX_EDGE") or "360"))
 STICKER_GIF_COLORS = max(32, min(256, int(os.environ.get("STICKER_GIF_COLORS") or "128")))
@@ -212,7 +214,9 @@ def _ocr_sticker_title(image_bytes: bytes) -> str:
 
         if not tencent_configured():
             return ""
-        thumb = _make_thumbnail_bytes(image_bytes)
+        thumb = _make_ocr_image_bytes(image_bytes)
+        if not thumb:
+            thumb = _make_thumbnail_bytes(image_bytes)
         if not thumb:
             return ""
         return _normalize_ocr_title(ocr_general_text(thumb))
@@ -395,6 +399,14 @@ def _compress_animated_gif(
 
 
 def _make_thumbnail_bytes(data: bytes) -> Optional[bytes]:
+    return _resize_image_jpeg_bytes(data, STICKER_THUMB_MAX_WIDTH, STICKER_THUMB_JPEG_QUALITY)
+
+
+def _make_ocr_image_bytes(data: bytes) -> Optional[bytes]:
+    return _resize_image_jpeg_bytes(data, STICKER_OCR_MAX_WIDTH, 88)
+
+
+def _resize_image_jpeg_bytes(data: bytes, max_width: int, quality: int) -> Optional[bytes]:
     if not data:
         return None
     try:
@@ -413,12 +425,12 @@ def _make_thumbnail_bytes(data: bytes) -> Optional[bytes]:
         elif im.mode != "RGB":
             im = im.convert("RGB")
         w, h = im.size
-        max_w = STICKER_THUMB_MAX_WIDTH
+        max_w = max_width
         if w > max_w:
             nh = max(1, int(round(h * max_w / w)))
             im = im.resize((max_w, nh), Image.Resampling.LANCZOS)
         buf = BytesIO()
-        im.save(buf, format="JPEG", quality=STICKER_THUMB_JPEG_QUALITY, optimize=True)
+        im.save(buf, format="JPEG", quality=quality, optimize=True)
         out = buf.getvalue()
         return out if out else None
     except Exception:

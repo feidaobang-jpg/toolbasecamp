@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""OCR generic sticker titles (e.g. "(47).gif") from image text."""
+"""OCR generic sticker titles (e.g. "(47).gif") from image text.
+
+On VPS:
+  set -a; source /etc/toolbasecamp-api.env; set +a
+  sudo -E /opt/toolbasecamp-api/venv/bin/python deploy/backfill-sticker-titles-ocr.py
+"""
 from __future__ import annotations
 
 import argparse
