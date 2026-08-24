@@ -215,19 +215,21 @@ def _quantize_rgb(rgb, colors: int, palette_img=None):
         return rgb.quantize(colors=n, dither=Image.Dither.FLOYDSTEINBERG)
 
 
-def _is_animated_gif_bytes(data: bytes) -> bool:
-    """True when GIF has more than one frame (browser will treat it as animated)."""
+def _gif_n_frames(data: bytes) -> int:
     if not data or len(data) < 4 or data[:4] != b"GIF8":
-        return False
+        return 0
     try:
         from PIL import Image
 
         im = Image.open(BytesIO(data))
-        if bool(getattr(im, "is_animated", False)):
-            return True
-        return int(getattr(im, "n_frames", 1) or 1) > 1
+        return max(1, int(getattr(im, "n_frames", 1) or 1))
     except Exception:
-        return False
+        return 0
+
+
+def _is_animated_gif_bytes(data: bytes) -> bool:
+    """True when GIF has more than one frame (browser will treat it as animated)."""
+    return _gif_n_frames(data) > 1
 
 
 def _compress_animated_gif(
@@ -244,7 +246,12 @@ def _compress_animated_gif(
         from PIL import Image, ImageSequence
 
         im = Image.open(BytesIO(data))
+        n_src = max(1, int(getattr(im, "n_frames", 1) or 1))
         step = max(1, int(frame_step or 1))
+        # Never drop a short clip to a single frame (grid would look static).
+        if n_src > 1:
+            while step > 1 and ((n_src + step - 1) // step) < 2:
+                step -= 1
         rgb_frames = []
         durations = []
         for idx, frame in enumerate(ImageSequence.Iterator(im)):
@@ -257,6 +264,8 @@ def _compress_animated_gif(
             rgb_frames.append(_flatten_rgba(rgba))
             durations.append(max(20, duration))
         if not rgb_frames:
+            return None
+        if n_src > 1 and len(rgb_frames) < 2:
             return None
 
         # One adaptive palette from frame 0; remap later frames to it (stable colors).
@@ -326,11 +335,23 @@ def _write_thumbnail(sticker_id: str, source_data: bytes) -> str:
 
 def _write_preview_gif(sticker_id: str, source_data: bytes) -> str:
     """Small animated GIF for grid playback (much lighter than full file)."""
-    attempts = [
-        (STICKER_PREVIEW_MAX_EDGE, STICKER_PREVIEW_COLORS, STICKER_PREVIEW_FRAME_STEP),
-        (120, 48, max(2, STICKER_PREVIEW_FRAME_STEP)),
-        (96, 32, max(3, STICKER_PREVIEW_FRAME_STEP + 1)),
-    ]
+    n_src = _gif_n_frames(source_data)
+    if n_src <= 1:
+        return ""
+    # Short clips: never skip frames. Longer: may thin frames to stay small.
+    if n_src <= 8:
+        attempts = [
+            (STICKER_PREVIEW_MAX_EDGE, STICKER_PREVIEW_COLORS, 1),
+            (140, 64, 1),
+            (120, 48, 1),
+        ]
+    else:
+        attempts = [
+            (STICKER_PREVIEW_MAX_EDGE, STICKER_PREVIEW_COLORS, 1),
+            (STICKER_PREVIEW_MAX_EDGE, STICKER_PREVIEW_COLORS, STICKER_PREVIEW_FRAME_STEP),
+            (120, 48, max(2, STICKER_PREVIEW_FRAME_STEP)),
+            (96, 32, max(3, STICKER_PREVIEW_FRAME_STEP + 1)),
+        ]
     preview = None
     for edge, colors, step in attempts:
         cand = _compress_animated_gif(
@@ -339,7 +360,7 @@ def _write_preview_gif(sticker_id: str, source_data: bytes) -> str:
             colors=colors,
             frame_step=step,
         )
-        if not cand:
+        if not cand or not _is_animated_gif_bytes(cand):
             continue
         if preview is None or len(cand) < len(preview):
             preview = cand
@@ -463,12 +484,15 @@ def _public_item(row: dict) -> dict:
             pass
     static_url = f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}"
     # Grid playback prefers tiny animated preview; fall back to full file.
-    if preview:
-        play_url = f"/pubsticker/{preview}"
-    elif animated:
-        play_url = static_url
-    else:
-        play_url = static_url
+    # Bad previews (抽帧后只剩 1 帧) must not replace a real animated original.
+    play_url = static_url
+    if animated and preview:
+        try:
+            preview_path = _safe_sticker_path(preview)
+            if preview_path.is_file() and _is_animated_gif_bytes(preview_path.read_bytes()):
+                play_url = f"/pubsticker/{preview}"
+        except HTTPException:
+            pass
     return {
         "id": sid,
         "title": str(row.get("title") or sid).strip() or sid,
