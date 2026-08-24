@@ -81,7 +81,14 @@ def main() -> int:
 
         data = path.read_bytes()
         before = len(data)
-        is_gif = _is_gif_row(row) or file_name.lower().endswith(".gif") or data[:4] == b"GIF8"
+        is_gif = file_name.lower().endswith(".gif") or data[:4] == b"GIF8"
+        is_anim = bool(is_gif and (_is_gif_row(row) or data[:4] == b"GIF8"))
+        try:
+            from stickers import _is_animated_gif_bytes
+
+            is_anim = bool(is_gif and _is_animated_gif_bytes(data))
+        except Exception:
+            pass
 
         if is_gif:
             if args.compress_full:
@@ -97,18 +104,28 @@ def main() -> int:
                     changed += 1
                     print(f"  compress {sid}: {before} -> {len(prepared)} bytes (bak={bak.name})")
 
-            preview_name = _write_preview_gif(sid, data)
-            if preview_name:
-                if row.get("previewFile") != preview_name:
-                    row["previewFile"] = preview_name
-                    changed += 1
-                preview_ok += 1
-                ppath = STICKER_DIR / preview_name
-                psz = ppath.stat().st_size if ppath.is_file() else 0
-                print(f"  preview {sid}: {psz} bytes")
+            if is_anim:
+                preview_name = _write_preview_gif(sid, data)
+                if preview_name:
+                    if row.get("previewFile") != preview_name:
+                        row["previewFile"] = preview_name
+                        changed += 1
+                    preview_ok += 1
+                    ppath = STICKER_DIR / preview_name
+                    psz = ppath.stat().st_size if ppath.is_file() else 0
+                    print(f"  preview {sid}: {psz} bytes")
+                else:
+                    if row.get("previewFile"):
+                        row["previewFile"] = ""
+                        changed += 1
+                    errors += 1
+                    print(f"  preview FAIL {sid}")
             else:
-                errors += 1
-                print(f"  preview FAIL {sid}")
+                # Static GIF: no grid preview needed
+                if row.get("previewFile"):
+                    row["previewFile"] = ""
+                    changed += 1
+                print(f"  static skip preview {sid}")
         elif preview_only:
             pass
 
