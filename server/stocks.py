@@ -444,7 +444,8 @@ def _strong_momentum_eval_row(row, is_trade_time: bool):
     day_high = highs[-1]
     pct = _safe_float(row.get("__pct"))
     turn = _safe_float(row.get("__turn"))
-    vr = _effective_vr(_safe_float(row.get("__vr")), is_trade_time)
+    raw_vr = _safe_float(row.get("__vr"))
+    vr = _effective_vr(raw_vr, is_trade_time)
     price = _safe_float(row.get("__price"))
     amt = _safe_float(row.get("__amount"))
     ret_3d = _calc_ret_pct_list(closes, 3)
@@ -454,7 +455,8 @@ def _strong_momentum_eval_row(row, is_trade_time: bool):
     # 要强：避开弱势与贴板
     if pct is None or pct < 2.0 or pct > 7.5:
         return None
-    if vr is not None and (vr < 1.15 or vr > 4.5):
+    # 收盘后东财量比常为 0，会被填成中性 1.0；若仍要求 ≥1.15 会整池筛空。
+    if is_trade_time and vr is not None and (vr < 1.15 or vr > 4.5):
         return None
     if turn is not None and (turn < 0.35 or turn > 18.0):
         return None
@@ -484,8 +486,13 @@ def _strong_momentum_eval_row(row, is_trade_time: bool):
     if near_high_ratio is not None and near_high_ratio < 0.62:
         return None
 
+    # 收盘后无真实量比时，评分用中性量比，避免整池分数被砸穿。
+    score_vr = vr
+    if not is_trade_time and (raw_vr is None or raw_vr <= 0):
+        score_vr = 2.0
+
     fit = _strong_momentum_fit_score(
-        last_close, ma5, ma10, ma20, ret_3d, ret_5d, pct, vr,
+        last_close, ma5, ma10, ma20, ret_3d, ret_5d, pct, score_vr,
         near_high_ratio, prior_up_days, amt, close_vs_high,
     )
     fit += _mid_small_code_bonus(code)
@@ -1365,6 +1372,8 @@ def _compute_strong_momentum(only_basic: bool = True):
         msg_core = f"共 {len(items)} 只（强势弹性隔夜，最多 {STOCK_PICK_MAX} 条）"
     else:
         msg_core = "当前暂无符合强势弹性条件的标的"
+        if not is_trade_time:
+            msg_core += "（收盘后按日K预览；正式下单请 14:50~14:59 再点一次）"
     msg_parts = [window_note, f"【{pool_note}】", msg_core]
     if market_note:
         msg_parts.append(market_note)
