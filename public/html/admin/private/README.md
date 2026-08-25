@@ -2,7 +2,7 @@
 
 Register in `public/js/config.js` → `privateToolsConfig`.
 
-Top nav shows a single admin entry「自用」; stats / ladder live as cards inside this hub.
+Top nav shows a single admin entry「后台」; stats / ladder live as cards inside this hub.
 
 ## Site ops
 

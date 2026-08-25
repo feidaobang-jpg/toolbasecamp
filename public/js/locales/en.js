@@ -26,16 +26,16 @@ window.TB_LOCALES.en = {
         chat: 'Inbox',
         chatInbox: 'Inbox',
         siteStats: 'Stats',
-        private: 'Private'
+        private: 'Admin'
     },
     privateHub: {
-        title: 'Private',
+        title: 'Admin',
         backHome: 'Back to home',
-        heading: 'Admin private tools',
+        heading: 'Admin console',
         subtitle: 'Admins only · hidden from public nav and SEO',
         needLogin: 'Please sign in as admin',
         needAdmin: 'Admin sign-in required',
-        empty: 'No private tools yet',
+        empty: 'No admin tools yet',
         emptyGroup: 'No tools in this group yet',
         groups: {
             ops: 'Site ops',

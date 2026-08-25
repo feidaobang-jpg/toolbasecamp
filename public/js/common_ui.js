@@ -666,17 +666,17 @@
     function injectAdminLinks(user, wrap) {
         if (!isAdminUser(user)) return;
         const path = String(window.location.pathname || '');
-        // Already on private hub / private tools — don't add another「自用」link
+        // Already on admin hub / admin tools — don't add another「后台」link
         if (/\/admin\/private(\.html|\/)/.test(path)) return;
         const base = getSiteRootPrefix();
-        const privateLabel = tr('nav.private') === 'nav.private' ? '自用' : tr('nav.private');
+        const privateLabel = tr('nav.private') === 'nav.private' ? '后台' : tr('nav.private');
 
-        // Single admin entry: 自用 hub (stats / ladder update live inside)
+        // Single admin entry: 后台 hub (stats / ladder update live inside)
         injectAdminNavLink(wrap, {
             id: 'tb-admin-private-link',
             href: `${base}html/admin/private.html`,
             label: privateLabel,
-            title: '管理员自用'
+            title: '管理后台'
         });
 
         injectAdminMobileLink({

@@ -121,7 +121,7 @@
     });
 
     if (!groups.length && !anyItem) {
-      root.innerHTML = '<p class="private-empty">' + tr('privateHub.empty', '暂无自用工具') + '</p>';
+      root.innerHTML = '<p class="private-empty">' + tr('privateHub.empty', '暂无后台工具') + '</p>';
     }
   }
 

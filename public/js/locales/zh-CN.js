@@ -25,16 +25,16 @@ window.TB_LOCALES['zh-CN'] = {
         chat: '收件箱',
         chatInbox: '收件箱',
         siteStats: '统计',
-        private: '自用'
+        private: '后台'
     },
     privateHub: {
-        title: '自用',
+        title: '后台',
         backHome: '返回首页',
-        heading: '管理员自用工具',
+        heading: '管理后台',
         subtitle: '仅管理员可见 · 不进公开导航与 SEO',
         needLogin: '请先登录管理员账号',
         needAdmin: '需要管理员登录后查看',
-        empty: '暂无自用工具',
+        empty: '暂无后台工具',
         emptyGroup: '暂无工具，迁入后显示在此',
         groups: {
             ops: '站点运维',
