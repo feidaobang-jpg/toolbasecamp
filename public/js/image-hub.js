@@ -492,17 +492,33 @@
           '<button type="button" class="tb-btn" data-preview-close></button>' +
         '</div>' +
       '</div>';
-    overlay.querySelector('.img-hub-preview-tip').textContent = tr('hub.imagesPage.stickersLongPress');
+    // Baidu App long-press「分享图片」often screenshots or re-encodes.
+    // Cache-bust ?t= breaks real GIF URL → black static frame. Keep clean absolute URL.
+    var shareSrc = String(fullSrc || '').replace(/[?#].*$/, '');
+    var tipEl = overlay.querySelector('.img-hub-preview-tip');
+    tipEl.textContent = /baidubrowser|baiduboxapp|Baidu/i.test(navigator.userAgent || '')
+      ? tr('hub.imagesPage.stickersBaiduShareTip')
+      : tr('hub.imagesPage.stickersLongPress');
     var img = overlay.querySelector('.img-hub-preview-img');
-    var bust = fullSrc + (fullSrc.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
-    img.src = bust;
+    img.src = shareSrc || fullSrc;
     img.alt = opts.alt || tr('hub.imagesPage.untitled');
+    // White underlay: transparent GIF pixels become black when Baidu/WeChat rasterize.
+    img.style.background = '#ffffff';
     var dlBtn = overlay.querySelector('[data-preview-dl]');
     dlBtn.textContent = tr('hub.imagesPage.download');
     dlBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       if (typeof opts.onDownload === 'function') opts.onDownload();
     });
+    var openBtn = document.createElement('a');
+    openBtn.className = 'tb-btn';
+    openBtn.href = shareSrc || fullSrc;
+    openBtn.target = '_blank';
+    openBtn.rel = 'noopener';
+    openBtn.textContent = tr('hub.imagesPage.openOriginal');
+    openBtn.addEventListener('click', function (e) { e.stopPropagation(); });
+    var actions = overlay.querySelector('.img-hub-preview-actions');
+    if (actions) actions.insertBefore(openBtn, dlBtn);
     var closeBtn = overlay.querySelector('[data-preview-close]');
     closeBtn.textContent = tr('hub.imagesPage.closePreview');
     function close() { overlay.remove(); }
