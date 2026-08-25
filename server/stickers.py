@@ -674,59 +674,84 @@ def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     return raw, ctype, ext if ext in _ALLOWED_EXT else ".png"
 
 
-def _share_flat_file_name(sticker_id: str, ext: str) -> str:
+def _share_flat_file_name(sticker_id: str, ext: str = ".png") -> str:
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48] or "sticker"
-    ext = ext if str(ext).startswith(".") else f".{ext}"
-    if ext.lower() not in (".gif", ".png"):
-        ext = ".png"
-    return f"{sid}_flat{ext.lower()}"
+    # Baidu→WeChat share usually freezes GIF; PNG on white is brighter and more reliable.
+    return f"{sid}_share.png"
+
+
+def _ink_score(rgba) -> int:
+    """How much non-white content a frame has (higher = more visible art)."""
+    try:
+        # Downsample for speed
+        small = rgba.resize((64, 64))
+        data = list(small.getdata())
+        score = 0
+        for r, g, b, a in data:
+            if a < 8:
+                continue
+            if r < 250 or g < 250 or b < 250:
+                score += 1
+        return score
+    except Exception:
+        return 0
+
+
+def _compose_gif_frames_on_white(im) -> list:
+    """Full RGBA frames on opaque white, honoring GIF disposal when possible."""
+    from PIL import Image
+
+    w, h = im.size
+    white = (255, 255, 255, 255)
+    canvas = Image.new("RGBA", (w, h), white)
+    frames: list = []
+    n = int(getattr(im, "n_frames", 1) or 1)
+    for i in range(n):
+        im.seek(i)
+        duration = max(20, int(im.info.get("duration") or 100))
+        dispose = int(getattr(im, "disposal_method", 2) or 2)
+        prev = canvas.copy()
+        overlay = im.convert("RGBA")
+        # Paste with alpha; overlay is often already full-canvas after convert.
+        if overlay.size != (w, h):
+            tmp = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+            tmp.paste(overlay, (0, 0), overlay)
+            overlay = tmp
+        canvas = Image.alpha_composite(canvas, overlay)
+        frames.append((canvas.copy(), duration))
+        if dispose == 2:
+            canvas = Image.new("RGBA", (w, h), white)
+        elif dispose == 3:
+            canvas = prev
+        # dispose 0/1: leave canvas as-is for next frame
+    return frames
 
 
 def _flatten_bytes_on_white(data: bytes) -> tuple[bytes, str, str]:
-    """Composite transparent pixels onto white — Baidu/WeChat share fills alpha with black."""
-    from PIL import Image, ImageSequence
+    """White-backed PNG for share. Baidu share rarely keeps GIF animation."""
+    from PIL import Image
 
     im = Image.open(BytesIO(data))
     animated = bool(getattr(im, "is_animated", False) and int(getattr(im, "n_frames", 1) or 1) > 1)
     if animated:
-        frames: list = []
-        durations: list[int] = []
-        for frame in ImageSequence.Iterator(im):
-            rgba = frame.convert("RGBA")
-            canvas = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
-            canvas.alpha_composite(rgba)
-            # RGB→P keeps file as GIF; disposal=2 avoids ghosting on white.
-            frames.append(canvas.convert("RGB").convert("P", palette=Image.ADAPTIVE, colors=255))
-            durations.append(max(20, int(frame.info.get("duration") or 100)))
-        buf = BytesIO()
-        frames[0].save(
-            buf,
-            format="GIF",
-            save_all=True,
-            append_images=frames[1:],
-            duration=durations,
-            loop=0,
-            disposal=2,
-            optimize=False,
-        )
-        out = buf.getvalue()
-        if out:
-            return out, "image/gif", ".gif"
-    rgba = im.convert("RGBA")
-    canvas = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
-    canvas.alpha_composite(rgba)
+        composed = _compose_gif_frames_on_white(im)
+        # Prefer the frame with the most visible art (not an empty/white tween).
+        best_rgba, _dur = max(composed, key=lambda fd: _ink_score(fd[0]))
+    else:
+        rgba = im.convert("RGBA")
+        canvas = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+        best_rgba = Image.alpha_composite(canvas, rgba)
     buf = BytesIO()
-    canvas.save(buf, format="PNG", optimize=True)
+    # RGB PNG — no alpha left for WeChat/Baidu to fill with black.
+    best_rgba.convert("RGB").save(buf, format="PNG", optimize=True)
     return buf.getvalue(), "image/png", ".png"
 
 
 def _ensure_flat_white_path(row: dict, src_path: Path) -> tuple[Path, str]:
-    """Return (path, media_type) for a white-backed share copy; create/cache on demand."""
+    """Return (path, media_type) for a white-backed share PNG; create/cache on demand."""
     sid = str(row.get("id") or "").strip()
-    prefer_ext = ".gif" if src_path.suffix.lower() == ".gif" else ".png"
-    out_name = _share_flat_file_name(sid, prefer_ext)
-    out_path = _safe_sticker_path(out_name)
-    media = "image/gif" if prefer_ext == ".gif" else "image/png"
+    out_path = _safe_sticker_path(_share_flat_file_name(sid))
+    media = "image/png"
     try:
         if (
             out_path.is_file()
@@ -737,8 +762,7 @@ def _ensure_flat_white_path(row: dict, src_path: Path) -> tuple[Path, str]:
             return out_path, media
     except OSError:
         pass
-    flat, media, ext = _flatten_bytes_on_white(src_path.read_bytes())
-    out_path = _safe_sticker_path(_share_flat_file_name(sid, ext))
+    flat, media, _ext = _flatten_bytes_on_white(src_path.read_bytes())
     out_path.write_bytes(flat)
     return out_path, media
 

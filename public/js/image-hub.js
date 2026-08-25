@@ -495,7 +495,7 @@
       'p{margin:12px 16px;font:14px/1.5 sans-serif;color:#64748b}' +
       'img{display:block;max-width:100%;margin:0 auto;background:#fff;-webkit-touch-callout:default}</style>' +
       '</head><body>' +
-      '<p>白底原图 · 请等图片完全显示后再长按分享给微信</p>' +
+      '<p>白底分享图 · 等完全显示后再长按。百度分享多为静图；要动图请回上一页点「下载」</p>' +
       '<img src="' + escapeHtml(src) + '" alt=""/>' +
       '</body></html>';
     var w = window.open('', '_blank');
