@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -153,8 +154,48 @@ def _next_sticker_id(items: list) -> str:
     raise HTTPException(status_code=500, detail="Sticker id space exhausted")
 
 
+def _content_hash(data: bytes) -> str:
+    return hashlib.sha256(data or b"").hexdigest()
+
+
+def _row_content_hash(row: dict) -> str:
+    """Return stored contentHash, or compute from file on disk (lazy)."""
+    stored = str(row.get("contentHash") or "").strip().lower()
+    if stored and re.fullmatch(r"[a-f0-9]{64}", stored):
+        return stored
+    file_name = str(row.get("file") or "").strip()
+    if not file_name:
+        return ""
+    try:
+        path = _safe_sticker_path(file_name)
+    except HTTPException:
+        return ""
+    if not path.is_file():
+        return ""
+    try:
+        return _content_hash(path.read_bytes())
+    except OSError:
+        return ""
+
+
+def _sticker_hash_exists(items: list, digest: str) -> bool:
+    key = (digest or "").strip().lower()
+    if not key:
+        return False
+    for row in items:
+        if _row_content_hash(row) == key:
+            return True
+    return False
+
+
 def _sticker_source_exists(items: list, orig_name: str) -> bool:
-    key = orig_name.strip().lower()
+    """Meaningful filenames only — skip (1).gif style so packs can share numbers."""
+    stem = Path(str(orig_name or "")).stem.strip()
+    if _is_generic_sticker_title(stem):
+        return False
+    key = Path(str(orig_name or "")).name.strip().lower()
+    if not key:
+        return False
     for row in items:
         if str(row.get("source") or "").strip().lower() == key:
             return True
@@ -249,8 +290,12 @@ def _sticker_download_filename(row: dict, ext: str) -> str:
 
 
 def _content_disposition_filename(name: str, attachment: bool) -> str:
+    """RFC 5987: ASCII filename= + UTF-8 filename*=. Never put CJK in filename=."""
     name = str(name or "download").strip() or "download"
-    ascii_fb = re.sub(r"[^\w.\-]+", "_", name).strip("._") or "download"
+    # Python \w matches Unicode letters — must force ASCII-only for HTTP headers.
+    ascii_fb = re.sub(r"[^A-Za-z0-9._\-]+", "_", name).strip("._") or "download"
+    if not re.search(r"[A-Za-z0-9]", ascii_fb):
+        ascii_fb = "download"
     encoded = quote(name, safe="")
     disp = "attachment" if attachment else "inline"
     return f'{disp}; filename="{ascii_fb}"; filename*=UTF-8\'\'{encoded}'
@@ -922,9 +967,6 @@ async def stickers_admin_upload(
         raise HTTPException(status_code=400, detail="File too small")
 
     items = _load_sticker_manifest()
-    if _sticker_source_exists(items, orig_name):
-        raise HTTPException(status_code=409, detail=f"Already uploaded: {orig_name}")
-
     sid = _next_sticker_id(items)
     cat, title = _parse_upload_meta(orig_name, category)
     if _is_generic_sticker_title(title):
@@ -935,6 +977,12 @@ async def stickers_admin_upload(
     animated = bool(is_gif_upload and _is_animated_gif_bytes(raw))
 
     raw, ctype, out_ext = _prepare_sticker_bytes(raw, ext)
+    digest = _content_hash(raw)
+    if _sticker_hash_exists(items, digest):
+        raise HTTPException(status_code=409, detail=f"Already uploaded (same file): {orig_name}")
+    if _sticker_source_exists(items, orig_name):
+        raise HTTPException(status_code=409, detail=f"Already uploaded: {orig_name}")
+
     if out_ext not in _ALLOWED_EXT:
         out_ext = ".gif" if "gif" in ctype else ".png"
     file_name = f"{sid}{out_ext}"
@@ -956,6 +1004,7 @@ async def stickers_admin_upload(
         "previewFile": preview_name,
         "contentType": ctype,
         "animated": bool(animated),
+        "contentHash": digest,
         "source": orig_name,
         "createdAt": _format_created_at_cn(created),
     }

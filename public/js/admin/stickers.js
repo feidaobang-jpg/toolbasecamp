@@ -470,6 +470,19 @@
     });
   }
 
+  function isGenericSourceName(name) {
+    var stem = String(normFileName(name) || '').replace(/\.[^.]+$/, '');
+    if (!stem) return true;
+    if (/^\(\d+\)$/.test(stem)) return true;
+    if (/^\d{1,6}$/.test(stem)) return true;
+    if (/^img[_-]?\d+$/i.test(stem)) return true;
+    if (/^image[_-]?\d+$/i.test(stem)) return true;
+    if (/^sticker\d*$/i.test(stem)) return true;
+    if (/^[\d()_\s.\-]+$/.test(stem)) return true;
+    if (stem.length <= 3 && !/[\u4e00-\u9fff]/.test(stem)) return true;
+    return false;
+  }
+
   function uploadFiles(files) {
     var status = document.getElementById('upload-status');
     var progress = document.getElementById('upload-progress');
@@ -482,16 +495,24 @@
     var picked = Array.prototype.slice.call(files);
     var skipped = 0;
     var skippedNames = [];
-    var seen = new Set(existingSources);
+    var batchSeen = new Set();
     var queue = [];
     picked.forEach(function (file) {
       var key = normFileName(file.name);
-      if (seen.has(key)) {
+      // Same pick can still have duplicate paths; skip within-batch name repeats.
+      if (batchSeen.has(key)) {
         skipped += 1;
         skippedNames.push(file.name);
         return;
       }
-      seen.add(key);
+      batchSeen.add(key);
+      // Meaningful filenames: skip if already in library. Numbered packs like (1).gif
+      // are allowed — server dedupes by file content hash instead.
+      if (!isGenericSourceName(file.name) && existingSources.has(key)) {
+        skipped += 1;
+        skippedNames.push(file.name);
+        return;
+      }
       queue.push(file);
     });
     if (!queue.length) {
