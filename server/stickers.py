@@ -1107,11 +1107,20 @@ async def stickers_admin_upload(
 
     items = _load_sticker_manifest()
     sid = _next_sticker_id(items)
-    cat, title = _parse_upload_meta(orig_name, category)
-    if _is_generic_sticker_title(title):
-        ocr_title = _ocr_sticker_title(raw)
-        if ocr_title:
-            title = ocr_title
+    cat = (category or "").strip()[:40]
+    if not cat:
+        raise HTTPException(status_code=400, detail="Category required")
+
+    # Every upload must OCR image text; title is always the OCR result (never raw filename).
+    if not STICKER_OCR_TITLE:
+        raise HTTPException(status_code=503, detail="Sticker OCR is disabled on server")
+    ocr_title = _ocr_sticker_title(raw)
+    if not ocr_title:
+        raise HTTPException(
+            status_code=422,
+            detail="No text detected in image (OCR); upload skipped",
+        )
+    title = ocr_title[:80]
     is_gif_upload = ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8")
     animated = bool(is_gif_upload and _is_animated_gif_bytes(raw))
 

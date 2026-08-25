@@ -98,14 +98,10 @@
 
   function displayTitle(item) {
     var title = String((item && item.title) || '').trim();
-    if (!title || isGenericStickerTitle(title)) {
-      return item.category || tr('hub.imagesPage.stickersUntitled') || item.id || '';
-    }
-    if (/^[a-f0-9]{28,64}$/i.test(title)) return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
-    if (/^[a-z0-9_-]{20,}$/i.test(title) && !/[\u4e00-\u9fff]/.test(title)) {
-      return (item.category || tr('hub.imagesPage.stickersUntitled') || item.id);
-    }
-    return title;
+    // Uploads always store OCR text as title — show it as the display name.
+    if (title && !isGenericStickerTitle(title)) return title;
+    if (title && /[\u4e00-\u9fff]/.test(title)) return title;
+    return item.category || tr('hub.imagesPage.stickersUntitled') || item.id || '';
   }
 
   function thumbUrl(item) {
@@ -510,6 +506,7 @@
     var ok = 0;
     var fail = 0;
     var serverSkip = 0;
+    var ocrSkip = 0;
 
     function next() {
       if (!queue.length) {
@@ -518,6 +515,7 @@
           tr('privateHub.ops.stickersUploadDone', {
             ok: ok,
             dup: skipped + serverSkip,
+            ocr: ocrSkip,
             fail: fail,
             total: pickedTotal
           })
@@ -548,6 +546,10 @@
           if (res.status === 409) {
             serverSkip += 1;
             existingSources.add(normFileName(file.name));
+            return;
+          }
+          if (res.status === 422) {
+            ocrSkip += 1;
             return;
           }
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
