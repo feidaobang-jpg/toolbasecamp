@@ -470,6 +470,10 @@
     if (/^sticker\d*$/i.test(s)) return true;
     if (/^[\d()_\s.\-]+$/.test(s)) return true;
     if (s.length <= 3 && !/[\u4e00-\u9fff]/.test(s)) return true;
+    // Pack dumps: "xinyuansucai (33)", "foo_12" — hide until OCR / treat as generic.
+    if (!/[\u4e00-\u9fff]/.test(s) && (/^.+\(\d+\)$/.test(s) || /^[a-z][a-z0-9_-]*[\s._-]*\d{1,4}$/i.test(s))) {
+      return true;
+    }
     return false;
   }
 

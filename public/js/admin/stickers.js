@@ -90,6 +90,9 @@
     if (/^sticker\d*$/i.test(s)) return true;
     if (/^[\d()_\s.\-]+$/.test(s)) return true;
     if (s.length <= 3 && !/[\u4e00-\u9fff]/.test(s)) return true;
+    if (!/[\u4e00-\u9fff]/.test(s) && (/^.+\(\d+\)$/.test(s) || /^[a-z][a-z0-9_-]*[\s._-]*\d{1,4}$/i.test(s))) {
+      return true;
+    }
     return false;
   }
 
@@ -457,6 +460,9 @@
     if (/^sticker\d*$/i.test(stem)) return true;
     if (/^[\d()_\s.\-]+$/.test(stem)) return true;
     if (stem.length <= 3 && !/[\u4e00-\u9fff]/.test(stem)) return true;
+    if (!/[\u4e00-\u9fff]/.test(stem) && (/^.+\(\d+\)$/.test(stem) || /^[a-z][a-z0-9_-]*[\s._-]*\d{1,4}$/i.test(stem))) {
+      return true;
+    }
     return false;
   }
 

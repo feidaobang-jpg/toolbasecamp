@@ -70,6 +70,14 @@ _GENERIC_TITLE_RE = re.compile(
     r")$",
     re.I,
 )
+# Material-pack filenames without CJK, e.g. "xinyuansucai (33)", "pack_12"
+_GENERIC_PACK_TITLE_RE = re.compile(
+    r"^(?:"
+    r".+\(\d+\)"  # foo (12) / xinyuansucai (33)
+    r"|[a-z][a-z0-9_-]*[\s._-]*\d{1,4}"  # foo_12 / pack-3
+    r")$",
+    re.I,
+)
 
 _ALLOWED_EXT = frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp"})
 _CONTENT_BY_EXT = {
@@ -246,6 +254,9 @@ def _is_generic_sticker_title(title: str) -> bool:
     if re.fullmatch(r"[\d\(\)\s_\-\.]+", s):
         return True
     if len(s) <= 3 and not re.search(r"[\u4e00-\u9fff]", s):
+        return True
+    # Pack dumps keep english/pinyin + index; OCR should replace these.
+    if not re.search(r"[\u4e00-\u9fff]", s) and _GENERIC_PACK_TITLE_RE.match(s):
         return True
     return False
 
