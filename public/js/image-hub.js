@@ -56,8 +56,15 @@
   function gridImageUrl(path) {
     if (!path) return '';
     if (/^https?:\/\//i.test(path)) return path;
-    if (path.indexOf('/pubimg/') === 0) return path;
-    if (path.indexOf('/pubsticker/') === 0) return path;
+    // Absolute URL helps Baidu/WeChat long-press share use the real GIF file
+    // instead of a rasterized frame (transparent pixels → black, no animation).
+    if (path.indexOf('/pubimg/') === 0 || path.indexOf('/pubsticker/') === 0) {
+      try {
+        var origin = String(window.location.origin || '');
+        if (origin) return origin + path;
+      } catch (e) {}
+      return path;
+    }
     return fullImageUrl(path);
   }
 

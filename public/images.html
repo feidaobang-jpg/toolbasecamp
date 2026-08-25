@@ -133,11 +133,13 @@
         background: #2563eb; border-color: #2563eb; color: #fff;
       }
       .img-hub-thumb-wrap--sticker {
-        background: repeating-conic-gradient(#e2e8f0 0% 25%, #f8fafc 0% 50%) 50% / 16px 16px;
+        /* Solid fill: Baidu/WeChat share rasterizes transparent GIF pixels as black. */
+        background: #f3f4f6;
       }
       .img-hub-card--sticker .img-hub-sticker-img {
         position: absolute; inset: 0; width: 100%; height: 100%;
         object-fit: contain; object-position: center; display: block;
+        background: #f3f4f6;
         -webkit-touch-callout: default;
       }
       .img-hub-preview {
@@ -156,8 +158,7 @@
       }
       .img-hub-preview-img {
         display: block; width: 100%; max-height: min(70vh, 520px);
-        object-fit: contain; background:
-          repeating-conic-gradient(#e2e8f0 0% 25%, #f8fafc 0% 50%) 50% / 16px 16px;
+        object-fit: contain; background: #f3f4f6;
         border-radius: 10px;
         -webkit-touch-callout: default;
       }
@@ -199,7 +200,7 @@
     <script src="js/common_ui.js?v=adminhub1"></script>
     <script src="js/gif-viewport.js?v=giffull2"></script>
     <script src="js/tb-pager.js?v=jump1"></script>
-    <script src="js/image-hub.js?v=kindgif1"></script>
+    <script src="js/image-hub.js?v=baidushare1"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }
