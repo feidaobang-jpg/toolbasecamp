@@ -402,7 +402,9 @@
     var list = document.getElementById('sticker-list');
     if (!list) return Promise.resolve();
     setStatus(meta, tr('privateHub.ops.stickersLoading'));
-    return fetch(apiBase() + '/image/stickers/admin/list?limit=500', { headers: authHeaders() })
+    // Admin UI filters/paginates client-side — pull the full catalog (was capped at 500).
+    var ADMIN_FETCH_LIMIT = 5000;
+    return fetch(apiBase() + '/image/stickers/admin/list?limit=' + ADMIN_FETCH_LIMIT, { headers: authHeaders() })
       .then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
@@ -411,6 +413,10 @@
       })
       .then(function (data) {
         allItems = (data && data.items) || [];
+        var reported = Number(data && data.total) || allItems.length;
+        if (reported > allItems.length) {
+          console.warn('[stickers] admin list truncated', allItems.length, 'of', reported);
+        }
         existingSources = new Set();
         allItems.forEach(function (item) {
           if (item.source) existingSources.add(normFileName(item.source));

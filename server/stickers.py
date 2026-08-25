@@ -895,7 +895,7 @@ def stickers_admin_list(
     del admin
     all_items = _load_sticker_manifest()
     filtered = _filter_sticker_rows(all_items, category=category, kind=kind, q=q)
-    lim = max(1, min(int(limit or 500), 1000))
+    lim = max(1, min(int(limit or 500), 5000))
     off = max(0, int(offset or 0))
     items = [_admin_item(row) for row in filtered[off : off + lim] if row.get("id")]
     categories = []
