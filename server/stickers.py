@@ -418,7 +418,12 @@ STICKER_GIF_MOTION_MIN = float(os.environ.get("STICKER_GIF_MOTION_MIN") or "2.0"
 
 
 def _gif_motion_score(data: bytes) -> float:
-    """How much frames differ (0 = identical). Sampled on a small RGBA canvas."""
+    """How much frames differ (0 = identical). Sampled on a small RGB canvas.
+
+    Frames are composited onto opaque white first — many sticker GIFs only
+    differ in transparency / disposal (look static in browsers/PC preview)
+    which inflated RGBA-only scores and wrongly kept the GIF badge.
+    """
     if not data or len(data) < 4 or data[:4] != b"GIF8":
         return 0.0
     try:
@@ -428,6 +433,12 @@ def _gif_motion_score(data: bytes) -> float:
         n = int(getattr(im, "n_frames", 1) or 1)
         if n <= 1:
             return 0.0
+
+        def _flat_rgb(frame):
+            rgba = frame.convert("RGBA").resize((64, 64))
+            bg = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+            return Image.alpha_composite(bg, rgba).convert("RGB")
+
         base = None
         best = 0.0
         # Cap work on long clips — compare first frame to later samples.
@@ -435,11 +446,11 @@ def _gif_motion_score(data: bytes) -> float:
         for idx, frame in enumerate(ImageSequence.Iterator(im)):
             if idx % step != 0 and idx != n - 1:
                 continue
-            rgba = frame.convert("RGBA").resize((64, 64))
+            rgb = _flat_rgb(frame)
             if base is None:
-                base = rgba
+                base = rgb
                 continue
-            diff = ImageChops.difference(base, rgba).convert("L")
+            diff = ImageChops.difference(base, rgb).convert("L")
             hist = diff.histogram()
             avg = sum(i * hist[i] for i in range(256)) / float(64 * 64)
             if avg > best:
