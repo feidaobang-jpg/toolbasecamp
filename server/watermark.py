@@ -12,7 +12,8 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 router = APIRouter(prefix="/watermark", tags=["watermark"])
 
 MAX_UPLOAD = 8 * 1024 * 1024
-ALLOWED_EXT = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
+# Filename extension is advisory; browsers/WeChat often use .gif / .jfif / no ext.
+ALLOWED_EXT = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif", ".jfif", ".tif", ".tiff"}
 
 
 def _opencv_available() -> bool:
@@ -87,7 +88,10 @@ async def watermark_image_process(
 
     name = (image.filename or "").lower()
     ext = os.path.splitext(name)[1]
-    if ext and ext not in ALLOWED_EXT:
+    ctype = (image.content_type or "").lower().split(";")[0].strip()
+    # Reject only when both extension and Content-Type look non-image.
+    # Rely on imdecode below for the real check (fixes GIF / JFIF / missing-ext uploads).
+    if ext and ext not in ALLOWED_EXT and not ctype.startswith("image/"):
         raise HTTPException(status_code=400, detail="Please upload an image file")
 
     data = await image.read()
