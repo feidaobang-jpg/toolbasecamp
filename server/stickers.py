@@ -289,12 +289,17 @@ def _sticker_download_filename(row: dict, ext: str) -> str:
     return _ascii_filename(sid, ext)
 
 
-def _content_disposition_filename(name: str, attachment: bool) -> str:
+def _content_disposition_filename(name: str, attachment: bool, ascii_fallback: str = "") -> str:
     """RFC 5987: ASCII filename= + UTF-8 filename*=. Never put CJK in filename=."""
     name = str(name or "download").strip() or "download"
     # Python \w matches Unicode letters — must force ASCII-only for HTTP headers.
-    ascii_fb = re.sub(r"[^A-Za-z0-9._\-]+", "_", name).strip("._") or "download"
-    if not re.search(r"[A-Za-z0-9]", ascii_fb):
+    ascii_fb = re.sub(r"[^A-Za-z0-9._\-]+", "_", name).strip("._") or ""
+    # Pure CJK titles collapse to "gif" — prefer sticker-stk00001.gif
+    if len(ascii_fb) < 5 or not re.search(r"[A-Za-z0-9].*[A-Za-z0-9]", ascii_fb):
+        fb = re.sub(r"[^A-Za-z0-9._\-]+", "_", str(ascii_fallback or "")).strip("._")
+        if fb and re.search(r"[A-Za-z0-9]", fb):
+            ascii_fb = fb
+    if not ascii_fb or not re.search(r"[A-Za-z0-9]", ascii_fb):
         ascii_fb = "download"
     encoded = quote(name, safe="")
     disp = "attachment" if attachment else "inline"
@@ -1041,7 +1046,9 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
     ext = path.suffix or ".png"
     filename = _sticker_download_filename(row, ext)
     headers = {
-        "Content-Disposition": _content_disposition_filename(filename, bool(download)),
+        "Content-Disposition": _content_disposition_filename(
+            filename, bool(download), _ascii_filename(sid, ext)
+        ),
     }
     if not download:
         headers["Cache-Control"] = "public, max-age=86400"
