@@ -10,10 +10,15 @@
   var filterSearch = '';
   var filterSearchTimer = null;
   var mediaKind = 'all'; // all | still | gif
-  var allItems = [];
+  var pageItems = [];
+  var listTotal = 0;
+  var catalogTotal = 0;
+  var categoryCounts = {};
+  var kindCounts = { all: 0, gif: 0, still: 0 };
   var selectedIds = new Set();
   var listPage = 1;
   var PAGE_SIZE = 20;
+  var listRequestSeq = 0;
 
   var PRESET_CATS = [
     { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
@@ -149,34 +154,10 @@
     else if (thumbSrc) img.src = thumbSrc;
   }
 
-  function itemMatchesSearch(item) {
-    var q = String(filterSearch || '').trim().toLowerCase();
-    if (!q) return true;
-    var blob = [
-      item && item.title,
-      item && item.category,
-      item && item.id,
-      item && item.source
-    ].join(' ').toLowerCase();
-    return blob.indexOf(q) >= 0;
-  }
-
-  function filteredItems() {
-    var list = allItems.slice();
-    if (filterCategory) {
-      list = list.filter(function (it) {
-        return String(it.category || '').trim() === filterCategory;
-      });
-    }
-    if (mediaKind === 'gif') {
-      list = list.filter(function (it) { return isAnimated(it); });
-    } else if (mediaKind === 'still') {
-      list = list.filter(function (it) { return !isAnimated(it); });
-    }
-    if (filterSearch.trim()) {
-      list = list.filter(itemMatchesSearch);
-    }
-    return list;
+  function rememberSources(items) {
+    (items || []).forEach(function (item) {
+      if (item && item.source) existingSources.add(normFileName(item.source));
+    });
   }
 
   function syncUploadChips() {
@@ -210,17 +191,10 @@
     var wrap = document.getElementById('filter-cat-chips');
     if (!wrap) return;
     wrap.innerHTML = '';
-    var counts = {};
-    allItems.forEach(function (it) {
-      var c = String(it.category || '').trim() || '其他';
-      counts[c] = (counts[c] || 0) + 1;
-    });
-    var gifN = 0;
-    var stillN = 0;
-    allItems.forEach(function (it) {
-      if (isAnimated(it)) gifN += 1;
-      else stillN += 1;
-    });
+    var counts = categoryCounts || {};
+    var gifN = Number(kindCounts.gif) || 0;
+    var stillN = Number(kindCounts.still) || 0;
+    var allN = Number(kindCounts.all) || catalogTotal || 0;
 
     function addKindBtn(kind, label, count) {
       var btn = document.createElement('button');
@@ -228,15 +202,15 @@
       btn.className = 'ladder-cat-chip' + (mediaKind === kind ? ' active' : '');
       btn.textContent = label + ' (' + count + ')';
       btn.addEventListener('click', function () {
+        if (mediaKind === kind) return;
         mediaKind = kind;
         listPage = 1;
         selectedIds = new Set();
-        renderFilterChips();
-        renderGrid();
+        loadList();
       });
       wrap.appendChild(btn);
     }
-    addKindBtn('all', tr('hub.imagesPage.filterAll'), allItems.length);
+    addKindBtn('all', tr('hub.imagesPage.filterAll'), allN);
     addKindBtn('gif', tr('hub.imagesPage.filterGif'), gifN);
     addKindBtn('still', tr('hub.imagesPage.filterStill'), stillN);
 
@@ -252,8 +226,7 @@
         filterCategory = filterCategory === cat.value ? '' : cat.value;
         listPage = 1;
         selectedIds = new Set();
-        renderFilterChips();
-        renderGrid();
+        loadList();
       });
       wrap.appendChild(btn);
     });
@@ -268,8 +241,7 @@
         filterCategory = filterCategory === cat ? '' : cat;
         listPage = 1;
         selectedIds = new Set();
-        renderFilterChips();
-        renderGrid();
+        loadList();
       });
       wrap.appendChild(btn);
     });
@@ -289,35 +261,32 @@
     var pager = document.getElementById('list-pager');
     if (!list) return;
     disconnectGifObserver();
-    var items = filteredItems();
     if (typeof tbNormalizePage === 'function') {
-      listPage = tbNormalizePage(listPage, items.length, PAGE_SIZE);
+      listPage = tbNormalizePage(listPage, listTotal, PAGE_SIZE);
     }
-    var start = (listPage - 1) * PAGE_SIZE;
-    var pageItems = items.slice(start, start + PAGE_SIZE);
     list.innerHTML = '';
     if (filterCategory || mediaKind !== 'all' || filterSearch.trim()) {
       setStatus(meta, tr('privateHub.ops.stickersListMetaFiltered', {
-        filtered: items.length,
-        total: allItems.length
+        filtered: listTotal,
+        total: catalogTotal
       }));
     } else {
-      setStatus(meta, tr('privateHub.ops.stickersListMeta', { total: allItems.length }));
+      setStatus(meta, tr('privateHub.ops.stickersListMeta', { total: listTotal }));
     }
     updateSelectMeta();
     if (typeof tbRenderPager === 'function') {
       tbRenderPager(pager, {
         page: listPage,
         pageSize: PAGE_SIZE,
-        total: items.length,
+        total: listTotal,
         onChange: function (p) {
           listPage = p;
-          renderGrid();
+          loadList();
         }
       });
     }
     if (!pageItems.length) {
-      var emptyMsg = allItems.length
+      var emptyMsg = catalogTotal
         ? (filterSearch.trim()
           ? tr('hub.imagesPage.stickersSearchEmpty')
           : tr('privateHub.ops.stickersEmptyFilter'))
@@ -402,9 +371,16 @@
     var list = document.getElementById('sticker-list');
     if (!list) return Promise.resolve();
     setStatus(meta, tr('privateHub.ops.stickersLoading'));
-    // Admin UI filters/paginates client-side — pull the full catalog (was capped at 500).
-    var ADMIN_FETCH_LIMIT = 5000;
-    return fetch(apiBase() + '/image/stickers/admin/list?limit=' + ADMIN_FETCH_LIMIT, { headers: authHeaders() })
+    if (typeof tbNormalizePage === 'function') {
+      listPage = tbNormalizePage(listPage, listTotal || listPage * PAGE_SIZE, PAGE_SIZE);
+    }
+    var offset = (listPage - 1) * PAGE_SIZE;
+    var url = apiBase() + '/image/stickers/admin/list?limit=' + PAGE_SIZE + '&offset=' + offset;
+    if (filterCategory) url += '&category=' + encodeURIComponent(filterCategory);
+    if (mediaKind === 'gif' || mediaKind === 'still') url += '&kind=' + encodeURIComponent(mediaKind);
+    if (filterSearch.trim()) url += '&q=' + encodeURIComponent(filterSearch.trim());
+    var seq = ++listRequestSeq;
+    return fetch(url, { headers: authHeaders(), cache: 'no-store' })
       .then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);
@@ -412,24 +388,19 @@
         });
       })
       .then(function (data) {
-        allItems = (data && data.items) || [];
-        var reported = Number(data && data.total) || allItems.length;
-        if (reported > allItems.length) {
-          console.warn('[stickers] admin list truncated', allItems.length, 'of', reported);
-        }
-        existingSources = new Set();
-        allItems.forEach(function (item) {
-          if (item.source) existingSources.add(normFileName(item.source));
-        });
-        var keep = new Set();
-        allItems.forEach(function (it) {
-          if (selectedIds.has(it.id)) keep.add(it.id);
-        });
-        selectedIds = keep;
+        if (seq !== listRequestSeq) return;
+        pageItems = (data && data.items) || [];
+        listTotal = Number(data && data.total) || pageItems.length;
+        catalogTotal = Number(data && data.catalogTotal);
+        if (!(catalogTotal > 0)) catalogTotal = listTotal;
+        categoryCounts = (data && data.categoryCounts) || {};
+        kindCounts = (data && data.kindCounts) || { all: catalogTotal, gif: 0, still: 0 };
+        rememberSources(pageItems);
         renderFilterChips();
         renderGrid();
       })
       .catch(function (err) {
+        if (seq !== listRequestSeq) return;
         setStatus(meta, (err && err.message) || tr('privateHub.ops.stickersLoadFailed'), true);
       });
   }
@@ -612,7 +583,9 @@
     var selectAll = document.getElementById('btn-select-all');
     if (selectAll) {
       selectAll.addEventListener('click', function () {
-        filteredItems().forEach(function (it) { selectedIds.add(it.id); });
+        pageItems.forEach(function (it) {
+          if (it && it.id) selectedIds.add(it.id);
+        });
         renderGrid();
       });
     }
@@ -635,13 +608,13 @@
         listPage = 1;
         selectedIds = new Set();
         clearTimeout(filterSearchTimer);
-        filterSearchTimer = setTimeout(function () { renderGrid(); }, 280);
+        filterSearchTimer = setTimeout(function () { loadList(); }, 280);
       });
       listSearch.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
           e.preventDefault();
           clearTimeout(filterSearchTimer);
-          renderGrid();
+          loadList();
         }
       });
     }

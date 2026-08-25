@@ -820,6 +820,28 @@ def _filter_sticker_rows(
     return out
 
 
+def _sticker_facet_counts(rows: list) -> dict:
+    """Category + kind totals for filter chips (full catalog, ignore current filters)."""
+    category_counts: dict[str, int] = {}
+    gif_n = 0
+    still_n = 0
+    for row in rows:
+        cat = str(row.get("category") or "").strip() or "其他"
+        category_counts[cat] = category_counts.get(cat, 0) + 1
+        if _is_gif_row(row):
+            gif_n += 1
+        else:
+            still_n += 1
+    return {
+        "categoryCounts": category_counts,
+        "kindCounts": {
+            "all": len(rows),
+            "gif": gif_n,
+            "still": still_n,
+        },
+    }
+
+
 def _guess_content_type(ext: str, upload_ctype: str) -> str:
     ext = (ext or "").lower()
     if ext in _CONTENT_BY_EXT:
@@ -885,7 +907,7 @@ def stickers_public_list(
 
 @router.get("/admin/list")
 def stickers_admin_list(
-    limit: int = 500,
+    limit: int = 20,
     offset: int = 0,
     category: str = "",
     kind: str = "",
@@ -895,7 +917,7 @@ def stickers_admin_list(
     del admin
     all_items = _load_sticker_manifest()
     filtered = _filter_sticker_rows(all_items, category=category, kind=kind, q=q)
-    lim = max(1, min(int(limit or 500), 5000))
+    lim = max(1, min(int(limit or 20), 100))
     off = max(0, int(offset or 0))
     items = [_admin_item(row) for row in filtered[off : off + lim] if row.get("id")]
     categories = []
@@ -905,13 +927,17 @@ def stickers_admin_list(
         if cat and cat not in seen:
             seen.add(cat)
             categories.append(cat)
+    facets = _sticker_facet_counts(all_items)
     return {
         "success": True,
         "items": items,
         "categories": categories,
+        "categoryCounts": facets["categoryCounts"],
+        "kindCounts": facets["kindCounts"],
         "limit": lim,
         "offset": off,
         "total": len(filtered),
+        "catalogTotal": len(all_items),
     }
 
 
