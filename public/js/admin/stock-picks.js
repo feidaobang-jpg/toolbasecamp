@@ -89,9 +89,10 @@
     var reason = (data && data.reason) ? String(data.reason).trim() : '';
     var hint = (data && data.hint) ? String(data.hint).trim() : '';
     var regime = market && market.regime ? String(market.regime) : '';
+    var gateOff = market && market.gate_applied === false;
     // Prefer explicit market-gate copy when regime is weak (may already be in message).
     var text = msg || marketNote || reason || hint || '暂无推荐结果';
-    var weak = regime === 'weak' || /大盘偏弱|暂不推荐新建仓/.test(text);
+    var weak = !gateOff && (regime === 'weak' || /大盘偏弱|暂不推荐新建仓/.test(text));
     return { text: text, weak: weak };
   }
 
@@ -305,7 +306,7 @@
         }
         var baseMsg = '生成完成，共 ' + items.length + ' 只';
         var doneMsg = data.message || (marketNote ? baseMsg + ' · ' + marketNote : baseMsg);
-        var weakDone = market && market.regime === 'weak';
+        var weakDone = market && market.regime === 'weak' && market.gate_applied !== false;
         setStatus(statusEl, doneMsg, { weak: !!weakDone });
 
         if (pickListEl) {

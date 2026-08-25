@@ -401,6 +401,16 @@ def _strong_momentum_fit_score(
     return s
 
 
+def _mid_small_code_bonus(code: str) -> float:
+    """轻量偏好主板中小盘代码段（002/003），适配「赚个股、亏指数」分化。"""
+    c = str(code or "").strip()
+    if c.startswith(("002", "003")):
+        return 4.0
+    if c.startswith(("000", "001")):
+        return 1.5
+    return 0.0
+
+
 def _strong_momentum_eval_row(row, is_trade_time: bool):
     """
     强势弹性（隔夜）：当日温和偏强~较强、放量、收盘贴近日高，短均线多头。
@@ -478,6 +488,7 @@ def _strong_momentum_eval_row(row, is_trade_time: bool):
         last_close, ma5, ma10, ma20, ret_3d, ret_5d, pct, vr,
         near_high_ratio, prior_up_days, amt, close_vs_high,
     )
+    fit += _mid_small_code_bonus(code)
     if fit < _strategy_fit_min("strong_momentum", is_trade_time):
         return None
     return {
@@ -1201,20 +1212,13 @@ def _compute_strong_momentum(only_basic: bool = True):
     in_live_window = _is_tail_buy_live_window()
     buy_date, sell_date = _tail_buy_trade_dates()
 
+    # 强势弹性跟「指数失真 / 小票强」行情：不因沪深300偏弱而停推（月K策略仍用大盘门控）。
+    market_note = (market.get("message") or "").strip()
     if not market.get("allow_recommend", True):
-        return {
-            "success": False,
-            "generated_at": generated_at,
-            "strategy": "strong_momentum",
-            "items": [],
-            "no_retry": True,
-            "in_live_window": in_live_window,
-            "market_regime": market,
-            "message": market.get("message") or "大盘偏弱，暂不推荐强势弹性隔夜",
-        }
-
-    idx_codes = _get_hs300_zz500_universe()
-    use_index = len(idx_codes) >= 120
+        market_note = (
+            "指数可能偏弱或与个股背离；本策略不据此停推，仍按个股强势筛选。"
+            + (f"（{market_note}）" if market_note else "")
+        )
 
     try:
         spot = _em_spot_a_share()
@@ -1258,18 +1262,21 @@ def _compute_strong_momentum(only_basic: bool = True):
     except Exception:
         pass
 
-    pool_note = "沪深300+中证500成分股"
-    if use_index:
-        try:
-            df = df[df["代码"].astype(str).isin(idx_codes)]
-        except Exception:
-            use_index = False
-    if not use_index:
-        pool_note = "主板高流动性替代池（指数成分拉取不足时）"
+    # 不绑死沪深300+中证500：隔夜弹性更贴「中小盘/题材小票」；用成交额保流动性。
+    pool_note = "主板中小盘高流动性池（不因大盘指数强弱停推）"
+    hs300_zz500 = _get_hs300_zz500_universe()
+    # 轻量偏好：非沪深300权重更吃「赚个股」行情；002/003 再略加分（见评分）。
+    try:
+        df["__code"] = df["代码"].astype(str)
+        # Prefer names outside the mega-cap heavy HS300 when possible by scanning more mid names first.
+        df["__mid_pref"] = df["__code"].map(
+            lambda c: 2 if str(c).startswith(("002", "003")) else (1 if str(c) not in hs300_zz500 else 0)
+        )
+    except Exception:
+        df["__mid_pref"] = 0
 
     is_trade_time = _is_a_share_trade_time()
-    caution = market.get("regime") == "caution"
-    min_amount = 1.2e8 if use_index else 1.8e8
+    min_amount = 1.0e8
 
     # 初筛：当日偏强（非贴板），放量
     if is_trade_time:
@@ -1292,7 +1299,7 @@ def _compute_strong_momentum(only_basic: bool = True):
             (df["__turn"].fillna(0) >= 0.35) &
             (df["__turn"].fillna(0) <= 18.0)
         ]
-    df_scan = df_scan.sort_values("__pct", ascending=False).head(90)
+    df_scan = df_scan.sort_values(["__mid_pref", "__pct"], ascending=[False, False]).head(100)
     scan_rows = [row for _, row in df_scan.iterrows()]
 
     candidates = _parallel_row_scan(
@@ -1301,8 +1308,7 @@ def _compute_strong_momentum(only_basic: bool = True):
         max_workers=8,
     )
     fit_min = _strategy_fit_min("strong_momentum", is_trade_time)
-    if caution:
-        fit_min = float(fit_min) + 3.0
+    # 不再因沪深300 caution 抬高门槛（指数弱≠小票弱）。
     top = _apply_sorted_picks(
         candidates,
         only_basic=True,
@@ -1340,7 +1346,7 @@ def _compute_strong_momentum(only_basic: bool = True):
             "sell_time_suggest": f"{sell_date} 09:30~10:00（冲高优先了结，走弱随时走）",
             "hold_days_suggest": "隔夜为主（最多观察至次日上午）",
             "summary": (
-                f"强势弹性：{pool_note}；偏好当日涨约 2%~7.5%、放量、收盘贴近日高、短均线多头的标的。"
+                f"强势弹性：{pool_note}；偏好当日涨约 2%~7.5%、放量、收盘贴近日高、短均线多头的中小盘标的。"
                 f"建议 {buy_date} 尾盘买、{sell_date} 早盘卖。搏次日溢价，波动更大，不保证上涨。"
             ),
             "prior_up_days": r.get("prior_up_days"),
@@ -1350,7 +1356,6 @@ def _compute_strong_momentum(only_basic: bool = True):
         if len(items) >= STOCK_PICK_MAX:
             break
 
-    market_msg = (market.get("message") or "").strip()
     window_note = (
         "【尾盘实时窗口】"
         if in_live_window
@@ -1361,8 +1366,8 @@ def _compute_strong_momentum(only_basic: bool = True):
     else:
         msg_core = "当前暂无符合强势弹性条件的标的"
     msg_parts = [window_note, f"【{pool_note}】", msg_core]
-    if market_msg:
-        msg_parts.append(market_msg)
+    if market_note:
+        msg_parts.append(market_note)
 
     return {
         "success": True if items else False,
@@ -1372,7 +1377,7 @@ def _compute_strong_momentum(only_basic: bool = True):
         "no_retry": True,
         "is_trade_time": is_trade_time,
         "in_live_window": in_live_window,
-        "market_regime": market,
+        "market_regime": {**market, "gate_applied": False, "note": "strong_momentum_skips_hs300_gate"},
         "buy_date": buy_date,
         "sell_date": sell_date,
         "message": " ".join(msg_parts).strip(),
