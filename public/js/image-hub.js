@@ -14,6 +14,8 @@
   var PAGE_SIZE = 20;
   var pageState = { ai: 1, stickers: 1 };
   var totalState = { ai: 0, stickers: 0 };
+  // Extra client bust for WeChat image disk cache (appended as &_r=).
+  var mediaEpoch = 0;
 
   function tr(key) {
     return typeof window.t === 'function' ? window.t(key) : key;
@@ -47,23 +49,29 @@
     return typeof tbIsWeChat === 'function' ? tbIsWeChat() : /MicroMessenger/i.test(navigator.userAgent || '');
   }
 
+  function withMediaEpoch(url) {
+    var u = String(url || '');
+    if (!u || !mediaEpoch) return u;
+    return u + (u.indexOf('?') >= 0 ? '&' : '?') + '_r=' + mediaEpoch;
+  }
+
   function fullImageUrl(path) {
     if (!path) return '';
-    if (/^https?:\/\//i.test(path)) return path;
-    return apiBase() + (path.charAt(0) === '/' ? path : '/' + path);
+    if (/^https?:\/\//i.test(path)) return withMediaEpoch(path);
+    return withMediaEpoch(apiBase() + (path.charAt(0) === '/' ? path : '/' + path));
   }
 
   function gridImageUrl(path) {
     if (!path) return '';
-    if (/^https?:\/\//i.test(path)) return path;
+    if (/^https?:\/\//i.test(path)) return withMediaEpoch(path);
     // Absolute URL helps Baidu/WeChat long-press share use the real GIF file
     // instead of a rasterized frame (transparent pixels → black, no animation).
     if (path.indexOf('/pubimg/') === 0 || path.indexOf('/pubsticker/') === 0) {
       try {
         var origin = String(window.location.origin || '');
-        if (origin) return origin + path;
+        if (origin) return withMediaEpoch(origin + path);
       } catch (e) {}
-      return path;
+      return withMediaEpoch(path);
     }
     return fullImageUrl(path);
   }
@@ -496,7 +504,8 @@
     tipEl.textContent = tr('hub.imagesPage.stickersLongPress') ||
       '长按图片可保存或转发；动图请用「下载」。';
     var img = overlay.querySelector('.img-hub-preview-img');
-    img.src = String(fullSrc || '').replace(/[?#].*$/, '') || fullSrc;
+    // Keep ?v= / &_r= cache-bust — stripping them causes WeChat thumb≠preview mismatch.
+    img.src = fullSrc || '';
     img.alt = opts.alt || tr('hub.imagesPage.untitled') || '';
     img.style.background = '#ffffff';
     var dlBtn = overlay.querySelector('[data-preview-dl]');
@@ -709,6 +718,9 @@
           '</div>' +
           '<div class="action-row" style="margin:0 0 8px">' +
             '<button type="button" class="tb-btn" id="img-hub-refresh">' + escapeHtml(tr('hub.imagesPage.refresh')) + '</button>' +
+            '<button type="button" class="tb-btn" id="img-hub-hard-refresh">' +
+              escapeHtml(tr('hub.imagesPage.hardRefresh') || '强制刷新') +
+            '</button>' +
           '</div>' +
         '</div>' +
         '<p class="img-hub-tip" id="img-hub-tip"></p>' +
@@ -769,14 +781,27 @@
     var refresh = document.getElementById('img-hub-refresh');
     if (refresh) {
       refresh.addEventListener('click', function () {
+        mediaEpoch = Date.now();
+        listCache = { ai: null, stickers: null };
         if (activeTab === 'ai') {
-          listCache.ai = null;
           pageState.ai = 1;
           loadAiList();
         } else {
-          listCache.stickers = null;
           pageState.stickers = 1;
           loadStickerList();
+        }
+      });
+    }
+    var hardRefresh = document.getElementById('img-hub-hard-refresh');
+    if (hardRefresh) {
+      hardRefresh.addEventListener('click', function () {
+        // Full navigation bypasses WeChat document + image disk cache.
+        try {
+          var u = new URL(window.location.href);
+          u.searchParams.set('_', String(Date.now()));
+          window.location.replace(u.toString());
+        } catch (e) {
+          window.location.reload(true);
         }
       });
     }

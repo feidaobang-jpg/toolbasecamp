@@ -440,6 +440,7 @@ window.TB_LOCALES['zh-CN'] = {
             createT2i: '文生图',
             createInstruct: '图生图',
             refresh: '刷新',
+            hardRefresh: '强制刷新',
             download: '下载',
             delete: '删除',
             deleteConfirm: '确定删除这张公开图片？文件与记录将一并移除。',

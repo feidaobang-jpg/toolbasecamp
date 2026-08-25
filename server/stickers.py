@@ -146,12 +146,31 @@ def _load_sticker_manifest() -> list:
 
 
 def _next_sticker_id(items: list) -> str:
-    used = {str(it.get("id") or "") for it in items}
-    for n in range(1, 100000):
-        sid = f"stk{n:05d}"
-        if sid not in used:
-            return sid
-    raise HTTPException(status_code=500, detail="Sticker id space exhausted")
+    # Never reuse deleted ids — same /pubsticker/{id}.* URLs confuse WeChat's
+    # long-lived image cache (thumb shows old art, full preview shows new).
+    max_n = 0
+    for it in items:
+        sid = str(it.get("id") or "")
+        m = re.fullmatch(r"stk(\d{1,6})", sid)
+        if m:
+            max_n = max(max_n, int(m.group(1)))
+    return f"stk{max_n + 1:05d}"
+
+
+def _cache_bust_token(row: dict) -> str:
+    stored = str(row.get("contentHash") or "").strip().lower()
+    if stored and re.fullmatch(r"[a-f0-9]{64}", stored):
+        return stored[:12]
+    seed = f"{row.get('id') or ''}|{row.get('file') or ''}|{row.get('createdAt') or ''}"
+    return hashlib.md5(seed.encode("utf-8")).hexdigest()[:12]
+
+
+def _with_cache_bust(url: str, row: dict) -> str:
+    token = _cache_bust_token(row)
+    if not url or not token:
+        return url
+    sep = "&" if "?" in url else "?"
+    return f"{url}{sep}v={token}"
 
 
 def _content_hash(data: bytes) -> str:
@@ -727,6 +746,7 @@ def _public_item(row: dict) -> dict:
     static_url = f"/pubsticker/{file_name}" if file_name else f"/image/stickers/{sid}"
     # Grid / modal playback always use the stored original.
     play_url = static_url
+    thumb_url = f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1"
     ext = Path(file_name).suffix if file_name else ".png"
     return {
         "id": sid,
@@ -736,11 +756,12 @@ def _public_item(row: dict) -> dict:
         "animated": bool(animated),
         "createdAt": str(row.get("createdAt") or ""),
         "bytes": bytes_n,
-        "imageUrl": f"/image/stickers/{sid}",
-        "staticUrl": static_url,
-        "previewUrl": play_url if animated else "",
-        "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
-        "downloadUrl": f"/image/stickers/{sid}?download=1",
+        "contentHash": _cache_bust_token(row),
+        "imageUrl": _with_cache_bust(f"/image/stickers/{sid}", row),
+        "staticUrl": _with_cache_bust(static_url, row),
+        "previewUrl": _with_cache_bust(play_url, row) if animated else "",
+        "thumbnailUrl": _with_cache_bust(thumb_url, row),
+        "downloadUrl": _with_cache_bust(f"/image/stickers/{sid}?download=1", row),
         "downloadFilename": _sticker_download_filename(row, ext),
     }
 
@@ -1041,7 +1062,7 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
                 filename = _ascii_filename(sid, ".jpg")
                 headers = {
                     "Content-Disposition": f'inline; filename="{filename}"',
-                    "Cache-Control": "public, max-age=86400",
+                    "Cache-Control": "public, max-age=3600, must-revalidate",
                 }
                 return FileResponse(thumb_path, media_type="image/jpeg", headers=headers)
     file_name = str(row.get("file") or "").strip()
@@ -1059,7 +1080,7 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
         ),
     }
     if not download:
-        headers["Cache-Control"] = "public, max-age=86400"
+        headers["Cache-Control"] = "public, max-age=3600, must-revalidate"
     return FileResponse(
         path,
         media_type=media_type,

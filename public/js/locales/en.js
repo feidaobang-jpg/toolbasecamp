@@ -441,6 +441,7 @@ window.TB_LOCALES.en = {
             createT2i: 'Text to Image',
             createInstruct: 'Image Edit',
             refresh: 'Refresh',
+            hardRefresh: 'Hard refresh',
             download: 'Download',
             delete: 'Delete',
             deleteConfirm: 'Delete this public image? The file and record will be removed.',

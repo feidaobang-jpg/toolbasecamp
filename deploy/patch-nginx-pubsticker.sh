@@ -6,11 +6,11 @@ SNIPPET="/etc/nginx/snippets/toolbasecamp-pubsticker.conf"
 mkdir -p /etc/nginx/snippets
 
 cat > "$SNIPPET" << 'EOF'
-# Sticker thumbnails ({id}_thumb.jpg) — grid preview only.
+# Sticker files (original + thumb) — no immutable: ids/files can change after delete/upload.
 location /pubsticker/ {
     alias /var/lib/toolbasecamp/stickers/;
-    expires 7d;
-    add_header Cache-Control "public, max-age=604800, immutable";
+    expires 1h;
+    add_header Cache-Control "public, max-age=3600, must-revalidate";
     access_log off;
     try_files $uri =404;
 }
