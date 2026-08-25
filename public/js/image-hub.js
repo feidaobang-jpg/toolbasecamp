@@ -474,46 +474,10 @@
     return title;
   }
 
-  function isBaiduApp() {
-    return /baidu/i.test(navigator.userAgent || '');
-  }
-
-  function shareSrcFor(item) {
-    // Prefer white-backed share URL so Baidu/WeChat don't turn transparent art into black-on-black.
-    if (item && item.shareUrl) return fullImageUrl(item.shareUrl);
-    return fullSrcFor(item) || fullImageUrl(item && item.imageUrl);
-  }
-
-  function openWhiteSharePage(imgUrl, title) {
-    var src = String(imgUrl || '');
-    if (!src) return;
-    var html =
-      '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
-      '<meta name="viewport" content="width=device-width,initial-scale=1"/>' +
-      '<title>' + escapeHtml(title || '原图') + '</title>' +
-      '<style>html,body{margin:0;background:#fff;min-height:100%;}' +
-      'p{margin:12px 16px;font:14px/1.5 sans-serif;color:#64748b}' +
-      'img{display:block;max-width:100%;margin:0 auto;background:#fff;-webkit-touch-callout:default}</style>' +
-      '</head><body>' +
-      '<p>白底分享图 · 等完全显示后再长按。百度分享多为静图；要动图请回上一页点「下载」</p>' +
-      '<img src="' + escapeHtml(src) + '" alt=""/>' +
-      '</body></html>';
-    var w = window.open('', '_blank');
-    if (w && w.document) {
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
-      return;
-    }
-    // Popup blocked — navigate same tab.
-    window.location.href = src;
-  }
-
   function openHubPreview(item, opts) {
     if (!item) return;
     opts = opts || {};
     var fullSrc = fullSrcFor(item) || fullImageUrl(item.imageUrl);
-    var shareSrc = shareSrcFor(item) || String(fullSrc || '').replace(/[?#].*$/, '');
     var existing = document.getElementById('img-hub-preview');
     if (existing) existing.remove();
     var overlay = document.createElement('div');
@@ -524,32 +488,17 @@
         '<p class="img-hub-preview-tip"></p>' +
         '<img class="img-hub-preview-img" alt="" />' +
         '<div class="action-row img-hub-preview-actions">' +
-          '<button type="button" class="tb-btn" data-preview-open>打开原图</button>' +
           '<button type="button" class="tb-btn" data-preview-dl>下载</button>' +
           '<button type="button" class="tb-btn" data-preview-close>关闭</button>' +
         '</div>' +
       '</div>';
     var tipEl = overlay.querySelector('.img-hub-preview-tip');
-    tipEl.textContent = isBaiduApp()
-      ? (tr('hub.imagesPage.stickersBaiduShareTip') ||
-        '手机百度：请点下方「打开原图」，等白底图完全显示后再长按分享。直接长按缩略图容易只有黑底。')
-      : (tr('hub.imagesPage.stickersLongPress') ||
-        '请点下方「打开原图」，等白底图显示完后再长按分享。');
-    // Always remind on stickers — Baidu UA strings vary and tips were easy to miss.
-    if (item && (item.shareUrl || item.staticUrl || isAnimated(item))) {
-      tipEl.textContent = tr('hub.imagesPage.stickersBaiduShareTip') || tipEl.textContent;
-    }
+    tipEl.textContent = tr('hub.imagesPage.stickersLongPress') ||
+      '长按图片可保存或转发；动图请用「下载」。';
     var img = overlay.querySelector('.img-hub-preview-img');
-    // Preview on-page: show original animation; share button uses white-backed shareSrc.
     img.src = String(fullSrc || '').replace(/[?#].*$/, '') || fullSrc;
     img.alt = opts.alt || tr('hub.imagesPage.untitled') || '';
     img.style.background = '#ffffff';
-    var openBtn = overlay.querySelector('[data-preview-open]');
-    openBtn.textContent = tr('hub.imagesPage.openOriginal') || '打开原图';
-    openBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      openWhiteSharePage(shareSrc, opts.alt || displayStickerTitle(item) || '原图');
-    });
     var dlBtn = overlay.querySelector('[data-preview-dl]');
     dlBtn.textContent = tr('hub.imagesPage.download') || '下载';
     dlBtn.addEventListener('click', function (e) {
@@ -606,7 +555,7 @@
     if (tip) {
       tip.textContent = activeTab === 'stickers'
         ? (tr('hub.imagesPage.stickersTip') ||
-          '手机百度分享：先点开图片 →「打开原图」→ 等图显示完再长按（直接长按缩略图容易发黑）。')
+          'GIF 进入可视区域会自动播放；可长按图片转发。动图请用「下载」。')
         : tr('hub.imagesPage.tip');
     }
     var aiActions = document.getElementById('img-hub-ai-actions');

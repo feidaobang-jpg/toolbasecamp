@@ -674,99 +674,6 @@ def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     return raw, ctype, ext if ext in _ALLOWED_EXT else ".png"
 
 
-def _share_flat_file_name(sticker_id: str, ext: str = ".png") -> str:
-    sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48] or "sticker"
-    # Baidu→WeChat share usually freezes GIF; PNG on white is brighter and more reliable.
-    return f"{sid}_share.png"
-
-
-def _ink_score(rgba) -> int:
-    """How much non-white content a frame has (higher = more visible art)."""
-    try:
-        # Downsample for speed
-        small = rgba.resize((64, 64))
-        data = list(small.getdata())
-        score = 0
-        for r, g, b, a in data:
-            if a < 8:
-                continue
-            if r < 250 or g < 250 or b < 250:
-                score += 1
-        return score
-    except Exception:
-        return 0
-
-
-def _compose_gif_frames_on_white(im) -> list:
-    """Full RGBA frames on opaque white, honoring GIF disposal when possible."""
-    from PIL import Image
-
-    w, h = im.size
-    white = (255, 255, 255, 255)
-    canvas = Image.new("RGBA", (w, h), white)
-    frames: list = []
-    n = int(getattr(im, "n_frames", 1) or 1)
-    for i in range(n):
-        im.seek(i)
-        duration = max(20, int(im.info.get("duration") or 100))
-        dispose = int(getattr(im, "disposal_method", 2) or 2)
-        prev = canvas.copy()
-        overlay = im.convert("RGBA")
-        # Paste with alpha; overlay is often already full-canvas after convert.
-        if overlay.size != (w, h):
-            tmp = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-            tmp.paste(overlay, (0, 0), overlay)
-            overlay = tmp
-        canvas = Image.alpha_composite(canvas, overlay)
-        frames.append((canvas.copy(), duration))
-        if dispose == 2:
-            canvas = Image.new("RGBA", (w, h), white)
-        elif dispose == 3:
-            canvas = prev
-        # dispose 0/1: leave canvas as-is for next frame
-    return frames
-
-
-def _flatten_bytes_on_white(data: bytes) -> tuple[bytes, str, str]:
-    """White-backed PNG for share. Baidu share rarely keeps GIF animation."""
-    from PIL import Image
-
-    im = Image.open(BytesIO(data))
-    animated = bool(getattr(im, "is_animated", False) and int(getattr(im, "n_frames", 1) or 1) > 1)
-    if animated:
-        composed = _compose_gif_frames_on_white(im)
-        # Prefer the frame with the most visible art (not an empty/white tween).
-        best_rgba, _dur = max(composed, key=lambda fd: _ink_score(fd[0]))
-    else:
-        rgba = im.convert("RGBA")
-        canvas = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
-        best_rgba = Image.alpha_composite(canvas, rgba)
-    buf = BytesIO()
-    # RGB PNG — no alpha left for WeChat/Baidu to fill with black.
-    best_rgba.convert("RGB").save(buf, format="PNG", optimize=True)
-    return buf.getvalue(), "image/png", ".png"
-
-
-def _ensure_flat_white_path(row: dict, src_path: Path) -> tuple[Path, str]:
-    """Return (path, media_type) for a white-backed share PNG; create/cache on demand."""
-    sid = str(row.get("id") or "").strip()
-    out_path = _safe_sticker_path(_share_flat_file_name(sid))
-    media = "image/png"
-    try:
-        if (
-            out_path.is_file()
-            and src_path.is_file()
-            and out_path.stat().st_mtime >= src_path.stat().st_mtime
-            and out_path.stat().st_size > 32
-        ):
-            return out_path, media
-    except OSError:
-        pass
-    flat, media, _ext = _flatten_bytes_on_white(src_path.read_bytes())
-    out_path.write_bytes(flat)
-    return out_path, media
-
-
 def _sticker_row(sticker_id: str) -> Optional[dict]:
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48]
     if not sid:
@@ -834,8 +741,6 @@ def _public_item(row: dict) -> dict:
         "previewUrl": play_url if animated else "",
         "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
         "downloadUrl": f"/image/stickers/{sid}?download=1",
-        # White-backed copy for Baidu/WeChat share (transparent GIF → black-on-black otherwise).
-        "shareUrl": f"/image/stickers/{sid}?flat=1",
         "downloadFilename": _sticker_download_filename(row, ext),
     }
 
@@ -1114,14 +1019,14 @@ async def stickers_admin_upload(
 
 
 @router.get("/{sticker_id}")
-def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0, flat: int = 0):
+def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48]
     if not sid:
         raise HTTPException(status_code=404, detail="Sticker not found")
     row = _sticker_row(sid)
     if not row:
         raise HTTPException(status_code=404, detail="Sticker not found")
-    if thumb and not download and not flat:
+    if thumb and not download:
         thumb_name = str(row.get("thumbFile") or "").strip()
         if thumb_name:
             thumb_path = _safe_sticker_path(thumb_name)
@@ -1139,16 +1044,8 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0, flat: int 
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Sticker file missing")
     media_type = str(row.get("contentType") or "image/png")
-    if flat:
-        try:
-            path, media_type = _ensure_flat_white_path(row, path)
-        except Exception as exc:
-            raise HTTPException(status_code=500, detail=f"Flat share failed: {exc}") from exc
     ext = path.suffix or ".png"
     filename = _sticker_download_filename(row, ext)
-    if flat and not _is_generic_sticker_title(str(row.get("title") or "")):
-        stem = _safe_filename_stem(str(row.get("title") or "")) or sid
-        filename = f"{stem}-白底{ext}"
     headers = {
         "Content-Disposition": _content_disposition_filename(
             filename, bool(download), _ascii_filename(sid, ext)
