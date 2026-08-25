@@ -125,6 +125,59 @@ def _invalidate_sticker_cache() -> None:
     _sticker_manifest_cache = (0.0, [])
 
 
+# Public category presets (admin chips). Legacy names remapped on load.
+STICKER_CATEGORY_PRESETS = ("表情", "动漫", "风景", "美女", "其他")
+# Only meme/sticker uploads require OCR for titles.
+STICKER_OCR_CATEGORIES = frozenset({"表情", "表情包"})
+_STICKER_CATEGORY_REMAP = {
+    "表情包": "表情",
+    "壁纸": "其他",
+    "漫画": "动漫",
+    "人物": "美女",
+    "萌宠": "其他",
+}
+
+
+def _normalize_sticker_category(cat: str) -> str:
+    c = (cat or "").strip()[:40]
+    if not c:
+        return ""
+    return _STICKER_CATEGORY_REMAP.get(c, c)
+
+
+def _remap_sticker_categories(items: list) -> bool:
+    changed = False
+    for row in items:
+        if not isinstance(row, dict):
+            continue
+        old = str(row.get("category") or "").strip()
+        new = _normalize_sticker_category(old) or "其他"
+        if new != old:
+            row["category"] = new
+            changed = True
+    return changed
+
+
+def _ordered_sticker_categories(items: list) -> list:
+    """Unique categories in preset order, then any leftovers."""
+    seen: set[str] = set()
+    out: list[str] = []
+    counts: dict[str, int] = {}
+    for row in items:
+        if not isinstance(row, dict):
+            continue
+        cat = _normalize_sticker_category(str(row.get("category") or "")) or "其他"
+        counts[cat] = counts.get(cat, 0) + 1
+    for cat in STICKER_CATEGORY_PRESETS:
+        if counts.get(cat):
+            out.append(cat)
+            seen.add(cat)
+    for cat in sorted(counts.keys()):
+        if cat not in seen:
+            out.append(cat)
+    return out
+
+
 def _save_sticker_manifest(items: list) -> None:
     STICKER_DIR.mkdir(parents=True, exist_ok=True)
     STICKER_MANIFEST.write_text(
@@ -148,6 +201,15 @@ def _load_sticker_manifest() -> list:
         items = raw.get("items") if isinstance(raw, dict) else raw
         if not isinstance(items, list):
             items = []
+        if _remap_sticker_categories(items):
+            try:
+                STICKER_DIR.mkdir(parents=True, exist_ok=True)
+                STICKER_MANIFEST.write_text(
+                    json.dumps({"version": 1, "items": items}, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+            except Exception:
+                pass
         _sticker_manifest_cache = (now, items)
         return items
     except Exception:
@@ -883,12 +945,15 @@ def _filter_sticker_rows(
     kind: str = "",
     q: str = "",
 ) -> list:
-    cat_filter = (category or "").strip()
+    cat_filter = _normalize_sticker_category(category) or (category or "").strip()
     kind_filter = (kind or "").strip().lower()
     q_norm = _sticker_search_q(q)
     out = []
     for row in rows:
-        if cat_filter and str(row.get("category") or "").strip() != cat_filter:
+        row_cat = _normalize_sticker_category(str(row.get("category") or "")) or str(
+            row.get("category") or ""
+        ).strip()
+        if cat_filter and row_cat != cat_filter:
             continue
         if kind_filter in ("gif", "animated") and not _is_gif_row(row):
             continue
@@ -906,7 +971,7 @@ def _sticker_facet_counts(rows: list) -> dict:
     gif_n = 0
     still_n = 0
     for row in rows:
-        cat = str(row.get("category") or "").strip() or "其他"
+        cat = _normalize_sticker_category(str(row.get("category") or "")) or "其他"
         category_counts[cat] = category_counts.get(cat, 0) + 1
         if _is_gif_row(row):
             gif_n += 1
@@ -941,13 +1006,7 @@ def stickers_public_list(
     q: str = "",
 ):
     all_items = _load_sticker_manifest()
-    categories = []
-    seen_cats = set()
-    for row in all_items:
-        cat = str(row.get("category") or "").strip()
-        if cat and cat not in seen_cats:
-            seen_cats.add(cat)
-            categories.append(cat)
+    categories = _ordered_sticker_categories(all_items)
     filtered = _filter_sticker_rows(all_items, category=category, kind=kind, q=q)
     kind_norm = (kind or "").strip().lower()
     lim = max(1, min(int(limit or 200), 500))
@@ -1000,13 +1059,7 @@ def stickers_admin_list(
     lim = max(1, min(int(limit or 20), 100))
     off = max(0, int(offset or 0))
     items = [_admin_item(row) for row in filtered[off : off + lim] if row.get("id")]
-    categories = []
-    seen = set()
-    for row in all_items:
-        cat = str(row.get("category") or "").strip()
-        if cat and cat not in seen:
-            seen.add(cat)
-            categories.append(cat)
+    categories = _ordered_sticker_categories(all_items)
     facets = _sticker_facet_counts(all_items)
     return {
         "success": True,
@@ -1107,20 +1160,24 @@ async def stickers_admin_upload(
 
     items = _load_sticker_manifest()
     sid = _next_sticker_id(items)
-    cat = (category or "").strip()[:40]
+    cat = _normalize_sticker_category(category)
     if not cat:
         raise HTTPException(status_code=400, detail="Category required")
 
-    # Every upload must OCR image text; title is always the OCR result (never raw filename).
-    if not STICKER_OCR_TITLE:
-        raise HTTPException(status_code=503, detail="Sticker OCR is disabled on server")
-    ocr_title = _ocr_sticker_title(raw)
-    if not ocr_title:
-        raise HTTPException(
-            status_code=422,
-            detail="No text detected in image (OCR); upload skipped",
-        )
-    title = ocr_title[:80]
+    # OCR titles only for 表情; other categories use the upload filename stem.
+    if cat in STICKER_OCR_CATEGORIES:
+        if not STICKER_OCR_TITLE:
+            raise HTTPException(status_code=503, detail="Sticker OCR is disabled on server")
+        ocr_title = _ocr_sticker_title(raw)
+        if not ocr_title:
+            raise HTTPException(
+                status_code=422,
+                detail="No text detected in image (OCR); upload skipped",
+            )
+        title = ocr_title[:80]
+    else:
+        _, stem_title = _parse_upload_meta(orig_name, cat)
+        title = (stem_title or sid)[:80]
     is_gif_upload = ext == ".gif" or (len(raw) >= 4 and raw[:4] == b"GIF8")
     animated = bool(is_gif_upload and _is_animated_gif_bytes(raw))
 

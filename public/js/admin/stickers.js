@@ -21,12 +21,10 @@
   var listRequestSeq = 0;
 
   var PRESET_CATS = [
-    { value: '表情包', key: 'privateHub.ops.stickersCatSticker' },
-    { value: '壁纸', key: 'privateHub.ops.stickersCatWallpaper' },
-    { value: '漫画', key: 'privateHub.ops.stickersCatComic' },
+    { value: '表情', key: 'privateHub.ops.stickersCatSticker' },
+    { value: '动漫', key: 'privateHub.ops.stickersCatAnime' },
     { value: '风景', key: 'privateHub.ops.stickersCatScenery' },
-    { value: '人物', key: 'privateHub.ops.stickersCatPeople' },
-    { value: '萌宠', key: 'privateHub.ops.stickersCatPet' },
+    { value: '美女', key: 'privateHub.ops.stickersCatBeauty' },
     { value: '其他', key: 'privateHub.ops.stickersCatOther' }
   ];
 
@@ -98,7 +96,7 @@
 
   function displayTitle(item) {
     var title = String((item && item.title) || '').trim();
-    // Uploads always store OCR text as title — show it as the display name.
+    // 表情 titles are OCR text; other categories use the filename stem.
     if (title && !isGenericStickerTitle(title)) return title;
     if (title && /[\u4e00-\u9fff]/.test(title)) return title;
     return item.category || tr('hub.imagesPage.stickersUntitled') || item.id || '';
