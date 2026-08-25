@@ -647,7 +647,7 @@
     if (stickerCategory) url += '&category=' + encodeURIComponent(stickerCategory);
     if (mediaKind === 'gif' || mediaKind === 'still') url += '&kind=' + encodeURIComponent(mediaKind);
     if (stickerSearch.trim()) url += '&q=' + encodeURIComponent(stickerSearch.trim());
-    fetch(url, { headers: authHeaders() })
+    fetch(url, { headers: authHeaders(), cache: 'no-store' })
       .then(function (res) {
         return res.json().then(function (data) {
           if (!res.ok) throw new Error((data && data.detail) || res.statusText);

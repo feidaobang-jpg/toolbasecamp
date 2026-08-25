@@ -15,7 +15,7 @@ from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 security = HTTPBearer(auto_error=False)
@@ -844,15 +844,22 @@ def stickers_public_list(
         if not path.is_file():
             continue
         items.append(_public_item(row))
-    return {
-        "success": True,
-        "items": items,
-        "categories": categories,
-        "limit": lim,
-        "offset": off,
-        "total": len(filtered),
-        "kind": kind_norm or "all",
-    }
+    # WeChat / mobile WebViews often cache GET JSON without explicit headers.
+    return JSONResponse(
+        {
+            "success": True,
+            "items": items,
+            "categories": categories,
+            "limit": lim,
+            "offset": off,
+            "total": len(filtered),
+            "kind": kind_norm or "all",
+        },
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate",
+            "Pragma": "no-cache",
+        },
+    )
 
 
 @router.get("/admin/list")
