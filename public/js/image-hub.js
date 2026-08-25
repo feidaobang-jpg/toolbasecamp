@@ -474,10 +474,46 @@
     return title;
   }
 
+  function isBaiduApp() {
+    return /baidu/i.test(navigator.userAgent || '');
+  }
+
+  function shareSrcFor(item) {
+    // Prefer white-backed share URL so Baidu/WeChat don't turn transparent art into black-on-black.
+    if (item && item.shareUrl) return fullImageUrl(item.shareUrl);
+    return fullSrcFor(item) || fullImageUrl(item && item.imageUrl);
+  }
+
+  function openWhiteSharePage(imgUrl, title) {
+    var src = String(imgUrl || '');
+    if (!src) return;
+    var html =
+      '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1"/>' +
+      '<title>' + escapeHtml(title || '原图') + '</title>' +
+      '<style>html,body{margin:0;background:#fff;min-height:100%;}' +
+      'p{margin:12px 16px;font:14px/1.5 sans-serif;color:#64748b}' +
+      'img{display:block;max-width:100%;margin:0 auto;background:#fff;-webkit-touch-callout:default}</style>' +
+      '</head><body>' +
+      '<p>白底原图 · 请等图片完全显示后再长按分享给微信</p>' +
+      '<img src="' + escapeHtml(src) + '" alt=""/>' +
+      '</body></html>';
+    var w = window.open('', '_blank');
+    if (w && w.document) {
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      return;
+    }
+    // Popup blocked — navigate same tab.
+    window.location.href = src;
+  }
+
   function openHubPreview(item, opts) {
     if (!item) return;
     opts = opts || {};
     var fullSrc = fullSrcFor(item) || fullImageUrl(item.imageUrl);
+    var shareSrc = shareSrcFor(item) || String(fullSrc || '').replace(/[?#].*$/, '');
     var existing = document.getElementById('img-hub-preview');
     if (existing) existing.remove();
     var overlay = document.createElement('div');
@@ -488,39 +524,40 @@
         '<p class="img-hub-preview-tip"></p>' +
         '<img class="img-hub-preview-img" alt="" />' +
         '<div class="action-row img-hub-preview-actions">' +
-          '<button type="button" class="tb-btn" data-preview-dl></button>' +
-          '<button type="button" class="tb-btn" data-preview-close></button>' +
+          '<button type="button" class="tb-btn" data-preview-open>打开原图</button>' +
+          '<button type="button" class="tb-btn" data-preview-dl>下载</button>' +
+          '<button type="button" class="tb-btn" data-preview-close>关闭</button>' +
         '</div>' +
       '</div>';
-    // Baidu App long-press「分享图片」often screenshots or re-encodes.
-    // Cache-bust ?t= breaks real GIF URL → black static frame. Keep clean absolute URL.
-    var shareSrc = String(fullSrc || '').replace(/[?#].*$/, '');
     var tipEl = overlay.querySelector('.img-hub-preview-tip');
-    tipEl.textContent = /baidubrowser|baiduboxapp|Baidu/i.test(navigator.userAgent || '')
-      ? tr('hub.imagesPage.stickersBaiduShareTip')
-      : tr('hub.imagesPage.stickersLongPress');
+    tipEl.textContent = isBaiduApp()
+      ? (tr('hub.imagesPage.stickersBaiduShareTip') ||
+        '手机百度：请点下方「打开原图」，等白底图完全显示后再长按分享。直接长按缩略图容易只有黑底。')
+      : (tr('hub.imagesPage.stickersLongPress') ||
+        '请点下方「打开原图」，等白底图显示完后再长按分享。');
+    // Always remind on stickers — Baidu UA strings vary and tips were easy to miss.
+    if (item && (item.shareUrl || item.staticUrl || isAnimated(item))) {
+      tipEl.textContent = tr('hub.imagesPage.stickersBaiduShareTip') || tipEl.textContent;
+    }
     var img = overlay.querySelector('.img-hub-preview-img');
-    img.src = shareSrc || fullSrc;
-    img.alt = opts.alt || tr('hub.imagesPage.untitled');
-    // White underlay: transparent GIF pixels become black when Baidu/WeChat rasterize.
+    // Preview on-page: show original animation; share button uses white-backed shareSrc.
+    img.src = String(fullSrc || '').replace(/[?#].*$/, '') || fullSrc;
+    img.alt = opts.alt || tr('hub.imagesPage.untitled') || '';
     img.style.background = '#ffffff';
+    var openBtn = overlay.querySelector('[data-preview-open]');
+    openBtn.textContent = tr('hub.imagesPage.openOriginal') || '打开原图';
+    openBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openWhiteSharePage(shareSrc, opts.alt || displayStickerTitle(item) || '原图');
+    });
     var dlBtn = overlay.querySelector('[data-preview-dl]');
-    dlBtn.textContent = tr('hub.imagesPage.download');
+    dlBtn.textContent = tr('hub.imagesPage.download') || '下载';
     dlBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       if (typeof opts.onDownload === 'function') opts.onDownload();
     });
-    var openBtn = document.createElement('a');
-    openBtn.className = 'tb-btn';
-    openBtn.href = shareSrc || fullSrc;
-    openBtn.target = '_blank';
-    openBtn.rel = 'noopener';
-    openBtn.textContent = tr('hub.imagesPage.openOriginal');
-    openBtn.addEventListener('click', function (e) { e.stopPropagation(); });
-    var actions = overlay.querySelector('.img-hub-preview-actions');
-    if (actions) actions.insertBefore(openBtn, dlBtn);
     var closeBtn = overlay.querySelector('[data-preview-close]');
-    closeBtn.textContent = tr('hub.imagesPage.closePreview');
+    closeBtn.textContent = tr('hub.imagesPage.closePreview') || '关闭';
     function close() { overlay.remove(); }
     closeBtn.addEventListener('click', function (e) {
       e.stopPropagation();

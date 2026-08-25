@@ -674,6 +674,75 @@ def _prepare_sticker_bytes(raw: bytes, ext: str) -> tuple[bytes, str, str]:
     return raw, ctype, ext if ext in _ALLOWED_EXT else ".png"
 
 
+def _share_flat_file_name(sticker_id: str, ext: str) -> str:
+    sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48] or "sticker"
+    ext = ext if str(ext).startswith(".") else f".{ext}"
+    if ext.lower() not in (".gif", ".png"):
+        ext = ".png"
+    return f"{sid}_flat{ext.lower()}"
+
+
+def _flatten_bytes_on_white(data: bytes) -> tuple[bytes, str, str]:
+    """Composite transparent pixels onto white — Baidu/WeChat share fills alpha with black."""
+    from PIL import Image, ImageSequence
+
+    im = Image.open(BytesIO(data))
+    animated = bool(getattr(im, "is_animated", False) and int(getattr(im, "n_frames", 1) or 1) > 1)
+    if animated:
+        frames: list = []
+        durations: list[int] = []
+        for frame in ImageSequence.Iterator(im):
+            rgba = frame.convert("RGBA")
+            canvas = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+            canvas.alpha_composite(rgba)
+            # RGB→P keeps file as GIF; disposal=2 avoids ghosting on white.
+            frames.append(canvas.convert("RGB").convert("P", palette=Image.ADAPTIVE, colors=255))
+            durations.append(max(20, int(frame.info.get("duration") or 100)))
+        buf = BytesIO()
+        frames[0].save(
+            buf,
+            format="GIF",
+            save_all=True,
+            append_images=frames[1:],
+            duration=durations,
+            loop=0,
+            disposal=2,
+            optimize=False,
+        )
+        out = buf.getvalue()
+        if out:
+            return out, "image/gif", ".gif"
+    rgba = im.convert("RGBA")
+    canvas = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+    canvas.alpha_composite(rgba)
+    buf = BytesIO()
+    canvas.save(buf, format="PNG", optimize=True)
+    return buf.getvalue(), "image/png", ".png"
+
+
+def _ensure_flat_white_path(row: dict, src_path: Path) -> tuple[Path, str]:
+    """Return (path, media_type) for a white-backed share copy; create/cache on demand."""
+    sid = str(row.get("id") or "").strip()
+    prefer_ext = ".gif" if src_path.suffix.lower() == ".gif" else ".png"
+    out_name = _share_flat_file_name(sid, prefer_ext)
+    out_path = _safe_sticker_path(out_name)
+    media = "image/gif" if prefer_ext == ".gif" else "image/png"
+    try:
+        if (
+            out_path.is_file()
+            and src_path.is_file()
+            and out_path.stat().st_mtime >= src_path.stat().st_mtime
+            and out_path.stat().st_size > 32
+        ):
+            return out_path, media
+    except OSError:
+        pass
+    flat, media, ext = _flatten_bytes_on_white(src_path.read_bytes())
+    out_path = _safe_sticker_path(_share_flat_file_name(sid, ext))
+    out_path.write_bytes(flat)
+    return out_path, media
+
+
 def _sticker_row(sticker_id: str) -> Optional[dict]:
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48]
     if not sid:
@@ -741,6 +810,8 @@ def _public_item(row: dict) -> dict:
         "previewUrl": play_url if animated else "",
         "thumbnailUrl": f"/pubsticker/{sid}_thumb.jpg" if thumb else f"/image/stickers/{sid}?thumb=1",
         "downloadUrl": f"/image/stickers/{sid}?download=1",
+        # White-backed copy for Baidu/WeChat share (transparent GIF → black-on-black otherwise).
+        "shareUrl": f"/image/stickers/{sid}?flat=1",
         "downloadFilename": _sticker_download_filename(row, ext),
     }
 
@@ -1019,14 +1090,14 @@ async def stickers_admin_upload(
 
 
 @router.get("/{sticker_id}")
-def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
+def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0, flat: int = 0):
     sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(sticker_id or ""))[:48]
     if not sid:
         raise HTTPException(status_code=404, detail="Sticker not found")
     row = _sticker_row(sid)
     if not row:
         raise HTTPException(status_code=404, detail="Sticker not found")
-    if thumb and not download:
+    if thumb and not download and not flat:
         thumb_name = str(row.get("thumbFile") or "").strip()
         if thumb_name:
             thumb_path = _safe_sticker_path(thumb_name)
@@ -1043,8 +1114,17 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
     path = _safe_sticker_path(file_name)
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Sticker file missing")
+    media_type = str(row.get("contentType") or "image/png")
+    if flat:
+        try:
+            path, media_type = _ensure_flat_white_path(row, path)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Flat share failed: {exc}") from exc
     ext = path.suffix or ".png"
     filename = _sticker_download_filename(row, ext)
+    if flat and not _is_generic_sticker_title(str(row.get("title") or "")):
+        stem = _safe_filename_stem(str(row.get("title") or "")) or sid
+        filename = f"{stem}-白底{ext}"
     headers = {
         "Content-Disposition": _content_disposition_filename(
             filename, bool(download), _ascii_filename(sid, ext)
@@ -1054,6 +1134,6 @@ def stickers_file(sticker_id: str, download: int = 0, thumb: int = 0):
         headers["Cache-Control"] = "public, max-age=86400"
     return FileResponse(
         path,
-        media_type=str(row.get("contentType") or "image/png"),
+        media_type=media_type,
         headers=headers,
     )
