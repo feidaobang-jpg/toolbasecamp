@@ -50,6 +50,8 @@ STICKER_PREVIEW_FRAME_STEP = max(1, int(os.environ.get("STICKER_PREVIEW_FRAME_ST
 STICKER_PREVIEW_MAX_BYTES = max(20 * 1024, int(os.environ.get("STICKER_PREVIEW_MAX_BYTES") or str(150 * 1024)))
 # Cap per-frame hold on stored GIFs (centiseconds; 60 = 600ms).
 STICKER_GIF_MAX_FRAME_CS = max(1, int(os.environ.get("STICKER_GIF_MAX_FRAME_CS") or "60"))
+# Floor per-frame delay (centiseconds). Delay 0 often freezes in WeChat/mobile WebViews.
+STICKER_GIF_MIN_FRAME_CS = max(1, int(os.environ.get("STICKER_GIF_MIN_FRAME_CS") or "10"))
 # OCR generic filenames (e.g. "(47).gif") into display titles via Tencent OCR.
 STICKER_OCR_TITLE = (os.environ.get("STICKER_OCR_TITLE") or "1").strip().lower() not in (
     "0",
@@ -592,13 +594,22 @@ def _normalize_gif_loop_infinite(data: bytes) -> bytes:
     return bytes(out) if changed else data
 
 
-def _clamp_gif_frame_durations(data: bytes, max_centisecs: int | None = None) -> bytes:
-    """Cap Graphic Control Extension frame delays without recompressing pixels."""
+def _clamp_gif_frame_durations(
+    data: bytes,
+    max_centisecs: int | None = None,
+    min_centisecs: int | None = None,
+) -> bytes:
+    """Clamp Graphic Control Extension frame delays without recompressing pixels.
+
+    - Cap long holds (max) so stickers don't freeze for seconds.
+    - Raise delay 0 / tiny delays (min) — WeChat often paints those as a static first frame.
+    """
     if not data or len(data) < 16 or data[:4] != b"GIF8":
         return data
     if not _is_animated_gif_bytes(data):
         return data
     max_cs = max(1, min(65535, int(max_centisecs or STICKER_GIF_MAX_FRAME_CS)))
+    min_cs = max(1, min(max_cs, int(min_centisecs or STICKER_GIF_MIN_FRAME_CS)))
     out = bytearray(data)
     changed = False
     pos = 13
@@ -610,9 +621,14 @@ def _clamp_gif_frame_durations(data: bytes, max_centisecs: int | None = None) ->
         if b == 0x21:
             if pos + 2 < len(data) and data[pos + 1] == 0xF9 and data[pos + 2] == 0x04 and pos + 6 <= len(data):
                 cs = out[pos + 4] | (out[pos + 5] << 8)
-                if cs > max_cs:
-                    out[pos + 4] = max_cs & 0xFF
-                    out[pos + 5] = (max_cs >> 8) & 0xFF
+                new_cs = cs
+                if new_cs > max_cs:
+                    new_cs = max_cs
+                if new_cs < min_cs:
+                    new_cs = min_cs
+                if new_cs != cs:
+                    out[pos + 4] = new_cs & 0xFF
+                    out[pos + 5] = (new_cs >> 8) & 0xFF
                     changed = True
             pos += 2
             if pos >= len(data):

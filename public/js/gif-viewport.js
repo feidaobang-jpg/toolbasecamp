@@ -15,9 +15,9 @@
   function stop(el) {
     if (!el) return;
     el.dataset.inView = '0';
+    // Keep GIF src when leaving view — swapping back to JPEG then to GIF again
+    // often freezes animation in WeChat / some mobile WebViews.
     if (el.dataset.playing === '1') {
-      var thumb = el.dataset.thumbSrc || '';
-      if (thumb) el.src = thumb;
       el.dataset.playing = '0';
     }
     var i = playing.indexOf(el);
@@ -29,7 +29,11 @@
     var play = el.dataset.playSrc || '';
     if (!play) return;
     while (playing.length >= CAP) stop(playing[0]);
-    if (el.dataset.playing === '1' && (el.currentSrc === play || el.getAttribute('src') === play)) {
+    var cur = el.getAttribute('src') || '';
+    // Already on the GIF URL — do not re-assign (WeChat freezes on JPEG↔GIF swaps).
+    if (cur === play) {
+      el.dataset.playing = '1';
+      if (playing.indexOf(el) < 0) playing.push(el);
       return;
     }
     el.src = play;
@@ -68,9 +72,10 @@
     img.dataset.playing = '0';
     img.dataset.inView = '1';
     img.loading = 'eager';
-    if (thumbSrc) img.src = thumbSrc;
-    // Start GIF on the real element (keeps animation).
-    showGif(img);
+    // Load GIF directly — JPEG-first then swap often freezes in WeChat.
+    img.src = playSrc;
+    img.dataset.playing = '1';
+    if (playing.indexOf(img) < 0) playing.push(img);
 
     if (typeof IntersectionObserver === 'undefined') return;
     ensureObserver();
