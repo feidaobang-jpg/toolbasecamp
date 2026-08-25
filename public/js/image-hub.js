@@ -605,7 +605,8 @@
     var tip = document.getElementById('img-hub-tip');
     if (tip) {
       tip.textContent = activeTab === 'stickers'
-        ? tr('hub.imagesPage.stickersTip')
+        ? (tr('hub.imagesPage.stickersTip') ||
+          '手机百度分享：先点开图片 →「打开原图」→ 等图显示完再长按（直接长按缩略图容易发黑）。')
         : tr('hub.imagesPage.tip');
     }
     var aiActions = document.getElementById('img-hub-ai-actions');
