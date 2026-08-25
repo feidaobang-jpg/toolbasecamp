@@ -413,9 +413,47 @@ def _gif_n_frames(data: bytes) -> int:
         return 0
 
 
+# Mean abs RGB diff on a 64×64 downsample; below this ≈ visually static (PC won't "move").
+STICKER_GIF_MOTION_MIN = float(os.environ.get("STICKER_GIF_MOTION_MIN") or "2.0")
+
+
+def _gif_motion_score(data: bytes) -> float:
+    """How much frames differ (0 = identical). Sampled on a small RGBA canvas."""
+    if not data or len(data) < 4 or data[:4] != b"GIF8":
+        return 0.0
+    try:
+        from PIL import Image, ImageChops, ImageSequence
+
+        im = Image.open(BytesIO(data))
+        n = int(getattr(im, "n_frames", 1) or 1)
+        if n <= 1:
+            return 0.0
+        base = None
+        best = 0.0
+        # Cap work on long clips — compare first frame to later samples.
+        step = 1 if n <= 12 else max(1, n // 8)
+        for idx, frame in enumerate(ImageSequence.Iterator(im)):
+            if idx % step != 0 and idx != n - 1:
+                continue
+            rgba = frame.convert("RGBA").resize((64, 64))
+            if base is None:
+                base = rgba
+                continue
+            diff = ImageChops.difference(base, rgba).convert("L")
+            hist = diff.histogram()
+            avg = sum(i * hist[i] for i in range(256)) / float(64 * 64)
+            if avg > best:
+                best = avg
+        return float(best)
+    except Exception:
+        return 0.0
+
+
 def _is_animated_gif_bytes(data: bytes) -> bool:
-    """True when GIF has more than one frame (browser will treat it as animated)."""
-    return _gif_n_frames(data) > 1
+    """True when GIF has visible motion (not just multi-frame identical/static packs)."""
+    if _gif_n_frames(data) <= 1:
+        return False
+    return _gif_motion_score(data) >= STICKER_GIF_MOTION_MIN
 
 
 def _compress_animated_gif(
@@ -737,9 +775,15 @@ def _is_gif_extension_row(row: dict) -> bool:
 
 
 def _is_gif_row(row: dict) -> bool:
-    """True when sticker should play as animated GIF in the grid."""
+    """True when sticker should play / filter as animated GIF.
+
+    Prefer stored `animated` (set on upload / backfill) so list filters stay cheap.
+    Live file probe only when the flag is missing.
+    """
     if not _is_gif_extension_row(row):
         return False
+    if "animated" in row:
+        return bool(row.get("animated"))
     file_name = str(row.get("file") or "").strip()
     if file_name:
         try:
@@ -748,8 +792,6 @@ def _is_gif_row(row: dict) -> bool:
                 return _is_animated_gif_bytes(path.read_bytes())
         except HTTPException:
             pass
-    if "animated" in row:
-        return bool(row.get("animated"))
     return False
 
 
