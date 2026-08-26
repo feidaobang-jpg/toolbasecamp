@@ -106,7 +106,7 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
-    # 逍遥：vendor 约 Image2 0.05/0.10、Banana2 0.14/0.18、BananaPro 0.20+/0.24（× markup）
+    # 逍遥（2026-08-26 skills/pricing）：Image2 1K≈0.05 2K≈0.10；Banana2≈0.14/0.18；BananaPro XBS≈0.20/0.24（MM≈0.28）
     {
         "id": "gpt-image-2",
         "priceCny1K": 0.06,
@@ -123,8 +123,8 @@ INSTRUCT_EDIT_MODELS = (
     },
     {
         "id": "banana-pro",
-        "priceCny1K": 0.16,
-        "priceCny2K": 0.20,
+        "priceCny1K": 0.20,
+        "priceCny2K": 0.24,
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelBananaPro",
     },
@@ -169,7 +169,7 @@ TEXT_TO_IMAGE_MODELS = (
     },
     {
         "id": "banana-pro",
-        "priceCny": 0.16,
+        "priceCny": 0.22,
         "labelKey": "tools.textToImage.modelBananaPro",
     },
     {
