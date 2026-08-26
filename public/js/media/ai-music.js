@@ -34,9 +34,8 @@
   var histPanel = null;
   var player = null;
 
-  var modelId = 'music-3.0-free';
+  var modelId = 'suno-v4.5';
   var modelPrices = {
-    'music-3.0-free': 0,
     'music-3.0': 2,
     'suno-v4.5': 1.34
   };
@@ -100,12 +99,7 @@
 
   function syncRunLabel() {
     if (!runBtn || (busyEl && !busyEl.hidden)) return;
-    var price = selectedPrice();
-    if (price <= 0) {
-      runBtn.textContent = tr('tools.aiMusic.generateFree');
-    } else {
-      runBtn.textContent = tr('tools.aiMusic.generatePaid', { price: price });
-    }
+    runBtn.textContent = tr('tools.aiMusic.generatePaid', { price: selectedPrice() });
   }
 
   function syncModelUi() {
@@ -411,7 +405,7 @@
     modelRow.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-model]');
       if (!btn) return;
-      modelId = btn.getAttribute('data-model') || 'music-3.0-free';
+      modelId = btn.getAttribute('data-model') || 'suno-v4.5';
       syncModelUi();
     });
   }

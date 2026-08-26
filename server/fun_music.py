@@ -1,9 +1,10 @@
 """AI Music — MiniMax Music + 逍遥 Suno; charge on success.
 
 Models:
-  - music-3.0-free: vendor ¥0/song → user ¥0
   - music-3.0: vendor ¥1/song → user ¥2 (× AI_PRICE_MARKUP, default 2)
   - suno-v4.5: vendor ≈¥0.67 → user ≈¥1.34 (逍遥 lk888)
+
+Note: MiniMax discontinued music-3.0-free / music-2.6-free / music-cover-free on 2026-08-20.
 
 Env: MINIMAX_API_KEY and/or LK888_API_KEY.
 """
@@ -56,16 +57,21 @@ MINIMAX_LYRICS_API_URL = (
 ).strip().rstrip("/")
 MUSIC_TIMEOUT = float(os.environ.get("MINIMAX_MUSIC_TIMEOUT") or os.environ.get("FUN_MUSIC_TIMEOUT") or "360")
 LYRICS_TIMEOUT = float(os.environ.get("MINIMAX_LYRICS_TIMEOUT") or "90")
-DEFAULT_MODEL = (os.environ.get("MINIMAX_MUSIC_MODEL") or "music-3.0-free").strip() or "music-3.0-free"
+def _default_music_model() -> str:
+    raw = (os.environ.get("MINIMAX_MUSIC_MODEL") or "suno-v4.5").strip() or "suno-v4.5"
+    if raw in ("music-3.0-free", "music-2.6-free", "music-cover-free"):
+        raw = "suno-v4.5"
+    return raw if raw in ALLOWED_MODELS else "suno-v4.5"
+
 
 # Vendor list price CNY per song (MiniMax paygo + 逍遥 Suno)
 LIST_PRICE_PER_SONG = {
-    "music-3.0-free": Decimal("0"),
     "music-3.0": Decimal("1.0"),
     # Xiaoyao Suno v4.5 ≈ ⚡0.67 → user ≈ ¥1.34 with default markup 2
     "suno-v4.5": Decimal("0.67"),
 }
 ALLOWED_MODELS = frozenset(LIST_PRICE_PER_SONG.keys())
+DEFAULT_MODEL = _default_music_model()
 
 RESULT_TTL_SEC = 24 * 3600
 TMP_DIR = Path(os.environ.get("FUN_MUSIC_TMP_DIR") or (Path(__file__).resolve().parent / "tmp_music"))
@@ -637,7 +643,7 @@ def pricing_public() -> dict:
         )
     return {
         "provider": "minimax+lk888",
-        "defaultModel": DEFAULT_MODEL if DEFAULT_MODEL in ALLOWED_MODELS else "music-3.0-free",
+        "defaultModel": DEFAULT_MODEL if DEFAULT_MODEL in ALLOWED_MODELS else "suno-v4.5",
         "models": models,
         "markup": float(AI_MARKUP),
         # Back-compat fields for older clients

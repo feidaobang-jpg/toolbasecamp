@@ -107,7 +107,7 @@
             'MiniMax returned empty audio.': 'tools.aiMusic.failed',
             'Music generation timed out': 'tools.aiMusic.failed',
             'Music generation failed': 'tools.aiMusic.failed',
-            'MiniMax provider balance insufficient (1008). Top up the MiniMax account at platform.minimaxi.com (even music-*-free still requires a funded MiniMax account).': 'tools.aiMusic.providerBalance',
+            'MiniMax provider balance insufficient (1008). Top up the MiniMax account at platform.minimaxi.com, or switch to Suno.': 'tools.aiMusic.providerBalance',
             'MiniMax rate limited (1002). Please retry later or use music-3.0.': 'tools.aiMusic.rateLimited',
             'MiniMax API key invalid or unauthorized. Check MINIMAX_API_KEY.': 'tools.aiMusic.notConfigured',
             'Fun Music returned no audio URL. Check invite access on Model Studio.': 'tools.aiMusic.failed',
