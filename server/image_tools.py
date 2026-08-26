@@ -45,6 +45,7 @@ from minimax_image import (
     minimax_configured,
 )
 from lk888_image import (
+    generate_lk888_image_to_image,
     generate_lk888_text_to_image,
     is_lk888_model,
     lk888_configured,
@@ -105,6 +106,28 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
+    # 逍遥：vendor 约 Image2 0.05/0.10、Banana2 0.14/0.18、BananaPro 0.20+/0.24（× markup）
+    {
+        "id": "gpt-image-2",
+        "priceCny1K": 0.06,
+        "priceCny2K": 0.12,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelGptImage2",
+    },
+    {
+        "id": "banana-2",
+        "priceCny1K": 0.15,
+        "priceCny2K": 0.20,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelBanana2",
+    },
+    {
+        "id": "banana-pro",
+        "priceCny1K": 0.16,
+        "priceCny2K": 0.20,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelBananaPro",
+    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
@@ -136,13 +159,18 @@ TEXT_TO_IMAGE_MODELS = (
     },
     {
         "id": "gpt-image-2",
-        "priceCny": 0.12,
+        "priceCny": 0.10,
         "labelKey": "tools.textToImage.modelGptImage2",
     },
     {
-        "id": "gemini-3-pro-image-preview",
-        "priceCny": 0.12,
-        "labelKey": "tools.textToImage.modelNanoBananaPro",
+        "id": "banana-2",
+        "priceCny": 0.15,
+        "labelKey": "tools.textToImage.modelBanana2",
+    },
+    {
+        "id": "banana-pro",
+        "priceCny": 0.16,
+        "labelKey": "tools.textToImage.modelBananaPro",
     },
     {
         "id": "wan2.7-image",
@@ -1360,7 +1388,11 @@ def _max_refs_for_models(model_ids: list[str]) -> int:
 
 
 def instruct_edit_configured() -> bool:
-    return dashscope_image_edit_configured() or volc_ark_configured()
+    return (
+        dashscope_image_edit_configured()
+        or volc_ark_configured()
+        or lk888_configured()
+    )
 
 
 def text_to_image_configured() -> bool:
@@ -1417,6 +1449,14 @@ async def _run_instruct_edit(
             text,
             model=model,
             size_preset="square",
+        )
+    if is_lk888_model(model):
+        return await generate_lk888_image_to_image(
+            refs[0],
+            text,
+            model=model,
+            images=refs if len(refs) > 1 else None,
+            output_size=size,
         )
     if is_seedream_model(model):
         return await edit_image_with_seedream(

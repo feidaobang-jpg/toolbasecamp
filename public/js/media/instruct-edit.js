@@ -683,6 +683,13 @@
     }
     if (mid === 'wan2.7-image-pro') return tr('tools.instructEdit.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
+    if (mid === 'gpt-image-2' || mid === 'tt-image-2') return tr('tools.instructEdit.modelGptImage2');
+    if (mid === 'banana-2' || mid === 'gemini-3.1-flash-image-preview') {
+      return tr('tools.instructEdit.modelBanana2');
+    }
+    if (mid === 'banana-pro' || mid === 'gemini-3-pro-image-preview' || mid === 'gemini-1-pro-image-preview') {
+      return tr('tools.instructEdit.modelBananaPro');
+    }
     if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     return mid || tr('tools.instructEdit.modelWan26');
   }

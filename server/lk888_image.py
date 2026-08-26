@@ -1,8 +1,9 @@
-"""逍遥 AI (lk888) text-to-image.
+"""逍遥 AI (lk888) text-to-image + image-to-image.
 
-- GPT Image 2 (`gpt-image-2`): sync OpenAI-compatible POST /images/generations
-- Nano Banana Pro (`gemini-3-pro-image-preview`): async POST /media/generate
-  then poll GET /media/status?task_id=…
+- GPT Image 2 (`gpt-image-2` / `tt-image-2`):
+  T2I POST /images/generations · I2I multipart POST /images/edits
+- Nano Banana 2 (`banana-2`) / Pro (`banana-pro`):
+  async POST /media/generate (+ optional images[]) then GET /media/status
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ import asyncio
 import base64
 import os
 import time
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Sequence, Tuple
 
 import httpx
 from fastapi import HTTPException
@@ -22,34 +23,58 @@ LK888_BASE_URL = (
 ).strip().rstrip("/")
 LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "180"))
 LK888_POLL_INTERVAL = float(os.environ.get("LK888_MEDIA_POLL_INTERVAL", "2"))
+LK888_MAX_REFS = int(os.environ.get("LK888_MAX_REFS", "10"))
 
+# Catalog / UI ids (also accept upstream aliases)
 LK888_T2I_MODELS = frozenset(
     {
         "gpt-image-2",
+        "tt-image-2",
+        "banana-2",
+        "banana-pro",
         "gemini-3-pro-image-preview",
-        # legacy alias (kept for in-flight clients)
+        "gemini-3.1-flash-image-preview",
         "gemini-1-pro-image-preview",
     }
 )
 
-# Models that reject /images/* and must use /media/generate + status poll
+# Reject /images/* — must use /media/generate
 _LK888_MEDIA_MODELS = frozenset(
     {
+        "banana-2",
+        "banana-pro",
         "gemini-3-pro-image-preview",
+        "gemini-3.1-flash-image-preview",
+        "gemini-1-pro-image-preview",
     }
 )
 
-# Map UI / legacy ids → upstream model id
+# Normalize to preferred upstream id
 _LK888_MODEL_ALIAS: dict[str, str] = {
-    "gemini-1-pro-image-preview": "gemini-3-pro-image-preview",
+    "tt-image-2": "gpt-image-2",
+    "gemini-1-pro-image-preview": "banana-pro",
+    "gemini-3-pro-image-preview": "banana-pro",
+    "gemini-3.1-flash-image-preview": "banana-2",
 }
 
-# UI size_preset → OpenAI-style size string
+# UI size_preset → OpenAI-style WxH (GPT Image 2)
 _SIZE_MAP: dict[str, str] = {
     "square": "1024x1024",
     "portrait": "1024x1536",
     "landscape": "1536x1024",
     "hd": "1536x1024",
+    "1k": "1024x1024",
+    "2k": "2048x2048",
+}
+
+# instruct-edit 1K/2K → Banana aspectRatio + imageSize
+_MEDIA_SIZE: dict[str, tuple[str, str]] = {
+    "1k": ("1:1", "1K"),
+    "2k": ("1:1", "2K"),
+    "square": ("1:1", "1K"),
+    "portrait": ("2:3", "1K"),
+    "landscape": ("3:2", "1K"),
+    "hd": ("3:2", "2K"),
 }
 
 
@@ -62,8 +87,20 @@ def is_lk888_model(model: Optional[str]) -> bool:
     return mid in LK888_T2I_MODELS
 
 
+def _resolve_model(model: Optional[str]) -> str:
+    mid = (model or "").strip()
+    if not is_lk888_model(mid):
+        raise HTTPException(status_code=400, detail=f"Unsupported lk888 model: {mid}")
+    return _LK888_MODEL_ALIAS.get(mid.lower(), mid)
+
+
 def _api_size(size_preset: Optional[str]) -> str:
     return _SIZE_MAP.get((size_preset or "square").lower(), "1024x1024")
+
+
+def _media_aspect_and_size(size_preset: Optional[str]) -> tuple[str, str]:
+    key = (size_preset or "1k").lower()
+    return _MEDIA_SIZE.get(key, ("1:1", "1K"))
 
 
 def _auth_headers(*, json_body: bool = True) -> dict[str, str]:
@@ -130,6 +167,18 @@ def _parse_json(resp: httpx.Response) -> dict:
     return data if isinstance(data, dict) else {}
 
 
+def _bytes_to_data_url(raw: bytes, mime: str = "image/png") -> str:
+    return f"data:{mime};base64,{base64.b64encode(raw).decode('ascii')}"
+
+
+def _sniff_mime(raw: bytes) -> str:
+    if raw.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if raw.startswith(b"RIFF") and b"WEBP" in raw[:16]:
+        return "image/webp"
+    return "image/png"
+
+
 async def _download_image(client: httpx.AsyncClient, out_url: str) -> Tuple[bytes, str]:
     if out_url.startswith("data:"):
         try:
@@ -150,7 +199,6 @@ async def _download_image(client: httpx.AsyncClient, out_url: str) -> Tuple[byte
 
 
 def _media_task_id(data: dict) -> Optional[int]:
-    """Extract task_id from media/generate response."""
     if not isinstance(data, dict):
         return None
     inner: Any = data.get("data")
@@ -174,6 +222,33 @@ def _media_task_id(data: dict) -> Optional[int]:
         except (TypeError, ValueError):
             pass
     return None
+
+
+def _require_prompt(prompt: str) -> str:
+    text = (prompt or "").strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Please enter a prompt.")
+    if len(text) > 4000:
+        raise HTTPException(
+            status_code=400,
+            detail="Prompt is too long (max 4000 characters).",
+        )
+    return text
+
+
+async def _result_from_openai_images(data: dict, client: httpx.AsyncClient) -> Tuple[bytes, str]:
+    out_url, out_b64 = _extract_output(data)
+    if out_b64:
+        try:
+            return base64.b64decode(out_b64), "image/png"
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail="Invalid b64_json image") from exc
+    if not out_url:
+        raise HTTPException(
+            status_code=502,
+            detail="逍遥 AI returned no image. Check model access / balance.",
+        )
+    return await _download_image(client, out_url)
 
 
 async def _generate_via_images(
@@ -200,51 +275,61 @@ async def _generate_via_images(
             data = _parse_json(resp)
         if resp.status_code >= 400 or data.get("error"):
             _raise_recharge_or_502(data, resp)
-    out_url, out_b64 = _extract_output(data)
-    if out_b64:
-        try:
-            return base64.b64decode(out_b64), "image/png"
-        except Exception as exc:
-            raise HTTPException(status_code=502, detail="Invalid b64_json image") from exc
-    if not out_url:
-        raise HTTPException(
-            status_code=502,
-            detail="逍遥 AI returned no image. Check model access / balance.",
-        )
-    return await _download_image(client, out_url)
+    return await _result_from_openai_images(data, client)
 
 
-async def _generate_via_media(
+async def _edit_via_images(
     client: httpx.AsyncClient,
     *,
     model: str,
     prompt: str,
     size: str,
+    refs: Sequence[bytes],
 ) -> Tuple[bytes, str]:
-    """Async media pipeline used by Nano Banana Pro (and similar Gemini image models)."""
-    payload = {
+    """OpenAI-compatible multipart /images/edits (GPT Image 2)."""
+    if not refs:
+        raise HTTPException(status_code=400, detail="Please upload at least one reference image.")
+    url = f"{LK888_BASE_URL}/images/edits"
+    # Primary ref as `image`; extras as `image[]` when supported.
+    files: list[tuple[str, tuple[str, bytes, str]]] = [
+        ("image", ("ref0.png", refs[0], _sniff_mime(refs[0]))),
+    ]
+    for i, raw in enumerate(refs[1:LK888_MAX_REFS], start=1):
+        files.append((f"image", (f"ref{i}.png", raw, _sniff_mime(raw))))
+    data = {
         "model": model,
         "prompt": prompt,
         "size": size,
+        "n": "1",
+        "response_format": "b64_json",
     }
-    create_url = f"{LK888_BASE_URL}/media/generate"
-    resp = await client.post(create_url, headers=_auth_headers(), json=payload)
-    data = _parse_json(resp)
-    if resp.status_code >= 400 or data.get("error"):
-        _raise_recharge_or_502(data, resp)
-    # Platform may return HTTP 200 with code!=200 in body
-    code = data.get("code")
-    if code is not None and int(code) != 200:
-        msg = str(data.get("msg") or data.get("message") or "media/generate rejected")
-        raise HTTPException(status_code=502, detail=f"逍遥 AI image generation failed: {msg}")
+    resp = await client.post(
+        url,
+        headers=_auth_headers(json_body=False),
+        data=data,
+        files=files,
+    )
+    parsed = _parse_json(resp)
+    if resp.status_code >= 400 or parsed.get("error"):
+        # Retry without response_format if gateway rejects it.
+        if resp.status_code in (400, 422) and "response_format" in str(parsed).lower():
+            data.pop("response_format", None)
+            resp = await client.post(
+                url,
+                headers=_auth_headers(json_body=False),
+                data=data,
+                files=files,
+            )
+            parsed = _parse_json(resp)
+        if resp.status_code >= 400 or parsed.get("error"):
+            _raise_recharge_or_502(parsed, resp)
+    return await _result_from_openai_images(parsed, client)
 
-    task_id = _media_task_id(data)
-    if task_id is None:
-        raise HTTPException(
-            status_code=502,
-            detail="逍遥 AI media/generate returned no task_id.",
-        )
 
+async def _poll_media_task(
+    client: httpx.AsyncClient,
+    task_id: int,
+) -> Tuple[bytes, str]:
     status_url = f"{LK888_BASE_URL}/media/status"
     deadline = time.monotonic() + LK888_TIMEOUT
     last: dict = {}
@@ -292,6 +377,46 @@ async def _generate_via_media(
     )
 
 
+async def _generate_via_media(
+    client: httpx.AsyncClient,
+    *,
+    model: str,
+    prompt: str,
+    size_preset: Optional[str],
+    refs: Optional[Sequence[bytes]] = None,
+) -> Tuple[bytes, str]:
+    """Async media pipeline for Banana 2 / Banana Pro (Gemini image)."""
+    aspect, image_size = _media_aspect_and_size(size_preset)
+    payload: dict[str, Any] = {
+        "model": model,
+        "prompt": prompt,
+        "aspectRatio": aspect,
+        "imageSize": image_size,
+    }
+    if refs:
+        payload["images"] = [
+            _bytes_to_data_url(raw, _sniff_mime(raw)) for raw in list(refs)[:LK888_MAX_REFS]
+        ]
+
+    create_url = f"{LK888_BASE_URL}/media/generate"
+    resp = await client.post(create_url, headers=_auth_headers(), json=payload)
+    data = _parse_json(resp)
+    if resp.status_code >= 400 or data.get("error"):
+        _raise_recharge_or_502(data, resp)
+    code = data.get("code")
+    if code is not None and int(code) != 200:
+        msg = str(data.get("msg") or data.get("message") or "media/generate rejected")
+        raise HTTPException(status_code=502, detail=f"逍遥 AI image generation failed: {msg}")
+
+    task_id = _media_task_id(data)
+    if task_id is None:
+        raise HTTPException(
+            status_code=502,
+            detail="逍遥 AI media/generate returned no task_id.",
+        )
+    return await _poll_media_task(client, task_id)
+
+
 async def generate_lk888_text_to_image(
     prompt: str,
     *,
@@ -304,29 +429,72 @@ async def generate_lk888_text_to_image(
             status_code=503,
             detail="逍遥 AI is not configured (LK888_API_KEY).",
         )
-    text = (prompt or "").strip()
-    if not text:
-        raise HTTPException(status_code=400, detail="Please enter a prompt.")
-    if len(text) > 4000:
-        raise HTTPException(
-            status_code=400,
-            detail="Prompt is too long (max 4000 characters).",
-        )
-    use_model = (model or "").strip()
-    if not is_lk888_model(use_model):
-        raise HTTPException(status_code=400, detail=f"Unsupported lk888 model: {use_model}")
-    use_model = _LK888_MODEL_ALIAS.get(use_model.lower(), use_model)
-    size = _api_size(size_preset)
+    text = _require_prompt(prompt)
+    use_model = _resolve_model(model)
 
     try:
-        # Overall budget covers create + poll + download
         async with httpx.AsyncClient(timeout=LK888_TIMEOUT + 30) as client:
             if use_model in _LK888_MEDIA_MODELS:
                 return await _generate_via_media(
-                    client, model=use_model, prompt=text, size=size
+                    client,
+                    model=use_model,
+                    prompt=text,
+                    size_preset=size_preset,
                 )
             return await _generate_via_images(
-                client, model=use_model, prompt=text, size=size
+                client, model=use_model, prompt=text, size=_api_size(size_preset)
+            )
+    except HTTPException:
+        raise
+    except httpx.TimeoutException as exc:
+        raise HTTPException(status_code=504, detail="逍遥 AI image generation timed out") from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"逍遥 AI image generation failed: {exc}") from exc
+
+
+async def generate_lk888_image_to_image(
+    image_bytes: bytes,
+    prompt: str,
+    *,
+    model: str,
+    images: Optional[Sequence[bytes]] = None,
+    output_size: Optional[str] = "2K",
+) -> Tuple[bytes, str]:
+    """Image-to-image / instruct edit. Returns (bytes, mime)."""
+    if not LK888_API_KEY:
+        raise HTTPException(
+            status_code=503,
+            detail="逍遥 AI is not configured (LK888_API_KEY).",
+        )
+    text = _require_prompt(prompt)
+    use_model = _resolve_model(model)
+    refs: list[bytes] = []
+    if image_bytes:
+        refs.append(image_bytes)
+    if images:
+        for raw in images:
+            if raw and raw not in refs:
+                refs.append(raw)
+    if not refs:
+        raise HTTPException(status_code=400, detail="Please upload at least one reference image.")
+
+    size_key = (output_size or "2K").strip().lower()
+    try:
+        async with httpx.AsyncClient(timeout=LK888_TIMEOUT + 30) as client:
+            if use_model in _LK888_MEDIA_MODELS:
+                return await _generate_via_media(
+                    client,
+                    model=use_model,
+                    prompt=text,
+                    size_preset=size_key,
+                    refs=refs,
+                )
+            return await _edit_via_images(
+                client,
+                model=use_model,
+                prompt=text,
+                size=_api_size(size_key),
+                refs=refs,
             )
     except HTTPException:
         raise
