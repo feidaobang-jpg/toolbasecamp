@@ -174,8 +174,13 @@
       audioName: String(lastFilename || 'ai-music').replace(/\.(mp3|wav)$/i, ''),
       onDownloadAudio: function () { doDownload(); }
     });
-    if (opts.autoplay && player && player.audio) {
-      try { player.play(); } catch (e) {}
+    if (opts.autoplay && player && typeof player.play === 'function') {
+      var p = player.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function () {
+          if (typeof player.setBuffering === 'function') player.setBuffering(false);
+        });
+      }
     }
   }
 
@@ -392,7 +397,8 @@
             title: row.title || lastFilename,
             lyrics: row.lyrics || '',
             duration: row.duration || 0,
-            autoplay: true
+            // 不自动播放：自动 play 常被浏览器拦截，waiting 会一直显示「缓冲中」
+            autoplay: false
           });
         }
       });

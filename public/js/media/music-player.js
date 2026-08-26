@@ -390,7 +390,8 @@
       if (typeof opts.onPlayState === 'function') opts.onPlayState(true);
     });
     audio.addEventListener('pause', function () {
-      if (!buffering) playBtn.textContent = labelPlay();
+      setBuffering(false);
+      playBtn.textContent = labelPlay();
       if (typeof opts.onPlayState === 'function') opts.onPlayState(false);
     });
     audio.addEventListener('ended', function () {
@@ -407,13 +408,14 @@
       if (typeof opts.onError === 'function') opts.onError();
     });
     audio.addEventListener('waiting', function () {
-      setBuffering(true);
+      // 未真正播放时不提示缓冲（避免自动播放被拦后一直「缓冲中」）
+      if (!audio.paused) setBuffering(true);
     });
     audio.addEventListener('stalled', function () {
-      setBuffering(true);
+      if (!audio.paused) setBuffering(true);
     });
     audio.addEventListener('canplay', function () {
-      if (!audio.paused) setBuffering(false);
+      setBuffering(false);
     });
     audio.addEventListener('playing', function () {
       setBuffering(false);
