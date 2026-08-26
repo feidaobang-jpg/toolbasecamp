@@ -2547,7 +2547,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
 
         instructEdit: {
-            title: '图生图（指令改图）',
+            title: '图生图',
             desc: '上传图片并用文字描述修改（图生图）。支持单图批量或多图参考合成。需登录，成功出图扣余额。',
             redeemTip: '余额不足请前往充值页（微信扫码）；也可在个人中心兑换码充值。成功生成才扣费。',
             refModeLabel: '供图模式',
@@ -3242,7 +3242,7 @@ window.TB_LOCALES['zh-CN'] = {
         documentTitle: '文档工具',
         documentDesc: 'PDF 转 Word、Word 转 PDF、图片转 PDF 等，快速简洁。',
         aiTitle: 'AI 出图',
-        aiDesc: '图生图（指令改图）、文生图；注册送 ¥5 余额，成功出图才扣费。',
+        aiDesc: '图生图、文生图；注册送 ¥5 余额，成功出图才扣费。',
         lifeTitle: '内容与生活',
         lifeDesc: '生活计划、菜谱、待办记事等日常效率工具。',
         gamesTitle: '休闲游戏',

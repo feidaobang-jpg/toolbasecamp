@@ -416,8 +416,8 @@
       var key = btn.getAttribute('data-style') || '';
       var snip = STYLE_SNIPPETS[key];
       if (!snip) return;
-      var cur = (promptEl.value || '').trim();
-      promptEl.value = cur ? (cur + ', ' + snip) : snip;
+      // 切换风格标签：替换整段风格，避免追加导致重复堆叠
+      promptEl.value = snip;
       updateCharCounts();
       setBusy(false);
     });

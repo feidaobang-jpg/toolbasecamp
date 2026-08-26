@@ -2548,7 +2548,7 @@ window.TB_LOCALES.en = {
         },
 
         instructEdit: {
-            title: 'Image-to-Image (Instruct Edit)',
+            title: 'Image-to-Image',
             desc: 'Upload photos and describe the change (img2img). Single-image batch or multi-image reference. Sign-in required; charged from balance on success.',
             redeemTip: 'Need more balance? Open Top up (WeChat pay) or redeem a code in Profile. Charged only on success.',
             refModeLabel: 'Reference mode',
@@ -3243,7 +3243,7 @@ window.TB_LOCALES.en = {
         documentTitle: 'Document Tools',
         documentDesc: 'PDF to Word, Word to PDF, Images to PDF, and more — fast and straightforward.',
         aiTitle: 'AI Images',
-        aiDesc: 'Image-to-Image (instruct edit) and Text-to-Image. New accounts get ¥5; charged only on success.',
+        aiDesc: 'Image-to-Image and Text-to-Image. New accounts get ¥5; charged only on success.',
         lifeTitle: 'Life & Content',
         lifeDesc: 'Life plans, recipes, todos, notes, and everyday productivity tools.',
         gamesTitle: 'Casual Games',
