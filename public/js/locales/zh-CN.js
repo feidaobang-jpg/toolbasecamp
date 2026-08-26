@@ -2712,7 +2712,7 @@ window.TB_LOCALES['zh-CN'] = {
             generateFree: '¥0 生成',
             generatePaid: '¥{price} 生成',
             tip: '提示：',
-            tipBody: '生成通常需 1–3 分钟（Suno 可能更久），请停留在本页。成功出歌才扣费。免费模型 RPM 较低，繁忙时可换 Music-3.0 或 Suno。勾选「自动歌词」时：MiniMax 会先写词；Suno 可由风格提示直接写词。',
+            tipBody: '生成通常需 1–3 分钟（Suno 可能更久），请停留在本页。成功出歌才扣费。免费模型 RPM 较低，繁忙时可换 Music-3.0 或 Suno。勾选「自动歌词」时会先写词再成曲（含 Suno），便于展示与下载歌词。',
             clear: '清除',
             download: '下载',
             downloadLyrics: '下载歌词',

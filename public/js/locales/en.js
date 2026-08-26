@@ -2713,7 +2713,7 @@ window.TB_LOCALES.en = {
             generateFree: 'Generate · ¥0',
             generatePaid: 'Generate · ¥{price}',
             tip: 'Tip:',
-            tipBody: 'Generation often takes 1–3 minutes (Suno may take longer). Stay on this page. Charged only on success. Auto-lyrics: MiniMax writes lyrics first; Suno can write from the style prompt alone.',
+            tipBody: 'Generation often takes 1–3 minutes (Suno may take longer). Stay on this page. Charged only on success. Auto-lyrics writes lyrics first (including Suno) so they can be shown and downloaded.',
             clear: 'Clear',
             download: 'Download',
             downloadLyrics: 'Download lyrics',

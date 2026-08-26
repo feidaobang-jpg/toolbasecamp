@@ -847,7 +847,7 @@ async def music_generate(
         lyrics_text = ""
         use_lyrics_optimizer = False
     elif suno:
-        # Suno can AI-write lyrics from style prompt alone (empty lyrics).
+        # Suno 可只凭风格作词，但平台 status 不回歌词文本；自动歌词需先写词再传入。
         if not prompt_text and not lyrics_text and not use_lyrics_optimizer:
             raise HTTPException(
                 status_code=400,
@@ -857,11 +857,8 @@ async def music_generate(
             raise HTTPException(status_code=400, detail="Lyrics are too long.")
         if prompt_text and len(prompt_text) > 2000:
             raise HTTPException(status_code=400, detail="Prompt is too long (max 2000 characters).")
-        # Auto-lyrics = leave lyrics empty for Suno (no MiniMax lyrics call)
-        if use_lyrics_optimizer and not lyrics_text:
-            if not prompt_text:
-                raise HTTPException(status_code=400, detail="Please enter a prompt or lyrics.")
-            use_lyrics_optimizer = False
+        if use_lyrics_optimizer and not lyrics_text and not prompt_text:
+            raise HTTPException(status_code=400, detail="Please enter a prompt or lyrics.")
     else:
         if lyrics_text:
             if len(lyrics_text) > 3500:
@@ -881,6 +878,38 @@ async def music_generate(
 
     if suno:
         try:
+            # 逍遥 /media/status 只回音频 URL，不回歌词。歌曲模式且未填歌词时，先作词再交给 Suno。
+            if (not is_instrumental) and not lyrics_text:
+                if not prompt_text:
+                    raise HTTPException(status_code=400, detail="Please enter a prompt or lyrics.")
+                if MINIMAX_API_KEY:
+                    async with httpx.AsyncClient(timeout=LYRICS_TIMEOUT + 30) as ly_client:
+                        pack = await _ensure_lyrics_text(
+                            ly_client,
+                            prompt=prompt_text,
+                            title=title_text,
+                            headers={
+                                "Authorization": f"Bearer {MINIMAX_API_KEY}",
+                                "Content-Type": "application/json",
+                            },
+                        )
+                else:
+                    ly = await _auto_lyrics_deepseek(prompt=prompt_text)
+                    pack = {"lyrics": ly, "song_title": "", "style_tags": ""}
+                lyrics_text = (pack.get("lyrics") or "").strip()
+                if not lyrics_text:
+                    raise HTTPException(
+                        status_code=502,
+                        detail="Failed to generate lyrics before Suno.",
+                    )
+                lyrics_text = _finalize_lyrics_text(lyrics_text)
+                if not title_text:
+                    sug = _sanitize_title(str(pack.get("song_title") or ""), max_len=40)
+                    if sug:
+                        title_text = sug
+            elif lyrics_text:
+                lyrics_text = _finalize_lyrics_text(lyrics_text)
+
             audio_bytes, ctype, ext, duration = await generate_suno_music(
                 prompt=prompt_text or "pop song",
                 lyrics=lyrics_text,
