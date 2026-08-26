@@ -130,6 +130,29 @@ except Exception as exc:  # pragma: no cover
     _hh_import_error = str(exc)
     print(f"[happyhorse] import failed: {exc}")
 
+_seedance_import_error = ""
+try:
+    from seedance_video import (
+        router as seedance_router,
+        _wire as wire_seedance,
+        get_seedance_config,
+        seedance_configured,
+    )
+except Exception as exc:  # pragma: no cover
+    seedance_router = None
+
+    def wire_seedance(*_a, **_k):
+        return None
+
+    def get_seedance_config():
+        return {"configured": False, "error": str(exc)}
+
+    def seedance_configured():
+        return False
+
+    _seedance_import_error = str(exc)
+    print(f"[seedance] import failed: {exc}")
+
 _music_import_error = ""
 try:
     from fun_music import (
@@ -595,6 +618,12 @@ if hh_router is not None:
     app.include_router(hh_router)
 else:
     print("[happyhorse] router not mounted:", _hh_import_error or "unknown")
+
+if seedance_router is not None:
+    wire_seedance(get_conn, require_db, get_current_user)
+    app.include_router(seedance_router)
+else:
+    print("[seedance] router not mounted:", _seedance_import_error or "unknown")
 
 try:
     from game_rooms_api import router as tank_coop_router
@@ -1076,6 +1105,10 @@ def health():
         "happyhorse_t2v_import_error": _hh_import_error or None,
         "happyhorse_r2v_api": "/happyhorse/r2v/submit" in paths,
         "happyhorse_edit_api": "/happyhorse/edit/submit" in paths,
+        "seedance_r2v_api": "/seedance/r2v/submit" in paths,
+        "seedance_r2v": get_seedance_config(),
+        "seedance_configured": seedance_configured(),
+        "seedance_import_error": _seedance_import_error or None,
         "fun_music_api": "/music/generate" in paths,
         "fun_music": get_fun_music_config(),
         "fun_music_configured": fun_music_configured(),
@@ -1084,7 +1117,7 @@ def health():
         "tts": get_tts_config(),
         "tts_configured": tts_configured(),
         "tts_import_error": _tts_import_error or None,
-        "api_features": ["wan_i2v", "minimax_h3", "happyhorse_t2v", "happyhorse_r2v", "happyhorse_edit", "fun_music", "tts"],
+        "api_features": ["wan_i2v", "minimax_h3", "happyhorse_t2v", "happyhorse_r2v", "happyhorse_edit", "seedance_r2v", "fun_music", "tts"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),

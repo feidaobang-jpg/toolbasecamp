@@ -583,6 +583,12 @@
   color: #2563eb;
 }
 
+.wan-preset.is-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
 .wan-preset:disabled {
   opacity: 0.5;
   cursor: not-allowed;
