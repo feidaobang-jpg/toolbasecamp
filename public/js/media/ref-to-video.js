@@ -78,12 +78,12 @@
   function readDuration() {
     var lim = limits();
     var n = parseInt(durationInput && durationInput.value, 10);
-    if (!isFinite(n)) n = 10;
+    if (!isFinite(n)) n = 5;
     return Math.max(lim.min, Math.min(lim.max, n));
   }
 
   function currentResKey() {
-    var res = (resolutionSelect && resolutionSelect.value) || (isSeedance() ? '720p' : '720P');
+    var res = (resolutionSelect && resolutionSelect.value) || (isSeedance() ? '480p' : '480P');
     if (isSeedance()) {
       return String(res).toLowerCase().replace(/p$/i, '') + 'p';
     }
@@ -126,7 +126,7 @@
     if (durationInput) {
       durationInput.min = String(lim.min);
       durationInput.max = String(lim.max);
-      var cur = parseInt(durationInput.value, 10) || 10;
+      var cur = parseInt(durationInput.value, 10) || 5;
       durationInput.value = String(Math.max(lim.min, Math.min(lim.max, cur)));
     }
     if (durationHint) {
@@ -162,7 +162,7 @@
         }
       }
       if (isSeedance() && resolutionSelect.value === '1080P') {
-        resolutionSelect.value = '720P';
+        resolutionSelect.value = '480P';
       }
     }
     if (ratioSelect) {
@@ -333,8 +333,8 @@
     thumbs.innerHTML = '';
     taskId = '';
     promptInput.value = '';
-    if (durationInput) durationInput.value = '10';
-    if (resolutionSelect) resolutionSelect.value = '720P';
+    if (durationInput) durationInput.value = '5';
+    if (resolutionSelect) resolutionSelect.value = '480P';
     if (ratioSelect) ratioSelect.value = '16:9';
     if (fileInput) fileInput.value = '';
     C.setError(errorBox, '');
@@ -414,7 +414,7 @@
     var form = new FormData();
     form.append('prompt', prompt);
     form.append('duration', String(dur));
-    var res = (resolutionSelect && resolutionSelect.value) || '720P';
+    var res = (resolutionSelect && resolutionSelect.value) || '480P';
     if (isSeedance()) {
       form.append('resolution', String(res).toLowerCase());
     } else {
