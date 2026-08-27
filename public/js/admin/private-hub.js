@@ -65,6 +65,7 @@
       authLabel.textContent = '';
       authLabel.classList.add('hidden');
     }
+    document.body.classList.add('tb-admin-private');
     renderGroups();
   }
 

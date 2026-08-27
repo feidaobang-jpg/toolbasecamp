@@ -226,6 +226,13 @@ window.TB_LOCALES.en = {
         homePc: {
             loading: 'Loading…',
             apiHint: 'Connects to your home ComfyUI API (comfy.zhengxiaohui.cn). Run ComfyUI + comfyui-api-server on the GPU PC; if the tunnel runs on NAS, point it to that PC’s LAN IP.',
+            removeBgHint: 'Workflow rembg.json (InspyrenetRembg; model auto-downloads). “Remove background” uses ComfyUI; resize/trim runs locally in the browser.',
+            txt2imgHint: 'Workflow z_image_turbo.json. Models: z_image_turbo_bf16, qwen_3_4b, ae.safetensors.',
+            img2imgHint: 'Workflow z_image_turbo_img2img.json. Models: z_image_turbo_bf16, qwen_3_4b, ae.safetensors.',
+            describeCutoutHint: 'Workflow qwen_describe_cutout.json. Qwen2.5-VL-3B + SAM2 hiera base + LayerMask refinement.',
+            photoRestoreHint: 'Workflow Qwen-Image-Edit photo restore. Checkpoint: Qwen-Rapid-AIO-NSFW-v10.safetensors.',
+            textToImagesHint: 'DeepSeek splits/ expands text; each segment uses z_image_turbo.json (same Z-Image trio).',
+            textToVideoHint: 'DeepSeek split + z_image_turbo images + TTS + FFmpeg mux (text-to-video pipeline).',
             removeBgTitle: 'Remove BG / batch',
             removeBgDesc: 'Resize, trim, optional ComfyUI background removal',
             txt2imgTitle: 'Text to image',

@@ -225,6 +225,13 @@ window.TB_LOCALES['zh-CN'] = {
         homePc: {
             loading: '加载中…',
             apiHint: '连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。在 GPU 电脑启动 ComfyUI 与 comfyui-api-server；Tunnel 在 NAS 上时需指向该电脑局域网 IP。',
+            removeBgHint: '工作流 rembg.json（InspyrenetRembg，模型自动下载）。勾选「移除背景」走 ComfyUI；缩放/裁边在浏览器本地完成。',
+            txt2imgHint: '工作流 z_image_turbo.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。',
+            img2imgHint: '工作流 z_image_turbo_img2img.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。',
+            describeCutoutHint: '工作流 qwen_describe_cutout.json。Qwen2.5-VL-3B + SAM2 hiera base + LayerMask 精细抠图。',
+            photoRestoreHint: '工作流 Qwen-Image-Edit 老照片修复。Checkpoint：Qwen-Rapid-AIO-NSFW-v10.safetensors。',
+            textToImagesHint: 'DeepSeek 分句扩写后，每段调用 z_image_turbo.json 文生图（同上 Z-Image 三件套）。',
+            textToVideoHint: 'DeepSeek 分句 + z_image_turbo 配图 + TTS 配音 + FFmpeg 合成（文字成片管线）。',
             removeBgTitle: '去背景 / 批量处理',
             removeBgDesc: '批量缩放、裁边、可选 ComfyUI 抠图',
             txt2imgTitle: '文生图',
