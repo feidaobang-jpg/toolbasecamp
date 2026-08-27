@@ -42,7 +42,10 @@ try:
 except ImportError:
     HAS_EDGE_TTS = False
 
-# 配置
+from resource_limits import apply_shared_pc_limits, comfyui_max_concurrent_jobs
+
+_RESOURCE_LIMIT_INFO = apply_shared_pc_limits()
+_COMFYUI_JOB_SEM = asyncio.Semaphore(comfyui_max_concurrent_jobs())
 COMFYUI_SERVER_ADDRESS = "127.0.0.1:8188"
 CLIENT_ID = str(uuid.uuid4())
 WORKFLOW_FOLDER = "work-flow"  # 工作流文件夹名称
@@ -113,6 +116,7 @@ async def health_check():
         "qwen_checkpoint": qwen_ckpt,
         "qwen_img2img_quality": _QWEN_IMG2IMG_QUALITY,
         "gpu_hint": "Qwen 高质量档约 1.5MP·8 步，16GB 显存可试；OOM 请用标准档（1MP·4 步）。",
+        "resource_limits": _RESOURCE_LIMIT_INFO,
     }
 
 
@@ -903,6 +907,11 @@ def _parse_seed_optional(seed_raw: str) -> Optional[int]:
 
 
 async def _run_comfyui_and_get_last_image(workflow: dict, timeout_sec: Optional[float] = None):
+    async with _COMFYUI_JOB_SEM:
+        return await _run_comfyui_and_get_last_image_impl(workflow, timeout_sec)
+
+
+async def _run_comfyui_and_get_last_image_impl(workflow: dict, timeout_sec: Optional[float] = None):
     if timeout_sec is None:
         timeout_sec = float(os.environ.get("COMFYUI_JOB_TIMEOUT", "600"))
     deadline = time.monotonic() + timeout_sec
@@ -2227,6 +2236,11 @@ async def upload_endpoint(
         raise HTTPException(status_code=500, detail=str(e))
 
 async def _run_photo_restore_task(task_id: str):
+    async with _COMFYUI_JOB_SEM:
+        await _run_photo_restore_task_impl(task_id)
+
+
+async def _run_photo_restore_task_impl(task_id: str):
     task = _PHOTO_RESTORE_TASKS.get(task_id)
     if not task:
         return

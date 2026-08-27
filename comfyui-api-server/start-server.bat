@@ -108,6 +108,14 @@ set INDEXTTS_CMD=edge-tts
 set INDEXTTS_VOICE=zh-CN-XiaoxiaoNeural
 set INDEXTTS_SPEED=1.0
 
+if not defined COMFYUI_RESOURCE_CPU_PERCENT set COMFYUI_RESOURCE_CPU_PERCENT=90
+if not defined COMFYUI_RESOURCE_LIMIT set COMFYUI_RESOURCE_LIMIT=1
+if /i not "%COMFYUI_RESOURCE_LIMIT%"=="0" (
+  echo.
+  echo Shared-PC resource cap: CPU ~%COMFYUI_RESOURCE_CPU_PERCENT%%%, priority below_normal
+  echo   ^(edit comfyui-api-server\local.env to tune; COMFYUI_RESOURCE_LIMIT=0 to disable^)
+)
+
 echo.
 echo Starting: http://localhost:5000  docs: /docs
 echo Press Ctrl+C to stop
