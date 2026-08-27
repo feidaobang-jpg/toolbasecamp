@@ -180,10 +180,6 @@ textarea#text-input {
   gap: 8px;
 }
 
-.tti-dl-btn {
-  padding: 6px 14px !important;
-  font-size: 13px !important;
-}
 
 .actions {
   display: flex;
@@ -206,94 +202,7 @@ textarea#text-input {
   margin-top: 6px;
 }
 
-.primary-btn,
-.secondary-btn,
-.success-btn,
-.cancel-btn {
-  padding: 12px 30px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-}
 
-.primary-btn {
-  background-color: #409eff;
-  color: white;
-}
-
-.primary-btn:hover {
-  background-color: #66b1ff;
-}
-
-.primary-btn:disabled {
-  background-color: #a0cfff;
-  cursor: not-allowed;
-}
-
- #start-btn.primary-btn,
- #clear-btn.primary-btn {
-   background-color: #409eff;
-   color: white;
- }
-
- #start-btn.primary-btn:hover,
- #clear-btn.primary-btn:hover {
-   background-color: #66b1ff;
- }
-
- #start-btn.primary-btn:disabled,
- #clear-btn.primary-btn:disabled {
-   background-color: #a0cfff;
-   cursor: not-allowed;
- }
-
-.secondary-btn,
-#cancel-button.secondary-btn,
-a.secondary-btn {
-  background-color: #409eff;
-  color: white;
-}
-
-.secondary-btn:hover,
-#cancel-button.secondary-btn:hover,
-a.secondary-btn:hover {
-  background-color: #66b1ff;
-}
-
-.success-btn {
-  background-color: #67c23a;
-  color: white;
-}
-
-.success-btn:hover {
-  background-color: #85ce61;
-}
-
-.cancel-btn {
-  background-color: #f56c6c;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background-color: #f78989;
-}
-
-.cancel-btn:disabled {
-  background-color: #fab6b6;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* 鎻忚堪鎶犲浘宸ュ叿鏍峰紡 - 鍩轰簬鍥剧墖澶勭悊宸ュ叿鏍峰紡 */
-.tool-container {
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
 
 .input-section, .output-section {
     margin-bottom: 20px;
@@ -327,7 +236,7 @@ a.secondary-btn:hover {
     margin: 20px 0;
 }
 
-button {
+button:not(.tb-btn) {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -357,22 +266,7 @@ button {
 }
 
 /* 鏃嬭浆鎸夐挳鏍峰紡 */
-.image-rotate-btn {
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 12px;
-    margin-bottom: 8px;
-    transition: background-color 0.3s;
-}
 
-.image-rotate-btn:hover {
-    background-color: #e68900;
-}
 
 /* 鏀惧ぇ妯℃€佹鏍峰紡 */
 .zoom-modal {
@@ -413,21 +307,7 @@ button {
 }
 
 /* 淇濆瓨鍏ㄩ儴鎸夐挳鏍峰紡 */
-#saveAllBtn {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-}
 
-#saveAllBtn:hover {
-    background-color: #1976D2;
-}
 
 .drop-zone {
     width: 100%;
@@ -456,37 +336,11 @@ button {
     margin: 8px 0;
 }
 
-.browse-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
 
-.browse-btn:hover {
-    background-color: #0056b3;
-}
 
-#process-btn {
-    background-color: #3498db;
-    color: white;
-}
 
-#process-btn:hover {
-    background-color: #2980b9;
-}
 
-#clear-btn {
-    background-color: #3498db;
-    color: white;
-}
 
-#clear-btn:hover {
-    background-color: #2980b9;
-}
 
 #image-count-label {
     font-size: 16px;
@@ -557,38 +411,14 @@ button {
     font-weight: bold;
 }
 
-.image-download-btn {
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 12px;
-    transition: background-color 0.3s;
-}
 
-.image-download-btn:hover {
-    background-color: #219653;
-}
 
 .bottom-container {
     margin-top: auto;
     width: 100%;
 }
 
-.save-btn {
-    background-color: #27ae60;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 20px;
-    font-size: 16px;
-}
 
-.save-btn:hover {
-    background-color: #219653;
-}
 
 .hidden {
     display: none;
@@ -652,20 +482,7 @@ h2 {
     color: #606266;
 }
 
-.browse-btn {
-    background-color: #409eff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s;
-}
 
-.browse-btn:hover {
-    background-color: #66b1ff;
-}
 
 /* 姘村嵃璁剧疆鍖哄煙 */
 .watermark-section {
@@ -786,22 +603,7 @@ input[type="checkbox"] {
     text-align: center;
 }
 
-.image-rotate-btn {
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 12px;
-    margin-top: 5px;
-    transition: background-color 0.3s;
-}
 
-.image-rotate-btn:hover {
-    background-color: #e68900;
-}
 
 /* 鎸夐挳缁?*/
 .action-buttons {
@@ -811,83 +613,19 @@ input[type="checkbox"] {
     justify-content: center;
 }
 
-.primary-btn, .secondary-btn, .success-btn, .cancel-btn {
-    padding: 12px 30px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s;
-}
 
-.primary-btn {
-    background-color: #409eff;
-    color: white;
-}
 
-.primary-btn:hover {
-    background-color: #66b1ff;
-}
 
-.primary-btn:disabled {
-    background-color: #a0cfff;
-    cursor: not-allowed;
-}
 
-.success-btn {
-    background-color: #67c23a;
-    color: white;
-}
 
-.success-btn:hover {
-    background-color: #85ce61;
-}
 
-.secondary-btn {
-    background-color: #909399;
-    color: white;
-}
 
-.secondary-btn:hover {
-    background-color: #a6a9ad;
-}
 
-.image-download-btn {
-    width: 100%;
-    padding: 8px;
-    background-color: #67c23a;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 5px;
-}
 
-.image-download-btn:hover {
-    background-color: #85ce61;
-}
 
-.image-download-btn.secondary {
-    background-color: #e6a23c;
-}
-.image-download-btn.secondary:hover {
-    background-color: #ebb563;
-}
 
-.cancel-btn {
-    background-color: #f56c6c;
-    color: white;
-}
 
-.cancel-btn:hover {
-    background-color: #f78989;
-}
 
-.cancel-btn:disabled {
-    background-color: #fab6b6;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
 
 .hidden {
     display: none !important;
@@ -946,7 +684,7 @@ input[type="checkbox"] {
     margin: 20px 0;
 }
 
-button {
+button:not(.tb-btn) {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -976,22 +714,7 @@ button {
 }
 
 /* 鏃嬭浆鎸夐挳鏍峰紡 */
-.image-rotate-btn {
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 12px;
-    margin-bottom: 8px;
-    transition: background-color 0.3s;
-}
 
-.image-rotate-btn:hover {
-    background-color: #e68900;
-}
 
 /* 鏀惧ぇ妯℃€佹鏍峰紡 */
 .zoom-modal {
@@ -1032,21 +755,7 @@ button {
 }
 
 /* 淇濆瓨鍏ㄩ儴鎸夐挳鏍峰紡 */
-#saveAllBtn {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-}
 
-#saveAllBtn:hover {
-    background-color: #1976D2;
-}
 
 .drop-zone {
     width: 100%;
@@ -1075,37 +784,11 @@ button {
     margin: 8px 0;
 }
 
-.browse-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
 
-.browse-btn:hover {
-    background-color: #0056b3;
-}
 
-#process-btn {
-    background-color: #3498db;
-    color: white;
-}
 
-#process-btn:hover {
-    background-color: #2980b9;
-}
 
-#clear-btn {
-    background-color: #3498db;
-    color: white;
-}
 
-#clear-btn:hover {
-    background-color: #2980b9;
-}
 
 #image-count-label {
     font-size: 16px;
@@ -1176,38 +859,14 @@ button {
     font-weight: bold;
 }
 
-.image-download-btn {
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 12px;
-    transition: background-color 0.3s;
-}
 
-.image-download-btn:hover {
-    background-color: #219653;
-}
 
 .bottom-container {
     margin-top: auto;
     width: 100%;
 }
 
-.save-btn {
-    background-color: #27ae60;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 20px;
-    font-size: 16px;
-}
 
-.save-btn:hover {
-    background-color: #219653;
-}
 
 .hidden {
     display: none;
@@ -1215,20 +874,48 @@ button {
 
 }
 
-/* --- tb-btn + mobile (override legacy port styles) --- */
-.home-pc-wrap button.tb-btn,
-.home-pc-wrap a.tb-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 9999px;
-  font-weight: 600;
-  background: #2563eb;
-  color: #fff;
-}
 
 .home-pc-wrap .action-row {
   justify-content: flex-start;
   margin: 16px 0;
+}
+
+/* 统一 tb-btn（覆盖 Tailwind preflight / 遗留端口样式） */
+.home-pc-wrap .tb-btn,
+.home-pc-wrap a.tb-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  line-height: 1.4;
+}
+
+.home-pc-wrap .tb-btn.tb-btn-sm {
+  padding: 6px 16px;
+  font-size: 13px;
+}
+
+.home-pc-wrap .tb-btn:hover:not(:disabled):not(.is-disabled),
+.home-pc-wrap a.tb-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.home-pc-wrap .tb-btn:disabled,
+.home-pc-wrap .tb-btn.is-disabled {
+  background: #93c5fd;
+  color: #fff;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+.home-pc-wrap .home-pc-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #6b7280;
 }
 
 .home-pc-wrap .home-pc-size-row {
@@ -1346,14 +1033,21 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .home-pc-wrap .action-row .tb-btn {
-    flex: 1 1 auto;
-    min-width: calc(50% - 6px);
+  .home-pc-wrap .action-row.home-pc-tool-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .home-pc-wrap .width-presets .tb-btn {
-    min-width: 3rem;
+  .home-pc-wrap .action-row.home-pc-tool-actions .tb-btn {
+    width: 100%;
+    flex: none;
+    min-width: 0;
+  }
+
+  .home-pc-wrap .action-row:not(.home-pc-tool-actions) .tb-btn,
+  .home-pc-wrap .width-presets.action-row .tb-btn {
     flex: 0 0 auto;
+    min-width: 3rem;
   }
 }
 
@@ -1372,5 +1066,4 @@ body.tb-admin-private #auth-status {
     min-width: 0;
   }
 }
-
 

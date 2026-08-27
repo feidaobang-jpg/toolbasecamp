@@ -9,10 +9,10 @@
   <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc4" />
-  <script src="../../../../js/locales/en.js?v=homepc1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
-  <script src="../../../../js/i18n.js?v=homepc4"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc5" />
+  <script src="../../../../js/locales/en.js?v=homepc5"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc5"></script>
+  <script src="../../../../js/i18n.js?v=homepc5"></script>
   <script src="../../../../js/config.js?v=homepc1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
 </head>
@@ -36,7 +36,7 @@
       <a id="gate-login" href="../../../auth/login.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
     </div>
     <div id="app" class="home-pc-wrap hidden">
-      <p class="home-pc-desc" data-i18n="privateHub.homePc.apiHint">连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。请先在本机启动 ComfyUI 与 comfyui-api-server。</p>
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.textToVideoHint">DeepSeek 分句 + z_image_turbo 配图 + TTS 配音 + FFmpeg 合成（文字成片管线）。</p>
       <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
       <div class="tool-container">
           <div class="input-section">
@@ -77,7 +77,7 @@
             </div>
           </div>
 
-          <div class="action-row">
+          <div class="action-row home-pc-tool-actions">
             <button id="start-btn" class="tb-btn">开始生成</button>
             <button id="cancel-button" class="tb-btn" style="display:none;">取消任务</button>
             <button type="button" id="btn-copy-output" class="tb-btn" style="display:none;">复制输出目录路径</button>
