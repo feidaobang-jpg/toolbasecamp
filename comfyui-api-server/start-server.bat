@@ -84,6 +84,14 @@ echo Using: !PY!
 !PY! --version
 
 echo.
+echo Checking port 5000 ...
+!PY! -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)" >nul 2>&1
+if not errorlevel 1 goto already_running
+
+netstat -ano | findstr ":5000" | findstr "LISTENING" >nul 2>&1
+if not errorlevel 1 goto port_busy
+
+echo.
 echo pip install -r requirements.txt ...
 !PY! -m pip install -r "%~dp0requirements.txt"
 if errorlevel 1 (
@@ -108,10 +116,31 @@ echo.
 
 if /i "%~1"=="hidden" (
   !PY! app.py
-  exit /b %ERRORLEVEL%
+  goto done
 )
 
 !PY! app.py
-
 pause
+goto done
+
+:already_running
+echo.
+set "API_PID="
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":5000" ^| findstr "LISTENING"') do set "API_PID=%%a"
+echo [INFO] comfyui-api-server is already running at http://127.0.0.1:5000
+if defined API_PID echo        PID: !API_PID!
+echo        Skip startup. To load new code: stop-server.bat then start again.
+echo.
+if /i not "%~1"=="hidden" pause
+goto done
+
+:port_busy
+echo.
+echo [WARN] Port 5000 is in use but /health did not respond.
+echo        Run stop-server.bat or taskkill the PID on 5000, then retry.
+echo.
+if /i not "%~1"=="hidden" pause
+exit /b 1
+
+:done
 endlocal
