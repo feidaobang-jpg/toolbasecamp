@@ -19,6 +19,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let lastDataUrl = '';
 
+  function tr(key, fallback) {
+    if (typeof window.t === 'function') {
+      const v = window.t(key);
+      if (v && v !== key) return v;
+    }
+    return fallback || key;
+  }
+
   function log(msg) {
     logOutput.textContent += `${msg}\n`;
     logOutput.parentElement.scrollTop = logOutput.parentElement.scrollHeight;
@@ -35,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
   async function generate() {
     const prompt = (promptInput.value || '').trim();
     if (!prompt) {
-      alert('请输入正向提示词');
+      alert(tr('privateHub.homePc.txt2imgNeedPrompt', '请输入正向提示词'));
       promptInput.focus();
       return;
     }
@@ -46,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('height', String(parseInt(heightInput.value, 10) || 1024));
     fd.append('seed', (seedInput.value || '').trim());
 
-    setBusy(true, '提交 ComfyUI 生成中…');
+    setBusy(true, tr('privateHub.homePc.txt2imgGenerating', '提交 ComfyUI 生成中…'));
     resultBox.style.display = 'none';
     downloadBtn.style.display = 'none';
     lastDataUrl = '';
@@ -63,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!b64) throw new Error('未返回图片数据');
       lastDataUrl = `data:image/png;base64,${b64}`;
       resultImg.src = lastDataUrl;
+      resultImg.alt = tr('privateHub.homePc.txt2imgResultTitle', '生成结果');
       metaLine.textContent = `使用的种子：${data.seed_used != null ? data.seed_used : '—'}`;
       resultBox.style.display = 'block';
       downloadBtn.style.display = 'inline-block';

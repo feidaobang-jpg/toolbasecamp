@@ -22,42 +22,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // 旋转状态存储：key为图片索引，value为旋转角度(0, 90, 180, 270)
     let imageRotations = {};
 
-    // 获取拖放区域
-    const dropZone = document.querySelector('.drop-zone');
+    const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
-    const browseBtnInner = document.getElementById('browse-btn-inner');
+    const selectionPreviewSection = document.getElementById('selection-preview-section');
+
+    function syncUploadUi() {
+        if (window.HomePcUpload) {
+            HomePcUpload.syncDropVisible(dropZone, selectedImages.length > 0);
+            HomePcUpload.syncSelectionSection(selectionPreviewSection, selectedImages.length > 0);
+        }
+    }
 
     // 绑定事件
     if (clearBtn) clearBtn.addEventListener('click', clearAll);
     if (processBtn) processBtn.addEventListener('click', processImages);
     if (saveAllBtn) saveAllBtn.addEventListener('click', saveAllImages);
-    if (browseBtnInner) browseBtnInner.addEventListener('click', () => fileInput.click());
 
-    // 处理拖放事件
-    if (dropZone) {
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drop-zone-hover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drop-zone-hover');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drop-zone-hover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
-            handleFiles(files);
-        });
-    }
-
-    // 处理文件选择
-    if (fileInput) {
-        fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files).filter(file => file.type.startsWith('image/'));
-            handleFiles(files);
+    if (window.HomePcUpload) {
+        HomePcUpload.bind({
+            dropZone: dropZone,
+            fileInput: fileInput,
+            onFiles: handleFiles,
+            multiple: true
         });
     }
 
@@ -80,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         displayImagePreviews();
+        syncUploadUi();
     }
 
     /**
@@ -505,6 +492,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveAllBtn.classList.add('hidden');
         if (describeInput) describeInput.value = '';
         if (fileInput) fileInput.value = '';
+        syncUploadUi();
     }
 
     // 格式化文件大小

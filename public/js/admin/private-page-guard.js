@@ -63,7 +63,6 @@
       authLabel.textContent = '';
       authLabel.classList.add('hidden');
     }
-    if (loginLink) loginLink.classList.add('hidden');
     var headerRight = authLabel && authLabel.parentElement;
     if (headerRight) headerRight.classList.add('hidden');
     document.body.classList.add('tb-admin-private');

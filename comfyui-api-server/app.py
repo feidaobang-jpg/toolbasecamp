@@ -729,7 +729,10 @@ def _parse_seed_optional(seed_raw: str) -> Optional[int]:
         return None
 
 
-async def _run_comfyui_and_get_last_image(workflow: dict):
+async def _run_comfyui_and_get_last_image(workflow: dict, timeout_sec: Optional[float] = None):
+    if timeout_sec is None:
+        timeout_sec = float(os.environ.get("COMFYUI_JOB_TIMEOUT", "600"))
+    deadline = time.monotonic() + timeout_sec
     ws = websocket.WebSocket()
     prompt_id = None
     try:
@@ -738,8 +741,14 @@ async def _run_comfyui_and_get_last_image(workflow: dict):
         prompt_id = prompt_response['prompt_id']
 
         while True:
-            ws.settimeout(5.0)
-            out = await asyncio.to_thread(ws.recv)
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise RuntimeError(f"ComfyUI job timed out after {int(timeout_sec)}s")
+            ws.settimeout(min(30.0, max(1.0, remaining)))
+            try:
+                out = await asyncio.to_thread(ws.recv)
+            except websocket.WebSocketTimeoutException:
+                continue
             if isinstance(out, str):
                 message = json.loads(out)
                 if message.get('type') == 'executing':

@@ -9,10 +9,11 @@
   <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc5" />
-  <script src="../../../../js/locales/en.js?v=homepc5"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc5"></script>
-  <script src="../../../../js/i18n.js?v=homepc5"></script>
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc7" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc7" />
+  <script src="../../../../js/locales/en.js?v=homepc7"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc7"></script>
+  <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
 </head>
@@ -40,28 +41,26 @@
       <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
       <div class="tool-container">
           <div class="input-section">
-            <div class="form-row">
-              <div class="input-control">
-                <label for="file-input">参考图：</label>
-                <input id="file-input" type="file" accept="image/*" />
-              </div>
+            <span class="home-pc-field-label" data-i18n="privateHub.homePc.img2imgRefLabel">参考图</span>
+            <div class="drop-zone" id="drop-zone">
+              <div class="drop-icon">+</div>
+              <div class="drop-title" data-i18n="privateHub.homePc.img2imgDropTitle">点击或拖入参考图</div>
+              <div class="drop-hint" data-i18n="privateHub.homePc.img2imgDropHint">支持 JPG、PNG、WebP</div>
             </div>
-            <div id="preview-wrap" style="display:none; margin-bottom: 12px;">
-              <span style="font-size: 13px; color:#666;">预览</span><br />
-              <img id="preview-img" alt="预览" style="max-width: 280px; max-height: 280px; border-radius: 8px; border: 1px solid #e5e7eb;" />
-            </div>
+            <input type="file" id="file-input" accept="image/*" hidden />
+            <div class="home-pc-source-grid" id="preview-wrap" hidden></div>
             <div>
-              <label for="prompt-input">正向提示词：</label>
-              <textarea id="prompt-input" placeholder="例：只把西瓜换成菠萝，人物、背景、其余物体保持不变"></textarea>
+              <label for="prompt-input" data-i18n="privateHub.homePc.img2imgPromptLabel">正向提示词：</label>
+              <textarea id="prompt-input" data-i18n-placeholder="privateHub.homePc.img2imgPromptPlaceholder" placeholder="例：只把西瓜换成菠萝，人物、背景、其余物体保持不变"></textarea>
             </div>
             <div class="form-row">
               <div class="input-control">
-                <label for="denoise-input">重绘幅度 Denoise（0.05–1）：</label>
+                <label for="denoise-input" data-i18n="privateHub.homePc.img2imgDenoiseLabel">重绘幅度 Denoise（0.05–1）：</label>
                 <input id="denoise-input" class="text-input" type="number" step="0.05" min="0.05" max="1" value="0.4" />
               </div>
               <div class="input-control">
-                <label for="seed-input">种子（可选）：</label>
-                <input id="seed-input" class="text-input" type="text" placeholder="留空随机" />
+                <label for="seed-input" data-i18n="privateHub.homePc.img2imgSeedLabel">种子（可选）：</label>
+                <input id="seed-input" class="text-input" type="text" data-i18n-placeholder="privateHub.homePc.img2imgSeedPlaceholder" placeholder="留空随机" />
               </div>
             </div>
           </div>
@@ -82,22 +81,25 @@
             </div>
           </div>
 
-          <div id="result-box" class="video-box" style="display:none;">
-            <h3 style="margin-top: 16px;">生成结果</h3>
-            <p id="meta-line" style="font-size: 13px; color:#666;"></p>
-            <img id="result-img" alt="结果" style="max-width: 100%; border-radius: 8px; border: 1px solid #e5e7eb;" />
+          <div id="result-box" class="video-box home-pc-result-box" style="display:none;">
+            <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.img2imgResultTitle">生成结果</h3>
+            <p id="meta-line" class="home-pc-result-meta"></p>
+            <div class="home-pc-result-img-wrap">
+              <img id="result-img" alt="" />
+            </div>
           </div>
 
-          <div id="log-container" style="height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-top: 16px;">
-            <h4 style="margin-top:0;">日志</h4>
+          <div id="log-container" class="home-pc-log-box">
+            <h4 data-i18n="privateHub.homePc.img2imgLogTitle">日志</h4>
             <pre id="log-output" style="margin:0; white-space: pre-wrap;"></pre>
           </div>
         </div>
     </div>
   </main>
-  <script src="../../../../js/admin/private-page-guard.js?v=homepc4"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc3"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc3"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc3"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc7"></script>
 </body>
 </html>

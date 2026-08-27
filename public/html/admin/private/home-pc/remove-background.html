@@ -9,10 +9,11 @@
   <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc5" />
-  <script src="../../../../js/locales/en.js?v=homepc5"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc5"></script>
-  <script src="../../../../js/i18n.js?v=homepc5"></script>
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc7" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc7" />
+  <script src="../../../../js/locales/en.js?v=homepc7"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc7"></script>
+  <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
 </head>
@@ -40,14 +41,12 @@
       <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
       <div class="tool-container">
                     <!-- 拖放区域 -->
-                    <div class="drop-zone">
-                        <div class="drop-zone-text">
-                            <p>将图片拖放到此处</p>
-                            <p>或者</p>
-                            <button id="browse-btn-inner" class="tb-btn tb-btn-sm">选择图片</button>
-                            <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
-                        </div>
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="drop-icon">+</div>
+                        <div class="drop-title" data-i18n="privateHub.homePc.dropTitleMulti">点击或拖入图片</div>
+                        <div class="drop-hint" data-i18n="privateHub.homePc.dropHintMulti">支持 JPG、PNG、WebP，可多选</div>
                     </div>
+                    <input type="file" id="file-input" multiple accept="image/*" hidden />
                     
                     <div class="input-section home-pc-size-row">
                         <select id="size-type-select" class="home-pc-select">
@@ -74,11 +73,9 @@
                     </div>
                     
                     <!-- 选择图片预览区域 -->
-                    <div class="selection-preview-section">
-                        <h3>选择的图片</h3>
-                        <div class="image-selection-preview" id="image-selection-preview">
-                            <!-- 选择的图片预览将在这里显示 -->
-                        </div>
+                    <div class="selection-preview-section" id="selection-preview-section" hidden>
+                        <h3 class="home-pc-section-title" data-i18n="privateHub.homePc.selectedImagesTitle">已选图片</h3>
+                        <div class="image-selection-preview" id="image-selection-preview"></div>
                     </div>
 
                     <div class="action-row home-pc-tool-actions">
@@ -87,18 +84,17 @@
                         <button id="clear-btn" class="tb-btn">清空</button>
                     </div>
                     
-                    <div class="result-section" id="result-container">
-                        <h3>处理结果</h3>
-                        <div class="image-preview-container" id="image-preview-container">
-                            <!-- 图片预览将在这里显示 -->
-                        </div>
+                    <div class="result-section home-pc-result-box" id="result-container">
+                        <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.resultTitle">处理结果</h3>
+                        <div class="image-preview-container" id="image-preview-container"></div>
                     </div>
                 </div>
     </div>
   </main>
-  <script src="../../../../js/admin/private-page-guard.js?v=homepc4"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc3"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc3"></script>
-  <script src="../../../../js/admin/home-pc/remove-background.js?v=homepc3"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/remove-background.js?v=homepc7"></script>
 </body>
 </html>

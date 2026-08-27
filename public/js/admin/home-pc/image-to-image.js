@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const genBtn = document.getElementById('gen-btn');
   const clearBtn = document.getElementById('clear-btn');
   const downloadBtn = document.getElementById('download-btn');
+  const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
   const previewWrap = document.getElementById('preview-wrap');
-  const previewImg = document.getElementById('preview-img');
   const promptInput = document.getElementById('prompt-input');
   const denoiseInput = document.getElementById('denoise-input');
   const seedInput = document.getElementById('seed-input');
@@ -21,6 +21,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let lastDataUrl = '';
   let selectedFile = null;
+  let previewUrl = '';
+
+  function tr(key, fallback) {
+    if (typeof window.t === 'function') {
+      const v = window.t(key);
+      if (v && v !== key) return v;
+    }
+    return fallback || key;
+  }
 
   function log(msg) {
     logOutput.textContent += `${msg}\n`;
@@ -35,34 +44,70 @@ document.addEventListener('DOMContentLoaded', function () {
     genBtn.disabled = busy;
   }
 
-  if (fileInput) {
-    fileInput.addEventListener('change', () => {
-      const f = fileInput.files && fileInput.files[0];
-      selectedFile = f || null;
-      if (!f) {
-        previewWrap.style.display = 'none';
-        previewImg.removeAttribute('src');
-        return;
-      }
-      const url = URL.createObjectURL(f);
-      previewImg.onload = function () {
-        URL.revokeObjectURL(url);
-      };
-      previewImg.src = url;
-      previewWrap.style.display = 'block';
+  function revokePreview() {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      previewUrl = '';
+    }
+  }
+
+  function renderPreview() {
+    if (!previewWrap) return;
+    previewWrap.innerHTML = '';
+    revokePreview();
+    if (!selectedFile) {
+      previewWrap.hidden = true;
+      if (window.HomePcUpload) HomePcUpload.syncDropVisible(dropZone, false);
+      return;
+    }
+    const card = document.createElement('div');
+    card.className = 'home-pc-source-card';
+    const img = document.createElement('img');
+    previewUrl = URL.createObjectURL(selectedFile);
+    img.src = previewUrl;
+    img.alt = selectedFile.name || tr('privateHub.homePc.img2imgRefLabel', '参考图');
+    const rm = document.createElement('button');
+    rm.type = 'button';
+    rm.className = 'home-pc-source-remove';
+    rm.setAttribute('aria-label', tr('privateHub.homePc.img2imgRemoveImage', '移除'));
+    rm.textContent = '×';
+    rm.addEventListener('click', function (e) {
+      e.stopPropagation();
+      selectedFile = null;
+      if (fileInput) fileInput.value = '';
+      renderPreview();
+    });
+    card.appendChild(img);
+    card.appendChild(rm);
+    previewWrap.appendChild(card);
+    previewWrap.hidden = false;
+    if (window.HomePcUpload) HomePcUpload.syncDropVisible(dropZone, true);
+  }
+
+  function pickFile(file) {
+    if (!file || !file.type || file.type.indexOf('image/') !== 0) return;
+    selectedFile = file;
+    renderPreview();
+  }
+
+  if (window.HomePcUpload) {
+    HomePcUpload.bind({
+      dropZone: dropZone,
+      fileInput: fileInput,
+      onFiles: function (files) { pickFile(files[0]); },
+      multiple: false
     });
   }
 
   async function generate() {
     const prompt = (promptInput.value || '').trim();
     if (!prompt) {
-      alert('请输入正向提示词');
+      alert(tr('privateHub.homePc.img2imgNeedPrompt', '请输入正向提示词'));
       promptInput.focus();
       return;
     }
     if (!selectedFile) {
-      alert('请先选择参考图');
-      fileInput.focus();
+      alert(tr('privateHub.homePc.img2imgNeedImage', '请先上传参考图'));
       return;
     }
 
@@ -76,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('denoise', String(denoise));
     fd.append('seed', (seedInput.value || '').trim());
 
-    setBusy(true, '上传并提交 ComfyUI…');
+    setBusy(true, tr('privateHub.homePc.img2imgGenerating', '上传并提交 ComfyUI…'));
     resultBox.style.display = 'none';
     downloadBtn.style.display = 'none';
     lastDataUrl = '';
@@ -93,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!b64) throw new Error('未返回图片数据');
       lastDataUrl = `data:image/png;base64,${b64}`;
       resultImg.src = lastDataUrl;
+      resultImg.alt = tr('privateHub.homePc.img2imgResultTitle', '生成结果');
       metaLine.textContent = `种子：${data.seed_used != null ? data.seed_used : '—'}；Denoise：${data.denoise != null ? data.denoise : denoise}`;
       resultBox.style.display = 'block';
       downloadBtn.style.display = 'inline-block';
@@ -108,8 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function clearAll() {
     selectedFile = null;
     if (fileInput) fileInput.value = '';
-    previewWrap.style.display = 'none';
-    previewImg.removeAttribute('src');
+    renderPreview();
     promptInput.value = '';
     denoiseInput.value = '0.4';
     seedInput.value = '';

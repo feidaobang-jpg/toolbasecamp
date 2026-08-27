@@ -35,19 +35,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // 旋转状态存储
     let imageRotations = {};
 
-    // 获取拖放区域
-    const dropZone = document.querySelector('.drop-zone');
+    const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
-    const browseBtnInner = document.getElementById('browse-btn-inner');
+    const selectionPreviewSection = document.getElementById('selection-preview-section');
+
+    function syncUploadUi() {
+        if (window.HomePcUpload) {
+            HomePcUpload.syncDropVisible(dropZone, selectedImages.length > 0);
+            HomePcUpload.syncSelectionSection(selectionPreviewSection, selectedImages.length > 0);
+        }
+    }
 
     // 绑定事件
     if (clearBtn) clearBtn.addEventListener('click', clearAll);
     if (processBtn) processBtn.addEventListener('click', processImages);
     if (cancelBtn) cancelBtn.addEventListener('click', cancelProcessing); // 绑定取消事件
     if (saveAllBtn) saveAllBtn.addEventListener('click', saveAllImages);
-    if (browseBtnInner) browseBtnInner.addEventListener('click', () => fileInput.click());
-    
-    // 水印开关联动
+
+    if (window.HomePcUpload) {
+        HomePcUpload.bind({
+            dropZone: dropZone,
+            fileInput: fileInput,
+            onFiles: handleFiles,
+            multiple: true
+        });
+    }
     if (enableWatermarkCheckbox) {
         enableWatermarkCheckbox.addEventListener('change', (e) => {
             if (e.target.checked) {
@@ -57,34 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 watermarkTextGroup.style.display = 'none';
                 watermarkTextGroup.style.opacity = '0';
             }
-        });
-    }
-
-    // 处理拖放事件
-    if (dropZone) {
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drop-zone-hover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('drop-zone-hover');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drop-zone-hover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
-            handleFiles(files);
-        });
-    }
-
-    // 处理文件选择
-    if (fileInput) {
-        fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files).filter(file => file.type.startsWith('image/'));
-            handleFiles(files);
         });
     }
 
@@ -198,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         displayImagePreviews();
+        syncUploadUi();
     }
 
     /**
@@ -888,6 +873,7 @@ document.addEventListener('DOMContentLoaded', function() {
         imagePreviewContainer.innerHTML = '';
         saveAllBtn.classList.add('hidden');
         if (fileInput) fileInput.value = '';
+        syncUploadUi();
     }
 
     function formatFileSize(bytes) {
