@@ -39,7 +39,8 @@ window.TB_LOCALES.en = {
         emptyGroup: 'No tools in this group yet',
         groups: {
             ops: 'Site ops',
-            stock: 'Stocks'
+            stock: 'Stocks',
+            homePc: 'Home PC'
         },
         ops: {
             siteStatsTitle: 'Site stats',
@@ -221,6 +222,24 @@ window.TB_LOCALES.en = {
         stock: {
             picksTitle: 'Stock picks',
             picksDesc: 'Monthly K start (long-term) and strong-momentum overnight'
+        },
+        homePc: {
+            loading: 'Loading…',
+            apiHint: 'Connects to your home ComfyUI API (comfy.zhengxiaohui.cn). Run ComfyUI + comfyui-api-server on the GPU PC; if the tunnel runs on NAS, point it to that PC’s LAN IP.',
+            removeBgTitle: 'Remove BG / batch',
+            removeBgDesc: 'Resize, trim, optional ComfyUI background removal',
+            txt2imgTitle: 'Text to image',
+            txt2imgDesc: 'Z-Image Turbo via home ComfyUI',
+            img2imgTitle: 'Image to image',
+            img2imgDesc: 'Reference image + prompt redraw',
+            describeCutoutTitle: 'Describe cutout',
+            describeCutoutDesc: 'Cut out objects by text description',
+            photoRestoreTitle: 'Photo restore',
+            photoRestoreDesc: 'Old photo repair and colorize (Qwen All-In-One)',
+            textToImagesTitle: 'Text to images',
+            textToImagesDesc: 'One image per sentence for social posts',
+            textToVideoTitle: 'Text to video',
+            textToVideoDesc: 'TTS + images + subtitles to video'
         }
     },
     coolSites: {

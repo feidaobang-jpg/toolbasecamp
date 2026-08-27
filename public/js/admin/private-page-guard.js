@@ -32,7 +32,9 @@
     var gateLogin = document.getElementById('gate-login');
     var next = encodeURIComponent(window.location.pathname || '/html/admin/private.html');
     var href = '../../auth/login.html?next=' + next;
-    if ((window.location.pathname || '').indexOf('/private/android/') !== -1) {
+    if ((window.location.pathname || '').indexOf('/private/home-pc/') !== -1) {
+      href = '../../../auth/login.html?next=' + next;
+    } else if ((window.location.pathname || '').indexOf('/private/android/') !== -1) {
       href = '../../../auth/login.html?next=' + next;
     }
     var boot = document.getElementById('boot-loading');

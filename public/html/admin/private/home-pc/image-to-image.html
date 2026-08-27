@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>图生图 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc1" />
+  <script src="../../../../js/locales/en.js?v=homepc1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
+  <script src="../../../../js/i18n.js?v=homepc1"></script>
+  <script src="../../../../js/config.js?v=homepc1"></script>
+  <script src="../../../../js/common_ui.js?v=homepc1"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.homePc.img2imgTitle">图生图</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full max-w-5xl mx-auto">
+    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500" data-i18n="privateHub.homePc.loading">加载中…</div>
+    <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../../auth/login.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
+    </div>
+    <div id="app" class="home-pc-wrap hidden">
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.apiHint">连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。请先在本机启动 ComfyUI 与 comfyui-api-server。</p>
+      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+      <div class="tool-container">
+          <div class="input-section">
+            <div class="form-row">
+              <div class="input-control">
+                <label for="file-input">参考图：</label>
+                <input id="file-input" type="file" accept="image/*" />
+              </div>
+            </div>
+            <div id="preview-wrap" style="display:none; margin-bottom: 12px;">
+              <span style="font-size: 13px; color:#666;">预览</span><br />
+              <img id="preview-img" alt="预览" style="max-width: 280px; max-height: 280px; border-radius: 8px; border: 1px solid #e5e7eb;" />
+            </div>
+            <div>
+              <label for="prompt-input">正向提示词：</label>
+              <textarea id="prompt-input" placeholder="例：只把西瓜换成菠萝，人物、背景、其余物体保持不变"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="input-control">
+                <label for="denoise-input">重绘幅度 Denoise（0.05–1）：</label>
+                <input id="denoise-input" class="text-input" type="number" step="0.05" min="0.05" max="1" value="0.4" />
+              </div>
+              <div class="input-control">
+                <label for="seed-input">种子（可选）：</label>
+                <input id="seed-input" class="text-input" type="text" placeholder="留空随机" />
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="gen-btn" class="primary-btn">生成</button>
+            <button type="button" id="download-btn" class="secondary-btn" style="display:none;">下载 PNG</button>
+            <button id="clear-btn" class="primary-btn">清空</button>
+          </div>
+
+          <div id="progress-wrap" class="progress-wrap" style="display:none;">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; color: #666;">
+              <span id="progress-status">生成中…</span>
+              <span id="progress-percent">—</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progress-bar" class="progress-bar" style="width: 45%;"></div>
+            </div>
+          </div>
+
+          <div id="result-box" class="video-box" style="display:none;">
+            <h3 style="margin-top: 16px;">生成结果</h3>
+            <p id="meta-line" style="font-size: 13px; color:#666;"></p>
+            <img id="result-img" alt="结果" style="max-width: 100%; border-radius: 8px; border: 1px solid #e5e7eb;" />
+          </div>
+
+          <div id="log-container" style="height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-top: 16px;">
+            <h4 style="margin-top:0;">日志</h4>
+            <pre id="log-output" style="margin:0; white-space: pre-wrap;"></pre>
+          </div>
+        </div>
+    </div>
+  </main>
+  <script src="../../../../js/admin/private-page-guard.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc1"></script>
+</body>
+</html>

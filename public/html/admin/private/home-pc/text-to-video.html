@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>文字成片 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc1" />
+  <script src="../../../../js/locales/en.js?v=homepc1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
+  <script src="../../../../js/i18n.js?v=homepc1"></script>
+  <script src="../../../../js/config.js?v=homepc1"></script>
+  <script src="../../../../js/common_ui.js?v=homepc1"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.homePc.textToVideoTitle">文字成片</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full max-w-5xl mx-auto">
+    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500" data-i18n="privateHub.homePc.loading">加载中…</div>
+    <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../../auth/login.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
+    </div>
+    <div id="app" class="home-pc-wrap hidden">
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.apiHint">连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。请先在本机启动 ComfyUI 与 comfyui-api-server。</p>
+      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+      <div class="tool-container">
+          <div class="input-section">
+            <div>
+              <label for="text-input">文字内容：</label>
+              <textarea id="text-input" placeholder=""></textarea>
+            </div>
+
+            <div id="deepseek-notice" role="alert" style="display:none; margin: 10px 0; padding: 10px 12px; border-radius: 8px; font-size: 14px; line-height: 1.5;"></div>
+
+            <p class="text-sm text-gray-600" style="margin: 0 0 8px 0;">配图规则：<strong>句号、叹号、问号、逗号</strong>（中英文逗号）各切一句一张图。画面按每句口播生成，无需填写主题。人物默认为<strong>中国人</strong>；古诗词/文言内容会倾向<strong>古代汉服</strong>形象，并抑制西方人面孔。预览指向<strong>当前所访问的 API 主机</strong>；文件保存在 <code>output</code> 任务目录；配图可到 <code>images</code> 自选。</p>
+
+            <div class="form-row">
+              <div class="input-control">
+                <label>导出视频：</label>
+                <div style="display:flex; gap: 12px; flex-wrap: wrap; padding-top: 6px;">
+                  <label style="display:flex; align-items:center; gap: 6px;"><input id="opt-video-16-9" type="checkbox">横屏 16:9</label>
+                  <label style="display:flex; align-items:center; gap: 6px;"><input id="opt-video-9-16" type="checkbox" checked>竖屏 9:16</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-control">
+                <label for="voice-select">语音：</label>
+                <select id="voice-select" class="text-input">
+                  <option value="zh-CN-XiaoxiaoNeural">晓晓（女声）</option>
+                  <option value="zh-CN-YunxiNeural">云希（男声）</option>
+                  <option value="zh-CN-YunyangNeural">云扬（男声新闻）</option>
+                  <option value="zh-CN-XiaoyiNeural">晓伊（女声）</option>
+                  <option value="zh-CN-YunjianNeural">云健（男声）</option>
+                </select>
+              </div>
+              <div class="input-control">
+                <label for="speed-input">语速：</label>
+                <input id="speed-input" class="text-input" type="number" step="0.1" value="1.0" />
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="start-btn" class="primary-btn">开始生成</button>
+            <button id="cancel-button" class="secondary-btn" style="display:none;">取消任务</button>
+            <button type="button" id="btn-copy-output" class="secondary-btn" style="display:none;">复制输出目录路径</button>
+            <button type="button" id="btn-open-output" class="secondary-btn" style="display:none;">在本机打开输出文件夹</button>
+            <button id="clear-btn" class="primary-btn">清空</button>
+          </div>
+
+          <div id="progress-wrap" class="progress-wrap" style="display:none;">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; color: #666;">
+              <span id="progress-status">准备中...</span>
+              <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progress-bar" class="progress-bar"></div>
+            </div>
+          </div>
+
+          <div id="video-box" class="video-box">
+            <h3 style="margin-top: 16px;">生成结果</h3>
+            <div id="result-videos-row" style="display:none; flex-wrap: wrap; gap: 12px;">
+              <div id="wrap-result-16-9" style="flex: 1 1 320px; display:none;">
+                <div style="font-size: 13px; color:#666; margin: 6px 0;">横屏 16:9</div>
+                <video id="result-video-16-9" controls playsinline></video>
+              </div>
+              <div id="wrap-result-9-16" style="flex: 1 1 320px; display:none;">
+                <div style="font-size: 13px; color:#666; margin: 6px 0;">竖屏 9:16</div>
+                <video id="result-video" controls playsinline></video>
+              </div>
+            </div>
+          </div>
+
+          <div id="log-container" style="height: 450px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
+            <h4>执行日志：</h4>
+            <pre id="log-output"></pre>
+          </div>
+        </div>
+    </div>
+  </main>
+  <script src="../../../../js/admin/private-page-guard.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/text-to-video.js?v=homepc1"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# FastAPI
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart>=0.0.20
+
+# HTTP
+requests==2.31.0
+
+# WebSocket client (import name: websocket)
+websocket-client==1.6.4
+
+# Images
+Pillow>=10.0.0
+
+# Video
+moviepy==1.0.3
+imageio-ffmpeg==0.4.9
+
+# TTS (Edge)
+edge-tts>=6.1.0

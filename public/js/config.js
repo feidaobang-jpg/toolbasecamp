@@ -23,6 +23,8 @@ const siteConfig = {
     hoppscotchPortalUrl: 'https://hoppscotch.zhengxiaohui.cn',
     translatePortalUrl: 'https://translate.zhengxiaohui.cn',
     newsPortalUrl: 'https://news.zhengxiaohui.cn',
+    /** 家里电脑 ComfyUI API（Cloudflare Tunnel） */
+    homePcApiBase: 'https://comfy.zhengxiaohui.cn',
     apiBase: (function () {
         const host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') {
@@ -356,6 +358,46 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.stock.picksTitle',
                     descriptionKey: 'privateHub.stock.picksDesc',
                     url: 'html/admin/private/stock-picks.html'
+                }
+            ]
+        },
+        {
+            titleKey: 'privateHub.groups.homePc',
+            items: [
+                {
+                    titleKey: 'privateHub.homePc.removeBgTitle',
+                    descriptionKey: 'privateHub.homePc.removeBgDesc',
+                    url: 'html/admin/private/home-pc/remove-background.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.txt2imgTitle',
+                    descriptionKey: 'privateHub.homePc.txt2imgDesc',
+                    url: 'html/admin/private/home-pc/text-to-image.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.img2imgTitle',
+                    descriptionKey: 'privateHub.homePc.img2imgDesc',
+                    url: 'html/admin/private/home-pc/image-to-image.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.describeCutoutTitle',
+                    descriptionKey: 'privateHub.homePc.describeCutoutDesc',
+                    url: 'html/admin/private/home-pc/describe-cutout.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.photoRestoreTitle',
+                    descriptionKey: 'privateHub.homePc.photoRestoreDesc',
+                    url: 'html/admin/private/home-pc/photo-restore.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.textToImagesTitle',
+                    descriptionKey: 'privateHub.homePc.textToImagesDesc',
+                    url: 'html/admin/private/home-pc/text-to-images.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.textToVideoTitle',
+                    descriptionKey: 'privateHub.homePc.textToVideoDesc',
+                    url: 'html/admin/private/home-pc/text-to-video.html'
                 }
             ]
         }

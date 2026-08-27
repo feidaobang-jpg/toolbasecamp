@@ -25,3 +25,10 @@ Server module: `server/ladder.py` (needs `requests`, `beautifulsoup4`).
 Server module: `server/stocks.py` (needs `requests`, `pandas` on the API host).
 
 Android 工具已全部公开，见首页「Android」分类。
+
+## 家里电脑（ComfyUI）
+
+- 文档：`../../docs/COMFY-HOME-PC.md`
+- 页面目录：`home-pc/`（后台分组「家里电脑」）
+- API：`siteConfig.homePcApiBase` → `https://comfy.zhengxiaohui.cn`
+- 服务端：仓库根目录 `comfyui-api-server/`（仅在家里 Windows 运行，不进 VPS API）

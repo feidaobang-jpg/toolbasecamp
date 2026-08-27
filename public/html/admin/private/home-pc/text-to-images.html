@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>文字配图 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc1" />
+  <script src="../../../../js/locales/en.js?v=homepc1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
+  <script src="../../../../js/i18n.js?v=homepc1"></script>
+  <script src="../../../../js/config.js?v=homepc1"></script>
+  <script src="../../../../js/common_ui.js?v=homepc1"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.homePc.textToImagesTitle">文字配图</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full max-w-5xl mx-auto">
+    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500" data-i18n="privateHub.homePc.loading">加载中…</div>
+    <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../../auth/login.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
+    </div>
+    <div id="app" class="home-pc-wrap hidden">
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.apiHint">连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。请先在本机启动 ComfyUI 与 comfyui-api-server。</p>
+      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+      <div class="tool-container">
+          <div class="input-section">
+            <div>
+              <label for="text-input">文字内容：</label>
+              <textarea id="text-input" placeholder="每句话将生成一张图。例如：春天来了，樱花盛开。孩子们在草地上奔跑。"></textarea>
+            </div>
+
+            <div id="deepseek-notice" role="alert" style="display:none; margin: 10px 0; padding: 10px 12px; border-radius: 8px; font-size: 14px; line-height: 1.5;"></div>
+
+            <div class="form-row">
+              <div class="input-control">
+                <label for="aspect-select">配图尺寸（用途）：</label>
+                <select id="aspect-select" class="text-input">
+                  <option value="xhs_34" selected>小红书竖图 3:4（1080×1440）</option>
+                  <option value="xhs_11">小红书方形 1:1（1080×1080）</option>
+                  <option value="wx_post">微信推文配图 1:1（1080×1080）</option>
+                  <option value="wx_emoji">微信表情包（512×512）</option>
+                </select>
+                <p class="small-hint">竖图适合小红书笔记；方形适合公众号头图；小图适合表情包素材（上传微信前可能还需裁切/抠图）。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="start-btn" class="primary-btn">开始生成配图</button>
+            <button id="cancel-button" class="secondary-btn" style="display:none;">取消任务</button>
+            <button type="button" id="btn-download-all" class="secondary-btn" style="display:none;">下载全部 PNG</button>
+            <button type="button" id="btn-copy-output" class="secondary-btn" style="display:none;">复制输出目录</button>
+            <button type="button" id="btn-open-output" class="secondary-btn" style="display:none;">打开输出文件夹</button>
+            <button id="clear-btn" class="primary-btn">清空</button>
+          </div>
+
+          <div id="progress-wrap" class="progress-wrap" style="display:none;">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; color: #666;">
+              <span id="progress-status">准备中…</span>
+              <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progress-bar" class="progress-bar"></div>
+            </div>
+          </div>
+
+          <div id="result-box" class="tti-gallery-wrap" style="display:none;">
+            <h3 style="margin-top: 16px;">生成结果 <span id="result-count" class="tti-count"></span></h3>
+            <div id="image-gallery" class="tti-gallery"></div>
+          </div>
+
+          <div id="log-container" style="height: 280px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-top: 16px;">
+            <h4 style="margin-top:0;">执行日志</h4>
+            <pre id="log-output" style="margin:0; white-space: pre-wrap;"></pre>
+          </div>
+        </div>
+    </div>
+  </main>
+  <script src="../../../../js/admin/private-page-guard.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/text-to-images.js?v=homepc1"></script>
+</body>
+</html>

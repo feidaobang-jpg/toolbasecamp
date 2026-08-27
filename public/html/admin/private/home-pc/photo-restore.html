@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>老照片修复 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc1" />
+  <script src="../../../../js/locales/en.js?v=homepc1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
+  <script src="../../../../js/i18n.js?v=homepc1"></script>
+  <script src="../../../../js/config.js?v=homepc1"></script>
+  <script src="../../../../js/common_ui.js?v=homepc1"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
+      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+      </a>
+      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.homePc.photoRestoreTitle">老照片修复</h1>
+      <div class="ml-auto flex items-center gap-3 text-sm">
+        <span id="auth-label" class="text-gray-500"></span>
+        <a id="login-link" href="../../../auth/login.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full max-w-5xl mx-auto">
+    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500" data-i18n="privateHub.homePc.loading">加载中…</div>
+    <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
+      <p id="gate-msg" class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../../auth/login.html" class="tb-btn inline-flex" data-i18n="auth.login">去登录</a>
+    </div>
+    <div id="app" class="home-pc-wrap hidden">
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.apiHint">连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。请先在本机启动 ComfyUI 与 comfyui-api-server。</p>
+      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+      <div class="tool-container">
+                    <!-- 拖放区域 -->
+                    <div class="drop-zone">
+                        <div class="drop-zone-text">
+                            <p>将老照片拖放到此处</p>
+                            <p>或者</p>
+                            <button id="browse-btn-inner" class="browse-btn">选择图片</button>
+                            <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <!-- 水印设置区域 -->
+                    <div class="watermark-section">
+                        <h3>水印设置</h3>
+                        <div class="watermark-controls">
+                            <div class="control-group">
+                                <input type="checkbox" id="enable-watermark" class="checkbox" checked>
+                                <label for="enable-watermark" class="checkbox-label">开启平铺水印</label>
+                            </div>
+                            <div class="control-group" id="watermark-text-group">
+                                <label for="watermark-text">水印文字：</label>
+                                <input type="text" id="watermark-text" class="watermark-input" value="样片确认" placeholder="输入水印文字">
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: #909399; margin-top: 10px;">注：开启水印后，将同时生成带水印（平铺全屏，30%透明度）和无水印的两个版本。</p>
+                    </div>
+                    
+                    <!-- 选择图片预览区域 -->
+                    <div class="selection-preview-section">
+                        <h3>选择的图片</h3>
+                        <div class="image-selection-preview" id="image-selection-preview">
+                            <!-- 选择的图片预览将在这里显示 -->
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="process-btn" class="primary-btn">开始处理</button>
+                        <button id="cancel-btn" class="cancel-btn" disabled>取消任务</button>
+                        <button id="save-all-btn" class="success-btn hidden">打包 ZIP 下载</button>
+                        <button id="clear-btn" class="secondary-btn">清空</button>
+                    </div>
+                    
+                    <!-- 进度条区域 -->
+                    <div id="progress-container" class="hidden" style="margin-top: 20px; width: 100%;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; color: #666;">
+                            <span id="progress-status">准备中...</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div style="width: 100%; background-color: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
+                            <div id="progress-bar" style="width: 0%; height: 100%; background-color: #2563eb; transition: width 0.3s ease;"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-section" id="result-container">
+                        <h3>修复结果</h3>
+                        <div class="image-preview-container" id="image-preview-container">
+                            <!-- 图片预览将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+    </div>
+  </main>
+  <script src="../../../../js/admin/private-page-guard.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc1"></script>
+  <script src="../../../../js/admin/home-pc/photo-restore.js?v=homepc1"></script>
+</body>
+</html>

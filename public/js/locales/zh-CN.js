@@ -38,7 +38,8 @@ window.TB_LOCALES['zh-CN'] = {
         emptyGroup: '暂无工具，迁入后显示在此',
         groups: {
             ops: '站点运维',
-            stock: '股票'
+            stock: '股票',
+            homePc: '家里电脑'
         },
         ops: {
             siteStatsTitle: '站点统计',
@@ -220,6 +221,24 @@ window.TB_LOCALES['zh-CN'] = {
         stock: {
             picksTitle: '选股策略',
             picksDesc: '月K启动（长线）与强势弹性（隔夜）'
+        },
+        homePc: {
+            loading: '加载中…',
+            apiHint: '连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。在 GPU 电脑启动 ComfyUI 与 comfyui-api-server；Tunnel 在 NAS 上时需指向该电脑局域网 IP。',
+            removeBgTitle: '去背景 / 批量处理',
+            removeBgDesc: '批量缩放、裁边、可选 ComfyUI 抠图',
+            txt2imgTitle: '文生图',
+            txt2imgDesc: 'Z-Image Turbo（家里 ComfyUI）',
+            img2imgTitle: '图生图',
+            img2imgDesc: '参考图 + 提示词重绘',
+            describeCutoutTitle: '描述抠图',
+            describeCutoutDesc: '按文字描述抠出目标物体',
+            photoRestoreTitle: '老照片修复',
+            photoRestoreDesc: '破损修复与上色（Qwen All-In-One）',
+            textToImagesTitle: '文字配图',
+            textToImagesDesc: '按句生图，适合小红书/公众号配图',
+            textToVideoTitle: '文字成片',
+            textToVideoDesc: '配音 + 配图 + 字幕合成视频'
         }
     },
     coolSites: {

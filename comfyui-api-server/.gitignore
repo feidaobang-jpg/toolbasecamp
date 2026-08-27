@@ -1,0 +1,4 @@
+# ComfyUI API Server — ignore local runtime artifacts
+output/
+__pycache__/
+*.pyc

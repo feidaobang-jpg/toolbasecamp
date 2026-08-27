@@ -42,5 +42,9 @@ node_modules/
 dist/
 build/
 
+# Home ComfyUI API runtime output (local GPU machine)
+comfyui-api-server/output/
+comfyui-api-server/__pycache__/
+
 # CodeGraph local index
 .codegraph/
