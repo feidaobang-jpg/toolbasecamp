@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // 添加旋转按钮
                     const rotateBtn = document.createElement('button');
-                    rotateBtn.className = 'image-rotate-btn';
+                    rotateBtn.className = 'tb-btn tb-btn-sm w-full';
                     rotateBtn.textContent = '↻ 旋转';
                     rotateBtn.onclick = function() {
                         const currentRotation = (imageRotations[i] || 0) + 90;
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
         bottomContainer.appendChild(infoDiv);
         
         const downloadBtn = document.createElement('button');
-        downloadBtn.className = 'image-download-btn';
+        downloadBtn.className = 'tb-btn tb-btn-sm w-full';
         downloadBtn.textContent = '下载';
         downloadBtn.addEventListener('click', () => {
             downloadImage(processedImage.dataUrl, processedImage.name);

@@ -9,7 +9,7 @@
   <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc3" />
   <script src="../../../../js/locales/en.js?v=homepc1"></script>
   <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
   <script src="../../../../js/i18n.js?v=homepc1"></script>
@@ -44,53 +44,27 @@
                         <div class="drop-zone-text">
                             <p>将图片拖放到此处</p>
                             <p>或者</p>
-                            <button id="browse-btn-inner" class="browse-btn">选择图片</button>
+                            <button id="browse-btn-inner" class="tb-btn tb-btn-sm">选择图片</button>
                             <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
                         </div>
                     </div>
                     
-                    <div class="input-section" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                        <select id="size-type-select" style="padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                    <div class="input-section home-pc-size-row">
+                        <select id="size-type-select" class="home-pc-select">
                             <option value="width">宽度：</option>
                             <option value="height">高度：</option>
                         </select>
-                        <input type="number" id="target-width-input" placeholder="请输入尺寸" value="240" style="width: 50px; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
-                        <div class="width-presets" style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button class="preset-btn" onclick="document.getElementById('target-width-input').value=32">32</button>
-                            <button class="preset-btn" onclick="document.getElementById('target-width-input').value=48">48</button>
-                            <button class="preset-btn" onclick="document.getElementById('target-width-input').value=64">64</button>
-                            <button class="preset-btn" onclick="document.getElementById('target-width-input').value=100">100</button>
-                            <button class="preset-btn" onclick="document.getElementById('target-width-input').value=240">240</button>
+                        <input type="number" id="target-width-input" class="home-pc-num-input" placeholder="请输入尺寸" value="240">
+                        <div class="width-presets action-row">
+                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=32">32</button>
+                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=48">48</button>
+                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=64">64</button>
+                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=100">100</button>
+                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=240">240</button>
                         </div>
-                        <style>
-                            /* 隐藏数字输入框的上下箭头 */
-                            #target-width-input::-webkit-outer-spin-button,
-                            #target-width-input::-webkit-inner-spin-button {
-                                -webkit-appearance: none;
-                                margin: 0;
-                            }
-                            #target-width-input[type=number] {
-                                -moz-appearance: textfield;
-                                appearance: textfield;
-                            }
-                            
-                            .preset-btn {
-                                padding: 4px 12px;
-                                background: #007bff;
-                                color: white;
-                                border: none;
-                                border-radius: 4px;
-                                cursor: pointer;
-                                font-size: 12px;
-                                transition: background-color 0.2s;
-                            }
-                            .preset-btn:hover {
-                                background: #0056b3;
-                            }
-                        </style>
                     </div>
                     
-                    <div class="input-section" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <div class="input-section home-pc-check-row">
                         <label>
                             <input type="checkbox" id="remove-bg-checkbox" checked> 移除背景
                         </label>
@@ -107,10 +81,10 @@
                         </div>
                     </div>
 
-                    <div class="action-buttons">
-                        <button id="process-btn" class="primary-btn">开始处理</button>
-                        <button id="save-all-btn" class="success-btn hidden">打包 ZIP 下载</button>
-                        <button id="clear-btn" class="secondary-btn">清空</button>
+                    <div class="action-row">
+                        <button id="process-btn" class="tb-btn">开始处理</button>
+                        <button id="save-all-btn" class="tb-btn hidden">打包 ZIP 下载</button>
+                        <button id="clear-btn" class="tb-btn">清空</button>
                     </div>
                     
                     <div class="result-section" id="result-container">
@@ -123,8 +97,8 @@
     </div>
   </main>
   <script src="../../../../js/admin/private-page-guard.js?v=homepc1"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc2"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc2"></script>
-  <script src="../../../../js/admin/home-pc/remove-background.js?v=homepc2"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc3"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc3"></script>
+  <script src="../../../../js/admin/home-pc/remove-background.js?v=homepc3"></script>
 </body>
 </html>

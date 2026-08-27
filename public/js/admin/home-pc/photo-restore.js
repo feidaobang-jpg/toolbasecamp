@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     previewItem.appendChild(img);
                     
                     const rotateBtn = document.createElement('button');
-                    rotateBtn.className = 'image-rotate-btn';
+                    rotateBtn.className = 'tb-btn tb-btn-sm w-full';
                     rotateBtn.textContent = '↻ 旋转';
                     rotateBtn.onclick = function() {
                         const currentRotation = (imageRotations[i] || 0) + 90;
@@ -729,7 +729,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 如果有水印版本，添加切换按钮
         if (resultItem.watermarkedDataUrl) {
             const toggleWatermarkBtn = document.createElement('button');
-            toggleWatermarkBtn.className = 'image-download-btn secondary'; // 使用黄色/橙色样式区分
+            toggleWatermarkBtn.className = 'tb-btn tb-btn-sm w-full';
             toggleWatermarkBtn.textContent = '加水印';
             toggleWatermarkBtn.style.marginBottom = '0'; // 覆盖默认样式
             
@@ -755,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 下载按钮 (下载当前显示的图片)
         const downloadBtn = document.createElement('button');
-        downloadBtn.className = 'image-download-btn';
+        downloadBtn.className = 'tb-btn tb-btn-sm w-full';
         downloadBtn.textContent = '下载图片';
         downloadBtn.addEventListener('click', () => {
             const fileNamePrefix = isWatermarkShown ? '样片-' : '修复版-';

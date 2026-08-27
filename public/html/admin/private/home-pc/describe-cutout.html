@@ -9,7 +9,7 @@
   <script src="../../../../vendor/tailwindcss.js?v=homepc1"></script>
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc1" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc3" />
   <script src="../../../../js/locales/en.js?v=homepc1"></script>
   <script src="../../../../js/locales/zh-CN.js?v=homepc1"></script>
   <script src="../../../../js/i18n.js?v=homepc1"></script>
@@ -44,7 +44,7 @@
                         <div class="drop-zone-text">
                             <p>将图片拖放到此处</p>
                             <p>或者</p>
-                            <button id="browse-btn-inner" class="browse-btn">选择图片</button>
+                            <button id="browse-btn-inner" class="tb-btn tb-btn-sm">选择图片</button>
                             <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
                         </div>
                     </div>
@@ -64,10 +64,10 @@
                         </div>
                     </div>
 
-                    <div class="action-buttons">
-                        <button id="process-btn" class="primary-btn">开始处理</button>
-                        <button id="save-all-btn" class="success-btn hidden">打包 ZIP 下载</button>
-                        <button id="clear-btn" class="secondary-btn">清空</button>
+                    <div class="action-row">
+                        <button id="process-btn" class="tb-btn">开始处理</button>
+                        <button id="save-all-btn" class="tb-btn hidden">打包 ZIP 下载</button>
+                        <button id="clear-btn" class="tb-btn">清空</button>
                     </div>
                     
                     <div class="result-section" id="result-container">
@@ -80,8 +80,8 @@
     </div>
   </main>
   <script src="../../../../js/admin/private-page-guard.js?v=homepc1"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc2"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc2"></script>
-  <script src="../../../../js/admin/home-pc/describe-cutout.js?v=homepc2"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc3"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc3"></script>
+  <script src="../../../../js/admin/home-pc/describe-cutout.js?v=homepc3"></script>
 </body>
 </html>

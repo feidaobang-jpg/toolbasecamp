@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
       actions.className = 'tti-card-actions';
 
       const dl = document.createElement('a');
-      dl.className = 'secondary-btn tti-dl-btn';
+      dl.className = 'tb-btn tb-btn-sm';
       dl.href = resolveUrl(item.url);
       dl.download = item.filename || `image-${i + 1}.png`;
       dl.textContent = '下载';
