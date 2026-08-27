@@ -111,6 +111,8 @@ async def health_check():
         "comfyui_error": comfy_err,
         "qwen_checkpoint_ready": bool(qwen_ckpt),
         "qwen_checkpoint": qwen_ckpt,
+        "qwen_img2img_quality": _QWEN_IMG2IMG_QUALITY,
+        "gpu_hint": "Qwen 高质量档约 1.5MP·8 步，16GB 显存可试；OOM 请用标准档（1MP·4 步）。",
     }
 
 
@@ -673,6 +675,7 @@ def build_qwen_image_edit_img2img_workflow(
     prompt_text: str,
     input_filename: str,
     seed: Optional[int] = None,
+    quality: str = "standard",
 ):
     """指令改图：基于已验证的老照片修复工作流，去掉对比/拼接节点，写入用户 prompt。"""
     photo_paths = [
@@ -713,6 +716,7 @@ def build_qwen_image_edit_img2img_workflow(
     if seed is not None and "2" in workflow and workflow["2"].get("class_type") == "KSampler":
         workflow["2"]["inputs"]["seed"] = int(seed)
 
+    workflow = _apply_qwen_img2img_quality(workflow, quality)
     return workflow
 
 
@@ -787,6 +791,29 @@ def _normalize_img2img_engine(raw: str) -> str:
     if v in ("z", "z_image", "z-image", "turbo", "z_image_turbo"):
         return "z_image"
     return "qwen"
+
+
+_QWEN_IMG2IMG_QUALITY = {
+    "standard": {"steps": 4, "megapixels": 1.0},
+    "high": {"steps": 8, "megapixels": 1.5},
+}
+
+
+def _normalize_img2img_quality(raw: str) -> str:
+    v = (raw or "standard").strip().lower()
+    if v in ("high", "hq", "quality", "1", "2", "better"):
+        return "high"
+    return "standard"
+
+
+def _apply_qwen_img2img_quality(workflow: dict, quality: str) -> dict:
+    q = _QWEN_IMG2IMG_QUALITY.get(_normalize_img2img_quality(quality), _QWEN_IMG2IMG_QUALITY["standard"])
+    if "2" in workflow and workflow["2"].get("class_type") == "KSampler":
+        workflow["2"]["inputs"]["steps"] = int(q["steps"])
+    for node in workflow.values():
+        if isinstance(node, dict) and node.get("class_type") == "ImageScaleToTotalPixels":
+            node.setdefault("inputs", {})["megapixels"] = float(q["megapixels"])
+    return workflow
 
 
 # 文生图 / 图生图：统一默认负面（用户可不填）；竖屏时追加抗「海报标题」类构图
@@ -1998,6 +2025,7 @@ async def _img2img_build_and_run(
     negative_prompt: str,
     denoise: float,
     run_seed: int,
+    quality: str = "standard",
 ):
     """图生图核心：已上传到 ComfyUI 的文件名 → 结果 PNG 字节与元数据。"""
     eng = _normalize_img2img_engine(engine)
@@ -2019,10 +2047,12 @@ async def _img2img_build_and_run(
                 "请从 Aki 复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，"
                 "或先在「老照片修复」页确认该模型可用。"
             )
-        wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed)
+        wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed, quality=quality)
         denoise_used = None
     img_bytes = await _run_comfyui_and_get_last_image(wf)
     out = {"image_bytes": img_bytes, "seed_used": run_seed, "engine": eng}
+    if eng == "qwen":
+        out["quality"] = _normalize_img2img_quality(quality)
     if denoise_used is not None:
         out["denoise"] = denoise_used
     return out
@@ -2053,9 +2083,12 @@ async def _run_img2img_task(task_id: str):
             task.get("negative_prompt") or "",
             float(task.get("denoise") or 0.4),
             run_seed,
+            task.get("quality") or "standard",
         )
         b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
         result = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
+        if core.get("quality"):
+            result["quality"] = core["quality"]
         if core.get("denoise") is not None:
             result["denoise"] = core["denoise"]
         task["result"] = result
@@ -2078,6 +2111,7 @@ async def img2img_start(
     denoise: float = Form(0.4),
     seed: str = Form(""),
     engine: str = Form("qwen"),
+    quality: str = Form("standard"),
 ):
     """图生图异步任务：快速返回 task_id，避免 Cloudflare 隧道长连接 524。"""
     p = (prompt or "").strip()
@@ -2097,6 +2131,7 @@ async def img2img_start(
             "negative_prompt": negative_prompt,
             "denoise": denoise,
             "engine": engine,
+            "quality": _normalize_img2img_quality(quality),
             "seed_opt": _parse_seed_optional(seed),
             "result": None,
             "error": None,
@@ -2135,6 +2170,7 @@ async def img2img_generate(
     denoise: float = Form(0.4),
     seed: str = Form(""),
     engine: str = Form("qwen"),
+    quality: str = Form("standard"),
 ):
     """图生图：默认 Qwen Image Edit 指令改图；可选 engine=z_image 走 Z-Image Turbo 重采样。"""
     p = (prompt or "").strip()
@@ -2148,9 +2184,11 @@ async def img2img_generate(
         fname, _sub = await upload_image(image)
         if not fname:
             raise HTTPException(status_code=500, detail="上传到 ComfyUI 失败")
-        core = await _img2img_build_and_run(fname, p, engine, negative_prompt, denoise, run_seed)
+        core = await _img2img_build_and_run(fname, p, engine, negative_prompt, denoise, run_seed, quality)
         b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
         out = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
+        if core.get("quality"):
+            out["quality"] = core["quality"]
         if core.get("denoise") is not None:
             out["denoise"] = core["denoise"]
         return out

@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const promptInput = document.getElementById('prompt-input');
   const presetWrap = document.getElementById('preset-wrap');
   const presetRow = document.getElementById('preset-row');
+  const bgWrap = document.getElementById('bg-wrap');
+  const bgPanel = document.getElementById('bg-panel');
+  const bgToggleBtn = document.getElementById('bg-toggle-btn');
+  const bgTimeRow = document.getElementById('bg-time-row');
+  const qualityWrap = document.getElementById('quality-wrap');
+  const qualitySelect = document.getElementById('quality-select');
+  const qualityHint = document.getElementById('quality-hint');
+  const zimageHint = document.getElementById('zimage-hint');
   const engineSelect = document.getElementById('engine-select');
   const denoiseWrap = document.getElementById('denoise-wrap');
   const denoiseInput = document.getElementById('denoise-input');
@@ -30,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let pollingTimer = null;
   let activePreset = '';
   let presetFillLock = false;
+  let bgTime = 'day';
+  let bgExpanded = false;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -119,6 +129,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const z = engineSelect && engineSelect.value === 'z_image';
     if (denoiseWrap) denoiseWrap.hidden = !z;
     if (presetWrap) presetWrap.hidden = !!z;
+    if (bgWrap) bgWrap.hidden = !!z;
+    if (qualityWrap) qualityWrap.hidden = !!z;
+    if (qualityHint) qualityHint.hidden = !!z;
+    if (zimageHint) zimageHint.hidden = !z;
   }
 
   function setPreset(id) {
@@ -138,6 +152,31 @@ document.addEventListener('DOMContentLoaded', function () {
     presetFillLock = false;
   }
 
+  function setBgTime(time) {
+    bgTime = time || 'day';
+    if (!bgTimeRow) return;
+    bgTimeRow.querySelectorAll('[data-bg-time]').forEach(function (chip) {
+      const t = chip.getAttribute('data-bg-time') || 'day';
+      chip.classList.toggle('is-active', t === bgTime);
+    });
+  }
+
+  function setBgPanelExpanded(on) {
+    bgExpanded = !!on;
+    if (bgPanel) bgPanel.hidden = !bgExpanded;
+    if (bgToggleBtn) {
+      bgToggleBtn.textContent = tr(
+        bgExpanded ? 'tools.instructEdit.bgCollapse' : 'tools.instructEdit.bgExpand',
+        bgExpanded ? '收起' : '展开'
+      );
+    }
+  }
+
+  function applyBackgroundPreset(place) {
+    if (!promptInput || !place || !window.InstructEditBgPresets) return;
+    promptInput.value = window.InstructEditBgPresets.apply(promptInput.value, place, bgTime);
+  }
+
   if (presetRow) {
     presetRow.addEventListener('click', function (e) {
       const btn = e.target.closest('[data-preset]');
@@ -154,9 +193,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  if (bgToggleBtn) {
+    bgToggleBtn.addEventListener('click', function () {
+      setBgPanelExpanded(!bgExpanded);
+    });
+  }
+
+  if (bgTimeRow) {
+    bgTimeRow.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-bg-time]');
+      if (!btn || !bgTimeRow.contains(btn)) return;
+      setBgTime(btn.getAttribute('data-bg-time') || 'day');
+    });
+  }
+
+  document.querySelectorAll('button[data-bg-place]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      applyBackgroundPreset(btn.getAttribute('data-bg-place') || btn.textContent || '');
+    });
+  });
+
   if (engineSelect) {
     engineSelect.addEventListener('change', syncEngineUi);
     syncEngineUi();
+  }
+
+  setBgPanelExpanded(false);
+  setBgTime('day');
+
+  function qualityLabel(q) {
+    if (q === 'high') return tr('privateHub.homePc.img2imgQualityHigh', '高质量');
+    return tr('privateHub.homePc.img2imgQualityStandard', '标准');
   }
 
   function showResult(data) {
@@ -166,9 +233,10 @@ document.addEventListener('DOMContentLoaded', function () {
     resultImg.src = lastDataUrl;
     resultImg.alt = tr('privateHub.homePc.img2imgResultTitle', '生成结果');
     const engLabel = data.engine === 'z_image'
-      ? tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image Turbo 重绘')
+      ? tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image 整图重绘')
       : tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
     let meta = `${tr('privateHub.homePc.img2imgEngineLabel', '引擎')}：${engLabel}；种子：${data.seed_used != null ? data.seed_used : '—'}`;
+    if (data.quality) meta += `；${tr('privateHub.homePc.img2imgQualityLabel', '质量')}：${qualityLabel(data.quality)}`;
     if (data.denoise != null) meta += `；Denoise：${data.denoise}`;
     metaLine.textContent = meta;
     resultBox.style.display = 'block';
@@ -243,6 +311,8 @@ document.addEventListener('DOMContentLoaded', function () {
       denoise = Math.max(0.05, Math.min(1, denoise));
       denoiseInput.value = String(denoise);
       fd.append('denoise', String(denoise));
+    } else if (qualitySelect) {
+      fd.append('quality', qualitySelect.value || 'standard');
     }
     fd.append('seed', (seedInput.value || '').trim());
 
@@ -279,6 +349,9 @@ document.addEventListener('DOMContentLoaded', function () {
     renderPreview();
     promptInput.value = '';
     setPreset('');
+    setBgTime('day');
+    setBgPanelExpanded(false);
+    if (qualitySelect) qualitySelect.value = 'high';
     denoiseInput.value = '0.4';
     seedInput.value = '';
     resultImg.removeAttribute('src');
