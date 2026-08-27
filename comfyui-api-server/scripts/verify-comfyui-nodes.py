@@ -63,6 +63,7 @@ def main() -> int:
         "rembg.json",
         "z_image_turbo.json",
         "z_image_turbo_img2img.json",
+        "qwen_image_edit_img2img.json",
         "qwen_describe_cutout.json",
     ]
     for fn in api_files:

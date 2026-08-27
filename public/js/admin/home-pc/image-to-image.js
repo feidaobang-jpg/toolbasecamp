@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const fileInput = document.getElementById('file-input');
   const previewWrap = document.getElementById('preview-wrap');
   const promptInput = document.getElementById('prompt-input');
+  const engineSelect = document.getElementById('engine-select');
+  const denoiseWrap = document.getElementById('denoise-wrap');
   const denoiseInput = document.getElementById('denoise-input');
   const seedInput = document.getElementById('seed-input');
   const progressWrap = document.getElementById('progress-wrap');
@@ -61,14 +63,14 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     const card = document.createElement('div');
-    card.className = 'home-pc-source-card';
+    card.className = 'instruct-source-card';
     const img = document.createElement('img');
     previewUrl = URL.createObjectURL(selectedFile);
     img.src = previewUrl;
     img.alt = selectedFile.name || tr('privateHub.homePc.img2imgRefLabel', '参考图');
     const rm = document.createElement('button');
     rm.type = 'button';
-    rm.className = 'home-pc-source-remove';
+    rm.className = 'instruct-source-remove';
     rm.setAttribute('aria-label', tr('privateHub.homePc.img2imgRemoveImage', '移除'));
     rm.textContent = '×';
     rm.addEventListener('click', function (e) {
@@ -99,6 +101,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function syncEngineUi() {
+    const z = engineSelect && engineSelect.value === 'z_image';
+    if (denoiseWrap) denoiseWrap.hidden = !z;
+  }
+
+  if (engineSelect) {
+    engineSelect.addEventListener('change', syncEngineUi);
+    syncEngineUi();
+  }
+
   async function generate() {
     const prompt = (promptInput.value || '').trim();
     if (!prompt) {
@@ -114,11 +126,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const fd = new FormData();
     fd.append('image', selectedFile);
     fd.append('prompt', prompt);
-    let denoise = parseFloat(denoiseInput.value);
-    if (!Number.isFinite(denoise)) denoise = 0.4;
-    denoise = Math.max(0.05, Math.min(1, denoise));
-    denoiseInput.value = String(denoise);
-    fd.append('denoise', String(denoise));
+    const engine = engineSelect ? engineSelect.value : 'qwen';
+    fd.append('engine', engine);
+    if (engine === 'z_image') {
+      let denoise = parseFloat(denoiseInput.value);
+      if (!Number.isFinite(denoise)) denoise = 0.4;
+      denoise = Math.max(0.05, Math.min(1, denoise));
+      denoiseInput.value = String(denoise);
+      fd.append('denoise', String(denoise));
+    }
     fd.append('seed', (seedInput.value || '').trim());
 
     setBusy(true, tr('privateHub.homePc.img2imgGenerating', '上传并提交 ComfyUI…'));
@@ -139,7 +155,12 @@ document.addEventListener('DOMContentLoaded', function () {
       lastDataUrl = `data:image/png;base64,${b64}`;
       resultImg.src = lastDataUrl;
       resultImg.alt = tr('privateHub.homePc.img2imgResultTitle', '生成结果');
-      metaLine.textContent = `种子：${data.seed_used != null ? data.seed_used : '—'}；Denoise：${data.denoise != null ? data.denoise : denoise}`;
+      const engLabel = data.engine === 'z_image'
+        ? tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image Turbo 重绘')
+        : tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
+      let meta = `${tr('privateHub.homePc.img2imgEngineLabel', '引擎')}：${engLabel}；种子：${data.seed_used != null ? data.seed_used : '—'}`;
+      if (data.denoise != null) meta += `；Denoise：${data.denoise}`;
+      metaLine.textContent = meta;
       resultBox.style.display = 'block';
       downloadBtn.style.display = 'inline-block';
       log(`完成 ${new Date().toLocaleString()}`);

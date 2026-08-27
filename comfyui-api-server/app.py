@@ -643,6 +643,42 @@ def _build_z_image_img2img_workflow(
     return workflow
 
 
+def build_qwen_image_edit_img2img_workflow(
+    prompt_text: str,
+    input_filename: str,
+    seed: Optional[int] = None,
+):
+    """指令改图：Qwen-Rapid-AIO + TextEncodeQwenImageEdit。"""
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "qwen_image_edit_img2img.json")
+    if not os.path.exists(workflow_path):
+        raise FileNotFoundError(f"Workflow file not found: {workflow_path}")
+
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    if "7" in workflow and workflow["7"].get("class_type") == "LoadImage":
+        workflow["7"]["inputs"]["image"] = input_filename
+    else:
+        raise ValueError("LoadImage node missing in qwen img2img workflow")
+
+    if "81" in workflow and workflow["81"].get("class_type") == "TextEncodeQwenImageEdit":
+        workflow["81"]["inputs"]["prompt"] = (prompt_text or "").strip()
+    else:
+        raise ValueError("TextEncodeQwenImageEdit node missing in qwen img2img workflow")
+
+    if seed is not None and "2" in workflow and workflow["2"].get("class_type") == "KSampler":
+        workflow["2"]["inputs"]["seed"] = int(seed)
+
+    return workflow
+
+
+def _normalize_img2img_engine(raw: str) -> str:
+    v = (raw or "qwen").strip().lower()
+    if v in ("z", "z_image", "z-image", "turbo", "z_image_turbo"):
+        return "z_image"
+    return "qwen"
+
+
 # 文生图 / 图生图：统一默认负面（用户可不填）；竖屏时追加抗「海报标题」类构图
 _DEFAULT_TXT2IMG_NEGATIVE_CORE = (
     "blurry ugly bad worst low quality jpeg artifacts noise distorted glitch broken messy "
@@ -1851,28 +1887,38 @@ async def img2img_generate(
     negative_prompt: str = Form(""),
     denoise: float = Form(0.4),
     seed: str = Form(""),
+    engine: str = Form("qwen"),
 ):
-    """图生图：参考图上传至 ComfyUI 后 VAE Encode + KSampler（工作流 z_image_turbo_img2img.json）。"""
+    """图生图：默认 Qwen Image Edit 指令改图；可选 engine=z_image 走 Z-Image Turbo 重采样。"""
     p = (prompt or "").strip()
     if not p:
         raise HTTPException(status_code=400, detail="prompt 不能为空")
     if not image:
         raise HTTPException(status_code=400, detail="请上传图片")
-    neg_core = _default_txt2img_negative(negative_prompt, width=None, height=None)
-    neg = f"{neg_core}, {_IMG2IMG_NEG_PRESERVE_EXTRA}"
+    eng = _normalize_img2img_engine(engine)
     seed_opt = _parse_seed_optional(seed)
     run_seed = seed_opt if seed_opt is not None else random.randint(0, (1 << 31) - 1)
     try:
         fname, _sub = await upload_image(image)
         if not fname:
             raise HTTPException(status_code=500, detail="上传到 ComfyUI 失败")
-        d = float(denoise)
-        d = max(0.05, min(1.0, d))
-        p_use = _enhance_img2img_positive(p)
-        wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
+        if eng == "z_image":
+            neg_core = _default_txt2img_negative(negative_prompt, width=None, height=None)
+            neg = f"{neg_core}, {_IMG2IMG_NEG_PRESERVE_EXTRA}"
+            d = float(denoise)
+            d = max(0.05, min(1.0, d))
+            p_use = _enhance_img2img_positive(p)
+            wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
+            denoise_used = d
+        else:
+            wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed)
+            denoise_used = None
         img_bytes = await _run_comfyui_and_get_last_image(wf)
         b64 = base64.b64encode(img_bytes).decode("ascii")
-        return {"success": True, "image_base64": b64, "seed_used": run_seed, "denoise": d}
+        out = {"success": True, "image_base64": b64, "seed_used": run_seed, "engine": eng}
+        if denoise_used is not None:
+            out["denoise"] = denoise_used
+        return out
     except HTTPException:
         raise
     except FileNotFoundError as e:

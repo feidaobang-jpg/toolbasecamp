@@ -1129,6 +1129,27 @@ button:not(.tb-btn) {
   max-width: 280px;
 }
 
+.home-pc-wrap .home-pc-source-grid .instruct-source-card {
+  width: 100%;
+  max-width: 280px;
+}
+
+.home-pc-wrap .home-pc-source-grid .instruct-source-card img {
+  object-fit: contain;
+  background: #f8fafc;
+}
+
+.home-pc-wrap button.instruct-source-remove {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .home-pc-wrap .home-pc-source-card {
   position: relative;
   width: 100%;

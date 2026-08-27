@@ -1,0 +1,100 @@
+{
+  "1": {
+    "inputs": {
+      "ckpt_name": "AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": { "title": "Checkpoint" }
+  },
+  "2": {
+    "inputs": {
+      "seed": 0,
+      "steps": 4,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "beta",
+      "denoise": 1,
+      "model": ["78", 0],
+      "positive": ["81", 0],
+      "negative": ["27", 0],
+      "latent_image": ["83", 0]
+    },
+    "class_type": "KSampler",
+    "_meta": { "title": "KSampler" }
+  },
+  "5": {
+    "inputs": {
+      "samples": ["2", 0],
+      "vae": ["1", 2]
+    },
+    "class_type": "VAEDecode",
+    "_meta": { "title": "VAE Decode" }
+  },
+  "7": {
+    "inputs": { "image": "placeholder.png" },
+    "class_type": "LoadImage",
+    "_meta": { "title": "Load Image" }
+  },
+  "27": {
+    "inputs": { "conditioning": ["81", 0] },
+    "class_type": "ConditioningZeroOut",
+    "_meta": { "title": "Conditioning Zero Out" }
+  },
+  "76": {
+    "inputs": {
+      "filename_prefix": "img2img_qwen",
+      "images": ["5", 0]
+    },
+    "class_type": "SaveImage",
+    "_meta": { "title": "Save Image" }
+  },
+  "77": {
+    "inputs": {
+      "shift": 3.1,
+      "model": ["1", 0]
+    },
+    "class_type": "ModelSamplingAuraFlow",
+    "_meta": { "title": "ModelSamplingAuraFlow" }
+  },
+  "78": {
+    "inputs": {
+      "strength": 1,
+      "model": ["77", 0]
+    },
+    "class_type": "CFGNorm",
+    "_meta": { "title": "CFGNorm" }
+  },
+  "81": {
+    "inputs": {
+      "prompt": "",
+      "clip": ["1", 1],
+      "vae": ["1", 2],
+      "image": ["7", 0]
+    },
+    "class_type": "TextEncodeQwenImageEdit",
+    "_meta": { "title": "TextEncodeQwenImageEdit" }
+  },
+  "82": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "megapixels": 1,
+      "image": ["7", 0]
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": { "title": "Scale To Megapixels" }
+  },
+  "83": {
+    "inputs": {
+      "width": ["84", 0],
+      "height": ["84", 1],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": { "title": "Empty Latent" }
+  },
+  "84": {
+    "inputs": { "image": ["82", 0] },
+    "class_type": "GetImageSize",
+    "_meta": { "title": "Get Image Size" }
+  }
+}
