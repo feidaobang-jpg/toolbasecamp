@@ -63,15 +63,17 @@ app = FastAPI(title="ComfyUI Image Processor API")
 app.mount("/output", StaticFiles(directory=str(_OUTPUT_ROOT)), name="output")
 app.mount("/api/output", StaticFiles(directory=str(_OUTPUT_ROOT)), name="api_output")
 
-# 配置 CORS
+# 配置 CORS（勿与 allow_credentials=True 同时使用 "*"）
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://web.xiaohui.work",
-        "*"  # 允许所有来源，以便 DDNS 域名访问。生产环境请限制为具体域名
+        "https://www.zhengxiaohui.cn",
+        "https://zhengxiaohui.cn",
+        "https://comfy.zhengxiaohui.cn",
     ],
-    allow_origin_regex=r"https?://((localhost|127\.0\.0\.1)(:\d+)?|.*\.tcloudbaseapp\.com|.*)",
-    allow_credentials=True,
+    allow_origin_regex=r"https?://((localhost|127\.0\.0\.1)(:\d+)?|([a-z0-9-]+\.)?zhengxiaohui\.cn|.*\.tcloudbaseapp\.com)",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -114,6 +116,7 @@ async def health_check():
 
 _TEXT_TO_VIDEO_TASKS = {}
 _PHOTO_RESTORE_TASKS = {}
+_IMG2IMG_TASKS = {}
 
 # 文字配图：各平台常用尺寸（宽, 高）
 _TEXT_TO_IMAGES_ASPECT_PRESETS = {
@@ -1988,6 +1991,141 @@ async def txt2img_generate(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+async def _img2img_build_and_run(
+    fname: str,
+    prompt: str,
+    engine: str,
+    negative_prompt: str,
+    denoise: float,
+    run_seed: int,
+):
+    """图生图核心：已上传到 ComfyUI 的文件名 → 结果 PNG 字节与元数据。"""
+    eng = _normalize_img2img_engine(engine)
+    p = (prompt or "").strip()
+    if eng == "z_image":
+        neg_core = _default_txt2img_negative(negative_prompt, width=None, height=None)
+        neg = f"{neg_core}, {_IMG2IMG_NEG_PRESERVE_EXTRA}"
+        d = float(denoise)
+        d = max(0.05, min(1.0, d))
+        p_use = _enhance_img2img_positive(p)
+        wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
+        denoise_used = d
+    else:
+        names = await asyncio.to_thread(_fetch_checkpoint_names)
+        resolved = _resolve_qwen_checkpoint("AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors")
+        if names and resolved not in names:
+            raise RuntimeError(
+                "未找到 Qwen-Rapid-AIO checkpoint（models/checkpoints/）。"
+                "请从 Aki 复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，"
+                "或先在「老照片修复」页确认该模型可用。"
+            )
+        wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed)
+        denoise_used = None
+    img_bytes = await _run_comfyui_and_get_last_image(wf)
+    out = {"image_bytes": img_bytes, "seed_used": run_seed, "engine": eng}
+    if denoise_used is not None:
+        out["denoise"] = denoise_used
+    return out
+
+
+async def _run_img2img_task(task_id: str):
+    task = _IMG2IMG_TASKS.get(task_id)
+    if not task:
+        return
+    task["status"] = "running"
+    task["updated_at"] = time.time()
+    try:
+        file_bytes = task.get("file_bytes")
+        if not file_bytes:
+            raise RuntimeError("缺少任务图片数据")
+        p = (task.get("prompt") or "").strip()
+        if not p:
+            raise RuntimeError("prompt 不能为空")
+        seed_opt = task.get("seed_opt")
+        run_seed = seed_opt if seed_opt is not None else random.randint(0, (1 << 31) - 1)
+        fname, _sub = await upload_image_bytes(file_bytes)
+        if not fname:
+            raise RuntimeError("上传到 ComfyUI 失败")
+        core = await _img2img_build_and_run(
+            fname,
+            p,
+            task.get("engine", "qwen"),
+            task.get("negative_prompt") or "",
+            float(task.get("denoise") or 0.4),
+            run_seed,
+        )
+        b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
+        result = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
+        if core.get("denoise") is not None:
+            result["denoise"] = core["denoise"]
+        task["result"] = result
+        task["status"] = "done"
+        task["updated_at"] = time.time()
+    except Exception as e:
+        task["status"] = "error"
+        task["error"] = str(e)
+        task["updated_at"] = time.time()
+    finally:
+        task.pop("file_bytes", None)
+
+
+@app.post("/img2img/start")
+@app.post("/api/img2img/start")
+async def img2img_start(
+    image: UploadFile = File(...),
+    prompt: str = Form(...),
+    negative_prompt: str = Form(""),
+    denoise: float = Form(0.4),
+    seed: str = Form(""),
+    engine: str = Form("qwen"),
+):
+    """图生图异步任务：快速返回 task_id，避免 Cloudflare 隧道长连接 524。"""
+    p = (prompt or "").strip()
+    if not p:
+        raise HTTPException(status_code=400, detail="prompt 不能为空")
+    if not image:
+        raise HTTPException(status_code=400, detail="请上传图片")
+    try:
+        file_bytes = await image.read()
+        task_id = str(uuid.uuid4())
+        _IMG2IMG_TASKS[task_id] = {
+            "status": "queued",
+            "created_at": time.time(),
+            "updated_at": time.time(),
+            "file_bytes": file_bytes,
+            "prompt": p,
+            "negative_prompt": negative_prompt,
+            "denoise": denoise,
+            "engine": engine,
+            "seed_opt": _parse_seed_optional(seed),
+            "result": None,
+            "error": None,
+        }
+        asyncio.create_task(_run_img2img_task(task_id))
+        return {"success": True, "task_id": task_id}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/img2img/status/{task_id}")
+@app.get("/api/img2img/status/{task_id}")
+async def img2img_status(task_id: str):
+    """查询图生图异步任务状态。"""
+    task = _IMG2IMG_TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {
+        "success": True,
+        "task_id": task_id,
+        "status": task.get("status"),
+        "result": task.get("result"),
+        "error": task.get("error"),
+        "updated_at": task.get("updated_at"),
+    }
+
+
 @app.post("/img2img")
 @app.post("/api/img2img")
 async def img2img_generate(
@@ -2004,43 +2142,24 @@ async def img2img_generate(
         raise HTTPException(status_code=400, detail="prompt 不能为空")
     if not image:
         raise HTTPException(status_code=400, detail="请上传图片")
-    eng = _normalize_img2img_engine(engine)
     seed_opt = _parse_seed_optional(seed)
     run_seed = seed_opt if seed_opt is not None else random.randint(0, (1 << 31) - 1)
     try:
         fname, _sub = await upload_image(image)
         if not fname:
             raise HTTPException(status_code=500, detail="上传到 ComfyUI 失败")
-        if eng == "z_image":
-            neg_core = _default_txt2img_negative(negative_prompt, width=None, height=None)
-            neg = f"{neg_core}, {_IMG2IMG_NEG_PRESERVE_EXTRA}"
-            d = float(denoise)
-            d = max(0.05, min(1.0, d))
-            p_use = _enhance_img2img_positive(p)
-            wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
-            denoise_used = d
-        else:
-            names = await asyncio.to_thread(_fetch_checkpoint_names)
-            resolved = _resolve_qwen_checkpoint("AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors")
-            if names and resolved not in names:
-                raise HTTPException(
-                    status_code=503,
-                    detail=(
-                        "未找到 Qwen-Rapid-AIO checkpoint（models/checkpoints/）。"
-                        "请从 Aki 复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，"
-                        "或先在「老照片修复」页确认该模型可用。"
-                    ),
-                )
-            wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed)
-            denoise_used = None
-        img_bytes = await _run_comfyui_and_get_last_image(wf)
-        b64 = base64.b64encode(img_bytes).decode("ascii")
-        out = {"success": True, "image_base64": b64, "seed_used": run_seed, "engine": eng}
-        if denoise_used is not None:
-            out["denoise"] = denoise_used
+        core = await _img2img_build_and_run(fname, p, engine, negative_prompt, denoise, run_seed)
+        b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
+        out = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
+        if core.get("denoise") is not None:
+            out["denoise"] = core["denoise"]
         return out
     except HTTPException:
         raise
+    except RuntimeError as e:
+        msg = str(e)
+        code = 503 if "未找到 Qwen" in msg else 500
+        raise HTTPException(status_code=code, detail=msg)
     except FileNotFoundError as e:
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:

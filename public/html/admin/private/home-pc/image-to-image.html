@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc8" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=homepc8" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc9" />
-  <script src="../../../../js/locales/en.js?v=homepc8"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc8"></script>
+  <script src="../../../../js/locales/en.js?v=homepc11"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc11"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
   <script src="../../../../js/config.js?v=homepc1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -50,6 +50,24 @@
             </div>
             <input type="file" id="file-input" accept="image/*" hidden />
             <div class="home-pc-source-grid" id="preview-wrap" hidden></div>
+            <div class="field-row" id="preset-wrap">
+              <span class="home-pc-field-label" data-i18n="tools.instructEdit.presetLabel">风格预设</span>
+              <div class="instruct-preset-row" id="preset-row">
+                <button type="button" class="rec-chip is-active" data-preset="" data-i18n="tools.instructEdit.presetCustom">自定义</button>
+                <button type="button" class="rec-chip" data-preset="manga_to_real" data-i18n="tools.instructEdit.presetMangaToReal">漫画 → 真人</button>
+                <button type="button" class="rec-chip" data-preset="real_to_manga" data-i18n="tools.instructEdit.presetRealToManga">真人 → 漫画</button>
+                <button type="button" class="rec-chip" data-preset="restore_old_photo" data-i18n="tools.instructEdit.presetRestoreOldPhoto">老照片修复</button>
+                <button type="button" class="rec-chip" data-preset="id_photo_white" data-i18n="tools.instructEdit.presetIdPhotoWhite">证件照白底</button>
+                <button type="button" class="rec-chip" data-preset="remove_watermark" data-i18n="tools.instructEdit.presetRemoveWatermark">去水印/杂物</button>
+                <button type="button" class="rec-chip" data-preset="beauty_light" data-i18n="tools.instructEdit.presetBeautyLight">人像轻美颜</button>
+                <button type="button" class="rec-chip" data-preset="slim_body" data-i18n="tools.instructEdit.presetSlimBody">瘦身</button>
+                <button type="button" class="rec-chip" data-preset="colorize_bw" data-i18n="tools.instructEdit.presetColorizeBw">黑白上色</button>
+                <button type="button" class="rec-chip" data-preset="product_white_bg" data-i18n="tools.instructEdit.presetProductWhiteBg">商品白底图</button>
+                <button type="button" class="rec-chip" data-preset="lineart_colorize" data-i18n="tools.instructEdit.presetLineartColorize">线稿上色</button>
+                <button type="button" class="rec-chip" data-preset="expand_edges" data-i18n="tools.instructEdit.presetExpandEdges">扩图补全</button>
+              </div>
+              <p class="small-hint" data-i18n="privateHub.homePc.img2imgPresetHint">风格预设仅适用于 Qwen 指令改图，与主站同一套提示词；本地 Rapid 版部分效果可能略弱于云端。</p>
+            </div>
             <div>
               <label for="prompt-input" data-i18n="privateHub.homePc.img2imgPromptLabel">正向提示词：</label>
               <textarea id="prompt-input" data-i18n-placeholder="privateHub.homePc.img2imgPromptPlaceholder" placeholder="例：只把西瓜换成菠萝，人物、背景、其余物体保持不变"></textarea>
@@ -77,7 +95,7 @@
 
           <div class="action-row home-pc-tool-actions">
             <button id="gen-btn" class="tb-btn">生成</button>
-            <button type="button" id="download-btn" class="tb-btn" style="display:none;">下载 PNG</button>
+            <button type="button" id="download-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.download">下载</button>
             <button id="clear-btn" class="tb-btn">清空</button>
           </div>
 
@@ -110,6 +128,7 @@
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc8"></script>
   <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc8"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc8"></script>
+  <script src="../../../../js/shared/instruct-edit-presets.js?v=homepc11"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc11"></script>
 </body>
 </html>

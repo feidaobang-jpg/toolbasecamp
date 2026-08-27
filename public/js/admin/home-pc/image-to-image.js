@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const fileInput = document.getElementById('file-input');
   const previewWrap = document.getElementById('preview-wrap');
   const promptInput = document.getElementById('prompt-input');
+  const presetWrap = document.getElementById('preset-wrap');
+  const presetRow = document.getElementById('preset-row');
   const engineSelect = document.getElementById('engine-select');
   const denoiseWrap = document.getElementById('denoise-wrap');
   const denoiseInput = document.getElementById('denoise-input');
@@ -24,6 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
   let lastDataUrl = '';
   let selectedFile = null;
   let previewUrl = '';
+  let currentTaskId = null;
+  let pollingTimer = null;
+  let activePreset = '';
+  let presetFillLock = false;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -44,6 +50,14 @@ document.addEventListener('DOMContentLoaded', function () {
     progressPercent.textContent = busy ? '…' : '';
     progressBar.style.width = busy ? '40%' : '0%';
     genBtn.disabled = busy;
+  }
+
+  function stopPolling() {
+    if (pollingTimer) {
+      clearInterval(pollingTimer);
+      pollingTimer = null;
+    }
+    currentTaskId = null;
   }
 
   function revokePreview() {
@@ -104,6 +118,40 @@ document.addEventListener('DOMContentLoaded', function () {
   function syncEngineUi() {
     const z = engineSelect && engineSelect.value === 'z_image';
     if (denoiseWrap) denoiseWrap.hidden = !z;
+    if (presetWrap) presetWrap.hidden = !!z;
+  }
+
+  function setPreset(id) {
+    activePreset = id || '';
+    if (!presetRow) return;
+    presetRow.querySelectorAll('.rec-chip').forEach(function (chip) {
+      const p = chip.getAttribute('data-preset') || '';
+      chip.classList.toggle('is-active', p === activePreset);
+    });
+    if (!window.InstructEditPresets) return;
+    presetFillLock = true;
+    if (activePreset) {
+      promptInput.value = window.InstructEditPresets.applyColorHint(
+        window.InstructEditPresets.prompt(activePreset)
+      );
+    }
+    presetFillLock = false;
+  }
+
+  if (presetRow) {
+    presetRow.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-preset]');
+      if (!btn || !presetRow.contains(btn)) return;
+      setPreset(btn.getAttribute('data-preset') || '');
+    });
+  }
+
+  if (promptInput) {
+    promptInput.addEventListener('input', function () {
+      if (presetFillLock || !activePreset || !window.InstructEditPresets) return;
+      var base = window.InstructEditPresets.prompt(activePreset);
+      if ((promptInput.value || '').indexOf(base) === -1) setPreset('');
+    });
   }
 
   if (engineSelect) {
@@ -111,8 +159,70 @@ document.addEventListener('DOMContentLoaded', function () {
     syncEngineUi();
   }
 
+  function showResult(data) {
+    const b64 = data.image_base64;
+    if (!b64) throw new Error('未返回图片数据');
+    lastDataUrl = `data:image/png;base64,${b64}`;
+    resultImg.src = lastDataUrl;
+    resultImg.alt = tr('privateHub.homePc.img2imgResultTitle', '生成结果');
+    const engLabel = data.engine === 'z_image'
+      ? tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image Turbo 重绘')
+      : tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
+    let meta = `${tr('privateHub.homePc.img2imgEngineLabel', '引擎')}：${engLabel}；种子：${data.seed_used != null ? data.seed_used : '—'}`;
+    if (data.denoise != null) meta += `；Denoise：${data.denoise}`;
+    metaLine.textContent = meta;
+    resultBox.style.display = 'block';
+    downloadBtn.style.display = 'inline-block';
+    log(`完成 ${new Date().toLocaleString()}`);
+  }
+
+  function parseApiError(data, status) {
+    let msg = data.detail || data.error || `HTTP ${status}`;
+    if (Array.isArray(msg)) msg = msg.map(function (x) { return x.msg || String(x); }).join(' ');
+    return typeof msg === 'string' ? msg : JSON.stringify(msg);
+  }
+
+  async function pollStatus() {
+    if (!currentTaskId) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/img2img/status/${encodeURIComponent(currentTaskId)}`);
+      const data = await res.json().catch(function () { return {}; });
+      if (!res.ok) {
+        throw new Error(parseApiError(data, res.status));
+      }
+      const st = data.status;
+      if (st === 'queued') {
+        setBusy(true, tr('privateHub.homePc.img2imgQueued', '排队中…'));
+        return;
+      }
+      if (st === 'running') {
+        setBusy(true, tr('privateHub.homePc.img2imgRunning', 'ComfyUI 生成中…'));
+        return;
+      }
+      stopPolling();
+      if (st === 'error') {
+        throw new Error(data.error || tr('privateHub.homePc.img2imgFailed', '生成失败'));
+      }
+      if (st === 'done' && data.result) {
+        showResult(data.result);
+      } else {
+        throw new Error(tr('privateHub.homePc.img2imgFailed', '生成失败'));
+      }
+    } catch (e) {
+      stopPolling();
+      log(`错误：${String(e.message || e)}`);
+      alert(String(e.message || e));
+    } finally {
+      if (!currentTaskId) setBusy(false);
+    }
+  }
+
   async function generate() {
-    const prompt = (promptInput.value || '').trim();
+    const engine = engineSelect ? engineSelect.value : 'qwen';
+    let prompt = (promptInput.value || '').trim();
+    if (engine === 'qwen' && window.InstructEditPresets) {
+      prompt = window.InstructEditPresets.resolvePrompt(activePreset, prompt).trim();
+    }
     if (!prompt) {
       alert(tr('privateHub.homePc.img2imgNeedPrompt', '请输入正向提示词'));
       promptInput.focus();
@@ -126,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fd = new FormData();
     fd.append('image', selectedFile);
     fd.append('prompt', prompt);
-    const engine = engineSelect ? engineSelect.value : 'qwen';
     fd.append('engine', engine);
     if (engine === 'z_image') {
       let denoise = parseFloat(denoiseInput.value);
@@ -137,46 +246,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     fd.append('seed', (seedInput.value || '').trim());
 
+    stopPolling();
     setBusy(true, tr('privateHub.homePc.img2imgGenerating', '上传并提交 ComfyUI…'));
     resultBox.style.display = 'none';
     downloadBtn.style.display = 'none';
     lastDataUrl = '';
 
     try {
-      const res = await fetch(`${API_BASE_URL}/img2img`, { method: 'POST', body: fd });
-      const data = await res.json().catch(() => ({}));
+      const res = await fetch(`${API_BASE_URL}/img2img/start`, { method: 'POST', body: fd });
+      const data = await res.json().catch(function () { return {}; });
       if (!res.ok || !data.success) {
-        let msg = data.detail || data.error || `HTTP ${res.status}`;
-        if (Array.isArray(msg)) msg = msg.map((x) => x.msg || String(x)).join(' ');
-        throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+        throw new Error(parseApiError(data, res.status));
       }
-      const b64 = data.image_base64;
-      if (!b64) throw new Error('未返回图片数据');
-      lastDataUrl = `data:image/png;base64,${b64}`;
-      resultImg.src = lastDataUrl;
-      resultImg.alt = tr('privateHub.homePc.img2imgResultTitle', '生成结果');
-      const engLabel = data.engine === 'z_image'
-        ? tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image Turbo 重绘')
-        : tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
-      let meta = `${tr('privateHub.homePc.img2imgEngineLabel', '引擎')}：${engLabel}；种子：${data.seed_used != null ? data.seed_used : '—'}`;
-      if (data.denoise != null) meta += `；Denoise：${data.denoise}`;
-      metaLine.textContent = meta;
-      resultBox.style.display = 'block';
-      downloadBtn.style.display = 'inline-block';
-      log(`完成 ${new Date().toLocaleString()}`);
+      if (!data.task_id) throw new Error('未返回 task_id');
+      currentTaskId = data.task_id;
+      setBusy(true, tr('privateHub.homePc.img2imgSubmitted', '任务已提交，等待生成…'));
+      await pollStatus();
+      pollingTimer = setInterval(pollStatus, 2000);
     } catch (e) {
+      stopPolling();
       log(`错误：${String(e.message || e)}`);
       alert(String(e.message || e));
-    } finally {
       setBusy(false);
     }
   }
 
   function clearAll() {
+    stopPolling();
+    setBusy(false);
     selectedFile = null;
     if (fileInput) fileInput.value = '';
     renderPreview();
     promptInput.value = '';
+    setPreset('');
     denoiseInput.value = '0.4';
     seedInput.value = '';
     resultImg.removeAttribute('src');
