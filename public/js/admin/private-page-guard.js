@@ -59,7 +59,14 @@
     if (gate) gate.classList.add('hidden');
     if (app) app.classList.remove('hidden');
     if (loginLink) loginLink.classList.add('hidden');
-    if (authLabel) authLabel.textContent = user.email || user.phone || user.display || 'admin';
+    if (authLabel) {
+      authLabel.textContent = '';
+      authLabel.classList.add('hidden');
+    }
+    if (loginLink) loginLink.classList.add('hidden');
+    var headerRight = authLabel && authLabel.parentElement;
+    if (headerRight) headerRight.classList.add('hidden');
+    document.body.classList.add('tb-admin-private');
     document.dispatchEvent(new CustomEvent('tb:private-ready', { detail: { user: user } }));
   }
 

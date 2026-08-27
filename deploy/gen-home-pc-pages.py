@@ -38,7 +38,7 @@ TEMPLATE = """<!DOCTYPE html>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+      <a href="../../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
       </a>
       <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="{title_key}">{title_fallback}</h1>

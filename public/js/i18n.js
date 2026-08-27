@@ -273,12 +273,16 @@
         updateLangSwitcher();
     }
 
+    function isAdminPrivatePage() {
+        return (window.location.pathname || '').indexOf('/html/admin/private') !== -1;
+    }
+
     function init() {
         currentLocale = detectLocale();
         syncLocaleCookie(currentLocale);
         document.documentElement.lang = currentLocale === 'zh-CN' ? 'zh-CN' : 'en';
         apply(document);
-        injectLangSwitcher();
+        if (!isAdminPrivatePage()) injectLangSwitcher();
     }
 
     window.t = t;

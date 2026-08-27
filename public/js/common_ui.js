@@ -834,12 +834,20 @@
         }
     }
 
+    function isAdminPrivatePage() {
+        return (window.location.pathname || '').indexOf('/html/admin/private') !== -1;
+    }
+
     function runMainUiInit() {
         injectFavicon();
+        updatePageTitle();
+        if (isAdminPrivatePage()) {
+            if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);
+            return;
+        }
         updatePageLogo();
         updateNavMenu();
         initSiteMobileNav();
-        updatePageTitle();
         renderAuthStatus();
         renderIcpFooter();
         ensureTbStatsScript();

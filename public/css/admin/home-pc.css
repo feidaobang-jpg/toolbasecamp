@@ -1357,4 +1357,20 @@ button {
   }
 }
 
+/* Admin private tool pages: compact header, no portal chrome */
+body.tb-admin-private #tb-site-stats,
+body.tb-admin-private #tb-lang-switcher,
+body.tb-admin-private #site-header-mobile-slot,
+body.tb-admin-private #site-nav-mobile-strip,
+body.tb-admin-private #auth-status {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  body.tb-admin-private header .max-w-7xl h1 {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 
