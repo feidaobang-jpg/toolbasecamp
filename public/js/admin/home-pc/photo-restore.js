@@ -10,7 +10,7 @@ let zoomedImage = null;
 (function loadJSZip() {
     if (typeof JSZip === 'undefined') {
         const script = document.createElement('script');
-        script.src = '../../../js/lib/jszip.min.js';
+        script.src = '/js/lib/jszip.min.js';
         script.onerror = function() {
             console.log('本地 JSZip 加载失败，尝试 CDN...');
             const backupScript = document.createElement('script');
@@ -826,6 +826,11 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(timeoutId);
             // 检查502错误
             if (typeof check502Error !== 'undefined' && check502Error(response)) {
+                return false;
+            }
+            const body = await response.json().catch(() => ({}));
+            if (body.comfyui === false) {
+                console.error('ComfyUI 未就绪:', body.comfyui_error || body.message);
                 return false;
             }
             return response.ok;

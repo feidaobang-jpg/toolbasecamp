@@ -11,6 +11,15 @@ echo.
 
 cd /d "%~dp0"
 
+if exist "%~dp0local.env" (
+  echo [INFO] Loading local.env ...
+  for /f "usebackq eol=# delims=" %%L in ("%~dp0local.env") do (
+    for /f "tokens=1,* delims==" %%A in ("%%L") do (
+      if not "%%~A"=="" set "%%~A=%%B"
+    )
+  )
+)
+
 echo Checking Python...
 set "PY="
 
@@ -96,6 +105,11 @@ echo Starting: http://localhost:5000  docs: /docs
 echo Press Ctrl+C to stop
 echo ========================================
 echo.
+
+if /i "%~1"=="hidden" (
+  !PY! app.py
+  exit /b %ERRORLEVEL%
+)
 
 !PY! app.py
 

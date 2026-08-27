@@ -41,11 +41,21 @@
     return fetch(base() + '/health', { method: 'GET', signal: controller.signal })
       .then(function (res) {
         clearTimeout(timer);
-        return res.ok;
+        return res.json().then(function (body) {
+          return {
+            ok: res.ok,
+            comfyui: body && body.comfyui,
+            comfyui_address: body && body.comfyui_address,
+            comfyui_error: body && body.comfyui_error,
+            message: body && body.message
+          };
+        }).catch(function () {
+          return { ok: res.ok, comfyui: null };
+        });
       })
       .catch(function () {
         clearTimeout(timer);
-        return false;
+        return { ok: false };
       });
   }
 
@@ -53,15 +63,28 @@
     if (!el) return;
     el.textContent = '正在检测家里电脑 API…';
     el.className = 'home-pc-status home-pc-status--checking';
-    checkHealth().then(function (ok) {
-      if (ok) {
-        el.textContent = '已连接家里电脑 API：' + base();
-        el.className = 'home-pc-status home-pc-status--ok';
-      } else {
-        el.textContent = '无法连接家里电脑 API（' + base() + '）。请确认本机已启动 ComfyUI 与 comfyui-api-server，且 Cloudflare Tunnel 已配置。';
+    checkHealth().then(function (data) {
+      if (!data || !data.ok) {
+        el.textContent = '无法连接家里电脑 API（' + base() + '）。请确认 comfyui-api-server 已启动且 Tunnel 指向 ' + base() + '。';
         el.className = 'home-pc-status home-pc-status--err';
+        return;
       }
+      if (data.comfyui === false) {
+        var err = data.comfyui_error ? '：' + data.comfyui_error : '';
+        el.textContent = 'API 已连通，但 ComfyUI（' + (data.comfyui_address || '127.0.0.1:8188') + '）未就绪' + err + '。请在本机先启动 ComfyUI。';
+        el.className = 'home-pc-status home-pc-status--err';
+        return;
+      }
+      el.textContent = '已连接：' + base() + ' · ComfyUI 正常';
+      el.className = 'home-pc-status home-pc-status--ok';
     });
+  }
+
+  function parseErrorResponse(res, data) {
+    var msg = (data && (data.detail || data.error)) || ('HTTP ' + (res && res.status));
+    if (Array.isArray(msg)) msg = msg.map(function (x) { return x.msg || String(x); }).join(' ');
+    if (typeof msg !== 'string') msg = JSON.stringify(msg);
+    return msg;
   }
 
   global.HomePcApi = {
@@ -69,6 +92,7 @@
     wsUrl: wsUrl,
     assetUrl: assetUrl,
     checkHealth: checkHealth,
-    renderStatus: renderStatus
+    renderStatus: renderStatus,
+    parseErrorResponse: parseErrorResponse
   };
 })(typeof window !== 'undefined' ? window : this);

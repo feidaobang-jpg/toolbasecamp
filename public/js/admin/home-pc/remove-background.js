@@ -10,7 +10,7 @@ let zoomedImage = null;
 (function loadJSZip() {
     if (typeof JSZip === 'undefined') {
         const script = document.createElement('script');
-        script.src = '../../../js/lib/jszip.min.js';
+        script.src = '/js/lib/jszip.min.js';
         script.onerror = function() {
             console.log('本地 JSZip 加载失败，尝试 CDN...');
             // 备用源
@@ -196,10 +196,11 @@ document.addEventListener('DOMContentLoaded', function() {
      * 获取服务连接失败的错误信息
      */
     function getServiceErrorMsg() {
-        return '⚠️ 无法连接到后端服务\n\n' +
+        return '⚠️ 无法连接到后端或 ComfyUI 未启动\n\n' +
                '请确保:\n' +
-               '1. ComfyUI API 服务已启动\n' +
-               `2. 服务运行在 ${API_BASE_URL}\n`;
+               '1. ComfyUI 已启动（127.0.0.1:8188）\n' +
+               '2. comfyui-api-server 已启动\n' +
+               `3. 服务地址 ${API_BASE_URL}/health 显示 comfyui: true\n`;
     }
 
     /**
@@ -540,6 +541,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             console.log('服务检查响应状态:', response.status);
+            const body = await response.json().catch(() => ({}));
+            if (body.comfyui === false) {
+                console.error('ComfyUI 未就绪:', body.comfyui_error || body.message);
+                return false;
+            }
             if (!response.ok) {
                 console.error('服务检查返回非200状态:', response.statusText);
             }
@@ -577,7 +583,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (!response.ok) {
-                throw new Error(`服务器错误: ${response.status}`);
+                const data = await response.json().catch(() => ({}));
+                const msg = window.HomePcApi && HomePcApi.parseErrorResponse
+                    ? HomePcApi.parseErrorResponse(response, data)
+                    : ('服务器错误: ' + response.status);
+                throw new Error(msg);
             }
 
             const data = await response.json();

@@ -23,7 +23,7 @@ ComfyUI :8188 + 本地模型
 
 ## 家里电脑上要跑的
 
-1. **ComfyUI** 监听 `127.0.0.1:8188`
+1. **ComfyUI** 监听 `127.0.0.1:8188`（推荐官方 main，见 [COMFYUI-MAIN-SETUP.md](./COMFYUI-MAIN-SETUP.md)）
 2. **comfyui-api-server**（仓库根目录 `comfyui-api-server/`）：
    ```bat
    cd comfyui-api-server

@@ -10,7 +10,7 @@ let zoomedImage = null;
 (function loadJSZip() {
     if (typeof JSZip === 'undefined') {
         const script = document.createElement('script');
-        script.src = '../../../js/lib/jszip.min.js';
+        script.src = '/js/lib/jszip.min.js';
         script.onerror = function() {
             console.log('本地 JSZip 加载失败，尝试 CDN...');
             // 备用源
@@ -540,6 +540,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             console.log('服务检查响应状态:', response.status);
+            const body = await response.json().catch(() => ({}));
+            if (body.comfyui === false) {
+                console.error('ComfyUI 未就绪:', body.comfyui_error || body.message);
+                return false;
+            }
             if (!response.ok) {
                 console.error('服务检查返回非200状态:', response.statusText);
             }

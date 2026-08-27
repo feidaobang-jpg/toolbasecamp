@@ -80,9 +80,27 @@ app.add_middleware(
 @app.get("/health")
 async def health_check():
     """
-    健康检查接口
+    健康检查：API 进程 + ComfyUI 是否可达（8188）。
     """
-    return {"status": "ok", "message": "Service is running"}
+    comfy_ok = False
+    comfy_err = None
+    try:
+        r = await asyncio.to_thread(
+            requests.get, "http://{}/system_stats".format(COMFYUI_SERVER_ADDRESS), timeout=5
+        )
+        comfy_ok = r.status_code == 200
+        if not comfy_ok:
+            comfy_err = "HTTP {}".format(r.status_code)
+    except Exception as e:
+        comfy_err = str(e)
+
+    return {
+        "status": "ok" if comfy_ok else "degraded",
+        "message": "Service is running" if comfy_ok else "API up but ComfyUI unreachable",
+        "comfyui": comfy_ok,
+        "comfyui_address": COMFYUI_SERVER_ADDRESS,
+        "comfyui_error": comfy_err,
+    }
 
 
 _TEXT_TO_VIDEO_TASKS = {}

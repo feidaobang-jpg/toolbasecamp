@@ -32,3 +32,4 @@ Android 工具已全部公开，见首页「Android」分类。
 - 页面目录：`home-pc/`（后台分组「家里电脑」）
 - API：`siteConfig.homePcApiBase` → `https://comfy.zhengxiaohui.cn`
 - 服务端：仓库根目录 `comfyui-api-server/`（仅在家里 Windows 运行，不进 VPS API）
+- 迁官方 ComfyUI-main：`docs/COMFYUI-MAIN-SETUP.md`
