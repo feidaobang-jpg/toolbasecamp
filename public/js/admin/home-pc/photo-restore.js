@@ -6,21 +6,6 @@ let selectedImages = [];
 let processedImages = [];
 let zoomedImage = null;
 
-// 动态加载 JSZip
-(function loadJSZip() {
-    if (typeof JSZip === 'undefined') {
-        const script = document.createElement('script');
-        script.src = '/js/lib/jszip.min.js';
-        script.onerror = function() {
-            console.log('本地 JSZip 加载失败，尝试 CDN...');
-            const backupScript = document.createElement('script');
-            backupScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-            document.head.appendChild(backupScript);
-        };
-        document.head.appendChild(script);
-    }
-})();
-
 document.addEventListener('DOMContentLoaded', function() {
     // 获取DOM元素
     const clearBtn = document.getElementById('clear-btn');
