@@ -735,18 +735,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             toggleWatermarkBtn.addEventListener('click', () => {
                 if (isWatermarkShown) {
-                    // 切换到无水印
                     img.src = resultItem.processedDataUrl;
                     toggleWatermarkBtn.textContent = '加水印';
-                    toggleWatermarkBtn.classList.add('secondary'); // 恢复黄色
-                    toggleWatermarkBtn.classList.remove('primary-style'); // 假设有这个样式，或者直接用内联
-                    toggleWatermarkBtn.style.backgroundColor = ''; // 恢复默认(secondary css)
                     isWatermarkShown = false;
                 } else {
-                    // 切换到水印
                     img.src = resultItem.watermarkedDataUrl;
                     toggleWatermarkBtn.textContent = '移除水印';
-                    toggleWatermarkBtn.style.backgroundColor = '#909399'; // 灰色表示移除
                     isWatermarkShown = true;
                 }
             });
