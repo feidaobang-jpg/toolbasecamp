@@ -31,7 +31,10 @@
     "_meta": { "title": "VAE Decode" }
   },
   "7": {
-    "inputs": { "image": "placeholder.png" },
+    "inputs": {
+      "image": "placeholder.png",
+      "upload": "image"
+    },
     "class_type": "LoadImage",
     "_meta": { "title": "Load Image" }
   },

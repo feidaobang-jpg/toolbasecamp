@@ -84,6 +84,7 @@ async def health_check():
     """
     comfy_ok = False
     comfy_err = None
+    qwen_ckpt = None
     try:
         r = await asyncio.to_thread(
             requests.get, "http://{}/system_stats".format(COMFYUI_SERVER_ADDRESS), timeout=5
@@ -94,12 +95,20 @@ async def health_check():
     except Exception as e:
         comfy_err = str(e)
 
+    if comfy_ok:
+        names = await asyncio.to_thread(_fetch_checkpoint_names)
+        pref = "AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors"
+        resolved = _resolve_qwen_checkpoint(pref)
+        qwen_ckpt = resolved if resolved in names else None
+
     return {
         "status": "ok" if comfy_ok else "degraded",
         "message": "Service is running" if comfy_ok else "API up but ComfyUI unreachable",
         "comfyui": comfy_ok,
         "comfyui_address": COMFYUI_SERVER_ADDRESS,
         "comfyui_error": comfy_err,
+        "qwen_checkpoint_ready": bool(qwen_ckpt),
+        "qwen_checkpoint": qwen_ckpt,
     }
 
 
@@ -648,16 +657,36 @@ def build_qwen_image_edit_img2img_workflow(
     input_filename: str,
     seed: Optional[int] = None,
 ):
-    """指令改图：Qwen-Rapid-AIO + TextEncodeQwenImageEdit。"""
-    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "qwen_image_edit_img2img.json")
-    if not os.path.exists(workflow_path):
-        raise FileNotFoundError(f"Workflow file not found: {workflow_path}")
+    """指令改图：基于已验证的老照片修复工作流，去掉对比/拼接节点，写入用户 prompt。"""
+    photo_paths = [
+        os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "qwen_image_edit_img2img.json"),
+    ]
+    wf_dir = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER)
+    if os.path.isdir(wf_dir):
+        for f in os.listdir(wf_dir):
+            if ("老照片修复" in f or "Qwen-Image-Edit" in f) and f.endswith(".json"):
+                photo_paths.insert(0, os.path.join(wf_dir, f))
 
-    with open(workflow_path, "r", encoding="utf-8") as f:
-        workflow = json.load(f)
+    workflow = None
+    for path in photo_paths:
+        if os.path.exists(path):
+            with open(path, "r", encoding="utf-8") as fp:
+                workflow = json.load(fp)
+            break
+    if workflow is None:
+        raise FileNotFoundError("Qwen Image Edit workflow not found (qwen_image_edit_img2img.json or 老照片修复)")
+
+    # rgthree 对比 / KJ 拼接仅 UI 用，API 提交易 400
+    for drop_id in ("74", "80"):
+        workflow.pop(drop_id, None)
+
+    if "1" in workflow and workflow["1"].get("class_type") == "CheckpointLoaderSimple":
+        preferred = workflow["1"]["inputs"].get("ckpt_name", "")
+        workflow["1"]["inputs"]["ckpt_name"] = _resolve_qwen_checkpoint(preferred)
 
     if "7" in workflow and workflow["7"].get("class_type") == "LoadImage":
         workflow["7"]["inputs"]["image"] = input_filename
+        workflow["7"]["inputs"]["upload"] = "image"
     else:
         raise ValueError("LoadImage node missing in qwen img2img workflow")
 
@@ -670,6 +699,72 @@ def build_qwen_image_edit_img2img_workflow(
         workflow["2"]["inputs"]["seed"] = int(seed)
 
     return workflow
+
+
+_checkpoint_names_cache: Optional[list] = None
+
+
+def _fetch_checkpoint_names() -> list:
+    global _checkpoint_names_cache
+    if _checkpoint_names_cache is not None:
+        return _checkpoint_names_cache
+    try:
+        r = requests.get(
+            "http://{}/object_info/CheckpointLoaderSimple".format(COMFYUI_SERVER_ADDRESS),
+            timeout=8,
+        )
+        r.raise_for_status()
+        info = r.json().get("CheckpointLoaderSimple", {})
+        names = info.get("input", {}).get("required", {}).get("ckpt_name", [[]])[0]
+        _checkpoint_names_cache = list(names) if isinstance(names, list) else []
+    except Exception as e:
+        print(f"WARN: fetch checkpoint list failed: {e}")
+        _checkpoint_names_cache = []
+    return _checkpoint_names_cache
+
+
+def _resolve_qwen_checkpoint(preferred: str) -> str:
+    names = _fetch_checkpoint_names()
+    if not names:
+        return preferred
+    if preferred in names:
+        return preferred
+    pref_norm = (preferred or "").replace("\\", "/").lower()
+    for n in names:
+        if n.replace("\\", "/").lower() == pref_norm:
+            return n
+    for n in names:
+        low = n.lower()
+        if "qwen-rapid" in low or ("qwen" in low and "aio" in low):
+            print(f"INFO: qwen checkpoint fallback {preferred!r} -> {n!r}")
+            return n
+    return preferred
+
+
+def _format_comfyui_prompt_error(response) -> str:
+    try:
+        body = response.json()
+    except Exception:
+        return (response.text or "")[:800] or "HTTP {}".format(response.status_code)
+    parts = []
+    err = body.get("error")
+    if err:
+        if isinstance(err, dict):
+            parts.append(str(err.get("message") or err))
+        else:
+            parts.append(str(err))
+    for nid, info in (body.get("node_errors") or {}).items():
+        if not isinstance(info, dict):
+            continue
+        for item in info.get("errors") or []:
+            if isinstance(item, dict):
+                msg = item.get("message") or item.get("details") or str(item)
+                parts.append("节点 {}: {}".format(nid, msg))
+            else:
+                parts.append("节点 {}: {}".format(nid, item))
+    if parts:
+        return "; ".join(parts)
+    return (response.text or "")[:800] or "HTTP {}".format(response.status_code)
 
 
 def _normalize_img2img_engine(raw: str) -> str:
@@ -1783,14 +1878,16 @@ async def queue_prompt(prompt):
     p = {"prompt": prompt, "client_id": CLIENT_ID}
     try:
         # 使用 asyncio.to_thread 防止阻塞事件循环
-        response = await asyncio.to_thread(requests.post, "http://{}/prompt".format(COMFYUI_SERVER_ADDRESS), json=p, timeout=10)
+        response = await asyncio.to_thread(requests.post, "http://{}/prompt".format(COMFYUI_SERVER_ADDRESS), json=p, timeout=30)
         if response.status_code != 200:
-            print(f"ComfyUI Error: {response.status_code}")
-            print(f"Response: {response.text}")
-        response.raise_for_status()
+            detail = _format_comfyui_prompt_error(response)
+            print(f"ComfyUI Error ({response.status_code}): {detail}")
+            raise RuntimeError(detail)
         return response.json()
     except requests.exceptions.Timeout:
         raise TimeoutError("连接 ComfyUI 超时 (queue_prompt)")
+    except RuntimeError:
+        raise
     except Exception as e:
         raise e
 
@@ -1911,6 +2008,17 @@ async def img2img_generate(
             wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
             denoise_used = d
         else:
+            names = await asyncio.to_thread(_fetch_checkpoint_names)
+            resolved = _resolve_qwen_checkpoint("AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors")
+            if names and resolved not in names:
+                raise HTTPException(
+                    status_code=503,
+                    detail=(
+                        "未找到 Qwen-Rapid-AIO checkpoint（models/checkpoints/）。"
+                        "请从 Aki 复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，"
+                        "或先在「老照片修复」页确认该模型可用。"
+                    ),
+                )
             wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed)
             denoise_used = None
         img_bytes = await _run_comfyui_and_get_last_image(wf)

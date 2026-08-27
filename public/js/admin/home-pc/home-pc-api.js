@@ -47,6 +47,8 @@
             comfyui: body && body.comfyui,
             comfyui_address: body && body.comfyui_address,
             comfyui_error: body && body.comfyui_error,
+            qwen_checkpoint_ready: body && body.qwen_checkpoint_ready,
+            qwen_checkpoint: body && body.qwen_checkpoint,
             message: body && body.message
           };
         }).catch(function () {
@@ -73,6 +75,11 @@
         var err = data.comfyui_error ? '：' + data.comfyui_error : '';
         el.textContent = 'API 已连通，但 ComfyUI（' + (data.comfyui_address || '127.0.0.1:8188') + '）未就绪' + err + '。请在本机先启动 ComfyUI。';
         el.className = 'home-pc-status home-pc-status--err';
+        return;
+      }
+      if (el.getAttribute('data-needs-qwen') === '1' && data.qwen_checkpoint_ready === false) {
+        el.textContent = '已连接 ComfyUI，但未找到 Qwen-Rapid-AIO 模型（models/checkpoints/）。图生图需复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，或先确认「老照片修复」可用。';
+        el.className = 'home-pc-status home-pc-status--warn';
         return;
       }
       el.textContent = '已连接：' + base() + ' · ComfyUI 正常';

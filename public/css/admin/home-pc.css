@@ -4,6 +4,7 @@
 .home-pc-status--checking { background: #f3f4f6; color: #4b5563; }
 .home-pc-status--ok { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
 .home-pc-status--err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+.home-pc-status--warn { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
 .home-pc-wrap textarea#prompt-input,
 .home-pc-wrap textarea#text-input {
   width: 100%;
