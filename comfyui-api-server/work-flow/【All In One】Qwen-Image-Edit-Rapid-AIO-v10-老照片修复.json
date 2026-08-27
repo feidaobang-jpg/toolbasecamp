@@ -187,6 +187,7 @@
     "inputs": {
       "upscale_method": "nearest-exact",
       "megapixels": 1,
+      "resolution_steps": 1,
       "image": [
         "7",
         0

@@ -652,6 +652,20 @@ def _build_z_image_img2img_workflow(
     return workflow
 
 
+def _patch_qwen_edit_workflow(workflow: dict) -> dict:
+    """补全新版 ComfyUI 必填项；去掉仅 UI 用、API 易报错的节点。"""
+    for drop_id in ("74", "80"):
+        workflow.pop(drop_id, None)
+    for node in workflow.values():
+        if not isinstance(node, dict):
+            continue
+        if node.get("class_type") == "ImageScaleToTotalPixels":
+            inputs = node.setdefault("inputs", {})
+            if "resolution_steps" not in inputs:
+                inputs["resolution_steps"] = 1
+    return workflow
+
+
 def build_qwen_image_edit_img2img_workflow(
     prompt_text: str,
     input_filename: str,
@@ -676,9 +690,7 @@ def build_qwen_image_edit_img2img_workflow(
     if workflow is None:
         raise FileNotFoundError("Qwen Image Edit workflow not found (qwen_image_edit_img2img.json or 老照片修复)")
 
-    # rgthree 对比 / KJ 拼接仅 UI 用，API 提交易 400
-    for drop_id in ("74", "80"):
-        workflow.pop(drop_id, None)
+    workflow = _patch_qwen_edit_workflow(workflow)
 
     if "1" in workflow and workflow["1"].get("class_type") == "CheckpointLoaderSimple":
         preferred = workflow["1"]["inputs"].get("ckpt_name", "")
@@ -2336,6 +2348,7 @@ def build_photo_restore_workflow(input_filename):
         if not found:
             raise ValueError("LoadImage node not found in workflow")
 
+    workflow = _patch_qwen_edit_workflow(workflow)
     return workflow
 
 @app.post('/remove-bg')
