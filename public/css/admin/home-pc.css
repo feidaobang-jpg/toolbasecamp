@@ -1115,6 +1115,51 @@ button:not(.tb-btn) {
   font-size: 14px;
 }
 
+/* img2img: preset/bg chips (toggle sits outside .instruct-preset-row) */
+.home-pc-wrap .home-pc-bg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.home-pc-wrap .home-pc-bg-title {
+  margin: 0;
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.home-pc-wrap button.rec-chip {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  line-height: 1.3;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.home-pc-wrap button.rec-chip:hover {
+  border-color: #93c5fd;
+  background: #f8fafc;
+}
+
+.home-pc-wrap button.rec-chip.is-active {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
 .home-pc-wrap .drop-zone {
   width: 100%;
   height: auto;
