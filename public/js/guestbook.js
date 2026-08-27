@@ -75,11 +75,11 @@
     function setStatus(text, isError) {
         if (!statusEl) return;
         if (!text) {
-            statusEl.className = 'hidden mb-4 rounded-lg px-4 py-3 text-sm';
+            statusEl.className = 'content-status hidden';
             statusEl.textContent = '';
             return;
         }
-        statusEl.className = 'mb-4 rounded-lg px-4 py-3 text-sm ' + (isError ? 'is-error' : 'is-success');
+        statusEl.className = 'content-status is-visible ' + (isError ? 'is-error' : 'is-success');
         statusEl.textContent = text;
     }
 

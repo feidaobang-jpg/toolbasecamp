@@ -8,13 +8,13 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=minimax1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=minimax1">
-    <link rel="stylesheet" href="css/tools-hub.css?v=minimax1">
+<link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
+    <link rel="stylesheet" href="css/tools-hub.css?v=nosTW1">
     <link rel="stylesheet" href="css/base.css?v=mediacard1">
-    <link rel="stylesheet" href="css/docs/docs-common.css?v=minimax1">
-    <link rel="stylesheet" href="css/tools-form.css?v=minimax1">
+  <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+    <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
+    <link rel="stylesheet" href="css/tools-form.css?v=nosTW1">
     <style>
       .img-hub { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
       .img-hub-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
@@ -171,34 +171,31 @@
       }
       .error-box { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
     </style>
-    <script>
-        tailwind.config = { theme: { extend: { colors: { primary: '#2563eb' } } } };
-    </script>
 </head>
-<body id="top" class="bg-gray-50 text-gray-800 h-screen flex flex-col overflow-hidden">
-    <header class="bg-white border-b border-gray-100 flex-shrink-0 z-40 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">工具大本营</h1>
+<body id="top" class="site-page site-page--hub">
+    <header class="site-header site-header--shrink">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">工具大本营</h1>
             </a>
-            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
         </div>
     </header>
 
-    <div class="flex-1 flex overflow-hidden relative">
-        <main class="flex-1 flex flex-col w-0 overflow-y-auto bg-gray-50">
+    <div class="site-hub-layout">
+        <main class="site-main site-main--hub site-main--scroll">
             <div id="main-content"></div>
         </main>
     </div>
 
     <script src="js/locales/en.js?v=i2i-name1"></script>
     <script src="js/locales/zh-CN.js?v=i2i-name1"></script>
-    <script src="js/i18n.js?v=minimax1"></script>
-    <script src="js/config.js?v=minimax1"></script>
-    <script src="js/base.js?v=minimax1"></script>
-    <script src="js/common_ui.js?v=adminhub1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/config.js?v=nosTW1"></script>
+    <script src="js/base.js?v=nosTW1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
     <script src="js/gif-viewport.js?v=gifdelay1"></script>
     <script src="js/tb-pager.js?v=jump1"></script>
     <script src="js/image-hub.js?v=ocrreq1"></script>

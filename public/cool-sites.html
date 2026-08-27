@@ -9,26 +9,26 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=minimax1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css?v=minimax1">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=minimax1">
-    <link rel="stylesheet" href="css/cool-sites.css?v=minimax1">
+<link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
+    <link rel="stylesheet" href="css/cool-sites.css?v=nosTW1">
     <script src="js/locales/en.js?v=i2i-name1"></script>
     <script src="js/locales/zh-CN.js?v=i2i-name1"></script>
-    <script src="js/i18n.js?v=minimax1"></script>
-    <script src="js/config.js?v=minimax1"></script>
-    <script src="js/common_ui.js?v=adminhub1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/config.js?v=nosTW1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 cool-sites-page font-sans">
-    <header class="bg-white border-b border-gray-100 flex-shrink-0 z-40 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">工具大本营</h1>
+<body class="site-page cool-sites-page">
+    <header class="site-header site-header--shrink">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">工具大本营</h1>
             </a>
-            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
         </div>
     </header>
 
@@ -44,11 +44,11 @@
         </aside>
 
         <div id="cool-sites-overlay" class="cool-sites-overlay hidden" aria-hidden="true"></div>
-        <aside id="cool-sites-drawer" class="cool-sites-drawer md:hidden" aria-label="手机目录">
+        <aside id="cool-sites-drawer" class="cool-sites-drawer" aria-label="手机目录">
             <div class="cool-sites-drawer-head">
                 <h1 data-i18n="coolSites.catalog">导航目录</h1>
                 <button type="button" id="cool-sites-close" aria-label="关闭">
-                    <i class="fas fa-times text-xl"></i>
+                    <i class="fas fa-times cool-sites-icon-btn"></i>
                 </button>
             </div>
             <nav class="cool-sites-aside-nav" id="mobile-sidebar-nav"></nav>
@@ -57,15 +57,15 @@
         <main class="cool-sites-main">
             <div class="cool-sites-mobile-bar">
                 <button type="button" id="cool-sites-open" aria-label="打开目录">
-                    <i class="fas fa-bars text-xl"></i>
+                    <i class="fas fa-bars cool-sites-icon-btn"></i>
                 </button>
-                <span class="text-sm font-medium text-gray-700" data-i18n="coolSites.title">导航</span>
+                <span class="cool-sites-mobile-bar-label" data-i18n="coolSites.title">导航</span>
             </div>
             <div class="cool-sites-content" id="main-content"></div>
         </main>
     </div>
 
-    <script src="js/cool-sites-data.js?v=minimax1"></script>
-    <script src="js/cool-sites.js?v=minimax1"></script>
+    <script src="js/cool-sites-data.js?v=nosTW1"></script>
+    <script src="js/cool-sites.js?v=nosTW1"></script>
 </body>
 </html>

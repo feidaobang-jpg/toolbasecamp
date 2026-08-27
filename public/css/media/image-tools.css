@@ -881,16 +881,45 @@
   margin-bottom: 12px;
 }
 
+.instruct-bg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.instruct-bg-head .field-label {
+  margin-bottom: 0;
+}
+
+.tool-card button.rec-chip,
+.home-pc-wrap button.rec-chip,
 .instruct-preset-row .rec-chip {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
   border: 1px solid #d1d5db;
   background: #fff;
   color: #374151;
   border-radius: 999px;
   padding: 6px 12px;
   font-size: 13px;
+  line-height: 1.3;
+  font-family: inherit;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
+.tool-card button.rec-chip:hover,
+.home-pc-wrap button.rec-chip:hover,
+.instruct-preset-row .rec-chip:hover {
+  border-color: #93c5fd;
+  background: #f8fafc;
+}
+
+.tool-card button.rec-chip.is-active,
+.home-pc-wrap button.rec-chip.is-active,
 .instruct-preset-row .rec-chip.is-active {
   border-color: #2563eb;
   color: #2563eb;
@@ -957,6 +986,35 @@
   font-size: 13px;
   color: #475569;
   line-height: 1.45;
+}
+
+.instruct-bg-region-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.instruct-bg-select-wrap {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.instruct-bg-select-wrap.hidden {
+  display: none;
+}
+
+.instruct-bg-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.instruct-bg-place-row {
+  margin-bottom: 0;
 }
 
 .ai-public-toggle {

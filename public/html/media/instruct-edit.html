@@ -7,7 +7,7 @@
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=slim1" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=slim1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=slim1" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=instructbg1" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=slim1" />
 </head>
 <body>
@@ -75,7 +75,7 @@
             <label class="field-label" for="prompt" data-i18n="tools.instructEdit.prompt">Edit instruction</label>
             <textarea id="prompt" rows="3" maxlength="1300" data-i18n-placeholder="tools.instructEdit.promptPh" placeholder="e.g. Make the sky blue… Or pick a style preset above."></textarea>
             <div class="mt-3">
-              <div class="flex items-center justify-between gap-3">
+              <div class="instruct-bg-head">
                 <div class="field-label" data-i18n="tools.instructEdit.bgChangeTitle">Background change</div>
                 <button type="button" class="rec-chip" id="bg-toggle-btn" data-i18n="tools.instructEdit.bgExpand">Expand</button>
               </div>
@@ -89,81 +89,22 @@
                   <button type="button" class="rec-chip" data-bg-time="night" data-i18n="tools.instructEdit.bgTimeNight">Night</button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mt-3 hidden" id="bg-select-wrap">
+                <div class="instruct-bg-select-wrap hidden" id="bg-select-wrap">
                   <label class="block">
                     <span class="sr-only" data-i18n="tools.instructEdit.bgRegionLabel">Region</span>
-                    <select id="bg-region-select" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white">
+                    <select id="bg-region-select" class="tb-select">
                       <option value="" data-i18n="tools.instructEdit.bgRegionPlaceholder">选择分类</option>
                     </select>
                   </label>
                   <label class="block">
                     <span class="sr-only" data-i18n="tools.instructEdit.bgPlaceLabel">Place</span>
-                    <select id="bg-place-select" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white" disabled>
+                    <select id="bg-place-select" class="tb-select" disabled>
                       <option value="" data-i18n="tools.instructEdit.bgPlacePlaceholder">选择地点</option>
                     </select>
                   </label>
                 </div>
 
-                <div class="mt-3 space-y-4" id="bg-groups">
-                <div>
-                  <div class="text-xs font-semibold text-gray-600 mb-2">欧洲</div>
-                  <div class="instruct-preset-row flex flex-wrap gap-2" id="bg-europe">
-                    <button type="button" class="rec-chip" data-bg-place="埃菲尔铁塔">埃菲尔铁塔</button>
-                    <button type="button" class="rec-chip" data-bg-place="大本钟/伦敦眼">大本钟/伦敦眼</button>
-                    <button type="button" class="rec-chip" data-bg-place="罗马斗兽场">罗马斗兽场</button>
-                    <button type="button" class="rec-chip" data-bg-place="圣家堂（Sagrada Familia）">圣家堂</button>
-                    <button type="button" class="rec-chip" data-bg-place="阿姆斯特丹运河">阿姆斯特丹运河</button>
-                    <button type="button" class="rec-chip" data-bg-place="圣托里尼蓝顶教堂">圣托里尼</button>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="text-xs font-semibold text-gray-600 mb-2">非洲</div>
-                  <div class="instruct-preset-row flex flex-wrap gap-2" id="bg-africa">
-                    <button type="button" class="rec-chip" data-bg-place="埃及吉萨金字塔">埃及吉萨金字塔</button>
-                    <button type="button" class="rec-chip" data-bg-place="撒哈拉沙丘">撒哈拉沙丘</button>
-                    <button type="button" class="rec-chip" data-bg-place="维多利亚瀑布">维多利亚瀑布</button>
-                    <button type="button" class="rec-chip" data-bg-place="桌山（Table Mountain）">桌山</button>
-                    <button type="button" class="rec-chip" data-bg-place="马赛马拉草原">马赛马拉草原</button>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="text-xs font-semibold text-gray-600 mb-2">亚洲</div>
-                  <div class="instruct-preset-row flex flex-wrap gap-2" id="bg-asia">
-                    <button type="button" class="rec-chip" data-bg-place="中国长城">中国长城</button>
-                    <button type="button" class="rec-chip" data-bg-place="日本富士山">富士山</button>
-                    <button type="button" class="rec-chip" data-bg-place="印度泰姬陵">泰姬陵</button>
-                    <button type="button" class="rec-chip" data-bg-place="东京浅草寺/浅草街景">浅草寺</button>
-                    <button type="button" class="rec-chip" data-bg-place="京都伏见稻荷">伏见稻荷</button>
-                    <button type="button" class="rec-chip" data-bg-place="泰国清迈古城">清迈古城</button>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="text-xs font-semibold text-gray-600 mb-2">美洲</div>
-                  <div class="instruct-preset-row flex flex-wrap gap-2" id="bg-americas">
-                    <button type="button" class="rec-chip" data-bg-place="自由女神像">自由女神像</button>
-                    <button type="button" class="rec-chip" data-bg-place="马丘比丘">马丘比丘</button>
-                    <button type="button" class="rec-chip" data-bg-place="科罗拉多大峡谷">科罗拉多大峡谷</button>
-                    <button type="button" class="rec-chip" data-bg-place="尼亚加拉大瀑布">尼亚加拉瀑布</button>
-                    <button type="button" class="rec-chip" data-bg-place="旧金山金门大桥">金门大桥</button>
-                    <button type="button" class="rec-chip" data-bg-place="里约基督像">里约基督像</button>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="text-xs font-semibold text-gray-600 mb-2">自然风光</div>
-                  <div class="instruct-preset-row flex flex-wrap gap-2" id="bg-nature">
-                    <button type="button" class="rec-chip" data-bg-place="冰岛瀑布/黑沙滩">冰岛瀑布/黑沙滩</button>
-                    <button type="button" class="rec-chip" data-bg-place="瑞士阿尔卑斯山">阿尔卑斯山</button>
-                    <button type="button" class="rec-chip" data-bg-place="加拿大班夫湖">班夫湖</button>
-                    <button type="button" class="rec-chip" data-bg-place="新西兰蒂卡波星空">蒂卡波星空</button>
-                    <button type="button" class="rec-chip" data-bg-place="黄石间歇泉">黄石间歇泉</button>
-                    <button type="button" class="rec-chip" data-bg-place="挪威峡湾">挪威峡湾</button>
-                  </div>
-                </div>
-              </div>
+                <div class="instruct-bg-groups" id="bg-groups"></div>
               </div>
             </div>
           </div>
@@ -274,6 +215,9 @@
   <script src="../../js/base.js?v=slim1"></script>
   <script src="../../js/media/image-cloud-client.js?v=imggif1"></script>
   <script src="../../js/media/image-gen-history.js?v=slim1"></script>
-  <script src="../../js/media/instruct-edit.js?v=lk888i2i2"></script>
+  <script src="../../js/shared/instruct-edit-bg-groups.js?v=instructbg1"></script>
+  <script src="../../js/shared/instruct-edit-bg-presets.js?v=instructbg1"></script>
+  <script src="../../js/shared/instruct-edit-bg-ui.js?v=instructbg1"></script>
+  <script src="../../js/media/instruct-edit.js?v=instructbg1"></script>
 </body>
 </html>

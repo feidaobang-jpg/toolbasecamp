@@ -1,0 +1,38 @@
+---
+description: 全站禁用 Tailwind CDN；样式用 site-shell / base / 页面专用 CSS
+alwaysApply: true
+---
+
+# 禁用 Tailwind
+
+## 禁止
+
+- 在 `public/**/*.html` 引入 `vendor/tailwindcss.js` 或 `tailwind.config`
+- 在 HTML/JS 新增 Tailwind 工具类（`flex`、`bg-gray-*`、`rounded-*`、`md:` 等）
+- 为「省事」保留 Tailwind 再用 `!important` 覆盖组件（如 `.rec-chip`）
+
+CI：`node deploy/check-no-tailwind.mjs`（部署前也会跑）。
+
+## 样式栈
+
+| 区域 | CSS |
+|------|-----|
+| 门户顶栏 / 手机抽屉 / 登录态 | `site-shell.css` + `site-mobile-nav.css` |
+| 首页 Hub | + `tools-hub.css` |
+| 认证页 | + `auth-form.css` |
+| 内容页（about / guestbook / top-up） | + `content-page.css` |
+| 后台 admin | + `admin-shell.css` + 页面 CSS（如 `site-stats.css`） |
+| 家里电脑工具 | `home-pc.css`（`body.home-pc-page`，见 home-pc 规则） |
+| 工具页 | `base.css` + `docs-common.css` + 工具 CSS |
+
+外壳语义 class 示例：`site-page`、`site-header-inner`、`site-brand`、`admin-page`、`auth-card`。
+
+## JS
+
+`common_ui.js` 等动态 UI 只用上述语义 class（如 `site-auth-bar`、`site-nav-panel.is-open`），禁止拼 Tailwind 字符串。
+
+## 迁移
+
+存量页已迁；新增页复制同类型模板。可跑 `node deploy/migrate-no-tailwind.mjs` 做批量替换（改脚本前先备份）。
+
+`vendor/tailwindcss.js` 保留作历史文件，**不得再引用**。

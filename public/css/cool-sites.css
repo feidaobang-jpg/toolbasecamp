@@ -122,6 +122,16 @@
   color: #374151;
 }
 
+.cool-sites-mobile-bar-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.cool-sites-icon-btn {
+  font-size: 1.25rem;
+}
+
 .cool-sites-content {
   flex: 1;
   overflow-y: auto;

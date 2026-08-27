@@ -5,70 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up - 工具大本营</title>
     <meta name="description" content="Create a Tools Base Camp account.">
-    <script src="../../vendor/tailwindcss.js?v=minimax1"></script>
-    <link rel="stylesheet" href="../../css/base.css?v=minimax1">
-    <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=minimax1">
-    <link href="../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
+<link rel="stylesheet" href="../../css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="../../css/site-shell.css?v=nosTW1">
+  <link rel="stylesheet" href="../../css/auth-form.css?v=nosTW1">
+    <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=nosTW1">
+    <link href="../../vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-    <header class="bg-white border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
-            <a href="../../index.html" class="flex items-center gap-2 flex-shrink-0 group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-xl font-bold text-gray-900 tracking-tight">工具大本营</h1>
+<body class="site-page">
+    <header class="site-header">
+        <div class="site-header-inner auth-header-inner">
+            <a href="../../index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">工具大本营</h1>
             </a>
-            <a href="../../index.html" class="text-sm text-gray-500 hover:text-blue-600 transition-colors whitespace-nowrap">
+            <a href="../../index.html" class="auth-back-home">
                 <i class="fas fa-arrow-left mr-1"></i> <span data-i18n="auth.backHome">Back to home</span>
             </a>
         </div>
     </header>
 
-    <main class="flex-1 flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div class="p-8">
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900" data-i18n="auth.createAccount">Create account</h2>
-                    <p class="text-gray-500 mt-2 text-sm" data-i18n="auth.registerSubtitle">Sign up with phone only (no SMS code)</p>
-                    <p class="text-blue-600 mt-3 text-sm font-medium" data-i18n="auth.registerGiftTip">New accounts get 楼5 balance for Image-to-Image / Text-to-Image (charged only on success).</p>
+    <main class="site-main site-main--center">
+        <div class="auth-card">
+            <div class="auth-card-body">
+                <div class="auth-head">
+                    <h2 class="auth-head-title" data-i18n="auth.createAccount">Create account</h2>
+                    <p class="auth-head-sub" data-i18n="auth.registerSubtitle">Sign up with phone only (no SMS code)</p>
+                    <p class="auth-gift-tip" data-i18n="auth.registerGiftTip">New accounts get 楼5 balance for Image-to-Image / Text-to-Image (charged only on success).</p>
                 </div>
 
-                <div class="space-y-5">
+                <div class="auth-form-stack">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.accountLabel">Phone</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
+                        <label class="auth-field-label" data-i18n="auth.accountLabel">Phone</label>
+                        <div class="auth-input-wrap">
+                            <div class="auth-input-icon">
+                                <i class="fas fa-user"></i>
                             </div>
-                            <input id="account" type="text" autocomplete="username" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white" data-i18n-placeholder="auth.accountPlaceholder" placeholder="Phone number" inputmode="tel" />
+                            <input id="account" type="text" autocomplete="username" class="auth-input" data-i18n-placeholder="auth.accountPlaceholder" placeholder="Phone number" inputmode="tel" />
                         </div>
-                        <p class="mt-1.5 text-xs text-gray-400" data-i18n="auth.phoneNote">Phone registration needs no SMS code 鈥?keep your password safe</p>
+                        <p class="auth-field-hint" data-i18n="auth.phoneNote">Phone registration needs no SMS code 鈥?keep your password safe</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.password">Password</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
+                        <label class="auth-field-label" data-i18n="auth.password">Password</label>
+                        <div class="auth-input-wrap">
+                            <div class="auth-input-icon">
+                                <i class="fas fa-lock"></i>
                             </div>
-                            <input id="password" type="password" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white" data-i18n-placeholder="auth.passwordHint" placeholder="At least 6 characters" />
+                            <input id="password" type="password" class="auth-input" data-i18n-placeholder="auth.passwordHint" placeholder="At least 6 characters" />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5" data-i18n="auth.inviteCodeLabel">Invite code (optional)</label>
+                        <label class="auth-field-label" data-i18n="auth.inviteCodeLabel">Invite code (optional)</label>
                         <input id="invite-code" type="text" maxlength="16" autocomplete="off"
-                            class="block w-full px-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-gray-50 focus:bg-white font-mono uppercase text-sm"
+                            class="auth-input auth-input--mono"
                             data-i18n-placeholder="auth.inviteCodePh" placeholder="Invite code" />
-                        <p class="mt-1.5 text-xs text-gray-400" data-i18n="auth.inviteCodeHint">If a friend shared a link, the code is filled automatically.</p>
+                        <p class="auth-field-hint" data-i18n="auth.inviteCodeHint">If a friend shared a link, the code is filled automatically.</p>
                     </div>
 
-                    <div id="status" class="hidden rounded-lg p-3 text-sm flex items-start gap-2"></div>
+                    <div id="status" class="auth-status"></div>
 
                     <button id="btn-register" type="button" class="tb-btn w-full" data-i18n="auth.registerBtn">Sign up</button>
 
-                    <div class="text-center text-sm text-gray-500 mt-6">
+                    <div class="auth-footer">
                         <span data-i18n="auth.hasAccount">Already have an account?</span>
-                        <a href="login.html" class="text-blue-600 font-semibold hover:underline" data-i18n="auth.login">Log in</a>
+                        <a href="login.html" class="auth-footer-link" data-i18n="auth.login">Log in</a>
                     </div>
                 </div>
             </div>
@@ -77,9 +78,9 @@
 
     <script src="../../js/locales/en.js?v=i2i-name1"></script>
     <script src="../../js/locales/zh-CN.js?v=i2i-name1"></script>
-    <script src="../../js/i18n.js?v=minimax1"></script>
-    <script src="../../js/config.js?v=minimax1"></script>
-    <script src="../../js/common_ui.js?v=adminhub1"></script>
-    <script src="../../js/auth/auth.js?v=minimax1"></script>
+    <script src="../../js/i18n.js?v=nosTW1"></script>
+    <script src="../../js/config.js?v=nosTW1"></script>
+    <script src="../../js/common_ui.js?v=nosTW1"></script>
+    <script src="../../js/auth/auth.js?v=nosTW1"></script>
 </body>
 </html>

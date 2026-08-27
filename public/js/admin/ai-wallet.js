@@ -96,12 +96,6 @@
       var st = chips[i].getAttribute('data-status') || 'unused';
       var on = st === codesStatus;
       chips[i].classList.toggle('is-active', on);
-      chips[i].classList.toggle('border-blue-600', on);
-      chips[i].classList.toggle('bg-blue-50', on);
-      chips[i].classList.toggle('text-blue-700', on);
-      chips[i].classList.toggle('border-gray-300', !on);
-      chips[i].classList.toggle('bg-white', !on);
-      chips[i].classList.toggle('text-gray-700', !on);
     }
   }
 
@@ -149,33 +143,33 @@
     if (!box) return;
     codesCache = list || [];
     if (!list || !list.length) {
-      box.innerHTML = '<p class="text-gray-400 text-sm">' + tr('privateHub.ops.walletCodesEmpty') + '</p>';
+      box.innerHTML = '<p class="admin-wallet-empty">' + tr('privateHub.ops.walletCodesEmpty') + '</p>';
       return;
     }
     box.innerHTML = list.map(function (c) {
       var used = c.redeemed
-        ? ('<span class="text-amber-600 whitespace-nowrap">' + tr('privateHub.ops.walletCodeUsed') + '</span>')
-        : ('<span class="text-emerald-600 whitespace-nowrap">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
+        ? ('<span class="admin-wallet-badge--used">' + tr('privateHub.ops.walletCodeUsed') + '</span>')
+        : ('<span class="admin-wallet-badge--unused">' + tr('privateHub.ops.walletCodeUnused') + '</span>');
       var meta = '';
       if (c.redeemed) {
         var account = c.redeemedAccount || '';
         var lines = [];
         if (account) {
           lines.push(
-            '<div class="text-xs text-gray-500 break-all mt-1">' +
+            '<div class="admin-wallet-meta admin-wallet-meta--tight">' +
               tr('privateHub.ops.walletCodeBy').replace('{account}', String(account)) +
             '</div>'
           );
         } else {
           lines.push(
-            '<div class="text-xs text-gray-400 mt-1">' +
+            '<div class="admin-wallet-meta admin-wallet-meta--tight">' +
               tr('privateHub.ops.walletCodeByUnknown') +
             '</div>'
           );
         }
         if (c.redeemedAt) {
           lines.push(
-            '<div class="text-xs text-gray-500 mt-0.5">' +
+            '<div class="admin-wallet-meta admin-wallet-meta--tight">' +
               tr('privateHub.ops.walletCodeAt').replace(
                 '{time}',
                 String(c.redeemedAt).replace('T', ' ').replace(/\.\d+$/, '')
@@ -187,15 +181,15 @@
       }
       var codeEsc = String(c.code || '').replace(/"/g, '&quot;');
       return (
-        '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
-          '<div class="min-w-0 flex-1">' +
-            '<code class="text-sm font-mono">' + String(c.code || '') + '</code>' +
+        '<div class="admin-wallet-row">' +
+          '<div class="admin-wallet-row-main">' +
+            '<code class="admin-wallet-code">' + String(c.code || '') + '</code>' +
             meta +
           '</div>' +
-          '<div class="flex items-center gap-3 flex-shrink-0 pt-0.5">' +
+          '<div class="admin-wallet-row-actions admin-wallet-row-actions--inline">' +
             '<span>¥' + money(c.amountCny) + '</span>' +
             used +
-            '<button type="button" class="text-xs text-blue-600 hover:underline" data-copy-code="' + codeEsc + '">' +
+            '<button type="button" class="admin-wallet-link" data-copy-code="' + codeEsc + '">' +
               tr('privateHub.ops.walletCodesCopy') +
             '</button>' +
           '</div>' +
@@ -244,13 +238,13 @@
     var box = document.getElementById('users-list');
     if (!box) return;
     if (!list || !list.length) {
-      box.innerHTML = '<p class="text-gray-400 text-sm">' + tr('privateHub.ops.walletUsersEmpty') + '</p>';
+      box.innerHTML = '<p class="admin-wallet-empty">' + tr('privateHub.ops.walletUsersEmpty') + '</p>';
       return;
     }
     box.innerHTML = list.map(function (u) {
       var isAdmin = u.role === 'admin';
       var role = isAdmin
-        ? (' · <span class="text-xs text-blue-600">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
+        ? (' · <span class="admin-wallet-badge--admin">' + tr('privateHub.ops.walletUsersRoleAdmin') + '</span>')
         : '';
       var displayName = (u.nickname && String(u.nickname).trim())
         ? String(u.nickname).trim()
@@ -260,13 +254,13 @@
         : (u.loginAccount || String(u.id));
       var fillAcc = u.phone || u.email || '';
       var fillBtn = fillAcc
-        ? ('<button type="button" class="text-xs text-blue-600 hover:underline" data-fill-account="' +
+        ? ('<button type="button" class="admin-wallet-link" data-fill-account="' +
             String(fillAcc).replace(/"/g, '&quot;') + '">' +
             tr('privateHub.ops.walletUsersFillCredit') +
           '</button>')
         : '';
       var delBtn = (
-        '<button type="button" class="text-xs text-red-600 hover:underline" data-delete-user="' +
+        '<button type="button" class="admin-wallet-link admin-wallet-link--danger" data-delete-user="' +
           String(u.id) + '" data-delete-account="' +
           String(deleteLabel).replace(/"/g, '&quot;') + '">' +
           tr('privateHub.ops.walletUsersDelete') +
@@ -282,23 +276,23 @@
         var raw = String(u.createdAt).replace('T', ' ').replace(/\.\d+$/, '');
         var dayOnly = raw.slice(0, 10);
         joined =
-          '<div class="text-xs text-gray-400 mt-0.5">' +
+          '<div class="admin-wallet-meta admin-wallet-meta--tight">' +
             tr('privateHub.ops.walletUsersJoined').replace('{time}', dayOnly) +
           '</div>';
       }
       return (
-        '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
-          '<div class="min-w-0 flex-1">' +
-            '<div class="text-sm font-medium break-all">' + displayName + role + '</div>' +
+        '<div class="admin-wallet-row">' +
+          '<div class="admin-wallet-row-main">' +
+            '<div class="admin-wallet-title">' + displayName + role + '</div>' +
             (u.loginAccount
-              ? ('<div class="text-sm font-medium break-all mt-0.5">' + String(u.loginAccount) + '</div>')
+              ? ('<div class="admin-wallet-title admin-wallet-meta--tight">' + String(u.loginAccount) + '</div>')
               : '') +
             joined +
-            '<div class="text-xs text-gray-500 mt-1 leading-relaxed">' + stats + '</div>' +
+            '<div class="admin-wallet-meta">' + stats + '</div>' +
           '</div>' +
-          '<div class="flex flex-col items-end gap-1 flex-shrink-0">' +
-            '<span class="font-semibold">¥' + money(u.balanceCny) + '</span>' +
-            '<span class="text-xs text-gray-500">' +
+          '<div class="admin-wallet-row-actions">' +
+            '<span class="admin-wallet-balance">¥' + money(u.balanceCny) + '</span>' +
+            '<span class="admin-wallet-meta">' +
               tr('privateHub.ops.walletWdCommission').replace('{amount}', money(u.commissionCny)) +
             '</span>' +
             fillBtn +
@@ -317,12 +311,6 @@
       var st = chips[i].getAttribute('data-status') || 'pending';
       var on = st === wdStatus;
       chips[i].classList.toggle('is-active', on);
-      chips[i].classList.toggle('border-blue-600', on);
-      chips[i].classList.toggle('bg-blue-50', on);
-      chips[i].classList.toggle('text-blue-700', on);
-      chips[i].classList.toggle('border-gray-300', !on);
-      chips[i].classList.toggle('bg-white', !on);
-      chips[i].classList.toggle('text-gray-700', !on);
     }
   }
 
@@ -330,7 +318,7 @@
     var box = document.getElementById('wd-list');
     if (!box) return;
     if (!list || !list.length) {
-      box.innerHTML = '<p class="text-gray-400 text-sm">' + tr('privateHub.ops.walletWdEmpty') + '</p>';
+      box.innerHTML = '<p class="admin-wallet-empty">' + tr('privateHub.ops.walletWdEmpty') + '</p>';
       return;
     }
     box.innerHTML = list.map(function (w) {
@@ -340,28 +328,28 @@
         : tr('privateHub.ops.walletWdStatusPaid');
       var t = String(w.createdAt || '').replace('T', ' ').replace(/\.\d+$/, '');
       var login = w.loginAccount
-        ? ('<div class="text-xs text-gray-400 break-all mt-0.5">' + String(w.loginAccount) + '</div>')
+        ? ('<div class="admin-wallet-meta admin-wallet-meta--tight">' + String(w.loginAccount) + '</div>')
         : '';
       var settleBtn = pending
-        ? ('<button type="button" class="tb-btn text-xs px-3 py-1.5" data-settle-wd="' +
+        ? ('<button type="button" class="tb-btn tb-btn-sm" data-settle-wd="' +
             String(w.id) + '" data-settle-amount="' + money(w.amountCny) +
             '" data-settle-account="' + String(w.account || '').replace(/"/g, '&quot;') + '">' +
             tr('privateHub.ops.walletWdSettle') +
           '</button>')
         : '';
       return (
-        '<div class="flex flex-wrap items-start justify-between gap-2 border border-gray-100 rounded-lg px-3 py-2 bg-white">' +
-          '<div class="min-w-0 flex-1">' +
-            '<div class="text-sm font-medium break-all">#' + w.id + ' · ' + String(w.account || '') + '</div>' +
+        '<div class="admin-wallet-row">' +
+          '<div class="admin-wallet-row-main">' +
+            '<div class="admin-wallet-title">#' + w.id + ' · ' + String(w.account || '') + '</div>' +
             login +
-            '<div class="text-xs text-gray-500 mt-1">' +
+            '<div class="admin-wallet-meta">' +
               tr('privateHub.ops.walletWdAmount').replace('{amount}', money(w.amountCny)) +
               ' · ' + tr('privateHub.ops.walletWdCommission').replace('{amount}', money(w.commissionCny)) +
               ' · ' + stLabel +
               (t ? ' · ' + t : '') +
             '</div>' +
           '</div>' +
-          '<div class="flex-shrink-0">' + settleBtn + '</div>' +
+          '<div class="admin-wallet-row-actions">' + settleBtn + '</div>' +
         '</div>'
       );
     }).join('');

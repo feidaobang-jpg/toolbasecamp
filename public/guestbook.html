@@ -8,78 +8,79 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=minimax1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css?v=minimax1">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=minimax1">
-    <link rel="stylesheet" href="css/guestbook.css?v=minimax1">
+<link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+  <link rel="stylesheet" href="css/content-page.css?v=nosTW1">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
+    <link rel="stylesheet" href="css/guestbook.css?v=nosTW1">
     <script src="js/locales/en.js?v=i2i-name1"></script>
     <script src="js/locales/zh-CN.js?v=i2i-name1"></script>
-    <script src="js/i18n.js?v=minimax1"></script>
-    <script src="js/config.js?v=minimax1"></script>
-    <script src="js/common_ui.js?v=adminhub1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/config.js?v=nosTW1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">工具大本营</h1>
+<body class="site-page">
+    <header class="site-header site-header--sticky">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">工具大本营</h1>
             </a>
-            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
         </div>
     </header>
 
-    <main class="flex-1 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <span class="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+    <main class="site-main site-main--content">
+        <div class="content-hero">
+            <h1 class="content-hero-title">
+                <span class="content-hero-accent"></span>
                 <span data-i18n="guestbook.title">Guestbook</span>
             </h1>
-            <p class="text-gray-500 mt-2 text-sm" data-i18n="guestbook.subtitle">Share ideas, feedback, or a quick hello.</p>
+            <p class="auth-head-sub" data-i18n="guestbook.subtitle">Share ideas, feedback, or a quick hello.</p>
         </div>
 
-        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
-            <h2 class="text-base font-semibold text-gray-900 mb-4" data-i18n="guestbook.writeTitle">Write a message</h2>
-            <div id="gb-login-hint" class="hidden mb-4 text-sm text-blue-700 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">
+        <section class="content-section">
+            <h2 class="content-section-title" data-i18n="guestbook.writeTitle">Write a message</h2>
+            <div id="gb-login-hint" class="content-hint-box hidden">
                 <i class="fas fa-user-circle mr-1"></i>
-                <span data-i18n="guestbook.postingAs">Posting as</span> <span id="gb-login-name" class="font-medium"></span>
+                <span data-i18n="guestbook.postingAs">Posting as</span> <span id="gb-login-name" class="gb-login-name"></span>
             </div>
-            <div id="gb-guest-fields" class="mb-4">
-                <label for="gb-guest-name" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="guestbook.displayName">Display name</label>
+            <div id="gb-guest-fields" class="gb-field">
+                <label for="gb-guest-name" class="auth-field-label" data-i18n="guestbook.displayName">Display name</label>
                 <input id="gb-guest-name" type="text" maxlength="20" data-i18n-placeholder="guestbook.guestPlaceholder"
-                    class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    class="content-input">
             </div>
-            <div class="mb-4">
-                <label for="gb-content" class="block text-sm font-medium text-gray-700 mb-1" data-i18n="guestbook.message">Message</label>
+            <div class="gb-field">
+                <label for="gb-content" class="auth-field-label" data-i18n="guestbook.message">Message</label>
                 <textarea id="gb-content" rows="4" maxlength="500" data-i18n-placeholder="guestbook.messagePlaceholder"
-                    class="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                <div class="text-right text-xs text-gray-400 mt-1"><span id="gb-char-count">0</span>/500</div>
+                    class="content-textarea"></textarea>
+                <div class="content-char-count"><span id="gb-char-count">0</span>/500</div>
             </div>
-            <div id="gb-status" class="hidden mb-4 rounded-lg px-4 py-3 text-sm"></div>
+            <div id="gb-status" class="content-status hidden"></div>
             <button id="gb-submit" type="button" class="tb-btn" data-i18n="guestbook.post">Post message</button>
         </section>
 
         <section>
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-base font-semibold text-gray-900" data-i18n="guestbook.allMessages">All messages</h2>
+            <div class="gb-section-head">
+                <h2 data-i18n="guestbook.allMessages">All messages</h2>
             </div>
-            <div id="gb-list" class="space-y-4">
-                <div id="gb-loading" class="text-center text-gray-400 py-12">
-                    <i class="fas fa-spinner fa-spin mr-2"></i><span data-i18n="guestbook.loading">Loading...</span>
+            <div id="gb-list" class="gb-list">
+                <div id="gb-loading" class="gb-loading">
+                    <i class="fas fa-spinner fa-spin"></i> <span data-i18n="guestbook.loading">Loading...</span>
                 </div>
             </div>
-            <div id="gb-load-more-wrap" class="text-center mt-6 hidden">
+            <div id="gb-load-more-wrap" class="gb-load-more-wrap hidden">
                 <button id="gb-load-more" type="button" class="tb-btn" data-i18n="guestbook.loadMore">Load more</button>
             </div>
-            <div id="gb-empty" class="hidden text-center text-gray-400 py-12">
-                <i class="fas fa-comment-dots text-3xl mb-3 block opacity-40"></i>
+            <div id="gb-empty" class="hidden gb-empty">
+                <i class="fas fa-comment-dots gb-empty-icon"></i>
                 <span data-i18n="guestbook.empty">No messages yet — be the first!</span>
             </div>
         </section>
     </main>
 
-    <script src="js/guestbook.js?v=minimax1"></script>
+    <script src="js/guestbook.js?v=nosTW1"></script>
 </body>
 </html>

@@ -96,6 +96,10 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: Check no Tailwind in HTML
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
+        run: node deploy/check-no-tailwind.mjs
+
       - name: Rsync static site
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
         run: |

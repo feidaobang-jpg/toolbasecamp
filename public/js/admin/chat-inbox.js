@@ -82,11 +82,9 @@
     seen[m.id] = true;
     var mine = Number(m.senderId) === Number(meId);
     var row = document.createElement('div');
-    row.className = 'flex ' + (mine ? 'justify-end' : 'justify-start');
+    row.className = 'chat-row ' + (mine ? 'chat-row--mine' : 'chat-row--theirs');
     var bubble = document.createElement('div');
-    bubble.className =
-      'max-w-[85%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap break-words ' +
-      (mine ? 'chat-bubble-me' : 'chat-bubble-them');
+    bubble.className = mine ? 'chat-bubble-me' : 'chat-bubble-them';
     bubble.textContent = m.body || '';
     row.appendChild(bubble);
     logEl.appendChild(row);
@@ -101,29 +99,25 @@
     if (!listEl) return;
     listEl.innerHTML = '';
     if (!threads || !threads.length) {
-      listEl.innerHTML = '<p class="text-xs text-gray-400 p-2">' + tr('chat.inboxEmpty') + '</p>';
+      listEl.innerHTML = '<p class="inbox-thread-empty">' + tr('chat.inboxEmpty') + '</p>';
       return;
     }
     threads.forEach(function (th) {
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.className =
-        'w-full text-left border border-gray-100 rounded-lg px-2.5 py-2 hover:bg-gray-50 ' +
-        (Number(th.threadId) === Number(activeThreadId) ? 'thread-active' : '');
+      btn.className = 'inbox-thread-btn' + (Number(th.threadId) === Number(activeThreadId) ? ' thread-active' : '');
       var unread = Number(th.unread || 0);
       btn.innerHTML =
-        '<div class="flex items-center justify-between gap-1">' +
-          '<span class="text-sm font-medium truncate">' + String(th.account || '') + '</span>' +
+        '<div class="inbox-thread-top">' +
+          '<span class="inbox-thread-account">' + String(th.account || '') + '</span>' +
           (unread > 0
-            ? '<span class="text-[10px] bg-red-500 text-white rounded-full min-w-[1.1rem] h-4 px-1 flex items-center justify-center">' +
-                unread +
-              '</span>'
+            ? '<span class="inbox-thread-badge">' + unread + '</span>'
             : '') +
         '</div>' +
         (th.loginAccount && th.nickname
-          ? '<div class="text-[11px] text-gray-400 truncate">' + String(th.loginAccount) + '</div>'
+          ? '<div class="inbox-thread-sub">' + String(th.loginAccount) + '</div>'
           : '') +
-        '<div class="text-xs text-gray-400 truncate mt-0.5">' +
+        '<div class="inbox-thread-preview">' +
           String(th.lastPreview || tr('chat.noPreview')) +
         '</div>';
       btn.addEventListener('click', function () {

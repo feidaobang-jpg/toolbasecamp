@@ -43,10 +43,8 @@
   var bgSelectWrap = document.getElementById('bg-select-wrap');
   var bgRegionSelect = document.getElementById('bg-region-select');
   var bgPlaceSelect = document.getElementById('bg-place-select');
-  var bgExpanded = false;
-  var bgPresetButtons = null;
   var bgGroupsData = [];
-  var bgTime = 'day';
+  var bgUi = null;
   var files = [];
   var previewUrls = [];
   var resultUrls = [];
@@ -324,76 +322,17 @@
     setBusy(false);
   }
 
-  function timePhrase() {
-    if (bgTime === 'dusk') return '黄昏金色光，电影感自然光';
-    if (bgTime === 'night') return '夜景霓虹，低照度，电影感';
-    return '白天晴朗，自然光，旅行摄影写实';
-  }
-
-  function setBgTime(time) {
-    bgTime = time || 'day';
-    if (!bgTimeRow) return;
-    var chips = bgTimeRow.querySelectorAll('.rec-chip');
-    for (var i = 0; i < chips.length; i++) {
-      var t = chips[i].getAttribute('data-bg-time') || 'day';
-      chips[i].classList.toggle('is-active', t === bgTime);
-    }
-    setBusy(false);
-  }
-
-  function setBgPanelExpanded(on) {
-    bgExpanded = !!on;
-    if (bgPanelEl) bgPanelEl.hidden = !bgExpanded;
-    if (bgToggleBtn) {
-      bgToggleBtn.textContent = tr(bgExpanded ? 'tools.instructEdit.bgCollapse' : 'tools.instructEdit.bgExpand');
-    }
-  }
-
-  function applyBackgroundPreset(place) {
-    if (!promptEl) return;
-    if (!place) return;
-    var snippet = '背景：' + place + '，写实旅游摄影，' + timePhrase();
-    var v = (promptEl.value || '').trim();
-    // Remove previously inserted background line(s) (we always add as a separate line).
-    var lines = v ? v.split(/\n/) : [];
-    var out = [];
-    for (var i = 0; i < lines.length; i++) {
-      var line = (lines[i] || '').trim();
-      if (!line) continue;
-      if (line.indexOf('背景：') === 0) continue;
-      out.push(line);
-    }
-    out.push(snippet);
-    promptEl.value = out.join('\n');
-    setBusy(false);
-    updateCostHint();
-  }
-
-  function collectBgGroups() {
-    if (!bgGroupsEl) return [];
-    var groups = bgGroupsEl.children || [];
-    var out = [];
-    for (var i = 0; i < groups.length; i++) {
-      var box = groups[i];
-      if (!box || !box.querySelectorAll) continue;
-      var titleEl = box.querySelector('.text-xs');
-      var btns = box.querySelectorAll('button[data-bg-place]');
-      var items = [];
-      for (var j = 0; j < btns.length; j++) {
-        var btn = btns[j];
-        items.push({
-          value: btn.getAttribute('data-bg-place') || btn.textContent || '',
-          label: (btn.textContent || '').trim()
-        });
-      }
-      if (titleEl && items.length) {
-        out.push({
-          label: (titleEl.textContent || '').trim(),
-          items: items
-        });
-      }
-    }
-    return out;
+  function getBgGroupsData() {
+    var G = window.InstructEditBgGroups;
+    if (!G || !G.groups) return [];
+    return G.groups.map(function (g) {
+      return {
+        label: g.title,
+        items: g.places.map(function (p) {
+          return { value: p.value, label: p.label };
+        })
+      };
+    });
   }
 
   function renderBgPlaceOptions(regionIdx) {
@@ -419,7 +358,7 @@
 
   function renderBgRegionOptions() {
     if (!bgRegionSelect) return;
-    bgGroupsData = collectBgGroups();
+    bgGroupsData = getBgGroupsData();
     bgRegionSelect.innerHTML = '';
     var ph = document.createElement('option');
     ph.value = '';
@@ -1277,8 +1216,7 @@
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
-      setBgPanelExpanded(false);
-      setBgTime('day');
+      if (bgUi) bgUi.reset();
       syncControlsVisible();
       syncSelectAllLabel();
       updateCostHint();
@@ -1288,24 +1226,21 @@
     });
   }
 
-  // Background preset chips wiring (optional)
-  if (bgToggleBtn) {
-    bgToggleBtn.addEventListener('click', function () {
-      setBgPanelExpanded(!bgExpanded);
+  if (window.InstructEditBgUi) {
+    bgUi = window.InstructEditBgUi.bind({
+      promptEl: promptEl,
+      toggleBtn: bgToggleBtn,
+      panelEl: bgPanelEl,
+      timeRowEl: bgTimeRow,
+      groupsEl: bgGroupsEl,
+      tr: tr,
+      onPromptChange: function () {
+        setBusy(false);
+        updateCostHint();
+      }
     });
   }
-  if (bgTimeRow) {
-    var timeChips = bgTimeRow.querySelectorAll('button[data-bg-time]');
-    for (var i = 0; i < timeChips.length; i++) {
-      (function (btn) {
-        btn.addEventListener('click', function () {
-          var t = btn.getAttribute('data-bg-time') || 'day';
-          setBgTime(t);
-        });
-      })(timeChips[i]);
-    }
-  }
-  setBgPanelExpanded(false);
+
   if (bgRegionSelect) {
     bgRegionSelect.addEventListener('change', function () {
       renderBgPlaceOptions(parseInt(bgRegionSelect.value || '-1', 10));
@@ -1315,29 +1250,13 @@
     bgPlaceSelect.addEventListener('change', function () {
       var place = (bgPlaceSelect.value || '').trim();
       if (!place) return;
-      applyBackgroundPreset(place);
-      setBusy(false);
+      if (bgUi) bgUi.applyPlace(place);
     });
-  }
-  // Location chips (everything with data-bg-place)
-  bgPresetButtons = document.querySelectorAll('button[data-bg-place]');
-  if (bgPresetButtons && bgPresetButtons.length) {
-    for (var b = 0; b < bgPresetButtons.length; b++) {
-      (function (btn) {
-        btn.addEventListener('click', function () {
-          var place = btn.getAttribute('data-bg-place') || btn.textContent || '';
-          place = place.trim();
-          applyBackgroundPreset(place);
-          // prompt input listener will update busy state; still safe to force.
-          setBusy(false);
-        });
-      })(bgPresetButtons[b]);
-    }
   }
 
   document.addEventListener('tb:locale', function () {
     applyLocaleBits();
-    setBgPanelExpanded(bgExpanded);
+    if (bgUi) bgUi.setExpanded(bgUi.getExpanded());
     syncSelectAllLabel();
     syncRefModeUi();
     syncDropHints();

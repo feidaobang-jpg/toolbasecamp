@@ -8,88 +8,89 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=minimax1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css?v=minimax1">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=minimax1">
+<link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+  <link rel="stylesheet" href="css/content-page.css?v=nosTW1">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
     <script src="js/locales/en.js?v=i2i-name1"></script>
     <script src="js/locales/zh-CN.js?v=i2i-name1"></script>
-    <script src="js/i18n.js?v=minimax1"></script>
-    <script src="js/config.js?v=minimax1"></script>
-    <script src="js/common_ui.js?v=adminhub1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/config.js?v=nosTW1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">工具大本营</h1>
+<body class="site-page">
+    <header class="site-header site-header--sticky">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">工具大本营</h1>
             </a>
-            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
         </div>
     </header>
 
-    <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
-            <div class="text-center mb-10">
-                <div class="w-24 h-24 bg-blue-100 rounded-2xl mx-auto mb-6 flex items-center justify-center">
-                    <span class="text-3xl font-bold text-blue-600">TB</span>
+    <main class="site-main site-main--about">
+        <div class="about-card">
+            <div class="about-hero">
+                <div class="about-logo-box">
+                    <span class="about-logo-text">TB</span>
                 </div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-4" data-i18n="about.title">About 工具大本营</h1>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto" data-i18n="about.lead">
+                <h1 class="about-hero-title" data-i18n="about.title">About 工具大本营</h1>
+                <p class="about-hero-lead" data-i18n="about.lead">
                     A global productivity toolkit
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-                <div class="p-5 bg-blue-50 rounded-xl">
-                    <i class="fas fa-file-alt text-blue-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.documentTitle">Document Tools</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.documentDesc">PDF to Word, Word to PDF, and Images to PDF.</p>
+            <div class="about-feature-grid">
+                <div class="about-feature about-feature--blue">
+                    <i class="fas fa-file-alt"></i>
+                    <h3 class="about-feature-title" data-i18n="about.documentTitle">Document Tools</h3>
+                    <p class="about-feature-desc" data-i18n="about.documentDesc">PDF to Word, Word to PDF, and Images to PDF.</p>
                 </div>
-                <div class="p-5 bg-violet-50 rounded-xl">
-                    <i class="fas fa-magic text-violet-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.aiTitle">AI Images</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.aiDesc">Image-to-Image and Text-to-Image.</p>
+                <div class="about-feature about-feature--violet">
+                    <i class="fas fa-magic"></i>
+                    <h3 class="about-feature-title" data-i18n="about.aiTitle">AI Images</h3>
+                    <p class="about-feature-desc" data-i18n="about.aiDesc">Image-to-Image and Text-to-Image.</p>
                 </div>
-                <div class="p-5 bg-teal-50 rounded-xl">
-                    <i class="fas fa-leaf text-teal-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.lifeTitle">Life & Content</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.lifeDesc">Life plans, recipes, todos, and more.</p>
+                <div class="about-feature about-feature--teal">
+                    <i class="fas fa-leaf"></i>
+                    <h3 class="about-feature-title" data-i18n="about.lifeTitle">Life & Content</h3>
+                    <p class="about-feature-desc" data-i18n="about.lifeDesc">Life plans, recipes, todos, and more.</p>
                 </div>
-                <div class="p-5 bg-amber-50 rounded-xl">
-                    <i class="fas fa-gamepad text-amber-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.gamesTitle">Casual Games</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.gamesDesc">Browser games for phone and desktop.</p>
+                <div class="about-feature about-feature--amber">
+                    <i class="fas fa-gamepad"></i>
+                    <h3 class="about-feature-title" data-i18n="about.gamesTitle">Casual Games</h3>
+                    <p class="about-feature-desc" data-i18n="about.gamesDesc">Browser games for phone and desktop.</p>
                 </div>
-                <div class="p-5 bg-indigo-50 rounded-xl">
-                    <i class="fas fa-code text-indigo-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.developerTitle">Developer Tools</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.developerDesc">JSON to Java entity generator and more.</p>
+                <div class="about-feature about-feature--indigo">
+                    <i class="fas fa-code"></i>
+                    <h3 class="about-feature-title" data-i18n="about.developerTitle">Developer Tools</h3>
+                    <p class="about-feature-desc" data-i18n="about.developerDesc">JSON to Java entity generator and more.</p>
                 </div>
-                <div class="p-5 bg-green-50 rounded-xl">
-                    <i class="fas fa-shield-alt text-green-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.privacyTitle">Privacy-friendly</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.privacyDesc">Client-side tools run in your browser.</p>
+                <div class="about-feature about-feature--green">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3 class="about-feature-title" data-i18n="about.privacyTitle">Privacy-friendly</h3>
+                    <p class="about-feature-desc" data-i18n="about.privacyDesc">Client-side tools run in your browser.</p>
                 </div>
-                <div class="p-5 bg-orange-50 rounded-xl sm:col-span-2">
-                    <i class="fas fa-globe text-orange-600 text-2xl mb-3"></i>
-                    <h3 class="font-bold text-gray-900 mb-1" data-i18n="about.builtTitle">Bilingual</h3>
-                    <p class="text-sm text-gray-600" data-i18n="about.builtDesc">Clean UI in English and Chinese.</p>
+                <div class="about-feature about-feature--orange about-feature--span2">
+                    <i class="fas fa-globe"></i>
+                    <h3 class="about-feature-title" data-i18n="about.builtTitle">Bilingual</h3>
+                    <p class="about-feature-desc" data-i18n="about.builtDesc">Clean UI in English and Chinese.</p>
                 </div>
             </div>
 
-            <div class="mt-12 pt-8 border-t border-gray-100 text-center">
-                <p class="text-sm text-gray-600 mb-4 max-w-xl mx-auto" data-i18n="about.topUpHint">
+            <div class="about-footer">
+                <p class="about-footer-hint" data-i18n="about.topUpHint">
                     Need balance? Open Top up: pay via WeChat and message the admin, or redeem a Xianyu code.
                 </p>
-                <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <div class="about-footer-actions">
                     <a href="top-up.html" class="tb-btn" data-i18n="about.goTopUp">Top up</a>
                 </div>
-                <p class="text-gray-500 text-sm mb-4" data-i18n="about.questions">Questions or feedback?</p>
-                <p class="text-gray-500 text-sm mb-4" data-i18n="about.qqGroup">QQ Group: 691386237 (community chat)</p>
-                <a href="html/auth/chat.html" class="tb-btn inline-flex items-center gap-2">
+                <p class="about-footer-text" data-i18n="about.questions">Questions or feedback?</p>
+                <p class="about-footer-text" data-i18n="about.qqGroup">QQ Group: 691386237 (community chat)</p>
+                <a href="html/auth/chat.html" class="tb-btn">
                     <i class="fas fa-comments"></i>
                     <span data-i18n="about.contactAdmin">Private chat with admin</span>
                 </a>

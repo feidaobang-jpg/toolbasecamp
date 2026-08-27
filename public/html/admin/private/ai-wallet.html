@@ -6,42 +6,42 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>用户余额 - 后台</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <script src="../../../vendor/tailwindcss.js?v=minimax1"></script>
-  <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
+<link href="../../../vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet" />
   <link rel="stylesheet" href="../../../css/base.css?v=pagerjump1" />
-  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
+  <link rel="stylesheet" href="../../../css/admin-shell.css?v=nosTW2" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=nosTW1" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=pager20" />
   <script src="../../../js/locales/en.js?v=i2i-name1"></script>
   <script src="../../../js/locales/zh-CN.js?v=i2i-name1"></script>
-  <script src="../../../js/i18n.js?v=minimax1"></script>
-  <script src="../../../js/config.js?v=minimax1"></script>
-  <script src="../../../js/common_ui.js?v=adminhub1"></script>
+  <script src="../../../js/i18n.js?v=nosTW1"></script>
+  <script src="../../../js/config.js?v=nosTW1"></script>
+  <script src="../../../js/common_ui.js?v=nosTW1"></script>
   <script src="../../../js/tb-pager.js?v=jump1"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="../private.html" class="admin-back">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.walletTitle">用户余额</h1>
-      <div class="ml-auto flex items-center gap-3 text-sm">
-        <span id="auth-label" class="text-gray-500"></span>
-        <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      <h1 class="admin-title" data-i18n="privateHub.ops.walletTitle">用户余额</h1>
+      <div class="admin-header-actions">
+        <span id="auth-label" class="admin-auth-label"></span>
+        <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="admin-login-link hidden" data-i18n="auth.login">登录</a>
       </div>
     </div>
   </header>
 
-  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
-    <div id="boot-loading" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">
+  <main class="admin-main admin-main--wide">
+    <div id="boot-loading" class="admin-card admin-card--center admin-card--narrow">
       加载中…
     </div>
-    <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
-      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查看</p>
-      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="tb-btn inline-flex">去登录</a>
+    <div id="gate" class="admin-card admin-card--center admin-card--narrow hidden">
+      <p id="gate-msg" class="admin-gate-msg">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fai-wallet.html" class="tb-btn">去登录</a>
     </div>
 
-    <div id="app" class="ladder-update-wrap hidden max-w-2xl mx-auto space-y-6">
+    <div id="app" class="ladder-update-wrap admin-app hidden">
       <p class="ladder-update-desc" data-i18n="privateHub.ops.walletDesc">
         给用户加余额，或生成兑换码发给用户在个人中心兑换。
       </p>
@@ -49,18 +49,18 @@
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCreditTitle">后台加余额</h2>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCreditDesc">填写用户登录手机号，以及金额（元）。</p>
-        <div class="space-y-3">
-          <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletAccount">账号</span>
-            <input id="credit-account" type="text" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" inputmode="tel" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletAccountPh" placeholder="手机号" />
+        <div class="admin-form-stack">
+          <label class="admin-field">
+            <span class="admin-field-label" data-i18n="privateHub.ops.walletAccount">账号</span>
+            <input id="credit-account" type="text" class="admin-input" inputmode="tel" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletAccountPh" placeholder="手机号" />
           </label>
-          <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
-            <input id="credit-amount" type="number" min="0.01" step="0.01" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="10" />
+          <label class="admin-field">
+            <span class="admin-field-label" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
+            <input id="credit-amount" type="number" min="0.01" step="0.01" class="admin-input" value="10" />
           </label>
-          <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletNote">备注（可选）</span>
-            <input id="credit-note" type="text" maxlength="128" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          <label class="admin-field">
+            <span class="admin-field-label" data-i18n="privateHub.ops.walletNote">备注（可选）</span>
+            <input id="credit-note" type="text" maxlength="128" class="admin-input" />
           </label>
           <div class="action-row">
             <button type="button" class="tb-btn" id="btn-credit" data-i18n="privateHub.ops.walletCreditBtn">加余额</button>
@@ -72,14 +72,14 @@
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletUsersTitle">用户余额列表</h2>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.walletUsersDesc">查看全部用户账号与余额，可按手机号或昵称搜索。</p>
-        <div class="space-y-3">
-          <div class="flex flex-col sm:flex-row gap-2">
-            <input id="users-q" type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletUsersSearchPh" placeholder="手机号/昵称" />
+        <div class="admin-form-stack">
+          <div class="admin-toolbar-row">
+            <input id="users-q" type="text" class="admin-input" autocomplete="off" data-i18n-placeholder="privateHub.ops.walletUsersSearchPh" placeholder="手机号/昵称" />
             <button type="button" class="tb-btn" id="btn-users-search" data-i18n="privateHub.ops.walletUsersSearch">查询</button>
             <button type="button" class="tb-btn" id="btn-users-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
           </div>
           <div id="users-status" class="ladder-status"></div>
-          <div id="users-list" class="text-sm space-y-2"></div>
+          <div id="users-list" class="admin-list-stack"></div>
           <div class="tb-pager" id="users-pager" hidden></div>
         </div>
       </section>
@@ -87,15 +87,15 @@
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletWdTitle">佣金兑现</h2>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.walletWdDesc">用户申请提现后，微信打款完成再在此核销扣减佣金。</p>
-        <div class="space-y-3">
-          <div class="flex flex-wrap gap-2" id="wd-filter">
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-blue-600 bg-blue-50 text-blue-700 is-active" data-status="pending" data-i18n="privateHub.ops.walletWdPending">待处理</button>
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="paid" data-i18n="privateHub.ops.walletWdPaid">已兑现</button>
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
-            <button type="button" class="tb-btn ml-auto" id="btn-wd-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
+        <div class="admin-form-stack">
+          <div class="admin-filter-row" id="wd-filter">
+            <button type="button" class="admin-filter-chip is-active" data-status="pending" data-i18n="privateHub.ops.walletWdPending">待处理</button>
+            <button type="button" class="admin-filter-chip" data-status="paid" data-i18n="privateHub.ops.walletWdPaid">已兑现</button>
+            <button type="button" class="admin-filter-chip" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
+            <button type="button" class="tb-btn" id="btn-wd-refresh" data-i18n="privateHub.ops.walletUsersRefresh">刷新</button>
           </div>
           <div id="wd-status" class="ladder-status"></div>
-          <div id="wd-list" class="text-sm space-y-2"></div>
+          <div id="wd-list" class="admin-list-stack"></div>
           <div class="tb-pager" id="wd-pager" hidden></div>
         </div>
       </section>
@@ -103,18 +103,18 @@
       <section class="ladder-section">
         <h2 class="ladder-section-title" data-i18n="privateHub.ops.walletCodesTitle">生成兑换码</h2>
         <p class="ladder-section-desc" data-i18n="privateHub.ops.walletCodesDesc">一次最多 50 个。用户在「个人中心」输入兑换码充值。</p>
-        <div class="space-y-3">
-          <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
-            <input id="code-amount" type="number" min="0.01" step="0.01" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="10" />
+        <div class="admin-form-stack">
+          <label class="admin-field">
+            <span class="admin-field-label" data-i18n="privateHub.ops.walletAmount">金额（元）</span>
+            <input id="code-amount" type="number" min="0.01" step="0.01" class="admin-input" value="10" />
           </label>
-          <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletCodeCount">数量</span>
-            <input id="code-count" type="number" min="1" max="50" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" value="5" />
+          <label class="admin-field">
+            <span class="admin-field-label" data-i18n="privateHub.ops.walletCodeCount">数量</span>
+            <input id="code-count" type="number" min="1" max="50" class="admin-input" value="5" />
           </label>
-          <label class="block text-sm">
-            <span class="text-gray-600" data-i18n="privateHub.ops.walletNote">备注（可选）</span>
-            <input id="code-note" type="text" maxlength="128" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          <label class="admin-field">
+            <span class="admin-field-label" data-i18n="privateHub.ops.walletNote">备注（可选）</span>
+            <input id="code-note" type="text" maxlength="128" class="admin-input" />
           </label>
           <div class="action-row">
             <button type="button" class="tb-btn" id="btn-codes" data-i18n="privateHub.ops.walletCodesBtn">生成</button>
@@ -122,20 +122,20 @@
             <button type="button" class="tb-btn" id="btn-copy-page-codes" data-i18n="privateHub.ops.walletCodesCopyPage">复制本页</button>
           </div>
           <div id="codes-status" class="ladder-status"></div>
-          <pre id="codes-new" class="text-xs bg-slate-50 border border-slate-100 rounded-lg p-3 overflow-auto hidden whitespace-pre-wrap"></pre>
-          <div class="flex flex-wrap gap-2 mt-3" id="codes-filter">
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-blue-600 bg-blue-50 text-blue-700 is-active" data-status="unused" data-i18n="privateHub.ops.walletFilterUnused">未用</button>
-            <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-gray-300 bg-white text-gray-700" data-status="used" data-i18n="privateHub.ops.walletFilterUsed">已用</button>
+          <pre id="codes-new" class="admin-code-pre hidden"></pre>
+          <div class="admin-filter-row" id="codes-filter">
+            <button type="button" class="admin-filter-chip" data-status="all" data-i18n="privateHub.ops.walletFilterAll">全部</button>
+            <button type="button" class="admin-filter-chip is-active" data-status="unused" data-i18n="privateHub.ops.walletFilterUnused">未用</button>
+            <button type="button" class="admin-filter-chip" data-status="used" data-i18n="privateHub.ops.walletFilterUsed">已用</button>
           </div>
-          <div id="codes-list" class="text-sm space-y-2 mt-3"></div>
+          <div id="codes-list" class="admin-list-stack"></div>
           <div class="tb-pager" id="codes-pager" hidden></div>
         </div>
       </section>
     </div>
   </main>
 
-  <script src="../../../js/admin/private-page-guard.js?v=minimax1"></script>
+  <script src="../../../js/admin/private-page-guard.js?v=nosTW1"></script>
   <script src="../../../js/admin/ai-wallet.js?v=pager20"></script>
 </body>
 </html>

@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const presetWrap = document.getElementById('preset-wrap');
   const presetRow = document.getElementById('preset-row');
   const bgWrap = document.getElementById('bg-wrap');
-  const bgPanel = document.getElementById('bg-panel');
+  const bgPanel = document.getElementById('bg-toggle-panel');
   const bgToggleBtn = document.getElementById('bg-toggle-btn');
   const bgTimeRow = document.getElementById('bg-time-row');
+  const bgGroups = document.getElementById('bg-groups');
   const qualityWrap = document.getElementById('quality-wrap');
   const qualitySelect = document.getElementById('quality-select');
   const qualityHint = document.getElementById('quality-hint');
@@ -36,10 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let previewUrl = '';
   let currentTaskId = null;
   let pollingTimer = null;
-  let activePreset = '';
-  let presetFillLock = false;
-  let bgTime = 'day';
-  let bgExpanded = false;
+  let presetUi = null;
+  let bgUi = null;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -135,91 +134,29 @@ document.addEventListener('DOMContentLoaded', function () {
     if (zimageHint) zimageHint.hidden = !z;
   }
 
-  function setPreset(id) {
-    activePreset = id || '';
-    if (!presetRow) return;
-    presetRow.querySelectorAll('.rec-chip').forEach(function (chip) {
-      const p = chip.getAttribute('data-preset') || '';
-      chip.classList.toggle('is-active', p === activePreset);
-    });
-    if (!window.InstructEditPresets) return;
-    presetFillLock = true;
-    if (activePreset) {
-      promptInput.value = window.InstructEditPresets.applyColorHint(
-        window.InstructEditPresets.prompt(activePreset)
-      );
-    }
-    presetFillLock = false;
-  }
-
-  function setBgTime(time) {
-    bgTime = time || 'day';
-    if (!bgTimeRow) return;
-    bgTimeRow.querySelectorAll('[data-bg-time]').forEach(function (chip) {
-      const t = chip.getAttribute('data-bg-time') || 'day';
-      chip.classList.toggle('is-active', t === bgTime);
+  if (window.InstructEditPresetUi) {
+    presetUi = window.InstructEditPresetUi.bind({
+      presetRow: presetRow,
+      promptEl: promptInput,
+      tr: tr
     });
   }
-
-  function setBgPanelExpanded(on) {
-    bgExpanded = !!on;
-    if (bgPanel) bgPanel.hidden = !bgExpanded;
-    if (bgToggleBtn) {
-      bgToggleBtn.textContent = tr(
-        bgExpanded ? 'tools.instructEdit.bgCollapse' : 'tools.instructEdit.bgExpand',
-        bgExpanded ? '收起' : '展开'
-      );
-    }
-  }
-
-  function applyBackgroundPreset(place) {
-    if (!promptInput || !place || !window.InstructEditBgPresets) return;
-    promptInput.value = window.InstructEditBgPresets.apply(promptInput.value, place, bgTime);
-  }
-
-  if (presetRow) {
-    presetRow.addEventListener('click', function (e) {
-      const btn = e.target.closest('[data-preset]');
-      if (!btn || !presetRow.contains(btn)) return;
-      setPreset(btn.getAttribute('data-preset') || '');
-    });
-  }
-
-  if (promptInput) {
-    promptInput.addEventListener('input', function () {
-      if (presetFillLock || !activePreset || !window.InstructEditPresets) return;
-      var base = window.InstructEditPresets.prompt(activePreset);
-      if ((promptInput.value || '').indexOf(base) === -1) setPreset('');
-    });
-  }
-
-  if (bgToggleBtn) {
-    bgToggleBtn.addEventListener('click', function () {
-      setBgPanelExpanded(!bgExpanded);
-    });
-  }
-
-  if (bgTimeRow) {
-    bgTimeRow.addEventListener('click', function (e) {
-      const btn = e.target.closest('[data-bg-time]');
-      if (!btn || !bgTimeRow.contains(btn)) return;
-      setBgTime(btn.getAttribute('data-bg-time') || 'day');
-    });
-  }
-
-  document.querySelectorAll('button[data-bg-place]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      applyBackgroundPreset(btn.getAttribute('data-bg-place') || btn.textContent || '');
-    });
-  });
 
   if (engineSelect) {
     engineSelect.addEventListener('change', syncEngineUi);
     syncEngineUi();
   }
 
-  setBgPanelExpanded(false);
-  setBgTime('day');
+  if (window.InstructEditBgUi) {
+    bgUi = window.InstructEditBgUi.bind({
+      promptEl: promptInput,
+      toggleBtn: bgToggleBtn,
+      panelEl: bgPanel,
+      timeRowEl: bgTimeRow,
+      groupsEl: bgGroups,
+      tr: tr
+    });
+  }
 
   function qualityLabel(q) {
     if (q === 'high') return tr('privateHub.homePc.img2imgQualityHigh', '高质量');
@@ -289,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const engine = engineSelect ? engineSelect.value : 'qwen';
     let prompt = (promptInput.value || '').trim();
     if (engine === 'qwen' && window.InstructEditPresets) {
-      prompt = window.InstructEditPresets.resolvePrompt(activePreset, prompt).trim();
+      prompt = window.InstructEditPresets.resolvePrompt(presetUi ? presetUi.getActive() : '', prompt).trim();
     }
     if (!prompt) {
       alert(tr('privateHub.homePc.img2imgNeedPrompt', '请输入正向提示词'));
@@ -348,9 +285,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (fileInput) fileInput.value = '';
     renderPreview();
     promptInput.value = '';
-    setPreset('');
-    setBgTime('day');
-    setBgPanelExpanded(false);
+    if (presetUi) presetUi.reset();
+    if (bgUi) bgUi.reset();
     if (qualitySelect) qualitySelect.value = 'high';
     denoiseInput.value = '0.4';
     seedInput.value = '';

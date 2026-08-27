@@ -6,39 +6,38 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>后台更新</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <script src="../../../vendor/tailwindcss.js?v=minimax1"></script>
-  <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
-  <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
+<link href="../../../vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=nosTW1" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=gameThumbs2" />
   <script src="../../../js/locales/en.js?v=i2i-name1"></script>
   <script src="../../../js/locales/zh-CN.js?v=i2i-name1"></script>
-  <script src="../../../js/i18n.js?v=minimax1"></script>
+  <script src="../../../js/i18n.js?v=nosTW1"></script>
   <script src="../../../js/config.js?v=games8"></script>
-  <script src="../../../js/common_ui.js?v=adminhub1"></script>
+  <script src="../../../js/common_ui.js?v=nosTW1"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="../private.html" class="admin-back">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.refreshTitle">后台更新</h1>
-      <div class="ml-auto flex items-center gap-3 text-sm">
-        <span id="auth-label" class="text-gray-500"></span>
-        <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fladder-update.html" class="text-blue-600 hover:underline hidden" data-i18n="auth.login">登录</a>
+      <h1 class="admin-title" data-i18n="privateHub.ops.refreshTitle">后台更新</h1>
+      <div class="admin-header-actions">
+        <span id="auth-label" class="admin-auth-label"></span>
+        <a id="login-link" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fladder-update.html" class="admin-login-link hidden" data-i18n="auth.login">登录</a>
       </div>
     </div>
   </header>
 
-  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
-    <div id="boot-loading" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">
+  <main class="admin-main admin-main--wide">
+    <div id="boot-loading" class="admin-card admin-card--center admin-card--narrow">
       加载中…
     </div>
 
-    <div id="gate" class="max-w-lg mx-auto bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
-      <p id="gate-msg" class="text-gray-600 mb-4">需要管理员登录后查看</p>
-      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fladder-update.html" class="tb-btn inline-flex">去登录</a>
+    <div id="gate" class="admin-card admin-card--center admin-card--narrow hidden">
+      <p id="gate-msg" class="admin-gate-msg">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fladder-update.html" class="tb-btn">去登录</a>
     </div>
 
     <div id="app" class="ladder-update-wrap hidden">

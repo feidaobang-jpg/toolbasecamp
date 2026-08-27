@@ -1,0 +1,25 @@
+---
+description: 家里电脑后台页 UI（见全站 no-tailwind 规则）
+globs: public/html/admin/private/home-pc/**,public/css/admin/home-pc.css,public/js/admin/home-pc/**,public/js/shared/instruct-edit-*.js
+alwaysApply: false
+---
+
+# 家里电脑（Home PC）后台 UI
+
+遵循全站规则 `.cursor/rules/no-tailwind.mdc`（禁止 Tailwind CDN / 工具类）。
+
+## 样式栈
+
+1. `base.css` → `docs/docs-common.css` → `admin/home-pc.css`
+2. 图生图 / instruct 表单：再加 `tools-form.css`、`media/image-tools.css`
+3. 外壳：`body.home-pc-page`、`.home-pc-header`、`.home-pc-main`、`.home-pc-card`
+
+## 与主站 instruct-edit 共用
+
+| 能力 | 共用模块 |
+|------|----------|
+| 风格预设 | `instruct-edit-presets.js` + `instruct-edit-preset-ui.js` |
+| 背景地点 | `instruct-edit-bg-*.js` |
+| 芯片 CSS | `image-tools.css`（`.rec-chip`） |
+
+新增 preset/背景只改 shared + 服务端镜像，不要在家 pc 页复制逻辑。

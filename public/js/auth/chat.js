@@ -62,7 +62,7 @@
     seen[m.id] = true;
     var mine = Number(m.senderId) === Number(meId);
     var row = document.createElement('div');
-    row.className = 'flex ' + (mine ? 'justify-end' : 'justify-start');
+    row.className = 'chat-row ' + (mine ? 'chat-row--mine' : 'chat-row--theirs');
     var bubble = document.createElement('div');
     bubble.className =
       'max-w-[85%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap break-words ' +

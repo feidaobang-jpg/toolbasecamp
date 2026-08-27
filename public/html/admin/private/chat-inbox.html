@@ -6,67 +6,64 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>收件箱 - 后台</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <script src="../../../vendor/tailwindcss.js?v=minimax1"></script>
-  <link href="../../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet" />
-  <link rel="stylesheet" href="../../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=minimax1" />
+  <link href="../../../vendor/font-awesome/css/all.min.css?v=nosTW2" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../css/base.css?v=nosTW2" />
+  <link rel="stylesheet" href="../../../css/admin-shell.css?v=nosTW2" />
+  <link rel="stylesheet" href="../../../css/admin/chat-inbox.css?v=nosTW2" />
   <script src="../../../js/locales/en.js?v=i2i-name1"></script>
   <script src="../../../js/locales/zh-CN.js?v=i2i-name1"></script>
-  <script src="../../../js/i18n.js?v=minimax1"></script>
-  <script src="../../../js/config.js?v=minimax1"></script>
-  <script src="../../../js/common_ui.js?v=adminhub1"></script>
+  <script src="../../../js/i18n.js?v=nosTW2"></script>
+  <script src="../../../js/config.js?v=nosTW2"></script>
+  <script src="../../../js/common_ui.js?v=nosTW2"></script>
   <style>
     .chat-bubble-me { background: #2563eb; color: #fff; }
     .chat-bubble-them { background: #f3f4f6; color: #111827; }
     .thread-active { background: #eff6ff; border-color: #93c5fd; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-  <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-      <a href="../private.html" class="flex items-center gap-2 flex-shrink-0 text-sm text-gray-600 hover:text-blue-600">
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="../private.html" class="admin-back">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
       </a>
-      <h1 class="text-base sm:text-lg font-bold text-gray-900 truncate" data-i18n="privateHub.ops.chatInboxTitle">收件箱</h1>
-      <span id="inbox-unread" class="text-xs text-amber-600 font-medium"></span>
-      <div class="ml-auto flex items-center gap-3 text-sm">
-        <span id="auth-label" class="text-gray-500"></span>
+      <h1 class="admin-title" data-i18n="privateHub.ops.chatInboxTitle">收件箱</h1>
+      <span id="inbox-unread" class="admin-inbox-unread"></span>
+      <div class="admin-header-actions">
+        <span id="auth-label" class="admin-auth-label"></span>
       </div>
     </div>
   </header>
 
-  <main class="flex-1 px-4 sm:px-6 lg:px-8 py-4 w-full max-w-5xl mx-auto flex flex-col min-h-0" style="height: calc(100vh - 4rem);">
-    <div id="boot-loading" class="bg-white rounded-2xl border border-gray-100 p-8 text-center text-sm text-gray-500">加载中…</div>
-    <div id="gate" class="bg-white rounded-2xl border border-gray-100 p-8 text-center hidden">
-      <p class="text-gray-600 mb-4" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
-      <a href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fchat-inbox.html" class="tb-btn inline-flex" data-i18n="auth.login">登录</a>
+  <main class="admin-main admin-main--inbox">
+    <div id="boot-loading" class="admin-card admin-card--center">加载中…</div>
+    <div id="gate" class="admin-card admin-card--center hidden">
+      <p class="admin-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fchat-inbox.html" class="tb-btn" data-i18n="auth.login">登录</a>
     </div>
 
-    <div id="app" class="hidden flex-1 min-h-0 grid grid-cols-1 md:grid-cols-[240px_1fr] gap-3">
-      <aside class="bg-white rounded-2xl border border-gray-100 flex flex-col min-h-0 overflow-hidden">
-        <div class="px-3 py-2 border-b border-gray-100 flex items-center justify-between">
-          <span class="text-sm font-semibold" data-i18n="chat.inboxThreads">会话</span>
-          <button type="button" id="btn-refresh-threads" class="text-xs text-blue-600 hover:underline" data-i18n="chat.refresh">刷新</button>
+    <div id="app" class="inbox-app hidden">
+      <aside class="inbox-panel">
+        <div class="inbox-panel-head">
+          <span class="inbox-panel-title" data-i18n="chat.inboxThreads">会话</span>
+          <button type="button" id="btn-refresh-threads" class="inbox-refresh-btn" data-i18n="chat.refresh">刷新</button>
         </div>
-        <div id="thread-list" class="flex-1 overflow-y-auto p-2 space-y-1"></div>
+        <div id="thread-list" class="inbox-thread-list"></div>
       </aside>
-      <section class="bg-white rounded-2xl border border-gray-100 flex flex-col min-h-0 overflow-hidden">
-        <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2">
-          <div>
-            <div id="thread-title" class="text-sm font-semibold text-gray-900" data-i18n="chat.inboxPick">选择左侧会话</div>
-            <div id="chat-status" class="text-xs text-gray-400"></div>
-          </div>
+      <section class="inbox-panel">
+        <div class="inbox-chat-head">
+          <div id="thread-title" class="inbox-chat-title" data-i18n="chat.inboxPick">选择左侧会话</div>
+          <div id="chat-status" class="inbox-chat-status"></div>
         </div>
-        <div id="chat-log" class="flex-1 overflow-y-auto px-4 py-3 space-y-2"></div>
-        <div id="composer" class="hidden border-t border-gray-100 p-3 flex gap-2">
+        <div id="chat-log" class="inbox-chat-log"></div>
+        <div id="composer" class="inbox-composer hidden">
           <textarea id="chat-input" rows="2" maxlength="2000"
-            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm resize-none"
             data-i18n-placeholder="chat.placeholder" placeholder="输入消息…"></textarea>
-          <button type="button" id="chat-send" class="tb-btn self-end whitespace-nowrap" data-i18n="chat.send">发送</button>
+          <button type="button" id="chat-send" class="tb-btn" data-i18n="chat.send">发送</button>
         </div>
       </section>
     </div>
   </main>
-  <script src="../../../js/admin/chat-inbox.js?v=minimax1"></script>
+  <script src="../../../js/admin/chat-inbox.js?v=nosTW2"></script>
 </body>
 </html>

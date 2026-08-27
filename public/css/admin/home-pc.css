@@ -1,4 +1,146 @@
 ﻿/* Home PC admin tools */
+
+/* Page shell（家里电脑后台页，不依赖 Tailwind） */
+body.home-pc-page {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  color: #1f2937;
+  background: #f9fafb;
+}
+
+.home-pc-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.home-pc-header-inner {
+  box-sizing: border-box;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 16px;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .home-pc-header-inner {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-pc-header-inner {
+    gap: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-pc-header-inner {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.home-pc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.home-pc-back:hover {
+  color: #2563eb;
+}
+
+.home-pc-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .home-pc-title {
+    font-size: 18px;
+  }
+}
+
+.home-pc-header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.home-pc-auth-label {
+  color: #6b7280;
+}
+
+.home-pc-login-link {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.home-pc-main {
+  flex: 1;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+@media (min-width: 640px) {
+  .home-pc-main {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-pc-main {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.home-pc-card {
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.home-pc-card--center {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.home-pc-gate-msg {
+  margin: 0 0 16px;
+  color: #4b5563;
+}
+
 .home-pc-desc { font-size: 14px; color: #6b7280; margin: 0 0 12px; line-height: 1.5; }
 .home-pc-status { font-size: 13px; padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; line-height: 1.45; }
 .home-pc-status--checking { background: #f3f4f6; color: #4b5563; }
@@ -1115,51 +1257,6 @@ button:not(.tb-btn) {
   font-size: 14px;
 }
 
-/* img2img: preset/bg chips (toggle sits outside .instruct-preset-row) */
-.home-pc-wrap .home-pc-bg-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.home-pc-wrap .home-pc-bg-title {
-  margin: 0;
-  font-weight: 600;
-  color: #374151;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.home-pc-wrap button.rec-chip {
-  appearance: none;
-  -webkit-appearance: none;
-  margin: 0;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  color: #374151;
-  border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 13px;
-  line-height: 1.3;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-
-.home-pc-wrap button.rec-chip:hover {
-  border-color: #93c5fd;
-  background: #f8fafc;
-}
-
-.home-pc-wrap button.rec-chip.is-active {
-  border-color: #2563eb;
-  color: #2563eb;
-  background: #eff6ff;
-}
-
 .home-pc-wrap .drop-zone {
   width: 100%;
   height: auto;
@@ -1341,7 +1438,7 @@ body.tb-admin-private #auth-status {
 }
 
 @media (max-width: 768px) {
-  body.tb-admin-private header .max-w-7xl h1 {
+  body.tb-admin-private .home-pc-header-inner .home-pc-title {
     flex: 1;
     min-width: 0;
   }

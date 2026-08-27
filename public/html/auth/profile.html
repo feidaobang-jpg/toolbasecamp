@@ -5,74 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - 工具大本营</title>
     <meta name="description" content="Manage your Tools Base Camp account.">
-    <script src="../../vendor/tailwindcss.js?v=minimax1"></script>
-    <link href="../../vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/base.css?v=minimax1">
-    <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=minimax1">
+<link href="../../vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="../../css/site-shell.css?v=nosTW1">
+  <link rel="stylesheet" href="../../css/auth-form.css?v=nosTW2">
+  <link rel="stylesheet" href="../../css/admin-shell.css?v=nosTW2">
+    <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=nosTW1">
     <script src="../../js/locales/en.js?v=i2i-name1"></script>
     <script src="../../js/locales/zh-CN.js?v=i2i-name1"></script>
-    <script src="../../js/i18n.js?v=minimax1"></script>
-    <script src="../../js/config.js?v=minimax1"></script>
-    <script src="../../js/common_ui.js?v=adminhub1"></script>
+    <script src="../../js/i18n.js?v=nosTW1"></script>
+    <script src="../../js/config.js?v=nosTW1"></script>
+    <script src="../../js/common_ui.js?v=nosTW1"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col font-sans">
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-            <a href="../../index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">工具大本营</h1>
+<body class="site-page">
+    <header class="site-header site-header--sticky">
+        <div class="site-header-inner">
+            <a href="../../index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">工具大本营</h1>
             </a>
-            <nav data-nav="main" data-base-path="../../" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+            <nav data-nav="main" data-base-path="../../" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
         </div>
     </header>
 
-    <main class="flex-1 w-full max-w-lg mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="p-8 flex flex-col items-center text-center border-b border-gray-50">
-                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 text-3xl mb-4" id="profile-avatar-fallback">
+    <main class="profile-wrap">
+        <div class="profile-card">
+            <div class="profile-hero">
+                <div class="profile-avatar" id="profile-avatar-fallback">
                     <i class="fas fa-user"></i>
                 </div>
-                <h2 class="text-xl font-bold text-gray-900 mb-1" id="profile-display" data-i18n="auth.loading">Loading...</h2>
-                <p class="text-sm text-gray-500 break-all" id="profile-account"></p>
-                <p class="mt-3 text-sm text-gray-600">
+                <h2 class="profile-section-title" id="profile-display" data-i18n="auth.loading">Loading...</h2>
+                <p class="profile-section-hint" id="profile-account"></p>
+                <p class="profile-section-hint">
                     <span data-i18n="auth.aiBalance">Balance</span>：
-                    <span id="profile-balance" class="font-semibold text-gray-900">--</span>
+                    <span id="profile-balance">--</span>
                 </p>
             </div>
 
-            <div class="px-6 py-4 space-y-3 border-b border-gray-50">
-                <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.nicknameTitle">Nickname</h3>
-                <p class="text-xs text-gray-500" data-i18n="auth.nicknameHint">用于收件箱等列表展示；留空则显示手机号。</p>
-                <div class="flex flex-col sm:flex-row gap-2">
+            <div class="profile-section">
+                <h3 class="profile-section-title" data-i18n="auth.nicknameTitle">Nickname</h3>
+                <p class="profile-section-hint" data-i18n="auth.nicknameHint">用于收件箱等列表展示；留空则显示手机号。</p>
+                <div class="admin-toolbar-row">
                     <input type="text" id="nickname-input" maxlength="32" autocomplete="nickname"
-                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" />
-                    <button type="button" id="btn-save-nickname" class="tb-btn whitespace-nowrap" data-i18n="auth.saveNickname">Save</button>
+                        class="admin-input" />
+                    <button type="button" id="btn-save-nickname" class="tb-btn" data-i18n="auth.saveNickname">Save</button>
                 </div>
-                <div id="nickname-msg" class="text-sm hidden"></div>
+                <div id="nickname-msg" class="profile-msg hidden"></div>
             </div>
 
-            <div class="px-6 pb-2 space-y-3 border-b border-gray-50" id="redeem-section">
-                <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.redeemTitle">Redeem code</h3>
-                <p class="text-xs text-gray-500" data-i18n="auth.redeemHint">Enter a code from an admin to top up your account balance.</p>
-                <div class="flex flex-col sm:flex-row gap-2">
+            <div class="profile-section" id="redeem-section">
+                <h3 class="profile-section-title" data-i18n="auth.redeemTitle">Redeem code</h3>
+                <p class="profile-section-hint" data-i18n="auth.redeemHint">Enter a code from an admin to top up your account balance.</p>
+                <div class="admin-toolbar-row">
                     <input type="text" id="redeem-code" maxlength="40" autocomplete="off"
-                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono uppercase"
+                        class="admin-input admin-input--mono"
                         data-i18n-placeholder="auth.redeemCode" placeholder="Redeem code" />
-                    <button type="button" id="btn-redeem" class="tb-btn whitespace-nowrap" data-i18n="auth.redeemBtn">Redeem</button>
+                    <button type="button" id="btn-redeem" class="tb-btn" data-i18n="auth.redeemBtn">Redeem</button>
                 </div>
-                <div id="redeem-msg" class="text-sm hidden"></div>
+                <div id="redeem-msg" class="profile-msg hidden"></div>
             </div>
 
-            <div class="px-6 py-4 space-y-3 border-b border-gray-50" id="referral-section">
-                <h3 class="text-sm font-semibold text-gray-900" data-i18n="auth.referralTitle">Earn commission</h3>
-                <p class="text-xs text-gray-500" data-i18n="auth.referralHint">Share your invite link. When friends top up, you earn 10% as commission (separate from AI balance).</p>
-                <div class="text-sm text-gray-700 space-y-1">
+            <div class="profile-section" id="referral-section">
+                <h3 class="profile-section-title" data-i18n="auth.referralTitle">Earn commission</h3>
+                <p class="profile-section-hint" data-i18n="auth.referralHint">Share your invite link. When friends top up, you earn 10% as commission (separate from AI balance).</p>
+                <div class="profile-section-hint">
                     <p>
                         <span data-i18n="auth.commissionBalance">Commission</span>：
-                        <span id="referral-commission" class="font-semibold text-gray-900">--</span>
+                        <span id="referral-commission" class="profile-strong">--</span>
                     </p>
-                    <p class="text-xs text-gray-500">
+                    <p class="profile-section-hint">
                         <span data-i18n="auth.commissionEarned">Earned total</span>：
                         <span id="referral-earned">--</span>
                         · <span data-i18n="auth.inviteeCount">Invitees</span>：
@@ -80,80 +82,71 @@
                     </p>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-500 mb-1" data-i18n="auth.inviteCodeLabel">Invite code</label>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input type="text" id="referral-code" readonly
-                            class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono bg-gray-50" />
-                        <button type="button" id="btn-copy-invite" class="tb-btn whitespace-nowrap" data-i18n="auth.copyInviteLink">Copy link</button>
+                    <label class="profile-field-label" data-i18n="auth.inviteCodeLabel">Invite code</label>
+                    <div class="admin-toolbar-row">
+                        <input type="text" id="referral-code" readonly class="admin-input admin-input--readonly" />
+                        <button type="button" id="btn-copy-invite" class="tb-btn" data-i18n="auth.copyInviteLink">Copy link</button>
                     </div>
-                    <p id="referral-url" class="mt-1.5 text-xs text-gray-400 break-all"></p>
+                    <p id="referral-url" class="profile-url"></p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-2">
+                <div class="admin-toolbar-row">
                     <input type="number" id="withdraw-amount" min="0.01" step="0.01"
-                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        class="admin-input"
                         data-i18n-placeholder="auth.withdrawAmountPh" placeholder="Amount (CNY)" />
-                    <button type="button" id="btn-withdraw" class="tb-btn whitespace-nowrap" data-i18n="auth.withdrawBtn">Withdraw</button>
+                    <button type="button" id="btn-withdraw" class="tb-btn" data-i18n="auth.withdrawBtn">Withdraw</button>
                 </div>
-                <p class="text-xs text-gray-400" data-i18n="auth.withdrawHint">We notify an admin; after WeChat payout they settle it in the admin panel.</p>
-                <div id="referral-msg" class="text-sm hidden"></div>
-                <div id="referral-withdrawals" class="text-xs text-gray-500 space-y-1"></div>
+                <div id="referral-msg" class="profile-msg hidden"></div>
+                <div id="referral-withdrawals" class="profile-section-hint"></div>
             </div>
 
-            <div class="p-6 space-y-3">
-                <a href="../../index.html" class="tb-btn w-full inline-flex items-center justify-center gap-2">
+            <div class="profile-actions">
+                <a href="../../index.html" class="tb-btn w-full">
                     <i class="fas fa-home"></i> <span data-i18n="auth.backHome">返回首页</span>
                 </a>
-                <a href="chat.html" class="tb-btn w-full inline-flex items-center justify-center gap-2">
+                <a href="chat.html" class="tb-btn w-full">
                     <i class="fas fa-comments"></i> <span data-i18n="nav.chat">收件箱</span>
                 </a>
                 <button type="button" onclick="document.getElementById('modal-password').classList.remove('hidden')"
-                    class="tb-btn w-full inline-flex items-center justify-center gap-2">
+                    class="tb-btn w-full">
                     <i class="fas fa-key"></i> <span data-i18n="auth.changePassword">Change password</span>
                 </button>
-                <button id="btn-logout-profile" type="button"
-                    class="tb-btn w-full inline-flex items-center justify-center gap-2">
+                <button id="btn-logout-profile" type="button" class="tb-btn w-full">
                     <i class="fas fa-sign-out-alt"></i> <span data-i18n="auth.logout">Log out</span>
                 </button>
             </div>
 
-            <div class="px-6 pb-6 text-sm text-gray-500 flex justify-between border-t border-gray-50 pt-4">
+            <div class="profile-meta">
                 <span data-i18n="auth.memberSince">Member since</span>
-                <span id="profile-created-at" class="font-mono text-gray-700">--</span>
+                <span id="profile-created-at">--</span>
             </div>
         </div>
     </main>
 
-    <div id="modal-password" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="document.getElementById('modal-password').classList.add('hidden')"></div>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4" data-i18n="auth.changePassword">Change password</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="old-password" class="block text-sm font-medium text-gray-700" data-i18n="auth.currentPassword">Current password</label>
-                            <input type="password" id="old-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm">
-                        </div>
-                        <div>
-                            <label for="new-password" class="block text-sm font-medium text-gray-700" data-i18n="auth.newPassword">New password</label>
-                            <input type="password" id="new-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm" data-i18n-placeholder="auth.passwordHint" placeholder="At least 6 characters">
-                        </div>
-                        <div>
-                            <label for="confirm-password" class="block text-sm font-medium text-gray-700" data-i18n="auth.confirmPassword">Confirm new password</label>
-                            <input type="password" id="confirm-password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm">
-                        </div>
-                        <div id="pwd-msg" class="text-sm text-red-600 hidden"></div>
+    <div id="modal-password" class="tb-modal hidden" role="dialog" aria-modal="true">
+        <div class="tb-modal-backdrop" onclick="document.getElementById('modal-password').classList.add('hidden')"></div>
+        <div class="tb-modal-panel">
+            <div class="tb-modal-body">
+                <h3 class="profile-section-title" data-i18n="auth.changePassword">Change password</h3>
+                <div class="admin-form-stack">
+                    <div class="admin-field">
+                        <label for="old-password" data-i18n="auth.currentPassword">Current password</label>
+                        <input type="password" id="old-password" class="admin-input">
                     </div>
+                    <div class="admin-field">
+                        <label for="new-password" data-i18n="auth.newPassword">New password</label>
+                        <input type="password" id="new-password" class="admin-input" data-i18n-placeholder="auth.passwordHint" placeholder="At least 6 characters">
+                    </div>
+                    <div class="admin-field">
+                        <label for="confirm-password" data-i18n="auth.confirmPassword">Confirm new password</label>
+                        <input type="password" id="confirm-password" class="admin-input">
+                    </div>
+                    <div id="pwd-msg" class="profile-msg is-error hidden"></div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse gap-2">
-                    <button type="button" id="btn-save-pwd" class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-sm font-medium text-white hover:bg-blue-700" data-i18n="auth.save">
-                        Save
-                    </button>
-                    <button type="button" class="mt-3 sm:mt-0 w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                        onclick="document.getElementById('modal-password').classList.add('hidden')" data-i18n="auth.cancel">
-                        Cancel
-                    </button>
-                </div>
+            </div>
+            <div class="tb-modal-footer">
+                <button type="button" id="btn-save-pwd" class="tb-btn" data-i18n="auth.save">Save</button>
+                <button type="button" class="tb-btn"
+                    onclick="document.getElementById('modal-password').classList.add('hidden')" data-i18n="auth.cancel">Cancel</button>
             </div>
         </div>
     </div>
@@ -324,8 +317,8 @@
                 } catch (e) {
                     if (msgEl && e.message !== 'Unauthorized') {
                         msgEl.textContent = translateAuthError(e.message || '') || tr('auth.loadProfileFailed');
-                        msgEl.classList.remove('hidden', 'text-emerald-600');
-                        msgEl.classList.add('text-red-600');
+                        msgEl.classList.remove('hidden', 'is-success');
+                        msgEl.classList.add('is-error');
                     }
                 }
             }
@@ -360,12 +353,12 @@
                 var msgEl = document.getElementById('referral-msg');
                 copyText(url).then(function () {
                     msgEl.textContent = tr('auth.inviteLinkCopied');
-                    msgEl.classList.remove('hidden', 'text-red-600');
-                    msgEl.classList.add('text-emerald-600');
+                        msgEl.classList.remove('hidden', 'is-error');
+                        msgEl.classList.add('is-success');
                 }).catch(function () {
                     msgEl.textContent = tr('auth.inviteLinkCopyFail');
                     msgEl.classList.remove('hidden', 'text-emerald-600');
-                    msgEl.classList.add('text-red-600');
+                    msgEl.classList.add('is-error');
                 });
             });
 
@@ -377,7 +370,7 @@
                 if (!(amount > 0)) {
                     msgEl.textContent = tr('auth.withdrawNeedAmount');
                     msgEl.classList.remove('hidden', 'text-emerald-600');
-                    msgEl.classList.add('text-red-600');
+                    msgEl.classList.add('is-error');
                     return;
                 }
                 btn.disabled = true;
@@ -389,14 +382,14 @@
                     });
                     if (!data.success) throw new Error(data.detail || tr('auth.updateFailed'));
                     msgEl.textContent = tr('auth.withdrawOk');
-                    msgEl.classList.remove('hidden', 'text-red-600');
-                    msgEl.classList.add('text-emerald-600');
+                        msgEl.classList.remove('hidden', 'is-error');
+                        msgEl.classList.add('is-success');
                     document.getElementById('withdraw-amount').value = '';
                     await loadReferral();
                 } catch (e) {
                     msgEl.textContent = translateAuthError(e.message || '') || tr('auth.updateFailed');
                     msgEl.classList.remove('hidden', 'text-emerald-600');
-                    msgEl.classList.add('text-red-600');
+                    msgEl.classList.add('is-error');
                 } finally {
                     btn.disabled = false;
                     btn.textContent = tr('auth.withdrawBtn');
@@ -432,12 +425,12 @@
                         }
                     }
                     msgEl.textContent = tr('auth.nicknameSaved');
-                    msgEl.classList.remove('hidden', 'text-red-600');
-                    msgEl.classList.add('text-emerald-600');
+                        msgEl.classList.remove('hidden', 'is-error');
+                        msgEl.classList.add('is-success');
                 } catch (e) {
                     msgEl.textContent = translateAuthError(e.message || '') || tr('auth.updateFailed');
                     msgEl.classList.remove('hidden', 'text-emerald-600');
-                    msgEl.classList.add('text-red-600');
+                    msgEl.classList.add('is-error');
                 } finally {
                     btn.disabled = false;
                     btn.textContent = tr('auth.saveNickname');
@@ -453,7 +446,7 @@
                     msgEl.textContent = tr('auth.redeemNeedCode');
                     msgEl.classList.remove('hidden');
                     msgEl.classList.remove('text-emerald-600');
-                    msgEl.classList.add('text-red-600');
+                    msgEl.classList.add('is-error');
                     return;
                 }
                 btn.disabled = true;
@@ -476,14 +469,14 @@
                     msgEl.textContent = tr('auth.redeemOk')
                         .replace('{amount}', amount)
                         .replace('{balance}', balance);
-                    msgEl.classList.remove('hidden', 'text-red-600');
-                    msgEl.classList.add('text-emerald-600');
+                        msgEl.classList.remove('hidden', 'is-error');
+                        msgEl.classList.add('is-success');
                     document.getElementById('redeem-code').value = '';
                     renderBalance(data.aiWallet || { unlimited: false, balanceCny: data.balanceCny });
                 } catch (e) {
                     msgEl.textContent = translateAuthError(e.message);
                     msgEl.classList.remove('hidden', 'text-emerald-600');
-                    msgEl.classList.add('text-red-600');
+                    msgEl.classList.add('is-error');
                 } finally {
                     btn.disabled = false;
                     btn.textContent = tr('auth.redeemBtn');
