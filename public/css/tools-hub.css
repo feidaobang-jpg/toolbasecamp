@@ -208,9 +208,17 @@
     padding: 1rem 1rem 2rem;
 }
 
+.hub-center > .hub-mobile-toolbar + .hub-center-inner {
+    padding-top: 0.625rem;
+}
+
 @media (min-width: 640px) {
     .hub-center-inner {
         padding: 1.5rem 1.5rem 2.5rem;
+    }
+
+    .hub-center > .hub-mobile-toolbar + .hub-center-inner {
+        padding-top: 0.75rem;
     }
 }
 
@@ -504,9 +512,9 @@
     opacity: 0.85;
 }
 
-/* Xianyu / redeem howto on homepage */
+/* Xianyu / redeem howto on homepage — align with tool groups, not narrow search */
 .hub-howto {
-    margin: 0.75rem 1rem 1.25rem;
+    margin: 0 0 0.875rem;
     padding: 0.875rem 1rem;
     border-radius: 0.75rem;
     border: 1px solid #bfdbfe;
@@ -541,11 +549,11 @@
 
 @media (max-width: 768px) {
     .hub-howto {
-        margin: 0.5rem 0.75rem 1.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .hub-howto + .hub-group {
-        margin-top: 0.25rem;
+        margin-top: 0;
     }
 }
 
