@@ -1376,6 +1376,25 @@ button:not(.tb-btn) {
   text-align: center;
 }
 
+.home-pc-wrap .home-pc-result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  text-align: left;
+  margin-top: 8px;
+}
+
+.home-pc-wrap .home-pc-result-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  background: #fff;
+}
+
+.home-pc-wrap .home-pc-result-card .action-row {
+  margin-top: 10px;
+}
+
 .home-pc-wrap .home-pc-result-title {
   margin: 16px 0 8px;
   font-size: 16px;

@@ -385,11 +385,6 @@ const privateToolsConfig = {
                     url: 'html/admin/private/home-pc/describe-cutout.html'
                 },
                 {
-                    titleKey: 'privateHub.homePc.photoRestoreTitle',
-                    descriptionKey: 'privateHub.homePc.photoRestoreDesc',
-                    url: 'html/admin/private/home-pc/photo-restore.html'
-                },
-                {
                     titleKey: 'privateHub.homePc.textToImagesTitle',
                     descriptionKey: 'privateHub.homePc.textToImagesDesc',
                     url: 'html/admin/private/home-pc/text-to-images.html'

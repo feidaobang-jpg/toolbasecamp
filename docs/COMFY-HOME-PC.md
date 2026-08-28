@@ -63,7 +63,7 @@ curl -s https://comfy.zhengxiaohui.cn/health
 
 应返回 `{"status":"ok",...}`。
 
-> Tunnel 需支持 **WebSocket**（老照片修复页）。Cloudflare 默认支持；若中间有自建 nginx，需配置 `Upgrade` / `Connection` 头。
+> Tunnel 需支持 **WebSocket**（部分长任务）。Cloudflare 默认支持；若中间有自建 nginx，需配置 `Upgrade` / `Connection` 头。
 
 ## 后台入口
 
@@ -72,9 +72,9 @@ curl -s https://comfy.zhengxiaohui.cn/health
 | 页面 | 说明 |
 |------|------|
 | 去背景 / 批量处理 | rembg + 批量缩放裁边 |
-| 文生图 / 图生图 | Z-Image Turbo |
+| 文生图 | Z-Image Turbo |
+| 图生图 | Qwen 指令改图 / Z-Image；多图批量、可选水印；老照片用风格预设 |
 | 描述抠图 | Qwen 按描述抠图 |
-| 老照片修复 | Qwen All-In-One |
 | 文字配图 / 文字成片 | 分句生图；成片含 TTS + 合成 |
 
 图标 / 封面仍在公开「媒体」工具里，纯前端，不走本服务。

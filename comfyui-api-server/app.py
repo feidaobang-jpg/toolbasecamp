@@ -2053,8 +2053,7 @@ async def _img2img_build_and_run(
         if names and resolved not in names:
             raise RuntimeError(
                 "未找到 Qwen-Rapid-AIO checkpoint（models/checkpoints/）。"
-                "请从 Aki 复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，"
-                "或先在「老照片修复」页确认该模型可用。"
+                "请从 Aki 复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors 到 models/checkpoints/。"
             )
         wf = build_qwen_image_edit_img2img_workflow(p, fname, seed=run_seed, quality=quality)
         denoise_used = None
@@ -2100,6 +2099,11 @@ async def _run_img2img_task(task_id: str):
             result["quality"] = core["quality"]
         if core.get("denoise") is not None:
             result["denoise"] = core["denoise"]
+        if task.get("enable_watermark"):
+            wm_text = (task.get("watermark_text") or "样片确认").strip() or "样片确认"
+            watermarked_raw = await asyncio.to_thread(add_watermark, core["image_bytes"], wm_text)
+            if watermarked_raw:
+                result["watermarked_image_base64"] = base64.b64encode(watermarked_raw).decode("ascii")
         task["result"] = result
         task["status"] = "done"
         task["updated_at"] = time.time()
@@ -2109,6 +2113,12 @@ async def _run_img2img_task(task_id: str):
         task["updated_at"] = time.time()
     finally:
         task.pop("file_bytes", None)
+
+
+def _form_truthy(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value or "").strip().lower() in ("1", "true", "yes", "on")
 
 
 @app.post("/img2img/start")
@@ -2121,6 +2131,8 @@ async def img2img_start(
     seed: str = Form(""),
     engine: str = Form("qwen"),
     quality: str = Form("standard"),
+    enable_watermark: str = Form("false"),
+    watermark_text: str = Form("样片确认"),
 ):
     """图生图异步任务：快速返回 task_id，避免 Cloudflare 隧道长连接 524。"""
     p = (prompt or "").strip()
@@ -2142,6 +2154,8 @@ async def img2img_start(
             "engine": engine,
             "quality": _normalize_img2img_quality(quality),
             "seed_opt": _parse_seed_optional(seed),
+            "enable_watermark": _form_truthy(enable_watermark),
+            "watermark_text": (watermark_text or "样片确认").strip() or "样片确认",
             "result": None,
             "error": None,
         }
@@ -2180,6 +2194,8 @@ async def img2img_generate(
     seed: str = Form(""),
     engine: str = Form("qwen"),
     quality: str = Form("standard"),
+    enable_watermark: str = Form("false"),
+    watermark_text: str = Form("样片确认"),
 ):
     """图生图：默认 Qwen Image Edit 指令改图；可选 engine=z_image 走 Z-Image Turbo 重采样。"""
     p = (prompt or "").strip()
@@ -2200,6 +2216,11 @@ async def img2img_generate(
             out["quality"] = core["quality"]
         if core.get("denoise") is not None:
             out["denoise"] = core["denoise"]
+        if _form_truthy(enable_watermark):
+            wm_text = (watermark_text or "样片确认").strip() or "样片确认"
+            watermarked_raw = await asyncio.to_thread(add_watermark, core["image_bytes"], wm_text)
+            if watermarked_raw:
+                out["watermarked_image_base64"] = base64.b64encode(watermarked_raw).decode("ascii")
         return out
     except HTTPException:
         raise

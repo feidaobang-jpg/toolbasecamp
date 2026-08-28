@@ -4,107 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>老照片修复 - 后台</title>
+  <meta http-equiv="refresh" content="0;url=image-to-image.html" />
+  <title>老照片修复已并入图生图</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
-  <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc20" />
-  <script src="../../../../js/locales/en.js?v=homepc7"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc7"></script>
-  <script src="../../../../js/i18n.js?v=homepc7"></script>
-  <script src="../../../../js/config.js?v=homepc1"></script>
-  <script src="../../../../js/common_ui.js?v=homepc4"></script>
+  <script>
+    location.replace('image-to-image.html');
+  </script>
 </head>
-<body class="home-pc-page">
-  <div class="home-pc-container">
-    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
-    <div class="home-pc-content">
-        <header class="home-pc-header">
-    <div class="home-pc-header-inner">
-      <a href="../../private.html" class="home-pc-back">
-        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
-      </a>
-      <h1 class="home-pc-title" data-i18n="privateHub.homePc.photoRestoreTitle">老照片修复</h1>
-      <div class="home-pc-header-actions">
-        <span id="auth-label" class="home-pc-auth-label"></span>
-        <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
-      </div>
-    </div>
-  </header>
-          <main class="home-pc-main">
-    <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
-    <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
-      <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
-      <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
-    </div>
-    <div id="app" class="home-pc-wrap hidden" hidden>
-      <p class="home-pc-desc" data-i18n="privateHub.homePc.photoRestoreHint">工作流 Qwen-Image-Edit 老照片修复。Checkpoint：Qwen-Rapid-AIO-NSFW-v10.safetensors。</p>
-      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
-      <div class="tool-container">
-                    <!-- 拖放区域 -->
-                    <div class="drop-zone" id="drop-zone">
-                        <div class="drop-icon">+</div>
-                        <div class="drop-title" data-i18n="privateHub.homePc.dropTitlePhoto">点击或拖入老照片</div>
-                        <div class="drop-hint" data-i18n="privateHub.homePc.dropHintPhoto">支持 JPG、PNG、WebP，可多选</div>
-                    </div>
-                    <input type="file" id="file-input" multiple accept="image/*" hidden />
-                    
-                    <!-- 水印设置区域 -->
-                    <div class="watermark-section">
-                        <h3>水印设置</h3>
-                        <div class="watermark-controls">
-                            <div class="control-group">
-                                <input type="checkbox" id="enable-watermark" class="checkbox" checked>
-                                <label for="enable-watermark" class="checkbox-label">开启平铺水印</label>
-                            </div>
-                            <div class="control-group" id="watermark-text-group">
-                                <label for="watermark-text">水印文字：</label>
-                                <input type="text" id="watermark-text" class="watermark-input" value="样片确认" placeholder="输入水印文字">
-                            </div>
-                        </div>
-                        <p style="font-size: 12px; color: #909399; margin-top: 10px;">注：开启水印后，将同时生成带水印（平铺全屏，30%透明度）和无水印的两个版本。</p>
-                    </div>
-                    
-                    <!-- 选择图片预览区域 -->
-                    <div class="selection-preview-section" id="selection-preview-section" hidden>
-                        <h3 class="home-pc-section-title" data-i18n="privateHub.homePc.selectedImagesTitle">已选图片</h3>
-                        <div class="image-selection-preview" id="image-selection-preview"></div>
-                    </div>
-
-                    <div class="action-row home-pc-tool-actions">
-                        <button id="process-btn" class="tb-btn">开始处理</button>
-                        <button id="cancel-btn" class="tb-btn" disabled>取消任务</button>
-                        <button id="save-all-btn" class="tb-btn hidden">打包 ZIP 下载</button>
-                        <button id="clear-btn" class="tb-btn">清空</button>
-                    </div>
-                    
-                    <!-- 进度条区域 -->
-                    <div id="progress-container" class="hidden" style="margin-top: 20px; width: 100%;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px; color: #666;">
-                            <span id="progress-status">准备中...</span>
-                            <span id="progress-percent">0%</span>
-                        </div>
-                        <div style="width: 100%; background-color: #e5e7eb; border-radius: 4px; height: 8px; overflow: hidden;">
-                            <div id="progress-bar" style="width: 0%; height: 100%; background-color: #2563eb; transition: width 0.3s ease;"></div>
-                        </div>
-                    </div>
-
-                    <div class="result-section home-pc-result-box" id="result-container">
-                        <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.resultTitle">处理结果</h3>
-                        <div class="image-preview-container" id="image-preview-container"></div>
-                    </div>
-                </div>
-    </div>
-    </main>
-    </div>
-  </div>
-  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc20"></script>
-  <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
-  <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/photo-restore.js?v=homepc7"></script>
+<body>
+  <p>老照片修复已并入「图生图」。若未自动跳转，请 <a href="image-to-image.html">打开图生图</a>，使用风格预设「老照片修复」。</p>
 </body>
 </html>

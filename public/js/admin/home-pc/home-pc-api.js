@@ -78,7 +78,7 @@
         return;
       }
       if (el.getAttribute('data-needs-qwen') === '1' && data.qwen_checkpoint_ready === false) {
-        el.textContent = '已连接 ComfyUI，但未找到 Qwen-Rapid-AIO 模型（models/checkpoints/）。图生图需复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors，或先确认「老照片修复」可用。';
+        el.textContent = '已连接 ComfyUI，但未找到 Qwen-Rapid-AIO 模型（models/checkpoints/）。图生图需复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors。';
         el.className = 'home-pc-status home-pc-status--warn';
         return;
       }

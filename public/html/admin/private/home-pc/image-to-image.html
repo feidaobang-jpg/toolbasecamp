@@ -11,11 +11,11 @@
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/tools-form.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc20" />
-  <script src="../../../../js/locales/en.js?v=homepc12"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc12"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc21" />
+  <script src="../../../../js/locales/en.js?v=homepc21"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc21"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
-  <script src="../../../../js/config.js?v=homepc1"></script>
+  <script src="../../../../js/config.js?v=homepc21"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
 </head>
 <body class="home-pc-page">
@@ -41,7 +41,7 @@
       <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
     </div>
     <div id="app" class="home-pc-wrap hidden" hidden>
-      <p class="home-pc-desc" data-i18n="privateHub.homePc.img2imgHint">默认 Qwen 指令改图（人物保真、换背景、风格预设）。Z-Image 为整图重采样，不适合指令改图。</p>
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.img2imgHint">默认 Qwen 指令改图（工作流 qwen_image_edit_img2img，Checkpoint：Qwen-Rapid-AIO-NSFW-v10）。可选 Z-Image 整图重采样（z_image_turbo_img2img）。支持多图批量与可选平铺水印；老照片修复请用风格预设。</p>
       <div id="api-status" class="home-pc-status home-pc-status--checking" data-needs-qwen="1" role="status"></div>
       <div class="tool-container">
           <div class="input-section">
@@ -49,9 +49,9 @@
             <div class="drop-zone" id="drop-zone">
               <div class="drop-icon">+</div>
               <div class="drop-title" data-i18n="privateHub.homePc.img2imgDropTitle">点击或拖入参考图</div>
-              <div class="drop-hint" data-i18n="privateHub.homePc.img2imgDropHint">支持 JPG、PNG、WebP</div>
+              <div class="drop-hint" data-i18n="privateHub.homePc.img2imgDropHint">支持 JPG、PNG、WebP，最多 8 张，逐张批量处理</div>
             </div>
-            <input type="file" id="file-input" accept="image/*" hidden />
+            <input type="file" id="file-input" accept="image/*" multiple hidden />
             <div class="home-pc-source-grid" id="preview-wrap" hidden></div>
             <div class="field-row" id="preset-wrap">
               <span class="home-pc-field-label" data-i18n="tools.instructEdit.presetLabel">风格预设</span>
@@ -69,11 +69,25 @@
                 <button type="button" class="rec-chip" data-preset="lineart_colorize" data-i18n="tools.instructEdit.presetLineartColorize">线稿上色</button>
                 <button type="button" class="rec-chip" data-preset="expand_edges" data-i18n="tools.instructEdit.presetExpandEdges">扩图补全</button>
               </div>
-              <p class="small-hint" data-i18n="privateHub.homePc.img2imgPresetHint">风格预设仅适用于 Qwen 指令改图，与主站同一套提示词；本地 Rapid 版部分效果可能略弱于云端。</p>
+              <p class="small-hint" data-i18n="privateHub.homePc.img2imgPresetHint">风格预设仅适用于 Qwen 指令改图，与主站同一套提示词；本地 Rapid 版部分效果可能略弱于云端。批量修老照片可多选图 + 勾选下方水印。</p>
             </div>
             <div>
               <label for="prompt-input" data-i18n="privateHub.homePc.img2imgPromptLabel">正向提示词：</label>
               <textarea id="prompt-input" data-i18n-placeholder="privateHub.homePc.img2imgPromptPlaceholder" placeholder="例：只把西瓜换成菠萝，人物、背景、其余物体保持不变"></textarea>
+            </div>
+            <div class="watermark-section">
+              <h3 data-i18n="privateHub.homePc.img2imgWatermarkTitle">水印设置</h3>
+              <div class="watermark-controls">
+                <div class="control-group">
+                  <input type="checkbox" id="enable-watermark" class="checkbox" />
+                  <label for="enable-watermark" class="checkbox-label" data-i18n="privateHub.homePc.img2imgWatermarkEnable">开启平铺水印</label>
+                </div>
+                <div class="control-group" id="watermark-text-group" hidden>
+                  <label for="watermark-text" data-i18n="privateHub.homePc.img2imgWatermarkTextLabel">水印文字：</label>
+                  <input type="text" id="watermark-text" class="watermark-input" value="样片确认" data-i18n-placeholder="privateHub.homePc.img2imgWatermarkPlaceholder" placeholder="样片确认" />
+                </div>
+              </div>
+              <p class="small-hint" data-i18n="privateHub.homePc.img2imgWatermarkHint">开启后每张结果会同时提供无水印版与带水印版（平铺、半透明）。</p>
             </div>
             <div class="field-row" id="bg-wrap">
               <div class="instruct-bg-head">
@@ -121,9 +135,9 @@
           </div>
 
           <div class="action-row home-pc-tool-actions">
-            <button id="gen-btn" class="tb-btn">生成</button>
-            <button type="button" id="download-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.download">下载</button>
-            <button id="clear-btn" class="tb-btn">清空</button>
+            <button id="gen-btn" class="tb-btn" data-i18n="privateHub.homePc.generate">生成</button>
+            <button type="button" id="download-all-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.downloadAll">下载全部</button>
+            <button id="clear-btn" class="tb-btn" data-i18n="privateHub.homePc.clear">清空</button>
           </div>
 
           <div id="progress-wrap" class="progress-wrap" style="display:none;">
@@ -138,10 +152,7 @@
 
           <div id="result-box" class="video-box home-pc-result-box" style="display:none;">
             <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.img2imgResultTitle">生成结果</h3>
-            <p id="meta-line" class="home-pc-result-meta"></p>
-            <div class="home-pc-result-img-wrap">
-              <img id="result-img" alt="" />
-            </div>
+            <div id="result-grid" class="home-pc-result-grid"></div>
           </div>
 
           <div id="log-container" class="home-pc-log-box">
@@ -153,10 +164,10 @@
     </main>
     </div>
   </div>
-  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc20"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc21"></script>
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc21"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc8"></script>
   <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc8"></script>
   <script src="../../../../js/shared/instruct-edit-presets.js?v=homepc16"></script>
@@ -164,6 +175,6 @@
   <script src="../../../../js/shared/instruct-edit-bg-groups.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-presets.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-ui.js?v=homepc16"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc16"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc21"></script>
 </body>
 </html>
