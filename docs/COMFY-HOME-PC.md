@@ -28,9 +28,10 @@ ComfyUI :8188 + 本地模型
    ```bat
    cd comfyui-api-server
    install-dependencies.bat   :: 首次
-   start-server.bat
+   install-all-autostart.bat  :: 开机自启 ComfyUI :8188 + API :5000
    ```
-3. 浏览器本机自测：`http://localhost:5000/health`
+   或分别运行 `install-comfyui-autostart.bat` / `install-autostart.bat`。
+3. 浏览器本机自测：`http://localhost:5000/health` 与 `http://127.0.0.1:8188`
 
 ## Cloudflare Tunnel（你需要做一次）
 

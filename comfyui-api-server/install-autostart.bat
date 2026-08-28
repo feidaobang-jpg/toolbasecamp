@@ -23,6 +23,6 @@ echo OK: Autostart installed:
 echo   %DEST%
 echo.
 echo comfyui-api-server will run in background on logon.
-echo ComfyUI must also be running on port 8188 - start it separately or add its own autostart.
+echo ComfyUI: run install-comfyui-autostart.bat for port 8188 autostart.
 pause
 endlocal
