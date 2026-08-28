@@ -2575,8 +2575,15 @@ def _patch_describe_cutout_inputs(workflow: dict, input_filename: str, text_prom
 def build_describe_cutout_detect_workflow(input_filename: str, text_prompt: str) -> dict:
     """仅 Qwen 检测，用于先拿到全部框再按描述选 index。"""
     workflow = _load_describe_cutout_workflow_template()
-    workflow = {k: v for k, v in workflow.items() if k in ("3", "4", "5")}
+    workflow = {k: v for k, v in workflow.items() if k in ("3", "4", "5", "35")}
     _patch_describe_cutout_inputs(workflow, input_filename, text_prompt, bbox_selection="all")
+    # ComfyUI 拒绝无 OUTPUT 节点的工作流（Prompt has no outputs）
+    if "35" in workflow and workflow["35"].get("class_type") == "easy showAnything":
+        workflow["35"]["inputs"]["anything"] = ["3", 0]
+    workflow["99"] = {
+        "inputs": {"images": ["5", 0]},
+        "class_type": "PreviewImage",
+    }
     return workflow
 
 
@@ -2615,20 +2622,33 @@ async def _run_comfyui_workflow_outputs(workflow: dict) -> dict:
         await asyncio.to_thread(ws.close)
 
 
+def _extract_qwen_detection_json(outputs: dict) -> str:
+    for node_id in ("3", "35"):
+        node_out = outputs.get(node_id) or outputs.get(str(node_id)) or {}
+        text = node_out.get("text")
+        if isinstance(text, list) and text:
+            return str(text[0])
+        if isinstance(text, str) and text.strip():
+            return text
+    return ""
+
+
 async def _resolve_describe_cutout_bbox_selection(comfy_filename: str, text_prompt: str) -> str:
     """先检测全部框，再按「右边的大人」等描述选 index。"""
-    detect_wf = build_describe_cutout_detect_workflow(comfy_filename, text_prompt)
-    outputs = await _run_comfyui_workflow_outputs(detect_wf)
-    node_out = outputs.get("3") or outputs.get(3) or {}
-    raw = None
-    if isinstance(node_out.get("text"), list) and node_out["text"]:
-        raw = node_out["text"][0]
-    elif isinstance(node_out.get("text"), str):
-        raw = node_out["text"]
-    boxes = _bbox_list_from_qwen_json(raw or "")
-    picked = _pick_describe_cutout_bbox_selection(boxes, text_prompt)
-    print(f"描述抠图检测: {len(boxes)} 框, 选用 bbox_selection={picked}, labels={[b.get('label') for b in boxes]}")
-    return picked
+    try:
+        detect_wf = build_describe_cutout_detect_workflow(comfy_filename, text_prompt)
+        outputs = await _run_comfyui_workflow_outputs(detect_wf)
+        raw = _extract_qwen_detection_json(outputs)
+        boxes = _bbox_list_from_qwen_json(raw)
+        picked = _pick_describe_cutout_bbox_selection(boxes, text_prompt)
+        print(
+            f"描述抠图检测: {len(boxes)} 框, 选用 bbox_selection={picked}, "
+            f"labels={[b.get('label') for b in boxes]}"
+        )
+        return picked
+    except Exception as e:
+        print(f"描述抠图预检测失败，回退 bbox_selection=0: {e}")
+        return "0"
 
 def build_photo_restore_workflow(input_filename):
     """
