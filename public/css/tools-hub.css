@@ -324,17 +324,35 @@
     font-size: 0.9375rem;
 }
 
-/* Hub toolbar: search (mobile + desktop) */
-.hub-mobile-toolbar {
+/* Hub toolbar: search (inside hub-center) */
+.hub-center > .hub-mobile-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
     flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 56rem;
+    margin: 0 auto;
     padding: 0.625rem 1rem;
     background: #fff;
     border-bottom: 1px solid #f3f4f6;
 }
 
-@media (min-width: 1024px) {
-    .hub-mobile-toolbar {
+.hub-center-wide > .hub-mobile-toolbar {
+    max-width: 64rem;
+}
+
+@media (min-width: 640px) {
+    .hub-center > .hub-mobile-toolbar {
         padding: 0.75rem 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hub-center > .hub-mobile-toolbar {
+        border-bottom: none;
+        padding-bottom: 0.5rem;
     }
 }
 
@@ -345,16 +363,17 @@
     padding: 0 0 0.75rem;
 }
 
-@media (min-width: 1024px) {
-    .hub-mobile-toolbar .hub-search-wrap {
-        max-width: 56rem;
-    }
-}
-
 .hub-search-wrap {
     position: relative;
-    max-width: 80rem;
-    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .hub-search-wrap {
+        max-width: 20rem;
+    }
 }
 
 .hub-search-wrap i {
@@ -365,11 +384,14 @@
     color: #9ca3af;
     font-size: 0.875rem;
     pointer-events: none;
+    z-index: 1;
 }
 
 .hub-search-input {
+    box-sizing: border-box;
+    display: block;
     width: 100%;
-    padding: 0.625rem 2.25rem 0.625rem 2.25rem;
+    padding: 0.625rem 2.5rem 0.625rem 2.25rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.625rem;
     background: #f9fafb;
@@ -394,24 +416,33 @@
 
 .hub-search-clear {
     position: absolute;
-    right: 0.5rem;
+    right: 0.375rem;
     top: 50%;
     transform: translateY(-50%);
+    box-sizing: border-box;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0;
+    padding: 0;
     border: none;
+    border-radius: 0.375rem;
     background: none;
     color: #9ca3af;
-    padding: 0.25rem 0.375rem;
     cursor: pointer;
     display: none;
+    align-items: center;
+    justify-content: center;
     line-height: 1;
+    font-size: 0.8125rem;
 }
 
 .hub-search-clear.is-visible {
-    display: block;
+    display: inline-flex;
 }
 
 .hub-search-clear:hover {
     color: #4b5563;
+    background: #f3f4f6;
 }
 
 /* Mobile portals：跟在工具列表滚动内容最下方 */
