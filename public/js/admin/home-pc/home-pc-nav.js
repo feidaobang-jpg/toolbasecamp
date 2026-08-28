@@ -1,5 +1,5 @@
 /**
- * Home PC admin tools — sidebar from privateToolsConfig (家里电脑 group).
+ * Home PC admin — sidebar matches public tool pages (base.css .sidebar / .menu).
  */
 (function () {
   function tr(key, fallback) {
@@ -24,8 +24,7 @@
     var u = String((item && item.url) || '');
     if (!u) return '#';
     if (/^https?:\/\//i.test(u)) return u;
-    var name = u.split('/').pop() || '';
-    return name || u;
+    return u.split('/').pop() || u;
   }
 
   function homePcItems() {
@@ -41,42 +40,111 @@
     return out;
   }
 
-  function render() {
-    var aside = document.getElementById('home-pc-sidebar');
-    if (!aside) return;
+  function logoBadge() {
+    var logoText = (window.siteConfig && siteConfig.logoText) || 'TB';
+    var key = tr('site.logoBadge', '');
+    return key && key !== 'site.logoBadge' ? key : logoText;
+  }
+
+  function renderSidebar() {
+    var sidebar = document.getElementById('home-pc-sidebar');
+    if (!sidebar) return;
     var items = homePcItems();
     if (!items.length) {
-      aside.setAttribute('aria-hidden', 'true');
-      aside.innerHTML = '';
+      sidebar.innerHTML = '';
       return;
     }
-    aside.setAttribute('aria-hidden', 'false');
     var here = currentFile();
-    var html =
-      '<div class="home-pc-sidebar-head">' +
-        '<a href="../../private.html" class="home-pc-sidebar-home">' +
-          '<i class="fas fa-th-large" aria-hidden="true"></i>' +
-          '<span>' + tr('privateHub.title', '后台') + '</span>' +
-        '</a>' +
-      '</div>' +
-      '<p class="home-pc-sidebar-label">' + tr('privateHub.groups.homePc', '家里电脑') + '</p>' +
-      '<ul class="home-pc-nav-list">';
+    var groupLabel = tr('privateHub.groups.homePc', '家里电脑');
+    var hubLabel = tr('privateHub.title', '后台');
+    var menuHtml = '<li class="menu-group-title">' + groupLabel + '</li>';
     items.forEach(function (item) {
       var href = itemHref(item);
       var active = href.toLowerCase() === here;
-      html +=
-        '<li class="home-pc-nav-item' + (active ? ' is-active' : '') + '">' +
+      menuHtml +=
+        '<li' + (active ? ' class="active"' : '') + '>' +
           '<a href="' + href + '">' + lbl(item) + '</a>' +
         '</li>';
     });
-    html += '</ul>';
-    aside.innerHTML = html;
+    sidebar.innerHTML =
+      '<div class="logo">' +
+        '<a class="logo-home-btn" href="../../private.html">' +
+          '<span class="logo-badge">' + logoBadge() + '</span>' +
+          '<span class="logo-home-label">' + hubLabel + '</span>' +
+        '</a>' +
+      '</div>' +
+      '<nav class="menu"><ul>' + menuHtml + '</ul></nav>';
+  }
+
+  function bindMobileNav() {
+    var sidebar = document.getElementById('home-pc-sidebar');
+    var main = document.querySelector('.home-pc-main');
+    if (!sidebar || !main) return;
+
+    var here = currentFile();
+    var title = '';
+    homePcItems().forEach(function (item) {
+      if (itemHref(item).toLowerCase() === here) title = lbl(item);
+    });
+
+    var bar = main.querySelector('.tool-mobile-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.className = 'tool-mobile-bar';
+      bar.innerHTML =
+        '<button type="button" class="tool-menu-toggle" aria-label="Open menu">&#9776;</button>' +
+        '<span class="tool-mobile-title"></span>';
+      main.insertBefore(bar, main.firstChild);
+    }
+    var titleEl = bar.querySelector('.tool-mobile-title');
+    if (titleEl) titleEl.textContent = title;
+
+    var overlay = document.getElementById('tool-sidebar-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'tool-sidebar-overlay';
+      overlay.className = 'sidebar-overlay';
+      document.body.appendChild(overlay);
+    }
+
+    function close() {
+      sidebar.classList.remove('is-open');
+      overlay.classList.remove('is-visible');
+      document.body.style.overflow = '';
+    }
+
+    function open() {
+      sidebar.classList.add('is-open');
+      overlay.classList.add('is-visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    var toggleBtn = bar.querySelector('.tool-menu-toggle');
+    if (toggleBtn) {
+      toggleBtn.onclick = function () {
+        if (sidebar.classList.contains('is-open')) close();
+        else open();
+      };
+    }
+    overlay.onclick = close;
+
+    if (!sidebar.dataset.mobileNavCloseBound) {
+      sidebar.dataset.mobileNavCloseBound = '1';
+      sidebar.addEventListener('click', function (e) {
+        if (e.target.closest('a')) close();
+      });
+    }
+  }
+
+  function boot() {
+    renderSidebar();
+    bindMobileNav();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    render();
+    boot();
   }
-  document.addEventListener('tb:locale', render);
+  document.addEventListener('tb:locale', boot);
 })();

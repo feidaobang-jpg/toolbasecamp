@@ -104,89 +104,45 @@ body.home-pc-page {
   text-underline-offset: 2px;
 }
 
-.home-pc-layout {
+/* Same row layout as tool pages: .sidebar + content column */
+.home-pc-container {
   display: flex;
   flex: 1;
-  min-height: 0;
+  min-height: 100vh;
   width: 100%;
-  max-width: 80rem;
-  margin: 0 auto;
-  box-sizing: border-box;
+  min-width: 0;
 }
 
-.home-pc-sidebar {
-  display: none;
+.home-pc-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f9fafb;
+}
+
+.home-pc-page .home-pc-container > .sidebar {
   flex-shrink: 0;
-  width: 13.5rem;
-  box-sizing: border-box;
-  padding: 16px 0 24px 16px;
-  border-right: 1px solid #f3f4f6;
-  background: #fff;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
-@media (min-width: 1024px) {
-  .home-pc-sidebar {
-    display: block;
+@media (min-width: 769px) {
+  .home-pc-container .home-pc-back {
+    display: none;
   }
 }
 
-.home-pc-sidebar-head {
-  padding: 0 12px 12px;
-  border-bottom: 1px solid #f3f4f6;
-  margin-bottom: 12px;
-}
+@media (max-width: 768px) {
+  .home-pc-container {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
 
-.home-pc-sidebar-home {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #4b5563;
-  text-decoration: none;
-}
-
-.home-pc-sidebar-home:hover {
-  color: #2563eb;
-}
-
-.home-pc-sidebar-label {
-  margin: 0;
-  padding: 0 12px 8px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #9ca3af;
-}
-
-.home-pc-nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0 8px;
-}
-
-.home-pc-nav-item a {
-  display: block;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #374151;
-  text-decoration: none;
-  line-height: 1.35;
-}
-
-.home-pc-nav-item a:hover {
-  background: #f3f4f6;
-  color: #2563eb;
-}
-
-.home-pc-nav-item.is-active a {
-  background: #eff6ff;
-  color: #2563eb;
+  .home-pc-main {
+    padding: 12px;
+    max-width: 100%;
+  }
 }
 
 .home-pc-main {
@@ -194,8 +150,8 @@ body.home-pc-page {
   min-width: 0;
   box-sizing: border-box;
   width: 100%;
-  max-width: none;
-  margin: 0;
+  max-width: 64rem;
+  margin: 0 auto;
   padding: 24px 16px;
 }
 

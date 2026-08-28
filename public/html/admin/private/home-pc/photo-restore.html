@@ -9,7 +9,7 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc18" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc20" />
   <script src="../../../../js/locales/en.js?v=homepc7"></script>
   <script src="../../../../js/locales/zh-CN.js?v=homepc7"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
@@ -17,7 +17,10 @@
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
 </head>
 <body class="home-pc-page">
-  <header class="home-pc-header">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+        <header class="home-pc-header">
     <div class="home-pc-header-inner">
       <a href="../../private.html" class="home-pc-back">
         <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
@@ -29,9 +32,7 @@
       </div>
     </div>
   </header>
-  <div class="home-pc-layout">
-    <aside id="home-pc-sidebar" class="home-pc-sidebar" aria-label="家里电脑"></aside>
-    <main class="home-pc-main">
+          <main class="home-pc-main">
     <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
     <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
       <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
@@ -96,8 +97,9 @@
                 </div>
     </div>
     </main>
+    </div>
   </div>
-  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc18"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc20"></script>
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc7"></script>
