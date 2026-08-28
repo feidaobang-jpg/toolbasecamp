@@ -236,7 +236,7 @@ window.TB_LOCALES.en = {
             img2imgQualityStandard: 'Standard (fast, ~1MP·4 steps)',
             img2imgQualityHigh: 'High quality (disabled)',
             img2imgQualityHint: 'Qwen uses standard only (~1MP · 4 steps).',
-            img2imgZImageHint: 'Z-Image redraws the whole image by Denoise—composition and faces may drift. Use Qwen for people and instruct edits.',
+            img2imgZImageHint: 'Z-Image whole-image redraw (experimental): large photos are capped ~1MP; may still time out or change faces. Prefer Qwen for people/local edits.',
             describeCutoutHint: 'Workflow qwen_describe_cutout.json. Qwen2.5-VL-3B + SAM2 hiera base + LayerMask refinement.',
             describeCutoutPromptLabel: 'Describe the object to cut out:',
             describeCutoutPromptPlaceholder: 'e.g. the child on the right, or a cat in the middle',

@@ -681,6 +681,7 @@ def _build_z_image_img2img_workflow(
     negative_text: Optional[str] = None,
     seed: Optional[int] = None,
     denoise: Optional[float] = None,
+    megapixels: float = 1.0,
 ):
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "z_image_turbo_img2img.json")
     if not os.path.exists(workflow_path):
@@ -706,9 +707,36 @@ def _build_z_image_img2img_workflow(
     else:
         raise ValueError("LoadImage node missing in img2img workflow")
 
+    # 大图（如 10 寸原片）整图 VAEEncode 极易拖到超时；先压到约 1MP
+    try:
+        mp = float(megapixels)
+    except Exception:
+        mp = 1.0
+    mp = max(0.25, min(2.0, mp))
+    workflow["21"] = {
+        "inputs": {
+            "upscale_method": "lanczos",
+            "megapixels": mp,
+            "resolution_steps": 1,
+            "image": ["19", 0],
+        },
+        "class_type": "ImageScaleToTotalPixels",
+        "_meta": {"title": "压到约 1MP（防大图超时）"},
+    }
+    if "20" in workflow and workflow["20"].get("class_type") == "VAEEncode":
+        workflow["20"]["inputs"]["pixels"] = ["21", 0]
+
     if seed is not None:
         if "3" in workflow and workflow["3"].get("class_type") == "KSampler":
             workflow["3"]["inputs"]["seed"] = int(seed)
+
+    # Turbo 默认偏多步；大图场景再收一点
+    if "3" in workflow and workflow["3"].get("class_type") == "KSampler":
+        try:
+            steps = int(workflow["3"]["inputs"].get("steps") or 9)
+            workflow["3"]["inputs"]["steps"] = min(steps, 6)
+        except Exception:
+            pass
 
     if denoise is not None:
         try:
@@ -977,6 +1005,7 @@ async def _run_comfyui_and_get_last_image_impl(workflow: dict, timeout_sec: Opti
     deadline = time.monotonic() + timeout_sec
     ws = websocket.WebSocket()
     prompt_id = None
+    timed_out = False
     try:
         await asyncio.to_thread(ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, CLIENT_ID), timeout=10)
         prompt_response = await queue_prompt(workflow)
@@ -985,7 +1014,11 @@ async def _run_comfyui_and_get_last_image_impl(workflow: dict, timeout_sec: Opti
         while True:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
-                raise RuntimeError(f"ComfyUI job timed out after {int(timeout_sec)}s")
+                timed_out = True
+                raise RuntimeError(
+                    f"ComfyUI 生成超时（{int(timeout_sec)} 秒）。"
+                    "大图用「Z-Image 整图重绘」容易卡住；请改用「Qwen 指令改图」，或先缩小原图再试。"
+                )
             ws.settimeout(min(30.0, max(1.0, remaining)))
             try:
                 out = await asyncio.to_thread(ws.recv)
@@ -1021,6 +1054,11 @@ async def _run_comfyui_and_get_last_image_impl(workflow: dict, timeout_sec: Opti
             await asyncio.to_thread(ws.close)
         except Exception:
             pass
+        if timed_out:
+            try:
+                await interrupt_comfyui()
+            except Exception:
+                pass
 
 
 async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] = None, speed: Optional[float] = None):

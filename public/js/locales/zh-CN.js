@@ -235,7 +235,7 @@ window.TB_LOCALES['zh-CN'] = {
             img2imgQualityStandard: '标准（快，约 1MP·4 步）',
             img2imgQualityHigh: '高质量（已停用）',
             img2imgQualityHint: 'Qwen 固定标准档（约 1MP·4 步）。',
-            img2imgZImageHint: 'Z-Image 按 Denoise 重绘整图，易改构图/人脸，无法像 Qwen 那样「只改背景」。人物与指令改图请用 Qwen。',
+            img2imgZImageHint: 'Z-Image 整图重绘（试效果）：大图会自动压到约 1MP；仍易超时/改脸，人物与局部改图请用 Qwen。',
             describeCutoutHint: '工作流 qwen_describe_cutout.json。Qwen2.5-VL-3B + SAM2 hiera base + LayerMask 精细抠图。',
             describeCutoutPromptLabel: '描述要抠出的物体：',
             describeCutoutPromptPlaceholder: '例如：右边的小孩，或者 a cat in the middle',
