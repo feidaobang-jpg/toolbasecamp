@@ -276,7 +276,6 @@ window.TB_LOCALES['zh-CN'] = {
             copyOutputDir: '复制输出目录',
             openOutputDir: '打开输出文件夹',
             logTitle: '执行日志',
-            apiRulesStale: '家里电脑 API 仍是旧规则（会按逗号分句/默认中国人）。请在本机重启 comfyui-api-server 后再试。',
             removeBgTitle: '去背景 / 批量处理',
             removeBgDesc: '批量缩放、裁边、可选 ComfyUI 抠图',
             txt2imgTitle: '文生图',

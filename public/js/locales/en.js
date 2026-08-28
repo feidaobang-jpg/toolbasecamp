@@ -277,7 +277,6 @@ window.TB_LOCALES.en = {
             copyOutputDir: 'Copy output path',
             openOutputDir: 'Open output folder',
             logTitle: 'Log',
-            apiRulesStale: 'Home PC API still has old rules (comma split / default Chinese cast). Restart comfyui-api-server locally, then retry.',
             removeBgTitle: 'Remove BG / batch',
             removeBgDesc: 'Resize, trim, optional ComfyUI background removal',
             txt2imgTitle: 'Text to image',
