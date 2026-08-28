@@ -1,5 +1,9 @@
 ﻿/* Home PC admin tools */
 
+.hidden {
+  display: none !important;
+}
+
 /* Page shell（家里电脑后台页，不依赖 Tailwind） */
 body.home-pc-page {
   margin: 0;

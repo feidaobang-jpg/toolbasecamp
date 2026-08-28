@@ -37,12 +37,12 @@
 
   <main class="admin-main admin-main--inbox">
     <div id="boot-loading" class="admin-card admin-card--center">加载中…</div>
-    <div id="gate" class="admin-card admin-card--center hidden">
-      <p class="admin-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
-      <a href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fchat-inbox.html" class="tb-btn" data-i18n="auth.login">登录</a>
+    <div id="gate" class="admin-card admin-card--center hidden" hidden>
+      <p id="gate-msg" class="admin-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../auth/login.html?next=%2Fhtml%2Fadmin%2Fprivate%2Fchat-inbox.html" class="tb-btn" data-i18n="auth.login">登录</a>
     </div>
 
-    <div id="app" class="inbox-app hidden">
+    <div id="app" class="inbox-app hidden" hidden>
       <aside class="inbox-panel">
         <div class="inbox-panel-head">
           <span class="inbox-panel-title" data-i18n="chat.inboxThreads">会话</span>
@@ -64,6 +64,7 @@
       </section>
     </div>
   </main>
-  <script src="../../../js/admin/chat-inbox.js?v=nosTW2"></script>
+  <script src="../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../js/admin/chat-inbox.js?v=nosTW5"></script>
 </body>
 </html>

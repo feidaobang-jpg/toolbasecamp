@@ -31,8 +31,25 @@
     }
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
-    if (gate) gate.classList.remove('hidden');
-    if (app) app.classList.add('hidden');
+    var gateMsg = document.getElementById('gate-msg');
+    var loginLink = document.getElementById('login-link');
+    var authLabel = document.getElementById('auth-label');
+    var boot = document.getElementById('boot-loading');
+    if (boot) boot.classList.add('hidden');
+    if (gateMsg && msg) gateMsg.textContent = msg;
+    if (gate) {
+      gate.classList.remove('hidden');
+      gate.hidden = false;
+    }
+    if (app) {
+      app.classList.add('hidden');
+      app.hidden = true;
+    }
+    if (loginLink) loginLink.classList.add('hidden');
+    if (authLabel) {
+      authLabel.textContent = '';
+      authLabel.classList.add('hidden');
+    }
   }
 
   function showApp(user) {
@@ -42,8 +59,18 @@
     }
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
-    if (gate) gate.classList.add('hidden');
-    if (app) app.classList.remove('hidden');
+    var loginLink = document.getElementById('login-link');
+    var boot = document.getElementById('boot-loading');
+    if (boot) boot.classList.add('hidden');
+    if (gate) {
+      gate.classList.add('hidden');
+      gate.hidden = true;
+    }
+    if (app) {
+      app.classList.remove('hidden');
+      app.hidden = false;
+    }
+    if (loginLink) loginLink.classList.add('hidden');
   }
 
   function boot() {

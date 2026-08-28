@@ -9,7 +9,7 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc17" />
   <script src="../../../../js/locales/en.js?v=homepc7"></script>
   <script src="../../../../js/locales/zh-CN.js?v=homepc7"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
@@ -31,11 +31,11 @@
   </header>
   <main class="home-pc-main">
     <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
-    <div id="gate" class="home-pc-card home-pc-card--center hidden">
+    <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
       <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
       <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
     </div>
-    <div id="app" class="home-pc-wrap hidden">
+    <div id="app" class="home-pc-wrap hidden" hidden>
       <p class="home-pc-desc" data-i18n="privateHub.homePc.textToVideoHint">DeepSeek 分句 + z_image_turbo 配图 + TTS 配音 + FFmpeg 合成（文字成片管线）。</p>
       <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
       <div class="tool-container">
@@ -116,7 +116,8 @@
         </div>
     </div>
   </main>
-  <script src="../../../../js/admin/private-page-guard.js?v=homepc7"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc7"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
   <script src="../../../../js/admin/home-pc/text-to-video.js?v=homepc7"></script>

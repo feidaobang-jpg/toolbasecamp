@@ -64,16 +64,37 @@
     if (statusEl) statusEl.textContent = text || '';
   }
 
-  function showGate() {
+  function showGate(msg) {
+    if (typeof window.tbAdminShowGate === 'function') {
+      window.tbAdminShowGate(msg || tr('privateHub.needAdmin', '需要管理员登录后查看'));
+      return;
+    }
     if (bootEl) bootEl.classList.add('hidden');
-    if (gateEl) gateEl.classList.remove('hidden');
-    if (appEl) appEl.classList.add('hidden');
+    if (gateEl) {
+      gateEl.classList.remove('hidden');
+      gateEl.hidden = false;
+    }
+    if (appEl) {
+      appEl.classList.add('hidden');
+      appEl.hidden = true;
+    }
+    var authLabel = document.getElementById('auth-label');
+    if (authLabel) {
+      authLabel.textContent = '';
+      authLabel.classList.add('hidden');
+    }
   }
 
   function showApp() {
     if (bootEl) bootEl.classList.add('hidden');
-    if (gateEl) gateEl.classList.add('hidden');
-    if (appEl) appEl.classList.remove('hidden');
+    if (gateEl) {
+      gateEl.classList.add('hidden');
+      gateEl.hidden = true;
+    }
+    if (appEl) {
+      appEl.classList.remove('hidden');
+      appEl.hidden = false;
+    }
   }
 
   function appendMsg(m, scroll) {
