@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const startBtn = document.getElementById('start-btn');
+  const startImagesBtn = document.getElementById('start-images-btn');
+  const startVideoBtn = document.getElementById('start-video-btn');
   const clearBtn = document.getElementById('clear-btn');
   const cancelButton = document.getElementById('cancel-button');
 
@@ -11,9 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const optVideo16_9 = document.getElementById('opt-video-16-9');
   const optVideo9_16 = document.getElementById('opt-video-9-16');
-  const imagesOptions = document.getElementById('images-options');
-  const videoOptions = document.getElementById('video-options');
-  const outputModeRow = document.getElementById('output-mode-row');
+  const reuseReadyHint = document.getElementById('reuse-ready-hint');
 
   const progressWrap = document.getElementById('progress-wrap');
   const progressStatus = document.getElementById('progress-status');
@@ -45,14 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const API_BASE_URL = window.HomePcApi.base();
 
-  let outputMode = (function () {
-    try {
-      const m = new URLSearchParams(window.location.search || '').get('mode');
-      if (m === 'images' || m === 'image') return 'images';
-    } catch (e) { /* ignore */ }
-    return 'video';
-  })();
-  let activeTaskKind = outputMode === 'images' ? 'images' : 'video';
+  let activeTaskKind = 'images';
   let pollingTimer = null;
   let currentTaskId = null;
   let videoProgressCreep = 0;
@@ -61,6 +53,9 @@ document.addEventListener('DOMContentLoaded', function () {
   let lastOutputDirectory = '';
   let lastDoneTaskId = '';
   let lastImages = [];
+  /** 最近一次成功的「仅配图」任务，可供「生成视频」复用 */
+  let reusableImagesTaskId = '';
+  let reusableImagesText = '';
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -80,6 +75,31 @@ document.addEventListener('DOMContentLoaded', function () {
     return activeTaskKind === 'images' ? 'text-to-images' : 'text-to-video';
   }
 
+  function currentText() {
+    return (textInput.value || '').trim();
+  }
+
+  function canReuseImages() {
+    if (!reusableImagesTaskId || !lastImages.length) return false;
+    return currentText() === reusableImagesText;
+  }
+
+  function syncReuseHint() {
+    if (!reuseReadyHint) return;
+    const ok = canReuseImages();
+    reuseReadyHint.style.display = ok ? 'block' : 'none';
+    if (startVideoBtn) {
+      startVideoBtn.textContent = ok
+        ? tr('privateHub.homePc.textToVideoStartVideoReuse', '生成视频（复用配图）')
+        : tr('privateHub.homePc.textToVideoStartVideo', '生成视频');
+    }
+  }
+
+  function setBusy(busy) {
+    if (startImagesBtn) startImagesBtn.disabled = !!busy;
+    if (startVideoBtn) startVideoBtn.disabled = !!busy;
+  }
+
   function setProgress(visible, statusText, percent) {
     progressWrap.style.display = visible ? 'block' : 'none';
     if (statusText != null) progressStatus.textContent = statusText;
@@ -96,21 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (wrapResult16) wrapResult16.style.display = o.wantVideo16_9 ? 'block' : 'none';
     if (wrapResult9) wrapResult9.style.display = o.wantVideo9_16 ? 'block' : 'none';
     if (resultVideosRow) resultVideosRow.style.display = anyV ? 'flex' : 'none';
-  }
-
-  function syncOutputModeUi() {
-    if (imagesOptions) imagesOptions.hidden = outputMode !== 'images';
-    if (videoOptions) videoOptions.hidden = outputMode !== 'video';
-    if (startBtn) {
-      startBtn.textContent = outputMode === 'images'
-        ? tr('privateHub.homePc.textToVideoStartImages', '开始生成图片')
-        : tr('privateHub.homePc.textToVideoStartVideo', '开始生成视频');
-    }
-    if (outputModeRow) {
-      Array.prototype.forEach.call(outputModeRow.querySelectorAll('[data-output-mode]'), function (el) {
-        el.classList.toggle('is-active', (el.getAttribute('data-output-mode') || '') === outputMode);
-      });
-    }
   }
 
   function hideDeepseekNotice() {
@@ -144,14 +149,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function resetOutput() {
-    hideDeepseekNotice();
-    if (resultBox) resultBox.style.display = 'none';
-    if (imageGallery) imageGallery.innerHTML = '';
-    lastImages = [];
-    if (resultCount) resultCount.textContent = '';
-    if (btnDownloadAll) btnDownloadAll.style.display = 'none';
+  function clearReusableImages() {
+    reusableImagesTaskId = '';
+    reusableImagesText = '';
+    syncReuseHint();
+  }
 
+  function resetVideoOnly() {
     if (videoBox) videoBox.style.display = 'none';
     applyResultLayout({ wantVideo16_9: false, wantVideo9_16: false });
     if (videoEl) {
@@ -162,6 +166,20 @@ document.addEventListener('DOMContentLoaded', function () {
       videoEl16_9.removeAttribute('src');
       videoEl16_9.load();
     }
+  }
+
+  function resetOutput(opts) {
+    const keepGallery = !!(opts && opts.keepGallery);
+    hideDeepseekNotice();
+    if (!keepGallery) {
+      if (resultBox) resultBox.style.display = 'none';
+      if (imageGallery) imageGallery.innerHTML = '';
+      lastImages = [];
+      if (resultCount) resultCount.textContent = '';
+      if (btnDownloadAll) btnDownloadAll.style.display = 'none';
+      clearReusableImages();
+    }
+    resetVideoOnly();
     lastOutputDirectory = '';
     lastDoneTaskId = '';
     if (btnCopyOutput) btnCopyOutput.style.display = 'none';
@@ -170,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
       cancelButton.style.display = 'none';
       cancelButton.disabled = false;
     }
+    syncReuseHint();
   }
 
   function getExportOptions() {
@@ -246,21 +265,12 @@ document.addEventListener('DOMContentLoaded', function () {
     return stage || '处理中';
   }
 
-  async function startTask() {
-    const text = (textInput.value || '').trim();
+  async function startImages() {
+    const text = currentText();
     if (!text) {
       alert('请输入要生成的文字内容');
       textInput.focus();
       return;
-    }
-
-    const kind = outputMode === 'images' ? 'images' : 'video';
-    if (kind === 'video') {
-      const opts = getExportOptions();
-      if (!opts.hasAnyVideo) {
-        alert('请至少选择一种导出视频（横屏 16:9 或竖屏 9:16）');
-        return;
-      }
     }
 
     resetOutput();
@@ -269,55 +279,102 @@ document.addEventListener('DOMContentLoaded', function () {
     statusErrorStreak = 0;
     lastLogLen = 0;
     if (logOutput) logOutput.innerHTML = '';
-    activeTaskKind = kind;
+    activeTaskKind = 'images';
 
     const form = new FormData();
     form.append('text', text);
-    if (illustrationPresets && illustrationPresets.getActive) {
-      form.append('style_preset', illustrationPresets.getActive());
-    }
+    form.append('aspect_preset', (aspectSelect && aspectSelect.value) || 'xhs_34');
+    form.append('style_preset', (illustrationPresets && illustrationPresets.getActive)
+      ? illustrationPresets.getActive()
+      : '');
 
-    if (kind === 'images') {
-      form.append('aspect_preset', (aspectSelect && aspectSelect.value) || 'xhs_34');
-    } else {
-      const opts = getExportOptions();
-      const speed = Number((speedInput && speedInput.value) || 1.0);
-      form.append('speed', String(Number.isFinite(speed) ? speed : 1.0));
-      form.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-XiaoxiaoNeural');
-      form.append('gen_video_16_9', opts.wantVideo16_9 ? '1' : '0');
-      form.append('gen_video_9_16', opts.wantVideo9_16 ? '1' : '0');
-    }
-
-    startBtn.disabled = true;
+    setBusy(true);
     cancelButton.style.display = 'inline-block';
-    setProgress(true, '提交任务中...', 0);
+    setProgress(true, '提交配图任务…', 0);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/${apiPrefix()}/start`, {
-        method: 'POST',
-        body: form
-      });
-
+      const res = await fetch(`${API_BASE_URL}/text-to-images/start`, { method: 'POST', body: form });
       if (typeof check502Error !== 'undefined' && check502Error(res)) {
         throw new Error('Backend service unavailable');
       }
-
       const data = await res.json().catch(function () { return {}; });
       if (!res.ok || !data.success) {
         throw new Error(data.detail || data.error || `HTTP ${res.status}`);
       }
-
       currentTaskId = data.task_id;
-      setProgress(true, kind === 'images' ? '任务已提交，开始生成配图…' : '任务已提交，开始生成…', 1);
+      setProgress(true, '任务已提交，开始生成配图…', 1);
       pollStatus();
       pollingTimer = setInterval(pollStatus, 1500);
     } catch (e) {
-      if (e.message !== 'Backend service unavailable') {
-        alert(String(e.message || e));
-      }
+      if (e.message !== 'Backend service unavailable') alert(String(e.message || e));
       setProgress(false);
     } finally {
-      startBtn.disabled = false;
+      setBusy(false);
+    }
+  }
+
+  async function startVideo() {
+    const text = currentText();
+    const reuse = canReuseImages();
+    if (!text && !reuse) {
+      alert('请输入要生成的文字内容');
+      textInput.focus();
+      return;
+    }
+
+    const opts = getExportOptions();
+    if (!opts.hasAnyVideo) {
+      alert('请至少选择一种导出视频（横屏 16:9 或竖屏 9:16）');
+      return;
+    }
+
+    resetOutput({ keepGallery: reuse });
+    stopPolling();
+    videoProgressCreep = 0;
+    statusErrorStreak = 0;
+    lastLogLen = 0;
+    if (logOutput) logOutput.innerHTML = '';
+    activeTaskKind = 'video';
+
+    const form = new FormData();
+    form.append('text', text || reusableImagesText);
+    form.append('style_preset', (illustrationPresets && illustrationPresets.getActive)
+      ? illustrationPresets.getActive()
+      : '');
+    const speed = Number((speedInput && speedInput.value) || 1.0);
+    form.append('speed', String(Number.isFinite(speed) ? speed : 1.0));
+    form.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-XiaoxiaoNeural');
+    form.append('gen_video_16_9', opts.wantVideo16_9 ? '1' : '0');
+    form.append('gen_video_9_16', opts.wantVideo9_16 ? '1' : '0');
+    if (reuse) {
+      form.append('reuse_images_task_id', reusableImagesTaskId);
+    }
+
+    setBusy(true);
+    cancelButton.style.display = 'inline-block';
+    setProgress(true, reuse ? '提交成片任务（复用配图）…' : '提交成片任务…', 0);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/text-to-video/start`, { method: 'POST', body: form });
+      if (typeof check502Error !== 'undefined' && check502Error(res)) {
+        throw new Error('Backend service unavailable');
+      }
+      const data = await res.json().catch(function () { return {}; });
+      if (!res.ok || !data.success) {
+        throw new Error(data.detail || data.error || `HTTP ${res.status}`);
+      }
+      currentTaskId = data.task_id;
+      if (data.reused_images) {
+        logMessage('将复用已生成的配图，跳过生图步骤');
+      }
+      setProgress(true, data.reused_images ? '已提交，开始配音与合成…' : '任务已提交，开始生成…', 1);
+      pollStatus();
+      pollingTimer = setInterval(pollStatus, 1500);
+    } catch (e) {
+      if (e.message !== 'Backend service unavailable') alert(String(e.message || e));
+      setProgress(false);
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -371,16 +428,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (data.status === 'done' && Array.isArray(data.images) && data.images.length) {
           stopPolling();
-          setProgress(true, '完成', 100);
+          setProgress(true, '配图完成', 100);
           renderGallery(data.images);
+          reusableImagesTaskId = (data.task_id && String(data.task_id)) || currentTaskId || '';
+          reusableImagesText = currentText();
           lastOutputDirectory = (data.output_directory && String(data.output_directory)) || '';
-          lastDoneTaskId = (data.task_id && String(data.task_id)) || currentTaskId || '';
+          lastDoneTaskId = reusableImagesTaskId;
           if (btnCopyOutput && lastOutputDirectory) btnCopyOutput.style.display = 'inline-flex';
           if (btnOpenOutput && typeof isLocal !== 'undefined' && isLocal && lastDoneTaskId) {
             btnOpenOutput.style.display = 'inline-flex';
           }
           if (lastOutputDirectory) logMessage(`输出目录：${lastOutputDirectory}`);
+          logMessage('配图可用：若满意可直接点「生成视频」继续配音合成，无需重新生图');
           cancelButton.style.display = 'none';
+          syncReuseHint();
         }
         return;
       }
@@ -441,6 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (videoBox) videoBox.style.display = 'block';
         cancelButton.disabled = true;
         cancelButton.style.display = 'none';
+        syncReuseHint();
       }
     } catch (e) {
       statusErrorStreak += 1;
@@ -450,15 +512,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setProgress(true, '失败：连接超时/网络异常（已重试多次）。请检查后端是否在线。', 0);
       }
     }
-  }
-
-  if (outputModeRow) {
-    outputModeRow.addEventListener('click', function (e) {
-      const btn = e.target && e.target.closest ? e.target.closest('[data-output-mode]') : null;
-      if (!btn) return;
-      outputMode = btn.getAttribute('data-output-mode') || 'video';
-      syncOutputModeUi();
-    });
   }
 
   cancelButton.addEventListener('click', async function () {
@@ -474,6 +527,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e) { /* ignore */ }
     logMessage('已发送取消请求');
     cancelButton.style.display = 'none';
+    setBusy(false);
   });
 
   function clearAll() {
@@ -484,10 +538,22 @@ document.addEventListener('DOMContentLoaded', function () {
     resetOutput();
     setProgress(false);
     if (logOutput) logOutput.innerHTML = '';
+    setBusy(false);
   }
 
-  if (startBtn) startBtn.addEventListener('click', startTask);
+  if (startImagesBtn) startImagesBtn.addEventListener('click', startImages);
+  if (startVideoBtn) startVideoBtn.addEventListener('click', startVideo);
   if (clearBtn) clearBtn.addEventListener('click', clearAll);
+
+  if (textInput) {
+    textInput.addEventListener('input', function () {
+      if (reusableImagesTaskId && currentText() !== reusableImagesText) {
+        syncReuseHint();
+      } else {
+        syncReuseHint();
+      }
+    });
+  }
 
   if (btnDownloadAll) {
     btnDownloadAll.addEventListener('click', function () {
@@ -524,7 +590,10 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         const fd = new FormData();
         fd.append('task_id', lastDoneTaskId);
-        const res = await fetch(`${API_BASE_URL}/${apiPrefix()}/reveal-output`, {
+        const prefix = reusableImagesTaskId && lastDoneTaskId === reusableImagesTaskId
+          ? 'text-to-images'
+          : 'text-to-video';
+        const res = await fetch(`${API_BASE_URL}/${prefix}/reveal-output`, {
           method: 'POST',
           body: fd
         });
@@ -539,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  document.addEventListener('tb:locale', syncOutputModeUi);
-  syncOutputModeUi();
+  document.addEventListener('tb:locale', syncReuseHint);
+  syncReuseHint();
   setProgress(false);
 });

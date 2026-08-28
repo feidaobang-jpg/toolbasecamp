@@ -118,6 +118,8 @@ async def health_check():
         "gpu_hint": "Qwen 高质量档约 1.5MP·8 步，16GB 显存可试；OOM 请用标准档（1MP·4 步）。",
         "resource_limits": _RESOURCE_LIMIT_INFO,
         "deepseek_configured": bool(_repo_deepseek_api_key()),
+        # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
+        "text_illustration_rules": "v2_no_comma_default",
     }
 
 
@@ -315,34 +317,43 @@ _CLIP_BANNED_CHINESE_FRAGMENTS = (
 )
 
 
-def _segment_to_visual_hints_en(seg: str, group_idx: int) -> str:
+def _segment_to_visual_hints_en(seg: str, group_idx: int, classical_poetry: bool = False) -> str:
     """按分镜句意生成英文画面关键词（不引用原句汉字）。"""
     s = (seg or "").strip()
     rules = [
-        (r"垂纶|稚子|鱼|莓|苔|招手|借问|不应", "young Chinese child in ancient hanfu, Tang dynasty, fishing by mossy riverbank, hiding from passersby"),
+        (r"垂纶|稚子|鱼|莓|苔|招手|借问|不应", "young child fishing by mossy riverbank, hiding from passersby"),
         (r"雪|冰封|素裹|飞雪|银", "vast snowy plains and ice-covered landscape"),
         (r"长城|万里", "Great Wall winding over snowy hills"),
         (r"黄河|大河|河|江|川|滔滔", "great river valley, flowing water"),
-        (r"山|峰|银蛇|蜡象", "rolling mountain ranges and ridges"),
-        (r"日|红|阳|晴|霞|妖娆", "sunrise or sunset glow over landscape"),
-        (r"天|空|欲与|比高", "dramatic wide sky over epic terrain"),
-        (r"风|飘|莽莽", "windy open landscape with mist"),
+        (r"山|峰|银蛇|蜡象|谷", "rolling mountain ranges, valley ridges"),
+        (r"日|红|阳|晴|霞|妖娆|暮|黄昏|落日", "sunrise or sunset glow over landscape"),
+        (r"天|空|欲与|比高|飞鸟", "dramatic wide sky over epic terrain"),
+        (r"风|飘|莽莽|雾", "windy open landscape with mist"),
         (r"英雄|风流|秦皇|汉武|唐宗|宋祖|成吉思汗|历史|惜", "epic historical atmosphere"),
-        (r"园|春|沁", "classical Chinese literary mood, refined scenery"),
-        (r"北国|风光", "northern China scenic panorama"),
+        (r"园|春|沁", "refined garden scenery"),
+        (r"北国|风光", "northern scenic panorama"),
+        (r"林|枝叶|草木|溪流", "forest trees, grass, and a stream"),
     ]
     matched: List[str] = []
     for pat, desc in rules:
         if re.search(pat, s) and desc not in matched:
             matched.append(desc)
+    if classical_poetry and matched:
+        matched = [
+            (m + ", ancient Chinese hanfu figures only if people appear") if "child" in m or "historical" in m else m
+            for m in matched
+        ]
     if matched:
-        return " ".join(matched[:3])
+        base = " ".join(matched[:3])
+        if not classical_poetry and not re.search(r"人|孩|童|君|郎|客|渔|翁|她|他|我们|大家", s):
+            base += ", empty scenic view, no people, no crowd, no costume portraits"
+        return base
     variants = [
-        "quiet riverside with greenery",
-        "wide northern China winter panorama",
-        "snowy mountains under dramatic clouds",
-        "river valley at golden hour",
-        "misty historical landscape",
+        "quiet riverside with greenery, empty of people",
+        "wide winter panorama, empty landscape",
+        "snowy mountains under dramatic clouds, no figures",
+        "river valley at golden hour, no people",
+        "misty landscape, atmospheric, empty of people",
     ]
     h = hash(s) & 0x7FFFFFFF
     return variants[(group_idx + h) % len(variants)]
@@ -359,6 +370,7 @@ def _build_rule_based_image_prompt_for_group(
     visual = _segment_to_visual_hints_en(
         " ".join([(x or "").strip() for x in (group_segments or []) if (x or "").strip()]),
         group_idx,
+        classical_poetry=classical_poetry,
     )
     cast = _chinese_cast_positive_fragment(classical_poetry, chinese_cast)
     cast_part = f"{cast} " if cast else ""
@@ -470,7 +482,11 @@ def _deepseek_batch_image_prompts(
     if cast_rule:
         cast_line = f"8. 若画面中出现人物：{cast_rule}\n"
     else:
-        cast_line = "8. 若画面中出现人物：按口播与场景自然呈现，勿强行指定族裔或服饰。\n"
+        cast_line = (
+            "8. 除非口播明确出现人物/角色，否则画面以风景、环境、光影、静物为主，"
+            "禁止擅自添加人物、人群、古装汉服、戏曲造型或东亚面孔特写；"
+            "不要默认「中国人」或古代服饰。\n"
+        )
 
     user_prompt = f"""你是影视分镜与文生图提示词专家。用户在做「文字成片」：下面共有 {n} 个分镜组，按顺序各生成一张配图。
 
@@ -1486,6 +1502,14 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
         split_mode = style["split_mode"]
         chinese_cast = style["chinese_cast"]
         classical_mode = style["classical_poetry"]
+        reuse_images_task_id = (task.get("reuse_images_task_id") or "").strip()
+        src_images_task = _TEXT_TO_VIDEO_TASKS.get(reuse_images_task_id) if reuse_images_task_id else None
+        if reuse_images_task_id and (
+            not isinstance(src_images_task, dict)
+            or src_images_task.get("status") != "done"
+            or not src_images_task.get("images")
+        ):
+            raise RuntimeError("找不到可复用的配图结果，请先点「生成图片」")
 
         try:
             scene_min_len = int(task.get("scene_min_len") or 12)
@@ -1513,30 +1537,38 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             need_landscape = bool(gen_video_16_9)
             need_portrait = bool(gen_video_9_16)
 
-        segments = _split_text_to_segments(
-            text,
-            scene_min_len=scene_min_len,
-            scene_max_len=scene_max_len,
-            split_mode=split_mode,
-        )
+        if src_images_task and isinstance(src_images_task.get("segments"), list) and src_images_task.get("segments"):
+            segments = [str(s).strip() for s in src_images_task["segments"] if str(s).strip()]
+            _log(f"复用配图任务分镜（{len(segments)} 句），跳过重新分句与生图")
+        else:
+            segments = _split_text_to_segments(
+                text,
+                scene_min_len=scene_min_len,
+                scene_max_len=scene_max_len,
+                split_mode=split_mode,
+            )
         if not segments:
             raise RuntimeError("Text is empty")
 
         user_topic_supplied = bool((task.get("topic") or "").strip())
         topic_clip = _topic_for_clip(user_topic_supplied, topic, segments)
         topic_llm = _topic_line_for_deepseek(user_topic_supplied, topic)
+        _log(
+            f"style_preset={((task.get('style_preset') or '') or 'custom')!r} "
+            f"split_mode={split_mode} chinese_cast={chinese_cast} classical={classical_mode}"
+        )
         if classical_mode:
             _log("已选古诗词预设：按逗号也分句；人物倾向古代汉服与中国形象")
         elif chinese_cast:
             _log("已选中国人/东亚面孔预设")
         else:
-            _log("未选人物族裔预设（默认不限制）")
+            _log("未选人物族裔预设（默认不限制；风景文不擅自加人）")
 
         images_per_group = 1
         if split_mode == "classical_poetry":
             _log(f"开始任务：分镜数 {len(segments)}；配图：句号/叹号/问号/分号/逗号各切一句一张图")
         else:
-            _log(f"开始任务：分镜数 {len(segments)}；配图：句号/叹号/问号/分号各切一句一张图")
+            _log(f"开始任务：分镜数 {len(segments)}；配图：句号/叹号/问号/分号各切一句一张图（默认不含逗号）")
 
         task_dir = _safe_task_dir(task_id)
         images_dir = task_dir / "images"
@@ -1562,6 +1594,11 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
         )
         if chinese_cast or classical_mode:
             neg_extra += ", " + _NEG_NON_CHINESE_CAST
+        elif not src_images_task:
+            neg_extra += (
+                ", crowd of people in hanfu, ancient chinese costume group portrait, "
+                "multiple people in traditional robes, forced human figures in landscape"
+            )
         neg_prompt = (neg_base + ", " + neg_extra).strip(", ")
 
         num_image_groups = (len(segments) + images_per_group - 1) // images_per_group  # 向上取整
@@ -1583,7 +1620,35 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
         task["deepseek_prompt_status"] = "pending"
         task["deepseek_prompt_message"] = ""
         deepseek_call_error: Optional[str] = None
-        if deepseek_key and num_image_groups > 0:
+
+        if src_images_task:
+            src_dir = _safe_task_dir(reuse_images_task_id) / "images"
+            reused = 0
+            for group_idx in range(num_image_groups):
+                src_name = f"{group_idx:03d}.png"
+                src_path = src_dir / src_name
+                if not src_path.is_file():
+                    meta = (src_images_task.get("images") or [])
+                    if group_idx < len(meta) and meta[group_idx].get("filename"):
+                        src_path = src_dir / str(meta[group_idx]["filename"])
+                if not src_path.is_file():
+                    raise RuntimeError(f"复用配图缺失：{src_name}")
+                dst = images_dir / src_name
+                if src_path.resolve() != dst.resolve():
+                    dst.write_bytes(src_path.read_bytes())
+                group_segments = all_groups[group_idx]
+                if need_landscape:
+                    for _ in group_segments:
+                        image_paths_16_9.append(dst)
+                if need_portrait:
+                    for _ in group_segments:
+                        image_paths_9_16.append(dst)
+                reused += 1
+            task["deepseek_prompt_status"] = src_images_task.get("deepseek_prompt_status") or "ok"
+            task["deepseek_prompt_message"] = src_images_task.get("deepseek_prompt_message") or ""
+            task["progress"] = {"current": img_total, "total": img_total}
+            _log(f"已复用配图 {reused} 张，开始配音与合成视频")
+        elif deepseek_key and num_image_groups > 0:
             task["stage"] = "prompt_llm"
             task["progress"] = {"current": 0, "total": max(1, img_total)}
             _log("正在用 DeepSeek 将各组分镜口播写成画面提示词…")
@@ -1625,89 +1690,88 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             )
             _log("未配置 DeepSeek 密钥（环境变量 DEEPSEEK_API_KEY 或 web-tool/scripts/build_news.py），使用规则拼接提示词")
 
-        # 先按组生成图片
-        for group_idx in range(num_image_groups):
-            group_segments = all_groups[group_idx]
+        # 先按组生成图片（复用配图时跳过）
+        if not src_images_task:
+            for group_idx in range(num_image_groups):
+                group_segments = all_groups[group_idx]
 
-            if llm_prompts is not None:
-                core = (llm_prompts[group_idx] or "").strip()
-                if user_topic_supplied:
-                    pos_prompt = (
-                        f"【总主题】{topic_clip}。"
-                        f"{core} "
-                        "写实风格，电影级光影，摄影质感，高清细节，画面中不要出现文字、水印或字幕。"
-                    )
+                if llm_prompts is not None:
+                    core = (llm_prompts[group_idx] or "").strip()
+                    if user_topic_supplied:
+                        pos_prompt = (
+                            f"【总主题】{topic_clip}。"
+                            f"{core} "
+                            "写实风格，电影级光影，摄影质感，高清细节，画面中不要出现文字、水印或字幕。"
+                        )
+                    else:
+                        pos_prompt = (
+                            f"{_CLIP_GENERIC_THEME_EN}. {core} "
+                            "photorealistic, cinematic lighting, no text watermark or subtitles in frame."
+                        )
                 else:
-                    pos_prompt = (
-                        f"{_CLIP_GENERIC_THEME_EN}. {core} "
-                        "photorealistic, cinematic lighting, no text watermark or subtitles in frame."
+                    pos_prompt = _build_rule_based_image_prompt_for_group(
+                        user_topic_supplied, topic, group_segments, group_idx, classical_mode, chinese_cast
                     )
-            else:
-                pos_prompt = _build_rule_based_image_prompt_for_group(
-                    user_topic_supplied, topic, group_segments, group_idx, classical_mode, chinese_cast
-                )
 
-            cast_suffix = _chinese_cast_positive_fragment(classical_mode, chinese_cast)
-            if cast_suffix:
-                pos_prompt = pos_prompt + " " + cast_suffix
+                cast_suffix = _chinese_cast_positive_fragment(classical_mode, chinese_cast)
+                if cast_suffix:
+                    pos_prompt = pos_prompt + " " + cast_suffix
 
-            pos_prompt = _IMAGE_NO_TEXT_PREFIX + pos_prompt
-            pos_prompt = _strip_verbatim_script_from_image_prompt(pos_prompt, segments)
-            pos_prompt = _sanitize_clip_positive_prompt(pos_prompt)
-            pos_prompt = _ensure_image_prompt_has_substance(pos_prompt, topic_clip)
+                pos_prompt = _IMAGE_NO_TEXT_PREFIX + pos_prompt
+                pos_prompt = _strip_verbatim_script_from_image_prompt(pos_prompt, segments)
+                pos_prompt = _sanitize_clip_positive_prompt(pos_prompt)
+                pos_prompt = _ensure_image_prompt_has_substance(pos_prompt, topic_clip)
 
-            if images_only:
-                task["stage"] = "image"
-                img_done += 1
-                task["progress"] = {"current": img_done, "total": img_total}
-                _log(f"生成配图 {img_done}/{img_total} (第 {group_idx + 1}/{num_image_groups} 句)")
-                workflow = _build_z_image_turbo_workflow(
-                    pos_prompt,
-                    seed=None if seed is None else seed + group_idx,
-                    width=image_width,
-                    height=image_height,
-                    negative_text=neg_prompt,
-                )
-                img_bytes = await _run_comfyui_and_get_last_image(workflow)
-                img_path = images_dir / f"{group_idx:03d}.png"
-                img_path.write_bytes(img_bytes)
-            elif need_landscape:
-                task["stage"] = "image"
-                img_done += 1
-                task["progress"] = {"current": img_done, "total": img_total}
-                _log(f"生成图片（横屏 16:9） {img_done}/{img_total} (分镜组 {group_idx + 1}/{num_image_groups})")
-                workflow = _build_z_image_turbo_workflow(
-                    pos_prompt,
-                    seed=None if seed is None else seed + group_idx,
-                    width=1920,
-                    height=1080,
-                    negative_text=neg_prompt,
-                )
-                img_bytes = await _run_comfyui_and_get_last_image(workflow)
-                img_path = images_dir / f"{group_idx:03d}_16_9.png"
-                img_path.write_bytes(img_bytes)
-                # 为这个组的每个segment都添加相同的图片路径
-                for _ in group_segments:
-                    image_paths_16_9.append(img_path)
+                if images_only:
+                    task["stage"] = "image"
+                    img_done += 1
+                    task["progress"] = {"current": img_done, "total": img_total}
+                    _log(f"生成配图 {img_done}/{img_total} (第 {group_idx + 1}/{num_image_groups} 句)")
+                    workflow = _build_z_image_turbo_workflow(
+                        pos_prompt,
+                        seed=None if seed is None else seed + group_idx,
+                        width=image_width,
+                        height=image_height,
+                        negative_text=neg_prompt,
+                    )
+                    img_bytes = await _run_comfyui_and_get_last_image(workflow)
+                    img_path = images_dir / f"{group_idx:03d}.png"
+                    img_path.write_bytes(img_bytes)
+                elif need_landscape:
+                    task["stage"] = "image"
+                    img_done += 1
+                    task["progress"] = {"current": img_done, "total": img_total}
+                    _log(f"生成图片（横屏 16:9） {img_done}/{img_total} (分镜组 {group_idx + 1}/{num_image_groups})")
+                    workflow = _build_z_image_turbo_workflow(
+                        pos_prompt,
+                        seed=None if seed is None else seed + group_idx,
+                        width=1920,
+                        height=1080,
+                        negative_text=neg_prompt,
+                    )
+                    img_bytes = await _run_comfyui_and_get_last_image(workflow)
+                    img_path = images_dir / f"{group_idx:03d}_16_9.png"
+                    img_path.write_bytes(img_bytes)
+                    for _ in group_segments:
+                        image_paths_16_9.append(img_path)
 
-            if need_portrait:
-                task["stage"] = "image"
-                img_done += 1
-                task["progress"] = {"current": img_done, "total": img_total}
-                _log(f"生成图片（竖屏 9:16） {img_done}/{img_total} (分镜组 {group_idx + 1}/{num_image_groups})")
-                workflow = _build_z_image_turbo_workflow(
-                    pos_prompt,
-                    seed=None if seed is None else seed + group_idx + 10000,
-                    width=1080,
-                    height=1920,
-                    negative_text=neg_prompt,
-                )
-                img_bytes = await _run_comfyui_and_get_last_image(workflow)
-                img_path = images_dir / f"{group_idx:03d}_9_16.png"
-                img_path.write_bytes(img_bytes)
-                # 为这个组的每个segment都添加相同的图片路径
-                for _ in group_segments:
-                    image_paths_9_16.append(img_path)
+                if need_portrait and not images_only:
+                    task["stage"] = "image"
+                    img_done += 1
+                    task["progress"] = {"current": img_done, "total": img_total}
+                    _log(f"生成图片（竖屏 9:16） {img_done}/{img_total} (分镜组 {group_idx + 1}/{num_image_groups})")
+                    workflow = _build_z_image_turbo_workflow(
+                        pos_prompt,
+                        seed=None if seed is None else seed + group_idx + 10000,
+                        width=1080,
+                        height=1920,
+                        negative_text=neg_prompt,
+                    )
+                    img_bytes = await _run_comfyui_and_get_last_image(workflow)
+                    img_path = images_dir / f"{group_idx:03d}_9_16.png"
+                    img_path.write_bytes(img_bytes)
+                    for _ in group_segments:
+                        image_paths_9_16.append(img_path)
 
         if images_only:
             images_result: List[dict] = []
@@ -1721,6 +1785,9 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
                     "filename": img_name,
                 })
             task["images"] = images_result
+            task["segments"] = segments
+            task["source_text"] = text
+            task["ready_for_video"] = True
             task["status"] = "done"
             task["stage"] = "done"
             task["progress"] = {"current": img_total, "total": img_total}
@@ -1728,7 +1795,7 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
                 task["output_directory"] = str(task_dir.resolve())
             except Exception:
                 task["output_directory"] = str(task_dir)
-            _log(f"配图完成，共 {len(images_result)} 张，输出目录 images/")
+            _log(f"配图完成，共 {len(images_result)} 张；可点「生成视频」复用这些图继续成片")
             return
 
         # 然后为每个segment生成音频
@@ -1897,16 +1964,31 @@ async def text_to_images_reveal_output(task_id: str = Form(...)):
 @app.post('/text-to-video/start')
 @app.post('/api/text-to-video/start')
 async def text_to_video_start(
-    text: str = Form(...),
+    text: str = Form(""),
     voice: str = Form(""),
     speed: float = Form(1.0),
     gen_video_16_9: str = Form("0"),
     gen_video_9_16: str = Form("1"),
     style_preset: str = Form(""),
+    reuse_images_task_id: str = Form(""),
     subtitle_simplify_punct: str = Form("0"),
     scene_min_len: str = Form(""),
     scene_max_len: str = Form(""),
 ):
+    reuse_id = (reuse_images_task_id or "").strip()
+    src = _TEXT_TO_VIDEO_TASKS.get(reuse_id) if reuse_id else None
+    text_val = (text or "").strip()
+    style_val = (style_preset or "").strip()
+    if reuse_id:
+        if not isinstance(src, dict) or src.get("status") != "done" or not src.get("images"):
+            raise HTTPException(status_code=400, detail="找不到可复用的配图结果，请先生成图片")
+        if not text_val:
+            text_val = (src.get("source_text") or "").strip()
+        if not style_val:
+            style_val = (src.get("style_preset") or "").strip()
+    if not text_val:
+        raise HTTPException(status_code=400, detail="请输入文字内容")
+
     task_id = str(uuid.uuid4())
     output_dir = _alloc_text_to_video_output_dir()
     _TEXT_TO_VIDEO_TASKS[task_id] = {
@@ -1922,7 +2004,8 @@ async def text_to_video_start(
         "video_url_9_16": None,
         "gen_video_16_9": gen_video_16_9,
         "gen_video_9_16": gen_video_9_16,
-        "style_preset": (style_preset or "").strip(),
+        "style_preset": style_val,
+        "reuse_images_task_id": reuse_id,
         "subtitle_simplify_punct": subtitle_simplify_punct,
         "scene_min_len": scene_min_len,
         "scene_max_len": scene_max_len,
@@ -1937,10 +2020,10 @@ async def text_to_video_start(
     seed_val = None  # Random seed by default
 
     async def _runner():
-        await _run_text_to_video_task(task_id, text, seed_val, voice_val, speed_val, fps_val)
+        await _run_text_to_video_task(task_id, text_val, seed_val, voice_val, speed_val, fps_val)
 
     asyncio.create_task(_runner())
-    return {"success": True, "task_id": task_id}
+    return {"success": True, "task_id": task_id, "reused_images": bool(reuse_id)}
 
 
 @app.post('/text-to-video/cancel')

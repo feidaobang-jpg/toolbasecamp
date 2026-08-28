@@ -49,6 +49,7 @@
             comfyui_error: body && body.comfyui_error,
             qwen_checkpoint_ready: body && body.qwen_checkpoint_ready,
             qwen_checkpoint: body && body.qwen_checkpoint,
+            text_illustration_rules: body && body.text_illustration_rules,
             message: body && body.message
           };
         }).catch(function () {
@@ -79,6 +80,15 @@
       }
       if (el.getAttribute('data-needs-qwen') === '1' && data.qwen_checkpoint_ready === false) {
         el.textContent = '已连接 ComfyUI，但未找到 Qwen-Rapid-AIO 模型（models/checkpoints/）。图生图需复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors。';
+        el.className = 'home-pc-status home-pc-status--warn';
+        return;
+      }
+      var rules = data.text_illustration_rules || '';
+      if (rules !== 'v2_no_comma_default') {
+        var staleHint = (typeof global.t === 'function' && global.t('privateHub.homePc.apiRulesStale') !== 'privateHub.homePc.apiRulesStale')
+          ? global.t('privateHub.homePc.apiRulesStale')
+          : '家里电脑 API 仍是旧规则（会按逗号分句/默认中国人）。请在本机重启 comfyui-api-server 后再试。';
+        el.textContent = '已连接：' + base() + ' · ComfyUI 正常 · ⚠️ ' + staleHint;
         el.className = 'home-pc-status home-pc-status--warn';
         return;
       }
