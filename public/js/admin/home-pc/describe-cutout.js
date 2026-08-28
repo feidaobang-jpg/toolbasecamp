@@ -16,8 +16,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageSelectionPreview = document.getElementById('image-selection-preview');
     
     const describeInput = document.getElementById('describe-input');
+    const outputModeRow = document.getElementById('output-mode-row');
 
     const API_BASE_URL = window.HomePcApi.base();
+    let outputMode = 'cutout';
+
+    function getOutputMode() {
+        return outputMode;
+    }
+
+    if (outputModeRow) {
+        outputModeRow.addEventListener('click', function (e) {
+            const btn = e.target.closest('[data-output-mode]');
+            if (!btn) return;
+            outputMode = btn.getAttribute('data-output-mode') || 'cutout';
+            Array.prototype.forEach.call(outputModeRow.querySelectorAll('[data-output-mode]'), function (el) {
+                el.classList.toggle('is-active', el === btn);
+            });
+        });
+    }
 
     // 旋转状态存储：key为图片索引，value为旋转角度(0, 90, 180, 270)
     let imageRotations = {};
@@ -218,8 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 processBtn.textContent = `处理中 ${i + 1}/${selectedImages.length}...`;
                 
                 try {
-                    let resultImage;
-                    
                     // 0. 预处理：获取图片数据（如果需要旋转，先旋转）
                     let currentDataUrl = await fileToDataURL(imageFile);
                     const rotation = imageRotations[i] || 0;
@@ -230,20 +245,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     // 描述抠图
-                    console.log(`[${i+1}/${selectedImages.length}] 开始上传并描述抠图: ${imageFile.name}, 提示词: ${describePrompt}`);
-                    const cutoutImage = await callDescribeCutoutApi({
+                    console.log(`[${i+1}/${selectedImages.length}] 开始上传并描述抠图: ${imageFile.name}, 提示词: ${describePrompt}, 模式: ${getOutputMode()}`);
+                    const cutoutResults = await callDescribeCutoutApi({
                         name: imageFile.name,
                         dataUrl: currentDataUrl
-                    }, describePrompt);
+                    }, describePrompt, getOutputMode());
 
                     console.log(`[${i+1}/${selectedImages.length}] 描述抠图完成`);
-                    resultImage = cutoutImage;
-
-                    // 处理成功，加入结果列表
-                    processedImages.push(resultImage);
-                    
-                    // 立即显示这张图片的结果（不用等所有都做完）
-                    displaySingleResult(resultImage, processedImages.length - 1);
+                    cutoutResults.forEach(function (resultImage) {
+                        processedImages.push(resultImage);
+                        displaySingleResult(resultImage, processedImages.length - 1);
+                    });
                     
                 } catch (err) {
                     console.error(`图片 ${imageFile.name} 处理失败:`, err);
@@ -263,15 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             saveAllBtn.classList.remove('hidden');
             if (typeof showToast === 'function') {
-                showToast(`处理完成，成功 ${processedImages.length}/${selectedImages.length} 张`);
-            }
-            // 积分刷新已移除（媒体工具集不需要登录验证和积分）
-            
-            // 自动滚动到结果区域
-            if (resultContainer && processedImages.length > 0) {
-                setTimeout(() => {
-                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 300);
+                showToast(`处理完成，成功 ${processedImages.length} 张输出`);
             }
             
         } catch (error) {
@@ -290,6 +294,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // 创建预览卡片
         const previewItem = document.createElement('div');
         previewItem.className = 'image-preview-item';
+
+        if (processedImage.kindLabel) {
+            const kind = document.createElement('div');
+            kind.className = 'image-info';
+            kind.style.marginBottom = '6px';
+            kind.textContent = processedImage.kindLabel;
+            previewItem.appendChild(kind);
+        }
         
         const img = document.createElement('img');
         img.src = processedImage.dataUrl;
@@ -416,13 +428,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /**
      * 调用后端描述抠图 API
+     * @returns {Promise<Array>} 结果图列表（抠图和/或蒙版）
      */
-    async function callDescribeCutoutApi(inputImage, prompt) {
+    async function callDescribeCutoutApi(inputImage, prompt, mode) {
         // inputImage 包含 name 和 dataUrl
         const blob = dataURLtoBlob(inputImage.dataUrl);
         const formData = new FormData();
         formData.append('image', blob, inputImage.name);
         formData.append('text_prompt', prompt);
+        formData.append('output_mode', mode || 'cutout');
         
         try {
             const response = await fetch(`${API_BASE_URL}/describe-cutout`, {
@@ -436,26 +450,44 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (!response.ok) {
-                throw new Error(`服务器错误: ${response.status}`);
+                let detail = `服务器错误: ${response.status}`;
+                try {
+                    const errData = await response.json();
+                    if (errData.detail) detail = typeof errData.detail === 'string' ? errData.detail : detail;
+                } catch (e) { /* ignore */ }
+                throw new Error(detail);
             }
 
             const data = await response.json();
-            if (data.success && data.image_data) {
-                // 创建一个新的对象返回
-                const newImage = { ...inputImage };
-                newImage.dataUrl = data.image_data;
-                // 文件名改为 png
-                newImage.name = newImage.name.replace(/\.[^/.]+$/, "") + ".png";
-                
-                // 重新计算大小和类型
-                const base64 = data.image_data.split(',')[1];
-                newImage.size = Math.round((base64.length * 3) / 4);
-                newImage.type = 'image/png';
-                
-                return newImage;
-            } else {
+            if (!data.success) {
                 throw new Error(data.error || '未知错误');
             }
+
+            const baseName = (inputImage.name || 'cutout').replace(/\.[^/.]+$/, '');
+            const results = [];
+
+            function pushFromDataUrl(dataUrl, suffix, kindLabel) {
+                if (!dataUrl) return;
+                const base64 = dataUrl.split(',')[1] || '';
+                results.push({
+                    name: `${baseName}_${suffix}.png`,
+                    dataUrl: dataUrl,
+                    size: Math.round((base64.length * 3) / 4),
+                    type: 'image/png',
+                    kindLabel: kindLabel
+                });
+            }
+
+            if (data.image_data) {
+                pushFromDataUrl(data.image_data, 'cutout', '抠图');
+            }
+            if (data.mask_image_data) {
+                pushFromDataUrl(data.mask_image_data, 'mask', '蒙版');
+            }
+            if (!results.length) {
+                throw new Error('未返回图片数据');
+            }
+            return results;
         } catch (err) {
             console.error("API调用失败", err);
             

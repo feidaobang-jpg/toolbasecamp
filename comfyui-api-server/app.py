@@ -117,6 +117,7 @@ async def health_check():
         "qwen_img2img_quality": _QWEN_IMG2IMG_QUALITY,
         "gpu_hint": "Qwen 高质量档约 1.5MP·8 步，16GB 显存可试；OOM 请用标准档（1MP·4 步）。",
         "resource_limits": _RESOURCE_LIMIT_INFO,
+        "deepseek_configured": bool(_repo_deepseek_api_key()),
     }
 
 
@@ -2701,14 +2702,20 @@ async def photo_restore_status(task_id: str):
 async def describe_cutout(
     image: UploadFile = File(...),
     text_prompt: str = Form(...),
+    output_mode: str = Form("cutout"),
     enable_watermark: bool = Form(False),
     watermark_text: str = Form("样片确认"),
 ):
     """
-    描述抠图 API 端点（无需登录与积分）
+    描述抠图 API：output_mode = cutout | mask | both
+    cutout=抠图成品(节点29)，mask=黑白蒙版(节点31)，both=两者都返回。
     """
     if not image:
         raise HTTPException(status_code=400, detail='No image file provided')
+
+    mode = (output_mode or "cutout").strip().lower()
+    if mode not in ("cutout", "mask", "both"):
+        raise HTTPException(status_code=400, detail="output_mode 须为 cutout / mask / both")
     
     try:
         # 1. 上传图片
@@ -2748,45 +2755,73 @@ async def describe_cutout(
         finally:
             await asyncio.to_thread(ws.close)
         
-        # 6. 获取结果
+        # 6. 获取结果（按节点取图：29=抠图预览，31=蒙版预览）
         history = await get_history(prompt_id)
         history = history[prompt_id]
         outputs = history['outputs']
 
-        output_images = []
-        # 收集所有输出图片
-        for node_id in outputs:
-            node_output = outputs[node_id]
-            if 'images' in node_output:
-                for image in node_output['images']:
-                    image_data = await get_image(image['filename'], image['subfolder'], image['type'])
-                    output_images.append(image_data)
+        async def _first_image_bytes(node_id: str):
+            node_output = outputs.get(node_id) or outputs.get(str(node_id))
+            if not node_output or "images" not in node_output:
+                return None
+            imgs = node_output["images"]
+            if not imgs:
+                return None
+            img_meta = imgs[0]
+            return await get_image(img_meta["filename"], img_meta["subfolder"], img_meta["type"])
 
-        if not output_images:
-            raise HTTPException(status_code=500, detail='No output images generated')
+        cutout_bytes = await _first_image_bytes("29")
+        mask_bytes = await _first_image_bytes("31")
 
-        # 取最后一张结果 (通常是最终结果)
-        # 注意：ComfyUI输出顺序可能不确定，但在该工作流中只有一个SaveImage节点
-        result_data = output_images[-1]
-        
-        # 编码无水印版本
-        clean_base64 = base64.b64encode(result_data).decode('utf-8')
+        # 兼容旧工作流：若固定节点无输出，回退收集全部 Preview 图
+        if cutout_bytes is None or mask_bytes is None:
+            collected = []
+            for node_id in sorted(outputs.keys(), key=lambda x: int(x) if str(x).isdigit() else 0):
+                node_output = outputs[node_id]
+                if "images" in node_output:
+                    for img_meta in node_output["images"]:
+                        image_data = await get_image(
+                            img_meta["filename"], img_meta["subfolder"], img_meta["type"]
+                        )
+                        collected.append((str(node_id), image_data))
+            if cutout_bytes is None and collected:
+                cutout_bytes = (
+                    collected[-1][1]
+                    if len(collected) == 1
+                    else collected[-2][1]
+                    if len(collected) >= 2
+                    else collected[-1][1]
+                )
+            if mask_bytes is None and len(collected) >= 1:
+                mask_bytes = collected[-1][1]
+
+        need_cutout = mode in ("cutout", "both")
+        need_mask = mode in ("mask", "both")
+        if need_cutout and not cutout_bytes:
+            raise HTTPException(status_code=500, detail="未生成抠图结果")
+        if need_mask and not mask_bytes:
+            raise HTTPException(status_code=500, detail="未生成蒙版结果")
 
         response_data = {
-            'success': True,
-            'image_data': f'data:image/png;base64,{clean_base64}'
+            "success": True,
+            "output_mode": mode,
         }
-        
-        # 如果需要水印，生成水印版本
-        if enable_watermark:
-            print(f"正在生成水印版本: {watermark_text}")
-            watermarked_raw = await asyncio.to_thread(add_watermark, result_data, watermark_text)
-            if watermarked_raw:
-                wm_base64 = base64.b64encode(watermarked_raw).decode('utf-8')
-                response_data['watermarked_image_data'] = f'data:image/png;base64,{wm_base64}'
-            else:
-                print("水印生成失败")
-                response_data['watermarked_image_data'] = None
+
+        if need_cutout:
+            clean_base64 = base64.b64encode(cutout_bytes).decode("utf-8")
+            response_data["image_data"] = f"data:image/png;base64,{clean_base64}"
+            if enable_watermark:
+                print(f"正在生成水印版本: {watermark_text}")
+                watermarked_raw = await asyncio.to_thread(add_watermark, cutout_bytes, watermark_text)
+                if watermarked_raw:
+                    wm_base64 = base64.b64encode(watermarked_raw).decode("utf-8")
+                    response_data["watermarked_image_data"] = f"data:image/png;base64,{wm_base64}"
+                else:
+                    response_data["watermarked_image_data"] = None
+
+        if need_mask:
+            mask_base64 = base64.b64encode(mask_bytes).decode("utf-8")
+            response_data["mask_image_data"] = f"data:image/png;base64,{mask_base64}"
 
         return response_data
 
