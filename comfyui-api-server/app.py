@@ -2465,40 +2465,170 @@ def build_rembg_workflow(input_filename):
 
     return workflow
 
-def build_describe_cutout_workflow(input_filename, text_prompt):
-    """
-    构建描述抠图工作流
-    """
-    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, 'qwen_describe_cutout.json')
-    
+def _enhance_describe_cutout_target(text_prompt: str) -> str:
+    """Qwen 节点内部用英文 Locate the {target}，补充空间/年龄语义提高命中率。"""
+    p = (text_prompt or "").strip()
+    if not p:
+        return p
+    hints = []
+    if re.search(r"右边|右侧", p):
+        hints.append("on the right side of the image")
+    if re.search(r"左边|左侧", p):
+        hints.append("on the left side of the image")
+    if re.search(r"中间|中央", p):
+        hints.append("in the center of the image")
+    if re.search(r"大人|成人|成年|男士|男子|男性", p) and not re.search(r"小孩|孩子|儿童", p):
+        hints.append("adult only, not a child")
+    if re.search(r"小孩|孩子|儿童|宝宝", p) and not re.search(r"大人|成人", p):
+        hints.append("child only, not an adult")
+    if hints:
+        return f"{p} ({', '.join(hints)})"
+    return p
+
+
+def _describe_cutout_wants_multi(text_prompt: str) -> bool:
+    return bool(re.search(r"所有|全部|每个|\ball\b", text_prompt or "", re.I))
+
+
+def _bbox_list_from_qwen_json(raw: str) -> list:
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+    except Exception:
+        return []
+    if not isinstance(data, list):
+        return []
+    out = []
+    for item in data:
+        if not isinstance(item, dict):
+            continue
+        bb = item.get("bbox_2d") or item.get("bbox")
+        if not bb or len(bb) < 4:
+            continue
+        out.append({"bbox_2d": bb, "label": item.get("label", "")})
+    return out
+
+
+def _bbox_center_x(box: dict) -> float:
+    bb = box.get("bbox_2d") or box.get("bbox") or []
+    x1, _, x2, _ = bb[0], bb[1], bb[2], bb[3]
+    return (float(x1) + float(x2)) / 2.0
+
+
+def _bbox_area(box: dict) -> float:
+    bb = box.get("bbox_2d") or box.get("bbox") or []
+    x1, y1, x2, y2 = bb[0], bb[1], bb[2], bb[3]
+    return abs(float(x2) - float(x1)) * abs(float(y2) - float(y1))
+
+
+def _pick_describe_cutout_bbox_selection(boxes: list, text_prompt: str) -> str:
+    """多人/多框时按描述（左右、大人小孩）选框，避免总抠到 index 0。"""
+    if not boxes:
+        return "0"
+    if _describe_cutout_wants_multi(text_prompt):
+        return "all"
+    if len(boxes) == 1:
+        return "0"
+    p = text_prompt or ""
+    if re.search(r"右边|右侧", p):
+        return str(max(range(len(boxes)), key=lambda i: _bbox_center_x(boxes[i])))
+    if re.search(r"左边|左侧", p):
+        return str(min(range(len(boxes)), key=lambda i: _bbox_center_x(boxes[i])))
+    if re.search(r"中间|中央", p):
+        centers = [_bbox_center_x(b) for b in boxes]
+        mid = (min(centers) + max(centers)) / 2.0
+        return str(min(range(len(boxes)), key=lambda i: abs(centers[i] - mid)))
+    if re.search(r"大人|成人|成年", p) and not re.search(r"小孩|孩子|儿童", p):
+        return str(max(range(len(boxes)), key=lambda i: _bbox_area(boxes[i])))
+    if re.search(r"小孩|孩子|儿童", p) and not re.search(r"大人|成人", p):
+        return str(min(range(len(boxes)), key=lambda i: _bbox_area(boxes[i])))
+    return "0"
+
+
+def _load_describe_cutout_workflow_template() -> dict:
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "qwen_describe_cutout.json")
     if not os.path.exists(workflow_path):
         raise FileNotFoundError(f"Workflow file not found: {workflow_path}")
-        
-    with open(workflow_path, 'r', encoding='utf-8') as f:
-        workflow = json.load(f)
-    
-    # 设置图片输入 (Node 5)
-    if "5" in workflow and workflow["5"]["class_type"] == "LoadImage":
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _patch_describe_cutout_inputs(workflow: dict, input_filename: str, text_prompt: str, bbox_selection: str = "0"):
+    target = _enhance_describe_cutout_target(text_prompt)
+    if "5" in workflow and workflow["5"].get("class_type") == "LoadImage":
         workflow["5"]["inputs"]["image"] = input_filename
         workflow["5"]["inputs"]["upload"] = "image"
     else:
         raise ValueError("LoadImage node (ID 5) not found in workflow")
+    qwen = workflow.get("3")
+    if not qwen or qwen.get("class_type") != "QwenVLDetection":
+        raise ValueError("QwenVLDetection node (ID 3) not found in workflow")
+    qwen["inputs"]["target"] = target
+    qwen["inputs"]["bbox_selection"] = bbox_selection or "0"
+    if "27" in workflow and workflow["27"].get("class_type") == "LayerMask: SAM2UltraV2":
+        multi = (bbox_selection or "").strip().lower() == "all"
+        workflow["27"]["inputs"]["bbox_select"] = "all" if multi else "first"
+        workflow["27"]["inputs"]["select_index"] = "0"
 
-    # 设置描述文本 (Node 3)
-    if "3" in workflow and workflow["3"]["class_type"] == "QwenVLDetection":
-        workflow["3"]["inputs"]["target"] = text_prompt
-    else:
-        # 尝试遍历查找 QwenVLDetection 节点
-        found = False
-        for node_id, node in workflow.items():
-            if node["class_type"] == "QwenVLDetection":
-                node["inputs"]["target"] = text_prompt
-                found = True
-                break
-        if not found:
-            raise ValueError("QwenVLDetection node not found in workflow")
 
+def build_describe_cutout_detect_workflow(input_filename: str, text_prompt: str) -> dict:
+    """仅 Qwen 检测，用于先拿到全部框再按描述选 index。"""
+    workflow = _load_describe_cutout_workflow_template()
+    workflow = {k: v for k, v in workflow.items() if k in ("3", "4", "5")}
+    _patch_describe_cutout_inputs(workflow, input_filename, text_prompt, bbox_selection="all")
     return workflow
+
+
+def build_describe_cutout_workflow(input_filename: str, text_prompt: str, bbox_selection: str = "0") -> dict:
+    """构建描述抠图完整工作流。"""
+    workflow = _load_describe_cutout_workflow_template()
+    _patch_describe_cutout_inputs(workflow, input_filename, text_prompt, bbox_selection=bbox_selection)
+    return workflow
+
+
+async def _run_comfyui_workflow_outputs(workflow: dict) -> dict:
+    ws = websocket.WebSocket()
+    try:
+        await asyncio.to_thread(
+            ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, CLIENT_ID), timeout=10
+        )
+        prompt_response = await queue_prompt(workflow)
+        prompt_id = prompt_response["prompt_id"]
+        while True:
+            ws.settimeout(5.0)
+            try:
+                out = await asyncio.to_thread(ws.recv)
+            except websocket.WebSocketTimeoutException:
+                continue
+            if isinstance(out, str):
+                message = json.loads(out)
+                if message.get("type") == "executing":
+                    data = message.get("data", {})
+                    if data.get("node") is None and data.get("prompt_id") == prompt_id:
+                        break
+            else:
+                continue
+        history = (await get_history(prompt_id)).get(prompt_id) or {}
+        return history.get("outputs", {})
+    finally:
+        await asyncio.to_thread(ws.close)
+
+
+async def _resolve_describe_cutout_bbox_selection(comfy_filename: str, text_prompt: str) -> str:
+    """先检测全部框，再按「右边的大人」等描述选 index。"""
+    detect_wf = build_describe_cutout_detect_workflow(comfy_filename, text_prompt)
+    outputs = await _run_comfyui_workflow_outputs(detect_wf)
+    node_out = outputs.get("3") or outputs.get(3) or {}
+    raw = None
+    if isinstance(node_out.get("text"), list) and node_out["text"]:
+        raw = node_out["text"][0]
+    elif isinstance(node_out.get("text"), str):
+        raw = node_out["text"]
+    boxes = _bbox_list_from_qwen_json(raw or "")
+    picked = _pick_describe_cutout_bbox_selection(boxes, text_prompt)
+    print(f"描述抠图检测: {len(boxes)} 框, 选用 bbox_selection={picked}, labels={[b.get('label') for b in boxes]}")
+    return picked
 
 def build_photo_restore_workflow(input_filename):
     """
@@ -2718,47 +2848,22 @@ async def describe_cutout(
         raise HTTPException(status_code=400, detail="output_mode 须为 cutout / mask / both")
     
     try:
+        p = (text_prompt or "").strip()
+        if not p:
+            raise HTTPException(status_code=400, detail="text_prompt 不能为空")
+
         # 1. 上传图片
         print(f"正在上传图片到 ComfyUI (描述抠图): {COMFYUI_SERVER_ADDRESS}...")
         comfy_filename, subfolder = await upload_image(image)
         print(f"上传成功: {comfy_filename}")
 
-        # 2. 构建工作流
-        workflow = build_describe_cutout_workflow(comfy_filename, text_prompt)
+        # 2. 先检测全部框，再按描述选框（修复「右边的大人」却抠到左边小孩）
+        bbox_selection = await _resolve_describe_cutout_bbox_selection(comfy_filename, p)
+        workflow = build_describe_cutout_workflow(comfy_filename, p, bbox_selection=bbox_selection)
 
-        # 3. WebSocket 连接
-        ws = websocket.WebSocket()
-        try:
-            await asyncio.to_thread(ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, CLIENT_ID), timeout=10)
-
-            # 4. 提交任务
-            print(f"正在发送任务到 ComfyUI (描述抠图)...")
-            prompt_response = await queue_prompt(workflow)
-            prompt_id = prompt_response['prompt_id']
-            print(f"任务已提交, ID: {prompt_id}")
-
-            # 5. 等待执行完成
-            while True:
-                ws.settimeout(5.0)
-                try:
-                    out = await asyncio.to_thread(ws.recv)
-                except websocket.WebSocketTimeoutException:
-                    continue
-                if isinstance(out, str):
-                    message = json.loads(out)
-                    if message['type'] == 'executing':
-                        data = message['data']
-                        if data['node'] is None and data['prompt_id'] == prompt_id:
-                            break
-                else:
-                    continue
-        finally:
-            await asyncio.to_thread(ws.close)
-        
-        # 6. 获取结果（按节点取图：29=抠图预览，31=蒙版预览）
-        history = await get_history(prompt_id)
-        history = history[prompt_id]
-        outputs = history['outputs']
+        # 3. 跑完整抠图工作流
+        print(f"正在发送任务到 ComfyUI (描述抠图), bbox_selection={bbox_selection}...")
+        outputs = await _run_comfyui_workflow_outputs(workflow)
 
         async def _first_image_bytes(node_id: str):
             node_output = outputs.get(node_id) or outputs.get(str(node_id))
@@ -2805,6 +2910,7 @@ async def describe_cutout(
         response_data = {
             "success": True,
             "output_mode": mode,
+            "bbox_selection": bbox_selection,
         }
 
         if need_cutout:

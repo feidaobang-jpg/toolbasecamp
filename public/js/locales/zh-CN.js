@@ -244,6 +244,7 @@ window.TB_LOCALES['zh-CN'] = {
             describeCutoutModeMask: '蒙版',
             describeCutoutModeBoth: '抠图 + 蒙版',
             describeCutoutOutputHint: '蒙版为黑白图，便于换背景或局部重绘；「两者」会各出一张。',
+            describeCutoutPromptHint: '多人同框时请写清左右或大人/小孩，如「右边的大人」「左侧的小孩」。',
             photoRestoreHint: '已并入图生图：选风格预设「老照片修复」，可多图批量并可选水印。',
             textToImagesHint: 'DeepSeek 分句扩写后，每段调用 z_image_turbo.json 文生图（同上 Z-Image 三件套）。',
             textToVideoHint: 'DeepSeek 分句 + z_image_turbo 配图 + TTS 配音 + FFmpeg 合成（文字成片管线）。',

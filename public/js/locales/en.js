@@ -245,6 +245,7 @@ window.TB_LOCALES.en = {
             describeCutoutModeMask: 'Mask',
             describeCutoutModeBoth: 'Cutout + mask',
             describeCutoutOutputHint: 'Mask is a black-and-white matte for background swap or local redraw; “both” returns two images.',
+            describeCutoutPromptHint: 'When several people appear, specify left/right or adult/child, e.g. “adult on the right”.',
             photoRestoreHint: 'Merged into Image to image: pick the “Restore old photo” style preset; batch upload + optional watermark.',
             textToImagesHint: 'DeepSeek splits/ expands text; each segment uses z_image_turbo.json (same Z-Image trio).',
             textToVideoHint: 'DeepSeek split + z_image_turbo images + TTS + FFmpeg mux (text-to-video pipeline).',

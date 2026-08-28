@@ -2,7 +2,7 @@
   "3": {
     "inputs": {
       "target": "右边的小孩",
-      "bbox_selection": "all",
+      "bbox_selection": "0",
       "score_threshold": 0,
       "merge_boxes": false,
       "qwen_model": [
@@ -88,8 +88,8 @@
   },
   "27": {
     "inputs": {
-      "bbox_select": "all",
-      "select_index": "0,",
+      "bbox_select": "first",
+      "select_index": "0",
       "detail_method": "VITMatte",
       "detail_erode": 6,
       "detail_dilate": 4,
