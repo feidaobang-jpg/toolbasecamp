@@ -1,20 +1,29 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const startBtn = document.getElementById('start-btn');
   const clearBtn = document.getElementById('clear-btn');
   const cancelButton = document.getElementById('cancel-button');
 
   const textInput = document.getElementById('text-input');
   const deepseekNotice = document.getElementById('deepseek-notice');
+  const aspectSelect = document.getElementById('aspect-select');
   const voiceSelect = document.getElementById('voice-select');
   const speedInput = document.getElementById('speed-input');
 
   const optVideo16_9 = document.getElementById('opt-video-16-9');
   const optVideo9_16 = document.getElementById('opt-video-9-16');
+  const imagesOptions = document.getElementById('images-options');
+  const videoOptions = document.getElementById('video-options');
+  const outputModeRow = document.getElementById('output-mode-row');
 
   const progressWrap = document.getElementById('progress-wrap');
   const progressStatus = document.getElementById('progress-status');
   const progressPercent = document.getElementById('progress-percent');
   const progressBar = document.getElementById('progress-bar');
+
+  const resultBox = document.getElementById('result-box');
+  const imageGallery = document.getElementById('image-gallery');
+  const resultCount = document.getElementById('result-count');
+  const btnDownloadAll = document.getElementById('btn-download-all');
 
   const videoBox = document.getElementById('video-box');
   const videoEl = document.getElementById('result-video');
@@ -29,8 +38,21 @@ document.addEventListener('DOMContentLoaded', function() {
   const logOutput = document.getElementById('log-output');
   const logContainer = document.getElementById('log-container');
 
+  const illustrationPresets = window.TextIllustrationPresets && window.TextIllustrationPresets.bind({
+    presetRow: document.getElementById('illustration-preset-row'),
+    hintEl: document.getElementById('illustration-split-hint')
+  });
+
   const API_BASE_URL = window.HomePcApi.base();
 
+  let outputMode = (function () {
+    try {
+      const m = new URLSearchParams(window.location.search || '').get('mode');
+      if (m === 'images' || m === 'image') return 'images';
+    } catch (e) { /* ignore */ }
+    return 'video';
+  })();
+  let activeTaskKind = outputMode === 'images' ? 'images' : 'video';
   let pollingTimer = null;
   let currentTaskId = null;
   let videoProgressCreep = 0;
@@ -38,6 +60,25 @@ document.addEventListener('DOMContentLoaded', function() {
   let lastLogLen = 0;
   let lastOutputDirectory = '';
   let lastDoneTaskId = '';
+  let lastImages = [];
+
+  function tr(key, fallback) {
+    if (typeof window.t === 'function') {
+      const v = window.t(key);
+      if (v && v !== key) return v;
+    }
+    return fallback || key;
+  }
+
+  function resolveUrl(url) {
+    if (!url) return '';
+    if (url.indexOf('http') === 0) return url;
+    return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+
+  function apiPrefix() {
+    return activeTaskKind === 'images' ? 'text-to-images' : 'text-to-video';
+  }
 
   function setProgress(visible, statusText, percent) {
     progressWrap.style.display = visible ? 'block' : 'none';
@@ -55,6 +96,21 @@ document.addEventListener('DOMContentLoaded', function() {
     if (wrapResult16) wrapResult16.style.display = o.wantVideo16_9 ? 'block' : 'none';
     if (wrapResult9) wrapResult9.style.display = o.wantVideo9_16 ? 'block' : 'none';
     if (resultVideosRow) resultVideosRow.style.display = anyV ? 'flex' : 'none';
+  }
+
+  function syncOutputModeUi() {
+    if (imagesOptions) imagesOptions.hidden = outputMode !== 'images';
+    if (videoOptions) videoOptions.hidden = outputMode !== 'video';
+    if (startBtn) {
+      startBtn.textContent = outputMode === 'images'
+        ? tr('privateHub.homePc.textToVideoStartImages', '开始生成图片')
+        : tr('privateHub.homePc.textToVideoStartVideo', '开始生成视频');
+    }
+    if (outputModeRow) {
+      Array.prototype.forEach.call(outputModeRow.querySelectorAll('[data-output-mode]'), function (el) {
+        el.classList.toggle('is-active', (el.getAttribute('data-output-mode') || '') === outputMode);
+      });
+    }
   }
 
   function hideDeepseekNotice() {
@@ -90,23 +146,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function resetOutput() {
     hideDeepseekNotice();
-    videoBox.style.display = 'none';
+    if (resultBox) resultBox.style.display = 'none';
+    if (imageGallery) imageGallery.innerHTML = '';
+    lastImages = [];
+    if (resultCount) resultCount.textContent = '';
+    if (btnDownloadAll) btnDownloadAll.style.display = 'none';
+
+    if (videoBox) videoBox.style.display = 'none';
     applyResultLayout({ wantVideo16_9: false, wantVideo9_16: false });
-    videoEl.removeAttribute('src');
-    videoEl.load();
+    if (videoEl) {
+      videoEl.removeAttribute('src');
+      videoEl.load();
+    }
     if (videoEl16_9) {
       videoEl16_9.removeAttribute('src');
       videoEl16_9.load();
     }
     lastOutputDirectory = '';
     lastDoneTaskId = '';
-    if (btnCopyOutput) {
-      btnCopyOutput.style.display = 'none';
+    if (btnCopyOutput) btnCopyOutput.style.display = 'none';
+    if (btnOpenOutput) btnOpenOutput.style.display = 'none';
+    if (cancelButton) {
+      cancelButton.style.display = 'none';
+      cancelButton.disabled = false;
     }
-    if (btnOpenOutput) {
-      btnOpenOutput.style.display = 'none';
-    }
-
   }
 
   function getExportOptions() {
@@ -115,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return {
       wantVideo16_9,
       wantVideo9_16,
-      hasAnyVideo: wantVideo16_9 || wantVideo9_16,
+      hasAnyVideo: wantVideo16_9 || wantVideo9_16
     };
   }
 
@@ -127,22 +190,77 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function logMessage(msg) {
+    if (!logOutput) return;
     logOutput.innerHTML += msg + '\n';
-    logContainer.scrollTop = logContainer.scrollHeight;  // Auto-scroll to bottom
+    if (logContainer) logContainer.scrollTop = logContainer.scrollHeight;
+  }
+
+  function renderGallery(images) {
+    if (!imageGallery || !resultBox) return;
+    imageGallery.innerHTML = '';
+    lastImages = images || [];
+    if (!lastImages.length) return;
+
+    lastImages.forEach(function (item, i) {
+      const card = document.createElement('div');
+      card.className = 'tti-card';
+
+      const cap = document.createElement('p');
+      cap.className = 'tti-caption';
+      cap.textContent = (item.caption || `第 ${i + 1} 张`).slice(0, 120);
+
+      const img = document.createElement('img');
+      img.src = resolveUrl(item.url);
+      img.alt = item.caption || `配图 ${i + 1}`;
+      img.loading = 'lazy';
+
+      const actions = document.createElement('div');
+      actions.className = 'tti-card-actions';
+
+      const dl = document.createElement('a');
+      dl.className = 'tb-btn tb-btn-sm';
+      dl.href = resolveUrl(item.url);
+      dl.download = item.filename || `image-${i + 1}.png`;
+      dl.textContent = tr('privateHub.homePc.download', '下载');
+      dl.target = '_blank';
+
+      actions.appendChild(dl);
+      card.appendChild(cap);
+      card.appendChild(img);
+      card.appendChild(actions);
+      imageGallery.appendChild(card);
+    });
+
+    if (resultCount) resultCount.textContent = `（共 ${lastImages.length} 张）`;
+    resultBox.style.display = 'block';
+    if (btnDownloadAll) btnDownloadAll.style.display = 'inline-flex';
+  }
+
+  function stageName(stage) {
+    if (stage === 'init') return '初始化';
+    if (stage === 'prompt_llm') return 'AI 编写画面提示词';
+    if (stage === 'image') return activeTaskKind === 'images' ? '生成配图' : '生成图片';
+    if (stage === 'tts') return '合成语音';
+    if (stage === 'video') return '合成视频';
+    if (stage === 'done') return '完成';
+    return stage || '处理中';
   }
 
   async function startTask() {
     const text = (textInput.value || '').trim();
     if (!text) {
-      alert('请输入要生成的文字内容（按句号/叹号/问号/逗号断句）');
+      alert('请输入要生成的文字内容');
       textInput.focus();
       return;
     }
 
-    const opts = getExportOptions();
-    if (!opts.hasAnyVideo) {
-      alert('请至少选择一种导出视频（横屏 16:9 或竖屏 9:16）');
-      return;
+    const kind = outputMode === 'images' ? 'images' : 'video';
+    if (kind === 'video') {
+      const opts = getExportOptions();
+      if (!opts.hasAnyVideo) {
+        alert('请至少选择一种导出视频（横屏 16:9 或竖屏 9:16）');
+        return;
+      }
     }
 
     resetOutput();
@@ -150,72 +268,66 @@ document.addEventListener('DOMContentLoaded', function() {
     videoProgressCreep = 0;
     statusErrorStreak = 0;
     lastLogLen = 0;
+    if (logOutput) logOutput.innerHTML = '';
+    activeTaskKind = kind;
 
     const form = new FormData();
     form.append('text', text);
+    if (illustrationPresets && illustrationPresets.getActive) {
+      form.append('style_preset', illustrationPresets.getActive());
+    }
 
-    const speed = Number(speedInput.value || 1.0);
-    const voice = voiceSelect.value;
-
-    form.append('speed', String(Number.isFinite(speed) ? speed : 1.0));
-    form.append('voice', voice);
-
-    form.append('gen_video_16_9', opts.wantVideo16_9 ? '1' : '0');
-    form.append('gen_video_9_16', opts.wantVideo9_16 ? '1' : '0');
+    if (kind === 'images') {
+      form.append('aspect_preset', (aspectSelect && aspectSelect.value) || 'xhs_34');
+    } else {
+      const opts = getExportOptions();
+      const speed = Number((speedInput && speedInput.value) || 1.0);
+      form.append('speed', String(Number.isFinite(speed) ? speed : 1.0));
+      form.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-XiaoxiaoNeural');
+      form.append('gen_video_16_9', opts.wantVideo16_9 ? '1' : '0');
+      form.append('gen_video_9_16', opts.wantVideo9_16 ? '1' : '0');
+    }
 
     startBtn.disabled = true;
-    cancelButton.style.display = 'inline-block';  // Show cancel button when task starts
+    cancelButton.style.display = 'inline-block';
     setProgress(true, '提交任务中...', 0);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/text-to-video/start`, {
+      const res = await fetch(`${API_BASE_URL}/${apiPrefix()}/start`, {
         method: 'POST',
         body: form
       });
 
-      // 检查502错误
       if (typeof check502Error !== 'undefined' && check502Error(res)) {
         throw new Error('Backend service unavailable');
       }
 
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(function () { return {}; });
       if (!res.ok || !data.success) {
         throw new Error(data.detail || data.error || `HTTP ${res.status}`);
       }
 
       currentTaskId = data.task_id;
-      setProgress(true, '任务已提交，开始生成...', 1);
+      setProgress(true, kind === 'images' ? '任务已提交，开始生成配图…' : '任务已提交，开始生成…', 1);
       pollStatus();
       pollingTimer = setInterval(pollStatus, 1500);
     } catch (e) {
-      // 如果是502错误，已经显示弹窗，这里只显示简要提示
-      if (e.message === 'Backend service unavailable') {
-        setProgress(false);
-      } else {
+      if (e.message !== 'Backend service unavailable') {
         alert(String(e.message || e));
-        setProgress(false);
       }
+      setProgress(false);
     } finally {
       startBtn.disabled = false;
     }
-  }
-
-  function stageName(stage) {
-    if (stage === 'init') return '初始化';
-    if (stage === 'prompt_llm') return 'AI 编写画面提示词';
-    if (stage === 'image') return '生成图片';
-    if (stage === 'tts') return '合成语音';
-    if (stage === 'video') return '合成视频';
-    if (stage === 'done') return '完成';
-    return stage || '处理中';
   }
 
   async function pollStatus() {
     if (!currentTaskId) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/text-to-video/status?task_id=${encodeURIComponent(currentTaskId)}`);
-      // 检查502错误
+      const response = await fetch(
+        `${API_BASE_URL}/${apiPrefix()}/status?task_id=${encodeURIComponent(currentTaskId)}`
+      );
       if (typeof check502Error !== 'undefined' && check502Error(response)) {
         logMessage('后端服务未开启');
         return;
@@ -227,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const data = await response.json();
       statusErrorStreak = 0;
 
-      // Prefer backend logs, avoid spamming repeated poll lines.
       const logs = Array.isArray(data.logs) ? data.logs : [];
       if (lastLogLen === 0 && logs.length > 0) {
         logOutput.innerHTML = '';
@@ -245,9 +356,35 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      const total = Number(data.progress?.total || 0);
-      const cur = Number(data.progress?.current || 0);
+      const total = Number((data.progress && data.progress.total) || 0);
+      const cur = Number((data.progress && data.progress.current) || 0);
       let percent = 0;
+
+      if (activeTaskKind === 'images') {
+        percent = total > 0 ? Math.round((cur / total) * 100) : 0;
+        if (data.stage === 'done') percent = 100;
+        const statusText = data.stage === 'prompt_llm'
+          ? 'DeepSeek 正在把各句写成画面提示词…'
+          : `${stageName(data.stage)}… (${cur}/${total || '-'})`;
+        setProgress(true, statusText, percent);
+        updateDeepseekNoticeFromStatus(data);
+
+        if (data.status === 'done' && Array.isArray(data.images) && data.images.length) {
+          stopPolling();
+          setProgress(true, '完成', 100);
+          renderGallery(data.images);
+          lastOutputDirectory = (data.output_directory && String(data.output_directory)) || '';
+          lastDoneTaskId = (data.task_id && String(data.task_id)) || currentTaskId || '';
+          if (btnCopyOutput && lastOutputDirectory) btnCopyOutput.style.display = 'inline-flex';
+          if (btnOpenOutput && typeof isLocal !== 'undefined' && isLocal && lastDoneTaskId) {
+            btnOpenOutput.style.display = 'inline-flex';
+          }
+          if (lastOutputDirectory) logMessage(`输出目录：${lastOutputDirectory}`);
+          cancelButton.style.display = 'none';
+        }
+        return;
+      }
+
       if (total > 0) {
         percent = Math.round((cur / total) * 85);
       }
@@ -270,31 +407,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const url9_16 = data.video_url_9_16 || data.video_url;
       const url16_9 = data.video_url_16_9;
-
       const opts = getExportOptions();
 
       if (data.status === 'done' && (url9_16 || url16_9 || data.output_directory)) {
         stopPolling();
         setProgress(true, '完成', 100);
         videoProgressCreep = 0;
-        // 积分刷新已移除（媒体工具集不需要登录验证和积分）
 
-        // 视频预览/下载（竖屏 9:16）
-        if (opts.wantVideo9_16 && url9_16) {
-          const videoUrl = url9_16.startsWith('http')
-            ? url9_16
-            : `${API_BASE_URL}${url9_16.startsWith('/') ? '' : '/'}${url9_16}`;
-          videoEl.src = videoUrl;
-        } else {
+        if (opts.wantVideo9_16 && url9_16 && videoEl) {
+          videoEl.src = resolveUrl(url9_16);
+        } else if (videoEl) {
           videoEl.removeAttribute('src');
           videoEl.load();
         }
 
         if (videoEl16_9 && opts.wantVideo16_9 && url16_9) {
-          const videoUrl16_9 = url16_9.startsWith('http')
-            ? url16_9
-            : `${API_BASE_URL}${url16_9.startsWith('/') ? '' : '/'}${url16_9}`;
-          videoEl16_9.src = videoUrl16_9;
+          videoEl16_9.src = resolveUrl(url16_9);
         } else if (videoEl16_9) {
           videoEl16_9.removeAttribute('src');
           videoEl16_9.load();
@@ -302,42 +430,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
         lastOutputDirectory = (data.output_directory && String(data.output_directory)) || '';
         lastDoneTaskId = (data.task_id && String(data.task_id)) || currentTaskId || '';
-        if (btnCopyOutput && lastOutputDirectory) {
-          btnCopyOutput.style.display = 'inline-block';
-        }
-        if (btnOpenOutput && isLocal && lastDoneTaskId) {
+        if (btnCopyOutput && lastOutputDirectory) btnCopyOutput.style.display = 'inline-block';
+        if (btnOpenOutput && typeof isLocal !== 'undefined' && isLocal && lastDoneTaskId) {
           btnOpenOutput.style.display = 'inline-block';
         }
-        if (lastOutputDirectory) {
-          logMessage(`输出目录：${lastOutputDirectory}`);
-        }
+        if (lastOutputDirectory) logMessage(`输出目录：${lastOutputDirectory}`);
 
         updateDeepseekNoticeFromStatus(data);
         applyResultLayout(opts);
-        videoBox.style.display = 'block';
-        cancelButton.disabled = true;  // Disable cancel button when task completes
+        if (videoBox) videoBox.style.display = 'block';
+        cancelButton.disabled = true;
+        cancelButton.style.display = 'none';
       }
     } catch (e) {
       statusErrorStreak += 1;
       logMessage(`状态获取失败（将自动重试 ${statusErrorStreak}/5）：${String(e.message || e)}`);
       if (statusErrorStreak >= 5) {
         stopPolling();
-        setProgress(true, `失败：连接超时/网络异常（已重试多次）。请检查后端是否在线、反代是否超时、ComfyUI 是否卡住。`, 0);
+        setProgress(true, '失败：连接超时/网络异常（已重试多次）。请检查后端是否在线。', 0);
       }
     }
   }
 
-  cancelButton.addEventListener('click', async () => {
+  if (outputModeRow) {
+    outputModeRow.addEventListener('click', function (e) {
+      const btn = e.target && e.target.closest ? e.target.closest('[data-output-mode]') : null;
+      if (!btn) return;
+      outputMode = btn.getAttribute('data-output-mode') || 'video';
+      syncOutputModeUi();
+    });
+  }
+
+  cancelButton.addEventListener('click', async function () {
     const tid = currentTaskId;
     currentTaskId = null;
     stopPolling();
     try {
       if (tid) {
-        await fetch(`${API_BASE_URL}/text-to-video/cancel?task_id=${encodeURIComponent(tid)}`, { method: 'POST' });
+        await fetch(`${API_BASE_URL}/${apiPrefix()}/cancel?task_id=${encodeURIComponent(tid)}`, {
+          method: 'POST'
+        });
       }
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) { /* ignore */ }
     logMessage('已发送取消请求');
     cancelButton.style.display = 'none';
   });
@@ -346,16 +480,34 @@ document.addEventListener('DOMContentLoaded', function() {
     stopPolling();
     currentTaskId = null;
     textInput.value = '';
+    if (illustrationPresets && illustrationPresets.reset) illustrationPresets.reset();
     resetOutput();
     setProgress(false);
-    logOutput.innerHTML = '';
+    if (logOutput) logOutput.innerHTML = '';
   }
 
   if (startBtn) startBtn.addEventListener('click', startTask);
   if (clearBtn) clearBtn.addEventListener('click', clearAll);
 
+  if (btnDownloadAll) {
+    btnDownloadAll.addEventListener('click', function () {
+      if (!lastImages.length) return;
+      lastImages.forEach(function (item, i) {
+        setTimeout(function () {
+          const a = document.createElement('a');
+          a.href = resolveUrl(item.url);
+          a.download = item.filename || `image-${i + 1}.png`;
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }, i * 300);
+      });
+    });
+  }
+
   if (btnCopyOutput) {
-    btnCopyOutput.addEventListener('click', async () => {
+    btnCopyOutput.addEventListener('click', async function () {
       if (!lastOutputDirectory) return;
       try {
         await navigator.clipboard.writeText(lastOutputDirectory);
@@ -365,23 +517,29 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
   if (btnOpenOutput) {
-    btnOpenOutput.addEventListener('click', async () => {
+    btnOpenOutput.addEventListener('click', async function () {
       if (!lastDoneTaskId) return;
       try {
         const fd = new FormData();
         fd.append('task_id', lastDoneTaskId);
-        const res = await fetch(`${API_BASE_URL}/text-to-video/reveal-output`, { method: 'POST', body: fd });
-        const j = await res.json().catch(() => ({}));
+        const res = await fetch(`${API_BASE_URL}/${apiPrefix()}/reveal-output`, {
+          method: 'POST',
+          body: fd
+        });
+        const j = await res.json().catch(function () { return {}; });
         if (!res.ok || !j.success) {
           throw new Error(j.detail || j.error || `HTTP ${res.status}`);
         }
-        logMessage('已在运行 API 的电脑上打开输出文件夹（请在本机访问 localhost:5000 时使用）');
+        logMessage('已在运行 API 的电脑上打开输出文件夹');
       } catch (e) {
         alert(String(e.message || e));
       }
     });
   }
 
+  document.addEventListener('tb:locale', syncOutputModeUi);
+  syncOutputModeUi();
   setProgress(false);
 });

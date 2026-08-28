@@ -134,20 +134,29 @@ _TEXT_TO_IMAGES_ASPECT_PRESETS = {
 }
 
 
-def _split_text_to_segments(text: str, scene_min_len: int = 12, scene_max_len: int = 45):
-    """分镜：按句号/叹号/问号/逗号断句（中英文逗号均切分）。"""
+def _split_text_to_segments(
+    text: str,
+    scene_min_len: int = 12,
+    scene_max_len: int = 45,
+    split_mode: str = "default",
+):
+    """分镜：默认按句号/分号/问号/感叹号断句；古诗词预设额外按逗号断句。"""
     del scene_min_len, scene_max_len
     raw = (text or "").strip()
     if not raw:
         return []
 
-    _SEG_END = "。！？!?，,"
+    mode = (split_mode or "default").strip().lower()
+    if mode == "classical_poetry":
+        _SEG_END = "。！？!?；;，,."
+    else:
+        _SEG_END = "。！？!?；;."
 
     def _split_by_sentence_end(s: str) -> List[str]:
         s = (s or "").strip()
         if not s:
             return []
-        if not re.search(r"[。！？!?，,]", s):
+        if not re.search(r"[。！？!?；;，,.]", s):
             return [s]
 
         out: List[str] = []
@@ -170,6 +179,28 @@ def _split_text_to_segments(text: str, scene_min_len: int = 12, scene_max_len: i
     for ln in lines:
         parts.extend(_split_by_sentence_end(ln))
     return parts
+
+
+def _parse_style_preset(preset: str) -> dict:
+    """文字配图/成片风格预设：默认无人物族裔限制。"""
+    key = (preset or "").strip().lower()
+    if key == "classical_poetry":
+        return {
+            "split_mode": "classical_poetry",
+            "chinese_cast": True,
+            "classical_poetry": True,
+        }
+    if key == "chinese_cast":
+        return {
+            "split_mode": "default",
+            "chinese_cast": True,
+            "classical_poetry": False,
+        }
+    return {
+        "split_mode": "default",
+        "chinese_cast": False,
+        "classical_poetry": False,
+    }
 
 
 def _split_text_to_phrases(text: str) -> List[str]:
@@ -262,7 +293,9 @@ def _looks_like_classical_chinese_poetry(text: str) -> bool:
     return score >= 1
 
 
-def _chinese_cast_positive_fragment(classical_poetry: bool) -> str:
+def _chinese_cast_positive_fragment(classical_poetry: bool = False, chinese_cast: bool = False) -> str:
+    if not classical_poetry and not chinese_cast:
+        return ""
     frag = (
         "Chinese people only, East Asian ethnicity and facial features, Chinese cultural environment, "
     )
@@ -321,22 +354,24 @@ def _build_rule_based_image_prompt_for_group(
     group_segments: List[str],
     group_idx: int,
     classical_poetry: bool = False,
+    chinese_cast: bool = False,
 ) -> str:
     visual = _segment_to_visual_hints_en(
         " ".join([(x or "").strip() for x in (group_segments or []) if (x or "").strip()]),
         group_idx,
     )
-    cast = _chinese_cast_positive_fragment(classical_poetry)
+    cast = _chinese_cast_positive_fragment(classical_poetry, chinese_cast)
+    cast_part = f"{cast} " if cast else ""
     if user_topic_supplied:
         t = (topic or "").strip() or "主题"
         return (
             f"Scene for narration theme 「{t}」: {visual}. "
-            f"{cast} "
+            f"{cast_part}"
             "Photorealistic, cinematic lighting, no text calligraphy subtitles or watermarks."
         )
     return (
         f"{_CLIP_GENERIC_THEME_EN}. {visual}. "
-        f"{cast} "
+        f"{cast_part}"
         "Photorealistic, cinematic lighting, no text calligraphy subtitles or watermarks."
     )
 
@@ -405,6 +440,7 @@ def _deepseek_batch_image_prompts(
     topic: str,
     groups: List[List[str]],
     classical_poetry: bool = False,
+    chinese_cast: bool = False,
 ) -> Optional[List[str]]:
     """
     一次请求为所有分镜组生成文生图正向提示词；与总主题、各组口播强绑定。
@@ -421,11 +457,20 @@ def _deepseek_batch_image_prompts(
         lines = [(s or "").strip() for s in (segs or []) if (s or "").strip()]
         payload_groups.append({"index": i, "lines": lines})
 
-    cast_rule = (
-        "古诗词/文言意境下人物须为中国古代人，穿汉服或唐宋风格服饰，配合古典中国建筑与环境，不要现代服装与道具。"
-        if classical_poetry
-        else "人物须为中国当代或传统华人形象，不要欧美面孔。"
-    )
+    cast_rule = ""
+    if classical_poetry:
+        cast_rule = (
+            "古诗词/文言意境下人物须为中国古代人，穿汉服或唐宋风格服饰，"
+            "配合古典中国建筑与环境，不要现代服装与道具。"
+        )
+    elif chinese_cast:
+        cast_rule = "人物须为中国当代或传统华人形象，不要欧美面孔。"
+
+    cast_line = ""
+    if cast_rule:
+        cast_line = f"8. 若画面中出现人物：{cast_rule}\n"
+    else:
+        cast_line = "8. 若画面中出现人物：按口播与场景自然呈现，勿强行指定族裔或服饰。\n"
 
     user_prompt = f"""你是影视分镜与文生图提示词专家。用户在做「文字成片」：下面共有 {n} 个分镜组，按顺序各生成一张配图。
 
@@ -444,8 +489,7 @@ def _deepseek_batch_image_prompts(
 5. 画面应完整自然：避免出现扭曲的人脸或肢体、崩坏、穿模、重影、杂乱构图、明显画质瑕疵或类似报错/乱码的视觉效果。
 6. 风格：写实、电影质感、摄影级细节；可少量英文质量词（如 cinematic lighting），不要整段只有英文标签堆砌。
 7. 单条 80～220 字为宜（中文为主）。
-8. 若画面中出现人物：必须是中国人/东亚面孔，禁止西方人、金发碧眼、现代西式街景与西装领带造型。{cast_rule}
-
+{cast_line}
 只输出 JSON，不要 markdown 代码块。"""
 
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
@@ -1438,6 +1482,10 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
         subtitle_simplify = _to_bool(task.get("subtitle_simplify_punct"), False)
 
         topic = (task.get("topic") or "").strip()
+        style = _parse_style_preset(task.get("style_preset") or "")
+        split_mode = style["split_mode"]
+        chinese_cast = style["chinese_cast"]
+        classical_mode = style["classical_poetry"]
 
         try:
             scene_min_len = int(task.get("scene_min_len") or 12)
@@ -1465,20 +1513,30 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             need_landscape = bool(gen_video_16_9)
             need_portrait = bool(gen_video_9_16)
 
-        segments = _split_text_to_segments(text, scene_min_len=scene_min_len, scene_max_len=scene_max_len)
+        segments = _split_text_to_segments(
+            text,
+            scene_min_len=scene_min_len,
+            scene_max_len=scene_max_len,
+            split_mode=split_mode,
+        )
         if not segments:
             raise RuntimeError("Text is empty")
 
         user_topic_supplied = bool((task.get("topic") or "").strip())
         topic_clip = _topic_for_clip(user_topic_supplied, topic, segments)
         topic_llm = _topic_line_for_deepseek(user_topic_supplied, topic)
-        classical_mode = _looks_like_classical_chinese_poetry(text)
-        cast_suffix = _chinese_cast_positive_fragment(classical_mode)
         if classical_mode:
-            _log("检测到古诗词/文言风格，配图人物将倾向中国古代汉服形象")
+            _log("已选古诗词预设：按逗号也分句；人物倾向古代汉服与中国形象")
+        elif chinese_cast:
+            _log("已选中国人/东亚面孔预设")
+        else:
+            _log("未选人物族裔预设（默认不限制）")
 
         images_per_group = 1
-        _log(f"开始任务：分镜数 {len(segments)}；配图：句号/叹号/问号/逗号各切一句一张图")
+        if split_mode == "classical_poetry":
+            _log(f"开始任务：分镜数 {len(segments)}；配图：句号/叹号/问号/分号/逗号各切一句一张图")
+        else:
+            _log(f"开始任务：分镜数 {len(segments)}；配图：句号/叹号/问号/分号各切一句一张图")
 
         task_dir = _safe_task_dir(task_id)
         images_dir = task_dir / "images"
@@ -1500,9 +1558,10 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             "text, watermark, logo, subtitle, captions, words, letters, typography, signature, UI, "
             "calligraphy, poetry scroll, opening titles, Chinese calligraphy, "
             "QR code, barcode, speech bubble, meme, newspaper, chart, diagram, "
-            "文字, 水印, 标志, logo, 字幕, 标语, 问答, 报错, 错误提示, 乱码, 畸形, 崩坏, 穿模, 重影, 书法, 题字, 诗句, "
-            + _NEG_NON_CHINESE_CAST
+            "文字, 水印, 标志, logo, 字幕, 标语, 问答, 报错, 错误提示, 乱码, 畸形, 崩坏, 穿模, 重影, 书法, 题字, 诗句"
         )
+        if chinese_cast or classical_mode:
+            neg_extra += ", " + _NEG_NON_CHINESE_CAST
         neg_prompt = (neg_base + ", " + neg_extra).strip(", ")
 
         num_image_groups = (len(segments) + images_per_group - 1) // images_per_group  # 向上取整
@@ -1530,7 +1589,11 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             _log("正在用 DeepSeek 将各组分镜口播写成画面提示词…")
             try:
                 llm_prompts = await asyncio.to_thread(
-                    _deepseek_batch_image_prompts, topic_llm, all_groups, classical_mode
+                    _deepseek_batch_image_prompts,
+                    topic_llm,
+                    all_groups,
+                    classical_mode,
+                    chinese_cast,
                 )
             except Exception as e:
                 llm_prompts = None
@@ -1581,10 +1644,12 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
                     )
             else:
                 pos_prompt = _build_rule_based_image_prompt_for_group(
-                    user_topic_supplied, topic, group_segments, group_idx, classical_mode
+                    user_topic_supplied, topic, group_segments, group_idx, classical_mode, chinese_cast
                 )
 
-            pos_prompt = pos_prompt + " " + cast_suffix
+            cast_suffix = _chinese_cast_positive_fragment(classical_mode, chinese_cast)
+            if cast_suffix:
+                pos_prompt = pos_prompt + " " + cast_suffix
 
             pos_prompt = _IMAGE_NO_TEXT_PREFIX + pos_prompt
             pos_prompt = _strip_verbatim_script_from_image_prompt(pos_prompt, segments)
@@ -1769,6 +1834,7 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
 async def text_to_images_start(
     text: str = Form(...),
     aspect_preset: str = Form("xhs_34"),
+    style_preset: str = Form(""),
     scene_min_len: str = Form(""),
     scene_max_len: str = Form(""),
 ):
@@ -1788,6 +1854,7 @@ async def text_to_images_start(
         "logs": [],
         "images_only": True,
         "aspect_preset": preset,
+        "style_preset": (style_preset or "").strip(),
         "images": [],
         "video_url": None,
         "video_url_16_9": None,
@@ -1835,6 +1902,7 @@ async def text_to_video_start(
     speed: float = Form(1.0),
     gen_video_16_9: str = Form("0"),
     gen_video_9_16: str = Form("1"),
+    style_preset: str = Form(""),
     subtitle_simplify_punct: str = Form("0"),
     scene_min_len: str = Form(""),
     scene_max_len: str = Form(""),
@@ -1854,6 +1922,7 @@ async def text_to_video_start(
         "video_url_9_16": None,
         "gen_video_16_9": gen_video_16_9,
         "gen_video_9_16": gen_video_9_16,
+        "style_preset": (style_preset or "").strip(),
         "subtitle_simplify_punct": subtitle_simplify_punct,
         "scene_min_len": scene_min_len,
         "scene_max_len": scene_max_len,
