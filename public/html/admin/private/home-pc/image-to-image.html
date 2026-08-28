@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../../../css/tools-form.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=homepc22" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc22" />
-  <script src="../../../../js/locales/en.js?v=homepc24"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc24"></script>
+  <script src="../../../../js/locales/en.js?v=homepc25"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc25"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
   <script src="../../../../js/config.js?v=homepc21"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -49,7 +49,7 @@
             <div class="drop-zone" id="drop-zone">
               <div class="drop-icon">+</div>
               <div class="drop-title" data-i18n="privateHub.homePc.img2imgDropTitle">点击或拖入参考图</div>
-              <div class="drop-hint" data-i18n="privateHub.homePc.img2imgDropHint">支持 JPG、PNG、WebP，最多 8 张，逐张批量处理</div>
+              <div class="drop-hint" data-i18n="privateHub.homePc.img2imgDropHint">支持 JPG、PNG、WebP，最多 8 张；大图上传前会自动压缩（长边约 1600）</div>
             </div>
             <input type="file" id="file-input" accept="image/*" multiple hidden />
             <div class="home-pc-source-grid" id="preview-wrap" hidden></div>
@@ -170,6 +170,7 @@
   <script src="../../../../js/shared/instruct-edit-bg-groups.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-presets.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-ui.js?v=homepc16"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc24"></script>
+  <script src="../../../../js/shared/image-upload-compress.js?v=imgup1"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc25"></script>
 </body>
 </html>

@@ -50,7 +50,7 @@
           <div class="drop-zone" id="drop-zone">
             <div class="drop-icon">+</div>
             <div class="drop-title" data-i18n="tools.instructEdit.dropTitle">Click or drop images</div>
-            <div class="drop-hint" id="drop-hint" data-i18n="tools.instructEdit.dropHint">JPG / PNG / WebP — max 8MB each, up to 4 images</div>
+            <div class="drop-hint" id="drop-hint" data-i18n="tools.instructEdit.dropHint">JPG / PNG / WebP，单张最大 8MB，最多 {max} 张（批量）；大图自动压缩</div>
           </div>
           <input type="file" id="file-input" accept="image/*" multiple style="display:none" />
           <div class="instruct-source-grid" id="source-wrap" hidden></div>
@@ -208,8 +208,8 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=i2i-name1"></script>
-  <script src="../../js/locales/zh-CN.js?v=i2i-name1"></script>
+  <script src="../../js/locales/en.js?v=imgup1"></script>
+  <script src="../../js/locales/zh-CN.js?v=imgup1"></script>
   <script src="../../js/i18n.js?v=slim1"></script>
   <script src="../../js/config.js?v=slim1"></script>
   <script src="../../js/base.js?v=slim1"></script>
@@ -218,6 +218,7 @@
   <script src="../../js/shared/instruct-edit-bg-groups.js?v=instructbg1"></script>
   <script src="../../js/shared/instruct-edit-bg-presets.js?v=instructbg1"></script>
   <script src="../../js/shared/instruct-edit-bg-ui.js?v=instructbg1"></script>
-  <script src="../../js/media/instruct-edit.js?v=instructbg1"></script>
+  <script src="../../js/shared/image-upload-compress.js?v=imgup1"></script>
+  <script src="../../js/media/instruct-edit.js?v=imgup1"></script>
 </body>
 </html>

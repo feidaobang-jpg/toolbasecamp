@@ -52,9 +52,6 @@
   var priceMarkup = 2;
   var histPanel = null;
   var runStartedAt = 0;
-  var MOBILE_COMPRESS_MIN_BYTES = 1200 * 1024;
-  var MOBILE_COMPRESS_MAX_EDGE = 1600;
-  var MOBILE_COMPRESS_QUALITY = 0.86;
 
   function tr(key, params) {
     return C.tr(key, params);
@@ -93,78 +90,11 @@
     return '';
   }
 
-  function isMobileUA() {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
-  }
-
-  function shouldCompressBeforeUpload(file) {
-    if (!file) return false;
-    if (!(C.isWeChat && C.isWeChat()) && !isMobileUA()) return false;
-    var type = String(file.type || '').toLowerCase();
-    if (
-      type !== 'image/jpeg'
-      && type !== 'image/jpg'
-      && type !== 'image/webp'
-      && type !== 'image/png'
-    ) return false;
-    return file.size >= MOBILE_COMPRESS_MIN_BYTES || type === 'image/png';
-  }
-
-  function loadImageFromFile(file) {
-    return new Promise(function (resolve, reject) {
-      var url = URL.createObjectURL(file);
-      var img = new Image();
-      img.onload = function () {
-        try { URL.revokeObjectURL(url); } catch (e) {}
-        resolve(img);
-      };
-      img.onerror = function () {
-        try { URL.revokeObjectURL(url); } catch (e) {}
-        reject(new Error('image load failed'));
-      };
-      img.src = url;
-    });
-  }
-
-  function canvasToBlob(canvas, type, quality) {
-    return new Promise(function (resolve, reject) {
-      canvas.toBlob(function (blob) {
-        if (!blob) reject(new Error('blob encode failed'));
-        else resolve(blob);
-      }, type, quality);
-    });
-  }
-
   async function compressFileIfNeeded(file) {
-    if (!shouldCompressBeforeUpload(file)) return file;
-    try {
-      var img = await loadImageFromFile(file);
-      var w = img.naturalWidth || img.width || 0;
-      var h = img.naturalHeight || img.height || 0;
-      if (!w || !h) return file;
-      var scale = Math.min(1, MOBILE_COMPRESS_MAX_EDGE / Math.max(w, h));
-      if (scale >= 1 && file.size < MOBILE_COMPRESS_MIN_BYTES * 1.5) return file;
-      var tw = Math.max(1, Math.round(w * scale));
-      var th = Math.max(1, Math.round(h * scale));
-      var canvas = document.createElement('canvas');
-      canvas.width = tw;
-      canvas.height = th;
-      var ctx = canvas.getContext('2d');
-      if (!ctx) return file;
-      ctx.drawImage(img, 0, 0, tw, th);
-      var blob = await canvasToBlob(canvas, 'image/jpeg', MOBILE_COMPRESS_QUALITY);
-      if (!blob || blob.size >= file.size * 0.95) return file;
-      if (typeof File !== 'undefined') {
-        return new File([blob], (file.name || 'image').replace(/\.\w+$/, '') + '.jpg', {
-          type: 'image/jpeg',
-          lastModified: Date.now()
-        });
-      }
-      blob.name = (file.name || 'image').replace(/\.\w+$/, '') + '.jpg';
-      return blob;
-    } catch (e) {
-      return file;
+    if (window.TBImageUploadCompress && TBImageUploadCompress.compressIfNeeded) {
+      return TBImageUploadCompress.compressIfNeeded(file);
     }
+    return file;
   }
 
   function modelInputs() {

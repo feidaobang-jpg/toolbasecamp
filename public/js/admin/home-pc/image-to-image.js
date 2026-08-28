@@ -125,15 +125,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function addFiles(files) {
     const list = Array.isArray(files) ? files : [];
-    list.forEach(function (file) {
-      if (!file || !file.type || file.type.indexOf('image/') !== 0) return;
-      if (selectedFiles.length >= MAX_BATCH) return;
-      selectedFiles.push(file);
+    const pending = list.filter(function (file) {
+      return file && file.type && file.type.indexOf('image/') === 0;
     });
-    if (list.length && selectedFiles.length >= MAX_BATCH) {
+    if (!pending.length) return;
+
+    const room = Math.max(0, MAX_BATCH - selectedFiles.length);
+    const slice = pending.slice(0, room);
+    if (pending.length > room) {
       log(tr('privateHub.homePc.img2imgBatchMax', '最多 {n} 张').replace('{n}', String(MAX_BATCH)));
     }
-    renderPreview();
+
+    const compress = window.TBImageUploadCompress && TBImageUploadCompress.compressMany
+      ? TBImageUploadCompress.compressMany(slice)
+      : Promise.resolve(slice);
+
+    compress.then(function (out) {
+      (out || []).forEach(function (file) {
+        if (!file) return;
+        if (selectedFiles.length >= MAX_BATCH) return;
+        selectedFiles.push(file);
+      });
+      renderPreview();
+    }).catch(function () {
+      slice.forEach(function (file) {
+        if (selectedFiles.length >= MAX_BATCH) return;
+        selectedFiles.push(file);
+      });
+      renderPreview();
+    });
   }
 
   if (window.HomePcUpload) {
