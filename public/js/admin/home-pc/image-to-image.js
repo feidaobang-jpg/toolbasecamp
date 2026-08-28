@@ -402,8 +402,11 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       log(`完成 ${ok}/${files.length} ${new Date().toLocaleString()}`);
     } catch (e) {
-      log(`错误：${String(e.message || e)}`);
-      alert(String(e.message || e));
+      var msg = (window.HomePcApi && HomePcApi.friendlyFetchError)
+        ? HomePcApi.friendlyFetchError(e)
+        : String(e.message || e);
+      log(`错误：${msg}`);
+      alert(msg);
     } finally {
       stopPolling();
       setBusy(false);

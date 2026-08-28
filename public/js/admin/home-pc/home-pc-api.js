@@ -94,12 +94,25 @@
     return msg;
   }
 
+  function friendlyFetchError(err) {
+    var m = String((err && err.message) || err || '');
+    if (/Failed to fetch|NetworkError|ERR_FAILED|Load failed|网络/i.test(m)) {
+      return (
+        '无法连接家里电脑 API（' + base() + '）。' +
+        '本机 :5000 可能正常，但 Cloudflare Tunnel（comfy.zhengxiaohui.cn）已断开。' +
+        '请在跑 cloudflared 的 NAS/电脑上重启隧道后再试。'
+      );
+    }
+    return m;
+  }
+
   global.HomePcApi = {
     base: base,
     wsUrl: wsUrl,
     assetUrl: assetUrl,
     checkHealth: checkHealth,
     renderStatus: renderStatus,
-    parseErrorResponse: parseErrorResponse
+    parseErrorResponse: parseErrorResponse,
+    friendlyFetchError: friendlyFetchError
   };
 })(typeof window !== 'undefined' ? window : this);
