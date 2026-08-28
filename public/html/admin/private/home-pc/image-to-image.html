@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../../../css/tools-form.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=homepc22" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc22" />
-  <script src="../../../../js/locales/en.js?v=homepc21"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=homepc21"></script>
+  <script src="../../../../js/locales/en.js?v=homepc23"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=homepc23"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
   <script src="../../../../js/config.js?v=homepc21"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -114,15 +114,8 @@
                   <option value="z_image" data-i18n="privateHub.homePc.img2imgEngineZImage">Z-Image 整图重绘（试效果）</option>
                 </select>
               </div>
-              <div class="input-control" id="quality-wrap">
-                <label for="quality-select" data-i18n="privateHub.homePc.img2imgQualityLabel">Qwen 质量：</label>
-                <select id="quality-select" class="text-input home-pc-select">
-                  <option value="standard" data-i18n="privateHub.homePc.img2imgQualityStandard">标准（快，约 1MP·4 步）</option>
-                  <option value="high" selected data-i18n="privateHub.homePc.img2imgQualityHigh">高质量（约 1.5MP·8 步）</option>
-                </select>
-              </div>
             </div>
-            <p class="small-hint" id="quality-hint" data-i18n="privateHub.homePc.img2imgQualityHint">4060 Ti 16G 可试高质量；若 ComfyUI OOM 请改标准档。</p>
+            <p class="small-hint" id="quality-hint" data-i18n="privateHub.homePc.img2imgQualityHint">Qwen 固定标准档（约 1MP·4 步），避免高质量超时。</p>
             <p class="small-hint" id="zimage-hint" hidden data-i18n="privateHub.homePc.img2imgZImageHint">Z-Image 按 Denoise 重绘整图，易改构图/人脸，无法像 Qwen 那样「只改背景」。人物与指令改图请用 Qwen。</p>
             <div class="form-row">
               <div class="input-control" id="denoise-wrap" hidden>
@@ -177,6 +170,6 @@
   <script src="../../../../js/shared/instruct-edit-bg-groups.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-presets.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-ui.js?v=homepc16"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc21"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc23"></script>
 </body>
 </html>

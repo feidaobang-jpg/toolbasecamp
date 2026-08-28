@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const bgToggleBtn = document.getElementById('bg-toggle-btn');
   const bgTimeRow = document.getElementById('bg-time-row');
   const bgGroups = document.getElementById('bg-groups');
-  const qualityWrap = document.getElementById('quality-wrap');
-  const qualitySelect = document.getElementById('quality-select');
   const qualityHint = document.getElementById('quality-hint');
   const zimageHint = document.getElementById('zimage-hint');
   const engineSelect = document.getElementById('engine-select');
@@ -152,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (denoiseWrap) denoiseWrap.hidden = !z;
     if (presetWrap) presetWrap.hidden = !!z;
     if (bgWrap) bgWrap.hidden = !!z;
-    if (qualityWrap) qualityWrap.hidden = !!z;
     if (qualityHint) qualityHint.hidden = !!z;
     if (zimageHint) zimageHint.hidden = !z;
   }
@@ -330,8 +327,8 @@ document.addEventListener('DOMContentLoaded', function () {
       denoise = Math.max(0.05, Math.min(1, denoise));
       denoiseInput.value = String(denoise);
       fd.append('denoise', String(denoise));
-    } else if (qualitySelect) {
-      fd.append('quality', qualitySelect.value || 'standard');
+    } else {
+      fd.append('quality', 'standard');
     }
     fd.append('seed', (seedInput.value || '').trim());
     const wantWm = !!(enableWatermark && enableWatermark.checked);
@@ -423,7 +420,6 @@ document.addEventListener('DOMContentLoaded', function () {
     promptInput.value = '';
     if (presetUi) presetUi.reset();
     if (bgUi) bgUi.reset();
-    if (qualitySelect) qualitySelect.value = 'high';
     if (denoiseInput) denoiseInput.value = '0.4';
     if (seedInput) seedInput.value = '';
     if (enableWatermark) enableWatermark.checked = false;

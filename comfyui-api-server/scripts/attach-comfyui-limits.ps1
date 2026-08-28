@@ -12,7 +12,7 @@ if (Test-Path (Join-Path $scriptDir '..\local.env')) {
     }
 }
 
-$cpuPct = 90
+$cpuPct = 75
 if ($env:COMFYUI_RESOURCE_CPU_PERCENT) { [void][int]::TryParse($env:COMFYUI_RESOURCE_CPU_PERCENT, [ref]$cpuPct) }
 $prio = if ($env:COMFYUI_PROCESS_PRIORITY) { $env:COMFYUI_PROCESS_PRIORITY } else { 'below_normal' }
 $gpuPct = 0

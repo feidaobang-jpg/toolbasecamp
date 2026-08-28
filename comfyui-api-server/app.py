@@ -115,7 +115,7 @@ async def health_check():
         "qwen_checkpoint_ready": bool(qwen_ckpt),
         "qwen_checkpoint": qwen_ckpt,
         "qwen_img2img_quality": _QWEN_IMG2IMG_QUALITY,
-        "gpu_hint": "Qwen 高质量档约 1.5MP·8 步，16GB 显存可试；OOM 请用标准档（1MP·4 步）。",
+        "gpu_hint": "Qwen 图生图固定标准档（约 1MP·4 步）。",
         "resource_limits": _RESOURCE_LIMIT_INFO,
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
@@ -860,19 +860,18 @@ def _normalize_img2img_engine(raw: str) -> str:
 
 _QWEN_IMG2IMG_QUALITY = {
     "standard": {"steps": 4, "megapixels": 1.0},
-    "high": {"steps": 8, "megapixels": 1.5},
 }
 
 
 def _normalize_img2img_quality(raw: str) -> str:
-    v = (raw or "standard").strip().lower()
-    if v in ("high", "hq", "quality", "1", "2", "better"):
-        return "high"
+    # 高质量档易超时，统一强制标准档
+    del raw
     return "standard"
 
 
 def _apply_qwen_img2img_quality(workflow: dict, quality: str) -> dict:
-    q = _QWEN_IMG2IMG_QUALITY.get(_normalize_img2img_quality(quality), _QWEN_IMG2IMG_QUALITY["standard"])
+    q = _QWEN_IMG2IMG_QUALITY["standard"]
+    del quality
     if "2" in workflow and workflow["2"].get("class_type") == "KSampler":
         workflow["2"]["inputs"]["steps"] = int(q["steps"])
     for node in workflow.values():

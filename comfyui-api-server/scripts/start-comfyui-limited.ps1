@@ -40,7 +40,7 @@ try {
     exit 0
 } catch {}
 
-$cpuPct = 90
+$cpuPct = 75
 if ($env:COMFYUI_RESOURCE_CPU_PERCENT) {
     [void][int]::TryParse($env:COMFYUI_RESOURCE_CPU_PERCENT, [ref]$cpuPct)
 }

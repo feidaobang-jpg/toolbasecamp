@@ -1,7 +1,7 @@
 # Apply CPU affinity / priority / optional NVIDIA power cap to a process (or current).
 param(
     [int]$ProcessId = 0,
-    [int]$CpuPercent = 90,
+    [int]$CpuPercent = 75,
     [ValidateSet('idle', 'below_normal', 'normal')]
     [string]$Priority = 'below_normal',
     [int]$GpuPowerPercent = 0

@@ -64,7 +64,7 @@ def apply_shared_pc_limits() -> dict:
     if enabled in ("0", "false", "no", "off"):
         return {"enabled": False}
 
-    percent = _env_int("COMFYUI_RESOURCE_CPU_PERCENT", 90)
+    percent = _env_int("COMFYUI_RESOURCE_CPU_PERCENT", 75)
     percent = max(50, min(100, percent))
     priority = (os.environ.get("COMFYUI_PROCESS_PRIORITY") or "below_normal").strip()
 
