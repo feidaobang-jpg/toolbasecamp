@@ -425,7 +425,7 @@ textarea#text-input {
     margin: 20px 0;
 }
 
-button:not(.tb-btn) {
+button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -725,7 +725,8 @@ h2 {
 .control-group {
     display: flex;
     align-items: center;
-    height: 32px; /* 寮哄埗缁熶竴楂樺害 */
+    gap: 8px;
+    min-height: 32px;
 }
 
 /* 澶嶉€夋鍜屾櫘閫?Label 鐨勯€氱敤鏍峰紡 */
@@ -736,13 +737,12 @@ h2 {
     padding: 0;
     cursor: pointer;
     font-weight: normal;
-    /* 浣跨敤 flex 甯冨眬寮哄埗鍨傜洿灞呬腑鏂囧瓧 */
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    height: 100%;
-    /* 瑙嗚寰皟锛氫腑鏂囧湪 flex 灞呬腑鏃跺線寰€鍋忛珮锛岀◢寰笅绉讳竴鐐?*/
-    position: relative;
-    top: 1px;
+    line-height: 1.4;
+    position: static;
+    top: auto;
+    height: auto;
 }
 
 .watermark-input {
@@ -900,7 +900,7 @@ input[type="checkbox"] {
     margin: 20px 0;
 }
 
-button:not(.tb-btn) {
+button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -1507,5 +1507,78 @@ body.tb-admin-private #auth-status {
     flex: 1;
     min-width: 0;
   }
+}
+
+/* Style presets: home-pc.css loads after image-tools and used to strip button borders */
+.home-pc-wrap button.rec-chip {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.home-pc-wrap button.rec-chip:hover {
+  border-color: #93c5fd;
+  background: #f8fafc;
+  color: #1f2937;
+}
+
+.home-pc-wrap button.rec-chip.is-active {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+  font-weight: 600;
+}
+
+/* Watermark checkbox: keep label + box vertically centered */
+.home-pc-wrap .watermark-section .control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+}
+
+.home-pc-wrap .watermark-section .home-pc-wm-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 !important;
+  padding: 0;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.25;
+  color: #606266;
+  cursor: pointer;
+  height: auto;
+  position: static;
+}
+
+.home-pc-wrap .watermark-section .home-pc-wm-check input[type="checkbox"] {
+  display: inline-block;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  accent-color: #2563eb;
+}
+
+.home-pc-wrap .watermark-section .control-group > label:not(.home-pc-wm-check) {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 !important;
+  font-weight: 500;
+  line-height: 1.25;
+  height: auto;
 }
 
