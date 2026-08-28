@@ -26,6 +26,7 @@
   }
 
   function isAdminUser(user) {
+    if (typeof window.tbIsAdminUser === 'function') return window.tbIsAdminUser(user);
     if (!user) return false;
     var adminEmail = (window.siteConfig && siteConfig.adminEmail) || '';
     var adminPhone = (window.siteConfig && siteConfig.adminPhone) || '';
@@ -46,10 +47,7 @@
     if (gateMsg && msg) gateMsg.textContent = msg;
     if (gate) gate.classList.remove('hidden');
     if (app) app.classList.add('hidden');
-    if (loginLink) {
-      loginLink.href = loginHref;
-      loginLink.classList.remove('hidden');
-    }
+    if (loginLink) loginLink.classList.add('hidden');
     if (gateLogin) gateLogin.href = loginHref;
   }
 

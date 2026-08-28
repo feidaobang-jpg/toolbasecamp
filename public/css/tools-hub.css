@@ -324,12 +324,18 @@
     font-size: 0.9375rem;
 }
 
-/* Mobile toolbar: search */
+/* Hub toolbar: search (mobile + desktop) */
 .hub-mobile-toolbar {
     flex-shrink: 0;
     padding: 0.625rem 1rem;
     background: #fff;
     border-bottom: 1px solid #f3f4f6;
+}
+
+@media (min-width: 1024px) {
+    .hub-mobile-toolbar {
+        padding: 0.75rem 1.5rem;
+    }
 }
 
 .hub-music-bar {
@@ -340,8 +346,8 @@
 }
 
 @media (min-width: 1024px) {
-    .hub-mobile-toolbar {
-        display: none !important;
+    .hub-mobile-toolbar .hub-search-wrap {
+        max-width: 56rem;
     }
 }
 
@@ -377,6 +383,13 @@
     border-color: #93c5fd;
     background: #fff;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.hub-search-input::-webkit-search-cancel-button,
+.hub-search-input::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
 }
 
 .hub-search-clear {
