@@ -75,15 +75,24 @@ document.addEventListener('DOMContentLoaded', function() {
         saveAllBtn.classList.add('hidden');
         processedImages = [];
         imageRotations = {}; // 重置旋转状态
-        
-        selectedImages = Array.from(files);
-        
-        if (typeof showToast === 'function') {
-            showToast(`已选择 ${selectedImages.length} 张图片`);
+
+        var list = Array.from(files);
+        var finish = function (out) {
+            selectedImages = out || list;
+            if (typeof showToast === 'function') {
+                showToast(`已选择 ${selectedImages.length} 张图片`);
+            }
+            displayImagePreviews();
+            syncUploadUi();
+        };
+
+        if (window.TBImageUploadCompress && TBImageUploadCompress.compressMany) {
+            TBImageUploadCompress.compressMany(list, 'default').then(finish).catch(function () {
+                finish(list);
+            });
+        } else {
+            finish(list);
         }
-        
-        displayImagePreviews();
-        syncUploadUi();
     }
 
     /**

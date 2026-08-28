@@ -325,30 +325,57 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!files.length) return;
 
         hideError();
+        const pending = [];
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            if (imageItems.length >= MAX_IMAGES) {
-                showError(tr('tools.aiRecipe.maxImages', { max: MAX_IMAGES }));
-                break;
-            }
             if (!isValidImage(file)) {
                 showError(tr('tools.aiRecipe.invalidImage'));
                 continue;
             }
-            if (file.size > 5 * 1024 * 1024) {
-                showError(tr('tools.aiRecipe.imageTooLarge'));
-                continue;
-            }
-            imageItems.push({
-                id: nextImageId++,
-                file: file,
-                url: URL.createObjectURL(file)
-            });
+            pending.push(file);
         }
-        renderPreviews();
-        fileInput.value = '';
-        if (imageItems.length) {
-            scrollRevealBottom(detectBtn);
+        if (!pending.length) return;
+
+        const room = Math.max(0, MAX_IMAGES - imageItems.length);
+        const slice = pending.slice(0, room);
+        if (pending.length > room) {
+            showError(tr('tools.aiRecipe.maxImages', { max: MAX_IMAGES }));
+        }
+        if (!slice.length) {
+            fileInput.value = '';
+            return;
+        }
+
+        function apply(out) {
+            (out || []).forEach(function (file) {
+                if (!file) return;
+                if (imageItems.length >= MAX_IMAGES) {
+                    showError(tr('tools.aiRecipe.maxImages', { max: MAX_IMAGES }));
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    showError(tr('tools.aiRecipe.imageTooLarge'));
+                    return;
+                }
+                imageItems.push({
+                    id: nextImageId++,
+                    file: file,
+                    url: URL.createObjectURL(file)
+                });
+            });
+            renderPreviews();
+            fileInput.value = '';
+            if (imageItems.length) {
+                scrollRevealBottom(detectBtn);
+            }
+        }
+
+        if (window.TBImageUploadCompress && TBImageUploadCompress.compressMany) {
+            TBImageUploadCompress.compressMany(slice, 'default').then(apply).catch(function () {
+                apply(slice);
+            });
+        } else {
+            apply(slice);
         }
     }
 

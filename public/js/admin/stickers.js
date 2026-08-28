@@ -570,7 +570,21 @@
     } else {
       setStatus(status, tr('privateHub.ops.stickersUploadStart', { total: uploadTotal }));
     }
-    next();
+
+    function startUpload(readyQueue) {
+      queue = readyQueue || queue;
+      uploadTotal = queue.length;
+      pickedTotal = skipped + queue.length;
+      next();
+    }
+
+    if (window.TBImageUploadCompress && TBImageUploadCompress.compressMany) {
+      TBImageUploadCompress.compressMany(queue, 'default').then(startUpload).catch(function () {
+        startUpload(queue);
+      });
+    } else {
+      startUpload(queue);
+    }
   }
 
   function bindUi() {

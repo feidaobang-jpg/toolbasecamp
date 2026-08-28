@@ -261,22 +261,46 @@
     C.setError(errorBox, '');
     var arr = Array.prototype.slice.call(fileList || []);
     var maxBytes = maxUploadBytes();
+    var pending = [];
     arr.forEach(function (f) {
       if (!f || !String(f.type || '').startsWith('image/')) return;
-      if (f.size > maxBytes) {
-        C.setError(errorBox, C.tr('tools.refToVideo.tooLarge'));
-        return;
-      }
-      if (refFiles.length >= MAX_REFS) {
-        C.setError(errorBox, C.tr('tools.refToVideo.tooMany', { max: String(MAX_REFS) }));
-        return;
-      }
-      refFiles.push(f);
+      pending.push(f);
     });
-    revokePreviews();
-    renderThumbs();
-    setBusy(false);
-    updateEstimate();
+    if (!pending.length) return;
+
+    var room = Math.max(0, MAX_REFS - refFiles.length);
+    var slice = pending.slice(0, room);
+    if (pending.length > room) {
+      C.setError(errorBox, C.tr('tools.refToVideo.tooMany', { max: String(MAX_REFS) }));
+    }
+    if (!slice.length) return;
+
+    function apply(out) {
+      (out || []).forEach(function (f) {
+        if (!f) return;
+        if (f.size > maxBytes) {
+          C.setError(errorBox, C.tr('tools.refToVideo.tooLarge'));
+          return;
+        }
+        if (refFiles.length >= MAX_REFS) {
+          C.setError(errorBox, C.tr('tools.refToVideo.tooMany', { max: String(MAX_REFS) }));
+          return;
+        }
+        refFiles.push(f);
+      });
+      revokePreviews();
+      renderThumbs();
+      setBusy(false);
+      updateEstimate();
+    }
+
+    if (window.TBImageUploadCompress && TBImageUploadCompress.compressMany) {
+      TBImageUploadCompress.compressMany(slice, 'video').then(apply).catch(function () {
+        apply(slice);
+      });
+    } else {
+      apply(slice);
+    }
   }
 
   function applyHhStatus(s) {

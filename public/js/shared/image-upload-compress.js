@@ -1,29 +1,47 @@
 /**
- * 图生图上传前统一压缩（前台指令改图 / 家里电脑图生图共用）
+ * 本地图片「上传到服务端」前统一压缩（全站共用）。
  * - 长边超过 maxEdge，或体积超过 minBytes → 缩边 + JPEG
- * - 桌面/手机都生效（大图易超时）
+ * - GIF 不压（动画会坏）；非图片原样返回
+ * - 桌面/手机都生效
+ *
+ * 预设：
+ *   default  图生图 / 抠图 / 理解 — 长边 1600
+ *   ocr      OCR / 药签 — 长边 2400（保字）
+ *   enhance  画质增强 — 长边 2560、更大体积才压
+ *   video    图生视频 / 参考图 — 长边 1600
  */
 (function (global) {
   'use strict';
 
-  var DEFAULTS = {
-    maxEdge: 1600,
-    minBytes: 1200 * 1024,
-    quality: 0.86
+  var PRESETS = {
+    default: { maxEdge: 1600, minBytes: 1200 * 1024, quality: 0.86 },
+    ocr: { maxEdge: 2400, minBytes: 1500 * 1024, quality: 0.88 },
+    enhance: { maxEdge: 2560, minBytes: 2500 * 1024, quality: 0.9 },
+    video: { maxEdge: 1600, minBytes: 1200 * 1024, quality: 0.86 }
   };
 
+  var DEFAULTS = PRESETS.default;
+
   function optsWith(opts) {
+    var base = DEFAULTS;
     var o = opts || {};
+    if (typeof opts === 'string') {
+      base = PRESETS[opts] || DEFAULTS;
+      o = {};
+    } else if (o.preset && PRESETS[o.preset]) {
+      base = PRESETS[o.preset];
+    }
     return {
-      maxEdge: Number(o.maxEdge) > 0 ? Number(o.maxEdge) : DEFAULTS.maxEdge,
-      minBytes: Number(o.minBytes) > 0 ? Number(o.minBytes) : DEFAULTS.minBytes,
-      quality: Number(o.quality) > 0 && Number(o.quality) <= 1 ? Number(o.quality) : DEFAULTS.quality
+      maxEdge: Number(o.maxEdge) > 0 ? Number(o.maxEdge) : base.maxEdge,
+      minBytes: Number(o.minBytes) > 0 ? Number(o.minBytes) : base.minBytes,
+      quality: Number(o.quality) > 0 && Number(o.quality) <= 1 ? Number(o.quality) : base.quality
     };
   }
 
   function isCompressibleImage(file) {
     if (!file) return false;
     var type = String(file.type || '').toLowerCase();
+    // 不压 GIF（动画帧会丢）
     return (
       type === 'image/jpeg'
       || type === 'image/jpg'
@@ -69,7 +87,7 @@
 
   /**
    * @param {File|Blob} file
-   * @param {{maxEdge?:number,minBytes?:number,quality?:number}} [opts]
+   * @param {string|{maxEdge?:number,minBytes?:number,quality?:number,preset?:string}} [opts]
    * @returns {Promise<File|Blob>}
    */
   async function compressIfNeeded(file, opts) {
@@ -99,7 +117,6 @@
 
       var blob = await canvasToBlob(canvas, 'image/jpeg', cfg.quality);
       if (!blob) return file;
-      // 压缩后几乎没变小则保留原图（除非是超大边必须缩）
       if (!overEdge && blob.size >= file.size * 0.95) return file;
       return toFile(blob, file);
     } catch (e) {
@@ -109,11 +126,11 @@
 
   /**
    * @param {Array<File|Blob>} files
-   * @param {{maxEdge?:number,minBytes?:number,quality?:number}} [opts]
+   * @param {string|{maxEdge?:number,minBytes?:number,quality?:number,preset?:string}} [opts]
    * @returns {Promise<Array<File|Blob>>}
    */
   async function compressMany(files, opts) {
-    var list = Array.isArray(files) ? files : [];
+    var list = Array.prototype.slice.call(files || []);
     var out = [];
     for (var i = 0; i < list.length; i++) {
       out.push(await compressIfNeeded(list[i], opts));
@@ -121,9 +138,26 @@
     return out;
   }
 
+  /**
+   * 选图后统一入口：压缩成功/失败都回调 apply(file)。
+   * @returns {Promise<File|Blob>}
+   */
+  function prepareUploadFile(file, applyFn, opts) {
+    var apply = typeof applyFn === 'function' ? applyFn : function () {};
+    return compressIfNeeded(file, opts).then(function (out) {
+      apply(out || file);
+      return out || file;
+    }).catch(function () {
+      apply(file);
+      return file;
+    });
+  }
+
   global.TBImageUploadCompress = {
     defaults: DEFAULTS,
+    presets: PRESETS,
     compressIfNeeded: compressIfNeeded,
-    compressMany: compressMany
+    compressMany: compressMany,
+    prepareUploadFile: prepareUploadFile
   };
 })(typeof window !== 'undefined' ? window : this);

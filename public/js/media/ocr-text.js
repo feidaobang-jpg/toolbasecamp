@@ -43,14 +43,21 @@
             C.setError(errorBox, C.tr('tools.imageCloud.invalidFile'));
             return;
         }
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-        file = f;
-        previewUrl = URL.createObjectURL(f);
-        sourceImg.src = previewUrl;
-        sourceWrap.hidden = false;
-        runBtn.disabled = false;
-        result.value = '';
-        copyBtn.disabled = true;
+        var apply = function (picked) {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            file = picked;
+            previewUrl = URL.createObjectURL(picked);
+            sourceImg.src = previewUrl;
+            sourceWrap.hidden = false;
+            runBtn.disabled = false;
+            result.value = '';
+            copyBtn.disabled = true;
+        };
+        if (window.TBImageUploadCompress && TBImageUploadCompress.prepareUploadFile) {
+            TBImageUploadCompress.prepareUploadFile(f, apply, 'ocr');
+        } else {
+            apply(f);
+        }
     }
 
     dropZone.addEventListener('click', function () { fileInput.click(); });

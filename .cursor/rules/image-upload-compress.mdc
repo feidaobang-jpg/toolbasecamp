@@ -1,0 +1,46 @@
+---
+description: 本地图片上传服务端前必须统一压缩（TBImageUploadCompress）
+alwaysApply: true
+---
+
+# 本地图片上传压缩（统一）
+
+凡用户**选择本地图片并上传到服务端**（云 API、家里电脑 ComfyUI、贴纸库等），必须先走共享模块压缩，禁止原图直传。
+
+## 模块
+
+- 文件：`public/js/shared/image-upload-compress.js`
+- 全局：`TBImageUploadCompress`
+- API：`compressIfNeeded(file, opts)` / `compressMany(files, opts)` / `prepareUploadFile(file, applyFn, opts)`
+- HTML：在页面业务脚本**之前**引入，并带 `?v=`：
+
+```html
+<script src="…/js/shared/image-upload-compress.js?v=imgup2"></script>
+```
+
+## 何时必须压
+
+| 场景 | 预设 `opts` | 说明 |
+|------|-------------|------|
+| 图生图 / 抠图 / 图理解 / PDF / 菜谱 / 家里电脑上传 | `'default'` 或省略 | 长边约 1600 |
+| OCR / 药签识字 | `'ocr'` | 长边约 2400，少伤小字 |
+| 画质增强 | `'enhance'` | 更宽松，仅超大才压 |
+| 图生视频 / 参考图 | `'video'` | 与 default 同档 |
+
+选图入口（`setFile` / `addFiles` / `handleFiles`）里压缩后再预览、再 `FormData.append`。
+
+## 何时不要压
+
+- **纯本地**编辑且输出依赖原图像素：如改尺寸、拼图、马赛克、本地加水印、证件复印排版、封面固定画布等。
+- **非图片**：视频、音频、PDF/Word、JSON。
+- **GIF**：模块自动跳过（避免毁掉动画）。
+
+## 禁止
+
+- 只在前台指令改图 / 家里电脑图生图压缩，其它上传原图。
+- 新建带 `accept="image/*"` 且会 `fetch`/`FormData` 上传的工具却不引入本模块。
+- 以「本地已够快」为由跳过手机端压缩。
+
+## 自检
+
+新增/改上传逻辑时：Grep `accept="image` 与 `FormData`/`append('file'`，确认远程上传路径已调用 `TBImageUploadCompress`；对应 HTML 已引入脚本。
