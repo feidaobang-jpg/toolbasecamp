@@ -200,6 +200,7 @@
   }
 
   function isAdminUser(user) {
+    if (typeof window.tbIsAdminUser === 'function') return window.tbIsAdminUser(user);
     if (!user) return false;
     var adminEmail = (window.siteConfig && siteConfig.adminEmail) || '';
     var adminPhone = (window.siteConfig && siteConfig.adminPhone) || '';
@@ -506,7 +507,7 @@
       syncDayChips();
     }).catch(function (err) {
       if (err && err.message === 'forbidden') {
-        showGate('需要管理员账号登录');
+        showError('统计数据加载被拒绝，请刷新重试');
         return;
       }
       showError('加载失败：' + (err && err.message ? err.message : 'unknown'));
@@ -514,18 +515,29 @@
   }
 
   function showGate(msg) {
+    if (typeof window.tbAdminShowGate === 'function') {
+      window.tbAdminShowGate(msg);
+      return;
+    }
     app.classList.add('hidden');
     gate.classList.remove('hidden');
     if (gateMsg) gateMsg.textContent = msg || '需要管理员登录后查看';
-    if (loginLink) loginLink.classList.remove('hidden');
+    if (loginLink) loginLink.classList.add('hidden');
+    if (authLabel) {
+      authLabel.textContent = '';
+      authLabel.classList.add('hidden');
+    }
   }
 
   function showApp(user) {
-    gate.classList.add('hidden');
-    app.classList.remove('hidden');
-    if (loginLink) loginLink.classList.add('hidden');
-    var label = user.phone || user.email || 'admin';
-    if (authLabel) authLabel.textContent = label;
+    if (typeof window.tbAdminShowApp === 'function') {
+      window.tbAdminShowApp(user);
+    } else {
+      gate.classList.add('hidden');
+      app.classList.remove('hidden');
+      if (loginLink) loginLink.classList.add('hidden');
+      if (authLabel) authLabel.textContent = user.phone || user.email || 'admin';
+    }
     try {
       localStorage.setItem('tb-stats-exclude', '1');
     } catch (e) { /* ignore */ }

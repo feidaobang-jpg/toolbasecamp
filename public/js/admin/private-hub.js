@@ -37,32 +37,34 @@
   }
 
   function showGate(msg) {
+    if (typeof window.tbAdminShowGate === 'function') {
+      window.tbAdminShowGate(msg);
+      return;
+    }
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
     var gateMsg = document.getElementById('gate-msg');
-    var loginLink = document.getElementById('login-link');
     var gateLogin = document.getElementById('gate-login');
     var next = encodeURIComponent('/html/admin/private.html');
     var loginHref = '../auth/login.html?next=' + next;
     if (gateMsg && msg) gateMsg.textContent = msg;
     if (gate) gate.classList.remove('hidden');
     if (app) app.classList.add('hidden');
-    if (loginLink) loginLink.classList.add('hidden');
     if (gateLogin) gateLogin.href = loginHref;
   }
 
   function showApp(user) {
+    if (typeof window.tbAdminShowApp === 'function') {
+      window.tbAdminShowApp(user, { hideHeaderAuth: true });
+      renderGroups();
+      return;
+    }
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
-    var authLabel = document.getElementById('auth-label');
     var loginLink = document.getElementById('login-link');
     if (gate) gate.classList.add('hidden');
     if (app) app.classList.remove('hidden');
     if (loginLink) loginLink.classList.add('hidden');
-    if (authLabel) {
-      authLabel.textContent = '';
-      authLabel.classList.add('hidden');
-    }
     document.body.classList.add('tb-admin-private');
     renderGroups();
   }

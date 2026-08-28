@@ -25,48 +25,25 @@
   }
 
   function showGate(msg) {
+    if (typeof window.tbAdminShowGate === 'function') {
+      window.tbAdminShowGate(msg);
+      return;
+    }
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
-    var gateMsg = document.getElementById('gate-msg');
-    var loginLink = document.getElementById('login-link');
-    var gateLogin = document.getElementById('gate-login');
-    var next = encodeURIComponent(window.location.pathname || '/html/admin/private.html');
-    var href = '../../auth/login.html?next=' + next;
-    if ((window.location.pathname || '').indexOf('/private/home-pc/') !== -1) {
-      href = '../../../auth/login.html?next=' + next;
-    } else if ((window.location.pathname || '').indexOf('/private/android/') !== -1) {
-      href = '../../../auth/login.html?next=' + next;
-    }
-    var boot = document.getElementById('boot-loading');
-    if (boot) boot.classList.add('hidden');
-    if (gateMsg && msg) gateMsg.textContent = msg;
     if (gate) gate.classList.remove('hidden');
     if (app) app.classList.add('hidden');
-    if (loginLink) {
-      loginLink.href = href;
-      loginLink.classList.remove('hidden');
-    }
-    if (gateLogin) gateLogin.href = href;
   }
 
   function showApp(user) {
+    if (typeof window.tbAdminShowApp === 'function') {
+      window.tbAdminShowApp(user, { hideHeaderAuth: true });
+      return;
+    }
     var gate = document.getElementById('gate');
     var app = document.getElementById('app');
-    var authLabel = document.getElementById('auth-label');
-    var loginLink = document.getElementById('login-link');
-    var boot = document.getElementById('boot-loading');
-    if (boot) boot.classList.add('hidden');
     if (gate) gate.classList.add('hidden');
     if (app) app.classList.remove('hidden');
-    if (loginLink) loginLink.classList.add('hidden');
-    if (authLabel) {
-      authLabel.textContent = '';
-      authLabel.classList.add('hidden');
-    }
-    var headerRight = authLabel && authLabel.parentElement;
-    if (headerRight) headerRight.classList.add('hidden');
-    document.body.classList.add('tb-admin-private');
-    document.dispatchEvent(new CustomEvent('tb:private-ready', { detail: { user: user } }));
   }
 
   function boot() {
