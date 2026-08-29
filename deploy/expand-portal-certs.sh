@@ -1,5 +1,5 @@
 #!/bin/bash
-# Expand Let's Encrypt cert for all Tool Basecamp portal subdomains
+# Expand Let's Encrypt cert for all Treasure Box portal subdomains
 set -euo pipefail
 
 CERT_DIR="/etc/letsencrypt/live/toolbasecamp.com"

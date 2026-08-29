@@ -1,4 +1,4 @@
-# Tool Basecamp
+# Treasure Box
 
 Global site: **https://zhengxiaohui.cn**
 
@@ -165,7 +165,7 @@ Repo → **Settings → Secrets and variables → Actions → New repository sec
 
 Add the matching **public key** to the server (`/root/.ssh/authorized_keys`) via Web Console.
 
-Manual re-run: Actions → **Deploy Tool Basecamp** → **Run workflow**.
+Manual re-run: Actions → **Deploy Treasure Box** → **Run workflow**.
 
 ---
 

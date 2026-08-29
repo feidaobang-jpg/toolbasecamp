@@ -5,13 +5,13 @@
 window.TB_LOCALES = window.TB_LOCALES || {};
 window.TB_LOCALES.en = {
     site: {
-        name: 'Tools Base Camp',
-        logoBadge: 'TB',
-        description: 'Tools Base Camp — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
+        name: 'Treasure Box',
+        logoBadge: 'BX',
+        description: 'Treasure Box — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
         keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
         footer: 'All rights reserved.',
         icpBeian: '闽ICP备2025116294号-2',
-        pageTitleSuffix: 'Tools Base Camp'
+        pageTitleSuffix: 'Treasure Box'
     },
     nav: {
         tools: 'Tools',
@@ -480,8 +480,8 @@ window.TB_LOCALES.en = {
     },
     hub: {
         portalsTitle: 'Portals',
-        portalsSubtitle: 'Extended tool collections hosted under Tools Base Camp.',
-        basecampTools: 'Basecamp Tools',
+        portalsSubtitle: 'Extended tool collections hosted under Treasure Box.',
+        basecampTools: 'Treasure Box Tools',
         gamesTitle: 'Games',
         lifeTitle: 'Content',
         categories: 'Categories',
@@ -2141,7 +2141,7 @@ window.TB_LOCALES.en = {
             modeSingle: 'Single',
             modeTile: 'Tile',
             textLabel: 'Watermark text',
-            textPlaceholder: 'e.g. © Tools Base Camp',
+            textPlaceholder: 'e.g. © Treasure Box',
             fontSizeLabel: 'Font size',
             opacityLabel: 'Opacity',
             colorLabel: 'Color',
@@ -2851,13 +2851,13 @@ window.TB_LOCALES.en = {
             noLyrics: 'No lyrics (instrumental or not returned)',
             openPlayer: 'Lyrics player',
             share: 'Share',
-            shareText: 'AI music made with Tools Base Camp',
+            shareText: 'AI music made with Treasure Box',
             generating: 'Generating music…',
             needPrompt: 'Please enter a style description',
             needLyrics: 'Please enter lyrics, or enable auto-generate lyrics',
             notConfigured: 'Music API is not configured (need MINIMAX_API_KEY and/or LK888_API_KEY).',
             failed: 'Generation failed. Try another style or lyrics.',
-            providerBalance: 'MiniMax account has insufficient balance (not your Tools Base Camp wallet). Top up at platform.minimaxi.com, or switch to Suno.',
+            providerBalance: 'MiniMax account has insufficient balance (not your Treasure Box wallet). Top up at platform.minimaxi.com, or switch to Suno.',
             rateLimited: 'MiniMax rate limited. Retry later, or switch to Suno.',
             resultMeta: '{model} · {duration}s · charged ¥{price}',
             wechatPlayTip: 'In WeChat you can play here. To save or forward the file, use the buttons below or open this page in your system browser.',
@@ -3369,7 +3369,7 @@ window.TB_LOCALES.en = {
         unreadCount: '{n} unread'
     },
     about: {
-        title: 'About Tools Base Camp',
+        title: 'About Treasure Box',
         lead: 'A global productivity toolkit — documents, AI images, life utilities, casual games, and developer helpers, in Chinese and English.',
         documentTitle: 'Document Tools',
         documentDesc: 'PDF to Word, Word to PDF, Images to PDF, and more — fast and straightforward.',

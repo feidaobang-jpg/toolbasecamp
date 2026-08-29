@@ -12,7 +12,7 @@
         upstreamFail: '服务器访问天行接口失败。请在服务器上测试：curl -m 8 https://apis.tianapi.com/',
         notConfigured: '未配置天行密钥（TIANAPI_KEY）',
         unknown: '未找到该功能',
-        pageSuffix: '工具大本营',
+        pageSuffix: '百宝箱',
         true: '正确',
         false: '错误',
         defaultPlaceholder: '请输入关键字'

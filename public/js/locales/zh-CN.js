@@ -4,13 +4,13 @@
  */
 window.TB_LOCALES['zh-CN'] = {
     site: {
-        name: '工具大本营',
-        logoBadge: '工',
-        description: '工具大本营 — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
+        name: '百宝箱',
+        logoBadge: '百',
+        description: '百宝箱 — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
         keywords: '效率工具, PDF 转换, JSON 转 Java, 开发者工具, 文档工具',
         footer: '保留所有权利。',
         icpBeian: '闽ICP备2025116294号-2',
-        pageTitleSuffix: '工具大本营'
+        pageTitleSuffix: '百宝箱'
     },
     nav: {
         tools: '工具',
@@ -479,7 +479,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     hub: {
         portalsTitle: '子站入口',
-        portalsSubtitle: '工具大本营托管的扩展工具集合。',
+        portalsSubtitle: '百宝箱托管的扩展工具集合。',
         basecampTools: '主站工具',
         gamesTitle: '休闲游戏',
         lifeTitle: '内容',
@@ -2850,7 +2850,7 @@ window.TB_LOCALES['zh-CN'] = {
             noLyrics: '暂无歌词（纯音乐或未返回歌词）',
             openPlayer: '歌词播放器',
             share: '分享',
-            shareText: '我用工具大本营生成的 AI 音乐',
+            shareText: '我用百宝箱生成的 AI 音乐',
             generating: '正在生成音乐，请稍候…',
             needPrompt: '请填写风格描述',
             needLyrics: '请填写歌词，或勾选「根据风格自动生成歌词」',
@@ -3368,7 +3368,7 @@ window.TB_LOCALES['zh-CN'] = {
         unreadCount: '未读 {n}'
     },
     about: {
-        title: '关于工具大本营',
+        title: '关于百宝箱',
         lead: '面向全球用户的效率工具集 — 文档转换、AI 出图、生活内容、休闲游戏与开发小工具，中英文可用。',
         documentTitle: '文档工具',
         documentDesc: 'PDF 转 Word、Word 转 PDF、图片转 PDF 等，快速简洁。',

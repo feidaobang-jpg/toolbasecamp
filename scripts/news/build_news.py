@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Tool Basecamp news crawler: RSS → DeepSeek rewrite → MySQL → static HTML pages.
+Treasure Box news crawler: RSS → DeepSeek rewrite → MySQL → static HTML pages.
 
 Run on the VPS only (via scripts/news/run_news.sh / cron).
 DeepSeek key: DEEPSEEK_API_KEY from env (e.g. /etc/toolbasecamp-api.env).
@@ -34,8 +34,8 @@ SITE_NAME = "资讯"
 SITE_LOGO_TEXT = "资"
 NEWS_SECTION_NAME = "科技资讯"
 SITE_BASE_URL = os.environ.get("NEWS_SITE_URL", "https://news.zhengxiaohui.cn").rstrip("/")
-KEYWORDS = "科技资讯,AI,硬件,显卡,手机,工具大本营"
-DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由工具大本营自动整理。"
+KEYWORDS = "科技资讯,AI,硬件,显卡,手机,百宝箱"
+DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由百宝箱自动整理。"
 
 DEEPSEEK_API_KEY = (os.environ.get("DEEPSEEK_API_KEY") or "").strip()
 DEEPSEEK_API_URL = os.environ.get(
@@ -1098,7 +1098,7 @@ def run_smoke(out_dir: str) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Tool Basecamp news builder")
+    parser = argparse.ArgumentParser(description="Treasure Box news builder")
     parser.add_argument("--regen-only", action="store_true", help="Rebuild HTML from MySQL only")
     parser.add_argument("--placeholder", action="store_true", help="Write empty index.html")
     parser.add_argument("--smoke", metavar="DIR", help="Local smoke test into DIR (no DB/API)")

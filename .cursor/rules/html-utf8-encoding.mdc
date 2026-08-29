@@ -13,7 +13,7 @@ Deploy 的 `deploy/bust-html-cache.py` 会扫描 HTML；**中文被截断**（�
 1. **所有 `public/**/*.html` 必须是合法 UTF-8（无 BOM）**。写入后用 Python 校验：
    `Path(f).read_bytes().decode("utf-8")` 不得抛错。
 2. **禁止**在 Windows PowerShell 里用默认重定向 / `Set-Content` / `Out-File`（无 `-Encoding utf8`）改含中文的 HTML/JS/CSS。
-3. **禁止**用按字节截断的方式改中文（错误示例：把「工具大本营」截成「工具大本」+ 半字节）。改 `<title>` / 文案时必须整段替换完整 Unicode 字符串。
+3. **禁止**用按字节截断的方式改中文（错误示例：把「百宝箱」截成「工具大本」+ 半字节）。改 `<title>` / 文案时必须整段替换完整 Unicode 字符串。
 4. **改完含中文的 HTML 后自检**：
    - 文件可 `decode("utf-8")`
    - 若有 `<title>`，必须存在完整的 `</title>`（字节序列里能找到 `b"</title>"`）
@@ -33,7 +33,7 @@ Deploy 的 `deploy/bust-html-cache.py` 会扫描 HTML；**中文被截断**（�
 
 ```html
 <!-- ✅ -->
-<title>自用 - 工具大本营</title>
+<title>自用 - 百宝箱</title>
 <p data-i18n="...">需要管理员登录后查看</p>
 ```
 

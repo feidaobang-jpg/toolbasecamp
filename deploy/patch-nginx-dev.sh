@@ -74,7 +74,7 @@ if [[ -n "$ASSET" ]]; then
 fi
 
 HTTPS_BODY="$(curl -sk https://127.0.0.1/ -H 'Host: dev.zhengxiaohui.cn' || true)"
-if echo "$HTTPS_BODY" | grep -q '工具大本营 - 效率工具集'; then
+if echo "$HTTPS_BODY" | grep -q '百宝箱 - 效率工具集'; then
   echo "ERROR: HTTPS still serves main site — check certbot and nginx 443 vhost."
   exit 1
 fi

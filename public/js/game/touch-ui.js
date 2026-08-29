@@ -1,5 +1,5 @@
 /**
- * Shared virtual touch controls — Tool Basecamp standard
+ * Shared virtual touch controls — Treasure Box standard
  *
  * PC: hide virtual pad (wantTouchUI === false)
  * Mobile right pad (bottom-right), key order by frequency:

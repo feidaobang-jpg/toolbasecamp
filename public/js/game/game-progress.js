@@ -1,5 +1,5 @@
 /**
- * Shared campaign progress + 5-slot save/load for Tool Basecamp action games.
+ * Shared campaign progress + 5-slot save/load for Treasure Box action games.
  *
  * Chapter layout (10 stages each):
  *   normal (1–2,4–5,7–8): mobs only

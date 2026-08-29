@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Tool Basecamp 装机推荐：ZOL → DeepSeek → MySQL（pc_builds）
+Treasure Box 装机推荐：ZOL → DeepSeek → MySQL（pc_builds）
 
 年份按本机当前年动态取；不写 AI 长点评。
 建议本地爬取：python build_pc.py --crawl --clean
@@ -406,7 +406,7 @@ def clean_temp_data() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=f"Tool Basecamp {ZOL_YEAR} 装机推荐 → MySQL")
+    parser = argparse.ArgumentParser(description=f"Treasure Box {ZOL_YEAR} 装机推荐 → MySQL")
     parser.add_argument(
         "--ai",
         action="store_true",

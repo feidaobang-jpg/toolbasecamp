@@ -1,5 +1,5 @@
 #!/bin/bash
-# One-time MySQL setup for Tool Basecamp (run as root)
+# One-time MySQL setup for Treasure Box (run as root)
 set -euo pipefail
 
 DB_NAME="${DB_NAME:-toolbasecamp}"

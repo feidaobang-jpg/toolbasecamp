@@ -140,7 +140,7 @@ docker compose exec pdf-proxy wget -q -O - http://127.0.0.1/ | Select-String -Pa
 
 1. Cloudflare → **Caching → Purge Everything**
 2. 手机 **无痕模式** 打开：`https://pdf.zhengxiaohui.cn`
-3. 应看到 PDF Toolkit，顶部有 **← Tool Basecamp** 返回条
+3. 应看到 PDF Toolkit，顶部有 **← Treasure Box** 返回条
 
 ---
 

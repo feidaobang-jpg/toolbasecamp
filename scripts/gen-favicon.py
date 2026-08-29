@@ -14,7 +14,7 @@ def make(size):
         font = ImageFont.truetype(r'C:\Windows\Fonts\arialbd.ttf', max(10, int(size * 0.42)))
     except Exception:
         font = ImageFont.load_default()
-    text = 'TB'
+    text = 'BX'
     bbox = d.textbbox((0, 0), text, font=font)
     tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
     x = (size - tw) / 2 - bbox[0]
@@ -33,11 +33,11 @@ print('ico bytes', os.path.getsize(ico_path))
 
 svg = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" '
-    'role="img" aria-label="工具大本营">'
+    'role="img" aria-label="百宝箱">'
     '<rect width="64" height="64" rx="14" fill="#2563eb"/>'
     '<text x="32" y="42" text-anchor="middle" '
     'font-family="Arial, Helvetica, sans-serif" font-size="28" '
-    'font-weight="700" fill="#fff">TB</text>'
+    'font-weight="700" fill="#fff">BX</text>'
     '</svg>\n'
 )
 with open(os.path.join(out, 'favicon.svg'), 'w', encoding='utf-8') as f:

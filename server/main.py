@@ -203,7 +203,7 @@ except Exception as exc:  # pragma: no cover
     _tts_import_error = str(exc)
     print(f"[tts] import failed: {exc}")
 
-app = FastAPI(title="Tool Basecamp API")
+app = FastAPI(title="Treasure Box API")
 
 DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
 DB_PORT = int(os.environ.get("DB_PORT", "3306"))
