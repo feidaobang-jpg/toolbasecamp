@@ -71,7 +71,7 @@ curl -s https://comfy.zhengxiaohui.cn/health
 
 | 页面 | 说明 |
 |------|------|
-| 去背景 / 批量处理 | rembg + 批量缩放裁边 |
+| 去背景 | rembg + 批量缩放裁边 |
 | 文生图 | Z-Image Turbo |
 | 图生图 | Qwen 指令改图 / Z-Image；多图批量、可选水印；老照片用风格预设 |
 | 描述抠图 | Qwen 按描述抠图 |

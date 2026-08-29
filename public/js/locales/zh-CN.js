@@ -277,7 +277,7 @@ window.TB_LOCALES['zh-CN'] = {
             openOutputDir: '打开输出文件夹',
             logTitle: '执行日志',
             removeBgTitle: '去背景',
-            removeBgDesc: '批量缩放、裁边、可选 ComfyUI 抠图',
+            removeBgDesc: '批量缩放、裁边、可选 ComfyUI 去背景',
             txt2imgTitle: '文生图',
             txt2imgDesc: 'Z-Image Turbo（家里 ComfyUI）',
             img2imgTitle: '图生图',
