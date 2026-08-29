@@ -277,7 +277,7 @@ window.TB_LOCALES.en = {
             copyOutputDir: 'Copy output path',
             openOutputDir: 'Open output folder',
             logTitle: 'Log',
-            removeBgTitle: 'Remove BG / batch',
+            removeBgTitle: 'Remove background',
             removeBgDesc: 'Resize, trim, optional ComfyUI background removal',
             txt2imgTitle: 'Text to image',
             txt2imgDesc: 'Z-Image Turbo via home ComfyUI',
