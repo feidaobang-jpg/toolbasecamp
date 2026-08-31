@@ -1352,6 +1352,44 @@ async def _run_comfyui_and_get_last_image_impl(workflow: dict, timeout_sec: Opti
                 pass
 
 
+def _ffmpeg_bin() -> str:
+    try:
+        import imageio_ffmpeg
+
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return "ffmpeg"
+
+
+def _transcode_audio_to_wav(src: Path, dst: Path) -> None:
+    """用 ffmpeg 把任意音频转成单声道 24kHz PCM wav（不依赖 MoviePy 写文件）。"""
+    src = Path(src)
+    dst = Path(dst)
+    if not src.exists():
+        raise FileNotFoundError(f"音频源不存在：{src}")
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    ff = _ffmpeg_bin()
+    cmd = [
+        ff,
+        "-y",
+        "-i",
+        str(src),
+        "-ac",
+        "1",
+        "-ar",
+        "24000",
+        "-c:a",
+        "pcm_s16le",
+        str(dst),
+    ]
+    import subprocess
+
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    if proc.returncode != 0 or not dst.exists() or dst.stat().st_size <= 0:
+        err = (proc.stderr or proc.stdout or "").strip()[-800:]
+        raise RuntimeError(f"ffmpeg 转 wav 失败（code={proc.returncode}）：{err}")
+
+
 async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] = None, speed: Optional[float] = None):
     if not HAS_EDGE_TTS:
         raise RuntimeError("edge-tts library not installed. Run: pip install edge-tts")
@@ -1369,8 +1407,15 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
     speed_val = speed if speed is not None else float(os.environ.get("INDEXTTS_SPEED", "1.0"))
     
     rate_str = f"{int((speed_val - 1.0) * 100):+d}%"  # Always include sign, e.g., '+0%', '-50%'
-    
-    actual_path = out_path
+
+    # edge-tts 7.x Communicate 无 output_format；直接写 mp3 再转 wav
+    supports_wav_format = False
+    try:
+        import inspect
+
+        supports_wav_format = "output_format" in inspect.signature(edge_tts.Communicate.__init__).parameters
+    except Exception:
+        supports_wav_format = False
 
     async def _synthesize_with_kwargs(kwargs: dict, target_path: Path):
         target_path = Path(target_path)
@@ -1395,26 +1440,19 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
             raise RuntimeError("No audio was received. Please verify that your parameters are correct.")
     
     last_err = None
+    actual_path = out_path
     for attempt in range(3):
         try:
-            # 新版 edge-tts 支持 output_format，可直接输出 WAV(RIFF)
-            await _synthesize_with_kwargs({"output_format": "riff-24khz-16bit-mono-pcm"}, out_path)
-            actual_path = out_path
+            if supports_wav_format:
+                await _synthesize_with_kwargs({"output_format": "riff-24khz-16bit-mono-pcm"}, out_path)
+                actual_path = out_path
+            else:
+                actual_path = out_path.with_suffix(".mp3")
+                await _synthesize_with_kwargs({}, actual_path)
             last_err = None
             break
         except Exception as e:
-            # 兼容旧版 edge-tts：Communicate.__init__ 不支持 output_format
-            if "unexpected keyword argument" in str(e) and "output_format" in str(e):
-                actual_path = out_path.with_suffix(".mp3")
-                try:
-                    await _synthesize_with_kwargs({}, actual_path)
-                    last_err = None
-                    break
-                except Exception as e2:
-                    last_err = e2
-            else:
-                last_err = e
-
+            last_err = e
             # Retry (network / transient service issues)
             if attempt < 2:
                 await asyncio.sleep(0.8 * (attempt + 1))
@@ -1437,24 +1475,7 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
     except Exception as e:
         raise RuntimeError(f"Edge-TTS 音频文件校验失败：{str(e)}")
 
-    def _transcode_to_wav(src: Path, dst: Path) -> None:
-        clip = AudioFileClip(str(src))
-        try:
-            clip.write_audiofile(
-                str(dst),
-                fps=24000,
-                nbytes=2,
-                codec="pcm_s16le",
-                ffmpeg_params=["-ac", "1"],
-                logger=None,
-            )
-        finally:
-            try:
-                clip.close()
-            except Exception:
-                pass
-
-    # 统一保证 out_path 是可读 WAV（旧版 edge-tts 常写 mp3；偶发扩展名是 .wav 但内容是 mp3）
+    # 统一保证 out_path 是可读 WAV（edge-tts 常写 mp3；偶发扩展名是 .wav 但内容是 mp3）
     need_transcode = actual_path.suffix.lower() != ".wav"
     if not need_transcode:
         try:
@@ -1469,17 +1490,18 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
         try:
             tmp_src = actual_path
             if actual_path.resolve() == out_path.resolve():
-                # 同路径非 RIFF：先挪到 .mp3 再转回 wav
                 tmp_src = out_path.with_suffix(".mp3")
                 if tmp_src.exists():
                     tmp_src.unlink()
                 actual_path.replace(tmp_src)
-            _transcode_to_wav(tmp_src, out_path)
+            _transcode_audio_to_wav(tmp_src, out_path)
             actual_path = out_path
         except Exception as e:
             raise RuntimeError(f"Edge-TTS 转 wav 失败：{e}")
 
-    return str(actual_path)
+    if not out_path.exists():
+        raise RuntimeError(f"Edge-TTS 未生成 wav：{out_path}")
+    return str(out_path)
 
 
 def _audio_duration_seconds(path: Path) -> float:

@@ -418,6 +418,54 @@ def _pad_or_trim_wav(src: Path, dst: Path, target_sec: float) -> None:
         out.writeframes(frames)
 
 
+def _ensure_wav(src_or_wav: Path, wav_dst: Path) -> Path:
+    """若已是 wav 则返回；否则用 ffmpeg 转成 wav_dst。"""
+    wav_dst = Path(wav_dst)
+    if wav_dst.exists() and wav_dst.stat().st_size > 0:
+        with open(wav_dst, "rb") as f:
+            if f.read(4) == b"RIFF":
+                return wav_dst
+    src = Path(src_or_wav)
+    if not src.exists():
+        raise FileNotFoundError(f"音频源不存在：{src}")
+    if src.resolve() == wav_dst.resolve() and src.suffix.lower() == ".wav":
+        return wav_dst
+    try:
+        import imageio_ffmpeg
+        import subprocess
+
+        ff = imageio_ffmpeg.get_ffmpeg_exe()
+        wav_dst.parent.mkdir(parents=True, exist_ok=True)
+        proc = subprocess.run(
+            [ff, "-y", "-i", str(src), "-ac", "1", "-ar", "24000", "-c:a", "pcm_s16le", str(wav_dst)],
+            capture_output=True,
+            text=True,
+        )
+        if proc.returncode != 0 or not wav_dst.exists() or wav_dst.stat().st_size <= 0:
+            raise RuntimeError((proc.stderr or proc.stdout or "")[-500:])
+        return wav_dst
+    except Exception as e:
+        # MoviePy 兜底
+        clip = AudioFileClip(str(src))
+        try:
+            clip.write_audiofile(
+                str(wav_dst),
+                fps=24000,
+                nbytes=2,
+                codec="pcm_s16le",
+                ffmpeg_params=["-ac", "1"],
+                logger=None,
+            )
+        finally:
+            try:
+                clip.close()
+            except Exception:
+                pass
+        if not wav_dst.exists():
+            raise RuntimeError(f"转 wav 失败：{e}")
+        return wav_dst
+
+
 def _compose_trailer_sync(
     image_paths: List[Path],
     audio_paths: List[Path],
@@ -928,28 +976,23 @@ class TrailerAPI:
             raw_wav = audio_dir / f"{idx:02d}_raw.wav"
             final_wav = audio_dir / f"{idx:02d}.wav"
             produced = await tts(vo, raw_wav, voice=voice, speed=speed)
-            # TTS 可能返回 mp3 路径；统一落到 raw_wav
+            # TTS 可能只留下 mp3；统一保证 raw_wav 存在
             produced_path = Path(produced) if produced else raw_wav
-            if produced_path.resolve() != raw_wav.resolve():
-                if not raw_wav.exists() and produced_path.exists():
-                    # 旧路径兜底：再转一遍
-                    clip = AudioFileClip(str(produced_path))
-                    try:
-                        clip.write_audiofile(
-                            str(raw_wav),
-                            fps=24000,
-                            nbytes=2,
-                            codec="pcm_s16le",
-                            ffmpeg_params=["-ac", "1"],
-                            logger=None,
-                        )
-                    finally:
-                        try:
-                            clip.close()
-                        except Exception:
-                            pass
+            mp3_fallback = raw_wav.with_suffix(".mp3")
+            if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
+                src = (
+                    produced_path
+                    if produced_path.exists()
+                    else (mp3_fallback if mp3_fallback.exists() else None)
+                )
+                if src is None:
+                    raise RuntimeError(f"配音文件未生成：{raw_wav}")
+                await asyncio.to_thread(_ensure_wav, src, raw_wav)
             if not raw_wav.exists():
-                raise RuntimeError(f"配音文件未生成：{raw_wav}")
+                raise RuntimeError(
+                    f"配音文件未生成：{raw_wav}"
+                    + (f"（仅有 {mp3_fallback.name}）" if mp3_fallback.exists() else "")
+                )
             audio_dur_fn = self.deps.get("audio_duration_seconds") or wav_dur
             tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
             # 以用户单段时长为主；旁白更长则略延长（上限 10s）
