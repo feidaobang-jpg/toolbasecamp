@@ -424,12 +424,8 @@
         0
       ],
       "filename_prefix": "video/ltx25_t2v",
-      "format": {
-        "format": "mp4",
-        "codec": {
-          "codec": "h264"
-        }
-      }
+      "format": "mp4",
+      "format.codec": "h264"
     }
   }
 }

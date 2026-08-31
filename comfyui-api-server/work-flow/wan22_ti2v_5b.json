@@ -95,7 +95,7 @@
       "video": ["57", 0],
       "filename_prefix": "video/trailer_i2v",
       "format": "mp4",
-      "codec": "h264"
+      "format.codec": "h264"
     }
   }
 }

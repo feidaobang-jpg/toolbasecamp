@@ -120,7 +120,7 @@ async def health_check():
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
-        "trailer_pipeline": "v4_wan22_ltx25_i2v",
+        "trailer_pipeline": "v5_savevideo_format_fix",
     }
 
 
@@ -1039,11 +1039,40 @@ def _build_wan22_ti2v_workflow(
     workflow["55"]["inputs"]["length"] = length_i
     workflow["57"]["inputs"]["fps"] = int(fps)
     workflow["3"]["inputs"]["seed"] = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
-    # DynamicCombo-friendly SaveVideo
-    workflow["58"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
-    if "codec" in workflow["58"]["inputs"]:
-        del workflow["58"]["inputs"]["codec"]
+    # SaveVideo 的 format 是 DynamicCombo：必须扁平字符串，不能嵌套 dict
+    # 否则 ComfyUI 会丢掉 format → SaveVideo.execute() missing ... 'format'
+    _patch_save_video_inputs(workflow.get("58") or {})
     return workflow
+
+
+def _patch_save_video_inputs(node_or_inputs: dict) -> None:
+    """把 SaveVideo 的 DynamicCombo 写成 API 可识别的扁平键。"""
+    inputs = node_or_inputs.get("inputs") if "inputs" in node_or_inputs else node_or_inputs
+    if not isinstance(inputs, dict):
+        return
+    fmt = inputs.get("format")
+    codec = "h264"
+    if isinstance(fmt, dict):
+        codec_obj = fmt.get("codec")
+        if isinstance(codec_obj, dict):
+            codec = str(codec_obj.get("codec") or codec)
+        elif isinstance(codec_obj, str) and codec_obj:
+            codec = codec_obj
+        fmt = str(fmt.get("format") or "mp4")
+    elif isinstance(fmt, str) and fmt:
+        pass
+    else:
+        fmt = "mp4"
+    raw_codec = inputs.get("format.codec", inputs.get("codec"))
+    if isinstance(raw_codec, dict):
+        codec = str(raw_codec.get("codec") or codec)
+    elif isinstance(raw_codec, str) and raw_codec:
+        codec = raw_codec
+    inputs["format"] = fmt
+    inputs["format.codec"] = codec
+    # 顶层 codec 可选；有 format.codec 时去掉，避免歧义
+    if "codec" in inputs:
+        del inputs["codec"]
 
 
 def _build_ltx25_t2v_workflow(
@@ -1082,7 +1111,7 @@ def _build_ltx25_t2v_workflow(
     if "338" in workflow:
         workflow["338"]["inputs"]["noise_seed"] = seed_i + 17
     if "save" in workflow:
-        workflow["save"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
+        _patch_save_video_inputs(workflow["save"])
     return workflow
 
 
@@ -1135,7 +1164,7 @@ def _build_ltx25_i2v_workflow(
         if "338" in workflow:
             workflow["338"]["inputs"]["noise_seed"] = seed_i + 17
         if "save" in workflow:
-            workflow["save"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
+            _patch_save_video_inputs(workflow["save"])
     else:
         # 兜底：运行时从 t2v 注入
         workflow["load"] = {"class_type": "LoadImage", "inputs": {"image": comfy_image_filename}}
