@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function selectedVideoMode() {
     var el = document.querySelector('input[name="video-mode"]:checked');
-    return el ? el.value : 'i2v';
+    return el ? el.value : 'wan22_5b';
   }
 
   function setBusy(busy) {
@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
       awaiting_picks: tr('privateHub.homePc.trailerStagePicks', '等待选图'),
       compose: tr('privateHub.homePc.trailerStageCompose', '配音与拼接…'),
       i2v: tr('privateHub.homePc.trailerStageI2v', '图生视频…'),
+      t2v: tr('privateHub.homePc.trailerStageT2v', '文生视频…'),
       tts: tr('privateHub.homePc.trailerStageTts', '配音…'),
       video: tr('privateHub.homePc.trailerStageVideo', '成片…'),
       done: tr('privateHub.homePc.trailerStageDone', '完成'),

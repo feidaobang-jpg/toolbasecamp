@@ -120,7 +120,7 @@ async def health_check():
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
-        "trailer_pipeline": "v2_wan22_ti2v",
+        "trailer_pipeline": "v3_wan22_ltx25",
     }
 
 
@@ -1043,6 +1043,46 @@ def _build_wan22_ti2v_workflow(
     workflow["58"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
     if "codec" in workflow["58"]["inputs"]:
         del workflow["58"]["inputs"]["codec"]
+    return workflow
+
+
+def _build_ltx25_t2v_workflow(
+    prompt_text: str,
+    seed: Optional[int] = None,
+    width: int = 768,
+    height: int = 432,
+    duration_sec: float = 5,
+    fps: int = 24,
+) -> dict:
+    """LTX-2.5 文生视频（由 user/default/workflows/video_ltx2_5_t2v 子图展开）。"""
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "ltx25_t2v.json")
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    w = _clamp_image_side(int(width), 64, 1280)
+    h = _clamp_image_side(int(height), 64, 1280)
+    # 对齐 32
+    w = max(64, (w // 32) * 32)
+    h = max(64, (h // 32) * 32)
+    try:
+        dur = int(round(float(duration_sec)))
+    except Exception:
+        dur = 5
+    dur = max(3, min(10, dur))
+    fps_i = max(8, min(30, int(fps)))
+    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+
+    workflow["376"]["inputs"]["value"] = (prompt_text or "").strip() or "cinematic scene, subtle camera motion"
+    workflow["362"]["inputs"]["value"] = dur  # duration seconds
+    workflow["372"]["inputs"]["value"] = w
+    workflow["360"]["inputs"]["value"] = h
+    workflow["361"]["inputs"]["value"] = fps_i
+    if "339" in workflow:
+        workflow["339"]["inputs"]["noise_seed"] = seed_i
+    if "338" in workflow:
+        workflow["338"]["inputs"]["noise_seed"] = seed_i + 17
+    if "save" in workflow:
+        workflow["save"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
     return workflow
 
 
@@ -4216,6 +4256,7 @@ _trailer_api = TrailerAPI(
     build_z_image_workflow=_build_z_image_turbo_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
+    build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
     upload_image_bytes=upload_image_bytes,
     indextts_synthesize=_indextts_synthesize,

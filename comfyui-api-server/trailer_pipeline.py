@@ -1,10 +1,9 @@
 """
 视频生成流水线（半自动）：
-  DeepSeek 分镜 → Z-Image 关键帧多候选勾选 → Wan 2.2 5B 图生视频 → 旁白拼接。
+  DeepSeek 分镜 → Z-Image 关键帧多候选勾选 → 视频引擎成片 → 旁白拼接。
 
+成片引擎：Wan 2.2 5B 图生视频 / LTX 2.5 文生视频 / 静帧推镜。
 单段时长 3～10 秒可选；生成段数默认 1，超过分镜数则封顶。
-工作流源：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\
-API 模板：work-flow/wan22_ti2v_5b.json
 """
 from __future__ import annotations
 
@@ -70,10 +69,37 @@ _ASPECT_I2V = {
     "9_16": (480, 832),
 }
 
+# LTX-2.5 T2V（latent 会再 /2 后上采样，给稍大画布）
+_ASPECT_LTX = {
+    "16_9": (768, 432),
+    "9_16": (432, 768),
+}
+
 _ASPECT_VIDEO = {
     "16_9": (1920, 1080),
     "9_16": (1080, 1920),
 }
+
+_VIDEO_ENGINES = {
+    "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "needs_image": True},
+    "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
+    "kenburns": {"label": "静帧推镜", "needs_image": False},
+}
+
+
+def _normalize_video_engine(raw: str) -> str:
+    m = (raw or "").strip().lower().replace("-", "_")
+    # 兼容旧值 i2v
+    if m in ("i2v", "wan", "wan22", "wan2.2_5b", "wan22_ti2v"):
+        return "wan22_5b"
+    if m in ("ltx", "ltx2.5", "ltx25", "ltx_t2v"):
+        return "ltx25_t2v"
+    if m in ("still", "ken_burns", "slideshow"):
+        return "kenburns"
+    if m in _VIDEO_ENGINES:
+        return m
+    return "wan22_5b"
+
 
 
 def _now_ts_ms() -> int:
@@ -499,7 +525,7 @@ class TrailerAPI:
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
             segment_count: str = Form("1"),
-            video_mode: str = Form("i2v"),
+            video_mode: str = Form("wan22_5b"),
         ):
             text = (prompt or "").strip()
             if len(text) < 2:
@@ -508,9 +534,7 @@ class TrailerAPI:
             style_n = (visual_style or "realistic").strip().lower()
             if style_n not in _VISUAL_STYLES:
                 style_n = "realistic"
-            mode = (video_mode or "i2v").strip().lower()
-            if mode not in ("i2v", "kenburns"):
-                mode = "i2v"
+            mode = _normalize_video_engine(video_mode)
             try:
                 cand = max(2, min(4, int(candidates_per_shot or 3)))
             except Exception:
@@ -808,16 +832,27 @@ class TrailerAPI:
         aspect = task["aspect"]
         out_size = _ASPECT_VIDEO[aspect]
         i2v_wh = _ASPECT_I2V[aspect]
+        ltx_wh = _ASPECT_LTX[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
-        mode = (task.get("video_mode") or "i2v").strip().lower()
+        mode = _normalize_video_engine(task.get("video_mode") or "wan22_5b")
+        task["video_mode"] = mode
+        engine_meta = _VIDEO_ENGINES[mode]
         tts = self.deps["indextts_synthesize"]
         wav_dur = self.deps["wav_duration_seconds"]
         create_subs = self.deps["create_subtitle_overlays_timed"]
         upload_bytes = self.deps.get("upload_image_bytes")
-        build_i2v = self.deps.get("build_wan22_ti2v_workflow")
-        run_i2v = self.deps.get("run_comfyui_and_get_last_video")
-        use_i2v = mode == "i2v" and callable(upload_bytes) and callable(build_i2v) and callable(run_i2v)
+        build_wan = self.deps.get("build_wan22_ti2v_workflow")
+        build_ltx = self.deps.get("build_ltx25_t2v_workflow")
+        run_video = self.deps.get("run_comfyui_and_get_last_video")
+        use_wan = (
+            mode == "wan22_5b"
+            and callable(upload_bytes)
+            and callable(build_wan)
+            and callable(run_video)
+        )
+        use_ltx = mode == "ltx25_t2v" and callable(build_ltx) and callable(run_video)
+        use_comfy_video = use_wan or use_ltx
 
         image_paths: List[Path] = []
         video_clip_paths: List[Path] = []
@@ -876,32 +911,47 @@ class TrailerAPI:
             dur = max(planned, tts_len)
             dur = min(10.0, max(3.0, dur))
 
-            # 2) 图生视频（Wan 2.2 5B）或稍后 Ken Burns
+            # 2) 视频引擎：Wan I2V / LTX T2V / 稍后 Ken Burns
             clip_path = clips_dir / f"{idx:02d}.mp4"
-            if use_i2v:
-                task["stage"] = "i2v"
-                self._log(
-                    task,
-                    f"图生视频 Wan2.2-5B 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {_length_for_duration(dur)}帧）",
-                )
+            if use_comfy_video:
+                task["stage"] = "i2v" if use_wan else "t2v"
                 try:
-                    comfy_name, _sub = await upload_bytes(img_path.read_bytes(), name_prefix=f"trailer_{idx:02d}_")
-                    if not comfy_name:
-                        raise RuntimeError("上传关键帧到 ComfyUI 失败")
-                    length = _length_for_duration(dur)
-                    wf = build_i2v(
-                        comfy_name,
-                        motion,
-                        seed=random.randint(1, 2_000_000_000),
-                        width=i2v_wh[0],
-                        height=i2v_wh[1],
-                        length=length,
-                        fps=24,
-                    )
-                    vid_bytes = await run_i2v(wf)
+                    if use_wan:
+                        self._log(
+                            task,
+                            f"Wan2.2-5B 图生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {_length_for_duration(dur)}帧）",
+                        )
+                        comfy_name, _sub = await upload_bytes(
+                            img_path.read_bytes(), name_prefix=f"trailer_{idx:02d}_"
+                        )
+                        if not comfy_name:
+                            raise RuntimeError("上传关键帧到 ComfyUI 失败")
+                        length = _length_for_duration(dur)
+                        wf = build_wan(
+                            comfy_name,
+                            motion,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
+                    else:
+                        self._log(
+                            task,
+                            f"LTX-2.5 文生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s）",
+                        )
+                        wf = build_ltx(
+                            motion,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=ltx_wh[0],
+                            height=ltx_wh[1],
+                            duration_sec=planned,
+                            fps=24,
+                        )
+                    vid_bytes = await run_video(wf)
                     clip_path.write_bytes(vid_bytes)
                     video_clip_paths.append(clip_path)
-                    # 以真实片长与旁白对齐
                     try:
                         vdur = float(VideoFileClip(str(clip_path)).duration)
                     except Exception:
@@ -910,8 +960,11 @@ class TrailerAPI:
                     dur = max(3.0, dur)
                 except Exception as e:
                     i2v_fail += 1
-                    self._log(task, f"分镜 {idx + 1} I2V 失败，该镜回退静帧推镜：{e}")
-                    video_clip_paths.append(img_path)  # 标记为图，后面 compose 分支处理
+                    self._log(
+                        task,
+                        f"分镜 {idx + 1} {engine_meta['label']} 失败，该镜回退静帧推镜：{e}",
+                    )
+                    video_clip_paths.append(img_path)
             else:
                 video_clip_paths.append(img_path)
 
@@ -928,7 +981,9 @@ class TrailerAPI:
         out_video = task_dir / out_name
 
         # 若全部是真视频片段，用视频拼接；否则用 Ken Burns（图路径）
-        all_video = use_i2v and all(p.suffix.lower() == ".mp4" and p.exists() for p in video_clip_paths)
+        all_video = use_comfy_video and all(
+            p.suffix.lower() == ".mp4" and p.exists() for p in video_clip_paths
+        )
         if all_video:
             await asyncio.to_thread(
                 _compose_clips_with_audio_sync,
@@ -941,7 +996,7 @@ class TrailerAPI:
                 create_subs,
                 24,
             )
-            engine_note = "Wan 2.2 5B 图生视频 + 旁白拼接"
+            engine_note = f"{engine_meta['label']} + 旁白拼接"
         else:
             # 混合失败时统一 Ken Burns，保证能出片
             await asyncio.to_thread(
@@ -955,7 +1010,7 @@ class TrailerAPI:
                 create_subs,
                 25,
             )
-            engine_note = "静帧 Ken Burns（I2V 未全成功或已选手动回退）"
+            engine_note = f"静帧 Ken Burns（{engine_meta['label']} 未全成功或选手动回退）"
 
         picks_export = []
         for shot in shots:
@@ -984,15 +1039,16 @@ class TrailerAPI:
             "2. images/ 关键帧；clips/ 为每镜 Wan 图生视频；audio/ 旁白。\n"
             "3. plan.json / selected_shots.json / trailer.srt 对照分镜与字幕。\n"
             "4. 精剪建议导入剪映：替换转场、BGM、音效；clips/ 可单镜替换。\n"
-            "5. 工作流源：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\video_wan2_2_5B_ti2v\n"
-            "   API 模板：comfyui-api-server/work-flow/wan22_ti2v_5b.json\n"
+            "5. 视频引擎：Wan 2.2 5B 图生视频 / LTX 2.5 文生视频 / 静帧推镜\n"
+            "   工作流源：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\\n"
+            "   API 模板：work-flow/wan22_ti2v_5b.json 、 work-flow/ltx25_t2v.json\n"
         )
         (task_dir / "README_剪映.txt").write_text(readme, encoding="utf-8")
 
         task["video_url"] = f"/output/{task_dir.name}/{out_name}"
         task["video_duration_sec"] = round(t_cursor, 1)
         task["output_directory"] = str(task_dir.resolve())
-        task["video_engine"] = "wan22_ti2v" if all_video else "kenburns"
+        task["video_engine"] = mode if all_video else "kenburns"
         task["export_hint"] = (
             f"粗剪已生成（{engine_note}）。素材在任务目录 images / clips / audio，可导入剪映。"
         )
