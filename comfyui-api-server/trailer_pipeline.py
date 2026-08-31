@@ -82,6 +82,7 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "needs_image": True},
+    "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "kenburns": {"label": "静帧推镜", "needs_image": False},
 }
@@ -89,10 +90,12 @@ _VIDEO_ENGINES = {
 
 def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
-    # 兼容旧值 i2v
+    # 兼容旧值 i2v / 笼统 ltx
     if m in ("i2v", "wan", "wan22", "wan2.2_5b", "wan22_ti2v"):
         return "wan22_5b"
-    if m in ("ltx", "ltx2.5", "ltx25", "ltx_t2v"):
+    if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):
+        return "ltx25_i2v"
+    if m in ("ltx_t2v", "ltx25_t2v", "ltx2.5_t2v"):
         return "ltx25_t2v"
     if m in ("still", "ken_burns", "slideshow"):
         return "kenburns"
@@ -843,7 +846,8 @@ class TrailerAPI:
         create_subs = self.deps["create_subtitle_overlays_timed"]
         upload_bytes = self.deps.get("upload_image_bytes")
         build_wan = self.deps.get("build_wan22_ti2v_workflow")
-        build_ltx = self.deps.get("build_ltx25_t2v_workflow")
+        build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
+        build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
         use_wan = (
             mode == "wan22_5b"
@@ -851,8 +855,14 @@ class TrailerAPI:
             and callable(build_wan)
             and callable(run_video)
         )
-        use_ltx = mode == "ltx25_t2v" and callable(build_ltx) and callable(run_video)
-        use_comfy_video = use_wan or use_ltx
+        use_ltx_i2v = (
+            mode == "ltx25_i2v"
+            and callable(upload_bytes)
+            and callable(build_ltx_i2v)
+            and callable(run_video)
+        )
+        use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
+        use_comfy_video = use_wan or use_ltx_i2v or use_ltx_t2v
 
         image_paths: List[Path] = []
         video_clip_paths: List[Path] = []
@@ -914,7 +924,7 @@ class TrailerAPI:
             # 2) 视频引擎：Wan I2V / LTX T2V / 稍后 Ken Burns
             clip_path = clips_dir / f"{idx:02d}.mp4"
             if use_comfy_video:
-                task["stage"] = "i2v" if use_wan else "t2v"
+                task["stage"] = "i2v" if (use_wan or use_ltx_i2v) else "t2v"
                 try:
                     if use_wan:
                         self._log(
@@ -936,12 +946,31 @@ class TrailerAPI:
                             length=length,
                             fps=24,
                         )
+                    elif use_ltx_i2v:
+                        self._log(
+                            task,
+                            f"LTX-2.5 图生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s）",
+                        )
+                        comfy_name, _sub = await upload_bytes(
+                            img_path.read_bytes(), name_prefix=f"trailer_ltx_{idx:02d}_"
+                        )
+                        if not comfy_name:
+                            raise RuntimeError("上传关键帧到 ComfyUI 失败")
+                        wf = build_ltx_i2v(
+                            comfy_name,
+                            motion,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=ltx_wh[0],
+                            height=ltx_wh[1],
+                            duration_sec=planned,
+                            fps=24,
+                        )
                     else:
                         self._log(
                             task,
                             f"LTX-2.5 文生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s）",
                         )
-                        wf = build_ltx(
+                        wf = build_ltx_t2v(
                             motion,
                             seed=random.randint(1, 2_000_000_000),
                             width=ltx_wh[0],

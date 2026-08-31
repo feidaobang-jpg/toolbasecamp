@@ -120,7 +120,7 @@ async def health_check():
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
-        "trailer_pipeline": "v3_wan22_ltx25",
+        "trailer_pipeline": "v4_wan22_ltx25_i2v",
     }
 
 
@@ -1083,6 +1083,84 @@ def _build_ltx25_t2v_workflow(
         workflow["338"]["inputs"]["noise_seed"] = seed_i + 17
     if "save" in workflow:
         workflow["save"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
+    return workflow
+
+
+def _build_ltx25_i2v_workflow(
+    comfy_image_filename: str,
+    prompt_text: str,
+    seed: Optional[int] = None,
+    width: int = 768,
+    height: int = 432,
+    duration_sec: float = 5,
+    fps: int = 24,
+    strength: float = 1.0,
+) -> dict:
+    """LTX-2.5 图生视频：在 T2V 图上插入 LTXVImgToVideoInplace（首帧条件）。"""
+    workflow = _build_ltx25_t2v_workflow(
+        prompt_text=prompt_text,
+        seed=seed,
+        width=width,
+        height=height,
+        duration_sec=duration_sec,
+        fps=fps,
+    )
+    # 复用同结构模板文件（含 LoadImage / preprocess / inplace）
+    i2v_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "ltx25_i2v.json")
+    if os.path.exists(i2v_path):
+        with open(i2v_path, "r", encoding="utf-8") as f:
+            workflow = json.load(f)
+        # 再套一层参数补丁（与 t2v builder 一致）
+        w = _clamp_image_side(int(width), 64, 1280)
+        h = _clamp_image_side(int(height), 64, 1280)
+        w = max(64, (w // 32) * 32)
+        h = max(64, (h // 32) * 32)
+        try:
+            dur = int(round(float(duration_sec)))
+        except Exception:
+            dur = 5
+        dur = max(3, min(10, dur))
+        fps_i = max(8, min(30, int(fps)))
+        seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+        workflow["376"]["inputs"]["value"] = (
+            (prompt_text or "").strip()
+            or "Use the provided start image as the first frame. Subtle cinematic motion."
+        )
+        workflow["362"]["inputs"]["value"] = dur
+        workflow["372"]["inputs"]["value"] = w
+        workflow["360"]["inputs"]["value"] = h
+        workflow["361"]["inputs"]["value"] = fps_i
+        if "339" in workflow:
+            workflow["339"]["inputs"]["noise_seed"] = seed_i
+        if "338" in workflow:
+            workflow["338"]["inputs"]["noise_seed"] = seed_i + 17
+        if "save" in workflow:
+            workflow["save"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
+    else:
+        # 兜底：运行时从 t2v 注入
+        workflow["load"] = {"class_type": "LoadImage", "inputs": {"image": comfy_image_filename}}
+        workflow["prep"] = {
+            "class_type": "LTXVPreprocess",
+            "inputs": {"image": ["load", 0], "img_compression": 18},
+        }
+        workflow["i2v"] = {
+            "class_type": "LTXVImgToVideoInplace",
+            "inputs": {
+                "vae": ["385", 0],
+                "image": ["prep", 0],
+                "latent": ["356", 0],
+                "strength": float(strength),
+                "bypass": False,
+            },
+        }
+        workflow["377"]["inputs"]["video_latent"] = ["i2v", 0]
+
+    workflow["load"]["inputs"]["image"] = comfy_image_filename
+    if "i2v" in workflow and isinstance(workflow["i2v"].get("inputs"), dict):
+        try:
+            workflow["i2v"]["inputs"]["strength"] = max(0.0, min(1.0, float(strength)))
+        except Exception:
+            workflow["i2v"]["inputs"]["strength"] = 1.0
     return workflow
 
 
@@ -4257,6 +4335,7 @@ _trailer_api = TrailerAPI(
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
+    build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
     upload_image_bytes=upload_image_bytes,
     indextts_synthesize=_indextts_synthesize,
