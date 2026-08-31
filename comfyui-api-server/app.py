@@ -120,7 +120,7 @@ async def health_check():
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
-        "trailer_pipeline": "v1_still_kenburns",
+        "trailer_pipeline": "v2_wan22_ti2v",
     }
 
 
@@ -998,6 +998,178 @@ def _parse_seed_optional(seed_raw: str) -> Optional[int]:
 async def _run_comfyui_and_get_last_image(workflow: dict, timeout_sec: Optional[float] = None):
     async with _COMFYUI_JOB_SEM:
         return await _run_comfyui_and_get_last_image_impl(workflow, timeout_sec)
+
+
+def _comfyui_output_root() -> Path:
+    raw = (os.environ.get("COMFYUI_OUTPUT_DIR") or "").strip()
+    if raw:
+        return Path(raw)
+    main_dir = (os.environ.get("COMFYUI_MAIN_DIR") or r"D:\sd\ComfyUI-main").strip()
+    return Path(main_dir) / "output"
+
+
+def _build_wan22_ti2v_workflow(
+    comfy_image_filename: str,
+    prompt_text: str,
+    negative_text: Optional[str] = None,
+    seed: Optional[int] = None,
+    width: int = 832,
+    height: int = 480,
+    length: int = 81,
+    fps: int = 24,
+) -> dict:
+    """Wan 2.2 5B 图生视频（API 格式，源自 user/default/workflows/video_wan2_2_5B_ti2v）。"""
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_ti2v_5b.json")
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    w = _clamp_image_side(int(width), 64, 1280)
+    h = _clamp_image_side(int(height), 64, 1280)
+    # Wan length: step 4, prefer 4n+1
+    length_i = max(17, min(121, int(length)))
+    if (length_i - 1) % 4 != 0:
+        length_i = ((length_i - 1) // 4) * 4 + 1
+
+    workflow["56"]["inputs"]["image"] = comfy_image_filename
+    workflow["6"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic subtle motion"
+    if negative_text is not None:
+        workflow["7"]["inputs"]["text"] = negative_text
+    workflow["55"]["inputs"]["width"] = w
+    workflow["55"]["inputs"]["height"] = h
+    workflow["55"]["inputs"]["length"] = length_i
+    workflow["57"]["inputs"]["fps"] = int(fps)
+    workflow["3"]["inputs"]["seed"] = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+    # DynamicCombo-friendly SaveVideo
+    workflow["58"]["inputs"]["format"] = {"format": "mp4", "codec": {"codec": "h264"}}
+    if "codec" in workflow["58"]["inputs"]:
+        del workflow["58"]["inputs"]["codec"]
+    return workflow
+
+
+def _extract_video_refs_from_history(history: dict) -> List[dict]:
+    """从 ComfyUI history.outputs 里抽出视频文件引用。"""
+    refs: List[dict] = []
+    outputs = (history or {}).get("outputs") or {}
+    for node_output in outputs.values():
+        if not isinstance(node_output, dict):
+            continue
+        for key in ("videos", "gifs", "images"):
+            items = node_output.get(key)
+            if not isinstance(items, list):
+                continue
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                fn = item.get("filename") or ""
+                if not fn:
+                    continue
+                low = fn.lower()
+                if key == "images" and not low.endswith((".mp4", ".webm", ".mkv", ".avi", ".gif", ".webp")):
+                    continue
+                refs.append(
+                    {
+                        "filename": fn,
+                        "subfolder": item.get("subfolder") or "",
+                        "type": item.get("type") or "output",
+                    }
+                )
+    # ui 预览区（部分版本）
+    ui = (history or {}).get("ui") or {}
+    if isinstance(ui, dict):
+        for key in ("videos", "gifs"):
+            items = ui.get(key)
+            if not isinstance(items, list):
+                continue
+            for item in items:
+                if isinstance(item, dict) and item.get("filename"):
+                    refs.append(
+                        {
+                            "filename": item["filename"],
+                            "subfolder": item.get("subfolder") or "",
+                            "type": item.get("type") or "output",
+                        }
+                    )
+    return refs
+
+
+async def get_view_bytes(filename: str, subfolder: str, folder_type: str):
+    data = {"filename": filename, "subfolder": subfolder or "", "type": folder_type or "output"}
+    url_values = urllib.parse.urlencode(data)
+
+    def _fetch():
+        with urllib.request.urlopen(
+            "http://{}/view?{}".format(COMFYUI_SERVER_ADDRESS, url_values), timeout=120
+        ) as response:
+            return response.read()
+
+    return await asyncio.to_thread(_fetch)
+
+
+async def _run_comfyui_and_get_last_video(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
+    async with _COMFYUI_JOB_SEM:
+        return await _run_comfyui_and_get_last_video_impl(workflow, timeout_sec)
+
+
+async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
+    if timeout_sec is None:
+        timeout_sec = float(os.environ.get("COMFYUI_VIDEO_JOB_TIMEOUT", "1200"))
+    deadline = time.monotonic() + timeout_sec
+    ws = websocket.WebSocket()
+    prompt_id = None
+    timed_out = False
+    try:
+        await asyncio.to_thread(
+            ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, CLIENT_ID), timeout=10
+        )
+        prompt_response = await queue_prompt(workflow)
+        prompt_id = prompt_response["prompt_id"]
+
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                timed_out = True
+                raise RuntimeError(f"ComfyUI 图生视频超时（{int(timeout_sec)} 秒）")
+            ws.settimeout(min(30.0, max(1.0, remaining)))
+            try:
+                out = await asyncio.to_thread(ws.recv)
+            except websocket.WebSocketTimeoutException:
+                continue
+            if isinstance(out, str):
+                message = json.loads(out)
+                if message.get("type") == "executing":
+                    data = message.get("data", {})
+                    if data.get("node") is None and str(data.get("prompt_id")) == str(prompt_id):
+                        break
+
+        history = (await get_history(prompt_id)).get(prompt_id) or {}
+        refs = _extract_video_refs_from_history(history)
+        if refs:
+            last = refs[-1]
+            return await get_view_bytes(last["filename"], last.get("subfolder") or "", last.get("type") or "output")
+
+        # 回退：读本机 ComfyUI output 目录最新 mp4
+        out_root = _comfyui_output_root()
+        candidates = []
+        if out_root.exists():
+            for pat in ("*.mp4", "*.webm", "*.mkv"):
+                candidates.extend(out_root.rglob(pat))
+        if candidates:
+            newest = max(candidates, key=lambda p: p.stat().st_mtime)
+            # 仅接受任务结束后不久写入的文件
+            if time.time() - newest.stat().st_mtime < max(60.0, timeout_sec):
+                return newest.read_bytes()
+
+        raise RuntimeError("No output video generated（请确认 Wan2.2 5B / VAE / umT5 模型已加载）")
+    finally:
+        try:
+            await asyncio.to_thread(ws.close)
+        except Exception:
+            pass
+        if timed_out:
+            try:
+                await interrupt_comfyui()
+            except Exception:
+                pass
 
 
 async def _run_comfyui_and_get_last_image_impl(workflow: dict, timeout_sec: Optional[float] = None):
@@ -4043,6 +4215,9 @@ _trailer_api = TrailerAPI(
     output_root=_OUTPUT_ROOT,
     build_z_image_workflow=_build_z_image_turbo_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
+    build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
+    run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
+    upload_image_bytes=upload_image_bytes,
     indextts_synthesize=_indextts_synthesize,
     wav_duration_seconds=_wav_duration_seconds,
     create_subtitle_overlays_timed=_create_subtitle_overlays_timed,

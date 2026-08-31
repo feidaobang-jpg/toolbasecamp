@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
     return el ? el.value : '16_9';
   }
 
+  function selectedVideoMode() {
+    var el = document.querySelector('input[name="video-mode"]:checked');
+    return el ? el.value : 'i2v';
+  }
+
   function setBusy(busy) {
     startBtn.disabled = !!busy;
     confirmBtn.disabled = !!busy;
@@ -69,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
       images: tr('privateHub.homePc.trailerStageImages', '生成候选图…'),
       awaiting_picks: tr('privateHub.homePc.trailerStagePicks', '等待选图'),
       compose: tr('privateHub.homePc.trailerStageCompose', '配音与拼接…'),
+      i2v: tr('privateHub.homePc.trailerStageI2v', '图生视频…'),
       tts: tr('privateHub.homePc.trailerStageTts', '配音…'),
       video: tr('privateHub.homePc.trailerStageVideo', '成片…'),
       done: tr('privateHub.homePc.trailerStageDone', '完成'),
@@ -291,6 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('voice', voiceSelect.value || 'zh-CN-YunxiNeural');
     fd.append('speed', speedInput.value || '1.0');
     fd.append('target_seconds', '60');
+    fd.append('video_mode', selectedVideoMode());
 
     setBusy(true);
     progressWrap.style.display = '';

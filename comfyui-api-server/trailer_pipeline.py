@@ -1,8 +1,9 @@
 """
 1 分钟预告流水线（半自动）：
-  DeepSeek 分镜剧本 → Z-Image 每镜多候选 → 人工勾选 → Edge-TTS + Ken Burns 粗剪。
+  DeepSeek 分镜 → Z-Image 关键帧多候选勾选 → Wan 2.2 5B 图生视频 → 旁白拼接。
 
-真 Comfy I2V/T2V（Wan/LTX）尚未接入 API；本模块先产出可剪映精剪的素材包与预览成片。
+工作流源目录：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\
+API 模板：work-flow/wan22_ti2v_5b.json（由 video_wan2_2_5B_ti2v 转换）
 """
 from __future__ import annotations
 
@@ -24,6 +25,7 @@ from moviepy.editor import (
     AudioFileClip,
     CompositeVideoClip,
     ImageClip,
+    VideoFileClip,
     concatenate_videoclips,
 )
 from PIL import Image
@@ -59,6 +61,12 @@ _VISUAL_STYLES = {
 _ASPECT_SIZES = {
     "16_9": (1280, 720),
     "9_16": (720, 1280),
+}
+
+# Wan 2.2 5B I2V（4060 Ti 16GB 用偏稳分辨率；约 3.4s / 5s）
+_ASPECT_I2V = {
+    "16_9": (832, 480),
+    "9_16": (480, 832),
 }
 
 _ASPECT_VIDEO = {
@@ -296,6 +304,59 @@ def deepseek_trailer_plan(
     return None
 
 
+def _length_for_duration(duration_sec: float, fps: int = 24) -> int:
+    """Wan length ≈ 4n+1，夹在 49～121（约 2～5 秒）。"""
+    frames = int(round(float(duration_sec) * float(fps)))
+    # snap to 4n+1
+    n = max(12, (frames - 1) // 4)
+    length = n * 4 + 1
+    return max(49, min(121, length))
+
+
+def _compose_clips_with_audio_sync(
+    video_paths: List[Path],
+    audio_paths: List[Path],
+    durations: List[float],
+    out_video: Path,
+    output_size: Tuple[int, int],
+    subtitle_timelines: Optional[List[Optional[List[Tuple[str, float, float]]]]] = None,
+    create_subtitle_overlays: Optional[Callable] = None,
+    fps: int = 24,
+) -> None:
+    """拼接 I2V 片段 + 旁白；视频不够长则冻结尾帧，太长则裁切。"""
+    if not video_paths:
+        raise ValueError("No video clips")
+    target_w, target_h = int(output_size[0]), int(output_size[1])
+    clips = []
+    for idx, vpath in enumerate(video_paths):
+        duration = float(durations[idx]) if idx < len(durations) else 5.0
+        audio_path = audio_paths[idx] if idx < len(audio_paths) else None
+        v = VideoFileClip(str(vpath))
+        if v.w != target_w or v.h != target_h:
+            v = v.resize((target_w, target_h))
+        if v.duration + 1e-3 < duration:
+            # 冻结尾帧补足
+            freeze = v.to_ImageClip(t=max(0.0, v.duration - 0.04)).set_duration(duration - v.duration)
+            v = concatenate_videoclips([v, freeze])
+        elif v.duration > duration + 1e-3:
+            v = v.subclip(0, duration)
+        v = v.set_duration(duration)
+        if audio_path and Path(audio_path).exists():
+            audio_clip = AudioFileClip(str(audio_path)).set_duration(duration)
+            v = v.set_audio(audio_clip)
+        timeline = None
+        if subtitle_timelines and idx < len(subtitle_timelines):
+            timeline = subtitle_timelines[idx]
+        if timeline and create_subtitle_overlays:
+            subs = create_subtitle_overlays(timeline, target_w, target_h)
+            if subs:
+                v = CompositeVideoClip([v] + subs)
+        clips.append(v)
+
+    final_clip = concatenate_videoclips(clips, method="compose")
+    final_clip.write_videofile(str(out_video), fps=fps, codec="libx264", audio_codec="aac")
+
+
 def _pad_or_trim_wav(src: Path, dst: Path, target_sec: float) -> None:
     target_sec = max(0.5, float(target_sec))
     with wave.open(str(src), "rb") as wf:
@@ -304,7 +365,6 @@ def _pad_or_trim_wav(src: Path, dst: Path, target_sec: float) -> None:
         rate = wf.getframerate() or 24000
         nch = wf.getnchannels()
         sw = wf.getsampwidth()
-    cur_sec = (len(frames) / float(sw * nch) / float(rate)) if rate and sw and nch else 0.0
     need = int(target_sec * rate) * nch * sw
     if len(frames) >= need:
         frames = frames[:need]
@@ -313,7 +373,6 @@ def _pad_or_trim_wav(src: Path, dst: Path, target_sec: float) -> None:
     with wave.open(str(dst), "wb") as out:
         out.setparams(params)
         out.writeframes(frames)
-    del cur_sec
 
 
 def _compose_trailer_sync(
@@ -425,6 +484,7 @@ class TrailerAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             target_seconds: str = Form("60"),
+            video_mode: str = Form("i2v"),
         ):
             text = (prompt or "").strip()
             if len(text) < 2:
@@ -433,6 +493,9 @@ class TrailerAPI:
             style_n = (visual_style or "realistic").strip().lower()
             if style_n not in _VISUAL_STYLES:
                 style_n = "realistic"
+            mode = (video_mode or "i2v").strip().lower()
+            if mode not in ("i2v", "kenburns"):
+                mode = "i2v"
             try:
                 cand = max(2, min(4, int(candidates_per_shot or 3)))
             except Exception:
@@ -461,6 +524,7 @@ class TrailerAPI:
                 "prompt": text,
                 "visual_style": style_n,
                 "aspect": aspect_n,
+                "video_mode": mode,
                 "candidates_per_shot": cand,
                 "voice": (voice or "zh-CN-YunxiNeural").strip(),
                 "speed": spd,
@@ -701,27 +765,42 @@ class TrailerAPI:
         task_dir = self._task_dir(task)
         images_dir = task_dir / "images"
         audio_dir = task_dir / "audio"
+        clips_dir = task_dir / "clips"
         audio_dir.mkdir(parents=True, exist_ok=True)
+        clips_dir.mkdir(parents=True, exist_ok=True)
 
         aspect = task["aspect"]
         out_size = _ASPECT_VIDEO[aspect]
+        i2v_wh = _ASPECT_I2V[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
+        mode = (task.get("video_mode") or "i2v").strip().lower()
         tts = self.deps["indextts_synthesize"]
         wav_dur = self.deps["wav_duration_seconds"]
         create_subs = self.deps["create_subtitle_overlays_timed"]
+        upload_bytes = self.deps.get("upload_image_bytes")
+        build_i2v = self.deps.get("build_wan22_ti2v_workflow")
+        run_i2v = self.deps.get("run_comfyui_and_get_last_video")
+        use_i2v = mode == "i2v" and callable(upload_bytes) and callable(build_i2v) and callable(run_i2v)
 
         image_paths: List[Path] = []
+        video_clip_paths: List[Path] = []
         audio_paths: List[Path] = []
         durations: List[float] = []
         sub_timelines: List[Optional[List[Tuple[str, float, float]]]] = []
         srt_lines: List[str] = []
         t_cursor = 0.0
-
-        task["stage"] = "tts"
-        task["progress"] = {"current": 0, "total": len(shots)}
+        i2v_fail = 0
 
         ui_by_idx = {int(s["index"]): s for s in shots_ui}
+        n_shots = len(shots)
+
+        def _ts(sec: float) -> str:
+            ms = int(round(sec * 1000))
+            h, rem = divmod(ms, 3600000)
+            m, rem = divmod(rem, 60000)
+            s, milli = divmod(rem, 1000)
+            return f"{h:02d}:{m:02d}:{s:02d},{milli:03d}"
 
         for i, shot in enumerate(shots):
             if task.get("status") == "cancelled":
@@ -739,52 +818,102 @@ class TrailerAPI:
 
             planned = float(shot.get("duration_sec") or 5)
             vo = (shot.get("voiceover") or "").strip() or f"镜头{idx + 1}"
-            task["progress"] = {"current": i + 1, "total": len(shots)}
-            self._log(task, f"配音 分镜 {idx + 1}/{len(shots)}")
+            motion = (
+                f"{(shot.get('visual_prompt') or '').strip()}. "
+                f"camera {shot.get('camera') or 'medium'}, subtle cinematic motion, natural movement"
+            )
 
+            # 1) 配音
+            task["stage"] = "tts"
+            task["progress"] = {"current": i + 1, "total": n_shots}
+            self._log(task, f"配音 分镜 {idx + 1}/{n_shots}")
             raw_wav = audio_dir / f"{idx:02d}_raw.wav"
             final_wav = audio_dir / f"{idx:02d}.wav"
             await tts(vo, raw_wav, voice=voice, speed=speed)
             tts_len = float(await asyncio.to_thread(wav_dur, raw_wav))
-            # 镜头时长：至少计划时长；若旁白更长则跟旁白（上限 10s）
             dur = max(planned, tts_len)
-            dur = min(10.0, max(4.0, dur))
+            dur = min(8.0, max(3.5, dur))
+
+            # 2) 图生视频（Wan 2.2 5B）或稍后 Ken Burns
+            clip_path = clips_dir / f"{idx:02d}.mp4"
+            if use_i2v:
+                task["stage"] = "i2v"
+                self._log(
+                    task,
+                    f"图生视频 Wan2.2-5B 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {_length_for_duration(dur)}帧）",
+                )
+                try:
+                    comfy_name, _sub = await upload_bytes(img_path.read_bytes(), name_prefix=f"trailer_{idx:02d}_")
+                    if not comfy_name:
+                        raise RuntimeError("上传关键帧到 ComfyUI 失败")
+                    length = _length_for_duration(dur)
+                    wf = build_i2v(
+                        comfy_name,
+                        motion,
+                        seed=random.randint(1, 2_000_000_000),
+                        width=i2v_wh[0],
+                        height=i2v_wh[1],
+                        length=length,
+                        fps=24,
+                    )
+                    vid_bytes = await run_i2v(wf)
+                    clip_path.write_bytes(vid_bytes)
+                    video_clip_paths.append(clip_path)
+                    # 以真实片长与旁白对齐
+                    try:
+                        vdur = float(VideoFileClip(str(clip_path)).duration)
+                    except Exception:
+                        vdur = dur
+                    dur = max(tts_len, min(8.0, max(vdur, planned * 0.85)))
+                except Exception as e:
+                    i2v_fail += 1
+                    self._log(task, f"分镜 {idx + 1} I2V 失败，该镜回退静帧推镜：{e}")
+                    video_clip_paths.append(img_path)  # 标记为图，后面 compose 分支处理
+            else:
+                video_clip_paths.append(img_path)
+
             await asyncio.to_thread(_pad_or_trim_wav, raw_wav, final_wav, dur)
             audio_paths.append(final_wav)
             durations.append(dur)
-
-            # 字幕：整段旁白铺满镜头
             sub_timelines.append([(vo, 0.0, dur)])
-            # SRT
-            def _ts(sec: float) -> str:
-                ms = int(round(sec * 1000))
-                h, rem = divmod(ms, 3600000)
-                m, rem = divmod(rem, 60000)
-                s, milli = divmod(rem, 1000)
-                return f"{h:02d}:{m:02d}:{s:02d},{milli:03d}"
-
-            srt_lines.append(
-                f"{i + 1}\n{_ts(t_cursor)} --> {_ts(t_cursor + dur)}\n{vo}\n"
-            )
+            srt_lines.append(f"{i + 1}\n{_ts(t_cursor)} --> {_ts(t_cursor + dur)}\n{vo}\n")
             t_cursor += dur
 
         task["stage"] = "video"
-        self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s）…")
+        self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s，I2V失败 {i2v_fail} 镜）…")
         out_name = "trailer_16_9.mp4" if aspect == "16_9" else "trailer_9_16.mp4"
         out_video = task_dir / out_name
-        await asyncio.to_thread(
-            _compose_trailer_sync,
-            image_paths,
-            audio_paths,
-            durations,
-            out_video,
-            out_size,
-            sub_timelines,
-            create_subs,
-            25,
-        )
 
-        # 导出剪映说明 + 选中清单
+        # 若全部是真视频片段，用视频拼接；否则用 Ken Burns（图路径）
+        all_video = use_i2v and all(p.suffix.lower() == ".mp4" and p.exists() for p in video_clip_paths)
+        if all_video:
+            await asyncio.to_thread(
+                _compose_clips_with_audio_sync,
+                video_clip_paths,
+                audio_paths,
+                durations,
+                out_video,
+                out_size,
+                sub_timelines,
+                create_subs,
+                24,
+            )
+            engine_note = "Wan 2.2 5B 图生视频 + 旁白拼接"
+        else:
+            # 混合失败时统一 Ken Burns，保证能出片
+            await asyncio.to_thread(
+                _compose_trailer_sync,
+                image_paths,
+                audio_paths,
+                durations,
+                out_video,
+                out_size,
+                sub_timelines,
+                create_subs,
+                25,
+            )
+            engine_note = "静帧 Ken Burns（I2V 未全成功或已选手动回退）"
+
         picks_export = []
         for shot in shots:
             idx = int(shot["index"])
@@ -797,6 +926,7 @@ class TrailerAPI:
                     "duration_sec": durations[idx] if idx < len(durations) else shot.get("duration_sec"),
                     "voiceover": shot.get("voiceover"),
                     "image": fname,
+                    "clip": f"clips/{idx:02d}.mp4" if (clips_dir / f"{idx:02d}.mp4").exists() else None,
                     "visual_prompt": shot.get("visual_prompt"),
                 }
             )
@@ -807,22 +937,23 @@ class TrailerAPI:
         readme = (
             "剪映精剪说明\n"
             "==============\n"
-            "1. 本目录 trailer_*.mp4 为网站粗剪预览（Ken Burns + 旁白），可直接试看节奏。\n"
-            "2. images/ 为选中分镜关键帧；audio/ 为分镜旁白 wav。\n"
-            "3. plan.json / selected_shots.json / trailer.srt 可导入剪映时对照分镜与字幕。\n"
-            "4. 正式成片建议：在剪映中替换转场、BGM、音效，并按需用图生视频替换关键帧。\n"
-            "5. 当前版本尚未调用本地 Wan/LTX 真视频工作流；后续可在同一分镜表上接 I2V。\n"
+            f"1. trailer_*.mp4 为网站粗剪预览（{engine_note}）。\n"
+            "2. images/ 关键帧；clips/ 为每镜 Wan 图生视频；audio/ 旁白。\n"
+            "3. plan.json / selected_shots.json / trailer.srt 对照分镜与字幕。\n"
+            "4. 精剪建议导入剪映：替换转场、BGM、音效；clips/ 可单镜替换。\n"
+            "5. 工作流源：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\video_wan2_2_5B_ti2v\n"
+            "   API 模板：comfyui-api-server/work-flow/wan22_ti2v_5b.json\n"
         )
         (task_dir / "README_剪映.txt").write_text(readme, encoding="utf-8")
 
         task["video_url"] = f"/output/{task_dir.name}/{out_name}"
         task["video_duration_sec"] = round(t_cursor, 1)
         task["output_directory"] = str(task_dir.resolve())
+        task["video_engine"] = "wan22_ti2v" if all_video else "kenburns"
         task["export_hint"] = (
-            "粗剪预览已生成。完整素材在任务目录（images / audio / plan.json / trailer.srt），"
-            "可复制到剪映精剪。"
+            f"粗剪已生成（{engine_note}）。素材在任务目录 images / clips / audio，可导入剪映。"
         )
         task["status"] = "done"
         task["stage"] = "done"
         task["progress"] = {"current": 1, "total": 1}
-        self._log(task, f"完成：{out_name}（约 {t_cursor:.1f}s）")
+        self._log(task, f"完成：{out_name}（约 {t_cursor:.1f}s · {engine_note}）")
