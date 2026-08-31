@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .replace(/"/g, '&quot;');
   }
 
-  function renderShots(shotsUi, aspect) {
+  function renderShots(shotsUi, aspect, showConfirm) {
     if (!Array.isArray(shotsUi) || !shotsUi.length) {
       shotsBox.style.display = 'none';
       confirmBtn.style.display = 'none';
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
       else appEl.classList.remove('trailer-portrait-preview');
     }
     shotsBox.style.display = '';
-    confirmBtn.style.display = '';
+    confirmBtn.style.display = showConfirm ? '' : 'none';
     shotsList.innerHTML = '';
     picks = {};
     shotsUi.forEach(function (shot) {
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (task.status === 'awaiting_picks') {
           stopPoll();
           setBusy(false);
-          renderShots(task.shots_ui || [], task.aspect);
+          renderShots(task.shots_ui || [], task.aspect, true);
           return;
         }
         if (task.status === 'done') {
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function () {
           setBusy(false);
           confirmBtn.style.display = 'none';
           openOutputBtn.style.display = '';
-          if (task.shots_ui) renderShots(task.shots_ui, task.aspect);
+          if (task.shots_ui) renderShots(task.shots_ui, task.aspect, false);
           videoBox.style.display = '';
           exportHint.textContent =
             task.export_hint ||
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('prompt', text);
     fd.append('visual_style', selectedStyle);
     fd.append('aspect', selectedAspect());
-    fd.append('candidates_per_shot', candidatesSelect.value || '3');
+    fd.append('candidates_per_shot', candidatesSelect.value || '1');
     fd.append('voice', voiceSelect.value || 'zh-CN-YunxiNeural');
     fd.append('speed', speedInput.value || '1.0');
     fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '5');

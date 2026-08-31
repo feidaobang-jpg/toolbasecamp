@@ -523,7 +523,7 @@ class TrailerAPI:
             prompt: str = Form(...),
             visual_style: str = Form("realistic"),
             aspect: str = Form("16_9"),
-            candidates_per_shot: str = Form("3"),
+            candidates_per_shot: str = Form("1"),
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
@@ -539,9 +539,9 @@ class TrailerAPI:
                 style_n = "realistic"
             mode = _normalize_video_engine(video_mode)
             try:
-                cand = max(2, min(4, int(candidates_per_shot or 3)))
+                cand = max(1, min(5, int(candidates_per_shot or 1)))
             except Exception:
-                cand = 3
+                cand = 1
             try:
                 spd = float(speed or 1.0)
             except Exception:
@@ -671,6 +671,18 @@ class TrailerAPI:
                 return
             await self._phase_images(task)
             if task.get("status") == "cancelled":
+                return
+            # 每镜仅 1 张：无需人工选图，直接成片
+            if int(task.get("candidates_per_shot") or 1) <= 1:
+                task["picks"] = {
+                    str(s.get("index")): int(s.get("default_pick") or 0)
+                    for s in (task.get("shots_ui") or [])
+                }
+                task["status"] = "running"
+                task["stage"] = "compose"
+                task["error"] = ""
+                self._log(task, "每镜 1 张候选，跳过选图，直接成片")
+                await self._run_compose(task_id)
                 return
             task["status"] = "awaiting_picks"
             task["stage"] = "awaiting_picks"
