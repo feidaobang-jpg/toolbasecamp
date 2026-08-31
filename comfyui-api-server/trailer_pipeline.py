@@ -11,6 +11,7 @@ import asyncio
 import json
 import random
 import re
+import shutil
 import time
 import uuid
 import wave
@@ -107,6 +108,84 @@ def _normalize_video_engine(raw: str) -> str:
 
 def _now_ts_ms() -> int:
     return int(time.time() * 1000)
+
+
+def _build_shots_ui_from_folder(task_dir: Path, plan: dict) -> List[dict]:
+    images_dir = task_dir / "images"
+    shots = plan.get("shots") or []
+    shots_ui: List[dict] = []
+    for shot in shots:
+        idx = int(shot.get("index", 0))
+        cands = sorted(images_dir.glob(f"{idx:02d}_c*.png"))
+        if not cands:
+            # 兼容只有单图命名
+            alt = images_dir / f"{idx:02d}.png"
+            cands = [alt] if alt.exists() else []
+        candidates = []
+        for ci, p in enumerate(cands):
+            candidates.append(
+                {
+                    "index": ci,
+                    "filename": p.name,
+                    "url": f"/output/{task_dir.name}/images/{p.name}",
+                }
+            )
+        if not candidates:
+            continue
+        shots_ui.append(
+            {
+                "index": idx,
+                "voiceover": shot.get("voiceover") or "",
+                "duration_sec": shot.get("duration_sec") or 5,
+                "candidates": candidates,
+                "default_pick": 0,
+            }
+        )
+    return shots_ui
+
+
+def _history_item_from_dir(d: Path) -> Optional[dict]:
+    images_dir = d / "images"
+    if not d.is_dir() or not images_dir.is_dir():
+        return None
+    imgs = sorted(images_dir.glob("*.png"))
+    if not imgs:
+        return None
+    plan = {}
+    plan_path = d / "plan.json"
+    if plan_path.exists():
+        try:
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        except Exception:
+            plan = {}
+    title = (plan.get("title") or d.name).strip()
+    video_url = ""
+    for name in ("trailer_16_9.mp4", "trailer_9_16.mp4"):
+        if (d / name).exists():
+            video_url = f"/output/{d.name}/{name}"
+            break
+    mtime = d.stat().st_mtime
+    # 展示用北京时间
+    try:
+        from zoneinfo import ZoneInfo
+
+        created_display = (
+            datetime.fromtimestamp(mtime, tz=ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+        )
+    except Exception:
+        created_display = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+    thumbs = [f"/output/{d.name}/images/{p.name}" for p in imgs[:4]]
+    return {
+        "folder": d.name,
+        "title": title,
+        "prompt": (plan.get("logline") or plan.get("synopsis") or "")[:120],
+        "shot_count": len(plan.get("shots") or []) or len({p.name[:2] for p in imgs}),
+        "image_count": len(imgs),
+        "thumbs": thumbs,
+        "video_url": video_url,
+        "created_display": created_display,
+        "mtime": mtime,
+    }
 
 
 def _style_meta(style: str) -> dict:
@@ -709,6 +788,161 @@ class TrailerAPI:
                 return JSONResponse({"success": False, "error": str(e)}, status_code=500)
             return {"success": True, "path": path}
 
+        @app.get("/trailer/history")
+        @app.get("/api/trailer/history")
+        async def trailer_history(limit: int = 24):
+            root: Path = api.deps["output_root"]
+            if not root.exists():
+                return {"success": True, "items": []}
+            try:
+                lim = max(1, min(60, int(limit)))
+            except Exception:
+                lim = 24
+            dirs = [p for p in root.iterdir() if p.is_dir()]
+            dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+            items = []
+            for d in dirs:
+                if len(items) >= lim:
+                    break
+                # 跳过测试目录；优先流水线目录（含 trailer 或 trailer_*.mp4）
+                if d.name.startswith("_"):
+                    continue
+                item = _history_item_from_dir(d)
+                if not item:
+                    continue
+                is_trailer = (
+                    "trailer" in d.name.lower()
+                    or bool(item.get("video_url"))
+                    or (d / "selected_shots.json").exists()
+                )
+                if not is_trailer:
+                    continue
+                items.append(item)
+            return {"success": True, "items": items}
+
+        @app.post("/trailer/reuse")
+        @app.post("/api/trailer/reuse")
+        async def trailer_reuse(
+            folder: str = Form(...),
+            voice: str = Form("zh-CN-YunxiNeural"),
+            speed: str = Form("1.0"),
+            shot_duration: str = Form(""),
+            video_mode: str = Form("wan22_5b"),
+            auto_compose: str = Form("0"),
+        ):
+            root: Path = api.deps["output_root"]
+            src_name = Path(str(folder or "").strip()).name
+            if not src_name or src_name in (".", ".."):
+                raise HTTPException(status_code=400, detail="无效的历史目录")
+            src = root / src_name
+            if not src.is_dir() or not (src / "images").is_dir():
+                raise HTTPException(status_code=404, detail="历史任务不存在或无图片")
+
+            plan_path = src / "plan.json"
+            if not plan_path.exists():
+                raise HTTPException(status_code=400, detail="历史任务缺少 plan.json，无法复用")
+            try:
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            except Exception:
+                raise HTTPException(status_code=400, detail="plan.json 无效")
+            if not isinstance(plan, dict) or not (plan.get("shots") or []):
+                raise HTTPException(status_code=400, detail="历史分镜为空")
+
+            shots_ui_src = _build_shots_ui_from_folder(src, plan)
+            if not shots_ui_src:
+                raise HTTPException(status_code=400, detail="历史目录中找不到分镜图片")
+
+            mode = _normalize_video_engine(video_mode)
+            try:
+                spd = float(speed or 1.0)
+            except Exception:
+                spd = 1.0
+            spd = max(0.7, min(1.4, spd))
+            if str(shot_duration or "").strip():
+                shot_dur = _clamp_shot_duration(shot_duration)
+            else:
+                shot_dur = _clamp_shot_duration(
+                    (plan.get("shots") or [{}])[0].get("duration_sec") or 5
+                )
+
+            out_dir = api._alloc_dir()
+            dst = root / out_dir
+            dst.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(src / "images", dst / "images")
+            (dst / "plan.json").write_text(
+                json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+
+            shots_ui = []
+            for shot in shots_ui_src:
+                cands = []
+                for c in shot.get("candidates") or []:
+                    cands.append(
+                        {
+                            **c,
+                            "url": f"/output/{out_dir}/images/{c['filename']}",
+                        }
+                    )
+                shots_ui.append({**shot, "candidates": cands})
+
+            max_cands = max((len(s.get("candidates") or []) for s in shots_ui), default=1)
+            do_auto = str(auto_compose or "0").strip() in ("1", "true", "True") or max_cands <= 1
+
+            task_id = uuid.uuid4().hex
+            aspect = _normalize_aspect(plan.get("aspect") or "16_9")
+            sel_path = src / "selected_shots.json"
+            if sel_path.exists():
+                try:
+                    sel = json.loads(sel_path.read_text(encoding="utf-8"))
+                    if isinstance(sel, dict) and sel.get("aspect"):
+                        aspect = _normalize_aspect(sel["aspect"])
+                    # 兼容旧版 selected_shots 为数组
+                    if isinstance(sel, list):
+                        pass
+                except Exception:
+                    pass
+
+            task = {
+                "task_id": task_id,
+                "output_dir": out_dir,
+                "status": "running" if do_auto else "awaiting_picks",
+                "stage": "compose" if do_auto else "awaiting_picks",
+                "progress": {"current": 0, "total": 1},
+                "logs": [],
+                "error": "",
+                "created_at": _now_ts_ms(),
+                "prompt": (plan.get("title") or src_name),
+                "visual_style": (plan.get("visual_style") or "realistic"),
+                "aspect": aspect,
+                "video_mode": mode,
+                "candidates_per_shot": max_cands,
+                "voice": (voice or "zh-CN-YunxiNeural").strip(),
+                "speed": spd,
+                "shot_duration_sec": shot_dur,
+                "segment_count": len(plan.get("shots") or []),
+                "target_seconds": round(shot_dur * len(plan.get("shots") or []), 1),
+                "plan": plan,
+                "shots_ui": shots_ui,
+                "picks": {str(s["index"]): int(s.get("default_pick") or 0) for s in shots_ui},
+                "video_url": "",
+                "export_hint": "",
+                "reused_from": src_name,
+            }
+            api.tasks[task_id] = task
+            api._log(task, f"复用历史关键帧：{src_name} → {out_dir}（{len(shots_ui)} 镜）")
+            if do_auto:
+                api._log(task, "历史关键帧每镜单图或已勾选自动成片，跳过选图")
+                asyncio.create_task(api._run_compose(task_id))
+            else:
+                api._log(task, "请勾选每镜关键帧后点「确认选图并成片」")
+            return {
+                "success": True,
+                "task_id": task_id,
+                "auto_compose": do_auto,
+                "shots_ui": shots_ui,
+                "plan": plan,
+            }
+
     async def _run_until_picks(self, task_id: str) -> None:
         task = self.tasks.get(task_id)
         if not task:
@@ -784,6 +1018,11 @@ class TrailerAPI:
             self._log(task, f"剧本就绪：{plan.get('title')}，采用 {got} 镜 × {shot_dur:g}s")
 
         task["plan"] = plan
+        # 便于历史复用时还原画幅/风格
+        if isinstance(plan, dict):
+            plan["aspect"] = aspect
+            plan["visual_style"] = style
+            plan["shot_duration_sec"] = shot_dur
         task["segment_count_effective"] = len(plan.get("shots") or [])
         task["target_seconds"] = plan.get("target_seconds") or round(
             shot_dur * len(plan.get("shots") or []), 1
@@ -1104,6 +1343,19 @@ class TrailerAPI:
                 24,
             )
             engine_note = f"{engine_meta['label']} + 旁白拼接"
+        elif mode == "kenburns":
+            await asyncio.to_thread(
+                _compose_trailer_sync,
+                image_paths,
+                audio_paths,
+                durations,
+                out_video,
+                out_size,
+                sub_timelines,
+                create_subs,
+                25,
+            )
+            engine_note = f"{engine_meta['label']}（关键帧推拉摇移）"
         else:
             # 混合失败时统一 Ken Burns，保证能出片
             await asyncio.to_thread(
@@ -1117,7 +1369,7 @@ class TrailerAPI:
                 create_subs,
                 25,
             )
-            engine_note = f"静帧 Ken Burns（{engine_meta['label']} 未全成功或选手动回退）"
+            engine_note = f"静帧推镜回退（{engine_meta['label']} 未全成功）"
 
         picks_export = []
         for shot in shots:
@@ -1136,7 +1388,17 @@ class TrailerAPI:
                 }
             )
         (task_dir / "selected_shots.json").write_text(
-            json.dumps(picks_export, ensure_ascii=False, indent=2), encoding="utf-8"
+            json.dumps(
+                {
+                    "aspect": aspect,
+                    "video_mode": mode,
+                    "engine_note": engine_note,
+                    "shots": picks_export,
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
         )
         (task_dir / "trailer.srt").write_text("\n".join(srt_lines), encoding="utf-8")
         readme = (

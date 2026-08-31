@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var resultVideo = document.getElementById('result-video');
   var exportHint = document.getElementById('export-hint');
   var logOutput = document.getElementById('log-output');
+  var historyList = document.getElementById('history-list');
+  var historyRefreshBtn = document.getElementById('history-refresh-btn');
 
   var API_BASE = window.HomePcApi.base();
   var selectedStyle = 'realistic';
@@ -46,6 +48,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function resolveUrl(url) {
     return window.HomePcApi.assetUrl(url);
+  }
+
+  function applyAspectPreview(aspect) {
+    var appEl = document.getElementById('app');
+    if (!appEl) return;
+    if ((aspect || selectedAspect()) === '9_16') appEl.classList.add('trailer-portrait-preview');
+    else appEl.classList.remove('trailer-portrait-preview');
+  }
+
+  function showResultVideo(url, aspect, hint) {
+    if (!videoBox || !resultVideo) return;
+    applyAspectPreview(aspect);
+    videoBox.style.display = 'block';
+    if (exportHint) {
+      exportHint.textContent =
+        hint ||
+        tr('privateHub.homePc.trailerExportHint', '粗剪已生成，素材可导入剪映。');
+    }
+    if (url) {
+      var full = resolveUrl(url);
+      // 强制刷新，避免同源同路径缓存导致空白
+      resultVideo.src = full + (full.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
+      try {
+        resultVideo.load();
+      } catch (e) {}
+    }
+    try {
+      videoBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (e2) {}
+  }
+
+  function hideResultVideo() {
+    if (!videoBox || !resultVideo) return;
+    videoBox.style.display = 'none';
+    resultVideo.removeAttribute('src');
+    try {
+      resultVideo.load();
+    } catch (e) {}
   }
 
   function openLightbox(src) {
@@ -165,13 +205,22 @@ document.addEventListener('DOMContentLoaded', function () {
       confirmBtn.style.display = 'none';
       return;
     }
-    var appEl = document.getElementById('app');
-    if (appEl) {
-      if ((aspect || selectedAspect()) === '9_16') appEl.classList.add('trailer-portrait-preview');
-      else appEl.classList.remove('trailer-portrait-preview');
-    }
-    shotsBox.style.display = '';
+    applyAspectPreview(aspect);
+    shotsBox.style.display = 'block';
     confirmBtn.style.display = showConfirm ? '' : 'none';
+    var shotsTitle = document.getElementById('shots-title');
+    var shotsHint = document.getElementById('shots-hint');
+    if (showConfirm) {
+      if (shotsTitle) {
+        shotsTitle.textContent = tr('privateHub.homePc.trailerShotsTitle', '勾选每镜关键帧');
+      }
+      if (shotsHint) {
+        shotsHint.textContent = tr(
+          'privateHub.homePc.trailerShotsHint',
+          '每组分镜点选一张；全部选好后点「确认选图并成片」。'
+        );
+      }
+    }
     shotsList.innerHTML = '';
     picks = {};
     shotsUi.forEach(function (shot) {
@@ -275,14 +324,29 @@ document.addEventListener('DOMContentLoaded', function () {
           setBusy(false);
           confirmBtn.style.display = 'none';
           openOutputBtn.style.display = '';
-          if (task.shots_ui) renderShots(task.shots_ui, task.aspect, false);
-          videoBox.style.display = '';
-          exportHint.textContent =
+          progressStatus.textContent = tr(
+            'privateHub.homePc.trailerStageDone',
+            '成片已就绪，请看上方预览播放器'
+          );
+          showResultVideo(
+            task.video_url,
+            task.aspect,
             task.export_hint ||
-            tr('privateHub.homePc.trailerExportHint', '粗剪已生成，素材可导入剪映。');
-          if (task.video_url) {
-            resultVideo.src = resolveUrl(task.video_url);
+              tr('privateHub.homePc.trailerExportHint', '粗剪已生成，素材可导入剪映。')
+          );
+          if (task.shots_ui) renderShots(task.shots_ui, task.aspect, false);
+          var shotsTitle = document.getElementById('shots-title');
+          var shotsHint = document.getElementById('shots-hint');
+          if (shotsTitle) {
+            shotsTitle.textContent = tr('privateHub.homePc.trailerShotsDoneTitle', '所用关键帧');
           }
+          if (shotsHint) {
+            shotsHint.textContent = tr(
+              'privateHub.homePc.trailerShotsDoneHint',
+              '成片在上方预览区；静帧推镜会在关键帧上做缓慢推拉，请点播放。'
+            );
+          }
+          loadHistory();
           return;
         }
         if (task.status === 'error' || task.status === 'cancelled') {
@@ -328,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function () {
     logOutput.textContent = '';
     planBox.style.display = 'none';
     shotsBox.style.display = 'none';
-    videoBox.style.display = 'none';
+    hideResultVideo();
     confirmBtn.style.display = 'none';
     openOutputBtn.style.display = 'none';
     picks = {};
@@ -378,13 +442,159 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   });
 
+  function loadHistory() {
+    if (!historyList) return;
+    fetch(API_BASE + '/trailer/history?limit=20')
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+        renderHistory(pack.body.items || []);
+      })
+      .catch(function () {
+        if (historyList) {
+          historyList.innerHTML =
+            '<p class="trailer-history-empty">' +
+            escapeHtml(tr('privateHub.homePc.trailerHistoryEmpty', '暂无历史记录')) +
+            '</p>';
+        }
+      });
+  }
+
+  function renderHistory(items) {
+    if (!historyList) return;
+    historyList.innerHTML = '';
+    if (!items.length) {
+      historyList.innerHTML =
+        '<p class="trailer-history-empty">' +
+        escapeHtml(tr('privateHub.homePc.trailerHistoryEmpty', '暂无历史记录')) +
+        '</p>';
+      return;
+    }
+    items.forEach(function (item) {
+      var card = document.createElement('div');
+      card.className = 'trailer-history-item';
+      var meta = document.createElement('p');
+      meta.className = 'trailer-history-meta';
+      meta.innerHTML =
+        '<strong>' +
+        escapeHtml(item.title || item.folder || '') +
+        '</strong><br/>' +
+        escapeHtml(item.created_display || '') +
+        ' · ' +
+        (item.shot_count || 0) +
+        ' 镜 · ' +
+        (item.image_count || 0) +
+        ' 图';
+      card.appendChild(meta);
+      var thumbs = document.createElement('div');
+      thumbs.className = 'trailer-history-thumbs';
+      (item.thumbs || []).forEach(function (u) {
+        var img = document.createElement('img');
+        img.src = resolveUrl(u);
+        img.alt = '';
+        img.loading = 'lazy';
+        img.addEventListener('click', function () {
+          openLightbox(resolveUrl(u));
+        });
+        thumbs.appendChild(img);
+      });
+      card.appendChild(thumbs);
+      var actions = document.createElement('div');
+      actions.className = 'action-row';
+      var reuseBtn = document.createElement('button');
+      reuseBtn.type = 'button';
+      reuseBtn.className = 'tb-btn';
+      reuseBtn.textContent = tr('privateHub.homePc.trailerHistoryReuse', '复用成片');
+      reuseBtn.addEventListener('click', function () {
+        reuseHistory(item.folder, true);
+      });
+      var loadBtn = document.createElement('button');
+      loadBtn.type = 'button';
+      loadBtn.className = 'tb-btn';
+      loadBtn.textContent = tr('privateHub.homePc.trailerHistoryLoad', '加载选图');
+      loadBtn.addEventListener('click', function () {
+        reuseHistory(item.folder, false);
+      });
+      actions.appendChild(reuseBtn);
+      actions.appendChild(loadBtn);
+      if (item.video_url) {
+        var openVid = document.createElement('button');
+        openVid.type = 'button';
+        openVid.className = 'tb-btn';
+        openVid.textContent = tr('privateHub.homePc.trailerHistoryOpenVideo', '打开成片');
+        openVid.addEventListener('click', function () {
+          showResultVideo(item.video_url, selectedAspect(), item.title || '');
+        });
+        actions.appendChild(openVid);
+      }
+      card.appendChild(actions);
+      historyList.appendChild(card);
+    });
+  }
+
+  function reuseHistory(folder, autoCompose) {
+    if (!folder) return;
+    stopPoll();
+    lastLogLen = 0;
+    logOutput.textContent = '';
+    hideResultVideo();
+    var fd = new FormData();
+    fd.append('folder', folder);
+    fd.append('voice', voiceSelect.value || 'zh-CN-YunxiNeural');
+    fd.append('speed', speedInput.value || '1.0');
+    fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '');
+    fd.append('video_mode', selectedVideoMode());
+    fd.append('auto_compose', autoCompose ? '1' : '0');
+    setBusy(true);
+    progressWrap.style.display = '';
+    progressStatus.textContent = tr('privateHub.homePc.trailerHistoryReuseOk', '已加载历史关键帧');
+    fetch(API_BASE + '/trailer/reuse', { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+        currentTaskId = pack.body.task_id;
+        cancelBtn.style.display = '';
+        if (pack.body.plan) renderPlan(pack.body.plan);
+        if (pack.body.auto_compose) {
+          startPoll();
+        } else {
+          setBusy(false);
+          renderShots(pack.body.shots_ui || [], selectedAspect(), true);
+          stopPoll();
+        }
+      })
+      .catch(function (err) {
+        setBusy(false);
+        progressStatus.textContent = window.HomePcApi.friendlyFetchError(err);
+      });
+  }
+
+  if (historyRefreshBtn) {
+    historyRefreshBtn.addEventListener('click', function () {
+      loadHistory();
+    });
+  }
+  loadHistory();
+
   confirmBtn.addEventListener('click', function () {
     if (!currentTaskId) return;
     var fd = new FormData();
     fd.append('task_id', currentTaskId);
     fd.append('picks_json', JSON.stringify(picks));
     setBusy(true);
-    videoBox.style.display = 'none';
+    hideResultVideo();
     fetch(API_BASE + '/trailer/confirm-picks', { method: 'POST', body: fd })
       .then(function (res) {
         return res.json().then(function (body) {
@@ -430,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function () {
     logOutput.textContent = '';
     planBox.style.display = 'none';
     shotsBox.style.display = 'none';
-    videoBox.style.display = 'none';
+    hideResultVideo();
     progressWrap.style.display = 'none';
     confirmBtn.style.display = 'none';
     openOutputBtn.style.display = 'none';
