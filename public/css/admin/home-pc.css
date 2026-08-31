@@ -1533,7 +1533,7 @@ body.tb-admin-private #auth-status {
   color: #1f2937;
 }
 
-/* 视频生成流水线 */
+/* 视频流水线 */
 .home-pc-wrap .trailer-aspect-row {
   display: flex;
   flex-wrap: wrap;
@@ -1593,15 +1593,15 @@ body.tb-admin-private #auth-status {
 
 .home-pc-wrap .trailer-cand-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
 }
 
 .home-pc-wrap .trailer-cand {
   display: block;
   position: relative;
   border: 2px solid transparent;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   background: #111;
@@ -1621,6 +1621,28 @@ body.tb-admin-private #auth-status {
   background: #222;
 }
 
+.home-pc-wrap .trailer-cand-zoom {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.home-pc-wrap .trailer-cand-zoom:hover {
+  background: rgba(37, 99, 235, 0.92);
+}
+
 .home-pc-wrap .trailer-cand.is-selected {
   border-color: #2563eb;
   box-shadow: 0 0 0 1px #2563eb;
@@ -1628,6 +1650,55 @@ body.tb-admin-private #auth-status {
 
 .home-pc-wrap.trailer-portrait-preview .trailer-cand img {
   aspect-ratio: 9 / 16;
+}
+
+.trailer-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.trailer-lightbox[hidden] {
+  display: none !important;
+}
+
+.trailer-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(15, 23, 42, 0.78);
+  cursor: pointer;
+}
+
+.trailer-lightbox-panel {
+  position: relative;
+  z-index: 1;
+  max-width: min(96vw, 1100px);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.trailer-lightbox-panel img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(92vh - 56px);
+  object-fit: contain;
+  border-radius: 10px;
+  background: #111;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.trailer-lightbox-close {
+  flex-shrink: 0;
 }
 
 .home-pc-wrap button.rec-chip.is-active {

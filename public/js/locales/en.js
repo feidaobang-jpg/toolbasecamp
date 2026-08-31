@@ -326,6 +326,8 @@ window.TB_LOCALES.en = {
             trailerTitle: 'Video pipeline',
             trailerDesc: 'Pick keyframes → image-to-video by segment count',
             trailerHint: 'Title/synopsis → DeepSeek shots → pick stills → I2V + VO. Clip length 3–10s; segment count defaults to 1 and caps at the shot list size.',
+            trailerPreviewClose: 'Close preview',
+            trailerZoomHint: 'Zoom',
             trailerPromptLabel: 'Book / film title / synopsis',
             trailerStyleLabel: 'Visual style',
             trailerStyleRealistic: 'Realistic',

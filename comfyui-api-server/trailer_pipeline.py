@@ -915,8 +915,31 @@ class TrailerAPI:
             self._log(task, f"配音 分镜 {idx + 1}/{n_shots}")
             raw_wav = audio_dir / f"{idx:02d}_raw.wav"
             final_wav = audio_dir / f"{idx:02d}.wav"
-            await tts(vo, raw_wav, voice=voice, speed=speed)
-            tts_len = float(await asyncio.to_thread(wav_dur, raw_wav))
+            produced = await tts(vo, raw_wav, voice=voice, speed=speed)
+            # TTS 可能返回 mp3 路径；统一落到 raw_wav
+            produced_path = Path(produced) if produced else raw_wav
+            if produced_path.resolve() != raw_wav.resolve():
+                if not raw_wav.exists() and produced_path.exists():
+                    # 旧路径兜底：再转一遍
+                    clip = AudioFileClip(str(produced_path))
+                    try:
+                        clip.write_audiofile(
+                            str(raw_wav),
+                            fps=24000,
+                            nbytes=2,
+                            codec="pcm_s16le",
+                            ffmpeg_params=["-ac", "1"],
+                            logger=None,
+                        )
+                    finally:
+                        try:
+                            clip.close()
+                        except Exception:
+                            pass
+            if not raw_wav.exists():
+                raise RuntimeError(f"配音文件未生成：{raw_wav}")
+            audio_dur_fn = self.deps.get("audio_duration_seconds") or wav_dur
+            tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
             # 以用户单段时长为主；旁白更长则略延长（上限 10s）
             dur = max(planned, tts_len)
             dur = min(10.0, max(3.0, dur))

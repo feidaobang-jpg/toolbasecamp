@@ -31,6 +31,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var pollingTimer = null;
   var lastLogLen = 0;
   var picks = {};
+  var lightbox = document.getElementById('trailer-lightbox');
+  var lightboxImg = document.getElementById('trailer-lightbox-img');
+  var lightboxClose = lightbox ? lightbox.querySelector('.trailer-lightbox-close') : null;
+  var lightboxBackdrop = lightbox ? lightbox.querySelector('.trailer-lightbox-backdrop') : null;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -43,6 +47,26 @@ document.addEventListener('DOMContentLoaded', function () {
   function resolveUrl(url) {
     return window.HomePcApi.assetUrl(url);
   }
+
+  function openLightbox(src) {
+    if (!lightbox || !lightboxImg || !src) return;
+    lightboxImg.src = src;
+    lightbox.hidden = false;
+    lightbox.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLightbox() {
+    if (!lightbox || !lightboxImg) return;
+    lightbox.hidden = true;
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.removeAttribute('src');
+  }
+
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
 
   function selectedAspect() {
     var el = document.querySelector('input[name="aspect"]:checked');
@@ -186,11 +210,29 @@ document.addEventListener('DOMContentLoaded', function () {
           label.classList.add('is-selected');
         });
         var img = document.createElement('img');
-        img.src = resolveUrl(c.url);
+        var imgSrc = resolveUrl(c.url);
+        img.src = imgSrc;
         img.alt = 'shot ' + idx + ' cand ' + ci;
         img.loading = 'lazy';
+        img.addEventListener('dblclick', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          openLightbox(imgSrc);
+        });
+        var zoomBtn = document.createElement('button');
+        zoomBtn.type = 'button';
+        zoomBtn.className = 'trailer-cand-zoom';
+        zoomBtn.title = tr('privateHub.homePc.trailerZoomHint', '放大');
+        zoomBtn.setAttribute('aria-label', zoomBtn.title);
+        zoomBtn.innerHTML = '<i class="fas fa-search-plus" aria-hidden="true"></i>';
+        zoomBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          openLightbox(imgSrc);
+        });
         label.appendChild(input);
         label.appendChild(img);
+        label.appendChild(zoomBtn);
         grid.appendChild(label);
       });
       card.appendChild(grid);

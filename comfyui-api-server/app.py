@@ -1357,6 +1357,8 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
         raise RuntimeError("edge-tts library not installed. Run: pip install edge-tts")
 
     clean_text = (text or "").strip()
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Avoid calling TTS on empty / punctuation-only input: output a short silence wav instead.
     if not re.sub(r"[\W_]+", "", clean_text, flags=re.UNICODE):
@@ -1371,6 +1373,8 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
     actual_path = out_path
 
     async def _synthesize_with_kwargs(kwargs: dict, target_path: Path):
+        target_path = Path(target_path)
+        target_path.parent.mkdir(parents=True, exist_ok=True)
         communicate = edge_tts.Communicate(
             text=clean_text,
             voice=voice_val,
@@ -1395,6 +1399,7 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
         try:
             # 新版 edge-tts 支持 output_format，可直接输出 WAV(RIFF)
             await _synthesize_with_kwargs({"output_format": "riff-24khz-16bit-mono-pcm"}, out_path)
+            actual_path = out_path
             last_err = None
             break
         except Exception as e:
@@ -1432,15 +1437,47 @@ async def _indextts_synthesize(text: str, out_path: Path, voice: Optional[str] =
     except Exception as e:
         raise RuntimeError(f"Edge-TTS 音频文件校验失败：{str(e)}")
 
-    # 如果生成的是 wav，则校验 RIFF 头；mp3 等格式不做该校验
-    if actual_path.suffix.lower() == ".wav":
+    def _transcode_to_wav(src: Path, dst: Path) -> None:
+        clip = AudioFileClip(str(src))
+        try:
+            clip.write_audiofile(
+                str(dst),
+                fps=24000,
+                nbytes=2,
+                codec="pcm_s16le",
+                ffmpeg_params=["-ac", "1"],
+                logger=None,
+            )
+        finally:
+            try:
+                clip.close()
+            except Exception:
+                pass
+
+    # 统一保证 out_path 是可读 WAV（旧版 edge-tts 常写 mp3；偶发扩展名是 .wav 但内容是 mp3）
+    need_transcode = actual_path.suffix.lower() != ".wav"
+    if not need_transcode:
         try:
             with open(actual_path, "rb") as f:
                 head = f.read(4)
             if head != b"RIFF":
-                raise RuntimeError("WAV 头不正确")
+                need_transcode = True
         except Exception as e:
             raise RuntimeError(f"Edge-TTS 音频文件校验失败：{str(e)}")
+
+    if need_transcode:
+        try:
+            tmp_src = actual_path
+            if actual_path.resolve() == out_path.resolve():
+                # 同路径非 RIFF：先挪到 .mp3 再转回 wav
+                tmp_src = out_path.with_suffix(".mp3")
+                if tmp_src.exists():
+                    tmp_src.unlink()
+                actual_path.replace(tmp_src)
+            _transcode_to_wav(tmp_src, out_path)
+            actual_path = out_path
+        except Exception as e:
+            raise RuntimeError(f"Edge-TTS 转 wav 失败：{e}")
 
     return str(actual_path)
 
@@ -4340,6 +4377,7 @@ _trailer_api = TrailerAPI(
     upload_image_bytes=upload_image_bytes,
     indextts_synthesize=_indextts_synthesize,
     wav_duration_seconds=_wav_duration_seconds,
+    audio_duration_seconds=_audio_duration_seconds,
     create_subtitle_overlays_timed=_create_subtitle_overlays_timed,
     default_txt2img_negative=_default_txt2img_negative,
     repo_deepseek_api_key=_repo_deepseek_api_key,
