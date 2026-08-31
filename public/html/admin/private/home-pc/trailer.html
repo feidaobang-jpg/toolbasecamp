@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>一分钟预告 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc25" />
+  <script src="../../../../js/locales/en.js?v=trailer1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=trailer1"></script>
+  <script src="../../../../js/i18n.js?v=homepc7"></script>
+  <script src="../../../../js/config.js?v=homepc27"></script>
+  <script src="../../../../js/common_ui.js?v=homepc4"></script>
+</head>
+<body class="home-pc-page">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+      <header class="home-pc-header">
+        <div class="home-pc-header-inner">
+          <a href="../../private.html" class="home-pc-back">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+          </a>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.trailerTitle">一分钟预告</h1>
+          <div class="home-pc-header-actions">
+            <span id="auth-label" class="home-pc-auth-label"></span>
+            <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+          </div>
+        </div>
+      </header>
+      <main class="home-pc-main">
+        <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+        <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+          <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+          <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+        </div>
+        <div id="app" class="home-pc-wrap hidden" hidden>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">输入书名/影视名/梗概 → DeepSeek 写约 60 秒分镜 → 每镜多张候选图勾选 → 配音粗剪预览。精剪请导出到剪映；真图生视频（Wan/LTX）后续再接。</p>
+          <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+
+          <div class="tool-container">
+            <div class="input-section">
+              <div>
+                <label for="prompt-input" data-i18n="privateHub.homePc.trailerPromptLabel">书名 / 影视名 / 故事梗概</label>
+                <textarea id="prompt-input" rows="5" placeholder="例如：西游记电视剧；或简述你的故事开端、冲突与悬念…"></textarea>
+              </div>
+
+              <div class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.trailerStyleLabel">画面风格</span>
+                <div class="instruct-preset-row" id="style-row">
+                  <button type="button" class="rec-chip is-active" data-style="realistic" data-i18n="privateHub.homePc.trailerStyleRealistic">写实</button>
+                  <button type="button" class="rec-chip" data-style="cartoon" data-i18n="privateHub.homePc.trailerStyleCartoon">卡通</button>
+                  <button type="button" class="rec-chip" data-style="anime" data-i18n="privateHub.homePc.trailerStyleAnime">二次元</button>
+                  <button type="button" class="rec-chip" data-style="ink" data-i18n="privateHub.homePc.trailerStyleInk">水墨</button>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label data-i18n="privateHub.homePc.trailerAspectLabel">画幅</label>
+                  <div class="trailer-aspect-row">
+                    <label class="trailer-radio"><input type="radio" name="aspect" value="16_9" checked /><span data-i18n="privateHub.homePc.textToVideoLandscape">横屏 16:9</span></label>
+                    <label class="trailer-radio"><input type="radio" name="aspect" value="9_16" /><span data-i18n="privateHub.homePc.textToVideoPortrait">竖屏 9:16</span></label>
+                  </div>
+                </div>
+                <div class="input-control">
+                  <label for="candidates-select" data-i18n="privateHub.homePc.trailerCandidatesLabel">每镜候选图</label>
+                  <select id="candidates-select" class="text-input">
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="voice-select" data-i18n="privateHub.homePc.textToVideoVoiceLabel">语音：</label>
+                  <select id="voice-select" class="text-input">
+                    <option value="zh-CN-YunxiNeural" selected>云希（男声）</option>
+                    <option value="zh-CN-XiaoxiaoNeural">晓晓（女声）</option>
+                    <option value="zh-CN-YunyangNeural">云扬（男声新闻）</option>
+                    <option value="zh-CN-XiaoyiNeural">晓伊（女声）</option>
+                    <option value="zh-CN-YunjianNeural">云健（男声）</option>
+                  </select>
+                </div>
+                <div class="input-control">
+                  <label for="speed-input" data-i18n="privateHub.homePc.textToVideoSpeedLabel">语速：</label>
+                  <input id="speed-input" class="text-input" type="number" step="0.1" min="0.7" max="1.4" value="1.0" />
+                </div>
+              </div>
+            </div>
+
+            <div class="action-row home-pc-tool-actions">
+              <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.trailerStart">生成分镜与候选图</button>
+              <button type="button" id="confirm-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerConfirm">确认选图并成片</button>
+              <button type="button" id="cancel-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.cancelTask">取消任务</button>
+              <button type="button" id="open-output-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.openOutputDir">打开输出文件夹</button>
+              <button type="button" id="clear-btn" class="tb-btn" data-i18n="privateHub.homePc.clear">清空</button>
+            </div>
+
+            <div id="progress-wrap" class="progress-wrap" style="display:none;">
+              <div style="display:flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; color: #666;">
+                <span id="progress-status">准备中…</span>
+                <span id="progress-percent">0%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div id="progress-bar" class="progress-bar"></div>
+              </div>
+            </div>
+
+            <div id="plan-box" class="home-pc-result-box trailer-plan-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerPlanTitle">分镜剧本</h3>
+              <p id="plan-meta" class="trailer-plan-meta"></p>
+              <ol id="plan-list" class="trailer-plan-list"></ol>
+            </div>
+
+            <div id="shots-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerShotsTitle">勾选每镜关键帧</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.trailerShotsHint">每组分镜点选一张；全部选好后点「确认选图并成片」。</p>
+              <div id="shots-list" class="trailer-shots"></div>
+            </div>
+
+            <div id="video-box" class="video-box home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerResultTitle">预览成片</h3>
+              <p id="export-hint" class="small-hint"></p>
+              <div class="home-pc-video-row">
+                <div class="home-pc-video-item">
+                  <video id="result-video" controls playsinline></video>
+                </div>
+              </div>
+            </div>
+
+            <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
+              <h4 data-i18n="privateHub.homePc.logTitle">执行日志</h4>
+              <pre id="log-output"></pre>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc23"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer1"></script>
+</body>
+</html>

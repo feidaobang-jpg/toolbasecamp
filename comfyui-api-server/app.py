@@ -120,6 +120,7 @@ async def health_check():
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
+        "trailer_pipeline": "v1_still_kenburns",
     }
 
 
@@ -4034,6 +4035,24 @@ async def websocket_photo_restore(client_ws: WebSocket):
             await client_ws.close()
         except:
             pass
+
+# 1 分钟预告流水线（半自动选图）
+from trailer_pipeline import TrailerAPI
+
+_trailer_api = TrailerAPI(
+    output_root=_OUTPUT_ROOT,
+    build_z_image_workflow=_build_z_image_turbo_workflow,
+    run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
+    indextts_synthesize=_indextts_synthesize,
+    wav_duration_seconds=_wav_duration_seconds,
+    create_subtitle_overlays_timed=_create_subtitle_overlays_timed,
+    default_txt2img_negative=_default_txt2img_negative,
+    repo_deepseek_api_key=_repo_deepseek_api_key,
+    deepseek_api_url=DEEPSEEK_API_URL,
+    image_no_text_prefix=_IMAGE_NO_TEXT_PREFIX,
+)
+_trailer_api.register(app)
+
 
 if __name__ == '__main__':
     import uvicorn

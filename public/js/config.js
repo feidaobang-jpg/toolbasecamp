@@ -388,6 +388,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.homePc.textToVideoTitle',
                     descriptionKey: 'privateHub.homePc.textToVideoDesc',
                     url: 'html/admin/private/home-pc/text-to-video.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.trailerTitle',
+                    descriptionKey: 'privateHub.homePc.trailerDesc',
+                    url: 'html/admin/private/home-pc/trailer.html'
                 }
             ]
         }
