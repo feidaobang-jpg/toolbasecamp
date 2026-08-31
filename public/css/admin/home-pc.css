@@ -1533,7 +1533,7 @@ body.tb-admin-private #auth-status {
   color: #1f2937;
 }
 
-/* 一分钟预告 */
+/* 视频生成流水线 */
 .home-pc-wrap .trailer-aspect-row {
   display: flex;
   flex-wrap: wrap;

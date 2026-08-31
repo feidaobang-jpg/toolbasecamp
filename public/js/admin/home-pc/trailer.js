@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var openOutputBtn = document.getElementById('open-output-btn');
   var promptInput = document.getElementById('prompt-input');
   var candidatesSelect = document.getElementById('candidates-select');
+  var shotDurationSelect = document.getElementById('shot-duration-select');
+  var segmentCountInput = document.getElementById('segment-count-input');
   var voiceSelect = document.getElementById('voice-select');
   var speedInput = document.getElementById('speed-input');
   var styleRow = document.getElementById('style-row');
@@ -296,7 +298,15 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('candidates_per_shot', candidatesSelect.value || '3');
     fd.append('voice', voiceSelect.value || 'zh-CN-YunxiNeural');
     fd.append('speed', speedInput.value || '1.0');
-    fd.append('target_seconds', '60');
+    fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '5');
+    var segN = 1;
+    if (segmentCountInput) {
+      segN = parseInt(segmentCountInput.value, 10);
+      if (!isFinite(segN) || segN < 1) segN = 1;
+      if (segN > 30) segN = 30;
+      segmentCountInput.value = String(segN);
+    }
+    fd.append('segment_count', String(segN));
     fd.append('video_mode', selectedVideoMode());
 
     setBusy(true);

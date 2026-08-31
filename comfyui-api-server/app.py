@@ -1025,8 +1025,8 @@ def _build_wan22_ti2v_workflow(
 
     w = _clamp_image_side(int(width), 64, 1280)
     h = _clamp_image_side(int(height), 64, 1280)
-    # Wan length: step 4, prefer 4n+1
-    length_i = max(17, min(121, int(length)))
+    # Wan length: step 4, prefer 4n+1（约 3～10 秒）
+    length_i = max(17, min(241, int(length)))
     if (length_i - 1) % 4 != 0:
         length_i = ((length_i - 1) // 4) * 4 + 1
 

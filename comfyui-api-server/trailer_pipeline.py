@@ -1,9 +1,10 @@
 """
-1 分钟预告流水线（半自动）：
+视频生成流水线（半自动）：
   DeepSeek 分镜 → Z-Image 关键帧多候选勾选 → Wan 2.2 5B 图生视频 → 旁白拼接。
 
-工作流源目录：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\
-API 模板：work-flow/wan22_ti2v_5b.json（由 video_wan2_2_5B_ti2v 转换）
+单段时长 3～10 秒可选；生成段数默认 1，超过分镜数则封顶。
+工作流源：D:\\sd\\ComfyUI-main\\user\\default\\workflows\\
+API 模板：work-flow/wan22_ti2v_5b.json
 """
 from __future__ import annotations
 
@@ -113,42 +114,47 @@ def _extract_json_object(text: str) -> Optional[dict]:
         return None
 
 
-def _fallback_plan(prompt: str, target_seconds: int = 60) -> dict:
-    """无 DeepSeek 时：把输入粗切成约 12 镜。"""
+def _clamp_shot_duration(raw) -> float:
+    try:
+        d = float(raw)
+    except Exception:
+        d = 5.0
+    return float(max(3, min(10, int(round(d)))))
+
+
+def _clamp_segment_count(raw) -> int:
+    try:
+        n = int(float(raw))
+    except Exception:
+        n = 1
+    return max(1, min(30, n))
+
+
+def _fallback_plan(prompt: str, shot_duration: float, segment_count: int) -> dict:
+    """无 DeepSeek 时：按段数切分输入。"""
     text = re.sub(r"\s+", " ", (prompt or "").strip())
     parts = [p.strip() for p in re.split(r"[。！？!?；;\n]+", text) if p.strip()]
     if not parts:
-        parts = [text or "神秘故事预告"]
-    while len(parts) < 8:
+        parts = [text or "故事开场"]
+    want = max(1, int(segment_count))
+    # 至少凑够 want 段
+    while len(parts) < want:
         parts.append(parts[-1])
-    if len(parts) > 14:
-        # 合并到约 12 段
-        step = max(1, len(parts) // 12)
+    if len(parts) > want:
+        # 合并到 want 段
+        step = max(1, len(parts) // want)
         merged = []
         for i in range(0, len(parts), step):
             merged.append("".join(parts[i : i + step]))
-            if len(merged) >= 12:
+            if len(merged) >= want:
                 break
-        parts = merged[:12]
+        parts = merged[:want]
+    else:
+        parts = parts[:want]
 
-    n = len(parts)
-    base = max(4, min(6, target_seconds // max(1, n)))
-    # 微调使总和接近 target
-    durations = [base] * n
-    total = sum(durations)
-    i = 0
-    while total < target_seconds and i < n * 3:
-        durations[i % n] += 1
-        total += 1
-        i += 1
-    while total > target_seconds and any(d > 4 for d in durations):
-        for j in range(n):
-            if durations[j] > 4 and total > target_seconds:
-                durations[j] -= 1
-                total -= 1
-
+    dur = _clamp_shot_duration(shot_duration)
     shots = []
-    for idx, (seg, dur) in enumerate(zip(parts, durations)):
+    for idx, seg in enumerate(parts):
         shots.append(
             {
                 "index": idx,
@@ -160,66 +166,66 @@ def _fallback_plan(prompt: str, target_seconds: int = 60) -> dict:
             }
         )
     return {
-        "title": (text[:40] or "预告片"),
+        "title": (text[:40] or "视频流水线"),
         "logline": text[:120],
-        "target_seconds": target_seconds,
+        "shot_duration_sec": dur,
+        "segment_count": len(shots),
+        "target_seconds": round(dur * len(shots), 1),
         "shots": shots,
         "source": "fallback",
     }
 
 
-def _normalize_plan(obj: dict, prompt: str, target_seconds: int) -> dict:
-    title = str(obj.get("title") or "").strip() or (prompt.strip()[:40] or "预告片")
+def _normalize_plan(
+    obj: dict,
+    prompt: str,
+    shot_duration: float,
+    segment_count: int,
+) -> dict:
+    title = str(obj.get("title") or "").strip() or (prompt.strip()[:40] or "视频流水线")
     logline = str(obj.get("logline") or "").strip() or prompt.strip()[:160]
     raw_shots = obj.get("shots")
+    dur = _clamp_shot_duration(shot_duration)
+    want = _clamp_segment_count(segment_count)
     if not isinstance(raw_shots, list) or not raw_shots:
-        return _fallback_plan(prompt, target_seconds)
+        return _fallback_plan(prompt, dur, want)
 
     shots = []
-    for i, s in enumerate(raw_shots[:16]):
+    for s in raw_shots[:30]:
         if not isinstance(s, dict):
             continue
         vo = str(s.get("voiceover") or s.get("narration") or "").strip()
         vis = str(s.get("visual_prompt") or s.get("image_prompt") or s.get("prompt") or "").strip()
         if not vo and not vis:
             continue
-        try:
-            dur = float(s.get("duration_sec") or s.get("duration") or 5)
-        except Exception:
-            dur = 5.0
-        dur = max(4.0, min(8.0, dur))
         shots.append(
             {
                 "index": len(shots),
-                "duration_sec": round(dur, 1),
+                "duration_sec": dur,
                 "voiceover": vo or f"镜头 {len(shots) + 1}",
-                "visual_prompt": vis or f"cinematic trailer shot for: {vo[:100]}",
+                "visual_prompt": vis or f"cinematic shot for: {vo[:100]}",
                 "camera": str(s.get("camera") or "medium").strip()[:32],
                 "mood": str(s.get("mood") or "").strip()[:48],
             }
         )
 
-    if len(shots) < 6:
-        return _fallback_plan(prompt, target_seconds)
+    if not shots:
+        return _fallback_plan(prompt, dur, want)
 
-    # 缩放到约 target_seconds
-    total = sum(float(s["duration_sec"]) for s in shots) or 1.0
-    scale = float(target_seconds) / total
-    for s in shots:
-        d = max(4.0, min(8.0, float(s["duration_sec"]) * scale))
-        s["duration_sec"] = round(d, 1)
-    # 再微调合计
-    total2 = sum(float(s["duration_sec"]) for s in shots)
-    diff = target_seconds - total2
-    if abs(diff) >= 0.5 and shots:
-        shots[-1]["duration_sec"] = round(
-            max(4.0, min(8.0, float(shots[-1]["duration_sec"]) + diff)), 1
-        )
+    # 段数：不超过分镜总数
+    take = min(want, len(shots))
+    shots = shots[:take]
+    for i, s in enumerate(shots):
+        s["index"] = i
+        s["duration_sec"] = dur
 
     return {
         "title": title,
         "logline": logline,
-        "target_seconds": target_seconds,
+        "shot_duration_sec": dur,
+        "segment_count": len(shots),
+        "segment_count_requested": want,
+        "target_seconds": round(dur * len(shots), 1),
         "shots": shots,
         "source": "deepseek",
         "characters": obj.get("characters") if isinstance(obj.get("characters"), list) else [],
@@ -230,7 +236,8 @@ def deepseek_trailer_plan(
     prompt: str,
     visual_style: str,
     aspect: str,
-    target_seconds: int,
+    shot_duration: float,
+    segment_count: int,
     api_key: str,
     api_url: str,
 ) -> Optional[dict]:
@@ -238,23 +245,30 @@ def deepseek_trailer_plan(
         return None
     style = _style_meta(visual_style)
     aspect_label = "横屏 16:9" if aspect == "16_9" else "竖屏 9:16"
-    n_lo, n_hi = 10, 14
-    user_prompt = f"""你是预告片编剧与分镜导演。用户要做约 {target_seconds} 秒的电影/剧集预告片粗剪。
+    dur = _clamp_shot_duration(shot_duration)
+    want = _clamp_segment_count(segment_count)
+    # 多要几镜再截断，避免 LLM 少给
+    n_lo = want
+    n_hi = max(want, min(24, want + 4))
+    total_hint = round(dur * want, 1)
+    user_prompt = f"""你是影视分镜导演。用户要做视频生成流水线粗剪。
 
 【用户输入】（书名、电影/电视剧名、或故事梗概）
 {prompt.strip()}
 
 【画面风格】{style['label']}（{style['zh']}）
 【画幅】{aspect_label}
+【单段时长】每镜固定约 {dur:g} 秒
+【需要段数】至少 {want} 镜（可写到 {n_hi} 镜，系统会截取前 {want} 镜）
 
 请输出严格 JSON（不要 markdown），字段：
 {{
-  "title": "预告标题",
+  "title": "标题",
   "logline": "一句话卖点",
   "characters": [{{"id":"c1","name":"角色名","look":"英文外形描述"}}],
   "shots": [
     {{
-      "duration_sec": 5,
+      "duration_sec": {dur:g},
       "voiceover": "中文旁白（简短有力，适合配音）",
       "visual_prompt": "英文文生图提示词：主体、动作、环境、光影、镜头景别；不要出现字幕/文字/水印",
       "camera": "wide|medium|close|detail",
@@ -264,12 +278,13 @@ def deepseek_trailer_plan(
 }}
 
 硬性要求：
-1. shots 数量 {n_lo}～{n_hi}；每镜 duration_sec 为 4～6 的整数或一位小数；所有 duration_sec 之和尽量接近 {target_seconds}（±4 秒可接受）。
-2. 预告节奏：开场钩子 → 世界观/冲突 → 高潮闪回 → 收束悬念；不要剧透结局细节。
-3. 若输入是知名作品名，基于公开剧情常识写分镜，不要编造离谱人设；若是原创梗概，紧扣梗概。
-4. voiceover 用中文，单镜不超过 28 个汉字；visual_prompt 用英文，具体可画。
+1. shots 数量 {n_lo}～{n_hi}；每镜 duration_sec 一律写 {dur:g}。
+2. 叙事节奏随段数伸缩：段数少则单镜信息密度更高；段数多则开场钩子→冲突→高潮→收束。
+3. 若输入是知名作品名，基于公开剧情常识写分镜；若是原创梗概，紧扣梗概。
+4. voiceover 用中文，单镜汉字数按 {dur:g} 秒语速控制（约每秒 3～4 字，勿过长）；visual_prompt 用英文。
 5. 风格一致性：所有 visual_prompt 都要符合「{style['label']}」。
 6. 不要在画面提示里要求生成文字、标题卡上的字、logo。
+7. 总时长大约 {total_hint:g} 秒（{want}×{dur:g}）。
 只输出 JSON。"""
 
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
@@ -295,7 +310,7 @@ def deepseek_trailer_plan(
             obj = _extract_json_object(content)
             if not obj:
                 return None
-            return _normalize_plan(obj, prompt, target_seconds)
+            return _normalize_plan(obj, prompt, dur, want)
         except Exception:
             if attempt == 0:
                 time.sleep(2)
@@ -305,12 +320,11 @@ def deepseek_trailer_plan(
 
 
 def _length_for_duration(duration_sec: float, fps: int = 24) -> int:
-    """Wan length ≈ 4n+1，夹在 49～121（约 2～5 秒）。"""
+    """Wan length ≈ 4n+1，约覆盖 3～10 秒（241 帧 ≈10s@24fps）。"""
     frames = int(round(float(duration_sec) * float(fps)))
-    # snap to 4n+1
-    n = max(12, (frames - 1) // 4)
+    n = max(8, (frames - 1) // 4)
     length = n * 4 + 1
-    return max(49, min(121, length))
+    return max(33, min(241, length))
 
 
 def _compose_clips_with_audio_sync(
@@ -483,7 +497,8 @@ class TrailerAPI:
             candidates_per_shot: str = Form("3"),
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
-            target_seconds: str = Form("60"),
+            shot_duration: str = Form("5"),
+            segment_count: str = Form("1"),
             video_mode: str = Form("i2v"),
         ):
             text = (prompt or "").strip()
@@ -505,10 +520,8 @@ class TrailerAPI:
             except Exception:
                 spd = 1.0
             spd = max(0.7, min(1.4, spd))
-            try:
-                target = max(45, min(90, int(float(target_seconds or 60))))
-            except Exception:
-                target = 60
+            shot_dur = _clamp_shot_duration(shot_duration)
+            seg_n = _clamp_segment_count(segment_count)
 
             task_id = uuid.uuid4().hex
             out_dir = api._alloc_dir()
@@ -528,7 +541,9 @@ class TrailerAPI:
                 "candidates_per_shot": cand,
                 "voice": (voice or "zh-CN-YunxiNeural").strip(),
                 "speed": spd,
-                "target_seconds": target,
+                "shot_duration_sec": shot_dur,
+                "segment_count": seg_n,
+                "target_seconds": round(shot_dur * seg_n, 1),
                 "plan": None,
                 "shots_ui": [],
                 "picks": {},
@@ -646,25 +661,46 @@ class TrailerAPI:
         prompt = task["prompt"]
         style = task["visual_style"]
         aspect = task["aspect"]
-        target = int(task["target_seconds"])
-        self._log(task, f"策划约 {target}s 预告分镜（风格={style}，画幅={aspect}）…")
+        shot_dur = _clamp_shot_duration(task.get("shot_duration_sec") or 5)
+        seg_n = _clamp_segment_count(task.get("segment_count") or 1)
+        task["shot_duration_sec"] = shot_dur
+        task["segment_count"] = seg_n
+        self._log(
+            task,
+            f"策划分镜：段数={seg_n}，单段={shot_dur:g}s，风格={style}，画幅={aspect}",
+        )
 
         api_key = self.deps["repo_deepseek_api_key"]()
         api_url = self.deps["deepseek_api_url"]
         plan = None
         if api_key:
             plan = await asyncio.to_thread(
-                deepseek_trailer_plan, prompt, style, aspect, target, api_key, api_url
+                deepseek_trailer_plan,
+                prompt,
+                style,
+                aspect,
+                shot_dur,
+                seg_n,
+                api_key,
+                api_url,
             )
         if not plan:
             self._log(task, "DeepSeek 不可用或解析失败，改用规则分镜")
-            plan = _fallback_plan(prompt, target)
+            plan = _fallback_plan(prompt, shot_dur, seg_n)
             task["deepseek_plan_status"] = "fallback"
         else:
             task["deepseek_plan_status"] = plan.get("source") or "ok"
-            self._log(task, f"剧本就绪：{plan.get('title')}，共 {len(plan.get('shots') or [])} 镜")
+            req = plan.get("segment_count_requested") or seg_n
+            got = len(plan.get("shots") or [])
+            if req > got:
+                self._log(task, f"请求 {req} 段，分镜仅 {got} 段，按最大分镜数出片")
+            self._log(task, f"剧本就绪：{plan.get('title')}，采用 {got} 镜 × {shot_dur:g}s")
 
         task["plan"] = plan
+        task["segment_count_effective"] = len(plan.get("shots") or [])
+        task["target_seconds"] = plan.get("target_seconds") or round(
+            shot_dur * len(plan.get("shots") or []), 1
+        )
         task_dir = self._task_dir(task)
         (task_dir / "plan.json").write_text(
             json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -816,7 +852,12 @@ class TrailerAPI:
                 raise RuntimeError(f"找不到选中图片：{fname}")
             image_paths.append(img_path)
 
-            planned = float(shot.get("duration_sec") or 5)
+            planned = float(
+                shot.get("duration_sec")
+                or task.get("shot_duration_sec")
+                or 5
+            )
+            planned = _clamp_shot_duration(planned)
             vo = (shot.get("voiceover") or "").strip() or f"镜头{idx + 1}"
             motion = (
                 f"{(shot.get('visual_prompt') or '').strip()}. "
@@ -831,8 +872,9 @@ class TrailerAPI:
             final_wav = audio_dir / f"{idx:02d}.wav"
             await tts(vo, raw_wav, voice=voice, speed=speed)
             tts_len = float(await asyncio.to_thread(wav_dur, raw_wav))
+            # 以用户单段时长为主；旁白更长则略延长（上限 10s）
             dur = max(planned, tts_len)
-            dur = min(8.0, max(3.5, dur))
+            dur = min(10.0, max(3.0, dur))
 
             # 2) 图生视频（Wan 2.2 5B）或稍后 Ken Burns
             clip_path = clips_dir / f"{idx:02d}.mp4"
@@ -864,7 +906,8 @@ class TrailerAPI:
                         vdur = float(VideoFileClip(str(clip_path)).duration)
                     except Exception:
                         vdur = dur
-                    dur = max(tts_len, min(8.0, max(vdur, planned * 0.85)))
+                    dur = max(tts_len, min(10.0, max(vdur, planned * 0.85)))
+                    dur = max(3.0, dur)
                 except Exception as e:
                     i2v_fail += 1
                     self._log(task, f"分镜 {idx + 1} I2V 失败，该镜回退静帧推镜：{e}")

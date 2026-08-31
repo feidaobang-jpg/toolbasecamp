@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>一分钟预告 - 后台</title>
+  <title>视频生成流水线 - 后台</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc25" />
-  <script src="../../../../js/locales/en.js?v=trailer2"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=trailer2"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc26" />
+  <script src="../../../../js/locales/en.js?v=trailer3"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=trailer3"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
-  <script src="../../../../js/config.js?v=homepc27"></script>
+  <script src="../../../../js/config.js?v=homepc28"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
 </head>
 <body class="home-pc-page">
@@ -25,7 +25,7 @@
           <a href="../../private.html" class="home-pc-back">
             <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
           </a>
-          <h1 class="home-pc-title" data-i18n="privateHub.homePc.trailerTitle">一分钟预告</h1>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.trailerTitle">视频生成流水线</h1>
           <div class="home-pc-header-actions">
             <span id="auth-label" class="home-pc-auth-label"></span>
             <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">输入书名/影视名/梗概 → DeepSeek 分镜 → 每镜候选关键帧勾选 → Wan 2.2 图生视频 + 旁白粗剪。精剪请导出到剪映。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">输入书名/影视名/梗概 → DeepSeek 分镜 → 勾选关键帧 → 按段数图生视频 + 旁白粗剪。单段 3～10 秒可选；段数默认 1，超过分镜数则按最大分镜出。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -74,6 +74,28 @@
                     <option value="3" selected>3</option>
                     <option value="4">4</option>
                   </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="shot-duration-select" data-i18n="privateHub.homePc.trailerShotDurationLabel">单段时长（秒）</label>
+                  <select id="shot-duration-select" class="text-input">
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5" selected>5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                  </select>
+                  <p class="small-hint" data-i18n="privateHub.homePc.trailerShotDurationHint">建议 4～6 秒更稳；8～10 秒更吃显存与时间。</p>
+                </div>
+                <div class="input-control">
+                  <label for="segment-count-input" data-i18n="privateHub.homePc.trailerSegmentCountLabel">生成段数</label>
+                  <input id="segment-count-input" class="text-input" type="number" min="1" max="30" step="1" value="1" />
+                  <p class="small-hint" data-i18n="privateHub.homePc.trailerSegmentCountHint">默认 1 段；若大于分镜数，按实际分镜数封顶。</p>
                 </div>
               </div>
 
@@ -159,6 +181,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer2"></script>
+  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer3"></script>
 </body>
 </html>
