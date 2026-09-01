@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var skipGlobalBtn = document.getElementById('skip-global-btn');
   var continueBtn = document.getElementById('continue-btn');
   var regenAllBtn = document.getElementById('regen-all-btn');
+  var freeVramBtn = document.getElementById('free-vram-btn');
   var playlistBtn = document.getElementById('playlist-btn');
   var playlistFromPreviewBtn = document.getElementById('playlist-from-preview-btn');
   var cancelBtn = document.getElementById('cancel-btn');
@@ -104,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (skipGlobalBtn) skipGlobalBtn.disabled = !!busy;
     if (continueBtn) continueBtn.disabled = !!busy;
     if (regenAllBtn) regenAllBtn.disabled = !!busy;
+    if (freeVramBtn) freeVramBtn.disabled = !!busy;
     if (playlistBtn) playlistBtn.disabled = !!busy;
     if (playlistFromPreviewBtn) playlistFromPreviewBtn.disabled = !!busy;
     if (sceneBoard) {
@@ -111,6 +113,34 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.disabled = !!busy;
       });
     }
+  }
+
+
+  function shortClock(s) {
+    var t = String(s || '').trim();
+    if (t.length >= 19) return t.slice(11, 19);
+    return t;
+  }
+
+  function shotTimingHtml(sh) {
+    var parts = [];
+    var inProg = sh.status === 'stills' || sh.status === 'video' || sh.status === 'vo';
+    if (sh.elapsed_label) {
+      parts.push(tr('privateHub.homePc.seriesElapsed', '耗时') + ' ' + sh.elapsed_label);
+    }
+    if (sh.finished_at) {
+      parts.push(tr('privateHub.homePc.seriesFinishedAt', '完成') + ' ' + shortClock(sh.finished_at));
+    } else if (inProg && sh.started_at) {
+      parts.push(tr('privateHub.homePc.seriesStartedAt', '开始') + ' ' + shortClock(sh.started_at));
+    }
+    if (sh.stills_label || sh.video_label) {
+      var detail = [];
+      if (sh.stills_label) detail.push(tr('privateHub.homePc.seriesStillsSec', '生图') + ' ' + sh.stills_label);
+      if (sh.video_label) detail.push(tr('privateHub.homePc.seriesVideoSec', '视频') + ' ' + sh.video_label);
+      if (detail.length) parts.push(detail.join(' · '));
+    }
+    if (!parts.length) return '';
+    return '<div class="series-shot-timing">' + escapeHtml(parts.join(' · ')) + '</div>';
   }
 
   function statusLabel(st) {
@@ -376,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (skipGlobalBtn) skipGlobalBtn.style.display = awaiting ? '' : 'none';
     if (continueBtn) continueBtn.style.display = hasShots && !awaiting ? '' : 'none';
     if (regenAllBtn) regenAllBtn.style.display = hasShots && !awaiting ? '' : 'none';
+    if (freeVramBtn) freeVramBtn.style.display = currentSeriesId ? '' : 'none';
     if (playlistBtn) playlistBtn.style.display = hasShots && !awaiting ? '' : 'none';
     if (deleteSeriesBtn) deleteSeriesBtn.style.display = currentSeriesId ? '' : 'none';
     if (downloadLogBtn) downloadLogBtn.style.display = currentSeriesId ? '' : 'none';
@@ -587,7 +618,11 @@ document.addEventListener('DOMContentLoaded', function () {
         runOrRegen.setAttribute('data-job-btn', '1');
         var isDone = sh.status === 'done' || sh.status === 'approved';
         var isFailed = sh.status === 'failed';
-        if (isDone || isFailed) {
+        var inProgress = sh.status === 'stills' || sh.status === 'video' || sh.status === 'vo';
+        if (inProgress) {
+          runOrRegen.textContent = statusLabel(sh.status);
+          runOrRegen.disabled = true;
+        } else if (isDone || isFailed) {
           runOrRegen.textContent = tr('privateHub.homePc.seriesRegenShot', '重跑此镜');
           runOrRegen.addEventListener('click', function (e) {
             e.preventDefault();
@@ -1061,6 +1096,33 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       postJob('/series/continue', { force: '1' });
+    });
+  }
+
+  if (freeVramBtn) {
+    freeVramBtn.addEventListener('click', function () {
+      if (!currentSeriesId) return;
+      freeVramBtn.disabled = true;
+      var fd = new FormData();
+      fd.append('series_id', currentSeriesId);
+      fetch(API_BASE + '/series/free-vram', { method: 'POST', body: fd })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { res: res, body: body };
+          });
+        })
+        .then(function (pack) {
+          if (!pack.res.ok || !pack.body.success) {
+            throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+          }
+          flashMsg(tr('privateHub.homePc.seriesFreeVramDone', '已请求释放显存'), false);
+        })
+        .catch(function (err) {
+          flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+        })
+        .finally(function () {
+          freeVramBtn.disabled = false;
+        });
     });
   }
   if (playlistBtn) {

@@ -121,7 +121,7 @@ async def health_check():
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
         "trailer_pipeline": "v7_timing_logs",
-        "series_studio": "v4_ltx_native_audio",
+        "series_studio": "v5_vram_timing",
     }
 
 
@@ -4130,6 +4130,17 @@ async def clear_comfyui_queue():
     except Exception as e:
         print(f"WS: 清除队列失败: {e}")
 
+
+async def free_comfyui_memory(*, unload_models: bool = True) -> None:
+    """调用 ComfyUI /free，卸模型并清缓存（镜间防显存叠满）。"""
+    await asyncio.to_thread(
+        requests.post,
+        "http://{}/free".format(COMFYUI_SERVER_ADDRESS),
+        json={"unload_models": bool(unload_models), "free_memory": True},
+        timeout=30,
+    )
+
+
 async def interrupt_comfyui():
     """发送中断信号给 ComfyUI"""
     try:
@@ -4145,7 +4156,7 @@ async def interrupt_comfyui():
         
         # 4. 释放显存：通知 ComfyUI 卸载模型
         try:
-            await asyncio.to_thread(requests.post, "http://{}/free".format(COMFYUI_SERVER_ADDRESS), json={"unload_models": True, "free_memory": True}, timeout=5)
+            await free_comfyui_memory()
             print("WS: 已发送释放显存请求给 ComfyUI")
         except Exception as e:
             print(f"WS: 发送释放显存请求失败 (忽略): {e}")
@@ -4459,6 +4470,7 @@ _series_studio_api = SeriesStudioAPI(
     repo_deepseek_api_key=_repo_deepseek_api_key,
     deepseek_api_url=DEEPSEEK_API_URL,
     image_no_text_prefix=_IMAGE_NO_TEXT_PREFIX,
+    free_comfyui_memory=free_comfyui_memory,
 )
 _series_studio_api.register(app)
 

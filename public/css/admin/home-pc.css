@@ -2078,6 +2078,13 @@ body.tb-admin-private #auth-status {
   overflow: hidden;
   word-break: break-word;
 }
+.home-pc-wrap .series-shot-timing {
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #0f766e;
+  font-variant-numeric: tabular-nums;
+}
 .home-pc-wrap .series-shot-actions {
   margin-top: auto;
   padding: 10px;

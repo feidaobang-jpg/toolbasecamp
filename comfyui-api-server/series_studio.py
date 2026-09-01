@@ -65,6 +65,29 @@ def _display_now() -> str:
     return datetime.now(_CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
 
 
+def _utc_to_cn_display(utc_s: str) -> str:
+    """UTC naive `YYYY-MM-DD HH:MM:SS` → 北京时间同格式。"""
+    s = (utc_s or "").strip()
+    if not s:
+        return ""
+    try:
+        dt = datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+        return dt.astimezone(_CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return s
+
+
+def _elapsed_since_utc(utc_s: str) -> float:
+    s = (utc_s or "").strip()
+    if not s:
+        return 0.0
+    try:
+        dt = datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+        return max(0.0, (datetime.now(timezone.utc) - dt).total_seconds())
+    except Exception:
+        return 0.0
+
+
 def _new_id(prefix: str = "") -> str:
     return f"{prefix}{uuid.uuid4().hex[:12]}" if prefix else uuid.uuid4().hex[:16]
 
@@ -161,6 +184,24 @@ class SeriesDB:
                 CREATE INDEX IF NOT EXISTS idx_log_series ON series_log(series_id);
                 """
             )
+            self._ensure_columns(
+                conn,
+                "shot",
+                {
+                    "started_at": "TEXT NOT NULL DEFAULT ''",
+                    "finished_at": "TEXT NOT NULL DEFAULT ''",
+                    "stills_sec": "REAL NOT NULL DEFAULT 0",
+                    "video_sec": "REAL NOT NULL DEFAULT 0",
+                    "total_sec": "REAL NOT NULL DEFAULT 0",
+                },
+            )
+
+    @staticmethod
+    def _ensure_columns(conn: sqlite3.Connection, table: str, cols: Dict[str, str]) -> None:
+        existing = {r[1] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+        for name, decl in cols.items():
+            if name not in existing:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {name} {decl}")
 
 
 def deepseek_series_plan(
@@ -540,6 +581,31 @@ class SeriesStudioAPI:
                     total_n += 1
                     if sh["status"] in ("done", "approved"):
                         done_n += 1
+                    started_utc = ""
+                    finished_utc = ""
+                    try:
+                        started_utc = str(sh["started_at"] or "")
+                    except (KeyError, IndexError):
+                        started_utc = ""
+                    try:
+                        finished_utc = str(sh["finished_at"] or "")
+                    except (KeyError, IndexError):
+                        finished_utc = ""
+                    try:
+                        stills_sec = float(sh["stills_sec"] or 0)
+                    except (KeyError, IndexError, TypeError, ValueError):
+                        stills_sec = 0.0
+                    try:
+                        video_sec = float(sh["video_sec"] or 0)
+                    except (KeyError, IndexError, TypeError, ValueError):
+                        video_sec = 0.0
+                    try:
+                        total_sec = float(sh["total_sec"] or 0)
+                    except (KeyError, IndexError, TypeError, ValueError):
+                        total_sec = 0.0
+                    if total_sec <= 0 and sh["status"] in ("stills", "video", "vo") and started_utc:
+                        total_sec = _elapsed_since_utc(started_utc)
+                    elapsed_label = _format_elapsed(total_sec) if total_sec > 0 else ""
                     sh_list.append(
                         {
                             "id": sh["id"],
@@ -557,6 +623,14 @@ class SeriesStudioAPI:
                             "label": f"第{e['ep_no']}集 · 第{sc['sc_no']}场 · 第{sh['shot_no']}镜",
                             "ep_no": e["ep_no"],
                             "sc_no": sc["sc_no"],
+                            "started_at": _utc_to_cn_display(started_utc),
+                            "finished_at": _utc_to_cn_display(finished_utc),
+                            "stills_sec": round(stills_sec, 1) if stills_sec else 0,
+                            "video_sec": round(video_sec, 1) if video_sec else 0,
+                            "total_sec": round(total_sec, 1) if total_sec else 0,
+                            "elapsed_label": elapsed_label,
+                            "stills_label": _format_elapsed(stills_sec) if stills_sec > 0 else "",
+                            "video_label": _format_elapsed(video_sec) if video_sec > 0 else "",
                         }
                     )
                 sc_list.append(
@@ -962,6 +1036,33 @@ class SeriesStudioAPI:
         self._log(series_id, f"已按反馈重出参考图 {safe}（{engine}）：{feedback[:80]}")
         return item
 
+    async def _free_comfy_vram(self, series_id: str, reason: str = "") -> None:
+        """镜间/阶段间卸模型，避免生图与 LTX 叠占显存导致极慢。"""
+        fn = self.deps.get("free_comfyui_memory")
+        if not callable(fn):
+            return
+        try:
+            await fn()
+            tip = f"（{reason}）" if reason else ""
+            self._log(series_id, f"已释放 ComfyUI 显存{tip}")
+        except Exception as e:
+            self._log(series_id, f"释放显存失败（可忽略）：{e}")
+
+    async def _run_video_with_heartbeat(self, series_id: str, label: str, workflow: dict):
+        run_video = self.deps.get("run_comfyui_and_get_last_video")
+        if not callable(run_video):
+            raise RuntimeError("无视频引擎")
+        task = asyncio.create_task(run_video(workflow))
+        t0 = time.perf_counter()
+        while True:
+            done, _pending = await asyncio.wait({task}, timeout=60.0)
+            if task in done:
+                return task.result()
+            self._log(
+                series_id,
+                f"图生视频进行中 {label}，已等待 {_format_elapsed(time.perf_counter() - t0)}（显存紧张时会明显变慢）",
+            )
+
     async def _run_one_shot(self, series_id: str, shot_id: str, *, force: bool = False) -> None:
         row = self._shot_detail(series_id, shot_id)
         if row["status"] in ("done", "approved") and not force:
@@ -1014,9 +1115,21 @@ class SeriesStudioAPI:
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
         use_comfy_video = use_ltx_i2v or use_ltx_t2v
 
+        started_at = _utc_now_str()
+        stills_sec = 0.0
+        video_sec = 0.0
         try:
             # 1) stills
-            self._update_shot(shot_id, status="stills", error="")
+            self._update_shot(
+                shot_id,
+                status="stills",
+                error="",
+                started_at=started_at,
+                finished_at="",
+                stills_sec=0,
+                video_sec=0,
+                total_sec=0,
+            )
             with self.db.connect() as conn:
                 conn.execute(
                     "UPDATE series SET cursor_shot_id=?, updated_at=? WHERE id=?",
@@ -1040,14 +1153,19 @@ class SeriesStudioAPI:
             img_path = shot_dir / "images" / "00.png"
             img_path.write_bytes(img_bytes)
             image_rel = self._rel(img_path)
-            self._update_shot(shot_id, image_rel=image_rel)
+            stills_sec = time.perf_counter() - t0
+            self._update_shot(shot_id, image_rel=image_rel, stills_sec=round(stills_sec, 2))
             self._log(
                 series_id,
-                f"生图完成 {label}（{eng_note}），耗时 {_format_elapsed(time.perf_counter() - t0)}",
+                f"生图完成 {label}（{eng_note}），耗时 {_format_elapsed(stills_sec)}",
             )
 
             if self._cancel.get(series_id):
                 return
+
+            # 生图模型与 LTX 叠占显存会极慢：视频前先卸模型
+            if use_comfy_video:
+                await self._free_comfy_vram(series_id, "生图→视频")
 
             # 2) video（LTX 直出音轨；不再走 Edge-TTS）
             self._update_shot(shot_id, status="video")
@@ -1090,14 +1208,16 @@ class SeriesStudioAPI:
                             duration_sec=clip_dur,
                             fps=24,
                         )
-                    vid_bytes = await run_video(wf)
+                    vid_bytes = await self._run_video_with_heartbeat(series_id, label, wf)
                     clip_path.write_bytes(vid_bytes)
                     made_mp4 = True
+                    video_sec = time.perf_counter() - t_vid
                     self._log(
                         series_id,
-                        f"图生视频完成 {label}，耗时 {_format_elapsed(time.perf_counter() - t_vid)}",
+                        f"图生视频完成 {label}，耗时 {_format_elapsed(video_sec)}",
                     )
                 except Exception as e:
+                    video_sec = time.perf_counter() - t_vid
                     self._log(series_id, f"{label} 视频引擎失败，回退静帧推镜：{e}")
 
             audio_rel = ""
@@ -1117,12 +1237,15 @@ class SeriesStudioAPI:
                     create_subs,
                     25,
                 )
+                video_sec = time.perf_counter() - t_vid
                 self._log(
                     series_id,
-                    f"静帧推镜完成 {label}，耗时 {_format_elapsed(time.perf_counter() - t_vid)}",
+                    f"静帧推镜完成 {label}，耗时 {_format_elapsed(video_sec)}",
                 )
 
             clip_rel = self._rel(clip_path)
+            total_sec = stills_sec + video_sec
+            finished_at = _utc_now_str()
             self._update_shot(
                 shot_id,
                 status="done",
@@ -1131,13 +1254,27 @@ class SeriesStudioAPI:
                 audio_rel=audio_rel,
                 error="",
                 duration_sec=clip_dur,
+                finished_at=finished_at,
+                stills_sec=round(stills_sec, 2),
+                video_sec=round(video_sec, 2),
+                total_sec=round(total_sec, 2),
             )
-            self._log(series_id, f"完成 {label}（v{version}）")
+            self._log(
+                series_id,
+                f"完成 {label}（v{version}），总耗时 {_format_elapsed(total_sec)}，"
+                f"完成于 {_utc_to_cn_display(finished_at)}",
+            )
             self._refresh_parent_status(series_id, row["episode_id"], row["scene_id"])
         except Exception as e:
             self._update_shot(shot_id, status="failed", error=str(e)[:500])
             self._log(series_id, f"失败 {label}：{e}")
             raise
+        finally:
+            # 下一镜生图前卸掉 LTX，避免显存叠满
+            try:
+                await self._free_comfy_vram(series_id, "镜结束")
+            except Exception:
+                pass
 
     def _refresh_parent_status(self, series_id: str, episode_id: str, scene_id: str) -> None:
         with self.db.connect() as conn:
@@ -1664,6 +1801,18 @@ class SeriesStudioAPI:
             api._cancel[series_id] = True
             api._log(series_id, "收到取消请求…")
             return {"success": True}
+
+        @app.post("/series/free-vram")
+        @app.post("/api/series/free-vram")
+        async def series_free_vram(series_id: str = Form("")):
+            sid = (series_id or "").strip()
+            if sid:
+                await api._free_comfy_vram(sid, "手动")
+            else:
+                fn = api.deps.get("free_comfyui_memory")
+                if callable(fn):
+                    await fn()
+            return {"success": True, "message": "已请求释放显存"}
 
         @app.post("/series/delete")
         @app.post("/api/series/delete")
