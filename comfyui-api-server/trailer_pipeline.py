@@ -408,7 +408,12 @@ def _bible_prompt_prefix(plan: dict) -> str:
             parts.append("characters: " + "; ".join(bits))
     if not parts:
         return ""
-    return "Consistent series bible — " + ". ".join(parts) + ". "
+    prefix = "Consistent series bible — " + ". ".join(parts) + ". "
+    prefix += (
+        "Cast rule: only show characters required by the current shot; "
+        "do not force the full ensemble into every frame. "
+    )
+    return prefix
 
 
 def _normalize_plan(
@@ -1430,7 +1435,11 @@ class TrailerAPI:
             ref_note = ""
             sel = task.get("global_refs_selected") or []
             if sel:
-                ref_note = f"Match the approved series reference sheets ({len(sel)} stills on disk). "
+                ref_note = (
+                    "Keep character looks and art style consistent with the series bible / look refs "
+                    f"({len(sel)} sheets). Compose THIS shot from the shot prompt only; "
+                    "include ONLY characters required by this shot; do not copy reference group lineup. "
+                )
             pos = (
                 f"{no_text}{bible_prefix}{ref_note}{base_prompt}. {style['suffix']}. "
                 f"{style['zh']}. no text, no watermark, no subtitles, no logo."

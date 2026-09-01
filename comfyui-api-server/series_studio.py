@@ -941,19 +941,34 @@ class SeriesStudioAPI:
         height: int,
         selected_refs: List[dict],
     ) -> Tuple[bytes, str]:
-        """有勾选参考图时走图生图锚定外形；失败则回退文生图。"""
+        """分镜静帧默认文生图，按 bible/提示词构图。
+
+        全剧参考图只用于人物外形与画风一致性（写进提示词）；
+        不再用定妆合影做强图生图，否则每镜都会锁成「参考图里的一排人」。
+        仅当环境变量 SERIES_REF_STYLE_IMG2IMG=1 时，才用极高 denoise 轻量蹭风格。
+        """
+        import os
+
         build_txt = self.deps["build_z_image_workflow"]
         build_i2i = self.deps.get("build_z_image_img2img_workflow")
         run_comfy = self.deps["run_comfyui_and_get_last_image"]
         upload_bytes = self.deps.get("upload_image_bytes")
         seed = random.randint(1, 2_000_000_000)
 
+        use_style_i2i = str(os.environ.get("SERIES_REF_STYLE_IMG2IMG", "0")).strip().lower() in (
+            "1",
+            "true",
+            "yes",
+            "on",
+        )
+
         primary = None
-        for it in selected_refs:
-            path = self._ref_disk_path(series_id, it)
-            if path:
-                primary = (it, path)
-                break
+        if use_style_i2i:
+            for it in selected_refs:
+                path = self._ref_disk_path(series_id, it)
+                if path:
+                    primary = (it, path)
+                    break
 
         if primary and callable(build_i2i) and callable(upload_bytes):
             it, path = primary
@@ -964,28 +979,30 @@ class SeriesStudioAPI:
                 if not comfy_name:
                     raise RuntimeError("参考图上传 ComfyUI 失败")
                 i2i_pos = (
-                    f"{pos} Keep the same character identity, face, costume colors and overall art style "
-                    f"as the reference image ({it.get('label') or it.get('filename')}). "
-                    f"Change pose/camera/scene to match this shot; do not copy the reference composition blindly."
+                    f"{pos} Borrow only art style, lighting mood and costume color palette "
+                    f"from the reference. Compose a NEW scene from the shot prompt; "
+                    f"include ONLY characters named in the shot; never copy the reference "
+                    f"group lineup, poses or camera."
                 )
                 wf = build_i2i(
                     i2i_pos,
                     comfy_name,
                     negative_text=neg,
                     seed=seed,
-                    denoise=0.78,
+                    # 极高 denoise：几乎丢掉参考构图，只留一点风格倾向
+                    denoise=0.93,
                     megapixels=1.0,
                 )
                 img_bytes = await run_comfy(wf)
-                note = f"参考图生图·{it.get('filename')}"
-                if len(selected_refs) > 1:
-                    note += f"（勾选 {len(selected_refs)} 张，主参考用首张）"
+                note = f"轻量风格图生图·{it.get('filename')}"
                 return img_bytes, note
             except Exception as e:
-                self._log(series_id, f"参考图生图失败，回退文生图：{e}")
+                self._log(series_id, f"参考风格图生图失败，回退文生图：{e}")
 
         wf = build_txt(pos, seed=seed, width=width, height=height, negative_text=neg)
         img_bytes = await run_comfy(wf)
+        if selected_refs:
+            return img_bytes, f"文生图（参考{len(selected_refs)}张仅作文风/角色描述）"
         return img_bytes, "文生图"
 
     async def _regen_one_global_ref(self, series_id: str, filename: str, feedback: str) -> dict:
@@ -1167,9 +1184,21 @@ class SeriesStudioAPI:
         selected_refs = [x for x in refs if isinstance(x, dict) and x.get("selected")]
         ref_note = ""
         if selected_refs:
-            ref_note = f"Match the approved series reference sheets ({len(selected_refs)} stills). "
+            ref_note = (
+                "Keep character identity, faces, costumes and art style consistent with the series bible "
+                f"and approved look references ({len(selected_refs)} sheets). "
+                "Compose THIS shot strictly from the shot action/camera below; "
+                "include ONLY characters required by this shot; "
+                "do NOT copy reference sheet group lineup, poses, or cast count. "
+            )
 
         neg = self.deps["default_txt2img_negative"]("", width=w, height=h)
+        if selected_refs:
+            neg = (
+                f"{neg}, group character lineup, four people standing in a row, "
+                "reference sheet collage, cast photo, identical group pose copied from styleboard, "
+                "all main characters forced into every frame"
+            )
         no_text = self.deps.get("image_no_text_prefix") or ""
         upload_bytes = self.deps.get("upload_image_bytes")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
