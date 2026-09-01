@@ -229,28 +229,78 @@ document.addEventListener('DOMContentLoaded', function () {
         regenBtn.type = 'button';
         regenBtn.className = 'tb-btn series-ref-regen-btn';
         regenBtn.textContent = tr('privateHub.homePc.seriesRefRegen', '按反馈重出');
+        var statusEl = document.createElement('div');
+        statusEl.className = 'series-ref-regen-status';
+        statusEl.setAttribute('aria-live', 'polite');
         regenBtn.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
-          regenGlobalRef(fn, ta.value || '');
+          regenGlobalRef(fn, ta.value || '', regenBtn, statusEl);
         });
         fb.appendChild(ta);
         fb.appendChild(regenBtn);
+        fb.appendChild(statusEl);
         card.appendChild(fb);
       }
       globalRefsList.appendChild(card);
     });
   }
 
-  function regenGlobalRef(filename, feedback) {
-    if (!currentSeriesId || !filename) return;
+  function flashMsg(msg, isErr) {
+    var text = String(msg || '');
+    if (progressWrap && progressStatus) {
+      progressWrap.style.display = '';
+      progressStatus.textContent = text;
+    }
+    var box = document.getElementById('series-toast');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'series-toast';
+      box.className = 'series-toast';
+      box.setAttribute('role', 'status');
+      document.body.appendChild(box);
+    }
+    box.textContent = text;
+    box.classList.toggle('is-err', !!isErr);
+    box.classList.add('is-show');
+    clearTimeout(box._hideTimer);
+    box._hideTimer = setTimeout(function () {
+      box.classList.remove('is-show');
+    }, isErr ? 10000 : 4500);
+  }
+
+  function setRefRegenBusy(busy, activeBtn) {
+    var buttons = globalRefsList
+      ? globalRefsList.querySelectorAll('.series-ref-regen-btn')
+      : [];
+    Array.prototype.forEach.call(buttons, function (btn) {
+      btn.disabled = !!busy;
+      if (!busy) {
+        btn.textContent = tr('privateHub.homePc.seriesRefRegen', '按反馈重出');
+      }
+    });
+    if (busy && activeBtn) {
+      activeBtn.disabled = true;
+      activeBtn.textContent = tr('privateHub.homePc.seriesRefRegenning', '按反馈重出参考图…');
+    }
+  }
+
+  function regenGlobalRef(filename, feedback, regenBtn, statusEl) {
+    if (!currentSeriesId || !filename) {
+      flashMsg(
+        tr('privateHub.homePc.seriesRefNoProject', '请先打开一个剧集项目'),
+        true
+      );
+      return;
+    }
     var tip = (feedback || '').trim();
     if (tip.length < 2) {
-      progressWrap.style.display = '';
-      progressStatus.textContent = tr(
+      var need = tr(
         'privateHub.homePc.seriesRefNeedFeedback',
         '请先填写这张参考图的修改意见'
       );
+      if (statusEl) statusEl.textContent = need;
+      flashMsg(need, true);
       return;
     }
     var fd = new FormData();
@@ -258,11 +308,26 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('filename', filename);
     fd.append('feedback', tip);
     setBusy(true);
-    progressWrap.style.display = '';
-    progressStatus.textContent = tr('privateHub.homePc.seriesRefRegenning', '按反馈重出参考图…');
+    setRefRegenBusy(true, regenBtn);
+    var runningMsg = tr(
+      'privateHub.homePc.seriesRefRegenning',
+      '按反馈重出参考图…大约半分钟，请稍候'
+    );
+    if (statusEl) statusEl.textContent = runningMsg;
+    flashMsg(runningMsg, false);
     fetch(API_BASE + '/series/regen-global-ref', { method: 'POST', body: fd })
       .then(function (res) {
-        return res.json().then(function (body) {
+        return res.text().then(function (raw) {
+          var body = null;
+          try {
+            body = raw ? JSON.parse(raw) : {};
+          } catch (e) {
+            throw new Error(
+              raw
+                ? '接口返回非 JSON（HTTP ' + res.status + '）'
+                : 'HTTP ' + res.status
+            );
+          }
           return { res: res, body: body };
         });
       })
@@ -272,12 +337,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderGlobalRefs(pack.body.global_refs || [], true);
         setBusy(false);
-        progressStatus.textContent = tr('privateHub.homePc.seriesRefRegenDone', '参考图已按反馈更新');
+        setRefRegenBusy(false);
+        var done = tr('privateHub.homePc.seriesRefRegenDone', '参考图已按反馈更新');
+        flashMsg(done, false);
         if (currentSeries) currentSeries.global_refs = pack.body.global_refs || [];
       })
       .catch(function (err) {
         setBusy(false);
-        progressStatus.textContent = window.HomePcApi.friendlyFetchError(err);
+        setRefRegenBusy(false);
+        var msg = window.HomePcApi.friendlyFetchError(err);
+        if (statusEl) statusEl.textContent = msg;
+        flashMsg(msg, true);
       });
   }
 

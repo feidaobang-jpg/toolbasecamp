@@ -836,7 +836,17 @@ class SeriesStudioAPI:
         no_text = self.deps.get("image_no_text_prefix") or ""
         bible_prefix = _bible_prompt_prefix({"bible": bible})
         neg = self.deps["default_txt2img_negative"]("", width=w, height=h)
-        base_prompt = (item.get("prompt") or item.get("label") or "series character design sheet").strip()
+        base_prompt = (
+            item.get("base_prompt")
+            or item.get("prompt")
+            or item.get("label")
+            or "series character design sheet"
+        ).strip()
+        # 避免多次「按反馈重出」把 Revision 叠成长串
+        if ". Revision:" in base_prompt:
+            base_prompt = base_prompt.split(". Revision:")[0].strip()
+        if ". User revision:" in base_prompt:
+            base_prompt = base_prompt.split(". User revision:")[0].strip()
         pos = (
             f"{no_text}{bible_prefix}{base_prompt}. User revision: {feedback}. "
             f"{style['suffix']}. {style['zh']}. series style guide still, no text, no watermark."
@@ -890,6 +900,7 @@ class SeriesStudioAPI:
         rel = self._rel(out_path)
         item["rel"] = rel
         item["url"] = self._url(rel) + f"?t={int(time.time())}"
+        item["base_prompt"] = base_prompt[:500]
         item["prompt"] = f"{base_prompt}. Revision: {feedback}"[:500]
         item["feedback"] = feedback[:300]
         item["selected"] = True
@@ -1257,6 +1268,7 @@ class SeriesStudioAPI:
                     "source": "ai",
                     "label": f"参考 {i + 1}",
                     "prompt": rp[:500],
+                    "base_prompt": rp[:500],
                     "selected": True,
                 }
             )

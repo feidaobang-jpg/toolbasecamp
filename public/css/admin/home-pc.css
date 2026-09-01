@@ -1814,6 +1814,42 @@ body.tb-admin-private #auth-status {
   align-self: flex-start;
 }
 
+.home-pc-wrap .series-ref-regen-status {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #64748b;
+  min-height: 1.2em;
+}
+
+.series-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1400;
+  max-width: min(92vw, 420px);
+  transform: translateX(-50%) translateY(120%);
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 14px;
+  line-height: 1.45;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.series-toast.is-show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.series-toast.is-err {
+  background: #991b1b;
+}
+
 .home-pc-wrap.trailer-portrait-preview .trailer-cand img {
   aspect-ratio: 9 / 16;
 }
