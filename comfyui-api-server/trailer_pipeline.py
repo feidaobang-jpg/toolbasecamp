@@ -408,7 +408,7 @@ def _bible_prompt_prefix(plan: dict) -> str:
             parts.append("characters: " + "; ".join(bits))
     if not parts:
         return ""
-    prefix = "Consistent series bible — " + ". ".join(parts) + ". "
+    prefix = "Consistent series bible: + ". ".join(parts) + ". "
     prefix += (
         "Cast rule: only show characters required by the current shot; "
         "do not force the full ensemble into every frame. "
