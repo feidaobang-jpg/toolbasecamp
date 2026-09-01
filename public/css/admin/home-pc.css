@@ -1819,14 +1819,6 @@ body.tb-admin-private #auth-status {
   border-radius: 10px;
 }
 
-.home-pc-wrap .series-shot-card {
-  cursor: pointer;
-}
-
-.home-pc-wrap .series-shot-actions {
-  margin-top: 8px;
-}
-
 .home-pc-wrap .series-log-head {
   display: flex;
   flex-wrap: wrap;
@@ -2017,12 +2009,16 @@ body.tb-admin-private #auth-status {
 }
 .home-pc-wrap .series-shot-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  align-items: stretch;
 }
 .home-pc-wrap .series-shot-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-width: 0;
+  min-height: 100%;
   text-align: left;
   border: 2px solid #e5e7eb;
   border-radius: 10px;
@@ -2031,6 +2027,7 @@ body.tb-admin-private #auth-status {
   overflow: hidden;
   cursor: pointer;
   color: inherit;
+  box-sizing: border-box;
 }
 .home-pc-wrap .series-shot-card.is-selected {
   border-color: #2563eb;
@@ -2043,6 +2040,7 @@ body.tb-admin-private #auth-status {
   aspect-ratio: 16 / 9;
   object-fit: cover;
   background: #e5e7eb;
+  flex: 0 0 auto;
 }
 .home-pc-wrap .series-shot-placeholder {
   display: flex;
@@ -2052,13 +2050,37 @@ body.tb-admin-private #auth-status {
   color: #6b7280;
 }
 .home-pc-wrap .series-shot-meta {
-  padding: 8px;
+  flex: 1 1 auto;
+  padding: 8px 10px 0;
   font-size: 12px;
   line-height: 1.35;
+  min-width: 0;
 }
 .home-pc-wrap .series-shot-vo {
   margin-top: 4px;
   color: #6b7280;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.7em;
+  word-break: break-word;
+}
+.home-pc-wrap .series-shot-actions {
+  margin-top: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.home-pc-wrap .series-shot-actions .tb-btn {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  white-space: nowrap;
 }
 .home-pc-wrap .series-shot-card.status-done,
 .home-pc-wrap .series-shot-card.status-approved {
@@ -2071,4 +2093,10 @@ body.tb-admin-private #auth-status {
 .home-pc-wrap .series-shot-card.status-video,
 .home-pc-wrap .series-shot-card.status-vo {
   border-color: #93c5fd;
+}
+
+@media (max-width: 768px) {
+  .home-pc-wrap .series-shot-grid {
+    grid-template-columns: 1fr;
+  }
 }

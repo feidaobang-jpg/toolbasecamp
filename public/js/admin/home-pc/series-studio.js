@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function () {
           escapeHtml((sh.voiceover || '').slice(0, 60)) +
           '</div></div>';
         var actions = document.createElement('div');
-        actions.className = 'action-row series-shot-actions';
+        actions.className = 'series-shot-actions';
         var previewBtn = document.createElement('button');
         previewBtn.type = 'button';
         previewBtn.className = 'tb-btn';
