@@ -1405,12 +1405,14 @@ class SeriesStudioAPI:
             text = api._export_log_text(series_id)
             if not text.strip():
                 text = f"# empty log for {series_id}\n"
-            title = re.sub(r"[^\w\u4e00-\u9fff\-]+", "_", (s["title"] or series_id))[:40]
-            fname = f"series_{title}_{series_id}_pipeline.log"
+            fname = f"series_{series_id}_pipeline.log"
+            # RFC 5987：避免中文文件名进 header 触发 500
             return PlainTextResponse(
                 text,
                 media_type="text/plain; charset=utf-8",
-                headers={"Content-Disposition": f'attachment; filename="{fname}"'},
+                headers={
+                    "Content-Disposition": f"attachment; filename=\"{fname}\"; filename*=UTF-8''{fname}"
+                },
             )
 
         @app.post("/series/plan")
