@@ -235,10 +235,12 @@ document.addEventListener('DOMContentLoaded', function () {
         card.classList.toggle('is-selected', input.checked);
       });
       var img = document.createElement('img');
-      var src = resolveUrl(it.url);
-      img.src = src;
+      var fullSrc = resolveUrl(it.url);
+      var thumbSrc = resolveUrl(it.thumb_url || it.url);
+      img.src = thumbSrc;
       img.alt = it.label || fn;
       img.loading = 'lazy';
+      img.decoding = 'async';
       var zoomBtn = document.createElement('button');
       zoomBtn.type = 'button';
       zoomBtn.className = 'trailer-cand-zoom';
@@ -246,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function () {
       zoomBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        openLightbox(src);
+        openLightbox(fullSrc);
       });
       var cap = document.createElement('span');
       cap.className = 'trailer-cand-cap';
@@ -571,8 +573,11 @@ document.addEventListener('DOMContentLoaded', function () {
           (sh.status || 'planned') +
           (sh.id === selectedShotId ? ' is-selected' : '');
         card.setAttribute('data-shot-id', sh.id);
-        var thumb = sh.image_url
-          ? '<img src="' + escapeHtml(resolveUrl(sh.image_url)) + '" alt="" loading="lazy" />'
+        var listImg = sh.image_thumb_url || sh.image_url;
+        var thumb = listImg
+          ? '<img src="' +
+            escapeHtml(resolveUrl(listImg)) +
+            '" alt="" loading="lazy" decoding="async" />'
           : '<div class="series-shot-placeholder">' + escapeHtml(statusLabel(sh.status)) + '</div>';
         card.innerHTML =
           thumb +

@@ -482,6 +482,69 @@ class SeriesStudioAPI:
             return ""
         return f"/output/{rel.lstrip('/')}"
 
+    def _thumb_rel_for(self, image_rel: str) -> str:
+        """foo/images/00.png -> foo/images/00.thumb.jpg"""
+        rel = (image_rel or "").replace("\\", "/").lstrip("/")
+        if not rel:
+            return ""
+        p = Path(rel)
+        return str(p.with_name(p.stem + ".thumb.jpg")).replace("\\", "/")
+
+    def _ensure_image_thumb(self, image_rel: str, *, max_side: int = 480) -> str:
+        """按需生成 JPEG 缩略图，返回 thumb 相对路径；失败时回退原图 rel。"""
+        rel = (image_rel or "").replace("\\", "/").lstrip("/")
+        if not rel:
+            return ""
+        src = self.output_root / rel
+        if not src.is_file():
+            return ""
+        thumb_rel = self._thumb_rel_for(rel)
+        thumb = self.output_root / thumb_rel
+        try:
+            if thumb.is_file() and thumb.stat().st_mtime >= src.stat().st_mtime:
+                return thumb_rel
+            with Image.open(src) as im:
+                im = im.convert("RGB")
+                im.thumbnail((int(max_side), int(max_side)), Image.Resampling.LANCZOS)
+                thumb.parent.mkdir(parents=True, exist_ok=True)
+                im.save(thumb, format="JPEG", quality=82, optimize=True)
+            return thumb_rel
+        except Exception:
+            return rel
+
+    def _image_urls(self, image_rel: str) -> tuple:
+        full = self._url(image_rel)
+        if not full:
+            return "", ""
+        thumb_rel = self._ensure_image_thumb(image_rel)
+        return full, self._url(thumb_rel) if thumb_rel else full
+
+    def _enrich_ref_urls(self, refs: list) -> list:
+        out = []
+        for it in refs or []:
+            if not isinstance(it, dict):
+                continue
+            item = dict(it)
+            rel = (item.get("rel") or "").strip().replace("\\", "/")
+            if rel:
+                full_u, thumb_u = self._image_urls(rel)
+                if full_u:
+                    item["url"] = full_u
+                if thumb_u:
+                    item["thumb_url"] = thumb_u
+            elif item.get("url") and not item.get("thumb_url"):
+                # 只有 url 时尽量从 /output/xxx 反推 rel
+                u = str(item.get("url") or "")
+                marker = "/output/"
+                if marker in u:
+                    rel2 = u.split(marker, 1)[1].split("?", 1)[0]
+                    full_u, thumb_u = self._image_urls(rel2)
+                    if thumb_u:
+                        item["thumb_url"] = thumb_u
+            out.append(item)
+        return out
+
+
     def _log(self, series_id: str, msg: str) -> None:
         line = f"[{datetime.now().strftime('%H:%M:%S')}] {msg}"
         with self.db.connect() as conn:
@@ -606,6 +669,7 @@ class SeriesStudioAPI:
                     if total_sec <= 0 and sh["status"] in ("stills", "video", "vo") and started_utc:
                         total_sec = _elapsed_since_utc(started_utc)
                     elapsed_label = _format_elapsed(total_sec) if total_sec > 0 else ""
+                    img_full, img_thumb = self._image_urls(sh["image_rel"])
                     sh_list.append(
                         {
                             "id": sh["id"],
@@ -617,7 +681,8 @@ class SeriesStudioAPI:
                             "status": sh["status"],
                             "version": sh["version"],
                             "error": sh["error"],
-                            "image_url": self._url(sh["image_rel"]),
+                            "image_url": img_full,
+                            "image_thumb_url": img_thumb,
                             "clip_url": self._url(sh["clip_rel"]),
                             "audio_url": self._url(sh["audio_rel"]),
                             "label": f"第{e['ep_no']}集 · 第{sc['sc_no']}场 · 第{sh['shot_no']}镜",
@@ -663,6 +728,7 @@ class SeriesStudioAPI:
             refs = json.loads(s["global_refs_json"] or "[]")
         except Exception:
             refs = []
+        refs = self._enrich_ref_urls(refs)
 
         return {
             "id": s["id"],
@@ -1020,7 +1086,9 @@ class SeriesStudioAPI:
         out_path.write_bytes(img_bytes)
         rel = self._rel(out_path)
         item["rel"] = rel
-        item["url"] = self._url(rel) + f"?t={int(time.time())}"
+        full_u, thumb_u = self._image_urls(rel)
+        item["url"] = full_u + f"?t={int(time.time())}"
+        item["thumb_url"] = (thumb_u + f"?t={int(time.time())}") if thumb_u else item["url"]
         item["base_prompt"] = base_prompt[:500]
         item["prompt"] = f"{base_prompt}. Revision: {feedback}"[:500]
         item["feedback"] = feedback[:300]
@@ -1153,6 +1221,7 @@ class SeriesStudioAPI:
             img_path = shot_dir / "images" / "00.png"
             img_path.write_bytes(img_bytes)
             image_rel = self._rel(img_path)
+            self._ensure_image_thumb(image_rel)
             stills_sec = time.perf_counter() - t0
             self._update_shot(shot_id, image_rel=image_rel, stills_sec=round(stills_sec, 2))
             self._log(
@@ -1406,7 +1475,8 @@ class SeriesStudioAPI:
             ui.append(
                 {
                     "filename": name,
-                    "url": self._url(rel),
+                    "url": self._image_urls(rel)[0],
+                    "thumb_url": self._image_urls(rel)[1],
                     "rel": rel,
                     "source": "ai",
                     "label": f"参考 {i + 1}",
@@ -1706,9 +1776,11 @@ class SeriesStudioAPI:
                 pass
             (refs_dir / name).write_bytes(raw)
             rel = api._rel(refs_dir / name)
+            full_u, thumb_u = api._image_urls(rel)
             item = {
                 "filename": name,
-                "url": api._url(rel),
+"url": full_u,
+                "thumb_url": thumb_u,
                 "rel": rel,
                 "source": "upload",
                 "label": (file.filename or name)[:80],
