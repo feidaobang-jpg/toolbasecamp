@@ -487,6 +487,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (newSeriesBtn) {
     newSeriesBtn.addEventListener('click', function () {
       resetNewForm();
+      progressWrap.style.display = '';
+      progressStatus.textContent = tr(
+        'privateHub.homePc.seriesClearedTip',
+        '已清空。填好梗概后点下方「新建并拆解剧本」。'
+      );
     });
   }
 

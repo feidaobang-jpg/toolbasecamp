@@ -343,6 +343,7 @@ window.TB_LOCALES['zh-CN'] = {
             seriesContinueUntil: '继续到选中镜',
             seriesRunShot: '生成此镜',
             seriesRegenShot: '重跑此镜',
+            seriesClearedTip: '已清空。填好梗概后点下方「新建并拆解剧本」。',
             seriesNeedSynopsis: '请先填写故事梗概',
             seriesCreating: '立项中…',
             seriesPlanning: '拆解集/场/镜…',

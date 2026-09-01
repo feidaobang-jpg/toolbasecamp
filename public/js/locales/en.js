@@ -344,6 +344,7 @@ window.TB_LOCALES.en = {
             seriesContinueUntil: 'Continue to selected shot',
             seriesRunShot: 'Generate this shot',
             seriesRegenShot: 'Regen this shot',
+            seriesClearedTip: 'Form cleared. Fill the synopsis, then click “Create & plan” below.',
             seriesNeedSynopsis: 'Enter a synopsis first',
             seriesCreating: 'Creating…',
             seriesPlanning: 'Planning episodes/scenes/shots…',
