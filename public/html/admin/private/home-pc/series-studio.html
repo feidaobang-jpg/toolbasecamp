@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc38" />
-  <script src="../../../../js/locales/en.js?v=series13"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=series13"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc39" />
+  <script src="../../../../js/locales/en.js?v=series15"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=series15"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -135,9 +135,8 @@
               <button type="button" id="confirm-global-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerConfirmGlobal">确认全剧参考</button>
               <button type="button" id="skip-global-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerSkipGlobal">跳过参考图</button>
               <button type="button" id="continue-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesContinue">继续全自动</button>
-              <button type="button" id="continue-until-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesContinueUntil">继续到选中镜</button>
-              <button type="button" id="run-shot-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesRunShot">生成此镜</button>
-              <button type="button" id="regen-shot-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesRegenShot">重跑此镜</button>
+              <button type="button" id="regen-all-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesRegenAll">全部重跑</button>
+              <button type="button" id="playlist-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesPlaylistPlay">合集预览</button>
               <button type="button" id="cancel-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.cancelTask">取消任务</button>
             </div>
 
@@ -171,6 +170,7 @@
                 <p id="shot-preview-meta" class="small-hint"></p>
                 <video id="shot-preview-video" class="series-shot-preview-video" controls playsinline></video>
                 <div class="action-row" style="margin-top:10px;">
+                  <button type="button" id="playlist-from-preview-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesPlaylistPlay">合集预览</button>
                   <button type="button" id="open-shot-folder-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesOpenFolder">打开文件夹</button>
                 </div>
               </div>
@@ -202,6 +202,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/series-studio.js?v=series13"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=series15"></script>
 </body>
 </html>

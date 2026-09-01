@@ -232,10 +232,11 @@ def deepseek_series_plan(
 
 规则：
 1. 集/场/镜编号从 1 开始连续。
-2. visual_prompt 英文；voiceover 中文；不要字幕/水印描述。
+2. visual_prompt 必须用英文，且足够具体：至少 35 个英文单词，写清主体是谁、动作、环境、光线、景别/镜头运动；每镜画面差异要大，禁止空泛套话。voiceover 中文一句即可。不要字幕/水印描述。
 3. 用户未细写画风时，由 bible 完整定调并贯穿所有 visual_prompt。
 4. episodes 数组长度必须等于 {ep_n}；每集 scenes 长度必须等于 {sc_n}；每场 shots 长度必须等于 {sh_n}。禁止多写。
 5. ref_prompts 必须给满 6 条英文提示：优先各主角单独定妆/半身+全身，再补场景情绪板；外形与 characters 一致。
+6. 本集若是动作戏，至少一半镜头要有明确动作/冲突，不要只会「站桩合影」。
 """
     try:
         import requests
@@ -1207,7 +1208,7 @@ class SeriesStudioAPI:
                             if until_shot_id and sid == until_shot_id:
                                 break
                             continue
-                        await self._run_one_shot(series_id, sid, force=False)
+                        await self._run_one_shot(series_id, sid, force=force)
                         if until_shot_id and sid == until_shot_id:
                             break
                 self._set_job(series_id, "idle")
@@ -1623,17 +1624,23 @@ class SeriesStudioAPI:
         async def series_continue(
             series_id: str = Form(...),
             until_shot_id: str = Form(""),
+            force: str = Form("0"),
         ):
             with api.db.connect() as conn:
                 s = api._get_series_row(conn, series_id)
             if s["job_status"] == "running":
                 raise HTTPException(status_code=400, detail="已有任务在跑")
             until = (until_shot_id or "").strip() or None
+            do_force = str(force or "0") in ("1", "true", "True")
             api._log(
                 series_id,
-                "继续全自动（跑到指定镜）…" if until else "继续全自动（至全部完成）…",
+                "全部重跑（强制）…"
+                if do_force
+                else ("继续全自动（跑到指定镜）…" if until else "继续全自动（至全部完成）…"),
             )
-            asyncio.create_task(api._continue_job(series_id, until_shot_id=until))
+            asyncio.create_task(
+                api._continue_job(series_id, until_shot_id=until, force=do_force)
+            )
             return {"success": True, "series_id": series_id}
 
         @app.post("/series/regen")

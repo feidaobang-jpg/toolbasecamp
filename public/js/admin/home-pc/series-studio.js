@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var confirmGlobalBtn = document.getElementById('confirm-global-btn');
   var skipGlobalBtn = document.getElementById('skip-global-btn');
   var continueBtn = document.getElementById('continue-btn');
-  var continueUntilBtn = document.getElementById('continue-until-btn');
-  var runShotBtn = document.getElementById('run-shot-btn');
-  var regenShotBtn = document.getElementById('regen-shot-btn');
+  var regenAllBtn = document.getElementById('regen-all-btn');
+  var playlistBtn = document.getElementById('playlist-btn');
+  var playlistFromPreviewBtn = document.getElementById('playlist-from-preview-btn');
   var cancelBtn = document.getElementById('cancel-btn');
   var progressWrap = document.getElementById('progress-wrap');
   var progressStatus = document.getElementById('progress-status');
@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var openShotFolderBtn = document.getElementById('open-shot-folder-btn');
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightbox-img');
+  var playlistQueue = [];
+  var playlistIndex = 0;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -101,10 +103,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (confirmGlobalBtn) confirmGlobalBtn.disabled = !!busy;
     if (skipGlobalBtn) skipGlobalBtn.disabled = !!busy;
     if (continueBtn) continueBtn.disabled = !!busy;
-    if (continueUntilBtn) continueUntilBtn.disabled = !!busy;
-    if (runShotBtn) runShotBtn.disabled = !!busy;
-    if (regenShotBtn) regenShotBtn.disabled = !!busy;
-    if (cancelBtn) cancelBtn.style.display = busy && currentSeriesId ? '' : 'none';
+    if (regenAllBtn) regenAllBtn.disabled = !!busy;
+    if (playlistBtn) playlistBtn.disabled = !!busy;
+    if (playlistFromPreviewBtn) playlistFromPreviewBtn.disabled = !!busy;
+    if (sceneBoard) {
+      Array.prototype.forEach.call(sceneBoard.querySelectorAll('[data-job-btn="1"]'), function (btn) {
+        btn.disabled = !!busy;
+      });
+    }
   }
 
   function statusLabel(st) {
@@ -369,9 +375,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (confirmGlobalBtn) confirmGlobalBtn.style.display = awaiting ? '' : 'none';
     if (skipGlobalBtn) skipGlobalBtn.style.display = awaiting ? '' : 'none';
     if (continueBtn) continueBtn.style.display = hasShots && !awaiting ? '' : 'none';
-    if (continueUntilBtn) continueUntilBtn.style.display = hasShots && !awaiting && selectedShotId ? '' : 'none';
-    if (runShotBtn) runShotBtn.style.display = hasShots && !awaiting && selectedShotId ? '' : 'none';
-    if (regenShotBtn) regenShotBtn.style.display = hasShots && !awaiting && selectedShotId ? '' : 'none';
+    if (regenAllBtn) regenAllBtn.style.display = hasShots && !awaiting ? '' : 'none';
+    if (playlistBtn) playlistBtn.style.display = hasShots && !awaiting ? '' : 'none';
     if (deleteSeriesBtn) deleteSeriesBtn.style.display = currentSeriesId ? '' : 'none';
     if (downloadLogBtn) downloadLogBtn.style.display = currentSeriesId ? '' : 'none';
     if (openSeriesFolderBtn) openSeriesFolderBtn.style.display = currentSeriesId ? '' : 'none';
@@ -546,8 +551,12 @@ document.addEventListener('DOMContentLoaded', function () {
           '</strong> · ' +
           escapeHtml(statusLabel(sh.status)) +
           '<div class="series-shot-vo">' +
-          escapeHtml((sh.voiceover || '').slice(0, 60)) +
-          '</div></div>';
+          escapeHtml((sh.voiceover || '').slice(0, 48)) +
+          '</div>' +
+          (sh.visual_prompt
+            ? '<div class="series-shot-vp">' + escapeHtml(String(sh.visual_prompt).slice(0, 72)) + '</div>'
+            : '') +
+          '</div>';
         var actions = document.createElement('div');
         actions.className = 'series-shot-actions';
         var previewBtn = document.createElement('button');
@@ -572,8 +581,34 @@ document.addEventListener('DOMContentLoaded', function () {
           updateActionVisibility(currentSeries);
           revealSelectedShotFolder();
         });
+        var runOrRegen = document.createElement('button');
+        runOrRegen.type = 'button';
+        runOrRegen.className = 'tb-btn';
+        runOrRegen.setAttribute('data-job-btn', '1');
+        var isDone = sh.status === 'done' || sh.status === 'approved';
+        var isFailed = sh.status === 'failed';
+        if (isDone || isFailed) {
+          runOrRegen.textContent = tr('privateHub.homePc.seriesRegenShot', '重跑此镜');
+          runOrRegen.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            selectedShotId = sh.id;
+            markSelectedShotCards();
+            postJob('/series/regen', { shot_id: sh.id });
+          });
+        } else {
+          runOrRegen.textContent = tr('privateHub.homePc.seriesRunShot', '生成此镜');
+          runOrRegen.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            selectedShotId = sh.id;
+            markSelectedShotCards();
+            postJob('/series/run-shot', { shot_id: sh.id, force: '0' });
+          });
+        }
         actions.appendChild(previewBtn);
         actions.appendChild(folderBtn);
+        actions.appendChild(runOrRegen);
         card.appendChild(actions);
         card.addEventListener('click', function () {
           selectShot(sh, !!sh.clip_url);
@@ -909,6 +944,77 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function collectPlaylistClips(series, epIdOnly) {
+    var list = [];
+    (series.episodes || []).forEach(function (ep) {
+      if (epIdOnly && ep.id !== epIdOnly) return;
+      (ep.scenes || []).forEach(function (sc) {
+        (sc.shots || []).forEach(function (sh) {
+          if (sh.clip_url) {
+            list.push({
+              url: resolveUrl(sh.clip_url),
+              label: sh.label || ('镜 ' + sh.shot_no),
+              id: sh.id
+            });
+          }
+        });
+      });
+    });
+    return list;
+  }
+
+  function playPlaylistItem() {
+    if (!shotPreviewVideo || !playlistQueue.length) return;
+    if (playlistIndex >= playlistQueue.length) {
+      if (shotPreviewMeta) {
+        shotPreviewMeta.textContent = tr(
+          'privateHub.homePc.seriesPlaylistDone',
+          '合集播放结束'
+        );
+      }
+      return;
+    }
+    var item = playlistQueue[playlistIndex];
+    selectedShotId = item.id;
+    markSelectedShotCards();
+    if (shotPreviewBox) shotPreviewBox.style.display = '';
+    if (shotPreviewMeta) {
+      shotPreviewMeta.textContent =
+        tr('privateHub.homePc.seriesPlaylistPlay', '合集预览') +
+        ' · ' +
+        (playlistIndex + 1) +
+        '/' +
+        playlistQueue.length +
+        ' · ' +
+        item.label;
+    }
+    var src = item.url + (item.url.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
+    shotPreviewVideo.src = src;
+    try {
+      shotPreviewVideo.load();
+      var p = shotPreviewVideo.play();
+      if (p && typeof p.catch === 'function') p.catch(function () {});
+    } catch (e) {}
+  }
+
+  function startPlaylist(epOnly) {
+    if (!currentSeries) return;
+    var epId = epOnly ? selectedEpId : null;
+    playlistQueue = collectPlaylistClips(currentSeries, epId);
+    playlistIndex = 0;
+    if (!playlistQueue.length) {
+      flashMsg(tr('privateHub.homePc.seriesNoClip', '此镜尚无成片可预览'), true);
+      return;
+    }
+    if (shotPreviewVideo) {
+      shotPreviewVideo.onended = function () {
+        playlistIndex += 1;
+        playPlaylistItem();
+      };
+    }
+    playPlaylistItem();
+  }
+
   function postJob(path, extra) {
     if (!currentSeriesId) return;
     var fd = new FormData();
@@ -944,22 +1050,27 @@ document.addEventListener('DOMContentLoaded', function () {
       postJob('/series/continue', {});
     });
   }
-  if (continueUntilBtn) {
-    continueUntilBtn.addEventListener('click', function () {
-      if (!selectedShotId) return;
-      postJob('/series/continue', { until_shot_id: selectedShotId });
+  if (regenAllBtn) {
+    regenAllBtn.addEventListener('click', function () {
+      if (!currentSeriesId) return;
+      if (
+        !window.confirm(
+          tr('privateHub.homePc.seriesRegenAllConfirm', '确定全部重跑？已完成镜头也会重新生成。')
+        )
+      ) {
+        return;
+      }
+      postJob('/series/continue', { force: '1' });
     });
   }
-  if (runShotBtn) {
-    runShotBtn.addEventListener('click', function () {
-      if (!selectedShotId) return;
-      postJob('/series/run-shot', { shot_id: selectedShotId, force: '0' });
+  if (playlistBtn) {
+    playlistBtn.addEventListener('click', function () {
+      startPlaylist(true);
     });
   }
-  if (regenShotBtn) {
-    regenShotBtn.addEventListener('click', function () {
-      if (!selectedShotId) return;
-      postJob('/series/regen', { shot_id: selectedShotId });
+  if (playlistFromPreviewBtn) {
+    playlistFromPreviewBtn.addEventListener('click', function () {
+      startPlaylist(true);
     });
   }
   if (cancelBtn) {

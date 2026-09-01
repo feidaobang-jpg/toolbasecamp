@@ -2067,6 +2067,17 @@ body.tb-admin-private #auth-status {
   min-height: 2.7em;
   word-break: break-word;
 }
+.home-pc-wrap .series-shot-vp {
+  margin-top: 4px;
+  color: #94a3b8;
+  font-size: 11px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+}
 .home-pc-wrap .series-shot-actions {
   margin-top: auto;
   padding: 10px;
