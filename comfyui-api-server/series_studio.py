@@ -1100,7 +1100,7 @@ class SeriesStudioAPI:
         @app.post("/series/create")
         @app.post("/api/series/create")
         async def series_create(
-            title: str = Form(""),
+            title: str = Form(...),
             synopsis: str = Form(...),
             visual_style: str = Form("realistic"),
             aspect: str = Form("16_9"),
@@ -1112,7 +1112,10 @@ class SeriesStudioAPI:
             scenes_per_ep: str = Form("2"),
             shots_per_scene: str = Form("3"),
         ):
+            title_s = (title or "").strip()
             text = (synopsis or "").strip()
+            if len(title_s) < 1:
+                raise HTTPException(status_code=400, detail="请填写剧名")
             if len(text) < 2:
                 raise HTTPException(status_code=400, detail="请填写故事梗概")
             style_n = (visual_style or "realistic").strip().lower()
@@ -1130,7 +1133,6 @@ class SeriesStudioAPI:
                 ep_n, sc_n, sh_n = 2, 2, 3
             sid = _new_id("ser_")
             now = _utc_now_str()
-            title_s = (title or "").strip() or (text[:40] + ("…" if len(text) > 40 else ""))
             with api.db.connect() as conn:
                 conn.execute(
                     """

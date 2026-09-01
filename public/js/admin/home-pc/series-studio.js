@@ -493,10 +493,18 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   createPlanBtn.addEventListener('click', function () {
+    var title = (titleInput.value || '').trim();
     var syn = (synopsisInput.value || '').trim();
+    if (title.length < 1) {
+      progressWrap.style.display = '';
+      progressStatus.textContent = tr('privateHub.homePc.seriesNeedTitle', '请先填写剧名');
+      if (titleInput) titleInput.focus();
+      return;
+    }
     if (syn.length < 2) {
       progressWrap.style.display = '';
       progressStatus.textContent = tr('privateHub.homePc.seriesNeedSynopsis', '请先填写故事梗概');
+      if (synopsisInput) synopsisInput.focus();
       return;
     }
     setBusy(true);
@@ -506,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
     logOutput.textContent = '';
 
     var fd = new FormData();
-    fd.append('title', (titleInput.value || '').trim());
+    fd.append('title', title);
     fd.append('synopsis', syn);
     fd.append('visual_style', selectedStyle);
     fd.append('aspect', selectedAspect());
