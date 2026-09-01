@@ -1307,9 +1307,9 @@ class SeriesStudioAPI:
             except Exception:
                 spd = 1.0
             try:
-                ep_n = max(1, min(12, int(episode_count or 2)))
-                sc_n = max(1, min(8, int(scenes_per_ep or 2)))
-                sh_n = max(1, min(12, int(shots_per_scene or 3)))
+                ep_n = max(1, min(12, int(episode_count or 1)))
+                sc_n = max(1, min(8, int(scenes_per_ep or 1)))
+                sh_n = max(1, min(12, int(shots_per_scene or 1)))
             except Exception:
                 ep_n, sc_n, sh_n = 2, 2, 3
             sid = _new_id("ser_")
