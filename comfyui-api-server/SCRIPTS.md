@@ -226,9 +226,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ### Q3: 自启动不生效
 
 **A:** 检查：
-1. 是否已运行 `install-autostart.bat`
-2. 启动文件夹中是否有快捷方式
-3. 重新安装自启动
+1. 是否已运行 `install-autostart.bat` / `install-all-autostart.bat`
+2. 「启动」里 `ComfyUI-API-Server.vbs` 是否为**绝对路径**指向本仓库 `start-server.bat`（旧版相对路径复制到 Startup 会找不到 bat）
+3. 重新运行安装脚本覆盖 Startup 条目
+4. 网站连不上 `https://comfy.zhengxiaohui.cn` 时：本机 `:5000` 只是一半，**Tunnel 需单独启动**（自启不含 Tunnel）
+5. 不需要自启时用 `uninstall-autostart.bat` 卸掉即可，**不必删仓库里的 bat**
 
 ### Q4: 如何查看服务日志
 
