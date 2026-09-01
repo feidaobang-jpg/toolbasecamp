@@ -92,18 +92,18 @@ _VIDEO_ENGINES = {
 
 def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
-    # 兼容旧值 i2v / 笼统 ltx
-    if m in ("i2v", "wan", "wan22", "wan2.2_5b", "wan22_ti2v"):
-        return "wan22_5b"
+    # 兼容旧值：Wan 已下线，统一落到 LTX 图生视频
+    if m in ("i2v", "wan", "wan22", "wan2.2_5b", "wan22_ti2v", "wan22_5b"):
+        return "ltx25_i2v"
     if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):
         return "ltx25_i2v"
     if m in ("ltx_t2v", "ltx25_t2v", "ltx2.5_t2v"):
         return "ltx25_t2v"
     if m in ("still", "ken_burns", "slideshow"):
         return "kenburns"
-    if m in _VIDEO_ENGINES:
+    if m in _VIDEO_ENGINES and m != "wan22_5b":
         return m
-    return "wan22_5b"
+    return "ltx25_i2v"
 
 
 
@@ -622,6 +622,19 @@ def _compose_clips_with_audio_sync(
     final_clip.write_videofile(str(out_video), fps=fps, codec="libx264", audio_codec="aac")
 
 
+def _write_silence_wav(path: Path, duration_sec: float = 1.0, sr: int = 24000) -> None:
+    import wave
+
+    n = max(1, int(float(duration_sec) * int(sr)))
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with wave.open(str(path), "w") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(int(sr))
+        w.writeframes(b"\x00\x00" * n)
+
+
 def _pad_or_trim_wav(src: Path, dst: Path, target_sec: float) -> None:
     target_sec = max(0.5, float(target_sec))
     with wave.open(str(src), "rb") as wf:
@@ -798,7 +811,7 @@ class TrailerAPI:
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
             segment_count: str = Form("1"),
-            video_mode: str = Form("wan22_5b"),
+            video_mode: str = Form("ltx25_i2v"),
             use_global_refs: str = Form("1"),
         ):
             text = (prompt or "").strip()
@@ -1068,7 +1081,7 @@ class TrailerAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form(""),
-            video_mode: str = Form("wan22_5b"),
+            video_mode: str = Form("ltx25_i2v"),
             auto_compose: str = Form("0"),
         ):
             root: Path = api.deps["output_root"]
@@ -1498,23 +1511,14 @@ class TrailerAPI:
         ltx_wh = _ASPECT_LTX[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
-        mode = _normalize_video_engine(task.get("video_mode") or "wan22_5b")
+        mode = _normalize_video_engine(task.get("video_mode") or "ltx25_i2v")
         task["video_mode"] = mode
-        engine_meta = _VIDEO_ENGINES[mode]
-        tts = self.deps["indextts_synthesize"]
-        wav_dur = self.deps["wav_duration_seconds"]
+        engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["ltx25_i2v"]
         create_subs = self.deps["create_subtitle_overlays_timed"]
         upload_bytes = self.deps.get("upload_image_bytes")
-        build_wan = self.deps.get("build_wan22_ti2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
-        use_wan = (
-            mode == "wan22_5b"
-            and callable(upload_bytes)
-            and callable(build_wan)
-            and callable(run_video)
-        )
         use_ltx_i2v = (
             mode == "ltx25_i2v"
             and callable(upload_bytes)
@@ -1522,11 +1526,11 @@ class TrailerAPI:
             and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_wan or use_ltx_i2v or use_ltx_t2v
+        use_comfy_video = use_ltx_i2v or use_ltx_t2v
 
         image_paths: List[Path] = []
         video_clip_paths: List[Path] = []
-        audio_paths: List[Path] = []
+        audio_paths: List[Optional[Path]] = []
         durations: List[float] = []
         sub_timelines: List[Optional[List[Tuple[str, float, float]]]] = []
         srt_lines: List[str] = []
@@ -1571,68 +1575,23 @@ class TrailerAPI:
                 f"camera {shot.get('camera') or 'medium'}, subtle cinematic motion, natural movement"
             )
 
-            # 1) 配音
-            task["stage"] = "tts"
+            # 1) 不再 Edge-TTS；LTX 直出音轨。仅回退静帧时写静音占位。
+            task["stage"] = "i2v" if use_ltx_i2v else ("t2v" if use_ltx_t2v else "video")
             task["progress"] = {"current": i + 1, "total": n_shots}
-            self._log(task, f"配音 分镜 {idx + 1}/{n_shots}")
-            t_tts0 = time.perf_counter()
+            dur = min(10.0, max(3.0, planned))
             raw_wav = audio_dir / f"{idx:02d}_raw.wav"
             final_wav = audio_dir / f"{idx:02d}.wav"
-            produced = await tts(vo, raw_wav, voice=voice, speed=speed)
-            # TTS 可能只留下 mp3；统一保证 raw_wav 存在
-            produced_path = Path(produced) if produced else raw_wav
-            mp3_fallback = raw_wav.with_suffix(".mp3")
-            if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
-                src = (
-                    produced_path
-                    if produced_path.exists()
-                    else (mp3_fallback if mp3_fallback.exists() else None)
-                )
-                if src is None:
-                    raise RuntimeError(f"配音文件未生成：{raw_wav}")
-                await asyncio.to_thread(_ensure_wav, src, raw_wav)
-            if not raw_wav.exists():
-                raise RuntimeError(
-                    f"配音文件未生成：{raw_wav}"
-                    + (f"（仅有 {mp3_fallback.name}）" if mp3_fallback.exists() else "")
-                )
-            audio_dur_fn = self.deps.get("audio_duration_seconds") or wav_dur
-            tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
-            tts_sec += time.perf_counter() - t_tts0
-            # 以用户单段时长为主；旁白更长则略延长（上限 10s）
-            dur = max(planned, tts_len)
-            dur = min(10.0, max(3.0, dur))
 
-            # 2) 视频引擎：Wan I2V / LTX T2V / 稍后 Ken Burns
+            # 2) 视频引擎：LTX I2V / T2V / 稍后 Ken Burns
             clip_path = clips_dir / f"{idx:02d}.mp4"
+            made_video = False
             if use_comfy_video:
-                task["stage"] = "i2v" if (use_wan or use_ltx_i2v) else "t2v"
                 t_vid0 = time.perf_counter()
                 try:
-                    if use_wan:
+                    if use_ltx_i2v:
                         self._log(
                             task,
-                            f"Wan2.2-5B 图生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {_length_for_duration(dur)}帧）",
-                        )
-                        comfy_name, _sub = await upload_bytes(
-                            img_path.read_bytes(), name_prefix=f"trailer_{idx:02d}_"
-                        )
-                        if not comfy_name:
-                            raise RuntimeError("上传关键帧到 ComfyUI 失败")
-                        length = _length_for_duration(dur)
-                        wf = build_wan(
-                            comfy_name,
-                            motion,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
-                            length=length,
-                            fps=24,
-                        )
-                    elif use_ltx_i2v:
-                        self._log(
-                            task,
-                            f"LTX-2.5 图生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s）",
+                            f"LTX-2.5 图生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s·直出音频）",
                         )
                         comfy_name, _sub = await upload_bytes(
                             img_path.read_bytes(), name_prefix=f"trailer_ltx_{idx:02d}_"
@@ -1651,7 +1610,7 @@ class TrailerAPI:
                     else:
                         self._log(
                             task,
-                            f"LTX-2.5 文生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s）",
+                            f"LTX-2.5 文生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s·直出音频）",
                         )
                         wf = build_ltx_t2v(
                             motion,
@@ -1664,12 +1623,12 @@ class TrailerAPI:
                     vid_bytes = await run_video(wf)
                     clip_path.write_bytes(vid_bytes)
                     video_clip_paths.append(clip_path)
+                    made_video = True
                     try:
                         vdur = float(VideoFileClip(str(clip_path)).duration)
                     except Exception:
                         vdur = dur
-                    dur = max(tts_len, min(10.0, max(vdur, planned * 0.85)))
-                    dur = max(3.0, dur)
+                    dur = max(3.0, min(10.0, max(vdur, planned * 0.85)))
                 except Exception as e:
                     i2v_fail += 1
                     self._log(
@@ -1682,32 +1641,34 @@ class TrailerAPI:
             else:
                 video_clip_paths.append(img_path)
 
-            await asyncio.to_thread(_pad_or_trim_wav, raw_wav, final_wav, dur)
-            audio_paths.append(final_wav)
+            if made_video:
+                # 保留 LTX 直出音轨，拼接时不覆盖
+                audio_paths.append(None)
+            else:
+                # 静帧推镜需要占位音轨
+                await asyncio.to_thread(_write_silence_wav, final_wav, dur)
+                audio_paths.append(final_wav)
             durations.append(dur)
             sub_timelines.append([(vo, 0.0, dur)])
             srt_lines.append(f"{i + 1}\n{_ts(t_cursor)} --> {_ts(t_cursor + dur)}\n{vo}\n")
             t_cursor += dur
 
         timing = _timing_bucket(task)
-        timing["tts_sec"] = round(tts_sec, 2)
+        timing["tts_sec"] = 0.0
         timing["video_sec"] = round(video_sec, 2)
 
         if use_comfy_video:
-            if use_wan or use_ltx_i2v:
-                vid_label = "图生视频"
-            else:
-                vid_label = "文生视频"
+            vid_label = "图生视频" if use_ltx_i2v else "文生视频"
             self._log(
                 task,
                 f"{vid_label}完成，{n_shots} 镜，耗时 {_format_elapsed(video_sec)}"
                 + (f"（失败回退 {i2v_fail} 镜）" if i2v_fail else ""),
             )
         else:
-            self._log(task, f"配音完成，{n_shots} 镜，耗时 {_format_elapsed(tts_sec)}")
+            self._log(task, f"跳过配音（LTX 直出音频 / 静帧静音）")
 
         task["stage"] = "video"
-        self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s，I2V失败 {i2v_fail} 镜）…")
+        self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s，失败回退 {i2v_fail} 镜）…")
         t_mux0 = time.perf_counter()
         out_name = "trailer_16_9.mp4" if aspect == "16_9" else "trailer_9_16.mp4"
         out_video = task_dir / out_name
@@ -1728,12 +1689,22 @@ class TrailerAPI:
                 create_subs,
                 24,
             )
-            engine_note = f"{engine_meta['label']} + 旁白拼接"
+            engine_note = f"{engine_meta['label']}（保留直出音轨）"
         elif mode == "kenburns":
+            kb_audio = []
+            for i, p in enumerate(audio_paths):
+                if p and Path(p).exists():
+                    kb_audio.append(Path(p))
+                else:
+                    sil = audio_dir / f"kb_sil_{i:02d}.wav"
+                    await asyncio.to_thread(
+                        _write_silence_wav, sil, float(durations[i] if i < len(durations) else 5)
+                    )
+                    kb_audio.append(sil)
             await asyncio.to_thread(
                 _compose_trailer_sync,
                 image_paths,
-                audio_paths,
+                kb_audio,
                 durations,
                 out_video,
                 out_size,
@@ -1743,11 +1714,21 @@ class TrailerAPI:
             )
             engine_note = f"{engine_meta['label']}（关键帧推拉摇移）"
         else:
-            # 混合失败时统一 Ken Burns，保证能出片
+            # 混合失败时统一 Ken Burns；缺音频则补静音
+            kb_audio = []
+            for i, p in enumerate(audio_paths):
+                if p and Path(p).exists():
+                    kb_audio.append(Path(p))
+                else:
+                    sil = audio_dir / f"kb_sil_{i:02d}.wav"
+                    await asyncio.to_thread(
+                        _write_silence_wav, sil, float(durations[i] if i < len(durations) else 5)
+                    )
+                    kb_audio.append(sil)
             await asyncio.to_thread(
                 _compose_trailer_sync,
                 image_paths,
-                audio_paths,
+                kb_audio,
                 durations,
                 out_video,
                 out_size,

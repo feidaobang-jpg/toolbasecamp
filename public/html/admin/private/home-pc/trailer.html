@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc32" />
-  <script src="../../../../js/locales/en.js?v=trailer15"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=trailer15"></script>
+  <script src="../../../../js/locales/en.js?v=trailer16"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=trailer16"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc28"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -25,7 +25,7 @@
           <a href="../../private.html" class="home-pc-back">
             <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
           </a>
-          <h1 class="home-pc-title" data-i18n="privateHub.homePc.trailerTitle">视频流水线</h1>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.trailerTitle">短片流水线</h1>
           <div class="home-pc-header-actions">
             <span id="auth-label" class="home-pc-auth-label"></span>
             <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
@@ -115,30 +115,13 @@
                 <div class="input-control">
                   <label data-i18n="privateHub.homePc.trailerVideoModeLabel">成片模型</label>
                   <div class="trailer-aspect-row">
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="wan22_5b" checked /><span data-i18n="privateHub.homePc.trailerVideoModeWan">图生视频 Wan 2.2 5B</span></label>
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_i2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5</span></label>
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5</span></label>
+                    <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_i2v" checked /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
                   </div>
-                  <p class="small-hint" data-i18n="privateHub.homePc.trailerVideoModeHint">Wan / LTX 图生视频都跟关键帧走；LTX 文生视频只按提示词。14B / MiniMax 因显存暂未接入。</p>
+                  <p class="small-hint" data-i18n="privateHub.homePc.trailerVideoModeHint">已停用 Wan / Edge-TTS。LTX 2.5 自带音轨直出；旁白可后期再加。</p>
                 </div>
               </div>
 
-              <div class="form-row">
-                <div class="input-control">
-                  <label for="voice-select" data-i18n="privateHub.homePc.textToVideoVoiceLabel">语音：</label>
-                  <select id="voice-select" class="text-input">
-                    <option value="zh-CN-YunxiNeural" selected>云希（男声）</option>
-                    <option value="zh-CN-XiaoxiaoNeural">晓晓（女声）</option>
-                    <option value="zh-CN-YunyangNeural">云扬（男声新闻）</option>
-                    <option value="zh-CN-XiaoyiNeural">晓伊（女声）</option>
-                    <option value="zh-CN-YunjianNeural">云健（男声）</option>
-                  </select>
-                </div>
-                <div class="input-control">
-                  <label for="speed-input" data-i18n="privateHub.homePc.textToVideoSpeedLabel">语速：</label>
-                  <input id="speed-input" class="text-input" type="number" step="0.1" min="0.7" max="1.4" value="1.0" />
-                </div>
-              </div>
             </div>
 
             <div class="action-row home-pc-tool-actions">
@@ -220,7 +203,7 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer14"></script>
+  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer16"></script>
   <div id="trailer-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">

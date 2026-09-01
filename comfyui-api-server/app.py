@@ -121,7 +121,7 @@ async def health_check():
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
         "trailer_pipeline": "v7_timing_logs",
-        "series_studio": "v3_mux_audio_preview",
+        "series_studio": "v4_ltx_native_audio",
     }
 
 

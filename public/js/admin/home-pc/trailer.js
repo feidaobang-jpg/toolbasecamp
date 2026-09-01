@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function selectedVideoMode() {
     var el = document.querySelector('input[name="video-mode"]:checked');
-    return el ? el.value : 'wan22_5b';
+    return el ? el.value : 'ltx25_i2v';
   }
 
   var startBtnDefaultText = startBtn ? (startBtn.textContent || '').trim() : '';
@@ -558,8 +558,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('aspect', selectedAspect());
     fd.append('candidates_per_shot', candidatesSelect.value || '1');
     fd.append('use_global_refs', selectedUseGlobalRefs() ? '1' : '0');
-    fd.append('voice', voiceSelect.value || 'zh-CN-YunxiNeural');
-    fd.append('speed', speedInput.value || '1.0');
+    fd.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-YunxiNeural');
+    fd.append('speed', (speedInput && speedInput.value) || '1.0');
     fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '5');
     var segN = 1;
     if (segmentCountInput) {
@@ -698,8 +698,8 @@ document.addEventListener('DOMContentLoaded', function () {
     hideResultVideo();
     var fd = new FormData();
     fd.append('folder', folder);
-    fd.append('voice', voiceSelect.value || 'zh-CN-YunxiNeural');
-    fd.append('speed', speedInput.value || '1.0');
+    fd.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-YunxiNeural');
+    fd.append('speed', (speedInput && speedInput.value) || '1.0');
     fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '');
     fd.append('video_mode', selectedVideoMode());
     fd.append('auto_compose', autoCompose ? '1' : '0');
