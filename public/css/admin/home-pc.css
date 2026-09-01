@@ -1426,7 +1426,9 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
 
 .home-pc-wrap .home-pc-log-box {
   height: 200px;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 10px 12px;
@@ -1438,6 +1440,12 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   margin: 0 0 8px;
   font-size: 14px;
   color: #374151;
+  flex-shrink: 0;
+}
+
+.home-pc-wrap .home-pc-log-box .series-log-head,
+.home-pc-wrap .home-pc-log-box .small-hint {
+  flex-shrink: 0;
 }
 
 .home-pc-wrap .home-pc-log-box pre {
@@ -1445,6 +1453,9 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   white-space: pre-wrap;
   font-size: 13px;
   color: #4b5563;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .home-pc-wrap .home-pc-log-box--tall {
