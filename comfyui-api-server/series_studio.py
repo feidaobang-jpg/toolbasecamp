@@ -30,6 +30,7 @@ from trailer_pipeline import (
     _VIDEO_ENGINES,
     _bible_prompt_prefix,
     _clamp_shot_duration,
+    _compose_clips_with_audio_sync,
     _compose_trailer_sync,
     _ensure_wav,
     _extract_json_object,
@@ -58,6 +59,19 @@ _SHOT_STATUSES = (
     "failed",
     "approved",
 )
+
+
+def _write_silence_wav(path: Path, duration_sec: float = 1.0, sr: int = 24000) -> None:
+    import wave
+
+    n = max(1, int(float(duration_sec) * int(sr)))
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with wave.open(str(path), "w") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(int(sr))
+        w.writeframes(b"\x00\x00" * n)
 
 
 def _utc_now_str() -> str:
@@ -1046,17 +1060,33 @@ class SeriesStudioAPI:
             t_tts = time.perf_counter()
             raw_wav = shot_dir / "audio" / "00_raw.wav"
             final_wav = shot_dir / "audio" / "00.wav"
-            produced = await tts(vo, raw_wav, voice=row["voice"], speed=float(row["speed"] or 1.0))
-            produced_path = Path(produced) if produced else raw_wav
-            mp3_fallback = raw_wav.with_suffix(".mp3")
-            if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
-                src = produced_path if produced_path.exists() else (mp3_fallback if mp3_fallback.exists() else None)
-                if src is None:
-                    raise RuntimeError("配音文件未生成")
-                await asyncio.to_thread(_ensure_wav, src, raw_wav)
-            tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
+            try:
+                produced = await tts(vo, raw_wav, voice=row["voice"], speed=float(row["speed"] or 1.0))
+                produced_path = Path(produced) if produced else raw_wav
+                mp3_fallback = raw_wav.with_suffix(".mp3")
+                if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
+                    src = (
+                        produced_path
+                        if produced_path.exists()
+                        else (mp3_fallback if mp3_fallback.exists() else None)
+                    )
+                    if src is None:
+                        raise RuntimeError("配音文件未生成")
+                    await asyncio.to_thread(_ensure_wav, src, raw_wav)
+                tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
+                self._log(
+                    series_id,
+                    f"配音完成 {label}，耗时 {_format_elapsed(time.perf_counter() - t_tts)}",
+                )
+            except Exception as e:
+                # Edge-TTS 偶发无音频/断网：用静音占位，保证成片继续
+                tts_len = float(dur)
+                await asyncio.to_thread(_write_silence_wav, raw_wav, max(1.0, tts_len))
+                self._log(
+                    series_id,
+                    f"配音失败，已用静音占位 {label}：{e}",
+                )
             clip_dur = min(10.0, max(3.0, max(dur, tts_len)))
-            self._log(series_id, f"配音完成 {label}，耗时 {_format_elapsed(time.perf_counter() - t_tts)}")
 
             if self._cancel.get(series_id):
                 return
@@ -1064,6 +1094,7 @@ class SeriesStudioAPI:
             # 3) video
             self._update_shot(shot_id, status="video")
             clip_path = shot_dir / "clips" / "00.mp4"
+            silent_path = shot_dir / "clips" / "00_silent.mp4"
             motion = (
                 f"{base_prompt}. camera {row['camera'] or 'medium'}, "
                 f"subtle cinematic motion, natural movement"
@@ -1118,7 +1149,7 @@ class SeriesStudioAPI:
                             fps=24,
                         )
                     vid_bytes = await run_video(wf)
-                    clip_path.write_bytes(vid_bytes)
+                    silent_path.write_bytes(vid_bytes)
                     made_mp4 = True
                     self._log(
                         series_id,
@@ -1130,21 +1161,33 @@ class SeriesStudioAPI:
             await asyncio.to_thread(_pad_or_trim_wav, raw_wav, final_wav, clip_dur)
             audio_rel = self._rel(final_wav)
 
-            if not made_mp4:
+            if made_mp4:
+                # Wan/LTX 默认无旁白轨，必须再混音
+                await asyncio.to_thread(
+                    _compose_clips_with_audio_sync,
+                    [silent_path],
+                    [final_wav],
+                    [clip_dur],
+                    clip_path,
+                    out_size,
+                    None,
+                    None,
+                    24,
+                )
+                self._log(series_id, f"已混入旁白 {label}")
+            else:
                 # Ken Burns 单镜成片
-                preview = shot_dir / "clips" / "00.mp4"
                 await asyncio.to_thread(
                     _compose_trailer_sync,
                     [img_path],
                     [final_wav],
                     [clip_dur],
-                    preview,
+                    clip_path,
                     out_size,
                     [[(vo, 0.0, clip_dur)]],
                     create_subs,
                     25,
                 )
-                clip_path = preview
                 self._log(
                     series_id,
                     f"静帧推镜完成 {label}，耗时 {_format_elapsed(time.perf_counter() - t_vid)}",
@@ -1414,6 +1457,37 @@ class SeriesStudioAPI:
                     "Content-Disposition": f"attachment; filename=\"{fname}\"; filename*=UTF-8''{fname}"
                 },
             )
+
+        @app.post("/series/reveal-shot")
+        @app.post("/api/series/reveal-shot")
+        async def series_reveal_shot(
+            series_id: str = Form(...),
+            shot_id: str = Form(...),
+        ):
+            row = api._shot_detail(series_id, shot_id)
+            version = int(row["version"] or 1)
+            path = str(
+                api._shot_dir(
+                    series_id,
+                    int(row["ep_no"]),
+                    int(row["sc_no"]),
+                    int(row["shot_no"]),
+                    version,
+                ).resolve()
+            )
+            try:
+                import subprocess
+                import sys
+
+                if sys.platform.startswith("win"):
+                    subprocess.Popen(["explorer", path])
+                elif sys.platform == "darwin":
+                    subprocess.Popen(["open", path])
+                else:
+                    subprocess.Popen(["xdg-open", path])
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=str(e))
+            return {"success": True, "path": path}
 
         @app.post("/series/plan")
         @app.post("/api/series/plan")

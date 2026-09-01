@@ -1810,6 +1810,23 @@ body.tb-admin-private #auth-status {
   line-height: 1.4;
 }
 
+.home-pc-wrap .series-shot-preview-video {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  max-height: 56vh;
+  background: #0f172a;
+  border-radius: 10px;
+}
+
+.home-pc-wrap .series-shot-card {
+  cursor: pointer;
+}
+
+.home-pc-wrap .series-shot-actions {
+  margin-top: 8px;
+}
+
 .home-pc-wrap .series-log-head {
   display: flex;
   flex-wrap: wrap;

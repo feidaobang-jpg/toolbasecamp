@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc36" />
-  <script src="../../../../js/locales/en.js?v=series9"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=series9"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc37" />
+  <script src="../../../../js/locales/en.js?v=series10"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=series10"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -166,6 +166,14 @@
               <div class="series-progress-line" id="series-progress-line"></div>
               <div class="series-ep-tabs" id="ep-tabs" role="tablist"></div>
               <div id="scene-board" class="series-scene-board"></div>
+              <div id="shot-preview-box" class="home-pc-result-box series-shot-preview" style="display:none;">
+                <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.seriesShotPreview">镜头预览</h3>
+                <p id="shot-preview-meta" class="small-hint"></p>
+                <video id="shot-preview-video" class="series-shot-preview-video" controls playsinline></video>
+                <div class="action-row" style="margin-top:10px;">
+                  <button type="button" id="open-shot-folder-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesOpenFolder">打开文件夹</button>
+                </div>
+              </div>
             </div>
 
             <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
@@ -194,6 +202,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/series-studio.js?v=series9"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=series10"></script>
 </body>
 </html>

@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var progressLine = document.getElementById('series-progress-line');
   var logOutput = document.getElementById('log-output');
   var downloadLogBtn = document.getElementById('download-log-btn');
+  var shotPreviewBox = document.getElementById('shot-preview-box');
+  var shotPreviewVideo = document.getElementById('shot-preview-video');
+  var shotPreviewMeta = document.getElementById('shot-preview-meta');
+  var openShotFolderBtn = document.getElementById('open-shot-folder-btn');
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightbox-img');
 
@@ -373,11 +377,88 @@ document.addEventListener('DOMContentLoaded', function () {
     setBusy(running);
   }
 
+  function findShotById(series, shotId) {
+    var found = null;
+    (series.episodes || []).forEach(function (ep) {
+      (ep.scenes || []).forEach(function (sc) {
+        (sc.shots || []).forEach(function (sh) {
+          if (sh.id === shotId) found = sh;
+        });
+      });
+    });
+    return found;
+  }
+
+  function markSelectedShotCards() {
+    if (!sceneBoard) return;
+    Array.prototype.forEach.call(sceneBoard.querySelectorAll('.series-shot-card'), function (el) {
+      el.classList.toggle('is-selected', el.getAttribute('data-shot-id') === selectedShotId);
+    });
+  }
+
+  function showShotPreview(sh) {
+    if (!shotPreviewBox || !shotPreviewVideo) return;
+    if (!sh || !sh.clip_url) {
+      shotPreviewBox.style.display = 'none';
+      shotPreviewVideo.removeAttribute('src');
+      try {
+        shotPreviewVideo.load();
+      } catch (e) {}
+      if (sh) {
+        flashMsg(tr('privateHub.homePc.seriesNoClip', '此镜尚无成片可预览'), true);
+      }
+      return;
+    }
+    shotPreviewBox.style.display = '';
+    if (shotPreviewMeta) {
+      shotPreviewMeta.textContent =
+        (sh.label || '镜 ' + sh.shot_no) +
+        ' · ' +
+        statusLabel(sh.status) +
+        (sh.duration_sec ? ' · ' + Number(sh.duration_sec).toFixed(1) + 's' : '');
+    }
+    var full = resolveUrl(sh.clip_url);
+    shotPreviewVideo.src = full + (full.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
+    try {
+      shotPreviewVideo.load();
+    } catch (e2) {}
+  }
+
+  function selectShot(sh, openPreview) {
+    if (!sh) return;
+    selectedShotId = sh.id;
+    markSelectedShotCards();
+    updateActionVisibility(currentSeries || { episodes: [], status: 'draft', job_status: 'idle' });
+    if (openPreview !== false) showShotPreview(sh);
+  }
+
+  function revealSelectedShotFolder() {
+    if (!currentSeriesId || !selectedShotId) return;
+    var fd = new FormData();
+    fd.append('series_id', currentSeriesId);
+    fd.append('shot_id', selectedShotId);
+    fetch(API_BASE + '/series/reveal-shot', { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+      })
+      .catch(function (err) {
+        flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+      });
+  }
+
   function renderWorkspace(series) {
     if (!workspace) return;
     var eps = series.episodes || [];
     if (!eps.length) {
       workspace.style.display = 'none';
+      if (shotPreviewBox) shotPreviewBox.style.display = 'none';
       return;
     }
     workspace.style.display = 'block';
@@ -408,6 +489,7 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.addEventListener('click', function () {
         selectedEpId = ep.id;
         selectedShotId = null;
+        if (shotPreviewBox) shotPreviewBox.style.display = 'none';
         renderWorkspace(currentSeries);
       });
       epTabs.appendChild(btn);
@@ -425,12 +507,12 @@ document.addEventListener('DOMContentLoaded', function () {
       var grid = document.createElement('div');
       grid.className = 'series-shot-grid';
       (sc.shots || []).forEach(function (sh) {
-        var card = document.createElement('button');
-        card.type = 'button';
+        var card = document.createElement('div');
         card.className =
           'series-shot-card status-' +
           (sh.status || 'planned') +
           (sh.id === selectedShotId ? ' is-selected' : '');
+        card.setAttribute('data-shot-id', sh.id);
         var thumb = sh.image_url
           ? '<img src="' + escapeHtml(resolveUrl(sh.image_url)) + '" alt="" loading="lazy" />'
           : '<div class="series-shot-placeholder">' + escapeHtml(statusLabel(sh.status)) + '</div>';
@@ -444,10 +526,35 @@ document.addEventListener('DOMContentLoaded', function () {
           '<div class="series-shot-vo">' +
           escapeHtml((sh.voiceover || '').slice(0, 60)) +
           '</div></div>';
-        card.addEventListener('click', function () {
+        var actions = document.createElement('div');
+        actions.className = 'action-row series-shot-actions';
+        var previewBtn = document.createElement('button');
+        previewBtn.type = 'button';
+        previewBtn.className = 'tb-btn';
+        previewBtn.textContent = tr('privateHub.homePc.seriesPreviewPlay', '预览');
+        previewBtn.disabled = !sh.clip_url;
+        previewBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          selectShot(sh, true);
+        });
+        var folderBtn = document.createElement('button');
+        folderBtn.type = 'button';
+        folderBtn.className = 'tb-btn';
+        folderBtn.textContent = tr('privateHub.homePc.seriesOpenFolder', '打开文件夹');
+        folderBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
           selectedShotId = sh.id;
-          renderWorkspace(currentSeries);
+          markSelectedShotCards();
           updateActionVisibility(currentSeries);
+          revealSelectedShotFolder();
+        });
+        actions.appendChild(previewBtn);
+        actions.appendChild(folderBtn);
+        card.appendChild(actions);
+        card.addEventListener('click', function () {
+          selectShot(sh, !!sh.clip_url);
         });
         if (sh.image_url) {
           card.addEventListener('dblclick', function (e) {
@@ -460,6 +567,10 @@ document.addEventListener('DOMContentLoaded', function () {
       block.appendChild(grid);
       sceneBoard.appendChild(block);
     });
+    if (selectedShotId) {
+      var cur = findShotById(series, selectedShotId);
+      if (cur && cur.clip_url) showShotPreview(cur);
+    }
     updateActionVisibility(series);
   }
 
@@ -837,6 +948,11 @@ document.addEventListener('DOMContentLoaded', function () {
       fetch(API_BASE + '/series/cancel', { method: 'POST', body: fd }).finally(function () {
         startPoll();
       });
+    });
+  }
+  if (openShotFolderBtn) {
+    openShotFolderBtn.addEventListener('click', function () {
+      revealSelectedShotFolder();
     });
   }
   if (downloadLogBtn) {
