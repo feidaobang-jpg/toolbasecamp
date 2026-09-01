@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc35" />
-  <script src="../../../../js/locales/en.js?v=series8"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=series8"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc36" />
+  <script src="../../../../js/locales/en.js?v=series9"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=series9"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -169,7 +169,13 @@
             </div>
 
             <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
-              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerLogTitle">日志</h3>
+              <div class="series-log-head">
+                <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerLogTitle">日志</h3>
+                <div class="action-row">
+                  <button type="button" id="download-log-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesDownloadLog">下载日志</button>
+                </div>
+              </div>
+              <p class="small-hint" data-i18n="privateHub.homePc.seriesLogHint">日志会写入项目目录 pipeline.log；下载后可发给排查。</p>
               <pre id="log-output"></pre>
             </div>
           </div>
@@ -188,6 +194,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/series-studio.js?v=series8"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=series9"></script>
 </body>
 </html>

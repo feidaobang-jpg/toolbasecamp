@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var sceneBoard = document.getElementById('scene-board');
   var progressLine = document.getElementById('series-progress-line');
   var logOutput = document.getElementById('log-output');
+  var downloadLogBtn = document.getElementById('download-log-btn');
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightbox-img');
 
@@ -367,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (runShotBtn) runShotBtn.style.display = hasShots && !awaiting && selectedShotId ? '' : 'none';
     if (regenShotBtn) regenShotBtn.style.display = hasShots && !awaiting && selectedShotId ? '' : 'none';
     if (deleteSeriesBtn) deleteSeriesBtn.style.display = currentSeriesId ? '' : 'none';
+    if (downloadLogBtn) downloadLogBtn.style.display = currentSeriesId ? '' : 'none';
     if (cancelBtn) cancelBtn.style.display = running ? '' : 'none';
     setBusy(running);
   }
@@ -657,9 +659,9 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('aspect', selectedAspect());
     fd.append('video_mode', selectedVideoMode());
     fd.append('shot_duration', shotDur.value || '5');
-    fd.append('episode_count', epCount.value || '2');
-    fd.append('scenes_per_ep', scCount.value || '2');
-    fd.append('shots_per_scene', shCount.value || '3');
+    fd.append('episode_count', epCount.value || '1');
+    fd.append('scenes_per_ep', scCount.value || '1');
+    fd.append('shots_per_scene', shCount.value || '1');
     fd.append('voice', 'zh-CN-YunxiNeural');
     fd.append('speed', '1.0');
 
@@ -835,6 +837,48 @@ document.addEventListener('DOMContentLoaded', function () {
       fetch(API_BASE + '/series/cancel', { method: 'POST', body: fd }).finally(function () {
         startPoll();
       });
+    });
+  }
+  if (downloadLogBtn) {
+    downloadLogBtn.addEventListener('click', function () {
+      if (!currentSeriesId) return;
+      var url =
+        API_BASE +
+        '/series/download-log?series_id=' +
+        encodeURIComponent(currentSeriesId);
+      downloadLogBtn.disabled = true;
+      fetch(url)
+        .then(function (res) {
+          if (!res.ok) {
+            return res.text().then(function (t) {
+              throw new Error(t || 'HTTP ' + res.status);
+            });
+          }
+          var cd = res.headers.get('Content-Disposition') || '';
+          var m = /filename=\"?([^\";]+)\"?/i.exec(cd);
+          var fname = m ? m[1] : 'series_' + currentSeriesId + '_pipeline.log';
+          return res.blob().then(function (blob) {
+            return { blob: blob, fname: fname };
+          });
+        })
+        .then(function (pack) {
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(pack.blob);
+          a.download = pack.fname;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            URL.revokeObjectURL(a.href);
+            a.remove();
+          }, 1500);
+          flashMsg(tr('privateHub.homePc.seriesLogDownloaded', '日志已开始下载'), false);
+        })
+        .catch(function (err) {
+          flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+        })
+        .finally(function () {
+          downloadLogBtn.disabled = false;
+        });
     });
   }
   if (deleteSeriesBtn) {

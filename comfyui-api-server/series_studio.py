@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from fastapi import File, Form, HTTPException, UploadFile
+from fastapi.responses import PlainTextResponse
 from PIL import Image
 
 from trailer_pipeline import (
@@ -194,7 +195,7 @@ def deepseek_series_plan(
 【画面风格】{style['label']}（{style['zh']}）
 【画幅】{aspect_label}
 【单镜时长】约 {dur:g} 秒
-【规模】约 {ep_n} 集；每集约 {sc_n} 场；每场约 {sh_n} 镜（可略浮动 ±1）
+【规模】严格 {ep_n} 集；每集严格 {sc_n} 场；每场严格 {sh_n} 镜（不得多写，不得少写）。
 
 请输出严格 JSON（不要 markdown）：
 {{
@@ -236,7 +237,7 @@ def deepseek_series_plan(
 1. 集/场/镜编号从 1 开始连续。
 2. visual_prompt 英文；voiceover 中文；不要字幕/水印描述。
 3. 用户未细写画风时，由 bible 完整定调并贯穿所有 visual_prompt。
-4. 规模尽量贴近 {ep_n}×{sc_n}×{sh_n}，不要爆炸式超长。
+4. episodes 数组长度必须等于 {ep_n}；每集 scenes 长度必须等于 {sc_n}；每场 shots 长度必须等于 {sh_n}。禁止多写。
 5. ref_prompts 必须给满 6 条英文提示：优先各主角单独定妆/半身+全身，再补场景情绪板；外形与 characters 一致。
 """
     try:
@@ -313,26 +314,36 @@ def _fallback_series_plan(
     }
 
 
-def _normalize_series_plan(obj: dict, synopsis: str, shot_duration: float) -> dict:
+def _normalize_series_plan(
+    obj: dict,
+    synopsis: str,
+    shot_duration: float,
+    episode_count: int = 12,
+    scenes_per_ep: int = 8,
+    shots_per_scene: int = 12,
+) -> dict:
     dur = _clamp_shot_duration(shot_duration)
+    ep_cap = max(1, min(12, int(episode_count or 12)))
+    sc_cap = max(1, min(8, int(scenes_per_ep or 8)))
+    sh_cap = max(1, min(12, int(shots_per_scene or 12)))
     title = str(obj.get("title") or "").strip() or (synopsis.strip()[:40] or "未命名剧集")
     logline = str(obj.get("logline") or "").strip() or synopsis.strip()[:160]
     bible = _normalize_bible(obj, synopsis)
     episodes_out = []
     raw_eps = obj.get("episodes") if isinstance(obj.get("episodes"), list) else []
-    for ei, ep in enumerate(raw_eps[:12], start=1):
+    for ei, ep in enumerate(raw_eps[:ep_cap], start=1):
         if not isinstance(ep, dict):
             continue
         ep_no = int(ep.get("ep_no") or ei)
         scenes_out = []
         raw_scs = ep.get("scenes") if isinstance(ep.get("scenes"), list) else []
-        for si, sc in enumerate(raw_scs[:8], start=1):
+        for si, sc in enumerate(raw_scs[:sc_cap], start=1):
             if not isinstance(sc, dict):
                 continue
             sc_no = int(sc.get("sc_no") or si)
             shots_out = []
             raw_sh = sc.get("shots") if isinstance(sc.get("shots"), list) else []
-            for hi, sh in enumerate(raw_sh[:12], start=1):
+            for hi, sh in enumerate(raw_sh[:sh_cap], start=1):
                 if not isinstance(sh, dict):
                     continue
                 vo = str(sh.get("voiceover") or sh.get("narration") or "").strip()
@@ -372,7 +383,7 @@ def _normalize_series_plan(obj: dict, synopsis: str, shot_duration: float) -> di
             }
         )
     if not episodes_out:
-        return _fallback_series_plan(synopsis, title, dur, 1, 1, 3)
+        return _fallback_series_plan(synopsis, title, dur, ep_cap, sc_cap, sh_cap)
     for i, e in enumerate(episodes_out, start=1):
         e["ep_no"] = i
     return {
@@ -448,6 +459,27 @@ class SeriesStudioAPI:
                 """,
                 (series_id, series_id),
             )
+        # 同步落盘，便于导出给排查
+        try:
+            log_path = self._series_dir(series_id) / "pipeline.log"
+            with log_path.open("a", encoding="utf-8") as fp:
+                fp.write(line + "\n")
+        except Exception:
+            pass
+
+    def _export_log_text(self, series_id: str) -> str:
+        disk = self._series_dir(series_id) / "pipeline.log"
+        if disk.is_file() and disk.stat().st_size > 0:
+            try:
+                return disk.read_text(encoding="utf-8")
+            except Exception:
+                pass
+        with self.db.connect() as conn:
+            rows = conn.execute(
+                "SELECT msg FROM series_log WHERE series_id=? ORDER BY id ASC",
+                (series_id,),
+            ).fetchall()
+        return "\n".join(r["msg"] for r in rows) + ("\n" if rows else "")
 
     def _get_series_row(self, conn: sqlite3.Connection, series_id: str) -> sqlite3.Row:
         row = conn.execute("SELECT * FROM series WHERE id=?", (series_id,)).fetchone()
@@ -1325,7 +1357,7 @@ class SeriesStudioAPI:
                 sc_n = max(1, min(8, int(scenes_per_ep or 1)))
                 sh_n = max(1, min(12, int(shots_per_scene or 1)))
             except Exception:
-                ep_n, sc_n, sh_n = 2, 2, 3
+                ep_n, sc_n, sh_n = 1, 1, 1
             sid = _new_id("ser_")
             now = _utc_now_str()
             with api.db.connect() as conn:
@@ -1364,6 +1396,22 @@ class SeriesStudioAPI:
         @app.get("/api/series/get")
         async def series_get(series_id: str):
             return {"success": True, "series": api._tree(series_id)}
+
+        @app.get("/series/download-log")
+        @app.get("/api/series/download-log")
+        async def series_download_log(series_id: str):
+            with api.db.connect() as conn:
+                s = api._get_series_row(conn, series_id)
+            text = api._export_log_text(series_id)
+            if not text.strip():
+                text = f"# empty log for {series_id}\n"
+            title = re.sub(r"[^\w\u4e00-\u9fff\-]+", "_", (s["title"] or series_id))[:40]
+            fname = f"series_{title}_{series_id}_pipeline.log"
+            return PlainTextResponse(
+                text,
+                media_type="text/plain; charset=utf-8",
+                headers={"Content-Disposition": f'attachment; filename="{fname}"'},
+            )
 
         @app.post("/series/plan")
         @app.post("/api/series/plan")
@@ -1408,7 +1456,14 @@ class SeriesStudioAPI:
                                 s["shots_per_scene"],
                             )
                         else:
-                            plan = _normalize_series_plan(raw, s["synopsis"], s["shot_duration_sec"])
+                            plan = _normalize_series_plan(
+                                raw,
+                                s["synopsis"],
+                                s["shot_duration_sec"],
+                                s["episode_count"],
+                                s["scenes_per_ep"],
+                                s["shots_per_scene"],
+                            )
                         api._replace_tree_from_plan(series_id, plan)
                         n_ep = len(plan.get("episodes") or [])
                         n_sh = sum(

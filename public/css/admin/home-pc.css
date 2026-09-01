@@ -1810,8 +1810,17 @@ body.tb-admin-private #auth-status {
   line-height: 1.4;
 }
 
-.home-pc-wrap .series-ref-regen-btn {
-  align-self: flex-start;
+.home-pc-wrap .series-log-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.home-pc-wrap .series-log-head .home-pc-result-title {
+  margin: 0;
 }
 
 .home-pc-wrap .series-ref-regen-status {
