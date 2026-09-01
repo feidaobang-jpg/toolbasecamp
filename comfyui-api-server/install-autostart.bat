@@ -2,27 +2,23 @@
 setlocal
 chcp 65001 >nul
 cd /d "%~dp0"
-
 set "STARTUP=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
 set "DEST=%STARTUP%\ComfyUI-API-Server.vbs"
-
-if not exist "%~dp0start-server-hidden.vbs" (
-  echo [ERROR] start-server-hidden.vbs not found in %~dp0
+set "ROOT=%~dp0"
+if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
+if not exist "%ROOT%\start-server.bat" (
+  echo [ERROR] start-server.bat not found in %ROOT%
   pause
   exit /b 1
 )
-
-copy /Y "%~dp0start-server-hidden.vbs" "%DEST%" >nul
-if errorlevel 1 (
-  echo [ERROR] Failed to copy to Startup folder.
-  pause
-  exit /b 1
+> "%DEST%" (
+  echo Set WshShell = CreateObject^("WScript.Shell"^)
+  echo WshShell.CurrentDirectory = "%ROOT%"
+  echo WshShell.Run "cmd /c ""%ROOT%\start-server.bat""", 0, False
 )
-
 echo OK: Autostart installed:
 echo   %DEST%
-echo.
-echo comfyui-api-server will run in background on logon.
-echo ComfyUI: run install-comfyui-autostart.bat for port 8188 autostart.
+echo   -^> %ROOT%\start-server.bat
+echo Tunnel (comfy.zhengxiaohui.cn) is separate - start it yourself if needed.
 pause
 endlocal
