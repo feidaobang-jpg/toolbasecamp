@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var globalRefPicks = {};
 
   var seriesPick = document.getElementById('series-pick');
-  var newSeriesBtn = document.getElementById('new-series-btn');
   var refreshListBtn = document.getElementById('refresh-list-btn');
   var deleteSeriesBtn = document.getElementById('delete-series-btn');
   var titleInput = document.getElementById('title-input');
@@ -483,17 +482,6 @@ document.addEventListener('DOMContentLoaded', function () {
   refreshListBtn.addEventListener('click', function () {
     loadList();
   });
-
-  if (newSeriesBtn) {
-    newSeriesBtn.addEventListener('click', function () {
-      resetNewForm();
-      progressWrap.style.display = '';
-      progressStatus.textContent = tr(
-        'privateHub.homePc.seriesClearedTip',
-        '已清空。填好梗概后点下方「新建并拆解剧本」。'
-      );
-    });
-  }
 
   seriesPick.addEventListener('change', function () {
     var id = seriesPick.value || '';

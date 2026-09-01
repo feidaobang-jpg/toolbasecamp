@@ -337,7 +337,7 @@ window.TB_LOCALES.en = {
             seriesDeleteConfirm: 'Delete this series project?',
             seriesTitleLabel: 'Title (optional)',
             seriesSynopsisLabel: 'Synopsis',
-            seriesCreateHint: 'After filling title/synopsis, click “Create & plan” below. “Clear form” only resets the fields.',
+            seriesCreateHint: 'After filling title/synopsis, click “Create & plan” below. To start fresh, pick the first item in Projects.',
             seriesEpCount: 'Episodes ~',
             seriesScCount: 'Scenes/ep ~',
             seriesShCount: 'Shots/scene ~',

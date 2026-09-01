@@ -336,7 +336,7 @@ window.TB_LOCALES['zh-CN'] = {
             seriesDeleteConfirm: '确定删除该剧项目？',
             seriesTitleLabel: '剧名（可空）',
             seriesSynopsisLabel: '故事梗概',
-            seriesCreateHint: '填完剧名/梗概后，点下方蓝色「新建并拆解剧本」开始；上面「清空重填」只清空表单。',
+            seriesCreateHint: '填完剧名/梗概后，点下方蓝色「新建并拆解剧本」开始。要从已有项目改回新建，在「已有项目」里选回第一项即可。',
             seriesEpCount: '集数约',
             seriesScCount: '每集场数约',
             seriesShCount: '每场镜数约',
