@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (shotsHint) {
             shotsHint.textContent = tr(
               'privateHub.homePc.trailerShotsDoneHint',
-              '成片在上方预览区；静帧推镜会在关键帧上做缓慢推拉，请点播放。'
+              '成片在上方预览区，请点播放。'
             );
           }
           loadHistory();

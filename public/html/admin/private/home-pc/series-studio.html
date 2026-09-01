@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc33" />
-  <script src="../../../../js/locales/en.js?v=series1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=series1"></script>
+  <script src="../../../../js/locales/en.js?v=series3"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=series3"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -48,11 +48,12 @@
                 <div class="input-control">
                   <label for="series-pick" data-i18n="privateHub.homePc.seriesPickLabel">已有项目</label>
                   <select id="series-pick" class="text-input">
-                    <option value="">— 新建 —</option>
+                    <option value="" data-i18n="privateHub.homePc.seriesPickPlaceholder">请选择已有项目…</option>
                   </select>
                 </div>
                 <div class="input-control" style="display:flex;align-items:flex-end;">
                   <div class="action-row">
+                    <button type="button" id="new-series-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesNewBtn">新建项目</button>
                     <button type="button" id="refresh-list-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesRefresh">刷新列表</button>
                     <button type="button" id="delete-series-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesDelete">删除项目</button>
                   </div>
@@ -91,7 +92,6 @@
                   <div class="trailer-aspect-row">
                     <label class="trailer-radio"><input type="radio" name="video-mode" value="wan22_5b" checked /><span data-i18n="privateHub.homePc.trailerVideoModeWan">图生视频 Wan 2.2 5B</span></label>
                     <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_i2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5</span></label>
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="kenburns" /><span data-i18n="privateHub.homePc.trailerVideoModeKenburns">静帧推镜（更快）</span></label>
                   </div>
                 </div>
               </div>
@@ -188,6 +188,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/series-studio.js?v=series2"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=series3"></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var globalRefPicks = {};
 
   var seriesPick = document.getElementById('series-pick');
+  var newSeriesBtn = document.getElementById('new-series-btn');
   var refreshListBtn = document.getElementById('refresh-list-btn');
   var deleteSeriesBtn = document.getElementById('delete-series-btn');
   var titleInput = document.getElementById('title-input');
@@ -392,7 +393,10 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (pack) {
         if (!pack.res.ok || !pack.body.success) return;
         var cur = seriesPick.value;
-        seriesPick.innerHTML = '<option value="">— ' + escapeHtml(tr('privateHub.homePc.seriesNew', '新建')) + ' —</option>';
+        seriesPick.innerHTML =
+          '<option value="">' +
+          escapeHtml(tr('privateHub.homePc.seriesPickPlaceholder', '请选择已有项目…')) +
+          '</option>';
         (pack.body.items || []).forEach(function (it) {
           var opt = document.createElement('option');
           opt.value = it.id;
@@ -452,12 +456,47 @@ document.addEventListener('DOMContentLoaded', function () {
     selectedStyle = btn.getAttribute('data-style') || 'realistic';
   });
 
+  function resetNewForm() {
+    stopPoll();
+    currentSeriesId = null;
+    currentSeries = null;
+    selectedShotId = null;
+    selectedEpId = null;
+    lastLogLen = 0;
+    logOutput.textContent = '';
+    seriesPick.value = '';
+    titleInput.value = '';
+    synopsisInput.value = '';
+    if (workspace) workspace.style.display = 'none';
+    if (bibleBox) {
+      bibleBox.style.display = 'none';
+      bibleBox.innerHTML = '';
+    }
+    if (globalRefsBox) globalRefsBox.style.display = 'none';
+    if (confirmGlobalBtn) confirmGlobalBtn.style.display = 'none';
+    if (skipGlobalBtn) skipGlobalBtn.style.display = 'none';
+    if (progressWrap) progressWrap.style.display = 'none';
+    updateActionVisibility({ episodes: [], status: 'draft', job_status: 'idle' });
+    if (synopsisInput) synopsisInput.focus();
+  }
+
   refreshListBtn.addEventListener('click', function () {
     loadList();
   });
 
+  if (newSeriesBtn) {
+    newSeriesBtn.addEventListener('click', function () {
+      resetNewForm();
+    });
+  }
+
   seriesPick.addEventListener('change', function () {
-    loadSeries(seriesPick.value || '');
+    var id = seriesPick.value || '';
+    if (!id) {
+      resetNewForm();
+      return;
+    }
+    loadSeries(id);
   });
 
   createPlanBtn.addEventListener('click', function () {
