@@ -1,6 +1,7 @@
 """
 视频生成流水线（半自动）：
-  DeepSeek 分镜 → Z-Image 关键帧多候选勾选 → 视频引擎成片 → 旁白拼接。
+  DeepSeek 全剧设定+分镜 → 全剧参考图（AI 候选勾选 / 上传）→
+  Z-Image 关键帧 → 视频引擎成片 → 旁白拼接。
 
 成片引擎：Wan 2.2 5B 图生视频 / LTX 2.5 文生视频 / 静帧推镜。
 单段时长 3～10 秒可选；生成段数默认 1，超过分镜数则封顶。
@@ -20,7 +21,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import requests
-from fastapi import Form, HTTPException
+from fastapi import File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 from moviepy.editor import (
     AudioFileClip,
@@ -273,6 +274,7 @@ def _fallback_plan(prompt: str, shot_duration: float, segment_count: int) -> dic
                 "mood": "dramatic",
             }
         )
+    bible = _normalize_bible({}, text)
     return {
         "title": (text[:40] or "视频流水线"),
         "logline": text[:120],
@@ -281,7 +283,109 @@ def _fallback_plan(prompt: str, shot_duration: float, segment_count: int) -> dic
         "target_seconds": round(dur * len(shots), 1),
         "shots": shots,
         "source": "fallback",
+        "characters": bible.get("characters") or [],
+        "bible": bible,
     }
+
+
+def _normalize_bible(obj: dict, prompt: str = "") -> dict:
+    """全剧设定：风格/世界观/关系等，默认由 DeepSeek 产出，用户只需粗选画风芯片。"""
+    raw = obj.get("bible") if isinstance(obj.get("bible"), dict) else {}
+    characters = []
+    src_chars = raw.get("characters") if isinstance(raw.get("characters"), list) else None
+    if not src_chars:
+        src_chars = obj.get("characters") if isinstance(obj.get("characters"), list) else []
+    for c in src_chars[:12]:
+        if not isinstance(c, dict):
+            continue
+        name = str(c.get("name") or "").strip()
+        look = str(c.get("look") or c.get("appearance") or "").strip()
+        if not name and not look:
+            continue
+        characters.append(
+            {
+                "id": str(c.get("id") or f"c{len(characters) + 1}").strip()[:16],
+                "name": name or f"角色{len(characters) + 1}",
+                "look": look[:400],
+                "role": str(c.get("role") or "").strip()[:80],
+            }
+        )
+    style_notes = str(
+        raw.get("style_notes") or raw.get("style") or raw.get("art_style") or ""
+    ).strip()[:600]
+    world_look = str(raw.get("world_look") or raw.get("world") or raw.get("setting") or "").strip()[
+        :600
+    ]
+    relationships = str(
+        raw.get("relationships") or raw.get("character_relations") or ""
+    ).strip()[:500]
+    palette = str(raw.get("palette") or raw.get("color_palette") or "").strip()[:200]
+    mood = str(raw.get("mood") or raw.get("overall_mood") or "").strip()[:120]
+    ref_prompts: List[str] = []
+    raw_refs = raw.get("ref_prompts") or raw.get("reference_prompts") or []
+    if isinstance(raw_refs, list):
+        for p in raw_refs[:6]:
+            t = str(p or "").strip()
+            if t:
+                ref_prompts.append(t[:500])
+    if not ref_prompts:
+        # 从角色/世界观拼出默认参考图提示
+        if characters:
+            for ch in characters[:3]:
+                ref_prompts.append(
+                    f"character design sheet of {ch.get('name')}: {ch.get('look')}, "
+                    f"full body and face close-up, consistent costume, clean background, "
+                    f"key visual, no text, no watermark"
+                )
+        if world_look:
+            ref_prompts.append(
+                f"establishing mood board: {world_look}. cinematic environment key art, "
+                f"no characters or tiny figures only, no text, no watermark"
+            )
+        if not ref_prompts:
+            tip = (prompt or "cinematic story world").strip()[:120]
+            ref_prompts = [
+                f"cinematic key visual mood board for: {tip}, consistent art style, no text",
+                f"main character design sheet for story: {tip}, full body, face detail, no text",
+            ]
+    if not style_notes:
+        style_notes = "cinematic, coherent color grading, consistent character design across shots"
+    return {
+        "style_notes": style_notes,
+        "world_look": world_look,
+        "relationships": relationships,
+        "palette": palette,
+        "mood": mood,
+        "characters": characters,
+        "ref_prompts": ref_prompts[:5],
+    }
+
+
+def _bible_prompt_prefix(plan: dict) -> str:
+    bible = (plan or {}).get("bible") if isinstance(plan, dict) else None
+    if not isinstance(bible, dict):
+        return ""
+    parts = []
+    if bible.get("style_notes"):
+        parts.append(f"global style: {bible['style_notes']}")
+    if bible.get("palette"):
+        parts.append(f"palette: {bible['palette']}")
+    if bible.get("world_look"):
+        parts.append(f"world: {bible['world_look']}")
+    if bible.get("mood"):
+        parts.append(f"overall mood: {bible['mood']}")
+    chars = bible.get("characters") or []
+    if isinstance(chars, list) and chars:
+        bits = []
+        for c in chars[:6]:
+            if not isinstance(c, dict):
+                continue
+            bits.append(f"{c.get('name')}: {c.get('look')}")
+        if bits:
+            parts.append("characters: " + "; ".join(bits))
+    if not parts:
+        return ""
+    return "Consistent series bible — " + ". ".join(parts) + ". "
 
 
 def _normalize_plan(
@@ -327,6 +431,8 @@ def _normalize_plan(
         s["index"] = i
         s["duration_sec"] = dur
 
+    bible = _normalize_bible(obj, prompt)
+
     return {
         "title": title,
         "logline": logline,
@@ -336,7 +442,8 @@ def _normalize_plan(
         "target_seconds": round(dur * len(shots), 1),
         "shots": shots,
         "source": "deepseek",
-        "characters": obj.get("characters") if isinstance(obj.get("characters"), list) else [],
+        "characters": bible.get("characters") or [],
+        "bible": bible,
     }
 
 
@@ -373,12 +480,24 @@ def deepseek_trailer_plan(
 {{
   "title": "标题",
   "logline": "一句话卖点",
+  "bible": {{
+    "style_notes": "英文：全剧画风/光影/镜头气质（供后续文生图统一前缀）",
+    "world_look": "英文：时代、地点、整体风貌",
+    "palette": "英文：主色调",
+    "mood": "英文：整体情绪",
+    "relationships": "中文：主要人物关系一两句",
+    "characters": [{{"id":"c1","name":"角色名","role":"身份","look":"英文外形/服装描述"}}],
+    "ref_prompts": [
+      "英文：全剧参考图1提示词（角色定妆或世界观情绪板，无文字无水印）",
+      "英文：全剧参考图2提示词"
+    ]
+  }},
   "characters": [{{"id":"c1","name":"角色名","look":"英文外形描述"}}],
   "shots": [
     {{
       "duration_sec": {dur:g},
       "voiceover": "中文旁白（简短有力，适合配音）",
-      "visual_prompt": "英文文生图提示词：主体、动作、环境、光影、镜头景别；不要出现字幕/文字/水印",
+      "visual_prompt": "英文文生图提示词：主体、动作、环境、光影、镜头景别；须符合 bible 设定；不要出现字幕/文字/水印",
       "camera": "wide|medium|close|detail",
       "mood": "情绪词"
     }}
@@ -388,11 +507,12 @@ def deepseek_trailer_plan(
 硬性要求：
 1. shots 数量 {n_lo}～{n_hi}；每镜 duration_sec 一律写 {dur:g}。
 2. 叙事节奏随段数伸缩：段数少则单镜信息密度更高；段数多则开场钩子→冲突→高潮→收束。
-3. 若输入是知名作品名，基于公开剧情常识写分镜；若是原创梗概，紧扣梗概。
+3. 若输入是知名作品名，基于公开剧情常识写分镜与人物设定；若是原创梗概，紧扣梗概。用户未细写画风时，由你在 bible 里完整定调。
 4. voiceover 用中文，单镜汉字数按 {dur:g} 秒语速控制（约每秒 3～4 字，勿过长）；visual_prompt 用英文。
-5. 风格一致性：所有 visual_prompt 都要符合「{style['label']}」。
+5. 风格一致性：bible.style_notes 与所有 visual_prompt 都要符合「{style['label']}」。
 6. 不要在画面提示里要求生成文字、标题卡上的字、logo。
 7. 总时长大约 {total_hint:g} 秒（{want}×{dur:g}）。
+8. ref_prompts 给 2～4 条，用于生成全剧参考定妆/情绪板（不是分镜），角色外形须与 characters 一致。
 只输出 JSON。"""
 
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
@@ -656,6 +776,7 @@ class TrailerAPI:
             shot_duration: str = Form("5"),
             segment_count: str = Form("1"),
             video_mode: str = Form("wan22_5b"),
+            use_global_refs: str = Form("1"),
         ):
             text = (prompt or "").strip()
             if len(text) < 2:
@@ -676,6 +797,7 @@ class TrailerAPI:
             spd = max(0.7, min(1.4, spd))
             shot_dur = _clamp_shot_duration(shot_duration)
             seg_n = _clamp_segment_count(segment_count)
+            use_refs = str(use_global_refs or "1").strip().lower() not in ("0", "false", "no", "off")
 
             task_id = uuid.uuid4().hex
             out_dir = api._alloc_dir()
@@ -698,8 +820,11 @@ class TrailerAPI:
                 "shot_duration_sec": shot_dur,
                 "segment_count": seg_n,
                 "target_seconds": round(shot_dur * seg_n, 1),
+                "use_global_refs": use_refs,
                 "plan": None,
                 "shots_ui": [],
+                "global_refs_ui": [],
+                "global_refs_selected": [],
                 "picks": {},
                 "video_url": "",
                 "export_hint": "",
@@ -766,6 +891,98 @@ class TrailerAPI:
             task["error"] = ""
             asyncio.create_task(api._run_compose(task_id))
             return {"success": True, "task_id": task_id}
+
+        @app.post("/trailer/upload-global-ref")
+        @app.post("/api/trailer/upload-global-ref")
+        async def trailer_upload_global_ref(
+            task_id: str = Form(...),
+            file: UploadFile = File(...),
+        ):
+            task = api.tasks.get(task_id)
+            if not task:
+                raise HTTPException(status_code=404, detail="任务不存在")
+            if task.get("status") not in ("awaiting_global_refs",):
+                raise HTTPException(status_code=400, detail="当前不能上传全剧参考图")
+            raw = await file.read()
+            if not raw:
+                raise HTTPException(status_code=400, detail="空文件")
+            if len(raw) > 12 * 1024 * 1024:
+                raise HTTPException(status_code=400, detail="图片过大（上限 12MB）")
+            task_dir = api._task_dir(task)
+            refs_dir = task_dir / "global_refs"
+            refs_dir.mkdir(parents=True, exist_ok=True)
+            n = len(list(refs_dir.glob("upload_*")))
+            name = f"upload_{n:02d}.png"
+            # 统一存 PNG
+            try:
+                from io import BytesIO
+
+                im = Image.open(BytesIO(raw))
+                if im.mode not in ("RGB", "RGBA"):
+                    im = im.convert("RGBA")
+                out = BytesIO()
+                im.convert("RGB").save(out, format="PNG")
+                raw = out.getvalue()
+            except Exception:
+                pass
+            (refs_dir / name).write_bytes(raw)
+            item = {
+                "filename": name,
+                "url": f"/output/{task_dir.name}/global_refs/{name}",
+                "source": "upload",
+                "label": (file.filename or name)[:80],
+                "selected": True,
+            }
+            ui = list(task.get("global_refs_ui") or [])
+            ui.append(item)
+            task["global_refs_ui"] = ui
+            api._log(task, f"已上传全剧参考图：{name}")
+            return {"success": True, "item": item, "global_refs_ui": ui}
+
+        @app.post("/trailer/confirm-global-refs")
+        @app.post("/api/trailer/confirm-global-refs")
+        async def trailer_confirm_global_refs(
+            task_id: str = Form(...),
+            selected_json: str = Form("[]"),
+            skip: str = Form("0"),
+        ):
+            task = api.tasks.get(task_id)
+            if not task:
+                raise HTTPException(status_code=404, detail="任务不存在")
+            if task.get("status") != "awaiting_global_refs":
+                raise HTTPException(status_code=400, detail="当前不在全剧参考图阶段")
+            do_skip = str(skip or "0").strip() in ("1", "true", "True")
+            selected: List[str] = []
+            if not do_skip:
+                try:
+                    raw_sel = json.loads(selected_json or "[]")
+                except Exception:
+                    raise HTTPException(status_code=400, detail="selected_json 无效")
+                if isinstance(raw_sel, list):
+                    selected = [str(x).strip() for x in raw_sel if str(x).strip()]
+                # 校验文件存在
+                refs_dir = api._task_dir(task) / "global_refs"
+                ok = []
+                for fn in selected:
+                    # 禁止路径穿越
+                    safe = Path(fn).name
+                    if (refs_dir / safe).is_file():
+                        ok.append(safe)
+                selected = ok
+            task["global_refs_selected"] = selected
+            # 同步 UI selected 标记
+            for it in task.get("global_refs_ui") or []:
+                if isinstance(it, dict):
+                    it["selected"] = it.get("filename") in selected
+            task["status"] = "running"
+            task["stage"] = "images"
+            task["error"] = ""
+            if do_skip or not selected:
+                api._log(task, "跳过全剧参考图勾选（仍使用 DeepSeek 文字 bible）")
+            else:
+                api._log(task, f"已确认全剧参考图 {len(selected)} 张，开始分镜生图")
+            asyncio.create_task(api._continue_after_global_refs(task_id))
+            return {"success": True, "task_id": task_id, "selected": selected}
 
         @app.post("/trailer/reveal-output")
         @app.post("/api/trailer/reveal-output")
@@ -951,6 +1168,33 @@ class TrailerAPI:
             await self._phase_plan(task)
             if task.get("status") == "cancelled":
                 return
+            if task.get("use_global_refs", True):
+                await self._phase_global_refs(task)
+                if task.get("status") == "cancelled":
+                    return
+                task["status"] = "awaiting_global_refs"
+                task["stage"] = "awaiting_global_refs"
+                self._log(
+                    task,
+                    "全剧参考候选已生成：勾选保留的 AI 图，或上传自己的图，再点「确认全剧参考」；也可跳过仅用文字设定",
+                )
+                return
+            await self._continue_after_global_refs(task_id)
+        except Exception as e:
+            if task.get("status") != "cancelled":
+                task["status"] = "error"
+                task["stage"] = "error"
+                task["error"] = str(e)
+                self._log(task, f"失败：{e}")
+
+    async def _continue_after_global_refs(self, task_id: str) -> None:
+        task = self.tasks.get(task_id)
+        if not task:
+            return
+        try:
+            if task.get("status") == "cancelled":
+                return
+            task["status"] = "running"
             await self._phase_images(task)
             if task.get("status") == "cancelled":
                 return
@@ -975,6 +1219,73 @@ class TrailerAPI:
                 task["stage"] = "error"
                 task["error"] = str(e)
                 self._log(task, f"失败：{e}")
+
+    async def _phase_global_refs(self, task: dict) -> None:
+        plan = task.get("plan") or {}
+        bible = plan.get("bible") if isinstance(plan.get("bible"), dict) else _normalize_bible(plan, task.get("prompt") or "")
+        if not isinstance(plan.get("bible"), dict):
+            plan["bible"] = bible
+            task["plan"] = plan
+        prompts = list(bible.get("ref_prompts") or [])[:4]
+        if not prompts:
+            prompts = _normalize_bible({}, task.get("prompt") or "").get("ref_prompts") or []
+
+        aspect = task["aspect"]
+        w, h = _ASPECT_SIZES[aspect]
+        style = _style_meta(task["visual_style"])
+        task["stage"] = "global_refs"
+        task["progress"] = {"current": 0, "total": max(1, len(prompts))}
+        self._log(task, f"生成全剧参考图候选 {len(prompts)} 张（定妆/情绪板）…")
+
+        task_dir = self._task_dir(task)
+        refs_dir = task_dir / "global_refs"
+        refs_dir.mkdir(parents=True, exist_ok=True)
+
+        build_wf = self.deps["build_z_image_workflow"]
+        run_comfy = self.deps["run_comfyui_and_get_last_image"]
+        neg = self.deps["default_txt2img_negative"]("", width=w, height=h)
+        no_text = self.deps.get("image_no_text_prefix") or ""
+        bible_prefix = _bible_prompt_prefix(plan)
+
+        ui = list(task.get("global_refs_ui") or [])
+        # 保留已上传的
+        ui = [x for x in ui if isinstance(x, dict) and x.get("source") == "upload"]
+        for i, rp in enumerate(prompts):
+            if task.get("status") == "cancelled":
+                return
+            task["progress"] = {"current": i + 1, "total": len(prompts)}
+            self._log(task, f"全剧参考图 {i + 1}/{len(prompts)}")
+            pos = (
+                f"{no_text}{bible_prefix}{rp}. {style['suffix']}. "
+                f"{style['zh']}. series style guide still, no text, no watermark, no subtitles, no logo."
+            )
+            seed = random.randint(1, 2_000_000_000)
+            workflow = build_wf(pos, seed=seed, width=w, height=h, negative_text=neg)
+            img_bytes = await run_comfy(workflow)
+            name = f"bible_{i:02d}.png"
+            (refs_dir / name).write_bytes(img_bytes)
+            ui.append(
+                {
+                    "filename": name,
+                    "url": f"/output/{task_dir.name}/global_refs/{name}",
+                    "source": "ai",
+                    "label": f"参考 {i + 1}",
+                    "prompt": rp[:200],
+                    "selected": True,
+                }
+            )
+        task["global_refs_ui"] = ui
+        task["global_refs_selected"] = [x["filename"] for x in ui if x.get("selected")]
+        # 写入 bible 摘要便于页面展示
+        task["bible_summary"] = {
+            "style_notes": bible.get("style_notes") or "",
+            "world_look": bible.get("world_look") or "",
+            "palette": bible.get("palette") or "",
+            "mood": bible.get("mood") or "",
+            "relationships": bible.get("relationships") or "",
+            "characters": bible.get("characters") or [],
+        }
+        self._log(task, f"全剧参考图候选就绪（{len(ui)} 张）")
 
     async def _phase_plan(self, task: dict) -> None:
         task["stage"] = "plan"
@@ -1016,6 +1327,13 @@ class TrailerAPI:
             if req > got:
                 self._log(task, f"请求 {req} 段，分镜仅 {got} 段，按最大分镜数出片")
             self._log(task, f"剧本就绪：{plan.get('title')}，采用 {got} 镜 × {shot_dur:g}s")
+            bible = plan.get("bible") if isinstance(plan.get("bible"), dict) else {}
+            if bible.get("style_notes") or bible.get("characters"):
+                n_ch = len(bible.get("characters") or [])
+                self._log(
+                    task,
+                    f"全剧设定已写入 bible（角色 {n_ch} 个；画风/世界观由 DeepSeek 自动定调）",
+                )
 
         task["plan"] = plan
         # 便于历史复用时还原画幅/风格
@@ -1063,8 +1381,14 @@ class TrailerAPI:
                 return
             idx = int(shot["index"])
             base_prompt = (shot.get("visual_prompt") or "").strip()
+            bible_prefix = _bible_prompt_prefix(plan)
+            # 有勾选全剧参考时，提示词强调与定妆一致（当前引擎靠文字 bible；参考图文件已落盘供剪映/后续）
+            ref_note = ""
+            sel = task.get("global_refs_selected") or []
+            if sel:
+                ref_note = f"Match the approved series reference sheets ({len(sel)} stills on disk). "
             pos = (
-                f"{no_text}{base_prompt}. {style['suffix']}. "
+                f"{no_text}{bible_prefix}{ref_note}{base_prompt}. {style['suffix']}. "
                 f"{style['zh']}. no text, no watermark, no subtitles, no logo."
             )
             candidates = []

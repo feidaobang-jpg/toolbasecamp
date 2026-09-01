@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc29" />
-  <script src="../../../../js/locales/en.js?v=trailer9"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=trailer9"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc32" />
+  <script src="../../../../js/locales/en.js?v=trailer13"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=trailer13"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc28"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">输入书名/影视名/梗概 → DeepSeek 分镜 → 关键帧（多张可勾选）→ 按段数图生视频 + 旁白粗剪。候选图默认 1 张直跑成片；单段 3～10 秒，段数默认 1。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">输入书名/梗概 → DeepSeek 全剧设定+分镜 → 全剧参考图（AI 勾选或上传）→ 关键帧 → 成片。画风细节一般不用手填。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -57,6 +57,15 @@
                   <button type="button" class="rec-chip" data-style="anime" data-i18n="privateHub.homePc.trailerStyleAnime">二次元</button>
                   <button type="button" class="rec-chip" data-style="ink" data-i18n="privateHub.homePc.trailerStyleInk">水墨</button>
                 </div>
+              </div>
+
+            <div class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.trailerGlobalRefsLabel">全剧参考图</span>
+                <div class="trailer-aspect-row">
+                  <label class="trailer-radio"><input type="radio" name="use-global-refs" value="1" checked /><span data-i18n="privateHub.homePc.trailerGlobalRefsOn">开启（DeepSeek 定设定 + AI 候选/可上传）</span></label>
+                  <label class="trailer-radio"><input type="radio" name="use-global-refs" value="0" /><span data-i18n="privateHub.homePc.trailerGlobalRefsOff">关闭（仅文字分镜）</span></label>
+                </div>
+                <p class="small-hint" data-i18n="privateHub.homePc.trailerGlobalRefsHint">画风细节、人物关系等由 DeepSeek 根据书名/梗概自动定；你只需粗选风格芯片。参考图可勾选 AI 定妆，也可上传。</p>
               </div>
 
               <div class="form-row">
@@ -135,6 +144,8 @@
 
             <div class="action-row home-pc-tool-actions">
               <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.trailerStart">生成分镜与候选图</button>
+              <button type="button" id="confirm-global-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerConfirmGlobal">确认全剧参考</button>
+              <button type="button" id="skip-global-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerSkipGlobal">跳过参考图</button>
               <button type="button" id="confirm-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerConfirm">确认选图并成片</button>
               <button type="button" id="cancel-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.cancelTask">取消任务</button>
               <button type="button" id="open-output-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.openOutputDir">打开输出文件夹</button>
@@ -154,7 +165,20 @@
             <div id="plan-box" class="home-pc-result-box trailer-plan-box" style="display:none;">
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerPlanTitle">分镜剧本</h3>
               <p id="plan-meta" class="trailer-plan-meta"></p>
+              <div id="bible-box" class="trailer-bible" style="display:none;"></div>
               <ol id="plan-list" class="trailer-plan-list"></ol>
+            </div>
+
+            <div id="global-refs-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerGlobalRefsTitle">全剧参考图</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.trailerGlobalRefsPickHint">勾选要保留的 AI 定妆/情绪板；也可上传自己的参考图。确认后才进入分镜生图。</p>
+              <div class="action-row" style="margin-bottom:12px;">
+                <label class="tb-btn trailer-upload-label">
+                  <span data-i18n="privateHub.homePc.trailerGlobalRefsUpload">上传参考图</span>
+                  <input id="global-ref-file" type="file" accept="image/*" multiple hidden />
+                </label>
+              </div>
+              <div id="global-refs-list" class="trailer-cand-grid"></div>
             </div>
 
             <div id="video-box" class="home-pc-result-box trailer-video-box" style="display:none;">
@@ -173,35 +197,35 @@
               <div id="shots-list" class="trailer-shots"></div>
             </div>
 
+            <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
+              <h4 data-i18n="privateHub.homePc.logTitle">执行日志</h4>
+              <pre id="log-output"></pre>
+            </div>
+
             <div id="history-box" class="home-pc-result-box trailer-history">
               <div class="trailer-history-head">
                 <h3 data-i18n="privateHub.homePc.trailerHistoryTitle">历史关键帧</h3>
                 <button type="button" id="history-refresh-btn" class="tb-btn" data-i18n="privateHub.homePc.trailerHistoryRefresh">刷新</button>
               </div>
-              <p class="small-hint" data-i18n="privateHub.homePc.trailerHistoryHint">可复用以前生成的分镜图直接成片，不必重新生图。</p>
+              <p class="small-hint" data-i18n="privateHub.homePc.trailerHistoryHint">复用成片：跳过生图直接配音/成片；加载选图：只载入旧图，可改选后再确认成片。</p>
               <div id="history-list" class="trailer-history-list"></div>
-            </div>
-
-            <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
-              <h4 data-i18n="privateHub.homePc.logTitle">执行日志</h4>
-              <pre id="log-output"></pre>
             </div>
           </div>
         </div>
       </main>
     </div>
   </div>
+  <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
   <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc23"></script>
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer9"></script>
+  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer13"></script>
   <div id="trailer-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">
-      <img id="trailer-lightbox-img" alt="" />
-      <button type="button" class="tb-btn trailer-lightbox-close" data-i18n="privateHub.homePc.trailerPreviewClose">关闭预览</button>
+      <img id="trailer-lightbox-img" alt="" title="点击关闭" />
     </div>
   </div>
 </body>

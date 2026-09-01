@@ -1502,6 +1502,47 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   color: #1d4ed8;
 }
 
+.home-pc-wrap .trailer-bible {
+  margin: 10px 0 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #374151;
+}
+
+.home-pc-wrap .trailer-bible-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.home-pc-wrap .trailer-bible > div {
+  margin-bottom: 6px;
+}
+
+.home-pc-wrap .trailer-cand-cap {
+  display: block;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.72);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.home-pc-wrap label.tb-btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
 .home-pc-wrap .trailer-history {
   margin-top: 18px;
   margin-bottom: 8px;
@@ -1786,15 +1827,12 @@ body.tb-admin-private #auth-status {
 .trailer-lightbox-panel img {
   display: block;
   max-width: 100%;
-  max-height: calc(92vh - 56px);
+  max-height: 92vh;
   object-fit: contain;
   border-radius: 10px;
   background: #111;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-}
-
-.trailer-lightbox-close {
-  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .home-pc-wrap button.rec-chip.is-active {
