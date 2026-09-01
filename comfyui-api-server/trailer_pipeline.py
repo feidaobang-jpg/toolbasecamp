@@ -111,6 +111,29 @@ def _now_ts_ms() -> int:
     return int(time.time() * 1000)
 
 
+def _format_elapsed(sec: float, *, coarse: bool = False) -> str:
+    """友好耗时：31.2s / 4m12s；coarse 时不足 1 分钟用整数秒（31s）。"""
+    sec = max(0.0, float(sec or 0.0))
+    if sec < 60:
+        if coarse:
+            return f"{int(round(sec))}s"
+        return f"{sec:.1f}s"
+    m = int(sec // 60)
+    s = int(round(sec - m * 60))
+    if s >= 60:
+        m += 1
+        s = 0
+    return f"{m}m{s:02d}s"
+
+
+def _timing_bucket(task: dict) -> dict:
+    t = task.get("timing")
+    if not isinstance(t, dict):
+        t = {}
+        task["timing"] = t
+    return t
+
+
 def _build_shots_ui_from_folder(task_dir: Path, plan: dict) -> List[dict]:
     images_dir = task_dir / "images"
     shots = plan.get("shots") or []
@@ -828,6 +851,7 @@ class TrailerAPI:
                 "picks": {},
                 "video_url": "",
                 "export_hint": "",
+                "timing": {},
             }
             api.tasks[task_id] = task
             asyncio.create_task(api._run_until_picks(task_id))
@@ -1236,6 +1260,7 @@ class TrailerAPI:
         task["stage"] = "global_refs"
         task["progress"] = {"current": 0, "total": max(1, len(prompts))}
         self._log(task, f"生成全剧参考图候选 {len(prompts)} 张（定妆/情绪板）…")
+        t0 = time.perf_counter()
 
         task_dir = self._task_dir(task)
         refs_dir = task_dir / "global_refs"
@@ -1285,7 +1310,12 @@ class TrailerAPI:
             "relationships": bible.get("relationships") or "",
             "characters": bible.get("characters") or [],
         }
-        self._log(task, f"全剧参考图候选就绪（{len(ui)} 张）")
+        elapsed = time.perf_counter() - t0
+        _timing_bucket(task)["global_refs_sec"] = round(elapsed, 2)
+        self._log(
+            task,
+            f"全剧参考图完成，共 {len(ui)} 张，耗时 {_format_elapsed(elapsed)}",
+        )
 
     async def _phase_plan(self, task: dict) -> None:
         task["stage"] = "plan"
@@ -1376,6 +1406,7 @@ class TrailerAPI:
 
         shots_ui = []
         done = 0
+        t0 = time.perf_counter()
         for shot in shots:
             if task.get("status") == "cancelled":
                 return
@@ -1426,6 +1457,12 @@ class TrailerAPI:
         task["shots_ui"] = shots_ui
         # 默认 picks
         task["picks"] = {str(s["index"]): 0 for s in shots_ui}
+        elapsed = time.perf_counter() - t0
+        _timing_bucket(task)["images_sec"] = round(elapsed, 2)
+        self._log(
+            task,
+            f"生图完成，共 {len(shots)} 镜 {done} 张，耗时 {_format_elapsed(elapsed)}",
+        )
 
     async def _run_compose(self, task_id: str) -> None:
         task = self.tasks.get(task_id)
@@ -1495,6 +1532,8 @@ class TrailerAPI:
         srt_lines: List[str] = []
         t_cursor = 0.0
         i2v_fail = 0
+        tts_sec = 0.0
+        video_sec = 0.0
 
         ui_by_idx = {int(s["index"]): s for s in shots_ui}
         n_shots = len(shots)
@@ -1536,6 +1575,7 @@ class TrailerAPI:
             task["stage"] = "tts"
             task["progress"] = {"current": i + 1, "total": n_shots}
             self._log(task, f"配音 分镜 {idx + 1}/{n_shots}")
+            t_tts0 = time.perf_counter()
             raw_wav = audio_dir / f"{idx:02d}_raw.wav"
             final_wav = audio_dir / f"{idx:02d}.wav"
             produced = await tts(vo, raw_wav, voice=voice, speed=speed)
@@ -1558,6 +1598,7 @@ class TrailerAPI:
                 )
             audio_dur_fn = self.deps.get("audio_duration_seconds") or wav_dur
             tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
+            tts_sec += time.perf_counter() - t_tts0
             # 以用户单段时长为主；旁白更长则略延长（上限 10s）
             dur = max(planned, tts_len)
             dur = min(10.0, max(3.0, dur))
@@ -1566,6 +1607,7 @@ class TrailerAPI:
             clip_path = clips_dir / f"{idx:02d}.mp4"
             if use_comfy_video:
                 task["stage"] = "i2v" if (use_wan or use_ltx_i2v) else "t2v"
+                t_vid0 = time.perf_counter()
                 try:
                     if use_wan:
                         self._log(
@@ -1635,6 +1677,8 @@ class TrailerAPI:
                         f"分镜 {idx + 1} {engine_meta['label']} 失败，该镜回退静帧推镜：{e}",
                     )
                     video_clip_paths.append(img_path)
+                finally:
+                    video_sec += time.perf_counter() - t_vid0
             else:
                 video_clip_paths.append(img_path)
 
@@ -1645,8 +1689,26 @@ class TrailerAPI:
             srt_lines.append(f"{i + 1}\n{_ts(t_cursor)} --> {_ts(t_cursor + dur)}\n{vo}\n")
             t_cursor += dur
 
+        timing = _timing_bucket(task)
+        timing["tts_sec"] = round(tts_sec, 2)
+        timing["video_sec"] = round(video_sec, 2)
+
+        if use_comfy_video:
+            if use_wan or use_ltx_i2v:
+                vid_label = "图生视频"
+            else:
+                vid_label = "文生视频"
+            self._log(
+                task,
+                f"{vid_label}完成，{n_shots} 镜，耗时 {_format_elapsed(video_sec)}"
+                + (f"（失败回退 {i2v_fail} 镜）" if i2v_fail else ""),
+            )
+        else:
+            self._log(task, f"配音完成，{n_shots} 镜，耗时 {_format_elapsed(tts_sec)}")
+
         task["stage"] = "video"
         self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s，I2V失败 {i2v_fail} 镜）…")
+        t_mux0 = time.perf_counter()
         out_name = "trailer_16_9.mp4" if aspect == "16_9" else "trailer_9_16.mp4"
         out_video = task_dir / out_name
 
@@ -1695,6 +1757,22 @@ class TrailerAPI:
             )
             engine_note = f"静帧推镜回退（{engine_meta['label']} 未全成功）"
 
+        mux_sec = time.perf_counter() - t_mux0
+        timing["mux_sec"] = round(mux_sec, 2)
+        # 「视频」：图生/文生用 Comfy 耗时；静帧推镜主要耗时在拼接（与分项日志一致）
+        if use_comfy_video:
+            video_for_summary = video_sec
+        else:
+            video_for_summary = mux_sec
+            self._log(
+                task,
+                f"静帧推镜完成，{n_shots} 镜，耗时 {_format_elapsed(mux_sec)}",
+            )
+        timing["video_total_sec"] = round(video_for_summary, 2)
+        images_sec = float(timing.get("images_sec") or 0.0)
+        total_pipeline = images_sec + tts_sec + video_for_summary
+        timing["pipeline_sec"] = round(total_pipeline, 2)
+
         picks_export = []
         for shot in shots:
             idx = int(shot["index"])
@@ -1718,6 +1796,7 @@ class TrailerAPI:
                     "video_mode": mode,
                     "engine_note": engine_note,
                     "shots": picks_export,
+                    "timing": timing,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -1749,3 +1828,13 @@ class TrailerAPI:
         task["stage"] = "done"
         task["progress"] = {"current": 1, "total": 1}
         self._log(task, f"完成：{out_name}（约 {t_cursor:.1f}s · {engine_note}）")
+        # 成片总耗时不含人工选图等待；含生图 + 配音 + 视频（Comfy 或推镜拼接）
+        parts = [
+            f"生图 {_format_elapsed(images_sec, coarse=True)}",
+            f"视频 {_format_elapsed(video_for_summary, coarse=True)}",
+            f"配音 {_format_elapsed(tts_sec, coarse=True)}",
+        ]
+        self._log(
+            task,
+            f"成片总耗时 {_format_elapsed(total_pipeline)}（{' · '.join(parts)}）",
+        )

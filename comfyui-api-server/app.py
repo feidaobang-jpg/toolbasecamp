@@ -120,7 +120,7 @@ async def health_check():
         "deepseek_configured": bool(_repo_deepseek_api_key()),
         # 用于确认家里电脑是否已加载「默认不分逗号 / 人物可选预设」逻辑
         "text_illustration_rules": "v2_no_comma_default",
-        "trailer_pipeline": "v6_global_refs_bible",
+        "trailer_pipeline": "v7_timing_logs",
     }
 
 
