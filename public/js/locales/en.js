@@ -371,7 +371,7 @@ window.TB_LOCALES.en = {
             seriesRefRegenDone: 'Reference updated from feedback',
             seriesRefNoProject: 'Open a series project first',
             seriesDownloadLog: 'Download log',
-            seriesLogHint: 'Logs are also written to pipeline.log in the project folder; download to share for debugging.',
+            seriesLogHint: 'Logs are in pipeline.log under the project folder; use Open folder for assets and logs.',
             seriesLogDownloaded: 'Log download started',
             seriesShotPreview: 'Shot preview',
             seriesOpenFolder: 'Open folder',

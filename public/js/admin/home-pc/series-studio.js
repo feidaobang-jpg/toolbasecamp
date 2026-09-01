@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var progressLine = document.getElementById('series-progress-line');
   var logOutput = document.getElementById('log-output');
   var downloadLogBtn = document.getElementById('download-log-btn');
+  var openSeriesFolderBtn = document.getElementById('open-series-folder-btn');
   var shotPreviewBox = document.getElementById('shot-preview-box');
   var shotPreviewVideo = document.getElementById('shot-preview-video');
   var shotPreviewMeta = document.getElementById('shot-preview-meta');
@@ -373,6 +374,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (regenShotBtn) regenShotBtn.style.display = hasShots && !awaiting && selectedShotId ? '' : 'none';
     if (deleteSeriesBtn) deleteSeriesBtn.style.display = currentSeriesId ? '' : 'none';
     if (downloadLogBtn) downloadLogBtn.style.display = currentSeriesId ? '' : 'none';
+    if (openSeriesFolderBtn) openSeriesFolderBtn.style.display = currentSeriesId ? '' : 'none';
     if (cancelBtn) cancelBtn.style.display = running ? '' : 'none';
     setBusy(running);
   }
@@ -430,6 +432,26 @@ document.addEventListener('DOMContentLoaded', function () {
     markSelectedShotCards();
     updateActionVisibility(currentSeries || { episodes: [], status: 'draft', job_status: 'idle' });
     if (openPreview !== false) showShotPreview(sh);
+  }
+
+  function revealSeriesFolder() {
+    if (!currentSeriesId) return;
+    var fd = new FormData();
+    fd.append('series_id', currentSeriesId);
+    fetch(API_BASE + '/series/reveal-output', { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+      })
+      .catch(function (err) {
+        flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+      });
   }
 
   function revealSelectedShotFolder() {
@@ -955,46 +977,14 @@ document.addEventListener('DOMContentLoaded', function () {
       revealSelectedShotFolder();
     });
   }
+  if (openSeriesFolderBtn) {
+    openSeriesFolderBtn.addEventListener('click', function () {
+      revealSeriesFolder();
+    });
+  }
   if (downloadLogBtn) {
     downloadLogBtn.addEventListener('click', function () {
-      if (!currentSeriesId) return;
-      var url =
-        API_BASE +
-        '/series/download-log?series_id=' +
-        encodeURIComponent(currentSeriesId);
-      downloadLogBtn.disabled = true;
-      fetch(url)
-        .then(function (res) {
-          if (!res.ok) {
-            return res.text().then(function (t) {
-              throw new Error(t || 'HTTP ' + res.status);
-            });
-          }
-          var cd = res.headers.get('Content-Disposition') || '';
-          var m = /filename=\"?([^\";]+)\"?/i.exec(cd);
-          var fname = m ? m[1] : 'series_' + currentSeriesId + '_pipeline.log';
-          return res.blob().then(function (blob) {
-            return { blob: blob, fname: fname };
-          });
-        })
-        .then(function (pack) {
-          var a = document.createElement('a');
-          a.href = URL.createObjectURL(pack.blob);
-          a.download = pack.fname;
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function () {
-            URL.revokeObjectURL(a.href);
-            a.remove();
-          }, 1500);
-          flashMsg(tr('privateHub.homePc.seriesLogDownloaded', '日志已开始下载'), false);
-        })
-        .catch(function (err) {
-          flashMsg(window.HomePcApi.friendlyFetchError(err), true);
-        })
-        .finally(function () {
-          downloadLogBtn.disabled = false;
-        });
+      revealSeriesFolder();
     });
   }
   if (deleteSeriesBtn) {

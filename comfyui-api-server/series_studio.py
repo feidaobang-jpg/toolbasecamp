@@ -481,6 +481,22 @@ class SeriesStudioAPI:
         except Exception:
             pass
 
+    def _reveal_path(self, path: Path) -> str:
+        resolved = str(Path(path).resolve())
+        try:
+            import subprocess
+            import sys
+
+            if sys.platform.startswith("win"):
+                subprocess.Popen(["explorer", resolved])
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", resolved])
+            else:
+                subprocess.Popen(["xdg-open", resolved])
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        return resolved
+
     def _export_log_text(self, series_id: str) -> str:
         disk = self._series_dir(series_id) / "pipeline.log"
         if disk.is_file() and disk.stat().st_size > 0:
@@ -1458,6 +1474,14 @@ class SeriesStudioAPI:
                 },
             )
 
+        @app.post("/series/reveal-output")
+        @app.post("/api/series/reveal-output")
+        async def series_reveal_output(series_id: str = Form(...)):
+            with api.db.connect() as conn:
+                api._get_series_row(conn, series_id)
+            path = api._reveal_path(api._series_dir(series_id))
+            return {"success": True, "path": path}
+
         @app.post("/series/reveal-shot")
         @app.post("/api/series/reveal-shot")
         async def series_reveal_shot(
@@ -1466,27 +1490,15 @@ class SeriesStudioAPI:
         ):
             row = api._shot_detail(series_id, shot_id)
             version = int(row["version"] or 1)
-            path = str(
+            path = api._reveal_path(
                 api._shot_dir(
                     series_id,
                     int(row["ep_no"]),
                     int(row["sc_no"]),
                     int(row["shot_no"]),
                     version,
-                ).resolve()
+                )
             )
-            try:
-                import subprocess
-                import sys
-
-                if sys.platform.startswith("win"):
-                    subprocess.Popen(["explorer", path])
-                elif sys.platform == "darwin":
-                    subprocess.Popen(["open", path])
-                else:
-                    subprocess.Popen(["xdg-open", path])
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
             return {"success": True, "path": path}
 
         @app.post("/series/plan")

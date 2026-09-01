@@ -370,7 +370,7 @@ window.TB_LOCALES['zh-CN'] = {
             seriesRefRegenDone: '参考图已按反馈更新',
             seriesRefNoProject: '请先打开一个剧集项目',
             seriesDownloadLog: '下载日志',
-            seriesLogHint: '日志会写入项目目录 pipeline.log；下载后可发给排查。',
+            seriesLogHint: '日志在项目目录 pipeline.log；点「打开文件夹」可查看素材与日志。',
             seriesLogDownloaded: '日志已开始下载',
             seriesShotPreview: '镜头预览',
             seriesOpenFolder: '打开文件夹',
