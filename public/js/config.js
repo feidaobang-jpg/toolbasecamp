@@ -393,6 +393,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.homePc.trailerTitle',
                     descriptionKey: 'privateHub.homePc.trailerDesc',
                     url: 'html/admin/private/home-pc/trailer.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.seriesTitle',
+                    descriptionKey: 'privateHub.homePc.seriesDesc',
+                    url: 'html/admin/private/home-pc/series-studio.html'
                 }
             ]
         }
