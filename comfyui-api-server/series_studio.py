@@ -730,6 +730,180 @@ class SeriesStudioAPI:
         with self.db.connect() as conn:
             conn.execute(f"UPDATE shot SET {cols} WHERE id=?", vals)
 
+    def _ref_disk_path(self, series_id: str, item: dict) -> Optional[Path]:
+        if not isinstance(item, dict):
+            return None
+        rel = (item.get("rel") or "").strip().replace("\\", "/")
+        if rel:
+            p = self.output_root / rel
+            if p.is_file():
+                return p
+        fn = Path(str(item.get("filename") or "")).name
+        if not fn:
+            return None
+        p2 = self._series_dir(series_id) / "global_refs" / fn
+        return p2 if p2.is_file() else None
+
+    async def _still_from_prompt(
+        self,
+        *,
+        series_id: str,
+        pos: str,
+        neg: str,
+        width: int,
+        height: int,
+        selected_refs: List[dict],
+    ) -> Tuple[bytes, str]:
+        """有勾选参考图时走图生图锚定外形；失败则回退文生图。"""
+        build_txt = self.deps["build_z_image_workflow"]
+        build_i2i = self.deps.get("build_z_image_img2img_workflow")
+        run_comfy = self.deps["run_comfyui_and_get_last_image"]
+        upload_bytes = self.deps.get("upload_image_bytes")
+        seed = random.randint(1, 2_000_000_000)
+
+        primary = None
+        for it in selected_refs:
+            path = self._ref_disk_path(series_id, it)
+            if path:
+                primary = (it, path)
+                break
+
+        if primary and callable(build_i2i) and callable(upload_bytes):
+            it, path = primary
+            try:
+                comfy_name, _sub = await upload_bytes(
+                    path.read_bytes(), name_prefix=f"series_ref_{series_id}_"
+                )
+                if not comfy_name:
+                    raise RuntimeError("参考图上传 ComfyUI 失败")
+                i2i_pos = (
+                    f"{pos} Keep the same character identity, face, costume colors and overall art style "
+                    f"as the reference image ({it.get('label') or it.get('filename')}). "
+                    f"Change pose/camera/scene to match this shot; do not copy the reference composition blindly."
+                )
+                wf = build_i2i(
+                    i2i_pos,
+                    comfy_name,
+                    negative_text=neg,
+                    seed=seed,
+                    denoise=0.78,
+                    megapixels=1.0,
+                )
+                img_bytes = await run_comfy(wf)
+                note = f"参考图生图·{it.get('filename')}"
+                if len(selected_refs) > 1:
+                    note += f"（勾选 {len(selected_refs)} 张，主参考用首张）"
+                return img_bytes, note
+            except Exception as e:
+                self._log(series_id, f"参考图生图失败，回退文生图：{e}")
+
+        wf = build_txt(pos, seed=seed, width=width, height=height, negative_text=neg)
+        img_bytes = await run_comfy(wf)
+        return img_bytes, "文生图"
+
+    async def _regen_one_global_ref(self, series_id: str, filename: str, feedback: str) -> dict:
+        feedback = (feedback or "").strip()
+        if len(feedback) < 2:
+            raise HTTPException(status_code=400, detail="请填写修改意见")
+        safe = Path(filename).name
+        with self.db.connect() as conn:
+            s = self._get_series_row(conn, series_id)
+            if s["job_status"] == "running":
+                raise HTTPException(status_code=400, detail="已有任务在跑，请稍候")
+            try:
+                refs = json.loads(s["global_refs_json"] or "[]")
+            except Exception:
+                refs = []
+            aspect = _normalize_aspect(s["aspect"])
+            style_key = s["visual_style"]
+            try:
+                bible = json.loads(s["bible_json"] or "{}")
+            except Exception:
+                bible = {}
+
+        idx = -1
+        item = None
+        for i, it in enumerate(refs):
+            if isinstance(it, dict) and it.get("filename") == safe:
+                idx = i
+                item = dict(it)
+                break
+        if not item:
+            raise HTTPException(status_code=404, detail="参考图不存在")
+
+        w, h = _ASPECT_SIZES[aspect]
+        style = _style_meta(style_key)
+        no_text = self.deps.get("image_no_text_prefix") or ""
+        bible_prefix = _bible_prompt_prefix({"bible": bible})
+        neg = self.deps["default_txt2img_negative"]("", width=w, height=h)
+        base_prompt = (item.get("prompt") or item.get("label") or "series character design sheet").strip()
+        pos = (
+            f"{no_text}{bible_prefix}{base_prompt}. User revision: {feedback}. "
+            f"{style['suffix']}. {style['zh']}. series style guide still, no text, no watermark."
+        )
+
+        build_txt = self.deps["build_z_image_workflow"]
+        build_i2i = self.deps.get("build_z_image_img2img_workflow")
+        build_qwen = self.deps.get("build_qwen_img2img_workflow")
+        run_comfy = self.deps["run_comfyui_and_get_last_image"]
+        upload_bytes = self.deps.get("upload_image_bytes")
+        path = self._ref_disk_path(series_id, item)
+        seed = random.randint(1, 2_000_000_000)
+        img_bytes = None
+        engine = "txt"
+
+        if path and callable(upload_bytes):
+            comfy_name, _sub = await upload_bytes(
+                path.read_bytes(), name_prefix=f"series_refedit_{series_id}_"
+            )
+            if comfy_name and callable(build_qwen):
+                try:
+                    qwen_prompt = (
+                        f"Edit this series reference still. Keep framing as a character/mood board. "
+                        f"Apply these changes: {feedback}. "
+                        f"Preserve overall art style. No text, no watermark."
+                    )
+                    wf = build_qwen(qwen_prompt, comfy_name, seed=seed, quality="standard")
+                    img_bytes = await run_comfy(wf)
+                    engine = "qwen_edit"
+                except Exception as e:
+                    self._log(series_id, f"Qwen 改参考图失败，改用图生图：{e}")
+            if img_bytes is None and comfy_name and callable(build_i2i):
+                try:
+                    wf = build_i2i(
+                        pos, comfy_name, negative_text=neg, seed=seed, denoise=0.62, megapixels=1.0
+                    )
+                    img_bytes = await run_comfy(wf)
+                    engine = "z_img2img"
+                except Exception as e:
+                    self._log(series_id, f"图生图改参考失败，改用文生图：{e}")
+
+        if img_bytes is None:
+            wf = build_txt(pos, seed=seed, width=w, height=h, negative_text=neg)
+            img_bytes = await run_comfy(wf)
+            engine = "txt"
+
+        refs_dir = self._series_dir(series_id) / "global_refs"
+        refs_dir.mkdir(parents=True, exist_ok=True)
+        out_path = refs_dir / safe
+        out_path.write_bytes(img_bytes)
+        rel = self._rel(out_path)
+        item["rel"] = rel
+        item["url"] = self._url(rel) + f"?t={int(time.time())}"
+        item["prompt"] = f"{base_prompt}. Revision: {feedback}"[:500]
+        item["feedback"] = feedback[:300]
+        item["selected"] = True
+        item["source"] = item.get("source") or "ai"
+        item["engine"] = engine
+        refs[idx] = item
+        with self.db.connect() as conn:
+            conn.execute(
+                "UPDATE series SET global_refs_json=?, updated_at=? WHERE id=?",
+                (json.dumps(refs, ensure_ascii=False), _utc_now_str(), series_id),
+            )
+        self._log(series_id, f"已按反馈重出参考图 {safe}（{engine}）：{feedback[:80]}")
+        return item
+
     async def _run_one_shot(self, series_id: str, shot_id: str, *, force: bool = False) -> None:
         row = self._shot_detail(series_id, shot_id)
         if row["status"] in ("done", "approved") and not force:
@@ -768,8 +942,6 @@ class SeriesStudioAPI:
         if selected_refs:
             ref_note = f"Match the approved series reference sheets ({len(selected_refs)} stills). "
 
-        build_wf = self.deps["build_z_image_workflow"]
-        run_comfy = self.deps["run_comfyui_and_get_last_image"]
         neg = self.deps["default_txt2img_negative"]("", width=w, height=h)
         no_text = self.deps.get("image_no_text_prefix") or ""
         tts = self.deps["indextts_synthesize"]
@@ -804,14 +976,22 @@ class SeriesStudioAPI:
                 f"{no_text}{bible_prefix}{ref_note}{base_prompt}. {style['suffix']}. "
                 f"{style['zh']}. no text, no watermark, no subtitles, no logo."
             )
-            seed = random.randint(1, 2_000_000_000)
-            workflow = build_wf(pos, seed=seed, width=w, height=h, negative_text=neg)
-            img_bytes = await run_comfy(workflow)
+            img_bytes, eng_note = await self._still_from_prompt(
+                series_id=series_id,
+                pos=pos,
+                neg=neg,
+                width=w,
+                height=h,
+                selected_refs=selected_refs,
+            )
             img_path = shot_dir / "images" / "00.png"
             img_path.write_bytes(img_bytes)
             image_rel = self._rel(img_path)
             self._update_shot(shot_id, image_rel=image_rel)
-            self._log(series_id, f"生图完成 {label}，耗时 {_format_elapsed(time.perf_counter() - t0)}")
+            self._log(
+                series_id,
+                f"生图完成 {label}（{eng_note}），耗时 {_format_elapsed(time.perf_counter() - t0)}",
+            )
 
             if self._cancel.get(series_id):
                 return
@@ -1076,6 +1256,7 @@ class SeriesStudioAPI:
                     "rel": rel,
                     "source": "ai",
                     "label": f"参考 {i + 1}",
+                    "prompt": rp[:500],
                     "selected": True,
                 }
             )
@@ -1333,6 +1514,22 @@ class SeriesStudioAPI:
                     (json.dumps(refs, ensure_ascii=False), _utc_now_str(), series_id),
                 )
             api._log(series_id, f"已上传全剧参考图：{name}")
+            return {"success": True, "item": item, "global_refs": refs}
+
+        @app.post("/series/regen-global-ref")
+        @app.post("/api/series/regen-global-ref")
+        async def series_regen_global_ref(
+            series_id: str = Form(...),
+            filename: str = Form(...),
+            feedback: str = Form(...),
+        ):
+            item = await api._regen_one_global_ref(series_id, filename, feedback)
+            with api.db.connect() as conn:
+                s = api._get_series_row(conn, series_id)
+                try:
+                    refs = json.loads(s["global_refs_json"] or "[]")
+                except Exception:
+                    refs = []
             return {"success": True, "item": item, "global_refs": refs}
 
         @app.post("/series/run-shot")

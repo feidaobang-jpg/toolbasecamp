@@ -179,6 +179,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var fn = it.filename || ('ref_' + i);
       var selected = showActions ? it.selected !== false : !!it.selected;
       if (showActions) globalRefPicks[fn] = selected;
+      var card = document.createElement('div');
+      card.className = 'series-ref-card' + (selected ? ' is-selected' : '');
       var label = document.createElement('label');
       label.className = 'trailer-cand' + (selected ? ' is-selected' : '');
       var input = document.createElement('input');
@@ -188,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
       input.addEventListener('change', function () {
         globalRefPicks[fn] = !!input.checked;
         label.classList.toggle('is-selected', input.checked);
+        card.classList.toggle('is-selected', input.checked);
       });
       var img = document.createElement('img');
       var src = resolveUrl(it.url);
@@ -210,8 +213,72 @@ document.addEventListener('DOMContentLoaded', function () {
       label.appendChild(img);
       label.appendChild(zoomBtn);
       label.appendChild(cap);
-      globalRefsList.appendChild(label);
+      card.appendChild(label);
+      if (showActions) {
+        var fb = document.createElement('div');
+        fb.className = 'series-ref-feedback';
+        var ta = document.createElement('textarea');
+        ta.rows = 2;
+        ta.className = 'text-input series-ref-feedback-input';
+        ta.placeholder = tr(
+          'privateHub.homePc.seriesRefFeedbackPh',
+          '修改意见，如：唐僧更年轻、沙僧灰袍不要黑蓝'
+        );
+        if (it.feedback) ta.value = it.feedback;
+        var regenBtn = document.createElement('button');
+        regenBtn.type = 'button';
+        regenBtn.className = 'tb-btn series-ref-regen-btn';
+        regenBtn.textContent = tr('privateHub.homePc.seriesRefRegen', '按反馈重出');
+        regenBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          regenGlobalRef(fn, ta.value || '');
+        });
+        fb.appendChild(ta);
+        fb.appendChild(regenBtn);
+        card.appendChild(fb);
+      }
+      globalRefsList.appendChild(card);
     });
+  }
+
+  function regenGlobalRef(filename, feedback) {
+    if (!currentSeriesId || !filename) return;
+    var tip = (feedback || '').trim();
+    if (tip.length < 2) {
+      progressWrap.style.display = '';
+      progressStatus.textContent = tr(
+        'privateHub.homePc.seriesRefNeedFeedback',
+        '请先填写这张参考图的修改意见'
+      );
+      return;
+    }
+    var fd = new FormData();
+    fd.append('series_id', currentSeriesId);
+    fd.append('filename', filename);
+    fd.append('feedback', tip);
+    setBusy(true);
+    progressWrap.style.display = '';
+    progressStatus.textContent = tr('privateHub.homePc.seriesRefRegenning', '按反馈重出参考图…');
+    fetch(API_BASE + '/series/regen-global-ref', { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+        renderGlobalRefs(pack.body.global_refs || [], true);
+        setBusy(false);
+        progressStatus.textContent = tr('privateHub.homePc.seriesRefRegenDone', '参考图已按反馈更新');
+        if (currentSeries) currentSeries.global_refs = pack.body.global_refs || [];
+      })
+      .catch(function (err) {
+        setBusy(false);
+        progressStatus.textContent = window.HomePcApi.friendlyFetchError(err);
+      });
   }
 
   function updateActionVisibility(series) {
