@@ -380,7 +380,7 @@ def _normalize_bible(obj: dict, prompt: str = "") -> dict:
         "palette": palette,
         "mood": mood,
         "characters": characters,
-        "ref_prompts": ref_prompts[:5],
+        "ref_prompts": ref_prompts[:6],
     }
 
 

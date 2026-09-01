@@ -207,7 +207,7 @@ def deepseek_series_plan(
     "mood": "英文整体情绪",
     "relationships": "中文或英文人物关系",
     "characters": [{{"id":"c1","name":"角色名","look":"英文外形","role":"身份"}}],
-    "ref_prompts": ["英文定妆/情绪板提示1","…最多4条"]
+    "ref_prompts": ["英文定妆/情绪板提示1","…共6条，含主角定妆与场景情绪板"]
   }},
   "episodes": [
     {{
@@ -237,6 +237,7 @@ def deepseek_series_plan(
 2. visual_prompt 英文；voiceover 中文；不要字幕/水印描述。
 3. 用户未细写画风时，由 bible 完整定调并贯穿所有 visual_prompt。
 4. 规模尽量贴近 {ep_n}×{sc_n}×{sh_n}，不要爆炸式超长。
+5. ref_prompts 必须给满 6 条英文提示：优先各主角单独定妆/半身+全身，再补场景情绪板；外形与 characters 一致。
 """
     try:
         import requests
@@ -1230,9 +1231,10 @@ class SeriesStudioAPI:
         uploads = [x for x in prev if isinstance(x, dict) and x.get("source") == "upload"]
         with self.db.connect() as conn:
             syn = self._get_series_row(conn, series_id)["synopsis"]
-        prompts = list((bible or {}).get("ref_prompts") or [])[:4]
+        prompts = list((bible or {}).get("ref_prompts") or [])[:6]
         if not prompts:
             prompts = _normalize_bible({"bible": bible}, syn).get("ref_prompts") or []
+        prompts = list(prompts)[:6]
 
         w, h = _ASPECT_SIZES[aspect]
         style = _style_meta(style_key)
