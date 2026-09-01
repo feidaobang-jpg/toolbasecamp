@@ -97,9 +97,9 @@ class SeriesDB:
                   speed REAL NOT NULL DEFAULT 1.0,
                   shot_duration_sec REAL NOT NULL DEFAULT 5.0,
                   video_mode TEXT NOT NULL DEFAULT 'wan22_5b',
-                  episode_count INTEGER NOT NULL DEFAULT 2,
-                  scenes_per_ep INTEGER NOT NULL DEFAULT 2,
-                  shots_per_scene INTEGER NOT NULL DEFAULT 3,
+                  episode_count INTEGER NOT NULL DEFAULT 1,
+                  scenes_per_ep INTEGER NOT NULL DEFAULT 1,
+                  shots_per_scene INTEGER NOT NULL DEFAULT 1,
                   bible_json TEXT NOT NULL DEFAULT '{}',
                   global_refs_json TEXT NOT NULL DEFAULT '[]',
                   status TEXT NOT NULL DEFAULT 'draft',
@@ -1289,9 +1289,9 @@ class SeriesStudioAPI:
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
             video_mode: str = Form("wan22_5b"),
-            episode_count: str = Form("2"),
-            scenes_per_ep: str = Form("2"),
-            shots_per_scene: str = Form("3"),
+            episode_count: str = Form("1"),
+            scenes_per_ep: str = Form("1"),
+            shots_per_scene: str = Form("1"),
         ):
             title_s = (title or "").strip()
             text = (synopsis or "").strip()
