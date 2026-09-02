@@ -84,6 +84,7 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
+    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "kenburns": {"label": "静帧推镜", "needs_image": False},
@@ -94,6 +95,8 @@ def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
     if m in ("i2v", "wan", "wan22", "wan2.2_5b", "wan22_ti2v", "wan22_5b", "wan22_14b", "wan22_14b_gguf"):
         return "wan22_14b_gguf"
+    if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
+        return "wan22_t2v_14b"
     if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):
         return "ltx25_i2v"
     if m in ("ltx_t2v", "ltx25_t2v", "ltx2.5_t2v"):
@@ -1749,6 +1752,7 @@ class TrailerAPI:
         create_subs = self.deps["create_subtitle_overlays_timed"]
         upload_bytes = self.deps.get("upload_image_bytes")
         build_wan = self.deps.get("build_wan22_ti2v_workflow")
+        build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
@@ -1758,6 +1762,7 @@ class TrailerAPI:
             and callable(build_wan)
             and callable(run_video)
         )
+        use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v"
             and callable(upload_bytes)
@@ -1765,8 +1770,8 @@ class TrailerAPI:
             and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_wan or use_ltx_i2v or use_ltx_t2v
-        use_tts = use_wan or mode == "kenburns" or not use_comfy_video
+        use_comfy_video = use_wan or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
+        use_tts = use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
 
         image_paths: List[Path] = []
         video_clip_paths: List[Path] = []
@@ -1876,6 +1881,20 @@ class TrailerAPI:
                             length=length,
                             fps=24,
                         )
+                    elif use_wan_t2v:
+                        length = _length_for_duration(dur)
+                        self._log(
+                            task,
+                            f"Wan2.2-14B 文生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                        )
+                        wf = build_wan_t2v(
+                            motion_t2v,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
                     elif use_ltx_i2v:
                         self._log(
                             task,
@@ -1917,7 +1936,7 @@ class TrailerAPI:
                         vdur = float(VideoFileClip(str(clip_path)).duration)
                     except Exception:
                         vdur = dur
-                    if use_wan:
+                    if use_wan or use_wan_t2v:
                         dur = max(tts_len, min(10.0, max(vdur, planned * 0.85)))
                     else:
                         dur = max(3.0, min(10.0, max(vdur, planned * 0.85)))
@@ -1990,7 +2009,7 @@ class TrailerAPI:
                 create_subs,
                 24,
             )
-            if use_wan or use_tts:
+            if use_wan or use_wan_t2v or use_tts:
                 engine_note = f"{engine_meta['label']}（IndexTTS 旁白）"
             else:
                 engine_note = f"{engine_meta['label']}（保留直出音轨）"
@@ -2105,7 +2124,7 @@ class TrailerAPI:
             "4. 多引擎对比时：trailer_<引擎>_16_9.mp4（或 9_16）可并排比较。\n"
             "5. 视频引擎：Wan 2.2 14B I2V GGUF Q5_K_M / LTX 2.5 / 静帧推镜\n"
             "   需 ComfyUI-GGUF + 双路 UnetLoaderGGUF（HighNoise / LowNoise）。\n"
-            "   API 模板：work-flow/wan22_i2v_14b_gguf.json 、 work-flow/ltx25_t2v.json\n"
+            "   API 模板：work-flow/wan22_i2v_14b_gguf.json 、 work-flow/wan22_t2v_14b.json 、 work-flow/ltx25_t2v.json\n"
         )
         (task_dir / "README_剪映.txt").write_text(readme, encoding="utf-8")
 
