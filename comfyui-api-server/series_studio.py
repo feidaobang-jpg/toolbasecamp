@@ -23,18 +23,23 @@ from fastapi.responses import PlainTextResponse
 from PIL import Image
 
 from trailer_pipeline import (
+    _ASPECT_I2V,
     _ASPECT_LTX,
     _ASPECT_SIZES,
     _ASPECT_VIDEO,
     _VIDEO_ENGINES,
     _bible_prompt_prefix,
     _clamp_shot_duration,
+    _compose_clips_with_audio_sync,
     _compose_trailer_sync,
+    _ensure_wav,
     _extract_json_object,
     _format_elapsed,
+    _length_for_duration,
     _normalize_aspect,
     _normalize_bible,
     _normalize_video_engine,
+    _pad_or_trim_wav,
     _style_meta,
     _write_silence_wav,
 )
@@ -117,7 +122,7 @@ class SeriesDB:
                   voice TEXT NOT NULL DEFAULT 'zh-CN-YunxiNeural',
                   speed REAL NOT NULL DEFAULT 1.0,
                   shot_duration_sec REAL NOT NULL DEFAULT 5.0,
-                  video_mode TEXT NOT NULL DEFAULT 'ltx25_i2v',
+                  video_mode TEXT NOT NULL DEFAULT 'wan22_14b_gguf',
                   episode_count INTEGER NOT NULL DEFAULT 1,
                   scenes_per_ep INTEGER NOT NULL DEFAULT 1,
                   shots_per_scene INTEGER NOT NULL DEFAULT 1,
@@ -1167,7 +1172,7 @@ class SeriesStudioAPI:
         aspect = _normalize_aspect(row["aspect"])
         w, h = _ASPECT_SIZES[aspect]
         style = _style_meta(row["visual_style"])
-        mode = _normalize_video_engine(row["video_mode"] or "ltx25_i2v")
+        mode = _normalize_video_engine(row["video_mode"] or "wan22_14b_gguf")
         dur = _clamp_shot_duration(row["duration_sec"] or 5)
         bible = {}
         try:
@@ -1201,16 +1206,27 @@ class SeriesStudioAPI:
             )
         no_text = self.deps.get("image_no_text_prefix") or ""
         upload_bytes = self.deps.get("upload_image_bytes")
+        build_wan = self.deps.get("build_wan22_ti2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
         create_subs = self.deps["create_subtitle_overlays_timed"]
+        tts = self.deps["indextts_synthesize"]
+        wav_dur = self.deps["wav_duration_seconds"]
+        audio_dur_fn = self.deps.get("audio_duration_seconds") or wav_dur
 
+        use_wan = (
+            mode == "wan22_14b_gguf"
+            and callable(upload_bytes)
+            and callable(build_wan)
+            and callable(run_video)
+        )
         use_ltx_i2v = (
             mode == "ltx25_i2v" and callable(upload_bytes) and callable(build_ltx_i2v) and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_ltx_i2v or use_ltx_t2v
+        use_comfy_video = use_wan or use_ltx_i2v or use_ltx_t2v
+        use_tts = use_wan or mode == "kenburns" or not use_comfy_video
 
         started_at = _utc_now_str()
         stills_sec = 0.0
@@ -1265,28 +1281,77 @@ class SeriesStudioAPI:
             if use_comfy_video:
                 await self._free_comfy_vram(series_id, "生图→视频")
 
-            # 2) video（LTX 直出音轨；不再走 Edge-TTS）
+            # 2) video：Wan 用 IndexTTS 旁白；LTX 直出音轨
             self._update_shot(shot_id, status="video")
             clip_path = shot_dir / "clips" / "00.mp4"
+            raw_clip = shot_dir / "clips" / "00_raw.mp4"
             clip_dur = min(10.0, max(3.0, float(dur)))
             vo = (row["voiceover"] or "").strip() or label
             motion = (
                 f"{base_prompt}. camera {row['camera'] or 'medium'}, "
                 f"subtle cinematic motion, natural movement"
             )
+            i2v_wh = _ASPECT_I2V[aspect]
             ltx_wh = _ASPECT_LTX[aspect]
             out_size = _ASPECT_VIDEO[aspect]
+            voice = (row["voice"] or "zh-CN-YunxiNeural").strip()
+            try:
+                speed = max(0.7, min(1.4, float(row["speed"] or 1.0)))
+            except Exception:
+                speed = 1.0
             t_vid = time.perf_counter()
             made_mp4 = False
+            audio_rel = ""
+            raw_wav = shot_dir / "audio" / "00_raw.wav"
+            final_wav = shot_dir / "audio" / "00.wav"
+            tts_len = clip_dur
+
+            if use_tts:
+                self._log(series_id, f"配音 {label}")
+                produced = await tts(vo, raw_wav, voice=voice, speed=speed)
+                produced_path = Path(produced) if produced else raw_wav
+                mp3_fallback = raw_wav.with_suffix(".mp3")
+                if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
+                    src = (
+                        produced_path
+                        if produced_path.exists()
+                        else (mp3_fallback if mp3_fallback.exists() else None)
+                    )
+                    if src is None:
+                        raise RuntimeError(f"配音文件未生成：{raw_wav}")
+                    await asyncio.to_thread(_ensure_wav, src, raw_wav)
+                tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
+                clip_dur = min(10.0, max(3.0, max(float(dur), tts_len)))
+
             if use_comfy_video:
                 try:
-                    if use_ltx_i2v:
+                    if use_wan:
+                        length = _length_for_duration(clip_dur)
+                        self._log(
+                            series_id,
+                            f"图生视频 {label}（Wan2.2-14B GGUF · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                        )
+                        comfy_name, _sub = await upload_bytes(
+                            img_path.read_bytes(), name_prefix=f"series_wan_{series_id}_{shot_no}_"
+                        )
+                        if not comfy_name:
+                            raise RuntimeError("上传静帧失败")
+                        wf = build_wan(
+                            comfy_name,
+                            motion,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
+                    elif use_ltx_i2v:
                         self._log(series_id, f"图生视频 {label}（LTX·直出音频）")
                         comfy_name, _sub = await upload_bytes(
                             img_path.read_bytes(), name_prefix=f"series_ltx_{series_id}_{shot_no}_"
                         )
                         if not comfy_name:
-                            raise RuntimeError("上传关键帧失败")
+                            raise RuntimeError("上传静帧失败")
                         wf = build_ltx_i2v(
                             comfy_name,
                             motion,
@@ -1307,8 +1372,22 @@ class SeriesStudioAPI:
                             fps=24,
                         )
                     vid_bytes = await self._run_video_with_heartbeat(series_id, label, wf)
-                    clip_path.write_bytes(vid_bytes)
+                    target = raw_clip if use_wan else clip_path
+                    target.write_bytes(vid_bytes)
                     made_mp4 = True
+                    if use_wan:
+                        try:
+                            from moviepy.editor import VideoFileClip
+
+                            _vc = VideoFileClip(str(raw_clip))
+                            try:
+                                vdur = float(_vc.duration)
+                            finally:
+                                _vc.close()
+                        except Exception:
+                            vdur = clip_dur
+                        clip_dur = max(tts_len, min(10.0, max(vdur, float(dur) * 0.85)))
+                        clip_dur = max(3.0, clip_dur)
                     video_sec = time.perf_counter() - t_vid
                     self._log(
                         series_id,
@@ -1318,12 +1397,26 @@ class SeriesStudioAPI:
                     video_sec = time.perf_counter() - t_vid
                     self._log(series_id, f"{label} 视频引擎失败，回退静帧推镜：{e}")
 
-            audio_rel = ""
-            if not made_mp4:
-                # 静帧推镜：无 TTS，用静音轨占位
-                final_wav = shot_dir / "audio" / "00.wav"
-                await asyncio.to_thread(_write_silence_wav, final_wav, clip_dur)
+            if use_tts:
+                await asyncio.to_thread(_pad_or_trim_wav, raw_wav, final_wav, clip_dur)
                 audio_rel = self._rel(final_wav)
+
+            if made_mp4 and use_wan:
+                await asyncio.to_thread(
+                    _compose_clips_with_audio_sync,
+                    [raw_clip],
+                    [final_wav],
+                    [clip_dur],
+                    clip_path,
+                    out_size,
+                    [[(vo, 0.0, clip_dur)]],
+                    create_subs,
+                    24,
+                )
+            elif not made_mp4:
+                if not use_tts:
+                    await asyncio.to_thread(_write_silence_wav, final_wav, clip_dur)
+                    audio_rel = self._rel(final_wav)
                 await asyncio.to_thread(
                     _compose_trailer_sync,
                     [img_path],
@@ -1542,7 +1635,7 @@ class SeriesStudioAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
-            video_mode: str = Form("ltx25_i2v"),
+            video_mode: str = Form("wan22_14b_gguf"),
             episode_count: str = Form("1"),
             scenes_per_ep: str = Form("1"),
             shots_per_scene: str = Form("1"),

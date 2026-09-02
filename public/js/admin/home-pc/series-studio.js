@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function selectedVideoMode() {
     var el = document.querySelector('input[name="video-mode"]:checked');
-    return el ? el.value : 'ltx25_i2v';
+    return el ? el.value : 'wan22_14b_gguf';
   }
 
   function selectedUseGlobalRefs() {

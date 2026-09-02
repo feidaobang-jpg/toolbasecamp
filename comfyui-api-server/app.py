@@ -1009,7 +1009,7 @@ def _comfyui_output_root() -> Path:
     return Path(main_dir) / "output"
 
 
-def _build_wan22_ti2v_workflow(
+def _build_wan22_i2v_14b_gguf_workflow(
     comfy_image_filename: str,
     prompt_text: str,
     negative_text: Optional[str] = None,
@@ -1019,8 +1019,8 @@ def _build_wan22_ti2v_workflow(
     length: int = 81,
     fps: int = 24,
 ) -> dict:
-    """Wan 2.2 5B 图生视频（API 格式，源自 user/default/workflows/video_wan2_2_5B_ti2v）。"""
-    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_ti2v_5b.json")
+    """Wan 2.2 14B I2V GGUF Q5_K_M（双 KSampler：HighNoise + LowNoise）。"""
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_i2v_14b_gguf.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
 
@@ -1031,19 +1031,23 @@ def _build_wan22_ti2v_workflow(
     if (length_i - 1) % 4 != 0:
         length_i = ((length_i - 1) // 4) * 4 + 1
 
-    workflow["56"]["inputs"]["image"] = comfy_image_filename
+    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+    workflow["52"]["inputs"]["image"] = comfy_image_filename
     workflow["6"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic subtle motion"
     if negative_text is not None:
         workflow["7"]["inputs"]["text"] = negative_text
-    workflow["55"]["inputs"]["width"] = w
-    workflow["55"]["inputs"]["height"] = h
-    workflow["55"]["inputs"]["length"] = length_i
-    workflow["57"]["inputs"]["fps"] = int(fps)
-    workflow["3"]["inputs"]["seed"] = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
-    # SaveVideo 的 format 是 DynamicCombo：必须扁平字符串，不能嵌套 dict
-    # 否则 ComfyUI 会丢掉 format → SaveVideo.execute() missing ... 'format'
-    _patch_save_video_inputs(workflow.get("58") or {})
+    workflow["50"]["inputs"]["width"] = w
+    workflow["50"]["inputs"]["height"] = h
+    workflow["50"]["inputs"]["length"] = length_i
+    workflow["61"]["inputs"]["fps"] = int(fps)
+    workflow["57"]["inputs"]["noise_seed"] = seed_i
+    workflow["58"]["inputs"]["noise_seed"] = seed_i
+    _patch_save_video_inputs(workflow.get("62") or {})
     return workflow
+
+
+# 兼容旧依赖名
+_build_wan22_ti2v_workflow = _build_wan22_i2v_14b_gguf_workflow
 
 
 def _patch_save_video_inputs(node_or_inputs: dict) -> None:
@@ -1307,7 +1311,9 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
             if time.time() - newest.stat().st_mtime < max(60.0, timeout_sec):
                 return newest.read_bytes()
 
-        raise RuntimeError("No output video generated（请确认 Wan2.2 5B / VAE / umT5 模型已加载）")
+        raise RuntimeError(
+            "No output video generated（请确认 Wan2.2 14B GGUF Q5_K_M / VAE / umT5 / CLIP Vision 已加载）"
+        )
     finally:
         try:
             await asyncio.to_thread(ws.close)
