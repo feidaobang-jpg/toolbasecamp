@@ -83,6 +83,7 @@ _ASPECT_VIDEO = {
 }
 
 _VIDEO_ENGINES = {
+    "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "needs_image": True},
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
     "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
@@ -93,7 +94,9 @@ _VIDEO_ENGINES = {
 
 def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
-    if m in ("i2v", "wan", "wan22", "wan2.2_5b", "wan22_ti2v", "wan22_5b", "wan22_14b", "wan22_14b_gguf"):
+    if m in ("wan22_5b", "wan2.2_5b", "wan22_ti2v", "wan22_ti2v_5b", "ti2v_5b", "wan5b"):
+        return "wan22_5b"
+    if m in ("i2v", "wan", "wan22", "wan22_14b", "wan22_14b_gguf", "wan2.2_14b"):
         return "wan22_14b_gguf"
     if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
         return "wan22_t2v_14b"
@@ -105,7 +108,7 @@ def _normalize_video_engine(raw: str) -> str:
         return "kenburns"
     if m in _VIDEO_ENGINES:
         return m
-    return "wan22_14b_gguf"
+    return "wan22_5b"
 
 
 
@@ -136,7 +139,7 @@ def _parse_video_engines(raw_modes=None, raw_single: str = "") -> List[str]:
         if m not in seen:
             seen.add(m)
             out.append(m)
-    return out or ["wan22_14b_gguf"]
+    return out or ["wan22_5b"]
 
 
 def _camera_motion_hint(camera: str) -> str:
@@ -919,7 +922,7 @@ class TrailerAPI:
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
             segment_count: str = Form("1"),
-            video_mode: str = Form("wan22_14b_gguf"),
+            video_mode: str = Form("wan22_5b"),
             video_modes: str = Form(""),
             use_global_refs: str = Form("0"),
         ):
@@ -1193,7 +1196,7 @@ class TrailerAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form(""),
-            video_mode: str = Form("wan22_14b_gguf"),
+            video_mode: str = Form("wan22_5b"),
             video_modes: str = Form(""),
             auto_compose: str = Form("0"),
         ):
@@ -1636,7 +1639,7 @@ class TrailerAPI:
         if not shots or not shots_ui:
             raise RuntimeError("缺少分镜或候选图")
 
-        modes = _parse_video_engines(task.get("video_modes"), task.get("video_mode") or "wan22_14b_gguf")
+        modes = _parse_video_engines(task.get("video_modes"), task.get("video_mode") or "wan22_5b")
         task["video_modes"] = modes
         multi = len(modes) > 1
         n_engines = len(modes)
@@ -1760,22 +1763,30 @@ class TrailerAPI:
         ltx_wh = _ASPECT_LTX[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
-        engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["wan22_14b_gguf"]
+        engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["wan22_5b"]
         tts = self.deps["indextts_synthesize"]
         wav_dur = self.deps["wav_duration_seconds"]
         create_subs = self.deps["create_subtitle_overlays_timed"]
         upload_bytes = self.deps.get("upload_image_bytes")
-        build_wan = self.deps.get("build_wan22_ti2v_workflow")
+        build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
+        build_wan_5b = self.deps.get("build_wan22_ti2v_5b_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
-        use_wan = (
+        use_wan_14b = (
             mode == "wan22_14b_gguf"
             and callable(upload_bytes)
-            and callable(build_wan)
+            and callable(build_wan_14b)
             and callable(run_video)
         )
+        use_wan_5b = (
+            mode == "wan22_5b"
+            and callable(upload_bytes)
+            and callable(build_wan_5b)
+            and callable(run_video)
+        )
+        use_wan = use_wan_14b or use_wan_5b
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v"
@@ -1875,7 +1886,7 @@ class TrailerAPI:
                 task["stage"] = "i2v" if (use_wan or use_ltx_i2v) else "t2v"
                 t_vid0 = time.perf_counter()
                 try:
-                    if use_wan:
+                    if use_wan_14b:
                         length = _length_for_duration(dur)
                         self._log(
                             task,
@@ -1885,8 +1896,28 @@ class TrailerAPI:
                             img_path.read_bytes(), name_prefix=f"trailer_wan_{idx:02d}_"
                         )
                         if not comfy_name:
-                            raise RuntimeError("上传关键帧到 ComfyUI 失败")
-                        wf = build_wan(
+                            raise RuntimeError("上传静帧到 ComfyUI 失败")
+                        wf = build_wan_14b(
+                            comfy_name,
+                            motion_i2v,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
+                    elif use_wan_5b:
+                        length = _length_for_duration(dur)
+                        self._log(
+                            task,
+                            f"Wan2.2-5B 图生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                        )
+                        comfy_name, _sub = await upload_bytes(
+                            img_path.read_bytes(), name_prefix=f"trailer_wan5b_{idx:02d}_"
+                        )
+                        if not comfy_name:
+                            raise RuntimeError("上传静帧到 ComfyUI 失败")
+                        wf = build_wan_5b(
                             comfy_name,
                             motion_i2v,
                             seed=random.randint(1, 2_000_000_000),

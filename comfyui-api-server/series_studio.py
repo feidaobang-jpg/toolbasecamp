@@ -122,7 +122,7 @@ class SeriesDB:
                   voice TEXT NOT NULL DEFAULT 'zh-CN-YunxiNeural',
                   speed REAL NOT NULL DEFAULT 1.0,
                   shot_duration_sec REAL NOT NULL DEFAULT 5.0,
-                  video_mode TEXT NOT NULL DEFAULT 'wan22_14b_gguf',
+                  video_mode TEXT NOT NULL DEFAULT 'wan22_5b',
                   episode_count INTEGER NOT NULL DEFAULT 1,
                   scenes_per_ep INTEGER NOT NULL DEFAULT 1,
                   shots_per_scene INTEGER NOT NULL DEFAULT 1,
@@ -1172,7 +1172,7 @@ class SeriesStudioAPI:
         aspect = _normalize_aspect(row["aspect"])
         w, h = _ASPECT_SIZES[aspect]
         style = _style_meta(row["visual_style"])
-        mode = _normalize_video_engine(row["video_mode"] or "wan22_14b_gguf")
+        mode = _normalize_video_engine(row["video_mode"] or "wan22_5b")
         dur = _clamp_shot_duration(row["duration_sec"] or 5)
         bible = {}
         try:
@@ -1206,7 +1206,8 @@ class SeriesStudioAPI:
             )
         no_text = self.deps.get("image_no_text_prefix") or ""
         upload_bytes = self.deps.get("upload_image_bytes")
-        build_wan = self.deps.get("build_wan22_ti2v_workflow")
+        build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
+        build_wan_5b = self.deps.get("build_wan22_ti2v_5b_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
@@ -1216,12 +1217,19 @@ class SeriesStudioAPI:
         wav_dur = self.deps["wav_duration_seconds"]
         audio_dur_fn = self.deps.get("audio_duration_seconds") or wav_dur
 
-        use_wan = (
+        use_wan_14b = (
             mode == "wan22_14b_gguf"
             and callable(upload_bytes)
-            and callable(build_wan)
+            and callable(build_wan_14b)
             and callable(run_video)
         )
+        use_wan_5b = (
+            mode == "wan22_5b"
+            and callable(upload_bytes)
+            and callable(build_wan_5b)
+            and callable(run_video)
+        )
+        use_wan = use_wan_14b or use_wan_5b
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v" and callable(upload_bytes) and callable(build_ltx_i2v) and callable(run_video)
@@ -1336,7 +1344,7 @@ class SeriesStudioAPI:
 
             if use_comfy_video:
                 try:
-                    if use_wan:
+                    if use_wan_14b:
                         length = _length_for_duration(clip_dur)
                         self._log(
                             series_id,
@@ -1347,7 +1355,27 @@ class SeriesStudioAPI:
                         )
                         if not comfy_name:
                             raise RuntimeError("上传静帧失败")
-                        wf = build_wan(
+                        wf = build_wan_14b(
+                            comfy_name,
+                            motion_i2v,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
+                    elif use_wan_5b:
+                        length = _length_for_duration(clip_dur)
+                        self._log(
+                            series_id,
+                            f"图生视频 {label}（Wan2.2-5B · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                        )
+                        comfy_name, _sub = await upload_bytes(
+                            img_path.read_bytes(), name_prefix=f"series_wan5b_{series_id}_{shot_no}_"
+                        )
+                        if not comfy_name:
+                            raise RuntimeError("上传静帧失败")
+                        wf = build_wan_5b(
                             comfy_name,
                             motion_i2v,
                             seed=random.randint(1, 2_000_000_000),
@@ -1661,7 +1689,7 @@ class SeriesStudioAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
-            video_mode: str = Form("wan22_14b_gguf"),
+            video_mode: str = Form("wan22_5b"),
             episode_count: str = Form("1"),
             scenes_per_ep: str = Form("1"),
             shots_per_scene: str = Form("1"),
