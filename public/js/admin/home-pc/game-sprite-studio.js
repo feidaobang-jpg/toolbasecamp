@@ -40,12 +40,40 @@ document.addEventListener('DOMContentLoaded', function () {
   var lastLogLen = 0;
   var pickedStillId = null;
 
+  var ACTION_GROUPS = [
+    { key: 'idle', labelKey: 'gameSpriteActGroupIdle', fallback: '待机', ids: ['idle'] },
+    { key: 'move', labelKey: 'gameSpriteActGroupMove', fallback: '移动', ids: ['walk', 'run', 'jump', 'fall'] },
+    { key: 'combat', labelKey: 'gameSpriteActGroupCombat', fallback: '战斗', ids: ['attack', 'attack2', 'skill', 'defend', 'hit'] },
+    { key: 'down', labelKey: 'gameSpriteActGroupDown', fallback: '倒地', ids: ['down', 'getup', 'death'] },
+    { key: 'extra', labelKey: 'gameSpriteActGroupExtra', fallback: '可选补充', ids: ['cast', 'dodge', 'climb', 'swim', 'emote'] }
+  ];
+
+  var ACTION_LABELS = {
+    idle: ['gameSpriteActIdle', '待机'],
+    walk: ['gameSpriteActWalk', '走路'],
+    run: ['gameSpriteActRun', '奔跑'],
+    jump: ['gameSpriteActJump', '跳跃'],
+    fall: ['gameSpriteActFall', '下落'],
+    attack: ['gameSpriteActAttack', '攻击'],
+    attack2: ['gameSpriteActAttack2', '攻击2'],
+    skill: ['gameSpriteActSkill', '技能'],
+    defend: ['gameSpriteActDefend', '防御'],
+    hit: ['gameSpriteActHit', '受击'],
+    down: ['gameSpriteActDown', '倒地'],
+    getup: ['gameSpriteActGetup', '起身'],
+    death: ['gameSpriteActDeath', '死亡'],
+    cast: ['gameSpriteActCast', '施法'],
+    dodge: ['gameSpriteActDodge', '闪避'],
+    climb: ['gameSpriteActClimb', '攀爬'],
+    swim: ['gameSpriteActSwim', '游泳'],
+    emote: ['gameSpriteActEmote', '表情']
+  };
+
   var DEFAULT_ACTIONS = [
     'idle', 'walk', 'run', 'jump', 'fall',
     'attack', 'attack2', 'skill', 'defend', 'hit',
     'down', 'getup', 'death'
   ];
-  var OPTIONAL_ACTIONS = ['cast', 'dodge', 'climb', 'swim', 'emote'];
   var selectedActions = DEFAULT_ACTIONS.slice();
 
   function tr(key, fallback) {
@@ -54,6 +82,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (v && v !== key) return v;
     }
     return fallback || key;
+  }
+
+  function actionLabel(id) {
+    var meta = ACTION_LABELS[id];
+    if (!meta) return id;
+    return tr('privateHub.homePc.' + meta[0], meta[1]);
   }
 
   function resolveUrl(url) {
@@ -66,21 +100,71 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderActionChips() {
     if (!actionsRow) return;
-    var all = DEFAULT_ACTIONS.concat(OPTIONAL_ACTIONS);
     actionsRow.innerHTML = '';
-    all.forEach(function (a) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'rec-chip' + (selectedActions.indexOf(a) >= 0 ? ' is-active' : '');
-      btn.textContent = a;
-      btn.setAttribute('data-action', a);
-      btn.addEventListener('click', function () {
-        var i = selectedActions.indexOf(a);
-        if (i >= 0) selectedActions.splice(i, 1);
-        else selectedActions.push(a);
-        btn.classList.toggle('is-active');
+    ACTION_GROUPS.forEach(function (group) {
+      var section = document.createElement('div');
+      section.className = 'gs-action-group';
+
+      var head = document.createElement('div');
+      head.className = 'gs-action-group-head';
+      var title = document.createElement('span');
+      title.className = 'gs-action-group-title';
+      title.textContent = tr('privateHub.homePc.' + group.labelKey, group.fallback);
+      head.appendChild(title);
+
+      var tools = document.createElement('div');
+      tools.className = 'action-row gs-action-group-tools';
+      var allBtn = document.createElement('button');
+      allBtn.type = 'button';
+      allBtn.className = 'tb-btn tb-btn-sm';
+      allBtn.textContent = tr('privateHub.homePc.gameSpriteSelectAll', '全选本组');
+      allBtn.addEventListener('click', function () {
+        group.ids.forEach(function (id) {
+          if (selectedActions.indexOf(id) < 0) selectedActions.push(id);
+        });
+        renderActionChips();
       });
-      actionsRow.appendChild(btn);
+      var noneBtn = document.createElement('button');
+      noneBtn.type = 'button';
+      noneBtn.className = 'tb-btn tb-btn-sm';
+      noneBtn.textContent = tr('privateHub.homePc.gameSpriteSelectNone', '清空本组');
+      noneBtn.addEventListener('click', function () {
+        selectedActions = selectedActions.filter(function (id) {
+          return group.ids.indexOf(id) < 0;
+        });
+        renderActionChips();
+      });
+      tools.appendChild(allBtn);
+      tools.appendChild(noneBtn);
+      head.appendChild(tools);
+      section.appendChild(head);
+
+      var chips = document.createElement('div');
+      chips.className = 'instruct-preset-row gs-actions';
+      group.ids.forEach(function (a) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'rec-chip gs-action-chip' + (selectedActions.indexOf(a) >= 0 ? ' is-active' : '');
+        btn.setAttribute('data-action', a);
+        btn.title = a;
+        var main = document.createElement('span');
+        main.className = 'gs-action-main';
+        main.textContent = actionLabel(a);
+        var sub = document.createElement('span');
+        sub.className = 'gs-action-id';
+        sub.textContent = a;
+        btn.appendChild(main);
+        btn.appendChild(sub);
+        btn.addEventListener('click', function () {
+          var i = selectedActions.indexOf(a);
+          if (i >= 0) selectedActions.splice(i, 1);
+          else selectedActions.push(a);
+          btn.classList.toggle('is-active');
+        });
+        chips.appendChild(btn);
+      });
+      section.appendChild(chips);
+      actionsRow.appendChild(section);
     });
     if (actionsBlock) actionsBlock.style.display = needsActions() ? '' : 'none';
   }
@@ -106,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function () {
     selectedStyle = v || 'cartoon';
   });
   renderActionChips();
+  document.addEventListener('tb:locale', function () {
+    renderActionChips();
+  });
 
   function setBusy(busy) {
     if (startBtn) startBtn.disabled = !!busy;
@@ -197,7 +284,8 @@ document.addEventListener('DOMContentLoaded', function () {
       card.className = 'gs-preview-card';
       var title = document.createElement('div');
       title.className = 'gs-preview-title';
-      title.textContent = anim.anim + ' (' + (anim.count || 0) + ')';
+      title.textContent =
+        actionLabel(anim.anim) + ' · ' + anim.anim + ' (' + (anim.count || 0) + ')';
       card.appendChild(title);
       if (anim.sheet_url) {
         var sheet = document.createElement('img');

@@ -2149,8 +2149,56 @@ body.tb-admin-private #auth-status {
 }
 
 /* Game sprite studio */
-.home-pc-wrap .gs-actions {
+.home-pc-wrap .gs-actions-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+}
+.home-pc-wrap .gs-action-group {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+.home-pc-wrap .gs-action-group-head {
+  display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+.home-pc-wrap .gs-action-group-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+.home-pc-wrap .gs-action-group-tools {
+  gap: 8px;
+}
+.home-pc-wrap .gs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.home-pc-wrap .gs-action-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 4.5rem;
+  padding: 8px 12px;
+  line-height: 1.2;
+}
+.home-pc-wrap .gs-action-main {
+  font-size: 13px;
+  font-weight: 600;
+}
+.home-pc-wrap .gs-action-id {
+  font-size: 11px;
+  opacity: 0.65;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 .home-pc-wrap .gs-preview-list {
   display: flex;
