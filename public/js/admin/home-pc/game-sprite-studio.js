@@ -69,7 +69,10 @@ document.addEventListener('DOMContentLoaded', function () {
     emote: ['gameSpriteActEmote', '表情']
   };
 
-  var DEFAULT_ACTIONS = [
+  /** 页面默认：只选待机（生成再手点其它动作） */
+  var DEFAULT_ACTIONS = ['idle'];
+  /** 「全选常用」：不含可选补充 */
+  var COMMON_ACTIONS = [
     'idle', 'walk', 'run', 'jump', 'fall',
     'attack', 'attack2', 'skill', 'defend', 'hit',
     'down', 'getup', 'death'
@@ -98,33 +101,41 @@ document.addEventListener('DOMContentLoaded', function () {
     return selectedType === 'character' || selectedType === 'monster';
   }
 
+  function setSelectedActions(ids) {
+    selectedActions = (ids || []).slice();
+    renderActionChips();
+  }
+
   function renderActionChips() {
     if (!actionsRow) return;
     actionsRow.innerHTML = '';
 
     var toolbar = document.createElement('div');
     toolbar.className = 'gs-actions-toolbar action-row';
-    var defaultBtn = document.createElement('button');
-    defaultBtn.type = 'button';
-    defaultBtn.className = 'tb-btn';
-    defaultBtn.textContent = tr('privateHub.homePc.gameSpriteSelectDefault', '默认全选');
-    defaultBtn.addEventListener('click', function () {
-      selectedActions = DEFAULT_ACTIONS.slice();
-      renderActionChips();
+    var idleBtn = document.createElement('button');
+    idleBtn.type = 'button';
+    idleBtn.className = 'tb-btn';
+    idleBtn.textContent = tr('privateHub.homePc.gameSpriteSelectDefault', '仅待机');
+    idleBtn.addEventListener('click', function () {
+      setSelectedActions(DEFAULT_ACTIONS);
     });
-    var clearExtraBtn = document.createElement('button');
-    clearExtraBtn.type = 'button';
-    clearExtraBtn.className = 'tb-btn';
-    clearExtraBtn.textContent = tr('privateHub.homePc.gameSpriteClearOptional', '清空可选');
-    clearExtraBtn.addEventListener('click', function () {
-      var extra = ACTION_GROUPS[ACTION_GROUPS.length - 1].ids;
-      selectedActions = selectedActions.filter(function (id) {
-        return extra.indexOf(id) < 0;
-      });
-      renderActionChips();
+    var commonBtn = document.createElement('button');
+    commonBtn.type = 'button';
+    commonBtn.className = 'tb-btn';
+    commonBtn.textContent = tr('privateHub.homePc.gameSpriteSelectCommon', '全选常用');
+    commonBtn.addEventListener('click', function () {
+      setSelectedActions(COMMON_ACTIONS);
     });
-    toolbar.appendChild(defaultBtn);
-    toolbar.appendChild(clearExtraBtn);
+    var clearAllBtn = document.createElement('button');
+    clearAllBtn.type = 'button';
+    clearAllBtn.className = 'tb-btn';
+    clearAllBtn.textContent = tr('privateHub.homePc.gameSpriteClearAll', '清空全部');
+    clearAllBtn.addEventListener('click', function () {
+      setSelectedActions([]);
+    });
+    toolbar.appendChild(idleBtn);
+    toolbar.appendChild(commonBtn);
+    toolbar.appendChild(clearAllBtn);
     actionsRow.appendChild(toolbar);
 
     ACTION_GROUPS.forEach(function (group) {
@@ -389,7 +400,10 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
     fd.append('pixel_art', selectedStyle === 'pixel' ? '1' : '0');
     fd.append('candidates', (candidatesSelect && candidatesSelect.value) || '2');
-    fd.append('actions', needsActions() ? selectedActions.join(',') : 'idle');
+    var actPayload = needsActions()
+      ? (selectedActions.length ? selectedActions.join(',') : 'idle')
+      : 'idle';
+    fd.append('actions', actPayload);
     fd.append('frames_per_action', '8');
     fd.append('action_duration_sec', '2.5');
 

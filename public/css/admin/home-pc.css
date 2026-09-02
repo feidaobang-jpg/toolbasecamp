@@ -2200,14 +2200,26 @@ body.tb-admin-private #auth-status {
   line-height: 1.15;
   text-align: center;
 }
+.home-pc-wrap .gs-action-chip.is-active {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+  box-shadow: inset 0 0 0 1px #2563eb;
+}
 .home-pc-wrap .gs-action-main {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
+}
+.home-pc-wrap .gs-action-chip.is-active .gs-action-main {
+  font-weight: 700;
 }
 .home-pc-wrap .gs-action-id {
   font-size: 10px;
   opacity: 0.6;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.home-pc-wrap .gs-action-chip.is-active .gs-action-id {
+  opacity: 0.85;
 }
 .home-pc-wrap .gs-preview-list {
   display: flex;

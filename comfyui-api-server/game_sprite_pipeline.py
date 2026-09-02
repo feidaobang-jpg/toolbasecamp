@@ -133,7 +133,7 @@ def _parse_actions(raw: str) -> List[str]:
     items: List[str] = []
     s = (raw or "").strip()
     if not s:
-        return list(_DEFAULT_ACTIONS)
+        return ["idle"]
     if s.startswith("["):
         try:
             parsed = json.loads(s)
@@ -149,7 +149,7 @@ def _parse_actions(raw: str) -> List[str]:
         if a in allowed and a not in seen:
             seen.add(a)
             out.append(a)
-    return out or list(_DEFAULT_ACTIONS)
+    return out or ["idle"]
 
 
 def _style_suffix(style: str) -> str:
