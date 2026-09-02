@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1" />
   <link rel="stylesheet" href="../../../css/admin-shell.css?v=nosTW4" />
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=nosTW1" />
-  <link rel="stylesheet" href="../../../css/admin/stock-picks.css?v=nosTW1" />
+  <link rel="stylesheet" href="../../../css/admin/stock-picks.css?v=nosTW2" />
   <script src="../../../js/locales/en.js?v=brand1"></script>
   <script src="../../../js/locales/zh-CN.js?v=brand1"></script>
   <script src="../../../js/i18n.js?v=nosTW1"></script>
@@ -49,6 +49,8 @@
       <div class="tab-nav">
         <button type="button" class="tab-btn active" data-tab="monthly-recovery">月K启动<span class="tab-tag">长线</span></button>
         <button type="button" class="tab-btn" data-tab="tail-buy">强势弹性<span class="tab-tag">隔夜</span></button>
+        <button type="button" class="tab-btn" data-tab="monster-stock">妖股追高<span class="tab-tag">高风险</span></button>
+        <button type="button" class="tab-btn" data-tab="records">跟单记录<span class="tab-tag">盈亏</span></button>
       </div>
 
       <div class="tab-panel active" id="panel-monthly-recovery">
@@ -78,10 +80,60 @@
           <div id="resultsTailBuy" class="results"></div>
         </div>
       </div>
+      <div class="tab-panel" id="panel-monster-stock">
+        <div class="stock-container">
+          <div class="strategy-desc">
+            <b>妖股追高（隔夜）</b>：主板池内筛选<strong>连涨 + 准涨停（约 5%~9.7%）+ 放量 + 收盘贴高</strong>的标的，尾盘确认强势后买入，次日早盘冲高即走。波动与回撤显著大于「强势弹性」，须严格止损与控仓；不含创业/科创/北交所与 ST。过滤严重负面公告。<b>建议时点</b>：买入 <b>当日 14:50~14:59</b>；卖出 <b>次日 9:30~10:00</b>。不保证次日上涨。
+          </div>
+          <div class="toolbar">
+            <button type="button" id="btnMonsterStock" class="tb-btn">推荐妖股追高</button>
+            <div id="statusMonsterStock" class="status"></div>
+          </div>
+          <div class="picked-summary" id="pickedListMonsterStock" aria-label="已选股票列表"></div>
+          <div id="resultsMonsterStock" class="results"></div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-records">
+        <div class="stock-container">
+          <div class="strategy-desc">
+            <b>跟单记录</b>：每次在「强势弹性」或「妖股追高」生成推荐时，自动写入本表；到达卖出日上午 10:00 后自动按<strong>次日开盘价</strong>结算盈亏（同时给出 9:30~10:00 最高价参考）。用于评估策略是否值得继续跟，不构成投资建议。
+          </div>
+          <div class="toolbar">
+            <select id="recordsStrategy" class="select-sm" aria-label="策略筛选">
+              <option value="">全部隔夜策略</option>
+              <option value="strong_momentum">强势弹性</option>
+              <option value="monster_stock">妖股追高</option>
+            </select>
+            <button type="button" id="btnRecordsRefresh" class="tb-btn">刷新记录</button>
+            <button type="button" id="btnRecordsSettle" class="tb-btn">手动结算</button>
+            <div id="statusRecords" class="status"></div>
+          </div>
+          <div id="recordsStats" class="records-stats" aria-live="polite"></div>
+          <div class="records-table-wrap">
+            <table class="records-table" id="recordsTable">
+              <thead>
+                <tr>
+                  <th>买入日</th>
+                  <th>策略</th>
+                  <th>股票</th>
+                  <th>买入价</th>
+                  <th>卖出日</th>
+                  <th>开盘价</th>
+                  <th>盈亏%</th>
+                  <th>10点高%</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
   <script src="../../../js/admin/admin-gate.js?v=nosTW5"></script>
-  <script src="../../../js/admin/stock-picks.js?v=nosTW5"></script>
+  <script src="../../../js/admin/stock-picks.js?v=nosTW6"></script>
 </body>
 </html>

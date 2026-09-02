@@ -55,7 +55,7 @@ from pc_builds import (
     router as pc_builds_router,
     wire as wire_pc_builds,
 )
-from stocks import router as stocks_router
+from stocks import ensure_stock_pick_tables, router as stocks_router
 from stocks import wire as wire_stocks
 from ladder import router as ladder_router
 from ladder import wire as wire_ladder
@@ -418,6 +418,7 @@ def ensure_tables():
             ensure_site_stats_tables(cur)
             ensure_news_tables(cur)
             ensure_pc_builds_tables(cur)
+            ensure_stock_pick_tables(cur)
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
@@ -783,7 +784,7 @@ wire_site_stats(
     is_admin,
     _client_ip,
 )
-wire_stocks(get_current_user, require_admin)
+wire_stocks(get_current_user, require_admin, get_conn, require_db)
 app.include_router(stocks_router)
 wire_ladder(get_current_user, require_admin)
 app.include_router(ladder_router)
@@ -1068,6 +1069,8 @@ def health():
         "stocks_api": (
             "/stocks/recommend-tail-buy" in paths
             and "/stocks/recommend-monthly-recovery" in paths
+            and "/stocks/recommend-monster-stock" in paths
+            and "/stocks/records" in paths
         ),
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
