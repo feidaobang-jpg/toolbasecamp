@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc42" />
-  <script src="../../../../js/locales/en.js?v=trailer17"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=trailer17"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc43" />
+  <script src="../../../../js/locales/en.js?v=trailer18"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=trailer18"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc28"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -115,12 +115,12 @@
                 <div class="input-control">
                   <label data-i18n="privateHub.homePc.trailerVideoModeLabel">成片模型</label>
                   <div class="trailer-aspect-row">
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="wan22_14b_gguf" checked /><span data-i18n="privateHub.homePc.trailerVideoModeWan">图生视频 Wan 2.2 14B GGUF Q5_K_M</span></label>
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_i2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5（直出音频）</span></label>
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
-                    <label class="trailer-radio"><input type="radio" name="video-mode" value="kenburns" /><span data-i18n="privateHub.homePc.trailerVideoModeKenburns">静帧推镜（更快）</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="wan22_14b_gguf" checked /><span data-i18n="privateHub.homePc.trailerVideoModeWan">图生视频 Wan 2.2 14B GGUF Q5_K_M</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="ltx25_i2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="ltx25_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="kenburns" /><span data-i18n="privateHub.homePc.trailerVideoModeKenburns">静帧推镜（更快）</span></label>
                   </div>
-                  <p class="small-hint" data-i18n="privateHub.homePc.trailerVideoModeHint">默认 Wan 2.2 14B GGUF Q5_K_M（IndexTTS 旁白）。LTX 可直出音轨；静帧推镜更快。</p>
+                  <p class="small-hint" data-i18n="privateHub.homePc.trailerVideoModeHint">可多选：同一份静帧会按勾选顺序依次成片，方便对比。默认 Wan（IndexTTS 旁白）；LTX 直出音轨；静帧推镜更快。</p>
                 </div>
               </div>
 
@@ -168,6 +168,7 @@
             <div id="video-box" class="home-pc-result-box trailer-video-box" style="display:none;">
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerResultTitle">预览成片</h3>
               <p id="export-hint" class="small-hint"></p>
+              <div id="compare-video-list" class="action-row" style="display:none; margin-bottom: 10px;"></div>
               <div class="home-pc-video-row">
                 <div class="home-pc-video-item">
                   <video id="result-video" controls playsinline preload="metadata"></video>
@@ -205,7 +206,7 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc9"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer17"></script>
+  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer18"></script>
   <div id="trailer-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">

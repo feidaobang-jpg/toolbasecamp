@@ -1147,6 +1147,10 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   color: #fff;
 }
 
+.home-pc-wrap #compare-video-list .tb-btn.is-active {
+  box-shadow: 0 0 0 2px #1e3a8a;
+}
+
 .home-pc-wrap .tb-btn:disabled,
 .home-pc-wrap .tb-btn.is-disabled {
   background: #93c5fd;

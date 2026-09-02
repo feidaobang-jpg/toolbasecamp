@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var videoBox = document.getElementById('video-box');
   var resultVideo = document.getElementById('result-video');
   var exportHint = document.getElementById('export-hint');
+  var compareVideoList = document.getElementById('compare-video-list');
   var logOutput = document.getElementById('log-output');
   var historyList = document.getElementById('history-list');
   var historyRefreshBtn = document.getElementById('history-refresh-btn');
@@ -85,6 +86,44 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e2) {}
   }
 
+  function renderCompareVideos(items, aspect, hint) {
+    var list = Array.isArray(items) ? items.filter(function (x) { return x && x.url; }) : [];
+    // 多引擎时隐藏与引擎成片重复的 primary trailer_16_9 / trailer_9_16
+    if (list.length > 1) {
+      list = list.filter(function (x) {
+        var m = String(x.mode || '');
+        return m && m !== 'primary';
+      });
+      if (!list.length && Array.isArray(items)) list = items.filter(function (x) { return x && x.url; });
+    }
+    if (!compareVideoList) {
+      if (list.length) showResultVideo(list[0].url, aspect, hint);
+      return;
+    }
+    compareVideoList.innerHTML = '';
+    if (list.length <= 1) {
+      compareVideoList.style.display = 'none';
+      if (list.length === 1) showResultVideo(list[0].url, aspect, hint);
+      return;
+    }
+    compareVideoList.style.display = '';
+    list.forEach(function (item, idx) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tb-btn';
+      btn.textContent = item.label || item.mode || ('成片 ' + (idx + 1));
+      btn.addEventListener('click', function () {
+        Array.prototype.forEach.call(compareVideoList.querySelectorAll('.tb-btn'), function (el) {
+          el.classList.toggle('is-active', el === btn);
+        });
+        showResultVideo(item.url, aspect, hint);
+      });
+      if (idx === 0) btn.classList.add('is-active');
+      compareVideoList.appendChild(btn);
+    });
+    showResultVideo(list[0].url, aspect, hint);
+  }
+
   function hideResultVideo() {
     if (!videoBox || !resultVideo) return;
     videoBox.style.display = 'none';
@@ -92,6 +131,10 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       resultVideo.load();
     } catch (e) {}
+    if (compareVideoList) {
+      compareVideoList.innerHTML = '';
+      compareVideoList.style.display = 'none';
+    }
   }
 
   function openLightbox(src) {
@@ -121,8 +164,42 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function selectedVideoMode() {
-    var el = document.querySelector('input[name="video-mode"]:checked');
-    return el ? el.value : 'wan22_14b_gguf';
+    var modes = selectedVideoModes();
+    return modes[0] || 'wan22_14b_gguf';
+  }
+
+  function selectedVideoModes() {
+    var nodes = document.querySelectorAll('input[name="video-mode"]:checked');
+    var out = [];
+    Array.prototype.forEach.call(nodes, function (el) {
+      if (el && el.value) out.push(el.value);
+    });
+    return out.length ? out : ['wan22_14b_gguf'];
+  }
+
+  function appendVideoModes(fd) {
+    var modes = selectedVideoModes();
+    fd.append('video_mode', modes[0]);
+    fd.append('video_modes', JSON.stringify(modes));
+  }
+
+  function showResultVideosFromTask(task) {
+    var hint =
+      (task && task.export_hint) ||
+      tr('privateHub.homePc.trailerExportHint', '粗剪已生成，素材可导入剪映。');
+    var aspect = (task && task.aspect) || selectedAspect();
+    var urls = (task && task.video_urls) || [];
+    if (urls.length > 1) {
+      renderCompareVideos(urls, aspect, hint);
+      return;
+    }
+    if (urls.length === 1) {
+      showResultVideo(urls[0].url, aspect, hint);
+      return;
+    }
+    if (task && task.video_url) {
+      showResultVideo(task.video_url, aspect, hint);
+    }
   }
 
   var startBtnDefaultText = startBtn ? (startBtn.textContent || '').trim() : '';
@@ -473,12 +550,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'privateHub.homePc.trailerStageDone',
             '成片已就绪，请看上方预览播放器'
           );
-          showResultVideo(
-            task.video_url,
-            task.aspect,
-            task.export_hint ||
-              tr('privateHub.homePc.trailerExportHint', '粗剪已生成，素材可导入剪映。')
-          );
+          showResultVideosFromTask(task);
           if (task.global_refs_ui && task.global_refs_ui.length) {
             renderGlobalRefs(task.global_refs_ui, false);
           }
@@ -569,7 +641,7 @@ document.addEventListener('DOMContentLoaded', function () {
       segmentCountInput.value = String(segN);
     }
     fd.append('segment_count', String(segN));
-    fd.append('video_mode', selectedVideoMode());
+    appendVideoModes(fd);
 
     setBusy(true);
     resetProgressUi(tr('privateHub.homePc.trailerStarting', '提交任务…'));
@@ -675,13 +747,13 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       actions.appendChild(reuseBtn);
       actions.appendChild(loadBtn);
-      if (item.video_url) {
+      if (item.video_url || (item.video_urls && item.video_urls.length)) {
         var openVid = document.createElement('button');
         openVid.type = 'button';
         openVid.className = 'tb-btn';
         openVid.textContent = tr('privateHub.homePc.trailerHistoryOpenVideo', '打开成片');
         openVid.addEventListener('click', function () {
-          showResultVideo(item.video_url, selectedAspect(), item.title || '');
+          showResultVideosFromTask(item);
         });
         actions.appendChild(openVid);
       }
@@ -701,7 +773,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-YunxiNeural');
     fd.append('speed', (speedInput && speedInput.value) || '1.0');
     fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '');
-    fd.append('video_mode', selectedVideoMode());
+    appendVideoModes(fd);
     fd.append('auto_compose', autoCompose ? '1' : '0');
     setBusy(true);
     if (autoCompose) {

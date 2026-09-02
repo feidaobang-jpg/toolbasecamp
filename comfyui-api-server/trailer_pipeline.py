@@ -106,6 +106,37 @@ def _normalize_video_engine(raw: str) -> str:
 
 
 
+def _parse_video_engines(raw_modes=None, raw_single: str = "") -> List[str]:
+    """解析多选引擎；保序去重；非法/空则默认 Wan。"""
+    items: List[str] = []
+    if isinstance(raw_modes, list):
+        items = [str(x) for x in raw_modes]
+    elif isinstance(raw_modes, str) and raw_modes.strip():
+        s = raw_modes.strip()
+        if s.startswith("["):
+            try:
+                parsed = json.loads(s)
+                if isinstance(parsed, list):
+                    items = [str(x) for x in parsed]
+                else:
+                    items = [s]
+            except Exception:
+                items = [x.strip() for x in s.split(",") if x.strip()]
+        else:
+            items = [x.strip() for x in s.replace(";", ",").split(",") if x.strip()]
+    if not items and raw_single:
+        items = [str(raw_single)]
+    out: List[str] = []
+    seen = set()
+    for it in items:
+        m = _normalize_video_engine(it)
+        if m not in seen:
+            seen.add(m)
+            out.append(m)
+    return out or ["wan22_14b_gguf"]
+
+
+
 def _now_ts_ms() -> int:
     return int(time.time() * 1000)
 
@@ -187,6 +218,28 @@ def _history_item_from_dir(d: Path) -> Optional[dict]:
         if (d / name).exists():
             video_url = f"/output/{d.name}/{name}"
             break
+    if not video_url:
+        extras = sorted(d.glob("trailer_*.mp4"))
+        if extras:
+            video_url = f"/output/{d.name}/{extras[0].name}"
+    video_urls = []
+    for p in sorted(d.glob("trailer_*.mp4")):
+        # skip primary alias duplicates later in UI if needed
+        stem = p.stem  # trailer_16_9 or trailer_wan22_14b_gguf_16_9
+        mode_guess = ""
+        if stem.startswith("trailer_") and stem.endswith(("_16_9", "_9_16")):
+            mid = stem[len("trailer_") : -len("_16_9") if stem.endswith("_16_9") else -len("_9_16")]
+            if mid not in ("16_9", "9_16", ""):
+                mode_guess = mid
+        label = (_VIDEO_ENGINES.get(mode_guess) or {}).get("label") or (mode_guess or p.name)
+        video_urls.append(
+            {
+                "mode": mode_guess or "primary",
+                "label": label,
+                "filename": p.name,
+                "url": f"/output/{d.name}/{p.name}",
+            }
+        )
     mtime = d.stat().st_mtime
     # 展示用北京时间
     try:
@@ -206,6 +259,7 @@ def _history_item_from_dir(d: Path) -> Optional[dict]:
         "image_count": len(imgs),
         "thumbs": thumbs,
         "video_url": video_url,
+        "video_urls": video_urls,
         "created_display": created_display,
         "mtime": mtime,
     }
@@ -816,6 +870,7 @@ class TrailerAPI:
             shot_duration: str = Form("5"),
             segment_count: str = Form("1"),
             video_mode: str = Form("wan22_14b_gguf"),
+            video_modes: str = Form(""),
             use_global_refs: str = Form("1"),
         ):
             text = (prompt or "").strip()
@@ -825,7 +880,8 @@ class TrailerAPI:
             style_n = (visual_style or "realistic").strip().lower()
             if style_n not in _VISUAL_STYLES:
                 style_n = "realistic"
-            mode = _normalize_video_engine(video_mode)
+            modes = _parse_video_engines(video_modes, video_mode)
+            mode = modes[0]
             try:
                 cand = max(1, min(5, int(candidates_per_shot or 1)))
             except Exception:
@@ -854,6 +910,8 @@ class TrailerAPI:
                 "visual_style": style_n,
                 "aspect": aspect_n,
                 "video_mode": mode,
+                "video_modes": modes,
+                "video_urls": [],
                 "candidates_per_shot": cand,
                 "voice": (voice or "zh-CN-YunxiNeural").strip(),
                 "speed": spd,
@@ -1086,6 +1144,7 @@ class TrailerAPI:
             speed: str = Form("1.0"),
             shot_duration: str = Form(""),
             video_mode: str = Form("wan22_14b_gguf"),
+            video_modes: str = Form(""),
             auto_compose: str = Form("0"),
         ):
             root: Path = api.deps["output_root"]
@@ -1110,7 +1169,8 @@ class TrailerAPI:
             if not shots_ui_src:
                 raise HTTPException(status_code=400, detail="历史目录中找不到分镜图片")
 
-            mode = _normalize_video_engine(video_mode)
+            modes = _parse_video_engines(video_modes, video_mode)
+            mode = modes[0]
             try:
                 spd = float(speed or 1.0)
             except Exception:
@@ -1173,6 +1233,8 @@ class TrailerAPI:
                 "visual_style": (plan.get("visual_style") or "realistic"),
                 "aspect": aspect,
                 "video_mode": mode,
+                "video_modes": modes,
+                "video_urls": [],
                 "candidates_per_shot": max_cands,
                 "voice": (voice or "zh-CN-YunxiNeural").strip(),
                 "speed": spd,
@@ -1502,14 +1564,122 @@ class TrailerAPI:
         plan = task.get("plan") or {}
         shots = plan.get("shots") or []
         shots_ui = task.get("shots_ui") or []
+        if not shots or not shots_ui:
+            raise RuntimeError("缺少分镜或候选图")
+
+        modes = _parse_video_engines(task.get("video_modes"), task.get("video_mode") or "wan22_14b_gguf")
+        task["video_modes"] = modes
+        multi = len(modes) > 1
+        n_engines = len(modes)
+        video_urls: List[dict] = []
+        last_result: Optional[dict] = None
+        engine_notes: List[str] = []
+        tts_total = 0.0
+        video_total = 0.0
+
+        for ei, mode in enumerate(modes):
+            if task.get("status") == "cancelled":
+                return
+            task["video_mode"] = mode
+            label = (_VIDEO_ENGINES.get(mode) or {}).get("label") or mode
+            self._log(task, f"对比成片 {ei + 1}/{n_engines}：{label}" if multi else f"成片引擎：{label}")
+            result = await self._phase_compose_one(
+                task,
+                mode=mode,
+                engine_index=ei,
+                engine_total=n_engines,
+                multi=multi,
+            )
+            if task.get("status") == "cancelled":
+                return
+            if result:
+                video_urls.append(result)
+                last_result = result
+                engine_notes.append(str(result.get("engine_note") or label))
+                tts_total += float(result.get("tts_sec") or 0)
+                video_total += float(result.get("video_for_summary") or 0)
+
+        if task.get("status") == "cancelled":
+            return
+        if not last_result:
+            raise RuntimeError("全部成片引擎均失败")
+
+        task_dir = self._task_dir(task)
+        aspect = task["aspect"]
+        primary_name = "trailer_16_9.mp4" if aspect == "16_9" else "trailer_9_16.mp4"
+        primary_path = task_dir / primary_name
+        src_path = task_dir / Path(last_result["url"]).name
+        # last_result url is /output/folder/name — resolve by filename
+        cand = task_dir / Path(str(last_result.get("filename") or "")).name
+        if cand.exists():
+            if primary_path.resolve() != cand.resolve():
+                shutil.copy2(cand, primary_path)
+        elif src_path.exists() and primary_path.resolve() != src_path.resolve():
+            shutil.copy2(src_path, primary_path)
+
+        timing = _timing_bucket(task)
+        images_sec = float(timing.get("images_sec") or 0.0)
+        timing["tts_sec"] = round(tts_total, 2)
+        timing["video_total_sec"] = round(video_total, 2)
+        timing["pipeline_sec"] = round(images_sec + tts_total + video_total, 2)
+
+        task["video_url"] = f"/output/{task_dir.name}/{primary_name}"
+        task["video_urls"] = video_urls
+        task["video_duration_sec"] = float(last_result.get("duration_sec") or 0)
+        task["output_directory"] = str(task_dir.resolve())
+        task["video_engine"] = str(last_result.get("mode") or modes[-1])
+        note_join = "；".join(engine_notes) if multi else (engine_notes[0] if engine_notes else "")
+        task["export_hint"] = (
+            f"粗剪已生成（{note_join}）。"
+            + ("多引擎对比成片已分别保存，可在预览区切换。" if multi else "")
+            + (
+                "素材在任务目录 images / clips_* / audio_*，可导入剪映。"
+                if multi
+                else "素材在任务目录 images / clips / audio，可导入剪映。"
+            )
+        )
+        task["status"] = "done"
+        task["stage"] = "done"
+        task["progress"] = {"current": 1, "total": 1}
+        self._log(
+            task,
+            f"完成：{primary_name}"
+            + (f"（对比 {len(video_urls)} 引擎）" if multi else "")
+            + f"（约 {task['video_duration_sec']:.1f}s）",
+        )
+        parts = [
+            f"生图 {_format_elapsed(images_sec, coarse=True)}",
+            f"视频 {_format_elapsed(video_total, coarse=True)}",
+            f"配音 {_format_elapsed(tts_total, coarse=True)}",
+        ]
+        self._log(
+            task,
+            f"成片总耗时 {_format_elapsed(timing['pipeline_sec'])}（{' · '.join(parts)}）",
+        )
+
+
+    async def _phase_compose_one(
+        self,
+        task: dict,
+        *,
+        mode: str,
+        engine_index: int = 0,
+        engine_total: int = 1,
+        multi: bool = False,
+    ) -> Optional[dict]:
+        plan = task.get("plan") or {}
+        shots = plan.get("shots") or []
+        shots_ui = task.get("shots_ui") or []
         picks = task.get("picks") or {}
         if not shots or not shots_ui:
             raise RuntimeError("缺少分镜或候选图")
 
         task_dir = self._task_dir(task)
         images_dir = task_dir / "images"
-        audio_dir = task_dir / "audio"
-        clips_dir = task_dir / "clips"
+        mode = _normalize_video_engine(mode)
+        task["video_mode"] = mode
+        audio_dir = task_dir / (f"audio_{mode}" if multi else "audio")
+        clips_dir = task_dir / (f"clips_{mode}" if multi else "clips")
         audio_dir.mkdir(parents=True, exist_ok=True)
         clips_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1519,8 +1689,6 @@ class TrailerAPI:
         ltx_wh = _ASPECT_LTX[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
-        mode = _normalize_video_engine(task.get("video_mode") or "wan22_14b_gguf")
-        task["video_mode"] = mode
         engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["wan22_14b_gguf"]
         tts = self.deps["indextts_synthesize"]
         wav_dur = self.deps["wav_duration_seconds"]
@@ -1594,7 +1762,10 @@ class TrailerAPI:
             )
 
             # 1) Wan / 静帧推镜：IndexTTS 旁白；LTX：直出音轨，跳过配音
-            task["progress"] = {"current": i + 1, "total": n_shots}
+            task["progress"] = {
+                "current": engine_index * n_shots + i + 1,
+                "total": max(1, engine_total * n_shots),
+            }
             dur = min(10.0, max(3.0, planned))
             raw_wav = audio_dir / f"{idx:02d}_raw.wav"
             final_wav = audio_dir / f"{idx:02d}.wav"
@@ -1746,7 +1917,8 @@ class TrailerAPI:
         task["stage"] = "video"
         self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s，失败回退 {i2v_fail} 镜）…")
         t_mux0 = time.perf_counter()
-        out_name = "trailer_16_9.mp4" if aspect == "16_9" else "trailer_9_16.mp4"
+        aspect_tag = "16_9" if aspect == "16_9" else "9_16"
+        out_name = f"trailer_{mode}_{aspect_tag}.mp4" if multi else f"trailer_{aspect_tag}.mp4"
         out_video = task_dir / out_name
 
         # 若全部是真视频片段，用视频拼接；否则用 Ken Burns（图路径）
@@ -1845,11 +2017,12 @@ class TrailerAPI:
                     "duration_sec": durations[idx] if idx < len(durations) else shot.get("duration_sec"),
                     "voiceover": shot.get("voiceover"),
                     "image": fname,
-                    "clip": f"clips/{idx:02d}.mp4" if (clips_dir / f"{idx:02d}.mp4").exists() else None,
+                    "clip": f"{clips_dir.name}/{idx:02d}.mp4" if (clips_dir / f"{idx:02d}.mp4").exists() else None,
                     "visual_prompt": shot.get("visual_prompt"),
                 }
             )
-        (task_dir / "selected_shots.json").write_text(
+        sel_name = f"selected_shots_{mode}.json" if multi else "selected_shots.json"
+        (task_dir / sel_name).write_text(
             json.dumps(
                 {
                     "aspect": aspect,
@@ -1863,38 +2036,33 @@ class TrailerAPI:
             ),
             encoding="utf-8",
         )
-        (task_dir / "trailer.srt").write_text("\n".join(srt_lines), encoding="utf-8")
+        if not multi or engine_index == 0:
+            (task_dir / "trailer.srt").write_text("\n".join(srt_lines), encoding="utf-8")
+            (task_dir / "selected_shots.json").write_text(
+                (task_dir / sel_name).read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
         readme = (
             "剪映精剪说明\n"
             "==============\n"
             f"1. trailer_*.mp4 为网站粗剪预览（{engine_note}）。\n"
-            "2. images/ 关键帧；clips/ 为每镜 Wan 图生视频；audio/ 旁白。\n"
-            "3. plan.json / selected_shots.json / trailer.srt 对照分镜与字幕。\n"
-            "4. 精剪建议导入剪映：替换转场、BGM、音效；clips/ 可单镜替换。\n"
-            "5. 视频引擎：Wan 2.2 14B I2V GGUF Q5_K_M / LTX 2.5 文生视频 / 静帧推镜\n"
+            "2. images/ 静帧；clips[_引擎]/ 为每镜视频；audio[_引擎]/ 旁白。\n"
+            "3. plan.json / selected_shots*.json / trailer.srt 对照分镜与字幕。\n"
+            "4. 多引擎对比时：trailer_<引擎>_16_9.mp4（或 9_16）可并排比较。\n"
+            "5. 视频引擎：Wan 2.2 14B I2V GGUF Q5_K_M / LTX 2.5 / 静帧推镜\n"
             "   需 ComfyUI-GGUF + 双路 UnetLoaderGGUF（HighNoise / LowNoise）。\n"
             "   API 模板：work-flow/wan22_i2v_14b_gguf.json 、 work-flow/ltx25_t2v.json\n"
         )
         (task_dir / "README_剪映.txt").write_text(readme, encoding="utf-8")
 
-        task["video_url"] = f"/output/{task_dir.name}/{out_name}"
-        task["video_duration_sec"] = round(t_cursor, 1)
-        task["output_directory"] = str(task_dir.resolve())
-        task["video_engine"] = mode if all_video else "kenburns"
-        task["export_hint"] = (
-            f"粗剪已生成（{engine_note}）。素材在任务目录 images / clips / audio，可导入剪映。"
-        )
-        task["status"] = "done"
-        task["stage"] = "done"
-        task["progress"] = {"current": 1, "total": 1}
-        self._log(task, f"完成：{out_name}（约 {t_cursor:.1f}s · {engine_note}）")
-        # 成片总耗时不含人工选图等待；含生图 + 配音 + 视频（Comfy 或推镜拼接）
-        parts = [
-            f"生图 {_format_elapsed(images_sec, coarse=True)}",
-            f"视频 {_format_elapsed(video_for_summary, coarse=True)}",
-            f"配音 {_format_elapsed(tts_sec, coarse=True)}",
-        ]
-        self._log(
-            task,
-            f"成片总耗时 {_format_elapsed(total_pipeline)}（{' · '.join(parts)}）",
-        )
+        self._log(task, f"引擎完成：{out_name}（约 {t_cursor:.1f}s · {engine_note}）")
+        return {
+            "mode": mode if all_video else "kenburns",
+            "label": engine_meta["label"],
+            "filename": out_name,
+            "url": f"/output/{task_dir.name}/{out_name}",
+            "engine_note": engine_note,
+            "duration_sec": round(t_cursor, 1),
+            "tts_sec": round(tts_sec, 2),
+            "video_for_summary": round(video_for_summary, 2),
+        }
