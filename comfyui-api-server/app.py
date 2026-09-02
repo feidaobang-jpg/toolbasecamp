@@ -42,7 +42,12 @@ try:
 except ImportError:
     HAS_EDGE_TTS = False
 
-from resource_limits import apply_shared_pc_limits, comfyui_max_concurrent_jobs
+from resource_limits import (
+    apply_shared_pc_limits,
+    comfyui_max_concurrent_jobs,
+    lift_gpu_power_for_video,
+    restore_gpu_power_after_video,
+)
 
 _RESOURCE_LIMIT_INFO = apply_shared_pc_limits()
 _COMFYUI_JOB_SEM = asyncio.Semaphore(comfyui_max_concurrent_jobs())
@@ -1293,7 +1298,30 @@ async def get_view_bytes(filename: str, subfolder: str, folder_type: str):
 
 async def _run_comfyui_and_get_last_video(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
     async with _COMFYUI_JOB_SEM:
-        return await _run_comfyui_and_get_last_video_impl(workflow, timeout_sec)
+        lift_info = await asyncio.to_thread(lift_gpu_power_for_video)
+        if lift_info.get("ok") and not lift_info.get("skipped"):
+            after = lift_info.get("after") or {}
+            print(
+                f"[GPU] 成片拉满功耗：{after.get('limit_w')}W / max {after.get('max_w')}W",
+                flush=True,
+            )
+        elif lift_info.get("needs_admin") or (
+            not lift_info.get("ok") and not lift_info.get("skipped")
+        ):
+            print(
+                f"[GPU] 成片拉满功耗失败（可忽略，常见需管理员）：{lift_info.get('message') or lift_info.get('error')}",
+                flush=True,
+            )
+        try:
+            return await _run_comfyui_and_get_last_video_impl(workflow, timeout_sec)
+        finally:
+            restore_info = await asyncio.to_thread(restore_gpu_power_after_video)
+            if restore_info.get("ok") and not restore_info.get("skipped"):
+                after = restore_info.get("after") or {}
+                print(
+                    f"[GPU] 成片结束，恢复功耗上限：{after.get('limit_w')}W",
+                    flush=True,
+                )
 
 
 async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:

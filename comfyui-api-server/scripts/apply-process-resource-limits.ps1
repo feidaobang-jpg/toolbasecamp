@@ -41,7 +41,11 @@ function Set-GpuPowerCap([int]$Percent) {
     $maxW = [double]($line.ToString().Trim().Split(',')[0])
     if ($maxW -le 0) { return $null }
     $target = [Math]::Max(50, [Math]::Floor($maxW * $Percent / 100.0))
-    & nvidia-smi -pl $target | Out-Null
+    $out = & nvidia-smi -pl $target 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host ("[limits] GPU power cap failed (often needs Admin): {0}" -f $out.Trim())
+        return $null
+    }
     return @{ MaxW = $maxW; TargetW = $target }
 }
 
