@@ -28,7 +28,7 @@
   "65": {
     "class_type": "CLIPVisionLoader",
     "inputs": {
-      "clip_name": "clip-vision_vit-h.safetensors"
+      "clip_name": "clip_vision_h.safetensors"
     }
   },
   "52": {
