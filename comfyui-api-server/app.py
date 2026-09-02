@@ -1050,6 +1050,40 @@ def _build_wan22_i2v_14b_gguf_workflow(
 _build_wan22_ti2v_workflow = _build_wan22_i2v_14b_gguf_workflow
 
 
+def _build_wan22_t2v_14b_workflow(
+    prompt_text: str,
+    negative_text: Optional[str] = None,
+    seed: Optional[int] = None,
+    width: int = 832,
+    height: int = 480,
+    length: int = 81,
+    fps: int = 24,
+) -> dict:
+    """Wan 2.2 14B 文生视频（本机 fp8 High/Low Noise，双 KSampler）。"""
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_14b.json")
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    w = _clamp_image_side(int(width), 64, 1280)
+    h = _clamp_image_side(int(height), 64, 1280)
+    length_i = max(17, min(241, int(length)))
+    if (length_i - 1) % 4 != 0:
+        length_i = ((length_i - 1) // 4) * 4 + 1
+
+    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+    workflow["89"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic dynamic motion"
+    if negative_text is not None:
+        workflow["72"]["inputs"]["text"] = negative_text
+    workflow["74"]["inputs"]["width"] = w
+    workflow["74"]["inputs"]["height"] = h
+    workflow["74"]["inputs"]["length"] = length_i
+    workflow["88"]["inputs"]["fps"] = int(fps)
+    workflow["81"]["inputs"]["noise_seed"] = seed_i
+    workflow["78"]["inputs"]["noise_seed"] = seed_i
+    _patch_save_video_inputs(workflow.get("80") or {})
+    return workflow
+
+
 def _patch_save_video_inputs(node_or_inputs: dict) -> None:
     """把 SaveVideo 的 DynamicCombo 写成 API 可识别的扁平键。"""
     inputs = node_or_inputs.get("inputs") if "inputs" in node_or_inputs else node_or_inputs
@@ -4440,6 +4474,7 @@ _trailer_api = TrailerAPI(
     build_z_image_workflow=_build_z_image_turbo_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
+    build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
@@ -4464,6 +4499,7 @@ _series_studio_api = SeriesStudioAPI(
     build_qwen_img2img_workflow=build_qwen_image_edit_img2img_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
+    build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
