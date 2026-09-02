@@ -6,8 +6,9 @@ import os
 import re
 import threading
 import time
-from datetime import datetime, timedelta
-from typing import Any, Callable, Dict, List, Optional
+from datetime import datetime, timedelta, timezone
+from typing import Any, Callable, Dict, List, Optional, Tuple
+from zoneinfo import ZoneInfo
 
 import requests
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -18,11 +19,23 @@ security = HTTPBearer(auto_error=False)
 
 _get_current_user: Optional[Callable[..., Any]] = None
 _require_admin: Optional[Callable[[dict], None]] = None
+_get_conn: Optional[Callable[..., Any]] = None
+_require_db: Optional[Callable[[], None]] = None
 
-def wire(get_current_user: Callable[..., Any], require_admin: Callable[[dict], None]) -> None:
-    global _get_current_user, _require_admin
+_CN_TZ = ZoneInfo("Asia/Shanghai")
+_OVERNIGHT_STRATEGIES = frozenset({"strong_momentum", "monster_stock"})
+
+def wire(
+    get_current_user: Callable[..., Any],
+    require_admin: Callable[[dict], None],
+    get_conn: Optional[Callable[..., Any]] = None,
+    require_db: Optional[Callable[[], None]] = None,
+) -> None:
+    global _get_current_user, _require_admin, _get_conn, _require_db
     _get_current_user = get_current_user
     _require_admin = require_admin
+    _get_conn = get_conn
+    _require_db = require_db
 
 def _admin_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> dict:
     if _get_current_user is None or _require_admin is None:
@@ -517,6 +530,167 @@ def _strong_momentum_eval_row(row, is_trade_time: bool):
         "close_vs_high": round(close_vs_high * 100.0, 2) if close_vs_high is not None else None,
         "prior_up_days": prior_up_days,
         "match_tier": "strong_momentum",
+    }
+
+
+def _count_near_limit_days(ohlc: List[list], lookback: int = 6) -> int:
+    """近几日接近涨停的天数（涨幅≥8% 或收盘贴近当日高）。"""
+    if not ohlc or len(ohlc) < 3:
+        return 0
+    tail = ohlc[-(lookback + 1):]
+    cnt = 0
+    for i in range(1, len(tail)):
+        row = tail[i]
+        prev = tail[i - 1]
+        if not isinstance(row, list) or not isinstance(prev, list) or len(row) < 4 or len(prev) < 2:
+            continue
+        c = _safe_float(row[1])
+        h = _safe_float(row[3])
+        prev_c = _safe_float(prev[1])
+        if c is None or prev_c is None or prev_c <= 0:
+            continue
+        pct = (c / prev_c - 1.0) * 100.0
+        cvh = (c / h) if h and h > 0 else 0.0
+        if pct >= 8.0 or cvh >= 0.97:
+            cnt += 1
+    return cnt
+
+
+def _monster_stock_fit_score(
+    pct, vr, near_high_ratio, prior_up_days, amount, close_vs_high, ret_5d,
+    limit_touch_days, ma5, ma10,
+) -> float:
+    """妖股追高：连涨+贴板+放量，偏情绪延续。"""
+    s = 0.0
+    s += _fit_in_range(pct, 6.0, 9.2, pad=0.55) * 28.0
+    s += _fit_in_range(vr, 1.8, 5.5, pad=0.65) * 18.0
+    if close_vs_high is not None:
+        if close_vs_high >= 0.99:
+            s += 18.0
+        elif close_vs_high >= 0.975:
+            s += 12.0
+        elif close_vs_high >= 0.96:
+            s += 6.0
+    if prior_up_days >= 3:
+        s += 14.0
+    elif prior_up_days >= 2:
+        s += 10.0
+    elif prior_up_days >= 1:
+        s += 4.0
+    if limit_touch_days >= 2:
+        s += 10.0
+    elif limit_touch_days >= 1:
+        s += 5.0
+    if near_high_ratio is not None:
+        if near_high_ratio >= 0.92:
+            s += 10.0
+        elif near_high_ratio >= 0.85:
+            s += 5.0
+    if ret_5d is not None and 8.0 <= ret_5d <= 38.0:
+        s += 10.0
+    if ma5 and ma10 and ma5 >= ma10 * 0.998:
+        s += 6.0
+    if amount is not None and amount >= 3e8:
+        s += 6.0
+    elif amount is not None and amount >= 1.5e8:
+        s += 3.0
+    return s
+
+
+def _monster_stock_eval_row(row, is_trade_time: bool):
+    """
+    妖股追高（隔夜）：连涨+强势贴高+放量，尾盘确认后买入，次日早盘了结。
+    主板普通股池；真妖多在创业/科创，此处偏「主板连板/准涨停」。
+    """
+    code = str(row.get("代码") or "").strip()
+    name = str(row.get("名称") or "").strip()
+    if not code or not name or _is_risky_stock_name(name) or not _is_tradable_stock(code):
+        return None
+    try:
+        daily_k = _em_kline(code, klt=101, lmt=80, timeout=5.0, retries=1)
+    except Exception:
+        return None
+    if not daily_k or not daily_k.get("ohlc"):
+        return None
+    ohlc = daily_k.get("ohlc") or []
+    closes = [_safe_float(x[1]) for x in ohlc if isinstance(x, list) and len(x) >= 2]
+    highs = [_safe_float(x[3]) for x in ohlc if isinstance(x, list) and len(x) >= 4]
+    closes = [c for c in closes if c is not None]
+    highs = [h for h in highs if h is not None]
+    if len(closes) < 25 or not highs:
+        return None
+
+    ma5 = _calc_ma_list(closes, 5)
+    ma10 = _calc_ma_list(closes, 10)
+    if ma5 is None or ma10 is None:
+        return None
+
+    last_close = closes[-1]
+    day_high = highs[-1]
+    pct = _safe_float(row.get("__pct"))
+    turn = _safe_float(row.get("__turn"))
+    raw_vr = _safe_float(row.get("__vr"))
+    vr = _effective_vr(raw_vr, is_trade_time)
+    price = _safe_float(row.get("__price"))
+    amt = _safe_float(row.get("__amount"))
+    ret_5d = _calc_ret_pct_list(closes, 5)
+    ret_20d = _calc_ret_pct_list(closes, 20)
+
+    if pct is None or pct < 5.0 or pct > 9.7:
+        return None
+    if is_trade_time and vr is not None and (vr < 1.25 or vr > 6.0):
+        return None
+    if turn is not None and (turn < 2.5 or turn > 25.0):
+        return None
+    if last_close < ma5 * 0.995 or ma5 < ma10 * 0.985:
+        return None
+    if ret_5d is not None and ret_5d < 6.0:
+        return None
+    if ret_20d is not None and ret_20d > 65.0:
+        return None
+
+    close_vs_high = (last_close / day_high) if day_high and day_high > 0 else None
+    if close_vs_high is None or close_vs_high < 0.96:
+        return None
+
+    prior_up_days = _count_consecutive_up_days(closes[:-1])
+    if prior_up_days < 1:
+        return None
+
+    win_highs = highs[-60:] if len(highs) >= 60 else highs
+    recent_high = max(win_highs) if win_highs else None
+    near_high_ratio = (last_close / recent_high) if recent_high and recent_high > 0 else None
+    if near_high_ratio is not None and near_high_ratio < 0.72:
+        return None
+
+    limit_touch_days = _count_near_limit_days(ohlc, lookback=6)
+    score_vr = vr if (is_trade_time or (raw_vr is not None and raw_vr > 0)) else 2.2
+
+    fit = _monster_stock_fit_score(
+        pct, score_vr, near_high_ratio, prior_up_days, amt, close_vs_high,
+        ret_5d, limit_touch_days, ma5, ma10,
+    )
+    fit += _mid_small_code_bonus(code)
+    if fit < _strategy_fit_min("monster_stock", is_trade_time):
+        return None
+    return {
+        "symbol": code,
+        "name": name,
+        "score": fit,
+        "price": price,
+        "pct": pct,
+        "turn": turn,
+        "vr": vr,
+        "amount": amt,
+        "ma5": ma5,
+        "ma10": ma10,
+        "ret_5d": ret_5d,
+        "ret_20d": ret_20d,
+        "near_high_ratio": round(near_high_ratio * 100.0, 2) if near_high_ratio is not None else None,
+        "close_vs_high": round(close_vs_high * 100.0, 2) if close_vs_high is not None else None,
+        "prior_up_days": prior_up_days,
+        "limit_touch_days": limit_touch_days,
+        "match_tier": "monster_stock",
     }
 
 
@@ -1201,7 +1375,8 @@ def stocks_recommend_tail_buy(only_basic: int = 1, _admin: dict = Depends(_admin
     路径名保留 recommend-tail-buy 以兼容旧前端；策略字段为 strong_momentum。
     """
     _ = _admin
-    return _with_empty_result_retry(_compute_strong_momentum, bool(int(only_basic or 0)))
+    result = _with_empty_result_retry(_compute_strong_momentum, bool(int(only_basic or 0)))
+    return _finalize_overnight_recommend(result)
 
 def _bg_update_tail_buy():
     try:
@@ -1708,4 +1883,557 @@ def _compute_monthly_recovery(only_basic: bool = True):
         "market_regime": market,
         "message": " ".join(msg_parts).strip(),
     }
+
+
+# ── 跟单记录（隔夜策略）────────────────────────────────────────────
+
+
+def ensure_stock_pick_tables(cur) -> None:
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS stock_pick_records (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            strategy VARCHAR(32) NOT NULL,
+            symbol VARCHAR(16) NOT NULL,
+            name VARCHAR(64) NOT NULL,
+            buy_date DATE NOT NULL,
+            sell_date DATE NOT NULL,
+            buy_price DECIMAL(12,4) NULL,
+            sell_price DECIMAL(12,4) NULL,
+            sell_price_high DECIMAL(12,4) NULL,
+            pct_return DECIMAL(8,4) NULL,
+            pct_return_high DECIMAL(8,4) NULL,
+            match_score DECIMAL(8,2) NULL,
+            status VARCHAR(16) NOT NULL DEFAULT 'pending',
+            generated_at DATETIME NOT NULL,
+            settled_at DATETIME NULL,
+            in_live_window TINYINT(1) NOT NULL DEFAULT 0,
+            metrics_json JSON NULL,
+            note VARCHAR(255) NULL,
+            created_at DOUBLE NOT NULL,
+            UNIQUE KEY uq_strategy_symbol_buy (strategy, symbol, buy_date),
+            KEY idx_status_sell (status, sell_date),
+            KEY idx_strategy_buy (strategy, buy_date DESC)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+
+
+def _now_cn() -> datetime:
+    return datetime.now(_CN_TZ)
+
+
+def _fmt_cn_dt(dt: Optional[datetime]) -> Optional[str]:
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(_CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _strategy_label(strategy: str) -> str:
+    return {
+        "strong_momentum": "强势弹性",
+        "monster_stock": "妖股追高",
+        "monthly_recovery": "月K启动",
+    }.get(strategy, strategy)
+
+
+def _db_ready() -> bool:
+    return _get_conn is not None and _require_db is not None
+
+
+def _save_pick_records(strategy: str, result: dict) -> int:
+    """将本次推荐写入跟单表（同日同股同策略去重）。"""
+    if strategy not in _OVERNIGHT_STRATEGIES:
+        return 0
+    if not _db_ready():
+        return 0
+    items = result.get("items") or []
+    if not items:
+        return 0
+    try:
+        _require_db()  # type: ignore[misc]
+        conn = _get_conn()  # type: ignore[misc]
+        with conn.cursor() as cur:
+            ensure_stock_pick_tables(cur)
+            buy_date = result.get("buy_date") or _tail_buy_trade_dates()[0]
+            sell_date = result.get("sell_date") or _tail_buy_trade_dates()[1]
+            gen_raw = result.get("generated_at")
+            try:
+                generated_at = datetime.strptime(str(gen_raw), "%Y-%m-%d %H:%M:%S")
+            except Exception:
+                generated_at = _now_cn().replace(tzinfo=None)
+            in_live = 1 if result.get("in_live_window") else 0
+            now_ts = time.time()
+            saved = 0
+            for it in items:
+                sym = str(it.get("symbol") or "").strip()
+                if not sym:
+                    continue
+                metrics = it.get("metrics") or {}
+                buy_px = _safe_float(metrics.get("last_price"))
+                cur.execute(
+                    """
+                    INSERT INTO stock_pick_records (
+                        strategy, symbol, name, buy_date, sell_date, buy_price,
+                        match_score, status, generated_at, in_live_window,
+                        metrics_json, created_at
+                    ) VALUES (%s,%s,%s,%s,%s,%s,%s,'pending',%s,%s,%s,%s)
+                    ON DUPLICATE KEY UPDATE
+                        name=VALUES(name),
+                        sell_date=VALUES(sell_date),
+                        buy_price=VALUES(buy_price),
+                        match_score=VALUES(match_score),
+                        generated_at=VALUES(generated_at),
+                        in_live_window=VALUES(in_live_window),
+                        metrics_json=VALUES(metrics_json)
+                    """,
+                    (
+                        strategy,
+                        sym,
+                        str(it.get("name") or ""),
+                        buy_date,
+                        sell_date,
+                        buy_px,
+                        _safe_float(it.get("match_score")),
+                        generated_at,
+                        in_live,
+                        json.dumps(metrics, ensure_ascii=False),
+                        now_ts,
+                    ),
+                )
+                saved += 1
+            return saved
+    except Exception as e:
+        print(f"[stocks] save pick records failed: {e}")
+        return 0
+
+
+def _fetch_sell_prices_on_date(symbol: str, sell_date: str) -> Tuple[Optional[float], Optional[float]]:
+    """返回 (次日开盘/9:30 价, 9:30~10:00 最高价)。"""
+    sell_day = str(sell_date or "")[:10]
+    if not sell_day:
+        return None, None
+    try:
+        k = _em_kline(symbol, klt=1, lmt=320, timeout=8.0, retries=2)
+        dates = k.get("dates") or []
+        ohlc = k.get("ohlc") or []
+        open_px = None
+        morning_high = None
+        for i, d in enumerate(dates):
+            ds = str(d)
+            if not ds.startswith(sell_day):
+                continue
+            tpart = ds.split(" ")[-1] if " " in ds else ""
+            if not tpart:
+                continue
+            parts = (tpart + ":00").split(":")
+            try:
+                hh, mm = int(parts[0]), int(parts[1])
+            except Exception:
+                continue
+            mins = hh * 60 + mm
+            if mins < 9 * 60 + 30:
+                continue
+            if mins > 10 * 60:
+                break
+            row = ohlc[i] if i < len(ohlc) else None
+            if not row or len(row) < 4:
+                continue
+            o = _safe_float(row[0])
+            h = _safe_float(row[3])
+            if open_px is None and mins <= 9 * 60 + 31 and o is not None:
+                open_px = o
+            if h is not None:
+                morning_high = h if morning_high is None else max(morning_high, h)
+        if open_px is not None:
+            return open_px, morning_high or open_px
+    except Exception:
+        pass
+
+    try:
+        dk = _em_kline(symbol, klt=101, lmt=15, timeout=6.0, retries=1)
+        dates = dk.get("dates") or []
+        ohlc = dk.get("ohlc") or []
+        for i, d in enumerate(dates):
+            if str(d)[:10] != sell_day:
+                continue
+            row = ohlc[i] if i < len(ohlc) else None
+            if not row or len(row) < 4:
+                continue
+            o = _safe_float(row[0])
+            h = _safe_float(row[3])
+            if o is not None:
+                return o, h or o
+    except Exception:
+        pass
+    return None, None
+
+
+def _settle_pending_records(limit: int = 80) -> int:
+    """结算已到卖出日的 pending 记录。"""
+    if not _db_ready():
+        return 0
+    now_cn = _now_cn()
+    today = now_cn.date()
+    settled = 0
+    try:
+        _require_db()  # type: ignore[misc]
+        conn = _get_conn()  # type: ignore[misc]
+        with conn.cursor() as cur:
+            ensure_stock_pick_tables(cur)
+            cur.execute(
+                """
+                SELECT id, symbol, buy_price, sell_date
+                FROM stock_pick_records
+                WHERE status = 'pending'
+                ORDER BY sell_date ASC, id ASC
+                LIMIT %s
+                """,
+                (max(1, int(limit)),),
+            )
+            rows = cur.fetchall() or []
+            for row in rows:
+                rid = row.get("id")
+                sym = str(row.get("symbol") or "").strip()
+                sell_date_raw = row.get("sell_date")
+                if hasattr(sell_date_raw, "strftime"):
+                    sell_day = sell_date_raw.strftime("%Y-%m-%d")
+                else:
+                    sell_day = str(sell_date_raw or "")[:10]
+                if not sym or not sell_day:
+                    continue
+                try:
+                    sd = datetime.strptime(sell_day, "%Y-%m-%d").date()
+                except Exception:
+                    continue
+                if sd > today:
+                    continue
+                if sd == today and (now_cn.hour < 10 or (now_cn.hour == 10 and now_cn.minute < 5)):
+                    continue
+                buy_px = _safe_float(row.get("buy_price"))
+                if buy_px is None or buy_px <= 0:
+                    cur.execute(
+                        "UPDATE stock_pick_records SET status='skipped', note=%s, settled_at=%s WHERE id=%s",
+                        ("缺少买入价，跳过结算", now_cn.replace(tzinfo=None), rid),
+                    )
+                    continue
+                sell_px, sell_high = _fetch_sell_prices_on_date(sym, sell_day)
+                if sell_px is None:
+                    continue
+                pct = round((sell_px / buy_px - 1.0) * 100.0, 4)
+                pct_high = round((sell_high / buy_px - 1.0) * 100.0, 4) if sell_high else pct
+                cur.execute(
+                    """
+                    UPDATE stock_pick_records
+                    SET status='settled', sell_price=%s, sell_price_high=%s,
+                        pct_return=%s, pct_return_high=%s, settled_at=%s, note=NULL
+                    WHERE id=%s
+                    """,
+                    (sell_px, sell_high, pct, pct_high, now_cn.replace(tzinfo=None), rid),
+                )
+                settled += 1
+    except Exception as e:
+        print(f"[stocks] settle records failed: {e}")
+    return settled
+
+
+def _records_stats(rows: List[dict]) -> dict:
+    settled = [r for r in rows if r.get("status") == "settled" and r.get("pct_return") is not None]
+    if not settled:
+        return {
+            "total": len(rows),
+            "settled": 0,
+            "pending": sum(1 for r in rows if r.get("status") == "pending"),
+            "win_rate": None,
+            "avg_return": None,
+            "avg_return_high": None,
+        }
+    wins = sum(1 for r in settled if float(r.get("pct_return") or 0) > 0)
+    avg_ret = sum(float(r.get("pct_return") or 0) for r in settled) / len(settled)
+    highs = [float(r.get("pct_return_high") or r.get("pct_return") or 0) for r in settled]
+    avg_high = sum(highs) / len(highs) if highs else None
+    return {
+        "total": len(rows),
+        "settled": len(settled),
+        "pending": sum(1 for r in rows if r.get("status") == "pending"),
+        "win_rate": round(wins / len(settled) * 100.0, 1),
+        "avg_return": round(avg_ret, 2),
+        "avg_return_high": round(avg_high, 2) if avg_high is not None else None,
+    }
+
+
+def _row_to_record_dict(row: dict) -> dict:
+    out = dict(row)
+    for k in ("buy_date", "sell_date"):
+        v = out.get(k)
+        if hasattr(v, "strftime"):
+            out[k] = v.strftime("%Y-%m-%d")
+    for k in ("generated_at", "settled_at"):
+        v = out.get(k)
+        if hasattr(v, "strftime"):
+            out[k] = v.strftime("%Y-%m-%d %H:%M:%S")
+    for k in ("buy_price", "sell_price", "sell_price_high", "pct_return", "pct_return_high", "match_score"):
+        v = _safe_float(out.get(k))
+        if v is not None:
+            out[k] = round(v, 4) if k.startswith("pct") else round(v, 2)
+    mj = out.get("metrics_json")
+    if isinstance(mj, str):
+        try:
+            out["metrics_json"] = json.loads(mj)
+        except Exception:
+            pass
+    out["strategy_label"] = _strategy_label(str(out.get("strategy") or ""))
+    return out
+
+
+def _finalize_overnight_recommend(result: dict) -> dict:
+    if not result:
+        return result
+    strategy = str(result.get("strategy") or "")
+    saved = _save_pick_records(strategy, result)
+    if saved:
+        result = dict(result)
+        note = f"已记入跟单表 {saved} 条"
+        msg = (result.get("message") or "").strip()
+        result["message"] = f"{msg} · {note}".strip(" ·") if msg else note
+        result["records_saved"] = saved
+    return result
+
+
+def _compute_monster_stock(only_basic: bool = True):
+    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    market = _assess_hs300_market()
+    in_live_window = _is_tail_buy_live_window()
+    buy_date, sell_date = _tail_buy_trade_dates()
+
+    market_note = (market.get("message") or "").strip()
+    if not market.get("allow_recommend", True):
+        market_note = (
+            "指数可能偏弱；妖股策略波动更大，请控制仓位。"
+            + (f"（{market_note}）" if market_note else "")
+        )
+
+    try:
+        spot = _em_spot_a_share()
+    except Exception as e:
+        return {
+            "success": False,
+            "generated_at": generated_at,
+            "strategy": "monster_stock",
+            "items": [],
+            "in_live_window": in_live_window,
+            "market_regime": market,
+            "message": f"获取A股行情失败：{e}",
+        }
+
+    import pandas as pd
+    df = pd.DataFrame(spot) if not hasattr(spot, "columns") else spot.copy()
+    if df is None or (hasattr(df, "empty") and df.empty):
+        return {
+            "success": False,
+            "generated_at": generated_at,
+            "strategy": "monster_stock",
+            "items": [],
+            "in_live_window": in_live_window,
+            "market_regime": market,
+            "message": "获取A股行情为空",
+        }
+
+    df["__price"] = df["最新价"].map(_safe_float)
+    df["__pct"] = df["涨跌幅"].map(_safe_float)
+    df["__turn"] = df["换手率"].map(_safe_float)
+    df["__vr"] = df["量比"].map(_safe_float)
+    df["__amount"] = df["成交额"].map(_safe_float)
+    df = df.dropna(subset=["__price"])
+    try:
+        df = df[df["代码"].map(_is_tradable_stock)]
+        df = df[~df["名称"].astype(str).map(_is_risky_stock_name)]
+    except Exception:
+        pass
+
+    pool_note = "主板妖股池（连涨+准涨停+放量；不含创业/科创）"
+    is_trade_time = _is_a_share_trade_time()
+    min_amount = 1.5e8
+
+    if is_trade_time:
+        df_scan = df[
+            (df["__amount"].fillna(0) >= min_amount) &
+            (df["__price"].fillna(0) >= 3.0) &
+            (df["__pct"].fillna(0) >= 5.0) &
+            (df["__pct"].fillna(0) <= 9.7) &
+            (df["__vr"].fillna(0) >= 1.15) &
+            (df["__vr"].fillna(0) <= 6.5) &
+            (df["__turn"].fillna(0) >= 2.5) &
+            (df["__turn"].fillna(0) <= 25.0)
+        ]
+    else:
+        df_scan = df[
+            (df["__amount"].fillna(0) >= min_amount) &
+            (df["__price"].fillna(0) >= 3.0) &
+            (df["__pct"].fillna(0) >= 5.0) &
+            (df["__pct"].fillna(0) <= 9.7) &
+            (df["__turn"].fillna(0) >= 2.5) &
+            (df["__turn"].fillna(0) <= 25.0)
+        ]
+    try:
+        df_scan = df_scan.sort_values(["__pct", "__turn"], ascending=[False, False]).head(120)
+    except Exception:
+        df_scan = df_scan.head(120)
+    scan_rows = [row for _, row in df_scan.iterrows()]
+
+    candidates = _parallel_row_scan(
+        scan_rows,
+        lambda row: _monster_stock_eval_row(row, is_trade_time),
+        max_workers=8,
+    )
+    fit_min = _strategy_fit_min("monster_stock", is_trade_time)
+    top = _apply_sorted_picks(
+        candidates,
+        only_basic=True,
+        min_score=fit_min,
+        is_trade_time=is_trade_time,
+        strategy="monster_stock",
+        max_results=0,
+    )
+
+    items = []
+    for r in top:
+        if _stock_negative_news_hit(r.get("symbol")):
+            continue
+        metrics = {
+            "last_price": r["price"],
+            "pct_change": r["pct"],
+            "turnover_rate": r["turn"],
+            "volume_ratio": r["vr"],
+            "ma5": r["ma5"],
+            "ma10": r["ma10"],
+            "ret_5d": r["ret_5d"],
+            "ret_20d": r.get("ret_20d"),
+            "near_high_60d_pct": r.get("near_high_ratio"),
+            "close_vs_high_pct": r.get("close_vs_high"),
+            "prior_up_days": r.get("prior_up_days"),
+            "limit_touch_days": r.get("limit_touch_days"),
+        }
+        items.append(_attach_market_fields({
+            "symbol": r["symbol"],
+            "name": r["name"],
+            "match_score": _round_match_score(r.get("score")),
+            "metrics": metrics,
+            "reason": _reason_text(metrics),
+            "buy_time_suggest": f"{buy_date} 14:50~14:59（确认封板意图或强势不回撤）",
+            "sell_time_suggest": f"{sell_date} 09:30~10:00（冲高即走，走弱不留）",
+            "hold_days_suggest": "隔夜为主（妖股波动大，严格止损）",
+            "summary": (
+                f"妖股追高：{pool_note}；当日涨约 5%~9.7%、连涨+放量+收盘贴高。"
+                f"建议 {buy_date} 尾盘买、{sell_date} 早盘卖。情绪博弈，不保证上涨。"
+            ),
+            "prior_up_days": r.get("prior_up_days"),
+            "limit_touch_days": r.get("limit_touch_days"),
+            "match_tier": "monster_stock",
+            "universe_note": pool_note,
+        }))
+        if len(items) >= STOCK_PICK_MAX:
+            break
+
+    window_note = (
+        "【尾盘实时窗口】"
+        if in_live_window
+        else "【预览模式】非 14:50~14:59，数据非尾盘实时；正式下单请到点再点一次确认。"
+    )
+    if items:
+        msg_core = f"共 {len(items)} 只（妖股追高隔夜，最多 {STOCK_PICK_MAX} 条）"
+    else:
+        msg_core = "当前暂无符合妖股追高条件的标的"
+        if not is_trade_time:
+            msg_core += "（收盘后按日K预览；正式下单请 14:50~14:59 再点一次）"
+    msg_parts = [window_note, f"【{pool_note}】", msg_core]
+    if market_note:
+        msg_parts.append(market_note)
+
+    return {
+        "success": True if items else False,
+        "generated_at": generated_at,
+        "strategy": "monster_stock",
+        "items": items,
+        "no_retry": True,
+        "is_trade_time": is_trade_time,
+        "in_live_window": in_live_window,
+        "market_regime": {**market, "gate_applied": False, "note": "monster_stock_high_risk"},
+        "buy_date": buy_date,
+        "sell_date": sell_date,
+        "message": " ".join(msg_parts).strip(),
+    }
+
+
+@router.get("/recommend-monster-stock")
+def stocks_recommend_monster_stock(only_basic: int = 1, _admin: dict = Depends(_admin_user)):
+    """妖股追高（隔夜）：连涨+准涨停+放量，尾盘买、次日早盘卖。"""
+    _ = _admin
+    result = _with_empty_result_retry(_compute_monster_stock, bool(int(only_basic or 0)))
+    return _finalize_overnight_recommend(result)
+
+
+@router.get("/records")
+def stocks_pick_records(
+    strategy: Optional[str] = Query(None),
+    limit: int = Query(60, ge=1, le=200),
+    settle: int = Query(1),
+    _admin: dict = Depends(_admin_user),
+):
+    """跟单记录列表（自动尝试结算已到卖出日的记录）。"""
+    _ = _admin
+    if not _db_ready():
+        raise HTTPException(status_code=503, detail="数据库不可用，无法读取跟单记录")
+    _require_db()  # type: ignore[misc]
+    if int(settle or 0):
+        _settle_pending_records(limit=80)
+    conn = _get_conn()  # type: ignore[misc]
+    with conn.cursor() as cur:
+        ensure_stock_pick_tables(cur)
+        if strategy:
+            cur.execute(
+                """
+                SELECT * FROM stock_pick_records
+                WHERE strategy = %s
+                ORDER BY buy_date DESC, id DESC
+                LIMIT %s
+                """,
+                (strategy, int(limit)),
+            )
+        else:
+            cur.execute(
+                """
+                SELECT * FROM stock_pick_records
+                ORDER BY buy_date DESC, id DESC
+                LIMIT %s
+                """,
+                (int(limit),),
+            )
+        rows = [_row_to_record_dict(r) for r in (cur.fetchall() or [])]
+    stats_all = _records_stats(rows)
+    by_strategy: Dict[str, dict] = {}
+    for st in _OVERNIGHT_STRATEGIES:
+        sub = [r for r in rows if r.get("strategy") == st]
+        if sub:
+            by_strategy[st] = _records_stats(sub)
+    return {
+        "success": True,
+        "generated_at": _fmt_cn_dt(_now_cn()),
+        "items": rows,
+        "stats": stats_all,
+        "stats_by_strategy": by_strategy,
+    }
+
+
+@router.post("/records/settle")
+def stocks_settle_records(_admin: dict = Depends(_admin_user)):
+    """手动触发结算 pending 记录。"""
+    _ = _admin
+    if not _db_ready():
+        raise HTTPException(status_code=503, detail="数据库不可用")
+    _require_db()  # type: ignore[misc]
+    n = _settle_pending_records(limit=120)
+    return {"success": True, "settled": n, "message": f"已结算 {n} 条"}
 

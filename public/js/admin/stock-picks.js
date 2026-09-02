@@ -113,6 +113,7 @@
       btn.classList.add('active');
       var panel = document.getElementById('panel-' + tab);
       if (panel) panel.classList.add('active');
+      if (tab === 'records') loadRecords();
     });
   });
 
@@ -231,6 +232,186 @@
     return card;
   }
 
+  function renderMonsterCard(item, idx) {
+    var card = document.createElement('div');
+    card.className = 'stock-card';
+    if (item.account_restricted) card.classList.add('stock-card-restricted');
+    var metrics = item.metrics || {};
+    var head = renderBaseHeader(item, idx, '妖股追高', 'metrics-ms');
+    card.innerHTML = head.html;
+    var metricsEl = card.querySelector('#' + head.metricsId);
+    metricsEl.appendChild(createMetric('最新价', fmt(metrics.last_price)));
+    metricsEl.appendChild(createMetric('涨跌幅(%)', fmt(metrics.pct_change), pctClass(metrics.pct_change)));
+    metricsEl.appendChild(createMetric('量比', fmt(metrics.volume_ratio)));
+    metricsEl.appendChild(createMetric('连涨(天)', fmt(metrics.prior_up_days, 0)));
+    if (metrics.limit_touch_days != null) {
+      metricsEl.appendChild(createMetric('近触板(天)', fmt(metrics.limit_touch_days, 0)));
+    }
+    if (metrics.close_vs_high_pct != null) {
+      metricsEl.appendChild(createMetric('收盘/日高(%)', fmt(metrics.close_vs_high_pct)));
+    }
+    if (metrics.ret_5d != null) {
+      metricsEl.appendChild(createMetric('近5日(%)', fmt(metrics.ret_5d), pctClass(metrics.ret_5d)));
+    }
+    var tips = [];
+    if (item.buy_time_suggest) tips.push('买：' + item.buy_time_suggest);
+    if (item.sell_time_suggest) tips.push('卖：' + item.sell_time_suggest);
+    if (tips.length) {
+      var tip = document.createElement('div');
+      tip.className = 'limit-note';
+      tip.textContent = tips.join(' · ');
+      card.appendChild(tip);
+    }
+    return card;
+  }
+
+  function statusLabel(status) {
+    var map = { pending: '待结算', settled: '已结算', skipped: '已跳过' };
+    return map[status] || status || '-';
+  }
+
+  function renderRecordsStats(stats, byStrategy) {
+    var el = document.getElementById('recordsStats');
+    if (!el) return;
+    if (!stats) {
+      el.innerHTML = '';
+      return;
+    }
+    var parts = [];
+    parts.push('<div class="stat-chip">共 <b>' + (stats.total || 0) + '</b> 条</div>');
+    parts.push('<div class="stat-chip">已结算 <b>' + (stats.settled || 0) + '</b></div>');
+    parts.push('<div class="stat-chip">待结算 <b>' + (stats.pending || 0) + '</b></div>');
+    if (stats.win_rate != null) {
+      parts.push('<div class="stat-chip">胜率 <b>' + stats.win_rate + '%</b></div>');
+    }
+    if (stats.avg_return != null) {
+      var cls = stats.avg_return >= 0 ? 'up' : 'dn';
+      parts.push('<div class="stat-chip">均盈亏(开盘) <b class="' + cls + '">' + fmt(stats.avg_return) + '%</b></div>');
+    }
+    if (stats.avg_return_high != null) {
+      var cls2 = stats.avg_return_high >= 0 ? 'up' : 'dn';
+      parts.push('<div class="stat-chip">均盈亏(10点高) <b class="' + cls2 + '">' + fmt(stats.avg_return_high) + '%</b></div>');
+    }
+    var sub = '';
+    if (byStrategy) {
+      var keys = Object.keys(byStrategy);
+      if (keys.length) {
+        sub = keys.map(function (k) {
+          var s = byStrategy[k];
+          var label = k === 'strong_momentum' ? '强势弹性' : (k === 'monster_stock' ? '妖股追高' : k);
+          var wr = s.win_rate != null ? ('胜率' + s.win_rate + '%') : '样本不足';
+          var ar = s.avg_return != null ? ('均' + fmt(s.avg_return) + '%') : '';
+          return '<span class="stat-sub">' + escapeHtml(label) + '：' + escapeHtml(wr + (ar ? ' / ' + ar : '')) + '</span>';
+        }).join('');
+      }
+    }
+    el.innerHTML = '<div class="records-stats-row">' + parts.join('') + '</div>' + (sub ? '<div class="records-stats-sub">' + sub + '</div>' : '');
+  }
+
+  function renderRecordsTable(items) {
+    var body = document.getElementById('recordsBody');
+    if (!body) return;
+    body.innerHTML = '';
+    if (!items || !items.length) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="9" class="records-empty">暂无跟单记录。请先在「强势弹性」或「妖股追高」生成推荐。</td>';
+      body.appendChild(tr);
+      return;
+    }
+    items.forEach(function (row) {
+      var tr = document.createElement('tr');
+      var pct = row.pct_return;
+      var pctHigh = row.pct_return_high;
+      var pctCls = pctClass(pct);
+      var pctHighCls = pctClass(pctHigh);
+      tr.innerHTML =
+        '<td>' + escapeHtml(row.buy_date || '-') + '</td>' +
+        '<td>' + escapeHtml(row.strategy_label || row.strategy || '-') + '</td>' +
+        '<td>' + escapeHtml((row.name || '') + '（' + (row.symbol || '-') + '）') + '</td>' +
+        '<td>' + escapeHtml(fmt(row.buy_price)) + '</td>' +
+        '<td>' + escapeHtml(row.sell_date || '-') + '</td>' +
+        '<td>' + escapeHtml(fmt(row.sell_price)) + '</td>' +
+        '<td class="' + pctCls + '">' + escapeHtml(pct != null ? fmt(pct) + '%' : '-') + '</td>' +
+        '<td class="' + pctHighCls + '">' + escapeHtml(pctHigh != null ? fmt(pctHigh) + '%' : '-') + '</td>' +
+        '<td>' + escapeHtml(statusLabel(row.status)) + '</td>';
+      body.appendChild(tr);
+    });
+  }
+
+  function loadRecords(opts) {
+    opts = opts || {};
+    var statusEl = document.getElementById('statusRecords');
+    var stratEl = document.getElementById('recordsStrategy');
+    var strategy = stratEl ? stratEl.value : '';
+    if (statusEl) {
+      statusEl.textContent = '加载中...';
+      statusEl.classList.add('loading');
+    }
+    var qs = new URLSearchParams();
+    qs.set('limit', '80');
+    qs.set('settle', opts.settle === false ? '0' : '1');
+    if (strategy) qs.set('strategy', strategy);
+    fetch(apiBase() + '/stocks/records?' + qs.toString(), {
+      method: 'GET',
+      headers: { Accept: 'application/json', Authorization: 'Bearer ' + token() },
+      cache: 'no-store'
+    })
+      .then(function (resp) {
+        return resp.json().then(function (data) { return { resp: resp, data: data }; });
+      })
+      .then(function (pack) {
+        var resp = pack.resp;
+        var data = pack.data || {};
+        if (resp.status === 401 || resp.status === 403) {
+          showGate('需要管理员登录后查看');
+          if (statusEl) setStatus(statusEl, '无权限', { error: true });
+          return;
+        }
+        if (!resp.ok) {
+          if (statusEl) setStatus(statusEl, data.detail || data.message || ('HTTP ' + resp.status), { error: true });
+          return;
+        }
+        renderRecordsStats(data.stats, data.stats_by_strategy);
+        renderRecordsTable(data.items || []);
+        if (statusEl) {
+          setStatus(statusEl, '已加载 ' + (data.items ? data.items.length : 0) + ' 条' + (data.generated_at ? ' · ' + data.generated_at : ''));
+        }
+      })
+      .catch(function (e) {
+        if (statusEl) setStatus(statusEl, '加载失败：' + (e && e.message ? e.message : String(e)), { error: true });
+      })
+      .finally(function () {
+        if (statusEl) statusEl.classList.remove('loading');
+      });
+  }
+
+  function settleRecords() {
+    var btn = document.getElementById('btnRecordsSettle');
+    var statusEl = document.getElementById('statusRecords');
+    if (btn) btn.disabled = true;
+    if (statusEl) {
+      statusEl.textContent = '结算中...';
+      statusEl.classList.add('loading');
+    }
+    fetch(apiBase() + '/stocks/records/settle', {
+      method: 'POST',
+      headers: { Accept: 'application/json', Authorization: 'Bearer ' + token() }
+    })
+      .then(function (resp) { return resp.json().then(function (data) { return { resp: resp, data: data }; }); })
+      .then(function (pack) {
+        if (!pack.resp.ok) throw new Error((pack.data && pack.data.detail) || '结算失败');
+        loadRecords({ settle: false });
+        if (statusEl) setStatus(statusEl, pack.data.message || '结算完成');
+      })
+      .catch(function (e) {
+        if (statusEl) setStatus(statusEl, e.message || '结算失败', { error: true });
+      })
+      .finally(function () {
+        if (btn) btn.disabled = false;
+        if (statusEl) statusEl.classList.remove('loading');
+      });
+  }
+
   function fetchRecommend(opts) {
     var btnEl = opts.btnEl;
     var statusEl = opts.statusEl;
@@ -301,6 +482,9 @@
         var doneMsg = data.message || (marketNote ? baseMsg + ' · ' + marketNote : baseMsg);
         var weakDone = market && market.regime === 'weak' && market.gate_applied !== false;
         setStatus(statusEl, doneMsg, { weak: !!weakDone });
+        if (data.records_saved) {
+          loadRecords({ settle: false });
+        }
 
         if (pickListEl) {
           var chips = items.map(function (it) {
@@ -356,6 +540,25 @@
         });
       });
     }
+    var btnMonsterStock = document.getElementById('btnMonsterStock');
+    if (btnMonsterStock) {
+      btnMonsterStock.addEventListener('click', function () {
+        fetchRecommend({
+          url: '/stocks/recommend-monster-stock',
+          btnEl: btnMonsterStock,
+          statusEl: document.getElementById('statusMonsterStock'),
+          pickListEl: document.getElementById('pickedListMonsterStock'),
+          resultsEl: document.getElementById('resultsMonsterStock'),
+          renderFn: renderMonsterCard
+        });
+      });
+    }
+    var btnRecordsRefresh = document.getElementById('btnRecordsRefresh');
+    if (btnRecordsRefresh) btnRecordsRefresh.addEventListener('click', function () { loadRecords(); });
+    var btnRecordsSettle = document.getElementById('btnRecordsSettle');
+    if (btnRecordsSettle) btnRecordsSettle.addEventListener('click', settleRecords);
+    var recordsStrategy = document.getElementById('recordsStrategy');
+    if (recordsStrategy) recordsStrategy.addEventListener('change', function () { loadRecords(); });
   }
 
   function boot() {
