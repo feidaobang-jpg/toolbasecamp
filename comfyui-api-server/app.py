@@ -1264,7 +1264,7 @@ async def _run_comfyui_and_get_last_video(workflow: dict, timeout_sec: Optional[
 
 async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
     if timeout_sec is None:
-        timeout_sec = float(os.environ.get("COMFYUI_VIDEO_JOB_TIMEOUT", "1200"))
+        timeout_sec = float(os.environ.get("COMFYUI_VIDEO_JOB_TIMEOUT", "3600"))
     deadline = time.monotonic() + timeout_sec
     ws = websocket.WebSocket()
     prompt_id = None
