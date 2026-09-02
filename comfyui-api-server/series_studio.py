@@ -28,7 +28,7 @@ from trailer_pipeline import (
     _ASPECT_SIZES,
     _ASPECT_VIDEO,
     _VIDEO_ENGINES,
-    _bible_prompt_prefix,
+    _build_shot_motion_prompt,
     _clamp_shot_duration,
     _compose_clips_with_audio_sync,
     _compose_trailer_sync,
@@ -1287,10 +1287,19 @@ class SeriesStudioAPI:
             raw_clip = shot_dir / "clips" / "00_raw.mp4"
             clip_dur = min(10.0, max(3.0, float(dur)))
             vo = (row["voiceover"] or "").strip() or label
-            motion = (
-                f"{base_prompt}. camera {row['camera'] or 'medium'}, "
-                f"subtle cinematic motion, natural movement"
-            )
+            mot_col = ""
+            try:
+                mot_col = (row["motion_prompt"] or "").strip()
+            except (KeyError, IndexError):
+                pass
+            shot_motion = {
+                "voiceover": vo,
+                "visual_prompt": base_prompt,
+                "motion_prompt": mot_col,
+                "camera": row["camera"] or "medium",
+            }
+            motion_i2v = _build_shot_motion_prompt(shot_motion, i2v=True)
+            motion_t2v = _build_shot_motion_prompt(shot_motion, i2v=False)
             i2v_wh = _ASPECT_I2V[aspect]
             ltx_wh = _ASPECT_LTX[aspect]
             out_size = _ASPECT_VIDEO[aspect]
@@ -1338,7 +1347,7 @@ class SeriesStudioAPI:
                             raise RuntimeError("上传静帧失败")
                         wf = build_wan(
                             comfy_name,
-                            motion,
+                            motion_i2v,
                             seed=random.randint(1, 2_000_000_000),
                             width=i2v_wh[0],
                             height=i2v_wh[1],
@@ -1354,17 +1363,18 @@ class SeriesStudioAPI:
                             raise RuntimeError("上传静帧失败")
                         wf = build_ltx_i2v(
                             comfy_name,
-                            motion,
+                            motion_i2v,
                             seed=random.randint(1, 2_000_000_000),
                             width=ltx_wh[0],
                             height=ltx_wh[1],
                             duration_sec=clip_dur,
                             fps=24,
+                            strength=0.82,
                         )
                     else:
                         self._log(series_id, f"文生视频 {label}（LTX·直出音频）")
                         wf = build_ltx_t2v(
-                            motion,
+                            motion_t2v,
                             seed=random.randint(1, 2_000_000_000),
                             width=ltx_wh[0],
                             height=ltx_wh[1],
@@ -1747,7 +1757,7 @@ class SeriesStudioAPI:
         @app.post("/api/series/plan")
         async def series_plan(
             series_id: str = Form(...),
-            use_global_refs: str = Form("1"),
+            use_global_refs: str = Form("0"),
         ):
             with api.db.connect() as conn:
                 s = api._get_series_row(conn, series_id)
@@ -1805,7 +1815,7 @@ class SeriesStudioAPI:
                             series_id,
                             f"剧本结构就绪：{plan.get('title')} · {n_ep} 集 · 共 {n_sh} 镜",
                         )
-                        use_refs = str(use_global_refs or "1").strip().lower() not in (
+                        use_refs = str(use_global_refs or "0").strip().lower() not in (
                             "0",
                             "false",
                             "off",

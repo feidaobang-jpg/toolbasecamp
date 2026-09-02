@@ -419,7 +419,7 @@ window.TB_LOCALES['zh-CN'] = {
             trailerVideoModeLtx: '文生视频 LTX 2.5（直出音频）',
             trailerVideoModeI2v: '图生视频 LTX 2.5',
             trailerVideoModeKenburns: '静帧推镜（更快）',
-            trailerVideoModeHint: '可多选：同一份静帧会按勾选顺序依次成片，方便对比。默认 Wan（IndexTTS 旁白）；LTX 直出音轨；静帧推镜更快。',
+            trailerVideoModeHint: '可多选：同一份静帧会按勾选顺序依次成片，方便对比。默认 Wan（IndexTTS 旁白）；LTX 直出音轨。引擎失败时仍会自动回退静帧推镜。',
             seriesVideoModeHint: '默认 Wan 2.2 14B GGUF Q5_K_M（IndexTTS 旁白）；也可选 LTX 直出音轨。',
             trailerCompareSwitch: '切换成片',
             trailerCandidatesLabel: '每镜候选图',

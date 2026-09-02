@@ -136,6 +136,48 @@ def _parse_video_engines(raw_modes=None, raw_single: str = "") -> List[str]:
     return out or ["wan22_14b_gguf"]
 
 
+def _camera_motion_hint(camera: str) -> str:
+    c = (camera or "medium").strip().lower()
+    if c in ("wide", "establishing"):
+        return "slow establishing push-in, gentle pan across the scene"
+    if c in ("close", "closeup", "close_up"):
+        return "close-up with subtle push-in, focus on subject expression"
+    if c in ("detail", "macro"):
+        return "detail shot, rack focus, micro movement"
+    if c in ("orbit", "rotate", "rotation"):
+        return "slow orbital camera move around the subject"
+    return "medium shot, motivated camera move following the action"
+
+
+def _build_shot_motion_prompt(shot: dict, *, i2v: bool = False) -> str:
+    """视频引擎用动态提示：优先 motion_prompt，避免「subtle」压掉爆发类动作。"""
+    motion = (shot.get("motion_prompt") or "").strip()
+    vis = (shot.get("visual_prompt") or "").strip()
+    vo = (shot.get("voiceover") or "").strip()
+    camera = shot.get("camera") or "medium"
+
+    if motion:
+        base = motion
+    else:
+        parts = []
+        if vo:
+            parts.append(f"Story beat (narration): {vo}")
+        if vis:
+            parts.append(vis)
+        base = ". ".join(parts) if parts else "cinematic scene with clear action progression"
+        base += (
+            ". Visible movement and change over time; subjects act and environment reacts; "
+            "not a frozen portrait or only camera spin"
+        )
+
+    cam = _camera_motion_hint(camera)
+    if i2v:
+        return (
+            f"Use the provided start image as frame 1. {base}. {cam}. "
+            "Dynamic physics-based motion, temporal continuity, cause and effect."
+        )
+    return f"{base}. {cam}. Dynamic motion, clear action beats, cinematic video."
+
 
 def _now_ts_ms() -> int:
     return int(time.time() * 1000)
@@ -345,7 +387,8 @@ def _fallback_plan(prompt: str, shot_duration: float, segment_count: int) -> dic
                 "index": idx,
                 "duration_sec": dur,
                 "voiceover": seg[:80],
-                "visual_prompt": f"cinematic scene illustrating: {seg[:120]}",
+                "visual_prompt": f"cinematic opening frame before action: {seg[:120]}",
+                "motion_prompt": f"dynamic action unfolding: {seg[:160]}, visible movement, debris and light if dramatic",
                 "camera": "medium",
                 "mood": "dramatic",
             }
@@ -489,6 +532,7 @@ def _normalize_plan(
             continue
         vo = str(s.get("voiceover") or s.get("narration") or "").strip()
         vis = str(s.get("visual_prompt") or s.get("image_prompt") or s.get("prompt") or "").strip()
+        mot = str(s.get("motion_prompt") or s.get("video_prompt") or s.get("motion") or "").strip()
         if not vo and not vis:
             continue
         shots.append(
@@ -496,7 +540,8 @@ def _normalize_plan(
                 "index": len(shots),
                 "duration_sec": dur,
                 "voiceover": vo or f"镜头 {len(shots) + 1}",
-                "visual_prompt": vis or f"cinematic shot for: {vo[:100]}",
+                "visual_prompt": vis or f"cinematic opening frame for: {vo[:100]}",
+                "motion_prompt": mot,
                 "camera": str(s.get("camera") or "medium").strip()[:32],
                 "mood": str(s.get("mood") or "").strip()[:48],
             }
@@ -578,8 +623,9 @@ def deepseek_trailer_plan(
     {{
       "duration_sec": {dur:g},
       "voiceover": "中文旁白（简短有力，适合配音）",
-      "visual_prompt": "英文文生图提示词：主体、动作、环境、光影、镜头景别；须符合 bible 设定；不要出现字幕/文字/水印",
-      "camera": "wide|medium|close|detail",
+      "visual_prompt": "英文首帧文生图：视频第 0 秒的单帧（动作起始态；如「石猴出世」应画开裂灵石/裂缝透光/石壳将破，不要画成猴子已坐在完整石头上）",
+      "motion_prompt": "英文视频动态：4 秒内发生的动作与变化（如灵石崩裂、石猴破壳跃出、碎石飞散、尘土与光效）；写清主体运动+环境反应+镜头运动；禁止 only subtle motion / static pose",
+      "camera": "wide|medium|close|detail|orbit",
       "mood": "情绪词"
     }}
   ]
@@ -589,11 +635,12 @@ def deepseek_trailer_plan(
 1. shots 数量 {n_lo}～{n_hi}；每镜 duration_sec 一律写 {dur:g}。
 2. 叙事节奏随段数伸缩：段数少则单镜信息密度更高；段数多则开场钩子→冲突→高潮→收束。
 3. 若输入是知名作品名，基于公开剧情常识写分镜与人物设定；若是原创梗概，紧扣梗概。用户未细写画风时，由你在 bible 里完整定调。
-4. voiceover 用中文，单镜汉字数按 {dur:g} 秒语速控制（约每秒 3～4 字，勿过长）；visual_prompt 用英文。
-5. 风格一致性：bible.style_notes 与所有 visual_prompt 都要符合「{style['label']}」。
-6. 不要在画面提示里要求生成文字、标题卡上的字、logo。
-7. 总时长大约 {total_hint:g} 秒（{want}×{dur:g}）。
-8. ref_prompts 给 2～4 条，用于生成全剧参考定妆/情绪板（不是分镜），角色外形须与 characters 一致。
+4. voiceover 用中文，单镜汉字数按 {dur:g} 秒语速控制（约每秒 3～4 字，勿过长）；visual_prompt 与 motion_prompt 均用英文。
+5. visual_prompt 只描述首帧静帧；motion_prompt 描述镜头内随时间发生的动作（二者分工，勿重复成静态描述）。
+6. 风格一致性：bible.style_notes 与所有 visual_prompt 都要符合「{style['label']}」。
+7. 不要在画面提示里要求生成文字、标题卡上的字、logo。
+8. 总时长大约 {total_hint:g} 秒（{want}×{dur:g}）。
+9. ref_prompts 给 2～4 条，用于生成全剧参考定妆/情绪板（不是分镜），角色外形须与 characters 一致。
 只输出 JSON。"""
 
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
@@ -871,7 +918,7 @@ class TrailerAPI:
             segment_count: str = Form("1"),
             video_mode: str = Form("wan22_14b_gguf"),
             video_modes: str = Form(""),
-            use_global_refs: str = Form("1"),
+            use_global_refs: str = Form("0"),
         ):
             text = (prompt or "").strip()
             if len(text) < 2:
@@ -893,7 +940,7 @@ class TrailerAPI:
             spd = max(0.7, min(1.4, spd))
             shot_dur = _clamp_shot_duration(shot_duration)
             seg_n = _clamp_segment_count(segment_count)
-            use_refs = str(use_global_refs or "1").strip().lower() not in ("0", "false", "no", "off")
+            use_refs = str(use_global_refs or "0").strip().lower() not in ("0", "false", "no", "off")
 
             task_id = uuid.uuid4().hex
             out_dir = api._alloc_dir()
@@ -1492,6 +1539,12 @@ class TrailerAPI:
             idx = int(shot["index"])
             base_prompt = (shot.get("visual_prompt") or "").strip()
             bible_prefix = _bible_prompt_prefix(plan)
+            mot = (shot.get("motion_prompt") or "").strip()
+            frame_hint = (
+                "Opening frame at the start of the action, not the finished pose after the event. "
+                if mot
+                else ""
+            )
             # 有勾选全剧参考时，提示词强调与定妆一致（当前引擎靠文字 bible；参考图文件已落盘供剪映/后续）
             ref_note = ""
             sel = task.get("global_refs_selected") or []
@@ -1502,7 +1555,7 @@ class TrailerAPI:
                     "include ONLY characters required by this shot; do not copy reference group lineup. "
                 )
             pos = (
-                f"{no_text}{bible_prefix}{ref_note}{base_prompt}. {style['suffix']}. "
+                f"{no_text}{bible_prefix}{ref_note}{frame_hint}{base_prompt}. {style['suffix']}. "
                 f"{style['zh']}. no text, no watermark, no subtitles, no logo."
             )
             candidates = []
@@ -1531,6 +1584,7 @@ class TrailerAPI:
                     "duration_sec": shot.get("duration_sec"),
                     "voiceover": shot.get("voiceover"),
                     "visual_prompt": base_prompt,
+                    "motion_prompt": (shot.get("motion_prompt") or "").strip(),
                     "camera": shot.get("camera"),
                     "candidates": candidates,
                     "default_pick": 0,
@@ -1756,10 +1810,8 @@ class TrailerAPI:
             )
             planned = _clamp_shot_duration(planned)
             vo = (shot.get("voiceover") or "").strip() or f"镜头{idx + 1}"
-            motion = (
-                f"{(shot.get('visual_prompt') or '').strip()}. "
-                f"camera {shot.get('camera') or 'medium'}, subtle cinematic motion, natural movement"
-            )
+            motion_i2v = _build_shot_motion_prompt(shot, i2v=True)
+            motion_t2v = _build_shot_motion_prompt(shot, i2v=False)
 
             # 1) Wan / 静帧推镜：IndexTTS 旁白；LTX：直出音轨，跳过配音
             task["progress"] = {
@@ -1817,7 +1869,7 @@ class TrailerAPI:
                             raise RuntimeError("上传关键帧到 ComfyUI 失败")
                         wf = build_wan(
                             comfy_name,
-                            motion,
+                            motion_i2v,
                             seed=random.randint(1, 2_000_000_000),
                             width=i2v_wh[0],
                             height=i2v_wh[1],
@@ -1836,12 +1888,13 @@ class TrailerAPI:
                             raise RuntimeError("上传关键帧到 ComfyUI 失败")
                         wf = build_ltx_i2v(
                             comfy_name,
-                            motion,
+                            motion_i2v,
                             seed=random.randint(1, 2_000_000_000),
                             width=ltx_wh[0],
                             height=ltx_wh[1],
                             duration_sec=planned,
                             fps=24,
+                            strength=0.82,
                         )
                     else:
                         self._log(
@@ -1849,7 +1902,7 @@ class TrailerAPI:
                             f"LTX-2.5 文生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s·直出音频）",
                         )
                         wf = build_ltx_t2v(
-                            motion,
+                            motion_t2v,
                             seed=random.randint(1, 2_000_000_000),
                             width=ltx_wh[0],
                             height=ltx_wh[1],
@@ -2019,6 +2072,7 @@ class TrailerAPI:
                     "image": fname,
                     "clip": f"{clips_dir.name}/{idx:02d}.mp4" if (clips_dir / f"{idx:02d}.mp4").exists() else None,
                     "visual_prompt": shot.get("visual_prompt"),
+                    "motion_prompt": shot.get("motion_prompt"),
                 }
             )
         sel_name = f"selected_shots_{mode}.json" if multi else "selected_shots.json"
