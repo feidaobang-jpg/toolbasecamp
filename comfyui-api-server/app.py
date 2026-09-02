@@ -4487,6 +4487,7 @@ _trailer_api = TrailerAPI(
     repo_deepseek_api_key=_repo_deepseek_api_key,
     deepseek_api_url=DEEPSEEK_API_URL,
     image_no_text_prefix=_IMAGE_NO_TEXT_PREFIX,
+    free_comfyui_memory=free_comfyui_memory,
 )
 _trailer_api.register(app)
 

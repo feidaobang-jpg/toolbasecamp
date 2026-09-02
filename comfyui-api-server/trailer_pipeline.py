@@ -1617,6 +1617,18 @@ class TrailerAPI:
                 task["error"] = str(e)
                 self._log(task, f"成片失败：{e}")
 
+    async def _free_comfy_vram(self, task: dict, reason: str = "") -> None:
+        """成片前卸掉生图等模型，避免与 Wan/LTX 叠占显存导致每步数分钟。"""
+        fn = self.deps.get("free_comfyui_memory")
+        if not callable(fn):
+            return
+        try:
+            await fn()
+            tip = f"（{reason}）" if reason else ""
+            self._log(task, f"已释放 ComfyUI 显存{tip}")
+        except Exception as e:
+            self._log(task, f"释放显存失败（可忽略）：{e}")
+
     async def _phase_compose(self, task: dict) -> None:
         plan = task.get("plan") or {}
         shots = plan.get("shots") or []
@@ -1640,6 +1652,8 @@ class TrailerAPI:
             task["video_mode"] = mode
             label = (_VIDEO_ENGINES.get(mode) or {}).get("label") or mode
             self._log(task, f"对比成片 {ei + 1}/{n_engines}：{label}" if multi else f"成片引擎：{label}")
+            # 生图模型与 14B 视频叠占会严重 offload；每引擎前清一次
+            await self._free_comfy_vram(task, f"成片前·{label}")
             result = await self._phase_compose_one(
                 task,
                 mode=mode,
@@ -1950,6 +1964,9 @@ class TrailerAPI:
                     video_clip_paths.append(img_path)
                 finally:
                     video_sec += time.perf_counter() - t_vid0
+                    # 多镜时卸掉上镜残留，避免 High/Low UNet + VAE 叠满 16GB
+                    if use_comfy_video and i + 1 < n_shots:
+                        await self._free_comfy_vram(task, f"镜 {idx + 1} 结束")
             else:
                 video_clip_paths.append(img_path)
 
