@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var sceneBoard = document.getElementById('scene-board');
   var progressLine = document.getElementById('series-progress-line');
   var logOutput = document.getElementById('log-output');
-  var downloadLogBtn = document.getElementById('download-log-btn');
+  var copyLogBtn = document.getElementById('copy-log-btn');
   var openSeriesFolderBtn = document.getElementById('open-series-folder-btn');
   var shotPreviewBox = document.getElementById('shot-preview-box');
   var shotPreviewVideo = document.getElementById('shot-preview-video');
@@ -411,7 +411,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (freeVramBtn) freeVramBtn.style.display = currentSeriesId ? '' : 'none';
     if (playlistBtn) playlistBtn.style.display = hasShots && !awaiting ? '' : 'none';
     if (deleteSeriesBtn) deleteSeriesBtn.style.display = currentSeriesId ? '' : 'none';
-    if (downloadLogBtn) downloadLogBtn.style.display = currentSeriesId ? '' : 'none';
     if (openSeriesFolderBtn) openSeriesFolderBtn.style.display = currentSeriesId ? '' : 'none';
     if (cancelBtn) cancelBtn.style.display = running ? '' : 'none';
     setBusy(running);
@@ -1160,9 +1159,24 @@ document.addEventListener('DOMContentLoaded', function () {
       revealSeriesFolder();
     });
   }
-  if (downloadLogBtn) {
-    downloadLogBtn.addEventListener('click', function () {
-      revealSeriesFolder();
+  if (copyLogBtn) {
+    copyLogBtn.addEventListener('click', function () {
+      var text = (logOutput && logOutput.textContent) || '';
+      if (!String(text).trim()) {
+        flashMsg(tr('privateHub.homePc.logEmpty', '暂无日志可复制'), true);
+        return;
+      }
+      var label = copyLogBtn.textContent;
+      window.HomePcApi.copyText(text)
+        .then(function () {
+          copyLogBtn.textContent = tr('privateHub.homePc.logCopied', '已复制');
+          setTimeout(function () {
+            copyLogBtn.textContent = label;
+          }, 1500);
+        })
+        .catch(function () {
+          flashMsg(tr('privateHub.homePc.logCopyFail', '复制失败，请手动选择复制'), true);
+        });
     });
   }
   if (deleteSeriesBtn) {

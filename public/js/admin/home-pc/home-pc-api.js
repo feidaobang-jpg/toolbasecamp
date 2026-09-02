@@ -106,6 +106,31 @@
     return m;
   }
 
+  function copyText(text) {
+    var s = text == null ? '' : String(text);
+    if (!s) return Promise.reject(new Error('empty'));
+    if (global.navigator && global.navigator.clipboard && global.navigator.clipboard.writeText) {
+      return global.navigator.clipboard.writeText(s);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = global.document.createElement('textarea');
+        ta.value = s;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        global.document.body.appendChild(ta);
+        ta.select();
+        var ok = global.document.execCommand('copy');
+        global.document.body.removeChild(ta);
+        if (ok) resolve();
+        else reject(new Error('copy failed'));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
   global.HomePcApi = {
     base: base,
     wsUrl: wsUrl,
@@ -113,6 +138,7 @@
     checkHealth: checkHealth,
     renderStatus: renderStatus,
     parseErrorResponse: parseErrorResponse,
-    friendlyFetchError: friendlyFetchError
+    friendlyFetchError: friendlyFetchError,
+    copyText: copyText
   };
 })(typeof window !== 'undefined' ? window : this);

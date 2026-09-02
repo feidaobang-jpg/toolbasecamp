@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var exportHint = document.getElementById('export-hint');
   var compareVideoList = document.getElementById('compare-video-list');
   var logOutput = document.getElementById('log-output');
+  var copyLogBtn = document.getElementById('copy-log-btn');
   var historyList = document.getElementById('history-list');
   var historyRefreshBtn = document.getElementById('history-refresh-btn');
 
@@ -944,6 +945,29 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('task_id', currentTaskId);
     fetch(API_BASE + '/trailer/reveal-output', { method: 'POST', body: fd }).catch(function () {});
   });
+
+  if (copyLogBtn) {
+    copyLogBtn.addEventListener('click', function () {
+      var text = (logOutput && logOutput.textContent) || '';
+      if (!String(text).trim()) {
+        progressStatus.textContent = tr('privateHub.homePc.logEmpty', '暂无日志可复制');
+        progressWrap.style.display = '';
+        return;
+      }
+      var label = copyLogBtn.textContent;
+      window.HomePcApi.copyText(text)
+        .then(function () {
+          copyLogBtn.textContent = tr('privateHub.homePc.logCopied', '已复制');
+          setTimeout(function () {
+            copyLogBtn.textContent = label;
+          }, 1500);
+        })
+        .catch(function () {
+          progressStatus.textContent = tr('privateHub.homePc.logCopyFail', '复制失败，请手动选择复制');
+          progressWrap.style.display = '';
+        });
+    });
+  }
 
   clearBtn.addEventListener('click', function () {
     stopPoll();

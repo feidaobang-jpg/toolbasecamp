@@ -1447,9 +1447,23 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   flex-shrink: 0;
 }
 
+.home-pc-wrap .home-pc-log-box .home-pc-log-head,
 .home-pc-wrap .home-pc-log-box .series-log-head,
 .home-pc-wrap .home-pc-log-box .small-hint {
   flex-shrink: 0;
+}
+
+.home-pc-wrap .home-pc-log-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.home-pc-wrap .home-pc-log-head h4 {
+  margin: 0;
 }
 
 .home-pc-wrap .home-pc-log-box pre {
