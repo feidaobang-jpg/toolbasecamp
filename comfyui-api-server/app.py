@@ -4617,6 +4617,22 @@ _series_studio_api = SeriesStudioAPI(
 )
 _series_studio_api.register(app)
 
+from game_sprite_pipeline import GameSpriteAPI
+
+_game_sprite_api = GameSpriteAPI(
+    output_root=_OUTPUT_ROOT,
+    build_z_image_workflow=_build_z_image_turbo_workflow,
+    run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
+    build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
+    run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
+    upload_image_bytes=upload_image_bytes,
+    build_rembg_workflow=build_rembg_workflow,
+    default_txt2img_negative=_default_txt2img_negative,
+    image_no_text_prefix=_IMAGE_NO_TEXT_PREFIX,
+    free_comfyui_memory=free_comfyui_memory,
+)
+_game_sprite_api.register(app)
+
 
 if __name__ == '__main__':
     import uvicorn

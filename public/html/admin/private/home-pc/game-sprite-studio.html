@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>游戏图流水线 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc45" />
+  <script src="../../../../js/locales/en.js?v=gsprite1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=gsprite1"></script>
+  <script src="../../../../js/i18n.js?v=homepc7"></script>
+  <script src="../../../../js/config.js?v=homepc29"></script>
+  <script src="../../../../js/common_ui.js?v=homepc4"></script>
+</head>
+<body class="home-pc-page">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+      <header class="home-pc-header">
+        <div class="home-pc-header-inner">
+          <a href="../../private.html" class="home-pc-back">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+          </a>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.gameSpriteTitle">游戏图流水线</h1>
+          <div class="home-pc-header-actions">
+            <span id="auth-label" class="home-pc-auth-label"></span>
+            <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+          </div>
+        </div>
+      </header>
+      <main class="home-pc-main">
+        <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+        <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+          <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+          <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+        </div>
+        <div id="app" class="home-pc-wrap hidden" hidden>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">设定 → 定妆/三视图 → 选主参考 → Wan 5B 图生动作 → 去背景对齐 → 导出 Godot SpriteFrames ZIP。</p>
+          <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+
+          <div class="tool-container">
+            <div class="input-section">
+              <div>
+                <label for="char-name" data-i18n="privateHub.homePc.gameSpriteNameLabel">角色 / 资产名</label>
+                <input id="char-name" class="text-input" type="text" placeholder="hero_knight" />
+              </div>
+              <div>
+                <label for="brief-input" data-i18n="privateHub.homePc.gameSpriteBriefLabel">设定描述</label>
+                <textarea id="brief-input" rows="4" placeholder="红披风骑士，侧视横版，金属盔甲…"></textarea>
+              </div>
+
+              <div class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteTypeLabel">资产类型</span>
+                <div class="instruct-preset-row" id="type-row">
+                  <button type="button" class="rec-chip is-active" data-type="character" data-i18n="privateHub.homePc.gameSpriteTypeCharacter">角色</button>
+                  <button type="button" class="rec-chip" data-type="monster" data-i18n="privateHub.homePc.gameSpriteTypeMonster">怪物</button>
+                  <button type="button" class="rec-chip" data-type="prop" data-i18n="privateHub.homePc.gameSpriteTypeProp">道具</button>
+                  <button type="button" class="rec-chip" data-type="building" data-i18n="privateHub.homePc.gameSpriteTypeBuilding">建筑</button>
+                  <button type="button" class="rec-chip" data-type="scene" data-i18n="privateHub.homePc.gameSpriteTypeScene">场景</button>
+                </div>
+              </div>
+
+              <div class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteStyleLabel">画风</span>
+                <div class="instruct-preset-row" id="style-row">
+                  <button type="button" class="rec-chip is-active" data-style="cartoon" data-i18n="privateHub.homePc.gameSpriteStyleCartoon">卡通</button>
+                  <button type="button" class="rec-chip" data-style="pixel" data-i18n="privateHub.homePc.gameSpriteStylePixel">像素</button>
+                  <button type="button" class="rec-chip" data-style="anime" data-i18n="privateHub.homePc.gameSpriteStyleAnime">二次元</button>
+                  <button type="button" class="rec-chip" data-style="handdrawn" data-i18n="privateHub.homePc.gameSpriteStyleHand">手绘</button>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="canvas-select" data-i18n="privateHub.homePc.gameSpriteCanvasLabel">画布</label>
+                  <select id="canvas-select" class="text-input">
+                    <option value="64">64×64</option>
+                    <option value="128">128×128</option>
+                    <option value="256" selected>256×256</option>
+                    <option value="512">512×512</option>
+                  </select>
+                </div>
+                <div class="input-control">
+                  <label for="fps-select" data-i18n="privateHub.homePc.gameSpriteFpsLabel">动画 FPS</label>
+                  <select id="fps-select" class="text-input">
+                    <option value="6">6</option>
+                    <option value="8" selected>8</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+                <div class="input-control">
+                  <label for="candidates-select" data-i18n="privateHub.homePc.gameSpriteCandidatesLabel">定妆候选数</label>
+                  <select id="candidates-select" class="text-input">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="actions-block" class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteActionsLabel">动作（角色/怪物）</span>
+                <div class="instruct-preset-row gs-actions" id="actions-row"></div>
+                <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteActionsHint">默认侧视横版。道具/建筑/场景不生成动作，只做定妆对齐。</p>
+              </div>
+
+              <div class="action-row">
+                <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteStart">生成定妆</button>
+                <button type="button" id="cancel-btn" class="tb-btn" disabled data-i18n="privateHub.homePc.cancelTask">取消</button>
+                <button type="button" id="clear-btn" class="tb-btn" data-i18n="privateHub.homePc.clear">清空</button>
+              </div>
+            </div>
+
+            <div id="progress-wrap" class="home-pc-progress" style="display:none;">
+              <div class="home-pc-progress-meta">
+                <span id="progress-status"></span>
+                <span id="progress-percent"></span>
+              </div>
+              <div class="home-pc-progress-track"><div id="progress-bar" class="home-pc-progress-bar"></div></div>
+            </div>
+
+            <div id="stills-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.gameSpriteStillsTitle">选择主参考图</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">勾选一张定妆图作为 IP，再点确认进入动作生成；也可上传自己的参考图。</p>
+              <div id="stills-list" class="trailer-cand-grid"></div>
+              <div class="action-row" style="margin-top:12px;">
+                <button type="button" id="confirm-pick-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteConfirmPick">确认选图并生成动作</button>
+                <label class="tb-btn" style="cursor:pointer;">
+                  <span data-i18n="privateHub.homePc.gameSpriteUploadRef">上传参考图</span>
+                  <input type="file" id="ref-file" accept="image/*" hidden />
+                </label>
+              </div>
+            </div>
+
+            <div id="preview-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.gameSpritePreviewTitle">动画预览</h3>
+              <p id="export-hint" class="small-hint"></p>
+              <div id="preview-list" class="gs-preview-list"></div>
+              <div class="action-row" style="margin-top:12px;">
+                <a id="zip-link" class="tb-btn" href="#" download style="display:none;" data-i18n="privateHub.homePc.gameSpriteDownloadZip">下载 Godot ZIP</a>
+                <button type="button" id="export-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteExport">重新打包导出</button>
+                <button type="button" id="open-output-btn" class="tb-btn" data-i18n="privateHub.homePc.openOutputDir">打开输出文件夹</button>
+              </div>
+              <div class="form-row" style="margin-top:12px;">
+                <div class="input-control" style="flex:1;">
+                  <label for="godot-path" data-i18n="privateHub.homePc.gameSpriteGodotPath">复制到本机 Godot 工程路径</label>
+                  <input id="godot-path" class="text-input" type="text" placeholder="D:\games\mygame" />
+                </div>
+                <div class="input-control" style="align-self:flex-end;">
+                  <button type="button" id="copy-godot-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteCopyGodot">复制到工程</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
+              <div class="home-pc-log-head">
+                <h4 data-i18n="privateHub.homePc.logTitle">执行日志</h4>
+                <div class="action-row">
+                  <button type="button" id="copy-log-btn" class="tb-btn" data-i18n="privateHub.homePc.copyLog">复制日志</button>
+                </div>
+              </div>
+              <pre id="log-output"></pre>
+            </div>
+
+            <div id="history-box" class="home-pc-result-box trailer-history">
+              <div class="trailer-history-head">
+                <h3 data-i18n="privateHub.homePc.gameSpriteHistoryTitle">历史项目</h3>
+                <button type="button" id="history-refresh-btn" class="tb-btn" data-i18n="privateHub.homePc.trailerHistoryRefresh">刷新</button>
+              </div>
+              <div id="history-list" class="trailer-history-list"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc23"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite1"></script>
+</body>
+</html>

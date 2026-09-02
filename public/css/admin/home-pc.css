@@ -2147,3 +2147,45 @@ body.tb-admin-private #auth-status {
     grid-template-columns: 1fr;
   }
 }
+
+/* Game sprite studio */
+.home-pc-wrap .gs-actions {
+  flex-wrap: wrap;
+}
+.home-pc-wrap .gs-preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.home-pc-wrap .gs-preview-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+.home-pc-wrap .gs-preview-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.home-pc-wrap .gs-sheet {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  background: repeating-conic-gradient(#e2e8f0 0% 25%, #fff 0% 50%) 50% / 16px 16px;
+  margin-bottom: 8px;
+}
+.home-pc-wrap .gs-frame-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.home-pc-wrap .gs-frame-row img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  background: repeating-conic-gradient(#e2e8f0 0% 25%, #fff 0% 50%) 50% / 12px 12px;
+  border-radius: 6px;
+  image-rendering: pixelated;
+}

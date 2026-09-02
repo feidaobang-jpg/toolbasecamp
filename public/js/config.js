@@ -398,6 +398,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.homePc.seriesTitle',
                     descriptionKey: 'privateHub.homePc.seriesDesc',
                     url: 'html/admin/private/home-pc/series-studio.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.gameSpriteTitle',
+                    descriptionKey: 'privateHub.homePc.gameSpriteDesc',
+                    url: 'html/admin/private/home-pc/game-sprite-studio.html'
                 }
             ]
         }
