@@ -36,9 +36,11 @@
   var sdConfigured = false;
   var hhLimits = { min: 3, max: 15, maxRefs: 9 };
   var sdLimits = { min: 4, max: 30, maxRefs: 9 };
+  var sd20Limits = { min: 4, max: 15, maxRefs: 9 };
   var priceMarkup = 2;
   var hhListPerSec = { '480P': 0.45, '720P': 0.9, '1080P': 1.2 };
   var sdListPerSec = { '480p': 1.33, '720p': 3.0, '480P': 1.33, '720P': 3.0 };
+  var sd20ListPerSec = { '480p': 0.18, '720p': 0.4, '480P': 0.18, '720P': 0.4 };
   var refFiles = [];
   var previewUrls = [];
   var taskId = '';
@@ -46,24 +48,43 @@
   var polling = false;
   var pollTimer = null;
 
-  function isSeedance() {
+  function isSeedanceFamily() {
+    return modelId === 'seedance' || modelId === 'seedance20';
+  }
+
+  function isSeedance20() {
+    return modelId === 'seedance20';
+  }
+
+  function isSeedance25() {
     return modelId === 'seedance';
   }
 
   function configured() {
-    return isSeedance() ? sdConfigured : hhConfigured;
+    return isSeedanceFamily() ? sdConfigured : hhConfigured;
   }
 
   function limits() {
-    return isSeedance() ? sdLimits : hhLimits;
+    if (isSeedance20()) return sd20Limits;
+    if (isSeedance25()) return sdLimits;
+    return hhLimits;
   }
 
   function maxUploadBytes() {
-    return isSeedance() ? 10 * 1024 * 1024 : 8 * 1024 * 1024;
+    return isSeedanceFamily() ? 10 * 1024 * 1024 : 8 * 1024 * 1024;
   }
 
   function apiBase() {
-    return isSeedance() ? '/seedance' : '/happyhorse';
+    return isSeedanceFamily() ? '/seedance' : '/happyhorse';
+  }
+
+  function seedanceVariant() {
+    return isSeedance20() ? '2.0' : '2.5';
+  }
+
+  function notConfiguredKey() {
+    if (isSeedanceFamily()) return 'tools.refToVideo.notConfiguredSeedance';
+    return 'tools.refToVideo.notConfiguredHappyhorse';
   }
 
   function tbIsWeChatNow() {
@@ -83,8 +104,8 @@
   }
 
   function currentResKey() {
-    var res = (resolutionSelect && resolutionSelect.value) || (isSeedance() ? '480p' : '480P');
-    if (isSeedance()) {
+    var res = (resolutionSelect && resolutionSelect.value) || (isSeedanceFamily() ? '480p' : '480P');
+    if (isSeedanceFamily()) {
       return String(res).toLowerCase().replace(/p$/i, '') + 'p';
     }
     return String(res).toUpperCase();
@@ -93,9 +114,13 @@
   function currentEstimate() {
     var dur = readDuration();
     var res = currentResKey();
-    var map = isSeedance() ? sdListPerSec : hhListPerSec;
+    var map = hhListPerSec;
+    if (isSeedance20()) map = sd20ListPerSec;
+    else if (isSeedance25()) map = sdListPerSec;
     var listRate = map[res];
-    if (listRate == null) listRate = isSeedance() ? 3.0 : 0.9;
+    if (listRate == null) {
+      listRate = isSeedance20() ? 0.4 : (isSeedance25() ? 3.0 : 0.9);
+    }
     return { duration: dur, resolution: res, price: listRate * dur * priceMarkup };
   }
 
@@ -130,29 +155,35 @@
       durationInput.value = String(Math.max(lim.min, Math.min(lim.max, cur)));
     }
     if (durationHint) {
-      durationHint.textContent = C.tr(
-        isSeedance() ? 'tools.refToVideo.durationHintSeedance' : 'tools.refToVideo.durationHintHappyhorse'
-      );
+      var dKey = 'tools.refToVideo.durationHintHappyhorse';
+      if (isSeedance20()) dKey = 'tools.refToVideo.durationHintSeedance20';
+      else if (isSeedance25()) dKey = 'tools.refToVideo.durationHintSeedance';
+      durationHint.textContent = C.tr(dKey);
     }
     if (costNote) {
-      costNote.textContent = C.tr(
-        isSeedance() ? 'tools.refToVideo.costNoteSeedance' : 'tools.refToVideo.costNoteHappyhorse'
-      );
+      var cKey = 'tools.refToVideo.costNoteHappyhorse';
+      if (isSeedance20()) cKey = 'tools.refToVideo.costNoteSeedance20';
+      else if (isSeedance25()) cKey = 'tools.refToVideo.costNoteSeedance';
+      costNote.textContent = C.tr(cKey);
     }
     if (modelLine) {
-      modelLine.textContent = C.tr(
-        isSeedance() ? 'tools.refToVideo.modelLineSeedance' : 'tools.refToVideo.modelLineHappyhorse'
-      );
+      var mKey = 'tools.refToVideo.modelLineHappyhorse';
+      if (isSeedance20()) mKey = 'tools.refToVideo.modelLineSeedance20';
+      else if (isSeedance25()) mKey = 'tools.refToVideo.modelLineSeedance';
+      modelLine.textContent = C.tr(mKey);
     }
     if (resolutionSelect) {
       var opts = resolutionSelect.options;
       for (var i = 0; i < opts.length; i++) {
         var v = opts[i].value;
         if (v === '1080P') {
-          opts[i].hidden = isSeedance();
-          opts[i].disabled = isSeedance();
+          opts[i].hidden = isSeedanceFamily();
+          opts[i].disabled = isSeedanceFamily();
         }
-        if (isSeedance()) {
+        if (isSeedance20()) {
+          if (v === '480P') opts[i].textContent = C.tr('tools.refToVideo.res480Sd20');
+          if (v === '720P') opts[i].textContent = C.tr('tools.refToVideo.res720Sd20');
+        } else if (isSeedance25()) {
           if (v === '480P') opts[i].textContent = C.tr('tools.refToVideo.res480Sd');
           if (v === '720P') opts[i].textContent = C.tr('tools.refToVideo.res720Sd');
         } else {
@@ -161,15 +192,15 @@
           if (v === '1080P') opts[i].textContent = C.tr('tools.refToVideo.res1080Hh');
         }
       }
-      if (isSeedance() && resolutionSelect.value === '1080P') {
+      if (isSeedanceFamily() && resolutionSelect.value === '1080P') {
         resolutionSelect.value = '480P';
       }
     }
     if (ratioSelect) {
       Array.prototype.forEach.call(ratioSelect.options, function (opt) {
         var extra = opt.value === 'adaptive' || opt.value === '4:3' || opt.value === '3:4' || opt.value === '21:9';
-        opt.hidden = extra && !isSeedance();
-        if (extra && !isSeedance() && ratioSelect.value === opt.value) {
+        opt.hidden = extra && !isSeedanceFamily();
+        if (extra && !isSeedanceFamily() && ratioSelect.value === opt.value) {
           ratioSelect.value = '16:9';
         }
       });
@@ -315,9 +346,28 @@
   function applySdStatus(s) {
     sdConfigured = !!s.configured;
     if (s.pricing && s.pricing.listPerSec) Object.assign(sdListPerSec, s.pricing.listPerSec);
+    if (s.pricing20 && s.pricing20.listPerSec) Object.assign(sd20ListPerSec, s.pricing20.listPerSec);
+    var v25 = s.variants && s.variants['2.5'];
+    var v20 = s.variants && s.variants['2.0'];
+    if (v25 && v25.pricing && v25.pricing.listPerSec) Object.assign(sdListPerSec, v25.pricing.listPerSec);
+    if (v20 && v20.pricing && v20.pricing.listPerSec) Object.assign(sd20ListPerSec, v20.pricing.listPerSec);
     if (s.minDuration != null) sdLimits.min = Number(s.minDuration) || sdLimits.min;
     if (s.maxDuration != null) sdLimits.max = Number(s.maxDuration) || sdLimits.max;
-    if (s.maxRefImages) sdLimits.maxRefs = Number(s.maxRefImages) || sdLimits.maxRefs;
+    if (s.maxRefImages) {
+      sdLimits.maxRefs = Number(s.maxRefImages) || sdLimits.maxRefs;
+      sd20Limits.maxRefs = Number(s.maxRefImages) || sd20Limits.maxRefs;
+    }
+    if (v25) {
+      if (v25.minDuration != null) sdLimits.min = Number(v25.minDuration) || sdLimits.min;
+      if (v25.maxDuration != null) sdLimits.max = Number(v25.maxDuration) || sdLimits.max;
+    }
+    if (v20) {
+      if (v20.minDuration != null) sd20Limits.min = Number(v20.minDuration) || sd20Limits.min;
+      if (v20.maxDuration != null) sd20Limits.max = Number(v20.maxDuration) || sd20Limits.max;
+    } else if (s.pricing20) {
+      if (s.pricing20.minDuration != null) sd20Limits.min = Number(s.pricing20.minDuration) || sd20Limits.min;
+      if (s.pricing20.maxDuration != null) sd20Limits.max = Number(s.pricing20.maxDuration) || sd20Limits.max;
+    }
     if (s.wallet) applyWallet(s.wallet);
   }
 
@@ -329,16 +379,13 @@
       applyHhStatus(pair[0] || {});
       applySdStatus(pair[1] || {});
       MAX_REFS = limits().maxRefs;
-      if (!hhConfigured && sdConfigured) modelId = 'seedance';
-      if (!sdConfigured && hhConfigured) modelId = 'happyhorse';
+      if (!hhConfigured && sdConfigured && modelId === 'happyhorse') modelId = 'seedance20';
+      if (!sdConfigured && hhConfigured && isSeedanceFamily()) modelId = 'happyhorse';
       syncModelUi();
       if (!hhConfigured && !sdConfigured) {
         C.setError(errorBox, C.tr('tools.refToVideo.notConfigured'));
       } else if (!configured()) {
-        C.setError(
-          errorBox,
-          C.tr(isSeedance() ? 'tools.refToVideo.notConfiguredSeedance' : 'tools.refToVideo.notConfiguredHappyhorse')
-        );
+        C.setError(errorBox, C.tr(notConfiguredKey()));
       } else {
         C.setError(errorBox, '');
       }
@@ -400,7 +447,7 @@
         setBusy(true, status === 'RUNNING'
           ? C.tr('tools.refToVideo.running')
           : C.tr('tools.refToVideo.queued'));
-        pollTimer = setTimeout(pollOnce, isSeedance() ? 5000 : 4000);
+        pollTimer = setTimeout(pollOnce, isSeedanceFamily() ? 5000 : 4000);
       })
       .catch(function (err) {
         stopPoll();
@@ -421,10 +468,7 @@
       return;
     }
     if (!configured()) {
-      C.setError(
-        errorBox,
-        C.tr(isSeedance() ? 'tools.refToVideo.notConfiguredSeedance' : 'tools.refToVideo.notConfiguredHappyhorse')
-      );
+      C.setError(errorBox, C.tr(notConfiguredKey()));
       return;
     }
     var dur = readDuration();
@@ -439,8 +483,9 @@
     form.append('prompt', prompt);
     form.append('duration', String(dur));
     var res = (resolutionSelect && resolutionSelect.value) || '480P';
-    if (isSeedance()) {
+    if (isSeedanceFamily()) {
       form.append('resolution', String(res).toLowerCase());
+      form.append('variant', seedanceVariant());
     } else {
       form.append('resolution', String(res).toUpperCase());
     }
@@ -466,7 +511,9 @@
 
   function downloadMp4() {
     if (!videoBlobUrl) return;
-    var name = isSeedance() ? 'seedance-r2v.mp4' : 'happyhorse-r2v.mp4';
+    var name = 'happyhorse-r2v.mp4';
+    if (isSeedance20()) name = 'seedance20-r2v.mp4';
+    else if (isSeedance25()) name = 'seedance-r2v.mp4';
     if (typeof window.tbTriggerDownload === 'function') {
       window.tbTriggerDownload(videoBlobUrl, name);
     } else {
@@ -485,10 +532,7 @@
       MAX_REFS = limits().maxRefs;
       syncModelUi();
       if (!configured()) {
-        C.setError(
-          errorBox,
-          C.tr(isSeedance() ? 'tools.refToVideo.notConfiguredSeedance' : 'tools.refToVideo.notConfiguredHappyhorse')
-        );
+        C.setError(errorBox, C.tr(notConfiguredKey()));
       } else {
         C.setError(errorBox, '');
       }

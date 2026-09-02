@@ -21,6 +21,9 @@ LK888_VIDEO_TIMEOUT = float(os.environ.get("LK888_VIDEO_TIMEOUT", "60"))
 LK888_POLL_INTERVAL = float(os.environ.get("LK888_MEDIA_POLL_INTERVAL", "3"))
 
 SEEDANCE_R2V_MODEL = "doubao-seedance-2-5-cankaosheng"
+# Seedance 2.0 参考生（逍遥）；官方「快速」档位当前 currently_unavailable，改用 Mini 作快/便宜档
+SEEDANCE20_R2V_MODEL = (os.environ.get("SEEDANCE20_R2V_MODEL") or "kwvideo-v2-ref").strip()
+SEEDANCE20_VERSION = (os.environ.get("SEEDANCE20_VERSION") or "Mini").strip() or "Mini"
 
 
 def lk888_video_configured() -> bool:
@@ -287,6 +290,34 @@ async def submit_seedance_r2v(
     }
     return await submit_media_generate(
         model=SEEDANCE_R2V_MODEL,
+        prompt=(prompt or "").strip() or "reference to video",
+        params=params,
+    )
+
+
+async def submit_seedance20_r2v(
+    *,
+    prompt: str,
+    image_data_urls: Sequence[str],
+    duration: str,
+    resolution: str,
+    aspect_ratio: str,
+    version: Optional[str] = None,
+) -> int:
+    """Submit Seedance 2.0 参考生 (kwvideo-v2-ref). duration is 'auto' or '4'..'15'."""
+    images = [u for u in image_data_urls if isinstance(u, str) and u.strip()]
+    if not images:
+        raise HTTPException(status_code=400, detail="Please upload 1–9 reference images")
+    ver = (version or SEEDANCE20_VERSION or "Mini").strip() or "Mini"
+    params: dict[str, Any] = {
+        "version": ver,
+        "duration": str(duration),
+        "resolution": resolution,
+        "aspect_ratio": aspect_ratio,
+        "images": list(images),
+    }
+    return await submit_media_generate(
+        model=SEEDANCE20_R2V_MODEL,
         prompt=(prompt or "").strip() or "reference to video",
         params=params,
     )

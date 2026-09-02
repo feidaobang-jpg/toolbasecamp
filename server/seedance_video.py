@@ -1,7 +1,9 @@
-"""Seedance 2.5 参考生 (逍遥 lk888) — async submit + poll + proxy.
+"""Seedance 参考生 (逍遥 lk888) — async submit + poll + proxy.
 
-Model: doubao-seedance-2-5-cankaosheng
-Billing: estimate list from token formula × 火山官方价；成功后优先用 status.cost 结算；× AI_PRICE_MARKUP。
+- 2.5: doubao-seedance-2-5-cankaosheng（最长 30s）
+- 2.0 快档: kwvideo-v2-ref + version=Mini（官方「快速」当前不可用；最长 15s）
+
+Billing: estimate list from token formula × 火山官方价；成功后优先用 status.cost 结算；× AI_PRICE_MARKUP.
 """
 
 from __future__ import annotations
@@ -10,7 +12,7 @@ import os
 import re
 import time
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 import httpx
@@ -27,11 +29,14 @@ from ai_wallet import (
     wallet_public,
 )
 from lk888_video import (
+    SEEDANCE20_R2V_MODEL,
+    SEEDANCE20_VERSION,
     SEEDANCE_R2V_MODEL,
     bytes_to_data_url,
     lk888_video_configured,
     poll_media_status_once,
     sniff_image_mime,
+    submit_seedance20_r2v,
     submit_seedance_r2v,
 )
 
@@ -43,13 +48,19 @@ security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/seedance", tags=["seedance"])
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
-MIN_DURATION = 4
-MAX_DURATION = 30
-DEFAULT_DURATION = 10
 MAX_REF_IMAGES = 9
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 MAX_PROMPT_CHARS = 2500
 TASK_TTL_SEC = 24 * 3600
+
+# 2.5
+MIN_DURATION_25 = 4
+MAX_DURATION_25 = 30
+DEFAULT_DURATION_25 = 10
+# 2.0
+MIN_DURATION_20 = 4
+MAX_DURATION_20 = 15
+DEFAULT_DURATION_20 = 5
 
 ALLOWED_RESOLUTIONS = {"480p", "720p"}
 ALLOWED_RATIOS = {
@@ -62,13 +73,20 @@ ALLOWED_RATIOS = {
     "21:9",
 }
 
-# 火山官方 output ≈138.86 算力/百万 token；tokens/s ≈ w×h×24/1024
+# 火山官方 output ≈138.86 算力/百万 token（2.5）；tokens/s ≈ w×h×24/1024
 _TOKENS_PER_SEC = {
     "480p": Decimal("9608"),
     "720p": Decimal("21600"),
 }
-_OUT_PRICE_PER_M = Decimal(
+_OUT_PRICE_PER_M_25 = Decimal(
     (os.environ.get("SEEDANCE_OUT_PRICE_PER_M") or "138.8625").strip() or "138.8625"
+)
+# 2.0 火山官方约 55.05/百万；Mini 系数约 0.3315（官方「快速」不可用时用 Mini）
+_OUT_PRICE_PER_M_20 = Decimal(
+    (os.environ.get("SEEDANCE20_OUT_PRICE_PER_M") or "55.0491").strip() or "55.0491"
+)
+_VERSION_MULT_20 = Decimal(
+    (os.environ.get("SEEDANCE20_VERSION_MULT") or "0.3315").strip() or "0.3315"
 )
 
 _task_owners: Dict[str, Dict[str, Any]] = {}
@@ -111,45 +129,71 @@ def _assert_can_afford(user: dict, list_price: float) -> None:
         conn.close()
 
 
-def estimate_list_price_cny(duration: int, resolution: str) -> float:
+def _normalize_variant(raw: Any) -> str:
+    s = str(raw or "2.5").strip().lower().replace("_", ".")
+    if s in ("2.0", "20", "seedance20", "fast", "mini", "kwvideo", "v2"):
+        return "2.0"
+    return "2.5"
+
+
+def estimate_list_price_cny(duration: int, resolution: str, variant: str = "2.5") -> float:
     res = (resolution or "720p").lower()
     if res not in _TOKENS_PER_SEC:
         res = "720p"
     tokens = _TOKENS_PER_SEC[res] * Decimal(int(duration))
-    cost = tokens / Decimal(1000000) * _OUT_PRICE_PER_M
+    if variant == "2.0":
+        cost = tokens / Decimal(1000000) * _OUT_PRICE_PER_M_20 * _VERSION_MULT_20
+    else:
+        cost = tokens / Decimal(1000000) * _OUT_PRICE_PER_M_25
     return float(money(cost))
 
 
-def list_price_cny(duration: int, resolution: str) -> float:
-    return estimate_list_price_cny(duration, resolution)
+def list_price_cny(duration: int, resolution: str, variant: str = "2.5") -> float:
+    return estimate_list_price_cny(duration, resolution, variant)
 
 
-def pricing_public() -> dict:
+def _list_per_sec_map(variant: str) -> dict:
+    if variant == "2.0":
+        out_m, mult = _OUT_PRICE_PER_M_20, _VERSION_MULT_20
+    else:
+        out_m, mult = _OUT_PRICE_PER_M_25, Decimal("1")
+    m = {}
+    for res, tok in _TOKENS_PER_SEC.items():
+        rate = float(money(tok / Decimal(1000000) * out_m * mult))
+        m[res] = rate
+        m[res.upper()] = rate
+        m[res.replace("p", "P")] = rate
+    return m
+
+
+def pricing_public(variant: str = "2.5") -> dict:
     markup = float(AI_MARKUP)
-    list_map = {
-        "480p": float(money(_TOKENS_PER_SEC["480p"] / Decimal(1000000) * _OUT_PRICE_PER_M)),
-        "720p": float(money(_TOKENS_PER_SEC["720p"] / Decimal(1000000) * _OUT_PRICE_PER_M)),
-        # UI often uses uppercase
-        "480P": float(money(_TOKENS_PER_SEC["480p"] / Decimal(1000000) * _OUT_PRICE_PER_M)),
-        "720P": float(money(_TOKENS_PER_SEC["720p"] / Decimal(1000000) * _OUT_PRICE_PER_M)),
-    }
+    list_map = _list_per_sec_map(variant)
+    min_d = MIN_DURATION_20 if variant == "2.0" else MIN_DURATION_25
+    max_d = MAX_DURATION_20 if variant == "2.0" else MAX_DURATION_25
+    note = (
+        "Seedance 2.0 Mini（官方「快速」暂不可用）token 估算 × 逍遥价；成功后按实际 cost 结算。"
+        if variant == "2.0"
+        else "Estimate from Seedance 2.5 token formula × 逍遥火山官方价；成功后按实际 cost 结算。"
+    )
     return {
         "listPerSec": list_map,
         "userPerSec": {k: float(user_price_cny(v)) for k, v in list_map.items()},
         "markup": markup,
         "billing": "token",
-        "note": "Estimate from Seedance token formula × 逍遥火山官方价；成功后按实际 cost 结算。",
+        "note": note,
         "examples": [
             {
                 "duration": d,
                 "resolution": r,
-                "listPriceCny": list_price_cny(d, r),
-                "userPriceCny": float(user_price_cny(list_price_cny(d, r))),
+                "listPriceCny": list_price_cny(d, r, variant),
+                "userPriceCny": float(user_price_cny(list_price_cny(d, r, variant))),
             }
             for d, r in ((5, "720p"), (10, "720p"), (5, "480p"))
         ],
-        "minDuration": MIN_DURATION,
-        "maxDuration": MAX_DURATION,
+        "minDuration": min_d,
+        "maxDuration": max_d,
+        "variant": variant,
     }
 
 
@@ -158,11 +202,38 @@ def get_seedance_config() -> dict:
         "configured": lk888_video_configured(),
         "model": SEEDANCE_R2V_MODEL,
         "r2vModel": SEEDANCE_R2V_MODEL,
+        "r2vModel20": SEEDANCE20_R2V_MODEL,
+        "version20": SEEDANCE20_VERSION,
         "provider": "lk888",
         "paid": True,
-        "pricing": pricing_public(),
-        "minDuration": MIN_DURATION,
-        "maxDuration": MAX_DURATION,
+        "pricing": pricing_public("2.5"),
+        "pricing20": pricing_public("2.0"),
+        "variants": {
+            "2.5": {
+                "id": "2.5",
+                "model": SEEDANCE_R2V_MODEL,
+                "label": "Seedance 2.5",
+                "minDuration": MIN_DURATION_25,
+                "maxDuration": MAX_DURATION_25,
+                "maxRefImages": MAX_REF_IMAGES,
+                "resolutions": ["480p", "720p"],
+                "pricing": pricing_public("2.5"),
+            },
+            "2.0": {
+                "id": "2.0",
+                "model": SEEDANCE20_R2V_MODEL,
+                "version": SEEDANCE20_VERSION,
+                "label": "Seedance 2.0 Fast (Mini)",
+                "note": "上游「快速」档暂不可用，当前走 Mini（更快更便宜试跑）",
+                "minDuration": MIN_DURATION_20,
+                "maxDuration": MAX_DURATION_20,
+                "maxRefImages": MAX_REF_IMAGES,
+                "resolutions": ["480p", "720p"],
+                "pricing": pricing_public("2.0"),
+            },
+        },
+        "minDuration": MIN_DURATION_25,
+        "maxDuration": MAX_DURATION_25,
         "maxRefImages": MAX_REF_IMAGES,
         "resolutions": ["480p", "720p"],
         "ratios": list(ALLOWED_RATIOS),
@@ -184,8 +255,11 @@ def _remember_task(
     duration: int,
     resolution: str,
     ratio: str,
+    variant: str,
+    model: str,
 ) -> None:
     _purge_tasks()
+    charge_reason = "seedance20_r2v" if variant == "2.0" else "seedance_r2v"
     _task_owners[task_id] = {
         "user_id": int(user_id),
         "created": time.time(),
@@ -193,9 +267,10 @@ def _remember_task(
         "duration": int(duration),
         "resolution": resolution,
         "ratio": ratio,
-        "model": SEEDANCE_R2V_MODEL,
+        "variant": variant,
+        "model": model,
         "mode": "r2v",
-        "charge_reason": "seedance_r2v",
+        "charge_reason": charge_reason,
         "charged": False,
         "video_url": "",
     }
@@ -231,6 +306,7 @@ def _ensure_charged(meta: Dict[str, Any], user: dict, task_id: str) -> Optional[
             meta={
                 "taskId": task_id,
                 "model": meta.get("model"),
+                "variant": meta.get("variant"),
                 "duration": meta.get("duration"),
                 "resolution": meta.get("resolution"),
                 "listPriceCny": list_price,
@@ -266,16 +342,19 @@ def _normalize_ratio(raw: str) -> str:
     return r
 
 
-def _normalize_duration(raw: Any) -> tuple[str, int]:
+def _normalize_duration(raw: Any, variant: str) -> Tuple[str, int]:
     """Return (api_duration_str, estimate_seconds)."""
+    min_d = MIN_DURATION_20 if variant == "2.0" else MIN_DURATION_25
+    max_d = MAX_DURATION_20 if variant == "2.0" else MAX_DURATION_25
+    default_d = DEFAULT_DURATION_20 if variant == "2.0" else DEFAULT_DURATION_25
     s = str(raw or "").strip().lower()
     if s in ("auto", ""):
-        return "auto", DEFAULT_DURATION
+        return "auto", default_d
     try:
         n = int(float(s))
     except (TypeError, ValueError):
-        n = DEFAULT_DURATION
-    n = max(MIN_DURATION, min(MAX_DURATION, n))
+        n = default_d
+    n = max(min_d, min(max_d, n))
     return str(n), n
 
 
@@ -303,9 +382,10 @@ def seedance_status(user: dict = Depends(_user)):
 @router.post("/r2v/submit")
 async def seedance_r2v_submit(
     prompt: str = Form(...),
-    duration: str = Form(str(DEFAULT_DURATION)),
+    duration: str = Form(str(DEFAULT_DURATION_25)),
     resolution: str = Form("720p"),
     ratio: str = Form("16:9"),
+    variant: str = Form("2.5"),
     images: List[UploadFile] = File(...),
     user: dict = Depends(_user),
 ):
@@ -320,7 +400,8 @@ async def seedance_r2v_submit(
     if len(plain) > MAX_PROMPT_CHARS:
         raise HTTPException(status_code=400, detail="Prompt is too long")
 
-    dur_api, dur_est = _normalize_duration(duration)
+    var = _normalize_variant(variant)
+    dur_api, dur_est = _normalize_duration(duration, var)
     res = _normalize_resolution(resolution)
     aspect = _normalize_ratio(ratio)
 
@@ -349,16 +430,29 @@ async def seedance_r2v_submit(
     if not data_urls:
         raise HTTPException(status_code=400, detail="Please upload 1–9 reference images")
 
-    list_price = list_price_cny(dur_est, res)
+    list_price = list_price_cny(dur_est, res, var)
     _assert_can_afford(user, list_price)
 
-    vendor_task_id = await submit_seedance_r2v(
-        prompt=plain,
-        image_data_urls=data_urls,
-        duration=dur_api,
-        resolution=res,
-        aspect_ratio=aspect,
-    )
+    if var == "2.0":
+        vendor_task_id = await submit_seedance20_r2v(
+            prompt=plain,
+            image_data_urls=data_urls,
+            duration=dur_api,
+            resolution=res,
+            aspect_ratio=aspect,
+            version=SEEDANCE20_VERSION,
+        )
+        model_name = SEEDANCE20_R2V_MODEL
+    else:
+        vendor_task_id = await submit_seedance_r2v(
+            prompt=plain,
+            image_data_urls=data_urls,
+            duration=dur_api,
+            resolution=res,
+            aspect_ratio=aspect,
+        )
+        model_name = SEEDANCE_R2V_MODEL
+
     task_id = str(vendor_task_id)
     _remember_task(
         task_id,
@@ -367,11 +461,15 @@ async def seedance_r2v_submit(
         duration=dur_est,
         resolution=res,
         ratio=aspect,
+        variant=var,
+        model=model_name,
     )
     return {
         "success": True,
         "task_id": task_id,
-        "model": SEEDANCE_R2V_MODEL,
+        "model": model_name,
+        "variant": var,
+        "version": SEEDANCE20_VERSION if var == "2.0" else None,
         "provider": "lk888",
         "duration": dur_est,
         "durationApi": dur_api,
@@ -416,6 +514,7 @@ async def seedance_r2v_task(task_id: str, user: dict = Depends(_user)):
         "success": True,
         "task_id": task_id,
         "status": status,
+        "variant": meta.get("variant") or "2.5",
         "video_url": video_url or None,
         "proxy_url": f"/seedance/r2v/proxy/{task_id}" if video_url or status == "SUCCEEDED" else None,
         "message": message,
@@ -465,8 +564,9 @@ async def seedance_r2v_proxy(task_id: str, user: dict = Depends(_user)):
                 async for chunk in resp.aiter_bytes(64 * 1024):
                     yield chunk
 
+    fname = "seedance20-r2v.mp4" if meta.get("variant") == "2.0" else "seedance-r2v.mp4"
     return StreamingResponse(
         stream(),
         media_type="video/mp4",
-        headers={"Content-Disposition": 'attachment; filename="seedance-r2v.mp4"'},
+        headers={"Content-Disposition": f'attachment; filename="{fname}"'},
     )
