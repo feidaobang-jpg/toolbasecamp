@@ -2148,56 +2148,65 @@ body.tb-admin-private #auth-status {
   }
 }
 
-/* Game sprite studio */
+/* Game sprite studio — compact action panel */
 .home-pc-wrap .gs-actions-wrap {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 6px;
-}
-.home-pc-wrap .gs-action-group {
-  padding: 12px 14px;
+  gap: 0;
+  margin-top: 8px;
+  padding: 12px 14px 10px;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #f8fafc;
 }
-.home-pc-wrap .gs-action-group-head {
+.home-pc-wrap .gs-actions-toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
-  margin-bottom: 10px;
-}
-.home-pc-wrap .gs-action-group-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #334155;
-}
-.home-pc-wrap .gs-action-group-tools {
   gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.home-pc-wrap .gs-action-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: start;
+  padding: 6px 0;
+}
+.home-pc-wrap .gs-action-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  line-height: 2.2;
+  white-space: nowrap;
 }
 .home-pc-wrap .gs-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+  margin: 0;
 }
 .home-pc-wrap .gs-action-chip {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  min-width: 4.5rem;
-  padding: 8px 12px;
-  line-height: 1.2;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 4.75rem;
+  min-height: 2.75rem;
+  padding: 6px 8px;
+  line-height: 1.15;
+  text-align: center;
 }
 .home-pc-wrap .gs-action-main {
   font-size: 13px;
   font-weight: 600;
 }
 .home-pc-wrap .gs-action-id {
-  font-size: 11px;
-  opacity: 0.65;
+  font-size: 10px;
+  opacity: 0.6;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 .home-pc-wrap .gs-preview-list {
@@ -2236,4 +2245,24 @@ body.tb-admin-private #auth-status {
   background: repeating-conic-gradient(#e2e8f0 0% 25%, #fff 0% 50%) 50% / 12px 12px;
   border-radius: 6px;
   image-rendering: pixelated;
+}
+.home-pc-wrap .gs-history-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.home-pc-wrap .gs-history-meta {
+  flex: 1;
+  min-width: 12rem;
+}
+@media (max-width: 768px) {
+  .home-pc-wrap .gs-action-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .home-pc-wrap .gs-action-row-label {
+    line-height: 1.4;
+  }
 }

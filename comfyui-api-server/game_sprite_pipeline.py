@@ -27,6 +27,13 @@ from game_sprite_postprocess import (
     pack_project_meta,
     process_animation_frames,
 )
+from output_layout import (
+    alloc_under,
+    ensure_reserved_dirs,
+    list_task_dirs,
+    rel_to_root,
+    resolve_task_dir,
+)
 
 if not hasattr(Image, "ANTIALIAS"):
     Image.ANTIALIAS = Image.Resampling.LANCZOS
@@ -272,22 +279,85 @@ class GameSpriteAPI:
 
     def _alloc_dir(self, char_id: str) -> str:
         root: Path = self.deps["output_root"]
+        ensure_reserved_dirs(root)
         base = datetime.now().strftime("%Y-%m-%d_%H-%M") + f"_gs_{char_id}"
-        root.mkdir(parents=True, exist_ok=True)
-        if not (root / base).exists():
-            return base
-        for i in range(1, 1000):
-            candidate = f"{base}_{i:02d}"
-            if not (root / candidate).exists():
-                return candidate
-        return f"{base}_{uuid.uuid4().hex[:6]}"
+        return alloc_under(root, "game_sprites", base)
 
     def _task_dir(self, task: dict) -> Path:
         root: Path = self.deps["output_root"]
         folder = (task.get("output_dir") or "").strip() or task["task_id"]
+        resolved = resolve_task_dir(root, folder)
+        if resolved is not None:
+            resolved.mkdir(parents=True, exist_ok=True)
+            return resolved
         d = root / folder
         d.mkdir(parents=True, exist_ok=True)
         return d
+
+    def _load_task_from_dir(self, folder_or_id: str) -> dict:
+        root: Path = self.deps["output_root"]
+        d = resolve_task_dir(root, folder_or_id)
+        if d is None:
+            # try match by task_id inside task.json under game_sprites + legacy
+            needle = (folder_or_id or "").strip()
+            for p in list_task_dirs(
+                root,
+                "game_sprites",
+                legacy_pred=lambda x: "_gs_" in x.name,
+                limit=120,
+            ):
+                tj = p / "task.json"
+                if not tj.exists():
+                    continue
+                try:
+                    meta = json.loads(tj.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if str(meta.get("task_id") or "") == needle:
+                    d = p
+                    break
+        if d is None or not d.is_dir():
+            raise FileNotFoundError("历史任务目录不存在")
+        tj = d / "task.json"
+        if not tj.exists():
+            raise FileNotFoundError("缺少 task.json，无法重开")
+        meta = json.loads(tj.read_text(encoding="utf-8"))
+        if not isinstance(meta, dict):
+            raise ValueError("task.json 无效")
+        rel = rel_to_root(root, d)
+        meta["output_dir"] = rel
+        tid = str(meta.get("task_id") or "").strip() or uuid.uuid4().hex
+        meta["task_id"] = tid
+        meta["cancel"] = False
+        # 刷新公开 URL（目录可能迁过）
+        stills = []
+        for s in meta.get("stills_ui") or []:
+            if not isinstance(s, dict):
+                continue
+            path = s.get("path") or ""
+            kind = s.get("kind") or ""
+            if kind == "upload" or str(s.get("id") or "").startswith("upload_"):
+                url = self._public_url(meta, f"uploads/{Path(path).name}")
+            else:
+                url = self._public_url(meta, f"stills/{Path(path).name}")
+            s2 = dict(s)
+            s2["url"] = url
+            stills.append(s2)
+        meta["stills_ui"] = stills
+        anim = meta.get("animations_meta") or {}
+        if anim:
+            # 重建 preview / zip 链接
+            self.tasks[tid] = meta
+            try:
+                self._finalize_preview(meta)
+            except Exception:
+                pass
+        else:
+            meta.setdefault("preview", [])
+        meta["status"] = meta.get("status") or "done"
+        self.tasks[tid] = meta
+        self._save_task_snapshot(meta)
+        return meta
 
     def _public_url(self, task: dict, rel: str) -> str:
         folder = (task.get("output_dir") or "").strip() or task["task_id"]
@@ -956,16 +1026,14 @@ class GameSpriteAPI:
         @app.get("/api/game-sprite/history")
         async def gs_history(limit: int = 24):
             root: Path = api.deps["output_root"]
-            if not root.exists():
-                return {"success": True, "items": []}
-            try:
-                lim = max(1, min(60, int(limit)))
-            except Exception:
-                lim = 24
-            dirs = [p for p in root.iterdir() if p.is_dir() and "_gs_" in p.name]
-            dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+            dirs = list_task_dirs(
+                root,
+                "game_sprites",
+                legacy_pred=lambda p: "_gs_" in p.name,
+                limit=limit,
+            )
             items = []
-            for p in dirs[:lim]:
+            for p in dirs:
                 meta = {}
                 tj = p / "task.json"
                 if tj.exists():
@@ -973,9 +1041,10 @@ class GameSpriteAPI:
                         meta = json.loads(tj.read_text(encoding="utf-8"))
                     except Exception:
                         meta = {}
+                folder = rel_to_root(root, p)
                 items.append(
                     {
-                        "folder": p.name,
+                        "folder": folder,
                         "char_id": meta.get("char_id") or "",
                         "brief": (meta.get("brief") or "")[:80],
                         "status": meta.get("status") or "",
@@ -984,3 +1053,21 @@ class GameSpriteAPI:
                     }
                 )
             return {"success": True, "items": items}
+
+        @app.post("/game-sprite/open")
+        @app.post("/api/game-sprite/open")
+        async def gs_open(
+            folder: str = Form(""),
+            task_id: str = Form(""),
+        ):
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="请提供 folder 或 task_id")
+            try:
+                task = api._load_task_from_dir(key)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=str(e))
+            out = {k: v for k, v in task.items() if k != "cancel"}
+            return {"success": True, **out}

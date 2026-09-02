@@ -32,6 +32,15 @@ from moviepy.editor import (
 )
 from PIL import Image
 
+from output_layout import (
+    alloc_under,
+    ensure_reserved_dirs,
+    folder_public_key,
+    list_task_dirs,
+    rel_to_root,
+    resolve_task_dir,
+)
+
 if not hasattr(Image, "ANTIALIAS"):
     Image.ANTIALIAS = Image.Resampling.LANCZOS
 
@@ -215,8 +224,11 @@ def _timing_bucket(task: dict) -> dict:
     return t
 
 
-def _build_shots_ui_from_folder(task_dir: Path, plan: dict) -> List[dict]:
+def _build_shots_ui_from_folder(
+    task_dir: Path, plan: dict, root: Optional[Path] = None
+) -> List[dict]:
     images_dir = task_dir / "images"
+    key = folder_public_key(task_dir, root)
     shots = plan.get("shots") or []
     shots_ui: List[dict] = []
     for shot in shots:
@@ -232,7 +244,7 @@ def _build_shots_ui_from_folder(task_dir: Path, plan: dict) -> List[dict]:
                 {
                     "index": ci,
                     "filename": p.name,
-                    "url": f"/output/{task_dir.name}/images/{p.name}",
+                    "url": f"/output/{key}/images/{p.name}",
                 }
             )
         if not candidates:
@@ -249,7 +261,7 @@ def _build_shots_ui_from_folder(task_dir: Path, plan: dict) -> List[dict]:
     return shots_ui
 
 
-def _history_item_from_dir(d: Path) -> Optional[dict]:
+def _history_item_from_dir(d: Path, root: Optional[Path] = None) -> Optional[dict]:
     images_dir = d / "images"
     if not d.is_dir() or not images_dir.is_dir():
         return None
@@ -263,16 +275,17 @@ def _history_item_from_dir(d: Path) -> Optional[dict]:
             plan = json.loads(plan_path.read_text(encoding="utf-8"))
         except Exception:
             plan = {}
+    key = folder_public_key(d, root)
     title = (plan.get("title") or d.name).strip()
     video_url = ""
     for name in ("trailer_16_9.mp4", "trailer_9_16.mp4"):
         if (d / name).exists():
-            video_url = f"/output/{d.name}/{name}"
+            video_url = f"/output/{key}/{name}"
             break
     if not video_url:
         extras = sorted(d.glob("trailer_*.mp4"))
         if extras:
-            video_url = f"/output/{d.name}/{extras[0].name}"
+            video_url = f"/output/{key}/{extras[0].name}"
     video_urls = []
     for p in sorted(d.glob("trailer_*.mp4")):
         # skip primary alias duplicates later in UI if needed
@@ -288,7 +301,7 @@ def _history_item_from_dir(d: Path) -> Optional[dict]:
                 "mode": mode_guess or "primary",
                 "label": label,
                 "filename": p.name,
-                "url": f"/output/{d.name}/{p.name}",
+                "url": f"/output/{key}/{p.name}",
             }
         )
     mtime = d.stat().st_mtime
@@ -301,9 +314,9 @@ def _history_item_from_dir(d: Path) -> Optional[dict]:
         )
     except Exception:
         created_display = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
-    thumbs = [f"/output/{d.name}/images/{p.name}" for p in imgs[:4]]
+    thumbs = [f"/output/{key}/images/{p.name}" for p in imgs[:4]]
     return {
-        "folder": d.name,
+        "folder": key,
         "title": title,
         "prompt": (plan.get("logline") or plan.get("synopsis") or "")[:120],
         "shot_count": len(plan.get("shots") or []) or len({p.name[:2] for p in imgs}),
@@ -894,22 +907,23 @@ class TrailerAPI:
 
     def _alloc_dir(self) -> str:
         root: Path = self.deps["output_root"]
+        ensure_reserved_dirs(root)
         base = datetime.now().strftime("%Y-%m-%d_%H-%M") + "_trailer"
-        root.mkdir(parents=True, exist_ok=True)
-        if not (root / base).exists():
-            return base
-        for i in range(1, 1000):
-            candidate = f"{base}_{i:02d}"
-            if not (root / candidate).exists():
-                return candidate
-        return f"{base}_{uuid.uuid4().hex[:6]}"
+        return alloc_under(root, "trailers", base)
 
     def _task_dir(self, task: dict) -> Path:
         root: Path = self.deps["output_root"]
         folder = (task.get("output_dir") or "").strip() or task["task_id"]
+        resolved = resolve_task_dir(root, folder)
+        if resolved is not None:
+            resolved.mkdir(parents=True, exist_ok=True)
+            return resolved
         d = root / folder
         d.mkdir(parents=True, exist_ok=True)
         return d
+
+    def _folder_key(self, task_dir: Path) -> str:
+        return folder_public_key(task_dir, self.deps["output_root"])
 
     def register(self, app) -> None:
         api = self
@@ -1083,7 +1097,7 @@ class TrailerAPI:
             (refs_dir / name).write_bytes(raw)
             item = {
                 "filename": name,
-                "url": f"/output/{task_dir.name}/global_refs/{name}",
+                "url": f"/output/{api._folder_key(task_dir)}/global_refs/{name}",
                 "source": "upload",
                 "label": (file.filename or name)[:80],
                 "selected": True,
@@ -1164,32 +1178,30 @@ class TrailerAPI:
         @app.get("/api/trailer/history")
         async def trailer_history(limit: int = 24):
             root: Path = api.deps["output_root"]
-            if not root.exists():
-                return {"success": True, "items": []}
-            try:
-                lim = max(1, min(60, int(limit)))
-            except Exception:
-                lim = 24
-            dirs = [p for p in root.iterdir() if p.is_dir()]
-            dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+
+            def _legacy_trailer(p: Path) -> bool:
+                if p.name.startswith("_"):
+                    return False
+                if "trailer" in p.name.lower():
+                    return True
+                if (p / "selected_shots.json").exists():
+                    return True
+                try:
+                    return any(p.glob("trailer_*.mp4"))
+                except Exception:
+                    return False
+
+            dirs = list_task_dirs(
+                root,
+                "trailers",
+                legacy_pred=_legacy_trailer,
+                limit=limit,
+            )
             items = []
             for d in dirs:
-                if len(items) >= lim:
-                    break
-                # 跳过测试目录；优先流水线目录（含 trailer 或 trailer_*.mp4）
-                if d.name.startswith("_"):
-                    continue
-                item = _history_item_from_dir(d)
-                if not item:
-                    continue
-                is_trailer = (
-                    "trailer" in d.name.lower()
-                    or bool(item.get("video_url"))
-                    or (d / "selected_shots.json").exists()
-                )
-                if not is_trailer:
-                    continue
-                items.append(item)
+                item = _history_item_from_dir(d, root)
+                if item:
+                    items.append(item)
             return {"success": True, "items": items}
 
         @app.post("/trailer/reuse")
@@ -1204,11 +1216,9 @@ class TrailerAPI:
             auto_compose: str = Form("0"),
         ):
             root: Path = api.deps["output_root"]
-            src_name = Path(str(folder or "").strip()).name
-            if not src_name or src_name in (".", ".."):
-                raise HTTPException(status_code=400, detail="无效的历史目录")
-            src = root / src_name
-            if not src.is_dir() or not (src / "images").is_dir():
+            raw = str(folder or "").strip().replace("\\", "/")
+            src = resolve_task_dir(root, raw)
+            if src is None or not src.is_dir() or not (src / "images").is_dir():
                 raise HTTPException(status_code=404, detail="历史任务不存在或无图片")
 
             plan_path = src / "plan.json"
@@ -1427,7 +1437,7 @@ class TrailerAPI:
             ui.append(
                 {
                     "filename": name,
-                    "url": f"/output/{task_dir.name}/global_refs/{name}",
+                    "url": f"/output/{self._folder_key(task_dir)}/global_refs/{name}",
                     "source": "ai",
                     "label": f"参考 {i + 1}",
                     "prompt": rp[:200],
@@ -1584,7 +1594,7 @@ class TrailerAPI:
                     {
                         "index": c,
                         "filename": name,
-                        "url": f"/output/{task_dir.name}/images/{name}",
+                        "url": f"/output/{self._folder_key(task_dir)}/images/{name}",
                     }
                 )
             shots_ui.append(
@@ -1700,7 +1710,7 @@ class TrailerAPI:
         timing["video_total_sec"] = round(video_total, 2)
         timing["pipeline_sec"] = round(images_sec + tts_total + video_total, 2)
 
-        task["video_url"] = f"/output/{task_dir.name}/{primary_name}"
+        task["video_url"] = f"/output/{self._folder_key(task_dir)}/{primary_name}"
         task["video_urls"] = video_urls
         task["video_duration_sec"] = float(last_result.get("duration_sec") or 0)
         task["output_directory"] = str(task_dir.resolve())
@@ -2200,7 +2210,7 @@ class TrailerAPI:
             "mode": mode if all_video else "kenburns",
             "label": engine_meta["label"],
             "filename": out_name,
-            "url": f"/output/{task_dir.name}/{out_name}",
+            "url": f"/output/{self._folder_key(task_dir)}/{out_name}",
             "engine_note": engine_note,
             "duration_sec": round(t_cursor, 1),
             "tts_sec": round(tts_sec, 2),

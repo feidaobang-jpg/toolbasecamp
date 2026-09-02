@@ -101,46 +101,43 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderActionChips() {
     if (!actionsRow) return;
     actionsRow.innerHTML = '';
+
+    var toolbar = document.createElement('div');
+    toolbar.className = 'gs-actions-toolbar action-row';
+    var defaultBtn = document.createElement('button');
+    defaultBtn.type = 'button';
+    defaultBtn.className = 'tb-btn';
+    defaultBtn.textContent = tr('privateHub.homePc.gameSpriteSelectDefault', '默认全选');
+    defaultBtn.addEventListener('click', function () {
+      selectedActions = DEFAULT_ACTIONS.slice();
+      renderActionChips();
+    });
+    var clearExtraBtn = document.createElement('button');
+    clearExtraBtn.type = 'button';
+    clearExtraBtn.className = 'tb-btn';
+    clearExtraBtn.textContent = tr('privateHub.homePc.gameSpriteClearOptional', '清空可选');
+    clearExtraBtn.addEventListener('click', function () {
+      var extra = ACTION_GROUPS[ACTION_GROUPS.length - 1].ids;
+      selectedActions = selectedActions.filter(function (id) {
+        return extra.indexOf(id) < 0;
+      });
+      renderActionChips();
+    });
+    toolbar.appendChild(defaultBtn);
+    toolbar.appendChild(clearExtraBtn);
+    actionsRow.appendChild(toolbar);
+
     ACTION_GROUPS.forEach(function (group) {
-      var section = document.createElement('div');
-      section.className = 'gs-action-group';
+      var row = document.createElement('div');
+      row.className = 'gs-action-row';
 
-      var head = document.createElement('div');
-      head.className = 'gs-action-group-head';
-      var title = document.createElement('span');
-      title.className = 'gs-action-group-title';
-      title.textContent = tr('privateHub.homePc.' + group.labelKey, group.fallback);
-      head.appendChild(title);
-
-      var tools = document.createElement('div');
-      tools.className = 'action-row gs-action-group-tools';
-      var allBtn = document.createElement('button');
-      allBtn.type = 'button';
-      allBtn.className = 'tb-btn tb-btn-sm';
-      allBtn.textContent = tr('privateHub.homePc.gameSpriteSelectAll', '全选本组');
-      allBtn.addEventListener('click', function () {
-        group.ids.forEach(function (id) {
-          if (selectedActions.indexOf(id) < 0) selectedActions.push(id);
-        });
-        renderActionChips();
-      });
-      var noneBtn = document.createElement('button');
-      noneBtn.type = 'button';
-      noneBtn.className = 'tb-btn tb-btn-sm';
-      noneBtn.textContent = tr('privateHub.homePc.gameSpriteSelectNone', '清空本组');
-      noneBtn.addEventListener('click', function () {
-        selectedActions = selectedActions.filter(function (id) {
-          return group.ids.indexOf(id) < 0;
-        });
-        renderActionChips();
-      });
-      tools.appendChild(allBtn);
-      tools.appendChild(noneBtn);
-      head.appendChild(tools);
-      section.appendChild(head);
+      var label = document.createElement('div');
+      label.className = 'gs-action-row-label';
+      label.textContent = tr('privateHub.homePc.' + group.labelKey, group.fallback);
+      row.appendChild(label);
 
       var chips = document.createElement('div');
-      chips.className = 'instruct-preset-row gs-actions';
+      chips.className = 'gs-actions';
       group.ids.forEach(function (a) {
         var btn = document.createElement('button');
         btn.type = 'button';
@@ -163,8 +160,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         chips.appendChild(btn);
       });
-      section.appendChild(chips);
-      actionsRow.appendChild(section);
+      row.appendChild(chips);
+      actionsRow.appendChild(row);
     });
     if (actionsBlock) actionsBlock.style.display = needsActions() ? '' : 'none';
   }
@@ -565,6 +562,47 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function applyOpenedTask(data) {
+    if (!data || !data.task_id) return;
+    currentTaskId = data.task_id;
+    lastLogLen = 0;
+    if (logOutput) logOutput.textContent = '';
+    appendLogs(data.logs || []);
+    updateProgress(data);
+    if (data.stills_ui && data.stills_ui.length) {
+      if (data.picked_ref && data.picked_ref.id) pickedStillId = data.picked_ref.id;
+      renderStills(data.stills_ui);
+    }
+    renderPreview(data);
+    var st = data.status || '';
+    if (st === 'running' || st === 'queued') {
+      setBusy(true);
+      startPolling();
+    } else {
+      setBusy(false);
+      stopPolling();
+    }
+  }
+
+  function openHistoryItem(it) {
+    var fd = new FormData();
+    if (it.folder) fd.append('folder', it.folder);
+    if (it.task_id) fd.append('task_id', it.task_id);
+    fetch(API_BASE + '/game-sprite/open', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) {
+          var msg = (data && data.detail) || tr('privateHub.homePc.gameSpriteOpenFail', '无法打开历史任务');
+          if (typeof window.tbNotify === 'function') window.tbNotify(String(msg));
+          return;
+        }
+        applyOpenedTask(data);
+      })
+      .catch(function (e) {
+        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+      });
+  }
+
   function loadHistory() {
     if (!historyList) return;
     fetch(API_BASE + '/game-sprite/history?limit=20')
@@ -581,15 +619,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         items.forEach(function (it) {
           var div = document.createElement('div');
-          div.className = 'trailer-history-item';
-          div.innerHTML =
-            '<div class="trailer-history-meta"><strong>' +
+          div.className = 'trailer-history-item gs-history-item';
+          var meta = document.createElement('div');
+          meta.className = 'trailer-history-meta gs-history-meta';
+          meta.innerHTML =
+            '<strong>' +
             (it.char_id || it.folder) +
             '</strong> · ' +
             (it.status || '') +
             '<br/>' +
             (it.brief || '') +
-            '</div>';
+            '<br/><span class="small-hint">' +
+            (it.folder || '') +
+            '</span>';
+          var openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.className = 'tb-btn';
+          openBtn.textContent = tr('privateHub.homePc.gameSpriteOpen', '打开');
+          openBtn.addEventListener('click', function () {
+            openHistoryItem(it);
+          });
+          div.appendChild(meta);
+          div.appendChild(openBtn);
           historyList.appendChild(div);
         });
       })

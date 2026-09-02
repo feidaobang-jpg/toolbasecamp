@@ -1717,30 +1717,30 @@ def _safe_task_dir(task_id: str) -> Path:
     folder = None
     if isinstance(task, dict):
         folder = (task.get("output_dir") or "").strip() or None
-    # 直接保存到 output 目录下，去掉 files 和 text-to-video 中间目录
+    from output_layout import resolve_task_dir
+
+    if folder:
+        resolved = resolve_task_dir(_OUTPUT_ROOT, folder)
+        if resolved is not None:
+            resolved.mkdir(parents=True, exist_ok=True)
+            return resolved
     d = _OUTPUT_ROOT / (folder or task_id)
     d.mkdir(parents=True, exist_ok=True)
     return d
 
 
 def _alloc_text_to_video_output_dir() -> str:
-    # Example: 2026-01-13_15-23
+    from output_layout import alloc_under, ensure_reserved_dirs, folder_public_key
+
+    ensure_reserved_dirs(_OUTPUT_ROOT)
     base = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    # 直接保存到 output 目录下，去掉 files 和 text-to-video 中间目录
-    root = _OUTPUT_ROOT
-    root.mkdir(parents=True, exist_ok=True)
+    return alloc_under(_OUTPUT_ROOT, "text_to_video", base)
 
-    candidate = base
-    if not (root / candidate).exists():
-        return candidate
 
-    # Collision handling within the same minute
-    for i in range(1, 1000):
-        candidate = f"{base}_{i:02d}"
-        if not (root / candidate).exists():
-            return candidate
-    # Extremely unlikely fallback
-    return f"{base}_{uuid.uuid4().hex[:6]}"
+def _ttv_public_key(task_dir: Path) -> str:
+    from output_layout import folder_public_key
+
+    return folder_public_key(task_dir, _OUTPUT_ROOT)
 
 
 def _load_font(font_size: int) -> ImageFont.FreeTypeFont:
@@ -2328,13 +2328,14 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
 
         if images_only:
             images_result: List[dict] = []
+            out_key = _ttv_public_key(task_dir)
             for group_idx, group_segments in enumerate(all_groups):
                 img_name = f"{group_idx:03d}.png"
                 caption = "".join(group_segments).strip()
                 images_result.append({
                     "index": group_idx,
                     "caption": caption,
-                    "url": f"/output/{task_dir.name}/images/{img_name}",
+                    "url": f"/output/{out_key}/images/{img_name}",
                     "filename": img_name,
                 })
             task["images"] = images_result
@@ -2412,7 +2413,7 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             _log(f"合成视频（横屏 16:9） {video_cur}/{video_total}")
             out_video_16_9 = task_dir / "result_16_9.mp4"
             await asyncio.to_thread(_compose_video_sync, image_paths_16_9, audio_paths, out_video_16_9, fps, subtitles_timeline, (1920, 1080))
-            task["video_url_16_9"] = f"/output/{task_dir.name}/result_16_9.mp4"
+            task["video_url_16_9"] = f"/output/{_ttv_public_key(task_dir)}/result_16_9.mp4"
             _log(f"合成完成（横屏 16:9） {video_cur}/{video_total}")
 
         if gen_video_9_16:
@@ -2421,7 +2422,7 @@ async def _run_text_to_video_task(task_id: str, text: str, seed: Optional[int], 
             _log(f"合成视频（竖屏 9:16） {video_cur}/{video_total}")
             out_video_9_16 = task_dir / "result_9_16.mp4"
             await asyncio.to_thread(_compose_video_sync, image_paths_9_16, audio_paths, out_video_9_16, fps, subtitles_timeline, (1080, 1920))
-            task["video_url_9_16"] = f"/output/{task_dir.name}/result_9_16.mp4"
+            task["video_url_9_16"] = f"/output/{_ttv_public_key(task_dir)}/result_9_16.mp4"
             _log(f"合成完成（竖屏 9:16） {video_cur}/{video_total}")
 
     except RuntimeError as e:
