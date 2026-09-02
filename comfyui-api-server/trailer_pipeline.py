@@ -84,6 +84,7 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "needs_image": True},
+    "wan22_t2v_5b": {"label": "Wan 2.2 5B 文生视频", "needs_image": False},
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
     "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
@@ -96,6 +97,8 @@ def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
     if m in ("wan22_5b", "wan2.2_5b", "wan22_ti2v", "wan22_ti2v_5b", "ti2v_5b", "wan5b"):
         return "wan22_5b"
+    if m in ("wan22_t2v_5b", "wan5b_t2v", "ti2v_5b_t2v", "wan2.2_5b_t2v"):
+        return "wan22_t2v_5b"
     if m in ("i2v", "wan", "wan22", "wan22_14b", "wan22_14b_gguf", "wan2.2_14b"):
         return "wan22_14b_gguf"
     if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
@@ -1770,6 +1773,7 @@ class TrailerAPI:
         upload_bytes = self.deps.get("upload_image_bytes")
         build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
         build_wan_5b = self.deps.get("build_wan22_ti2v_5b_workflow")
+        build_wan_t2v_5b = self.deps.get("build_wan22_t2v_5b_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
@@ -1787,6 +1791,7 @@ class TrailerAPI:
             and callable(run_video)
         )
         use_wan = use_wan_14b or use_wan_5b
+        use_wan_t2v_5b = mode == "wan22_t2v_5b" and callable(build_wan_t2v_5b) and callable(run_video)
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v"
@@ -1795,8 +1800,8 @@ class TrailerAPI:
             and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_wan or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
-        use_tts = use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
+        use_comfy_video = use_wan or use_wan_t2v_5b or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
+        use_tts = use_wan or use_wan_t2v_5b or use_wan_t2v or mode == "kenburns" or not use_comfy_video
 
         image_paths: List[Path] = []
         video_clip_paths: List[Path] = []
@@ -1926,6 +1931,20 @@ class TrailerAPI:
                             length=length,
                             fps=24,
                         )
+                    elif use_wan_t2v_5b:
+                        length = _length_for_duration(dur)
+                        self._log(
+                            task,
+                            f"Wan2.2-5B 文生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                        )
+                        wf = build_wan_t2v_5b(
+                            motion_t2v,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
                     elif use_wan_t2v:
                         length = _length_for_duration(dur)
                         self._log(
@@ -1981,7 +2000,7 @@ class TrailerAPI:
                         vdur = float(VideoFileClip(str(clip_path)).duration)
                     except Exception:
                         vdur = dur
-                    if use_wan or use_wan_t2v:
+                    if use_wan or use_wan_t2v_5b or use_wan_t2v:
                         dur = max(tts_len, min(10.0, max(vdur, planned * 0.85)))
                     else:
                         dur = max(3.0, min(10.0, max(vdur, planned * 0.85)))
@@ -2057,7 +2076,7 @@ class TrailerAPI:
                 create_subs,
                 24,
             )
-            if use_wan or use_wan_t2v or use_tts:
+            if use_wan or use_wan_t2v_5b or use_wan_t2v or use_tts:
                 engine_note = f"{engine_meta['label']}（IndexTTS 旁白）"
             else:
                 engine_note = f"{engine_meta['label']}（保留直出音轨）"

@@ -415,6 +415,7 @@ window.TB_LOCALES['zh-CN'] = {
             trailerSegmentCountHint: '默认 1 段；若大于分镜数，按实际分镜数封顶。',
             trailerVideoModeLabel: '成片模型',
             trailerVideoModeWan5b: '图生视频 Wan 2.2 5B（推荐）',
+            trailerVideoModeWan5bT2v: '文生视频 Wan 2.2 5B',
             trailerVideoModeWan: '图生视频 Wan 2.2 14B GGUF Q5_K_M',
             trailerVideoModeWanT2v: '文生视频 Wan 2.2 14B（fp8）',
             trailerVideoModeLtxI2v: '图生视频 LTX 2.5（直出音频）',

@@ -1065,7 +1065,7 @@ def _build_wan22_ti2v_5b_workflow(
     length: int = 81,
     fps: int = 24,
 ) -> dict:
-    """Wan 2.2 5B TI2V（图生视频，显存友好）。"""
+    """Wan 2.2 5B TI2V 图生视频（带首帧）。"""
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_ti2v_5b.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
@@ -1079,6 +1079,39 @@ def _build_wan22_ti2v_5b_workflow(
     seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
     workflow["56"]["inputs"]["image"] = comfy_image_filename
     workflow["6"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic subtle motion"
+    if negative_text is not None:
+        workflow["7"]["inputs"]["text"] = negative_text
+    workflow["55"]["inputs"]["width"] = w
+    workflow["55"]["inputs"]["height"] = h
+    workflow["55"]["inputs"]["length"] = length_i
+    workflow["3"]["inputs"]["seed"] = seed_i
+    workflow["57"]["inputs"]["fps"] = int(fps)
+    _patch_save_video_inputs(workflow.get("58") or {})
+    return workflow
+
+
+def _build_wan22_t2v_5b_workflow(
+    prompt_text: str,
+    negative_text: Optional[str] = None,
+    seed: Optional[int] = None,
+    width: int = 832,
+    height: int = 480,
+    length: int = 81,
+    fps: int = 24,
+) -> dict:
+    """Wan 2.2 5B 文生视频（同一 TI2V 权重，不接首帧）。"""
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_5b.json")
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    w = _clamp_image_side(int(width), 64, 1280)
+    h = _clamp_image_side(int(height), 64, 1280)
+    length_i = max(17, min(241, int(length)))
+    if (length_i - 1) % 4 != 0:
+        length_i = ((length_i - 1) // 4) * 4 + 1
+
+    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+    workflow["6"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic dynamic motion"
     if negative_text is not None:
         workflow["7"]["inputs"]["text"] = negative_text
     workflow["55"]["inputs"]["width"] = w
@@ -4538,6 +4571,7 @@ _trailer_api = TrailerAPI(
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
     build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
+    build_wan22_t2v_5b_workflow=_build_wan22_t2v_5b_workflow,
     build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
@@ -4565,6 +4599,7 @@ _series_studio_api = SeriesStudioAPI(
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
     build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
+    build_wan22_t2v_5b_workflow=_build_wan22_t2v_5b_workflow,
     build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,

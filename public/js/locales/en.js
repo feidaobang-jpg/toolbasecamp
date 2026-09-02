@@ -416,6 +416,7 @@ window.TB_LOCALES.en = {
             trailerSegmentCountHint: 'Default 1; if larger than the shot list, capped to the shot count.',
             trailerVideoModeLabel: 'Video model',
             trailerVideoModeWan5b: 'I2V Wan 2.2 5B (recommended)',
+            trailerVideoModeWan5bT2v: 'T2V Wan 2.2 5B',
             trailerVideoModeWan: 'I2V Wan 2.2 14B GGUF Q5_K_M',
             trailerVideoModeWanT2v: 'T2V Wan 2.2 14B (fp8)',
             trailerVideoModeLtxI2v: 'I2V LTX 2.5 (native audio)',

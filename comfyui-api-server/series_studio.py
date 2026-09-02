@@ -1208,6 +1208,7 @@ class SeriesStudioAPI:
         upload_bytes = self.deps.get("upload_image_bytes")
         build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
         build_wan_5b = self.deps.get("build_wan22_ti2v_5b_workflow")
+        build_wan_t2v_5b = self.deps.get("build_wan22_t2v_5b_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
@@ -1230,13 +1231,14 @@ class SeriesStudioAPI:
             and callable(run_video)
         )
         use_wan = use_wan_14b or use_wan_5b
+        use_wan_t2v_5b = mode == "wan22_t2v_5b" and callable(build_wan_t2v_5b) and callable(run_video)
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v" and callable(upload_bytes) and callable(build_ltx_i2v) and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_wan or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
-        use_tts = use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
+        use_comfy_video = use_wan or use_wan_t2v_5b or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
+        use_tts = use_wan or use_wan_t2v_5b or use_wan_t2v or mode == "kenburns" or not use_comfy_video
 
         started_at = _utc_now_str()
         stills_sec = 0.0
@@ -1384,6 +1386,20 @@ class SeriesStudioAPI:
                             length=length,
                             fps=24,
                         )
+                    elif use_wan_t2v_5b:
+                        length = _length_for_duration(clip_dur)
+                        self._log(
+                            series_id,
+                            f"文生视频 {label}（Wan2.2-5B · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                        )
+                        wf = build_wan_t2v_5b(
+                            motion_t2v,
+                            seed=random.randint(1, 2_000_000_000),
+                            width=i2v_wh[0],
+                            height=i2v_wh[1],
+                            length=length,
+                            fps=24,
+                        )
                     elif use_wan_t2v:
                         length = _length_for_duration(clip_dur)
                         self._log(
@@ -1426,10 +1442,10 @@ class SeriesStudioAPI:
                             fps=24,
                         )
                     vid_bytes = await self._run_video_with_heartbeat(series_id, label, wf)
-                    target = raw_clip if (use_wan or use_wan_t2v) else clip_path
+                    target = raw_clip if (use_wan or use_wan_t2v_5b or use_wan_t2v) else clip_path
                     target.write_bytes(vid_bytes)
                     made_mp4 = True
-                    if use_wan or use_wan_t2v:
+                    if use_wan or use_wan_t2v_5b or use_wan_t2v:
                         try:
                             from moviepy.editor import VideoFileClip
 
@@ -1455,7 +1471,7 @@ class SeriesStudioAPI:
                 await asyncio.to_thread(_pad_or_trim_wav, raw_wav, final_wav, clip_dur)
                 audio_rel = self._rel(final_wav)
 
-            if made_mp4 and (use_wan or use_wan_t2v):
+            if made_mp4 and (use_wan or use_wan_t2v_5b or use_wan_t2v):
                 await asyncio.to_thread(
                     _compose_clips_with_audio_sync,
                     [raw_clip],
