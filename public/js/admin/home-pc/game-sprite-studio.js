@@ -240,20 +240,22 @@ document.addEventListener('DOMContentLoaded', function () {
     back: ['gameSpriteStillBack', '背面'],
     left: ['gameSpriteStillLeft', '左侧面'],
     right: ['gameSpriteStillRight', '右侧面'],
-    side_00: ['gameSpriteStillSide', '侧视定妆'],
-    side_01: ['gameSpriteStillSide', '侧视定妆'],
-    side_02: ['gameSpriteStillSide', '侧视定妆'],
     concept: ['gameSpriteStillConcept', '概念图'],
     upload: ['gameSpriteStillUpload', '上传']
   };
 
   function stillKindLabel(kind) {
     var k = String(kind || '');
+    if (k.indexOf('side_') === 0) {
+      var idx = parseInt(k.slice(5), 10);
+      var base = tr('privateHub.homePc.gameSpriteStillSide', '侧视定妆');
+      if (!isNaN(idx) && idx > 0) {
+        return base + ' ' + (idx + 1);
+      }
+      return base;
+    }
     if (STILL_KIND_LABELS[k]) {
       return tr('privateHub.homePc.' + STILL_KIND_LABELS[k][0], STILL_KIND_LABELS[k][1]);
-    }
-    if (k.indexOf('side_') === 0) {
-      return tr('privateHub.homePc.gameSpriteStillSide', '侧视定妆');
     }
     return k;
   }
@@ -292,20 +294,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     stillsBox.style.display = 'block';
     var generating = !!(opts && opts.generating);
-    var hintEl = stillsBox.querySelector('.gs-stills-live-hint');
-    if (!hintEl) {
-      hintEl = document.createElement('p');
-      hintEl.className = 'small-hint gs-stills-live-hint';
-      var title = stillsBox.querySelector('.home-pc-result-title');
-      if (title && title.nextSibling) stillsBox.insertBefore(hintEl, title.nextSibling);
-      else stillsBox.insertBefore(hintEl, stillsList);
+    var hintEl =
+      stillsBox.querySelector('.gs-stills-hint') ||
+      stillsBox.querySelector('p.small-hint[data-i18n="privateHub.homePc.gameSpriteStillsHint"]') ||
+      stillsBox.querySelector('p.small-hint');
+    if (hintEl) {
+      hintEl.classList.add('gs-stills-hint');
+      hintEl.textContent = generating
+        ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
+        : tr(
+            'privateHub.homePc.gameSpriteStillsHint',
+            '默认三视图：正面、背面、侧视定妆（绿幕抠成透明）。动作必须选「侧视定妆」；正/背只作设定对照。点放大镜看大图。'
+          );
     }
-    hintEl.textContent = generating
-      ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
-      : tr(
-          'privateHub.homePc.gameSpriteStillsHint',
-          '默认三视图：正面、背面、侧视定妆（绿幕抠成透明）。动作必须选「侧视定妆」；正/背只作设定对照。点放大镜看大图。'
-        );
+    // 清掉旧版误插的第二行提示
+    stillsBox.querySelectorAll('.gs-stills-live-hint').forEach(function (el) {
+      if (el !== hintEl) el.remove();
+    });
     if (confirmPickBtn) confirmPickBtn.disabled = !!generating;
 
     // 未选手动时，默认勾选侧视定妆

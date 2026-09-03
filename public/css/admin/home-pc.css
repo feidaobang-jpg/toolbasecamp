@@ -2289,6 +2289,19 @@ body.tb-admin-private #auth-status {
   background-position: 0 0, 0 8px, 8px -8px, -8px 0;
   background-color: #0f172a;
 }
+.home-pc-wrap .gs-stills-actions {
+  align-items: stretch;
+}
+.home-pc-wrap .gs-stills-actions > .tb-btn,
+.home-pc-wrap .gs-stills-actions > label.tb-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
 @media (max-width: 768px) {
   .home-pc-wrap .gs-action-row {
     grid-template-columns: 1fr;

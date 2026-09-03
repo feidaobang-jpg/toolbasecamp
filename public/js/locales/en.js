@@ -350,6 +350,7 @@ window.TB_LOCALES.en = {
             gameSpriteCanvasLabel: 'Canvas',
             gameSpriteFpsLabel: 'Anim FPS',
             gameSpriteCandidatesLabel: 'Side hero candidates',
+            gameSpriteCandidatesHint: '1 = 3 stills (front+back+side); 2 = 4 stills (extra side pick)',
             gameSpriteActionsLabel: 'Actions (character/monster)',
             gameSpriteActionsHint: 'Chinese labels; Godot keeps English anim names. Props/buildings/scenes skip actions.',
             gameSpriteActGroupIdle: 'Idle',

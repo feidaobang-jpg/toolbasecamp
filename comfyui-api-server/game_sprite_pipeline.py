@@ -7,6 +7,7 @@ import asyncio
 import io
 import json
 import random
+import re
 import shutil
 import time
 import uuid
@@ -43,23 +44,23 @@ _GAME_SPRITE_TASKS: Dict[str, dict] = {}
 _VISUAL_STYLES = {
     "pixel": {
         "label": "像素",
-        "suffix": "pixel art game sprite, limited palette, crisp pixels, no anti-aliasing, side-view",
-        "zh": "像素风游戏精灵，清晰像素，侧视",
+        "suffix": "pixel art game sprite, limited palette, crisp pixels, no anti-aliasing",
+        "zh": "像素风游戏精灵，清晰像素",
     },
     "cartoon": {
         "label": "卡通",
-        "suffix": "stylized cartoon game character sprite, clean outlines, flat colors, side-view",
-        "zh": "卡通游戏角色，干净描边，侧视",
+        "suffix": "stylized cartoon game character sprite, clean outlines, flat colors",
+        "zh": "卡通游戏角色，干净描边",
     },
     "anime": {
         "label": "二次元",
-        "suffix": "anime game character sprite, cel shading, clean lineart, side-view",
-        "zh": "二次元游戏角色，赛璐璐，侧视",
+        "suffix": "anime game character sprite, cel shading, clean lineart",
+        "zh": "二次元游戏角色，赛璐璐",
     },
     "handdrawn": {
         "label": "手绘",
-        "suffix": "hand-drawn game sprite illustration, soft shading, side-view",
-        "zh": "手绘游戏精灵，侧视",
+        "suffix": "hand-drawn game sprite illustration, soft shading",
+        "zh": "手绘游戏精灵",
     },
 }
 
@@ -168,6 +169,22 @@ _STILL_CHROMA_NEG = (
     "foreshortening, three-quarter view, 3/4 view, dynamic pose, "
     "close-up bust only, cropped legs, multi-panel, collage, transparent background"
 )
+# 设定里常写「侧视横版」——生成正/背时必须剥掉，否则会压过视角指令
+_VIEW_POISON_RE = re.compile(
+    r"(?i)"
+    r"(侧视|侧面|横版|正视|正面|背面|背视|三视图|正交|"
+    r"side[\s\-]?view|side[\s\-]?scroll(?:er)?|profile view|"
+    r"front[\s\-]?view|back[\s\-]?view|rear[\s\-]?view|"
+    r"three[\s\-]?quarter|3[\s\/]?4[\s\-]?view|orthographic)"
+)
+
+
+def _brief_core_for_view(brief: str, view: str) -> str:
+    core = (brief or "").strip() or "game character"
+    if (view or "").strip().lower() in ("front", "back", "left", "right"):
+        core = _VIEW_POISON_RE.sub(" ", core)
+        core = re.sub(r"\s{2,}", " ", core).strip(" ,;，；") or "game character"
+    return core
 
 
 def _build_still_prompt(
@@ -185,7 +202,8 @@ def _build_still_prompt(
       concept — 道具/建筑/场景
     """
     sty = _style_suffix(style)
-    core = (brief or "").strip() or "game character"
+    view_n = (view or "side").strip().lower()
+    core = _brief_core_for_view(brief, view_n)
     if asset_type in ("prop", "building", "scene"):
         kind = {
             "prop": "game prop item icon/sprite",
@@ -197,36 +215,38 @@ def _build_still_prompt(
             "suitable for 2D game asset, high clarity"
         )
 
-    view_n = (view or "side").strip().lower()
     view_specs = {
         "front": (
-            "STRICT orthographic FRONT view only: nose and both shoulders face the camera, "
-            "chest facing viewer, A-pose, arms away from torso, feet parallel, "
-            "NOT a side view, NOT a three-quarter turn"
+            "CAMERA LOCK: orthographic FRONT elevation only. "
+            "Both eyes visible, both ears if any, both shoulders equal width, chest facing camera, "
+            "symmetric A-pose, feet pointing at camera. "
+            "Forbidden: profile, side silhouette, 3/4 turn, looking left/right, cape from the side."
         ),
         "back": (
-            "STRICT orthographic BACK view only: character faces directly away, "
-            "back of head and cape/armor toward camera, A-pose matching front, "
-            "NO face, NOT a side view, NOT three-quarter"
+            "CAMERA LOCK: orthographic BACK elevation only. "
+            "Character faces directly away; show back of helmet/head, backplates, cape from behind. "
+            "No face, no nose, no eyes. Symmetric A-pose matching a front turnaround. "
+            "Forbidden: profile, side silhouette, 3/4 turn."
         ),
         "left": (
-            "STRICT orthographic LEFT PROFILE: true 90-degree silhouette facing left, "
-            "one eye max, A-pose, NOT front, NOT three-quarter"
+            "CAMERA LOCK: orthographic LEFT PROFILE, true 90-degree silhouette facing left, "
+            "one eye max, A-pose. Forbidden: front, three-quarter."
         ),
         "right": (
-            "STRICT orthographic RIGHT PROFILE: true 90-degree silhouette facing right, "
-            "one eye max, A-pose, NOT front, NOT three-quarter"
+            "CAMERA LOCK: orthographic RIGHT PROFILE, true 90-degree silhouette facing right, "
+            "one eye max, A-pose. Forbidden: front, three-quarter."
         ),
         "side": (
-            "2D side-scroll game sprite START FRAME: true RIGHT profile, facing right, "
-            "full-body idle standing, feet planted, clear silhouette for animation"
+            "CAMERA LOCK: 2D side-scroll sprite START FRAME, true RIGHT profile facing right, "
+            "full-body idle standing, feet planted, clear silhouette for animation, side-view"
         ),
     }
     pose = view_specs.get(view_n) or view_specs["side"]
+    # 视角指令放最前，避免被设定/风格词淹没
     return (
-        f"square 1:1 canvas, single character only, ONE camera angle only, "
-        f"{pose}, locked design: {core}, {sty}, {_STILL_CHROMA}, "
-        f"full body head-to-toe centered, crisp game art"
+        f"{pose}. square 1:1 canvas, single character only, ONE camera angle only, "
+        f"character design (ignore any camera words in design text): {core}, {sty}, "
+        f"{_STILL_CHROMA}, full body head-to-toe centered, crisp game art turnaround sheet panel"
     )
 
 
@@ -609,7 +629,17 @@ class GameSpriteAPI:
                 task["progress"] = {"current": done - 1, "total": total}
                 self._log(task, f"文生图 {kind} ({done}/{total})…")
                 img = await self._txt2img(
-                    prompt, gen_w, gen_h, extra_negative=extra_neg
+                    prompt,
+                    gen_w,
+                    gen_h,
+                    extra_negative=(
+                        extra_neg
+                        + (
+                            ", side view, profile silhouette, looking sideways, cape from the side"
+                            if kind in ("front", "back")
+                            else ""
+                        )
+                    ),
                 )
                 # 先留绿幕原图，再 rembg 成透明 PNG 给预览/选图
                 raw_name = f"{kind}_raw.png"

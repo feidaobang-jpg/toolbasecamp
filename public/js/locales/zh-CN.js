@@ -349,6 +349,7 @@ window.TB_LOCALES['zh-CN'] = {
             gameSpriteCanvasLabel: '画布',
             gameSpriteFpsLabel: '动画 FPS',
             gameSpriteCandidatesLabel: '侧视定妆候选数',
+            gameSpriteCandidatesHint: '选1=共3张（正+背+侧）；选2=共4张（多一张侧视备选）',
             gameSpriteActionsLabel: '动作（角色/怪物）',
             gameSpriteActionsHint: '中文标签；导出仍用英文动画名。道具/建筑/场景不生成动作。',
             gameSpriteActGroupIdle: '待机',
