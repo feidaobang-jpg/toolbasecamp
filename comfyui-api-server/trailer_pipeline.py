@@ -449,6 +449,7 @@ def _normalize_bible(obj: dict, prompt: str = "") -> dict:
                 "name": name or f"角色{len(characters) + 1}",
                 "look": look[:400],
                 "role": str(c.get("role") or "").strip()[:80],
+                "voice": str(c.get("voice") or "").strip()[:120],
             }
         )
     style_notes = str(
@@ -463,34 +464,107 @@ def _normalize_bible(obj: dict, prompt: str = "") -> dict:
     palette = str(raw.get("palette") or raw.get("color_palette") or "").strip()[:200]
     mood = str(raw.get("mood") or raw.get("overall_mood") or "").strip()[:120]
     ref_prompts: List[str] = []
-    raw_refs = raw.get("ref_prompts") or raw.get("reference_prompts") or []
+    ref_sheets: List[dict] = []
+    raw_refs = raw.get("ref_prompts") or raw.get("reference_prompts") or raw.get("ref_sheets") or []
     if isinstance(raw_refs, list):
-        for p in raw_refs[:6]:
-            t = str(p or "").strip()
-            if t:
+        for i, p in enumerate(raw_refs[:6]):
+            if isinstance(p, dict):
+                t = str(p.get("prompt") or "").strip()
+                if not t:
+                    continue
+                kind = str(p.get("kind") or "mood").strip().lower()
+                if kind not in ("character", "scene", "mood"):
+                    kind = "mood"
+                sheet = {
+                    "kind": kind,
+                    "character_id": str(p.get("character_id") or "").strip()[:16],
+                    "scene_key": str(p.get("scene_key") or "").strip()[:32],
+                    "label": str(p.get("label") or f"参考{i + 1}").strip()[:40],
+                    "prompt": t[:500],
+                }
+                ref_sheets.append(sheet)
                 ref_prompts.append(t[:500])
+            else:
+                t = str(p or "").strip()
+                if t:
+                    ref_prompts.append(t[:500])
+                    ref_sheets.append(
+                        {
+                            "kind": "mood",
+                            "character_id": "",
+                            "scene_key": "",
+                            "label": f"参考{len(ref_sheets) + 1}",
+                            "prompt": t[:500],
+                        }
+                    )
     if not ref_prompts:
         # 从角色/世界观拼出默认参考图提示
         if characters:
             for ch in characters[:3]:
-                ref_prompts.append(
+                t = (
                     f"character design sheet of {ch.get('name')}: {ch.get('look')}, "
                     f"full body and face close-up, consistent costume, clean background, "
                     f"key visual, no text, no watermark"
                 )
+                ref_prompts.append(t)
+                ref_sheets.append(
+                    {
+                        "kind": "character",
+                        "character_id": str(ch.get("id") or ""),
+                        "scene_key": "",
+                        "label": f"主体 {ch.get('name')}",
+                        "prompt": t[:500],
+                    }
+                )
         if world_look:
-            ref_prompts.append(
+            t = (
                 f"establishing mood board: {world_look}. cinematic environment key art, "
                 f"no characters or tiny figures only, no text, no watermark"
             )
+            ref_prompts.append(t)
+            ref_sheets.append(
+                {
+                    "kind": "scene",
+                    "character_id": "",
+                    "scene_key": "world",
+                    "label": "场景情绪板",
+                    "prompt": t[:500],
+                }
+            )
         if not ref_prompts:
             tip = (prompt or "cinematic story world").strip()[:120]
-            ref_prompts = [
-                f"cinematic key visual mood board for: {tip}, consistent art style, no text",
-                f"main character design sheet for story: {tip}, full body, face detail, no text",
+            t1 = f"cinematic key visual mood board for: {tip}, consistent art style, no text"
+            t2 = f"main character design sheet for story: {tip}, full body, face detail, no text"
+            ref_prompts = [t1, t2]
+            ref_sheets = [
+                {
+                    "kind": "scene",
+                    "character_id": "",
+                    "scene_key": "world",
+                    "label": "情绪板",
+                    "prompt": t1,
+                },
+                {
+                    "kind": "character",
+                    "character_id": "",
+                    "scene_key": "",
+                    "label": "主角定妆",
+                    "prompt": t2,
+                },
             ]
     if not style_notes:
         style_notes = "cinematic, coherent color grading, consistent character design across shots"
+    if not ref_sheets and ref_prompts:
+        for i, t in enumerate(ref_prompts[:6]):
+            ref_sheets.append(
+                {
+                    "kind": "mood",
+                    "character_id": "",
+                    "scene_key": "",
+                    "label": f"参考{i + 1}",
+                    "prompt": t,
+                }
+            )
     return {
         "style_notes": style_notes,
         "world_look": world_look,
@@ -499,6 +573,7 @@ def _normalize_bible(obj: dict, prompt: str = "") -> dict:
         "mood": mood,
         "characters": characters,
         "ref_prompts": ref_prompts[:6],
+        "ref_sheets": ref_sheets[:6],
     }
 
 

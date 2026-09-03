@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var freeVramBtn = document.getElementById('free-vram-btn');
   var playlistBtn = document.getElementById('playlist-btn');
   var playlistFromPreviewBtn = document.getElementById('playlist-from-preview-btn');
+  var composeEpisodeBtn = document.getElementById('compose-episode-btn');
   var cancelBtn = document.getElementById('cancel-btn');
   var progressWrap = document.getElementById('progress-wrap');
   var progressStatus = document.getElementById('progress-status');
@@ -252,7 +253,9 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       var cap = document.createElement('span');
       cap.className = 'trailer-cand-cap';
-      cap.textContent = (it.source === 'upload' ? '上传 · ' : 'AI · ') + (it.label || fn);
+      cap.textContent =
+        (it.kind === 'character' ? '角色 · ' : it.kind === 'scene' ? '场景 · ' : it.source === 'upload' ? '上传 · ' : 'AI · ') +
+        (it.label || fn);
       label.appendChild(input);
       label.appendChild(img);
       label.appendChild(zoomBtn);
@@ -561,8 +564,30 @@ document.addEventListener('DOMContentLoaded', function () {
       block.className = 'series-scene-block';
       var h = document.createElement('h4');
       h.className = 'series-scene-title';
-      h.textContent = '第' + sc.sc_no + '场 · ' + (sc.title || '') + '（' + statusLabel(sc.status) + '）';
+      h.textContent =
+        '第' +
+        sc.sc_no +
+        '场 · ' +
+        (sc.title || '') +
+        (sc.location ? ' · ' + sc.location : '') +
+        '（' +
+        statusLabel(sc.status) +
+        '）';
       block.appendChild(h);
+      var sceneActions = document.createElement('div');
+      sceneActions.className = 'action-row series-scene-actions';
+      var shootSceneBtn = document.createElement('button');
+      shootSceneBtn.type = 'button';
+      shootSceneBtn.className = 'tb-btn';
+      shootSceneBtn.setAttribute('data-job-btn', '1');
+      shootSceneBtn.textContent = tr('privateHub.homePc.seriesShootScene', '一键拍摄本场');
+      shootSceneBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        postJob('/series/continue-scene', { scene_id: sc.id, force: '0' });
+      });
+      sceneActions.appendChild(shootSceneBtn);
+      block.appendChild(sceneActions);
       var grid = document.createElement('div');
       grid.className = 'series-shot-grid';
       (sc.shots || []).forEach(function (sh) {
@@ -588,7 +613,13 @@ document.addEventListener('DOMContentLoaded', function () {
           '<div class="series-shot-vo">' +
           escapeHtml((sh.voiceover || '').slice(0, 48)) +
           '</div>' +
-          (sh.visual_prompt
+          (sh.director_prompt
+            ? '<div class="series-shot-vp" title="' +
+              escapeHtml(String(sh.director_prompt).slice(0, 800)) +
+              '">' +
+              escapeHtml(String(sh.director_prompt).slice(0, 96)) +
+              '</div>'
+            : sh.visual_prompt
             ? '<div class="series-shot-vp">' + escapeHtml(String(sh.visual_prompt).slice(0, 72)) + '</div>'
             : '') +
           '</div>';
@@ -1087,6 +1118,49 @@ document.addEventListener('DOMContentLoaded', function () {
   if (continueBtn) {
     continueBtn.addEventListener('click', function () {
       postJob('/series/continue', {});
+    });
+  }
+  if (composeEpisodeBtn) {
+    composeEpisodeBtn.addEventListener('click', function () {
+      if (!currentSeriesId || !selectedEpId) {
+        if (typeof window.tbNotify === 'function') {
+          window.tbNotify(tr('privateHub.homePc.seriesNeedEpisode', '请先打开一集'));
+        }
+        return;
+      }
+      var fd = new FormData();
+      fd.append('series_id', currentSeriesId);
+      fd.append('episode_id', selectedEpId);
+      setBusy(true);
+      fetch(API_BASE + '/series/compose-episode', { method: 'POST', body: fd })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { res: res, body: body };
+          });
+        })
+        .then(function (pack) {
+          setBusy(false);
+          if (!pack.res.ok || !pack.body.success) {
+            throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+          }
+          var msg =
+            tr('privateHub.homePc.seriesComposeDone', '本集成片已导出') +
+            '（' +
+            (pack.body.shot_count || 0) +
+            ' 镜）';
+          if (typeof window.tbNotify === 'function') window.tbNotify(msg);
+          if (pack.body.url && shotPreviewVideo) {
+            shotPreviewBox.style.display = 'block';
+            shotPreviewVideo.src = resolveUrl(pack.body.url);
+            shotPreviewVideo.play().catch(function () {});
+          }
+        })
+        .catch(function (err) {
+          setBusy(false);
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(window.HomePcApi.friendlyFetchError(err));
+          }
+        });
     });
   }
   if (regenAllBtn) {

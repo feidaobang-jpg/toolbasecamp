@@ -198,6 +198,14 @@ class SeriesDB:
                     "stills_sec": "REAL NOT NULL DEFAULT 0",
                     "video_sec": "REAL NOT NULL DEFAULT 0",
                     "total_sec": "REAL NOT NULL DEFAULT 0",
+                    "director_prompt": "TEXT NOT NULL DEFAULT ''",
+                },
+            )
+            self._ensure_columns(
+                conn,
+                "scene",
+                {
+                    "location": "TEXT NOT NULL DEFAULT ''",
                 },
             )
 
@@ -250,8 +258,11 @@ def deepseek_series_plan(
     "palette": "英文色调",
     "mood": "英文整体情绪",
     "relationships": "中文或英文人物关系",
-    "characters": [{{"id":"c1","name":"角色名","look":"英文外形","role":"身份"}}],
-    "ref_prompts": ["英文定妆/情绪板提示1","…共6条，含主角定妆与场景情绪板"]
+    "characters": [{{"id":"c1","name":"角色名","look":"英文外形","role":"身份","voice":"中文音色描述如偏低沉厚三十岁男声"}}],
+    "ref_prompts": [
+      {{"kind":"character","character_id":"c1","label":"主体1 角色名","prompt":"英文定妆：单人全身/半身，绿幕或干净背景"}},
+      {{"kind":"scene","scene_key":"s1","label":"场景1 地点名","prompt":"英文场景情绪板：空镜环境光影"}}
+    ]
   }},
   "episodes": [
     {{
@@ -262,12 +273,14 @@ def deepseek_series_plan(
         {{
           "sc_no": 1,
           "title": "场标题",
+          "location": "地点·时段 如 唐宫寝殿·夜",
           "shots": [
             {{
               "shot_no": 1,
-              "voiceover": "中文旁白，适合约{dur:g}秒口述",
-              "visual_prompt": "英文文生图提示：主体动作环境光影景别，符合 bible",
-              "camera": "medium|close-up|wide|..."
+              "voiceover": "中文旁白或对白要点，适合约{dur:g}秒",
+              "visual_prompt": "英文文生图静帧：主体动作环境光影景别，符合 bible",
+              "director_prompt": "中文导演级分镜长提示：镜头运动起落幅、演技微动作、光线、音色、禁止字幕水印；可引用 <主体1><场景1>，不要写 @图片（绑定由系统后补）",
+              "camera": "medium|close-up|wide|tracking|..."
             }}
           ]
         }}
@@ -278,11 +291,12 @@ def deepseek_series_plan(
 
 规则：
 1. 集/场/镜编号从 1 开始连续。
-2. visual_prompt 必须用英文，且足够具体：至少 35 个英文单词，写清主体是谁、动作、环境、光线、景别/镜头运动；每镜画面差异要大，禁止空泛套话。voiceover 中文一句即可。不要字幕/水印描述。
-3. 用户未细写画风时，由 bible 完整定调并贯穿所有 visual_prompt。
-4. episodes 数组长度必须等于 {ep_n}；每集 scenes 长度必须等于 {sc_n}；每场 shots 长度必须等于 {sh_n}。禁止多写。
-5. ref_prompts 必须给满 6 条英文提示：优先各主角单独定妆/半身+全身，再补场景情绪板；外形与 characters 一致。
-6. 本集若是动作戏，至少一半镜头要有明确动作/冲突，不要只会「站桩合影」。
+2. visual_prompt 必须用英文，且足够具体：至少 35 个英文单词，写清主体是谁、动作、环境、光线、景别；每镜画面差异要大。voiceover 中文一句即可。不要字幕/水印描述。
+3. director_prompt 必须用中文，写成「可直接喂视频模型」的长分镜：含镜头运动（起幅→落幅）、演技细节（肩线/手部/表情）、动机光、环境声/台词音色；可写 {{台词}}；至少 120 个汉字；禁止空泛「很悲愤」。
+4. 用户未细写画风时，由 bible 完整定调并贯穿所有 visual_prompt / director_prompt。
+5. episodes 数组长度必须等于 {ep_n}；每集 scenes 长度必须等于 {sc_n}；每场 shots 长度必须等于 {sh_n}。禁止多写。
+6. ref_prompts：优先每个主角 1 条 character 定妆，再补 1～2 条 scene 情绪板，总共 4～6 条；kind 必填 character|scene；外形与 characters 一致。
+7. 本集若是动作戏，至少一半镜头要有明确动作/冲突，不要只会「站桩合影」。
 """
     try:
         import requests
@@ -392,13 +406,21 @@ def _normalize_series_plan(
                     continue
                 vo = str(sh.get("voiceover") or sh.get("narration") or "").strip()
                 vis = str(sh.get("visual_prompt") or sh.get("prompt") or "").strip()
-                if not vo and not vis:
+                director = str(sh.get("director_prompt") or sh.get("seedance_prompt") or "").strip()
+                if not vo and not vis and not director:
                     continue
+                if not director and (vo or vis):
+                    director = (
+                        f"镜头按 {str(sh.get('camera') or 'medium')} 运动。"
+                        f"{vo}。"
+                        f"画面要求：{vis[:280]}"
+                    )
                 shots_out.append(
                     {
                         "shot_no": int(sh.get("shot_no") or hi),
                         "voiceover": vo or f"镜头 {hi}",
                         "visual_prompt": vis or f"cinematic shot: {vo[:100]}",
+                        "director_prompt": director,
                         "camera": str(sh.get("camera") or "medium").strip()[:32],
                         "duration_sec": dur,
                     }
@@ -411,6 +433,7 @@ def _normalize_series_plan(
                 {
                     "sc_no": sc_no,
                     "title": str(sc.get("title") or f"第{sc_no}场").strip()[:80],
+                    "location": str(sc.get("location") or sc.get("title") or "").strip()[:120],
                     "shots": shots_out,
                 }
             )
@@ -675,12 +698,17 @@ class SeriesStudioAPI:
                         total_sec = _elapsed_since_utc(started_utc)
                     elapsed_label = _format_elapsed(total_sec) if total_sec > 0 else ""
                     img_full, img_thumb = self._image_urls(sh["image_rel"])
+                    try:
+                        director_prompt = str(sh["director_prompt"] or "")
+                    except (KeyError, IndexError):
+                        director_prompt = ""
                     sh_list.append(
                         {
                             "id": sh["id"],
                             "shot_no": sh["shot_no"],
                             "voiceover": sh["voiceover"],
                             "visual_prompt": sh["visual_prompt"],
+                            "director_prompt": director_prompt,
                             "camera": sh["camera"],
                             "duration_sec": sh["duration_sec"],
                             "status": sh["status"],
@@ -703,11 +731,16 @@ class SeriesStudioAPI:
                             "video_label": _format_elapsed(video_sec) if video_sec > 0 else "",
                         }
                     )
+                try:
+                    location = str(sc["location"] or "")
+                except (KeyError, IndexError):
+                    location = ""
                 sc_list.append(
                     {
                         "id": sc["id"],
                         "sc_no": sc["sc_no"],
                         "title": sc["title"],
+                        "location": location,
                         "status": sc["status"],
                         "shots": sh_list,
                     }
@@ -833,8 +866,8 @@ class SeriesStudioAPI:
                     sc_id = _new_id("sc_")
                     conn.execute(
                         """
-                        INSERT INTO scene(id, series_id, episode_id, sc_no, title, status)
-                        VALUES (?,?,?,?,?,?)
+                        INSERT INTO scene(id, series_id, episode_id, sc_no, title, status, location)
+                        VALUES (?,?,?,?,?,?,?)
                         """,
                         (
                             sc_id,
@@ -843,6 +876,7 @@ class SeriesStudioAPI:
                             int(sc["sc_no"]),
                             sc.get("title") or f"第{sc['sc_no']}场",
                             "planned",
+                            sc.get("location") or sc.get("title") or "",
                         ),
                     )
                     for sh in sc.get("shots") or []:
@@ -851,9 +885,9 @@ class SeriesStudioAPI:
                             """
                             INSERT INTO shot(
                               id, series_id, episode_id, scene_id, shot_no,
-                              voiceover, visual_prompt, camera, duration_sec,
+                              voiceover, visual_prompt, director_prompt, camera, duration_sec,
                               status, version, updated_at
-                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
                             """,
                             (
                                 sh_id,
@@ -863,6 +897,7 @@ class SeriesStudioAPI:
                                 int(sh["shot_no"]),
                                 sh.get("voiceover") or "",
                                 sh.get("visual_prompt") or "",
+                                sh.get("director_prompt") or "",
                                 sh.get("camera") or "medium",
                                 float(sh.get("duration_sec") or dur),
                                 "planned",
@@ -1304,10 +1339,17 @@ class SeriesStudioAPI:
                 mot_col = (row["motion_prompt"] or "").strip()
             except (KeyError, IndexError):
                 pass
+            director = ""
+            try:
+                director = (row["director_prompt"] or "").strip()
+            except (KeyError, IndexError):
+                director = ""
+            # 视频运动提示：优先导演长提示（猫斯卡式），否则回退 visual_prompt
+            motion_vis = director or base_prompt
             shot_motion = {
                 "voiceover": vo,
-                "visual_prompt": base_prompt,
-                "motion_prompt": mot_col,
+                "visual_prompt": motion_vis,
+                "motion_prompt": mot_col or (director[:1200] if director else ""),
                 "camera": row["camera"] or "medium",
             }
             motion_i2v = _build_shot_motion_prompt(shot_motion, i2v=True)
@@ -1634,9 +1676,14 @@ class SeriesStudioAPI:
         with self.db.connect() as conn:
             syn = self._get_series_row(conn, series_id)["synopsis"]
         prompts = list((bible or {}).get("ref_prompts") or [])[:6]
+        sheets = list((bible or {}).get("ref_sheets") or [])[:6]
         if not prompts:
-            prompts = _normalize_bible({"bible": bible}, syn).get("ref_prompts") or []
+            nb = _normalize_bible({"bible": bible}, syn)
+            prompts = nb.get("ref_prompts") or []
+            sheets = nb.get("ref_sheets") or []
         prompts = list(prompts)[:6]
+        while len(sheets) < len(prompts):
+            sheets.append({"kind": "mood", "label": f"参考{len(sheets) + 1}", "prompt": prompts[len(sheets)]})
 
         w, h = _ASPECT_SIZES[aspect]
         style = _style_meta(style_key)
@@ -1653,7 +1700,10 @@ class SeriesStudioAPI:
         for i, rp in enumerate(prompts):
             if self._cancel.get(series_id):
                 return
-            self._log(series_id, f"全剧参考图 {i + 1}/{len(prompts)}")
+            sheet = sheets[i] if i < len(sheets) else {}
+            kind = str((sheet or {}).get("kind") or "mood")
+            label = str((sheet or {}).get("label") or f"参考 {i + 1}")
+            self._log(series_id, f"全剧参考图 {i + 1}/{len(prompts)} · {label}")
             pos = (
                 f"{no_text}{bible_prefix}{rp}. {style['suffix']}. "
                 f"{style['zh']}. series style guide still, no text, no watermark."
@@ -1671,7 +1721,10 @@ class SeriesStudioAPI:
                     "thumb_url": self._image_urls(rel)[1],
                     "rel": rel,
                     "source": "ai",
-                    "label": f"参考 {i + 1}",
+                    "label": label,
+                    "kind": kind,
+                    "character_id": str((sheet or {}).get("character_id") or ""),
+                    "scene_key": str((sheet or {}).get("scene_key") or ""),
                     "prompt": rp[:500],
                     "base_prompt": rp[:500],
                     "selected": True,
@@ -1686,6 +1739,57 @@ class SeriesStudioAPI:
             series_id,
             f"全剧参考图完成，共 {len(ui)} 张，耗时 {_format_elapsed(time.perf_counter() - t0)}",
         )
+
+    def _bind_director_prompts_with_refs(self, series_id: str, refs: List[dict]) -> None:
+        """确认参考图后：给每镜 director_prompt 前缀补上 @图片N → <主体/场景> 绑定。"""
+        selected = [x for x in (refs or []) if isinstance(x, dict) and x.get("selected")]
+        if not selected:
+            return
+        bind_lines: List[str] = []
+        char_i = 0
+        scene_i = 0
+        for i, it in enumerate(selected, start=1):
+            kind = str(it.get("kind") or "mood").lower()
+            label = str(it.get("label") or f"参考{i}").strip()
+            slot = f"@图片{i}"
+            it["bind_slot"] = slot
+            if kind == "character":
+                char_i += 1
+                tag = f"<主体{char_i}>"
+                bind_lines.append(f"将 {slot} 中的「{label}」定义为 {tag}；")
+            elif kind == "scene":
+                scene_i += 1
+                tag = f"<场景{scene_i}>"
+                bind_lines.append(f"将 {slot} 中的「{label}」定义为 {tag}；")
+            else:
+                bind_lines.append(f"将 {slot}（{label}）作为造型/情绪参考；")
+        preamble = "".join(bind_lines) + "以上参考图锁定身份与场景，勿另生脸。"
+        with self.db.connect() as conn:
+            conn.execute(
+                "UPDATE series SET global_refs_json=?, updated_at=? WHERE id=?",
+                (json.dumps(refs, ensure_ascii=False), _utc_now_str(), series_id),
+            )
+            rows = conn.execute(
+                "SELECT id, director_prompt, visual_prompt, voiceover, camera FROM shot WHERE series_id=?",
+                (series_id,),
+            ).fetchall()
+            for sh in rows:
+                body = (sh["director_prompt"] or "").strip()
+                if not body:
+                    body = (
+                        f"镜头 {sh['camera'] or 'medium'}。"
+                        f"{(sh['voiceover'] or '').strip()}。"
+                        f"{(sh['visual_prompt'] or '').strip()[:400]}"
+                    )
+                if "@图片" in body or preamble[:12] in body:
+                    merged = body
+                else:
+                    merged = f"{preamble}\n{body}"
+                conn.execute(
+                    "UPDATE shot SET director_prompt=?, updated_at=? WHERE id=?",
+                    (merged[:8000], _utc_now_str(), sh["id"]),
+                )
+        self._log(series_id, f"已写入导演提示词绑定前缀（{len(selected)} 张 @图片）")
 
     def register(self, app) -> None:
         api = self
@@ -1934,6 +2038,11 @@ class SeriesStudioAPI:
                 series_id,
                 "跳过全剧参考图" if do_skip else f"已确认全剧参考图 {len(selected)} 张",
             )
+            if not do_skip:
+                try:
+                    api._bind_director_prompts_with_refs(series_id, refs)
+                except Exception as e:
+                    api._log(series_id, f"绑定导演提示词跳过：{e}")
             return {"success": True, "series": api._tree(series_id)}
 
         @app.post("/series/upload-global-ref")
@@ -2019,6 +2128,143 @@ class SeriesStudioAPI:
                 api._continue_job(series_id, only_shot_id=shot_id, force=do_force)
             )
             return {"success": True, "series_id": series_id}
+
+        @app.post("/series/continue-scene")
+        @app.post("/api/series/continue-scene")
+        async def series_continue_scene(
+            series_id: str = Form(...),
+            scene_id: str = Form(...),
+            force: str = Form("0"),
+        ):
+            """一键拍摄本场：从该场第一镜拍到最后一镜。"""
+            with api.db.connect() as conn:
+                s = api._get_series_row(conn, series_id)
+                rows = conn.execute(
+                    """
+                    SELECT id FROM shot
+                    WHERE series_id=? AND scene_id=?
+                    ORDER BY shot_no
+                    """,
+                    (series_id, scene_id),
+                ).fetchall()
+            if s["job_status"] == "running":
+                raise HTTPException(status_code=400, detail="已有任务在跑")
+            if not rows:
+                raise HTTPException(status_code=400, detail="该场没有分镜")
+            do_force = str(force or "0") in ("1", "true", "True")
+            shot_ids = [r["id"] for r in rows]
+            api._log(series_id, f"一键拍摄本场（{len(shot_ids)} 镜）…")
+
+            async def _scene_job() -> None:
+                async with api._lock(series_id):
+                    api._cancel[series_id] = False
+                    api._set_job(series_id, "running")
+                    try:
+                        for sid in shot_ids:
+                            if api._cancel.get(series_id):
+                                api._log(series_id, "用户取消任务")
+                                break
+                            await api._run_one_shot(series_id, sid, force=do_force)
+                        api._set_job(series_id, "idle")
+                    except Exception as e:
+                        api._set_job(series_id, "error", str(e)[:500])
+                        api._log(series_id, f"本场拍摄失败：{e}")
+                    finally:
+                        api._cancel[series_id] = False
+
+            asyncio.create_task(_scene_job())
+            return {"success": True, "series_id": series_id, "shot_ids": shot_ids}
+
+        @app.post("/series/compose-episode")
+        @app.post("/api/series/compose-episode")
+        async def series_compose_episode(
+            series_id: str = Form(...),
+            episode_id: str = Form(...),
+        ):
+            """把本集已完成镜头按顺序拼成一条成片。"""
+            with api.db.connect() as conn:
+                s = api._get_series_row(conn, series_id)
+                ep = conn.execute(
+                    "SELECT * FROM episode WHERE id=? AND series_id=?",
+                    (episode_id, series_id),
+                ).fetchone()
+                if not ep:
+                    raise HTTPException(status_code=404, detail="集不存在")
+                shots = conn.execute(
+                    """
+                    SELECT sh.*, sc.sc_no FROM shot sh
+                    JOIN scene sc ON sc.id = sh.scene_id
+                    WHERE sh.series_id=? AND sh.episode_id=?
+                    ORDER BY sc.sc_no, sh.shot_no
+                    """,
+                    (series_id, episode_id),
+                ).fetchall()
+            aspect = _normalize_aspect(s["aspect"])
+            out_size = _ASPECT_VIDEO[aspect]
+            video_paths: List[Path] = []
+            audio_paths: List[Path] = []
+            durations: List[float] = []
+            root = api._series_dir(series_id)
+            for sh in shots:
+                if sh["status"] not in ("done", "approved"):
+                    continue
+                clip_rel = (sh["clip_rel"] or "").strip()
+                if not clip_rel:
+                    continue
+                vpath = root / clip_rel if not Path(clip_rel).is_absolute() else Path(clip_rel)
+                # clip_rel may be relative to output_root
+                if not vpath.exists():
+                    alt = Path(api.deps["output_root"]) / clip_rel
+                    vpath = alt if alt.exists() else vpath
+                if not vpath.exists():
+                    continue
+                video_paths.append(vpath)
+                arel = (sh["audio_rel"] or "").strip()
+                apath = None
+                if arel:
+                    ap = root / arel
+                    if not ap.exists():
+                        ap = Path(api.deps["output_root"]) / arel
+                    if ap.exists():
+                        apath = ap
+                audio_paths.append(apath or vpath)  # dummy; compose tolerates missing audio via exists check
+                try:
+                    durations.append(float(sh["duration_sec"] or 5))
+                except Exception:
+                    durations.append(5.0)
+            if not video_paths:
+                raise HTTPException(status_code=400, detail="本集还没有可拼接的完成镜头")
+            out_dir = root / f"ep{int(ep['ep_no']):02d}" / "exports"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_video = out_dir / f"episode_{int(ep['ep_no']):02d}.mp4"
+            # audio_paths aligned; if same as video, compose uses clip audio if file missing for separate wav
+            fixed_audio: List[Path] = []
+            for i, ap in enumerate(audio_paths):
+                if ap.exists() and ap.suffix.lower() in (".wav", ".mp3", ".m4a"):
+                    fixed_audio.append(ap)
+                else:
+                    # empty placeholder path that won't exist → compose keeps video track only
+                    fixed_audio.append(out_dir / f"_no_audio_{i}.wav")
+            await asyncio.to_thread(
+                _compose_clips_with_audio_sync,
+                video_paths,
+                fixed_audio,
+                durations,
+                out_video,
+                out_size,
+                None,
+                None,
+                24,
+            )
+            rel = api._rel(out_video)
+            api._log(series_id, f"本集成片已导出：{out_video.name}（{len(video_paths)} 镜）")
+            return {
+                "success": True,
+                "url": api._url(rel),
+                "rel": rel,
+                "path": str(out_video.resolve()),
+                "shot_count": len(video_paths),
+            }
 
         @app.post("/series/continue")
         @app.post("/api/series/continue")
