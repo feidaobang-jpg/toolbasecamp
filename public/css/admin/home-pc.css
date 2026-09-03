@@ -2269,6 +2269,26 @@ body.tb-admin-private #auth-status {
   flex: 1;
   min-width: 12rem;
 }
+/* 定妆参考：正方形格子，contain 不裁切 */
+.home-pc-wrap .gs-stills-grid {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.home-pc-wrap .gs-stills-grid .trailer-cand {
+  background: #0f172a;
+}
+.home-pc-wrap .gs-stills-grid .trailer-cand img {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background:
+    linear-gradient(45deg, #1e293b 25%, transparent 25%),
+    linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1e293b 75%),
+    linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-color: #0f172a;
+}
 @media (max-width: 768px) {
   .home-pc-wrap .gs-action-row {
     grid-template-columns: 1fr;
@@ -2276,5 +2296,8 @@ body.tb-admin-private #auth-status {
   }
   .home-pc-wrap .gs-action-row-label {
     line-height: 1.4;
+  }
+  .home-pc-wrap .gs-stills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

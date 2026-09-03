@@ -384,7 +384,7 @@ window.TB_LOCALES['zh-CN'] = {
             gameSpriteOpenFail: '无法打开历史任务',
             gameSpriteStart: '生成定妆',
             gameSpriteStillsTitle: '选择主参考图',
-            gameSpriteStillsHint: '固定生成正面/背面/左侧面/右侧面各1张，再加侧视定妆候选。动作请优先选「侧视定妆」。点放大镜可看大图。',
+            gameSpriteStillsHint: '正/背/左/右为正交参考（正方形预览）；动作请优先选「侧视定妆」。点放大镜看大图。Z-Image 仍可能略偏 3/4，可重跑定妆。',
             gameSpriteStillsLive: '生成中：已出的图可先预览，全部完成后再确认选图。',
             gameSpriteStillFront: '正面',
             gameSpriteStillBack: '背面',

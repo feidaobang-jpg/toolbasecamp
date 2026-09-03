@@ -174,7 +174,8 @@ def _build_still_prompt(
     core = (brief or "").strip() or "game character"
     neg_bits = (
         "no text, no watermark, no UI, no collage, no multi-panel sheet, "
-        "solid color or plain backdrop, full body in frame, feet visible"
+        "no perspective distortion, no three-quarter view, no camera tilt, "
+        "solid flat color backdrop, full body in frame, feet visible, head to toe"
     )
     if asset_type in ("prop", "building", "scene"):
         kind = {
@@ -190,31 +191,34 @@ def _build_still_prompt(
     view_n = (view or "side").strip().lower()
     view_specs = {
         "front": (
-            "orthographic front view, character facing camera, full-body standing, "
-            "symmetrical front, clear face and chest details"
+            "model sheet orthographic FRONT elevation, character facing straight at camera, "
+            "A-pose or neutral T-pose, arms slightly away from body, "
+            "perfectly symmetrical front, flat lighting, no foreshortening"
         ),
         "back": (
-            "orthographic back view, character facing away from camera, full-body standing, "
-            "show cape/backpack/back armor clearly, no face"
+            "model sheet orthographic BACK elevation, character facing directly away, "
+            "same A-pose as front view, show cape/back armor fully, "
+            "no face visible, flat lighting, no foreshortening"
         ),
         "left": (
-            "orthographic left profile, character facing left, full-body standing side view, "
-            "clean silhouette"
+            "model sheet orthographic LEFT PROFILE elevation, true 90-degree side view facing left, "
+            "same standing A-pose, clean silhouette, one eye visible at most, "
+            "flat lighting, no three-quarter angle"
         ),
         "right": (
-            "orthographic right profile, character facing right, full-body standing side view, "
-            "clean silhouette"
+            "model sheet orthographic RIGHT PROFILE elevation, true 90-degree side view facing right, "
+            "same standing A-pose, clean silhouette, flat lighting, no three-quarter angle"
         ),
         "side": (
-            "2D side-view game sprite reference, character facing right, full-body standing, "
-            "feet planted, ideal hero pose for animation"
+            "2D side-scroll game sprite hero reference, true profile facing right, "
+            "full-body standing idle, feet planted, flat lighting, suitable as animation start frame"
         ),
     }
     pose = view_specs.get(view_n) or view_specs["side"]
     return (
-        f"single 2D game character reference image, ONE pose only (not a turnaround sheet), "
-        f"{pose}, same character design: {core}, {sty}, consistent proportions, "
-        f"{neg_bits}, high clarity game art"
+        f"square canvas character concept, single 2D game character reference, ONE view only "
+        f"(not a turnaround collage), {pose}, identical character design locked: {core}, {sty}, "
+        f"consistent proportions across a model sheet, {neg_bits}, crisp game art"
     )
 
 
@@ -433,18 +437,23 @@ class GameSpriteAPI:
             except Exception:
                 pass
 
-    async def _txt2img(self, prompt: str, width: int, height: int) -> bytes:
+    async def _txt2img(
+        self, prompt: str, width: int, height: int, *, extra_negative: str = ""
+    ) -> bytes:
         build = self.deps["build_z_image_workflow"]
         run = self.deps["run_comfyui_and_get_last_image"]
         neg_fn = self.deps.get("default_txt2img_negative")
         prefix = self.deps.get("image_no_text_prefix") or ""
-        neg = neg_fn("", width=width, height=height) if callable(neg_fn) else None
+        neg = neg_fn("", width=width, height=height) if callable(neg_fn) else ""
+        extra = (extra_negative or "").strip()
+        if extra:
+            neg = f"{neg}, {extra}" if neg else extra
         wf = build(
             prefix + prompt,
             seed=random.randint(1, 2_000_000_000),
             width=width,
             height=height,
-            negative_text=neg,
+            negative_text=neg or None,
         )
         return await run(wf)
 
@@ -494,8 +503,13 @@ class GameSpriteAPI:
             style = task["visual_style"]
             brief = task["brief"]
             cand_n = int(task.get("candidates") or 2)
-            # 文生图用稍大画布，后处理再缩到 sprite canvas
+            # 正方形画布，方便网格预览与正交参考
             gen_w, gen_h = 768, 768
+            # 正交参考再加强负面（透视/3/4）
+            extra_neg = (
+                "perspective, dutch angle, foreshortening, three-quarter view, "
+                "dynamic pose, action pose, cropped legs, close-up bust only"
+            )
             prompts: List[Tuple[str, str]] = []
             if asset_type in ("character", "monster"):
                 prompts = _character_still_jobs(brief, asset_type, style, cand_n)
@@ -522,7 +536,9 @@ class GameSpriteAPI:
                 done += 1
                 task["progress"] = {"current": done - 1, "total": total}
                 self._log(task, f"文生图 {kind} ({done}/{total})…")
-                img = await self._txt2img(prompt, gen_w, gen_h)
+                img = await self._txt2img(
+                    prompt, gen_w, gen_h, extra_negative=extra_neg
+                )
                 name = f"{kind}.png"
                 path = stills_dir / name
                 path.write_bytes(img)
