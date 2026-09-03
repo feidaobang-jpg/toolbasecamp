@@ -717,11 +717,63 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function selectChip(row, attr, value) {
+    if (!row || value == null || value === '') return;
+    var want = String(value);
+    var matched = false;
+    row.querySelectorAll('.rec-chip').forEach(function (btn) {
+      var on = btn.getAttribute(attr) === want;
+      btn.classList.toggle('is-active', on);
+      if (on) matched = true;
+    });
+    return matched;
+  }
+
+  function fillFormFromTask(data) {
+    if (!data) return;
+    if (briefInput && data.brief != null) briefInput.value = String(data.brief);
+    if (charName) {
+      charName.value = String(data.char_name || data.char_id || '');
+    }
+    if (data.asset_type) {
+      selectedType = String(data.asset_type);
+      selectChip(typeRow, 'data-type', selectedType);
+      if (actionsBlock) actionsBlock.style.display = needsActions() ? '' : 'none';
+    }
+    if (data.visual_style) {
+      selectedStyle = String(data.visual_style);
+      selectChip(styleRow, 'data-style', selectedStyle);
+    }
+    if (canvasSelect && data.canvas) {
+      var cw = Array.isArray(data.canvas) ? data.canvas[0] : data.canvas;
+      var key = String(cw || '');
+      if (canvasSelect.querySelector('option[value="' + key + '"]')) {
+        canvasSelect.value = key;
+      }
+    }
+    if (fpsSelect && data.fps != null) {
+      var fpsKey = String(data.fps);
+      if (fpsSelect.querySelector('option[value="' + fpsKey + '"]')) {
+        fpsSelect.value = fpsKey;
+      }
+    }
+    if (candidatesSelect && data.candidates != null) {
+      var candKey = String(data.candidates);
+      if (candidatesSelect.querySelector('option[value="' + candKey + '"]')) {
+        candidatesSelect.value = candKey;
+      }
+    }
+    if (Array.isArray(data.actions) && data.actions.length) {
+      setSelectedActions(data.actions);
+    }
+  }
+
   function applyOpenedTask(data) {
     if (!data || !data.task_id) return;
     currentTaskId = data.task_id;
     lastLogLen = 0;
     if (logOutput) logOutput.textContent = '';
+    fillFormFromTask(data);
     appendLogs(data.logs || []);
     updateProgress(data);
     if (data.stills_ui && data.stills_ui.length) {
