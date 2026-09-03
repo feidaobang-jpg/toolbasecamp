@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc49" />
-  <script src="../../../../js/locales/en.js?v=gsprite5"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=gsprite5"></script>
+  <script src="../../../../js/locales/en.js?v=gsprite6"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=gsprite6"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -93,7 +93,7 @@
                   </select>
                 </div>
                 <div class="input-control">
-                  <label for="candidates-select" data-i18n="privateHub.homePc.gameSpriteCandidatesLabel">定妆候选数</label>
+                  <label for="candidates-select" data-i18n="privateHub.homePc.gameSpriteCandidatesLabel">侧视定妆候选</label>
                   <select id="candidates-select" class="text-input">
                     <option value="1">1</option>
                     <option value="2" selected>2</option>
@@ -125,7 +125,7 @@
 
             <div id="stills-box" class="home-pc-result-box" style="display:none;">
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.gameSpriteStillsTitle">选择主参考图</h3>
-              <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">勾选一张定妆图作为 IP，再点确认进入动作生成；也可上传自己的参考图。</p>
+              <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">固定生成正面/背面/左侧面/右侧面各1张，再加侧视定妆候选。动作请优先选「侧视定妆」。点放大镜可看大图。</p>
               <div id="stills-list" class="trailer-cand-grid"></div>
               <div class="action-row" style="margin-top:12px;">
                 <button type="button" id="confirm-pick-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteConfirmPick">确认选图并生成动作</button>
@@ -184,6 +184,12 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite4"></script>
+  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite6"></script>
+  <div id="gs-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
+    <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
+    <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">
+      <img id="gs-lightbox-img" alt="" title="点击关闭" />
+    </div>
+  </div>
 </body>
 </html>

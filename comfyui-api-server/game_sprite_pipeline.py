@@ -162,11 +162,20 @@ def _build_still_prompt(
     *,
     asset_type: str,
     style: str,
-    turnaround: bool,
+    view: str = "side",
 ) -> str:
+    """
+    view:
+      front / back / left / right — 单独全身正交参考
+      side — 侧视全身定妆（动作 IP 优先选这个）
+      concept — 道具/建筑/场景
+    """
     sty = _style_suffix(style)
     core = (brief or "").strip() or "game character"
-    neg_bits = "no text, no watermark, no UI, solid color or plain backdrop"
+    neg_bits = (
+        "no text, no watermark, no UI, no collage, no multi-panel sheet, "
+        "solid color or plain backdrop, full body in frame, feet visible"
+    )
     if asset_type in ("prop", "building", "scene"):
         kind = {
             "prop": "game prop item icon/sprite",
@@ -177,16 +186,53 @@ def _build_still_prompt(
             f"{kind}, {core}, {sty}, centered, full subject visible, {neg_bits}, "
             "suitable for 2D game asset, high clarity"
         )
-    if turnaround:
-        return (
-            f"2D side-view game character turnaround sheet, same character three views "
-            f"left side / front / right side on one image, full body, feet visible, "
-            f"{core}, {sty}, consistent design, {neg_bits}, game sprite reference sheet"
-        )
+
+    view_n = (view or "side").strip().lower()
+    view_specs = {
+        "front": (
+            "orthographic front view, character facing camera, full-body standing, "
+            "symmetrical front, clear face and chest details"
+        ),
+        "back": (
+            "orthographic back view, character facing away from camera, full-body standing, "
+            "show cape/backpack/back armor clearly, no face"
+        ),
+        "left": (
+            "orthographic left profile, character facing left, full-body standing side view, "
+            "clean silhouette"
+        ),
+        "right": (
+            "orthographic right profile, character facing right, full-body standing side view, "
+            "clean silhouette"
+        ),
+        "side": (
+            "2D side-view game sprite reference, character facing right, full-body standing, "
+            "feet planted, ideal hero pose for animation"
+        ),
+    }
+    pose = view_specs.get(view_n) or view_specs["side"]
     return (
-        f"2D side-view game character full-body standing pose, facing right, feet planted, "
-        f"{core}, {sty}, single character, {neg_bits}, clean game sprite reference"
+        f"single 2D game character reference image, ONE pose only (not a turnaround sheet), "
+        f"{pose}, same character design: {core}, {sty}, consistent proportions, "
+        f"{neg_bits}, high clarity game art"
     )
+
+
+def _character_still_jobs(brief: str, asset_type: str, style: str, side_candidates: int) -> List[Tuple[str, str]]:
+    """固定四面参考 + 侧视定妆候选，共约 4+N 张。"""
+    jobs: List[Tuple[str, str]] = []
+    for view in ("front", "back", "left", "right"):
+        jobs.append(
+            (
+                view,
+                _build_still_prompt(brief, asset_type=asset_type, style=style, view=view),
+            )
+        )
+    n = max(1, min(3, int(side_candidates or 2)))
+    side_prompt = _build_still_prompt(brief, asset_type=asset_type, style=style, view="side")
+    for i in range(n):
+        jobs.append((f"side_{i:02d}", side_prompt))
+    return jobs
 
 
 def _build_action_prompt(brief: str, action: str, style: str) -> str:
@@ -452,43 +498,57 @@ class GameSpriteAPI:
             gen_w, gen_h = 768, 768
             prompts: List[Tuple[str, str]] = []
             if asset_type in ("character", "monster"):
-                prompts.append(("turnaround", _build_still_prompt(brief, asset_type=asset_type, style=style, turnaround=True)))
-                prompts.append(("portrait", _build_still_prompt(brief, asset_type=asset_type, style=style, turnaround=False)))
+                prompts = _character_still_jobs(brief, asset_type, style, cand_n)
             else:
-                prompts.append(("concept", _build_still_prompt(brief, asset_type=asset_type, style=style, turnaround=False)))
+                prompts.append(
+                    (
+                        "concept",
+                        _build_still_prompt(
+                            brief, asset_type=asset_type, style=style, view="side"
+                        ),
+                    )
+                )
 
             ui: List[dict] = []
-            total = len(prompts) * cand_n
+            total = len(prompts)
             done = 0
             for kind, prompt in prompts:
-                for i in range(cand_n):
-                    if task.get("cancel"):
-                        task["status"] = "cancelled"
-                        self._log(task, "已取消")
-                        self._save_task_snapshot(task)
-                        return
-                    done += 1
-                    task["progress"] = {"current": done, "total": total}
-                    self._log(task, f"文生图 {kind} {i + 1}/{cand_n}…")
-                    img = await self._txt2img(prompt, gen_w, gen_h)
-                    name = f"{kind}_{i:02d}.png"
-                    path = stills_dir / name
-                    path.write_bytes(img)
-                    ui.append(
-                        {
-                            "id": f"{kind}_{i:02d}",
-                            "kind": kind,
-                            "url": self._public_url(task, f"stills/{name}"),
-                            "path": name,
-                        }
-                    )
-                    await self._free_vram()
+                if task.get("cancel"):
+                    task["status"] = "cancelled"
+                    self._log(task, "已取消")
+                    self._save_task_snapshot(task)
+                    return
+                done += 1
+                task["progress"] = {"current": done, "total": total}
+                self._log(task, f"文生图 {kind} ({done}/{total})…")
+                img = await self._txt2img(prompt, gen_w, gen_h)
+                name = f"{kind}.png"
+                path = stills_dir / name
+                path.write_bytes(img)
+                # 保存提示词便于排查
+                try:
+                    (stills_dir / f"{kind}.txt").write_text(prompt, encoding="utf-8")
+                except Exception:
+                    pass
+                ui.append(
+                    {
+                        "id": kind,
+                        "kind": kind,
+                        "url": self._public_url(task, f"stills/{name}"),
+                        "path": name,
+                        "prompt": prompt[:240],
+                    }
+                )
+                await self._free_vram()
 
             task["stills_ui"] = ui
             task["stage"] = "pick"
             task["status"] = "waiting_pick"
             task["progress"] = {"current": total, "total": total}
-            self._log(task, "定妆图已生成，请勾选主参考图后继续")
+            self._log(
+                task,
+                f"已生成 {total} 张参考（正/背/左/右 + 侧视定妆×{cand_n if asset_type in ('character','monster') else 0}），请选主参考后继续",
+            )
             self._save_task_snapshot(task)
         except Exception as e:
             task["status"] = "failed"

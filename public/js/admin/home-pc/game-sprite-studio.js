@@ -235,6 +235,54 @@ document.addEventListener('DOMContentLoaded', function () {
     if (progressBar) progressBar.style.width = pct + '%';
   }
 
+  var STILL_KIND_LABELS = {
+    front: ['gameSpriteStillFront', '正面'],
+    back: ['gameSpriteStillBack', '背面'],
+    left: ['gameSpriteStillLeft', '左侧面'],
+    right: ['gameSpriteStillRight', '右侧面'],
+    side_00: ['gameSpriteStillSide', '侧视定妆'],
+    side_01: ['gameSpriteStillSide', '侧视定妆'],
+    side_02: ['gameSpriteStillSide', '侧视定妆'],
+    concept: ['gameSpriteStillConcept', '概念图'],
+    upload: ['gameSpriteStillUpload', '上传']
+  };
+
+  function stillKindLabel(kind) {
+    var k = String(kind || '');
+    if (STILL_KIND_LABELS[k]) {
+      return tr('privateHub.homePc.' + STILL_KIND_LABELS[k][0], STILL_KIND_LABELS[k][1]);
+    }
+    if (k.indexOf('side_') === 0) {
+      return tr('privateHub.homePc.gameSpriteStillSide', '侧视定妆');
+    }
+    return k;
+  }
+
+  var lightbox = document.getElementById('gs-lightbox');
+  var lightboxImg = document.getElementById('gs-lightbox-img');
+  var lightboxBackdrop = lightbox ? lightbox.querySelector('.trailer-lightbox-backdrop') : null;
+
+  function openLightbox(src) {
+    if (!lightbox || !lightboxImg || !src) return;
+    lightboxImg.src = src;
+    lightboxImg.title = tr('privateHub.homePc.trailerPreviewTapClose', '点击关闭');
+    lightbox.hidden = false;
+    lightbox.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLightbox() {
+    if (!lightbox || !lightboxImg) return;
+    lightbox.hidden = true;
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImg.removeAttribute('src');
+  }
+
+  if (lightboxImg) lightboxImg.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
   function renderStills(list) {
     if (!stillsBox || !stillsList) return;
     var items = Array.isArray(list) ? list : [];
@@ -261,13 +309,29 @@ document.addEventListener('DOMContentLoaded', function () {
         label.classList.add('is-selected');
       });
       var img = document.createElement('img');
-      img.src = resolveUrl(it.url);
-      img.alt = id;
+      var fullSrc = resolveUrl(it.url);
+      img.src = fullSrc;
+      img.alt = stillKindLabel(it.kind || id);
+      img.addEventListener('click', function (e) {
+        // 点图也可放大；不阻止选中
+      });
+      var zoomBtn = document.createElement('button');
+      zoomBtn.type = 'button';
+      zoomBtn.className = 'trailer-cand-zoom';
+      zoomBtn.title = tr('privateHub.homePc.trailerZoomHint', '放大');
+      zoomBtn.setAttribute('aria-label', zoomBtn.title);
+      zoomBtn.innerHTML = '<i class="fas fa-search-plus" aria-hidden="true"></i>';
+      zoomBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openLightbox(fullSrc);
+      });
       var cap = document.createElement('span');
       cap.className = 'trailer-cand-cap';
-      cap.textContent = (it.kind || '') + ' · ' + id;
+      cap.textContent = stillKindLabel(it.kind || id);
       label.appendChild(input);
       label.appendChild(img);
+      label.appendChild(zoomBtn);
       label.appendChild(cap);
       stillsList.appendChild(label);
     });
