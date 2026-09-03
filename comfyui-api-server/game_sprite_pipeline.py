@@ -250,22 +250,31 @@ def _build_still_prompt(
     )
 
 
+def _normalize_still_count(raw: Any) -> int:
+    """定妆张数：仅允许 1（侧视）或 3（正+背+侧）。旧值 2（曾表示两张侧视）视为 3。"""
+    try:
+        n = int(raw)
+    except Exception:
+        n = 3
+    return 1 if n <= 1 else 3
+
+
 def _character_still_jobs(
-    brief: str, asset_type: str, style: str, side_candidates: int = 1
+    brief: str, asset_type: str, style: str, still_count: int = 3
 ) -> List[Tuple[str, str]]:
     """
-    默认 3 张（推荐）：正面 + 背面 + 侧视定妆。
-    侧视可按 candidates 出 1～2 张备选；动作流水线只选 1 张侧视作 IP。
+    still_count=1：仅侧视定妆（动作主参考，无需再选）。
+    still_count=3：正面 + 背面 + 侧视定妆（动作仍用侧视）。
     """
-    jobs: List[Tuple[str, str]] = [
+    side_prompt = _build_still_prompt(brief, asset_type=asset_type, style=style, view="side")
+    side_job = ("side_00", side_prompt)
+    if _normalize_still_count(still_count) <= 1:
+        return [side_job]
+    return [
         ("front", _build_still_prompt(brief, asset_type=asset_type, style=style, view="front")),
         ("back", _build_still_prompt(brief, asset_type=asset_type, style=style, view="back")),
+        side_job,
     ]
-    n = max(1, min(2, int(side_candidates or 1)))
-    side_prompt = _build_still_prompt(brief, asset_type=asset_type, style=style, view="side")
-    for i in range(n):
-        jobs.append((f"side_{i:02d}", side_prompt))
-    return jobs
 
 
 def _build_action_prompt(brief: str, action: str, style: str) -> str:
@@ -597,14 +606,16 @@ class GameSpriteAPI:
             asset_type = task["asset_type"]
             style = task["visual_style"]
             brief = task["brief"]
-            cand_n = int(task.get("candidates") or 1)
+            still_count = _normalize_still_count(task.get("still_count", task.get("candidates")))
+            task["still_count"] = still_count
+            task["candidates"] = still_count  # 兼容旧前端字段名
             # 正方形画布，方便网格预览与正交参考
             gen_w, gen_h = 768, 768
             # 绿幕 + 正交负面（透视/3/4）
             extra_neg = _STILL_CHROMA_NEG
             prompts: List[Tuple[str, str]] = []
             if asset_type in ("character", "monster"):
-                prompts = _character_still_jobs(brief, asset_type, style, cand_n)
+                prompts = _character_still_jobs(brief, asset_type, style, still_count)
             else:
                 prompts.append(
                     (
@@ -676,12 +687,29 @@ class GameSpriteAPI:
                 await self._free_vram()
 
             task["stills_ui"] = ui
+            task["progress"] = {"current": total, "total": total}
+
+            # 仅 1 张：自动选用，跳过选图
+            if len(ui) == 1:
+                task["picked_ref"] = ui[0]
+                task["stage"] = "actions"
+                task["status"] = "running"
+                self._log(task, "仅 1 张定妆，已自动选用，开始后续流程…")
+                self._save_task_snapshot(task)
+                asyncio.create_task(self._run_actions(task_id))
+                return
+
+            # 三视图：默认勾选侧视，仍等待确认（正/背可对照）
+            side_pick = next(
+                (x for x in ui if str(x.get("id") or "").startswith("side_")),
+                ui[-1],
+            )
+            task["picked_ref"] = side_pick
             task["stage"] = "pick"
             task["status"] = "waiting_pick"
-            task["progress"] = {"current": total, "total": total}
             self._log(
                 task,
-                f"已生成 {total} 张参考（正/背 + 侧视定妆×{cand_n if asset_type in ('character','monster') else 0}，绿幕→透明）。动作请选「侧视定妆」",
+                f"已生成 {total} 张参考（正面/背面/侧视定妆）。动作请确认「侧视定妆」后继续",
             )
             self._save_task_snapshot(task)
         except Exception as e:
@@ -936,7 +964,8 @@ class GameSpriteAPI:
             fps: str = Form("8"),
             pixel_art: str = Form("0"),
             actions: str = Form(""),
-            candidates: str = Form("1"),
+            still_count: str = Form("3"),
+            candidates: str = Form(""),
             frames_per_action: str = Form("8"),
             action_duration_sec: str = Form("2.5"),
         ):
@@ -959,10 +988,9 @@ class GameSpriteAPI:
                 fps_i = max(4, min(24, int(fps or 8)))
             except Exception:
                 fps_i = 8
-            try:
-                cand = max(1, min(2, int(candidates or 1)))
-            except Exception:
-                cand = 1
+            # still_count：1=仅侧视，3=三视图。兼容旧字段 candidates（2 归为 3）
+            raw_count = (still_count or "").strip() or (candidates or "").strip() or "3"
+            count_n = _normalize_still_count(raw_count)
             try:
                 fpa = max(4, min(24, int(frames_per_action or 8)))
             except Exception:
@@ -995,7 +1023,8 @@ class GameSpriteAPI:
                 "fps": fps_i,
                 "pixel_art": pixel,
                 "actions": act_list,
-                "candidates": cand,
+                "still_count": count_n,
+                "candidates": count_n,
                 "frames_per_action": fpa,
                 "action_duration_sec": dur,
                 "stills_ui": [],

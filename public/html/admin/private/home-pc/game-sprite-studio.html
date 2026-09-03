@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc53" />
-  <script src="../../../../js/locales/en.js?v=gsprite13"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=gsprite13"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc54" />
+  <script src="../../../../js/locales/en.js?v=gsprite14"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=gsprite14"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">设定 → 定妆/三视图 → 选主参考 → Wan 5B 图生动作 → 去背景对齐 → 导出 Godot SpriteFrames ZIP。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">设定 → 定妆（1张侧视自动用，或3张正/背/侧）→ 确认侧视 → Wan 5B → Godot。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -93,12 +93,12 @@
                   </select>
                 </div>
                 <div class="input-control">
-                  <label for="candidates-select" data-i18n="privateHub.homePc.gameSpriteCandidatesLabel">侧视定妆候选数</label>
-                  <select id="candidates-select" class="text-input">
-                    <option value="1" selected>1（共3张）</option>
-                    <option value="2">2（共4张）</option>
+                  <label for="still-count-select" data-i18n="privateHub.homePc.gameSpriteStillCountLabel">定妆张数</label>
+                  <select id="still-count-select" class="text-input">
+                    <option value="3" selected>3（正面+背面+侧视）</option>
+                    <option value="1">1（仅侧视，自动选用）</option>
                   </select>
-                  <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteCandidatesHint">选1=共3张（正+背+侧）；选2=共4张（多一张侧视备选）</p>
+                  <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteStillCountHint">不是多风格备选。3张可对照设定；1张只出侧视并直接进动作。</p>
                 </div>
               </div>
 
@@ -125,7 +125,7 @@
 
             <div id="stills-box" class="home-pc-result-box" style="display:none;">
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.gameSpriteStillsTitle">选择主参考图</h3>
-              <p class="small-hint gs-stills-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">默认三视图：正面、背面、侧视定妆（绿幕抠成透明）。动作必须选「侧视定妆」；正/背只作设定对照。点放大镜看大图。</p>
+              <p class="small-hint gs-stills-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">三视图时请确认「侧视定妆」再生成动作；正/背只作设定对照。仅1张时会自动选用。点放大镜看大图。</p>
               <div id="stills-list" class="trailer-cand-grid gs-stills-grid"></div>
               <div class="action-row gs-stills-actions" style="margin-top:12px;">
                 <button type="button" id="confirm-pick-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteConfirmPick">确认选图并生成动作</button>
@@ -184,7 +184,7 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite13"></script>
+  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite14"></script>
   <div id="gs-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">

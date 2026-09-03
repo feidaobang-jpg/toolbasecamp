@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var charName = document.getElementById('char-name');
   var canvasSelect = document.getElementById('canvas-select');
   var fpsSelect = document.getElementById('fps-select');
-  var candidatesSelect = document.getElementById('candidates-select');
+  var stillCountSelect = document.getElementById('still-count-select');
+  var candidatesSelect = stillCountSelect; // 兼容旧变量名
   var typeRow = document.getElementById('type-row');
   var styleRow = document.getElementById('style-row');
   var actionsRow = document.getElementById('actions-row');
@@ -85,6 +86,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (v && v !== key) return v;
     }
     return fallback || key;
+  }
+
+  function _normalizeStillCountUi(raw) {
+    var n = parseInt(raw, 10);
+    if (isNaN(n) || n <= 1) return 1;
+    return 3;
   }
 
   function actionLabel(id) {
@@ -304,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
         : tr(
             'privateHub.homePc.gameSpriteStillsHint',
-            '默认三视图：正面、背面、侧视定妆（绿幕抠成透明）。动作必须选「侧视定妆」；正/背只作设定对照。点放大镜看大图。'
+            '三视图时请确认「侧视定妆」再生成动作；正/背只作设定对照。仅1张时会自动选用。点放大镜看大图。'
           );
     }
     // 清掉旧版误插的第二行提示
@@ -529,7 +536,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
     fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
     fd.append('pixel_art', selectedStyle === 'pixel' ? '1' : '0');
-    fd.append('candidates', (candidatesSelect && candidatesSelect.value) || '1');
+    fd.append('still_count', (stillCountSelect && stillCountSelect.value) || '3');
+    fd.append('candidates', (stillCountSelect && stillCountSelect.value) || '3');
     var actPayload = needsActions()
       ? (selectedActions.length ? selectedActions.join(',') : 'idle')
       : 'idle';
@@ -762,10 +770,11 @@ document.addEventListener('DOMContentLoaded', function () {
         fpsSelect.value = fpsKey;
       }
     }
-    if (candidatesSelect && data.candidates != null) {
-      var candKey = String(data.candidates);
-      if (candidatesSelect.querySelector('option[value="' + candKey + '"]')) {
-        candidatesSelect.value = candKey;
+    if (stillCountSelect) {
+      var sc = data.still_count != null ? data.still_count : data.candidates;
+      var scKey = String(_normalizeStillCountUi(sc));
+      if (stillCountSelect.querySelector('option[value="' + scKey + '"]')) {
+        stillCountSelect.value = scKey;
       }
     }
     if (Array.isArray(data.actions) && data.actions.length) {
