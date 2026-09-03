@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var progressStatus = document.getElementById('progress-status');
   var progressPercent = document.getElementById('progress-percent');
   var bibleBox = document.getElementById('bible-box');
+  var charactersBox = document.getElementById('characters-box');
+  var charactersList = document.getElementById('characters-list');
+  var regenAllCharsBtn = document.getElementById('regen-all-chars-btn');
   var globalRefsBox = document.getElementById('global-refs-box');
   var globalRefsList = document.getElementById('global-refs-list');
   var globalRefFile = document.getElementById('global-ref-file');
@@ -47,10 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var shotPreviewVideo = document.getElementById('shot-preview-video');
   var shotPreviewMeta = document.getElementById('shot-preview-meta');
   var openShotFolderBtn = document.getElementById('open-shot-folder-btn');
+  var trimStartInput = document.getElementById('trim-start');
+  var trimEndInput = document.getElementById('trim-end');
+  var trimShotBtn = document.getElementById('trim-shot-btn');
+  var seedanceCapHint = document.getElementById('seedance-cap-hint');
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightbox-img');
   var playlistQueue = [];
   var playlistIndex = 0;
+  var seedanceReady = false;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -80,6 +88,54 @@ document.addEventListener('DOMContentLoaded', function () {
   function selectedVideoMode() {
     var el = document.querySelector('input[name="video-mode"]:checked');
     return el ? el.value : 'wan22_5b';
+  }
+
+  function loadCapabilities() {
+    return fetch(API_BASE + '/series/capabilities')
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) return;
+        seedanceReady = !!pack.body.seedance;
+        if (seedanceCapHint) {
+          seedanceCapHint.textContent = seedanceReady
+            ? tr(
+                'privateHub.homePc.seriesSeedanceReady',
+                'Seedance 已配置 API Key，可选云端成片（按量计费）。'
+              )
+            : tr(
+                'privateHub.homePc.seriesSeedanceMissing',
+                '本机默认 Wan/LTX；Seedance 需配置 SEEDANCE_API_KEY（或 ARK_API_KEY）后重启服务。'
+              );
+        }
+        var seedRadio = document.querySelector('input[name="video-mode"][value="seedance_25"]');
+        if (seedRadio && seedRadio.parentElement) {
+          seedRadio.parentElement.classList.toggle('is-muted', !seedanceReady);
+          seedRadio.parentElement.title = seedanceReady
+            ? ''
+            : tr('privateHub.homePc.seriesSeedanceMissingShort', '未配置 API Key');
+        }
+      })
+      .catch(function () {});
+  }
+
+  function formatDialoguePreview(dialogue, voiceover) {
+    var lines = Array.isArray(dialogue) ? dialogue : [];
+    if (lines.length) {
+      return lines
+        .map(function (d) {
+          var sp = (d && d.speaker) || '';
+          var tx = (d && (d.text || d.line)) || '';
+          return (sp ? sp + '：' : '') + String(tx || '').trim();
+        })
+        .filter(Boolean)
+        .join(' / ')
+        .slice(0, 96);
+    }
+    return String(voiceover || '').slice(0, 48);
   }
 
   function selectedUseGlobalRefs() {
@@ -204,6 +260,141 @@ document.addEventListener('DOMContentLoaded', function () {
       escapeHtml(tr('privateHub.homePc.trailerBibleTitle', '全剧设定（DeepSeek）')) +
       '</h4>' +
       lines.join('');
+  }
+
+  function findCharRef(refs, char) {
+    var cid = String((char && char.id) || '').trim();
+    var name = String((char && char.name) || '').trim();
+    var list = refs || [];
+    for (var i = 0; i < list.length; i++) {
+      var it = list[i];
+      if (!it || String(it.kind || '').toLowerCase() !== 'character') continue;
+      if (cid && String(it.character_id || '') === cid) return it;
+      var label = String(it.label || '');
+      if (name && (label === name || label.indexOf(name) >= 0)) return it;
+    }
+    return null;
+  }
+
+  function regenCharacterRefs(opts) {
+    opts = opts || {};
+    if (!currentSeriesId) return;
+    var fd = new FormData();
+    fd.append('series_id', currentSeriesId);
+    if (opts.characterId) fd.append('character_id', opts.characterId);
+    if (opts.characterName) fd.append('character_name', opts.characterName);
+    if (opts.feedback) fd.append('feedback', opts.feedback);
+    setBusy(true);
+    if (progressWrap) {
+      progressWrap.style.display = '';
+      progressStatus.textContent = tr('privateHub.homePc.seriesCharRegenStart', '人物定妆重出中…');
+    }
+    fetch(API_BASE + '/series/regen-character-refs', { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+        startPoll();
+      })
+      .catch(function (err) {
+        setBusy(false);
+        flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+      });
+  }
+
+  function renderCharacters(series) {
+    if (!charactersBox || !charactersList) return;
+    series = series || {};
+    var bible = series.bible || {};
+    var chars = bible.characters || [];
+    var refs = series.global_refs || [];
+    var charRefs = refs.filter(function (it) {
+      return it && String(it.kind || '').toLowerCase() === 'character';
+    });
+    if (!chars.length && !charRefs.length) {
+      charactersBox.style.display = 'none';
+      charactersList.innerHTML = '';
+      return;
+    }
+    charactersBox.style.display = 'block';
+    charactersList.innerHTML = '';
+    var displayChars = chars.length
+      ? chars
+      : charRefs.map(function (it, i) {
+          return {
+            id: it.character_id || ('c' + (i + 1)),
+            name: it.label || it.character_id || '角色',
+            look: '',
+            voice: ''
+          };
+        });
+    displayChars.forEach(function (c) {
+      var ref = findCharRef(refs, c);
+      var card = document.createElement('div');
+      card.className = 'series-char-card';
+      var media = document.createElement('div');
+      media.className = 'series-char-media';
+      if (ref && (ref.thumb_url || ref.url)) {
+        var img = document.createElement('img');
+        img.src = resolveUrl(ref.thumb_url || ref.url);
+        img.alt = c.name || '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.addEventListener('click', function () {
+          openLightbox(resolveUrl(ref.url || ref.thumb_url));
+        });
+        media.appendChild(img);
+      } else {
+        media.innerHTML =
+          '<div class="series-char-placeholder">' +
+          escapeHtml(tr('privateHub.homePc.seriesCharNoStill', '暂无定妆')) +
+          '</div>';
+      }
+      var meta = document.createElement('div');
+      meta.className = 'series-char-meta';
+      meta.innerHTML =
+        '<strong>' +
+        escapeHtml(c.name || c.id || '') +
+        '</strong>' +
+        (c.role ? '<div class="series-char-role">' + escapeHtml(c.role) + '</div>' : '') +
+        (c.look
+          ? '<div class="series-char-look" title="' +
+            escapeHtml(c.look) +
+            '">' +
+            escapeHtml(String(c.look).slice(0, 80)) +
+            '</div>'
+          : '') +
+        (c.voice
+          ? '<div class="series-char-voice">' +
+            escapeHtml(tr('privateHub.homePc.seriesCharVoice', '音色') + '：' + c.voice) +
+            '</div>'
+          : '');
+      var actions = document.createElement('div');
+      actions.className = 'action-row series-char-actions';
+      var regenBtn = document.createElement('button');
+      regenBtn.type = 'button';
+      regenBtn.className = 'tb-btn';
+      regenBtn.setAttribute('data-job-btn', '1');
+      regenBtn.textContent = tr('privateHub.homePc.seriesRegenOneChar', '重出此角色');
+      regenBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        regenCharacterRefs({
+          characterId: c.id || '',
+          characterName: c.name || '',
+          feedback: ''
+        });
+      });
+      actions.appendChild(regenBtn);
+      card.appendChild(media);
+      card.appendChild(meta);
+      card.appendChild(actions);
+      charactersList.appendChild(card);
+    });
   }
 
   function renderGlobalRefs(items, showActions) {
@@ -453,12 +644,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     shotPreviewBox.style.display = '';
     if (shotPreviewMeta) {
+      var dlg = formatDialoguePreview(sh.dialogue, sh.voiceover);
       shotPreviewMeta.textContent =
         (sh.label || '镜 ' + sh.shot_no) +
         ' · ' +
         statusLabel(sh.status) +
-        (sh.duration_sec ? ' · ' + Number(sh.duration_sec).toFixed(1) + 's' : '');
+        (sh.duration_sec ? ' · ' + Number(sh.duration_sec).toFixed(1) + 's' : '') +
+        (dlg ? ' · ' + dlg : '');
     }
+    if (trimStartInput) trimStartInput.value = '0';
+    if (trimEndInput) trimEndInput.value = '';
     var full = resolveUrl(sh.clip_url);
     shotPreviewVideo.src = full + (full.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
     try {
@@ -611,8 +806,15 @@ document.addEventListener('DOMContentLoaded', function () {
           '</strong> · ' +
           escapeHtml(statusLabel(sh.status)) +
           '<div class="series-shot-vo">' +
-          escapeHtml((sh.voiceover || '').slice(0, 48)) +
+          escapeHtml(formatDialoguePreview(sh.dialogue, sh.voiceover)) +
           '</div>' +
+          (Array.isArray(sh.dialogue) && sh.dialogue.length > 1
+            ? '<div class="series-shot-dlg-badge">' +
+              escapeHtml(
+                tr('privateHub.homePc.seriesMultiDlg', '多角色对白') + ' · ' + sh.dialogue.length
+              ) +
+              '</div>'
+            : '') +
           (sh.director_prompt
             ? '<div class="series-shot-vp" title="' +
               escapeHtml(String(sh.director_prompt).slice(0, 800)) +
@@ -705,6 +907,7 @@ document.addEventListener('DOMContentLoaded', function () {
     currentSeries = series;
     currentSeriesId = series.id;
     renderBible(series.bible);
+    renderCharacters(series);
     var awaiting = series.status === 'awaiting_global_refs';
     renderGlobalRefs(series.global_refs || [], awaiting);
     appendLogs(series.logs || []);
@@ -794,6 +997,7 @@ document.addEventListener('DOMContentLoaded', function () {
       selectedEpId = null;
       workspace.style.display = 'none';
       if (bibleBox) bibleBox.style.display = 'none';
+      if (charactersBox) charactersBox.style.display = 'none';
       if (globalRefsBox) globalRefsBox.style.display = 'none';
       updateActionVisibility({ episodes: [], status: 'draft', job_status: 'idle' });
       return;
@@ -848,9 +1052,14 @@ document.addEventListener('DOMContentLoaded', function () {
       bibleBox.style.display = 'none';
       bibleBox.innerHTML = '';
     }
+    if (charactersBox) {
+      charactersBox.style.display = 'none';
+      if (charactersList) charactersList.innerHTML = '';
+    }
     if (globalRefsBox) globalRefsBox.style.display = 'none';
     if (confirmGlobalBtn) confirmGlobalBtn.style.display = 'none';
     if (skipGlobalBtn) skipGlobalBtn.style.display = 'none';
+    if (shotPreviewBox) shotPreviewBox.style.display = 'none';
     if (progressWrap) progressWrap.style.display = 'none';
     updateActionVisibility({ episodes: [], status: 'draft', job_status: 'idle' });
     if (synopsisInput) synopsisInput.focus();
@@ -1228,6 +1437,70 @@ document.addEventListener('DOMContentLoaded', function () {
       revealSelectedShotFolder();
     });
   }
+  if (trimShotBtn) {
+    trimShotBtn.addEventListener('click', function () {
+      if (!currentSeriesId || !selectedShotId) {
+        flashMsg(tr('privateHub.homePc.seriesNeedShotTrim', '请先选中一镜成片'), true);
+        return;
+      }
+      var fd = new FormData();
+      fd.append('series_id', currentSeriesId);
+      fd.append('shot_id', selectedShotId);
+      fd.append('start_sec', (trimStartInput && trimStartInput.value) || '0');
+      fd.append('end_sec', (trimEndInput && trimEndInput.value) || '');
+      setBusy(true);
+      if (progressStatus) {
+        progressWrap.style.display = '';
+        progressStatus.textContent = tr('privateHub.homePc.seriesTrimWorking', '正在裁切…');
+      }
+      fetch(API_BASE + '/series/trim-shot', { method: 'POST', body: fd })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { res: res, body: body };
+          });
+        })
+        .then(function (pack) {
+          setBusy(false);
+          if (!pack.res.ok || !pack.body.success) {
+            throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+          }
+          flashMsg(
+            tr('privateHub.homePc.seriesTrimDone', '裁切完成') +
+              ' · ' +
+              (pack.body.duration_sec || '') +
+              's'
+          );
+          if (pack.body.series) applySeries(pack.body.series);
+          else startPoll();
+          if (pack.body.clip_url && shotPreviewVideo) {
+            shotPreviewBox.style.display = 'block';
+            shotPreviewVideo.src =
+              resolveUrl(pack.body.clip_url) +
+              (String(pack.body.clip_url).indexOf('?') >= 0 ? '&' : '?') +
+              't=' +
+              Date.now();
+            shotPreviewVideo.play().catch(function () {});
+          }
+        })
+        .catch(function (err) {
+          setBusy(false);
+          flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+        });
+    });
+  }
+  if (regenAllCharsBtn) {
+    regenAllCharsBtn.addEventListener('click', function () {
+      if (!currentSeriesId) return;
+      if (
+        !window.confirm(
+          tr('privateHub.homePc.seriesRegenAllCharsConfirm', '确定重出全部角色定妆？')
+        )
+      ) {
+        return;
+      }
+      regenCharacterRefs({});
+    });
+  }
   if (openSeriesFolderBtn) {
     openSeriesFolderBtn.addEventListener('click', function () {
       revealSeriesFolder();
@@ -1271,5 +1544,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  loadCapabilities();
   loadList();
 });

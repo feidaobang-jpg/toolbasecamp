@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc58" />
-  <script src="../../../../js/locales/en.js?v=series24"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=series24"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc60" />
+  <script src="../../../../js/locales/en.js?v=series26"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=series26"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.seriesHint">丢进梗概 → 自动拆集/场/镜并写导演长提示词 → 角色/场景定妆确认（@图片绑定）→ 一键拍本场 → 合并导出本集。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.seriesHint">梗概 → 自动拆戏+导演长提示/多角色对白 → 人物定妆页 → 确认 @图片 → 一键拍场 → 站内裁切 → 合集成片（可选云端 Seedance）。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -96,8 +96,9 @@
                     <label class="trailer-radio"><input type="radio" name="video-mode" value="wan22_t2v_14b" /><span data-i18n="privateHub.homePc.trailerVideoModeWanT2v">文生视频 Wan 2.2 14B（fp8）</span></label>
                     <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_i2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5（直出音频）</span></label>
                     <label class="trailer-radio"><input type="radio" name="video-mode" value="ltx25_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="radio" name="video-mode" value="seedance_25" /><span data-i18n="privateHub.homePc.seriesVideoModeSeedance">云端 Seedance（贵·需 API Key）</span></label>
                   </div>
-                  <p class="small-hint" data-i18n="privateHub.homePc.seriesVideoModeHint">默认 Wan 2.2 14B GGUF Q5_K_M（IndexTTS 旁白）；也可选 LTX 直出音轨。</p>
+                  <p class="small-hint" id="seedance-cap-hint" data-i18n="privateHub.homePc.seriesVideoModeHint">本机默认 Wan/LTX；Seedance 需配置 SEEDANCE_API_KEY（或 ARK_API_KEY）。贵在抽卡，提示词写对再点拍。</p>
                 </div>
               </div>
 
@@ -155,9 +156,18 @@
 
             <div id="bible-box" class="trailer-bible" style="display:none;"></div>
 
+            <div id="characters-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.seriesCharactersTitle">人物页</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.seriesCharactersHint">本集角色一次列出；可按角色或全部批量重出定妆。音色描述会影响多角色分轨配音。</p>
+              <div class="action-row" style="margin-bottom:10px;">
+                <button type="button" id="regen-all-chars-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesRegenAllChars">全部角色定妆重出</button>
+              </div>
+              <div id="characters-list" class="series-char-grid"></div>
+            </div>
+
             <div id="global-refs-box" class="home-pc-result-box" style="display:none;">
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerGlobalRefsTitle">全剧参考图</h3>
-              <p class="small-hint" data-i18n="privateHub.homePc.trailerGlobalRefsPickHint">勾选要保留的定妆/情绪板；可上传；不满意可在图下填写修改意见后「按反馈重出」。确认后分镜会按勾选图做图生图锚定。</p>
+              <p class="small-hint" data-i18n="privateHub.homePc.trailerGlobalRefsPickHint">勾选要保留的定妆/情绪板；可上传；不满意可在图下填写修改意见后「按反馈重出」。确认后会写入 @图片N 绑定到导演提示词。</p>
               <div class="action-row" style="margin-bottom:10px;">
                 <label class="tb-btn trailer-upload-label">
                   <span data-i18n="privateHub.homePc.trailerGlobalRefsUpload">上传参考图</span>
@@ -175,6 +185,20 @@
                 <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.seriesShotPreview">镜头预览</h3>
                 <p id="shot-preview-meta" class="small-hint"></p>
                 <video id="shot-preview-video" class="series-shot-preview-video" controls playsinline></video>
+                <div class="form-row series-trim-row" style="margin-top:10px;">
+                  <div class="input-control">
+                    <label for="trim-start" data-i18n="privateHub.homePc.seriesTrimStart">裁切起点（秒）</label>
+                    <input id="trim-start" class="text-input" type="number" min="0" step="0.1" value="0" />
+                  </div>
+                  <div class="input-control">
+                    <label for="trim-end" data-i18n="privateHub.homePc.seriesTrimEnd">裁切终点（秒，空=片尾）</label>
+                    <input id="trim-end" class="text-input" type="number" min="0" step="0.1" value="" placeholder="留空到结尾" />
+                  </div>
+                  <div class="input-control" style="align-self:flex-end;">
+                    <button type="button" id="trim-shot-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesTrimApply">裁切并替换成片</button>
+                  </div>
+                </div>
+                <p class="small-hint" data-i18n="privateHub.homePc.seriesTrimHint">不满意头尾可直接站内裁；会覆盖本镜主成片（另留 trim 副本）。</p>
                 <div class="action-row" style="margin-top:10px;">
                   <button type="button" id="playlist-from-preview-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesPlaylistPlay">合集预览</button>
                   <button type="button" id="compose-episode-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesComposeEpisode">合并导出本集</button>
@@ -210,6 +234,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/series-studio.js?v=series24"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=series26"></script>
 </body>
 </html>

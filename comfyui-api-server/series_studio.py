@@ -45,6 +45,194 @@ from trailer_pipeline import (
 )
 
 try:
+    from seedance_client import run_seedance_i2v, seedance_configured
+except Exception:  # pragma: no cover
+
+    def seedance_configured() -> bool:  # type: ignore
+        return False
+
+    async def run_seedance_i2v(**_kwargs):  # type: ignore
+        raise RuntimeError("seedance_client 未安装")
+
+
+def _edge_voice_from_desc(desc: str, default: str = "zh-CN-YunxiNeural") -> str:
+    """把 bible 里的中文音色描述映射到 Edge-TTS Neural 音色。"""
+    raw = (desc or "").strip()
+    if not raw:
+        return default
+    if "Neural" in raw and raw.startswith("zh-"):
+        return raw
+    low = raw.lower()
+    female = any(k in raw for k in ("女", "少女", "姑娘", "姐", "柔", "甜")) or "female" in low
+    male = any(k in raw for k in ("男", "汉", "爷", "厚", "沉", "粗")) or "male" in low
+    cold = any(k in raw for k in ("冷", "御", "清冷"))
+    deep = any(k in raw for k in ("低", "沉", "厚", "粗粝"))
+    young = any(k in raw for k in ("年轻", "少年", "少女", "二十"))
+    if female:
+        if cold:
+            return "zh-CN-XiaoyiNeural"
+        if young:
+            return "zh-CN-XiaoxiaoNeural"
+        return "zh-CN-XiaohanNeural"
+    if male or deep:
+        if deep:
+            return "zh-CN-YunxiNeural"
+        if young:
+            return "zh-CN-YunyangNeural"
+        return "zh-CN-YunjianNeural"
+    return default
+
+
+def _concat_wav_files(in_paths: List[Path], out_path: Path) -> None:
+    import wave
+
+    paths = [Path(p) for p in in_paths if p and Path(p).exists()]
+    if not paths:
+        raise ValueError("没有可拼接的 wav")
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with wave.open(str(paths[0]), "rb") as wf0:
+        params = wf0.getparams()
+        frames0 = wf0.readframes(wf0.getnframes())
+    with wave.open(str(out_path), "wb") as out:
+        out.setparams(params)
+        out.writeframes(frames0)
+        for p in paths[1:]:
+            with wave.open(str(p), "rb") as wf:
+                wp = wf.getparams()
+                if (wp.nchannels, wp.sampwidth, wp.framerate, wp.comptype) != (
+                    params.nchannels,
+                    params.sampwidth,
+                    params.framerate,
+                    params.comptype,
+                ):
+                    raise RuntimeError(f"WAV 参数不一致，无法拼接：{p}")
+                out.writeframes(wf.readframes(wf.getnframes()))
+
+
+def _normalize_dialogue_list(raw: Any) -> List[dict]:
+    out: List[dict] = []
+    if not isinstance(raw, list):
+        return out
+    for it in raw:
+        if not isinstance(it, dict):
+            continue
+        text = str(it.get("text") or it.get("line") or it.get("content") or "").strip()
+        if not text:
+            continue
+        out.append(
+            {
+                "speaker": str(it.get("speaker") or it.get("name") or "").strip()[:40],
+                "character_id": str(it.get("character_id") or it.get("id") or "").strip()[:40],
+                "text": text[:240],
+                "voice": str(it.get("voice") or "").strip()[:80],
+            }
+        )
+    return out[:12]
+
+
+def _dialogue_lines_for_shot(
+    voiceover: str,
+    dialogue_json: str,
+    bible: dict,
+    default_voice: str,
+) -> List[dict]:
+    """多角色对白 → [{speaker,text,voice}]；无结构化时回退整段旁白。"""
+    chars = (bible or {}).get("characters") if isinstance(bible, dict) else []
+    if not isinstance(chars, list):
+        chars = []
+    by_id = {str(c.get("id") or "").strip(): c for c in chars if isinstance(c, dict)}
+    by_name = {str(c.get("name") or "").strip(): c for c in chars if isinstance(c, dict)}
+
+    def _voice_for(speaker: str, cid: str, hint: str = "") -> str:
+        c = by_id.get(cid) or by_name.get(speaker)
+        if isinstance(c, dict):
+            ev = str(c.get("edge_voice") or "").strip()
+            if ev:
+                return ev
+            return _edge_voice_from_desc(str(c.get("voice") or hint or ""), default_voice)
+        if hint:
+            return _edge_voice_from_desc(hint, default_voice)
+        return default_voice
+
+    try:
+        raw = json.loads(dialogue_json or "[]")
+    except Exception:
+        raw = []
+    structured = _normalize_dialogue_list(raw)
+    if structured:
+        lines = []
+        for it in structured:
+            lines.append(
+                {
+                    "speaker": it["speaker"],
+                    "text": it["text"],
+                    "voice": _voice_for(it["speaker"], it["character_id"], it.get("voice") or ""),
+                }
+            )
+        return lines
+
+    vo = (voiceover or "").strip()
+    if not vo:
+        return [{"speaker": "", "text": "", "voice": default_voice}]
+    # 钟馗：…… / 小白: ……
+    chunks = re.split(r"[\n；;]+", vo)
+    parsed: List[dict] = []
+    for chunk in chunks:
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        m = re.match(r"^([^：:]{1,20})[：:]\s*(.+)$", chunk)
+        if m:
+            sp, tx = m.group(1).strip(), m.group(2).strip()
+            if tx:
+                parsed.append({"speaker": sp, "text": tx, "voice": _voice_for(sp, "", "")})
+        else:
+            parsed.append({"speaker": "", "text": chunk, "voice": default_voice})
+    if len(parsed) >= 2 and any(p["speaker"] for p in parsed):
+        return parsed
+    return [{"speaker": "", "text": vo, "voice": default_voice}]
+
+
+def _trim_mp4_sync(src: Path, dst: Path, start_sec: float, end_sec: float) -> float:
+    from moviepy.editor import VideoFileClip
+
+    src = Path(src)
+    dst = Path(dst)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    clip = VideoFileClip(str(src))
+    try:
+        dur = float(clip.duration or 0)
+        start = max(0.0, float(start_sec or 0))
+        end = float(end_sec if end_sec is not None else dur)
+        if end <= 0 or end > dur:
+            end = dur
+        if end - start < 0.25:
+            raise ValueError("裁切区间至少 0.25 秒")
+        if start >= dur:
+            raise ValueError("起始时间超出片长")
+        sub = clip.subclip(start, end)
+        try:
+            sub.write_videofile(
+                str(dst),
+                fps=int(clip.fps or 24),
+                codec="libx264",
+                audio_codec="aac",
+                logger=None,
+            )
+        finally:
+            try:
+                sub.close()
+            except Exception:
+                pass
+        return max(0.25, end - start)
+    finally:
+        try:
+            clip.close()
+        except Exception:
+            pass
+
+try:
     from zoneinfo import ZoneInfo
 
     _CN_TZ = ZoneInfo("Asia/Shanghai")
@@ -199,6 +387,7 @@ class SeriesDB:
                     "video_sec": "REAL NOT NULL DEFAULT 0",
                     "total_sec": "REAL NOT NULL DEFAULT 0",
                     "director_prompt": "TEXT NOT NULL DEFAULT ''",
+                    "dialogue_json": "TEXT NOT NULL DEFAULT '[]'",
                 },
             )
             self._ensure_columns(
@@ -277,7 +466,8 @@ def deepseek_series_plan(
           "shots": [
             {{
               "shot_no": 1,
-              "voiceover": "中文旁白或对白要点，适合约{dur:g}秒",
+              "voiceover": "中文旁白或对白要点，适合约{dur:g}秒；多角色可用「角色名：台词」分行",
+              "dialogue": [{{"speaker":"角色名","character_id":"c1","text":"一句台词"}}],
               "visual_prompt": "英文文生图静帧：主体动作环境光影景别，符合 bible",
               "director_prompt": "中文导演级分镜长提示：镜头运动起落幅、演技微动作、光线、音色、禁止字幕水印；可引用 <主体1><场景1>，不要写 @图片（绑定由系统后补）",
               "camera": "medium|close-up|wide|tracking|..."
@@ -297,6 +487,7 @@ def deepseek_series_plan(
 5. episodes 数组长度必须等于 {ep_n}；每集 scenes 长度必须等于 {sc_n}；每场 shots 长度必须等于 {sh_n}。禁止多写。
 6. ref_prompts：优先每个主角 1 条 character 定妆，再补 1～2 条 scene 情绪板，总共 4～6 条；kind 必填 character|scene；外形与 characters 一致。
 7. 本集若是动作戏，至少一半镜头要有明确动作/冲突，不要只会「站桩合影」。
+8. 对白戏必须填 dialogue 数组（多角色分句）；单人旁白可空数组，只写 voiceover。speaker 与 characters.name 对齐。
 """
     try:
         import requests
@@ -407,7 +598,10 @@ def _normalize_series_plan(
                 vo = str(sh.get("voiceover") or sh.get("narration") or "").strip()
                 vis = str(sh.get("visual_prompt") or sh.get("prompt") or "").strip()
                 director = str(sh.get("director_prompt") or sh.get("seedance_prompt") or "").strip()
-                if not vo and not vis and not director:
+                dialogue = _normalize_dialogue_list(
+                    sh.get("dialogue") if sh.get("dialogue") is not None else sh.get("dialogue_json")
+                )
+                if not vo and not vis and not director and not dialogue:
                     continue
                 if not director and (vo or vis):
                     director = (
@@ -415,12 +609,17 @@ def _normalize_series_plan(
                         f"{vo}。"
                         f"画面要求：{vis[:280]}"
                     )
+                if not vo and dialogue:
+                    vo = "；".join(
+                        f"{(d['speaker'] + '：') if d['speaker'] else ''}{d['text']}" for d in dialogue
+                    )
                 shots_out.append(
                     {
                         "shot_no": int(sh.get("shot_no") or hi),
                         "voiceover": vo or f"镜头 {hi}",
                         "visual_prompt": vis or f"cinematic shot: {vo[:100]}",
                         "director_prompt": director,
+                        "dialogue": dialogue,
                         "camera": str(sh.get("camera") or "medium").strip()[:32],
                         "duration_sec": dur,
                     }
@@ -702,11 +901,19 @@ class SeriesStudioAPI:
                         director_prompt = str(sh["director_prompt"] or "")
                     except (KeyError, IndexError):
                         director_prompt = ""
+                    try:
+                        dialogue_raw = sh["dialogue_json"] or "[]"
+                        dialogue = json.loads(dialogue_raw) if dialogue_raw else []
+                        if not isinstance(dialogue, list):
+                            dialogue = []
+                    except Exception:
+                        dialogue = []
                     sh_list.append(
                         {
                             "id": sh["id"],
                             "shot_no": sh["shot_no"],
                             "voiceover": sh["voiceover"],
+                            "dialogue": dialogue,
                             "visual_prompt": sh["visual_prompt"],
                             "director_prompt": director_prompt,
                             "camera": sh["camera"],
@@ -791,6 +998,10 @@ class SeriesStudioAPI:
             "progress": {"done": done_n, "total": total_n},
             "logs": [r["msg"] for r in reversed(logs)],
             "labels": {"l1": "集", "l2": "场", "l3": "镜"},
+            "capabilities": {
+                "seedance": bool(seedance_configured()),
+                "engines": list(_VIDEO_ENGINES.keys()),
+            },
             "created_at": s["created_at"],
             "updated_at": s["updated_at"],
         }
@@ -881,13 +1092,14 @@ class SeriesStudioAPI:
                     )
                     for sh in sc.get("shots") or []:
                         sh_id = _new_id("sh_")
+                        dialogue = _normalize_dialogue_list(sh.get("dialogue"))
                         conn.execute(
                             """
                             INSERT INTO shot(
                               id, series_id, episode_id, scene_id, shot_no,
-                              voiceover, visual_prompt, director_prompt, camera, duration_sec,
+                              voiceover, visual_prompt, director_prompt, dialogue_json, camera, duration_sec,
                               status, version, updated_at
-                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                             """,
                             (
                                 sh_id,
@@ -898,6 +1110,7 @@ class SeriesStudioAPI:
                                 sh.get("voiceover") or "",
                                 sh.get("visual_prompt") or "",
                                 sh.get("director_prompt") or "",
+                                json.dumps(dialogue, ensure_ascii=False),
                                 sh.get("camera") or "medium",
                                 float(sh.get("duration_sec") or dur),
                                 "planned",
@@ -1045,14 +1258,16 @@ class SeriesStudioAPI:
             return img_bytes, f"文生图（参考{len(selected_refs)}张仅作文风/角色描述）"
         return img_bytes, "文生图"
 
-    async def _regen_one_global_ref(self, series_id: str, filename: str, feedback: str) -> dict:
+    async def _regen_one_global_ref(
+        self, series_id: str, filename: str, feedback: str, *, allow_while_running: bool = False
+    ) -> dict:
         feedback = (feedback or "").strip()
         if len(feedback) < 2:
             raise HTTPException(status_code=400, detail="请填写修改意见")
         safe = Path(filename).name
         with self.db.connect() as conn:
             s = self._get_series_row(conn, series_id)
-            if s["job_status"] == "running":
+            if (not allow_while_running) and s["job_status"] == "running":
                 raise HTTPException(status_code=400, detail="已有任务在跑，请稍候")
             try:
                 refs = json.loads(s["global_refs_json"] or "[]")
@@ -1272,8 +1487,11 @@ class SeriesStudioAPI:
             mode == "ltx25_i2v" and callable(upload_bytes) and callable(build_ltx_i2v) and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
+        use_seedance = mode == "seedance_25"
         use_comfy_video = use_wan or use_wan_t2v_5b or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
-        use_tts = use_wan or use_wan_t2v_5b or use_wan_t2v or mode == "kenburns" or not use_comfy_video
+        use_tts = (not use_seedance) and (
+            use_wan or use_wan_t2v_5b or use_wan_t2v or mode == "kenburns" or not use_comfy_video
+        )
 
         started_at = _utc_now_str()
         stills_sec = 0.0
@@ -1362,6 +1580,16 @@ class SeriesStudioAPI:
                 speed = max(0.7, min(1.4, float(row["speed"] or 1.0)))
             except Exception:
                 speed = 1.0
+            try:
+                dialogue_json = row["dialogue_json"] or "[]"
+            except (KeyError, IndexError):
+                dialogue_json = "[]"
+            dialogue_lines = _dialogue_lines_for_shot(vo, dialogue_json, bible, voice)
+            vo_display = " ".join(
+                (f"{ln['speaker']}：" if ln.get("speaker") else "") + ln["text"]
+                for ln in dialogue_lines
+                if (ln.get("text") or "").strip()
+            ) or vo
             t_vid = time.perf_counter()
             made_mp4 = False
             audio_rel = ""
@@ -1370,21 +1598,91 @@ class SeriesStudioAPI:
             tts_len = clip_dur
 
             if use_tts:
-                self._log(series_id, f"配音 {label}")
-                produced = await tts(vo, raw_wav, voice=voice, speed=speed)
-                produced_path = Path(produced) if produced else raw_wav
-                mp3_fallback = raw_wav.with_suffix(".mp3")
-                if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
-                    src = (
-                        produced_path
-                        if produced_path.exists()
-                        else (mp3_fallback if mp3_fallback.exists() else None)
+                self._log(
+                    series_id,
+                    f"配音 {label}"
+                    + (f"（{len(dialogue_lines)} 句分轨）" if len(dialogue_lines) > 1 else ""),
+                )
+                if len(dialogue_lines) <= 1:
+                    line = dialogue_lines[0] if dialogue_lines else {"text": vo, "voice": voice}
+                    produced = await tts(
+                        (line.get("text") or vo or label),
+                        raw_wav,
+                        voice=(line.get("voice") or voice),
+                        speed=speed,
                     )
-                    if src is None:
-                        raise RuntimeError(f"配音文件未生成：{raw_wav}")
-                    await asyncio.to_thread(_ensure_wav, src, raw_wav)
+                    produced_path = Path(produced) if produced else raw_wav
+                    mp3_fallback = raw_wav.with_suffix(".mp3")
+                    if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
+                        src = (
+                            produced_path
+                            if produced_path.exists()
+                            else (mp3_fallback if mp3_fallback.exists() else None)
+                        )
+                        if src is None:
+                            raise RuntimeError(f"配音文件未生成：{raw_wav}")
+                        await asyncio.to_thread(_ensure_wav, src, raw_wav)
+                else:
+                    part_paths: List[Path] = []
+                    for i, line in enumerate(dialogue_lines):
+                        part = shot_dir / "audio" / f"line_{i:02d}.wav"
+                        produced = await tts(
+                            line.get("text") or "",
+                            part,
+                            voice=(line.get("voice") or voice),
+                            speed=speed,
+                        )
+                        produced_path = Path(produced) if produced else part
+                        if not part.exists() or part.stat().st_size <= 0:
+                            src = produced_path if produced_path.exists() else None
+                            if src is None:
+                                raise RuntimeError(f"分轨配音未生成：{part}")
+                            await asyncio.to_thread(_ensure_wav, src, part)
+                        elif part.suffix.lower() != ".wav" or not part.exists():
+                            await asyncio.to_thread(_ensure_wav, produced_path, part)
+                        part_paths.append(part)
+                    await asyncio.to_thread(_concat_wav_files, part_paths, raw_wav)
                 tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
                 clip_dur = min(10.0, max(3.0, max(float(dur), tts_len)))
+
+            if use_seedance:
+                try:
+                    if not seedance_configured():
+                        raise RuntimeError("未配置 SEEDANCE_API_KEY / ARK_API_KEY")
+                    seed_prompt = (director or motion_i2v or base_prompt or vo_display).strip()
+                    self._log(
+                        series_id,
+                        f"云端 Seedance {label}（约 {int(round(clip_dur))}s · {aspect}）",
+                    )
+                    await run_seedance_i2v(
+                        prompt=seed_prompt[:8000],
+                        image_path=img_path,
+                        out_mp4=clip_path,
+                        duration=clip_dur,
+                        aspect=aspect,
+                        resolution="720p",
+                    )
+                    made_mp4 = True
+                    video_sec = time.perf_counter() - t_vid
+                    self._log(
+                        series_id,
+                        f"Seedance 完成 {label}，耗时 {_format_elapsed(video_sec)}",
+                    )
+                except Exception as e:
+                    video_sec = time.perf_counter() - t_vid
+                    self._log(series_id, f"{label} Seedance 失败，回退静帧推镜：{e}")
+                    use_tts = True
+                    if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
+                        self._log(series_id, f"配音 {label}（Seedance 回退）")
+                        produced = await tts(vo_display or label, raw_wav, voice=voice, speed=speed)
+                        produced_path = Path(produced) if produced else raw_wav
+                        if not raw_wav.exists() or raw_wav.stat().st_size <= 0:
+                            src = produced_path if produced_path.exists() else None
+                            if src is None:
+                                raise RuntimeError(f"配音文件未生成：{raw_wav}")
+                            await asyncio.to_thread(_ensure_wav, src, raw_wav)
+                        tts_len = float(await asyncio.to_thread(audio_dur_fn, raw_wav))
+                        clip_dur = min(10.0, max(3.0, max(float(dur), tts_len)))
 
             if use_comfy_video:
                 try:
@@ -1521,7 +1819,7 @@ class SeriesStudioAPI:
                     [clip_dur],
                     clip_path,
                     out_size,
-                    [[(vo, 0.0, clip_dur)]],
+                    [[(vo_display, 0.0, clip_dur)]],
                     create_subs,
                     24,
                 )
@@ -1536,7 +1834,7 @@ class SeriesStudioAPI:
                     [clip_dur],
                     clip_path,
                     out_size,
-                    [[(vo, 0.0, clip_dur)]],
+                    [[(vo_display, 0.0, clip_dur)]],
                     create_subs,
                     25,
                 )
@@ -1790,6 +2088,80 @@ class SeriesStudioAPI:
                     (merged[:8000], _utc_now_str(), sh["id"]),
                 )
         self._log(series_id, f"已写入导演提示词绑定前缀（{len(selected)} 张 @图片）")
+
+    def _resolve_media_path(self, series_id: str, rel: str) -> Optional[Path]:
+        rel = (rel or "").strip()
+        if not rel:
+            return None
+        p = Path(rel)
+        if p.is_absolute() and p.exists():
+            return p
+        root = self._series_dir(series_id)
+        cand = root / rel
+        if cand.exists():
+            return cand
+        alt = Path(self.deps["output_root"]) / rel
+        if alt.exists():
+            return alt
+        # clip_rel 常相对 output_root
+        if "/" in rel or "\\" in rel:
+            return alt if alt.parent.exists() else cand
+        return None
+
+    async def _batch_regen_character_refs(
+        self,
+        series_id: str,
+        *,
+        character_id: str = "",
+        character_name: str = "",
+        feedback: str = "",
+    ) -> None:
+        async with self._lock(series_id):
+            self._cancel[series_id] = False
+            self._set_job(series_id, "running")
+            try:
+                with self.db.connect() as conn:
+                    s = self._get_series_row(conn, series_id)
+                    try:
+                        refs = json.loads(s["global_refs_json"] or "[]")
+                    except Exception:
+                        refs = []
+                cid = (character_id or "").strip()
+                cname = (character_name or "").strip()
+                targets = []
+                for it in refs:
+                    if not isinstance(it, dict):
+                        continue
+                    if str(it.get("kind") or "").lower() != "character":
+                        continue
+                    if cid and str(it.get("character_id") or "") != cid:
+                        continue
+                    if cname:
+                        label = str(it.get("label") or "")
+                        if cname not in label and str(it.get("character_id") or "") != cname:
+                            continue
+                    targets.append(it)
+                if not targets:
+                    raise RuntimeError("没有匹配的角色定妆图")
+                tip = (feedback or "").strip() or (
+                    f"同一角色「{cname or cid or '主角'}」定妆重出：保持身份、脸型、服装一致，"
+                    "半身/全身清晰，干净背景，表情自然。"
+                )
+                self._log(series_id, f"人物页批量重出定妆 {len(targets)} 张…")
+                for it in targets:
+                    if self._cancel.get(series_id):
+                        self._log(series_id, "用户取消人物批量重出")
+                        break
+                    fn = str(it.get("filename") or "")
+                    self._log(series_id, f"重出角色定妆：{it.get('label') or fn}")
+                    await self._regen_one_global_ref(series_id, fn, tip, allow_while_running=True)
+                self._set_job(series_id, "idle")
+                self._log(series_id, "人物定妆批量重出完成")
+            except Exception as e:
+                self._set_job(series_id, "error", str(e)[:500])
+                self._log(series_id, f"人物定妆批量失败：{e}")
+            finally:
+                self._cancel[series_id] = False
 
     def register(self, app) -> None:
         api = self
@@ -2264,6 +2636,100 @@ class SeriesStudioAPI:
                 "rel": rel,
                 "path": str(out_video.resolve()),
                 "shot_count": len(video_paths),
+            }
+
+        @app.post("/series/trim-shot")
+        @app.post("/api/series/trim-shot")
+        async def series_trim_shot(
+            series_id: str = Form(...),
+            shot_id: str = Form(...),
+            start_sec: str = Form("0"),
+            end_sec: str = Form(""),
+        ):
+            """站内裁切已完成镜头：按起止秒重导出 mp4。"""
+            row = api._shot_detail(series_id, shot_id)
+            if row["status"] not in ("done", "approved"):
+                raise HTTPException(status_code=400, detail="请先完成该镜成片再裁切")
+            src = api._resolve_media_path(series_id, row["clip_rel"] or "")
+            if not src or not src.exists():
+                raise HTTPException(status_code=404, detail="成片文件不存在")
+            try:
+                start_v = float(start_sec or 0)
+            except Exception:
+                start_v = 0.0
+            try:
+                end_v = float(end_sec) if str(end_sec or "").strip() else -1.0
+            except Exception:
+                end_v = -1.0
+            version = int(row["version"] or 1)
+            shot_dir = api._shot_dir(
+                series_id, int(row["ep_no"]), int(row["sc_no"]), int(row["shot_no"]), version
+            )
+            out = shot_dir / "clips" / f"00_trim_{int(time.time())}.mp4"
+            try:
+                new_dur = await asyncio.to_thread(_trim_mp4_sync, src, out, start_v, end_v)
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"裁切失败：{e}") from e
+            # 覆盖主成片名，保留 trim 副本
+            main = shot_dir / "clips" / "00.mp4"
+            try:
+                shutil.copy2(out, main)
+            except Exception:
+                main = out
+            clip_rel = api._rel(main)
+            api._update_shot(
+                shot_id,
+                clip_rel=clip_rel,
+                duration_sec=round(float(new_dur), 2),
+            )
+            api._log(
+                series_id,
+                f"裁切完成 第{row['ep_no']}集第{row['sc_no']}场第{row['shot_no']}镜 "
+                f"{start_v:.2f}s → {start_v + new_dur:.2f}s（{new_dur:.2f}s）",
+            )
+            return {
+                "success": True,
+                "clip_url": api._url(clip_rel),
+                "duration_sec": round(float(new_dur), 2),
+                "series": api._tree(series_id),
+            }
+
+        @app.post("/series/regen-character-refs")
+        @app.post("/api/series/regen-character-refs")
+        async def series_regen_character_refs(
+            series_id: str = Form(...),
+            character_id: str = Form(""),
+            character_name: str = Form(""),
+            feedback: str = Form(""),
+        ):
+            """人物页：按角色批量重出定妆参考图。"""
+            with api.db.connect() as conn:
+                s = api._get_series_row(conn, series_id)
+            if s["job_status"] == "running":
+                raise HTTPException(status_code=400, detail="已有任务在跑")
+            if not (character_id or character_name or "").strip():
+                # 允许空：重出全部 character 类
+                pass
+            asyncio.create_task(
+                api._batch_regen_character_refs(
+                    series_id,
+                    character_id=character_id,
+                    character_name=character_name,
+                    feedback=feedback,
+                )
+            )
+            return {"success": True, "series_id": series_id}
+
+        @app.get("/series/capabilities")
+        @app.get("/api/series/capabilities")
+        async def series_capabilities():
+            return {
+                "success": True,
+                "seedance": bool(seedance_configured()),
+                "engines": [
+                    {"id": k, "label": v.get("label") or k, "needs_image": bool(v.get("needs_image"))}
+                    for k, v in _VIDEO_ENGINES.items()
+                ],
             }
 
         @app.post("/series/continue")

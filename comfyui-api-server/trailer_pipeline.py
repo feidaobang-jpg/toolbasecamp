@@ -98,6 +98,7 @@ _VIDEO_ENGINES = {
     "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
+    "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},
     "kenburns": {"label": "静帧推镜", "needs_image": False},
 }
 
@@ -118,6 +119,8 @@ def _normalize_video_engine(raw: str) -> str:
         return "ltx25_t2v"
     if m in ("still", "ken_burns", "slideshow"):
         return "kenburns"
+    if m in ("seedance", "seedance_25", "seedance2.5", "seedance_2_5", "doubao_seedance"):
+        return "seedance_25"
     if m in _VIDEO_ENGINES:
         return m
     return "wan22_5b"
