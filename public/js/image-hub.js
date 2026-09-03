@@ -79,6 +79,7 @@
   function sourceLabel(source) {
     if (source === 'text_to_image') return tr('hub.imagesPage.sourceT2i');
     if (source === 'instruct_edit') return tr('hub.imagesPage.sourceInstruct');
+    if (source === 'image_pipeline') return tr('hub.imagesPage.sourcePipeline');
     return source || '';
   }
 

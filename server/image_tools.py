@@ -762,7 +762,7 @@ async def image_public_publish(
     if _is_gif(raw, ctype):
         ctype = "image/gif"
     src = (source or "").strip() or "manual"
-    if src not in ("text_to_image", "instruct_edit", "manual"):
+    if src not in ("text_to_image", "instruct_edit", "image_pipeline", "manual"):
         src = "manual"
     # Shrink large AI PNGs for the public gallery; keep GIFs intact so they stay animated.
     if len(raw) > 1024 * 1024 and not _is_gif(raw, ctype):

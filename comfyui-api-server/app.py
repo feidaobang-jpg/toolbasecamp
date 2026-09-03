@@ -4634,6 +4634,20 @@ _game_sprite_api = GameSpriteAPI(
 )
 _game_sprite_api.register(app)
 
+from image_pipeline import ImagePipelineAPI
+
+_image_pipeline_api = ImagePipelineAPI(
+    output_root=_OUTPUT_ROOT,
+    build_z_image_workflow=_build_z_image_turbo_workflow,
+    run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
+    default_txt2img_negative=_default_txt2img_negative,
+    repo_deepseek_api_key=_repo_deepseek_api_key,
+    deepseek_api_url=DEEPSEEK_API_URL,
+    image_no_text_prefix=_IMAGE_NO_TEXT_PREFIX,
+    free_comfyui_memory=free_comfyui_memory,
+)
+_image_pipeline_api.register(app)
+
 
 if __name__ == '__main__':
     import uvicorn

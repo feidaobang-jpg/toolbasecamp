@@ -1,0 +1,729 @@
+"""
+图片流水线：按风格/分类/数量排队依次文生图，可公开到主站 Images 墙。
+
+输出目录：output/images/{date}_{title}/
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+import random
+import re
+import time
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import requests
+from fastapi import Form, HTTPException
+
+from output_layout import (
+    alloc_under,
+    ensure_reserved_dirs,
+    folder_public_key,
+    list_task_dirs,
+    rel_to_root,
+    resolve_task_dir,
+)
+
+_IMAGE_PIPE_TASKS: Dict[str, dict] = {}
+
+_STYLES: Dict[str, Dict[str, str]] = {
+    "realistic": {
+        "label": "写实摄影",
+        "suffix": "photorealistic, cinematic lighting, high detail, natural colors",
+    },
+    "cartoon": {
+        "label": "卡通",
+        "suffix": "stylized cartoon illustration, clean outlines, vibrant flat colors",
+    },
+    "anime": {
+        "label": "二次元",
+        "suffix": "anime style, cel shading, clean lineart, expressive lighting",
+    },
+    "ink": {
+        "label": "水墨",
+        "suffix": "Chinese ink wash painting, expressive brushwork, soft paper texture",
+    },
+    "watercolor": {
+        "label": "水彩",
+        "suffix": "watercolor painting, soft washes, paper grain, delicate edges",
+    },
+    "oil": {
+        "label": "油画",
+        "suffix": "oil painting, visible brush strokes, rich pigments, gallery lighting",
+    },
+    "cyberpunk": {
+        "label": "赛博朋克",
+        "suffix": "cyberpunk aesthetic, neon lights, rainy night city, high contrast",
+    },
+    "flat": {
+        "label": "扁平插画",
+        "suffix": "flat vector illustration, minimal shapes, bold color blocks",
+    },
+}
+
+_CATEGORIES: Dict[str, Dict[str, str]] = {
+    "landscape": {"label": "风景", "hint": "natural or urban landscape scenery"},
+    "character": {"label": "人物", "hint": "character portrait or full-body figure"},
+    "product": {"label": "产品", "hint": "product showcase on clean or lifestyle background"},
+    "food": {"label": "美食", "hint": "appetizing food photography or illustration"},
+    "animal": {"label": "动物", "hint": "animal subject, natural pose"},
+    "architecture": {"label": "建筑", "hint": "architecture exterior or interior"},
+    "abstract": {"label": "抽象", "hint": "abstract composition, shapes and color"},
+    "poster": {"label": "海报构图", "hint": "poster-like composition, strong focal subject"},
+    "wallpaper": {"label": "壁纸", "hint": "wallpaper-friendly composition, balanced empty space"},
+    "other": {"label": "其他", "hint": "general illustration"},
+}
+
+_ASPECTS: Dict[str, Dict[str, Any]] = {
+    "1_1": {"label": "方形 1:1", "size": (1024, 1024)},
+    "16_9": {"label": "横屏 16:9", "size": (1280, 720)},
+    "9_16": {"label": "竖屏 9:16", "size": (720, 1280)},
+    "3_4": {"label": "竖图 3:4", "size": (768, 1024)},
+    "4_3": {"label": "横图 4:3", "size": (1024, 768)},
+}
+
+_VARIATION_HINTS = [
+    "换一个更近的机位与构图",
+    "改为清晨柔光氛围",
+    "改为黄昏暖色光影",
+    "主体略偏左侧，留白更明显",
+    "主体略偏右侧，景深更浅",
+    "天气更晴朗，对比更强",
+    "增加前景层次与细节",
+    "更远全景，强调环境关系",
+    "低角度仰拍",
+    "高角度俯拍",
+    "夜景霓虹或灯火",
+    "极简干净背景",
+]
+
+
+def _safe_slug(text: str, fallback: str = "batch") -> str:
+    s = re.sub(r"[^\w\u4e00-\u9fff\-]+", "_", (text or "").strip(), flags=re.UNICODE)
+    s = re.sub(r"_+", "_", s).strip("._")
+    if not s:
+        s = fallback
+    return s[:48]
+
+
+def _now_ts_ms() -> int:
+    return int(time.time() * 1000)
+
+
+def _cn_now_str() -> str:
+    try:
+        from zoneinfo import ZoneInfo
+
+        return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + "Z"
+
+
+def _parse_manual_prompts(raw: str) -> List[str]:
+    lines = []
+    for ln in (raw or "").splitlines():
+        s = ln.strip()
+        if not s:
+            continue
+        # 允许 "1. xxx" / "- xxx"
+        s = re.sub(r"^[\d]+[\.\)、]\s*", "", s)
+        s = re.sub(r"^[-*•]\s*", "", s)
+        if s:
+            lines.append(s)
+    return lines
+
+
+def _rule_vary_prompts(theme: str, style_key: str, category_key: str, count: int) -> List[str]:
+    style = _STYLES.get(style_key) or _STYLES["realistic"]
+    cat = _CATEGORIES.get(category_key) or _CATEGORIES["other"]
+    base = (theme or "").strip() or cat["label"]
+    out: List[str] = []
+    for i in range(count):
+        hint = _VARIATION_HINTS[i % len(_VARIATION_HINTS)]
+        out.append(
+            f"{base}，分类：{cat['label']}，画风：{style['label']}。"
+            f"画面要求：{cat['hint']}；变化：{hint}。"
+            f"{style['suffix']}"
+        )
+    return out
+
+
+def deepseek_image_batch_prompts(
+    *,
+    theme: str,
+    style_key: str,
+    category_key: str,
+    count: int,
+    extra: str,
+    api_key: str,
+    api_url: str,
+) -> Optional[List[str]]:
+    if not api_key or count < 1:
+        return None
+    style = _STYLES.get(style_key) or _STYLES["realistic"]
+    cat = _CATEGORIES.get(category_key) or _CATEGORIES["other"]
+    extra_s = (extra or "").strip()
+    user_prompt = f"""你是文生图提示词专家。用户要批量生成 {count} 张同主题、同画风、同分类的图片，需彼此有构图/光影/角度差异，避免几乎重复。
+
+【主题】{(theme or '').strip()}
+【分类】{cat['label']}（{cat['hint']}）
+【画风】{style['label']}；英文风格词可参考：{style['suffix']}
+【补充要求】{extra_s or '无'}
+
+请严格输出 JSON 对象，仅含字段 "prompts"：字符串数组，长度必须等于 {count}。
+每条是中文为主的正向提示词（可少量英文质量词），要求：
+1. 紧扣主题与分类，画面具体可画：主体、环境、光影、氛围、构图。
+2. {count} 条之间明显变化（机位、时段、天气、景别、左右构图等），不要只改一两个词。
+3. 禁止要求画面内文字、字幕、Logo、水印、二维码。
+4. 单条约 60～180 字；写实类避免崩坏肢体；二次元/卡通按对应画风写。
+只输出 JSON，不要 markdown。"""
+
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+    data = {
+        "model": "deepseek-chat",
+        "messages": [
+            {"role": "system", "content": "你是一个只输出合法 JSON 的助手。"},
+            {"role": "user", "content": user_prompt},
+        ],
+        "temperature": 0.55,
+        "response_format": {"type": "json_object"},
+    }
+    for attempt in range(2):
+        try:
+            resp = requests.post(api_url, headers=headers, json=data, timeout=120)
+            if resp.status_code != 200:
+                if resp.status_code >= 500 and attempt == 0:
+                    time.sleep(2)
+                    continue
+                return None
+            body = resp.json() or {}
+            content = (((body.get("choices") or [{}])[0].get("message") or {}).get("content")) or ""
+            content = content.strip()
+            if content.startswith("```"):
+                content = re.sub(r"^```(?:json)?\s*", "", content)
+                content = re.sub(r"\s*```$", "", content)
+            parsed = json.loads(content)
+            prompts = parsed.get("prompts") if isinstance(parsed, dict) else None
+            if not isinstance(prompts, list):
+                return None
+            cleaned = [str(p).strip() for p in prompts if str(p).strip()]
+            if len(cleaned) < count:
+                return None
+            return cleaned[:count]
+        except Exception:
+            if attempt == 0:
+                time.sleep(2)
+                continue
+            return None
+    return None
+
+
+class ImagePipelineAPI:
+    def __init__(self, output_root: Path, **deps):
+        self.deps = deps
+        self.deps["output_root"] = Path(output_root)
+        self.tasks = _IMAGE_PIPE_TASKS
+
+    def _log(self, task: dict, msg: str) -> None:
+        line = f"[{_cn_now_str()}] {msg}"
+        logs = task.setdefault("logs", [])
+        logs.append(line)
+        if len(logs) > 400:
+            del logs[:-400]
+
+    def _public_url(self, task: dict, rel: str) -> str:
+        folder = (task.get("output_dir") or "").strip() or task["task_id"]
+        rel_n = str(rel).replace("\\", "/").lstrip("/")
+        return f"/output/{folder}/{rel_n}"
+
+    def _task_dir(self, task: dict) -> Path:
+        root: Path = self.deps["output_root"]
+        folder = (task.get("output_dir") or "").strip()
+        if folder:
+            resolved = resolve_task_dir(root, folder)
+            if resolved is not None:
+                resolved.mkdir(parents=True, exist_ok=True)
+                return resolved
+        d = root / "images" / (folder or task["task_id"])
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def _save_snapshot(self, task: dict) -> None:
+        try:
+            d = self._task_dir(task)
+            snap = {k: v for k, v in task.items() if k != "cancel"}
+            (d / "task.json").write_text(
+                json.dumps(snap, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
+
+    def _index_path(self) -> Path:
+        root: Path = self.deps["output_root"]
+        p = root / "images" / "_task_index.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        return p
+
+    def _index_task(self, task_id: str, task_dir: Path) -> None:
+        tid = (task_id or "").strip()
+        if not tid:
+            return
+        root: Path = self.deps["output_root"]
+        idx_path = self._index_path()
+        data: Dict[str, str] = {}
+        if idx_path.exists():
+            try:
+                raw = json.loads(idx_path.read_text(encoding="utf-8"))
+                if isinstance(raw, dict):
+                    data = {str(k): str(v) for k, v in raw.items()}
+            except Exception:
+                data = {}
+        data[tid] = rel_to_root(root, task_dir)
+        try:
+            idx_path.write_text(
+                json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
+
+    def _lookup_indexed_dir(self, task_id: str) -> Optional[Path]:
+        tid = (task_id or "").strip()
+        if not tid:
+            return None
+        root: Path = self.deps["output_root"]
+        idx_path = self._index_path()
+        if not idx_path.exists():
+            return None
+        try:
+            raw = json.loads(idx_path.read_text(encoding="utf-8"))
+            rel = (raw or {}).get(tid)
+            if not rel:
+                return None
+            return resolve_task_dir(root, str(rel))
+        except Exception:
+            return None
+
+    def _load_task_from_dir(self, key: str) -> dict:
+        root: Path = self.deps["output_root"]
+        d = resolve_task_dir(root, key)
+        if d is None:
+            d = self._lookup_indexed_dir(key)
+        if d is None or not d.is_dir():
+            raise FileNotFoundError("找不到该批次目录")
+        tj = d / "task.json"
+        if not tj.exists():
+            raise FileNotFoundError("目录缺少 task.json")
+        meta = json.loads(tj.read_text(encoding="utf-8"))
+        if not isinstance(meta, dict):
+            raise ValueError("task.json 无效")
+        meta["output_dir"] = rel_to_root(root, d)
+        folder = meta["output_dir"]
+        images = meta.get("images") or []
+        for it in images:
+            if isinstance(it, dict) and it.get("file"):
+                it["url"] = f"/output/{folder}/{it['file']}"
+        return meta
+
+    async def _plan_prompts(self, task: dict) -> List[str]:
+        mode = (task.get("prompt_mode") or "auto").strip().lower()
+        count = int(task.get("count") or 1)
+        theme = (task.get("theme") or "").strip()
+        style_key = task.get("style") or "realistic"
+        category_key = task.get("category") or "other"
+        extra = (task.get("extra") or "").strip()
+        manual = (task.get("manual_prompts") or "").strip()
+
+        if mode == "manual":
+            lines = _parse_manual_prompts(manual)
+            if not lines:
+                raise RuntimeError("手动模式请每行一条提示词")
+            prompts = lines[:count] if count > 0 else lines
+            if len(prompts) < count:
+                # 不够则循环补齐
+                while len(prompts) < count:
+                    prompts.append(lines[len(prompts) % len(lines)])
+            task["plan_source"] = "manual"
+            return prompts
+
+        if mode == "theme_vary":
+            task["plan_source"] = "rule"
+            return _rule_vary_prompts(theme, style_key, category_key, count)
+
+        # auto → DeepSeek，失败回退规则
+        self._log(task, f"规划 {count} 条提示词（DeepSeek）…")
+        key_fn = self.deps.get("repo_deepseek_api_key")
+        api_key = key_fn() if callable(key_fn) else ""
+        api_url = self.deps.get("deepseek_api_url") or "https://api.deepseek.com/chat/completions"
+        prompts = None
+        if api_key:
+            prompts = await asyncio.to_thread(
+                deepseek_image_batch_prompts,
+                theme=theme,
+                style_key=style_key,
+                category_key=category_key,
+                count=count,
+                extra=extra,
+                api_key=api_key,
+                api_url=api_url,
+            )
+        if prompts:
+            task["plan_source"] = "deepseek"
+            self._log(task, "DeepSeek 提示词就绪")
+            return prompts
+        self._log(task, "DeepSeek 不可用，改用规则变化提示词")
+        task["plan_source"] = "rule"
+        return _rule_vary_prompts(theme, style_key, category_key, count)
+
+    async def _run_task(self, task_id: str) -> None:
+        task = self.tasks.get(task_id)
+        if not task:
+            return
+        build_wf = self.deps["build_z_image_workflow"]
+        run_img = self.deps["run_comfyui_and_get_last_image"]
+        neg_fn = self.deps.get("default_txt2img_negative")
+        no_text = self.deps.get("image_no_text_prefix") or ""
+        free_mem = self.deps.get("free_comfyui_memory")
+
+        try:
+            task["status"] = "running"
+            task["stage"] = "plan"
+            task["progress"] = {"current": 0, "total": int(task.get("count") or 1)}
+            self._save_snapshot(task)
+
+            prompts = await self._plan_prompts(task)
+            task["prompts"] = prompts
+            task["progress"] = {"current": 0, "total": len(prompts)}
+            self._save_snapshot(task)
+
+            w, h = (_ASPECTS.get(task.get("aspect") or "1_1") or _ASPECTS["1_1"])["size"]
+            style = _STYLES.get(task.get("style") or "realistic") or _STYLES["realistic"]
+            user_neg = (task.get("negative") or "").strip()
+            neg = neg_fn(user_neg, width=w, height=h) if callable(neg_fn) else user_neg
+            seed_base = task.get("seed_base")
+            out_dir = self._task_dir(task)
+            img_dir = out_dir / "images"
+            img_dir.mkdir(parents=True, exist_ok=True)
+            images: List[dict] = []
+            task["images"] = images
+            task["stage"] = "generate"
+
+            for i, prompt in enumerate(prompts):
+                if task.get("cancel"):
+                    task["status"] = "cancelled"
+                    task["stage"] = "cancelled"
+                    self._log(task, "用户取消")
+                    self._save_snapshot(task)
+                    return
+                full_prompt = (no_text + (prompt or "").strip()).strip()
+                if style.get("suffix") and style["suffix"] not in full_prompt:
+                    full_prompt = f"{full_prompt}, {style['suffix']}"
+                if seed_base is None:
+                    seed = random.randint(1, 2**31 - 1)
+                else:
+                    seed = int(seed_base) + i
+                self._log(task, f"生成 {i + 1}/{len(prompts)}（seed={seed}）…")
+                task["progress"] = {"current": i, "total": len(prompts)}
+                self._save_snapshot(task)
+
+                wf = build_wf(full_prompt, seed=seed, width=w, height=h, negative_text=neg)
+                img_bytes = await run_img(wf)
+                if not img_bytes:
+                    raise RuntimeError(f"第 {i + 1} 张未返回图像")
+                name = f"{i + 1:02d}.png"
+                path = img_dir / name
+                path.write_bytes(img_bytes)
+                item = {
+                    "index": i + 1,
+                    "file": f"images/{name}",
+                    "url": self._public_url(task, f"images/{name}"),
+                    "prompt": prompt,
+                    "seed": seed,
+                    "width": w,
+                    "height": h,
+                    "published": False,
+                }
+                images.append(item)
+                task["progress"] = {"current": i + 1, "total": len(prompts)}
+                self._save_snapshot(task)
+                if callable(free_mem) and i + 1 < len(prompts):
+                    try:
+                        await free_mem()
+                    except Exception:
+                        pass
+
+            task["status"] = "done"
+            task["stage"] = "done"
+            task["finished_at"] = _cn_now_str()
+            self._log(task, f"完成，共 {len(images)} 张")
+            self._save_snapshot(task)
+        except Exception as e:
+            task["status"] = "error"
+            task["stage"] = "error"
+            task["error"] = str(e)[:500]
+            self._log(task, f"失败：{e}")
+            self._save_snapshot(task)
+
+    def register(self, app) -> None:
+        api = self
+
+        @app.get("/image-pipeline/defaults")
+        @app.get("/api/image-pipeline/defaults")
+        async def ip_defaults():
+            return {
+                "success": True,
+                "styles": {k: v["label"] for k, v in _STYLES.items()},
+                "categories": {k: v["label"] for k, v in _CATEGORIES.items()},
+                "aspects": {k: v["label"] for k, v in _ASPECTS.items()},
+                "prompt_modes": {
+                    "auto": "自动扩写（推荐）",
+                    "theme_vary": "主题规则变化",
+                    "manual": "手动多行提示词",
+                },
+                "max_count": 24,
+            }
+
+        @app.post("/image-pipeline/start")
+        @app.post("/api/image-pipeline/start")
+        async def ip_start(
+            title: str = Form(""),
+            theme: str = Form(...),
+            style: str = Form("realistic"),
+            category: str = Form("other"),
+            count: str = Form("4"),
+            aspect: str = Form("1_1"),
+            prompt_mode: str = Form("auto"),
+            extra: str = Form(""),
+            negative: str = Form(""),
+            manual_prompts: str = Form(""),
+            seed: str = Form(""),
+        ):
+            theme_s = (theme or "").strip()
+            if len(theme_s) < 2:
+                raise HTTPException(status_code=400, detail="请填写主题描述")
+            style_k = (style or "realistic").strip().lower()
+            if style_k not in _STYLES:
+                style_k = "realistic"
+            cat_k = (category or "other").strip().lower()
+            if cat_k not in _CATEGORIES:
+                cat_k = "other"
+            aspect_k = (aspect or "1_1").strip()
+            if aspect_k not in _ASPECTS:
+                aspect_k = "1_1"
+            mode = (prompt_mode or "auto").strip().lower()
+            if mode not in ("auto", "theme_vary", "manual"):
+                mode = "auto"
+            try:
+                n = max(1, min(24, int(count or 4)))
+            except Exception:
+                n = 4
+            if mode == "manual":
+                lines = _parse_manual_prompts(manual_prompts)
+                if not lines:
+                    raise HTTPException(status_code=400, detail="手动模式请每行一条提示词")
+                n = max(1, min(24, len(lines) if not str(count or "").strip() else n))
+            seed_base = None
+            seed_raw = (seed or "").strip()
+            if seed_raw:
+                try:
+                    seed_base = int(seed_raw)
+                except Exception:
+                    raise HTTPException(status_code=400, detail="种子须为整数")
+
+            title_s = (title or "").strip() or theme_s[:20]
+            root: Path = api.deps["output_root"]
+            ensure_reserved_dirs(root)
+            stamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+            folder = alloc_under(root, "images", f"{stamp}_{_safe_slug(title_s)}")
+            task_dir = root / folder
+            task_dir.mkdir(parents=True, exist_ok=True)
+
+            task_id = uuid.uuid4().hex
+            task = {
+                "task_id": task_id,
+                "title": title_s,
+                "theme": theme_s,
+                "style": style_k,
+                "style_label": _STYLES[style_k]["label"],
+                "category": cat_k,
+                "category_label": _CATEGORIES[cat_k]["label"],
+                "count": n,
+                "aspect": aspect_k,
+                "prompt_mode": mode,
+                "extra": (extra or "").strip(),
+                "negative": (negative or "").strip(),
+                "manual_prompts": (manual_prompts or "").strip(),
+                "seed_base": seed_base,
+                "output_dir": folder,
+                "status": "queued",
+                "stage": "init",
+                "created_at": _cn_now_str(),
+                "progress": {"current": 0, "total": n},
+                "logs": [],
+                "images": [],
+                "prompts": [],
+                "error": None,
+                "cancel": False,
+                "plan_source": "",
+            }
+            api.tasks[task_id] = task
+            api._index_task(task_id, task_dir)
+            api._log(task, f"批次已创建：{title_s} · {n} 张 · {_STYLES[style_k]['label']} · {_CATEGORIES[cat_k]['label']}")
+            api._save_snapshot(task)
+            asyncio.create_task(api._run_task(task_id))
+            return {"success": True, "task_id": task_id, "output_dir": folder}
+
+        @app.get("/image-pipeline/status")
+        @app.get("/api/image-pipeline/status")
+        async def ip_status(task_id: str):
+            tid = (task_id or "").strip()
+            task = api.tasks.get(tid)
+            if not task:
+                try:
+                    task = api._load_task_from_dir(tid)
+                except Exception:
+                    raise HTTPException(status_code=404, detail="任务不存在")
+            out = {k: v for k, v in task.items() if k != "cancel"}
+            return {"success": True, **out}
+
+        @app.post("/image-pipeline/cancel")
+        @app.post("/api/image-pipeline/cancel")
+        async def ip_cancel(task_id: str = Form(...)):
+            tid = (task_id or "").strip()
+            task = api.tasks.get(tid)
+            if not task:
+                raise HTTPException(status_code=404, detail="任务不存在或已结束")
+            task["cancel"] = True
+            api._log(task, "收到取消请求…")
+            return {"success": True}
+
+        @app.post("/image-pipeline/reveal-output")
+        @app.post("/api/image-pipeline/reveal-output")
+        async def ip_reveal(task_id: str = Form(""), folder: str = Form("")):
+            import os
+            import platform
+            import subprocess
+
+            root: Path = api.deps["output_root"]
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="缺少 task_id 或 folder")
+            d = resolve_task_dir(root, key) or api._lookup_indexed_dir(key)
+            if d is None or not d.is_dir():
+                raise HTTPException(status_code=404, detail="目录不存在")
+            path = str(d.resolve())
+            try:
+                system = platform.system()
+                if system == "Windows":
+                    os.startfile(path)  # type: ignore[attr-defined]
+                elif system == "Darwin":
+                    subprocess.Popen(["open", path])
+                else:
+                    subprocess.Popen(["xdg-open", path])
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"无法打开目录：{e}")
+            return {"success": True, "path": path}
+
+        @app.get("/image-pipeline/history")
+        @app.get("/api/image-pipeline/history")
+        async def ip_history(limit: int = 24):
+            root: Path = api.deps["output_root"]
+            dirs = list_task_dirs(root, "images", limit=limit)
+            items = []
+            for p in dirs:
+                meta: dict = {}
+                tj = p / "task.json"
+                if tj.exists():
+                    try:
+                        meta = json.loads(tj.read_text(encoding="utf-8"))
+                    except Exception:
+                        meta = {}
+                folder = rel_to_root(root, p)
+                n_img = 0
+                img_dir = p / "images"
+                if img_dir.is_dir():
+                    n_img = len([x for x in img_dir.iterdir() if x.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp")])
+                items.append(
+                    {
+                        "folder": folder,
+                        "task_id": meta.get("task_id") or "",
+                        "title": meta.get("title") or p.name,
+                        "theme": (meta.get("theme") or "")[:80],
+                        "style": meta.get("style") or "",
+                        "category": meta.get("category") or "",
+                        "status": meta.get("status") or "",
+                        "count": meta.get("count") or n_img,
+                        "image_count": n_img,
+                        "mtime": int(p.stat().st_mtime),
+                    }
+                )
+            return {"success": True, "items": items}
+
+        @app.post("/image-pipeline/open")
+        @app.post("/api/image-pipeline/open")
+        async def ip_open(folder: str = Form(""), task_id: str = Form("")):
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="请提供 folder 或 task_id")
+            try:
+                task = api._load_task_from_dir(key)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=str(e))
+            # 恢复到内存，便于继续 cancel/status
+            tid = str(task.get("task_id") or "")
+            if tid and tid not in api.tasks:
+                api.tasks[tid] = dict(task)
+                api.tasks[tid]["cancel"] = False
+            return {"success": True, **task}
+
+        @app.post("/image-pipeline/mark-published")
+        @app.post("/api/image-pipeline/mark-published")
+        async def ip_mark_published(
+            task_id: str = Form(""),
+            folder: str = Form(""),
+            indices: str = Form(""),
+        ):
+            """前台公开成功后回写本地 task.json 的 published 标记。"""
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="缺少 task_id 或 folder")
+            try:
+                task = api._load_task_from_dir(key)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            want = set()
+            for part in re.split(r"[,;\s]+", indices or ""):
+                part = part.strip()
+                if not part:
+                    continue
+                try:
+                    want.add(int(part))
+                except Exception:
+                    pass
+            images = task.get("images") or []
+            for it in images:
+                if not isinstance(it, dict):
+                    continue
+                idx = int(it.get("index") or 0)
+                if not want or idx in want:
+                    it["published"] = True
+            tid = str(task.get("task_id") or "")
+            if tid and tid in api.tasks:
+                api.tasks[tid]["images"] = images
+                api._save_snapshot(api.tasks[tid])
+            else:
+                # 仅磁盘
+                root: Path = api.deps["output_root"]
+                d = resolve_task_dir(root, task.get("output_dir") or key)
+                if d:
+                    try:
+                        (d / "task.json").write_text(
+                            json.dumps(task, ensure_ascii=False, indent=2), encoding="utf-8"
+                        )
+                    except Exception:
+                        pass
+            return {"success": True, "images": images}

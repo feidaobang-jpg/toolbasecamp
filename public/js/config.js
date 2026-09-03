@@ -375,6 +375,11 @@ const privateToolsConfig = {
                     url: 'html/admin/private/home-pc/text-to-image.html'
                 },
                 {
+                    titleKey: 'privateHub.homePc.imagePipeTitle',
+                    descriptionKey: 'privateHub.homePc.imagePipeDesc',
+                    url: 'html/admin/private/home-pc/image-pipeline.html'
+                },
+                {
                     titleKey: 'privateHub.homePc.img2imgTitle',
                     descriptionKey: 'privateHub.homePc.img2imgDesc',
                     url: 'html/admin/private/home-pc/image-to-image.html'

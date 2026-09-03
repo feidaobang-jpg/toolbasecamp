@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>图片流水线 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc61" />
+  <script src="../../../../js/locales/en.js?v=imgpipe1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=imgpipe1"></script>
+  <script src="../../../../js/i18n.js?v=homepc7"></script>
+  <script src="../../../../js/config.js?v=homepc30"></script>
+  <script src="../../../../js/common_ui.js?v=homepc4"></script>
+</head>
+<body class="home-pc-page">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+      <header class="home-pc-header">
+        <div class="home-pc-header-inner">
+          <a href="../../private.html" class="home-pc-back">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+          </a>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.imagePipeTitle">图片流水线</h1>
+          <div class="home-pc-header-actions">
+            <span id="auth-label" class="home-pc-auth-label"></span>
+            <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+          </div>
+        </div>
+      </header>
+      <main class="home-pc-main">
+        <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+        <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+          <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+          <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+        </div>
+        <div id="app" class="home-pc-wrap hidden" hidden>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.imagePipeHint">填主题与风格 → 一次排队多张 → 选中后公开到「图片」页 AI 墙。</p>
+          <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+
+          <div class="tool-container">
+            <div class="input-section">
+              <div class="form-row">
+                <div class="input-control" style="flex:1;">
+                  <label for="batch-title" data-i18n="privateHub.homePc.imagePipeTitleLabel">批次名（可选）</label>
+                  <input id="batch-title" class="text-input" type="text" data-i18n-placeholder="privateHub.homePc.imagePipeTitlePh" placeholder="例：春日壁纸批" />
+                </div>
+                <div class="input-control">
+                  <label for="count-input" data-i18n="privateHub.homePc.imagePipeCountLabel">图片数量</label>
+                  <input id="count-input" class="text-input" type="number" min="1" max="24" step="1" value="4" />
+                </div>
+              </div>
+
+              <div>
+                <label for="theme-input" data-i18n="privateHub.homePc.imagePipeThemeLabel">主题描述</label>
+                <textarea id="theme-input" rows="3" data-i18n-placeholder="privateHub.homePc.imagePipeThemePh" placeholder="例：江南水乡清晨薄雾，白墙黛瓦倒影"></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="style-select" data-i18n="privateHub.homePc.imagePipeStyleLabel">画风</label>
+                  <select id="style-select" class="text-input"></select>
+                </div>
+                <div class="input-control">
+                  <label for="category-select" data-i18n="privateHub.homePc.imagePipeCategoryLabel">分类</label>
+                  <select id="category-select" class="text-input"></select>
+                </div>
+                <div class="input-control">
+                  <label for="aspect-select" data-i18n="privateHub.homePc.imagePipeAspectLabel">画幅</label>
+                  <select id="aspect-select" class="text-input"></select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control" style="flex:1;">
+                  <label for="mode-select" data-i18n="privateHub.homePc.imagePipeModeLabel">提示词模式</label>
+                  <select id="mode-select" class="text-input">
+                    <option value="auto" data-i18n="privateHub.homePc.imagePipeModeAuto">自动扩写（推荐）</option>
+                    <option value="theme_vary" data-i18n="privateHub.homePc.imagePipeModeVary">主题规则变化</option>
+                    <option value="manual" data-i18n="privateHub.homePc.imagePipeModeManual">手动多行提示词</option>
+                  </select>
+                </div>
+                <div class="input-control">
+                  <label for="seed-input" data-i18n="privateHub.homePc.imagePipeSeedLabel">起始种子（可选）</label>
+                  <input id="seed-input" class="text-input" type="text" data-i18n-placeholder="privateHub.homePc.imagePipeSeedPh" placeholder="留空每张随机；填写则按序号递增" />
+                </div>
+              </div>
+
+              <div id="extra-wrap">
+                <label for="extra-input" data-i18n="privateHub.homePc.imagePipeExtraLabel">补充要求（可选）</label>
+                <textarea id="extra-input" rows="2" data-i18n-placeholder="privateHub.homePc.imagePipeExtraPh" placeholder="例：不要人物；偏冷色；留白多"></textarea>
+              </div>
+
+              <div id="manual-wrap" style="display:none;">
+                <label for="manual-input" data-i18n="privateHub.homePc.imagePipeManualLabel">手动提示词（每行一张）</label>
+                <textarea id="manual-input" rows="6" data-i18n-placeholder="privateHub.homePc.imagePipeManualPh" placeholder="每行一条正向提示词…"></textarea>
+              </div>
+
+              <div>
+                <label for="neg-input" data-i18n="privateHub.homePc.imagePipeNegLabel">反向提示词（可选）</label>
+                <textarea id="neg-input" rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="action-row home-pc-tool-actions">
+              <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipeStart">生成</button>
+              <button type="button" id="cancel-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.imagePipeCancel">取消</button>
+              <button type="button" id="open-folder-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.imagePipeOpenFolder">打开文件夹</button>
+            </div>
+
+            <div id="progress-wrap" class="home-pc-progress" style="display:none;">
+              <div class="home-pc-progress-meta">
+                <span id="progress-status">…</span>
+                <span id="progress-percent"></span>
+              </div>
+              <div class="progress-bar-bg">
+                <div id="progress-bar" class="progress-bar" style="width:0%;"></div>
+              </div>
+            </div>
+
+            <div id="flash-msg" class="home-pc-flash" style="display:none;"></div>
+
+            <div id="result-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.imagePipeResultTitle">本批结果</h3>
+              <p id="result-meta" class="small-hint"></p>
+              <div class="action-row" style="margin-bottom:10px;">
+                <button type="button" id="select-all-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipeSelectAll">全选</button>
+                <button type="button" id="select-none-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipeSelectNone">取消全选</button>
+                <button type="button" id="publish-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipePublish">公开到前台</button>
+              </div>
+              <div id="result-grid" class="image-pipe-grid"></div>
+            </div>
+
+            <div class="home-pc-result-box">
+              <div class="series-log-head" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+                <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.imagePipeHistoryTitle">历史批次</h3>
+                <button type="button" id="history-refresh-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipeRefreshHistory">刷新历史</button>
+              </div>
+              <div id="history-list" class="image-pipe-history"></div>
+            </div>
+
+            <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.imagePipeLogTitle">日志</h3>
+              <pre id="log-output"></pre>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="lightbox" class="trailer-lightbox" style="display:none;" title="点击关闭">
+    <img id="lightbox-img" alt="" />
+  </div>
+
+  <script src="../../../../js/media/image-cloud-client.js?v=imgpipe1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc30"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
+  <script src="../../../../js/admin/home-pc/image-pipeline.js?v=imgpipe1"></script>
+</body>
+</html>
