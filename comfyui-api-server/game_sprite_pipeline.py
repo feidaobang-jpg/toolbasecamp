@@ -72,7 +72,7 @@ _ASSET_TYPES = {
     "scene": {"label": "场景", "needs_actions": False},
 }
 
-# 游戏视角 → 定妆张数与动作主参考（不必永远三视图）
+# 游戏视角 → 定妆与动作主参考（只保留玩法常用两项）
 _GAME_CAMERAS = {
     "side": {
         "label": "横版侧视",
@@ -80,23 +80,11 @@ _GAME_CAMERAS = {
         "views": ("side",),
         "i2v_lock": "locked 2D side-scroll / profile camera matching the start frame",
     },
-    "front": {
-        "label": "正视（面向镜头）",
-        "hero_view": "front",
-        "views": ("front",),
-        "i2v_lock": "locked orthographic FRONT camera matching the start frame",
-    },
     "topdown": {
-        "label": "俯视角",
+        "label": "俯视",
         "hero_view": "topdown",
         "views": ("topdown",),
         "i2v_lock": "locked top-down / bird's-eye camera matching the start frame",
-    },
-    "turnaround": {
-        "label": "三视图设定",
-        "hero_view": "side",
-        "views": ("front", "back", "side"),
-        "i2v_lock": "locked side-view camera matching the side hero start frame",
     },
 }
 
@@ -220,12 +208,8 @@ def _normalize_camera(raw: Any) -> str:
     key = str(raw or "").strip().lower()
     if key in _GAME_CAMERAS:
         return key
-    # 旧 still_count / candidates：1→侧视，3→三视图
-    try:
-        n = int(raw)
-        return "side" if n <= 1 else "turnaround"
-    except Exception:
-        return "side"
+    # 旧 front / turnaround / 张数等 → 侧视
+    return "side"
 
 
 def _build_still_prompt(

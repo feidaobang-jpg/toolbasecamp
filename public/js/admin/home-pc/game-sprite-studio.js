@@ -91,9 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function _normalizeCameraUi(raw) {
     var key = String(raw || '').trim().toLowerCase();
-    if (key === 'side' || key === 'front' || key === 'topdown' || key === 'turnaround') return key;
-    var n = parseInt(raw, 10);
-    if (!isNaN(n)) return n <= 1 ? 'side' : 'turnaround';
+    if (key === 'topdown') return 'topdown';
     return 'side';
   }
 
@@ -101,9 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var sid = String(stillId || '');
     var cam = _normalizeCameraUi(camera);
     if (sid.indexOf('upload') === 0 || sid.indexOf('concept') === 0) return true;
-    if (cam === 'front') return sid === 'front';
     if (cam === 'topdown') return sid === 'topdown';
-    // side / turnaround：动作主参考必须是侧视
     return sid.indexOf('side_') === 0 || sid === 'side';
   }
 
@@ -328,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
         : tr(
             'privateHub.homePc.gameSpriteStillsHint',
-            '单视角 1 张会自动选用。三视图请确认「侧视定妆」再跑动作。点放大镜看大图。'
+            '定妆 1 张会自动选用并继续动作。点放大镜看大图；也可上传自己的参考图。'
           );
     }
     // 清掉旧版误插的第二行提示
@@ -634,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.tbNotify(
           tr(
             'privateHub.homePc.gameSpriteNeedHeroPick',
-            '请选与当前游戏视角匹配的主参考图（三视图请选侧视定妆）'
+            '请选与当前游戏视角匹配的主参考图'
           )
         );
         return;
