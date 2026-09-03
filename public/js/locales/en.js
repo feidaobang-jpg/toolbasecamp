@@ -383,6 +383,7 @@ window.TB_LOCALES.en = {
             gameSpriteClearAll: 'Clear all',
             gameSpriteOpen: 'Open',
             gameSpriteOpenFail: 'Could not open history task',
+            gameSpriteTaskLost: 'Task lost (API may have restarted). Open it from History below, or generate stills again.',
             gameSpriteStart: 'Generate stills',
             gameSpriteStillsTitle: 'Pick hero reference',
             gameSpriteStillsHint: 'Front/back/left/right are orthographic refs (square preview). Prefer a side hero for actions. Zoom for large view. Z-Image may still drift to 3/4 — regenerate if needed.',

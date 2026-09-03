@@ -348,6 +348,8 @@ class GameSpriteAPI:
         root: Path = self.deps["output_root"]
         d = resolve_task_dir(root, folder_or_id)
         if d is None:
+            d = self._lookup_indexed_dir(folder_or_id)
+        if d is None:
             # try match by task_id inside task.json under game_sprites + legacy
             needle = (folder_or_id or "").strip()
             for p in list_task_dirs(
@@ -367,7 +369,7 @@ class GameSpriteAPI:
                     d = p
                     break
         if d is None or not d.is_dir():
-            raise FileNotFoundError("历史任务目录不存在")
+            raise FileNotFoundError("历史任务目录不存在（可能已删除）")
         tj = d / "task.json"
         if not tj.exists():
             raise FileNotFoundError("缺少 task.json，无法重开")
@@ -394,9 +396,24 @@ class GameSpriteAPI:
             s2["url"] = url
             stills.append(s2)
         meta["stills_ui"] = stills
+        # 重启后不能恢复进行中的后台协程
+        st = str(meta.get("status") or "").strip()
+        if st in ("running", "queued"):
+            if stills:
+                meta["status"] = "waiting_pick"
+                meta["stage"] = "pick"
+                logs = meta.get("logs")
+                if not isinstance(logs, list):
+                    logs = []
+                    meta["logs"] = logs
+                logs.append(
+                    f"[{datetime.now().strftime('%H:%M:%S')}] 服务已重启：定妆进度已从磁盘恢复，请继续选图"
+                )
+            else:
+                meta["status"] = "failed"
+                meta["error"] = "服务重启后任务中断，请重新生成定妆"
         anim = meta.get("animations_meta") or {}
         if anim:
-            # 重建 preview / zip 链接
             self.tasks[tid] = meta
             try:
                 self._finalize_preview(meta)
@@ -414,6 +431,53 @@ class GameSpriteAPI:
         rel_n = str(rel).replace("\\", "/").lstrip("/")
         return f"/output/{folder}/{rel_n}"
 
+    def _index_path(self) -> Path:
+        root: Path = self.deps["output_root"]
+        p = root / "game_sprites" / "_task_index.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        return p
+
+    def _index_task(self, task_id: Optional[str], task_dir: Path) -> None:
+        tid = (task_id or "").strip()
+        if not tid:
+            return
+        root: Path = self.deps["output_root"]
+        idx_path = self._index_path()
+        data: Dict[str, str] = {}
+        if idx_path.exists():
+            try:
+                raw = json.loads(idx_path.read_text(encoding="utf-8"))
+                if isinstance(raw, dict):
+                    data = {str(k): str(v) for k, v in raw.items()}
+            except Exception:
+                data = {}
+        data[tid] = rel_to_root(root, task_dir)
+        try:
+            idx_path.write_text(
+                json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
+
+    def _lookup_indexed_dir(self, task_id: str) -> Optional[Path]:
+        tid = (task_id or "").strip()
+        if not tid:
+            return None
+        root: Path = self.deps["output_root"]
+        idx_path = self._index_path()
+        if not idx_path.exists():
+            return None
+        try:
+            raw = json.loads(idx_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+        if not isinstance(raw, dict):
+            return None
+        rel = str(raw.get(tid) or "").strip()
+        if not rel:
+            return None
+        return resolve_task_dir(root, rel)
+
     def _save_task_snapshot(self, task: dict) -> None:
         try:
             d = self._task_dir(task)
@@ -426,6 +490,7 @@ class GameSpriteAPI:
                 json.dumps(snap, ensure_ascii=False, indent=2, default=str),
                 encoding="utf-8",
             )
+            self._index_task(task.get("task_id"), d)
         except Exception:
             pass
 
@@ -792,6 +857,21 @@ class GameSpriteAPI:
         except Exception as e:
             self._log(task, f"导出打包警告: {e}")
 
+    def _ensure_task(self, task_id: str) -> dict:
+        """内存优先；重启后按 task_id / 目录从 task.json 恢复。"""
+        tid = (task_id or "").strip()
+        if not tid:
+            raise HTTPException(status_code=400, detail="缺少 task_id")
+        task = self.tasks.get(tid)
+        if task:
+            return task
+        try:
+            return self._load_task_from_dir(tid)
+        except FileNotFoundError as e:
+            raise HTTPException(status_code=404, detail=str(e) or "任务不存在") from e
+        except Exception as e:
+            raise HTTPException(status_code=404, detail=f"任务不存在: {e}") from e
+
     def register(self, app) -> None:
         api = self
 
@@ -886,18 +966,14 @@ class GameSpriteAPI:
         @app.get("/game-sprite/status")
         @app.get("/api/game-sprite/status")
         async def gs_status(task_id: str):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             out = {k: v for k, v in task.items() if k != "cancel"}
             return {"success": True, **out}
 
         @app.post("/game-sprite/cancel")
         @app.post("/api/game-sprite/cancel")
         async def gs_cancel(task_id: str = Form(...)):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             task["cancel"] = True
             api._log(task, "收到取消请求…")
             return {"success": True}
@@ -909,9 +985,7 @@ class GameSpriteAPI:
             still_id: str = Form(...),
             run_actions: str = Form("1"),
         ):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             stills = task.get("stills_ui") or []
             pick = None
             for s in stills:
@@ -936,9 +1010,7 @@ class GameSpriteAPI:
             image: UploadFile = File(...),
             run_actions: str = Form("0"),
         ):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             data = await image.read()
             if not data:
                 raise HTTPException(status_code=400, detail="空文件")
@@ -977,9 +1049,7 @@ class GameSpriteAPI:
             task_id: str = Form(...),
             actions: str = Form(""),
         ):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             if not task.get("picked_ref"):
                 raise HTTPException(status_code=400, detail="请先选择主参考图")
             act = _parse_actions(actions) if (actions or "").strip() else None
@@ -995,9 +1065,7 @@ class GameSpriteAPI:
             task_id: str = Form(...),
             action: str = Form(...),
         ):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             a = (action or "").strip().lower()
             if a not in set(_DEFAULT_ACTIONS + _OPTIONAL_ACTIONS):
                 raise HTTPException(status_code=400, detail="未知动作")
@@ -1039,9 +1107,7 @@ class GameSpriteAPI:
         @app.post("/game-sprite/export")
         @app.post("/api/game-sprite/export")
         async def gs_export(task_id: str = Form(...)):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             if not (task.get("animations_meta") or {}):
                 raise HTTPException(status_code=400, detail="尚无动画帧可导出")
             api._finalize_preview(task)
@@ -1059,9 +1125,7 @@ class GameSpriteAPI:
             task_id: str = Form(...),
             godot_project_path: str = Form(...),
         ):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             root = Path((godot_project_path or "").strip())
             try:
                 dest = copy_into_godot_project(
@@ -1075,9 +1139,7 @@ class GameSpriteAPI:
         @app.post("/game-sprite/reveal-output")
         @app.post("/api/game-sprite/reveal-output")
         async def gs_reveal(task_id: str = Form(...)):
-            task = api.tasks.get(task_id)
-            if not task:
-                raise HTTPException(status_code=404, detail="任务不存在")
+            task = api._ensure_task(task_id)
             path = str(api._task_dir(task).resolve())
             try:
                 import subprocess

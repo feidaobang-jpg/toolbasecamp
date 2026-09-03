@@ -447,7 +447,22 @@ document.addEventListener('DOMContentLoaded', function () {
   function pollStatus() {
     if (!currentTaskId) return;
     fetch(API_BASE + '/game-sprite/status?task_id=' + encodeURIComponent(currentTaskId))
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (r.status === 404) {
+          stopPolling();
+          setBusy(false);
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(
+              tr(
+                'privateHub.homePc.gameSpriteTaskLost',
+                '任务已丢失（服务可能刚重启）。请在下方历史里点「打开」，或重新生成定妆。'
+              )
+            );
+          }
+          return null;
+        }
+        return r.json();
+      })
       .then(function (data) {
         if (!data || !data.success) return;
         appendLogs(data.logs || []);

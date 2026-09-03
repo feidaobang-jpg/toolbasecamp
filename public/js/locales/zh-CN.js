@@ -382,6 +382,7 @@ window.TB_LOCALES['zh-CN'] = {
             gameSpriteClearAll: '清空全部',
             gameSpriteOpen: '打开',
             gameSpriteOpenFail: '无法打开历史任务',
+            gameSpriteTaskLost: '任务已丢失（服务可能刚重启）。请在下方历史里点「打开」，或重新生成定妆。',
             gameSpriteStart: '生成定妆',
             gameSpriteStillsTitle: '选择主参考图',
             gameSpriteStillsHint: '正/背/左/右为正交参考（正方形预览）；动作请优先选「侧视定妆」。点放大镜看大图。Z-Image 仍可能略偏 3/4，可重跑定妆。',
