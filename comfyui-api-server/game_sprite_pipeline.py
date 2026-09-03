@@ -72,6 +72,34 @@ _ASSET_TYPES = {
     "scene": {"label": "场景", "needs_actions": False},
 }
 
+# 游戏视角 → 定妆张数与动作主参考（不必永远三视图）
+_GAME_CAMERAS = {
+    "side": {
+        "label": "横版侧视",
+        "hero_view": "side",
+        "views": ("side",),
+        "i2v_lock": "locked 2D side-scroll / profile camera matching the start frame",
+    },
+    "front": {
+        "label": "正视（面向镜头）",
+        "hero_view": "front",
+        "views": ("front",),
+        "i2v_lock": "locked orthographic FRONT camera matching the start frame",
+    },
+    "topdown": {
+        "label": "俯视角",
+        "hero_view": "topdown",
+        "views": ("topdown",),
+        "i2v_lock": "locked top-down / bird's-eye camera matching the start frame",
+    },
+    "turnaround": {
+        "label": "三视图设定",
+        "hero_view": "side",
+        "views": ("front", "back", "side"),
+        "i2v_lock": "locked side-view camera matching the side hero start frame",
+    },
+}
+
 _DEFAULT_ACTIONS = [
     "idle",
     "walk",
@@ -92,11 +120,11 @@ _OPTIONAL_ACTIONS = ["cast", "dodge", "climb", "swim", "emote"]
 
 _ACTION_MOTIONS = {
     "idle": "subtle idle breathing, slight sway, feet planted, loopable idle pose",
-    "walk": "side-view walk cycle, clear leg steps, arms swing, constant ground contact rhythm",
-    "run": "side-view run cycle, faster stride, body lean forward, dynamic legs",
+    "walk": "walk cycle, clear leg steps, arms swing, constant ground contact rhythm",
+    "run": "run cycle, faster stride, body lean forward, dynamic legs",
     "jump": "character jumps upward then peaks, legs tuck, arms lift",
     "fall": "character falling downward, limbs slightly spread, descending motion",
-    "attack": "side-view melee attack swing, clear wind-up and strike, torso twist",
+    "attack": "melee attack swing, clear wind-up and strike, torso twist",
     "attack2": "alternate attack, strong follow-through slash or punch",
     "skill": "casting or special skill pose with glowing energy motion",
     "defend": "raise guard / block, shield or arms up, braced stance",
@@ -107,7 +135,7 @@ _ACTION_MOTIONS = {
     "cast": "spell cast gesture, hands forward, energy release",
     "dodge": "quick dodge roll or sidestep",
     "climb": "climbing upward motion",
-    "swim": "swimming stroke side-view",
+    "swim": "swimming stroke",
     "emote": "friendly wave or celebration emote",
 }
 
@@ -172,19 +200,32 @@ _STILL_CHROMA_NEG = (
 # 设定里常写「侧视横版」——生成正/背时必须剥掉，否则会压过视角指令
 _VIEW_POISON_RE = re.compile(
     r"(?i)"
-    r"(侧视|侧面|横版|正视|正面|背面|背视|三视图|正交|"
+    r"(侧视|侧面|横版|正视|正面|背面|背视|俯视|顶视|三视图|正交|"
     r"side[\s\-]?view|side[\s\-]?scroll(?:er)?|profile view|"
     r"front[\s\-]?view|back[\s\-]?view|rear[\s\-]?view|"
+    r"top[\s\-]?down|bird'?s?[\s\-]?eye|"
     r"three[\s\-]?quarter|3[\s\/]?4[\s\-]?view|orthographic)"
 )
 
 
 def _brief_core_for_view(brief: str, view: str) -> str:
     core = (brief or "").strip() or "game character"
-    if (view or "").strip().lower() in ("front", "back", "left", "right"):
+    if (view or "").strip().lower() in ("front", "back", "left", "right", "topdown", "side"):
         core = _VIEW_POISON_RE.sub(" ", core)
         core = re.sub(r"\s{2,}", " ", core).strip(" ,;，；") or "game character"
     return core
+
+
+def _normalize_camera(raw: Any) -> str:
+    key = str(raw or "").strip().lower()
+    if key in _GAME_CAMERAS:
+        return key
+    # 旧 still_count / candidates：1→侧视，3→三视图
+    try:
+        n = int(raw)
+        return "side" if n <= 1 else "turnaround"
+    except Exception:
+        return "side"
 
 
 def _build_still_prompt(
@@ -197,9 +238,9 @@ def _build_still_prompt(
     """
     view:
       front / back — 设定对照（正交）
-      side — 侧视定妆，动作图生视频只用这一张作主参考
-      left / right — 可选侧面（当前默认不出）
-      concept — 道具/建筑/场景
+      side — 横版侧视定妆
+      topdown — 俯视定妆
+      left / right — 可选侧面
     """
     sty = _style_suffix(style)
     view_n = (view or "side").strip().lower()
@@ -240,9 +281,14 @@ def _build_still_prompt(
             "CAMERA LOCK: 2D side-scroll sprite START FRAME, true RIGHT profile facing right, "
             "full-body idle standing, feet planted, clear silhouette for animation, side-view"
         ),
+        "topdown": (
+            "CAMERA LOCK: orthographic TOP-DOWN / bird's-eye game sprite only. "
+            "Camera above looking straight down, head near top of canvas, feet toward bottom, "
+            "full body readable from above, no horizon, no side profile. "
+            "Forbidden: eye-level front view, side silhouette, 3/4 perspective."
+        ),
     }
     pose = view_specs.get(view_n) or view_specs["side"]
-    # 视角指令放最前，避免被设定/风格词淹没
     return (
         f"{pose}. square 1:1 canvas, single character only, ONE camera angle only, "
         f"character design (ignore any camera words in design text): {core}, {sty}, "
@@ -250,40 +296,54 @@ def _build_still_prompt(
     )
 
 
-def _normalize_still_count(raw: Any) -> int:
-    """定妆张数：仅允许 1（侧视）或 3（正+背+侧）。旧值 2（曾表示两张侧视）视为 3。"""
-    try:
-        n = int(raw)
-    except Exception:
-        n = 3
-    return 1 if n <= 1 else 3
+def _job_id_for_view(view: str) -> str:
+    v = (view or "side").strip().lower()
+    if v == "side":
+        return "side_00"
+    return v
 
 
 def _character_still_jobs(
-    brief: str, asset_type: str, style: str, still_count: int = 3
+    brief: str, asset_type: str, style: str, camera: str = "side"
 ) -> List[Tuple[str, str]]:
-    """
-    still_count=1：仅侧视定妆（动作主参考，无需再选）。
-    still_count=3：正面 + 背面 + 侧视定妆（动作仍用侧视）。
-    """
-    side_prompt = _build_still_prompt(brief, asset_type=asset_type, style=style, view="side")
-    side_job = ("side_00", side_prompt)
-    if _normalize_still_count(still_count) <= 1:
-        return [side_job]
-    return [
-        ("front", _build_still_prompt(brief, asset_type=asset_type, style=style, view="front")),
-        ("back", _build_still_prompt(brief, asset_type=asset_type, style=style, view="back")),
-        side_job,
-    ]
+    cam = _normalize_camera(camera)
+    views = _GAME_CAMERAS[cam]["views"]
+    jobs: List[Tuple[str, str]] = []
+    for v in views:
+        jobs.append(
+            (
+                _job_id_for_view(v),
+                _build_still_prompt(brief, asset_type=asset_type, style=style, view=v),
+            )
+        )
+    return jobs
 
 
-def _build_action_prompt(brief: str, action: str, style: str) -> str:
+def _prefer_still_id(stills: List[dict], camera: str) -> Optional[dict]:
+    if not stills:
+        return None
+    hero = _GAME_CAMERAS[_normalize_camera(camera)]["hero_view"]
+    want = _job_id_for_view(hero)
+    for s in stills:
+        sid = str(s.get("id") or "")
+        if sid == want or sid.startswith(want):
+            return s
+    if hero == "side":
+        for s in stills:
+            if str(s.get("id") or "").startswith("side_"):
+                return s
+    return stills[-1]
+
+
+def _build_action_prompt(brief: str, action: str, style: str, camera: str = "side") -> str:
     motion = _ACTION_MOTIONS.get(action, f"perform {action} action")
     sty = _style_suffix(style)
     core = (brief or "").strip() or "same character"
+    cam = _normalize_camera(camera)
+    lock = _GAME_CAMERAS[cam]["i2v_lock"]
     return (
         f"Use the provided start image as frame 1. Keep the exact same character design, outfit, "
-        f"proportions, and side-view camera. {core}. Action: {action}. {motion}. "
+        f"proportions, and {lock}. {core}. Action: {action}. {motion}. "
         f"{sty}. Full body visible, feet on ground plane when applicable, "
         f"solid chroma-key green background #00FF00, "
         f"no camera cut, no morphing into different character, temporal continuity."
@@ -606,16 +666,17 @@ class GameSpriteAPI:
             asset_type = task["asset_type"]
             style = task["visual_style"]
             brief = task["brief"]
-            still_count = _normalize_still_count(task.get("still_count", task.get("candidates")))
-            task["still_count"] = still_count
-            task["candidates"] = still_count  # 兼容旧前端字段名
+            camera = _normalize_camera(task.get("camera") or task.get("still_count") or task.get("candidates"))
+            task["camera"] = camera
+            task["still_count"] = len(_GAME_CAMERAS[camera]["views"])
+            task["candidates"] = task["still_count"]
             # 正方形画布，方便网格预览与正交参考
             gen_w, gen_h = 768, 768
             # 绿幕 + 正交负面（透视/3/4）
             extra_neg = _STILL_CHROMA_NEG
             prompts: List[Tuple[str, str]] = []
             if asset_type in ("character", "monster"):
-                prompts = _character_still_jobs(brief, asset_type, style, still_count)
+                prompts = _character_still_jobs(brief, asset_type, style, camera)
             else:
                 prompts.append(
                     (
@@ -694,22 +755,22 @@ class GameSpriteAPI:
                 task["picked_ref"] = ui[0]
                 task["stage"] = "actions"
                 task["status"] = "running"
-                self._log(task, "仅 1 张定妆，已自动选用，开始后续流程…")
+                self._log(
+                    task,
+                    f"视角「{_GAME_CAMERAS[camera]['label']}」仅 1 张定妆，已自动选用，开始后续流程…",
+                )
                 self._save_task_snapshot(task)
                 asyncio.create_task(self._run_actions(task_id))
                 return
 
-            # 三视图：默认勾选侧视，仍等待确认（正/背可对照）
-            side_pick = next(
-                (x for x in ui if str(x.get("id") or "").startswith("side_")),
-                ui[-1],
-            )
+            # 三视图：默认勾选动作主参考（侧视），仍等待确认
+            side_pick = _prefer_still_id(ui, camera) or ui[-1]
             task["picked_ref"] = side_pick
             task["stage"] = "pick"
             task["status"] = "waiting_pick"
             self._log(
                 task,
-                f"已生成 {total} 张参考（正面/背面/侧视定妆）。动作请确认「侧视定妆」后继续",
+                f"已生成 {total} 张「{_GAME_CAMERAS[camera]['label']}」参考。请确认动作主参考后继续",
             )
             self._save_task_snapshot(task)
         except Exception as e:
@@ -781,7 +842,12 @@ class GameSpriteAPI:
         raw_alt = d / "stills" / f"{stem}_raw.png" if stem else None
         i2v_src = raw_alt if raw_alt and raw_alt.exists() else src
         ref_bytes = i2v_src.read_bytes()
-        prompt = _build_action_prompt(task["brief"], action, task["visual_style"])
+        prompt = _build_action_prompt(
+            task["brief"],
+            action,
+            task["visual_style"],
+            camera=str(task.get("camera") or "side"),
+        )
         dur = float(task.get("action_duration_sec") or 2.5)
         target_frames = int(task.get("frames_per_action") or 8)
 
@@ -964,7 +1030,8 @@ class GameSpriteAPI:
             fps: str = Form("8"),
             pixel_art: str = Form("0"),
             actions: str = Form(""),
-            still_count: str = Form("3"),
+            camera: str = Form("side"),
+            still_count: str = Form(""),
             candidates: str = Form(""),
             frames_per_action: str = Form("8"),
             action_duration_sec: str = Form("2.5"),
@@ -988,9 +1055,9 @@ class GameSpriteAPI:
                 fps_i = max(4, min(24, int(fps or 8)))
             except Exception:
                 fps_i = 8
-            # still_count：1=仅侧视，3=三视图。兼容旧字段 candidates（2 归为 3）
-            raw_count = (still_count or "").strip() or (candidates or "").strip() or "3"
-            count_n = _normalize_still_count(raw_count)
+            cam_raw = (camera or "").strip() or (still_count or "").strip() or (candidates or "").strip() or "side"
+            cam = _normalize_camera(cam_raw)
+            count_n = len(_GAME_CAMERAS[cam]["views"])
             try:
                 fpa = max(4, min(24, int(frames_per_action or 8)))
             except Exception:
@@ -1019,6 +1086,7 @@ class GameSpriteAPI:
                 "char_id": char_id,
                 "asset_type": at,
                 "visual_style": style,
+                "camera": cam,
                 "canvas": [cw, ch],
                 "fps": fps_i,
                 "pixel_art": pixel,
@@ -1244,6 +1312,8 @@ class GameSpriteAPI:
                 "default_actions": _DEFAULT_ACTIONS,
                 "optional_actions": _OPTIONAL_ACTIONS,
                 "canvas_presets": list(_CANVAS_PRESETS.keys()),
+                "cameras": {k: v["label"] for k, v in _GAME_CAMERAS.items()},
+                "default_camera": "side",
             }
 
         @app.get("/game-sprite/history")

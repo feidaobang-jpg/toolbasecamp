@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var charName = document.getElementById('char-name');
   var canvasSelect = document.getElementById('canvas-select');
   var fpsSelect = document.getElementById('fps-select');
-  var stillCountSelect = document.getElementById('still-count-select');
-  var candidatesSelect = stillCountSelect; // 兼容旧变量名
+  var stillCountSelect = null;
+  var cameraRow = document.getElementById('camera-row');
   var typeRow = document.getElementById('type-row');
   var styleRow = document.getElementById('style-row');
   var actionsRow = document.getElementById('actions-row');
@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var API_BASE = window.HomePcApi.base();
   var selectedType = 'character';
   var selectedStyle = 'cartoon';
+  var selectedCamera = 'side';
   var currentTaskId = null;
   var pollingTimer = null;
   var lastLogLen = 0;
@@ -88,10 +89,22 @@ document.addEventListener('DOMContentLoaded', function () {
     return fallback || key;
   }
 
-  function _normalizeStillCountUi(raw) {
+  function _normalizeCameraUi(raw) {
+    var key = String(raw || '').trim().toLowerCase();
+    if (key === 'side' || key === 'front' || key === 'topdown' || key === 'turnaround') return key;
     var n = parseInt(raw, 10);
-    if (isNaN(n) || n <= 1) return 1;
-    return 3;
+    if (!isNaN(n)) return n <= 1 ? 'side' : 'turnaround';
+    return 'side';
+  }
+
+  function heroStillOk(stillId, camera) {
+    var sid = String(stillId || '');
+    var cam = _normalizeCameraUi(camera);
+    if (sid.indexOf('upload') === 0 || sid.indexOf('concept') === 0) return true;
+    if (cam === 'front') return sid === 'front';
+    if (cam === 'topdown') return sid === 'topdown';
+    // side / turnaround：动作主参考必须是侧视
+    return sid.indexOf('side_') === 0 || sid === 'side';
   }
 
   function actionLabel(id) {
@@ -204,6 +217,9 @@ document.addEventListener('DOMContentLoaded', function () {
   bindChipRow(styleRow, 'data-style', function (v) {
     selectedStyle = v || 'cartoon';
   });
+  bindChipRow(cameraRow, 'data-camera', function (v) {
+    selectedCamera = _normalizeCameraUi(v);
+  });
   renderActionChips();
   document.addEventListener('tb:locale', function () {
     renderActionChips();
@@ -247,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
     back: ['gameSpriteStillBack', '背面'],
     left: ['gameSpriteStillLeft', '左侧面'],
     right: ['gameSpriteStillRight', '右侧面'],
+    topdown: ['gameSpriteStillTop', '俯视'],
     concept: ['gameSpriteStillConcept', '概念图'],
     upload: ['gameSpriteStillUpload', '上传']
   };
@@ -311,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
         : tr(
             'privateHub.homePc.gameSpriteStillsHint',
-            '三视图时请确认「侧视定妆」再生成动作；正/背只作设定对照。仅1张时会自动选用。点放大镜看大图。'
+            '单视角 1 张会自动选用。三视图请确认「侧视定妆」再跑动作。点放大镜看大图。'
           );
     }
     // 清掉旧版误插的第二行提示
@@ -320,14 +337,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     if (confirmPickBtn) confirmPickBtn.disabled = !!generating;
 
-    // 未选手动时，默认勾选侧视定妆
+    // 未选手动时，默认勾选动作主参考
     if (!pickedStillId && !generating) {
       var prefer = null;
+      var cam = selectedCamera;
       for (var i = 0; i < items.length; i++) {
         var kid = String(items[i].id || items[i].kind || '');
-        if (kid.indexOf('side_') === 0) {
+        if (heroStillOk(kid, cam)) {
           prefer = kid;
           break;
+        }
+      }
+      if (!prefer) {
+        for (var j = 0; j < items.length; j++) {
+          var kid2 = String(items[j].id || items[j].kind || '');
+          if (kid2.indexOf('side_') === 0) {
+            prefer = kid2;
+            break;
+          }
         }
       }
       if (prefer) pickedStillId = prefer;
@@ -533,11 +560,10 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('char_name', (charName && charName.value) || '');
     fd.append('asset_type', selectedType);
     fd.append('visual_style', selectedStyle);
+    fd.append('camera', selectedCamera);
     fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
     fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
     fd.append('pixel_art', selectedStyle === 'pixel' ? '1' : '0');
-    fd.append('still_count', (stillCountSelect && stillCountSelect.value) || '3');
-    fd.append('candidates', (stillCountSelect && stillCountSelect.value) || '3');
     var actPayload = needsActions()
       ? (selectedActions.length ? selectedActions.join(',') : 'idle')
       : 'idle';
@@ -604,16 +630,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       var sid = String(pickedStillId);
-      var isSide =
-        sid.indexOf('side_') === 0 ||
-        sid === 'side' ||
-        sid.indexOf('upload') === 0 ||
-        sid.indexOf('concept') === 0;
-      if (!isSide && typeof window.tbNotify === 'function') {
+      if (!heroStillOk(sid, selectedCamera) && typeof window.tbNotify === 'function') {
         window.tbNotify(
           tr(
-            'privateHub.homePc.gameSpriteNeedSidePick',
-            '动作请选「侧视定妆」（不要用正面/背面跑图生视频）'
+            'privateHub.homePc.gameSpriteNeedHeroPick',
+            '请选与当前游戏视角匹配的主参考图（三视图请选侧视定妆）'
           )
         );
         return;
@@ -757,6 +778,8 @@ document.addEventListener('DOMContentLoaded', function () {
       selectedStyle = String(data.visual_style);
       selectChip(styleRow, 'data-style', selectedStyle);
     }
+    selectedCamera = _normalizeCameraUi(data.camera || data.still_count || data.candidates);
+    selectChip(cameraRow, 'data-camera', selectedCamera);
     if (canvasSelect && data.canvas) {
       var cw = Array.isArray(data.canvas) ? data.canvas[0] : data.canvas;
       var key = String(cw || '');
@@ -768,13 +791,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var fpsKey = String(data.fps);
       if (fpsSelect.querySelector('option[value="' + fpsKey + '"]')) {
         fpsSelect.value = fpsKey;
-      }
-    }
-    if (stillCountSelect) {
-      var sc = data.still_count != null ? data.still_count : data.candidates;
-      var scKey = String(_normalizeStillCountUi(sc));
-      if (stillCountSelect.querySelector('option[value="' + scKey + '"]')) {
-        stillCountSelect.value = scKey;
       }
     }
     if (Array.isArray(data.actions) && data.actions.length) {
