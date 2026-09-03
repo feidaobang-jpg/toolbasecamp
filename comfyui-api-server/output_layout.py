@@ -137,7 +137,7 @@ def list_task_dirs(
     cat = root / category
     if cat.is_dir():
         for p in cat.iterdir():
-            if p.is_dir() and not p.name.startswith("_"):
+            if p.is_dir() and not p.name.startswith("_") and p.name != "projects":
                 _add(p)
 
     if legacy_pred:

@@ -32,11 +32,19 @@ document.addEventListener('DOMContentLoaded', function () {
   var historyList = document.getElementById('history-list');
   var refFile = document.getElementById('ref-file');
   var godotPath = document.getElementById('godot-path');
+  var projectPick = document.getElementById('project-pick');
+  var projectName = document.getElementById('project-name');
+  var projectCreateBtn = document.getElementById('project-create-btn');
+  var projectRefreshBtn = document.getElementById('project-refresh-btn');
+  var projectSaveBtn = document.getElementById('project-save-btn');
+  var projectActive = document.getElementById('project-active');
+  var assetWorkspace = document.getElementById('asset-workspace');
 
   var API_BASE = window.HomePcApi.base();
   var selectedType = 'character';
   var selectedStyle = 'cartoon';
-  var selectedCamera = 'side';
+  var selectedCamera = 'topdown';
+  var currentProject = null;
   var currentTaskId = null;
   var pollingTimer = null;
   var lastLogLen = 0;
@@ -91,8 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function _normalizeCameraUi(raw) {
     var key = String(raw || '').trim().toLowerCase();
-    if (key === 'topdown') return 'topdown';
-    return 'side';
+    if (key === 'side') return 'side';
+    return 'topdown';
   }
 
   function heroStillOk(stillId, camera) {
@@ -219,7 +227,179 @@ document.addEventListener('DOMContentLoaded', function () {
   renderActionChips();
   document.addEventListener('tb:locale', function () {
     renderActionChips();
+    updateProjectActiveLabel();
   });
+
+  function updateProjectActiveLabel() {
+    if (!projectActive) return;
+    if (!currentProject) {
+      projectActive.textContent = tr(
+        'privateHub.homePc.gameSpriteNeedProject',
+        '请先创建或打开一个游戏项目'
+      );
+      return;
+    }
+    var camLabel =
+      currentProject.camera === 'side'
+        ? tr('privateHub.homePc.gameSpriteCameraSide', '横版侧视')
+        : tr('privateHub.homePc.gameSpriteCameraTop', '俯视');
+    projectActive.textContent =
+      tr('privateHub.homePc.gameSpriteProjectActive', '当前项目') +
+      '：' +
+      (currentProject.name || currentProject.slug) +
+      ' · ' +
+      camLabel;
+  }
+
+  function applyProjectToForm(proj) {
+    currentProject = proj || null;
+    if (!proj) {
+      updateProjectActiveLabel();
+      return;
+    }
+    selectedCamera = _normalizeCameraUi(proj.camera);
+    selectChip(cameraRow, 'data-camera', selectedCamera);
+    if (proj.visual_style) {
+      selectedStyle = String(proj.visual_style);
+      selectChip(styleRow, 'data-style', selectedStyle);
+    }
+    if (canvasSelect && proj.canvas) {
+      var cw = Array.isArray(proj.canvas) ? proj.canvas[0] : proj.canvas;
+      var key = String(cw || '');
+      if (canvasSelect.querySelector('option[value="' + key + '"]')) canvasSelect.value = key;
+    }
+    if (fpsSelect && proj.fps != null) {
+      var fpsKey = String(proj.fps);
+      if (fpsSelect.querySelector('option[value="' + fpsKey + '"]')) fpsSelect.value = fpsKey;
+    }
+    if (godotPath && proj.godot_project_path) godotPath.value = String(proj.godot_project_path);
+    updateProjectActiveLabel();
+    loadHistory();
+  }
+
+  function loadProjects(selectSlug) {
+    if (!projectPick) return Promise.resolve();
+    return fetch(API_BASE + '/game-sprite/projects')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var items = (data && data.items) || [];
+        var cur = selectSlug || (projectPick.value || '');
+        projectPick.innerHTML =
+          '<option value="">' +
+          tr('privateHub.homePc.gameSpriteProjectPickPlaceholder', '请选择已有项目…') +
+          '</option>';
+        items.forEach(function (it) {
+          var opt = document.createElement('option');
+          opt.value = it.slug || it.project_id;
+          opt.textContent =
+            (it.name || it.slug) +
+            '（' +
+            (it.camera === 'side' ? '侧视' : '俯视') +
+            ' · ' +
+            (it.asset_count || 0) +
+            '）';
+          projectPick.appendChild(opt);
+        });
+        if (cur) projectPick.value = cur;
+      })
+      .catch(function () {});
+  }
+
+  function openProject(key) {
+    if (!key) {
+      currentProject = null;
+      updateProjectActiveLabel();
+      loadHistory();
+      return;
+    }
+    fetch(API_BASE + '/game-sprite/projects/get?project=' + encodeURIComponent(key))
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) {
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(String((data && data.detail) || '打开项目失败'));
+          }
+          return;
+        }
+        applyProjectToForm(data.project);
+        if (projectPick && data.project && data.project.slug) {
+          projectPick.value = data.project.slug;
+        }
+      })
+      .catch(function (e) {
+        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+      });
+  }
+
+  function createProject() {
+    var name = (projectName && projectName.value || '').trim();
+    if (!name) {
+      if (typeof window.tbNotify === 'function') {
+        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedProjectName', '请填写游戏项目名'));
+      }
+      return;
+    }
+    var fd = new FormData();
+    fd.append('name', name);
+    fd.append('camera', selectedCamera || 'topdown');
+    fd.append('visual_style', selectedStyle || 'cartoon');
+    fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
+    fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
+    fd.append('godot_project_path', (godotPath && godotPath.value) || '');
+    fetch(API_BASE + '/game-sprite/projects/create', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) {
+          throw new Error((data && data.detail) || 'create project failed');
+        }
+        if (projectName) projectName.value = '';
+        applyProjectToForm(data.project);
+        return loadProjects(data.project && data.project.slug);
+      })
+      .catch(function (e) {
+        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+      });
+  }
+
+  function saveProjectSettings() {
+    if (!currentProject || !(currentProject.slug || currentProject.project_id)) {
+      if (typeof window.tbNotify === 'function') {
+        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目'));
+      }
+      return;
+    }
+    var fd = new FormData();
+    fd.append('project', currentProject.slug || currentProject.project_id);
+    fd.append('camera', selectedCamera || 'topdown');
+    fd.append('visual_style', selectedStyle || 'cartoon');
+    fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
+    fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
+    fd.append('godot_project_path', (godotPath && godotPath.value) || '');
+    fetch(API_BASE + '/game-sprite/projects/update', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) throw new Error((data && data.detail) || 'save failed');
+        applyProjectToForm(data.project);
+        if (typeof window.tbNotify === 'function') {
+          window.tbNotify(tr('privateHub.homePc.gameSpriteProjectSaved', '项目设置已保存'));
+        }
+        return loadProjects(data.project && data.project.slug);
+      })
+      .catch(function (e) {
+        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+      });
+  }
+
+  if (projectPick) {
+    projectPick.addEventListener('change', function () {
+      openProject(projectPick.value);
+    });
+  }
+  if (projectCreateBtn) projectCreateBtn.addEventListener('click', createProject);
+  if (projectRefreshBtn) projectRefreshBtn.addEventListener('click', function () { loadProjects(projectPick && projectPick.value); });
+  if (projectSaveBtn) projectSaveBtn.addEventListener('click', saveProjectSettings);
+  updateProjectActiveLabel();
+  loadProjects();
 
   function setBusy(busy) {
     if (startBtn) startBtn.disabled = !!busy;
@@ -542,6 +722,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function startTask() {
+    if (!currentProject || !(currentProject.slug || currentProject.project_id)) {
+      if (typeof window.tbNotify === 'function') {
+        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目'));
+      }
+      return;
+    }
     var brief = (briefInput && briefInput.value || '').trim();
     if (brief.length < 2) {
       if (typeof window.tbNotify === 'function') {
@@ -555,6 +741,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('brief', brief);
     fd.append('char_name', (charName && charName.value) || '');
     fd.append('asset_type', selectedType);
+    fd.append('project', currentProject.slug || currentProject.project_id);
     fd.append('visual_style', selectedStyle);
     fd.append('camera', selectedCamera);
     fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
@@ -799,6 +986,15 @@ document.addEventListener('DOMContentLoaded', function () {
     currentTaskId = data.task_id;
     lastLogLen = 0;
     if (logOutput) logOutput.textContent = '';
+    if (data.project_slug || data.project_id) {
+      var pk = data.project_slug || data.project_id;
+      if (
+        !currentProject ||
+        (currentProject.slug !== pk && currentProject.project_id !== pk)
+      ) {
+        openProject(pk);
+      }
+    }
     fillFormFromTask(data);
     appendLogs(data.logs || []);
     updateProgress(data);
@@ -838,7 +1034,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function loadHistory() {
     if (!historyList) return;
-    fetch(API_BASE + '/game-sprite/history?limit=20')
+    var q = API_BASE + '/game-sprite/history?limit=20';
+    if (currentProject && (currentProject.slug || currentProject.project_id)) {
+      q += '&project=' + encodeURIComponent(currentProject.slug || currentProject.project_id);
+    }
+    fetch(q)
       .then(function (r) { return r.json(); })
       .then(function (data) {
         var items = (data && data.items) || [];

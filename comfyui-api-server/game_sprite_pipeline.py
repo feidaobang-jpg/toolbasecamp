@@ -30,6 +30,7 @@ from game_sprite_postprocess import (
 )
 from output_layout import (
     alloc_under,
+    category_dir,
     ensure_reserved_dirs,
     list_task_dirs,
     rel_to_root,
@@ -206,10 +207,18 @@ def _brief_core_for_view(brief: str, view: str) -> str:
 
 def _normalize_camera(raw: Any) -> str:
     key = str(raw or "").strip().lower()
+    if key == "topdown":
+        return "topdown"
+    # 旧 front / turnaround / 张数 → 侧视；显式 side 也保留
+    if key in ("side", "front", "turnaround", "1", "2", "3"):
+        return "side"
     if key in _GAME_CAMERAS:
         return key
-    # 旧 front / turnaround / 张数等 → 侧视
-    return "side"
+    # 新建默认俯视（首个游戏走幸存者风）
+    return "topdown"
+
+
+_DEFAULT_CAMERA = "topdown"
 
 
 def _build_still_prompt(
@@ -410,11 +419,120 @@ class GameSpriteAPI:
             task["logs"] = logs
         logs.append(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
 
-    def _alloc_dir(self, char_id: str) -> str:
+    def _alloc_dir(self, char_id: str, project_slug: str = "") -> str:
         root: Path = self.deps["output_root"]
         ensure_reserved_dirs(root)
         base = datetime.now().strftime("%Y-%m-%d_%H-%M") + f"_gs_{char_id}"
+        slug = _safe_slug(project_slug or "", "")
+        if slug:
+            projects = category_dir(root, "game_sprites", ensure=True) / "projects" / slug / "assets"
+            projects.mkdir(parents=True, exist_ok=True)
+            leaf = base
+            if (projects / leaf).exists():
+                for i in range(1, 1000):
+                    cand = f"{base}_{i:02d}"
+                    if not (projects / cand).exists():
+                        leaf = cand
+                        break
+            return f"game_sprites/projects/{slug}/assets/{leaf}"
         return alloc_under(root, "game_sprites", base)
+
+    def _projects_root(self) -> Path:
+        root: Path = self.deps["output_root"]
+        d = category_dir(root, "game_sprites", ensure=True) / "projects"
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def _project_dir(self, slug: str) -> Path:
+        s = _safe_slug(slug or "", "")
+        if not s:
+            raise ValueError("无效项目名")
+        d = self._projects_root() / s
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "assets").mkdir(parents=True, exist_ok=True)
+        return d
+
+    def _project_path(self, slug: str) -> Path:
+        return self._project_dir(slug) / "project.json"
+
+    def _read_project(self, slug_or_id: str) -> dict:
+        key = (slug_or_id or "").strip()
+        if not key:
+            raise FileNotFoundError("缺少项目")
+        root = self._projects_root()
+        # 先按 slug 目录
+        p = root / _safe_slug(key, key) / "project.json"
+        if p.exists():
+            meta = json.loads(p.read_text(encoding="utf-8"))
+            meta["camera"] = _normalize_camera(meta.get("camera"))
+            return meta
+        # 再扫 project_id
+        for d in root.iterdir():
+            if not d.is_dir():
+                continue
+            pj = d / "project.json"
+            if not pj.exists():
+                continue
+            try:
+                meta = json.loads(pj.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if str(meta.get("project_id") or "") == key or str(meta.get("slug") or "") == key:
+                meta["camera"] = _normalize_camera(meta.get("camera"))
+                return meta
+        raise FileNotFoundError(f"项目不存在: {key}")
+
+    def _write_project(self, meta: dict) -> dict:
+        slug = _safe_slug(str(meta.get("slug") or ""), "")
+        if not slug:
+            raise ValueError("缺少 slug")
+        meta["slug"] = slug
+        meta["camera"] = _normalize_camera(meta.get("camera"))
+        meta["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        path = self._project_path(slug)
+        path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        return meta
+
+    def _list_projects(self) -> List[dict]:
+        root = self._projects_root()
+        items: List[dict] = []
+        for d in root.iterdir():
+            if not d.is_dir():
+                continue
+            pj = d / "project.json"
+            if not pj.exists():
+                continue
+            try:
+                meta = json.loads(pj.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            assets = d / "assets"
+            n_assets = 0
+            if assets.is_dir():
+                n_assets = sum(1 for x in assets.iterdir() if x.is_dir())
+            items.append(
+                {
+                    "project_id": meta.get("project_id") or "",
+                    "slug": meta.get("slug") or d.name,
+                    "name": meta.get("name") or d.name,
+                    "camera": _normalize_camera(meta.get("camera")),
+                    "visual_style": meta.get("visual_style") or "cartoon",
+                    "canvas": meta.get("canvas") or [256, 256],
+                    "fps": meta.get("fps") or 8,
+                    "asset_count": n_assets,
+                    "mtime": int(d.stat().st_mtime),
+                }
+            )
+        items.sort(key=lambda x: x.get("mtime") or 0, reverse=True)
+        return items
+
+    def _list_project_assets(self, slug: str, limit: int = 24) -> List[Path]:
+        d = self._project_dir(slug) / "assets"
+        if not d.is_dir():
+            return []
+        found = [p for p in d.iterdir() if p.is_dir()]
+        found.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+        return found[: max(1, min(120, int(limit or 24)))]
 
     def _task_dir(self, task: dict) -> Path:
         root: Path = self.deps["output_root"]
@@ -1003,18 +1121,119 @@ class GameSpriteAPI:
     def register(self, app) -> None:
         api = self
 
+        @app.get("/game-sprite/projects")
+        @app.get("/api/game-sprite/projects")
+        async def gs_projects():
+            return {"success": True, "items": api._list_projects()}
+
+        @app.post("/game-sprite/projects/create")
+        @app.post("/api/game-sprite/projects/create")
+        async def gs_project_create(
+            name: str = Form(...),
+            camera: str = Form("topdown"),
+            visual_style: str = Form("cartoon"),
+            canvas: str = Form("256"),
+            fps: str = Form("8"),
+            godot_project_path: str = Form(""),
+        ):
+            title = (name or "").strip()
+            if len(title) < 1:
+                raise HTTPException(status_code=400, detail="请填写游戏项目名")
+            slug = _safe_slug(title, "game")
+            # 避免撞名
+            root = api._projects_root()
+            base_slug = slug
+            for i in range(0, 100):
+                cand = base_slug if i == 0 else f"{base_slug}_{i:02d}"
+                if not (root / cand / "project.json").exists():
+                    slug = cand
+                    break
+            style = (visual_style or "cartoon").strip().lower()
+            if style not in _VISUAL_STYLES:
+                style = "cartoon"
+            ckey = (canvas or "256").strip()
+            cw, ch = _CANVAS_PRESETS.get(ckey, (256, 256))
+            try:
+                fps_i = max(4, min(24, int(fps or 8)))
+            except Exception:
+                fps_i = 8
+            meta = {
+                "project_id": uuid.uuid4().hex,
+                "slug": slug,
+                "name": title,
+                "camera": _normalize_camera(camera or _DEFAULT_CAMERA),
+                "visual_style": style,
+                "canvas": [cw, ch],
+                "fps": fps_i,
+                "pixel_art": style == "pixel",
+                "godot_project_path": (godot_project_path or "").strip(),
+                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            api._project_dir(slug)
+            api._write_project(meta)
+            return {"success": True, "project": meta}
+
+        @app.get("/game-sprite/projects/get")
+        @app.get("/api/game-sprite/projects/get")
+        async def gs_project_get(project: str):
+            try:
+                meta = api._read_project(project)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            return {"success": True, "project": meta}
+
+        @app.post("/game-sprite/projects/update")
+        @app.post("/api/game-sprite/projects/update")
+        async def gs_project_update(
+            project: str = Form(...),
+            name: str = Form(""),
+            camera: str = Form(""),
+            visual_style: str = Form(""),
+            canvas: str = Form(""),
+            fps: str = Form(""),
+            godot_project_path: str = Form(""),
+        ):
+            try:
+                meta = api._read_project(project)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            if (name or "").strip():
+                meta["name"] = (name or "").strip()
+            if (camera or "").strip():
+                meta["camera"] = _normalize_camera(camera)
+            if (visual_style or "").strip():
+                style = (visual_style or "").strip().lower()
+                if style in _VISUAL_STYLES:
+                    meta["visual_style"] = style
+                    meta["pixel_art"] = style == "pixel"
+            if (canvas or "").strip():
+                ckey = (canvas or "").strip()
+                if ckey in _CANVAS_PRESETS:
+                    cw, ch = _CANVAS_PRESETS[ckey]
+                    meta["canvas"] = [cw, ch]
+            if (fps or "").strip():
+                try:
+                    meta["fps"] = max(4, min(24, int(fps)))
+                except Exception:
+                    pass
+            if godot_project_path is not None and str(godot_project_path).strip() != "":
+                meta["godot_project_path"] = str(godot_project_path).strip()
+            api._write_project(meta)
+            return {"success": True, "project": meta}
+
         @app.post("/game-sprite/create")
         @app.post("/api/game-sprite/create")
         async def gs_create(
             brief: str = Form(...),
             char_name: str = Form(""),
             asset_type: str = Form("character"),
-            visual_style: str = Form("cartoon"),
-            canvas: str = Form("256"),
-            fps: str = Form("8"),
+            visual_style: str = Form(""),
+            canvas: str = Form(""),
+            fps: str = Form(""),
             pixel_art: str = Form("0"),
             actions: str = Form(""),
-            camera: str = Form("side"),
+            camera: str = Form(""),
+            project: str = Form(...),
             still_count: str = Form(""),
             candidates: str = Form(""),
             frames_per_action: str = Form("8"),
@@ -1023,24 +1242,31 @@ class GameSpriteAPI:
             text = (brief or "").strip()
             if len(text) < 2:
                 raise HTTPException(status_code=400, detail="请填写角色/资产设定")
+            try:
+                proj = api._read_project(project)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=400, detail=str(e) or "请先创建并打开游戏项目")
             at = (asset_type or "character").strip().lower()
             if at not in _ASSET_TYPES:
                 at = "character"
-            style = (visual_style or "cartoon").strip().lower()
+            # 全游戏设置以项目为准；表单仅作缺省回退
+            style = (proj.get("visual_style") or visual_style or "cartoon").strip().lower()
             if style not in _VISUAL_STYLES:
                 style = "cartoon"
-            if style == "pixel":
-                pixel = True
-            else:
-                pixel = str(pixel_art or "0").strip().lower() not in ("0", "false", "no", "off")
-            ckey = (canvas or "256").strip()
-            cw, ch = _CANVAS_PRESETS.get(ckey, (256, 256))
+            pixel = bool(proj.get("pixel_art")) or style == "pixel"
+            canvas_arr = proj.get("canvas") or [256, 256]
             try:
-                fps_i = max(4, min(24, int(fps or 8)))
+                cw, ch = int(canvas_arr[0]), int(canvas_arr[1])
+            except Exception:
+                cw, ch = 256, 256
+            if (canvas or "").strip() in _CANVAS_PRESETS and not proj.get("canvas"):
+                cw, ch = _CANVAS_PRESETS[(canvas or "").strip()]
+            try:
+                fps_i = int(proj.get("fps") or fps or 8)
+                fps_i = max(4, min(24, fps_i))
             except Exception:
                 fps_i = 8
-            cam_raw = (camera or "").strip() or (still_count or "").strip() or (candidates or "").strip() or "side"
-            cam = _normalize_camera(cam_raw)
+            cam = _normalize_camera(proj.get("camera") or camera or _DEFAULT_CAMERA)
             count_n = len(_GAME_CAMERAS[cam]["views"])
             try:
                 fpa = max(4, min(24, int(frames_per_action or 8)))
@@ -1055,7 +1281,7 @@ class GameSpriteAPI:
             act_list = _parse_actions(actions) if _ASSET_TYPES[at]["needs_actions"] else ["idle"]
 
             task_id = uuid.uuid4().hex
-            out_dir = api._alloc_dir(char_id)
+            out_dir = api._alloc_dir(char_id, project_slug=str(proj.get("slug") or ""))
             task = {
                 "task_id": task_id,
                 "output_dir": out_dir,
@@ -1071,6 +1297,9 @@ class GameSpriteAPI:
                 "asset_type": at,
                 "visual_style": style,
                 "camera": cam,
+                "project_id": proj.get("project_id") or "",
+                "project_slug": proj.get("slug") or "",
+                "project_name": proj.get("name") or "",
                 "canvas": [cw, ch],
                 "fps": fps_i,
                 "pixel_art": pixel,
@@ -1092,7 +1321,7 @@ class GameSpriteAPI:
             api.tasks[task_id] = task
             api._save_task_snapshot(task)
             asyncio.create_task(api._run_stills(task_id))
-            return {"success": True, "task_id": task_id, "output_dir": out_dir}
+            return {"success": True, "task_id": task_id, "output_dir": out_dir, "project": proj}
 
         @app.get("/game-sprite/status")
         @app.get("/api/game-sprite/status")
@@ -1297,19 +1526,28 @@ class GameSpriteAPI:
                 "optional_actions": _OPTIONAL_ACTIONS,
                 "canvas_presets": list(_CANVAS_PRESETS.keys()),
                 "cameras": {k: v["label"] for k, v in _GAME_CAMERAS.items()},
-                "default_camera": "side",
+                "default_camera": _DEFAULT_CAMERA,
             }
 
         @app.get("/game-sprite/history")
         @app.get("/api/game-sprite/history")
-        async def gs_history(limit: int = 24):
+        async def gs_history(limit: int = 24, project: str = ""):
             root: Path = api.deps["output_root"]
-            dirs = list_task_dirs(
-                root,
-                "game_sprites",
-                legacy_pred=lambda p: "_gs_" in p.name,
-                limit=limit,
-            )
+            proj_key = (project or "").strip()
+            if proj_key:
+                try:
+                    proj = api._read_project(proj_key)
+                    slug = str(proj.get("slug") or "")
+                    dirs = api._list_project_assets(slug, limit=limit)
+                except FileNotFoundError:
+                    dirs = []
+            else:
+                dirs = list_task_dirs(
+                    root,
+                    "game_sprites",
+                    legacy_pred=lambda p: "_gs_" in p.name,
+                    limit=limit,
+                )
             items = []
             for p in dirs:
                 meta = {}
@@ -1327,6 +1565,8 @@ class GameSpriteAPI:
                         "brief": (meta.get("brief") or "")[:80],
                         "status": meta.get("status") or "",
                         "task_id": meta.get("task_id") or "",
+                        "camera": meta.get("camera") or "",
+                        "project_slug": meta.get("project_slug") or "",
                         "mtime": int(p.stat().st_mtime),
                     }
                 )

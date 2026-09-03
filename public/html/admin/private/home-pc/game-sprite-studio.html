@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc56" />
-  <script src="../../../../js/locales/en.js?v=gsprite16"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=gsprite16"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc57" />
+  <script src="../../../../js/locales/en.js?v=gsprite17"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=gsprite17"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,18 +39,45 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">设定 → 选视角（横版侧视 / 俯视）→ 定妆 → 动作 → Godot。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">先创建游戏项目（默认俯视）→ 在项目内生成角色/怪物等资产 → 导出 Godot。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
             <div class="input-section">
+              <div class="home-pc-result-box" id="project-box" style="margin-bottom:16px;">
+                <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.gameSpriteProjectTitle">游戏项目</h3>
+                <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteProjectHint">视角/画风/画布等为全项目设置；本项目内所有资产共用同一视角。</p>
+                <div class="form-row">
+                  <div class="input-control" style="flex:1;">
+                    <label for="project-pick" data-i18n="privateHub.homePc.gameSpriteProjectPick">打开已有项目</label>
+                    <select id="project-pick" class="text-input">
+                      <option value="">请选择…</option>
+                    </select>
+                  </div>
+                  <div class="input-control" style="align-self:flex-end;">
+                    <button type="button" id="project-refresh-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteProjectRefresh">刷新</button>
+                  </div>
+                </div>
+                <div class="form-row" style="margin-top:8px;">
+                  <div class="input-control" style="flex:1;">
+                    <label for="project-name" data-i18n="privateHub.homePc.gameSpriteProjectName">新项目名</label>
+                    <input id="project-name" class="text-input" type="text" placeholder="幸存者原型" />
+                  </div>
+                  <div class="input-control" style="align-self:flex-end;">
+                    <button type="button" id="project-create-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteProjectCreate">创建项目</button>
+                  </div>
+                </div>
+                <p id="project-active" class="small-hint" style="margin-top:8px;"></p>
+              </div>
+
+              <div id="asset-workspace">
               <div>
                 <label for="char-name" data-i18n="privateHub.homePc.gameSpriteNameLabel">角色 / 资产名</label>
                 <input id="char-name" class="text-input" type="text" placeholder="hero_knight" />
               </div>
               <div>
                 <label for="brief-input" data-i18n="privateHub.homePc.gameSpriteBriefLabel">设定描述</label>
-                <textarea id="brief-input" rows="4" placeholder="红披风骑士，侧视横版，金属盔甲…"></textarea>
+                <textarea id="brief-input" rows="4" placeholder="红披风骑士，俯视幸存者风，金属盔甲…"></textarea>
               </div>
 
               <div class="field-row">
@@ -65,7 +92,7 @@
               </div>
 
               <div class="field-row">
-                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteStyleLabel">画风</span>
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteStyleLabel">画风（项目）</span>
                 <div class="instruct-preset-row" id="style-row">
                   <button type="button" class="rec-chip is-active" data-style="cartoon" data-i18n="privateHub.homePc.gameSpriteStyleCartoon">卡通</button>
                   <button type="button" class="rec-chip" data-style="pixel" data-i18n="privateHub.homePc.gameSpriteStylePixel">像素</button>
@@ -75,17 +102,17 @@
               </div>
 
               <div class="field-row">
-                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteCameraLabel">游戏视角</span>
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.gameSpriteCameraLabel">游戏视角（项目）</span>
                 <div class="instruct-preset-row" id="camera-row">
-                  <button type="button" class="rec-chip is-active" data-camera="side" data-i18n="privateHub.homePc.gameSpriteCameraSide">横版侧视</button>
-                  <button type="button" class="rec-chip" data-camera="topdown" data-i18n="privateHub.homePc.gameSpriteCameraTop">俯视</button>
+                  <button type="button" class="rec-chip" data-camera="side" data-i18n="privateHub.homePc.gameSpriteCameraSide">横版侧视</button>
+                  <button type="button" class="rec-chip is-active" data-camera="topdown" data-i18n="privateHub.homePc.gameSpriteCameraTop">俯视</button>
                 </div>
-                <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteCameraHint">按玩法选：横版平台用侧视；幸存者/上帝视角用俯视。各出 1 张定妆并自动用于动作。</p>
+                <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteCameraHint">改这里会写回当前项目，之后本项目所有资产都用该视角。</p>
               </div>
 
               <div class="form-row">
                 <div class="input-control">
-                  <label for="canvas-select" data-i18n="privateHub.homePc.gameSpriteCanvasLabel">画布</label>
+                  <label for="canvas-select" data-i18n="privateHub.homePc.gameSpriteCanvasLabel">画布（项目）</label>
                   <select id="canvas-select" class="text-input">
                     <option value="64">64×64</option>
                     <option value="128">128×128</option>
@@ -94,12 +121,15 @@
                   </select>
                 </div>
                 <div class="input-control">
-                  <label for="fps-select" data-i18n="privateHub.homePc.gameSpriteFpsLabel">动画 FPS</label>
+                  <label for="fps-select" data-i18n="privateHub.homePc.gameSpriteFpsLabel">动画 FPS（项目）</label>
                   <select id="fps-select" class="text-input">
                     <option value="6">6</option>
                     <option value="8" selected>8</option>
                     <option value="12">12</option>
                   </select>
+                </div>
+                <div class="input-control" style="align-self:flex-end;">
+                  <button type="button" id="project-save-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteProjectSave">保存项目设置</button>
                 </div>
               </div>
 
@@ -113,6 +143,7 @@
                 <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteStart">生成定妆</button>
                 <button type="button" id="cancel-btn" class="tb-btn" disabled data-i18n="privateHub.homePc.cancelTask">取消</button>
                 <button type="button" id="clear-btn" class="tb-btn" data-i18n="privateHub.homePc.clear">清空</button>
+              </div>
               </div>
             </div>
 
@@ -185,7 +216,7 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite16"></script>
+  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite17"></script>
   <div id="gs-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">
