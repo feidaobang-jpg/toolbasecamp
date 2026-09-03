@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (e.key === 'Escape') closeLightbox();
   });
 
-  function renderStills(list) {
+  function renderStills(list, opts) {
     if (!stillsBox || !stillsList) return;
     var items = Array.isArray(list) ? list : [];
     if (!items.length) {
@@ -291,11 +291,39 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     stillsBox.style.display = 'block';
-    stillsList.innerHTML = '';
+    var generating = !!(opts && opts.generating);
+    var hintEl = stillsBox.querySelector('.gs-stills-live-hint');
+    if (!hintEl) {
+      hintEl = document.createElement('p');
+      hintEl.className = 'small-hint gs-stills-live-hint';
+      var title = stillsBox.querySelector('.home-pc-result-title');
+      if (title && title.nextSibling) stillsBox.insertBefore(hintEl, title.nextSibling);
+      else stillsBox.insertBefore(hintEl, stillsList);
+    }
+    hintEl.textContent = generating
+      ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
+      : tr('privateHub.homePc.gameSpriteStillsHint', '固定生成正面/背面/左侧面/右侧面各1张，再加侧视定妆候选。动作请优先选「侧视定妆」。点放大镜可看大图。');
+    if (confirmPickBtn) confirmPickBtn.disabled = !!generating;
+
+    // 只增不整表重绘：已有卡片保留，避免闪烁
+    var existing = {};
+    stillsList.querySelectorAll('.trailer-cand[data-still-id]').forEach(function (el) {
+      existing[el.getAttribute('data-still-id')] = el;
+    });
     items.forEach(function (it) {
       var id = it.id || it.path;
+      if (existing[id]) {
+        var img0 = existing[id].querySelector('img');
+        if (img0 && it.url && img0.getAttribute('data-url') !== it.url) {
+          img0.src = resolveUrl(it.url);
+          img0.setAttribute('data-url', it.url);
+        }
+        delete existing[id];
+        return;
+      }
       var label = document.createElement('label');
       label.className = 'trailer-cand' + (pickedStillId === id ? ' is-selected' : '');
+      label.setAttribute('data-still-id', id);
       var input = document.createElement('input');
       input.type = 'radio';
       input.name = 'gs-still';
@@ -311,10 +339,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var img = document.createElement('img');
       var fullSrc = resolveUrl(it.url);
       img.src = fullSrc;
+      img.setAttribute('data-url', it.url || '');
       img.alt = stillKindLabel(it.kind || id);
-      img.addEventListener('click', function (e) {
-        // 点图也可放大；不阻止选中
-      });
       var zoomBtn = document.createElement('button');
       zoomBtn.type = 'button';
       zoomBtn.className = 'trailer-cand-zoom';
@@ -426,7 +452,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!data || !data.success) return;
         appendLogs(data.logs || []);
         updateProgress(data);
-        if (data.stills_ui && data.stills_ui.length) renderStills(data.stills_ui);
+        if (data.stills_ui && data.stills_ui.length) {
+          renderStills(data.stills_ui, {
+            generating: data.status === 'running' && data.stage === 'stills'
+          });
+        }
         if (data.preview && data.preview.length) renderPreview(data);
         else if (data.zip_url) renderPreview(data);
 
@@ -475,6 +505,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (logOutput) logOutput.textContent = '';
     pickedStillId = null;
     if (stillsBox) stillsBox.style.display = 'none';
+    if (stillsList) stillsList.innerHTML = '';
     if (previewBox) previewBox.style.display = 'none';
 
     setBusy(true);

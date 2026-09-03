@@ -385,6 +385,7 @@ window.TB_LOCALES['zh-CN'] = {
             gameSpriteStart: '生成定妆',
             gameSpriteStillsTitle: '选择主参考图',
             gameSpriteStillsHint: '固定生成正面/背面/左侧面/右侧面各1张，再加侧视定妆候选。动作请优先选「侧视定妆」。点放大镜可看大图。',
+            gameSpriteStillsLive: '生成中：已出的图可先预览，全部完成后再确认选图。',
             gameSpriteStillFront: '正面',
             gameSpriteStillBack: '背面',
             gameSpriteStillLeft: '左侧面',

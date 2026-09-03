@@ -512,6 +512,7 @@ class GameSpriteAPI:
             ui: List[dict] = []
             total = len(prompts)
             done = 0
+            task["stills_ui"] = []
             for kind, prompt in prompts:
                 if task.get("cancel"):
                     task["status"] = "cancelled"
@@ -519,7 +520,7 @@ class GameSpriteAPI:
                     self._save_task_snapshot(task)
                     return
                 done += 1
-                task["progress"] = {"current": done, "total": total}
+                task["progress"] = {"current": done - 1, "total": total}
                 self._log(task, f"文生图 {kind} ({done}/{total})…")
                 img = await self._txt2img(prompt, gen_w, gen_h)
                 name = f"{kind}.png"
@@ -530,15 +531,21 @@ class GameSpriteAPI:
                     (stills_dir / f"{kind}.txt").write_text(prompt, encoding="utf-8")
                 except Exception:
                     pass
-                ui.append(
-                    {
-                        "id": kind,
-                        "kind": kind,
-                        "url": self._public_url(task, f"stills/{name}"),
-                        "path": name,
-                        "prompt": prompt[:240],
-                    }
-                )
+                item = {
+                    "id": kind,
+                    "kind": kind,
+                    "url": self._public_url(task, f"stills/{name}")
+                    + f"?t={int(time.time() * 1000)}",
+                    "path": name,
+                    "prompt": prompt[:240],
+                }
+                ui.append(item)
+                # 每出一张就推给前端轮询显示
+                task["stills_ui"] = list(ui)
+                task["progress"] = {"current": done, "total": total}
+                task["stage"] = "stills"
+                self._log(task, f"已出图 {kind}（{done}/{total}）")
+                self._save_task_snapshot(task)
                 await self._free_vram()
 
             task["stills_ui"] = ui

@@ -386,6 +386,7 @@ window.TB_LOCALES.en = {
             gameSpriteStart: 'Generate stills',
             gameSpriteStillsTitle: 'Pick hero reference',
             gameSpriteStillsHint: 'Always generates front/back/left/right plus side-view hero candidates. Prefer a side hero for actions. Use the zoom button for preview.',
+            gameSpriteStillsLive: 'Generating: preview ready images now; confirm pick after all are done.',
             gameSpriteStillFront: 'Front',
             gameSpriteStillBack: 'Back',
             gameSpriteStillLeft: 'Left',
