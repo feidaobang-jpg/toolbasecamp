@@ -302,8 +302,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     hintEl.textContent = generating
       ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
-      : tr('privateHub.homePc.gameSpriteStillsHint', '固定生成正面/背面/左侧面/右侧面各1张，再加侧视定妆候选。动作请优先选「侧视定妆」。点放大镜可看大图。');
+      : tr(
+          'privateHub.homePc.gameSpriteStillsHint',
+          '默认三视图：正面、背面、侧视定妆（绿幕抠成透明）。动作必须选「侧视定妆」；正/背只作设定对照。点放大镜看大图。'
+        );
     if (confirmPickBtn) confirmPickBtn.disabled = !!generating;
+
+    // 未选手动时，默认勾选侧视定妆
+    if (!pickedStillId && !generating) {
+      var prefer = null;
+      for (var i = 0; i < items.length; i++) {
+        var kid = String(items[i].id || items[i].kind || '');
+        if (kid.indexOf('side_') === 0) {
+          prefer = kid;
+          break;
+        }
+      }
+      if (prefer) pickedStillId = prefer;
+    }
 
     // 只增不整表重绘：已有卡片保留，避免闪烁
     var existing = {};
@@ -508,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
     fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
     fd.append('pixel_art', selectedStyle === 'pixel' ? '1' : '0');
-    fd.append('candidates', (candidatesSelect && candidatesSelect.value) || '2');
+    fd.append('candidates', (candidatesSelect && candidatesSelect.value) || '1');
     var actPayload = needsActions()
       ? (selectedActions.length ? selectedActions.join(',') : 'idle')
       : 'idle';
@@ -572,6 +588,21 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof window.tbNotify === 'function') {
           window.tbNotify(tr('privateHub.homePc.gameSpriteNeedPick', '请先勾选一张参考图'));
         }
+        return;
+      }
+      var sid = String(pickedStillId);
+      var isSide =
+        sid.indexOf('side_') === 0 ||
+        sid === 'side' ||
+        sid.indexOf('upload') === 0 ||
+        sid.indexOf('concept') === 0;
+      if (!isSide && typeof window.tbNotify === 'function') {
+        window.tbNotify(
+          tr(
+            'privateHub.homePc.gameSpriteNeedSidePick',
+            '动作请选「侧视定妆」（不要用正面/背面跑图生视频）'
+          )
+        );
         return;
       }
       var fd = new FormData();

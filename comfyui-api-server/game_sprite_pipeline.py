@@ -157,6 +157,19 @@ def _style_suffix(style: str) -> str:
     return m["suffix"]
 
 
+# Z-Image 无法可靠直出透明 PNG：统一绿幕，定妆后 rembg 成透明
+_STILL_CHROMA = (
+    "solid pure chroma-key green background #00FF00, flat even lighting, "
+    "no gradients, no floor shadow, no environment, no studio gray"
+)
+_STILL_CHROMA_NEG = (
+    "white background, black background, gray backdrop, studio gray, beige wall, "
+    "photo studio, textured ground, scenery, perspective, dutch angle, "
+    "foreshortening, three-quarter view, 3/4 view, dynamic pose, "
+    "close-up bust only, cropped legs, multi-panel, collage, transparent background"
+)
+
+
 def _build_still_prompt(
     brief: str,
     *,
@@ -166,17 +179,13 @@ def _build_still_prompt(
 ) -> str:
     """
     view:
-      front / back / left / right — 单独全身正交参考
-      side — 侧视全身定妆（动作 IP 优先选这个）
+      front / back — 设定对照（正交）
+      side — 侧视定妆，动作图生视频只用这一张作主参考
+      left / right — 可选侧面（当前默认不出）
       concept — 道具/建筑/场景
     """
     sty = _style_suffix(style)
     core = (brief or "").strip() or "game character"
-    neg_bits = (
-        "no text, no watermark, no UI, no collage, no multi-panel sheet, "
-        "no perspective distortion, no three-quarter view, no camera tilt, "
-        "solid flat color backdrop, full body in frame, feet visible, head to toe"
-    )
     if asset_type in ("prop", "building", "scene"):
         kind = {
             "prop": "game prop item icon/sprite",
@@ -184,55 +193,55 @@ def _build_still_prompt(
             "scene": "game environment concept still",
         }.get(asset_type, "game asset")
         return (
-            f"{kind}, {core}, {sty}, centered, full subject visible, {neg_bits}, "
+            f"{kind}, {core}, {sty}, centered, full subject visible, {_STILL_CHROMA}, "
             "suitable for 2D game asset, high clarity"
         )
 
     view_n = (view or "side").strip().lower()
     view_specs = {
         "front": (
-            "model sheet orthographic FRONT elevation, character facing straight at camera, "
-            "A-pose or neutral T-pose, arms slightly away from body, "
-            "perfectly symmetrical front, flat lighting, no foreshortening"
+            "STRICT orthographic FRONT view only: nose and both shoulders face the camera, "
+            "chest facing viewer, A-pose, arms away from torso, feet parallel, "
+            "NOT a side view, NOT a three-quarter turn"
         ),
         "back": (
-            "model sheet orthographic BACK elevation, character facing directly away, "
-            "same A-pose as front view, show cape/back armor fully, "
-            "no face visible, flat lighting, no foreshortening"
+            "STRICT orthographic BACK view only: character faces directly away, "
+            "back of head and cape/armor toward camera, A-pose matching front, "
+            "NO face, NOT a side view, NOT three-quarter"
         ),
         "left": (
-            "model sheet orthographic LEFT PROFILE elevation, true 90-degree side view facing left, "
-            "same standing A-pose, clean silhouette, one eye visible at most, "
-            "flat lighting, no three-quarter angle"
+            "STRICT orthographic LEFT PROFILE: true 90-degree silhouette facing left, "
+            "one eye max, A-pose, NOT front, NOT three-quarter"
         ),
         "right": (
-            "model sheet orthographic RIGHT PROFILE elevation, true 90-degree side view facing right, "
-            "same standing A-pose, clean silhouette, flat lighting, no three-quarter angle"
+            "STRICT orthographic RIGHT PROFILE: true 90-degree silhouette facing right, "
+            "one eye max, A-pose, NOT front, NOT three-quarter"
         ),
         "side": (
-            "2D side-scroll game sprite hero reference, true profile facing right, "
-            "full-body standing idle, feet planted, flat lighting, suitable as animation start frame"
+            "2D side-scroll game sprite START FRAME: true RIGHT profile, facing right, "
+            "full-body idle standing, feet planted, clear silhouette for animation"
         ),
     }
     pose = view_specs.get(view_n) or view_specs["side"]
     return (
-        f"square canvas character concept, single 2D game character reference, ONE view only "
-        f"(not a turnaround collage), {pose}, identical character design locked: {core}, {sty}, "
-        f"consistent proportions across a model sheet, {neg_bits}, crisp game art"
+        f"square 1:1 canvas, single character only, ONE camera angle only, "
+        f"{pose}, locked design: {core}, {sty}, {_STILL_CHROMA}, "
+        f"full body head-to-toe centered, crisp game art"
     )
 
 
-def _character_still_jobs(brief: str, asset_type: str, style: str, side_candidates: int) -> List[Tuple[str, str]]:
-    """固定四面参考 + 侧视定妆候选，共约 4+N 张。"""
-    jobs: List[Tuple[str, str]] = []
-    for view in ("front", "back", "left", "right"):
-        jobs.append(
-            (
-                view,
-                _build_still_prompt(brief, asset_type=asset_type, style=style, view=view),
-            )
-        )
-    n = max(1, min(3, int(side_candidates or 2)))
+def _character_still_jobs(
+    brief: str, asset_type: str, style: str, side_candidates: int = 1
+) -> List[Tuple[str, str]]:
+    """
+    默认 3 张（推荐）：正面 + 背面 + 侧视定妆。
+    侧视可按 candidates 出 1～2 张备选；动作流水线只选 1 张侧视作 IP。
+    """
+    jobs: List[Tuple[str, str]] = [
+        ("front", _build_still_prompt(brief, asset_type=asset_type, style=style, view="front")),
+        ("back", _build_still_prompt(brief, asset_type=asset_type, style=style, view="back")),
+    ]
+    n = max(1, min(2, int(side_candidates or 1)))
     side_prompt = _build_still_prompt(brief, asset_type=asset_type, style=style, view="side")
     for i in range(n):
         jobs.append((f"side_{i:02d}", side_prompt))
@@ -246,7 +255,8 @@ def _build_action_prompt(brief: str, action: str, style: str) -> str:
     return (
         f"Use the provided start image as frame 1. Keep the exact same character design, outfit, "
         f"proportions, and side-view camera. {core}. Action: {action}. {motion}. "
-        f"{sty}. Full body visible, feet on ground plane when applicable, plain backdrop, "
+        f"{sty}. Full body visible, feet on ground plane when applicable, "
+        f"solid chroma-key green background #00FF00, "
         f"no camera cut, no morphing into different character, temporal continuity."
     )
 
@@ -567,14 +577,11 @@ class GameSpriteAPI:
             asset_type = task["asset_type"]
             style = task["visual_style"]
             brief = task["brief"]
-            cand_n = int(task.get("candidates") or 2)
+            cand_n = int(task.get("candidates") or 1)
             # 正方形画布，方便网格预览与正交参考
             gen_w, gen_h = 768, 768
-            # 正交参考再加强负面（透视/3/4）
-            extra_neg = (
-                "perspective, dutch angle, foreshortening, three-quarter view, "
-                "dynamic pose, action pose, cropped legs, close-up bust only"
-            )
+            # 绿幕 + 正交负面（透视/3/4）
+            extra_neg = _STILL_CHROMA_NEG
             prompts: List[Tuple[str, str]] = []
             if asset_type in ("character", "monster"):
                 prompts = _character_still_jobs(brief, asset_type, style, cand_n)
@@ -604,6 +611,15 @@ class GameSpriteAPI:
                 img = await self._txt2img(
                     prompt, gen_w, gen_h, extra_negative=extra_neg
                 )
+                # 先留绿幕原图，再 rembg 成透明 PNG 给预览/选图
+                raw_name = f"{kind}_raw.png"
+                (stills_dir / raw_name).write_bytes(img)
+                self._log(task, f"去背景 {kind}…")
+                try:
+                    img = await self._rembg(img)
+                    await self._free_vram()
+                except Exception as rembg_err:
+                    self._log(task, f"去背景失败（保留绿幕）: {rembg_err}")
                 name = f"{kind}.png"
                 path = stills_dir / name
                 path.write_bytes(img)
@@ -635,7 +651,7 @@ class GameSpriteAPI:
             task["progress"] = {"current": total, "total": total}
             self._log(
                 task,
-                f"已生成 {total} 张参考（正/背/左/右 + 侧视定妆×{cand_n if asset_type in ('character','monster') else 0}），请选主参考后继续",
+                f"已生成 {total} 张参考（正/背 + 侧视定妆×{cand_n if asset_type in ('character','monster') else 0}，绿幕→透明）。动作请选「侧视定妆」",
             )
             self._save_task_snapshot(task)
         except Exception as e:
@@ -702,7 +718,11 @@ class GameSpriteAPI:
         if not src.exists():
             raise FileNotFoundError(f"主参考图缺失，无法生成动作 {action}")
 
-        ref_bytes = src.read_bytes()
+        # I2V 优先用绿幕原图（透明图易花边/穿帮）；展示用 rembg 透明版
+        stem = Path(rel).stem if rel else ""
+        raw_alt = d / "stills" / f"{stem}_raw.png" if stem else None
+        i2v_src = raw_alt if raw_alt and raw_alt.exists() else src
+        ref_bytes = i2v_src.read_bytes()
         prompt = _build_action_prompt(task["brief"], action, task["visual_style"])
         dur = float(task.get("action_duration_sec") or 2.5)
         target_frames = int(task.get("frames_per_action") or 8)
@@ -886,7 +906,7 @@ class GameSpriteAPI:
             fps: str = Form("8"),
             pixel_art: str = Form("0"),
             actions: str = Form(""),
-            candidates: str = Form("2"),
+            candidates: str = Form("1"),
             frames_per_action: str = Form("8"),
             action_duration_sec: str = Form("2.5"),
         ):
@@ -910,9 +930,9 @@ class GameSpriteAPI:
             except Exception:
                 fps_i = 8
             try:
-                cand = max(1, min(4, int(candidates or 2)))
+                cand = max(1, min(2, int(candidates or 1)))
             except Exception:
-                cand = 2
+                cand = 1
             try:
                 fpa = max(4, min(24, int(frames_per_action or 8)))
             except Exception:
