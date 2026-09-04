@@ -302,7 +302,7 @@
     openBtn.type = 'button';
     openBtn.className = 'tb-btn';
     if (opts.openBtnId) openBtn.id = opts.openBtnId;
-    openBtn.textContent = tr('privateHub.homePc.openLogDir', '打开日志目录');
+    openBtn.textContent = tr('privateHub.homePc.openLogDir', '打开输出目录');
 
     copyBtn.addEventListener('click', function () {
       var text =

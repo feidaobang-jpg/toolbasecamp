@@ -26,7 +26,6 @@
   var extraWrap = document.getElementById('extra-wrap');
   var startBtn = document.getElementById('start-btn');
   var cancelBtn = document.getElementById('cancel-btn');
-  var openFolderBtn = document.getElementById('open-folder-btn');
   var progressWrap = document.getElementById('progress-wrap');
   var progressStatus = document.getElementById('progress-status');
   var progressPercent = document.getElementById('progress-percent');
@@ -200,9 +199,6 @@
     }
     if (cancelBtn) {
       cancelBtn.style.display = st === 'running' || st === 'queued' ? '' : 'none';
-    }
-    if (openFolderBtn) {
-      openFolderBtn.style.display = task.output_dir || currentFolder ? '' : 'none';
     }
   }
 
@@ -760,16 +756,6 @@
       fetch(API_BASE + '/image-pipeline/cancel', { method: 'POST', body: fd }).finally(function () {
         startPoll();
       });
-    });
-  }
-  if (openFolderBtn) {
-    openFolderBtn.addEventListener('click', function () {
-      var fd = new FormData();
-      if (currentTaskId) fd.append('task_id', currentTaskId);
-      if (currentFolder) fd.append('folder', currentFolder);
-      fetch(API_BASE + '/image-pipeline/reveal-output', { method: 'POST', body: fd }).catch(
-        function () {}
-      );
     });
   }
   var selectToggleBtn = document.getElementById('select-toggle-btn');

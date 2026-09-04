@@ -277,7 +277,7 @@ window.TB_LOCALES['zh-CN'] = {
             openOutputDir: '打开输出文件夹',
             logTitle: '执行日志',
             copyLog: '复制日志',
-            openLogDir: '打开日志目录',
+            openLogDir: '打开输出目录',
             openLogDirNeedTask: '请先完成一次任务后再打开输出目录',
             deleteImage: '删除',
             deleteImageConfirm: '确定删除这张图？',

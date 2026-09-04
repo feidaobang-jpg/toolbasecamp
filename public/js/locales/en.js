@@ -278,7 +278,7 @@ window.TB_LOCALES.en = {
             openOutputDir: 'Open output folder',
             logTitle: 'Log',
             copyLog: 'Copy log',
-            openLogDir: 'Open log folder',
+            openLogDir: 'Open output folder',
             openLogDirNeedTask: 'Finish a task first to open its output folder',
             deleteImage: 'Delete',
             deleteImageConfirm: 'Delete this image?',

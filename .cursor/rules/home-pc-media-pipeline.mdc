@@ -62,9 +62,11 @@ alwaysApply: true
 | 按钮 | 文案 key | 行为 |
 |---|---|---|
 | 复制日志 | `privateHub.homePc.copyLog` | 复制 `#log-output` 全文 |
-| 打开日志目录 | `privateHub.homePc.openLogDir` | 打开本任务输出/日志目录（`reveal-output` 等） |
+| 打开输出目录 | `privateHub.homePc.openLogDir` | 打开本任务输出目录（含 `pipeline.log` 与素材） |
 
-禁止只有复制没有打开目录，或把「打开文件夹」藏在别处置换本栏。
+后端 `_log` 必须追加写入任务目录 `pipeline.log`（或等价文件），不能只留在内存/页面。
+
+操作区**不要**再单独放「打开文件夹」与工具栏重复；统一用日志栏「打开输出目录」。
 
 ## 8. i18n
 
@@ -77,5 +79,5 @@ alwaysApply: true
 - [ ] lightbox 有左右键与边界态
 - [ ] 打开历史回填表单
 - [ ] 顶栏模型/工作流 + `#api-status`
-- [ ] 日志含单条与总耗时
-- [ ] 日志上方：复制日志 + 打开日志目录
+- [ ] 日志含单条与总耗时，且落盘 `pipeline.log`
+- [ ] 日志上方：复制日志 + 打开输出目录（无重复「打开文件夹」）

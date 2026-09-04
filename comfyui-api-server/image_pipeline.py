@@ -249,6 +249,27 @@ class ImagePipelineAPI:
         logs.append(line)
         if len(logs) > 400:
             del logs[:-400]
+        # 落盘：任务目录 pipeline.log（「打开输出目录」可直接看到）
+        try:
+            d = self._task_dir(task)
+            with open(d / "pipeline.log", "a", encoding="utf-8") as f:
+                f.write(line + "\n")
+        except Exception:
+            pass
+
+    def _ensure_log_file(self, task: dict) -> None:
+        """历史批次若只有内存 logs，补写 pipeline.log。"""
+        try:
+            logs = task.get("logs") or []
+            if not logs:
+                return
+            d = self._task_dir(task)
+            p = d / "pipeline.log"
+            if p.is_file() and p.stat().st_size > 0:
+                return
+            p.write_text("\n".join(str(x) for x in logs) + "\n", encoding="utf-8")
+        except Exception:
+            pass
 
     def _public_url(self, task: dict, rel: str) -> str:
         folder = (task.get("output_dir") or "").strip() or task["task_id"]
@@ -393,6 +414,7 @@ class ImagePipelineAPI:
         meta["output_dir"] = rel_to_root(root, d)
         meta.setdefault("task_id", meta.get("task_id") or "")
         self._enrich_image_urls(meta)
+        self._ensure_log_file(meta)
         # 回写 thumb 字段，下次打开更快
         try:
             (d / "task.json").write_text(
