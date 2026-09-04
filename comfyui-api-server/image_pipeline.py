@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional
 
 import requests
 from fastapi import Form, HTTPException
+from PIL import Image
 
 from output_layout import (
     alloc_under,
@@ -26,6 +27,9 @@ from output_layout import (
     rel_to_root,
     resolve_task_dir,
 )
+
+if not hasattr(Image, "ANTIALIAS"):
+    Image.ANTIALIAS = Image.Resampling.LANCZOS
 
 _IMAGE_PIPE_TASKS: Dict[str, dict] = {}
 
@@ -251,6 +255,61 @@ class ImagePipelineAPI:
         rel_n = str(rel).replace("\\", "/").lstrip("/")
         return f"/output/{folder}/{rel_n}"
 
+    def _thumb_rel_for(self, image_file: str) -> str:
+        """images/01.png -> images/01.thumb.jpg"""
+        rel = (image_file or "").replace("\\", "/").lstrip("/")
+        if not rel:
+            return ""
+        p = Path(rel)
+        return str(p.with_name(p.stem + ".thumb.jpg")).replace("\\", "/")
+
+    def _ensure_thumb_bytes(self, png_bytes: bytes, thumb_path: Path, *, max_side: int = 480) -> bool:
+        try:
+            from io import BytesIO
+
+            with Image.open(BytesIO(png_bytes)) as im:
+                im = im.convert("RGB")
+                im.thumbnail((int(max_side), int(max_side)), Image.Resampling.LANCZOS)
+                thumb_path.parent.mkdir(parents=True, exist_ok=True)
+                im.save(thumb_path, format="JPEG", quality=82, optimize=True)
+            return thumb_path.is_file()
+        except Exception:
+            return False
+
+    def _ensure_thumb_file(self, task: dict, image_file: str, *, max_side: int = 480) -> str:
+        """按需生成缩略图，返回 thumb 相对路径（相对任务目录）；失败返回原图 file。"""
+        file_rel = (image_file or "").replace("\\", "/").lstrip("/")
+        if not file_rel:
+            return ""
+        task_dir = self._task_dir(task)
+        src = task_dir / file_rel
+        if not src.is_file():
+            return file_rel
+        thumb_rel = self._thumb_rel_for(file_rel)
+        thumb = task_dir / thumb_rel
+        try:
+            if thumb.is_file() and thumb.stat().st_mtime >= src.stat().st_mtime:
+                return thumb_rel
+            with Image.open(src) as im:
+                im = im.convert("RGB")
+                im.thumbnail((int(max_side), int(max_side)), Image.Resampling.LANCZOS)
+                thumb.parent.mkdir(parents=True, exist_ok=True)
+                im.save(thumb, format="JPEG", quality=82, optimize=True)
+            return thumb_rel
+        except Exception:
+            return file_rel
+
+    def _enrich_image_urls(self, task: dict) -> None:
+        images = task.get("images") or []
+        for it in images:
+            if not isinstance(it, dict) or not it.get("file"):
+                continue
+            file_rel = str(it["file"]).replace("\\", "/").lstrip("/")
+            it["url"] = self._public_url(task, file_rel)
+            thumb_rel = self._ensure_thumb_file(task, file_rel)
+            it["thumb_file"] = thumb_rel
+            it["thumb_url"] = self._public_url(task, thumb_rel) if thumb_rel else it["url"]
+
     def _task_dir(self, task: dict) -> Path:
         root: Path = self.deps["output_root"]
         folder = (task.get("output_dir") or "").strip()
@@ -332,11 +391,20 @@ class ImagePipelineAPI:
         if not isinstance(meta, dict):
             raise ValueError("task.json 无效")
         meta["output_dir"] = rel_to_root(root, d)
-        folder = meta["output_dir"]
-        images = meta.get("images") or []
-        for it in images:
-            if isinstance(it, dict) and it.get("file"):
-                it["url"] = f"/output/{folder}/{it['file']}"
+        meta.setdefault("task_id", meta.get("task_id") or "")
+        self._enrich_image_urls(meta)
+        # 回写 thumb 字段，下次打开更快
+        try:
+            (d / "task.json").write_text(
+                json.dumps(
+                    {k: v for k, v in meta.items() if k != "cancel"},
+                    ensure_ascii=False,
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+        except Exception:
+            pass
         return meta
 
     async def _plan_prompts(self, task: dict) -> List[str]:
@@ -452,10 +520,16 @@ class ImagePipelineAPI:
                 name = f"{i + 1:02d}.png"
                 path = img_dir / name
                 path.write_bytes(img_bytes)
+                thumb_name = f"{i + 1:02d}.thumb.jpg"
+                thumb_path = img_dir / thumb_name
+                thumb_ok = self._ensure_thumb_bytes(img_bytes, thumb_path)
+                thumb_file = f"images/{thumb_name}" if thumb_ok else f"images/{name}"
                 item = {
                     "index": i + 1,
                     "file": f"images/{name}",
+                    "thumb_file": thumb_file,
                     "url": self._public_url(task, f"images/{name}"),
+                    "thumb_url": self._public_url(task, thumb_file),
                     "prompt": prompt,
                     "seed": seed,
                     "width": w,
@@ -616,6 +690,13 @@ class ImagePipelineAPI:
                     task = api._load_task_from_dir(tid)
                 except Exception:
                     raise HTTPException(status_code=404, detail="任务不存在")
+            else:
+                need = any(
+                    isinstance(it, dict) and it.get("file") and not it.get("thumb_url")
+                    for it in (task.get("images") or [])
+                )
+                if need:
+                    api._enrich_image_urls(task)
             out = {k: v for k, v in task.items() if k != "cancel"}
             return {"success": True, **out}
 

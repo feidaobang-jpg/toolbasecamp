@@ -326,9 +326,10 @@
       check.setAttribute('data-index', String(it.index || ''));
       check.checked = !it.published;
       var img = document.createElement('img');
-      img.src = resolveUrl(it.url);
+      img.src = resolveUrl(it.thumb_url || it.url);
       img.alt = it.prompt || '';
       img.loading = 'lazy';
+      img.decoding = 'async';
       img.addEventListener('click', function (e) {
         e.preventDefault();
         openLightboxByIndex(idx);
