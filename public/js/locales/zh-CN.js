@@ -286,7 +286,7 @@ window.TB_LOCALES['zh-CN'] = {
             txt2imgDesc: 'Z-Image Turbo（家里 ComfyUI）',
             imagePipeTitle: '图片流水线',
             imagePipeDesc: '风格/分类批量排队生图，可公开到前台',
-            imagePipeHint: '填主题与风格 → 一次排队多张 → 选中后公开到「图片」页 AI 墙。',
+            imagePipeHint: '工作流 z_image_turbo.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。批量排队文生图，可选公开到「图片」页。',
             imagePipeTitleLabel: '批次名（可选）',
             imagePipeTitlePh: '例：春日壁纸批',
             imagePipeThemeLabel: '主题描述',

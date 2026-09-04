@@ -287,7 +287,7 @@ window.TB_LOCALES.en = {
             txt2imgDesc: 'Z-Image Turbo via home ComfyUI',
             imagePipeTitle: 'Image pipeline',
             imagePipeDesc: 'Batch queue by style/category; publish to Images hub',
-            imagePipeHint: 'Theme + style → queue many stills → publish selected to the public Images AI wall.',
+            imagePipeHint: 'Workflow z_image_turbo.json. Models: z_image_turbo_bf16, qwen_3_4b, ae.safetensors. Batch queued txt2img; optional publish to Images hub.',
             imagePipeTitleLabel: 'Batch name (optional)',
             imagePipeTitlePh: 'e.g. spring wallpapers',
             imagePipeThemeLabel: 'Theme',
