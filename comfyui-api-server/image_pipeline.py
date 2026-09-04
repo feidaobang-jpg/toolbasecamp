@@ -84,12 +84,58 @@ _CATEGORIES: Dict[str, Dict[str, str]] = {
 }
 
 _ASPECTS: Dict[str, Dict[str, Any]] = {
+    # size 仅作比例参考；实际像素由 size_tier 的长边决定
     "1_1": {"label": "方形 1:1", "size": (1024, 1024)},
     "16_9": {"label": "横屏 16:9", "size": (1280, 720)},
     "9_16": {"label": "竖屏 9:16", "size": (720, 1280)},
     "3_4": {"label": "竖图 3:4", "size": (768, 1024)},
     "4_3": {"label": "横图 4:3", "size": (1024, 768)},
 }
+
+_SIZE_TIERS: Dict[str, Dict[str, Any]] = {
+    "sd": {"label": "标清", "long_edge": 768},
+    "hd": {"label": "高清（推荐）", "long_edge": 1024},
+    "xl": {"label": "更大", "long_edge": 1280},
+}
+
+
+def _round8(n: int) -> int:
+    n = int(n)
+    return max(512, int(round(n / 8.0) * 8))
+
+
+def _resolve_wh(aspect_key: str, size_tier: str) -> tuple:
+    """按画幅比例 + 档位长边计算宽高（对齐 8 像素）。"""
+    aspect = _ASPECTS.get(aspect_key) or _ASPECTS["1_1"]
+    tier = _SIZE_TIERS.get(size_tier) or _SIZE_TIERS["hd"]
+    aw, ah = aspect["size"]
+    long_edge = int(tier.get("long_edge") or 1024)
+    aw = max(1, int(aw))
+    ah = max(1, int(ah))
+    if aw >= ah:
+        w = _round8(long_edge)
+        h = _round8(int(round(long_edge * ah / aw)))
+    else:
+        h = _round8(long_edge)
+        w = _round8(int(round(long_edge * aw / ah)))
+    return w, h
+
+
+def _image_meta_from_bytes(img_bytes: bytes) -> Dict[str, int]:
+    """原图像素与体积（非缩略图）。"""
+    meta = {"width": 0, "height": 0, "bytes": len(img_bytes or b"")}
+    if not img_bytes:
+        return meta
+    try:
+        from io import BytesIO
+
+        with Image.open(BytesIO(img_bytes)) as im:
+            meta["width"] = int(im.width or 0)
+            meta["height"] = int(im.height or 0)
+    except Exception:
+        pass
+    return meta
+
 
 _VARIATION_HINTS = [
     "换一个更近的机位与构图",
@@ -324,6 +370,7 @@ class ImagePipelineAPI:
 
     def _enrich_image_urls(self, task: dict) -> None:
         images = task.get("images") or []
+        task_dir = self._task_dir(task)
         for it in images:
             if not isinstance(it, dict) or not it.get("file"):
                 continue
@@ -332,6 +379,21 @@ class ImagePipelineAPI:
             thumb_rel = self._ensure_thumb_file(task, file_rel)
             it["thumb_file"] = thumb_rel
             it["thumb_url"] = self._public_url(task, thumb_rel) if thumb_rel else it["url"]
+            # 补全原图分辨率 / 体积（历史批次可能缺字段）
+            src = task_dir / file_rel
+            if src.is_file():
+                try:
+                    if not it.get("bytes"):
+                        it["bytes"] = int(src.stat().st_size)
+                except Exception:
+                    pass
+                if not (it.get("width") and it.get("height")):
+                    try:
+                        with Image.open(src) as im:
+                            it["width"] = int(im.width or 0)
+                            it["height"] = int(im.height or 0)
+                    except Exception:
+                        pass
 
     def _task_dir(self, task: dict) -> Path:
         root: Path = self.deps["output_root"]
@@ -565,7 +627,9 @@ class ImagePipelineAPI:
             task["progress"] = {"current": 0, "total": len(prompts)}
             self._save_snapshot(task)
 
-            w, h = (_ASPECTS.get(task.get("aspect") or "1_1") or _ASPECTS["1_1"])["size"]
+            w, h = _resolve_wh(task.get("aspect") or "1_1", task.get("size_tier") or "hd")
+            task["gen_width"] = w
+            task["gen_height"] = h
             style = _STYLES.get(task.get("style") or "realistic") or _STYLES["realistic"]
             user_neg = (task.get("negative") or "").strip()
             neg = neg_fn(user_neg, width=w, height=h) if callable(neg_fn) else user_neg
@@ -578,6 +642,7 @@ class ImagePipelineAPI:
             task["stage"] = "generate"
             batch_t0 = time.perf_counter()
             gen_total = 0.0
+            self._log(task, f"目标分辨率 {w}×{h}（{(task.get('size_tier') or 'hd')}）")
 
             lock = bool(task.get("lock_subject"))
             lock_engine = str(task.get("lock_engine") or "qwen").strip().lower()
@@ -705,6 +770,9 @@ class ImagePipelineAPI:
                 thumb_path = img_dir / thumb_name
                 thumb_ok = self._ensure_thumb_bytes(img_bytes, thumb_path)
                 thumb_file = f"images/{thumb_name}" if thumb_ok else f"images/{name}"
+                meta = _image_meta_from_bytes(img_bytes)
+                out_w = meta["width"] or w
+                out_h = meta["height"] or h
                 item = {
                     "index": i + 1,
                     "file": f"images/{name}",
@@ -713,8 +781,9 @@ class ImagePipelineAPI:
                     "thumb_url": self._public_url(task, thumb_file),
                     "prompt": prompt,
                     "seed": seed,
-                    "width": w,
-                    "height": h,
+                    "width": out_w,
+                    "height": out_h,
+                    "bytes": meta["bytes"],
                     "elapsed_sec": round(elapsed, 2),
                     "published": False,
                     "engine": used_engine,
@@ -722,7 +791,8 @@ class ImagePipelineAPI:
                 images.append(item)
                 self._log(
                     task,
-                    f"第 {i + 1}/{len(prompts)} 张完成，耗时 {_format_elapsed(elapsed)}",
+                    f"第 {i + 1}/{len(prompts)} 张完成，{out_w}×{out_h} · "
+                    f"{meta['bytes']}B，耗时 {_format_elapsed(elapsed)}",
                 )
                 task["progress"] = {"current": i + 1, "total": len(prompts)}
                 self._save_snapshot(task)
@@ -764,6 +834,8 @@ class ImagePipelineAPI:
                 "styles": {k: v["label"] for k, v in _STYLES.items()},
                 "categories": {k: v["label"] for k, v in _CATEGORIES.items()},
                 "aspects": {k: v["label"] for k, v in _ASPECTS.items()},
+                "size_tiers": {k: v["label"] for k, v in _SIZE_TIERS.items()},
+                "size_tier_default": "hd",
                 "prompt_modes": {
                     "auto": "自动扩写（推荐）",
                     "theme_vary": "主题规则变化",
@@ -789,6 +861,7 @@ class ImagePipelineAPI:
             category: str = Form("other"),
             count: str = Form("4"),
             aspect: str = Form("1_1"),
+            size_tier: str = Form("hd"),
             prompt_mode: str = Form("auto"),
             extra: str = Form(""),
             negative: str = Form(""),
@@ -811,6 +884,9 @@ class ImagePipelineAPI:
             aspect_k = (aspect or "1_1").strip()
             if aspect_k not in _ASPECTS:
                 aspect_k = "1_1"
+            tier_k = (size_tier or "hd").strip().lower()
+            if tier_k not in _SIZE_TIERS:
+                tier_k = "hd"
             mode = (prompt_mode or "auto").strip().lower()
             if mode not in ("auto", "theme_vary", "manual"):
                 mode = "auto"
@@ -901,6 +977,10 @@ class ImagePipelineAPI:
                 "category_label": _CATEGORIES[cat_k]["label"],
                 "count": n,
                 "aspect": aspect_k,
+                "size_tier": tier_k,
+                "size_tier_label": _SIZE_TIERS[tier_k]["label"],
+                "gen_width": _resolve_wh(aspect_k, tier_k)[0],
+                "gen_height": _resolve_wh(aspect_k, tier_k)[1],
                 "prompt_mode": mode,
                 "extra": (extra or "").strip(),
                 "negative": (negative or "").strip(),
@@ -928,10 +1008,11 @@ class ImagePipelineAPI:
             lock_note = ""
             if lock_flag:
                 lock_note = " · 锁定主体·Qwen" if eng == "qwen" else " · 锁定主体·Z-Image"
+            gw, gh = task["gen_width"], task["gen_height"]
             api._log(
                 task,
                 f"批次已创建：{title_s} · {n} 张 · {_STYLES[style_k]['label']} · "
-                f"{_CATEGORIES[cat_k]['label']}{lock_note}",
+                f"{_CATEGORIES[cat_k]['label']} · {_SIZE_TIERS[tier_k]['label']} {gw}×{gh}{lock_note}",
             )
             api._save_snapshot(task)
             asyncio.create_task(api._run_task(task_id))

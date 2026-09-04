@@ -85,6 +85,50 @@ document.addEventListener('DOMContentLoaded', function () {
     return window.HomePcApi.assetUrl(url);
   }
 
+  /** Append original WxH · size; probe HD url (not thumb) when missing. */
+  function fillCapDimSize(capEl, baseText, item, originalUrl) {
+    if (!capEl) return;
+    var base = baseText || '';
+    var Ui = window.HomePcMediaUi;
+    function setText(dim) {
+      capEl.textContent = dim ? (base ? base + ' · ' + dim : dim) : base;
+    }
+    function appendDim(dim) {
+      if (!dim) return;
+      var el = capEl.querySelector('.home-pc-dim-size');
+      if (!el) {
+        el = document.createElement('div');
+        el.className = 'home-pc-dim-size';
+        capEl.appendChild(el);
+      }
+      el.textContent = dim;
+    }
+    var appendMode = capEl.getAttribute('data-dim-mode') === 'append';
+    if (!Ui || typeof Ui.formatItemDimSize !== 'function') {
+      if (!appendMode) setText('');
+      return;
+    }
+    var known = Ui.formatItemDimSize(item);
+    if (known) {
+      if (appendMode) appendDim(known);
+      else setText(known);
+      return;
+    }
+    if (!appendMode) setText('');
+    var src = originalUrl || (item && (item.url || item.image_url)) || '';
+    if (!src || typeof Ui.probeOriginalMeta !== 'function') return;
+    Ui.probeOriginalMeta(resolveUrl(src)).then(function (meta) {
+      if (item) {
+        if (!item.width && meta.width) item.width = meta.width;
+        if (!item.height && meta.height) item.height = meta.height;
+        if ((item.bytes == null || item.bytes === '') && meta.bytes) item.bytes = meta.bytes;
+      }
+      var text = Ui.formatDimSize(meta.width, meta.height, meta.bytes);
+      if (appendMode) appendDim(text);
+      else setText(text);
+    });
+  }
+
   function selectedAspect() {
     var el = document.querySelector('input[name="aspect"]:checked');
     return el ? el.value : '16_9';
@@ -456,6 +500,10 @@ document.addEventListener('DOMContentLoaded', function () {
             escapeHtml(tr('privateHub.homePc.seriesCharVoice', '音色') + '：' + c.voice) +
             '</div>'
           : '');
+      if (ref && (ref.url || ref.thumb_url)) {
+        meta.setAttribute('data-dim-mode', 'append');
+        fillCapDimSize(meta, '', ref, ref.url || '');
+      }
       var actions = document.createElement('div');
       actions.className = 'action-row series-char-actions';
       var regenBtn = document.createElement('button');
@@ -565,9 +613,10 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       var cap = document.createElement('span');
       cap.className = 'trailer-cand-cap';
-      cap.textContent =
+      var capBase =
         (it.kind === 'character' ? '角色 · ' : it.kind === 'scene' ? '场景 · ' : it.source === 'upload' ? '上传 · ' : 'AI · ') +
         (it.label || fn);
+      fillCapDimSize(cap, capBase, it, it.url || '');
       label.appendChild(input);
       label.appendChild(img);
       label.appendChild(zoomBtn);
@@ -987,6 +1036,10 @@ document.addEventListener('DOMContentLoaded', function () {
             : sh.visual_prompt
             ? '<div class="series-shot-vp">' + escapeHtml(String(sh.visual_prompt).slice(0, 72)) + '</div>'
             : '');
+        if (sh.image_url || sh.image_thumb_url) {
+          meta.setAttribute('data-dim-mode', 'append');
+          fillCapDimSize(meta, '', sh, sh.image_url || '');
+        }
         card.appendChild(meta);
         var actions = document.createElement('div');
         actions.className = 'action-row series-shot-actions';

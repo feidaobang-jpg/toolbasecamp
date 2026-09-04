@@ -107,7 +107,14 @@ document.addEventListener('DOMContentLoaded', function () {
       resultImg.alt = tr('privateHub.homePc.txt2imgResultTitle', '生成结果');
       resultImg.style.cursor = 'pointer';
       if (metaLine) {
-        metaLine.textContent = `使用的种子：${seedUsed != null ? seedUsed : '—'}`;
+        var seedText = `使用的种子：${seedUsed != null ? seedUsed : '—'}`;
+        metaLine.textContent = seedText;
+        if (MediaUi && typeof MediaUi.probeOriginalMeta === 'function' && lastDataUrl) {
+          MediaUi.probeOriginalMeta(lastDataUrl).then(function (meta) {
+            var dim = MediaUi.formatDimSize(meta.width, meta.height, meta.bytes);
+            if (dim && metaLine) metaLine.textContent = seedText + ' · ' + dim;
+          });
+        }
       }
       resultBox.style.display = 'block';
       if (downloadBtn) downloadBtn.style.display = 'inline-block';

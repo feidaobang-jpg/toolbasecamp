@@ -604,7 +604,23 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       var cap = document.createElement('div');
       cap.className = 'trailer-cand-cap';
-      cap.textContent = stillKindLabel(it.kind || id);
+      var capBase = stillKindLabel(it.kind || id);
+      var Ui = window.HomePcMediaUi;
+      var knownDim = Ui && Ui.formatItemDimSize ? Ui.formatItemDimSize(it) : '';
+      if (knownDim) {
+        cap.textContent = capBase + ' · ' + knownDim;
+      } else {
+        cap.textContent = capBase;
+        if (Ui && typeof Ui.probeOriginalMeta === 'function' && it.url) {
+          Ui.probeOriginalMeta(resolveUrl(it.url)).then(function (meta) {
+            if (!it.width && meta.width) it.width = meta.width;
+            if (!it.height && meta.height) it.height = meta.height;
+            if ((it.bytes == null || it.bytes === '') && meta.bytes) it.bytes = meta.bytes;
+            var dim = Ui.formatDimSize(meta.width, meta.height, meta.bytes);
+            if (dim) cap.textContent = capBase + ' · ' + dim;
+          });
+        }
+      }
       label.appendChild(input);
       label.appendChild(img);
       label.appendChild(zoomBtn);

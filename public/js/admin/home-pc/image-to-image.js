@@ -298,7 +298,17 @@ document.addEventListener('DOMContentLoaded', function () {
       if (item.quality) metaText += ` · ${qualityLabel(item.quality)}`;
       if (item.denoise != null) metaText += ` · Denoise ${item.denoise}`;
       if (item.elapsed_sec != null) metaText += ` · ${Number(item.elapsed_sec).toFixed(1)}s`;
-      meta.textContent = metaText;
+      var knownDim = MediaUi && MediaUi.formatItemDimSize ? MediaUi.formatItemDimSize(item) : '';
+      if (knownDim) {
+        meta.textContent = metaText + ' · ' + knownDim;
+      } else {
+        meta.textContent = metaText;
+        if (MediaUi && typeof MediaUi.applyDimSizeMeta === 'function' && item.cleanUrl) {
+          MediaUi.applyDimSizeMeta(meta, item, item.cleanUrl).then(function (dim) {
+            if (dim) meta.textContent = metaText + ' · ' + dim;
+          });
+        }
+      }
       card.appendChild(meta);
 
       const cleanWrap = document.createElement('div');

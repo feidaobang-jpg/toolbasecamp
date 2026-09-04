@@ -264,7 +264,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const cap = document.createElement('p');
       cap.className = 'tti-caption';
-      cap.textContent = (item.caption || `第 ${i + 1} 张`).slice(0, 120);
+      const capBase = (item.caption || `第 ${i + 1} 张`).slice(0, 120);
+      const knownDim = MediaUi && MediaUi.formatItemDimSize ? MediaUi.formatItemDimSize(item) : '';
+      if (knownDim) {
+        cap.textContent = capBase + ' · ' + knownDim;
+      } else {
+        cap.textContent = capBase;
+        const hdForProbe = item.url || '';
+        if (MediaUi && typeof MediaUi.probeOriginalMeta === 'function' && hdForProbe) {
+          MediaUi.probeOriginalMeta(resolveUrl(hdForProbe)).then(function (meta) {
+            if (!item.width && meta.width) item.width = meta.width;
+            if (!item.height && meta.height) item.height = meta.height;
+            if ((item.bytes == null || item.bytes === '') && meta.bytes) item.bytes = meta.bytes;
+            const dim = MediaUi.formatDimSize(meta.width, meta.height, meta.bytes);
+            if (dim) cap.textContent = capBase + ' · ' + dim;
+          });
+        }
+      }
 
       const img = document.createElement('img');
       img.alt = item.caption || `配图 ${i + 1}`;

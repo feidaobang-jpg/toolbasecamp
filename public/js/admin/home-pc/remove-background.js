@@ -407,7 +407,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const infoDiv = document.createElement('div');
         infoDiv.className = 'image-info';
-        let infoText = `${processedImage.width}x${processedImage.height} (${formatFileSize(processedImage.size)})`;
+        let infoText =
+            MediaUi && typeof MediaUi.formatDimSize === 'function'
+                ? MediaUi.formatDimSize(processedImage.width, processedImage.height, processedImage.size)
+                : `${processedImage.width}x${processedImage.height} (${formatFileSize(processedImage.size)})`;
         if (processedImage.elapsed_sec != null) {
             infoText += ` · ${Number(processedImage.elapsed_sec).toFixed(1)}s`;
         }

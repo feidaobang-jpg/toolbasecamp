@@ -19,6 +19,7 @@
   var styleSelect = document.getElementById('style-select');
   var categorySelect = document.getElementById('category-select');
   var aspectSelect = document.getElementById('aspect-select');
+  var sizeTierSelect = document.getElementById('size-tier-select');
   var modeSelect = document.getElementById('mode-select');
   var extraInput = document.getElementById('extra-input');
   var manualInput = document.getElementById('manual-input');
@@ -192,6 +193,15 @@
         fillSelect(styleSelect, pack.body.styles, 'realistic');
         fillSelect(categorySelect, pack.body.categories, 'landscape');
         fillSelect(aspectSelect, pack.body.aspects, '1_1');
+        fillSelect(
+          sizeTierSelect,
+          pack.body.size_tiers || {
+            sd: tr('privateHub.homePc.imagePipeSizeSd', '标清'),
+            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（推荐）'),
+            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大')
+          },
+          pack.body.size_tier_default || 'hd'
+        );
       })
       .catch(function () {
         fillSelect(
@@ -235,7 +245,31 @@
           },
           '1_1'
         );
+        fillSelect(
+          sizeTierSelect,
+          {
+            sd: tr('privateHub.homePc.imagePipeSizeSd', '标清'),
+            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（推荐）'),
+            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大')
+          },
+          'hd'
+        );
       });
+  }
+
+  function dimSizeText(it) {
+    if (window.HomePcMediaUi && window.HomePcMediaUi.formatItemDimSize) {
+      return window.HomePcMediaUi.formatItemDimSize(it) || '';
+    }
+    if (it && it.width && it.height) {
+      var s = it.width + '×' + it.height;
+      if (it.bytes) {
+        var mb = (Number(it.bytes) / (1024 * 1024)).toFixed(2);
+        s += ' · ' + mb + ' MB';
+      }
+      return s;
+    }
+    return '';
   }
 
   function stopPoll() {
@@ -333,11 +367,13 @@
         it.elapsed_sec != null
           ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's'
           : '';
+      var dim = dimSizeText(it);
       lightboxCaption.textContent =
         '#' +
         (it.index || index + 1) +
         ' / ' +
         imgs.length +
+        (dim ? ' · ' + dim : '') +
         elapsed +
         (it.seed != null ? ' · seed=' + it.seed : '') +
         '\n' +
@@ -400,6 +436,11 @@
         ' · ' +
         (task.category_label || task.category || '') +
         ' · ' +
+        (task.size_tier_label || task.size_tier || '') +
+        (task.gen_width && task.gen_height
+          ? ' ' + task.gen_width + '×' + task.gen_height
+          : '') +
+        ' · ' +
         images.length +
         ' 张' +
         (task.plan_source ? ' · plan=' + task.plan_source : '') +
@@ -430,9 +471,11 @@
         it.elapsed_sec != null
           ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's'
           : '';
+      var dim = dimSizeText(it);
       meta.innerHTML =
         '<div class="image-pipe-card-idx">#' +
         (it.index || '') +
+        (dim ? ' · ' + escapeAttr(dim) : '') +
         elapsed +
         (it.published
           ? ' · ' + tr('privateHub.homePc.imagePipePublished', '已公开')
@@ -444,6 +487,22 @@
         escapeAttr(String(it.prompt || '').slice(0, 90)) +
         (String(it.prompt || '').length > 90 ? '…' : '') +
         '</div>';
+      if (!dim && window.HomePcMediaUi && window.HomePcMediaUi.applyDimSizeMeta) {
+        window.HomePcMediaUi.applyDimSizeMeta(meta, it, resolveUrl(it.url)).then(function (text) {
+          if (!text) return;
+          var idxEl = meta.querySelector('.image-pipe-card-idx');
+          if (!idxEl || idxEl.textContent.indexOf('×') >= 0) return;
+          idxEl.textContent =
+            '#' +
+            (it.index || '') +
+            ' · ' +
+            text +
+            (it.elapsed_sec != null ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '') +
+            (it.published
+              ? ' · ' + tr('privateHub.homePc.imagePipePublished', '已公开')
+              : '');
+        });
+      }
       card.appendChild(check);
       card.appendChild(img);
       card.appendChild(meta);
@@ -608,6 +667,7 @@
         fd.append('category', categorySelect ? categorySelect.value : 'other');
         fd.append('count', countInput ? String(countInput.value || '4') : '4');
         fd.append('aspect', aspectSelect ? aspectSelect.value : '1_1');
+        fd.append('size_tier', sizeTierSelect ? sizeTierSelect.value : 'hd');
         fd.append('prompt_mode', mode);
         fd.append('extra', (extraInput && extraInput.value) || '');
         fd.append('negative', (negInput && negInput.value) || '');
@@ -908,6 +968,7 @@
     setSelectValue(styleSelect, task.style);
     setSelectValue(categorySelect, task.category);
     setSelectValue(aspectSelect, task.aspect);
+    setSelectValue(sizeTierSelect, task.size_tier || 'hd');
     setSelectValue(modeSelect, task.prompt_mode || 'auto');
     syncModeUi();
     if (extraInput) extraInput.value = task.extra || '';

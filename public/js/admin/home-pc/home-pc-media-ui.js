@@ -437,6 +437,137 @@
     return el;
   }
 
+  /**
+   * 格式化原图体积。
+   */
+  function formatBytes(n) {
+    var v = Number(n);
+    if (!isFinite(v) || v < 0) return '';
+    if (v < 1024) return Math.round(v) + ' B';
+    if (v < 1024 * 1024) return (v / 1024).toFixed(v < 10 * 1024 ? 1 : 0) + ' KB';
+    return (v / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  /**
+   * 原图分辨率 + 体积文案。优先用显式 width/height/bytes，勿用缩略图尺寸。
+   */
+  function formatDimSize(w, h, bytes) {
+    var parts = [];
+    var ww = Number(w);
+    var hh = Number(h);
+    if (ww > 0 && hh > 0) parts.push(Math.round(ww) + '×' + Math.round(hh));
+    var sizeLabel = bytes != null && bytes !== '' ? formatBytes(bytes) : '';
+    if (sizeLabel) parts.push(sizeLabel);
+    return parts.join(' · ');
+  }
+
+  function formatItemDimSize(item) {
+    if (!item) return '';
+    return formatDimSize(item.width, item.height, item.bytes != null ? item.bytes : item.size);
+  }
+
+  /**
+   * 探测原图（URL / dataURL / Blob）的宽高与体积。禁止传入缩略图 URL。
+   */
+  function probeOriginalMeta(src) {
+    if (!src) return Promise.resolve({ width: 0, height: 0, bytes: 0 });
+    if (src instanceof Blob) {
+      var blob = src;
+      return new Promise(function (resolve) {
+        var url = URL.createObjectURL(blob);
+        var img = new Image();
+        img.onload = function () {
+          var out = {
+            width: img.naturalWidth || img.width || 0,
+            height: img.naturalHeight || img.height || 0,
+            bytes: blob.size || 0
+          };
+          try {
+            URL.revokeObjectURL(url);
+          } catch (e) {}
+          resolve(out);
+        };
+        img.onerror = function () {
+          try {
+            URL.revokeObjectURL(url);
+          } catch (e2) {}
+          resolve({ width: 0, height: 0, bytes: blob.size || 0 });
+        };
+        img.src = url;
+      });
+    }
+    var s = String(src);
+    if (s.indexOf('data:') === 0) {
+      var comma = s.indexOf(',');
+      var b64 = comma >= 0 ? s.slice(comma + 1) : '';
+      var approx = b64 ? Math.floor((b64.length * 3) / 4) : 0;
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () {
+          resolve({
+            width: img.naturalWidth || img.width || 0,
+            height: img.naturalHeight || img.height || 0,
+            bytes: approx
+          });
+        };
+        img.onerror = function () {
+          resolve({ width: 0, height: 0, bytes: approx });
+        };
+        img.src = s;
+      });
+    }
+    var href = assetUrl(s);
+    return fetch(href)
+      .then(function (r) {
+        if (!r.ok) throw new Error('probe failed');
+        return r.blob();
+      })
+      .then(function (blob) {
+        return probeOriginalMeta(blob);
+      })
+      .catch(function () {
+        return new Promise(function (resolve) {
+          var img = new Image();
+          img.onload = function () {
+            resolve({
+              width: img.naturalWidth || img.width || 0,
+              height: img.naturalHeight || img.height || 0,
+              bytes: 0
+            });
+          };
+          img.onerror = function () {
+            resolve({ width: 0, height: 0, bytes: 0 });
+          };
+          img.crossOrigin = 'anonymous';
+          img.src = href;
+        });
+      });
+  }
+
+  /**
+   * 把分辨率·体积写到 meta 元素；若 item 缺字段则异步探测 originalSrc。
+   */
+  function applyDimSizeMeta(el, item, originalSrc) {
+    if (!el) return Promise.resolve('');
+    var known = formatItemDimSize(item);
+    if (known) {
+      el.setAttribute('data-dim-size', known);
+      return Promise.resolve(known);
+    }
+    var src = originalSrc || (item && (item.url || item.cleanUrl || item.imageUrl)) || '';
+    if (!src) return Promise.resolve('');
+    return probeOriginalMeta(src).then(function (meta) {
+      if (item) {
+        if (!item.width && meta.width) item.width = meta.width;
+        if (!item.height && meta.height) item.height = meta.height;
+        if ((item.bytes == null || item.bytes === '') && meta.bytes) item.bytes = meta.bytes;
+      }
+      var text = formatDimSize(meta.width, meta.height, meta.bytes);
+      if (text) el.setAttribute('data-dim-size', text);
+      return text;
+    });
+  }
+
   global.HomePcMediaUi = {
     tr: tr,
     assetUrl: assetUrl,
@@ -446,6 +577,11 @@
     ensureLogToolbar: ensureLogToolbar,
     appendCardActions: appendCardActions,
     ensureLightboxDom: ensureLightboxDom,
-    upgradeLightboxDom: upgradeLightboxDom
+    upgradeLightboxDom: upgradeLightboxDom,
+    formatBytes: formatBytes,
+    formatDimSize: formatDimSize,
+    formatItemDimSize: formatItemDimSize,
+    probeOriginalMeta: probeOriginalMeta,
+    applyDimSizeMeta: applyDimSizeMeta
   };
 })(typeof window !== 'undefined' ? window : this);

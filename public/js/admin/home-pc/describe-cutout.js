@@ -401,12 +401,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const infoDiv = document.createElement('div');
         infoDiv.className = 'image-info';
         
-        // 动态获取图片尺寸
+        // 动态获取原图尺寸（勿用缩略图）
         const tempImg = new Image();
         tempImg.onload = function() {
             processedImage.width = tempImg.width;
             processedImage.height = tempImg.height;
-            let infoText = `${tempImg.width}x${tempImg.height} (${formatFileSize(processedImage.size)})`;
+            let infoText =
+                MediaUi && typeof MediaUi.formatDimSize === 'function'
+                    ? MediaUi.formatDimSize(tempImg.width, tempImg.height, processedImage.size)
+                    : `${tempImg.width}x${tempImg.height} (${formatFileSize(processedImage.size)})`;
             if (processedImage.elapsed_sec != null) {
                 infoText += ` · ${Number(processedImage.elapsed_sec).toFixed(1)}s`;
             }

@@ -73,6 +73,14 @@
                   <label for="aspect-select" data-i18n="privateHub.homePc.imagePipeAspectLabel">画幅</label>
                   <select id="aspect-select" class="text-input"></select>
                 </div>
+                <div class="input-control">
+                  <label for="size-tier-select" data-i18n="privateHub.homePc.imagePipeSizeTierLabel">分辨率档位</label>
+                  <select id="size-tier-select" class="text-input">
+                    <option value="sd" data-i18n="privateHub.homePc.imagePipeSizeSd">标清</option>
+                    <option value="hd" selected data-i18n="privateHub.homePc.imagePipeSizeHd">高清（推荐）</option>
+                    <option value="xl" data-i18n="privateHub.homePc.imagePipeSizeXl">更大</option>
+                  </select>
+                </div>
               </div>
 
               <div class="form-row">
@@ -198,7 +206,7 @@
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui5"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
   <script src="../../../../js/admin/home-pc/image-pipeline.js?v=imgpipe14"></script>
 </body>

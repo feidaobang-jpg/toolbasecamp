@@ -57,6 +57,34 @@ document.addEventListener('DOMContentLoaded', function () {
     return window.HomePcApi.assetUrl(url);
   }
 
+  /** Append original WxH · size after caption; probe HD url when missing. */
+  function fillCapDimSize(capEl, baseText, item, originalUrl) {
+    if (!capEl) return;
+    var base = baseText || '';
+    var Ui = MediaUi || window.HomePcMediaUi;
+    if (!Ui || typeof Ui.formatItemDimSize !== 'function') {
+      capEl.textContent = base;
+      return;
+    }
+    var known = Ui.formatItemDimSize(item);
+    if (known) {
+      capEl.textContent = base + ' · ' + known;
+      return;
+    }
+    capEl.textContent = base;
+    var src = originalUrl || (item && item.url) || '';
+    if (!src || typeof Ui.probeOriginalMeta !== 'function') return;
+    Ui.probeOriginalMeta(resolveUrl(src)).then(function (meta) {
+      if (item) {
+        if (!item.width && meta.width) item.width = meta.width;
+        if (!item.height && meta.height) item.height = meta.height;
+        if ((item.bytes == null || item.bytes === '') && meta.bytes) item.bytes = meta.bytes;
+      }
+      var text = Ui.formatDimSize(meta.width, meta.height, meta.bytes);
+      if (text) capEl.textContent = base + ' · ' + text;
+    });
+  }
+
   function ensureMediaLightbox() {
     if (mediaLightbox) return mediaLightbox;
     if (!MediaUi || !MediaUi.createLightbox) return null;
@@ -544,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       var cap = document.createElement('span');
       cap.className = 'trailer-cand-cap';
-      cap.textContent = caption;
+      fillCapDimSize(cap, caption, it, it.url);
       label.appendChild(input);
       label.appendChild(img);
       label.appendChild(zoomBtn);
@@ -651,9 +679,13 @@ document.addEventListener('DOMContentLoaded', function () {
         bindOpenLightbox(zoomBtn, function () {
           return parseInt(img.getAttribute('data-gallery-index') || '-1', 10);
         });
+        var cap = document.createElement('span');
+        cap.className = 'trailer-cand-cap';
+        fillCapDimSize(cap, caption, c, c.url);
         label.appendChild(input);
         label.appendChild(img);
         label.appendChild(zoomBtn);
+        label.appendChild(cap);
         wrap.appendChild(label);
         appendImgCardActions(wrap, c.url, c.filename || 'shot.png', function () {
           var wasSelected = label.classList.contains('is-selected');
