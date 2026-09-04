@@ -329,7 +329,8 @@
       check.type = 'checkbox';
       check.className = 'image-pipe-check';
       check.setAttribute('data-index', String(it.index || ''));
-      check.checked = !it.published;
+      check.checked = false;
+      check.addEventListener('change', syncSelectToggleLabel);
       var img = document.createElement('img');
       img.src = resolveUrl(it.thumb_url || it.url);
       img.alt = it.prompt || '';
@@ -410,10 +411,30 @@
       }
       resultGrid.appendChild(card);
     });
+    syncSelectToggleLabel();
     if (lightbox && !lightbox.hasAttribute('hidden') && lightboxIndex >= 0) {
       if (lightboxIndex >= images.length) closeLightbox();
       else showLightboxAt(lightboxIndex);
     }
+  }
+
+  function selectionState() {
+    var boxes = resultGrid
+      ? Array.prototype.slice.call(resultGrid.querySelectorAll('.image-pipe-check'))
+      : [];
+    var checked = boxes.filter(function (el) {
+      return el.checked;
+    }).length;
+    return { total: boxes.length, checked: checked, all: boxes.length > 0 && checked === boxes.length };
+  }
+
+  function syncSelectToggleLabel() {
+    var btn = document.getElementById('select-toggle-btn');
+    if (!btn) return;
+    var st = selectionState();
+    btn.textContent = st.all
+      ? tr('privateHub.homePc.imagePipeSelectNone', '取消全选')
+      : tr('privateHub.homePc.imagePipeSelectAll', '全选');
   }
 
   function fetchStatus(taskId) {
@@ -751,24 +772,18 @@
       );
     });
   }
-  var selectAllBtn = document.getElementById('select-all-btn');
-  var selectNoneBtn = document.getElementById('select-none-btn');
+  var selectToggleBtn = document.getElementById('select-toggle-btn');
   var publishBtn = document.getElementById('publish-btn');
   var historyRefreshBtn = document.getElementById('history-refresh-btn');
-  if (selectAllBtn) {
-    selectAllBtn.addEventListener('click', function () {
+  if (selectToggleBtn) {
+    selectToggleBtn.addEventListener('click', function () {
       if (!resultGrid) return;
+      var st = selectionState();
+      var next = !st.all;
       resultGrid.querySelectorAll('.image-pipe-check').forEach(function (el) {
-        el.checked = true;
+        el.checked = next;
       });
-    });
-  }
-  if (selectNoneBtn) {
-    selectNoneBtn.addEventListener('click', function () {
-      if (!resultGrid) return;
-      resultGrid.querySelectorAll('.image-pipe-check').forEach(function (el) {
-        el.checked = false;
-      });
+      syncSelectToggleLabel();
     });
   }
   if (publishBtn) publishBtn.addEventListener('click', publishSelected);
