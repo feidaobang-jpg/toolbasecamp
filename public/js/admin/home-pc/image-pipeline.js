@@ -609,6 +609,41 @@
       });
   }
 
+  function setSelectValue(sel, value) {
+    if (!sel || value == null || value === '') return;
+    var v = String(value);
+    var found = false;
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === v) {
+        found = true;
+        break;
+      }
+    }
+    if (found) sel.value = v;
+  }
+
+  function fillFormFromTask(task) {
+    if (!task) return;
+    if (titleInput) titleInput.value = task.title || '';
+    if (themeInput) themeInput.value = task.theme || '';
+    if (countInput) {
+      var n = Number(task.count || (task.images && task.images.length) || 4);
+      countInput.value = String(Math.max(1, Math.min(24, n || 4)));
+    }
+    setSelectValue(styleSelect, task.style);
+    setSelectValue(categorySelect, task.category);
+    setSelectValue(aspectSelect, task.aspect);
+    setSelectValue(modeSelect, task.prompt_mode || 'auto');
+    syncModeUi();
+    if (extraInput) extraInput.value = task.extra || '';
+    if (negInput) negInput.value = task.negative || '';
+    if (manualInput) manualInput.value = task.manual_prompts || '';
+    if (seedInput) {
+      seedInput.value =
+        task.seed_base != null && task.seed_base !== '' ? String(task.seed_base) : '';
+    }
+  }
+
   function openHistory(it) {
     var fd = new FormData();
     if (it.folder) fd.append('folder', it.folder);
@@ -628,6 +663,7 @@
         var task = pack.body;
         currentTaskId = task.task_id || null;
         currentFolder = task.output_dir || it.folder || null;
+        fillFormFromTask(task);
         applyLogs(task);
         applyProgress(task);
         renderResults(task);
