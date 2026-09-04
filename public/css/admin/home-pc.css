@@ -2549,22 +2549,28 @@ body.tb-admin-private #auth-status {
   position: absolute;
   top: 50%;
   z-index: 2;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border: 2px solid #fff;
   border-radius: 999px;
   background: #000;
   color: #fff;
-  font-size: 48px;
-  font-weight: 700;
+  font-size: 0;
   line-height: 1;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65);
-  padding: 0 0 6px;
+  padding: 0;
   pointer-events: auto;
+}
+.image-pipe-lb-nav i {
+  font-size: 28px;
+  line-height: 1;
+  width: 1em;
+  text-align: center;
+  pointer-events: none;
 }
 /* 紧贴图片左右外侧 */
 .image-pipe-lb-prev {
@@ -2576,9 +2582,12 @@ body.tb-admin-private #auth-status {
   transform: translate(110%, -50%);
 }
 .image-pipe-lb-nav:hover:not(.is-disabled):not(:disabled) {
-  background: #111;
+  background: #1a1a1a;
   border-color: #fff;
   color: #fff;
+}
+.image-pipe-lb-nav:hover:not(.is-disabled):not(:disabled) i {
+  transform: scale(1.08);
 }
 .image-pipe-lb-nav.is-disabled,
 .image-pipe-lb-nav:disabled {
@@ -2611,8 +2620,10 @@ body.tb-admin-private #auth-status {
     transform: translateY(-50%);
   }
   .image-pipe-lb-nav {
-    width: 48px;
-    height: 48px;
-    font-size: 40px;
+    width: 46px;
+    height: 46px;
+  }
+  .image-pipe-lb-nav i {
+    font-size: 24px;
   }
 }

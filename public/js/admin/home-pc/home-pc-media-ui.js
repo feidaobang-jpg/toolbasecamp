@@ -392,9 +392,9 @@
       '<button type="button" class="trailer-lightbox-backdrop" id="lightbox-backdrop" aria-label="关闭"></button>' +
       '<div class="trailer-lightbox-panel image-pipe-lightbox-panel">' +
       '<div class="image-pipe-lb-stage">' +
-      '<button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张">‹</button>' +
+      '<button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>' +
       '<img id="lightbox-img" alt="" />' +
-      '<button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张">›</button>' +
+      '<button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>' +
       '</div>' +
       '<div id="lightbox-caption" class="image-pipe-lb-caption" data-lb-caption></div>' +
       '</div>';
@@ -421,6 +421,17 @@
     if (prev) stage.appendChild(prev);
     stage.appendChild(img);
     if (next) stage.appendChild(next);
+    // 旧页若仍是文字箭头，换成粗一点的 FA 图标
+    function ensureChevron(btn, side) {
+      if (!btn) return;
+      if (btn.querySelector('i.fas')) return;
+      btn.innerHTML =
+        side === 'prev'
+          ? '<i class="fas fa-chevron-left" aria-hidden="true"></i>'
+          : '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
+    }
+    ensureChevron(prev || el.querySelector('.image-pipe-lb-prev'), 'prev');
+    ensureChevron(next || el.querySelector('.image-pipe-lb-next'), 'next');
     panel.insertBefore(stage, panel.firstChild);
     if (caption && caption.parentNode !== panel) panel.appendChild(caption);
     return el;
