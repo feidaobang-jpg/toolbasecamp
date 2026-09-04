@@ -2471,6 +2471,30 @@ body.tb-admin-private #auth-status {
   border-radius: 10px;
   background: #fff;
 }
+.home-pc-wrap .image-pipe-history-actions {
+  flex: 0 0 auto;
+}
+.home-pc-wrap .image-pipe-lock-block {
+  margin-top: 4px;
+}
+.home-pc-wrap .image-pipe-ref-drop {
+  margin-top: 8px;
+  min-height: 96px;
+}
+.home-pc-wrap .image-pipe-ref-preview {
+  margin-top: 10px;
+}
+.home-pc-wrap .image-pipe-ref-preview img {
+  display: block;
+  max-width: 220px;
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  margin-bottom: 8px;
+}
 .home-pc-wrap .image-pipe-history-meta {
   min-width: 0;
   flex: 1 1 auto;

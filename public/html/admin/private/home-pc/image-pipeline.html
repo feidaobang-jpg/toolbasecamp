@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc66" />
-  <script src="../../../../js/locales/en.js?v=imgpipe11"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=imgpipe11"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc67" />
+  <script src="../../../../js/locales/en.js?v=imgpipe13"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=imgpipe13"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc30"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.imagePipeHint">工作流 z_image_turbo.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。批量排队文生图，可选公开到「图片」页。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.imagePipeHint">工作流 z_image_turbo.json；锁定主体时走 z_image_turbo_img2img.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。批量排队生图，可选参考图锁人物/主体，可公开到「图片」页。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -104,6 +104,26 @@
                 <label for="neg-input" data-i18n="privateHub.homePc.imagePipeNegLabel">反向提示词（可选）</label>
                 <textarea id="neg-input" rows="2"></textarea>
               </div>
+
+              <div class="image-pipe-lock-block">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.imagePipeLockLabel">锁定主体（可选）</span>
+                <p class="small-hint" data-i18n="privateHub.homePc.imagePipeLockHint">上传一张参考图后，本批用图生图保持人物/主体外貌，场景与姿态可变化。</p>
+                <div class="drop-zone image-pipe-ref-drop" id="ref-drop" tabindex="0" role="button">
+                  <div class="drop-icon">+</div>
+                  <div class="drop-title" data-i18n="privateHub.homePc.imagePipeLockDrop">点击或拖入参考图</div>
+                </div>
+                <input id="ref-file" type="file" accept="image/*" hidden />
+                <div id="ref-preview-wrap" class="image-pipe-ref-preview" style="display:none;">
+                  <img id="ref-preview" alt="" />
+                  <div class="action-row">
+                    <button type="button" id="ref-clear-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipeLockClear">清除参考图</button>
+                  </div>
+                </div>
+                <div id="denoise-wrap" class="input-control" style="display:none;margin-top:10px;">
+                  <label for="denoise-input" data-i18n="privateHub.homePc.imagePipeDenoiseLabel">重绘幅度 Denoise（越低越像参考图）</label>
+                  <input id="denoise-input" class="text-input" type="number" step="0.05" min="0.35" max="0.85" value="0.55" />
+                </div>
+              </div>
             </div>
 
             <div class="action-row home-pc-tool-actions">
@@ -165,6 +185,7 @@
     </div>
   </div>
 
+  <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
   <script src="../../../../js/media/image-cloud-client.js?v=imgpipe2"></script>
   <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc30"></script>
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
@@ -172,6 +193,6 @@
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
   <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/image-pipeline.js?v=imgpipe12"></script>
+  <script src="../../../../js/admin/home-pc/image-pipeline.js?v=imgpipe13"></script>
 </body>
 </html>

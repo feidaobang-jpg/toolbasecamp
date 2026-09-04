@@ -10,6 +10,8 @@
   var currentTask = null;
   var pollTimer = null;
   var busy = false;
+  var refFile = null;
+  var refObjectUrl = null;
 
   var themeInput = document.getElementById('theme-input');
   var titleInput = document.getElementById('batch-title');
@@ -22,6 +24,13 @@
   var manualInput = document.getElementById('manual-input');
   var negInput = document.getElementById('neg-input');
   var seedInput = document.getElementById('seed-input');
+  var denoiseInput = document.getElementById('denoise-input');
+  var denoiseWrap = document.getElementById('denoise-wrap');
+  var refDrop = document.getElementById('ref-drop');
+  var refFileInput = document.getElementById('ref-file');
+  var refPreviewWrap = document.getElementById('ref-preview-wrap');
+  var refPreview = document.getElementById('ref-preview');
+  var refClearBtn = document.getElementById('ref-clear-btn');
   var manualWrap = document.getElementById('manual-wrap');
   var extraWrap = document.getElementById('extra-wrap');
   var startBtn = document.getElementById('start-btn');
@@ -78,6 +87,81 @@
     var mode = modeSelect ? modeSelect.value : 'auto';
     if (manualWrap) manualWrap.style.display = mode === 'manual' ? '' : 'none';
     if (extraWrap) extraWrap.style.display = mode === 'manual' ? 'none' : '';
+  }
+
+  function revokeRefObjectUrl() {
+    if (refObjectUrl) {
+      try {
+        URL.revokeObjectURL(refObjectUrl);
+      } catch (e) {}
+      refObjectUrl = null;
+    }
+  }
+
+  function syncLockUi() {
+    var hasLocal = !!refFile;
+    var hasRemote = !!(
+      refPreview &&
+      refPreview.getAttribute('data-remote') === '1' &&
+      refPreview.getAttribute('src')
+    );
+    var has = hasLocal || hasRemote;
+    if (denoiseWrap) denoiseWrap.style.display = has ? '' : 'none';
+    if (refDrop) refDrop.style.display = has ? 'none' : '';
+    if (refPreviewWrap) refPreviewWrap.style.display = has ? '' : 'none';
+  }
+
+  function clearRef() {
+    refFile = null;
+    revokeRefObjectUrl();
+    if (refFileInput) refFileInput.value = '';
+    if (refPreview) {
+      refPreview.removeAttribute('src');
+      refPreview.removeAttribute('data-remote');
+    }
+    syncLockUi();
+  }
+
+  function setRefFile(file) {
+    if (!file) return;
+    refFile = file;
+    revokeRefObjectUrl();
+    refObjectUrl = URL.createObjectURL(file);
+    if (refPreview) {
+      refPreview.src = refObjectUrl;
+      refPreview.removeAttribute('data-remote');
+    }
+    syncLockUi();
+  }
+
+  function setRefFromUrl(url) {
+    refFile = null;
+    revokeRefObjectUrl();
+    if (refFileInput) refFileInput.value = '';
+    if (refPreview && url) {
+      refPreview.src = resolveUrl(url);
+      refPreview.setAttribute('data-remote', '1');
+    } else if (refPreview) {
+      refPreview.removeAttribute('src');
+      refPreview.removeAttribute('data-remote');
+    }
+    syncLockUi();
+  }
+
+  function pickRefFiles(fileList) {
+    var file = fileList && fileList[0];
+    if (!file) return;
+    var compress =
+      window.TBImageUploadCompress && typeof window.TBImageUploadCompress.compressIfNeeded === 'function'
+        ? window.TBImageUploadCompress.compressIfNeeded(file, 'default')
+        : Promise.resolve(file);
+    Promise.resolve(compress)
+      .then(function (out) {
+        setRefFile(out || file);
+      })
+      .catch(function () {
+        setRefFile(file);
+      });
   }
 
   function fillSelect(sel, map, preferred) {
@@ -465,6 +549,30 @@
       .catch(function () {});
   }
 
+  function resolveRefForUpload() {
+    if (refFile) return Promise.resolve(refFile);
+    var remote =
+      refPreview &&
+      refPreview.getAttribute('data-remote') === '1' &&
+      refPreview.getAttribute('src');
+    if (!remote) return Promise.resolve(null);
+    return fetch(remote)
+      .then(function (res) {
+        if (!res.ok) throw new Error('ref fetch failed');
+        return res.blob();
+      })
+      .then(function (blob) {
+        var type = blob.type || 'image/jpeg';
+        var name = type.indexOf('png') >= 0 ? 'ref.png' : 'ref.jpg';
+        try {
+          return new File([blob], name, { type: type });
+        } catch (e) {
+          blob.name = name;
+          return blob;
+        }
+      });
+  }
+
   function startJob() {
     var theme = (themeInput && themeInput.value) || '';
     if (!String(theme).trim()) {
@@ -479,18 +587,6 @@
         return;
       }
     }
-    var fd = new FormData();
-    fd.append('title', (titleInput && titleInput.value) || '');
-    fd.append('theme', theme.trim());
-    fd.append('style', styleSelect ? styleSelect.value : 'realistic');
-    fd.append('category', categorySelect ? categorySelect.value : 'other');
-    fd.append('count', countInput ? String(countInput.value || '4') : '4');
-    fd.append('aspect', aspectSelect ? aspectSelect.value : '1_1');
-    fd.append('prompt_mode', mode);
-    fd.append('extra', (extraInput && extraInput.value) || '');
-    fd.append('negative', (negInput && negInput.value) || '');
-    fd.append('manual_prompts', (manualInput && manualInput.value) || '');
-    fd.append('seed', (seedInput && seedInput.value) || '');
 
     setBusy(true);
     if (progressWrap) progressWrap.style.display = '';
@@ -498,7 +594,30 @@
       progressStatus.textContent = tr('privateHub.homePc.imagePipeWorking', '排队生成中…');
     }
     if (logOutput) logOutput.textContent = '';
-    fetch(API_BASE + '/image-pipeline/start', { method: 'POST', body: fd })
+
+    resolveRefForUpload()
+      .then(function (file) {
+        var fd = new FormData();
+        fd.append('title', (titleInput && titleInput.value) || '');
+        fd.append('theme', theme.trim());
+        fd.append('style', styleSelect ? styleSelect.value : 'realistic');
+        fd.append('category', categorySelect ? categorySelect.value : 'other');
+        fd.append('count', countInput ? String(countInput.value || '4') : '4');
+        fd.append('aspect', aspectSelect ? aspectSelect.value : '1_1');
+        fd.append('prompt_mode', mode);
+        fd.append('extra', (extraInput && extraInput.value) || '');
+        fd.append('negative', (negInput && negInput.value) || '');
+        fd.append('manual_prompts', (manualInput && manualInput.value) || '');
+        fd.append('seed', (seedInput && seedInput.value) || '');
+        if (file) {
+          fd.append('lock_subject', '1');
+          fd.append('ref_image', file, file.name || 'ref.jpg');
+          fd.append('denoise', denoiseInput ? String(denoiseInput.value || '0.55') : '0.55');
+        } else {
+          fd.append('lock_subject', '0');
+        }
+        return fetch(API_BASE + '/image-pipeline/start', { method: 'POST', body: fd });
+      })
       .then(function (res) {
         return res.json().then(function (body) {
           return { res: res, body: body };
@@ -662,17 +781,30 @@
             (it.image_count || it.count || 0) +
             ' · ' +
             (it.status || '') +
+            (it.lock_subject ? ' · ' + tr('privateHub.homePc.imagePipeLockedTag', '已锁主体') : '') +
             '</div>';
-          var btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'tb-btn';
-          btn.setAttribute('data-job-btn', '1');
-          btn.textContent = tr('privateHub.homePc.imagePipeHistoryOpen', '打开');
-          btn.addEventListener('click', function () {
+          var actions = document.createElement('div');
+          actions.className = 'action-row image-pipe-history-actions';
+          var openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.className = 'tb-btn';
+          openBtn.setAttribute('data-job-btn', '1');
+          openBtn.textContent = tr('privateHub.homePc.imagePipeHistoryOpen', '打开');
+          openBtn.addEventListener('click', function () {
             openHistory(it);
           });
+          var delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'tb-btn';
+          delBtn.setAttribute('data-job-btn', '1');
+          delBtn.textContent = tr('privateHub.homePc.imagePipeHistoryDelete', '删除');
+          delBtn.addEventListener('click', function () {
+            deleteHistory(it);
+          });
+          actions.appendChild(openBtn);
+          actions.appendChild(delBtn);
           row.appendChild(left);
-          row.appendChild(btn);
+          row.appendChild(actions);
           historyList.appendChild(row);
         });
       })
@@ -681,6 +813,62 @@
           '<p class="small-hint">' +
           tr('privateHub.homePc.imagePipeHistoryEmpty', '暂无历史') +
           '</p>';
+      });
+  }
+
+  function clearCurrentIfMatches(it) {
+    var folder = (it && it.folder) || '';
+    var tid = (it && it.task_id) || '';
+    var match =
+      (tid && currentTaskId && tid === currentTaskId) ||
+      (folder && currentFolder && folder === currentFolder);
+    if (!match) return;
+    stopPoll();
+    currentTaskId = null;
+    currentFolder = null;
+    currentTask = null;
+    if (resultBox) resultBox.style.display = 'none';
+    if (resultGrid) resultGrid.innerHTML = '';
+    if (resultMeta) resultMeta.textContent = '';
+    if (logOutput) logOutput.textContent = '';
+    if (progressWrap) progressWrap.style.display = 'none';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    setBusy(false);
+  }
+
+  function deleteHistory(it) {
+    if (
+      !confirm(
+        tr(
+          'privateHub.homePc.imagePipeHistoryDeleteConfirm',
+          '确定删除该历史批次？将删除本地输出目录，不可恢复。'
+        )
+      )
+    ) {
+      return;
+    }
+    var fd = new FormData();
+    if (it.folder) fd.append('folder', it.folder);
+    if (it.task_id) fd.append('task_id', it.task_id);
+    setBusy(true);
+    fetch(API_BASE + '/image-pipeline/delete-batch', { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body };
+        });
+      })
+      .then(function (pack) {
+        setBusy(false);
+        if (!pack.res.ok || !pack.body.success) {
+          throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+        }
+        clearCurrentIfMatches(it);
+        flashMsg(tr('privateHub.homePc.imagePipeHistoryDeleted', '已删除该批次'));
+        loadHistory();
+      })
+      .catch(function (err) {
+        setBusy(false);
+        flashMsg(window.HomePcApi.friendlyFetchError(err), true);
       });
   }
 
@@ -716,6 +904,16 @@
     if (seedInput) {
       seedInput.value =
         task.seed_base != null && task.seed_base !== '' ? String(task.seed_base) : '';
+    }
+    if (denoiseInput && task.denoise != null && task.denoise !== '') {
+      denoiseInput.value = String(task.denoise);
+    } else if (denoiseInput) {
+      denoiseInput.value = '0.55';
+    }
+    if (task.lock_subject && task.ref_url) {
+      setRefFromUrl(task.ref_url);
+    } else {
+      clearRef();
     }
   }
 
@@ -755,6 +953,35 @@
 
   if (modeSelect) modeSelect.addEventListener('change', syncModeUi);
   if (startBtn) startBtn.addEventListener('click', startJob);
+  if (refClearBtn) refClearBtn.addEventListener('click', clearRef);
+  if (refFileInput) {
+    refFileInput.addEventListener('change', function () {
+      pickRefFiles(refFileInput.files);
+    });
+  }
+  if (refDrop) {
+    refDrop.addEventListener('click', function () {
+      if (refFileInput) refFileInput.click();
+    });
+    refDrop.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (refFileInput) refFileInput.click();
+      }
+    });
+    refDrop.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      refDrop.classList.add('is-dragover');
+    });
+    refDrop.addEventListener('dragleave', function () {
+      refDrop.classList.remove('is-dragover');
+    });
+    refDrop.addEventListener('drop', function (e) {
+      e.preventDefault();
+      refDrop.classList.remove('is-dragover');
+      pickRefFiles(e.dataTransfer && e.dataTransfer.files);
+    });
+  }
   if (cancelBtn) {
     cancelBtn.addEventListener('click', function () {
       if (!currentTaskId) return;
@@ -841,6 +1068,7 @@
   });
 
   syncModeUi();
+  syncLockUi();
   if (window.HomePcMediaUi) {
     window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
       getText: function () {

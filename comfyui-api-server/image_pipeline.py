@@ -15,8 +15,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import shutil
+
 import requests
-from fastapi import Form, HTTPException
+from fastapi import File, Form, HTTPException, UploadFile
 from PIL import Image
 
 from output_layout import (
@@ -381,6 +383,33 @@ class ImagePipelineAPI:
         except Exception:
             pass
 
+    def _unindex_task(self, task_id: str) -> None:
+        tid = (task_id or "").strip()
+        if not tid:
+            return
+        idx_path = self._index_path()
+        if not idx_path.exists():
+            return
+        try:
+            raw = json.loads(idx_path.read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return
+            if tid not in raw:
+                return
+            raw.pop(tid, None)
+            idx_path.write_text(
+                json.dumps(raw, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
+
+    def _attach_ref_url(self, task: dict) -> None:
+        rel = str(task.get("ref_file") or "").replace("\\", "/").lstrip("/")
+        if not rel:
+            task.pop("ref_url", None)
+            return
+        task["ref_url"] = self._public_url(task, rel)
+
     def _lookup_indexed_dir(self, task_id: str) -> Optional[Path]:
         tid = (task_id or "").strip()
         if not tid:
@@ -414,6 +443,7 @@ class ImagePipelineAPI:
         meta["output_dir"] = rel_to_root(root, d)
         meta.setdefault("task_id", meta.get("task_id") or "")
         self._enrich_image_urls(meta)
+        self._attach_ref_url(meta)
         self._ensure_log_file(meta)
         # 回写 thumb 字段，下次打开更快
         try:
@@ -429,13 +459,39 @@ class ImagePipelineAPI:
             pass
         return meta
 
+    def _lock_subject_extra(self, task: dict, extra: str) -> str:
+        if not task.get("lock_subject"):
+            return (extra or "").strip()
+        lock_hint = (
+            "锁定主体：保持与参考图同一人物/主体的外貌特征一致"
+            "（脸型、发型、年龄感、服装基调），姿态、表情、场景与构图可变化"
+        )
+        base = (extra or "").strip()
+        if not base:
+            return lock_hint
+        if lock_hint in base:
+            return base
+        return f"{base}；{lock_hint}"
+
+    def _apply_lock_to_prompts(self, task: dict, prompts: List[str]) -> List[str]:
+        if not task.get("lock_subject"):
+            return prompts
+        tag = "同一人物与参考图外貌一致"
+        out: List[str] = []
+        for p in prompts:
+            s = (p or "").strip()
+            if tag not in s:
+                s = f"{s}，{tag}" if s else tag
+            out.append(s)
+        return out
+
     async def _plan_prompts(self, task: dict) -> List[str]:
         mode = (task.get("prompt_mode") or "auto").strip().lower()
         count = int(task.get("count") or 1)
         theme = (task.get("theme") or "").strip()
         style_key = task.get("style") or "realistic"
         category_key = task.get("category") or "other"
-        extra = (task.get("extra") or "").strip()
+        extra = self._lock_subject_extra(task, (task.get("extra") or "").strip())
         manual = (task.get("manual_prompts") or "").strip()
 
         if mode == "manual":
@@ -448,11 +504,14 @@ class ImagePipelineAPI:
                 while len(prompts) < count:
                     prompts.append(lines[len(prompts) % len(lines)])
             task["plan_source"] = "manual"
-            return prompts
+            return self._apply_lock_to_prompts(task, prompts)
 
         if mode == "theme_vary":
             task["plan_source"] = "rule"
-            return _rule_vary_prompts(theme, style_key, category_key, count)
+            prompts = _rule_vary_prompts(theme, style_key, category_key, count)
+            if extra:
+                prompts = [f"{p}。{extra}" for p in prompts]
+            return self._apply_lock_to_prompts(task, prompts)
 
         # auto → DeepSeek，失败回退规则
         self._log(task, f"规划 {count} 条提示词（DeepSeek）…")
@@ -474,16 +533,21 @@ class ImagePipelineAPI:
         if prompts:
             task["plan_source"] = "deepseek"
             self._log(task, "DeepSeek 提示词就绪")
-            return prompts
+            return self._apply_lock_to_prompts(task, prompts)
         self._log(task, "DeepSeek 不可用，改用规则变化提示词")
         task["plan_source"] = "rule"
-        return _rule_vary_prompts(theme, style_key, category_key, count)
+        prompts = _rule_vary_prompts(theme, style_key, category_key, count)
+        if extra:
+            prompts = [f"{p}。{extra}" for p in prompts]
+        return self._apply_lock_to_prompts(task, prompts)
 
     async def _run_task(self, task_id: str) -> None:
         task = self.tasks.get(task_id)
         if not task:
             return
         build_wf = self.deps["build_z_image_workflow"]
+        build_i2i = self.deps.get("build_z_image_img2img_workflow")
+        upload_bytes = self.deps.get("upload_image_bytes")
         run_img = self.deps["run_comfyui_and_get_last_image"]
         neg_fn = self.deps.get("default_txt2img_negative")
         no_text = self.deps.get("image_no_text_prefix") or ""
@@ -514,6 +578,35 @@ class ImagePipelineAPI:
             batch_t0 = time.perf_counter()
             gen_total = 0.0
 
+            lock = bool(task.get("lock_subject"))
+            denoise = 0.55
+            try:
+                denoise = float(task.get("denoise") if task.get("denoise") is not None else 0.55)
+            except Exception:
+                denoise = 0.55
+            denoise = max(0.35, min(0.85, denoise))
+            task["denoise"] = denoise
+            comfy_ref_name = None
+            if lock:
+                ref_rel = str(task.get("ref_file") or "").replace("\\", "/").lstrip("/")
+                ref_path = out_dir / ref_rel if ref_rel else None
+                if not ref_path or not ref_path.is_file():
+                    raise RuntimeError("锁定主体需要有效的参考图")
+                if not callable(build_i2i) or not callable(upload_bytes):
+                    raise RuntimeError("图生图工作流未注入，无法锁定主体")
+                ref_bytes = ref_path.read_bytes()
+                uploaded = await upload_bytes(ref_bytes, name_prefix="ip_ref_")
+                if isinstance(uploaded, (tuple, list)):
+                    comfy_ref_name = uploaded[0]
+                else:
+                    comfy_ref_name = uploaded
+                if not comfy_ref_name:
+                    raise RuntimeError("参考图上传到 ComfyUI 失败")
+                self._log(
+                    task,
+                    f"锁定主体：图生图模式（z_image_turbo_img2img，denoise={denoise:.2f}）",
+                )
+
             for i, prompt in enumerate(prompts):
                 if task.get("cancel"):
                     task["status"] = "cancelled"
@@ -528,12 +621,23 @@ class ImagePipelineAPI:
                     seed = random.randint(1, 2**31 - 1)
                 else:
                     seed = int(seed_base) + i
-                self._log(task, f"生成 {i + 1}/{len(prompts)}（seed={seed}）…")
+                mode_tag = f"img2img denoise={denoise:.2f}" if lock else "txt2img"
+                self._log(task, f"生成 {i + 1}/{len(prompts)}（{mode_tag}，seed={seed}）…")
                 task["progress"] = {"current": i, "total": len(prompts)}
                 self._save_snapshot(task)
 
                 t0 = time.perf_counter()
-                wf = build_wf(full_prompt, seed=seed, width=w, height=h, negative_text=neg)
+                if lock:
+                    wf = build_i2i(
+                        full_prompt,
+                        comfy_ref_name,
+                        negative_text=neg,
+                        seed=seed,
+                        denoise=denoise,
+                        megapixels=1.0,
+                    )
+                else:
+                    wf = build_wf(full_prompt, seed=seed, width=w, height=h, negative_text=neg)
                 img_bytes = await run_img(wf)
                 elapsed = time.perf_counter() - t0
                 gen_total += elapsed
@@ -558,6 +662,7 @@ class ImagePipelineAPI:
                     "height": h,
                     "elapsed_sec": round(elapsed, 2),
                     "published": False,
+                    "engine": "z_image_img2img" if lock else "z_image_turbo",
                 }
                 images.append(item)
                 self._log(
@@ -610,6 +715,9 @@ class ImagePipelineAPI:
                     "manual": "手动多行提示词",
                 },
                 "max_count": 24,
+                "denoise_default": 0.55,
+                "denoise_min": 0.35,
+                "denoise_max": 0.85,
             }
 
         @app.post("/image-pipeline/start")
@@ -626,6 +734,9 @@ class ImagePipelineAPI:
             negative: str = Form(""),
             manual_prompts: str = Form(""),
             seed: str = Form(""),
+            denoise: str = Form("0.55"),
+            lock_subject: str = Form("0"),
+            ref_image: Optional[UploadFile] = File(None),
         ):
             theme_s = (theme or "").strip()
             if len(theme_s) < 2:
@@ -659,6 +770,25 @@ class ImagePipelineAPI:
                 except Exception:
                     raise HTTPException(status_code=400, detail="种子须为整数")
 
+            lock_flag = str(lock_subject or "").strip().lower() in ("1", "true", "yes", "on")
+            ref_bytes = None
+            if ref_image is not None and getattr(ref_image, "filename", None):
+                try:
+                    ref_bytes = await ref_image.read()
+                except Exception as e:
+                    raise HTTPException(status_code=400, detail=f"读取参考图失败：{e}") from e
+            if ref_bytes:
+                lock_flag = True
+            if lock_flag and not ref_bytes:
+                raise HTTPException(status_code=400, detail="锁定主体请上传一张参考图")
+
+            denoise_v = 0.55
+            try:
+                denoise_v = float(denoise or 0.55)
+            except Exception:
+                denoise_v = 0.55
+            denoise_v = max(0.35, min(0.85, denoise_v))
+
             title_s = (title or "").strip() or theme_s[:20]
             root: Path = api.deps["output_root"]
             ensure_reserved_dirs(root)
@@ -666,6 +796,30 @@ class ImagePipelineAPI:
             folder = alloc_under(root, "images", f"{stamp}_{_safe_slug(title_s)}")
             task_dir = root / folder
             task_dir.mkdir(parents=True, exist_ok=True)
+
+            ref_file = ""
+            if lock_flag and ref_bytes:
+                ref_dir = task_dir / "ref"
+                ref_dir.mkdir(parents=True, exist_ok=True)
+                # 统一存 JPEG，便于预览与再次上传 Comfy
+                try:
+                    from io import BytesIO
+
+                    with Image.open(BytesIO(ref_bytes)) as im:
+                        im = im.convert("RGB")
+                        im.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
+                        out_path = ref_dir / "source.jpg"
+                        im.save(out_path, format="JPEG", quality=90, optimize=True)
+                    ref_file = "ref/source.jpg"
+                except Exception:
+                    # 原样落盘
+                    raw_name = Path(str(ref_image.filename or "source.bin")).name
+                    ext = Path(raw_name).suffix.lower() or ".bin"
+                    if ext not in (".png", ".jpg", ".jpeg", ".webp", ".gif"):
+                        ext = ".bin"
+                    out_path = ref_dir / f"source{ext}"
+                    out_path.write_bytes(ref_bytes)
+                    ref_file = f"ref/{out_path.name}"
 
             task_id = uuid.uuid4().hex
             task = {
@@ -683,6 +837,9 @@ class ImagePipelineAPI:
                 "negative": (negative or "").strip(),
                 "manual_prompts": (manual_prompts or "").strip(),
                 "seed_base": seed_base,
+                "lock_subject": bool(lock_flag),
+                "denoise": denoise_v if lock_flag else None,
+                "ref_file": ref_file,
                 "output_dir": folder,
                 "status": "queued",
                 "stage": "init",
@@ -695,9 +852,15 @@ class ImagePipelineAPI:
                 "cancel": False,
                 "plan_source": "",
             }
+            api._attach_ref_url(task)
             api.tasks[task_id] = task
             api._index_task(task_id, task_dir)
-            api._log(task, f"批次已创建：{title_s} · {n} 张 · {_STYLES[style_k]['label']} · {_CATEGORIES[cat_k]['label']}")
+            lock_note = " · 锁定主体" if lock_flag else ""
+            api._log(
+                task,
+                f"批次已创建：{title_s} · {n} 张 · {_STYLES[style_k]['label']} · "
+                f"{_CATEGORIES[cat_k]['label']}{lock_note}",
+            )
             api._save_snapshot(task)
             asyncio.create_task(api._run_task(task_id))
             return {"success": True, "task_id": task_id, "output_dir": folder}
@@ -719,6 +882,7 @@ class ImagePipelineAPI:
                 )
                 if need:
                     api._enrich_image_urls(task)
+            api._attach_ref_url(task)
             out = {k: v for k, v in task.items() if k != "cancel"}
             return {"success": True, **out}
 
@@ -732,6 +896,43 @@ class ImagePipelineAPI:
             task["cancel"] = True
             api._log(task, "收到取消请求…")
             return {"success": True}
+
+        @app.post("/image-pipeline/delete-batch")
+        @app.post("/api/image-pipeline/delete-batch")
+        async def ip_delete_batch(task_id: str = Form(""), folder: str = Form("")):
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="缺少 task_id 或 folder")
+            root: Path = api.deps["output_root"]
+            images_root = (root / "images").resolve()
+            try:
+                task = api._load_task_from_dir(key)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            tid = str(task.get("task_id") or "").strip()
+            if tid and tid in api.tasks:
+                api.tasks[tid]["cancel"] = True
+            d = resolve_task_dir(root, task.get("output_dir") or key) or api._lookup_indexed_dir(
+                tid or key
+            )
+            if d is None or not d.is_dir():
+                raise HTTPException(status_code=404, detail="目录不存在")
+            try:
+                resolved = d.resolve()
+                resolved.relative_to(images_root)
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail="非法目录") from e
+            except HTTPException:
+                raise
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"目录校验失败：{e}") from e
+            shutil.rmtree(resolved, ignore_errors=True)
+            if tid:
+                api._unindex_task(tid)
+                api.tasks.pop(tid, None)
+            return {"success": True, "task_id": tid or None, "folder": rel_to_root(root, resolved)}
 
         @app.post("/image-pipeline/reveal-output")
         @app.post("/api/image-pipeline/reveal-output")
@@ -790,6 +991,7 @@ class ImagePipelineAPI:
                         "status": meta.get("status") or "",
                         "count": meta.get("count") or n_img,
                         "image_count": n_img,
+                        "lock_subject": bool(meta.get("lock_subject")),
                         "mtime": int(p.stat().st_mtime),
                     }
                 )
