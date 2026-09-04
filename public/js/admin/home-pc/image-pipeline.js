@@ -511,11 +511,18 @@
         currentTaskId = pack.body.task_id;
         currentFolder = pack.body.output_dir || null;
         if (cancelBtn) cancelBtn.style.display = '';
-        if (openFolderBtn) openFolderBtn.style.display = '';
         startPoll();
       })
       .catch(function (err) {
+        // 若任务已创建成功但后续脚本出错，仍继续轮询，避免「后台在跑、页面停住」
+        if (currentTaskId) {
+          startPoll();
+          flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+          return;
+        }
         setBusy(false);
+        if (progressWrap) progressWrap.style.display = 'none';
+        if (cancelBtn) cancelBtn.style.display = 'none';
         flashMsg(window.HomePcApi.friendlyFetchError(err), true);
       });
   }
