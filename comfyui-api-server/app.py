@@ -4640,6 +4640,7 @@ _image_pipeline_api = ImagePipelineAPI(
     output_root=_OUTPUT_ROOT,
     build_z_image_workflow=_build_z_image_turbo_workflow,
     build_z_image_img2img_workflow=_build_z_image_img2img_workflow,
+    build_qwen_img2img_workflow=build_qwen_image_edit_img2img_workflow,
     upload_image_bytes=upload_image_bytes,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     default_txt2img_negative=_default_txt2img_negative,

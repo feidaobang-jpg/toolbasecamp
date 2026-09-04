@@ -547,6 +547,7 @@ class ImagePipelineAPI:
             return
         build_wf = self.deps["build_z_image_workflow"]
         build_i2i = self.deps.get("build_z_image_img2img_workflow")
+        build_qwen = self.deps.get("build_qwen_img2img_workflow")
         upload_bytes = self.deps.get("upload_image_bytes")
         run_img = self.deps["run_comfyui_and_get_last_image"]
         neg_fn = self.deps.get("default_txt2img_negative")
@@ -579,21 +580,36 @@ class ImagePipelineAPI:
             gen_total = 0.0
 
             lock = bool(task.get("lock_subject"))
+            lock_engine = str(task.get("lock_engine") or "qwen").strip().lower()
+            if lock_engine in ("z", "z-image", "z_image_turbo", "turbo"):
+                lock_engine = "z_image"
+            if lock_engine not in ("qwen", "z_image"):
+                lock_engine = "qwen"
+            task["lock_engine"] = lock_engine if lock else None
+
             denoise = 0.55
             try:
                 denoise = float(task.get("denoise") if task.get("denoise") is not None else 0.55)
             except Exception:
                 denoise = 0.55
             denoise = max(0.35, min(0.85, denoise))
-            task["denoise"] = denoise
+            if lock and lock_engine == "z_image":
+                task["denoise"] = denoise
+            elif lock:
+                task["denoise"] = None
+
             comfy_ref_name = None
             if lock:
                 ref_rel = str(task.get("ref_file") or "").replace("\\", "/").lstrip("/")
                 ref_path = out_dir / ref_rel if ref_rel else None
                 if not ref_path or not ref_path.is_file():
                     raise RuntimeError("锁定主体需要有效的参考图")
-                if not callable(build_i2i) or not callable(upload_bytes):
-                    raise RuntimeError("图生图工作流未注入，无法锁定主体")
+                if not callable(upload_bytes):
+                    raise RuntimeError("upload_image_bytes 未注入，无法锁定主体")
+                if lock_engine == "qwen" and not callable(build_qwen):
+                    raise RuntimeError("Qwen 改图工作流未注入")
+                if lock_engine == "z_image" and not callable(build_i2i):
+                    raise RuntimeError("Z-Image 图生图工作流未注入")
                 ref_bytes = ref_path.read_bytes()
                 uploaded = await upload_bytes(ref_bytes, name_prefix="ip_ref_")
                 if isinstance(uploaded, (tuple, list)):
@@ -602,10 +618,13 @@ class ImagePipelineAPI:
                     comfy_ref_name = uploaded
                 if not comfy_ref_name:
                     raise RuntimeError("参考图上传到 ComfyUI 失败")
-                self._log(
-                    task,
-                    f"锁定主体：图生图模式（z_image_turbo_img2img，denoise={denoise:.2f}）",
-                )
+                if lock_engine == "qwen":
+                    self._log(task, "锁定主体：Qwen 指令改图（推荐，更稳同人）")
+                else:
+                    self._log(
+                        task,
+                        f"锁定主体：Z-Image 图生图（z_image_turbo_img2img，denoise={denoise:.2f}）",
+                    )
 
             for i, prompt in enumerate(prompts):
                 if task.get("cancel"):
@@ -621,24 +640,60 @@ class ImagePipelineAPI:
                     seed = random.randint(1, 2**31 - 1)
                 else:
                     seed = int(seed_base) + i
-                mode_tag = f"img2img denoise={denoise:.2f}" if lock else "txt2img"
+                if lock and lock_engine == "qwen":
+                    mode_tag = "qwen_edit"
+                elif lock:
+                    mode_tag = f"z_img2img denoise={denoise:.2f}"
+                else:
+                    mode_tag = "txt2img"
                 self._log(task, f"生成 {i + 1}/{len(prompts)}（{mode_tag}，seed={seed}）…")
                 task["progress"] = {"current": i, "total": len(prompts)}
                 self._save_snapshot(task)
 
                 t0 = time.perf_counter()
+                used_engine = "z_image_turbo"
                 if lock:
-                    wf = build_i2i(
-                        full_prompt,
-                        comfy_ref_name,
-                        negative_text=neg,
-                        seed=seed,
-                        denoise=denoise,
-                        megapixels=1.0,
-                    )
+                    img_bytes = None
+                    if lock_engine == "qwen":
+                        qwen_prompt = (
+                            "Edit this image. Keep the SAME person/subject identity from the reference "
+                            "(face, hair, age feel, clothing style). Change pose, expression, scene and "
+                            f"composition as described: {(prompt or '').strip()}. "
+                            "Photorealistic if the reference is photo-like. No text, no watermark, no logo."
+                        )
+                        try:
+                            wf = build_qwen(qwen_prompt, comfy_ref_name, seed=seed, quality="standard")
+                            img_bytes = await run_img(wf)
+                            used_engine = "qwen_edit"
+                        except Exception as e:
+                            self._log(task, f"Qwen 改图失败，回退 Z-Image 图生图：{e}")
+                            if not callable(build_i2i):
+                                raise
+                            wf = build_i2i(
+                                full_prompt,
+                                comfy_ref_name,
+                                negative_text=neg,
+                                seed=seed,
+                                denoise=denoise,
+                                megapixels=1.0,
+                            )
+                            img_bytes = await run_img(wf)
+                            used_engine = "z_image_img2img"
+                    else:
+                        wf = build_i2i(
+                            full_prompt,
+                            comfy_ref_name,
+                            negative_text=neg,
+                            seed=seed,
+                            denoise=denoise,
+                            megapixels=1.0,
+                        )
+                        img_bytes = await run_img(wf)
+                        used_engine = "z_image_img2img"
                 else:
                     wf = build_wf(full_prompt, seed=seed, width=w, height=h, negative_text=neg)
-                img_bytes = await run_img(wf)
+                    img_bytes = await run_img(wf)
+                    used_engine = "z_image_turbo"
                 elapsed = time.perf_counter() - t0
                 gen_total += elapsed
                 if not img_bytes:
@@ -662,7 +717,7 @@ class ImagePipelineAPI:
                     "height": h,
                     "elapsed_sec": round(elapsed, 2),
                     "published": False,
-                    "engine": "z_image_img2img" if lock else "z_image_turbo",
+                    "engine": used_engine,
                 }
                 images.append(item)
                 self._log(
@@ -718,6 +773,11 @@ class ImagePipelineAPI:
                 "denoise_default": 0.55,
                 "denoise_min": 0.35,
                 "denoise_max": 0.85,
+                "lock_engines": {
+                    "qwen": "Qwen 指令改图（推荐）",
+                    "z_image": "Z-Image 图生图",
+                },
+                "lock_engine_default": "qwen",
             }
 
         @app.post("/image-pipeline/start")
@@ -736,6 +796,7 @@ class ImagePipelineAPI:
             seed: str = Form(""),
             denoise: str = Form("0.55"),
             lock_subject: str = Form("0"),
+            lock_engine: str = Form("qwen"),
             ref_image: Optional[UploadFile] = File(None),
         ):
             theme_s = (theme or "").strip()
@@ -789,6 +850,14 @@ class ImagePipelineAPI:
                 denoise_v = 0.55
             denoise_v = max(0.35, min(0.85, denoise_v))
 
+            eng = str(lock_engine or "qwen").strip().lower()
+            if eng in ("z", "z-image", "z_image_turbo", "turbo"):
+                eng = "z_image"
+            if eng not in ("qwen", "z_image"):
+                eng = "qwen"
+            if not lock_flag:
+                eng = "qwen"
+
             title_s = (title or "").strip() or theme_s[:20]
             root: Path = api.deps["output_root"]
             ensure_reserved_dirs(root)
@@ -838,7 +907,8 @@ class ImagePipelineAPI:
                 "manual_prompts": (manual_prompts or "").strip(),
                 "seed_base": seed_base,
                 "lock_subject": bool(lock_flag),
-                "denoise": denoise_v if lock_flag else None,
+                "lock_engine": eng if lock_flag else None,
+                "denoise": denoise_v if (lock_flag and eng == "z_image") else None,
                 "ref_file": ref_file,
                 "output_dir": folder,
                 "status": "queued",
@@ -855,7 +925,9 @@ class ImagePipelineAPI:
             api._attach_ref_url(task)
             api.tasks[task_id] = task
             api._index_task(task_id, task_dir)
-            lock_note = " · 锁定主体" if lock_flag else ""
+            lock_note = ""
+            if lock_flag:
+                lock_note = " · 锁定主体·Qwen" if eng == "qwen" else " · 锁定主体·Z-Image"
             api._log(
                 task,
                 f"批次已创建：{title_s} · {n} 张 · {_STYLES[style_k]['label']} · "
@@ -992,6 +1064,7 @@ class ImagePipelineAPI:
                         "count": meta.get("count") or n_img,
                         "image_count": n_img,
                         "lock_subject": bool(meta.get("lock_subject")),
+                        "lock_engine": meta.get("lock_engine") or "",
                         "mtime": int(p.stat().st_mtime),
                     }
                 )

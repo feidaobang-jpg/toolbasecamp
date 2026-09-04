@@ -26,6 +26,8 @@
   var seedInput = document.getElementById('seed-input');
   var denoiseInput = document.getElementById('denoise-input');
   var denoiseWrap = document.getElementById('denoise-wrap');
+  var lockEngineSelect = document.getElementById('lock-engine-select');
+  var lockEngineWrap = document.getElementById('lock-engine-wrap');
   var refDrop = document.getElementById('ref-drop');
   var refFileInput = document.getElementById('ref-file');
   var refPreviewWrap = document.getElementById('ref-preview-wrap');
@@ -106,7 +108,9 @@
       refPreview.getAttribute('src')
     );
     var has = hasLocal || hasRemote;
-    if (denoiseWrap) denoiseWrap.style.display = has ? '' : 'none';
+    var eng = lockEngineSelect ? lockEngineSelect.value : 'qwen';
+    if (lockEngineWrap) lockEngineWrap.style.display = has ? '' : 'none';
+    if (denoiseWrap) denoiseWrap.style.display = has && eng === 'z_image' ? '' : 'none';
     if (refDrop) refDrop.style.display = has ? 'none' : '';
     if (refPreviewWrap) refPreviewWrap.style.display = has ? '' : 'none';
   }
@@ -612,6 +616,10 @@
         if (file) {
           fd.append('lock_subject', '1');
           fd.append('ref_image', file, file.name || 'ref.jpg');
+          fd.append(
+            'lock_engine',
+            lockEngineSelect ? String(lockEngineSelect.value || 'qwen') : 'qwen'
+          );
           fd.append('denoise', denoiseInput ? String(denoiseInput.value || '0.55') : '0.55');
         } else {
           fd.append('lock_subject', '0');
