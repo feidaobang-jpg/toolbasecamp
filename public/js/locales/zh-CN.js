@@ -328,6 +328,8 @@ window.TB_LOCALES['zh-CN'] = {
             imagePipeRefreshHistory: '刷新历史',
             imagePipePublished: '已公开',
             imagePipeLogTitle: '日志',
+            imagePipeLbFirst: '已经是第一张',
+            imagePipeLbLast: '已经是最后一张',
             img2imgTitle: '图生图',
             img2imgDesc: '参考图 + 提示词；支持批量与可选水印',
             img2imgRefLabel: '参考图',

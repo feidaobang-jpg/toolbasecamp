@@ -329,6 +329,8 @@ window.TB_LOCALES.en = {
             imagePipeRefreshHistory: 'Refresh history',
             imagePipePublished: 'Published',
             imagePipeLogTitle: 'Log',
+            imagePipeLbFirst: 'Already the first image',
+            imagePipeLbLast: 'Already the last image',
             img2imgTitle: 'Image to image',
             img2imgDesc: 'Reference + prompt; batch and optional watermark',
             img2imgRefLabel: 'Reference image',

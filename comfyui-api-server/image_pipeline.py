@@ -122,6 +122,18 @@ def _cn_now_str() -> str:
         return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + "Z"
 
 
+def _format_elapsed(sec: float) -> str:
+    sec = max(0.0, float(sec or 0.0))
+    if sec < 60:
+        return f"{sec:.1f}s"
+    m = int(sec // 60)
+    s = int(round(sec - m * 60))
+    if s >= 60:
+        m += 1
+        s = 0
+    return f"{m}m{s:02d}s"
+
+
 def _parse_manual_prompts(raw: str) -> List[str]:
     lines = []
     for ln in (raw or "").splitlines():
@@ -409,6 +421,8 @@ class ImagePipelineAPI:
             images: List[dict] = []
             task["images"] = images
             task["stage"] = "generate"
+            batch_t0 = time.perf_counter()
+            gen_total = 0.0
 
             for i, prompt in enumerate(prompts):
                 if task.get("cancel"):
@@ -428,8 +442,11 @@ class ImagePipelineAPI:
                 task["progress"] = {"current": i, "total": len(prompts)}
                 self._save_snapshot(task)
 
+                t0 = time.perf_counter()
                 wf = build_wf(full_prompt, seed=seed, width=w, height=h, negative_text=neg)
                 img_bytes = await run_img(wf)
+                elapsed = time.perf_counter() - t0
+                gen_total += elapsed
                 if not img_bytes:
                     raise RuntimeError(f"第 {i + 1} 张未返回图像")
                 name = f"{i + 1:02d}.png"
@@ -443,9 +460,14 @@ class ImagePipelineAPI:
                     "seed": seed,
                     "width": w,
                     "height": h,
+                    "elapsed_sec": round(elapsed, 2),
                     "published": False,
                 }
                 images.append(item)
+                self._log(
+                    task,
+                    f"第 {i + 1}/{len(prompts)} 张完成，耗时 {_format_elapsed(elapsed)}",
+                )
                 task["progress"] = {"current": i + 1, "total": len(prompts)}
                 self._save_snapshot(task)
                 if callable(free_mem) and i + 1 < len(prompts):
@@ -454,10 +476,19 @@ class ImagePipelineAPI:
                     except Exception:
                         pass
 
+            batch_elapsed = time.perf_counter() - batch_t0
             task["status"] = "done"
             task["stage"] = "done"
             task["finished_at"] = _cn_now_str()
-            self._log(task, f"完成，共 {len(images)} 张")
+            task["timing"] = {
+                "generate_sec": round(gen_total, 2),
+                "batch_sec": round(batch_elapsed, 2),
+            }
+            self._log(
+                task,
+                f"完成，共 {len(images)} 张；生图合计 {_format_elapsed(gen_total)}，"
+                f"本批总耗时 {_format_elapsed(batch_elapsed)}",
+            )
             self._save_snapshot(task)
         except Exception as e:
             task["status"] = "error"
