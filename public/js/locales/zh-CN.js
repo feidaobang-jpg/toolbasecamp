@@ -332,6 +332,7 @@ window.TB_LOCALES['zh-CN'] = {
             imagePipeOpenFolder: '打开文件夹',
             imagePipeRefreshHistory: '刷新历史',
             imagePipePublished: '已公开',
+            imagePipePromptLabel: '提示词',
             imagePipeLogTitle: '日志',
             imagePipeLbFirst: '已经是第一张',
             imagePipeLbLast: '已经是最后一张',

@@ -333,6 +333,7 @@ window.TB_LOCALES.en = {
             imagePipeOpenFolder: 'Open folder',
             imagePipeRefreshHistory: 'Refresh history',
             imagePipePublished: 'Published',
+            imagePipePromptLabel: 'Prompt',
             imagePipeLogTitle: 'Log',
             imagePipeLbFirst: 'Already the first image',
             imagePipeLbLast: 'Already the last image',

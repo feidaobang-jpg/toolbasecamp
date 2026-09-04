@@ -44,6 +44,9 @@
   var lightboxNext = document.getElementById('lightbox-next');
   var lightboxCaption = document.getElementById('lightbox-caption');
   var lightboxIndex = -1;
+  if (window.HomePcMediaUi && window.HomePcMediaUi.upgradeLightboxDom) {
+    window.HomePcMediaUi.upgradeLightboxDom(lightbox);
+  }
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -254,6 +257,8 @@
         elapsed +
         (it.seed != null ? ' · seed=' + it.seed : '') +
         '\n' +
+        tr('privateHub.homePc.imagePipePromptLabel', '提示词') +
+        '：\n' +
         (it.prompt || '');
     }
     lightbox.style.display = '';
@@ -768,6 +773,25 @@
   }
   if (publishBtn) publishBtn.addEventListener('click', publishSelected);
   if (historyRefreshBtn) historyRefreshBtn.addEventListener('click', loadHistory);
+  if (window.HomePcMediaUi && window.HomePcMediaUi.upgradeLightboxDom && lightbox) {
+    window.HomePcMediaUi.upgradeLightboxDom(lightbox);
+  }
+  if (lightbox) {
+    lightbox.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t) return;
+      if (t === lightbox || t === lightboxBackdrop) {
+        closeLightbox();
+        return;
+      }
+      if (t.closest && t.closest('.image-pipe-lb-nav')) return;
+      if (lightboxImg && (t === lightboxImg || lightboxImg.contains(t))) return;
+      if (lightboxCaption && (t === lightboxCaption || lightboxCaption.contains(t))) return;
+      var stage = lightbox.querySelector('.image-pipe-lb-stage');
+      if (stage && stage.contains(t) && t !== stage) return;
+      closeLightbox();
+    });
+  }
   if (lightboxBackdrop) {
     lightboxBackdrop.addEventListener('click', closeLightbox);
   }

@@ -106,6 +106,7 @@
     opts = opts || {};
     var root = opts.root || document.getElementById('lightbox');
     if (!root) return null;
+    upgradeLightboxDom(root);
     var img = root.querySelector('img') || document.getElementById('lightbox-img');
     var backdrop =
       root.querySelector('.trailer-lightbox-backdrop') ||
@@ -194,6 +195,28 @@
       if (bound) return;
       bound = true;
       if (backdrop) backdrop.addEventListener('click', close);
+      // 点图片/箭头/说明以外的任何区域都关闭（含面板空隙透到遮罩）
+      root.addEventListener('click', function (e) {
+        var t = e.target;
+        if (!t) return;
+        if (t === backdrop || t === root) {
+          close();
+          return;
+        }
+        if (t.closest && t.closest('.image-pipe-lb-nav')) return;
+        if (img && (t === img || (img.contains && img.contains(t)))) return;
+        if (caption && (t === caption || (caption.contains && caption.contains(t)))) return;
+        var stage = root.querySelector('.image-pipe-lb-stage');
+        if (stage && stage.contains(t) && t !== stage) return;
+        // 点在 stage 空白（理论上极少）或其它透传区域
+        if (t === stage) {
+          close();
+          return;
+        }
+        if (!stage || !stage.contains(t)) {
+          if (!caption || !caption.contains(t)) close();
+        }
+      });
       if (prevBtn) {
         prevBtn.addEventListener('click', function (e) {
           e.stopPropagation();
@@ -356,7 +379,10 @@
   /** 标准 lightbox DOM（若页面未放） */
   function ensureLightboxDom(parent) {
     var existing = document.getElementById('lightbox');
-    if (existing) return existing;
+    if (existing) {
+      upgradeLightboxDom(existing);
+      return existing;
+    }
     var wrap = document.createElement('div');
     wrap.id = 'lightbox';
     wrap.className = 'trailer-lightbox image-pipe-lightbox';
@@ -365,13 +391,39 @@
     wrap.innerHTML =
       '<button type="button" class="trailer-lightbox-backdrop" id="lightbox-backdrop" aria-label="关闭"></button>' +
       '<div class="trailer-lightbox-panel image-pipe-lightbox-panel">' +
+      '<div class="image-pipe-lb-stage">' +
       '<button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张">‹</button>' +
       '<img id="lightbox-img" alt="" />' +
       '<button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张">›</button>' +
+      '</div>' +
       '<div id="lightbox-caption" class="image-pipe-lb-caption" data-lb-caption></div>' +
       '</div>';
     (parent || document.body).appendChild(wrap);
     return wrap;
+  }
+
+  /** 把旧版 lightbox（无 stage）升级成箭头贴图结构 */
+  function upgradeLightboxDom(root) {
+    var el = root || document.getElementById('lightbox');
+    if (!el) return null;
+    if (el.querySelector('.image-pipe-lb-stage')) return el;
+    var panel = el.querySelector('.image-pipe-lightbox-panel') || el.querySelector('.trailer-lightbox-panel');
+    var img = el.querySelector('img') || document.getElementById('lightbox-img');
+    var prev =
+      el.querySelector('[data-lb-prev]') || document.getElementById('lightbox-prev');
+    var next =
+      el.querySelector('[data-lb-next]') || document.getElementById('lightbox-next');
+    var caption =
+      el.querySelector('[data-lb-caption]') || document.getElementById('lightbox-caption');
+    if (!panel || !img) return el;
+    var stage = document.createElement('div');
+    stage.className = 'image-pipe-lb-stage';
+    if (prev) stage.appendChild(prev);
+    stage.appendChild(img);
+    if (next) stage.appendChild(next);
+    panel.insertBefore(stage, panel.firstChild);
+    if (caption && caption.parentNode !== panel) panel.appendChild(caption);
+    return el;
   }
 
   global.HomePcMediaUi = {
@@ -382,6 +434,7 @@
     createLightbox: createLightbox,
     ensureLogToolbar: ensureLogToolbar,
     appendCardActions: appendCardActions,
-    ensureLightboxDom: ensureLightboxDom
+    ensureLightboxDom: ensureLightboxDom,
+    upgradeLightboxDom: upgradeLightboxDom
   };
 })(typeof window !== 'undefined' ? window : this);

@@ -9,7 +9,7 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc57" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc65" />
   <script src="../../../../js/locales/en.js?v=gsprite19"></script>
   <script src="../../../../js/locales/zh-CN.js?v=gsprite19"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
@@ -212,15 +212,17 @@
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui3"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
   <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsprite20"></script>
   <div id="lightbox" class="trailer-lightbox image-pipe-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" id="lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel image-pipe-lightbox-panel" role="dialog" aria-modal="true">
-      <button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张">‹</button>
-      <img id="lightbox-img" alt="" />
-      <button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张">›</button>
+      <div class="image-pipe-lb-stage">
+        <button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张">‹</button>
+        <img id="lightbox-img" alt="" />
+        <button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张">›</button>
+      </div>
       <div id="lightbox-caption" class="image-pipe-lb-caption" data-lb-caption></div>
     </div>
   </div>
