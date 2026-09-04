@@ -632,6 +632,35 @@ class GameSpriteAPI:
         rel_n = str(rel).replace("\\", "/").lstrip("/")
         return f"/output/{folder}/{rel_n}"
 
+    def _format_elapsed(self, sec: float) -> str:
+        sec = max(0.0, float(sec or 0.0))
+        if sec < 60:
+            return f"{sec:.1f}s"
+        m = int(sec // 60)
+        s = int(round(sec - m * 60))
+        if s >= 60:
+            m += 1
+            s = 0
+        return f"{m}m{s:02d}s"
+
+    def _write_thumb(self, png_path: Path, *, max_side: int = 480) -> Optional[Path]:
+        try:
+            thumb = png_path.with_name(png_path.stem + ".thumb.jpg")
+            with Image.open(png_path) as im:
+                if im.mode in ("RGBA", "LA", "P"):
+                    bg = Image.new("RGB", im.size, (255, 255, 255))
+                    rgba = im.convert("RGBA")
+                    bg.paste(rgba, mask=rgba.split()[-1])
+                    im = bg
+                else:
+                    im = im.convert("RGB")
+                im.thumbnail((int(max_side), int(max_side)), Image.Resampling.LANCZOS)
+                thumb.parent.mkdir(parents=True, exist_ok=True)
+                im.save(thumb, format="JPEG", quality=82, optimize=True)
+            return thumb if thumb.is_file() else None
+        except Exception:
+            return None
+
     def _index_path(self) -> Path:
         root: Path = self.deps["output_root"]
         p = root / "game_sprites" / "_task_index.json"
@@ -793,6 +822,8 @@ class GameSpriteAPI:
             total = len(prompts)
             done = 0
             task["stills_ui"] = []
+            stills_t0 = time.perf_counter()
+            stills_gen = 0.0
             for kind, prompt in prompts:
                 if task.get("cancel"):
                     task["status"] = "cancelled"
@@ -802,6 +833,7 @@ class GameSpriteAPI:
                 done += 1
                 task["progress"] = {"current": done - 1, "total": total}
                 self._log(task, f"文生图 {kind} ({done}/{total})…")
+                t0 = time.perf_counter()
                 img = await self._txt2img(
                     prompt,
                     gen_w,
@@ -827,6 +859,9 @@ class GameSpriteAPI:
                 name = f"{kind}.png"
                 path = stills_dir / name
                 path.write_bytes(img)
+                thumb = self._write_thumb(path)
+                elapsed = time.perf_counter() - t0
+                stills_gen += elapsed
                 # 保存提示词便于排查
                 try:
                     (stills_dir / f"{kind}.txt").write_text(prompt, encoding="utf-8")
@@ -837,20 +872,36 @@ class GameSpriteAPI:
                     "kind": kind,
                     "url": self._public_url(task, f"stills/{name}")
                     + f"?t={int(time.time() * 1000)}",
+                    "thumb_url": (
+                        self._public_url(task, f"stills/{thumb.name}")
+                        + f"?t={int(time.time() * 1000)}"
+                        if thumb
+                        else ""
+                    ),
                     "path": name,
                     "prompt": prompt[:240],
+                    "elapsed_sec": round(elapsed, 2),
                 }
                 ui.append(item)
                 # 每出一张就推给前端轮询显示
                 task["stills_ui"] = list(ui)
                 task["progress"] = {"current": done, "total": total}
                 task["stage"] = "stills"
-                self._log(task, f"已出图 {kind}（{done}/{total}）")
+                self._log(
+                    task,
+                    f"已出图 {kind}（{done}/{total}），耗时 {self._format_elapsed(elapsed)}",
+                )
                 self._save_task_snapshot(task)
                 await self._free_vram()
 
             task["stills_ui"] = ui
             task["progress"] = {"current": total, "total": total}
+            batch_elapsed = time.perf_counter() - stills_t0
+            self._log(
+                task,
+                f"定妆生图合计 {self._format_elapsed(stills_gen)}，"
+                f"本阶段总耗时 {self._format_elapsed(batch_elapsed)}",
+            )
 
             # 仅 1 张：自动选用，跳过选图
             if len(ui) == 1:
@@ -1385,10 +1436,14 @@ class GameSpriteAPI:
             except Exception:
                 path = up / name
                 path.write_bytes(data)
+            thumb = api._write_thumb(path)
             pick = {
                 "id": f"upload_{name}",
                 "kind": "upload",
                 "url": api._public_url(task, f"uploads/{name}"),
+                "thumb_url": (
+                    api._public_url(task, f"uploads/{thumb.name}") if thumb else ""
+                ),
                 "path": name,
                 "abs": str(path.resolve()),
             }
@@ -1402,6 +1457,48 @@ class GameSpriteAPI:
             if do_run:
                 asyncio.create_task(api._run_actions(task_id))
             return {"success": True, "picked": pick, "stills_ui": stills}
+
+        @app.post("/game-sprite/delete-still")
+        @app.post("/api/game-sprite/delete-still")
+        async def gs_delete_still(
+            task_id: str = Form(...),
+            still_id: str = Form(...),
+        ):
+            task = api._ensure_task(task_id)
+            sid = (still_id or "").strip()
+            stills = list(task.get("stills_ui") or [])
+            victim = None
+            keep = []
+            for s in stills:
+                if not isinstance(s, dict):
+                    continue
+                if s.get("id") == sid or s.get("path") == sid:
+                    victim = s
+                else:
+                    keep.append(s)
+            if not victim:
+                raise HTTPException(status_code=404, detail="未找到该图")
+            d = api._task_dir(task)
+            name = str(victim.get("path") or "")
+            for folder in ("stills", "uploads"):
+                p = d / folder / name
+                if p.is_file():
+                    try:
+                        p.unlink()
+                    except Exception:
+                        pass
+                    t = p.with_name(p.stem + ".thumb.jpg")
+                    if t.is_file():
+                        try:
+                            t.unlink()
+                        except Exception:
+                            pass
+            task["stills_ui"] = keep
+            if (task.get("picked_ref") or {}).get("id") == victim.get("id"):
+                task["picked_ref"] = keep[0] if keep else None
+            api._log(task, f"已删除定妆图: {victim.get('id') or name}")
+            api._save_task_snapshot(task)
+            return {"success": True, "stills_ui": keep}
 
         @app.post("/game-sprite/run-actions")
         @app.post("/api/game-sprite/run-actions")

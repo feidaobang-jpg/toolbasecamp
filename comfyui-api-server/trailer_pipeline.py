@@ -46,6 +46,46 @@ if not hasattr(Image, "ANTIALIAS"):
 
 _TRAILER_TASKS: Dict[str, dict] = {}
 
+
+def _ensure_thumb_beside(png_path: Path, *, max_side: int = 480) -> Optional[Path]:
+    """Write sibling .thumb.jpg next to a PNG; return thumb path or None."""
+    try:
+        if not png_path.is_file():
+            return None
+        thumb = png_path.with_name(png_path.stem + ".thumb.jpg")
+        if thumb.is_file() and thumb.stat().st_mtime >= png_path.stat().st_mtime:
+            return thumb
+        with Image.open(png_path) as im:
+            im = im.convert("RGB")
+            im.thumbnail((int(max_side), int(max_side)), Image.Resampling.LANCZOS)
+            thumb.parent.mkdir(parents=True, exist_ok=True)
+            im.save(thumb, format="JPEG", quality=82, optimize=True)
+        return thumb if thumb.is_file() else None
+    except Exception:
+        return None
+
+
+def _ensure_thumb_bytes(png_bytes: bytes, thumb_path: Path, *, max_side: int = 480) -> bool:
+    try:
+        from io import BytesIO
+
+        with Image.open(BytesIO(png_bytes)) as im:
+            im = im.convert("RGB")
+            im.thumbnail((int(max_side), int(max_side)), Image.Resampling.LANCZOS)
+            thumb_path.parent.mkdir(parents=True, exist_ok=True)
+            im.save(thumb_path, format="JPEG", quality=82, optimize=True)
+        return thumb_path.is_file()
+    except Exception:
+        return False
+
+
+def _cand_urls(key: str, subdir: str, png_name: str, png_path: Path) -> Tuple[str, str]:
+    url = f"/output/{key}/{subdir}/{png_name}"
+    thumb = _ensure_thumb_beside(png_path)
+    if thumb is not None:
+        return url, f"/output/{key}/{subdir}/{thumb.name}"
+    return url, url
+
 _VISUAL_STYLES = {
     "realistic": {
         "label": "写实",
@@ -243,11 +283,13 @@ def _build_shots_ui_from_folder(
             cands = [alt] if alt.exists() else []
         candidates = []
         for ci, p in enumerate(cands):
+            url, thumb_url = _cand_urls(key, "images", p.name, p)
             candidates.append(
                 {
                     "index": ci,
                     "filename": p.name,
-                    "url": f"/output/{key}/images/{p.name}",
+                    "url": url,
+                    "thumb_url": thumb_url,
                 }
             )
         if not candidates:
@@ -317,11 +359,49 @@ def _history_item_from_dir(d: Path, root: Optional[Path] = None) -> Optional[dic
         )
     except Exception:
         created_display = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
-    thumbs = [f"/output/{key}/images/{p.name}" for p in imgs[:4]]
+    thumbs = []
+    for p in imgs[:4]:
+        url, thumb_url = _cand_urls(key, "images", p.name, p)
+        thumbs.append({"url": url, "thumb_url": thumb_url})
+    aspect = _normalize_aspect(plan.get("aspect") or "16_9")
+    visual_style = (plan.get("visual_style") or "realistic").strip().lower()
+    shot_duration = plan.get("shot_duration_sec")
+    if shot_duration is None and (plan.get("shots") or []):
+        shot_duration = (plan.get("shots") or [{}])[0].get("duration_sec")
+    video_mode = ""
+    video_modes: List[str] = []
+    sel_path = d / "selected_shots.json"
+    if sel_path.exists():
+        try:
+            sel = json.loads(sel_path.read_text(encoding="utf-8"))
+            if isinstance(sel, dict):
+                if sel.get("aspect"):
+                    aspect = _normalize_aspect(sel["aspect"])
+                if sel.get("video_mode"):
+                    video_mode = str(sel.get("video_mode") or "").strip()
+                if isinstance(sel.get("video_modes"), list):
+                    video_modes = [str(x) for x in sel["video_modes"] if str(x).strip()]
+        except Exception:
+            pass
+    if video_mode and not video_modes:
+        video_modes = [video_mode]
+    source_text = (
+        plan.get("source_prompt")
+        or plan.get("title")
+        or plan.get("logline")
+        or plan.get("synopsis")
+        or ""
+    )
     return {
         "folder": key,
         "title": title,
-        "prompt": (plan.get("logline") or plan.get("synopsis") or "")[:120],
+        "prompt": str(source_text)[:240],
+        "source_text": str(source_text)[:500],
+        "aspect": aspect,
+        "visual_style": visual_style,
+        "shot_duration": shot_duration,
+        "video_mode": video_mode,
+        "video_modes": video_modes,
         "shot_count": len(plan.get("shots") or []) or len({p.name[:2] for p in imgs}),
         "image_count": len(imgs),
         "thumbs": thumbs,
@@ -1173,9 +1253,17 @@ class TrailerAPI:
             except Exception:
                 pass
             (refs_dir / name).write_bytes(raw)
+            thumb_name = name.rsplit(".", 1)[0] + ".thumb.jpg"
+            thumb_ok = _ensure_thumb_bytes(raw, refs_dir / thumb_name)
+            key = api._folder_key(task_dir)
             item = {
                 "filename": name,
-                "url": f"/output/{api._folder_key(task_dir)}/global_refs/{name}",
+                "url": f"/output/{key}/global_refs/{name}",
+                "thumb_url": (
+                    f"/output/{key}/global_refs/{thumb_name}"
+                    if thumb_ok
+                    else f"/output/{key}/global_refs/{name}"
+                ),
                 "source": "upload",
                 "label": (file.filename or name)[:80],
                 "selected": True,
@@ -1339,10 +1427,13 @@ class TrailerAPI:
             for shot in shots_ui_src:
                 cands = []
                 for c in shot.get("candidates") or []:
+                    png_path = dst / "images" / c["filename"]
+                    url, thumb_url = _cand_urls(out_dir, "images", c["filename"], png_path)
                     cands.append(
                         {
                             **c,
-                            "url": f"/output/{out_dir}/images/{c['filename']}",
+                            "url": url,
+                            "thumb_url": thumb_url,
                         }
                     )
                 shots_ui.append({**shot, "candidates": cands})
@@ -1364,6 +1455,16 @@ class TrailerAPI:
                 except Exception:
                     pass
 
+            src_name = src.name
+            source_prompt = (
+                plan.get("source_prompt")
+                or plan.get("title")
+                or src_name
+            )
+            visual_style = (plan.get("visual_style") or "realistic").strip().lower()
+            if visual_style not in _VISUAL_STYLES:
+                visual_style = "realistic"
+
             task = {
                 "task_id": task_id,
                 "output_dir": out_dir,
@@ -1373,8 +1474,8 @@ class TrailerAPI:
                 "logs": [],
                 "error": "",
                 "created_at": _now_ts_ms(),
-                "prompt": (plan.get("title") or src_name),
-                "visual_style": (plan.get("visual_style") or "realistic"),
+                "prompt": source_prompt,
+                "visual_style": visual_style,
                 "aspect": aspect,
                 "video_mode": mode,
                 "video_modes": modes,
@@ -1405,6 +1506,15 @@ class TrailerAPI:
                 "auto_compose": do_auto,
                 "shots_ui": shots_ui,
                 "plan": plan,
+                "prompt": source_prompt,
+                "source_text": source_prompt,
+                "visual_style": visual_style,
+                "aspect": aspect,
+                "voice": task["voice"],
+                "speed": spd,
+                "shot_duration": shot_dur,
+                "video_mode": mode,
+                "video_modes": modes,
             }
 
     async def _run_until_picks(self, task_id: str) -> None:
@@ -1511,11 +1621,20 @@ class TrailerAPI:
             workflow = build_wf(pos, seed=seed, width=w, height=h, negative_text=neg)
             img_bytes = await run_comfy(workflow)
             name = f"bible_{i:02d}.png"
-            (refs_dir / name).write_bytes(img_bytes)
+            path = refs_dir / name
+            path.write_bytes(img_bytes)
+            thumb_name = f"bible_{i:02d}.thumb.jpg"
+            thumb_ok = _ensure_thumb_bytes(img_bytes, refs_dir / thumb_name)
+            key = self._folder_key(task_dir)
             ui.append(
                 {
                     "filename": name,
-                    "url": f"/output/{self._folder_key(task_dir)}/global_refs/{name}",
+                    "url": f"/output/{key}/global_refs/{name}",
+                    "thumb_url": (
+                        f"/output/{key}/global_refs/{thumb_name}"
+                        if thumb_ok
+                        else f"/output/{key}/global_refs/{name}"
+                    ),
                     "source": "ai",
                     "label": f"参考 {i + 1}",
                     "prompt": rp[:200],
@@ -1594,6 +1713,7 @@ class TrailerAPI:
             plan["aspect"] = aspect
             plan["visual_style"] = style
             plan["shot_duration_sec"] = shot_dur
+            plan["source_prompt"] = prompt
         task["segment_count_effective"] = len(plan.get("shots") or [])
         task["target_seconds"] = plan.get("target_seconds") or round(
             shot_dur * len(plan.get("shots") or []), 1
@@ -1668,11 +1788,19 @@ class TrailerAPI:
                 name = f"{idx:02d}_c{c}.png"
                 path = images_dir / name
                 path.write_bytes(img_bytes)
+                thumb_name = f"{idx:02d}_c{c}.thumb.jpg"
+                thumb_ok = _ensure_thumb_bytes(img_bytes, images_dir / thumb_name)
+                key = self._folder_key(task_dir)
                 candidates.append(
                     {
                         "index": c,
                         "filename": name,
-                        "url": f"/output/{self._folder_key(task_dir)}/images/{name}",
+                        "url": f"/output/{key}/images/{name}",
+                        "thumb_url": (
+                            f"/output/{key}/images/{thumb_name}"
+                            if thumb_ok
+                            else f"/output/{key}/images/{name}"
+                        ),
                     }
                 )
             shots_ui.append(

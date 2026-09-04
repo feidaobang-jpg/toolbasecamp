@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const API_BASE_URL = window.HomePcApi.base();
   const MAX_BATCH = 8;
 
+  const MediaUi = window.HomePcMediaUi;
+
   let selectedFiles = [];
   let previewUrls = [];
   let results = [];
@@ -41,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let batchBusy = false;
   let presetUi = null;
   let bgUi = null;
+  let resultsLightbox = null;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -214,10 +217,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function downloadDataUrl(dataUrl, filename) {
     if (!dataUrl) return;
+    if (MediaUi && typeof MediaUi.triggerDownload === 'function') {
+      MediaUi.triggerDownload(dataUrl, filename).catch(function () { /* ignore */ });
+      return;
+    }
     const a = document.createElement('a');
     a.href = dataUrl;
     a.download = filename;
     a.click();
+  }
+
+  function ensureResultsLightbox() {
+    if (!MediaUi) return null;
+    if (resultsLightbox) return resultsLightbox;
+    MediaUi.ensureLightboxDom();
+    resultsLightbox = MediaUi.createLightbox({
+      getItems: function () {
+        return results.map(function (r) {
+          return { url: r.cleanUrl, name: r.name };
+        });
+      },
+      getHdUrl: function (it) {
+        return it && it.url;
+      },
+      getCaption: function (it, i, n) {
+        return (it && it.name ? it.name + ' · ' : '') + '#' + (i + 1) + ' / ' + n;
+      },
+      onBoundary: function (edge) {
+        alert(
+          edge === 'first'
+            ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+            : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张')
+        );
+      }
+    });
+    return resultsLightbox;
+  }
+
+  function applyThumbSrc(imgEl, item) {
+    if (!imgEl || !item) return;
+    if (item.thumbUrl) {
+      imgEl.src = item.thumbUrl;
+      return;
+    }
+    if (MediaUi && typeof MediaUi.makeThumbDataUrl === 'function' && item.cleanUrl) {
+      MediaUi.makeThumbDataUrl(item.cleanUrl)
+        .then(function (thumb) {
+          item.thumbUrl = thumb;
+          imgEl.src = thumb;
+        })
+        .catch(function () {
+          imgEl.src = item.cleanUrl;
+        });
+      return;
+    }
+    imgEl.src = item.cleanUrl || '';
   }
 
   function renderResults() {
@@ -243,51 +297,62 @@ document.addEventListener('DOMContentLoaded', function () {
       let metaText = `${item.name || ('#' + (i + 1))} · ${engLabel} · seed ${item.seed_used != null ? item.seed_used : '—'}`;
       if (item.quality) metaText += ` · ${qualityLabel(item.quality)}`;
       if (item.denoise != null) metaText += ` · Denoise ${item.denoise}`;
+      if (item.elapsed_sec != null) metaText += ` · ${Number(item.elapsed_sec).toFixed(1)}s`;
       meta.textContent = metaText;
       card.appendChild(meta);
 
       const cleanWrap = document.createElement('div');
       cleanWrap.className = 'home-pc-result-img-wrap';
       const cleanImg = document.createElement('img');
-      cleanImg.src = item.cleanUrl;
       cleanImg.alt = item.name || tr('privateHub.homePc.img2imgResultTitle', '生成结果');
+      cleanImg.style.cursor = 'pointer';
+      cleanImg.addEventListener('click', function () {
+        const lb = ensureResultsLightbox();
+        if (lb) lb.openAt(i);
+      });
+      applyThumbSrc(cleanImg, item);
       cleanWrap.appendChild(cleanImg);
       card.appendChild(cleanWrap);
-
-      const actions = document.createElement('div');
-      actions.className = 'action-row home-pc-tool-actions';
-      const dlClean = document.createElement('button');
-      dlClean.type = 'button';
-      dlClean.className = 'tb-btn';
-      dlClean.textContent = tr('privateHub.homePc.download', '下载');
-      dlClean.addEventListener('click', function () {
-        downloadDataUrl(item.cleanUrl, `img2img_${i + 1}_${Date.now()}.png`);
-      });
-      actions.appendChild(dlClean);
 
       if (item.wmUrl) {
         const wmLabel = document.createElement('p');
         wmLabel.className = 'home-pc-result-meta';
         wmLabel.textContent = tr('privateHub.homePc.img2imgWatermarkVersion', '水印版');
         card.appendChild(wmLabel);
-        const wmWrap = document.createElement('div');
-        wmWrap.className = 'home-pc-result-img-wrap';
-        const wmImg = document.createElement('img');
-        wmImg.src = item.wmUrl;
-        wmImg.alt = tr('privateHub.homePc.img2imgWatermarkVersion', '水印版');
-        wmWrap.appendChild(wmImg);
-        card.appendChild(wmWrap);
+        const wmRow = document.createElement('div');
+        wmRow.className = 'action-row home-pc-tool-actions';
         const dlWm = document.createElement('button');
         dlWm.type = 'button';
         dlWm.className = 'tb-btn';
         dlWm.textContent = tr('privateHub.homePc.img2imgDownloadWatermark', '下载水印版');
-        dlWm.addEventListener('click', function () {
+        dlWm.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
           downloadDataUrl(item.wmUrl, `img2img_wm_${i + 1}_${Date.now()}.png`);
         });
-        actions.appendChild(dlWm);
+        wmRow.appendChild(dlWm);
+        card.appendChild(wmRow);
       }
 
-      card.appendChild(actions);
+      if (MediaUi) {
+        MediaUi.appendCardActions(card, {
+          onDownload: function () {
+            downloadDataUrl(item.cleanUrl, `img2img_${i + 1}_${Date.now()}.png`);
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(
+                tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+              )
+            ) {
+              return;
+            }
+            results.splice(i, 1);
+            renderResults();
+          }
+        });
+      }
+
       resultGrid.appendChild(card);
     });
   }
@@ -400,11 +465,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const files = selectedFiles.slice();
     let ok = 0;
+    const batchStart = performance.now();
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         log(`${i + 1}/${files.length} ${file.name || ''}`);
+        const itemStart = performance.now();
         const data = await runOne(file, prompt, engine, i, files.length);
+        const elapsedSec = (performance.now() - itemStart) / 1000;
         const cleanUrl = toDataUrl(data.image_base64);
         if (!cleanUrl) throw new Error('未返回图片数据');
         results.push({
@@ -414,13 +482,16 @@ document.addEventListener('DOMContentLoaded', function () {
           engine: data.engine,
           seed_used: data.seed_used,
           quality: data.quality,
-          denoise: data.denoise
+          denoise: data.denoise,
+          elapsed_sec: elapsedSec
         });
         ok += 1;
+        log(`第 ${i + 1}/${files.length} 张完成，耗时 ${elapsedSec.toFixed(1)}s`);
         renderResults();
         if (progressBar) progressBar.style.width = `${Math.round(((i + 1) / files.length) * 100)}%`;
       }
-      log(`完成 ${ok}/${files.length} ${new Date().toLocaleString()}`);
+      const batchSec = (performance.now() - batchStart) / 1000;
+      log(`完成 ${ok}/${files.length}，本批总耗时 ${batchSec.toFixed(1)}s ${new Date().toLocaleString()}`);
     } catch (e) {
       var msg = (window.HomePcApi && HomePcApi.friendlyFetchError)
         ? HomePcApi.friendlyFetchError(e)
@@ -465,4 +536,15 @@ document.addEventListener('DOMContentLoaded', function () {
   if (genBtn) genBtn.addEventListener('click', generate);
   if (clearBtn) clearBtn.addEventListener('click', clearAll);
   if (downloadAllBtn) downloadAllBtn.addEventListener('click', downloadAll);
+
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (document.getElementById('log-output') || {}).textContent || '';
+      },
+      onOpenDir: function () {
+        alert(tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录'));
+      }
+    });
+  }
 });

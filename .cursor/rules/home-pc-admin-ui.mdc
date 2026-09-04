@@ -8,6 +8,8 @@ alwaysApply: false
 
 遵循全站规则 `.cursor/rules/no-tailwind.mdc`（禁止 Tailwind CDN / 工具类）。
 
+媒体列表 / 大图预览 / 历史回填 / 模型状态 / 日志工具栏等约定见 **`.cursor/rules/home-pc-media-pipeline.mdc`（alwaysApply）**，改图相关页必须遵守。
+
 ## 样式栈
 
 1. `base.css` → `docs/docs-common.css` → `admin/home-pc.css`
@@ -21,5 +23,6 @@ alwaysApply: false
 | 风格预设 | `instruct-edit-presets.js` + `instruct-edit-preset-ui.js` |
 | 背景地点 | `instruct-edit-bg-*.js` |
 | 芯片 CSS | `image-tools.css`（`.rec-chip`） |
+| 缩略图卡 / lightbox / 日志栏 | `home-pc-media-ui.js`（`HomePcMediaUi`） |
 
 新增 preset/背景只改 shared + 服务端镜像，不要在家 pc 页复制逻辑。

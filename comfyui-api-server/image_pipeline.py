@@ -839,3 +839,54 @@ class ImagePipelineAPI:
                     except Exception:
                         pass
             return {"success": True, "images": images}
+
+        @app.post("/image-pipeline/delete-image")
+        @app.post("/api/image-pipeline/delete-image")
+        async def ip_delete_image(
+            task_id: str = Form(""),
+            folder: str = Form(""),
+            index: str = Form(...),
+        ):
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="缺少 task_id 或 folder")
+            try:
+                idx = int(index)
+            except Exception as e:
+                raise HTTPException(status_code=400, detail="index 无效") from e
+            try:
+                task = api._load_task_from_dir(key)
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            images = [it for it in (task.get("images") or []) if isinstance(it, dict)]
+            victim = None
+            for it in images:
+                if int(it.get("index") or 0) == idx:
+                    victim = it
+                    break
+            if not victim:
+                raise HTTPException(status_code=404, detail="找不到该图")
+            task_dir = api._task_dir(task)
+            for rel_key in ("file", "thumb_file"):
+                rel = str(victim.get(rel_key) or "").replace("\\", "/").lstrip("/")
+                if not rel:
+                    continue
+                p = task_dir / rel
+                try:
+                    if p.is_file():
+                        p.unlink()
+                except Exception:
+                    pass
+            images = [it for it in images if int(it.get("index") or 0) != idx]
+            task["images"] = images
+            task["count"] = len(images)
+            api._log(task, f"已删除第 {idx} 张")
+            tid = str(task.get("task_id") or "")
+            if tid:
+                api.tasks[tid] = dict(task)
+                api.tasks[tid]["cancel"] = False
+                api._save_snapshot(api.tasks[tid])
+            else:
+                api._save_snapshot(task)
+            api._enrich_image_urls(task)
+            return {"success": True, "series": None, **{k: v for k, v in task.items() if k != "cancel"}}

@@ -1,0 +1,81 @@
+---
+description: 家里电脑：缩略图网格、大图导航、历史回填、模型状态、日志耗时与工具栏
+globs: public/html/admin/private/home-pc/**,public/css/admin/home-pc.css,public/js/admin/home-pc/**,comfyui-api-server/**
+alwaysApply: true
+---
+
+# 家里电脑媒体 / 流水线约定（全局）
+
+适用范围：`public/html|js/admin/home-pc/**`、`comfyui-api-server` 里对应流水线。新建或大改必须遵守；存量不符要改正。
+
+共享实现优先用：
+
+- `public/js/admin/home-pc/home-pc-media-ui.js`（`HomePcMediaUi`）
+- `public/js/admin/home-pc/home-pc-api.js` / `home-pc-boot.js`
+- 样式：`home-pc.css` 中 `.image-pipe-*` / `.home-pc-log-toolbar` / `.home-pc-img-card-*`
+
+## 1. 列表 / 网格图片 = 缩略图
+
+- 结果网格、历史预览、候选图、定妆图列表等：**只加载缩略图**（JPEG 约长边 ≤ 480，或等价体积）。
+- **禁止**在网格里直接塞原图 PNG / 无压缩 data URL。
+- 服务端：生图时写出 `.thumb.jpg`（或等价），状态/打开历史返回 `thumb_url` + `url`。
+- 纯前端结果：用 canvas 压成缩略图再挂到卡片；原图仅保留给预览/下载。
+
+## 2. 每张图下方：下载 + 删除
+
+- 每个图片卡片下方必须有 `.action-row`，内含 **下载**、**删除**（`tb-btn`）。
+- 下载：原图（`url` / blob），走 `tbTriggerDownload` / `HomePcApi` 等价逻辑；勿只开新标签。
+- 删除：本地任务调删除 API 并刷新；会话内结果可从 DOM/数组移除。删除前 `confirm`。
+- 勾选公开等操作可另有按钮，但不能替代下载/删除。
+
+## 3. 预览大图：点开才加载高清 + 左右切换
+
+- 点击缩略图打开 lightbox；**此时才**把 `img.src` 设为高清 `url`。
+- 必须有 **上一张 / 下一张**；到达边界时按钮 `disabled` + `.is-disabled`，并可短提示「已经是第一张/最后一张」。
+- 支持键盘 ← →、Esc；点击遮罩关闭。
+- 大图区可显示完整提示词 / 序号（可选）。
+
+## 4. 打开历史必须回填输入框
+
+- 任何「打开 / 复用 / 加载历史」必须把该次任务的关键参数写回表单（主题、风格、数量、画幅、引擎、提示词等该页有的字段）。
+- 只刷新结果区、不回填表单 = 违规。
+
+## 5. 顶部：本地模型 + 工作流 + 连接状态
+
+凡使用本机 ComfyUI / 本地大模型的页面，顶部须同时有：
+
+1. **文案**：工作流文件名 + 主要模型名（与文生图页同风格，如 `工作流 z_image_turbo.json。模型：…`）。
+2. **`#api-status`**：经 `home-pc-boot` / `HomePcApi.renderStatus` 显示家里电脑 API 与 ComfyUI 连通状态。
+
+禁止只写业务流程一句、不写模型与工作流。
+
+## 6. 日志：单条耗时 + 批量总耗时
+
+- 能拿到单张/单镜/单步耗时的，必须写入日志（如 `第 3/8 张完成，耗时 41.2s`）。
+- 一批结束必须写合计（生图合计 / 本批总耗时等）。
+- 前端若展示 `elapsed_sec`，后端日志仍要有对应行，不能只写在卡片上。
+
+## 7. 日志上方工具栏
+
+每个日志盒子（`.home-pc-log-box`）上方必须有 `.action-row.home-pc-log-toolbar`：
+
+| 按钮 | 文案 key | 行为 |
+|---|---|---|
+| 复制日志 | `privateHub.homePc.copyLog` | 复制 `#log-output` 全文 |
+| 打开日志目录 | `privateHub.homePc.openLogDir` | 打开本任务输出/日志目录（`reveal-output` 等） |
+
+禁止只有复制没有打开目录，或把「打开文件夹」藏在别处置换本栏。
+
+## 8. i18n
+
+新增按钮/提示同步 `zh-CN.js` + `en.js`，并递增页面 `?v=`。
+
+## 自检清单（改页时勾）
+
+- [ ] 网格用 `thumb_url`，预览才用 `url`
+- [ ] 每卡有下载 + 删除
+- [ ] lightbox 有左右键与边界态
+- [ ] 打开历史回填表单
+- [ ] 顶栏模型/工作流 + `#api-status`
+- [ ] 日志含单条与总耗时
+- [ ] 日志上方：复制日志 + 打开日志目录

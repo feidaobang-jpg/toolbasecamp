@@ -1458,7 +1458,7 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 8px;
 }
 
@@ -1624,18 +1624,41 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   margin-bottom: 10px;
 }
 
-.home-pc-wrap .trailer-history-thumbs img {
+.home-pc-wrap .trailer-history-thumb-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 120px;
+  min-width: 0;
+}
+
+.home-pc-wrap .trailer-history-thumbs img,
+.home-pc-wrap .trailer-history-thumb-card img {
   width: 96px;
   height: 54px;
   object-fit: cover;
   border-radius: 8px;
   background: #111;
   border: 1px solid #e5e7eb;
+  cursor: pointer;
 }
 
-.home-pc-wrap.trailer-portrait-preview .trailer-history-thumbs img {
+.home-pc-wrap.trailer-portrait-preview .trailer-history-thumbs img,
+.home-pc-wrap.trailer-portrait-preview .trailer-history-thumb-card img {
   width: 54px;
   height: 96px;
+}
+
+.home-pc-wrap .trailer-history-thumb-card .home-pc-img-card-actions .tb-btn {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.home-pc-wrap .trailer-cand-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
 }
 
 .home-pc-wrap .trailer-history-empty {
@@ -2460,10 +2483,33 @@ body.tb-admin-private #auth-status {
   color: #1e40af;
   font-size: 14px;
 }
-.home-pc-wrap .home-pc-flash--err {
-  background: #fef2f2;
-  color: #b91c1c;
+.home-pc-wrap .home-pc-log-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
+.home-pc-wrap .home-pc-log-head .home-pc-result-title,
+.home-pc-wrap .home-pc-log-head h3,
+.home-pc-wrap .home-pc-log-head h4 {
+  margin: 0;
+}
+.home-pc-wrap .home-pc-log-toolbar {
+  margin: 0;
+}
+.home-pc-wrap .home-pc-img-card-actions {
+  padding: 8px 10px 10px;
+  margin-top: auto;
+}
+.home-pc-wrap .home-pc-img-card-actions .tb-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 13px;
+  padding: 6px 10px;
+}
+
 
 .image-pipe-lightbox .image-pipe-lightbox-panel {
   position: relative;

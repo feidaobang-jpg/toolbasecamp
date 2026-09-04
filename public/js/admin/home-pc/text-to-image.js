@@ -16,8 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const logOutput = document.getElementById('log-output');
 
   const API_BASE_URL = window.HomePcApi.base();
+  const MediaUi = window.HomePcMediaUi;
 
   let lastDataUrl = '';
+  let resultLightbox = null;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -40,6 +42,94 @@ document.addEventListener('DOMContentLoaded', function () {
     genBtn.disabled = busy;
   }
 
+  function ensureLightbox() {
+    if (!MediaUi) return null;
+    if (resultLightbox) return resultLightbox;
+    MediaUi.ensureLightboxDom();
+    resultLightbox = MediaUi.createLightbox({
+      getItems: function () {
+        return lastDataUrl ? [{ url: lastDataUrl }] : [];
+      },
+      getHdUrl: function (it) {
+        return it && it.url;
+      },
+      getCaption: function () {
+        return tr('privateHub.homePc.txt2imgResultTitle', '生成结果') + ' · #1 / 1';
+      },
+      onBoundary: function (edge) {
+        alert(
+          edge === 'first'
+            ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+            : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张')
+        );
+      }
+    });
+    return resultLightbox;
+  }
+
+  function clearResultUi() {
+    lastDataUrl = '';
+    if (resultImg) resultImg.removeAttribute('src');
+    if (resultBox) {
+      resultBox.style.display = 'none';
+      const actions = resultBox.querySelector('.home-pc-img-card-actions');
+      if (actions) actions.remove();
+    }
+    if (downloadBtn) downloadBtn.style.display = 'none';
+    if (metaLine) metaLine.textContent = '';
+  }
+
+  function mountCardActions() {
+    if (!MediaUi || !resultBox) return;
+    const existing = resultBox.querySelector('.home-pc-img-card-actions');
+    if (existing) existing.remove();
+    MediaUi.appendCardActions(resultBox, {
+      onDownload: downloadPng,
+      onDelete: function () {
+        if (
+          !window.confirm(
+            tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+          )
+        ) {
+          return;
+        }
+        clearResultUi();
+      }
+    });
+  }
+
+  function showResult(fullDataUrl, seedUsed) {
+    lastDataUrl = fullDataUrl || '';
+    if (!lastDataUrl || !resultImg) return;
+
+    function applyThumb(src) {
+      resultImg.src = src;
+      resultImg.alt = tr('privateHub.homePc.txt2imgResultTitle', '生成结果');
+      resultImg.style.cursor = 'pointer';
+      if (metaLine) {
+        metaLine.textContent = `使用的种子：${seedUsed != null ? seedUsed : '—'}`;
+      }
+      resultBox.style.display = 'block';
+      if (downloadBtn) downloadBtn.style.display = 'inline-block';
+      mountCardActions();
+    }
+
+    resultImg.onclick = function () {
+      const lb = ensureLightbox();
+      if (lb) lb.openAt(0);
+    };
+
+    if (MediaUi && typeof MediaUi.makeThumbDataUrl === 'function') {
+      MediaUi.makeThumbDataUrl(lastDataUrl)
+        .then(applyThumb)
+        .catch(function () {
+          applyThumb(lastDataUrl);
+        });
+    } else {
+      applyThumb(lastDataUrl);
+    }
+  }
+
   async function generate() {
     const prompt = (promptInput.value || '').trim();
     if (!prompt) {
@@ -55,10 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('seed', (seedInput.value || '').trim());
 
     setBusy(true, tr('privateHub.homePc.txt2imgGenerating', '提交 ComfyUI 生成中…'));
-    resultBox.style.display = 'none';
-    downloadBtn.style.display = 'none';
-    lastDataUrl = '';
+    clearResultUi();
 
+    const t0 = performance.now();
     try {
       const res = await fetch(`${API_BASE_URL}/txt2img`, { method: 'POST', body: fd });
       const data = await res.json().catch(() => ({}));
@@ -69,13 +158,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       const b64 = data.image_base64;
       if (!b64) throw new Error('未返回图片数据');
-      lastDataUrl = `data:image/png;base64,${b64}`;
-      resultImg.src = lastDataUrl;
-      resultImg.alt = tr('privateHub.homePc.txt2imgResultTitle', '生成结果');
-      metaLine.textContent = `使用的种子：${data.seed_used != null ? data.seed_used : '—'}`;
-      resultBox.style.display = 'block';
-      downloadBtn.style.display = 'inline-block';
-      log(`完成 ${new Date().toLocaleString()}`);
+      const fullUrl = `data:image/png;base64,${b64}`;
+      const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+      showResult(fullUrl, data.seed_used);
+      log(`完成，耗时 ${elapsed}s ${new Date().toLocaleString()}`);
     } catch (e) {
       log(`错误：${String(e.message || e)}`);
       alert(String(e.message || e));
@@ -89,22 +175,37 @@ document.addEventListener('DOMContentLoaded', function () {
     widthInput.value = '1024';
     heightInput.value = '1024';
     seedInput.value = '';
-    resultImg.removeAttribute('src');
-    resultBox.style.display = 'none';
-    downloadBtn.style.display = 'none';
+    clearResultUi();
     logOutput.textContent = '';
-    lastDataUrl = '';
   }
 
   function downloadPng() {
     if (!lastDataUrl) return;
+    const name = `txt2img_${Date.now()}.png`;
+    if (MediaUi && typeof MediaUi.triggerDownload === 'function') {
+      MediaUi.triggerDownload(lastDataUrl, name).catch(function () {
+        /* ignore */
+      });
+      return;
+    }
     const a = document.createElement('a');
     a.href = lastDataUrl;
-    a.download = `txt2img_${Date.now()}.png`;
+    a.download = name;
     a.click();
   }
 
   if (genBtn) genBtn.addEventListener('click', generate);
   if (clearBtn) clearBtn.addEventListener('click', clearAll);
   if (downloadBtn) downloadBtn.addEventListener('click', downloadPng);
+
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (document.getElementById('log-output') || {}).textContent || '';
+      },
+      onOpenDir: function () {
+        alert(tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录'));
+      }
+    });
+  }
 });

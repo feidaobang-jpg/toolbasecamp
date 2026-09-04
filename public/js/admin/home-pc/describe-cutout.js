@@ -19,7 +19,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const outputModeRow = document.getElementById('output-mode-row');
 
     const API_BASE_URL = window.HomePcApi.base();
+    const MediaUi = window.HomePcMediaUi;
     let outputMode = 'cutout';
+    let lightboxItems = [];
+    let sharedLightbox = null;
+
+    function tr(key, fallback) {
+        if (typeof window.t === 'function') {
+            const v = window.t(key);
+            if (v && v !== key) return v;
+        }
+        return fallback || key;
+    }
+
+    function ensureSharedLightbox() {
+        if (!MediaUi) return null;
+        if (sharedLightbox) return sharedLightbox;
+        MediaUi.ensureLightboxDom();
+        sharedLightbox = MediaUi.createLightbox({
+            getItems: function () {
+                return lightboxItems;
+            },
+            getHdUrl: function (it) {
+                return it && (it.url || it.dataUrl);
+            },
+            getCaption: function (it, i, n) {
+                return ((it && it.name) || '') + ' · #' + (i + 1) + ' / ' + n;
+            },
+            onBoundary: function (edge) {
+                alert(
+                    edge === 'first'
+                        ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+                        : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张')
+                );
+            }
+        });
+        return sharedLightbox;
+    }
+
+    function openGallery(items, index) {
+        lightboxItems = (items || []).map(function (it) {
+            return {
+                url: it.dataUrl || it.url || '',
+                name: it.name || it.kindLabel || ''
+            };
+        });
+        const lb = ensureSharedLightbox();
+        if (lb) lb.openAt(index);
+    }
 
     function getOutputMode() {
         return outputMode;
@@ -137,20 +184,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     img.id = `preview-img-${i}`;
                     img.style.transition = 'transform 0.3s ease'; // 添加过渡效果
                     
-                    // 使用新的画廊预览，传递完整列表和当前索引
+                    // 使用 HomePcMediaUi lightbox
                     img.addEventListener('click', () => {
-                        // 动态重新构建画廊数据，以包含最新的旋转状态
                         const currentGalleryImages = selectedImages.map((file, idx) => ({
-                            dataUrl: galleryImages[idx].dataUrl,
-                            name: file.name,
-                            rotation: imageRotations[idx] || 0
+                            dataUrl: galleryImages[idx] && galleryImages[idx].dataUrl,
+                            name: file.name
                         }));
-
-                        if (typeof window.createGalleryModal === 'function') {
-                            window.createGalleryModal(currentGalleryImages, i);
-                        } else if (typeof createZoomModal === 'function') {
-                            createZoomModal(e.target.result);
-                        }
+                        openGallery(currentGalleryImages, i);
                     });
                     previewItem.appendChild(img);
                     
@@ -237,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             processBtn.textContent = '处理中...';
 
             // 串行处理
+            const batchStart = performance.now();
             for (let i = 0; i < selectedImages.length; i++) {
                 const imageFile = selectedImages[i];
                 
@@ -244,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 processBtn.textContent = `处理中 ${i + 1}/${selectedImages.length}...`;
                 
                 try {
+                    const itemStart = performance.now();
                     // 0. 预处理：获取图片数据（如果需要旋转，先旋转）
                     let currentDataUrl = await fileToDataURL(imageFile);
                     const rotation = imageRotations[i] || 0;
@@ -260,8 +302,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         dataUrl: currentDataUrl
                     }, describePrompt, getOutputMode());
 
-                    console.log(`[${i+1}/${selectedImages.length}] 描述抠图完成`);
+                    const elapsedSec = (performance.now() - itemStart) / 1000;
+                    console.log(`[${i+1}/${selectedImages.length}] 描述抠图完成，耗时 ${elapsedSec.toFixed(1)}s`);
                     cutoutResults.forEach(function (resultImage) {
+                        resultImage.elapsed_sec = elapsedSec;
                         processedImages.push(resultImage);
                         displaySingleResult(resultImage, processedImages.length - 1);
                     });
@@ -281,10 +325,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+
+            const batchSec = (performance.now() - batchStart) / 1000;
+            console.log(`本批总耗时 ${batchSec.toFixed(1)}s`);
             
             saveAllBtn.classList.remove('hidden');
             if (typeof showToast === 'function') {
-                showToast(`处理完成，成功 ${processedImages.length} 张输出`);
+                showToast(`处理完成，成功 ${processedImages.length} 张输出，总耗时 ${batchSec.toFixed(1)}s`);
             }
             
         } catch (error) {
@@ -297,10 +344,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
+     * 重新渲染全部处理结果（删除后用）
+     */
+    function renderProcessedResults() {
+        imagePreviewContainer.innerHTML = '';
+        processedImages.forEach(function (img, idx) {
+            displaySingleResult(img, idx);
+        });
+        if (processedImages.length) {
+            saveAllBtn.classList.remove('hidden');
+        } else {
+            saveAllBtn.classList.add('hidden');
+        }
+    }
+
+    /**
      * 显示单张处理结果
      */
     function displaySingleResult(processedImage, index) {
-        // 创建预览卡片
         const previewItem = document.createElement('div');
         previewItem.className = 'image-preview-item';
 
@@ -313,15 +374,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const img = document.createElement('img');
-        img.src = processedImage.dataUrl;
-        // 绑定点击事件
+        img.style.cursor = 'pointer';
         img.addEventListener('click', () => {
-            if (typeof window.createGalleryModal === 'function') {
-                window.createGalleryModal(processedImages, index);
-            } else if (typeof createZoomModal === 'function') {
-                createZoomModal(processedImage.dataUrl);
-            }
+            openGallery(processedImages, index);
         });
+        if (processedImage.thumbUrl) {
+            img.src = processedImage.thumbUrl;
+        } else if (MediaUi && typeof MediaUi.makeThumbDataUrl === 'function') {
+            MediaUi.makeThumbDataUrl(processedImage.dataUrl)
+                .then(function (thumb) {
+                    processedImage.thumbUrl = thumb;
+                    img.src = thumb;
+                })
+                .catch(function () {
+                    img.src = processedImage.dataUrl;
+                });
+        } else {
+            img.src = processedImage.dataUrl;
+        }
         previewItem.appendChild(img);
         
         const bottomContainer = document.createElement('div');
@@ -336,19 +406,42 @@ document.addEventListener('DOMContentLoaded', function() {
         tempImg.onload = function() {
             processedImage.width = tempImg.width;
             processedImage.height = tempImg.height;
-            infoDiv.textContent = `${tempImg.width}x${tempImg.height} (${formatFileSize(processedImage.size)})`;
+            let infoText = `${tempImg.width}x${tempImg.height} (${formatFileSize(processedImage.size)})`;
+            if (processedImage.elapsed_sec != null) {
+                infoText += ` · ${Number(processedImage.elapsed_sec).toFixed(1)}s`;
+            }
+            infoDiv.textContent = infoText;
         };
         tempImg.src = processedImage.dataUrl;
         
         bottomContainer.appendChild(infoDiv);
-        
-        const downloadBtn = document.createElement('button');
-        downloadBtn.className = 'tb-btn tb-btn-sm w-full';
-        downloadBtn.textContent = '下载';
-        downloadBtn.addEventListener('click', () => {
-            downloadImage(processedImage.dataUrl, processedImage.name);
-        });
-        bottomContainer.appendChild(downloadBtn);
+
+        if (MediaUi) {
+            MediaUi.appendCardActions(previewItem, {
+                onDownload: function () {
+                    downloadImage(processedImage.dataUrl, processedImage.name);
+                },
+                onDelete: function () {
+                    if (
+                        !window.confirm(
+                            tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+                        )
+                    ) {
+                        return;
+                    }
+                    processedImages.splice(index, 1);
+                    renderProcessedResults();
+                }
+            });
+        } else {
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'tb-btn w-full';
+            downloadBtn.textContent = '下载';
+            downloadBtn.addEventListener('click', () => {
+                downloadImage(processedImage.dataUrl, processedImage.name);
+            });
+            bottomContainer.appendChild(downloadBtn);
+        }
         
         imagePreviewContainer.appendChild(previewItem);
     }
@@ -547,6 +640,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 下载图片
     function downloadImage(dataUrl, filename) {
+        if (MediaUi && typeof MediaUi.triggerDownload === 'function') {
+            MediaUi.triggerDownload(dataUrl, filename).catch(function () { /* ignore */ });
+            return;
+        }
         const link = document.createElement('a');
         link.href = dataUrl;
         link.download = filename;

@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc60" />
-  <script src="../../../../js/locales/en.js?v=series26"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=series26"></script>
+  <script src="../../../../js/locales/en.js?v=series28"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=series28"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc29"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.seriesHint">梗概 → 自动拆戏+导演长提示/多角色对白 → 人物定妆页 → 确认 @图片 → 一键拍场 → 站内裁切 → 合集成片（可选云端 Seedance）。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.seriesHint">梗概 → 自动拆戏+导演长提示/多角色对白 → 工作流 z_image_turbo.json 人物定妆 → 确认 @图片 → Wan/LTX 成片（可选云端 Seedance）→ 站内裁切 → 合集成片。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -127,6 +127,23 @@
                 </div>
               </div>
 
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="voice-select" data-i18n="privateHub.homePc.textToVideoVoiceLabel">语音：</label>
+                  <select id="voice-select" class="text-input">
+                    <option value="zh-CN-XiaoxiaoNeural">晓晓（女声）</option>
+                    <option value="zh-CN-YunxiNeural" selected>云希（男声）</option>
+                    <option value="zh-CN-YunyangNeural">云扬（男声新闻）</option>
+                    <option value="zh-CN-XiaoyiNeural">晓伊（女声）</option>
+                    <option value="zh-CN-YunjianNeural">云健（男声）</option>
+                  </select>
+                </div>
+                <div class="input-control">
+                  <label for="speed-input" data-i18n="privateHub.homePc.textToVideoSpeedLabel">语速：</label>
+                  <input id="speed-input" class="text-input" type="number" step="0.1" min="0.7" max="1.4" value="1.0" />
+                </div>
+              </div>
+
               <div class="field-row">
                 <span class="home-pc-field-label" data-i18n="privateHub.homePc.trailerGlobalRefsLabel">全剧参考图</span>
                 <div class="trailer-aspect-row">
@@ -210,12 +227,8 @@
             <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
               <div class="home-pc-log-head series-log-head">
                 <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerLogTitle">日志</h3>
-                <div class="action-row">
-                  <button type="button" id="copy-log-btn" class="tb-btn" data-i18n="privateHub.homePc.copyLog">复制日志</button>
-                  <button type="button" id="open-series-folder-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesOpenFolder">打开文件夹</button>
-                </div>
               </div>
-              <p class="small-hint" data-i18n="privateHub.homePc.seriesLogHint">日志在项目目录 pipeline.log；点「打开文件夹」可查看素材与日志。</p>
+              <p class="small-hint" data-i18n="privateHub.homePc.seriesLogHint">日志在项目目录 pipeline.log；点「打开日志目录」可查看素材与日志。</p>
               <pre id="log-output"></pre>
             </div>
           </div>
@@ -224,8 +237,14 @@
     </div>
   </div>
 
-  <div id="lightbox" class="trailer-lightbox" style="display:none;" title="点击关闭">
-    <img id="lightbox-img" alt="" />
+  <div id="lightbox" class="trailer-lightbox image-pipe-lightbox" style="display:none;" hidden>
+    <button type="button" class="trailer-lightbox-backdrop" id="lightbox-backdrop" aria-label="关闭"></button>
+    <div class="trailer-lightbox-panel image-pipe-lightbox-panel">
+      <button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张">‹</button>
+      <img id="lightbox-img" alt="" />
+      <button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张">›</button>
+      <div id="lightbox-caption" class="image-pipe-lb-caption" data-lb-caption></div>
+    </div>
   </div>
 
   <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
@@ -233,7 +252,8 @@
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/series-studio.js?v=series26"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=series28"></script>
 </body>
 </html>

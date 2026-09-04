@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc44" />
-  <script src="../../../../js/locales/en.js?v=trailer23"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=trailer23"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc45" />
+  <script src="../../../../js/locales/en.js?v=trailer25"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=trailer25"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc28"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">输入书名/梗概 → DeepSeek 全剧设定+分镜 → 全剧参考图（AI 勾选或上传）→ 关键帧 → 成片。画风细节一般不用手填。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.trailerHint">工作流 z_image_turbo.json（关键帧）。成片：Wan / LTX 工作流。模型：z_image_turbo_bf16…</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -187,9 +187,6 @@
             <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
               <div class="home-pc-log-head">
                 <h4 data-i18n="privateHub.homePc.logTitle">执行日志</h4>
-                <div class="action-row">
-                  <button type="button" id="copy-log-btn" class="tb-btn" data-i18n="privateHub.homePc.copyLog">复制日志</button>
-                </div>
               </div>
               <pre id="log-output"></pre>
             </div>
@@ -212,12 +209,16 @@
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer23"></script>
-  <div id="trailer-lightbox" class="trailer-lightbox" hidden aria-hidden="true">
+  <script src="../../../../js/admin/home-pc/trailer.js?v=trailer25"></script>
+  <div id="trailer-lightbox" class="trailer-lightbox image-pipe-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" aria-label="关闭"></button>
-    <div class="trailer-lightbox-panel" role="dialog" aria-modal="true">
-      <img id="trailer-lightbox-img" alt="" title="点击关闭" />
+    <div class="trailer-lightbox-panel image-pipe-lightbox-panel" role="dialog" aria-modal="true">
+      <button type="button" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张">‹</button>
+      <img id="trailer-lightbox-img" alt="" />
+      <button type="button" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张">›</button>
+      <div class="image-pipe-lb-caption" data-lb-caption></div>
     </div>
   </div>
 </body>

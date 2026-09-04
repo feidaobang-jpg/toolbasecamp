@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var exportBtn = document.getElementById('export-btn');
   var openOutputBtn = document.getElementById('open-output-btn');
   var copyGodotBtn = document.getElementById('copy-godot-btn');
-  var copyLogBtn = document.getElementById('copy-log-btn');
   var historyRefreshBtn = document.getElementById('history-refresh-btn');
   var briefInput = document.getElementById('brief-input');
   var charName = document.getElementById('char-name');
@@ -460,36 +459,53 @@ document.addEventListener('DOMContentLoaded', function () {
     return k;
   }
 
-  var lightbox = document.getElementById('gs-lightbox');
-  var lightboxImg = document.getElementById('gs-lightbox-img');
-  var lightboxBackdrop = lightbox ? lightbox.querySelector('.trailer-lightbox-backdrop') : null;
-
-  function openLightbox(src) {
-    if (!lightbox || !lightboxImg || !src) return;
-    lightboxImg.src = src;
-    lightboxImg.title = tr('privateHub.homePc.trailerPreviewTapClose', '点击关闭');
-    lightbox.hidden = false;
-    lightbox.setAttribute('aria-hidden', 'false');
+  var stillGallery = [];
+  var mediaLb = null;
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLightboxDom();
+    mediaLb = window.HomePcMediaUi.createLightbox({
+      getItems: function () {
+        return stillGallery;
+      },
+      getHdUrl: function (it) {
+        return it && (it.url || it.thumb_url || '');
+      },
+      getCaption: function (it, i, n) {
+        if (!it) return '';
+        var el =
+          it.elapsed_sec != null ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '';
+        return (
+          '#' +
+          (i + 1) +
+          ' / ' +
+          n +
+          el +
+          '\n' +
+          (it.prompt || stillKindLabel(it.kind || it.id) || '')
+        );
+      },
+      onBoundary: function (which) {
+        try {
+          window.alert(
+            which === 'first'
+              ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+              : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张')
+          );
+        } catch (e) {}
+      }
+    });
   }
 
-  function closeLightbox() {
-    if (!lightbox || !lightboxImg) return;
-    lightbox.hidden = true;
-    lightbox.setAttribute('aria-hidden', 'true');
-    lightboxImg.removeAttribute('src');
+  function openLightboxAt(idx) {
+    if (mediaLb) mediaLb.openAt(idx);
   }
-
-  if (lightboxImg) lightboxImg.addEventListener('click', closeLightbox);
-  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
 
   function renderStills(list, opts) {
     if (!stillsBox || !stillsList) return;
     var items = Array.isArray(list) ? list : [];
     if (!items.length) {
       stillsBox.style.display = 'none';
+      stillGallery = [];
       return;
     }
     stillsBox.style.display = 'block';
@@ -507,13 +523,11 @@ document.addEventListener('DOMContentLoaded', function () {
             '定妆 1 张会自动选用并继续动作。点放大镜看大图；也可上传自己的参考图。'
           );
     }
-    // 清掉旧版误插的第二行提示
     stillsBox.querySelectorAll('.gs-stills-live-hint').forEach(function (el) {
       if (el !== hintEl) el.remove();
     });
     if (confirmPickBtn) confirmPickBtn.disabled = !!generating;
 
-    // 未选手动时，默认勾选动作主参考
     if (!pickedStillId && !generating) {
       var prefer = null;
       var cam = selectedCamera;
@@ -536,22 +550,20 @@ document.addEventListener('DOMContentLoaded', function () {
       if (prefer) pickedStillId = prefer;
     }
 
-    // 只增不整表重绘：已有卡片保留，避免闪烁
-    var existing = {};
-    stillsList.querySelectorAll('.trailer-cand[data-still-id]').forEach(function (el) {
-      existing[el.getAttribute('data-still-id')] = el;
+    stillGallery = items.map(function (it) {
+      return {
+        id: it.id || it.path,
+        kind: it.kind || it.id,
+        url: it.url,
+        thumb_url: it.thumb_url || it.url,
+        prompt: it.prompt || '',
+        elapsed_sec: it.elapsed_sec
+      };
     });
-    items.forEach(function (it) {
+
+    stillsList.innerHTML = '';
+    items.forEach(function (it, idx) {
       var id = it.id || it.path;
-      if (existing[id]) {
-        var img0 = existing[id].querySelector('img');
-        if (img0 && it.url && img0.getAttribute('data-url') !== it.url) {
-          img0.src = resolveUrl(it.url);
-          img0.setAttribute('data-url', it.url);
-        }
-        delete existing[id];
-        return;
-      }
       var label = document.createElement('label');
       label.className = 'trailer-cand' + (pickedStillId === id ? ' is-selected' : '');
       label.setAttribute('data-still-id', id);
@@ -568,10 +580,17 @@ document.addEventListener('DOMContentLoaded', function () {
         label.classList.add('is-selected');
       });
       var img = document.createElement('img');
-      var fullSrc = resolveUrl(it.url);
-      img.src = fullSrc;
+      img.src = resolveUrl(it.thumb_url || it.url);
       img.setAttribute('data-url', it.url || '');
+      img.setAttribute('data-thumb-url', it.thumb_url || '');
       img.alt = stillKindLabel(it.kind || id);
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openLightboxAt(idx);
+      });
       var zoomBtn = document.createElement('button');
       zoomBtn.type = 'button';
       zoomBtn.className = 'trailer-cand-zoom';
@@ -581,15 +600,50 @@ document.addEventListener('DOMContentLoaded', function () {
       zoomBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        openLightbox(fullSrc);
+        openLightboxAt(idx);
       });
-      var cap = document.createElement('span');
+      var cap = document.createElement('div');
       cap.className = 'trailer-cand-cap';
       cap.textContent = stillKindLabel(it.kind || id);
       label.appendChild(input);
       label.appendChild(img);
       label.appendChild(zoomBtn);
       label.appendChild(cap);
+      if (window.HomePcMediaUi) {
+        window.HomePcMediaUi.appendCardActions(label, {
+          onDownload: function () {
+            window.HomePcMediaUi.triggerDownload(
+              resolveUrl(it.url),
+              (it.kind || it.id || 'still') + '.png'
+            ).catch(function () {});
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(
+                tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+              )
+            ) {
+              return;
+            }
+            if (!currentTaskId) {
+              label.remove();
+              return;
+            }
+            var fd = new FormData();
+            fd.append('task_id', currentTaskId);
+            fd.append('still_id', id);
+            fetch(API_BASE + '/game-sprite/delete-still', { method: 'POST', body: fd })
+              .then(function (r) {
+                return r.json();
+              })
+              .then(function (body) {
+                if (body && body.stills_ui) renderStills(body.stills_ui);
+                else label.remove();
+              })
+              .catch(function () {});
+          }
+        });
+      }
       stillsList.appendChild(label);
     });
   }
@@ -915,21 +969,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  if (copyLogBtn) {
-    copyLogBtn.addEventListener('click', function () {
-      var text = (logOutput && logOutput.textContent) || '';
-      if (!text) {
-        if (typeof window.tbNotify === 'function') {
-          window.tbNotify(tr('privateHub.homePc.logEmpty', 'Nothing to copy'));
-        }
-        return;
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (document.getElementById('log-output') || {}).textContent || '';
+      },
+      onOpenDir: function () {
+        if (!currentTaskId) {
           if (typeof window.tbNotify === 'function') {
-            window.tbNotify(tr('privateHub.homePc.logCopied', 'Copied'));
+            window.tbNotify(
+              tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录')
+            );
+          } else {
+            alert(tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录'));
           }
-        });
+          return;
+        }
+        if (openOutputBtn) openOutputBtn.click();
       }
     });
   }

@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /** 最近一次成功的「仅配图」任务，可供「生成视频」复用 */
   let reusableImagesTaskId = '';
   let reusableImagesText = '';
+  let galleryLightbox = null;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -214,11 +215,48 @@ document.addEventListener('DOMContentLoaded', function () {
     if (logContainer) logContainer.scrollTop = logContainer.scrollHeight;
   }
 
+  function ensureGalleryLightbox() {
+    if (!window.HomePcMediaUi) return null;
+    if (galleryLightbox) return galleryLightbox;
+    window.HomePcMediaUi.ensureLightboxDom();
+    galleryLightbox = window.HomePcMediaUi.createLightbox({
+      getItems: function () {
+        return lastImages.map(function (item) {
+          return {
+            url: resolveUrl(item.url),
+            name: item.caption || item.filename || ''
+          };
+        });
+      },
+      getHdUrl: function (it) {
+        return it && it.url;
+      },
+      getCaption: function (it, i, n) {
+        return ((it && it.name) || `第 ${i + 1} 张`).slice(0, 120) + ' · #' + (i + 1) + ' / ' + n;
+      },
+      onBoundary: function (edge) {
+        alert(
+          edge === 'first'
+            ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+            : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张')
+        );
+      }
+    });
+    return galleryLightbox;
+  }
+
   function renderGallery(images) {
     if (!imageGallery || !resultBox) return;
     imageGallery.innerHTML = '';
-    lastImages = images || [];
-    if (!lastImages.length) return;
+    lastImages = Array.isArray(images) ? images.slice() : [];
+    if (!lastImages.length) {
+      if (resultCount) resultCount.textContent = '';
+      resultBox.style.display = 'none';
+      if (btnDownloadAll) btnDownloadAll.style.display = 'none';
+      return;
+    }
+
+    const MediaUi = window.HomePcMediaUi;
 
     lastImages.forEach(function (item, i) {
       const card = document.createElement('div');
@@ -229,24 +267,69 @@ document.addEventListener('DOMContentLoaded', function () {
       cap.textContent = (item.caption || `第 ${i + 1} 张`).slice(0, 120);
 
       const img = document.createElement('img');
-      img.src = resolveUrl(item.url);
       img.alt = item.caption || `配图 ${i + 1}`;
       img.loading = 'lazy';
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', function () {
+        const lb = ensureGalleryLightbox();
+        if (lb) lb.openAt(i);
+      });
 
-      const actions = document.createElement('div');
-      actions.className = 'tti-card-actions';
+      const hdUrl = resolveUrl(item.url);
+      const apiThumb = item.thumb_url ? resolveUrl(item.thumb_url) : '';
+      if (apiThumb) {
+        img.src = apiThumb;
+      } else if (MediaUi && typeof MediaUi.makeThumbDataUrl === 'function' && hdUrl) {
+        MediaUi.makeThumbDataUrl(hdUrl)
+          .then(function (thumb) {
+            item._clientThumb = thumb;
+            img.src = thumb;
+          })
+          .catch(function () {
+            img.src = hdUrl;
+          });
+      } else {
+        img.src = hdUrl;
+      }
 
-      const dl = document.createElement('a');
-      dl.className = 'tb-btn tb-btn-sm';
-      dl.href = resolveUrl(item.url);
-      dl.download = item.filename || `image-${i + 1}.png`;
-      dl.textContent = tr('privateHub.homePc.download', '下载');
-      dl.target = '_blank';
-
-      actions.appendChild(dl);
       card.appendChild(cap);
       card.appendChild(img);
-      card.appendChild(actions);
+
+      if (MediaUi) {
+        MediaUi.appendCardActions(card, {
+          onDownload: function () {
+            MediaUi.triggerDownload(hdUrl, item.filename || `image-${i + 1}.png`).catch(function () {
+              /* ignore */
+            });
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(
+                tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+              )
+            ) {
+              return;
+            }
+            lastImages.splice(i, 1);
+            if (!lastImages.length) {
+              clearReusableImages();
+            }
+            renderGallery(lastImages);
+          }
+        });
+      } else {
+        const actions = document.createElement('div');
+        actions.className = 'tti-card-actions action-row';
+        const dl = document.createElement('a');
+        dl.className = 'tb-btn';
+        dl.href = hdUrl;
+        dl.download = item.filename || `image-${i + 1}.png`;
+        dl.textContent = tr('privateHub.homePc.download', '下载');
+        dl.target = '_blank';
+        actions.appendChild(dl);
+        card.appendChild(actions);
+      }
+
       imageGallery.appendChild(card);
     });
 
@@ -560,9 +643,15 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!lastImages.length) return;
       lastImages.forEach(function (item, i) {
         setTimeout(function () {
+          const url = resolveUrl(item.url);
+          const name = item.filename || `image-${i + 1}.png`;
+          if (window.HomePcMediaUi && HomePcMediaUi.triggerDownload) {
+            HomePcMediaUi.triggerDownload(url, name).catch(function () { /* ignore */ });
+            return;
+          }
           const a = document.createElement('a');
-          a.href = resolveUrl(item.url);
-          a.download = item.filename || `image-${i + 1}.png`;
+          a.href = url;
+          a.download = name;
           a.target = '_blank';
           document.body.appendChild(a);
           a.click();
@@ -611,4 +700,19 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('tb:locale', syncReuseHint);
   syncReuseHint();
   setProgress(false);
+
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (document.getElementById('log-output') || {}).textContent || '';
+      },
+      onOpenDir: function () {
+        if (btnOpenOutput && lastDoneTaskId) {
+          btnOpenOutput.click();
+          return;
+        }
+        alert(tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录'));
+      }
+    });
+  }
 });

@@ -357,6 +357,52 @@
       card.appendChild(check);
       card.appendChild(img);
       card.appendChild(meta);
+      if (window.HomePcMediaUi) {
+        window.HomePcMediaUi.appendCardActions(card, {
+          onDownload: function () {
+            window.HomePcMediaUi.triggerDownload(
+              resolveUrl(it.url),
+              'pipe-' + (it.index || idx + 1) + '.png'
+            ).catch(function (err) {
+              flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+            });
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(
+                tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+              )
+            ) {
+              return;
+            }
+            var fd = new FormData();
+            if (currentTaskId) fd.append('task_id', currentTaskId);
+            if (currentFolder) fd.append('folder', currentFolder);
+            fd.append('index', String(it.index || ''));
+            setBusy(true);
+            fetch(API_BASE + '/image-pipeline/delete-image', { method: 'POST', body: fd })
+              .then(function (res) {
+                return res.json().then(function (body) {
+                  return { res: res, body: body };
+                });
+              })
+              .then(function (pack) {
+                setBusy(false);
+                if (!pack.res.ok || !pack.body.success) {
+                  throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+                }
+                flashMsg(tr('privateHub.homePc.imageDeleted', '已删除'));
+                applyLogs(pack.body);
+                renderResults(pack.body);
+                loadHistory();
+              })
+              .catch(function (err) {
+                setBusy(false);
+                flashMsg(window.HomePcApi.friendlyFetchError(err), true);
+              });
+          }
+        });
+      }
       resultGrid.appendChild(card);
     });
     if (lightbox && !lightbox.hasAttribute('hidden') && lightboxIndex >= 0) {
@@ -763,5 +809,24 @@
   });
 
   syncModeUi();
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (logOutput && logOutput.textContent) || '';
+      },
+      onOpenDir: function () {
+        var fd = new FormData();
+        if (currentTaskId) fd.append('task_id', currentTaskId);
+        if (currentFolder) fd.append('folder', currentFolder);
+        if (!currentTaskId && !currentFolder) {
+          flashMsg(tr('privateHub.homePc.imagePipeNeedTheme', '请先打开或生成一个批次'), true);
+          return;
+        }
+        fetch(API_BASE + '/image-pipeline/reveal-output', { method: 'POST', body: fd }).catch(
+          function () {}
+        );
+      }
+    });
+  }
   loadDefaults().then(loadHistory);
 })();

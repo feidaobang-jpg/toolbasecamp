@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var scCount = document.getElementById('sc-count');
   var shCount = document.getElementById('sh-count');
   var shotDur = document.getElementById('shot-dur');
+  var voiceSelect = document.getElementById('voice-select');
+  var speedInput = document.getElementById('speed-input');
   var createPlanBtn = document.getElementById('create-plan-btn');
   var confirmGlobalBtn = document.getElementById('confirm-global-btn');
   var skipGlobalBtn = document.getElementById('skip-global-btn');
@@ -44,8 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var sceneBoard = document.getElementById('scene-board');
   var progressLine = document.getElementById('series-progress-line');
   var logOutput = document.getElementById('log-output');
-  var copyLogBtn = document.getElementById('copy-log-btn');
-  var openSeriesFolderBtn = document.getElementById('open-series-folder-btn');
   var shotPreviewBox = document.getElementById('shot-preview-box');
   var shotPreviewVideo = document.getElementById('shot-preview-video');
   var shotPreviewMeta = document.getElementById('shot-preview-meta');
@@ -55,10 +55,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var trimShotBtn = document.getElementById('trim-shot-btn');
   var seedanceCapHint = document.getElementById('seedance-cap-hint');
   var lightbox = document.getElementById('lightbox');
-  var lightboxImg = document.getElementById('lightbox-img');
   var playlistQueue = [];
   var playlistIndex = 0;
   var seedanceReady = false;
+  /** Lightbox gallery contexts (characters / global refs / shot stills). */
+  var lbItems = [];
+  var charGallery = [];
+  var globalRefGallery = [];
+  var shotGallery = [];
+  var mediaLb = null;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -143,16 +148,79 @@ document.addEventListener('DOMContentLoaded', function () {
     return !el || el.value !== '0';
   }
 
-  function openLightbox(src) {
-    if (!lightbox || !lightboxImg || !src) return;
-    lightboxImg.src = src;
-    lightbox.style.display = 'flex';
+  function selectStyleChip(style) {
+    selectedStyle = style || 'realistic';
+    if (!styleRow) return;
+    Array.prototype.forEach.call(styleRow.querySelectorAll('[data-style]'), function (el) {
+      el.classList.toggle('is-active', el.getAttribute('data-style') === selectedStyle);
+    });
   }
 
-  if (lightbox) {
-    lightbox.addEventListener('click', function () {
-      lightbox.style.display = 'none';
-      if (lightboxImg) lightboxImg.src = '';
+  function selectRadioValue(name, value) {
+    if (!value) return;
+    var el = document.querySelector('input[name="' + name + '"][value="' + String(value) + '"]');
+    if (el) el.checked = true;
+  }
+
+  function fillFormFromSeries(s) {
+    if (!s) return;
+    if (titleInput) titleInput.value = s.title || '';
+    if (synopsisInput) synopsisInput.value = s.synopsis || '';
+    if (s.visual_style) selectStyleChip(s.visual_style);
+    if (s.aspect) selectRadioValue('aspect', s.aspect);
+    if (s.video_mode) selectRadioValue('video-mode', s.video_mode);
+    if (shotDur && s.shot_duration_sec != null) {
+      var d = String(Math.round(Number(s.shot_duration_sec)));
+      if (shotDur.querySelector('option[value="' + d + '"]')) shotDur.value = d;
+      else shotDur.value = d;
+    }
+    if (voiceSelect && s.voice) {
+      var v = String(s.voice);
+      if (!voiceSelect.querySelector('option[value="' + v + '"]')) {
+        var opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        voiceSelect.appendChild(opt);
+      }
+      voiceSelect.value = v;
+    }
+    if (speedInput && s.speed != null) speedInput.value = String(s.speed);
+  }
+
+  if (window.HomePcMediaUi && lightbox) {
+    mediaLb = window.HomePcMediaUi.createLightbox({
+      root: lightbox,
+      getItems: function () {
+        return lbItems;
+      },
+      getHdUrl: function (it) {
+        return (it && (it.url || it.src || it.full_url)) || '';
+      },
+      getCaption: function (it, i, n) {
+        var label = (it && (it.label || it.caption || it.name)) || '';
+        return '#' + (i + 1) + ' / ' + n + (label ? ' · ' + label : '');
+      },
+      onBoundary: function (which) {
+        flashMsg(
+          which === 'first'
+            ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+            : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张'),
+          true
+        );
+      }
+    });
+  }
+
+  function openGallery(items, index) {
+    lbItems = Array.isArray(items) ? items : [];
+    if (!mediaLb || !lbItems.length) return;
+    mediaLb.openAt(index >= 0 ? index : 0);
+  }
+
+  function downloadHd(url, filename) {
+    if (!url || !window.HomePcMediaUi) return;
+    window.HomePcMediaUi.triggerDownload(resolveUrl(url), filename || 'image.png').catch(function (err) {
+      flashMsg(window.HomePcApi.friendlyFetchError(err), true);
     });
   }
 
@@ -319,6 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!chars.length && !charRefs.length) {
       charactersBox.style.display = 'none';
       charactersList.innerHTML = '';
+      charGallery = [];
       return;
     }
     charactersBox.style.display = 'block';
@@ -333,20 +402,33 @@ document.addEventListener('DOMContentLoaded', function () {
             voice: ''
           };
         });
+    var gallery = [];
+    charGallery = gallery;
     displayChars.forEach(function (c) {
       var ref = findCharRef(refs, c);
       var card = document.createElement('div');
       card.className = 'series-char-card';
       var media = document.createElement('div');
       media.className = 'series-char-media';
+      var galleryIdx = -1;
       if (ref && (ref.thumb_url || ref.url)) {
+        var gItem = {
+          url: ref.url || ref.thumb_url,
+          thumb_url: ref.thumb_url || ref.url,
+          label: c.name || ref.label || ''
+        };
+        galleryIdx = gallery.length;
+        gallery.push(gItem);
         var img = document.createElement('img');
         img.src = resolveUrl(ref.thumb_url || ref.url);
         img.alt = c.name || '';
         img.loading = 'lazy';
         img.decoding = 'async';
-        img.addEventListener('click', function () {
-          openLightbox(resolveUrl(ref.url || ref.thumb_url));
+        img.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var idx = charGallery.indexOf(gItem);
+          openGallery(charGallery, idx >= 0 ? idx : 0);
         });
         media.appendChild(img);
       } else {
@@ -393,8 +475,27 @@ document.addEventListener('DOMContentLoaded', function () {
       card.appendChild(media);
       card.appendChild(meta);
       card.appendChild(actions);
+      if (galleryIdx >= 0 && window.HomePcMediaUi) {
+        // No series delete-ref API yet — UI-only remove until confirm/regen.
+        window.HomePcMediaUi.appendCardActions(card, {
+          onDownload: function () {
+            downloadHd(gItem.url, (c.name || c.id || 'char') + '.png');
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？'))
+            ) {
+              return;
+            }
+            card.remove();
+            var i = charGallery.indexOf(gItem);
+            if (i >= 0) charGallery.splice(i, 1);
+          }
+        });
+      }
       charactersList.appendChild(card);
     });
+    charGallery = gallery;
   }
 
   function renderGlobalRefs(items, showActions) {
@@ -402,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
     items = items || [];
     if (!items.length && !showActions) {
       globalRefsBox.style.display = 'none';
+      globalRefGallery = [];
       return;
     }
     globalRefsBox.style.display = 'block';
@@ -409,6 +511,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (skipGlobalBtn) skipGlobalBtn.style.display = showActions ? '' : 'none';
     globalRefsList.innerHTML = '';
     if (showActions) globalRefPicks = {};
+    var gallery = [];
+    globalRefGallery = gallery;
     items.forEach(function (it, i) {
       var fn = it.filename || ('ref_' + i);
       var selected = showActions ? it.selected !== false : !!it.selected;
@@ -426,10 +530,18 @@ document.addEventListener('DOMContentLoaded', function () {
         label.classList.toggle('is-selected', input.checked);
         card.classList.toggle('is-selected', input.checked);
       });
+      var gItem = {
+        url: it.url || it.thumb_url,
+        thumb_url: it.thumb_url || it.url,
+        label: it.label || fn
+      };
+      var galleryIdx = -1;
+      if (gItem.url) {
+        galleryIdx = gallery.length;
+        gallery.push(gItem);
+      }
       var img = document.createElement('img');
-      var fullSrc = resolveUrl(it.url);
-      var thumbSrc = resolveUrl(it.thumb_url || it.url);
-      img.src = thumbSrc;
+      img.src = resolveUrl(it.thumb_url || it.url);
       img.alt = it.label || fn;
       img.loading = 'lazy';
       img.decoding = 'async';
@@ -437,10 +549,19 @@ document.addEventListener('DOMContentLoaded', function () {
       zoomBtn.type = 'button';
       zoomBtn.className = 'trailer-cand-zoom';
       zoomBtn.innerHTML = '<i class="fas fa-search-plus" aria-hidden="true"></i>';
+      function openThis() {
+        var idx = globalRefGallery.indexOf(gItem);
+        openGallery(globalRefGallery, idx >= 0 ? idx : 0);
+      }
       zoomBtn.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        openLightbox(fullSrc);
+        openThis();
+      });
+      img.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openThis();
       });
       var cap = document.createElement('span');
       cap.className = 'trailer-cand-cap';
@@ -479,6 +600,26 @@ document.addEventListener('DOMContentLoaded', function () {
         fb.appendChild(regenBtn);
         fb.appendChild(statusEl);
         card.appendChild(fb);
+      }
+      if (galleryIdx >= 0 && window.HomePcMediaUi) {
+        // No /series/delete-ref API — uncheck + remove from UI; confirmGlobal won't include it.
+        window.HomePcMediaUi.appendCardActions(card, {
+          onDownload: function () {
+            downloadHd(gItem.url, fn);
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？'))
+            ) {
+              return;
+            }
+            globalRefPicks[fn] = false;
+            input.checked = false;
+            card.remove();
+            var gi = globalRefGallery.indexOf(gItem);
+            if (gi >= 0) globalRefGallery.splice(gi, 1);
+          }
+        });
       }
       globalRefsList.appendChild(card);
     });
@@ -605,7 +746,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (freeVramBtn) freeVramBtn.style.display = currentSeriesId ? '' : 'none';
     if (playlistBtn) playlistBtn.style.display = hasShots && !awaiting ? '' : 'none';
     if (deleteSeriesBtn) deleteSeriesBtn.style.display = currentSeriesId ? '' : 'none';
-    if (openSeriesFolderBtn) openSeriesFolderBtn.style.display = currentSeriesId ? '' : 'none';
     if (cancelBtn) cancelBtn.style.display = running ? '' : 'none';
     setBusy(running);
   }
@@ -754,6 +894,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var ep = eps.filter(function (e) { return e.id === selectedEpId; })[0] || eps[0];
     sceneBoard.innerHTML = '';
+    var gallery = [];
+    shotGallery = gallery;
     (ep.scenes || []).forEach(function (sc) {
       var block = document.createElement('div');
       block.className = 'series-scene-block';
@@ -793,14 +935,35 @@ document.addEventListener('DOMContentLoaded', function () {
           (sh.id === selectedShotId ? ' is-selected' : '');
         card.setAttribute('data-shot-id', sh.id);
         var listImg = sh.image_thumb_url || sh.image_url;
-        var thumb = listImg
-          ? '<img src="' +
-            escapeHtml(resolveUrl(listImg)) +
-            '" alt="" loading="lazy" decoding="async" />'
-          : '<div class="series-shot-placeholder">' + escapeHtml(statusLabel(sh.status)) + '</div>';
-        card.innerHTML =
-          thumb +
-          '<div class="series-shot-meta">' +
+        var gItem = null;
+        if (sh.image_url || sh.image_thumb_url) {
+          gItem = {
+            url: sh.image_url || sh.image_thumb_url,
+            thumb_url: sh.image_thumb_url || sh.image_url,
+            label: sh.label || ('镜 ' + sh.shot_no)
+          };
+          gallery.push(gItem);
+          var img = document.createElement('img');
+          img.src = resolveUrl(listImg);
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var idx = shotGallery.indexOf(gItem);
+            openGallery(shotGallery, idx >= 0 ? idx : 0);
+          });
+          card.appendChild(img);
+        } else {
+          var ph = document.createElement('div');
+          ph.className = 'series-shot-placeholder';
+          ph.textContent = statusLabel(sh.status);
+          card.appendChild(ph);
+        }
+        var meta = document.createElement('div');
+        meta.className = 'series-shot-meta';
+        meta.innerHTML =
           '<strong>镜 ' +
           sh.shot_no +
           '</strong> · ' +
@@ -823,10 +986,10 @@ document.addEventListener('DOMContentLoaded', function () {
               '</div>'
             : sh.visual_prompt
             ? '<div class="series-shot-vp">' + escapeHtml(String(sh.visual_prompt).slice(0, 72)) + '</div>'
-            : '') +
-          '</div>';
+            : '');
+        card.appendChild(meta);
         var actions = document.createElement('div');
-        actions.className = 'series-shot-actions';
+        actions.className = 'action-row series-shot-actions';
         var previewBtn = document.createElement('button');
         previewBtn.type = 'button';
         previewBtn.className = 'tb-btn';
@@ -882,15 +1045,28 @@ document.addEventListener('DOMContentLoaded', function () {
         actions.appendChild(folderBtn);
         actions.appendChild(runOrRegen);
         card.appendChild(actions);
+        if (gItem && window.HomePcMediaUi) {
+          // No per-shot still delete API — UI-only hide of still preview.
+          window.HomePcMediaUi.appendCardActions(card, {
+            onDownload: function () {
+              downloadHd(gItem.url, 'shot-' + (sh.shot_no || sh.id) + '.png');
+            },
+            onDelete: function () {
+              if (
+                !window.confirm(tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？'))
+              ) {
+                return;
+              }
+              var imgEl = card.querySelector('img');
+              if (imgEl) imgEl.remove();
+              var gi = shotGallery.indexOf(gItem);
+              if (gi >= 0) shotGallery.splice(gi, 1);
+            }
+          });
+        }
         card.addEventListener('click', function () {
           selectShot(sh, !!sh.clip_url);
         });
-        if (sh.image_url) {
-          card.addEventListener('dblclick', function (e) {
-            e.preventDefault();
-            openLightbox(resolveUrl(sh.image_url));
-          });
-        }
         grid.appendChild(card);
       });
       block.appendChild(grid);
@@ -1015,8 +1191,7 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
         }
         var s = pack.body.series;
-        titleInput.value = s.title || '';
-        synopsisInput.value = s.synopsis || '';
+        fillFormFromSeries(s);
         applySeries(s);
       })
       .catch(function (err) {
@@ -1030,10 +1205,7 @@ document.addEventListener('DOMContentLoaded', function () {
   styleRow.addEventListener('click', function (e) {
     var btn = e.target.closest('[data-style]');
     if (!btn) return;
-    Array.prototype.forEach.call(styleRow.querySelectorAll('[data-style]'), function (el) {
-      el.classList.toggle('is-active', el === btn);
-    });
-    selectedStyle = btn.getAttribute('data-style') || 'realistic';
+    selectStyleChip(btn.getAttribute('data-style') || 'realistic');
   });
 
   function resetNewForm() {
@@ -1109,8 +1281,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('episode_count', epCount.value || '1');
     fd.append('scenes_per_ep', scCount.value || '1');
     fd.append('shots_per_scene', shCount.value || '1');
-    fd.append('voice', 'zh-CN-YunxiNeural');
-    fd.append('speed', '1.0');
+    fd.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-YunxiNeural');
+    fd.append('speed', (speedInput && speedInput.value) || '1.0');
 
     fetch(API_BASE + '/series/create', { method: 'POST', body: fd })
       .then(function (res) {
@@ -1501,29 +1673,18 @@ document.addEventListener('DOMContentLoaded', function () {
       regenCharacterRefs({});
     });
   }
-  if (openSeriesFolderBtn) {
-    openSeriesFolderBtn.addEventListener('click', function () {
-      revealSeriesFolder();
-    });
-  }
-  if (copyLogBtn) {
-    copyLogBtn.addEventListener('click', function () {
-      var text = (logOutput && logOutput.textContent) || '';
-      if (!String(text).trim()) {
-        flashMsg(tr('privateHub.homePc.logEmpty', '暂无日志可复制'), true);
-        return;
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (document.getElementById('log-output') || {}).textContent || '';
+      },
+      onOpenDir: function () {
+        if (!currentSeriesId) {
+          flashMsg(tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录'), true);
+          return;
+        }
+        revealSeriesFolder();
       }
-      var label = copyLogBtn.textContent;
-      window.HomePcApi.copyText(text)
-        .then(function () {
-          copyLogBtn.textContent = tr('privateHub.homePc.logCopied', '已复制');
-          setTimeout(function () {
-            copyLogBtn.textContent = label;
-          }, 1500);
-        })
-        .catch(function () {
-          flashMsg(tr('privateHub.homePc.logCopyFail', '复制失败，请手动选择复制'), true);
-        });
     });
   }
   if (deleteSeriesBtn) {
