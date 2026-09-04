@@ -789,7 +789,11 @@
             (it.image_count || it.count || 0) +
             ' · ' +
             (it.status || '') +
-            (it.lock_subject ? ' · ' + tr('privateHub.homePc.imagePipeLockedTag', '已锁主体') : '') +
+            (it.lock_subject
+              ? ' · ' +
+                tr('privateHub.homePc.imagePipeLockedTag', '已锁主体') +
+                (it.lock_engine === 'z_image' ? '/Z' : it.lock_engine === 'qwen' ? '/Qwen' : '')
+              : '') +
             '</div>';
           var actions = document.createElement('div');
           actions.className = 'action-row image-pipe-history-actions';
@@ -918,11 +922,16 @@
     } else if (denoiseInput) {
       denoiseInput.value = '0.55';
     }
+    if (lockEngineSelect) {
+      setSelectValue(lockEngineSelect, task.lock_engine || 'qwen');
+      if (!lockEngineSelect.value) lockEngineSelect.value = 'qwen';
+    }
     if (task.lock_subject && task.ref_url) {
       setRefFromUrl(task.ref_url);
     } else {
       clearRef();
     }
+    syncLockUi();
   }
 
   function openHistory(it) {
@@ -962,6 +971,9 @@
   if (modeSelect) modeSelect.addEventListener('change', syncModeUi);
   if (startBtn) startBtn.addEventListener('click', startJob);
   if (refClearBtn) refClearBtn.addEventListener('click', clearRef);
+  if (lockEngineSelect) {
+    lockEngineSelect.addEventListener('change', syncLockUi);
+  }
   if (refFileInput) {
     refFileInput.addEventListener('change', function () {
       pickRefFiles(refFileInput.files);
