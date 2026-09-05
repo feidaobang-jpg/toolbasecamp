@@ -75,23 +75,33 @@
 .ms-table-foot {
   flex-shrink: 0; border-top: 1px solid #eee; background: #fff;
   min-height: 52px; padding-top: 8px; padding-bottom: 8px;
-  grid-template-columns: auto 1fr auto auto;
-  gap: 8px;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 8px 10px;
+  align-items: center;
 }
 .ms-foot-label { font-weight: 700; color: #333; }
 .ms-foot-total { font-weight: 700; font-size: 18px; color: #07c160; }
+/* 网络状态：纯信息，不要做成按钮 */
 .ms-net {
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 6px 10px; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600;
-  background: #07c160; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 0; border: 0; border-radius: 0; background: transparent;
+  color: #07c160; font-size: 12px; font-weight: 500; white-space: nowrap;
+  pointer-events: none; user-select: none; cursor: default;
 }
-.ms-net[data-quality="良"] { background: #1890ff; }
-.ms-net[data-quality="差"] { background: #ff9800; }
-.ms-net[data-quality="断"] { background: #ff4d4f; }
-.ms-foot-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.ms-net::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0;
+}
+.ms-net[data-quality="良"] { color: #1890ff; }
+.ms-net[data-quality="差"] { color: #ff9800; }
+.ms-net[data-quality="断"] { color: #ff4d4f; }
+.ms-foot-actions {
+  display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-end;
+}
 .ms-foot-btn {
-  border: 0; border-radius: 6px; padding: 8px 12px; background: #1890ff; color: #fff;
+  border: 0; border-radius: 6px; padding: 8px 0; background: #1890ff; color: #fff;
   font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  min-width: 72px; width: 72px; text-align: center;
 }
 .ms-foot-btn:active { opacity: 0.9; }
 
@@ -101,16 +111,14 @@
   }
   .ms-add-btn, .ms-sub-btn { width: 36px; height: 36px; font-size: 14px; }
   .ms-table-foot {
-    grid-template-columns: auto auto 1fr;
-    grid-template-areas:
-      "label total net"
-      "actions actions actions";
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas: "label total net actions";
   }
   .ms-foot-label { grid-area: label; }
   .ms-foot-total { grid-area: total; }
-  .ms-net { grid-area: net; justify-self: end; }
-  .ms-foot-actions { grid-area: actions; justify-content: stretch; }
-  .ms-foot-btn { flex: 1; }
+  .ms-net { grid-area: net; justify-self: start; }
+  .ms-foot-actions { grid-area: actions; }
+  .ms-foot-btn { min-width: 64px; width: 64px; padding: 8px 0; }
 }
 
 /* —— 弹窗 —— */
