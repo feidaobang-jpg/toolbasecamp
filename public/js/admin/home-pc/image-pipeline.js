@@ -206,7 +206,7 @@
             sm: tr('privateHub.homePc.imagePipeSizeSm', '更低（512）'),
             sd: tr('privateHub.homePc.imagePipeSizeSd', '标清（768）'),
             hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024）'),
-            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大（1280）'),
+            xl: tr('privateHub.homePc.imagePipeSizeXl', '超高清（1280）'),
             custom: tr('privateHub.homePc.imagePipeSizeCustom', '自定义长边')
           },
           pack.body.size_tier_default || 'sm'
@@ -269,7 +269,7 @@
             sm: tr('privateHub.homePc.imagePipeSizeSm', '更低（512）'),
             sd: tr('privateHub.homePc.imagePipeSizeSd', '标清（768）'),
             hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024）'),
-            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大（1280）'),
+            xl: tr('privateHub.homePc.imagePipeSizeXl', '超高清（1280）'),
             custom: tr('privateHub.homePc.imagePipeSizeCustom', '自定义长边')
           },
           'sm'
@@ -686,7 +686,7 @@
         fd.append('theme', theme.trim());
         fd.append('style', styleSelect ? styleSelect.value : 'realistic');
         fd.append('category', categorySelect ? categorySelect.value : 'other');
-        fd.append('count', countInput ? String(countInput.value || '4') : '4');
+        fd.append('count', countInput ? String(countInput.value || '1') : '1');
         fd.append('aspect', aspectSelect ? aspectSelect.value : '1_1');
         fd.append('size_tier', sizeTierSelect ? sizeTierSelect.value : 'sm');
         if (sizeTierSelect && sizeTierSelect.value === 'custom') {
@@ -989,8 +989,8 @@
     if (titleInput) titleInput.value = task.title || '';
     if (themeInput) themeInput.value = task.theme || '';
     if (countInput) {
-      var n = Number(task.count || (task.images && task.images.length) || 4);
-      countInput.value = String(Math.max(1, Math.min(24, n || 4)));
+      var n = Number(task.count || (task.images && task.images.length) || 1);
+      countInput.value = String(Math.max(1, Math.min(24, n || 1)));
     }
     setSelectValue(styleSelect, task.style);
     setSelectValue(categorySelect, task.category);

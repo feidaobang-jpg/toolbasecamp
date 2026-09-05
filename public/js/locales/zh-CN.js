@@ -318,7 +318,7 @@ window.TB_LOCALES['zh-CN'] = {
             imagePipeSizeSm: '更低（512）',
             imagePipeSizeSd: '标清（768）',
             imagePipeSizeHd: '高清（1024）',
-            imagePipeSizeXl: '更大（1280）',
+            imagePipeSizeXl: '超高清（1280）',
             imagePipeSizeCustom: '自定义长边',
             imagePipeSizeLongEdgeLabel: '长边像素',
             imagePipeSizeLongEdgePh: '512–1280，对齐 8',

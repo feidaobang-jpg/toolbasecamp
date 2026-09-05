@@ -96,7 +96,7 @@ _SIZE_TIERS: Dict[str, Dict[str, Any]] = {
     "sm": {"label": "更低（512）", "long_edge": 512},
     "sd": {"label": "标清（768）", "long_edge": 768},
     "hd": {"label": "高清（1024）", "long_edge": 1024},
-    "xl": {"label": "更大（1280）", "long_edge": 1280},
+    "xl": {"label": "超高清（1280）", "long_edge": 1280},
     "custom": {"label": "自定义长边", "long_edge": 768},
 }
 
@@ -881,7 +881,7 @@ class ImagePipelineAPI:
             theme: str = Form(...),
             style: str = Form("realistic"),
             category: str = Form("other"),
-            count: str = Form("4"),
+            count: str = Form("1"),
             aspect: str = Form("1_1"),
             size_tier: str = Form("sm"),
             size_long_edge: str = Form(""),
@@ -921,9 +921,9 @@ class ImagePipelineAPI:
             if mode not in ("auto", "theme_vary", "manual"):
                 mode = "auto"
             try:
-                n = max(1, min(24, int(count or 4)))
+                n = max(1, min(24, int(count or 1)))
             except Exception:
-                n = 4
+                n = 1
             if mode == "manual":
                 lines = _parse_manual_prompts(manual_prompts)
                 if not lines:

@@ -319,7 +319,7 @@ window.TB_LOCALES.en = {
             imagePipeSizeSm: 'Lower (512)',
             imagePipeSizeSd: 'Standard (768)',
             imagePipeSizeHd: 'HD (1024)',
-            imagePipeSizeXl: 'Larger (1280)',
+            imagePipeSizeXl: 'Ultra HD (1280)',
             imagePipeSizeCustom: 'Custom long edge',
             imagePipeSizeLongEdgeLabel: 'Long-edge px',
             imagePipeSizeLongEdgePh: '512–1280, step 8',
