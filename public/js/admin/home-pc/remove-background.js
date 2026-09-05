@@ -40,7 +40,8 @@
   function setError(msg) {
     if (!errorBox) return;
     errorBox.textContent = msg || '';
-    errorBox.hidden = !msg;
+    if (msg) errorBox.classList.add('show');
+    else errorBox.classList.remove('show');
   }
 
   function setBusy(on) {
@@ -235,5 +236,4 @@
   if (downloadBtn) downloadBtn.addEventListener('click', downloadResult);
 
   setError('');
-  if (errorBox) errorBox.hidden = true;
 })();
