@@ -6,6 +6,7 @@
   'use strict';
 
   var LIGHT_BG = '#f3f4f6';
+  var GREEN_BG = '#00b140';
 
   var dropZone = document.getElementById('drop-zone');
   var fileInput = document.getElementById('file-input');
@@ -103,14 +104,14 @@
     });
   }
 
-  /** Composite transparent PNG onto a light solid fill → opaque PNG data URL. */
-  function compositeOnLight(dataUrl) {
+  /** Composite transparent PNG onto a solid fill → opaque PNG data URL. */
+  function compositeOnColor(dataUrl, fillCss) {
     return loadImage(dataUrl).then(function (img) {
       var c = document.createElement('canvas');
       c.width = img.naturalWidth || img.width;
       c.height = img.naturalHeight || img.height;
       var ctx = c.getContext('2d');
-      ctx.fillStyle = LIGHT_BG;
+      ctx.fillStyle = fillCss;
       ctx.fillRect(0, 0, c.width, c.height);
       ctx.drawImage(img, 0, 0);
       return c.toDataURL('image/png');
@@ -130,6 +131,9 @@
     if (resultMode === 'light') {
       previewWrap.classList.remove('cutout-preview');
       previewWrap.style.background = LIGHT_BG;
+    } else if (resultMode === 'green') {
+      previewWrap.classList.remove('cutout-preview');
+      previewWrap.style.background = GREEN_BG;
     } else {
       previewWrap.classList.add('cutout-preview');
       previewWrap.style.background = '';
@@ -213,7 +217,9 @@
       if (!ok) throw new Error(serviceErrorMsg());
       var dataUrl = await callRemoveBg(file);
       if (mode === 'light') {
-        dataUrl = await compositeOnLight(dataUrl);
+        dataUrl = await compositeOnColor(dataUrl, LIGHT_BG);
+      } else if (mode === 'green') {
+        dataUrl = await compositeOnColor(dataUrl, GREEN_BG);
       }
       showResult(dataUrl, mode);
       var sec = ((performance.now() - t0) / 1000).toFixed(1);
@@ -244,8 +250,10 @@
 
   function downloadResult() {
     if (!resultUrl) return;
-    var name =
-      (resultMode === 'light' ? 'cutout_light_' : 'cutout_') + Date.now() + '.png';
+    var prefix = 'cutout_';
+    if (resultMode === 'light') prefix = 'cutout_light_';
+    else if (resultMode === 'green') prefix = 'cutout_green_';
+    var name = prefix + Date.now() + '.png';
     var MediaUi = window.HomePcMediaUi;
     if (MediaUi && typeof MediaUi.triggerDownload === 'function') {
       MediaUi.triggerDownload(resultUrl, name).catch(function () {
