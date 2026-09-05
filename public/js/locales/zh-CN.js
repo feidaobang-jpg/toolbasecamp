@@ -286,7 +286,7 @@ window.TB_LOCALES['zh-CN'] = {
             logCopied: '已复制',
             logCopyFail: '复制失败，请手动选择复制',
             removeBgTitle: '去背景（抠图）',
-            removeBgDesc: '家里 ComfyUI rembg；可选透明或浅底',
+            removeBgDesc: '家里 ComfyUI rembg；可选透明、浅灰或绿幕',
             removeBgRun: '开始抠图',
             removeBgDownload: '下载',
             removeBgClear: '清除',

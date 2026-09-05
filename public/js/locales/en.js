@@ -287,7 +287,7 @@ window.TB_LOCALES.en = {
             logCopied: 'Copied',
             logCopyFail: 'Copy failed — select and copy manually',
             removeBgTitle: 'Remove background (cutout)',
-            removeBgDesc: 'Home ComfyUI rembg; transparent or light fill',
+            removeBgDesc: 'Home ComfyUI rembg; transparent, light gray, or green',
             removeBgRun: 'Cut out',
             removeBgDownload: 'Download',
             removeBgClear: 'Clear',
