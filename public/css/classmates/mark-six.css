@@ -33,6 +33,15 @@
   flex-shrink: 0; border: 0; background: #fff1f0; color: #cf1322;
   padding: 0 14px; font-size: 13px; cursor: pointer;
 }
+.ms-sheet-restore {
+  flex-shrink: 0; border: 0; background: #e6f4ff; color: #1677ff;
+  padding: 0 14px; font-size: 13px; cursor: pointer; font-weight: 600;
+}
+.ms-sheet-card--trash { opacity: 0.95; }
+.ms-sheet-main--static { cursor: default; }
+.ms-trash { margin-top: 28px; padding-top: 8px; border-top: 1px dashed #e5e7eb; }
+.ms-trash-title { margin: 0 0 6px; font-size: 15px; font-weight: 700; color: #333; }
+.ms-trash-tip { margin: 0 0 12px; font-size: 12px; color: #999; }
 .ms-empty { color: #999; padding: 28px 8px; text-align: center; font-size: 14px; }
 
 /* —— 详情表 —— */

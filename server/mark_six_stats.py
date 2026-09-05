@@ -192,11 +192,33 @@ def ensure_mark_six_tables(cur) -> None:
             updated_by BIGINT NULL,
             created_at DATETIME NOT NULL,
             updated_at DATETIME NOT NULL,
+            deleted_at DATETIME NULL,
+            deleted_by BIGINT NULL,
             INDEX idx_mark_six_sheets_updated (updated_at),
-            INDEX idx_mark_six_sheets_created_by (created_by)
+            INDEX idx_mark_six_sheets_created_by (created_by),
+            INDEX idx_mark_six_sheets_deleted (deleted_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
     )
+    # 存量库补软删除字段
+    for col_sql in (
+        "ALTER TABLE mark_six_sheets ADD COLUMN deleted_at DATETIME NULL",
+        "ALTER TABLE mark_six_sheets ADD COLUMN deleted_by BIGINT NULL",
+    ):
+        try:
+            cur.execute(col_sql)
+        except Exception:
+            pass
+    try:
+        cur.execute(
+            "CREATE INDEX idx_mark_six_sheets_deleted ON mark_six_sheets (deleted_at)"
+        )
+    except Exception:
+        pass
+
+
+# 软删除保留天数，过期硬删
+_SOFT_DELETE_DAYS = 7
 
 
 def _utc_now_str() -> str:
@@ -332,7 +354,7 @@ class SheetSaveIn(BaseModel):
     odds: Optional[float] = None
 
 
-def _serialize_sheet(row: dict, include_table: bool = True) -> dict:
+def _serialize_sheet(row: dict, include_table: bool = True, deleted_by_label: str = "") -> dict:
     odds = float(row.get("odds") or _DEFAULT_ODDS)
     item = {
         "id": int(row["id"]),
@@ -348,6 +370,9 @@ def _serialize_sheet(row: dict, include_table: bool = True) -> dict:
             if isinstance(row.get("updated_at"), datetime)
             else str(row.get("updated_at") or "")[:19]
         ),
+        "deleted_at": _to_cn(row.get("deleted_at")),
+        "deleted_by": row.get("deleted_by"),
+        "deleted_by_label": deleted_by_label or "",
     }
     if include_table:
         try:
@@ -358,6 +383,42 @@ def _serialize_sheet(row: dict, include_table: bool = True) -> dict:
             raw = []
         item["table_data"] = _enrich_rows(raw, odds)
     return item
+
+
+def _user_label(cur, user_id) -> str:
+    if not user_id:
+        return ""
+    try:
+        cur.execute(
+            "SELECT nickname, phone, email FROM users WHERE id=%s LIMIT 1",
+            (int(user_id),),
+        )
+        u = cur.fetchone() or {}
+    except Exception:
+        return str(user_id)
+    nick = str(u.get("nickname") or "").strip()
+    if nick:
+        return nick
+    ph = str(u.get("phone") or "").strip()
+    if ph:
+        return ph
+    em = str(u.get("email") or "").strip()
+    return em or str(user_id)
+
+
+def _purge_expired_soft_deletes(cur) -> None:
+    cur.execute(
+        """
+        DELETE FROM mark_six_sheets
+        WHERE deleted_at IS NOT NULL
+          AND deleted_at < (UTC_TIMESTAMP() - INTERVAL %s DAY)
+        """,
+        (_SOFT_DELETE_DAYS,),
+    )
+
+
+def _row_is_deleted(row: Optional[dict]) -> bool:
+    return bool(row and row.get("deleted_at"))
 
 
 @router.get("/me")
@@ -471,10 +532,13 @@ def list_sheets(user: dict = Depends(_mark_six_user)):
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
+            _purge_expired_soft_deletes(cur)
             cur.execute(
                 """
-                SELECT id, title, total, odds, created_by, updated_by, created_at, updated_at
+                SELECT id, title, total, odds, created_by, updated_by, created_at, updated_at,
+                       deleted_at, deleted_by
                 FROM mark_six_sheets
+                WHERE deleted_at IS NULL
                 ORDER BY updated_at DESC, id DESC
                 LIMIT 200
                 """
@@ -485,7 +549,34 @@ def list_sheets(user: dict = Depends(_mark_six_user)):
     return {
         "success": True,
         "sheets": [_serialize_sheet(r, include_table=False) for r in rows],
+        "trash_keep_days": _SOFT_DELETE_DAYS,
     }
+
+
+@router.get("/sheets/trash")
+def list_trash(user: dict = Depends(_mark_six_user)):
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            _purge_expired_soft_deletes(cur)
+            cur.execute(
+                """
+                SELECT id, title, total, odds, created_by, updated_by, created_at, updated_at,
+                       deleted_at, deleted_by
+                FROM mark_six_sheets
+                WHERE deleted_at IS NOT NULL
+                ORDER BY deleted_at DESC, id DESC
+                LIMIT 100
+                """
+            )
+            rows = cur.fetchall() or []
+            out = []
+            for r in rows:
+                label = _user_label(cur, r.get("deleted_by"))
+                out.append(_serialize_sheet(r, include_table=False, deleted_by_label=label))
+    finally:
+        conn.close()
+    return {"success": True, "sheets": out, "trash_keep_days": _SOFT_DELETE_DAYS}
 
 
 @router.post("/sheets")
@@ -500,8 +591,9 @@ def create_sheet(body: SheetCreateIn, user: dict = Depends(_mark_six_user)):
             cur.execute(
                 """
                 INSERT INTO mark_six_sheets
-                (title, table_data, total, odds, created_by, updated_by, created_at, updated_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                (title, table_data, total, odds, created_by, updated_by, created_at, updated_at,
+                 deleted_at, deleted_by)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NULL, NULL)
                 """,
                 (
                     title,
@@ -531,8 +623,8 @@ def get_sheet(sheet_id: int, since: str = "", user: dict = Depends(_mark_six_use
             row = cur.fetchone()
     finally:
         conn.close()
-    if not row:
-        raise HTTPException(status_code=404, detail="统计表不存在")
+    if not row or _row_is_deleted(row):
+        raise HTTPException(status_code=404, detail="该统计已被他人删除")
     utc = (
         row.get("updated_at").strftime("%Y-%m-%d %H:%M:%S")
         if isinstance(row.get("updated_at"), datetime)
@@ -559,16 +651,19 @@ def save_sheet(sheet_id: int, body: SheetSaveIn, user: dict = Depends(_mark_six_
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, title FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            cur.execute(
+                "SELECT id, title, deleted_at FROM mark_six_sheets WHERE id=%s",
+                (int(sheet_id),),
+            )
             old = cur.fetchone()
-            if not old:
-                raise HTTPException(status_code=404, detail="统计表不存在")
+            if not old or _row_is_deleted(old):
+                raise HTTPException(status_code=404, detail="该统计已被他人删除")
             new_title = title if title else (old.get("title") or "统计数据")
             cur.execute(
                 """
                 UPDATE mark_six_sheets
                 SET title=%s, table_data=%s, total=%s, odds=%s, updated_by=%s, updated_at=%s
-                WHERE id=%s
+                WHERE id=%s AND deleted_at IS NULL
                 """,
                 (
                     new_title,
@@ -589,14 +684,60 @@ def save_sheet(sheet_id: int, body: SheetSaveIn, user: dict = Depends(_mark_six_
 
 @router.delete("/sheets/{sheet_id}")
 def delete_sheet(sheet_id: int, user: dict = Depends(_mark_six_user)):
+    now = _utc_now_str()
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            cur.execute(
+                "SELECT id, deleted_at FROM mark_six_sheets WHERE id=%s",
+                (int(sheet_id),),
+            )
             row = cur.fetchone()
             if not row:
                 raise HTTPException(status_code=404, detail="统计表不存在")
-            cur.execute("DELETE FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            if _row_is_deleted(row):
+                return {"success": True, "alreadyDeleted": True}
+            cur.execute(
+                """
+                UPDATE mark_six_sheets
+                SET deleted_at=%s, deleted_by=%s, updated_at=%s, updated_by=%s
+                WHERE id=%s AND deleted_at IS NULL
+                """,
+                (now, user.get("id"), now, user.get("id"), int(sheet_id)),
+            )
     finally:
         conn.close()
-    return {"success": True}
+    return {"success": True, "trashed": True, "trash_keep_days": _SOFT_DELETE_DAYS}
+
+
+@router.post("/sheets/{sheet_id}/restore")
+def restore_sheet(sheet_id: int, user: dict = Depends(_mark_six_user)):
+    now = _utc_now_str()
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            _purge_expired_soft_deletes(cur)
+            cur.execute(
+                "SELECT id, deleted_at FROM mark_six_sheets WHERE id=%s",
+                (int(sheet_id),),
+            )
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="统计表不存在或已彻底清除")
+            if not _row_is_deleted(row):
+                cur.execute("SELECT * FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+                alive = cur.fetchone()
+                return {"success": True, "sheet": _serialize_sheet(alive, include_table=False)}
+            cur.execute(
+                """
+                UPDATE mark_six_sheets
+                SET deleted_at=NULL, deleted_by=NULL, updated_at=%s, updated_by=%s
+                WHERE id=%s
+                """,
+                (now, user.get("id"), int(sheet_id)),
+            )
+            cur.execute("SELECT * FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            restored = cur.fetchone()
+    finally:
+        conn.close()
+    return {"success": True, "sheet": _serialize_sheet(restored, include_table=False)}

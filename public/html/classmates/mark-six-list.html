@@ -6,16 +6,16 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>统计数据列表 - 同学专区</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link href="../../vendor/font-awesome/css/all.min.css?v=ms10" rel="stylesheet" />
-  <link rel="stylesheet" href="../../css/base.css?v=ms10" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=ms10" />
-  <link rel="stylesheet" href="../../css/admin-shell.css?v=ms10" />
-  <link rel="stylesheet" href="../../css/classmates/mark-six.css?v=ms10" />
-  <script src="../../js/locales/en.js?v=ms10"></script>
-  <script src="../../js/locales/zh-CN.js?v=ms10"></script>
-  <script src="../../js/i18n.js?v=ms10"></script>
-  <script src="../../js/config.js?v=ms10"></script>
-  <script src="../../js/common_ui.js?v=ms10"></script>
+  <link href="../../vendor/font-awesome/css/all.min.css?v=ms11" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/base.css?v=ms11" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=ms11" />
+  <link rel="stylesheet" href="../../css/admin-shell.css?v=ms11" />
+  <link rel="stylesheet" href="../../css/classmates/mark-six.css?v=ms11" />
+  <script src="../../js/locales/en.js?v=ms11"></script>
+  <script src="../../js/locales/zh-CN.js?v=ms11"></script>
+  <script src="../../js/i18n.js?v=ms11"></script>
+  <script src="../../js/config.js?v=ms11"></script>
+  <script src="../../js/common_ui.js?v=ms11"></script>
 </head>
 <body class="admin-page ms-page">
   <header class="admin-header">
@@ -39,9 +39,14 @@
         <span data-i18n="classmates.createNew">创建新统计</span>
       </button>
       <div id="sheet-list" class="ms-sheet-list"></div>
+      <section class="ms-trash" aria-label="回收站">
+        <h2 class="ms-trash-title" data-i18n="classmates.trashTitle">回收站</h2>
+        <p class="ms-trash-tip" id="trash-tip" data-i18n="classmates.trashTip">删除后可在此恢复，约保留 7 天</p>
+        <div id="trash-list" class="ms-sheet-list"></div>
+      </section>
     </div>
   </main>
-  <script src="../../js/classmates/mark-six-guard.js?v=ms10"></script>
-  <script src="../../js/classmates/mark-six-list.js?v=ms10"></script>
+  <script src="../../js/classmates/mark-six-guard.js?v=ms11"></script>
+  <script src="../../js/classmates/mark-six-list.js?v=ms11"></script>
 </body>
 </html>
