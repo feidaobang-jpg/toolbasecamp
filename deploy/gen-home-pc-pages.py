@@ -8,7 +8,7 @@ COMP = Path(r"D:/project/composite/web-tool/html/media")
 OUT = ROOT / "public/html/admin/private/home-pc"
 
 PAGES = [
-    ("image-processor.html", "remove-background.html", "privateHub.homePc.removeBgTitle", "remove-background.js", "去背景"),
+    ("image-processor.html", "remove-background.html", "privateHub.homePc.removeBgTitle", "remove-background.js", "去背景（抠图）"),
     ("text-to-image.html", "text-to-image.html", "privateHub.homePc.txt2imgTitle", "text-to-image.js", "文生图"),
     ("image-to-image.html", "image-to-image.html", "privateHub.homePc.img2imgTitle", "image-to-image.js", "图生图"),
     ("describe-cutout.html", "describe-cutout.html", "privateHub.homePc.describeCutoutTitle", "describe-cutout.js", "描述抠图"),

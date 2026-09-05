@@ -4,14 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>去背景 - 后台</title>
+  <title>去背景（抠图） - 后台</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=cutouthp1" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc68" />
-  <script src="../../../../js/locales/en.js?v=mediaui1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=mediaui1"></script>
+  <script src="../../../../js/locales/en.js?v=cutouthp1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=cutouthp1"></script>
   <script src="../../../../js/i18n.js?v=homepc26"></script>
   <script src="../../../../js/config.js?v=homepc21"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -20,89 +21,61 @@
   <div class="home-pc-container">
     <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
     <div class="home-pc-content">
-        <header class="home-pc-header">
-    <div class="home-pc-header-inner">
-      <a href="../../private.html" class="home-pc-back">
-        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
-      </a>
-      <h1 class="home-pc-title" data-i18n="privateHub.homePc.removeBgTitle">去背景</h1>
-      <div class="home-pc-header-actions">
-        <span id="auth-label" class="home-pc-auth-label"></span>
-        <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
-      </div>
-    </div>
-  </header>
-          <main class="home-pc-main">
-    <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
-    <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
-      <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
-      <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
-    </div>
-    <div id="app" class="home-pc-wrap hidden" hidden>
-      <p class="home-pc-desc" data-i18n="privateHub.homePc.removeBgHint">工作流 rembg.json（InspyrenetRembg，模型自动下载）。勾选「移除背景」走 ComfyUI；缩放/裁边在浏览器本地完成。</p>
-      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
-      <div class="tool-container">
-                    <!-- 拖放区域 -->
-                    <div class="drop-zone" id="drop-zone">
-                        <div class="drop-icon">+</div>
-                        <div class="drop-title" data-i18n="privateHub.homePc.dropTitleMulti">点击或拖入图片</div>
-                        <div class="drop-hint" data-i18n="privateHub.homePc.dropHintMulti">支持 JPG、PNG、WebP，可多选</div>
-                    </div>
-                    <input type="file" id="file-input" multiple accept="image/*" hidden />
-                    
-                    <div class="input-section home-pc-size-row">
-                        <select id="size-type-select" class="home-pc-select">
-                            <option value="width">宽度：</option>
-                            <option value="height">高度：</option>
-                        </select>
-                        <input type="number" id="target-width-input" class="home-pc-num-input" placeholder="请输入尺寸" value="240">
-                        <div class="width-presets action-row">
-                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=32">32</button>
-                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=48">48</button>
-                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=64">64</button>
-                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=100">100</button>
-                            <button type="button" class="tb-btn tb-btn-sm" onclick="document.getElementById('target-width-input').value=240">240</button>
-                        </div>
-                    </div>
-                    
-                    <div class="input-section home-pc-check-row">
-                        <label>
-                            <input type="checkbox" id="remove-bg-checkbox" checked> 移除背景
-                        </label>
-                        <label>
-                            <input type="checkbox" id="trim-edges-checkbox" checked> 裁切边缘（如果不勾选移除背景则背景必须是透明的）
-                        </label>
-                    </div>
-                    
-                    <!-- 选择图片预览区域 -->
-                    <div class="selection-preview-section" id="selection-preview-section" hidden>
-                        <h3 class="home-pc-section-title" data-i18n="privateHub.homePc.selectedImagesTitle">已选图片</h3>
-                        <div class="image-selection-preview" id="image-selection-preview"></div>
-                    </div>
-
-                    <div class="action-row home-pc-tool-actions">
-                        <button id="process-btn" class="tb-btn">开始处理</button>
-                        <button id="save-all-btn" class="tb-btn hidden">打包 ZIP 下载</button>
-                        <button id="clear-btn" class="tb-btn">清空</button>
-                    </div>
-                    
-                    <div class="result-section home-pc-result-box" id="result-container">
-                        <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.resultTitle">处理结果</h3>
-                        <div class="image-preview-container" id="image-preview-container"></div>
-                    </div>
-                </div>
-    </div>
-    </main>
+      <header class="home-pc-header">
+        <div class="home-pc-header-inner">
+          <a href="../../private.html" class="home-pc-back">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+          </a>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.removeBgTitle">去背景（抠图）</h1>
+          <div class="home-pc-header-actions">
+            <span id="auth-label" class="home-pc-auth-label"></span>
+            <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+          </div>
+        </div>
+      </header>
+      <main class="home-pc-main">
+        <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+        <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+          <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+          <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+        </div>
+        <div id="app" class="home-pc-wrap hidden" hidden>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.removeBgHint">工作流 rembg.json（InspyrenetRembg，模型自动下载）。走家里 ComfyUI 抠透明 PNG。</p>
+          <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+          <div class="tool-card">
+            <div class="drop-zone" id="drop-zone">
+              <div class="drop-icon">+</div>
+              <div class="drop-title" data-i18n="privateHub.homePc.dropTitle">点击或拖入图片</div>
+              <div class="drop-hint" data-i18n="privateHub.homePc.dropHint">JPG / PNG / WebP</div>
+            </div>
+            <input type="file" id="file-input" accept="image/*" hidden />
+            <div class="img-tool-source" id="source-wrap" hidden>
+              <img id="source-img" alt="" />
+            </div>
+            <div class="action-row">
+              <button type="button" class="tb-btn" id="run-btn" disabled data-i18n="privateHub.homePc.removeBgRun">开始抠图</button>
+              <button type="button" class="tb-btn" id="download-btn" disabled data-i18n="privateHub.homePc.removeBgDownload">下载</button>
+              <button type="button" class="tb-btn" id="clear-btn" data-i18n="privateHub.homePc.removeBgClear">清除</button>
+            </div>
+            <div class="img-cloud-busy" id="busy" hidden aria-live="polite">
+              <span class="img-cloud-spinner" aria-hidden="true"></span>
+              <span id="busy-text" data-i18n="privateHub.homePc.processing">处理中…</span>
+            </div>
+            <div class="error-box" id="error-box" role="alert"></div>
+            <div class="img-tool-preview cutout-preview" id="preview-wrap" hidden>
+              <img id="result-img" alt="" />
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
   <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc21"></script>
   <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc7"></script>
   <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
-  <script src="../../../../js/admin/home-pc/remove-background.js?v=homepc9"></script>
+  <script src="../../../../js/admin/home-pc/remove-background.js?v=cutouthp1"></script>
 </body>
 </html>
