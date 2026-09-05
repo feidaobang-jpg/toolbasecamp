@@ -79,7 +79,9 @@ window.TB_LOCALES['zh-CN'] = {
         amountUnit: '金额',
         totalAmount: '总金额',
         saveFail: '保存失败',
-        missingId: '缺少统计表 id'
+        missingId: '缺少统计表 id',
+        serverBusy: '服务暂时不可用，请稍后重试',
+        badResponse: '服务器返回异常'
     },
     privateHub: {
         title: '后台',

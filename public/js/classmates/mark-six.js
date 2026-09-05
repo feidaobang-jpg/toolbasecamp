@@ -33,7 +33,18 @@
       opts.body = JSON.stringify(opts.body);
     }
     return fetch(G.apiBase() + path, opts).then(function (r) {
-      return r.json().then(function (b) {
+      return r.text().then(function (txt) {
+        var b = {};
+        try {
+          b = txt ? JSON.parse(txt) : {};
+        } catch (e) {
+          b = {
+            success: false,
+            detail: r.status === 502 || r.status === 503
+              ? G.tr('classmates.serverBusy', '服务暂时不可用，请稍后重试')
+              : G.tr('classmates.badResponse', '服务器返回异常')
+          };
+        }
         return { res: r, body: b };
       });
     });

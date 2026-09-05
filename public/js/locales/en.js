@@ -80,7 +80,9 @@ window.TB_LOCALES.en = {
         amountUnit: '',
         totalAmount: 'Total',
         saveFail: 'Save failed',
-        missingId: 'Missing sheet id'
+        missingId: 'Missing sheet id',
+        serverBusy: 'Service temporarily unavailable — try again',
+        badResponse: 'Unexpected server response'
     },
     privateHub: {
         title: 'Admin',
