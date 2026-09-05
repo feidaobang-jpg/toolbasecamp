@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Callable, Dict, List, Optional
 from zoneinfo import ZoneInfo
 
@@ -20,31 +20,52 @@ _get_current_user: Optional[Callable[..., Any]] = None
 _require_admin: Optional[Callable[[dict], None]] = None
 _is_admin: Optional[Callable[[dict], bool]] = None
 
-_CN_TZ = ZoneInfo("Asia/Shanghai")
+try:
+    _CN_TZ = ZoneInfo("Asia/Shanghai")
+except Exception:
+    _CN_TZ = timezone(timedelta(hours=8))
 _DEFAULT_ODDS = 47.0
 _PHONE_RE = re.compile(r"^1\d{10}$")
 
-# 生肖：马年映射（与用户对照表一致）；波色固定不随年份变
-ZODIAC_MAP: Dict[str, str] = {}
-for n, z in [
-    (1, "马"), (13, "马"), (25, "马"), (37, "马"), (49, "马"),
-    (2, "蛇"), (14, "蛇"), (26, "蛇"), (38, "蛇"),
-    (3, "龙"), (15, "龙"), (27, "龙"), (39, "龙"),
-    (4, "兔"), (16, "兔"), (28, "兔"), (40, "兔"),
-    (5, "虎"), (17, "虎"), (29, "虎"), (41, "虎"),
-    (6, "牛"), (18, "牛"), (30, "牛"), (42, "牛"),
-    (7, "鼠"), (19, "鼠"), (31, "鼠"), (43, "鼠"),
-    (8, "猪"), (20, "猪"), (32, "猪"), (44, "猪"),
-    (9, "狗"), (21, "狗"), (33, "狗"), (45, "狗"),
-    (10, "鸡"), (22, "鸡"), (34, "鸡"), (46, "鸡"),
-    (11, "猴"), (23, "猴"), (35, "猴"), (47, "猴"),
-    (12, "羊"), (24, "羊"), (36, "羊"), (48, "羊"),
-]:
-    ZODIAC_MAP[str(n)] = z
+# 生肖十二地支顺序（向前）；六合彩号码按「本命年 → 上一年…」倒序排布
+_ZODIAC_CYCLE = ["鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"]
 
-ZODIAC_LIST = ["马", "蛇", "龙", "兔", "虎", "牛", "鼠", "猪", "狗", "鸡", "猴", "羊"]
+# 农历春节公历日期（月, 日）。到年限前可再往后补几行即可。
+_CNY_MD: Dict[int, tuple] = {
+    2020: (1, 25),
+    2021: (2, 12),
+    2022: (2, 1),
+    2023: (1, 22),
+    2024: (2, 10),
+    2025: (1, 29),
+    2026: (2, 17),
+    2027: (2, 6),
+    2028: (1, 26),
+    2029: (2, 13),
+    2030: (2, 3),
+    2031: (1, 23),
+    2032: (2, 11),
+    2033: (1, 31),
+    2034: (2, 19),
+    2035: (2, 8),
+    2036: (1, 28),
+    2037: (2, 15),
+    2038: (2, 4),
+    2039: (1, 24),
+    2040: (2, 12),
+    2041: (2, 1),
+    2042: (1, 22),
+    2043: (2, 10),
+    2044: (1, 30),
+    2045: (2, 17),
+    2046: (2, 6),
+    2047: (1, 26),
+    2048: (2, 14),
+    2049: (2, 2),
+    2050: (1, 23),
+}
 
-# 红波 / 蓝波 / 绿波（与对照表红单+红双等合并一致）
+# 波色固定，不随年份变（与对照表一致）
 WAVE_GROUPS: Dict[str, List[int]] = {
     "红波": [1, 2, 7, 8, 12, 13, 18, 19, 23, 24, 29, 30, 34, 35, 40, 45, 46],
     "蓝波": [3, 4, 9, 10, 14, 15, 20, 25, 26, 31, 36, 37, 41, 42, 47, 48],
@@ -65,6 +86,69 @@ for w in ("红波", "蓝波", "绿波"):
 WAVE_LIST = ["红波", "蓝波", "绿波"]
 WAVE_PARITY_LIST = ["红单", "红双", "蓝单", "蓝双", "绿单", "绿双"]
 WAVE_SELECT_LIST = WAVE_LIST + WAVE_PARITY_LIST
+
+_zodiac_cache: Dict[str, Any] = {"key": "", "map": {}, "list": [], "year_animal": "", "lunar_year": 0}
+
+
+def _animal_for_lunar_year(lunar_year: int) -> str:
+    # 2020=鼠；(Y+8)%12 与地支对齐
+    return _ZODIAC_CYCLE[(lunar_year + 8) % 12]
+
+
+def _lunar_year_for_date(dt: datetime) -> int:
+    """北京时间日期所属农历生肖年（以春节为界）。"""
+    y, m, d = dt.year, dt.month, dt.day
+    cny = _CNY_MD.get(y)
+    if cny:
+        return y if (m, d) >= cny else y - 1
+    # 表外年份：春节落在 1/21–2/20，粗分界（建议补表）
+    if m > 2 or (m == 2 and d > 20):
+        return y
+    if m == 1 and d < 21:
+        return y - 1
+    return y
+
+
+def build_zodiac_for_animal(year_animal: str) -> tuple[Dict[str, str], List[str]]:
+    """本命年生肖占 1/13/25/37/49，其余按生肖倒序。"""
+    if year_animal not in _ZODIAC_CYCLE:
+        raise ValueError(f"unknown zodiac: {year_animal}")
+    idx = _ZODIAC_CYCLE.index(year_animal)
+    order = [_ZODIAC_CYCLE[(idx - i) % 12] for i in range(12)]
+    zmap: Dict[str, str] = {}
+    for i, z in enumerate(order):
+        nums = [i + 1, i + 13, i + 25, i + 37]
+        if i + 49 <= 49:
+            nums.append(i + 49)
+        for n in nums:
+            zmap[str(n)] = z
+    return zmap, order
+
+
+def current_zodiac(now: Optional[datetime] = None) -> Dict[str, Any]:
+    """按当前北京时间返回生肖映射（按日缓存）。"""
+    if now is None:
+        now = datetime.now(_CN_TZ)
+    elif now.tzinfo is None:
+        now = now.replace(tzinfo=_CN_TZ)
+    else:
+        now = now.astimezone(_CN_TZ)
+    key = now.strftime("%Y-%m-%d")
+    if _zodiac_cache["key"] == key and _zodiac_cache["map"]:
+        return _zodiac_cache
+    lunar_year = _lunar_year_for_date(now)
+    animal = _animal_for_lunar_year(lunar_year)
+    zmap, zlist = build_zodiac_for_animal(animal)
+    _zodiac_cache.update(
+        {
+            "key": key,
+            "map": zmap,
+            "list": zlist,
+            "year_animal": animal,
+            "lunar_year": lunar_year,
+        }
+    )
+    return _zodiac_cache
 
 
 def wire(
@@ -143,6 +227,7 @@ def _norm_phone(raw: str) -> str:
 
 
 def _empty_table(odds: float = _DEFAULT_ODDS) -> List[dict]:
+    zmap = current_zodiac()["map"]
     rows = []
     for i in range(1, 50):
         rows.append(
@@ -151,7 +236,7 @@ def _empty_table(odds: float = _DEFAULT_ODDS) -> List[dict]:
                 "value": 0,
                 "expression": "0",
                 "displayValue": "0",
-                "zodiac": ZODIAC_MAP.get(str(i), ""),
+                "zodiac": zmap.get(str(i), ""),
                 "wave": WAVE_MAP.get(str(i), ""),
                 "payout": 0,
             }
@@ -160,6 +245,7 @@ def _empty_table(odds: float = _DEFAULT_ODDS) -> List[dict]:
 
 
 def _enrich_rows(rows: List[dict], odds: float) -> List[dict]:
+    zmap = current_zodiac()["map"]
     out = []
     for i in range(1, 50):
         src = None
@@ -176,7 +262,7 @@ def _enrich_rows(rows: List[dict], odds: float) -> List[dict]:
                 "value": round(val, 2),
                 "expression": expr,
                 "displayValue": disp,
-                "zodiac": ZODIAC_MAP.get(str(i), ""),
+                "zodiac": zmap.get(str(i), ""),
                 "wave": WAVE_MAP.get(str(i), ""),
                 "payout": round(val * float(odds or _DEFAULT_ODDS), 2),
             }
@@ -287,14 +373,16 @@ def mark_six_me(user: dict = Depends(_current_user)):
 
 @router.get("/meta")
 def mark_six_meta(user: dict = Depends(_mark_six_user)):
+    z = current_zodiac()
     return {
         "success": True,
         "odds_default": _DEFAULT_ODDS,
-        "zodiac_year": "马",
-        "zodiac_map": ZODIAC_MAP,
+        "zodiac_year": z["year_animal"],
+        "lunar_year": z["lunar_year"],
+        "zodiac_map": z["map"],
         "wave_map": WAVE_MAP,
         "wave_groups": WAVE_GROUPS,
-        "zodiac_list": ZODIAC_LIST,
+        "zodiac_list": z["list"],
         "wave_list": WAVE_LIST,
         "wave_parity_list": WAVE_PARITY_LIST,
         "wave_select_list": WAVE_SELECT_LIST,
