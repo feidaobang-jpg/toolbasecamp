@@ -719,7 +719,7 @@ def _build_z_image_img2img_workflow(
         mp = float(megapixels)
     except Exception:
         mp = 1.0
-    mp = max(0.25, min(2.0, mp))
+    mp = max(0.15, min(2.0, mp))
     workflow["21"] = {
         "inputs": {
             "upscale_method": "lanczos",
@@ -728,7 +728,7 @@ def _build_z_image_img2img_workflow(
             "image": ["19", 0],
         },
         "class_type": "ImageScaleToTotalPixels",
-        "_meta": {"title": "压到约 1MP（防大图超时）"},
+        "_meta": {"title": "按目标总像素缩放（对齐分辨率档位）"},
     }
     if "20" in workflow and workflow["20"].get("class_type") == "VAEEncode":
         workflow["20"]["inputs"]["pixels"] = ["21", 0]

@@ -104,14 +104,19 @@ _SIZE_LONG_EDGE_MIN = 512
 _SIZE_LONG_EDGE_MAX = 1280  # 与 Z-Image 工作流侧边上限一致
 
 
-def _round8(n: int) -> int:
+def _align8(n: int) -> int:
+    """对齐到 8 像素，短边允许低于档位长边（勿强行抬到 512）。"""
     n = int(n)
-    return max(_SIZE_LONG_EDGE_MIN, int(round(n / 8.0) * 8))
+    return max(64, int(round(n / 8.0) * 8))
+
+
+def _round8(n: int) -> int:
+    return _align8(n)
 
 
 def _clamp_long_edge(n: int) -> int:
     n = max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, int(n)))
-    return max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, int(round(n / 8.0) * 8)))
+    return max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, _align8(n)))
 
 
 def _resolve_wh(aspect_key: str, size_tier: str, long_edge_override: Optional[int] = None) -> tuple:
@@ -126,12 +131,44 @@ def _resolve_wh(aspect_key: str, size_tier: str, long_edge_override: Optional[in
     aw = max(1, int(aw))
     ah = max(1, int(ah))
     if aw >= ah:
-        w = _round8(long_edge)
-        h = _round8(int(round(long_edge * ah / aw)))
+        w = _align8(long_edge)
+        h = _align8(int(round(long_edge * ah / aw)))
     else:
-        h = _round8(long_edge)
-        w = _round8(int(round(long_edge * aw / ah)))
+        h = _align8(long_edge)
+        w = _align8(int(round(long_edge * aw / ah)))
     return w, h
+
+
+def _wh_from_ref_long_edge(rw: int, rh: int, long_edge: int) -> tuple:
+    """参考图比例 + 档位长边 → 目标宽高。"""
+    long_edge = _clamp_long_edge(long_edge)
+    rw = max(1, int(rw))
+    rh = max(1, int(rh))
+    if rw >= rh:
+        w = _align8(long_edge)
+        h = _align8(int(round(long_edge * rh / rw)))
+    else:
+        h = _align8(long_edge)
+        w = _align8(int(round(long_edge * rw / rh)))
+    return w, h
+
+
+def _megapixels_for_wh(w: int, h: int) -> float:
+    """供 ImageScaleToTotalPixels；允许低于 0.25 以便 512 档竖图。"""
+    try:
+        mp = (max(1, int(w)) * max(1, int(h))) / 1_000_000.0
+    except Exception:
+        mp = 0.25
+    return max(0.15, min(2.0, round(mp, 4)))
+
+
+def _set_workflow_megapixels(workflow: Optional[dict], megapixels: float) -> None:
+    if not isinstance(workflow, dict):
+        return
+    mp = max(0.15, min(2.0, float(megapixels)))
+    for node in workflow.values():
+        if isinstance(node, dict) and node.get("class_type") == "ImageScaleToTotalPixels":
+            node.setdefault("inputs", {})["megapixels"] = mp
 
 
 def _image_meta_from_bytes(img_bytes: bytes) -> Dict[str, int]:
@@ -662,7 +699,7 @@ class ImagePipelineAPI:
             batch_t0 = time.perf_counter()
             gen_total = 0.0
             tier_note = f"{tier_k}" + (f" long={long_edge_ov}" if long_edge_ov is not None else "")
-            self._log(task, f"目标分辨率 {w}×{h}（{tier_note}）")
+            self._log(task, f"目标分辨率 {w}×{h}（画幅档 {tier_note}）")
 
             lock = bool(task.get("lock_subject"))
             lock_engine = str(task.get("lock_engine") or "qwen").strip().lower()
@@ -684,6 +721,7 @@ class ImagePipelineAPI:
                 task["denoise"] = None
 
             comfy_ref_name = None
+            lock_mp = None
             if lock:
                 ref_rel = str(task.get("ref_file") or "").replace("\\", "/").lstrip("/")
                 ref_path = out_dir / ref_rel if ref_rel else None
@@ -696,6 +734,26 @@ class ImagePipelineAPI:
                 if lock_engine == "z_image" and not callable(build_i2i):
                     raise RuntimeError("Z-Image 图生图工作流未注入")
                 ref_bytes = ref_path.read_bytes()
+                # 锁定主体：按档位长边缩放参考图（此前固定 ~1MP，会忽略「更低 512」）
+                tier_le = long_edge_ov
+                if tier_le is None:
+                    tier_le = (_SIZE_TIERS.get(tier_k) or _SIZE_TIERS["sm"]).get("long_edge") or 512
+                tier_le = _clamp_long_edge(int(tier_le))
+                ref_meta = _image_meta_from_bytes(ref_bytes)
+                rw = int(ref_meta.get("width") or 0) or w
+                rh = int(ref_meta.get("height") or 0) or h
+                lock_w, lock_h = _wh_from_ref_long_edge(rw, rh, tier_le)
+                lock_mp = _megapixels_for_wh(lock_w, lock_h)
+                task["gen_width"] = lock_w
+                task["gen_height"] = lock_h
+                w, h = lock_w, lock_h
+                if callable(neg_fn):
+                    neg = neg_fn(user_neg, width=w, height=h)
+                self._log(
+                    task,
+                    f"锁定主体缩放：参考 {rw}×{rh} → 目标约 {lock_w}×{lock_h}"
+                    f"（长边 {tier_le}，{lock_mp:.2f}MP）",
+                )
                 uploaded = await upload_bytes(ref_bytes, name_prefix="ip_ref_")
                 if isinstance(uploaded, (tuple, list)):
                     comfy_ref_name = uploaded[0]
@@ -748,6 +806,8 @@ class ImagePipelineAPI:
                         )
                         try:
                             wf = build_qwen(qwen_prompt, comfy_ref_name, seed=seed, quality="standard")
+                            if lock_mp is not None:
+                                _set_workflow_megapixels(wf, lock_mp)
                             img_bytes = await run_img(wf)
                             used_engine = "qwen_edit"
                         except Exception as e:
@@ -760,7 +820,7 @@ class ImagePipelineAPI:
                                 negative_text=neg,
                                 seed=seed,
                                 denoise=denoise,
-                                megapixels=1.0,
+                                megapixels=float(lock_mp if lock_mp is not None else 1.0),
                             )
                             img_bytes = await run_img(wf)
                             used_engine = "z_image_img2img"
@@ -771,7 +831,7 @@ class ImagePipelineAPI:
                             negative_text=neg,
                             seed=seed,
                             denoise=denoise,
-                            megapixels=1.0,
+                            megapixels=float(lock_mp if lock_mp is not None else 1.0),
                         )
                         img_bytes = await run_img(wf)
                         used_engine = "z_image_img2img"
