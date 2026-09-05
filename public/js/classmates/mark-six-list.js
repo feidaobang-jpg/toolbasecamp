@@ -2,6 +2,9 @@
   'use strict';
 
   var G = window.MarkSixGuard;
+  var pollTimer = null;
+  var lastSig = '';
+  var busy = false;
 
   function api(path, opts) {
     opts = opts || {};
@@ -27,6 +30,14 @@
         return { res: r, body: b };
       });
     });
+  }
+
+  function sheetsSig(sheets) {
+    return (sheets || [])
+      .map(function (s) {
+        return [s.id, s.total, s.updated_at, s.title].join(':');
+      })
+      .join('|');
   }
 
   function render(sheets) {
@@ -71,24 +82,33 @@
         var id = btn.getAttribute('data-id');
         if (!id) return;
         if (!confirm(G.tr('classmates.deleteConfirm', '确定删除该统计表？'))) return;
+        busy = true;
         api('/mark-six/sheets/' + id, { method: 'DELETE' }).then(function (p) {
+          busy = false;
           if (!p.res.ok || !p.body.success) {
             alert(p.body.detail || 'failed');
             return;
           }
-          load();
+          load(true);
+        }).catch(function () {
+          busy = false;
         });
       });
     });
   }
 
-  function load() {
+  function load(force) {
+    if (busy && !force) return;
     api('/mark-six/sheets').then(function (p) {
       if (!p.res.ok || !p.body.success) {
-        render([]);
+        if (force) render([]);
         return;
       }
-      render(p.body.sheets || []);
+      var sheets = p.body.sheets || [];
+      var sig = sheetsSig(sheets);
+      if (!force && sig === lastSig) return;
+      lastSig = sig;
+      render(sheets);
     });
   }
 
@@ -99,18 +119,45 @@
     );
     if (title === null) return;
     title = String(title || '').trim() || G.tr('classmates.defaultTitle', '统计数据');
+    busy = true;
     api('/mark-six/sheets', { method: 'POST', body: { title: title } }).then(function (p) {
+      busy = false;
       if (!p.res.ok || !p.body.success || !p.body.sheet) {
         alert(p.body.detail || 'failed');
         return;
       }
       window.location.href = 'mark-six.html?id=' + p.body.sheet.id;
+    }).catch(function () {
+      busy = false;
     });
+  }
+
+  function startPoll() {
+    stopPoll();
+    pollTimer = setInterval(function () {
+      load(false);
+    }, 2000);
+  }
+
+  function stopPoll() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
   }
 
   document.addEventListener('tb:mark-six-ready', function () {
     var c = document.getElementById('create-btn');
     if (c) c.addEventListener('click', createSheet);
-    load();
+    load(true);
+    startPoll();
+  });
+  window.addEventListener('beforeunload', stopPoll);
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopPoll();
+    else {
+      load(false);
+      startPoll();
+    }
   });
 })();
