@@ -7,6 +7,19 @@
   var lastTrashSig = '';
   var busy = false;
   var trashKeepDays = 7;
+  var isAdmin = false;
+
+  function setTrashVisible(show) {
+    var sec = document.querySelector('.ms-trash');
+    if (!sec) return;
+    if (show) {
+      sec.classList.remove('hidden');
+      sec.hidden = false;
+    } else {
+      sec.classList.add('hidden');
+      sec.hidden = true;
+    }
+  }
 
   function api(path, opts) {
     opts = opts || {};
@@ -200,6 +213,11 @@
       lastSig = sig;
       render(sheets);
     });
+    if (!isAdmin) {
+      setTrashVisible(false);
+      return;
+    }
+    setTrashVisible(true);
     api('/mark-six/sheets/trash').then(function (p) {
       if (!p.res.ok || !p.body.success) {
         if (force) renderTrash([]);
@@ -250,7 +268,10 @@
     }
   }
 
-  document.addEventListener('tb:mark-six-ready', function () {
+  document.addEventListener('tb:mark-six-ready', function (ev) {
+    var u = (ev && ev.detail && ev.detail.user) || window.__markSixUser || {};
+    isAdmin = !!(typeof window.tbIsAdminUser === 'function' && window.tbIsAdminUser(u));
+    setTrashVisible(isAdmin);
     var c = document.getElementById('create-btn');
     if (c) c.addEventListener('click', createSheet);
     load(true);

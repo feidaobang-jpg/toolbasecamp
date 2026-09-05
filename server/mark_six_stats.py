@@ -554,7 +554,7 @@ def list_sheets(user: dict = Depends(_mark_six_user)):
 
 
 @router.get("/sheets/trash")
-def list_trash(user: dict = Depends(_mark_six_user)):
+def list_trash(user: dict = Depends(_admin_user)):
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
@@ -711,7 +711,7 @@ def delete_sheet(sheet_id: int, user: dict = Depends(_mark_six_user)):
 
 
 @router.post("/sheets/{sheet_id}/restore")
-def restore_sheet(sheet_id: int, user: dict = Depends(_mark_six_user)):
+def restore_sheet(sheet_id: int, user: dict = Depends(_admin_user)):
     now = _utc_now_str()
     conn = _get_conn()
     try:
