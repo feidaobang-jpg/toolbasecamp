@@ -226,7 +226,7 @@ window.TB_LOCALES.en = {
         homePc: {
             loading: 'Loading…',
             apiHint: 'Connects to your home ComfyUI API (comfy.zhengxiaohui.cn). Run ComfyUI + comfyui-api-server on the GPU PC; if the tunnel runs on NAS, point it to that PC’s LAN IP.',
-            removeBgHint: 'Workflow rembg.json (InspyrenetRembg). Output transparent, light solid, or green screen.',
+            removeBgHint: 'Workflow rembg.json (InspyrenetRembg). Output transparent, light gray, or green screen.',
             txt2imgHint: 'Workflow z_image_turbo.json. Models: z_image_turbo_bf16, qwen_3_4b, ae.safetensors.',
             img2imgHint: 'Default: Qwen instruct edit (workflow qwen_image_edit_img2img, checkpoint Qwen-Rapid-AIO-NSFW-v10). Optional Z-Image full resampling (z_image_turbo_img2img). Supports multi-image batch and optional tiled watermark; use the “Restore old photo” style preset for that use case.',
             img2imgEngineLabel: 'Engine',

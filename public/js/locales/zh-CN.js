@@ -225,7 +225,7 @@ window.TB_LOCALES['zh-CN'] = {
         homePc: {
             loading: '加载中…',
             apiHint: '连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。在 GPU 电脑启动 ComfyUI 与 comfyui-api-server；Tunnel 在 NAS 上时需指向该电脑局域网 IP。',
-            removeBgHint: '工作流 rembg.json（InspyrenetRembg）。可选透明、实色浅底或绿幕。',
+            removeBgHint: '工作流 rembg.json（InspyrenetRembg）。可选透明、浅灰或绿幕。',
             txt2imgHint: '工作流 z_image_turbo.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。',
             img2imgHint: '默认 Qwen 指令改图（工作流 qwen_image_edit_img2img，Checkpoint：Qwen-Rapid-AIO-NSFW-v10）。可选 Z-Image 整图重采样（z_image_turbo_img2img）。支持多图批量与可选平铺水印；老照片修复请用风格预设。',
             img2imgEngineLabel: '引擎',
