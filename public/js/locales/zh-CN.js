@@ -34,7 +34,7 @@ window.TB_LOCALES['zh-CN'] = {
         subtitle: '仅名单内同学与管理员可见',
         needLogin: '请先登录',
         needMember: '当前账号不在同学名单中',
-        markSixTitle: '六合彩统计',
+        markSixTitle: '统计',
         markSixDesc: '1–49 号码统计，支持多人协作刷新',
         listTitle: '统计数据列表',
         createNew: '创建新统计',

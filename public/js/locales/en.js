@@ -35,7 +35,7 @@ window.TB_LOCALES.en = {
         subtitle: 'Visible only to whitelist members and admins',
         needLogin: 'Please sign in',
         needMember: 'This account is not on the classmates list',
-        markSixTitle: 'Mark Six stats',
+        markSixTitle: 'Stats',
         markSixDesc: '1–49 number sheet with multi-user sync',
         listTitle: 'Stats list',
         createNew: 'Create new',
