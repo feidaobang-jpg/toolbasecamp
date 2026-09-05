@@ -65,12 +65,8 @@
       previewWrap.hidden = false;
     }).catch(function (err) {
       var msg = (err && err.message) || '';
-      // Keep auth / quota messages; map all cutout failures to a simple tip.
-      if (/登录|限额|次数|Authentication|Session|Daily limit|sign in|log in|quota/i.test(msg)) {
-        C.setError(errorBox, msg);
-      } else {
-        C.setError(errorBox, C.tr('tools.removeBackground.noPortrait'));
-      }
+      // Show real API/auth/quota errors; only fall back when message is empty.
+      C.setError(errorBox, msg || C.tr('tools.removeBackground.noPortrait'));
     }).finally(function () {
       setProcessing(false);
     });

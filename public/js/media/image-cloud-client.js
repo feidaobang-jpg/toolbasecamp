@@ -59,8 +59,10 @@
         ) {
             return tr('tools.imageCloud.contentBlocked');
         }
-        if (
-            text.indexOf('MiniMax provider balance insufficient') === 0
+        if (text.indexOf('Tencent Cloud service is not enabled') === 0 || /计费状态未知|开通服务|未开通|尚未开通/.test(text)) {
+            return tr('tools.imageCloud.serviceNotEnabled');
+        }
+        if (text.indexOf('MiniMax provider balance insufficient') === 0
             || text.indexOf('MiniMax error 1008') === 0
             || /MiniMax.*insufficient balance/i.test(text)
         ) {
