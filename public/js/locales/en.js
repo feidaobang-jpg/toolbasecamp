@@ -208,7 +208,7 @@ window.TB_LOCALES.en = {
             stickersCatScenery: 'Scenery',
             stickersCatBeauty: 'Beauty',
             stickersCatOther: 'Other',
-            markSixMembersTitle: 'Mark Six whitelist',
+            markSixMembersTitle: 'Classmates module list',
             markSixMembersDesc: 'Phones on this list see the Classmates entry after login. Admins always see it.',
             markSixPhone: 'Phone',
             markSixNote: 'Note',

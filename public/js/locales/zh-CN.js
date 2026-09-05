@@ -207,7 +207,7 @@ window.TB_LOCALES['zh-CN'] = {
             stickersCatScenery: '风景',
             stickersCatBeauty: '美女',
             stickersCatOther: '其他',
-            markSixMembersTitle: '六合彩名单',
+            markSixMembersTitle: '同学模块名单',
             markSixMembersDesc: '添加到名单的手机号登录后，可在顶栏看到「同学」入口。管理员始终可见。',
             markSixPhone: '手机号',
             markSixNote: '备注',
