@@ -448,6 +448,7 @@ def _scrape_passmark_list(list_id: str, meta: Dict[str, Any]) -> Dict[str, Any]:
             continue
         if not _include_row(model, kind, passmark_cat=cat):
             continue
+        samples_raw = row.get("samples")
         try:
             samples = int(float(str(samples_raw).replace(",", ""))) if samples_raw not in (None, "") else 0
         except ValueError:
