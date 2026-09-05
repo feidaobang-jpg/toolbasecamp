@@ -2,6 +2,7 @@
   'use strict';
 
   var G = window.MarkSixGuard;
+  var isAdmin = false;
 
   function api(path, opts) {
     opts = opts || {};
@@ -23,43 +24,44 @@
     if (!box) return;
     if (!sheets || !sheets.length) {
       box.innerHTML =
-        '<p class="ms-empty">' + G.tr('classmates.noSheets', '暂无统计表，点上方新建') + '</p>';
+        '<p class="ms-empty">' +
+        G.tr('classmates.noSheets', '暂无统计数据，点击上方按钮创建') +
+        '</p>';
       return;
     }
     box.innerHTML = sheets
       .map(function (s) {
+        var del =
+          isAdmin
+            ? '<button type="button" class="ms-sheet-del" data-id="' +
+              s.id +
+              '">' +
+              G.tr('classmates.delete', '删除') +
+              '</button>'
+            : '';
         return (
           '<div class="ms-sheet-card">' +
-          '<div class="ms-sheet-main">' +
-          '<a class="ms-sheet-title" href="mark-six.html?id=' +
+          '<a class="ms-sheet-main" href="mark-six.html?id=' +
           s.id +
           '">' +
+          '<div class="ms-sheet-info">' +
+          '<span class="ms-sheet-title">' +
           (s.title || G.tr('classmates.defaultTitle', '统计数据')) +
-          '</a>' +
-          '<div class="ms-sheet-meta">#' +
-          s.id +
-          ' · ' +
-          G.tr('classmates.total', '合计') +
-          ' ' +
-          (s.total || 0) +
-          ' · ' +
+          '</span>' +
+          '<span class="ms-sheet-date">' +
           (s.updated_at || '') +
-          '</div></div>' +
-          '<div class="action-row">' +
-          '<a class="tb-btn" href="mark-six.html?id=' +
-          s.id +
-          '">' +
-          G.tr('classmates.open', '打开') +
-          '</a>' +
-          '<button type="button" class="tb-btn ms-del" data-id="' +
-          s.id +
-          '">' +
-          G.tr('classmates.delete', '删除') +
-          '</button></div></div>'
+          '</span></div>' +
+          '<div class="ms-sheet-total">' +
+          G.tr('classmates.grandTotal', '总计：') +
+          '<strong>' +
+          (s.total || 0) +
+          '</strong></div></a>' +
+          del +
+          '</div>'
         );
       })
       .join('');
-    box.querySelectorAll('.ms-del').forEach(function (btn) {
+    box.querySelectorAll('.ms-sheet-del').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var id = btn.getAttribute('data-id');
         if (!id) return;
@@ -101,11 +103,11 @@
     });
   }
 
-  document.addEventListener('tb:mark-six-ready', function () {
+  document.addEventListener('tb:mark-six-ready', function (ev) {
+    var u = (ev && ev.detail && ev.detail.user) || window.__markSixUser || {};
+    isAdmin = !!(typeof window.tbIsAdminUser === 'function' && window.tbIsAdminUser(u));
     var c = document.getElementById('create-btn');
-    var r = document.getElementById('refresh-btn');
     if (c) c.addEventListener('click', createSheet);
-    if (r) r.addEventListener('click', load);
     load();
   });
 })();

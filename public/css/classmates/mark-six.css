@@ -1,45 +1,150 @@
+/* 同学专区 · 六合彩统计（对齐小程序布局） */
+.ms-page .ms-main { padding-bottom: 24px; }
+.ms-sheet-app { max-width: 720px; margin: 0 auto; }
+.ms-list-app { max-width: 640px; margin: 0 auto; }
+
+/* —— 列表 —— */
+.ms-create-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; border: 0; border-radius: 10px; padding: 14px 16px;
+  background: #07c160; color: #fff; font-size: 17px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(7, 193, 96, 0.28); margin-bottom: 14px;
+}
+.ms-create-btn:active { opacity: 0.92; }
+.ms-create-plus { font-size: 22px; line-height: 1; font-weight: 700; }
 .ms-sheet-list { display: flex; flex-direction: column; gap: 12px; }
 .ms-sheet-card {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  display: flex; align-items: stretch; background: #fff; border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); overflow: hidden;
 }
-.ms-sheet-title { font-weight: 600; color: #0f172a; text-decoration: none; }
-.ms-sheet-title:hover { color: #2563eb; }
-.ms-sheet-meta { margin-top: 4px; font-size: 13px; color: #64748b; }
-.ms-empty { color: #64748b; padding: 24px 0; }
+.ms-sheet-main {
+  flex: 1; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 16px; text-decoration: none; color: inherit; min-width: 0; cursor: pointer;
+}
+.ms-sheet-info { flex: 1; min-width: 0; }
+.ms-sheet-title {
+  display: block; font-weight: 700; font-size: 16px; color: #333;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ms-sheet-date { display: block; margin-top: 6px; font-size: 13px; color: #999; }
+.ms-sheet-total { flex-shrink: 0; font-size: 14px; color: #666; white-space: nowrap; }
+.ms-sheet-total strong { color: #07c160; font-size: 18px; font-weight: 700; margin-left: 2px; }
+.ms-sheet-del {
+  flex-shrink: 0; border: 0; background: #fff1f0; color: #cf1322;
+  padding: 0 14px; font-size: 13px; cursor: pointer;
+}
+.ms-empty { color: #999; padding: 28px 8px; text-align: center; font-size: 14px; }
 
-.ms-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
-.ms-total { font-weight: 700; font-size: 1.05rem; }
-.ms-sync { font-size: 13px; color: #64748b; }
-.ms-table-wrap { overflow-x: auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; }
-.ms-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 560px; }
-.ms-table th, .ms-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; }
-.ms-table th { background: #f8fafc; font-weight: 600; position: sticky; top: 0; }
-.ms-table tr:nth-child(even) td { background: #fafafa; }
-.ms-num { font-weight: 700; }
-.ms-wave-红波 { color: #dc2626; }
-.ms-wave-蓝波 { color: #2563eb; }
-.ms-wave-绿波 { color: #16a34a; }
-.ms-ops { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
-.ms-ops .tb-btn { padding: 4px 10px; font-size: 12px; min-height: 0; }
+/* —— 详情表 —— */
+.ms-table-panel {
+  background: #fff; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex; flex-direction: column; max-height: calc(100vh - 120px);
+}
+.ms-table-head, .ms-row, .ms-table-foot {
+  display: grid;
+  grid-template-columns: minmax(88px, 1.2fr) minmax(72px, 1.4fr) 52px 52px;
+  align-items: center; gap: 4px; padding: 0 8px;
+}
+.ms-table-head {
+  flex-shrink: 0; background: #fafafa; border-bottom: 1px solid #eee;
+  min-height: 40px; font-weight: 700; font-size: 13px; color: #333;
+}
+.ms-th { text-align: center; }
+.ms-th-num { text-align: left; padding-left: 4px; }
+.ms-table-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.ms-row {
+  min-height: 56px; border-bottom: 1px solid #f0f0f0; font-size: 14px;
+}
+.ms-row:last-child { border-bottom: none; }
+.ms-cell-num { text-align: left; padding: 8px 4px; }
+.ms-num-zodiac { display: flex; align-items: baseline; gap: 6px; }
+.ms-num { font-weight: 700; color: #333; }
+.ms-zodiac { color: #333; }
+.ms-payout { margin-top: 2px; font-size: 12px; color: #1890ff; }
+.ms-cell-val { text-align: center; word-break: break-all; font-weight: 600; color: #333; padding: 6px 2px; }
+.ms-cell-act { display: flex; justify-content: center; }
+.ms-add-btn, .ms-sub-btn {
+  width: 40px; height: 40px; border: 0; border-radius: 6px; color: #fff;
+  font-size: 15px; font-weight: 600; cursor: pointer; padding: 0;
+}
+.ms-add-btn { background: #07c160; }
+.ms-sub-btn { background: #ff4d4f; }
+.ms-add-btn:active, .ms-sub-btn:active { opacity: 0.9; }
 
+.ms-table-foot {
+  flex-shrink: 0; border-top: 1px solid #eee; background: #fff;
+  min-height: 52px; padding-top: 8px; padding-bottom: 8px;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 8px;
+}
+.ms-foot-label { font-weight: 700; color: #333; }
+.ms-foot-total { font-weight: 700; font-size: 18px; color: #07c160; }
+.ms-net {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 10px; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600;
+  background: #07c160; white-space: nowrap;
+}
+.ms-net[data-quality="良"] { background: #1890ff; }
+.ms-net[data-quality="差"] { background: #ff9800; }
+.ms-net[data-quality="断"] { background: #ff4d4f; }
+.ms-foot-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.ms-foot-btn {
+  border: 0; border-radius: 6px; padding: 8px 12px; background: #1890ff; color: #fff;
+  font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.ms-foot-btn:active { opacity: 0.9; }
+
+@media (max-width: 420px) {
+  .ms-table-head, .ms-row {
+    grid-template-columns: minmax(76px, 1.15fr) minmax(64px, 1.3fr) 44px 44px;
+  }
+  .ms-add-btn, .ms-sub-btn { width: 36px; height: 36px; font-size: 14px; }
+  .ms-table-foot {
+    grid-template-columns: auto auto 1fr;
+    grid-template-areas:
+      "label total net"
+      "actions actions actions";
+  }
+  .ms-foot-label { grid-area: label; }
+  .ms-foot-total { grid-area: total; }
+  .ms-net { grid-area: net; justify-self: end; }
+  .ms-foot-actions { grid-area: actions; justify-content: stretch; }
+  .ms-foot-btn { flex: 1; }
+}
+
+/* —— 弹窗 —— */
 .ms-modal {
   position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
-  background: rgba(15, 23, 42, 0.45); padding: 16px;
+  background: rgba(0, 0, 0, 0.45); padding: 16px;
 }
 .ms-modal[hidden] { display: none !important; }
 .ms-modal-card {
-  width: min(420px, 100%); background: #fff; border-radius: 14px; padding: 18px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.18);
+  width: min(400px, 100%); background: #fff; border-radius: 12px; padding: 20px 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
-.ms-modal-title { margin: 0 0 12px; font-size: 1.1rem; }
-.ms-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.ms-modal-title { margin: 0 0 14px; font-size: 17px; font-weight: 700; text-align: center; color: #333; }
+.ms-field-label { display: block; font-size: 13px; color: #333; margin: 0 0 8px; line-height: 1.4; }
+.ms-modal input[type="text"] {
+  width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px;
+  border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px;
+}
+.ms-hint {
+  white-space: pre-line; font-size: 13px; color: #666; margin: 10px 0 0; min-height: 0; line-height: 1.5;
+}
+.ms-chip-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;
+}
 .ms-chip {
-  border: 1px solid #cbd5e1; border-radius: 999px; padding: 6px 12px; cursor: pointer;
-  background: #fff; font-size: 13px;
+  border: 1px solid #d9d9d9; border-radius: 8px; padding: 10px 4px; cursor: pointer;
+  background: #fff; font-size: 14px; text-align: center; color: #333;
 }
-.ms-chip.is-on { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
-.ms-modal input[type="text"], .ms-modal input[type="number"] {
-  width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px;
+.ms-chip.is-on { border-color: #1890ff; color: #1890ff; background: #e6f4ff; box-shadow: inset 0 0 0 1px #1890ff; }
+.ms-modal-actions {
+  display: flex; gap: 12px; margin-top: 18px;
 }
-.ms-hint { font-size: 13px; color: #64748b; margin: 8px 0; min-height: 1.2em; }
+.ms-modal-cancel, .ms-modal-ok {
+  flex: 1; border: 0; border-radius: 8px; height: 42px; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.ms-modal-cancel { background: #f5f5f5; color: #666; }
+.ms-modal-ok { background: #07c160; color: #fff; }

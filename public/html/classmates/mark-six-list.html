@@ -4,44 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>六合彩统计 - 同学专区</title>
+  <title>统计数据列表 - 同学专区</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link href="../../vendor/font-awesome/css/all.min.css?v=ms1" rel="stylesheet" />
-  <link rel="stylesheet" href="../../css/base.css?v=ms1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=ms1" />
-  <link rel="stylesheet" href="../../css/admin-shell.css?v=ms1" />
-  <link rel="stylesheet" href="../../css/classmates/mark-six.css?v=ms1" />
-  <script src="../../js/locales/en.js?v=ms1"></script>
-  <script src="../../js/locales/zh-CN.js?v=ms1"></script>
-  <script src="../../js/i18n.js?v=ms1"></script>
-  <script src="../../js/config.js?v=ms1"></script>
-  <script src="../../js/common_ui.js?v=ms1"></script>
+  <link href="../../vendor/font-awesome/css/all.min.css?v=ms2" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/base.css?v=ms2" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=ms2" />
+  <link rel="stylesheet" href="../../css/admin-shell.css?v=ms2" />
+  <link rel="stylesheet" href="../../css/classmates/mark-six.css?v=ms2" />
+  <script src="../../js/locales/en.js?v=ms2"></script>
+  <script src="../../js/locales/zh-CN.js?v=ms2"></script>
+  <script src="../../js/i18n.js?v=ms2"></script>
+  <script src="../../js/config.js?v=ms2"></script>
+  <script src="../../js/common_ui.js?v=ms2"></script>
 </head>
-<body class="admin-page">
+<body class="admin-page ms-page">
   <header class="admin-header">
     <div class="admin-header-inner">
       <a href="hub.html" class="admin-back">
         <i class="fas fa-arrow-left"></i> <span data-i18n="classmates.title">同学专区</span>
       </a>
-      <h1 class="admin-title" data-i18n="classmates.markSixTitle">六合彩统计</h1>
+      <h1 class="admin-title" data-i18n="classmates.listTitle">统计数据列表</h1>
       <div class="admin-header-actions"></div>
     </div>
   </header>
-  <main class="admin-main">
+  <main class="admin-main ms-main">
     <div id="boot-loading" class="admin-card admin-card--center">加载中…</div>
     <div id="gate" class="admin-card admin-card--center hidden" hidden>
       <p id="gate-msg" class="admin-gate-msg">需要登录且在同学名单中</p>
       <a id="gate-login" href="../auth/login.html" class="tb-btn">去登录</a>
     </div>
-    <div id="app" class="admin-app hidden" hidden>
-      <div class="action-row" style="margin-bottom:12px;">
-        <button type="button" class="tb-btn" id="create-btn" data-i18n="classmates.createSheet">新建统计表</button>
-        <button type="button" class="tb-btn" id="refresh-btn" data-i18n="classmates.refresh">刷新</button>
-      </div>
+    <div id="app" class="admin-app ms-list-app hidden" hidden>
+      <button type="button" class="ms-create-btn" id="create-btn">
+        <span class="ms-create-plus">+</span>
+        <span data-i18n="classmates.createNew">创建新统计</span>
+      </button>
       <div id="sheet-list" class="ms-sheet-list"></div>
     </div>
   </main>
-  <script src="../../js/classmates/mark-six-guard.js?v=ms1"></script>
-  <script src="../../js/classmates/mark-six-list.js?v=ms1"></script>
+  <script src="../../js/classmates/mark-six-guard.js?v=ms2"></script>
+  <script src="../../js/classmates/mark-six-list.js?v=ms2"></script>
 </body>
 </html>

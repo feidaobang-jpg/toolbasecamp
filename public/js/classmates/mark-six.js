@@ -1,5 +1,5 @@
 /**
- * 六合彩统计详情：加减 / 包生肖 / 选波 + 2s 轮询
+ * 六合彩统计详情：加减 / 包生肖 / 选波；弹窗「确定」即保存；2s 轮询同步
  */
 (function () {
   'use strict';
@@ -20,6 +20,7 @@
   var WAVE_LIST = ['红波', '蓝波', '绿波'];
   var zodiacMap = {};
   var waveMap = {};
+  var failStreak = 0;
 
   function api(path, opts) {
     opts = opts || {};
@@ -47,9 +48,11 @@
   }
 
   function calcTotal() {
-    return Math.round(tableData.reduce(function (s, r) {
-      return s + (Number(r.value) || 0);
-    }, 0) * 100) / 100;
+    return Math.round(
+      tableData.reduce(function (s, r) {
+        return s + (Number(r.value) || 0);
+      }, 0) * 100
+    ) / 100;
   }
 
   function enrichRow(row) {
@@ -71,7 +74,9 @@
     Object.keys(zodiacMap).forEach(function (n) {
       if (zodiacMap[n] === z) out.push(parseInt(n, 10));
     });
-    return out;
+    return out.sort(function (a, b) {
+      return a - b;
+    });
   }
 
   function numbersByWave(w) {
@@ -79,64 +84,64 @@
     Object.keys(waveMap).forEach(function (n) {
       if (waveMap[n] === w) out.push(parseInt(n, 10));
     });
-    return out;
+    return out.sort(function (a, b) {
+      return a - b;
+    });
+  }
+
+  function setNet(quality) {
+    var el = document.getElementById('net-label');
+    if (!el) return;
+    var q = quality || '优';
+    el.setAttribute('data-quality', q);
+    el.textContent = G.tr('classmates.network', '网络') + ':' + q;
   }
 
   function renderTable() {
     var tb = document.getElementById('table-body');
     var totalEl = document.getElementById('total-label');
-    if (totalEl) {
-      totalEl.textContent = G.tr('classmates.total', '合计') + ' ' + calcTotal();
-    }
+    if (totalEl) totalEl.textContent = String(calcTotal());
     if (!tb) return;
     tb.innerHTML = tableData
       .map(function (row, idx) {
-        var waveClass = row.wave ? ' ms-wave-' + row.wave : '';
         return (
-          '<tr>' +
-          '<td class="ms-num">' +
+          '<div class="ms-row">' +
+          '<div class="ms-cell-num">' +
+          '<div class="ms-num-zodiac"><span class="ms-num">' +
           row.number +
-          '</td>' +
-          '<td>' +
+          '</span><span class="ms-zodiac">' +
           (row.zodiac || '') +
-          '</td>' +
-          '<td class="' +
-          waveClass.trim() +
-          '">' +
-          (row.wave || '') +
-          '</td>' +
-          '<td>' +
-          (row.displayValue || row.value || 0) +
-          '</td>' +
-          '<td>' +
+          '</span></div>' +
+          '<div class="ms-payout">' +
+          G.tr('classmates.payoutPrefix', '赔:') +
           (row.payout || 0) +
-          '</td>' +
-          '<td><div class="ms-ops">' +
-          '<button type="button" class="tb-btn ms-add" data-i="' +
+          '</div></div>' +
+          '<div class="ms-cell-val">' +
+          (row.displayValue || row.value || 0) +
+          '</div>' +
+          '<div class="ms-cell-act"><button type="button" class="ms-add-btn" data-i="' +
           idx +
-          '">+</button>' +
-          '<button type="button" class="tb-btn ms-sub" data-i="' +
+          '">' +
+          G.tr('classmates.colAdd', '加') +
+          '</button></div>' +
+          '<div class="ms-cell-act"><button type="button" class="ms-sub-btn" data-i="' +
           idx +
-          '">−</button>' +
-          '</div></td></tr>'
+          '">' +
+          G.tr('classmates.colSub', '减') +
+          '</button></div></div>'
         );
       })
       .join('');
-    tb.querySelectorAll('.ms-add').forEach(function (b) {
+    tb.querySelectorAll('.ms-add-btn').forEach(function (b) {
       b.addEventListener('click', function () {
         openAmount(parseInt(b.getAttribute('data-i'), 10), true);
       });
     });
-    tb.querySelectorAll('.ms-sub').forEach(function (b) {
+    tb.querySelectorAll('.ms-sub-btn').forEach(function (b) {
       b.addEventListener('click', function () {
         openAmount(parseInt(b.getAttribute('data-i'), 10), false);
       });
     });
-  }
-
-  function setSync(text) {
-    var el = document.getElementById('sync-label');
-    if (el) el.textContent = text || '';
   }
 
   function applySheet(s) {
@@ -151,10 +156,11 @@
     renderTable();
   }
 
+  /** 弹窗确定后立即写入服务端；他人 2s 轮询可见 */
   function persist() {
     if (!sheetId || saving) return Promise.resolve();
     saving = true;
-    setSync(G.tr('classmates.saving', '保存中…'));
+    setNet('良');
     return api('/mark-six/sheets/' + sheetId, {
       method: 'PUT',
       body: {
@@ -167,15 +173,20 @@
       .then(function (p) {
         saving = false;
         if (!p.res.ok || !p.body.success) {
-          setSync(p.body.detail || G.tr('classmates.saveFail', '保存失败'));
+          failStreak += 1;
+          setNet(failStreak > 2 ? '断' : '差');
+          alert(p.body.detail || G.tr('classmates.saveFail', '保存失败'));
           return;
         }
+        failStreak = 0;
         applySheet(p.body.sheet);
-        setSync(G.tr('classmates.saved', '已保存'));
+        setNet('优');
       })
       .catch(function () {
         saving = false;
-        setSync(G.tr('classmates.saveFail', '保存失败'));
+        failStreak += 1;
+        setNet('断');
+        alert(G.tr('classmates.saveFail', '保存失败'));
       });
   }
 
@@ -190,17 +201,15 @@
     modalOpen = true;
     var modal = document.getElementById('amount-modal');
     var title = document.getElementById('amount-modal-title');
-    var hint = document.getElementById('amount-modal-hint');
     var input = document.getElementById('amount-input');
     if (title) {
       title.textContent = isAdd
-        ? G.tr('classmates.addAmount', '加金额')
-        : G.tr('classmates.subAmount', '减金额');
+        ? G.tr('classmates.addAmount', '添加数值') + ' - ' + G.tr('classmates.serial', '序号') + row.number
+        : G.tr('classmates.subAmount', '减少数值') + ' - ' + G.tr('classmates.serial', '序号') + row.number;
     }
-    if (hint) hint.textContent = '#' + row.number + ' · ' + (row.displayValue || row.value);
     if (input) input.value = '';
     if (modal) modal.hidden = false;
-    if (input) input.focus();
+    if (input) setTimeout(function () { input.focus(); }, 50);
   }
 
   function closeAmount() {
@@ -240,13 +249,9 @@
     persist();
   }
 
-  function addToNumbers(nums, amt) {
-    var set = {};
-    nums.forEach(function (n) {
-      set[n] = true;
-    });
+  function addToNumber(number, amt) {
     tableData.forEach(function (row) {
-      if (!set[row.number]) return;
+      if (row.number !== number) return;
       var cur = Number(row.value) || 0;
       var expr = row.expression || '0';
       row.value = Math.round((cur + amt) * 100) / 100;
@@ -298,18 +303,30 @@
     zs.forEach(function (z) {
       count += numbersByZodiac(z).length;
     });
-    var per = count ? Math.round((amt / count) * 100) / 100 : 0;
+    var totalAmount = Math.round(amt * zs.length * 100) / 100;
     if (info) {
       info.textContent =
-        G.tr('classmates.zodiacSplit', '均分到') +
+        G.tr('classmates.zodiacInfo1', '已选择') +
+        ' ' +
+        zs.length +
+        ' ' +
+        G.tr('classmates.zodiacUnit', '个生肖') +
+        '，' +
+        G.tr('classmates.totalNumbers', '共') +
         ' ' +
         count +
         ' ' +
         G.tr('classmates.numbers', '个号码') +
-        '，' +
-        G.tr('classmates.each', '每个') +
+        '\n' +
+        G.tr('classmates.eachZodiacAdd', '每个生肖将添加') +
         ' ' +
-        per;
+        amt +
+        ' ' +
+        G.tr('classmates.amountUnit', '金额') +
+        '\n' +
+        G.tr('classmates.totalAmount', '总金额') +
+        ': ' +
+        totalAmount;
     }
   }
 
@@ -318,7 +335,7 @@
     var raw = input ? String(input.value || '').trim() : '';
     var zs = Object.keys(selectedZodiacs);
     if (!zs.length) {
-      alert(G.tr('classmates.pickZodiac', '请选择生肖'));
+      alert(G.tr('classmates.pickZodiac', '请至少选择一个生肖'));
       return;
     }
     if (!raw || !/^(\d+)(\.\d*)?$/.test(raw) || parseFloat(raw) <= 0) {
@@ -326,12 +343,15 @@
       return;
     }
     var amt = Math.round(parseFloat(raw) * 100) / 100;
-    var nums = [];
+    // 与小程序一致：每个生肖获得 amt，再均分到该生肖下号码
     zs.forEach(function (z) {
-      nums = nums.concat(numbersByZodiac(z));
+      var nums = numbersByZodiac(z);
+      if (!nums.length) return;
+      var per = Math.round((amt / nums.length) * 100) / 100;
+      nums.forEach(function (n) {
+        addToNumber(n, per);
+      });
     });
-    var per = Math.round((amt / nums.length) * 100) / 100;
-    addToNumbers(nums, per);
     document.getElementById('zodiac-modal').hidden = true;
     modalOpen = false;
     renderTable();
@@ -380,17 +400,30 @@
     ws.forEach(function (w) {
       count += numbersByWave(w).length;
     });
+    var totalAmount = Math.round(amt * count * 100) / 100;
     if (info) {
       info.textContent =
-        G.tr('classmates.waveApply', '将对') +
+        G.tr('classmates.zodiacInfo1', '已选择') +
+        ' ' +
+        ws.length +
+        ' ' +
+        G.tr('classmates.waveUnit', '个波色') +
+        '，' +
+        G.tr('classmates.totalNumbers', '共') +
         ' ' +
         count +
         ' ' +
         G.tr('classmates.numbers', '个号码') +
+        '\n' +
+        G.tr('classmates.eachNumberAdd', '每个号码添加') +
         ' ' +
-        G.tr('classmates.eachPlus', '各加') +
+        amt +
         ' ' +
-        amt;
+        G.tr('classmates.amountUnit', '金额') +
+        '\n' +
+        G.tr('classmates.totalAmount', '总金额') +
+        ': ' +
+        totalAmount;
     }
   }
 
@@ -399,7 +432,7 @@
     var raw = input ? String(input.value || '').trim() : '';
     var ws = Object.keys(selectedWaves);
     if (!ws.length) {
-      alert(G.tr('classmates.pickWave', '请选择波色'));
+      alert(G.tr('classmates.pickWave', '请至少选择一个波色'));
       return;
     }
     if (!raw || !/^(\d+)(\.\d*)?$/.test(raw) || parseFloat(raw) <= 0) {
@@ -407,24 +440,13 @@
       return;
     }
     var amt = Math.round(parseFloat(raw) * 100) / 100;
-    var nums = [];
     ws.forEach(function (w) {
-      nums = nums.concat(numbersByWave(w));
+      numbersByWave(w).forEach(function (n) {
+        addToNumber(n, amt);
+      });
     });
-    addToNumbers(nums, amt);
     document.getElementById('wave-modal').hidden = true;
     modalOpen = false;
-    renderTable();
-    persist();
-  }
-
-  function clearAll() {
-    if (!confirm(G.tr('classmates.clearConfirm', '确定清空全部数值？'))) return;
-    tableData.forEach(function (row) {
-      row.value = 0;
-      row.expression = '0';
-      enrichRow(row);
-    });
     renderTable();
     persist();
   }
@@ -432,17 +454,22 @@
   function poll() {
     if (!sheetId || saving || modalOpen) return;
     var q = updatedAtUtc ? '?since=' + encodeURIComponent(updatedAtUtc) : '';
-    api('/mark-six/sheets/' + sheetId + q).then(function (p) {
-      if (!p.res.ok || !p.body.success) return;
-      if (p.body.unchanged) {
-        setSync(G.tr('classmates.synced', '已同步'));
-        return;
-      }
-      if (p.body.sheet) {
-        applySheet(p.body.sheet);
-        setSync(G.tr('classmates.remoteUpdated', '他人已更新，已同步'));
-      }
-    });
+    api('/mark-six/sheets/' + sheetId + q)
+      .then(function (p) {
+        if (!p.res.ok || !p.body.success) {
+          failStreak += 1;
+          setNet(failStreak > 2 ? '断' : '差');
+          return;
+        }
+        failStreak = 0;
+        setNet('优');
+        if (p.body.unchanged) return;
+        if (p.body.sheet) applySheet(p.body.sheet);
+      })
+      .catch(function () {
+        failStreak += 1;
+        setNet('断');
+      });
   }
 
   function startPoll() {
@@ -462,6 +489,12 @@
     var amountCancel = document.getElementById('amount-cancel');
     if (amountOk) amountOk.addEventListener('click', confirmAmount);
     if (amountCancel) amountCancel.addEventListener('click', closeAmount);
+    var amountInput = document.getElementById('amount-input');
+    if (amountInput) {
+      amountInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') confirmAmount();
+      });
+    }
     var zOk = document.getElementById('zodiac-ok');
     var zCancel = document.getElementById('zodiac-cancel');
     var zIn = document.getElementById('zodiac-input');
@@ -486,12 +519,8 @@
     if (wIn) wIn.addEventListener('input', updateWaveInfo);
     var zb = document.getElementById('zodiac-btn');
     var wb = document.getElementById('wave-btn');
-    var cb = document.getElementById('clear-btn');
-    var sb = document.getElementById('save-btn');
     if (zb) zb.addEventListener('click', openZodiac);
     if (wb) wb.addEventListener('click', openWave);
-    if (cb) cb.addEventListener('click', clearAll);
-    if (sb) sb.addEventListener('click', persist);
   }
 
   function boot() {
@@ -502,6 +531,7 @@
       return;
     }
     bindUi();
+    setNet('优');
     api('/mark-six/meta')
       .then(function (p) {
         if (p.res.ok && p.body.success) {
@@ -520,8 +550,11 @@
           return;
         }
         applySheet(p.body.sheet);
-        setSync(G.tr('classmates.synced', '已同步'));
+        setNet('优');
         startPoll();
+      })
+      .catch(function () {
+        setNet('断');
       });
   }
 
