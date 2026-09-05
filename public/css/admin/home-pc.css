@@ -2481,6 +2481,15 @@ body.tb-admin-private #auth-status {
   margin-top: 8px;
   min-height: 96px;
 }
+.home-pc-wrap .home-pc-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #334155;
+  cursor: pointer;
+  user-select: none;
+}
 .home-pc-wrap .image-pipe-ref-preview {
   margin-top: 10px;
 }

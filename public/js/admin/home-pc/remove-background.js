@@ -1,9 +1,11 @@
 /**
  * 家里电脑 · 去背景（抠图）
- * ComfyUI rembg.json；交互对齐前台通用抠图（单图、源预览、棋盘格结果）。
+ * ComfyUI rembg.json；可选透明 PNG 或铺实色浅底。
  */
 (function () {
   'use strict';
+
+  var LIGHT_BG = '#f3f4f6';
 
   var dropZone = document.getElementById('drop-zone');
   var fileInput = document.getElementById('file-input');
@@ -21,6 +23,7 @@
   var file = null;
   var previewUrl = '';
   var resultUrl = '';
+  var resultMode = 'transparent';
   var processing = false;
 
   function tr(key, fallback) {
@@ -35,6 +38,11 @@
     return window.HomePcApi && typeof HomePcApi.base === 'function'
       ? HomePcApi.base()
       : 'http://127.0.0.1:8189';
+  }
+
+  function getBgMode() {
+    var el = document.querySelector('input[name="bg-mode"]:checked');
+    return (el && el.value) || 'transparent';
   }
 
   function setError(msg) {
@@ -62,8 +70,13 @@
       } catch (e) { /* ignore */ }
     }
     resultUrl = '';
+    resultMode = 'transparent';
     if (resultImg) resultImg.removeAttribute('src');
-    if (previewWrap) previewWrap.hidden = true;
+    if (previewWrap) {
+      previewWrap.hidden = true;
+      previewWrap.classList.add('cutout-preview');
+      previewWrap.style.background = '';
+    }
     if (downloadBtn) downloadBtn.disabled = true;
   }
 
@@ -75,6 +88,53 @@
     var arr = new Uint8Array(bin.length);
     for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
     return new Blob([arr], { type: mime });
+  }
+
+  function loadImage(src) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        resolve(img);
+      };
+      img.onerror = function () {
+        reject(new Error(tr('privateHub.homePc.removeBgFail', '抠图失败')));
+      };
+      img.src = src;
+    });
+  }
+
+  /** Composite transparent PNG onto a light solid fill → opaque PNG data URL. */
+  function compositeOnLight(dataUrl) {
+    return loadImage(dataUrl).then(function (img) {
+      var c = document.createElement('canvas');
+      c.width = img.naturalWidth || img.width;
+      c.height = img.naturalHeight || img.height;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = LIGHT_BG;
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0);
+      return c.toDataURL('image/png');
+    });
+  }
+
+  function showResult(dataUrl, mode) {
+    revokeResult();
+    resultMode = mode || 'transparent';
+    try {
+      resultUrl = URL.createObjectURL(dataUrlToBlob(dataUrl));
+    } catch (e) {
+      resultUrl = dataUrl;
+    }
+    resultImg.src = resultUrl;
+    previewWrap.hidden = false;
+    if (resultMode === 'light') {
+      previewWrap.classList.remove('cutout-preview');
+      previewWrap.style.background = LIGHT_BG;
+    } else {
+      previewWrap.classList.add('cutout-preview');
+      previewWrap.style.background = '';
+    }
+    downloadBtn.disabled = false;
   }
 
   function serviceErrorMsg() {
@@ -146,23 +206,18 @@
     if (!file || processing) return;
     setError('');
     setBusy(true);
+    var mode = getBgMode();
     var t0 = performance.now();
     try {
       var ok = await checkServerOk();
       if (!ok) throw new Error(serviceErrorMsg());
       var dataUrl = await callRemoveBg(file);
-      revokeResult();
-      // Prefer blob URL for download; data URL also works for checkerboard preview.
-      try {
-        resultUrl = URL.createObjectURL(dataUrlToBlob(dataUrl));
-      } catch (e) {
-        resultUrl = dataUrl;
+      if (mode === 'light') {
+        dataUrl = await compositeOnLight(dataUrl);
       }
-      resultImg.src = resultUrl;
-      previewWrap.hidden = false;
-      downloadBtn.disabled = false;
+      showResult(dataUrl, mode);
       var sec = ((performance.now() - t0) / 1000).toFixed(1);
-      console.log('去背景完成，耗时 ' + sec + 's');
+      console.log('去背景完成，mode=' + mode + '，耗时 ' + sec + 's');
     } catch (err) {
       var msg = (err && err.message) || String(err || '');
       if (/Failed to fetch|NetworkError|TypeError/i.test(msg)) {
@@ -189,7 +244,8 @@
 
   function downloadResult() {
     if (!resultUrl) return;
-    var name = 'cutout_' + Date.now() + '.png';
+    var name =
+      (resultMode === 'light' ? 'cutout_light_' : 'cutout_') + Date.now() + '.png';
     var MediaUi = window.HomePcMediaUi;
     if (MediaUi && typeof MediaUi.triggerDownload === 'function') {
       MediaUi.triggerDownload(resultUrl, name).catch(function () {
