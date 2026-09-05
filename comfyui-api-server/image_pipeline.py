@@ -92,51 +92,76 @@ _ASPECTS: Dict[str, Dict[str, Any]] = {
     "4_3": {"label": "横图 4:3", "size": (1024, 768)},
 }
 
+# Z-Image-Turbo：官方 Demo 主档约 1024²；训练末段建议边长落在约 768–1280，且宽高可被 16 整除。
+# 512 档易出短边过小（如 344×520）导致手脚崩坏，已移除。
 _SIZE_TIERS: Dict[str, Dict[str, Any]] = {
-    "sm": {"label": "更低（512）", "long_edge": 512},
     "sd": {"label": "标清（768）", "long_edge": 768},
-    "hd": {"label": "高清（1024）", "long_edge": 1024},
+    "hd": {"label": "高清（1024·推荐）", "long_edge": 1024},
     "xl": {"label": "超高清（1280）", "long_edge": 1280},
-    "custom": {"label": "自定义长边", "long_edge": 768},
+    "custom": {"label": "自定义长边", "long_edge": 1024},
 }
 
-_SIZE_LONG_EDGE_MIN = 512
-_SIZE_LONG_EDGE_MAX = 1280  # 与 Z-Image 工作流侧边上限一致
+_SIZE_LONG_EDGE_MIN = 768
+_SIZE_LONG_EDGE_MAX = 1280
+_SIZE_SIDE_MIN = 576  # 短边过低易崩；竖图时允许略低于 768
+_SIZE_ALIGN = 16  # VAE×8 × patch×2
 
 
-def _align8(n: int) -> int:
-    """对齐到 8 像素，短边允许低于档位长边（勿强行抬到 512）。"""
+def _align_side(n: int) -> int:
+    """对齐到 16 像素（Z-Image 要求宽高可被 16 整除）。"""
+    step = _SIZE_ALIGN
     n = int(n)
-    return max(64, int(round(n / 8.0) * 8))
+    return max(step, int(round(n / float(step)) * step))
 
 
 def _round8(n: int) -> int:
-    return _align8(n)
+    """兼容旧名：现对齐 16。"""
+    return _align_side(n)
 
 
 def _clamp_long_edge(n: int) -> int:
     n = max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, int(n)))
-    return max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, _align8(n)))
+    return max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, _align_side(n)))
+
+
+def _normalize_wh(w: int, h: int) -> tuple:
+    """对齐 16，短边过低则等比抬升，长边不超过上限。"""
+    w = _align_side(w)
+    h = _align_side(h)
+    short = min(w, h)
+    if short < _SIZE_SIDE_MIN and short > 0:
+        scale = _SIZE_SIDE_MIN / float(short)
+        w = _align_side(int(round(w * scale)))
+        h = _align_side(int(round(h * scale)))
+    long_side = max(w, h)
+    if long_side > _SIZE_LONG_EDGE_MAX:
+        scale = _SIZE_LONG_EDGE_MAX / float(long_side)
+        w = _align_side(int(round(w * scale)))
+        h = _align_side(int(round(h * scale)))
+    return max(_SIZE_ALIGN, w), max(_SIZE_ALIGN, h)
 
 
 def _resolve_wh(aspect_key: str, size_tier: str, long_edge_override: Optional[int] = None) -> tuple:
-    """按画幅比例 + 档位长边计算宽高（对齐 8 像素）。"""
+    """按画幅比例 + 档位长边计算宽高（对齐 16，短边保底）。"""
     aspect = _ASPECTS.get(aspect_key) or _ASPECTS["1_1"]
-    tier = _SIZE_TIERS.get(size_tier) or _SIZE_TIERS["sm"]
+    tier_k = (size_tier or "hd").strip().lower()
+    if tier_k == "sm":  # 旧「512」档映射到标清
+        tier_k = "sd"
+    tier = _SIZE_TIERS.get(tier_k) or _SIZE_TIERS["hd"]
     aw, ah = aspect["size"]
     if long_edge_override is not None:
         long_edge = _clamp_long_edge(long_edge_override)
     else:
-        long_edge = _clamp_long_edge(int(tier.get("long_edge") or _SIZE_LONG_EDGE_MIN))
+        long_edge = _clamp_long_edge(int(tier.get("long_edge") or 1024))
     aw = max(1, int(aw))
     ah = max(1, int(ah))
     if aw >= ah:
-        w = _align8(long_edge)
-        h = _align8(int(round(long_edge * ah / aw)))
+        w = _align_side(long_edge)
+        h = _align_side(int(round(long_edge * ah / aw)))
     else:
-        h = _align8(long_edge)
-        w = _align8(int(round(long_edge * aw / ah)))
-    return w, h
+        h = _align_side(long_edge)
+        w = _align_side(int(round(long_edge * aw / ah)))
+    return _normalize_wh(w, h)
 
 
 def _wh_from_ref_long_edge(rw: int, rh: int, long_edge: int) -> tuple:
@@ -145,27 +170,27 @@ def _wh_from_ref_long_edge(rw: int, rh: int, long_edge: int) -> tuple:
     rw = max(1, int(rw))
     rh = max(1, int(rh))
     if rw >= rh:
-        w = _align8(long_edge)
-        h = _align8(int(round(long_edge * rh / rw)))
+        w = _align_side(long_edge)
+        h = _align_side(int(round(long_edge * rh / rw)))
     else:
-        h = _align8(long_edge)
-        w = _align8(int(round(long_edge * rw / rh)))
-    return w, h
+        h = _align_side(long_edge)
+        w = _align_side(int(round(long_edge * rw / rh)))
+    return _normalize_wh(w, h)
 
 
 def _megapixels_for_wh(w: int, h: int) -> float:
-    """供 ImageScaleToTotalPixels；允许低于 0.25 以便 512 档竖图。"""
+    """供 ImageScaleToTotalPixels；与 768+ 档位匹配。"""
     try:
         mp = (max(1, int(w)) * max(1, int(h))) / 1_000_000.0
     except Exception:
-        mp = 0.25
-    return max(0.15, min(2.0, round(mp, 4)))
+        mp = 0.6
+    return max(0.35, min(2.0, round(mp, 4)))
 
 
 def _set_workflow_megapixels(workflow: Optional[dict], megapixels: float) -> None:
     if not isinstance(workflow, dict):
         return
-    mp = max(0.15, min(2.0, float(megapixels)))
+    mp = max(0.35, min(2.0, float(megapixels)))
     for node in workflow.values():
         if isinstance(node, dict) and node.get("class_type") == "ImageScaleToTotalPixels":
             node.setdefault("inputs", {})["megapixels"] = mp
@@ -677,7 +702,9 @@ class ImagePipelineAPI:
             task["progress"] = {"current": 0, "total": len(prompts)}
             self._save_snapshot(task)
 
-            tier_k = task.get("size_tier") or "sm"
+            tier_k = task.get("size_tier") or "hd"
+            if tier_k == "sm":
+                tier_k = "sd"
             long_edge_ov = task.get("size_long_edge")
             try:
                 long_edge_ov = int(long_edge_ov) if long_edge_ov is not None else None
@@ -737,7 +764,7 @@ class ImagePipelineAPI:
                 # 锁定主体：按档位长边缩放参考图（此前固定 ~1MP，会忽略「更低 512」）
                 tier_le = long_edge_ov
                 if tier_le is None:
-                    tier_le = (_SIZE_TIERS.get(tier_k) or _SIZE_TIERS["sm"]).get("long_edge") or 512
+                    tier_le = (_SIZE_TIERS.get(tier_k) or _SIZE_TIERS["hd"]).get("long_edge") or 1024
                 tier_le = _clamp_long_edge(int(tier_le))
                 ref_meta = _image_meta_from_bytes(ref_bytes)
                 rw = int(ref_meta.get("width") or 0) or w
@@ -915,7 +942,7 @@ class ImagePipelineAPI:
                 "categories": {k: v["label"] for k, v in _CATEGORIES.items()},
                 "aspects": {k: v["label"] for k, v in _ASPECTS.items()},
                 "size_tiers": {k: v["label"] for k, v in _SIZE_TIERS.items()},
-                "size_tier_default": "sm",
+                "size_tier_default": "hd",
                 "size_long_edge_min": _SIZE_LONG_EDGE_MIN,
                 "size_long_edge_max": _SIZE_LONG_EDGE_MAX,
                 "prompt_modes": {
@@ -943,7 +970,7 @@ class ImagePipelineAPI:
             category: str = Form("other"),
             count: str = Form("1"),
             aspect: str = Form("1_1"),
-            size_tier: str = Form("sm"),
+            size_tier: str = Form("hd"),
             size_long_edge: str = Form(""),
             prompt_mode: str = Form("auto"),
             extra: str = Form(""),
@@ -967,9 +994,11 @@ class ImagePipelineAPI:
             aspect_k = (aspect or "1_1").strip()
             if aspect_k not in _ASPECTS:
                 aspect_k = "1_1"
-            tier_k = (size_tier or "sm").strip().lower()
+            tier_k = (size_tier or "hd").strip().lower()
+            if tier_k == "sm":
+                tier_k = "sd"
             if tier_k not in _SIZE_TIERS:
-                tier_k = "sm"
+                tier_k = "hd"
             long_edge_v: Optional[int] = None
             if tier_k == "custom":
                 raw_le = (size_long_edge or "").strip()

@@ -203,13 +203,12 @@
         fillSelect(
           sizeTierSelect,
           pack.body.size_tiers || {
-            sm: tr('privateHub.homePc.imagePipeSizeSm', '更低（512）'),
             sd: tr('privateHub.homePc.imagePipeSizeSd', '标清（768）'),
-            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024）'),
+            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024·推荐）'),
             xl: tr('privateHub.homePc.imagePipeSizeXl', '超高清（1280）'),
             custom: tr('privateHub.homePc.imagePipeSizeCustom', '自定义长边')
           },
-          pack.body.size_tier_default || 'sm'
+          pack.body.size_tier_default || 'hd'
         );
         if (sizeLongEdgeInput) {
           if (pack.body.size_long_edge_min != null) {
@@ -266,13 +265,12 @@
         fillSelect(
           sizeTierSelect,
           {
-            sm: tr('privateHub.homePc.imagePipeSizeSm', '更低（512）'),
             sd: tr('privateHub.homePc.imagePipeSizeSd', '标清（768）'),
-            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024）'),
+            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024·推荐）'),
             xl: tr('privateHub.homePc.imagePipeSizeXl', '超高清（1280）'),
             custom: tr('privateHub.homePc.imagePipeSizeCustom', '自定义长边')
           },
-          'sm'
+          'hd'
         );
         syncSizeTierUi();
       });
@@ -688,11 +686,11 @@
         fd.append('category', categorySelect ? categorySelect.value : 'other');
         fd.append('count', countInput ? String(countInput.value || '1') : '1');
         fd.append('aspect', aspectSelect ? aspectSelect.value : '1_1');
-        fd.append('size_tier', sizeTierSelect ? sizeTierSelect.value : 'sm');
+        fd.append('size_tier', sizeTierSelect ? sizeTierSelect.value : 'hd');
         if (sizeTierSelect && sizeTierSelect.value === 'custom') {
           fd.append(
             'size_long_edge',
-            sizeLongEdgeInput ? String(sizeLongEdgeInput.value || '768') : '768'
+            sizeLongEdgeInput ? String(sizeLongEdgeInput.value || '1024') : '1024'
           );
         }
         fd.append('prompt_mode', mode);
@@ -995,7 +993,9 @@
     setSelectValue(styleSelect, task.style);
     setSelectValue(categorySelect, task.category);
     setSelectValue(aspectSelect, task.aspect);
-    setSelectValue(sizeTierSelect, task.size_tier || 'sm');
+    var tierVal = task.size_tier || 'hd';
+    if (tierVal === 'sm') tierVal = 'sd';
+    setSelectValue(sizeTierSelect, tierVal);
     if (sizeLongEdgeInput && task.size_long_edge != null && task.size_long_edge !== '') {
       sizeLongEdgeInput.value = String(task.size_long_edge);
     } else if (

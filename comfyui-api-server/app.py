@@ -719,7 +719,7 @@ def _build_z_image_img2img_workflow(
         mp = float(megapixels)
     except Exception:
         mp = 1.0
-    mp = max(0.15, min(2.0, mp))
+    mp = max(0.35, min(2.0, mp))
     workflow["21"] = {
         "inputs": {
             "upscale_method": "lanczos",
