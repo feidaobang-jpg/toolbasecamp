@@ -93,23 +93,36 @@ _ASPECTS: Dict[str, Dict[str, Any]] = {
 }
 
 _SIZE_TIERS: Dict[str, Dict[str, Any]] = {
-    "sd": {"label": "标清", "long_edge": 768},
-    "hd": {"label": "高清（推荐）", "long_edge": 1024},
-    "xl": {"label": "更大", "long_edge": 1280},
+    "sm": {"label": "更低（512）", "long_edge": 512},
+    "sd": {"label": "标清（768）", "long_edge": 768},
+    "hd": {"label": "高清（1024）", "long_edge": 1024},
+    "xl": {"label": "更大（1280）", "long_edge": 1280},
+    "custom": {"label": "自定义长边", "long_edge": 768},
 }
+
+_SIZE_LONG_EDGE_MIN = 512
+_SIZE_LONG_EDGE_MAX = 1280  # 与 Z-Image 工作流侧边上限一致
 
 
 def _round8(n: int) -> int:
     n = int(n)
-    return max(512, int(round(n / 8.0) * 8))
+    return max(_SIZE_LONG_EDGE_MIN, int(round(n / 8.0) * 8))
 
 
-def _resolve_wh(aspect_key: str, size_tier: str) -> tuple:
+def _clamp_long_edge(n: int) -> int:
+    n = max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, int(n)))
+    return max(_SIZE_LONG_EDGE_MIN, min(_SIZE_LONG_EDGE_MAX, int(round(n / 8.0) * 8)))
+
+
+def _resolve_wh(aspect_key: str, size_tier: str, long_edge_override: Optional[int] = None) -> tuple:
     """按画幅比例 + 档位长边计算宽高（对齐 8 像素）。"""
     aspect = _ASPECTS.get(aspect_key) or _ASPECTS["1_1"]
-    tier = _SIZE_TIERS.get(size_tier) or _SIZE_TIERS["hd"]
+    tier = _SIZE_TIERS.get(size_tier) or _SIZE_TIERS["sm"]
     aw, ah = aspect["size"]
-    long_edge = int(tier.get("long_edge") or 1024)
+    if long_edge_override is not None:
+        long_edge = _clamp_long_edge(long_edge_override)
+    else:
+        long_edge = _clamp_long_edge(int(tier.get("long_edge") or _SIZE_LONG_EDGE_MIN))
     aw = max(1, int(aw))
     ah = max(1, int(ah))
     if aw >= ah:
@@ -627,7 +640,13 @@ class ImagePipelineAPI:
             task["progress"] = {"current": 0, "total": len(prompts)}
             self._save_snapshot(task)
 
-            w, h = _resolve_wh(task.get("aspect") or "1_1", task.get("size_tier") or "hd")
+            tier_k = task.get("size_tier") or "sm"
+            long_edge_ov = task.get("size_long_edge")
+            try:
+                long_edge_ov = int(long_edge_ov) if long_edge_ov is not None else None
+            except Exception:
+                long_edge_ov = None
+            w, h = _resolve_wh(task.get("aspect") or "1_1", tier_k, long_edge_ov)
             task["gen_width"] = w
             task["gen_height"] = h
             style = _STYLES.get(task.get("style") or "realistic") or _STYLES["realistic"]
@@ -642,7 +661,8 @@ class ImagePipelineAPI:
             task["stage"] = "generate"
             batch_t0 = time.perf_counter()
             gen_total = 0.0
-            self._log(task, f"目标分辨率 {w}×{h}（{(task.get('size_tier') or 'hd')}）")
+            tier_note = f"{tier_k}" + (f" long={long_edge_ov}" if long_edge_ov is not None else "")
+            self._log(task, f"目标分辨率 {w}×{h}（{tier_note}）")
 
             lock = bool(task.get("lock_subject"))
             lock_engine = str(task.get("lock_engine") or "qwen").strip().lower()
@@ -835,7 +855,9 @@ class ImagePipelineAPI:
                 "categories": {k: v["label"] for k, v in _CATEGORIES.items()},
                 "aspects": {k: v["label"] for k, v in _ASPECTS.items()},
                 "size_tiers": {k: v["label"] for k, v in _SIZE_TIERS.items()},
-                "size_tier_default": "hd",
+                "size_tier_default": "sm",
+                "size_long_edge_min": _SIZE_LONG_EDGE_MIN,
+                "size_long_edge_max": _SIZE_LONG_EDGE_MAX,
                 "prompt_modes": {
                     "auto": "自动扩写（推荐）",
                     "theme_vary": "主题规则变化",
@@ -861,7 +883,8 @@ class ImagePipelineAPI:
             category: str = Form("other"),
             count: str = Form("4"),
             aspect: str = Form("1_1"),
-            size_tier: str = Form("hd"),
+            size_tier: str = Form("sm"),
+            size_long_edge: str = Form(""),
             prompt_mode: str = Form("auto"),
             extra: str = Form(""),
             negative: str = Form(""),
@@ -884,9 +907,16 @@ class ImagePipelineAPI:
             aspect_k = (aspect or "1_1").strip()
             if aspect_k not in _ASPECTS:
                 aspect_k = "1_1"
-            tier_k = (size_tier or "hd").strip().lower()
+            tier_k = (size_tier or "sm").strip().lower()
             if tier_k not in _SIZE_TIERS:
-                tier_k = "hd"
+                tier_k = "sm"
+            long_edge_v: Optional[int] = None
+            if tier_k == "custom":
+                raw_le = (size_long_edge or "").strip()
+                try:
+                    long_edge_v = _clamp_long_edge(int(raw_le or _SIZE_TIERS["custom"]["long_edge"]))
+                except Exception:
+                    long_edge_v = _clamp_long_edge(int(_SIZE_TIERS["custom"]["long_edge"]))
             mode = (prompt_mode or "auto").strip().lower()
             if mode not in ("auto", "theme_vary", "manual"):
                 mode = "auto"
@@ -979,8 +1009,9 @@ class ImagePipelineAPI:
                 "aspect": aspect_k,
                 "size_tier": tier_k,
                 "size_tier_label": _SIZE_TIERS[tier_k]["label"],
-                "gen_width": _resolve_wh(aspect_k, tier_k)[0],
-                "gen_height": _resolve_wh(aspect_k, tier_k)[1],
+                "size_long_edge": long_edge_v,
+                "gen_width": _resolve_wh(aspect_k, tier_k, long_edge_v)[0],
+                "gen_height": _resolve_wh(aspect_k, tier_k, long_edge_v)[1],
                 "prompt_mode": mode,
                 "extra": (extra or "").strip(),
                 "negative": (negative or "").strip(),

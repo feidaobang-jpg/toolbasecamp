@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc68" />
-  <script src="../../../../js/locales/en.js?v=imgpipe14"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=imgpipe14"></script>
+  <script src="../../../../js/locales/en.js?v=imgpipe15"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=imgpipe15"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=homepc30"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -76,10 +76,16 @@
                 <div class="input-control">
                   <label for="size-tier-select" data-i18n="privateHub.homePc.imagePipeSizeTierLabel">分辨率档位</label>
                   <select id="size-tier-select" class="text-input">
-                    <option value="sd" data-i18n="privateHub.homePc.imagePipeSizeSd">标清</option>
-                    <option value="hd" selected data-i18n="privateHub.homePc.imagePipeSizeHd">高清（推荐）</option>
-                    <option value="xl" data-i18n="privateHub.homePc.imagePipeSizeXl">更大</option>
+                    <option value="sm" selected data-i18n="privateHub.homePc.imagePipeSizeSm">更低（512）</option>
+                    <option value="sd" data-i18n="privateHub.homePc.imagePipeSizeSd">标清（768）</option>
+                    <option value="hd" data-i18n="privateHub.homePc.imagePipeSizeHd">高清（1024）</option>
+                    <option value="xl" data-i18n="privateHub.homePc.imagePipeSizeXl">更大（1280）</option>
+                    <option value="custom" data-i18n="privateHub.homePc.imagePipeSizeCustom">自定义长边</option>
                   </select>
+                </div>
+                <div class="input-control" id="size-custom-wrap" style="display:none;">
+                  <label for="size-long-edge" data-i18n="privateHub.homePc.imagePipeSizeLongEdgeLabel">长边像素</label>
+                  <input id="size-long-edge" class="text-input" type="number" min="512" max="1280" step="8" value="768" data-i18n-placeholder="privateHub.homePc.imagePipeSizeLongEdgePh" placeholder="512–1280，对齐 8" />
                 </div>
               </div>
 
@@ -208,6 +214,6 @@
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=homepc10"></script>
   <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc7"></script>
-  <script src="../../../../js/admin/home-pc/image-pipeline.js?v=imgpipe14"></script>
+  <script src="../../../../js/admin/home-pc/image-pipeline.js?v=imgpipe15"></script>
 </body>
 </html>

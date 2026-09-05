@@ -20,6 +20,8 @@
   var categorySelect = document.getElementById('category-select');
   var aspectSelect = document.getElementById('aspect-select');
   var sizeTierSelect = document.getElementById('size-tier-select');
+  var sizeCustomWrap = document.getElementById('size-custom-wrap');
+  var sizeLongEdgeInput = document.getElementById('size-long-edge');
   var modeSelect = document.getElementById('mode-select');
   var extraInput = document.getElementById('extra-input');
   var manualInput = document.getElementById('manual-input');
@@ -169,6 +171,11 @@
       });
   }
 
+  function syncSizeTierUi() {
+    var isCustom = sizeTierSelect && sizeTierSelect.value === 'custom';
+    if (sizeCustomWrap) sizeCustomWrap.style.display = isCustom ? '' : 'none';
+  }
+
   function fillSelect(sel, map, preferred) {
     if (!sel || !map) return;
     sel.innerHTML = '';
@@ -196,12 +203,23 @@
         fillSelect(
           sizeTierSelect,
           pack.body.size_tiers || {
-            sd: tr('privateHub.homePc.imagePipeSizeSd', '标清'),
-            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（推荐）'),
-            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大')
+            sm: tr('privateHub.homePc.imagePipeSizeSm', '更低（512）'),
+            sd: tr('privateHub.homePc.imagePipeSizeSd', '标清（768）'),
+            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024）'),
+            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大（1280）'),
+            custom: tr('privateHub.homePc.imagePipeSizeCustom', '自定义长边')
           },
-          pack.body.size_tier_default || 'hd'
+          pack.body.size_tier_default || 'sm'
         );
+        if (sizeLongEdgeInput) {
+          if (pack.body.size_long_edge_min != null) {
+            sizeLongEdgeInput.min = String(pack.body.size_long_edge_min);
+          }
+          if (pack.body.size_long_edge_max != null) {
+            sizeLongEdgeInput.max = String(pack.body.size_long_edge_max);
+          }
+        }
+        syncSizeTierUi();
       })
       .catch(function () {
         fillSelect(
@@ -248,12 +266,15 @@
         fillSelect(
           sizeTierSelect,
           {
-            sd: tr('privateHub.homePc.imagePipeSizeSd', '标清'),
-            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（推荐）'),
-            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大')
+            sm: tr('privateHub.homePc.imagePipeSizeSm', '更低（512）'),
+            sd: tr('privateHub.homePc.imagePipeSizeSd', '标清（768）'),
+            hd: tr('privateHub.homePc.imagePipeSizeHd', '高清（1024）'),
+            xl: tr('privateHub.homePc.imagePipeSizeXl', '更大（1280）'),
+            custom: tr('privateHub.homePc.imagePipeSizeCustom', '自定义长边')
           },
-          'hd'
+          'sm'
         );
+        syncSizeTierUi();
       });
   }
 
@@ -667,7 +688,13 @@
         fd.append('category', categorySelect ? categorySelect.value : 'other');
         fd.append('count', countInput ? String(countInput.value || '4') : '4');
         fd.append('aspect', aspectSelect ? aspectSelect.value : '1_1');
-        fd.append('size_tier', sizeTierSelect ? sizeTierSelect.value : 'hd');
+        fd.append('size_tier', sizeTierSelect ? sizeTierSelect.value : 'sm');
+        if (sizeTierSelect && sizeTierSelect.value === 'custom') {
+          fd.append(
+            'size_long_edge',
+            sizeLongEdgeInput ? String(sizeLongEdgeInput.value || '768') : '768'
+          );
+        }
         fd.append('prompt_mode', mode);
         fd.append('extra', (extraInput && extraInput.value) || '');
         fd.append('negative', (negInput && negInput.value) || '');
@@ -968,7 +995,18 @@
     setSelectValue(styleSelect, task.style);
     setSelectValue(categorySelect, task.category);
     setSelectValue(aspectSelect, task.aspect);
-    setSelectValue(sizeTierSelect, task.size_tier || 'hd');
+    setSelectValue(sizeTierSelect, task.size_tier || 'sm');
+    if (sizeLongEdgeInput && task.size_long_edge != null && task.size_long_edge !== '') {
+      sizeLongEdgeInput.value = String(task.size_long_edge);
+    } else if (
+      sizeLongEdgeInput &&
+      task.size_tier === 'custom' &&
+      task.gen_width &&
+      task.gen_height
+    ) {
+      sizeLongEdgeInput.value = String(Math.max(Number(task.gen_width), Number(task.gen_height)));
+    }
+    syncSizeTierUi();
     setSelectValue(modeSelect, task.prompt_mode || 'auto');
     syncModeUi();
     if (extraInput) extraInput.value = task.extra || '';
@@ -1030,6 +1068,8 @@
   }
 
   if (modeSelect) modeSelect.addEventListener('change', syncModeUi);
+  if (sizeTierSelect) sizeTierSelect.addEventListener('change', syncSizeTierUi);
+  syncSizeTierUi();
   if (startBtn) startBtn.addEventListener('click', startJob);
   if (refClearBtn) refClearBtn.addEventListener('click', clearRef);
   if (lockEngineSelect) {
