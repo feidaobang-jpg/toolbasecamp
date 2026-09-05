@@ -1,5 +1,5 @@
 /**
- * Admin private tool: manually refresh Notebookcheck rank lists.
+ * Admin private tool: manually refresh benchmark rank lists (PassMark + Notebookcheck).
  */
 (function () {
   function apiBase() {
@@ -107,6 +107,7 @@
         '<button type="button" class="tb-btn ladder-row-btn">更新</button>';
       row.querySelector('.ladder-row-title').textContent = item.title + ' (' + item.id + ')';
       row.querySelector('.ladder-row-meta').textContent =
+        (item.source ? item.source + ' · ' : '') +
         (item.has_data ? '已缓存 ' + (item.kept || 0) + ' 条' : '尚未更新') +
         ' · ' +
         fmtTime(item.updated_at) +
@@ -131,7 +132,7 @@
       })
       .then(function (health) {
         if (!health || !health.nbcheck_api) {
-          throw new Error('Notebookcheck API 未加载（需重新部署/重启 API）');
+          throw new Error('跑分榜 API 未加载（需重新部署/重启 API）');
         }
         return fetch(apiBase() + '/nbcheck/status', {
           headers: authHeaders(),
@@ -154,8 +155,8 @@
     var target = listId || 'all';
     setStatus(
       target === 'all'
-        ? '正在抓取全部 Notebookcheck 榜单…'
-        : '正在抓取 Notebookcheck：' + target + '…'
+        ? '正在抓取全部跑分榜…'
+        : '正在抓取跑分榜：' + target + '…'
     );
     fetch(apiBase() + '/nbcheck/refresh', {
       method: 'POST',
@@ -176,19 +177,19 @@
             return sum + (r.kept || r.count || 0);
           }, 0);
           setStatus(
-            'Notebookcheck 更新完成：' +
+            '跑分榜更新完成：' +
               (body.refreshed || []).join(', ') +
               '（共 ' +
               n +
               ' 条）'
           );
         } else {
-          setStatus('Notebookcheck 更新完成：' + (body.kept || body.count || 0) + ' 条');
+          setStatus('跑分榜更新完成：' + (body.kept || body.count || 0) + ' 条');
         }
         return loadNbcheckStatus();
       })
       .catch(function (err) {
-        setStatus('Notebookcheck 更新失败：' + (err && err.message ? err.message : err), true);
+        setStatus('跑分榜更新失败：' + (err && err.message ? err.message : err), true);
       })
       .finally(function () {
         if (btn) btn.disabled = false;
@@ -460,7 +461,7 @@
           setPcBuildsStatus('加载装机状态失败：' + (err && err.message ? err.message : err), true);
         });
         return loadNbcheckStatus().catch(function (err) {
-          setStatus('加载 Notebookcheck 状态失败：' + (err && err.message ? err.message : err), true);
+          setStatus('加载跑分榜状态失败：' + (err && err.message ? err.message : err), true);
         });
       })
       .catch(function (err) {

@@ -214,7 +214,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladder: {
             updateTitle: '后台更新',
-            updateDesc: '从 Notebookcheck 抓取跑分并写入缓存与公开 JSON',
+            updateDesc: 'CPU/GPU 从 PassMark、手机 SoC 从 Notebookcheck 抓取并写入缓存与公开 JSON',
             sectionTitle: '性能跑分榜',
             refreshAll: '全部更新'
         },
@@ -3525,7 +3525,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladderCpuRank: {
             title: '桌面处理器跑分榜',
-            desc: '基于 Notebookcheck 的桌面 CPU 相对跑分排行',
+            desc: '基于 PassMark CPU Mark 的桌面处理器跑分排行',
             updated: '更新',
             count: '条目',
             empty: '暂无数据',
@@ -3567,7 +3567,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladderGpuRank: {
             title: '桌面显卡跑分榜',
-            desc: '基于 Notebookcheck 的桌面 GPU 相对跑分排行',
+            desc: '基于 PassMark G3D Mark 的桌面显卡跑分排行',
             updated: '更新',
             count: '条目',
             empty: '暂无数据',
@@ -3605,7 +3605,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladderNbCpuRank: {
             title: '笔记本处理器跑分榜',
-            desc: '基于 Notebookcheck 的笔记本 CPU 相对跑分排行',
+            desc: '基于 PassMark CPU Mark 的笔记本处理器跑分排行',
             updated: '更新',
             count: '条目',
             empty: '暂无数据',
@@ -3624,10 +3624,10 @@ window.TB_LOCALES['zh-CN'] = {
         },
         ladderNbGpuRank: {
             title: '笔记本显卡跑分榜',
-            desc: '基于 Notebookcheck 的笔记本 GPU 相对跑分排行',
-            note: '数据来自 Notebookcheck 公开榜，仅供参考；同型号因功耗墙差异可能差一截。原世代天梯见',
+            desc: '基于 PassMark G3D Mark 的笔记本显卡跑分排行',
+            note: '数据来自 PassMark 公开榜（用户提交），仅供参考；同型号因功耗墙差异可能差一截。原世代天梯见',
             legacyLink: '快科技笔记本显卡天梯',
-            sourceLink: 'Notebookcheck 源页',
+            sourceLink: 'PassMark 源页',
             updated: '更新',
             count: '条目',
             empty: '暂无数据',

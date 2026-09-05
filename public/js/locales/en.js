@@ -215,7 +215,7 @@ window.TB_LOCALES.en = {
         },
         ladder: {
             updateTitle: 'Backend updates',
-            updateDesc: 'Scrape Notebookcheck rankings into cache and public JSON',
+            updateDesc: 'Scrape PassMark for CPU/GPU and Notebookcheck for phone SoC into cache and public JSON',
             sectionTitle: 'Benchmark ranks',
             refreshAll: 'Refresh all'
         },
@@ -3526,7 +3526,7 @@ window.TB_LOCALES.en = {
         },
         ladderCpuRank: {
             title: 'Desktop CPU Rank',
-            desc: 'Relative desktop CPU ranking based on Notebookcheck',
+            desc: 'Desktop CPU ranking by PassMark CPU Mark',
             updated: 'Updated',
             count: 'Items',
             empty: 'No data',
@@ -3568,7 +3568,7 @@ window.TB_LOCALES.en = {
         },
         ladderGpuRank: {
             title: 'Desktop GPU Rank',
-            desc: 'Relative desktop GPU ranking based on Notebookcheck',
+            desc: 'Desktop GPU ranking by PassMark G3D Mark',
             updated: 'Updated',
             count: 'Items',
             empty: 'No data',
@@ -3606,7 +3606,7 @@ window.TB_LOCALES.en = {
         },
         ladderNbCpuRank: {
             title: 'Laptop CPU Rank',
-            desc: 'Relative laptop CPU ranking based on Notebookcheck',
+            desc: 'Laptop CPU ranking by PassMark CPU Mark',
             updated: 'Updated',
             count: 'Items',
             empty: 'No data',
@@ -3621,14 +3621,14 @@ window.TB_LOCALES.en = {
             title: 'Laptop GPU',
             desc: 'Laptop GPU performance ladder (higher is stronger)',
             staleNote: 'The mydrivers laptop GPU chart has stopped updating (no RTX 50 series). Table below is for reference; for newer scores see',
-            staleLink: 'Laptop GPU rank (Notebookcheck)'
+            staleLink: 'Laptop GPU rank (PassMark)'
         },
         ladderNbGpuRank: {
             title: 'Laptop GPU Rank',
-            desc: 'Relative laptop GPU ranking based on Notebookcheck',
-            note: 'Data from Notebookcheck public charts, for reference only; same SKU can vary with TGP. Legacy generation chart:',
+            desc: 'Laptop GPU ranking by PassMark G3D Mark',
+            note: 'Data from PassMark public charts (user submissions), for reference only; same SKU can vary with TGP. Legacy generation chart:',
             legacyLink: 'mydrivers laptop GPU ladder',
-            sourceLink: 'Notebookcheck source',
+            sourceLink: 'PassMark source',
             updated: 'Updated',
             count: 'Items',
             empty: 'No data',

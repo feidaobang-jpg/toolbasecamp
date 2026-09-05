@@ -64,7 +64,7 @@ from game_thumbs import wire as wire_game_thumbs
 from nbcheck import router as nbcheck_router
 from nbcheck import wire as wire_nbcheck
 
-NBCHECK_API_REV = 2
+NBCHECK_API_REV = 3
 NEWS_API_REV = 2
 PC_BUILDS_API_REV = 4
 

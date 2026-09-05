@@ -1,4 +1,4 @@
-"""Notebookcheck benchmark rankings (admin refresh + public JSON)."""
+"""Hardware benchmark rankings (PassMark CPU/GPU + Notebookcheck SoC)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import json
 import os
 import re
 import threading
+import time
 from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional
 
@@ -31,35 +32,54 @@ _REFRESH_STATE: Dict[str, Any] = {
 }
 
 KEEP_TOP = 300
+PASSMARK_MIN_SAMPLES = 2
+_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+)
+_PASSMARK_ENDPOINTS = {
+    "cpu": {
+        "mega": "https://www.cpubenchmark.net/CPU_mega_page.html",
+        "data": "https://www.cpubenchmark.net/data/",
+        "score_key": "cpumark",
+    },
+    "gpu": {
+        "mega": "https://www.videocardbenchmark.net/GPU_mega_page.html",
+        "data": "https://www.videocardbenchmark.net/data/",
+        "score_key": "g3d",
+    },
+}
+_passmark_rows_cache: Dict[str, List[Dict[str, Any]]] = {}
 
-# Official Notebookcheck benchmark-list pages (filter query where needed).
+# PassMark mega lists for PC ladders; Notebookcheck remains for phone SoC.
 LISTS: Dict[str, Dict[str, Any]] = {
     "cpu": {
         "title": "桌面处理器跑分榜",
         "kind": "cpu",
-        "url": (
-            "https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html"
-            "?deskornote=1&cpu_fullname=1&showBars=1"
-        ),
-        "credit": "Data from Notebookcheck mobile/desktop processor list (desktop filter). For reference only.",
+        "provider": "passmark",
+        "passmark_kind": "cpu",
+        "url": "https://www.cpubenchmark.net/CPU_mega_page.html",
+        "credit": "Data from PassMark CPU Mark (user submissions). For reference only.",
+        "score_label": "PassMark CPU Mark",
         "filters": ["intel", "amd", "apple"],
     },
     "gpu": {
         "title": "桌面显卡跑分榜",
         "kind": "gpu",
-        "url": (
-            "https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html"
-            "?deskornote=1&gpu_fullname=1&showBars=1"
-        ),
-        "credit": "Data from Notebookcheck graphics list (desktop filter). For reference only.",
+        "provider": "passmark",
+        "passmark_kind": "gpu",
+        "url": "https://www.videocardbenchmark.net/GPU_mega_page.html",
+        "credit": "Data from PassMark G3D Mark (user submissions). For reference only.",
+        "score_label": "PassMark G3D Mark",
         "filters": ["nvidia", "amd", "intel"],
     },
     "soc": {
         "title": "手机 SoC 跑分榜",
         "kind": "soc",
+        "provider": "notebookcheck",
         "url": (
             "https://www.notebookcheck.net/Smartphone-Processors-Benchmark-List.149513.0.html"
-            "?cpu_fullname=1&showBars=1&perfrating=1"
+            "?cpu_average=1&showBars=1&perfrating=1"
         ),
         "credit": (
             "Data from Notebookcheck smartphone/tablet SoC list. "
@@ -71,18 +91,24 @@ LISTS: Dict[str, Dict[str, Any]] = {
     "nb_cpu": {
         "title": "笔记本处理器跑分榜",
         "kind": "nb_cpu",
-        "url": (
-            "https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html"
-            "?deskornote=2&cpu_fullname=1&showBars=1"
-        ),
-        "credit": "Data from Notebookcheck mobile processors list (notebook filter). For reference only.",
+        "provider": "passmark",
+        "passmark_kind": "cpu",
+        "url": "https://www.cpubenchmark.net/CPU_mega_page.html",
+        "credit": "Data from PassMark CPU Mark laptop category (user submissions). For reference only.",
+        "score_label": "PassMark CPU Mark",
         "filters": ["intel", "amd", "apple", "qualcomm"],
     },
     "nb_gpu": {
         "title": "笔记本显卡跑分榜",
         "kind": "nb_gpu",
-        "url": "https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html",
-        "credit": "Data from Notebookcheck. For reference only; laptop TGP varies by chassis.",
+        "provider": "passmark",
+        "passmark_kind": "gpu",
+        "url": "https://www.videocardbenchmark.net/GPU_mega_page.html",
+        "credit": (
+            "Data from PassMark G3D Mark mobile category (user submissions). "
+            "For reference only; laptop TGP varies by chassis."
+        ),
+        "score_label": "PassMark G3D Mark",
         "filters": ["nvidia", "amd", "intel"],
     },
 }
@@ -117,6 +143,17 @@ def _json_path(list_id: str) -> str:
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _source_label(meta: Dict[str, Any]) -> str:
+    provider = str(meta.get("provider") or "notebookcheck").lower()
+    if provider == "passmark":
+        return "PassMark"
+    return "Notebookcheck"
+
+
+def _clear_passmark_cache() -> None:
+    _passmark_rows_cache.clear()
 
 
 def _parse_num(s: str) -> Optional[float]:
@@ -206,6 +243,56 @@ def _is_phone_soc(model: str) -> bool:
     return True
 
 
+def _is_workstation_gpu_name(model: str) -> bool:
+    low = model.lower()
+    return any(x in low for x in ("quadro", "rtx pro", "radeon pro", "tesla", "firepro", "rtx a"))
+
+
+def _include_row(model: str, kind: str, *, passmark_cat: str = "") -> bool:
+    if not model:
+        return False
+    cat = (passmark_cat or "").lower()
+    if kind == "nb_gpu":
+        # PassMark Mobile category already separates laptop SKUs (name may omit "Laptop").
+        if "mobile" in cat:
+            return not _is_workstation_gpu_name(model)
+        return _is_consumer_mobile_gpu(model)
+    if kind == "gpu":
+        if "desktop" in cat:
+            low = model.lower()
+            if "laptop" in low or "mobile" in low or "max-q" in low:
+                return False
+            return not _is_workstation_gpu_name(model)
+        return _is_consumer_desktop_gpu(model)
+    if kind == "soc":
+        return _is_phone_soc(model)
+    if kind in ("cpu", "nb_cpu"):
+        low = model.lower()
+        if "epyc" in low or re.search(r"\bxeon\b", low):
+            return False
+        return True
+    return True
+
+
+def _passmark_cat_ok(list_id: str, cat: str, model: str) -> bool:
+    c = (cat or "").lower()
+    if list_id == "cpu":
+        return "desktop" in c
+    if list_id == "nb_cpu":
+        return "laptop" in c
+    if list_id == "gpu":
+        if "desktop" in c:
+            return True
+        if "workstation" in c or "mobile" in c:
+            return False
+        # Unknown category: keep consumer desktop names only.
+        return _is_consumer_desktop_gpu(model)
+    if list_id == "nb_gpu":
+        # Prefer explicit Mobile; skip Unknown to avoid desktop SKUs leaking in.
+        return "mobile" in c and "workstation" not in c
+    return False
+
+
 def _row_model(tr) -> str:
     model_td = tr.find("td", class_="fullname")
     if model_td:
@@ -261,23 +348,6 @@ def _cb_r23_multi(tr) -> Optional[float]:
     return None
 
 
-def _include_row(model: str, kind: str) -> bool:
-    if not model:
-        return False
-    if kind == "nb_gpu":
-        return _is_consumer_mobile_gpu(model)
-    if kind == "gpu":
-        return _is_consumer_desktop_gpu(model)
-    if kind == "soc":
-        return _is_phone_soc(model)
-    if kind in ("cpu", "nb_cpu"):
-        low = model.lower()
-        if "epyc" in low or re.search(r"\bxeon\b", low):
-            return False
-        return True
-    return True
-
-
 def _score_for_row(tr, kind: str) -> Optional[float]:
     if kind == "soc":
         return _soc_geekbench_multi(tr)
@@ -308,17 +378,114 @@ def _is_low_confidence_perf(tr) -> bool:
     return False
 
 
-def _scrape_list(list_id: str) -> Dict[str, Any]:
-    meta = LISTS.get(list_id)
-    if not meta:
-        raise ValueError(f"Unknown list: {list_id}")
+def _fetch_passmark_rows(pm_kind: str) -> List[Dict[str, Any]]:
+    cached = _passmark_rows_cache.get(pm_kind)
+    if cached is not None:
+        return cached
+    ep = _PASSMARK_ENDPOINTS.get(pm_kind)
+    if not ep:
+        raise ValueError(f"Unknown PassMark kind: {pm_kind}")
+    session = requests.Session()
+    session.headers.update({"User-Agent": _UA, "Accept-Language": "en-US,en;q=0.9"})
+    mega = str(ep["mega"])
+    data_url = str(ep["data"])
+    r1 = session.get(mega, timeout=120)
+    r1.raise_for_status()
+    r2 = session.get(
+        data_url,
+        params={"_": int(time.time() * 1000)},
+        headers={
+            "X-Requested-With": "XMLHttpRequest",
+            "Referer": mega,
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+        },
+        timeout=120,
+    )
+    r2.raise_for_status()
+    payload = r2.json()
+    rows = payload.get("data") if isinstance(payload, dict) else payload
+    if not isinstance(rows, list) or not rows:
+        raise RuntimeError(f"PassMark data empty for {pm_kind}")
+    typed = [r for r in rows if isinstance(r, dict)]
+    _passmark_rows_cache[pm_kind] = typed
+    return typed
+
+
+def _finalize_items(list_id: str, meta: Dict[str, Any], items: List[Dict[str, Any]]) -> Dict[str, Any]:
+    if not items:
+        raise RuntimeError(f"No items parsed for {list_id}")
+    items.sort(key=lambda x: (-float(x["perf_rating"]), x["model"]))
+    top = float(items[0]["perf_rating"])
+    for i, it in enumerate(items, 1):
+        it["rank"] = i
+        it["pct"] = round(100.0 * float(it["perf_rating"]) / top, 1) if top else 0
+    url = str(meta["url"])
+    return {
+        "id": list_id,
+        "title": meta["title"],
+        "source": _source_label(meta),
+        "source_url": url.split("?")[0],
+        "credit": meta["credit"],
+        "score_label": meta.get("score_label"),
+        "filters": meta.get("filters") or [],
+        "updated_at": _utc_now(),
+        "count": len(items),
+        "items": items[:KEEP_TOP],
+    }
+
+
+def _scrape_passmark_list(list_id: str, meta: Dict[str, Any]) -> Dict[str, Any]:
+    kind = str(meta["kind"])
+    pm_kind = str(meta.get("passmark_kind") or ("gpu" if kind in ("gpu", "nb_gpu") else "cpu"))
+    score_key = str(_PASSMARK_ENDPOINTS[pm_kind]["score_key"])
+    items: List[Dict[str, Any]] = []
+    for row in _fetch_passmark_rows(pm_kind):
+        model = str(row.get("name") or "").strip()
+        if not model:
+            continue
+        cat = str(row.get("cat") or "")
+        if not _passmark_cat_ok(list_id, cat, model):
+            continue
+        if not _include_row(model, kind, passmark_cat=cat):
+            continue
+        try:
+            samples = int(float(str(samples_raw).replace(",", ""))) if samples_raw not in (None, "") else 0
+        except ValueError:
+            samples = 0
+        if samples < PASSMARK_MIN_SAMPLES:
+            continue
+        perf = _parse_num(str(row.get(score_key) or ""))
+        if perf is None or perf <= 0:
+            continue
+        architecture = ""
+        if pm_kind == "cpu":
+            architecture = str(row.get("socket") or "").strip()
+        else:
+            mem = str(row.get("memSize") or "").strip()
+            architecture = mem
+        item: Dict[str, Any] = {
+            "pos": None,
+            "model": model,
+            "brand": _brand_of(model, kind),
+            "architecture": architecture,
+            "perf_rating": perf,
+            "samples": samples,
+            "category": cat,
+        }
+        rank_raw = row.get("rank")
+        try:
+            item["pos"] = int(float(str(rank_raw).replace(",", ""))) if rank_raw not in (None, "") else None
+        except ValueError:
+            item["pos"] = None
+        items.append(item)
+    return _finalize_items(list_id, meta, items)
+
+
+def _scrape_notebookcheck_list(list_id: str, meta: Dict[str, Any]) -> Dict[str, Any]:
     kind = str(meta["kind"])
     url = str(meta["url"])
     headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        ),
+        "User-Agent": _UA,
         "Accept-Language": "en-US,en;q=0.9",
     }
     resp = requests.get(url, headers=headers, timeout=120)
@@ -363,27 +530,17 @@ def _scrape_list(list_id: str) -> Dict[str, Any]:
             item["score_label"] = meta.get("score_label") or "Geekbench 5.5 Multi"
         items.append(item)
 
-    if not items:
-        raise RuntimeError(f"No items parsed for {list_id}")
+    return _finalize_items(list_id, meta, items)
 
-    items.sort(key=lambda x: (-float(x["perf_rating"]), x["model"]))
-    top = float(items[0]["perf_rating"])
-    for i, it in enumerate(items, 1):
-        it["rank"] = i
-        it["pct"] = round(100.0 * float(it["perf_rating"]) / top, 1) if top else 0
 
-    return {
-        "id": list_id,
-        "title": meta["title"],
-        "source": "Notebookcheck",
-        "source_url": url.split("?")[0],
-        "credit": meta["credit"],
-        "score_label": meta.get("score_label"),
-        "filters": meta.get("filters") or [],
-        "updated_at": _utc_now(),
-        "count": len(items),
-        "items": items[:KEEP_TOP],
-    }
+def _scrape_list(list_id: str) -> Dict[str, Any]:
+    meta = LISTS.get(list_id)
+    if not meta:
+        raise ValueError(f"Unknown list: {list_id}")
+    provider = str(meta.get("provider") or "notebookcheck").lower()
+    if provider == "passmark":
+        return _scrape_passmark_list(list_id, meta)
+    return _scrape_notebookcheck_list(list_id, meta)
 
 
 def _load_json(list_id: str) -> Optional[Dict[str, Any]]:
@@ -445,6 +602,7 @@ def refresh_list(list_id: str) -> Dict[str, Any]:
         "updated_at": payload.get("updated_at"),
         "path": path,
         "public_path": public_path,
+        "source": payload.get("source"),
     }
 
 
@@ -459,6 +617,7 @@ def refresh_lists(list_ids: Optional[List[str]] = None) -> Dict[str, Any]:
     _REFRESH_STATE["started_at"] = _utc_now()
     _REFRESH_STATE["last_error"] = None
     results: List[Dict[str, Any]] = []
+    _clear_passmark_cache()
     try:
         for lid in ids:
             _REFRESH_STATE["current_id"] = lid
@@ -472,8 +631,9 @@ def refresh_lists(list_ids: Optional[List[str]] = None) -> Dict[str, Any]:
         raise
     except Exception as exc:
         _REFRESH_STATE["last_error"] = str(exc)
-        raise HTTPException(status_code=502, detail=f"Notebookcheck scrape failed: {exc}") from exc
+        raise HTTPException(status_code=502, detail=f"Benchmark scrape failed: {exc}") from exc
     finally:
+        _clear_passmark_cache()
         _REFRESH_STATE["running"] = False
         _REFRESH_STATE["finished_at"] = _utc_now()
         _REFRESH_STATE["current_id"] = None
@@ -498,7 +658,7 @@ def nbcheck_status(_admin: dict = Depends(_admin_user)):
             {
                 "id": lid,
                 "title": meta["title"],
-                "source": "Notebookcheck",
+                "source": (data or {}).get("source") or _source_label(meta),
                 "source_url": str(meta["url"]).split("?")[0],
                 "updated_at": (data or {}).get("updated_at"),
                 "count": (data or {}).get("count"),
