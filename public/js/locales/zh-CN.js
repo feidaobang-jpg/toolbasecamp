@@ -80,6 +80,7 @@ window.TB_LOCALES['zh-CN'] = {
         totalAmount: '总金额',
         saveFail: '保存失败',
         missingId: '缺少统计表 id',
+        sheetDeleted: '该统计已被他人删除',
         serverBusy: '服务暂时不可用，请稍后重试',
         badResponse: '服务器返回异常'
     },

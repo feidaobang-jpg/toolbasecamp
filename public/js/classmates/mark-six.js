@@ -22,6 +22,20 @@
   var waveMap = {};
   var waveGroups = {};
   var failStreak = 0;
+  var goneHandled = false;
+
+  function leaveIfGone(detail) {
+    if (goneHandled) return;
+    goneHandled = true;
+    stopPoll();
+    modalOpen = false;
+    ['amount-modal', 'zodiac-modal', 'wave-modal'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = true;
+    });
+    alert(detail || G.tr('classmates.sheetDeleted', '该统计已被他人删除'));
+    window.location.href = 'mark-six-list.html';
+  }
 
   function api(path, opts) {
     opts = opts || {};
@@ -189,6 +203,10 @@
     })
       .then(function (p) {
         saving = false;
+        if (p.res.status === 404) {
+          leaveIfGone(p.body.detail);
+          return;
+        }
         if (!p.res.ok || !p.body.success) {
           failStreak += 1;
           setNet(failStreak > 2 ? '断' : '差');
@@ -486,10 +504,14 @@
   }
 
   function poll() {
-    if (!sheetId || saving || modalOpen) return;
+    if (!sheetId || saving || modalOpen || goneHandled) return;
     var q = updatedAtUtc ? '?since=' + encodeURIComponent(updatedAtUtc) : '';
     api('/mark-six/sheets/' + sheetId + q)
       .then(function (p) {
+        if (p.res.status === 404) {
+          leaveIfGone(p.body.detail || G.tr('classmates.sheetDeleted', '该统计已被他人删除'));
+          return;
+        }
         if (!p.res.ok || !p.body.success) {
           failStreak += 1;
           setNet(failStreak > 2 ? '断' : '差');
@@ -586,7 +608,11 @@
       })
       .then(function (p) {
         if (!p || !p.res.ok || !p.body.success || !p.body.sheet) {
-          alert((p && p.body && p.body.detail) || 'not found');
+          if (p && p.res && p.res.status === 404) {
+            leaveIfGone(p.body.detail);
+            return;
+          }
+          alert((p && p.body && p.body.detail) || G.tr('classmates.sheetDeleted', '该统计已被他人删除'));
           window.location.href = 'mark-six-list.html';
           return;
         }

@@ -81,6 +81,7 @@ window.TB_LOCALES.en = {
         totalAmount: 'Total',
         saveFail: 'Save failed',
         missingId: 'Missing sheet id',
+        sheetDeleted: 'This sheet was deleted by someone else',
         serverBusy: 'Service temporarily unavailable — try again',
         badResponse: 'Unexpected server response'
     },
