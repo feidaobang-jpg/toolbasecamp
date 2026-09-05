@@ -50,6 +50,7 @@ window.TB_LOCALES.en = {
         packZodiac: 'By zodiac',
         packWave: 'By color',
         packWaveTitle: 'By color',
+        waveParity: 'Odd / even by color',
         colNumZodiac: 'No./Zodiac',
         colValue: 'Value',
         colAdd: 'Add',

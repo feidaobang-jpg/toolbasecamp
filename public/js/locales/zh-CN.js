@@ -49,6 +49,7 @@ window.TB_LOCALES['zh-CN'] = {
         packZodiac: '包生肖',
         packWave: '选波',
         packWaveTitle: '包波',
+        waveParity: '波色单双',
         colNumZodiac: '序号/生肖',
         colValue: '数值',
         colAdd: '加',

@@ -16,10 +16,11 @@
   var amountCtx = { index: -1, isAdd: true };
   var selectedZodiacs = {};
   var selectedWaves = {};
-  var ZODIAC_LIST = ['蛇', '龙', '兔', '虎', '牛', '鼠', '猪', '狗', '鸡', '猴', '羊', '马'];
-  var WAVE_LIST = ['红波', '蓝波', '绿波'];
+  var ZODIAC_LIST = ['马', '蛇', '龙', '兔', '虎', '牛', '鼠', '猪', '狗', '鸡', '猴', '羊'];
+  var WAVE_SELECT_LIST = ['红波', '蓝波', '绿波', '红单', '红双', '蓝单', '蓝双', '绿单', '绿双'];
   var zodiacMap = {};
   var waveMap = {};
+  var waveGroups = {};
   var failStreak = 0;
 
   function api(path, opts) {
@@ -80,6 +81,11 @@
   }
 
   function numbersByWave(w) {
+    if (waveGroups[w] && waveGroups[w].length) {
+      return waveGroups[w].slice().sort(function (a, b) {
+        return a - b;
+      });
+    }
     var out = [];
     Object.keys(waveMap).forEach(function (n) {
       if (waveMap[n] === w) out.push(parseInt(n, 10));
@@ -365,9 +371,26 @@
     var input = document.getElementById('wave-input');
     var info = document.getElementById('wave-info');
     if (chips) {
-      chips.innerHTML = WAVE_LIST.map(function (w) {
-        return '<button type="button" class="ms-chip" data-w="' + w + '">' + w + '</button>';
-      }).join('');
+      var colorOpts = WAVE_SELECT_LIST.slice(0, 3);
+      var parityOpts = WAVE_SELECT_LIST.slice(3);
+      chips.innerHTML =
+        '<div class="ms-chip-section">' +
+        colorOpts
+          .map(function (w) {
+            return '<button type="button" class="ms-chip" data-w="' + w + '">' + w + '</button>';
+          })
+          .join('') +
+        '</div>' +
+        '<div class="ms-chip-section-label">' +
+        G.tr('classmates.waveParity', '波色单双') +
+        '</div>' +
+        '<div class="ms-chip-section">' +
+        parityOpts
+          .map(function (w) {
+            return '<button type="button" class="ms-chip" data-w="' + w + '">' + w + '</button>';
+          })
+          .join('') +
+        '</div>';
       chips.querySelectorAll('.ms-chip').forEach(function (c) {
         c.addEventListener('click', function () {
           var w = c.getAttribute('data-w');
@@ -537,8 +560,15 @@
         if (p.res.ok && p.body.success) {
           zodiacMap = p.body.zodiac_map || {};
           waveMap = p.body.wave_map || {};
+          waveGroups = p.body.wave_groups || {};
           if (p.body.zodiac_list && p.body.zodiac_list.length) ZODIAC_LIST = p.body.zodiac_list;
-          if (p.body.wave_list && p.body.wave_list.length) WAVE_LIST = p.body.wave_list;
+          if (p.body.wave_select_list && p.body.wave_select_list.length) {
+            WAVE_SELECT_LIST = p.body.wave_select_list;
+          } else if (p.body.wave_list && p.body.wave_parity_list) {
+            WAVE_SELECT_LIST = [].concat(p.body.wave_list, p.body.wave_parity_list);
+          } else if (p.body.wave_list && p.body.wave_list.length) {
+            WAVE_SELECT_LIST = p.body.wave_list;
+          }
           if (p.body.odds_default) odds = Number(p.body.odds_default) || odds;
         }
         return api('/mark-six/sheets/' + sheetId);

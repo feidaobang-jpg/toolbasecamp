@@ -140,7 +140,17 @@
 .ms-hint {
   white-space: pre-line; font-size: 13px; color: #666; margin: 10px 0 0; min-height: 0; line-height: 1.5;
 }
-.ms-chip-grid {
+.ms-chip-grid { margin-bottom: 14px; }
+.ms-chip-section {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px;
+}
+.ms-chip-section:last-of-type {
+  grid-template-columns: repeat(3, 1fr);
+}
+.ms-chip-section-label {
+  font-size: 12px; color: #999; margin: 4px 0 8px; font-weight: 600;
+}
+#zodiac-chips {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;
 }
 .ms-chip {
