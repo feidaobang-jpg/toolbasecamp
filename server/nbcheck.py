@@ -30,7 +30,7 @@ _REFRESH_STATE: Dict[str, Any] = {
     "current_id": None,
 }
 
-KEEP_TOP = 100
+KEEP_TOP = 300
 
 # Official Notebookcheck benchmark-list pages (filter query where needed).
 LISTS: Dict[str, Dict[str, Any]] = {

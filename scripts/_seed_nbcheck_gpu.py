@@ -115,7 +115,7 @@ def main() -> int:
         "credit": "Data from Notebookcheck. For reference only; laptop TGP varies by chassis.",
         "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "count": len(items),
-        "items": items[:100],
+        "items": items[:300],
     }
     out = os.path.abspath(OUT)
     os.makedirs(os.path.dirname(out), exist_ok=True)
