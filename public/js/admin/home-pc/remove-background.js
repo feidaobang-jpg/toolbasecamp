@@ -1,11 +1,10 @@
 /**
  * 家里电脑 · 去背景（抠图）
- * ComfyUI rembg.json；可选透明 PNG 或铺实色浅底。
+ * ComfyUI rembg.json；可选绿幕或透明 PNG。
  */
 (function () {
   'use strict';
 
-  var LIGHT_BG = '#f3f4f6';
   var GREEN_BG = '#00b140';
 
   var dropZone = document.getElementById('drop-zone');
@@ -24,7 +23,7 @@
   var file = null;
   var previewUrl = '';
   var resultUrl = '';
-  var resultMode = 'transparent';
+  var resultMode = 'green';
   var processing = false;
 
   function tr(key, fallback) {
@@ -43,7 +42,7 @@
 
   function getBgMode() {
     var el = document.querySelector('input[name="bg-mode"]:checked');
-    return (el && el.value) || 'transparent';
+    return (el && el.value) || 'green';
   }
 
   function setError(msg) {
@@ -71,7 +70,7 @@
       } catch (e) { /* ignore */ }
     }
     resultUrl = '';
-    resultMode = 'transparent';
+    resultMode = 'green';
     if (resultImg) resultImg.removeAttribute('src');
     if (previewWrap) {
       previewWrap.hidden = true;
@@ -120,7 +119,7 @@
 
   function showResult(dataUrl, mode) {
     revokeResult();
-    resultMode = mode || 'transparent';
+    resultMode = mode || 'green';
     try {
       resultUrl = URL.createObjectURL(dataUrlToBlob(dataUrl));
     } catch (e) {
@@ -128,10 +127,7 @@
     }
     resultImg.src = resultUrl;
     previewWrap.hidden = false;
-    if (resultMode === 'light') {
-      previewWrap.classList.remove('cutout-preview');
-      previewWrap.style.background = LIGHT_BG;
-    } else if (resultMode === 'green') {
+    if (resultMode === 'green') {
       previewWrap.classList.remove('cutout-preview');
       previewWrap.style.background = GREEN_BG;
     } else {
@@ -216,9 +212,7 @@
       var ok = await checkServerOk();
       if (!ok) throw new Error(serviceErrorMsg());
       var dataUrl = await callRemoveBg(file);
-      if (mode === 'light') {
-        dataUrl = await compositeOnColor(dataUrl, LIGHT_BG);
-      } else if (mode === 'green') {
+      if (mode === 'green') {
         dataUrl = await compositeOnColor(dataUrl, GREEN_BG);
       }
       showResult(dataUrl, mode);
@@ -251,8 +245,7 @@
   function downloadResult() {
     if (!resultUrl) return;
     var prefix = 'cutout_';
-    if (resultMode === 'light') prefix = 'cutout_light_';
-    else if (resultMode === 'green') prefix = 'cutout_green_';
+    if (resultMode === 'green') prefix = 'cutout_green_';
     var name = prefix + Date.now() + '.png';
     var MediaUi = window.HomePcMediaUi;
     if (MediaUi && typeof MediaUi.triggerDownload === 'function') {
