@@ -57,6 +57,12 @@ from pc_builds import (
 )
 from stocks import ensure_stock_pick_tables, router as stocks_router
 from stocks import wire as wire_stocks
+from mark_six_stats import (
+    ensure_mark_six_tables,
+    router as mark_six_router,
+    user_is_mark_six,
+    wire as wire_mark_six,
+)
 from ladder import router as ladder_router
 from ladder import wire as wire_ladder
 from game_thumbs import router as game_thumbs_router
@@ -419,6 +425,7 @@ def ensure_tables():
             ensure_news_tables(cur)
             ensure_pc_builds_tables(cur)
             ensure_stock_pick_tables(cur)
+            ensure_mark_six_tables(cur)
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
@@ -786,6 +793,8 @@ wire_site_stats(
 )
 wire_stocks(get_current_user, require_admin, get_conn, require_db)
 app.include_router(stocks_router)
+wire_mark_six(get_conn, require_db, get_current_user, require_admin, is_admin)
+app.include_router(mark_six_router)
 wire_ladder(get_current_user, require_admin)
 app.include_router(ladder_router)
 wire_game_thumbs(get_current_user, require_admin)
@@ -1350,16 +1359,18 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     phone = user.get("phone") or ""
     nickname = (user.get("nickname") or "").strip()
     wallet = None
+    is_mark_six = False
     try:
         from ai_wallet import wallet_public
 
         conn = get_conn()
         try:
             wallet = wallet_public(conn, user, is_admin=is_admin(user))
+            is_mark_six = bool(user_is_mark_six(conn, user))
         finally:
             conn.close()
     except Exception as exc:
-        print(f"[auth/me] wallet: {exc}")
+        print(f"[auth/me] wallet/mark_six: {exc}")
     return {
         "success": True,
         "user": {
@@ -1372,6 +1383,7 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
             "created_at": user["created_at"],
             "updated_at": user["updated_at"],
             "aiWallet": wallet,
+            "isMarkSix": is_mark_six,
         },
     }
 

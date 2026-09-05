@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>统计表 - 同学专区</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../vendor/font-awesome/css/all.min.css?v=ms1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/base.css?v=ms1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=ms1" />
+  <link rel="stylesheet" href="../../css/admin-shell.css?v=ms1" />
+  <link rel="stylesheet" href="../../css/classmates/mark-six.css?v=ms1" />
+  <script src="../../js/locales/en.js?v=ms1"></script>
+  <script src="../../js/locales/zh-CN.js?v=ms1"></script>
+  <script src="../../js/i18n.js?v=ms1"></script>
+  <script src="../../js/config.js?v=ms1"></script>
+  <script src="../../js/common_ui.js?v=ms1"></script>
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="mark-six-list.html" class="admin-back">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="classmates.markSixTitle">六合彩统计</span>
+      </a>
+      <h1 class="admin-title" id="sheet-title">统计数据</h1>
+      <div class="admin-header-actions"></div>
+    </div>
+  </header>
+  <main class="admin-main admin-main--wide">
+    <div id="boot-loading" class="admin-card admin-card--center">加载中…</div>
+    <div id="gate" class="admin-card admin-card--center hidden" hidden>
+      <p id="gate-msg" class="admin-gate-msg">需要登录且在同学名单中</p>
+      <a id="gate-login" href="../auth/login.html" class="tb-btn">去登录</a>
+    </div>
+    <div id="app" class="admin-app hidden" hidden>
+      <div class="ms-toolbar">
+        <span class="ms-total" id="total-label">合计 0</span>
+        <span class="ms-sync" id="sync-label"></span>
+        <div class="action-row" style="margin-left:auto;">
+          <button type="button" class="tb-btn" id="zodiac-btn" data-i18n="classmates.packZodiac">包生肖</button>
+          <button type="button" class="tb-btn" id="wave-btn" data-i18n="classmates.packWave">选波</button>
+          <button type="button" class="tb-btn" id="clear-btn" data-i18n="classmates.clearAll">清空</button>
+          <button type="button" class="tb-btn" id="save-btn" data-i18n="classmates.save">保存</button>
+        </div>
+      </div>
+      <div class="ms-table-wrap">
+        <table class="ms-table">
+          <thead>
+            <tr>
+              <th data-i18n="classmates.colNum">号码</th>
+              <th data-i18n="classmates.colZodiac">生肖</th>
+              <th data-i18n="classmates.colWave">波色</th>
+              <th data-i18n="classmates.colValue">数值</th>
+              <th data-i18n="classmates.colPayout">赔付</th>
+              <th data-i18n="classmates.colOps">操作</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="amount-modal" class="ms-modal" hidden>
+    <div class="ms-modal-card">
+      <h3 class="ms-modal-title" id="amount-modal-title">加减</h3>
+      <p class="ms-hint" id="amount-modal-hint"></p>
+      <input id="amount-input" type="text" inputmode="decimal" placeholder="金额" />
+      <div class="action-row" style="margin-top:14px;">
+        <button type="button" class="tb-btn" id="amount-ok">确定</button>
+        <button type="button" class="tb-btn" id="amount-cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="zodiac-modal" class="ms-modal" hidden>
+    <div class="ms-modal-card">
+      <h3 class="ms-modal-title" data-i18n="classmates.packZodiac">包生肖</h3>
+      <div class="ms-chip-row" id="zodiac-chips"></div>
+      <input id="zodiac-input" type="text" inputmode="decimal" placeholder="金额" />
+      <p class="ms-hint" id="zodiac-info"></p>
+      <div class="action-row" style="margin-top:14px;">
+        <button type="button" class="tb-btn" id="zodiac-ok">确定</button>
+        <button type="button" class="tb-btn" id="zodiac-cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="wave-modal" class="ms-modal" hidden>
+    <div class="ms-modal-card">
+      <h3 class="ms-modal-title" data-i18n="classmates.packWave">选波</h3>
+      <div class="ms-chip-row" id="wave-chips"></div>
+      <input id="wave-input" type="text" inputmode="decimal" placeholder="每个号码金额" />
+      <p class="ms-hint" id="wave-info"></p>
+      <div class="action-row" style="margin-top:14px;">
+        <button type="button" class="tb-btn" id="wave-ok">确定</button>
+        <button type="button" class="tb-btn" id="wave-cancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/classmates/mark-six-guard.js?v=ms1"></script>
+  <script src="../../js/classmates/mark-six.js?v=ms1"></script>
+</body>
+</html>

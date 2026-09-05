@@ -242,6 +242,7 @@
                     mobileUserSpan.textContent = label;
                 }
                 injectAdminLinks(user, wrap);
+                injectClassmatesLink(user, wrap);
                 injectChatLink(user, wrap);
                 startChatUnreadPolling();
                 const _testPhonePrefixes = ['1585913072'];
@@ -676,6 +677,25 @@
             id: 'tb-admin-private-link-m',
             href: `${base}html/admin/private.html`,
             label: privateLabel
+        });
+    }
+
+    function injectClassmatesLink(user, wrap) {
+        if (!user || !user.isMarkSix) return;
+        const path = String(window.location.pathname || '');
+        if (/\/classmates(\/|\.html)/.test(path)) return;
+        const base = getSiteRootPrefix();
+        const label = tr('nav.classmates') === 'nav.classmates' ? '同学' : tr('nav.classmates');
+        injectAdminNavLink(wrap, {
+            id: 'tb-classmates-link',
+            href: `${base}html/classmates/hub.html`,
+            label: label,
+            title: label
+        });
+        injectAdminMobileLink({
+            id: 'tb-classmates-link-m',
+            href: `${base}html/classmates/hub.html`,
+            label: label
         });
     }
 

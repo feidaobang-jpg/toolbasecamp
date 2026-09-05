@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>同学专区 - 百宝箱</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../vendor/font-awesome/css/all.min.css?v=ms1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/base.css?v=ms1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=ms1" />
+  <link rel="stylesheet" href="../../css/admin-shell.css?v=ms1" />
+  <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=ms1" />
+  <script src="../../js/locales/en.js?v=ms1"></script>
+  <script src="../../js/locales/zh-CN.js?v=ms1"></script>
+  <script src="../../js/i18n.js?v=ms1"></script>
+  <script src="../../js/config.js?v=ms1"></script>
+  <script src="../../js/common_ui.js?v=ms1"></script>
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="../../index.html" class="admin-back">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="classmates.backHome">返回首页</span>
+      </a>
+      <h1 class="admin-title" data-i18n="classmates.title">同学专区</h1>
+      <div class="admin-header-actions">
+        <span id="auth-label" class="admin-auth-label"></span>
+        <a id="login-link" href="../auth/login.html" class="admin-login-link hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+  <main class="admin-main">
+    <div id="boot-loading" class="admin-card admin-card--center">加载中…</div>
+    <div id="gate" class="admin-card admin-card--center hidden" hidden>
+      <p id="gate-msg" class="admin-gate-msg">需要登录且在同学名单中</p>
+      <a id="gate-login" href="../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+    </div>
+    <div id="app" class="admin-app hidden" hidden>
+      <p class="admin-page-head-sub" data-i18n="classmates.subtitle">仅名单内同学与管理员可见</p>
+      <div class="admin-tool-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:16px;">
+        <a class="admin-card" href="mark-six-list.html" style="text-decoration:none;color:inherit;display:block;">
+          <h3 style="margin:0 0 8px;font-size:1.05rem;" data-i18n="classmates.markSixTitle">六合彩统计</h3>
+          <p style="margin:0;color:#64748b;font-size:14px;" data-i18n="classmates.markSixDesc">1–49 号码统计，支持多人协作刷新</p>
+        </a>
+      </div>
+    </div>
+  </main>
+  <script src="../../js/classmates/mark-six-guard.js?v=ms1"></script>
+</body>
+</html>

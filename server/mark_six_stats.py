@@ -1,0 +1,499 @@
+"""同学专区 · 六合彩统计（白名单 + 管理员）。"""
+from __future__ import annotations
+
+import json
+import re
+from datetime import datetime, timezone
+from typing import Any, Callable, Dict, List, Optional
+from zoneinfo import ZoneInfo
+
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import BaseModel, Field
+
+router = APIRouter(prefix="/mark-six", tags=["mark-six"])
+security = HTTPBearer(auto_error=False)
+
+_get_conn: Optional[Callable[..., Any]] = None
+_require_db: Optional[Callable[[], None]] = None
+_get_current_user: Optional[Callable[..., Any]] = None
+_require_admin: Optional[Callable[[dict], None]] = None
+_is_admin: Optional[Callable[[dict], bool]] = None
+
+_CN_TZ = ZoneInfo("Asia/Shanghai")
+_DEFAULT_ODDS = 47.0
+_PHONE_RE = re.compile(r"^1\d{10}$")
+
+# 与小程序一致（蛇年映射）；以后换年可改此表
+ZODIAC_MAP: Dict[str, str] = {}
+for n, z in [
+    (1, "蛇"), (13, "蛇"), (25, "蛇"), (37, "蛇"), (49, "蛇"),
+    (2, "龙"), (14, "龙"), (26, "龙"), (38, "龙"),
+    (3, "兔"), (15, "兔"), (27, "兔"), (39, "兔"),
+    (4, "虎"), (16, "虎"), (28, "虎"), (40, "虎"),
+    (5, "牛"), (17, "牛"), (29, "牛"), (41, "牛"),
+    (6, "鼠"), (18, "鼠"), (30, "鼠"), (42, "鼠"),
+    (7, "猪"), (19, "猪"), (31, "猪"), (43, "猪"),
+    (8, "狗"), (20, "狗"), (32, "狗"), (44, "狗"),
+    (9, "鸡"), (21, "鸡"), (33, "鸡"), (45, "鸡"),
+    (10, "猴"), (22, "猴"), (34, "猴"), (46, "猴"),
+    (11, "羊"), (23, "羊"), (35, "羊"), (47, "羊"),
+    (12, "马"), (24, "马"), (36, "马"), (48, "马"),
+]:
+    ZODIAC_MAP[str(n)] = z
+
+WAVE_MAP: Dict[str, str] = {}
+for nums, w in [
+    ([1, 2, 7, 8, 12, 13, 18, 19, 23, 24, 29, 30, 34, 35, 40, 45, 46], "红波"),
+    ([3, 4, 9, 10, 14, 15, 20, 25, 26, 31, 36, 37, 41, 42, 47, 48], "蓝波"),
+    ([5, 6, 11, 16, 17, 21, 22, 27, 28, 32, 33, 38, 39, 43, 44, 49], "绿波"),
+]:
+    for n in nums:
+        WAVE_MAP[str(n)] = w
+
+
+def wire(
+    get_conn: Callable[..., Any],
+    require_db: Callable[[], None],
+    get_current_user: Callable[..., Any],
+    require_admin: Callable[[dict], None],
+    is_admin: Callable[[dict], bool],
+) -> None:
+    global _get_conn, _require_db, _get_current_user, _require_admin, _is_admin
+    _get_conn = get_conn
+    _require_db = require_db
+    _get_current_user = get_current_user
+    _require_admin = require_admin
+    _is_admin = is_admin
+
+
+def ensure_mark_six_tables(cur) -> None:
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS mark_six_members (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            phone VARCHAR(32) NOT NULL,
+            note VARCHAR(128) NULL,
+            created_by BIGINT NULL,
+            created_at DATETIME NOT NULL,
+            UNIQUE KEY uq_mark_six_phone (phone),
+            INDEX idx_mark_six_members_created (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS mark_six_sheets (
+            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+            title VARCHAR(128) NOT NULL DEFAULT '统计数据',
+            table_data LONGTEXT NOT NULL,
+            total DOUBLE NOT NULL DEFAULT 0,
+            odds DOUBLE NOT NULL DEFAULT 47,
+            created_by BIGINT NULL,
+            updated_by BIGINT NULL,
+            created_at DATETIME NOT NULL,
+            updated_at DATETIME NOT NULL,
+            INDEX idx_mark_six_sheets_updated (updated_at),
+            INDEX idx_mark_six_sheets_created_by (created_by)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+
+
+def _utc_now_str() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _to_cn(dt_val) -> Optional[str]:
+    if dt_val is None:
+        return None
+    if isinstance(dt_val, str):
+        s = dt_val.strip().replace("T", " ")[:19]
+        try:
+            dt = datetime.strptime(s, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+        except Exception:
+            return s
+    elif isinstance(dt_val, datetime):
+        dt = dt_val if dt_val.tzinfo else dt_val.replace(tzinfo=timezone.utc)
+    else:
+        return str(dt_val)
+    return dt.astimezone(_CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _norm_phone(raw: str) -> str:
+    p = re.sub(r"\D+", "", (raw or "").strip())
+    if p.startswith("86") and len(p) == 13:
+        p = p[2:]
+    return p
+
+
+def _empty_table(odds: float = _DEFAULT_ODDS) -> List[dict]:
+    rows = []
+    for i in range(1, 50):
+        rows.append(
+            {
+                "number": i,
+                "value": 0,
+                "expression": "0",
+                "displayValue": "0",
+                "zodiac": ZODIAC_MAP.get(str(i), ""),
+                "wave": WAVE_MAP.get(str(i), ""),
+                "payout": 0,
+            }
+        )
+    return rows
+
+
+def _enrich_rows(rows: List[dict], odds: float) -> List[dict]:
+    out = []
+    for i in range(1, 50):
+        src = None
+        for r in rows or []:
+            if int(r.get("number") or 0) == i:
+                src = r
+                break
+        val = float((src or {}).get("value") or 0)
+        expr = str((src or {}).get("expression") or "0")
+        disp = str((src or {}).get("displayValue") or expr)
+        out.append(
+            {
+                "number": i,
+                "value": round(val, 2),
+                "expression": expr,
+                "displayValue": disp,
+                "zodiac": ZODIAC_MAP.get(str(i), ""),
+                "wave": WAVE_MAP.get(str(i), ""),
+                "payout": round(val * float(odds or _DEFAULT_ODDS), 2),
+            }
+        )
+    return out
+
+
+def _sum_total(rows: List[dict]) -> float:
+    return round(sum(float(r.get("value") or 0) for r in rows), 2)
+
+
+def user_is_mark_six(conn, user: dict) -> bool:
+    if not user:
+        return False
+    if _is_admin and _is_admin(user):
+        return True
+    phone = _norm_phone(user.get("phone") or "")
+    if not phone:
+        return False
+    with conn.cursor() as cur:
+        cur.execute("SELECT id FROM mark_six_members WHERE phone=%s LIMIT 1", (phone,))
+        return bool(cur.fetchone())
+
+
+def _current_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> dict:
+    if _require_db:
+        _require_db()
+    if _get_current_user is None:
+        raise HTTPException(status_code=503, detail="Auth unavailable")
+    return _get_current_user(creds)
+
+
+def _mark_six_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> dict:
+    user = _current_user(creds)
+    if _get_conn is None:
+        raise HTTPException(status_code=503, detail="DB unavailable")
+    conn = _get_conn()
+    try:
+        if not user_is_mark_six(conn, user):
+            raise HTTPException(status_code=403, detail="Mark six access required")
+    finally:
+        conn.close()
+    return user
+
+
+def _admin_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> dict:
+    user = _current_user(creds)
+    if _require_admin is None:
+        raise HTTPException(status_code=503, detail="Admin unavailable")
+    _require_admin(user)
+    return user
+
+
+class MemberIn(BaseModel):
+    phone: str
+    note: str = ""
+
+
+class SheetCreateIn(BaseModel):
+    title: str = Field(default="统计数据", max_length=128)
+
+
+class SheetSaveIn(BaseModel):
+    title: Optional[str] = Field(default=None, max_length=128)
+    table_data: List[dict]
+    total: Optional[float] = None
+    odds: Optional[float] = None
+
+
+def _serialize_sheet(row: dict, include_table: bool = True) -> dict:
+    odds = float(row.get("odds") or _DEFAULT_ODDS)
+    item = {
+        "id": int(row["id"]),
+        "title": row.get("title") or "统计数据",
+        "total": float(row.get("total") or 0),
+        "odds": odds,
+        "created_by": row.get("created_by"),
+        "updated_by": row.get("updated_by"),
+        "created_at": _to_cn(row.get("created_at")),
+        "updated_at": _to_cn(row.get("updated_at")),
+        "updated_at_utc": (
+            row.get("updated_at").strftime("%Y-%m-%d %H:%M:%S")
+            if isinstance(row.get("updated_at"), datetime)
+            else str(row.get("updated_at") or "")[:19]
+        ),
+    }
+    if include_table:
+        try:
+            raw = json.loads(row.get("table_data") or "[]")
+        except Exception:
+            raw = []
+        if not isinstance(raw, list):
+            raw = []
+        item["table_data"] = _enrich_rows(raw, odds)
+    return item
+
+
+@router.get("/me")
+def mark_six_me(user: dict = Depends(_current_user)):
+    conn = _get_conn()
+    try:
+        allowed = user_is_mark_six(conn, user)
+        admin = bool(_is_admin and _is_admin(user))
+    finally:
+        conn.close()
+    return {"success": True, "allowed": allowed, "isAdmin": admin, "isMarkSix": allowed}
+
+
+@router.get("/meta")
+def mark_six_meta(user: dict = Depends(_mark_six_user)):
+    return {
+        "success": True,
+        "odds_default": _DEFAULT_ODDS,
+        "zodiac_map": ZODIAC_MAP,
+        "wave_map": WAVE_MAP,
+        "zodiac_list": ["蛇", "龙", "兔", "虎", "牛", "鼠", "猪", "狗", "鸡", "猴", "羊", "马"],
+        "wave_list": ["红波", "蓝波", "绿波"],
+    }
+
+
+@router.get("/members")
+def list_members(user: dict = Depends(_admin_user)):
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, phone, note, created_by, created_at
+                FROM mark_six_members
+                ORDER BY id DESC
+                """
+            )
+            rows = cur.fetchall() or []
+    finally:
+        conn.close()
+    return {
+        "success": True,
+        "members": [
+            {
+                "id": int(r["id"]),
+                "phone": r.get("phone"),
+                "note": r.get("note") or "",
+                "created_by": r.get("created_by"),
+                "created_at": _to_cn(r.get("created_at")),
+            }
+            for r in rows
+        ],
+    }
+
+
+@router.post("/members")
+def add_member(body: MemberIn, user: dict = Depends(_admin_user)):
+    phone = _norm_phone(body.phone)
+    if not _PHONE_RE.match(phone):
+        raise HTTPException(status_code=400, detail="请填写 11 位手机号")
+    note = (body.note or "").strip()[:128]
+    now = _utc_now_str()
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO mark_six_members (phone, note, created_by, created_at)
+                VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE note=VALUES(note)
+                """,
+                (phone, note or None, user.get("id"), now),
+            )
+            cur.execute("SELECT id, phone, note, created_by, created_at FROM mark_six_members WHERE phone=%s", (phone,))
+            row = cur.fetchone()
+    finally:
+        conn.close()
+    return {
+        "success": True,
+        "member": {
+            "id": int(row["id"]),
+            "phone": row["phone"],
+            "note": row.get("note") or "",
+            "created_by": row.get("created_by"),
+            "created_at": _to_cn(row.get("created_at")),
+        },
+    }
+
+
+@router.delete("/members/{member_id}")
+def delete_member(member_id: int, user: dict = Depends(_admin_user)):
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM mark_six_members WHERE id=%s", (int(member_id),))
+            if cur.rowcount <= 0:
+                raise HTTPException(status_code=404, detail="成员不存在")
+    finally:
+        conn.close()
+    return {"success": True}
+
+
+@router.get("/sheets")
+def list_sheets(user: dict = Depends(_mark_six_user)):
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, title, total, odds, created_by, updated_by, created_at, updated_at
+                FROM mark_six_sheets
+                ORDER BY updated_at DESC, id DESC
+                LIMIT 200
+                """
+            )
+            rows = cur.fetchall() or []
+    finally:
+        conn.close()
+    return {
+        "success": True,
+        "sheets": [_serialize_sheet(r, include_table=False) for r in rows],
+    }
+
+
+@router.post("/sheets")
+def create_sheet(body: SheetCreateIn, user: dict = Depends(_mark_six_user)):
+    title = (body.title or "统计数据").strip()[:128] or "统计数据"
+    odds = _DEFAULT_ODDS
+    rows = _empty_table(odds)
+    now = _utc_now_str()
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO mark_six_sheets
+                (title, table_data, total, odds, created_by, updated_by, created_at, updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    title,
+                    json.dumps(rows, ensure_ascii=False),
+                    0,
+                    odds,
+                    user.get("id"),
+                    user.get("id"),
+                    now,
+                    now,
+                ),
+            )
+            sheet_id = int(cur.lastrowid)
+            cur.execute("SELECT * FROM mark_six_sheets WHERE id=%s", (sheet_id,))
+            row = cur.fetchone()
+    finally:
+        conn.close()
+    return {"success": True, "sheet": _serialize_sheet(row, include_table=True)}
+
+
+@router.get("/sheets/{sheet_id}")
+def get_sheet(sheet_id: int, since: str = "", user: dict = Depends(_mark_six_user)):
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            row = cur.fetchone()
+    finally:
+        conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="统计表不存在")
+    utc = (
+        row.get("updated_at").strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(row.get("updated_at"), datetime)
+        else str(row.get("updated_at") or "")[:19]
+    )
+    since_s = (since or "").strip().replace("T", " ")[:19]
+    if since_s and utc and since_s >= utc:
+        return {"success": True, "unchanged": True, "updated_at_utc": utc}
+    return {"success": True, "unchanged": False, "sheet": _serialize_sheet(row, include_table=True)}
+
+
+@router.put("/sheets/{sheet_id}")
+def save_sheet(sheet_id: int, body: SheetSaveIn, user: dict = Depends(_mark_six_user)):
+    odds = float(body.odds if body.odds is not None else _DEFAULT_ODDS)
+    odds = max(0.01, min(1000.0, odds))
+    rows = _enrich_rows(body.table_data or [], odds)
+    total = body.total
+    if total is None:
+        total = _sum_total(rows)
+    else:
+        total = round(float(total), 2)
+    title = (body.title or "").strip()[:128] if body.title is not None else None
+    now = _utc_now_str()
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, title FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            old = cur.fetchone()
+            if not old:
+                raise HTTPException(status_code=404, detail="统计表不存在")
+            new_title = title if title else (old.get("title") or "统计数据")
+            cur.execute(
+                """
+                UPDATE mark_six_sheets
+                SET title=%s, table_data=%s, total=%s, odds=%s, updated_by=%s, updated_at=%s
+                WHERE id=%s
+                """,
+                (
+                    new_title,
+                    json.dumps(rows, ensure_ascii=False),
+                    total,
+                    odds,
+                    user.get("id"),
+                    now,
+                    int(sheet_id),
+                ),
+            )
+            cur.execute("SELECT * FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            row = cur.fetchone()
+    finally:
+        conn.close()
+    return {"success": True, "sheet": _serialize_sheet(row, include_table=True)}
+
+
+@router.delete("/sheets/{sheet_id}")
+def delete_sheet(sheet_id: int, user: dict = Depends(_mark_six_user)):
+    conn = _get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT id, created_by FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="统计表不存在")
+            admin = bool(_is_admin and _is_admin(user))
+            owner = int(row.get("created_by") or 0) == int(user.get("id") or 0)
+            if not admin and not owner:
+                raise HTTPException(status_code=403, detail="仅创建者或管理员可删除")
+            cur.execute("DELETE FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+    finally:
+        conn.close()
+    return {"success": True}

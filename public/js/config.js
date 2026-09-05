@@ -348,6 +348,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.stickersTitle',
                     descriptionKey: 'privateHub.ops.stickersDesc',
                     url: 'html/admin/private/stickers.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.markSixMembersTitle',
+                    descriptionKey: 'privateHub.ops.markSixMembersDesc',
+                    url: 'html/admin/private/mark-six-members.html'
                 }
             ]
         },

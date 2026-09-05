@@ -1,0 +1,45 @@
+.ms-sheet-list { display: flex; flex-direction: column; gap: 12px; }
+.ms-sheet-card {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+}
+.ms-sheet-title { font-weight: 600; color: #0f172a; text-decoration: none; }
+.ms-sheet-title:hover { color: #2563eb; }
+.ms-sheet-meta { margin-top: 4px; font-size: 13px; color: #64748b; }
+.ms-empty { color: #64748b; padding: 24px 0; }
+
+.ms-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.ms-total { font-weight: 700; font-size: 1.05rem; }
+.ms-sync { font-size: 13px; color: #64748b; }
+.ms-table-wrap { overflow-x: auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; }
+.ms-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 560px; }
+.ms-table th, .ms-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; text-align: center; }
+.ms-table th { background: #f8fafc; font-weight: 600; position: sticky; top: 0; }
+.ms-table tr:nth-child(even) td { background: #fafafa; }
+.ms-num { font-weight: 700; }
+.ms-wave-红波 { color: #dc2626; }
+.ms-wave-蓝波 { color: #2563eb; }
+.ms-wave-绿波 { color: #16a34a; }
+.ms-ops { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.ms-ops .tb-btn { padding: 4px 10px; font-size: 12px; min-height: 0; }
+
+.ms-modal {
+  position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 23, 42, 0.45); padding: 16px;
+}
+.ms-modal[hidden] { display: none !important; }
+.ms-modal-card {
+  width: min(420px, 100%); background: #fff; border-radius: 14px; padding: 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.18);
+}
+.ms-modal-title { margin: 0 0 12px; font-size: 1.1rem; }
+.ms-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.ms-chip {
+  border: 1px solid #cbd5e1; border-radius: 999px; padding: 6px 12px; cursor: pointer;
+  background: #fff; font-size: 13px;
+}
+.ms-chip.is-on { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+.ms-modal input[type="text"], .ms-modal input[type="number"] {
+  width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px;
+}
+.ms-hint { font-size: 13px; color: #64748b; margin: 8px 0; min-height: 1.2em; }
