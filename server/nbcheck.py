@@ -248,6 +248,21 @@ def _is_workstation_gpu_name(model: str) -> bool:
     return any(x in low for x in ("quadro", "rtx pro", "radeon pro", "tesla", "firepro", "rtx a"))
 
 
+def _looks_laptop_cpu(model: str) -> bool:
+    """Name heuristics when PassMark tags a mobile SKU as Desktop (or Desktop, Laptop)."""
+    low = (model or "").lower()
+    if "laptop" in low or "mobile" in low:
+        return True
+    # Apple laptop SoCs; Ultra is usually Mac Studio / desktop Mac — keep those.
+    if re.search(r"\bapple\s+m[1-5]\s*(pro|max)\b", low) or re.search(r"^m[1-5]\s*(pro|max)\b", low):
+        return True
+    # Modern AMD/Intel mobile suffixes (U/H/HS/HX/HK/KB…). Use 4+ digit SKUs to
+    # avoid old Athlon "160u"-style desktop ultra-low chips.
+    if re.search(r"(?i)\d{4,5}(U|H|HS|HX|HK|HL|HF|UH|UL|UE|UM|KB)\b", model or ""):
+        return True
+    return False
+
+
 def _include_row(model: str, kind: str, *, passmark_cat: str = "") -> bool:
     if not model:
         return False
@@ -266,7 +281,14 @@ def _include_row(model: str, kind: str, *, passmark_cat: str = "") -> bool:
         return _is_consumer_desktop_gpu(model)
     if kind == "soc":
         return _is_phone_soc(model)
-    if kind in ("cpu", "nb_cpu"):
+    if kind == "cpu":
+        low = model.lower()
+        if "epyc" in low or re.search(r"\bxeon\b", low):
+            return False
+        if _looks_laptop_cpu(model):
+            return False
+        return True
+    if kind == "nb_cpu":
         low = model.lower()
         if "epyc" in low or re.search(r"\bxeon\b", low):
             return False
@@ -277,7 +299,9 @@ def _include_row(model: str, kind: str, *, passmark_cat: str = "") -> bool:
 def _passmark_cat_ok(list_id: str, cat: str, model: str) -> bool:
     c = (cat or "").lower()
     if list_id == "cpu":
-        return "desktop" in c
+        # PassMark often tags laptop SKUs as "Desktop, Laptop". Desktop ladder
+        # must be Desktop-only (no Laptop / Mobile).
+        return "desktop" in c and "laptop" not in c and "mobile" not in c
     if list_id == "nb_cpu":
         return "laptop" in c
     if list_id == "gpu":
