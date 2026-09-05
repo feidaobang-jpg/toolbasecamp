@@ -592,14 +592,10 @@ def delete_sheet(sheet_id: int, user: dict = Depends(_mark_six_user)):
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, created_by FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
+            cur.execute("SELECT id FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
             row = cur.fetchone()
             if not row:
                 raise HTTPException(status_code=404, detail="统计表不存在")
-            admin = bool(_is_admin and _is_admin(user))
-            owner = int(row.get("created_by") or 0) == int(user.get("id") or 0)
-            if not admin and not owner:
-                raise HTTPException(status_code=403, detail="仅创建者或管理员可删除")
             cur.execute("DELETE FROM mark_six_sheets WHERE id=%s", (int(sheet_id),))
     finally:
         conn.close()

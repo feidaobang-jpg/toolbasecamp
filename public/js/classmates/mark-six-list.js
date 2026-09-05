@@ -2,7 +2,6 @@
   'use strict';
 
   var G = window.MarkSixGuard;
-  var isAdmin = false;
 
   function api(path, opts) {
     opts = opts || {};
@@ -31,14 +30,6 @@
     }
     box.innerHTML = sheets
       .map(function (s) {
-        var del =
-          isAdmin
-            ? '<button type="button" class="ms-sheet-del" data-id="' +
-              s.id +
-              '">' +
-              G.tr('classmates.delete', '删除') +
-              '</button>'
-            : '';
         return (
           '<div class="ms-sheet-card">' +
           '<a class="ms-sheet-main" href="mark-six.html?id=' +
@@ -56,8 +47,11 @@
           '<strong>' +
           (s.total || 0) +
           '</strong></div></a>' +
-          del +
-          '</div>'
+          '<button type="button" class="ms-sheet-del" data-id="' +
+          s.id +
+          '">' +
+          G.tr('classmates.delete', '删除') +
+          '</button></div>'
         );
       })
       .join('');
@@ -103,9 +97,7 @@
     });
   }
 
-  document.addEventListener('tb:mark-six-ready', function (ev) {
-    var u = (ev && ev.detail && ev.detail.user) || window.__markSixUser || {};
-    isAdmin = !!(typeof window.tbIsAdminUser === 'function' && window.tbIsAdminUser(u));
+  document.addEventListener('tb:mark-six-ready', function () {
     var c = document.getElementById('create-btn');
     if (c) c.addEventListener('click', createSheet);
     load();
