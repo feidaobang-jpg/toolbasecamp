@@ -249,16 +249,34 @@ def _is_workstation_gpu_name(model: str) -> bool:
 
 
 def _looks_laptop_cpu(model: str) -> bool:
-    """Name heuristics when PassMark tags a mobile SKU as Desktop (or Desktop, Laptop)."""
+    """Name heuristics for mobile / laptop SKUs (PassMark categories are noisy)."""
     low = (model or "").lower()
     if "laptop" in low or "mobile" in low:
         return True
-    # Apple laptop SoCs; Ultra is usually Mac Studio / desktop Mac — keep those.
+    if "ryzen ai" in low or "snapdragon" in low:
+        return True
+    # Apple laptop SoCs; Ultra is usually Mac Studio / desktop Mac — keep those out.
     if re.search(r"\bapple\s+m[1-5]\s*(pro|max)\b", low) or re.search(r"^m[1-5]\s*(pro|max)\b", low):
+        return True
+    # "HX 370" / "H 255" style (letter class before model number).
+    if re.search(r"(?i)\b(hx|hs|h)\s+\d{2,4}\b", model or ""):
         return True
     # Modern AMD/Intel mobile suffixes (U/H/HS/HX/HK/KB…). Use 4+ digit SKUs to
     # avoid old Athlon "160u"-style desktop ultra-low chips.
     if re.search(r"(?i)\d{4,5}(U|H|HS|HX|HK|HL|HF|UH|UL|UE|UM|KB)\b", model or ""):
+        return True
+    return False
+
+
+def _looks_desktop_cpu(model: str) -> bool:
+    """Clear desktop-only naming (should not appear on the laptop ladder)."""
+    low = (model or "").lower()
+    if "threadripper" in low:
+        return True
+    if _looks_laptop_cpu(model):
+        return False
+    # Unlocked / X3D / non-mobile desktop suffixes.
+    if re.search(r"(?i)\d{4,5}(K|KF|KS|F|X|XT|X3D|G|GE|GT)\b", model or ""):
         return True
     return False
 
@@ -292,6 +310,8 @@ def _include_row(model: str, kind: str, *, passmark_cat: str = "") -> bool:
         low = model.lower()
         if "epyc" in low or re.search(r"\bxeon\b", low):
             return False
+        if _looks_desktop_cpu(model):
+            return False
         return True
     return True
 
@@ -303,7 +323,13 @@ def _passmark_cat_ok(list_id: str, cat: str, model: str) -> bool:
         # must be Desktop-only (no Laptop / Mobile).
         return "desktop" in c and "laptop" not in c and "mobile" not in c
     if list_id == "nb_cpu":
-        return "laptop" in c
+        if "laptop" not in c:
+            return False
+        # Dual-tagged "Desktop, Laptop": only keep clear laptop names so 14900K
+        # / 9950X3D do not leak into the notebook ladder.
+        if "desktop" in c:
+            return _looks_laptop_cpu(model)
+        return True
     if list_id == "gpu":
         if "desktop" in c:
             return True

@@ -108,6 +108,7 @@ jobs:
           VER="$VER" python3 deploy/bust-html-cache.py
           grep -q 'recipe-ingredient-tags' public/html/life/ai-recipe.html
           rsync -avz --delete \
+            --exclude 'data/nbcheck/*.json' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
@@ -125,6 +126,7 @@ jobs:
           git rev-parse HEAD > server/DEPLOY_SHA
           rsync -avz --delete --exclude venv \
             --exclude var/ --exclude tmp_music/ --exclude '__pycache__/' \
+            --exclude 'data/nbcheck/*.json' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             server/ \
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
