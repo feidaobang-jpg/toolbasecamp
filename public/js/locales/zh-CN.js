@@ -1207,7 +1207,7 @@ window.TB_LOCALES['zh-CN'] = {
             media: '媒体',
             document: '文档',
             diagram: '图表',
-            android: 'Android',
+            android: '安卓',
             ladder: '性能跑分榜',
             developer: '开发者'
         },

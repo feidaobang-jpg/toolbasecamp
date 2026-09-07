@@ -45,7 +45,16 @@
     'tool.game': { zh: '游戏', en: 'Games' },
     'tool.auth': { zh: '账户', en: 'Auth' },
     'tool.ladder': { zh: '硬件跑分', en: 'Benchmarks' },
-    'tool.admin': { zh: '后台', en: 'Admin' }
+    'tool.admin': { zh: '后台', en: 'Admin' },
+    'tool.android': { zh: '安卓', en: 'Android' },
+    'tool.classmates': { zh: '同学专区', en: 'Classmates' }
+  };
+
+  /** Pages not in toolsConfig / gamesConfig (private or classmates). */
+  var EXTRA_EVENT_LABELS = {
+    'tool.classmates.hub': { zh: '同学专区', en: 'Classmates hub' },
+    'tool.classmates.mark-six': { zh: '号码统计', en: 'Number stats' },
+    'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' }
   };
 
   var AUTH_LABELS = {
@@ -148,6 +157,7 @@
     if (AUTH_LABELS[name]) return pickLocale(AUTH_LABELS[name]);
     if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
     if (ACTION_LABELS[name]) return pickLocale(ACTION_LABELS[name]);
+    if (EXTRA_EVENT_LABELS[name]) return pickLocale(EXTRA_EVENT_LABELS[name]);
     if (MODULE_LABELS[name]) return pickLocale(MODULE_LABELS[name]);
 
     if (name.indexOf('portal.') === 0) {
@@ -165,10 +175,20 @@
       if (title) return title;
       var authKey = 'tool.' + m[1] + '.' + m[2];
       if (AUTH_LABELS[authKey]) return pickLocale(AUTH_LABELS[authKey]);
+      if (EXTRA_EVENT_LABELS[authKey]) return pickLocale(EXTRA_EVENT_LABELS[authKey]);
       if (m[1] === 'auth') {
         return langIsZh() ? ('账户 · ' + m[2]) : ('Auth · ' + m[2]);
       }
-      return m[2].replace(/-/g, ' ');
+      // Never dump raw English slug (e.g. "mark six") into the Chinese admin UI.
+      var folderLabel = '';
+      var gKey = maps().groupByFolder[m[1]];
+      if (gKey) folderLabel = trKey(gKey);
+      if (!folderLabel) {
+        var mod = MODULE_LABELS['tool.' + m[1]];
+        if (mod) folderLabel = pickLocale(mod);
+      }
+      if (!folderLabel) folderLabel = m[1];
+      return folderLabel + ' · ' + m[2].replace(/-/g, ' ');
     }
 
     if (name.indexOf('page.') === 0) {
@@ -178,11 +198,11 @@
 
     if (name.indexOf('tool.') === 0) {
       var folder = name.split('.')[1] || '';
-      var gKey = maps().groupByFolder[folder];
-      var gTitle = gKey ? trKey(gKey) : '';
+      var gKey2 = maps().groupByFolder[folder];
+      var gTitle = gKey2 ? trKey(gKey2) : '';
       if (gTitle) return gTitle;
-      var mod = MODULE_LABELS['tool.' + folder];
-      if (mod) return pickLocale(mod);
+      var mod2 = MODULE_LABELS['tool.' + folder];
+      if (mod2) return pickLocale(mod2);
     }
 
     return name;
