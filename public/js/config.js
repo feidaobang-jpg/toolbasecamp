@@ -400,6 +400,16 @@ const privateToolsConfig = {
                     url: 'html/admin/private/home-pc/text-to-video.html'
                 },
                 {
+                    titleKey: 'privateHub.homePc.t2vTitle',
+                    descriptionKey: 'privateHub.homePc.t2vDesc',
+                    url: 'html/admin/private/home-pc/t2v.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.i2vTitle',
+                    descriptionKey: 'privateHub.homePc.i2vDesc',
+                    url: 'html/admin/private/home-pc/i2v.html'
+                },
+                {
                     titleKey: 'privateHub.homePc.trailerTitle',
                     descriptionKey: 'privateHub.homePc.trailerDesc',
                     url: 'html/admin/private/home-pc/trailer.html'

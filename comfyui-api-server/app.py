@@ -4651,6 +4651,22 @@ _image_pipeline_api = ImagePipelineAPI(
 )
 _image_pipeline_api.register(app)
 
+from video_clip_pipeline import VideoClipAPI
+
+_video_clip_api = VideoClipAPI(
+    output_root=_OUTPUT_ROOT,
+    build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
+    build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
+    build_wan22_t2v_5b_workflow=_build_wan22_t2v_5b_workflow,
+    build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
+    build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
+    build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
+    run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
+    upload_image_bytes=upload_image_bytes,
+    free_comfyui_memory=free_comfyui_memory,
+)
+_video_clip_api.register(app)
+
 
 if __name__ == '__main__':
     import uvicorn

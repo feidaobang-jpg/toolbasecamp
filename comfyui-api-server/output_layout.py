@@ -8,6 +8,8 @@ output/
   series/          # 剧集已用
   game_sprites/
   text_to_video/
+  t2v/             # 文生视频（Wan/LTX 单镜）
+  i2v/             # 图生视频（Wan/LTX 单镜）
   images/          # 预留
   music/           # 预留
   sfx/             # 预留
@@ -22,6 +24,8 @@ CATEGORIES = (
     "series",
     "game_sprites",
     "text_to_video",
+    "t2v",
+    "i2v",
     "images",
     "music",
     "sfx",

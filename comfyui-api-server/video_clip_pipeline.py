@@ -1,0 +1,766 @@
+"""
+文生视频 / 图生视频：单镜短片，可多选模型依次生成便于对比。
+
+输出目录：
+  output/t2v/{date}_t2v_*/
+  output/i2v/{date}_i2v_*/
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+import random
+import time
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+from zoneinfo import ZoneInfo
+
+from fastapi import File, Form, HTTPException, UploadFile
+
+from output_layout import (
+    alloc_under,
+    ensure_reserved_dirs,
+    folder_public_key,
+    list_task_dirs,
+    rel_to_root,
+    resolve_task_dir,
+)
+
+_VIDEO_CLIP_TASKS: Dict[str, dict] = {}
+
+_T2V_ENGINES = {
+    "wan22_t2v_5b": {"label": "Wan 2.2 5B 文生视频", "workflow": "wan22_t2v_5b.json"},
+    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "workflow": "wan22_t2v_14b.json"},
+    "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
+}
+
+_I2V_ENGINES = {
+    "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "workflow": "wan22_ti2v_5b.json"},
+    "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "workflow": "wan22_i2v"},
+    "ltx25_i2v": {"label": "LTX 2.5 图生视频（直出音频）", "workflow": "ltx25_i2v.json"},
+}
+
+_ASPECT_WAN = {
+    "16_9": (832, 480),
+    "9_16": (480, 832),
+}
+
+_ASPECT_LTX = {
+    "16_9": (768, 432),
+    "9_16": (432, 768),
+}
+
+_DEFAULT_NEG = (
+    "blurry, low quality, distorted, watermark, text, logo, subtitle, "
+    "static image, frozen pose, no motion"
+)
+
+
+def _cn_now_str() -> str:
+    return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _now_ms() -> int:
+    return int(time.time() * 1000)
+
+
+def _format_elapsed(sec: float) -> str:
+    sec = max(0.0, float(sec or 0.0))
+    if sec < 60:
+        return f"{sec:.1f}s"
+    m = int(sec // 60)
+    s = int(round(sec - m * 60))
+    if s >= 60:
+        m += 1
+        s = 0
+    return f"{m}m{s:02d}s"
+
+
+def _normalize_kind(raw: str) -> str:
+    k = (raw or "").strip().lower().replace("-", "_")
+    if k in ("t2v", "text", "text_to_video", "txt2vid"):
+        return "t2v"
+    if k in ("i2v", "image", "image_to_video", "img2vid"):
+        return "i2v"
+    return "t2v"
+
+
+def _normalize_aspect(raw: str) -> str:
+    a = (raw or "").strip().lower().replace("-", "_").replace(":", "_")
+    if a in ("9_16", "916", "portrait", "vertical"):
+        return "9_16"
+    return "16_9"
+
+
+def _normalize_engine(raw: str, kind: str) -> Optional[str]:
+    m = (raw or "").strip().lower().replace("-", "_")
+    table = _T2V_ENGINES if kind == "t2v" else _I2V_ENGINES
+    aliases = {
+        "wan22_t2v_5b": "wan22_t2v_5b",
+        "wan5b_t2v": "wan22_t2v_5b",
+        "wan22_t2v_14b": "wan22_t2v_14b",
+        "wan22_t2v": "wan22_t2v_14b",
+        "ltx25_t2v": "ltx25_t2v",
+        "ltx_t2v": "ltx25_t2v",
+        "wan22_5b": "wan22_5b",
+        "wan5b": "wan22_5b",
+        "wan22_ti2v_5b": "wan22_5b",
+        "wan22_14b_gguf": "wan22_14b_gguf",
+        "wan22_14b": "wan22_14b_gguf",
+        "i2v": "wan22_14b_gguf",
+        "ltx25_i2v": "ltx25_i2v",
+        "ltx_i2v": "ltx25_i2v",
+        "ltx": "ltx25_i2v" if kind == "i2v" else "ltx25_t2v",
+    }
+    key = aliases.get(m, m)
+    return key if key in table else None
+
+
+def _parse_engines(raw_modes, raw_single: str, kind: str) -> List[str]:
+    items: List[str] = []
+    if isinstance(raw_modes, list):
+        items = [str(x) for x in raw_modes]
+    elif isinstance(raw_modes, str) and raw_modes.strip():
+        s = raw_modes.strip()
+        if s.startswith("["):
+            try:
+                parsed = json.loads(s)
+                if isinstance(parsed, list):
+                    items = [str(x) for x in parsed]
+                else:
+                    items = [s]
+            except Exception:
+                items = [x.strip() for x in s.split(",") if x.strip()]
+        else:
+            items = [x.strip() for x in s.replace(";", ",").split(",") if x.strip()]
+    if not items and raw_single:
+        items = [str(raw_single)]
+    out: List[str] = []
+    seen = set()
+    for it in items:
+        m = _normalize_engine(it, kind)
+        if m and m not in seen:
+            seen.add(m)
+            out.append(m)
+    if out:
+        return out
+    return ["wan22_t2v_5b"] if kind == "t2v" else ["wan22_5b"]
+
+
+def _clamp_duration(raw) -> float:
+    try:
+        v = float(raw)
+    except Exception:
+        v = 5.0
+    return max(3.0, min(10.0, v))
+
+
+def _length_for_duration(duration_sec: float, fps: int = 24) -> int:
+    frames = int(round(float(duration_sec) * float(fps)))
+    n = max(8, (frames - 1) // 4)
+    length = n * 4 + 1
+    return max(33, min(241, length))
+
+
+def _engine_label(mode: str, kind: str) -> str:
+    table = _T2V_ENGINES if kind == "t2v" else _I2V_ENGINES
+    return (table.get(mode) or {}).get("label") or mode
+
+
+class VideoClipAPI:
+    def __init__(self, **deps: Any):
+        self.deps = deps
+        self.deps["output_root"] = Path(deps["output_root"])
+        self.tasks = _VIDEO_CLIP_TASKS
+
+    def _log(self, task: dict, msg: str) -> None:
+        line = f"[{_cn_now_str()}] {msg}"
+        logs = task.setdefault("logs", [])
+        logs.append(line)
+        if len(logs) > 400:
+            del logs[:-400]
+        try:
+            d = self._task_dir(task)
+            with open(d / "pipeline.log", "a", encoding="utf-8") as f:
+                f.write(line + "\n")
+        except Exception:
+            pass
+
+    def _alloc_dir(self, kind: str) -> str:
+        root: Path = self.deps["output_root"]
+        ensure_reserved_dirs(root)
+        cat = "t2v" if kind == "t2v" else "i2v"
+        base = datetime.now().strftime("%Y-%m-%d_%H-%M") + f"_{cat}"
+        return alloc_under(root, cat, base)
+
+    def _task_dir(self, task: dict) -> Path:
+        root: Path = self.deps["output_root"]
+        folder = (task.get("output_dir") or "").strip() or task["task_id"]
+        resolved = resolve_task_dir(root, folder)
+        if resolved is not None:
+            resolved.mkdir(parents=True, exist_ok=True)
+            return resolved
+        d = root / folder
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def _folder_key(self, task_dir: Path) -> str:
+        return folder_public_key(task_dir, self.deps["output_root"])
+
+    def _public_url(self, task: dict, filename: str) -> str:
+        folder = (task.get("output_dir") or "").strip() or task["task_id"]
+        name = str(filename).replace("\\", "/").lstrip("/")
+        return f"/output/{folder}/{name}"
+
+    def _save_snapshot(self, task: dict) -> None:
+        try:
+            d = self._task_dir(task)
+            snap = {
+                "task_id": task.get("task_id"),
+                "kind": task.get("kind"),
+                "status": task.get("status"),
+                "stage": task.get("stage"),
+                "prompt": task.get("prompt"),
+                "negative": task.get("negative"),
+                "aspect": task.get("aspect"),
+                "duration_sec": task.get("duration_sec"),
+                "video_modes": task.get("video_modes"),
+                "video_mode": task.get("video_mode"),
+                "video_urls": task.get("video_urls"),
+                "video_url": task.get("video_url"),
+                "seed": task.get("seed"),
+                "error": task.get("error"),
+                "created_at": task.get("created_at"),
+                "export_hint": task.get("export_hint"),
+                "source_image": task.get("source_image"),
+                "timing": task.get("timing"),
+                "output_dir": task.get("output_dir"),
+            }
+            (d / "task.json").write_text(
+                json.dumps(snap, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
+
+    def _public_status(self, task: dict) -> dict:
+        return {
+            "success": True,
+            "task_id": task.get("task_id"),
+            "status": task.get("status"),
+            "stage": task.get("stage"),
+            "progress": task.get("progress") or {"current": 0, "total": 1},
+            "logs": list(task.get("logs") or []),
+            "error": task.get("error") or "",
+            "kind": task.get("kind"),
+            "prompt": task.get("prompt"),
+            "negative": task.get("negative"),
+            "aspect": task.get("aspect"),
+            "duration_sec": task.get("duration_sec"),
+            "video_modes": task.get("video_modes") or [],
+            "video_mode": task.get("video_mode"),
+            "video_urls": task.get("video_urls") or [],
+            "video_url": task.get("video_url") or "",
+            "export_hint": task.get("export_hint") or "",
+            "output_dir": task.get("output_dir") or "",
+            "output_directory": task.get("output_directory") or "",
+            "source_image": task.get("source_image") or "",
+            "seed": task.get("seed"),
+            "timing": task.get("timing") or {},
+        }
+
+    async def _free_vram(self, task: dict, tip: str = "") -> None:
+        free_fn = self.deps.get("free_comfyui_memory")
+        if not free_fn:
+            return
+        try:
+            await free_fn()
+            self._log(task, f"已释放 ComfyUI 显存{(' · ' + tip) if tip else ''}")
+        except Exception as e:
+            self._log(task, f"释放显存失败（可忽略）：{e}")
+
+    def _build_workflow(
+        self,
+        *,
+        kind: str,
+        mode: str,
+        prompt: str,
+        negative: str,
+        aspect: str,
+        duration_sec: float,
+        seed: Optional[int],
+        comfy_image: str = "",
+    ) -> Tuple[dict, str]:
+        wan_wh = _ASPECT_WAN[aspect]
+        ltx_wh = _ASPECT_LTX[aspect]
+        length = _length_for_duration(duration_sec)
+        seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+        neg = (negative or "").strip() or _DEFAULT_NEG
+        prompt_s = (prompt or "").strip()
+
+        if kind == "t2v":
+            if mode == "wan22_t2v_5b":
+                wf = self.deps["build_wan22_t2v_5b_workflow"](
+                    prompt_s,
+                    negative_text=neg,
+                    seed=seed_i,
+                    width=wan_wh[0],
+                    height=wan_wh[1],
+                    length=length,
+                    fps=24,
+                )
+                note = f"Wan2.2-5B T2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+            elif mode == "wan22_t2v_14b":
+                wf = self.deps["build_wan22_t2v_workflow"](
+                    prompt_s,
+                    negative_text=neg,
+                    seed=seed_i,
+                    width=wan_wh[0],
+                    height=wan_wh[1],
+                    length=length,
+                    fps=24,
+                )
+                note = f"Wan2.2-14B T2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+            else:
+                wf = self.deps["build_ltx25_t2v_workflow"](
+                    prompt_s,
+                    seed=seed_i,
+                    width=ltx_wh[0],
+                    height=ltx_wh[1],
+                    duration_sec=duration_sec,
+                    fps=24,
+                )
+                note = f"LTX-2.5 T2V · {ltx_wh[0]}×{ltx_wh[1]} · {duration_sec:g}s"
+            return wf, note
+
+        if not comfy_image:
+            raise RuntimeError("图生视频缺少首帧图")
+        motion = (
+            f"Use the provided start image as frame 1. {prompt_s}. "
+            "Subtle cinematic motion, temporal continuity."
+            if prompt_s
+            else "Use the provided start image as frame 1. Subtle cinematic motion."
+        )
+        if mode == "wan22_5b":
+            wf = self.deps["build_wan22_ti2v_5b_workflow"](
+                comfy_image,
+                motion,
+                negative_text=neg,
+                seed=seed_i,
+                width=wan_wh[0],
+                height=wan_wh[1],
+                length=length,
+                fps=24,
+            )
+            note = f"Wan2.2-5B I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+        elif mode == "wan22_14b_gguf":
+            wf = self.deps["build_wan22_ti2v_workflow"](
+                comfy_image,
+                motion,
+                negative_text=neg,
+                seed=seed_i,
+                width=wan_wh[0],
+                height=wan_wh[1],
+                length=length,
+                fps=24,
+            )
+            note = f"Wan2.2-14B GGUF I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+        else:
+            wf = self.deps["build_ltx25_i2v_workflow"](
+                comfy_image,
+                motion,
+                seed=seed_i,
+                width=ltx_wh[0],
+                height=ltx_wh[1],
+                duration_sec=duration_sec,
+                fps=24,
+                strength=0.82,
+            )
+            note = f"LTX-2.5 I2V · {ltx_wh[0]}×{ltx_wh[1]} · {duration_sec:g}s"
+        return wf, note
+
+    async def _run_task(self, task_id: str) -> None:
+        task = self.tasks.get(task_id)
+        if not task:
+            return
+        kind = task["kind"]
+        modes = list(task.get("video_modes") or [])
+        multi = len(modes) > 1
+        n = len(modes)
+        video_urls: List[dict] = []
+        last: Optional[dict] = None
+        total_sec = 0.0
+        task_dir = self._task_dir(task)
+        comfy_name = ""
+
+        try:
+            if kind == "i2v":
+                src_name = task.get("source_image") or "source.png"
+                src_path = task_dir / src_name
+                if not src_path.is_file():
+                    raise RuntimeError("缺少首帧图")
+                upload = self.deps["upload_image_bytes"]
+                comfy_name, _sub = await upload(
+                    src_path.read_bytes(), name_prefix=f"clip_i2v_{task_id[:8]}_"
+                )
+                if not comfy_name:
+                    raise RuntimeError("上传首帧到 ComfyUI 失败")
+
+            task["stage"] = "video"
+            task["progress"] = {"current": 0, "total": n}
+            self._log(
+                task,
+                f"开始{'文生' if kind == 't2v' else '图生'}视频，共 {n} 个模型"
+                + ("（依次对比）" if multi else ""),
+            )
+
+            run_video = self.deps["run_comfyui_and_get_last_video"]
+            for ei, mode in enumerate(modes):
+                if task.get("status") == "cancelled":
+                    self._log(task, "已取消")
+                    self._save_snapshot(task)
+                    return
+                label = _engine_label(mode, kind)
+                task["video_mode"] = mode
+                task["progress"] = {"current": ei, "total": n}
+                self._log(
+                    task,
+                    f"对比 {ei + 1}/{n}：{label}" if multi else f"引擎：{label}",
+                )
+                await self._free_vram(task, label)
+                t0 = time.perf_counter()
+                try:
+                    wf, note = self._build_workflow(
+                        kind=kind,
+                        mode=mode,
+                        prompt=task.get("prompt") or "",
+                        negative=task.get("negative") or "",
+                        aspect=task["aspect"],
+                        duration_sec=float(task["duration_sec"]),
+                        seed=task.get("seed"),
+                        comfy_image=comfy_name,
+                    )
+                    self._log(task, f"提交 ComfyUI（{note}）…")
+                    vid_bytes = await run_video(wf)
+                    elapsed = time.perf_counter() - t0
+                    total_sec += elapsed
+                    out_name = (
+                        f"clip_{mode}_{task['aspect']}.mp4"
+                        if multi
+                        else f"clip_{task['aspect']}.mp4"
+                    )
+                    out_path = task_dir / out_name
+                    out_path.write_bytes(vid_bytes)
+                    item = {
+                        "mode": mode,
+                        "label": label,
+                        "filename": out_name,
+                        "url": self._public_url(task, out_name),
+                        "elapsed_sec": round(elapsed, 2),
+                        "engine_note": note,
+                    }
+                    video_urls.append(item)
+                    last = item
+                    self._log(
+                        task,
+                        f"第 {ei + 1}/{n} 个完成（{label}），耗时 {_format_elapsed(elapsed)}",
+                    )
+                except Exception as e:
+                    elapsed = time.perf_counter() - t0
+                    total_sec += elapsed
+                    self._log(
+                        task,
+                        f"第 {ei + 1}/{n} 个失败（{label}），耗时 {_format_elapsed(elapsed)}：{e}",
+                    )
+                finally:
+                    if ei + 1 < n:
+                        await self._free_vram(task, f"{label} 结束")
+
+            if task.get("status") == "cancelled":
+                self._save_snapshot(task)
+                return
+            if not last:
+                raise RuntimeError("全部模型均失败")
+
+            primary = f"clip_{task['aspect']}.mp4"
+            primary_path = task_dir / primary
+            src = task_dir / last["filename"]
+            if src.exists() and primary_path.resolve() != src.resolve():
+                primary_path.write_bytes(src.read_bytes())
+
+            task["video_url"] = self._public_url(task, primary)
+            task["video_urls"] = video_urls
+            task["output_directory"] = str(task_dir.resolve())
+            task["timing"] = {"video_total_sec": round(total_sec, 2)}
+            task["export_hint"] = (
+                f"已生成 {len(video_urls)} 条成片"
+                + ("，可在下方切换对比。" if multi else "。")
+                + "文件在任务目录。"
+            )
+            task["status"] = "done"
+            task["stage"] = "done"
+            task["progress"] = {"current": n, "total": n}
+            self._log(
+                task,
+                f"完成：{primary}"
+                + (f"（对比 {len(video_urls)} 引擎）" if multi else "")
+                + f"，本批总耗时 {_format_elapsed(total_sec)}",
+            )
+            self._save_snapshot(task)
+        except Exception as e:
+            if task.get("status") != "cancelled":
+                task["status"] = "error"
+                task["stage"] = "error"
+                task["error"] = str(e)
+                self._log(task, f"失败：{e}")
+                self._save_snapshot(task)
+
+    def register(self, app) -> None:
+        api = self
+
+        @app.get("/video-clip/defaults")
+        @app.get("/api/video-clip/defaults")
+        async def vc_defaults(kind: str = "t2v"):
+            k = _normalize_kind(kind)
+            engines = _T2V_ENGINES if k == "t2v" else _I2V_ENGINES
+            return {
+                "success": True,
+                "kind": k,
+                "engines": {mid: meta["label"] for mid, meta in engines.items()},
+                "default_engine": "wan22_t2v_5b" if k == "t2v" else "wan22_5b",
+                "aspects": {"16_9": "横屏 16:9", "9_16": "竖屏 9:16"},
+                "duration_min": 3,
+                "duration_max": 10,
+                "duration_default": 5,
+                "workflows": {
+                    "t2v": "wan22_t2v_5b.json / wan22_t2v_14b.json / ltx25_t2v.json",
+                    "i2v": "wan22_ti2v_5b.json / Wan 14B GGUF I2V / ltx25_i2v.json",
+                },
+            }
+
+        @app.post("/video-clip/start")
+        @app.post("/api/video-clip/start")
+        async def vc_start(
+            kind: str = Form("t2v"),
+            prompt: str = Form(""),
+            negative: str = Form(""),
+            aspect: str = Form("16_9"),
+            duration_sec: str = Form("5"),
+            video_mode: str = Form(""),
+            video_modes: str = Form(""),
+            seed: str = Form(""),
+            image: Optional[UploadFile] = File(None),
+        ):
+            k = _normalize_kind(kind)
+            text = (prompt or "").strip()
+            if k == "t2v" and len(text) < 2:
+                raise HTTPException(status_code=400, detail="请填写提示词")
+            if k == "i2v" and image is None:
+                raise HTTPException(status_code=400, detail="请上传首帧图")
+            modes = _parse_engines(video_modes, video_mode, k)
+            aspect_n = _normalize_aspect(aspect)
+            dur = _clamp_duration(duration_sec)
+            seed_v: Optional[int] = None
+            raw_seed = (seed or "").strip()
+            if raw_seed:
+                try:
+                    seed_v = int(raw_seed)
+                except Exception:
+                    seed_v = None
+
+            task_id = uuid.uuid4().hex
+            out_dir = api._alloc_dir(k)
+            task = {
+                "task_id": task_id,
+                "output_dir": out_dir,
+                "status": "running",
+                "stage": "prepare",
+                "progress": {"current": 0, "total": len(modes)},
+                "logs": [],
+                "error": "",
+                "created_at": _now_ms(),
+                "kind": k,
+                "prompt": text,
+                "negative": (negative or "").strip(),
+                "aspect": aspect_n,
+                "duration_sec": dur,
+                "video_mode": modes[0],
+                "video_modes": modes,
+                "video_urls": [],
+                "video_url": "",
+                "seed": seed_v,
+                "source_image": "",
+                "timing": {},
+            }
+            api.tasks[task_id] = task
+            task_dir = api._task_dir(task)
+            if k == "i2v" and image is not None:
+                raw = await image.read()
+                if not raw:
+                    raise HTTPException(status_code=400, detail="图片为空")
+                ext = Path(image.filename or "source.png").suffix.lower() or ".png"
+                if ext not in (".png", ".jpg", ".jpeg", ".webp"):
+                    ext = ".png"
+                src_name = f"source{ext}"
+                (task_dir / src_name).write_bytes(raw)
+                task["source_image"] = src_name
+            api._log(
+                task,
+                f"任务已创建（{'文生视频' if k == 't2v' else '图生视频'}，"
+                f"{aspect_n}，{dur:g}s，模型 {len(modes)} 个）",
+            )
+            api._save_snapshot(task)
+            asyncio.create_task(api._run_task(task_id))
+            return api._public_status(task)
+
+        @app.get("/video-clip/status")
+        @app.get("/api/video-clip/status")
+        async def vc_status(task_id: str):
+            task = api.tasks.get(task_id)
+            if not task:
+                raise HTTPException(status_code=404, detail="任务不存在")
+            return api._public_status(task)
+
+        @app.post("/video-clip/cancel")
+        @app.post("/api/video-clip/cancel")
+        async def vc_cancel(task_id: str = Form(...)):
+            task = api.tasks.get(task_id)
+            if not task:
+                raise HTTPException(status_code=404, detail="任务不存在")
+            if task.get("status") == "running":
+                task["status"] = "cancelled"
+                task["stage"] = "cancelled"
+                api._log(task, "收到取消请求…")
+                api._save_snapshot(task)
+            return api._public_status(task)
+
+        @app.post("/video-clip/reveal-output")
+        @app.post("/api/video-clip/reveal-output")
+        async def vc_reveal(task_id: str = Form(""), folder: str = Form("")):
+            import os
+            import platform
+            import subprocess
+
+            root: Path = api.deps["output_root"]
+            key = (folder or "").strip() or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="缺少 task_id 或 folder")
+            task = api.tasks.get(key)
+            if task and task.get("output_dir"):
+                key = task["output_dir"]
+            d = resolve_task_dir(root, key)
+            if d is None or not d.is_dir():
+                raise HTTPException(status_code=404, detail="目录不存在")
+            path = str(d.resolve())
+            try:
+                system = platform.system()
+                if system == "Windows":
+                    os.startfile(path)  # type: ignore[attr-defined]
+                elif system == "Darwin":
+                    subprocess.Popen(["open", path])
+                else:
+                    subprocess.Popen(["xdg-open", path])
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"无法打开目录：{e}")
+            return {"success": True, "path": path}
+
+        @app.get("/video-clip/history")
+        @app.get("/api/video-clip/history")
+        async def vc_history(kind: str = "t2v", limit: int = 24):
+            k = _normalize_kind(kind)
+            root: Path = api.deps["output_root"]
+            cat = "t2v" if k == "t2v" else "i2v"
+            dirs = list_task_dirs(root, cat, limit=limit)
+            items = []
+            for p in dirs:
+                meta: dict = {}
+                tj = p / "task.json"
+                if tj.exists():
+                    try:
+                        meta = json.loads(tj.read_text(encoding="utf-8"))
+                    except Exception:
+                        meta = {}
+                folder = rel_to_root(root, p)
+                videos = []
+                for vu in meta.get("video_urls") or []:
+                    if isinstance(vu, dict) and vu.get("url"):
+                        videos.append(vu)
+                if not videos:
+                    for mp4 in sorted(p.glob("clip_*.mp4")):
+                        videos.append(
+                            {
+                                "filename": mp4.name,
+                                "url": f"/output/{folder}/{mp4.name}",
+                                "label": mp4.stem,
+                            }
+                        )
+                items.append(
+                    {
+                        "folder": folder,
+                        "task_id": meta.get("task_id") or "",
+                        "kind": meta.get("kind") or k,
+                        "prompt": meta.get("prompt") or "",
+                        "aspect": meta.get("aspect") or "",
+                        "duration_sec": meta.get("duration_sec"),
+                        "video_modes": meta.get("video_modes") or [],
+                        "video_url": meta.get("video_url")
+                        or (videos[0]["url"] if videos else ""),
+                        "video_urls": videos,
+                        "status": meta.get("status") or "",
+                        "created_at": meta.get("created_at"),
+                        "source_image": (
+                            f"/output/{folder}/{meta['source_image']}"
+                            if meta.get("source_image")
+                            else ""
+                        ),
+                    }
+                )
+            return {"success": True, "items": items}
+
+        @app.post("/video-clip/open")
+        @app.post("/api/video-clip/open")
+        async def vc_open(folder: str = Form(...)):
+            """打开历史：返回 task.json 内容供表单回填。"""
+            root: Path = api.deps["output_root"]
+            d = resolve_task_dir(root, (folder or "").strip())
+            if d is None or not d.is_dir():
+                raise HTTPException(status_code=404, detail="历史不存在")
+            meta: dict = {}
+            tj = d / "task.json"
+            if tj.exists():
+                try:
+                    meta = json.loads(tj.read_text(encoding="utf-8"))
+                except Exception:
+                    meta = {}
+            folder_key = rel_to_root(root, d)
+            videos = list(meta.get("video_urls") or [])
+            if not videos:
+                for mp4 in sorted(d.glob("clip_*.mp4")):
+                    videos.append(
+                        {
+                            "filename": mp4.name,
+                            "url": f"/output/{folder_key}/{mp4.name}",
+                            "label": mp4.stem,
+                        }
+                    )
+            src = meta.get("source_image") or ""
+            return {
+                "success": True,
+                "folder": folder_key,
+                "task_id": meta.get("task_id") or "",
+                "kind": meta.get("kind") or "",
+                "prompt": meta.get("prompt") or "",
+                "negative": meta.get("negative") or "",
+                "aspect": meta.get("aspect") or "16_9",
+                "duration_sec": meta.get("duration_sec") or 5,
+                "video_modes": meta.get("video_modes") or [],
+                "video_mode": meta.get("video_mode") or "",
+                "seed": meta.get("seed"),
+                "video_url": meta.get("video_url")
+                or (videos[0]["url"] if videos else ""),
+                "video_urls": videos,
+                "source_image": f"/output/{folder_key}/{src}" if src else "",
+                "export_hint": meta.get("export_hint") or "",
+                "status": meta.get("status") or "done",
+            }
