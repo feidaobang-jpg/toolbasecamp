@@ -311,6 +311,78 @@
       });
   }
 
+  function downloadAsset(url, filename) {
+    var u = assetUrl(url);
+    if (!u) {
+      return Promise.reject(new Error(statusTr('privateHub.homePc.historyNoAudio', '暂无音频')));
+    }
+    var name = filename || 'audio.wav';
+    if (typeof global.tbTriggerDownload === 'function') {
+      global.tbTriggerDownload(u, name);
+      return Promise.resolve();
+    }
+    var a = global.document.createElement('a');
+    a.href = u;
+    a.download = name;
+    a.rel = 'noopener';
+    global.document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return Promise.resolve();
+  }
+
+  /**
+   * 音频历史行操作：播放 / 下载 / 打开 / 删除
+   * opts: { audioUrl, filename, onPlay, onOpen, onDelete }
+   */
+  function buildAudioHistoryActions(opts) {
+    opts = opts || {};
+    var row = global.document.createElement('div');
+    row.className = 'action-row';
+    var hasAudio = !!(opts.audioUrl && String(opts.audioUrl).trim());
+
+    if (hasAudio) {
+      var playBtn = global.document.createElement('button');
+      playBtn.type = 'button';
+      playBtn.className = 'tb-btn';
+      playBtn.textContent = statusTr('privateHub.homePc.historyPlay', '播放');
+      playBtn.addEventListener('click', function () {
+        if (typeof opts.onPlay === 'function') opts.onPlay();
+      });
+      row.appendChild(playBtn);
+
+      var dlBtn = global.document.createElement('button');
+      dlBtn.type = 'button';
+      dlBtn.className = 'tb-btn';
+      dlBtn.textContent = statusTr('privateHub.homePc.historyDownload', '下载');
+      dlBtn.addEventListener('click', function () {
+        downloadAsset(opts.audioUrl, opts.filename || 'audio.wav').catch(function (e) {
+          if (global.window) global.window.alert(String((e && e.message) || e));
+        });
+      });
+      row.appendChild(dlBtn);
+    }
+
+    var openBtn = global.document.createElement('button');
+    openBtn.type = 'button';
+    openBtn.className = 'tb-btn';
+    openBtn.textContent = statusTr('privateHub.homePc.historyOpen', '打开');
+    openBtn.addEventListener('click', function () {
+      if (typeof opts.onOpen === 'function') opts.onOpen();
+    });
+    row.appendChild(openBtn);
+
+    var delBtn = global.document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'tb-btn';
+    delBtn.textContent = statusTr('privateHub.homePc.historyDelete', '删除');
+    delBtn.addEventListener('click', function () {
+      if (typeof opts.onDelete === 'function') opts.onDelete();
+    });
+    row.appendChild(delBtn);
+    return row;
+  }
+
   global.HomePcApi = {
     base: base,
     wsUrl: wsUrl,
@@ -321,6 +393,8 @@
     parseErrorResponse: parseErrorResponse,
     friendlyFetchError: friendlyFetchError,
     copyText: copyText,
-    deleteHistoryTask: deleteHistoryTask
+    deleteHistoryTask: deleteHistoryTask,
+    downloadAsset: downloadAsset,
+    buildAudioHistoryActions: buildAudioHistoryActions
   };
 })(typeof window !== 'undefined' ? window : this);

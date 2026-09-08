@@ -56,6 +56,13 @@ alwaysApply: true
 - 前端优先 `HomePcApi.deleteHistoryTask('/…/delete', { folder })`；文案用 `privateHub.homePc.historyDelete*`。
 - 图片流水线已有「删除批次」亦算满足；单图卡删除（§2）不能代替整条历史删除。
 
+## 4c. 音频历史：播放 + 下载
+
+- **音乐 / 音效 / 语音** 历史每条（有 `audio_url` 时）必须有 **播放**、**下载**，再加打开、删除。
+- 播放：加载到结果区播放器并 `play()`，**不必**为试听去改表单；打开才回填参数。
+- 下载：走 `HomePcApi.downloadAsset` / `tbTriggerDownload`（遵守微信下载规则）。
+- 优先 `HomePcApi.buildAudioHistoryActions(...)`；文案 `historyPlay` / `historyDownload` / `historyOpen`。
+
 ## 5. 顶部：本地模型 + 工作流 + 连接状态
 
 凡使用本机 ComfyUI / 本地大模型的页面，顶部须同时有：
@@ -95,6 +102,7 @@ alwaysApply: true
 - [ ] lightbox 有左右键与边界态
 - [ ] 打开历史回填表单
 - [ ] 历史列表每条有删除（删本地输出目录 + confirm）
+- [ ] 音频历史有播放 + 下载（音乐/音效/语音）
 - [ ] 顶栏模型/工作流 + `#api-status`
 - [ ] 日志含单条与总耗时，且落盘 `pipeline.log`
 - [ ] 日志上方：复制日志 + 打开输出目录（无重复「打开文件夹」）

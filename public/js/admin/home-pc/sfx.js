@@ -127,47 +127,42 @@ document.addEventListener('DOMContentLoaded', function () {
           '</div><div style="font-size:14px">' +
           (it.prompt || it.caption || '').replace(/</g, '&lt;') +
           '</div>';
-        var openBtn = document.createElement('button');
-        openBtn.type = 'button';
-        openBtn.className = 'tb-btn';
-        openBtn.textContent = tr('privateHub.homePc.sfxHistoryOpen', '打开');
-        openBtn.addEventListener('click', function () {
-          if (it.preset && presetSelect.querySelector('option[value="' + it.preset + '"]')) {
-            presetSelect.value = it.preset;
-          }
-          promptInput.value = it.prompt || '';
-          if (it.duration_req != null) durationInput.value = String(it.duration_req);
-          lastFolder = it.folder || '';
-          if (it.audio_url) {
-            showResult(
-              it.audio_url,
-              (it.preset || '') +
-                ' · ' +
-                (it.engine_used || '') +
-                (it.duration_sec ? ' · ' + Number(it.duration_sec).toFixed(1) + 's' : '')
-            );
+        var metaText =
+          (it.preset || '') +
+          ' · ' +
+          (it.engine_used || '') +
+          (it.duration_sec ? ' · ' + Number(it.duration_sec).toFixed(1) + 's' : '');
+        var actions = HomePcApi.buildAudioHistoryActions({
+          audioUrl: it.audio_url || '',
+          filename: 'sfx.wav',
+          onPlay: function () {
+            if (!it.audio_url) return;
+            showResult(it.audio_url, metaText);
+            try {
+              resultAudio.play();
+            } catch (e) {}
+          },
+          onOpen: function () {
+            if (it.preset && presetSelect.querySelector('option[value="' + it.preset + '"]')) {
+              presetSelect.value = it.preset;
+            }
+            promptInput.value = it.prompt || '';
+            if (it.duration_req != null) durationInput.value = String(it.duration_req);
+            lastFolder = it.folder || '';
+            if (it.audio_url) showResult(it.audio_url, metaText);
+          },
+          onDelete: function () {
+            HomePcApi.deleteHistoryTask('/sfx/delete', { folder: it.folder || '' })
+              .then(function (r) {
+                if (r && r.cancelled) return;
+                if (lastFolder && it.folder && lastFolder === it.folder) lastFolder = '';
+                loadHistory();
+              })
+              .catch(function (e) {
+                alert(String((e && e.message) || e));
+              });
           }
         });
-        var delBtn = document.createElement('button');
-        delBtn.type = 'button';
-        delBtn.className = 'tb-btn';
-        delBtn.textContent = tr('privateHub.homePc.historyDelete', '删除');
-        delBtn.addEventListener('click', function () {
-          if (!window.HomePcApi || !HomePcApi.deleteHistoryTask) return;
-          HomePcApi.deleteHistoryTask('/sfx/delete', { folder: it.folder || '' })
-            .then(function (r) {
-              if (r && r.cancelled) return;
-              if (lastFolder && it.folder && lastFolder === it.folder) lastFolder = '';
-              loadHistory();
-            })
-            .catch(function (e) {
-              alert(String((e && e.message) || e));
-            });
-        });
-        var actions = document.createElement('div');
-        actions.className = 'action-row';
-        actions.appendChild(openBtn);
-        actions.appendChild(delBtn);
         row.appendChild(info);
         row.appendChild(actions);
         historyList.appendChild(row);

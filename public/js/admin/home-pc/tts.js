@@ -136,55 +136,53 @@ document.addEventListener('DOMContentLoaded', function () {
           '</div><div style="font-size:14px">' +
           (it.text || '').replace(/</g, '&lt;') +
           '</div>';
-        var openBtn = document.createElement('button');
-        openBtn.type = 'button';
-        openBtn.className = 'tb-btn';
-        openBtn.textContent = tr('privateHub.homePc.ttsHistoryOpen', '打开');
-        openBtn.addEventListener('click', function () {
-          textInput.value = it.text || '';
-          if (it.engine && engineSelect.querySelector('option[value="' + it.engine + '"]')) {
-            engineSelect.value = it.engine;
-          } else if (it.engine_used === 'edge-tts' && engineSelect.querySelector('option[value="edge"]')) {
-            engineSelect.value = 'edge';
-          } else if (String(it.engine_used || '').indexOf('indextts') === 0 && engineSelect.querySelector('option[value="indextts"]')) {
-            engineSelect.value = 'indextts';
-          }
-          if (it.lang && langSelect.querySelector('option[value="' + it.lang + '"]')) {
-            langSelect.value = it.lang;
-          }
-          if (it.voice && voiceSelect.querySelector('option[value="' + it.voice + '"]')) {
-            voiceSelect.value = it.voice;
-          }
-          if (it.speed != null && speedInput) speedInput.value = String(it.speed);
-          if (it.duration_factor != null && durationInput) durationInput.value = String(it.duration_factor);
-          lastFolder = it.folder || '';
-          if (it.audio_url) {
-            showResult(
-              it.audio_url,
-              (it.engine_used || '') + (it.duration_sec ? ' · ' + it.duration_sec + 's' : '')
-            );
+        var metaText =
+          (it.engine_used || '') + (it.duration_sec ? ' · ' + it.duration_sec + 's' : '');
+        var actions = HomePcApi.buildAudioHistoryActions({
+          audioUrl: it.audio_url || '',
+          filename: 'speech.wav',
+          onPlay: function () {
+            if (!it.audio_url) return;
+            showResult(it.audio_url, metaText);
+            try {
+              resultAudio.play();
+            } catch (e) {}
+          },
+          onOpen: function () {
+            textInput.value = it.text || '';
+            if (it.engine && engineSelect.querySelector('option[value="' + it.engine + '"]')) {
+              engineSelect.value = it.engine;
+            } else if (it.engine_used === 'edge-tts' && engineSelect.querySelector('option[value="edge"]')) {
+              engineSelect.value = 'edge';
+            } else if (
+              String(it.engine_used || '').indexOf('indextts') === 0 &&
+              engineSelect.querySelector('option[value="indextts"]')
+            ) {
+              engineSelect.value = 'indextts';
+            }
+            if (it.lang && langSelect.querySelector('option[value="' + it.lang + '"]')) {
+              langSelect.value = it.lang;
+            }
+            if (it.voice && voiceSelect.querySelector('option[value="' + it.voice + '"]')) {
+              voiceSelect.value = it.voice;
+            }
+            if (it.speed != null && speedInput) speedInput.value = String(it.speed);
+            if (it.duration_factor != null && durationInput) durationInput.value = String(it.duration_factor);
+            lastFolder = it.folder || '';
+            if (it.audio_url) showResult(it.audio_url, metaText);
+          },
+          onDelete: function () {
+            HomePcApi.deleteHistoryTask('/tts/delete', { folder: it.folder || '' })
+              .then(function (r) {
+                if (r && r.cancelled) return;
+                if (lastFolder && it.folder && lastFolder === it.folder) lastFolder = '';
+                loadHistory();
+              })
+              .catch(function (e) {
+                alert(String((e && e.message) || e));
+              });
           }
         });
-        var delBtn = document.createElement('button');
-        delBtn.type = 'button';
-        delBtn.className = 'tb-btn';
-        delBtn.textContent = tr('privateHub.homePc.historyDelete', '删除');
-        delBtn.addEventListener('click', function () {
-          if (!window.HomePcApi || !HomePcApi.deleteHistoryTask) return;
-          HomePcApi.deleteHistoryTask('/tts/delete', { folder: it.folder || '' })
-            .then(function (r) {
-              if (r && r.cancelled) return;
-              if (lastFolder && it.folder && lastFolder === it.folder) lastFolder = '';
-              loadHistory();
-            })
-            .catch(function (e) {
-              alert(String((e && e.message) || e));
-            });
-        });
-        var actions = document.createElement('div');
-        actions.className = 'action-row';
-        actions.appendChild(openBtn);
-        actions.appendChild(delBtn);
         row.appendChild(info);
         row.appendChild(actions);
         historyList.appendChild(row);
