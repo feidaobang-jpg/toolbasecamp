@@ -23,9 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var historyList = document.getElementById('history-list');
   var copyLogBtn = document.getElementById('copy-log-btn');
   var openDirBtn = document.getElementById('open-dir-btn');
+  var voiceLibSelect = document.getElementById('voice-lib-select');
+  var voiceLibSaveBtn = document.getElementById('voice-lib-save-btn');
+  var voiceLibDelBtn = document.getElementById('voice-lib-del-btn');
 
   var API_BASE_URL = window.HomePcApi.base();
   var refFile = null;
+  var selectedVoiceId = '';
   var lastAudioUrl = '';
   var lastFolder = '';
   var pollTimer = null;
@@ -70,13 +74,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setRefFile(file) {
     refFile = file || null;
+    if (refFile) {
+      selectedVoiceId = '';
+      if (voiceLibSelect) voiceLibSelect.value = '';
+    }
     refName.textContent = refFile ? refFile.name + ' (' + Math.round(refFile.size / 1024) + ' KB)' : '';
+  }
+
+  async function loadVoiceLibrary() {
+    if (!voiceLibSelect) return;
+    try {
+      var res = await fetch(API_BASE_URL + '/tts/voices');
+      var data = await res.json();
+      var keep = selectedVoiceId || voiceLibSelect.value || '';
+      voiceLibSelect.innerHTML = '';
+      var none = document.createElement('option');
+      none.value = '';
+      none.textContent = tr('privateHub.homePc.ttsVoiceLibNone', '不使用音色库');
+      voiceLibSelect.appendChild(none);
+      (data.items || []).forEach(function (it) {
+        var opt = document.createElement('option');
+        opt.value = it.id;
+        opt.textContent = it.name || it.id;
+        voiceLibSelect.appendChild(opt);
+      });
+      if (keep && voiceLibSelect.querySelector('option[value="' + keep + '"]')) {
+        voiceLibSelect.value = keep;
+        selectedVoiceId = keep;
+      }
+    } catch (e) {
+      log('voices: ' + e);
+    }
   }
 
   function clearUi() {
     textInput.value = '';
     setRefFile(null);
     refInput.value = '';
+    selectedVoiceId = '';
+    if (voiceLibSelect) voiceLibSelect.value = '';
     lastAudioUrl = '';
     lastFolder = '';
     resultAudio.removeAttribute('src');
@@ -240,7 +276,11 @@ document.addEventListener('DOMContentLoaded', function () {
     form.append('voice', voiceSelect.value || '');
     form.append('speed', String(speedInput.value || '1'));
     form.append('duration_factor', String(durationInput.value || '1'));
-    if (refFile) form.append('ref_audio', refFile, refFile.name);
+    if (refFile) {
+      form.append('ref_audio', refFile, refFile.name);
+    } else if (selectedVoiceId || (voiceLibSelect && voiceLibSelect.value)) {
+      form.append('voice_id', selectedVoiceId || voiceLibSelect.value);
+    }
 
     setBusy(true, tr('privateHub.homePc.processing', '处理中…'));
     logOutput.textContent = '';
@@ -277,6 +317,92 @@ document.addEventListener('DOMContentLoaded', function () {
   refInput.addEventListener('change', function () {
     setRefFile(refInput.files && refInput.files[0]);
   });
+  if (voiceLibSelect) {
+    voiceLibSelect.addEventListener('change', function () {
+      selectedVoiceId = voiceLibSelect.value || '';
+      if (selectedVoiceId) {
+        refFile = null;
+        refInput.value = '';
+        refName.textContent = tr('privateHub.homePc.ttsVoiceLibUsing', '将使用音色库：') + voiceLibSelect.options[voiceLibSelect.selectedIndex].text;
+      } else if (!refFile) {
+        refName.textContent = '';
+      }
+    });
+  }
+  if (voiceLibSaveBtn) {
+    voiceLibSaveBtn.addEventListener('click', function () {
+      if (!refFile) {
+        alert(tr('privateHub.homePc.ttsVoiceLibNeedRef', '请先上传参考音频再保存到音色库'));
+        return;
+      }
+      var name = window.prompt(
+        tr('privateHub.homePc.ttsVoiceLibNamePrompt', '音色名称（如：主角男声）'),
+        (refFile.name || 'voice').replace(/\.[^.]+$/, '')
+      );
+      if (name == null) return;
+      name = String(name || '').trim();
+      if (!name) {
+        alert(tr('privateHub.homePc.ttsVoiceLibNeedName', '请填写音色名称'));
+        return;
+      }
+      var fd = new FormData();
+      fd.append('name', name);
+      fd.append('ref_audio', refFile, refFile.name);
+      fetch(API_BASE_URL + '/tts/voices', { method: 'POST', body: fd })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { res: res, body: body || {} };
+          });
+        })
+        .then(function (pack) {
+          if (!pack.res.ok || !pack.body.success) {
+            throw new Error(pack.body.detail || pack.body.error || 'save failed');
+          }
+          selectedVoiceId = pack.body.id || '';
+          return loadVoiceLibrary();
+        })
+        .then(function () {
+          alert(tr('privateHub.homePc.ttsVoiceLibSaved', '已保存到音色库'));
+        })
+        .catch(function (e) {
+          alert(HomePcApi.friendlyFetchError(e));
+        });
+    });
+  }
+  if (voiceLibDelBtn) {
+    voiceLibDelBtn.addEventListener('click', function () {
+      var id = (voiceLibSelect && voiceLibSelect.value) || selectedVoiceId;
+      if (!id) {
+        alert(tr('privateHub.homePc.ttsVoiceLibNeedSelect', '请先选择要删除的音色'));
+        return;
+      }
+      if (
+        !window.confirm(
+          tr('privateHub.homePc.ttsVoiceLibDeleteConfirm', '确定删除该音色？参考音频将从本地删除。')
+        )
+      ) {
+        return;
+      }
+      var fd = new FormData();
+      fd.append('voice_id', id);
+      fetch(API_BASE_URL + '/tts/voices/delete', { method: 'POST', body: fd })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { res: res, body: body || {} };
+          });
+        })
+        .then(function (pack) {
+          if (!pack.res.ok || !pack.body.success) {
+            throw new Error(pack.body.detail || pack.body.error || 'delete failed');
+          }
+          selectedVoiceId = '';
+          return loadVoiceLibrary();
+        })
+        .catch(function (e) {
+          alert(HomePcApi.friendlyFetchError(e));
+        });
+    });
+  }
 
   genBtn.addEventListener('click', start);
   clearBtn.addEventListener('click', clearUi);
@@ -316,8 +442,12 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   loadDefaults()
+    .then(function () {
+      return loadVoiceLibrary();
+    })
     .then(loadHistory)
     .catch(function (e) {
       engineLine.textContent = String(e);
+      log(String(e));
     });
 });

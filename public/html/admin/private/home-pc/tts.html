@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc70" />
-  <script src="../../../../js/locales/en.js?v=histPlay1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=histPlay1"></script>
+  <script src="../../../../js/locales/en.js?v=packVoice1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=packVoice1"></script>
   <script src="../../../../js/i18n.js?v=homepc26"></script>
   <script src="../../../../js/config.js?v=tts1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -80,6 +80,22 @@
                 </div>
                 <input type="file" id="ref-input" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg" hidden />
                 <p id="ref-name" class="small-hint"></p>
+                <div class="home-pc-field" style="margin-top:12px">
+                  <span class="home-pc-field-label" data-i18n="privateHub.homePc.ttsVoiceLibLabel">角色音色库</span>
+                  <div class="form-row" style="margin-top:8px;align-items:flex-end">
+                    <div class="input-control" style="flex:1">
+                      <label for="voice-lib-select" data-i18n="privateHub.homePc.ttsVoiceLibSelect">选用已保存音色</label>
+                      <select id="voice-lib-select" class="text-input">
+                        <option value="" data-i18n="privateHub.homePc.ttsVoiceLibNone">不使用音色库</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="action-row" style="margin-top:8px">
+                    <button type="button" id="voice-lib-save-btn" class="tb-btn" data-i18n="privateHub.homePc.ttsVoiceLibSave">保存当前参考音</button>
+                    <button type="button" id="voice-lib-del-btn" class="tb-btn" data-i18n="privateHub.homePc.ttsVoiceLibDelete">删除所选</button>
+                  </div>
+                  <p class="small-hint" data-i18n="privateHub.homePc.ttsVoiceLibHint">保存后可反复选角色声，无需每次重新上传。</p>
+                </div>
               </div>
             </div>
 
@@ -129,6 +145,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=histPlay1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
-  <script src="../../../../js/admin/home-pc/tts.js?v=histPlay1"></script>
+  <script src="../../../../js/admin/home-pc/tts.js?v=packVoice1"></script>
 </body>
 </html>

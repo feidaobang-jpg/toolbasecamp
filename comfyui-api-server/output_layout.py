@@ -11,9 +11,10 @@ output/
   t2v/             # 文生视频（Wan/LTX 单镜）
   i2v/             # 图生视频（Wan/LTX 单镜）
   tts/             # 语音 / 声音克隆
+  voices/          # TTS 角色音色库（参考音）
   images/          # 预留
-  music/           # 音乐流水线（BGM / 流行歌）
-  sfx/             # 音效流水线（短时 Foley / SFX）
+  music/           # 音乐（BGM / 流行歌）
+  sfx/             # 音效（Foley / SFX）
 """
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ CATEGORIES = (
     "t2v",
     "i2v",
     "tts",
+    "voices",
     "images",
     "music",
     "sfx",

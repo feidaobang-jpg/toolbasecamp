@@ -21,6 +21,7 @@ from fastapi import File, Form, HTTPException, UploadFile
 
 from output_layout import (
     alloc_under,
+    category_dir,
     delete_task_dir,
     ensure_reserved_dirs,
     list_task_dirs,
@@ -128,6 +129,65 @@ class TtsAPI:
     def _public_url(self, path: Path) -> str:
         rel = rel_to_root(self.output_root, path)
         return f"/output/{rel}".replace("\\", "/")
+
+    def _voices_root(self) -> Path:
+        return category_dir(self.output_root, "voices", ensure=True)
+
+    def _list_voice_items(self) -> List[dict]:
+        root = self._voices_root()
+        items: List[dict] = []
+        if not root.is_dir():
+            return items
+        for d in sorted(root.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+            if not d.is_dir() or d.name.startswith("_"):
+                continue
+            meta_path = d / "meta.json"
+            meta: dict = {}
+            if meta_path.is_file():
+                try:
+                    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                except Exception:
+                    meta = {}
+            ref_name = str(meta.get("ref") or "")
+            ref_path = d / ref_name if ref_name else None
+            if ref_path is None or not ref_path.is_file():
+                for cand in d.glob("ref.*"):
+                    ref_path = cand
+                    break
+            if ref_path is None or not ref_path.is_file():
+                continue
+            items.append(
+                {
+                    "id": d.name,
+                    "name": str(meta.get("name") or d.name),
+                    "created_at": str(meta.get("created_at") or ""),
+                    "ref_url": self._public_url(ref_path),
+                    "notes": str(meta.get("notes") or ""),
+                }
+            )
+        return items
+
+    def _resolve_voice_ref(self, voice_id: str) -> Optional[Path]:
+        vid = (voice_id or "").strip()
+        if not vid or ".." in vid or "/" in vid or "\\" in vid:
+            return None
+        d = self._voices_root() / vid
+        if not d.is_dir():
+            return None
+        meta_path = d / "meta.json"
+        if meta_path.is_file():
+            try:
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                ref_name = str(meta.get("ref") or "")
+                if ref_name:
+                    p = d / Path(ref_name).name
+                    if p.is_file():
+                        return p
+            except Exception:
+                pass
+        for cand in d.glob("ref.*"):
+            return cand
+        return None
 
     async def _run_indextts(
         self,
@@ -317,6 +377,7 @@ class TtsAPI:
             voice: str = Form("zh-CN-XiaoxiaoNeural"),
             speed: str = Form("1.0"),
             duration_factor: str = Form("1.0"),
+            voice_id: str = Form(""),
             ref_audio: Optional[UploadFile] = File(None),
         ):
             body = (text or "").strip()
@@ -357,6 +418,7 @@ class TtsAPI:
                 "voice": (voice or "").strip() or "zh-CN-XiaoxiaoNeural",
                 "speed": spd,
                 "duration_factor": df,
+                "voice_id": (voice_id or "").strip(),
                 "ref_path": "",
                 "audio_url": "",
                 "audio_urls": [],
@@ -374,6 +436,15 @@ class TtsAPI:
                     ref_path.write_bytes(raw)
                     task["ref_path"] = str(ref_path)
                     api._log(task, f"已保存参考音频 {ref_path.name}（{len(raw)} bytes）")
+            elif (voice_id or "").strip():
+                lib_ref = api._resolve_voice_ref(voice_id)
+                if lib_ref is None:
+                    raise HTTPException(status_code=404, detail="音色库中找不到该参考音")
+                suffix = lib_ref.suffix.lower() or ".wav"
+                ref_path = task_dir / f"ref{suffix}"
+                shutil.copy2(lib_ref, ref_path)
+                task["ref_path"] = str(ref_path)
+                api._log(task, f"已从音色库复制参考音 {voice_id} → {ref_path.name}")
             api._log(task, f"任务创建 engine={eng} lang={lang_n} chars={len(body)}")
             asyncio.create_task(api._execute(task_id))
             return {"success": True, "task_id": task_id, "output_dir": out_dir}
@@ -425,6 +496,57 @@ class TtsAPI:
                 raise HTTPException(status_code=400, detail="缺少 folder")
             try:
                 deleted = delete_task_dir(api.output_root, rel, category="tts")
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            return {"success": True, "folder": rel_to_root(api.output_root, deleted)}
+
+        @app.get("/tts/voices")
+        @app.get("/api/tts/voices")
+        async def tts_voices_list():
+            return {"success": True, "items": api._list_voice_items()}
+
+        @app.post("/tts/voices")
+        @app.post("/api/tts/voices")
+        async def tts_voices_save(
+            name: str = Form(""),
+            notes: str = Form(""),
+            ref_audio: UploadFile = File(...),
+        ):
+            label = (name or "").strip() or (ref_audio.filename or "voice").rsplit(".", 1)[0]
+            raw = await ref_audio.read()
+            if not raw or len(raw) < 256:
+                raise HTTPException(status_code=400, detail="参考音频无效")
+            suffix = Path(ref_audio.filename or "ref.wav").suffix.lower() or ".wav"
+            if suffix not in (".wav", ".mp3", ".flac", ".ogg", ".m4a", ".webm"):
+                suffix = ".wav"
+            voice_id = uuid.uuid4().hex[:12]
+            d = api._voices_root() / voice_id
+            d.mkdir(parents=True, exist_ok=True)
+            ref_path = d / f"ref{suffix}"
+            ref_path.write_bytes(raw)
+            meta = {
+                "id": voice_id,
+                "name": label[:80],
+                "ref": ref_path.name,
+                "notes": (notes or "").strip()[:200],
+                "created_at": _cn_now_str(),
+            }
+            (d / "meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+            return {
+                "success": True,
+                "id": voice_id,
+                "name": meta["name"],
+                "ref_url": api._public_url(ref_path),
+                "created_at": meta["created_at"],
+            }
+
+        @app.post("/tts/voices/delete")
+        @app.post("/api/tts/voices/delete")
+        async def tts_voices_delete(voice_id: str = Form("")):
+            try:
+                deleted = delete_task_dir(api.output_root, f"voices/{(voice_id or '').strip()}", category="voices")
             except FileNotFoundError as e:
                 raise HTTPException(status_code=404, detail=str(e)) from e
             except ValueError as e:

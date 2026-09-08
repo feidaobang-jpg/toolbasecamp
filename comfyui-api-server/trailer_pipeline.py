@@ -19,6 +19,7 @@ import wave
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
+from zoneinfo import ZoneInfo
 
 import requests
 from fastapi import File, Form, HTTPException, UploadFile
@@ -86,6 +87,100 @@ def _cand_urls(key: str, subdir: str, png_name: str, png_path: Path) -> Tuple[st
     if thumb is not None:
         return url, f"/output/{key}/{subdir}/{thumb.name}"
     return url, url
+
+
+def _pick_trailer_video(task_dir: Path, preferred: str = "") -> Optional[Path]:
+    name = (preferred or "").strip()
+    if name:
+        p = task_dir / Path(name).name
+        if p.is_file():
+            return p
+    for cand in ("trailer_16_9.mp4", "trailer_9_16.mp4"):
+        p = task_dir / cand
+        if p.is_file():
+            return p
+    extras = sorted(task_dir.glob("trailer_*.mp4"))
+    return extras[0] if extras else None
+
+
+def _write_publish_cover(task_dir: Path, video_path: Path, out_jpg: Path) -> None:
+    """Prefer first keyframe still; else grab first video frame."""
+    images_dir = task_dir / "images"
+    stills: List[Path] = []
+    if images_dir.is_dir():
+        stills = [
+            p
+            for p in sorted(images_dir.glob("*.png"))
+            if ".thumb." not in p.name.lower()
+        ]
+    if stills:
+        with Image.open(stills[0]) as im:
+            im.convert("RGB").save(out_jpg, format="JPEG", quality=90, optimize=True)
+        return
+    clip = VideoFileClip(str(video_path))
+    try:
+        frame = clip.get_frame(0)
+    finally:
+        clip.close()
+    Image.fromarray(frame).convert("RGB").save(out_jpg, format="JPEG", quality=90, optimize=True)
+
+
+def _build_publish_pack(
+    *,
+    root: Path,
+    task_dir: Path,
+    title: str = "",
+    description: str = "",
+    video_filename: str = "",
+) -> dict:
+    video = _pick_trailer_video(task_dir, video_filename)
+    if video is None:
+        raise FileNotFoundError("未找到成片视频")
+    plan: dict = {}
+    plan_path = task_dir / "plan.json"
+    if plan_path.is_file():
+        try:
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        except Exception:
+            plan = {}
+    title_n = (title or "").strip() or str(plan.get("title") or "").strip() or task_dir.name
+    desc_n = (description or "").strip() or str(plan.get("logline") or plan.get("synopsis") or "").strip()
+    pack_dir = task_dir / "publish_pack"
+    if pack_dir.exists():
+        shutil.rmtree(pack_dir, ignore_errors=True)
+    pack_dir.mkdir(parents=True, exist_ok=True)
+    video_dst = pack_dir / video.name
+    shutil.copy2(video, video_dst)
+    cover_dst = pack_dir / "cover.jpg"
+    _write_publish_cover(task_dir, video, cover_dst)
+    publish = {
+        "title": title_n,
+        "description": desc_n,
+        "aspect": plan.get("aspect") or "",
+        "video": video_dst.name,
+        "cover": cover_dst.name,
+        "created_at": datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S"),
+        "source_folder": rel_to_root(root, task_dir),
+    }
+    (pack_dir / "publish.json").write_text(
+        json.dumps(publish, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    # Human-readable copy for CapCut / social paste
+    (pack_dir / "发布说明.txt").write_text(
+        f"标题：{title_n}\n\n简介：\n{desc_n}\n\n成片：{video_dst.name}\n封面：{cover_dst.name}\n",
+        encoding="utf-8",
+    )
+    key = rel_to_root(root, pack_dir)
+    return {
+        "pack_dir": key,
+        "path": str(pack_dir.resolve()),
+        "title": title_n,
+        "description": desc_n,
+        "video_url": f"/output/{key}/{video_dst.name}",
+        "cover_url": f"/output/{key}/{cover_dst.name}",
+        "publish_url": f"/output/{key}/publish.json",
+    }
 
 _VISUAL_STYLES = {
     "realistic": {
@@ -1385,6 +1480,43 @@ class TrailerAPI:
             except ValueError as e:
                 raise HTTPException(status_code=400, detail=str(e)) from e
             return {"success": True, "folder": rel_to_root(root, deleted)}
+
+        @app.post("/trailer/export-pack")
+        @app.post("/api/trailer/export-pack")
+        async def trailer_export_pack(
+            task_id: str = Form(""),
+            folder: str = Form(""),
+            title: str = Form(""),
+            description: str = Form(""),
+            video_filename: str = Form(""),
+        ):
+            root: Path = api.deps["output_root"]
+            task_dir: Optional[Path] = None
+            tid = (task_id or "").strip()
+            if tid and tid in api.tasks:
+                task_dir = api._task_dir(api.tasks[tid])
+            else:
+                key = (folder or "").strip().replace("\\", "/") or tid
+                if not key:
+                    raise HTTPException(status_code=400, detail="缺少 task_id 或 folder")
+                task_dir = resolve_task_dir(root, key)
+            if task_dir is None or not task_dir.is_dir():
+                raise HTTPException(status_code=404, detail="任务目录不存在")
+            try:
+                pack = _build_publish_pack(
+                    root=root,
+                    task_dir=task_dir,
+                    title=title,
+                    description=description,
+                    video_filename=video_filename,
+                )
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"导出失败：{e}") from e
+            if tid and tid in api.tasks:
+                api._log(api.tasks[tid], f"已导出发布物料包 → {pack.get('pack_dir')}")
+            return {"success": True, **pack}
 
         @app.post("/trailer/reuse")
         @app.post("/api/trailer/reuse")

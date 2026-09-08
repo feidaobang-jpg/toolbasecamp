@@ -63,6 +63,12 @@ alwaysApply: true
 - 下载：走 `HomePcApi.downloadAsset` / `tbTriggerDownload`（遵守微信下载规则）。
 - 优先 `HomePcApi.buildAudioHistoryActions(...)`；文案 `historyPlay` / `historyDownload` / `historyOpen`。
 
+## 4d. 短片发布物料包 + TTS 音色库
+
+- **短片成片后**提供「导出发布物料包」：`publish_pack/` 含成片 mp4、`cover.jpg`、`publish.json`（标题/简介）、`发布说明.txt`。API：`POST /trailer/export-pack`。
+- **TTS** 提供角色音色库（`output/voices/`）：保存参考音、列表选用、删除；生成时可传 `voice_id` 不必每次上传。
+- **暂不做**：3D 资产管线、Spine 骨骼、整本小说定时连载、无人值守 n→n 全自动批产（可作为后续单独立项）。
+
 ## 5. 顶部：本地模型 + 工作流 + 连接状态
 
 凡使用本机 ComfyUI / 本地大模型的页面，顶部须同时有：

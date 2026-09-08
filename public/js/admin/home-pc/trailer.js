@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var cancelBtn = document.getElementById('cancel-btn');
   var clearBtn = document.getElementById('clear-btn');
   var openOutputBtn = document.getElementById('open-output-btn');
+  var exportPackBtn = document.getElementById('export-pack-btn');
   var promptInput = document.getElementById('prompt-input');
   var candidatesSelect = document.getElementById('candidates-select');
   var shotDurationSelect = document.getElementById('shot-duration-select');
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var API_BASE = window.HomePcApi.base();
   var selectedStyle = 'realistic';
   var currentTaskId = null;
+  var currentFolder = '';
   var pollingTimer = null;
   var lastLogLen = 0;
   var picks = {};
@@ -731,6 +733,7 @@ document.addEventListener('DOMContentLoaded', function () {
         appendLogs(task.logs);
         setProgress(task);
         if (task.plan) renderPlan(task.plan);
+        if (task.output_dir) currentFolder = task.output_dir;
 
         if (task.status === 'awaiting_global_refs') {
           stopPoll();
@@ -754,6 +757,7 @@ document.addEventListener('DOMContentLoaded', function () {
           hideGlobalRefsUi();
           confirmBtn.style.display = 'none';
           openOutputBtn.style.display = '';
+          if (exportPackBtn) exportPackBtn.style.display = '';
           progressStatus.textContent = tr(
             'privateHub.homePc.trailerStageDone',
             '成片已就绪，请看上方预览播放器'
@@ -828,9 +832,11 @@ document.addEventListener('DOMContentLoaded', function () {
     hideGlobalRefsUi();
     confirmBtn.style.display = 'none';
     openOutputBtn.style.display = 'none';
+    if (exportPackBtn) exportPackBtn.style.display = 'none';
     picks = {};
     globalRefPicks = {};
     currentTaskId = null;
+    currentFolder = '';
 
     var fd = new FormData();
     fd.append('prompt', text);
@@ -1221,6 +1227,60 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch(API_BASE + '/trailer/reveal-output', { method: 'POST', body: fd }).catch(function () {});
   });
 
+  if (exportPackBtn) {
+    exportPackBtn.addEventListener('click', function () {
+      if (!currentTaskId && !currentFolder) {
+        progressStatus.textContent = tr(
+          'privateHub.homePc.trailerExportPackNeedTask',
+          '请先完成或打开一条成片'
+        );
+        progressWrap.style.display = '';
+        return;
+      }
+      exportPackBtn.disabled = true;
+      var fd = new FormData();
+      if (currentTaskId) fd.append('task_id', currentTaskId);
+      if (currentFolder) fd.append('folder', currentFolder);
+      fetch(API_BASE + '/trailer/export-pack', { method: 'POST', body: fd })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { res: res, body: body || {} };
+          });
+        })
+        .then(function (pack) {
+          if (!pack.res.ok || !pack.body.success) {
+            throw new Error(window.HomePcApi.parseErrorResponse(pack.res, pack.body));
+          }
+          progressWrap.style.display = '';
+          progressStatus.textContent =
+            tr('privateHub.homePc.trailerExportPackDone', '已导出发布物料包') +
+            '：' +
+            (pack.body.pack_dir || '');
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(
+              tr('privateHub.homePc.trailerExportPackDone', '已导出发布物料包') +
+                '\n' +
+                (pack.body.title || '') +
+                '\n' +
+                (pack.body.pack_dir || '')
+            );
+          }
+          if (currentTaskId) {
+            var fd2 = new FormData();
+            fd2.append('task_id', currentTaskId);
+            fetch(API_BASE + '/trailer/reveal-output', { method: 'POST', body: fd2 }).catch(function () {});
+          }
+        })
+        .catch(function (err) {
+          progressWrap.style.display = '';
+          progressStatus.textContent = window.HomePcApi.friendlyFetchError(err);
+        })
+        .finally(function () {
+          exportPackBtn.disabled = false;
+        });
+    });
+  }
+
   if (window.HomePcMediaUi) {
     window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
       getText: function () {
@@ -1243,12 +1303,15 @@ document.addEventListener('DOMContentLoaded', function () {
   clearBtn.addEventListener('click', function () {
     stopPoll();
     currentTaskId = null;
+    currentFolder = '';
     lastLogLen = 0;
     picks = {};
     globalRefPicks = {};
     promptInput.value = '';
     logOutput.textContent = '';
     planBox.style.display = 'none';
+    if (exportPackBtn) exportPackBtn.style.display = 'none';
+    if (openOutputBtn) openOutputBtn.style.display = 'none';
     if (bibleBox) {
       bibleBox.style.display = 'none';
       bibleBox.innerHTML = '';
