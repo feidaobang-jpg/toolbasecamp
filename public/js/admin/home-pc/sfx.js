@@ -86,21 +86,21 @@ document.addEventListener('DOMContentLoaded', function () {
     var data = await res.json();
     defaults = data;
     fillSelect(presetSelect, data.presets, data.default_preset || 'whoosh');
-    durationInput.value = String(data.default_duration || 1.5);
+    durationInput.value = String(data.default_duration || 3);
     durationInput.min = String(data.duration_min || 0.5);
-    durationInput.max = String(data.duration_max || 30);
+    durationInput.max = String(data.duration_max || 47);
     durationInput.step = '0.5';
     if (data.hint) {
       var hint = document.getElementById('sfx-hint');
       if (hint) hint.textContent = data.hint;
     }
-    var st = data.acestep || {};
+    var st = data.stable_audio || data.acestep || {};
     engineLine.textContent =
       tr('privateHub.homePc.sfxEngineStatus', '音效引擎') +
       '：' +
       (st.ready
-        ? tr('privateHub.homePc.sfxLocalReady', 'ACE-Step 已就绪')
-        : tr('privateHub.homePc.sfxLocalNotReady', 'ACE-Step 未就绪')) +
+        ? tr('privateHub.homePc.sfxLocalReady', 'Stable Audio Open 已就绪')
+        : tr('privateHub.homePc.sfxLocalNotReady', 'Stable Audio Open 未就绪')) +
       ' · ' +
       (st.engine || '');
   }

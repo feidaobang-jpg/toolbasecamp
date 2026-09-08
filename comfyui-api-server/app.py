@@ -129,7 +129,7 @@ async def health_check():
         "series_studio": "v6_ref_style_only",
         "tts_pipeline": "v1_indextts25",
         "music_pipeline": "v1_acestep15",
-        "sfx_pipeline": "v1_acestep15",
+        "sfx_pipeline": "v2_stable_audio_open",
     }
 
 

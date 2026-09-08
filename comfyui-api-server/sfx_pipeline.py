@@ -1,5 +1,5 @@
 """
-音效流水线：复用本地 ACE-Step 1.5 turbo，短时无人声 Foley / SFX。
+音效流水线：本地 Stable Audio Open 1.0（文生 SFX / Foley / 氛围）。
 
 输出：output/sfx/{date}_sfx_*/
 """
@@ -19,7 +19,6 @@ from zoneinfo import ZoneInfo
 
 from fastapi import Form, HTTPException
 
-from music_pipeline import acestep_ready
 from output_layout import (
     alloc_under,
     ensure_reserved_dirs,
@@ -30,8 +29,8 @@ from output_layout import (
 
 _SFX_TASKS: Dict[str, dict] = {}
 
-_DEFAULT_ACESTEP_ROOT = Path(r"D:\sd\ACE-Step-1.5")
-_WORKER = Path(__file__).resolve().parent / "scripts" / "acestep_worker.py"
+_DEFAULT_SAO_ROOT = Path(r"D:\sd\stable-audio-open")
+_WORKER = Path(__file__).resolve().parent / "scripts" / "stable_audio_worker.py"
 
 _SFX_PRESETS = {
     "explosion": "cinematic explosion sound effect, loud boom, debris rattle, short impact, no music bed, no vocals, foley sfx",
@@ -69,9 +68,39 @@ def _format_elapsed(sec: float) -> str:
     return f"{m}m{s:02d}s"
 
 
-def _acestep_root() -> Path:
-    raw = (os.environ.get("ACESTEP_ROOT") or "").strip()
-    return Path(raw) if raw else _DEFAULT_ACESTEP_ROOT
+def _sao_root() -> Path:
+    raw = (os.environ.get("STABLE_AUDIO_ROOT") or "").strip()
+    return Path(raw) if raw else _DEFAULT_SAO_ROOT
+
+
+def _sao_python() -> Path:
+    return _sao_root() / ".venv" / "Scripts" / "python.exe"
+
+
+def _sao_model_dir() -> Path:
+    raw = (os.environ.get("STABLE_AUDIO_MODEL_DIR") or "").strip()
+    if raw:
+        return Path(raw)
+    return _sao_root() / "model"
+
+
+def stable_audio_ready() -> Dict[str, Any]:
+    root = _sao_root()
+    py = _sao_python()
+    model = _sao_model_dir()
+    marker = root / ".tbc_ready"
+    has_model = (model / "model_index.json").is_file()
+    ready = py.is_file() and has_model and _WORKER.is_file()
+    return {
+        "ready": ready,
+        "root": str(root),
+        "model_dir": str(model),
+        "has_python": py.is_file(),
+        "has_model": has_model,
+        "has_marker": marker.is_file(),
+        "has_worker": _WORKER.is_file(),
+        "engine": "stable-audio-open-1.0" if ready else "unavailable",
+    }
 
 
 def _build_caption(prompt: str, preset: str) -> str:
@@ -90,29 +119,33 @@ def _build_caption(prompt: str, preset: str) -> str:
     return base
 
 
-_SFX_ENGINE_MIN_SEC = 10.0
-
-
 def _trim_wav_to_peak(src: Path, dst: Path, target_sec: float) -> float:
     """Keep the loudest window of target_sec from src wav. Returns trimmed duration."""
     import numpy as np
+    import soundfile as sf
 
     target = max(0.2, float(target_sec))
-    try:
-        import soundfile as sf
-    except ImportError as e:
-        raise RuntimeError("缺少 soundfile，无法裁剪短音效") from e
-
     data, sr = sf.read(str(src), always_2d=True)
     if sr <= 0 or data.size == 0:
         raise RuntimeError("empty audio")
+    # Drop trailing near-silence first (Stable Audio often pads)
+    mono = np.mean(np.abs(data.astype(np.float64)), axis=1)
+    thresh = max(1e-4, float(np.max(mono)) * 0.02)
+    nonzero = np.where(mono > thresh)[0]
+    if nonzero.size:
+        end = int(nonzero[-1]) + 1
+        start0 = int(nonzero[0])
+        data = data[start0:end]
+        mono = mono[start0:end]
+
     total_sec = float(data.shape[0]) / float(sr)
     if target >= total_sec - 0.02:
         if Path(src).resolve() != Path(dst).resolve():
-            shutil.copy2(src, dst)
+            sf.write(str(dst), data, sr)
+        else:
+            sf.write(str(dst), data, sr)
         return total_sec
 
-    mono = np.mean(data.astype(np.float64), axis=1)
     win = max(1, int(round(target * sr)))
     if mono.size <= win:
         start_i = 0
@@ -167,46 +200,38 @@ class SfxAPI:
         rel = rel_to_root(self.output_root, path)
         return f"/output/{rel}".replace("\\", "/")
 
-    async def _run_acestep(self, *, task: dict, caption: str, out_wav: Path) -> None:
-        root = _acestep_root()
-        uv = shutil.which("uv")
-        if not uv:
-            raise RuntimeError("未找到 uv，无法调用 ACE-Step")
-        status = acestep_ready()
+    async def _run_stable_audio(self, *, task: dict, caption: str, out_wav: Path) -> None:
+        status = stable_audio_ready()
         if not status["ready"]:
             raise RuntimeError(
-                "本地 ACE-Step 未就绪。请运行 comfyui-api-server/scripts/setup_acestep.py"
+                "本地 Stable Audio Open 未就绪。请运行 comfyui-api-server/scripts/setup_stable_audio.py"
             )
-        duration = float(task.get("gen_duration") or task.get("duration") or _SFX_ENGINE_MIN_SEC)
-        duration = max(_SFX_ENGINE_MIN_SEC, min(30.0, duration))
+        py = _sao_python()
+        seconds = float(task.get("gen_duration") or task.get("duration") or 5.0)
+        seconds = max(0.5, min(47.0, seconds))
         cmd = [
-            uv,
-            "run",
-            "python",
+            str(py),
             str(_WORKER),
-            "--caption",
+            "--prompt",
             caption,
-            "--lyrics",
-            "[Instrumental]",
             "--out",
             str(out_wav),
-            "--mode",
-            "sfx",
-            "--duration",
-            str(duration),
-            "--lang",
-            "unknown",
+            "--seconds",
+            str(seconds),
             "--steps",
-            str(int(task.get("steps") or 8)),
+            str(int(task.get("steps") or 50)),
+            "--model-dir",
+            str(_sao_model_dir()),
         ]
         if int(task.get("seed") or -1) >= 0:
             cmd.extend(["--seed", str(int(task["seed"]))])
-        self._log(task, f"ACE-Step 音效启动 gen={duration}s（目标 {task.get('duration')}s）…")
+        self._log(task, f"Stable Audio Open 启动 seconds={seconds} …")
         env = os.environ.copy()
-        env["UV_PYTHON"] = env.get("UV_PYTHON") or "3.12"
+        env["STABLE_AUDIO_ROOT"] = str(_sao_root())
+        env["STABLE_AUDIO_MODEL_DIR"] = str(_sao_model_dir())
         proc = await asyncio.create_subprocess_exec(
             *cmd,
-            cwd=str(root),
+            cwd=str(_sao_root()),
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.STDOUT,
             env=env,
@@ -214,12 +239,12 @@ class SfxAPI:
         out_b, _ = await proc.communicate()
         text_out = (out_b or b"").decode("utf-8", errors="replace").strip()
         if text_out:
-            for line in text_out.splitlines()[-30:]:
+            for line in text_out.splitlines()[-40:]:
                 self._log(task, line)
         if proc.returncode != 0:
-            raise RuntimeError(f"ACE-Step 音效失败 (code={proc.returncode})")
+            raise RuntimeError(f"Stable Audio Open 失败 (code={proc.returncode})")
         if not out_wav.is_file() or out_wav.stat().st_size < 1024:
-            raise RuntimeError("ACE-Step 未写出有效音效")
+            raise RuntimeError("Stable Audio Open 未写出有效音效")
 
     async def _execute(self, task_id: str) -> None:
         task = self.tasks.get(task_id)
@@ -235,13 +260,20 @@ class SfxAPI:
             caption = _build_caption(task.get("prompt") or "", task.get("preset") or "")
             task["caption"] = caption
             (task_dir / "caption.txt").write_text(caption, encoding="utf-8")
-            task["engine_used"] = "ace-step-1.5-turbo"
-            await self._run_acestep(task=task, caption=caption, out_wav=out_wav)
+            task["engine_used"] = "stable-audio-open-1.0"
+            await self._run_stable_audio(task=task, caption=caption, out_wav=out_wav)
 
-            want = float(task.get("duration") or _SFX_ENGINE_MIN_SEC)
-            if want + 0.05 < _SFX_ENGINE_MIN_SEC:
+            want = float(task.get("duration") or 1.5)
+            # Always keep full render, then trim to target when needed (silence pad / long buffer)
+            actual = None
+            if self.audio_duration_seconds:
+                try:
+                    actual = float(self.audio_duration_seconds(out_wav))
+                except Exception:
+                    actual = None
+            if actual is None or actual > want + 0.15:
                 task["stage"] = "trim"
-                self._log(task, f"按能量峰值裁剪到约 {want:.2f}s …")
+                self._log(task, f"裁剪到目标约 {want:.2f}s（去静音 + 能量峰值）…")
                 shutil.copy2(out_wav, raw_wav)
                 trimmed = await asyncio.to_thread(_trim_wav_to_peak, raw_wav, out_wav, want)
                 self._log(task, f"裁剪完成 → {trimmed:.2f}s（完整版保留 sfx_full.wav）")
@@ -296,10 +328,11 @@ class SfxAPI:
         @app.get("/sfx/defaults")
         @app.get("/api/sfx/defaults")
         async def sfx_defaults():
-            st = acestep_ready()
+            st = stable_audio_ready()
             return {
                 "success": True,
-                "acestep": st,
+                "stable_audio": st,
+                "acestep": st,  # backward compat for old UI field name
                 "presets": {
                     "explosion": "爆炸冲击",
                     "whoosh": "呼啸 / 转场",
@@ -316,25 +349,24 @@ class SfxAPI:
                     "custom": "自定义（只用下方描述）",
                 },
                 "default_preset": "whoosh",
-                "default_duration": 1.5,
+                "default_duration": 3.0,
                 "duration_min": 0.5,
-                "duration_max": 30,
-                "engine_min_sec": _SFX_ENGINE_MIN_SEC,
-                "hint": "工作流：本地 ACE-Step 1.5 turbo（无人声）。引擎一次至少约 10 秒；目标短于 10 秒时会自动按能量峰值裁成游戏短音效（完整版另存 sfx_full.wav）。",
+                "duration_max": 47,
+                "hint": "工作流：本地 Stable Audio Open 1.0（D:\\sd\\stable-audio-open）。需先在 Hugging Face 同意模型协议并运行 setup_stable_audio.py。适合 Foley / 氛围；短目标会去静音并按峰值裁剪。",
             }
 
         @app.get("/sfx/status")
         @app.get("/api/sfx/status")
         async def sfx_engine_status():
-            return {"success": True, **acestep_ready()}
+            return {"success": True, **stable_audio_ready()}
 
         @app.post("/sfx/start")
         @app.post("/api/sfx/start")
         async def sfx_start(
             prompt: str = Form(""),
             preset: str = Form("whoosh"),
-            duration: str = Form("1.5"),
-            steps: str = Form("8"),
+            duration: str = Form("3"),
+            steps: str = Form("50"),
             seed: str = Form("-1"),
         ):
             body = (prompt or "").strip()
@@ -346,16 +378,17 @@ class SfxAPI:
                     raise HTTPException(status_code=400, detail="请选择预设或填写描述")
                 preset_n = "custom"
             try:
-                dur = float(duration or "1.5")
+                dur = float(duration or "3")
             except Exception:
-                dur = 1.5
-            dur = max(0.5, min(30.0, dur))
-            gen_dur = max(_SFX_ENGINE_MIN_SEC, dur)
+                dur = 3.0
+            dur = max(0.5, min(47.0, dur))
+            # Ask model for target length; short clips still get silence-pad + trim.
+            gen_dur = dur
             try:
-                steps_i = int(float(steps or "8"))
+                steps_i = int(float(steps or "50"))
             except Exception:
-                steps_i = 8
-            steps_i = max(4, min(32, steps_i))
+                steps_i = 50
+            steps_i = max(10, min(200, steps_i))
             try:
                 seed_i = int(float(seed or "-1"))
             except Exception:
@@ -386,7 +419,7 @@ class SfxAPI:
                 "timing": {},
             }
             api.tasks[task_id] = task
-            api._log(task, f"任务创建 preset={preset_n} target={dur}s gen={gen_dur}s")
+            api._log(task, f"任务创建 preset={preset_n} target={dur}s engine=stable-audio-open")
             asyncio.create_task(api._execute(task_id))
             return {"success": True, "task_id": task_id, "output_dir": out_dir}
 
