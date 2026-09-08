@@ -436,6 +436,18 @@
     gap: 12px;
 }
 
+/* display:flex 会盖掉原生 [hidden]，必须显式藏起来 */
+.tb-input-image-preview[hidden],
+.instruct-source-grid[hidden],
+.home-pc-source-grid[hidden],
+.img-tool-source[hidden],
+.i23d-ref-preview[hidden],
+.image-pipe-ref-preview[hidden],
+.home-pc-result-box[hidden],
+.i23d-viewer[hidden] {
+    display: none !important;
+}
+
 .tb-input-image-preview .home-pc-img-card,
 .i23d-ref-preview .home-pc-img-card,
 .instruct-source-card,

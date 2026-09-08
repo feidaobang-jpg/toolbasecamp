@@ -8,7 +8,7 @@ alwaysApply: true
 凡用户**选择 / 拖入本地图片**并展示预览（工具页、家里电脑、内容页等）：
 
 1. **空上传 / 拖放区**：宽度可拉满，但**不要**一上来就做成满屏大正方形；用紧凑条（约 `min-height: 112px` + padding），选图后再出预览。
-2. **选图后预览**：宽度约 **容器一半**（`max-width: min(50%, 420px)`；手机可满宽），**高度 = 宽度**（`aspect-ratio: 1 / 1`）。
+2. **选图后预览**：宽度约 **容器一半**（`max-width: min(50%, 420px)`；手机可满宽），**高度 = 宽度**（`aspect-ratio: 1 / 1`）。未选图时预览容器必须 `hidden`，且 CSS 里对带 `[hidden]` 的预览写 `display: none !important`（否则 `display:flex` 会盖掉原生 hidden，出现空灰框）。
 3. 图用 `object-fit: contain`，背景可用浅灰。
 4. **禁止**再压成 168/220/280px 小缩略图；也**不要**空态就占满一屏高。
 

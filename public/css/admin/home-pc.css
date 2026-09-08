@@ -2701,6 +2701,12 @@ body.tb-admin-private #auth-status {
   margin: 0 0 16px;
   justify-content: stretch;
 }
+.home-pc-wrap .home-pc-source-grid[hidden],
+.home-pc-wrap .i23d-ref-preview[hidden],
+.home-pc-wrap .image-pipe-ref-preview[hidden],
+.home-pc-wrap .tb-input-image-preview[hidden] {
+  display: none !important;
+}
 .home-pc-wrap .home-pc-source-grid .instruct-source-card,
 .home-pc-wrap .home-pc-source-card,
 .home-pc-wrap .i23d-ref-preview .home-pc-img-card,
