@@ -99,8 +99,47 @@ def setup_triposr(root: Path) -> None:
     )
     req = root / "requirements.txt"
     if req.is_file():
-        _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
-    _run([str(py), "-m", "pip", "install", "trimesh", "rembg", "onnxruntime-gpu", "-i", PIP_INDEX])
+        # torchmcubes via git often fails on Windows; install rest then best-effort mcubes
+        try:
+            _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
+        except subprocess.CalledProcessError:
+            print("[warn] requirements.txt 部分失败，继续装基础包", flush=True)
+            for pkg in (
+                "omegaconf==2.3.0",
+                "Pillow",
+                "einops==0.7.0",
+                "transformers==4.35.0",
+                "trimesh==4.0.5",
+                "rembg",
+                "huggingface-hub",
+                "imageio",
+                "xatlas==0.0.9",
+            ):
+                try:
+                    _run([str(py), "-m", "pip", "install", pkg, "-i", PIP_INDEX])
+                except subprocess.CalledProcessError:
+                    print(f"[warn] skip {pkg}", flush=True)
+    # numpy2 + old trimesh 会因 ndarray.ptp 导出 GLB 失败；钉新版 trimesh
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "trimesh>=4.5",
+            "rembg",
+            "onnxruntime-gpu",
+            "-i",
+            PIP_INDEX,
+        ]
+    )
+    # Verify import with repo on PYTHONPATH
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    subprocess.check_call(
+        [str(py), "-c", "import sys; sys.path.insert(0, r'%s'); from tsr.system import TSR" % str(root)],
+        env=env,
+    )
     (root / ".tbc_ready").write_text("triposr\n", encoding="utf-8")
     print("[done] triposr", flush=True)
 
@@ -149,10 +188,50 @@ def setup_trellis(root: Path) -> None:
     )
     req = root / "requirements.txt"
     if req.is_file():
-        _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
-    # TRELLIS often needs extra setup; mark ready if importable later
+        try:
+            _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
+        except subprocess.CalledProcessError:
+            print("[warn] trellis requirements 部分失败", flush=True)
+    # Replace PyPI kaolin placeholder with NVIDIA wheel (torch 2.6 + cu124)
+    try:
+        _run([str(py), "-m", "pip", "uninstall", "-y", "kaolin"])
+    except subprocess.CalledProcessError:
+        pass
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "kaolin==0.18.0",
+            "-f",
+            "https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.6.0_cu124.html",
+        ]
+    )
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    try:
+        subprocess.check_call(
+            [
+                str(py),
+                "-c",
+                "import sys; sys.path.insert(0, r'%s'); from trellis.pipelines import TrellisImageTo3DPipeline"
+                % str(root),
+            ],
+            env=env,
+        )
+    except subprocess.CalledProcessError as e:
+        marker = root / ".tbc_ready"
+        if marker.is_file():
+            marker.unlink()
+        print(
+            "[fail] trellis import 仍失败（可能缺 spconv/flash_attn 等）。"
+            "未写入 .tbc_ready。请按 microsoft/TRELLIS README 补依赖后重跑本脚本。",
+            flush=True,
+        )
+        raise SystemExit(1) from e
     (root / ".tbc_ready").write_text("trellis\n", encoding="utf-8")
-    print("[done] trellis — 请按官方 README 补全额外依赖后重试", flush=True)
+    print("[done] trellis", flush=True)
 
 
 def main() -> int:

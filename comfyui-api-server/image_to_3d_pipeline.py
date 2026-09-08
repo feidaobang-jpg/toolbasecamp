@@ -204,7 +204,9 @@ class ImageTo3dAPI:
             str(int(task.get("seed") or -1)),
         ]
         env = os.environ.copy()
-        env[_ENGINES[engine]["root_env"]] = str(_engine_root(engine))
+        root = str(_engine_root(engine))
+        env[_ENGINES[engine]["root_env"]] = root
+        env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
         env["TQDM_DISABLE"] = "1"
         self._log(task, f"{engine} 启动…")
         t0 = time.time()

@@ -21,6 +21,25 @@ import sys
 from pathlib import Path
 
 
+def _ensure_engine_path(engine: str) -> Path:
+    """Put cloned repo root on sys.path (TripoSR/TRELLIS are not always pip-installed)."""
+    env_key = {
+        "triposr": "TRIPOSR_ROOT",
+        "hunyuan3d": "HUNYUAN3D_ROOT",
+        "trellis": "TRELLIS_ROOT",
+    }[engine]
+    defaults = {
+        "triposr": r"D:\sd\triposr",
+        "hunyuan3d": r"D:\sd\hunyuan3d",
+        "trellis": r"D:\sd\trellis",
+    }
+    root = Path(os.environ.get(env_key, defaults[engine])).resolve()
+    s = str(root)
+    if s not in sys.path:
+        sys.path.insert(0, s)
+    return root
+
+
 def _write_meta(out_dir: Path, **kwargs) -> None:
     meta = {k: v for k, v in kwargs.items() if v is not None}
     (out_dir / "result.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -28,13 +47,14 @@ def _write_meta(out_dir: Path, **kwargs) -> None:
 
 def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
     # Prefer installed package API; fallback to cloned repo run.py
+    _ensure_engine_path("triposr")
     try:
         import numpy as np
         import rembg
         import torch
         from PIL import Image
         from tsr.system import TSR
-        from tsr.utils import remove_background, resize_foreground, save_mesh
+        from tsr.utils import remove_background, resize_foreground
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
         model = TSR.from_pretrained(
@@ -54,23 +74,18 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
 
         with torch.no_grad():
             scene_codes = model([img], device=device)
-        meshes = model.extract_mesh(scene_codes, resolution=256)
+        # signature: extract_mesh(scene_codes, has_vertex_color, resolution=…)
+        meshes = model.extract_mesh(scene_codes, True, resolution=256)
         mesh_path = out_dir / "mesh.glb"
-        # save_mesh may write obj; try export glb via trimesh if available
         try:
-            import trimesh
-
-            m = meshes[0]
-            # TSR mesh has vertices/faces
-            tm = trimesh.Trimesh(vertices=m.vertices.detach().cpu().numpy(), faces=m.faces.cpu().numpy())
-            tm.export(str(mesh_path))
+            meshes[0].export(str(mesh_path))
         except Exception:
-            obj_path = out_dir / "mesh.obj"
-            save_mesh(meshes[0], str(obj_path))
-            mesh_path = obj_path
+            mesh_path = out_dir / "mesh.obj"
+            meshes[0].export(str(mesh_path))
         return mesh_path
     except Exception as e1:
         # Repo layout: D:\sd\triposr\run.py
+        print(f"TripoSR API path failed: {e1!r}", flush=True)
         root = Path(os.environ.get("TRIPOSR_ROOT", r"D:\sd\triposr"))
         run_py = root / "run.py"
         if not run_py.is_file():
@@ -84,7 +99,7 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
             "--output-dir",
             str(out_dir),
             "--model-save-format",
-            "glb",
+            "obj",
         ]
         if seed >= 0:
             # TripoSR run.py may ignore seed; keep for forward compat
@@ -136,6 +151,7 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
 
 
 def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
+    _ensure_engine_path("trellis")
     try:
         import torch
         from trellis.pipelines import TrellisImageTo3DPipeline
