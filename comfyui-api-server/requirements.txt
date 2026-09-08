@@ -20,3 +20,6 @@ setuptools>=65,<81
 
 # TTS (Edge)
 edge-tts>=6.1.0
+
+# Windows ZoneInfo (Asia/Shanghai)
+tzdata>=2024.1

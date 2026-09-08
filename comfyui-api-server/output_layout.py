@@ -10,6 +10,7 @@ output/
   text_to_video/
   t2v/             # 文生视频（Wan/LTX 单镜）
   i2v/             # 图生视频（Wan/LTX 单镜）
+  tts/             # 语音 / 声音克隆
   images/          # 预留
   music/           # 预留
   sfx/             # 预留
@@ -26,6 +27,7 @@ CATEGORIES = (
     "text_to_video",
     "t2v",
     "i2v",
+    "tts",
     "images",
     "music",
     "sfx",

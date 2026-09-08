@@ -1,11 +1,11 @@
 @echo off
 setlocal EnableDelayedExpansion
 chcp 65001 >nul
-title ComfyUI API Server (Edge-TTS)
+title ComfyUI API Server (IndexTTS + Edge-TTS)
 
 echo ========================================
 echo   ComfyUI Image Processor API Server
-echo   TTS Engine: Edge-TTS
+echo   TTS: IndexTTS-2.5 (local) / Edge-TTS
 echo ========================================
 echo.
 
@@ -102,7 +102,8 @@ if errorlevel 1 (
 )
 
 echo.
-echo TTS: Edge-TTS
+echo TTS: IndexTTS-2.5 at D:\sd\index-tts (fallback Edge-TTS)
+if not defined INDEXTTS_ROOT set INDEXTTS_ROOT=D:\sd\index-tts
 set INDEXTTS_MODE=cli
 set INDEXTTS_CMD=edge-tts
 set INDEXTTS_VOICE=zh-CN-XiaoxiaoNeural

@@ -127,6 +127,7 @@ async def health_check():
         "text_illustration_rules": "v2_no_comma_default",
         "trailer_pipeline": "v7_timing_logs",
         "series_studio": "v6_ref_style_only",
+        "tts_pipeline": "v1_indextts25",
     }
 
 
@@ -4666,6 +4667,15 @@ _video_clip_api = VideoClipAPI(
     free_comfyui_memory=free_comfyui_memory,
 )
 _video_clip_api.register(app)
+
+from tts_pipeline import TtsAPI
+
+_tts_api = TtsAPI(
+    output_root=_OUTPUT_ROOT,
+    edge_synthesize=_indextts_synthesize,
+    audio_duration_seconds=_audio_duration_seconds,
+)
+_tts_api.register(app)
 
 
 if __name__ == '__main__':

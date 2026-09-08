@@ -47,14 +47,16 @@
     'tool.ladder': { zh: '硬件跑分', en: 'Benchmarks' },
     'tool.admin': { zh: '后台', en: 'Admin' },
     'tool.android': { zh: '安卓', en: 'Android' },
-    'tool.classmates': { zh: '同学专区', en: 'Classmates' }
+    'tool.classmates': { zh: '同学专区', en: 'Classmates' },
+    'tool.admin.private': { zh: '私有后台', en: 'Private admin' }
   };
 
   /** Pages not in toolsConfig / gamesConfig (private or classmates). */
   var EXTRA_EVENT_LABELS = {
     'tool.classmates.hub': { zh: '同学专区', en: 'Classmates hub' },
     'tool.classmates.mark-six': { zh: '号码统计', en: 'Number stats' },
-    'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' }
+    'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' },
+    'tool.admin.private.home-pc.tts': { zh: '语音 / 声音克隆', en: 'Speech / voice clone' }
   };
 
   var AUTH_LABELS = {
