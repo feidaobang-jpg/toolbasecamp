@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (renderer) return;
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x111111);
-    camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
+    camera = new THREE.PerspectiveCamera(45, 1, 0.01, 500);
     camera.position.set(1.6, 1.2, 1.8);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -133,14 +133,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function fitCamera(object3d) {
     var box = new THREE.Box3().setFromObject(object3d);
+    if (box.isEmpty()) return;
     var size = box.getSize(new THREE.Vector3());
     var center = box.getCenter(new THREE.Vector3());
     var maxDim = Math.max(size.x, size.y, size.z, 0.001);
+    // 归一到约 1 单位，避免远裁 / 过大过小
+    var scale = 1.2 / maxDim;
+    object3d.scale.multiplyScalar(scale);
+    box.setFromObject(object3d);
+    size = box.getSize(new THREE.Vector3());
+    center = box.getCenter(new THREE.Vector3());
     object3d.position.sub(center);
     object3d.position.y += size.y * 0.5;
     controls.target.set(0, size.y * 0.35, 0);
-    camera.position.set(maxDim * 1.4, maxDim * 1.1, maxDim * 1.5);
+    camera.near = 0.01;
+    camera.far = 500;
+    camera.position.set(1.8, 1.4, 2.2);
+    camera.updateProjectionMatrix();
     controls.update();
+  }
+
+  /** TripoSR/Hunyuan/TRELLIS 导出的 GLB 常无 material、无 NORMAL → Standard 材质全黑，只剩地板可见 */
+  function prepareMeshRoot(root) {
+    root.traverse(function (c) {
+      if (!c.isMesh || !c.geometry) return;
+      var g = c.geometry;
+      if (!g.getAttribute('normal')) {
+        g.computeVertexNormals();
+      }
+      var hasColor = !!g.getAttribute('color');
+      c.material = new THREE.MeshStandardMaterial({
+        color: hasColor ? 0xffffff : 0xc5ced8,
+        metalness: 0.08,
+        roughness: 0.72,
+        vertexColors: hasColor,
+        side: THREE.DoubleSide,
+        flatShading: false,
+      });
+      c.castShadow = false;
+      c.receiveShadow = false;
+      c.frustumCulled = true;
+    });
+    return root;
   }
 
   function loadMeshUrl(url) {
@@ -154,11 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
         new OBJLoader().load(
           full,
           function (obj) {
-            obj.traverse(function (c) {
-              if (c.isMesh) {
-                c.material = new THREE.MeshStandardMaterial({ color: 0xb0b8c4, metalness: 0.05, roughness: 0.85 });
-              }
-            });
+            prepareMeshRoot(obj);
             currentRoot = obj;
             scene.add(obj);
             fitCamera(obj);
@@ -171,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
         new GLTFLoader().load(
           full,
           function (gltf) {
+            prepareMeshRoot(gltf.scene);
             currentRoot = gltf.scene;
             scene.add(gltf.scene);
             fitCamera(gltf.scene);

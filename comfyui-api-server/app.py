@@ -65,6 +65,13 @@ _FILES_ROOT = _OUTPUT_ROOT / FILES_FOLDER
 # files 文件夹不再自动创建
 _OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
 
+# Windows mimetypes 常把 .glb 标成 text/plain，浏览器/隧道可能异常；钉死二进制类型
+import mimetypes
+
+mimetypes.add_type("model/gltf-binary", ".glb")
+mimetypes.add_type("model/gltf+json", ".gltf")
+mimetypes.add_type("application/octet-stream", ".obj")
+
 app = FastAPI(title="ComfyUI Image Processor API")
 
 # 添加 output 目录的静态文件挂载，用于 text-to-video 直接访问
