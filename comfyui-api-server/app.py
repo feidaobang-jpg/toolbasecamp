@@ -128,6 +128,7 @@ async def health_check():
         "trailer_pipeline": "v7_timing_logs",
         "series_studio": "v6_ref_style_only",
         "tts_pipeline": "v1_indextts25",
+        "music_pipeline": "v1_acestep15",
     }
 
 
@@ -4676,6 +4677,16 @@ _tts_api = TtsAPI(
     audio_duration_seconds=_audio_duration_seconds,
 )
 _tts_api.register(app)
+
+from music_pipeline import MusicAPI
+
+_music_api = MusicAPI(
+    output_root=_OUTPUT_ROOT,
+    audio_duration_seconds=_audio_duration_seconds,
+    repo_deepseek_api_key=_repo_deepseek_api_key,
+    deepseek_api_url=DEEPSEEK_API_URL,
+)
+_music_api.register(app)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,11 @@
 @echo off
 setlocal EnableDelayedExpansion
 chcp 65001 >nul
-title ComfyUI API Server (IndexTTS + Edge-TTS)
+title ComfyUI API Server (IndexTTS + ACE-Step + Edge-TTS)
 
 echo ========================================
 echo   ComfyUI Image Processor API Server
-echo   TTS: IndexTTS-2.5 (local) / Edge-TTS
+echo   TTS: IndexTTS-2.5 / Music: ACE-Step 1.5
 echo ========================================
 echo.
 
@@ -108,6 +108,8 @@ set INDEXTTS_MODE=cli
 set INDEXTTS_CMD=edge-tts
 set INDEXTTS_VOICE=zh-CN-XiaoxiaoNeural
 set INDEXTTS_SPEED=1.0
+echo Music: ACE-Step 1.5 turbo at D:\sd\ACE-Step-1.5
+if not defined ACESTEP_ROOT set ACESTEP_ROOT=D:\sd\ACE-Step-1.5
 
 if not defined COMFYUI_RESOURCE_CPU_PERCENT set COMFYUI_RESOURCE_CPU_PERCENT=75
 if not defined COMFYUI_RESOURCE_LIMIT set COMFYUI_RESOURCE_LIMIT=1

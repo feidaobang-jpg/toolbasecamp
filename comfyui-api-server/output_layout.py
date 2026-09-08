@@ -12,7 +12,7 @@ output/
   i2v/             # 图生视频（Wan/LTX 单镜）
   tts/             # 语音 / 声音克隆
   images/          # 预留
-  music/           # 预留
+  music/           # 音乐流水线（BGM / 流行歌）
   sfx/             # 预留
 """
 from __future__ import annotations
