@@ -438,6 +438,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.homePc.sfxTitle',
                     descriptionKey: 'privateHub.homePc.sfxDesc',
                     url: 'html/admin/private/home-pc/sfx.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.i23dTitle',
+                    descriptionKey: 'privateHub.homePc.i23dDesc',
+                    url: 'html/admin/private/home-pc/image-to-3d.html'
                 }
             ]
         }

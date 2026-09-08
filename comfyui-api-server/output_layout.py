@@ -12,6 +12,7 @@ output/
   i2v/             # 图生视频（Wan/LTX 单镜）
   tts/             # 语音 / 声音克隆
   voices/          # TTS 角色音色库（参考音）
+  mesh3d/          # 图生 3D（TripoSR / Hunyuan3D / TRELLIS）
   images/          # 预留
   music/           # 音乐（BGM / 流行歌）
   sfx/             # 音效（Foley / SFX）
@@ -30,6 +31,7 @@ CATEGORIES = (
     "i2v",
     "tts",
     "voices",
+    "mesh3d",
     "images",
     "music",
     "sfx",

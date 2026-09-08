@@ -11,9 +11,9 @@ alwaysApply: true
 ## 0. 用户可见命名：「流水线」不要乱用
 
 - **「流水线」**留给多阶段批量/编排页：图片流水线、短片流水线、剧集流水线、游戏图流水线等。
-- **语音 / 音乐 / 音效**是单功能生成页，侧栏、标题、站点统计、locales **不要**带「流水线」或英文 `pipeline`。
-  - 中文：`语音 / 声音克隆`、`音乐`、`音效`
-  - 英文：`Speech / voice clone`、`Music`、`SFX`
+- **语音 / 音乐 / 音效 / 图生 3D**是单功能生成页，侧栏、标题、站点统计、locales **不要**带「流水线」或英文 `pipeline`。
+  - 中文：`语音 / 声音克隆`、`音乐`、`音效`、`图生 3D`
+  - 英文：`Speech / voice clone`、`Music`、`SFX`、`Image to 3D`
 - 代码/路径可保留 `*_pipeline.py`、`sfx_pipeline` 等内部名；**仅用户可见文案**遵守上表。
 
 共享实现优先用：
@@ -67,7 +67,8 @@ alwaysApply: true
 
 - **短片成片后**提供「导出发布物料包」：`publish_pack/` 含成片 mp4、`cover.jpg`、`publish.json`（标题/简介）、`发布说明.txt`。API：`POST /trailer/export-pack`。
 - **TTS** 提供角色音色库（`output/voices/`）：保存参考音、列表选用、删除；生成时可传 `voice_id` 不必每次上传。
-- **暂不做**：3D 资产管线、Spine 骨骼、整本小说定时连载、无人值守 n→n 全自动批产（可作为后续单独立项）。
+- **图生 3D**：`image-to-3d` 页 + `ImageTo3dAPI`；引擎 TripoSR / Hunyuan3D / TRELLIS **可多选对比**；输出 `output/mesh3d/`；页内 Three.js 预览 GLB；未就绪用 `setup_image_to_3d.py --engine …`。侧栏文案用「图生 3D」，不要叫「流水线」。
+- **暂不做**：Spine 骨骼、整本小说定时连载、无人值守 n→n 全自动批产、完整 3D 资产库/骨骼动画管线（可作为后续单独立项）。
 
 ## 5. 顶部：本地模型 + 工作流 + 连接状态
 

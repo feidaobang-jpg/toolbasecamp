@@ -130,6 +130,7 @@ async def health_check():
         "tts_pipeline": "v1_indextts25",
         "music_pipeline": "v1_acestep15",
         "sfx_pipeline": "v2_stable_audio_open",
+        "image_to_3d_pipeline": "v1_triposr_hunyuan_trellis",
     }
 
 
@@ -4696,6 +4697,11 @@ _sfx_api = SfxAPI(
     audio_duration_seconds=_audio_duration_seconds,
 )
 _sfx_api.register(app)
+
+from image_to_3d_pipeline import ImageTo3dAPI
+
+_i23d_api = ImageTo3dAPI(output_root=_OUTPUT_ROOT)
+_i23d_api.register(app)
 
 
 if __name__ == '__main__':

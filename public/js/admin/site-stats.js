@@ -58,7 +58,8 @@
     'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' },
     'tool.admin.private.home-pc.tts': { zh: '语音 / 声音克隆', en: 'Speech / voice clone' },
     'tool.admin.private.home-pc.music': { zh: '音乐', en: 'Music' },
-    'tool.admin.private.home-pc.sfx': { zh: '音效', en: 'SFX' }
+    'tool.admin.private.home-pc.sfx': { zh: '音效', en: 'SFX' },
+    'tool.admin.private.home-pc.image-to-3d': { zh: '图生 3D', en: 'Image to 3D' }
   };
 
   var AUTH_LABELS = {

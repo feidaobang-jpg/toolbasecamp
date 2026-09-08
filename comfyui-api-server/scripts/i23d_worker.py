@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""
+Image-to-3D worker dispatcher.
+
+Run with each engine's own venv Python when possible:
+  D:\\sd\\triposr\\.venv\\Scripts\\python.exe i23d_worker.py --engine triposr ...
+  D:\\sd\\hunyuan3d\\.venv\\Scripts\\python.exe i23d_worker.py --engine hunyuan3d ...
+  D:\\sd\\trellis\\.venv\\Scripts\\python.exe i23d_worker.py --engine trellis ...
+
+Outputs into --out-dir:
+  mesh.glb (preferred) and/or mesh.obj
+  preview.png (optional)
+  result.json
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+
+
+def _write_meta(out_dir: Path, **kwargs) -> None:
+    meta = {k: v for k, v in kwargs.items() if v is not None}
+    (out_dir / "result.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
+    # Prefer installed package API; fallback to cloned repo run.py
+    try:
+        import numpy as np
+        import rembg
+        import torch
+        from PIL import Image
+        from tsr.system import TSR
+        from tsr.utils import remove_background, resize_foreground, save_mesh
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        model = TSR.from_pretrained(
+            "stabilityai/TripoSR",
+            config_name="config.yaml",
+            weight_name="model.ckpt",
+        )
+        model.to(device)
+        model.renderer.set_chunk_size(8192)
+
+        img = Image.open(image).convert("RGBA")
+        img = remove_background(img, rembg.new_session())
+        img = resize_foreground(img, 0.85)
+        img = np.array(img).astype(np.float32) / 255.0
+        img = img[:, :, :3] * img[:, :, 3:4] + (1 - img[:, :, 3:4]) * 0.5
+        img = Image.fromarray((img * 255.0).astype(np.uint8))
+
+        with torch.no_grad():
+            scene_codes = model([img], device=device)
+        meshes = model.extract_mesh(scene_codes, resolution=256)
+        mesh_path = out_dir / "mesh.glb"
+        # save_mesh may write obj; try export glb via trimesh if available
+        try:
+            import trimesh
+
+            m = meshes[0]
+            # TSR mesh has vertices/faces
+            tm = trimesh.Trimesh(vertices=m.vertices.detach().cpu().numpy(), faces=m.faces.cpu().numpy())
+            tm.export(str(mesh_path))
+        except Exception:
+            obj_path = out_dir / "mesh.obj"
+            save_mesh(meshes[0], str(obj_path))
+            mesh_path = obj_path
+        return mesh_path
+    except Exception as e1:
+        # Repo layout: D:\sd\triposr\run.py
+        root = Path(os.environ.get("TRIPOSR_ROOT", r"D:\sd\triposr"))
+        run_py = root / "run.py"
+        if not run_py.is_file():
+            raise RuntimeError(f"TripoSR 未就绪：{e1}") from e1
+        import subprocess
+
+        cmd = [
+            sys.executable,
+            str(run_py),
+            str(image),
+            "--output-dir",
+            str(out_dir),
+            "--model-save-format",
+            "glb",
+        ]
+        if seed >= 0:
+            # TripoSR run.py may ignore seed; keep for forward compat
+            pass
+        print("fallback run.py:", " ".join(cmd), flush=True)
+        proc = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True)
+        sys.stdout.write(proc.stdout or "")
+        sys.stderr.write(proc.stderr or "")
+        if proc.returncode != 0:
+            raise RuntimeError(f"TripoSR run.py failed ({proc.returncode})")
+        # Official run.py writes <stem>.glb under output-dir
+        cands = list(out_dir.glob("*.glb")) + list(out_dir.glob("**/*.glb"))
+        if not cands:
+            cands = list(out_dir.glob("*.obj")) + list(out_dir.glob("**/*.obj"))
+        if not cands:
+            raise RuntimeError("TripoSR 未写出 mesh")
+        dest = out_dir / ("mesh.glb" if cands[0].suffix.lower() == ".glb" else "mesh.obj")
+        if cands[0].resolve() != dest.resolve():
+            dest.write_bytes(cands[0].read_bytes())
+        return dest
+
+
+def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
+    """Hunyuan3D-2 shape (+ optional texture if available)."""
+    try:
+        import torch
+        from hy3dgen.shapegen import Hunyuan3DDiTFlowMatchingPipeline
+        from hy3dgen.rembg import BackgroundRemover
+    except Exception as e:
+        raise RuntimeError(
+            "Hunyuan3D 未安装。请运行 scripts/setup_image_to_3d.py --engine hunyuan3d"
+        ) from e
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    pipe = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained("tencent/Hunyuan3D-2mini")
+    pipe.to(device)
+    rembg = BackgroundRemover()
+    from PIL import Image
+
+    img = Image.open(image).convert("RGBA")
+    img = rembg(img)
+    generator = None
+    if seed >= 0:
+        generator = torch.Generator(device=device).manual_seed(seed)
+    mesh = pipe(image=img, generator=generator)[0]
+    mesh_path = out_dir / "mesh.glb"
+    mesh.export(str(mesh_path))
+    return mesh_path
+
+
+def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
+    try:
+        import torch
+        from trellis.pipelines import TrellisImageTo3DPipeline
+        from trellis.utils import postprocessing_utils
+    except Exception as e:
+        raise RuntimeError(
+            "TRELLIS 未安装。请运行 scripts/setup_image_to_3d.py --engine trellis"
+        ) from e
+
+    pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
+    pipe.cuda()
+    from PIL import Image
+
+    img = Image.open(image).convert("RGBA")
+    outputs = pipe.run(img, seed=seed if seed >= 0 else 1)
+    glb = postprocessing_utils.to_glb(
+        outputs["gaussian"][0],
+        outputs["mesh"][0],
+        simplify=0.95,
+        texture_size=1024,
+    )
+    mesh_path = out_dir / "mesh.glb"
+    glb.export(str(mesh_path))
+    return mesh_path
+
+
+def main() -> int:
+    for k in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"):
+        os.environ.pop(k, None)
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--engine", required=True, choices=("triposr", "hunyuan3d", "trellis"))
+    ap.add_argument("--image", required=True)
+    ap.add_argument("--out-dir", required=True)
+    ap.add_argument("--seed", type=int, default=-1)
+    args = ap.parse_args()
+
+    image = Path(args.image)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if not image.is_file():
+        print(f"ERROR: missing image {image}", file=sys.stderr)
+        return 2
+
+    print(f"i23d engine={args.engine} image={image} out={out_dir}", flush=True)
+    try:
+        if args.engine == "triposr":
+            mesh = _run_triposr(image, out_dir, args.seed)
+        elif args.engine == "hunyuan3d":
+            mesh = _run_hunyuan(image, out_dir, args.seed)
+        else:
+            mesh = _run_trellis(image, out_dir, args.seed)
+    except Exception as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        _write_meta(out_dir, engine=args.engine, ok=False, error=str(e))
+        return 1
+
+    _write_meta(
+        out_dir,
+        engine=args.engine,
+        ok=True,
+        mesh=mesh.name,
+        bytes=mesh.stat().st_size if mesh.is_file() else 0,
+    )
+    print(f"OK {mesh} bytes={mesh.stat().st_size if mesh.is_file() else 0}", flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

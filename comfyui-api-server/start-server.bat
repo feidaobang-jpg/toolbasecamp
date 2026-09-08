@@ -108,10 +108,13 @@ set INDEXTTS_MODE=cli
 set INDEXTTS_CMD=edge-tts
 set INDEXTTS_VOICE=zh-CN-XiaoxiaoNeural
 set INDEXTTS_SPEED=1.0
-echo Music: ACE-Step 1.5 | SFX: Stable Audio Open
+echo Music: ACE-Step 1.5 | SFX: Stable Audio Open | Image-to-3D: TripoSR/Hunyuan/TRELLIS
 if not defined ACESTEP_ROOT set ACESTEP_ROOT=D:\sd\ACE-Step-1.5
 if not defined STABLE_AUDIO_ROOT set STABLE_AUDIO_ROOT=D:\sd\stable-audio-open
 if not defined STABLE_AUDIO_MODEL_DIR set STABLE_AUDIO_MODEL_DIR=D:\sd\stable-audio-open\model
+if not defined TRIPOSR_ROOT set TRIPOSR_ROOT=D:\sd\triposr
+if not defined HUNYUAN3D_ROOT set HUNYUAN3D_ROOT=D:\sd\hunyuan3d
+if not defined TRELLIS_ROOT set TRELLIS_ROOT=D:\sd\trellis
 
 if not defined COMFYUI_RESOURCE_CPU_PERCENT set COMFYUI_RESOURCE_CPU_PERCENT=75
 if not defined COMFYUI_RESOURCE_LIMIT set COMFYUI_RESOURCE_LIMIT=1
