@@ -97,14 +97,18 @@ document.addEventListener('DOMContentLoaded', function () {
     var grid = new THREE.GridHelper(4, 16, 0x444444, 0x2a2a2a);
     scene.add(grid);
     function resize() {
-      var w = viewerEl.clientWidth || 640;
-      var h = viewerEl.clientHeight || 360;
+      var w = viewerEl.clientWidth || 480;
+      var h = viewerEl.clientHeight || w;
+      if (h < 8) h = w;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
     }
     resize();
     window.addEventListener('resize', resize);
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(resize).observe(viewerEl);
+    }
     function tick() {
       animId = requestAnimationFrame(tick);
       controls.update();
@@ -236,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fileInput.value = '';
     refPreview.removeAttribute('src');
     refPreviewWrap.hidden = true;
+    if (dropZone) dropZone.style.display = '';
   }
 
   async function setFile(file) {
@@ -249,6 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fileObjectUrl = URL.createObjectURL(prepared);
     refPreview.src = fileObjectUrl;
     refPreviewWrap.hidden = false;
+    if (dropZone) dropZone.style.display = 'none';
   }
 
   function selectedEngines() {

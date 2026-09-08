@@ -2673,3 +2673,44 @@ body.tb-admin-private #auth-status {
     font-size: 24px;
   }
 }
+
+/* Image-to-3D: compact ref thumb + square mesh viewer */
+.home-pc-wrap .i23d-ref-preview {
+  max-width: 168px;
+  margin: 0 auto 14px;
+}
+.home-pc-wrap .i23d-ref-preview .home-pc-img-card {
+  width: 100%;
+}
+.home-pc-wrap .i23d-ref-preview img {
+  display: block;
+  width: 100%;
+  max-width: 168px;
+  max-height: 168px;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+.home-pc-wrap .i23d-ref-preview .action-row {
+  margin-top: 8px;
+  justify-content: center;
+}
+.home-pc-wrap .i23d-viewer {
+  width: 100%;
+  max-width: min(100%, 560px);
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.home-pc-wrap .i23d-viewer canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
