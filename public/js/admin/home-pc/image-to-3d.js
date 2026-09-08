@@ -362,6 +362,7 @@ document.addEventListener('DOMContentLoaded', function () {
         refPreview.src = assetUrl(data.image_url);
         refPreviewWrap.hidden = false;
         fileBlob = null;
+        if (dropZone) dropZone.style.display = 'none';
       }
       var urls = data.mesh_urls || it.mesh_urls || [];
       var mesh = data.mesh_url || it.mesh_url || '';
