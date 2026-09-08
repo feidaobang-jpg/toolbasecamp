@@ -15,7 +15,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
-from zoneinfo import ZoneInfo
+from cn_time import CN_TZ, cn_now, cn_now_str, cn_stamp_dir
 
 from fastapi import Form, HTTPException
 
@@ -50,7 +50,7 @@ _SFX_PRESETS = {
 
 
 def _cn_now_str() -> str:
-    return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+    return cn_now_str()
 
 
 def _now_ms() -> int:
@@ -176,7 +176,7 @@ class SfxAPI:
         ensure_reserved_dirs(self.output_root)
 
     def _alloc_dir(self) -> str:
-        stamp = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d_%H-%M")
+        stamp = cn_stamp_dir()
         return alloc_under(self.output_root, "sfx", f"{stamp}_sfx")
 
     def _task_dir(self, task: dict) -> Path:

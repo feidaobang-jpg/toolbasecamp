@@ -233,9 +233,9 @@ def _trim_mp4_sync(src: Path, dst: Path, start_sec: float, end_sec: float) -> fl
             pass
 
 try:
-    from zoneinfo import ZoneInfo
+    from cn_time import CN_TZ, cn_now, cn_now_str, cn_stamp_dir
 
-    _CN_TZ = ZoneInfo("Asia/Shanghai")
+    _CN_TZ = CN_TZ
 except Exception:
     _CN_TZ = timezone(timedelta(hours=8))
 

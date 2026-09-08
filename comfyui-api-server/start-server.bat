@@ -23,32 +23,29 @@ if exist "%~dp0local.env" (
 echo Checking Python...
 set "PY="
 
-py -3 --version >nul 2>&1
-if not errorlevel 1 set "PY=py -3"
+rem Prefer explicit installs (3.12 first) — `py -3` may point at an env without tzdata
+for %%P in (
+  "%LocalAppData%\Programs\Python\Python312\python.exe"
+  "%LocalAppData%\Programs\Python\Python313\python.exe"
+  "%LocalAppData%\Programs\Python\Python314\python.exe"
+  "%LocalAppData%\Programs\Python\Python311\python.exe"
+  "%LocalAppData%\Programs\Python\Python310\python.exe"
+  "%LocalAppData%\Programs\Python\Python39\python.exe"
+  "%LocalAppData%\Programs\Python\Python38\python.exe"
+) do if not defined PY if exist "%%~P" set "PY=%%~P"
 
 if not defined PY (
-  for %%P in (
-    "%LocalAppData%\Programs\Python\Python314\python.exe"
-    "%LocalAppData%\Programs\Python\Python313\python.exe"
-    "%LocalAppData%\Programs\Python\Python312\python.exe"
-    "%LocalAppData%\Programs\Python\Python311\python.exe"
-    "%LocalAppData%\Programs\Python\Python310\python.exe"
-    "%LocalAppData%\Programs\Python\Python39\python.exe"
-    "%LocalAppData%\Programs\Python\Python38\python.exe"
-  ) do if exist "%%~P" (
-    set "PY=%%~P"
-    goto found_local_py
-  )
+  py -3 --version >nul 2>&1
+  if not errorlevel 1 set "PY=py -3"
 )
-:found_local_py
 
 if not defined PY if exist "%USERPROFILE%\miniconda3\python.exe" set "PY=%USERPROFILE%\miniconda3\python.exe"
 if not defined PY if exist "%USERPROFILE%\anaconda3\python.exe" set "PY=%USERPROFILE%\anaconda3\python.exe"
 if not defined PY if exist "%USERPROFILE%\miniforge3\python.exe" set "PY=%USERPROFILE%\miniforge3\python.exe"
 
-if not defined PY if exist "%ProgramFiles%\Python314\python.exe" set "PY=%ProgramFiles%\Python314\python.exe"
-if not defined PY if exist "%ProgramFiles%\Python313\python.exe" set "PY=%ProgramFiles%\Python313\python.exe"
 if not defined PY if exist "%ProgramFiles%\Python312\python.exe" set "PY=%ProgramFiles%\Python312\python.exe"
+if not defined PY if exist "%ProgramFiles%\Python313\python.exe" set "PY=%ProgramFiles%\Python313\python.exe"
+if not defined PY if exist "%ProgramFiles%\Python314\python.exe" set "PY=%ProgramFiles%\Python314\python.exe"
 if not defined PY if exist "%ProgramFiles%\Python311\python.exe" set "PY=%ProgramFiles%\Python311\python.exe"
 if not defined PY if exist "%ProgramFiles%\Python310\python.exe" set "PY=%ProgramFiles%\Python310\python.exe"
 
@@ -82,6 +79,9 @@ if not defined PY (
 
 echo Using: !PY!
 !PY! --version
+
+echo Ensuring tzdata ^(Asia/Shanghai^) ...
+!PY! -m pip install -q "tzdata>=2024.1" >nul 2>&1
 
 echo.
 echo Checking port 5000 ...

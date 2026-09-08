@@ -21,7 +21,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
-from zoneinfo import ZoneInfo
+from cn_time import CN_TZ, cn_now, cn_now_str, cn_stamp_dir
 
 from fastapi import File, Form, HTTPException, UploadFile
 
@@ -61,7 +61,7 @@ _ENGINES = {
 
 
 def _cn_now_str() -> str:
-    return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+    return cn_now_str()
 
 
 def _now_ms() -> int:
@@ -188,7 +188,7 @@ class ImageTo3dAPI:
         ensure_reserved_dirs(self.output_root)
 
     def _alloc_dir(self) -> str:
-        stamp = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d_%H-%M")
+        stamp = cn_stamp_dir()
         return alloc_under(self.output_root, "mesh3d", f"{stamp}_i23d")
 
     def _task_dir(self, task: dict) -> Path:

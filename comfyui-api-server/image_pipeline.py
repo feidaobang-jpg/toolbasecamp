@@ -242,9 +242,9 @@ def _now_ts_ms() -> int:
 
 def _cn_now_str() -> str:
     try:
-        from zoneinfo import ZoneInfo
+        from cn_time import CN_TZ, cn_now, cn_now_str, cn_stamp_dir
 
-        return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+        return cn_now_str()
     except Exception:
         return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + "Z"
 

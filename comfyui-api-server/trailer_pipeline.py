@@ -19,7 +19,7 @@ import wave
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
-from zoneinfo import ZoneInfo
+from cn_time import CN_TZ, cn_now, cn_now_str, cn_stamp_dir
 
 import requests
 from fastapi import File, Form, HTTPException, UploadFile
@@ -159,7 +159,7 @@ def _build_publish_pack(
         "aspect": plan.get("aspect") or "",
         "video": video_dst.name,
         "cover": cover_dst.name,
-        "created_at": datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S"),
+        "created_at": cn_now_str(),
         "source_folder": rel_to_root(root, task_dir),
     }
     (pack_dir / "publish.json").write_text(
@@ -448,11 +448,7 @@ def _history_item_from_dir(d: Path, root: Optional[Path] = None) -> Optional[dic
     mtime = d.stat().st_mtime
     # 展示用北京时间
     try:
-        from zoneinfo import ZoneInfo
-
-        created_display = (
-            datetime.fromtimestamp(mtime, tz=ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
-        )
+        created_display = datetime.fromtimestamp(mtime, tz=CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
     except Exception:
         created_display = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
     thumbs = []

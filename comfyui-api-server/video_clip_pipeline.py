@@ -15,7 +15,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-from zoneinfo import ZoneInfo
+from cn_time import CN_TZ, cn_now, cn_now_str, cn_stamp_dir
 
 from fastapi import File, Form, HTTPException, UploadFile
 
@@ -60,7 +60,7 @@ _DEFAULT_NEG = (
 
 
 def _cn_now_str() -> str:
-    return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+    return cn_now_str()
 
 
 def _now_ms() -> int:
