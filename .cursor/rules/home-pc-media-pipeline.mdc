@@ -8,6 +8,14 @@ alwaysApply: true
 
 适用范围：`public/html|js/admin/home-pc/**`、`comfyui-api-server` 里对应流水线。新建或大改必须遵守；存量不符要改正。
 
+## 0. 用户可见命名：「流水线」不要乱用
+
+- **「流水线」**留给多阶段批量/编排页：图片流水线、短片流水线、剧集流水线、游戏图流水线等。
+- **语音 / 音乐 / 音效**是单功能生成页，侧栏、标题、站点统计、locales **不要**带「流水线」或英文 `pipeline`。
+  - 中文：`语音 / 声音克隆`、`音乐`、`音效`
+  - 英文：`Speech / voice clone`、`Music`、`SFX`
+- 代码/路径可保留 `*_pipeline.py`、`sfx_pipeline` 等内部名；**仅用户可见文案**遵守上表。
+
 共享实现优先用：
 
 - `public/js/admin/home-pc/home-pc-media-ui.js`（`HomePcMediaUi`）

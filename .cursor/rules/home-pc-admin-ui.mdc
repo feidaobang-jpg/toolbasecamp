@@ -10,6 +10,8 @@ alwaysApply: false
 
 媒体列表 / 大图预览 / 历史回填 / 模型状态 / 日志工具栏等约定见 **`.cursor/rules/home-pc-media-pipeline.mdc`（alwaysApply）**，改图相关页必须遵守。
 
+用户可见命名：语音/音乐/音效 **不要**叫「流水线」（详见该规则 §0）；图片/短片/剧集/游戏图等批量编排页才用「流水线」。
+
 ## 样式栈
 
 1. `base.css` → `docs/docs-common.css` → `admin/home-pc.css`
