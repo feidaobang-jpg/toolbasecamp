@@ -207,7 +207,16 @@ class ImageTo3dAPI:
         root = str(_engine_root(engine))
         env[_ENGINES[engine]["root_env"]] = root
         env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
+        env["PYTHONUNBUFFERED"] = "1"
         env["TQDM_DISABLE"] = "1"
+        # 国内 HuggingFace 直连常极慢；未设置时默认镜像（可被外部 HF_ENDPOINT 覆盖）
+        if not (env.get("HF_ENDPOINT") or "").strip():
+            env["HF_ENDPOINT"] = "https://hf-mirror.com"
+        if engine == "hunyuan3d":
+            self._log(
+                task,
+                "hunyuan3d：首次会从 HuggingFace 拉权重（约数 GB），下载中日志可能较久无新行，请耐心等待…",
+            )
         self._log(task, f"{engine} 启动…")
         t0 = time.time()
         proc = await asyncio.create_subprocess_exec(
@@ -217,16 +226,29 @@ class ImageTo3dAPI:
             stderr=asyncio.subprocess.STDOUT,
             env=env,
         )
-        out_b, _ = await proc.communicate()
-        text_out = (out_b or b"").decode("utf-8", errors="replace").strip()
-        if text_out:
-            for line in text_out.splitlines()[-30:]:
-                s = line.strip()
-                if not s or "it/s]" in s or "UserWarning" in s:
-                    continue
-                self._log(task, s)
+        assert proc.stdout is not None
+        lines: List[str] = []
+        while True:
+            raw = await proc.stdout.readline()
+            if not raw:
+                break
+            line = raw.decode("utf-8", errors="replace").rstrip()
+            if not line:
+                continue
+            lines.append(line)
+            s = line.strip()
+            if not s or "it/s]" in s or "UserWarning" in s or "FutureWarning" in s:
+                continue
+            if "_torch_pytree" in s or "deprecated" in s.lower():
+                continue
+            self._log(task, s)
+        await proc.wait()
         elapsed = round(time.time() - t0, 2)
         if proc.returncode != 0:
+            # 失败时补几行尾部便于排查
+            for s in lines[-8:]:
+                if s.strip():
+                    self._log(task, s.strip())
             raise RuntimeError(f"{engine} 失败 (code={proc.returncode})")
         mesh = eng_dir / "mesh.glb"
         if not mesh.is_file():

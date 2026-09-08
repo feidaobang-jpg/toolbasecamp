@@ -143,7 +143,12 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
     elif "2mini" in model_id.replace("_", "-").lower():
         load_kw["subfolder"] = "hunyuan3d-dit-v2-mini"
     print(f"hunyuan load {model_id} {load_kw or '(default subfolder)'}", flush=True)
+    print(
+        "hunyuan: 若本地无完整权重，将从 HuggingFace 下载（可能数十分钟）；请看缓存目录是否有 .incomplete 在增长",
+        flush=True,
+    )
     pipe = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained(model_id, **load_kw)
+    print("hunyuan: 权重已加载，开始推理…", flush=True)
     pipe.to(device)
     rembg = BackgroundRemover()
     from PIL import Image

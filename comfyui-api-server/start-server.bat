@@ -115,6 +115,7 @@ if not defined STABLE_AUDIO_MODEL_DIR set STABLE_AUDIO_MODEL_DIR=D:\sd\stable-au
 if not defined TRIPOSR_ROOT set TRIPOSR_ROOT=D:\sd\triposr
 if not defined HUNYUAN3D_ROOT set HUNYUAN3D_ROOT=D:\sd\hunyuan3d
 if not defined TRELLIS_ROOT set TRELLIS_ROOT=D:\sd\trellis
+if not defined HF_ENDPOINT set HF_ENDPOINT=https://hf-mirror.com
 
 if not defined COMFYUI_RESOURCE_CPU_PERCENT set COMFYUI_RESOURCE_CPU_PERCENT=75
 if not defined COMFYUI_RESOURCE_LIMIT set COMFYUI_RESOURCE_LIMIT=1
