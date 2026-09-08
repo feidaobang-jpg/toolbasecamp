@@ -1330,14 +1330,17 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
 
 .home-pc-wrap .home-pc-source-grid {
   display: flex;
-  justify-content: center;
-  margin: 0 auto 16px;
-  max-width: 280px;
+  flex-direction: column;
+  justify-content: stretch;
+  margin: 0 0 16px;
+  max-width: 100%;
+  width: 100%;
 }
 
 .home-pc-wrap .home-pc-source-grid .instruct-source-card {
   width: 100%;
-  max-width: 280px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 .home-pc-wrap .home-pc-source-grid .instruct-source-card img {
@@ -2508,10 +2511,12 @@ body.tb-admin-private #auth-status {
 }
 .home-pc-wrap .image-pipe-ref-preview img {
   display: block;
-  max-width: 220px;
-  max-height: 220px;
-  width: auto;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  aspect-ratio: 1 / 1;
   height: auto;
+  object-fit: contain;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   background: #f8fafc;
@@ -2674,29 +2679,60 @@ body.tb-admin-private #auth-status {
   }
 }
 
-/* Image-to-3D: full-width square ref + mesh viewer */
-.home-pc-wrap .i23d-ref-preview {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 0 14px;
-}
-.home-pc-wrap .i23d-ref-preview .home-pc-img-card {
-  width: 100%;
-}
-.home-pc-wrap .i23d-ref-preview img {
-  display: block;
+/* 输入图满宽正方形：覆盖本文件历史小缩略图限制 */
+.home-pc-wrap .drop-zone.tb-input-image {
   width: 100%;
   max-width: 100%;
   aspect-ratio: 1 / 1;
   height: auto;
-  object-fit: contain;
-  margin: 0;
-  border-radius: 8px;
-  background: #f1f5f9;
-  border: 1px solid #e5e7eb;
+  min-height: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.home-pc-wrap .i23d-ref-preview .action-row {
-  margin-top: 8px;
+.home-pc-wrap .home-pc-source-grid,
+.home-pc-wrap .i23d-ref-preview,
+.home-pc-wrap .image-pipe-ref-preview,
+.home-pc-wrap .tb-input-image-preview {
+  width: 100%;
+  max-width: 100% !important;
+  margin: 0 0 16px;
+  justify-content: stretch;
+}
+.home-pc-wrap .home-pc-source-grid .instruct-source-card,
+.home-pc-wrap .home-pc-source-card,
+.home-pc-wrap .i23d-ref-preview .home-pc-img-card,
+.home-pc-wrap .tb-input-image-preview .home-pc-img-card {
+  width: 100%;
+  max-width: 100% !important;
+}
+.home-pc-wrap .home-pc-source-grid .instruct-source-card img,
+.home-pc-wrap .home-pc-source-card img,
+.home-pc-wrap .i23d-ref-preview img,
+.home-pc-wrap .image-pipe-ref-preview img,
+.home-pc-wrap .tb-input-image-preview img {
+  display: block;
+  width: 100%;
+  max-width: 100% !important;
+  max-height: none !important;
+  aspect-ratio: 1 / 1;
+  height: auto !important;
+  object-fit: contain;
+  background: #f8fafc;
+}
+.home-pc-wrap .image-pipe-ref-drop.tb-input-image {
+  min-height: 0;
+}
+
+.home-pc-wrap #compare-mesh-list .tb-btn.is-failed {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.home-pc-wrap #compare-mesh-list .tb-btn.is-active {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
 }
 .home-pc-wrap .i23d-viewer {
   width: 100%;
@@ -2713,12 +2749,4 @@ body.tb-admin-private #auth-status {
   display: block;
   width: 100% !important;
   height: 100% !important;
-}
-.home-pc-wrap #compare-mesh-list .tb-btn.is-failed {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-.home-pc-wrap #compare-mesh-list .tb-btn.is-active {
-  outline: 2px solid #1d4ed8;
-  outline-offset: 2px;
 }

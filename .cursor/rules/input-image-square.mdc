@@ -1,0 +1,50 @@
+---
+description: 输入图上传区/预览满宽正方形（全局 UI）
+alwaysApply: true
+---
+
+# 输入图：满宽正方形（全局）
+
+凡用户**选择 / 拖入本地图片**并展示预览（工具页、家里电脑、内容页等），上传区与输入预览统一：
+
+1. **宽度拉满**容器（`width: 100%`，不要 `max-width: 168/220/280px` 一类小缩略图）。
+2. **高度 = 宽度**：`aspect-ratio: 1 / 1`（正方形）。
+3. 图用 `object-fit: contain`，背景可用浅灰；**不要**为「省地方」改回小预览。
+
+## 必用 class
+
+| 场景 | class |
+|---|---|
+| 空上传 / 拖放区 | `drop-zone tb-input-image` |
+| 选图后预览容器 | `tb-input-image-preview`（可叠加 `home-pc-source-grid` / `instruct-source-grid` / `img-tool-source` / `i23d-ref-preview` 等） |
+
+样式唯一定义在 **`public/css/docs/docs-common.css`**（输入图全局段）。页面须引入 `docs-common.css`（工具页本就要求 base → docs-common）。
+
+家里电脑若有历史覆盖，在 `home-pc.css` 里只能**加强**满宽正方形，禁止再压小。
+
+## CSS 写法（避免失效）
+
+把 `aspect-ratio: 1 / 1` + `height: auto` 写在 **`<img>`（或专用预览帧）** 上，配合 `width: 100%` + `object-fit: contain`。  
+不要只靠「父级 height:100% + 子级 aspect-ratio」互相依赖（易塌成扁条）。  
+卡片上若另有「清空」等按钮，按钮放在正方形 `img` **下方**，不要挤进正方形计算。
+
+## 多图
+
+多张输入图：**纵向叠放**，每张各自满宽正方形；不要缩成多列小网格（对比用的结果网格除外）。
+
+## 例外（不要套本规则）
+
+- **结果图 / 历史缩略图网格**（输出列表、流水线候选卡）——仍可小缩略图。
+- **3D mesh 预览**（`.i23d-viewer`）可同为正方形满宽，但不叫「输入图」。
+- **非图片**上传（PDF / 视频 / 音频）。
+- 纯本地编辑画布若用户明确要求按原图像素比例展示输出，输出区可例外；**输入选择区仍用正方形**。
+
+## 禁止
+
+- 新建 `accept="image/*"` 上传却不挂 `tb-input-image` / 预览不挂 `tb-input-image-preview`（或等价全局选择器已覆盖的容器）。
+- 在页面 CSS 里给输入预览写死小 `max-width` / `max-height` 覆盖全局。
+- 以「桌面太空」为由把输入预览改回扁条或小方块。
+
+## 改完
+
+递增引用页的 `docs-common.css?v=`（及若改了 `home-pc.css` / `image-tools.css` 的 `?v=`）。

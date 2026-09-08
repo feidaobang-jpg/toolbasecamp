@@ -6,8 +6,8 @@
   <title>Add Background - 百宝箱</title>
   <meta name="description" content="Place a foreground (best with transparent PNG) on a solid color or background image. Runs locally.">
   <link rel="stylesheet" href="../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=minimax1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq2" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=imgSq2" />
 </head>
 <body>
   <div class="container">
@@ -21,7 +21,7 @@
       <div class="tool-card">
         <div class="rec-field">
           <span class="field-label" data-i18n="tools.addBackground.fgLabel">1. Foreground image</span>
-          <div class="drop-zone" id="fg-drop">
+          <div class="drop-zone tb-input-image" id="fg-drop">
             <div class="drop-icon">+</div>
             <div class="drop-title" data-i18n="tools.addBackground.fgDropTitle">Click or drop foreground</div>
             <div class="drop-hint" data-i18n="tools.addBackground.fgDropHint">Transparent PNG works best</div>
@@ -49,7 +49,7 @@
         </div>
 
         <div id="bg-image-block" hidden>
-          <div class="drop-zone" id="bg-drop">
+          <div class="drop-zone tb-input-image" id="bg-drop">
             <div class="drop-icon">+</div>
             <div class="drop-title" data-i18n="tools.addBackground.bgDropTitle">Click or drop background</div>
             <div class="drop-hint" data-i18n="tools.addBackground.bgDropHint">JPG, PNG, or WebP</div>

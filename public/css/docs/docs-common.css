@@ -401,3 +401,80 @@
 .tip-box b {
     font-weight: 700;
 }
+
+/* ========== 输入图：满宽正方形（全局） ==========
+ * 空上传区：.drop-zone.tb-input-image
+ * 选图后预览：.tb-input-image-preview（或 .home-pc-source-grid / .instruct-source-grid / .img-tool-source）
+ * 规则：宽度 100%；预览图 / 上传区 aspect-ratio:1/1；object-fit:contain。
+ * 禁止用 max-width/max-height 把输入预览压成小缩略图。
+ */
+.tb-input-image,
+.drop-zone.tb-input-image {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    min-height: 0;
+    box-sizing: border-box;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.tb-input-image-preview,
+.instruct-source-grid,
+.home-pc-source-grid,
+.img-tool-source,
+.i23d-ref-preview,
+.image-pipe-ref-preview {
+    width: 100%;
+    max-width: 100% !important;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tb-input-image-preview .home-pc-img-card,
+.i23d-ref-preview .home-pc-img-card,
+.instruct-source-card,
+.home-pc-source-card {
+    width: 100%;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+/* 真正的正方形：落在 img / 卡片内预览帧上 */
+.tb-input-image-preview img,
+.img-tool-source img,
+.i23d-ref-preview img,
+.image-pipe-ref-preview img,
+.instruct-source-card img,
+.home-pc-source-card img,
+.tb-input-image-preview .home-pc-img-card > img,
+.i23d-ref-preview .home-pc-img-card > img {
+    display: block;
+    width: 100%;
+    max-width: 100% !important;
+    max-height: none !important;
+    aspect-ratio: 1 / 1;
+    height: auto !important;
+    object-fit: contain;
+    background: #f8fafc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* instruct 卡片本体也撑满宽；图在其内正方形 */
+.instruct-source-card {
+    position: relative;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}

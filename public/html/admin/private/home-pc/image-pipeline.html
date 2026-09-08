@@ -8,8 +8,8 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc69" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq2" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=imgSq2" />
   <script src="../../../../js/locales/en.js?v=histDel1"></script>
   <script src="../../../../js/locales/zh-CN.js?v=histDel1"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
@@ -121,12 +121,12 @@
               <div class="image-pipe-lock-block">
                 <span class="home-pc-field-label" data-i18n="privateHub.homePc.imagePipeLockLabel">锁定主体（可选）</span>
                 <p class="small-hint" data-i18n="privateHub.homePc.imagePipeLockHint">上传参考图后可选引擎：默认 Qwen 指令改图（更稳同人）；也可选 Z-Image 图生图（更快，靠 Denoise）。输出尺寸跟分辨率档位走（建议高清 1024）。</p>
-                <div class="drop-zone image-pipe-ref-drop" id="ref-drop" tabindex="0" role="button">
+                <div class="drop-zone image-pipe-ref-drop tb-input-image" id="ref-drop" tabindex="0" role="button">
                   <div class="drop-icon">+</div>
                   <div class="drop-title" data-i18n="privateHub.homePc.imagePipeLockDrop">点击或拖入参考图</div>
                 </div>
                 <input id="ref-file" type="file" accept="image/*" hidden />
-                <div id="ref-preview-wrap" class="image-pipe-ref-preview" style="display:none;">
+                <div id="ref-preview-wrap" class="image-pipe-ref-preview tb-input-image-preview" style="display:none;">
                   <img id="ref-preview" alt="" />
                   <div class="action-row">
                     <button type="button" id="ref-clear-btn" class="tb-btn" data-i18n="privateHub.homePc.imagePipeLockClear">清除参考图</button>

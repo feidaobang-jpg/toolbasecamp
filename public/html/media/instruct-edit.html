@@ -6,8 +6,8 @@
   <title>图生图 - 百宝箱</title>
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=slim1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=slim1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=instructbg1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq2" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=imgSq2" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=slim1" />
 </head>
 <body>
@@ -47,13 +47,13 @@
             </div>
             <p class="instruct-cost-hint" id="ref-mode-hint" data-i18n="tools.instructEdit.refModeSingleHint">Single: each upload is edited separately (batch). Multi: combine references into one generation.</p>
           </div>
-          <div class="drop-zone" id="drop-zone">
+          <div class="drop-zone tb-input-image" id="drop-zone">
             <div class="drop-icon">+</div>
             <div class="drop-title" data-i18n="tools.instructEdit.dropTitle">Click or drop images</div>
             <div class="drop-hint" id="drop-hint" data-i18n="tools.instructEdit.dropHint">JPG / PNG / WebP，单张最大 8MB，最多 {max} 张（批量）；大图自动压缩</div>
           </div>
           <input type="file" id="file-input" accept="image/*" multiple style="display:none" />
-          <div class="instruct-source-grid" id="source-wrap" hidden></div>
+          <div class="instruct-source-grid tb-input-image-preview" id="source-wrap" hidden></div>
           <div class="field-row" id="preset-wrap">
             <span class="field-label" data-i18n="tools.instructEdit.presetLabel">Style preset</span>
             <div class="instruct-preset-row" id="preset-row">
