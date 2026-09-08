@@ -300,6 +300,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         homePc: {
             loading: '加载中…',
+            refreshStatus: '刷新',
             apiHint: '连接家里电脑的 ComfyUI API（comfy.zhengxiaohui.cn）。在 GPU 电脑启动 ComfyUI 与 comfyui-api-server；Tunnel 在 NAS 上时需指向该电脑局域网 IP。',
             removeBgHint: '工作流 rembg.json（InspyrenetRembg）。可选绿幕或透明。',
             txt2imgHint: '工作流 z_image_turbo.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。',

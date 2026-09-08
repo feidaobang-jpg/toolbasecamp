@@ -45,7 +45,7 @@ alwaysApply: true
 凡使用本机 ComfyUI / 本地大模型的页面，顶部须同时有：
 
 1. **文案**：工作流文件名 + 主要模型名（与文生图页同风格，如 `工作流 z_image_turbo.json。模型：…`）。
-2. **`#api-status`**：经 `home-pc-boot` / `HomePcApi.renderStatus` 显示家里电脑 API 与 ComfyUI 连通状态。
+2. **`#api-status`**：经 `home-pc-boot` / `HomePcApi.startStatusWatch`（进页检测 + 可见时约 30s 慢轮询 + 条上「刷新」）显示家里电脑 API 与 ComfyUI 连通状态。
 
 禁止只写业务流程一句、不写模型与工作流。
 

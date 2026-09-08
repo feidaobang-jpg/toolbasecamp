@@ -301,6 +301,7 @@ window.TB_LOCALES.en = {
         },
         homePc: {
             loading: 'Loading…',
+            refreshStatus: 'Refresh',
             apiHint: 'Connects to your home ComfyUI API (comfy.zhengxiaohui.cn). Run ComfyUI + comfyui-api-server on the GPU PC; if the tunnel runs on NAS, point it to that PC’s LAN IP.',
             removeBgHint: 'Workflow rembg.json (InspyrenetRembg). Output green screen or transparent.',
             txt2imgHint: 'Workflow z_image_turbo.json. Models: z_image_turbo_bf16, qwen_3_4b, ae.safetensors.',

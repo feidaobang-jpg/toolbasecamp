@@ -189,6 +189,19 @@ body.home-pc-page {
 
 .home-pc-desc { font-size: 14px; color: #6b7280; margin: 0 0 12px; line-height: 1.5; }
 .home-pc-status { font-size: 13px; padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; line-height: 1.45; }
+.home-pc-status--with-refresh {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.home-pc-status-text { flex: 1; min-width: 0; }
+.home-pc-status-refresh {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+}
 .home-pc-status--checking { background: #f3f4f6; color: #4b5563; }
 .home-pc-status--ok { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
 .home-pc-status--err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }

@@ -20,7 +20,9 @@
 
 (function () {
   function boot() {
-    if (window.HomePcApi) {
+    if (window.HomePcApi && typeof HomePcApi.startStatusWatch === 'function') {
+      HomePcApi.startStatusWatch(document.getElementById('api-status'));
+    } else if (window.HomePcApi) {
       HomePcApi.renderStatus(document.getElementById('api-status'));
     }
   }
