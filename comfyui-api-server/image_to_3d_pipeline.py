@@ -110,6 +110,10 @@ def _worker_env(engine: str) -> dict:
         dit = hy / "tencent" / "Hunyuan3D-2" / "hunyuan3d-dit-v2-0"
         if dit.is_dir():
             env["HF_HUB_OFFLINE"] = "1"
+    if engine == "trellis":
+        # 默认 flash_attn；本机常无。先钉 xformers，避免加载失败后误走 Hub ckpts/*
+        env.setdefault("ATTN_BACKEND", "xformers")
+        env.setdefault("SPARSE_ATTN_BACKEND", "xformers")
     return env
 
 

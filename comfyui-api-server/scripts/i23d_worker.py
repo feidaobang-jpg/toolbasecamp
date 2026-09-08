@@ -222,8 +222,28 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
     return mesh_path
 
 
+def _pick_trellis_attn_backend() -> str:
+    """TRELLIS 默认 flash_attn；Windows 常未装。缺则用 xformers，再退 sdpa（仅 dense）。"""
+    import importlib.util as iu
+
+    if iu.find_spec("flash_attn") is not None:
+        return "flash_attn"
+    if iu.find_spec("xformers") is not None:
+        return "xformers"
+    return "sdpa"
+
+
 def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
     _ensure_engine_path("trellis")
+    # 必须在 import trellis 之前设好：缺 flash_attn 时 Pipeline 裸 except 会把
+    # ckpts/xxx 误当成独立 Hub repo，报「locate file on the Hub」。
+    attn = _pick_trellis_attn_backend()
+    os.environ["ATTN_BACKEND"] = attn
+    # sparse 只认 xformers / flash_attn
+    os.environ["SPARSE_ATTN_BACKEND"] = "xformers" if attn == "sdpa" else attn
+    if attn != "flash_attn":
+        print(f"trellis: 未检测到 flash_attn，改用 attention={attn}", flush=True)
+
     try:
         import torch
         from trellis.pipelines import TrellisImageTo3DPipeline
@@ -232,7 +252,60 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
             f"TRELLIS 未安装/导入失败：{e}。请运行 scripts/setup_image_to_3d.py --engine trellis"
         ) from e
 
-    pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
+    need = [
+        "ckpts/ss_dec_conv3d_16l8_fp16",
+        "ckpts/ss_flow_img_dit_L_16l8_fp16",
+        "ckpts/slat_dec_gs_swin8_B_64l8gs32_fp16",
+        "ckpts/slat_dec_rf_swin8_B_64l8r16_fp16",
+        "ckpts/slat_dec_mesh_swin8_B_64l8m256c_fp16",
+        "ckpts/slat_flow_img_dit_L_64l8p2_fp16",
+    ]
+
+    def _snap_missing(snap: Path) -> list[str]:
+        miss: list[str] = []
+        for n in need:
+            if not (snap / f"{n}.safetensors").is_file() or not (snap / f"{n}.json").is_file():
+                miss.append(n)
+        return miss
+
+    local: Path | None = None
+    hub = Path.home() / ".cache" / "huggingface" / "hub" / "models--microsoft--TRELLIS-image-large" / "snapshots"
+    if hub.is_dir():
+        snaps = sorted([p for p in hub.iterdir() if p.is_dir()], key=lambda p: p.stat().st_mtime, reverse=True)
+        for snap in snaps:
+            if not (snap / "pipeline.json").is_file():
+                continue
+            miss = _snap_missing(snap)
+            if not miss:
+                local = snap
+                break
+            print(f"trellis: 本地 snapshot 缺权重 {miss}，继续找/下载…", flush=True)
+
+    if local is not None:
+        print(f"trellis load from local {local}", flush=True)
+        os.environ["HF_HUB_OFFLINE"] = "1"
+        # 从本地目录加载，避免把 ckpts/xxx 误解析成独立 Hub repo
+        try:
+            pipe = TrellisImageTo3DPipeline.from_pretrained(str(local))
+        except Exception as e:
+            raise RuntimeError(
+                "TRELLIS 本地权重加载失败。"
+                f"attention={attn}。若仍报 Hub/ckpts，请确认已装 xformers 或 flash_attn。原因：{e}"
+            ) from e
+    else:
+        print(
+            "trellis: 本地 microsoft/TRELLIS-image-large 不完整，开始从 HuggingFace 拉取（数 GB）…",
+            flush=True,
+        )
+        os.environ.pop("HF_HUB_OFFLINE", None)
+        try:
+            pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
+        except Exception as e:
+            raise RuntimeError(
+                "TRELLIS 权重未下全且无法从 HuggingFace 补齐。"
+                "请联网后运行：python scripts/setup_image_to_3d.py --engine trellis"
+                f"（或 huggingface-cli download microsoft/TRELLIS-image-large）。原因：{e}"
+            ) from e
     pipe.cuda()
     from PIL import Image
 

@@ -210,6 +210,9 @@ def setup_trellis(root: Path) -> None:
     )
     env = os.environ.copy()
     env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    # Windows 常无 flash_attn；与 i23d_worker 一致先用 xformers
+    env.setdefault("ATTN_BACKEND", "xformers")
+    env.setdefault("SPARSE_ATTN_BACKEND", "xformers")
     try:
         subprocess.check_call(
             [
@@ -225,11 +228,27 @@ def setup_trellis(root: Path) -> None:
         if marker.is_file():
             marker.unlink()
         print(
-            "[fail] trellis import 仍失败（可能缺 spconv/flash_attn 等）。"
+            "[fail] trellis import 仍失败（可能缺 spconv/xformers 等）。"
             "未写入 .tbc_ready。请按 microsoft/TRELLIS README 补依赖后重跑本脚本。",
             flush=True,
         )
         raise SystemExit(1) from e
+    print("[info] 预下载 microsoft/TRELLIS-image-large（数 GB，可断点续传）…", flush=True)
+    try:
+        _run(
+            [
+                str(py),
+                "-c",
+                "from huggingface_hub import snapshot_download; "
+                "p=snapshot_download('microsoft/TRELLIS-image-large'); print('[ok] trellis weights', p)",
+            ]
+        )
+    except subprocess.CalledProcessError:
+        print(
+            "[warn] TRELLIS 权重未下完；推理前会再试。可手动："
+            "huggingface-cli download microsoft/TRELLIS-image-large",
+            flush=True,
+        )
     (root / ".tbc_ready").write_text("trellis\n", encoding="utf-8")
     print("[done] trellis", flush=True)
 

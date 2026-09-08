@@ -1333,8 +1333,8 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   flex-direction: column;
   justify-content: stretch;
   margin: 0 0 16px;
-  max-width: min(50%, 420px);
-  width: 50%;
+  max-width: 100%;
+  width: 100%;
 }
 
 .home-pc-wrap .home-pc-source-grid .instruct-source-card {
@@ -2696,8 +2696,8 @@ body.tb-admin-private #auth-status {
 .home-pc-wrap .i23d-ref-preview,
 .home-pc-wrap .image-pipe-ref-preview,
 .home-pc-wrap .tb-input-image-preview {
-  width: 50%;
-  max-width: min(50%, 420px) !important;
+  width: 100%;
+  max-width: 100% !important;
   margin: 0 0 16px;
   justify-content: stretch;
 }
@@ -2733,18 +2733,68 @@ body.tb-admin-private #auth-status {
   aspect-ratio: auto;
 }
 
-.home-pc-wrap #compare-mesh-list .tb-btn.is-failed {
-  opacity: 0.55;
+/* 多引擎结果：小卡片网格；点击后在下方满宽正方形 3D 预览 */
+.home-pc-wrap .i23d-mesh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 0 0 12px;
+}
+.home-pc-wrap .i23d-mesh-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+.home-pc-wrap .i23d-mesh-card.is-active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+.home-pc-wrap .i23d-mesh-card.is-failed {
+  opacity: 0.6;
   cursor: not-allowed;
+  background: #f8fafc;
 }
-.home-pc-wrap #compare-mesh-list .tb-btn.is-active {
-  outline: 2px solid #1d4ed8;
-  outline-offset: 2px;
+.home-pc-wrap .i23d-mesh-card-thumb {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: 8px;
+  background: #111;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
 }
-/* 3D 结果预览：约半宽正方形，不要一上来占满屏 */
+.home-pc-wrap .i23d-mesh-card.is-failed .i23d-mesh-card-thumb {
+  background: #334155;
+  color: #fca5a5;
+}
+.home-pc-wrap .i23d-mesh-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.35;
+}
+.home-pc-wrap .i23d-mesh-card-meta {
+  font-size: 12px;
+  color: #64748b;
+}
+.home-pc-wrap .i23d-viewer-hint {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+/* 3D 结果预览：满宽正方形 */
 .home-pc-wrap .i23d-viewer {
-  width: 50%;
-  max-width: min(50%, 480px);
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   aspect-ratio: 1 / 1;
   height: auto;
@@ -2757,14 +2807,4 @@ body.tb-admin-private #auth-status {
   display: block;
   width: 100% !important;
   height: 100% !important;
-}
-@media (max-width: 768px) {
-  .home-pc-wrap .home-pc-source-grid,
-  .home-pc-wrap .i23d-ref-preview,
-  .home-pc-wrap .image-pipe-ref-preview,
-  .home-pc-wrap .tb-input-image-preview,
-  .home-pc-wrap .i23d-viewer {
-    width: 100%;
-    max-width: 100% !important;
-  }
 }

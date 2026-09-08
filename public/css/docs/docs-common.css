@@ -404,7 +404,7 @@
 
 /* ========== 输入图预览（全局） ==========
  * 空上传区：紧凑条，不要一上来就占满屏大正方形。
- * 选图后预览：约半宽 + 正方形（aspect-ratio 1/1），object-fit:contain。
+ * 选图后预览：宽度撑满 + 正方形（aspect-ratio 1/1），object-fit:contain。
  */
 .tb-input-image,
 .drop-zone.tb-input-image {
@@ -428,8 +428,8 @@
 .img-tool-source,
 .i23d-ref-preview,
 .image-pipe-ref-preview {
-    width: 50%;
-    max-width: min(50%, 420px) !important;
+    width: 100%;
+    max-width: 100% !important;
     margin: 0 0 16px;
     display: flex;
     flex-direction: column;

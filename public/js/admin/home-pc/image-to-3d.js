@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var resultBox = document.getElementById('result-box');
   var metaLine = document.getElementById('meta-line');
   var compareList = document.getElementById('compare-mesh-list');
+  var viewerHint = document.getElementById('viewer-hint');
   var viewerEl = document.getElementById('viewer');
   var logOutput = document.getElementById('log-output');
   var engineLine = document.getElementById('engine-line');
@@ -182,48 +183,77 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function selectMeshItem(it, cardEl) {
+    if (!it || !it.url) return;
+    lastMeshUrl = assetUrl(it.url);
+    lastMeshName =
+      it.filename || (String(it.url).toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
+    metaLine.textContent =
+      (it.label || it.engine || '') +
+      (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '') +
+      (it.bytes ? ' · ' + Math.round(it.bytes / 1024) + ' KB' : '');
+    downloadBtn.style.display = '';
+    if (viewerHint) viewerHint.style.display = '';
+    Array.prototype.forEach.call(compareList.querySelectorAll('.i23d-mesh-card'), function (c) {
+      c.classList.toggle('is-active', c === cardEl);
+    });
+    loadMeshUrl(it.url).catch(function (e) {
+      alert(tr('privateHub.homePc.i23dPreviewFail', '预览加载失败') + ': ' + e);
+    });
+  }
+
   function renderCompareButtons(items) {
     meshItems = items || [];
     compareList.innerHTML = '';
     var okItems = meshItems.filter(function (x) { return x && x.url; });
     if (!meshItems.length) {
       compareList.style.display = 'none';
+      if (viewerHint) viewerHint.style.display = 'none';
       return;
     }
-    compareList.style.display = 'flex';
-    meshItems.forEach(function (it, idx) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
+    compareList.style.display = 'grid';
+    if (viewerHint) viewerHint.style.display = okItems.length ? '' : 'none';
+    meshItems.forEach(function (it) {
       var failed = !!(it.error || !it.url);
       var label = it.label || it.engine || 'mesh';
-      btn.className = 'tb-btn' + (failed ? ' is-failed' : '');
-      btn.textContent = failed
-        ? label + ' · ' + tr('privateHub.homePc.i23dEngineFail', '失败')
-        : label + (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '');
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'i23d-mesh-card' + (failed ? ' is-failed' : '');
       if (failed) {
-        btn.title = it.error || tr('privateHub.homePc.i23dEngineFail', '失败');
-        btn.disabled = true;
-      } else {
-        btn.addEventListener('click', function () {
-          lastMeshUrl = assetUrl(it.url);
-          lastMeshName = it.filename || (String(it.url).toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
-          metaLine.textContent =
-            (it.label || it.engine || '') +
-            (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '') +
-            (it.bytes ? ' · ' + Math.round(it.bytes / 1024) + ' KB' : '');
-          downloadBtn.style.display = '';
-          loadMeshUrl(it.url).catch(function (e) {
-            alert(tr('privateHub.homePc.i23dPreviewFail', '预览加载失败') + ': ' + e);
-          });
-          Array.prototype.forEach.call(compareList.querySelectorAll('.tb-btn'), function (b) {
-            b.classList.toggle('is-active', b === btn);
-          });
+        card.title = it.error || tr('privateHub.homePc.i23dEngineFail', '失败');
+        card.disabled = true;
+      }
+
+      var thumb = document.createElement('div');
+      thumb.className = 'i23d-mesh-card-thumb';
+      thumb.textContent = failed
+        ? tr('privateHub.homePc.i23dEngineFail', '失败')
+        : (it.engine || '3D').toUpperCase();
+
+      var title = document.createElement('div');
+      title.className = 'i23d-mesh-card-title';
+      title.textContent = label;
+
+      var meta = document.createElement('div');
+      meta.className = 'i23d-mesh-card-meta';
+      meta.textContent = failed
+        ? (it.error || tr('privateHub.homePc.i23dEngineFail', '失败'))
+        : (it.elapsed_sec ? Number(it.elapsed_sec).toFixed(1) + 's' : 'OK') +
+          (it.bytes ? ' · ' + Math.round(it.bytes / 1024) + ' KB' : '');
+
+      card.appendChild(thumb);
+      card.appendChild(title);
+      card.appendChild(meta);
+
+      if (!failed) {
+        card.addEventListener('click', function () {
+          selectMeshItem(it, card);
         });
       }
       if (!failed && okItems.length && it.url === okItems[okItems.length - 1].url) {
-        btn.classList.add('is-active');
+        card.classList.add('is-active');
       }
-      compareList.appendChild(btn);
+      compareList.appendChild(card);
     });
   }
 
@@ -546,6 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
     metaLine.textContent = '';
     compareList.innerHTML = '';
     compareList.style.display = 'none';
+    if (viewerHint) viewerHint.style.display = 'none';
     logOutput.textContent = '';
   });
   downloadBtn.addEventListener('click', function () {
