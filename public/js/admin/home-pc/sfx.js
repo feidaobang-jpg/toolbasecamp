@@ -86,9 +86,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var data = await res.json();
     defaults = data;
     fillSelect(presetSelect, data.presets, data.default_preset || 'whoosh');
-    durationInput.value = String(data.default_duration || 10);
-    durationInput.min = String(data.duration_min || 10);
+    durationInput.value = String(data.default_duration || 1.5);
+    durationInput.min = String(data.duration_min || 0.5);
     durationInput.max = String(data.duration_max || 30);
+    durationInput.step = '0.5';
     if (data.hint) {
       var hint = document.getElementById('sfx-hint');
       if (hint) hint.textContent = data.hint;

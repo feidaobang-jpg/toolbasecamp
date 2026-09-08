@@ -90,6 +90,45 @@ def _build_caption(prompt: str, preset: str) -> str:
     return base
 
 
+_SFX_ENGINE_MIN_SEC = 10.0
+
+
+def _trim_wav_to_peak(src: Path, dst: Path, target_sec: float) -> float:
+    """Keep the loudest window of target_sec from src wav. Returns trimmed duration."""
+    import numpy as np
+
+    target = max(0.2, float(target_sec))
+    try:
+        import soundfile as sf
+    except ImportError as e:
+        raise RuntimeError("缺少 soundfile，无法裁剪短音效") from e
+
+    data, sr = sf.read(str(src), always_2d=True)
+    if sr <= 0 or data.size == 0:
+        raise RuntimeError("empty audio")
+    total_sec = float(data.shape[0]) / float(sr)
+    if target >= total_sec - 0.02:
+        if Path(src).resolve() != Path(dst).resolve():
+            shutil.copy2(src, dst)
+        return total_sec
+
+    mono = np.mean(data.astype(np.float64), axis=1)
+    win = max(1, int(round(target * sr)))
+    if mono.size <= win:
+        start_i = 0
+    else:
+        energy = mono * mono
+        csum = np.concatenate(([0.0], np.cumsum(energy, dtype=np.float64)))
+        scores = csum[win:] - csum[:-win]
+        start_i = int(np.argmax(scores))
+
+    end_i = min(mono.size, start_i + win)
+    start_i = max(0, end_i - win)
+    clipped = data[start_i:end_i]
+    sf.write(str(dst), clipped, sr)
+    return float(clipped.shape[0]) / float(sr)
+
+
 class SfxAPI:
     def __init__(
         self,
@@ -138,7 +177,8 @@ class SfxAPI:
             raise RuntimeError(
                 "本地 ACE-Step 未就绪。请运行 comfyui-api-server/scripts/setup_acestep.py"
             )
-        duration = float(task.get("duration") or 10)
+        duration = float(task.get("gen_duration") or task.get("duration") or _SFX_ENGINE_MIN_SEC)
+        duration = max(_SFX_ENGINE_MIN_SEC, min(30.0, duration))
         cmd = [
             uv,
             "run",
@@ -161,7 +201,7 @@ class SfxAPI:
         ]
         if int(task.get("seed") or -1) >= 0:
             cmd.extend(["--seed", str(int(task["seed"]))])
-        self._log(task, f"ACE-Step 音效启动 duration={duration}s …")
+        self._log(task, f"ACE-Step 音效启动 gen={duration}s（目标 {task.get('duration')}s）…")
         env = os.environ.copy()
         env["UV_PYTHON"] = env.get("UV_PYTHON") or "3.12"
         proc = await asyncio.create_subprocess_exec(
@@ -191,11 +231,20 @@ class SfxAPI:
             task["stage"] = "synthesize"
             task_dir = self._task_dir(task)
             out_wav = task_dir / "sfx.wav"
+            raw_wav = task_dir / "sfx_full.wav"
             caption = _build_caption(task.get("prompt") or "", task.get("preset") or "")
             task["caption"] = caption
             (task_dir / "caption.txt").write_text(caption, encoding="utf-8")
             task["engine_used"] = "ace-step-1.5-turbo"
             await self._run_acestep(task=task, caption=caption, out_wav=out_wav)
+
+            want = float(task.get("duration") or _SFX_ENGINE_MIN_SEC)
+            if want + 0.05 < _SFX_ENGINE_MIN_SEC:
+                task["stage"] = "trim"
+                self._log(task, f"按能量峰值裁剪到约 {want:.2f}s …")
+                shutil.copy2(out_wav, raw_wav)
+                trimmed = await asyncio.to_thread(_trim_wav_to_peak, raw_wav, out_wav, want)
+                self._log(task, f"裁剪完成 → {trimmed:.2f}s（完整版保留 sfx_full.wav）")
 
             dur = None
             if self.audio_duration_seconds:
@@ -206,6 +255,8 @@ class SfxAPI:
             url = self._public_url(out_wav)
             task["audio_url"] = url
             task["audio_urls"] = [url]
+            if raw_wav.is_file():
+                task["audio_full_url"] = self._public_url(raw_wav)
             task["duration_sec"] = dur
             elapsed = time.time() - t0
             task["timing"] = {"total_sec": round(elapsed, 2)}
@@ -224,9 +275,12 @@ class SfxAPI:
                 "caption": caption,
                 "engine_used": task.get("engine_used"),
                 "duration_req": task.get("duration"),
+                "gen_duration": task.get("gen_duration"),
+                "trimmed": bool(raw_wav.is_file()),
                 "created_at": task.get("created_at_cn"),
                 "duration_sec": dur,
                 "audio": "sfx.wav",
+                "audio_full": "sfx_full.wav" if raw_wav.is_file() else "",
             }
             (task_dir / "meta.json").write_text(
                 json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -262,10 +316,11 @@ class SfxAPI:
                     "custom": "自定义（只用下方描述）",
                 },
                 "default_preset": "whoosh",
-                "default_duration": 10,
-                "duration_min": 10,
+                "default_duration": 1.5,
+                "duration_min": 0.5,
                 "duration_max": 30,
-                "hint": "工作流：本地 ACE-Step 1.5 turbo 短时音效（无人声）。引擎最短约 10 秒；适合游戏 Foley / UI / 爆炸等。",
+                "engine_min_sec": _SFX_ENGINE_MIN_SEC,
+                "hint": "工作流：本地 ACE-Step 1.5 turbo（无人声）。引擎一次至少约 10 秒；目标短于 10 秒时会自动按能量峰值裁成游戏短音效（完整版另存 sfx_full.wav）。",
             }
 
         @app.get("/sfx/status")
@@ -278,7 +333,7 @@ class SfxAPI:
         async def sfx_start(
             prompt: str = Form(""),
             preset: str = Form("whoosh"),
-            duration: str = Form("10"),
+            duration: str = Form("1.5"),
             steps: str = Form("8"),
             seed: str = Form("-1"),
         ):
@@ -291,10 +346,11 @@ class SfxAPI:
                     raise HTTPException(status_code=400, detail="请选择预设或填写描述")
                 preset_n = "custom"
             try:
-                dur = float(duration or "10")
+                dur = float(duration or "1.5")
             except Exception:
-                dur = 10.0
-            dur = max(10.0, min(30.0, dur))
+                dur = 1.5
+            dur = max(0.5, min(30.0, dur))
+            gen_dur = max(_SFX_ENGINE_MIN_SEC, dur)
             try:
                 steps_i = int(float(steps or "8"))
             except Exception:
@@ -320,6 +376,7 @@ class SfxAPI:
                 "prompt": body,
                 "preset": preset_n,
                 "duration": dur,
+                "gen_duration": gen_dur,
                 "steps": steps_i,
                 "seed": seed_i,
                 "caption": "",
@@ -329,7 +386,7 @@ class SfxAPI:
                 "timing": {},
             }
             api.tasks[task_id] = task
-            api._log(task, f"任务创建 preset={preset_n} duration={dur}s")
+            api._log(task, f"任务创建 preset={preset_n} target={dur}s gen={gen_dur}s")
             asyncio.create_task(api._execute(task_id))
             return {"success": True, "task_id": task_id, "output_dir": out_dir}
 
