@@ -25,6 +25,7 @@ from fastapi import Form, HTTPException
 
 from output_layout import (
     alloc_under,
+    delete_task_dir,
     ensure_reserved_dirs,
     list_task_dirs,
     rel_to_root,
@@ -490,6 +491,20 @@ class MusicAPI:
                     }
                 )
             return {"success": True, "items": items}
+
+        @app.post("/music/delete")
+        @app.post("/api/music/delete")
+        async def music_delete(folder: str = Form("")):
+            rel = (folder or "").strip().replace("\\", "/")
+            if not rel:
+                raise HTTPException(status_code=400, detail="缺少 folder")
+            try:
+                deleted = delete_task_dir(api.output_root, rel, category="music")
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            return {"success": True, "folder": rel_to_root(api.output_root, deleted)}
 
         @app.post("/music/open-dir")
         @app.post("/api/music/open-dir")

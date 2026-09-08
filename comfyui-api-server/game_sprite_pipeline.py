@@ -31,6 +31,7 @@ from game_sprite_postprocess import (
 from output_layout import (
     alloc_under,
     category_dir,
+    delete_task_dir,
     ensure_reserved_dirs,
     list_task_dirs,
     rel_to_root,
@@ -1668,6 +1669,21 @@ class GameSpriteAPI:
                     }
                 )
             return {"success": True, "items": items}
+
+        @app.post("/game-sprite/delete")
+        @app.post("/api/game-sprite/delete")
+        async def gs_delete(folder: str = Form(""), task_id: str = Form("")):
+            root: Path = api.deps["output_root"]
+            key = (folder or "").strip().replace("\\", "/") or (task_id or "").strip()
+            if not key:
+                raise HTTPException(status_code=400, detail="缺少 folder")
+            try:
+                deleted = delete_task_dir(root, key, category="game_sprites")
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            return {"success": True, "folder": rel_to_root(root, deleted)}
 
         @app.post("/game-sprite/open")
         @app.post("/api/game-sprite/open")

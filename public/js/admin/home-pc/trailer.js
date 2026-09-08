@@ -1008,6 +1008,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         actions.appendChild(openVid);
       }
+      var delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'tb-btn';
+      delBtn.textContent = tr('privateHub.homePc.historyDelete', '删除');
+      delBtn.addEventListener('click', function () {
+        if (!window.HomePcApi || !HomePcApi.deleteHistoryTask) return;
+        HomePcApi.deleteHistoryTask('/trailer/delete', { folder: item.folder || '' })
+          .then(function (r) {
+            if (r && r.cancelled) return;
+            loadHistory();
+          })
+          .catch(function (e) {
+            alert(String((e && e.message) || e));
+          });
+      });
+      actions.appendChild(delBtn);
       card.appendChild(actions);
       historyList.appendChild(card);
     });

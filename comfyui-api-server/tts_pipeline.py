@@ -21,6 +21,7 @@ from fastapi import File, Form, HTTPException, UploadFile
 
 from output_layout import (
     alloc_under,
+    delete_task_dir,
     ensure_reserved_dirs,
     list_task_dirs,
     rel_to_root,
@@ -415,6 +416,20 @@ class TtsAPI:
                     }
                 )
             return {"success": True, "items": items}
+
+        @app.post("/tts/delete")
+        @app.post("/api/tts/delete")
+        async def tts_delete(folder: str = Form("")):
+            rel = (folder or "").strip().replace("\\", "/")
+            if not rel:
+                raise HTTPException(status_code=400, detail="缺少 folder")
+            try:
+                deleted = delete_task_dir(api.output_root, rel, category="tts")
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            return {"success": True, "folder": rel_to_root(api.output_root, deleted)}
 
         @app.post("/tts/open-dir")
         @app.post("/api/tts/open-dir")

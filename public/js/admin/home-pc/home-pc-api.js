@@ -272,6 +272,45 @@
     });
   }
 
+  /**
+   * 删除一条历史任务目录。
+   * opts: { folder, confirmMsg?, skipConfirm? }
+   * 返回 Promise<{ cancelled?: true } | { success: true, ... }>
+   */
+  function deleteHistoryTask(apiPath, opts) {
+    opts = opts || {};
+    var folder = String(opts.folder || '').trim();
+    if (!folder) {
+      return Promise.reject(new Error(statusTr('privateHub.homePc.historyDeleteNeedFolder', '缺少历史目录')));
+    }
+    var msg =
+      opts.confirmMsg ||
+      statusTr(
+        'privateHub.homePc.historyDeleteConfirm',
+        '确定删除该历史记录？将删除本地输出目录，不可恢复。'
+      );
+    if (!opts.skipConfirm && global.window && !global.window.confirm(msg)) {
+      return Promise.resolve({ cancelled: true });
+    }
+    var path = String(apiPath || '').trim();
+    if (!path) return Promise.reject(new Error('missing api path'));
+    if (path.charAt(0) !== '/') path = '/' + path;
+    var fd = new FormData();
+    fd.append('folder', folder);
+    return fetch(base() + path, { method: 'POST', body: fd })
+      .then(function (res) {
+        return res.json().then(function (body) {
+          return { res: res, body: body || {} };
+        });
+      })
+      .then(function (pack) {
+        if (!pack.res.ok || pack.body.success === false) {
+          throw new Error(parseErrorResponse(pack.res, pack.body));
+        }
+        return pack.body;
+      });
+  }
+
   global.HomePcApi = {
     base: base,
     wsUrl: wsUrl,
@@ -281,6 +320,7 @@
     startStatusWatch: startStatusWatch,
     parseErrorResponse: parseErrorResponse,
     friendlyFetchError: friendlyFetchError,
-    copyText: copyText
+    copyText: copyText,
+    deleteHistoryTask: deleteHistoryTask
   };
 })(typeof window !== 'undefined' ? window : this);

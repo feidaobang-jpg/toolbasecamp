@@ -34,6 +34,7 @@ from PIL import Image
 
 from output_layout import (
     alloc_under,
+    delete_task_dir,
     ensure_reserved_dirs,
     folder_public_key,
     list_task_dirs,
@@ -1369,6 +1370,21 @@ class TrailerAPI:
                 if item:
                     items.append(item)
             return {"success": True, "items": items}
+
+        @app.post("/trailer/delete")
+        @app.post("/api/trailer/delete")
+        async def trailer_delete(folder: str = Form("")):
+            root: Path = api.deps["output_root"]
+            rel = (folder or "").strip().replace("\\", "/")
+            if not rel:
+                raise HTTPException(status_code=400, detail="缺少 folder")
+            try:
+                deleted = delete_task_dir(root, rel, category="trailers")
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            return {"success": True, "folder": rel_to_root(root, deleted)}
 
         @app.post("/trailer/reuse")
         @app.post("/api/trailer/reuse")

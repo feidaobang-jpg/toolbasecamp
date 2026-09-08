@@ -169,6 +169,49 @@ def rel_to_root(root: Path, path: Path) -> str:
         return Path(path).name
 
 
+def delete_task_dir(
+    root: Path,
+    folder: str,
+    *,
+    category: Optional[str] = None,
+) -> Path:
+    """
+    安全删除任务输出目录（历史「删除」用）。
+    - 必须落在 output_root 下
+    - 若指定 category：须在该分类目录下，或根目录旧任务（父级即 root）
+    - 拒绝删 root / 分类目录本身
+    """
+    import shutil
+
+    d = resolve_task_dir(root, folder)
+    if d is None or not d.is_dir():
+        raise FileNotFoundError("目录不存在")
+    resolved = d.resolve()
+    root_r = Path(root).resolve()
+    try:
+        resolved.relative_to(root_r)
+    except ValueError as e:
+        raise ValueError("非法目录") from e
+    if resolved == root_r or resolved.name in _CATEGORY_NAMES:
+        raise ValueError("拒绝删除根目录或分类目录")
+    if category:
+        cat = (category or "").strip()
+        if cat not in _CATEGORY_NAMES:
+            raise ValueError(f"unknown output category: {category}")
+        cat_root = (root_r / cat).resolve()
+        under_cat = True
+        try:
+            resolved.relative_to(cat_root)
+        except ValueError:
+            under_cat = False
+        if not under_cat:
+            # 兼容根目录旧任务：父目录必须是 root，且不是其它分类名
+            if resolved.parent != root_r:
+                raise ValueError("非法目录（分类不匹配）")
+    shutil.rmtree(resolved)
+    return resolved
+
+
 def folder_public_key(task_dir: Path, root: Optional[Path] = None) -> str:
     """用于 /output/{key}/… 的相对路径；兼容分类子目录与根目录旧任务。"""
     d = Path(task_dir)

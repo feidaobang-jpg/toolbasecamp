@@ -21,6 +21,7 @@ from fastapi import File, Form, HTTPException, UploadFile
 
 from output_layout import (
     alloc_under,
+    delete_task_dir,
     ensure_reserved_dirs,
     folder_public_key,
     list_task_dirs,
@@ -717,6 +718,28 @@ class VideoClipAPI:
                     }
                 )
             return {"success": True, "items": items}
+
+        @app.post("/video-clip/delete")
+        @app.post("/api/video-clip/delete")
+        async def vc_delete(folder: str = Form("")):
+            root: Path = api.deps["output_root"]
+            rel = (folder or "").strip().replace("\\", "/")
+            if not rel:
+                raise HTTPException(status_code=400, detail="缺少 folder")
+            d = resolve_task_dir(root, rel)
+            if d is None or not d.is_dir():
+                raise HTTPException(status_code=404, detail="目录不存在")
+            parent_name = d.resolve().parent.name
+            cat = parent_name if parent_name in ("t2v", "i2v") else None
+            if cat is None and d.resolve().parent != Path(root).resolve():
+                raise HTTPException(status_code=400, detail="非法目录（仅允许 t2v/i2v）")
+            try:
+                deleted = delete_task_dir(root, rel, category=cat)
+            except FileNotFoundError as e:
+                raise HTTPException(status_code=404, detail=str(e)) from e
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+            return {"success": True, "folder": rel_to_root(root, deleted)}
 
         @app.post("/video-clip/open")
         @app.post("/api/video-clip/open")

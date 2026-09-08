@@ -148,8 +148,28 @@ document.addEventListener('DOMContentLoaded', function () {
             );
           }
         });
+        var delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'tb-btn';
+        delBtn.textContent = tr('privateHub.homePc.historyDelete', '删除');
+        delBtn.addEventListener('click', function () {
+          if (!window.HomePcApi || !HomePcApi.deleteHistoryTask) return;
+          HomePcApi.deleteHistoryTask('/sfx/delete', { folder: it.folder || '' })
+            .then(function (r) {
+              if (r && r.cancelled) return;
+              if (lastFolder && it.folder && lastFolder === it.folder) lastFolder = '';
+              loadHistory();
+            })
+            .catch(function (e) {
+              alert(String((e && e.message) || e));
+            });
+        });
+        var actions = document.createElement('div');
+        actions.className = 'action-row';
+        actions.appendChild(openBtn);
+        actions.appendChild(delBtn);
         row.appendChild(info);
-        row.appendChild(openBtn);
+        row.appendChild(actions);
         historyList.appendChild(row);
       });
     } catch (e) {

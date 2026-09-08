@@ -1144,8 +1144,28 @@ document.addEventListener('DOMContentLoaded', function () {
           openBtn.addEventListener('click', function () {
             openHistoryItem(it);
           });
+          var delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'tb-btn';
+          delBtn.textContent = tr('privateHub.homePc.historyDelete', '删除');
+          delBtn.addEventListener('click', function () {
+            if (!window.HomePcApi || !HomePcApi.deleteHistoryTask) return;
+            HomePcApi.deleteHistoryTask('/game-sprite/delete', { folder: it.folder || '' })
+              .then(function (r) {
+                if (r && r.cancelled) return;
+                loadHistory();
+              })
+              .catch(function (e) {
+                if (typeof window.tbNotify === 'function') window.tbNotify(String((e && e.message) || e));
+                else alert(String((e && e.message) || e));
+              });
+          });
+          var actions = document.createElement('div');
+          actions.className = 'action-row';
+          actions.appendChild(openBtn);
+          actions.appendChild(delBtn);
           div.appendChild(meta);
-          div.appendChild(openBtn);
+          div.appendChild(actions);
           historyList.appendChild(div);
         });
       })
