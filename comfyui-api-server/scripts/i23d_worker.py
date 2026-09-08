@@ -20,6 +20,28 @@ import os
 import sys
 from pathlib import Path
 
+# Windows 子进程默认控制台编码会把中文 print 弄成乱码；先钉 UTF-8
+try:
+    for _s in (sys.stdout, sys.stderr):
+        _s.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+except Exception:
+    pass
+
+
+def _hf_snapshot_dir(repo_id: str) -> Path | None:
+    """Resolve local HuggingFace hub snapshot dir if weights already cached."""
+    name = "models--" + repo_id.replace("/", "--")
+    hub = Path.home() / ".cache" / "huggingface" / "hub" / name / "snapshots"
+    if not hub.is_dir():
+        return None
+    snaps = sorted([p for p in hub.iterdir() if p.is_dir()], key=lambda p: p.stat().st_mtime, reverse=True)
+    for snap in snaps:
+        if (snap / "config.yaml").is_file() and (
+            (snap / "model.ckpt").is_file() or (snap / "model.safetensors").is_file()
+        ):
+            return snap
+    return snaps[0] if snaps else None
+
 
 def _ensure_engine_path(engine: str) -> Path:
     """Put cloned repo root on sys.path (TripoSR/TRELLIS are not always pip-installed)."""
@@ -57,8 +79,20 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
         from tsr.utils import remove_background, resize_foreground
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
+        local = os.environ.get("TRIPOSR_MODEL_DIR", "").strip()
+        model_src = local if local and Path(local).is_dir() else None
+        if not model_src:
+            snap = _hf_snapshot_dir("stabilityai/TripoSR")
+            if snap is not None:
+                model_src = str(snap)
+        if not model_src:
+            model_src = "stabilityai/TripoSR"
+        print(f"triposr load from {model_src}", flush=True)
+        # 本地已有权重时离线，避免 HF 镜像缺 commit header 直接炸
+        if Path(model_src).is_dir():
+            os.environ["HF_HUB_OFFLINE"] = "1"
         model = TSR.from_pretrained(
-            "stabilityai/TripoSR",
+            model_src,
             config_name="config.yaml",
             weight_name="model.ckpt",
         )
@@ -105,7 +139,22 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
             # TripoSR run.py may ignore seed; keep for forward compat
             pass
         print("fallback run.py:", " ".join(cmd), flush=True)
-        proc = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True)
+        env = os.environ.copy()
+        env["PYTHONUTF8"] = "1"
+        env["PYTHONIOENCODING"] = "utf-8"
+        # run.py 仍会走 hub；有本地 snapshot 时离线
+        snap = _hf_snapshot_dir("stabilityai/TripoSR")
+        if snap is not None:
+            env["HF_HUB_OFFLINE"] = "1"
+        proc = subprocess.run(
+            cmd,
+            cwd=str(root),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=env,
+        )
         sys.stdout.write(proc.stdout or "")
         sys.stderr.write(proc.stderr or "")
         if proc.returncode != 0:
@@ -144,9 +193,18 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
         load_kw["subfolder"] = "hunyuan3d-dit-v2-mini"
     print(f"hunyuan load {model_id} {load_kw or '(default subfolder)'}", flush=True)
     print(
-        "hunyuan: 若本地无完整权重，将从 HuggingFace 下载（可能数十分钟）；请看缓存目录是否有 .incomplete 在增长",
+        "hunyuan: 优先读本地 ~/.cache/hy3dgen；若无完整权重才访问 HuggingFace",
         flush=True,
     )
+    # 已有本地权重则离线，避免镜像/网络卡住
+    base = Path(os.environ.get("HY3DGEN_MODELS", Path.home() / ".cache" / "hy3dgen")).expanduser()
+    sub = load_kw.get("subfolder") or "hunyuan3d-dit-v2-0"
+    local_dir = base / model_id / sub
+    if local_dir.is_dir() and (
+        any(local_dir.glob("model*.safetensors")) or any(local_dir.glob("model*.ckpt"))
+    ):
+        os.environ["HF_HUB_OFFLINE"] = "1"
+        print(f"hunyuan: 使用本地权重 {local_dir}", flush=True)
     pipe = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained(model_id, **load_kw)
     print("hunyuan: 权重已加载，开始推理…", flush=True)
     pipe.to(device)

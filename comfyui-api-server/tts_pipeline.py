@@ -222,6 +222,9 @@ class TtsAPI:
         self._log(task, f"IndexTTS 启动：{' '.join(cmd[:6])} …")
         env = os.environ.copy()
         env["UV_PYTHON"] = env.get("UV_PYTHON") or "3.11"
+        env["PYTHONUTF8"] = "1"
+        env["PYTHONIOENCODING"] = "utf-8"
+        env["PYTHONUNBUFFERED"] = "1"
         # Run from IndexTTS root so checkpoints resolve
         proc = await asyncio.create_subprocess_exec(
             *cmd,
@@ -232,6 +235,11 @@ class TtsAPI:
         )
         out_b, _ = await proc.communicate()
         text_out = (out_b or b"").decode("utf-8", errors="replace").strip()
+        if not text_out:
+            try:
+                text_out = (out_b or b"").decode("gbk", errors="replace").strip()
+            except Exception:
+                pass
         if text_out:
             for line in text_out.splitlines()[-20:]:
                 self._log(task, line)

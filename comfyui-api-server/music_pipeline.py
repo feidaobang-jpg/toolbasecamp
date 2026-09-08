@@ -244,6 +244,9 @@ class MusicAPI:
         self._log(task, f"ACE-Step 启动 mode={mode} duration={duration}s …")
         env = os.environ.copy()
         env["UV_PYTHON"] = env.get("UV_PYTHON") or "3.12"
+        env["PYTHONUTF8"] = "1"
+        env["PYTHONIOENCODING"] = "utf-8"
+        env["PYTHONUNBUFFERED"] = "1"
         proc = await asyncio.create_subprocess_exec(
             *cmd,
             cwd=str(root),
@@ -253,6 +256,11 @@ class MusicAPI:
         )
         out_b, _ = await proc.communicate()
         text_out = (out_b or b"").decode("utf-8", errors="replace").strip()
+        if not text_out:
+            try:
+                text_out = (out_b or b"").decode("gbk", errors="replace").strip()
+            except Exception:
+                pass
         if text_out:
             for line in text_out.splitlines()[-30:]:
                 self._log(task, line)

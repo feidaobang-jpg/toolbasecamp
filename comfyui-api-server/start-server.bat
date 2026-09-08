@@ -115,7 +115,10 @@ if not defined STABLE_AUDIO_MODEL_DIR set STABLE_AUDIO_MODEL_DIR=D:\sd\stable-au
 if not defined TRIPOSR_ROOT set TRIPOSR_ROOT=D:\sd\triposr
 if not defined HUNYUAN3D_ROOT set HUNYUAN3D_ROOT=D:\sd\hunyuan3d
 if not defined TRELLIS_ROOT set TRELLIS_ROOT=D:\sd\trellis
-if not defined HF_ENDPOINT set HF_ENDPOINT=https://hf-mirror.com
+rem 不要默认 HF_ENDPOINT=hf-mirror：会导致 hub missing commit header（TripoSR 等）
+rem 若需镜像请自行 set HF_ENDPOINT=https://hf-mirror.com
+set PYTHONUTF8=1
+set PYTHONIOENCODING=utf-8
 
 if not defined COMFYUI_RESOURCE_CPU_PERCENT set COMFYUI_RESOURCE_CPU_PERCENT=75
 if not defined COMFYUI_RESOURCE_LIMIT set COMFYUI_RESOURCE_LIMIT=1

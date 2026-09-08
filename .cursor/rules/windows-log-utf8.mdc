@@ -1,0 +1,34 @@
+---
+description: 服务端/工人日志禁止中文乱码（Windows UTF-8）
+alwaysApply: true
+---
+
+# 日志与子进程：禁止中文乱码
+
+面向用户的执行日志（`pipeline.log`、页面「执行日志」、API 回传的 worker stdout）必须是可读中文，**禁止**出现 `` `����` `` 一类乱码。
+
+## 根因（Windows）
+
+子进程 `print` 默认常走控制台代码页（GBK/CP936），父进程若按 UTF-8 `decode` 就会乱码。  
+`HF_ENDPOINT=hf-mirror` 等环境变量与编码无关，但不要用「乱码」当下载失败的借口。
+
+## 必须遵守
+
+1. **落盘日志**用 `encoding="utf-8"`（`open(..., encoding="utf-8")` / `Path.write_text(..., encoding="utf-8")`）。
+2. **启动 Python 子进程**时设置环境变量：
+   - `PYTHONUTF8=1`
+   - `PYTHONIOENCODING=utf-8`
+   - `PYTHONUNBUFFERED=1`（需要实时日志时）
+3. **worker 脚本开头**尽量 `sys.stdout/stderr.reconfigure(encoding="utf-8", errors="replace")`。
+4. **父进程读 stdout**：优先 `utf-8`，失败再试 `gbk`/`cp936`（见 `image_to_3d_pipeline._decode_worker_line`），不要只用 `errors="replace"` 把汉字吃成 ``。
+5. **`subprocess.run(..., text=True)`** 在 Windows 上显式传 `encoding="utf-8", errors="replace"`。
+
+## 禁止
+
+- 假定「页面上看起来乱码没关系、文件里是好的」——用户看的就是页面日志。
+- 默认强制 `HF_ENDPOINT=https://hf-mirror.com`（易导致 hub `missing commit header`）；镜像仅在本机显式需要时设置。
+- 用 PowerShell 默认编码重定向含中文的日志文件。
+
+## 自检
+
+跑一次带中文 `print` 的 worker，页面/pipeline.log 里应看到正常汉字（如「权重已加载」），而不是 `` `����` ``。

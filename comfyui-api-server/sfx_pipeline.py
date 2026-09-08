@@ -231,6 +231,9 @@ class SfxAPI:
         env["STABLE_AUDIO_ROOT"] = str(_sao_root())
         env["STABLE_AUDIO_MODEL_DIR"] = str(_sao_model_dir())
         env["TQDM_DISABLE"] = "1"
+        env["PYTHONUTF8"] = "1"
+        env["PYTHONIOENCODING"] = "utf-8"
+        env["PYTHONUNBUFFERED"] = "1"
         proc = await asyncio.create_subprocess_exec(
             *cmd,
             cwd=str(_sao_root()),
@@ -240,6 +243,11 @@ class SfxAPI:
         )
         out_b, _ = await proc.communicate()
         text_out = (out_b or b"").decode("utf-8", errors="replace").strip()
+        if not text_out:
+            try:
+                text_out = (out_b or b"").decode("gbk", errors="replace").strip()
+            except Exception:
+                pass
         if text_out:
             for line in text_out.splitlines()[-40:]:
                 s = line.strip()

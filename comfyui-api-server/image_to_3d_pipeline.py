@@ -80,6 +80,39 @@ def _format_elapsed(sec: float) -> str:
     return f"{m}m{s:02d}s"
 
 
+def _decode_worker_line(raw: bytes) -> str:
+    """Decode subprocess stdout: prefer UTF-8, fallback GBK (legacy Windows console)."""
+    if not raw:
+        return ""
+    for enc in ("utf-8", "gbk", "cp936"):
+        try:
+            return raw.decode(enc).rstrip()
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("utf-8", errors="replace").rstrip()
+
+
+def _worker_env(engine: str) -> dict:
+    env = os.environ.copy()
+    root = str(_engine_root(engine))
+    env[_ENGINES[engine]["root_env"]] = root
+    env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
+    env["PYTHONUNBUFFERED"] = "1"
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["TQDM_DISABLE"] = "1"
+    # 不默认强制 HF 镜像：hf-mirror 会导致 hub 报 missing commit header。
+    # 需要镜像时由本机环境自行设置 HF_ENDPOINT。
+    if engine == "triposr":
+        env.setdefault("HF_HUB_OFFLINE", "1")
+    if engine == "hunyuan3d":
+        hy = Path(os.environ.get("HY3DGEN_MODELS", Path.home() / ".cache" / "hy3dgen")).expanduser()
+        dit = hy / "tencent" / "Hunyuan3D-2" / "hunyuan3d-dit-v2-0"
+        if dit.is_dir():
+            env["HF_HUB_OFFLINE"] = "1"
+    return env
+
+
 def _engine_root(key: str) -> Path:
     meta = _ENGINES[key]
     raw = (os.environ.get(meta["root_env"]) or "").strip()
@@ -203,19 +236,11 @@ class ImageTo3dAPI:
             "--seed",
             str(int(task.get("seed") or -1)),
         ]
-        env = os.environ.copy()
-        root = str(_engine_root(engine))
-        env[_ENGINES[engine]["root_env"]] = root
-        env["PYTHONPATH"] = root + os.pathsep + env.get("PYTHONPATH", "")
-        env["PYTHONUNBUFFERED"] = "1"
-        env["TQDM_DISABLE"] = "1"
-        # 国内 HuggingFace 直连常极慢；未设置时默认镜像（可被外部 HF_ENDPOINT 覆盖）
-        if not (env.get("HF_ENDPOINT") or "").strip():
-            env["HF_ENDPOINT"] = "https://hf-mirror.com"
+        env = _worker_env(engine)
         if engine == "hunyuan3d":
             self._log(
                 task,
-                "hunyuan3d：首次会从 HuggingFace 拉权重（约数 GB），下载中日志可能较久无新行，请耐心等待…",
+                "hunyuan3d：优先使用本地权重；若缺失才会下载（可能较久）…",
             )
         self._log(task, f"{engine} 启动…")
         t0 = time.time()
@@ -232,7 +257,7 @@ class ImageTo3dAPI:
             raw = await proc.stdout.readline()
             if not raw:
                 break
-            line = raw.decode("utf-8", errors="replace").rstrip()
+            line = _decode_worker_line(raw)
             if not line:
                 continue
             lines.append(line)
