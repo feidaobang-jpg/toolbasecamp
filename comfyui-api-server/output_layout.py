@@ -13,7 +13,7 @@ output/
   tts/             # 语音 / 声音克隆
   images/          # 预留
   music/           # 音乐流水线（BGM / 流行歌）
-  sfx/             # 预留
+  sfx/             # 音效流水线（短时 Foley / SFX）
 """
 from __future__ import annotations
 

@@ -433,6 +433,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.homePc.musicTitle',
                     descriptionKey: 'privateHub.homePc.musicDesc',
                     url: 'html/admin/private/home-pc/music.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.sfxTitle',
+                    descriptionKey: 'privateHub.homePc.sfxDesc',
+                    url: 'html/admin/private/home-pc/sfx.html'
                 }
             ]
         }

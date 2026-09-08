@@ -57,7 +57,8 @@
     'tool.classmates.mark-six': { zh: '号码统计', en: 'Number stats' },
     'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' },
     'tool.admin.private.home-pc.tts': { zh: '语音 / 声音克隆', en: 'Speech / voice clone' },
-    'tool.admin.private.home-pc.music': { zh: '音乐流水线', en: 'Music pipeline' }
+    'tool.admin.private.home-pc.music': { zh: '音乐流水线', en: 'Music pipeline' },
+    'tool.admin.private.home-pc.sfx': { zh: '音效流水线', en: 'SFX pipeline' }
   };
 
   var AUTH_LABELS = {

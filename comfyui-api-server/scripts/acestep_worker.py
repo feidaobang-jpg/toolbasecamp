@@ -24,7 +24,7 @@ def main() -> int:
     ap.add_argument("--caption", required=True, help="style / scene description")
     ap.add_argument("--lyrics", default="", help="structured lyrics; empty → instrumental")
     ap.add_argument("--out", required=True, help="output wav/mp3/flac path")
-    ap.add_argument("--mode", choices=("bgm", "song"), default="bgm")
+    ap.add_argument("--mode", choices=("bgm", "song", "sfx"), default="bgm")
     ap.add_argument("--duration", type=float, default=60.0)
     ap.add_argument("--bpm", type=int, default=0)
     ap.add_argument("--lang", default="zh", help="vocal language code")
@@ -42,10 +42,14 @@ def main() -> int:
         print("ERROR: empty caption", file=sys.stderr)
         return 2
 
-    instrumental = args.mode == "bgm" or not (args.lyrics or "").strip()
+    instrumental = args.mode in ("bgm", "sfx") or not (args.lyrics or "").strip()
     lyrics = "[Instrumental]" if instrumental else (args.lyrics or "").strip()
     duration = float(args.duration or 60.0)
-    duration = max(10.0, min(240.0, duration))
+    # ACE-Step DiT practical minimum ~10s; SFX uses short end of range
+    if args.mode == "sfx":
+        duration = max(10.0, min(30.0, duration))
+    else:
+        duration = max(10.0, min(240.0, duration))
     lang = (args.lang or "zh").strip().lower() or "zh"
     if lang in ("zh-cn", "chinese", "cn"):
         lang = "zh"

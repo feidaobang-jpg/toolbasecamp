@@ -129,6 +129,7 @@ async def health_check():
         "series_studio": "v6_ref_style_only",
         "tts_pipeline": "v1_indextts25",
         "music_pipeline": "v1_acestep15",
+        "sfx_pipeline": "v1_acestep15",
     }
 
 
@@ -4687,6 +4688,14 @@ _music_api = MusicAPI(
     deepseek_api_url=DEEPSEEK_API_URL,
 )
 _music_api.register(app)
+
+from sfx_pipeline import SfxAPI
+
+_sfx_api = SfxAPI(
+    output_root=_OUTPUT_ROOT,
+    audio_duration_seconds=_audio_duration_seconds,
+)
+_sfx_api.register(app)
 
 
 if __name__ == '__main__':
