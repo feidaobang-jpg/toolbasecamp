@@ -1333,8 +1333,8 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   flex-direction: column;
   justify-content: stretch;
   margin: 0 0 16px;
-  max-width: 100%;
-  width: 100%;
+  max-width: min(50%, 420px);
+  width: 50%;
 }
 
 .home-pc-wrap .home-pc-source-grid .instruct-source-card {
@@ -2679,14 +2679,14 @@ body.tb-admin-private #auth-status {
   }
 }
 
-/* 输入图满宽正方形：覆盖本文件历史小缩略图限制 */
+/* 输入图：空区紧凑；选图后约半宽正方形 */
 .home-pc-wrap .drop-zone.tb-input-image {
   width: 100%;
   max-width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: auto;
   height: auto;
-  min-height: 0;
-  padding: 16px;
+  min-height: 112px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2696,8 +2696,8 @@ body.tb-admin-private #auth-status {
 .home-pc-wrap .i23d-ref-preview,
 .home-pc-wrap .image-pipe-ref-preview,
 .home-pc-wrap .tb-input-image-preview {
-  width: 100%;
-  max-width: 100% !important;
+  width: 50%;
+  max-width: min(50%, 420px) !important;
   margin: 0 0 16px;
   justify-content: stretch;
 }
@@ -2723,7 +2723,8 @@ body.tb-admin-private #auth-status {
   background: #f8fafc;
 }
 .home-pc-wrap .image-pipe-ref-drop.tb-input-image {
-  min-height: 0;
+  min-height: 112px;
+  aspect-ratio: auto;
 }
 
 .home-pc-wrap #compare-mesh-list .tb-btn.is-failed {
@@ -2734,9 +2735,10 @@ body.tb-admin-private #auth-status {
   outline: 2px solid #1d4ed8;
   outline-offset: 2px;
 }
+/* 3D 结果预览：约半宽正方形，不要一上来占满屏 */
 .home-pc-wrap .i23d-viewer {
-  width: 100%;
-  max-width: 100%;
+  width: 50%;
+  max-width: min(50%, 480px);
   margin: 0;
   aspect-ratio: 1 / 1;
   height: auto;
@@ -2749,4 +2751,14 @@ body.tb-admin-private #auth-status {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+@media (max-width: 768px) {
+  .home-pc-wrap .home-pc-source-grid,
+  .home-pc-wrap .i23d-ref-preview,
+  .home-pc-wrap .image-pipe-ref-preview,
+  .home-pc-wrap .tb-input-image-preview,
+  .home-pc-wrap .i23d-viewer {
+    width: 100%;
+    max-width: 100% !important;
+  }
 }

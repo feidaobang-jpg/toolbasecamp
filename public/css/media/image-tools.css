@@ -20,8 +20,8 @@
 
 .img-tool-source {
   margin: 12px 0 16px;
-  width: 100%;
-  max-width: 100%;
+  width: 50%;
+  max-width: min(50%, 420px);
 }
 
 .img-tool-source img {
