@@ -233,6 +233,78 @@ def _pick_trellis_attn_backend() -> str:
     return "sdpa"
 
 
+# torch.hub 默认落盘路径；TRELLIS image_cond 用 dinov2_vitl14_reg
+_DINOV2_CKPT_NAME = "dinov2_vitl14_reg4_pretrain.pth"
+_DINOV2_URL = (
+    "https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth"
+)
+# 完整权重约 1.13GB；小于此视为残缺/中断
+_DINOV2_MIN_BYTES = 1_100_000_000
+
+
+def _dinov2_ckpt_path() -> Path:
+    return Path.home() / ".cache" / "torch" / "hub" / "checkpoints" / _DINOV2_CKPT_NAME
+
+
+def _download_file_resumable(url: str, dest: Path, *, min_bytes: int, label: str) -> None:
+    """断点续传下载；国内直连 Facebook CDN 易中断，多试几次。"""
+    import urllib.request
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    part = dest.with_suffix(dest.suffix + ".tbc.partial")
+    # 清掉 torch.hub 留下的哈希 partial，避免占盘干扰
+    for junk in dest.parent.glob(dest.name + ".*.partial"):
+        try:
+            junk.unlink()
+        except OSError:
+            pass
+
+    attempts = 5
+    for i in range(1, attempts + 1):
+        have = part.stat().st_size if part.is_file() else 0
+        headers = {"User-Agent": "toolbasecamp-i23d/1.0"}
+        if have > 0:
+            headers["Range"] = f"bytes={have}-"
+        print(f"{label}: 下载 {dest.name}（第 {i}/{attempts} 次，已有 {have} bytes）…", flush=True)
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=120) as resp, open(part, "ab" if have else "wb") as out:
+                while True:
+                    chunk = resp.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    out.write(chunk)
+            size = part.stat().st_size
+            if size < min_bytes:
+                raise RuntimeError(f"文件过小 {size} < {min_bytes}，可能未下完")
+            part.replace(dest)
+            print(f"{label}: 已就绪 {dest} ({size} bytes)", flush=True)
+            return
+        except Exception as e:
+            print(f"{label}: 下载中断 {e}", flush=True)
+            if i >= attempts:
+                raise RuntimeError(
+                    f"{label} 权重下载失败（常因 Facebook CDN 不稳定）。"
+                    f"请稍后重试，或手动把文件放到 {dest} 。URL: {url}。原因：{e}"
+                ) from e
+
+
+def _ensure_dinov2_checkpoint() -> Path:
+    """TRELLIS 会经 torch.hub 拉 DINOv2；国内直连易报 chunk/separator。先保证本地完整。"""
+    dest = _dinov2_ckpt_path()
+    if dest.is_file() and dest.stat().st_size >= _DINOV2_MIN_BYTES:
+        print(f"trellis: 使用本地 DINOv2 {dest} ({dest.stat().st_size} bytes)", flush=True)
+        return dest
+    if dest.is_file():
+        print(f"trellis: 本地 DINOv2 不完整 ({dest.stat().st_size} bytes)，重新下载…", flush=True)
+        try:
+            dest.unlink()
+        except OSError:
+            pass
+    _download_file_resumable(_DINOV2_URL, dest, min_bytes=_DINOV2_MIN_BYTES, label="trellis DINOv2")
+    return dest
+
+
 def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
     _ensure_engine_path("trellis")
     # 必须在 import trellis 之前设好：缺 flash_attn 时 Pipeline 裸 except 会把
@@ -251,6 +323,17 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
         raise RuntimeError(
             f"TRELLIS 未安装/导入失败：{e}。请运行 scripts/setup_image_to_3d.py --engine trellis"
         ) from e
+
+    try:
+        _ensure_dinov2_checkpoint()
+    except Exception as e:
+        msg = str(e)
+        if "Separator is not found" in msg or "chunk exceed" in msg.lower():
+            raise RuntimeError(
+                "TRELLIS 依赖的 DINOv2 权重下载中断（Facebook CDN）。"
+                f"请再跑一次，或手动下载到 {_dinov2_ckpt_path()} 。原因：{e}"
+            ) from e
+        raise
 
     need = [
         "ckpts/ss_dec_conv3d_16l8_fp16",
@@ -281,6 +364,15 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
                 break
             print(f"trellis: 本地 snapshot 缺权重 {miss}，继续找/下载…", flush=True)
 
+    def _friendly_trellis_err(e: BaseException, prefix: str) -> RuntimeError:
+        msg = str(e)
+        if "Separator is not found" in msg or "chunk exceed" in msg.lower():
+            return RuntimeError(
+                f"{prefix}：DINOv2/依赖下载中断（Facebook CDN）。"
+                f"本地应有 {_dinov2_ckpt_path()} 。请重试。原因：{e}"
+            )
+        return RuntimeError(f"{prefix}：{e}")
+
     if local is not None:
         print(f"trellis load from local {local}", flush=True)
         os.environ["HF_HUB_OFFLINE"] = "1"
@@ -288,9 +380,9 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
         try:
             pipe = TrellisImageTo3DPipeline.from_pretrained(str(local))
         except Exception as e:
-            raise RuntimeError(
-                "TRELLIS 本地权重加载失败。"
-                f"attention={attn}。若仍报 Hub/ckpts，请确认已装 xformers 或 flash_attn。原因：{e}"
+            raise _friendly_trellis_err(
+                e,
+                f"TRELLIS 本地权重加载失败（attention={attn}；缺 xformers/flash_attn 时也会异常）",
             ) from e
     else:
         print(
@@ -310,7 +402,10 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
     from PIL import Image
 
     img = Image.open(image).convert("RGBA")
-    outputs = pipe.run(img, seed=seed if seed >= 0 else 1)
+    try:
+        outputs = pipe.run(img, seed=seed if seed >= 0 else 1)
+    except Exception as e:
+        raise _friendly_trellis_err(e, "TRELLIS 推理失败") from e
     mesh_path = out_dir / "mesh.glb"
     # 优先官方 to_glb（需 nvdiffrast）；否则直接导出无贴图 mesh，避免整条链路挂掉
     try:

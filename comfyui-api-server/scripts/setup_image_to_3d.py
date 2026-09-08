@@ -249,6 +249,27 @@ def setup_trellis(root: Path) -> None:
             "huggingface-cli download microsoft/TRELLIS-image-large",
             flush=True,
         )
+    # DINOv2：torch.hub 直连 Facebook CDN，国内易 chunk 中断；安装阶段尽量先下好
+    print("[info] 预下载 DINOv2（TRELLIS image_cond，约 1.1GB）…", flush=True)
+    try:
+        worker = Path(__file__).resolve().parent / "i23d_worker.py"
+        _run(
+            [
+                str(py),
+                "-c",
+                "import importlib.util, sys; "
+                f"p=r'{worker}'; "
+                "s=importlib.util.spec_from_file_location('i23d_worker', p); "
+                "m=importlib.util.module_from_spec(s); s.loader.exec_module(m); "
+                "m._ensure_dinov2_checkpoint()",
+            ]
+        )
+    except subprocess.CalledProcessError:
+        print(
+            "[warn] DINOv2 未下完；首次 TRELLIS 推理会再下。"
+            "失败若见 Separator/chunk，多半是 Facebook CDN，重试即可。",
+            flush=True,
+        )
     (root / ".tbc_ready").write_text("trellis\n", encoding="utf-8")
     print("[done] trellis", flush=True)
 
