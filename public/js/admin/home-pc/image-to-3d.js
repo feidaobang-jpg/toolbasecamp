@@ -48,7 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var camera = null;
   var controls = null;
   var currentRoot = null;
+  var currentViewUrl = '';
+  var meshCache = Object.create(null);
+  var loadSeq = 0;
   var animId = 0;
+  var viewerLoadingEl = document.getElementById('viewer-loading');
+  var viewerLoadingText = document.getElementById('viewer-loading-text');
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -85,17 +90,27 @@ document.addEventListener('DOMContentLoaded', function () {
     camera.position.set(1.6, 1.2, 1.8);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    viewerEl.innerHTML = '';
+    // 保留 loading 遮罩，只清空其它子节点后挂 canvas
+    Array.prototype.slice.call(viewerEl.childNodes).forEach(function (n) {
+      if (n.id === 'viewer-loading') return;
+      viewerEl.removeChild(n);
+    });
     viewerEl.appendChild(renderer.domElement);
+    if (viewerLoadingEl && viewerLoadingEl.parentNode !== viewerEl) {
+      viewerEl.appendChild(viewerLoadingEl);
+    }
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.target.set(0, 0.4, 0);
     var hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.1);
+    hemi.userData.i23dPersist = true;
     scene.add(hemi);
     var dir = new THREE.DirectionalLight(0xffffff, 1.2);
     dir.position.set(3, 5, 2);
+    dir.userData.i23dPersist = true;
     scene.add(dir);
     var grid = new THREE.GridHelper(4, 16, 0x444444, 0x2a2a2a);
+    grid.userData.i23dPersist = true;
     scene.add(grid);
     function resize() {
       var w = viewerEl.clientWidth || 480;
@@ -118,28 +133,67 @@ document.addEventListener('DOMContentLoaded', function () {
     tick();
   }
 
-  function clearMesh() {
-    if (!scene || !currentRoot) return;
-    scene.remove(currentRoot);
-    currentRoot.traverse(function (obj) {
+  function setViewerLoading(on, text) {
+    if (!viewerLoadingEl) return;
+    if (text && viewerLoadingText) viewerLoadingText.textContent = text;
+    if (on) viewerLoadingEl.removeAttribute('hidden');
+    else viewerLoadingEl.setAttribute('hidden', '');
+  }
+
+  function disposeRoot(root) {
+    if (!root) return;
+    root.traverse(function (obj) {
       if (obj.geometry) obj.geometry.dispose();
       if (obj.material) {
         if (Array.isArray(obj.material)) obj.material.forEach(function (m) { m.dispose(); });
         else obj.material.dispose();
       }
     });
+  }
+
+  /** 只保留灯光/网格；去掉场景里所有 mesh（含竞态多加的） */
+  function purgeSceneMeshes() {
+    if (!scene) return;
+    var remove = [];
+    for (var i = 0; i < scene.children.length; i++) {
+      var ch = scene.children[i];
+      if (ch.userData && ch.userData.i23dPersist) continue;
+      remove.push(ch);
+    }
+    remove.forEach(function (ch) {
+      scene.remove(ch);
+    });
     currentRoot = null;
   }
 
+  function clearMeshCache() {
+    loadSeq += 1;
+    purgeSceneMeshes();
+    Object.keys(meshCache).forEach(function (k) {
+      disposeRoot(meshCache[k]);
+      delete meshCache[k];
+    });
+    currentViewUrl = '';
+    setViewerLoading(false);
+  }
+
+  function clearMesh() {
+    purgeSceneMeshes();
+  }
+
   function fitCamera(object3d) {
+    object3d.scale.set(1, 1, 1);
+    object3d.position.set(0, 0, 0);
+    object3d.rotation.set(0, 0, 0);
+    object3d.updateMatrixWorld(true);
     var box = new THREE.Box3().setFromObject(object3d);
     if (box.isEmpty()) return;
     var size = box.getSize(new THREE.Vector3());
     var center = box.getCenter(new THREE.Vector3());
     var maxDim = Math.max(size.x, size.y, size.z, 0.001);
-    // 归一到约 1 单位，避免远裁 / 过大过小
     var scale = 1.2 / maxDim;
-    object3d.scale.multiplyScalar(scale);
+    object3d.scale.setScalar(scale);
+    object3d.updateMatrixWorld(true);
     box.setFromObject(object3d);
     size = box.getSize(new THREE.Vector3());
     center = box.getCenter(new THREE.Vector3());
@@ -179,37 +233,74 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function loadMeshUrl(url) {
     ensureViewer();
-    clearMesh();
     var full = assetUrl(url);
     if (!full) return Promise.reject(new Error('no mesh'));
+
+    // 已在显示同一模型：跳过
+    if (currentViewUrl === full && currentRoot && currentRoot.parent === scene) {
+      setViewerLoading(false);
+      return Promise.resolve(currentRoot);
+    }
+
+    var seq = ++loadSeq;
+    currentViewUrl = full;
+    purgeSceneMeshes();
+
+    // 缓存命中：瞬时切换（大 GLB 只解析一次）
+    if (meshCache[full]) {
+      currentRoot = meshCache[full];
+      scene.add(currentRoot);
+      fitCamera(currentRoot);
+      setViewerLoading(false);
+      return Promise.resolve(currentRoot);
+    }
+
     var lower = String(url).toLowerCase();
+    setViewerLoading(true, tr('privateHub.homePc.i23dViewerLoading', '加载 3D 模型…'));
+
     return new Promise(function (resolve, reject) {
+      function onProgress(ev) {
+        if (seq !== loadSeq) return;
+        if (ev && ev.total) {
+          var pct = Math.min(99, Math.round((100 * ev.loaded) / ev.total));
+          setViewerLoading(
+            true,
+            tr('privateHub.homePc.i23dViewerLoading', '加载 3D 模型…') + ' ' + pct + '%'
+          );
+        }
+      }
+
+      function finish(root) {
+        if (seq !== loadSeq) {
+          disposeRoot(root);
+          reject(new Error('aborted'));
+          return;
+        }
+        prepareMeshRoot(root);
+        meshCache[full] = root;
+        purgeSceneMeshes();
+        currentRoot = root;
+        scene.add(root);
+        fitCamera(root);
+        setViewerLoading(false);
+        resolve(root);
+      }
+
+      function fail(err) {
+        if (seq !== loadSeq) {
+          reject(new Error('aborted'));
+          return;
+        }
+        setViewerLoading(false);
+        reject(err);
+      }
+
       if (lower.indexOf('.obj') >= 0) {
-        new OBJLoader().load(
-          full,
-          function (obj) {
-            prepareMeshRoot(obj);
-            currentRoot = obj;
-            scene.add(obj);
-            fitCamera(obj);
-            resolve(obj);
-          },
-          undefined,
-          reject
-        );
+        new OBJLoader().load(full, finish, onProgress, fail);
       } else {
-        new GLTFLoader().load(
-          full,
-          function (gltf) {
-            prepareMeshRoot(gltf.scene);
-            currentRoot = gltf.scene;
-            scene.add(gltf.scene);
-            fitCamera(gltf.scene);
-            resolve(gltf.scene);
-          },
-          undefined,
-          reject
-        );
+        new GLTFLoader().load(full, function (gltf) {
+          finish(gltf.scene);
+        }, onProgress, fail);
       }
     });
   }
@@ -229,6 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
       c.classList.toggle('is-active', c === cardEl);
     });
     loadMeshUrl(it.url).catch(function (e) {
+      if (e && String(e.message || e) === 'aborted') return;
       alert(tr('privateHub.homePc.i23dPreviewFail', '预览加载失败') + ': ' + e);
     });
   }
@@ -297,6 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
     renderCompareButtons(items || (url ? [{ url: url, label: 'mesh' }] : []));
     if (url) {
       loadMeshUrl(url).catch(function (e) {
+        if (e && String(e.message || e) === 'aborted') return;
         log('preview: ' + e);
       });
     }
@@ -429,6 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
         cb.checked = engs.indexOf(cb.value) >= 0;
       });
       lastFolder = data.folder || it.folder || '';
+      clearMeshCache();
       if (data.image_url) {
         refPreview.src = assetUrl(data.image_url);
         refPreviewWrap.hidden = false;
@@ -547,7 +641,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setBusy(true, tr('privateHub.homePc.processing', '处理中…'));
     logOutput.textContent = '';
+    clearMeshCache();
     resultBox.style.display = 'none';
+    compareList.innerHTML = '';
+    compareList.style.display = 'none';
+    if (viewerHint) viewerHint.style.display = 'none';
+    metaLine.textContent = '';
+    downloadBtn.style.display = 'none';
     try {
       var res = await fetch(API_BASE_URL + '/image-to-3d/start', { method: 'POST', body: form });
       var data = await res.json().catch(function () { return {}; });
@@ -601,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function () {
     lastFolder = '';
     lastTaskId = '';
     meshItems = [];
-    clearMesh();
+    clearMeshCache();
     resultBox.style.display = 'none';
     downloadBtn.style.display = 'none';
     metaLine.textContent = '';

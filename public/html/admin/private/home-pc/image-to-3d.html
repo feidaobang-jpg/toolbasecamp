@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq5" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=imgSq5" />
-  <script src="../../../../js/locales/en.js?v=i23d4"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=i23d4"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=i23d6" />
+  <script src="../../../../js/locales/en.js?v=i23d6"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=i23d6"></script>
   <script src="../../../../js/i18n.js?v=homepc26"></script>
   <script src="../../../../js/config.js?v=i23d1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -109,8 +109,13 @@
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.i23dResultTitle">生成结果</h3>
               <p id="meta-line" class="home-pc-result-meta"></p>
               <div id="compare-mesh-list" class="i23d-mesh-grid" style="display:none"></div>
-              <p id="viewer-hint" class="i23d-viewer-hint" style="display:none" data-i18n="privateHub.homePc.i23dViewerHint">点击上方成功卡片，在下方满宽预览 3D</p>
-              <div id="viewer" class="i23d-viewer"></div>
+              <p id="viewer-hint" class="i23d-viewer-hint" style="display:none" data-i18n="privateHub.homePc.i23dViewerHint">点击上方成功卡片，下方每次只预览一个模型</p>
+              <div id="viewer" class="i23d-viewer">
+                <div id="viewer-loading" class="i23d-viewer-loading" hidden>
+                  <div class="i23d-viewer-spinner" aria-hidden="true"></div>
+                  <p id="viewer-loading-text" data-i18n="privateHub.homePc.i23dViewerLoading">加载 3D 模型…</p>
+                </div>
+              </div>
             </div>
 
             <div class="action-row home-pc-log-toolbar" style="margin-top:16px">
@@ -140,6 +145,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=histPlay1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
-  <script type="module" src="../../../../js/admin/home-pc/image-to-3d.js?v=i23d5"></script>
+  <script type="module" src="../../../../js/admin/home-pc/image-to-3d.js?v=i23d6"></script>
 </body>
 </html>
