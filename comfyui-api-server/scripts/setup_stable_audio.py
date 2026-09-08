@@ -78,6 +78,7 @@ def main() -> int:
             "huggingface_hub",
             "sentencepiece",
             "protobuf",
+            "torchsde",
             "-i",
             PIP_INDEX,
         ]

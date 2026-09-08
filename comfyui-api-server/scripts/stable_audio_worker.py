@@ -52,7 +52,7 @@ def main() -> int:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     dtype = torch.float16 if device == "cuda" else torch.float32
     print(f"loading Stable Audio Open from {model_dir} device={device}", flush=True)
-    pipe = StableAudioPipeline.from_pretrained(str(model_dir), torch_dtype=dtype)
+    pipe = StableAudioPipeline.from_pretrained(str(model_dir), dtype=dtype)
     pipe = pipe.to(device)
 
     seed = int(args.seed)
@@ -71,6 +71,8 @@ def main() -> int:
         generator=generator,
     )
     audio = result.audios[0]
+    if hasattr(audio, "detach"):
+        audio = audio.detach().float().cpu()
     # shape: (channels, samples) or (samples, channels)
     arr = np.asarray(audio, dtype=np.float32)
     if arr.ndim == 1:

@@ -229,6 +229,7 @@ class SfxAPI:
         env = os.environ.copy()
         env["STABLE_AUDIO_ROOT"] = str(_sao_root())
         env["STABLE_AUDIO_MODEL_DIR"] = str(_sao_model_dir())
+        env["TQDM_DISABLE"] = "1"
         proc = await asyncio.create_subprocess_exec(
             *cmd,
             cwd=str(_sao_root()),
@@ -240,7 +241,12 @@ class SfxAPI:
         text_out = (out_b or b"").decode("utf-8", errors="replace").strip()
         if text_out:
             for line in text_out.splitlines()[-40:]:
-                self._log(task, line)
+                s = line.strip()
+                if not s or s.startswith("%") or "|█" in s or "it/s]" in s:
+                    continue
+                if "UserWarning:" in s or "warnings.warn" in s:
+                    continue
+                self._log(task, s)
         if proc.returncode != 0:
             raise RuntimeError(f"Stable Audio Open 失败 (code={proc.returncode})")
         if not out_wav.is_file() or out_wav.stat().st_size < 1024:
