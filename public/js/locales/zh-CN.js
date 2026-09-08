@@ -637,7 +637,7 @@ window.TB_LOCALES['zh-CN'] = {
             i23dNoOutputYet: '暂无输出目录',
             i23dPreviewFail: '预览加载失败',
             i23dEngineFail: '失败',
-            i23dViewerHint: '点击上方成功卡片，下方每次只预览一个模型',
+            i23dViewerHint: '点击上方成功卡片切换；预览区每次只显示一个模型（大文件首次会稍慢，之后有缓存）',
             i23dViewerLoading: '加载 3D 模型…',
             gameSpriteHint: '先创建游戏项目（默认俯视）→ 工作流 z_image_turbo.json 定妆静帧 → Wan 2.2 5B（build_wan22_ti2v_5b）I2V 抽动作帧 → 导出 Godot。',
             gameSpriteProjectTitle: '游戏项目',

@@ -207,34 +207,58 @@ document.addEventListener('DOMContentLoaded', function () {
     controls.update();
   }
 
-  /** TripoSR/Hunyuan/TRELLIS 导出的 GLB 常无 material、无 NORMAL → Standard 材质全黑，只剩地板可见 */
+  /**
+   * 预览用 Basic 材质：无需 computeVertexNormals（百万三角会卡数秒），
+   * 也不依赖灯光；对比页够用。正式下载仍是原 GLB。
+   */
   function prepareMeshRoot(root) {
+    if (root.userData && root.userData.i23dPrepared) return root;
     root.traverse(function (c) {
       if (!c.isMesh || !c.geometry) return;
       var g = c.geometry;
-      if (!g.getAttribute('normal')) {
-        g.computeVertexNormals();
-      }
       var hasColor = !!g.getAttribute('color');
-      c.material = new THREE.MeshStandardMaterial({
+      c.material = new THREE.MeshBasicMaterial({
         color: hasColor ? 0xffffff : 0xc5ced8,
-        metalness: 0.08,
-        roughness: 0.72,
         vertexColors: hasColor,
         side: THREE.DoubleSide,
-        flatShading: false,
       });
       c.castShadow = false;
       c.receiveShadow = false;
-      c.frustumCulled = true;
     });
+    root.userData.i23dPrepared = true;
     return root;
   }
 
-  function loadMeshUrl(url) {
+  function formatBytes(n) {
+    var b = Number(n) || 0;
+    if (b >= 1048576) return (b / 1048576).toFixed(1) + ' MB';
+    if (b >= 1024) return Math.round(b / 1024) + ' KB';
+    return b + ' B';
+  }
+
+  /** 首屏优先最小 GLB（通常 TripoSR），避免一上来拉 Hunyuan 几十 MB */
+  function pickPreviewItem(items, preferredUrl) {
+    var ok = (items || []).filter(function (x) {
+      return x && x.url && !x.error;
+    });
+    if (!ok.length) return preferredUrl ? { url: preferredUrl } : null;
+    if (preferredUrl) {
+      for (var i = 0; i < ok.length; i++) {
+        if (ok[i].url === preferredUrl) return ok[i];
+      }
+    }
+    ok.sort(function (a, b) {
+      return (a.bytes || 1e15) - (b.bytes || 1e15);
+    });
+    return ok[0];
+  }
+
+  function loadMeshUrl(url, opts) {
     ensureViewer();
     var full = assetUrl(url);
     if (!full) return Promise.reject(new Error('no mesh'));
+    opts = opts || {};
+    var bytesHint = opts.bytes;
 
     // 已在显示同一模型：跳过
     if (currentViewUrl === full && currentRoot && currentRoot.parent === scene) {
@@ -248,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 缓存命中：瞬时切换（大 GLB 只解析一次）
     if (meshCache[full]) {
+      if (seq !== loadSeq) return Promise.reject(new Error('aborted'));
       currentRoot = meshCache[full];
       scene.add(currentRoot);
       fitCamera(currentRoot);
@@ -256,30 +281,53 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var lower = String(url).toLowerCase();
-    setViewerLoading(true, tr('privateHub.homePc.i23dViewerLoading', '加载 3D 模型…'));
+    var loadingMsg = tr('privateHub.homePc.i23dViewerLoading', '加载 3D 模型…');
+    if (bytesHint) loadingMsg += ' (' + formatBytes(bytesHint) + ')';
+    setViewerLoading(true, loadingMsg);
 
     return new Promise(function (resolve, reject) {
       function onProgress(ev) {
         if (seq !== loadSeq) return;
         if (ev && ev.total) {
           var pct = Math.min(99, Math.round((100 * ev.loaded) / ev.total));
-          setViewerLoading(
-            true,
-            tr('privateHub.homePc.i23dViewerLoading', '加载 3D 模型…') + ' ' + pct + '%'
-          );
+          var msg = tr('privateHub.homePc.i23dViewerLoading', '加载 3D 模型…') + ' ' + pct + '%';
+          if (bytesHint) msg += ' · ' + formatBytes(bytesHint);
+          setViewerLoading(true, msg);
         }
       }
 
       function finish(root) {
+        // prepare 可能较慢：之后必须再校验 seq，否则旧任务会叠到当前场景
         if (seq !== loadSeq) {
           disposeRoot(root);
           reject(new Error('aborted'));
           return;
         }
-        prepareMeshRoot(root);
+        try {
+          prepareMeshRoot(root);
+        } catch (e) {
+          if (seq !== loadSeq) {
+            disposeRoot(root);
+            reject(new Error('aborted'));
+            return;
+          }
+          setViewerLoading(false);
+          reject(e);
+          return;
+        }
+        if (seq !== loadSeq) {
+          disposeRoot(root);
+          reject(new Error('aborted'));
+          return;
+        }
         meshCache[full] = root;
         purgeSceneMeshes();
+        if (seq !== loadSeq) {
+          reject(new Error('aborted'));
+          return;
+        }
         currentRoot = root;
+        currentViewUrl = full;
         scene.add(root);
         fitCamera(root);
         setViewerLoading(false);
@@ -298,9 +346,14 @@ document.addEventListener('DOMContentLoaded', function () {
       if (lower.indexOf('.obj') >= 0) {
         new OBJLoader().load(full, finish, onProgress, fail);
       } else {
-        new GLTFLoader().load(full, function (gltf) {
-          finish(gltf.scene);
-        }, onProgress, fail);
+        new GLTFLoader().load(
+          full,
+          function (gltf) {
+            finish(gltf.scene);
+          },
+          onProgress,
+          fail
+        );
       }
     });
   }
@@ -319,23 +372,25 @@ document.addEventListener('DOMContentLoaded', function () {
     Array.prototype.forEach.call(compareList.querySelectorAll('.i23d-mesh-card'), function (c) {
       c.classList.toggle('is-active', c === cardEl);
     });
-    loadMeshUrl(it.url).catch(function (e) {
+    loadMeshUrl(it.url, { bytes: it.bytes }).catch(function (e) {
       if (e && String(e.message || e) === 'aborted') return;
       alert(tr('privateHub.homePc.i23dPreviewFail', '预览加载失败') + ': ' + e);
     });
   }
 
-  function renderCompareButtons(items) {
+  function renderCompareButtons(items, activeUrl) {
     meshItems = items || [];
     compareList.innerHTML = '';
     var okItems = meshItems.filter(function (x) { return x && x.url; });
     if (!meshItems.length) {
       compareList.style.display = 'none';
       if (viewerHint) viewerHint.style.display = 'none';
-      return;
+      return null;
     }
     compareList.style.display = 'grid';
     if (viewerHint) viewerHint.style.display = okItems.length ? '' : 'none';
+    var activeItem = pickPreviewItem(okItems, activeUrl);
+    var activeCard = null;
     meshItems.forEach(function (it) {
       var failed = !!(it.error || !it.url);
       var label = it.label || it.engine || 'mesh';
@@ -373,22 +428,36 @@ document.addEventListener('DOMContentLoaded', function () {
           selectMeshItem(it, card);
         });
       }
-      if (!failed && okItems.length && it.url === okItems[okItems.length - 1].url) {
+      if (activeItem && it.url === activeItem.url) {
         card.classList.add('is-active');
+        activeCard = card;
       }
       compareList.appendChild(card);
     });
+    return activeItem;
   }
 
   function showResult(url, items, meta) {
-    lastMeshUrl = assetUrl(url);
-    lastMeshName = String(url || '').toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb';
     resultBox.style.display = 'block';
-    downloadBtn.style.display = url ? '' : 'none';
+    if (viewerHint) viewerHint.style.display = '';
     metaLine.textContent = meta || '';
-    renderCompareButtons(items || (url ? [{ url: url, label: 'mesh' }] : []));
-    if (url) {
-      loadMeshUrl(url).catch(function (e) {
+    // 默认预览体积最小的成功模型，而不是最后一个（常是最大的）
+    var active = renderCompareButtons(items || (url ? [{ url: url, label: 'mesh' }] : []), null);
+    var previewUrl = (active && active.url) || url || '';
+    lastMeshUrl = assetUrl(previewUrl);
+    lastMeshName =
+      (active && active.filename) ||
+      (String(previewUrl || '').toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
+    downloadBtn.style.display = previewUrl ? '' : 'none';
+    if (active) {
+      metaLine.textContent =
+        (meta ? meta + ' · ' : '') +
+        (active.label || active.engine || '') +
+        (active.elapsed_sec ? ' · ' + Number(active.elapsed_sec).toFixed(1) + 's' : '') +
+        (active.bytes ? ' · ' + Math.round(active.bytes / 1024) + ' KB' : '');
+    }
+    if (previewUrl) {
+      loadMeshUrl(previewUrl, { bytes: active && active.bytes }).catch(function (e) {
         if (e && String(e.message || e) === 'aborted') return;
         log('preview: ' + e);
       });
