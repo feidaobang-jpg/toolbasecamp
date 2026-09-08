@@ -2674,10 +2674,11 @@ body.tb-admin-private #auth-status {
   }
 }
 
-/* Image-to-3D: compact ref thumb + square mesh viewer */
+/* Image-to-3D: full-width square ref + mesh viewer */
 .home-pc-wrap .i23d-ref-preview {
-  max-width: 168px;
-  margin: 0 auto 14px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 14px;
 }
 .home-pc-wrap .i23d-ref-preview .home-pc-img-card {
   width: 100%;
@@ -2685,23 +2686,22 @@ body.tb-admin-private #auth-status {
 .home-pc-wrap .i23d-ref-preview img {
   display: block;
   width: 100%;
-  max-width: 168px;
-  max-height: 168px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
   height: auto;
   object-fit: contain;
-  margin: 0 auto;
+  margin: 0;
   border-radius: 8px;
-  background: #f8fafc;
+  background: #f1f5f9;
   border: 1px solid #e5e7eb;
 }
 .home-pc-wrap .i23d-ref-preview .action-row {
   margin-top: 8px;
-  justify-content: center;
 }
 .home-pc-wrap .i23d-viewer {
   width: 100%;
-  max-width: min(100%, 560px);
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   aspect-ratio: 1 / 1;
   height: auto;
   background: #111;
@@ -2713,4 +2713,12 @@ body.tb-admin-private #auth-status {
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+.home-pc-wrap #compare-mesh-list .tb-btn.is-failed {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.home-pc-wrap #compare-mesh-list .tb-btn.is-active {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
 }

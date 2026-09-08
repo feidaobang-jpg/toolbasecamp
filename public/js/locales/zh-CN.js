@@ -636,6 +636,7 @@ window.TB_LOCALES['zh-CN'] = {
             i23dNeedEngine: '请至少选择一个引擎',
             i23dNoOutputYet: '暂无输出目录',
             i23dPreviewFail: '预览加载失败',
+            i23dEngineFail: '失败',
             gameSpriteHint: '先创建游戏项目（默认俯视）→ 工作流 z_image_turbo.json 定妆静帧 → Wan 2.2 5B（build_wan22_ti2v_5b）I2V 抽动作帧 → 导出 Godot。',
             gameSpriteProjectTitle: '游戏项目',
             gameSpriteProjectHint: '视角/画风/画布等为全项目设置；本项目内所有资产共用同一视角。',

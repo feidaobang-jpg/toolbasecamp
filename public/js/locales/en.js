@@ -637,6 +637,7 @@ window.TB_LOCALES.en = {
             i23dNeedEngine: 'Select at least one engine',
             i23dNoOutputYet: 'No output folder yet',
             i23dPreviewFail: 'Failed to load preview',
+            i23dEngineFail: 'Failed',
             gameSpriteHint: 'Create a game project first (default top-down) → workflow z_image_turbo.json stills → Wan 2.2 5B (build_wan22_ti2v_5b) I2V action frames → Godot export.',
             gameSpriteProjectTitle: 'Game project',
             gameSpriteProjectHint: 'Camera/style/canvas are project-wide; all assets share the same camera.',

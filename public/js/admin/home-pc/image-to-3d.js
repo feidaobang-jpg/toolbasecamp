@@ -183,9 +183,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderCompareButtons(items) {
-    meshItems = (items || []).filter(function (x) { return x && x.url; });
+    meshItems = items || [];
     compareList.innerHTML = '';
-    if (meshItems.length <= 1) {
+    var okItems = meshItems.filter(function (x) { return x && x.url; });
+    if (!meshItems.length) {
       compareList.style.display = 'none';
       return;
     }
@@ -193,26 +194,35 @@ document.addEventListener('DOMContentLoaded', function () {
     meshItems.forEach(function (it, idx) {
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'tb-btn';
-      btn.textContent =
-        (it.label || it.engine || 'mesh') +
-        (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '');
-      btn.addEventListener('click', function () {
-        lastMeshUrl = assetUrl(it.url);
-        lastMeshName = it.filename || (String(it.url).toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
-        metaLine.textContent =
-          (it.label || it.engine || '') +
-          (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '') +
-          (it.bytes ? ' · ' + Math.round(it.bytes / 1024) + ' KB' : '');
-        downloadBtn.style.display = '';
-        loadMeshUrl(it.url).catch(function (e) {
-          alert(tr('privateHub.homePc.i23dPreviewFail', '预览加载失败') + ': ' + e);
+      var failed = !!(it.error || !it.url);
+      var label = it.label || it.engine || 'mesh';
+      btn.className = 'tb-btn' + (failed ? ' is-failed' : '');
+      btn.textContent = failed
+        ? label + ' · ' + tr('privateHub.homePc.i23dEngineFail', '失败')
+        : label + (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '');
+      if (failed) {
+        btn.title = it.error || tr('privateHub.homePc.i23dEngineFail', '失败');
+        btn.disabled = true;
+      } else {
+        btn.addEventListener('click', function () {
+          lastMeshUrl = assetUrl(it.url);
+          lastMeshName = it.filename || (String(it.url).toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
+          metaLine.textContent =
+            (it.label || it.engine || '') +
+            (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '') +
+            (it.bytes ? ' · ' + Math.round(it.bytes / 1024) + ' KB' : '');
+          downloadBtn.style.display = '';
+          loadMeshUrl(it.url).catch(function (e) {
+            alert(tr('privateHub.homePc.i23dPreviewFail', '预览加载失败') + ': ' + e);
+          });
+          Array.prototype.forEach.call(compareList.querySelectorAll('.tb-btn'), function (b) {
+            b.classList.toggle('is-active', b === btn);
+          });
         });
-        Array.prototype.forEach.call(compareList.querySelectorAll('.tb-btn'), function (b, i) {
-          b.classList.toggle('is-active', i === idx);
-        });
-      });
-      if (idx === meshItems.length - 1) btn.classList.add('is-active');
+      }
+      if (!failed && okItems.length && it.url === okItems[okItems.length - 1].url) {
+        btn.classList.add('is-active');
+      }
       compareList.appendChild(btn);
     });
   }

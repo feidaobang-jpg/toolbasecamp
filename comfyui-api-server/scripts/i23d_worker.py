@@ -134,7 +134,16 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
         ) from e
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    pipe = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained("tencent/Hunyuan3D-2mini")
+    # mini 默认 subfolder 是 hunyuan3d-dit-v2-0（不对）；用官方 2.0 或显式 mini subfolder
+    model_id = os.environ.get("HUNYUAN3D_MODEL", "tencent/Hunyuan3D-2")
+    subfolder = os.environ.get("HUNYUAN3D_SUBFOLDER", "").strip()
+    load_kw = {}
+    if subfolder:
+        load_kw["subfolder"] = subfolder
+    elif "2mini" in model_id.replace("_", "-").lower():
+        load_kw["subfolder"] = "hunyuan3d-dit-v2-mini"
+    print(f"hunyuan load {model_id} {load_kw or '(default subfolder)'}", flush=True)
+    pipe = Hunyuan3DDiTFlowMatchingPipeline.from_pretrained(model_id, **load_kw)
     pipe.to(device)
     rembg = BackgroundRemover()
     from PIL import Image
@@ -155,10 +164,9 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
     try:
         import torch
         from trellis.pipelines import TrellisImageTo3DPipeline
-        from trellis.utils import postprocessing_utils
     except Exception as e:
         raise RuntimeError(
-            "TRELLIS 未安装。请运行 scripts/setup_image_to_3d.py --engine trellis"
+            f"TRELLIS 未安装/导入失败：{e}。请运行 scripts/setup_image_to_3d.py --engine trellis"
         ) from e
 
     pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
@@ -167,14 +175,30 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
 
     img = Image.open(image).convert("RGBA")
     outputs = pipe.run(img, seed=seed if seed >= 0 else 1)
-    glb = postprocessing_utils.to_glb(
-        outputs["gaussian"][0],
-        outputs["mesh"][0],
-        simplify=0.95,
-        texture_size=1024,
-    )
     mesh_path = out_dir / "mesh.glb"
-    glb.export(str(mesh_path))
+    # 优先官方 to_glb（需 nvdiffrast）；否则直接导出无贴图 mesh，避免整条链路挂掉
+    try:
+        from trellis.utils import postprocessing_utils
+
+        glb = postprocessing_utils.to_glb(
+            outputs["gaussian"][0],
+            outputs["mesh"][0],
+            simplify=0.95,
+            texture_size=1024,
+        )
+        glb.export(str(mesh_path))
+    except Exception as e:
+        print(f"trellis to_glb 回退无贴图导出：{e}", flush=True)
+        import numpy as np
+        import trimesh
+
+        m = outputs["mesh"][0]
+        verts = m.vertices.detach().cpu().numpy() if hasattr(m.vertices, "detach") else np.asarray(m.vertices)
+        faces = m.faces.detach().cpu().numpy() if hasattr(m.faces, "detach") else np.asarray(m.faces)
+        # TRELLIS 默认 z-up → y-up
+        verts = verts @ np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], dtype=np.float32)
+        tm = trimesh.Trimesh(vertices=verts, faces=faces)
+        tm.export(str(mesh_path))
     return mesh_path
 
 
