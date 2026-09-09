@@ -1400,6 +1400,8 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
     if timeout_sec is None:
         timeout_sec = float(os.environ.get("COMFYUI_VIDEO_JOB_TIMEOUT", "3600"))
     deadline = time.monotonic() + timeout_sec
+    # 只接受「本任务提交之后」写出的成片，避免多引擎对比时误拿上一份 mp4
+    job_started = time.time()
     ws = websocket.WebSocket()
     prompt_id = None
     timed_out = False
@@ -1431,22 +1433,36 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
         refs = _extract_video_refs_from_history(history)
         if refs:
             last = refs[-1]
+            # history 有引用时仍校验本地文件时间，避免偶发指到旧片
+            try:
+                out_root = _comfyui_output_root()
+                local = out_root / (last.get("subfolder") or "") / last["filename"]
+                if local.is_file() and local.stat().st_mtime < (job_started - 2.0):
+                    refs = []
+            except Exception:
+                pass
+        if refs:
+            last = refs[-1]
             return await get_view_bytes(last["filename"], last.get("subfolder") or "", last.get("type") or "output")
 
-        # 回退：读本机 ComfyUI output 目录最新 mp4
+        # 回退：仅取本任务开始后新写入的 mp4（旧逻辑用 timeout 当窗口，会把上一引擎成片误当成本次结果）
         out_root = _comfyui_output_root()
         candidates = []
         if out_root.exists():
             for pat in ("*.mp4", "*.webm", "*.mkv"):
                 candidates.extend(out_root.rglob(pat))
-        if candidates:
-            newest = max(candidates, key=lambda p: p.stat().st_mtime)
-            # 仅接受任务结束后不久写入的文件
-            if time.time() - newest.stat().st_mtime < max(60.0, timeout_sec):
-                return newest.read_bytes()
+        fresh = [
+            p
+            for p in candidates
+            if p.stat().st_mtime >= (job_started - 2.0)
+        ]
+        if fresh:
+            newest = max(fresh, key=lambda p: p.stat().st_mtime)
+            return newest.read_bytes()
 
         raise RuntimeError(
-            "No output video generated（请确认 Wan2.2 14B GGUF Q5_K_M / VAE / umT5 / CLIP Vision 已加载）"
+            "No output video generated（history 无视频且本任务开始后无新 mp4；"
+            "请确认工作流 SaveVideo 已写出，或上一引擎成片未被误用）"
         )
     finally:
         try:

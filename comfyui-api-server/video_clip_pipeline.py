@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import random
 import time
@@ -431,6 +432,7 @@ class VideoClipAPI:
             )
 
             run_video = self.deps["run_comfyui_and_get_last_video"]
+            seen_hashes: set[str] = set()
             for ei, mode in enumerate(modes):
                 if task.get("status") == "cancelled":
                     self._log(task, "已取消")
@@ -458,6 +460,13 @@ class VideoClipAPI:
                     )
                     self._log(task, f"提交 ComfyUI（{note}）…")
                     vid_bytes = await run_video(wf)
+                    digest = hashlib.md5(vid_bytes).hexdigest()
+                    if digest in seen_hashes:
+                        raise RuntimeError(
+                            "成片与上一引擎字节完全相同（疑似误取旧 mp4，已丢弃；"
+                            "请确认该引擎工作流是否真正写出新视频）"
+                        )
+                    seen_hashes.add(digest)
                     elapsed = time.perf_counter() - t0
                     total_sec += elapsed
                     out_name = (
