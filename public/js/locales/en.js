@@ -508,7 +508,7 @@ window.TB_LOCALES.en = {
             t2vNegLabel: 'Negative prompt (optional)',
             t2vNegPlaceholder: 'Leave empty for defaults',
             t2vModelLabel: 'Text-to-video models',
-            t2vModelHint: 'Multi-select OK. Default MiniMax H3 (Turbo 8-step + audio). Wan 14B uses LightX2V 4-step + 640x368 (16GB anti-OOM). Wan 5B retired.',
+            t2vModelHint: 'Multi-select OK. Default MiniMax H3 (Turbo 8-step + audio). Wan 14B drops LightX2V (anti-OOM), uses 20 steps + 512x288. Wan 5B retired.',
             t2vResultTitle: 'Result',
             t2vHistoryTitle: 'History',
             t2vHistoryHint: 'Open history restores prompt, aspect, duration, and model checks, and previews clips.',

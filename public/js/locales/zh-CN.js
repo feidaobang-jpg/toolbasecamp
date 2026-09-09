@@ -507,7 +507,7 @@ window.TB_LOCALES['zh-CN'] = {
             t2vNegLabel: '负向提示词（可选）',
             t2vNegPlaceholder: '可不填，使用默认负向',
             t2vModelLabel: '文生视频模型',
-            t2vModelHint: '可多选对比。默认 MiniMax H3（Turbo 8 步·直出音频）；Wan 14B 用 LightX2V 4 步+640×368（16GB 防 OOM）；Wan 5B 已下线。',
+            t2vModelHint: '可多选对比。默认 MiniMax H3（Turbo 8 步·直出音频）；Wan 14B 已去掉 LightX2V（防 OOM），改 20 步+512×288；Wan 5B 已下线。',
             t2vResultTitle: '生成结果',
             t2vHistoryTitle: '历史记录',
             t2vHistoryHint: '打开历史会回填提示词、画幅、时长与模型勾选，并可预览成片。',
