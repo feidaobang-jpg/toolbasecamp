@@ -102,23 +102,28 @@
 
   function applyHealthToEl(el, data) {
     var textEl = statusTextEl(el);
+    var apiOnly = el.getAttribute('data-api-only') === '1';
     if (!data || !data.ok) {
       textEl.textContent = '无法连接家里电脑 API（' + base() + '）。请确认 comfyui-api-server 已启动且 Tunnel 指向 ' + base() + '。';
       setStatusClass(el, 'home-pc-status home-pc-status--err');
       return;
     }
-    if (data.comfyui === false) {
+    if (!apiOnly && data.comfyui === false) {
       var err = data.comfyui_error ? '：' + data.comfyui_error : '';
       textEl.textContent = 'API 已连通，但 ComfyUI（' + (data.comfyui_address || '127.0.0.1:8188') + '）未就绪' + err + '。请在本机先启动 ComfyUI。';
       setStatusClass(el, 'home-pc-status home-pc-status--err');
       return;
     }
-    if (el.getAttribute('data-needs-qwen') === '1' && data.qwen_checkpoint_ready === false) {
+    if (!apiOnly && el.getAttribute('data-needs-qwen') === '1' && data.qwen_checkpoint_ready === false) {
       textEl.textContent = '已连接 ComfyUI，但未找到 Qwen-Rapid-AIO 模型（models/checkpoints/）。图生图需复制 AllInOne/qwen/Qwen-Rapid-AIO-NSFW-v10.safetensors。';
       setStatusClass(el, 'home-pc-status home-pc-status--warn');
       return;
     }
-    textEl.textContent = '已连接：' + base() + ' · ComfyUI 正常';
+    if (apiOnly) {
+      textEl.textContent = '已连接：' + base() + ' · 本页不依赖 ComfyUI';
+    } else {
+      textEl.textContent = '已连接：' + base() + ' · ComfyUI 正常';
+    }
     setStatusClass(el, 'home-pc-status home-pc-status--ok');
   }
 
