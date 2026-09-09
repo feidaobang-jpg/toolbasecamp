@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var refClearBtn = document.getElementById('ref-clear-btn');
   var engineChecks = document.getElementById('engine-checks');
   var seedInput = document.getElementById('seed-input');
+  var meshDetailInput = document.getElementById('mesh-detail-input');
   var promptInput = document.getElementById('prompt-input');
   var startBtn = document.getElementById('start-btn');
   var cancelBtn = document.getElementById('cancel-btn');
@@ -707,6 +708,10 @@ document.addEventListener('DOMContentLoaded', function () {
     form.append('engines', JSON.stringify(engines));
     form.append('prompt', (promptInput.value || '').trim());
     form.append('seed', String((seedInput.value || '').trim() || '-1'));
+    form.append(
+      'mesh_detail',
+      String((meshDetailInput && meshDetailInput.value) || 'game')
+    );
 
     setBusy(true, tr('privateHub.homePc.processing', '处理中…'));
     logOutput.textContent = '';

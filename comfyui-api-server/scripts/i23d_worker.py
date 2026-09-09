@@ -67,7 +67,98 @@ def _write_meta(out_dir: Path, **kwargs) -> None:
     (out_dir / "result.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
+# 面数档位：游戏低模默认；生成后再做一次目标面数简化（若引擎已较低则跳过）
+_MESH_DETAIL: dict[str, dict] = {
+    "game": {
+        "label": "游戏低模",
+        "triposr_resolution": 128,
+        "trellis_simplify": 0.97,
+        "target_faces": 6000,
+    },
+    "mid": {
+        "label": "中等",
+        "triposr_resolution": 192,
+        "trellis_simplify": 0.95,
+        "target_faces": 30000,
+    },
+    "high": {
+        "label": "高模",
+        "triposr_resolution": 256,
+        "trellis_simplify": 0.90,
+        "target_faces": 0,  # 0 = 不额外减面
+    },
+}
+
+
+def _normalize_mesh_detail(raw: str | None) -> str:
+    key = (raw or "game").strip().lower()
+    if key in ("low", "game-low", "lowpoly", "game_low"):
+        return "game"
+    if key in ("medium", "med", "normal"):
+        return "mid"
+    if key in ("max", "full", "quality"):
+        return "high"
+    return key if key in _MESH_DETAIL else "game"
+
+
+def _detail_cfg(detail: str) -> dict:
+    return _MESH_DETAIL[_normalize_mesh_detail(detail)]
+
+
+def _simplify_mesh_file(path: Path, target_faces: int) -> Path:
+    """将 mesh 减到约 target_faces（游戏低模）。失败则保留原文件。"""
+    if target_faces <= 0 or not path.is_file():
+        return path
+    try:
+        import trimesh
+    except Exception as e:
+        print(f"mesh simplify skip（无 trimesh）: {e}", flush=True)
+        return path
+
+    try:
+        loaded = trimesh.load(str(path), force="mesh")
+        if isinstance(loaded, trimesh.Scene):
+            geoms = [g for g in loaded.geometry.values() if isinstance(g, trimesh.Trimesh)]
+            if not geoms:
+                return path
+            mesh = trimesh.util.concatenate(geoms) if len(geoms) > 1 else geoms[0]
+        else:
+            mesh = loaded
+        if not isinstance(mesh, trimesh.Trimesh) or mesh.faces is None:
+            return path
+        before = int(len(mesh.faces))
+        if before <= target_faces:
+            print(f"mesh faces={before} ≤ target={target_faces}，无需减面", flush=True)
+            return path
+        print(f"mesh simplify {before} → ~{target_faces} faces…", flush=True)
+        simplified = None
+        try:
+            simplified = mesh.simplify_quadric_decimation(face_count=int(target_faces))
+        except TypeError:
+            # 旧版 trimesh：percent = 保留比例
+            try:
+                ratio = max(0.01, min(0.99, float(target_faces) / float(before)))
+                simplified = mesh.simplify_quadric_decimation(percent=ratio)
+            except Exception:
+                simplified = None
+        except Exception as e:
+            print(f"mesh simplify_quadric 失败，尝试 open3d/保留原模: {e}", flush=True)
+            simplified = None
+        if simplified is None or not isinstance(simplified, trimesh.Trimesh):
+            return path
+        after = int(len(simplified.faces))
+        # 保留同后缀写出
+        simplified.export(str(path))
+        print(f"mesh simplify done faces {before} → {after} bytes={path.stat().st_size}", flush=True)
+        return path
+    except Exception as e:
+        print(f"mesh simplify error（保留原模）: {e}", flush=True)
+        return path
+
+
+def _run_triposr(image: Path, out_dir: Path, seed: int, detail: str = "game") -> Path:
+    cfg = _detail_cfg(detail)
+    res = int(cfg["triposr_resolution"])
     # Prefer installed package API; fallback to cloned repo run.py
     _ensure_engine_path("triposr")
     try:
@@ -87,7 +178,7 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
                 model_src = str(snap)
         if not model_src:
             model_src = "stabilityai/TripoSR"
-        print(f"triposr load from {model_src}", flush=True)
+        print(f"triposr load from {model_src} detail={_normalize_mesh_detail(detail)} res={res}", flush=True)
         # 本地已有权重时离线，避免 HF 镜像缺 commit header 直接炸
         if Path(model_src).is_dir():
             os.environ["HF_HUB_OFFLINE"] = "1"
@@ -109,14 +200,14 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
         with torch.no_grad():
             scene_codes = model([img], device=device)
         # signature: extract_mesh(scene_codes, has_vertex_color, resolution=…)
-        meshes = model.extract_mesh(scene_codes, True, resolution=256)
+        meshes = model.extract_mesh(scene_codes, True, resolution=res)
         mesh_path = out_dir / "mesh.glb"
         try:
             meshes[0].export(str(mesh_path))
         except Exception:
             mesh_path = out_dir / "mesh.obj"
             meshes[0].export(str(mesh_path))
-        return mesh_path
+        return _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
     except Exception as e1:
         # Repo layout: D:\sd\triposr\run.py
         print(f"TripoSR API path failed: {e1!r}", flush=True)
@@ -168,11 +259,12 @@ def _run_triposr(image: Path, out_dir: Path, seed: int) -> Path:
         dest = out_dir / ("mesh.glb" if cands[0].suffix.lower() == ".glb" else "mesh.obj")
         if cands[0].resolve() != dest.resolve():
             dest.write_bytes(cands[0].read_bytes())
-        return dest
+        return _simplify_mesh_file(dest, int(cfg["target_faces"]))
 
 
-def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
+def _run_hunyuan(image: Path, out_dir: Path, seed: int, detail: str = "game") -> Path:
     """Hunyuan3D-2 shape (+ optional texture if available)."""
+    cfg = _detail_cfg(detail)
     try:
         import torch
         from hy3dgen.shapegen import Hunyuan3DDiTFlowMatchingPipeline
@@ -191,7 +283,11 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
         load_kw["subfolder"] = subfolder
     elif "2mini" in model_id.replace("_", "-").lower():
         load_kw["subfolder"] = "hunyuan3d-dit-v2-mini"
-    print(f"hunyuan load {model_id} {load_kw or '(default subfolder)'}", flush=True)
+    print(
+        f"hunyuan load {model_id} {load_kw or '(default subfolder)'} "
+        f"detail={_normalize_mesh_detail(detail)}",
+        flush=True,
+    )
     print(
         "hunyuan: 优先读本地 ~/.cache/hy3dgen；若无完整权重才访问 HuggingFace",
         flush=True,
@@ -219,7 +315,7 @@ def _run_hunyuan(image: Path, out_dir: Path, seed: int) -> Path:
     mesh = pipe(image=img, generator=generator)[0]
     mesh_path = out_dir / "mesh.glb"
     mesh.export(str(mesh_path))
-    return mesh_path
+    return _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
 
 
 def _pick_trellis_attn_backend() -> str:
@@ -305,7 +401,8 @@ def _ensure_dinov2_checkpoint() -> Path:
     return dest
 
 
-def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
+def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") -> Path:
+    cfg = _detail_cfg(detail)
     _ensure_engine_path("trellis")
     # 必须在 import trellis 之前设好：缺 flash_attn 时 Pipeline 裸 except 会把
     # ckpts/xxx 误当成独立 Hub repo，报「locate file on the Hub」。
@@ -315,6 +412,7 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
     os.environ["SPARSE_ATTN_BACKEND"] = "xformers" if attn == "sdpa" else attn
     if attn != "flash_attn":
         print(f"trellis: 未检测到 flash_attn，改用 attention={attn}", flush=True)
+    print(f"trellis detail={_normalize_mesh_detail(detail)}", flush=True)
 
     try:
         import torch
@@ -414,7 +512,7 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
         glb = postprocessing_utils.to_glb(
             outputs["gaussian"][0],
             outputs["mesh"][0],
-            simplify=0.95,
+            simplify=float(cfg["trellis_simplify"]),
             texture_size=1024,
         )
         glb.export(str(mesh_path))
@@ -430,7 +528,7 @@ def _run_trellis(image: Path, out_dir: Path, seed: int) -> Path:
         verts = verts @ np.array([[1, 0, 0], [0, 0, -1], [0, 1, 0]], dtype=np.float32)
         tm = trimesh.Trimesh(vertices=verts, faces=faces)
         tm.export(str(mesh_path))
-    return mesh_path
+    return _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
 
 
 def main() -> int:
@@ -442,6 +540,11 @@ def main() -> int:
     ap.add_argument("--image", required=True)
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--seed", type=int, default=-1)
+    ap.add_argument(
+        "--mesh-detail",
+        default="game",
+        help="game=低模(~6k面) | mid(~30k) | high(不额外减面)",
+    )
     args = ap.parse_args()
 
     image = Path(args.image)
@@ -451,17 +554,18 @@ def main() -> int:
         print(f"ERROR: missing image {image}", file=sys.stderr)
         return 2
 
-    print(f"i23d engine={args.engine} image={image} out={out_dir}", flush=True)
+    detail = _normalize_mesh_detail(args.mesh_detail)
+    print(f"i23d engine={args.engine} detail={detail} image={image} out={out_dir}", flush=True)
     try:
         if args.engine == "triposr":
-            mesh = _run_triposr(image, out_dir, args.seed)
+            mesh = _run_triposr(image, out_dir, args.seed, detail)
         elif args.engine == "hunyuan3d":
-            mesh = _run_hunyuan(image, out_dir, args.seed)
+            mesh = _run_hunyuan(image, out_dir, args.seed, detail)
         else:
-            mesh = _run_trellis(image, out_dir, args.seed)
+            mesh = _run_trellis(image, out_dir, args.seed, detail)
     except Exception as e:
         print(f"ERROR: {e}", file=sys.stderr)
-        _write_meta(out_dir, engine=args.engine, ok=False, error=str(e))
+        _write_meta(out_dir, engine=args.engine, ok=False, error=str(e), mesh_detail=detail)
         return 1
 
     _write_meta(
@@ -470,6 +574,8 @@ def main() -> int:
         ok=True,
         mesh=mesh.name,
         bytes=mesh.stat().st_size if mesh.is_file() else 0,
+        mesh_detail=detail,
+        target_faces=_detail_cfg(detail)["target_faces"],
     )
     print(f"OK {mesh} bytes={mesh.stat().st_size if mesh.is_file() else 0}", flush=True)
     return 0

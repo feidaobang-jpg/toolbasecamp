@@ -80,6 +80,25 @@ def _clone_if_needed(engine: str, root: Path) -> None:
     shutil.rmtree(tmp, ignore_errors=True)
 
 
+def _ensure_mesh_simplify(py: Path) -> None:
+    """游戏低模减面依赖 trimesh + fast-simplification。"""
+    try:
+        _run(
+            [
+                str(py),
+                "-m",
+                "pip",
+                "install",
+                "trimesh>=4.5",
+                "fast-simplification",
+                "-i",
+                PIP_INDEX,
+            ]
+        )
+    except subprocess.CalledProcessError:
+        print("[warn] fast-simplification 安装失败；游戏低模可能无法减面", flush=True)
+
+
 def setup_triposr(root: Path) -> None:
     _clone_if_needed("triposr", root)
     py = _ensure_venv(root)
@@ -133,6 +152,7 @@ def setup_triposr(root: Path) -> None:
             PIP_INDEX,
         ]
     )
+    _ensure_mesh_simplify(py)
     # Verify import with repo on PYTHONPATH
     env = os.environ.copy()
     env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
@@ -166,6 +186,7 @@ def setup_hunyuan(root: Path) -> None:
     req = root / "requirements.txt"
     if req.is_file():
         _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
+    _ensure_mesh_simplify(py)
     (root / ".tbc_ready").write_text("hunyuan3d\n", encoding="utf-8")
     print("[done] hunyuan3d — 首次推理会从 HuggingFace 拉权重", flush=True)
 
@@ -270,6 +291,7 @@ def setup_trellis(root: Path) -> None:
             "失败若见 Separator/chunk，多半是 Facebook CDN，重试即可。",
             flush=True,
         )
+    _ensure_mesh_simplify(py)
     (root / ".tbc_ready").write_text("trellis\n", encoding="utf-8")
     print("[done] trellis", flush=True)
 

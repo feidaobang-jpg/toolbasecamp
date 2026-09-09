@@ -9,19 +9,19 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq5" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=i23d7" />
-  <script src="../../../../js/locales/en.js?v=i23d7"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=i23d7"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=i23d8" />
+  <script src="../../../../js/locales/en.js?v=i23d8"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=i23d8"></script>
   <script src="../../../../js/i18n.js?v=homepc26"></script>
   <script src="../../../../js/config.js?v=i23d1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
   <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
-  <!-- three@0.170.0 for GLB preview -->
+  <!-- three@0.170.0：本地 vendor，避免刷新卡在 cdn.jsdelivr.net -->
   <script type="importmap">
   {
     "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      "three": "../../../../vendor/three/0.170.0/build/three.module.js",
+      "three/addons/": "../../../../vendor/three/0.170.0/examples/jsm/"
     }
   }
   </script>
@@ -74,6 +74,18 @@
               <div class="home-pc-field" style="margin-top:12px">
                 <span class="home-pc-field-label" data-i18n="privateHub.homePc.i23dEnginesLabel">引擎（可多选对比）</span>
                 <div id="engine-checks" class="trailer-aspect-row" style="margin-top:8px;flex-wrap:wrap;gap:10px"></div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="mesh-detail-input" data-i18n="privateHub.homePc.i23dMeshDetailLabel">面数（游戏向）</label>
+                  <select id="mesh-detail-input" class="text-input">
+                    <option value="game" selected data-i18n="privateHub.homePc.i23dMeshDetailGame">游戏低模（约 ≤6k 面）</option>
+                    <option value="mid" data-i18n="privateHub.homePc.i23dMeshDetailMid">中等（约 ≤30k 面）</option>
+                    <option value="high" data-i18n="privateHub.homePc.i23dMeshDetailHigh">高模（不额外减面）</option>
+                  </select>
+                  <p class="small-hint" style="margin:6px 0 0" data-i18n="privateHub.homePc.i23dMeshDetailHint">低模更适合 Godot/手游；高模文件大、预览也更慢。</p>
+                </div>
               </div>
 
               <div class="form-row">
@@ -145,6 +157,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=histPlay1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
-  <script type="module" src="../../../../js/admin/home-pc/image-to-3d.js?v=i23d7"></script>
+  <script type="module" src="../../../../js/admin/home-pc/image-to-3d.js?v=i23d8"></script>
 </body>
 </html>

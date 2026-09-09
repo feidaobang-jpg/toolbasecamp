@@ -239,6 +239,8 @@ class ImageTo3dAPI:
             str(eng_dir),
             "--seed",
             str(int(task.get("seed") or -1)),
+            "--mesh-detail",
+            str(task.get("mesh_detail") or "game"),
         ]
         env = _worker_env(engine)
         if engine == "hunyuan3d":
@@ -351,6 +353,7 @@ class ImageTo3dAPI:
                 "engines": engines,
                 "prompt": task.get("prompt") or "",
                 "seed": task.get("seed"),
+                "mesh_detail": task.get("mesh_detail") or "game",
                 "mesh_url": task["mesh_url"],
                 "mesh_urls": mesh_urls,
                 "timing": task["timing"],
@@ -375,9 +378,15 @@ class ImageTo3dAPI:
                 "engines": {k: v["label"] for k, v in _ENGINES.items()},
                 "engine_meta": st["engines"],
                 "default_engines": ["triposr"],
+                "default_mesh_detail": "game",
+                "mesh_detail_options": [
+                    {"id": "game", "label": "游戏低模", "hint": "约 ≤6k 三角面，适合 Godot/低模"},
+                    {"id": "mid", "label": "中等", "hint": "约 ≤30k 三角面"},
+                    {"id": "high", "label": "高模", "hint": "引擎原始面数，文件更大"},
+                ],
                 "hint": (
                     "图生 3D 多引擎对比：TripoSR（快）/ Hunyuan3D（均衡）/ TRELLIS（质量）。"
-                    "可多选依次生成。未就绪请运行 scripts/setup_image_to_3d.py"
+                    "可多选依次生成；面数建议选「游戏低模」。未就绪请运行 scripts/setup_image_to_3d.py"
                 ),
                 **st,
             }
@@ -393,6 +402,7 @@ class ImageTo3dAPI:
             engines: str = Form("triposr"),
             prompt: str = Form(""),
             seed: str = Form("-1"),
+            mesh_detail: str = Form("game"),
             image: UploadFile = File(...),
         ):
             raw = await image.read()
@@ -403,6 +413,9 @@ class ImageTo3dAPI:
                 seed_i = int(float(seed or "-1"))
             except Exception:
                 seed_i = -1
+            detail = (mesh_detail or "game").strip().lower()
+            if detail not in ("game", "mid", "high"):
+                detail = "game"
 
             task_id = uuid.uuid4().hex
             out_dir = api._alloc_dir()
@@ -420,6 +433,7 @@ class ImageTo3dAPI:
                 "prompt": (prompt or "").strip(),
                 "engines": modes,
                 "seed": seed_i,
+                "mesh_detail": detail,
                 "image_path": "",
                 "mesh_url": "",
                 "mesh_urls": [],
@@ -433,7 +447,7 @@ class ImageTo3dAPI:
             img_path = task_dir / f"input{suffix}"
             img_path.write_bytes(raw)
             task["image_path"] = str(img_path)
-            api._log(task, f"任务创建 engines={modes} bytes={len(raw)}")
+            api._log(task, f"任务创建 engines={modes} mesh_detail={detail} bytes={len(raw)}")
             asyncio.create_task(api._execute(task_id))
             return {"success": True, "task_id": task_id, "output_dir": out_dir}
 
