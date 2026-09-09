@@ -2791,6 +2791,13 @@ body.tb-admin-private #auth-status {
   font-size: 13px;
   color: #64748b;
 }
+.home-pc-wrap .i23d-viewer-shade-bar {
+  margin: 0 0 10px;
+}
+.home-pc-wrap .i23d-viewer-shade-bar .i23d-shade-btn.is-active {
+  box-shadow: inset 0 0 0 2px #1d4ed8;
+  filter: brightness(0.95);
+}
 /* 3D 结果预览：满宽正方形 */
 .home-pc-wrap .i23d-viewer {
   width: 100%;

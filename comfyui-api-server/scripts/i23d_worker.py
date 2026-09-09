@@ -156,6 +156,52 @@ def _simplify_mesh_file(path: Path, target_faces: int) -> Path:
         return path
 
 
+def _orient_max_footprint(path: Path) -> Path:
+    """把 mesh 转到「贴地投影」最大的正交朝向（缓解 TripoSR 侧躺）。"""
+    try:
+        import numpy as np
+        import trimesh
+    except Exception as e:
+        print(f"orient skip: {e}", flush=True)
+        return path
+    try:
+        loaded = trimesh.load(str(path), force="mesh")
+        if isinstance(loaded, trimesh.Scene):
+            geoms = [g for g in loaded.geometry.values() if isinstance(g, trimesh.Trimesh)]
+            if not geoms:
+                return path
+            mesh = trimesh.util.concatenate(geoms) if len(geoms) > 1 else geoms[0]
+        else:
+            mesh = loaded
+        if not isinstance(mesh, trimesh.Trimesh):
+            return path
+        rots = [
+            (0, [1, 0, 0]),
+            (np.pi / 2, [1, 0, 0]),
+            (-np.pi / 2, [1, 0, 0]),
+            (np.pi, [1, 0, 0]),
+            (np.pi / 2, [0, 0, 1]),
+            (-np.pi / 2, [0, 0, 1]),
+        ]
+        best = mesh
+        best_area = -1.0
+        for ang, axis in rots:
+            m = mesh.copy()
+            if ang:
+                m.apply_transform(trimesh.transformations.rotation_matrix(ang, axis))
+            e = m.extents
+            area = float(e[0] * e[2])
+            if area > best_area:
+                best_area = area
+                best = m
+        best.export(str(path))
+        print(f"mesh orient footprint={best_area:.4f} extents={best.extents}", flush=True)
+        return path
+    except Exception as e:
+        print(f"orient error（保留原朝向）: {e}", flush=True)
+        return path
+
+
 def _run_triposr(image: Path, out_dir: Path, seed: int, detail: str = "game") -> Path:
     cfg = _detail_cfg(detail)
     res = int(cfg["triposr_resolution"])
@@ -207,6 +253,7 @@ def _run_triposr(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         except Exception:
             mesh_path = out_dir / "mesh.obj"
             meshes[0].export(str(mesh_path))
+        _orient_max_footprint(mesh_path)
         return _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
     except Exception as e1:
         # Repo layout: D:\sd\triposr\run.py
@@ -259,6 +306,7 @@ def _run_triposr(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         dest = out_dir / ("mesh.glb" if cands[0].suffix.lower() == ".glb" else "mesh.obj")
         if cands[0].resolve() != dest.resolve():
             dest.write_bytes(cands[0].read_bytes())
+        _orient_max_footprint(dest)
         return _simplify_mesh_file(dest, int(cfg["target_faces"]))
 
 

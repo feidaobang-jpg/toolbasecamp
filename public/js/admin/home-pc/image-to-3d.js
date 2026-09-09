@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var animId = 0;
   var viewerLoadingEl = document.getElementById('viewer-loading');
   var viewerLoadingText = document.getElementById('viewer-loading-text');
+  var viewerShadeBar = document.getElementById('viewer-shade-bar');
+  var viewerOrientBtn = document.getElementById('viewer-orient-btn');
+  var shadeMode = 'clay';
+  var orientStep = 0;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -183,9 +187,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function fitCamera(object3d) {
+    // 保留 rotation（摆正），重置位移/缩放再适配
     object3d.scale.set(1, 1, 1);
     object3d.position.set(0, 0, 0);
-    object3d.rotation.set(0, 0, 0);
     object3d.updateMatrixWorld(true);
     var box = new THREE.Box3().setFromObject(object3d);
     if (box.isEmpty()) return;
@@ -198,7 +202,9 @@ document.addEventListener('DOMContentLoaded', function () {
     box.setFromObject(object3d);
     size = box.getSize(new THREE.Vector3());
     center = box.getCenter(new THREE.Vector3());
-    object3d.position.sub(center);
+    object3d.position.x -= center.x;
+    object3d.position.y -= center.y;
+    object3d.position.z -= center.z;
     object3d.position.y += size.y * 0.5;
     controls.target.set(0, size.y * 0.35, 0);
     camera.near = 0.01;
@@ -208,25 +214,143 @@ document.addEventListener('DOMContentLoaded', function () {
     controls.update();
   }
 
-  /**
-   * 预览用 Basic 材质：无需 computeVertexNormals（百万三角会卡数秒），
-   * 也不依赖灯光；对比页够用。正式下载仍是原 GLB。
-   */
-  function prepareMeshRoot(root) {
-    if (root.userData && root.userData.i23dPrepared) return root;
+  /** TripoSR 等常侧躺：在 4 种正交朝向里选「贴地投影面积」最大的（车/物体更稳） */
+  function autoOrientMaxFootprint(root) {
+    var rots = [
+      [0, 0, 0],
+      [-Math.PI / 2, 0, 0],
+      [Math.PI / 2, 0, 0],
+      [0, 0, Math.PI / 2],
+      [0, 0, -Math.PI / 2],
+      [Math.PI, 0, 0],
+    ];
+    var best = rots[0];
+    var bestArea = -1;
+    var i;
+    for (i = 0; i < rots.length; i++) {
+      root.rotation.set(rots[i][0], rots[i][1], rots[i][2]);
+      root.updateMatrixWorld(true);
+      var box = new THREE.Box3().setFromObject(root);
+      var size = box.getSize(new THREE.Vector3());
+      var area = size.x * size.z;
+      if (area > bestArea) {
+        bestArea = area;
+        best = rots[i];
+      }
+    }
+    root.rotation.set(best[0], best[1], best[2]);
+    orientStep = 0;
+  }
+
+  function cycleOrient(root) {
+    if (!root) return;
+    orientStep = (orientStep + 1) % 4;
+    // 绕 X 每次 +90°
+    root.rotation.x += Math.PI / 2;
+    fitCamera(root);
+  }
+
+  function meshHasVertexColor(root) {
+    var found = false;
     root.traverse(function (c) {
+      if (c.isMesh && c.geometry && c.geometry.getAttribute('color')) found = true;
+    });
+    return found;
+  }
+
+  function meshHasUsefulMaterial(root) {
+    var found = false;
+    root.traverse(function (c) {
+      if (!c.isMesh) return;
+      var mats = c.userData.i23dOrigMat;
+      if (!mats) return;
+      var list = Array.isArray(mats) ? mats : [mats];
+      list.forEach(function (m) {
+        if (!m) return;
+        if (m.map || m.normalMap || m.emissiveMap || m.roughnessMap) found = true;
+        if (m.isMeshStandardMaterial && m.color && m.color.getHex() !== 0xffffff) found = true;
+      });
+    });
+    return found;
+  }
+
+  function applyShadeMode(mode) {
+    shadeMode = mode || shadeMode;
+    if (viewerShadeBar) {
+      Array.prototype.forEach.call(viewerShadeBar.querySelectorAll('.i23d-shade-btn'), function (btn) {
+        btn.classList.toggle('is-active', btn.getAttribute('data-shade') === shadeMode);
+      });
+    }
+    if (!currentRoot) return;
+    if (shadeMode === 'vertex' && !meshHasVertexColor(currentRoot)) {
+      alert(tr('privateHub.homePc.i23dShadeNoVertex', '当前模型无顶点色'));
+      shadeMode = 'clay';
+      if (viewerShadeBar) {
+        Array.prototype.forEach.call(viewerShadeBar.querySelectorAll('.i23d-shade-btn'), function (btn) {
+          btn.classList.toggle('is-active', btn.getAttribute('data-shade') === 'clay');
+        });
+      }
+    }
+    if (shadeMode === 'material' && !meshHasUsefulMaterial(currentRoot)) {
+      // 无贴图时仍可切回「原材质」（多为灰白 Standard），不弹窗打断；提示一次即可
+    }
+    currentRoot.traverse(function (c) {
       if (!c.isMesh || !c.geometry) return;
-      var g = c.geometry;
-      var hasColor = !!g.getAttribute('color');
-      c.material = new THREE.MeshBasicMaterial({
-        color: hasColor ? 0xffffff : 0xc5ced8,
-        vertexColors: hasColor,
+      var hasColor = !!c.geometry.getAttribute('color');
+      if (shadeMode === 'material' && c.userData.i23dOrigMat) {
+        c.material = c.userData.i23dOrigMat;
+        return;
+      }
+      if (shadeMode === 'wire') {
+        c.material = new THREE.MeshBasicMaterial({
+          color: 0x93c5fd,
+          wireframe: true,
+          side: THREE.DoubleSide,
+        });
+        return;
+      }
+      if (shadeMode === 'vertex' && hasColor) {
+        c.material = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          vertexColors: true,
+          side: THREE.DoubleSide,
+        });
+        return;
+      }
+      // clay 白模：Lambert + 灯光，比纯 Basic 更有体积感
+      if (!c.geometry.getAttribute('normal')) {
+        c.geometry.computeVertexNormals();
+      }
+      c.material = new THREE.MeshLambertMaterial({
+        color: 0xd1d5db,
         side: THREE.DoubleSide,
       });
+    });
+  }
+
+  /**
+   * 保存原材质；默认白模预览。顶点色/贴图用工具栏切换。
+   */
+  function prepareMeshRoot(root, urlHint) {
+    if (root.userData && root.userData.i23dPrepared) {
+      applyShadeMode(shadeMode);
+      return root;
+    }
+    root.traverse(function (c) {
+      if (!c.isMesh || !c.geometry) return;
+      c.userData.i23dOrigMat = c.material;
       c.castShadow = false;
       c.receiveShadow = false;
     });
     root.userData.i23dPrepared = true;
+    // TripoSR 路径常侧躺：自动选贴地面积最大朝向
+    if (String(urlHint || '').toLowerCase().indexOf('triposr') >= 0) {
+      autoOrientMaxFootprint(root);
+    } else {
+      root.rotation.set(0, 0, 0);
+      orientStep = 0;
+    }
+    applyShadeMode(shadeMode);
     return root;
   }
 
@@ -276,6 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (seq !== loadSeq) return Promise.reject(new Error('aborted'));
       currentRoot = meshCache[full];
       scene.add(currentRoot);
+      applyShadeMode(shadeMode);
       fitCamera(currentRoot);
       setViewerLoading(false);
       return Promise.resolve(currentRoot);
@@ -305,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
         try {
-          prepareMeshRoot(root);
+          prepareMeshRoot(root, full);
         } catch (e) {
           if (seq !== loadSeq) {
             disposeRoot(root);
@@ -441,6 +566,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function showResult(url, items, meta) {
     resultBox.style.display = 'block';
     if (viewerHint) viewerHint.style.display = '';
+    if (viewerShadeBar) viewerShadeBar.style.display = '';
     metaLine.textContent = meta || '';
     // 默认预览体积最小的成功模型，而不是最后一个（常是最大的）
     var active = renderCompareButtons(items || (url ? [{ url: url, label: 'mesh' }] : []), null);
@@ -782,8 +908,22 @@ document.addEventListener('DOMContentLoaded', function () {
     compareList.innerHTML = '';
     compareList.style.display = 'none';
     if (viewerHint) viewerHint.style.display = 'none';
+    if (viewerShadeBar) viewerShadeBar.style.display = 'none';
     logOutput.textContent = '';
   });
+  if (viewerShadeBar) {
+    viewerShadeBar.addEventListener('click', function (ev) {
+      var btn = ev.target && ev.target.closest ? ev.target.closest('.i23d-shade-btn') : null;
+      if (!btn) return;
+      applyShadeMode(btn.getAttribute('data-shade') || 'clay');
+    });
+  }
+  if (viewerOrientBtn) {
+    viewerOrientBtn.addEventListener('click', function () {
+      if (!currentRoot) return;
+      cycleOrient(currentRoot);
+    });
+  }
   downloadBtn.addEventListener('click', function () {
     if (!lastMeshUrl) return;
     HomePcApi.downloadAsset(lastMeshUrl, lastMeshName).catch(function (e) {
