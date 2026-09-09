@@ -2,9 +2,10 @@
 图生 3D：多引擎依次生成便于对比。
 
 引擎：
-- triposr   快
-- hunyuan3d 均衡
-- trellis   质量
+- triposr    快
+- hunyuan3d  均衡
+- trellis    质量（v1）
+- trellis2   TRELLIS.2（官方建议 ≥24GB 显存；与 v1 分目录，不冲突）
 
 输出：output/mesh3d/{date}_i23d_*/{engine}/mesh.glb
 """
@@ -52,12 +53,39 @@ _ENGINES = {
         "default_root": Path(r"D:\sd\hunyuan3d"),
     },
     "trellis": {
-        "label": "TRELLIS（质量）",
+        "label": "TRELLIS v1（质量）",
         "tier": "quality",
         "root_env": "TRELLIS_ROOT",
         "default_root": Path(r"D:\sd\trellis"),
     },
+    "trellis2": {
+        "label": "TRELLIS.2（高质·≥24GB）",
+        "tier": "quality2",
+        "root_env": "TRELLIS2_ROOT",
+        "default_root": Path(r"D:\sd\trellis2"),
+        "min_vram_mib": 22000,
+    },
 }
+
+
+def _gpu_vram_mib() -> int:
+    """本机 NVIDIA 显存 MB；查不到返回 0。"""
+    try:
+        out = subprocess.check_output(
+            [
+                "nvidia-smi",
+                "--query-gpu=memory.total",
+                "--format=csv,noheader,nounits",
+            ],
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=8,
+        )
+        line = (out or "").strip().splitlines()[0].strip()
+        return int(float(line))
+    except Exception:
+        return 0
 
 
 def _cn_now_str() -> str:
@@ -114,6 +142,9 @@ def _worker_env(engine: str) -> dict:
         # 默认 flash_attn；本机常无。先钉 xformers，避免加载失败后误走 Hub ckpts/*
         env.setdefault("ATTN_BACKEND", "xformers")
         env.setdefault("SPARSE_ATTN_BACKEND", "xformers")
+    if engine == "trellis2":
+        env.setdefault("ATTN_BACKEND", "xformers")
+        env.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
     return env
 
 
@@ -140,7 +171,7 @@ def engine_ready(key: str) -> Dict[str, Any]:
     marker = root / ".tbc_ready"
     has_worker = _WORKER.is_file()
     ready = root.is_dir() and py.is_file() and marker.is_file() and has_worker
-    return {
+    info: Dict[str, Any] = {
         "engine": key,
         "label": _ENGINES[key]["label"],
         "tier": _ENGINES[key]["tier"],
@@ -150,12 +181,39 @@ def engine_ready(key: str) -> Dict[str, Any]:
         "has_marker": marker.is_file(),
         "has_worker": has_worker,
     }
+    min_vram = int(_ENGINES[key].get("min_vram_mib") or 0)
+    if min_vram > 0:
+        vram = _gpu_vram_mib()
+        info["vram_mib"] = vram
+        info["min_vram_mib"] = min_vram
+        if vram and vram < min_vram:
+            info["ready"] = False
+            info["reason"] = (
+                f"官方建议显存 ≥{max(1, min_vram // 1024)}GB；本机约 {vram / 1024:.1f}GB。"
+                "与 TRELLIS v1 分目录不冲突，但本机暂不宜启用。"
+            )
+        elif not marker.is_file():
+            info["reason"] = (
+                "未安装。需 ≥24GB 显存的独立环境："
+                "python scripts/setup_image_to_3d.py --engine trellis2"
+            )
+    return info
 
 
 def all_engines_status() -> Dict[str, Any]:
     items = {k: engine_ready(k) for k in _ENGINES}
     any_ready = any(v["ready"] for v in items.values())
     return {"engines": items, "any_ready": any_ready, "worker": str(_WORKER)}
+
+
+def _normalize_engine_key(raw: str) -> str:
+    k = str(raw or "").strip().lower().replace("-", "_")
+    k = k.replace(".", "")
+    if k in ("hunyuan", "hy3d"):
+        return "hunyuan3d"
+    if k in ("trellis_2", "trellis2", "trellisv2"):
+        return "trellis2"
+    return k
 
 
 def _parse_engines(raw: str) -> List[str]:
@@ -166,18 +224,14 @@ def _parse_engines(raw: str) -> List[str]:
             arr = json.loads(text)
             if isinstance(arr, list):
                 for x in arr:
-                    k = str(x or "").strip().lower().replace("-", "_")
-                    if k in ("hunyuan", "hy3d"):
-                        k = "hunyuan3d"
+                    k = _normalize_engine_key(x)
                     if k in _ENGINES and k not in out:
                         out.append(k)
         except Exception:
             pass
     if not out:
         for part in text.replace(";", ",").split(","):
-            k = part.strip().lower().replace("-", "_")
-            if k in ("hunyuan", "hy3d"):
-                k = "hunyuan3d"
+            k = _normalize_engine_key(part)
             if k in _ENGINES and k not in out:
                 out.append(k)
     if not out:
@@ -271,6 +325,18 @@ class ImageTo3dAPI:
             if not s or "it/s]" in s or "UserWarning" in s or "FutureWarning" in s:
                 continue
             if "_torch_pytree" in s or "deprecated" in s.lower():
+                continue
+            # Windows 无官方 triton：xformers 探测失败的 Traceback 可忽略
+            low = s.lower()
+            if "no module named 'triton'" in low or "no module named \"triton\"" in low:
+                continue
+            if "a matching triton is not available" in low:
+                continue
+            if s.startswith("File \"") and "xformers" in s.replace("\\", "/"):
+                continue
+            if s.startswith("Traceback (most recent call last)"):
+                continue
+            if s.startswith("^^^^^") or s.startswith("~~~"):
                 continue
             self._log(task, s)
         await proc.wait()
@@ -385,8 +451,8 @@ class ImageTo3dAPI:
                     {"id": "high", "label": "高模", "hint": "引擎原始面数，文件更大"},
                 ],
                 "hint": (
-                    "图生 3D 多引擎对比：TripoSR（快）/ Hunyuan3D（均衡）/ TRELLIS（质量）。"
-                    "可多选依次生成；面数建议选「游戏低模」。未就绪请运行 scripts/setup_image_to_3d.py"
+                    "图生 3D：TripoSR（快）/ Hunyuan3D / TRELLIS v1 / TRELLIS.2（需≥24GB，与 v1 分目录）。"
+                    "可多选依次对比。未就绪请运行 scripts/setup_image_to_3d.py"
                 ),
                 **st,
             }

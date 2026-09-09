@@ -49,11 +49,13 @@ def _ensure_engine_path(engine: str) -> Path:
         "triposr": "TRIPOSR_ROOT",
         "hunyuan3d": "HUNYUAN3D_ROOT",
         "trellis": "TRELLIS_ROOT",
+        "trellis2": "TRELLIS2_ROOT",
     }[engine]
     defaults = {
         "triposr": r"D:\sd\triposr",
         "hunyuan3d": r"D:\sd\hunyuan3d",
         "trellis": r"D:\sd\trellis",
+        "trellis2": r"D:\sd\trellis2",
     }
     root = Path(os.environ.get(env_key, defaults[engine])).resolve()
     s = str(root)
@@ -524,6 +526,7 @@ def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         os.environ["HF_HUB_OFFLINE"] = "1"
         # 从本地目录加载，避免把 ckpts/xxx 误解析成独立 Hub repo
         try:
+            print("trellis: 正在装载 Pipeline 到 GPU（约 1–3 分钟可能无新日志，属正常；Triton 警告可忽略）…", flush=True)
             pipe = TrellisImageTo3DPipeline.from_pretrained(str(local))
         except Exception as e:
             raise _friendly_trellis_err(
@@ -537,6 +540,7 @@ def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         )
         os.environ.pop("HF_HUB_OFFLINE", None)
         try:
+            print("trellis: 正在装载 Pipeline 到 GPU（约 1–3 分钟可能无新日志，属正常）…", flush=True)
             pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
         except Exception as e:
             raise RuntimeError(
@@ -544,6 +548,7 @@ def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
                 "请联网后运行：python scripts/setup_image_to_3d.py --engine trellis"
                 f"（或 huggingface-cli download microsoft/TRELLIS-image-large）。原因：{e}"
             ) from e
+    print("trellis: 权重已加载，开始推理…", flush=True)
     pipe.cuda()
     from PIL import Image
 
@@ -579,12 +584,92 @@ def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
     return _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
 
 
+def _run_trellis2(image: Path, out_dir: Path, seed: int, detail: str = "game") -> Path:
+    """TRELLIS.2：与 v1 分目录（D:\\sd\\trellis2）。官方建议 ≥24GB 显存。"""
+    cfg = _detail_cfg(detail)
+    root = _ensure_engine_path("trellis2")
+    try:
+        import torch
+    except Exception as e:
+        raise RuntimeError(f"TRELLIS.2 需要 torch：{e}") from e
+    if torch.cuda.is_available():
+        total = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+        if total < 22:
+            raise RuntimeError(
+                f"TRELLIS.2 官方要求约 ≥24GB 显存；本机约 {total:.1f}GB。"
+                "请继续用 TRELLIS v1，或换更大显存的机器。"
+            )
+    try:
+        from trellis2.pipelines import Trellis2ImageTo3DPipeline
+    except Exception as e:
+        raise RuntimeError(
+            f"TRELLIS.2 未安装/导入失败：{e}。"
+            "请在 ≥24GB 显存机器上运行：python scripts/setup_image_to_3d.py --engine trellis2"
+            f"（目录 {root}）"
+        ) from e
+
+    os.environ.setdefault("ATTN_BACKEND", "xformers")
+    os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+    print("trellis2: 加载 microsoft/TRELLIS.2-4B（首次会很大）…", flush=True)
+    pipe = Trellis2ImageTo3DPipeline.from_pretrained("microsoft/TRELLIS.2-4B")
+    pipe.cuda()
+    from PIL import Image
+
+    img = Image.open(image).convert("RGBA")
+    print("trellis2: 开始推理…", flush=True)
+    # API 随版本可能略有差异：优先 run，再试常见别名
+    try:
+        out = pipe.run(img, seed=seed if seed >= 0 else 1)
+    except TypeError:
+        out = pipe.run(img)
+    mesh_obj = out[0] if isinstance(out, (list, tuple)) else out
+    mesh_path = out_dir / "mesh.glb"
+    exported = False
+    try:
+        import o_voxel
+
+        if hasattr(mesh_obj, "simplify"):
+            try:
+                mesh_obj.simplify(16_777_216)
+            except Exception:
+                pass
+        glb = o_voxel.postprocess.to_glb(
+            vertices=mesh_obj.vertices,
+            faces=mesh_obj.faces,
+            attr_volume=getattr(mesh_obj, "attrs", None),
+            coords=getattr(mesh_obj, "coords", None),
+            attr_layout=getattr(mesh_obj, "layout", None),
+            voxel_size=getattr(mesh_obj, "voxel_size", None),
+            aabb=[[-0.5, -0.5, -0.5], [0.5, 0.5, 0.5]],
+            decimation_target=int(cfg["target_faces"] or 100000) if cfg["target_faces"] else 100000,
+            texture_size=1024,
+            remesh=True,
+            verbose=True,
+        )
+        glb.export(str(mesh_path))
+        exported = True
+    except Exception as e:
+        print(f"trellis2 o_voxel 导出失败，尝试通用 export：{e}", flush=True)
+    if not exported:
+        if hasattr(mesh_obj, "export"):
+            mesh_obj.export(str(mesh_path))
+        else:
+            raise RuntimeError("TRELLIS.2 未能导出 mesh.glb")
+    if cfg["target_faces"]:
+        return _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
+    return mesh_path
+
+
 def main() -> int:
     for k in ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"):
         os.environ.pop(k, None)
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--engine", required=True, choices=("triposr", "hunyuan3d", "trellis"))
+    ap.add_argument(
+        "--engine",
+        required=True,
+        choices=("triposr", "hunyuan3d", "trellis", "trellis2"),
+    )
     ap.add_argument("--image", required=True)
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--seed", type=int, default=-1)
@@ -609,6 +694,8 @@ def main() -> int:
             mesh = _run_triposr(image, out_dir, args.seed, detail)
         elif args.engine == "hunyuan3d":
             mesh = _run_hunyuan(image, out_dir, args.seed, detail)
+        elif args.engine == "trellis2":
+            mesh = _run_trellis2(image, out_dir, args.seed, detail)
         else:
             mesh = _run_trellis(image, out_dir, args.seed, detail)
     except Exception as e:

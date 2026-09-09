@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Install Image-to-3D engine roots under D:\\sd\\{triposr,hunyuan3d,trellis}.
+Install Image-to-3D engine roots under D:\\sd\\{triposr,hunyuan3d,trellis,trellis2}.
 
 Usage:
   python setup_image_to_3d.py --engine triposr
   python setup_image_to_3d.py --engine hunyuan3d
   python setup_image_to_3d.py --engine trellis
+  python setup_image_to_3d.py --engine trellis2
   python setup_image_to_3d.py --engine all
 """
 from __future__ import annotations
@@ -23,12 +24,14 @@ ROOTS = {
     "triposr": Path(os.environ.get("TRIPOSR_ROOT", r"D:\sd\triposr")),
     "hunyuan3d": Path(os.environ.get("HUNYUAN3D_ROOT", r"D:\sd\hunyuan3d")),
     "trellis": Path(os.environ.get("TRELLIS_ROOT", r"D:\sd\trellis")),
+    "trellis2": Path(os.environ.get("TRELLIS2_ROOT", r"D:\sd\trellis2")),
 }
 
 REPOS = {
     "triposr": "https://github.com/VAST-AI-Research/TripoSR.git",
     "hunyuan3d": "https://github.com/Tencent-Hunyuan/Hunyuan3D-2.git",
     "trellis": "https://github.com/microsoft/TRELLIS.git",
+    "trellis2": "https://github.com/microsoft/TRELLIS.2.git",
 }
 
 
@@ -296,9 +299,77 @@ def setup_trellis(root: Path) -> None:
     print("[done] trellis", flush=True)
 
 
+def _gpu_vram_mib() -> int:
+    try:
+        out = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=memory.total", "--format=csv,noheader,nounits"],
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=8,
+        )
+        return int(float(out.strip().splitlines()[0].strip()))
+    except Exception:
+        return 0
+
+
+def setup_trellis2(root: Path) -> None:
+    """TRELLIS.2 与 v1 分目录；官方要求 ≥24GB。16GB 卡只克隆说明，不写 .tbc_ready。"""
+    vram = _gpu_vram_mib()
+    print(f"[info] 检测到显存约 {vram} MiB（TRELLIS.2 官方 ≥24GB / 22000MiB）", flush=True)
+    if vram and vram < 22000:
+        print(
+            "[skip] 本机显存不足，不安装 TRELLIS.2（避免白装依赖后推理 OOM）。"
+            "与 v1（D:\\sd\\trellis）不冲突；换 ≥24GB 卡后再跑本命令。",
+            flush=True,
+        )
+        marker = root / ".tbc_ready"
+        if marker.is_file():
+            marker.unlink()
+        root.mkdir(parents=True, exist_ok=True)
+        (root / "README.tbc.txt").write_text(
+            "TRELLIS.2 needs >=24GB VRAM. This PC was below that at setup time.\n"
+            "Repo: https://github.com/microsoft/TRELLIS.2\n"
+            "Keep using TRELLIS v1 at D:\\sd\\trellis.\n",
+            encoding="utf-8",
+        )
+        return
+    _clone_if_needed("trellis2", root)
+    # 官方 setup.sh 面向 Linux；Windows 需自行按 README 装 conda/依赖后再验 import
+    print(
+        "[warn] TRELLIS.2 官方安装脚本以 Linux 为主。"
+        "请按 https://github.com/microsoft/TRELLIS.2 README 在独立环境装好后，"
+        f"确认能 import trellis2，再手动写入 {root / '.tbc_ready'}",
+        flush=True,
+    )
+    py = _ensure_venv(root)
+    _ensure_mesh_simplify(py)
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    try:
+        subprocess.check_call(
+            [
+                str(py),
+                "-c",
+                "import sys; sys.path.insert(0, r'%s'); from trellis2.pipelines import Trellis2ImageTo3DPipeline"
+                % str(root),
+            ],
+            env=env,
+        )
+    except subprocess.CalledProcessError:
+        print("[fail] trellis2 import 失败，未写入 .tbc_ready", flush=True)
+        raise SystemExit(1)
+    (root / ".tbc_ready").write_text("trellis2\n", encoding="utf-8")
+    print("[done] trellis2", flush=True)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--engine", default="triposr", choices=("triposr", "hunyuan3d", "trellis", "all"))
+    ap.add_argument(
+        "--engine",
+        default="triposr",
+        choices=("triposr", "hunyuan3d", "trellis", "trellis2", "all"),
+    )
     args = ap.parse_args()
     engines = list(ROOTS.keys()) if args.engine == "all" else [args.engine]
     for eng in engines:
@@ -308,6 +379,8 @@ def main() -> int:
             setup_triposr(root)
         elif eng == "hunyuan3d":
             setup_hunyuan(root)
+        elif eng == "trellis2":
+            setup_trellis2(root)
         else:
             setup_trellis(root)
     return 0

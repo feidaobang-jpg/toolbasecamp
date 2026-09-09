@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function buildEngineChecks(meta, preferred) {
     engineChecks.innerHTML = '';
     var keys = Object.keys(meta || {});
-    if (!keys.length) keys = ['triposr', 'hunyuan3d', 'trellis'];
+    if (!keys.length) keys = ['triposr', 'hunyuan3d', 'trellis', 'trellis2'];
     var pref = preferred && preferred.length ? preferred : ['triposr'];
     keys.forEach(function (k) {
       var st = (meta && meta[k]) || {};
@@ -637,12 +637,18 @@ document.addEventListener('DOMContentLoaded', function () {
       var cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.value = k;
-      cb.checked = pref.indexOf(k) >= 0;
+      cb.checked = pref.indexOf(k) >= 0 && !!st.ready;
+      if (!st.ready) cb.disabled = true;
       var span = document.createElement('span');
-      span.textContent =
-        (st.label || k) +
-        (st.ready ? '' : ' · ' + tr('privateHub.homePc.i23dNotReady', '未就绪'));
+      var extra = '';
+      if (!st.ready) {
+        extra = st.reason
+          ? ' · ' + st.reason
+          : ' · ' + tr('privateHub.homePc.i23dNotReady', '未就绪');
+      }
+      span.textContent = (st.label || k) + extra;
       if (!st.ready) span.style.opacity = '0.65';
+      if (st.reason) label.title = st.reason;
       label.appendChild(cb);
       label.appendChild(span);
       engineChecks.appendChild(label);
