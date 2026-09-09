@@ -216,6 +216,18 @@ _ASPECT_I2V = {
     "9_16": (480, 832),
 }
 
+# Wan 2.2 14B 文生（LightX2V 4 步）：降分辨率，避免近 50 分钟
+_ASPECT_WAN_T2V = {
+    "16_9": (704, 400),
+    "9_16": (400, 704),
+}
+
+# MiniMax H3 文生（Turbo 8 · CLIP@CPU）
+_ASPECT_H3 = {
+    "16_9": (704, 400),
+    "9_16": (400, 704),
+}
+
 # LTX-2.5 T2V（latent 会再 /2 后上采样，给稍大画布）
 _ASPECT_LTX = {
     "16_9": (768, 432),
@@ -228,10 +240,9 @@ _ASPECT_VIDEO = {
 }
 
 _VIDEO_ENGINES = {
-    "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "needs_image": True},
-    "wan22_t2v_5b": {"label": "Wan 2.2 5B 文生视频", "needs_image": False},
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
-    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "needs_image": False},
+    "minimax_h3_t2v": {"label": "MiniMax H3 文生视频（Turbo·直出音频）", "needs_image": False},
+    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8·LightX2V）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},
@@ -241,14 +252,17 @@ _VIDEO_ENGINES = {
 
 def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
+    # 已下线的 Wan 5B → 映射到现有引擎
     if m in ("wan22_5b", "wan2.2_5b", "wan22_ti2v", "wan22_ti2v_5b", "ti2v_5b", "wan5b"):
-        return "wan22_5b"
+        return "wan22_14b_gguf"
     if m in ("wan22_t2v_5b", "wan5b_t2v", "ti2v_5b_t2v", "wan2.2_5b_t2v"):
-        return "wan22_t2v_5b"
+        return "minimax_h3_t2v"
     if m in ("i2v", "wan", "wan22", "wan22_14b", "wan22_14b_gguf", "wan2.2_14b"):
         return "wan22_14b_gguf"
     if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
         return "wan22_t2v_14b"
+    if m in ("minimax_h3_t2v", "minimax_h3", "minimaxh3", "h3", "h3_t2v"):
+        return "minimax_h3_t2v"
     if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):
         return "ltx25_i2v"
     if m in ("ltx_t2v", "ltx25_t2v", "ltx2.5_t2v"):
@@ -259,7 +273,7 @@ def _normalize_video_engine(raw: str) -> str:
         return "seedance_25"
     if m in _VIDEO_ENGINES:
         return m
-    return "wan22_5b"
+    return "wan22_14b_gguf"
 
 
 
@@ -290,7 +304,7 @@ def _parse_video_engines(raw_modes=None, raw_single: str = "") -> List[str]:
         if m not in seen:
             seen.add(m)
             out.append(m)
-    return out or ["wan22_5b"]
+    return out or ["wan22_14b_gguf"]
 
 
 def _camera_motion_hint(camera: str) -> str:
@@ -1189,7 +1203,7 @@ class TrailerAPI:
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
             segment_count: str = Form("1"),
-            video_mode: str = Form("wan22_5b"),
+            video_mode: str = Form("wan22_14b_gguf"),
             video_modes: str = Form(""),
             use_global_refs: str = Form("0"),
         ):
@@ -1521,7 +1535,7 @@ class TrailerAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form(""),
-            video_mode: str = Form("wan22_5b"),
+            video_mode: str = Form("wan22_14b_gguf"),
             video_modes: str = Form(""),
             auto_compose: str = Form("0"),
         ):
@@ -2002,7 +2016,7 @@ class TrailerAPI:
         if not shots or not shots_ui:
             raise RuntimeError("缺少分镜或候选图")
 
-        modes = _parse_video_engines(task.get("video_modes"), task.get("video_mode") or "wan22_5b")
+        modes = _parse_video_engines(task.get("video_modes"), task.get("video_mode") or "wan22_14b_gguf")
         task["video_modes"] = modes
         multi = len(modes) > 1
         n_engines = len(modes)
@@ -2126,15 +2140,14 @@ class TrailerAPI:
         ltx_wh = _ASPECT_LTX[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
-        engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["wan22_5b"]
+        engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["wan22_14b_gguf"]
         tts = self.deps["indextts_synthesize"]
         wav_dur = self.deps["wav_duration_seconds"]
         create_subs = self.deps["create_subtitle_overlays_timed"]
         upload_bytes = self.deps.get("upload_image_bytes")
         build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
-        build_wan_5b = self.deps.get("build_wan22_ti2v_5b_workflow")
-        build_wan_t2v_5b = self.deps.get("build_wan22_t2v_5b_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
+        build_h3_t2v = self.deps.get("build_minimax_h3_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
@@ -2144,15 +2157,9 @@ class TrailerAPI:
             and callable(build_wan_14b)
             and callable(run_video)
         )
-        use_wan_5b = (
-            mode == "wan22_5b"
-            and callable(upload_bytes)
-            and callable(build_wan_5b)
-            and callable(run_video)
-        )
-        use_wan = use_wan_14b or use_wan_5b
-        use_wan_t2v_5b = mode == "wan22_t2v_5b" and callable(build_wan_t2v_5b) and callable(run_video)
+        use_wan = use_wan_14b
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
+        use_h3_t2v = mode == "minimax_h3_t2v" and callable(build_h3_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v"
             and callable(upload_bytes)
@@ -2160,8 +2167,9 @@ class TrailerAPI:
             and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_wan or use_wan_t2v_5b or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
-        use_tts = use_wan or use_wan_t2v_5b or use_wan_t2v or mode == "kenburns" or not use_comfy_video
+        use_comfy_video = use_wan or use_wan_t2v or use_h3_t2v or use_ltx_i2v or use_ltx_t2v
+        # Wan 需 IndexTTS；H3/LTX 直出音轨
+        use_tts = use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
 
         image_paths: List[Path] = []
         video_clip_paths: List[Path] = []
@@ -2271,53 +2279,36 @@ class TrailerAPI:
                             length=length,
                             fps=24,
                         )
-                    elif use_wan_5b:
-                        length = _length_for_duration(dur)
+                    elif use_h3_t2v:
+                        h3_wh = _ASPECT_H3[aspect]
+                        dur_h3 = min(5.0, float(dur))
                         self._log(
                             task,
-                            f"Wan2.2-5B 图生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                            f"MiniMax H3 文生视频 分镜 {idx + 1}/{n_shots}（{h3_wh[0]}×{h3_wh[1]} · {dur_h3:g}s·Turbo8）",
                         )
-                        comfy_name, _sub = await upload_bytes(
-                            img_path.read_bytes(), name_prefix=f"trailer_wan5b_{idx:02d}_"
-                        )
-                        if not comfy_name:
-                            raise RuntimeError("上传静帧到 ComfyUI 失败")
-                        wf = build_wan_5b(
-                            comfy_name,
-                            motion_i2v,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
-                            length=length,
-                            fps=24,
-                        )
-                    elif use_wan_t2v_5b:
-                        length = _length_for_duration(dur)
-                        self._log(
-                            task,
-                            f"Wan2.2-5B 文生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
-                        )
-                        wf = build_wan_t2v_5b(
+                        wf = build_h3_t2v(
                             motion_t2v,
                             seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
-                            length=length,
+                            width=h3_wh[0],
+                            height=h3_wh[1],
+                            duration_sec=dur_h3,
                             fps=24,
+                            steps=8,
                         )
                     elif use_wan_t2v:
-                        length = _length_for_duration(dur)
+                        wan_t2v_wh = _ASPECT_WAN_T2V[aspect]
+                        length = min(49, _length_for_duration(min(float(dur), 4.0), fps=16))
                         self._log(
                             task,
-                            f"Wan2.2-14B 文生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                            f"Wan2.2-14B 文生视频 LightX4 分镜 {idx + 1}/{n_shots}（{wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",
                         )
                         wf = build_wan_t2v(
                             motion_t2v,
                             seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
+                            width=wan_t2v_wh[0],
+                            height=wan_t2v_wh[1],
                             length=length,
-                            fps=24,
+                            fps=16,
                         )
                     elif use_ltx_i2v:
                         self._log(
@@ -2360,7 +2351,7 @@ class TrailerAPI:
                         vdur = float(VideoFileClip(str(clip_path)).duration)
                     except Exception:
                         vdur = dur
-                    if use_wan or use_wan_t2v_5b or use_wan_t2v:
+                    if use_wan or use_wan_t2v:
                         dur = max(tts_len, min(10.0, max(vdur, planned * 0.85)))
                     else:
                         dur = max(3.0, min(10.0, max(vdur, planned * 0.85)))
@@ -2436,7 +2427,7 @@ class TrailerAPI:
                 create_subs,
                 24,
             )
-            if use_wan or use_wan_t2v_5b or use_wan_t2v or use_tts:
+            if use_wan or use_wan_t2v or use_tts:
                 engine_note = f"{engine_meta['label']}（IndexTTS 旁白）"
             else:
                 engine_note = f"{engine_meta['label']}（保留直出音轨）"
@@ -2551,7 +2542,7 @@ class TrailerAPI:
             "4. 多引擎对比时：trailer_<引擎>_16_9.mp4（或 9_16）可并排比较。\n"
             "5. 视频引擎：Wan 2.2 14B I2V GGUF Q5_K_M / LTX 2.5 / 静帧推镜\n"
             "   需 ComfyUI-GGUF + 双路 UnetLoaderGGUF（HighNoise / LowNoise）。\n"
-            "   API 模板：work-flow/wan22_i2v_14b_gguf.json 、 work-flow/wan22_t2v_14b.json 、 work-flow/ltx25_t2v.json\n"
+            "   API 模板：work-flow/wan22_i2v_14b_gguf.json 、 work-flow/minimax_h3_t2v.json 、 work-flow/wan22_t2v_14b.json 、 work-flow/ltx25_t2v.json\n"
         )
         (task_dir / "README_剪映.txt").write_text(readme, encoding="utf-8")
 

@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function selectedVideoMode() {
     var modes = selectedVideoModes();
-    return modes[0] || 'wan22_5b';
+    return modes[0] || 'wan22_14b_gguf';
   }
 
   function selectedVideoModes() {
@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
     Array.prototype.forEach.call(nodes, function (el) {
       if (el && el.value) out.push(el.value);
     });
-    return out.length ? out : ['wan22_5b'];
+    return out.length ? out : ['wan22_14b_gguf'];
   }
 
   function appendVideoModes(fd) {

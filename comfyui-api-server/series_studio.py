@@ -310,7 +310,7 @@ class SeriesDB:
                   voice TEXT NOT NULL DEFAULT 'zh-CN-YunxiNeural',
                   speed REAL NOT NULL DEFAULT 1.0,
                   shot_duration_sec REAL NOT NULL DEFAULT 5.0,
-                  video_mode TEXT NOT NULL DEFAULT 'wan22_5b',
+                  video_mode TEXT NOT NULL DEFAULT 'wan22_14b_gguf',
                   episode_count INTEGER NOT NULL DEFAULT 1,
                   scenes_per_ep INTEGER NOT NULL DEFAULT 1,
                   shots_per_scene INTEGER NOT NULL DEFAULT 1,
@@ -1422,7 +1422,7 @@ class SeriesStudioAPI:
         aspect = _normalize_aspect(row["aspect"])
         w, h = _ASPECT_SIZES[aspect]
         style = _style_meta(row["visual_style"])
-        mode = _normalize_video_engine(row["video_mode"] or "wan22_5b")
+        mode = _normalize_video_engine(row["video_mode"] or "wan22_14b_gguf")
         dur = _clamp_shot_duration(row["duration_sec"] or 5)
         bible = {}
         try:
@@ -1457,9 +1457,8 @@ class SeriesStudioAPI:
         no_text = self.deps.get("image_no_text_prefix") or ""
         upload_bytes = self.deps.get("upload_image_bytes")
         build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
-        build_wan_5b = self.deps.get("build_wan22_ti2v_5b_workflow")
-        build_wan_t2v_5b = self.deps.get("build_wan22_t2v_5b_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
+        build_h3_t2v = self.deps.get("build_minimax_h3_t2v_workflow")
         build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
         build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
@@ -1474,23 +1473,17 @@ class SeriesStudioAPI:
             and callable(build_wan_14b)
             and callable(run_video)
         )
-        use_wan_5b = (
-            mode == "wan22_5b"
-            and callable(upload_bytes)
-            and callable(build_wan_5b)
-            and callable(run_video)
-        )
-        use_wan = use_wan_14b or use_wan_5b
-        use_wan_t2v_5b = mode == "wan22_t2v_5b" and callable(build_wan_t2v_5b) and callable(run_video)
+        use_wan = use_wan_14b
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
+        use_h3_t2v = mode == "minimax_h3_t2v" and callable(build_h3_t2v) and callable(run_video)
         use_ltx_i2v = (
             mode == "ltx25_i2v" and callable(upload_bytes) and callable(build_ltx_i2v) and callable(run_video)
         )
         use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
         use_seedance = mode == "seedance_25"
-        use_comfy_video = use_wan or use_wan_t2v_5b or use_wan_t2v or use_ltx_i2v or use_ltx_t2v
+        use_comfy_video = use_wan or use_wan_t2v or use_h3_t2v or use_ltx_i2v or use_ltx_t2v
         use_tts = (not use_seedance) and (
-            use_wan or use_wan_t2v_5b or use_wan_t2v or mode == "kenburns" or not use_comfy_video
+            use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
         )
 
         started_at = _utc_now_str()
@@ -1706,53 +1699,40 @@ class SeriesStudioAPI:
                             length=length,
                             fps=24,
                         )
-                    elif use_wan_5b:
-                        length = _length_for_duration(clip_dur)
+                    elif use_h3_t2v:
+                        from trailer_pipeline import _ASPECT_H3, _ASPECT_WAN_T2V
+
+                        h3_wh = _ASPECT_H3.get(aspect) or (704, 400)
+                        dur_h3 = min(5.0, float(clip_dur))
                         self._log(
                             series_id,
-                            f"图生视频 {label}（Wan2.2-5B · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                            f"文生视频 {label}（MiniMax H3 Turbo8 · {h3_wh[0]}×{h3_wh[1]} · {dur_h3:g}s）",
                         )
-                        comfy_name, _sub = await upload_bytes(
-                            img_path.read_bytes(), name_prefix=f"series_wan5b_{series_id}_{shot_no}_"
-                        )
-                        if not comfy_name:
-                            raise RuntimeError("上传静帧失败")
-                        wf = build_wan_5b(
-                            comfy_name,
-                            motion_i2v,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
-                            length=length,
-                            fps=24,
-                        )
-                    elif use_wan_t2v_5b:
-                        length = _length_for_duration(clip_dur)
-                        self._log(
-                            series_id,
-                            f"文生视频 {label}（Wan2.2-5B · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
-                        )
-                        wf = build_wan_t2v_5b(
+                        wf = build_h3_t2v(
                             motion_t2v,
                             seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
-                            length=length,
+                            width=h3_wh[0],
+                            height=h3_wh[1],
+                            duration_sec=dur_h3,
                             fps=24,
+                            steps=8,
                         )
                     elif use_wan_t2v:
-                        length = _length_for_duration(clip_dur)
+                        from trailer_pipeline import _ASPECT_WAN_T2V
+
+                        wan_t2v_wh = _ASPECT_WAN_T2V.get(aspect) or (704, 400)
+                        length = min(49, _length_for_duration(min(float(clip_dur), 4.0), fps=16))
                         self._log(
                             series_id,
-                            f"文生视频 {label}（Wan2.2-14B · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                            f"文生视频 {label}（Wan2.2-14B LightX4 · {wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",
                         )
                         wf = build_wan_t2v(
                             motion_t2v,
                             seed=random.randint(1, 2_000_000_000),
-                            width=i2v_wh[0],
-                            height=i2v_wh[1],
+                            width=wan_t2v_wh[0],
+                            height=wan_t2v_wh[1],
                             length=length,
-                            fps=24,
+                            fps=16,
                         )
                     elif use_ltx_i2v:
                         self._log(series_id, f"图生视频 {label}（LTX·直出音频）")
@@ -1782,10 +1762,10 @@ class SeriesStudioAPI:
                             fps=24,
                         )
                     vid_bytes = await self._run_video_with_heartbeat(series_id, label, wf)
-                    target = raw_clip if (use_wan or use_wan_t2v_5b or use_wan_t2v) else clip_path
+                    target = raw_clip if (use_wan or use_wan_t2v) else clip_path
                     target.write_bytes(vid_bytes)
                     made_mp4 = True
-                    if use_wan or use_wan_t2v_5b or use_wan_t2v:
+                    if use_wan or use_wan_t2v:
                         try:
                             from moviepy.editor import VideoFileClip
 
@@ -1811,7 +1791,7 @@ class SeriesStudioAPI:
                 await asyncio.to_thread(_pad_or_trim_wav, raw_wav, final_wav, clip_dur)
                 audio_rel = self._rel(final_wav)
 
-            if made_mp4 and (use_wan or use_wan_t2v_5b or use_wan_t2v):
+            if made_mp4 and (use_wan or use_wan_t2v):
                 await asyncio.to_thread(
                     _compose_clips_with_audio_sync,
                     [raw_clip],
@@ -2181,7 +2161,7 @@ class SeriesStudioAPI:
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
             shot_duration: str = Form("5"),
-            video_mode: str = Form("wan22_5b"),
+            video_mode: str = Form("wan22_14b_gguf"),
             episode_count: str = Form("1"),
             scenes_per_ep: str = Form("1"),
             shots_per_scene: str = Form("1"),

@@ -32,20 +32,32 @@ from output_layout import (
 _VIDEO_CLIP_TASKS: Dict[str, dict] = {}
 
 _T2V_ENGINES = {
-    "wan22_t2v_5b": {"label": "Wan 2.2 5B 文生视频", "workflow": "wan22_t2v_5b.json"},
-    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8）", "workflow": "wan22_t2v_14b.json"},
+    "minimax_h3_t2v": {
+        "label": "MiniMax H3 文生视频（Turbo 8 步·直出音频）",
+        "workflow": "minimax_h3_t2v.json",
+    },
+    "wan22_t2v_14b": {
+        "label": "Wan 2.2 14B 文生视频（fp8 + LightX2V 4 步）",
+        "workflow": "wan22_t2v_14b.json",
+    },
     "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
 }
 
 _I2V_ENGINES = {
-    "wan22_5b": {"label": "Wan 2.2 5B 图生视频", "workflow": "wan22_ti2v_5b.json"},
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "workflow": "wan22_i2v"},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频（直出音频）", "workflow": "ltx25_i2v.json"},
 }
 
 _ASPECT_WAN = {
-    "16_9": (832, 480),
-    "9_16": (480, 832),
+    # 16GB + LightX2V：略降分辨率，显著缩短 14B 耗时（原 832×480 易跑到接近 1 小时）
+    "16_9": (704, 400),
+    "9_16": (400, 704),
+}
+
+_ASPECT_H3 = {
+    # 16GB：INT8 权重约 19GB，配合 CLIP 放 CPU；约 0.28MP，比 864×480 更稳更快
+    "16_9": (704, 400),
+    "9_16": (400, 704),
 }
 
 _ASPECT_LTX = {
@@ -96,18 +108,24 @@ def _normalize_aspect(raw: str) -> str:
 
 
 def _normalize_engine(raw: str, kind: str) -> Optional[str]:
-    m = (raw or "").strip().lower().replace("-", "_")
+    m = (raw or "").strip().lower().replace("-", "_").replace(".", "")
     table = _T2V_ENGINES if kind == "t2v" else _I2V_ENGINES
     aliases = {
-        "wan22_t2v_5b": "wan22_t2v_5b",
-        "wan5b_t2v": "wan22_t2v_5b",
+        "minimax_h3_t2v": "minimax_h3_t2v",
+        "minimax_h3": "minimax_h3_t2v",
+        "minimaxh3": "minimax_h3_t2v",
+        "h3": "minimax_h3_t2v",
+        "h3_t2v": "minimax_h3_t2v",
+        # 已下线的 5B：旧勾选映射到现默认引擎
+        "wan22_t2v_5b": "minimax_h3_t2v" if kind == "t2v" else None,
+        "wan5b_t2v": "minimax_h3_t2v",
         "wan22_t2v_14b": "wan22_t2v_14b",
         "wan22_t2v": "wan22_t2v_14b",
         "ltx25_t2v": "ltx25_t2v",
         "ltx_t2v": "ltx25_t2v",
-        "wan22_5b": "wan22_5b",
-        "wan5b": "wan22_5b",
-        "wan22_ti2v_5b": "wan22_5b",
+        "wan22_5b": "wan22_14b_gguf",
+        "wan5b": "wan22_14b_gguf",
+        "wan22_ti2v_5b": "wan22_14b_gguf",
         "wan22_14b_gguf": "wan22_14b_gguf",
         "wan22_14b": "wan22_14b_gguf",
         "i2v": "wan22_14b_gguf",
@@ -116,6 +134,8 @@ def _normalize_engine(raw: str, kind: str) -> Optional[str]:
         "ltx": "ltx25_i2v" if kind == "i2v" else "ltx25_t2v",
     }
     key = aliases.get(m, m)
+    if not key:
+        return None
     return key if key in table else None
 
 
@@ -147,7 +167,7 @@ def _parse_engines(raw_modes, raw_single: str, kind: str) -> List[str]:
             out.append(m)
     if out:
         return out
-    return ["wan22_t2v_5b"] if kind == "t2v" else ["wan22_5b"]
+    return ["minimax_h3_t2v"] if kind == "t2v" else ["wan22_14b_gguf"]
 
 
 def _clamp_duration(raw) -> float:
@@ -301,28 +321,33 @@ class VideoClipAPI:
         prompt_s = (prompt or "").strip()
 
         if kind == "t2v":
-            if mode == "wan22_t2v_5b":
-                wf = self.deps["build_wan22_t2v_5b_workflow"](
+            if mode == "minimax_h3_t2v":
+                h3_wh = _ASPECT_H3[aspect]
+                # 16GB：时长封顶约 5s，配合 Turbo 8 步
+                dur = min(5.0, float(duration_sec))
+                wf = self.deps["build_minimax_h3_t2v_workflow"](
                     prompt_s,
-                    negative_text=neg,
                     seed=seed_i,
-                    width=wan_wh[0],
-                    height=wan_wh[1],
-                    length=length,
+                    width=h3_wh[0],
+                    height=h3_wh[1],
+                    duration_sec=dur,
                     fps=24,
+                    steps=8,
                 )
-                note = f"Wan2.2-5B T2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+                note = f"MiniMax H3 T2V Turbo8 · {h3_wh[0]}×{h3_wh[1]} · {dur:g}s"
             elif mode == "wan22_t2v_14b":
+                # LightX2V 4 步 + 704×400；帧数封顶 49（~3s@16fps），避免再跑近 50 分钟
+                length_14 = min(49, _length_for_duration(min(4.0, float(duration_sec)), fps=16))
                 wf = self.deps["build_wan22_t2v_workflow"](
                     prompt_s,
                     negative_text=neg,
                     seed=seed_i,
                     width=wan_wh[0],
                     height=wan_wh[1],
-                    length=length,
-                    fps=24,
+                    length=length_14,
+                    fps=16,
                 )
-                note = f"Wan2.2-14B T2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+                note = f"Wan2.2-14B T2V LightX4 · {wan_wh[0]}×{wan_wh[1]} · {length_14}帧@16fps"
             else:
                 wf = self.deps["build_ltx25_t2v_workflow"](
                     prompt_s,
@@ -343,19 +368,7 @@ class VideoClipAPI:
             if prompt_s
             else "Use the provided start image as frame 1. Subtle cinematic motion."
         )
-        if mode == "wan22_5b":
-            wf = self.deps["build_wan22_ti2v_5b_workflow"](
-                comfy_image,
-                motion,
-                negative_text=neg,
-                seed=seed_i,
-                width=wan_wh[0],
-                height=wan_wh[1],
-                length=length,
-                fps=24,
-            )
-            note = f"Wan2.2-5B I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
-        elif mode == "wan22_14b_gguf":
+        if mode == "wan22_14b_gguf":
             wf = self.deps["build_wan22_ti2v_workflow"](
                 comfy_image,
                 motion,
@@ -529,15 +542,21 @@ class VideoClipAPI:
                 "success": True,
                 "kind": k,
                 "engines": {mid: meta["label"] for mid, meta in engines.items()},
-                "default_engine": "wan22_t2v_5b" if k == "t2v" else "wan22_5b",
+                "default_engine": "minimax_h3_t2v" if k == "t2v" else "wan22_14b_gguf",
                 "aspects": {"16_9": "横屏 16:9", "9_16": "竖屏 9:16"},
                 "duration_min": 3,
                 "duration_max": 10,
                 "duration_default": 5,
                 "workflows": {
-                    "t2v": "wan22_t2v_5b.json / wan22_t2v_14b.json / ltx25_t2v.json",
-                    "i2v": "wan22_ti2v_5b.json / Wan 14B GGUF I2V / ltx25_i2v.json",
+                    "t2v": "minimax_h3_t2v.json / wan22_t2v_14b.json（LightX2V 4步）/ ltx25_t2v.json",
+                    "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
                 },
+                "hint": (
+                    "文生视频默认 MiniMax H3（Turbo 8 步·直出音频；CLIP 放 CPU，约 704×400，适配 16GB）。"
+                    "Wan 14B：LightX2V 4 步 + 降分辨率/帧数封顶加速；Wan 5B 已下线。"
+                    if k == "t2v"
+                    else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
+                ),
             }
 
         @app.post("/video-clip/start")

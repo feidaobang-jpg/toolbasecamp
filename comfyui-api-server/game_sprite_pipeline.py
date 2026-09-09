@@ -1,5 +1,5 @@
 """
-游戏图流水线：定妆/三视图 → 选主参考 → Wan 5B I2V 抽帧 → rembg → 对齐 → Godot 包。
+游戏图流水线：定妆/三视图 → 选主参考 → Wan 14B GGUF I2V 抽帧 → rembg → 对齐 → Godot 包。
 """
 from __future__ import annotations
 
@@ -763,10 +763,10 @@ class GameSpriteAPI:
 
     async def _i2v(self, image_bytes: bytes, prompt: str, duration_sec: float) -> bytes:
         upload = self.deps["upload_image_bytes"]
-        build = self.deps["build_wan22_ti2v_5b_workflow"]
+        build = self.deps["build_wan22_ti2v_workflow"]
         run_v = self.deps["run_comfyui_and_get_last_video"]
         fname, _sub = await upload(image_bytes, name_prefix="gs_i2v_")
-        # 16GB 友好：约 480 短边侧视
+        # 16GB：Wan 14B GGUF，短边约 480
         w, h = 640, 480
         length = _length_for_sec(duration_sec, 24)
         wf = build(
@@ -1005,7 +1005,7 @@ class GameSpriteAPI:
         dur = float(task.get("action_duration_sec") or 2.5)
         target_frames = int(task.get("frames_per_action") or 8)
 
-        self._log(task, f"[{action}] Wan 5B I2V…")
+        self._log(task, f"[{action}] Wan 14B GGUF I2V…")
         video_bytes = await self._i2v(ref_bytes, prompt, dur)
         await self._free_vram()
 

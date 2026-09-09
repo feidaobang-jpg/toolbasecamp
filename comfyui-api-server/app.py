@@ -1066,91 +1066,23 @@ def _build_wan22_i2v_14b_gguf_workflow(
 _build_wan22_ti2v_workflow = _build_wan22_i2v_14b_gguf_workflow
 
 
-def _build_wan22_ti2v_5b_workflow(
-    comfy_image_filename: str,
-    prompt_text: str,
-    negative_text: Optional[str] = None,
-    seed: Optional[int] = None,
-    width: int = 832,
-    height: int = 480,
-    length: int = 81,
-    fps: int = 24,
-) -> dict:
-    """Wan 2.2 5B TI2V 图生视频（带首帧）。"""
-    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_ti2v_5b.json")
-    with open(workflow_path, "r", encoding="utf-8") as f:
-        workflow = json.load(f)
-
-    w = _clamp_image_side(int(width), 64, 1280)
-    h = _clamp_image_side(int(height), 64, 1280)
-    length_i = max(17, min(241, int(length)))
-    if (length_i - 1) % 4 != 0:
-        length_i = ((length_i - 1) // 4) * 4 + 1
-
-    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
-    workflow["56"]["inputs"]["image"] = comfy_image_filename
-    workflow["6"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic subtle motion"
-    if negative_text is not None:
-        workflow["7"]["inputs"]["text"] = negative_text
-    workflow["55"]["inputs"]["width"] = w
-    workflow["55"]["inputs"]["height"] = h
-    workflow["55"]["inputs"]["length"] = length_i
-    workflow["3"]["inputs"]["seed"] = seed_i
-    workflow["57"]["inputs"]["fps"] = int(fps)
-    _patch_save_video_inputs(workflow.get("58") or {})
-    return workflow
-
-
-def _build_wan22_t2v_5b_workflow(
-    prompt_text: str,
-    negative_text: Optional[str] = None,
-    seed: Optional[int] = None,
-    width: int = 832,
-    height: int = 480,
-    length: int = 81,
-    fps: int = 24,
-) -> dict:
-    """Wan 2.2 5B 文生视频（同一 TI2V 权重，不接首帧）。"""
-    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_5b.json")
-    with open(workflow_path, "r", encoding="utf-8") as f:
-        workflow = json.load(f)
-
-    w = _clamp_image_side(int(width), 64, 1280)
-    h = _clamp_image_side(int(height), 64, 1280)
-    length_i = max(17, min(241, int(length)))
-    if (length_i - 1) % 4 != 0:
-        length_i = ((length_i - 1) // 4) * 4 + 1
-
-    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
-    workflow["6"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic dynamic motion"
-    if negative_text is not None:
-        workflow["7"]["inputs"]["text"] = negative_text
-    workflow["55"]["inputs"]["width"] = w
-    workflow["55"]["inputs"]["height"] = h
-    workflow["55"]["inputs"]["length"] = length_i
-    workflow["3"]["inputs"]["seed"] = seed_i
-    workflow["57"]["inputs"]["fps"] = int(fps)
-    _patch_save_video_inputs(workflow.get("58") or {})
-    return workflow
-
-
 def _build_wan22_t2v_14b_workflow(
     prompt_text: str,
     negative_text: Optional[str] = None,
     seed: Optional[int] = None,
-    width: int = 832,
-    height: int = 480,
-    length: int = 81,
-    fps: int = 24,
+    width: int = 704,
+    height: int = 400,
+    length: int = 49,
+    fps: int = 16,
 ) -> dict:
-    """Wan 2.2 14B 文生视频（本机 fp8 High/Low Noise，双 KSampler）。"""
+    """Wan 2.2 14B 文生视频（fp8 + LightX2V 4 步；CLIP 放 CPU；默认 704×400 适配 16GB）。"""
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_14b.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
 
     w = _clamp_image_side(int(width), 64, 1280)
     h = _clamp_image_side(int(height), 64, 1280)
-    length_i = max(17, min(241, int(length)))
+    length_i = max(17, min(81, int(length)))
     if (length_i - 1) % 4 != 0:
         length_i = ((length_i - 1) // 4) * 4 + 1
 
@@ -1164,7 +1096,64 @@ def _build_wan22_t2v_14b_workflow(
     workflow["88"]["inputs"]["fps"] = int(fps)
     workflow["81"]["inputs"]["noise_seed"] = seed_i
     workflow["78"]["inputs"]["noise_seed"] = seed_i
+    # CLIP 强制 CPU，给双 UNet 腾显存
+    if "71" in workflow and isinstance(workflow["71"].get("inputs"), dict):
+        workflow["71"]["inputs"]["device"] = "cpu"
     _patch_save_video_inputs(workflow.get("80") or {})
+    return workflow
+
+
+def _h3_snap_length(frames: int) -> int:
+    """MiniMax H3：帧数落到 17k+5 网格（约 24fps）。"""
+    n = max(5, int(frames))
+    # 已是 17k+5
+    if n >= 5 and (n - 5) % 17 == 0:
+        return n
+    # 向上取到下一合法值
+    k = max(0, (n - 5 + 16) // 17)
+    return 17 * k + 5
+
+
+def _build_minimax_h3_t2v_workflow(
+    prompt_text: str,
+    seed: Optional[int] = None,
+    width: int = 704,
+    height: int = 400,
+    duration_sec: float = 3.0,
+    fps: int = 24,
+    steps: int = 8,
+) -> dict:
+    """
+    MiniMax H3 文生视频（本机 pruned INT8 + Turbo 8 步）。
+    16GB 优化：默认 704×400、CLIP 放 CPU、时长封顶约 5s。
+    """
+    workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "minimax_h3_t2v.json")
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    w = _clamp_image_side(int(width), 32, 1280)
+    h = _clamp_image_side(int(height), 32, 1280)
+    # 对齐 32
+    w = max(32, (w // 32) * 32)
+    h = max(32, (h // 32) * 32)
+    length_i = _h3_snap_length(int(round(float(duration_sec) * float(fps))))
+    # 16GB 默认不超过约 5s（124 帧）
+    length_i = min(length_i, 124)
+    steps_i = max(4, min(20, int(steps or 8)))
+    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+
+    # 强制 CLIP 走 CPU，避免与 INT8 UNet 抢 16GB 显存
+    if "3" in workflow and isinstance(workflow["3"].get("inputs"), dict):
+        workflow["3"]["inputs"]["device"] = "cpu"
+
+    workflow["6"]["inputs"]["prompt"] = (prompt_text or "").strip() or "cinematic motion, single continuous shot"
+    workflow["6"]["inputs"]["width"] = w
+    workflow["6"]["inputs"]["height"] = h
+    workflow["6"]["inputs"]["length"] = length_i
+    workflow["9"]["inputs"]["steps"] = steps_i
+    workflow["10"]["inputs"]["noise_seed"] = seed_i
+    workflow["14"]["inputs"]["fps"] = int(fps)
+    _patch_save_video_inputs(workflow.get("15") or {})
     return workflow
 
 
@@ -4582,9 +4571,8 @@ _trailer_api = TrailerAPI(
     build_z_image_workflow=_build_z_image_turbo_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
-    build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
-    build_wan22_t2v_5b_workflow=_build_wan22_t2v_5b_workflow,
     build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
+    build_minimax_h3_t2v_workflow=_build_minimax_h3_t2v_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
@@ -4610,9 +4598,8 @@ _series_studio_api = SeriesStudioAPI(
     build_qwen_img2img_workflow=build_qwen_image_edit_img2img_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
-    build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
-    build_wan22_t2v_5b_workflow=_build_wan22_t2v_5b_workflow,
     build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
+    build_minimax_h3_t2v_workflow=_build_minimax_h3_t2v_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
@@ -4635,7 +4622,7 @@ _game_sprite_api = GameSpriteAPI(
     output_root=_OUTPUT_ROOT,
     build_z_image_workflow=_build_z_image_turbo_workflow,
     run_comfyui_and_get_last_image=_run_comfyui_and_get_last_image,
-    build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
+    build_wan22_ti2v_workflow=_build_wan22_i2v_14b_gguf_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,
     upload_image_bytes=upload_image_bytes,
     build_rembg_workflow=build_rembg_workflow,
@@ -4667,9 +4654,8 @@ from video_clip_pipeline import VideoClipAPI
 _video_clip_api = VideoClipAPI(
     output_root=_OUTPUT_ROOT,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
-    build_wan22_ti2v_5b_workflow=_build_wan22_ti2v_5b_workflow,
-    build_wan22_t2v_5b_workflow=_build_wan22_t2v_5b_workflow,
     build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
+    build_minimax_h3_t2v_workflow=_build_minimax_h3_t2v_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,
     run_comfyui_and_get_last_video=_run_comfyui_and_get_last_video,

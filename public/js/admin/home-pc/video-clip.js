@@ -325,8 +325,8 @@
     if (seedInput) seedInput.value = '';
     if (durationSelect) durationSelect.value = '5';
     setAspect('16_9');
-    if (KIND === 't2v') setModes(['wan22_t2v_5b']);
-    else setModes(['wan22_5b']);
+    if (KIND === 't2v') setModes(['minimax_h3_t2v']);
+    else setModes(['wan22_14b_gguf']);
     setRefFile(null);
     if (logOutput) logOutput.textContent = '';
     if (progressWrap) progressWrap.style.display = 'none';
