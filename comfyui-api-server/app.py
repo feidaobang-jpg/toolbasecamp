@@ -137,7 +137,7 @@ async def health_check():
         "tts_pipeline": "v1_indextts25",
         "music_pipeline": "v1_acestep15",
         "sfx_pipeline": "v2_stable_audio_open",
-        "image_to_3d_pipeline": "v1_triposr_hunyuan_trellis",
+        "image_to_3d_pipeline": "v2_hunyuan3d_only",
     }
 
 

@@ -367,7 +367,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--engine",
-        default="triposr",
+        default="hunyuan3d",
         choices=("triposr", "hunyuan3d", "trellis", "trellis2", "all"),
     )
     args = ap.parse_args()

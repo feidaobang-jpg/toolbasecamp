@@ -1,12 +1,7 @@
 """
-图生 3D：多引擎依次生成便于对比。
+图生 3D：本机默认仅 Hunyuan3D-2（hy3dgen）。
 
-引擎：
-- triposr    快
-- hunyuan3d  均衡
-- trellis    质量（v1）
-- trellis2   TRELLIS.2（官方建议 ≥24GB 显存；与 v1 分目录，不冲突）
-
+其它引擎（TripoSR / TRELLIS）保留代码入口但默认不展示；本机安装目录可删。
 输出：output/mesh3d/{date}_i23d_*/{engine}/mesh.glb
 """
 from __future__ import annotations
@@ -48,23 +43,25 @@ _ENGINE_TIMEOUT_SEC = {
 }
 
 _ENGINES = {
+    "hunyuan3d": {
+        "label": "Hunyuan3D-2",
+        "tier": "balanced",
+        "root_env": "HUNYUAN3D_ROOT",
+        "default_root": Path(r"D:\sd\hunyuan3d"),
+    },
     "triposr": {
         "label": "TripoSR（快）",
         "tier": "fast",
         "root_env": "TRIPOSR_ROOT",
         "default_root": Path(r"D:\sd\triposr"),
-    },
-    "hunyuan3d": {
-        "label": "Hunyuan3D（均衡）",
-        "tier": "balanced",
-        "root_env": "HUNYUAN3D_ROOT",
-        "default_root": Path(r"D:\sd\hunyuan3d"),
+        "ui_hidden": True,
     },
     "trellis": {
         "label": "TRELLIS v1（质量）",
         "tier": "quality",
         "root_env": "TRELLIS_ROOT",
         "default_root": Path(r"D:\sd\trellis"),
+        "ui_hidden": True,
     },
     "trellis2": {
         "label": "TRELLIS.2（高质·≥24GB）",
@@ -72,7 +69,6 @@ _ENGINES = {
         "root_env": "TRELLIS2_ROOT",
         "default_root": Path(r"D:\sd\trellis2"),
         "min_vram_mib": 22000,
-        # 本机常见 ≤16GB：先不在页面展示；代码与 setup 仍保留，换大卡后再开
         "ui_hidden": True,
     },
 }
@@ -246,7 +242,7 @@ def _parse_engines(raw: str) -> List[str]:
             if k in _ENGINES and k not in out:
                 out.append(k)
     if not out:
-        out = ["triposr"]
+        out = ["hunyuan3d"]
     return out
 
 
@@ -400,7 +396,7 @@ class ImageTo3dAPI:
                     await asyncio.gather(pump, return_exceptions=True)
                     raise RuntimeError(
                         f"{engine} 超时（>{timeout_sec // 60} 分钟无完成）。"
-                        "常见原因：装载卡住或显存争用；可只勾 TRELLIS 重试。"
+                        "常见原因：装载卡住或显存争用；请重试或重启家里电脑 API。"
                     )
                 await asyncio.wait({pump}, timeout=1.0)
             await pump
@@ -445,7 +441,7 @@ class ImageTo3dAPI:
             image_path = Path(task.get("image_path") or "")
             if not image_path.is_file():
                 raise RuntimeError("缺少输入图")
-            engines: List[str] = list(task.get("engines") or ["triposr"])
+            engines: List[str] = list(task.get("engines") or ["hunyuan3d"])
             mesh_urls: List[dict] = []
             last = None
             total = len(engines)
@@ -456,7 +452,7 @@ class ImageTo3dAPI:
                     self._log(task, "已取消")
                     return
                 if i > 0:
-                    # 上一引擎子进程刚退，稍等让驱动释放显存，降低 TRELLIS 装载假死概率
+                    # 上一引擎子进程刚退，稍等让驱动释放显存
                     self._log(task, f"等待显存释放后启动 {eng}…")
                     await asyncio.sleep(3.0)
                 task["stage"] = eng
@@ -520,7 +516,7 @@ class ImageTo3dAPI:
                 "success": True,
                 "engines": {k: v["label"] for k, v in _ENGINES.items()},
                 "engine_meta": st["engines"],
-                "default_engines": ["triposr"],
+                "default_engines": ["hunyuan3d"],
                 "default_mesh_detail": "game",
                 "mesh_detail_options": [
                     {"id": "game", "label": "游戏低模", "hint": "约 ≤6k 三角面，适合 Godot/低模"},
@@ -528,8 +524,8 @@ class ImageTo3dAPI:
                     {"id": "high", "label": "高模", "hint": "引擎原始面数，文件更大"},
                 ],
                 "hint": (
-                    "图生 3D：TripoSR（快）/ Hunyuan3D / TRELLIS v1。"
-                    "可多选依次对比。未就绪请运行 scripts/setup_image_to_3d.py"
+                    "图生 3D：本机 Hunyuan3D-2（hy3dgen 2.0.x，权重 hunyuan3d-dit-v2-0）。"
+                    "未就绪请运行 scripts/setup_image_to_3d.py --engine hunyuan3d"
                 ),
                 **st,
             }
@@ -542,7 +538,7 @@ class ImageTo3dAPI:
         @app.post("/image-to-3d/start")
         @app.post("/api/image-to-3d/start")
         async def i23d_start(
-            engines: str = Form("triposr"),
+            engines: str = Form("hunyuan3d"),
             prompt: str = Form(""),
             seed: str = Form("-1"),
             mesh_detail: str = Form("game"),

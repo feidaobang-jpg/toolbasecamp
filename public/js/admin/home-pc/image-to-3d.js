@@ -250,14 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
     fitCamera(root);
   }
 
-  function meshHasVertexColor(root) {
-    var found = false;
-    root.traverse(function (c) {
-      if (c.isMesh && c.geometry && c.geometry.getAttribute('color')) found = true;
-    });
-    return found;
-  }
-
   function meshHasUsefulMaterial(root) {
     var found = false;
     root.traverse(function (c) {
@@ -276,27 +268,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function applyShadeMode(mode) {
     shadeMode = mode || shadeMode;
+    if (shadeMode === 'vertex') shadeMode = 'clay';
     if (viewerShadeBar) {
       Array.prototype.forEach.call(viewerShadeBar.querySelectorAll('.i23d-shade-btn'), function (btn) {
         btn.classList.toggle('is-active', btn.getAttribute('data-shade') === shadeMode);
       });
     }
     if (!currentRoot) return;
-    if (shadeMode === 'vertex' && !meshHasVertexColor(currentRoot)) {
-      alert(tr('privateHub.homePc.i23dShadeNoVertex', '当前模型无顶点色'));
-      shadeMode = 'clay';
-      if (viewerShadeBar) {
-        Array.prototype.forEach.call(viewerShadeBar.querySelectorAll('.i23d-shade-btn'), function (btn) {
-          btn.classList.toggle('is-active', btn.getAttribute('data-shade') === 'clay');
-        });
-      }
-    }
-    if (shadeMode === 'material' && !meshHasUsefulMaterial(currentRoot)) {
-      // 无贴图时仍可切回「原材质」（多为灰白 Standard），不弹窗打断；提示一次即可
-    }
     currentRoot.traverse(function (c) {
       if (!c.isMesh || !c.geometry) return;
-      var hasColor = !!c.geometry.getAttribute('color');
       if (shadeMode === 'material' && c.userData.i23dOrigMat) {
         c.material = c.userData.i23dOrigMat;
         return;
@@ -305,14 +285,6 @@ document.addEventListener('DOMContentLoaded', function () {
         c.material = new THREE.MeshBasicMaterial({
           color: 0x93c5fd,
           wireframe: true,
-          side: THREE.DoubleSide,
-        });
-        return;
-      }
-      if (shadeMode === 'vertex' && hasColor) {
-        c.material = new THREE.MeshBasicMaterial({
-          color: 0xffffff,
-          vertexColors: true,
           side: THREE.DoubleSide,
         });
         return;
@@ -329,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /**
-   * 保存原材质；默认白模预览。顶点色/贴图用工具栏切换。
+   * 保存原材质；默认白模预览。线框/贴图用工具栏切换。
    */
   function prepareMeshRoot(root, urlHint) {
     if (root.userData && root.userData.i23dPrepared) {
@@ -343,13 +315,8 @@ document.addEventListener('DOMContentLoaded', function () {
       c.receiveShadow = false;
     });
     root.userData.i23dPrepared = true;
-    // TripoSR 路径常侧躺：自动选贴地面积最大朝向
-    if (String(urlHint || '').toLowerCase().indexOf('triposr') >= 0) {
-      autoOrientMaxFootprint(root);
-    } else {
-      root.rotation.set(0, 0, 0);
-      orientStep = 0;
-    }
+    root.rotation.set(0, 0, 0);
+    orientStep = 0;
     applyShadeMode(shadeMode);
     return root;
   }
@@ -361,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return b + ' B';
   }
 
-  /** 首屏优先最小 GLB（通常 TripoSR），避免一上来拉 Hunyuan 几十 MB */
+  /** 优先预览当前成功结果（本机默认 Hunyuan3D） */
   function pickPreviewItem(items, preferredUrl) {
     var ok = (items || []).filter(function (x) {
       return x && x.url && !x.error;
@@ -631,8 +598,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var st = (meta && meta[k]) || {};
       return !st.ui_hidden;
     });
-    if (!keys.length) keys = ['triposr', 'hunyuan3d', 'trellis'];
-    var pref = preferred && preferred.length ? preferred : ['triposr'];
+    if (!keys.length) keys = ['hunyuan3d'];
+    var pref = preferred && preferred.length ? preferred : ['hunyuan3d'];
     keys.forEach(function (k) {
       var st = (meta && meta[k]) || {};
       var label = document.createElement('label');
@@ -662,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var res = await fetch(API_BASE_URL + '/image-to-3d/defaults');
     var data = await res.json();
     defaults = data;
-    buildEngineChecks(data.engine_meta || data.engines, data.default_engines || ['triposr']);
+    buildEngineChecks(data.engine_meta || data.engines, data.default_engines || ['hunyuan3d']);
     if (data.hint) {
       var hint = document.getElementById('i23d-hint');
       if (hint) hint.textContent = data.hint;

@@ -67,7 +67,7 @@ alwaysApply: true
 
 - **短片成片后**提供「导出发布物料包」：`publish_pack/` 含成片 mp4、`cover.jpg`、`publish.json`（标题/简介）、`发布说明.txt`。API：`POST /trailer/export-pack`。
 - **TTS** 提供角色音色库（`output/voices/`）：保存参考音、列表选用、删除；生成时可传 `voice_id` 不必每次上传。
-- **图生 3D**：`image-to-3d` 页 + `ImageTo3dAPI`；引擎 TripoSR / Hunyuan3D / TRELLIS **可多选对比**；输出 `output/mesh3d/`；页内 Three.js 预览 GLB；未就绪用 `setup_image_to_3d.py --engine …`。侧栏文案用「图生 3D」，不要叫「流水线」。
+- **图生 3D**：`image-to-3d` 页 + `ImageTo3dAPI`；本机默认 **Hunyuan3D-2**（`hy3dgen`）；输出 `output/mesh3d/`；页内 Three.js 预览 GLB；未就绪用 `setup_image_to_3d.py --engine hunyuan3d`。侧栏文案用「图生 3D」，不要叫「流水线」。
 - **暂不做**：Spine 骨骼、整本小说定时连载、无人值守 n→n 全自动批产、完整 3D 资产库/骨骼动画管线（可作为后续单独立项）。
 
 ## 5. 顶部：本地模型 + 工作流 + 连接状态
