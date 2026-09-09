@@ -39,6 +39,14 @@ _I23D_TASKS: Dict[str, dict] = {}
 
 _WORKER = Path(__file__).resolve().parent / "scripts" / "i23d_worker.py"
 
+# 单引擎子进程硬超时（秒）；超时 kill，避免页面永远卡在 67%
+_ENGINE_TIMEOUT_SEC = {
+    "triposr": 600,
+    "hunyuan3d": 1200,
+    "trellis": 900,
+    "trellis2": 1800,
+}
+
 _ENGINES = {
     "triposr": {
         "label": "TripoSR（快）",
@@ -271,6 +279,53 @@ class ImageTo3dAPI:
         rel = rel_to_root(self.output_root, path)
         return f"/output/{rel}".replace("\\", "/")
 
+    @staticmethod
+    def _kill_worker_proc(proc: asyncio.subprocess.Process | None) -> None:
+        if proc is None or proc.returncode is not None:
+            return
+        pid = proc.pid
+        try:
+            if platform.system() == "Windows" and pid:
+                subprocess.run(
+                    ["taskkill", "/F", "/T", "/PID", str(pid)],
+                    capture_output=True,
+                    timeout=15,
+                )
+            else:
+                proc.kill()
+        except Exception:
+            try:
+                proc.kill()
+            except Exception:
+                pass
+
+    @staticmethod
+    def _should_skip_worker_log(s: str) -> bool:
+        if not s:
+            return True
+        if "it/s]" in s or "UserWarning" in s or "FutureWarning" in s:
+            return True
+        if "_torch_pytree" in s or "deprecated" in s.lower():
+            return True
+        low = s.lower()
+        if "no module named 'triton'" in low or 'no module named "triton"' in low:
+            return True
+        if "a matching triton is not available" in low:
+            return True
+        if "xformers is available" in low:
+            return True
+        if "using cache found in" in low:
+            return True
+        if s.startswith('File "') and "xformers" in s.replace("\\", "/"):
+            return True
+        if s.startswith("Traceback (most recent call last)"):
+            return True
+        if s.startswith("^^^^^") or s.startswith("~~~"):
+            return True
+        if s.startswith("import triton") or s.strip() == "^^^^^^^^^^^^^":
+            return True
+        return False
+
     async def _run_engine(self, *, task: dict, engine: str, image_path: Path) -> dict:
         st = engine_ready(engine)
         if not st["ready"]:
@@ -302,7 +357,8 @@ class ImageTo3dAPI:
                 task,
                 "hunyuan3d：优先使用本地权重；若缺失才会下载（可能较久）…",
             )
-        self._log(task, f"{engine} 启动…")
+        timeout_sec = int(_ENGINE_TIMEOUT_SEC.get(engine) or 900)
+        self._log(task, f"{engine} 启动…（超时 {timeout_sec // 60} 分钟）")
         t0 = time.time()
         proc = await asyncio.create_subprocess_exec(
             *cmd,
@@ -311,40 +367,49 @@ class ImageTo3dAPI:
             stderr=asyncio.subprocess.STDOUT,
             env=env,
         )
+        task["_proc"] = proc
         assert proc.stdout is not None
         lines: List[str] = []
-        while True:
-            raw = await proc.stdout.readline()
-            if not raw:
-                break
-            line = _decode_worker_line(raw)
-            if not line:
-                continue
-            lines.append(line)
-            s = line.strip()
-            if not s or "it/s]" in s or "UserWarning" in s or "FutureWarning" in s:
-                continue
-            if "_torch_pytree" in s or "deprecated" in s.lower():
-                continue
-            # Windows 无官方 triton：xformers 探测失败的 Traceback 可忽略
-            low = s.lower()
-            if "no module named 'triton'" in low or "no module named \"triton\"" in low:
-                continue
-            if "a matching triton is not available" in low:
-                continue
-            if s.startswith("File \"") and "xformers" in s.replace("\\", "/"):
-                continue
-            if s.startswith("Traceback (most recent call last)"):
-                continue
-            if s.startswith("^^^^^") or s.startswith("~~~"):
-                continue
-            self._log(task, s)
-        await proc.wait()
+
+        async def _pump() -> None:
+            while True:
+                raw = await proc.stdout.readline()
+                if not raw:
+                    break
+                line = _decode_worker_line(raw)
+                if not line:
+                    continue
+                lines.append(line)
+                s = line.strip()
+                if self._should_skip_worker_log(s):
+                    continue
+                self._log(task, s)
+
+        pump = asyncio.create_task(_pump())
+        try:
+            while not pump.done():
+                if task.get("cancel"):
+                    self._kill_worker_proc(proc)
+                    await asyncio.gather(pump, return_exceptions=True)
+                    raise RuntimeError(f"{engine} 已取消")
+                if time.time() - t0 > timeout_sec:
+                    self._kill_worker_proc(proc)
+                    await asyncio.gather(pump, return_exceptions=True)
+                    raise RuntimeError(
+                        f"{engine} 超时（>{timeout_sec // 60} 分钟无完成）。"
+                        "常见原因：装载卡住或显存争用；可只勾 TRELLIS 重试。"
+                    )
+                await asyncio.wait({pump}, timeout=1.0)
+            await pump
+            await proc.wait()
+        finally:
+            if task.get("_proc") is proc:
+                task["_proc"] = None
+
         elapsed = round(time.time() - t0, 2)
         if proc.returncode != 0:
-            # 失败时补几行尾部便于排查
             for s in lines[-8:]:
-                if s.strip():
+                if s.strip() and not self._should_skip_worker_log(s.strip()):
                     self._log(task, s.strip())
             raise RuntimeError(f"{engine} 失败 (code={proc.returncode})")
         mesh = eng_dir / "mesh.glb"
@@ -383,9 +448,14 @@ class ImageTo3dAPI:
             total = len(engines)
             for i, eng in enumerate(engines):
                 if task.get("cancel"):
+                    self._kill_worker_proc(task.get("_proc"))
                     task["status"] = "cancelled"
                     self._log(task, "已取消")
                     return
+                if i > 0:
+                    # 上一引擎子进程刚退，稍等让驱动释放显存，降低 TRELLIS 装载假死概率
+                    self._log(task, f"等待显存释放后启动 {eng}…")
+                    await asyncio.sleep(3.0)
                 task["stage"] = eng
                 task["progress"] = {"current": i, "total": total}
                 try:
@@ -393,6 +463,10 @@ class ImageTo3dAPI:
                     mesh_urls.append(item)
                     last = item
                 except Exception as e:
+                    if task.get("cancel"):
+                        task["status"] = "cancelled"
+                        self._log(task, "已取消")
+                        return
                     self._log(task, f"{eng} 错误：{e}")
                     mesh_urls.append(
                         {
@@ -532,7 +606,8 @@ class ImageTo3dAPI:
             if not task:
                 raise HTTPException(status_code=404, detail="任务不存在")
             task["cancel"] = True
-            api._log(task, "收到取消请求…")
+            api._kill_worker_proc(task.get("_proc"))
+            api._log(task, "收到取消请求，已尝试终止子进程…")
             return {"success": True}
 
         @app.get("/image-to-3d/history")

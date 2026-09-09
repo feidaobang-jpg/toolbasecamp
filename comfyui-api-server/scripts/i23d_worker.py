@@ -18,6 +18,8 @@ import argparse
 import json
 import os
 import sys
+import threading
+import time
 from pathlib import Path
 
 # Windows 子进程默认控制台编码会把中文 print 弄成乱码；先钉 UTF-8
@@ -26,6 +28,32 @@ try:
         _s.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 except Exception:
     pass
+
+
+class _Heartbeat:
+    """装载/推理长时间无输出时，定期打日志，避免页面误判卡住。"""
+
+    def __init__(self, label: str, interval: float = 30.0):
+        self.label = label
+        self.interval = max(5.0, float(interval))
+        self._stop = threading.Event()
+        self._thread: threading.Thread | None = None
+        self._t0 = time.time()
+
+    def __enter__(self) -> "_Heartbeat":
+        def _loop() -> None:
+            while not self._stop.wait(self.interval):
+                elapsed = int(time.time() - self._t0)
+                print(f"{self.label} 仍在进行… 已等待 {elapsed}s", flush=True)
+
+        self._thread = threading.Thread(target=_loop, name="i23d-hb", daemon=True)
+        self._thread.start()
+        return self
+
+    def __exit__(self, *args) -> None:
+        self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=1.0)
 
 
 def _hf_snapshot_dir(repo_id: str) -> Path | None:
@@ -526,8 +554,12 @@ def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         os.environ["HF_HUB_OFFLINE"] = "1"
         # 从本地目录加载，避免把 ckpts/xxx 误解析成独立 Hub repo
         try:
-            print("trellis: 正在装载 Pipeline 到 GPU（约 1–3 分钟可能无新日志，属正常；Triton 警告可忽略）…", flush=True)
-            pipe = TrellisImageTo3DPipeline.from_pretrained(str(local))
+            print(
+                "trellis: 正在装载 Pipeline（约 1–3 分钟可能较静默；Triton 警告可忽略）…",
+                flush=True,
+            )
+            with _Heartbeat("trellis: 装载权重", 30.0):
+                pipe = TrellisImageTo3DPipeline.from_pretrained(str(local))
         except Exception as e:
             raise _friendly_trellis_err(
                 e,
@@ -540,21 +572,25 @@ def _run_trellis(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         )
         os.environ.pop("HF_HUB_OFFLINE", None)
         try:
-            print("trellis: 正在装载 Pipeline 到 GPU（约 1–3 分钟可能无新日志，属正常）…", flush=True)
-            pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
+            print("trellis: 正在装载 Pipeline（首次下载会更久）…", flush=True)
+            with _Heartbeat("trellis: 下载/装载权重", 30.0):
+                pipe = TrellisImageTo3DPipeline.from_pretrained("microsoft/TRELLIS-image-large")
         except Exception as e:
             raise RuntimeError(
                 "TRELLIS 权重未下全且无法从 HuggingFace 补齐。"
                 "请联网后运行：python scripts/setup_image_to_3d.py --engine trellis"
                 f"（或 huggingface-cli download microsoft/TRELLIS-image-large）。原因：{e}"
             ) from e
-    print("trellis: 权重已加载，开始推理…", flush=True)
-    pipe.cuda()
+    print("trellis: 权重已加载，迁到 GPU…", flush=True)
+    with _Heartbeat("trellis: cuda()", 20.0):
+        pipe.cuda()
+    print("trellis: 开始推理…", flush=True)
     from PIL import Image
 
     img = Image.open(image).convert("RGBA")
     try:
-        outputs = pipe.run(img, seed=seed if seed >= 0 else 1)
+        with _Heartbeat("trellis: 推理", 30.0):
+            outputs = pipe.run(img, seed=seed if seed >= 0 else 1)
     except Exception as e:
         raise _friendly_trellis_err(e, "TRELLIS 推理失败") from e
     mesh_path = out_dir / "mesh.glb"
@@ -688,7 +724,10 @@ def main() -> int:
         return 2
 
     detail = _normalize_mesh_detail(args.mesh_detail)
-    print(f"i23d engine={args.engine} detail={detail} image={image} out={out_dir}", flush=True)
+    print(
+        f"i23d engine={args.engine} detail={detail} python={sys.executable} image={image} out={out_dir}",
+        flush=True,
+    )
     try:
         if args.engine == "triposr":
             mesh = _run_triposr(image, out_dir, args.seed, detail)
