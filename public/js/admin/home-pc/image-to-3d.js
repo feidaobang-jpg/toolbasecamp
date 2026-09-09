@@ -56,9 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var viewerLoadingEl = document.getElementById('viewer-loading');
   var viewerLoadingText = document.getElementById('viewer-loading-text');
   var viewerShadeBar = document.getElementById('viewer-shade-bar');
-  var viewerOrientBtn = document.getElementById('viewer-orient-btn');
   var shadeMode = 'clay';
-  var orientStep = 0;
 
   function tr(key, fallback) {
     if (typeof window.t === 'function') {
@@ -187,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function fitCamera(object3d) {
-    // 保留 rotation（摆正），重置位移/缩放再适配
     object3d.scale.set(1, 1, 1);
     object3d.position.set(0, 0, 0);
     object3d.updateMatrixWorld(true);
@@ -212,42 +209,6 @@ document.addEventListener('DOMContentLoaded', function () {
     camera.position.set(1.8, 1.4, 2.2);
     camera.updateProjectionMatrix();
     controls.update();
-  }
-
-  /** TripoSR 等常侧躺：在 4 种正交朝向里选「贴地投影面积」最大的（车/物体更稳） */
-  function autoOrientMaxFootprint(root) {
-    var rots = [
-      [0, 0, 0],
-      [-Math.PI / 2, 0, 0],
-      [Math.PI / 2, 0, 0],
-      [0, 0, Math.PI / 2],
-      [0, 0, -Math.PI / 2],
-      [Math.PI, 0, 0],
-    ];
-    var best = rots[0];
-    var bestArea = -1;
-    var i;
-    for (i = 0; i < rots.length; i++) {
-      root.rotation.set(rots[i][0], rots[i][1], rots[i][2]);
-      root.updateMatrixWorld(true);
-      var box = new THREE.Box3().setFromObject(root);
-      var size = box.getSize(new THREE.Vector3());
-      var area = size.x * size.z;
-      if (area > bestArea) {
-        bestArea = area;
-        best = rots[i];
-      }
-    }
-    root.rotation.set(best[0], best[1], best[2]);
-    orientStep = 0;
-  }
-
-  function cycleOrient(root) {
-    if (!root) return;
-    orientStep = (orientStep + 1) % 4;
-    // 绕 X 每次 +90°
-    root.rotation.x += Math.PI / 2;
-    fitCamera(root);
   }
 
   function meshHasUsefulMaterial(root) {
@@ -316,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     root.userData.i23dPrepared = true;
     root.rotation.set(0, 0, 0);
-    orientStep = 0;
     applyShadeMode(shadeMode);
     return root;
   }
@@ -893,12 +853,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var btn = ev.target && ev.target.closest ? ev.target.closest('.i23d-shade-btn') : null;
       if (!btn) return;
       applyShadeMode(btn.getAttribute('data-shade') || 'clay');
-    });
-  }
-  if (viewerOrientBtn) {
-    viewerOrientBtn.addEventListener('click', function () {
-      if (!currentRoot) return;
-      cycleOrient(currentRoot);
     });
   }
   downloadBtn.addEventListener('click', function () {

@@ -649,7 +649,6 @@ window.TB_LOCALES.en = {
             i23dShadeVertex: 'Vertex color',
             i23dShadeWire: 'Wireframe',
             i23dShadeMaterial: 'Material',
-            i23dOrientBtn: 'Upright',
             i23dShadeNoVertex: 'No vertex colors on this mesh',
             i23dShadeNoMaterial: 'No textures/materials (usually untextured export)',
             gameSpriteHint: 'Create a game project first (default top-down) → workflow z_image_turbo.json stills → Wan 2.2 5B (build_wan22_ti2v_5b) I2V action frames → Godot export.',

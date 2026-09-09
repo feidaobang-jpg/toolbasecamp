@@ -648,7 +648,6 @@ window.TB_LOCALES['zh-CN'] = {
             i23dShadeVertex: '顶点色',
             i23dShadeWire: '线框',
             i23dShadeMaterial: '原材质',
-            i23dOrientBtn: '摆正',
             i23dShadeNoVertex: '当前模型无顶点色',
             i23dShadeNoMaterial: '当前模型无贴图/材质（多为白模导出）',
             gameSpriteHint: '先创建游戏项目（默认俯视）→ 工作流 z_image_turbo.json 定妆静帧 → Wan 2.2 5B（build_wan22_ti2v_5b）I2V 抽动作帧 → 导出 Godot。',
