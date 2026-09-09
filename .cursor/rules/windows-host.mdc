@@ -1,0 +1,36 @@
+---
+description: 本机是 Windows 11，脚本与路径必须按 Win 适配
+alwaysApply: true
+---
+
+# 本机环境：Windows 11
+
+用户日常开发/运行环境是 **Windows 11**（PowerShell / `cmd`）。改家里电脑相关代码时必须按 Win 适配，不要按 Linux/macOS 默认假设。
+
+## 必须遵守
+
+1. **`.bat` / `.cmd` 必须是 CRLF 换行**  
+   - 仅 LF 时 `cmd` 会把脚本拆碎（`'n'/'API' 不是内部或外部命令`、`for`/`%~` 报错、双击行为异常）。  
+   - 仓库已有 `.gitattributes`：`*.bat` / `*.cmd` / `*.ps1` → `text eol=crlf`。编辑后若怀疑换行坏了，用工具确认存在 `\r\n`。  
+   - **禁止**把批处理存成 Unix LF 后当「能跑」交差。
+
+2. **路径与命令**  
+   - 示例与脚本优先 `D:\...`、反斜杠或 `pathlib`；不要写死 `/home/...`、`bash`、`chmod +x` 当唯一启动方式。  
+   - 需要 shell 时优先 **PowerShell 或 `cmd /c`**；不要默认 `bash`/`sh` 管道（本机常没有）。
+
+3. **启动家里电脑 API**  
+   - 入口是 `comfyui-api-server\start-server.bat`（双击或 `cmd` 运行）。  
+   - 读环境用同目录 `local.env`（bat 内 `for /f` **读取**，不要 `start`/关联打开 `.env` 文件）。
+
+4. **Python / 子进程**  
+   - 继续遵守 `windows-log-utf8.mdc`（`PYTHONUTF8`、日志 UTF-8）。  
+   - Windows 上注意 venv 路径：`...\Scripts\python.exe`（不是 `bin/python`）。
+
+5. **换行自检（改过 `.bat` 后）**  
+   - 在 `comfyui-api-server` 下 `cmd /c start-server.bat`，应看到正常横幅与 `Checking Python...`，而不是一串「不是内部或外部命令」。
+
+## 禁止
+
+- 只在 WSL/Linux 语义下改启动脚本，导致 Win 双击/cmd 挂掉。  
+- 提交或保存 `.bat` 时把 CRLF 转成 LF。  
+- 假设用户用 `./start-server.sh` 启动家里电脑 API。
