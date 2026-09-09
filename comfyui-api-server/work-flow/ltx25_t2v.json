@@ -339,7 +339,7 @@
     "inputs": {
       "clip_name": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
       "type": "ltxv",
-      "device": "default"
+      "device": "cpu"
     }
   },
   "378": {
@@ -389,7 +389,7 @@
   "360": {
     "class_type": "PrimitiveInt",
     "inputs": {
-      "value": 432
+      "value": 400
     }
   },
   "361": {
@@ -407,7 +407,7 @@
   "372": {
     "class_type": "PrimitiveInt",
     "inputs": {
-      "value": 768
+      "value": 704
     }
   },
   "376": {

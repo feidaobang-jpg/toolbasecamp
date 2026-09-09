@@ -1190,12 +1190,12 @@ def _patch_save_video_inputs(node_or_inputs: dict) -> None:
 def _build_ltx25_t2v_workflow(
     prompt_text: str,
     seed: Optional[int] = None,
-    width: int = 768,
-    height: int = 432,
+    width: int = 704,
+    height: int = 400,
     duration_sec: float = 5,
     fps: int = 24,
 ) -> dict:
-    """LTX-2.5 文生视频（由 user/default/workflows/video_ltx2_5_t2v 子图展开）。"""
+    """LTX-2.5 文生视频（distilled INT8；16GB：704×400、Gemma CLIP@CPU）。"""
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "ltx25_t2v.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
@@ -1212,6 +1212,10 @@ def _build_ltx25_t2v_workflow(
     dur = max(3, min(10, dur))
     fps_i = max(8, min(30, int(fps)))
     seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+
+    # Gemma 文本编码器放 CPU，给 INT8 transformer 腾 16GB 显存
+    if "387" in workflow and isinstance(workflow["387"].get("inputs"), dict):
+        workflow["387"]["inputs"]["device"] = "cpu"
 
     workflow["376"]["inputs"]["value"] = (prompt_text or "").strip() or "cinematic scene, subtle camera motion"
     workflow["362"]["inputs"]["value"] = dur  # duration seconds
