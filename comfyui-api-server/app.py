@@ -1070,12 +1070,16 @@ def _build_wan22_t2v_14b_workflow(
     prompt_text: str,
     negative_text: Optional[str] = None,
     seed: Optional[int] = None,
-    width: int = 640,
-    height: int = 368,
-    length: int = 33,
+    width: int = 512,
+    height: int = 288,
+    length: int = 25,
     fps: int = 16,
+    steps: int = 20,
 ) -> dict:
-    """Wan 2.2 14B 文生视频（fp8 + LightX2V 4 步；CLIP 放 CPU；默认 640×368 适配 16GB）。"""
+    """
+    Wan 2.2 14B 文生视频（fp8，无 LightX2V）。
+    16GB：去掉 LoRA（合并时会 OOM），改 20 步；默认 512×288、CLIP@CPU。
+    """
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_14b.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
@@ -1086,6 +1090,11 @@ def _build_wan22_t2v_14b_workflow(
     if (length_i - 1) % 4 != 0:
         length_i = ((length_i - 1) // 4) * 4 + 1
 
+    steps_i = max(8, min(40, int(steps or 20)))
+    if steps_i % 2:
+        steps_i += 1
+    half = steps_i // 2
+
     seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
     workflow["89"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic dynamic motion"
     if negative_text is not None:
@@ -1094,12 +1103,16 @@ def _build_wan22_t2v_14b_workflow(
     workflow["74"]["inputs"]["height"] = h
     workflow["74"]["inputs"]["length"] = length_i
     workflow["88"]["inputs"]["fps"] = int(fps)
-    workflow["81"]["inputs"]["noise_seed"] = seed_i
-    workflow["78"]["inputs"]["noise_seed"] = seed_i
-    # CLIP 强制 CPU，给双 UNet 腾显存
+    for nid in ("81", "78"):
+        workflow[nid]["inputs"]["noise_seed"] = seed_i
+        workflow[nid]["inputs"]["steps"] = steps_i
+        workflow[nid]["inputs"]["cfg"] = 3.5
+    workflow["81"]["inputs"]["start_at_step"] = 0
+    workflow["81"]["inputs"]["end_at_step"] = half
+    workflow["78"]["inputs"]["start_at_step"] = half
+    workflow["78"]["inputs"]["end_at_step"] = steps_i
     if "71" in workflow and isinstance(workflow["71"].get("inputs"), dict):
         workflow["71"]["inputs"]["device"] = "cpu"
-    # fp8 权重保持低精度加载，减轻 16GB 峰值
     for nid in ("75", "76"):
         if nid in workflow and isinstance(workflow[nid].get("inputs"), dict):
             workflow[nid]["inputs"]["weight_dtype"] = "fp8_e4m3fn"

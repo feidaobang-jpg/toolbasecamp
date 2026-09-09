@@ -218,8 +218,8 @@ _ASPECT_I2V = {
 
 # Wan 2.2 14B 文生（LightX2V 4 步）：降分辨率，避免近 50 分钟
 _ASPECT_WAN_T2V = {
-    "16_9": (640, 368),
-    "9_16": (368, 640),
+    "16_9": (512, 288),
+    "9_16": (288, 512),
 }
 
 # MiniMax H3 文生（Turbo 8 · CLIP@CPU）
@@ -242,7 +242,7 @@ _ASPECT_VIDEO = {
 _VIDEO_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
     "minimax_h3_t2v": {"label": "MiniMax H3 文生视频（Turbo·直出音频）", "needs_image": False},
-    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8·LightX2V）", "needs_image": False},
+    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8·20步·16GB）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},
@@ -2297,10 +2297,10 @@ class TrailerAPI:
                         )
                     elif use_wan_t2v:
                         wan_t2v_wh = _ASPECT_WAN_T2V[aspect]
-                        length = min(33, _length_for_duration(min(float(dur), 3.0), fps=16))
+                        length = min(25, _length_for_duration(min(float(dur), 2.0), fps=16))
                         self._log(
                             task,
-                            f"Wan2.2-14B 文生视频 LightX4 分镜 {idx + 1}/{n_shots}（{wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",
+                            f"Wan2.2-14B 文生视频 20步无LoRA 分镜 {idx + 1}/{n_shots}（{wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",
                         )
                         wf = build_wan_t2v(
                             motion_t2v,
@@ -2309,6 +2309,7 @@ class TrailerAPI:
                             height=wan_t2v_wh[1],
                             length=length,
                             fps=16,
+                            steps=20,
                         )
                     elif use_ltx_i2v:
                         self._log(

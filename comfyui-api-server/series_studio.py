@@ -1720,11 +1720,11 @@ class SeriesStudioAPI:
                     elif use_wan_t2v:
                         from trailer_pipeline import _ASPECT_WAN_T2V
 
-                        wan_t2v_wh = _ASPECT_WAN_T2V.get(aspect) or (640, 368)
-                        length = min(33, _length_for_duration(min(float(clip_dur), 3.0), fps=16))
+                        wan_t2v_wh = _ASPECT_WAN_T2V.get(aspect) or (512, 288)
+                        length = min(25, _length_for_duration(min(float(clip_dur), 2.0), fps=16))
                         self._log(
                             series_id,
-                            f"文生视频 {label}（Wan2.2-14B LightX4 · {wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",
+                            f"文生视频 {label}（Wan2.2-14B 20步无LoRA · {wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",
                         )
                         wf = build_wan_t2v(
                             motion_t2v,
@@ -1733,6 +1733,7 @@ class SeriesStudioAPI:
                             height=wan_t2v_wh[1],
                             length=length,
                             fps=16,
+                            steps=20,
                         )
                     elif use_ltx_i2v:
                         self._log(series_id, f"图生视频 {label}（LTX·直出音频）")
