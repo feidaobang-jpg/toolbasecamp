@@ -627,8 +627,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function buildEngineChecks(meta, preferred) {
     engineChecks.innerHTML = '';
-    var keys = Object.keys(meta || {});
-    if (!keys.length) keys = ['triposr', 'hunyuan3d', 'trellis', 'trellis2'];
+    var keys = Object.keys(meta || {}).filter(function (k) {
+      var st = (meta && meta[k]) || {};
+      return !st.ui_hidden;
+    });
+    if (!keys.length) keys = ['triposr', 'hunyuan3d', 'trellis'];
     var pref = preferred && preferred.length ? preferred : ['triposr'];
     keys.forEach(function (k) {
       var st = (meta && meta[k]) || {};
@@ -668,6 +671,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var meta = data.engine_meta || {};
     Object.keys(meta).forEach(function (k) {
       var st = meta[k];
+      if (st && st.ui_hidden) return;
       parts.push((st.label || k) + (st.ready ? ' ✓' : ' ✗'));
     });
     engineLine.textContent =

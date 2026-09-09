@@ -621,7 +621,7 @@ window.TB_LOCALES.en = {
             sfxNoOutputYet: 'No output folder yet',
             i23dTitle: 'Image to 3D',
             i23dDesc: 'Image → mesh: TripoSR / Hunyuan3D / TRELLIS, multi-select compare',
-            i23dHint: 'TripoSR (fast) / Hunyuan3D (balanced) / TRELLIS v1 (quality) / TRELLIS.2 (≥24GB VRAM, separate from v1). Multi-select runs engines in sequence. Run setup_image_to_3d.py if not ready.',
+            i23dHint: 'TripoSR (fast) / Hunyuan3D (balanced) / TRELLIS v1 (quality). Multi-select runs engines in sequence. Run setup_image_to_3d.py if not ready.',
             i23dImageLabel: 'Reference image',
             i23dDropTitle: 'Click or drop an image',
             i23dDropHint: 'Cartoon / white-bg objects work best. Large images are auto-compressed.',

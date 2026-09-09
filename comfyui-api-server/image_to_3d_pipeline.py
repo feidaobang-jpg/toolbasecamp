@@ -72,6 +72,8 @@ _ENGINES = {
         "root_env": "TRELLIS2_ROOT",
         "default_root": Path(r"D:\sd\trellis2"),
         "min_vram_mib": 22000,
+        # 本机常见 ≤16GB：先不在页面展示；代码与 setup 仍保留，换大卡后再开
+        "ui_hidden": True,
     },
 }
 
@@ -188,6 +190,7 @@ def engine_ready(key: str) -> Dict[str, Any]:
         "has_python": py.is_file(),
         "has_marker": marker.is_file(),
         "has_worker": has_worker,
+        "ui_hidden": bool(_ENGINES[key].get("ui_hidden")),
     }
     min_vram = int(_ENGINES[key].get("min_vram_mib") or 0)
     if min_vram > 0:
@@ -525,7 +528,7 @@ class ImageTo3dAPI:
                     {"id": "high", "label": "高模", "hint": "引擎原始面数，文件更大"},
                 ],
                 "hint": (
-                    "图生 3D：TripoSR（快）/ Hunyuan3D / TRELLIS v1 / TRELLIS.2（需≥24GB，与 v1 分目录）。"
+                    "图生 3D：TripoSR（快）/ Hunyuan3D / TRELLIS v1。"
                     "可多选依次对比。未就绪请运行 scripts/setup_image_to_3d.py"
                 ),
                 **st,

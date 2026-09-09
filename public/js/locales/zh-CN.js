@@ -620,7 +620,7 @@ window.TB_LOCALES['zh-CN'] = {
             sfxNoOutputYet: '暂无输出目录',
             i23dTitle: '图生 3D',
             i23dDesc: '单图转 mesh：TripoSR / Hunyuan3D / TRELLIS，可多选对比',
-            i23dHint: 'TripoSR（快）/ Hunyuan3D（均衡）/ TRELLIS v1（质量）/ TRELLIS.2（需≥24GB，与 v1 分目录）。可多选依次对比。未就绪请运行 setup_image_to_3d.py。',
+            i23dHint: 'TripoSR（快）/ Hunyuan3D（均衡）/ TRELLIS v1（质量）。可多选依次对比。未就绪请运行 setup_image_to_3d.py。',
             i23dImageLabel: '参考图',
             i23dDropTitle: '点击或拖入图片',
             i23dDropHint: '建议卡通/白底物体；实景可先图生图转卡通。大图会自动压缩。',
