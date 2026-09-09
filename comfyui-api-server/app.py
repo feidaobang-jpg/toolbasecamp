@@ -1070,12 +1070,12 @@ def _build_wan22_t2v_14b_workflow(
     prompt_text: str,
     negative_text: Optional[str] = None,
     seed: Optional[int] = None,
-    width: int = 704,
-    height: int = 400,
-    length: int = 49,
+    width: int = 640,
+    height: int = 368,
+    length: int = 33,
     fps: int = 16,
 ) -> dict:
-    """Wan 2.2 14B 文生视频（fp8 + LightX2V 4 步；CLIP 放 CPU；默认 704×400 适配 16GB）。"""
+    """Wan 2.2 14B 文生视频（fp8 + LightX2V 4 步；CLIP 放 CPU；默认 640×368 适配 16GB）。"""
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_14b.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
         workflow = json.load(f)
@@ -1099,6 +1099,10 @@ def _build_wan22_t2v_14b_workflow(
     # CLIP 强制 CPU，给双 UNet 腾显存
     if "71" in workflow and isinstance(workflow["71"].get("inputs"), dict):
         workflow["71"]["inputs"]["device"] = "cpu"
+    # fp8 权重保持低精度加载，减轻 16GB 峰值
+    for nid in ("75", "76"):
+        if nid in workflow and isinstance(workflow[nid].get("inputs"), dict):
+            workflow[nid]["inputs"]["weight_dtype"] = "fp8_e4m3fn"
     _patch_save_video_inputs(workflow.get("80") or {})
     return workflow
 
@@ -1396,6 +1400,36 @@ async def _run_comfyui_and_get_last_video(workflow: dict, timeout_sec: Optional[
                 )
 
 
+def _comfyui_history_error_message(history: dict) -> Optional[str]:
+    """从 ComfyUI history.status.messages 抽出 execution_error 文案。"""
+    status = (history or {}).get("status") or {}
+    msgs = status.get("messages") or []
+    for item in msgs:
+        if not isinstance(item, (list, tuple)) or len(item) < 2:
+            continue
+        if item[0] != "execution_error":
+            continue
+        data = item[1] if isinstance(item[1], dict) else {}
+        et = str(data.get("exception_type") or "").strip()
+        em = str(data.get("exception_message") or "").strip()
+        node = str(data.get("node_type") or data.get("node_id") or "").strip()
+        # 常见 OOM：截断过长 traceback，保留首行要点
+        em_one = em.splitlines()[0].strip() if em else ""
+        if "OutOfMemory" in et or "out of memory" in em.lower():
+            return (
+                f"显存不足（OOM）"
+                + (f" · 节点 {node}" if node else "")
+                + "：Wan 14B fp8 在 16GB 上需更小分辨率/更短帧数；"
+                + "请关掉其它占 GPU 的程序后重试"
+                + (f"（{em_one}）" if em_one else "")
+            )
+        parts = [p for p in (et, em_one, f"节点 {node}" if node else "") if p]
+        return "；".join(parts) if parts else "ComfyUI execution_error"
+    if status.get("status_str") == "error" or status.get("completed") is False:
+        return "ComfyUI 任务失败（无详细错误）"
+    return None
+
+
 async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
     if timeout_sec is None:
         timeout_sec = float(os.environ.get("COMFYUI_VIDEO_JOB_TIMEOUT", "3600"))
@@ -1405,6 +1439,7 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
     ws = websocket.WebSocket()
     prompt_id = None
     timed_out = False
+    ws_exec_error: Optional[str] = None
     try:
         await asyncio.to_thread(
             ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, CLIENT_ID), timeout=10
@@ -1424,12 +1459,32 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
                 continue
             if isinstance(out, str):
                 message = json.loads(out)
-                if message.get("type") == "executing":
-                    data = message.get("data", {})
+                msg_type = message.get("type")
+                data = message.get("data") or {}
+                if msg_type == "execution_error" and str(data.get("prompt_id")) == str(prompt_id):
+                    et = str(data.get("exception_type") or "").strip()
+                    em = str(data.get("exception_message") or "").strip().splitlines()
+                    em_one = em[0].strip() if em else ""
+                    node = str(data.get("node_type") or data.get("node_id") or "").strip()
+                    if "OutOfMemory" in et or "out of memory" in (em_one + et).lower():
+                        ws_exec_error = (
+                            f"显存不足（OOM）"
+                            + (f" · 节点 {node}" if node else "")
+                            + "：请降低分辨率/时长，并关闭其它占 GPU 程序后重试"
+                            + (f"（{em_one}）" if em_one else "")
+                        )
+                    else:
+                        parts = [p for p in (et, em_one, f"节点 {node}" if node else "") if p]
+                        ws_exec_error = "；".join(parts) or "ComfyUI execution_error"
+                    break
+                if msg_type == "executing":
                     if data.get("node") is None and str(data.get("prompt_id")) == str(prompt_id):
                         break
 
         history = (await get_history(prompt_id)).get(prompt_id) or {}
+        err = ws_exec_error or _comfyui_history_error_message(history)
+        if err:
+            raise RuntimeError(err)
         refs = _extract_video_refs_from_history(history)
         if refs:
             last = refs[-1]

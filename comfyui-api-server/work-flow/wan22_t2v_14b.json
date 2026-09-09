@@ -3,14 +3,14 @@
     "class_type": "UNETLoader",
     "inputs": {
       "unet_name": "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
-      "weight_dtype": "default"
+      "weight_dtype": "fp8_e4m3fn"
     }
   },
   "76": {
     "class_type": "UNETLoader",
     "inputs": {
       "unet_name": "wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors",
-      "weight_dtype": "default"
+      "weight_dtype": "fp8_e4m3fn"
     }
   },
   "90": {
@@ -72,9 +72,9 @@
   "74": {
     "class_type": "EmptyHunyuanLatentVideo",
     "inputs": {
-      "width": 704,
-      "height": 400,
-      "length": 49,
+      "width": 640,
+      "height": 368,
+      "length": 33,
       "batch_size": 1
     }
   },

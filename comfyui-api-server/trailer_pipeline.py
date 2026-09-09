@@ -218,8 +218,8 @@ _ASPECT_I2V = {
 
 # Wan 2.2 14B 文生（LightX2V 4 步）：降分辨率，避免近 50 分钟
 _ASPECT_WAN_T2V = {
-    "16_9": (704, 400),
-    "9_16": (400, 704),
+    "16_9": (640, 368),
+    "9_16": (368, 640),
 }
 
 # MiniMax H3 文生（Turbo 8 · CLIP@CPU）
@@ -2297,7 +2297,7 @@ class TrailerAPI:
                         )
                     elif use_wan_t2v:
                         wan_t2v_wh = _ASPECT_WAN_T2V[aspect]
-                        length = min(49, _length_for_duration(min(float(dur), 4.0), fps=16))
+                        length = min(33, _length_for_duration(min(float(dur), 3.0), fps=16))
                         self._log(
                             task,
                             f"Wan2.2-14B 文生视频 LightX4 分镜 {idx + 1}/{n_shots}（{wan_t2v_wh[0]}×{wan_t2v_wh[1]} · {length}帧@16fps）",

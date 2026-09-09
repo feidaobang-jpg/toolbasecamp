@@ -38,7 +38,7 @@ _T2V_ENGINES = {
         "workflow": "minimax_h3_t2v.json",
     },
     "wan22_t2v_14b": {
-        "label": "Wan 2.2 14B 文生视频（fp8 + LightX2V 4 步）",
+        "label": "Wan 2.2 14B 文生视频（fp8 + LightX2V·16GB）",
         "workflow": "wan22_t2v_14b.json",
     },
     "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
@@ -50,9 +50,9 @@ _I2V_ENGINES = {
 }
 
 _ASPECT_WAN = {
-    # 16GB + LightX2V：略降分辨率，显著缩短 14B 耗时（原 832×480 易跑到接近 1 小时）
-    "16_9": (704, 400),
-    "9_16": (400, 704),
+    # 16GB + LightX2V：704×400×49 在本机曾 OOM；再降一档保证可出片
+    "16_9": (640, 368),
+    "9_16": (368, 640),
 }
 
 _ASPECT_H3 = {
@@ -299,6 +299,9 @@ class VideoClipAPI:
             return
         try:
             await free_fn()
+            # 再清一次并稍等，减轻 14B 加载前显存碎片（尤其刚跑完 H3/LTX）
+            await free_fn()
+            await asyncio.sleep(1.5)
             self._log(task, f"已释放 ComfyUI 显存{(' · ' + tip) if tip else ''}")
         except Exception as e:
             self._log(task, f"释放显存失败（可忽略）：{e}")
@@ -338,8 +341,8 @@ class VideoClipAPI:
                 )
                 note = f"MiniMax H3 T2V Turbo8 · {h3_wh[0]}×{h3_wh[1]} · {dur:g}s"
             elif mode == "wan22_t2v_14b":
-                # LightX2V 4 步 + 704×400；帧数封顶 49（~3s@16fps），避免再跑近 50 分钟
-                length_14 = min(49, _length_for_duration(min(4.0, float(duration_sec)), fps=16))
+                # LightX2V 4 步；16GB 帧数封顶 33（~2s@16fps），避免 KSampler OOM
+                length_14 = min(33, _length_for_duration(min(3.0, float(duration_sec)), fps=16))
                 wf = self.deps["build_wan22_t2v_workflow"](
                     prompt_s,
                     negative_text=neg,
@@ -349,7 +352,7 @@ class VideoClipAPI:
                     length=length_14,
                     fps=16,
                 )
-                note = f"Wan2.2-14B T2V LightX4 · {wan_wh[0]}×{wan_wh[1]} · {length_14}帧@16fps"
+                note = f"Wan2.2-14B T2V LightX4 · {wan_wh[0]}×{wan_wh[1]} · {length_14}帧@16fps（16GB）"
             else:
                 wf = self.deps["build_ltx25_t2v_workflow"](
                     prompt_s,
@@ -563,7 +566,7 @@ class VideoClipAPI:
                 },
                 "hint": (
                     "文生视频默认 MiniMax H3（Turbo 8 步·直出音频；CLIP 放 CPU，约 704×400，适配 16GB）。"
-                    "Wan 14B：LightX2V 4 步 + 降分辨率/帧数封顶加速；Wan 5B 已下线。"
+                    "Wan 14B：LightX2V 4 步 + 640×368·最多 33 帧（防 16GB OOM）；Wan 5B 已下线。"
                     if k == "t2v"
                     else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
                 ),
