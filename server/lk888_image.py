@@ -49,6 +49,9 @@ _LK888_MEDIA_MODELS = frozenset(
     }
 )
 
+from image_i2i_size import banana_aspect_and_tier, first_ref_wh, gpt_size_wh
+
+
 # Normalize to preferred upstream id
 _LK888_MODEL_ALIAS: dict[str, str] = {
     "tt-image-2": "gpt-image-2",
@@ -57,17 +60,17 @@ _LK888_MODEL_ALIAS: dict[str, str] = {
     "gemini-3.1-flash-image-preview": "banana-2",
 }
 
-# UI size_preset → OpenAI-style WxH (GPT Image 2)
+# UI size_preset → OpenAI-style WxH (GPT Image 2) — T2I / no-ref fallback
 _SIZE_MAP: dict[str, str] = {
     "square": "1024x1024",
     "portrait": "1024x1536",
     "landscape": "1536x1024",
     "hd": "1536x1024",
     "1k": "1024x1024",
-    "2k": "2048x2048",
+    "2k": "1024x1024",
 }
 
-# instruct-edit 1K/2K → Banana aspectRatio + imageSize
+# instruct-edit 1K/2K → Banana aspectRatio + imageSize (T2I / no-ref fallback)
 _MEDIA_SIZE: dict[str, tuple[str, str]] = {
     "1k": ("1:1", "1K"),
     "2k": ("1:1", "2K"),
@@ -384,9 +387,13 @@ async def _generate_via_media(
     prompt: str,
     size_preset: Optional[str],
     refs: Optional[Sequence[bytes]] = None,
+    ref_wh: Optional[Tuple[int, int]] = None,
 ) -> Tuple[bytes, str]:
     """Async media pipeline for Banana 2 / Banana Pro (Gemini image)."""
-    aspect, image_size = _media_aspect_and_size(size_preset)
+    if ref_wh and ref_wh[0] > 0 and ref_wh[1] > 0:
+        aspect, image_size = banana_aspect_and_tier(ref_wh, size_preset or "2K")
+    else:
+        aspect, image_size = _media_aspect_and_size(size_preset)
     payload: dict[str, Any] = {
         "model": model,
         "prompt": prompt,
@@ -479,6 +486,7 @@ async def generate_lk888_image_to_image(
         raise HTTPException(status_code=400, detail="Please upload at least one reference image.")
 
     size_key = (output_size or "2K").strip().lower()
+    ref_wh = first_ref_wh(refs)
     try:
         async with httpx.AsyncClient(timeout=LK888_TIMEOUT + 30) as client:
             if use_model in _LK888_MEDIA_MODELS:
@@ -488,12 +496,13 @@ async def generate_lk888_image_to_image(
                     prompt=text,
                     size_preset=size_key,
                     refs=refs,
+                    ref_wh=ref_wh,
                 )
             return await _edit_via_images(
                 client,
                 model=use_model,
                 prompt=text,
-                size=_api_size(size_key),
+                size=gpt_size_wh(ref_wh, output_size or "2K"),
                 refs=refs,
             )
     except HTTPException:

@@ -10,6 +10,7 @@ import httpx
 from fastapi import HTTPException
 
 from dashscope_image_edit import _data_uri, _normalize_edit_image
+from image_i2i_size import first_ref_wh, seedream_size_wh
 
 VOLC_ARK_API_KEY = (os.environ.get("VOLC_ARK_API_KEY") or "").strip()
 VOLC_ARK_BASE_URL = (
@@ -35,8 +36,20 @@ def is_seedream_model(model: Optional[str]) -> bool:
     return mid.startswith("doubao-seedream") or mid.startswith("seedream")
 
 
-def seedream_api_size(output_size: Optional[str]) -> str:
-    """Map UI 1K/2K to Ark API size (2k/3k/4k — lowercase k). Minimum 2k."""
+def seedream_api_size(
+    output_size: Optional[str],
+    *,
+    ref_wh: Optional[Tuple[int, int]] = None,
+) -> str:
+    """
+    Map UI size + input aspect to Ark `size`.
+
+    Prefer WIDTHxHEIGHT nearest to the reference aspect so tall screenshots
+    are not forced into a square 2k tier. Falls back to tier keyword only
+    when no ref dimensions are available.
+    """
+    if ref_wh and ref_wh[0] > 0 and ref_wh[1] > 0:
+        return seedream_size_wh(output_size or SEEDREAM_SIZE, ref_wh, lite=True)
     key = (output_size or SEEDREAM_SIZE or "2K").strip().upper()
     if key not in ("1K", "2K", "3K", "4K"):
         return "2k"
@@ -122,7 +135,8 @@ async def edit_image_with_seedream(
         )
 
     use_model = (model or _default_model()).strip() or _default_model()
-    api_size = seedream_api_size(output_size or SEEDREAM_SIZE)
+    ref_wh = first_ref_wh(refs)
+    api_size = seedream_api_size(output_size or SEEDREAM_SIZE, ref_wh=ref_wh)
     norm_refs = [_normalize_edit_image(b, for_wan=False) for b in refs]
     data_uris = [_data_uri(b, mime) for b, mime in norm_refs]
     image_field: Any = data_uris[0] if len(data_uris) == 1 else data_uris

@@ -336,87 +336,45 @@ def _extract_image_url(data: dict) -> Optional[str]:
     return None
 
 
+from image_i2i_size import first_ref_wh, pixel_size_star, ref_image_wh  # noqa: E402
+
+
 def _qwen_pixel_size(
     output_size: str,
     *,
     model: Optional[str] = None,
     ref_wh: Optional[Tuple[int, int]] = None,
 ) -> str:
-    """
-    DashScope Qwen I2I size as W*H, preserving the input aspect ratio.
-
-    Never force a square: square 2048*2048 / 1664*1664 makes portrait/landscape
-    look short or stretched. Limits (docs): total pixels in [512², 2048²],
-    aspect 1:8–8:1. 2K billing needs area > 2_250_000.
-    """
-    import math
-
-    low = (model or "").lower()
-    want_2k = _normalize_output_size(output_size) != "1K"
-    # Pro: slightly smaller target area to reduce timeout risk, still 2K-billed.
-    if want_2k:
-        target_area = float(1664 * 1664) if "pro" in low else float(2048 * 2048)
-        target_area = max(target_area, 2_250_001.0)
-    else:
-        target_area = float(1024 * 1024)
-
-    rw, rh = 1024, 1024
-    if ref_wh and ref_wh[0] > 0 and ref_wh[1] > 0:
-        rw, rh = int(ref_wh[0]), int(ref_wh[1])
-    aspect = rw / float(rh)
-
-    # Clamp aspect to API 1:8 .. 8:1
-    aspect = max(1.0 / 8.0, min(8.0, aspect))
-
-    ow = int(round(math.sqrt(target_area * aspect)))
-    oh = int(round(math.sqrt(target_area / aspect)))
-    ow = max(64, ow)
-    oh = max(64, oh)
-
-    max_area = 2048 * 2048
-    min_area = 512 * 512
-    area = ow * oh
-    if area > max_area:
-        scale = math.sqrt(max_area / float(area))
-        ow = max(64, int(round(ow * scale)))
-        oh = max(64, int(round(oh * scale)))
-        area = ow * oh
-    if area < min_area:
-        scale = math.sqrt(min_area / float(max(area, 1)))
-        ow = max(64, int(round(ow * scale)))
-        oh = max(64, int(round(oh * scale)))
-        area = ow * oh
-
-    # Keep 2K billing tier when requested (area > 2.25M), if ratio allows.
-    if want_2k and area <= 2_250_000:
-        scale = math.sqrt(2_250_001.0 / float(area))
-        ow2 = max(64, int(math.ceil(ow * scale)))
-        oh2 = max(64, int(math.ceil(oh * scale)))
-        if ow2 * oh2 <= max_area:
-            ow, oh = ow2, oh2
-
-    return f"{ow}*{oh}"
+    """DashScope I2I size as W*H, preserving input aspect (shared helper)."""
+    return pixel_size_star(
+        output_size,
+        ref_wh,
+        pro="pro" in (model or "").lower(),
+    )
 
 
 def _ref_image_wh(image_bytes: bytes) -> Optional[Tuple[int, int]]:
-    try:
-        from io import BytesIO
+    return ref_image_wh(image_bytes)
 
-        from PIL import Image
 
-        im = Image.open(BytesIO(image_bytes))
-        im.load()
-        w, h = im.size
-        if w > 0 and h > 0:
-            return int(w), int(h)
-    except Exception:
-        return None
-    return None
+def _first_ref_wh(refs: Sequence[bytes]) -> Optional[Tuple[int, int]]:
+    return first_ref_wh(refs)
 
 
 def _normalize_output_size(raw: Optional[str]) -> str:
     s = (raw or "2K").strip().upper()
     return s if s in ("1K", "2K") else "2K"
+
+
+def _i2i_ref_wh(
+    refs: Sequence[bytes],
+    norm_refs: Optional[Sequence[tuple[bytes, str]]] = None,
+) -> Optional[Tuple[int, int]]:
+    """Prefer original upload dimensions (before JPEG normalize) for aspect."""
+    wh = _first_ref_wh(refs)
+    if wh is None and norm_refs:
+        wh = _ref_image_wh(norm_refs[0][0])
+    return wh
 
 
 async def edit_image_with_instruction(
@@ -469,12 +427,9 @@ async def edit_image_with_instruction(
     size_key = _normalize_output_size(output_size)
     parameters: dict[str, Any] = {"n": 1, "watermark": False}
     low_model = use_model.lower()
+    ref_wh = _i2i_ref_wh(refs, norm_refs)
     if low_model.startswith("qwen-image-3"):
         parameters["prompt_extend"] = True
-        # Prefer original upload dimensions (before JPEG normalize) for aspect.
-        ref_wh = _ref_image_wh(refs[0]) if refs else None
-        if ref_wh is None and norm_refs:
-            ref_wh = _ref_image_wh(norm_refs[0][0])
         if ref_wh:
             parameters["size"] = _qwen_pixel_size(
                 size_key,
@@ -485,12 +440,25 @@ async def edit_image_with_instruction(
     elif low_model.startswith("wan2.6"):
         parameters["enable_interleave"] = False
         parameters["prompt_extend"] = True
-        parameters["size"] = size_key
+        # Prefer W*H so tall screenshots keep aspect (1K/2K alone can ignore AR).
+        parameters["size"] = (
+            _qwen_pixel_size(size_key, model=use_model, ref_wh=ref_wh)
+            if ref_wh
+            else size_key
+        )
     elif low_model.startswith("wan2.7"):
-        parameters["size"] = size_key
+        parameters["size"] = (
+            _qwen_pixel_size(size_key, model=use_model, ref_wh=ref_wh)
+            if ref_wh
+            else size_key
+        )
     elif _is_wan_model(use_model):
         parameters["enable_interleave"] = False
-        parameters["size"] = size_key
+        parameters["size"] = (
+            _qwen_pixel_size(size_key, model=use_model, ref_wh=ref_wh)
+            if ref_wh
+            else size_key
+        )
 
     url = _api_root().rstrip("/") + "/services/aigc/multimodal-generation/generation"
     payload: dict[str, Any] = {

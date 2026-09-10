@@ -391,8 +391,14 @@
         return /MicroMessenger/i.test(global.navigator.userAgent || '');
     }
 
+    /** Phone/tablet UA (shared). Prefer this over undeclared page-local helpers. */
     function isMobile() {
         return /Android|iPhone|iPad|iPod|Mobile/i.test(global.navigator.userAgent || '');
+    }
+
+    /** Alias used by instruct-edit light-response headers. */
+    function isMobileUA() {
+        return isMobile();
     }
 
     function blobFromSource(blobOrUrl) {
@@ -690,6 +696,8 @@
         b64ToDataUrl: b64ToDataUrl,
         displayImageSrc: displayImageSrc,
         isWeChat: isWeChat,
+        isMobile: isMobile,
+        isMobileUA: isMobileUA,
         urlToDataUrl: urlToDataUrl,
         applyWeChatResultImage: applyWeChatResultImage,
         downloadBlob: downloadBlob,

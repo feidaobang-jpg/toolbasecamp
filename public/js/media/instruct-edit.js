@@ -59,6 +59,8 @@
 
   /** Phone/tablet UA — request lighter API payloads (same idea as WeChat). */
   function isMobileUA() {
+    if (C.isMobileUA) return C.isMobileUA();
+    if (C.isMobile) return C.isMobile();
     return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
   }
 
