@@ -34,11 +34,7 @@ _VIDEO_CLIP_TASKS: Dict[str, dict] = {}
 
 _T2V_ENGINES = {
     "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
-    "minimax_h3_t2v": {
-        "label": "MiniMax H3 文生视频（Turbo 8 步·512×288·直出音频）",
-        "workflow": "minimax_h3_t2v.json",
-    },
-    # wan22_t2v_14b 已从文生对比下线（16GB 降配后效果远弱于 LTX）；旧请求映射到 LTX
+    # MiniMax H3 / Wan 14B 文生：16GB 上易 OOM 或效果过差，已从选项下线；旧请求映射到 LTX
 }
 
 _I2V_ENGINES = {
@@ -110,12 +106,12 @@ def _normalize_engine(raw: str, kind: str) -> Optional[str]:
     m = (raw or "").strip().lower().replace("-", "_").replace(".", "")
     table = _T2V_ENGINES if kind == "t2v" else _I2V_ENGINES
     aliases = {
-        "minimax_h3_t2v": "minimax_h3_t2v",
-        "minimax_h3": "minimax_h3_t2v",
-        "minimaxh3": "minimax_h3_t2v",
-        "h3": "minimax_h3_t2v",
-        "h3_t2v": "minimax_h3_t2v",
-        # 已下线：5B / Wan 14B 文生 → 默认 LTX
+        # H3 / Wan 文生已下线 → LTX
+        "minimax_h3_t2v": "ltx25_t2v",
+        "minimax_h3": "ltx25_t2v",
+        "minimaxh3": "ltx25_t2v",
+        "h3": "ltx25_t2v",
+        "h3_t2v": "ltx25_t2v",
         "wan22_t2v_5b": "ltx25_t2v" if kind == "t2v" else None,
         "wan5b_t2v": "ltx25_t2v",
         "wan22_t2v_14b": "ltx25_t2v",
@@ -323,30 +319,15 @@ class VideoClipAPI:
         prompt_s = (prompt or "").strip()
 
         if kind == "t2v":
-            if mode == "minimax_h3_t2v":
-                h3_wh = _ASPECT_H3[aspect]
-                # 16GB：时长封顶约 5s，配合 Turbo 8 步
-                dur = min(5.0, float(duration_sec))
-                wf = self.deps["build_minimax_h3_t2v_workflow"](
-                    prompt_s,
-                    seed=seed_i,
-                    width=h3_wh[0],
-                    height=h3_wh[1],
-                    duration_sec=dur,
-                    fps=24,
-                    steps=8,
-                )
-                note = f"MiniMax H3 T2V Turbo8 · {h3_wh[0]}×{h3_wh[1]} · {dur:g}s"
-            else:
-                wf = self.deps["build_ltx25_t2v_workflow"](
-                    prompt_s,
-                    seed=seed_i,
-                    width=ltx_wh[0],
-                    height=ltx_wh[1],
-                    duration_sec=duration_sec,
-                    fps=24,
-                )
-                note = f"LTX-2.5 T2V · {ltx_wh[0]}×{ltx_wh[1]} · {duration_sec:g}s"
+            wf = self.deps["build_ltx25_t2v_workflow"](
+                prompt_s,
+                seed=seed_i,
+                width=ltx_wh[0],
+                height=ltx_wh[1],
+                duration_sec=duration_sec,
+                fps=24,
+            )
+            note = f"LTX-2.5 T2V · {ltx_wh[0]}×{ltx_wh[1]} · {duration_sec:g}s"
             return wf, note
 
         if not comfy_image:
@@ -545,12 +526,11 @@ class VideoClipAPI:
                 "duration_max": 10,
                 "duration_default": 5,
                 "workflows": {
-                    "t2v": "ltx25_t2v.json / minimax_h3_t2v.json",
+                    "t2v": "ltx25_t2v.json",
                     "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
                 },
                 "hint": (
-                    "文生视频默认 LTX 2.5（704×400·直出音频）。"
-                    "可选 MiniMax H3（Turbo8·512×288，防 OOM）。Wan 14B 文生已下线；图生仍可用 Wan GGUF。"
+                    "文生视频默认 LTX 2.5（704×400·直出音频）。MiniMax H3 / Wan 14B 文生在 16GB 上已下线。"
                     if k == "t2v"
                     else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
                 ),

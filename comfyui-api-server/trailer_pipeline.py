@@ -241,7 +241,6 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
-    "minimax_h3_t2v": {"label": "MiniMax H3 文生视频（Turbo·512×288·直出音频）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},
@@ -258,11 +257,11 @@ def _normalize_video_engine(raw: str) -> str:
         return "ltx25_t2v"
     if m in ("i2v", "wan", "wan22", "wan22_14b", "wan22_14b_gguf", "wan2.2_14b"):
         return "wan22_14b_gguf"
-    # Wan 14B 文生已下线（16GB 降配效果弱）→ LTX
+    # Wan 14B / MiniMax H3 文生：16GB 易 OOM → LTX
     if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
         return "ltx25_t2v"
     if m in ("minimax_h3_t2v", "minimax_h3", "minimaxh3", "h3", "h3_t2v"):
-        return "minimax_h3_t2v"
+        return "ltx25_t2v"
     if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):
         return "ltx25_i2v"
     if m in ("ltx_t2v", "ltx25_t2v", "ltx2.5_t2v"):
