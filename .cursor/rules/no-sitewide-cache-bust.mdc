@@ -1,0 +1,29 @@
+---
+description: 禁止全站批量刷 HTML 的 ?v= cache-bust；只改相关页或正式 bust 脚本
+alwaysApply: true
+---
+
+# 禁止全站 cache-bust
+
+**禁止**为「清缓存」批量改大量 `public/**/*.html` 的 `?v=`（例如一次改几十/上百页，或把各页原有 `hht2v1` / `brand1` 等统一刷成同一个 commit hash）。
+
+## 必须遵守
+
+1. **只改相关页**：改了某工具/某公共资源时，只递增**引用了它的页面**上的 `?v=`。
+2. **不要**用脚本/`StrReplace`/全仓库替换，把全站 HTML 的 `?v=` 扫成同一值。
+3. **发布清缓存**：仅在用户明确要求发布/部署 bust 时，用仓库脚本 `deploy/bust-html-cache.py`（`VER=…`），不要在日常编码工作区随手全站刷。
+4. 发现工作区已有大批仅 `?v=` 差异的 HTML：先确认是否误改；未要求提交则建议还原，**不要**当成业务改动一起 commit。
+
+## 反例
+
+```text
+❌ 一次 git 里出现 100+ 个 HTML，diff 全是 ?v=xxx → ?v=a2e80383
+❌ 改文生视频却顺手 bust 了 media/record/calc 全部页面
+```
+
+## 正例
+
+```text
+✅ 只改 t2v.html / trailer.html 上 locales 与 video-clip.js 的 ?v=
+✅ 改 base.css 后，只递增真正引用该文件的页面（或等用户要求再用 bust 脚本）
+```
