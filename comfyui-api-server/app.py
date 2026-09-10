@@ -1134,15 +1134,15 @@ def _h3_snap_length(frames: int) -> int:
 def _build_minimax_h3_t2v_workflow(
     prompt_text: str,
     seed: Optional[int] = None,
-    width: int = 704,
-    height: int = 400,
+    width: int = 512,
+    height: int = 288,
     duration_sec: float = 3.0,
     fps: int = 24,
     steps: int = 8,
 ) -> dict:
     """
     MiniMax H3 文生视频（本机 pruned INT8 + Turbo 8 步）。
-    16GB 优化：默认 704×400、CLIP 放 CPU、时长封顶约 5s。
+    16GB：默认 512×288（704×400 易 OOM）、CLIP 放 CPU、时长封顶约 5s。
     """
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "minimax_h3_t2v.json")
     with open(workflow_path, "r", encoding="utf-8") as f:

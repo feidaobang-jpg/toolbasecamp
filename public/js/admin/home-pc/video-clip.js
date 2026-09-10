@@ -325,7 +325,7 @@
     if (seedInput) seedInput.value = '';
     if (durationSelect) durationSelect.value = '5';
     setAspect('16_9');
-    if (KIND === 't2v') setModes(['minimax_h3_t2v']);
+    if (KIND === 't2v') setModes(['ltx25_t2v']);
     else setModes(['wan22_14b_gguf']);
     setRefFile(null);
     if (logOutput) logOutput.textContent = '';

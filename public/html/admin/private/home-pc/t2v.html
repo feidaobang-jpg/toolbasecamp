@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=a2e80383" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=a2e80383" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=a2e80383" />
-  <script src="../../../../js/locales/en.js?v=wannolora1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=wannolora1"></script>
+  <script src="../../../../js/locales/en.js?v=t2vltx1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=t2vltx1"></script>
   <script src="../../../../js/i18n.js?v=a2e80383"></script>
   <script src="../../../../js/config.js?v=a2e80383"></script>
   <script src="../../../../js/common_ui.js?v=a2e80383"></script>
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.t2vHint">工作流 minimax_h3_t2v.json / wan22_t2v_14b.json（LightX2V 4步）/ ltx25_t2v.json。默认 MiniMax H3（16GB：Turbo8·CLIP@CPU·约704×400）。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.t2vHint">工作流 ltx25_t2v.json / minimax_h3_t2v.json。默认 LTX 2.5（704×400·直出音频）；可选 MiniMax H3（Turbo8·512×288，防 OOM）。Wan 14B 文生已下线。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -84,11 +84,10 @@
                 <div class="input-control">
                   <label data-i18n="privateHub.homePc.t2vModelLabel">文生视频模型</label>
                   <div class="trailer-aspect-row" id="model-row">
-                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="minimax_h3_t2v" checked /><span data-i18n="privateHub.homePc.trailerVideoModeH3T2v">文生视频 MiniMax H3（Turbo·直出音频）</span></label>
-                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="wan22_t2v_14b" /><span data-i18n="privateHub.homePc.trailerVideoModeWanT2v">文生视频 Wan 2.2 14B（fp8·LightX2V）</span></label>
-                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="ltx25_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="ltx25_t2v" checked /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="minimax_h3_t2v" /><span data-i18n="privateHub.homePc.trailerVideoModeH3T2v">文生视频 MiniMax H3（Turbo·512×288·直出音频）</span></label>
                   </div>
-                  <p class="small-hint" data-i18n="privateHub.homePc.t2vModelHint">可多选对比。默认 MiniMax H3（16GB：Turbo 8 步·直出音频）；Wan 14B 已用 LightX2V 4 步+降分辨率加速；Wan 5B 已下线。</p>
+                  <p class="small-hint" data-i18n="privateHub.homePc.t2vModelHint">可多选对比。默认 LTX 2.5；可选 H3（已降到 512×288 防 OOM）。Wan 14B 文生已下线。</p>
                 </div>
               </div>
             </div>
@@ -146,6 +145,6 @@
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=a2e80383"></script>
   <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=a2e80383"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=a2e80383"></script>
-  <script src="../../../../js/admin/home-pc/video-clip.js?v=a2e80383"></script>
+  <script src="../../../../js/admin/home-pc/video-clip.js?v=t2vltx1"></script>
 </body>
 </html>

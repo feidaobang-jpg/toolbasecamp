@@ -222,10 +222,10 @@ _ASPECT_WAN_T2V = {
     "9_16": (288, 512),
 }
 
-# MiniMax H3 文生（Turbo 8 · CLIP@CPU）
+# MiniMax H3 文生（Turbo 8 · CLIP@CPU）；16GB 用 512×288（704 易 OOM）
 _ASPECT_H3 = {
-    "16_9": (704, 400),
-    "9_16": (400, 704),
+    "16_9": (512, 288),
+    "9_16": (288, 512),
 }
 
 # LTX-2.5：16GB 用 704×400；CLIP@CPU（workflow 内）
@@ -241,8 +241,7 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
-    "minimax_h3_t2v": {"label": "MiniMax H3 文生视频（Turbo·直出音频）", "needs_image": False},
-    "wan22_t2v_14b": {"label": "Wan 2.2 14B 文生视频（fp8·20步·16GB）", "needs_image": False},
+    "minimax_h3_t2v": {"label": "MiniMax H3 文生视频（Turbo·512×288·直出音频）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},
@@ -256,11 +255,12 @@ def _normalize_video_engine(raw: str) -> str:
     if m in ("wan22_5b", "wan2.2_5b", "wan22_ti2v", "wan22_ti2v_5b", "ti2v_5b", "wan5b"):
         return "wan22_14b_gguf"
     if m in ("wan22_t2v_5b", "wan5b_t2v", "ti2v_5b_t2v", "wan2.2_5b_t2v"):
-        return "minimax_h3_t2v"
+        return "ltx25_t2v"
     if m in ("i2v", "wan", "wan22", "wan22_14b", "wan22_14b_gguf", "wan2.2_14b"):
         return "wan22_14b_gguf"
+    # Wan 14B 文生已下线（16GB 降配效果弱）→ LTX
     if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
-        return "wan22_t2v_14b"
+        return "ltx25_t2v"
     if m in ("minimax_h3_t2v", "minimax_h3", "minimaxh3", "h3", "h3_t2v"):
         return "minimax_h3_t2v"
     if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):

@@ -33,15 +33,12 @@ from output_layout import (
 _VIDEO_CLIP_TASKS: Dict[str, dict] = {}
 
 _T2V_ENGINES = {
+    "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
     "minimax_h3_t2v": {
-        "label": "MiniMax H3 文生视频（Turbo 8 步·直出音频）",
+        "label": "MiniMax H3 文生视频（Turbo 8 步·512×288·直出音频）",
         "workflow": "minimax_h3_t2v.json",
     },
-    "wan22_t2v_14b": {
-        "label": "Wan 2.2 14B 文生视频（fp8·20步·无LoRA·16GB）",
-        "workflow": "wan22_t2v_14b.json",
-    },
-    "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
+    # wan22_t2v_14b 已从文生对比下线（16GB 降配后效果远弱于 LTX）；旧请求映射到 LTX
 }
 
 _I2V_ENGINES = {
@@ -56,13 +53,13 @@ _ASPECT_WAN = {
 }
 
 _ASPECT_H3 = {
-    # 16GB：INT8 权重约 19GB，配合 CLIP 放 CPU；约 0.28MP，比 864×480 更稳更快
-    "16_9": (704, 400),
-    "9_16": (400, 704),
+    # 16GB：704×400 在 Sampler 易 OOM；降到与 Wan 同档 512×288（CLIP@CPU）
+    "16_9": (512, 288),
+    "9_16": (288, 512),
 }
 
 _ASPECT_LTX = {
-    # 16GB：与 H3/Wan 对齐略降分辨率；CLIP 放 CPU（见 workflow）
+    # 16GB：704×400 + CLIP@CPU（见 workflow）；比 H3 更省显存
     "16_9": (704, 400),
     "9_16": (400, 704),
 }
@@ -118,11 +115,11 @@ def _normalize_engine(raw: str, kind: str) -> Optional[str]:
         "minimaxh3": "minimax_h3_t2v",
         "h3": "minimax_h3_t2v",
         "h3_t2v": "minimax_h3_t2v",
-        # 已下线的 5B：旧勾选映射到现默认引擎
-        "wan22_t2v_5b": "minimax_h3_t2v" if kind == "t2v" else None,
-        "wan5b_t2v": "minimax_h3_t2v",
-        "wan22_t2v_14b": "wan22_t2v_14b",
-        "wan22_t2v": "wan22_t2v_14b",
+        # 已下线：5B / Wan 14B 文生 → 默认 LTX
+        "wan22_t2v_5b": "ltx25_t2v" if kind == "t2v" else None,
+        "wan5b_t2v": "ltx25_t2v",
+        "wan22_t2v_14b": "ltx25_t2v",
+        "wan22_t2v": "ltx25_t2v",
         "ltx25_t2v": "ltx25_t2v",
         "ltx_t2v": "ltx25_t2v",
         "wan22_5b": "wan22_14b_gguf",
@@ -169,7 +166,7 @@ def _parse_engines(raw_modes, raw_single: str, kind: str) -> List[str]:
             out.append(m)
     if out:
         return out
-    return ["minimax_h3_t2v"] if kind == "t2v" else ["wan22_14b_gguf"]
+    return ["ltx25_t2v"] if kind == "t2v" else ["wan22_14b_gguf"]
 
 
 def _clamp_duration(raw) -> float:
@@ -340,20 +337,6 @@ class VideoClipAPI:
                     steps=8,
                 )
                 note = f"MiniMax H3 T2V Turbo8 · {h3_wh[0]}×{h3_wh[1]} · {dur:g}s"
-            elif mode == "wan22_t2v_14b":
-                # 无 LightX2V（LoRA 合并会 OOM）；20 步；帧数封顶 25（~1.5s@16fps）
-                length_14 = min(25, _length_for_duration(min(2.0, float(duration_sec)), fps=16))
-                wf = self.deps["build_wan22_t2v_workflow"](
-                    prompt_s,
-                    negative_text=neg,
-                    seed=seed_i,
-                    width=wan_wh[0],
-                    height=wan_wh[1],
-                    length=length_14,
-                    fps=16,
-                    steps=20,
-                )
-                note = f"Wan2.2-14B T2V 20步无LoRA · {wan_wh[0]}×{wan_wh[1]} · {length_14}帧@16fps（16GB）"
             else:
                 wf = self.deps["build_ltx25_t2v_workflow"](
                     prompt_s,
@@ -556,18 +539,18 @@ class VideoClipAPI:
                 "success": True,
                 "kind": k,
                 "engines": {mid: meta["label"] for mid, meta in engines.items()},
-                "default_engine": "minimax_h3_t2v" if k == "t2v" else "wan22_14b_gguf",
+                "default_engine": "ltx25_t2v" if k == "t2v" else "wan22_14b_gguf",
                 "aspects": {"16_9": "横屏 16:9", "9_16": "竖屏 9:16"},
                 "duration_min": 3,
                 "duration_max": 10,
                 "duration_default": 5,
                 "workflows": {
-                    "t2v": "minimax_h3_t2v.json / wan22_t2v_14b.json（LightX2V 4步）/ ltx25_t2v.json",
+                    "t2v": "ltx25_t2v.json / minimax_h3_t2v.json",
                     "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
                 },
                 "hint": (
-                    "文生视频默认 MiniMax H3（Turbo 8 步·直出音频；CLIP 放 CPU，约 704×400，适配 16GB）。"
-                    "Wan 14B：已去掉 LightX2V（LoRA 合并 OOM），改 20 步 + 512×288；Wan 5B 已下线。"
+                    "文生视频默认 LTX 2.5（704×400·直出音频）。"
+                    "可选 MiniMax H3（Turbo8·512×288，防 OOM）。Wan 14B 文生已下线；图生仍可用 Wan GGUF。"
                     if k == "t2v"
                     else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
                 ),
