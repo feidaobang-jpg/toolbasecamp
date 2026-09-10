@@ -35,7 +35,7 @@ _VIDEO_CLIP_TASKS: Dict[str, dict] = {}
 _T2V_ENGINES = {
     "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
     "minimax_h3_t2v": {
-        "label": "MiniMax H3 文生（T8 DualClock·Turbo8·512×288）",
+        "label": "MiniMax H3 文生（T8·384×224·3s·4步）",
         "workflow": "minimax_h3_t2v.json",
     },
     # Wan 14B 文生已下线；旧请求映射到 LTX
@@ -53,9 +53,9 @@ _ASPECT_WAN = {
 }
 
 _ASPECT_H3 = {
-    # 16GB：704×400 在 Sampler 易 OOM；降到与 Wan 同档 512×288（CLIP@CPU）
-    "16_9": (512, 288),
-    "9_16": (288, 512),
+    # 16GB：512×288·5s 仍 OOM；再降到约 0.09MP，时长/步数在 build 里封顶
+    "16_9": (384, 224),
+    "9_16": (224, 384),
 }
 
 _ASPECT_LTX = {
@@ -289,15 +289,15 @@ class VideoClipAPI:
             "timing": task.get("timing") or {},
         }
 
-    async def _free_vram(self, task: dict, tip: str = "") -> None:
+    async def _free_vram(self, task: dict, tip: str = "", *, heavy: bool = False) -> None:
         free_fn = self.deps.get("free_comfyui_memory")
         if not free_fn:
             return
         try:
             await free_fn()
-            # 再清一次并稍等，减轻 14B 加载前显存碎片（尤其刚跑完 H3/LTX）
             await free_fn()
-            await asyncio.sleep(1.5)
+            # H3 加载前多等一会，减轻碎片导致的假 OOM
+            await asyncio.sleep(4.0 if heavy else 1.5)
             self._log(task, f"已释放 ComfyUI 显存{(' · ' + tip) if tip else ''}")
         except Exception as e:
             self._log(task, f"释放显存失败（可忽略）：{e}")
@@ -324,7 +324,8 @@ class VideoClipAPI:
         if kind == "t2v":
             if mode == "minimax_h3_t2v":
                 h3_wh = _ASPECT_H3[aspect]
-                dur = min(5.0, float(duration_sec))
+                # 16GB：硬封顶 3s / DualClock 4 步（Turbo LoRA 仍加载，步数减半省激活）
+                dur = min(3.0, float(duration_sec))
                 wf = self.deps["build_minimax_h3_t2v_workflow"](
                     prompt_s,
                     seed=seed_i,
@@ -332,9 +333,9 @@ class VideoClipAPI:
                     height=h3_wh[1],
                     duration_sec=dur,
                     fps=24,
-                    steps=8,
+                    steps=4,
                 )
-                note = f"MiniMax H3 T8 DualClock Turbo8 · {h3_wh[0]}×{h3_wh[1]} · {dur:g}s"
+                note = f"MiniMax H3 T8 DualClock · {h3_wh[0]}×{h3_wh[1]} · {dur:g}s · 4步"
             else:
                 wf = self.deps["build_ltx25_t2v_workflow"](
                     prompt_s,
@@ -430,7 +431,7 @@ class VideoClipAPI:
                     task,
                     f"对比 {ei + 1}/{n}：{label}" if multi else f"引擎：{label}",
                 )
-                await self._free_vram(task, label)
+                await self._free_vram(task, label, heavy=(mode == "minimax_h3_t2v"))
                 t0 = time.perf_counter()
                 try:
                     wf, note = self._build_workflow(
@@ -547,7 +548,7 @@ class VideoClipAPI:
                     "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
                 },
                 "hint": (
-                    "文生默认 LTX 2.5（704×400）。可选 MiniMax H3（T8 DualClock+ForwardSync·Turbo8·512×288）。"
+                    "文生默认 LTX 2.5（704×400）。可选 MiniMax H3（T8·384×224·最长 3s·4 步，16GB 极限档）。"
                     if k == "t2v"
                     else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
                 ),

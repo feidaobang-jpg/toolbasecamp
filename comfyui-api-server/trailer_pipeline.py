@@ -241,7 +241,7 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
-    "minimax_h3_t2v": {"label": "MiniMax H3 文生（T8 DualClock·512×288）", "needs_image": False},
+    "minimax_h3_t2v": {"label": "MiniMax H3 文生（T8·384×224）", "needs_image": False},
     "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
     "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},

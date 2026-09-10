@@ -1134,15 +1134,15 @@ def _h3_snap_length(frames: int) -> int:
 def _build_minimax_h3_t2v_workflow(
     prompt_text: str,
     seed: Optional[int] = None,
-    width: int = 512,
-    height: int = 288,
+    width: int = 384,
+    height: int = 224,
     duration_sec: float = 3.0,
     fps: int = 24,
-    steps: int = 8,
+    steps: int = 4,
 ) -> dict:
     """
-    MiniMax H3 文生（T8）：pruned INT8 + Turbo8 + ForwardSync + DualClock。
-    16GB：默认 512×288、CLIP@CPU、时长封顶约 5s。
+    MiniMax H3 文生（T8）：pruned INT8 + Turbo LoRA + ForwardSync + DualClock。
+    16GB：默认 384×224、最长约 3s、DualClock 4 步、CLIP@CPU。
     """
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "minimax_h3_t2v.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
@@ -1153,8 +1153,9 @@ def _build_minimax_h3_t2v_workflow(
     w = max(32, (w // 32) * 32)
     h = max(32, (h // 32) * 32)
     length_i = _h3_snap_length(int(round(float(duration_sec) * float(fps))))
-    length_i = min(length_i, 124)
-    steps_i = max(4, min(20, int(steps or 8)))
+    # 16GB：约 3s（73 帧）封顶，避免 5s 采样激活爆显存
+    length_i = min(length_i, 73)
+    steps_i = max(4, min(8, int(steps or 4)))
     seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
 
     if "3" in workflow and isinstance(workflow["3"].get("inputs"), dict):
