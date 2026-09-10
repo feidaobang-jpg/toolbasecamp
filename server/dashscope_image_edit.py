@@ -154,7 +154,8 @@ def _default_edit_model() -> str:
 QWEN_IMAGE_EDIT_MODEL = _default_edit_model()
 # Non-pro default 360s: multi-ref + 2K Qwen often exceeds the old 180s floor.
 EDIT_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_TIMEOUT", "360"))
-EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "600"))
+# Pro 实测可达 ~10 分钟；默认 900s，避免服务端先掐断
+EDIT_PRO_TIMEOUT = float(os.environ.get("QWEN_IMAGE_EDIT_PRO_TIMEOUT", "900"))
 
 
 def dashscope_image_edit_configured() -> bool:

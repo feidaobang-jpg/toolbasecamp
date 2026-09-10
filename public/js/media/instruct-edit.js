@@ -374,14 +374,16 @@
     var id = String(modelId || '').toLowerCase();
     var seedream = id.indexOf('seedream') >= 0;
     var isPro = id.indexOf('-pro') >= 0 || id.indexOf('pro-') >= 0 || /pro$/.test(id);
+    // Qwen Image 3.0 Pro 实测约 9–10 分钟；前端须 > 服务端 EDIT_PRO_TIMEOUT
+    var qwenPro = id.indexOf('qwen-image') >= 0 && isPro;
     var ms;
     if (refMode === 'multi') {
-      ms = seedream ? 240000 : (isPro ? 600000 : 420000);
+      ms = seedream ? 240000 : (qwenPro ? 900000 : (isPro ? 720000 : 420000));
     } else {
-      ms = seedream ? 240000 : (isPro ? 540000 : 300000);
+      ms = seedream ? 240000 : (qwenPro ? 900000 : (isPro ? 720000 : 300000));
     }
     if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 300000);
-    return Math.min(900000, ms);
+    return Math.min(960000, ms);
   }
 
   function buildEditFormData(modelList, fileList) {
