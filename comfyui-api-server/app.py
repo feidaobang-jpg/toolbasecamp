@@ -1141,8 +1141,8 @@ def _build_minimax_h3_t2v_workflow(
     steps: int = 8,
 ) -> dict:
     """
-    MiniMax H3 文生视频（本机 pruned INT8 + Turbo 8 步）。
-    16GB：默认 512×288（704×400 易 OOM）、CLIP 放 CPU、时长封顶约 5s。
+    MiniMax H3 文生（T8）：pruned INT8 + Turbo8 + ForwardSync + DualClock。
+    16GB：默认 512×288、CLIP@CPU、时长封顶约 5s。
     """
     workflow_path = os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER, "minimax_h3_t2v.json")
     with open(workflow_path, "r", encoding="utf-8") as f:
@@ -1150,24 +1150,24 @@ def _build_minimax_h3_t2v_workflow(
 
     w = _clamp_image_side(int(width), 32, 1280)
     h = _clamp_image_side(int(height), 32, 1280)
-    # 对齐 32
     w = max(32, (w // 32) * 32)
     h = max(32, (h // 32) * 32)
     length_i = _h3_snap_length(int(round(float(duration_sec) * float(fps))))
-    # 16GB 默认不超过约 5s（124 帧）
     length_i = min(length_i, 124)
     steps_i = max(4, min(20, int(steps or 8)))
     seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
 
-    # 强制 CLIP 走 CPU，避免与 INT8 UNet 抢 16GB 显存
     if "3" in workflow and isinstance(workflow["3"].get("inputs"), dict):
         workflow["3"]["inputs"]["device"] = "cpu"
 
-    workflow["6"]["inputs"]["prompt"] = (prompt_text or "").strip() or "cinematic motion, single continuous shot"
+    prompt_s = (prompt_text or "").strip() or "cinematic motion, single continuous shot"
+    workflow["6"]["inputs"]["prompt"] = prompt_s
     workflow["6"]["inputs"]["width"] = w
     workflow["6"]["inputs"]["height"] = h
     workflow["6"]["inputs"]["length"] = length_i
-    workflow["9"]["inputs"]["steps"] = steps_i
+    workflow["6"]["inputs"]["task_type"] = "T2VA"
+    workflow["6"]["inputs"]["audio_mode"] = "native"
+    workflow["7"]["inputs"]["steps"] = steps_i
     workflow["10"]["inputs"]["noise_seed"] = seed_i
     workflow["14"]["inputs"]["fps"] = int(fps)
     _patch_save_video_inputs(workflow.get("15") or {})

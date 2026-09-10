@@ -14,6 +14,12 @@
       "strength_model": 1.0
     }
   },
+  "16": {
+    "class_type": "MiniMaxH3ForwardSyncOptimizationT8Advanced",
+    "inputs": {
+      "model": ["2", 0]
+    }
+  },
   "3": {
     "class_type": "CLIPLoader",
     "inputs": {
@@ -35,36 +41,43 @@
     }
   },
   "6": {
-    "class_type": "MiniMaxH3ImageToVideo",
+    "class_type": "MiniMaxH3AudioConditioningT8",
     "inputs": {
       "clip": ["3", 0],
-      "vae": ["4", 0],
+      "video_vae": ["4", 0],
+      "audio_vae": ["5", 0],
       "prompt": "cinematic motion, single continuous shot",
-      "width": 704,
-      "height": 400,
-      "length": 73
+      "width": 512,
+      "height": 288,
+      "length": 73,
+      "task_type": "T2VA",
+      "audio_mode": "native",
+      "audio_denoise_strength": 0.35,
+      "add_source_as_reference": true,
+      "prompt_primary_audio_ordinal": 1,
+      "strict_prompt_tags": true,
+      "ref_image_size": "match",
+      "reference_video_policy": "official_2_to_15s",
+      "allow_above_reference_area": true
     }
   },
   "7": {
-    "class_type": "BasicGuider",
+    "class_type": "MiniMaxH3DualClockSamplerT8",
     "inputs": {
-      "model": ["2", 0],
-      "conditioning": ["6", 0]
+      "model": ["16", 0],
+      "av_latent": ["6", 1],
+      "steps": 8,
+      "shift_video": 12.0,
+      "shift_audio": 3.0,
+      "sampler_name": "dual_clock_euler",
+      "scheduler": "native_flow"
     }
   },
   "8": {
-    "class_type": "KSamplerSelect",
+    "class_type": "BasicGuider",
     "inputs": {
-      "sampler_name": "res_multistep"
-    }
-  },
-  "9": {
-    "class_type": "BasicScheduler",
-    "inputs": {
-      "model": ["2", 0],
-      "scheduler": "simple",
-      "steps": 8,
-      "denoise": 1.0
+      "model": ["7", 0],
+      "conditioning": ["6", 0]
     }
   },
   "10": {
@@ -77,31 +90,25 @@
     "class_type": "SamplerCustomAdvanced",
     "inputs": {
       "noise": ["10", 0],
-      "guider": ["7", 0],
-      "sampler": ["8", 0],
-      "sigmas": ["9", 0],
+      "guider": ["8", 0],
+      "sampler": ["7", 1],
+      "sigmas": ["7", 2],
       "latent_image": ["6", 1]
     }
   },
   "12": {
-    "class_type": "VAEDecode",
+    "class_type": "MiniMaxH3AVDecodeT8",
     "inputs": {
-      "samples": ["11", 0],
-      "vae": ["4", 0]
-    }
-  },
-  "13": {
-    "class_type": "VAEDecodeAudio",
-    "inputs": {
-      "samples": ["11", 0],
-      "vae": ["5", 0]
+      "av_latent": ["11", 0],
+      "video_vae": ["4", 0],
+      "audio_vae": ["5", 0]
     }
   },
   "14": {
     "class_type": "CreateVideo",
     "inputs": {
       "images": ["12", 0],
-      "audio": ["13", 0],
+      "audio": ["12", 1],
       "fps": 24,
       "bit_depth": "auto",
       "color_space": "sRGB"
