@@ -57,6 +57,11 @@
     return C.tr(key, params);
   }
 
+  /** Phone/tablet UA — request lighter API payloads (same idea as WeChat). */
+  function isMobileUA() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+  }
+
   function downloadName(item) {
     var name = 'instruct-edit-' + String(item.model || 'out').replace(/[^\w.-]+/g, '-');
     if (typeof item.index === 'number') name += '-' + (item.index + 1);
