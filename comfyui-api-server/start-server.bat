@@ -23,7 +23,7 @@ if exist "%~dp0local.env" (
 echo Checking Python...
 set "PY="
 
-rem Prefer explicit installs (3.12 first) — `py -3` may point at an env without tzdata
+rem Prefer Python312 path; py -3 may lack tzdata
 for %%P in (
   "%LocalAppData%\Programs\Python\Python312\python.exe"
   "%LocalAppData%\Programs\Python\Python313\python.exe"
@@ -108,13 +108,12 @@ set INDEXTTS_MODE=cli
 set INDEXTTS_CMD=edge-tts
 set INDEXTTS_VOICE=zh-CN-XiaoxiaoNeural
 set INDEXTTS_SPEED=1.0
-echo Music: ACE-Step 1.5 | SFX: Stable Audio Open | Image-to-3D: Hunyuan3D-2
+echo Music: ACE-Step 1.5 / SFX: Stable Audio Open / Image-to-3D: Hunyuan3D-2
 if not defined ACESTEP_ROOT set ACESTEP_ROOT=D:\sd\ACE-Step-1.5
 if not defined STABLE_AUDIO_ROOT set STABLE_AUDIO_ROOT=D:\sd\stable-audio-open
 if not defined STABLE_AUDIO_MODEL_DIR set STABLE_AUDIO_MODEL_DIR=D:\sd\stable-audio-open\model
 if not defined HUNYUAN3D_ROOT set HUNYUAN3D_ROOT=D:\sd\hunyuan3d
-rem 不要默认 HF_ENDPOINT=hf-mirror：会导致 hub missing commit header
-rem 若需镜像请自行 set HF_ENDPOINT=https://hf-mirror.com
+rem Do not default HF_ENDPOINT=hf-mirror (hub missing commit header). Set it yourself if needed.
 set PYTHONUTF8=1
 set PYTHONIOENCODING=utf-8
 
@@ -138,6 +137,10 @@ if /i "%~1"=="hidden" (
 )
 
 !PY! app.py
+if errorlevel 1 (
+  echo.
+  echo [ERROR] app.py exited with error. See messages above.
+)
 pause
 goto done
 
