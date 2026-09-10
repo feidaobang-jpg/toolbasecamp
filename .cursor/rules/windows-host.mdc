@@ -29,8 +29,17 @@ alwaysApply: true
 5. **换行自检（改过 `.bat` 后）**  
    - 在 `comfyui-api-server` 下 `cmd /c start-server.bat`，应看到正常横幅与 `Checking Python...`，而不是一串「不是内部或外部命令」。
 
+6. **`.bat` 里 `echo` 的特殊字符（曾导致双击一闪退出）**  
+   - **`|` `&` `<` `>` 在未转义时会被 cmd 当管道/重定向**，不是普通文字。  
+   - `echo A | B: xxx` 会报 `'B:' is not recognized`，且常在到达 `pause` 前就以非零退出 → **窗口一闪而过**。  
+   - `echo` 文案里要用竖线/与号时：写成 `^|` `^&`，或改用 `/` `·` 等安全分隔符。  
+   - 括号块内 `echo` 的 `)` 也要 `^)`。  
+   - 双击入口脚本：关键路径失败、`app.py` 崩溃后应 **`pause`**（或 `if errorlevel 1 pause`），不要无提示就 `exit`。  
+   - 改完用 `cmd /c start-server.bat` 跑到 `Starting:` / 报错停住，确认没有「不是内部或外部命令」再交差。
+
 ## 禁止
 
 - 只在 WSL/Linux 语义下改启动脚本，导致 Win 双击/cmd 挂掉。  
 - 提交或保存 `.bat` 时把 CRLF 转成 LF。  
-- 假设用户用 `./start-server.sh` 启动家里电脑 API。
+- 假设用户用 `./start-server.sh` 启动家里电脑 API。  
+- 在 `.bat` 的 `echo` 里写未转义的 `|` `&`（当普通标点用）。
