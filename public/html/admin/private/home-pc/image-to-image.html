@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../../../css/tools-form.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=imgSq3" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=imgSq4" />
-  <script src="../../../../js/locales/en.js?v=ttvname1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=ttvname1"></script>
+  <script src="../../../../js/locales/en.js?v=img2hint1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=img2hint1"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
   <script src="../../../../js/config.js?v=videoclip1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -41,7 +41,7 @@
       <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
     </div>
     <div id="app" class="home-pc-wrap hidden" hidden>
-      <p class="home-pc-desc" data-i18n="privateHub.homePc.img2imgHint">默认 Qwen 指令改图（工作流 qwen_image_edit_img2img，Checkpoint：Qwen-Rapid-AIO-NSFW-v10）。可选 Z-Image 整图重采样（z_image_turbo_img2img）。支持多图批量与可选平铺水印；老照片修复请用风格预设。</p>
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.img2imgHint">默认 Qwen 指令改图（工作流 qwen_image_edit_img2img，Checkpoint：Qwen-Rapid-AIO-NSFW-v10）。适合换装、换背景、修细节、老照片等「保构图」修改；三视图、大改姿势/排版请用文生图，指令改图几乎做不到。可选 Z-Image 整图重绘（靠 Denoise，仍不稳）。支持多图批量与可选平铺水印。</p>
       <div id="api-status" class="home-pc-status home-pc-status--checking" data-needs-qwen="1" role="status"></div>
       <div class="tool-container">
           <div class="input-section">
@@ -115,8 +115,8 @@
                 </select>
               </div>
             </div>
-            <p class="small-hint" id="quality-hint" data-i18n="privateHub.homePc.img2imgQualityHint">Qwen 固定标准档（约 1MP·4 步），避免高质量超时。</p>
-            <p class="small-hint" id="zimage-hint" hidden data-i18n="privateHub.homePc.img2imgZImageHint">Z-Image 按 Denoise 重绘整图，易改构图/人脸，无法像 Qwen 那样「只改背景」。人物与指令改图请用 Qwen。</p>
+            <p class="small-hint" id="quality-hint" data-i18n="privateHub.homePc.img2imgQualityHint">Qwen 固定标准档（约 1MP·4 步）。保原图构图/姿势，只改指令里写的外观；不要指望它出角色三视图。</p>
+            <p class="small-hint" id="zimage-hint" hidden data-i18n="privateHub.homePc.img2imgZImageHint">Z-Image 按 Denoise 整图重绘：大图约压到 1MP；Denoise 越高越敢改构图，仍易改脸/超时。人物局部改图用 Qwen；三视图仍建议文生图。</p>
             <div class="form-row">
               <div class="input-control" id="denoise-wrap" hidden>
                 <label for="denoise-input" data-i18n="privateHub.homePc.img2imgDenoiseLabel">重绘幅度 Denoise（0.05–1）：</label>
