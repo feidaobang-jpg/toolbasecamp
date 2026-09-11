@@ -294,11 +294,16 @@ _NEG_NON_CHINESE_CAST = (
 
 
 def _looks_like_classical_chinese_poetry(text: str) -> bool:
-    """粗判全文是否为古诗词/文言风格（用于古代人物与场景）。"""
+    """粗判全文是否为古诗词/文言风格（仅用于明确文言；勿靠中文逗号误伤普通提示）。"""
     s = re.sub(r"\s+", "", (text or "").strip())
     if len(s) < 4:
         return False
-    if re.search(r"手机|电脑|汽车|微信|比特币|NBA|迪士尼|高铁|飞机|西装革履", s):
+    if re.search(
+        r"手机|电脑|汽车|微信|比特币|NBA|迪士尼|高铁|飞机|西装革履|"
+        r"游戏|角色|三视图|骑士|动漫|二次元|赛博|机甲|Cosplay|盔甲|黑暗骑士",
+        s,
+        re.I,
+    ):
         return False
     han = len(re.findall(r"[\u4e00-\u9fff]", s))
     if han < max(4, len(s) // 2):
@@ -306,11 +311,10 @@ def _looks_like_classical_chinese_poetry(text: str) -> bool:
     score = 0
     if re.search(r"[之乎者也兮矣哉]", s):
         score += 2
-    if re.search(r"[，。；]", s):
-        score += 1
     if re.search(r"君|郎|妾|愁|赋|辞|朕|诸侯|大漠|长安|江南|明月|青山|白云|古道|西风", s):
-        score += 1
-    return score >= 1
+        score += 2
+    # 仅有中文逗号/句号不够：会把「游戏角色三视图，黑暗骑士」误判成古诗
+    return score >= 2
 
 
 def _chinese_cast_positive_fragment(classical_poetry: bool = False, chinese_cast: bool = False) -> str:
@@ -942,7 +946,8 @@ def _default_txt2img_negative(
     width: Optional[int] = None,
     height: Optional[int] = None,
 ) -> str:
-    parts = [_DEFAULT_TXT2IMG_NEGATIVE_CORE, _NEG_NON_CHINESE_CAST]
+    # 通用文生图/图生图：不要默认塞「只能中国人」负向（那是文字成片古诗预设专用）。
+    parts = [_DEFAULT_TXT2IMG_NEGATIVE_CORE]
     try:
         if width is not None and height is not None and int(height) > int(width):
             parts.append(_NEG_PORTRAIT_LAYOUT_EXTRA)
@@ -955,15 +960,12 @@ def _default_txt2img_negative(
 
 
 def _enhance_txt2img_positive(user_prompt: str) -> str:
-    """文生图：轻量包装正向提示，提高清晰度与贴合度。"""
+    """文生图：轻量包装正向提示，不自动注入古装/中国人设定。"""
     core = (user_prompt or "").strip()
     if not core:
         return core
-    classical = _looks_like_classical_chinese_poetry(core)
-    cast = _chinese_cast_positive_fragment(classical)
     return (
         "cinematic high-resolution shot, sharp focus, coherent composition, faithful to subject, "
-        f"{cast} "
         f"{core} "
         "consistent lighting and colors, physically plausible scene, no extra random objects, "
         "no readable text or watermarks."
@@ -978,16 +980,13 @@ _IMG2IMG_NEG_PRESERVE_EXTRA = (
 
 
 def _enhance_img2img_positive(user_prompt: str) -> str:
-    """图生图：强调「同一场景、只改描述处」，避免再套文生图那套「电影大片」引导导致全图重画。"""
+    """图生图：强调「同一场景、只改描述处」，不自动注入古装/中国人设定。"""
     core = (user_prompt or "").strip()
     if not core:
         return core
-    classical = _looks_like_classical_chinese_poetry(core)
-    cast = _chinese_cast_positive_fragment(classical)
     return (
         "photo edit of the same image, same camera angle and lighting; "
         "preserve all regions not mentioned in the instruction—same people, poses, faces, clothes, and background; "
-        f"{cast} "
         f"apply only this edit: {core}. "
         "Do not add helmets, hats, armor, or accessories unless explicitly requested in the edit. "
         "No unrelated object changes."
