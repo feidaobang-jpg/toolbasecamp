@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var projectSaveBtn = document.getElementById('project-save-btn');
   var projectActive = document.getElementById('project-active');
   var assetWorkspace = document.getElementById('asset-workspace');
+  var startGateHint = document.getElementById('start-gate-hint');
+  var projectBox = document.getElementById('project-box');
 
   var API_BASE = window.HomePcApi.base();
   var selectedType = 'character';
@@ -48,6 +50,37 @@ document.addEventListener('DOMContentLoaded', function () {
   var pollingTimer = null;
   var lastLogLen = 0;
   var pickedStillId = null;
+  var startBusy = false;
+
+  function notify(msg) {
+    var text = String(msg || '');
+    if (!text) return;
+    if (typeof window.tbNotify === 'function') {
+      window.tbNotify(text);
+      return;
+    }
+    alert(text);
+  }
+
+  function appendUiLog(line) {
+    if (!logOutput) return;
+    var stamp = new Date().toLocaleTimeString();
+    logOutput.textContent += (logOutput.textContent ? '\n' : '') + '[' + stamp + '] ' + line;
+    // 不自动滚动：遵守全局 UI 约定
+  }
+
+  function hasActiveProject() {
+    return !!(currentProject && (currentProject.slug || currentProject.project_id));
+  }
+
+  function syncStartEnabled() {
+    var ok = hasActiveProject();
+    if (startBtn) startBtn.disabled = startBusy || !ok;
+    if (startGateHint) {
+      startGateHint.hidden = ok;
+      startGateHint.style.display = ok ? 'none' : '';
+    }
+  }
 
   var ACTION_GROUPS = [
     { key: 'idle', labelKey: 'gameSpriteActGroupIdle', fallback: '待机', ids: ['idle'] },
@@ -236,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'privateHub.homePc.gameSpriteNeedProject',
         '请先创建或打开一个游戏项目'
       );
+      syncStartEnabled();
       return;
     }
     var camLabel =
@@ -248,12 +282,14 @@ document.addEventListener('DOMContentLoaded', function () {
       (currentProject.name || currentProject.slug) +
       ' · ' +
       camLabel;
+    syncStartEnabled();
   }
 
   function applyProjectToForm(proj) {
     currentProject = proj || null;
     if (!proj) {
       updateProjectActiveLabel();
+      syncStartEnabled();
       return;
     }
     selectedCamera = _normalizeCameraUi(proj.camera);
@@ -333,9 +369,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function createProject() {
     var name = (projectName && projectName.value || '').trim();
     if (!name) {
-      if (typeof window.tbNotify === 'function') {
-        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedProjectName', '请填写游戏项目名'));
-      }
+      notify(tr('privateHub.homePc.gameSpriteNeedProjectName', '请填写游戏项目名'));
+      if (projectName) projectName.focus();
       return;
     }
     var fd = new FormData();
@@ -356,15 +391,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return loadProjects(data.project && data.project.slug);
       })
       .catch(function (e) {
-        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+        notify(String(e.message || e));
       });
   }
 
   function saveProjectSettings() {
-    if (!currentProject || !(currentProject.slug || currentProject.project_id)) {
-      if (typeof window.tbNotify === 'function') {
-        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目'));
-      }
+    if (!hasActiveProject()) {
+      notify(tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目'));
       return;
     }
     var fd = new FormData();
@@ -379,13 +412,11 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (data) {
         if (!data || !data.success) throw new Error((data && data.detail) || 'save failed');
         applyProjectToForm(data.project);
-        if (typeof window.tbNotify === 'function') {
-          window.tbNotify(tr('privateHub.homePc.gameSpriteProjectSaved', '项目设置已保存'));
-        }
+        notify(tr('privateHub.homePc.gameSpriteProjectSaved', '项目设置已保存'));
         return loadProjects(data.project && data.project.slug);
       })
       .catch(function (e) {
-        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+        notify(String(e.message || e));
       });
   }
 
@@ -401,7 +432,8 @@ document.addEventListener('DOMContentLoaded', function () {
   loadProjects();
 
   function setBusy(busy) {
-    if (startBtn) startBtn.disabled = !!busy;
+    startBusy = !!busy;
+    syncStartEnabled();
     if (cancelBtn) cancelBtn.disabled = !busy;
     if (confirmPickBtn) confirmPickBtn.disabled = !!busy && !!currentTaskId;
   }
@@ -520,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
         : tr(
             'privateHub.homePc.gameSpriteStillsHint',
-            '定妆 1 张会自动选用并继续动作。点放大镜看大图；也可上传自己的参考图。'
+            '定妆按视角只出 1 张主参考，会自动选用并继续动作；也可上传自己的参考图。'
           );
     }
     stillsBox.querySelectorAll('.gs-stills-live-hint').forEach(function (el) {
@@ -792,19 +824,23 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function startTask() {
-    if (!currentProject || !(currentProject.slug || currentProject.project_id)) {
-      if (typeof window.tbNotify === 'function') {
-        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目'));
+    if (!hasActiveProject()) {
+      var msg = tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目');
+      notify(msg);
+      appendUiLog(msg);
+      syncStartEnabled();
+      if (projectBox && typeof projectBox.scrollIntoView === 'function') {
+        projectBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+      if (projectName) projectName.focus();
       return;
     }
     var brief = (briefInput && briefInput.value || '').trim();
     if (brief.length < 2) {
-      if (typeof window.tbNotify === 'function') {
-        window.tbNotify(tr('privateHub.homePc.gameSpriteNeedBrief', '请填写设定描述'));
-      } else {
-        alert(tr('privateHub.homePc.gameSpriteNeedBrief', '请填写设定描述'));
-      }
+      var briefMsg = tr('privateHub.homePc.gameSpriteNeedBrief', '请填写设定描述');
+      notify(briefMsg);
+      appendUiLog(briefMsg);
+      if (briefInput) briefInput.focus();
       return;
     }
     var fd = new FormData();
@@ -831,9 +867,25 @@ document.addEventListener('DOMContentLoaded', function () {
     if (stillsList) stillsList.innerHTML = '';
     if (previewBox) previewBox.style.display = 'none';
 
+    appendUiLog(
+      tr(
+        'privateHub.homePc.gameSpriteStartQueued',
+        '已提交定妆任务（与游戏视角匹配的 1 张主参考）…'
+      )
+    );
     setBusy(true);
     fetch(API_BASE + '/game-sprite/create', { method: 'POST', body: fd })
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        return r.json().then(function (data) {
+          if (!r.ok) {
+            var detail =
+              (data && (data.detail || data.error || data.message)) ||
+              ('HTTP ' + r.status);
+            throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+          }
+          return data;
+        });
+      })
       .then(function (data) {
         if (!data || !data.success) throw new Error((data && data.detail) || 'create failed');
         currentTaskId = data.task_id;
@@ -841,9 +893,9 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .catch(function (e) {
         setBusy(false);
-        if (typeof window.tbNotify === 'function') {
-          window.tbNotify(String(e.message || e));
-        }
+        var err = String(e.message || e);
+        notify(err);
+        appendUiLog('定妆提交失败：' + err);
       });
   }
 
@@ -1173,5 +1225,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (historyRefreshBtn) historyRefreshBtn.addEventListener('click', loadHistory);
+  syncStartEnabled();
   loadHistory();
 });

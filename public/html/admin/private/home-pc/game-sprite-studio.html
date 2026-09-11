@@ -10,11 +10,12 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq4" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=imgSq4" />
-  <script src="../../../../js/locales/en.js?v=ttvname1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=ttvname1"></script>
+  <script src="../../../../js/locales/en.js?v=gsfix1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=gsfix1"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=videoclip1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
+  <script src="../../../../js/base.js?v=gsfix1"></script>
 </head>
 <body class="home-pc-page">
   <div class="home-pc-container">
@@ -39,7 +40,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">先创建游戏项目（默认俯视）→ 工作流 z_image_turbo.json 定妆静帧 → Wan 2.2 14B GGUF I2V 抽动作帧 → 导出 Godot。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.gameSpriteHint">流程：① 创建/打开游戏项目 → ② 填写设定 → ③「生成定妆」用 Z-Image 出 1 张与游戏视角匹配的主参考（俯视=俯视定妆，侧视=侧视定妆；不是文生图那种三视图正面）→ ④ 自动选用或确认后，Wan 14B 图生视频抽动作帧 → ⑤ 导出 Godot。也可上传自己的定妆图跳过生图。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -139,8 +140,9 @@
                 <p class="small-hint" data-i18n="privateHub.homePc.gameSpriteActionsHint">中文标签；导出仍用英文动画名。道具/建筑/场景不生成动作。</p>
               </div>
 
+              <p id="start-gate-hint" class="small-hint" data-i18n="privateHub.homePc.gameSpriteStartGateHint">请先在上方创建或打开游戏项目，并填写设定描述，再点「生成定妆」。</p>
               <div class="action-row">
-                <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteStart">生成定妆</button>
+                <button type="button" id="start-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteStart" disabled>生成定妆</button>
                 <button type="button" id="cancel-btn" class="tb-btn" disabled data-i18n="privateHub.homePc.cancelTask">取消</button>
                 <button type="button" id="clear-btn" class="tb-btn" data-i18n="privateHub.homePc.clear">清空</button>
               </div>
@@ -157,7 +159,7 @@
 
             <div id="stills-box" class="home-pc-result-box" style="display:none;">
               <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.gameSpriteStillsTitle">选择主参考图</h3>
-              <p class="small-hint gs-stills-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">定妆 1 张会自动选用并继续动作。点放大镜看大图；也可上传自己的参考图。</p>
+              <p class="small-hint gs-stills-hint" data-i18n="privateHub.homePc.gameSpriteStillsHint">定妆按项目视角只出 1 张主参考（供动作起始帧），会自动选用并继续抽动作；不满意可上传自己的参考图再确认。</p>
               <div id="stills-list" class="trailer-cand-grid gs-stills-grid"></div>
               <div class="action-row gs-stills-actions" style="margin-top:12px;">
                 <button type="button" id="confirm-pick-btn" class="tb-btn" data-i18n="privateHub.homePc.gameSpriteConfirmPick">确认选图并生成动作</button>
@@ -214,7 +216,7 @@
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=histDel1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
-  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=histDel1"></script>
+  <script src="../../../../js/admin/home-pc/game-sprite-studio.js?v=gsfix1"></script>
   <div id="lightbox" class="trailer-lightbox image-pipe-lightbox" hidden aria-hidden="true">
     <button type="button" class="trailer-lightbox-backdrop" id="lightbox-backdrop" aria-label="关闭"></button>
     <div class="trailer-lightbox-panel image-pipe-lightbox-panel" role="dialog" aria-modal="true">
