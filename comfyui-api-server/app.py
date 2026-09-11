@@ -1385,7 +1385,11 @@ async def get_view_bytes(filename: str, subfolder: str, folder_type: str):
     return await asyncio.to_thread(_fetch)
 
 
-async def _run_comfyui_and_get_last_video(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
+async def _run_comfyui_and_get_last_video(
+    workflow: dict,
+    timeout_sec: Optional[float] = None,
+    cancel_check=None,
+) -> bytes:
     async with _COMFYUI_JOB_SEM:
         lift_info = await asyncio.to_thread(lift_gpu_power_for_video)
         if lift_info.get("ok") and not lift_info.get("skipped"):
@@ -1402,7 +1406,9 @@ async def _run_comfyui_and_get_last_video(workflow: dict, timeout_sec: Optional[
                 flush=True,
             )
         try:
-            return await _run_comfyui_and_get_last_video_impl(workflow, timeout_sec)
+            return await _run_comfyui_and_get_last_video_impl(
+                workflow, timeout_sec, cancel_check=cancel_check
+            )
         finally:
             restore_info = await asyncio.to_thread(restore_gpu_power_after_video)
             if restore_info.get("ok") and not restore_info.get("skipped"):
@@ -1443,7 +1449,11 @@ def _comfyui_history_error_message(history: dict) -> Optional[str]:
     return None
 
 
-async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Optional[float] = None) -> bytes:
+async def _run_comfyui_and_get_last_video_impl(
+    workflow: dict,
+    timeout_sec: Optional[float] = None,
+    cancel_check=None,
+) -> bytes:
     if timeout_sec is None:
         timeout_sec = float(os.environ.get("COMFYUI_VIDEO_JOB_TIMEOUT", "3600"))
     deadline = time.monotonic() + timeout_sec
@@ -1452,6 +1462,7 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
     ws = websocket.WebSocket()
     prompt_id = None
     timed_out = False
+    cancelled = False
     ws_exec_error: Optional[str] = None
     try:
         await asyncio.to_thread(
@@ -1461,6 +1472,9 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
         prompt_id = prompt_response["prompt_id"]
 
         while True:
+            if callable(cancel_check) and cancel_check():
+                cancelled = True
+                raise RuntimeError("cancelled")
             remaining = deadline - time.monotonic()
             if remaining <= 0:
                 timed_out = True
@@ -1537,7 +1551,7 @@ async def _run_comfyui_and_get_last_video_impl(workflow: dict, timeout_sec: Opti
             await asyncio.to_thread(ws.close)
         except Exception:
             pass
-        if timed_out:
+        if timed_out or cancelled:
             try:
                 await interrupt_comfyui()
             except Exception:
@@ -4717,6 +4731,7 @@ _game_sprite_api = GameSpriteAPI(
     default_txt2img_negative=_default_txt2img_negative,
     image_no_text_prefix=_IMAGE_NO_TEXT_PREFIX,
     free_comfyui_memory=free_comfyui_memory,
+    interrupt_comfyui=interrupt_comfyui,
 )
 _game_sprite_api.register(app)
 

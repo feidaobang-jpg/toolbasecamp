@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var pollingTimer = null;
   var lastLogLen = 0;
   var pickedStillId = null;
+  var lastStillsSig = '';
+  var lastPreviewSig = '';
   var startBusy = false;
 
   function notify(msg) {
@@ -532,12 +534,54 @@ document.addEventListener('DOMContentLoaded', function () {
     if (mediaLb) mediaLb.openAt(idx);
   }
 
+  function stillsSignature(list, generating) {
+    var items = Array.isArray(list) ? list : [];
+    return (
+      items
+        .map(function (it) {
+          return [
+            it.id || it.path || '',
+            it.thumb_url || it.url || '',
+            it.width || '',
+            it.height || '',
+            it.bytes || ''
+          ].join(':');
+        })
+        .join('|') +
+      '#' +
+      (generating ? '1' : '0') +
+      '#' +
+      (pickedStillId || '')
+    );
+  }
+
+  function previewSignature(data) {
+    var items = Array.isArray(data && data.preview) ? data.preview : [];
+    return (
+      items
+        .map(function (anim) {
+          return [
+            anim.anim || '',
+            anim.sheet_url || '',
+            anim.count || 0,
+            (anim.frames || []).join(',')
+          ].join(':');
+        })
+        .join('|') +
+      '#' +
+      ((data && data.zip_url) || '') +
+      '#' +
+      ((data && data.export_hint) || '')
+    );
+  }
+
   function renderStills(list, opts) {
     if (!stillsBox || !stillsList) return;
     var items = Array.isArray(list) ? list : [];
     if (!items.length) {
       stillsBox.style.display = 'none';
       stillGallery = [];
+      lastStillsSig = '';
       return;
     }
     stillsBox.style.display = 'block';
@@ -581,6 +625,22 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (prefer) pickedStillId = prefer;
     }
+
+    var sig = stillsSignature(items, generating);
+    if (sig === lastStillsSig && stillsList.childElementCount) {
+      stillGallery = items.map(function (it) {
+        return {
+          id: it.id || it.path,
+          kind: it.kind || it.id,
+          url: it.url,
+          thumb_url: it.thumb_url || it.url,
+          prompt: it.prompt || '',
+          elapsed_sec: it.elapsed_sec
+        };
+      });
+      return;
+    }
+    lastStillsSig = sig;
 
     stillGallery = items.map(function (it) {
       return {
@@ -701,8 +761,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var items = Array.isArray(data.preview) ? data.preview : [];
     if (!items.length && !data.zip_url) {
       previewBox.style.display = 'none';
+      lastPreviewSig = '';
       return;
     }
+    var sig = previewSignature(data);
+    if (sig === lastPreviewSig && previewList.childElementCount) {
+      previewBox.style.display = 'block';
+      return;
+    }
+    lastPreviewSig = sig;
     previewBox.style.display = 'block';
     if (exportHint) {
       exportHint.textContent =
@@ -861,6 +928,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('action_duration_sec', '2.5');
 
     lastLogLen = 0;
+    lastStillsSig = '';
+    lastPreviewSig = '';
     if (logOutput) logOutput.textContent = '';
     pickedStillId = null;
     if (stillsBox) stillsBox.style.display = 'none';
@@ -904,9 +973,32 @@ document.addEventListener('DOMContentLoaded', function () {
   if (cancelBtn) {
     cancelBtn.addEventListener('click', function () {
       if (!currentTaskId) return;
+      var msg = tr(
+        'privateHub.homePc.gameSpriteCancelQueued',
+        '正在取消任务并中断 ComfyUI…'
+      );
+      appendUiLog(msg);
+      notify(msg);
       var fd = new FormData();
       fd.append('task_id', currentTaskId);
-      fetch(API_BASE + '/game-sprite/cancel', { method: 'POST', body: fd });
+      fetch(API_BASE + '/game-sprite/cancel', { method: 'POST', body: fd })
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function (data) {
+          if (!data || !data.success) {
+            throw new Error((data && data.detail) || 'cancel failed');
+          }
+          appendUiLog(
+            tr(
+              'privateHub.homePc.gameSpriteCancelDone',
+              '已发送取消；进度条会在当前步骤结束后停下。'
+            )
+          );
+        })
+        .catch(function (e) {
+          notify(String(e.message || e));
+        });
     });
   }
 
@@ -916,6 +1008,8 @@ document.addEventListener('DOMContentLoaded', function () {
       currentTaskId = null;
       pickedStillId = null;
       lastLogLen = 0;
+      lastStillsSig = '';
+      lastPreviewSig = '';
       if (briefInput) briefInput.value = '';
       if (charName) charName.value = '';
       if (logOutput) logOutput.textContent = '';

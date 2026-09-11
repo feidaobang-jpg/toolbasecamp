@@ -666,6 +666,8 @@ window.TB_LOCALES.en = {
             gameSpriteNeedProjectName: 'Enter a game project name',
             gameSpriteStartGateHint: 'Create or open a project above, fill the brief, then click Generate stills.',
             gameSpriteStartQueued: 'Stills task queued (one camera-matched hero reference)…',
+            gameSpriteCancelQueued: 'Cancelling task and interrupting ComfyUI…',
+            gameSpriteCancelDone: 'Cancel sent; progress will stop after the current step ends.',
             gameSpriteNameLabel: 'Character / asset name',
             gameSpriteBriefLabel: 'Brief',
             gameSpriteTypeLabel: 'Asset type',

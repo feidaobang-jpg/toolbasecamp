@@ -665,6 +665,8 @@ window.TB_LOCALES['zh-CN'] = {
             gameSpriteNeedProjectName: '请填写游戏项目名',
             gameSpriteStartGateHint: '请先在上方创建或打开游戏项目，并填写设定描述，再点「生成定妆」。',
             gameSpriteStartQueued: '已提交定妆任务（与游戏视角匹配的 1 张主参考）…',
+            gameSpriteCancelQueued: '正在取消任务并中断 ComfyUI…',
+            gameSpriteCancelDone: '已发送取消；进度条会在当前步骤结束后停下。',
             gameSpriteNameLabel: '角色 / 资产名',
             gameSpriteBriefLabel: '设定描述',
             gameSpriteTypeLabel: '资产类型',

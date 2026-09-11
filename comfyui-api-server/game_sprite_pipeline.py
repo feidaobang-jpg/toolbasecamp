@@ -761,12 +761,28 @@ class GameSpriteAPI:
         wf = build_rembg(fname)
         return await run(wf)
 
-    async def _i2v(self, image_bytes: bytes, prompt: str, duration_sec: float) -> bytes:
+    async def _interrupt_comfy(self) -> None:
+        fn = self.deps.get("interrupt_comfyui")
+        if not fn:
+            return
+        try:
+            await fn()
+        except Exception:
+            pass
+
+    async def _i2v(
+        self,
+        image_bytes: bytes,
+        prompt: str,
+        duration_sec: float,
+        *,
+        cancel_check=None,
+    ) -> bytes:
         upload = self.deps["upload_image_bytes"]
         build = self.deps["build_wan22_ti2v_workflow"]
         run_v = self.deps["run_comfyui_and_get_last_video"]
         fname, _sub = await upload(image_bytes, name_prefix="gs_i2v_")
-        # 16GB：Wan 14B GGUF，短边约 480
+        # 16GB：Wan 14B GGUF，短边约 480；单次常需 10–25 分钟
         w, h = 640, 480
         length = _length_for_sec(duration_sec, 24)
         wf = build(
@@ -782,7 +798,8 @@ class GameSpriteAPI:
             length=length,
             fps=24,
         )
-        return await run_v(wf, timeout_sec=max(600.0, duration_sec * 180))
+        timeout = max(1800.0, float(duration_sec or 2.5) * 400.0)
+        return await run_v(wf, timeout_sec=timeout, cancel_check=cancel_check)
 
     async def _run_stills(self, task_id: str) -> None:
         task = self.tasks.get(task_id)
@@ -1006,7 +1023,14 @@ class GameSpriteAPI:
         target_frames = int(task.get("frames_per_action") or 8)
 
         self._log(task, f"[{action}] Wan 14B GGUF I2V…")
-        video_bytes = await self._i2v(ref_bytes, prompt, dur)
+        video_bytes = await self._i2v(
+            ref_bytes,
+            prompt,
+            dur,
+            cancel_check=lambda: bool(task.get("cancel")),
+        )
+        if task.get("cancel"):
+            raise RuntimeError("cancelled")
         await self._free_vram()
 
         vid_dir = d / "videos"
@@ -1095,10 +1119,22 @@ class GameSpriteAPI:
                     )
                     self._save_task_snapshot(task)
                 except Exception as e:
+                    err = str(e)
+                    if task.get("cancel") or "cancelled" in err.lower():
+                        task["status"] = "cancelled"
+                        self._log(task, "已取消（已中断 ComfyUI 当前任务）")
+                        self._save_task_snapshot(task)
+                        return
                     self._log(task, f"[{action}] 失败: {e}")
                     task.setdefault("failed_actions", [])
                     if action not in task["failed_actions"]:
                         task["failed_actions"].append(action)
+
+            if task.get("cancel"):
+                task["status"] = "cancelled"
+                self._log(task, "已取消")
+                self._save_task_snapshot(task)
+                return
 
             task["progress"] = {"current": total, "total": total}
             task["stage"] = "export"
@@ -1387,7 +1423,9 @@ class GameSpriteAPI:
         async def gs_cancel(task_id: str = Form(...)):
             task = api._ensure_task(task_id)
             task["cancel"] = True
-            api._log(task, "收到取消请求…")
+            api._log(task, "收到取消请求，正在中断 ComfyUI…")
+            api._save_task_snapshot(task)
+            await api._interrupt_comfy()
             return {"success": True}
 
         @app.post("/game-sprite/confirm-pick")
