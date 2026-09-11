@@ -31,7 +31,9 @@ git commit -m "feat: 简要中文说明"
 git push origin HEAD
 ```
 
-推送后 GitHub Actions 会自动部署；不要只改仓库让用户自己去 VPS 手动同步代码（运维类 SSH 除外）。
+推送后 GitHub Actions **通常**会 rsync 静态站；**但 push 成功 ≠ 线上已更新**。  
+若改了 **`public/**`**：须按 `verify-static-deploy` **校验公网/VPS**，过期则 SSH 补同步，禁止假设 Actions 一定成功。  
+不要只改仓库让用户自己去 VPS 手动同步（运维类 SSH 除外）。
 
 若本次改动了 `comfyui-api-server/`，push 后还须按 `comfyui-api-restart`：本机能重启则自动重启该 API。
 

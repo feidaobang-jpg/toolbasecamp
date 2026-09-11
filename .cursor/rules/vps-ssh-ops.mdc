@@ -49,7 +49,8 @@ Host toolbasecamp-cn
 |------|------|
 | Nginx API 超时等 | 跑 `deploy/patch-nginx-api.sh` → reload nginx |
 | 新增 / 改 env | **必须**用 `deploy/upsert-api-env.py`（见下节），禁止手搓换行 |
-| 代码已 push | GitHub Actions 会自动 deploy；仅 **配置/nginx/systemd** 需 SSH 补跑 |
+| 代码已 push（`public/**`） | Actions **通常**会 rsync；须按 `verify-static-deploy` **校验**，失败则 SSH 补同步静态站 |
+| 代码已 push（仅 API/配置） | 仅 **配置/nginx/systemd** 需 SSH 补跑；API 代码靠 Actions rsync `server/` |
 | 长任务被 kill | 检查 `TimeoutStopSec`（service）、`proxy_read_timeout`（nginx） |
 
 ## `/etc/toolbasecamp-api.env` 写入（禁止再犯）
