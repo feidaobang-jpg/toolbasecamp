@@ -13,7 +13,7 @@ PAGES = [
     ("image-to-image.html", "image-to-image.html", "privateHub.homePc.img2imgTitle", "image-to-image.js", "图生图"),
     ("describe-cutout.html", "describe-cutout.html", "privateHub.homePc.describeCutoutTitle", "describe-cutout.js", "描述抠图"),
     # photo-restore 已并入图生图；text-to-images 已并入文字成片（输出「生成图片」）；旧 URL 见对应 redirect HTML
-    ("text-to-video.html", "text-to-video.html", "privateHub.homePc.textToVideoTitle", "text-to-video.js", "文字成片"),
+    ("text-to-video.html", "text-to-video.html", "privateHub.homePc.textToVideoTitle", "text-to-video.js", "文生图合成视频"),
 ]
 
 TEMPLATE = """<!DOCTYPE html>
