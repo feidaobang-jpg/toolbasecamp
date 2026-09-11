@@ -1518,12 +1518,16 @@ async def _run_comfyui_and_get_last_video_impl(
     timed_out = False
     cancelled = False
     ws_exec_error: Optional[str] = None
+    # 每个视频任务用独立 clientId，避免与其它 Comfy 任务抢同一条 WS 丢消息后假死
+    client_id = str(uuid.uuid4())
+    last_hb = time.monotonic()
     try:
         await asyncio.to_thread(
-            ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, CLIENT_ID), timeout=10
+            ws.connect, "ws://{}/ws?clientId={}".format(COMFYUI_SERVER_ADDRESS, client_id), timeout=10
         )
-        prompt_response = await queue_prompt(workflow)
+        prompt_response = await queue_prompt(workflow, client_id=client_id)
         prompt_id = prompt_response["prompt_id"]
+        print(f"[video] queued prompt_id={prompt_id}", flush=True)
 
         while True:
             if callable(cancel_check) and cancel_check():
@@ -1533,10 +1537,68 @@ async def _run_comfyui_and_get_last_video_impl(
             if remaining <= 0:
                 timed_out = True
                 raise RuntimeError(f"ComfyUI 图生视频超时（{int(timeout_sec)} 秒）")
-            ws.settimeout(min(30.0, max(1.0, remaining)))
+            ws.settimeout(min(15.0, max(1.0, remaining)))
             try:
                 out = await asyncio.to_thread(ws.recv)
             except websocket.WebSocketTimeoutException:
+                # WS 丢包时用 history/queue 兜底，避免队列已空仍干等到超时
+                done = False
+                if prompt_id:
+                    try:
+                        hist_wrap = await get_history(prompt_id)
+                        hist = (hist_wrap or {}).get(prompt_id)
+                        if hist:
+                            st = hist.get("status") or {}
+                            if st.get("completed") is True or str(st.get("status_str") or "") in (
+                                "success",
+                                "error",
+                            ):
+                                err = _comfyui_history_error_message(hist)
+                                if err:
+                                    ws_exec_error = err
+                                done = True
+                    except Exception:
+                        pass
+                    if not done:
+                        try:
+                            q = await asyncio.to_thread(
+                                requests.get,
+                                "http://{}/queue".format(COMFYUI_SERVER_ADDRESS),
+                                timeout=5,
+                            )
+                            q.raise_for_status()
+                            body = q.json() or {}
+                            running = body.get("queue_running") or []
+                            pending = body.get("queue_pending") or []
+
+                            def _qid(item) -> str:
+                                # [number, prompt_id, ...]
+                                if isinstance(item, (list, tuple)) and len(item) >= 2:
+                                    return str(item[1])
+                                return ""
+
+                            in_q = any(_qid(x) == str(prompt_id) for x in list(running) + list(pending))
+                            if not in_q:
+                                # 不在队列且尚无 history：再查一次 history；仍无则继续等（可能刚出队）
+                                hist_wrap = await get_history(prompt_id)
+                                hist = (hist_wrap or {}).get(prompt_id)
+                                if hist:
+                                    err = _comfyui_history_error_message(hist)
+                                    if err:
+                                        ws_exec_error = err
+                                    done = True
+                        except Exception:
+                            pass
+                if done:
+                    break
+                now = time.monotonic()
+                if now - last_hb >= 30.0:
+                    last_hb = now
+                    print(
+                        f"[video] waiting ComfyUI prompt_id={prompt_id} "
+                        f"left={int(max(0.0, deadline - now))}s",
+                        flush=True,
+                    )
                 continue
             if isinstance(out, str):
                 message = json.loads(out)
@@ -2787,9 +2849,9 @@ async def text_to_video_reveal_output(task_id: str = Form(...)):
     return {"success": True, "path": str(p)}
 
 
-async def queue_prompt(prompt):
+async def queue_prompt(prompt, client_id: Optional[str] = None):
     print("API: queue_prompt called")
-    p = {"prompt": prompt, "client_id": CLIENT_ID}
+    p = {"prompt": prompt, "client_id": client_id or CLIENT_ID}
     try:
         # 使用 asyncio.to_thread 防止阻塞事件循环
         response = await asyncio.to_thread(requests.post, "http://{}/prompt".format(COMFYUI_SERVER_ADDRESS), json=p, timeout=30)

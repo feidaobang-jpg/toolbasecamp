@@ -393,6 +393,9 @@ class VideoClipAPI:
             else "Use the provided start image as frame 1. Subtle cinematic motion."
         )
         if mode == "wan22_14b_gguf":
+            # 16GB：与文生一致，最长约 5s / 81 帧，避免 117 帧长时间假死或 OOM
+            wan_fps = 16
+            length = min(81, _length_for_duration(min(float(duration_sec), 5.0), fps=wan_fps))
             wf = self.deps["build_wan22_ti2v_workflow"](
                 comfy_image,
                 motion,
@@ -401,9 +404,9 @@ class VideoClipAPI:
                 width=wan_wh[0],
                 height=wan_wh[1],
                 length=length,
-                fps=24,
+                fps=wan_fps,
             )
-            note = f"Wan2.2-14B GGUF I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧"
+            note = f"Wan2.2-14B GGUF I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧@{wan_fps}fps"
         else:
             wf = self.deps["build_ltx25_i2v_workflow"](
                 comfy_image,
@@ -467,7 +470,7 @@ class VideoClipAPI:
                     task,
                     f"对比 {ei + 1}/{n}：{label}" if multi else f"引擎：{label}",
                 )
-                await self._free_vram(task, label, heavy=(mode in ("minimax_h3_t2v", "wan22_t2v_14b_gguf")))
+                await self._free_vram(task, label, heavy=(mode in ("minimax_h3_t2v", "wan22_t2v_14b_gguf", "wan22_14b_gguf")))
                 t0 = time.perf_counter()
                 try:
                     wf, note = self._build_workflow(
@@ -480,8 +483,12 @@ class VideoClipAPI:
                         seed=task.get("seed"),
                         comfy_image=comfy_name,
                     )
-                    self._log(task, f"提交 ComfyUI（{note}）…")
-                    timeout = 1800.0 if mode == "wan22_t2v_14b_gguf" else None
+                    self._log(task, f"等待 GPU 槽位并提交 ComfyUI（{note}）…")
+                    timeout = (
+                        1800.0
+                        if mode in ("wan22_t2v_14b_gguf", "wan22_14b_gguf")
+                        else None
+                    )
                     vid_bytes = await run_video(wf, timeout_sec=timeout)
                     digest = hashlib.md5(vid_bytes).hexdigest()
                     if digest in seen_hashes:
