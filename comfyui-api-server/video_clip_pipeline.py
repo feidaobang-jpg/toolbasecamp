@@ -200,8 +200,9 @@ def _clamp_duration(raw) -> float:
     try:
         v = float(raw)
     except Exception:
-        v = 5.0
-    return max(3.0, min(10.0, v))
+        v = 3.0
+    # 文生/图生：默认偏短更稳；最长 6s（Wan 另在工作流侧硬顶 3s）
+    return max(2.0, min(6.0, v))
 
 
 def _length_for_duration(duration_sec: float, fps: int = 24) -> int:
@@ -355,9 +356,9 @@ class VideoClipAPI:
                 build_wan = self.deps.get("build_wan22_t2v_gguf_workflow")
                 if not callable(build_wan):
                     raise RuntimeError("未注入 Wan 14B GGUF 文生工作流")
-                # 16GB：16fps、最长约 5s（81 帧），避免 empty latent 过长 OOM
+                # 16GB：16fps、最长约 3s（约 49 帧），减少漂移与超时
                 wan_fps = 16
-                length = min(81, _length_for_duration(min(float(duration_sec), 5.0), fps=wan_fps))
+                length = min(81, _length_for_duration(min(float(duration_sec), 3.0), fps=wan_fps))
                 wf = build_wan(
                     prompt_s,
                     negative_text=neg,
@@ -393,9 +394,9 @@ class VideoClipAPI:
             else "Use the provided start image as frame 1. Subtle cinematic motion."
         )
         if mode == "wan22_14b_gguf":
-            # 16GB：与文生一致，最长约 5s / 81 帧，避免 117 帧长时间假死或 OOM
+            # 16GB：最长约 3s / 81 帧，减少身份漂移与假死
             wan_fps = 16
-            length = min(81, _length_for_duration(min(float(duration_sec), 5.0), fps=wan_fps))
+            length = min(81, _length_for_duration(min(float(duration_sec), 3.0), fps=wan_fps))
             wf = self.deps["build_wan22_ti2v_workflow"](
                 comfy_image,
                 motion,
@@ -584,17 +585,17 @@ class VideoClipAPI:
                 "engines": {mid: meta["label"] for mid, meta in engines.items()},
                 "default_engine": "ltx25_t2v" if k == "t2v" else "wan22_14b_gguf",
                 "aspects": {"16_9": "横屏 16:9", "9_16": "竖屏 9:16"},
-                "duration_min": 3,
-                "duration_max": 10,
-                "duration_default": 5,
+                "duration_min": 2,
+                "duration_max": 6,
+                "duration_default": 3,
                 "workflows": {
                     "t2v": "ltx25_t2v.json / wan22_t2v_14b_gguf.json",
                     "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
                 },
                 "hint": (
-                    "文生默认 LTX 2.5（704×400·直出音频）；可选 Wan 2.2 14B GGUF（512×288·约≤5s@16fps·无音频）。"
+                    "文生默认 3s（可选 2～6s）。Wan GGUF 实际硬顶约 3s；LTX 可用满所选时长并直出音频。"
                     if k == "t2v"
-                    else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
+                    else "图生默认 3s（可选 2～6s）。Wan GGUF 实际硬顶约 3s；LTX 可用满所选时长并直出音频。"
                 ),
             }
 
@@ -605,7 +606,7 @@ class VideoClipAPI:
             prompt: str = Form(""),
             negative: str = Form(""),
             aspect: str = Form("16_9"),
-            duration_sec: str = Form("5"),
+            duration_sec: str = Form("3"),
             video_mode: str = Form(""),
             video_modes: str = Form(""),
             seed: str = Form(""),

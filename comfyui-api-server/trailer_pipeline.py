@@ -555,8 +555,9 @@ def _clamp_shot_duration(raw) -> float:
     try:
         d = float(raw)
     except Exception:
-        d = 5.0
-    return float(max(3, min(10, int(round(d)))))
+        d = 4.0
+    # 短片/剧集：允许 3～8s；Wan 成片侧另硬顶约 3s
+    return float(max(3, min(8, int(round(d)))))
 
 
 def _clamp_segment_count(raw) -> int:
@@ -1200,7 +1201,7 @@ class TrailerAPI:
             candidates_per_shot: str = Form("1"),
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
-            shot_duration: str = Form("5"),
+            shot_duration: str = Form("4"),
             segment_count: str = Form("1"),
             video_mode: str = Form("wan22_14b_gguf"),
             video_modes: str = Form(""),
@@ -2259,10 +2260,13 @@ class TrailerAPI:
                 t_vid0 = time.perf_counter()
                 try:
                     if use_wan_14b:
-                        length = _length_for_duration(dur)
+                        wan_dur = min(float(dur), 3.0)
+                        wan_fps = 16
+                        length = min(81, _length_for_duration(wan_dur, fps=wan_fps))
                         self._log(
                             task,
-                            f"Wan2.2-14B GGUF 图生视频 分镜 {idx + 1}/{n_shots}（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                            f"Wan2.2-14B GGUF 图生视频 分镜 {idx + 1}/{n_shots}"
+                            f"（{i2v_wh[0]}×{i2v_wh[1]} · {length}帧@{wan_fps}fps·时长顶 {wan_dur:g}s）",
                         )
                         comfy_name, _sub = await upload_bytes(
                             img_path.read_bytes(), name_prefix=f"trailer_wan_{idx:02d}_"
@@ -2276,7 +2280,7 @@ class TrailerAPI:
                             width=i2v_wh[0],
                             height=i2v_wh[1],
                             length=length,
-                            fps=24,
+                            fps=wan_fps,
                         )
                     elif use_h3_t2v:
                         h3_wh = _ASPECT_H3[aspect]

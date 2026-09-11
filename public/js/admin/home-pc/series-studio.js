@@ -1330,7 +1330,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('visual_style', selectedStyle);
     fd.append('aspect', selectedAspect());
     fd.append('video_mode', selectedVideoMode());
-    fd.append('shot_duration', shotDur.value || '5');
+    fd.append('shot_duration', shotDur.value || '4');
     fd.append('episode_count', epCount.value || '1');
     fd.append('scenes_per_ep', scCount.value || '1');
     fd.append('shots_per_scene', shCount.value || '1');

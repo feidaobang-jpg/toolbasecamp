@@ -1680,10 +1680,13 @@ class SeriesStudioAPI:
             if use_comfy_video:
                 try:
                     if use_wan_14b:
-                        length = _length_for_duration(clip_dur)
+                        wan_dur = min(float(clip_dur), 3.0)
+                        wan_fps = 16
+                        length = min(81, _length_for_duration(wan_dur, fps=wan_fps))
                         self._log(
                             series_id,
-                            f"图生视频 {label}（Wan2.2-14B GGUF · {i2v_wh[0]}×{i2v_wh[1]} · {length}帧）",
+                            f"图生视频 {label}（Wan2.2-14B GGUF · {i2v_wh[0]}×{i2v_wh[1]} · "
+                            f"{length}帧@{wan_fps}fps·时长顶 {wan_dur:g}s）",
                         )
                         comfy_name, _sub = await upload_bytes(
                             img_path.read_bytes(), name_prefix=f"series_wan_{series_id}_{shot_no}_"
@@ -1697,7 +1700,7 @@ class SeriesStudioAPI:
                             width=i2v_wh[0],
                             height=i2v_wh[1],
                             length=length,
-                            fps=24,
+                            fps=wan_fps,
                         )
                     elif use_h3_t2v:
                         from trailer_pipeline import _ASPECT_H3, _ASPECT_WAN_T2V
@@ -2161,7 +2164,7 @@ class SeriesStudioAPI:
             aspect: str = Form("16_9"),
             voice: str = Form("zh-CN-YunxiNeural"),
             speed: str = Form("1.0"),
-            shot_duration: str = Form("5"),
+            shot_duration: str = Form("4"),
             video_mode: str = Form("wan22_14b_gguf"),
             episode_count: str = Form("1"),
             scenes_per_ep: str = Form("1"),

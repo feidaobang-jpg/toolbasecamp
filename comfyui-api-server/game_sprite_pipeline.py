@@ -782,9 +782,11 @@ class GameSpriteAPI:
         build = self.deps["build_wan22_ti2v_workflow"]
         run_v = self.deps["run_comfyui_and_get_last_video"]
         fname, _sub = await upload(image_bytes, name_prefix="gs_i2v_")
-        # 16GB：Wan 14B GGUF，短边约 480；单次常需 10–25 分钟
+        # 16GB：Wan 14B GGUF，短边约 480；游戏动作默认 ≤3s@16fps
         w, h = 640, 480
-        length = _length_for_sec(duration_sec, 24)
+        wan_fps = 16
+        length = _length_for_sec(min(float(duration_sec or 2.5), 3.0), wan_fps)
+        length = min(81, length)
         wf = build(
             fname,
             prompt,
@@ -796,7 +798,7 @@ class GameSpriteAPI:
             width=w,
             height=h,
             length=length,
-            fps=24,
+            fps=wan_fps,
         )
         timeout = max(1800.0, float(duration_sec or 2.5) * 400.0)
         return await run_v(wf, timeout_sec=timeout, cancel_check=cancel_check)
@@ -1361,7 +1363,7 @@ class GameSpriteAPI:
             except Exception:
                 fpa = 8
             try:
-                dur = max(1.5, min(5.0, float(action_duration_sec or 2.5)))
+                dur = max(1.5, min(3.0, float(action_duration_sec or 2.5)))
             except Exception:
                 dur = 2.5
 

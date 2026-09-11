@@ -280,7 +280,7 @@
     fd.append('prompt', prompt.trim());
     fd.append('negative', (negativeInput && negativeInput.value) || '');
     fd.append('aspect', selectedAspect());
-    fd.append('duration_sec', (durationSelect && durationSelect.value) || '5');
+    fd.append('duration_sec', (durationSelect && durationSelect.value) || '3');
     fd.append('video_modes', JSON.stringify(modes));
     fd.append('video_mode', modes[0]);
     if (seedInput && seedInput.value.trim()) fd.append('seed', seedInput.value.trim());
@@ -346,7 +346,7 @@
     if (negativeInput && meta.negative != null) negativeInput.value = meta.negative;
     if (meta.aspect) setAspect(meta.aspect);
     if (durationSelect && meta.duration_sec != null) {
-      durationSelect.value = String(Math.round(Number(meta.duration_sec) || 5));
+      durationSelect.value = String(Math.round(Number(meta.duration_sec) || 3));
     }
     if (seedInput) {
       seedInput.value = meta.seed != null && meta.seed !== '' ? String(meta.seed) : '';

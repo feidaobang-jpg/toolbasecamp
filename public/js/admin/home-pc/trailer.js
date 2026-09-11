@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fd.append('use_global_refs', selectedUseGlobalRefs() ? '1' : '0');
     fd.append('voice', (voiceSelect && voiceSelect.value) || 'zh-CN-YunxiNeural');
     fd.append('speed', (speedInput && speedInput.value) || '1.0');
-    fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '5');
+    fd.append('shot_duration', shotDurationSelect ? shotDurationSelect.value : '4');
     var segN = 1;
     if (segmentCountInput) {
       segN = parseInt(segmentCountInput.value, 10);
