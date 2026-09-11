@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import os
 import random
 import time
 import uuid
@@ -34,6 +35,10 @@ _VIDEO_CLIP_TASKS: Dict[str, dict] = {}
 
 _T2V_ENGINES = {
     "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
+    "wan22_t2v_14b_gguf": {
+        "label": "Wan 2.2 14B 文生视频（GGUF Q5_K_M）",
+        "workflow": "wan22_t2v_14b_gguf.json",
+    },
     # MiniMax H3：16GB 需极限降配后效果远弱于 LTX，已从文生选项下线；旧请求映射到 LTX
 }
 
@@ -58,6 +63,37 @@ _DEFAULT_NEG = (
     "blurry, low quality, distorted, watermark, text, logo, subtitle, "
     "static image, frozen pose, no motion"
 )
+
+_WAN_T2V_GGUF_FILES = (
+    "Wan2.2-T2V-A14B-HighNoise-Q5_K_M.gguf",
+    "Wan2.2-T2V-A14B-LowNoise-Q5_K_M.gguf",
+)
+
+
+def _comfyui_main_dir() -> Path:
+    return Path((os.environ.get("COMFYUI_MAIN_DIR") or r"D:\sd\ComfyUI-main").strip())
+
+
+def _find_model_file(name: str) -> Optional[Path]:
+    root = _comfyui_main_dir() / "models"
+    for sub in ("unet", "diffusion_models"):
+        p = root / sub / name
+        if p.is_file():
+            return p
+    return None
+
+
+def _require_wan_t2v_gguf_weights() -> None:
+    missing = [n for n in _WAN_T2V_GGUF_FILES if not _find_model_file(n)]
+    if not missing:
+        return
+    raise RuntimeError(
+        "缺少 Wan 文生 GGUF 权重（与图生 I2V GGUF 不是同一套）："
+        + "、".join(missing)
+        + "。请放到 ComfyUI/models/unet/，"
+        + "下载：https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF"
+        + "（HighNoise / LowNoise 各一份 Q5_K_M）"
+    )
 
 
 def _cn_now_str() -> str:
@@ -107,8 +143,10 @@ def _normalize_engine(raw: str, kind: str) -> Optional[str]:
         "h3_t2v": "ltx25_t2v",
         "wan22_t2v_5b": "ltx25_t2v" if kind == "t2v" else None,
         "wan5b_t2v": "ltx25_t2v",
-        "wan22_t2v_14b": "ltx25_t2v",
-        "wan22_t2v": "ltx25_t2v",
+        "wan22_t2v_14b": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "wan22_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "wan22_t2v_14b_gguf": "wan22_t2v_14b_gguf",
+        "wan_t2v_gguf": "wan22_t2v_14b_gguf",
         "ltx25_t2v": "ltx25_t2v",
         "ltx_t2v": "ltx25_t2v",
         "wan22_5b": "wan22_14b_gguf",
@@ -312,6 +350,29 @@ class VideoClipAPI:
         prompt_s = (prompt or "").strip()
 
         if kind == "t2v":
+            if mode == "wan22_t2v_14b_gguf":
+                _require_wan_t2v_gguf_weights()
+                build_wan = self.deps.get("build_wan22_t2v_gguf_workflow")
+                if not callable(build_wan):
+                    raise RuntimeError("未注入 Wan 14B GGUF 文生工作流")
+                # 16GB：16fps、最长约 5s（81 帧），避免 empty latent 过长 OOM
+                wan_fps = 16
+                length = min(81, _length_for_duration(min(float(duration_sec), 5.0), fps=wan_fps))
+                wf = build_wan(
+                    prompt_s,
+                    negative_text=neg,
+                    seed=seed_i,
+                    width=wan_wh[0],
+                    height=wan_wh[1],
+                    length=length,
+                    fps=wan_fps,
+                    steps=20,
+                )
+                note = (
+                    f"Wan2.2-14B GGUF T2V · {wan_wh[0]}×{wan_wh[1]} · "
+                    f"{length}帧@{wan_fps}fps"
+                )
+                return wf, note
             wf = self.deps["build_ltx25_t2v_workflow"](
                 prompt_s,
                 seed=seed_i,
@@ -406,7 +467,7 @@ class VideoClipAPI:
                     task,
                     f"对比 {ei + 1}/{n}：{label}" if multi else f"引擎：{label}",
                 )
-                await self._free_vram(task, label, heavy=(mode == "minimax_h3_t2v"))
+                await self._free_vram(task, label, heavy=(mode in ("minimax_h3_t2v", "wan22_t2v_14b_gguf")))
                 t0 = time.perf_counter()
                 try:
                     wf, note = self._build_workflow(
@@ -420,7 +481,8 @@ class VideoClipAPI:
                         comfy_image=comfy_name,
                     )
                     self._log(task, f"提交 ComfyUI（{note}）…")
-                    vid_bytes = await run_video(wf)
+                    timeout = 1800.0 if mode == "wan22_t2v_14b_gguf" else None
+                    vid_bytes = await run_video(wf, timeout_sec=timeout)
                     digest = hashlib.md5(vid_bytes).hexdigest()
                     if digest in seen_hashes:
                         raise RuntimeError(
@@ -519,11 +581,11 @@ class VideoClipAPI:
                 "duration_max": 10,
                 "duration_default": 5,
                 "workflows": {
-                    "t2v": "ltx25_t2v.json",
+                    "t2v": "ltx25_t2v.json / wan22_t2v_14b_gguf.json",
                     "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
                 },
                 "hint": (
-                    "文生视频仅 LTX 2.5（704×400·直出音频）。MiniMax H3 / Wan 14B 文生在 16GB 上已下线。"
+                    "文生默认 LTX 2.5（704×400·直出音频）；可选 Wan 2.2 14B GGUF（512×288·约≤5s@16fps·无音频）。"
                     if k == "t2v"
                     else "图生视频默认 Wan 2.2 14B GGUF；Wan 5B 已下线。"
                 ),

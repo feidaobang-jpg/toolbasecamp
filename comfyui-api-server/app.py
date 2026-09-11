@@ -1065,6 +1065,60 @@ def _build_wan22_i2v_14b_gguf_workflow(
 _build_wan22_ti2v_workflow = _build_wan22_i2v_14b_gguf_workflow
 
 
+def _build_wan22_t2v_14b_gguf_workflow(
+    prompt_text: str,
+    negative_text: Optional[str] = None,
+    seed: Optional[int] = None,
+    width: int = 512,
+    height: int = 288,
+    length: int = 25,
+    fps: int = 16,
+    steps: int = 20,
+) -> dict:
+    """
+    Wan 2.2 14B 文生视频（GGUF Q5_K_M，无 LightX2V）。
+    权重：Wan2.2-T2V-A14B-{High,Low}Noise-Q5_K_M.gguf → ComfyUI/models/unet
+    16GB：512×288、CLIP@CPU、20 步；帧数建议 ≤81（约 5s@16fps）。
+    """
+    workflow_path = os.path.join(
+        os.path.dirname(__file__), WORKFLOW_FOLDER, "wan22_t2v_14b_gguf.json"
+    )
+    with open(workflow_path, "r", encoding="utf-8") as f:
+        workflow = json.load(f)
+
+    w = _clamp_image_side(int(width), 64, 1280)
+    h = _clamp_image_side(int(height), 64, 1280)
+    length_i = max(17, min(81, int(length)))
+    if (length_i - 1) % 4 != 0:
+        length_i = ((length_i - 1) // 4) * 4 + 1
+
+    steps_i = max(8, min(40, int(steps or 20)))
+    if steps_i % 2:
+        steps_i += 1
+    half = steps_i // 2
+
+    seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
+    workflow["89"]["inputs"]["text"] = (prompt_text or "").strip() or "cinematic dynamic motion"
+    if negative_text is not None:
+        workflow["72"]["inputs"]["text"] = negative_text
+    workflow["74"]["inputs"]["width"] = w
+    workflow["74"]["inputs"]["height"] = h
+    workflow["74"]["inputs"]["length"] = length_i
+    workflow["88"]["inputs"]["fps"] = int(fps)
+    for nid in ("81", "78"):
+        workflow[nid]["inputs"]["noise_seed"] = seed_i
+        workflow[nid]["inputs"]["steps"] = steps_i
+        workflow[nid]["inputs"]["cfg"] = 3.5
+    workflow["81"]["inputs"]["start_at_step"] = 0
+    workflow["81"]["inputs"]["end_at_step"] = half
+    workflow["78"]["inputs"]["start_at_step"] = half
+    workflow["78"]["inputs"]["end_at_step"] = steps_i
+    if "71" in workflow and isinstance(workflow["71"].get("inputs"), dict):
+        workflow["71"]["inputs"]["device"] = "cpu"
+    _patch_save_video_inputs(workflow.get("80") or {})
+    return workflow
+
+
 def _build_wan22_t2v_14b_workflow(
     prompt_text: str,
     negative_text: Optional[str] = None,
@@ -4758,6 +4812,7 @@ _video_clip_api = VideoClipAPI(
     output_root=_OUTPUT_ROOT,
     build_wan22_ti2v_workflow=_build_wan22_ti2v_workflow,
     build_wan22_t2v_workflow=_build_wan22_t2v_14b_workflow,
+    build_wan22_t2v_gguf_workflow=_build_wan22_t2v_14b_gguf_workflow,
     build_minimax_h3_t2v_workflow=_build_minimax_h3_t2v_workflow,
     build_ltx25_t2v_workflow=_build_ltx25_t2v_workflow,
     build_ltx25_i2v_workflow=_build_ltx25_i2v_workflow,

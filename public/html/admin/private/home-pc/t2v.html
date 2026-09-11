@@ -10,11 +10,11 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=t2vltx2" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=t2vltx2" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=t2vltx2" />
-  <script src="../../../../js/locales/en.js?v=ttvname1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=ttvname1"></script>
-  <script src="../../../../js/i18n.js?v=t2vltx2"></script>
-  <script src="../../../../js/config.js?v=t2vltx2"></script>
-  <script src="../../../../js/common_ui.js?v=t2vltx2"></script>
+  <script src="../../../../js/locales/en.js?v=t2vwan1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=t2vwan1"></script>
+  <script src="../../../../js/i18n.js?v=t2vwan1"></script>
+  <script src="../../../../js/config.js?v=t2vwan1"></script>
+  <script src="../../../../js/common_ui.js?v=t2vwan1"></script>
 </head>
 <body class="home-pc-page" data-video-kind="t2v">
   <div class="home-pc-container">
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.t2vHint">工作流 ltx25_t2v.json。默认 LTX 2.5（704×400·直出音频）。MiniMax H3 文生在 16GB 上已下线。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.t2vHint">工作流 ltx25_t2v.json / wan22_t2v_14b_gguf.json。默认 LTX 2.5（704×400·直出音频）；可选 Wan 14B GGUF（512×288）。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -85,6 +85,7 @@
                   <label data-i18n="privateHub.homePc.t2vModelLabel">文生视频模型</label>
                   <div class="trailer-aspect-row" id="model-row">
                     <label class="trailer-radio"><input type="checkbox" name="video-mode" value="ltx25_t2v" checked /><span data-i18n="privateHub.homePc.trailerVideoModeLtx">文生视频 LTX 2.5（直出音频）</span></label>
+                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="wan22_t2v_14b_gguf" /><span data-i18n="privateHub.homePc.trailerVideoModeWanT2v">文生视频 Wan 2.2 14B GGUF Q5_K_M</span></label>
                   </div>
                 </div>
               </div>
@@ -137,12 +138,12 @@
       </main>
     </div>
   </div>
-  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=t2vltx2"></script>
-  <script src="../../../../js/admin/admin-gate.js?v=t2vltx2"></script>
-  <script src="../../../../js/admin/private-page-guard.js?v=t2vltx2"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=t2vltx2"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=t2vltx2"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=t2vltx2"></script>
-  <script src="../../../../js/admin/home-pc/video-clip.js?v=t2vltx2"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=t2vwan1"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=t2vwan1"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=t2vwan1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=t2vwan1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=t2vwan1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=t2vwan1"></script>
+  <script src="../../../../js/admin/home-pc/video-clip.js?v=t2vwan1"></script>
 </body>
 </html>
