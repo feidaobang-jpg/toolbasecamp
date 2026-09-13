@@ -562,6 +562,10 @@
     if (mid === 'wan2.7-image-pro') return tr('tools.instructEdit.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
     if (mid === 'gpt-image-2' || mid === 'tt-image-2') return tr('tools.instructEdit.modelGptImage2');
+    if (mid === 'gpt-image-2.5-flare' || mid === 'gpt-image-2.5') {
+      return tr('tools.instructEdit.modelGptImage25Flare');
+    }
+    if (mid === 'gpt-image-2.5-sunburst') return tr('tools.instructEdit.modelGptImage25Sunburst');
     if (mid === 'banana-2' || mid === 'gemini-3.1-flash-image-preview') {
       return tr('tools.instructEdit.modelBanana2');
     }

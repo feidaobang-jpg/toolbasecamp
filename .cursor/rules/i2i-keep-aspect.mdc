@@ -16,7 +16,7 @@
 |---|---|
 | 万相 Wan / 千问 Image | DashScope `parameters.size` 用 `W*H`（`pixel_size_star`），不要只用 `1K`/`2K` 忽略比例 |
 | 豆包 Seedream | Ark `size` 用最近 `WIDTHxHEIGHT` 预设（`seedream_size_wh`），不要只用 `2k` 方图档 |
-| GPT Image 2（lk888） | `/images/edits` 的 `size` 用最近 `1024x1024` / `1024x1536` / `1536x1024`（`gpt_size_wh`） |
+| GPT Image 2 / 2.5 Flare / 2.5 Sunburst（lk888） | `/images/edits` 的 `size` 用最近 `1024x1024` / `1024x1536` / `1536x1024`（`gpt_size_wh`） |
 | Banana（lk888 media） | `aspectRatio` + `imageSize` 由参考图选最近档（`banana_aspect_and_tier`） |
 
 参考尺寸优先用**上传原图**（normalize/JPEG 压缩前）的宽高。

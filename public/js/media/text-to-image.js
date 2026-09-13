@@ -278,6 +278,10 @@
     if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     if (mid === 'z-image-turbo') return tr('tools.textToImage.modelZTurbo');
     if (mid === 'gpt-image-2' || mid === 'tt-image-2') return tr('tools.textToImage.modelGptImage2');
+    if (mid === 'gpt-image-2.5-flare' || mid === 'gpt-image-2.5') {
+      return tr('tools.textToImage.modelGptImage25Flare');
+    }
+    if (mid === 'gpt-image-2.5-sunburst') return tr('tools.textToImage.modelGptImage25Sunburst');
     if (mid === 'banana-2' || mid === 'gemini-3.1-flash-image-preview') {
       return tr('tools.textToImage.modelBanana2');
     }

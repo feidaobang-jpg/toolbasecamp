@@ -106,13 +106,27 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
-    # 逍遥（2026-08-26 skills/pricing）：Image2 1K≈0.05 2K≈0.10；Banana2≈0.14/0.18；BananaPro XBS≈0.20/0.24（MM≈0.28）
+    # 逍遥：Image2 1K≈0.05 2K≈0.10；2.5 官方同 token 价，Flare 日常 / Sunburst 精品略加价
     {
         "id": "gpt-image-2",
         "priceCny1K": 0.06,
         "priceCny2K": 0.12,
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelGptImage2",
+    },
+    {
+        "id": "gpt-image-2.5-flare",
+        "priceCny1K": 0.07,
+        "priceCny2K": 0.14,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelGptImage25Flare",
+    },
+    {
+        "id": "gpt-image-2.5-sunburst",
+        "priceCny1K": 0.12,
+        "priceCny2K": 0.20,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelGptImage25Sunburst",
     },
     {
         "id": "banana-2",
@@ -161,6 +175,16 @@ TEXT_TO_IMAGE_MODELS = (
         "id": "gpt-image-2",
         "priceCny": 0.10,
         "labelKey": "tools.textToImage.modelGptImage2",
+    },
+    {
+        "id": "gpt-image-2.5-flare",
+        "priceCny": 0.11,
+        "labelKey": "tools.textToImage.modelGptImage25Flare",
+    },
+    {
+        "id": "gpt-image-2.5-sunburst",
+        "priceCny": 0.16,
+        "labelKey": "tools.textToImage.modelGptImage25Sunburst",
     },
     {
         "id": "banana-2",

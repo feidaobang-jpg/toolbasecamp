@@ -1,11 +1,10 @@
 """逍遥 AI (lk888) text-to-image + image-to-image.
 
-- GPT Image 2 (`gpt-image-2` / `tt-image-2`):
+- GPT Image 2 / 2.5 (`gpt-image-2`, `gpt-image-2.5-flare`, `gpt-image-2.5-sunburst`):
   T2I POST /images/generations · I2I multipart POST /images/edits
 - Nano Banana 2 (`banana-2`) / Pro (`banana-pro`):
   async POST /media/generate (+ optional images[]) then GET /media/status
 """
-
 from __future__ import annotations
 
 import asyncio
@@ -30,6 +29,9 @@ LK888_T2I_MODELS = frozenset(
     {
         "gpt-image-2",
         "tt-image-2",
+        "gpt-image-2.5-flare",
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5",
         "banana-2",
         "banana-pro",
         "gemini-3-pro-image-preview",
@@ -55,6 +57,7 @@ from image_i2i_size import banana_aspect_and_tier, first_ref_wh, gpt_size_wh
 # Normalize to preferred upstream id
 _LK888_MODEL_ALIAS: dict[str, str] = {
     "tt-image-2": "gpt-image-2",
+    "gpt-image-2.5": "gpt-image-2.5-flare",
     "gemini-1-pro-image-preview": "banana-pro",
     "gemini-3-pro-image-preview": "banana-pro",
     "gemini-3.1-flash-image-preview": "banana-2",
