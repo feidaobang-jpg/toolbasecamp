@@ -36,6 +36,18 @@
         return 'assets/game/thumbs/' + m[1] + '.jpg?v=17';
     }
 
+    function isExternalGame(item) {
+        if (!item) return false;
+        if (item.external) return true;
+        return /^https?:\/\//i.test(item.url || '');
+    }
+
+    function gameCardLabel(item) {
+        if (!item) return '';
+        if (item.titleKey) return tr(item.titleKey);
+        return item.title || '';
+    }
+
     function bindSearch(toolbarEl) {
         var input = toolbarEl.querySelector('#hub-search-input');
         var clearBtn = toolbarEl.querySelector('#hub-search-clear');
@@ -119,17 +131,23 @@
             gridEl.className = 'hub-games-grid';
 
             group.items.forEach(function (item) {
-                var label = item.titleKey ? tr(item.titleKey) : (item.title || '');
+                var label = gameCardLabel(item);
                 var groupLabel = tr(group.titleKey);
                 var thumb = gameThumbSrc(item);
+                var external = isExternalGame(item);
                 var card = document.createElement('a');
                 card.href = item.url || '#';
-                card.className = 'hub-tool-card hub-game-card';
+                card.className = 'hub-tool-card hub-game-card' + (external ? ' hub-game-card--external' : '');
+                if (external) {
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+                    card.title = label + ' · ' + tr('games.externalOpenTip');
+                }
                 card.dataset.search = groupLabel + ' ' + label;
                 card.innerHTML =
                     (thumb
                         ? '<span class="hub-game-card-thumb">' +
-                            '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async">' +
+                            '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' +
                           '</span>'
                         : '') +
                     '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3></span>';

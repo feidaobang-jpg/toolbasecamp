@@ -581,6 +581,26 @@
     overflow: hidden;
 }
 
+.hub-game-card--external .hub-game-card-thumb::after {
+    content: '外链';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(15, 23, 42, 0.72);
+    pointer-events: none;
+}
+
+html[lang='en'] .hub-game-card--external .hub-game-card-thumb::after {
+    content: 'EXT';
+}
+
 .hub-game-card-thumb img {
     position: absolute;
     inset: 0;

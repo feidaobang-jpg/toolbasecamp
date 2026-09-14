@@ -1209,8 +1209,15 @@ window.TB_LOCALES['zh-CN'] = {
             polished: '高完成度',
             draft: '低完成度',
             developing: '正在开发',
-            casual: '休闲游戏'
-        }
+            casual: '休闲游戏',
+            astraAction: 'Astra · 动作街机',
+            astraPuzzle: 'Astra · 解谜益智',
+            astraStrategy: 'Astra · 策略模拟',
+            astraRpg: 'Astra · RPG 冒险',
+            astraPlatform: 'Astra · 平台竞速',
+            astraExperimental: 'Astra · 实验多人'
+        },
+        externalOpenTip: '外链游戏，将在新标签页打开'
     },
     life: {
         desc: '点击「查询」获取内容；部分条目支持关键字搜索。数据来自天行 API。',

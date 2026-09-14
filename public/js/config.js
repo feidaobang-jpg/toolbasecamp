@@ -312,6 +312,16 @@ window.portalsConfig = portalsConfig;
 window.toolsConfig = toolsConfig;
 window.gamesConfig = gamesConfig;
 
+/** Append Awesome GPT-6 Astra external catalog (loaded via astra-games-catalog.js). */
+(function mergeAstraGamesCatalog() {
+    var cat = typeof window !== 'undefined' ? window.astraGamesCatalog : null;
+    if (!cat || !Array.isArray(cat.groups) || !cat.groups.length) return;
+    if (!gamesConfig.groups) gamesConfig.groups = [];
+    cat.groups.forEach(function (g) {
+        if (g && Array.isArray(g.items) && g.items.length) gamesConfig.groups.push(g);
+    });
+})();
+
 /** Admin-only personal tools (not shown in public hub). */
 const privateToolsConfig = {
     sectionTitleKey: 'privateHub.title',

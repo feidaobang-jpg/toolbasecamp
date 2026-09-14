@@ -1210,8 +1210,15 @@ window.TB_LOCALES.en = {
             polished: 'Polished',
             draft: 'Early drafts',
             developing: 'In development',
-            casual: 'Casual games'
-        }
+            casual: 'Casual games',
+            astraAction: 'Astra · Action & Arcade',
+            astraPuzzle: 'Astra · Puzzle',
+            astraStrategy: 'Astra · Strategy & Sim',
+            astraRpg: 'Astra · RPG & Adventure',
+            astraPlatform: 'Astra · Platform & Racing',
+            astraExperimental: 'Astra · Experimental & Multiplayer'
+        },
+        externalOpenTip: 'External game — opens in a new tab'
     },
     life: {
         desc: 'Tap Query to fetch content; some tools accept a keyword. Powered by TianAPI.',
