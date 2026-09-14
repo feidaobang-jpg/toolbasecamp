@@ -24,7 +24,6 @@ from PIL import Image
 
 from trailer_pipeline import (
     _ASPECT_I2V,
-    _ASPECT_LTX,
     _ASPECT_SIZES,
     _ASPECT_VIDEO,
     _VIDEO_ENGINES,
@@ -1377,7 +1376,7 @@ class SeriesStudioAPI:
         return item
 
     async def _free_comfy_vram(self, series_id: str, reason: str = "") -> None:
-        """镜间/阶段间卸模型，避免生图与 LTX 叠占显存导致极慢。"""
+        """镜间/阶段间卸模型，避免生图与视频叠占显存导致极慢。"""
         fn = self.deps.get("free_comfyui_memory")
         if not callable(fn):
             return
@@ -1459,8 +1458,6 @@ class SeriesStudioAPI:
         build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_h3_t2v = self.deps.get("build_minimax_h3_t2v_workflow")
-        build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
-        build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
         create_subs = self.deps["create_subtitle_overlays_timed"]
         tts = self.deps["indextts_synthesize"]
@@ -1476,12 +1473,8 @@ class SeriesStudioAPI:
         use_wan = use_wan_14b
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_h3_t2v = mode == "minimax_h3_t2v" and callable(build_h3_t2v) and callable(run_video)
-        use_ltx_i2v = (
-            mode == "ltx25_i2v" and callable(upload_bytes) and callable(build_ltx_i2v) and callable(run_video)
-        )
-        use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
         use_seedance = mode == "seedance_25"
-        use_comfy_video = use_wan or use_wan_t2v or use_h3_t2v or use_ltx_i2v or use_ltx_t2v
+        use_comfy_video = use_wan or use_wan_t2v or use_h3_t2v
         use_tts = (not use_seedance) and (
             use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
         )
@@ -1535,11 +1528,11 @@ class SeriesStudioAPI:
             if self._cancel.get(series_id):
                 return
 
-            # 生图模型与 LTX 叠占显存会极慢：视频前先卸模型
+            # 生图模型与视频叠占显存会极慢：视频前先卸模型
             if use_comfy_video:
                 await self._free_comfy_vram(series_id, "生图→视频")
 
-            # 2) video：Wan 用 IndexTTS 旁白；LTX 直出音轨
+            # 2) video：Wan 用 IndexTTS 旁白
             self._update_shot(shot_id, status="video")
             clip_path = shot_dir / "clips" / "00.mp4"
             raw_clip = shot_dir / "clips" / "00_raw.mp4"
@@ -1566,7 +1559,6 @@ class SeriesStudioAPI:
             motion_i2v = _build_shot_motion_prompt(shot_motion, i2v=True)
             motion_t2v = _build_shot_motion_prompt(shot_motion, i2v=False)
             i2v_wh = _ASPECT_I2V[aspect]
-            ltx_wh = _ASPECT_LTX[aspect]
             out_size = _ASPECT_VIDEO[aspect]
             voice = (row["voice"] or "zh-CN-YunxiNeural").strip()
             try:
@@ -1738,33 +1730,8 @@ class SeriesStudioAPI:
                             fps=16,
                             steps=20,
                         )
-                    elif use_ltx_i2v:
-                        self._log(series_id, f"图生视频 {label}（LTX·直出音频）")
-                        comfy_name, _sub = await upload_bytes(
-                            img_path.read_bytes(), name_prefix=f"series_ltx_{series_id}_{shot_no}_"
-                        )
-                        if not comfy_name:
-                            raise RuntimeError("上传静帧失败")
-                        wf = build_ltx_i2v(
-                            comfy_name,
-                            motion_i2v,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=ltx_wh[0],
-                            height=ltx_wh[1],
-                            duration_sec=clip_dur,
-                            fps=24,
-                            strength=0.82,
-                        )
                     else:
-                        self._log(series_id, f"文生视频 {label}（LTX·直出音频）")
-                        wf = build_ltx_t2v(
-                            motion_t2v,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=ltx_wh[0],
-                            height=ltx_wh[1],
-                            duration_sec=clip_dur,
-                            fps=24,
-                        )
+                        raise RuntimeError(f"不支持的成片引擎：{mode}（仅 Wan 2.2 14B GGUF）")
                     vid_bytes = await self._run_video_with_heartbeat(series_id, label, wf)
                     target = raw_clip if (use_wan or use_wan_t2v) else clip_path
                     target.write_bytes(vid_bytes)
@@ -1785,7 +1752,7 @@ class SeriesStudioAPI:
                     video_sec = time.perf_counter() - t_vid
                     self._log(
                         series_id,
-                        f"{'图生' if use_wan or use_ltx_i2v else '文生'}视频完成 {label}，耗时 {_format_elapsed(video_sec)}",
+                        f"{'图生' if use_wan else '文生'}视频完成 {label}，耗时 {_format_elapsed(video_sec)}",
                     )
                 except Exception as e:
                     video_sec = time.perf_counter() - t_vid
@@ -1855,7 +1822,7 @@ class SeriesStudioAPI:
             self._log(series_id, f"失败 {label}：{e}")
             raise
         finally:
-            # 下一镜生图前卸掉 LTX，避免显存叠满
+            # 下一镜生图前卸掉视频模型，避免显存叠满
             try:
                 await self._free_comfy_vram(series_id, "镜结束")
             except Exception:

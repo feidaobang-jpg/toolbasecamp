@@ -3,7 +3,7 @@
   DeepSeek 全剧设定+分镜 → 全剧参考图（AI 候选勾选 / 上传）→
   Z-Image 关键帧 → 视频引擎成片 → 旁白拼接。
 
-成片引擎：Wan 2.2 14B I2V GGUF Q5_K_M / LTX 2.5 文生视频 / 静帧推镜。
+成片引擎：Wan 2.2 14B I2V GGUF Q5_K_M / 静帧推镜（可选云端 Seedance）。
 单段时长 3～10 秒可选；生成段数默认 1，超过分镜数则封顶。
 """
 from __future__ import annotations
@@ -228,12 +228,6 @@ _ASPECT_H3 = {
     "9_16": (288, 512),
 }
 
-# LTX-2.5：16GB 用 704×400；CLIP@CPU（workflow 内）
-_ASPECT_LTX = {
-    "16_9": (704, 400),
-    "9_16": (400, 704),
-}
-
 _ASPECT_VIDEO = {
     "16_9": (1920, 1080),
     "9_16": (1080, 1920),
@@ -241,8 +235,6 @@ _ASPECT_VIDEO = {
 
 _VIDEO_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "needs_image": True},
-    "ltx25_i2v": {"label": "LTX 2.5 图生视频", "needs_image": True},
-    "ltx25_t2v": {"label": "LTX 2.5 文生视频", "needs_image": False},
     "seedance_25": {"label": "Seedance 云端（需 API Key）", "needs_image": True},
     "kenburns": {"label": "静帧推镜", "needs_image": False},
 }
@@ -250,22 +242,41 @@ _VIDEO_ENGINES = {
 
 def _normalize_video_engine(raw: str) -> str:
     m = (raw or "").strip().lower().replace("-", "_")
-    # 已下线的 Wan 5B → 映射到现有引擎
-    if m in ("wan22_5b", "wan2.2_5b", "wan22_ti2v", "wan22_ti2v_5b", "ti2v_5b", "wan5b"):
+    # 已下线：Wan 5B / LTX / H3 文生 → 统一落到本机 Wan 2.2 14B I2V
+    if m in (
+        "wan22_5b",
+        "wan2.2_5b",
+        "wan22_ti2v",
+        "wan22_ti2v_5b",
+        "ti2v_5b",
+        "wan5b",
+        "wan22_t2v_5b",
+        "wan5b_t2v",
+        "ti2v_5b_t2v",
+        "wan2.2_5b_t2v",
+        "wan_t2v",
+        "wan22_t2v",
+        "wan22_t2v_14b",
+        "wan2.2_t2v",
+        "t2v_wan",
+        "minimax_h3_t2v",
+        "minimax_h3",
+        "minimaxh3",
+        "h3",
+        "h3_t2v",
+        "ltx",
+        "ltx2.5",
+        "ltx25",
+        "ltx_i2v",
+        "ltx25_img",
+        "ltx_t2v",
+        "ltx25_t2v",
+        "ltx2.5_t2v",
+        "ltx25_i2v",
+    ):
         return "wan22_14b_gguf"
-    if m in ("wan22_t2v_5b", "wan5b_t2v", "ti2v_5b_t2v", "wan2.2_5b_t2v"):
-        return "ltx25_t2v"
     if m in ("i2v", "wan", "wan22", "wan22_14b", "wan22_14b_gguf", "wan2.2_14b"):
         return "wan22_14b_gguf"
-    # Wan 14B / MiniMax H3 文生：16GB 易 OOM → LTX
-    if m in ("wan_t2v", "wan22_t2v", "wan22_t2v_14b", "wan2.2_t2v", "t2v_wan"):
-        return "ltx25_t2v"
-    if m in ("minimax_h3_t2v", "minimax_h3", "minimaxh3", "h3", "h3_t2v"):
-        return "ltx25_t2v"
-    if m in ("ltx", "ltx2.5", "ltx25", "ltx_i2v", "ltx25_img"):
-        return "ltx25_i2v"
-    if m in ("ltx_t2v", "ltx25_t2v", "ltx2.5_t2v"):
-        return "ltx25_t2v"
     if m in ("still", "ken_burns", "slideshow"):
         return "kenburns"
     if m in ("seedance", "seedance_25", "seedance2.5", "seedance_2_5", "doubao_seedance"):
@@ -1998,7 +2009,7 @@ class TrailerAPI:
                 self._log(task, f"成片失败：{e}")
 
     async def _free_comfy_vram(self, task: dict, reason: str = "") -> None:
-        """成片前卸掉生图等模型，避免与 Wan/LTX 叠占显存导致每步数分钟。"""
+        """成片前卸掉生图等模型，避免与 Wan 叠占显存导致每步数分钟。"""
         fn = self.deps.get("free_comfyui_memory")
         if not callable(fn):
             return
@@ -2137,7 +2148,6 @@ class TrailerAPI:
         aspect = task["aspect"]
         out_size = _ASPECT_VIDEO[aspect]
         i2v_wh = _ASPECT_I2V[aspect]
-        ltx_wh = _ASPECT_LTX[aspect]
         voice = task.get("voice")
         speed = task.get("speed")
         engine_meta = _VIDEO_ENGINES.get(mode) or _VIDEO_ENGINES["wan22_14b_gguf"]
@@ -2148,8 +2158,6 @@ class TrailerAPI:
         build_wan_14b = self.deps.get("build_wan22_ti2v_workflow")
         build_wan_t2v = self.deps.get("build_wan22_t2v_workflow")
         build_h3_t2v = self.deps.get("build_minimax_h3_t2v_workflow")
-        build_ltx_t2v = self.deps.get("build_ltx25_t2v_workflow")
-        build_ltx_i2v = self.deps.get("build_ltx25_i2v_workflow")
         run_video = self.deps.get("run_comfyui_and_get_last_video")
         use_wan_14b = (
             mode == "wan22_14b_gguf"
@@ -2160,15 +2168,8 @@ class TrailerAPI:
         use_wan = use_wan_14b
         use_wan_t2v = mode == "wan22_t2v_14b" and callable(build_wan_t2v) and callable(run_video)
         use_h3_t2v = mode == "minimax_h3_t2v" and callable(build_h3_t2v) and callable(run_video)
-        use_ltx_i2v = (
-            mode == "ltx25_i2v"
-            and callable(upload_bytes)
-            and callable(build_ltx_i2v)
-            and callable(run_video)
-        )
-        use_ltx_t2v = mode == "ltx25_t2v" and callable(build_ltx_t2v) and callable(run_video)
-        use_comfy_video = use_wan or use_wan_t2v or use_h3_t2v or use_ltx_i2v or use_ltx_t2v
-        # Wan 需 IndexTTS；H3/LTX 直出音轨
+        use_comfy_video = use_wan or use_wan_t2v or use_h3_t2v
+        # Wan 需 IndexTTS；静帧推镜也配旁白
         use_tts = use_wan or use_wan_t2v or mode == "kenburns" or not use_comfy_video
 
         image_paths: List[Path] = []
@@ -2216,7 +2217,7 @@ class TrailerAPI:
             motion_i2v = _build_shot_motion_prompt(shot, i2v=True)
             motion_t2v = _build_shot_motion_prompt(shot, i2v=False)
 
-            # 1) Wan / 静帧推镜：IndexTTS 旁白；LTX：直出音轨，跳过配音
+            # 1) Wan / 静帧推镜：IndexTTS 旁白
             task["progress"] = {
                 "current": engine_index * n_shots + i + 1,
                 "total": max(1, engine_total * n_shots),
@@ -2252,11 +2253,11 @@ class TrailerAPI:
                 tts_sec += time.perf_counter() - t_tts0
                 dur = min(10.0, max(3.0, max(planned, tts_len)))
 
-            # 2) 视频引擎：Wan I2V / LTX I2V / T2V / 稍后 Ken Burns
+            # 2) 视频引擎：Wan I2V / 稍后 Ken Burns
             clip_path = clips_dir / f"{idx:02d}.mp4"
             made_video = False
             if use_comfy_video:
-                task["stage"] = "i2v" if (use_wan or use_ltx_i2v) else "t2v"
+                task["stage"] = "i2v" if use_wan else "t2v"
                 t_vid0 = time.perf_counter()
                 try:
                     if use_wan_14b:
@@ -2314,39 +2315,8 @@ class TrailerAPI:
                             fps=16,
                             steps=20,
                         )
-                    elif use_ltx_i2v:
-                        self._log(
-                            task,
-                            f"LTX-2.5 图生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s·直出音频）",
-                        )
-                        comfy_name, _sub = await upload_bytes(
-                            img_path.read_bytes(), name_prefix=f"trailer_ltx_{idx:02d}_"
-                        )
-                        if not comfy_name:
-                            raise RuntimeError("上传关键帧到 ComfyUI 失败")
-                        wf = build_ltx_i2v(
-                            comfy_name,
-                            motion_i2v,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=ltx_wh[0],
-                            height=ltx_wh[1],
-                            duration_sec=planned,
-                            fps=24,
-                            strength=0.82,
-                        )
                     else:
-                        self._log(
-                            task,
-                            f"LTX-2.5 文生视频 分镜 {idx + 1}/{n_shots}（{ltx_wh[0]}×{ltx_wh[1]} · {planned:g}s·直出音频）",
-                        )
-                        wf = build_ltx_t2v(
-                            motion_t2v,
-                            seed=random.randint(1, 2_000_000_000),
-                            width=ltx_wh[0],
-                            height=ltx_wh[1],
-                            duration_sec=planned,
-                            fps=24,
-                        )
+                        raise RuntimeError(f"不支持的成片引擎：{mode}（仅 Wan 2.2 14B GGUF）")
                     vid_bytes = await run_video(wf)
                     clip_path.write_bytes(vid_bytes)
                     video_clip_paths.append(clip_path)
@@ -2396,17 +2366,14 @@ class TrailerAPI:
             self._log(task, f"配音完成，{n_shots} 镜，耗时 {_format_elapsed(tts_sec)}")
 
         if use_comfy_video:
-            if use_wan or use_ltx_i2v:
-                vid_label = "图生视频"
-            else:
-                vid_label = "文生视频"
+            vid_label = "图生视频" if use_wan else "文生视频"
             self._log(
                 task,
                 f"{vid_label}完成，{n_shots} 镜，耗时 {_format_elapsed(video_sec)}"
                 + (f"（失败回退 {i2v_fail} 镜）" if i2v_fail else ""),
             )
         elif not use_tts:
-            self._log(task, f"跳过配音（LTX 直出音频 / 静帧静音）")
+            self._log(task, "跳过配音（静帧静音）")
 
         task["stage"] = "video"
         self._log(task, f"拼接预览成片（约 {t_cursor:.1f}s，失败回退 {i2v_fail} 镜）…")
@@ -2544,9 +2511,9 @@ class TrailerAPI:
             "2. images/ 静帧；clips[_引擎]/ 为每镜视频；audio[_引擎]/ 旁白。\n"
             "3. plan.json / selected_shots*.json / trailer.srt 对照分镜与字幕。\n"
             "4. 多引擎对比时：trailer_<引擎>_16_9.mp4（或 9_16）可并排比较。\n"
-            "5. 视频引擎：Wan 2.2 14B I2V GGUF Q5_K_M / LTX 2.5 / 静帧推镜\n"
+            "5. 视频引擎：Wan 2.2 14B I2V GGUF Q5_K_M / 静帧推镜\n"
             "   需 ComfyUI-GGUF + 双路 UnetLoaderGGUF（HighNoise / LowNoise）。\n"
-            "   API 模板：work-flow/wan22_i2v_14b_gguf.json 、 work-flow/minimax_h3_t2v.json 、 work-flow/wan22_t2v_14b.json 、 work-flow/ltx25_t2v.json\n"
+            "   API 模板：work-flow/wan22_i2v_14b_gguf.json\n"
         )
         (task_dir / "README_剪映.txt").write_text(readme, encoding="utf-8")
 

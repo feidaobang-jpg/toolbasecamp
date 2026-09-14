@@ -6,15 +6,15 @@
   <meta name="robots" content="noindex,nofollow" />
   <title>图生视频 - 后台</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link href="../../../../vendor/font-awesome/css/all.min.css?v=dur1" rel="stylesheet" />
-  <link rel="stylesheet" href="../../../../css/base.css?v=dur1" />
-  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=dur1" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=dur1" />
-  <script src="../../../../js/locales/en.js?v=dur1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=dur1"></script>
-  <script src="../../../../js/i18n.js?v=dur1"></script>
-  <script src="../../../../js/config.js?v=dur1"></script>
-  <script src="../../../../js/common_ui.js?v=dur1"></script>
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=wanonly1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=wanonly1" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=wanonly1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=wanonly1" />
+  <script src="../../../../js/locales/en.js?v=wanonly1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=wanonly1"></script>
+  <script src="../../../../js/i18n.js?v=wanonly1"></script>
+  <script src="../../../../js/config.js?v=wanonly1"></script>
+  <script src="../../../../js/common_ui.js?v=wanonly1"></script>
 </head>
 <body class="home-pc-page" data-video-kind="i2v">
   <div class="home-pc-container">
@@ -39,7 +39,7 @@
           <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
         </div>
         <div id="app" class="home-pc-wrap hidden" hidden>
-          <p class="home-pc-desc" data-i18n="privateHub.homePc.i2vHint">工作流 Wan 14B GGUF I2V / ltx25_i2v.json。默认 Wan 2.2 14B GGUF；Wan 5B 已下线。上传首帧后按提示词驱动运动。</p>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.i2vHint">工作流 Wan 14B GGUF I2V。本机仅 Wan 2.2 14B GGUF。上传首帧后按提示词驱动运动。</p>
           <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
 
           <div class="tool-container">
@@ -86,7 +86,7 @@
                     <option value="5">5</option>
                     <option value="6">6</option>
                   </select>
-                  <p class="small-hint" data-i18n="privateHub.homePc.clipDurationHint">默认 3 秒更稳。Wan GGUF 实际约顶 3 秒；LTX 可用满所选时长。</p>
+                  <p class="small-hint" data-i18n="privateHub.homePc.clipDurationHint">默认 3 秒更稳。本机 Wan GGUF 实际约顶 3 秒。</p>
                 </div>
                 <div class="input-control">
                   <label for="seed-input" data-i18n="privateHub.homePc.txt2imgSeedLabel">种子（可选）：</label>
@@ -99,9 +99,8 @@
                   <label data-i18n="privateHub.homePc.i2vModelLabel">图生视频模型</label>
                   <div class="trailer-aspect-row" id="model-row">
                     <label class="trailer-radio"><input type="checkbox" name="video-mode" value="wan22_14b_gguf" checked /><span data-i18n="privateHub.homePc.trailerVideoModeWan">图生视频 Wan 2.2 14B GGUF Q5_K_M</span></label>
-                    <label class="trailer-radio"><input type="checkbox" name="video-mode" value="ltx25_i2v" /><span data-i18n="privateHub.homePc.trailerVideoModeLtxI2v">图生视频 LTX 2.5（直出音频）</span></label>
                   </div>
-                  <p class="small-hint" data-i18n="privateHub.homePc.i2vModelHint">可多选对比：按勾选顺序依次各生成一次。默认 Wan 5B（16GB 更合适）；14B 更慢更吃显存。</p>
+                  <p class="small-hint" data-i18n="privateHub.homePc.i2vModelHint">本机仅 Wan 2.2 14B GGUF。</p>
                 </div>
               </div>
             </div>
@@ -153,13 +152,13 @@
       </main>
     </div>
   </div>
-  <script src="../../../../js/shared/image-upload-compress.js?v=dur1"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=dur1"></script>
-  <script src="../../../../js/admin/admin-gate.js?v=dur1"></script>
-  <script src="../../../../js/admin/private-page-guard.js?v=dur1"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=dur1"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=dur1"></script>
-  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=dur1"></script>
-  <script src="../../../../js/admin/home-pc/video-clip.js?v=dur1"></script>
+  <script src="../../../../js/shared/image-upload-compress.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/video-clip.js?v=wanonly1"></script>
 </body>
 </html>

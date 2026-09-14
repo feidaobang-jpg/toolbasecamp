@@ -34,29 +34,20 @@ from output_layout import (
 _VIDEO_CLIP_TASKS: Dict[str, dict] = {}
 
 _T2V_ENGINES = {
-    "ltx25_t2v": {"label": "LTX 2.5 文生视频（直出音频）", "workflow": "ltx25_t2v.json"},
     "wan22_t2v_14b_gguf": {
         "label": "Wan 2.2 14B 文生视频（GGUF Q5_K_M）",
         "workflow": "wan22_t2v_14b_gguf.json",
     },
-    # MiniMax H3：16GB 需极限降配后效果远弱于 LTX，已从文生选项下线；旧请求映射到 LTX
 }
 
 _I2V_ENGINES = {
     "wan22_14b_gguf": {"label": "Wan 2.2 14B 图生视频（GGUF Q5_K_M）", "workflow": "wan22_i2v"},
-    "ltx25_i2v": {"label": "LTX 2.5 图生视频（直出音频）", "workflow": "ltx25_i2v.json"},
 }
 
 _ASPECT_WAN = {
     # 16GB：去掉 LightX2V LoRA 后仍需较低分辨率，避免采样阶段 OOM
     "16_9": (512, 288),
     "9_16": (288, 512),
-}
-
-_ASPECT_LTX = {
-    # 16GB：704×400 + CLIP@CPU（见 workflow）
-    "16_9": (704, 400),
-    "9_16": (400, 704),
 }
 
 _DEFAULT_NEG = (
@@ -136,28 +127,30 @@ def _normalize_engine(raw: str, kind: str) -> Optional[str]:
     m = (raw or "").strip().lower().replace("-", "_").replace(".", "")
     table = _T2V_ENGINES if kind == "t2v" else _I2V_ENGINES
     aliases = {
-        "minimax_h3_t2v": "ltx25_t2v",
-        "minimax_h3": "ltx25_t2v",
-        "minimaxh3": "ltx25_t2v",
-        "h3": "ltx25_t2v",
-        "h3_t2v": "ltx25_t2v",
-        "wan22_t2v_5b": "ltx25_t2v" if kind == "t2v" else None,
-        "wan5b_t2v": "ltx25_t2v",
+        # 旧 LTX / H3 / 5B 请求统一落到 Wan 2.2
+        "minimax_h3_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "minimax_h3": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "minimaxh3": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "h3": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "h3_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "wan22_t2v_5b": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
+        "wan5b_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
         "wan22_t2v_14b": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
         "wan22_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else None,
         "wan22_t2v_14b_gguf": "wan22_t2v_14b_gguf",
         "wan_t2v_gguf": "wan22_t2v_14b_gguf",
-        "ltx25_t2v": "ltx25_t2v",
-        "ltx_t2v": "ltx25_t2v",
+        "ltx25_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else "wan22_14b_gguf",
+        "ltx_t2v": "wan22_t2v_14b_gguf" if kind == "t2v" else "wan22_14b_gguf",
+        "ltx25": "wan22_t2v_14b_gguf" if kind == "t2v" else "wan22_14b_gguf",
+        "ltx": "wan22_t2v_14b_gguf" if kind == "t2v" else "wan22_14b_gguf",
         "wan22_5b": "wan22_14b_gguf",
         "wan5b": "wan22_14b_gguf",
         "wan22_ti2v_5b": "wan22_14b_gguf",
         "wan22_14b_gguf": "wan22_14b_gguf",
         "wan22_14b": "wan22_14b_gguf",
         "i2v": "wan22_14b_gguf",
-        "ltx25_i2v": "ltx25_i2v",
-        "ltx_i2v": "ltx25_i2v",
-        "ltx": "ltx25_i2v" if kind == "i2v" else "ltx25_t2v",
+        "ltx25_i2v": "wan22_14b_gguf",
+        "ltx_i2v": "wan22_14b_gguf",
     }
     key = aliases.get(m, m)
     if not key:
@@ -193,7 +186,7 @@ def _parse_engines(raw_modes, raw_single: str, kind: str) -> List[str]:
             out.append(m)
     if out:
         return out
-    return ["ltx25_t2v"] if kind == "t2v" else ["wan22_14b_gguf"]
+    return ["wan22_t2v_14b_gguf"] if kind == "t2v" else ["wan22_14b_gguf"]
 
 
 def _clamp_duration(raw) -> float:
@@ -344,82 +337,61 @@ class VideoClipAPI:
         comfy_image: str = "",
     ) -> Tuple[dict, str]:
         wan_wh = _ASPECT_WAN[aspect]
-        ltx_wh = _ASPECT_LTX[aspect]
         length = _length_for_duration(duration_sec)
         seed_i = int(seed) if seed is not None else random.randint(1, 2_000_000_000)
         neg = (negative or "").strip() or _DEFAULT_NEG
         prompt_s = (prompt or "").strip()
 
         if kind == "t2v":
-            if mode == "wan22_t2v_14b_gguf":
-                _require_wan_t2v_gguf_weights()
-                build_wan = self.deps.get("build_wan22_t2v_gguf_workflow")
-                if not callable(build_wan):
-                    raise RuntimeError("未注入 Wan 14B GGUF 文生工作流")
-                # 16GB：16fps、最长约 3s（约 49 帧），减少漂移与超时
-                wan_fps = 16
-                length = min(81, _length_for_duration(min(float(duration_sec), 3.0), fps=wan_fps))
-                wf = build_wan(
-                    prompt_s,
-                    negative_text=neg,
-                    seed=seed_i,
-                    width=wan_wh[0],
-                    height=wan_wh[1],
-                    length=length,
-                    fps=wan_fps,
-                    steps=20,
-                )
-                note = (
-                    f"Wan2.2-14B GGUF T2V · {wan_wh[0]}×{wan_wh[1]} · "
-                    f"{length}帧@{wan_fps}fps"
-                )
-                return wf, note
-            wf = self.deps["build_ltx25_t2v_workflow"](
-                prompt_s,
-                seed=seed_i,
-                width=ltx_wh[0],
-                height=ltx_wh[1],
-                duration_sec=duration_sec,
-                fps=24,
-            )
-            note = f"LTX-2.5 T2V · {ltx_wh[0]}×{ltx_wh[1]} · {duration_sec:g}s"
-            return wf, note
-
-        if not comfy_image:
-            raise RuntimeError("图生视频缺少首帧图")
-        motion = (
-            f"Use the provided start image as frame 1. {prompt_s}. "
-            "Subtle cinematic motion, temporal continuity."
-            if prompt_s
-            else "Use the provided start image as frame 1. Subtle cinematic motion."
-        )
-        if mode == "wan22_14b_gguf":
-            # 16GB：最长约 3s / 81 帧，减少身份漂移与假死
+            if mode != "wan22_t2v_14b_gguf":
+                raise RuntimeError(f"不支持的文生视频引擎：{mode}（仅 Wan 2.2 14B GGUF）")
+            _require_wan_t2v_gguf_weights()
+            build_wan = self.deps.get("build_wan22_t2v_gguf_workflow")
+            if not callable(build_wan):
+                raise RuntimeError("未注入 Wan 14B GGUF 文生工作流")
+            # 16GB：16fps、最长约 3s（约 49 帧），减少漂移与超时
             wan_fps = 16
             length = min(81, _length_for_duration(min(float(duration_sec), 3.0), fps=wan_fps))
-            wf = self.deps["build_wan22_ti2v_workflow"](
-                comfy_image,
-                motion,
+            wf = build_wan(
+                prompt_s,
                 negative_text=neg,
                 seed=seed_i,
                 width=wan_wh[0],
                 height=wan_wh[1],
                 length=length,
                 fps=wan_fps,
+                steps=20,
             )
-            note = f"Wan2.2-14B GGUF I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧@{wan_fps}fps"
-        else:
-            wf = self.deps["build_ltx25_i2v_workflow"](
-                comfy_image,
-                motion,
-                seed=seed_i,
-                width=ltx_wh[0],
-                height=ltx_wh[1],
-                duration_sec=duration_sec,
-                fps=24,
-                strength=0.82,
+            note = (
+                f"Wan2.2-14B GGUF T2V · {wan_wh[0]}×{wan_wh[1]} · "
+                f"{length}帧@{wan_fps}fps"
             )
-            note = f"LTX-2.5 I2V · {ltx_wh[0]}×{ltx_wh[1]} · {duration_sec:g}s"
+            return wf, note
+
+        if not comfy_image:
+            raise RuntimeError("图生视频缺少首帧图")
+        if mode != "wan22_14b_gguf":
+            raise RuntimeError(f"不支持的图生视频引擎：{mode}（仅 Wan 2.2 14B GGUF）")
+        motion = (
+            f"Use the provided start image as frame 1. {prompt_s}. "
+            "Subtle cinematic motion, temporal continuity."
+            if prompt_s
+            else "Use the provided start image as frame 1. Subtle cinematic motion."
+        )
+        # 16GB：最长约 3s / 81 帧，减少身份漂移与假死
+        wan_fps = 16
+        length = min(81, _length_for_duration(min(float(duration_sec), 3.0), fps=wan_fps))
+        wf = self.deps["build_wan22_ti2v_workflow"](
+            comfy_image,
+            motion,
+            negative_text=neg,
+            seed=seed_i,
+            width=wan_wh[0],
+            height=wan_wh[1],
+            length=length,
+            fps=wan_fps,
+        )
+        note = f"Wan2.2-14B GGUF I2V · {wan_wh[0]}×{wan_wh[1]} · {length}帧@{wan_fps}fps"
         return wf, note
 
     async def _run_task(self, task_id: str) -> None:
@@ -583,19 +555,19 @@ class VideoClipAPI:
                 "success": True,
                 "kind": k,
                 "engines": {mid: meta["label"] for mid, meta in engines.items()},
-                "default_engine": "ltx25_t2v" if k == "t2v" else "wan22_14b_gguf",
+                "default_engine": "wan22_t2v_14b_gguf" if k == "t2v" else "wan22_14b_gguf",
                 "aspects": {"16_9": "横屏 16:9", "9_16": "竖屏 9:16"},
                 "duration_min": 2,
                 "duration_max": 6,
                 "duration_default": 3,
                 "workflows": {
-                    "t2v": "ltx25_t2v.json / wan22_t2v_14b_gguf.json",
-                    "i2v": "wan22_i2v_14b_gguf / ltx25_i2v.json",
+                    "t2v": "wan22_t2v_14b_gguf.json",
+                    "i2v": "wan22_i2v_14b_gguf.json",
                 },
                 "hint": (
-                    "文生默认 3s（可选 2～6s）。Wan GGUF 实际硬顶约 3s；LTX 可用满所选时长并直出音频。"
+                    "文生默认 3s（可选 2～6s）。本机仅 Wan 2.2 14B GGUF，实际硬顶约 3s。"
                     if k == "t2v"
-                    else "图生默认 3s（可选 2～6s）。Wan GGUF 实际硬顶约 3s；LTX 可用满所选时长并直出音频。"
+                    else "图生默认 3s（可选 2～6s）。本机仅 Wan 2.2 14B GGUF，实际硬顶约 3s。"
                 ),
             }
 

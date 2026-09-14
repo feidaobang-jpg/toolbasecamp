@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
               )
             : tr(
                 'privateHub.homePc.seriesSeedanceMissing',
-                '本机默认 Wan/LTX；Seedance 需配置 SEEDANCE_API_KEY（或 ARK_API_KEY）后重启服务。'
+                '本机默认 Wan 2.2；Seedance 需配置 SEEDANCE_API_KEY（或 ARK_API_KEY）后重启服务。'
               );
         }
         var seedRadio = document.querySelector('input[name="video-mode"][value="seedance_25"]');

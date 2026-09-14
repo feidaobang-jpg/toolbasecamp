@@ -8,8 +8,8 @@ output/
   series/          # 剧集已用
   game_sprites/
   text_to_video/
-  t2v/             # 文生视频（Wan/LTX 单镜）
-  i2v/             # 图生视频（Wan/LTX 单镜）
+  t2v/             # 文生视频（Wan 单镜）
+  i2v/             # 图生视频（Wan 单镜）
   tts/             # 语音 / 声音克隆
   voices/          # TTS 角色音色库（参考音）
   mesh3d/          # 图生 3D（TripoSR / Hunyuan3D / TRELLIS）
