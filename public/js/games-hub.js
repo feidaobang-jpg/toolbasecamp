@@ -122,8 +122,9 @@
 
             var headerEl = document.createElement('h3');
             headerEl.className = 'hub-group-head';
+            var groupLabel = group.titleKey ? tr(group.titleKey) : (group.title || '');
             if (groups.length > 1) {
-                headerEl.textContent = tr(group.titleKey);
+                headerEl.textContent = groupLabel;
                 sectionEl.appendChild(headerEl);
             }
 
@@ -132,7 +133,6 @@
 
             group.items.forEach(function (item) {
                 var label = gameCardLabel(item);
-                var groupLabel = tr(group.titleKey);
                 var thumb = gameThumbSrc(item);
                 var external = isExternalGame(item);
                 var card = document.createElement('a');

@@ -1,0 +1,84 @@
+name: Sync Astra games catalog
+
+# Daily 10:00 Beijing (02:00 UTC). Upstream list updates in bursts;
+# daily is cheap (one README fetch) and keeps the hub fresh within ~1 day.
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sync-astra-games
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      DO_HOST: ${{ secrets.DO_HOST }}
+      DO_USER: ${{ secrets.DO_USER }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Regenerate catalog
+        id: gen
+        run: |
+          set -euo pipefail
+          python3 deploy/gen-astra-games-catalog.py --bump-html | tee /tmp/astra-gen.log
+          if grep -q '^changed=1$' /tmp/astra-gen.log; then
+            echo "changed=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit if changed
+        if: steps.gen.outputs.changed == '1'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/js/astra-games-catalog.js public/games.html
+          git status -sb
+          git commit -m "chore: 同步 Astra 外链游戏目录"
+          git push origin HEAD
+
+      - name: Setup SSH (publish even if deploy.yml is not re-triggered)
+        if: steps.gen.outputs.changed == '1'
+        run: |
+          set -euo pipefail
+          trim() { printf '%s' "$1" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'; }
+          DO_HOST="$(trim "$DO_HOST")"
+          DO_USER="$(trim "$DO_USER")"
+          if [[ -z "$DO_HOST" || -z "$DO_USER" ]]; then
+            echo "::warning::DO_HOST/DO_USER missing — catalog committed but not rsynced."
+            exit 0
+          fi
+          echo "DO_HOST=$DO_HOST" >> "$GITHUB_ENV"
+          echo "DO_USER=$DO_USER" >> "$GITHUB_ENV"
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          echo "ssh_ready=1" >> "$GITHUB_ENV"
+
+      - name: Rsync catalog to VPS
+        if: steps.gen.outputs.changed == '1' && env.ssh_ready == '1'
+        run: |
+          set -euo pipefail
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            public/js/astra-games-catalog.js \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/js/astra-games-catalog.js"
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            public/games.html \
+            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/games.html"
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" \
+            "grep -c 'external: true' /var/www/toolbasecamp/js/astra-games-catalog.js"

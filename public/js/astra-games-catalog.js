@@ -1,4 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
+/** generated_at: 2026-09-14T14:29:29Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -114,6 +115,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
+    generatedAt: "2026-09-14T14:29:29Z",
+    count: 97,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
