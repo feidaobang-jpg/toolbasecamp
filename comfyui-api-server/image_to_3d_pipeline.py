@@ -291,6 +291,11 @@ class ImageTo3dAPI:
         return f"/output/{rel}".replace("\\", "/")
 
     @staticmethod
+    def _task_payload(task: dict) -> dict:
+        """JSON-safe view of an in-memory task (drop asyncio Process etc.)."""
+        return {k: v for k, v in task.items() if not str(k).startswith("_")}
+
+    @staticmethod
     def _kill_worker_proc(proc: asyncio.subprocess.Process | None) -> None:
         if proc is None or proc.returncode is not None:
             return
@@ -631,7 +636,7 @@ class ImageTo3dAPI:
             task = api.tasks.get(task_id)
             if not task:
                 raise HTTPException(status_code=404, detail="任务不存在")
-            return {"success": True, **task}
+            return {"success": True, **api._task_payload(task)}
 
         @app.post("/image-to-3d/cancel")
         @app.post("/api/image-to-3d/cancel")
