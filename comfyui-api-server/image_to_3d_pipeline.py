@@ -381,7 +381,10 @@ class ImageTo3dAPI:
         timeout_sec = int(_ENGINE_TIMEOUT_SEC.get(engine) or 900)
         if engine == "hunyuan3d" and task.get("texture"):
             timeout_sec = int(_ENGINE_TIMEOUT_SEC.get("hunyuan3d_texture") or 2400)
-        self._log(task, f"{engine} 启动…（超时 {timeout_sec // 60} 分钟）")
+        self._log(
+            task,
+            f"{engine} 启动…（本轮最长等待 {timeout_sec // 60} 分钟，超时才会中止）",
+        )
         t0 = time.time()
         proc = await asyncio.create_subprocess_exec(
             *cmd,
