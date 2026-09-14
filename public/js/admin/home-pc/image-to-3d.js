@@ -727,6 +727,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function pollOnce(taskId) {
     var res = await fetch(API_BASE_URL + '/image-to-3d/task/' + taskId);
+    if (!res.ok) {
+      stopPoll();
+      setBusy(false);
+      var lost = tr(
+        'privateHub.homePc.i23dTaskLost',
+        '任务状态已丢失（家里电脑 API 可能刚重启）。进行中的生成已中断，请重新点生成。'
+      );
+      logOutput.textContent = (logOutput.textContent || '') + '\n' + lost + '\n';
+      progressStatus.textContent = lost;
+      if (res.status !== 404) {
+        alert(lost);
+      }
+      return;
+    }
     var data = await res.json();
     if (Array.isArray(data.logs)) {
       logOutput.textContent = data.logs.join('\n') + '\n';

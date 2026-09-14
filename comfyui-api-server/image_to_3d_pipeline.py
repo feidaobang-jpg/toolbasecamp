@@ -276,6 +276,88 @@ class ImageTo3dAPI:
         d.mkdir(parents=True, exist_ok=True)
         return d
 
+    def _index_path(self, task_id: str) -> Path:
+        d = self.output_root / "mesh3d" / "_index"
+        d.mkdir(parents=True, exist_ok=True)
+        return d / f"{task_id}.json"
+
+    def _write_task_index(self, task: dict) -> None:
+        tid = str(task.get("task_id") or "").strip()
+        if not tid:
+            return
+        payload = {
+            "task_id": tid,
+            "output_dir": task.get("output_dir") or "",
+            "engines": list(task.get("engines") or []),
+            "mesh_detail": task.get("mesh_detail") or "game",
+            "texture": bool(task.get("texture")),
+            "prompt": task.get("prompt") or "",
+        }
+        self._index_path(tid).write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+
+    def _recover_task(self, task_id: str) -> dict | None:
+        """After API restart, in-memory tasks are gone; rebuild from disk."""
+        idx_p = self._index_path(task_id)
+        if not idx_p.is_file():
+            return None
+        try:
+            idx = json.loads(idx_p.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+        rel = str(idx.get("output_dir") or "").strip()
+        task_dir = resolve_task_dir(self.output_root, rel)
+        if task_dir is None:
+            return None
+        logs: list[str] = []
+        lp = task_dir / "pipeline.log"
+        if lp.is_file():
+            try:
+                logs = lp.read_text(encoding="utf-8").splitlines()
+            except Exception:
+                logs = []
+        mesh_urls: list[dict] = []
+        mesh_url = ""
+        for eng in idx.get("engines") or ["hunyuan3d"]:
+            mesh = task_dir / str(eng) / "mesh.glb"
+            if not mesh.is_file():
+                mesh = task_dir / str(eng) / "mesh.obj"
+            if not mesh.is_file():
+                continue
+            item = {
+                "engine": eng,
+                "filename": mesh.name,
+                "url": self._public_url(mesh),
+                "preview_url": "",
+            }
+            mesh_urls.append(item)
+            if not mesh_url:
+                mesh_url = item["url"]
+        if mesh_url:
+            status = "done"
+            error = ""
+        else:
+            status = "error"
+            error = "家里电脑 API 已重启，进行中的任务中断。请重新点生成。"
+            logs = list(logs) + [f"[{_cn_now_str()}] {error}"]
+        return {
+            "task_id": task_id,
+            "output_dir": rel,
+            "status": status,
+            "stage": "recovered",
+            "progress": {"current": 1 if mesh_url else 0, "total": 1},
+            "logs": logs,
+            "error": error,
+            "engines": list(idx.get("engines") or []),
+            "mesh_detail": idx.get("mesh_detail") or "game",
+            "texture": bool(idx.get("texture")),
+            "prompt": idx.get("prompt") or "",
+            "mesh_url": mesh_url,
+            "mesh_urls": mesh_urls,
+            "timing": {},
+        }
+
     def _log(self, task: dict, msg: str) -> None:
         line = f"[{_cn_now_str()}] {msg}"
         logs = task.setdefault("logs", [])
@@ -626,6 +708,7 @@ class ImageTo3dAPI:
             img_path = task_dir / f"input{suffix}"
             img_path.write_bytes(raw)
             task["image_path"] = str(img_path)
+            api._write_task_index(task)
             api._log(
                 task,
                 f"任务创建 engines={modes} mesh_detail={detail} texture={int(want_tex)} bytes={len(raw)}",
@@ -637,6 +720,8 @@ class ImageTo3dAPI:
         @app.get("/api/image-to-3d/task/{task_id}")
         async def i23d_task(task_id: str):
             task = api.tasks.get(task_id)
+            if not task:
+                task = api._recover_task(task_id)
             if not task:
                 raise HTTPException(status_code=404, detail="任务不存在")
             return {"success": True, **api._task_payload(task)}

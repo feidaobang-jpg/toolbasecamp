@@ -634,6 +634,7 @@ window.TB_LOCALES['zh-CN'] = {
             i23dNotReady: '未就绪',
             i23dNeedImage: '请先上传参考图',
             i23dNeedEngine: '请至少选择一个引擎',
+            i23dTaskLost: '任务状态已丢失（家里电脑 API 可能刚重启）。进行中的生成已中断，请重新点生成。',
             i23dMeshDetailLabel: '面数（游戏向）',
             i23dMeshDetailGame: '游戏低模（约 ≤6k 面）',
             i23dMeshDetailMid: '中等（约 ≤30k 面）',

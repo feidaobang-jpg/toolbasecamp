@@ -635,6 +635,7 @@ window.TB_LOCALES.en = {
             i23dNotReady: 'not ready',
             i23dNeedImage: 'Please upload a reference image',
             i23dNeedEngine: 'Select at least one engine',
+            i23dTaskLost: 'Task state was lost (home PC API may have restarted). Please generate again.',
             i23dMeshDetailLabel: 'Poly count (game)',
             i23dMeshDetailGame: 'Game low-poly (~<=6k faces)',
             i23dMeshDetailMid: 'Medium (~<=30k faces)',
