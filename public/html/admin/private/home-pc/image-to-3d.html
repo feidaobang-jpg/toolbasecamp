@@ -10,8 +10,8 @@
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq5" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=i23d10" />
-  <script src="../../../../js/locales/en.js?v=i23d14"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=i23d14"></script>
+  <script src="../../../../js/locales/en.js?v=i23d15"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=i23d15"></script>
   <script src="../../../../js/i18n.js?v=homepc26"></script>
   <script src="../../../../js/config.js?v=i23d1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -88,6 +88,16 @@
                 </div>
               </div>
 
+              <div class="home-pc-field" style="margin-top:12px">
+                <div class="home-pc-check-row">
+                  <label class="home-pc-check" for="texture-input">
+                    <input type="checkbox" id="texture-input" />
+                    <span data-i18n="privateHub.homePc.i23dTextureLabel">生成贴图</span>
+                  </label>
+                </div>
+                <p class="small-hint" style="margin:6px 0 0" data-i18n="privateHub.homePc.i23dTextureHint">勾选后把参考图涂到网格上（更慢、更吃显存；首次会下载贴图权重）。预览请切「原材质」。</p>
+              </div>
+
               <div class="form-row">
                 <div class="input-control">
                   <label for="seed-input" data-i18n="privateHub.homePc.txt2imgSeedLabel">种子（可选）：</label>
@@ -162,6 +172,6 @@
   <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=apiOnly1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
-  <script type="module" src="../../../../js/admin/home-pc/image-to-3d.js?v=i23d14"></script>
+  <script type="module" src="../../../../js/admin/home-pc/image-to-3d.js?v=i23d15"></script>
 </body>
 </html>

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var engineChecks = document.getElementById('engine-checks');
   var seedInput = document.getElementById('seed-input');
   var meshDetailInput = document.getElementById('mesh-detail-input');
+  var textureInput = document.getElementById('texture-input');
   var promptInput = document.getElementById('prompt-input');
   var startBtn = document.getElementById('start-btn');
   var cancelBtn = document.getElementById('cancel-btn');
@@ -416,6 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
     lastMeshUrl = assetUrl(it.url);
     lastMeshName =
       it.filename || (String(it.url).toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
+    if (it.textured) shadeMode = 'material';
     metaLine.textContent =
       (it.label || it.engine || '') +
       (it.elapsed_sec ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '') +
@@ -502,6 +504,7 @@ document.addEventListener('DOMContentLoaded', function () {
     lastMeshName =
       (active && active.filename) ||
       (String(previewUrl || '').toLowerCase().indexOf('.obj') >= 0 ? 'mesh.obj' : 'mesh.glb');
+    if (active && active.textured) shadeMode = 'material';
     downloadBtn.style.display = previewUrl ? '' : 'none';
     if (active) {
       metaLine.textContent =
@@ -654,6 +657,8 @@ document.addEventListener('DOMContentLoaded', function () {
       engineChecks.querySelectorAll('input[type=checkbox]').forEach(function (cb) {
         cb.checked = engs.indexOf(cb.value) >= 0;
       });
+      if (meshDetailInput && data.mesh_detail) meshDetailInput.value = data.mesh_detail;
+      if (textureInput) textureInput.checked = !!data.texture;
       lastFolder = data.folder || it.folder || '';
       clearMeshCache();
       if (data.image_url) {
@@ -775,6 +780,7 @@ document.addEventListener('DOMContentLoaded', function () {
       'mesh_detail',
       String((meshDetailInput && meshDetailInput.value) || 'game')
     );
+    form.append('texture', textureInput && textureInput.checked ? '1' : '0');
 
     setBusy(true, tr('privateHub.homePc.processing', '处理中…'));
     logOutput.textContent = '';

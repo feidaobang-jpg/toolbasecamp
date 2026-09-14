@@ -38,6 +38,7 @@ _WORKER = Path(__file__).resolve().parent / "scripts" / "i23d_worker.py"
 _ENGINE_TIMEOUT_SEC = {
     "triposr": 600,
     "hunyuan3d": 1200,
+    "hunyuan3d_texture": 2400,
     "trellis": 900,
     "trellis2": 1800,
 }
@@ -223,6 +224,17 @@ def _normalize_engine_key(raw: str) -> str:
     return k
 
 
+def _parse_bool(raw: str) -> bool:
+    return str(raw or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def _hunyuan_paint_cached() -> bool:
+    hy = Path(os.environ.get("HY3DGEN_MODELS", Path.home() / ".cache" / "hy3dgen")).expanduser()
+    root = hy / "tencent" / "Hunyuan3D-2"
+    paint_sub = (os.environ.get("HUNYUAN3D_PAINT_SUBFOLDER") or "hunyuan3d-paint-v2-0-turbo").strip()
+    return (root / "hunyuan3d-delight-v2-0").is_dir() and (root / paint_sub).is_dir()
+
+
 def _parse_engines(raw: str) -> List[str]:
     text = (raw or "").strip()
     out: List[str] = []
@@ -350,13 +362,20 @@ class ImageTo3dAPI:
             "--mesh-detail",
             str(task.get("mesh_detail") or "game"),
         ]
+        if engine == "hunyuan3d" and task.get("texture"):
+            cmd.append("--texture")
         env = _worker_env(engine)
         if engine == "hunyuan3d":
+            if task.get("texture") and not _hunyuan_paint_cached():
+                env.pop("HF_HUB_OFFLINE", None)
+                self._log(task, "hunyuan3d：贴图权重未缓存，允许联网下载 delight/paint…")
             self._log(
                 task,
                 "hunyuan3d：优先使用本地权重；若缺失才会下载（可能较久）…",
             )
         timeout_sec = int(_ENGINE_TIMEOUT_SEC.get(engine) or 900)
+        if engine == "hunyuan3d" and task.get("texture"):
+            timeout_sec = int(_ENGINE_TIMEOUT_SEC.get("hunyuan3d_texture") or 2400)
         self._log(task, f"{engine} 启动…（超时 {timeout_sec // 60} 分钟）")
         t0 = time.time()
         proc = await asyncio.create_subprocess_exec(
@@ -417,6 +436,13 @@ class ImageTo3dAPI:
         if not mesh.is_file():
             raise RuntimeError(f"{engine} 未写出 mesh")
         preview = eng_dir / "preview.png"
+        worker_meta: dict = {}
+        rp = eng_dir / "result.json"
+        if rp.is_file():
+            try:
+                worker_meta = json.loads(rp.read_text(encoding="utf-8"))
+            except Exception:
+                worker_meta = {}
         item = {
             "engine": engine,
             "label": _ENGINES[engine]["label"],
@@ -425,6 +451,7 @@ class ImageTo3dAPI:
             "preview_url": self._public_url(preview) if preview.is_file() else "",
             "elapsed_sec": elapsed,
             "bytes": mesh.stat().st_size,
+            "textured": bool(worker_meta.get("textured") or task.get("texture")),
         }
         self._log(task, f"{engine} 完成，耗时 {elapsed}s，{mesh.name} {item['bytes']} bytes")
         return item
@@ -493,6 +520,7 @@ class ImageTo3dAPI:
                 "prompt": task.get("prompt") or "",
                 "seed": task.get("seed"),
                 "mesh_detail": task.get("mesh_detail") or "game",
+                "texture": bool(task.get("texture")),
                 "mesh_url": task["mesh_url"],
                 "mesh_urls": mesh_urls,
                 "timing": task["timing"],
@@ -518,6 +546,7 @@ class ImageTo3dAPI:
                 "engine_meta": st["engines"],
                 "default_engines": ["hunyuan3d"],
                 "default_mesh_detail": "game",
+                "default_texture": False,
                 "mesh_detail_options": [
                     {"id": "game", "label": "游戏低模", "hint": "约 ≤6k 三角面，适合 Godot/低模"},
                     {"id": "mid", "label": "中等", "hint": "约 ≤30k 三角面"},
@@ -542,6 +571,7 @@ class ImageTo3dAPI:
             prompt: str = Form(""),
             seed: str = Form("-1"),
             mesh_detail: str = Form("game"),
+            texture: str = Form("0"),
             image: UploadFile = File(...),
         ):
             raw = await image.read()
@@ -555,6 +585,7 @@ class ImageTo3dAPI:
             detail = (mesh_detail or "game").strip().lower()
             if detail not in ("game", "mid", "high"):
                 detail = "game"
+            want_tex = _parse_bool(texture)
 
             task_id = uuid.uuid4().hex
             out_dir = api._alloc_dir()
@@ -573,6 +604,7 @@ class ImageTo3dAPI:
                 "engines": modes,
                 "seed": seed_i,
                 "mesh_detail": detail,
+                "texture": want_tex,
                 "image_path": "",
                 "mesh_url": "",
                 "mesh_urls": [],
@@ -586,7 +618,10 @@ class ImageTo3dAPI:
             img_path = task_dir / f"input{suffix}"
             img_path.write_bytes(raw)
             task["image_path"] = str(img_path)
-            api._log(task, f"任务创建 engines={modes} mesh_detail={detail} bytes={len(raw)}")
+            api._log(
+                task,
+                f"任务创建 engines={modes} mesh_detail={detail} texture={int(want_tex)} bytes={len(raw)}",
+            )
             asyncio.create_task(api._execute(task_id))
             return {"success": True, "task_id": task_id, "output_dir": out_dir}
 
@@ -643,6 +678,8 @@ class ImageTo3dAPI:
                         "created_at": meta.get("created_at") or "",
                         "engines": meta.get("engines") or [],
                         "prompt": meta.get("prompt") or "",
+                        "mesh_detail": meta.get("mesh_detail") or "",
+                        "texture": bool(meta.get("texture")),
                         "mesh_url": mesh_url,
                         "mesh_urls": mesh_urls,
                         "thumb_url": thumb,

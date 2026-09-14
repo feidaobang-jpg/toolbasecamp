@@ -640,6 +640,8 @@ window.TB_LOCALES.en = {
             i23dMeshDetailMid: 'Medium (~<=30k faces)',
             i23dMeshDetailHigh: 'High (no extra simplify)',
             i23dMeshDetailHint: 'Low-poly suits Godot/mobile; high-poly is larger and slower to preview.',
+            i23dTextureLabel: 'Generate textures',
+            i23dTextureHint: 'Paints the reference image onto the mesh (slower, more VRAM; first run downloads paint weights). Use the Material shade in preview.',
             i23dNoOutputYet: 'No output folder yet',
             i23dPreviewFail: 'Failed to load preview',
             i23dEngineFail: 'Failed',
