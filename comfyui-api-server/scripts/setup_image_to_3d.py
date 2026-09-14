@@ -102,27 +102,6 @@ def _ensure_mesh_simplify(py: Path) -> None:
         print("[warn] fast-simplification 安装失败；游戏低模可能无法减面", flush=True)
 
 
-def _ensure_hunyuan_texgen_ext(py: Path, root: Path) -> None:
-    """Best-effort compile of Hunyuan paint rasterizer (needed for textures)."""
-    for pkg in ("xatlas",):
-        try:
-            _run([str(py), "-m", "pip", "install", pkg, "-i", PIP_INDEX])
-        except subprocess.CalledProcessError:
-            print(f"[warn] {pkg} 安装失败；贴图生成可能不可用", flush=True)
-    for rel in (
-        Path("hy3dgen") / "texgen" / "custom_rasterizer",
-        Path("hy3dgen") / "texgen" / "differentiable_renderer",
-    ):
-        d = root / rel
-        if not (d / "setup.py").is_file():
-            continue
-        print(f"compiling texgen ext {d} …", flush=True)
-        try:
-            _run([str(py), "setup.py", "install"], cwd=d)
-        except subprocess.CalledProcessError:
-            print(f"[warn] 编译 {rel} 失败；仅几何仍可用，贴图需本机有 VS/CUDA 后再编", flush=True)
-
-
 def setup_triposr(root: Path) -> None:
     _clone_if_needed("triposr", root)
     py = _ensure_venv(root)
@@ -211,9 +190,8 @@ def setup_hunyuan(root: Path) -> None:
     if req.is_file():
         _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
     _ensure_mesh_simplify(py)
-    _ensure_hunyuan_texgen_ext(py, root)
     (root / ".tbc_ready").write_text("hunyuan3d\n", encoding="utf-8")
-    print("[done] hunyuan3d — 首次推理会从 HuggingFace 拉权重；勾选贴图时另下 delight/paint", flush=True)
+    print("[done] hunyuan3d — 首次推理会从 HuggingFace 拉形状权重（几何）", flush=True)
 
 
 def setup_trellis(root: Path) -> None:

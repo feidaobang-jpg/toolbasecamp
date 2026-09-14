@@ -640,8 +640,6 @@ window.TB_LOCALES['zh-CN'] = {
             i23dMeshDetailMid: '中等（约 ≤30k 面）',
             i23dMeshDetailHigh: '高模（不额外减面）',
             i23dMeshDetailHint: '低模更适合 Godot/手游；高模文件大、预览也更慢。',
-            i23dTextureLabel: '生成贴图',
-            i23dTextureHint: '勾选后把参考图涂到网格上（更慢、更吃显存；首次会下载贴图权重）。预览请切「原材质」。',
             i23dNoOutputYet: '暂无输出目录',
             i23dPreviewFail: '预览加载失败',
             i23dEngineFail: '失败',

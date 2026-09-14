@@ -340,68 +340,10 @@ def _run_triposr(image: Path, out_dir: Path, seed: int, detail: str = "game") ->
         return _simplify_mesh_file(dest, int(cfg["target_faces"]))
 
 
-def _hunyuan_cache_root(model_id: str) -> Path:
-    base = Path(os.environ.get("HY3DGEN_MODELS", Path.home() / ".cache" / "hy3dgen")).expanduser()
-    return base / model_id
-
-
-def _hunyuan_paint_cached(model_id: str) -> bool:
-    root = _hunyuan_cache_root(model_id)
-    paint_sub = (os.environ.get("HUNYUAN3D_PAINT_SUBFOLDER") or "hunyuan3d-paint-v2-0-turbo").strip()
-    delight = root / "hunyuan3d-delight-v2-0"
-    paint = root / paint_sub
-    return delight.is_dir() and paint.is_dir()
-
-
-def _load_trimesh_mesh(path: Path):
-    import trimesh
-
-    loaded = trimesh.load(str(path), force="mesh", process=False)
-    if isinstance(loaded, trimesh.Scene):
-        geoms = [g for g in loaded.geometry.values() if isinstance(g, trimesh.Trimesh)]
-        if not geoms:
-            raise RuntimeError("无法从 GLB 读取网格")
-        return trimesh.util.concatenate(geoms) if len(geoms) > 1 else geoms[0]
-    if not isinstance(loaded, trimesh.Trimesh):
-        raise RuntimeError("无法从 GLB 读取网格")
-    return loaded
-
-
-def _apply_hunyuan_texture(*, model_id: str, mesh_path: Path, image) -> None:
-    """Paint PBR/albedo onto existing mesh. Must run after simplify."""
-    if not _hunyuan_paint_cached(model_id):
-        os.environ.pop("HF_HUB_OFFLINE", None)
-        print("hunyuan: 本地无贴图权重，将从 HuggingFace 下载 delight/paint（体积较大）…", flush=True)
-    try:
-        from hy3dgen.texgen import Hunyuan3DPaintPipeline
-    except Exception as e:
-        raise RuntimeError(
-            "贴图模块导入失败（常缺 custom_rasterizer / xatlas）。"
-            "请在 Hunyuan 环境重跑 scripts/setup_image_to_3d.py --engine hunyuan3d，"
-            "或按官方说明编译 hy3dgen/texgen/custom_rasterizer 与 differentiable_renderer。"
-            f" 原因：{e}"
-        ) from e
-
-    print("hunyuan: 加载贴图生成（delight + paint）…", flush=True)
-    with _Heartbeat("hunyuan 贴图装载", 30.0):
-        tex = Hunyuan3DPaintPipeline.from_pretrained(model_id)
-        try:
-            tex.enable_model_cpu_offload()
-            print("hunyuan: 贴图模型已开 CPU offload（省显存）", flush=True)
-        except Exception as e:
-            print(f"hunyuan: CPU offload 不可用，继续：{e}", flush=True)
-    mesh_in = _load_trimesh_mesh(mesh_path)
-    print("hunyuan: 开始生成贴图（比出几何更久）…", flush=True)
-    with _Heartbeat("hunyuan 贴图推理", 30.0):
-        textured = tex(mesh_in, image=image)
-    textured.export(str(mesh_path))
-    print(f"hunyuan: 贴图已写入 {mesh_path.name} bytes={mesh_path.stat().st_size}", flush=True)
-
-
 def _run_hunyuan(
-    image: Path, out_dir: Path, seed: int, detail: str = "game", *, texture: bool = False
+    image: Path, out_dir: Path, seed: int, detail: str = "game"
 ) -> Path:
-    """Hunyuan3D-2 shape; optional Hunyuan paint (texgen) after simplify."""
+    """Hunyuan3D-2 shape generation."""
     cfg = _detail_cfg(detail)
     try:
         import torch
@@ -423,14 +365,14 @@ def _run_hunyuan(
         load_kw["subfolder"] = "hunyuan3d-dit-v2-mini"
     print(
         f"hunyuan load {model_id} {load_kw or '(default subfolder)'} "
-        f"detail={_normalize_mesh_detail(detail)} texture={'on' if texture else 'off'}",
+        f"detail={_normalize_mesh_detail(detail)}",
         flush=True,
     )
     print(
         "hunyuan: 优先读本地 ~/.cache/hy3dgen；若无完整权重才访问 HuggingFace",
         flush=True,
     )
-    # 已有本地形状权重则离线；若还要贴图且本地无 paint，后面会关掉离线
+    # 已有本地形状权重则离线
     base = Path(os.environ.get("HY3DGEN_MODELS", Path.home() / ".cache" / "hy3dgen")).expanduser()
     sub = load_kw.get("subfolder") or "hunyuan3d-dit-v2-0"
     local_dir = base / model_id / sub
@@ -454,11 +396,6 @@ def _run_hunyuan(
     mesh_path = out_dir / "mesh.glb"
     mesh.export(str(mesh_path))
     mesh_path = _simplify_mesh_file(mesh_path, int(cfg["target_faces"]))
-    if texture:
-        del pipe
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-        _apply_hunyuan_texture(model_id=model_id, mesh_path=mesh_path, image=img)
     return mesh_path
 
 
@@ -780,11 +717,6 @@ def main() -> int:
         default="game",
         help="game=低模(~6k面) | mid(~30k) | high(不额外减面)",
     )
-    ap.add_argument(
-        "--texture",
-        action="store_true",
-        help="Hunyuan3D-2: also run paint/texgen onto the mesh",
-    )
     args = ap.parse_args()
 
     image = Path(args.image)
@@ -796,19 +728,15 @@ def main() -> int:
 
     detail = _normalize_mesh_detail(args.mesh_detail)
     print(
-        f"i23d engine={args.engine} detail={detail} texture={int(bool(args.texture))} "
+        f"i23d engine={args.engine} detail={detail} "
         f"python={sys.executable} image={image} out={out_dir}",
         flush=True,
     )
-    textured = False
     try:
         if args.engine == "triposr":
             mesh = _run_triposr(image, out_dir, args.seed, detail)
         elif args.engine == "hunyuan3d":
-            mesh = _run_hunyuan(
-                image, out_dir, args.seed, detail, texture=bool(args.texture)
-            )
-            textured = bool(args.texture)
+            mesh = _run_hunyuan(image, out_dir, args.seed, detail)
         elif args.engine == "trellis2":
             mesh = _run_trellis2(image, out_dir, args.seed, detail)
         else:
@@ -821,7 +749,6 @@ def main() -> int:
             ok=False,
             error=str(e),
             mesh_detail=detail,
-            texture=bool(args.texture),
         )
         return 1
 
@@ -833,8 +760,6 @@ def main() -> int:
         bytes=mesh.stat().st_size if mesh.is_file() else 0,
         mesh_detail=detail,
         target_faces=_detail_cfg(detail)["target_faces"],
-        texture=bool(args.texture),
-        textured=bool(textured),
     )
     print(f"OK {mesh} bytes={mesh.stat().st_size if mesh.is_file() else 0}", flush=True)
     return 0
