@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-15T07:08:49Z */
+/** generated_at: 2026-09-16T07:10:26Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -29,6 +29,11 @@
       { title: "水果忍者 · 再来一刀 / Fruit Ninja Dojo", url: "https://fruit-ninja-dojo-20260905.yongqixue666.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/fruit-ninja-dojo/gameplay.jpg", external: true },
       { title: "血裔决斗Ⅱ / Nightborn Clash", url: "https://nightborn-clash.dixonefg5.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/nightborn-clash/gameplay.jpg", external: true },
       { title: "DUST II · 沙漠行动 / Desert Operations", url: "https://dust-ii-map.yelin8130.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dust-ii-ops/gameplay.jpg", external: true },
+      { title: "Thornwake", url: "https://thornwake-moth-descent.ltodd.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/thornwake/gameplay.jpg", external: true },
+      { title: "DEAD END — Oakridge", url: "https://dead-end.replit.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dead-end/gameplay.jpg", external: true },
+      { title: "Anime Rift — The Crossover Arena", url: "https://anime-rift-cade.theyounganimation.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/anime-rift/gameplay.jpg", external: true },
+      { title: "VeilFall — God’s Heart", url: "https://veilfall.replit.app/play", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/veilfall/gameplay.jpg", external: true },
+      { title: "Butterball Run — Dinner Has Other Plans", url: "https://butterball-run.jeraldine-t.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/butterball-run/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPuzzle', items: [
       { title: "Vesper: The Last Light", url: "https://vesper.mansgullberg.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/vesper/gameplay.png", external: true },
@@ -41,6 +46,7 @@
       { title: "Greenhouse Escape Room: The Last Seed", url: "https://www.aigameshare.com/games/greenhouse-escape-room", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/greenhouse-escape-room/gameplay.jpg", external: true },
       { title: "无限庭院 · Infinite Garden — Atlas of Echoes", url: "https://infinite-garden.yelin8130.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/infinite-garden/gameplay.jpg", external: true },
       { title: "Pixel Orchard — Memory Harvest", url: "https://miaai-lab.github.io/GPT-6-Astra-100-HTML-Files/013-pixel-orchard.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/pixel-orchard/gameplay.jpg", external: true },
+      { title: "Lantern Cove — The Borrowed Light", url: "https://lantern-cove.akartit.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/lantern-cove/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraStrategy', items: [
       { title: "Tidehook", url: "https://tidehook-mallow.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/tidehook/gameplay.png", external: true },
@@ -69,6 +75,9 @@
       { title: "Česká dobrodružství / Czech Adventures", url: "https://czech-game.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/czech-adventures/gameplay.jpg", external: true },
       { title: "Land, If You Can", url: "https://landifyoucan.naylalabs.xyz/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/land-if-you-can/gameplay.jpg", external: true },
       { title: "Last Train to the Sea", url: "https://app.usecrayon.ai/play/bda1b910-b840-48cb-bb4c-28d0cde29107", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/last-train-to-the-sea/gameplay.jpg", external: true },
+      { title: "Realm of Seratari", url: "https://dragonwild.seranotte.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/realm-of-seratari/gameplay.jpg", external: true },
+      { title: "Monopoly City — A Board Worth Exploring", url: "https://monopoly-city.eekosystems.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/monopoly-city/gameplay.jpg", external: true },
+      { title: "MUST. MAKE. PAPERCLIPS.", url: "https://wavedash.com/games/must-make-paperclips", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/must-make-paperclips/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraRpg', items: [
       { title: "The Sunshard", url: "https://mindblown.ai/games/the-sunshard", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-sunshard/gameplay.png", external: true },
@@ -87,6 +96,7 @@
       { title: "NÁCAR", url: "https://nacar-microcosmo.preda2005.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/nacar/gameplay.jpg", external: true },
       { title: "BELOW — The Hollow", url: "https://below-the-hollow.thebuggeddev.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/below-the-hollow/gameplay.jpg", external: true },
       { title: "The Road to Kufa", url: "https://road-to-kufa.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/road-to-kufa/gameplay.jpg", external: true },
+      { title: "Grand Theft Auto VI — PS1 Demake", url: "https://origozero.ai/play/ad25322f-fdfe-49c0-9ee9-82608c8f9ff7", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/gta-vi-ps1-demake/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPlatform', items: [
       { title: "Barrelbound: The Lost Cargo", url: "https://barrelbound.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/barrelbound/gameplay.jpg", external: true },
@@ -112,6 +122,7 @@
       { title: "Wings of Freedom — Levi Skyrun", url: "https://attack-on-titan-jet.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/levi-skyrun/gameplay.jpg", external: true },
       { title: "Hot Wheeler", url: "https://hot-wheeler.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/hot-wheeler/gameplay.jpg", external: true },
       { title: "旧城区 · 放学路 / Dual Realms", url: "https://sgyno09-source.github.io/dual-realms/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dual-realms/gameplay.jpg", external: true },
+      { title: "Race Jimothy", url: "https://tayttm.github.io/race-jimothy/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/race-jimothy/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
@@ -126,8 +137,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-15T07:08:49Z",
-    count: 108,
+    generatedAt: "2026-09-16T07:10:26Z",
+    count: 119,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
