@@ -742,15 +742,16 @@
 
 .instruct-results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
   gap: 16px;
-  justify-items: start;
+  justify-content: start;
+  justify-items: stretch;
 }
 
 .instruct-result-card {
   text-align: center;
   width: 100%;
-  max-width: 420px;
+  max-width: 220px;
 }
 
 .instruct-result-title {
@@ -764,8 +765,8 @@
   display: block;
   width: 100%;
   height: auto;
-  max-width: 420px;
-  max-height: min(70vh, 560px);
+  max-width: 220px;
+  max-height: 280px;
   object-fit: contain;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -776,7 +777,7 @@
 .instruct-result-img-wrap {
   position: relative;
   margin: 0 auto 10px;
-  max-width: 420px;
+  max-width: 220px;
 }
 
 .instruct-result-img-wrap.is-loading {
