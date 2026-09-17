@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>视频转图片 - 百宝箱</title>
   <meta name="description" content="在浏览器本地从视频提取帧、去重并打包下载，无需上传。">
-  <link rel="stylesheet" href="../../css/base.css?v=vti2" />
+  <link rel="stylesheet" href="../../css/base.css?v=vti3" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq4" />
-  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti2" />
+  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti3" />
 </head>
 <body>
   <div class="container">
@@ -41,8 +41,8 @@
               <input type="number" id="frame-interval" value="100" min="100" step="50" />
             </label>
             <label><span data-i18n="tools.videoToImages.clipLength">Clip length (s)</span>
-              <input type="range" id="extract-duration" min="1" max="10" value="3" step="0.5" />
-              <span id="extract-duration-value">3s</span>
+              <input type="range" id="extract-duration" min="0.1" max="10" value="10" step="0.1" />
+              <span id="extract-duration-value">—</span>
             </label>
             <label><span data-i18n="tools.videoToImages.startAt">Start at (s)</span>
               <input type="range" id="start-time" min="0" max="100" value="0" step="0.1" />
@@ -113,13 +113,13 @@
     </main>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti2"></script>
-  <script src="../../js/locales/en.js?v=vti2"></script>
-  <script src="../../js/locales/zh-CN.js?v=vti2"></script>
-  <script src="../../js/i18n.js?v=vti2"></script>
-  <script src="../../js/config.js?v=vti2"></script>
-  <script src="../../js/base.js?v=vti2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti3"></script>
+  <script src="../../js/locales/en.js?v=vti3"></script>
+  <script src="../../js/locales/zh-CN.js?v=vti3"></script>
+  <script src="../../js/i18n.js?v=vti3"></script>
+  <script src="../../js/config.js?v=vti3"></script>
+  <script src="../../js/base.js?v=vti3"></script>
   <script src="../../js/common_ui.js?v=adminhub1"></script>
-  <script src="../../js/media/video-to-images.js?v=vti2"></script>
+  <script src="../../js/media/video-to-images.js?v=vti3"></script>
 </body>
 </html>

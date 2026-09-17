@@ -80,26 +80,45 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // 绑定提取设置事件
-    extractDurationInput.addEventListener('input', () => {
-        extractDurationValue.textContent = extractDurationInput.value + 's';
-        
-        // 更新开始时间滑块的最大值
+    function formatSeconds(sec) {
+        const n = Math.round(Number(sec) * 10) / 10;
+        return (Number.isInteger(n) ? String(n) : n.toFixed(1)) + 's';
+    }
+
+    function syncClipSlidersFromVideo(duration) {
+        const dur = Math.max(0.1, Number(duration) || 0.1);
+        const maxClip = Math.round(dur * 10) / 10;
+        extractDurationInput.min = '0.1';
+        extractDurationInput.max = String(maxClip);
+        extractDurationInput.step = '0.1';
+        extractDurationInput.value = String(maxClip);
+        extractDurationValue.textContent = formatSeconds(maxClip);
+        startTimeInput.min = '0';
+        startTimeInput.max = '0';
+        startTimeInput.value = '0';
+        startTimeValue.textContent = '0s';
+    }
+
+    function refreshStartTimeMax() {
         const videoElement = videoContainer.querySelector('video');
-        if (videoElement && videoElement.duration) {
-            const duration = videoElement.duration;
-            const maxStartTime = Math.max(0, duration - parseFloat(extractDurationInput.value));
-            startTimeInput.max = maxStartTime.toFixed(1);
-            
-            // 如果当前开始时间超过了最大值，调整它
-            if (parseFloat(startTimeInput.value) > maxStartTime) {
-                startTimeInput.value = maxStartTime.toFixed(1);
-                startTimeValue.textContent = maxStartTime.toFixed(1) + 's';
-            }
+        if (!videoElement || !videoElement.duration) return;
+        const duration = videoElement.duration;
+        const clip = parseFloat(extractDurationInput.value) || 0.1;
+        const maxStartTime = Math.max(0, Math.round((duration - clip) * 10) / 10);
+        startTimeInput.max = String(maxStartTime);
+        if (parseFloat(startTimeInput.value) > maxStartTime) {
+            startTimeInput.value = String(maxStartTime);
+            startTimeValue.textContent = formatSeconds(maxStartTime);
         }
+    }
+
+    extractDurationInput.addEventListener('input', () => {
+        extractDurationValue.textContent = formatSeconds(extractDurationInput.value);
+        refreshStartTimeMax();
     });
     
     startTimeInput.addEventListener('input', () => {
-        startTimeValue.textContent = startTimeInput.value + 's';
+        startTimeValue.textContent = formatSeconds(startTimeInput.value);
     });
     
     // 绑定全选按钮事件
@@ -162,14 +181,9 @@ document.addEventListener('DOMContentLoaded', function() {
         videoElement.controls = true;
         videoElement.style.width = '100%';
         
-        // 当视频元数据加载完成时，更新开始时间滑块的最大值
+        // 片段时长上限 = 原视频时长，默认选满整段
         videoElement.addEventListener('loadedmetadata', () => {
-            const duration = videoElement.duration;
-            const maxStartTime = Math.max(0, duration - parseFloat(extractDurationInput.value));
-            startTimeInput.max = maxStartTime.toFixed(1);
-            startTimeInput.value = 0;
-            startTimeValue.textContent = '0s';
-            console.log(`视频时长: ${duration.toFixed(1)}秒，最大开始时间: ${maxStartTime.toFixed(1)}秒`);
+            syncClipSlidersFromVideo(videoElement.duration);
         });
         
         // 清空并添加视频到容器
