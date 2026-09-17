@@ -1176,7 +1176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * 去除相似帧：每组相似帧只保留一帧，并从列表中删除其余帧
+     * 勾选相似帧：每组相似帧勾选多余的（保留中间一帧不勾），不自动删除
      */
     function keepDifferentFrames() {
         if (extractedFrames.length === 0) {
@@ -1187,41 +1187,45 @@ document.addEventListener('DOMContentLoaded', function() {
         showToast(tr('tools.videoToImages.toastComparing'));
         
         const threshold = Math.max(80, Math.min(100, parseInt(document.getElementById('similarity-threshold').value) || 90));
+        const checkboxes = document.querySelectorAll('.frame-checkbox');
         
         const similarGroups = [];
         let currentGroup = [0];
         
         async function compareFrames() {
             for (let i = 0; i < extractedFrames.length - 1; i++) {
-                const similarity = await compareImages(extractedFrames[i], extractedFrames[i+1]);
+                const similarity = await compareImages(extractedFrames[i], extractedFrames[i + 1]);
                 
                 if (similarity >= threshold) {
-                    currentGroup.push(i+1);
+                    currentGroup.push(i + 1);
                 } else {
                     similarGroups.push(currentGroup);
-                    currentGroup = [i+1];
+                    currentGroup = [i + 1];
                 }
             }
             similarGroups.push(currentGroup);
             
-            const keepIndices = [];
-            similarGroups.forEach(group => {
-                if (group.length === 1) {
-                    keepIndices.push(group[0]);
-                } else {
-                    keepIndices.push(group[Math.floor(group.length / 2)]);
-                }
-            });
-            keepIndices.sort((a, b) => a - b);
-            
-            extractedFrames = keepIndices.map(i => extractedFrames[i]);
-            renderFramesGrid();
             selectedFrames = [];
-            document.querySelectorAll('.frame-checkbox').forEach((checkbox) => {
-                checkbox.checked = true;
-                selectedFrames.push(parseInt(checkbox.dataset.index, 10));
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = false;
             });
-            showToast(tr('tools.videoToImages.toastRemovedSimilar', { n: extractedFrames.length }));
+            
+            let marked = 0;
+            similarGroups.forEach((group) => {
+                if (group.length < 2) return;
+                const keepIndex = group[Math.floor(group.length / 2)];
+                group.forEach((frameIndex) => {
+                    if (frameIndex === keepIndex) return;
+                    const checkbox = checkboxes[frameIndex];
+                    if (!checkbox) return;
+                    checkbox.checked = true;
+                    selectedFrames.push(frameIndex);
+                    marked += 1;
+                });
+            });
+            selectedFrames.sort((a, b) => a - b);
+            
+            showToast(tr('tools.videoToImages.toastSelectedSimilar', { n: marked }));
         }
         
         compareFrames();
