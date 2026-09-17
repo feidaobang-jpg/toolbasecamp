@@ -742,7 +742,7 @@
 
 .instruct-results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
+  grid-template-columns: repeat(auto-fill, 220px);
   gap: 16px;
   justify-content: start;
   justify-items: stretch;
@@ -750,8 +750,9 @@
 
 .instruct-result-card {
   text-align: center;
-  width: 100%;
-  max-width: 220px;
+  width: 220px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .instruct-result-title {
@@ -761,36 +762,43 @@
   margin-bottom: 8px;
 }
 
-.instruct-result-card img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: 220px;
-  max-height: 280px;
-  object-fit: contain;
+.instruct-result-img-wrap {
+  position: relative;
+  width: 220px;
+  max-width: 100%;
+  height: 280px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #fff;
-  margin: 0 auto;
+  overflow: hidden;
 }
 
-.instruct-result-img-wrap {
-  position: relative;
-  margin: 0 auto 10px;
-  max-width: 220px;
+.instruct-result-card img,
+.instruct-result-img-wrap img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  margin: 0;
 }
 
 .instruct-result-img-wrap.is-loading {
-  min-height: 180px;
   background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
 }
 
 .instruct-result-img-wrap.is-loading img {
-  border: none;
-  min-height: 180px;
   opacity: 0;
+  min-height: 0;
 }
 
 .instruct-result-loading {
