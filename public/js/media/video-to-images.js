@@ -62,13 +62,36 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 获取去水印按钮并绑定事件
     const removeWatermarkBtn = document.getElementById('remove-watermark-btn');
+    const watermarkEnable = document.getElementById('watermark-enable');
     const watermarkRemovalSettings = document.getElementById('watermark-removal-settings');
     const watermarkSize = document.getElementById('watermark-size');
     const watermarkSizeValue = document.getElementById('watermark-size-value');
     const watermarkThreshold = document.getElementById('watermark-threshold');
     const watermarkThresholdValue = document.getElementById('watermark-threshold-value');
     
+    function isWatermarkEnabled() {
+        return !!(watermarkEnable && watermarkEnable.checked);
+    }
+
+    function syncWatermarkControls() {
+        const on = isWatermarkEnabled();
+        if (watermarkRemovalSettings) {
+            watermarkRemovalSettings.classList.toggle('is-disabled', !on);
+            watermarkRemovalSettings.setAttribute('aria-disabled', on ? 'false' : 'true');
+            watermarkRemovalSettings.querySelectorAll('input').forEach((el) => {
+                el.disabled = !on;
+            });
+        }
+        if (removeWatermarkBtn) {
+            removeWatermarkBtn.disabled = !on;
+        }
+    }
+
     removeWatermarkBtn.addEventListener('click', processRemoveWatermark);
+    if (watermarkEnable) {
+        watermarkEnable.addEventListener('change', syncWatermarkControls);
+        syncWatermarkControls();
+    }
     
     // 绑定去水印设置事件
     watermarkSize.addEventListener('input', () => {
@@ -327,6 +350,10 @@ document.addEventListener('DOMContentLoaded', function() {
      * 处理所有已提取的帧，移除水印
      */
     function processRemoveWatermark() {
+        if (!isWatermarkEnabled()) {
+            showToast(tr('tools.videoToImages.toastEnableWatermark'));
+            return;
+        }
         if (extractedFrames.length === 0) {
             showToast(tr('tools.videoToImages.toastNoFramesProcess'));
             return;
@@ -1426,6 +1453,11 @@ document.addEventListener('DOMContentLoaded', function() {
         framesContainer.innerHTML = '';
         framesPreviewSection.classList.add('hidden');
         if (dropZone) dropZone.classList.remove('hidden');
+
+        if (watermarkEnable) {
+            watermarkEnable.checked = false;
+            syncWatermarkControls();
+        }
         
         // 重置动画
         if (animationInterval) {

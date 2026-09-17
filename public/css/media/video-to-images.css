@@ -107,6 +107,34 @@
   background: #fafafa;
 }
 
+.watermark-enable {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+  user-select: none;
+}
+
+.watermark-enable input {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+}
+
+#watermark-removal-settings.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+#remove-watermark-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .frame-item {
   position: relative;
   border-radius: 8px;

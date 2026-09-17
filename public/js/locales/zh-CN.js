@@ -3586,6 +3586,7 @@ window.TB_LOCALES['zh-CN'] = {
             clipLength: '片段时长（秒）',
             startAt: '起始时间（秒）',
             watermarkOptional: '去水印',
+            toastEnableWatermark: '请先勾选「去水印」',
             cornerToClear: '清除角落',
             topLeft: '左上',
             topRight: '右上',
