@@ -296,13 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
             frameCountEl.textContent = String(extractedFrames.length);
         }
     }
-    
-    /**
-     * 创建帧预览元素
-     * @param {string} frameData - 帧图片数据URL
-     * @param {number} index - 帧索引
-     * @returns {HTMLElement} - 帧预览元素
-     */
+
     function createZoomModal(imageSrc, currentIndex) {
         // 如果已存在模态框，先移除
         if (zoomedImage) {
