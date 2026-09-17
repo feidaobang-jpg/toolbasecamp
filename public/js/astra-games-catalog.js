@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-16T07:10:26Z */
+/** generated_at: 2026-09-17T07:08:16Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -34,6 +34,9 @@
       { title: "Anime Rift — The Crossover Arena", url: "https://anime-rift-cade.theyounganimation.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/anime-rift/gameplay.jpg", external: true },
       { title: "VeilFall — God’s Heart", url: "https://veilfall.replit.app/play", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/veilfall/gameplay.jpg", external: true },
       { title: "Butterball Run — Dinner Has Other Plans", url: "https://butterball-run.jeraldine-t.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/butterball-run/gameplay.jpg", external: true },
+      { title: "Tideglass Hunt", url: "https://tideglass-hunt.timothee-leborgne.ohmyunicorn.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/tideglass-hunt/gameplay.jpg", external: true },
+      { title: "Canteen Crashers", url: "https://wavedash.com/games/canteen-crashers", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/canteen-crashers/gameplay.jpg", external: true },
+      { title: "こもれびの木の実あつめ / Komorebi Nut Gathering", url: "https://komorebi-kinomi-0916.inu03550.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/komorebi-kinomi/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPuzzle', items: [
       { title: "Vesper: The Last Light", url: "https://vesper.mansgullberg.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/vesper/gameplay.png", external: true },
@@ -78,6 +81,7 @@
       { title: "Realm of Seratari", url: "https://dragonwild.seranotte.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/realm-of-seratari/gameplay.jpg", external: true },
       { title: "Monopoly City — A Board Worth Exploring", url: "https://monopoly-city.eekosystems.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/monopoly-city/gameplay.jpg", external: true },
       { title: "MUST. MAKE. PAPERCLIPS.", url: "https://wavedash.com/games/must-make-paperclips", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/must-make-paperclips/gameplay.jpg", external: true },
+      { title: "Sundrift — Take the Slow Way Home", url: "https://wesche.com/lab/astra/boat-explorer/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/sundrift/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraRpg', items: [
       { title: "The Sunshard", url: "https://mindblown.ai/games/the-sunshard", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-sunshard/gameplay.png", external: true },
@@ -123,6 +127,9 @@
       { title: "Hot Wheeler", url: "https://hot-wheeler.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/hot-wheeler/gameplay.jpg", external: true },
       { title: "旧城区 · 放学路 / Dual Realms", url: "https://sgyno09-source.github.io/dual-realms/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dual-realms/gameplay.jpg", external: true },
       { title: "Race Jimothy", url: "https://tayttm.github.io/race-jimothy/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/race-jimothy/gameplay.jpg", external: true },
+      { title: "Glider — One Throw. Endless Sky.", url: "https://glider.game/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/glider-game/gameplay.jpg", external: true },
+      { title: "Duck Off", url: "https://duckoff.fun/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/duck-off/gameplay.jpg", external: true },
+      { title: "Wildwake Rally", url: "https://wildwake-rally.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/wildwake-rally/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
@@ -132,13 +139,16 @@
       { title: "Jelly Baby", url: "https://jelly.scottsun.io/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/jelly-baby/gameplay.jpg", external: true },
       { title: "泡泡坦克大作战联机版 / Toon Tank Arena", url: "https://toon-tank-arena.jay6697117.deno.net/", thumb: "https://github.com/user-attachments/assets/713d44f3-a77c-452c-ba6d-1231882dc670", external: true },
       { title: "Above the Rooftops", url: "https://app.usecrayon.ai/play/d09bb865-2259-42e2-86cc-fb609a9d6f28", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/above-the-rooftops/gameplay.jpg", external: true },
+      { title: "Starship Foundry — Isometric Flight Lab", url: "https://allaiinc.org/Starship-Foundry-Isometric-Flight-Lab.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/starship-foundry/gameplay.jpg", external: true },
+      { title: "POCKET_01 — Personal Game System", url: "https://devoshub.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/pocket-01/gameplay.jpg", external: true },
+      { title: "Super Mario Bros. + Duck Hunt — Browser Port", url: "https://mario-duck-hunt-mobile.astral-bead-6514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mario-duck-hunt/gameplay.jpg", external: true },
     ] },
   ];
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-16T07:10:26Z",
-    count: 119,
+    generatedAt: "2026-09-17T07:08:16Z",
+    count: 129,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
