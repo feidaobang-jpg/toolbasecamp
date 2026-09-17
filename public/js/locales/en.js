@@ -3586,7 +3586,7 @@ window.TB_LOCALES.en = {
             frameInterval: 'Frame interval (ms)',
             clipLength: 'Clip length (s)',
             startAt: 'Start at (s)',
-            watermarkOptional: 'Watermark / background (optional)',
+            watermarkOptional: 'Remove watermark',
             cornerToClear: 'Corner to clear',
             topLeft: 'Top left',
             topRight: 'Top right',

@@ -1427,10 +1427,6 @@ document.addEventListener('DOMContentLoaded', function() {
         framesPreviewSection.classList.add('hidden');
         if (dropZone) dropZone.classList.remove('hidden');
         
-        if (watermarkRemovalSettings) {
-            watermarkRemovalSettings.open = false;
-        }
-        
         // 重置动画
         if (animationInterval) {
             clearInterval(animationInterval);

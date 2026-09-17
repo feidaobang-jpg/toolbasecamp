@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>视频转图片 - 百宝箱</title>
   <meta name="description" content="在浏览器本地从视频提取帧、去重并打包下载，无需上传。">
-  <link rel="stylesheet" href="../../css/base.css?v=vti4" />
+  <link rel="stylesheet" href="../../css/base.css?v=vti5" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq4" />
-  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti4" />
+  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti5" />
 </head>
 <body>
   <div class="container">
@@ -50,26 +50,24 @@
             </label>
           </div>
 
-          <details class="advanced-block" id="watermark-removal-settings">
-            <summary data-i18n="tools.videoToImages.watermarkOptional">Watermark / background (optional)</summary>
-            <div class="settings-row">
-              <span class="settings-label" data-i18n="tools.videoToImages.cornerToClear">Corner to clear</span>
-              <div class="radio-group">
-                <label><input type="radio" name="watermark-position" value="top-left" checked /> <span data-i18n="tools.videoToImages.topLeft">Top left</span></label>
-                <label><input type="radio" name="watermark-position" value="top-right" /> <span data-i18n="tools.videoToImages.topRight">Top right</span></label>
-                <label><input type="radio" name="watermark-position" value="bottom-left" /> <span data-i18n="tools.videoToImages.bottomLeft">Bottom left</span></label>
-                <label><input type="radio" name="watermark-position" value="bottom-right" /> <span data-i18n="tools.videoToImages.bottomRight">Bottom right</span></label>
-              </div>
-              <label><span data-i18n="tools.videoToImages.regionSize">Region size</span>
-                <input type="range" id="watermark-size" min="10" max="30" value="20" />
-                <span id="watermark-size-value">20%</span>
-              </label>
-              <label><span data-i18n="tools.videoToImages.bgSensitivity">Background sensitivity</span>
-                <input type="range" id="watermark-threshold" min="10" max="50" value="25" />
-                <span id="watermark-threshold-value">25</span>
-              </label>
+          <h3 class="section-title" data-i18n="tools.videoToImages.watermarkOptional">Remove watermark</h3>
+          <div class="settings-row" id="watermark-removal-settings">
+            <span class="settings-label" data-i18n="tools.videoToImages.cornerToClear">Corner to clear</span>
+            <div class="radio-group">
+              <label><input type="radio" name="watermark-position" value="top-left" checked /> <span data-i18n="tools.videoToImages.topLeft">Top left</span></label>
+              <label><input type="radio" name="watermark-position" value="top-right" /> <span data-i18n="tools.videoToImages.topRight">Top right</span></label>
+              <label><input type="radio" name="watermark-position" value="bottom-left" /> <span data-i18n="tools.videoToImages.bottomLeft">Bottom left</span></label>
+              <label><input type="radio" name="watermark-position" value="bottom-right" /> <span data-i18n="tools.videoToImages.bottomRight">Bottom right</span></label>
             </div>
-          </details>
+            <label><span data-i18n="tools.videoToImages.regionSize">Region size</span>
+              <input type="range" id="watermark-size" min="10" max="30" value="20" />
+              <span id="watermark-size-value">20%</span>
+            </label>
+            <label><span data-i18n="tools.videoToImages.bgSensitivity">Background sensitivity</span>
+              <input type="range" id="watermark-threshold" min="10" max="50" value="25" />
+              <span id="watermark-threshold-value">25</span>
+            </label>
+          </div>
 
           <div class="action-row">
             <button type="button" class="tb-btn" id="extract-frames-btn" data-i18n="tools.videoToImages.extractFrames">Extract frames</button>
@@ -113,13 +111,13 @@
     </main>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti4"></script>
-  <script src="../../js/locales/en.js?v=vti4"></script>
-  <script src="../../js/locales/zh-CN.js?v=vti4"></script>
-  <script src="../../js/i18n.js?v=vti4"></script>
-  <script src="../../js/config.js?v=vti4"></script>
-  <script src="../../js/base.js?v=vti4"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti5"></script>
+  <script src="../../js/locales/en.js?v=vti5"></script>
+  <script src="../../js/locales/zh-CN.js?v=vti5"></script>
+  <script src="../../js/i18n.js?v=vti5"></script>
+  <script src="../../js/config.js?v=vti5"></script>
+  <script src="../../js/base.js?v=vti5"></script>
   <script src="../../js/common_ui.js?v=adminhub1"></script>
-  <script src="../../js/media/video-to-images.js?v=vti4"></script>
+  <script src="../../js/media/video-to-images.js?v=vti5"></script>
 </body>
 </html>

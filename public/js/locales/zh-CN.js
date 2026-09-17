@@ -3585,7 +3585,7 @@ window.TB_LOCALES['zh-CN'] = {
             frameInterval: '帧间隔（毫秒）',
             clipLength: '片段时长（秒）',
             startAt: '起始时间（秒）',
-            watermarkOptional: '水印 / 背景（可选）',
+            watermarkOptional: '去水印',
             cornerToClear: '清除角落',
             topLeft: '左上',
             topRight: '右上',
