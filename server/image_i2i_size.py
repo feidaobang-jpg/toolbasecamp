@@ -93,7 +93,7 @@ _SEEDREAM_2K: list[Tuple[float, int, int]] = [
     (21 / 9, 3136, 1344),
 ]
 
-# GPT Image 2 via OpenAI-style sizes (API typically only these three).
+# GPT Image 1 discrete sizes (legacy). GPT Image 2 / 2.5 also accept custom WxH.
 _GPT_SIZES: list[Tuple[float, str]] = [
     (1.0, "1024x1024"),
     (1024 / 1536, "1024x1536"),
@@ -122,6 +122,73 @@ def _nearest(aspect: float, options: Sequence[Tuple[float, ...]]) -> Tuple:
     return best
 
 
+def _snap16(n: int) -> int:
+    return max(16, int(round(n / 16.0)) * 16)
+
+
+def gpt_size_wh(ref_wh: Optional[Tuple[int, int]], output_size: str = "2K") -> str:
+    """
+    OpenAI-style `WIDTHxHEIGHT` for GPT Image edits.
+
+    GPT Image 2 / 2.5 support custom resolutions (sides multiples of 16, aspect ≤ 3:1,
+    pixels in ~[655360, 8294400], max edge ≤ 3840). Prefer matching the reference
+    aspect so tall phone screenshots are not forced into 1024x1536 and stretched.
+    """
+    want_2k = (output_size or "2K").strip().upper() != "1K"
+    if not ref_wh or ref_wh[0] <= 0 or ref_wh[1] <= 0:
+        return "2048x2048" if want_2k else "1024x1024"
+
+    aspect = _clamp_aspect(ref_wh[0] / float(ref_wh[1]), 1.0 / 3.0, 3.0)
+    long_edge = 2048 if want_2k else 1024
+    max_edge = 3840
+    min_pixels = 655_360
+    max_pixels = 8_294_400
+
+    if aspect >= 1.0:
+        ow = long_edge
+        oh = max(16, int(round(long_edge / aspect)))
+    else:
+        oh = long_edge
+        ow = max(16, int(round(long_edge * aspect)))
+
+    ow, oh = _snap16(ow), _snap16(oh)
+
+    if max(ow, oh) > max_edge:
+        scale = max_edge / float(max(ow, oh))
+        ow, oh = _snap16(int(ow * scale)), _snap16(int(oh * scale))
+
+    area = ow * oh
+    if area > max_pixels:
+        scale = math.sqrt(max_pixels / float(area))
+        ow, oh = _snap16(int(ow * scale)), _snap16(int(oh * scale))
+        area = ow * oh
+    if area < min_pixels:
+        scale = math.sqrt(min_pixels / float(max(area, 1)))
+        ow = _snap16(int(math.ceil(ow * scale)))
+        oh = _snap16(int(math.ceil(oh * scale)))
+        if max(ow, oh) > max_edge or ow * oh > max_pixels:
+            # Extreme aspect after min-pixel bump: fall back to nearest discrete size.
+            _ar, size = _nearest(aspect, _GPT_SIZES)
+            return size
+
+    # Re-clamp aspect after snaps (keep within 3:1).
+    if ow / float(oh) > 3.0:
+        ow = _snap16(oh * 3)
+    elif oh / float(ow) > 3.0:
+        oh = _snap16(ow * 3)
+
+    return f"{ow}x{oh}"
+
+
+def gpt_size_wh_discrete(ref_wh: Optional[Tuple[int, int]], output_size: str = "2K") -> str:
+    """Legacy discrete sizes only (1024 square / portrait / landscape)."""
+    if not ref_wh or ref_wh[0] <= 0 or ref_wh[1] <= 0:
+        return "1024x1024"
+    aspect = ref_wh[0] / float(ref_wh[1])
+    _ar, size = _nearest(aspect, _GPT_SIZES)
+    return size
+
+
 def seedream_size_wh(
     output_size: str,
     ref_wh: Optional[Tuple[int, int]],
@@ -145,18 +212,6 @@ def seedream_size_wh(
         w = max(64, int(math.ceil(w * scale)))
         h = max(64, int(math.ceil(h * scale)))
     return f"{w}x{h}"
-
-
-def gpt_size_wh(ref_wh: Optional[Tuple[int, int]], output_size: str = "2K") -> str:
-    """OpenAI-style size closest to input aspect (GPT Image 2 discrete sizes)."""
-    if not ref_wh or ref_wh[0] <= 0 or ref_wh[1] <= 0:
-        # No ref → square; 2K key historically mapped to 2048 square when allowed.
-        if (output_size or "2K").strip().upper() != "1K":
-            return "1024x1024"
-        return "1024x1024"
-    aspect = ref_wh[0] / float(ref_wh[1])
-    _ar, size = _nearest(aspect, _GPT_SIZES)
-    return size
 
 
 def banana_aspect_and_tier(

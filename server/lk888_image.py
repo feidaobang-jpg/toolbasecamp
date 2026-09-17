@@ -302,34 +302,65 @@ async def _edit_via_images(
     ]
     for i, raw in enumerate(refs[1:LK888_MAX_REFS], start=1):
         files.append((f"image", (f"ref{i}.png", raw, _sniff_mime(raw))))
-    data = {
-        "model": model,
-        "prompt": prompt,
-        "size": size,
-        "n": "1",
-        "response_format": "b64_json",
-    }
-    resp = await client.post(
-        url,
-        headers=_auth_headers(json_body=False),
-        data=data,
-        files=files,
-    )
-    parsed = _parse_json(resp)
-    if resp.status_code >= 400 or parsed.get("error"):
-        # Retry without response_format if gateway rejects it.
-        if resp.status_code in (400, 422) and "response_format" in str(parsed).lower():
-            data.pop("response_format", None)
-            resp = await client.post(
-                url,
-                headers=_auth_headers(json_body=False),
-                data=data,
-                files=files,
-            )
-            parsed = _parse_json(resp)
+
+    from image_i2i_size import first_ref_wh, gpt_size_wh_discrete
+
+    sizes_to_try = [size]
+    # Custom WxH may be rejected by some gateways → fall back to discrete presets.
+    discrete = gpt_size_wh_discrete(first_ref_wh(refs), "2K")
+    if discrete not in sizes_to_try:
+        sizes_to_try.append(discrete)
+    if "1024x1024" not in sizes_to_try:
+        sizes_to_try.append("1024x1024")
+
+    last_parsed: dict = {}
+    last_resp: Optional[httpx.Response] = None
+    for try_size in sizes_to_try:
+        data = {
+            "model": model,
+            "prompt": prompt,
+            "size": try_size,
+            "n": "1",
+            "response_format": "b64_json",
+        }
+        resp = await client.post(
+            url,
+            headers=_auth_headers(json_body=False),
+            data=data,
+            files=files,
+        )
+        parsed = _parse_json(resp)
+        last_parsed, last_resp = parsed, resp
         if resp.status_code >= 400 or parsed.get("error"):
-            _raise_recharge_or_502(parsed, resp)
-    return await _result_from_openai_images(parsed, client)
+            # Retry without response_format if gateway rejects it.
+            if resp.status_code in (400, 422) and "response_format" in str(parsed).lower():
+                data.pop("response_format", None)
+                resp = await client.post(
+                    url,
+                    headers=_auth_headers(json_body=False),
+                    data=data,
+                    files=files,
+                )
+                parsed = _parse_json(resp)
+                last_parsed, last_resp = parsed, resp
+            if resp.status_code >= 400 or parsed.get("error"):
+                err_l = str(parsed).lower()
+                # Try next size when the gateway dislikes this WxH.
+                if (
+                    try_size != sizes_to_try[-1]
+                    and resp.status_code in (400, 422)
+                    and ("size" in err_l or "resolution" in err_l or "dimension" in err_l)
+                ):
+                    continue
+                _raise_recharge_or_502(parsed, resp)
+            else:
+                return await _result_from_openai_images(parsed, client)
+        else:
+            return await _result_from_openai_images(parsed, client)
+
+    assert last_resp is not None
+    _raise_recharge_or_502(last_parsed, last_resp)
+    raise AssertionError("unreachable")
 
 
 async def _poll_media_task(
