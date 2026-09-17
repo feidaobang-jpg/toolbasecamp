@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>视频转图片 - 百宝箱</title>
   <meta name="description" content="在浏览器本地从视频提取帧、去重并打包下载，无需上传。">
-  <link rel="stylesheet" href="../../css/base.css?v=vti6" />
+  <link rel="stylesheet" href="../../css/base.css?v=vti7" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq4" />
-  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti6" />
+  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti7" />
 </head>
 <body>
   <div class="container">
@@ -38,7 +38,7 @@
           <h3 class="section-title" data-i18n="tools.videoToImages.extractionSettings">Extraction settings</h3>
           <div class="settings-row">
             <label><span data-i18n="tools.videoToImages.frameInterval">Frame interval (ms)</span>
-              <input type="number" id="frame-interval" value="100" min="100" step="50" />
+              <input type="number" id="frame-interval" value="2000" min="100" step="100" />
             </label>
             <label><span data-i18n="tools.videoToImages.clipLength">Clip length (s)</span>
               <input type="range" id="extract-duration" min="0.1" max="10" value="10" step="0.1" />
@@ -50,31 +50,8 @@
             </label>
           </div>
 
-          <label class="watermark-enable">
-            <input type="checkbox" id="watermark-enable" />
-            <span data-i18n="tools.videoToImages.watermarkOptional">Remove watermark</span>
-          </label>
-          <div class="settings-row is-disabled" id="watermark-removal-settings" aria-disabled="true">
-            <span class="settings-label" data-i18n="tools.videoToImages.cornerToClear">Corner to clear</span>
-            <div class="radio-group">
-              <label><input type="radio" name="watermark-position" value="top-left" checked disabled /> <span data-i18n="tools.videoToImages.topLeft">Top left</span></label>
-              <label><input type="radio" name="watermark-position" value="top-right" disabled /> <span data-i18n="tools.videoToImages.topRight">Top right</span></label>
-              <label><input type="radio" name="watermark-position" value="bottom-left" disabled /> <span data-i18n="tools.videoToImages.bottomLeft">Bottom left</span></label>
-              <label><input type="radio" name="watermark-position" value="bottom-right" disabled /> <span data-i18n="tools.videoToImages.bottomRight">Bottom right</span></label>
-            </div>
-            <label><span data-i18n="tools.videoToImages.regionSize">Region size</span>
-              <input type="range" id="watermark-size" min="10" max="30" value="20" disabled />
-              <span id="watermark-size-value">20%</span>
-            </label>
-            <label><span data-i18n="tools.videoToImages.bgSensitivity">Background sensitivity</span>
-              <input type="range" id="watermark-threshold" min="10" max="50" value="25" disabled />
-              <span id="watermark-threshold-value">25</span>
-            </label>
-          </div>
-
           <div class="action-row">
             <button type="button" class="tb-btn" id="extract-frames-btn" data-i18n="tools.videoToImages.extractFrames">Extract frames</button>
-            <button type="button" class="tb-btn" id="remove-watermark-btn" data-i18n="tools.videoToImages.clearCorner" disabled>Clear corner + background</button>
             <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.videoToImages.clearAll">Clear all</button>
           </div>
         </section>
@@ -114,13 +91,13 @@
     </main>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti6"></script>
-  <script src="../../js/locales/en.js?v=vti6"></script>
-  <script src="../../js/locales/zh-CN.js?v=vti6"></script>
-  <script src="../../js/i18n.js?v=vti6"></script>
-  <script src="../../js/config.js?v=vti6"></script>
-  <script src="../../js/base.js?v=vti6"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti7"></script>
+  <script src="../../js/locales/en.js?v=vti7"></script>
+  <script src="../../js/locales/zh-CN.js?v=vti7"></script>
+  <script src="../../js/i18n.js?v=vti7"></script>
+  <script src="../../js/config.js?v=vti7"></script>
+  <script src="../../js/base.js?v=vti7"></script>
   <script src="../../js/common_ui.js?v=adminhub1"></script>
-  <script src="../../js/media/video-to-images.js?v=vti6"></script>
+  <script src="../../js/media/video-to-images.js?v=vti7"></script>
 </body>
 </html>
