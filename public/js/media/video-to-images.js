@@ -1,5 +1,9 @@
 /** Video to Images — extract frames locally in the browser */
 
+function tr(key, params) {
+    return typeof t === 'function' ? t(key, params) : key;
+}
+
 // 全局变量
 let selectedVideo = null;
 let extractedFrames = [];
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewAnimationBtn = document.getElementById('preview-animation-btn');
     const saveSelectedBtn = document.getElementById('save-selected-btn');
     const selectAllBtn = document.getElementById('select-all-btn');
+    const deleteSelectedBtn = document.getElementById('delete-selected-btn');
     const clearBtn = document.getElementById('clear-btn');
     const playPauseBtn = document.getElementById('play-pause-btn');
     const speedControl = document.getElementById('speed-control');
@@ -46,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (extractFramesBtn) extractFramesBtn.addEventListener('click', extractFrames);
     if (previewAnimationBtn) previewAnimationBtn.addEventListener('click', previewAnimation);
     if (saveSelectedBtn) saveSelectedBtn.addEventListener('click', saveSelectedFrames);
+    if (deleteSelectedBtn) deleteSelectedBtn.addEventListener('click', deleteSelectedFrames);
     if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
     if (speedControl) speedControl.addEventListener('input', updateSpeed);
     
@@ -130,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 videoInput.files = dt.files;
                 handleVideoSelect({ target: { files: dt.files } });
             } else {
-                showToast('Please drop a video file');
+                showToast(tr('tools.videoToImages.toastDropVideo'));
             }
         });
     }
@@ -143,12 +149,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const file = e.target.files[0] || (e.dataTransfer && e.dataTransfer.files[0]);
 
         if (!file || !file.type.startsWith('video/')) {
-            showToast('Please choose a valid video file');
+            showToast(tr('tools.videoToImages.toastChooseVideo'));
             return;
         }
 
         selectedVideo = file;
-        showToast('Selected: ' + file.name);
+        showToast(tr('tools.videoToImages.toastSelectedFile', { name: file.name }));
         
         // 创建视频预览
         const videoElement = document.createElement('video');
@@ -186,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function extractFrames() {
         if (!selectedVideo) {
-            showToast('Select a video first');
+            showToast(tr('tools.videoToImages.toastSelectVideoFirst'));
             return;
         }
 
@@ -195,11 +201,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const startTime = parseFloat(startTimeInput.value) || 0;
 
         if (interval < 100) {
-            showToast('Minimum interval is 100 ms');
+            showToast(tr('tools.videoToImages.toastMinInterval'));
             return;
         }
 
-        showToast('Extracting frames…');
+        showToast(tr('tools.videoToImages.toastExtracting'));
         
         // 创建视频元素用于提取帧
         const video = document.createElement('video');
@@ -215,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 验证时间参数
             if (startTime >= videoDuration) {
-                showToast('Start time exceeds video length');
+                showToast(tr('tools.videoToImages.toastStartExceeds'));
                 return;
             }
             
@@ -276,18 +282,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 framesPreviewSection.classList.remove('hidden');
                 captureFrame(startTime);
             }).catch(error => {
-                showToast('Video playback failed: ' + error.message);
+                showToast(tr('tools.videoToImages.toastPlaybackFailed', { msg: error.message }));
             });
 
             function finishExtraction() {
                 updateFrameCount();
-                showToast('Extracted ' + extractedFrames.length + ' frames');
+                showToast(tr('tools.videoToImages.toastExtracted', { n: extractedFrames.length }));
                 URL.revokeObjectURL(video.src);
             }
         });
 
         video.addEventListener('error', function() {
-            showToast('Failed to load video');
+            showToast(tr('tools.videoToImages.toastLoadFailed'));
         });
     }
 
@@ -308,11 +314,11 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function processRemoveWatermark() {
         if (extractedFrames.length === 0) {
-            showToast('No frames to process');
+            showToast(tr('tools.videoToImages.toastNoFramesProcess'));
             return;
         }
 
-        showToast('Processing frames…');
+        showToast(tr('tools.videoToImages.toastProcessing'));
         
         // 获取水印位置设置
         const watermarkPosition = document.querySelector('input[name="watermark-position"]:checked').value;
@@ -367,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // 检查是否所有帧都已处理完成
                 if (processedCount === extractedFrames.length) {
-                    showToast('Processed ' + extractedFrames.length + ' frames');
+                    showToast(tr('tools.videoToImages.toastProcessed', { n: extractedFrames.length }));
                 }
             };
             img.src = frameData;
@@ -1054,6 +1060,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return frameItem;
     }
     
+    function updateFrameCount() {
+        if (frameCountEl) {
+            frameCountEl.textContent = String(extractedFrames.length);
+        }
+    }
+
+    function renderFramesGrid() {
+        framesContainer.innerHTML = '';
+        selectedFrames = [];
+        extractedFrames.forEach((frameData, index) => {
+            framesContainer.appendChild(createFrameElement(frameData, index));
+        });
+        updateFrameCount();
+        if (extractedFrames.length === 0) {
+            framesPreviewSection.classList.add('hidden');
+            animationPreviewSection.classList.add('hidden');
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+            isPlaying = false;
+        }
+    }
+
+    function deleteSelectedFrames() {
+        if (selectedFrames.length === 0) {
+            showToast(tr('tools.videoToImages.toastSelectOne'));
+            return;
+        }
+        const removeSet = new Set(selectedFrames);
+        const deleted = removeSet.size;
+        extractedFrames = extractedFrames.filter((_, i) => !removeSet.has(i));
+        renderFramesGrid();
+        showToast(tr('tools.videoToImages.toastDeleted', { n: deleted }));
+    }
+
     /**
      * 比较两张图片的相似度
      * @param {string} img1Data - 第一张图片的DataURL
@@ -1120,34 +1162,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * 仅保留差异图片
+     * 去除相似帧：每组相似帧只保留一帧，并从列表中删除其余帧
      */
     function keepDifferentFrames() {
         if (extractedFrames.length === 0) {
-            showToast('No frames to compare');
+            showToast(tr('tools.videoToImages.toastNoFramesCompare'));
             return;
         }
 
-        showToast('Comparing frames…');
+        showToast(tr('tools.videoToImages.toastComparing'));
         
-        // 获取阈值
         const threshold = Math.max(80, Math.min(100, parseInt(document.getElementById('similarity-threshold').value) || 90));
         
-        // 获取所有帧元素
-        const frameItems = document.querySelectorAll('.frame-item');
-        const checkboxes = document.querySelectorAll('.frame-checkbox');
-        
-        // 重置所有选择
-        selectedFrames = [];
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        // 递归比较帧
         const similarGroups = [];
         let currentGroup = [0];
         
-        // 比较相邻帧
         async function compareFrames() {
             for (let i = 0; i < extractedFrames.length - 1; i++) {
                 const similarity = await compareImages(extractedFrames[i], extractedFrames[i+1]);
@@ -1155,38 +1184,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (similarity >= threshold) {
                     currentGroup.push(i+1);
                 } else {
-                    if (currentGroup.length > 1) {
-                        similarGroups.push(currentGroup);
-                    } else if (currentGroup.length === 1) {
-                        // 单帧，直接选择
-                        selectedFrames.push(currentGroup[0]);
-                        checkboxes[currentGroup[0]].checked = true;
-                    }
+                    similarGroups.push(currentGroup);
                     currentGroup = [i+1];
                 }
             }
+            similarGroups.push(currentGroup);
             
-            // 处理最后一组
-            if (currentGroup.length > 1) {
-                similarGroups.push(currentGroup);
-            } else if (currentGroup.length === 1) {
-                selectedFrames.push(currentGroup[0]);
-                checkboxes[currentGroup[0]].checked = true;
-            }
-            
-            // 处理相似组
+            const keepIndices = [];
             similarGroups.forEach(group => {
-                // 选择中间的一帧
-                const middleIndex = Math.floor(group.length / 2);
-                const selectedIndex = group[middleIndex];
-                selectedFrames.push(selectedIndex);
-                checkboxes[selectedIndex].checked = true;
+                if (group.length === 1) {
+                    keepIndices.push(group[0]);
+                } else {
+                    keepIndices.push(group[Math.floor(group.length / 2)]);
+                }
             });
+            keepIndices.sort((a, b) => a - b);
             
-            // 更新选择数组（排序）
-            selectedFrames.sort((a, b) => a - b);
-            
-            showToast('Kept ' + selectedFrames.length + ' distinct frames');
+            extractedFrames = keepIndices.map(i => extractedFrames[i]);
+            renderFramesGrid();
+            selectedFrames = [];
+            document.querySelectorAll('.frame-checkbox').forEach((checkbox) => {
+                checkbox.checked = true;
+                selectedFrames.push(parseInt(checkbox.dataset.index, 10));
+            });
+            showToast(tr('tools.videoToImages.toastRemovedSimilar', { n: extractedFrames.length }));
         }
         
         compareFrames();
@@ -1197,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function previewAnimation() {
         if (selectedFrames.length === 0) {
-            showToast('Select at least one frame');
+            showToast(tr('tools.videoToImages.toastSelectOne'));
             return;
         }
 
@@ -1212,7 +1233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         isPlaying = true;
 
         if (playPauseBtn) {
-            playPauseBtn.textContent = 'Pause';
+            playPauseBtn.textContent = tr('tools.videoToImages.pause');
         }
 
         startAnimation();
@@ -1244,7 +1265,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function togglePlayPause() {
         isPlaying = !isPlaying;
-        playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
+        playPauseBtn.textContent = isPlaying
+            ? tr('tools.videoToImages.pause')
+            : tr('tools.videoToImages.play');
 
         if (isPlaying && !animationInterval) {
             startAnimation();
@@ -1269,7 +1292,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function selectAllFrames() {
         if (extractedFrames.length === 0) {
-            showToast('No frames to select');
+            showToast(tr('tools.videoToImages.toastNoFramesSelect'));
             return;
         }
         
@@ -1283,7 +1306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedFrames.push(parseInt(checkbox.dataset.index));
         });
         
-        showToast('Selected all ' + selectedFrames.length + ' frames');
+        showToast(tr('tools.videoToImages.toastSelectedAll', { n: selectedFrames.length }));
     }
     
     /**
@@ -1291,7 +1314,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function saveSelectedFrames() {
         if (selectedFrames.length === 0) {
-            showToast('Select at least one frame');
+            showToast(tr('tools.videoToImages.toastSelectOne'));
             return;
         }
         
@@ -1300,7 +1323,7 @@ document.addEventListener('DOMContentLoaded', function() {
             createAndDownloadZip();
         } catch (error) {
             console.error('保存图片错误:', error);
-            showToast('Save failed: ' + error.message);
+            showToast(tr('tools.videoToImages.toastSaveFailed', { msg: error.message }));
         }
     }
     
@@ -1344,10 +1367,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.removeChild(link);
             }
             
-            showToast('Saved ' + selectedFrames.length + ' frames as ZIP');
+            showToast(tr('tools.videoToImages.toastSavedZip', { n: selectedFrames.length }));
         }).catch(function(error) {
             console.error('生成ZIP文件失败:', error);
-            showToast('Save failed: ' + error.message);
+            showToast(tr('tools.videoToImages.toastSaveFailed', { msg: error.message }));
         });
     }
     
@@ -1408,7 +1431,7 @@ document.addEventListener('DOMContentLoaded', function() {
             zoomedImage = null;
         }
         
-        showToast('Cleared');
+        showToast(tr('tools.videoToImages.toastCleared'));
     }
     
     /**
