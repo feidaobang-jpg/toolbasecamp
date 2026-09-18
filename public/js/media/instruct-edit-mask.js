@@ -182,7 +182,7 @@
       octx.fillStyle = '#000';
       octx.fillRect(0, 0, naturalW, naturalH);
 
-      // Convert blue overlay strokes → white mask
+      // Convert blue overlay strokes → hard white mask (no soft edges)
       var tmp = document.createElement('canvas');
       tmp.width = _strokeLayer.width;
       tmp.height = _strokeLayer.height;
@@ -201,8 +201,19 @@
         }
       }
       tctx.putImageData(data, 0, 0);
-      octx.imageSmoothingEnabled = true;
+      // Nearest-neighbor upscale — bilinear creates gray/半透明边缘，GPT 易把半透明蒙版画进结果
+      octx.imageSmoothingEnabled = false;
       octx.drawImage(tmp, 0, 0, naturalW, naturalH);
+      // Re-binarize after scale
+      var outData = octx.getImageData(0, 0, naturalW, naturalH);
+      var opx = outData.data;
+      for (var j = 0; j < opx.length; j += 4) {
+        var bright = opx[j] > 12 || opx[j + 1] > 12 || opx[j + 2] > 12;
+        var v = bright ? 255 : 0;
+        opx[j] = opx[j + 1] = opx[j + 2] = v;
+        opx[j + 3] = 255;
+      }
+      octx.putImageData(outData, 0, 0);
       return new Promise(function (resolve) {
         out.toBlob(function (blob) {
           resolve(blob);

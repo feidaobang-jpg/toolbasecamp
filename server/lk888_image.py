@@ -20,7 +20,8 @@ LK888_API_KEY = (os.environ.get("LK888_API_KEY") or "").strip()
 LK888_BASE_URL = (
     os.environ.get("LK888_BASE_URL") or "https://api.lk888.ai/v1"
 ).strip().rstrip("/")
-LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "180"))
+# GPT Image edits can take many minutes; keep frontend timeout above this.
+LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "600"))
 LK888_POLL_INTERVAL = float(os.environ.get("LK888_MEDIA_POLL_INTERVAL", "2"))
 LK888_MAX_REFS = int(os.environ.get("LK888_MAX_REFS", "10"))
 
@@ -291,8 +292,12 @@ async def _edit_via_images(
     prompt: str,
     size: str,
     refs: Sequence[bytes],
+    mask: Optional[bytes] = None,
 ) -> Tuple[bytes, str]:
-    """OpenAI-compatible multipart /images/edits (GPT Image 2)."""
+    """OpenAI-compatible multipart /images/edits (GPT Image 2).
+
+    Optional ``mask``: OpenAI alpha mask (transparent = edit, opaque = keep).
+    """
     if not refs:
         raise HTTPException(status_code=400, detail="Please upload at least one reference image.")
     url = f"{LK888_BASE_URL}/images/edits"
@@ -302,6 +307,8 @@ async def _edit_via_images(
     ]
     for i, raw in enumerate(refs[1:LK888_MAX_REFS], start=1):
         files.append((f"image", (f"ref{i}.png", raw, _sniff_mime(raw))))
+    if mask:
+        files.append(("mask", ("mask.png", mask, "image/png")))
 
     from image_i2i_size import first_ref_wh, gpt_size_wh_discrete
 
@@ -500,8 +507,12 @@ async def generate_lk888_image_to_image(
     model: str,
     images: Optional[Sequence[bytes]] = None,
     output_size: Optional[str] = "2K",
+    mask: Optional[bytes] = None,
 ) -> Tuple[bytes, str]:
-    """Image-to-image / instruct edit. Returns (bytes, mime)."""
+    """Image-to-image / instruct edit. Returns (bytes, mime).
+
+    ``mask`` is only used for GPT ``/images/edits`` (OpenAI alpha mask).
+    """
     if not LK888_API_KEY:
         raise HTTPException(
             status_code=503,
@@ -538,6 +549,7 @@ async def generate_lk888_image_to_image(
                 prompt=text,
                 size=gpt_size_wh(ref_wh, output_size or "2K"),
                 refs=refs,
+                mask=mask,
             )
     except HTTPException:
         raise

@@ -1458,8 +1458,8 @@ def _model_provider_ready(model_id: str) -> None:
 
 
 _INPAINT_PROMPT_PREFIX = (
-    "【局部重绘】请只修改画面中需要改动的涂抹区域（可包含多处不连通区域）；"
-    "未涂抹区域必须与原图保持完全一致，不要改构图、人脸、字体与其它细节。"
+    "【局部重绘】只改需要改动的局部（可多处），未改区域必须与原图像素级一致；"
+    "不要添加半透明色块、蓝色遮罩、涂鸦层或任何蒙版痕迹。"
     "修改要求："
 )
 
@@ -1494,12 +1494,34 @@ def _mask_has_paint(mask_bytes: bytes) -> bool:
     return float(extrema[1] or 0) > 12
 
 
+def mask_to_openai_alpha(mask_bytes: bytes, *, size: Optional[tuple[int, int]] = None) -> bytes:
+    """
+    Convert our white=edit / black=keep mask to OpenAI edits mask:
+    transparent (alpha=0) = edit, opaque (alpha=255) = keep.
+    """
+    from io import BytesIO
+
+    from PIL import Image
+
+    im = Image.open(BytesIO(mask_bytes))
+    im.load()
+    gray = im.convert("L")
+    if size and gray.size != size:
+        gray = gray.resize(size, Image.Resampling.NEAREST)
+    # Hard threshold — avoid soft gray edges that look like translucent overlays.
+    edit = gray.point(lambda p: 0 if p > 12 else 255)
+    rgba = Image.merge("RGBA", (edit, edit, edit, edit))
+    buf = BytesIO()
+    rgba.save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
+
+
 def composite_masked_edit(
     original: bytes,
     edited: bytes,
     mask: bytes,
     *,
-    feather: int = 2,
+    feather: int = 0,
 ) -> tuple[bytes, str]:
     """
     Keep unpainted pixels from original; take painted regions from edited.
@@ -1519,21 +1541,19 @@ def composite_masked_edit(
     if gen.size != base.size:
         gen = gen.resize(base.size, Image.Resampling.LANCZOS)
     if m.size != base.size:
-        m = m.resize(base.size, Image.Resampling.LANCZOS)
+        m = m.resize(base.size, Image.Resampling.NEAREST)
 
     if m.mode == "RGBA":
-        # Prefer alpha if present; else luminance of RGB.
-        alpha = m.split()[-1]
-        lum = m.convert("L")
-        # Combine: painted if either bright or opaque paint stroke.
-        m_l = Image.composite(lum, alpha, alpha.point(lambda a: 255 if a > 8 else 0))
+        # Prefer luminance; ignore soft UI alpha.
+        m_l = m.convert("L")
     else:
         m_l = m.convert("L")
 
+    # Binary mask: painted → use generated; else keep original (no soft ghost).
+    m_l = m_l.point(lambda p: 255 if p > 12 else 0)
     if feather > 0:
         m_l = m_l.filter(ImageFilter.GaussianBlur(radius=float(feather)))
 
-    # Soft alpha: painted → use generated; else keep original.
     out = Image.composite(gen, base, m_l)
     buf = BytesIO()
     out.convert("RGB").save(buf, format="PNG", optimize=True)
@@ -1546,6 +1566,7 @@ async def _run_instruct_edit(
     *,
     model: str,
     output_size: str = "2K",
+    mask: Optional[bytes] = None,
 ) -> tuple[bytes, str]:
     _model_provider_ready(model)
     size = _normalize_output_size(output_size)
@@ -1558,12 +1579,24 @@ async def _run_instruct_edit(
             size_preset="square",
         )
     if is_lk888_model(model):
+        openai_mask = None
+        if mask and refs:
+            try:
+                from io import BytesIO
+
+                from PIL import Image
+
+                wh = Image.open(BytesIO(refs[0])).size
+                openai_mask = mask_to_openai_alpha(mask, size=wh)
+            except Exception:
+                openai_mask = None
         return await generate_lk888_image_to_image(
             refs[0],
             text,
             model=model,
             images=refs if len(refs) > 1 else None,
             output_size=size,
+            mask=openai_mask,
         )
     if is_seedream_model(model):
         return await edit_image_with_seedream(
@@ -1743,10 +1776,16 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
-        out, ctype = await _run_instruct_edit(refs, text, model=mid, output_size=out_size)
+        out, ctype = await _run_instruct_edit(
+            refs,
+            text,
+            model=mid,
+            output_size=out_size,
+            mask=mask_bytes if emode == "inpaint" else None,
+        )
         if emode == "inpaint" and mask_bytes and refs:
             try:
-                out, ctype = composite_masked_edit(refs[0], out, mask_bytes)
+                out, ctype = composite_masked_edit(refs[0], out, mask_bytes, feather=0)
             except HTTPException:
                 raise
             except Exception as exc:
