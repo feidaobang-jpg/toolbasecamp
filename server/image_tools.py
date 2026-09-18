@@ -1457,6 +1457,89 @@ def _model_provider_ready(model_id: str) -> None:
         )
 
 
+_INPAINT_PROMPT_PREFIX = (
+    "【局部重绘】请只修改画面中需要改动的涂抹区域（可包含多处不连通区域）；"
+    "未涂抹区域必须与原图保持完全一致，不要改构图、人脸、字体与其它细节。"
+    "修改要求："
+)
+
+
+def wrap_inpaint_prompt(user_text: str) -> str:
+    text = (user_text or "").strip()
+    if not text:
+        return ""
+    if text.startswith("【局部重绘】"):
+        return text
+    return f"{_INPAINT_PROMPT_PREFIX}{text}"
+
+
+def _mask_has_paint(mask_bytes: bytes) -> bool:
+    """True if mask has any non-black painted pixels (white/alpha)."""
+    from io import BytesIO
+
+    from PIL import Image
+
+    try:
+        im = Image.open(BytesIO(mask_bytes))
+        im.load()
+    except Exception:
+        return False
+    if im.mode not in ("L", "LA", "RGBA", "RGB"):
+        im = im.convert("RGBA")
+    gray = im.convert("L")
+    # Any pixel above near-black counts as painted.
+    extrema = gray.getextrema()
+    if not extrema:
+        return False
+    return float(extrema[1] or 0) > 12
+
+
+def composite_masked_edit(
+    original: bytes,
+    edited: bytes,
+    mask: bytes,
+    *,
+    feather: int = 2,
+) -> tuple[bytes, str]:
+    """
+    Keep unpainted pixels from original; take painted regions from edited.
+    Mask: white/bright = edit region (may be multiple disconnected areas).
+    """
+    from io import BytesIO
+
+    from PIL import Image, ImageFilter
+
+    try:
+        base = Image.open(BytesIO(original)).convert("RGBA")
+        gen = Image.open(BytesIO(edited)).convert("RGBA")
+        m = Image.open(BytesIO(mask))
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Invalid image or mask") from exc
+
+    if gen.size != base.size:
+        gen = gen.resize(base.size, Image.Resampling.LANCZOS)
+    if m.size != base.size:
+        m = m.resize(base.size, Image.Resampling.LANCZOS)
+
+    if m.mode == "RGBA":
+        # Prefer alpha if present; else luminance of RGB.
+        alpha = m.split()[-1]
+        lum = m.convert("L")
+        # Combine: painted if either bright or opaque paint stroke.
+        m_l = Image.composite(lum, alpha, alpha.point(lambda a: 255 if a > 8 else 0))
+    else:
+        m_l = m.convert("L")
+
+    if feather > 0:
+        m_l = m_l.filter(ImageFilter.GaussianBlur(radius=float(feather)))
+
+    # Soft alpha: painted → use generated; else keep original.
+    out = Image.composite(gen, base, m_l)
+    buf = BytesIO()
+    out.convert("RGB").save(buf, format="PNG", optimize=True)
+    return buf.getvalue(), "image/png"
+
+
 async def _run_instruct_edit(
     refs: list[bytes],
     text: str,
@@ -1514,10 +1597,12 @@ async def api_instruct_edit(
     models: List[str] = Form(default=[]),
     compare: str = Form("0"),
     ref_mode: str = Form("single"),
+    edit_mode: str = Form("instruct"),
     output_size: str = Form("2K"),
     public: str = Form("0"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
+    mask: Optional[UploadFile] = File(None),
     request: Request = None,
     user: dict = Depends(_user),
 ):
@@ -1533,7 +1618,12 @@ async def api_instruct_edit(
             status_code=503,
             detail="Image edit is not configured (DASHSCOPE_API_KEY or VOLC_ARK_API_KEY).",
         )
-    text = resolve_edit_prompt(prompt, preset)
+    emode = (edit_mode or "instruct").strip().lower()
+    if emode not in ("instruct", "inpaint"):
+        emode = "instruct"
+    text = resolve_edit_prompt(prompt, None if emode == "inpaint" else preset)
+    if emode == "inpaint":
+        text = wrap_inpaint_prompt(text)
     if not text.strip():
         raise HTTPException(
             status_code=400,
@@ -1541,6 +1631,8 @@ async def api_instruct_edit(
         )
     mode = (ref_mode or "single").strip().lower()
     if mode not in ("single", "multi"):
+        mode = "single"
+    if emode == "inpaint":
         mode = "single"
     out_size = _normalize_output_size(output_size)
     uploads: list[UploadFile] = []
@@ -1550,6 +1642,11 @@ async def api_instruct_edit(
         uploads.append(file)
     if not uploads:
         raise HTTPException(status_code=400, detail="No images")
+    if emode == "inpaint" and len(uploads) != 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Local inpaint mode supports exactly one image.",
+        )
     if len(uploads) > MAX_INSTRUCT_BATCH:
         raise HTTPException(
             status_code=400,
@@ -1560,6 +1657,17 @@ async def api_instruct_edit(
             status_code=400,
             detail="Multi-reference mode needs at least 2 images",
         )
+
+    mask_bytes: Optional[bytes] = None
+    if emode == "inpaint":
+        if mask is None or not getattr(mask, "filename", None):
+            raise HTTPException(status_code=400, detail="Please paint a mask for local inpaint.")
+        mask_bytes = await _read_upload(mask)
+        if not _mask_has_paint(mask_bytes):
+            raise HTTPException(
+                status_code=400,
+                detail="Mask is empty. Paint the area(s) to edit first.",
+            )
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
     model_ids = _resolve_instruct_models(model, models, do_compare)
@@ -1574,6 +1682,8 @@ async def api_instruct_edit(
                 "compare": do_compare,
                 "preset": (preset or "").strip() or None,
                 "promptLen": len(text),
+                "editMode": emode,
+                "hasMask": bool(mask_bytes),
             },
             flush=True,
         )
@@ -1634,6 +1744,16 @@ async def api_instruct_edit(
                 flush=True,
             )
         out, ctype = await _run_instruct_edit(refs, text, model=mid, output_size=out_size)
+        if emode == "inpaint" and mask_bytes and refs:
+            try:
+                out, ctype = composite_masked_edit(refs[0], out, mask_bytes)
+            except HTTPException:
+                raise
+            except Exception as exc:
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"Local inpaint composite failed: {exc}",
+                ) from exc
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_ok",
@@ -1750,6 +1870,7 @@ async def api_instruct_edit(
                     "model": mid,
                     "index": img_idx,
                     "refMode": mode,
+                    "editMode": emode,
                     "refCount": len(refs),
                     "outputSize": out_size,
                     "billedSize": _billable_output_size(mid, out_size),
