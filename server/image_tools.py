@@ -1494,28 +1494,6 @@ def _mask_has_paint(mask_bytes: bytes) -> bool:
     return float(extrema[1] or 0) > 12
 
 
-def mask_to_openai_alpha(mask_bytes: bytes, *, size: Optional[tuple[int, int]] = None) -> bytes:
-    """
-    Convert our white=edit / black=keep mask to OpenAI edits mask:
-    transparent (alpha=0) = edit, opaque (alpha=255) = keep.
-    """
-    from io import BytesIO
-
-    from PIL import Image
-
-    im = Image.open(BytesIO(mask_bytes))
-    im.load()
-    gray = im.convert("L")
-    if size and gray.size != size:
-        gray = gray.resize(size, Image.Resampling.NEAREST)
-    # Hard threshold — avoid soft gray edges that look like translucent overlays.
-    edit = gray.point(lambda p: 0 if p > 12 else 255)
-    rgba = Image.merge("RGBA", (edit, edit, edit, edit))
-    buf = BytesIO()
-    rgba.save(buf, format="PNG", optimize=True)
-    return buf.getvalue()
-
-
 def composite_masked_edit(
     original: bytes,
     edited: bytes,
@@ -1566,8 +1544,8 @@ async def _run_instruct_edit(
     *,
     model: str,
     output_size: str = "2K",
-    mask: Optional[bytes] = None,
 ) -> tuple[bytes, str]:
+    """Run model edit. Local inpaint composite is applied by the caller."""
     _model_provider_ready(model)
     size = _normalize_output_size(output_size)
     if is_minimax_model(model):
@@ -1579,24 +1557,12 @@ async def _run_instruct_edit(
             size_preset="square",
         )
     if is_lk888_model(model):
-        openai_mask = None
-        if mask and refs:
-            try:
-                from io import BytesIO
-
-                from PIL import Image
-
-                wh = Image.open(BytesIO(refs[0])).size
-                openai_mask = mask_to_openai_alpha(mask, size=wh)
-            except Exception:
-                openai_mask = None
         return await generate_lk888_image_to_image(
             refs[0],
             text,
             model=model,
             images=refs if len(refs) > 1 else None,
             output_size=size,
-            mask=openai_mask,
         )
     if is_seedream_model(model):
         return await edit_image_with_seedream(
@@ -1781,7 +1747,6 @@ async def api_instruct_edit(
             text,
             model=mid,
             output_size=out_size,
-            mask=mask_bytes if emode == "inpaint" else None,
         )
         if emode == "inpaint" and mask_bytes and refs:
             try:
