@@ -164,6 +164,15 @@
         -webkit-touch-callout: default;
       }
       .img-hub-preview-actions { margin: 0; }
+      .img-hub-lb-nav {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        width: 44px; height: 72px; border: none; border-radius: 10px;
+        background: rgba(15, 23, 42, 0.55); color: #fff; font-size: 36px;
+        line-height: 1; cursor: pointer; z-index: 2;
+      }
+      .img-hub-lb-prev { left: 12px; }
+      .img-hub-lb-next { right: 12px; }
+      .img-hub-lb-nav.is-disabled, .img-hub-lb-nav:disabled { opacity: 0.35; cursor: default; }
       .img-hub-card .action-row {
         margin-top: auto;
         padding-top: 8px;
@@ -198,7 +207,7 @@
     <script src="js/common_ui.js?v=nosTW1"></script>
     <script src="js/gif-viewport.js?v=gifdelay1"></script>
     <script src="js/tb-pager.js?v=jump1"></script>
-    <script src="js/image-hub.js?v=imgpipe1"></script>
+    <script src="js/image-hub.js?v=gal1"></script>
     <script>
       (function () {
         function go() { if (typeof renderImageHub === 'function') renderImageHub(); }

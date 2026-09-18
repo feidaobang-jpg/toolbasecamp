@@ -3227,6 +3227,10 @@ window.TB_LOCALES['zh-CN'] = {
             longPressSave: '请长按图片，选择「保存到手机」或「转发给朋友」',
             previewClickHint: '点击查看大图',
             previewCloseHint: '点击空白处或按 Esc 关闭',
+            previewPrev: '上一张',
+            previewNext: '下一张',
+            previewFirst: '已经是第一张',
+            previewLast: '已经是最后一张',
             iosSaveTip: '若未开始下载，请长按图片保存，或用系统分享。',
             saveFailed: '保存失败，请长按图片重试，或换用系统浏览器打开本页。',
             closePreview: '关闭'

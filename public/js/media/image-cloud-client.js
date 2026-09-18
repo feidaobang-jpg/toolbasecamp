@@ -673,6 +673,151 @@
         });
     }
 
+    function bindResultGallery(root) {
+        if (!root || isWeChat()) return;
+        var imgs = root.querySelectorAll('.instruct-result-card img');
+        for (var i = 0; i < imgs.length; i++) {
+            (function (img) {
+                img.style.cursor = 'pointer';
+                img.setAttribute('title', tr('tools.imageCloud.previewClickHint'));
+                img.addEventListener('click', function () {
+                    var list = root.querySelectorAll('.instruct-result-card img');
+                    var items = [];
+                    var start = 0;
+                    for (var j = 0; j < list.length; j++) {
+                        var el = list[j];
+                        var card = el.closest ? el.closest('.instruct-result-card') : null;
+                        var titleEl = card ? card.querySelector('.instruct-result-title') : null;
+                        items.push({
+                            src: el.currentSrc || el.src,
+                            caption: titleEl ? titleEl.textContent : ''
+                        });
+                        if (el === img) start = j;
+                    }
+                    openResultGallery(items, start);
+                });
+            })(imgs[i]);
+        }
+    }
+
+    function openResultGallery(items, startIndex) {
+        closeSavePreview();
+        items = items || [];
+        if (!items.length) return;
+        var index = startIndex || 0;
+        if (index < 0) index = 0;
+        if (index >= items.length) index = items.length - 1;
+
+        var wrap = document.createElement('div');
+        wrap.id = 'tb-img-save-preview';
+        wrap.className = 'tb-img-save-preview';
+        wrap.setAttribute('role', 'dialog');
+        wrap.setAttribute('aria-modal', 'true');
+
+        var prev = document.createElement('button');
+        prev.type = 'button';
+        prev.className = 'tb-img-lb-nav tb-img-lb-prev';
+        prev.textContent = '‹';
+        prev.setAttribute('aria-label', tr('tools.imageCloud.previewPrev'));
+        var next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'tb-img-lb-nav tb-img-lb-next';
+        next.textContent = '›';
+        next.setAttribute('aria-label', tr('tools.imageCloud.previewNext'));
+        if (items.length < 2) {
+            prev.hidden = true;
+            next.hidden = true;
+        }
+
+        var panel = document.createElement('div');
+        panel.className = 'tb-img-save-preview-panel';
+        var tip = document.createElement('p');
+        tip.className = 'tb-img-save-preview-tip';
+        var img = document.createElement('img');
+        img.alt = '';
+        img.setAttribute('referrerpolicy', 'no-referrer');
+        var close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'tb-btn';
+        close.textContent = tr('tools.imageCloud.closePreview');
+
+        function setNav() {
+            var atStart = index <= 0;
+            var atEnd = index >= items.length - 1;
+            prev.disabled = atStart;
+            next.disabled = atEnd;
+            prev.classList.toggle('is-disabled', atStart);
+            next.classList.toggle('is-disabled', atEnd);
+        }
+
+        function show() {
+            var it = items[index] || {};
+            img.src = it.src || '';
+            var cap = it.caption || '';
+            var pos = items.length > 1 ? ((index + 1) + ' / ' + items.length) : '';
+            tip.textContent = [cap, pos].filter(Boolean).join(' · ')
+                || tr('tools.imageCloud.previewCloseHint');
+            setNav();
+        }
+
+        function boundary(which) {
+            var msg = which === 'first'
+                ? tr('tools.imageCloud.previewFirst')
+                : tr('tools.imageCloud.previewLast');
+            if (typeof global.tbNotify === 'function') global.tbNotify(msg);
+        }
+
+        function step(delta) {
+            var n = index + delta;
+            if (n < 0 || n >= items.length) {
+                boundary(n < 0 ? 'first' : 'last');
+                return;
+            }
+            index = n;
+            show();
+        }
+
+        prev.addEventListener('click', function (e) {
+            e.stopPropagation();
+            step(-1);
+        });
+        next.addEventListener('click', function (e) {
+            e.stopPropagation();
+            step(1);
+        });
+        close.addEventListener('click', function (e) {
+            e.stopPropagation();
+            closeSavePreview();
+        });
+        wrap.addEventListener('click', function (e) {
+            if (e.target === wrap) closeSavePreview();
+        });
+        panel.addEventListener('click', function (e) { e.stopPropagation(); });
+
+        panel.appendChild(tip);
+        panel.appendChild(img);
+        panel.appendChild(close);
+        wrap.appendChild(prev);
+        wrap.appendChild(panel);
+        wrap.appendChild(next);
+        document.body.appendChild(wrap);
+        show();
+
+        closeSavePreview._onKey = function (e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                e.preventDefault();
+                closeSavePreview();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                step(-1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                step(1);
+            }
+        };
+        document.addEventListener('keydown', closeSavePreview._onKey);
+    }
+
     /** Bind tap-to-preview on desktop. WeChat keeps long-press on the result thumb (no popup). */
     function bindImagePreview(img, src) {
         if (!img) return;
@@ -680,7 +825,25 @@
         img.style.cursor = 'pointer';
         img.setAttribute('title', tr('tools.imageCloud.previewClickHint'));
         img.addEventListener('click', function () {
-            openSavePreview(src || img.src);
+            var root = img.closest ? img.closest('.instruct-results-grid, .instruct-results, #history-grid') : null;
+            if (root && root.querySelectorAll('.instruct-result-card img').length > 1) {
+                var list = root.querySelectorAll('.instruct-result-card img');
+                var items = [];
+                var start = 0;
+                for (var j = 0; j < list.length; j++) {
+                    var el = list[j];
+                    var card = el.closest ? el.closest('.instruct-result-card') : null;
+                    var titleEl = card ? card.querySelector('.instruct-result-title') : null;
+                    items.push({
+                        src: el.currentSrc || el.src,
+                        caption: titleEl ? titleEl.textContent : ''
+                    });
+                    if (el === img) start = j;
+                }
+                openResultGallery(items, start);
+                return;
+            }
+            openResultGallery([{ src: src || img.src, caption: '' }], 0);
         });
     }
 
@@ -724,6 +887,8 @@
         downloadBlob: downloadBlob,
         publishPublicImage: publishPublicImage,
         openSavePreview: openSavePreview,
+        openResultGallery: openResultGallery,
+        bindResultGallery: bindResultGallery,
         bindImagePreview: bindImagePreview,
         showWeChatBanner: showWeChatBanner,
         translateDetail: translateDetail

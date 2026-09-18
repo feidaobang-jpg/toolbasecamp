@@ -3228,6 +3228,10 @@ window.TB_LOCALES.en = {
             longPressSave: 'Long-press the image, then choose Save or Forward',
             previewClickHint: 'Click to enlarge',
             previewCloseHint: 'Click outside or press Esc to close',
+            previewPrev: 'Previous',
+            previewNext: 'Next',
+            previewFirst: 'Already the first image',
+            previewLast: 'Already the last image',
             iosSaveTip: 'If download did not start, long-press the image to save, or use system share.',
             saveFailed: 'Save failed. Long-press the image to retry, or open this page in your system browser.',
             closePreview: 'Close'
