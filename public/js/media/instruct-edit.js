@@ -455,17 +455,19 @@
     var isPro = id.indexOf('-pro') >= 0 || id.indexOf('pro-') >= 0 || /pro$/.test(id);
     // Qwen Image 3.0 Pro 实测约 9–10 分钟；前端须 > 服务端 EDIT_PRO_TIMEOUT
     var qwenPro = id.indexOf('qwen-image') >= 0 && isPro;
-    // GPT Image（逍遥）局部重绘/改图常超过 5 分钟；与 LK888_IMAGE_TIMEOUT≈600s 对齐并留余量
+    // GPT Image（逍遥）常 10–20+ 分钟；须 > LK888_IMAGE_TIMEOUT≈1200s，并留网关余量
     var gpt = id.indexOf('gpt-image') >= 0 || id.indexOf('tt-image') >= 0;
+    var sunburst = id.indexOf('sunburst') >= 0;
     var ms;
     if (refMode === 'multi') {
-      ms = seedream ? 240000 : (qwenPro ? 900000 : (gpt ? 900000 : (isPro ? 720000 : 420000)));
+      ms = seedream ? 240000 : (qwenPro ? 900000 : (gpt ? (sunburst ? 1800000 : 1500000) : (isPro ? 720000 : 420000)));
     } else {
-      ms = seedream ? 240000 : (qwenPro ? 900000 : (gpt ? 900000 : (isPro ? 720000 : 300000)));
+      ms = seedream ? 240000 : (qwenPro ? 900000 : (gpt ? (sunburst ? 1800000 : 1500000) : (isPro ? 720000 : 300000)));
     }
-    if (editMode === 'inpaint') ms = Math.max(ms, 900000);
-    if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 300000);
-    return Math.min(1200000, ms);
+    if (editMode === 'inpaint') ms = Math.max(ms, gpt ? 1800000 : 900000);
+    if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 600000);
+    // nginx /api proxy_read_timeout=1800s
+    return Math.min(1800000, ms);
   }
 
   function buildEditFormData(modelList, fileList, maskBlob) {

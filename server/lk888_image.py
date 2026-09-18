@@ -20,8 +20,8 @@ LK888_API_KEY = (os.environ.get("LK888_API_KEY") or "").strip()
 LK888_BASE_URL = (
     os.environ.get("LK888_BASE_URL") or "https://api.lk888.ai/v1"
 ).strip().rstrip("/")
-# GPT Image edits can take many minutes; keep frontend timeout above this.
-LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "600"))
+# GPT Image edits often exceed 10 minutes; frontend timeout must stay above this.
+LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "1200"))
 LK888_POLL_INTERVAL = float(os.environ.get("LK888_MEDIA_POLL_INTERVAL", "2"))
 LK888_MAX_REFS = int(os.environ.get("LK888_MAX_REFS", "10"))
 

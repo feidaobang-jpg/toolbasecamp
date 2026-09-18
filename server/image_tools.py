@@ -1458,18 +1458,29 @@ def _model_provider_ready(model_id: str) -> None:
 
 
 _INPAINT_PROMPT_PREFIX = (
-    "【局部重绘】只改需要改动的局部（可多处），未改区域必须与原图像素级一致；"
-    "不要添加半透明色块、蓝色遮罩、涂鸦层或任何蒙版痕迹。"
+    "【局部重绘】只改需要改动的局部内容（可多处），其余区域必须与原图像素级一致。"
+    "输出必须是自然、完全不透明的画面：禁止半透明遮罩、蓝色涂抹层、雾状蒙版、色块接缝或任何蒙版痕迹。"
+    "改动区域边缘须与周围光线、材质、色温无缝衔接，不要出现可辨认的补丁边界。"
     "修改要求："
 )
 
+_INPAINT_PROMPT_PREFIX_GPT = (
+    "Local photorealistic edit: change ONLY the user-requested region(s); everything else must stay identical. "
+    "Return a fully opaque RGB photo — no transparency, no glass/frost overlay, no blue brush tint, no vignette, "
+    "no soft milky haze inside the edit. Blend edges seamlessly with surrounding light, grain, and color. "
+    "User edit: "
+)
 
-def wrap_inpaint_prompt(user_text: str) -> str:
+
+def wrap_inpaint_prompt(user_text: str, *, model: Optional[str] = None) -> str:
     text = (user_text or "").strip()
     if not text:
         return ""
-    if text.startswith("【局部重绘】"):
+    if text.startswith("【局部重绘】") or text.startswith("Local edit only:"):
         return text
+    mid = (model or "").strip().lower()
+    if "gpt-image" in mid or mid.startswith("tt-image"):
+        return f"{_INPAINT_PROMPT_PREFIX_GPT}{text}"
     return f"{_INPAINT_PROMPT_PREFIX}{text}"
 
 
@@ -1494,16 +1505,65 @@ def _mask_has_paint(mask_bytes: bytes) -> bool:
     return float(extrema[1] or 0) > 12
 
 
+def _boundary_color_match(base_rgba, gen_rgba, mask_bin, *, ring: int = 8):
+    """
+    Shift gen RGB using colors just outside the mask vs gen near the inner edge.
+    Reduces GPT patch tint / frosted look without pulling toward old content inside the hole.
+    """
+    from PIL import Image, ImageChops, ImageFilter, ImageStat
+
+    if mask_bin is None or ring <= 0:
+        return gen_rgba
+    k = ring * 2 + 1
+    try:
+        dil = mask_bin.filter(ImageFilter.MaxFilter(size=k))
+        ero = mask_bin.filter(ImageFilter.MinFilter(size=k))
+        ring_out = ImageChops.subtract(dil, mask_bin)
+        ring_in = ImageChops.subtract(mask_bin, ero)
+        # Need enough pixels in both rings.
+        if ImageStat.Stat(ring_out).sum[0] < 64 or ImageStat.Stat(ring_in).sum[0] < 64:
+            return gen_rgba
+        base_rgb = base_rgba.convert("RGB")
+        gen_rgb = gen_rgba.convert("RGB")
+        sb = ImageStat.Stat(base_rgb, ring_out)
+        sg = ImageStat.Stat(gen_rgb, ring_in)
+    except Exception:
+        return gen_rgba
+    if not sb.mean or not sg.mean or len(sb.mean) < 3 or len(sg.mean) < 3:
+        return gen_rgba
+    gen_bands = list(gen_rgb.split())
+    adj_bands = []
+    for i in range(3):
+        delta = int(round(float(sb.mean[i]) - float(sg.mean[i])))
+        # Cap so intentional recolors still work.
+        delta = max(-28, min(28, delta))
+        if delta == 0:
+            adj_bands.append(gen_bands[i])
+        else:
+            adj_bands.append(
+                gen_bands[i].point(
+                    lambda p, d=delta: 0 if p + d < 0 else (255 if p + d > 255 else p + d)
+                )
+            )
+    matched = Image.merge("RGB", adj_bands).convert("RGBA")
+    if gen_rgba.mode == "RGBA":
+        matched.putalpha(gen_rgba.split()[-1])
+    return matched
+
+
 def composite_masked_edit(
     original: bytes,
     edited: bytes,
     mask: bytes,
     *,
-    feather: int = 0,
+    feather: int = 5,
+    expand: int = 2,
+    color_match: bool = True,
 ) -> tuple[bytes, str]:
     """
     Keep unpainted pixels from original; take painted regions from edited.
     Mask: white/bright = edit region (may be multiple disconnected areas).
+    Soft edge + slight expand + boundary color match reduce GPT patch seams.
     """
     from io import BytesIO
 
@@ -1521,19 +1581,21 @@ def composite_masked_edit(
     if m.size != base.size:
         m = m.resize(base.size, Image.Resampling.NEAREST)
 
-    if m.mode == "RGBA":
-        # Prefer luminance; ignore soft UI alpha.
-        m_l = m.convert("L")
-    else:
-        m_l = m.convert("L")
-
-    # Binary mask: painted → use generated; else keep original (no soft ghost).
-    m_l = m_l.point(lambda p: 255 if p > 12 else 0)
+    m_l = m.convert("L")
+    # Binary mask: painted → use generated; else keep original.
+    m_bin = m_l.point(lambda p: 255 if p > 12 else 0)
+    if expand > 0:
+        # Cover soft GPT edge artifacts just outside the brush stroke.
+        m_bin = m_bin.filter(ImageFilter.MaxFilter(size=expand * 2 + 1))
+    if color_match:
+        gen = _boundary_color_match(base, gen, m_bin, ring=max(6, expand * 3))
+    m_soft = m_bin
     if feather > 0:
-        m_l = m_l.filter(ImageFilter.GaussianBlur(radius=float(feather)))
+        m_soft = m_bin.filter(ImageFilter.GaussianBlur(radius=float(feather)))
 
-    out = Image.composite(gen, base, m_l)
+    out = Image.composite(gen, base, m_soft)
     buf = BytesIO()
+    # Force opaque RGB — drops any residual alpha haze from the model.
     out.convert("RGB").save(buf, format="PNG", optimize=True)
     return buf.getvalue(), "image/png"
 
@@ -1621,8 +1683,6 @@ async def api_instruct_edit(
     if emode not in ("instruct", "inpaint"):
         emode = "instruct"
     text = resolve_edit_prompt(prompt, None if emode == "inpaint" else preset)
-    if emode == "inpaint":
-        text = wrap_inpaint_prompt(text)
     if not text.strip():
         raise HTTPException(
             status_code=400,
@@ -1742,15 +1802,30 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
+        job_text = text
+        if emode == "inpaint":
+            job_text = wrap_inpaint_prompt(text, model=mid)
         out, ctype = await _run_instruct_edit(
             refs,
-            text,
+            job_text,
             model=mid,
             output_size=out_size,
         )
         if emode == "inpaint" and mask_bytes and refs:
             try:
-                out, ctype = composite_masked_edit(refs[0], out, mask_bytes, feather=0)
+                mid_l = (mid or "").strip().lower()
+                is_gpt = ("gpt-image" in mid_l) or mid_l.startswith("tt-image")
+                # GPT whole-image rewrite leaves stronger seams; soften + expand more.
+                feather = 8 if is_gpt else 3
+                expand = 3 if is_gpt else 1
+                out, ctype = composite_masked_edit(
+                    refs[0],
+                    out,
+                    mask_bytes,
+                    feather=feather,
+                    expand=expand,
+                    color_match=True,
+                )
             except HTTPException:
                 raise
             except Exception as exc:
