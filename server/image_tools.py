@@ -1476,7 +1476,11 @@ def wrap_inpaint_prompt(user_text: str, *, model: Optional[str] = None) -> str:
     text = (user_text or "").strip()
     if not text:
         return ""
-    if text.startswith("【局部重绘】") or text.startswith("Local edit only:"):
+    if (
+        text.startswith("【局部重绘】")
+        or text.startswith("Local edit only:")
+        or text.startswith("Local photorealistic edit:")
+    ):
         return text
     mid = (model or "").strip().lower()
     if "gpt-image" in mid or mid.startswith("tt-image"):
@@ -1551,23 +1555,167 @@ def _boundary_color_match(base_rgba, gen_rgba, mask_bin, *, ring: int = 8):
     return matched
 
 
+def _pil_to_bgr(im) -> "object":
+    import numpy as np
+
+    rgb = np.asarray(im.convert("RGB"), dtype=np.uint8)
+    return rgb[:, :, ::-1].copy()
+
+
+def _bgr_to_pil(bgr):
+    from PIL import Image
+    import numpy as np
+
+    rgb = bgr[:, :, ::-1].copy()
+    return Image.fromarray(rgb, mode="RGB")
+
+
+def _try_import_cv2():
+    try:
+        import cv2  # noqa: F401
+
+        return True
+    except Exception:
+        return False
+
+
+def _distance_alpha(mask_u8, *, edge_px: float):
+    """Solid inside, soft only near the painted boundary (avoids milky whole-patch haze)."""
+    import numpy as np
+
+    edge = max(1.0, float(edge_px))
+    m = (mask_u8 > 12).astype(np.uint8)
+    if not m.any():
+        return np.zeros(m.shape, dtype=np.float32)
+
+    if _try_import_cv2():
+        import cv2
+
+        dist = cv2.distanceTransform((m * 255).astype(np.uint8), cv2.DIST_L2, 5)
+        alpha = np.clip(dist / edge, 0.0, 1.0)
+        alpha[m == 0] = 0.0
+        return alpha.astype(np.float32)
+
+    # PIL fallback: solid core + soft ring (no whole-mask Gaussian haze).
+    from PIL import Image, ImageChops, ImageFilter
+
+    m_img = Image.fromarray((m * 255).astype(np.uint8), mode="L")
+    k = max(3, int(round(edge)) * 2 + 1)
+    if k % 2 == 0:
+        k += 1
+    core = m_img.filter(ImageFilter.MinFilter(size=k))
+    ring = ImageChops.subtract(m_img, core)
+    ring_soft = ring.filter(ImageFilter.GaussianBlur(radius=max(1.0, edge * 0.55)))
+    core_a = np.asarray(core, dtype=np.float32) / 255.0
+    ring_a = np.asarray(ring_soft, dtype=np.float32) / 255.0
+    alpha = np.clip(core_a + ring_a, 0.0, 1.0)
+    alpha[m == 0] = 0.0
+    return alpha.astype(np.float32)
+
+
+def _soft_blend_bgr(base_bgr, gen_bgr, mask_u8, *, edge_px: float):
+    import numpy as np
+
+    alpha = _distance_alpha(mask_u8, edge_px=edge_px)
+    a = alpha[..., None]
+    out = base_bgr.astype(np.float32) * (1.0 - a) + gen_bgr.astype(np.float32) * a
+    return np.clip(out, 0, 255).astype(np.uint8)
+
+
+def _seamless_blend_bgr(base_bgr, gen_bgr, mask_u8, *, edge_px: float = 10.0):
+    """
+    Poisson seamless clone per connected component so the edit melts into surroundings.
+    Falls back to distance soft-blend when OpenCV is missing or a region is unsuitable.
+    """
+    import numpy as np
+
+    m = (mask_u8 > 12).astype(np.uint8) * 255
+    if not m.any():
+        return base_bgr.copy()
+
+    if not _try_import_cv2():
+        return _soft_blend_bgr(base_bgr, gen_bgr, m, edge_px=edge_px)
+
+    import cv2
+
+    # Slight expand so clone covers GPT edge haze just outside the brush.
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    m = cv2.dilate(m, k, iterations=1)
+
+    h, w = m.shape[:2]
+    out = base_bgr.copy()
+    num, labels, stats, centroids = cv2.connectedComponentsWithStats(m, connectivity=8)
+    any_comp = False
+
+    for i in range(1, num):
+        area = int(stats[i, cv2.CC_STAT_AREA])
+        if area < 24:
+            continue
+        any_comp = True
+        x = int(stats[i, cv2.CC_STAT_LEFT])
+        y = int(stats[i, cv2.CC_STAT_TOP])
+        bw = int(stats[i, cv2.CC_STAT_WIDTH])
+        bh = int(stats[i, cv2.CC_STAT_HEIGHT])
+        # OpenCV seamlessClone is unreliable when the mask touches the image border.
+        touches_border = x <= 1 or y <= 1 or (x + bw) >= (w - 1) or (y + bh) >= (h - 1)
+        comp = np.zeros_like(m)
+        comp[labels == i] = 255
+        # Shrink a hair so the clone center stays inside a solid region.
+        comp_erode = cv2.erode(comp, k, iterations=1)
+        if int(cv2.countNonZero(comp_erode)) < 16:
+            comp_erode = comp
+
+        cx = int(round(float(centroids[i][0])))
+        cy = int(round(float(centroids[i][1])))
+        cx = max(0, min(w - 1, cx))
+        cy = max(0, min(h - 1, cy))
+
+        if touches_border or area > (h * w * 0.55):
+            out = _soft_blend_bgr(out, gen_bgr, comp, edge_px=edge_px)
+            continue
+
+        try:
+            cloned = cv2.seamlessClone(
+                gen_bgr,
+                out,
+                comp_erode,
+                (cx, cy),
+                cv2.NORMAL_CLONE,
+            )
+            if cloned is not None and cloned.shape == out.shape:
+                out = cloned
+            else:
+                out = _soft_blend_bgr(out, gen_bgr, comp, edge_px=edge_px)
+        except Exception:
+            out = _soft_blend_bgr(out, gen_bgr, comp, edge_px=edge_px)
+
+    if not any_comp:
+        out = _soft_blend_bgr(base_bgr, gen_bgr, m, edge_px=edge_px)
+
+    return out
+
+
 def composite_masked_edit(
     original: bytes,
     edited: bytes,
     mask: bytes,
     *,
-    feather: int = 5,
+    feather: int = 10,
     expand: int = 2,
     color_match: bool = True,
+    blend: str = "seamless",
 ) -> tuple[bytes, str]:
     """
     Keep unpainted pixels from original; take painted regions from edited.
-    Mask: white/bright = edit region (may be multiple disconnected areas).
-    Soft edge + slight expand + boundary color match reduce GPT patch seams.
+
+    Prefer OpenCV Poisson seamless clone so the edit blends into surroundings
+    (avoids milky / translucent Gaussian seams). Fallback: distance-transform
+    soft edge (solid center, soft only at the boundary).
     """
     from io import BytesIO
 
     from PIL import Image, ImageFilter
+    import numpy as np
 
     try:
         base = Image.open(BytesIO(original)).convert("RGBA")
@@ -1582,21 +1730,36 @@ def composite_masked_edit(
         m = m.resize(base.size, Image.Resampling.NEAREST)
 
     m_l = m.convert("L")
-    # Binary mask: painted → use generated; else keep original.
     m_bin = m_l.point(lambda p: 255 if p > 12 else 0)
     if expand > 0:
-        # Cover soft GPT edge artifacts just outside the brush stroke.
         m_bin = m_bin.filter(ImageFilter.MaxFilter(size=expand * 2 + 1))
     if color_match:
-        gen = _boundary_color_match(base, gen, m_bin, ring=max(6, expand * 3))
-    m_soft = m_bin
-    if feather > 0:
-        m_soft = m_bin.filter(ImageFilter.GaussianBlur(radius=float(feather)))
+        gen = _boundary_color_match(base, gen, m_bin, ring=max(8, expand * 4))
 
-    out = Image.composite(gen, base, m_soft)
+    edge_px = float(max(4, feather))
+    mask_u8 = np.asarray(m_bin, dtype=np.uint8)
+    base_bgr = _pil_to_bgr(base)
+    gen_bgr = _pil_to_bgr(gen)
+
+    mode = (blend or "seamless").strip().lower()
+    try:
+        if mode == "soft":
+            out_bgr = _soft_blend_bgr(base_bgr, gen_bgr, mask_u8, edge_px=edge_px)
+        else:
+            out_bgr = _seamless_blend_bgr(
+                base_bgr, gen_bgr, mask_u8, edge_px=edge_px
+            )
+    except Exception:
+        alpha = _distance_alpha(mask_u8, edge_px=edge_px)
+        alpha_img = Image.fromarray((alpha * 255.0).astype(np.uint8), mode="L")
+        out_rgba = Image.composite(gen.convert("RGBA"), base.convert("RGBA"), alpha_img)
+        buf = BytesIO()
+        out_rgba.convert("RGB").save(buf, format="PNG", optimize=True)
+        return buf.getvalue(), "image/png"
+
+    out = _bgr_to_pil(out_bgr)
     buf = BytesIO()
-    # Force opaque RGB — drops any residual alpha haze from the model.
-    out.convert("RGB").save(buf, format="PNG", optimize=True)
+    out.save(buf, format="PNG", optimize=True)
     return buf.getvalue(), "image/png"
 
 
@@ -1815,9 +1978,9 @@ async def api_instruct_edit(
             try:
                 mid_l = (mid or "").strip().lower()
                 is_gpt = ("gpt-image" in mid_l) or mid_l.startswith("tt-image")
-                # GPT whole-image rewrite leaves stronger seams; soften + expand more.
-                feather = 8 if is_gpt else 3
-                expand = 3 if is_gpt else 1
+                # GPT whole-image rewrite leaves stronger seams → Poisson blend + wider edge.
+                feather = 14 if is_gpt else 8
+                expand = 2 if is_gpt else 1
                 out, ctype = composite_masked_edit(
                     refs[0],
                     out,
@@ -1825,6 +1988,7 @@ async def api_instruct_edit(
                     feather=feather,
                     expand=expand,
                     color_match=True,
+                    blend="seamless",
                 )
             except HTTPException:
                 raise
