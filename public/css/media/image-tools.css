@@ -1172,8 +1172,8 @@
 }
 
 .tb-img-save-preview-panel {
-  width: min(100%, 420px);
-  max-height: 92vh;
+  width: min(100%, 920px);
+  max-height: 94vh;
   overflow: auto;
   background: #fff;
   border-radius: 12px;
@@ -1195,6 +1195,8 @@
 .tb-img-save-preview-panel img {
   width: 100%;
   height: auto;
+  max-height: min(78vh, 900px);
+  object-fit: contain;
   display: block;
   border-radius: 8px;
   background: #f1f5f9;

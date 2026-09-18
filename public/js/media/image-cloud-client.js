@@ -487,10 +487,15 @@
     function closeSavePreview() {
         var el = document.getElementById('tb-img-save-preview');
         if (el && el.parentNode) el.parentNode.removeChild(el);
+        if (closeSavePreview._onKey) {
+            document.removeEventListener('keydown', closeSavePreview._onKey);
+            closeSavePreview._onKey = null;
+        }
     }
 
     function openSavePreview(src, message) {
         closeSavePreview();
+        if (!src) return;
         var wrap = document.createElement('div');
         wrap.id = 'tb-img-save-preview';
         wrap.className = 'tb-img-save-preview';
@@ -498,13 +503,21 @@
         wrap.setAttribute('aria-modal', 'true');
         var panel = document.createElement('div');
         panel.className = 'tb-img-save-preview-panel';
-        var tip = document.createElement('p');
-        tip.className = 'tb-img-save-preview-tip';
-        tip.textContent = message || tr('tools.imageCloud.longPressSave');
+        var tipText = message;
+        if (tipText == null || tipText === undefined) {
+            tipText = isWeChat()
+                ? tr('tools.imageCloud.longPressSave')
+                : tr('tools.imageCloud.previewCloseHint');
+        }
+        if (tipText) {
+            var tip = document.createElement('p');
+            tip.className = 'tb-img-save-preview-tip';
+            tip.textContent = tipText;
+            panel.appendChild(tip);
+        }
         var img = document.createElement('img');
         img.src = src;
         img.alt = '';
-        // Help WeChat recognize as image for long-press menu
         img.setAttribute('referrerpolicy', 'no-referrer');
         var close = document.createElement('button');
         close.type = 'button';
@@ -514,11 +527,17 @@
         wrap.addEventListener('click', function (e) {
             if (e.target === wrap) closeSavePreview();
         });
-        panel.appendChild(tip);
         panel.appendChild(img);
         panel.appendChild(close);
         wrap.appendChild(panel);
         document.body.appendChild(wrap);
+        closeSavePreview._onKey = function (e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                e.preventDefault();
+                closeSavePreview();
+            }
+        };
+        document.addEventListener('keydown', closeSavePreview._onKey);
     }
 
     function notifySave(msg, tipEl, errorEl) {
@@ -654,12 +673,14 @@
         });
     }
 
-    /** Bind tap-to-preview (long-press save/share works inside the preview). */
+    /** Bind tap-to-preview on desktop. WeChat keeps long-press on the result thumb (no popup). */
     function bindImagePreview(img, src) {
         if (!img) return;
+        if (isWeChat()) return;
         img.style.cursor = 'pointer';
+        img.setAttribute('title', tr('tools.imageCloud.previewClickHint'));
         img.addEventListener('click', function () {
-            openSavePreview(src || img.src, tr('tools.imageCloud.longPressSave'));
+            openSavePreview(src || img.src);
         });
     }
 

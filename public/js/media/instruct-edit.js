@@ -811,6 +811,7 @@
     } else {
       img.src = displaySrc;
     }
+    if (C.bindImagePreview) C.bindImagePreview(img);
     var actions = document.createElement('div');
     actions.className = 'img-hist-actions';
     var again = document.createElement('button');

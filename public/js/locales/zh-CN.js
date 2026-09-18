@@ -3225,6 +3225,8 @@ window.TB_LOCALES['zh-CN'] = {
             wechatBanner: '微信内下载按钮无效。请直接长按下方图片，选择「保存到手机」或「转发给朋友」；或点右上角 ··· → 在浏览器中打开再下载。',
             wechatSaveTip: '微信内无法直接下载。请长按图片保存/转发，或用系统浏览器打开本页。',
             longPressSave: '请长按图片，选择「保存到手机」或「转发给朋友」',
+            previewClickHint: '点击查看大图',
+            previewCloseHint: '点击空白处或按 Esc 关闭',
             iosSaveTip: '若未开始下载，请长按图片保存，或用系统分享。',
             saveFailed: '保存失败，请长按图片重试，或换用系统浏览器打开本页。',
             closePreview: '关闭'

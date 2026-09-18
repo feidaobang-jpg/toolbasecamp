@@ -306,6 +306,7 @@
         var img = document.createElement('img');
         img.alt = '';
         img.src = resultSrc(item.imageBase64, item.contentType);
+        if (C.bindImagePreview) C.bindImagePreview(img);
         var dl = document.createElement('button');
         dl.type = 'button';
         dl.className = 'tb-btn';
