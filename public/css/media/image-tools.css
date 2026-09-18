@@ -746,28 +746,40 @@
   gap: 16px;
   justify-content: start;
   justify-items: stretch;
+  align-items: stretch;
 }
 
 .instruct-result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   text-align: center;
   width: 220px;
   max-width: 100%;
   box-sizing: border-box;
+  min-height: 100%;
 }
 
 .instruct-result-title {
   font-size: 13px;
   font-weight: 600;
   color: #334155;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  min-height: 3.9em; /* 3 lines — keeps image tops aligned across a row */
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 .instruct-result-img-wrap {
   position: relative;
-  width: 220px;
-  max-width: 100%;
+  width: 100%;
   height: 280px;
-  margin: 0 auto 10px;
+  flex: 0 0 280px;
+  margin: 0 0 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -778,7 +790,6 @@
   overflow: hidden;
 }
 
-.instruct-result-card img,
 .instruct-result-img-wrap img {
   display: block;
   width: auto;
@@ -790,6 +801,20 @@
   border-radius: 0;
   background: transparent;
   margin: 0;
+}
+
+/* text-to-image mounts bare <img>; match wrap box so rows align */
+.instruct-result-card > img {
+  display: block;
+  width: 100%;
+  height: 280px;
+  flex: 0 0 280px;
+  margin: 0 0 10px;
+  object-fit: contain;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  box-sizing: border-box;
 }
 
 .instruct-result-img-wrap.is-loading {
@@ -834,6 +859,31 @@
 
 .instruct-result-card .tb-btn {
   width: 100%;
+}
+
+.instruct-result-save-tip {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
+  text-align: left;
+  min-height: 0;
+  flex: 0 0 auto;
+}
+
+.img-hist-actions {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 0;
+}
+
+.img-hist-actions .tb-btn {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
 }
 
 .instruct-partial-err {
@@ -1133,30 +1183,10 @@
   margin-top: 16px;
 }
 
-.instruct-result-save-tip {
-  margin: 0 0 8px;
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.45;
-  text-align: left;
-}
-
 .img-hist-empty {
   margin: 0;
   font-size: 13px;
   color: #94a3b8;
-}
-
-.img-hist-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.img-hist-actions .tb-btn {
-  flex: 1 1 auto;
-  min-width: 0;
 }
 
 .tb-img-save-preview {
