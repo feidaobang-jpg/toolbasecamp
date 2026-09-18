@@ -1,9 +1,12 @@
 /**
  * Brush mask for local inpaint (图生图 · 局部重绘).
  * White = edit region; supports multiple disconnected strokes.
+ * Undo/redo: Ctrl+Z / Ctrl+Y (one stroke = one pointer down→up).
  */
 (function (global) {
   'use strict';
+
+  var MAX_HISTORY = 40;
 
   function createMaskPainter(opts) {
     opts = opts || {};
@@ -21,12 +24,21 @@
     var objectUrl = null;
     var hasPaint = false;
     var scale = 1;
+    var _strokeLayer = null;
+    var _strokeCtx = null;
+    var undoStack = [];
+    var redoStack = [];
+    var currentStroke = null;
 
     function brushRadius() {
-      var v = brushInput ? parseInt(brushInput.value, 10) : 36;
+      var v = brushInput ? parseInt(brushInput.value, 10) : 18;
       if (!Number.isFinite(v) || v < 8) v = 8;
       if (v > 120) v = 120;
       return v;
+    }
+
+    function notifyChange() {
+      if (typeof opts.onChange === 'function') opts.onChange();
     }
 
     function syncSize() {
@@ -43,9 +55,7 @@
       canvas.height = dh;
       canvas.style.width = dw + 'px';
       canvas.style.height = dh + 'px';
-      if (_strokeLayer) {
-        ensureStrokeLayer();
-      }
+      rebuildStrokeLayer();
       redraw();
     }
 
@@ -53,15 +63,10 @@
       if (!naturalW) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      // Restore strokes from offscreen if we kept them — for v1 redraw clears strokes
-      // after resize; keep simple: strokes live on overlay buffer.
       if (_strokeLayer) {
         ctx.drawImage(_strokeLayer, 0, 0);
       }
     }
-
-    var _strokeLayer = null;
-    var _strokeCtx = null;
 
     function ensureStrokeLayer() {
       if (_strokeLayer && _strokeLayer.width === canvas.width && _strokeLayer.height === canvas.height) {
@@ -77,16 +82,79 @@
       }
     }
 
-    function paintAt(cx, cy) {
+    function paintDot(cx, cy, radius) {
       ensureStrokeLayer();
-      var br = brushRadius();
       _strokeCtx.fillStyle = 'rgba(37, 99, 235, 0.45)';
       _strokeCtx.beginPath();
-      _strokeCtx.arc(cx, cy, br, 0, Math.PI * 2);
+      _strokeCtx.arc(cx, cy, radius, 0, Math.PI * 2);
       _strokeCtx.fill();
+    }
+
+    function paintStrokePath(stroke) {
+      if (!stroke || !stroke.points || !stroke.points.length) return;
+      var r = stroke.r || brushRadius();
+      for (var i = 0; i < stroke.points.length; i++) {
+        var p = stroke.points[i];
+        paintDot(p.x, p.y, r);
+      }
+    }
+
+    function rebuildStrokeLayer() {
+      _strokeLayer = null;
+      _strokeCtx = null;
+      ensureStrokeLayer();
+      for (var i = 0; i < undoStack.length; i++) {
+        paintStrokePath(undoStack[i]);
+      }
+      if (currentStroke) {
+        paintStrokePath(currentStroke);
+      }
+      hasPaint = undoStack.length > 0 || !!(currentStroke && currentStroke.points.length);
+    }
+
+    function commitCurrentStroke() {
+      if (!currentStroke || !currentStroke.points.length) {
+        currentStroke = null;
+        return;
+      }
+      undoStack.push(currentStroke);
+      if (undoStack.length > MAX_HISTORY) {
+        undoStack.shift();
+      }
+      redoStack = [];
+      currentStroke = null;
+      hasPaint = undoStack.length > 0;
+      notifyChange();
+    }
+
+    function undo() {
+      if (painting) return false;
+      if (!undoStack.length) return false;
+      redoStack.push(undoStack.pop());
+      rebuildStrokeLayer();
+      redraw();
+      notifyChange();
+      return true;
+    }
+
+    function redo() {
+      if (painting) return false;
+      if (!redoStack.length) return false;
+      undoStack.push(redoStack.pop());
+      rebuildStrokeLayer();
+      redraw();
+      notifyChange();
+      return true;
+    }
+
+    function paintAt(cx, cy) {
+      if (!currentStroke) {
+        currentStroke = { r: brushRadius(), points: [] };
+      }
+      currentStroke.points.push({ x: cx, y: cy });
+      paintDot(cx, cy, currentStroke.r);
       hasPaint = true;
       redraw();
-      if (typeof opts.onChange === 'function') opts.onChange();
     }
 
     function pointerPos(e) {
@@ -106,6 +174,7 @@
     function onDown(e) {
       e.preventDefault();
       painting = true;
+      currentStroke = { r: brushRadius(), points: [] };
       var p = pointerPos(e);
       paintAt(p.x, p.y);
     }
@@ -118,7 +187,28 @@
     }
 
     function onUp() {
+      if (!painting) return;
       painting = false;
+      commitCurrentStroke();
+    }
+
+    function isTypingTarget(el) {
+      if (!el) return false;
+      var tag = (el.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
+      return !!el.isContentEditable;
+    }
+
+    function onKeyDown(e) {
+      if (wrap.hidden) return;
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (isTypingTarget(e.target)) return;
+      var key = String(e.key || '').toLowerCase();
+      if (key === 'z' && !e.shiftKey) {
+        if (undo()) e.preventDefault();
+      } else if (key === 'y' || (key === 'z' && e.shiftKey)) {
+        if (redo()) e.preventDefault();
+      }
     }
 
     canvas.addEventListener('mousedown', onDown);
@@ -128,6 +218,7 @@
     canvas.addEventListener('touchmove', onMove, { passive: false });
     canvas.addEventListener('touchend', onUp);
     canvas.addEventListener('touchcancel', onUp);
+    window.addEventListener('keydown', onKeyDown);
 
     if (clearBtn) {
       clearBtn.addEventListener('click', function () {
@@ -136,11 +227,15 @@
     }
 
     function clearMask() {
+      painting = false;
+      currentStroke = null;
+      undoStack = [];
+      redoStack = [];
       _strokeLayer = null;
       _strokeCtx = null;
       hasPaint = false;
       redraw();
-      if (typeof opts.onChange === 'function') opts.onChange();
+      notifyChange();
     }
 
     function setFile(file) {
@@ -182,7 +277,6 @@
       octx.fillStyle = '#000';
       octx.fillRect(0, 0, naturalW, naturalH);
 
-      // Convert blue overlay strokes → hard white mask (no soft edges)
       var tmp = document.createElement('canvas');
       tmp.width = _strokeLayer.width;
       tmp.height = _strokeLayer.height;
@@ -201,10 +295,8 @@
         }
       }
       tctx.putImageData(data, 0, 0);
-      // Nearest-neighbor upscale — bilinear creates gray/半透明边缘，GPT 易把半透明蒙版画进结果
       octx.imageSmoothingEnabled = false;
       octx.drawImage(tmp, 0, 0, naturalW, naturalH);
-      // Re-binarize after scale
       var outData = octx.getImageData(0, 0, naturalW, naturalH);
       var opx = outData.data;
       for (var j = 0; j < opx.length; j += 4) {
@@ -222,6 +314,8 @@
     }
 
     function destroy() {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('mouseup', onUp);
       clearMask();
       if (objectUrl) {
         try { URL.revokeObjectURL(objectUrl); } catch (e) {}
@@ -242,6 +336,8 @@
       clearMask: clearMask,
       exportMaskBlob: exportMaskBlob,
       hasPaint: function () { return hasPaint; },
+      undo: undo,
+      redo: redo,
       destroy: destroy,
       syncSize: syncSize
     };

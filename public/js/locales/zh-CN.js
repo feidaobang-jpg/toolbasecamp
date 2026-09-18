@@ -3305,7 +3305,7 @@ window.TB_LOCALES['zh-CN'] = {
             editModeInstructHint: '指令改图：用文字描述整图修改。局部重绘：涂抹一处或多处区域，再写修改说明；未涂区域会尽量保持原图。',
             editModeInpaintHint: '局部重绘：在图上涂抹需要改的区域（可涂多处），再填写修改说明。未涂抹处生成后会合成回原图。仅支持单张。',
             maskLabel: '涂抹要改的区域',
-            maskHint: '蓝色为待改区域，可涂多处不连通区域；未涂处保持原图。',
+            maskHint: '蓝色为待改区域，可涂多处；Ctrl+Z 撤销上一笔，Ctrl+Y 恢复；未涂处保持原图。',
             brushSize: '笔刷',
             clearMask: '清空涂抹',
             needMask: '请先涂抹要修改的区域',

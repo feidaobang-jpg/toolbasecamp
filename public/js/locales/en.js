@@ -3306,7 +3306,7 @@ window.TB_LOCALES.en = {
             editModeInstructHint: 'Instruction: describe the whole-image change. Local inpaint: paint one or more areas, then describe what to change; unpainted areas stay from the original.',
             editModeInpaintHint: 'Local inpaint: paint the region(s) to edit (multiple OK), then write the instruction. Unpainted areas are composited back from the original. One image only.',
             maskLabel: 'Paint areas to edit',
-            maskHint: 'Blue overlay marks edit regions (multiple OK). Unpainted areas stay from the original.',
+            maskHint: 'Blue overlay marks edit regions (multiple OK). Ctrl+Z undoes the last stroke, Ctrl+Y redoes. Unpainted areas stay from the original.',
             brushSize: 'Brush',
             clearMask: 'Clear mask',
             needMask: 'Paint the area(s) to edit first',
