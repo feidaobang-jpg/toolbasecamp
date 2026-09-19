@@ -44,3 +44,7 @@ build/
 
 # CodeGraph local index
 .codegraph/
+
+# NAS downloaded translation models and local migration backups
+/deploy/home-nas/lt-models/
+/deploy/home-nas/migration-backup/

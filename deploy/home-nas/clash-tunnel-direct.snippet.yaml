@@ -1,0 +1,21 @@
+# Paste into Clash config (YAML) — fixes Cloudflare Tunnel dropping (Error 1033)
+# (Also applied in Clash Verge Rev: profiles/rvDxdV2WxltT.yaml + mwIsHiwJkv1f.yaml + dns_config.yaml)
+
+dns:
+  respect-rules: true
+  fake-ip-filter:
+    - '+.argotunnel.com'
+    - '+.cfargotunnel.com'
+    - '+.v2.argotunnel.com'
+    - '+.cloudflare.com'
+    - 'api.cloudflare.com'
+
+rules:
+  - PROCESS-NAME,cloudflared,DIRECT
+  - PROCESS-NAME,wsl,DIRECT
+  - DOMAIN-SUFFIX,argotunnel.com,DIRECT
+  - IP-CIDR,198.41.0.0/16,DIRECT,no-resolve
+
+tun:
+  route-exclude-address:
+    - 198.41.0.0/16
