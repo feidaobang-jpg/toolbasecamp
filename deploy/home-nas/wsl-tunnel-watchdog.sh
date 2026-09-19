@@ -2,7 +2,9 @@
 set -u
 cd -- "$(dirname -- "$(readlink -f -- "$0")")" || exit 1
 exec 9>/run/lock/tbc-tunnel-watchdog.lock
-flock -n 9 || exit 0
+# Keep the new WSL client alive while an orphaned previous watchdog owns the lock.
+# When that process exits, this client takes over without starting a second worker.
+flock 9 || exit 1
 log() { printf '%s %s\n' "$(date -Is)" "$*"; }
 failures=0
 log 'Watchdog started; checking /ready instead of registration log age.'

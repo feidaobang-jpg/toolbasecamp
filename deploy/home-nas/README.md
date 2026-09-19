@@ -127,9 +127,12 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File D:\project\toolbasecamp\
 此进程需要持续运行；日志在 `%LOCALAPPDATA%\ToolBasecamp\wsl-nas-keepalive.log`。
 本机已配置 Windows 计划任务 `ToolBasecamp-WSL-NAS-KeepAlive`：当前用户登录后
 隐藏运行，无运行时长限制；WSL 子进程退出后 15 秒重试，计划任务失败后每分钟
-重试。原 `WSL-Docker-Start.bat` 已移出启动文件夹并备份到
+重试。此外每分钟触发一次启动检查（已经运行则跳过），即使整个 Windows
+保活程序被结束，也能由独立的计划任务触发器恢复。运行
+`install-wsl-nas-keepalive.ps1` 可安装或更新这两个触发器。
+原 `WSL-Docker-Start.bat` 已移出启动文件夹并备份到
 `%LOCALAPPDATA%\ToolBasecamp`，避免重复启动。该配置需要用户登录，不是登录前服务。
-可在任务计划程序中停止或禁用该任务。
+需要长期暂停时，应在任务计划程序中先禁用、再停止该任务；仅停止会在下次触发时恢复。
 脚本只允许一个 Windows 实例，看门狗在 Linux 端也有互斥锁。
 `wsl-tunnel-watchdog.sh` 每 30 秒检查容器内部的 `20241/ready`，连续失败
 3 次才重启隧道，重启后等待 90 秒。不再根据 `Registered` 日志是否出现
