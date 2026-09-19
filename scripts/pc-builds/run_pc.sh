@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tool Basecamp PC builds runner (VPS or local).
+# Treasure Box PC builds runner (VPS or local).
 set -euo pipefail
 
 PC_HOME="${PC_HOME:-/opt/toolbasecamp-pcbuilds}"

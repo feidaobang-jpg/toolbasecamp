@@ -401,3 +401,101 @@
 .tip-box b {
     font-weight: 700;
 }
+
+/* ========== 输入图预览（全局） ==========
+ * 空上传区：紧凑条，不要一上来就占满屏大正方形。
+ * 选图后预览：宽度撑满 + 正方形（aspect-ratio 1/1），object-fit:contain。
+ */
+.tb-input-image,
+.drop-zone.tb-input-image {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: auto;
+    height: auto;
+    min-height: 112px;
+    box-sizing: border-box;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.tb-input-image-preview,
+.instruct-source-grid,
+.home-pc-source-grid,
+.img-tool-source,
+.i23d-ref-preview,
+.image-pipe-ref-preview {
+    width: 100%;
+    max-width: 100% !important;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* display:flex 会盖掉原生 [hidden]，必须显式藏起来 */
+.tb-input-image-preview[hidden],
+.instruct-source-grid[hidden],
+.home-pc-source-grid[hidden],
+.img-tool-source[hidden],
+.i23d-ref-preview[hidden],
+.image-pipe-ref-preview[hidden],
+.home-pc-result-box[hidden],
+.i23d-viewer[hidden] {
+    display: none !important;
+}
+
+.tb-input-image-preview .home-pc-img-card,
+.i23d-ref-preview .home-pc-img-card,
+.instruct-source-card,
+.home-pc-source-card {
+    width: 100%;
+    max-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+}
+
+/* 选图后：正方形预览 */
+.tb-input-image-preview img,
+.img-tool-source img,
+.i23d-ref-preview img,
+.image-pipe-ref-preview img,
+.instruct-source-card img,
+.home-pc-source-card img,
+.tb-input-image-preview .home-pc-img-card > img,
+.i23d-ref-preview .home-pc-img-card > img {
+    display: block;
+    width: 100%;
+    max-width: 100% !important;
+    max-height: none !important;
+    aspect-ratio: 1 / 1;
+    height: auto !important;
+    object-fit: contain;
+    background: #f8fafc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.instruct-source-card {
+    position: relative;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .tb-input-image-preview,
+    .instruct-source-grid,
+    .home-pc-source-grid,
+    .img-tool-source,
+    .i23d-ref-preview,
+    .image-pipe-ref-preview {
+        width: 100%;
+        max-width: 100% !important;
+    }
+}

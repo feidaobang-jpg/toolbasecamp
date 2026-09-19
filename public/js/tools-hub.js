@@ -121,7 +121,7 @@
         toolbarEl.innerHTML =
             '<div class="hub-search-wrap">' +
                 '<i class="fas fa-search"></i>' +
-                '<input type="search" id="hub-search-input" class="hub-search-input" autocomplete="off" ' +
+                '<input type="text" id="hub-search-input" class="hub-search-input" role="searchbox" autocomplete="off" ' +
                     'placeholder="' + tr('hub.searchPlaceholder') + '" value="' + escapeAttr(searchQuery) + '">' +
                 '<button type="button" id="hub-search-clear" class="hub-search-clear' +
                     (searchQuery ? ' is-visible' : '') + '" aria-label="Clear">' +

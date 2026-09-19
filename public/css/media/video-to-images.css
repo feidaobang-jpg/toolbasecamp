@@ -101,8 +101,6 @@
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 12px;
   width: 100%;
-  max-height: min(520px, 60vh);
-  overflow-y: auto;
   padding: 8px;
   border: 1px solid #e5e7eb;
   border-radius: 10px;

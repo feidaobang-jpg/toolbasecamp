@@ -433,3 +433,67 @@
 
 .stock-page-wrap{max-width:56rem;margin:0 auto;}
 .stock-page-wrap h2{font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 1rem;}
+
+.records-stats{
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+.records-stats-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.stat-chip{
+  font-size:12px;
+  color:#4b5563;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:999px;
+  padding:5px 10px;
+}
+.stat-chip b.up{color:#dc2626;}
+.stat-chip b.dn{color:#16a34a;}
+.records-stats-sub{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.stat-sub{
+  font-size:12px;
+  color:#6b7280;
+}
+.records-table-wrap{
+  overflow-x:auto;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  background:#fff;
+}
+.records-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+.records-table th,
+.records-table td{
+  padding:10px 12px;
+  border-bottom:1px solid #f3f4f6;
+  text-align:left;
+  white-space:nowrap;
+}
+.records-table th{
+  background:#f9fafb;
+  color:#6b7280;
+  font-weight:700;
+  font-size:12px;
+}
+.records-table td.up{color:#dc2626;font-weight:700;}
+.records-table td.dn{color:#16a34a;font-weight:700;}
+.records-empty{
+  text-align:center;
+  color:#9ca3af;
+  padding:24px 12px !important;
+}

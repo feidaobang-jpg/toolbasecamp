@@ -22,7 +22,7 @@ from tencent_image import ocr_general_text, tencent_configured
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/life-plans", tags=["life-plans"])
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 LIMITS = {
     "life_plan": int(os.environ.get("LIFE_PLAN_LIMIT", "20")),
     "life_plan_guest": int(os.environ.get("LIFE_PLAN_GUEST_LIMIT", "5")),

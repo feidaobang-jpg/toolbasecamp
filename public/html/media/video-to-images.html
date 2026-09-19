@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Video to Images - Tool Basecamp</title>
-  <meta name="description" content="Extract frames from video files in your browser. Preview, dedupe, and download as ZIP. No upload required.">
-  <link rel="stylesheet" href="../../css/base.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=minimax1" />
-  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=minimax1" />
+  <title>视频转图片 - 百宝箱</title>
+  <meta name="description" content="在浏览器本地从视频提取帧、去重并打包下载，无需上传。">
+  <link rel="stylesheet" href="../../css/base.css?v=vti7" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq4" />
+  <link rel="stylesheet" href="../../css/media/video-to-images.css?v=vti7" />
 </head>
 <body>
   <div class="container">
@@ -32,78 +32,57 @@
         </div>
 
         <section class="media-section hidden" id="video-preview-section">
-          <h3 class="section-title">Video preview</h3>
+          <h3 class="section-title" data-i18n="tools.videoToImages.videoPreview">Video preview</h3>
           <div class="video-container" id="video-container"></div>
 
-          <h3 class="section-title">Extraction settings</h3>
+          <h3 class="section-title" data-i18n="tools.videoToImages.extractionSettings">Extraction settings</h3>
           <div class="settings-row">
-            <label>Frame interval (ms)
-              <input type="number" id="frame-interval" value="100" min="100" step="50" />
+            <label><span data-i18n="tools.videoToImages.frameInterval">Frame interval (ms)</span>
+              <input type="number" id="frame-interval" value="2000" min="100" step="100" />
             </label>
-            <label>Clip length (s)
-              <input type="range" id="extract-duration" min="1" max="10" value="3" step="0.5" />
-              <span id="extract-duration-value">3s</span>
+            <label><span data-i18n="tools.videoToImages.clipLength">Clip length (s)</span>
+              <input type="range" id="extract-duration" min="0.1" max="10" value="10" step="0.1" />
+              <span id="extract-duration-value">—</span>
             </label>
-            <label>Start at (s)
+            <label><span data-i18n="tools.videoToImages.startAt">Start at (s)</span>
               <input type="range" id="start-time" min="0" max="100" value="0" step="0.1" />
               <span id="start-time-value">0s</span>
             </label>
           </div>
 
-          <details class="advanced-block" id="watermark-removal-settings">
-            <summary>Watermark / background (optional)</summary>
-            <div class="settings-row">
-              <span class="settings-label">Corner to clear</span>
-              <div class="radio-group">
-                <label><input type="radio" name="watermark-position" value="top-left" checked /> Top left</label>
-                <label><input type="radio" name="watermark-position" value="top-right" /> Top right</label>
-                <label><input type="radio" name="watermark-position" value="bottom-left" /> Bottom left</label>
-                <label><input type="radio" name="watermark-position" value="bottom-right" /> Bottom right</label>
-              </div>
-              <label>Region size
-                <input type="range" id="watermark-size" min="10" max="30" value="20" />
-                <span id="watermark-size-value">20%</span>
-              </label>
-              <label>Background sensitivity
-                <input type="range" id="watermark-threshold" min="10" max="50" value="25" />
-                <span id="watermark-threshold-value">25</span>
-              </label>
-            </div>
-          </details>
-
           <div class="action-row">
             <button type="button" class="tb-btn" id="extract-frames-btn" data-i18n="tools.videoToImages.extractFrames">Extract frames</button>
-            <button type="button" class="tb-btn" id="remove-watermark-btn" data-i18n="tools.videoToImages.clearCorner">Clear corner + background</button>
             <button type="button" class="tb-btn" id="clear-btn" data-i18n="tools.videoToImages.clearAll">Clear all</button>
           </div>
         </section>
 
         <section class="media-section hidden" id="frames-preview-section">
-          <h3 class="section-title">Extracted frames (<span id="frame-count">0</span>)</h3>
+          <h3 class="section-title"><span data-i18n="tools.videoToImages.extractedFrames">Extracted frames</span> (<span id="frame-count">0</span>)</h3>
           <div class="frames-container" id="frames-container"></div>
 
-          <h3 class="section-title">Similar frames</h3>
+          <h3 class="section-title" data-i18n="tools.videoToImages.similarFrames">Similar frames</h3>
           <div class="settings-row">
-            <label>Similarity threshold
+            <label><span data-i18n="tools.videoToImages.similarityThreshold">Similarity threshold</span>
               <input type="range" id="similarity-threshold" min="80" max="100" value="90" />
               <span id="threshold-value">90%</span>
             </label>
-            <button type="button" class="tb-btn" id="keep-different-btn" data-i18n="tools.videoToImages.dedupe">Keep distinct frames only</button>
+            <button type="button" class="tb-btn" id="keep-different-btn" data-i18n="tools.videoToImages.dedupe">Select similar frames</button>
           </div>
 
           <div class="action-row">
             <button type="button" class="tb-btn" id="select-all-btn" data-i18n="tools.videoToImages.selectAll">Select all</button>
+            <button type="button" class="tb-btn" id="delete-selected-btn" data-i18n="tools.videoToImages.deleteSelected">Delete selected</button>
             <button type="button" class="tb-btn" id="preview-animation-btn" data-i18n="tools.videoToImages.animationPreview">Preview animation</button>
-            <button type="button" class="tb-btn" id="save-selected-btn" data-i18n="tools.videoToImages.saveZip">Download selected (ZIP)</button>
+            <button type="button" class="tb-btn" id="save-selected-btn" data-i18n="tools.videoToImages.saveZip">Save as ZIP</button>
           </div>
         </section>
 
         <section class="media-section hidden" id="animation-preview-section">
-          <h3 class="section-title">Animation preview</h3>
+          <h3 class="section-title" data-i18n="tools.videoToImages.animationPreview">Animation preview</h3>
           <div class="animation-container" id="animation-container"></div>
           <div class="animation-controls">
             <button type="button" class="tb-btn" id="play-pause-btn" data-i18n="tools.videoToImages.pause">Pause</button>
-            <label>FPS: <span id="speed-value">5</span>
+            <label><span data-i18n="tools.videoToImages.fpsLabel">FPS</span>: <span id="speed-value">5</span>
               <input type="range" id="speed-control" min="1" max="10" value="5" />
             </label>
           </div>
@@ -112,13 +91,13 @@
     </main>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=minimax1"></script>
-  <script src="../../js/locales/en.js?v=minimax1"></script>
-  <script src="../../js/locales/zh-CN.js?v=minimax1"></script>
-  <script src="../../js/i18n.js?v=minimax1"></script>
-  <script src="../../js/config.js?v=minimax1"></script>
-  <script src="../../js/base.js?v=minimax1"></script>
-  <script src="../../js/common_ui.js?v=minimax1"></script>
-  <script src="../../js/media/video-to-images.js?v=minimax1"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js?v=vti7"></script>
+  <script src="../../js/locales/en.js?v=vti7"></script>
+  <script src="../../js/locales/zh-CN.js?v=vti7"></script>
+  <script src="../../js/i18n.js?v=vti7"></script>
+  <script src="../../js/config.js?v=vti7"></script>
+  <script src="../../js/base.js?v=vti7"></script>
+  <script src="../../js/common_ui.js?v=adminhub1"></script>
+  <script src="../../js/media/video-to-images.js?v=vti7"></script>
 </body>
 </html>

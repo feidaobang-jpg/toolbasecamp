@@ -2,7 +2,7 @@
 # Run on server via Web Console — bootstrap before first deploy
 set -euo pipefail
 
-echo "=== Tool Basecamp bootstrap ==="
+echo "=== Treasure Box bootstrap ==="
 apt update
 apt install -y nginx python3 python3-pip python3-venv git rsync ufw \
   libreoffice-writer certbot python3-certbot-nginx

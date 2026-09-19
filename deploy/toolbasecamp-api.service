@@ -1,5 +1,5 @@
 [Unit]
-Description=Tool Basecamp API (FastAPI)
+Description=Treasure Box API (FastAPI)
 After=network.target
 
 [Service]

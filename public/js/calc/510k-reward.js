@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const NAMES_KEY = 'tbc_k510_reward_names_v1';
     const gridWrap = document.getElementById('grid-wrap');
     const scoreGrid = document.getElementById('score-grid');
     const multiplierInput = document.getElementById('multiplier');
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const playerRadios = document.querySelectorAll('input[name="player-count"]');
 
     let playerCount = 0;
+    let playerNames = [];
     let scoreRows = [];
     let results = [];
     let multipliedResults = [];
@@ -35,6 +37,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function sanitizeDigits(value) {
         return String(value || '').replace(/\D/g, '');
+    }
+
+    function loadStoredNames() {
+        try {
+            const raw = localStorage.getItem(NAMES_KEY);
+            if (!raw) return [];
+            const arr = JSON.parse(raw);
+            return Array.isArray(arr) ? arr.map(function (x) { return String(x || '').trim(); }) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveNames() {
+        try {
+            localStorage.setItem(NAMES_KEY, JSON.stringify(playerNames));
+        } catch (e) { /* ignore quota */ }
+    }
+
+    function defaultPlayerLabel(n) {
+        return tr('tools.k510Reward.playerLabel', { n: n });
+    }
+
+    function displayName(col) {
+        const custom = (playerNames[col] || '').trim();
+        return custom || defaultPlayerLabel(col + 1);
+    }
+
+    function syncNamesLength(count, previous) {
+        const stored = loadStoredNames();
+        const prev = previous && previous.length ? previous : stored;
+        const next = [];
+        for (let i = 0; i < count; i += 1) {
+            next[i] = (prev[i] != null && String(prev[i]).trim())
+                ? String(prev[i]).trim()
+                : (stored[i] || '');
+        }
+        playerNames = next;
+        saveNames();
     }
 
     function resetResults() {
@@ -74,7 +115,20 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let col = 0; col < playerCount; col += 1) {
             const head = document.createElement('div');
             head.className = 'k510-score-head-cell';
-            head.textContent = tr('tools.k510Reward.playerLabel', { n: col + 1 });
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.className = 'k510-name-input';
+            nameInput.maxLength = 8;
+            nameInput.autocomplete = 'off';
+            nameInput.spellcheck = false;
+            nameInput.value = playerNames[col] || '';
+            nameInput.placeholder = defaultPlayerLabel(col + 1);
+            nameInput.setAttribute('aria-label', defaultPlayerLabel(col + 1));
+            nameInput.title = tr('tools.k510Reward.nameHint');
+            nameInput.dataset.col = String(col);
+            nameInput.addEventListener('input', onNameInput);
+            nameInput.addEventListener('blur', onNameBlur);
+            head.appendChild(nameInput);
             headerRow.appendChild(head);
         }
         layout.appendChild(headerRow);
@@ -101,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.value = row[col] || '';
                 input.dataset.row = String(rowIndex);
                 input.dataset.col = String(col);
+                input.setAttribute('aria-label', displayName(col));
                 input.addEventListener('input', onScoreInput);
                 rowEl.appendChild(input);
             }
@@ -144,8 +199,25 @@ document.addEventListener('DOMContentLoaded', function () {
         scoreGrid.appendChild(layout);
     }
 
+    function onNameInput(e) {
+        const col = parseInt(e.target.dataset.col, 10);
+        if (!Number.isFinite(col)) return;
+        playerNames[col] = String(e.target.value || '').slice(0, 8);
+        saveNames();
+    }
+
+    function onNameBlur(e) {
+        const col = parseInt(e.target.dataset.col, 10);
+        if (!Number.isFinite(col)) return;
+        playerNames[col] = String(e.target.value || '').trim().slice(0, 8);
+        e.target.value = playerNames[col];
+        saveNames();
+    }
+
     function onPlayerChange(count) {
+        const previousNames = playerNames.slice();
         playerCount = count;
+        syncNamesLength(count, previousNames);
         scoreRows = [new Array(count).fill('')];
         resetResults();
         setActionEnabled(true);
@@ -249,4 +321,8 @@ document.addEventListener('DOMContentLoaded', function () {
     addRowBtn.addEventListener('click', addRow);
     calcBtn.addEventListener('click', calculateResult);
     clearBtn.addEventListener('click', clearAll);
+
+    document.addEventListener('tb:locale', function () {
+        if (playerCount) renderGrid();
+    });
 });

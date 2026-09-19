@@ -1,0 +1,1324 @@
+document.addEventListener('DOMContentLoaded', function () {
+  var startBtn = document.getElementById('start-btn');
+  var cancelBtn = document.getElementById('cancel-btn');
+  var clearBtn = document.getElementById('clear-btn');
+  var confirmPickBtn = document.getElementById('confirm-pick-btn');
+  var exportBtn = document.getElementById('export-btn');
+  var openOutputBtn = document.getElementById('open-output-btn');
+  var copyGodotBtn = document.getElementById('copy-godot-btn');
+  var historyRefreshBtn = document.getElementById('history-refresh-btn');
+  var briefInput = document.getElementById('brief-input');
+  var charName = document.getElementById('char-name');
+  var canvasSelect = document.getElementById('canvas-select');
+  var fpsSelect = document.getElementById('fps-select');
+  var stillCountSelect = null;
+  var cameraRow = document.getElementById('camera-row');
+  var typeRow = document.getElementById('type-row');
+  var styleRow = document.getElementById('style-row');
+  var actionsRow = document.getElementById('actions-row');
+  var actionsBlock = document.getElementById('actions-block');
+  var progressWrap = document.getElementById('progress-wrap');
+  var progressStatus = document.getElementById('progress-status');
+  var progressPercent = document.getElementById('progress-percent');
+  var progressBar = document.getElementById('progress-bar');
+  var stillsBox = document.getElementById('stills-box');
+  var stillsList = document.getElementById('stills-list');
+  var previewBox = document.getElementById('preview-box');
+  var previewList = document.getElementById('preview-list');
+  var exportHint = document.getElementById('export-hint');
+  var zipLink = document.getElementById('zip-link');
+  var logOutput = document.getElementById('log-output');
+  var historyList = document.getElementById('history-list');
+  var refFile = document.getElementById('ref-file');
+  var godotPath = document.getElementById('godot-path');
+  var projectPick = document.getElementById('project-pick');
+  var projectName = document.getElementById('project-name');
+  var projectCreateBtn = document.getElementById('project-create-btn');
+  var projectRefreshBtn = document.getElementById('project-refresh-btn');
+  var projectSaveBtn = document.getElementById('project-save-btn');
+  var projectActive = document.getElementById('project-active');
+  var assetWorkspace = document.getElementById('asset-workspace');
+  var startGateHint = document.getElementById('start-gate-hint');
+  var projectBox = document.getElementById('project-box');
+
+  var API_BASE = window.HomePcApi.base();
+  var selectedType = 'character';
+  var selectedStyle = 'cartoon';
+  var selectedCamera = 'topdown';
+  var currentProject = null;
+  var currentTaskId = null;
+  var pollingTimer = null;
+  var lastLogLen = 0;
+  var pickedStillId = null;
+  var lastStillsSig = '';
+  var lastPreviewSig = '';
+  var startBusy = false;
+
+  function notify(msg) {
+    var text = String(msg || '');
+    if (!text) return;
+    if (typeof window.tbNotify === 'function') {
+      window.tbNotify(text);
+      return;
+    }
+    alert(text);
+  }
+
+  function appendUiLog(line) {
+    if (!logOutput) return;
+    var stamp = new Date().toLocaleTimeString();
+    logOutput.textContent += (logOutput.textContent ? '\n' : '') + '[' + stamp + '] ' + line;
+    // 不自动滚动：遵守全局 UI 约定
+  }
+
+  function hasActiveProject() {
+    return !!(currentProject && (currentProject.slug || currentProject.project_id));
+  }
+
+  function syncStartEnabled() {
+    var ok = hasActiveProject();
+    if (startBtn) startBtn.disabled = startBusy || !ok;
+    if (startGateHint) {
+      startGateHint.hidden = ok;
+      startGateHint.style.display = ok ? 'none' : '';
+    }
+  }
+
+  var ACTION_GROUPS = [
+    { key: 'idle', labelKey: 'gameSpriteActGroupIdle', fallback: '待机', ids: ['idle'] },
+    { key: 'move', labelKey: 'gameSpriteActGroupMove', fallback: '移动', ids: ['walk', 'run', 'jump', 'fall'] },
+    { key: 'combat', labelKey: 'gameSpriteActGroupCombat', fallback: '战斗', ids: ['attack', 'attack2', 'skill', 'defend', 'hit'] },
+    { key: 'down', labelKey: 'gameSpriteActGroupDown', fallback: '倒地', ids: ['down', 'getup', 'death'] },
+    { key: 'extra', labelKey: 'gameSpriteActGroupExtra', fallback: '可选补充', ids: ['cast', 'dodge', 'climb', 'swim', 'emote'] }
+  ];
+
+  var ACTION_LABELS = {
+    idle: ['gameSpriteActIdle', '待机'],
+    walk: ['gameSpriteActWalk', '走路'],
+    run: ['gameSpriteActRun', '奔跑'],
+    jump: ['gameSpriteActJump', '跳跃'],
+    fall: ['gameSpriteActFall', '下落'],
+    attack: ['gameSpriteActAttack', '攻击'],
+    attack2: ['gameSpriteActAttack2', '攻击2'],
+    skill: ['gameSpriteActSkill', '技能'],
+    defend: ['gameSpriteActDefend', '防御'],
+    hit: ['gameSpriteActHit', '受击'],
+    down: ['gameSpriteActDown', '倒地'],
+    getup: ['gameSpriteActGetup', '起身'],
+    death: ['gameSpriteActDeath', '死亡'],
+    cast: ['gameSpriteActCast', '施法'],
+    dodge: ['gameSpriteActDodge', '闪避'],
+    climb: ['gameSpriteActClimb', '攀爬'],
+    swim: ['gameSpriteActSwim', '游泳'],
+    emote: ['gameSpriteActEmote', '表情']
+  };
+
+  /** 页面默认：只选待机（生成再手点其它动作） */
+  var DEFAULT_ACTIONS = ['idle'];
+  /** 「全选常用」：不含可选补充 */
+  var COMMON_ACTIONS = [
+    'idle', 'walk', 'run', 'jump', 'fall',
+    'attack', 'attack2', 'skill', 'defend', 'hit',
+    'down', 'getup', 'death'
+  ];
+  var selectedActions = DEFAULT_ACTIONS.slice();
+
+  function tr(key, fallback) {
+    if (typeof window.t === 'function') {
+      var v = window.t(key);
+      if (v && v !== key) return v;
+    }
+    return fallback || key;
+  }
+
+  function _normalizeCameraUi(raw) {
+    var key = String(raw || '').trim().toLowerCase();
+    if (key === 'side') return 'side';
+    return 'topdown';
+  }
+
+  function heroStillOk(stillId, camera) {
+    var sid = String(stillId || '');
+    var cam = _normalizeCameraUi(camera);
+    if (sid.indexOf('upload') === 0 || sid.indexOf('concept') === 0) return true;
+    if (cam === 'topdown') return sid === 'topdown';
+    return sid.indexOf('side_') === 0 || sid === 'side';
+  }
+
+  function actionLabel(id) {
+    var meta = ACTION_LABELS[id];
+    if (!meta) return id;
+    return tr('privateHub.homePc.' + meta[0], meta[1]);
+  }
+
+  function resolveUrl(url) {
+    return window.HomePcApi.assetUrl(url);
+  }
+
+  function needsActions() {
+    return selectedType === 'character' || selectedType === 'monster';
+  }
+
+  function setSelectedActions(ids) {
+    selectedActions = (ids || []).slice();
+    renderActionChips();
+  }
+
+  function renderActionChips() {
+    if (!actionsRow) return;
+    actionsRow.innerHTML = '';
+
+    var toolbar = document.createElement('div');
+    toolbar.className = 'gs-actions-toolbar action-row';
+    var idleBtn = document.createElement('button');
+    idleBtn.type = 'button';
+    idleBtn.className = 'tb-btn';
+    idleBtn.textContent = tr('privateHub.homePc.gameSpriteSelectDefault', '仅待机');
+    idleBtn.addEventListener('click', function () {
+      setSelectedActions(DEFAULT_ACTIONS);
+    });
+    var commonBtn = document.createElement('button');
+    commonBtn.type = 'button';
+    commonBtn.className = 'tb-btn';
+    commonBtn.textContent = tr('privateHub.homePc.gameSpriteSelectCommon', '全选常用');
+    commonBtn.addEventListener('click', function () {
+      setSelectedActions(COMMON_ACTIONS);
+    });
+    var clearAllBtn = document.createElement('button');
+    clearAllBtn.type = 'button';
+    clearAllBtn.className = 'tb-btn';
+    clearAllBtn.textContent = tr('privateHub.homePc.gameSpriteClearAll', '清空全部');
+    clearAllBtn.addEventListener('click', function () {
+      setSelectedActions([]);
+    });
+    toolbar.appendChild(idleBtn);
+    toolbar.appendChild(commonBtn);
+    toolbar.appendChild(clearAllBtn);
+    actionsRow.appendChild(toolbar);
+
+    ACTION_GROUPS.forEach(function (group) {
+      var row = document.createElement('div');
+      row.className = 'gs-action-row';
+
+      var label = document.createElement('div');
+      label.className = 'gs-action-row-label';
+      label.textContent = tr('privateHub.homePc.' + group.labelKey, group.fallback);
+      row.appendChild(label);
+
+      var chips = document.createElement('div');
+      chips.className = 'gs-actions';
+      group.ids.forEach(function (a) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'rec-chip gs-action-chip' + (selectedActions.indexOf(a) >= 0 ? ' is-active' : '');
+        btn.setAttribute('data-action', a);
+        btn.title = a;
+        var main = document.createElement('span');
+        main.className = 'gs-action-main';
+        main.textContent = actionLabel(a);
+        var sub = document.createElement('span');
+        sub.className = 'gs-action-id';
+        sub.textContent = a;
+        btn.appendChild(main);
+        btn.appendChild(sub);
+        btn.addEventListener('click', function () {
+          var i = selectedActions.indexOf(a);
+          if (i >= 0) selectedActions.splice(i, 1);
+          else selectedActions.push(a);
+          btn.classList.toggle('is-active');
+        });
+        chips.appendChild(btn);
+      });
+      row.appendChild(chips);
+      actionsRow.appendChild(row);
+    });
+    if (actionsBlock) actionsBlock.style.display = needsActions() ? '' : 'none';
+  }
+
+  function bindChipRow(row, attr, onPick) {
+    if (!row) return;
+    row.querySelectorAll('.rec-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        row.querySelectorAll('.rec-chip').forEach(function (b) {
+          b.classList.remove('is-active');
+        });
+        btn.classList.add('is-active');
+        onPick(btn.getAttribute(attr));
+      });
+    });
+  }
+
+  bindChipRow(typeRow, 'data-type', function (v) {
+    selectedType = v || 'character';
+    if (actionsBlock) actionsBlock.style.display = needsActions() ? '' : 'none';
+  });
+  bindChipRow(styleRow, 'data-style', function (v) {
+    selectedStyle = v || 'cartoon';
+  });
+  bindChipRow(cameraRow, 'data-camera', function (v) {
+    selectedCamera = _normalizeCameraUi(v);
+  });
+  renderActionChips();
+  document.addEventListener('tb:locale', function () {
+    renderActionChips();
+    updateProjectActiveLabel();
+  });
+
+  function updateProjectActiveLabel() {
+    if (!projectActive) return;
+    if (!currentProject) {
+      projectActive.textContent = tr(
+        'privateHub.homePc.gameSpriteNeedProject',
+        '请先创建或打开一个游戏项目'
+      );
+      syncStartEnabled();
+      return;
+    }
+    var camLabel =
+      currentProject.camera === 'side'
+        ? tr('privateHub.homePc.gameSpriteCameraSide', '横版侧视')
+        : tr('privateHub.homePc.gameSpriteCameraTop', '俯视');
+    projectActive.textContent =
+      tr('privateHub.homePc.gameSpriteProjectActive', '当前项目') +
+      '：' +
+      (currentProject.name || currentProject.slug) +
+      ' · ' +
+      camLabel;
+    syncStartEnabled();
+  }
+
+  function applyProjectToForm(proj) {
+    currentProject = proj || null;
+    if (!proj) {
+      updateProjectActiveLabel();
+      syncStartEnabled();
+      return;
+    }
+    selectedCamera = _normalizeCameraUi(proj.camera);
+    selectChip(cameraRow, 'data-camera', selectedCamera);
+    if (proj.visual_style) {
+      selectedStyle = String(proj.visual_style);
+      selectChip(styleRow, 'data-style', selectedStyle);
+    }
+    if (canvasSelect && proj.canvas) {
+      var cw = Array.isArray(proj.canvas) ? proj.canvas[0] : proj.canvas;
+      var key = String(cw || '');
+      if (canvasSelect.querySelector('option[value="' + key + '"]')) canvasSelect.value = key;
+    }
+    if (fpsSelect && proj.fps != null) {
+      var fpsKey = String(proj.fps);
+      if (fpsSelect.querySelector('option[value="' + fpsKey + '"]')) fpsSelect.value = fpsKey;
+    }
+    if (godotPath && proj.godot_project_path) godotPath.value = String(proj.godot_project_path);
+    updateProjectActiveLabel();
+    loadHistory();
+  }
+
+  function loadProjects(selectSlug) {
+    if (!projectPick) return Promise.resolve();
+    return fetch(API_BASE + '/game-sprite/projects')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var items = (data && data.items) || [];
+        var cur = selectSlug || (projectPick.value || '');
+        projectPick.innerHTML =
+          '<option value="">' +
+          tr('privateHub.homePc.gameSpriteProjectPickPlaceholder', '请选择已有项目…') +
+          '</option>';
+        items.forEach(function (it) {
+          var opt = document.createElement('option');
+          opt.value = it.slug || it.project_id;
+          opt.textContent =
+            (it.name || it.slug) +
+            '（' +
+            (it.camera === 'side' ? '侧视' : '俯视') +
+            ' · ' +
+            (it.asset_count || 0) +
+            '）';
+          projectPick.appendChild(opt);
+        });
+        if (cur) projectPick.value = cur;
+      })
+      .catch(function () {});
+  }
+
+  function openProject(key) {
+    if (!key) {
+      currentProject = null;
+      updateProjectActiveLabel();
+      loadHistory();
+      return;
+    }
+    fetch(API_BASE + '/game-sprite/projects/get?project=' + encodeURIComponent(key))
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) {
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(String((data && data.detail) || '打开项目失败'));
+          }
+          return;
+        }
+        applyProjectToForm(data.project);
+        if (projectPick && data.project && data.project.slug) {
+          projectPick.value = data.project.slug;
+        }
+      })
+      .catch(function (e) {
+        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+      });
+  }
+
+  function createProject() {
+    var name = (projectName && projectName.value || '').trim();
+    if (!name) {
+      notify(tr('privateHub.homePc.gameSpriteNeedProjectName', '请填写游戏项目名'));
+      if (projectName) projectName.focus();
+      return;
+    }
+    var fd = new FormData();
+    fd.append('name', name);
+    fd.append('camera', selectedCamera || 'topdown');
+    fd.append('visual_style', selectedStyle || 'cartoon');
+    fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
+    fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
+    fd.append('godot_project_path', (godotPath && godotPath.value) || '');
+    fetch(API_BASE + '/game-sprite/projects/create', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) {
+          throw new Error((data && data.detail) || 'create project failed');
+        }
+        if (projectName) projectName.value = '';
+        applyProjectToForm(data.project);
+        return loadProjects(data.project && data.project.slug);
+      })
+      .catch(function (e) {
+        notify(String(e.message || e));
+      });
+  }
+
+  function saveProjectSettings() {
+    if (!hasActiveProject()) {
+      notify(tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目'));
+      return;
+    }
+    var fd = new FormData();
+    fd.append('project', currentProject.slug || currentProject.project_id);
+    fd.append('camera', selectedCamera || 'topdown');
+    fd.append('visual_style', selectedStyle || 'cartoon');
+    fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
+    fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
+    fd.append('godot_project_path', (godotPath && godotPath.value) || '');
+    fetch(API_BASE + '/game-sprite/projects/update', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) throw new Error((data && data.detail) || 'save failed');
+        applyProjectToForm(data.project);
+        notify(tr('privateHub.homePc.gameSpriteProjectSaved', '项目设置已保存'));
+        return loadProjects(data.project && data.project.slug);
+      })
+      .catch(function (e) {
+        notify(String(e.message || e));
+      });
+  }
+
+  if (projectPick) {
+    projectPick.addEventListener('change', function () {
+      openProject(projectPick.value);
+    });
+  }
+  if (projectCreateBtn) projectCreateBtn.addEventListener('click', createProject);
+  if (projectRefreshBtn) projectRefreshBtn.addEventListener('click', function () { loadProjects(projectPick && projectPick.value); });
+  if (projectSaveBtn) projectSaveBtn.addEventListener('click', saveProjectSettings);
+  updateProjectActiveLabel();
+  loadProjects();
+
+  function setBusy(busy) {
+    startBusy = !!busy;
+    syncStartEnabled();
+    if (cancelBtn) cancelBtn.disabled = !busy;
+    if (confirmPickBtn) confirmPickBtn.disabled = !!busy && !!currentTaskId;
+  }
+
+  function appendLogs(logs) {
+    if (!logOutput || !Array.isArray(logs)) return;
+    if (logs.length <= lastLogLen) return;
+    var chunk = logs.slice(lastLogLen);
+    lastLogLen = logs.length;
+    logOutput.textContent += (logOutput.textContent ? '\n' : '') + chunk.join('\n');
+    // 不自动滚动（全局约定）
+  }
+
+  function updateProgress(data) {
+    if (!progressWrap) return;
+    var st = data.status || '';
+    var stage = data.stage || '';
+    var cur = (data.progress && data.progress.current) || 0;
+    var tot = (data.progress && data.progress.total) || 1;
+    var pct = tot > 0 ? Math.min(100, Math.round((cur / tot) * 100)) : 0;
+    var label = stage;
+    if (data.current_action) label += ' · ' + data.current_action;
+    if (st === 'waiting_pick') label = tr('privateHub.homePc.gameSpriteWaitingPick', '等待选图');
+    if (st === 'done') label = tr('privateHub.homePc.gameSpriteDone', '完成');
+    if (st === 'failed') label = tr('privateHub.homePc.gameSpriteFailed', '失败') + (data.error ? ': ' + data.error : '');
+    progressWrap.style.display = 'block';
+    if (progressStatus) progressStatus.textContent = label;
+    if (progressPercent) progressPercent.textContent = pct + '%';
+    if (progressBar) progressBar.style.width = pct + '%';
+  }
+
+  var STILL_KIND_LABELS = {
+    front: ['gameSpriteStillFront', '正面'],
+    back: ['gameSpriteStillBack', '背面'],
+    left: ['gameSpriteStillLeft', '左侧面'],
+    right: ['gameSpriteStillRight', '右侧面'],
+    topdown: ['gameSpriteStillTop', '俯视'],
+    concept: ['gameSpriteStillConcept', '概念图'],
+    upload: ['gameSpriteStillUpload', '上传']
+  };
+
+  function stillKindLabel(kind) {
+    var k = String(kind || '');
+    if (k.indexOf('side_') === 0) {
+      var idx = parseInt(k.slice(5), 10);
+      var base = tr('privateHub.homePc.gameSpriteStillSide', '侧视定妆');
+      if (!isNaN(idx) && idx > 0) {
+        return base + ' ' + (idx + 1);
+      }
+      return base;
+    }
+    if (STILL_KIND_LABELS[k]) {
+      return tr('privateHub.homePc.' + STILL_KIND_LABELS[k][0], STILL_KIND_LABELS[k][1]);
+    }
+    return k;
+  }
+
+  var stillGallery = [];
+  var mediaLb = null;
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLightboxDom();
+    mediaLb = window.HomePcMediaUi.createLightbox({
+      getItems: function () {
+        return stillGallery;
+      },
+      getHdUrl: function (it) {
+        return it && (it.url || it.thumb_url || '');
+      },
+      getCaption: function (it, i, n) {
+        if (!it) return '';
+        var el =
+          it.elapsed_sec != null ? ' · ' + Number(it.elapsed_sec).toFixed(1) + 's' : '';
+        return (
+          '#' +
+          (i + 1) +
+          ' / ' +
+          n +
+          el +
+          '\n' +
+          (it.prompt || stillKindLabel(it.kind || it.id) || '')
+        );
+      },
+      onBoundary: function (which) {
+        try {
+          window.alert(
+            which === 'first'
+              ? tr('privateHub.homePc.imagePipeLbFirst', '已经是第一张')
+              : tr('privateHub.homePc.imagePipeLbLast', '已经是最后一张')
+          );
+        } catch (e) {}
+      }
+    });
+  }
+
+  function openLightboxAt(idx) {
+    if (mediaLb) mediaLb.openAt(idx);
+  }
+
+  function stillsSignature(list, generating) {
+    var items = Array.isArray(list) ? list : [];
+    return (
+      items
+        .map(function (it) {
+          return [
+            it.id || it.path || '',
+            it.thumb_url || it.url || '',
+            it.width || '',
+            it.height || '',
+            it.bytes || ''
+          ].join(':');
+        })
+        .join('|') +
+      '#' +
+      (generating ? '1' : '0') +
+      '#' +
+      (pickedStillId || '')
+    );
+  }
+
+  function previewSignature(data) {
+    var items = Array.isArray(data && data.preview) ? data.preview : [];
+    return (
+      items
+        .map(function (anim) {
+          return [
+            anim.anim || '',
+            anim.sheet_url || '',
+            anim.count || 0,
+            (anim.frames || []).join(',')
+          ].join(':');
+        })
+        .join('|') +
+      '#' +
+      ((data && data.zip_url) || '') +
+      '#' +
+      ((data && data.export_hint) || '')
+    );
+  }
+
+  function renderStills(list, opts) {
+    if (!stillsBox || !stillsList) return;
+    var items = Array.isArray(list) ? list : [];
+    if (!items.length) {
+      stillsBox.style.display = 'none';
+      stillGallery = [];
+      lastStillsSig = '';
+      return;
+    }
+    stillsBox.style.display = 'block';
+    var generating = !!(opts && opts.generating);
+    var hintEl =
+      stillsBox.querySelector('.gs-stills-hint') ||
+      stillsBox.querySelector('p.small-hint[data-i18n="privateHub.homePc.gameSpriteStillsHint"]') ||
+      stillsBox.querySelector('p.small-hint');
+    if (hintEl) {
+      hintEl.classList.add('gs-stills-hint');
+      hintEl.textContent = generating
+        ? tr('privateHub.homePc.gameSpriteStillsLive', '生成中：已出的图可先预览，全部完成后再确认选图。')
+        : tr(
+            'privateHub.homePc.gameSpriteStillsHint',
+            '定妆按视角只出 1 张主参考，会自动选用并继续动作；也可上传自己的参考图。'
+          );
+    }
+    stillsBox.querySelectorAll('.gs-stills-live-hint').forEach(function (el) {
+      if (el !== hintEl) el.remove();
+    });
+    if (confirmPickBtn) confirmPickBtn.disabled = !!generating;
+
+    if (!pickedStillId && !generating) {
+      var prefer = null;
+      var cam = selectedCamera;
+      for (var i = 0; i < items.length; i++) {
+        var kid = String(items[i].id || items[i].kind || '');
+        if (heroStillOk(kid, cam)) {
+          prefer = kid;
+          break;
+        }
+      }
+      if (!prefer) {
+        for (var j = 0; j < items.length; j++) {
+          var kid2 = String(items[j].id || items[j].kind || '');
+          if (kid2.indexOf('side_') === 0) {
+            prefer = kid2;
+            break;
+          }
+        }
+      }
+      if (prefer) pickedStillId = prefer;
+    }
+
+    var sig = stillsSignature(items, generating);
+    if (sig === lastStillsSig && stillsList.childElementCount) {
+      stillGallery = items.map(function (it) {
+        return {
+          id: it.id || it.path,
+          kind: it.kind || it.id,
+          url: it.url,
+          thumb_url: it.thumb_url || it.url,
+          prompt: it.prompt || '',
+          elapsed_sec: it.elapsed_sec
+        };
+      });
+      return;
+    }
+    lastStillsSig = sig;
+
+    stillGallery = items.map(function (it) {
+      return {
+        id: it.id || it.path,
+        kind: it.kind || it.id,
+        url: it.url,
+        thumb_url: it.thumb_url || it.url,
+        prompt: it.prompt || '',
+        elapsed_sec: it.elapsed_sec
+      };
+    });
+
+    stillsList.innerHTML = '';
+    items.forEach(function (it, idx) {
+      var id = it.id || it.path;
+      var label = document.createElement('label');
+      label.className = 'trailer-cand' + (pickedStillId === id ? ' is-selected' : '');
+      label.setAttribute('data-still-id', id);
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'gs-still';
+      input.value = id;
+      if (pickedStillId === id) input.checked = true;
+      input.addEventListener('change', function () {
+        pickedStillId = id;
+        stillsList.querySelectorAll('.trailer-cand').forEach(function (el) {
+          el.classList.remove('is-selected');
+        });
+        label.classList.add('is-selected');
+      });
+      var img = document.createElement('img');
+      img.src = resolveUrl(it.thumb_url || it.url);
+      img.setAttribute('data-url', it.url || '');
+      img.setAttribute('data-thumb-url', it.thumb_url || '');
+      img.alt = stillKindLabel(it.kind || id);
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openLightboxAt(idx);
+      });
+      var zoomBtn = document.createElement('button');
+      zoomBtn.type = 'button';
+      zoomBtn.className = 'trailer-cand-zoom';
+      zoomBtn.title = tr('privateHub.homePc.trailerZoomHint', '放大');
+      zoomBtn.setAttribute('aria-label', zoomBtn.title);
+      zoomBtn.innerHTML = '<i class="fas fa-search-plus" aria-hidden="true"></i>';
+      zoomBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openLightboxAt(idx);
+      });
+      var cap = document.createElement('div');
+      cap.className = 'trailer-cand-cap';
+      var capBase = stillKindLabel(it.kind || id);
+      var Ui = window.HomePcMediaUi;
+      var knownDim = Ui && Ui.formatItemDimSize ? Ui.formatItemDimSize(it) : '';
+      if (knownDim) {
+        cap.textContent = capBase + ' · ' + knownDim;
+      } else {
+        cap.textContent = capBase;
+        if (Ui && typeof Ui.probeOriginalMeta === 'function' && it.url) {
+          Ui.probeOriginalMeta(resolveUrl(it.url)).then(function (meta) {
+            if (!it.width && meta.width) it.width = meta.width;
+            if (!it.height && meta.height) it.height = meta.height;
+            if ((it.bytes == null || it.bytes === '') && meta.bytes) it.bytes = meta.bytes;
+            var dim = Ui.formatDimSize(meta.width, meta.height, meta.bytes);
+            if (dim) cap.textContent = capBase + ' · ' + dim;
+          });
+        }
+      }
+      label.appendChild(input);
+      label.appendChild(img);
+      label.appendChild(zoomBtn);
+      label.appendChild(cap);
+      if (window.HomePcMediaUi) {
+        window.HomePcMediaUi.appendCardActions(label, {
+          onDownload: function () {
+            window.HomePcMediaUi.triggerDownload(
+              resolveUrl(it.url),
+              (it.kind || it.id || 'still') + '.png'
+            ).catch(function () {});
+          },
+          onDelete: function () {
+            if (
+              !window.confirm(
+                tr('privateHub.homePc.deleteImageConfirm', '确定删除这张图？')
+              )
+            ) {
+              return;
+            }
+            if (!currentTaskId) {
+              label.remove();
+              return;
+            }
+            var fd = new FormData();
+            fd.append('task_id', currentTaskId);
+            fd.append('still_id', id);
+            fetch(API_BASE + '/game-sprite/delete-still', { method: 'POST', body: fd })
+              .then(function (r) {
+                return r.json();
+              })
+              .then(function (body) {
+                if (body && body.stills_ui) renderStills(body.stills_ui);
+                else label.remove();
+              })
+              .catch(function () {});
+          }
+        });
+      }
+      stillsList.appendChild(label);
+    });
+  }
+
+  function renderPreview(data) {
+    if (!previewBox || !previewList) return;
+    var items = Array.isArray(data.preview) ? data.preview : [];
+    if (!items.length && !data.zip_url) {
+      previewBox.style.display = 'none';
+      lastPreviewSig = '';
+      return;
+    }
+    var sig = previewSignature(data);
+    if (sig === lastPreviewSig && previewList.childElementCount) {
+      previewBox.style.display = 'block';
+      return;
+    }
+    lastPreviewSig = sig;
+    previewBox.style.display = 'block';
+    if (exportHint) {
+      exportHint.textContent =
+        data.export_hint ||
+        tr('privateHub.homePc.gameSpriteExportHint', '可下载 ZIP 拖入 Godot 工程。');
+    }
+    previewList.innerHTML = '';
+    items.forEach(function (anim) {
+      var card = document.createElement('div');
+      card.className = 'gs-preview-card';
+      var title = document.createElement('div');
+      title.className = 'gs-preview-title';
+      title.textContent =
+        actionLabel(anim.anim) + ' · ' + anim.anim + ' (' + (anim.count || 0) + ')';
+      card.appendChild(title);
+      if (anim.sheet_url) {
+        var sheet = document.createElement('img');
+        sheet.className = 'gs-sheet';
+        sheet.src = resolveUrl(anim.sheet_url);
+        sheet.alt = anim.anim + ' sheet';
+        card.appendChild(sheet);
+      }
+      var row = document.createElement('div');
+      row.className = 'gs-frame-row';
+      (anim.frames || []).forEach(function (u) {
+        var img = document.createElement('img');
+        img.src = resolveUrl(u);
+        img.alt = '';
+        row.appendChild(img);
+      });
+      card.appendChild(row);
+      var rerun = document.createElement('button');
+      rerun.type = 'button';
+      rerun.className = 'tb-btn';
+      rerun.textContent = tr('privateHub.homePc.gameSpriteRerun', '重跑此动作');
+      rerun.addEventListener('click', function () {
+        if (!currentTaskId) return;
+        var fd = new FormData();
+        fd.append('task_id', currentTaskId);
+        fd.append('action', anim.anim);
+        fetch(API_BASE + '/game-sprite/rerun-action', { method: 'POST', body: fd })
+          .then(function (r) { return r.json(); })
+          .then(function () {
+            setBusy(true);
+            startPolling();
+          })
+          .catch(function () {});
+      });
+      card.appendChild(rerun);
+      previewList.appendChild(card);
+    });
+    if (zipLink) {
+      if (data.zip_url) {
+        zipLink.href = resolveUrl(data.zip_url);
+        zipLink.style.display = '';
+      } else {
+        zipLink.style.display = 'none';
+      }
+    }
+  }
+
+  function stopPolling() {
+    if (pollingTimer) {
+      clearInterval(pollingTimer);
+      pollingTimer = null;
+    }
+  }
+
+  function startPolling() {
+    stopPolling();
+    pollingTimer = setInterval(pollStatus, 2000);
+    pollStatus();
+  }
+
+  function pollStatus() {
+    if (!currentTaskId) return;
+    fetch(API_BASE + '/game-sprite/status?task_id=' + encodeURIComponent(currentTaskId))
+      .then(function (r) {
+        if (r.status === 404) {
+          stopPolling();
+          setBusy(false);
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(
+              tr(
+                'privateHub.homePc.gameSpriteTaskLost',
+                '任务已丢失（服务可能刚重启）。请在下方历史里点「打开」，或重新生成定妆。'
+              )
+            );
+          }
+          return null;
+        }
+        return r.json();
+      })
+      .then(function (data) {
+        if (!data || !data.success) return;
+        appendLogs(data.logs || []);
+        updateProgress(data);
+        if (data.stills_ui && data.stills_ui.length) {
+          renderStills(data.stills_ui, {
+            generating: data.status === 'running' && data.stage === 'stills'
+          });
+        }
+        if (data.preview && data.preview.length) renderPreview(data);
+        else if (data.zip_url) renderPreview(data);
+
+        var st = data.status;
+        if (st === 'waiting_pick') {
+          setBusy(false);
+          if (cancelBtn) cancelBtn.disabled = true;
+        } else if (st === 'done' || st === 'failed' || st === 'cancelled') {
+          setBusy(false);
+          stopPolling();
+          if (st === 'done') renderPreview(data);
+        } else {
+          setBusy(true);
+        }
+      })
+      .catch(function () {});
+  }
+
+  function startTask() {
+    if (!hasActiveProject()) {
+      var msg = tr('privateHub.homePc.gameSpriteNeedProject', '请先创建或打开一个游戏项目');
+      notify(msg);
+      appendUiLog(msg);
+      syncStartEnabled();
+      if (projectBox && typeof projectBox.scrollIntoView === 'function') {
+        projectBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (projectName) projectName.focus();
+      return;
+    }
+    var brief = (briefInput && briefInput.value || '').trim();
+    if (brief.length < 2) {
+      var briefMsg = tr('privateHub.homePc.gameSpriteNeedBrief', '请填写设定描述');
+      notify(briefMsg);
+      appendUiLog(briefMsg);
+      if (briefInput) briefInput.focus();
+      return;
+    }
+    var fd = new FormData();
+    fd.append('brief', brief);
+    fd.append('char_name', (charName && charName.value) || '');
+    fd.append('asset_type', selectedType);
+    fd.append('project', currentProject.slug || currentProject.project_id);
+    fd.append('visual_style', selectedStyle);
+    fd.append('camera', selectedCamera);
+    fd.append('canvas', (canvasSelect && canvasSelect.value) || '256');
+    fd.append('fps', (fpsSelect && fpsSelect.value) || '8');
+    fd.append('pixel_art', selectedStyle === 'pixel' ? '1' : '0');
+    var actPayload = needsActions()
+      ? (selectedActions.length ? selectedActions.join(',') : 'idle')
+      : 'idle';
+    fd.append('actions', actPayload);
+    fd.append('frames_per_action', '8');
+    fd.append('action_duration_sec', '2.5');
+
+    lastLogLen = 0;
+    lastStillsSig = '';
+    lastPreviewSig = '';
+    if (logOutput) logOutput.textContent = '';
+    pickedStillId = null;
+    if (stillsBox) stillsBox.style.display = 'none';
+    if (stillsList) stillsList.innerHTML = '';
+    if (previewBox) previewBox.style.display = 'none';
+
+    appendUiLog(
+      tr(
+        'privateHub.homePc.gameSpriteStartQueued',
+        '已提交定妆任务（与游戏视角匹配的 1 张主参考）…'
+      )
+    );
+    setBusy(true);
+    fetch(API_BASE + '/game-sprite/create', { method: 'POST', body: fd })
+      .then(function (r) {
+        return r.json().then(function (data) {
+          if (!r.ok) {
+            var detail =
+              (data && (data.detail || data.error || data.message)) ||
+              ('HTTP ' + r.status);
+            throw new Error(typeof detail === 'string' ? detail : JSON.stringify(detail));
+          }
+          return data;
+        });
+      })
+      .then(function (data) {
+        if (!data || !data.success) throw new Error((data && data.detail) || 'create failed');
+        currentTaskId = data.task_id;
+        startPolling();
+      })
+      .catch(function (e) {
+        setBusy(false);
+        var err = String(e.message || e);
+        notify(err);
+        appendUiLog('定妆提交失败：' + err);
+      });
+  }
+
+  if (startBtn) startBtn.addEventListener('click', startTask);
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function () {
+      if (!currentTaskId) return;
+      var msg = tr(
+        'privateHub.homePc.gameSpriteCancelQueued',
+        '正在取消任务并中断 ComfyUI…'
+      );
+      appendUiLog(msg);
+      notify(msg);
+      var fd = new FormData();
+      fd.append('task_id', currentTaskId);
+      fetch(API_BASE + '/game-sprite/cancel', { method: 'POST', body: fd })
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function (data) {
+          if (!data || !data.success) {
+            throw new Error((data && data.detail) || 'cancel failed');
+          }
+          appendUiLog(
+            tr(
+              'privateHub.homePc.gameSpriteCancelDone',
+              '已发送取消；进度条会在当前步骤结束后停下。'
+            )
+          );
+        })
+        .catch(function (e) {
+          notify(String(e.message || e));
+        });
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function () {
+      stopPolling();
+      currentTaskId = null;
+      pickedStillId = null;
+      lastLogLen = 0;
+      lastStillsSig = '';
+      lastPreviewSig = '';
+      if (briefInput) briefInput.value = '';
+      if (charName) charName.value = '';
+      if (logOutput) logOutput.textContent = '';
+      if (stillsBox) stillsBox.style.display = 'none';
+      if (previewBox) previewBox.style.display = 'none';
+      if (progressWrap) progressWrap.style.display = 'none';
+      setBusy(false);
+    });
+  }
+
+  if (confirmPickBtn) {
+    confirmPickBtn.addEventListener('click', function () {
+      if (!currentTaskId || !pickedStillId) {
+        if (typeof window.tbNotify === 'function') {
+          window.tbNotify(tr('privateHub.homePc.gameSpriteNeedPick', '请先勾选一张参考图'));
+        }
+        return;
+      }
+      var sid = String(pickedStillId);
+      if (!heroStillOk(sid, selectedCamera) && typeof window.tbNotify === 'function') {
+        window.tbNotify(
+          tr(
+            'privateHub.homePc.gameSpriteNeedHeroPick',
+            '请选与当前游戏视角匹配的主参考图'
+          )
+        );
+        return;
+      }
+      var fd = new FormData();
+      fd.append('task_id', currentTaskId);
+      fd.append('still_id', pickedStillId);
+      fd.append('run_actions', '1');
+      setBusy(true);
+      fetch(API_BASE + '/game-sprite/confirm-pick', { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function () { startPolling(); })
+        .catch(function () { setBusy(false); });
+    });
+  }
+
+  if (refFile) {
+    refFile.addEventListener('change', function () {
+      var file = refFile.files && refFile.files[0];
+      if (!file || !currentTaskId) return;
+      var run = function (f) {
+        var fd = new FormData();
+        fd.append('task_id', currentTaskId);
+        fd.append('image', f);
+        fd.append('run_actions', '0');
+        fetch(API_BASE + '/game-sprite/upload-ref', { method: 'POST', body: fd })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data && data.stills_ui) renderStills(data.stills_ui);
+            if (data && data.picked) pickedStillId = data.picked.id;
+            pollStatus();
+          });
+      };
+      if (window.TBImageUploadCompress && TBImageUploadCompress.prepareUploadFile) {
+        TBImageUploadCompress.prepareUploadFile(file, run, 'default');
+      } else {
+        run(file);
+      }
+      refFile.value = '';
+    });
+  }
+
+  if (exportBtn) {
+    exportBtn.addEventListener('click', function () {
+      if (!currentTaskId) return;
+      var fd = new FormData();
+      fd.append('task_id', currentTaskId);
+      fetch(API_BASE + '/game-sprite/export', { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.success) {
+            pollStatus();
+            if (data.zip_url && zipLink) {
+              zipLink.href = resolveUrl(data.zip_url);
+              zipLink.style.display = '';
+            }
+          }
+        });
+    });
+  }
+
+  if (openOutputBtn) {
+    openOutputBtn.addEventListener('click', function () {
+      if (!currentTaskId) return;
+      var fd = new FormData();
+      fd.append('task_id', currentTaskId);
+      fetch(API_BASE + '/game-sprite/reveal-output', { method: 'POST', body: fd });
+    });
+  }
+
+  if (copyGodotBtn) {
+    copyGodotBtn.addEventListener('click', function () {
+      if (!currentTaskId) return;
+      var path = (godotPath && godotPath.value || '').trim();
+      if (!path) {
+        if (typeof window.tbNotify === 'function') {
+          window.tbNotify(tr('privateHub.homePc.gameSpriteNeedGodotPath', '请填写 Godot 工程路径'));
+        }
+        return;
+      }
+      var fd = new FormData();
+      fd.append('task_id', currentTaskId);
+      fd.append('godot_project_path', path);
+      fetch(API_BASE + '/game-sprite/copy-to-godot', { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var msg = data && data.success
+            ? tr('privateHub.homePc.gameSpriteCopied', '已复制到工程') + ': ' + (data.dest || '')
+            : (data && data.detail) || 'failed';
+          if (typeof window.tbNotify === 'function') window.tbNotify(msg);
+        })
+        .catch(function (e) {
+          if (typeof window.tbNotify === 'function') window.tbNotify(String(e));
+        });
+    });
+  }
+
+  if (window.HomePcMediaUi) {
+    window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {
+      getText: function () {
+        return (document.getElementById('log-output') || {}).textContent || '';
+      },
+      onOpenDir: function () {
+        if (!currentTaskId) {
+          if (typeof window.tbNotify === 'function') {
+            window.tbNotify(
+              tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录')
+            );
+          } else {
+            alert(tr('privateHub.homePc.openLogDirNeedTask', '请先完成一次任务后再打开输出目录'));
+          }
+          return;
+        }
+        if (openOutputBtn) openOutputBtn.click();
+      }
+    });
+  }
+
+  function selectChip(row, attr, value) {
+    if (!row || value == null || value === '') return;
+    var want = String(value);
+    var matched = false;
+    row.querySelectorAll('.rec-chip').forEach(function (btn) {
+      var on = btn.getAttribute(attr) === want;
+      btn.classList.toggle('is-active', on);
+      if (on) matched = true;
+    });
+    return matched;
+  }
+
+  function fillFormFromTask(data) {
+    if (!data) return;
+    if (briefInput && data.brief != null) briefInput.value = String(data.brief);
+    if (charName) {
+      charName.value = String(data.char_name || data.char_id || '');
+    }
+    if (data.asset_type) {
+      selectedType = String(data.asset_type);
+      selectChip(typeRow, 'data-type', selectedType);
+      if (actionsBlock) actionsBlock.style.display = needsActions() ? '' : 'none';
+    }
+    if (data.visual_style) {
+      selectedStyle = String(data.visual_style);
+      selectChip(styleRow, 'data-style', selectedStyle);
+    }
+    selectedCamera = _normalizeCameraUi(data.camera || data.still_count || data.candidates);
+    selectChip(cameraRow, 'data-camera', selectedCamera);
+    if (canvasSelect && data.canvas) {
+      var cw = Array.isArray(data.canvas) ? data.canvas[0] : data.canvas;
+      var key = String(cw || '');
+      if (canvasSelect.querySelector('option[value="' + key + '"]')) {
+        canvasSelect.value = key;
+      }
+    }
+    if (fpsSelect && data.fps != null) {
+      var fpsKey = String(data.fps);
+      if (fpsSelect.querySelector('option[value="' + fpsKey + '"]')) {
+        fpsSelect.value = fpsKey;
+      }
+    }
+    if (Array.isArray(data.actions) && data.actions.length) {
+      setSelectedActions(data.actions);
+    }
+  }
+
+  function applyOpenedTask(data) {
+    if (!data || !data.task_id) return;
+    currentTaskId = data.task_id;
+    lastLogLen = 0;
+    if (logOutput) logOutput.textContent = '';
+    if (data.project_slug || data.project_id) {
+      var pk = data.project_slug || data.project_id;
+      if (
+        !currentProject ||
+        (currentProject.slug !== pk && currentProject.project_id !== pk)
+      ) {
+        openProject(pk);
+      }
+    }
+    fillFormFromTask(data);
+    appendLogs(data.logs || []);
+    updateProgress(data);
+    if (data.stills_ui && data.stills_ui.length) {
+      if (data.picked_ref && data.picked_ref.id) pickedStillId = data.picked_ref.id;
+      renderStills(data.stills_ui);
+    }
+    renderPreview(data);
+    var st = data.status || '';
+    if (st === 'running' || st === 'queued') {
+      setBusy(true);
+      startPolling();
+    } else {
+      setBusy(false);
+      stopPolling();
+    }
+  }
+
+  function openHistoryItem(it) {
+    var fd = new FormData();
+    if (it.folder) fd.append('folder', it.folder);
+    if (it.task_id) fd.append('task_id', it.task_id);
+    fetch(API_BASE + '/game-sprite/open', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.success) {
+          var msg = (data && data.detail) || tr('privateHub.homePc.gameSpriteOpenFail', '无法打开历史任务');
+          if (typeof window.tbNotify === 'function') window.tbNotify(String(msg));
+          return;
+        }
+        applyOpenedTask(data);
+      })
+      .catch(function (e) {
+        if (typeof window.tbNotify === 'function') window.tbNotify(String(e.message || e));
+      });
+  }
+
+  function loadHistory() {
+    if (!historyList) return;
+    var q = API_BASE + '/game-sprite/history?limit=20';
+    if (currentProject && (currentProject.slug || currentProject.project_id)) {
+      q += '&project=' + encodeURIComponent(currentProject.slug || currentProject.project_id);
+    }
+    fetch(q)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var items = (data && data.items) || [];
+        historyList.innerHTML = '';
+        if (!items.length) {
+          historyList.innerHTML =
+            '<p class="trailer-history-empty">' +
+            tr('privateHub.homePc.gameSpriteHistoryEmpty', '暂无历史') +
+            '</p>';
+          return;
+        }
+        items.forEach(function (it) {
+          var div = document.createElement('div');
+          div.className = 'trailer-history-item gs-history-item';
+          var meta = document.createElement('div');
+          meta.className = 'trailer-history-meta gs-history-meta';
+          meta.innerHTML =
+            '<strong>' +
+            (it.char_id || it.folder) +
+            '</strong> · ' +
+            (it.status || '') +
+            '<br/>' +
+            (it.brief || '') +
+            '<br/><span class="small-hint">' +
+            (it.folder || '') +
+            '</span>';
+          var openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.className = 'tb-btn';
+          openBtn.textContent = tr('privateHub.homePc.gameSpriteOpen', '打开');
+          openBtn.addEventListener('click', function () {
+            openHistoryItem(it);
+          });
+          var delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'tb-btn';
+          delBtn.textContent = tr('privateHub.homePc.historyDelete', '删除');
+          delBtn.addEventListener('click', function () {
+            if (!window.HomePcApi || !HomePcApi.deleteHistoryTask) return;
+            HomePcApi.deleteHistoryTask('/game-sprite/delete', { folder: it.folder || '' })
+              .then(function (r) {
+                if (r && r.cancelled) return;
+                loadHistory();
+              })
+              .catch(function (e) {
+                if (typeof window.tbNotify === 'function') window.tbNotify(String((e && e.message) || e));
+                else alert(String((e && e.message) || e));
+              });
+          });
+          var actions = document.createElement('div');
+          actions.className = 'action-row';
+          actions.appendChild(openBtn);
+          actions.appendChild(delBtn);
+          div.appendChild(meta);
+          div.appendChild(actions);
+          historyList.appendChild(div);
+        });
+      })
+      .catch(function () {});
+  }
+
+  if (historyRefreshBtn) historyRefreshBtn.addEventListener('click', loadHistory);
+  syncStartEnabled();
+  loadHistory();
+});

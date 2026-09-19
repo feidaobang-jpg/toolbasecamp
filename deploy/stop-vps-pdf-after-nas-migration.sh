@@ -27,8 +27,8 @@ fi
 
 echo ""
 echo "Next steps:"
-echo "  1) Cloudflare Tunnel on NAS must serve pdf.toolbasecamp.com"
+echo "  1) Cloudflare Tunnel on NAS must serve pdf.zhengxiaohui.cn"
 echo "  2) Remove old pdf A record pointing to this VPS (if still present)"
-echo "  3) Purge Cloudflare cache for pdf.toolbasecamp.com"
+echo "  3) Purge Cloudflare cache for pdf.zhengxiaohui.cn"
 echo "  4) free -h  — confirm memory dropped"
 echo "Done."

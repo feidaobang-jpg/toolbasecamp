@@ -1,0 +1,390 @@
+#!/usr/bin/env python3
+"""
+Install Image-to-3D engine roots under D:\\sd\\{triposr,hunyuan3d,trellis,trellis2}.
+
+Usage:
+  python setup_image_to_3d.py --engine triposr
+  python setup_image_to_3d.py --engine hunyuan3d
+  python setup_image_to_3d.py --engine trellis
+  python setup_image_to_3d.py --engine trellis2
+  python setup_image_to_3d.py --engine all
+"""
+from __future__ import annotations
+
+import argparse
+import os
+import subprocess
+import sys
+import venv
+from pathlib import Path
+
+PIP_INDEX = os.environ.get("PIP_INDEX_URL", "https://pypi.tuna.tsinghua.edu.cn/simple")
+
+ROOTS = {
+    "triposr": Path(os.environ.get("TRIPOSR_ROOT", r"D:\sd\triposr")),
+    "hunyuan3d": Path(os.environ.get("HUNYUAN3D_ROOT", r"D:\sd\hunyuan3d")),
+    "trellis": Path(os.environ.get("TRELLIS_ROOT", r"D:\sd\trellis")),
+    "trellis2": Path(os.environ.get("TRELLIS2_ROOT", r"D:\sd\trellis2")),
+}
+
+REPOS = {
+    "triposr": "https://github.com/VAST-AI-Research/TripoSR.git",
+    "hunyuan3d": "https://github.com/Tencent-Hunyuan/Hunyuan3D-2.git",
+    "trellis": "https://github.com/microsoft/TRELLIS.git",
+    "trellis2": "https://github.com/microsoft/TRELLIS.2.git",
+}
+
+
+def _run(cmd: list[str], *, cwd: Path | None = None) -> None:
+    print("+", " ".join(cmd), flush=True)
+    subprocess.check_call(cmd, cwd=str(cwd) if cwd else None)
+
+
+def _ensure_venv(root: Path) -> Path:
+    root.mkdir(parents=True, exist_ok=True)
+    vdir = root / ".venv"
+    py = vdir / "Scripts" / "python.exe"
+    if not py.is_file():
+        print(f"creating venv {vdir}", flush=True)
+        venv.create(str(vdir), with_pip=True)
+    return py
+
+
+def _clone_if_needed(engine: str, root: Path) -> None:
+    marker = root / ".git"
+    if marker.is_dir() or (root / "run.py").is_file() or (root / "README.md").is_file():
+        return
+    root.mkdir(parents=True, exist_ok=True)
+    # clone into temp then move? simpler: clone into root if empty
+    if any(root.iterdir()):
+        # has .venv only
+        if list(root.iterdir()) == [root / ".venv"] or all(p.name.startswith(".") for p in root.iterdir()):
+            pass
+        else:
+            return
+    url = REPOS[engine]
+    tmp = root.parent / f"_clone_{engine}"
+    if tmp.exists():
+        import shutil
+
+        shutil.rmtree(tmp, ignore_errors=True)
+    _run(["git", "clone", "--depth", "1", url, str(tmp)])
+    # copy contents into root keeping .venv
+    import shutil
+
+    for p in tmp.iterdir():
+        dest = root / p.name
+        if dest.exists():
+            continue
+        if p.is_dir():
+            shutil.copytree(p, dest)
+        else:
+            shutil.copy2(p, dest)
+    shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _ensure_mesh_simplify(py: Path) -> None:
+    """游戏低模减面依赖 trimesh + fast-simplification。"""
+    try:
+        _run(
+            [
+                str(py),
+                "-m",
+                "pip",
+                "install",
+                "trimesh>=4.5",
+                "fast-simplification",
+                "-i",
+                PIP_INDEX,
+            ]
+        )
+    except subprocess.CalledProcessError:
+        print("[warn] fast-simplification 安装失败；游戏低模可能无法减面", flush=True)
+
+
+def setup_triposr(root: Path) -> None:
+    _clone_if_needed("triposr", root)
+    py = _ensure_venv(root)
+    _run([str(py), "-m", "pip", "install", "-U", "pip", "setuptools", "wheel", "-i", PIP_INDEX])
+    # torch cuda wheel — best effort
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "torch",
+            "torchvision",
+            "--index-url",
+            "https://download.pytorch.org/whl/cu124",
+        ]
+    )
+    req = root / "requirements.txt"
+    if req.is_file():
+        # torchmcubes via git often fails on Windows; install rest then best-effort mcubes
+        try:
+            _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
+        except subprocess.CalledProcessError:
+            print("[warn] requirements.txt 部分失败，继续装基础包", flush=True)
+            for pkg in (
+                "omegaconf==2.3.0",
+                "Pillow",
+                "einops==0.7.0",
+                "transformers==4.35.0",
+                "trimesh==4.0.5",
+                "rembg",
+                "huggingface-hub",
+                "imageio",
+                "xatlas==0.0.9",
+            ):
+                try:
+                    _run([str(py), "-m", "pip", "install", pkg, "-i", PIP_INDEX])
+                except subprocess.CalledProcessError:
+                    print(f"[warn] skip {pkg}", flush=True)
+    # numpy2 + old trimesh 会因 ndarray.ptp 导出 GLB 失败；钉新版 trimesh
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "trimesh>=4.5",
+            "rembg",
+            "onnxruntime-gpu",
+            "-i",
+            PIP_INDEX,
+        ]
+    )
+    _ensure_mesh_simplify(py)
+    # Verify import with repo on PYTHONPATH
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    subprocess.check_call(
+        [str(py), "-c", "import sys; sys.path.insert(0, r'%s'); from tsr.system import TSR" % str(root)],
+        env=env,
+    )
+    (root / ".tbc_ready").write_text("triposr\n", encoding="utf-8")
+    print("[done] triposr", flush=True)
+
+
+def setup_hunyuan(root: Path) -> None:
+    _clone_if_needed("hunyuan3d", root)
+    py = _ensure_venv(root)
+    _run([str(py), "-m", "pip", "install", "-U", "pip", "setuptools", "wheel", "-i", PIP_INDEX])
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "torch",
+            "torchvision",
+            "--index-url",
+            "https://download.pytorch.org/whl/cu124",
+        ]
+    )
+    # Editable install if pyproject/setup exists
+    if (root / "setup.py").is_file() or (root / "pyproject.toml").is_file():
+        _run([str(py), "-m", "pip", "install", "-e", str(root), "-i", PIP_INDEX])
+    req = root / "requirements.txt"
+    if req.is_file():
+        _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
+    _ensure_mesh_simplify(py)
+    (root / ".tbc_ready").write_text("hunyuan3d\n", encoding="utf-8")
+    print("[done] hunyuan3d — 首次推理会从 HuggingFace 拉形状权重（几何）", flush=True)
+
+
+def setup_trellis(root: Path) -> None:
+    _clone_if_needed("trellis", root)
+    py = _ensure_venv(root)
+    _run([str(py), "-m", "pip", "install", "-U", "pip", "setuptools", "wheel", "-i", PIP_INDEX])
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "torch",
+            "torchvision",
+            "--index-url",
+            "https://download.pytorch.org/whl/cu124",
+        ]
+    )
+    req = root / "requirements.txt"
+    if req.is_file():
+        try:
+            _run([str(py), "-m", "pip", "install", "-r", str(req), "-i", PIP_INDEX])
+        except subprocess.CalledProcessError:
+            print("[warn] trellis requirements 部分失败", flush=True)
+    # Replace PyPI kaolin placeholder with NVIDIA wheel (torch 2.6 + cu124)
+    try:
+        _run([str(py), "-m", "pip", "uninstall", "-y", "kaolin"])
+    except subprocess.CalledProcessError:
+        pass
+    _run(
+        [
+            str(py),
+            "-m",
+            "pip",
+            "install",
+            "kaolin==0.18.0",
+            "-f",
+            "https://nvidia-kaolin.s3.us-east-2.amazonaws.com/torch-2.6.0_cu124.html",
+        ]
+    )
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    # Windows 常无 flash_attn；与 i23d_worker 一致先用 xformers
+    env.setdefault("ATTN_BACKEND", "xformers")
+    env.setdefault("SPARSE_ATTN_BACKEND", "xformers")
+    try:
+        subprocess.check_call(
+            [
+                str(py),
+                "-c",
+                "import sys; sys.path.insert(0, r'%s'); from trellis.pipelines import TrellisImageTo3DPipeline"
+                % str(root),
+            ],
+            env=env,
+        )
+    except subprocess.CalledProcessError as e:
+        marker = root / ".tbc_ready"
+        if marker.is_file():
+            marker.unlink()
+        print(
+            "[fail] trellis import 仍失败（可能缺 spconv/xformers 等）。"
+            "未写入 .tbc_ready。请按 microsoft/TRELLIS README 补依赖后重跑本脚本。",
+            flush=True,
+        )
+        raise SystemExit(1) from e
+    print("[info] 预下载 microsoft/TRELLIS-image-large（数 GB，可断点续传）…", flush=True)
+    try:
+        _run(
+            [
+                str(py),
+                "-c",
+                "from huggingface_hub import snapshot_download; "
+                "p=snapshot_download('microsoft/TRELLIS-image-large'); print('[ok] trellis weights', p)",
+            ]
+        )
+    except subprocess.CalledProcessError:
+        print(
+            "[warn] TRELLIS 权重未下完；推理前会再试。可手动："
+            "huggingface-cli download microsoft/TRELLIS-image-large",
+            flush=True,
+        )
+    # DINOv2：torch.hub 直连 Facebook CDN，国内易 chunk 中断；安装阶段尽量先下好
+    print("[info] 预下载 DINOv2（TRELLIS image_cond，约 1.1GB）…", flush=True)
+    try:
+        worker = Path(__file__).resolve().parent / "i23d_worker.py"
+        _run(
+            [
+                str(py),
+                "-c",
+                "import importlib.util, sys; "
+                f"p=r'{worker}'; "
+                "s=importlib.util.spec_from_file_location('i23d_worker', p); "
+                "m=importlib.util.module_from_spec(s); s.loader.exec_module(m); "
+                "m._ensure_dinov2_checkpoint()",
+            ]
+        )
+    except subprocess.CalledProcessError:
+        print(
+            "[warn] DINOv2 未下完；首次 TRELLIS 推理会再下。"
+            "失败若见 Separator/chunk，多半是 Facebook CDN，重试即可。",
+            flush=True,
+        )
+    _ensure_mesh_simplify(py)
+    (root / ".tbc_ready").write_text("trellis\n", encoding="utf-8")
+    print("[done] trellis", flush=True)
+
+
+def _gpu_vram_mib() -> int:
+    try:
+        out = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=memory.total", "--format=csv,noheader,nounits"],
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=8,
+        )
+        return int(float(out.strip().splitlines()[0].strip()))
+    except Exception:
+        return 0
+
+
+def setup_trellis2(root: Path) -> None:
+    """TRELLIS.2 与 v1 分目录；官方要求 ≥24GB。16GB 卡只克隆说明，不写 .tbc_ready。"""
+    vram = _gpu_vram_mib()
+    print(f"[info] 检测到显存约 {vram} MiB（TRELLIS.2 官方 ≥24GB / 22000MiB）", flush=True)
+    if vram and vram < 22000:
+        print(
+            "[skip] 本机显存不足，不安装 TRELLIS.2（避免白装依赖后推理 OOM）。"
+            "与 v1（D:\\sd\\trellis）不冲突；换 ≥24GB 卡后再跑本命令。",
+            flush=True,
+        )
+        marker = root / ".tbc_ready"
+        if marker.is_file():
+            marker.unlink()
+        root.mkdir(parents=True, exist_ok=True)
+        (root / "README.tbc.txt").write_text(
+            "TRELLIS.2 needs >=24GB VRAM. This PC was below that at setup time.\n"
+            "Repo: https://github.com/microsoft/TRELLIS.2\n"
+            "Keep using TRELLIS v1 at D:\\sd\\trellis.\n",
+            encoding="utf-8",
+        )
+        return
+    _clone_if_needed("trellis2", root)
+    # 官方 setup.sh 面向 Linux；Windows 需自行按 README 装 conda/依赖后再验 import
+    print(
+        "[warn] TRELLIS.2 官方安装脚本以 Linux 为主。"
+        "请按 https://github.com/microsoft/TRELLIS.2 README 在独立环境装好后，"
+        f"确认能 import trellis2，再手动写入 {root / '.tbc_ready'}",
+        flush=True,
+    )
+    py = _ensure_venv(root)
+    _ensure_mesh_simplify(py)
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root) + os.pathsep + env.get("PYTHONPATH", "")
+    try:
+        subprocess.check_call(
+            [
+                str(py),
+                "-c",
+                "import sys; sys.path.insert(0, r'%s'); from trellis2.pipelines import Trellis2ImageTo3DPipeline"
+                % str(root),
+            ],
+            env=env,
+        )
+    except subprocess.CalledProcessError:
+        print("[fail] trellis2 import 失败，未写入 .tbc_ready", flush=True)
+        raise SystemExit(1)
+    (root / ".tbc_ready").write_text("trellis2\n", encoding="utf-8")
+    print("[done] trellis2", flush=True)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--engine",
+        default="hunyuan3d",
+        choices=("triposr", "hunyuan3d", "trellis", "trellis2", "all"),
+    )
+    args = ap.parse_args()
+    engines = list(ROOTS.keys()) if args.engine == "all" else [args.engine]
+    for eng in engines:
+        root = ROOTS[eng]
+        print(f"=== setup {eng} → {root} ===", flush=True)
+        if eng == "triposr":
+            setup_triposr(root)
+        elif eng == "hunyuan3d":
+            setup_hunyuan(root)
+        elif eng == "trellis2":
+            setup_trellis2(root)
+        else:
+            setup_trellis(root)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

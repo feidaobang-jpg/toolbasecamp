@@ -64,7 +64,7 @@
 
     function checkIsAdmin(user) {
         if (!user) return false;
-        var adminEmail = (typeof siteConfig !== 'undefined' && siteConfig.adminEmail) || 'admin@toolbasecamp.com';
+        var adminEmail = (typeof siteConfig !== 'undefined' && siteConfig.adminEmail) || 'admin@zhengxiaohui.cn';
         var adminPhone = (typeof siteConfig !== 'undefined' && siteConfig.adminPhone) || '15859130726';
         if (user.role === 'admin') return true;
         if ((user.email || '').toLowerCase() === adminEmail.toLowerCase()) return true;
@@ -75,11 +75,11 @@
     function setStatus(text, isError) {
         if (!statusEl) return;
         if (!text) {
-            statusEl.className = 'hidden mb-4 rounded-lg px-4 py-3 text-sm';
+            statusEl.className = 'content-status hidden';
             statusEl.textContent = '';
             return;
         }
-        statusEl.className = 'mb-4 rounded-lg px-4 py-3 text-sm ' + (isError ? 'is-error' : 'is-success');
+        statusEl.className = 'content-status is-visible ' + (isError ? 'is-error' : 'is-success');
         statusEl.textContent = text;
     }
 

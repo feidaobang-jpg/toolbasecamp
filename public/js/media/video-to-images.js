@@ -1,5 +1,9 @@
 /** Video to Images — extract frames locally in the browser */
 
+function tr(key, params) {
+    return typeof t === 'function' ? t(key, params) : key;
+}
+
 // 全局变量
 let selectedVideo = null;
 let extractedFrames = [];
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewAnimationBtn = document.getElementById('preview-animation-btn');
     const saveSelectedBtn = document.getElementById('save-selected-btn');
     const selectAllBtn = document.getElementById('select-all-btn');
+    const deleteSelectedBtn = document.getElementById('delete-selected-btn');
     const clearBtn = document.getElementById('clear-btn');
     const playPauseBtn = document.getElementById('play-pause-btn');
     const speedControl = document.getElementById('speed-control');
@@ -46,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (extractFramesBtn) extractFramesBtn.addEventListener('click', extractFrames);
     if (previewAnimationBtn) previewAnimationBtn.addEventListener('click', previewAnimation);
     if (saveSelectedBtn) saveSelectedBtn.addEventListener('click', saveSelectedFrames);
+    if (deleteSelectedBtn) deleteSelectedBtn.addEventListener('click', deleteSelectedFrames);
     if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
     if (speedControl) speedControl.addEventListener('input', updateSpeed);
     
@@ -54,46 +60,45 @@ document.addEventListener('DOMContentLoaded', function() {
         videoInput.addEventListener('change', handleVideoSelect);
     }
     
-    // 获取去水印按钮并绑定事件
-    const removeWatermarkBtn = document.getElementById('remove-watermark-btn');
-    const watermarkRemovalSettings = document.getElementById('watermark-removal-settings');
-    const watermarkSize = document.getElementById('watermark-size');
-    const watermarkSizeValue = document.getElementById('watermark-size-value');
-    const watermarkThreshold = document.getElementById('watermark-threshold');
-    const watermarkThresholdValue = document.getElementById('watermark-threshold-value');
-    
-    removeWatermarkBtn.addEventListener('click', processRemoveWatermark);
-    
-    // 绑定去水印设置事件
-    watermarkSize.addEventListener('input', () => {
-        watermarkSizeValue.textContent = watermarkSize.value + '%';
-    });
-    
-    watermarkThreshold.addEventListener('input', () => {
-        watermarkThresholdValue.textContent = watermarkThreshold.value;
-    });
-    
-    // 绑定提取设置事件
-    extractDurationInput.addEventListener('input', () => {
-        extractDurationValue.textContent = extractDurationInput.value + 's';
-        
-        // 更新开始时间滑块的最大值
+    function formatSeconds(sec) {
+        const n = Math.round(Number(sec) * 10) / 10;
+        return (Number.isInteger(n) ? String(n) : n.toFixed(1)) + 's';
+    }
+
+    function syncClipSlidersFromVideo(duration) {
+        const dur = Math.max(0.1, Number(duration) || 0.1);
+        const maxClip = Math.round(dur * 10) / 10;
+        extractDurationInput.min = '0.1';
+        extractDurationInput.max = String(maxClip);
+        extractDurationInput.step = '0.1';
+        extractDurationInput.value = String(maxClip);
+        extractDurationValue.textContent = formatSeconds(maxClip);
+        startTimeInput.min = '0';
+        startTimeInput.max = '0';
+        startTimeInput.value = '0';
+        startTimeValue.textContent = '0s';
+    }
+
+    function refreshStartTimeMax() {
         const videoElement = videoContainer.querySelector('video');
-        if (videoElement && videoElement.duration) {
-            const duration = videoElement.duration;
-            const maxStartTime = Math.max(0, duration - parseFloat(extractDurationInput.value));
-            startTimeInput.max = maxStartTime.toFixed(1);
-            
-            // 如果当前开始时间超过了最大值，调整它
-            if (parseFloat(startTimeInput.value) > maxStartTime) {
-                startTimeInput.value = maxStartTime.toFixed(1);
-                startTimeValue.textContent = maxStartTime.toFixed(1) + 's';
-            }
+        if (!videoElement || !videoElement.duration) return;
+        const duration = videoElement.duration;
+        const clip = parseFloat(extractDurationInput.value) || 0.1;
+        const maxStartTime = Math.max(0, Math.round((duration - clip) * 10) / 10);
+        startTimeInput.max = String(maxStartTime);
+        if (parseFloat(startTimeInput.value) > maxStartTime) {
+            startTimeInput.value = String(maxStartTime);
+            startTimeValue.textContent = formatSeconds(maxStartTime);
         }
+    }
+
+    extractDurationInput.addEventListener('input', () => {
+        extractDurationValue.textContent = formatSeconds(extractDurationInput.value);
+        refreshStartTimeMax();
     });
     
     startTimeInput.addEventListener('input', () => {
-        startTimeValue.textContent = startTimeInput.value + 's';
+        startTimeValue.textContent = formatSeconds(startTimeInput.value);
     });
     
     // 绑定全选按钮事件
@@ -130,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 videoInput.files = dt.files;
                 handleVideoSelect({ target: { files: dt.files } });
             } else {
-                showToast('Please drop a video file');
+                showToast(tr('tools.videoToImages.toastDropVideo'));
             }
         });
     }
@@ -143,12 +148,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const file = e.target.files[0] || (e.dataTransfer && e.dataTransfer.files[0]);
 
         if (!file || !file.type.startsWith('video/')) {
-            showToast('Please choose a valid video file');
+            showToast(tr('tools.videoToImages.toastChooseVideo'));
             return;
         }
 
         selectedVideo = file;
-        showToast('Selected: ' + file.name);
+        showToast(tr('tools.videoToImages.toastSelectedFile', { name: file.name }));
         
         // 创建视频预览
         const videoElement = document.createElement('video');
@@ -156,14 +161,9 @@ document.addEventListener('DOMContentLoaded', function() {
         videoElement.controls = true;
         videoElement.style.width = '100%';
         
-        // 当视频元数据加载完成时，更新开始时间滑块的最大值
+        // 片段时长上限 = 原视频时长，默认选满整段
         videoElement.addEventListener('loadedmetadata', () => {
-            const duration = videoElement.duration;
-            const maxStartTime = Math.max(0, duration - parseFloat(extractDurationInput.value));
-            startTimeInput.max = maxStartTime.toFixed(1);
-            startTimeInput.value = 0;
-            startTimeValue.textContent = '0s';
-            console.log(`视频时长: ${duration.toFixed(1)}秒，最大开始时间: ${maxStartTime.toFixed(1)}秒`);
+            syncClipSlidersFromVideo(videoElement.duration);
         });
         
         // 清空并添加视频到容器
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function extractFrames() {
         if (!selectedVideo) {
-            showToast('Select a video first');
+            showToast(tr('tools.videoToImages.toastSelectVideoFirst'));
             return;
         }
 
@@ -195,11 +195,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const startTime = parseFloat(startTimeInput.value) || 0;
 
         if (interval < 100) {
-            showToast('Minimum interval is 100 ms');
+            showToast(tr('tools.videoToImages.toastMinInterval'));
             return;
         }
 
-        showToast('Extracting frames…');
+        showToast(tr('tools.videoToImages.toastExtracting'));
         
         // 创建视频元素用于提取帧
         const video = document.createElement('video');
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 验证时间参数
             if (startTime >= videoDuration) {
-                showToast('Start time exceeds video length');
+                showToast(tr('tools.videoToImages.toastStartExceeds'));
                 return;
             }
             
@@ -276,529 +276,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 framesPreviewSection.classList.remove('hidden');
                 captureFrame(startTime);
             }).catch(error => {
-                showToast('Video playback failed: ' + error.message);
+                showToast(tr('tools.videoToImages.toastPlaybackFailed', { msg: error.message }));
             });
 
             function finishExtraction() {
                 updateFrameCount();
-                showToast('Extracted ' + extractedFrames.length + ' frames');
+                showToast(tr('tools.videoToImages.toastExtracted', { n: extractedFrames.length }));
                 URL.revokeObjectURL(video.src);
             }
         });
 
         video.addEventListener('error', function() {
-            showToast('Failed to load video');
+            showToast(tr('tools.videoToImages.toastLoadFailed'));
         });
     }
 
-    function updateFrameCount() {
-        if (frameCountEl) {
-            frameCountEl.textContent = String(extractedFrames.length);
-        }
-    }
-    
-    /**
-     * 创建帧预览元素
-     * @param {string} frameData - 帧图片数据URL
-     * @param {number} index - 帧索引
-     * @returns {HTMLElement} - 帧预览元素
-     */
-    /**
-     * 处理所有已提取的帧，移除水印
-     */
-    function processRemoveWatermark() {
-        if (extractedFrames.length === 0) {
-            showToast('No frames to process');
-            return;
-        }
-
-        showToast('Processing frames…');
-        
-        // 获取水印位置设置
-        const watermarkPosition = document.querySelector('input[name="watermark-position"]:checked').value;
-        const watermarkSizePercent = parseInt(watermarkSize.value);
-        const threshold = parseInt(watermarkThreshold.value);
-        
-        console.log(`去水印设置: 位置=${watermarkPosition}, 大小=${watermarkSizePercent}%, 阈值=${threshold}`);
-        
-        // 测试模式：如果阈值设置为99，则直接填充整个区域为红色用于测试
-        const isTestMode = threshold >= 99;
-        if (isTestMode) {
-            console.log('启用测试模式：将直接填充水印区域为红色');
-        }
-        
-        // 创建临时canvas用于处理
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        let processedCount = 0;
-        
-        // 处理每一帧
-        extractedFrames.forEach((frameData, index) => {
-            const img = new Image();
-            img.onload = function() {
-                // 设置canvas尺寸
-                canvas.width = img.width;
-                canvas.height = img.height;
-                
-                // 绘制图片到canvas
-                ctx.drawImage(img, 0, 0);
-                
-                // 移除水印
-                if (isTestMode) {
-                    // 测试模式：直接填充区域
-                    fillWatermarkRegionForTest(ctx, canvas.width, canvas.height, watermarkPosition, watermarkSizePercent);
-                } else {
-                    removeWatermark(ctx, canvas.width, canvas.height, watermarkPosition, watermarkSizePercent, threshold);
-                }
-                
-                // 将处理后的图片转为PNG格式（支持透明度）
-                const processedFrameData = canvas.toDataURL('image/png');
-                extractedFrames[index] = processedFrameData;
-                
-                // 更新对应的帧预览
-                const frameItems = document.querySelectorAll('.frame-item');
-                if (frameItems[index]) {
-                    const img = frameItems[index].querySelector('img');
-                    img.src = processedFrameData;
-                }
-                
-                processedCount++;
-                
-                // 检查是否所有帧都已处理完成
-                if (processedCount === extractedFrames.length) {
-                    showToast('Processed ' + extractedFrames.length + ' frames');
-                }
-            };
-            img.src = frameData;
-        });
-    }
-
-    /**
-     * 移除水印算法（包含背景透明化）
-     * @param {CanvasRenderingContext2D} ctx - Canvas上下文
-     * @param {number} width - 图像宽度
-     * @param {number} height - 图像高度
-     * @param {string} position - 水印位置
-     * @param {number} sizePercent - 水印区域大小百分比
-     * @param {number} threshold - 检测阈值
-     */
-    function removeWatermark(ctx, width, height, position, sizePercent, threshold) {
-        // 获取图像数据
-        const imageData = ctx.getImageData(0, 0, width, height);
-        const data = imageData.data;
-        
-        // 1. 先进行背景透明化处理
-        removeBackgroundAndMakeTransparent(data, width, height, threshold);
-        
-        // 2. 再处理指定的水印区域
-        const watermarkRegion = calculateWatermarkRegion(width, height, position, sizePercent);
-        detectAndRemoveWatermark(data, width, height, watermarkRegion, threshold);
-        
-        // 将处理后的数据放回canvas
-        ctx.putImageData(imageData, 0, 0);
-    }
-    
-    /**
-     * 移除背景并使其透明
-     */
-    function removeBackgroundAndMakeTransparent(data, width, height, threshold) {
-        // 检测背景颜色（从边缘采样）
-        const backgroundColors = detectBackgroundColors(data, width, height);
-        
-        console.log('检测到的背景颜色:', backgroundColors);
-        
-        let transparentPixels = 0;
-        
-        // 处理每个像素
-        for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            
-            // 检查是否为背景像素
-            let isBackground = false;
-            for (const bgColor of backgroundColors) {
-                const distance = Math.sqrt(
-                    Math.pow(r - bgColor[0], 2) +
-                    Math.pow(g - bgColor[1], 2) +
-                    Math.pow(b - bgColor[2], 2)
-                );
-                
-                // 使用阈值判断是否为背景
-                if (distance < threshold * 2) {
-                    isBackground = true;
-                    break;
-                }
-            }
-            
-            // 如果是背景像素，设为透明
-            if (isBackground) {
-                data[i + 3] = 0; // 设为完全透明
-                transparentPixels++;
-            }
-        }
-        
-        console.log(`背景透明化完成，处理了 ${transparentPixels} 个背景像素`);
-    }
-    
-    /**
-     * 检测背景颜色
-     */
-    function detectBackgroundColors(data, width, height) {
-        const colorMap = new Map();
-        const margin = Math.max(2, Math.min(width, height) * 0.02);
-        
-        // 从图像边缘采样背景色
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                // 只采样边缘区域
-                if (x < margin || x >= width - margin || y < margin || y >= height - margin) {
-                    const idx = (y * width + x) * 4;
-                    const r = data[idx];
-                    const g = data[idx + 1];
-                    const b = data[idx + 2];
-                    
-                    // 量化颜色以减少噪音
-                    const quantizedR = Math.floor(r / 16) * 16;
-                    const quantizedG = Math.floor(g / 16) * 16;
-                    const quantizedB = Math.floor(b / 16) * 16;
-                    const colorKey = `${quantizedR},${quantizedG},${quantizedB}`;
-                    
-                    colorMap.set(colorKey, (colorMap.get(colorKey) || 0) + 1);
-                }
-            }
-        }
-        
-        // 找出最常见的颜色作为背景色
-        const sortedColors = Array.from(colorMap.entries())
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 3); // 取前3个最常见的颜色
-        
-        const backgroundColors = sortedColors.map(([colorKey, count]) => {
-            const [r, g, b] = colorKey.split(',').map(Number);
-            return [r, g, b];
-        });
-        
-        // 如果没有找到明显的背景色，使用四个角落的像素
-        if (backgroundColors.length === 0) {
-            const corners = [
-                [0, 0], [width-1, 0], [0, height-1], [width-1, height-1]
-            ];
-            
-            corners.forEach(([x, y]) => {
-                const idx = (y * width + x) * 4;
-                backgroundColors.push([data[idx], data[idx+1], data[idx+2]]);
-            });
-        }
-        
-        return backgroundColors;
-    }
-    
-    /**
-     * 计算水印区域
-     */
-    function calculateWatermarkRegion(width, height, position, sizePercent) {
-        const regionWidth = Math.floor(width * sizePercent / 100);
-        const regionHeight = Math.floor(height * sizePercent / 100);
-        
-        let startX, startY;
-        
-        switch(position) {
-            case 'top-left':
-                startX = 0;
-                startY = 0;
-                break;
-            case 'top-right':
-                startX = width - regionWidth;
-                startY = 0;
-                break;
-            case 'bottom-left':
-                startX = 0;
-                startY = height - regionHeight;
-                break;
-            case 'bottom-right':
-                startX = width - regionWidth;
-                startY = height - regionHeight;
-                break;
-            default:
-                startX = 0;
-                startY = 0;
-        }
-        
-        const region = {
-            startX: Math.max(0, startX),
-            startY: Math.max(0, startY),
-            endX: Math.min(width, startX + regionWidth),
-            endY: Math.min(height, startY + regionHeight)
-        };
-        
-        console.log(`水印区域: (${region.startX}, ${region.startY}) 到 (${region.endX}, ${region.endY}), 大小: ${region.endX - region.startX} x ${region.endY - region.startY}`);
-        
-        return region;
-    }
-    
-    /**
-     * 绘制水印区域边框（用于调试）
-     */
-    function drawWatermarkRegion(ctx, width, height, position, sizePercent) {
-        const region = calculateWatermarkRegion(width, height, position, sizePercent);
-        const { startX, startY, endX, endY } = region;
-        
-        // 保存当前绘制状态
-        ctx.save();
-        
-        // 设置绿色边框样式
-        ctx.strokeStyle = '#00FF00'; // 绿色
-        ctx.lineWidth = 3;
-        ctx.setLineDash([5, 5]); // 虚线效果
-        
-        // 绘制矩形边框
-        ctx.strokeRect(startX, startY, endX - startX, endY - startY);
-        
-        // 添加半透明绿色填充
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-        ctx.fillRect(startX, startY, endX - startX, endY - startY);
-        
-        // 恢复绘制状态
-        ctx.restore();
-        
-        console.log(`绘制水印区域框: (${startX}, ${startY}) 到 (${endX}, ${endY})`);
-    }
-    
-    /**
-     * 测试模式：直接填充水印区域
-     */
-    function fillWatermarkRegionForTest(ctx, width, height, position, sizePercent) {
-        const region = calculateWatermarkRegion(width, height, position, sizePercent);
-        const { startX, startY, endX, endY } = region;
-        
-        // 保存当前绘制状态
-        ctx.save();
-        
-        // 填充红色用于测试
-        ctx.fillStyle = '#FF0000'; // 红色
-        ctx.fillRect(startX, startY, endX - startX, endY - startY);
-        
-        // 恢复绘制状态
-        ctx.restore();
-        
-        console.log(`测试模式：填充区域 (${startX}, ${startY}) 到 (${endX}, ${endY}) 为红色`);
-    }
-    
-    /**
-     * 检测和移除水印
-     */
-    function detectAndRemoveWatermark(data, width, height, region, threshold) {
-        const { startX, startY, endX, endY } = region;
-        
-        let processedPixels = 0;
-        
-        // 直接将整个水印区域设为完全透明
-        console.log(`开始处理水印区域，将范围内所有像素设为透明`);
-        
-        // 处理水印区域内的每个像素
-        for (let y = startY; y < endY; y++) {
-            for (let x = startX; x < endX; x++) {
-                const pixelIdx = (y * width + x) * 4;
-                
-                // 直接设为完全透明
-                data[pixelIdx + 3] = 0; // Alpha通道设为0（完全透明）
-                processedPixels++;
-            }
-        }
-        
-        console.log(`处理了 ${processedPixels} 个像素，全部设为透明，总区域像素: ${(endX - startX) * (endY - startY)}`);
-    }
-    
-    /**
-     * 简化的像素替换判断
-     */
-    function shouldReplacePixel(data, pixelIdx, avgRef, referenceColors, threshold) {
-        const r = data[pixelIdx];
-        const g = data[pixelIdx + 1];
-        const b = data[pixelIdx + 2];
-        
-        // 计算与平均参考颜色的距离
-        const avgDistance = Math.sqrt(
-            Math.pow(r - avgRef.r, 2) +
-            Math.pow(g - avgRef.g, 2) +
-            Math.pow(b - avgRef.b, 2)
-        );
-        
-        // 如果差异大于阈值，认为是水印
-        return avgDistance > threshold;
-    }
-    
-    /**
-     * 计算平均颜色
-     */
-    function calculateAverageColor(colors) {
-        let totalR = 0, totalG = 0, totalB = 0;
-        
-        for (const color of colors) {
-            totalR += color[0];
-            totalG += color[1];
-            totalB += color[2];
-        }
-        
-        return {
-            r: Math.round(totalR / colors.length),
-            g: Math.round(totalG / colors.length),
-            b: Math.round(totalB / colors.length)
-        };
-    }
-    
-    /**
-     * 收集参考颜色
-     */
-    function collectReferenceColors(data, width, height, region) {
-        const colors = [];
-        const { startX, startY, endX, endY } = region;
-        
-        // 从水印区域周围采样
-        const borderSize = 10; // 边界采样宽度
-        
-        // 上边界
-        for (let x = Math.max(0, startX - borderSize); x < Math.min(width, endX + borderSize); x++) {
-            for (let y = Math.max(0, startY - borderSize); y < startY; y++) {
-                const idx = (y * width + x) * 4;
-                colors.push([data[idx], data[idx + 1], data[idx + 2]]);
-            }
-        }
-        
-        // 下边界
-        for (let x = Math.max(0, startX - borderSize); x < Math.min(width, endX + borderSize); x++) {
-            for (let y = endY; y < Math.min(height, endY + borderSize); y++) {
-                const idx = (y * width + x) * 4;
-                colors.push([data[idx], data[idx + 1], data[idx + 2]]);
-            }
-        }
-        
-        // 左边界
-        for (let x = Math.max(0, startX - borderSize); x < startX; x++) {
-            for (let y = startY; y < endY; y++) {
-                const idx = (y * width + x) * 4;
-                colors.push([data[idx], data[idx + 1], data[idx + 2]]);
-            }
-        }
-        
-        // 右边界
-        for (let x = endX; x < Math.min(width, endX + borderSize); x++) {
-            for (let y = startY; y < endY; y++) {
-                const idx = (y * width + x) * 4;
-                colors.push([data[idx], data[idx + 1], data[idx + 2]]);
-            }
-        }
-        
-        // 如果采样不够，从更远的地方补充
-        if (colors.length < 20) {
-            for (let i = 0; i < 30; i++) {
-                let x, y;
-                do {
-                    x = Math.floor(Math.random() * width);
-                    y = Math.floor(Math.random() * height);
-                } while (x >= startX && x < endX && y >= startY && y < endY);
-                
-                const idx = (y * width + x) * 4;
-                colors.push([data[idx], data[idx + 1], data[idx + 2]]);
-            }
-        }
-        
-        console.log(`收集了 ${colors.length} 个参考颜色样本`);
-        return colors;
-    }
-    
-    /**
-     * 改进的水印像素检测
-     */
-    function isWatermarkPixelImproved(r, g, b, avgRef, referenceColors, threshold) {
-        // 计算与平均参考颜色的距离
-        const avgDistance = Math.sqrt(
-            Math.pow(r - avgRef.r, 2) +
-            Math.pow(g - avgRef.g, 2) +
-            Math.pow(b - avgRef.b, 2)
-        );
-        
-        // 如果与平均颜色差异很大，可能是水印
-        if (avgDistance > threshold * 2) {
-            return true;
-        }
-        
-        // 检查与参考颜色的最小距离
-        let minDistance = Infinity;
-        for (const refColor of referenceColors) {
-            const distance = Math.sqrt(
-                Math.pow(r - refColor[0], 2) +
-                Math.pow(g - refColor[1], 2) +
-                Math.pow(b - refColor[2], 2)
-            );
-            minDistance = Math.min(minDistance, distance);
-        }
-        
-        // 如果与所有参考颜色差异都很大，可能是水印
-        return minDistance > threshold;
-    }
-    
-    /**
-     * 改进的像素修复
-     */
-    function repairPixelImproved(data, width, height, x, y, region, avgRef) {
-        const { startX, startY, endX, endY } = region;
-        
-        // 优先使用水印区域外的相邻像素
-        const candidates = [];
-        const radius = 5;
-        
-        for (let dy = -radius; dy <= radius; dy++) {
-            for (let dx = -radius; dx <= radius; dx++) {
-                if (dx === 0 && dy === 0) continue;
-                
-                const nx = x + dx;
-                const ny = y + dy;
-                
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    // 如果像素在水印区域外，优先使用
-                    if (nx < startX || nx >= endX || ny < startY || ny >= endY) {
-                        const idx = (ny * width + nx) * 4;
-                        candidates.push({
-                            r: data[idx],
-                            g: data[idx + 1],
-                            b: data[idx + 2],
-                            weight: 1.0 / (Math.abs(dx) + Math.abs(dy) + 1) // 距离越近权重越大
-                        });
-                    }
-                }
-            }
-        }
-        
-        if (candidates.length > 0) {
-            // 使用加权平均
-            let totalR = 0, totalG = 0, totalB = 0, totalWeight = 0;
-            
-            for (const candidate of candidates) {
-                totalR += candidate.r * candidate.weight;
-                totalG += candidate.g * candidate.weight;
-                totalB += candidate.b * candidate.weight;
-                totalWeight += candidate.weight;
-            }
-            
-            return {
-                r: Math.round(totalR / totalWeight),
-                g: Math.round(totalG / totalWeight),
-                b: Math.round(totalB / totalWeight)
-            };
-        } else {
-            // 如果没有找到区域外的像素，使用平均参考颜色
-            return avgRef;
-        }
-    }
-    
-    /**
-     * 创建放大查看的模态框
-     * @param {string} imageSrc - 图片源
-     * @param {number} currentIndex - 当前图片索引
-     */
     function createZoomModal(imageSrc, currentIndex) {
         // 如果已存在模态框，先移除
         if (zoomedImage) {
@@ -1054,6 +546,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return frameItem;
     }
     
+    function updateFrameCount() {
+        if (frameCountEl) {
+            frameCountEl.textContent = String(extractedFrames.length);
+        }
+    }
+
+    function renderFramesGrid() {
+        framesContainer.innerHTML = '';
+        selectedFrames = [];
+        extractedFrames.forEach((frameData, index) => {
+            framesContainer.appendChild(createFrameElement(frameData, index));
+        });
+        updateFrameCount();
+        if (extractedFrames.length === 0) {
+            framesPreviewSection.classList.add('hidden');
+            animationPreviewSection.classList.add('hidden');
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+            isPlaying = false;
+        }
+    }
+
+    function deleteSelectedFrames() {
+        if (selectedFrames.length === 0) {
+            showToast(tr('tools.videoToImages.toastSelectOne'));
+            return;
+        }
+        const removeSet = new Set(selectedFrames);
+        const deleted = removeSet.size;
+        extractedFrames = extractedFrames.filter((_, i) => !removeSet.has(i));
+        renderFramesGrid();
+        showToast(tr('tools.videoToImages.toastDeleted', { n: deleted }));
+    }
+
     /**
      * 比较两张图片的相似度
      * @param {string} img1Data - 第一张图片的DataURL
@@ -1120,73 +648,56 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * 仅保留差异图片
+     * 勾选相似帧：每组相似帧勾选多余的（保留中间一帧不勾），不自动删除
      */
     function keepDifferentFrames() {
         if (extractedFrames.length === 0) {
-            showToast('No frames to compare');
+            showToast(tr('tools.videoToImages.toastNoFramesCompare'));
             return;
         }
 
-        showToast('Comparing frames…');
+        showToast(tr('tools.videoToImages.toastComparing'));
         
-        // 获取阈值
         const threshold = Math.max(80, Math.min(100, parseInt(document.getElementById('similarity-threshold').value) || 90));
-        
-        // 获取所有帧元素
-        const frameItems = document.querySelectorAll('.frame-item');
         const checkboxes = document.querySelectorAll('.frame-checkbox');
         
-        // 重置所有选择
-        selectedFrames = [];
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        // 递归比较帧
         const similarGroups = [];
         let currentGroup = [0];
         
-        // 比较相邻帧
         async function compareFrames() {
             for (let i = 0; i < extractedFrames.length - 1; i++) {
-                const similarity = await compareImages(extractedFrames[i], extractedFrames[i+1]);
+                const similarity = await compareImages(extractedFrames[i], extractedFrames[i + 1]);
                 
                 if (similarity >= threshold) {
-                    currentGroup.push(i+1);
+                    currentGroup.push(i + 1);
                 } else {
-                    if (currentGroup.length > 1) {
-                        similarGroups.push(currentGroup);
-                    } else if (currentGroup.length === 1) {
-                        // 单帧，直接选择
-                        selectedFrames.push(currentGroup[0]);
-                        checkboxes[currentGroup[0]].checked = true;
-                    }
-                    currentGroup = [i+1];
+                    similarGroups.push(currentGroup);
+                    currentGroup = [i + 1];
                 }
             }
+            similarGroups.push(currentGroup);
             
-            // 处理最后一组
-            if (currentGroup.length > 1) {
-                similarGroups.push(currentGroup);
-            } else if (currentGroup.length === 1) {
-                selectedFrames.push(currentGroup[0]);
-                checkboxes[currentGroup[0]].checked = true;
-            }
-            
-            // 处理相似组
-            similarGroups.forEach(group => {
-                // 选择中间的一帧
-                const middleIndex = Math.floor(group.length / 2);
-                const selectedIndex = group[middleIndex];
-                selectedFrames.push(selectedIndex);
-                checkboxes[selectedIndex].checked = true;
+            selectedFrames = [];
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = false;
             });
             
-            // 更新选择数组（排序）
+            let marked = 0;
+            similarGroups.forEach((group) => {
+                if (group.length < 2) return;
+                const keepIndex = group[Math.floor(group.length / 2)];
+                group.forEach((frameIndex) => {
+                    if (frameIndex === keepIndex) return;
+                    const checkbox = checkboxes[frameIndex];
+                    if (!checkbox) return;
+                    checkbox.checked = true;
+                    selectedFrames.push(frameIndex);
+                    marked += 1;
+                });
+            });
             selectedFrames.sort((a, b) => a - b);
             
-            showToast('Kept ' + selectedFrames.length + ' distinct frames');
+            showToast(tr('tools.videoToImages.toastSelectedSimilar', { n: marked }));
         }
         
         compareFrames();
@@ -1197,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function previewAnimation() {
         if (selectedFrames.length === 0) {
-            showToast('Select at least one frame');
+            showToast(tr('tools.videoToImages.toastSelectOne'));
             return;
         }
 
@@ -1212,7 +723,7 @@ document.addEventListener('DOMContentLoaded', function() {
         isPlaying = true;
 
         if (playPauseBtn) {
-            playPauseBtn.textContent = 'Pause';
+            playPauseBtn.textContent = tr('tools.videoToImages.pause');
         }
 
         startAnimation();
@@ -1244,7 +755,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function togglePlayPause() {
         isPlaying = !isPlaying;
-        playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
+        playPauseBtn.textContent = isPlaying
+            ? tr('tools.videoToImages.pause')
+            : tr('tools.videoToImages.play');
 
         if (isPlaying && !animationInterval) {
             startAnimation();
@@ -1269,7 +782,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function selectAllFrames() {
         if (extractedFrames.length === 0) {
-            showToast('No frames to select');
+            showToast(tr('tools.videoToImages.toastNoFramesSelect'));
             return;
         }
         
@@ -1283,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedFrames.push(parseInt(checkbox.dataset.index));
         });
         
-        showToast('Selected all ' + selectedFrames.length + ' frames');
+        showToast(tr('tools.videoToImages.toastSelectedAll', { n: selectedFrames.length }));
     }
     
     /**
@@ -1291,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function saveSelectedFrames() {
         if (selectedFrames.length === 0) {
-            showToast('Select at least one frame');
+            showToast(tr('tools.videoToImages.toastSelectOne'));
             return;
         }
         
@@ -1300,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
             createAndDownloadZip();
         } catch (error) {
             console.error('保存图片错误:', error);
-            showToast('Save failed: ' + error.message);
+            showToast(tr('tools.videoToImages.toastSaveFailed', { msg: error.message }));
         }
     }
     
@@ -1344,10 +857,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.removeChild(link);
             }
             
-            showToast('Saved ' + selectedFrames.length + ' frames as ZIP');
+            showToast(tr('tools.videoToImages.toastSavedZip', { n: selectedFrames.length }));
         }).catch(function(error) {
             console.error('生成ZIP文件失败:', error);
-            showToast('Save failed: ' + error.message);
+            showToast(tr('tools.videoToImages.toastSaveFailed', { msg: error.message }));
         });
     }
     
@@ -1385,11 +898,7 @@ document.addEventListener('DOMContentLoaded', function() {
         framesContainer.innerHTML = '';
         framesPreviewSection.classList.add('hidden');
         if (dropZone) dropZone.classList.remove('hidden');
-        
-        if (watermarkRemovalSettings) {
-            watermarkRemovalSettings.open = false;
-        }
-        
+
         // 重置动画
         if (animationInterval) {
             clearInterval(animationInterval);
@@ -1408,7 +917,7 @@ document.addEventListener('DOMContentLoaded', function() {
             zoomedImage = null;
         }
         
-        showToast('Cleared');
+        showToast(tr('tools.videoToImages.toastCleared'));
     }
     
     /**

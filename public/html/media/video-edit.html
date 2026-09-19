@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Video Edit - Tool Basecamp</title>
+  <title>Video Edit - 百宝箱</title>
   <meta name="description" content="Edit an existing MP4 with text instructions and optional reference images. HappyHorse Video-Edit. Keeps original timing better than full remakes.">
   <link rel="stylesheet" href="../../css/base.css?v=hhedit1" />
-  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=hhedit1" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=hhedit1" />
+  <link rel="stylesheet" href="../../css/docs/docs-common.css?v=imgSq4" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=imgSq3" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=hhedit1" />
   <style>
     .r2v-thumbs { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
@@ -62,7 +62,7 @@
 
           <div class="field-row">
             <span class="field-label" data-i18n="tools.videoEdit.refsLabel">Reference images (optional)</span>
-            <div class="drop-zone" id="img-drop" style="padding:18px">
+            <div class="drop-zone tb-input-image" id="img-drop" style="padding:18px">
               <div class="drop-title" data-i18n="tools.videoEdit.dropRefs">Add 0–5 refs (new face / clothes…)</div>
             </div>
             <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp,image/*" multiple style="display:none" />
@@ -78,7 +78,7 @@
             </div>
             <textarea id="prompt-input" class="rec-input wan-prompt" rows="4" maxlength="2500"
               data-i18n-placeholder="tools.videoEdit.promptPlaceholder"
-              placeholder="e.g. Replace the buyer with the person in the reference image; keep the melon stall and dialogue timing"></textarea>
+              placeholder="e.g. Replace the main person with the one in the reference image; keep motion and dialogue timing"></textarea>
           </div>
 
           <div class="field-row">
@@ -127,11 +127,12 @@
     </main>
   </div>
 
-  <script src="../../js/locales/en.js?v=hhedit1"></script>
-  <script src="../../js/locales/zh-CN.js?v=hhedit1"></script>
+  <script src="../../js/locales/en.js?v=brand1"></script>
+  <script src="../../js/locales/zh-CN.js?v=brand1"></script>
   <script src="../../js/i18n.js?v=hhedit1"></script>
   <script src="../../js/config.js?v=hhedit1"></script>
   <script src="../../js/base.js?v=hhedit1"></script>
+  <script src="../../js/shared/image-upload-compress.js?v=imgup2"></script>
   <script src="../../js/media/image-cloud-client.js?v=hhedit1"></script>
   <script src="../../js/media/video-edit.js?v=hhedit1"></script>
 </body>

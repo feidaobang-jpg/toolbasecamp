@@ -1,10 +1,12 @@
-"""MiniMax Music Generation — sync generate + charge on success.
+"""AI Music — MiniMax Music + 逍遥 Suno; charge on success.
 
 Models:
-  - music-3.0-free: vendor ¥0/song → user ¥0
   - music-3.0: vendor ¥1/song → user ¥2 (× AI_PRICE_MARKUP, default 2)
+  - suno-v4.5: vendor ≈¥0.67 → user ≈¥1.34 (逍遥 lk888)
 
-Env: MINIMAX_API_KEY (required). Optional MINIMAX_MUSIC_API_URL, MINIMAX_MUSIC_TIMEOUT.
+Note: MiniMax discontinued music-3.0-free / music-2.6-free / music-cover-free on 2026-08-20.
+
+Env: MINIMAX_API_KEY and/or LK888_API_KEY.
 """
 
 from __future__ import annotations
@@ -36,6 +38,7 @@ from ai_wallet import (
     user_price_cny,
     wallet_public,
 )
+from lk888_music import generate_suno_music, is_suno_model, lk888_music_configured
 from recipe_ai import DEEPSEEK_API_KEY, _call_deepseek
 
 security = HTTPBearer(auto_error=False)
@@ -43,7 +46,7 @@ router = APIRouter(prefix="/music", tags=["music"])
 
 CN_TZ = ZoneInfo("Asia/Shanghai")
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 MINIMAX_API_KEY = (os.environ.get("MINIMAX_API_KEY") or "").strip()
 MINIMAX_MUSIC_API_URL = (
@@ -54,14 +57,21 @@ MINIMAX_LYRICS_API_URL = (
 ).strip().rstrip("/")
 MUSIC_TIMEOUT = float(os.environ.get("MINIMAX_MUSIC_TIMEOUT") or os.environ.get("FUN_MUSIC_TIMEOUT") or "360")
 LYRICS_TIMEOUT = float(os.environ.get("MINIMAX_LYRICS_TIMEOUT") or "90")
-DEFAULT_MODEL = (os.environ.get("MINIMAX_MUSIC_MODEL") or "music-3.0-free").strip() or "music-3.0-free"
+def _default_music_model() -> str:
+    raw = (os.environ.get("MINIMAX_MUSIC_MODEL") or "suno-v4.5").strip() or "suno-v4.5"
+    if raw in ("music-3.0-free", "music-2.6-free", "music-cover-free"):
+        raw = "suno-v4.5"
+    return raw if raw in ALLOWED_MODELS else "suno-v4.5"
 
-# Vendor list price CNY per song (MiniMax paygo)
+
+# Vendor list price CNY per song (MiniMax paygo + 逍遥 Suno)
 LIST_PRICE_PER_SONG = {
-    "music-3.0-free": Decimal("0"),
     "music-3.0": Decimal("1.0"),
+    # Xiaoyao Suno v4.5 ≈ ⚡0.67 → user ≈ ¥1.34 with default markup 2
+    "suno-v4.5": Decimal("0.67"),
 }
 ALLOWED_MODELS = frozenset(LIST_PRICE_PER_SONG.keys())
+DEFAULT_MODEL = _default_music_model()
 
 RESULT_TTL_SEC = 24 * 3600
 TMP_DIR = Path(os.environ.get("FUN_MUSIC_TMP_DIR") or (Path(__file__).resolve().parent / "tmp_music"))
@@ -257,7 +267,13 @@ def _creator_public(row: dict) -> Dict[str, str]:
 
 
 def fun_music_configured() -> bool:
-    return bool(MINIMAX_API_KEY)
+    return bool(MINIMAX_API_KEY) or lk888_music_configured()
+
+
+def _provider_for_model(model: str) -> str:
+    if is_suno_model(model):
+        return "lk888"
+    return "minimax"
 
 
 def _sanitize_title(raw: str, *, max_len: int = 40) -> str:
@@ -626,21 +642,23 @@ def pricing_public() -> dict:
             }
         )
     return {
-        "provider": "minimax",
-        "defaultModel": DEFAULT_MODEL if DEFAULT_MODEL in ALLOWED_MODELS else "music-3.0-free",
+        "provider": "minimax+lk888",
+        "defaultModel": DEFAULT_MODEL if DEFAULT_MODEL in ALLOWED_MODELS else "suno-v4.5",
         "models": models,
         "markup": float(AI_MARKUP),
         # Back-compat fields for older clients
         "model": DEFAULT_MODEL,
         "listEstCny": float(_list_price(DEFAULT_MODEL)),
         "userEstCny": float(user_price_cny(_list_price(DEFAULT_MODEL))),
+        "minimaxConfigured": bool(MINIMAX_API_KEY),
+        "lk888Configured": lk888_music_configured(),
     }
 
 
 def get_fun_music_config() -> dict:
     return {
         "configured": fun_music_configured(),
-        "provider": "minimax",
+        "provider": "minimax+lk888",
         "model": DEFAULT_MODEL,
         "apiUrl": MINIMAX_MUSIC_API_URL,
         "pricing": pricing_public(),
@@ -678,6 +696,7 @@ def _charge_success(user: dict, list_price: Decimal, *, meta: dict) -> Optional[
             return float(get_balance(conn, int(user["id"])))
         finally:
             conn.close()
+    provider = str(meta.get("provider") or "minimax")
     conn = _conn()
     try:
         new_bal = try_charge(
@@ -689,7 +708,7 @@ def _charge_success(user: dict, list_price: Decimal, *, meta: dict) -> Optional[
                 **meta,
                 "listPriceCny": float(list_price),
                 "chargedCny": float(charge),
-                "provider": "minimax",
+                "provider": provider,
             },
         )
         if new_bal is None:
@@ -768,7 +787,7 @@ def _minimax_error_detail(data: dict, resp: httpx.Response) -> str:
 def music_status(user: dict = Depends(_user)):
     return {
         "configured": fun_music_configured(),
-        "provider": "minimax",
+        "provider": "minimax+lk888",
         "isAdmin": _is_admin(user),
         "wallet": _wallet_for(user),
         "pricing": pricing_public(),
@@ -792,7 +811,7 @@ async def music_generate(
     if not fun_music_configured():
         raise HTTPException(
             status_code=503,
-            detail="MiniMax is not configured (MINIMAX_API_KEY).",
+            detail="Music is not configured (need MINIMAX_API_KEY and/or LK888_API_KEY).",
         )
 
     use_model = (model or DEFAULT_MODEL).strip() or DEFAULT_MODEL
@@ -800,6 +819,17 @@ async def music_generate(
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported model. Use one of: {', '.join(sorted(ALLOWED_MODELS))}",
+        )
+    suno = is_suno_model(use_model)
+    if suno and not lk888_music_configured():
+        raise HTTPException(
+            status_code=503,
+            detail="逍遥 AI is not configured (LK888_API_KEY) for Suno.",
+        )
+    if (not suno) and not MINIMAX_API_KEY:
+        raise HTTPException(
+            status_code=503,
+            detail="MiniMax is not configured (MINIMAX_API_KEY).",
         )
 
     prompt_text = (prompt or "").strip()
@@ -811,6 +841,9 @@ async def music_generate(
     fmt = (format or "mp3").strip().lower()
     if fmt not in ("mp3", "wav", "pcm"):
         fmt = "mp3"
+    # Suno returns mp3/wav via download URL; force mp3 storage when unsure
+    if suno and fmt == "pcm":
+        fmt = "mp3"
 
     if is_instrumental:
         if not prompt_text:
@@ -819,6 +852,19 @@ async def music_generate(
             raise HTTPException(status_code=400, detail="Prompt is too long (max 2000 characters).")
         lyrics_text = ""
         use_lyrics_optimizer = False
+    elif suno:
+        # Suno 可只凭风格作词，但平台 status 不回歌词文本；自动歌词需先写词再传入。
+        if not prompt_text and not lyrics_text and not use_lyrics_optimizer:
+            raise HTTPException(
+                status_code=400,
+                detail="Please enter a style prompt and/or lyrics for Suno.",
+            )
+        if lyrics_text and len(lyrics_text) > 3500:
+            raise HTTPException(status_code=400, detail="Lyrics are too long.")
+        if prompt_text and len(prompt_text) > 2000:
+            raise HTTPException(status_code=400, detail="Prompt is too long (max 2000 characters).")
+        if use_lyrics_optimizer and not lyrics_text and not prompt_text:
+            raise HTTPException(status_code=400, detail="Please enter a prompt or lyrics.")
     else:
         if lyrics_text:
             if len(lyrics_text) > 3500:
@@ -834,6 +880,144 @@ async def music_generate(
 
     list_price = _list_price(use_model)
     _assert_can_afford(user, list_price)
+    provider = _provider_for_model(use_model)
+
+    if suno:
+        try:
+            # 逍遥 /media/status 只回音频 URL，不回歌词。歌曲模式且未填歌词时，先作词再交给 Suno。
+            if (not is_instrumental) and not lyrics_text:
+                if not prompt_text:
+                    raise HTTPException(status_code=400, detail="Please enter a prompt or lyrics.")
+                if MINIMAX_API_KEY:
+                    async with httpx.AsyncClient(timeout=LYRICS_TIMEOUT + 30) as ly_client:
+                        pack = await _ensure_lyrics_text(
+                            ly_client,
+                            prompt=prompt_text,
+                            title=title_text,
+                            headers={
+                                "Authorization": f"Bearer {MINIMAX_API_KEY}",
+                                "Content-Type": "application/json",
+                            },
+                        )
+                else:
+                    ly = await _auto_lyrics_deepseek(prompt=prompt_text)
+                    pack = {"lyrics": ly, "song_title": "", "style_tags": ""}
+                lyrics_text = (pack.get("lyrics") or "").strip()
+                if not lyrics_text:
+                    raise HTTPException(
+                        status_code=502,
+                        detail="Failed to generate lyrics before Suno.",
+                    )
+                lyrics_text = _finalize_lyrics_text(lyrics_text)
+                if not title_text:
+                    sug = _sanitize_title(str(pack.get("song_title") or ""), max_len=40)
+                    if sug:
+                        title_text = sug
+            elif lyrics_text:
+                lyrics_text = _finalize_lyrics_text(lyrics_text)
+
+            audio_bytes, ctype, ext, duration = await generate_suno_music(
+                prompt=prompt_text or "pop song",
+                lyrics=lyrics_text,
+                instrumental=is_instrumental,
+            )
+            if not title_text:
+                title_text = await _auto_title_deepseek(
+                    lyrics=lyrics_text,
+                    prompt=prompt_text,
+                    instrumental=is_instrumental,
+                )
+            _purge_old_results()
+            result_id = secrets.token_hex(16)
+            file_name = f"{result_id}{ext}"
+            path = (PUBLIC_DIR if is_public else TMP_DIR) / file_name
+            path.write_bytes(audio_bytes)
+
+            charged_cny = 0.0
+            try:
+                bal_after = _charge_success(
+                    user,
+                    list_price,
+                    meta={
+                        "model": use_model,
+                        "duration": duration,
+                        "instrumental": is_instrumental,
+                        "resultId": result_id,
+                        "title": title_text,
+                        "public": is_public,
+                        "provider": provider,
+                    },
+                )
+                if not _is_admin(user):
+                    charged_cny = float(user_price_cny(list_price))
+                if is_public:
+                    _insert_public_track(
+                        track_id=result_id,
+                        user_id=int(user["id"]),
+                        title=title_text or "AI Music",
+                        prompt=prompt_text,
+                        lyrics=lyrics_text,
+                        model=use_model,
+                        duration=duration,
+                        content_type=ctype,
+                        file_ext=ext,
+                        file_name=file_name,
+                    )
+            except HTTPException:
+                try:
+                    path.unlink(missing_ok=True)
+                except Exception:
+                    pass
+                raise
+
+            _results[result_id] = {
+                "user_id": int(user["id"]),
+                "created": time.time(),
+                "path": str(path),
+                "content_type": ctype,
+                "ext": ext,
+                "model": use_model,
+                "duration": duration,
+                "list_price": float(list_price),
+                "charged": charged_cny,
+                "prompt": prompt_text,
+                "lyrics": lyrics_text,
+                "title": title_text,
+                "public": is_public,
+                "provider": provider,
+            }
+            wallet = _wallet_for(user)
+            out: Dict[str, Any] = {
+                "success": True,
+                "resultId": result_id,
+                "provider": provider,
+                "model": use_model,
+                "duration": duration,
+                "listPriceCny": float(list_price),
+                "userPriceCny": float(user_price_cny(list_price)),
+                "chargedCny": charged_cny,
+                "lyrics": lyrics_text,
+                "prompt": prompt_text,
+                "title": title_text,
+                "public": is_public,
+                "contentType": ctype,
+                "proxyUrl": f"/music/result/{result_id}",
+                "downloadUrl": f"/music/result/{result_id}?download=1",
+                "wallet": wallet,
+                "aiWallet": wallet,
+                "balanceCny": wallet.get("balanceCny"),
+            }
+            if is_public:
+                out["publicId"] = result_id
+                out["publicStreamUrl"] = f"/music/public/{result_id}"
+                out["publicDownloadUrl"] = f"/music/public/{result_id}?download=1"
+            if bal_after is not None:
+                out["balanceCny"] = bal_after
+            return out
+        except HTTPException:
+            raise
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"Suno generation failed: {exc}") from exc
 
     headers = {
         "Authorization": f"Bearer {MINIMAX_API_KEY}",
@@ -962,6 +1146,7 @@ async def music_generate(
                         "resultId": result_id,
                         "title": title_text,
                         "public": is_public,
+                        "provider": provider,
                     },
                 )
                 if not _is_admin(user):
@@ -997,10 +1182,11 @@ async def music_generate(
                 "duration": duration,
                 "list_price": float(list_price),
                 "charged": charged_cny,
-                "lyrics": lyrics_text,
                 "prompt": prompt_text,
+                "lyrics": lyrics_text,
                 "title": title_text,
                 "public": is_public,
+                "provider": provider,
                 "balance_after": bal_after,
             }
     except HTTPException:
@@ -1014,7 +1200,7 @@ async def music_generate(
     out = {
         "success": True,
         "resultId": result_id,
-        "provider": "minimax",
+        "provider": provider,
         "model": use_model,
         "duration": duration,
         "listPriceCny": float(list_price),
@@ -1044,13 +1230,16 @@ def music_public_list(
     offset: int = 0,
     viewer: Optional[dict] = Depends(_optional_user),
 ):
-    lim = max(1, min(100, int(limit or 50)))
+    lim = max(1, min(500, int(limit or 50)))
     off = max(0, int(offset or 0))
     can_admin = _is_admin(viewer) if viewer else False
     conn = _conn()
     try:
         with conn.cursor() as cur:
             _ensure_music_schema(cur)
+            cur.execute("SELECT COUNT(*) AS c FROM music_tracks WHERE is_public=1")
+            total_row = cur.fetchone() or {}
+            total = int(total_row.get("c") or 0)
             cur.execute(
                 """
                 SELECT m.id, m.title, m.prompt, m.lyrics, m.model, m.duration_sec,
@@ -1102,7 +1291,14 @@ def music_public_list(
                 "downloadUrl": f"/music/public/{tid}?download=1",
             }
         )
-    return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
+    return {
+        "success": True,
+        "items": items,
+        "limit": lim,
+        "offset": off,
+        "total": total,
+        "canAdmin": can_admin,
+    }
 
 
 @router.delete("/public/{track_id}")
@@ -1307,40 +1503,8 @@ async def _lookup_lyrics_deepseek(*, artist: str, title: str) -> str:
 
 
 async def _lookup_artist_deepseek(*, title: str) -> str:
-    """Best-effort primary artist name for a song title."""
-    if not DEEPSEEK_API_KEY:
-        return ""
-    title = (title or "").strip()
-    if not title:
-        return ""
-    try:
-        raw = await _call_deepseek(
-            [
-                {
-                    "role": "system",
-                    "content": (
-                        "你是华语流行音乐资料助手。用户给出歌名时，只输出该曲最常见原唱歌手名"
-                        "（可含组合名），不要书名号、不要解释、不要多行。"
-                        "若不确定，只输出一个空行。"
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": f"歌名：{title}\n歌手名：",
-                },
-            ],
-            use_json_mode=False,
-            max_tokens=40,
-            temperature=0.1,
-            timeout=30.0,
-        )
-        text = (raw or "").strip().splitlines()[0].strip() if (raw or "").strip() else ""
-        text = re.sub(r"^[《\"'【\[]+|[》\"'】\]]+$", "", text).strip()
-        if not text or text == title or len(text) > 40:
-            return ""
-        return text[:80]
-    except Exception:
-        return ""
+    """Deprecated: traditional uploads only use「歌手-歌名」from the filename."""
+    return ""
 
 
 def _traditional_public_item(row: dict, *, include_lyrics: bool = True) -> dict:
@@ -1458,10 +1622,70 @@ def music_traditional_admin_delete(track_id: str, admin: dict = Depends(_admin_u
     return {"success": True, "deletedId": tid}
 
 
+@router.post("/traditional/admin/reparse-from-source")
+def music_traditional_reparse_from_source(admin: dict = Depends(_admin_user)):
+    """Re-parse artist/title from stored source filename (歌手-歌名.mp3)."""
+    del admin
+    items = _load_traditional_manifest()
+    changed = 0
+    skipped = 0
+    for row in items:
+        src = str(row.get("source") or "").strip()
+        if not src:
+            skipped += 1
+            continue
+        artist, title = _parse_upload_filename(src)
+        old_artist = str(row.get("artist") or "").strip()
+        old_title = str(row.get("title") or "").strip()
+        if artist == old_artist and title == old_title:
+            continue
+        row["artist"] = artist
+        row["title"] = title
+        changed += 1
+    if changed:
+        _save_traditional_manifest(items)
+    return {
+        "success": True,
+        "changed": changed,
+        "skipped": skipped,
+        "total": len(items),
+    }
+
+
+@router.post("/traditional/admin/{track_id}/meta")
+async def music_traditional_update_meta(
+    track_id: str,
+    artist: str = Form(""),
+    title: str = Form(""),
+    admin: dict = Depends(_admin_user),
+):
+    """Manually set artist/title when source filename was wrong."""
+    del admin
+    tid = re.sub(r"[^a-zA-Z0-9_-]", "", str(track_id or ""))[:48]
+    if not tid:
+        raise HTTPException(status_code=404, detail="Music not found")
+    items = _load_traditional_manifest()
+    row = None
+    for it in items:
+        if str(it.get("id") or "") == tid:
+            row = it
+            break
+    if not row:
+        raise HTTPException(status_code=404, detail="Music not found")
+    new_title = (title or "").strip()
+    new_artist = (artist or "").strip()
+    # Title optional: admin “改歌手” only sends artist.
+    if new_title:
+        row["title"] = new_title[:200]
+    row["artist"] = new_artist[:120]
+    _save_traditional_manifest(items)
+    return {"success": True, "item": _traditional_admin_item(row)}
+
+
 @router.post("/traditional/admin/upload")
 async def music_traditional_admin_upload(
     file: UploadFile = File(...),
-    fetch_lyrics: int = Form(1),
+    fetch_lyrics: int = Form(0),
     admin: dict = Depends(_admin_user),
 ):
     del admin
@@ -1480,8 +1704,6 @@ async def music_traditional_admin_upload(
         raise HTTPException(status_code=409, detail=f"Already uploaded: {orig_name}")
     tid = _next_traditional_id(items)
     artist, title = _parse_upload_filename(orig_name)
-    if not artist and title:
-        artist = await _lookup_artist_deepseek(title=title)
     full_name = f"{tid}.mp3"
     preview_name = f"{tid}.preview.mp3"
     full_path = TRADITIONAL_DIR / full_name

@@ -32,7 +32,7 @@ if [[ "$PDF_CODE" != "200" ]]; then
   else
     echo "  Cloudflare: set pdf to ORANGE cloud (Proxied), same as dev — grey cloud blocks CN mobile."
   fi
-elif [[ "$PDF_TITLE" == *"Tool Basecamp"* ]] && [[ "$PDF_TITLE" != *"PDF"* ]]; then
+elif [[ "$PDF_TITLE" == *"Treasure Box"* ]] && [[ "$PDF_TITLE" != *"PDF"* ]]; then
   echo "WARNING: pdf still serves main site — run fix-pdf-portal.sh + expand cert for pdf subdomain"
 fi
 

@@ -180,26 +180,33 @@ document.addEventListener('DOMContentLoaded', function () {
             setError(tr('tools.watermarkRemovalAdvanced.invalidFile'));
             return;
         }
-        var url = URL.createObjectURL(file);
-        var img = new Image();
-        img.onload = function () {
-            state.file = file;
-            state.image = img;
-            state.regions = [centerRegion(img.naturalWidth, img.naturalHeight)];
-            state.active = 0;
-            state.resultDataUrl = '';
-            resultWrap.hidden = true;
-            resultImg.removeAttribute('src');
-            dropZone.hidden = true;
-            canvasWrap.hidden = false;
-            setError('');
-            draw();
+        var apply = function (picked) {
+            var url = URL.createObjectURL(picked);
+            var img = new Image();
+            img.onload = function () {
+                state.file = picked;
+                state.image = img;
+                state.regions = [centerRegion(img.naturalWidth, img.naturalHeight)];
+                state.active = 0;
+                state.resultDataUrl = '';
+                resultWrap.hidden = true;
+                resultImg.removeAttribute('src');
+                dropZone.hidden = true;
+                canvasWrap.hidden = false;
+                setError('');
+                draw();
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(url);
+                setError(tr('tools.watermarkRemovalAdvanced.loadFailed'));
+            };
+            img.src = url;
         };
-        img.onerror = function () {
-            URL.revokeObjectURL(url);
-            setError(tr('tools.watermarkRemovalAdvanced.loadFailed'));
-        };
-        img.src = url;
+        if (window.TBImageUploadCompress && TBImageUploadCompress.prepareUploadFile) {
+            TBImageUploadCompress.prepareUploadFile(file, apply, 'default');
+        } else {
+            apply(file);
+        }
     }
 
     function clearAll() {

@@ -1,0 +1,37 @@
+{
+  "22": {
+    "inputs": {
+      "torchscript_jit": "default",
+      "image": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "InspyrenetRembg",
+    "_meta": {
+      "title": "Inspyrenet Rembg"
+    }
+  },
+  "23": {
+    "inputs": {
+      "image": "jimeng-2025-11-03-6790-8位像素艺术风格，参考打击者1945街机游戏的敌机设计，敌机轰炸机，俯视角，机头....png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "加载图像"
+    }
+  },
+  "24": {
+    "inputs": {
+      "filename_prefix": "999\\ComfyUI",
+      "images": [
+        "22",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "保存图像"
+    }
+  }
+}

@@ -15,7 +15,7 @@ const siteConfig = {
     /** ICP filing number shown in site footer (link to MIIT). */
     icpBeianNumber: '闽ICP备2025116294号-2',
     icpBeianUrl: 'https://beian.miit.gov.cn/',
-    adminEmail: 'admin@toolbasecamp.com',
+    adminEmail: 'admin@zhengxiaohui.cn',
     adminPhone: '15859130726',
     devPortalUrl: 'https://dev.zhengxiaohui.cn',
     pdfPortalUrl: 'https://pdf.zhengxiaohui.cn',
@@ -23,6 +23,8 @@ const siteConfig = {
     hoppscotchPortalUrl: 'https://hoppscotch.zhengxiaohui.cn',
     translatePortalUrl: 'https://translate.zhengxiaohui.cn',
     newsPortalUrl: 'https://news.zhengxiaohui.cn',
+    /** 家里电脑 ComfyUI API（Cloudflare Tunnel） */
+    homePcApiBase: 'https://comfy.zhengxiaohui.cn',
     apiBase: (function () {
         const host = window.location.hostname;
         if (host === 'localhost' || host === '127.0.0.1') {
@@ -310,6 +312,16 @@ window.portalsConfig = portalsConfig;
 window.toolsConfig = toolsConfig;
 window.gamesConfig = gamesConfig;
 
+/** Append Awesome GPT-6 Astra external catalog (loaded via astra-games-catalog.js). */
+(function mergeAstraGamesCatalog() {
+    var cat = typeof window !== 'undefined' ? window.astraGamesCatalog : null;
+    if (!cat || !Array.isArray(cat.groups) || !cat.groups.length) return;
+    if (!gamesConfig.groups) gamesConfig.groups = [];
+    cat.groups.forEach(function (g) {
+        if (g && Array.isArray(g.items) && g.items.length) gamesConfig.groups.push(g);
+    });
+})();
+
 /** Admin-only personal tools (not shown in public hub). */
 const privateToolsConfig = {
     sectionTitleKey: 'privateHub.title',
@@ -341,6 +353,16 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.tradMusicTitle',
                     descriptionKey: 'privateHub.ops.tradMusicDesc',
                     url: 'html/admin/private/traditional-music.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.stickersTitle',
+                    descriptionKey: 'privateHub.ops.stickersDesc',
+                    url: 'html/admin/private/stickers.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.markSixMembersTitle',
+                    descriptionKey: 'privateHub.ops.markSixMembersDesc',
+                    url: 'html/admin/private/mark-six-members.html'
                 }
             ]
         },
@@ -351,6 +373,86 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.stock.picksTitle',
                     descriptionKey: 'privateHub.stock.picksDesc',
                     url: 'html/admin/private/stock-picks.html'
+                }
+            ]
+        },
+        {
+            titleKey: 'privateHub.groups.homePc',
+            items: [
+                {
+                    titleKey: 'privateHub.homePc.removeBgTitle',
+                    descriptionKey: 'privateHub.homePc.removeBgDesc',
+                    url: 'html/admin/private/home-pc/remove-background.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.txt2imgTitle',
+                    descriptionKey: 'privateHub.homePc.txt2imgDesc',
+                    url: 'html/admin/private/home-pc/text-to-image.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.imagePipeTitle',
+                    descriptionKey: 'privateHub.homePc.imagePipeDesc',
+                    url: 'html/admin/private/home-pc/image-pipeline.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.img2imgTitle',
+                    descriptionKey: 'privateHub.homePc.img2imgDesc',
+                    url: 'html/admin/private/home-pc/image-to-image.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.describeCutoutTitle',
+                    descriptionKey: 'privateHub.homePc.describeCutoutDesc',
+                    url: 'html/admin/private/home-pc/describe-cutout.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.textToVideoTitle',
+                    descriptionKey: 'privateHub.homePc.textToVideoDesc',
+                    url: 'html/admin/private/home-pc/text-to-video.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.t2vTitle',
+                    descriptionKey: 'privateHub.homePc.t2vDesc',
+                    url: 'html/admin/private/home-pc/t2v.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.i2vTitle',
+                    descriptionKey: 'privateHub.homePc.i2vDesc',
+                    url: 'html/admin/private/home-pc/i2v.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.trailerTitle',
+                    descriptionKey: 'privateHub.homePc.trailerDesc',
+                    url: 'html/admin/private/home-pc/trailer.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.seriesTitle',
+                    descriptionKey: 'privateHub.homePc.seriesDesc',
+                    url: 'html/admin/private/home-pc/series-studio.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.gameSpriteTitle',
+                    descriptionKey: 'privateHub.homePc.gameSpriteDesc',
+                    url: 'html/admin/private/home-pc/game-sprite-studio.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.ttsTitle',
+                    descriptionKey: 'privateHub.homePc.ttsDesc',
+                    url: 'html/admin/private/home-pc/tts.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.musicTitle',
+                    descriptionKey: 'privateHub.homePc.musicDesc',
+                    url: 'html/admin/private/home-pc/music.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.sfxTitle',
+                    descriptionKey: 'privateHub.homePc.sfxDesc',
+                    url: 'html/admin/private/home-pc/sfx.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.i23dTitle',
+                    descriptionKey: 'privateHub.homePc.i23dDesc',
+                    url: 'html/admin/private/home-pc/image-to-3d.html'
                 }
             ]
         }

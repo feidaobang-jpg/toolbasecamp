@@ -1,3 +1,80 @@
+.stats-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.stats-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.stats-day-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-field label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.stats-input,
+.stats-select {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 8px 12px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stats-section {
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.stats-section-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.stats-section-sub {
+  margin: 0 0 1rem;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.admin-main--stats {
+  flex: 1;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 32px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .stat-card {
   background: #fff;
   border: 1px solid #f3f4f6;
@@ -140,4 +217,59 @@
 
 .tb-btn:hover {
   background: #1d4ed8;
+}
+
+.stats-note {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.stats-warn {
+  font-size: 12px;
+  color: #b45309;
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-radius: 0.5rem;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+.stats-warn.hidden {
+  display: none;
+}
+
+.stats-geo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .stats-geo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.stats-geo-card-title {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.stats-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stats-empty {
+  font-size: 14px;
+  color: #9ca3af;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.stats-table-wrap {
+  overflow-x: auto;
 }

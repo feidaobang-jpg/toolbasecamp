@@ -36,6 +36,18 @@
         return 'assets/game/thumbs/' + m[1] + '.jpg?v=17';
     }
 
+    function isExternalGame(item) {
+        if (!item) return false;
+        if (item.external) return true;
+        return /^https?:\/\//i.test(item.url || '');
+    }
+
+    function gameCardLabel(item) {
+        if (!item) return '';
+        if (item.titleKey) return tr(item.titleKey);
+        return item.title || '';
+    }
+
     function bindSearch(toolbarEl) {
         var input = toolbarEl.querySelector('#hub-search-input');
         var clearBtn = toolbarEl.querySelector('#hub-search-clear');
@@ -64,7 +76,7 @@
         toolbarEl.innerHTML =
             '<div class="hub-search-wrap">' +
                 '<i class="fas fa-search"></i>' +
-                '<input type="search" id="hub-search-input" class="hub-search-input" autocomplete="off" ' +
+                '<input type="text" id="hub-search-input" class="hub-search-input" role="searchbox" autocomplete="off" ' +
                     'placeholder="' + escapeAttr(tr('hub.searchGamesPlaceholder')) + '" value="' + escapeAttr(searchQuery) + '">' +
                 '<button type="button" id="hub-search-clear" class="hub-search-clear' +
                     (searchQuery ? ' is-visible' : '') + '" aria-label="Clear">' +
@@ -110,8 +122,9 @@
 
             var headerEl = document.createElement('h3');
             headerEl.className = 'hub-group-head';
+            var groupLabel = group.titleKey ? tr(group.titleKey) : (group.title || '');
             if (groups.length > 1) {
-                headerEl.textContent = tr(group.titleKey);
+                headerEl.textContent = groupLabel;
                 sectionEl.appendChild(headerEl);
             }
 
@@ -119,17 +132,22 @@
             gridEl.className = 'hub-games-grid';
 
             group.items.forEach(function (item) {
-                var label = item.titleKey ? tr(item.titleKey) : (item.title || '');
-                var groupLabel = tr(group.titleKey);
+                var label = gameCardLabel(item);
                 var thumb = gameThumbSrc(item);
+                var external = isExternalGame(item);
                 var card = document.createElement('a');
                 card.href = item.url || '#';
-                card.className = 'hub-tool-card hub-game-card';
+                card.className = 'hub-tool-card hub-game-card' + (external ? ' hub-game-card--external' : '');
+                if (external) {
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+                    card.title = label + ' · ' + tr('games.externalOpenTip');
+                }
                 card.dataset.search = groupLabel + ' ' + label;
                 card.innerHTML =
                     (thumb
                         ? '<span class="hub-game-card-thumb">' +
-                            '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async">' +
+                            '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' +
                           '</span>'
                         : '') +
                     '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3></span>';

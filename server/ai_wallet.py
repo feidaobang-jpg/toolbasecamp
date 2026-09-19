@@ -951,10 +951,10 @@ def ensure_invite_code(conn, user_id: int) -> str:
     return _tx(conn, _run)
 
 
-def referral_me(conn, user_id: int, *, site_base: str = "https://toolbasecamp.com") -> dict:
+def referral_me(conn, user_id: int, *, site_base: str = "https://zhengxiaohui.cn") -> dict:
     uid = int(user_id)
     code = ensure_invite_code(conn, uid)
-    base = (site_base or "https://toolbasecamp.com").rstrip("/")
+    base = (site_base or "https://zhengxiaohui.cn").rstrip("/")
 
     def _run(cur):
         ensure_wallet_schema(cur)

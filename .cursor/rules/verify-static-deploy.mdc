@@ -1,0 +1,45 @@
+---
+description: push 含 public/** 后必须校验主站静态资源已上线，禁止以为 push 就等于线上已更新
+alwaysApply: true
+---
+
+# 主站静态部署：push ≠ 上线
+
+`zhengxiaohui.cn` 静态文件在 VPS **`/var/www/toolbasecamp`**，靠 GitHub Actions `rsync public/`。  
+**git push 成功只表示 GitHub 有新代码**；Actions 失败/卡住时，线上仍是旧 HTML/JS（曾导致改名后侧栏仍显示「文字成片」）。
+
+## 何时必须校验
+
+本次 commit **改了 `public/**`**（含 locales、HTML、CSS、JS），且用户可见文案/界面会受影响时：
+
+1. push 后 **不要**直接对用户说「已上线 / 刷新即可」。
+2. **抽查线上**（优先公网 URL；也可用 SSH 看 VPS 文件）：
+   - 改了 locale：`https://www.zhengxiaohui.cn/js/locales/zh-CN.js` 里是否含新字符串
+   - 改了某页：该页 HTML 的 `?v=` / 关键文案是否已变
+3. push 后约 **2–3 分钟**仍旧 → **判定部署未生效**，Agent **自己 SSH 补同步**，不要甩给用户。
+
+## 本机补同步（ubuntu → 需 sudo）
+
+Actions 用户可直接写 web root；本机 SSH `ubuntu` **不能**直接 `scp` 进 `/var/www/toolbasecamp`（属主 `lighthouse`）。标准做法：
+
+```powershell
+# 1) 先传到家目录
+scp public/js/locales/zh-CN.js public/js/locales/en.js toolbasecamp-cn:~/sync-static/
+# 2) sudo 安装
+ssh toolbasecamp-cn "sudo install -o lighthouse -g ubuntu -m 644 ~/sync-static/zh-CN.js ~/sync-static/en.js /var/www/toolbasecamp/js/locales/"
+# 3) 再 curl/SSH 确认新文案
+```
+
+相关 HTML 同理：先 `~/sync-static/`，再 `sudo install` 到对应路径。改动面大时也可在 VPS 跑 `/opt/toolbasecamp-deploy/fix-static-site.sh`（会拉 origin 并 rsync，注意其内 `perl` bust 全站 `?v=`）。
+
+## 禁止
+
+- 只 push、不校验用户可见的 `public/**` 改动
+- 用「等 Actions / 你清一下缓存」代替校验与补同步
+- 只递增某页 `?v=` 却不确认 **locale/JS 文件本体**已在 VPS 更新
+
+## 与其它规则
+
+- **推送**：仍按 `auto-commit-push`
+- **API / nginx / env**：仍按 `vps-ssh-ops`（与静态站是两条线）
+- **家里电脑 API**：仍按 `comfyui-api-restart`（不走本路径）

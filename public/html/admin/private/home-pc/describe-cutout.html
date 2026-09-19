@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>描述抠图 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq4" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=imgSq4" />
+  <script src="../../../../js/locales/en.js?v=ttvname1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=ttvname1"></script>
+  <script src="../../../../js/i18n.js?v=homepc7"></script>
+  <script src="../../../../js/config.js?v=videoclip1"></script>
+  <script src="../../../../js/common_ui.js?v=homepc4"></script>
+</head>
+<body class="home-pc-page">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+        <header class="home-pc-header">
+    <div class="home-pc-header-inner">
+      <a href="../../private.html" class="home-pc-back">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+      </a>
+      <h1 class="home-pc-title" data-i18n="privateHub.homePc.describeCutoutTitle">描述抠图</h1>
+      <div class="home-pc-header-actions">
+        <span id="auth-label" class="home-pc-auth-label"></span>
+        <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+          <main class="home-pc-main">
+    <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+    <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+      <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+    </div>
+    <div id="app" class="home-pc-wrap hidden" hidden>
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.describeCutoutHint">工作流 qwen_describe_cutout.json。Qwen2.5-VL-3B + SAM2 hiera base + LayerMask 精细抠图。</p>
+      <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+      <div class="tool-container">
+                    <!-- 拖放区域 -->
+                    <div class="drop-zone tb-input-image" id="drop-zone">
+                        <div class="drop-icon">+</div>
+                        <div class="drop-title" data-i18n="privateHub.homePc.dropTitleMulti">点击或拖入图片</div>
+                        <div class="drop-hint" data-i18n="privateHub.homePc.dropHintMulti">支持 JPG、PNG、WebP，可多选</div>
+                    </div>
+                    <input type="file" id="file-input" multiple accept="image/*" hidden />
+                    
+                    <div class="input-section" style="display: flex; gap: 20px; flex-wrap: wrap; flex-direction: column;">
+                        <div id="describe-input-container" style="width: 100%;">
+                            <label for="describe-input" data-i18n="privateHub.homePc.describeCutoutPromptLabel">描述要抠出的物体：</label>
+                            <input type="text" id="describe-input" data-i18n-placeholder="privateHub.homePc.describeCutoutPromptPlaceholder" placeholder="例如：右边的小孩，或者 a cat in the middle" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px;">
+                            <p class="small-hint" data-i18n="privateHub.homePc.describeCutoutPromptHint">多人同框时请写清左右或大人/小孩，如「右边的大人」「左侧的小孩」。</p>
+                        </div>
+                        <div class="field-row" id="output-mode-wrap">
+                            <span class="home-pc-field-label" data-i18n="privateHub.homePc.describeCutoutOutputLabel">输出模式</span>
+                            <div class="instruct-preset-row" id="output-mode-row" role="group">
+                                <button type="button" class="rec-chip is-active" data-output-mode="cutout" data-i18n="privateHub.homePc.describeCutoutModeCutout">抠图</button>
+                                <button type="button" class="rec-chip" data-output-mode="mask" data-i18n="privateHub.homePc.describeCutoutModeMask">蒙版</button>
+                                <button type="button" class="rec-chip" data-output-mode="both" data-i18n="privateHub.homePc.describeCutoutModeBoth">抠图 + 蒙版</button>
+                            </div>
+                            <p class="small-hint" data-i18n="privateHub.homePc.describeCutoutOutputHint">蒙版为黑白图，便于换背景或局部重绘；「两者」会各出一张。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 选择图片预览区域 -->
+                    <div class="selection-preview-section" id="selection-preview-section" hidden>
+                        <h3 class="home-pc-section-title" data-i18n="privateHub.homePc.selectedImagesTitle">已选图片</h3>
+                        <div class="image-selection-preview" id="image-selection-preview"></div>
+                    </div>
+
+                    <div class="action-row home-pc-tool-actions">
+                        <button id="process-btn" class="tb-btn">开始处理</button>
+                        <button id="save-all-btn" class="tb-btn hidden">打包 ZIP 下载</button>
+                        <button id="clear-btn" class="tb-btn">清空</button>
+                    </div>
+                    
+                    <div class="result-section home-pc-result-box" id="result-container">
+                        <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.resultTitle">处理结果</h3>
+                        <div class="image-preview-container" id="image-preview-container"></div>
+                    </div>
+                </div>
+    </div>
+    </main>
+    </div>
+  </div>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=homepc21"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=nosTW5"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=histDel1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc7"></script>
+  <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
+  <script src="../../../../js/admin/home-pc/describe-cutout.js?v=homepc25"></script>
+</body>
+</html>

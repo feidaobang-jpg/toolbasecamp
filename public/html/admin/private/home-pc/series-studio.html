@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>剧集流水线 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=wanonly1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=wanonly1" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=wanonly1" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=wanonly1" />
+  <script src="../../../../js/locales/en.js?v=wanonly1"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=wanonly1"></script>
+  <script src="../../../../js/i18n.js?v=wanonly1"></script>
+  <script src="../../../../js/config.js?v=wanonly1"></script>
+  <script src="../../../../js/common_ui.js?v=wanonly1"></script>
+</head>
+<body class="home-pc-page">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+      <header class="home-pc-header">
+        <div class="home-pc-header-inner">
+          <a href="../../private.html" class="home-pc-back">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+          </a>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.seriesTitle">剧集流水线</h1>
+          <div class="home-pc-header-actions">
+            <span id="auth-label" class="home-pc-auth-label"></span>
+            <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+          </div>
+        </div>
+      </header>
+      <main class="home-pc-main">
+        <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+        <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+          <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+          <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+        </div>
+        <div id="app" class="home-pc-wrap hidden" hidden>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.seriesHint">梗概 → 自动拆戏+导演长提示/多角色对白 → 工作流 z_image_turbo.json 人物定妆 → 确认 @图片 → Wan 成片（可选云端 Seedance）→ 站内裁切 → 合集成片。</p>
+          <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
+
+          <div class="tool-container">
+            <div class="input-section">
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="series-pick" data-i18n="privateHub.homePc.seriesPickLabel">已有项目</label>
+                  <select id="series-pick" class="text-input">
+                    <option value="" data-i18n="privateHub.homePc.seriesPickPlaceholder">请选择已有项目…</option>
+                  </select>
+                </div>
+                <div class="input-control" style="display:flex;align-items:flex-end;">
+                  <div class="action-row">
+                    <button type="button" id="refresh-list-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesRefresh">刷新列表</button>
+                    <button type="button" id="delete-series-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesDelete">删除项目</button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label for="title-input" data-i18n="privateHub.homePc.seriesTitleLabel">剧名</label>
+                <input id="title-input" class="text-input" type="text" required placeholder="例如：西游记" />
+              </div>
+              <div>
+                <label for="synopsis-input" data-i18n="privateHub.homePc.seriesSynopsisLabel">故事梗概</label>
+                <textarea id="synopsis-input" rows="4" placeholder="简述世界观、主角与主线冲突…"></textarea>
+                <p class="small-hint" data-i18n="privateHub.homePc.seriesCreateHint">填完剧名/梗概后，点下方蓝色「新建并拆解剧本」开始。要从已有项目改回新建，在「已有项目」里选回第一项即可。</p>
+              </div>
+
+              <div class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.trailerStyleLabel">画面风格</span>
+                <div class="instruct-preset-row" id="style-row">
+                  <button type="button" class="rec-chip is-active" data-style="realistic" data-i18n="privateHub.homePc.trailerStyleRealistic">写实</button>
+                  <button type="button" class="rec-chip" data-style="cartoon" data-i18n="privateHub.homePc.trailerStyleCartoon">卡通</button>
+                  <button type="button" class="rec-chip" data-style="anime" data-i18n="privateHub.homePc.trailerStyleAnime">二次元</button>
+                  <button type="button" class="rec-chip" data-style="ink" data-i18n="privateHub.homePc.trailerStyleInk">水墨</button>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label data-i18n="privateHub.homePc.trailerAspectLabel">画幅</label>
+                  <div class="trailer-aspect-row">
+                    <label class="trailer-radio"><input type="radio" name="aspect" value="16_9" checked /><span data-i18n="privateHub.homePc.textToVideoLandscape">横屏 16:9</span></label>
+                    <label class="trailer-radio"><input type="radio" name="aspect" value="9_16" /><span data-i18n="privateHub.homePc.textToVideoPortrait">竖屏 9:16</span></label>
+                  </div>
+                </div>
+                <div class="input-control">
+                  <label data-i18n="privateHub.homePc.trailerVideoModeLabel">成片模型</label>
+                  <div class="trailer-aspect-row">
+                    <label class="trailer-radio"><input type="radio" name="video-mode" value="wan22_14b_gguf" checked /><span data-i18n="privateHub.homePc.trailerVideoModeWan">图生视频 Wan 2.2 14B GGUF Q5_K_M</span></label>
+                    <label class="trailer-radio"><input type="radio" name="video-mode" value="seedance_25" /><span data-i18n="privateHub.homePc.seriesVideoModeSeedance">云端 Seedance（贵·需 API Key）</span></label>
+                  </div>
+                  <p class="small-hint" id="seedance-cap-hint" data-i18n="privateHub.homePc.seriesVideoModeHint">本机默认 Wan 2.2 14B GGUF；Seedance 需配置 SEEDANCE_API_KEY（或 ARK_API_KEY）。贵在抽卡，提示词写对再点拍。</p>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="ep-count" data-i18n="privateHub.homePc.seriesEpCount">集数约</label>
+                  <input id="ep-count" class="text-input" type="number" min="1" max="12" value="1" />
+                </div>
+                <div class="input-control">
+                  <label for="sc-count" data-i18n="privateHub.homePc.seriesScCount">每集场数约</label>
+                  <input id="sc-count" class="text-input" type="number" min="1" max="8" value="1" />
+                </div>
+                <div class="input-control">
+                  <label for="sh-count" data-i18n="privateHub.homePc.seriesShCount">每场镜数约</label>
+                  <input id="sh-count" class="text-input" type="number" min="1" max="12" value="1" />
+                </div>
+                <div class="input-control">
+                  <label for="shot-dur" data-i18n="privateHub.homePc.trailerShotDurationLabel">单镜秒数</label>
+                  <select id="shot-dur" class="text-input">
+                    <option value="3">3</option>
+                    <option value="4" selected>4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                  </select>
+                  <p class="small-hint" data-i18n="privateHub.homePc.seriesShotDurationHint">剧集默认 4 秒（可选 3～8）。对白镜头别压到 1～3；本机 Wan 成片实际约顶 3 秒。</p>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-control">
+                  <label for="voice-select" data-i18n="privateHub.homePc.textToVideoVoiceLabel">语音：</label>
+                  <select id="voice-select" class="text-input">
+                    <option value="zh-CN-XiaoxiaoNeural">晓晓（女声）</option>
+                    <option value="zh-CN-YunxiNeural" selected>云希（男声）</option>
+                    <option value="zh-CN-YunyangNeural">云扬（男声新闻）</option>
+                    <option value="zh-CN-XiaoyiNeural">晓伊（女声）</option>
+                    <option value="zh-CN-YunjianNeural">云健（男声）</option>
+                  </select>
+                </div>
+                <div class="input-control">
+                  <label for="speed-input" data-i18n="privateHub.homePc.textToVideoSpeedLabel">语速：</label>
+                  <input id="speed-input" class="text-input" type="number" step="0.1" min="0.7" max="1.4" value="1.0" />
+                </div>
+              </div>
+
+              <div class="field-row">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.trailerGlobalRefsLabel">全剧参考图</span>
+                <div class="trailer-aspect-row">
+                  <label class="trailer-radio"><input type="radio" name="use-global-refs" value="1" /><span data-i18n="privateHub.homePc.trailerGlobalRefsOn">开启（DeepSeek 定设定 + AI 候选/可上传）</span></label>
+                  <label class="trailer-radio"><input type="radio" name="use-global-refs" value="0" checked /><span data-i18n="privateHub.homePc.trailerGlobalRefsOff">关闭（仅文字分镜）</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-row home-pc-tool-actions">
+              <button type="button" id="create-plan-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesCreatePlan">新建并拆解剧本</button>
+              <button type="button" id="confirm-global-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerConfirmGlobal">确认全剧参考</button>
+              <button type="button" id="skip-global-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.trailerSkipGlobal">跳过参考图</button>
+              <button type="button" id="continue-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesContinue">继续全自动</button>
+              <button type="button" id="regen-all-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesRegenAll">全部重跑</button>
+              <button type="button" id="playlist-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesPlaylistPlay">合集预览</button>
+              <button type="button" id="free-vram-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.seriesFreeVram">释放显存</button>
+              <button type="button" id="cancel-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.cancelTask">取消任务</button>
+            </div>
+
+            <div id="progress-wrap" class="home-pc-progress" style="display:none;">
+              <div class="home-pc-progress-meta">
+                <span id="progress-status">…</span>
+                <span id="progress-percent"></span>
+              </div>
+            </div>
+
+            <div id="bible-box" class="trailer-bible" style="display:none;"></div>
+
+            <div id="characters-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.seriesCharactersTitle">人物页</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.seriesCharactersHint">本集角色一次列出；可按角色或全部批量重出定妆。音色描述会影响多角色分轨配音。</p>
+              <div class="action-row" style="margin-bottom:10px;">
+                <button type="button" id="regen-all-chars-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesRegenAllChars">全部角色定妆重出</button>
+              </div>
+              <div id="characters-list" class="series-char-grid"></div>
+            </div>
+
+            <div id="global-refs-box" class="home-pc-result-box" style="display:none;">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerGlobalRefsTitle">全剧参考图</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.trailerGlobalRefsPickHint">勾选要保留的定妆/情绪板；可上传；不满意可在图下填写修改意见后「按反馈重出」。确认后会写入 @图片N 绑定到导演提示词。</p>
+              <div class="action-row" style="margin-bottom:10px;">
+                <label class="tb-btn trailer-upload-label">
+                  <span data-i18n="privateHub.homePc.trailerGlobalRefsUpload">上传参考图</span>
+                  <input id="global-ref-file" type="file" accept="image/*" multiple hidden />
+                </label>
+              </div>
+              <div id="global-refs-list" class="trailer-cand-grid"></div>
+            </div>
+
+            <div id="workspace" class="series-workspace" style="display:none;">
+              <div class="series-progress-line" id="series-progress-line"></div>
+              <div class="series-ep-tabs" id="ep-tabs" role="tablist"></div>
+              <div id="scene-board" class="series-scene-board"></div>
+              <div id="shot-preview-box" class="home-pc-result-box series-shot-preview" style="display:none;">
+                <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.seriesShotPreview">镜头预览</h3>
+                <p id="shot-preview-meta" class="small-hint"></p>
+                <video id="shot-preview-video" class="series-shot-preview-video" controls playsinline></video>
+                <div class="form-row series-trim-row" style="margin-top:10px;">
+                  <div class="input-control">
+                    <label for="trim-start" data-i18n="privateHub.homePc.seriesTrimStart">裁切起点（秒）</label>
+                    <input id="trim-start" class="text-input" type="number" min="0" step="0.1" value="0" />
+                  </div>
+                  <div class="input-control">
+                    <label for="trim-end" data-i18n="privateHub.homePc.seriesTrimEnd">裁切终点（秒，空=片尾）</label>
+                    <input id="trim-end" class="text-input" type="number" min="0" step="0.1" value="" placeholder="留空到结尾" />
+                  </div>
+                  <div class="input-control" style="align-self:flex-end;">
+                    <button type="button" id="trim-shot-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesTrimApply">裁切并替换成片</button>
+                  </div>
+                </div>
+                <p class="small-hint" data-i18n="privateHub.homePc.seriesTrimHint">不满意头尾可直接站内裁；会覆盖本镜主成片（另留 trim 副本）。</p>
+                <div class="action-row" style="margin-top:10px;">
+                  <button type="button" id="playlist-from-preview-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesPlaylistPlay">合集预览</button>
+                  <button type="button" id="compose-episode-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesComposeEpisode">合并导出本集</button>
+                  <button type="button" id="open-shot-folder-btn" class="tb-btn" data-i18n="privateHub.homePc.seriesOpenFolder">打开文件夹</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="log-container" class="home-pc-log-box home-pc-log-box--tall">
+              <div class="home-pc-log-head series-log-head">
+                <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.trailerLogTitle">日志</h3>
+              </div>
+              <p class="small-hint" data-i18n="privateHub.homePc.seriesLogHint">日志在项目目录 pipeline.log；点「打开日志目录」可查看素材与日志。</p>
+              <pre id="log-output"></pre>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="lightbox" class="trailer-lightbox image-pipe-lightbox" style="display:none;" hidden>
+    <button type="button" class="trailer-lightbox-backdrop" id="lightbox-backdrop" aria-label="关闭"></button>
+    <div class="trailer-lightbox-panel image-pipe-lightbox-panel">
+      <div class="image-pipe-lb-stage">
+        <button type="button" id="lightbox-prev" class="image-pipe-lb-nav image-pipe-lb-prev" data-lb-prev aria-label="上一张"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+        <img id="lightbox-img" alt="" />
+        <button type="button" id="lightbox-next" class="image-pipe-lb-nav image-pipe-lb-next" data-lb-next aria-label="下一张"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <div id="lightbox-caption" class="image-pipe-lb-caption" data-lb-caption></div>
+    </div>
+  </div>
+
+  <script src="../../../../js/shared/image-upload-compress.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=wanonly1"></script>
+  <script src="../../../../js/admin/home-pc/series-studio.js?v=wanonly1"></script>
+</body>
+</html>

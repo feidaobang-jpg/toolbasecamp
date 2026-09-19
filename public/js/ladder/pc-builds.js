@@ -173,7 +173,7 @@
     var el = document.getElementById('pc-builds-title');
     var text = String(t('tools.pcBuilds.titleTpl', '{year} 装机配置推荐')).replace('{year}', String(year));
     if (el) el.textContent = text;
-    document.title = text + ' - ' + (t('site.name', '工具大本营') || '工具大本营');
+    document.title = text + ' - ' + (t('site.name', '百宝箱') || '百宝箱');
   }
 
   function setMeta(shown, total) {

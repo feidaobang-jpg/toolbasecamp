@@ -10,18 +10,26 @@ alwaysApply: true
 1. **入库 / 日志基准**：用 **UTC**（`datetime.now(timezone.utc)` 或等价）。不要依赖 VPS「系统本地时区」。
 2. **接口返回给前端 / 页面展示**：转成 **Asia/Shanghai（UTC+8）**，格式优先 `YYYY-MM-DD HH:MM:SS`（无时区后缀亦可，但数值必须是北京时间）。
 3. **禁止**：把 UTC 裸字符串直接当北京时间展示（会差约 8 小时，公开音乐列表曾因此出错）。
-4. **禁止**：靠 `datetime.now()` / `datetime.utcnow()` 混用却不说明语义；新建代码优先显式 `timezone.utc` + `ZoneInfo("Asia/Shanghai")`。
+4. **禁止**：靠 `datetime.now()` / `datetime.utcnow()` 混用却不说明语义；新建代码优先显式 `timezone.utc` + 北京时间助手。
 5. **已有 naive DATETIME**：若历史写入是 UTC naive，展示时按 UTC 解释再转上海；不要对同一批数据再「整库 +8」除非做过迁移说明。
+6. **Windows**：`ZoneInfo("Asia/Shanghai")` 需要 `tzdata` 包。家里电脑 API 用 `comfyui-api-server/cn_time.py`（缺 tzdata 时回退 UTC+8），`requirements.txt` 含 `tzdata`，`start-server.bat` 启动时会补装。**禁止**在无回退的情况下裸调 `ZoneInfo("Asia/Shanghai")` 导致 TTS 等接口 500。
 
 ```python
 # ✅ 写入
 datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
+# ✅ 展示（家里电脑流水线）
+from cn_time import cn_now_str, CN_TZ
+cn_now_str()
+
 # ✅ 展示（naive 按 UTC）
-dt.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S")
+dt.replace(tzinfo=timezone.utc).astimezone(CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
 
 # ❌ 写入 UTC 却原样 isoformat 给国内用户当本地时间
 created.isoformat(sep=" ")
+
+# ❌ Windows 无 tzdata 时裸用 ZoneInfo（会 ZoneInfoNotFoundError）
+datetime.now(ZoneInfo("Asia/Shanghai"))
 ```
 
 前端若自己格式化 ISO 时间戳，也按东八区或 `Asia/Shanghai` 显示，不要只 `toLocaleString` 却假定服务器已是北京时间。

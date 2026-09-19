@@ -263,19 +263,26 @@
             C.setError(errorBox, C.tr('tools.imageCloud.invalidFile'));
             return;
         }
-        if (f.size > 6 * 1024 * 1024) {
-            C.setError(errorBox, C.tr('tools.imageCloud.tooLarge'));
-            return;
+        var apply = function (picked) {
+            if (picked.size > 6 * 1024 * 1024) {
+                C.setError(errorBox, C.tr('tools.imageCloud.tooLarge'));
+                return;
+            }
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            file = picked;
+            previewUrl = URL.createObjectURL(picked);
+            sourceImg.src = previewUrl;
+            sourceWrap.hidden = false;
+            controls.hidden = false;
+            dropZone.hidden = true;
+            setBusy(false);
+            updateEstimate();
+        };
+        if (window.TBImageUploadCompress && TBImageUploadCompress.prepareUploadFile) {
+            TBImageUploadCompress.prepareUploadFile(f, apply, 'video');
+        } else {
+            apply(f);
         }
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-        file = f;
-        previewUrl = URL.createObjectURL(f);
-        sourceImg.src = previewUrl;
-        sourceWrap.hidden = false;
-        controls.hidden = false;
-        dropZone.hidden = true;
-        setBusy(false);
-        updateEstimate();
     }
 
     function clearAll() {

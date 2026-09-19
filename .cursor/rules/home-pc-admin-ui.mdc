@@ -1,0 +1,30 @@
+---
+description: 家里电脑后台页 UI（见全站 no-tailwind 规则）
+globs: public/html/admin/private/home-pc/**,public/css/admin/home-pc.css,public/js/admin/home-pc/**,public/js/shared/instruct-edit-*.js
+alwaysApply: false
+---
+
+# 家里电脑（Home PC）后台 UI
+
+遵循全站规则 `.cursor/rules/no-tailwind.mdc`（禁止 Tailwind CDN / 工具类）。
+
+媒体列表 / 大图预览 / 历史回填 / 模型状态 / 日志工具栏等约定见 **`.cursor/rules/home-pc-media-pipeline.mdc`（alwaysApply）**，改图相关页必须遵守。
+
+用户可见命名：语音/音乐/音效 **不要**叫「流水线」（详见该规则 §0）；图片/短片/剧集/游戏图等批量编排页才用「流水线」。
+
+## 样式栈
+
+1. `base.css` → `docs/docs-common.css` → `admin/home-pc.css`
+2. 图生图 / instruct 表单：再加 `tools-form.css`、`media/image-tools.css`
+3. 外壳：`body.home-pc-page`、`.home-pc-header`、`.home-pc-main`、`.home-pc-card`
+
+## 与主站 instruct-edit 共用
+
+| 能力 | 共用模块 |
+|------|----------|
+| 风格预设 | `instruct-edit-presets.js` + `instruct-edit-preset-ui.js` |
+| 背景地点 | `instruct-edit-bg-*.js` |
+| 芯片 CSS | `image-tools.css`（`.rec-chip`） |
+| 缩略图卡 / lightbox / 日志栏 | `home-pc-media-ui.js`（`HomePcMediaUi`） |
+
+新增 preset/背景只改 shared + 服务端镜像，不要在家 pc 页复制逻辑。

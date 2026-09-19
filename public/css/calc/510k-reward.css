@@ -109,6 +109,36 @@
   color: #374151;
   line-height: 1.2;
   padding: 2px 0 6px;
+  min-width: 0;
+}
+
+.k510-name-input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px 4px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  text-align: center;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.k510-name-input::placeholder {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.k510-name-input:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 0;
+  border-color: #2563eb;
 }
 
 .k510-score-body {

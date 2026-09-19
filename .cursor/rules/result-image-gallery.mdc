@@ -1,0 +1,25 @@
+---
+description: 生成结果图必须同行对齐，点击大图预览，并带左右切换
+alwaysApply: true
+---
+
+# 生成结果图：对齐 + 大图 + 左右切换
+
+凡展示**多张生成结果图**（图生图 / 文生图 / 本机历史 / 图片列表 / 家里电脑结果网格），必须同时满足：
+
+1. **同行对齐**：同一行卡片标题区等高、图框尺寸一致、按钮贴底，禁止长短标题把图和按钮顶歪。结果卡用 `.instruct-result-card` + `.instruct-results-grid`（样式在 `image-tools.css`）。
+2. **点击出大图**：点缩略图打开预览，点遮罩或 Esc 关闭。微信内结果图仍不弹预览（长按保存），见 `wechat-image-download`。
+3. **左右切换**：预览必须有上一张 / 下一张（按钮 + ← →）。到头 `disabled` + `.is-disabled`，并短提示「已经是第一张 / 已经是最后一张」。只有一张时隐藏箭头。
+
+## 用哪套
+
+| 区域 | 实现 |
+|---|---|
+| 公开图生图 / 文生图 / 历史 | `TBImageCloud.bindImagePreview`（同一 `.instruct-results-grid` 内切换）或 `openResultGallery` |
+| 家里电脑流水线 | `HomePcMediaUi.createLightbox`（已有，不要另写一套） |
+| 图片页 AI 列表 | `image-hub.js` 的 `openHubPreview({ list })` |
+
+## 禁止
+
+- 只弹单张、没有左右箭头的结果预览（单张结果除外）。
+- 只改某一页对齐，其它结果网格继续错位。

@@ -1,0 +1,129 @@
+========================================
+  ComfyUI API Server 使用说明：这个是在本地运行的，不传服务器
+========================================
+
+📁 文件说明
+----------------------------------------
+
+✓ app.py                      - 主程序
+✓ requirements.txt            - Python 依赖列表
+✓ work-flow/                  - 工作流配置文件夹
+  └── rembg.json              - 移除背景工作流
+
+✓ start-server.bat            - 启动服务（显示窗口）
+✓ start-server.ps1            - PowerShell 启动脚本
+✓ start-server-hidden.vbs     - 后台启动（无窗口）
+
+✓ install-autostart.bat       - 安装开机自启动
+✓ uninstall-autostart.bat     - 卸载开机自启动
+✓ check-server.bat            - 检查服务状态
+✓ disable-store-python-alias.bat / .ps1  - 删除微软 WindowsApps 下的 python 占位，避免抢 PATH
+
+
+🚀 快速开始
+----------------------------------------
+
+【首次使用】
+1. 确保已安装 Python 3.8+
+   若已安装但「python --version」无输出，且 where python 先列出 WindowsApps：
+   可双击 disable-store-python-alias.bat（或设置里关闭「应用执行别名」中的 python）
+2. 双击运行: install-dependencies.bat（如果有）
+   或手动安装: pip install -r requirements.txt
+3. 确保 ComfyUI 运行在 127.0.0.1:8188
+
+【启动服务】
+- 方式1: 双击 start-server.bat（推荐，有窗口）
+- 方式2: 双击 start-server-hidden.vbs（无窗口）
+- 方式3: 命令行运行 python app.py
+
+【访问服务】
+- 主页: http://localhost:5000
+- API文档: http://localhost:5000/docs
+- 健康检查: http://localhost:5000/health
+
+
+⚙️ 开机自启动
+----------------------------------------
+
+【安装】
+双击运行: install-autostart.bat
+
+安装后，服务会在每次开机时自动启动（后台运行）
+
+【卸载】
+双击运行: uninstall-autostart.bat
+
+【说明】
+自启动脚本会在以下位置创建快捷方式：
+%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
+
+
+🔍 故障排查
+----------------------------------------
+
+【问题1】运行 start-server.bat 报错 "Python 未安装"
+解决: 安装 Python 或将 Python 添加到系统 PATH
+
+【问题2】服务启动失败
+解决: 
+1. 检查 ComfyUI 是否运行在 127.0.0.1:8188
+2. 检查端口 5000 是否被占用
+3. 查看错误信息
+
+【问题3】自启动不生效
+解决:
+1. 确认已运行 install-autostart.bat
+2. 检查启动文件夹中是否有快捷方式
+3. 重新安装自启动
+
+【检查服务状态】
+双击运行: check-server.bat
+
+
+📝 注意事项
+----------------------------------------
+
+1. 服务依赖 ComfyUI，请确保 ComfyUI 已启动
+2. 默认端口: 5000，可在 app.py 中修改
+3. 默认 ComfyUI 地址: 127.0.0.1:8188
+4. 生产环境请修改 CORS 配置
+
+
+💡 常用命令
+----------------------------------------
+
+# 启动服务
+python app.py
+
+# 使用 uvicorn 启动（开发模式）
+uvicorn app:app --reload
+
+# 使用 uvicorn 启动（生产模式）
+uvicorn app:app --host 0.0.0.0 --port 5000 --workers 4
+
+# 查看服务状态
+curl http://localhost:5000/health
+
+# 查看 API 文档
+浏览器访问: http://localhost:5000/docs
+
+
+📝 文字成片（text-to-video）画面提示词
+----------------------------------------
+- 若存在 DeepSeek 密钥，会在生成图片前批量调用 API，把「总主题 + 每组口播」写成文生图正向提示词，画面与主题/句子更贴合。
+- 密钥读取顺序：环境变量 DEEPSEEK_API_KEY；否则在仓库内尝试读取 ../web-tool/scripts/build_news.py 中的 DEEPSEEK_API_KEY（与生成资讯脚本一致）。
+- 无密钥或 API 失败时自动回退为规则拼接提示词，任务仍会继续。
+- 配图固定为一句分镜一张图（与语音、字幕一一对应）；完成后接口会返回 output_directory，可用「复制路径 / 在本机打开输出文件夹」。
+
+
+🔗 相关链接
+----------------------------------------
+
+- 项目主页: ../README.md
+- 前端工具: ../web-tool/
+- API 文档: http://localhost:5000/docs（服务启动后）
+
+
+========================================
+如有问题，请查看 README.md 获取更多信息
+========================================

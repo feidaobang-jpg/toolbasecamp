@@ -1,0 +1,51 @@
+---
+description: 改完并推送 comfyui-api-server 后，本机可重启则自动重启 API
+alwaysApply: true
+---
+
+# comfyui-api-server：推送后自动重启
+
+家里电脑 GPU 上的 `comfyui-api-server`（默认 `:5000`，经 Tunnel 到 `comfy.zhengxiaohui.cn`）**不会**因 git push / GitHub Actions 自动换代码；进程不重启就仍跑旧逻辑。
+
+## 何时执行
+
+本会话若改动了 **`comfyui-api-server/`** 下任意文件，且已按 `auto-commit-push` **push 成功**（或用户要求跳过 push 但本地改动已落盘）后：
+
+1. **探测本机能否重启**：`http://127.0.0.1:5000/health` 或端口 `5000` 在监听。
+2. **能** → **立即重启**，不要只提醒用户「请手动重启」。
+3. **不能**（本机无服务、无 Python、权限失败）→ 简短说明跳过原因，勿假装已重启。
+
+用户明确说「不要重启」时跳过。
+
+## 标准重启步骤（Windows / PowerShell）
+
+在仓库根或 `comfyui-api-server/`：
+
+```powershell
+# 1) 停掉占用 5000 的进程
+$listen = Get-NetTCPConnection -LocalPort 5000 -State Listen -ErrorAction SilentlyContinue |
+  Select-Object -First 1 -ExpandProperty OwningProcess
+if ($listen) { Stop-Process -Id $listen -Force }
+
+# 2) 后台再起（用本机实际 python；常见路径如下）
+$py = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
+if (-not (Test-Path $py)) { $py = (Get-Command python -ErrorAction SilentlyContinue).Source }
+Start-Process -FilePath $py -ArgumentList "app.py" -WorkingDirectory "<repo>/comfyui-api-server" -WindowStyle Hidden
+
+# 3) 校验
+# Invoke-WebRequest http://127.0.0.1:5000/health
+# 若改了 image_pipeline 等：再看 /image-pipeline/defaults 是否含新字段
+```
+
+也可用目录内脚本：先无交互停服（勿用带 `pause` 的 bat 卡住 Agent），再 `start-server.bat hidden` 或等价无 pause 启动。
+
+## 禁止
+
+- 改完 `comfyui-api-server` 只 push、能重启却不重启
+- 为「省事」杀掉无关进程，或重启 ComfyUI `:8188`（除非任务明确要求）
+- 把「请用户去双击 stop/start」当作默认完成项（本机可重启时）
+
+## 与其它规则
+
+- **推送**：仍按 `auto-commit-push`
+- **VPS**：本服务不进腾讯云 API；勿对 `toolbasecamp-cn` 重启此进程

@@ -1,0 +1,35 @@
+---
+description: 站点统计后台模块汇总/页面排行必须显示中文，禁止英文 event key 或英文 slug 直出
+globs: public/js/admin/site-stats.js,public/html/admin/site-stats.html,public/js/tb-stats.js
+alwaysApply: true
+---
+
+# 站点统计展示：中文标签（禁止英文直出）
+
+管理后台「站点统计」里的 **模块汇总**、**功能 / 页面排行** 面向运营，**必须显示中文名称**。
+
+## 禁止出现的形态
+
+| 错误示例 | 原因 |
+|---|---|
+| `tool.classmates` | 模块缺 `MODULE_LABELS` |
+| `hub` / `mark six` / `mark six list` | 事件缺映射，回退成 `file.replace(/-/g,' ')` |
+| `Android`（作组名） | 中文 locale 写成了英文专名 |
+
+原始 `event_name`（如 `tool.classmates.mark-six`）可放在 `title` 悬停提示，**不得**当主文案。
+
+## 改动时必须做的
+
+1. **新目录 / 新页**（`html/<folder>/<page>.html`）会被 `tb-stats.js` 记成 `tool.<folder>.<page>`：
+   - 若在 `toolsConfig` / `gamesConfig`：保证 `titleKey` 在 **zh-CN.js** 有中文（组名也要中文，如「安卓」不是 `Android`）。
+   - 若不在公开工具表（同学专区、私有页等）：在 `public/js/admin/site-stats.js` 的 `EXTRA_EVENT_LABELS`（单页）和/或 `MODULE_LABELS`（`tool.<folder>`）补 `{ zh, en }`。
+2. **改 `labelForEvent` 回退逻辑**时：中文环境禁止只返回英文 slug（如 `mark six`）；至少要有模块中文名，未知页也要带中文前缀。
+3. 改完 `site-stats.js` / locales 后递增页面 `?v=`。
+
+## 自检
+
+打开站点统计，模块汇总与排行里不应再出现：
+
+- 裸 `tool.*` key
+- 纯英文工具文件名（`hub`、`mark six`…）
+- 组名仍是英文品牌词却无中文（中文 UI 下「安卓」等）

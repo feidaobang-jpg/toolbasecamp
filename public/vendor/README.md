@@ -2,7 +2,7 @@
 
 Self-hosted copies so hub/auth pages do not wait on overseas CDNs.
 
-- `tailwindcss.js` — Tailwind Play CDN build (pinned snapshot)
+- `tailwindcss.js` — **已废弃**，勿在 HTML 中引用（样式见 `css/site-shell.css` 等）
 - `font-awesome/` — Font Awesome 6.0.0 CSS + woff2 webfonts
 
 Update by re-downloading from the upstream CDN URLs when bumping versions.

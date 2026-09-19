@@ -34,6 +34,57 @@ body {
     width: 100%;
 }
 
+.tb-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.tb-pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 4px;
+}
+
+.tb-pager-status {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.tb-pager-jump {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.tb-pager-jump-label {
+    white-space: nowrap;
+}
+
+.tb-pager-input {
+    width: 4.2em;
+    padding: 4px 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.875rem;
+    color: #0f172a;
+    background: #fff;
+    text-align: center;
+}
+
+.tb-pager-input:focus {
+    outline: 2px solid #93c5fd;
+    outline-offset: 1px;
+    border-color: #2563eb;
+}
+
 .tb-btn-sm {
     padding: 6px 16px;
     font-size: 13px;
@@ -634,4 +685,28 @@ label {
 .site-icp-footer a:hover {
     color: #2563eb;
     text-decoration: underline;
+}
+
+/* Media grid card title / meta (images hub + admin sticker grid) */
+.tb-media-card-title,
+.ladder-media-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.2em;
+    line-height: 1.2;
+}
+
+.tb-media-card-sub,
+.ladder-media-sub {
+    font-size: 0.72rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.2em;
+    line-height: 1.2;
 } 

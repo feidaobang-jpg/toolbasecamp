@@ -44,6 +44,12 @@ from minimax_image import (
     is_minimax_model,
     minimax_configured,
 )
+from lk888_image import (
+    generate_lk888_image_to_image,
+    generate_lk888_text_to_image,
+    is_lk888_model,
+    lk888_configured,
+)
 from ai_wallet import (
     require_can_afford,
     require_positive_balance,
@@ -100,6 +106,42 @@ INSTRUCT_EDIT_MODELS = (
         "maxRefs": 4,
         "labelKey": "tools.instructEdit.modelSeedream50lite",
     },
+    # 逍遥：Image2 1K≈0.05 2K≈0.10；2.5 官方同 token 价，Flare 日常 / Sunburst 精品略加价
+    {
+        "id": "gpt-image-2",
+        "priceCny1K": 0.06,
+        "priceCny2K": 0.12,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelGptImage2",
+    },
+    {
+        "id": "gpt-image-2.5-flare",
+        "priceCny1K": 0.07,
+        "priceCny2K": 0.14,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelGptImage25Flare",
+    },
+    {
+        "id": "gpt-image-2.5-sunburst",
+        "priceCny1K": 0.12,
+        "priceCny2K": 0.20,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelGptImage25Sunburst",
+    },
+    {
+        "id": "banana-2",
+        "priceCny1K": 0.15,
+        "priceCny2K": 0.20,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelBanana2",
+    },
+    {
+        "id": "banana-pro",
+        "priceCny1K": 0.20,
+        "priceCny2K": 0.24,
+        "maxRefs": 4,
+        "labelKey": "tools.instructEdit.modelBananaPro",
+    },
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
@@ -111,6 +153,7 @@ INSTRUCT_EDIT_RATE_BACKOFF = float(os.environ.get("IMAGE_EDIT_RATE_BACKOFF", "2.
 IMAGE_DEBUG = os.environ.get("IMAGE_DEBUG", "1").strip().lower() not in ("0", "false", "no", "off")
 
 # Text-to-image models — price ascending; MiniMax Image-01 = default.
+# priceCny = vendor list (× AI_PRICE_MARKUP for users). lk888 mid-tier ~0.06–0.24.
 TEXT_TO_IMAGE_MODELS = (
     {
         "id": "image-01",
@@ -127,6 +170,31 @@ TEXT_TO_IMAGE_MODELS = (
         "id": "z-image-turbo",
         "priceCny": 0.04,
         "labelKey": "tools.textToImage.modelZTurbo",
+    },
+    {
+        "id": "gpt-image-2",
+        "priceCny": 0.10,
+        "labelKey": "tools.textToImage.modelGptImage2",
+    },
+    {
+        "id": "gpt-image-2.5-flare",
+        "priceCny": 0.11,
+        "labelKey": "tools.textToImage.modelGptImage25Flare",
+    },
+    {
+        "id": "gpt-image-2.5-sunburst",
+        "priceCny": 0.16,
+        "labelKey": "tools.textToImage.modelGptImage25Sunburst",
+    },
+    {
+        "id": "banana-2",
+        "priceCny": 0.15,
+        "labelKey": "tools.textToImage.modelBanana2",
+    },
+    {
+        "id": "banana-pro",
+        "priceCny": 0.22,
+        "labelKey": "tools.textToImage.modelBananaPro",
     },
     {
         "id": "wan2.7-image",
@@ -190,7 +258,7 @@ PUBLIC_THUMB_JPEG_QUALITY = max(50, min(95, int(os.environ.get("PUBLIC_IMAGE_THU
 CN_TZ = ZoneInfo("Asia/Shanghai")
 
 # Daily per-user limits (login required). Admins (role=admin or ADMIN_EMAIL) are exempt.
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 ADMIN_PHONE = (os.environ.get("ADMIN_PHONE") or "").strip()
 LIMITS = {
     "ocr_text": int(os.environ.get("IMAGE_LIMIT_OCR_TEXT", "30")),
@@ -424,6 +492,8 @@ def _publish_public_image(
         raise HTTPException(status_code=500, detail="Empty image for publish")
     image_id = secrets.token_hex(16)
     ctype = content_type or "image/png"
+    if _is_gif(data, ctype):
+        ctype = "image/gif"
     ext = _tmp_suffix(ctype)
     file_name = f"{image_id}{ext}"
     path = PUBLIC_IMAGE_DIR / file_name
@@ -452,6 +522,8 @@ def _publish_public_image(
         "publicUrl": f"/image/public/{image_id}",
         "publicDownloadUrl": f"/image/public/{image_id}?download=1",
         "publicThumbnailUrl": f"/pubimg/{image_id}_thumb.jpg",
+        "publicStaticUrl": f"/pubimg/{file_name}",
+        "animated": _is_gif(data, ctype),
     }
 
 
@@ -511,12 +583,21 @@ def _conn():
     return router.get_conn()  # type: ignore[attr-defined]
 
 
+def _is_gif(data: Optional[bytes], ctype: str = "") -> bool:
+    low = (ctype or "").lower()
+    if "gif" in low:
+        return True
+    return bool(data and len(data) >= 4 and data[:4] == b"GIF8")
+
+
 def _tmp_suffix(ctype: str) -> str:
     low = (ctype or "").lower()
     if "jpeg" in low or "jpg" in low:
         return ".jpg"
     if "webp" in low:
         return ".webp"
+    if "gif" in low:
+        return ".gif"
     return ".png"
 
 
@@ -549,6 +630,9 @@ def _compress_for_mobile(data: bytes, ctype: str) -> tuple[bytes, str]:
 
 def _compress_for_public(data: bytes, ctype: str) -> tuple[bytes, str]:
     """Aggressive JPEG shrink for public gallery (Wan PNG can be 10MB+)."""
+    # Never flatten animated GIFs into a still JPEG.
+    if _is_gif(data, ctype):
+        return data, "image/gif"
     try:
         from io import BytesIO
 
@@ -607,6 +691,11 @@ def image_public_list(
         with conn.cursor() as cur:
             _ensure_public_images_schema(cur)
             cur.execute(
+                "SELECT COUNT(*) AS c FROM public_images WHERE is_public=1"
+            )
+            total_row = cur.fetchone() or {}
+            total = int(total_row.get("c") or 0)
+            cur.execute(
                 """
                 SELECT i.id, i.prompt, i.model, i.source, i.content_type,
                        i.created_at, i.file_name, i.user_id,
@@ -636,22 +725,41 @@ def image_public_list(
             continue
         creator = _creator_public(row)
         prompt = (row.get("prompt") or "").strip()
+        ctype = row.get("content_type") or "image/png"
+        animated = _is_gif(None, str(ctype)) or file_name.lower().endswith(".gif")
+        if not animated:
+            try:
+                animated = _is_gif(path.read_bytes()[:6], "")
+            except Exception:
+                animated = False
+        if animated and "gif" not in str(ctype).lower():
+            ctype = "image/gif"
         items.append(
             {
                 "id": iid,
                 "prompt": prompt[:400],
                 "model": row.get("model") or "",
                 "source": row.get("source") or "",
-                "contentType": row.get("content_type") or "image/png",
+                "contentType": ctype,
+                "animated": bool(animated),
                 "createdAt": _format_created_at_cn(row.get("created_at")),
                 "creatorNickname": creator["creatorNickname"],
                 "creatorPhone": creator["creatorPhone"],
+                "bytes": path.stat().st_size,
                 "imageUrl": f"/image/public/{iid}",
+                "staticUrl": f"/pubimg/{file_name}",
                 "thumbnailUrl": f"/pubimg/{iid}_thumb.jpg",
                 "downloadUrl": f"/image/public/{iid}?download=1",
             }
         )
-    return {"success": True, "items": items, "limit": lim, "offset": off, "canAdmin": can_admin}
+    return {
+        "success": True,
+        "items": items,
+        "limit": lim,
+        "offset": off,
+        "total": total,
+        "canAdmin": can_admin,
+    }
 
 
 @router.post("/public/publish")
@@ -675,11 +783,13 @@ async def image_public_publish(
         raise HTTPException(status_code=400, detail="Please upload an image file")
     if not ctype.startswith("image/"):
         ctype = "image/png"
+    if _is_gif(raw, ctype):
+        ctype = "image/gif"
     src = (source or "").strip() or "manual"
-    if src not in ("text_to_image", "instruct_edit", "manual"):
+    if src not in ("text_to_image", "instruct_edit", "image_pipeline", "manual"):
         src = "manual"
-    # Always shrink large AI PNGs for the public gallery.
-    if len(raw) > 1024 * 1024:
+    # Shrink large AI PNGs for the public gallery; keep GIFs intact so they stay animated.
+    if len(raw) > 1024 * 1024 and not _is_gif(raw, ctype):
         raw, ctype = _compress_for_public(raw, ctype)
     if len(raw) > MAX_UPLOAD:
         raise HTTPException(status_code=400, detail="Image is too large (max 8MB)")
@@ -980,7 +1090,7 @@ def image_status(user: dict = Depends(_user)):
                 {"id": "expand_edges", "labelKey": "tools.instructEdit.presetExpandEdges"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
-            "textToImageConfigured": dashscope_image_edit_configured(),
+            "textToImageConfigured": text_to_image_configured(),
             "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": True,
             "aiWallet": wallet,
@@ -1033,7 +1143,7 @@ def image_status(user: dict = Depends(_user)):
                 {"id": "expand_edges", "labelKey": "tools.instructEdit.presetExpandEdges"},
             ],
             "instructEditMaxBatch": MAX_INSTRUCT_BATCH,
-            "textToImageConfigured": dashscope_image_edit_configured(),
+            "textToImageConfigured": text_to_image_configured(),
             "textToImageModels": list(TEXT_TO_IMAGE_MODELS),
             "isAdmin": False,
             "aiWallet": wallet,
@@ -1302,7 +1412,19 @@ def _max_refs_for_models(model_ids: list[str]) -> int:
 
 
 def instruct_edit_configured() -> bool:
-    return dashscope_image_edit_configured() or volc_ark_configured()
+    return (
+        dashscope_image_edit_configured()
+        or volc_ark_configured()
+        or lk888_configured()
+    )
+
+
+def text_to_image_configured() -> bool:
+    return (
+        dashscope_image_edit_configured()
+        or minimax_configured()
+        or lk888_configured()
+    )
 
 
 def _model_provider_ready(model_id: str) -> None:
@@ -1312,6 +1434,13 @@ def _model_provider_ready(model_id: str) -> None:
             raise HTTPException(
                 status_code=503,
                 detail="MiniMax is not configured (MINIMAX_API_KEY).",
+            )
+        return
+    if is_lk888_model(model_id):
+        if not lk888_configured():
+            raise HTTPException(
+                status_code=503,
+                detail="逍遥 AI is not configured (LK888_API_KEY).",
             )
         return
     if is_seedream_model(model_id):
@@ -1328,6 +1457,149 @@ def _model_provider_ready(model_id: str) -> None:
         )
 
 
+_INPAINT_PROMPT_PREFIX = (
+    "【局部重绘】只改需要改动的局部内容（可多处），其余区域必须与原图像素级一致。"
+    "输出必须是自然、完全不透明的画面：禁止半透明遮罩、蓝色涂抹层、雾状蒙版、色块接缝或任何蒙版痕迹。"
+    "改动区域边缘须与周围光线、材质、色温无缝衔接，不要出现可辨认的补丁边界。"
+    "修改要求："
+)
+
+_INPAINT_PROMPT_PREFIX_GPT = (
+    "Local photorealistic edit: change ONLY the user-requested region(s); everything else must stay identical. "
+    "Return a fully opaque RGB photo — no transparency, no glass/frost overlay, no blue brush tint, no vignette, "
+    "no soft milky haze inside the edit. Blend edges seamlessly with surrounding light, grain, and color. "
+    "User edit: "
+)
+
+
+def wrap_inpaint_prompt(user_text: str, *, model: Optional[str] = None) -> str:
+    text = (user_text or "").strip()
+    if not text:
+        return ""
+    if text.startswith("【局部重绘】") or text.startswith("Local edit only:"):
+        return text
+    mid = (model or "").strip().lower()
+    if "gpt-image" in mid or mid.startswith("tt-image"):
+        return f"{_INPAINT_PROMPT_PREFIX_GPT}{text}"
+    return f"{_INPAINT_PROMPT_PREFIX}{text}"
+
+
+def _mask_has_paint(mask_bytes: bytes) -> bool:
+    """True if mask has any non-black painted pixels (white/alpha)."""
+    from io import BytesIO
+
+    from PIL import Image
+
+    try:
+        im = Image.open(BytesIO(mask_bytes))
+        im.load()
+    except Exception:
+        return False
+    if im.mode not in ("L", "LA", "RGBA", "RGB"):
+        im = im.convert("RGBA")
+    gray = im.convert("L")
+    # Any pixel above near-black counts as painted.
+    extrema = gray.getextrema()
+    if not extrema:
+        return False
+    return float(extrema[1] or 0) > 12
+
+
+def _boundary_color_match(base_rgba, gen_rgba, mask_bin, *, ring: int = 8):
+    """
+    Shift gen RGB using colors just outside the mask vs gen near the inner edge.
+    Reduces GPT patch tint / frosted look without pulling toward old content inside the hole.
+    """
+    from PIL import Image, ImageChops, ImageFilter, ImageStat
+
+    if mask_bin is None or ring <= 0:
+        return gen_rgba
+    k = ring * 2 + 1
+    try:
+        dil = mask_bin.filter(ImageFilter.MaxFilter(size=k))
+        ero = mask_bin.filter(ImageFilter.MinFilter(size=k))
+        ring_out = ImageChops.subtract(dil, mask_bin)
+        ring_in = ImageChops.subtract(mask_bin, ero)
+        # Need enough pixels in both rings.
+        if ImageStat.Stat(ring_out).sum[0] < 64 or ImageStat.Stat(ring_in).sum[0] < 64:
+            return gen_rgba
+        base_rgb = base_rgba.convert("RGB")
+        gen_rgb = gen_rgba.convert("RGB")
+        sb = ImageStat.Stat(base_rgb, ring_out)
+        sg = ImageStat.Stat(gen_rgb, ring_in)
+    except Exception:
+        return gen_rgba
+    if not sb.mean or not sg.mean or len(sb.mean) < 3 or len(sg.mean) < 3:
+        return gen_rgba
+    gen_bands = list(gen_rgb.split())
+    adj_bands = []
+    for i in range(3):
+        delta = int(round(float(sb.mean[i]) - float(sg.mean[i])))
+        # Cap so intentional recolors still work.
+        delta = max(-28, min(28, delta))
+        if delta == 0:
+            adj_bands.append(gen_bands[i])
+        else:
+            adj_bands.append(
+                gen_bands[i].point(
+                    lambda p, d=delta: 0 if p + d < 0 else (255 if p + d > 255 else p + d)
+                )
+            )
+    matched = Image.merge("RGB", adj_bands).convert("RGBA")
+    if gen_rgba.mode == "RGBA":
+        matched.putalpha(gen_rgba.split()[-1])
+    return matched
+
+
+def composite_masked_edit(
+    original: bytes,
+    edited: bytes,
+    mask: bytes,
+    *,
+    feather: int = 5,
+    expand: int = 2,
+    color_match: bool = True,
+) -> tuple[bytes, str]:
+    """
+    Keep unpainted pixels from original; take painted regions from edited.
+    Mask: white/bright = edit region (may be multiple disconnected areas).
+    Soft edge + slight expand + boundary color match reduce GPT patch seams.
+    """
+    from io import BytesIO
+
+    from PIL import Image, ImageFilter
+
+    try:
+        base = Image.open(BytesIO(original)).convert("RGBA")
+        gen = Image.open(BytesIO(edited)).convert("RGBA")
+        m = Image.open(BytesIO(mask))
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Invalid image or mask") from exc
+
+    if gen.size != base.size:
+        gen = gen.resize(base.size, Image.Resampling.LANCZOS)
+    if m.size != base.size:
+        m = m.resize(base.size, Image.Resampling.NEAREST)
+
+    m_l = m.convert("L")
+    # Binary mask: painted → use generated; else keep original.
+    m_bin = m_l.point(lambda p: 255 if p > 12 else 0)
+    if expand > 0:
+        # Cover soft GPT edge artifacts just outside the brush stroke.
+        m_bin = m_bin.filter(ImageFilter.MaxFilter(size=expand * 2 + 1))
+    if color_match:
+        gen = _boundary_color_match(base, gen, m_bin, ring=max(6, expand * 3))
+    m_soft = m_bin
+    if feather > 0:
+        m_soft = m_bin.filter(ImageFilter.GaussianBlur(radius=float(feather)))
+
+    out = Image.composite(gen, base, m_soft)
+    buf = BytesIO()
+    # Force opaque RGB — drops any residual alpha haze from the model.
+    out.convert("RGB").save(buf, format="PNG", optimize=True)
+    return buf.getvalue(), "image/png"
+
+
 async def _run_instruct_edit(
     refs: list[bytes],
     text: str,
@@ -1335,6 +1607,7 @@ async def _run_instruct_edit(
     model: str,
     output_size: str = "2K",
 ) -> tuple[bytes, str]:
+    """Run model edit. Local inpaint composite is applied by the caller."""
     _model_provider_ready(model)
     size = _normalize_output_size(output_size)
     if is_minimax_model(model):
@@ -1344,6 +1617,14 @@ async def _run_instruct_edit(
             text,
             model=model,
             size_preset="square",
+        )
+    if is_lk888_model(model):
+        return await generate_lk888_image_to_image(
+            refs[0],
+            text,
+            model=model,
+            images=refs if len(refs) > 1 else None,
+            output_size=size,
         )
     if is_seedream_model(model):
         return await edit_image_with_seedream(
@@ -1377,10 +1658,12 @@ async def api_instruct_edit(
     models: List[str] = Form(default=[]),
     compare: str = Form("0"),
     ref_mode: str = Form("single"),
+    edit_mode: str = Form("instruct"),
     output_size: str = Form("2K"),
     public: str = Form("0"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
+    mask: Optional[UploadFile] = File(None),
     request: Request = None,
     user: dict = Depends(_user),
 ):
@@ -1396,7 +1679,10 @@ async def api_instruct_edit(
             status_code=503,
             detail="Image edit is not configured (DASHSCOPE_API_KEY or VOLC_ARK_API_KEY).",
         )
-    text = resolve_edit_prompt(prompt, preset)
+    emode = (edit_mode or "instruct").strip().lower()
+    if emode not in ("instruct", "inpaint"):
+        emode = "instruct"
+    text = resolve_edit_prompt(prompt, None if emode == "inpaint" else preset)
     if not text.strip():
         raise HTTPException(
             status_code=400,
@@ -1404,6 +1690,8 @@ async def api_instruct_edit(
         )
     mode = (ref_mode or "single").strip().lower()
     if mode not in ("single", "multi"):
+        mode = "single"
+    if emode == "inpaint":
         mode = "single"
     out_size = _normalize_output_size(output_size)
     uploads: list[UploadFile] = []
@@ -1413,6 +1701,11 @@ async def api_instruct_edit(
         uploads.append(file)
     if not uploads:
         raise HTTPException(status_code=400, detail="No images")
+    if emode == "inpaint" and len(uploads) != 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Local inpaint mode supports exactly one image.",
+        )
     if len(uploads) > MAX_INSTRUCT_BATCH:
         raise HTTPException(
             status_code=400,
@@ -1423,6 +1716,17 @@ async def api_instruct_edit(
             status_code=400,
             detail="Multi-reference mode needs at least 2 images",
         )
+
+    mask_bytes: Optional[bytes] = None
+    if emode == "inpaint":
+        if mask is None or not getattr(mask, "filename", None):
+            raise HTTPException(status_code=400, detail="Please paint a mask for local inpaint.")
+        mask_bytes = await _read_upload(mask)
+        if not _mask_has_paint(mask_bytes):
+            raise HTTPException(
+                status_code=400,
+                detail="Mask is empty. Paint the area(s) to edit first.",
+            )
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
     model_ids = _resolve_instruct_models(model, models, do_compare)
@@ -1437,6 +1741,8 @@ async def api_instruct_edit(
                 "compare": do_compare,
                 "preset": (preset or "").strip() or None,
                 "promptLen": len(text),
+                "editMode": emode,
+                "hasMask": bool(mask_bytes),
             },
             flush=True,
         )
@@ -1496,7 +1802,37 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
-        out, ctype = await _run_instruct_edit(refs, text, model=mid, output_size=out_size)
+        job_text = text
+        if emode == "inpaint":
+            job_text = wrap_inpaint_prompt(text, model=mid)
+        out, ctype = await _run_instruct_edit(
+            refs,
+            job_text,
+            model=mid,
+            output_size=out_size,
+        )
+        if emode == "inpaint" and mask_bytes and refs:
+            try:
+                mid_l = (mid or "").strip().lower()
+                is_gpt = ("gpt-image" in mid_l) or mid_l.startswith("tt-image")
+                # GPT whole-image rewrite leaves stronger seams; soften + expand more.
+                feather = 8 if is_gpt else 3
+                expand = 3 if is_gpt else 1
+                out, ctype = composite_masked_edit(
+                    refs[0],
+                    out,
+                    mask_bytes,
+                    feather=feather,
+                    expand=expand,
+                    color_match=True,
+                )
+            except HTTPException:
+                raise
+            except Exception as exc:
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"Local inpaint composite failed: {exc}",
+                ) from exc
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_ok",
@@ -1613,6 +1949,7 @@ async def api_instruct_edit(
                     "model": mid,
                     "index": img_idx,
                     "refMode": mode,
+                    "editMode": emode,
                     "refCount": len(refs),
                     "outputSize": out_size,
                     "billedSize": _billable_output_size(mid, out_size),
@@ -1759,9 +2096,11 @@ async def api_text_to_image(
         raise HTTPException(status_code=400, detail="Please enter a prompt.")
     is_public = _parse_bool(public, default=False)
     model_ids = _resolve_t2i_models(model, models)
-    # Per-model provider check (deferred to _one; fail early for non-minimax if dashscope missing)
-    non_minimax = [m for m in model_ids if not is_minimax_model(m)]
-    if non_minimax and not dashscope_image_edit_configured():
+    # Per-model provider check (deferred to _one; fail early for DashScope-only models)
+    need_dashscope = [
+        m for m in model_ids if not is_minimax_model(m) and not is_lk888_model(m)
+    ]
+    if need_dashscope and not dashscope_image_edit_configured():
         raise HTTPException(
             status_code=503,
             detail="DashScope is not configured (DASHSCOPE_API_KEY).",
@@ -1796,9 +2135,18 @@ async def api_text_to_image(
     async def _one(mid: str) -> dict:
         if is_minimax_model(mid):
             _model_provider_ready(mid)
-            out, ctype = await generate_minimax_text_to_image(text, model=mid, size_preset=size_preset)
+            out, ctype = await generate_minimax_text_to_image(
+                text, model=mid, size_preset=size_preset
+            )
+        elif is_lk888_model(mid):
+            _model_provider_ready(mid)
+            out, ctype = await generate_lk888_text_to_image(
+                text, model=mid, size_preset=size_preset
+            )
         else:
-            out, ctype = await generate_image_from_text(text, model=mid, size_preset=size_preset)
+            out, ctype = await generate_image_from_text(
+                text, model=mid, size_preset=size_preset
+            )
         return {
             "model": mid,
             "priceCny": _t2i_price_for(mid),

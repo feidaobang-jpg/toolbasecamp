@@ -34,10 +34,10 @@
   var histPanel = null;
   var player = null;
 
-  var modelId = 'music-3.0-free';
+  var modelId = 'suno-v4.5';
   var modelPrices = {
-    'music-3.0-free': 0,
-    'music-3.0': 2
+    'music-3.0': 2,
+    'suno-v4.5': 1.34
   };
   var audioBlobUrl = '';
   var audioBlob = null;
@@ -99,12 +99,7 @@
 
   function syncRunLabel() {
     if (!runBtn || (busyEl && !busyEl.hidden)) return;
-    var price = selectedPrice();
-    if (price <= 0) {
-      runBtn.textContent = tr('tools.aiMusic.generateFree');
-    } else {
-      runBtn.textContent = tr('tools.aiMusic.generatePaid', { price: price });
-    }
+    runBtn.textContent = tr('tools.aiMusic.generatePaid', { price: selectedPrice() });
   }
 
   function syncModelUi() {
@@ -173,8 +168,13 @@
       audioName: String(lastFilename || 'ai-music').replace(/\.(mp3|wav)$/i, ''),
       onDownloadAudio: function () { doDownload(); }
     });
-    if (opts.autoplay && player && player.audio) {
-      try { player.play(); } catch (e) {}
+    if (opts.autoplay && player && typeof player.play === 'function') {
+      var p = player.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function () {
+          if (typeof player.setBuffering === 'function') player.setBuffering(false);
+        });
+      }
     }
   }
 
@@ -239,7 +239,7 @@
     setBusy(true);
     if (busyText) busyText.textContent = tr('tools.aiMusic.generating');
 
-    C.apiJson('/music/generate', { method: 'POST', body: fd, timeoutMs: 400000 })
+    C.apiJson('/music/generate', { method: 'POST', body: fd, timeoutMs: 480000 })
       .then(function (res) {
         applyWallet(res.wallet || res.aiWallet);
         var proxy = res.publicStreamUrl || res.proxyUrl || '';
@@ -391,7 +391,8 @@
             title: row.title || lastFilename,
             lyrics: row.lyrics || '',
             duration: row.duration || 0,
-            autoplay: true
+            // 不自动播放：自动 play 常被浏览器拦截，waiting 会一直显示「缓冲中」
+            autoplay: false
           });
         }
       });
@@ -404,7 +405,7 @@
     modelRow.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-model]');
       if (!btn) return;
-      modelId = btn.getAttribute('data-model') || 'music-3.0-free';
+      modelId = btn.getAttribute('data-model') || 'suno-v4.5';
       syncModelUi();
     });
   }
@@ -415,8 +416,8 @@
       var key = btn.getAttribute('data-style') || '';
       var snip = STYLE_SNIPPETS[key];
       if (!snip) return;
-      var cur = (promptEl.value || '').trim();
-      promptEl.value = cur ? (cur + ', ' + snip) : snip;
+      // 切换风格标签：替换整段风格，避免追加导致重复堆叠
+      promptEl.value = snip;
       updateCharCounts();
       setBusy(false);
     });

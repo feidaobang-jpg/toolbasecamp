@@ -39,7 +39,7 @@ from recipe_ai import DASHSCOPE_API_KEY, DASHSCOPE_BASE_URL
 security = HTTPBearer(auto_error=False)
 router = APIRouter(prefix="/happyhorse", tags=["happyhorse"])
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 HH_TIMEOUT = float(os.environ.get("HAPPYHORSE_TIMEOUT", "60"))
 MIN_DURATION = 3
 MAX_DURATION = 15

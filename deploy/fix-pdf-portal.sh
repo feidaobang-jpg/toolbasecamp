@@ -72,7 +72,7 @@ echo -n "pdf HTTPS local: "
 curl -sk https://127.0.0.1/ -H 'Host: pdf.toolbasecamp.com' | grep -oP '(?<=<title>)[^<]+' | head -1 || echo "(no title)"
 
 BODY="$(curl -sk https://127.0.0.1/ -H 'Host: pdf.toolbasecamp.com' || true)"
-if echo "$BODY" | grep -q 'Tool Basecamp'; then
+if echo "$BODY" | grep -q 'Treasure Box'; then
   echo "ERROR: pdf vhost still serves main site."
   exit 1
 fi

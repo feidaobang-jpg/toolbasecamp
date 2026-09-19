@@ -283,6 +283,9 @@
               objectUrls.push(url);
               img.src = url;
             }
+            if (global.TBImageCloud && typeof global.TBImageCloud.bindImagePreview === 'function') {
+              global.TBImageCloud.bindImagePreview(img);
+            }
             var actions = document.createElement('div');
             actions.className = 'img-hist-actions';
             if (typeof onEditAgain === 'function') {

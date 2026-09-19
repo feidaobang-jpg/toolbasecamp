@@ -29,6 +29,7 @@ from recipe_ai import (
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
+from stickers import router as stickers_router, _wire as wire_stickers
 from ai_wallet_api import router as wallet_router, _wire as wire_wallet
 from chat_api import router as chat_router, _wire as wire_chat
 from life_plans import (
@@ -54,8 +55,14 @@ from pc_builds import (
     router as pc_builds_router,
     wire as wire_pc_builds,
 )
-from stocks import router as stocks_router
+from stocks import ensure_stock_pick_tables, router as stocks_router
 from stocks import wire as wire_stocks
+from mark_six_stats import (
+    ensure_mark_six_tables,
+    router as mark_six_router,
+    user_is_mark_six,
+    wire as wire_mark_six,
+)
 from ladder import router as ladder_router
 from ladder import wire as wire_ladder
 from game_thumbs import router as game_thumbs_router
@@ -63,7 +70,7 @@ from game_thumbs import wire as wire_game_thumbs
 from nbcheck import router as nbcheck_router
 from nbcheck import wire as wire_nbcheck
 
-NBCHECK_API_REV = 2
+NBCHECK_API_REV = 5
 NEWS_API_REV = 2
 PC_BUILDS_API_REV = 4
 
@@ -129,6 +136,29 @@ except Exception as exc:  # pragma: no cover
     _hh_import_error = str(exc)
     print(f"[happyhorse] import failed: {exc}")
 
+_seedance_import_error = ""
+try:
+    from seedance_video import (
+        router as seedance_router,
+        _wire as wire_seedance,
+        get_seedance_config,
+        seedance_configured,
+    )
+except Exception as exc:  # pragma: no cover
+    seedance_router = None
+
+    def wire_seedance(*_a, **_k):
+        return None
+
+    def get_seedance_config():
+        return {"configured": False, "error": str(exc)}
+
+    def seedance_configured():
+        return False
+
+    _seedance_import_error = str(exc)
+    print(f"[seedance] import failed: {exc}")
+
 _music_import_error = ""
 try:
     from fun_music import (
@@ -179,7 +209,7 @@ except Exception as exc:  # pragma: no cover
     _tts_import_error = str(exc)
     print(f"[tts] import failed: {exc}")
 
-app = FastAPI(title="Tool Basecamp API")
+app = FastAPI(title="Treasure Box API")
 
 DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
 DB_PORT = int(os.environ.get("DB_PORT", "3306"))
@@ -191,7 +221,7 @@ JWT_SECRET = os.environ.get("JWT_SECRET", "CHANGE_ME_IN_PRODUCTION")
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 JWT_EXPIRE_DAYS = int(os.environ.get("JWT_EXPIRE_DAYS", "30"))
 
-ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@toolbasecamp.com").lower()
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@zhengxiaohui.cn").lower()
 ADMIN_PHONE = os.environ.get("ADMIN_PHONE", "15859130726").strip()
 ROLE_ADMIN = "admin"
 ROLE_USER = "user"
@@ -232,9 +262,6 @@ app.add_middleware(
         "https://pdf.zhengxiaohui.cn",
         "https://translate.zhengxiaohui.cn",
         "https://hoppscotch.zhengxiaohui.cn",
-        "https://toolbasecamp.com",
-        "https://www.toolbasecamp.com",
-        "https://news.toolbasecamp.com",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
     ],
@@ -397,6 +424,8 @@ def ensure_tables():
             ensure_site_stats_tables(cur)
             ensure_news_tables(cur)
             ensure_pc_builds_tables(cur)
+            ensure_stock_pick_tables(cur)
+            ensure_mark_six_tables(cur)
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
@@ -598,6 +627,12 @@ if hh_router is not None:
 else:
     print("[happyhorse] router not mounted:", _hh_import_error or "unknown")
 
+if seedance_router is not None:
+    wire_seedance(get_conn, require_db, get_current_user)
+    app.include_router(seedance_router)
+else:
+    print("[seedance] router not mounted:", _seedance_import_error or "unknown")
+
 try:
     from game_rooms_api import router as tank_coop_router
     app.include_router(tank_coop_router)
@@ -663,6 +698,8 @@ def require_admin(user: dict):
 
 wire_image(get_conn, require_db, get_current_user, require_admin, get_optional_user)
 app.include_router(image_router)
+wire_stickers(get_conn, require_db, get_current_user, require_admin, get_optional_user)
+app.include_router(stickers_router)
 
 
 if music_router is not None:
@@ -754,8 +791,10 @@ wire_site_stats(
     is_admin,
     _client_ip,
 )
-wire_stocks(get_current_user, require_admin)
+wire_stocks(get_current_user, require_admin, get_conn, require_db)
 app.include_router(stocks_router)
+wire_mark_six(get_conn, require_db, get_current_user, require_admin, is_admin)
+app.include_router(mark_six_router)
 wire_ladder(get_current_user, require_admin)
 app.include_router(ladder_router)
 wire_game_thumbs(get_current_user, require_admin)
@@ -1039,6 +1078,8 @@ def health():
         "stocks_api": (
             "/stocks/recommend-tail-buy" in paths
             and "/stocks/recommend-monthly-recovery" in paths
+            and "/stocks/recommend-monster-stock" in paths
+            and "/stocks/records" in paths
         ),
         "fx_allowed_rev": FX_ALLOWED_REV,
         "fx_thb_twd": "THB" in FX_ALLOWED and "TWD" in FX_ALLOWED,
@@ -1076,6 +1117,10 @@ def health():
         "happyhorse_t2v_import_error": _hh_import_error or None,
         "happyhorse_r2v_api": "/happyhorse/r2v/submit" in paths,
         "happyhorse_edit_api": "/happyhorse/edit/submit" in paths,
+        "seedance_r2v_api": "/seedance/r2v/submit" in paths,
+        "seedance_r2v": get_seedance_config(),
+        "seedance_configured": seedance_configured(),
+        "seedance_import_error": _seedance_import_error or None,
         "fun_music_api": "/music/generate" in paths,
         "fun_music": get_fun_music_config(),
         "fun_music_configured": fun_music_configured(),
@@ -1084,7 +1129,7 @@ def health():
         "tts": get_tts_config(),
         "tts_configured": tts_configured(),
         "tts_import_error": _tts_import_error or None,
-        "api_features": ["wan_i2v", "minimax_h3", "happyhorse_t2v", "happyhorse_r2v", "happyhorse_edit", "fun_music", "tts"],
+        "api_features": ["wan_i2v", "minimax_h3", "happyhorse_t2v", "happyhorse_r2v", "happyhorse_edit", "seedance_r2v", "fun_music", "tts"],
         "records_annual": isinstance(days_sample, int) and abs(int(days_sample)) < 400,
         "deploy_sha": deploy_sha,
         "recipe": get_recipe_config(),
@@ -1314,16 +1359,18 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
     phone = user.get("phone") or ""
     nickname = (user.get("nickname") or "").strip()
     wallet = None
+    is_mark_six = False
     try:
         from ai_wallet import wallet_public
 
         conn = get_conn()
         try:
             wallet = wallet_public(conn, user, is_admin=is_admin(user))
+            is_mark_six = bool(user_is_mark_six(conn, user))
         finally:
             conn.close()
     except Exception as exc:
-        print(f"[auth/me] wallet: {exc}")
+        print(f"[auth/me] wallet/mark_six: {exc}")
     return {
         "success": True,
         "user": {
@@ -1336,6 +1383,7 @@ def me(creds: Optional[HTTPAuthorizationCredentials] = Depends(security)):
             "created_at": user["created_at"],
             "updated_at": user["updated_at"],
             "aiWallet": wallet,
+            "isMarkSix": is_mark_six,
         },
     }
 

@@ -1,4 +1,4 @@
-name: Deploy Tool Basecamp
+name: Deploy Treasure Box
 
 on:
   push:
@@ -96,6 +96,10 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: Check no Tailwind in HTML
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
+        run: node deploy/check-no-tailwind.mjs
+
       - name: Rsync static site
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
         run: |
@@ -104,16 +108,17 @@ jobs:
           VER="$VER" python3 deploy/bust-html-cache.py
           grep -q 'recipe-ingredient-tags' public/html/life/ai-recipe.html
           rsync -avz --delete \
+            --exclude 'data/nbcheck/*.json' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             public/ \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp/"
 
-      - name: Ensure toolbasecamp.com migration notice
+      - name: Verify main site (zhengxiaohui.cn)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" \
-            'test -f /opt/toolbasecamp-deploy/install-migration-notice.sh && bash /opt/toolbasecamp-deploy/install-migration-notice.sh; curl -sI -H "Host: toolbasecamp.com" http://127.0.0.1/ | grep -qi "location:.*zhengxiaohui.cn" || { echo "::error:: toolbasecamp.com / missing 301 to zhengxiaohui.cn"; exit 1; }'
+            'bash /opt/toolbasecamp-deploy/install-migration-notice.sh || true'
 
       - name: Rsync API server
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true'
@@ -121,12 +126,13 @@ jobs:
           git rev-parse HEAD > server/DEPLOY_SHA
           rsync -avz --delete --exclude venv \
             --exclude var/ --exclude tmp_music/ --exclude '__pycache__/' \
+            --exclude 'data/nbcheck/*.json' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
             server/ \
             "${DO_USER}@${DO_HOST}:/opt/toolbasecamp-api/"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
             "${DO_USER}@${DO_HOST}" \
-            'mkdir -p /var/lib/toolbasecamp/public-music /var/lib/toolbasecamp/image-results /opt/toolbasecamp-api/tmp_music && test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
+            'mkdir -p /var/lib/toolbasecamp/public-music /var/lib/toolbasecamp/image-results /var/lib/toolbasecamp/stickers /opt/toolbasecamp-api/tmp_music && test -f /opt/toolbasecamp-api/user_records.py && test -f /opt/toolbasecamp-api/DEPLOY_SHA && echo "API files OK $(cat /opt/toolbasecamp-api/DEPLOY_SHA)"'
 
       - name: Rsync deploy scripts
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
@@ -269,6 +275,8 @@ jobs:
             deploy/chef-portal-SOURCE.txt \
             "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/SOURCE.txt"
 
+      # 逍遥 AI key: set repo secret LK888_API_KEY (never commit the key).
+      # Separate step — quoted remote heredoc cannot see GitHub Actions env.
       - name: Install API deps and restart
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
@@ -306,6 +314,7 @@ jobs:
           systemctl enable toolbasecamp-api
           # API first: nginx API patch + DB + nuclear restart (do not let portal scripts block this)
           bash /opt/toolbasecamp-deploy/patch-nginx-api.sh || true
+          bash /opt/toolbasecamp-deploy/patch-nginx-pubsticker.sh || true
           bash /opt/toolbasecamp-deploy/ensure-api-db.sh || true
           bash /opt/toolbasecamp-deploy/restart-api-core.sh
           # From here, portal/fix scripts are best-effort; final wallet check re-enables -e
@@ -347,7 +356,7 @@ jobs:
             echo "news crawler not present  - skip news portal"
           fi
           bash /opt/toolbasecamp-deploy/patch-nginx-nas-proxy.sh || true
-          bash /opt/toolbasecamp-deploy/patch-nginx-legacy-redirects.sh || true
+          bash /opt/toolbasecamp-deploy/patch-disable-toolbasecamp-legacy.sh || true
           bash /opt/toolbasecamp-deploy/install-mysql-backup-cron.sh || true
           bash /opt/toolbasecamp-deploy/install-api-health-cron.sh || true
           echo "=== Nuclear restart before start ==="
@@ -647,6 +656,23 @@ jobs:
           set -e
           bash /opt/toolbasecamp-deploy/restart-api-core.sh
           REMOTE
+
+      # 逍遥 AI key: set repo secret LK888_API_KEY (never commit the key).
+      # Runs after API install so upsert-api-env.py + service are present.
+      - name: Upsert LK888 API key
+        if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
+        env:
+          LK888_API_KEY: ${{ secrets.LK888_API_KEY }}
+        run: |
+          if [[ -z "${LK888_API_KEY:-}" ]]; then
+            echo "LK888_API_KEY secret not set — skip (文生图 GPT Image 2 / Nano Banana Pro 需配置后可用)"
+            exit 0
+          fi
+          QKEY=$(printf %q "$LK888_API_KEY")
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${DO_USER}@${DO_HOST}" \
+            "python3 /opt/toolbasecamp-deploy/upsert-api-env.py LK888_API_KEY=${QKEY} LK888_BASE_URL=https://api.lk888.ai/v1 && systemctl restart toolbasecamp-api && curl -sf http://127.0.0.1:8001/health | head -c 200"
+
 
       - name: Verify main site assets (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
@@ -1081,7 +1107,7 @@ jobs:
           echo "stats event: $EV"
           if ! check_stats || ! echo "$HIT" | grep -F '"site_pv"' >/dev/null \
             || ! echo "$HIT" | grep -F '"region"' >/dev/null \
-            || ! echo "$HIT" | grep -F '"geo_rev":1' >/dev/null \
+            || ! echo "$HIT" | grep -F '"geo_rev":2' >/dev/null \
             || ! echo "$EV" | grep -F '"ok":true' >/dev/null; then
             echo "::warning:: public stats incomplete  - forcing fix-stats-api.sh"
             ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
@@ -1098,7 +1124,7 @@ jobs:
             check_stats || exit 1
             echo "$HIT" | grep -F '"site_pv"' >/dev/null || exit 1
             echo "$HIT" | grep -F '"region"' >/dev/null || exit 1
-            echo "$HIT" | grep -F '"geo_rev":1' >/dev/null || exit 1
+            echo "$HIT" | grep -F '"geo_rev":2' >/dev/null || exit 1
             echo "$EV" | grep -F '"ok":true' >/dev/null || exit 1
           fi
           HEALTH2="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
@@ -1175,7 +1201,7 @@ jobs:
             echo "::warning:: dev portal HTTPS returned $HTTP_CODE (nginx on server may still be OK)."
             exit 0
           fi
-          if grep -q 'Tool Basecamp  - Productivity Tools Hub' /tmp/dev-public.html; then
+          if grep -q '百宝箱 - 效率工具集' /tmp/dev-public.html; then
             echo "::warning:: Public URL still shows main site  - purge Cloudflare cache or check Origin Rules."
             exit 0
           fi
@@ -1205,7 +1231,7 @@ jobs:
             echo "::warning:: pdf portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: pdf A record, then re-run deploy."
             exit 0
           fi
-          if grep -q 'Tool Basecamp  - Productivity Tools Hub' /tmp/pdf-public.html; then
+          if grep -q '百宝箱 - 效率工具集' /tmp/pdf-public.html; then
             echo "::warning:: pdf URL shows main site  - check nginx 443 vhost for pdf.zhengxiaohui.cn."
             exit 0
           fi
@@ -1249,7 +1275,7 @@ jobs:
             echo "::warning:: news portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: news A record (orange cloud), then re-run deploy."
             exit 0
           fi
-          if ! grep -qi '??\|Tool Basecamp' /tmp/news-public.html; then
+          if ! grep -qi '百宝箱' /tmp/news-public.html; then
             echo "::warning:: news URL did not look like news portal HTML."
             exit 0
           fi

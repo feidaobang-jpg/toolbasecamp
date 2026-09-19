@@ -70,7 +70,7 @@ ALLOWED_APIS = frozenset(
 )
 
 _UA = (
-    "Mozilla/5.0 (compatible; ToolBasecamp/1.0; +https://toolbasecamp.com)"
+    "Mozilla/5.0 (compatible; ToolBasecamp/1.0; +https://zhengxiaohui.cn)"
 )
 
 

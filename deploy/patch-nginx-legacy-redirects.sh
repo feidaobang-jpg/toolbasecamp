@@ -1,5 +1,5 @@
 #!/bin/bash
-# Enable 301 from old toolbasecamp.com VPS portals to zhengxiaohui.cn
+# Enable 301 from old VPS portals to zhengxiaohui.cn
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
@@ -20,4 +20,4 @@ cp "$SRC" "$SITE"
 ln -sf "$SITE" /etc/nginx/sites-enabled/toolbasecamp-legacy-redirects
 nginx -t
 systemctl reload nginx
-echo "OK: legacy toolbasecamp.com portal redirects"
+echo "OK: legacy portal redirects"

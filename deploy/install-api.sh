@@ -32,7 +32,7 @@ fi
 if [[ ! -f /etc/systemd/system/toolbasecamp-api.service ]]; then
   cat > /etc/systemd/system/toolbasecamp-api.service << 'EOF'
 [Unit]
-Description=Tool Basecamp API (FastAPI)
+Description=Treasure Box API (FastAPI)
 After=network.target
 
 [Service]

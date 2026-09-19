@@ -30,8 +30,8 @@ from pathlib import Path
 root = Path("/var/www/toolbasecamp-news")
 root.mkdir(parents=True, exist_ok=True)
 (root / "index.html").write_text(
-    "<!DOCTYPE html><html><head><meta charset=utf-8><title>Tool Basecamp News</title></head>"
-    "<body><h1>Tool Basecamp 资讯</h1><p>Initializing… run /opt/toolbasecamp-news/run_news.sh</p></body></html>",
+    "<!DOCTYPE html><html><head><meta charset=utf-8><title>资讯</title></head>"
+    "<body><h1>资讯</h1><p>Initializing… run /opt/toolbasecamp-news/run_news.sh</p></body></html>",
     encoding="utf-8",
 )
 print("wrote minimal placeholder")

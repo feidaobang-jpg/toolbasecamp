@@ -3,7 +3,7 @@
 
 Title from filename stem; lyrics fetched on server via DeepSeek during admin upload.
 
-Requires: ffmpeg + ffprobe on PATH, SSH alias toolbasecamp-hk (or --host).
+Requires: ffmpeg + ffprobe on PATH, SSH alias toolbasecamp-cn (or --host).
 
 Usage:
   python deploy/upload-traditional-music.py --dry-run
@@ -27,7 +27,7 @@ REPO = Path(__file__).resolve().parents[1]
 DEFAULT_MUSIC_DIR = REPO / "music"
 DEFAULT_OUT_DIR = REPO / "deploy" / ".traditional-out"
 DEFAULT_STATE = REPO / "deploy" / ".traditional-build-state.json"
-DEFAULT_HOST = "toolbasecamp-hk"
+DEFAULT_HOST = "toolbasecamp-cn"
 DEFAULT_REMOTE = "/var/lib/toolbasecamp/traditional-music"
 
 

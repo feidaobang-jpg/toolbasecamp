@@ -6,6 +6,7 @@
 
   var MAX_BATCH = 4;
   var refMode = 'single';
+  var editMode = 'instruct';
   var outputSize = '2K';
   var modelCatalog = {};
   var gate = document.getElementById('login-gate');
@@ -18,8 +19,12 @@
   var promptWrap = document.getElementById('prompt-wrap');
   var presetWrap = document.getElementById('preset-wrap');
   var presetRow = document.getElementById('preset-row');
+  var refModeWrap = document.getElementById('ref-mode-wrap');
   var refModeRow = document.getElementById('ref-mode-row');
   var refModeHint = document.getElementById('ref-mode-hint');
+  var editModeRow = document.getElementById('edit-mode-row');
+  var editModeHint = document.getElementById('edit-mode-hint');
+  var maskWrap = document.getElementById('mask-wrap');
   var modelWrap = document.getElementById('model-wrap');
   var modelRow = document.getElementById('model-row');
   var selectAllBtn = document.getElementById('select-all-models');
@@ -43,10 +48,8 @@
   var bgSelectWrap = document.getElementById('bg-select-wrap');
   var bgRegionSelect = document.getElementById('bg-region-select');
   var bgPlaceSelect = document.getElementById('bg-place-select');
-  var bgExpanded = false;
-  var bgPresetButtons = null;
   var bgGroupsData = [];
-  var bgTime = 'day';
+  var bgUi = null;
   var files = [];
   var previewUrls = [];
   var resultUrls = [];
@@ -54,12 +57,27 @@
   var priceMarkup = 2;
   var histPanel = null;
   var runStartedAt = 0;
-  var MOBILE_COMPRESS_MIN_BYTES = 1200 * 1024;
-  var MOBILE_COMPRESS_MAX_EDGE = 1600;
-  var MOBILE_COMPRESS_QUALITY = 0.86;
+  var maskPainter = null;
+
+  if (window.TBInstructEditMask && TBInstructEditMask.createMaskPainter) {
+    maskPainter = TBInstructEditMask.createMaskPainter({
+      wrap: document.getElementById('mask-canvas-wrap'),
+      canvas: document.getElementById('mask-canvas'),
+      brushInput: document.getElementById('mask-brush'),
+      clearBtn: document.getElementById('mask-clear-btn'),
+      onChange: function () { setBusy(false); }
+    });
+  }
 
   function tr(key, params) {
     return C.tr(key, params);
+  }
+
+  /** Phone/tablet UA — request lighter API payloads (same idea as WeChat). */
+  function isMobileUA() {
+    if (C.isMobileUA) return C.isMobileUA();
+    if (C.isMobile) return C.isMobile();
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
   }
 
   function downloadName(item) {
@@ -95,78 +113,11 @@
     return '';
   }
 
-  function isMobileUA() {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
-  }
-
-  function shouldCompressBeforeUpload(file) {
-    if (!file) return false;
-    if (!(C.isWeChat && C.isWeChat()) && !isMobileUA()) return false;
-    var type = String(file.type || '').toLowerCase();
-    if (
-      type !== 'image/jpeg'
-      && type !== 'image/jpg'
-      && type !== 'image/webp'
-      && type !== 'image/png'
-    ) return false;
-    return file.size >= MOBILE_COMPRESS_MIN_BYTES || type === 'image/png';
-  }
-
-  function loadImageFromFile(file) {
-    return new Promise(function (resolve, reject) {
-      var url = URL.createObjectURL(file);
-      var img = new Image();
-      img.onload = function () {
-        try { URL.revokeObjectURL(url); } catch (e) {}
-        resolve(img);
-      };
-      img.onerror = function () {
-        try { URL.revokeObjectURL(url); } catch (e) {}
-        reject(new Error('image load failed'));
-      };
-      img.src = url;
-    });
-  }
-
-  function canvasToBlob(canvas, type, quality) {
-    return new Promise(function (resolve, reject) {
-      canvas.toBlob(function (blob) {
-        if (!blob) reject(new Error('blob encode failed'));
-        else resolve(blob);
-      }, type, quality);
-    });
-  }
-
   async function compressFileIfNeeded(file) {
-    if (!shouldCompressBeforeUpload(file)) return file;
-    try {
-      var img = await loadImageFromFile(file);
-      var w = img.naturalWidth || img.width || 0;
-      var h = img.naturalHeight || img.height || 0;
-      if (!w || !h) return file;
-      var scale = Math.min(1, MOBILE_COMPRESS_MAX_EDGE / Math.max(w, h));
-      if (scale >= 1 && file.size < MOBILE_COMPRESS_MIN_BYTES * 1.5) return file;
-      var tw = Math.max(1, Math.round(w * scale));
-      var th = Math.max(1, Math.round(h * scale));
-      var canvas = document.createElement('canvas');
-      canvas.width = tw;
-      canvas.height = th;
-      var ctx = canvas.getContext('2d');
-      if (!ctx) return file;
-      ctx.drawImage(img, 0, 0, tw, th);
-      var blob = await canvasToBlob(canvas, 'image/jpeg', MOBILE_COMPRESS_QUALITY);
-      if (!blob || blob.size >= file.size * 0.95) return file;
-      if (typeof File !== 'undefined') {
-        return new File([blob], (file.name || 'image').replace(/\.\w+$/, '') + '.jpg', {
-          type: 'image/jpeg',
-          lastModified: Date.now()
-        });
-      }
-      blob.name = (file.name || 'image').replace(/\.\w+$/, '') + '.jpg';
-      return blob;
-    } catch (e) {
-      return file;
+    if (window.TBImageUploadCompress && TBImageUploadCompress.compressIfNeeded) {
+      return TBImageUploadCompress.compressIfNeeded(file);
     }
+    return file;
   }
 
   function modelInputs() {
@@ -201,6 +152,7 @@
   }
 
   function uploadLimit() {
+    if (editMode === 'inpaint') return 1;
     return refMode === 'multi' ? maxRefsForSelectedModels() : MAX_BATCH;
   }
 
@@ -225,10 +177,70 @@
 
   function canRun() {
     if (!files.length) return false;
+    if (editMode === 'inpaint') {
+      if (files.length !== 1) return false;
+      if (!selectedModels().length) return false;
+      if (!(promptEl && promptEl.value.trim())) return false;
+      if (maskPainter && !maskPainter.hasPaint()) return false;
+      return true;
+    }
     if (refMode === 'multi' && files.length < 2) return false;
     if (!selectedModels().length) return false;
     if (activePreset) return true;
     return !!(promptEl && promptEl.value.trim());
+  }
+
+  function syncEditModeUi() {
+    if (editModeRow) {
+      var chips = editModeRow.querySelectorAll('.rec-chip');
+      for (var i = 0; i < chips.length; i++) {
+        var m = chips[i].getAttribute('data-edit-mode') || 'instruct';
+        chips[i].classList.toggle('is-active', m === editMode);
+      }
+    }
+    if (editModeHint) {
+      var hk = editMode === 'inpaint'
+        ? 'tools.instructEdit.editModeInpaintHint'
+        : 'tools.instructEdit.editModeInstructHint';
+      editModeHint.setAttribute('data-i18n', hk);
+      editModeHint.textContent = tr(hk);
+    }
+    if (editMode === 'inpaint' && refMode !== 'single') {
+      refMode = 'single';
+    }
+    if (refModeWrap) refModeWrap.hidden = editMode === 'inpaint';
+    if (presetWrap) presetWrap.hidden = editMode === 'inpaint';
+    var bgBlock = document.querySelector('#prompt-wrap .mt-3');
+    if (bgBlock) bgBlock.hidden = editMode === 'inpaint';
+    if (bgPanelEl && editMode === 'inpaint') {
+      bgPanelEl.hidden = true;
+      if (bgToggleBtn) {
+        bgToggleBtn.setAttribute('data-i18n', 'tools.instructEdit.bgExpand');
+        bgToggleBtn.textContent = tr('tools.instructEdit.bgExpand');
+      }
+    }
+    syncRefModeUi();
+    syncMaskUi();
+    syncControlsVisible();
+    setBusy(false);
+  }
+
+  function syncMaskUi() {
+    if (!maskWrap) return;
+    var show = editMode === 'inpaint' && files.length === 1;
+    maskWrap.hidden = !show;
+    if (!maskPainter) return;
+    if (show) {
+      if (maskPainter._boundFile !== files[0]) {
+        maskPainter._boundFile = files[0];
+        maskPainter.setFile(files[0]).catch(function () {});
+      } else {
+        maskPainter.syncSize();
+      }
+    } else {
+      maskPainter._boundFile = null;
+      maskPainter.setFile(null);
+    }
   }
 
   function updateCostHint() {
@@ -304,9 +316,9 @@
     }
     if (dropHint) syncDropHints();
     if (promptEl) {
-      var phKey = refMode === 'multi'
-        ? 'tools.instructEdit.promptPhMulti'
-        : 'tools.instructEdit.promptPh';
+      var phKey = 'tools.instructEdit.promptPh';
+      if (editMode === 'inpaint') phKey = 'tools.instructEdit.promptPhInpaint';
+      else if (refMode === 'multi') phKey = 'tools.instructEdit.promptPhMulti';
       promptEl.setAttribute('data-i18n-placeholder', phKey);
       promptEl.setAttribute('placeholder', tr(phKey));
     }
@@ -324,76 +336,17 @@
     setBusy(false);
   }
 
-  function timePhrase() {
-    if (bgTime === 'dusk') return '黄昏金色光，电影感自然光';
-    if (bgTime === 'night') return '夜景霓虹，低照度，电影感';
-    return '白天晴朗，自然光，旅行摄影写实';
-  }
-
-  function setBgTime(time) {
-    bgTime = time || 'day';
-    if (!bgTimeRow) return;
-    var chips = bgTimeRow.querySelectorAll('.rec-chip');
-    for (var i = 0; i < chips.length; i++) {
-      var t = chips[i].getAttribute('data-bg-time') || 'day';
-      chips[i].classList.toggle('is-active', t === bgTime);
-    }
-    setBusy(false);
-  }
-
-  function setBgPanelExpanded(on) {
-    bgExpanded = !!on;
-    if (bgPanelEl) bgPanelEl.hidden = !bgExpanded;
-    if (bgToggleBtn) {
-      bgToggleBtn.textContent = tr(bgExpanded ? 'tools.instructEdit.bgCollapse' : 'tools.instructEdit.bgExpand');
-    }
-  }
-
-  function applyBackgroundPreset(place) {
-    if (!promptEl) return;
-    if (!place) return;
-    var snippet = '背景：' + place + '，写实旅游摄影，' + timePhrase();
-    var v = (promptEl.value || '').trim();
-    // Remove previously inserted background line(s) (we always add as a separate line).
-    var lines = v ? v.split(/\n/) : [];
-    var out = [];
-    for (var i = 0; i < lines.length; i++) {
-      var line = (lines[i] || '').trim();
-      if (!line) continue;
-      if (line.indexOf('背景：') === 0) continue;
-      out.push(line);
-    }
-    out.push(snippet);
-    promptEl.value = out.join('\n');
-    setBusy(false);
-    updateCostHint();
-  }
-
-  function collectBgGroups() {
-    if (!bgGroupsEl) return [];
-    var groups = bgGroupsEl.children || [];
-    var out = [];
-    for (var i = 0; i < groups.length; i++) {
-      var box = groups[i];
-      if (!box || !box.querySelectorAll) continue;
-      var titleEl = box.querySelector('.text-xs');
-      var btns = box.querySelectorAll('button[data-bg-place]');
-      var items = [];
-      for (var j = 0; j < btns.length; j++) {
-        var btn = btns[j];
-        items.push({
-          value: btn.getAttribute('data-bg-place') || btn.textContent || '',
-          label: (btn.textContent || '').trim()
-        });
-      }
-      if (titleEl && items.length) {
-        out.push({
-          label: (titleEl.textContent || '').trim(),
-          items: items
-        });
-      }
-    }
-    return out;
+  function getBgGroupsData() {
+    var G = window.InstructEditBgGroups;
+    if (!G || !G.groups) return [];
+    return G.groups.map(function (g) {
+      return {
+        label: g.title,
+        items: g.places.map(function (p) {
+          return { value: p.value, label: p.label };
+        })
+      };
+    });
   }
 
   function renderBgPlaceOptions(regionIdx) {
@@ -419,7 +372,7 @@
 
   function renderBgRegionOptions() {
     if (!bgRegionSelect) return;
-    bgGroupsData = collectBgGroups();
+    bgGroupsData = getBgGroupsData();
     bgRegionSelect.innerHTML = '';
     var ph = document.createElement('option');
     ph.value = '';
@@ -500,29 +453,40 @@
     var id = String(modelId || '').toLowerCase();
     var seedream = id.indexOf('seedream') >= 0;
     var isPro = id.indexOf('-pro') >= 0 || id.indexOf('pro-') >= 0 || /pro$/.test(id);
+    // Qwen Image 3.0 Pro 实测约 9–10 分钟；前端须 > 服务端 EDIT_PRO_TIMEOUT
+    var qwenPro = id.indexOf('qwen-image') >= 0 && isPro;
+    // GPT Image（逍遥）常 10–20+ 分钟；须 > LK888_IMAGE_TIMEOUT≈1200s，并留网关余量
+    var gpt = id.indexOf('gpt-image') >= 0 || id.indexOf('tt-image') >= 0;
+    var sunburst = id.indexOf('sunburst') >= 0;
     var ms;
     if (refMode === 'multi') {
-      ms = seedream ? 240000 : (isPro ? 600000 : 420000);
+      ms = seedream ? 240000 : (qwenPro ? 900000 : (gpt ? (sunburst ? 1800000 : 1500000) : (isPro ? 720000 : 420000)));
     } else {
-      ms = seedream ? 240000 : (isPro ? 540000 : 300000);
+      ms = seedream ? 240000 : (qwenPro ? 900000 : (gpt ? (sunburst ? 1800000 : 1500000) : (isPro ? 720000 : 300000)));
     }
-    if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 300000);
-    return Math.min(900000, ms);
+    if (editMode === 'inpaint') ms = Math.max(ms, gpt ? 1800000 : 900000);
+    if (C.isWeChat && C.isWeChat()) ms = Math.max(ms, 600000);
+    // nginx /api proxy_read_timeout=1800s
+    return Math.min(1800000, ms);
   }
 
-  function buildEditFormData(modelList, fileList) {
+  function buildEditFormData(modelList, fileList, maskBlob) {
     var list = fileList && fileList.length ? fileList : files;
     var fd = new FormData();
     for (var i = 0; i < list.length; i++) {
       fd.append('files', list[i], list[i].name || ('image-' + (i + 1) + '.jpg'));
     }
     fd.append('prompt', (promptEl && promptEl.value) || '');
-    fd.append('ref_mode', refMode);
+    fd.append('ref_mode', editMode === 'inpaint' ? 'single' : refMode);
+    fd.append('edit_mode', editMode === 'inpaint' ? 'inpaint' : 'instruct');
     fd.append('output_size', outputSize);
     fd.append('public', (publicToggle && publicToggle.checked) ? '1' : '0');
-    if (activePreset) fd.append('preset', activePreset);
+    if (editMode !== 'inpaint' && activePreset) fd.append('preset', activePreset);
     for (var m = 0; m < modelList.length; m++) {
       fd.append('models', modelList[m].id);
+    }
+    if (editMode === 'inpaint' && maskBlob) {
+      fd.append('mask', maskBlob, 'mask.png');
     }
     return fd;
   }
@@ -683,6 +647,17 @@
     }
     if (mid === 'wan2.7-image-pro') return tr('tools.instructEdit.modelWan27pro');
     if (mid === 'wan2.7-image') return tr('tools.instructEdit.modelWan27');
+    if (mid === 'gpt-image-2' || mid === 'tt-image-2') return tr('tools.instructEdit.modelGptImage2');
+    if (mid === 'gpt-image-2.5-flare' || mid === 'gpt-image-2.5') {
+      return tr('tools.instructEdit.modelGptImage25Flare');
+    }
+    if (mid === 'gpt-image-2.5-sunburst') return tr('tools.instructEdit.modelGptImage25Sunburst');
+    if (mid === 'banana-2' || mid === 'gemini-3.1-flash-image-preview') {
+      return tr('tools.instructEdit.modelBanana2');
+    }
+    if (mid === 'banana-pro' || mid === 'gemini-3-pro-image-preview' || mid === 'gemini-1-pro-image-preview') {
+      return tr('tools.instructEdit.modelBananaPro');
+    }
     if (mid === 'wan2.6-image') return tr('tools.instructEdit.modelWan26');
     return mid || tr('tools.instructEdit.modelWan26');
   }
@@ -731,16 +706,19 @@
     }
     sourceWrap.hidden = false;
     updateCostHint();
+    syncMaskUi();
   }
 
   function syncControlsVisible() {
     var has = files.length > 0;
     if (dropZone) dropZone.hidden = has && files.length >= uploadLimit();
-    // Prompt + background presets are useful before uploading; keep visible.
     if (promptWrap) promptWrap.hidden = false;
-    if (presetWrap) presetWrap.hidden = false;
+    if (presetWrap) presetWrap.hidden = editMode === 'inpaint';
     if (modelWrap) modelWrap.hidden = !has;
     if (!has && dropZone) dropZone.hidden = false;
+    if (maskWrap) {
+      maskWrap.hidden = !(editMode === 'inpaint' && files.length === 1);
+    }
     updateCostHint();
   }
 
@@ -833,6 +811,7 @@
     } else {
       img.src = displaySrc;
     }
+    if (C.bindImagePreview) C.bindImagePreview(img);
     var actions = document.createElement('div');
     actions.className = 'img-hist-actions';
     var again = document.createElement('button');
@@ -1036,10 +1015,9 @@
       histPanel.refresh();
     }
     syncSelectAllLabel();
-    syncRefModeUi();
+    syncEditModeUi();
     syncDropHints();
     updateCostHint();
-    syncControlsVisible();
     loadStatus();
   }
 
@@ -1097,10 +1075,29 @@
     });
   }
 
+  if (editModeRow) {
+    editModeRow.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
+      if (!btn || btn.disabled) return;
+      var next = btn.getAttribute('data-edit-mode') || 'instruct';
+      if (next === editMode) return;
+      editMode = next;
+      if (editMode === 'inpaint') {
+        activePreset = '';
+        if (files.length > 1) {
+          files = files.slice(0, 1);
+          renderSources();
+        }
+      }
+      syncEditModeUi();
+    });
+  }
+
   if (refModeRow) {
     refModeRow.addEventListener('click', function (e) {
       var btn = e.target && e.target.closest ? e.target.closest('.rec-chip') : null;
       if (!btn || btn.disabled) return;
+      if (editMode === 'inpaint') return;
       setRefMode(btn.getAttribute('data-ref-mode') || 'single');
     });
   }
@@ -1109,7 +1106,20 @@
     runBtn.addEventListener('click', function () {
       var models = selectedModels();
       if (!files.length) return;
-      if (refMode === 'multi' && files.length < 2) {
+      if (editMode === 'inpaint') {
+        if (files.length !== 1) {
+          C.setError(errorBox, tr('tools.instructEdit.inpaintSingleOnly'));
+          return;
+        }
+        if (!maskPainter || !maskPainter.hasPaint()) {
+          C.setError(errorBox, tr('tools.instructEdit.needMask'));
+          return;
+        }
+        if (!(promptEl && promptEl.value.trim())) {
+          C.setError(errorBox, tr('tools.instructEdit.needPrompt'));
+          return;
+        }
+      } else if (refMode === 'multi' && files.length < 2) {
         C.setError(errorBox, tr('tools.instructEdit.needMultiRefs'));
         return;
       }
@@ -1118,7 +1128,12 @@
         return;
       }
       if (!canRun()) {
-        C.setError(errorBox, tr('tools.instructEdit.needPromptOrPreset'));
+        C.setError(
+          errorBox,
+          editMode === 'inpaint'
+            ? tr('tools.instructEdit.needMask')
+            : tr('tools.instructEdit.needPromptOrPreset')
+        );
         return;
       }
       C.setError(errorBox, '');
@@ -1149,7 +1164,7 @@
       var allImages = [];
       var partialErrors = [];
       var lastErrMsg = '';
-      var splitImages = refMode === 'single' && files.length > 1;
+      var splitImages = editMode !== 'inpaint' && refMode === 'single' && files.length > 1;
 
       function finishElapsed() {
         if (resultMeta && runStartedAt) {
@@ -1169,6 +1184,14 @@
       }
 
       (async function () {
+        var maskBlob = null;
+        if (editMode === 'inpaint' && maskPainter) {
+          maskBlob = await maskPainter.exportMaskBlob();
+          if (!maskBlob) {
+            C.setError(errorBox, tr('tools.instructEdit.needMask'));
+            return;
+          }
+        }
         for (var mi = 0; mi < models.length; mi++) {
           var mid = models[mi].id;
           if (splitImages) {
@@ -1181,7 +1204,7 @@
               try {
                 var dataOne = await C.apiJson('/image/instruct-edit', {
                   method: 'POST',
-                  body: buildEditFormData([models[mi]], [files[fi]]),
+                  body: buildEditFormData([models[mi]], [files[fi]], maskBlob),
                   headers: headers,
                   timeoutMs: oneModelTimeoutMs(mid)
                 });
@@ -1212,7 +1235,7 @@
             try {
               var data = await C.apiJson('/image/instruct-edit', {
                 method: 'POST',
-                body: buildEditFormData([models[mi]]),
+                body: buildEditFormData([models[mi]], null, maskBlob),
                 headers: headers,
                 timeoutMs: oneModelTimeoutMs(mid)
               });
@@ -1265,14 +1288,14 @@
       }
       if (dropZone) dropZone.hidden = false;
       if (promptEl) promptEl.value = '';
+      if (maskPainter) maskPainter.clearMask();
       var inputs = modelInputs();
       for (var i = 0; i < inputs.length; i++) {
         inputs[i].checked = inputs[i].value === 'wan2.6-image';
       }
       setPreset('');
-      setBgPanelExpanded(false);
-      setBgTime('day');
-      syncControlsVisible();
+      if (bgUi) bgUi.reset();
+      syncEditModeUi();
       syncSelectAllLabel();
       updateCostHint();
       C.setError(errorBox, '');
@@ -1281,24 +1304,21 @@
     });
   }
 
-  // Background preset chips wiring (optional)
-  if (bgToggleBtn) {
-    bgToggleBtn.addEventListener('click', function () {
-      setBgPanelExpanded(!bgExpanded);
+  if (window.InstructEditBgUi) {
+    bgUi = window.InstructEditBgUi.bind({
+      promptEl: promptEl,
+      toggleBtn: bgToggleBtn,
+      panelEl: bgPanelEl,
+      timeRowEl: bgTimeRow,
+      groupsEl: bgGroupsEl,
+      tr: tr,
+      onPromptChange: function () {
+        setBusy(false);
+        updateCostHint();
+      }
     });
   }
-  if (bgTimeRow) {
-    var timeChips = bgTimeRow.querySelectorAll('button[data-bg-time]');
-    for (var i = 0; i < timeChips.length; i++) {
-      (function (btn) {
-        btn.addEventListener('click', function () {
-          var t = btn.getAttribute('data-bg-time') || 'day';
-          setBgTime(t);
-        });
-      })(timeChips[i]);
-    }
-  }
-  setBgPanelExpanded(false);
+
   if (bgRegionSelect) {
     bgRegionSelect.addEventListener('change', function () {
       renderBgPlaceOptions(parseInt(bgRegionSelect.value || '-1', 10));
@@ -1308,29 +1328,13 @@
     bgPlaceSelect.addEventListener('change', function () {
       var place = (bgPlaceSelect.value || '').trim();
       if (!place) return;
-      applyBackgroundPreset(place);
-      setBusy(false);
+      if (bgUi) bgUi.applyPlace(place);
     });
-  }
-  // Location chips (everything with data-bg-place)
-  bgPresetButtons = document.querySelectorAll('button[data-bg-place]');
-  if (bgPresetButtons && bgPresetButtons.length) {
-    for (var b = 0; b < bgPresetButtons.length; b++) {
-      (function (btn) {
-        btn.addEventListener('click', function () {
-          var place = btn.getAttribute('data-bg-place') || btn.textContent || '';
-          place = place.trim();
-          applyBackgroundPreset(place);
-          // prompt input listener will update busy state; still safe to force.
-          setBusy(false);
-        });
-      })(bgPresetButtons[b]);
-    }
   }
 
   document.addEventListener('tb:locale', function () {
     applyLocaleBits();
-    setBgPanelExpanded(bgExpanded);
+    if (bgUi) bgUi.setExpanded(bgUi.getExpanded());
     syncSelectAllLabel();
     syncRefModeUi();
     syncDropHints();

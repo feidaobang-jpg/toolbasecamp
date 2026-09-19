@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music — Tool Basecamp</title>
-    <meta name="description" content="Public AI-generated music on Tool Basecamp — play, pause, and download.">
+    <title>Music — 百宝箱</title>
+    <meta name="description" content="Public AI-generated music on 百宝箱 — play, pause, and download.">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script src="vendor/tailwindcss.js?v=minimax1"></script>
-    <link href="vendor/font-awesome/css/all.min.css?v=minimax1" rel="stylesheet">
-    <link rel="stylesheet" href="css/site-mobile-nav.css?v=minimax1">
-    <link rel="stylesheet" href="css/tools-hub.css?v=minimax1">
-    <link rel="stylesheet" href="css/base.css?v=minimax1">
-    <link rel="stylesheet" href="css/docs/docs-common.css?v=minimax1">
-    <link rel="stylesheet" href="css/tools-form.css?v=minimax1">
+<link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
+    <link rel="stylesheet" href="css/tools-hub.css?v=nosTW1">
+    <link rel="stylesheet" href="css/base.css?v=pagerjump1">
+  <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+    <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
+    <link rel="stylesheet" href="css/tools-form.css?v=nosTW1">
     <style>
       .music-hub { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
       .music-hub-title { font-size: 1.35rem; font-weight: 700; color: #0f172a; margin: 0 0 6px; }
@@ -32,31 +32,51 @@
       .music-hub-cont-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
       .music-hub-cont-tip { font-size: 0.8rem; color: #94a3b8; }
       .music-hub-busy, .music-hub-empty { color: #64748b; font-size: 0.95rem; margin: 12px 0; }
-      .music-track-list { display: flex; flex-direction: column; gap: 12px; }
+      .music-track-list { display: flex; flex-direction: column; gap: 10px; }
       .music-track-card {
         background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
-        padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;
+        padding: 10px 12px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 10px;
+        row-gap: 8px;
       }
-      .music-track-main { min-width: 0; }
-      .music-track-title { font-weight: 700; color: #0f172a; font-size: 1rem; }
+      .music-track-main { min-width: 0; grid-column: 1; grid-row: 1; }
+      .music-track-title {
+        font-weight: 700; color: #0f172a; font-size: 0.95rem;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
       .music-track-creator {
-        font-size: 0.82rem; color: #334155; margin-top: 4px; line-height: 1.45;
+        font-size: 0.8rem; color: #334155; margin-top: 2px; line-height: 1.35;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .music-track-prompt {
-        font-size: 0.85rem; color: #475569; margin-top: 4px; line-height: 1.45;
-        word-break: break-word;
+        font-size: 0.8rem; color: #475569; margin-top: 2px; line-height: 1.35;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
-      .music-track-lyrics {
-        font-size: 0.82rem; color: #64748b; margin-top: 4px; line-height: 1.45;
-        word-break: break-word;
+      .music-track-meta {
+        font-size: 0.75rem; color: #64748b; margin-top: 2px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
-      .music-track-meta { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
-      .music-track-actions { margin: 0; }
+      .music-track-actions {
+        margin: 0;
+        grid-column: 2; grid-row: 1;
+        flex-wrap: nowrap;
+        gap: 8px;
+        justify-content: flex-end;
+        align-self: center;
+      }
       .music-track-card.is-player-open .music-track-actions,
-      .music-track-card.is-player-open .music-track-prompt,
-      .music-track-card.is-player-open .music-track-lyrics { display: none; }
-      .music-track-player { width: 100%; }
-      .music-track-player .tb-mp { margin-top: 4px; }
+      .music-track-card.is-player-open .music-track-prompt { display: none; }
+      .music-track-card.is-player-open .music-track-main { grid-column: 1 / -1; }
+      .music-track-player { width: 100%; grid-column: 1 / -1; grid-row: 2; }
+      .music-track-player .tb-mp { margin-top: 2px; }
+      @media (min-width: 640px) {
+        .music-track-card { padding: 12px 14px; column-gap: 12px; }
+        .music-track-title { font-size: 1rem; }
+        .music-track-actions { gap: 12px; }
+      }
       [data-music-play][data-loading="1"]::after {
         content: ' ';
         display: inline-block;
@@ -72,36 +92,34 @@
       @keyframes tbc-spin { to { transform: rotate(360deg); } }
       .error-box { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
     </style>
-    <script>
-        tailwind.config = { theme: { extend: { colors: { primary: '#2563eb' } } } };
-    </script>
 </head>
-<body id="top" class="bg-gray-50 text-gray-800 h-screen flex flex-col overflow-hidden">
-    <header class="bg-white border-b border-gray-100 flex-shrink-0 z-40 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-3 md:gap-8 min-w-0">
-            <a href="index.html" class="flex items-center gap-2 flex-shrink-0 min-w-0 max-w-[58vw] sm:max-w-none group">
-                <div class="logo-text w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">TB</div>
-                <h1 class="site-name text-base sm:text-xl font-bold text-gray-900 tracking-tight truncate">Tool Basecamp</h1>
+<body id="top" class="site-page site-page--hub">
+    <header class="site-header site-header--shrink">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">百宝箱</h1>
             </a>
-            <nav data-nav="main" data-base-path="" class="hidden md:flex items-center gap-8 text-[15px] font-medium text-gray-600"></nav>
-            <div id="site-header-mobile-slot" class="flex items-center gap-1 flex-shrink-0 md:hidden ml-auto"></div>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
         </div>
     </header>
 
-    <div class="flex-1 flex overflow-hidden relative">
-        <main class="flex-1 flex flex-col w-0 overflow-y-auto bg-gray-50">
+    <div class="site-hub-layout">
+        <main class="site-main site-main--hub site-main--scroll">
             <div id="main-content"></div>
         </main>
     </div>
 
-    <script src="js/locales/en.js?v=minimax1"></script>
-    <script src="js/locales/zh-CN.js?v=minimax1"></script>
-    <script src="js/i18n.js?v=minimax1"></script>
-    <script src="js/config.js?v=minimax1"></script>
-    <script src="js/base.js?v=minimax1"></script>
-    <script src="js/common_ui.js?v=minimax1"></script>
-    <script src="js/media/music-player.js?v=minimax1"></script>
-    <script src="js/music-hub.js?v=taborder1"></script>
+    <script src="js/locales/en.js?v=brand1"></script>
+    <script src="js/locales/zh-CN.js?v=brand1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/config.js?v=nosTW1"></script>
+    <script src="js/base.js?v=nosTW1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
+    <script src="js/media/music-player.js?v=buf1"></script>
+    <script src="js/tb-pager.js?v=jump1"></script>
+    <script src="js/music-hub.js?v=meta3"></script>
     <script>
       (function () {
         function go() { if (typeof renderMusicHub === 'function') renderMusicHub(); }

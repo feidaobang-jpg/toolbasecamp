@@ -23,7 +23,7 @@ Zero Trust → 你的 Tunnel → **Public Hostname** → Add：
 | 字段 | 值 |
 |------|-----|
 | Subdomain | `translate` |
-| Domain | `toolbasecamp.com` |
+| Domain | `zhengxiaohui.cn` |
 | Type | HTTP |
 | URL | `translate-proxy:80` |
 
@@ -40,7 +40,7 @@ docker compose ps
 
 首次启动 LibreTranslate 约 **2～5 分钟**（下载 en/zh 模型）。
 
-验证：`https://translate.toolbasecamp.com` → 翻译页 + 顶部返回条。
+验证：`https://translate.zhengxiaohui.cn` → 翻译页 + 顶部返回条。
 
 ### VPS 释放内存（外网正常后）
 
@@ -57,7 +57,7 @@ free -h
 
 ### Cloudflare Tunnel
 
-Public Hostname：`pdf.toolbasecamp.com` → `pdf-proxy:80`
+Public Hostname：`pdf.zhengxiaohui.cn` → `pdf-proxy:80`
 
 ### NAS
 
@@ -88,7 +88,7 @@ VPS：`sudo bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh`
 2. **HTML 注入后 gzip**（pdf / translate proxy）。
 3. **主站 preconnect translate**（`public/index.html`）。
 4. **NAS 保活**（可选）：`install-nas-warmup-task.ps1` 每 5 分钟 ping 两个子站，避免 JVM/模型冷启动。
-5. **Cloudflare Cache Rules**（可选）：`pdf.toolbasecamp.com` / `translate.toolbasecamp.com` 对 `*.js` `*.css` `/static/*` 设 **Cache Everything，Edge TTL 7 天**（HTML 保持 Bypass）。
+5. **Cloudflare Cache Rules**（可选）：`pdf.zhengxiaohui.cn` / `translate.zhengxiaohui.cn` 对 `*.js` `*.css` `/static/*` 设 **Cache Everything，Edge TTL 7 天**（HTML 保持 Bypass）。
 6. **二次访问**会明显快于首次（PDF 的 `/assets/*.js` 已有 `Cf-Cache-Status: HIT`）。
 
 **无法彻底消除的：** Tunnel 物理延迟（约 1～3s TTFB）、Stirling 大包体积。若必须 <2s 首屏，只能把子站迁回 VPS 或上 CF Argo Smart Routing（付费）。

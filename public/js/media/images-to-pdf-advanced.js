@@ -72,12 +72,32 @@
 
     function addFiles(list) {
         C.setError(errorBox, '');
+        var pending = [];
         Array.prototype.forEach.call(list || [], function (f) {
             if (!f || !String(f.type || '').startsWith('image/')) return;
-            if (files.length >= MAX) return;
-            files.push(f);
+            pending.push(f);
         });
-        renderThumbs();
+        if (!pending.length) return;
+        var room = Math.max(0, MAX - files.length);
+        var slice = pending.slice(0, room);
+        if (!slice.length) return;
+
+        function apply(out) {
+            (out || []).forEach(function (f) {
+                if (!f) return;
+                if (files.length >= MAX) return;
+                files.push(f);
+            });
+            renderThumbs();
+        }
+
+        if (window.TBImageUploadCompress && TBImageUploadCompress.compressMany) {
+            TBImageUploadCompress.compressMany(slice, 'default').then(apply).catch(function () {
+                apply(slice);
+            });
+        } else {
+            apply(slice);
+        }
     }
 
     dropZone.addEventListener('click', function () { fileInput.click(); });

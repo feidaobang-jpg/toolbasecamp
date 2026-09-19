@@ -376,12 +376,21 @@ def _map_tencent_error(exc: Any) -> str:
         "AuthFailure.SecretIdNotFound": "Invalid TENCENT_SECRET_ID",
         "AuthFailure.SignatureFailure": "Invalid TENCENT_SECRET_KEY",
     }
-    return mapping.get(code, msg or "Tencent Cloud request failed")
+    mapped = mapping.get(code)
+    if mapped:
+        return mapped
+    # BDA sometimes returns Chinese billing text without UnOpenError code.
+    if any(x in msg for x in ("计费状态未知", "开通服务", "未开通", "尚未开通")):
+        return "Tencent Cloud service is not enabled"
+    return msg or "Tencent Cloud request failed"
 
 
 def _segment_http_status(exc: Any) -> int:
     """400 for image/content issues; 502 for infra / account problems."""
     code = getattr(exc, "code", "") or ""
+    msg = getattr(exc, "message", "") or str(exc)
+    if any(x in msg for x in ("计费状态未知", "开通服务", "未开通", "尚未开通")):
+        return 502
     if code.startswith("AuthFailure") or code in {
         "ResourceUnavailable.InArrears",
         "FailedOperation.UnOpenError",

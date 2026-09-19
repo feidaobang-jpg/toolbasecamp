@@ -25,6 +25,6 @@ if [[ -L "$TR_SITE" || -f "$TR_SITE" ]]; then
 fi
 
 echo ""
-echo "Next: Tunnel Public Hostname translate.toolbasecamp.com → translate-proxy:80"
+echo "Next: Tunnel Public Hostname translate.zhengxiaohui.cn → translate-proxy:80"
 echo "Purge Cloudflare cache. Run: free -h"
 echo "Done."

@@ -1,5 +1,5 @@
 #!/bin/bash
-# One-time MySQL setup for Tool Basecamp (run as root)
+# One-time MySQL setup for Treasure Box (run as root)
 set -euo pipefail
 
 DB_NAME="${DB_NAME:-toolbasecamp}"
@@ -25,7 +25,7 @@ DB_USER=${DB_USER}
 DB_PASSWORD=${DB_PASSWORD}
 DB_NAME=${DB_NAME}
 JWT_SECRET=${JWT_SECRET}
-ADMIN_EMAIL=admin@toolbasecamp.com
+ADMIN_EMAIL=admin@zhengxiaohui.cn
 EOF
 chmod 600 /etc/toolbasecamp-api.env
 

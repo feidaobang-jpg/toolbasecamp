@@ -32,16 +32,11 @@
     }
 
     function maskEmail(email) {
-        if (!email || !email.includes('@')) return email || 'User';
-        const [local, domain] = email.split('@');
-        if (local.length <= 2) return `${local[0]}***@${domain}`;
-        return `${local.slice(0, 2)}***@${domain}`;
+        return String(email || '').trim() || 'User';
     }
 
     function maskPhone(phone) {
-        const p = String(phone || '').trim();
-        if (p.length >= 7) return p.slice(0, 3) + '****' + p.slice(-4);
-        return p || 'User';
+        return String(phone || '').trim() || 'User';
     }
 
     function clearAuthLocalState(tokenKey) {
@@ -66,8 +61,17 @@
         return maskPhone(s);
     }
 
+    function applyMobileDrawerActionStyle(el, extraCssText = '') {
+        if (!el) return;
+        el.style.cssText =
+            'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;' +
+            'padding:0 16px;border:1px solid #dbeafe;border-radius:0.5rem;background:#eff6ff;' +
+            'color:#1d4ed8;font-size:14px;font-weight:500;line-height:1;text-decoration:none;box-sizing:border-box;' +
+            extraCssText;
+    }
+
     function renderAuthStatus() {
-        const headerContainer = document.querySelector('header .max-w-7xl');
+        const headerContainer = document.querySelector('header .site-header-inner');
         const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
         const tokenKey = 'auth_token';
         const token = localStorage.getItem(tokenKey) || '';
@@ -80,7 +84,7 @@
 
             wrap = document.createElement('div');
             wrap.id = 'auth-status';
-            wrap.className = 'hidden md:flex items-center gap-3 ml-auto';
+            wrap.className = 'site-auth-bar';
 
             const mobileOnly = headerContainer.querySelector('#site-header-mobile-slot');
             if (mobileOnly && mobileOnly.parentNode === headerContainer) {
@@ -94,7 +98,7 @@
             const a = document.createElement('a');
             a.href = href;
             a.textContent = text;
-            a.className = 'text-sm text-gray-600 hover:text-blue-600 transition-colors';
+            a.className = 'site-auth-link';
             return a;
         };
 
@@ -102,7 +106,7 @@
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.textContent = text;
-            btn.className = 'text-sm text-gray-600 hover:text-blue-600 transition-colors';
+            btn.className = 'site-auth-link';
             return btn;
         };
 
@@ -117,11 +121,11 @@
             if (!mobileAuthSlot) return;
             mobileAuthSlot.innerHTML = '';
             const row = document.createElement('div');
-            row.className = 'flex flex-col gap-2';
+            row.className = 'site-mobile-auth-stack';
             const a1 = createLink(loginUrl, tr('auth.login'));
             const a2 = createLink(registerUrl, tr('auth.signup'));
-            a1.className = 'block w-full rounded-lg border border-gray-200 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50';
-            a2.className = 'block w-full rounded-lg bg-blue-600 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700';
+            a1.className = 'site-mobile-auth-btn site-mobile-auth-btn--outline';
+            a2.className = 'site-mobile-auth-btn site-mobile-auth-btn--primary';
             row.appendChild(a1);
             row.appendChild(a2);
             mobileAuthSlot.appendChild(row);
@@ -132,18 +136,29 @@
             mobileAuthSlot.innerHTML = '';
             const profileUrl = resolveAuthUrl('profile.html');
             const box = document.createElement('div');
-            box.className = 'flex flex-col gap-3';
+            box.className = 'site-mobile-auth-box';
             const userLink = document.createElement('a');
             userLink.href = profileUrl;
-            userLink.className = 'flex items-center gap-2 text-sm font-medium text-gray-800';
-            userLink.innerHTML = '<i class="fas fa-user-circle text-xl text-blue-600"></i> <span>' + tr('auth.profile') + '</span>';
+            userLink.className = 'site-mobile-auth-btn';
+            applyMobileDrawerActionStyle(userLink);
+            userLink.innerHTML = '<i class="fas fa-user-circle"></i> <span>' + tr('auth.profile') + '</span>';
             const logout = createBtn(tr('auth.logout'));
-            logout.className = 'w-full rounded-lg border border-gray-200 py-2.5 text-sm text-gray-700 hover:bg-gray-50';
+            logout.className = 'site-mobile-auth-btn';
+            applyMobileDrawerActionStyle(logout, 'appearance:none;');
+
+            // 手机抽屉优先显示私聊入口：避免 auth/me 请求时序导致“收件箱”按钮短暂缺失。
+            // 后续 injectChatLink() 会根据管理员身份把 href/文案更新为“收件箱/私聊”。
+            const mobileChat = document.createElement('a');
+            mobileChat.id = 'tb-chat-link-m';
+            mobileChat.href = resolveAuthUrl('chat.html');
+            applyMobileDrawerActionStyle(mobileChat);
+            mobileChat.innerHTML = '<i class="fas fa-comments"></i><span>收件箱</span>';
             logout.addEventListener('click', () => {
                 clearAuthLocalState(tokenKey);
                 window.location.reload();
             });
             box.appendChild(userLink);
+            box.appendChild(mobileChat);
             box.appendChild(logout);
             mobileAuthSlot.appendChild(box);
             return { userLink };
@@ -155,6 +170,18 @@
                 wrap.appendChild(createLink(registerUrl, tr('auth.signup')));
             }
             fillMobileAuthLoggedOut();
+            // 手机顶栏：直接显示「登录」按钮
+            const mobileSlot = document.getElementById('site-header-mobile-slot');
+            if (mobileSlot && !document.getElementById('tb-mobile-login-btn')) {
+                const loginA = document.createElement('a');
+                loginA.id = 'tb-mobile-login-btn';
+                loginA.href = loginUrl;
+                loginA.className = 'site-mobile-login-btn';
+                loginA.textContent = tr('auth.login');
+                const menuBtn = document.getElementById('site-nav-menu-btn');
+                if (menuBtn) mobileSlot.insertBefore(loginA, menuBtn);
+                else mobileSlot.appendChild(loginA);
+            }
             return;
         }
 
@@ -166,8 +193,8 @@
             const profileUrl = resolveAuthUrl('profile.html');
             userEl = document.createElement('a');
             userEl.href = profileUrl;
-            userEl.className = 'text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors flex items-center gap-2';
-            userEl.innerHTML = '<i class="fas fa-user-circle text-lg"></i> <span>' + tr('auth.profile') + '</span>';
+            userEl.className = 'site-auth-user';
+            userEl.innerHTML = '<i class="fas fa-user-circle"></i> <span>' + tr('auth.profile') + '</span>';
             wrap.appendChild(userEl);
 
             logoutBtn = createBtn(tr('auth.logout'));
@@ -215,6 +242,7 @@
                     mobileUserSpan.textContent = label;
                 }
                 injectAdminLinks(user, wrap);
+                injectClassmatesLink(user, wrap);
                 injectChatLink(user, wrap);
                 startChatUnreadPolling();
                 const _testPhonePrefixes = ['1585913072'];
@@ -411,7 +439,7 @@
     function ensureSiteNavMobileStrip() {
         if (document.getElementById('site-mobile-nav-html')) return null;
         const header = document.querySelector('header');
-        const headerRow = document.querySelector('header .max-w-7xl');
+        const headerRow = document.querySelector('header .site-header-inner');
         if (!header || !headerRow) return null;
 
         let strip = document.getElementById('site-nav-mobile-strip');
@@ -419,12 +447,12 @@
             strip = document.createElement('div');
             strip.id = 'site-nav-mobile-strip';
             strip.setAttribute('aria-label', 'Main navigation');
-            strip.className = 'border-t border-gray-100';
+            strip.className = 'site-nav-strip';
             strip.style.background = 'rgba(255,255,255,0.98)';
 
             const inner = document.createElement('div');
             inner.id = 'site-nav-mobile-scroll';
-            inner.style.cssText = 'max-width:80rem;margin:0 auto;display:flex;flex-direction:row;align-items:center;gap:0.5rem;overflow-x:auto;padding:10px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:thin';
+            inner.style.cssText = 'max-width:80rem;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 12px;';
             strip.appendChild(inner);
             header.insertBefore(strip, headerRow.nextSibling);
         }
@@ -448,7 +476,7 @@
             const a = document.createElement('a');
             a.href = basePath + item.url;
             a.textContent = navLabel(item);
-            a.style.cssText = 'flex-shrink:0;white-space:nowrap;border-radius:9999px;padding:6px 14px;font-size:0.875rem;font-weight:' + (isActive ? '600' : '500') + ';text-decoration:none;color:' + (isActive ? '#2563eb' : '#4b5563') + ';background:' + (isActive ? '#eff6ff' : 'transparent') + ';' + (isActive ? 'box-shadow:inset 0 0 0 1px #bfdbfe;' : '');
+            a.style.cssText = 'text-align:center;white-space:nowrap;border-radius:9999px;padding:6px 8px;font-size:0.875rem;font-weight:' + (isActive ? '600' : '500') + ';text-decoration:none;color:' + (isActive ? '#2563eb' : '#4b5563') + ';background:' + (isActive ? '#eff6ff' : '#f9fafb') + ';' + (isActive ? 'box-shadow:inset 0 0 0 1px #bfdbfe;' : '');
             scroll.appendChild(a);
         });
     }
@@ -459,11 +487,8 @@
         const backdrop = document.getElementById('site-nav-backdrop');
         const panel = document.getElementById('site-nav-panel');
         const btn = document.getElementById('site-nav-menu-btn');
-        if (backdrop) {
-            backdrop.classList.add('opacity-0', 'pointer-events-none');
-            backdrop.classList.remove('opacity-100');
-        }
-        if (panel) panel.classList.add('translate-x-full');
+        if (backdrop) backdrop.classList.remove('is-open');
+        if (panel) panel.classList.remove('is-open');
         if (btn) btn.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
     }
@@ -472,24 +497,21 @@
         const backdrop = document.getElementById('site-nav-backdrop');
         const panel = document.getElementById('site-nav-panel');
         const btn = document.getElementById('site-nav-menu-btn');
-        if (backdrop) {
-            backdrop.classList.remove('opacity-0', 'pointer-events-none');
-            backdrop.classList.add('opacity-100');
-        }
-        if (panel) panel.classList.remove('translate-x-full');
+        if (backdrop) backdrop.classList.add('is-open');
+        if (panel) panel.classList.add('is-open');
         if (btn) btn.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
     }
 
     function initSiteMobileNav() {
-        const headerRow = document.querySelector('header .max-w-7xl');
+        const headerRow = document.querySelector('header .site-header-inner');
         if (!headerRow || typeof siteConfig === 'undefined' || !Array.isArray(siteConfig.nav)) return;
 
         let mobileRow = findHeaderMobileSlot(headerRow);
         if (!mobileRow) {
             mobileRow = document.createElement('div');
             mobileRow.id = 'site-header-mobile-slot';
-            mobileRow.className = 'flex items-center gap-1 flex-shrink-0 md:hidden ml-auto';
+            mobileRow.className = 'site-header-mobile-slot';
             headerRow.appendChild(mobileRow);
         }
 
@@ -497,13 +519,13 @@
             const btn = document.createElement('button');
             btn.id = 'site-nav-menu-btn';
             btn.type = 'button';
-            btn.className = 'p-2 rounded-lg text-gray-600 hover:bg-gray-100 flex-shrink-0';
+            btn.className = 'site-nav-menu-btn';
             btn.setAttribute('aria-label', tr('auth.openMenu'));
             btn.innerHTML = '<span aria-hidden="true" style="font-size:1.35rem;line-height:1">☰</span>';
             mobileRow.insertBefore(btn, mobileRow.firstChild);
             btn.addEventListener('click', () => {
                 const panel = document.getElementById('site-nav-panel');
-                if (panel && panel.classList.contains('translate-x-full')) openSiteNavDrawer();
+                if (panel && !panel.classList.contains('is-open')) openSiteNavDrawer();
                 else closeSiteNavDrawer();
             });
         }
@@ -512,15 +534,15 @@
             const root = document.createElement('div');
             root.id = 'site-nav-drawer';
             root.innerHTML = `
-                <div id="site-nav-backdrop" class="fixed inset-0 z-[200] bg-black/40 opacity-0 pointer-events-none transition-opacity duration-200 md:hidden"></div>
-                <div id="site-nav-panel" class="fixed inset-y-0 right-0 z-[210] flex w-[min(100vw-2rem,20rem)] max-w-full flex-col bg-white shadow-2xl transition-transform duration-200 ease-out translate-x-full md:hidden" role="dialog" aria-modal="true" aria-label="Account menu">
-                    <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                        <span class="font-semibold text-gray-900">${tr('auth.account')}</span>
-                        <button type="button" id="site-nav-close" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" aria-label="${tr('auth.closeMenu')}">
-                            <i class="fas fa-times text-lg"></i>
+                <div id="site-nav-backdrop" class="site-nav-backdrop"></div>
+                <div id="site-nav-panel" class="site-nav-panel" role="dialog" aria-modal="true" aria-label="Account menu">
+                    <div class="site-nav-panel-head">
+                        <span class="site-nav-panel-title">${tr('auth.account')}</span>
+                        <button type="button" id="site-nav-close" class="site-nav-panel-close" aria-label="${tr('auth.closeMenu')}">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <div id="site-nav-mobile-auth" class="flex-1 overflow-y-auto p-4"></div>
+                    <div id="site-nav-mobile-auth" class="site-nav-mobile-auth"></div>
                 </div>
             `;
             document.body.appendChild(root);
@@ -602,7 +624,7 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'text-sm text-blue-600 hover:text-blue-700 transition-colors';
+        a.className = 'site-auth-link site-auth-link--admin';
         if (opts.title) a.title = opts.title;
         wrap.insertBefore(a, wrap.firstChild);
     }
@@ -615,30 +637,65 @@
         a.id = opts.id;
         a.href = opts.href;
         a.textContent = opts.label;
-        a.className = 'block w-full rounded-lg border border-blue-100 bg-blue-50 py-2.5 text-center text-sm font-medium text-blue-700';
+        a.className = 'site-mobile-auth-btn site-mobile-auth-btn--spaced';
+        a.style.cursor = 'pointer';
+        a.style.display = 'flex';
+        a.style.alignItems = 'center';
+        a.style.justifyContent = 'center';
+        a.style.width = '100%';
+        a.style.height = '48px';
+        a.style.padding = '0 16px';
+        a.style.border = '1px solid #dbeafe';
+        a.style.borderRadius = '0.5rem';
+        a.style.background = '#eff6ff';
+        a.style.color = '#1d4ed8';
+        a.style.fontSize = '14px';
+        a.style.fontWeight = '500';
+        a.style.lineHeight = '1';
+        a.style.textDecoration = 'none';
+        a.style.boxSizing = 'border-box';
         mobileAuthSlot.appendChild(a);
     }
 
     function injectAdminLinks(user, wrap) {
         if (!isAdminUser(user)) return;
         const path = String(window.location.pathname || '');
-        // Already on private hub / private tools — don't add another「自用」link
+        // Already on admin hub / admin tools — don't add another「后台」link
         if (/\/admin\/private(\.html|\/)/.test(path)) return;
         const base = getSiteRootPrefix();
-        const privateLabel = tr('nav.private') === 'nav.private' ? '自用' : tr('nav.private');
+        const privateLabel = tr('nav.private') === 'nav.private' ? '后台' : tr('nav.private');
 
-        // Single admin entry: 自用 hub (stats / ladder update live inside)
+        // Single admin entry: 后台 hub (stats / ladder update live inside)
         injectAdminNavLink(wrap, {
             id: 'tb-admin-private-link',
             href: `${base}html/admin/private.html`,
             label: privateLabel,
-            title: '管理员自用'
+            title: '管理后台'
         });
 
         injectAdminMobileLink({
             id: 'tb-admin-private-link-m',
             href: `${base}html/admin/private.html`,
             label: privateLabel
+        });
+    }
+
+    function injectClassmatesLink(user, wrap) {
+        if (!user || !user.isMarkSix) return;
+        const path = String(window.location.pathname || '');
+        if (/\/classmates(\/|\.html)/.test(path)) return;
+        const base = getSiteRootPrefix();
+        const label = tr('nav.classmates') === 'nav.classmates' ? '同学' : tr('nav.classmates');
+        injectAdminNavLink(wrap, {
+            id: 'tb-classmates-link',
+            href: `${base}html/classmates/hub.html`,
+            label: label,
+            title: label
+        });
+        injectAdminMobileLink({
+            id: 'tb-classmates-link-m',
+            href: `${base}html/classmates/hub.html`,
+            label: label
         });
     }
 
@@ -655,7 +712,7 @@
         let badge = anchor.querySelector('.tb-chat-unread');
         if (!badge) {
             badge = document.createElement('span');
-            badge.className = 'tb-chat-unread hidden ml-1 inline-flex items-center justify-center min-w-[1.1rem] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold leading-none';
+            badge.className = 'tb-chat-unread hidden';
             anchor.appendChild(badge);
         }
         return badge;
@@ -679,12 +736,14 @@
     }
 
     function chatLabelForUser(user) {
-        if (isAdminUser(user)) {
-            const inbox = tr('nav.chatInbox');
-            return inbox === 'nav.chatInbox' ? '私聊收件箱' : inbox;
+        // Unify all chat entry labels to a single word.
+        // zh-CN: 收件箱, else: Inbox
+        try {
+            const loc = (typeof tbGetLocale === 'function' ? tbGetLocale() : (document.documentElement.lang || '')).toString();
+            return loc === 'zh-CN' ? '收件箱' : 'Inbox';
+        } catch (e) {
+            return '收件箱';
         }
-        const label = tr('nav.chat');
-        return label === 'nav.chat' ? '联系管理员' : label;
     }
 
     function injectChatLink(user, wrap) {
@@ -692,31 +751,15 @@
         const href = chatHrefForUser(user);
         const label = chatLabelForUser(user);
 
-        if (wrap && !document.getElementById('tb-chat-link')) {
-            const a = document.createElement('a');
-            a.id = 'tb-chat-link';
-            a.href = href;
-            a.className = 'text-sm text-gray-600 hover:text-blue-600 transition-colors inline-flex items-center';
-            a.innerHTML = '<i class="fas fa-comments mr-1"></i><span>' + label + '</span>';
-            ensureChatBadge(a);
-            const logout = wrap.querySelector('button');
-            if (logout) wrap.insertBefore(a, logout);
-            else wrap.appendChild(a);
-        } else {
-            const existing = document.getElementById('tb-chat-link');
-            if (existing) {
-                existing.href = href;
-                ensureChatBadge(existing);
-            }
-        }
-
         const mobileAuthSlot = document.getElementById('site-nav-mobile-auth');
+        // 先插入手机端入口：即使桌面端插入中途异常，也不会影响手机端显示
         if (mobileAuthSlot && !mobileAuthSlot.querySelector('#tb-chat-link-m')) {
             const a = document.createElement('a');
             a.id = 'tb-chat-link-m';
             a.href = href;
-            a.className = 'block w-full rounded-lg border border-gray-200 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50 inline-flex items-center justify-center gap-1';
-            a.innerHTML = '<i class="fas fa-comments"></i><span>' + label + '</span>';
+            a.className = 'site-mobile-auth-btn';
+            applyMobileDrawerActionStyle(a);
+            a.innerHTML = '<i class="fas fa-comments"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
             ensureChatBadge(a);
             const logout = mobileAuthSlot.querySelector('button');
             if (logout) mobileAuthSlot.insertBefore(a, logout);
@@ -725,7 +768,36 @@
             const m = mobileAuthSlot && mobileAuthSlot.querySelector('#tb-chat-link-m');
             if (m) {
                 m.href = href;
+                applyMobileDrawerActionStyle(m);
+                m.innerHTML = '<i class="fas fa-comments"></i><span>' + (isAdminUser(user) ? '收件箱' : label) + '</span>';
                 ensureChatBadge(m);
+            }
+        }
+
+        // 再插入桌面端入口
+        if (wrap && !document.getElementById('tb-chat-link')) {
+            const a = document.createElement('a');
+            a.id = 'tb-chat-link';
+            a.href = href;
+            a.className = 'site-chat-link';
+            a.title = label;
+            a.innerHTML = isAdminUser(user)
+                ? '<i class="fas fa-comments"></i><span class="site-chat-label">收件箱</span>'
+                : '<i class="fas fa-comments"></i>';
+            ensureChatBadge(a);
+            const logout = wrap.querySelector('button');
+            if (logout) wrap.insertBefore(a, logout);
+            else wrap.appendChild(a);
+        } else {
+            const existing = document.getElementById('tb-chat-link');
+            if (existing) {
+                existing.href = href;
+                existing.title = label;
+                existing.className = 'site-chat-link' + (isAdminUser(user) ? ' site-chat-link--labeled' : '');
+                existing.innerHTML = isAdminUser(user)
+                    ? '<i class="fas fa-comments text-base"></i><span class="site-chat-label">收件箱</span>'
+                    : '<i class="fas fa-comments text-lg"></i>';
+                ensureChatBadge(existing);
             }
         }
 
@@ -775,12 +847,20 @@
         }
     }
 
+    function isAdminPrivatePage() {
+        return (window.location.pathname || '').indexOf('/html/admin/private') !== -1;
+    }
+
     function runMainUiInit() {
         injectFavicon();
+        updatePageTitle();
+        if (isAdminPrivatePage()) {
+            if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);
+            return;
+        }
         updatePageLogo();
         updateNavMenu();
         initSiteMobileNav();
-        updatePageTitle();
         renderAuthStatus();
         renderIcpFooter();
         ensureTbStatsScript();

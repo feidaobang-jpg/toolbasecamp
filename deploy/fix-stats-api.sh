@@ -52,8 +52,8 @@ echo "$HEALTH" | grep -q '"stats_events_api":true' || {
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
-echo "$HEALTH" | grep -q '"stats_geo_rev":1' || {
-  echo "FAILED: health missing stats_geo_rev:1 (stale process without geo?)"
+echo "$HEALTH" | grep -q '"stats_geo_rev":2' || {
+  echo "FAILED: health missing stats_geo_rev:2 (stale process without geo?)"
   journalctl -u toolbasecamp-api -n 40 --no-pager || true
   exit 1
 }
@@ -83,8 +83,8 @@ echo "$HIT" | grep -q '"region"' || {
   echo "FAILED: hit response missing region — geo write path not loaded"
   exit 1
 }
-echo "$HIT" | grep -q '"geo_rev":1' || {
-  echo "FAILED: hit response missing geo_rev:1"
+echo "$HIT" | grep -q '"geo_rev":2' || {
+  echo "FAILED: hit response missing geo_rev:2"
   exit 1
 }
 EV="$(curl -sf -X POST http://127.0.0.1:8001/stats/event \

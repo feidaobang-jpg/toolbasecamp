@@ -45,7 +45,21 @@
     'tool.game': { zh: '游戏', en: 'Games' },
     'tool.auth': { zh: '账户', en: 'Auth' },
     'tool.ladder': { zh: '硬件跑分', en: 'Benchmarks' },
-    'tool.admin': { zh: '后台', en: 'Admin' }
+    'tool.admin': { zh: '后台', en: 'Admin' },
+    'tool.android': { zh: '安卓', en: 'Android' },
+    'tool.classmates': { zh: '同学专区', en: 'Classmates' },
+    'tool.admin.private': { zh: '私有后台', en: 'Private admin' }
+  };
+
+  /** Pages not in toolsConfig / gamesConfig (private or classmates). */
+  var EXTRA_EVENT_LABELS = {
+    'tool.classmates.hub': { zh: '同学专区', en: 'Classmates hub' },
+    'tool.classmates.mark-six': { zh: '号码统计', en: 'Number stats' },
+    'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' },
+    'tool.admin.private.home-pc.tts': { zh: '语音 / 声音克隆', en: 'Speech / voice clone' },
+    'tool.admin.private.home-pc.music': { zh: '音乐', en: 'Music' },
+    'tool.admin.private.home-pc.sfx': { zh: '音效', en: 'SFX' },
+    'tool.admin.private.home-pc.image-to-3d': { zh: '图生 3D', en: 'Image to 3D' }
   };
 
   var AUTH_LABELS = {
@@ -148,6 +162,7 @@
     if (AUTH_LABELS[name]) return pickLocale(AUTH_LABELS[name]);
     if (PORTAL_LABELS[name]) return pickLocale(PORTAL_LABELS[name]);
     if (ACTION_LABELS[name]) return pickLocale(ACTION_LABELS[name]);
+    if (EXTRA_EVENT_LABELS[name]) return pickLocale(EXTRA_EVENT_LABELS[name]);
     if (MODULE_LABELS[name]) return pickLocale(MODULE_LABELS[name]);
 
     if (name.indexOf('portal.') === 0) {
@@ -165,10 +180,20 @@
       if (title) return title;
       var authKey = 'tool.' + m[1] + '.' + m[2];
       if (AUTH_LABELS[authKey]) return pickLocale(AUTH_LABELS[authKey]);
+      if (EXTRA_EVENT_LABELS[authKey]) return pickLocale(EXTRA_EVENT_LABELS[authKey]);
       if (m[1] === 'auth') {
         return langIsZh() ? ('账户 · ' + m[2]) : ('Auth · ' + m[2]);
       }
-      return m[2].replace(/-/g, ' ');
+      // Never dump raw English slug (e.g. "mark six") into the Chinese admin UI.
+      var folderLabel = '';
+      var gKey = maps().groupByFolder[m[1]];
+      if (gKey) folderLabel = trKey(gKey);
+      if (!folderLabel) {
+        var mod = MODULE_LABELS['tool.' + m[1]];
+        if (mod) folderLabel = pickLocale(mod);
+      }
+      if (!folderLabel) folderLabel = m[1];
+      return folderLabel + ' · ' + m[2].replace(/-/g, ' ');
     }
 
     if (name.indexOf('page.') === 0) {
@@ -178,11 +203,11 @@
 
     if (name.indexOf('tool.') === 0) {
       var folder = name.split('.')[1] || '';
-      var gKey = maps().groupByFolder[folder];
-      var gTitle = gKey ? trKey(gKey) : '';
+      var gKey2 = maps().groupByFolder[folder];
+      var gTitle = gKey2 ? trKey(gKey2) : '';
       if (gTitle) return gTitle;
-      var mod = MODULE_LABELS['tool.' + folder];
-      if (mod) return pickLocale(mod);
+      var mod2 = MODULE_LABELS['tool.' + folder];
+      if (mod2) return pickLocale(mod2);
     }
 
     return name;
@@ -200,6 +225,7 @@
   }
 
   function isAdminUser(user) {
+    if (typeof window.tbIsAdminUser === 'function') return window.tbIsAdminUser(user);
     if (!user) return false;
     var adminEmail = (window.siteConfig && siteConfig.adminEmail) || '';
     var adminPhone = (window.siteConfig && siteConfig.adminPhone) || '';
@@ -506,7 +532,7 @@
       syncDayChips();
     }).catch(function (err) {
       if (err && err.message === 'forbidden') {
-        showGate('需要管理员账号登录');
+        showError('统计数据加载被拒绝，请刷新重试');
         return;
       }
       showError('加载失败：' + (err && err.message ? err.message : 'unknown'));
@@ -514,18 +540,29 @@
   }
 
   function showGate(msg) {
+    if (typeof window.tbAdminShowGate === 'function') {
+      window.tbAdminShowGate(msg);
+      return;
+    }
     app.classList.add('hidden');
     gate.classList.remove('hidden');
     if (gateMsg) gateMsg.textContent = msg || '需要管理员登录后查看';
-    if (loginLink) loginLink.classList.remove('hidden');
+    if (loginLink) loginLink.classList.add('hidden');
+    if (authLabel) {
+      authLabel.textContent = '';
+      authLabel.classList.add('hidden');
+    }
   }
 
   function showApp(user) {
-    gate.classList.add('hidden');
-    app.classList.remove('hidden');
-    if (loginLink) loginLink.classList.add('hidden');
-    var label = user.phone || user.email || 'admin';
-    if (authLabel) authLabel.textContent = label;
+    if (typeof window.tbAdminShowApp === 'function') {
+      window.tbAdminShowApp(user);
+    } else {
+      gate.classList.add('hidden');
+      app.classList.remove('hidden');
+      if (loginLink) loginLink.classList.add('hidden');
+      if (authLabel) authLabel.textContent = user.phone || user.email || 'admin';
+    }
     try {
       localStorage.setItem('tb-stats-exclude', '1');
     } catch (e) { /* ignore */ }

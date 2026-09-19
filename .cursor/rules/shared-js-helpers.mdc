@@ -1,0 +1,33 @@
+# 共享前端助手：禁止未定义全局（isMobileUA 等）
+
+页面脚本里调用 `isMobileUA()` / `isWeChat()` 等助手时，**必须**挂在已加载的共享模块上（优先 `TBImageCloud`），或从该模块转发；**禁止**假设存在未声明的全局函数。
+
+## 根因（曾导致指令改图整页挂死）
+
+`instruct-edit.js` 调用了 `isMobileUA()`，但函数未定义 → `ReferenceError` → 生成请求未发出、不扣费，进度停在「正在生成」。
+
+## 必须遵守
+
+1. **UA / 微信检测**统一用 `public/js/media/image-cloud-client.js` 的 `TBImageCloud`：
+   - `TBImageCloud.isWeChat()`
+   - `TBImageCloud.isMobile()` / `TBImageCloud.isMobileUA()`（二者等价）
+2. 页面本地若需要短名，写成 **转发**：
+   ```js
+   function isMobileUA() {
+     if (C.isMobileUA) return C.isMobileUA();
+     if (C.isMobile) return C.isMobile();
+     return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+   }
+   ```
+3. HTML 必须先引入 `image-cloud-client.js`，再引入业务脚本；改共享客户端后递增页面 `?v=`。
+4. 新增类似助手（下载、预览、轻量响应头等）同样：**先挂到共享模块再导出**，不要只在某个页写死全局函数名却不定义。
+
+## 禁止
+
+- 调用未定义的 `isMobileUA` / `isMobileUa` / 其它「以为别处有」的全局。
+- 只在单页复制一份 UA 正则、其它页继续裸调未定义名。
+- 以「本机有定义就行」收工：线上缓存旧 JS 或缺 `?v=` 仍会炸。
+
+## 自检
+
+在浏览器控制台打开对应工具页，确认 `typeof TBImageCloud.isMobileUA === 'function'`，且生成流程不再因 `ReferenceError` 中断。
