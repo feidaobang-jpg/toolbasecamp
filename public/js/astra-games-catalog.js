@@ -1,9 +1,10 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-17T07:08:16Z */
+/** generated_at: 2026-09-18T07:00:33Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
+      { title: "Astra Floor", url: "https://astrafloor.berochlu.workers.dev/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-floor/gameplay.png", external: true },
       { title: "Stadium Elite — El Clásico", url: "https://stadium-elite.mindblown.ai/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/stadium-elite/gameplay.png", external: true },
       { title: "Magic Carpet Wizard — A Thousand Skies", url: "https://threapchills.github.io/MagicCarpetWizard/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/magic-carpet/gameplay.jpg", external: true },
       { title: "雷霆战机 · 天穹远征 / THUNDERFALL", url: "https://thunderfall.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/thunderfall/gameplay.jpg", external: true },
@@ -37,6 +38,11 @@
       { title: "Tideglass Hunt", url: "https://tideglass-hunt.timothee-leborgne.ohmyunicorn.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/tideglass-hunt/gameplay.jpg", external: true },
       { title: "Canteen Crashers", url: "https://wavedash.com/games/canteen-crashers", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/canteen-crashers/gameplay.jpg", external: true },
       { title: "こもれびの木の実あつめ / Komorebi Nut Gathering", url: "https://komorebi-kinomi-0916.inu03550.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/komorebi-kinomi/gameplay.jpg", external: true },
+      { title: "PATCH", url: "https://agentgames.dev/play/patch", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/patch/gameplay.jpg", external: true },
+      { title: "DEADBLOCK: Outbreak", url: "https://agentgames.dev/play/deadblock-outbreak", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/deadblock-outbreak/gameplay.jpg", external: true },
+      { title: "Dropzone Royale", url: "https://agentgames.dev/play/dropzone-royale", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dropzone-royale/gameplay.jpg", external: true },
+      { title: "Mog Mode", url: "https://yesterdayarcade.com/games/mog-mode/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mog-mode/gameplay.jpg", external: true },
+      { title: "The Crownless", url: "https://www.spawn.co/@izkimar/the-crownless/play", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-crownless/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPuzzle', items: [
       { title: "Vesper: The Last Light", url: "https://vesper.mansgullberg.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/vesper/gameplay.png", external: true },
@@ -82,6 +88,9 @@
       { title: "Monopoly City — A Board Worth Exploring", url: "https://monopoly-city.eekosystems.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/monopoly-city/gameplay.jpg", external: true },
       { title: "MUST. MAKE. PAPERCLIPS.", url: "https://wavedash.com/games/must-make-paperclips", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/must-make-paperclips/gameplay.jpg", external: true },
       { title: "Sundrift — Take the Slow Way Home", url: "https://wesche.com/lab/astra/boat-explorer/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/sundrift/gameplay.jpg", external: true },
+      { title: "VeilFall: The Hollow War", url: "https://agentgames.dev/play/veilfall", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/veilfall-hollow-war/gameplay.jpg", external: true },
+      { title: "Minimum Rage", url: "https://minimum-rage.fastandlucid.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/minimum-rage/gameplay.jpg", external: true },
+      { title: "Cabsolutely", url: "https://cabsolutely.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/cabsolutely/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraRpg', items: [
       { title: "The Sunshard", url: "https://mindblown.ai/games/the-sunshard", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-sunshard/gameplay.png", external: true },
@@ -101,6 +110,7 @@
       { title: "BELOW — The Hollow", url: "https://below-the-hollow.thebuggeddev.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/below-the-hollow/gameplay.jpg", external: true },
       { title: "The Road to Kufa", url: "https://road-to-kufa.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/road-to-kufa/gameplay.jpg", external: true },
       { title: "Grand Theft Auto VI — PS1 Demake", url: "https://origozero.ai/play/ad25322f-fdfe-49c0-9ee9-82608c8f9ff7", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/gta-vi-ps1-demake/gameplay.jpg", external: true },
+      { title: "Don't Look Away — Saint Orison", url: "https://weeping-angels.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dont-look-away/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPlatform', items: [
       { title: "Barrelbound: The Lost Cargo", url: "https://barrelbound.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/barrelbound/gameplay.jpg", external: true },
@@ -130,6 +140,7 @@
       { title: "Glider — One Throw. Endless Sky.", url: "https://glider.game/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/glider-game/gameplay.jpg", external: true },
       { title: "Duck Off", url: "https://duckoff.fun/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/duck-off/gameplay.jpg", external: true },
       { title: "Wildwake Rally", url: "https://wildwake-rally.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/wildwake-rally/gameplay.jpg", external: true },
+      { title: "Icy Tower — Frostbound", url: "https://icy-tower-frostbound.netlify.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/frostbound/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
@@ -147,8 +158,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-17T07:08:16Z",
-    count: 129,
+    generatedAt: "2026-09-18T07:00:33Z",
+    count: 140,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1457,6 +1457,149 @@ def _model_provider_ready(model_id: str) -> None:
         )
 
 
+_INPAINT_PROMPT_PREFIX = (
+    "【局部重绘】只改需要改动的局部内容（可多处），其余区域必须与原图像素级一致。"
+    "输出必须是自然、完全不透明的画面：禁止半透明遮罩、蓝色涂抹层、雾状蒙版、色块接缝或任何蒙版痕迹。"
+    "改动区域边缘须与周围光线、材质、色温无缝衔接，不要出现可辨认的补丁边界。"
+    "修改要求："
+)
+
+_INPAINT_PROMPT_PREFIX_GPT = (
+    "Local photorealistic edit: change ONLY the user-requested region(s); everything else must stay identical. "
+    "Return a fully opaque RGB photo — no transparency, no glass/frost overlay, no blue brush tint, no vignette, "
+    "no soft milky haze inside the edit. Blend edges seamlessly with surrounding light, grain, and color. "
+    "User edit: "
+)
+
+
+def wrap_inpaint_prompt(user_text: str, *, model: Optional[str] = None) -> str:
+    text = (user_text or "").strip()
+    if not text:
+        return ""
+    if text.startswith("【局部重绘】") or text.startswith("Local edit only:"):
+        return text
+    mid = (model or "").strip().lower()
+    if "gpt-image" in mid or mid.startswith("tt-image"):
+        return f"{_INPAINT_PROMPT_PREFIX_GPT}{text}"
+    return f"{_INPAINT_PROMPT_PREFIX}{text}"
+
+
+def _mask_has_paint(mask_bytes: bytes) -> bool:
+    """True if mask has any non-black painted pixels (white/alpha)."""
+    from io import BytesIO
+
+    from PIL import Image
+
+    try:
+        im = Image.open(BytesIO(mask_bytes))
+        im.load()
+    except Exception:
+        return False
+    if im.mode not in ("L", "LA", "RGBA", "RGB"):
+        im = im.convert("RGBA")
+    gray = im.convert("L")
+    # Any pixel above near-black counts as painted.
+    extrema = gray.getextrema()
+    if not extrema:
+        return False
+    return float(extrema[1] or 0) > 12
+
+
+def _boundary_color_match(base_rgba, gen_rgba, mask_bin, *, ring: int = 8):
+    """
+    Shift gen RGB using colors just outside the mask vs gen near the inner edge.
+    Reduces GPT patch tint / frosted look without pulling toward old content inside the hole.
+    """
+    from PIL import Image, ImageChops, ImageFilter, ImageStat
+
+    if mask_bin is None or ring <= 0:
+        return gen_rgba
+    k = ring * 2 + 1
+    try:
+        dil = mask_bin.filter(ImageFilter.MaxFilter(size=k))
+        ero = mask_bin.filter(ImageFilter.MinFilter(size=k))
+        ring_out = ImageChops.subtract(dil, mask_bin)
+        ring_in = ImageChops.subtract(mask_bin, ero)
+        # Need enough pixels in both rings.
+        if ImageStat.Stat(ring_out).sum[0] < 64 or ImageStat.Stat(ring_in).sum[0] < 64:
+            return gen_rgba
+        base_rgb = base_rgba.convert("RGB")
+        gen_rgb = gen_rgba.convert("RGB")
+        sb = ImageStat.Stat(base_rgb, ring_out)
+        sg = ImageStat.Stat(gen_rgb, ring_in)
+    except Exception:
+        return gen_rgba
+    if not sb.mean or not sg.mean or len(sb.mean) < 3 or len(sg.mean) < 3:
+        return gen_rgba
+    gen_bands = list(gen_rgb.split())
+    adj_bands = []
+    for i in range(3):
+        delta = int(round(float(sb.mean[i]) - float(sg.mean[i])))
+        # Cap so intentional recolors still work.
+        delta = max(-28, min(28, delta))
+        if delta == 0:
+            adj_bands.append(gen_bands[i])
+        else:
+            adj_bands.append(
+                gen_bands[i].point(
+                    lambda p, d=delta: 0 if p + d < 0 else (255 if p + d > 255 else p + d)
+                )
+            )
+    matched = Image.merge("RGB", adj_bands).convert("RGBA")
+    if gen_rgba.mode == "RGBA":
+        matched.putalpha(gen_rgba.split()[-1])
+    return matched
+
+
+def composite_masked_edit(
+    original: bytes,
+    edited: bytes,
+    mask: bytes,
+    *,
+    feather: int = 5,
+    expand: int = 2,
+    color_match: bool = True,
+) -> tuple[bytes, str]:
+    """
+    Keep unpainted pixels from original; take painted regions from edited.
+    Mask: white/bright = edit region (may be multiple disconnected areas).
+    Soft edge + slight expand + boundary color match reduce GPT patch seams.
+    """
+    from io import BytesIO
+
+    from PIL import Image, ImageFilter
+
+    try:
+        base = Image.open(BytesIO(original)).convert("RGBA")
+        gen = Image.open(BytesIO(edited)).convert("RGBA")
+        m = Image.open(BytesIO(mask))
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Invalid image or mask") from exc
+
+    if gen.size != base.size:
+        gen = gen.resize(base.size, Image.Resampling.LANCZOS)
+    if m.size != base.size:
+        m = m.resize(base.size, Image.Resampling.NEAREST)
+
+    m_l = m.convert("L")
+    # Binary mask: painted → use generated; else keep original.
+    m_bin = m_l.point(lambda p: 255 if p > 12 else 0)
+    if expand > 0:
+        # Cover soft GPT edge artifacts just outside the brush stroke.
+        m_bin = m_bin.filter(ImageFilter.MaxFilter(size=expand * 2 + 1))
+    if color_match:
+        gen = _boundary_color_match(base, gen, m_bin, ring=max(6, expand * 3))
+    m_soft = m_bin
+    if feather > 0:
+        m_soft = m_bin.filter(ImageFilter.GaussianBlur(radius=float(feather)))
+
+    out = Image.composite(gen, base, m_soft)
+    buf = BytesIO()
+    # Force opaque RGB — drops any residual alpha haze from the model.
+    out.convert("RGB").save(buf, format="PNG", optimize=True)
+    return buf.getvalue(), "image/png"
+
+
 async def _run_instruct_edit(
     refs: list[bytes],
     text: str,
@@ -1464,6 +1607,7 @@ async def _run_instruct_edit(
     model: str,
     output_size: str = "2K",
 ) -> tuple[bytes, str]:
+    """Run model edit. Local inpaint composite is applied by the caller."""
     _model_provider_ready(model)
     size = _normalize_output_size(output_size)
     if is_minimax_model(model):
@@ -1514,10 +1658,12 @@ async def api_instruct_edit(
     models: List[str] = Form(default=[]),
     compare: str = Form("0"),
     ref_mode: str = Form("single"),
+    edit_mode: str = Form("instruct"),
     output_size: str = Form("2K"),
     public: str = Form("0"),
     file: Optional[UploadFile] = File(None),
     files: List[UploadFile] = File(default=[]),
+    mask: Optional[UploadFile] = File(None),
     request: Request = None,
     user: dict = Depends(_user),
 ):
@@ -1533,7 +1679,10 @@ async def api_instruct_edit(
             status_code=503,
             detail="Image edit is not configured (DASHSCOPE_API_KEY or VOLC_ARK_API_KEY).",
         )
-    text = resolve_edit_prompt(prompt, preset)
+    emode = (edit_mode or "instruct").strip().lower()
+    if emode not in ("instruct", "inpaint"):
+        emode = "instruct"
+    text = resolve_edit_prompt(prompt, None if emode == "inpaint" else preset)
     if not text.strip():
         raise HTTPException(
             status_code=400,
@@ -1541,6 +1690,8 @@ async def api_instruct_edit(
         )
     mode = (ref_mode or "single").strip().lower()
     if mode not in ("single", "multi"):
+        mode = "single"
+    if emode == "inpaint":
         mode = "single"
     out_size = _normalize_output_size(output_size)
     uploads: list[UploadFile] = []
@@ -1550,6 +1701,11 @@ async def api_instruct_edit(
         uploads.append(file)
     if not uploads:
         raise HTTPException(status_code=400, detail="No images")
+    if emode == "inpaint" and len(uploads) != 1:
+        raise HTTPException(
+            status_code=400,
+            detail="Local inpaint mode supports exactly one image.",
+        )
     if len(uploads) > MAX_INSTRUCT_BATCH:
         raise HTTPException(
             status_code=400,
@@ -1560,6 +1716,17 @@ async def api_instruct_edit(
             status_code=400,
             detail="Multi-reference mode needs at least 2 images",
         )
+
+    mask_bytes: Optional[bytes] = None
+    if emode == "inpaint":
+        if mask is None or not getattr(mask, "filename", None):
+            raise HTTPException(status_code=400, detail="Please paint a mask for local inpaint.")
+        mask_bytes = await _read_upload(mask)
+        if not _mask_has_paint(mask_bytes):
+            raise HTTPException(
+                status_code=400,
+                detail="Mask is empty. Paint the area(s) to edit first.",
+            )
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
     model_ids = _resolve_instruct_models(model, models, do_compare)
@@ -1574,6 +1741,8 @@ async def api_instruct_edit(
                 "compare": do_compare,
                 "preset": (preset or "").strip() or None,
                 "promptLen": len(text),
+                "editMode": emode,
+                "hasMask": bool(mask_bytes),
             },
             flush=True,
         )
@@ -1633,7 +1802,37 @@ async def api_instruct_edit(
                 },
                 flush=True,
             )
-        out, ctype = await _run_instruct_edit(refs, text, model=mid, output_size=out_size)
+        job_text = text
+        if emode == "inpaint":
+            job_text = wrap_inpaint_prompt(text, model=mid)
+        out, ctype = await _run_instruct_edit(
+            refs,
+            job_text,
+            model=mid,
+            output_size=out_size,
+        )
+        if emode == "inpaint" and mask_bytes and refs:
+            try:
+                mid_l = (mid or "").strip().lower()
+                is_gpt = ("gpt-image" in mid_l) or mid_l.startswith("tt-image")
+                # GPT whole-image rewrite leaves stronger seams; soften + expand more.
+                feather = 8 if is_gpt else 3
+                expand = 3 if is_gpt else 1
+                out, ctype = composite_masked_edit(
+                    refs[0],
+                    out,
+                    mask_bytes,
+                    feather=feather,
+                    expand=expand,
+                    color_match=True,
+                )
+            except HTTPException:
+                raise
+            except Exception as exc:
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"Local inpaint composite failed: {exc}",
+                ) from exc
         if IMAGE_DEBUG:
             print(
                 "[instruct-edit] job_ok",
@@ -1750,6 +1949,7 @@ async def api_instruct_edit(
                     "model": mid,
                     "index": img_idx,
                     "refMode": mode,
+                    "editMode": emode,
                     "refCount": len(refs),
                     "outputSize": out_size,
                     "billedSize": _billable_output_size(mid, out_size),

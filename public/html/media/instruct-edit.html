@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
   <meta name="description" content="Edit an image with a text instruction. Requires sign-in.">
   <link rel="stylesheet" href="../../css/base.css?v=a2e80383" />
   <link rel="stylesheet" href="../../css/docs/docs-common.css?v=a2e80383" />
-  <link rel="stylesheet" href="../../css/media/image-tools.css?v=i2irsz3" />
+  <link rel="stylesheet" href="../../css/media/image-tools.css?v=gal1" />
   <link rel="stylesheet" href="../../css/tools-form.css?v=a2e80383" />
 </head>
 <body>
@@ -39,6 +39,14 @@
         <div class="tool-card tb-form">
           <div class="tip-box img-wechat-tip" id="wechat-tip" hidden></div>
           <p class="img-cloud-quota" id="balance-line"></p>
+          <div class="field-row" id="edit-mode-wrap">
+            <span class="field-label" data-i18n="tools.instructEdit.editModeLabel">Edit mode</span>
+            <div class="instruct-preset-row" id="edit-mode-row">
+              <button type="button" class="rec-chip is-active" data-edit-mode="instruct" data-i18n="tools.instructEdit.editModeInstruct">Instruction</button>
+              <button type="button" class="rec-chip" data-edit-mode="inpaint" data-i18n="tools.instructEdit.editModeInpaint">Local inpaint</button>
+            </div>
+            <p class="instruct-cost-hint" id="edit-mode-hint" data-i18n="tools.instructEdit.editModeInstructHint">Instruction: describe the whole-image change. Local inpaint: paint one or more areas, then describe what to change there; unpainted areas stay from the original.</p>
+          </div>
           <div class="field-row" id="ref-mode-wrap">
             <span class="field-label" data-i18n="tools.instructEdit.refModeLabel">Reference mode</span>
             <div class="instruct-preset-row" id="ref-mode-row">
@@ -54,6 +62,20 @@
           </div>
           <input type="file" id="file-input" accept="image/*" multiple style="display:none" />
           <div class="instruct-source-grid tb-input-image-preview" id="source-wrap" hidden></div>
+          <div class="field-row" id="mask-wrap" hidden>
+            <span class="field-label" data-i18n="tools.instructEdit.maskLabel">Paint areas to edit</span>
+            <p class="instruct-cost-hint" data-i18n="tools.instructEdit.maskHint">Paint one or more regions (blue overlay). Unpainted areas stay from the original after generation.</p>
+            <div class="action-row instruct-mask-toolbar">
+              <label class="instruct-brush-label" for="mask-brush">
+                <span data-i18n="tools.instructEdit.brushSize">Brush</span>
+                <input type="range" id="mask-brush" min="8" max="96" value="18" />
+              </label>
+              <button type="button" class="tb-btn" id="mask-clear-btn" data-i18n="tools.instructEdit.clearMask">Clear mask</button>
+            </div>
+            <div class="instruct-mask-canvas-wrap" id="mask-canvas-wrap">
+              <canvas id="mask-canvas" aria-label="inpaint mask"></canvas>
+            </div>
+          </div>
           <div class="field-row" id="preset-wrap">
             <span class="field-label" data-i18n="tools.instructEdit.presetLabel">Style preset</span>
             <div class="instruct-preset-row" id="preset-row">
@@ -216,17 +238,18 @@
       </div>
     </main>
   </div>
-  <script src="../../js/locales/en.js?v=gpt25a"></script>
-  <script src="../../js/locales/zh-CN.js?v=gpt25a"></script>
+  <script src="../../js/locales/en.js?v=gal1"></script>
+  <script src="../../js/locales/zh-CN.js?v=gal1"></script>
   <script src="../../js/i18n.js?v=a2e80383"></script>
   <script src="../../js/config.js?v=a2e80383"></script>
   <script src="../../js/base.js?v=a2e80383"></script>
-  <script src="../../js/media/image-cloud-client.js?v=i2iar1"></script>
-  <script src="../../js/media/image-gen-history.js?v=a2e80383"></script>
+  <script src="../../js/media/image-cloud-client.js?v=gal1"></script>
+  <script src="../../js/media/image-gen-history.js?v=prev1"></script>
   <script src="../../js/shared/instruct-edit-bg-groups.js?v=a2e80383"></script>
   <script src="../../js/shared/instruct-edit-bg-presets.js?v=a2e80383"></script>
   <script src="../../js/shared/instruct-edit-bg-ui.js?v=a2e80383"></script>
   <script src="../../js/shared/image-upload-compress.js?v=a2e80383"></script>
-  <script src="../../js/media/instruct-edit.js?v=gpt25a"></script>
+  <script src="../../js/media/instruct-edit-mask.js?v=mask5"></script>
+  <script src="../../js/media/instruct-edit.js?v=prev1"></script>
 </body>
 </html>

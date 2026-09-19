@@ -20,7 +20,8 @@ LK888_API_KEY = (os.environ.get("LK888_API_KEY") or "").strip()
 LK888_BASE_URL = (
     os.environ.get("LK888_BASE_URL") or "https://api.lk888.ai/v1"
 ).strip().rstrip("/")
-LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "180"))
+# GPT Image edits often exceed 10 minutes; frontend timeout must stay above this.
+LK888_TIMEOUT = float(os.environ.get("LK888_IMAGE_TIMEOUT", "1200"))
 LK888_POLL_INTERVAL = float(os.environ.get("LK888_MEDIA_POLL_INTERVAL", "2"))
 LK888_MAX_REFS = int(os.environ.get("LK888_MAX_REFS", "10"))
 
@@ -292,7 +293,11 @@ async def _edit_via_images(
     size: str,
     refs: Sequence[bytes],
 ) -> Tuple[bytes, str]:
-    """OpenAI-compatible multipart /images/edits (GPT Image 2)."""
+    """OpenAI-compatible multipart /images/edits (GPT Image 2).
+
+    Do not send ``mask``: 逍遥 currently rejects it
+    (「暂不支持 mask 局部重绘参数」). Local inpaint uses prompt + composite instead.
+    """
     if not refs:
         raise HTTPException(status_code=400, detail="Please upload at least one reference image.")
     url = f"{LK888_BASE_URL}/images/edits"

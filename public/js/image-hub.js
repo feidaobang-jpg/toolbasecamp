@@ -304,6 +304,7 @@
       img.style.cursor = 'zoom-in';
       img.addEventListener('click', function () {
         openHubPreview(item, {
+          list: items,
           alt: (item.prompt || '').trim() || tr('hub.imagesPage.untitled'),
           onDownload: function () { downloadAiItem(item); }
         });
@@ -494,13 +495,22 @@
   function openHubPreview(item, opts) {
     if (!item) return;
     opts = opts || {};
-    var fullSrc = fullSrcFor(item) || fullImageUrl(item.imageUrl);
+    var list = (opts.list && opts.list.length) ? opts.list : [item];
+    var index = 0;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] === item) { index = i; break; }
+    }
     var existing = document.getElementById('img-hub-preview');
     if (existing) existing.remove();
+    if (openHubPreview._onKey) {
+      document.removeEventListener('keydown', openHubPreview._onKey);
+      openHubPreview._onKey = null;
+    }
     var overlay = document.createElement('div');
     overlay.id = 'img-hub-preview';
     overlay.className = 'img-hub-preview';
     overlay.innerHTML =
+      '<button type="button" class="img-hub-lb-nav img-hub-lb-prev" data-lb-prev aria-label="上一张">‹</button>' +
       '<div class="img-hub-preview-panel">' +
         '<p class="img-hub-preview-tip"></p>' +
         '<img class="img-hub-preview-img" alt="" />' +
@@ -508,31 +518,88 @@
           '<button type="button" class="tb-btn" data-preview-dl>下载</button>' +
           '<button type="button" class="tb-btn" data-preview-close>关闭</button>' +
         '</div>' +
-      '</div>';
+      '</div>' +
+      '<button type="button" class="img-hub-lb-nav img-hub-lb-next" data-lb-next aria-label="下一张">›</button>';
     var tipEl = overlay.querySelector('.img-hub-preview-tip');
-    tipEl.textContent = tr('hub.imagesPage.stickersLongPress') ||
-      '长按图片可保存或转发；动图请用「下载」。';
     var img = overlay.querySelector('.img-hub-preview-img');
-    // Keep ?v= / &_r= cache-bust — stripping them causes WeChat thumb≠preview mismatch.
-    img.src = fullSrc || '';
-    img.alt = opts.alt || tr('hub.imagesPage.untitled') || '';
     img.style.background = '#ffffff';
+    var prevBtn = overlay.querySelector('[data-lb-prev]');
+    var nextBtn = overlay.querySelector('[data-lb-next]');
+    if (list.length < 2) {
+      prevBtn.hidden = true;
+      nextBtn.hidden = true;
+    }
+    var current = list[index];
+    function downloadCurrent() {
+      if (opts.list && current && current !== item && typeof downloadAiItem === 'function' && current.imageUrl) {
+        downloadAiItem(current);
+        return;
+      }
+      if (typeof opts.onDownload === 'function') opts.onDownload();
+    }
+    function show() {
+      current = list[index];
+      var fullSrc = fullSrcFor(current) || fullImageUrl(current.imageUrl);
+      img.src = fullSrc || '';
+      img.alt = (current.prompt || opts.alt || '').trim() || tr('hub.imagesPage.untitled') || '';
+      var cap = (current.prompt || '').trim();
+      var pos = list.length > 1 ? ((index + 1) + ' / ' + list.length) : '';
+      tipEl.textContent = [cap, pos].filter(Boolean).join(' · ') ||
+        (tr('hub.imagesPage.stickersLongPress') || '长按图片可保存或转发；动图请用「下载」。');
+      var atStart = index <= 0;
+      var atEnd = index >= list.length - 1;
+      prevBtn.disabled = atStart;
+      nextBtn.disabled = atEnd;
+      prevBtn.classList.toggle('is-disabled', atStart);
+      nextBtn.classList.toggle('is-disabled', atEnd);
+    }
+    function step(delta) {
+      var n = index + delta;
+      if (n < 0 || n >= list.length) {
+        var msg = n < 0 ? '已经是第一张' : '已经是最后一张';
+        if (typeof window.tbNotify === 'function') window.tbNotify(msg);
+        return;
+      }
+      index = n;
+      show();
+    }
+    show();
     var dlBtn = overlay.querySelector('[data-preview-dl]');
     dlBtn.textContent = tr('hub.imagesPage.download') || '下载';
     dlBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      if (typeof opts.onDownload === 'function') opts.onDownload();
+      downloadCurrent();
     });
     var closeBtn = overlay.querySelector('[data-preview-close]');
     closeBtn.textContent = tr('hub.imagesPage.closePreview') || '关闭';
-    function close() { overlay.remove(); }
+    function close() {
+      if (openHubPreview._onKey) {
+        document.removeEventListener('keydown', openHubPreview._onKey);
+        openHubPreview._onKey = null;
+      }
+      overlay.remove();
+    }
     closeBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       close();
     });
+    prevBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      step(-1);
+    });
+    nextBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      step(1);
+    });
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) close();
     });
+    openHubPreview._onKey = function (e) {
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    };
+    document.addEventListener('keydown', openHubPreview._onKey);
     document.body.appendChild(overlay);
   }
 
