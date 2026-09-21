@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-20T07:24:54Z */
+/** generated_at: 2026-09-21T07:35:25Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -47,6 +47,9 @@
       { title: "VOIDBOUND — The Choir of Ash", url: "https://alesha-pro.github.io/bench-portal/games/voidbound-choir-of-ash/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/voidbound/gameplay.jpg", external: true },
       { title: "u/NIVERSE — Orbital Duel", url: "https://universe-duel.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/universe-duel/gameplay.jpg", external: true },
       { title: "RUNNER — Stage 1", url: "https://runner-stage1.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/runner-stage-1/gameplay.jpg", external: true },
+      { title: "DRONE.IO — Proving Grounds", url: "https://drone-io.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/drone-io/gameplay.jpg", external: true },
+      { title: "Neural Sight", url: "https://monstercameron.github.io/Neural-Sight/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/neural-sight/gameplay.jpg", external: true },
+      { title: "Knightmare — Medusa’s Temple", url: "https://knightmare-medusa-3d.robin-hwang.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/knightmare-medusa/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPuzzle', items: [
       { title: "Vesper: The Last Light", url: "https://vesper.mansgullberg.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/vesper/gameplay.png", external: true },
@@ -96,6 +99,9 @@
       { title: "Minimum Rage", url: "https://minimum-rage.fastandlucid.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/minimum-rage/gameplay.jpg", external: true },
       { title: "Cabsolutely", url: "https://cabsolutely.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/cabsolutely/gameplay.jpg", external: true },
       { title: "Mini Moto — Pine Ridge Park", url: "https://mini-moto-park.chipchaunceytheonlyone.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mini-moto/gameplay.jpg", external: true },
+      { title: "DASH / DINNER", url: "https://play.agentgames.dev/g/g_Gkna3a8DsdOR3NCL/index.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dash-dinner/gameplay.jpg", external: true },
+      { title: "Aegis Flora", url: "https://murderszn.github.io/aegis-flora/game.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/aegis-flora/gameplay.jpg", external: true },
+      { title: "Stillwater · Aquarium", url: "https://fish.kennyatx.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/stillwater-aquarium/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraRpg', items: [
       { title: "The Sunshard", url: "https://mindblown.ai/games/the-sunshard", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-sunshard/gameplay.png", external: true },
@@ -116,6 +122,7 @@
       { title: "The Road to Kufa", url: "https://road-to-kufa.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/road-to-kufa/gameplay.jpg", external: true },
       { title: "Grand Theft Auto VI — PS1 Demake", url: "https://origozero.ai/play/ad25322f-fdfe-49c0-9ee9-82608c8f9ff7", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/gta-vi-ps1-demake/gameplay.jpg", external: true },
       { title: "Don't Look Away — Saint Orison", url: "https://weeping-angels.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/dont-look-away/gameplay.jpg", external: true },
+      { title: "Europe, the Game", url: "https://play.justmovetoeurope.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/europe-the-game/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPlatform', items: [
       { title: "Barrelbound: The Lost Cargo", url: "https://barrelbound.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/barrelbound/gameplay.jpg", external: true },
@@ -150,6 +157,8 @@
       { title: "PaperRoute", url: "https://www.paperroute.lol/play/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/paperroute/gameplay.jpg", external: true },
       { title: "Zombie Escape Driver", url: "https://zombiedriver.z.madsoftware.co/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/zombie-escape-driver/gameplay.jpg", external: true },
       { title: "DUSKLINE — Canyon Circuit", url: "https://duskline-canyon-run.abdulhadi-ai.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/duskline-canyon-circuit/gameplay.jpg", external: true },
+      { title: "RED FLAG GAME", url: "https://seimusic.info/file/red_flag_game.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/red-flag-game/gameplay.jpg", external: true },
+      { title: "Flappy Bird · Click to Fly", url: "https://flappy-click-arcade-sept26.wesley-blomquist96.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/flappy-click-to-fly/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraExperimental', items: [
       { title: "ASTRA Arcade", url: "https://astra-arcade.antonioleivag.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-arcade/gameplay.jpg", external: true },
@@ -163,13 +172,14 @@
       { title: "POCKET_01 — Personal Game System", url: "https://devoshub.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/pocket-01/gameplay.jpg", external: true },
       { title: "Super Mario Bros. + Duck Hunt — Browser Port", url: "https://mario-duck-hunt-mobile.astral-bead-6514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mario-duck-hunt/gameplay.jpg", external: true },
       { title: "Bubble Wrap Simulator", url: "https://bubble-wrap-simulator.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/bubble-wrap-simulator/gameplay.jpg", external: true },
+      { title: "Loulou’s Apartment", url: "https://loulous-apartment.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/loulous-apartment/gameplay.jpg", external: true },
     ] },
   ];
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-20T07:24:54Z",
-    count: 150,
+    generatedAt: "2026-09-21T07:35:25Z",
+    count: 160,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
