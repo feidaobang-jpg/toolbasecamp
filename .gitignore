@@ -53,3 +53,6 @@ comfyui-api-server/__pycache__/
 # NAS downloaded translation models and local migration backups
 /deploy/home-nas/lt-models/
 /deploy/home-nas/migration-backup/
+
+# WorkBuddy workspace data (local memory / notes, not for version control)
+.workbuddy/
