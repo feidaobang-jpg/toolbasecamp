@@ -89,6 +89,24 @@ D:\sd\ComfyUI-main\.venv\Scripts\python.exe -m pip install -r requirements.txt
 
 工作流里 UNET / CLIP / VAE _loader 下拉要选对上述文件名。
 
+### Qwen-Image-2.1 · 7B（文生图 / 图生图多模型对比）
+
+后台「文生图」「图生图」新增可选模型 `qwen-image-2.1:7b`，可与 Z-Image Turbo / Qwen-Rapid-AIO **多选、排队生成、并排对比**（同一提示词、同一种子）。
+
+**权重自动发现**：API 不硬编码文件名，而是启动后到 ComfyUI 的 `object_info` 里按关键字匹配。把下表文件放进对应目录并**重启 ComfyUI** 即可；未就位时前端会自动置灰该模型并提示缺哪个文件。
+
+| 用途 | 文件名含其一即可 | 目录 |
+|------|------------------|------|
+| 主模型（diffusion） | `qwen_image_2_1` / `qwen-image-2.1` | `models/diffusion_models/` |
+| 文本编码器（CLIP） | `qwen_2.5_vl_7b` / `qwen3_vl_8b` | `models/text_encoders/` |
+| VAE | `qwen_image_vae` | `models/vae/` |
+
+对应工作流：`work-flow/qwen_image_21_t2i.json`（文生图）、`work-flow/qwen_image_21_img2img.json`（图生图）。
+
+采样默认 20 步 / cfg 2.5 / euler+simple，可用环境变量覆盖：`QWEN21_STEPS`、`QWEN21_CFG`、`QWEN21_SAMPLER`、`QWEN21_SCHEDULER`、`QWEN21_MEGAPIXELS`。
+
+CLIPLoader 的 `type` 需较新版本 ComfyUI 支持 `qwen_image`；版本过旧无此类型时提交会由 ComfyUI 明确报错，提示升级。
+
 ### 老照片修复（Qwen All-In-One）
 
 工作流使用 `CheckpointLoaderSimple`，需要 **AIO 整包 checkpoint**（与 Aki 里该工作流选的同名 `.safetensors`）：
@@ -110,7 +128,16 @@ Inspyrenet 首次运行 **自动下载** 权重，无需手拷。
 
 ## 启动方式
 
-**先 ComfyUI，再 API**（顺序固定）：
+**一键启动（推荐）**：
+
+```bat
+D:\project\toolbasecamp\comfyui-api-server\start-all.bat
+```
+
+会依次做：起 ComfyUI（后台隐藏，等 8188 就绪）→ 起 API（本窗口前台）。
+两边都已在跑时不会重复启动。
+
+**手动启动**（**先 ComfyUI，再 API**，顺序固定）：
 
 ```bat
 :: 1) ComfyUI 8188
@@ -126,6 +153,10 @@ D:\project\toolbasecamp\comfyui-api-server\start-server.bat
 set COMFYUI_ROOT=E:\path\to\ComfyUI-main
 ```
 
+后台自启（`run-comfyui-hidden.vbs` → `run-comfyui-autostart.bat`）默认带
+`--lowvram --cache-none --reserve-vram 0.8`（16GB 显存友好），
+可在 `local.env` 里用 `COMFYUI_EXTRA_ARGS` 覆盖。
+
 ---
 
 ## 自检
@@ -133,7 +164,7 @@ set COMFYUI_ROOT=E:\path\to\ComfyUI-main
 ComfyUI 起来后：
 
 ```bat
-D:\sd\ComfyUI-main\.venv\Scripts\python.exe D:\project\toolbasecamp\comfyui-api-server\scripts\verify-comfyui-nodes.py
+D:\sd\ComfyUI-main\venv\Scripts\python.exe D:\project\toolbasecamp\comfyui-api-server\scripts\verify-comfyui-nodes.py
 ```
 
 会对照 `work-flow/*.json` 检查 `127.0.0.1:8188` 是否注册全部 `class_type`。
@@ -184,3 +215,28 @@ A: 看 API 黑窗：`Node 'InspyrenetRembg' not found` = 插件未装进 **当�
 
 **Q: 官方 main 和 Aki 哪个对开发友好？**  
 A: main：`git pull`、venv 独立、节点少、日志清晰；适合固定 API + 固定 JSON 工作流。Aki 适合手点试百种流。
+
+**Q: 所有 venv 同时报 `No Python at '...'` / `uv trampoline failed to spawn Python`？**  
+A: 这是 **Windows 用户配置文件被换过**导致的（本机 2026-09 从 `ZhengXiaoHui` 变成 `37818`，
+`C:\Users\ZhengXiaoHui` 整个目录没了）。venv 的 `pyvenv.cfg` 里 `home=` 指向的 base Python 不存在了，
+于是启动器直接罢工——**site-packages 里的包其实都还在**，不用重装。
+
+修法（以 ComfyUI 为例，版本必须对上，包是 cp311 就不能换 3.12）：
+
+```bat
+:: 1) 用 uv 装一个同小版本的 Python（原 venv 是 3.11.6）
+uv python install 3.11
+
+:: 2) 备份并改写 venv\pyvenv.cfg，把 home / executable / command 指向新 Python
+::    路径形如 C:\Users\<你>\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none
+:: 3) 验证
+D:\sd\ComfyUI-main\venv\Scripts\python.exe -c "import torch;print(torch.__version__, torch.cuda.is_available())"
+```
+
+`uv` 本身可能还在：`C:\Users\<你>\.local\bin\uv.exe`。装完 Python 后无需重建 venv，
+改 `pyvenv.cfg` 即可（其他 venv：`index-tts/.venv` 要 3.11.13，`hunyuan3d`/`stable-audio-open` 要 3.12）。
+
+**Q: 下载/安装脚本中途莫名中断，日志里出现 `SAFE_DELETE_...`？**  
+A: 本机有「安全删除」保护，程序清理临时文件时会被拦下并 fail-closed 中断整个进程。
+凡是会自己删临时目录/锁文件的下载器（如 `huggingface-cli download --local-dir`）都可能中招。
+改成分块直接写入目标文件、不产生临时文件即可绕过。

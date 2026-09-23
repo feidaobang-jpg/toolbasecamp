@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const bgGroups = document.getElementById('bg-groups');
   const qualityHint = document.getElementById('quality-hint');
   const zimageHint = document.getElementById('zimage-hint');
-  const engineSelect = document.getElementById('engine-select');
+  const modelRow = document.getElementById('model-row');
+  const selectAllBtn = document.getElementById('select-all-models');
+  const modelWarn = document.getElementById('model-warn');
+  const engineConflictHint = document.getElementById('engine-conflict-hint');
   const denoiseWrap = document.getElementById('denoise-wrap');
   const denoiseInput = document.getElementById('denoise-input');
   const seedInput = document.getElementById('seed-input');
@@ -168,13 +171,94 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function modelInputs() {
+    return modelRow ? modelRow.querySelectorAll('input[name="img2img-model"]') : [];
+  }
+
+  function selectedModels() {
+    const out = [];
+    const inputs = modelInputs();
+    for (let i = 0; i < inputs.length; i++) {
+      if (inputs[i].checked && !inputs[i].disabled) {
+        out.push(inputs[i].getAttribute('data-engine') || inputs[i].value);
+      }
+    }
+    return out;
+  }
+
+  function selectedHasZImage() {
+    return selectedModels().indexOf('z_image') >= 0;
+  }
+
+  function selectedHasInstruct() {
+    const m = selectedModels();
+    return m.indexOf('qwen') >= 0 || m.indexOf('qwen21') >= 0;
+  }
+
   function syncEngineUi() {
-    const z = engineSelect && engineSelect.value === 'z_image';
+    const z = selectedHasZImage();
+    const instruct = selectedHasInstruct();
+    const mixed = z && instruct;
     if (denoiseWrap) denoiseWrap.hidden = !z;
-    if (presetWrap) presetWrap.hidden = !!z;
-    if (bgWrap) bgWrap.hidden = !!z;
-    if (qualityHint) qualityHint.hidden = !!z;
+    if (presetWrap) presetWrap.hidden = !instruct;
+    if (bgWrap) bgWrap.hidden = !instruct;
+    if (qualityHint) qualityHint.hidden = !instruct || z;
     if (zimageHint) zimageHint.hidden = !z;
+    if (engineConflictHint) engineConflictHint.hidden = !mixed;
+  }
+
+  /** 权重未就位的模型置灰，避免排队后才失败。 */
+  function applyModelAvailability(models) {
+    const notReady = [];
+    (models || []).forEach(function (m) {
+      if (!m || m.id !== 'qwen-image-2.1:7b') return;
+      const input = modelRow
+        ? modelRow.querySelector('input[name="img2img-model"][value="qwen-image-2.1:7b"]')
+        : null;
+      if (!input) return;
+      if (m.ready) {
+        input.disabled = false;
+        input.title = '';
+        return;
+      }
+      const missing = (m.missing || []).join('；');
+      input.disabled = true;
+      input.checked = false;
+      input.title = missing || tr('privateHub.homePc.txt2imgModelNotReady', '未就位');
+      const span = input.parentElement ? input.parentElement.querySelector('span') : null;
+      if (span) {
+        span.textContent =
+          tr('privateHub.homePc.img2imgModelQwen21', 'Qwen-Image-2.1 · 7B（本地）') +
+          '（' +
+          tr('privateHub.homePc.txt2imgModelNotReady', '未就位，需先把权重放进 ComfyUI 的 models 目录') +
+          '）';
+      }
+      notReady.push(missing || m.id);
+    });
+    if (modelWarn) {
+      if (notReady.length) {
+        modelWarn.hidden = false;
+        modelWarn.textContent = tr(
+          'privateHub.homePc.txt2imgModelWarnNotReady',
+          'Qwen-Image-2.1 权重未就位，已自动跳过：{missing}'
+        ).replace('{missing}', notReady.join('；'));
+      } else {
+        modelWarn.hidden = true;
+        modelWarn.textContent = '';
+      }
+    }
+    syncEngineUi();
+  }
+
+  function loadModels() {
+    fetch(`${API_BASE_URL}/txt2img/models`)
+      .then(function (res) { return res.json().catch(function () { return {}; }); })
+      .then(function (data) {
+        if (data && data.models) applyModelAvailability(data.models);
+      })
+      .catch(function (e) {
+        log(`模型清单获取失败：${String(e.message || e)}`);
+      });
   }
 
   if (window.InstructEditPresetUi) {
@@ -185,10 +269,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  if (engineSelect) {
-    engineSelect.addEventListener('change', syncEngineUi);
+  (function bindModelRow() {
+    const inputs = modelInputs();
+    for (let i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('change', syncEngineUi);
+    }
     syncEngineUi();
-  }
+    if (selectAllBtn) {
+      selectAllBtn.addEventListener('click', function () {
+        const enabled = [];
+        const all = modelInputs();
+        for (let j = 0; j < all.length; j++) if (!all[j].disabled) enabled.push(all[j]);
+        const allOn = enabled.length > 0 && enabled.every(function (x) { return x.checked; });
+        enabled.forEach(function (x) { x.checked = !allOn; });
+        selectAllBtn.textContent = allOn
+          ? tr('privateHub.homePc.img2imgSelectAllModels', '全选')
+          : tr('privateHub.homePc.txt2imgSelectNoneModels', '取消全选');
+        syncEngineUi();
+      });
+    }
+  })();
 
   if (enableWatermark) {
     enableWatermark.addEventListener('change', syncWatermarkUi);
@@ -204,6 +304,16 @@ document.addEventListener('DOMContentLoaded', function () {
       groupsEl: bgGroups,
       tr: tr
     });
+  }
+
+  function engineLabel(engine) {
+    if (engine === 'z_image') {
+      return tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image 整图重绘');
+    }
+    if (engine === 'qwen21') {
+      return tr('privateHub.homePc.img2imgModelQwen21Short', 'Qwen-Image-2.1 · 7B');
+    }
+    return tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
   }
 
   function qualityLabel(q) {
@@ -233,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
     MediaUi.ensureLightboxDom();
     resultsLightbox = MediaUi.createLightbox({
       getItems: function () {
-        return results.map(function (r) {
+        return results.filter(function (r) { return r.cleanUrl; }).map(function (r) {
           return { url: r.cleanUrl, name: r.name };
         });
       },
@@ -285,6 +395,12 @@ document.addEventListener('DOMContentLoaded', function () {
     resultBox.style.display = 'block';
     if (downloadAllBtn) downloadAllBtn.style.display = 'inline-block';
 
+    // 灯箱只收成功的图；失败条目不占位，避免点击放大时索引错位。
+    let lbIndex = 0;
+    results.forEach(function (item) {
+      item.lightboxIndex = item.cleanUrl ? lbIndex++ : null;
+    });
+
     results.forEach(function (item, i) {
       const card = document.createElement('div');
       card.className = 'home-pc-result-card';
@@ -293,7 +409,9 @@ document.addEventListener('DOMContentLoaded', function () {
       meta.className = 'home-pc-result-meta';
       const engLabel = item.engine === 'z_image'
         ? tr('privateHub.homePc.img2imgEngineZImage', 'Z-Image 整图重绘')
-        : tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
+        : item.engine === 'qwen21'
+          ? tr('privateHub.homePc.img2imgModelQwen21Short', 'Qwen-Image-2.1 · 7B')
+          : tr('privateHub.homePc.img2imgEngineQwen', 'Qwen 指令改图（推荐）');
       let metaText = `${item.name || ('#' + (i + 1))} · ${engLabel} · seed ${item.seed_used != null ? item.seed_used : '—'}`;
       if (item.quality) metaText += ` · ${qualityLabel(item.quality)}`;
       if (item.denoise != null) metaText += ` · Denoise ${item.denoise}`;
@@ -311,18 +429,25 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       card.appendChild(meta);
 
-      const cleanWrap = document.createElement('div');
-      cleanWrap.className = 'home-pc-result-img-wrap';
-      const cleanImg = document.createElement('img');
-      cleanImg.alt = item.name || tr('privateHub.homePc.img2imgResultTitle', '生成结果');
-      cleanImg.style.cursor = 'pointer';
-      cleanImg.addEventListener('click', function () {
-        const lb = ensureResultsLightbox();
-        if (lb) lb.openAt(i);
-      });
-      applyThumbSrc(cleanImg, item);
-      cleanWrap.appendChild(cleanImg);
-      card.appendChild(cleanWrap);
+      if (item.cleanUrl) {
+        const cleanWrap = document.createElement('div');
+        cleanWrap.className = 'home-pc-result-img-wrap';
+        const cleanImg = document.createElement('img');
+        cleanImg.alt = item.name || tr('privateHub.homePc.img2imgResultTitle', '生成结果');
+        cleanImg.style.cursor = 'pointer';
+        cleanImg.addEventListener('click', function () {
+          const lb = ensureResultsLightbox();
+          if (lb && item.lightboxIndex != null) lb.openAt(item.lightboxIndex);
+        });
+        applyThumbSrc(cleanImg, item);
+        cleanWrap.appendChild(cleanImg);
+        card.appendChild(cleanWrap);
+      } else {
+        const err = document.createElement('p');
+        err.className = 'home-pc-result-meta home-pc-result-error';
+        err.textContent = item.error || tr('privateHub.homePc.img2imgFailed', '生成失败');
+        card.appendChild(err);
+      }
 
       if (item.wmUrl) {
         const wmLabel = document.createElement('p');
@@ -432,9 +557,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setBusy(
       true,
-      tr('privateHub.homePc.img2imgBatchProgress', '批量 {i}/{n}：上传并提交…')
+      tr('privateHub.homePc.img2imgBatchProgressModel', '批量 {i}/{n}：{model} 提交中…')
         .replace('{i}', String(index + 1))
-        .replace('{n}', String(total)),
+        .replace('{n}', String(total))
+        .replace('{model}', engineLabel(engine)),
       `${index + 1}/${total}`
     );
     if (progressBar) progressBar.style.width = `${Math.max(8, Math.round(((index) / total) * 100))}%`;
@@ -453,12 +579,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function generate() {
     if (batchBusy) return;
-    const engine = engineSelect ? engineSelect.value : 'qwen';
-    let prompt = (promptInput.value || '').trim();
-    if (engine === 'qwen' && window.InstructEditPresets) {
-      prompt = window.InstructEditPresets.resolvePrompt(presetUi ? presetUi.getActive() : '', prompt).trim();
-    }
-    if (!prompt) {
+    const models = selectedModels();
+    let rawPrompt = (promptInput.value || '').trim();
+    if (!rawPrompt) {
       alert(tr('privateHub.homePc.img2imgNeedPrompt', '请输入正向提示词'));
       promptInput.focus();
       return;
@@ -467,50 +590,99 @@ document.addEventListener('DOMContentLoaded', function () {
       alert(tr('privateHub.homePc.img2imgNeedImage', '请先上传参考图'));
       return;
     }
+    if (!models.length) {
+      alert(tr('privateHub.homePc.img2imgModelNeedOne', '请至少勾选一个模型'));
+      return;
+    }
+
+    // 指令改图类模型套风格预设；Z-Image 整图重绘用原始提示词（保持各自原行为）。
+    let instructPrompt = rawPrompt;
+    if ((models.indexOf('qwen') >= 0 || models.indexOf('qwen21') >= 0) && window.InstructEditPresets) {
+      instructPrompt = window.InstructEditPresets.resolvePrompt(presetUi ? presetUi.getActive() : '', rawPrompt).trim();
+    }
+    function promptFor(engine) {
+      return engine === 'z_image' ? rawPrompt : instructPrompt;
+    }
+
+    // 对比要公平：种子留空时前端定一个，所有图片/模型共用同一种子。
+    let seedText = (seedInput.value || '').trim();
+    if (!seedText) {
+      seedText = String(Math.floor(Math.random() * 2147483647));
+      seedInput.value = seedText;
+    }
 
     stopPolling();
     results = [];
     renderResults();
-    setBusy(true, tr('privateHub.homePc.img2imgGenerating', '上传并提交 ComfyUI…'));
 
     const files = selectedFiles.slice();
+    const jobs = [];
+    files.forEach(function (file, fi) {
+      models.forEach(function (engine) {
+        jobs.push({ file: file, engine: engine, fileIndex: fi });
+      });
+    });
+    const total = jobs.length;
+
+    setBusy(
+      true,
+      tr('privateHub.homePc.img2imgBatchProgress', '批量 {i}/{n}：上传并提交…')
+        .replace('{i}', '0').replace('{n}', String(total)),
+      `0/${total}`
+    );
+
     let ok = 0;
     const batchStart = performance.now();
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        log(`${i + 1}/${files.length} ${file.name || ''}`);
-        const itemStart = performance.now();
-        const data = await runOne(file, prompt, engine, i, files.length);
+    for (let j = 0; j < total; j++) {
+      const job = jobs[j];
+      const file = job.file;
+      const engine = job.engine;
+      const fi = job.fileIndex;
+      const label = engineLabel(engine);
+      log(`${j + 1}/${total} ${file.name || ''} · ${label} seed=${seedText} 开始`);
+      const itemStart = performance.now();
+      try {
+        const data = await runOne(file, promptFor(engine), engine, j, total);
         const elapsedSec = (performance.now() - itemStart) / 1000;
         const cleanUrl = toDataUrl(data.image_base64);
         if (!cleanUrl) throw new Error('未返回图片数据');
         results.push({
-          name: file.name || `image-${i + 1}`,
+          name: file.name || `image-${fi + 1}`,
           cleanUrl: cleanUrl,
           wmUrl: toDataUrl(data.watermarked_image_base64),
-          engine: data.engine,
+          engine: data.engine || engine,
+          model_id: data.model_id,
           seed_used: data.seed_used,
           quality: data.quality,
           denoise: data.denoise,
           elapsed_sec: elapsedSec
         });
         ok += 1;
-        log(`第 ${i + 1}/${files.length} 张完成，耗时 ${elapsedSec.toFixed(1)}s`);
-        renderResults();
-        if (progressBar) progressBar.style.width = `${Math.round(((i + 1) / files.length) * 100)}%`;
+        log(`  ${j + 1}/${total} ${label} 完成，耗时 ${elapsedSec.toFixed(1)}s`);
+      } catch (e) {
+        const msg = (window.HomePcApi && HomePcApi.friendlyFetchError)
+          ? HomePcApi.friendlyFetchError(e)
+          : String(e.message || e);
+        log(`  ${j + 1}/${total} ${label} 失败：${msg}`);
+        results.push({
+          name: file.name || `image-${fi + 1}`,
+          cleanUrl: '',
+          engine: engine,
+          seed_used: Number(seedText),
+          elapsed_sec: (performance.now() - itemStart) / 1000,
+          error: msg
+        });
       }
-      const batchSec = (performance.now() - batchStart) / 1000;
-      log(`完成 ${ok}/${files.length}，本批总耗时 ${batchSec.toFixed(1)}s ${new Date().toLocaleString()}`);
-    } catch (e) {
-      var msg = (window.HomePcApi && HomePcApi.friendlyFetchError)
-        ? HomePcApi.friendlyFetchError(e)
-        : String(e.message || e);
-      log(`错误：${msg}`);
-      alert(msg);
-    } finally {
-      stopPolling();
-      setBusy(false);
+      currentTaskId = null;
+      renderResults();
+      if (progressBar) progressBar.style.width = `${Math.round(((j + 1) / total) * 100)}%`;
+    }
+    stopPolling();
+    const batchSec = (performance.now() - batchStart) / 1000;
+    log(`完成 ${ok}/${total}，本批总耗时 ${batchSec.toFixed(1)}s ${new Date().toLocaleString()}`);
+    setBusy(false);
+    if (ok === 0 && total > 0) {
+      alert(tr('privateHub.homePc.img2imgAllFailed', '所有任务都生成失败，详见日志'));
     }
   }
 
@@ -529,6 +701,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (enableWatermark) enableWatermark.checked = false;
     if (watermarkText) watermarkText.value = '样片确认';
     syncWatermarkUi();
+    const inputs = modelInputs();
+    for (let i = 0; i < inputs.length; i++) {
+      inputs[i].checked = !inputs[i].disabled && inputs[i].value === 'qwen';
+    }
+    syncEngineUi();
+    if (selectAllBtn) {
+      selectAllBtn.textContent = tr('privateHub.homePc.img2imgSelectAllModels', '全选');
+    }
     results = [];
     renderResults();
     if (logOutput) logOutput.textContent = '';
@@ -536,6 +716,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function downloadAll() {
     results.forEach(function (item, i) {
+      if (!item.cleanUrl) return;
       downloadDataUrl(item.cleanUrl, `img2img_${i + 1}_${Date.now()}.png`);
       if (item.wmUrl) {
         downloadDataUrl(item.wmUrl, `img2img_wm_${i + 1}_${Date.now()}.png`);
@@ -546,6 +727,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (genBtn) genBtn.addEventListener('click', generate);
   if (clearBtn) clearBtn.addEventListener('click', clearAll);
   if (downloadAllBtn) downloadAllBtn.addEventListener('click', downloadAll);
+
+  loadModels();
 
   if (window.HomePcMediaUi) {
     window.HomePcMediaUi.ensureLogToolbar(document.getElementById('log-container'), {

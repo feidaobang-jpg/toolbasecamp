@@ -23,7 +23,10 @@ if exist "%~dp0local.env" (
 echo Checking Python...
 set "PY="
 
-rem Prefer Python312 path; py -3 may lack tzdata
+rem 优先用仓库自带的隔离环境（推荐；由 uv 创建，见 README）
+if exist "%~dp0.venv\Scripts\python.exe" set "PY=%~dp0.venv\Scripts\python.exe"
+
+rem 其次找系统 Python312 等；py -3 可能缺 tzdata
 for %%P in (
   "%LocalAppData%\Programs\Python\Python312\python.exe"
   "%LocalAppData%\Programs\Python\Python313\python.exe"
@@ -91,6 +94,24 @@ if not errorlevel 1 goto already_running
 netstat -ano | findstr ":5000" | findstr "LISTENING" >nul 2>&1
 if not errorlevel 1 goto port_busy
 
+rem ---------- 确保 venv 里有 pip ----------
+rem uv 建的 venv 默认**不带 pip**，直接跑 pip 会 "No module named pip" 而中断启动。
+echo.
+echo Ensure pip in venv ...
+!PY! -m pip --version >nul 2>&1
+if errorlevel 1 (
+    echo   [INFO] venv 里没有 pip ^(uv 建的 venv 默认不带^)，尝试 bootstrap ...
+    !PY! -m ensurepip --upgrade >nul 2>&1
+    !PY! -m pip --version >nul 2>&1
+)
+!PY! -m pip --version >nul 2>&1
+if errorlevel 1 (
+    echo   [WARN] 仍无法启用 pip，跳过依赖安装 ^(假定依赖已装好^)。
+    echo          需要装/更新依赖请手动跑：
+    echo            uv pip install -r requirements.txt --python "!PY!"
+    goto :deps_ok
+)
+
 echo.
 echo pip install -r requirements.txt ...
 !PY! -m pip install -r "%~dp0requirements.txt"
@@ -100,6 +121,8 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
+
+:deps_ok
 
 echo.
 echo TTS: IndexTTS-2.5 at D:\sd\index-tts (fallback Edge-TTS)
@@ -113,6 +136,12 @@ if not defined ACESTEP_ROOT set ACESTEP_ROOT=D:\sd\ACE-Step-1.5
 if not defined STABLE_AUDIO_ROOT set STABLE_AUDIO_ROOT=D:\sd\stable-audio-open
 if not defined STABLE_AUDIO_MODEL_DIR set STABLE_AUDIO_MODEL_DIR=D:\sd\stable-audio-open\model
 if not defined HUNYUAN3D_ROOT set HUNYUAN3D_ROOT=D:\sd\hunyuan3d
+
+rem 数字人（唇形同步）：引擎根目录 + ffmpeg（MuseTalk 要求 ffmpeg 在 PATH 或 --ffmpeg_path 目录内）
+if not defined MUSETALK_ROOT set MUSETALK_ROOT=D:\sd\musetalk
+if not defined LATENTSYNC_ROOT set LATENTSYNC_ROOT=D:\sd\latentsync
+if not defined WAV2LIP_ROOT set WAV2LIP_ROOT=D:\sd\wav2lip
+if exist "D:\sd\ffmpeg\bin\ffmpeg.exe" set "PATH=D:\sd\ffmpeg\bin;%PATH%"
 rem Do not default HF_ENDPOINT=hf-mirror (hub missing commit header). Set it yourself if needed.
 set PYTHONUTF8=1
 set PYTHONIOENCODING=utf-8

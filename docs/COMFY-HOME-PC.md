@@ -76,6 +76,7 @@ curl -s https://comfy.zhengxiaohui.cn/health
 | 图生图 | Qwen 指令改图 / Z-Image；多图批量、可选水印；老照片用风格预设 |
 | 描述抠图 | Qwen 按描述抠图 |
 | 文字配图 / 文字成片 | 分句生图；成片含 TTS + 合成 |
+| 数字人 / 对口型 | 人物图 + 台词 → 本机 TTS + 口型同步出说话视频；见 [DIGITAL-HUMAN.md](./DIGITAL-HUMAN.md) |
 
 图标 / 封面仍在公开「媒体」工具里，纯前端，不走本服务。
 

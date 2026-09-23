@@ -440,6 +440,11 @@ const privateToolsConfig = {
                     url: 'html/admin/private/home-pc/tts.html'
                 },
                 {
+                    titleKey: 'privateHub.homePc.digitalHumanTitle',
+                    descriptionKey: 'privateHub.homePc.digitalHumanDesc',
+                    url: 'html/admin/private/home-pc/digital-human.html'
+                },
+                {
                     titleKey: 'privateHub.homePc.musicTitle',
                     descriptionKey: 'privateHub.homePc.musicDesc',
                     url: 'html/admin/private/home-pc/music.html'

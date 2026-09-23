@@ -9,9 +9,9 @@
   <link href="../../../../vendor/font-awesome/css/all.min.css?v=homepc16" rel="stylesheet" />
   <link rel="stylesheet" href="../../../../css/base.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=homepc16" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=homepc69" />
-  <script src="../../../../js/locales/en.js?v=ttvname1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=ttvname1"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=qwen21a" />
+  <script src="../../../../js/locales/en.js?v=qwen21a"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=qwen21a"></script>
   <script src="../../../../js/i18n.js?v=homepc7"></script>
   <script src="../../../../js/config.js?v=videoclip1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -39,7 +39,7 @@
       <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
     </div>
     <div id="app" class="home-pc-wrap hidden" hidden>
-      <p class="home-pc-desc" data-i18n="privateHub.homePc.txt2imgHint">工作流 z_image_turbo.json。模型：z_image_turbo_bf16、qwen_3_4b、ae.safetensors。</p>
+      <p class="home-pc-desc" data-i18n="privateHub.homePc.txt2imgHint">可多选模型排队生成对比。Z-Image Turbo 走工作流 z_image_turbo.json（z_image_turbo_bf16、qwen_3_4b、ae.safetensors）；Qwen-Image-2.1 · 7B 走工作流 qwen_image_21_t2i.json，权重放进 models/diffusion_models、models/text_encoders、models/vae 后自动识别。</p>
       <div id="api-status" class="home-pc-status home-pc-status--checking" role="status"></div>
       <div class="tool-container">
           <div class="input-section">
@@ -61,11 +61,30 @@
                 <input id="seed-input" class="text-input" type="text" data-i18n-placeholder="privateHub.homePc.txt2imgSeedPlaceholder" placeholder="留空随机" />
               </div>
             </div>
+
+            <div class="home-pc-field-block">
+              <div class="home-pc-model-head">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.txt2imgModelLabel">模型（可多选，排队生成对比）：</span>
+                <button type="button" class="rec-chip" id="select-all-models" data-i18n="privateHub.homePc.txt2imgSelectAllModels">全选</button>
+              </div>
+              <div class="home-pc-model-row" id="model-row">
+                <label class="home-pc-model-item">
+                  <input type="checkbox" name="t2i-model" value="z_image" checked />
+                  <span data-i18n="privateHub.homePc.txt2imgModelZImage">Z-Image Turbo（本地，快）</span>
+                </label>
+                <label class="home-pc-model-item">
+                  <input type="checkbox" name="t2i-model" value="qwen-image-2.1:7b" />
+                  <span data-i18n="privateHub.homePc.txt2imgModelQwen21">Qwen-Image-2.1 · 7B（本地）</span>
+                </label>
+              </div>
+              <p class="small-hint" id="model-hint" data-i18n="privateHub.homePc.txt2imgModelHint">勾选多个模型时按顺序排队生成，同一提示词、同一种子，结果并排展示便于对比效果。</p>
+              <p class="small-hint home-pc-model-warn" id="model-warn" hidden></p>
+            </div>
           </div>
 
           <div class="action-row home-pc-tool-actions">
             <button id="gen-btn" class="tb-btn">生成</button>
-            <button type="button" id="download-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.download">Download</button>
+            <button type="button" id="download-btn" class="tb-btn" style="display:none;" data-i18n="privateHub.homePc.downloadAll">下载全部</button>
             <button id="clear-btn" class="tb-btn">清空</button>
           </div>
 
@@ -82,9 +101,7 @@
           <div id="result-box" class="video-box home-pc-result-box" style="display:none;">
             <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.txt2imgResultTitle">生成结果</h3>
             <p id="meta-line" class="home-pc-result-meta"></p>
-            <div class="home-pc-result-img-wrap">
-              <img id="result-img" alt="" />
-            </div>
+            <div id="result-grid" class="home-pc-result-grid"></div>
           </div>
 
           <div id="log-container" class="home-pc-log-box">
@@ -102,6 +119,6 @@
   <script src="../../../../js/admin/home-pc/home-pc-api.js?v=histDel1"></script>
   <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
-  <script src="../../../../js/admin/home-pc/text-to-image.js?v=homepc9"></script>
+  <script src="../../../../js/admin/home-pc/text-to-image.js?v=qwen21a"></script>
 </body>
 </html>

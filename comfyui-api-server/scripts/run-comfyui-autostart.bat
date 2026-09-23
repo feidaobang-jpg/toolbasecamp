@@ -34,5 +34,9 @@ if not errorlevel 1 exit /b 0
 netstat -ano | findstr ":8188" | findstr "LISTENING" >nul 2>&1
 if not errorlevel 1 exit /b 1
 
-"%PYTHON%" main.py --listen 127.0.0.1 --port 8188
+rem 16GB 显存友好的默认参数；可在 local.env 里用 COMFYUI_EXTRA_ARGS 覆盖
+if not defined COMFYUI_EXTRA_ARGS set "COMFYUI_EXTRA_ARGS=--lowvram --cache-none --reserve-vram 0.8"
+
+echo Starting ComfyUI: main.py --listen 127.0.0.1 --port 8188 %COMFYUI_EXTRA_ARGS%
+"%PYTHON%" main.py --listen 127.0.0.1 --port 8188 %COMFYUI_EXTRA_ARGS%
 exit /b %ERRORLEVEL%

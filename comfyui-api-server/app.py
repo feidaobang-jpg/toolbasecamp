@@ -42,6 +42,7 @@ try:
 except ImportError:
     HAS_EDGE_TTS = False
 
+import qwen21_image
 from resource_limits import (
     apply_shared_pc_limits,
     comfyui_max_concurrent_jobs,
@@ -102,6 +103,7 @@ async def health_check():
     comfy_ok = False
     comfy_err = None
     qwen_ckpt = None
+    qwen21_info = {"ready": False, "missing": []}
     try:
         r = await asyncio.to_thread(
             requests.get, "http://{}/system_stats".format(COMFYUI_SERVER_ADDRESS), timeout=5
@@ -117,6 +119,12 @@ async def health_check():
         pref = "AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors"
         resolved = _resolve_qwen_checkpoint(pref)
         qwen_ckpt = resolved if resolved in names else None
+        try:
+            qwen21_info = await asyncio.to_thread(
+                qwen21_image.discover_weights, COMFYUI_SERVER_ADDRESS
+            )
+        except Exception as e:  # pragma: no cover
+            qwen21_info = {"ready": False, "missing": [str(e)]}
 
     return {
         "status": "ok" if comfy_ok else "degraded",
@@ -126,6 +134,9 @@ async def health_check():
         "comfyui_error": comfy_err,
         "qwen_checkpoint_ready": bool(qwen_ckpt),
         "qwen_checkpoint": qwen_ckpt,
+        "qwen21_ready": bool(qwen21_info.get("ready")),
+        "qwen21_weights": qwen21_info,
+        "qwen21_model_id": qwen21_image.QWEN21_MODEL_ID,
         "qwen_img2img_quality": _QWEN_IMG2IMG_QUALITY,
         "gpu_hint": "Qwen 图生图固定标准档（约 1MP·4 步）。",
         "resource_limits": _RESOURCE_LIMIT_INFO,
@@ -144,6 +155,7 @@ async def health_check():
 _TEXT_TO_VIDEO_TASKS = {}
 _PHOTO_RESTORE_TASKS = {}
 _IMG2IMG_TASKS = {}
+_TXT2IMG_TASKS = {}
 
 # 文字配图：各平台常用尺寸（宽, 高）
 _TEXT_TO_IMAGES_ASPECT_PRESETS = {
@@ -905,6 +917,8 @@ def _normalize_img2img_engine(raw: str) -> str:
     v = (raw or "qwen").strip().lower()
     if v in ("z", "z_image", "z-image", "turbo", "z_image_turbo"):
         return "z_image"
+    if v in ("qwen21", "qwen-21", "qwen_image_21", qwen21_image.QWEN21_MODEL_ID.lower()):
+        return "qwen21"
     return "qwen"
 
 
@@ -2830,6 +2844,190 @@ async def txt2img_generate(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def _normalize_txt2img_model(raw: str) -> str:
+    """文生图模型归一化：z_image（默认，保持原行为）或 qwen-image-2.1:7b。"""
+    v = (raw or "").strip().lower()
+    if v in ("qwen21", "qwen-21", "qwen_image_21", qwen21_image.QWEN21_MODEL_ID.lower()):
+        return "qwen21"
+    return "z_image"
+
+
+async def _txt2img_build_and_run(
+    prompt: str,
+    model: str,
+    negative_prompt: str,
+    width: int,
+    height: int,
+    run_seed: int,
+):
+    """文生图核心：提示词 + 模型 → 结果 PNG 字节与元数据。
+
+    各模型共用同一段提示词包装与负面词，这样并排对比时差异来自模型本身。
+    """
+    m = _normalize_txt2img_model(model)
+    p = (prompt or "").strip()
+    neg = _default_txt2img_negative(negative_prompt, width=width, height=height)
+    p_use = _enhance_txt2img_positive(p)
+    if m == "qwen21":
+        wf = await asyncio.to_thread(
+            qwen21_image.build_t2i_workflow,
+            COMFYUI_SERVER_ADDRESS,
+            os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER),
+            p_use,
+            run_seed,
+            width,
+            height,
+            neg,
+        )
+    else:
+        wf = _build_z_image_turbo_workflow(
+            p_use, seed=run_seed, width=width, height=height, negative_text=neg
+        )
+    img_bytes = await _run_comfyui_and_get_last_image(wf)
+    out = {"image_bytes": img_bytes, "seed_used": run_seed, "model": m}
+    if m == "qwen21":
+        out["model_id"] = qwen21_image.QWEN21_MODEL_ID
+    return out
+
+
+async def _run_txt2img_task(task_id: str):
+    task = _TXT2IMG_TASKS.get(task_id)
+    if not task:
+        return
+    task["status"] = "running"
+    task["updated_at"] = time.time()
+    try:
+        p = (task.get("prompt") or "").strip()
+        if not p:
+            raise RuntimeError("prompt 不能为空")
+        seed_opt = task.get("seed_opt")
+        run_seed = seed_opt if seed_opt is not None else random.randint(0, (1 << 31) - 1)
+        core = await _txt2img_build_and_run(
+            p,
+            task.get("model") or "z_image",
+            task.get("negative_prompt") or "",
+            int(task.get("width") or 1024),
+            int(task.get("height") or 1024),
+            run_seed,
+        )
+        b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
+        result = {
+            "success": True,
+            "image_base64": b64,
+            "seed_used": core["seed_used"],
+            "model": core["model"],
+        }
+        if core.get("model_id"):
+            result["model_id"] = core["model_id"]
+        task["result"] = result
+        task["status"] = "done"
+        task["updated_at"] = time.time()
+    except Exception as e:
+        task["status"] = "error"
+        task["error"] = str(e)
+        task["updated_at"] = time.time()
+
+
+@app.post("/txt2img/start")
+@app.post("/api/txt2img/start")
+async def txt2img_start(
+    prompt: str = Form(...),
+    negative_prompt: str = Form(""),
+    width: int = Form(1024),
+    height: int = Form(1024),
+    seed: str = Form(""),
+    model: str = Form("z_image"),
+):
+    """文生图异步任务：快速返回 task_id。
+
+    本地 Qwen-Image-2.1 步数多、单张耗时长，同步等待易被隧道掐断，故走异步。
+    """
+    p = (prompt or "").strip()
+    if not p:
+        raise HTTPException(status_code=400, detail="prompt 不能为空")
+    m = _normalize_txt2img_model(model)
+    if m == "qwen21":
+        # 提交前就查权重，避免用户排完队才发现缺模型
+        try:
+            await asyncio.to_thread(qwen21_image.require_weights, COMFYUI_SERVER_ADDRESS)
+        except qwen21_image.Qwen21NotReady as e:
+            raise HTTPException(status_code=503, detail=str(e))
+    try:
+        task_id = str(uuid.uuid4())
+        _TXT2IMG_TASKS[task_id] = {
+            "status": "queued",
+            "created_at": time.time(),
+            "updated_at": time.time(),
+            "prompt": p,
+            "negative_prompt": negative_prompt,
+            "width": _clamp_image_side(width),
+            "height": _clamp_image_side(height),
+            "model": m,
+            "model_id": qwen21_image.QWEN21_MODEL_ID if m == "qwen21" else None,
+            "seed_opt": _parse_seed_optional(seed),
+            "result": None,
+            "error": None,
+        }
+        asyncio.create_task(_run_txt2img_task(task_id))
+        return {
+            "success": True,
+            "task_id": task_id,
+            "model": m,
+            "model_id": _TXT2IMG_TASKS[task_id]["model_id"],
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/txt2img/status/{task_id}")
+@app.get("/api/txt2img/status/{task_id}")
+async def txt2img_status(task_id: str):
+    """查询文生图异步任务状态。"""
+    task = _TXT2IMG_TASKS.get(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {
+        "success": True,
+        "task_id": task_id,
+        "status": task.get("status"),
+        "model": task.get("model"),
+        "model_id": task.get("model_id"),
+        "result": task.get("result"),
+        "error": task.get("error"),
+        "updated_at": task.get("updated_at"),
+    }
+
+
+@app.get("/txt2img/models")
+@app.get("/api/txt2img/models")
+async def txt2img_models():
+    """可选模型清单（含权重是否就位），供前端渲染多选框。"""
+    try:
+        w = await asyncio.to_thread(qwen21_image.discover_weights, COMFYUI_SERVER_ADDRESS)
+    except Exception as e:  # pragma: no cover
+        w = {"ready": False, "missing": [str(e)]}
+    return {
+        "success": True,
+        "models": [
+            {
+                "id": "z_image",
+                "label": "Z-Image Turbo（本地，快）",
+                "ready": True,
+                "default": True,
+            },
+            {
+                "id": qwen21_image.QWEN21_MODEL_ID,
+                "label": qwen21_image.QWEN21_LABEL,
+                "ready": bool(w.get("ready")),
+                "missing": w.get("missing") or [],
+            },
+        ],
+        "qwen21_weights": w,
+    }
+
+
 async def _img2img_build_and_run(
     fname: str,
     prompt: str,
@@ -2850,6 +3048,16 @@ async def _img2img_build_and_run(
         p_use = _enhance_img2img_positive(p)
         wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
         denoise_used = d
+    elif eng == "qwen21":
+        wf = await asyncio.to_thread(
+            qwen21_image.build_img2img_workflow,
+            COMFYUI_SERVER_ADDRESS,
+            os.path.join(os.path.dirname(__file__), WORKFLOW_FOLDER),
+            p,
+            fname,
+            run_seed,
+        )
+        denoise_used = None
     else:
         names = await asyncio.to_thread(_fetch_checkpoint_names)
         resolved = _resolve_qwen_checkpoint("AllInOne\\qwen\\Qwen-Rapid-AIO-NSFW-v10.safetensors")
@@ -2862,6 +3070,8 @@ async def _img2img_build_and_run(
         denoise_used = None
     img_bytes = await _run_comfyui_and_get_last_image(wf)
     out = {"image_bytes": img_bytes, "seed_used": run_seed, "engine": eng}
+    if eng == "qwen21":
+        out["model_id"] = qwen21_image.QWEN21_MODEL_ID
     if eng == "qwen":
         out["quality"] = _normalize_img2img_quality(quality)
     if denoise_used is not None:
@@ -2898,6 +3108,8 @@ async def _run_img2img_task(task_id: str):
         )
         b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
         result = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
+        if core.get("model_id"):
+            result["model_id"] = core["model_id"]
         if core.get("quality"):
             result["quality"] = core["quality"]
         if core.get("denoise") is not None:
@@ -3015,6 +3227,8 @@ async def img2img_generate(
         core = await _img2img_build_and_run(fname, p, engine, negative_prompt, denoise, run_seed, quality)
         b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
         out = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
+        if core.get("model_id"):
+            out["model_id"] = core["model_id"]
         if core.get("quality"):
             out["quality"] = core["quality"]
         if core.get("denoise") is not None:
@@ -4787,6 +5001,40 @@ from image_to_3d_pipeline import ImageTo3dAPI
 
 _i23d_api = ImageTo3dAPI(output_root=_OUTPUT_ROOT)
 _i23d_api.register(app)
+
+
+async def _lipsync_wan_i2v(image_path: Path, out_path: Path, prompt_text: str, seconds: float) -> None:
+    """静帧 → Wan2.2 14B I2V 运动视频（数字人口型同步的前置阶段，可选）。"""
+    img_bytes = Path(image_path).read_bytes()
+    comfy_name, _sub = await upload_image_bytes(img_bytes, name_prefix="lipsync_")
+    if not comfy_name:
+        raise RuntimeError("上传图片到 ComfyUI 失败")
+    fps = 24
+    length = int(max(17, min(241, round(max(1.0, float(seconds or 3.0)) * fps))))
+    workflow = _build_wan22_i2v_14b_gguf_workflow(
+        comfy_image_filename=comfy_name,
+        prompt_text=(prompt_text or "").strip()
+        or "a person talking to the camera, subtle natural head movement, steady framing",
+        length=length,
+        fps=fps,
+    )
+    vid_bytes = await _run_comfyui_and_get_last_video(workflow, timeout_sec=1800.0)
+    if not vid_bytes:
+        raise RuntimeError("Wan I2V 未返回视频")
+    Path(out_path).write_bytes(vid_bytes)
+
+
+from lipsync_pipeline import LipsyncAPI
+
+_lipsync_api = LipsyncAPI(
+    output_root=_OUTPUT_ROOT,
+    synthesize=_indextts_synthesize,
+    audio_duration_seconds=_audio_duration_seconds,
+    transcode_audio_to_wav=_transcode_audio_to_wav,
+    ffmpeg_bin=_ffmpeg_bin,
+    wan_i2v=_lipsync_wan_i2v,
+)
+_lipsync_api.register(app)
 
 
 if __name__ == '__main__':

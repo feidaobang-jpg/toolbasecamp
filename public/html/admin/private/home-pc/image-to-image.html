@@ -11,9 +11,9 @@
   <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq4" />
   <link rel="stylesheet" href="../../../../css/tools-form.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=imgSq3" />
-  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=imgSq4" />
-  <script src="../../../../js/locales/en.js?v=img2hint1"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=img2hint1"></script>
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=qwen21a" />
+  <script src="../../../../js/locales/en.js?v=qwen21a"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=qwen21a"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
   <script src="../../../../js/config.js?v=videoclip1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -106,14 +106,28 @@
                 <div class="instruct-bg-groups" id="bg-groups"></div>
               </div>
             </div>
-            <div class="form-row">
-              <div class="input-control">
-                <label for="engine-select" data-i18n="privateHub.homePc.img2imgEngineLabel">引擎：</label>
-                <select id="engine-select" class="text-input home-pc-select">
-                  <option value="qwen" selected data-i18n="privateHub.homePc.img2imgEngineQwen">Qwen 指令改图（推荐）</option>
-                  <option value="z_image" data-i18n="privateHub.homePc.img2imgEngineZImage">Z-Image 整图重绘（试效果）</option>
-                </select>
+            <div class="field-row" id="engine-wrap">
+              <div class="home-pc-model-head">
+                <span class="home-pc-field-label" data-i18n="privateHub.homePc.img2imgModelLabel">模型（可多选，排队生成对比）：</span>
+                <button type="button" class="rec-chip" id="select-all-models" data-i18n="privateHub.homePc.img2imgSelectAllModels">全选</button>
               </div>
+              <div class="home-pc-model-row" id="model-row">
+                <label class="home-pc-model-item">
+                  <input type="checkbox" name="img2img-model" value="qwen" data-engine="qwen" checked />
+                  <span data-i18n="privateHub.homePc.img2imgEngineQwen">Qwen 指令改图（推荐）</span>
+                </label>
+                <label class="home-pc-model-item">
+                  <input type="checkbox" name="img2img-model" value="z_image" data-engine="z_image" />
+                  <span data-i18n="privateHub.homePc.img2imgEngineZImage">Z-Image 整图重绘（试效果）</span>
+                </label>
+                <label class="home-pc-model-item">
+                  <input type="checkbox" name="img2img-model" value="qwen-image-2.1:7b" data-engine="qwen21" />
+                  <span data-i18n="privateHub.homePc.img2imgModelQwen21">Qwen-Image-2.1 · 7B（本地）</span>
+                </label>
+              </div>
+              <p class="small-hint" data-i18n="privateHub.homePc.img2imgModelHint">勾选多个模型时按「图片 × 模型」顺序排队生成，同一提示词、同一种子，结果并排展示便于对比。</p>
+              <p class="small-hint home-pc-model-warn" id="model-warn" hidden></p>
+              <p class="small-hint" id="engine-conflict-hint" hidden data-i18n="privateHub.homePc.img2imgEngineConflictHint">Z-Image 走整图重绘，Denoise / 风格预设对它与 Qwen 的效果不同；同时勾选时以当前参数分别生成。</p>
             </div>
             <p class="small-hint" id="quality-hint" data-i18n="privateHub.homePc.img2imgQualityHint">Qwen 固定标准档（约 1MP·4 步）。保原图构图/姿势，只改指令里写的外观；不要指望它出角色三视图。</p>
             <p class="small-hint" id="zimage-hint" hidden data-i18n="privateHub.homePc.img2imgZImageHint">Z-Image 按 Denoise 整图重绘：大图约压到 1MP；Denoise 越高越敢改构图，仍易改脸/超时。人物局部改图用 Qwen；三视图仍建议文生图。</p>
@@ -172,6 +186,6 @@
   <script src="../../../../js/shared/instruct-edit-bg-presets.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-ui.js?v=homepc16"></script>
   <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=homepc27"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=qwen21a"></script>
 </body>
 </html>

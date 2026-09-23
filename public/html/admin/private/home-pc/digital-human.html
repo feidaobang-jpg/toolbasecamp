@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>数字人 / 对口型 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link href="../../../../vendor/font-awesome/css/all.min.css?v=dh1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../../css/base.css?v=dh1" />
+  <link rel="stylesheet" href="../../../../css/docs/docs-common.css?v=imgSq4" />
+  <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=dh1" />
+  <style>
+    .dh-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .dh-thumb {
+      position: relative; margin-top: 8px; width: 132px; height: 132px;
+      border-radius: 10px; overflow: hidden; border: 1px solid #d1d5db; background: #f3f4f6;
+    }
+    .dh-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .dh-thumb button {
+      position: absolute; right: 4px; top: 4px; border: 0; width: 22px; height: 22px;
+      border-radius: 50%; background: rgba(0, 0, 0, .55); color: #fff; cursor: pointer; line-height: 1;
+    }
+    .dh-src-tabs { display: flex; gap: 8px; margin: 4px 0 12px; }
+    .dh-mini-hint { font-size: 12px; color: #6b7280; margin: 6px 0 0; line-height: 1.6; }
+    .dh-engine-note { font-size: 12px; color: #6b7280; margin: 6px 0 0; }
+  </style>
+</head>
+<body class="home-pc-page">
+  <div class="home-pc-container">
+    <aside id="home-pc-sidebar" class="sidebar" aria-label="家里电脑"></aside>
+    <div class="home-pc-content">
+      <header class="home-pc-header">
+        <div class="home-pc-header-inner">
+          <a href="../../private.html" class="home-pc-back">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+          </a>
+          <h1 class="home-pc-title" data-i18n="privateHub.homePc.digitalHumanTitle">数字人 / 对口型</h1>
+          <div class="home-pc-header-actions">
+            <span id="auth-label" class="home-pc-auth-label"></span>
+            <a id="login-link" href="../../../auth/login.html" class="home-pc-login-link hidden" data-i18n="auth.login">登录</a>
+          </div>
+        </div>
+      </header>
+      <main class="home-pc-main">
+        <div id="boot-loading" class="home-pc-card home-pc-card--center" data-i18n="privateHub.homePc.loading">加载中…</div>
+        <div id="gate" class="home-pc-card home-pc-card--center hidden" hidden>
+          <p id="gate-msg" class="home-pc-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+          <a id="gate-login" href="../../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+        </div>
+        <div id="app" class="home-pc-wrap hidden" hidden>
+          <p class="home-pc-desc" data-i18n="privateHub.homePc.digitalHumanHint">
+            上传人物图 + 输入台词，本机合成语音并驱动口型，输出说话视频。全部计算在本机完成。
+          </p>
+          <div id="api-status" class="home-pc-status home-pc-status--checking" data-api-only="1" role="status"></div>
+          <p id="engine-line" class="dh-engine-note"></p>
+
+          <div class="tool-container">
+            <div class="input-section">
+              <div class="dh-grid">
+                <div>
+                  <span class="home-pc-field-label" data-i18n="privateHub.homePc.dhImageLabel">人物图片</span>
+                  <div class="drop-zone tb-input-image" id="image-drop" style="margin-top:8px;min-height:110px">
+                    <div class="drop-icon">+</div>
+                    <div class="drop-title" data-i18n="privateHub.homePc.dhImageDrop">点击或拖入人物图</div>
+                    <div class="drop-hint" data-i18n="privateHub.homePc.dhImageHint">JPG/PNG · 单人正面 · 脸部清晰无遮挡</div>
+                  </div>
+                  <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp,image/bmp,image/*" hidden />
+                  <div class="dh-thumb" id="image-thumb" hidden>
+                    <img id="image-preview" alt="" />
+                    <button type="button" id="image-remove" aria-label="remove">&times;</button>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="home-pc-field-label" data-i18n="privateHub.homePc.dhAudioLabel">音频（可选）</span>
+                  <div class="drop-zone" id="audio-drop" style="margin-top:8px;min-height:110px">
+                    <div class="drop-title" data-i18n="privateHub.homePc.dhAudioDrop">点击或拖入音频</div>
+                    <div class="drop-hint" data-i18n="privateHub.homePc.dhAudioHint">留空则用下方文字合成。WAV/MP3，建议 ≤180 秒</div>
+                  </div>
+                  <input type="file" id="audio-input" accept="audio/*,.wav,.mp3,.m4a,.flac,.ogg" hidden />
+                  <p id="audio-name" class="dh-mini-hint"></p>
+                </div>
+              </div>
+
+              <div style="margin-top:16px">
+                <label for="text-input" data-i18n="privateHub.homePc.dhTextLabel">要说的台词（留空则只用上传音频）</label>
+                <textarea id="text-input" rows="4" data-i18n-placeholder="privateHub.homePc.dhTextPlaceholder" placeholder="你好，我是你的数字人助手…"></textarea>
+              </div>
+
+              <div class="form-row" style="margin-top:12px">
+                <div class="input-control">
+                  <label for="engine-select" data-i18n="privateHub.homePc.dhEngineLabel">口型引擎</label>
+                  <select id="engine-select" class="text-input"></select>
+                </div>
+                <div class="input-control">
+                  <label for="motion-select" data-i18n="privateHub.homePc.dhMotionLabel">画面运动</label>
+                  <select id="motion-select" class="text-input"></select>
+                </div>
+                <div class="input-control" id="voice-wrap">
+                  <label for="voice-select" data-i18n="privateHub.homePc.dhVoiceLabel">合成音色</label>
+                  <select id="voice-select" class="text-input"></select>
+                </div>
+                <div class="input-control" id="speed-wrap">
+                  <label for="speed-input" data-i18n="privateHub.homePc.dhSpeedLabel">语速</label>
+                  <input id="speed-input" class="text-input" type="number" min="0.5" max="2" step="0.1" value="1.0" />
+                </div>
+              </div>
+
+              <div class="form-row" style="margin-top:12px">
+                <div class="input-control">
+                  <label for="zoom-input" data-i18n="privateHub.homePc.dhZoomLabel">静帧推近</label>
+                  <input id="zoom-input" class="text-input" type="number" min="1" max="1.2" step="0.01" value="1.0" />
+                </div>
+                <div class="input-control">
+                  <label for="seed-input" data-i18n="privateHub.homePc.dhSeedLabel">种子</label>
+                  <input id="seed-input" class="text-input" type="number" min="0" step="1" value="1247" />
+                </div>
+                <div class="input-control">
+                  <label for="motion-prompt" data-i18n="privateHub.homePc.dhMotionPromptLabel">运动提示词（仅画面运动选 Wan 时用）</label>
+                  <input id="motion-prompt" class="text-input" type="text"
+                    data-i18n-placeholder="privateHub.homePc.dhMotionPromptPlaceholder"
+                    placeholder="a person talking to camera, subtle head movement" />
+                </div>
+              </div>
+              <p class="dh-mini-hint" data-i18n="privateHub.homePc.dhStillHint">
+                静帧推近 1.0 表示完全静止；1.05 左右会有极缓的缓慢推近，观感更自然。
+              </p>
+            </div>
+
+            <div class="action-row home-pc-tool-actions">
+              <button type="button" id="gen-btn" class="tb-btn" data-i18n="privateHub.homePc.dhGenerate">生成数字人视频</button>
+              <button type="button" id="cancel-btn" class="tb-btn" style="display:none" data-i18n="privateHub.homePc.cancelTask">取消任务</button>
+              <button type="button" id="download-btn" class="tb-btn" style="display:none" data-i18n="privateHub.homePc.ttsDownload">下载</button>
+              <button type="button" id="clear-btn" class="tb-btn" data-i18n="privateHub.homePc.ttsClear">清空</button>
+            </div>
+
+            <div id="progress-wrap" class="progress-wrap" style="display:none">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:14px;color:#666">
+                <span id="progress-status">生成中…</span>
+                <span id="progress-percent">—</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div id="progress-bar" class="progress-bar" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div id="result-box" class="video-box home-pc-result-box" style="display:none">
+              <h3 class="home-pc-result-title" data-i18n="privateHub.homePc.dhResultTitle">生成结果</h3>
+              <p id="meta-line" class="home-pc-result-meta"></p>
+              <video id="result-video" controls playsinline style="width:100%;max-width:560px;margin-top:8px;border-radius:10px"></video>
+            </div>
+
+            <div class="action-row home-pc-log-toolbar" style="margin-top:16px">
+              <button type="button" class="tb-btn" id="copy-log-btn" data-i18n="privateHub.homePc.copyLog">复制日志</button>
+              <button type="button" class="tb-btn" id="open-dir-btn" data-i18n="privateHub.homePc.openLogDir">打开输出目录</button>
+            </div>
+            <div id="log-container" class="home-pc-log-box">
+              <h4 data-i18n="privateHub.homePc.logTitle">执行日志</h4>
+              <pre id="log-output"></pre>
+            </div>
+
+            <div style="margin-top:20px">
+              <h3 data-i18n="privateHub.homePc.dhHistoryTitle">历史记录</h3>
+              <p class="small-hint" data-i18n="privateHub.homePc.dhHistoryHint">点击可直接播放或下载；删除会移除本机文件。</p>
+              <div id="history-list" class="home-pc-history-list"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="../../../../js/admin/home-pc/home-pc-nav.js?v=dh1"></script>
+  <script src="../../../../js/admin/admin-gate.js?v=dh1"></script>
+  <script src="../../../../js/admin/private-page-guard.js?v=dh1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-api.js?v=dh1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=dh1"></script>
+  <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=dh1"></script>
+  <script src="../../../../js/admin/home-pc/digital-human.js?v=dh1"></script>
+</body>
+</html>
