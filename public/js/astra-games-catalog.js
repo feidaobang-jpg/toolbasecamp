@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-21T07:35:25Z */
+/** generated_at: 2026-09-23T07:18:12Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -50,6 +50,7 @@
       { title: "DRONE.IO — Proving Grounds", url: "https://drone-io.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/drone-io/gameplay.jpg", external: true },
       { title: "Neural Sight", url: "https://monstercameron.github.io/Neural-Sight/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/neural-sight/gameplay.jpg", external: true },
       { title: "Knightmare — Medusa’s Temple", url: "https://knightmare-medusa-3d.robin-hwang.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/knightmare-medusa/gameplay.jpg", external: true },
+      { title: "准点下班，别被发现 / Clock Out Unseen", url: "https://www.bilibili.com/toy/clockout-unseen/index.html", thumb: "https://raw.githubusercontent.com/Ryan-fm/clockout-unseen/main/docs/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPuzzle', items: [
       { title: "Vesper: The Last Light", url: "https://vesper.mansgullberg.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/vesper/gameplay.png", external: true },
@@ -178,8 +179,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-21T07:35:25Z",
-    count: 160,
+    generatedAt: "2026-09-23T07:18:12Z",
+    count: 161,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
