@@ -22,16 +22,20 @@ _DIFFUSION_KEYS = (
     ("qwen_image_2", "qwen-image-2"),
     ("qwen_image", "qwen-image"),
 )
+# 优先级即正确性：2.1 主模型要求 4096 维文字向量 = Qwen3-VL-8B。
+# 2.5-VL-7B 是 3584 维，误选会在 KSampler 报 normalized_shape 错，
+# 故 3vl-8b 系排最前，2.5 系只做末位兜底。
 _CLIP_KEYS = (
-    ("qwen_2_5_vl_7b", "qwen2.5_vl_7b", "qwen2.5-vl-7b"),
-    ("qwen_2_5_vl", "qwen2.5_vl", "qwen2.5-vl"),
-    ("qwen3_vl_8b", "qwen3-vl-8b", "qwen3vl_8b", "qwen3vl-8b"),
+    ("qwen3vl_8b", "qwen3_vl_8b", "qwen3-vl-8b"),
     ("qwen3_vl", "qwen3-vl", "qwen3vl"),
-    ("qwen_vl", "qwen2_vl", "qwen3_vl"),
+    ("qwen3.5_9b_qwen_image_2.1",),
+    ("qwen_2_5_vl_7b", "qwen2.5_vl_7b", "qwen2.5-vl-7b"),
+    ("qwen_vl", "qwen2_vl"),
 )
 _VAE_KEYS = (
-    ("qwen_image_vae", "qwen-image-vae", "qwen_image_2.1_vae", "qwen_image_2_1_vae"),
-    ("qwen_vae",),
+    ("qwen_image_2.1_vae", "qwen-image-2.1-vae", "qwen_image_2_1_vae"),
+    # 不提供通用 qwen_image_vae 回退：老版 VAE 与 2.1 潜空间维度不符，
+    # 会在 VAEDecode 报 IndexError；缺 2.1 VAE 时应判为未就绪并明确报错。
 )
 
 # 采样参数：7B 版官方推荐值未在仓库中明确给出，做成可配置，默认取
