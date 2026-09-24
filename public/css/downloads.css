@@ -1,0 +1,253 @@
+/* 下载页（zhengxiaohui.cn/downloads.html）— 浅色主题，跟随站点基础样式 */
+
+.downloads-main {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+}
+
+.downloads-head {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.downloads-head h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.5rem;
+}
+
+.downloads-head p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+    max-width: 42rem;
+    margin-inline: auto;
+}
+
+.downloads-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.downloads-chips button {
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    color: #4b5563;
+    border-radius: 9999px;
+    padding: 6px 14px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.downloads-chips button:hover {
+    border-color: #bfdbfe;
+    color: #2563eb;
+}
+
+.downloads-chips button.is-active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px #bfdbfe;
+}
+
+.downloads-status {
+    text-align: center;
+    color: #6b7280;
+    padding: 2rem 0;
+}
+
+.downloads-status.is-error { color: #dc2626; }
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.dl-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.9rem;
+    padding: 1.1rem 1.2rem;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.dl-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
+}
+
+.dl-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.dl-icon {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 0.75rem;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 1.15rem;
+}
+
+.dl-icon.is-win { background: #e0f2fe; color: #0369a1; }
+.dl-icon.is-android { background: #dcfce7; color: #15803d; }
+.dl-icon.is-apple { background: #f3f4f6; color: #374151; }
+.dl-icon.is-zip { background: #fef3c7; color: #b45309; }
+.dl-icon.is-pdf { background: #fee2e2; color: #b91c1c; }
+
+.dl-card-head { min-width: 0; }
+
+.dl-card-head h3 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+.dl-ver {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 9999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 600;
+    vertical-align: 1px;
+}
+
+.dl-meta {
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: #9ca3af;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+}
+
+.dl-meta .dl-cat { color: #2563eb; }
+
+.dl-desc {
+    margin: 0;
+    font-size: 0.86rem;
+    color: #6b7280;
+    line-height: 1.6;
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.dl-actions {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.tb-dl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563eb;
+    color: #ffffff;
+    border-radius: 9999px;
+    padding: 7px 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+.tb-dl-btn:hover { background: #1d4ed8; color: #ffffff; }
+.tb-dl-btn.is-external { background: #0d9488; }
+.tb-dl-btn.is-external:hover { background: #0f766e; }
+
+.dl-source {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.downloads-empty {
+    text-align: center;
+    color: #9ca3af;
+    padding: 3.5rem 0;
+}
+
+.downloads-empty i { font-size: 2.4rem; margin-bottom: 0.75rem; display: block; }
+
+@media (max-width: 640px) {
+    .downloads-main { padding: 1.25rem 0.9rem 3rem; }
+    .downloads-grid { grid-template-columns: 1fr; }
+}
+
+/* —— 后台管理（admin/private/downloads.html）—— */
+
+.dl-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.dl-field { display: flex; flex-direction: column; gap: 4px; }
+.dl-field > span { font-size: 0.82rem; color: #4b5563; }
+.dl-field--num { max-width: 200px; }
+
+.dl-admin-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+
+.dl-admin-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+}
+
+.dl-admin-row.is-hidden { opacity: 0.62; background: #f9fafb; }
+
+.dl-admin-main { flex: 1 1 260px; min-width: 0; }
+.dl-admin-name { font-weight: 600; color: #111827; font-size: 0.95rem; word-break: break-word; }
+.dl-admin-sub { font-size: 0.78rem; color: #9ca3af; margin-top: 2px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.dl-admin-sub .dl-cat { color: #2563eb; }
+
+.dl-badge {
+    flex: none;
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    font-weight: 600;
+}
+.dl-badge.is-pub { background: #dcfce7; color: #15803d; }
+.dl-badge.is-hidden { background: #f3f4f6; color: #6b7280; }
+
+.dl-admin-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.dl-admin-actions .tb-btn { padding: 4px 12px; font-size: 0.8rem; }
+.dl-admin-actions .is-danger { color: #dc2626; }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载 - 百宝箱</title>
+    <meta name="description" content="自研小工具与常用免费软件下载：服务器直链 + 网盘外链，免登录直接下。" data-i18n-content="downloads.metaDesc">
+    <meta name="keywords" content="软件下载,工具下载,免费软件,直链下载">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=nosTW1">
+    <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
+    <link rel="stylesheet" href="css/downloads.css?v=dl1">
+    <script src="js/locales/en.js?v=brand1"></script>
+    <script src="js/locales/zh-CN.js?v=brand1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/config.js?v=dl1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
+</head>
+<body class="site-page downloads-page">
+    <header class="site-header site-header--shrink">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">百宝箱</h1>
+            </a>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
+        </div>
+    </header>
+
+    <main class="downloads-main">
+        <section class="downloads-head">
+            <h2 data-i18n="downloads.title">软件下载</h2>
+            <p data-i18n="downloads.lead">自研小工具与常用免费软件合集，服务器直链下载，免登录、无广告。</p>
+        </section>
+
+        <div class="downloads-chips" id="downloads-chips" role="group" aria-label="分类"></div>
+        <div id="downloads-status" class="downloads-status" hidden></div>
+
+        <section class="downloads-grid" id="downloads-grid" aria-live="polite"></section>
+
+        <section class="downloads-empty hidden" id="downloads-empty">
+            <i class="fas fa-box-open" aria-hidden="true"></i>
+            <p data-i18n="downloads.empty">暂无软件，敬请期待</p>
+        </section>
+    </main>
+
+    <script src="js/downloads.js?v=dl1"></script>
+</body>
+</html>

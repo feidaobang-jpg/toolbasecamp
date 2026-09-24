@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>软件下载管理 - 后台</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link href="../../../vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet" />
+  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1" />
+  <link rel="stylesheet" href="../../../css/admin-shell.css?v=nosTW4" />
+  <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=nosTW1" />
+  <link rel="stylesheet" href="../../../css/tools-form.css?v=nosTW1" />
+  <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=sticksearch2" />
+  <link rel="stylesheet" href="../../../css/downloads.css?v=dl1" />
+  <script src="../../../js/locales/en.js?v=brand1"></script>
+  <script src="../../../js/locales/zh-CN.js?v=brand1"></script>
+  <script src="../../../js/i18n.js?v=nosTW1"></script>
+  <script src="../../../js/config.js?v=dl1"></script>
+  <script src="../../../js/common_ui.js?v=nosTW1"></script>
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="../private.html" class="admin-back">
+        <i class="fas fa-arrow-left"></i> <span data-i18n="privateHub.title">后台</span>
+      </a>
+      <h1 class="admin-title" data-i18n="privateHub.ops.downloadsTitle">软件下载管理</h1>
+      <div class="admin-header-actions">
+        <span id="auth-label" class="admin-auth-label"></span>
+        <a id="login-link" href="../../auth/login.html" class="admin-login-link hidden" data-i18n="auth.login">登录</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main admin-main--wide">
+    <div id="boot-loading" class="admin-card admin-card--center admin-card--narrow" data-i18n="privateHub.loading">加载中…</div>
+
+    <div id="gate" class="admin-card admin-card--center admin-card--narrow hidden">
+      <p id="gate-msg" class="admin-gate-msg" data-i18n="privateHub.needAdmin">需要管理员登录后查看</p>
+      <a id="gate-login" href="../../auth/login.html" class="tb-btn" data-i18n="auth.login">去登录</a>
+    </div>
+
+    <div id="app" class="ladder-update-wrap hidden">
+      <p class="ladder-update-desc" data-i18n="privateHub.ops.downloadsDesc">
+        上传软件包（分片上传，支持大文件）或填网盘外链；前台「下载」页展示，可编辑、上下架、删除。
+      </p>
+
+      <section class="ladder-section">
+        <h2 class="ladder-section-title" id="form-title" data-i18n="privateHub.ops.downloadsNewTitle">新增软件</h2>
+        <div class="dl-form-grid">
+          <label class="dl-field">
+            <span data-i18n="privateHub.ops.downloadsFieldTitle">标题 *</span>
+            <input type="text" id="f-title" class="tb-input" maxlength="200" autocomplete="off" />
+          </label>
+          <label class="dl-field">
+            <span data-i18n="privateHub.ops.downloadsFieldVersion">版本</span>
+            <input type="text" id="f-version" class="tb-input" maxlength="64" placeholder="v1.0" autocomplete="off" />
+          </label>
+          <label class="dl-field">
+            <span data-i18n="privateHub.ops.downloadsFieldCategory">分类</span>
+            <input type="text" id="f-category" class="tb-input" maxlength="64" list="dl-cat-options" autocomplete="off" />
+            <datalist id="dl-cat-options"></datalist>
+          </label>
+          <label class="dl-field dl-field--num">
+            <span data-i18n="privateHub.ops.downloadsFieldSort">排序（小在前）</span>
+            <input type="number" id="f-sort" class="tb-input" value="0" step="1" />
+          </label>
+        </div>
+        <label class="dl-field">
+          <span data-i18n="privateHub.ops.downloadsFieldDesc">简介</span>
+          <textarea id="f-desc" class="tb-input" rows="3" maxlength="2000"></textarea>
+        </label>
+        <div class="dl-form-grid">
+          <label class="dl-field">
+            <span data-i18n="privateHub.ops.downloadsFieldFile">安装包（新增时可上传；编辑不更换文件）</span>
+            <label class="tb-btn" style="cursor:pointer;margin:0;display:inline-flex;align-items:center;gap:6px">
+              <i class="fas fa-file-arrow-up" aria-hidden="true"></i>
+              <span id="file-label" data-i18n="privateHub.ops.downloadsPickFile">选择文件</span>
+              <input type="file" id="f-file" hidden />
+            </label>
+            <span id="file-meta" class="ladder-status" style="margin:0"></span>
+          </label>
+          <label class="dl-field">
+            <span data-i18n="privateHub.ops.downloadsFieldUrl">网盘/官网外链（没有本地文件时必填）</span>
+            <input type="url" id="f-url" class="tb-input" maxlength="1000" placeholder="https://pan.baidu.com/s/..." autocomplete="off" />
+          </label>
+          <label class="dl-field dl-field--num">
+            <span data-i18n="privateHub.ops.downloadsFieldStatus">状态</span>
+            <select id="f-status" class="tb-select">
+              <option value="published" data-i18n="privateHub.ops.downloadsStatusPub">上架</option>
+              <option value="hidden" data-i18n="privateHub.ops.downloadsStatusHidden">隐藏</option>
+            </select>
+          </label>
+        </div>
+        <div class="ladder-toolbar action-row" style="align-items:center;flex-wrap:wrap">
+          <button type="button" id="btn-submit" class="tb-btn" data-i18n="privateHub.ops.downloadsSubmitNew">上传 / 创建</button>
+          <button type="button" id="btn-cancel-edit" class="tb-btn hidden" data-i18n="privateHub.ops.downloadsCancelEdit">取消编辑</button>
+          <button type="button" id="btn-refresh" class="tb-btn" data-i18n="privateHub.ops.downloadsRefresh">刷新列表</button>
+          <a class="ladder-row-link" href="../../../downloads.html" target="_blank" rel="noopener" data-i18n="privateHub.ops.downloadsPublic">查看前台</a>
+        </div>
+        <div id="form-status" class="ladder-status"></div>
+        <div id="upload-progress" class="ladder-status" hidden></div>
+      </section>
+
+      <section class="ladder-section">
+        <h2 class="ladder-section-title" data-i18n="privateHub.ops.downloadsListTitle">软件列表</h2>
+        <div id="list-meta" class="ladder-status"></div>
+        <div id="download-list" class="dl-admin-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../../../js/admin/admin-gate.js?v=nosTW5"></script>
+  <script src="../../../js/admin/private-page-guard.js?v=nosTW5"></script>
+  <script src="../../../js/admin/downloads.js?v=dl1"></script>
+</body>
+</html>
