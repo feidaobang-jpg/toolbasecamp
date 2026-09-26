@@ -35,7 +35,7 @@ SITE_LOGO_TEXT = "资"
 NEWS_SECTION_NAME = "科技资讯"
 SITE_BASE_URL = os.environ.get("NEWS_SITE_URL", "https://news.zhengxiaohui.cn").rstrip("/")
 KEYWORDS = "科技资讯,AI,硬件,显卡,手机,百宝箱"
-DESCRIPTION = "海外科技资讯中文编译 — AI、硬件与数码动态，由百宝箱自动整理。"
+DESCRIPTION = "国外科技资讯中文编译 — AI、硬件与数码动态，由百宝箱自动整理。"
 
 DEEPSEEK_API_KEY = (os.environ.get("DEEPSEEK_API_KEY") or "").strip()
 DEEPSEEK_API_URL = os.environ.get(

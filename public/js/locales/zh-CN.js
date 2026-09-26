@@ -1486,7 +1486,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         news: {
             title: '科技资讯',
-            description: '海外科技资讯中文编译 — AI、硬件与数码动态，每日自动更新。',
+            description: '国外科技资讯中文编译 — AI、硬件与数码动态，每日自动更新。',
             cta: '打开资讯'
         }
     },
@@ -3479,7 +3479,7 @@ window.TB_LOCALES['zh-CN'] = {
             modelGroupWan: '万相（阿里）',
             modelGroupQwen: '千问图像',
             modelGroupSeedream: '豆包 Seedream',
-            modelGroupXiaoyao: '逍遥（海外）',
+            modelGroupXiaoyao: '逍遥（国外）',
             modelGroupMinimax: 'MiniMax',
             modelWan26: '万相 2.6 · ¥0.4/张（推荐）',
             modelSeedream50lite: '豆包 Seedream 5.0 Lite · ¥0.44/张',
