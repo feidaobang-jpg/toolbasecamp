@@ -1,9 +1,10 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-23T07:18:12Z */
+/** generated_at: 2026-09-26T07:01:58Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
+      { title: "JellyBlob.win", url: "https://jellyblob.win/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/jellyblob/gameplay.jpg", external: true },
       { title: "Astra Floor", url: "https://astrafloor.berochlu.workers.dev/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-floor/gameplay.png", external: true },
       { title: "Stadium Elite — El Clásico", url: "https://stadium-elite.mindblown.ai/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/stadium-elite/gameplay.png", external: true },
       { title: "Magic Carpet Wizard — A Thousand Skies", url: "https://threapchills.github.io/MagicCarpetWizard/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/magic-carpet/gameplay.jpg", external: true },
@@ -179,8 +180,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-23T07:18:12Z",
-    count: 161,
+    generatedAt: "2026-09-26T07:01:58Z",
+    count: 162,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
