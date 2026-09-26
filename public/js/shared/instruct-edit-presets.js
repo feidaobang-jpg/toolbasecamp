@@ -94,6 +94,71 @@
     expand_edges: 'tools.instructEdit.presetExpandEdges'
   };
 
+  // 任务类型决定该预设该走哪种引擎：
+  //   preserve = 保内容编辑（编辑模型强项）
+  //   transfer = 画风/域转换（编辑模型弱项，需整图重绘）
+  // blockedEngines 只列「真的做不了」的引擎，用于置灰；其余保持可选。
+  // negative 为内置负面提示词，只在 cfg>1 的引擎生效（qwen 指令改图 cfg=1 会忽略）。
+  // 与 comfyui-api-server/app.py 的 _IMG2IMG_TRANSFER_PRESETS 保持同步。
+  var META = {
+    manga_to_real: {
+      taskType: 'transfer',
+      blockedEngines: ['qwen', 'qwen21'],
+      negative:
+        'anime, manga, cel shading, flat coloring, line art, sketch, 2d illustration, cartoon'
+    },
+    real_to_manga: {
+      taskType: 'transfer',
+      blockedEngines: ['qwen', 'qwen21'],
+      negative: 'photograph, photorealistic, realistic skin texture, 3d render, cgi'
+    },
+    restore_old_photo: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'creased, stained, mold spots, noise, grain, scratches, blurry, low resolution'
+    },
+    id_photo_white: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'shadow, cluttered background, colored background, blurry, distorted face'
+    },
+    remove_watermark: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'text, watermark, logo, subtitle, caption, signature, stamp, date stamp, ui overlay'
+    },
+    beauty_light: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'plastic skin, over-smoothed, doll-like, heavy makeup, deformed face'
+    },
+    slim_body: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'distorted limbs, deformed body, extra fingers, twisted perspective'
+    },
+    colorize_bw: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'grayscale, black and white, monochrome, sepia, desaturated'
+    },
+    product_white_bg: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'text, watermark, logo overlay, cluttered background, props'
+    },
+    lineart_colorize: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'uncolored line art, grayscale, monochrome, sketch'
+    },
+    expand_edges: {
+      taskType: 'preserve',
+      blockedEngines: [],
+      negative: 'repeated texture, tiling, distorted limbs, duplicated subject'
+    }
+  };
+
   var COLOR_HINT =
     '【画面要求】必须输出全彩上色成品（full color），'
     + '有自然肤色、服装色彩与环境色彩；'
@@ -139,8 +204,13 @@
   global.InstructEditPresets = {
     ids: IDS,
     prompts: PROMPTS,
+    meta: META,
     labelKey: function (id) { return LABEL_KEYS[id] || ''; },
     prompt: function (id) { return PROMPTS[id] || ''; },
+    taskType: function (id) { return (META[id] && META[id].taskType) || 'preserve'; },
+    isTransfer: function (id) { return !!(META[id] && META[id].taskType === 'transfer'); },
+    blockedEngines: function (id) { return (META[id] && META[id].blockedEngines) || []; },
+    negative: function (id) { return (META[id] && META[id].negative) || ''; },
     applyColorHint: applyColorHint,
     resolvePrompt: resolvePrompt
   };

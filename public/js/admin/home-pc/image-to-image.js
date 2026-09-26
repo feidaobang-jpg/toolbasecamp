@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const selectAllBtn = document.getElementById('select-all-models');
   const modelWarn = document.getElementById('model-warn');
   const engineConflictHint = document.getElementById('engine-conflict-hint');
+  const presetEngineHint = document.getElementById('preset-engine-hint');
   const denoiseWrap = document.getElementById('denoise-wrap');
   const denoiseInput = document.getElementById('denoise-input');
   const seedInput = document.getElementById('seed-input');
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let pollingTimer = null;
   let batchBusy = false;
   let presetUi = null;
+  const notReadyEngines = {};
   let bgUi = null;
   let resultsLightbox = null;
 
@@ -200,11 +202,67 @@ document.addEventListener('DOMContentLoaded', function () {
     const instruct = selectedHasInstruct();
     const mixed = z && instruct;
     if (denoiseWrap) denoiseWrap.hidden = !z;
-    if (presetWrap) presetWrap.hidden = !instruct;
+    // 画风转换类预设要走 Z-Image，故只要有模型勾选就展示预设行
+    if (presetWrap) presetWrap.hidden = !(instruct || z);
     if (bgWrap) bgWrap.hidden = !instruct;
     if (qualityHint) qualityHint.hidden = !instruct || z;
     if (zimageHint) zimageHint.hidden = !z;
     if (engineConflictHint) engineConflictHint.hidden = !mixed;
+    applyPresetGuard();
+  }
+
+  /** 置灰当前预设明确做不了的模型，并说明原因（映射见 InstructEditPresets.META.blockedEngines）。 */
+  function applyPresetGuard() {
+    const P = window.InstructEditPresets;
+    const active = presetUi ? presetUi.getActive() : '';
+    const blocked = (P && active) ? P.blockedEngines(active) : [];
+    const inputs = modelInputs();
+    let blockedChecked = false;
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      const eng = input.getAttribute('data-engine') || input.value;
+      const notReady = !!notReadyEngines[eng];
+      const isBlocked = blocked.indexOf(eng) >= 0;
+      input.disabled = notReady || isBlocked;
+      if (isBlocked && !notReady) {
+        input.title = tr('privateHub.homePc.img2imgPresetEngineBlocked', '该模型不适用于当前风格预设');
+      } else if (!notReady) {
+        input.title = '';
+      }
+      if (input.disabled && input.checked) {
+        input.checked = false;
+        if (isBlocked) blockedChecked = true;
+      }
+    }
+    // 刚被置灰的是用户原本勾选的模型：自动改勾一个可用模型，避免卡住
+    if (blockedChecked) {
+      let anyChecked = false;
+      let firstUsable = null;
+      for (let j = 0; j < inputs.length; j++) {
+        if (inputs[j].disabled) continue;
+        if (!firstUsable) firstUsable = inputs[j];
+        if (inputs[j].checked) anyChecked = true;
+      }
+      if (!anyChecked && firstUsable) firstUsable.checked = true;
+    }
+    if (presetEngineHint) {
+      const isTransfer = !!(P && active && P.isTransfer && P.isTransfer(active));
+      presetEngineHint.hidden = !isTransfer;
+      if (isTransfer) {
+        presetEngineHint.textContent = tr(
+          'privateHub.homePc.img2imgPresetTransferHint',
+          '「漫画 ↔ 真人」属于画风转换，指令改图类模型做不到，已置灰；建议用 Z-Image 整图重绘，Denoise 已提到 0.8。'
+        );
+      }
+    }
+  }
+
+  function onPresetChange(id) {
+    applyPresetGuard();
+    // 整图重绘要改画风，Denoise 太低改不动
+    if (window.InstructEditPresets && window.InstructEditPresets.isTransfer(id) && denoiseInput) {
+      denoiseInput.value = '0.8';
+    }
   }
 
   /** 权重未就位的模型置灰，避免排队后才失败。 */
@@ -217,11 +275,13 @@ document.addEventListener('DOMContentLoaded', function () {
         : null;
       if (!input) return;
       if (m.ready) {
+        delete notReadyEngines['qwen21'];
         input.disabled = false;
         input.title = '';
         return;
       }
       const missing = (m.missing || []).join('；');
+      notReadyEngines['qwen21'] = true;
       input.disabled = true;
       input.checked = false;
       input.title = missing || tr('privateHub.homePc.txt2imgModelNotReady', '未就位');
@@ -265,7 +325,8 @@ document.addEventListener('DOMContentLoaded', function () {
     presetUi = window.InstructEditPresetUi.bind({
       presetRow: presetRow,
       promptEl: promptInput,
-      tr: tr
+      tr: tr,
+      onChange: onPresetChange
     });
   }
 
@@ -551,6 +612,15 @@ document.addEventListener('DOMContentLoaded', function () {
       fd.append('quality', 'standard');
     }
     fd.append('seed', (seedInput.value || '').trim());
+    const activePreset = presetUi ? presetUi.getActive() : '';
+    if (activePreset) {
+      fd.append('preset', activePreset);
+      // 预设内置负面词：仅在 cfg>1 的引擎生效（qwen 指令改图 cfg=1 会忽略）
+      const presetNeg = window.InstructEditPresets
+        ? window.InstructEditPresets.negative(activePreset)
+        : '';
+      if (presetNeg) fd.append('negative_prompt', presetNeg);
+    }
     const wantWm = !!(enableWatermark && enableWatermark.checked);
     fd.append('enable_watermark', wantWm ? 'true' : 'false');
     fd.append('watermark_text', (watermarkText && watermarkText.value) || '样片确认');
@@ -595,13 +665,17 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // 指令改图类模型套风格预设；Z-Image 整图重绘用原始提示词（保持各自原行为）。
+    // 指令改图类模型套风格预设；Z-Image 整图重绘默认用原始提示词，
+    // 但画风转换类预设（漫画↔真人）的提示词本身就是指令，Z-Image 也要用。
+    const activePreset = presetUi ? presetUi.getActive() : '';
+    const transferPreset = !!(window.InstructEditPresets && window.InstructEditPresets.isTransfer(activePreset));
     let instructPrompt = rawPrompt;
-    if ((models.indexOf('qwen') >= 0 || models.indexOf('qwen21') >= 0) && window.InstructEditPresets) {
-      instructPrompt = window.InstructEditPresets.resolvePrompt(presetUi ? presetUi.getActive() : '', rawPrompt).trim();
+    if ((models.indexOf('qwen') >= 0 || models.indexOf('qwen21') >= 0 || activePreset) && window.InstructEditPresets) {
+      instructPrompt = window.InstructEditPresets.resolvePrompt(activePreset, rawPrompt).trim();
     }
     function promptFor(engine) {
-      return engine === 'z_image' ? rawPrompt : instructPrompt;
+      if (engine === 'z_image') return transferPreset ? instructPrompt : rawPrompt;
+      return instructPrompt;
     }
 
     // 对比要公平：种子留空时前端定一个，所有图片/模型共用同一种子。

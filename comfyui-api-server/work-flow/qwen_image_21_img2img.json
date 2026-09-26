@@ -56,9 +56,14 @@
     "_meta": { "title": "Load CLIP (占位，运行时自动发现)" }
   },
   "27": {
-    "inputs": { "conditioning": ["81", 0] },
-    "class_type": "ConditioningZeroOut",
-    "_meta": { "title": "Conditioning Zero Out" }
+    "inputs": {
+      "prompt": "",
+      "clip": ["18", 0],
+      "vae": ["17", 0],
+      "image": ["7", 0]
+    },
+    "class_type": "TextEncodeQwenImageEdit",
+    "_meta": { "title": "Negative 负面提示词（留空即中性）" }
   },
   "76": {
     "inputs": {

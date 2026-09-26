@@ -252,6 +252,7 @@ def build_img2img_workflow(
     seed: Optional[int] = None,
     megapixels: Optional[float] = None,
     steps: Optional[int] = None,
+    negative_text: Optional[str] = None,
 ) -> dict:
     """Qwen-Image-2.1 指令改图工作流（单参考图形态）。"""
     wf = _load_workflow(workflow_dir, "qwen_image_21_img2img.json")
@@ -269,6 +270,14 @@ def build_img2img_workflow(
             "TextEncodeQwenImageEdit node missing in qwen-image-2.1 img2img workflow"
         )
     enc["inputs"]["prompt"] = (prompt_text or "").strip()
+
+    neg = wf.get("27")
+    if (
+        negative_text is not None
+        and isinstance(neg, dict)
+        and neg.get("class_type") == "TextEncodeQwenImageEdit"
+    ):
+        neg.setdefault("inputs", {})["prompt"] = (negative_text or "").strip()
 
     _tune_sampler(_ksampler_inputs(wf), seed, steps)
 

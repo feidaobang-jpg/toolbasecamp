@@ -992,6 +992,11 @@ _IMG2IMG_NEG_PRESERVE_EXTRA = (
     "identity drift, different person, background replacement, new props not in original scene"
 )
 
+# 画风/域转换类预设要的是「整图重绘」，与 z_image 路径默认注入的保真约束正好冲突，
+# 故命中这些预设时跳过 _enhance_img2img_positive / _IMG2IMG_NEG_PRESERVE_EXTRA。
+# 与 public/js/shared/instruct-edit-presets.js 里 taskType='transfer' 的预设保持同步。
+_IMG2IMG_TRANSFER_PRESETS = {"manga_to_real", "real_to_manga"}
+
 
 def _enhance_img2img_positive(user_prompt: str) -> str:
     """图生图：强调「同一场景、只改描述处」，不自动注入古装/中国人设定。"""
@@ -3036,16 +3041,18 @@ async def _img2img_build_and_run(
     denoise: float,
     run_seed: int,
     quality: str = "standard",
+    preset: str = "",
 ):
     """图生图核心：已上传到 ComfyUI 的文件名 → 结果 PNG 字节与元数据。"""
     eng = _normalize_img2img_engine(engine)
     p = (prompt or "").strip()
+    is_transfer = (preset or "").strip() in _IMG2IMG_TRANSFER_PRESETS
     if eng == "z_image":
         neg_core = _default_txt2img_negative(negative_prompt, width=None, height=None)
-        neg = f"{neg_core}, {_IMG2IMG_NEG_PRESERVE_EXTRA}"
+        neg = neg_core if is_transfer else f"{neg_core}, {_IMG2IMG_NEG_PRESERVE_EXTRA}"
         d = float(denoise)
         d = max(0.05, min(1.0, d))
-        p_use = _enhance_img2img_positive(p)
+        p_use = p if is_transfer else _enhance_img2img_positive(p)
         wf = _build_z_image_img2img_workflow(p_use, fname, negative_text=neg, seed=run_seed, denoise=d)
         denoise_used = d
     elif eng == "qwen21":
@@ -3056,6 +3063,7 @@ async def _img2img_build_and_run(
             p,
             fname,
             run_seed,
+            negative_text=negative_prompt,
         )
         denoise_used = None
     else:
@@ -3105,6 +3113,7 @@ async def _run_img2img_task(task_id: str):
             float(task.get("denoise") or 0.4),
             run_seed,
             task.get("quality") or "standard",
+            task.get("preset") or "",
         )
         b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
         result = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
@@ -3148,6 +3157,7 @@ async def img2img_start(
     quality: str = Form("standard"),
     enable_watermark: str = Form("false"),
     watermark_text: str = Form("样片确认"),
+    preset: str = Form(""),
 ):
     """图生图异步任务：快速返回 task_id，避免 Cloudflare 隧道长连接 524。"""
     p = (prompt or "").strip()
@@ -3168,6 +3178,7 @@ async def img2img_start(
             "denoise": denoise,
             "engine": engine,
             "quality": _normalize_img2img_quality(quality),
+            "preset": (preset or "").strip(),
             "seed_opt": _parse_seed_optional(seed),
             "enable_watermark": _form_truthy(enable_watermark),
             "watermark_text": (watermark_text or "样片确认").strip() or "样片确认",
@@ -3211,6 +3222,7 @@ async def img2img_generate(
     quality: str = Form("standard"),
     enable_watermark: str = Form("false"),
     watermark_text: str = Form("样片确认"),
+    preset: str = Form(""),
 ):
     """图生图：默认 Qwen Image Edit 指令改图；可选 engine=z_image 走 Z-Image Turbo 重采样。"""
     p = (prompt or "").strip()
@@ -3224,7 +3236,7 @@ async def img2img_generate(
         fname, _sub = await upload_image(image)
         if not fname:
             raise HTTPException(status_code=500, detail="上传到 ComfyUI 失败")
-        core = await _img2img_build_and_run(fname, p, engine, negative_prompt, denoise, run_seed, quality)
+        core = await _img2img_build_and_run(fname, p, engine, negative_prompt, denoise, run_seed, quality, preset)
         b64 = base64.b64encode(core["image_bytes"]).decode("ascii")
         out = {"success": True, "image_base64": b64, "seed_used": core["seed_used"], "engine": core["engine"]}
         if core.get("model_id"):

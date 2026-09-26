@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../../../css/tools-form.css?v=homepc16" />
   <link rel="stylesheet" href="../../../../css/media/image-tools.css?v=imgSq3" />
   <link rel="stylesheet" href="../../../../css/admin/home-pc.css?v=qwen21a" />
-  <script src="../../../../js/locales/en.js?v=qwen21a"></script>
-  <script src="../../../../js/locales/zh-CN.js?v=qwen21a"></script>
+  <script src="../../../../js/locales/en.js?v=qwen21b"></script>
+  <script src="../../../../js/locales/zh-CN.js?v=qwen21b"></script>
   <script src="../../../../js/i18n.js?v=homepc8"></script>
   <script src="../../../../js/config.js?v=videoclip1"></script>
   <script src="../../../../js/common_ui.js?v=homepc4"></script>
@@ -69,7 +69,8 @@
                 <button type="button" class="rec-chip" data-preset="lineart_colorize" data-i18n="tools.instructEdit.presetLineartColorize">线稿上色</button>
                 <button type="button" class="rec-chip" data-preset="expand_edges" data-i18n="tools.instructEdit.presetExpandEdges">扩图补全</button>
               </div>
-              <p class="small-hint" data-i18n="privateHub.homePc.img2imgPresetHint">风格预设仅适用于 Qwen 指令改图，与主站同一套提示词；本地 Rapid 版部分效果可能略弱于云端。批量修老照片可多选图 + 勾选下方水印。</p>
+              <p class="small-hint" data-i18n="privateHub.homePc.img2imgPresetHint">风格预设与主站同一套提示词。保内容类（老照片修复、去水印等）用 Qwen 指令改图；「漫画 ↔ 真人」属于画风转换，请用 Z-Image 整图重绘（不匹配的模型会自动置灰）。批量修老照片可多选图 + 勾选下方水印。</p>
+              <p class="small-hint" id="preset-engine-hint" hidden></p>
             </div>
             <div>
               <label for="prompt-input" data-i18n="privateHub.homePc.img2imgPromptLabel">正向提示词：</label>
@@ -180,12 +181,12 @@
   <script src="../../../../js/admin/home-pc/home-pc-media-ui.js?v=mediaui6"></script>
   <script src="../../../../js/admin/home-pc/home-pc-boot.js?v=homepc11"></script>
   <script src="../../../../js/admin/home-pc/home-pc-upload.js?v=homepc8"></script>
-  <script src="../../../../js/shared/instruct-edit-presets.js?v=homepc16"></script>
+  <script src="../../../../js/shared/instruct-edit-presets.js?v=homepc17"></script>
   <script src="../../../../js/shared/instruct-edit-preset-ui.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-groups.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-presets.js?v=homepc16"></script>
   <script src="../../../../js/shared/instruct-edit-bg-ui.js?v=homepc16"></script>
   <script src="../../../../js/shared/image-upload-compress.js?v=imgup2"></script>
-  <script src="../../../../js/admin/home-pc/image-to-image.js?v=qwen21a"></script>
+  <script src="../../../../js/admin/home-pc/image-to-image.js?v=qwen21b"></script>
 </body>
 </html>
