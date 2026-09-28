@@ -1,6 +1,6 @@
 # toolbasecamp 项目规则（AGENTS.md）
 
-本仓库的完整编码约定写在 `.cursor/rules/*.mdc`（26 条，其中 23 条 `alwaysApply: true`）。
+本仓库的完整编码约定写在 `.cursor/rules/*.mdc`（25 条，其中 21 条 `alwaysApply: true`）。
 **这些文件不会自动注入上下文，开工前必须主动读取：**
 
 ```bash
@@ -15,7 +15,7 @@ cat .cursor/rules/*.mdc        # 全量；或按下方索引只读与本次任�
 
 全站 UI 与文案：`no-tailwind`、`tool-ui-globals`、`i18n-bilingual`、`site-stats-zh-labels`、`list-pagination`、`no-sitewide-cache-bust`、`shared-js-helpers`、`timezone-utc-cn`
 
-图像与生成类：`image-upload-compress`、`input-image-square`、`result-image-gallery`、`i2i-keep-aspect`、`wechat-image-download`、`tool-hub-badges`、`single-file-games`
+图像与生成类：`image-upload-compress`、`input-image-square`、`result-image-gallery`、`i2i-keep-aspect`、`wechat-image-download`、`tool-hub-badges`
 
 服务端与设备：`comfyui-api-restart`、`home-pc-admin-ui`、`home-pc-media-pipeline`
 
