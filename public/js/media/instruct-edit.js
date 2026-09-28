@@ -9,6 +9,15 @@
   var editMode = 'instruct';
   var outputSize = '2K';
   var modelCatalog = {};
+  /** 局部重绘仅显示逍遥系（与服务端 INSTRUCT_INPAINT_MODELS 一致） */
+  var INPAINT_MODEL_IDS = {
+    'gpt-image-2': true,
+    'gpt-image-2.5-flare': true,
+    'gpt-image-2.5-sunburst': true,
+    'banana-2': true,
+    'banana-pro': true
+  };
+  var modelChecksBeforeInpaint = null;
   var gate = document.getElementById('login-gate');
   var app = document.getElementById('app');
   var loginLink = document.getElementById('login-link');
@@ -124,6 +133,89 @@
     return modelRow ? modelRow.querySelectorAll('input[name="instruct-model"]') : [];
   }
 
+  function isInpaintModel(modelId) {
+    return !!INPAINT_MODEL_IDS[String(modelId || '')];
+  }
+
+  function visibleModelInputs() {
+    var inputs = modelInputs();
+    var out = [];
+    for (var i = 0; i < inputs.length; i++) {
+      var group = inputs[i].closest('.instruct-model-group');
+      var label = inputs[i].closest('label');
+      if (group && group.hidden) continue;
+      if (label && label.hidden) continue;
+      out.push(inputs[i]);
+    }
+    return out;
+  }
+
+  function syncInpaintModelMenu() {
+    if (!modelRow) return;
+    var groups = modelRow.querySelectorAll('.instruct-model-group');
+    var inputs = modelInputs();
+    var i;
+    if (editMode === 'inpaint') {
+      if (!modelChecksBeforeInpaint) {
+        modelChecksBeforeInpaint = {};
+        for (i = 0; i < inputs.length; i++) {
+          modelChecksBeforeInpaint[inputs[i].value] = !!inputs[i].checked;
+        }
+      }
+      for (i = 0; i < inputs.length; i++) {
+        var ok = isInpaintModel(inputs[i].value);
+        var label = inputs[i].closest('label');
+        if (label) label.hidden = !ok;
+        if (!ok) {
+          inputs[i].checked = false;
+        } else if (modelChecksBeforeInpaint[inputs[i].value]) {
+          inputs[i].checked = true;
+        }
+      }
+      var any = false;
+      for (i = 0; i < inputs.length; i++) {
+        if (isInpaintModel(inputs[i].value) && inputs[i].checked) {
+          any = true;
+          break;
+        }
+      }
+      if (!any) {
+        for (i = 0; i < inputs.length; i++) {
+          if (inputs[i].value === 'gpt-image-2') {
+            inputs[i].checked = true;
+            break;
+          }
+        }
+      }
+      for (i = 0; i < groups.length; i++) {
+        var gInputs = groups[i].querySelectorAll('input[name="instruct-model"]');
+        var show = false;
+        for (var gi = 0; gi < gInputs.length; gi++) {
+          if (isInpaintModel(gInputs[gi].value)) {
+            show = true;
+            break;
+          }
+        }
+        groups[i].hidden = !show;
+      }
+    } else {
+      for (i = 0; i < inputs.length; i++) {
+        var lab = inputs[i].closest('label');
+        if (lab) lab.hidden = false;
+        if (
+          modelChecksBeforeInpaint &&
+          Object.prototype.hasOwnProperty.call(modelChecksBeforeInpaint, inputs[i].value)
+        ) {
+          inputs[i].checked = !!modelChecksBeforeInpaint[inputs[i].value];
+        }
+      }
+      for (i = 0; i < groups.length; i++) groups[i].hidden = false;
+      modelChecksBeforeInpaint = null;
+    }
+    syncSelectAllLabel();
+    updateCostHint();
+  }
+
   function isSeedreamModel(modelId) {
     var s = String(modelId || '').toLowerCase();
     return s.indexOf('seedream') >= 0 || s.indexOf('doubao-seedream') >= 0;
@@ -219,6 +311,7 @@
         bgToggleBtn.textContent = tr('tools.instructEdit.bgExpand');
       }
     }
+    syncInpaintModelMenu();
     syncRefModeUi();
     syncMaskUi();
     syncControlsVisible();
@@ -421,7 +514,7 @@
 
   function syncSelectAllLabel() {
     if (!selectAllBtn) return;
-    var inputs = modelInputs();
+    var inputs = visibleModelInputs();
     var all = inputs.length > 0;
     for (var i = 0; i < inputs.length; i++) {
       if (!inputs[i].checked) { all = false; break; }
@@ -1054,7 +1147,7 @@
   }
   if (selectAllBtn) {
     selectAllBtn.addEventListener('click', function () {
-      var inputs = modelInputs();
+      var inputs = visibleModelInputs();
       var all = true;
       for (var i = 0; i < inputs.length; i++) {
         if (!inputs[i].checked) { all = false; break; }

@@ -145,6 +145,15 @@ INSTRUCT_EDIT_MODELS = (
 )
 INSTRUCT_EDIT_MODEL_IDS = {m["id"] for m in INSTRUCT_EDIT_MODELS}
 INSTRUCT_EDIT_MODEL_BY_ID = {m["id"]: m for m in INSTRUCT_EDIT_MODELS}
+# 局部重绘实测仅逍遥系效果可用
+INSTRUCT_INPAINT_MODELS = (
+    "gpt-image-2",
+    "gpt-image-2.5-flare",
+    "gpt-image-2.5-sunburst",
+    "banana-2",
+    "banana-pro",
+)
+INSTRUCT_INPAINT_MODEL_IDS = set(INSTRUCT_INPAINT_MODELS)
 INSTRUCT_COMPARE_MODELS = ("wan2.6-image", "wan2.7-image")
 MAX_INSTRUCT_BATCH = 4
 INSTRUCT_EDIT_GAP_SEC = float(os.environ.get("IMAGE_EDIT_GAP_SEC", "0.6"))
@@ -1730,6 +1739,16 @@ async def api_instruct_edit(
 
     do_compare = str(compare or "").strip().lower() in ("1", "true", "yes", "on")
     model_ids = _resolve_instruct_models(model, models, do_compare)
+    if emode == "inpaint":
+        bad = [m for m in model_ids if m not in INSTRUCT_INPAINT_MODEL_IDS]
+        if bad:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Local inpaint only supports Xiaoyao models: "
+                    + ", ".join(INSTRUCT_INPAINT_MODELS)
+                ),
+            )
     if IMAGE_DEBUG:
         print(
             "[instruct-edit] start",
