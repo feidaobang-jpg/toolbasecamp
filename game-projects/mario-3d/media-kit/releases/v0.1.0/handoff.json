@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v0.1.0",
+  "base_version": null,
+  "created_at": "2026-09-28T00:00:00+08:00",
+  "build": {"id":"mario-3d-v0.1.0-browser","commit":"02a3ba0149795df7db31ff55b007358ec3f152bc","dirty":true,"fingerprint":"7023dbdd24b5639584501375d07819ae0ecc00ad0494c50ade19200c564e80f4","entrypoint":"public/html/game/mario-3d/index.html"},
+  "feature_inventory": [
+    {"id":"movement","status":"implemented","description":"WASD 与手机摇杆移动，J 加速，K 跳跃","evidence_ids":["desktop-play","mobile-controls"]},
+    {"id":"camera","status":"implemented","description":"Q/E/R/F/C 镜头控制与手机镜头按钮","evidence_ids":["desktop-play","mobile-controls"]},
+    {"id":"platforming","status":"implemented","description":"地面、砖块、水管、断崖、阶梯和终点路线","evidence_ids":["desktop-play","desktop-play-video"]},
+    {"id":"items-enemies","status":"implemented","description":"金币、蘑菇、敌人、碰撞与中途检查点","evidence_ids":["desktop-play","desktop-play-video"]},
+    {"id":"finish","status":"implemented","description":"旗杆、城堡、倒计时、胜利失败和重玩","evidence_ids":["desktop-start","desktop-play"]}
+  ],
+  "changes": [{"id":"initial-demo","feature_ids":["movement","camera","platforming","items-enemies","finish"],"before":"空白游戏目录","after":"一条可从起点走到旗杆的程序化 3D 第一关","result":"桌面和手机横屏均可进入与操作","evidence_ids":["desktop-title","desktop-play","mobile-controls"],"validation":"浏览器实机页面无控制台错误；桌面启动、移动、跳跃与手机控件已检查"}],
+  "bugs": [],
+  "media": [
+    {"id":"desktop-title","file":"releases/v0.1.0/captures/desktop-title.png","sha256":"6721b1c0bee0c6e42a7467be8802dc7756a3535ff556cee3b466c69457a9c859","kind":"screenshot","version":"v0.1.0","build_id":"mario-3d-v0.1.0-browser","capture_mode":"realtime-automation","description":"桌面宽屏开始界面与第一视角场景","width":1280,"height":720,"duration_seconds":null,"audio":"none","visual_review":"pass","audio_review":"not-applicable","segments":[]},
+    {"id":"desktop-start","file":"releases/v0.1.0/captures/desktop-start.png","sha256":"d28313cf0d4a2885296e21614abf6261ade86257a792406afc062ed90d8db29d","kind":"screenshot","version":"v0.1.0","build_id":"mario-3d-v0.1.0-browser","capture_mode":"realtime-automation","description":"按 Enter 开始后的 HUD 与角色","width":1280,"height":720,"duration_seconds":null,"audio":"none","visual_review":"pass","audio_review":"not-applicable","segments":[]},
+    {"id":"desktop-play","file":"releases/v0.1.0/captures/desktop-play.png","sha256":"7913b0c6f812cdbf1e6c9915453465f6227525e7c74eac1ee09568f9f8365917","kind":"screenshot","version":"v0.1.0","build_id":"mario-3d-v0.1.0-browser","capture_mode":"realtime-automation","description":"桌面移动、金币、问号砖、敌人和 3D 路线","width":1280,"height":720,"duration_seconds":null,"audio":"none","visual_review":"pass","audio_review":"not-applicable","segments":[]},
+    {"id":"mobile-landscape","file":"releases/v0.1.0/captures/mobile-landscape.png","sha256":"72d080ad3f589374adcb1955269c166a30ab6b87e74e8409757fb623f6370032","kind":"screenshot","version":"v0.1.0","build_id":"mario-3d-v0.1.0-browser","capture_mode":"realtime-automation","description":"844×390 手机横屏视口","width":844,"height":390,"duration_seconds":null,"audio":"none","visual_review":"pass","audio_review":"not-applicable","segments":[]},
+    {"id":"mobile-controls","file":"releases/v0.1.0/captures/mobile-controls.png","sha256":"dd9d7fdb8f67067bc8f5b10bed0c3b63a1763cf4d6cadb4f7756e5554a2f7fd4","kind":"screenshot","version":"v0.1.0","build_id":"mario-3d-v0.1.0-browser","capture_mode":"realtime-automation","description":"手机横屏虚拟摇杆、J/K 动作键与视角键","width":844,"height":390,"duration_seconds":null,"audio":"none","visual_review":"pass","audio_review":"not-applicable","segments":[]},
+    {"id":"desktop-play-video","file":"releases/v0.1.0/captures/desktop-play.webm","sha256":"d361d6b7e03a2d1e0e82f8a3c543773359dbb23f0b6846503fb2ebe932b024fb","kind":"video","version":"v0.1.0","build_id":"mario-3d-v0.1.0-browser","capture_mode":"realtime-automation","description":"当前浏览器构建 Canvas 实机录像，展示 HUD、移动和场景；Canvas 录制没有页面外音轨","width":1280,"height":720,"duration_seconds":2.17,"audio":"none","visual_review":"pass","audio_review":"not-applicable","segments":[{"in_seconds":0.0,"out_seconds":2.1,"description":"当前版本的连续实机画面与 3D 路线","facts":["movement","platforming"]}]}
+  ],
+  "historical_media": [],
+  "qa": [
+    {"device":"Edge headless Chromium","viewport":"1280x720","method":"HTTP local page; Enter, D+J, K; screenshot and Canvas MediaRecorder","result":"pass","evidence_ids":["desktop-play","desktop-play-video"],"untested":"真实手机触控、浏览器 Fullscreen API 授权"},
+    {"device":"Edge headless Chromium emulated touch","viewport":"844x390 landscape","method":"Touch controls toggle and start button; screenshot","result":"pass","evidence_ids":["mobile-controls"],"untested":"真实手机 orientation lock and performance"}
+  ],
+  "readiness": {"overview":"partial","update":"not_applicable","gaps":["未进行真实手机设备触控与 Fullscreen API 授权验收；需要发布前补测。"]}
+}

@@ -257,6 +257,7 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.action',
             items: [
+                { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=1' },
                 { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
                 { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=10' },
                 { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },

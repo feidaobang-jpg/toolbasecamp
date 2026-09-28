@@ -1325,6 +1325,10 @@ window.TB_LOCALES.en = {
             waveDesc: 'Flowing arpeggios, laid-back vibe.'
         }
     },
+    mario3d: {
+        world: 'WORLD 1–1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        title: 'Super Mario\nin a new dimension.', intro: 'The familiar first adventure. Now with room to explore.', move: 'Move', jump: 'Jump', run: 'Run', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start adventure', restart: 'Start over', back: 'Game hub', touch: 'Touch controls', note: 'Fan-made first-level demo · Procedural art & sound · Not an official release', help: 'WASD Move · K Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your adventure will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'That pit got you', deadCopy: 'World 1–1 is waiting. Press Enter or start over and try again.', winTitle: 'World 1–1 complete!', winCopy: 'The flag, castle and a new 3D route are all yours.', grow: 'The mushroom made you bigger', checkpoint: 'Midway checkpoint reached', hurt: 'That hit hurt, but you can keep going', mushroom: 'There was something in the block!', paused: 'Game paused', continued: 'Back to the adventure', soundOn: 'Mute', soundOff: 'Sound'
+    },
     games: {
         groups: {
             all: 'Games',
@@ -1573,6 +1577,10 @@ window.TB_LOCALES.en = {
         hundredFloors: {
             title: 'Down 100 Floors',
             desc: 'Move left/right, fall through platforms, dodge hazards. Portrait touch controls.'
+        },
+        mario3d: {
+            title: 'Super Mario 3D: World 1–1',
+            desc: 'A procedural 3D web demo of the classic first level, playable with keyboard or phone landscape controls.'
         },
         roadRash: {
             title: 'Road Rash',

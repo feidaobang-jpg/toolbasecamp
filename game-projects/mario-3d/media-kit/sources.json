@@ -1,0 +1,6 @@
+[
+  {"id":"scene-procedural","purpose":"场景、地形、旗杆、城堡和装饰","source_type":"procedural","tool":"Three.js","input":"scene.js","processing":"程序化几何、材质和 Canvas 纹理","usage":"public/html/game/mario-3d/scene.js"},
+  {"id":"character-procedural","purpose":"玩家、敌人和蘑菇模型","source_type":"procedural","tool":"Three.js","input":"scene.js","processing":"基础几何组合与颜色材质","usage":"public/html/game/mario-3d/scene.js"},
+  {"id":"sound-original","purpose":"跳跃、金币、碰撞、胜利和背景节奏","source_type":"procedural","tool":"Web Audio API","input":"audio.js","processing":"运行时振荡器音符，无外部音频素材","usage":"public/html/game/mario-3d/audio.js"},
+  {"id":"three-vendor","purpose":"WebGL 渲染","source_type":"licensed","tool":"Three.js 0.170.0","input":"public/vendor/three/0.170.0/build/three.module.js","processing":"仓库已固定版本","usage":"public/html/game/mario-3d/scene.js"}
+]
