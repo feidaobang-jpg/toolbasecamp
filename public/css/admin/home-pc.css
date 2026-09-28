@@ -1433,6 +1433,60 @@ button:not(.tb-btn):not(.rec-chip):not(.instruct-source-remove) {
   max-width: 100%;
 }
 
+/* 文生图 / 图生图：模型多选（可勾选多个排队生成对比） */
+.home-pc-wrap .home-pc-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.home-pc-wrap .home-pc-model-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.home-pc-wrap .home-pc-model-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-bottom: 6px;
+}
+
+.home-pc-wrap .home-pc-model-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.home-pc-wrap .home-pc-model-item input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.home-pc-wrap .home-pc-model-item input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+.home-pc-wrap .home-pc-model-item input[type="checkbox"]:disabled + span {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.home-pc-wrap .home-pc-model-warn {
+  color: #b45309;
+}
+
+.home-pc-wrap .home-pc-result-error {
+  color: #dc2626;
+}
+
 .home-pc-wrap .home-pc-result-img-wrap img {
   display: block;
   width: 100%;

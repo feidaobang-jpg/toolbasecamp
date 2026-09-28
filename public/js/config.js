@@ -38,6 +38,7 @@ const siteConfig = {
         { nameKey: 'nav.games', url: 'games.html' },
         { nameKey: 'nav.images', url: 'images.html' },
         { nameKey: 'nav.music', url: 'music.html' },
+        { nameKey: 'nav.downloads', url: 'downloads.html' },
         { nameKey: 'nav.sites', url: 'cool-sites.html' },
         { nameKey: 'nav.guestbook', url: 'guestbook.html' },
         { nameKey: 'nav.topUp', url: 'top-up.html' },
@@ -363,6 +364,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.ops.markSixMembersTitle',
                     descriptionKey: 'privateHub.ops.markSixMembersDesc',
                     url: 'html/admin/private/mark-six-members.html'
+                },
+                {
+                    titleKey: 'privateHub.ops.downloadsTitle',
+                    descriptionKey: 'privateHub.ops.downloadsDesc',
+                    url: 'html/admin/private/downloads.html'
                 }
             ]
         },
@@ -438,6 +444,11 @@ const privateToolsConfig = {
                     titleKey: 'privateHub.homePc.ttsTitle',
                     descriptionKey: 'privateHub.homePc.ttsDesc',
                     url: 'html/admin/private/home-pc/tts.html'
+                },
+                {
+                    titleKey: 'privateHub.homePc.digitalHumanTitle',
+                    descriptionKey: 'privateHub.homePc.digitalHumanDesc',
+                    url: 'html/admin/private/home-pc/digital-human.html'
                 },
                 {
                     titleKey: 'privateHub.homePc.musicTitle',

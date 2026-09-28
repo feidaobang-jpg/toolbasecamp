@@ -331,7 +331,7 @@
 
     var labels = {
       cn: '国内',
-      overseas: '海外',
+      overseas: '国外',
       unknown: '未知'
     };
     var order = ['cn', 'overseas', 'unknown'];

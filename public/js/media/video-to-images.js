@@ -291,12 +291,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function updateFrameCount() {
-        if (frameCountEl) {
-            frameCountEl.textContent = String(extractedFrames.length);
-        }
-    }
-
     function createZoomModal(imageSrc, currentIndex) {
         // 如果已存在模态框，先移除
         if (zoomedImage) {

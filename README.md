@@ -222,6 +222,9 @@ Nginx config reference: `deploy/nginx-toolbasecamp.conf`
 | POST | `/api/auth/register` | Email sign-up |
 | POST | `/api/auth/login` | Email login |
 | GET/POST | `/api/guestbook/messages` | Guestbook |
+| GET | `/api/downloads` | Software download hub (public list) |
+| GET | `/api/downloads/{id}/file` | Download file (counts a hit; external items 302) |
+| * | `/api/downloads/admin/*` | Downloads admin: list / create / edit / delete / chunked upload — see [docs/DOWNLOADS.md](docs/DOWNLOADS.md) |
 | POST | `/api/recipe/detect` | Identify ingredients from text and/or photos (Qwen VL) |
 | POST | `/api/recipe/generate` | Generate recipe from selected ingredients (DeepSeek) |
 

@@ -50,6 +50,11 @@ from site_stats import ensure_site_stats_tables
 from site_stats import router as site_stats_router
 from site_stats import wire as wire_site_stats
 from news_articles import ensure_news_tables, router as news_router, wire as wire_news
+from downloads import (
+    ensure_downloads_tables,
+    router as downloads_router,
+    wire as wire_downloads,
+)
 from pc_builds import (
     ensure_pc_builds_tables,
     router as pc_builds_router,
@@ -426,6 +431,7 @@ def ensure_tables():
             ensure_pc_builds_tables(cur)
             ensure_stock_pick_tables(cur)
             ensure_mark_six_tables(cur)
+            ensure_downloads_tables(cur)
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
@@ -805,6 +811,8 @@ wire_news(get_conn, require_db, get_current_user, require_admin)
 app.include_router(news_router)
 wire_pc_builds(get_conn, require_db, get_current_user, require_admin)
 app.include_router(pc_builds_router)
+wire_downloads(get_conn, require_db, get_current_user, require_admin)
+app.include_router(downloads_router)
 wire_life_plans(get_conn, require_db, get_current_user, get_optional_user, _client_ip)
 app.include_router(life_plans_router)
 
