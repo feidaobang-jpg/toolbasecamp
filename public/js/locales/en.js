@@ -1326,7 +1326,7 @@ window.TB_LOCALES.en = {
         }
     },
     mario3d: {
-        world: 'WORLD 1–1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        world: 'WORLD 1–1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen', fileWarning: 'Opening by double-click (file://) cannot load 3D modules. Use the website URL or a local HTTP server.',
         title: 'Super Mario\nin a new dimension.', intro: 'The familiar first adventure. Now with room to explore.', move: 'Move', jump: 'Jump', run: 'Run', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start adventure', restart: 'Start over', back: 'Game hub', touch: 'Touch controls', note: 'Fan-made first-level demo · Procedural art & sound · Not an official release', help: 'WASD Move · K Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your adventure will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'That pit got you', deadCopy: 'World 1–1 is waiting. Press Enter or start over and try again.', winTitle: 'World 1–1 complete!', winCopy: 'The flag, castle and a new 3D route are all yours.', grow: 'The mushroom made you bigger', checkpoint: 'Midway checkpoint reached', hurt: 'That hit hurt, but you can keep going', mushroom: 'There was something in the block!', paused: 'Game paused', continued: 'Back to the adventure', soundOn: 'Mute', soundOff: 'Sound'
     },
     games: {
