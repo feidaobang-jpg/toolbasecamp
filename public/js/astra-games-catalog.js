@@ -1,9 +1,11 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-09-26T07:01:58Z */
+/** generated_at: 2026-09-29T07:50:55Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
+      { title: "沙线行动 / SANDLINE", url: "https://ihca.cn/sandline/", thumb: "https://github.com/user-attachments/assets/0443c8e4-4060-49f2-af31-175138c4e6ab", external: true },
+      { title: "SURGE for Oinja", url: "https://oinja-game.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/surge-for-oinja/cover.png", external: true },
       { title: "JellyBlob.win", url: "https://jellyblob.win/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/jellyblob/gameplay.jpg", external: true },
       { title: "Astra Floor", url: "https://astrafloor.berochlu.workers.dev/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-floor/gameplay.png", external: true },
       { title: "Stadium Elite — El Clásico", url: "https://stadium-elite.mindblown.ai/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/stadium-elite/gameplay.png", external: true },
@@ -180,8 +182,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-09-26T07:01:58Z",
-    count: 162,
+    generatedAt: "2026-09-29T07:50:55Z",
+    count: 164,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
