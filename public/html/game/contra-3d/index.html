@@ -7,7 +7,7 @@
   <title>Contra Jungle · Stage 1 in 3D</title>
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=1">
+  <link rel="stylesheet" href="./style.css?v=menu-first">
 </head>
 <body>
 <main id="game" tabindex="-1">
@@ -25,7 +25,7 @@
     <p id="panel-copy" data-i18n="contra3d.intro">Run, jump and shoot through stage 1. Two bridges, a river, and the fortress wall cannons at the end.</p>
     <p id="file-warning" class="file-warning" hidden>本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
     <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="contra3d.move">Move</span></div><div><kbd>J</kbd><span data-i18n="contra3d.shoot">Shoot</span></div><div><kbd>K</kbd><span data-i18n="contra3d.jump">Jump</span></div><div><kbd>L</kbd><span data-i18n="contra3d.diveKey">Dive (in water)</span></div><div><kbd>Q E · R F · C</kbd><span data-i18n="contra3d.camera">Orbit · Tilt · Reset camera</span></div></div>
-    <div class="action-row"><button id="start" class="tb-btn" data-i18n="contra3d.start">Enter · Start mission</button><button id="restart" class="tb-btn" hidden data-i18n="contra3d.restart">Start over</button><a class="tb-btn" href="../../../games.html" data-i18n="contra3d.back">Game hub</a></div>
+    <div class="action-row"><button id="start" class="tb-btn" data-i18n="contra3d.start">Enter · Start mission</button><button id="restart" class="tb-btn" hidden data-i18n="contra3d.restart">Start over</button><a class="tb-btn" href="../../../games.html" data-i18n="contra3d.back">Back to games</a></div>
     <div class="action-row options"><button id="sound" class="tb-btn">Sound</button><button id="touch-toggle" class="tb-btn" data-i18n="contra3d.touch">Touch controls</button><button id="lang" class="tb-btn">中文 / EN</button></div>
     <small class="footnote" data-i18n="contra3d.note">Fan-made first-stage demo · Procedural art & sound · Not an official release</small>
   </section>
@@ -37,8 +37,8 @@
   <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="contra3d.rotate">Turn your phone sideways</h2><p data-i18n="contra3d.rotateHint">Your mission will wait for you.</p></div>
   <div id="keyboard-help" data-i18n="contra3d.help">WASD Move · J Shoot · K Jump · L Dive · Q/E Orbit · C Reset · Esc Pause</div>
 </main>
-<script src="../../../js/locales/en.js?v=contra1"></script>
-<script src="../../../js/locales/zh-CN.js?v=contra1"></script>
+<script src="../../../js/locales/en.js?v=menu-first"></script>
+<script src="../../../js/locales/zh-CN.js?v=menu-first"></script>
 <script src="../../../js/i18n.js?v=nosTW1"></script>
 <script>
   if (location.protocol === 'file:') {
@@ -48,7 +48,7 @@
   }
 </script>
 <script type="module">
-  import('./main.js?v=c1').catch(() => {
+  import('./main.js?v=menu-first').catch(() => {
     if (location.protocol !== 'file:') {
       document.getElementById('panel-copy').textContent = t('contra3d.loadError');
       document.getElementById('start').textContent = t('contra3d.retry');

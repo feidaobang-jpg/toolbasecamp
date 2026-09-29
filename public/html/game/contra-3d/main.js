@@ -129,7 +129,7 @@ function releaseStick(e) {
 }
 stick.addEventListener('pointerup', releaseStick); stick.addEventListener('pointercancel', releaseStick);
 function orientation() {
-  orientationBlocked = mobileDevice && innerHeight > innerWidth;
+  orientationBlocked = running && mobileDevice && innerHeight > innerWidth;
   $('rotate').hidden = !orientationBlocked;
   if (orientationBlocked) {
     held.clear(); pointerKeys.clear(); frame.wasJump = false; frame.wasDive = false; stickId = null;
