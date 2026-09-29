@@ -8,6 +8,8 @@ const audio=new GameAudio();
 const view=createScene($('world'),world);
 const held=new Set(), pointerKeys=new Set();
 let running=false, paused=false, last=performance.now();
+const mobileDevice=matchMedia('(pointer: coarse) and (hover: none)').matches;
+let orientationBlocked=false;
 const input={x:0,z:0,run:false,jump:false,jumpPressed:false,yaw:0,pitch:0,reset:false};
 
 function setText(id,value){$(id).textContent=value;}
@@ -20,7 +22,7 @@ function syncInput(){
   input.yaw=(pressed('KeyE')?1:0)-(pressed('KeyQ')?1:0);input.pitch=(pressed('KeyF')?1:0)-(pressed('KeyR')?1:0);input.reset=pressed('KeyC');
 }
 function startFullscreen(){const el=$('game');try{if(document.fullscreenElement!==el&&el.requestFullscreen)el.requestFullscreen({navigationUI:'hide'}).catch(()=>{});}catch(e){}try{if(screen.orientation?.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}
-function startGame(){if(world.status==='dead')respawn(world);else if(world.status==='won'){location.reload();return;}world.status='playing';running=true;paused=false;$('panel').hidden=true;document.body.classList.add('playing');setText('pause',t('mario3d.pause'));audio.unlock();startFullscreen();$('game').focus();}
+function startGame(){if(world.status==='dead')respawn(world);else if(world.status==='won'){location.reload();return;}world.status='playing';running=true;paused=false;$('panel').hidden=true;document.body.classList.add('playing');orientation();setText('pause',paused?t('mario3d.resume'):t('mario3d.pause'));audio.unlock();startFullscreen();$('game').focus();}
 function togglePause(){if(!running)return;if(world.status==='dead'){respawn(world);return;}if(world.status==='won')return;paused=!paused;setText('pause',paused?t('mario3d.resume'):t('mario3d.pause'));toast(paused?t('mario3d.paused'):t('mario3d.continued'));}
 function updateHud(){setText('coins',String(world.coins).padStart(2,'0'));setText('score',String(world.score).padStart(6,'0'));setText('time',String(Math.max(0,Math.ceil(world.time))).padStart(3,'0'));$('progress').style.width=Math.min(100,Math.max(0,(world.player.x/LEVEL_END)*100))+'%';}
 function eventEffects(){
@@ -31,7 +33,7 @@ function eventEffects(){
     if(e.type==='win'){running=false;$('panel').hidden=false;document.body.classList.remove('playing');$('panel-title').textContent=t('mario3d.winTitle');$('panel-copy').textContent=t('mario3d.winCopy');$('start').hidden=true;$('restart').hidden=false;}
   }
 }
-function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;syncInput();if(running&&!paused){input.jumpPressed=input.jump&&!frame.wasJump;stepWorld(world,input,dt);frame.wasJump=input.jump;audio.tick(true);eventEffects();}else{input.jumpPressed=false;audio.tick(false);}view.update(dt,{yaw:input.yaw,pitch:input.pitch,reset:input.reset});updateHud();requestAnimationFrame(frame);}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;syncInput();if(running&&!paused&&!orientationBlocked){input.jumpPressed=input.jump&&!frame.wasJump;stepWorld(world,input,dt);frame.wasJump=input.jump;audio.tick(true);eventEffects();}else{input.jumpPressed=false;audio.tick(false);}view.update(dt,{yaw:input.yaw,pitch:input.pitch,reset:input.reset});updateHud();requestAnimationFrame(frame);}
 frame.wasJump=false;
 window.addEventListener('keydown',e=>{if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if(e.code==='Enter'&&!running){startGame();return;}if(e.code==='Escape'){togglePause();return;}held.add(e.code);});
 window.addEventListener('keyup',e=>held.delete(e.code));window.addEventListener('blur',()=>{held.clear();pointerKeys.clear();});
@@ -45,5 +47,16 @@ function moveStick(e){const r=stick.getBoundingClientRect(),cx=r.left+r.width/2,
 stick.addEventListener('pointerdown',e=>{stickId=e.pointerId;stick.setPointerCapture(stickId);moveStick(e);});stick.addEventListener('pointermove',e=>{if(e.pointerId===stickId)moveStick(e);});
 function releaseStick(e){if(e.pointerId!==stickId)return;stickId=null;['KeyA','KeyD','KeyW','KeyS'].forEach(k=>pointerKeys.delete(k));knob.style.transform='translate(0,0)';}
 stick.addEventListener('pointerup',releaseStick);stick.addEventListener('pointercancel',releaseStick);
-function orientation(){const vertical=innerHeight>innerWidth;$('rotate').hidden=vertical||!running;if(vertical&&running){running=false;held.clear();pointerKeys.clear();}}
-addEventListener('resize',()=>{view.resize();orientation();});orientation();view.update(0,{reset:true});updateHud();requestAnimationFrame(frame);
+function orientation(){
+  orientationBlocked=mobileDevice&&innerHeight>innerWidth;
+  $('rotate').hidden=!orientationBlocked;
+  if(orientationBlocked){
+    held.clear();pointerKeys.clear();frame.wasJump=false;stickId=null;
+    knob.style.transform='translate(0,0)';
+    document.querySelectorAll('.held').forEach(el=>el.classList.remove('held'));
+    if(running){paused=true;setText('pause',t('mario3d.resume'));}
+  }
+}
+$('touch').hidden=!mobileDevice;
+document.body.classList.toggle('touch-mode',mobileDevice);
+addEventListener('resize',()=>{view.resize();orientation();});document.addEventListener('fullscreenchange',orientation);orientation();view.update(0,{reset:true});updateHud();requestAnimationFrame(frame);
