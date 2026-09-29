@@ -1,0 +1,850 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "v0.1.0",
+  "base_version": null,
+  "created_at": "2026-09-29T16:50:00+08:00",
+  "build": {
+    "id": "tank3d-v0.1.0-a7187b392e06",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "a7187b392e0636584ffad11d310ac6c007bfa1add9443be71fc89303607a490d",
+    "entrypoint": "public/html/game/tank-3d/index.html",
+    "fingerprint_method": "sha256(cat index.html main.js scene.js world.js audio.js style.css)，文件位于 public/html/game/tank-3d/",
+    "commit_note": "本会话无法在用户电脑上运行 git，尚未提交；commit 为 null。"
+  },
+  "feature_inventory": [
+    {
+      "id": "F-drive",
+      "desc": "四方向行驶、转弯半格对齐、贴墙碰撞、WASD 相对镜头方向",
+      "status": "implemented",
+      "evidence_ids": [
+        "round-win",
+        "battle-overview",
+        "mobile-play"
+      ]
+    },
+    {
+      "id": "F-fire",
+      "desc": "开炮（按住连发）、四级火力、敌我炮弹相撞抵消",
+      "status": "implemented",
+      "evidence_ids": [
+        "round-win",
+        "freeze-level3"
+      ]
+    },
+    {
+      "id": "F-bricks",
+      "desc": "砖墙逐格破坏（2 格宽 × 1 格深）与钢墙（三星可破）",
+      "status": "implemented",
+      "evidence_ids": [
+        "round-win",
+        "battle-overview",
+        "orbit-low"
+      ]
+    },
+    {
+      "id": "F-eagle",
+      "desc": "老鹰基地、被击中即失败（含误伤识别）",
+      "status": "implemented",
+      "evidence_ids": [
+        "intro-swoop",
+        "flow-defeat"
+      ]
+    },
+    {
+      "id": "F-enemies",
+      "desc": "20 辆敌军（18 普通 + 2 快速）、同屏 4 辆、三出生点光柱降临、游走/追老鹰/追玩家 AI",
+      "status": "implemented",
+      "evidence_ids": [
+        "round-win",
+        "round-defeat",
+        "battle-overview"
+      ]
+    },
+    {
+      "id": "F-powerups",
+      "desc": "第 4/11/18 辆闪红携带道具；星星、手雷、头盔、铁锹、定时器、坦克",
+      "status": "implemented",
+      "evidence_ids": [
+        "round-win",
+        "powerup-steel-fort",
+        "freeze-level3"
+      ]
+    },
+    {
+      "id": "F-camera",
+      "desc": "适配视口的俯瞰、Q/E 旋转、R/F 俯仰至跟车视角、C 回正、开场闸门 + 镜头掠过",
+      "status": "implemented",
+      "evidence_ids": [
+        "curtain",
+        "intro-swoop",
+        "orbit-low",
+        "commander-view"
+      ]
+    },
+    {
+      "id": "F-controls",
+      "desc": "键盘全程；手机左摇杆 + 右侧 J 与视角键、多点触控、全屏请求与失败回退、竖屏暂停提示",
+      "status": "implemented",
+      "evidence_ids": [
+        "mobile-title",
+        "mobile-play",
+        "mobile-portrait",
+        "mobile-narrow"
+      ]
+    },
+    {
+      "id": "F-hud",
+      "desc": "分数/最高分/生命/火力星级、敌军剩余图标、道具状态标签、结算面板与原地重玩",
+      "status": "implemented",
+      "evidence_ids": [
+        "title",
+        "flow-defeat",
+        "flow-win",
+        "flow-restart"
+      ]
+    },
+    {
+      "id": "F-audio",
+      "desc": "原创振荡器音效与随行驶变化的引擎声、静音开关",
+      "status": "implemented",
+      "evidence_ids": [
+        "round-win",
+        "round-defeat"
+      ]
+    },
+    {
+      "id": "F-more-stages",
+      "desc": "第二关及以后、水/树林/冰面地形、装甲与重炮敌军、双人模式",
+      "status": "planned",
+      "evidence_ids": []
+    }
+  ],
+  "changes": [
+    {
+      "id": "initial-release",
+      "feature_ids": [
+        "F-drive",
+        "F-fire",
+        "F-bricks",
+        "F-eagle",
+        "F-enemies",
+        "F-powerups",
+        "F-camera",
+        "F-controls",
+        "F-hud",
+        "F-audio"
+      ],
+      "before": "无（新游戏）",
+      "after": "坦克大战第一关 3D 完整一局：闸门开场 → 守老鹰打 20 辆坦克 → 道具 → 通关或失败结算 → 原地重玩",
+      "result": "游戏中心动作分组新增「坦克大战 3D：第一关」卡片，键盘与手机横屏都能完整玩一局",
+      "evidence_ids": [
+        "round-win",
+        "round-defeat",
+        "title",
+        "mobile-play",
+        "flow-win"
+      ],
+      "validation": "Node 逻辑模拟 15 项全过；Chromium 无头（软件渲染）键盘流程、手机触控流程、截图与离线逐帧整局采集均零页面错误"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "event-type-clobbered",
+      "found_version": "v0.1.0-dev",
+      "repro": "拾取道具或击中闪红坦克（代码自查，首次进浏览器前发现）",
+      "observed": "emit(w, 'pickup', { type: pu.type }) 覆盖了事件自己的 type，拾取/道具出现事件会变成 'star' 等未知事件，提示与音效不触发",
+      "comedy_angle": null,
+      "cause": "事件对象用同名字段携带道具种类",
+      "status": "fixed",
+      "fix": "改用 kind 字段；main.js 按 e.kind 显示提示",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "round-win"
+      ],
+      "retest": "整局录像中道具拾取有提示与音效；Node 模拟道具 6 种检查通过"
+    },
+    {
+      "id": "bot-shoots-own-eagle",
+      "found_version": "v0.1.0-dev",
+      "repro": "Node 平衡探针：对齐就开火的机器人跑 12 个种子",
+      "observed": "输掉的局大多是机器人自己把炮弹打进老鹰围墙",
+      "comedy_angle": "测试机器人最大的敌人是它自己",
+      "cause": "机器人不看炮弹后面是不是自家老鹰；游戏本身规则（自己的炮弹也能打老鹰）与原作一致",
+      "status": "kept_as_feature",
+      "fix": "游戏记录是谁打掉了老鹰，误伤时结算标题为「你打中了自己的老鹰……」并有专门提示；机器人改为不朝围墙开火，胜率 6/12（按采集时序重放 300 个种子为 147/300）",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "world-sim 探针显示失败原因带 (player)/(enemy) 标记"
+    },
+    {
+      "id": "eagle-looks-like-duck",
+      "found_version": "v0.1.0-dev",
+      "repro": "开场镜头贴近老鹰时查看模型",
+      "observed": "第一版老鹰像麻雀/鸭子（开发阶段截图 assets/dev-stages/02-eagle-v1-before.jpg，非本构建）",
+      "comedy_angle": "守护的国徽变成了小鸭子",
+      "cause": "圆身体 + 两片小翅膀，缺少白头、钩喙等辨识特征",
+      "status": "fixed",
+      "fix": "白头、钩状黄喙、三层展翅与白尾，底座加金色饰条",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "intro-swoop"
+      ],
+      "retest": "开场镜头截图目检"
+    },
+    {
+      "id": "curtain-hides-swoop",
+      "found_version": "v0.1.0-dev",
+      "repro": "开始游戏观察开场",
+      "observed": "闸门 1.5 秒动画与镜头掠过同时进行，3D 开场镜头被闸门挡住",
+      "comedy_angle": null,
+      "cause": "两段动画同时计时",
+      "status": "fixed",
+      "fix": "闸门 1.25 秒先合后开，镜头在闸门打开后（0.7 s 起）掠起 2.2 秒，2.4 s 开战",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "curtain",
+        "intro-swoop",
+        "round-win"
+      ],
+      "retest": "离线逐帧采集中 0.7–3.7 s 依次为闸门与掠过镜头"
+    },
+    {
+      "id": "gameover-text-behind-panel",
+      "found_version": "v0.1.0-dev",
+      "repro": "老鹰被毁或命数用完后等结算面板出现",
+      "observed": "GAME OVER 大字仍在，从面板右侧漏出红色字母（assets/dev-stages/04-defeat-panel-overlap-before.jpg，非本构建）",
+      "comedy_angle": null,
+      "cause": "面板出现时没有隐藏升起的大字",
+      "status": "fixed",
+      "fix": "showPanel 时隐藏大字",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "flow-defeat"
+      ],
+      "retest": "最终构建失败面板截图无残字"
+    },
+    {
+      "id": "mobile-camera-pad-overlap",
+      "found_version": "v0.1.0-dev",
+      "repro": "844×390 触屏模拟进入游戏",
+      "observed": "Q/E/R/F/C 一排按钮压在战场右下角（assets/dev-stages/05-mobile-camera-pad-overlap-before.jpg，非本构建）",
+      "comedy_angle": null,
+      "cause": "沿用横排布局，窄高度下落到战场上",
+      "status": "fixed",
+      "fix": "改为开炮键左侧 2 列网格（44px 触控尺寸），位于战场外",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "mobile-play"
+      ],
+      "retest": "最终构建手机截图目检"
+    },
+    {
+      "id": "rotate-overlay-stuck",
+      "found_version": "v0.1.0-dev",
+      "repro": "虚拟时钟下手机竖屏 → 横屏",
+      "observed": "「请横屏」遮罩没有消失（resize 事件时序不稳定）",
+      "comedy_angle": null,
+      "cause": "只依赖 resize 事件判断方向",
+      "status": "fixed",
+      "fix": "主循环每 20 帧补查方向与画布尺寸，并监听 orientationchange",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "mobile-portrait"
+      ],
+      "retest": "mobile 场景：竖屏暂停 → 横屏遮罩消失 → 继续，通过"
+    }
+  ],
+  "media": [
+    {
+      "id": "title",
+      "file": "releases/v0.1.0/captures/title.jpg",
+      "sha256": "efe6498f015208bd12da3360d42494d3ab0b6dded12a257ac372387799d977a3",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "标题面板（英文界面），背后战场待机镜头摆动",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "curtain",
+      "file": "releases/v0.1.0/captures/curtain.jpg",
+      "sha256": "5aa70c222462f9a48ec4cc81f3b8a164aa0732bf4e0d0eb8c13a597cc24d8d6b",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "开场闸门合拢显示 STAGE 1（冻结 CSS 动画 0.5 s 处截取）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "intro-swoop",
+      "file": "releases/v0.1.0/captures/intro-swoop.jpg",
+      "sha256": "201ffa969eb8ec0470a2450d51b043db2c35a3ee88ea1c62c6be849ef12fa3d7",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "开场镜头掠过中段：白头钩喙老鹰与砖墙围墙特写",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "battle-overview",
+      "file": "releases/v0.1.0/captures/battle-overview.jpg",
+      "sha256": "130b0182e2867336d71cdce4b6f15f50fdbe3cae6ea8daa5fb0e988acd5060fc",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "机器人游玩 14 s 后的战场俯瞰：打开的砖墙、敌军、烟雾",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "orbit-low",
+      "file": "releases/v0.1.0/captures/orbit-low.jpg",
+      "sha256": "a936515020cb5d8a90625cd9a5f2c5c8897c41b2ef73beea6b35bbdafc6643a7",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "按住 E 旋转、R 压低后的斜视角：金色玩家坦克与银色敌军",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "commander-view",
+      "file": "releases/v0.1.0/captures/commander-view.jpg",
+      "sha256": "a1c29970252ed17c620eaa0a83f492d1cd2318f7572da932a41f15ed749ab4d8",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "R 压到最低的跟车视角，炮口闪光",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "powerup-steel-fort",
+      "file": "releases/v0.1.0/captures/powerup-steel-fort.jpg",
+      "sha256": "6b1e18adc1ee17f715be876b924fcf2f0a27e946636058fd0124429d2fe8b4ab",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "QA 捷径：生成星星并应用铁锹——钢墙基地、飘分、状态标签",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "explosion",
+      "file": "releases/v0.1.0/captures/explosion.jpg",
+      "sha256": "baf6e3b70ad170467d726251e0ebd84829f3f8e8a8e8596755e5d69f3a620b44",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "QA 捷径击毁敌军：火球/烟雾/冲击环与 100 飘分，闪红携带者可见",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "freeze-level3",
+      "file": "releases/v0.1.0/captures/freeze-level3.jpg",
+      "sha256": "ba678066f891907205aac26102e5bf820cb4f9f2c2f3dd321b817070b8e5cfdd",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "QA 捷径：定时器冻结（敌军泛蓝、冻结波纹）+ 三星火力",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "grenade-frame",
+      "file": "releases/v0.1.0/captures/grenade-frame.jpg",
+      "sha256": "07e9d3e83504717943f0184b12737442873d770f970e4a918e3596515b26652c",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "种子 275 通关局第 1001 帧：手雷清屏冲击波（封面来源）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "flow-defeat",
+      "file": "releases/v0.1.0/captures/flow-defeat-panel.jpg",
+      "sha256": "4016991c87cbc2fcda70915c44df2e5de651838734fc5852cd4c6cecc4bd33be",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "640×360：QA 捷径摧毁老鹰后的失败结算面板（无残留大字）",
+      "width": 640,
+      "height": 360,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "flow-restart",
+      "file": "releases/v0.1.0/captures/flow-restart-rebuild.jpg",
+      "sha256": "032f58dae704dbce763473ecc771cd8a1c6b0b94460d55436e2f7cedc98ee54b",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "640×360：Enter 原地重开，砖墙重建、玩家护盾出场",
+      "width": 640,
+      "height": 360,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "flow-win",
+      "file": "releases/v0.1.0/captures/flow-win-panel.jpg",
+      "sha256": "91695090a529f527728ee30c8b7b73685b5612340264283e22843c6b7c802457",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "640×360：QA 捷径清完 20 辆后的通关结算面板",
+      "width": 640,
+      "height": 360,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-title",
+      "file": "releases/v0.1.0/captures/mobile-title.jpg",
+      "sha256": "4fbe2dc80b3e6925d356c173c6d7bbef413e125e46c47609d050c8c470e2363c",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "844×390 @2x 触屏模拟标题面板",
+      "width": 1688,
+      "height": 780,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-play",
+      "file": "releases/v0.1.0/captures/mobile-play.jpg",
+      "sha256": "84cda0f88dd49801e85b658b44c0ba9b295dc017a1ac8077cdb8adbde144ee80",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "844×390 @2x 对局：左摇杆按住向上 + 右侧 J 开炮（多点触控），视角键在战场外",
+      "width": 1688,
+      "height": 780,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-portrait",
+      "file": "releases/v0.1.0/captures/mobile-portrait-paused.jpg",
+      "sha256": "146496f48eac3326ea21a5f16c0d1d7e8c52de92ecd2eb23028bd51c1696040f",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "390×844 竖屏：请横屏遮罩，游戏自动暂停",
+      "width": 780,
+      "height": 1688,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-narrow",
+      "file": "releases/v0.1.0/captures/mobile-narrow.jpg",
+      "sha256": "0fe21469f030e38a0c718563794d326b1cb3abea0e4c56256292e45d56534427",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "740×360 更窄横屏布局",
+      "width": 1480,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "round-win",
+      "file": "releases/v0.1.0/captures/round-win-seed275.mp4",
+      "sha256": "3d56ebcb8ea2cbf9c2c2962ae9a2bf1e8165fc09e9d1cb14292b4ef177575853",
+      "kind": "video",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "完整一局通关（种子 275，脚本机器人输入，虚拟时钟 30 fps 逐帧渲染，H.264 CRF 24；音轨为同一局音效调用在 OfflineAudioContext 重放渲染）。离线采集时 CSS 动画冻结，底部操作提示未淡出",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 60.7,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 0.0,
+          "out_seconds": 0.67,
+          "description": "标题面板，待机镜头缓慢摆动",
+          "facts": [
+            "F-hud"
+          ]
+        },
+        {
+          "in_seconds": 0.67,
+          "out_seconds": 1.95,
+          "description": "灰色闸门合上显示 STAGE 1 后打开",
+          "facts": [
+            "F-camera"
+          ]
+        },
+        {
+          "in_seconds": 1.4,
+          "out_seconds": 3.8,
+          "description": "镜头从老鹰脚下低角度掠起到战场俯瞰",
+          "facts": [
+            "F-camera",
+            "F-eagle"
+          ]
+        },
+        {
+          "in_seconds": 3.8,
+          "out_seconds": 9.8,
+          "description": "玩家闪光出场（护盾），敌军光柱降临，第一次击毁（9.3 s）",
+          "facts": [
+            "F-drive",
+            "F-fire",
+            "F-enemies"
+          ]
+        },
+        {
+          "in_seconds": 16.2,
+          "out_seconds": 18.4,
+          "description": "击毁闪红坦克掉落星星（16.5 s），拾取后火力升一星（17.5 s）",
+          "facts": [
+            "F-powerups"
+          ]
+        },
+        {
+          "in_seconds": 32.0,
+          "out_seconds": 35.0,
+          "description": "手雷掉落并被拾取（33.2 s），清屏冲击波 + 镜头震动",
+          "facts": [
+            "F-powerups"
+          ]
+        },
+        {
+          "in_seconds": 49.2,
+          "out_seconds": 52.5,
+          "description": "铁锹（50.4 s）：老鹰围墙升起为钢墙",
+          "facts": [
+            "F-powerups",
+            "F-eagle"
+          ]
+        },
+        {
+          "in_seconds": 55.0,
+          "out_seconds": 60.6,
+          "description": "最后一辆击毁（55.3 s）→ STAGE 1 CLEAR 结算面板（57.9 s）",
+          "facts": [
+            "F-hud"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "round-defeat",
+      "file": "releases/v0.1.0/captures/round-defeat-seed104.mp4",
+      "sha256": "90761ddcce3f3114e507b89e8f3ef294f4b77ad131cea11a53b44b6b532cb869",
+      "kind": "video",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "完整一局失败（种子 104，3 条命用完），采集方式同上",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 39.2,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 3.8,
+          "out_seconds": 9.6,
+          "description": "开局推进，第一次击毁（9.2 s）",
+          "facts": [
+            "F-fire",
+            "F-enemies"
+          ]
+        },
+        {
+          "in_seconds": 16.3,
+          "out_seconds": 18.8,
+          "description": "玩家坦克被击毁爆炸（16.6 s）并带护盾复活（18.5 s）",
+          "facts": [
+            "F-drive"
+          ]
+        },
+        {
+          "in_seconds": 23.0,
+          "out_seconds": 24.5,
+          "description": "闪红坦克被击毁，头盔道具掉落（23.3 s）",
+          "facts": [
+            "F-powerups"
+          ]
+        },
+        {
+          "in_seconds": 33.8,
+          "out_seconds": 39.2,
+          "description": "最后一条命被击毁（34.1 s）→ GAME OVER 升起（36.5 s）→ 失败结算",
+          "facts": [
+            "F-hud"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "round-win-audio",
+      "file": "releases/v0.1.0/captures/round-win-seed275-audio.wav",
+      "sha256": "f463a0c2e784f30ac5261ff3e23193c70aa1654f45074104df30744f939fa0bd",
+      "kind": "audio",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "通关局无损音轨（44.1 kHz 单声道），与 round-win 同步",
+      "width": null,
+      "height": null,
+      "duration_seconds": 60.7,
+      "audio": "game",
+      "visual_review": "not-applicable",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "round-defeat-audio",
+      "file": "releases/v0.1.0/captures/round-defeat-seed104-audio.wav",
+      "sha256": "c00400d7c58aa46dd2cac2074960e99a6e5f0cd8778de2951c7aba7e75758107",
+      "kind": "audio",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "失败局无损音轨，与 round-defeat 同步",
+      "width": null,
+      "height": null,
+      "duration_seconds": 39.2,
+      "audio": "game",
+      "visual_review": "not-applicable",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "round-win-timeline",
+      "file": "releases/v0.1.0/captures/round-win-seed275-timeline.json",
+      "sha256": "6b873b185e44c8ea278c1988bef7a662fd859d057fb57f60784c4a369ebabb96",
+      "kind": "asset",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "通关局每 0.5 s 状态采样（分数/命/击毁/火力/道具）",
+      "width": null,
+      "height": null,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-applicable",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "round-defeat-timeline",
+      "file": "releases/v0.1.0/captures/round-defeat-seed104-timeline.json",
+      "sha256": "d64763139be71f262f7597e6714cd1d08ff79f249701a7e743c066e78a1d071d",
+      "kind": "asset",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "offline-render",
+      "description": "失败局状态采样",
+      "width": null,
+      "height": null,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-applicable",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "perf-desktop",
+      "file": "releases/v0.1.0/captures/perf-desktop.json",
+      "sha256": "6bfd93dcabb78263198c52378ff923d168ca16eb8b72868f238f278f7511cbbe",
+      "kind": "asset",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "realtime-automation",
+      "description": "1280×720 帧时间（SwiftShader 软件渲染，约 2 fps，不代表真实显卡）",
+      "width": null,
+      "height": null,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-applicable",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "perf-mobile",
+      "file": "releases/v0.1.0/captures/perf-mobile.json",
+      "sha256": "3231987fa9d82c1b195de588e8aa4fe771a38f556d2f2c41be141f5516f08cc5",
+      "kind": "asset",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "realtime-automation",
+      "description": "844×390 @2x 触屏模拟帧时间（SwiftShader，DPR 上限 1.25）",
+      "width": null,
+      "height": null,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-applicable",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "world-sim-log",
+      "file": "releases/v0.1.0/captures/world-sim.log",
+      "sha256": "ce28fac33db06f8cd9af5f2972fff5c30150deebb3fab9d0df517aca803c61d3",
+      "kind": "asset",
+      "version": "v0.1.0",
+      "build_id": "tank3d-v0.1.0-a7187b392e06",
+      "capture_mode": "realtime-automation",
+      "description": "Node 逻辑模拟 15 项输出",
+      "width": null,
+      "height": null,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-applicable",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Node 逻辑模拟（qa/world-sim.mjs）：地图解析、贴墙、转弯对齐、砖块破坏宽度、钢墙/穿钢、敌军名单与同屏上限、携带者、击毁计分、6 种道具、护盾、老鹰、命数、通关、5 种子 × 4 分钟随机长跑（边界/穿墙/NaN/子弹数）、闲置守家压力、机器人平衡探针",
+      "result": "15/15 通过；闲置不开火时老鹰存活 22–47 s；机器人 12 种子胜 6",
+      "file": "releases/v0.1.0/captures/world-sim.log",
+      "untested": "无"
+    },
+    {
+      "method": "Chromium 141 headless（SwiftShader 软件渲染，虚拟时钟）键盘全流程（qa/render-check.cjs flow）：标题 → Enter → 开场 → W 行驶 → Esc 暂停/Enter 继续 → E 旋转 90° 后 W 映射为向左 → C 回正 → 失焦自动暂停且无卡键 → QA 捷径摧毁老鹰 → 失败面板 → Enter 原地重开（砖墙重建）→ QA 捷径清完 20 辆 → 通关面板",
+      "result": "见 flow 截图；零页面错误",
+      "file": null,
+      "untested": "真实键盘手感"
+    },
+    {
+      "method": "Chromium headless 手机模拟 844×390 @2x 触屏（qa/render-check.cjs mobile）：点开始、CDP 多点触控同时按住摇杆与开炮、松手即停、竖屏 390×844 显示遮罩并自动暂停、横屏恢复后点继续、740×360 更窄横屏",
+      "result": "通过；零页面错误",
+      "file": null,
+      "untested": "真机触感、真机全屏与横屏锁定（无头环境全屏请求被拒，走的是视口回退）"
+    },
+    {
+      "method": "帧时间测量（perf-desktop / perf-mobile）：机器人游玩 8 s + 按住 E 旋转 3 s，SwiftShader 软件渲染",
+      "result": "见 perf JSON；软件渲染约 2 fps（1280×720），仅说明场景规模（约 22 draw calls、8.5k 三角形），不代表真实显卡或手机",
+      "file": "releases/v0.1.0/captures/perf-desktop.json",
+      "untested": "真实 GPU 电脑与真机手机帧率：未测。尝试在用户电脑内置浏览器打开 claude.ai 私有预览，但该浏览器未登录 claude.ai，未能测量"
+    },
+    {
+      "method": "离线逐帧采集（qa/render-check.cjs capture）：虚拟时钟 30 fps、固定种子、脚本机器人输入，逐帧截图合成 H.264；音效调用按虚拟时间记录后用游戏自己的 GameAudio 在 OfflineAudioContext 重放得到同步音轨",
+      "result": "两局：种子 275 通关局、种子 104 失败局",
+      "file": null,
+      "untested": "实时录像与人耳审听"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "not_applicable",
+    "gaps": [
+      "整局录像为离线逐帧渲染 + 机器人输入（capture_mode offline-render），不是真人实时游玩；需要时补一段真人实时录像",
+      "音轨为离线重放渲染，未经人耳审听；引擎声较突出，剪辑时可能需要压低",
+      "离线采集时 CSS 动画被冻结，底部操作提示条没有按实际 7 秒后淡出",
+      "真实 GPU 电脑与真机手机的帧率、触感、全屏/横屏锁定未测",
+      "尚未推送上线，线上试玩地址未核实"
+    ]
+  }
+}

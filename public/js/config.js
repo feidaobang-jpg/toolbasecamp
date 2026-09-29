@@ -257,6 +257,7 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.action',
             items: [
+                { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
                 { titleKey: 'tools.contra3d.title', url: 'html/game/contra-3d/index.html?v=1', thumb: 'assets/game/thumbs/contra-3d.jpg?v=1' },
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },
                 { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },

@@ -1,0 +1,26 @@
+{
+  "game_id": "tank-3d-stage-1",
+  "name": "坦克大战 3D：第一关",
+  "name_en": "Tank Battle 3D: Stage 1",
+  "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤）",
+  "current_version": "v0.1.0",
+  "handoff": "releases/v0.1.0/handoff.json",
+  "entrypoint": "public/html/game/tank-3d/index.html",
+  "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html",
+  "controls": "电脑：WASD 行驶（相对镜头、四方向）、J 开炮（可按住）、Q/E 旋转视角、R/F 俯仰（压低即跟车视角）、C 回正、方向键为镜头备用、Enter 开始/继续/重玩、Esc 暂停；手机：横屏，左摇杆四方向，右下 J 开炮，右侧 Q/E/R/F/C 视角键。",
+  "release_intent": "web_demo",
+  "public_play_url": null,
+  "public_play_url_note": "尚未推送上线，未核实线上可玩；预期地址 https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "preview_url": "https://claude.ai/artifact/24AYVoSJXaPXLF9KLsKNtp",
+  "preview_url_note": "claude.ai 私有预览副本（扁平目录 + 按 ` 显示帧时间浮层），仅所有者可见，不是公开试玩链接。",
+  "development_model": "claude-opus-5-5（Claude Cowork 会话，按 web-game-maker 技能开发）",
+  "tools": [
+    "Three.js 0.170.0（仓库 vendor 同源）",
+    "程序化几何、InstancedMesh 与 Canvas 纹理",
+    "Web Audio API（振荡器 + 噪声）",
+    "Node.js 逻辑模拟（qa/world-sim.mjs）",
+    "Playwright + Chromium headless（SwiftShader 软件渲染）QA 与离线逐帧采集",
+    "ffmpeg（逐帧合成 H.264、混入离线渲染音轨）"
+  ],
+  "notes": "FC《坦克大战》第一关的同人 3D 网页实验。地图按经典第一关的结构原创绘制，美术与音效全部程序化生成，不使用原作素材、音乐或音效。"
+}

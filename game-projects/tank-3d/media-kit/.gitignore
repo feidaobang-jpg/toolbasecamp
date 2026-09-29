@@ -1,0 +1,4 @@
+# Heavy capture binaries stay on the local disk only (referenced by releases/*/handoff.json).
+*.mp4
+*.webm
+*.wav

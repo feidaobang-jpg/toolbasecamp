@@ -1,0 +1,10 @@
+[
+  {"id": "stage1-map", "purpose": "第一关 26×26 格地图（砖墙列、钢块、钢柱、老鹰围墙）", "source_type": "procedural", "tool": "手写字符串地图", "input": "public/html/game/tank-3d/world.js（STAGE1）", "processing": "按经典第一关的结构原创绘制，未复制原版数据", "usage": "public/html/game/tank-3d/world.js", "conditions": "同人致敬，非官方"},
+  {"id": "wall-textures", "purpose": "砖墙、钢墙、履带、地面、混凝土边框、草地贴图", "source_type": "procedural", "tool": "Canvas 2D", "input": "scene.js（brickTex/steelTex/treadTex/groundTex/concreteTex/grassTex）", "processing": "运行时绘制 + 固定种子噪点", "usage": "public/html/game/tank-3d/scene.js"},
+  {"id": "tank-models", "purpose": "玩家金色坦克（含四级外观）、普通/快速敌军坦克", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（tankModel/applyPlayerLevel）", "processing": "盒体/圆柱组合，履带贴图随行驶滚动，负轮旋转", "usage": "public/html/game/tank-3d/scene.js"},
+  {"id": "eagle-model", "purpose": "老鹰基地雕像与被毁后的碎石 + 白旗", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（eagleModel）", "processing": "v1 身形像鸭子（见 assets/dev-stages/02-eagle-v1-before.jpg），v2 改为白头、钩喙、三层展翅（03-eagle-v2-after.jpg）", "usage": "public/html/game/tank-3d/scene.js"},
+  {"id": "fx-icons", "purpose": "道具图标、出生星光、炮口闪光、飘分数字", "source_type": "procedural", "tool": "Canvas 2D + Three.js Sprite", "input": "scene.js（iconTex/starTex/flashTex/textTex）", "processing": "运行时绘制", "usage": "public/html/game/tank-3d/scene.js"},
+  {"id": "sound-original", "purpose": "开炮、砖碎、钢墙、爆炸、道具、护盾、冻结、铁锹、开场/通关/失败短句、引擎声", "source_type": "procedural", "tool": "Web Audio API", "input": "audio.js", "processing": "振荡器 + 噪声缓冲，原创旋律，无采样", "usage": "public/html/game/tank-3d/audio.js"},
+  {"id": "three-vendor", "purpose": "WebGL 渲染", "source_type": "licensed", "tool": "Three.js 0.170.0（MIT）", "input": "public/vendor/three/0.170.0/build/three.module.js", "processing": "仓库已固定版本，同源加载", "usage": "public/html/game/tank-3d/scene.js"},
+  {"id": "thumb-capture", "purpose": "游戏中心卡片封面", "source_type": "procedural", "tool": "离线逐帧采集的实机画面 + Pillow 裁切", "input": "releases/v0.1.0/captures/grenade-frame.jpg（种子 275 通关局第 1001 帧，手雷冲击波）", "processing": "裁切战场区域 580×580 缩放为 512×512 并 JPEG 压缩", "usage": "public/assets/game/thumbs/tank-3d.jpg"}
+]

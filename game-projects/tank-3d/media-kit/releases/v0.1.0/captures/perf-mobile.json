@@ -1,0 +1,41 @@
+{
+  "scenario": "perf-mobile",
+  "url": "http://127.0.0.1:8765/public/html/game/tank-3d/index.html",
+  "viewport": "844x390 @2x touch emulation",
+  "browser": "141.0.7390.37",
+  "mode": "headless, SwiftShader software GL (not representative of real GPUs)",
+  "route": "bot plays with QA shield; then orbit with E",
+  "play": {
+    "seconds": 8.05,
+    "frames": 31,
+    "fps": 3.85,
+    "median_ms": 250,
+    "p95_ms": 483.3,
+    "over50ms": 27,
+    "max_draw_calls": 78,
+    "max_triangles": 9988,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "pixelRatio": 1.25,
+    "drawing_buffer": [
+      1055,
+      487
+    ]
+  },
+  "orbit": {
+    "seconds": 3.02,
+    "frames": 14,
+    "fps": 4.63,
+    "median_ms": 249.9,
+    "p95_ms": 500,
+    "over50ms": 11,
+    "max_draw_calls": 86,
+    "max_triangles": 10036,
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+    "pixelRatio": 1.25,
+    "drawing_buffer": [
+      1055,
+      487
+    ]
+  },
+  "errors": []
+}

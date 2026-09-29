@@ -1346,6 +1346,15 @@ window.TB_LOCALES['zh-CN'] = {
         stage: '第一关 · 丛林', lives: '生命', score: '分数', time: '时间', gun: '武器', pause: '暂停', resume: '继续', full: '全屏',
         title: '魂斗罗丛林\n进入新的 3D 维度', intro: '跑、跳、射击穿越第一关：两座会炸的桥、一条可以潜水的河，终点是堡垒墙上的双炮。', move: '移动', shoot: '射击', jump: '跳跃', diveKey: '潜水（水中）', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始突袭', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · J 射击 · K 跳跃 · L 潜水 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的任务会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '任务失败', deadCopy: '丛林还在等你。按回车或重新开始再来一次。', winTitle: '第一关突破！', winCopy: '堡垒双炮被摧毁，丛林的 3D 突袭路线全部打通。', spread: '拿到 S 散弹枪！', capsule: '击落了飞行胶囊！', checkpoint: '到达中途检查点', dive: '已潜水，子弹打不到你', lostLife: '牺牲了一条命，还有备用队员', paused: '游戏已暂停', continued: '继续突袭', soundOn: '静音', soundOff: '打开声音'
     },
+    tank3d: {
+        stage: '第一关', score: '分数', hi: '最高', lives: '生命', power: '火力', enemies: '敌军', pause: '暂停', resume: '继续', full: '全屏',
+        title: '坦克大战\n进入新的 3D 维度', intro: '守住老鹰、轰开砖墙、消灭全部 20 辆敌方坦克。现在墙有了高度，镜头还能压低跟车。', move: '行驶（四方向）', fire: '开炮（可按住）', fireShort: '开炮', camera: '旋转 · 俯仰 · 镜头回正', startPause: '开始 · 暂停', start: '回车 · 开始战斗', restart: '回车 · 再来一局', back: '游戏中心', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 行驶 · J 开炮 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '老鹰会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
+        chipFreeze: '敌军冻结', chipFort: '钢墙基地', chipShield: '护盾',
+        winTitle: '第一关通关！', winCopy: '20 辆敌方坦克全部击毁，老鹰安然无恙。', deadTitle: '坦克全部阵亡', deadCopy: '按回车或点按钮，砖墙会重新砌好，再来一次。', baseTitle: '老鹰被摧毁了', ownGoalTitle: '你打中了自己的老鹰……',
+        type_basic: '普通坦克', type_fast: '快速坦克', bonus: '道具奖励', total: '总分',
+        powerupAppear: '战场上出现了道具！', puStar: '星星：火力升级', puGrenade: '手雷：屏幕上的敌人全部炸毁', puHelmet: '头盔：10 秒护盾', puShovel: '铁锹：老鹰围墙变成钢墙', puTimer: '定时器：敌人全部冻结', puTank: '坦克：生命 +1',
+        lostLife: '坦克被击毁，备用坦克出动', ownGoal: '误伤！自己的炮弹打中了老鹰', baseLost: '老鹰被摧毁了！'
+    },
     games: {
         groups: {
             all: '游戏',
@@ -1602,6 +1611,10 @@ window.TB_LOCALES['zh-CN'] = {
         contra3d: {
             title: '魂斗罗丛林 3D：第一关',
             desc: '魂斗罗第一关的程序化 3D 跑打射击演示：会炸的桥、潜水的河、堡垒双炮。键盘与手机横屏都能玩。'
+        },
+        tank3d: {
+            title: '坦克大战 3D：第一关',
+            desc: '经典坦克大战第一关的程序化 3D 演示：可打碎的砖墙、老鹰基地、20 辆敌方坦克与六种道具。键盘与手机横屏都能玩。'
         },
         roadRash: {
             title: '暴力摩托',

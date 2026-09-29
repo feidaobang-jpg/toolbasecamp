@@ -1347,6 +1347,15 @@ window.TB_LOCALES.en = {
         stage: 'STAGE 1 · JUNGLE', lives: 'LIVES', score: 'SCORE', time: 'TIME', gun: 'GUN', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
         title: 'Contra Jungle\nin a new dimension.', intro: 'Run, jump and shoot through stage 1: two exploding bridges, a river you can dive into, and twin wall cannons guarding the fortress.', move: 'Move', shoot: 'Shoot', jump: 'Jump', diveKey: 'Dive (in water)', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start mission', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'WASD Move · J Shoot · K Jump · L Dive · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your mission will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'Mission failed', deadCopy: 'The jungle is waiting. Press Enter or start over and try again.', winTitle: 'Stage 1 cleared!', winCopy: 'Both fortress cannons are down and the 3D jungle route is all yours.', spread: 'S spread gun acquired!', capsule: 'Flying capsule shot down!', checkpoint: 'Midway checkpoint reached', dive: 'Diving — bullets pass over you', lostLife: 'A soldier down, backups remain', paused: 'Game paused', continued: 'Back to the mission', soundOn: 'Mute', soundOff: 'Sound'
     },
+    tank3d: {
+        stage: 'STAGE 1', score: 'SCORE', hi: 'HI', lives: 'LIVES', power: 'POWER', enemies: 'ENEMIES', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        title: 'Tank Battle\nin a new dimension.', intro: 'Guard the eagle, blast through brick walls and wipe out all 20 enemy tanks. Now the walls have height and the camera can swing low.', move: 'Drive (4 directions)', fire: 'Fire (hold)', fireShort: 'Fire', camera: 'Orbit · Tilt · Reset camera', startPause: 'Start · Pause', start: 'Enter · Start battle', restart: 'Enter · Play again', back: 'Game hub', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'WASD Drive · J Fire · Q/E Orbit · R/F Tilt · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The eagle will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', fullFail: 'Fullscreen was not allowed — tap Fullscreen to retry, or just rotate and play.', soundOn: 'Mute', soundOff: 'Sound', paused: 'PAUSE',
+        chipFreeze: 'FROZEN', chipFort: 'STEEL FORT', chipShield: 'SHIELD',
+        winTitle: 'Stage 1 cleared!', winCopy: 'All 20 enemy tanks are scrap and the eagle still stands.', deadTitle: 'Out of tanks', deadCopy: 'Press Enter or tap the button to rebuild the walls and try again.', baseTitle: 'The eagle has fallen', ownGoalTitle: 'You shot your own eagle…',
+        type_basic: 'Light tanks', type_fast: 'Fast scouts', bonus: 'Power-ups', total: 'Total',
+        powerupAppear: 'A power-up dropped on the field!', puStar: 'Star: firepower up', puGrenade: 'Grenade: every enemy on screen destroyed', puHelmet: 'Helmet: 10-second shield', puShovel: 'Shovel: the eagle\'s fort turns to steel', puTimer: 'Timer: enemies frozen', puTank: 'Tank: extra life',
+        lostLife: 'Tank lost — backup rolling in', ownGoal: 'Friendly fire! Your own shell hit the eagle', baseLost: 'The eagle was destroyed!'
+    },
     games: {
         groups: {
             all: 'Games',
@@ -1603,6 +1612,10 @@ window.TB_LOCALES.en = {
         contra3d: {
             title: 'Contra Jungle 3D: Stage 1',
             desc: 'A procedural 3D run-and-gun demo of the classic first stage: exploding bridges, a divable river and twin fortress cannons. Keyboard or phone landscape.'
+        },
+        tank3d: {
+            title: 'Tank Battle 3D: Stage 1',
+            desc: 'A procedural 3D take on the classic first stage: breakable brick walls, the eagle base, 20 enemy tanks and six power-ups. Keyboard or phone landscape.'
         },
         roadRash: {
             title: 'Road Rash',
