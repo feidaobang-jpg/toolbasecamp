@@ -259,9 +259,6 @@ const gamesConfig = {
             items: [
                 { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },
-                { titleKey: 'tools.marioFc3d.title', url: 'html/game/mario-fc-3d/index.html?v=1', thumb: 'assets/game/thumbs/mario-fc-3d.jpg?v=1' },
-                { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
-                { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
                 { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
                 { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=3' }
@@ -275,11 +272,9 @@ const gamesConfig = {
                 { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
                 { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html?v=3' },
                 { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },
-                { titleKey: 'tools.hundredFloors.title', url: 'html/game/hundred_floors.html?v=6' },
                 { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=7' },
                 { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=7' },
-                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=10' },
-                { titleKey: 'tools.pvz.title', url: 'html/game/pvz.html?v=7' }
+                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=10' }
             ]
         }
     ]

@@ -1357,10 +1357,6 @@ window.TB_LOCALES['zh-CN'] = {
         winTitle: '第一关通关！', winCopy: '铃声响彻草原。再来一次，试试抓得更高、跑得更快。', deadTitle: '生命用完了', deadCopy: '按回车或点按钮，从草原起点重新出发。', bell: '铃铛高度奖励', total: '总分',
         gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
     },
-    marioFc3d: {
-        world: 'WORLD 1-1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
-        title: '超级玛丽 FC\n3D 重构版', intro: 'FC 第一关的 3D 重构：问号砖、蘑菇、水管、栗子怪、深坑与旗杆城堡，还能在纵深上躲开敌人。', move: '移动（A/D 前后 · W/S 纵深）', jump: '跳跃', run: '加速跑', camera: '切换视角 · 回正', start: '回车 · 开始闯关', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · K 跳 · 按住 J 加速 · Q/E 切换视角 · C 回正 · Esc 暂停', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', mushroom: '顶出了蘑菇！', grow: '吃到蘑菇，变大了！', shrunk: '变小了，小心！', checkpoint: '到达中途检查点', flag: '抓住旗杆！', deadTitle: '这次摔了', deadCopy: '从检查点继续，或整关重跑。旗杆和城堡都在等你。', winTitle: '1-1 通关！', winCopy: '旗杆到手，城堡大门打开。试试用更快的速度再跑一遍！', paused: '游戏已暂停', continued: '继续前进', soundOn: '静音', soundOff: '打开声音'
-    },
     games: {
         groups: {
             all: '游戏',
@@ -1578,17 +1574,9 @@ window.TB_LOCALES['zh-CN'] = {
             title: '青蛙祖玛',
             desc: '祖玛式滚球射击，三连消除不让球链进洞。触屏瞄准发射。'
         },
-        hundredFloors: {
-            title: '下一百层',
-            desc: '左右移动踩平台向下落，躲开障碍挑战层数。竖屏触屏。'
-        },
         mario3d: {
             title: '超级玛丽 3D：第一关',
             desc: '经典第一关的程序化 3D 网页演示，键盘与手机横屏都能玩。'
-        },
-        marioFc3d: {
-            title: '超级玛丽 FC 3D 重构版',
-            desc: 'FC 1-1 的 3D 重构：顶砖、蘑菇、踩怪、纵深走位躲敌人、旗杆城堡。键盘与手机横屏都能玩。'
         },
         tank3d: {
             title: '坦克大战 3D：第一关',
@@ -1597,10 +1585,6 @@ window.TB_LOCALES['zh-CN'] = {
         hopfox3d: {
             title: '跳跳狐 3D：第一关',
             desc: '原创 3D 横版闯关：跑跳顶箱拿橡果、踩甲虫、踢蜗牛壳，终点敲响铃铛。键盘与手机横屏都能玩。'
-        },
-        roadRash: {
-            title: '暴力摩托',
-            desc: '俯视角摩托竞速与碰撞，吃道具、撞对手。横竖屏自适应。'
         },
         worms: {
             title: '百战天虫',
@@ -1763,14 +1747,6 @@ window.TB_LOCALES['zh-CN'] = {
         starshipDefense: {
             title: '星河战队',
             desc: '3D 守卫基地：刷怪攒金、建造炮塔抵御虫潮；章节 BOSS 与无限周目，键鼠与触屏均可。'
-        },
-        bomberman: {
-            title: '炸弹人',
-            desc: '迷宫炸弹对战：炸砖找出口、躲敌人、拾取火力与道具。触屏摇杆，多关卡与无尽模式。'
-        },
-        pvz: {
-            title: '植物大战僵尸',
-            desc: '五路塔防：种向日葵攒阳光，部署豌豆、坚果等植物抵御僵尸波次。'
         },
         journeyWest: {
             title: '西游降魔',
