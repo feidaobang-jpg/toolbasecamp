@@ -1356,6 +1356,10 @@ window.TB_LOCALES.en = {
         powerupAppear: 'A power-up dropped on the field!', puStar: 'Star: firepower up', puGrenade: 'Grenade: every enemy on screen destroyed', puHelmet: 'Helmet: 10-second shield', puShovel: 'Shovel: the eagle\'s fort turns to steel', puTimer: 'Timer: enemies frozen', puTank: 'Tank: extra life',
         lostLife: 'Tank lost — backup rolling in', ownGoal: 'Friendly fire! Your own shell hit the eagle', baseLost: 'The eagle was destroyed!'
     },
+    mario113d: {
+        stage: 'WORLD 1-1', lives: 'LIVES', coins: 'COINS', score: 'SCORE', time: 'TIME', power: 'SIZE', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        title: 'Super Mario 1-1\nin a new dimension.', intro: 'Run, jump and stomp through World 1-1: ?-blocks, mushrooms, pipes, two pits and the flagpole at the end.', move: 'Move (A/D run · W/S depth)', run: 'Run', jump: 'Jump', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start run', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'A/D Move · W/S Depth · K/W/Space Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The mushrooms will wait for you.', loadError: 'Failed to load the game, please reload the page.', retry: 'Reload', mushroom: 'A mushroom popped out!', grow: 'You ate the mushroom — you are big!', shrunk: 'Shrunk! Be careful.', oneup: '100 coins · 1-UP', checkpoint: 'Reached the halfway checkpoint', flag: 'Grabbed the flagpole!', lostLife: 'Lost a life', deadTitle: 'GAME OVER', deadCopy: 'Press Enter or hit restart to run 1-1 again.', winTitle: 'Stage 1-1 clear!', winCopy: 'Flagpole claimed and the castle gate is open. See you in the next stage!', paused: 'Paused', continued: 'Run continues', soundOn: 'Mute', soundOff: 'Unmute'
+    },
     games: {
         groups: {
             all: 'Games',
@@ -1604,6 +1608,10 @@ window.TB_LOCALES.en = {
         hundredFloors: {
             title: 'Down 100 Floors',
             desc: 'Move left/right, fall through platforms, dodge hazards. Portrait touch controls.'
+        },
+        mario113d: {
+            title: 'Super Mario 3D Remake: 1-1',
+            desc: 'A 3D web demo of the classic first level — ?-blocks, mushrooms, stomps and the flagpole. Keyboard or phone landscape.'
         },
         mario3d: {
             title: 'Super Mario 3D: World 1–1',

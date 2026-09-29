@@ -1,0 +1,36 @@
+{
+  "version": "v0.1.0",
+  "date": "2026-09-29",
+  "commit": "f3161dec",
+  "buildFingerprint": "b716ec17f9c4cb67d5626acdbce6f1cf5a9d1b5413acf8a78a2b015c3abe6294",
+  "buildFingerprintNote": "sha256 of concatenation of index.html+main.js+world.js+scene.js+audio.js+style.css in public/html/game/mario-1-1-3d/",
+  "capturesSha256": "81216088043b552c7eb30fd8247fda5c3e540be30d4c3a7c4a36febe39bf6fb0",
+  "capturesSha256Note": "sha256 of sha256 list of all files in captures/",
+  "liveUrl": "https://www.zhengxiaohui.cn/html/game/mario-1-1-3d/index.html",
+  "qa": {
+    "logic": "qa/world-sim.mjs — 10/10 assertions passed",
+    "browser": "qa/render-check.cjs — desktop & mobile viewports, SwiftShader 60fps, zero page errors",
+    "perf": {
+      "desktop": "captures/m1-perf-desktop.json (1280x720, ~60fps median 16.7ms)",
+      "mobile": "captures/m1-perf-mobile.json (844x390, ~60fps median 16.7ms)"
+    }
+  },
+  "captures": [
+    { "file": "m1-ground.png", "what": "title panel over the rendered stage" },
+    { "file": "m1-orbit.png", "what": "camera orbited right" },
+    { "file": "m1-moving.png", "what": "running past a goomba under the ?-blocks" },
+    { "file": "m1-stage-blocks.png", "what": "QA teleport: coins + pipes section" },
+    { "file": "m1-stage-gap.png", "what": "QA teleport: first pit" },
+    { "file": "m1-stage-stairs.png", "what": "QA teleport: staircase + checkpoint toast" },
+    { "file": "m1-stage-flag.png", "what": "QA teleport: final staircase and flagpole" },
+    { "file": "m1-motion.webm", "what": "gameplay capture, CDP screencast 139 frames @15fps" },
+    { "file": "mobile-title.png", "what": "mobile landscape title" },
+    { "file": "mobile-play.png", "what": "mobile landscape play with touch controls" },
+    { "file": "m1-perf-desktop.json", "what": "desktop frame-time sampling" },
+    { "file": "m1-perf-mobile.json", "what": "mobile frame-time sampling" }
+  ],
+  "knownArtifacts": [
+    "QA screenshots show HUD values left over from the scripted run (coins/score) — capture artifacts, not bugs",
+    "m1-stage-flag.png camera hugs the final staircase because the QA teleport lands on the steps"
+  ]
+}
