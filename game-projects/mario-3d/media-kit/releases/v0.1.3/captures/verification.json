@@ -1,0 +1,28 @@
+[
+  {
+    "mobile": false,
+    "started": {
+      "calls": 0,
+      "fullscreen": false,
+      "playing": true
+    },
+    "full": {
+      "calls": 1,
+      "fullscreen": true
+    },
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "started": {
+      "calls": 0,
+      "fullscreen": false,
+      "playing": true
+    },
+    "full": {
+      "calls": 1,
+      "fullscreen": true
+    },
+    "errors": []
+  }
+]

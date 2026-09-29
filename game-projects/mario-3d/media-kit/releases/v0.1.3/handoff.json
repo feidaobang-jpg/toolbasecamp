@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v0.1.3",
+  "base_version": "v0.1.2",
+  "created_at": "2026-09-29T02:12:27.644781+00:00",
+  "build": {
+    "id": "mario-v0.1.3-1bcfdb8a12bc",
+    "commit": "cd7df55ad5cfcb31e624150c8d578b2a20ca482a",
+    "dirty": true,
+    "fingerprint": "1bcfdb8a12bc99859e38a1b40bfb2fa067f7246fe1cb131167e246e3923e95fc",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [],
+  "changes": [
+    {
+      "id": "manual-fullscreen",
+      "before": "开始游戏同时请求全屏",
+      "after": "开始游戏保持窗口模式，仅全屏按钮请求全屏",
+      "result": "由玩家自主选择全屏",
+      "evidence_ids": [
+        "desktop-windowed",
+        "manual-fullscreen",
+        "mobile-windowed"
+      ],
+      "validation": "桌面及手机模拟：开始后请求次数0、playing=true、fullscreen=false；按钮后请求次数1、fullscreen=true；无页面错误"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop-windowed",
+      "file": "releases/v0.1.3/captures/desktop-windowed.png",
+      "sha256": "923364fd1e89fef07195ca55c6960687da79e0d351b09e6bc26bdb55ece59f13",
+      "kind": "screenshot",
+      "version": "v0.1.3",
+      "build_id": "mario-v0.1.3-1bcfdb8a12bc",
+      "capture_mode": "realtime-automation",
+      "description": "自动操作开始按钮后保持窗口模式，再点击全屏按钮；手机为桌面模拟",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "manual-fullscreen",
+      "file": "releases/v0.1.3/captures/manual-fullscreen.webm",
+      "sha256": "668e4d86dbc2380d6b00ed1a48cc74f41dc05a40c56a771f5eaa448845f7f395",
+      "kind": "video",
+      "version": "v0.1.3",
+      "build_id": "mario-v0.1.3-1bcfdb8a12bc",
+      "capture_mode": "realtime-automation",
+      "description": "自动操作开始按钮后保持窗口模式，再点击全屏按钮；手机为桌面模拟",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 2.8,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-windowed",
+      "file": "releases/v0.1.3/captures/mobile-windowed.png",
+      "sha256": "b02879f045f4575b1de680a16222929497c68bf09acf588b724e9fa7bd4c9f80",
+      "kind": "screenshot",
+      "version": "v0.1.3",
+      "build_id": "mario-v0.1.3-1bcfdb8a12bc",
+      "capture_mode": "realtime-automation",
+      "description": "自动操作开始按钮后保持窗口模式，再点击全屏按钮；手机为桌面模拟",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge headless 1280x720桌面、844x390触屏模拟，包装原生requestFullscreen计数并调用原方法",
+      "file": "releases/v0.1.3/captures/verification.json",
+      "untested": "真实手机；本次未重测完整关卡"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像和手机截图未人工审片；录像无音轨；本次仅验证全屏交互"
+    ]
+  }
+}

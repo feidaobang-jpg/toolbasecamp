@@ -49,7 +49,7 @@
   }
 </script>
 <script type="module">
-  import('./main.js?v=render2').catch(() => {
+  import('./main.js?v=manual-fullscreen').catch(() => {
     if (location.protocol !== 'file:') {
       document.getElementById('panel-copy').textContent = t('mario3d.loadError');
       document.getElementById('start').textContent = t('mario3d.retry');

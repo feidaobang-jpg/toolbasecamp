@@ -22,7 +22,7 @@ function syncInput(){
   input.yaw=(pressed('KeyE')?1:0)-(pressed('KeyQ')?1:0);input.pitch=(pressed('KeyF')?1:0)-(pressed('KeyR')?1:0);input.reset=pressed('KeyC');
 }
 function startFullscreen(){const el=$('game');try{if(document.fullscreenElement!==el&&el.requestFullscreen)el.requestFullscreen({navigationUI:'hide'}).catch(()=>{});}catch(e){}try{if(screen.orientation?.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}
-function startGame(){if(world.status==='dead')respawn(world);else if(world.status==='won'){location.reload();return;}world.status='playing';running=true;paused=false;$('panel').hidden=true;document.body.classList.add('playing');orientation();setText('pause',paused?t('mario3d.resume'):t('mario3d.pause'));audio.unlock();startFullscreen();$('game').focus();}
+function startGame(){if(world.status==='dead')respawn(world);else if(world.status==='won'){location.reload();return;}world.status='playing';running=true;paused=false;$('panel').hidden=true;document.body.classList.add('playing');orientation();setText('pause',paused?t('mario3d.resume'):t('mario3d.pause'));audio.unlock();$('game').focus();}
 function togglePause(){if(!running)return;if(world.status==='dead'){respawn(world);return;}if(world.status==='won')return;paused=!paused;setText('pause',paused?t('mario3d.resume'):t('mario3d.pause'));toast(paused?t('mario3d.paused'):t('mario3d.continued'));}
 function updateHud(){setText('coins',String(world.coins).padStart(2,'0'));setText('score',String(world.score).padStart(6,'0'));setText('time',String(Math.max(0,Math.ceil(world.time))).padStart(3,'0'));$('progress').style.width=Math.min(100,Math.max(0,(world.player.x/LEVEL_END)*100))+'%';}
 function eventEffects(){
