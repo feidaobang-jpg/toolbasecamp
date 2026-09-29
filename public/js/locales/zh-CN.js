@@ -1328,6 +1328,10 @@ window.TB_LOCALES['zh-CN'] = {
         world: 'WORLD 1–1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏', fileWarning: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
         title: '超级玛丽\n进入新的 3D 维度', intro: '熟悉的第一关，现在可以在更大的空间里探索。', move: '移动', jump: '跳跃', run: '加速', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始冒险', restart: '重新开始', back: '游戏中心', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · K 跳跃 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的冒险会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '这次掉进了坑里', deadCopy: '第一关还在等你。按回车或重新开始再试一次。', winTitle: '第一关通关！', winCopy: '旗杆、城堡和一段新的 3D 路线都完成了。', grow: '蘑菇让你变大了', checkpoint: '到达中途检查点', hurt: '被撞到了，但还能继续', mushroom: '砖块里有东西！', paused: '游戏已暂停', continued: '继续前进', soundOn: '静音', soundOff: '打开声音'
     },
+    contra3d: {
+        stage: '第一关 · 丛林', lives: '生命', score: '分数', time: '时间', gun: '武器', pause: '暂停', resume: '继续', full: '全屏',
+        title: '魂斗罗丛林\n进入新的 3D 维度', intro: '跑、跳、射击穿越第一关：两座会炸的桥、一条可以潜水的河，终点是堡垒墙上的双炮。', move: '移动', shoot: '射击', jump: '跳跃', diveKey: '潜水（水中）', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始突袭', restart: '重新开始', back: '游戏中心', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · J 射击 · K 跳跃 · L 潜水 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的任务会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '任务失败', deadCopy: '丛林还在等你。按回车或重新开始再来一次。', winTitle: '第一关突破！', winCopy: '堡垒双炮被摧毁，丛林的 3D 突袭路线全部打通。', spread: '拿到 S 散弹枪！', capsule: '击落了飞行胶囊！', checkpoint: '到达中途检查点', dive: '已潜水，子弹打不到你', lostLife: '牺牲了一条命，还有备用队员', paused: '游戏已暂停', continued: '继续突袭', soundOn: '静音', soundOff: '打开声音'
+    },
     games: {
         groups: {
             all: '游戏',
@@ -1580,6 +1584,10 @@ window.TB_LOCALES['zh-CN'] = {
         mario3d: {
             title: '超级玛丽 3D：第一关',
             desc: '经典第一关的程序化 3D 网页演示，键盘与手机横屏都能玩。'
+        },
+        contra3d: {
+            title: '魂斗罗丛林 3D：第一关',
+            desc: '魂斗罗第一关的程序化 3D 跑打射击演示：会炸的桥、潜水的河、堡垒双炮。键盘与手机横屏都能玩。'
         },
         roadRash: {
             title: '暴力摩托',

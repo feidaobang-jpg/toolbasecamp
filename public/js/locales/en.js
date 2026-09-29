@@ -1329,6 +1329,10 @@ window.TB_LOCALES.en = {
         world: 'WORLD 1–1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen', fileWarning: 'Opening by double-click (file://) cannot load 3D modules. Use the website URL or a local HTTP server.',
         title: 'Super Mario\nin a new dimension.', intro: 'The familiar first adventure. Now with room to explore.', move: 'Move', jump: 'Jump', run: 'Run', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start adventure', restart: 'Start over', back: 'Game hub', touch: 'Touch controls', note: 'Fan-made first-level demo · Procedural art & sound · Not an official release', help: 'WASD Move · K Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your adventure will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'That pit got you', deadCopy: 'World 1–1 is waiting. Press Enter or start over and try again.', winTitle: 'World 1–1 complete!', winCopy: 'The flag, castle and a new 3D route are all yours.', grow: 'The mushroom made you bigger', checkpoint: 'Midway checkpoint reached', hurt: 'That hit hurt, but you can keep going', mushroom: 'There was something in the block!', paused: 'Game paused', continued: 'Back to the adventure', soundOn: 'Mute', soundOff: 'Sound'
     },
+    contra3d: {
+        stage: 'STAGE 1 · JUNGLE', lives: 'LIVES', score: 'SCORE', time: 'TIME', gun: 'GUN', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        title: 'Contra Jungle\nin a new dimension.', intro: 'Run, jump and shoot through stage 1: two exploding bridges, a river you can dive into, and twin wall cannons guarding the fortress.', move: 'Move', shoot: 'Shoot', jump: 'Jump', diveKey: 'Dive (in water)', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start mission', restart: 'Start over', back: 'Game hub', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'WASD Move · J Shoot · K Jump · L Dive · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your mission will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'Mission failed', deadCopy: 'The jungle is waiting. Press Enter or start over and try again.', winTitle: 'Stage 1 cleared!', winCopy: 'Both fortress cannons are down and the 3D jungle route is all yours.', spread: 'S spread gun acquired!', capsule: 'Flying capsule shot down!', checkpoint: 'Midway checkpoint reached', dive: 'Diving — bullets pass over you', lostLife: 'A soldier down, backups remain', paused: 'Game paused', continued: 'Back to the mission', soundOn: 'Mute', soundOff: 'Sound'
+    },
     games: {
         groups: {
             all: 'Games',
@@ -1581,6 +1585,10 @@ window.TB_LOCALES.en = {
         mario3d: {
             title: 'Super Mario 3D: World 1–1',
             desc: 'A procedural 3D web demo of the classic first level, playable with keyboard or phone landscape controls.'
+        },
+        contra3d: {
+            title: 'Contra Jungle 3D: Stage 1',
+            desc: 'A procedural 3D run-and-gun demo of the classic first stage: exploding bridges, a divable river and twin fortress cannons. Keyboard or phone landscape.'
         },
         roadRash: {
             title: 'Road Rash',

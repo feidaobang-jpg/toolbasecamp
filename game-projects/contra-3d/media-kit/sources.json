@@ -1,0 +1,7 @@
+[
+  {"id":"scene-procedural","purpose":"丛林地形、水面、棕榈树、桥梁、堡垒墙与远景","source_type":"procedural","tool":"Three.js","input":"scene.js","processing":"程序化几何、InstancedMesh 合批与 Canvas 纹理","usage":"public/html/game/contra-3d/scene.js"},
+  {"id":"character-procedural","purpose":"突击队员、敌兵、炮台、飞行胶囊与 S 拾取物模型","source_type":"procedural","tool":"Three.js","input":"scene.js","processing":"基础几何组合与颜色材质","usage":"public/html/game/contra-3d/scene.js"},
+  {"id":"sound-original","purpose":"射击、爆炸、跳水、拾取、牺牲、通关音效与原创贝斯循环","source_type":"procedural","tool":"Web Audio API","input":"audio.js","processing":"运行时振荡器与噪声缓冲，无外部音频素材","usage":"public/html/game/contra-3d/audio.js"},
+  {"id":"three-vendor","purpose":"WebGL 渲染","source_type":"licensed","tool":"Three.js 0.170.0","input":"public/vendor/three/0.170.0/build/three.module.js","processing":"仓库已固定版本","usage":"public/html/game/contra-3d/scene.js"},
+  {"id":"thumb-capture","purpose":"游戏中心缩略图","source_type":"procedural","tool":"Playwright 截图 + Pillow 裁切","input":"game-projects/contra-3d/qa/render-results/after-stage-bridge.png","processing":"居中裁切为 512x512 并压缩","usage":"public/assets/game/thumbs/contra-3d.jpg"}
+]

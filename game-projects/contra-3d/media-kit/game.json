@@ -1,0 +1,20 @@
+{
+  "game_id": "contra-3d-stage-1",
+  "name": "魂斗罗丛林 3D：第一关",
+  "engine": "Three.js 0.170.0 + 原生 JavaScript",
+  "current_version": "v0.1.0",
+  "handoff": "releases/v0.1.0/handoff.json",
+  "entrypoint": "public/html/game/contra-3d/index.html",
+  "launch": "在仓库根目录运行本地 HTTP 服务后打开 /public/html/game/contra-3d/index.html",
+  "controls": "电脑：WASD 移动、J 射击、K 跳跃、L 潜水（水中）、Q/E 旋转、R/F 俯仰、C 回正；手机：左摇杆、右侧 J/K/L 与视角键。横屏。",
+  "release_intent": "web_demo",
+  "public_play_url": "https://www.zhengxiaohui.cn/html/game/contra-3d/index.html?v=1",
+  "development_model": "GLM-5.3-Flash (WorkBuddy)",
+  "tools": [
+    "Three.js 0.170.0",
+    "原生 Canvas/WebGL",
+    "程序化几何与 Canvas 纹理",
+    "Web Audio API"
+  ],
+  "notes": "同人风格的魂斗罗第一关 3D 网页实验，不使用 Konami 原始美术、音乐或音效。"
+}
