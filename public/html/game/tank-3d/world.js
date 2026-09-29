@@ -156,11 +156,11 @@ export function fire(w, t) {
 }
 
 function killPlayer(w) {
-  const p = w.player; if (!p || !p.alive) return;
-  p.alive = false; w.player = null; w.lives--; w.level = 0; w.shake = Math.max(w.shake, .7);
+  const p = w.player; if (!p || !p.alive || w.demoMode) return;
+  p.alive = false; w.player = null;  w.level = 0; w.shake = Math.max(w.shake, .7);
   emit(w, 'boom', { x: p.x, z: p.z, big: true, team: 'player' }); emit(w, 'die');
   for (const b of w.bullets) if (b.owner === p.id) b.alive = false;
-  if (w.lives <= 0) endGame(w, 'lost', 'lives', 2.4); else queuePlayer(w, 1.1);
+  queuePlayer(w, 1.1);
 }
 function destroyEnemy(w, e, byGrenade = false) {
   e.alive = false;

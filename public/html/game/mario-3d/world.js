@@ -38,7 +38,7 @@ function hitBlock(w,b){
     else{w.coins++;w.score+=100;emit(w,'coin',{x:b.x,y:b.y+1,z:b.z});}
   }
 }
-export function die(w,reason){if(w.status!=='playing')return;w.status='dead';w.reason=reason;emit(w,'die');}
+export function die(w,reason){if(w.status!=='playing')return;if(w.demoMode){if(reason==='pit'||reason==='timeout')respawn(w);return;}w.status='dead';w.reason=reason;emit(w,'die');}
 export function respawn(w){const p=w.player;Object.assign(p,{x:w.checkpoint,y:0,z:0,vx:0,vy:0,vz:0,big:false,invincible:2,grounded:true,coyote:0,jumpBuffer:0});w.time=Math.max(120,w.time);w.status='playing';}
 export function stepWorld(w,input,dt){
   if(w.status!=='playing')return;
@@ -82,7 +82,7 @@ export function stepWorld(w,input,dt){
     if(!supported||blocked)e.dir*=-1;else e.x=next;
     if(Math.abs(p.x-e.x)<.65&&Math.abs(p.z-e.z)<.62&&p.y<.9&&p.y+height(p)>e.y){
       if(p.vy<0&&oldY>=.66){e.alive=false;e.squash=.35;p.vy=input.jump?9:6.8;w.score+=100;emit(w,'stomp',{x:e.x,y:.4,z:e.z});}
-      else if(p.invincible<=0){if(p.big){p.big=false;p.invincible=2;emit(w,'hurt');}else die(w,'enemy');}
+      else if(p.invincible<=0&&!w.demoMode){if(p.big){p.big=false;p.invincible=2;emit(w,'hurt');}else die(w,'enemy');}
     }
   }
   for(const item of w.items){

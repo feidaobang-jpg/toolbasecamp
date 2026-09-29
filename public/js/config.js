@@ -257,14 +257,11 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.action',
             items: [
-                { titleKey: 'tools.mario113d.title', url: 'html/game/mario-1-1-3d/index.html?v=1', thumb: 'assets/game/thumbs/mario-1-1-3d.jpg?v=1' },
                 { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
-                { titleKey: 'tools.contra3d.title', url: 'html/game/contra-3d/index.html?v=1', thumb: 'assets/game/thumbs/contra-3d.jpg?v=1' },
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },
+                { titleKey: 'tools.marioFc3d.title', url: 'html/game/mario-fc-3d/index.html?v=1', thumb: 'assets/game/thumbs/mario-fc-3d.jpg?v=1' },
                 { titleKey: 'tools.roadRash.title', url: 'html/game/road_rash.html?v=6' },
-                { titleKey: 'tools.fishFeast.title', url: 'html/game/fish-feast.html?v=10' },
                 { titleKey: 'tools.bomberman.title', url: 'html/game/bomberman.html?v=9' },
-                { titleKey: 'tools.diving.title', url: 'html/game/diving.html?v=7' },
                 { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
                 { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=3' }
@@ -273,12 +270,8 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.puzzle',
             items: [
-                { titleKey: 'tools.klotski.title', url: 'html/game/klotski.html?v=3' },
-                { titleKey: 'tools.gomoku.title', url: 'html/game/gomoku.html?v=3' },
-                { titleKey: 'tools.puzzle.title', url: 'html/game/puzzle.html?v=4' },
                 { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=10' },
                 { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
-                { titleKey: 'tools.slots.title', url: 'html/game/slots.html?v=20' },
                 { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
                 { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html?v=3' },
                 { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },

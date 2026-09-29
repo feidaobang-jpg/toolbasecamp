@@ -1,5 +1,5 @@
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, BRICK, STEEL, BASE_WALL, EMPTY, DIRS } from './world.js';
+import { N, BRICK, STEEL, BASE_WALL, EMPTY, DIRS } from './world.js?v=modes1';
 
 // All art is procedural: primitive meshes + canvas-drawn textures. No sprites or audio from the original game.
 const C = N / 2;
@@ -288,7 +288,7 @@ export function createScene(canvas, world) {
     const k = .12 + .88 * low;
     follow.set(fx0 * k, 0, fz0 * k + (1 - low) * 2.1);
     target.lerp(follow, snap ? 1 : 1 - Math.exp(-4 * dt));
-    let dist = fitDistance() * 1.06 * (1 - .66 * low), pt = pitch, yw = yaw + sway, tg = target;
+    let dist = fitDistance() * 1.06 * (1 - .66 * low), pt = pitch, yw = yaw, tg = target;
     if (intro >= 0) {
       const t = Math.min(1, intro), e = t * t * (3 - 2 * t);
       const startT = new THREE.Vector3(wx(13), .6, wz(24));
@@ -328,9 +328,6 @@ export function createScene(canvas, world) {
   const seenTmp = [];
   function update(dt, cam = {}, snap = false) {
     dt_ = dt; elapsed += dt;
-    yaw += (cam.yaw || 0) * dt * 1.7;
-    pitch = THREE.MathUtils.clamp(pitch + (cam.pitch || 0) * dt * .9, MIN_PITCH, MAX_PITCH);
-    if (cam.reset) { yaw = 0; pitch = DEFAULT_PITCH; }
     intro = cam.intro === undefined ? -1 : cam.intro;
     sway += ((cam.attract ? Math.sin(elapsed * .22) * .42 : 0) - sway) * Math.min(1, dt * 1.5);
     shakeT = Math.max(0, shakeT - dt * 2);
@@ -435,5 +432,5 @@ export function createScene(canvas, world) {
   }
   function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   resize(); target.set(0, 0, 2.1); update(0, {}, true);
-  return { renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get pitch() { return pitch; } };
+  return { setCamera(y,p){yaw=y;pitch=p;}, renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get pitch() { return pitch; } };
 }

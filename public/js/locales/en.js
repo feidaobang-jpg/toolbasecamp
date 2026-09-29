@@ -1343,10 +1343,6 @@ window.TB_LOCALES.en = {
         world: 'WORLD 1–1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen', fileWarning: 'Opening by double-click (file://) cannot load 3D modules. Use the website URL or a local HTTP server.',
         title: 'Super Mario\nin a new dimension.', intro: 'The familiar first adventure. Now with room to explore.', move: 'Move', jump: 'Jump', run: 'Run', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start adventure', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-level demo · Procedural art & sound · Not an official release', help: 'WASD Move · K Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your adventure will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'That pit got you', deadCopy: 'World 1–1 is waiting. Press Enter or start over and try again.', winTitle: 'World 1–1 complete!', winCopy: 'The flag, castle and a new 3D route are all yours.', grow: 'The mushroom made you bigger', checkpoint: 'Midway checkpoint reached', hurt: 'That hit hurt, but you can keep going', mushroom: 'There was something in the block!', paused: 'Game paused', continued: 'Back to the adventure', soundOn: 'Mute', soundOff: 'Sound'
     },
-    contra3d: {
-        stage: 'STAGE 1 · JUNGLE', lives: 'LIVES', score: 'SCORE', time: 'TIME', gun: 'GUN', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
-        title: 'Contra Jungle\nin a new dimension.', intro: 'Run, jump and shoot through stage 1: two exploding bridges, a river you can dive into, and twin wall cannons guarding the fortress.', move: 'Move', shoot: 'Shoot', jump: 'Jump', diveKey: 'Dive (in water)', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start mission', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'WASD Move · J Shoot · K Jump · L Dive · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'Your mission will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', deadTitle: 'Mission failed', deadCopy: 'The jungle is waiting. Press Enter or start over and try again.', winTitle: 'Stage 1 cleared!', winCopy: 'Both fortress cannons are down and the 3D jungle route is all yours.', spread: 'S spread gun acquired!', capsule: 'Flying capsule shot down!', checkpoint: 'Midway checkpoint reached', dive: 'Diving — bullets pass over you', lostLife: 'A soldier down, backups remain', paused: 'Game paused', continued: 'Back to the mission', soundOn: 'Mute', soundOff: 'Sound'
-    },
     tank3d: {
         stage: 'STAGE 1', score: 'SCORE', hi: 'HI', lives: 'LIVES', power: 'POWER', enemies: 'ENEMIES', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
         title: 'Tank Battle\nin a new dimension.', intro: 'Guard the eagle, blast through brick walls and wipe out all 20 enemy tanks. Now the walls have height and the camera can swing low.', move: 'Drive (4 directions)', fire: 'Fire (hold)', fireShort: 'Fire', camera: 'Orbit · Tilt · Reset camera', startPause: 'Start · Pause', start: 'Enter · Start battle', restart: 'Enter · Play again', back: 'Game hub', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'WASD Drive · J Fire · Q/E Orbit · R/F Tilt · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The eagle will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', fullFail: 'Fullscreen was not allowed — tap Fullscreen to retry, or just rotate and play.', soundOn: 'Mute', soundOff: 'Sound', paused: 'PAUSE',
@@ -1356,9 +1352,11 @@ window.TB_LOCALES.en = {
         powerupAppear: 'A power-up dropped on the field!', puStar: 'Star: firepower up', puGrenade: 'Grenade: every enemy on screen destroyed', puHelmet: 'Helmet: 10-second shield', puShovel: 'Shovel: the eagle\'s fort turns to steel', puTimer: 'Timer: enemies frozen', puTank: 'Tank: extra life',
         lostLife: 'Tank lost — backup rolling in', ownGoal: 'Friendly fire! Your own shell hit the eagle', baseLost: 'The eagle was destroyed!'
     },
-    mario113d: {
-        stage: 'WORLD 1-1', lives: 'LIVES', coins: 'COINS', score: 'SCORE', time: 'TIME', power: 'SIZE', pause: 'Pause', resume: 'Resume', full: 'Fullscreen', fileWarning: 'Opening by double-click (file://) cannot load 3D modules. Use the website URL or a local HTTP server.',
-        title: 'Super Mario 1-1\nin a new dimension.', intro: 'Run, jump and stomp through World 1-1: ?-blocks, mushrooms, pipes, two pits and the flagpole at the end.', move: 'Move (A/D run · W/S depth)', run: 'Run', jump: 'Jump', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start run', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'A/D Move · W/S Depth · K/Space Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The mushrooms will wait for you.', loadError: 'Failed to load the game, please reload the page.', retry: 'Reload', mushroom: 'A mushroom popped out!', grow: 'You ate the mushroom — you are big!', shrunk: 'Shrunk! Be careful.', oneup: '100 coins · 1-UP', checkpoint: 'Reached the halfway checkpoint', flag: 'Grabbed the flagpole!', lostLife: 'Lost a life', deadTitle: 'GAME OVER', deadCopy: 'Press Enter or hit restart to run 1-1 again.', winTitle: 'Stage 1-1 clear!', winCopy: 'Flagpole claimed and the castle gate is open. See you in the next stage!', paused: 'Paused', continued: 'Run continues', soundOn: 'Mute', soundOff: 'Unmute'
+    hopfox3d: {
+        stage: 'STAGE 1 · MEADOW', score: 'SCORE', acorns: 'ACORNS', lives: 'LIVES', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        title: 'Hop Fox\nmeadow run in 3D.', intro: 'Run, jump and bop your way across the meadow. Knock crates for acorns, stomp beetles, kick snail shells and ring the bell at the end.', move: 'Move', jump: 'Jump (hold = higher)', run: 'Run · throw sparks with the lantern', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start', restart: 'Enter · Play again', back: 'Game hub', touch: 'Touch controls', note: 'Original characters, level, art and music · Procedural 3D · Fan-style platformer demo', runShort: 'Run', jumpShort: 'Jump', help: 'A/D Move · K Jump · J Run/Throw · Q/E Orbit · R/F Tilt · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The meadow will wait for you.', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', fullFail: 'Fullscreen was not allowed — tap Fullscreen to retry, or just rotate and play.', soundOn: 'Mute', soundOff: 'Sound', paused: 'PAUSE',
+        winTitle: 'Stage 1 cleared!', winCopy: 'The bell rang across the meadow. Try again to grab the pole higher or finish faster.', deadTitle: 'Out of lives', deadCopy: 'Press Enter or tap the button to start the meadow again.', bell: 'Bell height bonus', total: 'Total',
+        gotBerry: 'Glow berry: mining helmet on — you can break clay tiles', gotJar: 'Firefly lantern: press J to throw sparks', shrink: 'Ouch! Your gear fell off', oneup: 'Extra life!', checkpoint: 'Checkpoint lantern lit', hurry: 'Hurry up — time is running out!', timeUp: 'TIME UP', bellRang: 'Ding! Bell bonus +{n}'
     },
     marioFc3d: {
         world: 'WORLD 1-1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
@@ -1565,34 +1563,6 @@ window.TB_LOCALES.en = {
             dupCol: 'Column {col} already has {n}',
             dupBox: 'This 3×3 box already has {n}'
         },
-        klotski: {
-            title: 'Number Puzzle',
-            desc: 'Slide tiles into the empty space until numbers are in order. Runs locally.',
-            steps: 'Steps',
-            hint: 'Tap a tile next to the empty cell.',
-            win: 'Done in {n} steps!'
-        },
-        gomoku: {
-            title: 'Gomoku',
-            desc: 'Two players take turns. First to place five stones in a row wins. Runs locally.',
-            tip: 'Tip: play on one device — black and white take turns.',
-            blackTurn: 'Black to move',
-            whiteTurn: 'White to move',
-            blackWin: 'Black wins!',
-            whiteWin: 'White wins!'
-        },
-        puzzle: {
-            title: 'Jigsaw Puzzle',
-            desc: 'Swap tiles to restore the picture. Pick a preset (random by default) or upload your own. Runs locally.',
-            hint: 'Drag onto another tile to swap, or tap two tiles.',
-            pickImage: 'Choose image',
-            upload: 'Custom image (optional)',
-            win: 'Puzzle complete!',
-            loadFailed: 'Failed to load image',
-            cropHint: 'Drag to pick a square area. Preview and puzzle use the same cropped image (no stretch).',
-            cropApply: 'Use this crop',
-            cropCancel: 'Cancel'
-        },
         brickBreaker: {
             title: 'Brick Breaker',
             desc: 'Neon portrait brick breaker: bounce the ball, clear bricks, grab power-ups. Touch-friendly, runs locally.'
@@ -1613,10 +1583,6 @@ window.TB_LOCALES.en = {
             title: 'Down 100 Floors',
             desc: 'Move left/right, fall through platforms, dodge hazards. Portrait touch controls.'
         },
-        mario113d: {
-            title: 'Super Mario 3D Remake: 1-1',
-            desc: 'A 3D web demo of the classic first level — ?-blocks, mushrooms, stomps and the flagpole. Keyboard or phone landscape.'
-        },
         mario3d: {
             title: 'Super Mario 3D: World 1–1',
             desc: 'A procedural 3D web demo of the classic first level, playable with keyboard or phone landscape controls.'
@@ -1625,13 +1591,13 @@ window.TB_LOCALES.en = {
             title: 'Super Mario FC 3D Rebuilt',
             desc: 'FC 1-1 rebuilt in 3D: bump blocks, mushrooms, stomps, depth dodging, flagpole and castle. Keyboard or phone landscape.'
         },
-        contra3d: {
-            title: 'Contra Jungle 3D: Stage 1',
-            desc: 'A procedural 3D run-and-gun demo of the classic first stage: exploding bridges, a divable river and twin fortress cannons. Keyboard or phone landscape.'
-        },
         tank3d: {
             title: 'Tank Battle 3D: Stage 1',
             desc: 'A procedural 3D take on the classic first stage: breakable brick walls, the eagle base, 20 enemy tanks and six power-ups. Keyboard or phone landscape.'
+        },
+        hopfox3d: {
+            title: 'Hop Fox 3D: Stage 1',
+            desc: 'An original 3D side-scroller: run, jump, bop crates for acorns, stomp beetles, kick snail shells and ring the goal bell. Keyboard or phone landscape.'
         },
         roadRash: {
             title: 'Road Rash',
@@ -1765,10 +1731,6 @@ window.TB_LOCALES.en = {
             levelStart: 'Level {n} · {mines} mines',
             levelClear: 'Level {n} cleared! Next…'
         },
-        slots: {
-            title: 'Tiger Slots',
-            desc: 'Jungle-chess animal slots: elephant–rat with big/small pays, cannon & train bonuses. GO reuses last bets. Fun only.'
-        },
         sheepstack: {
             title: 'Stack Layers',
             desc: 'Tap free tiles into the tray. Three matching emoji clear. Later levels: more tiles, less time.',
@@ -1795,14 +1757,6 @@ window.TB_LOCALES.en = {
             title: 'Dive Fisher',
             desc: 'Dave-the-Diver style loop: dive, catch fish, watch oxygen, sell and upgrade, go deeper. Single HTML, no deps.'
         },
-        gardenDefense: {
-            title: 'Sunny Garden',
-            desc: 'Portrait-friendly 2D tower defense — zombies come from the top. Fully procedural art.'
-        },
-        blitzRun3d: {
-            title: 'Blitz Run',
-            desc: 'Contra-style side-scroller. Landscape view on desktop; mobile suggests landscape (not forced).'
-        },
         tankBattle: {
             title: 'Tank Battle',
             desc: 'Battle City style: 20 stages with terrain unlock, enemy-side loot mode, landscape dual controls.'
@@ -1811,21 +1765,9 @@ window.TB_LOCALES.en = {
             title: 'Starship Defense',
             desc: '3D base defense: farm gold, build turrets, hold insect waves; chapter bosses and endless cycles. Keyboard and touch.'
         },
-        starSerpent: {
-            title: 'Star Serpent',
-            desc: 'Salamander homage vertical shmup. Arcade landscape frame; mobile suggests landscape (not forced).'
-        },
-        fishFeast: {
-            title: 'Fish Feast',
-            desc: 'Eat smaller fish to grow, avoid bigger ones. Upgrade speed and shields between stages.'
-        },
         bomberman: {
             title: 'Bomberman',
             desc: 'Maze bomber action: blast bricks, find the exit, dodge enemies, collect power-ups. Touch joystick; levels and endless mode.'
-        },
-        diving: {
-            title: 'Deep Sea Dive',
-            desc: 'Dive deep, harpoon fish, manage oxygen and cargo; upgrade gear for deeper runs.'
         },
         pvz: {
             title: 'Plants vs Zombies',

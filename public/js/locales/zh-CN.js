@@ -1342,10 +1342,6 @@ window.TB_LOCALES['zh-CN'] = {
         world: 'WORLD 1–1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏', fileWarning: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
         title: '超级玛丽\n进入新的 3D 维度', intro: '熟悉的第一关，现在可以在更大的空间里探索。', move: '移动', jump: '跳跃', run: '加速', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始冒险', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · K 跳跃 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的冒险会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '这次掉进了坑里', deadCopy: '第一关还在等你。按回车或重新开始再试一次。', winTitle: '第一关通关！', winCopy: '旗杆、城堡和一段新的 3D 路线都完成了。', grow: '蘑菇让你变大了', checkpoint: '到达中途检查点', hurt: '被撞到了，但还能继续', mushroom: '砖块里有东西！', paused: '游戏已暂停', continued: '继续前进', soundOn: '静音', soundOff: '打开声音'
     },
-    contra3d: {
-        stage: '第一关 · 丛林', lives: '生命', score: '分数', time: '时间', gun: '武器', pause: '暂停', resume: '继续', full: '全屏',
-        title: '魂斗罗丛林\n进入新的 3D 维度', intro: '跑、跳、射击穿越第一关：两座会炸的桥、一条可以潜水的河，终点是堡垒墙上的双炮。', move: '移动', shoot: '射击', jump: '跳跃', diveKey: '潜水（水中）', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始突袭', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · J 射击 · K 跳跃 · L 潜水 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的任务会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '任务失败', deadCopy: '丛林还在等你。按回车或重新开始再来一次。', winTitle: '第一关突破！', winCopy: '堡垒双炮被摧毁，丛林的 3D 突袭路线全部打通。', spread: '拿到 S 散弹枪！', capsule: '击落了飞行胶囊！', checkpoint: '到达中途检查点', dive: '已潜水，子弹打不到你', lostLife: '牺牲了一条命，还有备用队员', paused: '游戏已暂停', continued: '继续突袭', soundOn: '静音', soundOff: '打开声音'
-    },
     tank3d: {
         stage: '第一关', score: '分数', hi: '最高', lives: '生命', power: '火力', enemies: '敌军', pause: '暂停', resume: '继续', full: '全屏',
         title: '坦克大战\n进入新的 3D 维度', intro: '守住老鹰、轰开砖墙、消灭全部 20 辆敌方坦克。现在墙有了高度，镜头还能压低跟车。', move: '行驶（四方向）', fire: '开炮（可按住）', fireShort: '开炮', camera: '旋转 · 俯仰 · 镜头回正', startPause: '开始 · 暂停', start: '回车 · 开始战斗', restart: '回车 · 再来一局', back: '游戏中心', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 行驶 · J 开炮 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '老鹰会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
@@ -1355,9 +1351,11 @@ window.TB_LOCALES['zh-CN'] = {
         powerupAppear: '战场上出现了道具！', puStar: '星星：火力升级', puGrenade: '手雷：屏幕上的敌人全部炸毁', puHelmet: '头盔：10 秒护盾', puShovel: '铁锹：老鹰围墙变成钢墙', puTimer: '定时器：敌人全部冻结', puTank: '坦克：生命 +1',
         lostLife: '坦克被击毁，备用坦克出动', ownGoal: '误伤！自己的炮弹打中了老鹰', baseLost: '老鹰被摧毁了！'
     },
-    mario113d: {
-        stage: 'WORLD 1-1', lives: '生命', coins: '金币', score: '分数', time: '时间', power: '体型', pause: '暂停', resume: '继续', full: '全屏', fileWarning: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
-        title: '超级玛丽 1-1\n进入新的 3D 维度', intro: '跑、跳、踩，穿越第一关：问号砖、蘑菇、水管、两个深坑，终点是旗杆。', move: '移动（A/D 前后 · W/S 纵深）', run: '加速跑', jump: '跳跃', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始闯关', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'A/D 移动 · W/S 纵深 · K/空格 跳 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '蘑菇会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', mushroom: '顶出了蘑菇！', grow: '吃到蘑菇，变大啦！', shrunk: '变小了，小心！', oneup: '100 金币 · 生命 +1', checkpoint: '到达中途检查点', flag: '抓住旗杆！', lostLife: '牺牲了一条命', deadTitle: 'GAME OVER', deadCopy: '按回车或点「重新开始」，再闯一次 1-1。', winTitle: '1-1 通关！', winCopy: '旗杆到手，城堡大门打开。下一关见！', paused: '游戏已暂停', continued: '继续闯关', soundOn: '静音', soundOff: '打开声音'
+    hopfox3d: {
+        stage: '第一关 · 草原', score: '分数', acorns: '橡果', lives: '生命', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
+        title: '跳跳狐\n草原 3D 冒险', intro: '跑、跳、踩，一路穿过草原：顶木箱拿橡果，踩扁甲虫，踢飞蜗牛壳，最后敲响终点的铃铛。', move: '移动', jump: '跳跃（按住跳更高）', run: '奔跑 · 拿到灯笼后发射火花', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始', restart: '回车 · 再玩一次', back: '游戏中心', touch: '触屏操作', note: '原创角色、关卡、美术与音乐 · 程序化 3D · 横版闯关演示', runShort: '奔跑', jumpShort: '跳跃', help: 'A/D 移动 · K 跳跃 · J 奔跑/发射 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '草原会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
+        winTitle: '第一关通关！', winCopy: '铃声响彻草原。再来一次，试试抓得更高、跑得更快。', deadTitle: '生命用完了', deadCopy: '按回车或点按钮，从草原起点重新出发。', bell: '铃铛高度奖励', total: '总分',
+        gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
     },
     marioFc3d: {
         world: 'WORLD 1-1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
@@ -1564,34 +1562,6 @@ window.TB_LOCALES['zh-CN'] = {
             dupCol: '第 {col} 列已有数字 {n}',
             dupBox: '当前九宫内已有数字 {n}'
         },
-        klotski: {
-            title: '数字华容道',
-            desc: '滑动方块，把数字按顺序排好。本地运行。',
-            steps: '步数',
-            hint: '点击与空格相邻的方块即可移动。',
-            win: '恭喜！你用 {n} 步完成了拼图。'
-        },
-        gomoku: {
-            title: '五子棋',
-            desc: '双人轮流落子，先连成五子者获胜。本地运行。',
-            tip: '提示：适合同设备对战，黑白交替落子。',
-            blackTurn: '轮到黑棋',
-            whiteTurn: '轮到白棋',
-            blackWin: '黑棋获胜！',
-            whiteWin: '白棋获胜！'
-        },
-        puzzle: {
-            title: '拼图',
-            desc: '交换碎片还原整图。可选预设图（默认随机）或上传自己的照片。本地处理。',
-            hint: '拖到目标格互换，或依次点两块碎片交换。',
-            pickImage: '选择图片',
-            upload: '自定义图片（可选）',
-            win: '拼图完成！',
-            loadFailed: '图片加载失败',
-            cropHint: '拖动图片选择正方形区域，确认后用于拼图与预览（等比裁切，不拉伸）。',
-            cropApply: '确认裁切',
-            cropCancel: '取消'
-        },
         brickBreaker: {
             title: '打砖块',
             desc: '竖屏霓虹打砖块：挡板弹球清砖块，道具与关卡挑战。触屏可玩，本地运行。'
@@ -1612,10 +1582,6 @@ window.TB_LOCALES['zh-CN'] = {
             title: '下一百层',
             desc: '左右移动踩平台向下落，躲开障碍挑战层数。竖屏触屏。'
         },
-        mario113d: {
-            title: '超级玛丽 3D 重制版：第一关',
-            desc: 'FC 马里奥第一关的 3D 化演示：问号砖、蘑菇、踩敌人、旗杆城堡。键盘与手机横屏都能玩。'
-        },
         mario3d: {
             title: '超级玛丽 3D：第一关',
             desc: '经典第一关的程序化 3D 网页演示，键盘与手机横屏都能玩。'
@@ -1624,13 +1590,13 @@ window.TB_LOCALES['zh-CN'] = {
             title: '超级玛丽 FC 3D 重构版',
             desc: 'FC 1-1 的 3D 重构：顶砖、蘑菇、踩怪、纵深走位躲敌人、旗杆城堡。键盘与手机横屏都能玩。'
         },
-        contra3d: {
-            title: '魂斗罗丛林 3D：第一关',
-            desc: '魂斗罗第一关的程序化 3D 跑打射击演示：会炸的桥、潜水的河、堡垒双炮。键盘与手机横屏都能玩。'
-        },
         tank3d: {
             title: '坦克大战 3D：第一关',
             desc: '经典坦克大战第一关的程序化 3D 演示：可打碎的砖墙、老鹰基地、20 辆敌方坦克与六种道具。键盘与手机横屏都能玩。'
+        },
+        hopfox3d: {
+            title: '跳跳狐 3D：第一关',
+            desc: '原创 3D 横版闯关：跑跳顶箱拿橡果、踩甲虫、踢蜗牛壳，终点敲响铃铛。键盘与手机横屏都能玩。'
         },
         roadRash: {
             title: '暴力摩托',
@@ -1764,10 +1730,6 @@ window.TB_LOCALES['zh-CN'] = {
             levelStart: '第 {n} 关 · {mines} 颗雷',
             levelClear: '第 {n} 关完成！进入下一关…'
         },
-        slots: {
-            title: '老虎机',
-            desc: '斗兽棋老虎机：象一大一小(底中小象)，其余一大两小；鼠10/2，左礼包右火车。仅供娱乐。'
-        },
         sheepstack: {
             title: '叠叠乐',
             desc: '点开未被压住的图案放入槽位，三个相同消除。通关后牌更多、时间更紧。本地运行。',
@@ -1794,14 +1756,6 @@ window.TB_LOCALES['zh-CN'] = {
             title: '潜水捕鱼',
             desc: '类似《潜水员戴夫》：下潜捕鱼、管理氧气、回船卖鱼升级、再潜更深。单文件零依赖。'
         },
-        gardenDefense: {
-            title: '阳光菜园',
-            desc: '竖屏友好 2D 塔防：僵尸从上往下，纯程序化绘制，适配手机。'
-        },
-        blitzRun3d: {
-            title: '冲锋行动',
-            desc: '魂斗罗风格横版射击：八向射击与道具。桌面横屏视野，手机建议横屏（不强制）。'
-        },
         tankBattle: {
             title: '坦克大战',
             desc: '经典坦克大战：20 关地形递进、敌方吃道具模式，横屏双端操控。'
@@ -1810,21 +1764,9 @@ window.TB_LOCALES['zh-CN'] = {
             title: '星河战队',
             desc: '3D 守卫基地：刷怪攒金、建造炮塔抵御虫潮；章节 BOSS 与无限周目，键鼠与触屏均可。'
         },
-        starSerpent: {
-            title: '星蛇突击',
-            desc: '沙罗曼蛇致敬：纵版射击与 Boss。街机横屏视野，手机建议横屏（不强制）。'
-        },
-        fishFeast: {
-            title: '大鱼吃小鱼',
-            desc: '吃小鱼长大、躲开大鱼；过关升级游速与护盾。程序化绘制，本地可玩。'
-        },
         bomberman: {
             title: '炸弹人',
             desc: '迷宫炸弹对战：炸砖找出口、躲敌人、拾取火力与道具。触屏摇杆，多关卡与无尽模式。'
-        },
-        diving: {
-            title: '潜水捕鱼',
-            desc: '深海潜水用鱼叉捕鱼，管理氧气与背包；升级装备挑战更深海域。'
         },
         pvz: {
             title: '植物大战僵尸',

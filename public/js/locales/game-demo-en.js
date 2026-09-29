@@ -1,0 +1,1 @@
+export default {side:'Side',oblique:'Angled',depth:'Depth',top:'Top',overview:'Overview',normal:'Unlimited lives',demo:'Invincible demo',camera:'Q/E Switch view · C Default view',help:'WASD Camera-relative move · Q/E Switch · C Reset',modeHint:'Unlimited respawns; optional invincible demo. Protect the tank base.',retry:'Continue from checkpoint'};

@@ -1,5 +1,6 @@
-import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js';
-import { createScene } from './scene.js?v=1';
+import {installDemoControls} from '../../../js/game/demo-controls.js?v=1';
+import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=modes1';
+import { createScene } from './scene.js?v=modes1';
 import { GameAudio } from './audio.js?v=1';
 
 const $ = id => document.getElementById(id);
@@ -7,6 +8,7 @@ const tr = (k, p) => (typeof window.t === 'function' ? window.t(k, p) : k);
 let world = createWorld();
 const audio = new GameAudio();
 const view = createScene($('world'), world);
+const modes=installDemoControls(()=>world,view,true);
 const held = new Set(), pointerKeys = new Set(), tapped = new Set(), dirStack = [];   // tapped: presses shorter than a frame still count once
 const DIR_KEYS = { KeyW: 0, KeyD: 1, KeyS: 2, KeyA: 3 };
 const HOLD_ALIASES = { ArrowLeft: 'KeyQ', ArrowRight: 'KeyE', ArrowUp: 'KeyR', ArrowDown: 'KeyF' }; // arrow keys = backup camera controls
@@ -44,9 +46,10 @@ function buildReserve() {
   for (let i = 0; i < world.roster.length; i++) { const icon = document.createElement('i'); if (world.roster[i] === 'fast') icon.className = 'fast'; r.appendChild(icon); }
 }
 function updateHud() {
+  modes.sync();
   setText('score', String(world.score).padStart(6, '0'));
   setText('hi', String(Math.max(hi, world.score)).padStart(6, '0'));
-  setText('lives', '×' + Math.max(0, world.lives));
+  setText('lives', '∞');
   setText('level', '★'.repeat(world.level) + '☆'.repeat(3 - world.level));
   const icons = $('reserve').children, left = world.roster.length - world.rosterIndex;
   for (let i = 0; i < icons.length; i++) { const on = i < left; if (icons[i].classList.contains('gone') === on) icons[i].classList.toggle('gone', !on); }
@@ -82,7 +85,7 @@ function startGame() {
     view.reset();
   }
   audio.unlock().then(() => audio.effect('start'));
-  requestFull();
+
   clearInput(); buildReserve();
   phase = 'intro'; paused = false; introT = 0;
   $('panel').hidden = true; $('tally').hidden = true; $('instructions').hidden = false; $('bigtext').hidden = true;

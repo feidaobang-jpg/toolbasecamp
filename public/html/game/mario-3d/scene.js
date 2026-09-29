@@ -1,5 +1,5 @@
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import {GROUND,PIPES} from './world.js';
+import {GROUND,PIPES} from './world.js?v=modes1';
 
 const materials=new Map();
 function mat(color,roughness=.7){const k=color+':'+roughness;if(!materials.has(k))materials.set(k,new THREE.MeshStandardMaterial({color,roughness}));return materials.get(k);}
@@ -83,7 +83,7 @@ export function createScene(canvas,world){
   function burst(x,y,z,color,count=9){for(let i=0;i<count;i++){const m=box(scene,x,y,z,.1,.1,.1,color);sparks.push({mesh:m,v:new THREE.Vector3((Math.random()-.5)*3,2+Math.random()*3,(Math.random()-.5)*3),life:.7});}}
   function update(dt,camInput={},snap=false){
     elapsed+=dt;const p=world.player;
-    yaw+=(camInput.yaw||0)*dt*1.8;pitch=THREE.MathUtils.clamp(pitch+(camInput.pitch||0)*dt*.8,.15,.95);if(camInput.reset){yaw=0;pitch=.45;}
+
     followX=snap?p.x:THREE.MathUtils.lerp(followX,p.x,1-Math.exp(-5*dt));camY=THREE.MathUtils.lerp(camY,1.2+Math.max(0,p.y-1.5)*.4,1-Math.exp(-3*dt));
     const distance=canvas.clientWidth/canvas.clientHeight<1.6?19:17;
     const target=new THREE.Vector3(followX+3,camY,0);camera.position.set(target.x+Math.sin(yaw)*distance,camY+Math.sin(pitch)*distance,Math.cos(yaw)*distance*Math.cos(pitch));camera.lookAt(target);
@@ -99,5 +99,5 @@ export function createScene(canvas,world){
   }
   function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
   resize();
-  return {renderer,scene,camera,update,resize,burst,get yaw(){return yaw;},dispose(){scene.traverse(o=>{if(o.isMesh&&o.geometry!==boxGeo&&o.geometry!==ballGeo)o.geometry.dispose();});qm.map.dispose();qm.dispose();bm.map.dispose();bm.dispose();renderer.dispose();}};
+  return {setCamera(y,p){yaw=y;pitch=p;},renderer,scene,camera,update,resize,burst,get yaw(){return yaw;},dispose(){scene.traverse(o=>{if(o.isMesh&&o.geometry!==boxGeo&&o.geometry!==ballGeo)o.geometry.dispose();});qm.map.dispose();qm.dispose();bm.map.dispose();bm.dispose();renderer.dispose();}};
 }

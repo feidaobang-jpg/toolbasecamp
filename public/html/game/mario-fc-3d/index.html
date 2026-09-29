@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#8fd0f2">
+  <title>Super Mario FC · World 1-1 in 3D</title>
+  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+<main id="game" tabindex="-1">
+  <canvas id="world" aria-label="3D game"></canvas>
+  <div id="hud">
+    <div class="brand"><span class="eyebrow">SUPER MARIO FC / 3D</span><strong data-i18n="marioFc3d.world">WORLD 1-1</strong></div>
+    <div class="stats"><span><small data-i18n="marioFc3d.coins">COINS</small><b id="coins">00</b></span><span><small data-i18n="marioFc3d.score">SCORE</small><b id="score">000000</b></span><span><small data-i18n="marioFc3d.time">TIME</small><b id="time">300</b></span></div>
+    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="marioFc3d.pause">Pause</button><button class="tb-btn" id="full" data-i18n="marioFc3d.full">Fullscreen</button></div>
+  </div>
+  <div class="journey"><i id="progress"></i></div>
+  <div id="toast" role="status"></div>
+  <section id="panel" class="panel" aria-labelledby="panel-title">
+    <span class="eyebrow" id="panel-kicker">8-BIT CLASSIC, THIRD DIMENSION</span>
+    <h1 id="panel-title" data-i18n="marioFc3d.title">Super Mario FC<br>rebuilt in 3D.</h1>
+    <p id="panel-copy" data-i18n="marioFc3d.intro">Run and jump through World 1-1: ?-blocks, mushrooms, pipes, goombas, pits and the flagpole.</p>
+    <div id="instructions" class="instructions">
+      <div><kbd>W A S D</kbd><span data-i18n="marioFc3d.move">Move</span></div>
+      <div><kbd>K</kbd><span data-i18n="marioFc3d.jump">Jump</span></div>
+      <div><kbd>J</kbd><span data-i18n="marioFc3d.run">Run</span></div>
+      <div><kbd>Q E · C</kbd><span data-i18n="marioFc3d.camera">Switch camera · Reset</span></div>
+    </div>
+    <div class="action-row"><button id="start" class="tb-btn" data-i18n="marioFc3d.start">Enter · Start level</button><button id="restart" class="tb-btn" hidden data-i18n="marioFc3d.restart">Start over</button><a class="tb-btn" href="../../../games.html" data-i18n="marioFc3d.back">Back to games</a></div>
+    <div class="action-row options"><button id="sound" class="tb-btn">Sound</button><button id="touch-toggle" class="tb-btn" data-i18n="marioFc3d.touch">Touch controls</button><button id="lang" class="tb-btn">中文 / EN</button></div>
+    <small class="footnote" data-i18n="marioFc3d.note">Fan-made level demo · Procedural art &amp; sound · Not an official release</small>
+  </section>
+  <div id="touch" hidden>
+    <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
+    <div class="camera-pad action-row"><button class="tb-btn" data-hold="KeyQ" aria-label="Camera left">Q ◀</button><button class="tb-btn" data-hold="KeyE" aria-label="Camera right">E ▶</button><button class="tb-btn" id="recenter">C ◎</button></div>
+    <div class="action-row touch-actions"><button class="tb-btn" data-hold="KeyJ"><b>J</b><span data-i18n="marioFc3d.run">Run</span></button><button class="tb-btn" data-hold="KeyK"><b>K</b><span data-i18n="marioFc3d.jump">Jump</span></button></div>
+  </div>
+  <div id="keyboard-help" data-i18n="marioFc3d.help">WASD Move · K Jump · Hold J to Run · Q/E Camera · C Reset · Esc Pause</div>
+</main>
+<script src="../../../js/locales/en.js?v=menu-first"></script>
+<script src="../../../js/locales/zh-CN.js?v=menu-first"></script>
+<script src="../../../js/i18n.js?v=nosTW1"></script>
+<script type="module">
+  import('./main.js?v=1').catch(() => {
+    document.getElementById('panel-copy').textContent = t('marioFc3d.loadError');
+    document.getElementById('start').textContent = t('marioFc3d.retry');
+    document.getElementById('start').onclick = () => location.reload();
+  });
+</script>
+</body>
+</html>

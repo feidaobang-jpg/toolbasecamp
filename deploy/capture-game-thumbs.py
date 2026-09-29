@@ -188,7 +188,7 @@ def crop_dense_core(im: Image.Image, min_density: float = 0.10, threshold: int =
     ))
 
 
-DOM_BOARD_SLUGS = frozenset({"gomoku", "puzzle", "klotski"})
+DOM_BOARD_SLUGS: frozenset = frozenset()
 # Wide 3D scenes: dense-core crop zooms onto a single bright mesh.
 SKIP_DENSE_CROP = frozenset({"starship_defense"})
 

@@ -235,18 +235,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://zhengxiaohui.cn/html/game/diving.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://zhengxiaohui.cn/html/game/fish-feast.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://zhengxiaohui.cn/html/game/fly_bird.html</loc>
     <lastmod>2026-09-10T02:16:00Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -265,12 +253,6 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://zhengxiaohui.cn/html/game/gomoku.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://zhengxiaohui.cn/html/game/hundred_floors.html</loc>
     <lastmod>2026-09-10T02:16:00Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -283,19 +265,7 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://zhengxiaohui.cn/html/game/klotski.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://zhengxiaohui.cn/html/game/lianliankan.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://zhengxiaohui.cn/html/game/puzzle.html</loc>
     <lastmod>2026-09-10T02:16:00Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
@@ -319,19 +289,7 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://zhengxiaohui.cn/html/game/slots.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
     <loc>https://zhengxiaohui.cn/html/game/starship_defense.html</loc>
-    <lastmod>2026-09-10T02:16:00Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  <url>
-    <loc>https://zhengxiaohui.cn/html/game/tank_battle.html</loc>
     <lastmod>2026-09-10T02:16:00Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
@@ -842,6 +800,12 @@
   </url>
   <url>
     <loc>https://zhengxiaohui.cn/top-up.html</loc>
+    <lastmod>2026-09-10T02:16:00Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://zhengxiaohui.cn/html/game/tank_battle.html</loc>
     <lastmod>2026-09-10T02:16:00Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>

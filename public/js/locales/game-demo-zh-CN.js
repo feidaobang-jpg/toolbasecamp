@@ -1,0 +1,1 @@
+export default {side:'侧视',oblique:'斜视',depth:'纵深',top:'俯视',overview:'斜俯视',normal:'无限命',demo:'演示无敌',camera:'Q/E 切换视角 · C 默认视角',help:'WASD 随视角移动 · Q/E 切换 · C 回正',modeHint:'无限次复活；演示无敌可切换。坦克基地仍需保护。',retry:'从检查点继续'};

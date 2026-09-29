@@ -1,0 +1,10 @@
+[
+  {"id": "stage1-level", "purpose": "原创第一关布局（约 186 格：草原、树枝平台、树桩、坑、陶砖行、隐藏箱、石阶、移动浮木、弹跳叶片、台地、终点草地）", "source_type": "procedural", "tool": "代码搭建（buildLevel）", "input": "public/html/game/hop-fox-3d/world.js", "processing": "手写放置函数生成 200×19 格网格", "usage": "public/html/game/hop-fox-3d/world.js", "conditions": "原创，非任何现有游戏关卡的复刻"},
+  {"id": "fox-hero", "purpose": "主角橙色小狐狸（围巾、尾巴、耳朵、矿工帽与萤火灯笼装备）", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（foxModel）", "processing": "球体/圆锥/圆环组合，程序动画（跑步、跳跃压扁拉伸、刹车倾斜、尾巴与围巾摆动）", "usage": "public/html/game/hop-fox-3d/scene.js"},
+  {"id": "enemies", "purpose": "蓝色甲虫（六腿、触角）与粉色蜗牛（螺旋壳、眼柄）", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（beetleModel/snailModel）", "processing": "几何组合 + 腿部/身体摆动动画，壳可旋转滑行", "usage": "public/html/game/hop-fox-3d/scene.js"},
+  {"id": "items", "purpose": "橡果、发光莓、萤火灯笼罐、金叶", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（acornModel/berryModel/jarModel/leafModel）", "processing": "几何 + 自发光材质", "usage": "public/html/game/hop-fox-3d/scene.js"},
+  {"id": "textures", "purpose": "草地、泥土、石块、陶砖、木箱（叶片标志）、空箱、树皮、年轮、木板、河面波纹、天空渐变", "source_type": "procedural", "tool": "Canvas 2D", "input": "scene.js（TEX.*、rippleTex、skyTex）", "processing": "运行时绘制，固定种子噪点", "usage": "public/html/game/hop-fox-3d/scene.js"},
+  {"id": "scenery", "purpose": "河流、后方草地台、远岸、石头、低多边形树与松树、远山、云、终点旗杆与铃铛、磨坊小屋、检查点灯笼", "source_type": "procedural", "tool": "Three.js（InstancedMesh）", "input": "scene.js", "processing": "固定种子随机摆放", "usage": "public/html/game/hop-fox-3d/scene.js"},
+  {"id": "music-sfx", "purpose": "原创 64 步循环配乐（F 大调主旋律 + 低音 + 噪声鼓）与全部音效", "source_type": "procedural", "tool": "Web Audio API", "input": "audio.js", "processing": "振荡器与噪声缓冲，无采样、无转录", "usage": "public/html/game/hop-fox-3d/audio.js"},
+  {"id": "three-vendor", "purpose": "WebGL 渲染", "source_type": "licensed", "tool": "Three.js 0.170.0（MIT）", "input": "public/vendor/three/0.170.0/build/three.module.js", "processing": "仓库已固定版本，同源加载", "usage": "public/html/game/hop-fox-3d/scene.js"}
+]
