@@ -284,9 +284,9 @@
           '<div class="dl-admin-sub">' + sub.map(function (s) { return '<span>' + s + '</span>'; }).join('') + '</div>' +
         '</div>' +
         '<div class="dl-admin-actions">' +
-          '<button type="button" class="tb-btn" data-act="edit">' + escapeHtml(tr('privateHub.ops.downloadsEdit')) + '</button>' +
-          '<button type="button" class="tb-btn" data-act="toggle">' + escapeHtml(toggleLabel) + '</button>' +
-          '<button type="button" class="tb-btn is-danger" data-act="delete">' + escapeHtml(tr('privateHub.ops.downloadsDelete')) + '</button>' +
+          '<button type="button" class="tb-btn tb-btn-sm" data-act="edit">' + escapeHtml(tr('privateHub.ops.downloadsEdit')) + '</button>' +
+          '<button type="button" class="tb-btn tb-btn-sm" data-act="toggle">' + escapeHtml(toggleLabel) + '</button>' +
+          '<button type="button" class="tb-btn tb-btn-sm" data-act="delete">' + escapeHtml(tr('privateHub.ops.downloadsDelete')) + '</button>' +
         '</div>' +
       '</div>'
     );

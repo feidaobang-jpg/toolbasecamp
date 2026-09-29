@@ -266,6 +266,5 @@
 .dl-badge.is-pub { background: #dcfce7; color: #15803d; }
 .dl-badge.is-hidden { background: #f3f4f6; color: #6b7280; }
 
-.dl-admin-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-.dl-admin-actions .tb-btn { padding: 4px 12px; font-size: 0.8rem; }
-.dl-admin-actions .is-danger { color: #dc2626; }
+/* 行内操作按钮：尺寸走全局 .tb-btn-sm，不自造一套；间距与 .action-row 一致 */
+.dl-admin-actions { display: flex; gap: 12px; flex-wrap: wrap; }
