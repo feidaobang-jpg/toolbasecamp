@@ -48,7 +48,7 @@ stick.addEventListener('pointerdown',e=>{stickId=e.pointerId;stick.setPointerCap
 function releaseStick(e){if(e.pointerId!==stickId)return;stickId=null;['KeyA','KeyD','KeyW','KeyS'].forEach(k=>pointerKeys.delete(k));knob.style.transform='translate(0,0)';}
 stick.addEventListener('pointerup',releaseStick);stick.addEventListener('pointercancel',releaseStick);
 function orientation(){
-  orientationBlocked=mobileDevice&&innerHeight>innerWidth;
+  orientationBlocked=running&&mobileDevice&&innerHeight>innerWidth;
   $('rotate').hidden=!orientationBlocked;
   if(orientationBlocked){
     held.clear();pointerKeys.clear();frame.wasJump=false;stickId=null;
