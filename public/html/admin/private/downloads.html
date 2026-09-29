@@ -12,9 +12,9 @@
   <link rel="stylesheet" href="../../../css/site-mobile-nav.css?v=nosTW1" />
   <link rel="stylesheet" href="../../../css/tools-form.css?v=nosTW1" />
   <link rel="stylesheet" href="../../../css/admin/ladder-update.css?v=sticksearch2" />
-  <link rel="stylesheet" href="../../../css/downloads.css?v=dl1" />
-  <script src="../../../js/locales/en.js?v=brand1"></script>
-  <script src="../../../js/locales/zh-CN.js?v=brand1"></script>
+  <link rel="stylesheet" href="../../../css/downloads.css?v=dl2" />
+  <script src="../../../js/locales/en.js?v=dl2"></script>
+  <script src="../../../js/locales/zh-CN.js?v=dl2"></script>
   <script src="../../../js/i18n.js?v=nosTW1"></script>
   <script src="../../../js/config.js?v=dl1"></script>
   <script src="../../../js/common_ui.js?v=nosTW1"></script>
@@ -62,7 +62,7 @@
             <input type="text" id="f-category" class="tb-input" maxlength="64" list="dl-cat-options" autocomplete="off" />
             <datalist id="dl-cat-options"></datalist>
           </label>
-          <label class="dl-field dl-field--num">
+          <label class="dl-field">
             <span data-i18n="privateHub.ops.downloadsFieldSort">排序（小在前）</span>
             <input type="number" id="f-sort" class="tb-input" value="0" step="1" />
           </label>
@@ -72,20 +72,22 @@
           <textarea id="f-desc" class="tb-input" rows="3" maxlength="2000"></textarea>
         </label>
         <div class="dl-form-grid">
-          <label class="dl-field">
-            <span data-i18n="privateHub.ops.downloadsFieldFile">安装包（新增时可上传；编辑不更换文件）</span>
+          <label class="dl-field dl-field--wide">
+            <span data-i18n="privateHub.ops.downloadsFieldFile">安装包</span>
             <label class="tb-btn" style="cursor:pointer;margin:0;display:inline-flex;align-items:center;gap:6px">
               <i class="fas fa-file-arrow-up" aria-hidden="true"></i>
               <span id="file-label" data-i18n="privateHub.ops.downloadsPickFile">选择文件</span>
               <input type="file" id="f-file" hidden />
             </label>
             <span id="file-meta" class="ladder-status" style="margin:0"></span>
+            <span class="dl-field-hint" data-i18n="privateHub.ops.downloadsHintFile">新增时可上传；编辑不更换文件</span>
           </label>
           <label class="dl-field">
-            <span data-i18n="privateHub.ops.downloadsFieldUrl">网盘/官网外链（没有本地文件时必填）</span>
+            <span data-i18n="privateHub.ops.downloadsFieldUrl">网盘/官网外链</span>
             <input type="url" id="f-url" class="tb-input" maxlength="1000" placeholder="https://pan.baidu.com/s/..." autocomplete="off" />
+            <span class="dl-field-hint" data-i18n="privateHub.ops.downloadsHintUrl">没有本地文件时必填</span>
           </label>
-          <label class="dl-field dl-field--num">
+          <label class="dl-field">
             <span data-i18n="privateHub.ops.downloadsFieldStatus">状态</span>
             <select id="f-status" class="tb-select">
               <option value="published" data-i18n="privateHub.ops.downloadsStatusPub">上架</option>

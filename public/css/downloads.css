@@ -207,16 +207,34 @@
 
 /* —— 后台管理（admin/private/downloads.html）—— */
 
+/* 后台「软件下载管理」：只有这一页同时用 admin-main--wide + ladder-update-wrap，
+   720px 居中栏放不下 4 个字段，这里单独放宽到 960px（不影响其他私有后台页） */
+.admin-main--wide > .ladder-update-wrap {
+    max-width: 960px;
+}
+
+/* 显式 4 列：原先 auto-fit + minmax(220px,1fr) 在 720px 里只排得出 3 列，
+   「排序」会被挤到单独一行，右侧留空 */
 .dl-form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.75rem 1rem;
     margin-bottom: 0.75rem;
 }
 
-.dl-field { display: flex; flex-direction: column; gap: 4px; }
-.dl-field > span { font-size: 0.82rem; color: #4b5563; }
-.dl-field--num { max-width: 200px; }
+.dl-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.dl-field > span:not(.dl-field-hint) { font-size: 0.82rem; color: #4b5563; }
+.dl-field--wide { grid-column: span 2; }
+.dl-field-hint { font-size: 0.75rem; color: #9ca3af; line-height: 1.4; }
+
+@media (max-width: 860px) {
+    .dl-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+    .dl-form-grid { grid-template-columns: minmax(0, 1fr); }
+    .dl-field--wide { grid-column: auto; }
+}
 
 .dl-admin-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
 
