@@ -56,3 +56,7 @@ comfyui-api-server/__pycache__/
 
 # WorkBuddy workspace data (local memory / notes, not for version control)
 .workbuddy/
+
+# Game QA intermediate artifacts (screenshots / screencast frames / perf json);
+# only qa scripts and media-kit captures are committed
+game-projects/*/qa/render-results/
