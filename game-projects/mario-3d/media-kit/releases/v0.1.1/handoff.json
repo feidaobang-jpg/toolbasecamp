@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v0.1.1",
+  "base_version": null,
+  "created_at": "2026-09-29T01:57:02.528Z",
+  "build": {
+    "id": "mario-v0.1.1-7e5dc70f2a5a",
+    "commit": "5dd08ffff884c54c2002457b6c0e237389ed3188",
+    "dirty": false,
+    "fingerprint": "7e5dc70f2a5a97d83251d84147c78013599c83be688ae23369c4c72e6051b017",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [],
+  "changes": [],
+  "bugs": [],
+  "media": [
+    {
+      "id": "before-ground",
+      "file": "releases/v0.1.2/captures/before-ground.png",
+      "sha256": "853dc380c2e6699a7d761960c43e5263a92f879e3273deb8d0eff0cd0d47e3f9",
+      "kind": "screenshot",
+      "version": "v0.1.1",
+      "build_id": "mario-v0.1.1-7e5dc70f2a5a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复前地面闪烁",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "before-motion",
+      "file": "releases/v0.1.2/captures/before-motion.webm",
+      "sha256": "0d314dc1df1cc0edf27ebe4b0d5652c1a1ef351d69d404c9a4d8c7a394c7b174",
+      "kind": "video",
+      "version": "v0.1.1",
+      "build_id": "mario-v0.1.1-7e5dc70f2a5a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复前地面闪烁",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 4.16,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0.6,
+          "out_seconds": 3.5,
+          "description": "移动和转镜头，跳过加载开头"
+        }
+      ]
+    },
+    {
+      "id": "before-moving",
+      "file": "releases/v0.1.2/captures/before-moving.png",
+      "sha256": "3bae1d7b86b7fd97edd082f426767989d1ebb43408eb976722bc920c8c71462f",
+      "kind": "screenshot",
+      "version": "v0.1.1",
+      "build_id": "mario-v0.1.1-7e5dc70f2a5a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复前地面闪烁",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "before-orbit",
+      "file": "releases/v0.1.2/captures/before-orbit.png",
+      "sha256": "1f02f598826b86b2219d6629f282d0806877514ab8e4c990424c50d90e3a8023",
+      "kind": "screenshot",
+      "version": "v0.1.1",
+      "build_id": "mario-v0.1.1-7e5dc70f2a5a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复前地面闪烁",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge headless RTX4060Ti DPR1；录像与性能分开",
+      "file": "releases/v0.1.2/captures/before-performance.json",
+      "untested": "用户实际浏览器GPU、真实手机和长期负载"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "用户严重卡顿未复现；原片无音轨，本次非完整玩法录制。"
+    ]
+  }
+}

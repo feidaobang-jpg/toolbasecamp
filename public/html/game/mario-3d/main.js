@@ -1,5 +1,5 @@
 import {createWorld,stepWorld,respawn,LEVEL_END} from './world.js';
-import {createScene} from './scene.js';
+import {createScene} from './scene.js?v=render2';
 import {GameAudio} from './audio.js';
 
 const $=id=>document.getElementById(id);
@@ -12,7 +12,7 @@ const mobileDevice=matchMedia('(pointer: coarse) and (hover: none)').matches;
 let orientationBlocked=false;
 const input={x:0,z:0,run:false,jump:false,jumpPressed:false,yaw:0,pitch:0,reset:false};
 
-function setText(id,value){$(id).textContent=value;}
+function setText(id,value){const el=$(id);if(el.textContent!==value)el.textContent=value;}
 function toast(text){const e=$('toast');e.textContent=text;e.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('visible'),1700);}
 function pressed(key){return held.has(key)||pointerKeys.has(key);}
 function syncInput(){

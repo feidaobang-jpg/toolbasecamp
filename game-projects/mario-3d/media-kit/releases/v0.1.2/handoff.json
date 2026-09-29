@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v0.1.2",
+  "base_version": "v0.1.1",
+  "created_at": "2026-09-29T01:57:02.546Z",
+  "build": {
+    "id": "mario-v0.1.2-7f9ef8f8f08a",
+    "commit": "5dd08ffff884c54c2002457b6c0e237389ed3188",
+    "dirty": true,
+    "fingerprint": "7f9ef8f8f08a542ee4191edcbf2af24600fe3c787eaa2a65a50695de56445e4d",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [],
+  "changes": [
+    {
+      "id": "render-stability",
+      "before": "共面闪烁；转镜头峰值560次绘制",
+      "after": "几何分离；峰值275次绘制",
+      "result": "消除可复现条纹，降低绘制提交开销",
+      "evidence_ids": [
+        "before-ground",
+        "after-ground",
+        "after-motion"
+      ],
+      "validation": "截图、连续抽样帧与GPU性能统计"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "ground-z-fighting",
+      "discovered_version": "v0.1.1",
+      "repro": "开始后移动、转镜头",
+      "impact": "地面黄色绿色条纹闪烁",
+      "cause": "泥土和草地顶面均为y=0",
+      "status": "fixed",
+      "fix": "土层顶面降到-0.15，保持草地碰撞y=0",
+      "before_media_ids": [
+        "before-ground",
+        "before-motion"
+      ],
+      "after_media_ids": [
+        "after-ground",
+        "after-motion"
+      ],
+      "retest": "连续抽样帧和多个视角地面稳定"
+    },
+    {
+      "id": "reported-stutter",
+      "discovered_version": "v0.1.1",
+      "status": "not_reproduced",
+      "impact": "用户报告严重卡顿",
+      "cause": "用户环境未知；本机绘制提交开销可优化",
+      "fix": "实例化、减少无用投影、取消缓冲保留、减少DOM更新",
+      "before_media_ids": [
+        "before-motion"
+      ],
+      "after_media_ids": [
+        "after-motion"
+      ],
+      "retest": "本机两版约170fps，用户端未验证"
+    }
+  ],
+  "media": [
+    {
+      "id": "after-ground",
+      "file": "releases/v0.1.2/captures/after-ground.png",
+      "sha256": "f063f614fbc0b0dea2bcdd0c9b3546ce2dbeac346b0cdacf79d2e8ce28f5ce9d",
+      "kind": "screenshot",
+      "version": "v0.1.2",
+      "build_id": "mario-v0.1.2-7f9ef8f8f08a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复后稳定地面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "after-motion",
+      "file": "releases/v0.1.2/captures/after-motion.webm",
+      "sha256": "2b21d7d7740b772643f59c7a748bd150c4f8e12cd557320f6d895ab858238de5",
+      "kind": "video",
+      "version": "v0.1.2",
+      "build_id": "mario-v0.1.2-7f9ef8f8f08a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复后稳定地面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 3.92,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0.6,
+          "out_seconds": 3.5,
+          "description": "移动和转镜头，跳过加载开头"
+        }
+      ]
+    },
+    {
+      "id": "after-moving",
+      "file": "releases/v0.1.2/captures/after-moving.png",
+      "sha256": "6b4b03ad8af55f34e46805f906c6f0771a79fe11d5821352551ba2014ccf1fef",
+      "kind": "screenshot",
+      "version": "v0.1.2",
+      "build_id": "mario-v0.1.2-7f9ef8f8f08a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复后稳定地面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "after-orbit",
+      "file": "releases/v0.1.2/captures/after-orbit.png",
+      "sha256": "565cbfba46178bcf38c347044d0f0b84a8396bbaa076b1c367e9fe157cb3aecb",
+      "kind": "screenshot",
+      "version": "v0.1.2",
+      "build_id": "mario-v0.1.2-7f9ef8f8f08a",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实际浏览器自动键盘操作；修复后稳定地面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "before-ground",
+      "handoff": "releases/v0.1.1/handoff.json",
+      "media_id": "before-ground",
+      "reason": "真实修复前构建对照"
+    },
+    {
+      "id": "before-motion",
+      "handoff": "releases/v0.1.1/handoff.json",
+      "media_id": "before-motion",
+      "reason": "真实修复前构建对照"
+    },
+    {
+      "id": "before-moving",
+      "handoff": "releases/v0.1.1/handoff.json",
+      "media_id": "before-moving",
+      "reason": "真实修复前构建对照"
+    },
+    {
+      "id": "before-orbit",
+      "handoff": "releases/v0.1.1/handoff.json",
+      "media_id": "before-orbit",
+      "reason": "真实修复前构建对照"
+    }
+  ],
+  "qa": [
+    {
+      "method": "Edge headless RTX4060Ti DPR1；录像与性能分开",
+      "file": "releases/v0.1.2/captures/after-performance.json",
+      "untested": "用户实际浏览器GPU、真实手机和长期负载"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "用户严重卡顿未复现；原片无音轨，本次非完整玩法录制。"
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "label": "after",
+  "url": "http://127.0.0.1:8765/public/html/game/mario-3d/index.html",
+  "browser": "154.0.4258.37",
+  "mode": "headless, DPR 1, recording disabled during timings",
+  "scenarios": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "moving": {
+        "seconds": 3.505899999928474,
+        "frames": 597,
+        "fps": 170.28437776667323,
+        "median_ms": 5.900000000000091,
+        "p95_ms": 6,
+        "over50ms": 0,
+        "max_draw_calls": 68,
+        "max_triangles": 20268,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "pixelRatio": 1,
+        "width": 1280,
+        "height": 720,
+        "state": "playing",
+        "x": 30.962794162682936,
+        "z": 2.4296253340309
+      },
+      "orbit": {
+        "seconds": 2.5011999999284744,
+        "frames": 426,
+        "fps": 170.31824724619466,
+        "median_ms": 5.899999999999636,
+        "p95_ms": 6,
+        "over50ms": 0,
+        "max_draw_calls": 275,
+        "max_triangles": 80240,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "pixelRatio": 1,
+        "width": 1280,
+        "height": 720,
+        "state": "playing",
+        "x": 31.44560111033367,
+        "z": 2.4296253340309
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 1600,
+        "height": 1317
+      },
+      "moving": {
+        "seconds": 3.5026,
+        "frames": 596,
+        "fps": 170.15931022668872,
+        "median_ms": 5.900000000000091,
+        "p95_ms": 6,
+        "over50ms": 0,
+        "max_draw_calls": 63,
+        "max_triangles": 18816,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "pixelRatio": 1,
+        "width": 1600,
+        "height": 1317,
+        "state": "playing",
+        "x": 30.914176683924975,
+        "z": 2.489812766996485
+      },
+      "orbit": {
+        "seconds": 2.501399999976158,
+        "frames": 426,
+        "fps": 170.304629409155,
+        "median_ms": 5.899999999999636,
+        "p95_ms": 6,
+        "over50ms": 0,
+        "max_draw_calls": 288,
+        "max_triangles": 80132,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "pixelRatio": 1,
+        "width": 1600,
+        "height": 1317,
+        "state": "playing",
+        "x": 31.396964729403077,
+        "z": 2.489812766996485
+      },
+      "errors": []
+    }
+  ]
+}

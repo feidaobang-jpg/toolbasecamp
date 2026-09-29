@@ -28,26 +28,50 @@ function goomba(){const g=new THREE.Group();ball(g,0,.44,0,.43,.39,.35,'#995532'
 function mushroom(){const g=new THREE.Group();cylinder(g,0,.2,0,.2,.4,'#fff2d4');ball(g,0,.46,0,.42,.28,.42,'#e84432');for(const [x,z] of [[0,.29],[-.27,-.1],[.27,-.1]])ball(g,x,.59,z,.11,.07,.1,'#fff3df');return g;}
 function coin(){const m=new THREE.Mesh(new THREE.CylinderGeometry(.27,.27,.09,16),mat('#ffcb36',.25));m.rotation.x=Math.PI/2;m.castShadow=true;return m;}
 
+// Keep spatial batches small enough for camera/shadow frustum culling.
+function batchStatic(root){
+  root.updateMatrixWorld(true);
+  const groups=new Map(),position=new THREE.Vector3();
+  root.traverse(m=>{if(!m.isMesh)return;position.setFromMatrixPosition(m.matrixWorld);
+    const key=[m.geometry.uuid,m.material.uuid,m.castShadow,m.receiveShadow,Math.floor(position.x/24)].join(':');
+    if(!groups.has(key))groups.set(key,[]);groups.get(key).push(m);
+  });
+  for(const meshes of groups.values()){
+    if(meshes.length<2)continue;
+    const first=meshes[0],batch=new THREE.InstancedMesh(first.geometry,first.material,meshes.length);
+    batch.castShadow=first.castShadow;batch.receiveShadow=first.receiveShadow;
+    meshes.forEach((m,i)=>{batch.setMatrixAt(i,m.matrixWorld);m.removeFromParent();});
+    batch.computeBoundingSphere();root.add(batch);
+  }
+}
+
 export function createScene(canvas,world){
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.22;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.22;
   const scene=new THREE.Scene();scene.background=new THREE.Color('#a2deed');scene.fog=new THREE.Fog('#a2deed',38,110);
   const camera=new THREE.PerspectiveCamera(43,1,.1,170);
   scene.add(new THREE.HemisphereLight('#eafaff','#81904f',2.6));
   const sun=new THREE.DirectionalLight('#fff1d3',3.3);sun.position.set(-12,25,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-23,right:23,top:17,bottom:-17,near:.1,far:80});sun.shadow.bias=-.001;scene.add(sun);scene.add(sun.target);
   const level=new THREE.Group();scene.add(level);
-  for(const [a,b] of GROUND){box(level,(a+b)/2,-1.05,0,b-a,2.1,6,'#c58b55');box(level,(a+b)/2,-.07,0,b-a,.14,6.08,'#78b756');
-    for(let x=Math.ceil(a);x<b;x+=2){box(level,x,-.44,3.02,1.82,.43,.06,'#b67a4d');box(level,x,-1.25,3.025,1.85,.8,.07,'#bc8250');}
+  for(const [a,b] of GROUND){
+    // Grass top stays at collision height y=0; soil top is below grass bottom.
+    // Previously both top faces were exactly y=0, causing moving stripes.
+    box(level,(a+b)/2,-1.125,0,b-a,1.95,6,'#c58b55').castShadow=false;
+    box(level,(a+b)/2,-.07,0,b-a,.14,6.08,'#78b756').castShadow=false;
+    for(let x=Math.ceil(a);x<b;x+=2){box(level,x,-.44,3.02,1.82,.43,.06,'#b67a4d').castShadow=false;box(level,x,-1.25,3.025,1.85,.8,.07,'#bc8250').castShadow=false;}
   }
   // Decorative landscape is entirely procedural, with no extracted game artwork.
   for(let x=-12;x<235;x+=15){
     const hill=ball(level,x,-.4,-13,6+(x%3),5+(Math.abs(x)%4),4,'#77ba79');hill.castShadow=false;
-    ball(level,x+7,-.8,-19,9,7,5,'#99cc92');
+    ball(level,x+7,-.8,-19,9,7,5,'#99cc92').castShadow=false;
     const cloud=new THREE.Group();cloud.position.set(x+3,9+(Math.abs(x)%3),-15);level.add(cloud);for(let i=0;i<3;i++){const m=ball(cloud,(i-1)*1.2,i===1?.4:0,0,1.3,1,1,'#fffdf1');m.castShadow=false;}
   }
   for(let x=5;x<210;x+=9){if(!GROUND.some(([a,b])=>x>a&&x<b))continue;for(let i=0;i<3;i++)ball(level,x+i*.3,.2,-2.4,.4,.45,.35,'#489d5d');}
   for(const [x,h] of PIPES){cylinder(level,x,h/2,0,.91,h,'#29965a');cylinder(level,x,h-.12,0,1.06,.3,'#42ba70');cylinder(level,x,h+.036,0,.81,.035,'#174938');}
+  batchStatic(level);
   const qm=new THREE.MeshStandardMaterial({map:questionTexture(),roughness:.55}),bm=new THREE.MeshStandardMaterial({map:brickTexture(),roughness:.85});
-  const blockMeshes=new Map();for(const b of world.blocks){const m=new THREE.Mesh(boxGeo,b.type==='coin'||b.type==='mushroom'?qm:b.type==='brick'?bm:mat('#d4ae7a'));m.position.set(b.x,b.y,b.z);m.scale.set(.96,b.type==='stair'?.8:.96,b.type==='step'||b.type==='stair'?3:.96);m.castShadow=true;m.receiveShadow=true;level.add(m);blockMeshes.set(b,m);}
+  const steps=new THREE.Group();scene.add(steps);
+  const blockMeshes=new Map();for(const b of world.blocks){const m=new THREE.Mesh(boxGeo,b.type==='coin'||b.type==='mushroom'?qm:b.type==='brick'?bm:mat('#d4ae7a'));m.position.set(b.x,b.y,b.z);m.scale.set(.96,b.type==='stair'?.8:.96,b.type==='step'||b.type==='stair'?3:.96);m.castShadow=true;m.receiveShadow=true;if(b.type==='step'||b.type==='stair')steps.add(m);else{level.add(m);blockMeshes.set(b,m);}}
+  batchStatic(steps);
   // The flag and little castle remain visible as a tangible destination.
   cylinder(level,202,4.4,0,.055,8.8,'#e8e3cb');ball(level,202,8.85,0,.14,.14,.14,'#f5c249');
   const flagGeo=new THREE.BufferGeometry();flagGeo.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,-1.4,-.42,0,0,-.86,0],3));flagGeo.computeVertexNormals();const flag=new THREE.Mesh(flagGeo,new THREE.MeshStandardMaterial({color:'#f4f6df',side:THREE.DoubleSide}));flag.position.set(202,8.3,.1);level.add(flag);
