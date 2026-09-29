@@ -7,7 +7,7 @@
   <title>Contra Jungle · Stage 1 in 3D</title>
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=menu-first">
+  <link rel="stylesheet" href="./style.css?v=auto-landscape">
 </head>
 <body>
 <main id="game" tabindex="-1">
@@ -48,7 +48,7 @@
   }
 </script>
 <script type="module">
-  import('./main.js?v=menu-first').catch(() => {
+  import('./main.js?v=auto-landscape').catch(() => {
     if (location.protocol !== 'file:') {
       document.getElementById('panel-copy').textContent = t('contra3d.loadError');
       document.getElementById('start').textContent = t('contra3d.retry');

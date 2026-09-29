@@ -9,7 +9,7 @@ const view = createScene($('world'), world);
 const held = new Set(), pointerKeys = new Set();
 let running = false, paused = false, last = performance.now();
 const mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
-let orientationBlocked = false;
+let orientationBlocked = false, hasStarted = false, rotatedLayout = false;
 const input = { x: 0, z: 0, shoot: false, jump: false, jumpPressed: false, divePressed: false, yaw: 0, pitch: 0, reset: false };
 
 function setText(id, value) { const el = $(id); if (el.textContent !== value) el.textContent = value; }
@@ -23,14 +23,14 @@ function syncInput() {
   input.yaw = (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0); input.pitch = (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0); input.reset = pressed('KeyC');
 }
 function startFullscreen() {
-  const el = $('game');
+  const el = document.documentElement;
   try { if (document.fullscreenElement !== el && el.requestFullscreen) el.requestFullscreen({ navigationUI: 'hide' }).catch(() => {}); } catch (e) {}
   try { if (screen.orientation?.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (e) {}
 }
 function startGame() {
   if (world.status === 'dead') { location.reload(); return; }
   if (world.status === 'won') { location.reload(); return; }
-  world.status = 'playing'; running = true; paused = false;
+  world.status = 'playing'; hasStarted = true; running = true; paused = false;
   $('panel').hidden = true; document.body.classList.add('playing');
   orientation(); setText('pause', paused ? t('contra3d.resume') : t('contra3d.pause'));
   audio.unlock(); $('game').focus();
@@ -113,7 +113,7 @@ document.querySelectorAll('[data-hold]').forEach(btn => {
 const stick = $('stick'), knob = $('knob'); let stickId = null;
 function moveStick(e) {
   const r = stick.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  const dx = e.clientX - cx, dy = e.clientY - cy, d = Math.min(r.width * .38, Math.hypot(dx, dy)), a = Math.atan2(dy, dx);
+  const screenX = e.clientX - cx, screenY = e.clientY - cy, dx = rotatedLayout ? screenY : screenX, dy = rotatedLayout ? -screenX : screenY, d = Math.min(r.width * .38, Math.hypot(dx, dy)), a = Math.atan2(dy, dx);
   knob.style.transform = `translate(${Math.cos(a) * d}px,${Math.sin(a) * d}px)`;
   const nx = Math.cos(a) * d / (r.width * .38), ny = Math.sin(a) * d / (r.height * .38);
   ['KeyA', 'KeyD', 'KeyW', 'KeyS'].forEach(k => pointerKeys.delete(k));
@@ -128,18 +128,25 @@ function releaseStick(e) {
   knob.style.transform = 'translate(0,0)';
 }
 stick.addEventListener('pointerup', releaseStick); stick.addEventListener('pointercancel', releaseStick);
-function orientation() {
-  orientationBlocked = running && mobileDevice && innerHeight > innerWidth;
-  $('rotate').hidden = !orientationBlocked;
-  if (orientationBlocked) {
-    held.clear(); pointerKeys.clear(); frame.wasJump = false; frame.wasDive = false; stickId = null;
-    knob.style.transform = 'translate(0,0)';
-    document.querySelectorAll('.held').forEach(el => el.classList.remove('held'));
-    if (running) { paused = true; setText('pause', t('contra3d.resume')); }
+function orientation(){
+  const nextRotation=hasStarted&&mobileDevice&&innerHeight>innerWidth;
+  if(nextRotation!==rotatedLayout){
+    held.clear();pointerKeys.clear();frame.wasJump=false;frame.wasDive=false;stickId=null;
+    knob.style.transform='translate(0,0)';
+    document.querySelectorAll('.held').forEach(el=>el.classList.remove('held'));
   }
+  rotatedLayout=nextRotation;
+  document.body.classList.toggle('rotated-layout',rotatedLayout);
+  const game=$('game');
+  game.style.width=(rotatedLayout?innerHeight:innerWidth)+'px';
+  game.style.height=(rotatedLayout?innerWidth:innerHeight)+'px';
+  game.style.left=rotatedLayout?innerWidth+'px':'0px';
+  orientationBlocked=false;
+  $('rotate').hidden=true;
+  view.resize();
 }
 $('touch').hidden = !mobileDevice;
 document.body.classList.toggle('touch-mode', mobileDevice);
-addEventListener('resize', () => { view.resize(); orientation(); });
+addEventListener('resize', orientation);
 document.addEventListener('fullscreenchange', orientation);
 orientation(); view.update(0, { reset: true }); updateHud(); requestAnimationFrame(frame);
