@@ -268,3 +268,44 @@
 
 /* 行内操作按钮：尺寸走全局 .tb-btn-sm，不自造一套；间距与 .action-row 一致 */
 .dl-admin-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* 封面图：后台选择/预览 + 列表缩略图 + 前台卡片大图入口 */
+.dl-cover-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.dl-cover-btn { cursor: pointer; margin: 0; }
+.dl-cover-thumb {
+    width: 128px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.6rem;
+    background: #f9fafb;
+}
+.dl-admin-thumb {
+    flex: none;
+    width: 72px;
+    height: 46px;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #f9fafb;
+}
+
+.dl-cover {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    font: inherit;
+}
+.dl-cover img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid #eef0f3;
+    border-radius: 0.7rem;
+    background: #f9fafb;
+}

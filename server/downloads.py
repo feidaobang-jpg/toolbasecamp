@@ -3,25 +3,29 @@
 Public:
   GET  /downloads                 — published list
   GET  /downloads/{id}/file       — download (counts a hit; X-Accel-Redirect when nginx patched)
+  GET  /downloads/{id}/cover/{n}  — cover image, inline (never counts a hit)
 
 Admin (JWT):
   GET    /downloads/admin/list
   POST   /downloads/admin                        — metadata-only entry (external link)
   PUT    /downloads/admin/{id}                   — edit metadata / status / sort
-  DELETE /downloads/admin/{id}                   — delete row + file on disk
+  DELETE /downloads/admin/{id}                   — delete row + files on disk
   POST   /downloads/admin/upload                 — single-shot multipart upload (small files)
   POST   /downloads/admin/upload/init            — chunked upload handshake (Cloudflare 100MB limit)
   POST   /downloads/admin/upload/chunk           — one chunk (multipart)
   POST   /downloads/admin/upload/finalize        — assemble + insert row
+  POST   /downloads/admin/{id}/cover             — replace cover image (multipart)
+  DELETE /downloads/admin/{id}/cover             — remove cover image(s)
 
 Storage: DOWNLOADS_DIR (default /opt/toolbasecamp-downloads)
-  files/    — stored binaries (never executed, always attachment)
+  files/    — stored binaries (never executed, always attachment) + cover images
   chunks/   — in-progress chunked uploads (auto-swept after 24h)
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 import secrets
@@ -79,6 +83,17 @@ CHUNKS_DIR = os.path.join(DOWNLOADS_DIR, "chunks")
 
 _UPLOAD_ID_RE = re.compile(r"^[a-f0-9]{16,64}$")
 _STATUS_ALLOWED = ("published", "hidden")
+# 封面图：前台卡片缩略图 + 点击放大。covers 存 JSON 数组（文件名），
+# 当前只展示第一张，将来放开多图不用再迁移表结构。
+COVER_MAX_ITEMS = 5
+COVER_MAX_BYTES = 4 * 1024 * 1024
+COVER_MEDIA_BY_EXT = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+}
+_COVER_NAME_RE = re.compile(r"[0-9a-f]{32}\.(?:jpg|jpeg|png|webp)")
 # Served as attachment/octet-stream only; still refuse things that only make sense inline.
 _EXT_BLOCKLIST = {".html", ".htm", ".svg", ".php", ".asp", ".aspx", ".jsp", ".cgi"}
 _FIELDS_EDITABLE = (
@@ -105,6 +120,7 @@ CREATE TABLE IF NOT EXISTS downloads (
     orig_name VARCHAR(255) NOT NULL DEFAULT '',
     file_size BIGINT NOT NULL DEFAULT 0,
     sha256 CHAR(64) NOT NULL DEFAULT '',
+    covers VARCHAR(1024) NOT NULL DEFAULT '',
     download_count INT NOT NULL DEFAULT 0,
     sort_order INT NOT NULL DEFAULT 0,
     status VARCHAR(16) NOT NULL DEFAULT 'published',
@@ -117,6 +133,13 @@ CREATE TABLE IF NOT EXISTS downloads (
 
 def ensure_downloads_tables(cur: Any) -> None:
     cur.execute(SCHEMA_SQL)
+    # 存量库补封面字段（重复列直接忽略，与其他模块的幂等迁移写法一致）
+    try:
+        cur.execute(
+            "ALTER TABLE downloads ADD COLUMN covers VARCHAR(1024) NOT NULL DEFAULT ''"
+        )
+    except Exception:
+        pass
 
 
 # ---------------------------------------------------------------------------
@@ -173,6 +196,81 @@ def _chunks_dir(upload_id: str) -> str:
     return os.path.join(CHUNKS_DIR, upload_id)
 
 
+def _parse_covers(row: Dict[str, Any]) -> List[str]:
+    """covers 列存 JSON 数组；脏数据一律当作没有封面，不让列表接口 500。
+
+    只认 32 位十六进制 + 图片扩展名，避免有人往这列塞可内联执行的文件名。
+    """
+    raw = String_or_empty(row.get("covers"))
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+    except (TypeError, ValueError):
+        return []
+    if not isinstance(data, list):
+        return []
+    return [n for n in data if isinstance(n, str) and _COVER_NAME_RE.fullmatch(n)]
+
+
+def _dump_covers(names: List[str]) -> str:
+    return json.dumps(names[:COVER_MAX_ITEMS]) if names else ""
+
+
+def _looks_like_image(data: bytes, ext: str) -> bool:
+    if ext in (".jpg", ".jpeg"):
+        return data[:3] == b"\xff\xd8\xff"
+    if ext == ".png":
+        return data[:8] == b"\x89PNG\r\n\x1a\n"
+    if ext == ".webp":
+        return data[:4] == b"RIFF" and data[8:12] == b"WEBP"
+    return False
+
+
+def _sniff_cover_ext(data: bytes) -> str:
+    """按文件头判定扩展名：文件名改名不改内容，避免 .png 里装 JPEG 却按 png 回吐。"""
+    for ext in (".png", ".jpg", ".webp"):
+        if _looks_like_image(data, ext):
+            return ext
+    return ""
+
+
+def _store_cover(data: bytes, orig_name: str) -> str:
+    ext = _safe_ext(orig_name).lower()
+    if ext not in COVER_MEDIA_BY_EXT:
+        raise HTTPException(status_code=400, detail="封面仅支持 jpg / png / webp")
+    if len(data) > COVER_MAX_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"封面超过 {COVER_MAX_BYTES // (1024 * 1024)}MB，请先压缩图片",
+        )
+    real_ext = _sniff_cover_ext(data)
+    if not real_ext:
+        raise HTTPException(status_code=400, detail="封面内容不是有效图片")
+    os.makedirs(FILES_DIR, exist_ok=True)
+    file_name = uuid.uuid4().hex + real_ext
+    with open(os.path.join(FILES_DIR, file_name), "wb") as out:
+        out.write(data)
+    return file_name
+
+
+def _update_covers(item_id: int, names: List[str]) -> None:
+    conn = _conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("UPDATE downloads SET covers=%s WHERE id=%s", (_dump_covers(names), item_id))
+    finally:
+        conn.close()
+
+
+def _remove_stored(names: List[str]) -> None:
+    for name in names:
+        try:
+            os.remove(_stored_path(name))
+        except (HTTPException, OSError):
+            pass
+
+
 def _sweep_stale_chunks() -> None:
     """Best-effort cleanup of chunk dirs older than 24h."""
     try:
@@ -209,6 +307,7 @@ def _file_url(row: Dict[str, Any]) -> str:
 def _serialize(row: Dict[str, Any], admin: bool = False) -> Dict[str, Any]:
     created = row.get("created_at")
     updated = row.get("updated_at")
+    covers = _parse_covers(row)
     item = {
         "id": row["id"],
         "title": row.get("title") or "",
@@ -222,6 +321,7 @@ def _serialize(row: Dict[str, Any], admin: bool = False) -> Dict[str, Any]:
         "downloadCount": int(row.get("download_count") or 0),
         "sortOrder": int(row.get("sort_order") or 0),
         "url": _file_url(row),
+        "coverUrl": f"/downloads/{row['id']}/cover/0" if covers else "",
         "createdAt": _fmt_ts(created),
         "updatedAt": _fmt_ts(updated),
     }
@@ -229,6 +329,7 @@ def _serialize(row: Dict[str, Any], admin: bool = False) -> Dict[str, Any]:
         item["status"] = row.get("status") or "published"
         item["fileName"] = row.get("file_name") or ""
         item["sourceUrl"] = String_or_empty(row.get("source_url"))
+        item["coverCount"] = len(covers)
     return item
 
 
@@ -470,6 +571,32 @@ def downloads_file(item_id: int):
     )
 
 
+@router.get("/{item_id}/cover/{index}")
+def downloads_cover(item_id: int, index: int):
+    """封面图：内联展示，不计下载数；条目隐藏时也要能出图，后台才能预览。"""
+    row = _fetch_row(item_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="下载不存在")
+    covers = _parse_covers(row)
+    if index < 0 or index >= len(covers):
+        raise HTTPException(status_code=404, detail="该条目没有这张封面")
+    try:
+        path = _stored_path(covers[index])
+    except HTTPException:
+        raise HTTPException(status_code=404, detail="封面已丢失，请重新上传")
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404, detail="封面已丢失，请重新上传")
+    ext = os.path.splitext(path)[1].lower()
+    return FileResponse(
+        path,
+        media_type=COVER_MEDIA_BY_EXT.get(ext, "application/octet-stream"),
+        headers={
+            "Cache-Control": "public, max-age=86400",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
 # ---------------------------------------------------------------------------
 # admin routes
 
@@ -542,7 +669,38 @@ def admin_delete(item_id: int, _admin: dict = Depends(_admin_user)):
             os.remove(_stored_path(file_name))
         except OSError:
             pass
+    _remove_stored(_parse_covers(row))
     return {"ok": True, "id": item_id}
+
+
+@router.post("/admin/{item_id}/cover")
+def admin_upload_cover(
+    item_id: int,
+    file: UploadFile = File(...),
+    _admin: dict = Depends(_admin_user),
+):
+    _ = _admin
+    row = _fetch_row(item_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="条目不存在")
+    orig_name = _sanitize_display_name(file.filename or "", "cover")
+    stored_name = _store_cover(file.file.read(), orig_name)
+    previous = _parse_covers(row)
+    _update_covers(item_id, [stored_name])
+    _remove_stored([n for n in previous if n != stored_name])
+    return _serialize(_fetch_row(item_id) or {}, admin=True)
+
+
+@router.delete("/admin/{item_id}/cover")
+def admin_delete_cover(item_id: int, _admin: dict = Depends(_admin_user)):
+    _ = _admin
+    row = _fetch_row(item_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="条目不存在")
+    previous = _parse_covers(row)
+    _update_covers(item_id, [])
+    _remove_stored(previous)
+    return _serialize(_fetch_row(item_id) or {}, admin=True)
 
 
 @router.post("/admin/upload")

@@ -236,6 +236,16 @@ window.TB_LOCALES.en = {
             downloadsFieldUrl: 'Net disk / official link',
             downloadsHintUrl: 'Required when there is no local file',
             downloadsFieldStatus: 'Status',
+            downloadsFieldCover: 'Cover image',
+            downloadsPickCover: 'Choose image',
+            downloadsHintCover: 'Auto-compressed to 1600px on the long edge; shown on the public card, click to zoom in.',
+            downloadsCoverRemove: 'Remove cover',
+            downloadsCoverErrType: 'Cover must be a jpg / png / webp image',
+            downloadsCoverCompressing: 'Compressing cover…',
+            downloadsCoverBusy: 'Uploading cover…',
+            downloadsCoverUploaded: 'Cover updated',
+            downloadsCoverRemoved: 'Cover removed',
+            downloadsCoverRemovePending: 'Cover will be removed once you save',
             downloadsStatusPub: 'Published',
             downloadsStatusHidden: 'Hidden',
             downloadsSubmitNew: 'Upload / create',
@@ -1064,7 +1074,9 @@ window.TB_LOCALES.en = {
         externalBtn: 'Net disk',
         sourceServer: 'Direct link',
         sourceExternal: 'Net disk link',
-        times: '{n} downloads'
+        times: '{n} downloads',
+        coverAlt: '{title} screenshot',
+        coverZoom: 'Zoom in on the {title} screenshot'
     },
     coolSites: {
         title: 'Directory',

@@ -115,8 +115,17 @@
     var btnLabel = ext ? tr('downloads.externalBtn') : tr('downloads.download');
     var btnIcon = ext ? 'fas fa-cloud-download-alt' : 'fas fa-download';
     var externalAttrs = ext ? ' target="_blank" rel="noopener noreferrer nofollow"' : '';
+    var coverSrc = item.coverUrl ? apiBase() + item.coverUrl : '';
+    var cover = coverSrc
+      ? '<button type="button" class="dl-cover" data-cover="' + escapeHtml(coverSrc) + '"' +
+        ' data-title="' + escapeHtml(item.title || '') + '"' +
+        ' aria-label="' + escapeHtml(tr('downloads.coverZoom', { title: item.title || '' })) + '">' +
+        '<img src="' + escapeHtml(coverSrc) + '" alt="' + escapeHtml(tr('downloads.coverAlt', { title: item.title || '' })) + '" loading="lazy" />' +
+        '</button>'
+      : '';
     return (
       '<article class="dl-card">' +
+        cover +
         '<div class="dl-card-top">' +
           '<span class="dl-icon"><i class="' + iconClass(item) + '" aria-hidden="true"></i></span>' +
           '<div class="dl-card-head">' +
@@ -190,6 +199,24 @@
         state.category = btn.getAttribute('data-cat') || '';
         renderChips();
         renderGrid();
+      });
+    }
+    var grid = document.getElementById('downloads-grid');
+    if (grid) {
+      grid.addEventListener('click', function (e) {
+        var btn = e.target.closest('.dl-cover');
+        if (!btn) return;
+        var src = btn.getAttribute('data-cover') || '';
+        if (!src) return;
+        var caption = btn.getAttribute('data-title') || '';
+        var cloud = window.TBImageCloud;
+        // 复用全站结果图预览；微信内不弹层（长按保存），新窗口开原图
+        if (cloud && typeof cloud.openResultGallery === 'function' &&
+            !(typeof cloud.isWeChat === 'function' && cloud.isWeChat())) {
+          cloud.openResultGallery([{ src: src, caption: caption }], 0);
+        } else {
+          window.open(src, '_blank', 'noopener');
+        }
       });
     }
     if (typeof window.tbApplyI18n === 'function') window.tbApplyI18n(document);

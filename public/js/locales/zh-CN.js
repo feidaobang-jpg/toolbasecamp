@@ -235,6 +235,16 @@ window.TB_LOCALES['zh-CN'] = {
             downloadsFieldUrl: '网盘/官网外链',
             downloadsHintUrl: '没有本地文件时必填',
             downloadsFieldStatus: '状态',
+            downloadsFieldCover: '封面图',
+            downloadsPickCover: '选择图片',
+            downloadsHintCover: '上传前自动压缩到长边 1600；前台卡片展示，点击看大图',
+            downloadsCoverRemove: '移除封面',
+            downloadsCoverErrType: '封面仅支持 jpg / png / webp 图片',
+            downloadsCoverCompressing: '正在压缩封面…',
+            downloadsCoverBusy: '正在上传封面…',
+            downloadsCoverUploaded: '封面已更新',
+            downloadsCoverRemoved: '封面已移除',
+            downloadsCoverRemovePending: '已标记移除封面，保存后生效',
             downloadsStatusPub: '上架',
             downloadsStatusHidden: '隐藏',
             downloadsSubmitNew: '上传 / 创建',
@@ -1063,7 +1073,9 @@ window.TB_LOCALES['zh-CN'] = {
         externalBtn: '网盘下载',
         sourceServer: '服务器直链',
         sourceExternal: '网盘/外链',
-        times: '{n} 次下载'
+        times: '{n} 次下载',
+        coverAlt: '{title} 界面截图',
+        coverZoom: '查看 {title} 的大图'
     },
     coolSites: {
         title: '导航',

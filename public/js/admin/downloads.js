@@ -1,6 +1,6 @@
 /**
  * 后台 — 软件下载管理（admin/private/downloads.html）
- * 功能：新增（分片上传文件 或 网盘外链）、编辑、上架/下架、删除、下载量查看。
+ * 功能：新增（分片上传文件 或 网盘外链）、编辑、上架/下架、删除、下载量查看、封面图。
  */
 (function () {
   'use strict';
@@ -8,6 +8,9 @@
   var CHUNK_FALLBACK = 8 * 1024 * 1024;
   var editingId = null;
   var pickedFile = null;
+  var pickedCover = null;     // 待上传封面（已压缩），提交成功后再传
+  var coverPreviewUrl = '';   // object URL，换图/重置时 revoke
+  var removeCover = false;    // 编辑态点了「移除封面」，提交时调 DELETE
   var uploading = false;
 
   var CATS = ['自研软件', '办公效率', '开发工具', '媒体工具', '系统工具', '其他'];
@@ -66,6 +69,95 @@
     return document.getElementById(id);
   }
 
+  // ----------------------------------------------------------------- cover
+
+  function revokeCoverPreview() {
+    if (coverPreviewUrl) {
+      URL.revokeObjectURL(coverPreviewUrl);
+      coverPreviewUrl = '';
+    }
+  }
+
+  function showCoverPreview(src) {
+    var img = $('cover-preview');
+    var btn = $('btn-cover-remove');
+    if (!img) return;
+    if (src) {
+      img.src = src;
+      img.classList.remove('hidden');
+      if (btn) btn.classList.remove('hidden');
+    } else {
+      img.removeAttribute('src');
+      img.classList.add('hidden');
+      if (btn) btn.classList.add('hidden');
+    }
+  }
+
+  function clearCoverPick() {
+    pickedCover = null;
+    removeCover = false;
+    revokeCoverPreview();
+    var input = $('f-cover');
+    if (input) input.value = '';
+    var label = $('cover-label');
+    if (label) label.textContent = tr('privateHub.ops.downloadsPickCover');
+  }
+
+  async function onCoverPicked(file) {
+    var status = $('form-status');
+    if (!file) return;
+    if (!/^image\/(png|jpe?g|webp)$/i.test(file.type || '')) {
+      setStatus(status, tr('privateHub.ops.downloadsCoverErrType'), true);
+      return;
+    }
+    var prepared = file;
+    var compress = window.TBImageUploadCompress;
+    if (compress && typeof compress.compressIfNeeded === 'function') {
+      setStatus(status, tr('privateHub.ops.downloadsCoverCompressing'));
+      try {
+        prepared = await compress.compressIfNeeded(file, 'default');
+      } catch (err) {
+        prepared = file;  // 压缩失败不拦上传，用原图继续
+      }
+    }
+    setStatus(status, '');
+    pickedCover = prepared;
+    removeCover = false;
+    revokeCoverPreview();
+    coverPreviewUrl = URL.createObjectURL(prepared);
+    showCoverPreview(coverPreviewUrl);
+    var label = $('cover-label');
+    if (label) {
+      label.textContent = String(prepared.name || file.name || 'cover') +
+        ' · ' + fmtBytes(prepared.size);
+    }
+  }
+
+  async function applyCover(itemId) {
+    if (pickedCover) {
+      var fd = new FormData();
+      fd.append('file', pickedCover, pickedCover.name || 'cover.jpg');
+      var res = await fetch(apiBase() + '/downloads/admin/' + itemId + '/cover', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: fd
+      });
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok) throw new Error(data.detail || 'HTTP ' + res.status);
+      return tr('privateHub.ops.downloadsCoverUploaded');
+    }
+    if (removeCover) {
+      var res2 = await fetch(apiBase() + '/downloads/admin/' + itemId + '/cover', {
+        method: 'DELETE',
+        headers: authHeaders()
+      });
+      var data2 = await res2.json().catch(function () { return {}; });
+      if (!res2.ok) throw new Error(data2.detail || 'HTTP ' + res2.status);
+      return tr('privateHub.ops.downloadsCoverRemoved');
+    }
+    return '';
+  }
+
   // ------------------------------------------------------------------ form
 
   function resetForm() {
@@ -85,6 +177,8 @@
     if (fl) fl.textContent = tr('privateHub.ops.downloadsPickFile');
     var fm = $('file-meta');
     if (fm) setStatus(fm, '');
+    clearCoverPick();
+    showCoverPreview('');
     var title = $('form-title');
     if (title) title.textContent = tr('privateHub.ops.downloadsNewTitle');
     var submit = $('btn-submit');
@@ -116,6 +210,8 @@
         setStatus(fm, '');
       }
     }
+    clearCoverPick();
+    showCoverPreview(item.coverUrl ? apiBase() + item.coverUrl : '');
     $('form-title').textContent = tr('privateHub.ops.downloadsEditTitle', { id: item.id });
     $('btn-submit').textContent = tr('privateHub.ops.downloadsSubmitEdit');
     $('btn-cancel-edit').classList.remove('hidden');
@@ -213,6 +309,7 @@
     var btn = $('btn-submit');
     btn.disabled = true;
     try {
+      var savedId = editingId;
       if (editingId) {
         var res = await fetch(apiBase() + '/downloads/admin/' + editingId, {
           method: 'PUT',
@@ -223,7 +320,8 @@
         if (!res.ok) throw new Error(data.detail || 'HTTP ' + res.status);
         setStatus(status, tr('privateHub.ops.downloadsSaved'));
       } else if (pickedFile) {
-        await chunkedUpload(pickedFile, meta);
+        var created = await chunkedUpload(pickedFile, meta);
+        savedId = created && created.id;
         setStatus(status, tr('privateHub.ops.downloadsCreated'));
       } else if (meta.source_url) {
         var res2 = await fetch(apiBase() + '/downloads/admin', {
@@ -233,12 +331,19 @@
         });
         var data2 = await res2.json().catch(function () { return {}; });
         if (!res2.ok) throw new Error(data2.detail || 'HTTP ' + res2.status);
+        savedId = data2 && data2.id;
         setStatus(status, tr('privateHub.ops.downloadsCreated'));
       } else {
         setStatus(status, tr('privateHub.ops.downloadsErrSource'), true);
         uploading = false;
         btn.disabled = false;
         return;
+      }
+      // 封面单独走一个接口：条目先落库拿到 id，再传图，失败只提示不丢条目
+      if (savedId && (pickedCover || removeCover)) {
+        setStatus(status, tr('privateHub.ops.downloadsCoverBusy'));
+        var coverMsg = await applyCover(savedId);
+        if (coverMsg) setStatus(status, coverMsg);
       }
       resetForm();
       await loadList();
@@ -276,6 +381,9 @@
         '<span class="dl-badge ' + (hidden ? 'is-hidden' : 'is-pub') + '">' +
           escapeHtml(hidden ? tr('privateHub.ops.downloadsStatusHidden') : tr('privateHub.ops.downloadsStatusPub')) +
         '</span>' +
+        (item.coverUrl
+          ? '<img class="dl-admin-thumb" src="' + escapeHtml(apiBase() + item.coverUrl) + '" alt="" loading="lazy" />'
+          : '') +
         '<div class="dl-admin-main">' +
           '<div class="dl-admin-name">' + escapeHtml(item.title) + '</div>' +
           '<div class="dl-admin-sub">' +
@@ -388,6 +496,28 @@
         } else {
           pickedFile = null;
         }
+      });
+    }
+
+    var coverInput = $('f-cover');
+    if (coverInput) {
+      coverInput.addEventListener('change', function () {
+        var f = coverInput.files && coverInput.files[0];
+        onCoverPicked(f);
+      });
+    }
+
+    var coverRemoveBtn = $('btn-cover-remove');
+    if (coverRemoveBtn) {
+      coverRemoveBtn.addEventListener('click', function () {
+        if (pickedCover) {
+          clearCoverPick();
+          showCoverPreview('');
+          return;
+        }
+        removeCover = true;
+        showCoverPreview('');
+        setStatus($('form-status'), tr('privateHub.ops.downloadsCoverRemovePending'));
       });
     }
 
