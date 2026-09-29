@@ -21,7 +21,7 @@ function syncInput() {
   if (Math.hypot(x, z) > 1) { x /= Math.SQRT2; z /= Math.SQRT2; }
   input.x = x; input.z = z;
   input.run = pressed('KeyJ') || pressed('ShiftLeft');
-  input.jump = pressed('KeyK') || pressed('Space') || pressed('KeyW');
+  input.jump = pressed('KeyK') || pressed('Space');
   input.yaw = (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0); input.pitch = (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0); input.reset = pressed('KeyC');
 }
 function startFullscreen() {

@@ -237,7 +237,7 @@ function advanceEnemies(w, dt, p, peaceful) {
     e.z += clamp(p.z - e.z, -1, 1) * .5 * dt; // drift toward the player's lane
     if (peaceful || p.invuln > 0) continue;
     if (Math.abs(p.x - e.x) < .75 && Math.abs(p.z - e.z) < .75) {
-      const falling = p.vy < -1 && p.y >= e.y + .5;
+      const falling = p.vy < -1 && p.y >= e.y + .5 && p.y - e.y < 2.2;
       if (falling) {
         e.squashT = .5; e.vx = 0; p.vy = 7.5; w.score += e.kind === 'koopa' ? 200 : 100; emit(w, 'stomp', { x: e.x, y: e.y, z: e.z });
       } else if (p.y + h > e.y + .2 && p.y < e.y + .9) {

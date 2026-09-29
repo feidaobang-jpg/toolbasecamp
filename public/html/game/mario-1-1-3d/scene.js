@@ -4,7 +4,42 @@ import { LEVEL_END, GAPS, FLAG_X, PIPES, STAIRS } from './world.js';
 
 const boxGeo = new THREE.BoxGeometry(1, 1, 1);
 const edgeGeo = new THREE.EdgesGeometry(boxGeo);
-const M = (c, opts) => new THREE.MeshLambertMaterial({ color: c, ...opts });
+const _matCache = new Map();
+const M = (c, opts) => {
+  if (!opts) { let m = _matCache.get(c); if (!m) { m = new THREE.MeshLambertMaterial({ color: c }); _matCache.set(c, m); } return m; }
+  return new THREE.MeshLambertMaterial({ color: c, ...opts });
+};
+const _geoCache = new Map();
+const sphereGeo = (r, w = 14, h = 10) => { const k = 's' + r + '_' + w + '_' + h; let g = _geoCache.get(k); if (!g) { g = new THREE.SphereGeometry(r, w, h); _geoCache.set(k, g); } return g; };
+const cylGeo = (rt, rb, hh, seg) => { const k = 'c' + rt + '_' + rb + '_' + hh + '_' + seg; let g = _geoCache.get(k); if (!g) { g = new THREE.CylinderGeometry(rt, rb, hh, seg); _geoCache.set(k, g); } return g; };
+
+// Procedural canvas textures — original art, no extracted game assets.
+function canvasTex(draw) {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  draw(c.getContext('2d'));
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  return t;
+}
+function questionTexture() {
+  return canvasTex(g => {
+    g.fillStyle = '#f8b800'; g.fillRect(0, 0, 128, 128);
+    g.fillStyle = '#c98d00'; g.fillRect(0, 0, 128, 10); g.fillRect(0, 118, 128, 10); g.fillRect(0, 0, 10, 128); g.fillRect(118, 0, 10, 128);
+    for (const [x, y] of [[20, 20], [98, 20], [20, 98], [98, 98]]) { g.fillStyle = '#5a2c0c'; g.fillRect(x, y, 10, 10); }
+    g.font = 'bold 84px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#5a2c0c'; g.fillText('?', 68, 70);
+    g.fillStyle = '#fff3c8'; g.fillText('?', 64, 64);
+  });
+}
+function brickTexture() {
+  return canvasTex(g => {
+    g.fillStyle = '#c84c0c'; g.fillRect(0, 0, 128, 128);
+    g.fillStyle = '#8f3208';
+    for (let row = 0; row < 4; row++) { g.fillRect(0, row * 32 + 28, 128, 4); const off = row % 2 ? 32 : 0; for (let col = 0; col < 3; col++) g.fillRect(((off + col * 64) % 128) + 60, row * 32, 4, 30); }
+    g.fillStyle = '#e0713a';
+    for (let row = 0; row < 4; row++) { const off = row % 2 ? 32 : 0; for (let col = -1; col < 3; col++) g.fillRect(((off + col * 64) % 128) + 4, row * 32 + 4, 56, 3); }
+  });
+}
 
 function mesh(parent, geo, color, x, y, z, cast = true) {
   const m = new THREE.Mesh(geo, typeof color === 'string' ? M(color) : color);
@@ -23,60 +58,92 @@ export function createScene(canvas, world) {
   scene.add(new THREE.HemisphereLight('#eaf4ff', '#3d7a2a', 1.05));
   const sun = new THREE.DirectionalLight('#fff6df', 1.6);
   sun.position.set(14, 26, 12); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, far: 90 });
+  sun.shadow.mapSize.set(1024, 1024);
+  Object.assign(sun.shadow.camera, { left: -24, right: 24, top: 20, bottom: -20, far: 80 });
   sun.shadow.camera.updateProjectionMatrix();
-  scene.add(sun);
+  scene.add(sun); scene.add(sun.target);
 
   const level = new THREE.Group(); scene.add(level);
 
   // --- Ground strips (skip the two pits) with grass tops and dirt bodies.
+  const decor = new THREE.Group(); scene.add(decor);
   for (const [a, b] of [[-8, GAPS[0][0]], [GAPS[0][1], GAPS[1][0]], [GAPS[1][1], LEVEL_END + 6]]) {
     const w = b - a, cx = (a + b) / 2;
-    const top = mesh(level, boxGeo, M('#3fae4a'), cx, -.15, 0); top.scale.set(w, .3, 6.4); top.castShadow = false;
-    const body = mesh(level, boxGeo, M('#9c5a2c'), cx, -1.9, 0); body.scale.set(w, 3.5, 6.4); body.castShadow = false;
-    const face = mesh(level, boxGeo, M('#7a4520'), cx, -.4, 3.21); face.scale.set(w, .5, .06); face.castShadow = false;
+    const top = mesh(decor, boxGeo, M('#3fae4a'), cx, -.15, 0); top.scale.set(w, .3, 6.4); top.castShadow = false;
+    const body = mesh(decor, boxGeo, M('#9c5a2c'), cx, -1.9, 0); body.scale.set(w, 3.5, 6.4); body.castShadow = false;
+    const face = mesh(decor, boxGeo, M('#7a4520'), cx, -.4, 3.21); face.scale.set(w, .5, .06); face.castShadow = false;
   }
 
   // --- Background dressing: hills, bushes, clouds (outside the play lane).
-  const hill = (x, z, r, c) => { const m = mesh(level, new THREE.SphereGeometry(r, 18, 12), M(c), x, -.1, z, false); m.scale.y = .62; };
+  // Accumulated per color, then merged into a few InstancedMeshes so orbiting
+  // the camera does not pay one draw call per decoration ball.
+  const unitSphere = new THREE.SphereGeometry(1, 16, 12);
+  const decorBalls = new Map(); // color -> [Matrix4]
+  function decorBall(x, y, z, r, color, squash) {
+    if (!decorBalls.has(color)) decorBalls.set(color, []);
+    const m = new THREE.Matrix4().compose(
+      new THREE.Vector3(x, y, z), new THREE.Quaternion(),
+      new THREE.Vector3(r, squash ? r * .62 : r, r)
+    );
+    decorBalls.get(color).push(m);
+  }
+  const hill = (x, z, r, c) => decorBall(x, -.1, z, r, c, true);
   const bush = (x, z) => {
-    const g = new THREE.Group(); g.position.set(x, 0, z); level.add(g);
-    for (const [dx, r] of [[-.6, .5], [0, .68], [.6, .5]]) mesh(g, new THREE.SphereGeometry(r, 12, 10), M('#2f9e3f'), dx, .3, 0, false);
+    for (const [dx, r] of [[-.6, .5], [0, .68], [.6, .5]]) decorBall(x + dx, .3, z, r, '#2f9e3f', false);
   };
   const cloud = (x, y, z) => {
-    const g = new THREE.Group(); g.position.set(x, y, z); level.add(g);
-    for (const [dx, dy, r] of [[-.9, 0, .55], [0, .25, .75], [.95, 0, .55]]) mesh(g, new THREE.SphereGeometry(r, 12, 10), M('#ffffff'), dx, dy, 0, false);
+    for (const [dx, dy, r] of [[-.9, 0, .55], [0, .25, .75], [.95, 0, .55]]) decorBall(x + dx, y + dy, z, r, '#ffffff', false);
   };
   for (let x = -4; x < LEVEL_END + 10; x += 26) { hill(x + 6, -8.5, 3.2, '#2f9e3f'); hill(x + 17, -7.5, 2.1, '#37a848'); }
   for (let x = 2; x < LEVEL_END + 8; x += 17) bush(x, -4.2 - (x % 3));
   for (let x = 0; x < LEVEL_END + 12; x += 21) { cloud(x, 7.5 + (x % 5) * .6, -10); cloud(x + 9, 9.2, -12); }
+  for (const [color, mats] of decorBalls) {
+    const inst = new THREE.InstancedMesh(unitSphere, M(color), mats.length);
+    mats.forEach((m, i) => inst.setMatrixAt(i, m));
+    inst.castShadow = false; inst.receiveShadow = false; inst.instanceMatrix.needsUpdate = true;
+    inst.computeBoundingSphere();
+    decor.add(inst);
+  }
 
   // --- Question / brick blocks.
   const blockNodes = new Map();
   const edgeMat = new THREE.LineBasicMaterial({ color: '#5a2c0c' });
+  const qMat = new THREE.MeshLambertMaterial({ map: questionTexture() });
+  const bMat = new THREE.MeshLambertMaterial({ map: brickTexture() });
+  const usedMat = new THREE.MeshLambertMaterial({ color: '#8a5a2b' });
   for (const b of world.blocks) {
     const g = new THREE.Group(); g.position.set(b.x, b.y, 0); level.add(g);
-    const m = mesh(g, boxGeo, M(b.kind === 'q' ? '#f8b800' : '#c84c0c'), 0, 0, 0);
+    const m = mesh(g, boxGeo, b.kind === 'q' ? qMat : bMat, 0, 0, 0);
     m.scale.setScalar(.98);
     g.add(new THREE.LineSegments(edgeGeo, edgeMat));
-    if (b.kind === 'q') for (const [dx, dy] of [[-.3, .3], [.3, .3], [-.3, -.3], [.3, -.3]]) {
-      const r = mesh(g, boxGeo, M('#5a2c0c'), dx, dy, .5, false); r.scale.setScalar(.09);
-    }
     blockNodes.set(b, { g, m, baseY: b.y });
   }
 
-  // --- Pipes and staircases.
+  // --- Pipes and staircases (instanced: same geometry, per-instance scale).
+  const unitCyl = new THREE.CylinderGeometry(1, 1, 1, 18);
+  const pipeParts = { body: [], rim: [], hole: [] };
   for (const [x, h] of PIPES) {
-    const g = new THREE.Group(); g.position.set(x, 0, 0); level.add(g);
-    const body = mesh(g, new THREE.CylinderGeometry(.68, .68, h, 18), M('#2ea44f'), 0, h / 2, 0);
-    const rim = mesh(g, new THREE.CylinderGeometry(.82, .82, .55, 18), M('#37b95a'), 0, h - .27, 0);
-    const hole = mesh(g, new THREE.CylinderGeometry(.5, .5, .06, 18), M('#134d22'), 0, h + .01, 0, false);
+    pipeParts.body.push(new THREE.Matrix4().compose(new THREE.Vector3(x, h / 2, 0), new THREE.Quaternion(), new THREE.Vector3(.68, h, .68)));
+    pipeParts.rim.push(new THREE.Matrix4().compose(new THREE.Vector3(x, h - .27, 0), new THREE.Quaternion(), new THREE.Vector3(.82, .55, .82)));
+    pipeParts.hole.push(new THREE.Matrix4().compose(new THREE.Vector3(x, h + .01, 0), new THREE.Quaternion(), new THREE.Vector3(.5, .06, .5)));
   }
+  function pipeInst(parts, color, x) {
+    const inst = new THREE.InstancedMesh(unitCyl, M(color), parts.length);
+    parts.forEach((m, i) => inst.setMatrixAt(i, m));
+    inst.castShadow = x !== 'hole'; inst.receiveShadow = true;
+    inst.computeBoundingSphere(); level.add(inst);
+  }
+  pipeInst(pipeParts.body, '#2ea44f'); pipeInst(pipeParts.rim, '#37b95a'); pipeInst(pipeParts.hole, '#134d22', 'hole');
+  const stairM = [], capM4 = [];
   for (const [x, h] of STAIRS) {
-    const s = mesh(level, boxGeo, M('#c9c2b8'), x, h / 2, 0);
-    s.scale.set(1, h, 3.2);
-    const cap = mesh(level, boxGeo, M('#b5aea2'), x, h - .06, 0, false); cap.scale.set(1.02, .1, 3.24);
+    stairM.push(new THREE.Matrix4().compose(new THREE.Vector3(x, h / 2, 0), new THREE.Quaternion(), new THREE.Vector3(1, h, 3.2)));
+    capM4.push(new THREE.Matrix4().compose(new THREE.Vector3(x, h - .06, 0), new THREE.Quaternion(), new THREE.Vector3(1.02, .1, 3.24)));
+  }
+  for (const [mats, color, shadow] of [[stairM, '#c9c2b8', true], [capM4, '#b5aea2', false]]) {
+    const inst = new THREE.InstancedMesh(boxGeo, M(color), mats.length);
+    mats.forEach((m, i) => inst.setMatrixAt(i, m));
+    inst.castShadow = shadow; inst.receiveShadow = true;
+    inst.computeBoundingSphere(); level.add(inst);
   }
 
   // --- Floating coins.
@@ -154,16 +221,16 @@ export function createScene(canvas, world) {
   }
 
   // --- Camera (orbit around Mario, contra-style conventions).
-  let yaw = 0, pitch = .34, dist = 9.5;
+  let yaw = 0, pitch = .38, dist = 10.8;
   function update(dt, cam = {}) {
     const p = world.player;
     yaw += (cam.yaw || 0) * 2.2 * dt;
     pitch = Math.max(.08, Math.min(1.2, pitch + (cam.pitch || 0) * 1.6 * dt));
-    if (cam.reset) { yaw = 0; pitch = .34; }
+    if (cam.reset) { yaw = 0; pitch = .38; }
     const tx = p.x + Math.sin(yaw) * dist, tz = p.z + Math.cos(yaw) * dist;
     const ty = p.y + 1.6 + Math.sin(pitch) * dist * .55;
     camera.position.lerp(new THREE.Vector3(tx, Math.max(ty, p.y + .8), tz), 1 - Math.exp(-8 * dt));
-    camera.lookAt(p.x, p.y + 1.3, p.z);
+    camera.lookAt(p.x, p.y + 1.5, p.z);
     sun.position.set(p.x + 14, 26, 12); sun.target.position.set(p.x, 0, 0); sun.target.updateMatrixWorld();
     scene.add(sun.target);
 
@@ -182,7 +249,7 @@ export function createScene(canvas, world) {
     for (const [b, n] of blockNodes) {
       n.g.position.y = n.baseY + (b.bumpT > 0 ? Math.sin(b.bumpT / .18 * Math.PI) * .3 : 0);
       if (b.broken) n.g.visible = false;
-      else if (b.used && n.m.material.color.getHex() !== 0x8a5a2b) n.m.material = M('#8a5a2b');
+      else if (b.used && n.m.material !== usedMat) n.m.material = usedMat;
     }
     // Coins.
     world.coinsLive.forEach((c, i) => {

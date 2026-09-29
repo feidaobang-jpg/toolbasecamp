@@ -1357,8 +1357,12 @@ window.TB_LOCALES.en = {
         lostLife: 'Tank lost — backup rolling in', ownGoal: 'Friendly fire! Your own shell hit the eagle', baseLost: 'The eagle was destroyed!'
     },
     mario113d: {
-        stage: 'WORLD 1-1', lives: 'LIVES', coins: 'COINS', score: 'SCORE', time: 'TIME', power: 'SIZE', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
-        title: 'Super Mario 1-1\nin a new dimension.', intro: 'Run, jump and stomp through World 1-1: ?-blocks, mushrooms, pipes, two pits and the flagpole at the end.', move: 'Move (A/D run · W/S depth)', run: 'Run', jump: 'Jump', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start run', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'A/D Move · W/S Depth · K/W/Space Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The mushrooms will wait for you.', loadError: 'Failed to load the game, please reload the page.', retry: 'Reload', mushroom: 'A mushroom popped out!', grow: 'You ate the mushroom — you are big!', shrunk: 'Shrunk! Be careful.', oneup: '100 coins · 1-UP', checkpoint: 'Reached the halfway checkpoint', flag: 'Grabbed the flagpole!', lostLife: 'Lost a life', deadTitle: 'GAME OVER', deadCopy: 'Press Enter or hit restart to run 1-1 again.', winTitle: 'Stage 1-1 clear!', winCopy: 'Flagpole claimed and the castle gate is open. See you in the next stage!', paused: 'Paused', continued: 'Run continues', soundOn: 'Mute', soundOff: 'Unmute'
+        stage: 'WORLD 1-1', lives: 'LIVES', coins: 'COINS', score: 'SCORE', time: 'TIME', power: 'SIZE', pause: 'Pause', resume: 'Resume', full: 'Fullscreen', fileWarning: 'Opening by double-click (file://) cannot load 3D modules. Use the website URL or a local HTTP server.',
+        title: 'Super Mario 1-1\nin a new dimension.', intro: 'Run, jump and stomp through World 1-1: ?-blocks, mushrooms, pipes, two pits and the flagpole at the end.', move: 'Move (A/D run · W/S depth)', run: 'Run', jump: 'Jump', camera: 'Orbit · Tilt · Reset camera', start: 'Enter · Start run', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made first-stage demo · Procedural art & sound · Not an official release', help: 'A/D Move · W/S Depth · K/Space Jump · J Run · Q/E Orbit · C Reset · Esc Pause', rotate: 'Turn your phone sideways', rotateHint: 'The mushrooms will wait for you.', loadError: 'Failed to load the game, please reload the page.', retry: 'Reload', mushroom: 'A mushroom popped out!', grow: 'You ate the mushroom — you are big!', shrunk: 'Shrunk! Be careful.', oneup: '100 coins · 1-UP', checkpoint: 'Reached the halfway checkpoint', flag: 'Grabbed the flagpole!', lostLife: 'Lost a life', deadTitle: 'GAME OVER', deadCopy: 'Press Enter or hit restart to run 1-1 again.', winTitle: 'Stage 1-1 clear!', winCopy: 'Flagpole claimed and the castle gate is open. See you in the next stage!', paused: 'Paused', continued: 'Run continues', soundOn: 'Mute', soundOff: 'Unmute'
+    },
+    marioFc3d: {
+        world: 'WORLD 1-1', coins: 'COINS', score: 'SCORE', time: 'TIME', pause: 'Pause', resume: 'Resume', full: 'Fullscreen',
+        title: 'Super Mario FC\nrebuilt in 3D.', intro: 'World 1-1 rebuilt in 3D: ?-blocks, mushrooms, pipes, goombas, pits and the flagpole castle — now you can also dodge enemies along the depth axis.', move: 'Move (A/D run · W/S depth)', jump: 'Jump', run: 'Run', camera: 'Switch camera · Reset', start: 'Enter · Start level', restart: 'Start over', back: 'Back to games', touch: 'Touch controls', note: 'Fan-made level demo · Procedural art & sound · Not an official release', help: 'WASD Move · K Jump · Hold J to Run · Q/E Camera · C Reset · Esc Pause', loadError: 'The game failed to load. Reload the page to try again.', retry: 'Reload', mushroom: 'A mushroom popped out!', grow: 'You ate the mushroom — you are big!', shrunk: 'Shrunk! Be careful.', checkpoint: 'Midway checkpoint reached', flag: 'Grabbed the flagpole!', deadTitle: 'That fall got you', deadCopy: 'Continue from the checkpoint or run the whole level again. The flag and castle are waiting.', winTitle: 'World 1-1 clear!', winCopy: 'Flagpole claimed and the castle gate is open. Try a faster run!', paused: 'Game paused', continued: 'Back to the run', soundOn: 'Mute', soundOff: 'Sound'
     },
     games: {
         groups: {
@@ -1616,6 +1620,10 @@ window.TB_LOCALES.en = {
         mario3d: {
             title: 'Super Mario 3D: World 1–1',
             desc: 'A procedural 3D web demo of the classic first level, playable with keyboard or phone landscape controls.'
+        },
+        marioFc3d: {
+            title: 'Super Mario FC 3D Rebuilt',
+            desc: 'FC 1-1 rebuilt in 3D: bump blocks, mushrooms, stomps, depth dodging, flagpole and castle. Keyboard or phone landscape.'
         },
         contra3d: {
             title: 'Contra Jungle 3D: Stage 1',

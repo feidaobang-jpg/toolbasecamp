@@ -37,7 +37,7 @@ async function sample(page, duration) {
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const viewport = VIEWPORTS[scenario];
-  const browser = await chromium.launch({ headless: true, executablePath, args: ['--disable-gpu', '--use-angle=swiftshader', '--disable-dev-shm-usage'] });
+  const browser = await chromium.launch({ headless: true, executablePath, args: ['--disable-dev-shm-usage'] });
   try {
     if (scenario === 'shots') {
       const { context, page, errors } = await open(browser, viewport, false);
@@ -90,7 +90,7 @@ async function sample(page, duration) {
       await page.keyboard.up('KeyD'); await page.keyboard.up('KeyJ'); await page.keyboard.down('KeyE');
       const orbit = await sample(page, 2500); await page.keyboard.up('KeyE');
       assert.deepEqual(errors, []);
-      const result = { label, url, scenario, viewport, browser: browser.version(), mode: 'headless, DPR 1, software GL, recording disabled during timings', moving, orbit, errors };
+      const result = { label, url, scenario, viewport, browser: browser.version(), mode: 'headless Edge, default GPU (D3D11), DPR 1, recording disabled during timings', moving, orbit, errors };
       fs.writeFileSync(path.join(out, label + '-perf-' + scenario + '.json'), JSON.stringify(result, null, 2));
       console.log(JSON.stringify(result, null, 2));
       await context.close();

@@ -1356,8 +1356,12 @@ window.TB_LOCALES['zh-CN'] = {
         lostLife: '坦克被击毁，备用坦克出动', ownGoal: '误伤！自己的炮弹打中了老鹰', baseLost: '老鹰被摧毁了！'
     },
     mario113d: {
-        stage: 'WORLD 1-1', lives: '生命', coins: '金币', score: '分数', time: '时间', power: '体型', pause: '暂停', resume: '继续', full: '全屏',
-        title: '超级玛丽 1-1\n进入新的 3D 维度', intro: '跑、跳、踩，穿越第一关：问号砖、蘑菇、水管、两个深坑，终点是旗杆。', move: '移动（A/D 前后 · W/S 纵深）', run: '加速跑', jump: '跳跃', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始闯关', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'A/D 移动 · W/S 纵深 · K/W/空格 跳 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '蘑菇会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', mushroom: '顶出了蘑菇！', grow: '吃到蘑菇，变大啦！', shrunk: '变小了，小心！', oneup: '100 金币 · 生命 +1', checkpoint: '到达中途检查点', flag: '抓住旗杆！', lostLife: '牺牲了一条命', deadTitle: 'GAME OVER', deadCopy: '按回车或点「重新开始」，再闯一次 1-1。', winTitle: '1-1 通关！', winCopy: '旗杆到手，城堡大门打开。下一关见！', paused: '游戏已暂停', continued: '继续闯关', soundOn: '静音', soundOff: '打开声音'
+        stage: 'WORLD 1-1', lives: '生命', coins: '金币', score: '分数', time: '时间', power: '体型', pause: '暂停', resume: '继续', full: '全屏', fileWarning: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
+        title: '超级玛丽 1-1\n进入新的 3D 维度', intro: '跑、跳、踩，穿越第一关：问号砖、蘑菇、水管、两个深坑，终点是旗杆。', move: '移动（A/D 前后 · W/S 纵深）', run: '加速跑', jump: '跳跃', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始闯关', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'A/D 移动 · W/S 纵深 · K/空格 跳 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '蘑菇会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', mushroom: '顶出了蘑菇！', grow: '吃到蘑菇，变大啦！', shrunk: '变小了，小心！', oneup: '100 金币 · 生命 +1', checkpoint: '到达中途检查点', flag: '抓住旗杆！', lostLife: '牺牲了一条命', deadTitle: 'GAME OVER', deadCopy: '按回车或点「重新开始」，再闯一次 1-1。', winTitle: '1-1 通关！', winCopy: '旗杆到手，城堡大门打开。下一关见！', paused: '游戏已暂停', continued: '继续闯关', soundOn: '静音', soundOff: '打开声音'
+    },
+    marioFc3d: {
+        world: 'WORLD 1-1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
+        title: '超级玛丽 FC\n3D 重构版', intro: 'FC 第一关的 3D 重构：问号砖、蘑菇、水管、栗子怪、深坑与旗杆城堡，还能在纵深上躲开敌人。', move: '移动（A/D 前后 · W/S 纵深）', jump: '跳跃', run: '加速跑', camera: '切换视角 · 回正', start: '回车 · 开始闯关', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · K 跳 · 按住 J 加速 · Q/E 切换视角 · C 回正 · Esc 暂停', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', mushroom: '顶出了蘑菇！', grow: '吃到蘑菇，变大了！', shrunk: '变小了，小心！', checkpoint: '到达中途检查点', flag: '抓住旗杆！', deadTitle: '这次摔了', deadCopy: '从检查点继续，或整关重跑。旗杆和城堡都在等你。', winTitle: '1-1 通关！', winCopy: '旗杆到手，城堡大门打开。试试用更快的速度再跑一遍！', paused: '游戏已暂停', continued: '继续前进', soundOn: '静音', soundOff: '打开声音'
     },
     games: {
         groups: {
@@ -1615,6 +1619,10 @@ window.TB_LOCALES['zh-CN'] = {
         mario3d: {
             title: '超级玛丽 3D：第一关',
             desc: '经典第一关的程序化 3D 网页演示，键盘与手机横屏都能玩。'
+        },
+        marioFc3d: {
+            title: '超级玛丽 FC 3D 重构版',
+            desc: 'FC 1-1 的 3D 重构：顶砖、蘑菇、踩怪、纵深走位躲敌人、旗杆城堡。键盘与手机横屏都能玩。'
         },
         contra3d: {
             title: '魂斗罗丛林 3D：第一关',
