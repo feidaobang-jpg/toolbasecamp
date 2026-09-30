@@ -27,3 +27,6 @@
 ## 素材
 
 运行资源来自用户现有工程：程序化几何、场景与Web Audio合成声音。Three.js r152的MIT说明保留，并附完整许可。截图是本次构建的真实实机，不是AI宣传图。原游戏历史开发模型未知，不新增归因。
+## 发布完成
+
+官方mylist已返回published、PUBLIC；正式入口 https://www.bilibili.com/toy/chongchao-qianshao/index.html 已实际打开并验证开局。正式画面保存为captures/toy-published.png。

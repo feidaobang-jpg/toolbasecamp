@@ -8,9 +8,9 @@
   "release_intent": "web_demo",
   "development_model": null,
   "toy_id": "38678478981120",
-  "publication_status": "auditing",
+  "publication_status": "published",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_3tNRtOgC/index.html",
-  "public_play_url": null,
+  "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
   "qa": "releases/toy-v0.1.0/notes.md"
 }
