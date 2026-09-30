@@ -1,0 +1,483 @@
+{
+  "seed": 275,
+  "fps": 30,
+  "frames": 470,
+  "timeline": [
+    {
+      "t": 3.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 0.67,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": null,
+      "enemies": 0,
+      "bricks": 206,
+      "powerup": null
+    },
+    {
+      "t": 4.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 1.17,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 9,
+        "z": 25,
+        "dir": 0
+      },
+      "enemies": 0,
+      "bricks": 206,
+      "powerup": null
+    },
+    {
+      "t": 4.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 1.67,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 7.74,
+        "z": 25,
+        "dir": 3
+      },
+      "enemies": 1,
+      "bricks": 206,
+      "powerup": null
+    },
+    {
+      "t": 5.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 2.17,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 5.04,
+        "z": 25,
+        "dir": 3
+      },
+      "enemies": 1,
+      "bricks": 206,
+      "powerup": null
+    },
+    {
+      "t": 5.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 2.67,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 2.34,
+        "z": 25,
+        "dir": 3
+      },
+      "enemies": 1,
+      "bricks": 206,
+      "powerup": null
+    },
+    {
+      "t": 6.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 3.17,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 1,
+        "z": 23.2,
+        "dir": 0
+      },
+      "enemies": 1,
+      "bricks": 204,
+      "powerup": null
+    },
+    {
+      "t": 6.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 3.67,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 1,
+        "z": 20.5,
+        "dir": 0
+      },
+      "enemies": 1,
+      "bricks": 204,
+      "powerup": null
+    },
+    {
+      "t": 7.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 4.17,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 1,
+        "z": 17.8,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 204,
+      "powerup": null
+    },
+    {
+      "t": 7.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 4.67,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 1,
+        "z": 15.1,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 204,
+      "powerup": null
+    },
+    {
+      "t": 8.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 5.17,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 1,
+        "z": 14.98,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 204,
+      "powerup": null
+    },
+    {
+      "t": 8.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 5.67,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 2.18,
+        "z": 15,
+        "dir": 1
+      },
+      "enemies": 2,
+      "bricks": 203,
+      "powerup": null
+    },
+    {
+      "t": 9.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 6.17,
+      "score": 0,
+      "lives": 3,
+      "killed": 0,
+      "level": 0,
+      "player": {
+        "x": 3.02,
+        "z": 14,
+        "dir": 1
+      },
+      "enemies": 2,
+      "bricks": 201,
+      "powerup": null
+    },
+    {
+      "t": 9.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 6.67,
+      "score": 100,
+      "lives": 3,
+      "killed": 1,
+      "level": 0,
+      "player": {
+        "x": 3.92,
+        "z": 14,
+        "dir": 1
+      },
+      "enemies": 2,
+      "bricks": 190,
+      "powerup": null
+    },
+    {
+      "t": 10.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 7.17,
+      "score": 100,
+      "lives": 3,
+      "killed": 1,
+      "level": 0,
+      "player": {
+        "x": 6.62,
+        "z": 14,
+        "dir": 1
+      },
+      "enemies": 2,
+      "bricks": 189,
+      "powerup": null
+    },
+    {
+      "t": 10.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 7.67,
+      "score": 100,
+      "lives": 3,
+      "killed": 1,
+      "level": 0,
+      "player": {
+        "x": 9.32,
+        "z": 14,
+        "dir": 1
+      },
+      "enemies": 2,
+      "bricks": 186,
+      "powerup": null
+    },
+    {
+      "t": 11.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 8.17,
+      "score": 100,
+      "lives": 3,
+      "killed": 1,
+      "level": 0,
+      "player": {
+        "x": 11,
+        "z": 13.82,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 184,
+      "powerup": null
+    },
+    {
+      "t": 11.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 8.67,
+      "score": 100,
+      "lives": 3,
+      "killed": 1,
+      "level": 0,
+      "player": {
+        "x": 10.82,
+        "z": 12,
+        "dir": 3
+      },
+      "enemies": 2,
+      "bricks": 178,
+      "powerup": null
+    },
+    {
+      "t": 12.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 9.17,
+      "score": 100,
+      "lives": 3,
+      "killed": 1,
+      "level": 0,
+      "player": {
+        "x": 9,
+        "z": 10.46,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 173,
+      "powerup": null
+    },
+    {
+      "t": 12.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 9.67,
+      "score": 200,
+      "lives": 3,
+      "killed": 2,
+      "level": 0,
+      "player": {
+        "x": 9,
+        "z": 7.76,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 173,
+      "powerup": null
+    },
+    {
+      "t": 13.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 10.17,
+      "score": 200,
+      "lives": 3,
+      "killed": 2,
+      "level": 0,
+      "player": {
+        "x": 9,
+        "z": 5.06,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 173,
+      "powerup": null
+    },
+    {
+      "t": 13.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 10.67,
+      "score": 200,
+      "lives": 3,
+      "killed": 2,
+      "level": 0,
+      "player": {
+        "x": 9,
+        "z": 2.36,
+        "dir": 0
+      },
+      "enemies": 2,
+      "bricks": 173,
+      "powerup": null
+    },
+    {
+      "t": 14.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 11.17,
+      "score": 200,
+      "lives": 3,
+      "killed": 2,
+      "level": 0,
+      "player": {
+        "x": 7.74,
+        "z": 2,
+        "dir": 3
+      },
+      "enemies": 2,
+      "bricks": 171,
+      "powerup": null
+    },
+    {
+      "t": 14.7,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 11.67,
+      "score": 200,
+      "lives": 3,
+      "killed": 2,
+      "level": 0,
+      "player": {
+        "x": 7,
+        "z": 3.1,
+        "dir": 2
+      },
+      "enemies": 2,
+      "bricks": 163,
+      "powerup": null
+    },
+    {
+      "t": 15.2,
+      "phase": "playing",
+      "paused": false,
+      "status": "playing",
+      "reason": "",
+      "time": 12.17,
+      "score": 200,
+      "lives": 3,
+      "killed": 2,
+      "level": 0,
+      "player": {
+        "x": 7,
+        "z": 4.54,
+        "dir": 2
+      },
+      "enemies": 3,
+      "bricks": 157,
+      "powerup": null
+    }
+  ]
+}

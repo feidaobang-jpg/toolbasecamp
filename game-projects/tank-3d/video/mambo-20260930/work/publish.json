@@ -1,0 +1,14 @@
+{
+  "schema_version": 2,
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false
+    }
+  ],
+  "ready_to_upload": false
+}

@@ -1,0 +1,24 @@
+{
+  "status": "files-complete-listening-review-pending",
+  "video_uploaded": false,
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "voice": "必剪 曼波",
+  "voice_rate": 1.0,
+  "gameplay_modified": false,
+  "render_backend": "ANGLE NVIDIA RTX4060Ti D3D11",
+  "visual_review": "pass",
+  "audio_review": "not-run",
+  "production": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 50.3,
+    "voice": "必剪 曼波",
+    "voice_rate": 1.0,
+    "caption_alignment": "BCut ASR with exact rate remapping",
+    "video_sha256": "a7a28fc358247df3b5dd3a5e780120d9f75f64163fbffd613d1f78a1eb14036d"
+  },
+  "next_step": "试听确认主观听感；render.py和package.py可重建。"
+}

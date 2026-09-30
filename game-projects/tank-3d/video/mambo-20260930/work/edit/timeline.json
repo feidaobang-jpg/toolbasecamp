@@ -1,0 +1,90 @@
+[
+  {
+    "final_in": 0.0,
+    "final_out": 2.54,
+    "source": "capture/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 4,
+    "speed": 1
+  },
+  {
+    "final_in": 2.54,
+    "final_out": 7.833,
+    "source": "capture/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 4,
+    "speed": 1
+  },
+  {
+    "final_in": 7.833,
+    "final_out": 11.713,
+    "source": "capture/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 8,
+    "speed": 1
+  },
+  {
+    "final_in": 11.713,
+    "final_out": 16.867,
+    "source": "capture/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 38,
+    "speed": 1
+  },
+  {
+    "final_in": 16.867,
+    "final_out": 23.667,
+    "source": "capture/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 14,
+    "speed": 1
+  },
+  {
+    "final_in": 23.667,
+    "final_out": 26.457,
+    "source": "duck",
+    "kind": "still",
+    "source_in": 0,
+    "speed": 1
+  },
+  {
+    "final_in": 26.457,
+    "final_out": 31.487,
+    "source": "eagle",
+    "kind": "still",
+    "source_in": 0,
+    "speed": 1
+  },
+  {
+    "final_in": 31.487,
+    "final_out": 35.867,
+    "source": "camera/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 5,
+    "speed": 1
+  },
+  {
+    "final_in": 35.867,
+    "final_out": 40.127,
+    "source": "capture/capture-offline-audio.mp4",
+    "kind": "video",
+    "source_in": 55,
+    "speed": 1
+  },
+  {
+    "final_in": 40.127,
+    "final_out": 45.573,
+    "source": "end",
+    "kind": "still",
+    "source_in": 0,
+    "speed": 1
+  },
+  {
+    "final_in": 45.573,
+    "final_out": 50.3,
+    "source": "end",
+    "kind": "still",
+    "source_in": 0,
+    "speed": 1
+  }
+]
