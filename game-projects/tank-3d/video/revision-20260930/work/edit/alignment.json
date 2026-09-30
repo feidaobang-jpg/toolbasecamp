@@ -1,0 +1,170 @@
+[
+  {
+    "start": 0.0,
+    "end": 2.8333333333333335,
+    "text": "这地图，你应该一眼就认出来了。",
+    "source": "BCut ASR",
+    "original_start_ms": 0,
+    "original_end_ms": 2720
+  },
+  {
+    "start": 2.8468750000000003,
+    "end": 5.628125,
+    "text": "没错，坦克大战第一关。",
+    "source": "BCut ASR",
+    "original_start_ms": 2733,
+    "original_end_ms": 5403
+  },
+  {
+    "start": 5.628125,
+    "end": 9.065624999999999,
+    "text": "我把它做成了一个3D网页小游戏。",
+    "source": "BCut ASR",
+    "original_start_ms": 5403,
+    "original_end_ms": 8703
+  },
+  {
+    "start": 9.065624999999999,
+    "end": 10.690625,
+    "text": "还是那套玩法：",
+    "source": "BCut ASR",
+    "original_start_ms": 8703,
+    "original_end_ms": 10263
+  },
+  {
+    "start": 10.694791666666667,
+    "end": 12.736458333333335,
+    "text": "开坦克，打砖墙，",
+    "source": "BCut ASR",
+    "original_start_ms": 10267,
+    "original_end_ms": 12227
+  },
+  {
+    "start": 12.846875,
+    "end": 14.763541666666667,
+    "text": "守住底下那只老鹰。",
+    "source": "BCut ASR",
+    "original_start_ms": 12333,
+    "original_end_ms": 14173
+  },
+  {
+    "start": 14.763541666666667,
+    "end": 16.648958333333333,
+    "text": "别只顾着往前冲，",
+    "source": "BCut ASR",
+    "original_start_ms": 14173,
+    "original_end_ms": 15983
+  },
+  {
+    "start": 16.648958333333333,
+    "end": 19.076041666666665,
+    "text": "自家的炮弹也能把它打坏。",
+    "source": "BCut ASR",
+    "original_start_ms": 15983,
+    "original_end_ms": 18313
+  },
+  {
+    "start": 19.096875,
+    "end": 23.190625000000004,
+    "text": "红色坦克带着道具。捡到星星升级火力，",
+    "source": "BCut ASR",
+    "original_start_ms": 18333,
+    "original_end_ms": 22263
+  },
+  {
+    "start": 23.194791666666667,
+    "end": 26.36145833333333,
+    "text": "铁锹能临时给基地换上钢墙。",
+    "source": "BCut ASR",
+    "original_start_ms": 22267,
+    "original_end_ms": 25307
+  },
+  {
+    "start": 26.423958333333335,
+    "end": 30.17395833333333,
+    "text": "其实做的时候，最先翻车的是这只老鹰。",
+    "source": "BCut ASR",
+    "original_start_ms": 25367,
+    "original_end_ms": 28967
+  },
+  {
+    "start": 30.17395833333333,
+    "end": 34.53854166666667,
+    "text": "第一版像只鸭子。改了白头、钩喙和翅膀，",
+    "source": "BCut ASR",
+    "original_start_ms": 28967,
+    "original_end_ms": 33157
+  },
+  {
+    "start": 34.54895833333334,
+    "end": 36.41354166666667,
+    "text": "才终于像那么回事。",
+    "source": "BCut ASR",
+    "original_start_ms": 33167,
+    "original_end_ms": 34957
+  },
+  {
+    "start": 36.41354166666667,
+    "end": 39.653125,
+    "text": "现在可以切换斜俯视和俯视，",
+    "source": "BCut ASR",
+    "original_start_ms": 34957,
+    "original_end_ms": 38067
+  },
+  {
+    "start": 39.653125,
+    "end": 41.944791666666674,
+    "text": "找一个看得清路的角度。",
+    "source": "BCut ASR",
+    "original_start_ms": 38067,
+    "original_end_ms": 40267
+  },
+  {
+    "start": 41.944791666666674,
+    "end": 44.44479166666667,
+    "text": "这一局，二十辆敌人清完，",
+    "source": "BCut ASR",
+    "original_start_ms": 40267,
+    "original_end_ms": 42667
+  },
+  {
+    "start": 44.47916666666667,
+    "end": 46.708333333333336,
+    "text": "老鹰还在，过关。",
+    "source": "BCut ASR",
+    "original_start_ms": 42700,
+    "original_end_ms": 44840
+  },
+  {
+    "start": 46.708333333333336,
+    "end": 48.4375,
+    "text": "目前只有第一关。",
+    "source": "BCut ASR",
+    "original_start_ms": 44840,
+    "original_end_ms": 46500
+  },
+  {
+    "start": 48.4375,
+    "end": 50.979166666666664,
+    "text": "电脑和手机横屏都能玩，",
+    "source": "BCut ASR",
+    "original_start_ms": 46500,
+    "original_end_ms": 48940
+  },
+  {
+    "start": 51.00729166666667,
+    "end": 52.840624999999996,
+    "text": "链接放在简介里。",
+    "source": "BCut ASR",
+    "original_start_ms": 48967,
+    "original_end_ms": 50727
+  },
+  {
+    "start": 52.846875,
+    "end": 55.721875000000004,
+    "text": "你试试，看看这次能不能守住。",
+    "source": "BCut ASR",
+    "original_start_ms": 50733,
+    "original_end_ms": 53493
+  }
+]

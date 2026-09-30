@@ -1,0 +1,11 @@
+*.mp4
+*.wav
+*.mp3
+*.bjson
+capture/frames/
+work/capture/frames/
+work/camera/frames/
+work/qa/hardware/
+work/qa/software/
+work/edit/parts.txt
+work/edit/game.txt

@@ -1,0 +1,86 @@
+[
+  {
+    "inPoint": 0,
+    "outPoint": 2720
+  },
+  {
+    "inPoint": 2733,
+    "outPoint": 5403
+  },
+  {
+    "inPoint": 5403,
+    "outPoint": 8703
+  },
+  {
+    "inPoint": 8703,
+    "outPoint": 10263
+  },
+  {
+    "inPoint": 10267,
+    "outPoint": 12227
+  },
+  {
+    "inPoint": 12333,
+    "outPoint": 14173
+  },
+  {
+    "inPoint": 14173,
+    "outPoint": 15983
+  },
+  {
+    "inPoint": 15983,
+    "outPoint": 18313
+  },
+  {
+    "inPoint": 18333,
+    "outPoint": 22263
+  },
+  {
+    "inPoint": 22267,
+    "outPoint": 25307
+  },
+  {
+    "inPoint": 25367,
+    "outPoint": 28967
+  },
+  {
+    "inPoint": 28967,
+    "outPoint": 33157
+  },
+  {
+    "inPoint": 33167,
+    "outPoint": 34957
+  },
+  {
+    "inPoint": 34957,
+    "outPoint": 38067
+  },
+  {
+    "inPoint": 38067,
+    "outPoint": 40267
+  },
+  {
+    "inPoint": 40267,
+    "outPoint": 42667
+  },
+  {
+    "inPoint": 42700,
+    "outPoint": 44840
+  },
+  {
+    "inPoint": 44840,
+    "outPoint": 46500
+  },
+  {
+    "inPoint": 46500,
+    "outPoint": 48940
+  },
+  {
+    "inPoint": 48967,
+    "outPoint": 50727
+  },
+  {
+    "inPoint": 50733,
+    "outPoint": 53493
+  }
+]

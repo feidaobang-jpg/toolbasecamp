@@ -1,0 +1,10 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 58.1,
+  "voice": "必剪 清冷解说员",
+  "voice_rate": 0.96,
+  "caption_alignment": "BCut ASR with exact rate remapping",
+  "video_sha256": "d2390c44dbf814c78fcaec56e75adaa8946cef634fe205f4ae03f55a964f3f46"
+}

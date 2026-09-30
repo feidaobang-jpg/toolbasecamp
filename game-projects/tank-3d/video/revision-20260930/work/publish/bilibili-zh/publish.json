@@ -1,0 +1,50 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "language": "zh-CN",
+  "game_name": "坦克大战 3D：第一关",
+  "game_version": "current-site-modes1",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 58.1,
+  "video_sha256": "d2390c44dbf814c78fcaec56e75adaa8946cef634fe205f4ae03f55a964f3f46",
+  "subtitle_mode": "burned_in",
+  "title": "把童年的坦克大战搬进3D，换个视角守住老鹰！",
+  "description": "还是那张熟悉的地图：开坦克、打砖墙、守老鹰。这次把第一关做成了3D网页小游戏，可以切换斜俯视和俯视。视频里也留了个开发小插曲——第一版老鹰，怎么看都像只鸭子。\n\n这是AI辅助制作的非官方同人网页实验，目前只有第一关，支持电脑键盘和手机横屏。你来试试，看能不能守住。\n\n网页试玩：\nhttps://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "tags": [
+    "坦克大战",
+    "3D游戏",
+    "网页游戏",
+    "游戏开发",
+    "AI辅助开发",
+    "童年游戏",
+    "万物皆可游戏"
+  ],
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间"
+    }
+  },
+  "ready_to_upload": false,
+  "blocking_issues": [
+    "主观听审未运行，发布前需试听确认。"
+  ],
+  "disclosures": [
+    "按投稿页要求声明AI合成配音及AI辅助制作。"
+  ],
+  "unverified_fields": [
+    "账号当前投稿入口限制"
+  ]
+}
