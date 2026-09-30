@@ -1,0 +1,16 @@
+{
+  "title": "虫潮前哨：守卫基地",
+  "slug": "chongchao-qianshao",
+  "version": "toy-v0.1.0",
+  "source": "public\\html\\game\\starship_defense.html",
+  "source_sha256": "2b91e0520148f610db804cf53c71da6a39e96441ff84a3cb2588532703acc563",
+  "zip_sha256": "7e06c05e65b6943bf0d51878b0e8a829d6145281c78ed77af3187b2a17b86260",
+  "files": {
+    "game.js": "bf4af9c9832d647ad2d467622a60feb1f0b044394b5c3e7dfafd96d843942545",
+    "index.html": "2ef6f8980e014f008fbb669e6b4cc40d92dadc6e762b04304af4ed32c8196c1f",
+    "THREE-LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
+    "three.min.js": "217189aa5d1c48f7afc414a815a87289d9667fe1cafecd510f684566ef6176a5",
+    "toy-adapter.js": "a07952a6226e969e95bbcdac858ebbcf979c4f876ffd7add62f6aeeae376cf6f"
+  },
+  "status": "built_not_submitted"
+}
