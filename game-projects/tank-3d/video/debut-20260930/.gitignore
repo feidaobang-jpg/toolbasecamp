@@ -1,0 +1,6 @@
+# Local media remains available in this delivery, while sources and packaging are versioned.
+*.mp4
+*.wav
+*.mp3
+work/edit/shared-zh/parts.txt
+work/edit/shared-zh/game.txt

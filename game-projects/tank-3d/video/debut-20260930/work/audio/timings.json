@@ -1,0 +1,98 @@
+[
+  {
+    "type": "SentenceBoundary",
+    "offset": 1000000,
+    "duration": 37119049,
+    "text": "小时候守的那只老鹰，现在搬进了三维战场。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 37619049,
+    "duration": 50119049,
+    "text": "这是用AI辅助制作的《坦克大战三D：第一关》。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 87738099,
+    "duration": 46904764,
+    "text": "金色坦克出发，按住J开炮，把砖墙打成新的通道。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 134642863,
+    "duration": 50119049,
+    "text": "看起来是在追敌人，其实最重要的，是守住身后的老鹰。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 184761913,
+    "duration": 43452382,
+    "text": "连自己的炮弹也能打坏基地，开火前得看清方向。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 228214296,
+    "duration": 43928573,
+    "text": "击中闪红的敌人会掉道具，星星可以升级火力。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 272142869,
+    "duration": 51190478,
+    "text": "铁锹还能把基地围墙临时变成钢墙，给守家争取时间。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 323333348,
+    "duration": 30000001,
+    "text": "做这个版本时，第一只老鹰长这样。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 353333349,
+    "duration": 19285715,
+    "text": "怎么看都像只小鸭子。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 372619064,
+    "duration": 54642859,
+    "text": "后来加上白头、钩喙和展开的翅膀，终于像个需要保护的基地了。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 427261924,
+    "duration": 54642859,
+    "text": "镜头也能从俯瞰压低到坦克后方，同一张地图，换个角度看。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 481904783,
+    "duration": 49166668,
+    "text": "这一局，二十辆敌方坦克全部清掉，第一关守住了。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 531071452,
+    "duration": 49523811,
+    "text": "目前只有第一关和单人模式，电脑键盘和手机横屏都能操作。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 580595264,
+    "duration": 26309525,
+    "text": "网页试玩入口放在简介里。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 606904789,
+    "duration": 36190477,
+    "text": "后面可以再打磨低视角的遮挡和手机手感。"
+  },
+  {
+    "type": "SentenceBoundary",
+    "offset": 643095267,
+    "duration": 44523811,
+    "text": "你更喜欢看清全场的俯瞰，还是贴着坦克的视角？"
+  }
+]

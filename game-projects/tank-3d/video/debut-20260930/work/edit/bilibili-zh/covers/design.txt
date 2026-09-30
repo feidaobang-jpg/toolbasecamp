@@ -1,0 +1,1 @@
+封面真实截图：commander-view.jpg。双比例分别裁切到680px高，下方主体，上方标题。主标题坦克大战3D；看点换个视角守住老鹰。重建入口work/package.py。

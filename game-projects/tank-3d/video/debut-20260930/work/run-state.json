@@ -1,0 +1,17 @@
+{
+  "status": "files-complete-audio-review-pending",
+  "mode": "overview",
+  "requested_variants": ["bilibili-zh"],
+  "duration_seconds": 70.7666666667,
+  "capture_mode": "existing-offline-automated-gameplay",
+  "gameplay_modified": false,
+  "visual_review": "pass",
+  "technical_decode": "pass",
+  "audio_review": "not-run",
+  "objective_audio": {"integrated_lufs": -16.14, "true_peak_dbtp": -1.49, "lra_lu": 3.6},
+  "blocking_issues": ["发布前需播放确认人声和混音；工具无法执行主观听审。"],
+  "video_uploaded": false,
+  "resume": ["运行make.py重建成片；运行package.py重建封面和文案。", "修改口播时移除旧audio/timings.json并重建；修改剪辑时移除相应part文件及game分段音轨。"],
+  "local_media_policy": "MP4/WAV/MP3保留本地，不提交Git。",
+  "toolchain": {"python": "bundled Python 3.12", "tts": "Edge online YunxiNeural +5%", "ffmpeg": "D:/sd/ffmpeg/bin/ffmpeg.exe"}
+}

@@ -1,0 +1,24 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+WrapStyle: 2
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Microsoft YaHei,34,&H00FFFFFF,&H00FFFFFF,&H00101820,&H80000000,-1,0,0,0,100,100,0,0,1,2,1,2,50,50,180,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.10,0:00:03.93,Default,,0,0,0,,{\an2\pos(640,535)}小时候守的那只老鹰，现在搬进了三维战场。
+Dialogue: 0,0:00:03.76,0:00:08.89,Default,,0,0,0,,{\an2\pos(640,535)}这是用AI辅助制作的《坦克大战3D：第一关》。\N
+Dialogue: 0,0:00:08.77,0:00:13.58,Default,,0,0,0,,{\an2\pos(640,535)}金色坦克出发，按住J开炮，把砖墙打成新的通道。\N
+Dialogue: 0,0:00:13.46,0:00:18.60,Default,,0,0,0,,{\an2\pos(640,535)}看起来是在追敌人，其实最重要的，\N是守住身后的老鹰。
+Dialogue: 0,0:00:18.48,0:00:22.94,Default,,0,0,0,,{\an2\pos(640,535)}连自己的炮弹也能打坏基地，开火前得看清方向。
+Dialogue: 0,0:00:22.82,0:00:27.33,Default,,0,0,0,,{\an2\pos(640,535)}击中闪红的敌人会掉道具，星星可以升级火力。
+Dialogue: 0,0:00:27.21,0:00:32.45,Default,,0,0,0,,{\an2\pos(640,535)}铁锹还能把基地围墙临时变成钢墙，\N给守家争取时间。
+Dialogue: 0,0:00:32.33,0:00:37.38,Default,,0,0,0,,{\an2\pos(640,535)}做这个版本时，第一只老鹰长这样。\N怎么看都像只小鸭子。
+Dialogue: 0,0:00:37.26,0:00:42.85,Default,,0,0,0,,{\an2\pos(640,535)}后来加上白头、钩喙和展开的翅膀，\N终于像个需要保护的基地了。
+Dialogue: 0,0:00:42.73,0:00:48.31,Default,,0,0,0,,{\an2\pos(640,535)}镜头也能从俯瞰压低到坦克后方，同一张地图，\N换个角度看。
+Dialogue: 0,0:00:48.19,0:00:53.23,Default,,0,0,0,,{\an2\pos(640,535)}这一局，二十辆敌方坦克全部清掉，第一关守住了。\N
+Dialogue: 0,0:00:53.11,0:00:58.18,Default,,0,0,0,,{\an2\pos(640,535)}目前只有第一关和单人模式，\N电脑键盘和手机横屏都能操作。
+Dialogue: 0,0:00:58.06,0:01:04.43,Default,,0,0,0,,{\an2\pos(640,535)}网页试玩入口放在简介里。\N后面可以再打磨低视角的遮挡和手机手感。
+Dialogue: 0,0:01:04.31,0:01:08.88,Default,,0,0,0,,{\an2\pos(640,535)}你更喜欢看清全场的俯瞰，还是贴着坦克的视角？

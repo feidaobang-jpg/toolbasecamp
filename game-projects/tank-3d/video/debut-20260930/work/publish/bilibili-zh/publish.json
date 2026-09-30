@@ -1,0 +1,57 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "language": "zh-CN",
+  "game_name": "坦克大战 3D：第一关",
+  "game_version": "v0.1.0 gameplay captures",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "video_sha256": "ab3aa84501ca1384c5004f889c4084073a483ab6b9c7a055b2bf4ff27c713af4",
+  "width": 1280,
+  "height": 720,
+  "duration_seconds": 70.7666666667,
+  "title": "把童年的坦克大战搬进3D，换个视角守住老鹰！",
+  "description": "经典第一关变成了3D沙盘：开着金色坦克打穿砖墙、拾取道具，守住老鹰，清掉20辆敌方坦克。视频也记录了一个小插曲：第一版老鹰怎么看都像只小鸭子。\n\n这是AI辅助制作的非官方同人网页实验，目前是第一关单人Demo，支持电脑键盘和手机横屏操作。你更喜欢全场俯瞰，还是贴着坦克的视角？\n\n网页试玩：\nhttps://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "tags": [
+    "坦克大战",
+    "3D游戏",
+    "网页游戏",
+    "游戏开发",
+    "AI辅助开发",
+    "童年游戏",
+    "万物皆可游戏"
+  ],
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "subtitle_mode": "burned_in",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间"
+    }
+  },
+  "cover_upload_mode": "custom_image",
+  "cover_text": "坦克大战 3D / 换个视角，守住老鹰！",
+  "ready_to_upload": false,
+  "blocking_issues": [
+    "主观听审未运行：请发布前播放确认人声与混音。"
+  ],
+  "disclosures": [
+    "按投稿页要求声明AI合成配音及AI辅助制作。"
+  ],
+  "unverified_fields": [
+    "账号当前投稿页入口与限制"
+  ],
+  "platform_requirements_checked_at": "2026-09-30",
+  "platform_sources": [
+    "https://member.bilibili.com/"
+  ],
+  "category": null
+}

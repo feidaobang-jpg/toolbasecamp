@@ -1,0 +1,128 @@
+[
+  {
+    "final_in": 0,
+    "final_out": 3.7619049,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 0,
+    "kind": "video",
+    "speed": 1,
+    "narration": "小时候守的那只老鹰，现在搬进了三维战场。"
+  },
+  {
+    "final_in": 3.7619049,
+    "final_out": 8.7738099,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 3,
+    "kind": "video",
+    "speed": 1,
+    "narration": "这是用AI辅助制作的《坦克大战三D：第一关》。"
+  },
+  {
+    "final_in": 8.7738099,
+    "final_out": 13.4642863,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 8,
+    "kind": "video",
+    "speed": 1,
+    "narration": "金色坦克出发，按住J开炮，把砖墙打成新的通道。"
+  },
+  {
+    "final_in": 13.4642863,
+    "final_out": 18.4761913,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 38,
+    "kind": "video",
+    "speed": 1,
+    "narration": "看起来是在追敌人，其实最重要的，是守住身后的老鹰。"
+  },
+  {
+    "final_in": 18.4761913,
+    "final_out": 22.8214296,
+    "source": "media-kit/releases/v0.1.0/captures/round-defeat-seed104.mp4",
+    "source_in": 20,
+    "kind": "video",
+    "speed": 1,
+    "narration": "连自己的炮弹也能打坏基地，开火前得看清方向。"
+  },
+  {
+    "final_in": 22.8214296,
+    "final_out": 27.2142869,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 14,
+    "kind": "video",
+    "speed": 1,
+    "narration": "击中闪红的敌人会掉道具，星星可以升级火力。"
+  },
+  {
+    "final_in": 27.2142869,
+    "final_out": 32.3333348,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 49,
+    "kind": "video",
+    "speed": 1,
+    "narration": "铁锹还能把基地围墙临时变成钢墙，给守家争取时间。"
+  },
+  {
+    "final_in": 32.3333348,
+    "final_out": 37.2619064,
+    "source": "video/debut-20260930/work/capture/duck.png",
+    "source_in": 0,
+    "kind": "still",
+    "speed": 1,
+    "narration": "做这个版本时，第一只老鹰长这样。怎么看都像只小鸭子。"
+  },
+  {
+    "final_in": 37.2619064,
+    "final_out": 42.7261924,
+    "source": "video/debut-20260930/work/capture/eagle.png",
+    "source_in": 0,
+    "kind": "still",
+    "speed": 1,
+    "narration": "后来加上白头、钩喙和展开的翅膀，终于像个需要保护的基地了。"
+  },
+  {
+    "final_in": 42.7261924,
+    "final_out": 48.1904783,
+    "source": "video/debut-20260930/work/capture/camera.png",
+    "source_in": 0,
+    "kind": "still",
+    "speed": 1,
+    "narration": "镜头也能从俯瞰压低到坦克后方，同一张地图，换个角度看。"
+  },
+  {
+    "final_in": 48.1904783,
+    "final_out": 53.1071452,
+    "source": "media-kit/releases/v0.1.0/captures/round-win-seed275.mp4",
+    "source_in": 55,
+    "kind": "video",
+    "speed": 1,
+    "narration": "这一局，二十辆敌方坦克全部清掉，第一关守住了。"
+  },
+  {
+    "final_in": 53.1071452,
+    "final_out": 58.0595264,
+    "source": "video/debut-20260930/work/capture/mobile.png",
+    "source_in": 0,
+    "kind": "still",
+    "speed": 1,
+    "narration": "目前只有第一关和单人模式，电脑键盘和手机横屏都能操作。"
+  },
+  {
+    "final_in": 58.0595264,
+    "final_out": 64.3095267,
+    "source": "video/debut-20260930/work/capture/end.png",
+    "source_in": 0,
+    "kind": "still",
+    "speed": 1,
+    "narration": "网页试玩入口放在简介里。后面可以再打磨低视角的遮挡和手机手感。"
+  },
+  {
+    "final_in": 64.3095267,
+    "final_out": 70.76666666666667,
+    "source": "video/debut-20260930/work/capture/end.png",
+    "source_in": 0,
+    "kind": "still",
+    "speed": 1,
+    "narration": "你更喜欢看清全场的俯瞰，还是贴着坦克的视角？"
+  }
+]

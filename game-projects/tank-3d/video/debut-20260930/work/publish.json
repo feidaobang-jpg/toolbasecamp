@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "game_name": "坦克大战 3D：第一关",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "主观听审未运行：请发布前播放确认人声与混音。"
+      ]
+    }
+  ],
+  "ready_to_upload": false
+}
