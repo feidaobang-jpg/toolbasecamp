@@ -1,0 +1,16 @@
+﻿【标题】
+虫潮来了，这座基地你能守住吗？我的小游戏上线B站Toy了
+
+【简介】
+用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。
+
+试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html
+
+目前是可玩的试玩版，下一步想先打磨操作体验。
+
+【标签】
+独立游戏、游戏开发、游戏试玩、AI辅助开发、B站Toy
+
+【置顶评论】
+试玩入口：https://www.bilibili.com/toy/chongchao-qianshao/index.html
+试完告诉我：哪处操作最别扭？最好说一下你用的是电脑还是手机，我会据此安排下一轮修改。

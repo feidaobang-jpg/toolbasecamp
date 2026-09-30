@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮前哨：守卫基地",
+  "game_version": "toy-v0.1.0",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "配音可懂度和主观混音听感尚未听审：当前工具无法接收音频。请用户播放成片确认。"
+      ]
+    }
+  ],
+  "ready_to_upload": false
+}

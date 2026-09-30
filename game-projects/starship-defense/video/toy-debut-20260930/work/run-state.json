@@ -1,0 +1,37 @@
+{
+  "status": "published-user-reported",
+  "video_complete": true,
+  "video_uploaded": true,
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "duration_seconds": 32.434,
+  "capture_mode": "realtime-automation",
+  "gameplay_modified": false,
+  "visual_review": "pass",
+  "technical_decode": "pass",
+  "audio_review": "not-run",
+  "objective_audio": {
+    "integrated_lufs": -16.24,
+    "true_peak_dbtp": -1.44,
+    "lra_lu": 2.6
+  },
+  "blocking_issues": [
+    "配音可懂度和主观混音听感尚未听审：当前工具无法接收音频。请用户播放成片确认。"
+  ],
+  "resume": [
+    "用户听完确认或指出需修改的具体时间点。",
+    "若改稿：运行 narrate.py，再运行 render.py；随后重做视频验收、运行 package.py。"
+  ],
+  "inputs": [
+    {
+      "file": "capture/defense.webm",
+      "sha256": "f80369efc5d63c9ee6104fe66e7bacf4d872902ebf2f34633b4ca40d5e61c7bc"
+    },
+    {
+      "file": "audio/narration.mp3",
+      "sha256": "5654de57b85c78702ce705701952e3ac816f196ca95665d273e61d7961251f86"
+    }
+  ],
+  "local_media_policy": "Raw video/audio and rendered video are ignored by Git but retained in this local project."
+}

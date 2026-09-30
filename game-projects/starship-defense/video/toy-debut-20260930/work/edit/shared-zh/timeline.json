@@ -1,0 +1,50 @@
+[
+  {
+    "final_in": 0,
+    "final_out": 3.6190477,
+    "source": "capture/defense.webm",
+    "source_in": 21,
+    "source_out": 24.6190477,
+    "speed": 1
+  },
+  {
+    "final_in": 3.6190477,
+    "final_out": 7.2380955,
+    "source": "capture/defense.webm",
+    "source_in": 2.9,
+    "source_out": 6.519047800000001,
+    "speed": 1
+  },
+  {
+    "final_in": 7.2380955,
+    "final_out": 11.9285719,
+    "source": "capture/defense.webm",
+    "source_in": 10.5,
+    "source_out": 15.190476400000001,
+    "speed": 1
+  },
+  {
+    "final_in": 11.9285719,
+    "final_out": 15.583334,
+    "source": "capture/defense.webm",
+    "source_in": 41.5,
+    "source_out": 45.1547621,
+    "speed": 1
+  },
+  {
+    "final_in": 15.583334,
+    "final_out": 18.6785722,
+    "source": "capture/defense.webm",
+    "source_in": 50.8,
+    "source_out": 53.8952382,
+    "speed": 1
+  },
+  {
+    "final_in": 18.6785722,
+    "final_out": 32.43333333333334,
+    "source": "capture/defense.webm",
+    "source_in": 55,
+    "source_out": 68.75476113333333,
+    "speed": 1
+  }
+]

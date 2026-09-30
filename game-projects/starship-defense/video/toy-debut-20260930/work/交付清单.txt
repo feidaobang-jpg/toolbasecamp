@@ -1,0 +1,8 @@
+﻿投稿入口：../final/bilibili-zh/
+中文横屏 1920×1080，30 fps，32.43 秒。
+成片：gameplay-zh-final.mp4（已烧录字幕，不必另传SRT）
+首页推荐封面：cover-home-4x3.jpg
+个人空间封面：cover-space-16x9.jpg
+文案：投稿文案.txt
+文件已完成；画面、完整解码和客观音频检查通过。主观听审待用户播放确认，因此尚未标为全部验收通过。
+未上传视频；抖音、YouTube本次未请求。

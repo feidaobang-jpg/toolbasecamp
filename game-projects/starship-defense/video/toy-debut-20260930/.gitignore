@@ -1,0 +1,13 @@
+final/**/*.mp4
+work/audio/
+work/capture/runtime/
+work/capture/*.webm
+work/capture/*.wav
+work/tmp/
+work/edit/*.mp4
+work/edit/*.wav
+work/edit/**/*.mkv
+work/edit/**/*.mp4
+work/edit/**/*.wav
+work/qa/*.mp4
+work/__pycache__/

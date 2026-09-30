@@ -1,0 +1,17 @@
+[0:v]split=6[vs0][vs1][vs2][vs3][vs4][vs5];
+[0:a]asplit=6[as0][as1][as2][as3][as4][as5];
+[vs0]trim=start=21:duration=3.6190477,setpts=PTS-STARTPTS,fps=30,setsar=1[v0];
+[as0]atrim=start=21:duration=3.6190477,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.03,afade=t=out:st=3.5890477:d=0.03[a0];
+[vs1]trim=start=2.9:duration=3.6190478,setpts=PTS-STARTPTS,fps=30,setsar=1[v1];
+[as1]atrim=start=2.9:duration=3.6190478,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.03,afade=t=out:st=3.5890478000000003:d=0.03[a1];
+[vs2]trim=start=10.5:duration=4.6904764,setpts=PTS-STARTPTS,fps=30,setsar=1[v2];
+[as2]atrim=start=10.5:duration=4.6904764,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.03,afade=t=out:st=4.660476399999999:d=0.03[a2];
+[vs3]trim=start=41.5:duration=3.654762100000001,setpts=PTS-STARTPTS,fps=30,setsar=1[v3];
+[as3]atrim=start=41.5:duration=3.654762100000001,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.03,afade=t=out:st=3.624762100000001:d=0.03[a3];
+[vs4]trim=start=50.8:duration=3.0952382000000007,setpts=PTS-STARTPTS,fps=30,setsar=1[v4];
+[as4]atrim=start=50.8:duration=3.0952382000000007,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.03,afade=t=out:st=3.065238200000001:d=0.03[a4];
+[vs5]trim=start=55:duration=13.754761133333336,setpts=PTS-STARTPTS,fps=30,setsar=1[v5];
+[as5]atrim=start=55:duration=13.754761133333336,asetpts=PTS-STARTPTS,aresample=48000,afade=t=in:d=0.03,afade=t=out:st=13.724761133333336:d=0.03[a5];
+[v0][a0][v1][a1][v2][a2][v3][a3][v4][a4][v5][a5]concat=n=6:v=1:a=1[vc][ac];
+[vc]drawbox=x=0:y=0:w=iw:h=ih:color=0x061527@0.82:t=fill:enable='gte(t,18.6785722)',drawtext=fontfile='C\:/Windows/Fonts/msyhbd.ttc':text='虫潮前哨':fontsize=100:fontcolor=white:x=(w-tw)/2:y=225:enable='gte(t,18.6785722)',drawtext=fontfile='C\:/Windows/Fonts/msyhbd.ttc':text='已上线 B站 Toy':fontsize=58:fontcolor=0xffd35a:x=(w-tw)/2:y=370:enable='gte(t,18.6785722)',drawtext=fontfile='C\:/Windows/Fonts/msyhbd.ttc':text='简介链接 · 点击试玩':fontsize=40:fontcolor=0xd4e7ed:x=(w-tw)/2:y=477:enable='gte(t,18.6785722)',drawtext=fontfile='C\:/Windows/Fonts/msyhbd.ttc':text='你觉得哪处操作最别扭？':fontsize=42:fontcolor=0x8dcfdb:x=(w-tw)/2:y=579:enable='gte(t,23.3333343)',subtitles=edit/shared-zh/captions.ass:fontsdir='C\:/Windows/Fonts',fade=t=out:st=31.733333333333338:d=0.7,format=yuv420p[vout];
+[ac]anull[aout]
