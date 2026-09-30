@@ -12,8 +12,7 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 title='虫潮来了，这座基地你能守住吗？我的小游戏上线B站Toy了'
 desc='用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n目前是可玩的试玩版，下一步想先打磨操作体验。'
 tags=['独立游戏','游戏开发','游戏试玩','AI辅助开发','B站Toy']
-comment='试玩入口：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n试完告诉我：哪处操作最别扭？最好说一下你用的是电脑还是手机，我会据此安排下一轮修改。'
-copy=f'【标题】\n{title}\n\n【简介】\n{desc}\n\n【标签】\n'+ '、'.join(tags)+f'\n\n【置顶评论】\n{comment}\n'
+copy=f'【标题】\n{title}\n\n【标签】\n'+ '\n'.join(tags)+f'\n\n【简介】\n{desc}\n'
 (F/'投稿文案.txt').write_text(copy,encoding='utf-8-sig')
 probe=json.loads((W/'qa/ffprobe.json').read_text(encoding='utf-8-sig'))
 duration=float(probe['format']['duration'])
@@ -27,7 +26,7 @@ manifest={'variant_id':'bilibili-zh','platform':'bilibili','content_type':'short
  'game_name':'虫潮前哨：守卫基地','game_version':'toy-v0.1.0','media_id':'shared-zh',
  'video_file':'../../../final/bilibili-zh/gameplay-zh-final.mp4','video_sha256':sha(F/'gameplay-zh-final.mp4'),
  'width':1920,'height':1080,'fps':30,'duration_seconds':duration,'title':title,'description':desc,'tags':tags,
- 'pinned_comment_draft':comment,'description_file':'../../../final/bilibili-zh/投稿文案.txt',
+ 'description_file':'../../../final/bilibili-zh/投稿文案.txt',
  'cover_file':covers['home_4_3']['file'],'cover_files':covers,'cover_text':'基地能守住吗？ / 虫潮前哨 / 已上线 Toy',
  'cover_selection_source':'AI-assisted graphic layout based on captured gameplay, not an unmodified screenshot',
  'cover_upload_mode':'custom_image','subtitle_mode':'burned_in','category':None,
