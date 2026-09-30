@@ -104,7 +104,7 @@ async function sampleFrames(page, ms) {
       await page.keyboard.down('KeyE'); await adv(page, 28); await page.keyboard.up('KeyE');
       const yaw = await page.evaluate(() => window.__qa.view.yaw); note('yaw after E', yaw);
       await page.keyboard.down('KeyW'); await adv(page, 3); await page.keyboard.up('KeyW');
-      s = await state(page); note('dir after orbit + W', s.player.dir); assert.notEqual(s.player.dir, 0);
+      s = await state(page); note('dir after orbit + W', s.player.dir); assert.equal(s.player.dir, 0); assert.ok(await page.evaluate(() => window.__qa.view.pitch > 1.4), 'E selects top view');
       await page.keyboard.down('KeyC'); await adv(page, 2); await page.keyboard.up('KeyC');
       assert.ok(Math.abs(await page.evaluate(() => window.__qa.view.yaw)) < 1e-6, 'C recentres');
       // Blur clears held keys and auto-pauses.
@@ -171,13 +171,20 @@ async function sampleFrames(page, ms) {
       assert.ok(s.player.z < z0 - 2, 'stick drives north');
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
       await adv(page, 10); const zStop = (await state(page)).player.z; await adv(page, 10); assert.equal((await state(page)).player.z, zStop, 'released stick stops the tank');
-      // Portrait → rotate overlay + auto pause; back to landscape → resume via button.
-      await page.setViewportSize({ width: 390, height: 844 }); await adv(page, 4);
-      assert.ok(await page.locator('#rotate').isVisible()); s = await state(page); assert.equal(s.paused, true);
-      await page.screenshot({ path: path.join(out, 'mobile-portrait-paused.png') });
+      // Portrait automatically rotates the playable surface; touch coordinates invert the transform.
+      await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(200); await adv(page, 24);
+      assert.ok(await page.locator('#rotate').isHidden()); assert.equal((await state(page)).paused, false);
+      assert.ok(await page.locator('#game').evaluate(e=>e.classList.contains('portrait-play')));
+      await page.screenshot({ path: path.join(out, 'mobile-portrait-play.png') });
+      const pb=await page.locator('#stick').boundingBox();
+      const pcx=pb.x+pb.width/2,pcy=pb.y+pb.height/2;
+      const before=(await state(page)).player.z;
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:pcx,y:pcy,id:1}]});
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:pcx+40,y:pcy,id:1}]});
+      await adv(page,12);assert.ok((await state(page)).player.z<before-1,'portrait logical up drives north');
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
       await page.setViewportSize({ width: 844, height: 390 }); await adv(page, 4);
-      assert.ok(await page.locator('#rotate').isHidden()); await page.locator('#pause').tap(); await adv(page, 4);
-      s = await state(page); assert.equal(s.paused, false); note('mobile resume', s);
+      assert.equal((await state(page)).paused, false);
       await page.setViewportSize({ width: 740, height: 360 }); await adv(page, 6); await page.screenshot({ path: path.join(out, 'mobile-narrow.png') });
       assert.deepEqual(errors, []); note('mobile', 'OK');
     } else if (scenario === 'perf-desktop' || scenario === 'perf-mobile') {

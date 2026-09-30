@@ -73,3 +73,17 @@ body.touch-mode #side{top:auto;bottom:auto;top:92px;transform:none;right:max(118
   body.touch-mode #side{top:58px;right:max(12px,env(safe-area-inset-right))}
 }
 @media(max-width:700px) and (orientation:landscape){.brand .eyebrow{display:none}.stats{gap:9px;padding:5px 10px}.toolbar .tb-btn{font-size:10px;padding:5px 8px}.panel{left:4%;width:400px}.brand strong{font-size:15px}}
+
+#game.portrait-play{inset:auto;left:50%;top:50%;transform:translate(-50%,-50%) rotate(90deg)}
+#game.portrait-play .panel{width:420px;max-height:85%;overflow:auto;padding:16px 22px}
+#game.portrait-play #hud{top:10px;left:14px;right:14px;gap:8px}
+#game.portrait-play .brand strong{font-size:18px}
+#game.portrait-play .stats{gap:12px;padding:6px 12px}
+#game.portrait-play .stats b{font-size:16px}
+#game.portrait-play .toolbar{gap:6px}
+#game.portrait-play .toolbar .tb-btn{padding:5px 8px;min-height:44px;font-size:10px}
+#game.portrait-play #side{top:66px;right:14px}
+#game.portrait-play #reserve{grid-template-columns:repeat(4,11px)}
+#game.portrait-play .panel h1{font-size:26px;margin:6px 0}
+#game.portrait-play .panel p{font-size:12px;margin:6px 0}
+#game.portrait-play .instructions{margin:10px 0}

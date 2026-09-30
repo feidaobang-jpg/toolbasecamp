@@ -1,0 +1,27 @@
+{
+  "lifecycle": {
+    "deaths": 5,
+    "respawn": true,
+    "protectionExpires": true,
+    "demoToggle": true
+  },
+  "perf": {
+    "fps": 170.14153477208984,
+    "median": 5.899999999999636,
+    "p95": 6,
+    "over50": 0,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "drawCalls": 146,
+    "triangles": 12416,
+    "dpr": 1,
+    "buffer": [
+      1280,
+      720
+    ],
+    "recording": true
+  },
+  "errors": [],
+  "browser": "154.0.4258.37",
+  "capture": "realtime-automation",
+  "audio": "none"
+}

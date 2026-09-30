@@ -1,0 +1,41 @@
+{
+  "scenario": "perf-desktop",
+  "url": "http://127.0.0.1:8765/public/html/game/tank-3d/index.html",
+  "viewport": "1280x720 @1x",
+  "browser": "154.0.4258.37",
+  "mode": "headless, default GL",
+  "route": "bot plays with QA shield; then orbit with E",
+  "play": {
+    "seconds": 8,
+    "frames": 1352,
+    "fps": 169,
+    "median_ms": 5.9,
+    "p95_ms": 6,
+    "over50ms": 1,
+    "max_draw_calls": 156,
+    "max_triangles": 11962,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "pixelRatio": 1,
+    "drawing_buffer": [
+      1280,
+      720
+    ]
+  },
+  "orbit": {
+    "seconds": 3.01,
+    "frames": 512,
+    "fps": 170.37,
+    "median_ms": 5.9,
+    "p95_ms": 6,
+    "over50ms": 0,
+    "max_draw_calls": 196,
+    "max_triangles": 12716,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "pixelRatio": 1,
+    "drawing_buffer": [
+      1280,
+      720
+    ]
+  },
+  "errors": []
+}

@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "v0.2.0",
+  "base_version": "v0.1.0",
+  "created_at": "2026-09-30T23:02:34.048084+08:00",
+  "build": {
+    "id": "tank3d-v020",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "c95d2105d08fee054f29fe88678a56d67c67f255e5fa23b0eabbf7ce97f73068",
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "controls",
+      "description": "键盘/触控/手机竖屏横置",
+      "status": "implemented",
+      "evidence_ids": [
+        "mobile-play",
+        "mobile-portrait-play"
+      ]
+    },
+    {
+      "id": "combat",
+      "description": "20敌军、砖墙、基地、道具",
+      "status": "implemented",
+      "evidence_ids": [
+        "realtime-battle",
+        "play"
+      ]
+    },
+    {
+      "id": "camera",
+      "description": "斜俯视与俯视固定预设",
+      "status": "implemented",
+      "evidence_ids": [
+        "realtime-top"
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "description": "无限复活与基地失败/胜利/重玩",
+      "status": "implemented",
+      "evidence_ids": [
+        "flow-defeat-panel",
+        "flow-win-panel",
+        "flow-restart-rebuild"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "portrait",
+      "feature_ids": [
+        "controls"
+      ],
+      "before": "竖屏暂停并遮挡",
+      "after": "自动旋转并逆变换触控",
+      "user_visible_result": "竖屏也能开局和操作",
+      "evidence_ids": [
+        "mobile-portrait-play"
+      ],
+      "validation": "pass"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "decoded-12",
+      "file": "releases/v0.2.0/captures/decoded-12.png",
+      "sha256": "d490bd214afa591c57cf8161820f9bfe2e92a1e44f00e56121ffe3c58ee6042c",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "decoded-12：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "decoded-8",
+      "file": "releases/v0.2.0/captures/decoded-8.png",
+      "sha256": "2bd4a11bc2ffb53739e1bdb8d9bfccb14c6b4866a1640244f8b96694ffb489a7",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "decoded-8：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "flow-defeat-panel",
+      "file": "releases/v0.2.0/captures/flow-defeat-panel.png",
+      "sha256": "fd1b97bffd148af84244370095813cf7d83c1b34c98340d617486f0a343a321b",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "flow-defeat-panel：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 640,
+      "height": 360,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "flow-restart-rebuild",
+      "file": "releases/v0.2.0/captures/flow-restart-rebuild.png",
+      "sha256": "3250f286c9d18b3c57ea869c04f308feafe7ca48604d098950ecf33ad1edfb0f",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "flow-restart-rebuild：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 640,
+      "height": 360,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "flow-win-panel",
+      "file": "releases/v0.2.0/captures/flow-win-panel.png",
+      "sha256": "f555e5ac5a1c905ec08b17ea281be1b15c1c652397191577206394619baa988f",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "flow-win-panel：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 640,
+      "height": 360,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-narrow",
+      "file": "releases/v0.2.0/captures/mobile-narrow.png",
+      "sha256": "c18332345fa884e4a0270dc5214cd2e83b3aa8bc555aae28f0e73700780e75cc",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "mobile-narrow：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1480,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-play",
+      "file": "releases/v0.2.0/captures/mobile-play.png",
+      "sha256": "5f1170ae546c90a1d1f43c8b06bb8c93c12cf62926e1e79d01176083fed180c9",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "mobile-play：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1688,
+      "height": 780,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-portrait-play",
+      "file": "releases/v0.2.0/captures/mobile-portrait-play.png",
+      "sha256": "0a07cf1bd1d236fd66c4e173edbeb80f8422d50c36bb427969fddf151131c38a",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "mobile-portrait-play：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 780,
+      "height": 1688,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-title",
+      "file": "releases/v0.2.0/captures/mobile-title.png",
+      "sha256": "5317df11650e6f63941d968a03d5608f7f8120f2a0d9563d6ef18ef59c6c9523",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "reconstruction",
+      "description": "mobile-title：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1688,
+      "height": 780,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "realtime-battle",
+      "file": "releases/v0.2.0/captures/realtime-battle.png",
+      "sha256": "0a4029e1b414fc4effec6584dfdb7600bf38a2a4b5118adef720c2d5a5614ef9",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "realtime-automation",
+      "description": "realtime-battle：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "realtime-top",
+      "file": "releases/v0.2.0/captures/realtime-top.png",
+      "sha256": "c6a1c5ed3ff658b258cc1ae4c2386fde98364a469ab29e9a7677d46f47c07840",
+      "kind": "screenshot",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "realtime-automation",
+      "description": "realtime-top：当前构建；flow结局使用QA捷径，mobile为模拟触控，decoded为录屏解码帧",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play",
+      "file": "releases/v0.2.0/captures/realtime-play.webm",
+      "sha256": "2a95796b3963edabd3ba4ac9f4f0f9a1d6df85d6e6aa5c6c3dd91c8eeb4a891f",
+      "kind": "video",
+      "version": "v0.2.0",
+      "build_id": "tank3d-v020",
+      "capture_mode": "realtime-automation",
+      "description": "Canvas captureStream，30fps目标，QA捕获启用preserveDrawingBuffer；开场、QA复活检查后重置、W/J射击、切俯视。无DOM HUD、无音轨。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 18.54,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 7,
+          "out_seconds": 13,
+          "description": "玩家开炮、敌军移动、砖墙破坏"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "device": "Windows / RTX 4060 Ti / Edge headless 154.0.4258.37",
+    "viewports": [
+      "1280x720",
+      "844x390",
+      "390x844",
+      "740x360"
+    ],
+    "method": "真实HTTP浏览器，手机CDP触控模拟，flow用虚拟时钟和明确QA捷径；性能为独立实时硬件测量，不录屏",
+    "results": "键盘流程、多触控、竖屏方向、5次复活、护盾到期、演示开关通过；桌面P95 6ms；手机模拟不代表真机",
+    "evidence": [
+      "captures/perf-desktop.json",
+      "captures/perf-mobile.json",
+      "captures/realtime-qa.json"
+    ],
+    "untested": [
+      "真机手机",
+      "完整有声通关录像",
+      "真机全屏"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像无HUD与音轨",
+      "真机未测",
+      "清关采用QA捷径，未采完整正常通关"
+    ]
+  }
+}

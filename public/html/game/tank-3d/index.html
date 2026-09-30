@@ -8,7 +8,7 @@
   <meta name="description" content="坦克大战第一关的程序化 3D 网页演示：打砖墙、守老鹰、吃道具，键盘与手机横屏都能玩。">
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=1">
+  <link rel="stylesheet" href="./style.css?v=portrait2">
 </head>
 <body>
 <main id="game" tabindex="-1">
@@ -62,7 +62,7 @@ in a new dimension.</h1>
   }
 </script>
 <script type="module">
-  import('./main.js?v=modes1').catch(err => {
+  import('./main.js?v=portrait2').catch(err => {
     console.error(err);
     if (location.protocol !== 'file:') {
       document.getElementById('panel-copy').textContent = t('tank3d.loadError');

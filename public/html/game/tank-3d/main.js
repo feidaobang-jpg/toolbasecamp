@@ -11,7 +11,7 @@ const view = createScene($('world'), world);
 const modes=installDemoControls(()=>world,view,true);
 const held = new Set(), pointerKeys = new Set(), tapped = new Set(), dirStack = [];   // tapped: presses shorter than a frame still count once
 const DIR_KEYS = { KeyW: 0, KeyD: 1, KeyS: 2, KeyA: 3 };
-const HOLD_ALIASES = { ArrowLeft: 'KeyQ', ArrowRight: 'KeyE', ArrowUp: 'KeyR', ArrowDown: 'KeyF' }; // arrow keys = backup camera controls
+const HOLD_ALIASES = {}; // Menu arrows remain available for navigation.
 let phase = 'title', paused = false, introT = 0, last = performance.now(), orientationBlocked = false, bigTimer = 0;
 const mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
 const HI_KEY = 'tb-game-tank3d-hi';
@@ -35,7 +35,7 @@ function clearInput() {
   document.querySelectorAll('.held').forEach(el => el.classList.remove('held'));
 }
 function requestFull() {
-  const el = $('game');
+  const el = document.documentElement;
   try { if (document.fullscreenElement !== el && el.requestFullscreen) el.requestFullscreen({ navigationUI: 'hide' }).then(() => { try { screen.orientation?.lock?.('landscape').catch(() => {}); } catch (e) { /* unsupported */ } }).catch(() => { if (mobileDevice) toast(tr('tank3d.fullFail'), 2600); }); } catch (e) { /* unsupported */ }
 }
 function refreshSoundLabel() { setText('sound', audio.enabled ? tr('tank3d.soundOn') : tr('tank3d.soundOff')); }
@@ -122,7 +122,7 @@ function frame(now) {
     orientation();
   }
   const active = !paused && !orientationBlocked;
-  const cam = { yaw: (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0), pitch: (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0), reset: pressed('KeyC') };
+  const cam = {};
   // Intro: shutters close on "STAGE 1" (0–0.75 s), then the camera swoops from the eagle up to the overview.
   if (phase === 'intro' && active) {
     introT += dt;
@@ -179,8 +179,10 @@ document.querySelectorAll('[data-hold]').forEach(btn => {
 // --- Virtual stick: 4-way, dominant axis with a little hysteresis so diagonals don't jitter.
 const stickEl = $('stick'), knob = $('knob');
 function moveStick(e) {
-  const r = stickEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, max = r.width * .38;
-  let dx = e.clientX - cx, dy = e.clientY - cy; const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; }
+  const r = stickEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, max = stickEl.clientWidth * .38;
+  let dx = e.clientX - cx, dy = e.clientY - cy;
+  if ($('game').classList.contains('portrait-play')) { const physicalX = dx; dx = dy; dy = -physicalX; }
+  const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; }
   knob.style.transform = `translate(${dx}px,${dy}px)`;
   const nx = dx / max, ny = dy / max, mag = Math.hypot(nx, ny);
   if (mag < .3) { stick.axis = -1; return; }
@@ -193,16 +195,19 @@ const releaseStick = e => { if (e.pointerId !== stick.id) return; stick = { id: 
 stickEl.addEventListener('pointerup', releaseStick); stickEl.addEventListener('pointercancel', releaseStick); stickEl.addEventListener('lostpointercapture', releaseStick);
 
 function orientation() {
-  const blocked = mobileDevice && innerHeight > innerWidth;
-  if (blocked !== orientationBlocked) {
-    orientationBlocked = blocked; $('rotate').hidden = !blocked;
-    if (blocked) { clearInput(); if ((phase === 'playing' || phase === 'intro') && !paused) togglePause(); }
-  }
+  const width = document.documentElement.clientWidth, height = document.documentElement.clientHeight;
+  const rotate = mobileDevice && height > width && phase !== 'title';
+  const game = $('game');
+  if (rotate !== game.classList.contains('portrait-play')) clearInput();
+  game.classList.toggle('portrait-play', rotate);
+  if (rotate) { game.style.width = height + 'px'; game.style.height = width + 'px'; }
+  else { game.style.width = ''; game.style.height = ''; }
+  orientationBlocked = false; $('rotate').hidden = true;
 }
 document.addEventListener('tb:locale', () => { refreshSoundLabel(); refreshPauseLabel(); if (phase === 'over') showPanel(world.status === 'won' ? 'won' : 'lost'); });
 $('touch').hidden = !mobileDevice; document.body.classList.toggle('touch-mode', mobileDevice);
-addEventListener('resize', () => { view.resize(); orientation(); });
-document.addEventListener('fullscreenchange', () => { view.resize(); orientation(); });
+addEventListener('resize', () => { clearInput(); orientation(); view.resize(); });
+document.addEventListener('fullscreenchange', () => { clearInput(); orientation(); view.resize(); });
 addEventListener('orientationchange', () => setTimeout(() => { view.resize(); orientation(); }, 120));
 buildReserve(); refreshSoundLabel(); refreshPauseLabel(); orientation(); updateHud();
 $('game').focus({ preventScroll: true });
