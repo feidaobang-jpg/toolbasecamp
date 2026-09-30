@@ -6,8 +6,8 @@
   "created_at": "2026-09-30T23:02:34.048084+08:00",
   "build": {
     "id": "tank3d-v020",
-    "commit": null,
-    "dirty": true,
+    "commit": "27636b1b",
+    "dirty": false,
     "fingerprint": "c95d2105d08fee054f29fe88678a56d67c67f255e5fa23b0eabbf7ce97f73068",
     "entrypoint": "public/html/game/tank-3d/index.html"
   },
@@ -297,7 +297,8 @@
       "真机手机",
       "完整有声通关录像",
       "真机全屏"
-    ]
+    ],
+    "online": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html 已实机浏览器核验加载、开始、演示开关、射击，页面无异常。"
   },
   "readiness": {
     "overview": "partial",
