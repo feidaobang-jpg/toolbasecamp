@@ -433,6 +433,11 @@ export function createScene(canvas, world) {
     for (let c = 0; c < CELLS; c++) { lastGrid[c] = EMPTY; shown[c] = EMPTY; }
     rise.clear();
     for (let c = 0; c < CELLS; c++) if (world.grid[c] !== EMPTY) rise.set(c, 0);
+    // Caches alone are not enough: writeCell() skips cells whose state looks unchanged, so the
+    // instances left over from the previous stage would keep rendering bricks the new grid does not
+    // contain (the tank then drives through a wall it cannot see in the data). Force one real pass.
+    for (let c = 0; c < CELLS; c++) writeCell(c, true);
+    bricks.instanceMatrix.needsUpdate = steels.instanceMatrix.needsUpdate = true;
     gridVersion = -1;
   }
   resize(); target.set(0, 0, 2.1); update(0, {}, true);

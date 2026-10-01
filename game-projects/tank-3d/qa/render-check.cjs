@@ -64,7 +64,7 @@ async function open(browser, opts = {}) {
   return { context, page, errors };
 }
 const adv = (page, n) => page.evaluate(n => window.__advance(n), n);
-const state = page => page.evaluate(() => { const q = window.__qa, w = q.world; return { phase: q.phase, paused: q.paused, status: w.status, reason: w.reason, time: +w.time.toFixed(2), score: w.score, lives: w.lives, killed: w.killed, level: w.level, player: w.player && { x: +w.player.x.toFixed(2), z: +w.player.z.toFixed(2), dir: w.player.dir }, enemies: w.enemies.length, bricks: Array.from(w.grid).filter(c => c === 1).length, powerup: w.powerup && w.powerup.type }; });
+const state = page => page.evaluate(() => { const q = window.__qa, w = q.world; return { phase: q.phase, paused: q.paused, status: w.status, stage: w.stage, loop: w.loop, reason: w.reason, time: +w.time.toFixed(2), score: w.score, lives: w.lives, killed: w.killed, level: w.level, player: w.player && { x: +w.player.x.toFixed(2), z: +w.player.z.toFixed(2), dir: w.player.dir }, enemies: w.enemies.length, bricks: Array.from(w.grid).filter(c => c === 1).length, powerup: w.powerup && w.powerup.type }; });
 async function sampleFrames(page, ms) {
   return page.evaluate(ms => new Promise(resolve => {
     const v = window.__qa.view, g = v.renderer.getContext(), ext = g.getExtension('WEBGL_debug_renderer_info');
@@ -124,6 +124,33 @@ async function sampleFrames(page, ms) {
       for (let i = 0; i < 160; i++) { await page.evaluate(() => { const q = window.__qa; for (const e of q.world.enemies) if (e.alive) q.W.qa.destroyEnemy(q.world, e); if (q.world.player) q.world.player.shield = 99; }); await adv(page, 15); if ((await state(page)).phase === 'over') break; }
       s = await state(page); assert.equal(s.status, 'won'); note('cleared', s);
       await adv(page, 4); await page.screenshot({ path: path.join(out, 'flow-win-panel.png') });
+      // Advance to the next stage and prove the wall buffers were rebuilt from the new grid.
+      // relayout() used to reset its caches without rewriting the instance matrices, so walls from the
+      // previous stage kept rendering over empty cells — the player could drive through a visible brick.
+      const panel = await page.evaluate(() => document.getElementById('start').textContent);
+      assert.match(panel, /2/, 'the clear panel offers stage 2: ' + panel);
+      await page.keyboard.press('Enter'); await adv(page, 140);
+      s = await state(page); assert.equal(s.phase, 'playing'); assert.equal(s.stage, 2, 'campaign moved on to stage 2');
+      const walls = await page.evaluate(() => {
+        const { world, view } = window.__qa, N = world.spec.rows.length, meshes = [];
+        view.scene.traverse(o => { if (o.isInstancedMesh && o.count === N * N) meshes.push(o.instanceMatrix.array); });
+        if (meshes.length !== 2) return { error: 'expected brick + steel instanced meshes, got ' + meshes.length };
+        let ghost = 0, missing = 0, double = 0;
+        for (let c = 0; c < N * N; c++) {
+          const solid = world.grid[c] === 1 || world.grid[c] === 2;   // the eagle cell is its own model
+          const drawn = meshes.map(m => m[c * 16 + 5] > 1e-6);
+          const any = drawn.some(Boolean);
+          if (any && !solid) ghost++;                                   // wall rendered where the grid is empty
+          if (!any && solid) missing++;                                 // grid wall with nothing to collide with visually
+          if (drawn[0] && drawn[1]) double++;                           // brick and steel stacked on one cell
+        }
+        return { ghost, missing, double };
+      });
+      assert.equal(walls.error, undefined, String(walls.error));
+      assert.equal(walls.ghost, 0, 'ghost walls left from the previous stage: ' + JSON.stringify(walls));
+      assert.equal(walls.missing, 0, 'walls missing from the rebuilt layout: ' + JSON.stringify(walls));
+      assert.equal(walls.double, 0, 'a cell rendered as both brick and steel: ' + JSON.stringify(walls));
+      note('stage 2 walls', walls);
       assert.deepEqual(errors, []);
       note('flow', 'OK');
     } else if (scenario === 'shots') {
