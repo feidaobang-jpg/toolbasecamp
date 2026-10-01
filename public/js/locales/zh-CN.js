@@ -1358,6 +1358,61 @@ window.TB_LOCALES['zh-CN'] = {
         winTitle: '第一关通关！', winCopy: '铃声响彻草原。再来一次，试试抓得更高、跑得更快。', deadTitle: '生命用完了', deadCopy: '按回车或点按钮，从草原起点重新出发。', bell: '铃铛高度奖励', total: '总分',
         gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
     },
+    nobitaTown: {
+        title: '哆啦A梦小镇漫游', kicker: '同人 3D 漫游 · 收集 7 枚记忆铃铛', intro: '傍晚的小镇等着你：以中央广场为起点，逛遍 7 处熟悉的地点、点亮路牌，再把藏在各处的 7 枚「记忆铃铛」收进口袋。漫步没有失败，比比谁逛得又全又快。',
+        start: 'Enter · 开始漫游', replay: 'Enter · 再逛一次', back: '游戏中心', pause: '暂停', resume: '继续', paused: '已暂停', full: '全屏', fullFail: '此浏览器不支持全屏，游戏仍可正常游玩。',
+        soundOn: '音效：开', soundOff: '音效：关', touch: '触屏控制', note: '同人风格致敬演示 · 程序化美术与音效 · 与原作官方无关', fileWarn: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
+        move: '移动（相对镜头）', run: '加速跑', jump: '跳跃', interact: '互动 / 点亮路牌', camera: '切换镜头 · 回默认', startPause: '开始 / 暂停', help: 'WASD 移动 · Shift 加速 · K 跳 · J 互动 · Q/E 镜头 · C 回正 · Esc 暂停',
+        hudBells: '铃铛', hudTime: '时间', hudScore: '得分', plaza: '中央广场', promptJ: '按 J 互动', touchTalk: '互动', touchJump: '跳',
+        signLit: '路牌已点亮 {n}/7', bellGot: '收到记忆铃铛 {n}/7 · +100',
+        resultKicker: '漫游完成', resultTitle: '你把小镇逛了个遍！', statTime: '总用时', statDistance: '里程', statSteps: '步数', statBells: '记忆铃铛', statVisits: '点亮路牌', statBonus: '时间奖励', statTotal: '总分', statBest: '最高纪录', newRecord: '新纪录！',
+        loadError: '3D 模块加载失败，请刷新重试。',
+        place_nobita: '大雄家', place_nobita_desc: '日式两层小屋和熟悉的院门，放学回家的起点。',
+        place_school: '学校', place_school_desc: '校舍、旗杆和红色的操场跑道，上课铃在记忆里回响。',
+        place_park: '公园', place_park_desc: '滑梯与戏水池，午后在这里消磨掉一整个夏天。',
+        place_lot: '空地', place_lot_desc: '水泥管堆和木料堆，最好的秘密基地候选人。',
+        place_shops: '商店街', place_shops_desc: '拱廊下一排小店，雨天的屋檐下总能躲一躲。',
+        place_shrine: '神社小坡', place_shrine_desc: '石阶尽头的鸟居剪影，新年许愿的第一站。',
+        place_river: '河边堤坝', place_river_desc: '草坡缓缓滑向河面，最适合发呆和放风筝。'
+    },
+    breachline: {
+        kicker: '原创基地攻防演示 · THREE.JS', title: '裂隙防线 3D', intro: '虫群正从远方裂隙源源涌出。与友军小队一起守住城门 10 波进攻：三件武器、翻滚闪避、战功建塔，撑到最后就是胜利。', note: '原创题材演示 · 程序化美术与音效',
+        start: 'Enter · 开始防守', nextWave: 'Enter · 下一波', nextLoop: 'Enter · 进入周目 {n}', retry: 'Enter · 重新防守', back: '游戏中心', pause: '暂停', resume: '继续', paused: '已暂停', full: '全屏', fullFail: '此浏览器拒绝了全屏请求',
+        soundOn: '声音：开', soundOff: '声音：关', touch: '触屏控制', demo: '演示无敌', demoHint: '演示无敌：开启后玩家不受伤害（默认关）',
+        move: '移动（相对镜头）', turn: '←/→ 转向 · ↑/↓ 俯仰', fire: '射击（按住） · 跳跃 · 翻滚闪避', weapon: '切换武器 1/2/3', build: '建炮塔（100 战功）', camera: 'Q/E 视角 · C 默认', startPause: 'Enter 开始/继续 · Esc 暂停', help: 'WASD 移动 · J 射击 · K 跳 · L 翻滚 · 1/2/3 武器 · U 建塔 · Q/E/C 视角 · Esc 暂停',
+        hudGate: '城门', hudHp: '装甲', hudMerit: '战功', hudWave: '波次', hudWeapon: '武器', best: '最佳', w1: '突击步枪', w2: '狙击枪', w3: '火箭筒',
+        waveBanner: '第 {n} 波', bossWave: '第 10 波 · 洞窟母巢', waveClear: '波次肃清 · Enter 继续', loopTag: '周目 {n}',
+        winTitle: '防线守住了！', winCopy: '10 波进攻全部击退，战功 {score}。周目 {n} 的虫群更快更硬，随时再战。', loseTitle: '城门陷落', loseCopy: '虫群攻破了城门，你坚守到第 {n} 波。',
+        turretBuilt: '机枪塔已部署', turretNeed: '战功不足（需要 100）', turretMax: '炮塔数量已达上限', respawn: '重整防线！', gateAlarm: '警告：城门遭到攻击！', newBest: '新纪录！',
+        fireShort: '射击', rollShort: '翻滚', buildShort: '建塔', ws1: '步枪', ws2: '狙击', ws3: '火箭',
+        enemyCrawler: '甲刃虫', enemyRunner: '疾行虫', enemySpitter: '酸囊虫', enemyFlyer: '飞镰虫', enemyElite: '重甲精英', enemyBoss: '洞窟母巢'
+    },
+    pvz3d: {
+        title: '植物守卫战 3D', kicker: '同人 3D 塔防 · 守住草坪 3 大波', intro: '夜幕降临前，僵尸要从草坪右侧闯进你的房子。种向日葵攒阳光、豌豆射手阻击、坚果墙挡路，守住 3 大波进攻；撑过一波就迎来更难的下一关，无限递增。',
+        start: 'Enter · 开始守卫', nextLevel: 'Enter · 下一关（第 {n} 关）', retryLevel: 'Enter · 再战第 {n} 关', back: '游戏中心', pause: '暂停', resume: '继续', paused: '已暂停', full: '全屏', fullFail: '此浏览器不支持全屏，游戏仍可正常游玩。',
+        soundOn: '音效：开', soundOff: '音效：关', touch: '触屏控制', touchHint: '点草坪种植 · 点阳光收取 · 点卡片选植物', note: '同人致敬演示 · 程序化美术与音效 · 与原作官方无关', fileWarn: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
+        move: '移动格子光标', select: '选择植物卡', plant: '种植 / 收取阳光', dig: '铲除光标格植物', camera: '切换镜头 · 回默认', startPause: '开始 / 确认 / 暂停', help: 'WASD/方向键 移动光标 · 1-5 选卡 · J 种植/收阳光 · K 铲除 · Q/E 镜头 · C 回正 · Esc 暂停',
+        hudSun: '阳光', hudWave: '波次', hudKills: '击杀', levelBanner: '第 {n} 关', waveTag: '第 {n} 波', hugeWave: '一大波僵尸正在接近！',
+        winKicker: '防线守住了', winTitle: '第 {n} 关完成！', winCopy: '草坪守住了，僵尸退回墓地。下一关它们更快、更多、更硬。', loseKicker: '防线被突破', loseTitle: '僵尸吃掉了你的脑子！', loseCopy: '该车道的小推车已经用完，僵尸闯进了房子。调整阵型，再战一次。',
+        statScore: '本局得分', statKills: '消灭僵尸', statSun: '收取阳光', statLevel: '到达关卡', statBest: '最高纪录', newRecord: '新纪录！', loadError: '3D 模块加载失败，请刷新重试。',
+        cardSunflower: '向日葵', cardPeashooter: '豌豆射手', cardSnowpea: '寒冰射手', cardWallnut: '坚果墙', cardCherry: '樱桃炸弹',
+        dSunflower: '定期产出 25 阳光', dPeashooter: '单发行内射击', dSnowpea: '命中减速僵尸', dWallnut: '高血量挡路', dCherry: '3×3 范围爆炸，一次性',
+        shovel: '铲除模式', toastSun: '阳光不足', toastCool: '卡片冷却中', toastOccupied: '这一格已有植物', toastPick: '先选择一张植物卡', toastEmpty: '这里没有植物', toastSunGot: '+25 阳光', mower: '小推车出击！',
+        cameraOblique: '斜俯视', cameraTop: '俯视', cameraReset: '默认视角', cameraHelp: 'Q/E 切换镜头 · C 回默认'
+    },
+    zombieRoad: {
+        kicker: '原创丧尸公路防守演示 · THREE.JS', title: '公路打僵尸 3D', intro: '雪夜公路尽头，僵尸潮顺着车道涌向你身后的沙袋防线。六波一波比一波凶：击杀捡零件、建造机枪塔，活到「巨骸领主」倒下。', note: '原创丧尸题材演示 · 程序化美术与音效',
+        start: 'Enter · 开始守线', nextWave: 'Enter · 下一波', nextStage: 'Enter · 进入第 {n} 关', retry: 'Enter · 重新守线', back: '游戏中心', pause: '暂停', resume: '继续', paused: '已暂停', full: '全屏', fullFail: '此浏览器拒绝了全屏请求',
+        soundOn: '声音：开', soundOff: '声音：关', touch: '触屏控制', demo: '演示无敌', demoHint: '演示无敌：开启后玩家不受伤害（默认关）',
+        move: '移动（相对镜头）', turn: '←/→ 转向 · ↑/↓ 俯仰', fire: '射击（按住） · 翻滚闪避', weapon: '切换武器 1/2/3', build: '建机枪塔（100 零件） · 维修（40）', camera: 'Q/E 视角 · C 默认', startPause: 'Enter 开始/波间继续 · Esc 暂停', help: 'WASD 移动 · J 射击 · L 翻滚 · 1/2/3 武器 · U 建塔 · I 维修 · Q/E/C 视角 · Esc 暂停',
+        hudWall: '防线', hudHp: '状态', hudParts: '零件', hudWave: '波次', hudWeapon: '武器', hudScore: '得分', best: '最佳', w1: '步枪', w2: '喷火器', w3: '狙击枪',
+        waveBanner: '第 {n} 波', bossWave: '第 6 波 · 巨骸领主', waveClear: '波次肃清 · Enter 继续', stageTag: '第 {n} 关',
+        winTitle: '公路守住了！', winCopy: '六波僵尸潮全部击退，得分 {score}。第 {n} 关的尸潮更多更硬，随时再战。', loseTitle: '防线陷落', loseCopy: '尸潮冲垮了沙袋防线，你坚守到第 {n} 波。',
+        turretBuilt: '机枪塔已部署', turretFixed: '机枪塔已修复', turretDown: '一座机枪塔被摧毁', turretNeed: '零件不足（需要 100）', turretMax: '机枪塔数量已达上限', buildFar: '无法在此建造（防线前方、靠近玩家）', repairNone: '附近没有损坏的机枪塔',
+        buildHint: 'U · 建造机枪塔（100 零件）', repairHint: 'I · 维修机枪塔（40 零件）', repairNoParts: '零件不足，无法维修', respawn: '重整防线！', wallAlarm: '警告：防线遭到啃食！', enrage: '巨骸领主进入狂暴！', newBest: '新纪录！',
+        fireShort: '射击', rollShort: '翻滚', buildShort: '建塔', repairShort: '维修', ws1: '步枪', ws2: '喷火', ws3: '狙击',
+        enemyShambler: '普通感染者', enemyRunner: '疾行者', enemyBrute: '装甲怪', enemySpitter: '酸液投手', enemyOverlord: '精英督军', enemyBoss: '巨骸领主'
+    },
     games: {
         groups: {
             all: '游戏',
@@ -1586,6 +1641,22 @@ window.TB_LOCALES['zh-CN'] = {
         hopfox3d: {
             title: '跳跳狐 3D：第一关',
             desc: '原创 3D 横版闯关：跑跳顶箱拿橡果、踩甲虫、踢蜗牛壳，终点敲响铃铛。键盘与手机横屏都能玩。'
+        },
+        nobitaTown: {
+            title: '哆啦A梦小镇漫游 3D',
+            desc: '同人风格 3D 小镇漫游：漫步广场、空地与河堤，点亮 7 处地点路牌、集齐记忆铃铛。键盘与手机横屏都能玩。'
+        },
+        breachline: {
+            title: '裂隙防线 3D',
+            desc: '虫群从裂隙洞口涌来，与友军小队一起守住城门 10 波：三件武器、翻滚闪避、自建炮塔。键盘与手机横屏都能玩。'
+        },
+        pvz3d: {
+            title: '植物守卫战 3D',
+            desc: '植物大战僵尸玩法的同人 3D 致敬：种向日葵攒阳光、豌豆射手守车道，挡住一波波僵尸。键盘与手机横屏都能玩。'
+        },
+        zombieRoad: {
+            title: '公路打僵尸',
+            desc: '雪夜公路守住防线 6 波：击杀僵尸捡零件、建机枪塔，撑到巨骸领主倒下。键盘与手机横屏都能玩。'
         },
         worms: {
             title: '百战天虫',

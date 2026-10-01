@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5c98e">
+  <title>哆啦A梦小镇漫游 3D · Nobita Town Wander</title>
+  <meta name="description" content="哆啦A梦小镇漫游 3D：第三人称漫步同人风格机器猫小镇，逛 7 处经典地点、点亮路牌、集齐 7 枚记忆铃铛，键盘与手机横屏都能玩。">
+  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="./style.css?v=nt1">
+</head>
+<body>
+<main id="game" tabindex="-1">
+  <canvas id="world" aria-label="3D town stroll"></canvas>
+  <div id="hud">
+    <div class="brand"><span class="eyebrow">NOBITA TOWN / 3D</span><strong id="place-label">中央广场</strong></div>
+    <div class="stats">
+      <span class="bells"><small data-i18n="nobitaTown.hudBells">铃铛</small><b id="bells">0 / 7</b></span>
+      <span><small data-i18n="nobitaTown.hudTime">时间</small><b id="time">0:00</b></span>
+      <span><small data-i18n="nobitaTown.hudScore">得分</small><b id="score">0000</b></span>
+    </div>
+    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="nobitaTown.pause">暂停</button><button class="tb-btn" id="full" data-i18n="nobitaTown.full">全屏</button></div>
+  </div>
+  <div id="toast" role="status"></div>
+  <div id="prompt" hidden><kbd>J</kbd><span id="prompt-text">按 J 互动</span></div>
+  <div id="bigtext" hidden></div>
+  <section id="panel" class="panel" aria-labelledby="panel-title">
+    <span class="eyebrow" id="panel-kicker" data-i18n="nobitaTown.kicker">同人 3D 漫游 · 收集 7 枚记忆铃铛</span>
+    <h1 id="panel-title" data-i18n="nobitaTown.title">哆啦A梦小镇漫游</h1>
+    <p id="panel-copy" data-i18n="nobitaTown.intro">傍晚的小镇等着你：以中央广场为起点，逛遍 7 处熟悉的地点、点亮路牌，再把藏在各处的 7 枚「记忆铃铛」收进口袋。漫步没有失败，比比谁逛得又全又快。</p>
+    <p id="file-warning" class="file-warning" hidden data-i18n="nobitaTown.fileWarn">本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
+    <div id="tally" class="tally" hidden></div>
+    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="nobitaTown.move">移动（相对镜头）</span></div><div><kbd>Shift</kbd><span data-i18n="nobitaTown.run">加速跑</span></div><div><kbd>K</kbd><span data-i18n="nobitaTown.jump">跳跃</span></div><div><kbd>J</kbd><span data-i18n="nobitaTown.interact">互动 / 点亮路牌</span></div><div><kbd>Q E · C</kbd><span data-i18n="nobitaTown.camera">切换镜头 · 回默认</span></div><div><kbd>Enter · Esc</kbd><span data-i18n="nobitaTown.startPause">开始 / 暂停</span></div></div>
+    <div class="action-row"><button id="start" class="tb-btn" data-i18n="nobitaTown.start">Enter · 开始漫游</button><a class="tb-btn" href="../../../games.html" data-i18n="nobitaTown.back">游戏中心</a></div>
+    <div class="action-row options"><button id="sound" class="tb-btn" data-i18n="nobitaTown.soundOn">音效：开</button><button id="touch-toggle" class="tb-btn" data-i18n="nobitaTown.touch">触屏控制</button><button id="lang" class="tb-btn">中文 / EN</button></div>
+    <small class="footnote" data-i18n="nobitaTown.note">同人风格致敬演示 · 程序化美术与音效 · 与原作官方无关</small>
+  </section>
+  <div id="touch" hidden>
+    <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
+    <div class="camera-pad action-row"><button class="tb-btn" data-cam="prev" aria-label="Camera previous">Q ◀</button><button class="tb-btn" data-cam="next" aria-label="Camera next">E ▶</button><button class="tb-btn" data-cam="reset" aria-label="Reset camera">C ◎</button></div>
+    <div class="touch-actions action-row"><button class="tb-btn interact" data-hold="KeyJ"><b>J</b><span data-i18n="nobitaTown.touchTalk">互动</span></button><button class="tb-btn" data-hold="KeyK"><b>K</b><span data-i18n="nobitaTown.touchJump">跳</span></button></div>
+  </div>
+  <div id="keyboard-help"><span id="kb-help">WASD 移动 · Shift 加速 · K 跳 · J 互动 · Q/E 镜头 · C 回正 · Esc 暂停</span></div>
+</main>
+<script src="../../../js/locales/en.js?v=nosTW1"></script>
+<script src="../../../js/locales/zh-CN.js?v=nosTW1"></script>
+<script src="../../../js/i18n.js?v=nosTW1"></script>
+<script>
+  // In-page i18n fallback: the site locale files cannot be edited per-game, so every
+  // nobitaTown.* key ships here (zh + en) and is merged into TB_LOCALES at boot.
+  window.GAME_I18N = {
+    zh: {
+      title: '哆啦A梦小镇漫游', kicker: '同人 3D 漫游 · 收集 7 枚记忆铃铛',
+      intro: '傍晚的小镇等着你：以中央广场为起点，逛遍 7 处熟悉的地点、点亮路牌，再把藏在各处的 7 枚「记忆铃铛」收进口袋。漫步没有失败，比比谁逛得又全又快。',
+      start: 'Enter · 开始漫游', replay: 'Enter · 再逛一次', back: '游戏中心',
+      pause: '暂停', resume: '继续', paused: '已暂停', full: '全屏',
+      fullFail: '此浏览器不支持全屏，游戏仍可正常游玩。',
+      soundOn: '音效：开', soundOff: '音效：关', touch: '触屏控制',
+      note: '同人风格致敬演示 · 程序化美术与音效 · 与原作官方无关',
+      fileWarn: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
+      move: '移动（相对镜头）', run: '加速跑', jump: '跳跃', interact: '互动 / 点亮路牌',
+      camera: '切换镜头 · 回默认', startPause: '开始 / 暂停',
+      help: 'WASD 移动 · Shift 加速 · K 跳 · J 互动 · Q/E 镜头 · C 回正 · Esc 暂停',
+      hudBells: '铃铛', hudTime: '时间', hudScore: '得分', plaza: '中央广场',
+      promptJ: '按 J 互动', touchTalk: '互动', touchJump: '跳',
+      signLit: '路牌已点亮 {n}/7', bellGot: '收到记忆铃铛 {n}/7 · +100',
+      resultKicker: '漫游完成', resultTitle: '你把小镇逛了个遍！',
+      statTime: '总用时', statDistance: '里程', statSteps: '步数', statBells: '记忆铃铛',
+      statVisits: '点亮路牌', statBonus: '时间奖励', statTotal: '总分', statBest: '最高纪录',
+      newRecord: '新纪录！', loadError: '3D 模块加载失败，请刷新重试。',
+      place_nobita: '大雄家', place_nobita_desc: '日式两层小屋和熟悉的院门，放学回家的起点。',
+      place_school: '学校', place_school_desc: '校舍、旗杆和红色的操场跑道，上课铃在记忆里回响。',
+      place_park: '公园', place_park_desc: '滑梯与戏水池，午后在这里消磨掉一整个夏天。',
+      place_lot: '空地', place_lot_desc: '水泥管堆和木料堆，最好的秘密基地候选人。',
+      place_shops: '商店街', place_shops_desc: '拱廊下一排小店，雨天的屋檐下总能躲一躲。',
+      place_shrine: '神社小坡', place_shrine_desc: '石阶尽头的鸟居剪影，新年许愿的第一站。',
+      place_river: '河边堤坝', place_river_desc: '草坡缓缓滑向河面，最适合发呆和放风筝。'
+    },
+    en: {
+      title: 'Nobita Town Wander', kicker: 'FAN-MADE 3D STROLL · FIND 7 MEMORY BELLS',
+      intro: 'The town glows in the evening light: start at the central plaza, visit 7 familiar spots, light up their signs and pocket the 7 hidden memory bells. No way to lose — just wander far and fast.',
+      start: 'Enter · Start the stroll', replay: 'Enter · Wander again', back: 'Game hub',
+      pause: 'Pause', resume: 'Resume', paused: 'Paused', full: 'Fullscreen',
+      fullFail: 'Fullscreen is not supported here — the game stays playable.',
+      soundOn: 'Sound: on', soundOff: 'Sound: off', touch: 'Touch controls',
+      note: 'Fan-made tribute demo · Procedural art & sound · Not affiliated with the original',
+      fileWarn: 'Opening from file:// cannot load the 3D module — use the website or a local HTTP server.',
+      move: 'Move (camera relative)', run: 'Run (hold)', jump: 'Jump', interact: 'Interact / light the sign',
+      camera: 'Camera presets · reset', startPause: 'Start / Pause',
+      help: 'WASD move · Shift run · K jump · J interact · Q/E camera · C reset · Esc pause',
+      hudBells: 'Bells', hudTime: 'Time', hudScore: 'Score', plaza: 'Central Plaza',
+      promptJ: 'Press J to interact', touchTalk: 'Talk', touchJump: 'Jump',
+      signLit: 'Sign lit {n}/7', bellGot: 'Memory bell {n}/7 · +100',
+      resultKicker: 'STROLL COMPLETE', resultTitle: 'You wandered the whole town!',
+      statTime: 'Total time', statDistance: 'Distance', statSteps: 'Steps', statBells: 'Memory bells',
+      statVisits: 'Signs lit', statBonus: 'Time bonus', statTotal: 'Total score', statBest: 'Best',
+      newRecord: 'New best!', loadError: 'Failed to load the 3D module — refresh to retry.',
+      place_nobita: "Nobita's House", place_nobita_desc: 'A two-storey Japanese home with the familiar garden gate.',
+      place_school: 'School', place_school_desc: 'Schoolhouse, flagpole and the red running track.',
+      place_park: 'Park', place_park_desc: 'A slide and a paddling pool for long summer afternoons.',
+      place_lot: 'The Empty Lot', place_lot_desc: 'Concrete pipes and lumber — prime secret-base real estate.',
+      place_shops: 'Shopping Street', place_shops_desc: 'Small shops under one arcade roof, dry on rainy days.',
+      place_shrine: 'Shrine Hill', place_shrine_desc: 'A torii silhouette at the top of the stone steps.',
+      place_river: 'Riverside Levee', place_river_desc: 'A grassy slope sliding toward the river — perfect for daydreams.'
+    }
+  };
+  (function () {
+    var L = window.TB_LOCALES; if (!L) return;
+    if (L.en && !L.en.nobitaTown) L.en.nobitaTown = window.GAME_I18N.en;
+    if (L['zh-CN'] && !L['zh-CN'].nobitaTown) L['zh-CN'].nobitaTown = window.GAME_I18N.zh;
+  })();
+  if (location.protocol === 'file:') {
+    document.getElementById('file-warning').hidden = false;
+    document.getElementById('start').disabled = true;
+  }
+</script>
+<script type="module">
+  import('./main.js?v=nt1').catch(err => {
+    console.error(err);
+    if (location.protocol !== 'file:') {
+      document.getElementById('panel-copy').textContent = window.GAME_I18N.zh.loadError;
+      const b = document.getElementById('start'); b.textContent = '重试'; b.onclick = () => location.reload();
+    }
+  });
+</script>
+</body>
+</html>

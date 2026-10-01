@@ -1,0 +1,27 @@
+{
+  "title": "哆啦A梦小镇漫游 3D",
+  "slug": "nobita-town",
+  "version": "toy-0.1.0",
+  "source": "public/html/game/nobita-town",
+  "source_sha256": {
+    "audio.js": "f42272b4267a1476a2eec1f761722e0fdd0d09fc0ccf9e37113c10dfd1e8ae94",
+    "index.html": "9ba27ca49ed3de389aa0812156f344b615ca3f62504af763b9603cdf230fea8b",
+    "main.js": "655421b2b6e6ec523ea97d933dc16f4f3316895feebf00bcb5a8d4b35573068e",
+    "scene.js": "4529354722d072711484deba0d13e74b40e98f31bf48786a8185501d7388fe2a",
+    "style.css": "ae5c05e3019f31903030de37a295ec1bdc9f9ca9143f0f33e7831a6e4b6ee3e3"
+  },
+  "zip_sha256": "a03a027f626dbabff9279cbcbc31fca1ade9b54114ccef5050e12f163c85d875",
+  "zip_bytes": 293272,
+  "files": {
+    "audio.js": "f42272b4267a1476a2eec1f761722e0fdd0d09fc0ccf9e37113c10dfd1e8ae94",
+    "base.css": "94d20a7ea796ba7712bce000dd553a4c855cfca96505929a2b5b9f645b7d7326",
+    "favicon.svg": "a6a197711cfa402bf5838aaddb16dd78a973e7f438724b17466e215d61741a07",
+    "index.html": "23c41fac7a6bf9bc525cc8b63d8f64d7859cdf16f035f83ebcdb395c74f60ba4",
+    "main.js": "655421b2b6e6ec523ea97d933dc16f4f3316895feebf00bcb5a8d4b35573068e",
+    "scene.js": "f80b79482c362e0b516874b2b6120b9bf86bd500dbbabe6911ab2ed49824fc6b",
+    "style.css": "ae5c05e3019f31903030de37a295ec1bdc9f9ca9143f0f33e7831a6e4b6ee3e3",
+    "toy-adapter.js": "f92bf48924c4c59db896f2cd4c8901b4c84f4d90cf0ece173079be84794ca727",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+  },
+  "status": "built_not_submitted"
+}

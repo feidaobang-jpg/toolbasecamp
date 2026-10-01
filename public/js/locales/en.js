@@ -1359,6 +1359,61 @@ window.TB_LOCALES.en = {
         winTitle: 'Stage 1 cleared!', winCopy: 'The bell rang across the meadow. Try again to grab the pole higher or finish faster.', deadTitle: 'Out of lives', deadCopy: 'Press Enter or tap the button to start the meadow again.', bell: 'Bell height bonus', total: 'Total',
         gotBerry: 'Glow berry: mining helmet on — you can break clay tiles', gotJar: 'Firefly lantern: press J to throw sparks', shrink: 'Ouch! Your gear fell off', oneup: 'Extra life!', checkpoint: 'Checkpoint lantern lit', hurry: 'Hurry up — time is running out!', timeUp: 'TIME UP', bellRang: 'Ding! Bell bonus +{n}'
     },
+    nobitaTown: {
+        title: 'Nobita Town Wander', kicker: 'FAN-MADE 3D STROLL · FIND 7 MEMORY BELLS', intro: "The town glows in the evening light: start at the central plaza, visit 7 familiar spots, light up their signs and pocket the 7 hidden memory bells. No way to lose — just wander far and fast.",
+        start: 'Enter · Start the stroll', replay: 'Enter · Wander again', back: 'Game hub', pause: 'Pause', resume: 'Resume', paused: 'Paused', full: 'Fullscreen', fullFail: 'Fullscreen is not supported here — the game stays playable.',
+        soundOn: 'Sound: on', soundOff: 'Sound: off', touch: 'Touch controls', note: 'Fan-made tribute demo · Procedural art & sound · Not affiliated with the original', fileWarn: 'Opening from file:// cannot load the 3D module — use the website or a local HTTP server.',
+        move: 'Move (camera relative)', run: 'Run (hold)', jump: 'Jump', interact: 'Interact / light the sign', camera: 'Camera presets · reset', startPause: 'Start / Pause', help: 'WASD move · Shift run · K jump · J interact · Q/E camera · C reset · Esc pause',
+        hudBells: 'Bells', hudTime: 'Time', hudScore: 'Score', plaza: 'Central Plaza', promptJ: 'Press J to interact', touchTalk: 'Talk', touchJump: 'Jump',
+        signLit: 'Sign lit {n}/7', bellGot: 'Memory bell {n}/7 · +100',
+        resultKicker: 'STROLL COMPLETE', resultTitle: 'You wandered the whole town!', statTime: 'Total time', statDistance: 'Distance', statSteps: 'Steps', statBells: 'Memory bells', statVisits: 'Signs lit', statBonus: 'Time bonus', statTotal: 'Total score', statBest: 'Best', newRecord: 'New best!',
+        loadError: 'Failed to load the 3D module — refresh to retry.',
+        place_nobita: "Nobita's House", place_nobita_desc: 'A two-storey Japanese home with the familiar garden gate.',
+        place_school: 'School', place_school_desc: 'Schoolhouse, flagpole and the red running track.',
+        place_park: 'Park', place_park_desc: 'A slide and a paddling pool for long summer afternoons.',
+        place_lot: 'The Empty Lot', place_lot_desc: 'Concrete pipes and lumber — prime secret-base real estate.',
+        place_shops: 'Shopping Street', place_shops_desc: 'Small shops under one arcade roof, dry on rainy days.',
+        place_shrine: 'Shrine Hill', place_shrine_desc: 'A torii silhouette at the top of the stone steps.',
+        place_river: 'Riverside Levee', place_river_desc: 'A grassy slope sliding toward the river — perfect for daydreams.'
+    },
+    breachline: {
+        kicker: 'Original base-defense demo · THREE.JS', title: 'Breachline 3D', intro: 'A bug swarm pours out of distant rifts. Hold the gate with your squad for 10 waves: three weapons, combat rolls and merit-built turrets. Survive to win.', note: 'Original demo · Procedural art & sound',
+        start: 'Enter · Start defense', nextWave: 'Enter · Next wave', nextLoop: 'Enter · Loop {n}', retry: 'Enter · Defend again', back: 'Game hub', pause: 'Pause', resume: 'Resume', paused: 'Paused', full: 'Fullscreen', fullFail: 'Fullscreen was blocked by the browser',
+        soundOn: 'Sound: On', soundOff: 'Sound: Off', touch: 'Touch controls', demo: 'Demo invincibility', demoHint: 'Demo invincibility: the player takes no damage (off by default)',
+        move: 'Move (camera-relative)', turn: '←/→ Turn · ↑/↓ Pitch', fire: 'Fire (hold) · Jump · Combat roll', weapon: 'Switch weapon 1/2/3', build: 'Build turret (100 merit)', camera: 'Q/E Camera · C Default', startPause: 'Enter Start/Continue · Esc Pause', help: 'WASD Move · J Fire · K Jump · L Roll · 1/2/3 Weapons · U Turret · Q/E/C Camera · Esc Pause',
+        hudGate: 'Gate', hudHp: 'Armor', hudMerit: 'Merit', hudWave: 'Wave', hudWeapon: 'Weapon', best: 'Best', w1: 'Assault rifle', w2: 'Sniper rifle', w3: 'Rocket launcher',
+        waveBanner: 'Wave {n}', bossWave: 'Wave 10 · Hive Matriarch', waveClear: 'Wave cleared · Enter to continue', loopTag: 'Loop {n}',
+        winTitle: 'The line held!', winCopy: 'All 10 waves repelled with {score} merit. Loop {n} bugs are faster and tougher — fight again anytime.', loseTitle: 'The gate has fallen', loseCopy: 'The swarm broke through. You held until wave {n}.',
+        turretBuilt: 'Machine-gun turret deployed', turretNeed: 'Not enough merit (100 required)', turretMax: 'Turret limit reached', respawn: 'Back in the fight!', gateAlarm: 'Warning: the gate is under attack!', newBest: 'New record!',
+        fireShort: 'Fire', rollShort: 'Roll', buildShort: 'Build', ws1: 'Rifle', ws2: 'Sniper', ws3: 'Rocket',
+        enemyCrawler: 'Blade Crawler', enemyRunner: 'Sprinter', enemySpitter: 'Acid Spitter', enemyFlyer: 'Reaper Flyer', enemyElite: 'Heavy Elite', enemyBoss: 'Hive Matriarch'
+    },
+    pvz3d: {
+        title: 'Plant Guard 3D', kicker: 'FAN-MADE 3D LANE DEFENSE · HOLD 3 WAVES', intro: "Zombies are marching from the graveyard on the right toward your house. Plant sunflowers for energy, peashooters to fight, wall-nuts to block — survive 3 huge waves, then face a harder level. Endless progression.",
+        start: 'Enter · Start defending', nextLevel: 'Enter · Next level ({n})', retryLevel: 'Enter · Retry level {n}', back: 'Game hub', pause: 'Pause', resume: 'Resume', paused: 'Paused', full: 'Fullscreen', fullFail: 'Fullscreen is not supported here — the game stays playable.',
+        soundOn: 'Sound: on', soundOff: 'Sound: off', touch: 'Touch controls', touchHint: 'Tap lawn to plant · Tap sun to collect · Tap a card to select', note: 'Fan-made tribute demo · Procedural art & sound · Not affiliated with the original', fileWarn: 'Opening from file:// cannot load the 3D module — use the website or a local HTTP server.',
+        move: 'Move the cell cursor', select: 'Pick a plant card', plant: 'Plant / collect sun', dig: 'Shovel the plant under cursor', camera: 'Camera presets · reset', startPause: 'Start / Confirm / Pause', help: 'WASD/Arrows move cursor · 1-5 pick card · J plant/collect · K shovel · Q/E camera · C reset · Esc pause',
+        hudSun: 'SUN', hudWave: 'WAVE', hudKills: 'KILLS', levelBanner: 'LEVEL {n}', waveTag: 'Wave {n}', hugeWave: 'A HUGE WAVE OF ZOMBIES IS APPROACHING!',
+        winKicker: 'LAWN DEFENDED', winTitle: 'Level {n} cleared!', winCopy: 'The lawn holds and the zombies retreat to the graveyard. Next level they come faster, stronger and more numerous.', loseKicker: 'THE LINE IS BROKEN', loseTitle: 'THE ZOMBIES ATE YOUR BRAINS!', loseCopy: 'That lane had no mower left, so the zombies reached the house. Rework your layout and try again.',
+        statScore: 'Score', statKills: 'Zombies defeated', statSun: 'Sun collected', statLevel: 'Level reached', statBest: 'Best', newRecord: 'New best!', loadError: 'Failed to load the 3D module — refresh to retry.',
+        cardSunflower: 'Sunflower', cardPeashooter: 'Peashooter', cardSnowpea: 'Snow Pea', cardWallnut: 'Wall-nut', cardCherry: 'Cherry Bomb',
+        dSunflower: 'Produces 25 sun on a timer', dPeashooter: 'Shoots peas down its lane', dSnowpea: 'Chilled peas slow zombies', dWallnut: 'Tough blocker', dCherry: 'One-shot 3×3 explosion',
+        shovel: 'Shovel mode', toastSun: 'Not enough sun', toastCool: 'Card is recharging', toastOccupied: 'That tile is taken', toastPick: 'Pick a plant card first', toastEmpty: 'Nothing to shovel here', toastSunGot: '+25 sun', mower: 'Mower deployed!',
+        cameraOblique: 'Oblique', cameraTop: 'Top-down', cameraReset: 'Default view', cameraHelp: 'Q/E camera presets · C reset'
+    },
+    zombieRoad: {
+        kicker: 'Original zombie highway defense demo · THREE.JS', title: 'Zombie Road 3D', intro: 'On a snow-night highway, the zombie horde shambles down the lanes toward your sandbag line. Six waves, each fiercer: harvest parts from kills, build turrets and outlive the Bone Lord.', note: 'Original zombie demo · Procedural art & sound',
+        start: 'Enter · Hold the line', nextWave: 'Enter · Next wave', nextStage: 'Enter · Stage {n}', retry: 'Enter · Hold again', back: 'Game hub', pause: 'Pause', resume: 'Resume', paused: 'Paused', full: 'Fullscreen', fullFail: 'Fullscreen was blocked by the browser',
+        soundOn: 'Sound: On', soundOff: 'Sound: Off', touch: 'Touch controls', demo: 'Demo invincibility', demoHint: 'Demo invincibility: the player takes no damage (off by default)',
+        move: 'Move (camera-relative)', turn: '←/→ Turn · ↑/↓ Pitch', fire: 'Fire (hold) · Combat roll', weapon: 'Switch weapon 1/2/3', build: 'Build turret (100 parts) · Repair (40)', camera: 'Q/E Camera · C Default', startPause: 'Enter Start/Continue · Esc Pause', help: 'WASD Move · J Fire · L Roll · 1/2/3 Weapons · U Turret · I Repair · Q/E/C Camera · Esc Pause',
+        hudWall: 'Line', hudHp: 'Health', hudParts: 'Parts', hudWave: 'Wave', hudWeapon: 'Weapon', hudScore: 'Score', best: 'Best', w1: 'Rifle', w2: 'Flamethrower', w3: 'Sniper rifle',
+        waveBanner: 'Wave {n}', bossWave: 'Wave 6 · Bone Lord', waveClear: 'Wave cleared · Enter to continue', stageTag: 'Stage {n}',
+        winTitle: 'The road held!', winCopy: 'All six waves repelled with {score} points. Stage {n} horde is bigger and tougher — fight again anytime.', loseTitle: 'The line has fallen', loseCopy: 'The horde overran the sandbags. You held until wave {n}.',
+        turretBuilt: 'Auto-turret deployed', turretFixed: 'Turret repaired', turretDown: 'A turret was destroyed', turretNeed: 'Not enough parts (100 required)', turretMax: 'Turret limit reached', buildFar: "Can't build here (ahead of the line, near you)", repairNone: 'No damaged turret nearby',
+        buildHint: 'U · Build turret (100 parts)', repairHint: 'I · Repair turret (40 parts)', repairNoParts: 'Not enough parts to repair', respawn: 'Back in the fight!', wallAlarm: 'Warning: the line is under attack!', enrage: 'The Bone Lord is enraged!', newBest: 'New record!',
+        fireShort: 'Fire', rollShort: 'Roll', buildShort: 'Build', repairShort: 'Repair', ws1: 'Rifle', ws2: 'Flame', ws3: 'Sniper',
+        enemyShambler: 'Shambler', enemyRunner: 'Runner', enemyBrute: 'Armored Brute', enemySpitter: 'Acid Spitter', enemyOverlord: 'Taskmaster', enemyBoss: 'Bone Lord'
+    },
     games: {
         groups: {
             all: 'Games',
@@ -1587,6 +1642,22 @@ window.TB_LOCALES.en = {
         hopfox3d: {
             title: 'Hop Fox 3D: Stage 1',
             desc: 'An original 3D side-scroller: run, jump, bop crates for acorns, stomp beetles, kick snail shells and ring the goal bell. Keyboard or phone landscape.'
+        },
+        nobitaTown: {
+            title: 'Nobita Town Stroll 3D',
+            desc: 'A fan-style 3D town stroll: wander the plaza, empty lot and river levee, light up 7 location signs and collect all memory bells. Keyboard or phone landscape.'
+        },
+        breachline: {
+            title: 'Breachline 3D',
+            desc: 'Bug swarms pour out of rift caves — hold the gate for 10 waves with your squad: three weapons, combat rolls and buildable turrets. Keyboard or phone landscape.'
+        },
+        pvz3d: {
+            title: 'Lawn Guardians 3D',
+            desc: 'A fan-made 3D take on lane defense: grow sunflowers for energy, fire peas down the lanes and stop wave after wave of zombies. Keyboard or phone landscape.'
+        },
+        zombieRoad: {
+            title: 'Zombie Road',
+            desc: 'Hold the highway barricade for 6 snowy waves: loot parts from kills, build gun turrets and outlast the Colossus boss. Keyboard or phone landscape.'
         },
         worms: {
             title: 'Worms',

@@ -1,0 +1,29 @@
+{
+  "title": "公路打僵尸 3D",
+  "slug": "zombie-road",
+  "version": "toy-0.1.0",
+  "source": "public/html/game/zombie-road",
+  "source_sha256": {
+    "audio.js": "3b6371a76108e99db4d38274f5317e64a584aa89c88fca8005032eeee6275fd4",
+    "game.js": "171c439c11048873a828aeb790dd73ad2c37c840f3d8c86a2107d5250807c32f",
+    "index.html": "7e2cbc9167788a291b02936d2145a882b39f0c05bc99d0d81ca195ed2fa8788d",
+    "main.js": "f1ecfa61ea263762240475a469e52f94c75692510ae51476d11a00ebdc6d4e0f",
+    "scene.js": "66ed15be485b8b6531585cfc8465dc43387a88e809082b6dafa3204e6342f99c",
+    "style.css": "fb49b4229d0d053a028b11126b255bde40c1a93ef11068b16c64fa6eb5753361"
+  },
+  "zip_sha256": "687cd4622e4c5b082c089199dc756dc892c91764d4e41f94e3d76bdd38770ace",
+  "zip_bytes": 303253,
+  "files": {
+    "audio.js": "3b6371a76108e99db4d38274f5317e64a584aa89c88fca8005032eeee6275fd4",
+    "base.css": "94d20a7ea796ba7712bce000dd553a4c855cfca96505929a2b5b9f645b7d7326",
+    "favicon.svg": "a6a197711cfa402bf5838aaddb16dd78a973e7f438724b17466e215d61741a07",
+    "game.js": "171c439c11048873a828aeb790dd73ad2c37c840f3d8c86a2107d5250807c32f",
+    "index.html": "78af5eaac65de68f422834e1464ab49408b548140c57e0186cfb83ea03be2404",
+    "main.js": "46fdf34bdd4750211b55d2a1199d2efc1b02f82cb77160f306ff8d7e5eaefb01",
+    "scene.js": "e9aade8047960fc3aa5281768dc24ff79b8435e5c26c1e06798f9b3df4f78801",
+    "style.css": "fb49b4229d0d053a028b11126b255bde40c1a93ef11068b16c64fa6eb5753361",
+    "toy-adapter.js": "f92bf48924c4c59db896f2cd4c8901b4c84f4d90cf0ece173079be84794ca727",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+  },
+  "status": "built_not_submitted"
+}

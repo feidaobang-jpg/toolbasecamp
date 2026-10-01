@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0d1320">
+  <title>Zombie Road 3D · 公路打僵尸</title>
+  <meta name="description" content="公路打僵尸 3D：雪夜公路上僵尸潮顺着车道涌向沙袋防线，六波一波比一波凶。三件武器、翻滚闪避、零件建塔，键盘与手机横屏都能玩。">
+  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
+  <link rel="stylesheet" href="./style.css?v=z1">
+</head>
+<body>
+<main id="game" tabindex="-1">
+  <canvas id="world" aria-label="3D zombie road battlefield"></canvas>
+  <div id="hud">
+    <div class="brand"><span class="eyebrow">ZOMBIE ROAD / 3D</span><strong id="wave-label">WAVE 1 · ROAD 1</strong></div>
+    <div class="stats">
+      <span class="bar-col"><small data-i18n="zombieRoad.hudWall">防线</small><span class="meter"><i id="wall-meter"></i></span></span>
+      <span class="bar-col"><small data-i18n="zombieRoad.hudHp">状态</small><span class="meter hp"><i id="hp-meter"></i></span></span>
+      <span><small data-i18n="zombieRoad.hudParts">零件</small><b id="parts">0</b></span>
+      <span><small data-i18n="zombieRoad.hudWave">波次</small><b id="wave">0/6</b></span>
+      <span><small data-i18n="zombieRoad.hudWeapon">武器</small><b id="weapon">—</b></span>
+      <span><small data-i18n="zombieRoad.best">最佳</small><b id="best">—</b></span>
+    </div>
+    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="zombieRoad.pause">暂停</button><button class="tb-btn" id="full" data-i18n="zombieRoad.full">全屏</button></div>
+  </div>
+  <div id="crosshair" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+  <div id="hitarc" aria-hidden="true"></div>
+  <div id="hint" aria-hidden="true"></div>
+  <div id="popups" aria-hidden="true"></div>
+  <div id="toast" role="status"></div>
+  <div id="bigtext" hidden></div>
+  <section id="panel" class="panel" aria-labelledby="panel-title">
+    <span class="eyebrow" id="panel-kicker" data-i18n="zombieRoad.kicker">原创丧尸公路防守演示 · THREE.JS</span>
+    <h1 id="panel-title" data-i18n="zombieRoad.title">公路打僵尸 3D</h1>
+    <p id="panel-copy" data-i18n="zombieRoad.intro">雪夜公路尽头，僵尸潮顺着车道涌向你身后的沙袋防线。六波一波比一波凶：击杀捡零件、建造机枪塔，活到「巨骸领主」倒下。</p>
+    <p id="file-warning" class="file-warning" hidden>本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
+    <small class="footnote" id="new-best" hidden data-i18n="zombieRoad.newBest">新纪录！</small>
+    <div id="tally" class="tally" hidden></div>
+    <div id="instructions" class="instructions">
+      <div><kbd>W A S D</kbd><span data-i18n="zombieRoad.move">移动（相对镜头）</span></div>
+      <div><kbd>← → ↑ ↓</kbd><span data-i18n="zombieRoad.turn">←/→ 转向 · ↑/↓ 俯仰</span></div>
+      <div><kbd>J · L</kbd><span data-i18n="zombieRoad.fire">射击（按住） · 翻滚闪避</span></div>
+      <div><kbd>1 · 2 · 3</kbd><span data-i18n="zombieRoad.weapon">切换武器 1/2/3</span></div>
+      <div><kbd>U · I</kbd><span data-i18n="zombieRoad.build">建机枪塔（100 零件） · 维修（40）</span></div>
+      <div><kbd>Q E · C</kbd><span data-i18n="zombieRoad.camera">Q/E 视角 · C 默认</span></div>
+      <div><kbd>Enter · Esc</kbd><span data-i18n="zombieRoad.startPause">Enter 开始/波间继续 · Esc 暂停</span></div>
+    </div>
+    <div class="action-row"><button id="start" class="tb-btn" data-i18n="zombieRoad.start">Enter · 开始守线</button><a class="tb-btn" href="../../../games.html" data-i18n="zombieRoad.back">游戏中心</a></div>
+    <div class="action-row options"><button id="sound" class="tb-btn">声音</button><button id="touch-toggle" class="tb-btn" data-i18n="zombieRoad.touch">触屏控制</button><button id="lang" class="tb-btn">中文 / EN</button><button id="demo" class="tb-btn" aria-pressed="false" data-i18n="zombieRoad.demo">演示无敌</button></div>
+    <small class="footnote" id="demo-hint" data-i18n="zombieRoad.demoHint">演示无敌：开启后玩家不受伤害（默认关）</small>
+    <small class="footnote" data-i18n="zombieRoad.note">原创丧尸题材演示 · 程序化美术与音效</small>
+  </section>
+  <div id="touch" hidden>
+    <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
+    <div id="camzone" aria-label="Camera">
+      <div class="cam-hold action-row"><button class="tb-btn" data-hold="camL" aria-label="Rotate left">↺</button><button class="tb-btn" data-hold="camR" aria-label="Rotate right">↻</button></div>
+      <div class="cam-preset action-row"><button class="tb-btn" data-tap="KeyQ" aria-label="Preset 1">Q</button><button class="tb-btn" data-tap="KeyE" aria-label="Preset 2">E</button><button class="tb-btn" data-tap="KeyC" aria-label="Reset camera">C ◎</button></div>
+    </div>
+    <div class="action-row touch-actions">
+      <button class="tb-btn wpn" data-tap="Digit1"><b>1</b><span data-i18n="zombieRoad.ws1">步枪</span></button>
+      <button class="tb-btn wpn" data-tap="Digit2"><b>2</b><span data-i18n="zombieRoad.ws2">喷火</span></button>
+      <button class="tb-btn wpn" data-tap="Digit3"><b>3</b><span data-i18n="zombieRoad.ws3">狙击</span></button>
+      <button class="tb-btn" data-tap="KeyU"><b>U</b><span data-i18n="zombieRoad.buildShort">建塔</span></button>
+      <button class="tb-btn" data-tap="KeyI"><b>I</b><span data-i18n="zombieRoad.repairShort">维修</span></button>
+      <button class="tb-btn" data-tap="KeyL"><b>L</b><span data-i18n="zombieRoad.rollShort">翻滚</span></button>
+      <button class="tb-btn fire-btn" data-hold="KeyJ"><b>J</b><span data-i18n="zombieRoad.fireShort">射击</span></button>
+    </div>
+  </div>
+  <div id="keyboard-help" data-i18n="zombieRoad.help">WASD 移动 · J 射击 · L 翻滚 · 1/2/3 武器 · U 建塔 · I 维修 · Q/E/C 视角 · Esc 暂停</div>
+</main>
+<script src="../../../js/locales/en.js?v=nosTW1"></script>
+<script src="../../../js/locales/zh-CN.js?v=nosTW1"></script>
+<script src="../../../js/i18n.js?v=nosTW1"></script>
+<script>
+  window.GAME_I18N = {
+    zh: {
+      'zombieRoad.kicker': '原创丧尸公路防守演示 · THREE.JS',
+      'zombieRoad.title': '公路打僵尸 3D',
+      'zombieRoad.intro': '雪夜公路尽头，僵尸潮顺着车道涌向你身后的沙袋防线。六波一波比一波凶：击杀捡零件、建造机枪塔，活到「巨骸领主」倒下。',
+      'zombieRoad.note': '原创丧尸题材演示 · 程序化美术与音效',
+      'zombieRoad.start': 'Enter · 开始守线',
+      'zombieRoad.nextWave': 'Enter · 下一波',
+      'zombieRoad.nextStage': 'Enter · 进入第 {n} 关',
+      'zombieRoad.retry': 'Enter · 重新守线',
+      'zombieRoad.back': '游戏中心',
+      'zombieRoad.pause': '暂停',
+      'zombieRoad.resume': '继续',
+      'zombieRoad.paused': '已暂停',
+      'zombieRoad.full': '全屏',
+      'zombieRoad.fullFail': '此浏览器拒绝了全屏请求',
+      'zombieRoad.soundOn': '声音：开',
+      'zombieRoad.soundOff': '声音：关',
+      'zombieRoad.touch': '触屏控制',
+      'zombieRoad.demo': '演示无敌',
+      'zombieRoad.demoHint': '演示无敌：开启后玩家不受伤害（默认关）',
+      'zombieRoad.move': '移动（相对镜头）',
+      'zombieRoad.turn': '←/→ 转向 · ↑/↓ 俯仰',
+      'zombieRoad.fire': '射击（按住） · 翻滚闪避',
+      'zombieRoad.weapon': '切换武器 1/2/3',
+      'zombieRoad.build': '建机枪塔（100 零件） · 维修（40）',
+      'zombieRoad.camera': 'Q/E 视角 · C 默认',
+      'zombieRoad.startPause': 'Enter 开始/波间继续 · Esc 暂停',
+      'zombieRoad.help': 'WASD 移动 · J 射击 · L 翻滚 · 1/2/3 武器 · U 建塔 · I 维修 · Q/E/C 视角 · Esc 暂停',
+      'zombieRoad.hudWall': '防线',
+      'zombieRoad.hudHp': '状态',
+      'zombieRoad.hudParts': '零件',
+      'zombieRoad.hudWave': '波次',
+      'zombieRoad.hudWeapon': '武器',
+      'zombieRoad.hudScore': '得分',
+      'zombieRoad.best': '最佳',
+      'zombieRoad.w1': '步枪',
+      'zombieRoad.w2': '喷火器',
+      'zombieRoad.w3': '狙击枪',
+      'zombieRoad.waveBanner': '第 {n} 波',
+      'zombieRoad.bossWave': '第 6 波 · 巨骸领主',
+      'zombieRoad.waveClear': '波次肃清 · Enter 继续',
+      'zombieRoad.stageTag': '第 {n} 关',
+      'zombieRoad.winTitle': '公路守住了！',
+      'zombieRoad.winCopy': '六波僵尸潮全部击退，得分 {score}。第 {n} 关的尸潮更多更硬，随时再战。',
+      'zombieRoad.loseTitle': '防线陷落',
+      'zombieRoad.loseCopy': '尸潮冲垮了沙袋防线，你坚守到第 {n} 波。',
+      'zombieRoad.turretBuilt': '机枪塔已部署',
+      'zombieRoad.turretFixed': '机枪塔已修复',
+      'zombieRoad.turretDown': '一座机枪塔被摧毁',
+      'zombieRoad.turretNeed': '零件不足（需要 100）',
+      'zombieRoad.turretMax': '机枪塔数量已达上限',
+      'zombieRoad.buildFar': '无法在此建造（防线前方、靠近玩家）',
+      'zombieRoad.repairNone': '附近没有损坏的机枪塔',
+      'zombieRoad.buildHint': 'U · 建造机枪塔（100 零件）',
+      'zombieRoad.repairHint': 'I · 维修机枪塔（40 零件）',
+      'zombieRoad.repairNoParts': '零件不足，无法维修',
+      'zombieRoad.respawn': '重整防线！',
+      'zombieRoad.wallAlarm': '警告：防线遭到啃食！',
+      'zombieRoad.enrage': '巨骸领主进入狂暴！',
+      'zombieRoad.newBest': '新纪录！',
+      'zombieRoad.fireShort': '射击',
+      'zombieRoad.rollShort': '翻滚',
+      'zombieRoad.buildShort': '建塔',
+      'zombieRoad.repairShort': '维修',
+      'zombieRoad.ws1': '步枪',
+      'zombieRoad.ws2': '喷火',
+      'zombieRoad.ws3': '狙击',
+      'zombieRoad.enemyShambler': '普通感染者',
+      'zombieRoad.enemyRunner': '疾行者',
+      'zombieRoad.enemyBrute': '装甲怪',
+      'zombieRoad.enemySpitter': '酸液投手',
+      'zombieRoad.enemyOverlord': '精英督军',
+      'zombieRoad.enemyBoss': '巨骸领主'
+    },
+    en: {
+      'zombieRoad.kicker': 'Original zombie highway defense demo · THREE.JS',
+      'zombieRoad.title': 'Zombie Road 3D',
+      'zombieRoad.intro': 'On a snow-night highway, the zombie horde shambles down the lanes toward your sandbag line. Six waves, each fiercer: harvest parts from kills, build turrets and outlive the Bone Lord.',
+      'zombieRoad.note': 'Original zombie demo · Procedural art & sound',
+      'zombieRoad.start': 'Enter · Hold the line',
+      'zombieRoad.nextWave': 'Enter · Next wave',
+      'zombieRoad.nextStage': 'Enter · Stage {n}',
+      'zombieRoad.retry': 'Enter · Hold again',
+      'zombieRoad.back': 'Game hub',
+      'zombieRoad.pause': 'Pause',
+      'zombieRoad.resume': 'Resume',
+      'zombieRoad.paused': 'Paused',
+      'zombieRoad.full': 'Fullscreen',
+      'zombieRoad.fullFail': 'Fullscreen was blocked by the browser',
+      'zombieRoad.soundOn': 'Sound: On',
+      'zombieRoad.soundOff': 'Sound: Off',
+      'zombieRoad.touch': 'Touch controls',
+      'zombieRoad.demo': 'Demo invincibility',
+      'zombieRoad.demoHint': 'Demo invincibility: the player takes no damage (off by default)',
+      'zombieRoad.move': 'Move (camera-relative)',
+      'zombieRoad.turn': '←/→ Turn · ↑/↓ Pitch',
+      'zombieRoad.fire': 'Fire (hold) · Combat roll',
+      'zombieRoad.weapon': 'Switch weapon 1/2/3',
+      'zombieRoad.build': 'Build turret (100 parts) · Repair (40)',
+      'zombieRoad.camera': 'Q/E Camera · C Default',
+      'zombieRoad.startPause': 'Enter Start/Continue · Esc Pause',
+      'zombieRoad.help': 'WASD Move · J Fire · L Roll · 1/2/3 Weapons · U Turret · I Repair · Q/E/C Camera · Esc Pause',
+      'zombieRoad.hudWall': 'Line',
+      'zombieRoad.hudHp': 'Health',
+      'zombieRoad.hudParts': 'Parts',
+      'zombieRoad.hudWave': 'Wave',
+      'zombieRoad.hudWeapon': 'Weapon',
+      'zombieRoad.hudScore': 'Score',
+      'zombieRoad.best': 'Best',
+      'zombieRoad.w1': 'Rifle',
+      'zombieRoad.w2': 'Flamethrower',
+      'zombieRoad.w3': 'Sniper rifle',
+      'zombieRoad.waveBanner': 'Wave {n}',
+      'zombieRoad.bossWave': 'Wave 6 · Bone Lord',
+      'zombieRoad.waveClear': 'Wave cleared · Enter to continue',
+      'zombieRoad.stageTag': 'Stage {n}',
+      'zombieRoad.winTitle': 'The road held!',
+      'zombieRoad.winCopy': 'All six waves repelled with {score} points. Stage {n} horde is bigger and tougher — fight again anytime.',
+      'zombieRoad.loseTitle': 'The line has fallen',
+      'zombieRoad.loseCopy': 'The horde overran the sandbags. You held until wave {n}.',
+      'zombieRoad.turretBuilt': 'Auto-turret deployed',
+      'zombieRoad.turretFixed': 'Turret repaired',
+      'zombieRoad.turretDown': 'A turret was destroyed',
+      'zombieRoad.turretNeed': 'Not enough parts (100 required)',
+      'zombieRoad.turretMax': 'Turret limit reached',
+      'zombieRoad.buildFar': "Can't build here (ahead of the line, near you)",
+      'zombieRoad.repairNone': 'No damaged turret nearby',
+      'zombieRoad.buildHint': 'U · Build turret (100 parts)',
+      'zombieRoad.repairHint': 'I · Repair turret (40 parts)',
+      'zombieRoad.repairNoParts': 'Not enough parts to repair',
+      'zombieRoad.respawn': 'Back in the fight!',
+      'zombieRoad.wallAlarm': 'Warning: the line is under attack!',
+      'zombieRoad.enrage': 'The Bone Lord is enraged!',
+      'zombieRoad.newBest': 'New record!',
+      'zombieRoad.fireShort': 'Fire',
+      'zombieRoad.rollShort': 'Roll',
+      'zombieRoad.buildShort': 'Build',
+      'zombieRoad.repairShort': 'Repair',
+      'zombieRoad.ws1': 'Rifle',
+      'zombieRoad.ws2': 'Flame',
+      'zombieRoad.ws3': 'Sniper',
+      'zombieRoad.enemyShambler': 'Shambler',
+      'zombieRoad.enemyRunner': 'Runner',
+      'zombieRoad.enemyBrute': 'Armored Brute',
+      'zombieRoad.enemySpitter': 'Acid Spitter',
+      'zombieRoad.enemyOverlord': 'Taskmaster',
+      'zombieRoad.enemyBoss': 'Bone Lord'
+    }
+  };
+  if (location.protocol === 'file:') {
+    document.getElementById('file-warning').hidden = false;
+    document.getElementById('start').disabled = true;
+  }
+</script>
+<script type="module">
+  import('./main.js?v=z1').catch(err => {
+    console.error(err);
+    if (location.protocol !== 'file:') {
+      document.getElementById('panel-copy').textContent = '加载失败：' + err.message + ' — 请刷新重试。';
+    }
+  });
+</script>
+</body>
+</html>

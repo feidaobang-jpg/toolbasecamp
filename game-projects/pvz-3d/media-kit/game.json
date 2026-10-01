@@ -1,0 +1,29 @@
+{
+  "slug": "pvz-3d",
+  "name": { "zh": "植物守卫战 3D", "en": "Plant Guard 3D" },
+  "version": "0.1.0",
+  "date": "2026-10-01",
+  "entry": "public/html/game/pvz-3d/index.html",
+  "engine": "Three.js 0.170.0 (vendored)",
+  "files": [
+    "public/html/game/pvz-3d/index.html",
+    "public/html/game/pvz-3d/style.css",
+    "public/html/game/pvz-3d/main.js",
+    "public/html/game/pvz-3d/scene.js",
+    "public/html/game/pvz-3d/audio.js"
+  ],
+  "assets": [
+    "game-projects/pvz-3d/media-kit/overview.md",
+    "game-projects/pvz-3d/media-kit/i18n-keys.md",
+    "game-projects/pvz-3d/media-kit/assets/shots/01-title.png",
+    "game-projects/pvz-3d/media-kit/assets/shots/02-midgame.png",
+    "game-projects/pvz-3d/media-kit/assets/shots/03-huge-wave.png",
+    "game-projects/pvz-3d/media-kit/assets/shots/04-win.png",
+    "game-projects/pvz-3d/media-kit/assets/shots/05-lose.png",
+    "game-projects/pvz-3d/media-kit/assets/shots/06-mobile-landscape.png",
+    "game-projects/pvz-3d/media-kit/assets/shots/07-portrait.png"
+  ],
+  "localeNamespace": "pvz3d",
+  "storageNamespace": "tb-game-pvz3d-",
+  "tags": ["tower-defense", "3d", "fan-made", "single-player", "keyboard", "touch"]
+}
