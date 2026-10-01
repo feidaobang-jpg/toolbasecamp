@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "single-view1",
+  "base_version": "v0.1.3",
+  "created_at": "2026-10-01",
+  "build": {
+    "id": "mario-3d-single-view1-e37a8497b6ef",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "e37a8497b6ef0fc7d9c5eef1d5a63cd69276b20c66be15437e8ba8bdc5ca5d2e",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [],
+  "changes": [
+    {
+      "id": "single-camera",
+      "before": "Q/E 切换、C 回正，多个手机视角入口",
+      "after": "C 或一个手机按钮循环常用视角",
+      "result": "坦克斜俯视/俯视；玛丽奥侧视/斜视/纵深",
+      "evidence_ids": [
+        "desktop-controls",
+        "phone-controls",
+        "phone-landscape"
+      ],
+      "validation": "单次按键、长按不重复、触屏点击、横竖屏、多点触控释放通过"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop-controls",
+      "file": "releases/single-view1/captures/desktop-controls.png",
+      "sha256": "5dc02723956275d9513aebf08ceb882914ecff667d20890ddce34c6421a20a4c",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop",
+      "file": "releases/single-view1/captures/desktop.png",
+      "sha256": "f1ebd6b84908d67c0e4b8bcfd13e08a1739636f37e2966ed8672e4f3afacbbf2",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop",
+      "file": "releases/single-view1/captures/desktop.webm",
+      "sha256": "26fe34736634e6072980c7d0136639e21a1b0eff850a3722a9444a99e337a364",
+      "kind": "video",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "unknown",
+      "visual_review": "not-run",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "phone-controls",
+      "file": "releases/single-view1/captures/phone-controls.png",
+      "sha256": "5b51abd4444e445e4c3769f6356d2f5609aac93968b052967ed429804b7a79c8",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-landscape",
+      "file": "releases/single-view1/captures/phone-landscape.png",
+      "sha256": "08e1dfad565f1a34abaf0762b79bfbf2a50065d4ad16bf5019bc48c904d40ada",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/single-view1/captures/phone-portrait.png",
+      "sha256": "edb09e989a3b10157d1e6ffaf0a1e0840a8116482d625f7999c4aedea0a7810b",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/single-view1/captures/phone-portrait.webm",
+      "sha256": "3dcc280bac7394e5cd61682feeaa0a70cc0b2a89de9ce4f464d8045b9aeb1d72",
+      "kind": "video",
+      "version": "single-view1",
+      "build_id": "mario-3d-single-view1-e37a8497b6ef",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "unknown",
+      "visual_review": "not-run",
+      "audio_review": "not-run",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "method": "Edge headless，桌面 1280x720；手机模拟390x844及844x390，CDP双点触控；无页面异常",
+    "results": "captures/verification.json",
+    "limits": "没有真实手机；录像未做逐帧视觉与音轨审核。性能样本与录像同时采集，不能视为真机性能验收。"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像动态审查、音轨审查和真机性能未测"
+    ]
+  }
+}

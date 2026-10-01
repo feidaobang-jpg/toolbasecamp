@@ -8,7 +8,7 @@
   <meta name="description" content="坦克大战 3D：50 关程序化战场，通关后进入难度更高的下一周目无限循环。打砖墙、守老鹰、吃道具，键盘与手机横屏都能玩。">
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=stages1">
+  <link rel="stylesheet" href="./style.css?v=single-view1">
 </head>
 <body>
 <main id="game" tabindex="-1">
@@ -38,18 +38,18 @@ in a new dimension.</h1>
     <p id="panel-copy" data-i18n="tank3d.intro">Clear all 50 stages, then loop back for a harder second run. Guard the eagle, blast through brick walls and wipe out every enemy tank.</p>
     <p id="file-warning" class="file-warning" hidden>本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
     <div id="tally" class="tally" hidden></div>
-    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="tank3d.move">Drive (4 directions)</span></div><div><kbd>J</kbd><span data-i18n="tank3d.fire">Fire (hold)</span></div><div><kbd>Q E · R F · C</kbd><span data-i18n="tank3d.camera">Orbit · Tilt · Reset camera</span></div><div><kbd>Enter · Esc</kbd><span data-i18n="tank3d.startPause">Start · Pause</span></div></div>
+    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="tank3d.move">Drive (4 directions)</span></div><div><kbd>J</kbd><span data-i18n="tank3d.fire">Fire (hold)</span></div><div><kbd>C</kbd><span data-i18n="tank3d.camera">Cycle camera views</span></div><div><kbd>Enter · Esc</kbd><span data-i18n="tank3d.startPause">Start · Pause</span></div></div>
     <div class="action-row"><button id="start" class="tb-btn" data-i18n="tank3d.start">Enter · Start battle</button><button id="restart-run" class="tb-btn" data-i18n="tank3d.restartRun" hidden>New run from stage 1</button><a class="tb-btn" href="../../../games.html" data-i18n="tank3d.back">Game hub</a></div>
     <div class="action-row options"><button id="sound" class="tb-btn">Sound</button><button id="touch-toggle" class="tb-btn" data-i18n="tank3d.touch">Touch controls</button><button id="lang" class="tb-btn">中文 / EN</button></div>
     <small class="footnote" data-i18n="tank3d.note">Fan-made 50-stage demo · Procedural art & sound · Not an official release</small>
   </section>
   <div id="touch" hidden>
     <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
-    <div class="camera-pad action-row"><button class="tb-btn" data-hold="KeyQ" aria-label="Rotate left">Q ↶</button><button class="tb-btn" data-hold="KeyE" aria-label="Rotate right">E ↷</button><button class="tb-btn" data-hold="KeyR" aria-label="Look up">R ↑</button><button class="tb-btn" data-hold="KeyF" aria-label="Look down">F ↓</button><button class="tb-btn" id="recenter" aria-label="Reset camera">C ◎</button></div>
+    <div class="camera-pad action-row"><button class="tb-btn" id="recenter">C</button></div>
     <div class="action-row touch-actions"><button class="tb-btn fire-btn" data-hold="KeyJ"><b>J</b><span data-i18n="tank3d.fireShort">Fire</span></button></div>
   </div>
   <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="tank3d.rotate">Turn your phone sideways</h2><p data-i18n="tank3d.rotateHint">The eagle will wait for you.</p><button class="tb-btn" id="rotate-go" data-i18n="tank3d.resume">Resume</button></div>
-  <div id="keyboard-help" data-i18n="tank3d.help">WASD Drive · J Fire · Q/E Orbit · R/F Tilt · C Reset · Esc Pause</div>
+  <div id="keyboard-help" data-i18n="tank3d.help">WASD Drive · J Fire · C Camera · Esc Pause</div>
 </main>
 <script src="../../../js/locales/en.js?v=stages1"></script>
 <script src="../../../js/locales/zh-CN.js?v=stages1"></script>
@@ -62,7 +62,7 @@ in a new dimension.</h1>
   }
 </script>
 <script type="module">
-  import('./main.js?v=stages1').catch(err => {
+  import('./main.js?v=single-view1').catch(err => {
     console.error(err);
     if (location.protocol !== 'file:') {
       document.getElementById('panel-copy').textContent = t('tank3d.loadError');

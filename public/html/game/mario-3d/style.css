@@ -5,3 +5,5 @@
 @media(orientation:portrait){body:not(.playing):not(.rotated-layout) #hud{display:none}body:not(.rotated-layout) .panel{left:5%;top:50%;transform:translateY(-50%);width:90%;max-height:90dvh;overflow:auto;padding:22px}body:not(.rotated-layout) .panel h1{font-size:30px}body:not(.playing) #keyboard-help{display:none}}
 
 body.rotated-layout #game{inset:auto;top:0;transform-origin:0 0;transform:rotate(90deg)}
+
+body.touch-mode #camera-mode{display:none}

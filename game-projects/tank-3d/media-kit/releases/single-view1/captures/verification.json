@@ -1,0 +1,32 @@
+[
+  {
+    "mobile": false,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "camera": "斜俯视",
+    "rotated": false,
+    "perf": {
+      "fps": 163.81979822585737,
+      "p95": 6,
+      "median": 5.899999999999636
+    },
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "camera": "斜俯视",
+    "rotated": true,
+    "perf": {
+      "fps": 169.94901530148744,
+      "p95": 6,
+      "median": 5.899999999999636
+    },
+    "errors": []
+  }
+]

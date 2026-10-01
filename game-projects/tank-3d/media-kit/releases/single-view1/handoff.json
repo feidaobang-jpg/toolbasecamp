@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "single-view1",
+  "base_version": "v0.2.0",
+  "created_at": "2026-10-01",
+  "build": {
+    "id": "tank-3d-single-view1-caca209c5c29",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "caca209c5c2951954b7e4470ca4d8c1f38ff9f894aeca348470b436a32881951",
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [],
+  "changes": [
+    {
+      "id": "single-camera",
+      "before": "Q/E 切换、C 回正，多个手机视角入口",
+      "after": "C 或一个手机按钮循环常用视角",
+      "result": "坦克斜俯视/俯视；玛丽奥侧视/斜视/纵深",
+      "evidence_ids": [
+        "desktop-controls",
+        "phone-controls",
+        "phone-landscape"
+      ],
+      "validation": "单次按键、长按不重复、触屏点击、横竖屏、多点触控释放通过"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop-controls",
+      "file": "releases/single-view1/captures/desktop-controls.png",
+      "sha256": "9fe705ad33d0459d532eda8f8fc18912c99453394b6257ed6739ab2c12ddde87",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop",
+      "file": "releases/single-view1/captures/desktop.png",
+      "sha256": "e6f0b4c161cacaea06146ff9762c6abb0438a09e604df988a9a5a653ed3a4f62",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop",
+      "file": "releases/single-view1/captures/desktop.webm",
+      "sha256": "6e583d4c956763c934e4525d86942390a9ca0b17ad5da2b21a560c80f4cc2917",
+      "kind": "video",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "unknown",
+      "visual_review": "not-run",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "phone-controls",
+      "file": "releases/single-view1/captures/phone-controls.png",
+      "sha256": "229956113ac0b4c48ef25a747f76aa3c3ab1754b6885b492653a301f44f89a75",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-landscape",
+      "file": "releases/single-view1/captures/phone-landscape.png",
+      "sha256": "02834da4d3820102d16023254bd1467785f4e9980d3d40ff2a4b5fdc3dc559a1",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/single-view1/captures/phone-portrait.png",
+      "sha256": "15958cf59e21537d815c7185d904098ef987bfb2181f805ea980e02b915041d4",
+      "kind": "screenshot",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/single-view1/captures/phone-portrait.webm",
+      "sha256": "d064e1b2524381f19fd62946c0964d2b932da91ed9b00115598367da6c383f4b",
+      "kind": "video",
+      "version": "single-view1",
+      "build_id": "tank-3d-single-view1-caca209c5c29",
+      "capture_mode": "realtime-automation",
+      "description": "Edge headless 实时操作；手机为视口与触控模拟。",
+      "audio": "unknown",
+      "visual_review": "not-run",
+      "audio_review": "not-run",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "method": "Edge headless，桌面 1280x720；手机模拟390x844及844x390，CDP双点触控；无页面异常",
+    "results": "captures/verification.json",
+    "limits": "没有真实手机；录像未做逐帧视觉与音轨审核。性能样本与录像同时采集，不能视为真机性能验收。"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像动态审查、音轨审查和真机性能未测"
+    ]
+  }
+}

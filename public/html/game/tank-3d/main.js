@@ -1,4 +1,4 @@
-import {installDemoControls} from '../../../js/game/demo-controls.js?v=1';
+import {installDemoControls} from '../../../js/game/demo-controls.js?v=single-view1';
 import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=stages1';
 import { TOTAL_STAGES } from './stages.js?v=stages1';
 import { createScene } from './scene.js?v=stages1';
@@ -14,7 +14,7 @@ const held = new Set(), pointerKeys = new Set(), tapped = new Set(), dirStack = 
 const DIR_KEYS = { KeyW: 0, KeyD: 1, KeyS: 2, KeyA: 3 };
 const HOLD_ALIASES = {}; // Menu arrows remain available for navigation.
 let phase = 'title', paused = false, introT = 0, last = performance.now(), orientationBlocked = false, bigTimer = 0;
-const mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
+const mobileDevice = (matchMedia('(any-pointer: coarse)').matches || navigator.maxTouchPoints > 0);
 const HI_KEY = 'tb-game-tank3d-hi', PROGRESS_KEY = 'tb-game-tank3d-progress';
 let hi = 0; try { hi = Number(localStorage.getItem(HI_KEY)) || 0; } catch (e) { /* storage unavailable */ }
 let stick = { id: null, x: 0, y: 0, axis: -1 };
@@ -229,7 +229,7 @@ $('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSo
 $('touch-toggle').onclick = () => { $('touch').hidden = !$('touch').hidden; document.body.classList.toggle('touch-mode', !$('touch').hidden); };
 $('lang').onclick = () => tbSetLocale(tbGetLocale() === 'zh-CN' ? 'en' : 'zh-CN');
 $('rotate-go').onclick = () => { orientation(); if (!orientationBlocked && paused) togglePause(); };
-$('recenter').addEventListener('pointerdown', e => { e.preventDefault(); pointerKeys.add('KeyC'); setTimeout(() => pointerKeys.delete('KeyC'), 90); });
+
 document.querySelectorAll('[data-hold]').forEach(btn => {
   const code = btn.dataset.hold;
   const down = e => { e.preventDefault(); btn.setPointerCapture?.(e.pointerId); pointerKeys.add(code); btn.classList.add('held'); if (code === 'KeyJ') audio.unlock(); };
