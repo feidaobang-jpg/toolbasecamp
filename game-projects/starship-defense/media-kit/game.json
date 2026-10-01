@@ -8,9 +8,18 @@
   "release_intent": "web_demo",
   "development_model": null,
   "toy_id": "38678478981120",
-  "publication_status": "auditing",
+  "publication_status": "published",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_Z2dVJ49C/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/toy-v0.3.0/handoff.json"
+  "qa": "releases/toy-v0.3.0/handoff.json",
+  "toy": {
+    "id": 38678478981120,
+    "slug": "chongchao-qianshao",
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "visibility": "PUBLIC",
+    "review_status": "published",
+    "verified_at": "2026-10-01T15:06:11.229935+00:00"
+  },
+  "website_url": "https://www.zhengxiaohui.cn/html/game/starship_defense.html"
 }

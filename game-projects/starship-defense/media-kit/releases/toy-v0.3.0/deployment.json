@@ -1,0 +1,12 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship_defense.html",
+  "verifiedAt": "2026-10-01T15:05:15.175Z",
+  "checks": {
+    "camera": 1,
+    "shop": true,
+    "immediateWeapons": true,
+    "pendingOrders": [],
+    "guide": "↙ 基地 25米"
+  },
+  "errors": []
+}

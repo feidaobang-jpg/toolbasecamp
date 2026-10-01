@@ -6,8 +6,8 @@
   "created_at": "2026-10-01T23:02:47.387459+08:00",
   "build": {
     "id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
-    "commit": null,
-    "dirty": true,
+    "commit": "3b35557430f050f11b6397dc42dfc75d549b8b70",
+    "dirty": false,
     "fingerprint": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
     "entrypoint": "public/html/game/starship_defense.html"
   },
@@ -246,12 +246,25 @@
     {
       "id": "toy-preview-shop",
       "file": "releases/toy-v0.3.0/captures/toy-preview-shop.png",
-      "sha256": "335f8cffcba5a3030ea3ace21341c77f758ca538c560d2889f8d0942f3b5d676",
+      "sha256": "8322605eb3be16c6aac7c85c9de9ee9e32f06e48f52d04c2f658d57392dd95a2",
       "kind": "screenshot",
       "version": "toy-v0.3.0",
       "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
       "capture_mode": "realtime-automation",
       "description": "toy-preview-shop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "toy-published-shop",
+      "file": "releases/toy-v0.3.0/captures/toy-published-shop.png",
+      "sha256": "003391cae217bf78105a5dbe6aff0b593ce0682851a12cb926cb4a861f670942",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "正式Toy版本，手机横屏商店",
       "audio": "none",
       "visual_review": "pass",
       "audio_review": "not-applicable"
@@ -265,7 +278,8 @@
       "No physical phone tested",
       "Software-renderer run was slow; final hardware measurements passed",
       "No pre-fix recording retained; comments are user reports, not fabricated reproductions"
-    ]
+    ],
+    "deployment": "deployment.json; Toy published build v21053 iframe opened, mobile shop/camera/immediate weapon logic verified, zero page errors."
   },
   "readiness": {
     "overview": "partial",
