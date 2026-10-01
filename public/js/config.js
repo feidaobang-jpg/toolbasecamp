@@ -216,17 +216,6 @@ const toolsConfig = {
             ]
         },
         {
-            titleKey: 'tools.groups.android',
-            items: [
-                { titleKey: 'tools.layoutConverter.title', url: 'html/dev/layout-converter.html' },
-                { titleKey: 'tools.stringTranslator.title', url: 'html/android/string-translator.html' },
-                { titleKey: 'tools.folderTranslator.title', url: 'html/android/folder-translator.html' },
-                { titleKey: 'tools.mvpConverter.title', url: 'html/android/mvp-converter.html' },
-                { titleKey: 'tools.adapterGenerator.title', url: 'html/android/adapter-generator.html' },
-                { titleKey: 'tools.refreshPageGenerator.title', url: 'html/android/refresh-page-generator.html' }
-            ]
-        },
-        {
             titleKey: 'tools.groups.ladder',
             items: [
                 { titleKey: 'tools.pcBuilds.title', url: 'html/ladder/pc-builds.html' },
@@ -235,16 +224,6 @@ const toolsConfig = {
                 { titleKey: 'tools.ladderSocRank.title', url: 'html/ladder/soc_rank.html' },
                 { titleKey: 'tools.ladderNbCpuRank.title', url: 'html/ladder/nb_cpu_rank.html' },
                 { titleKey: 'tools.ladderNbGpuRank.title', url: 'html/ladder/nb_gpu_rank.html' }
-            ]
-        },
-        {
-            titleKey: 'tools.groups.developer',
-            items: [
-                { titleKey: 'tools.jsonToJava.title', url: 'html/dev/json-to-java.html' },
-                { titleKey: 'tools.base64Url.title', url: 'html/dev/base64-url.html' },
-                { titleKey: 'tools.regexTester.title', url: 'html/dev/regex-tester.html' },
-                { titleKey: 'tools.jwtDecode.title', url: 'html/dev/jwt-decode.html' },
-                { titleKey: 'tools.jsonFormat.title', url: 'html/dev/json-format.html' }
             ]
         }
     ]

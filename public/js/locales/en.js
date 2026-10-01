@@ -7,8 +7,8 @@ window.TB_LOCALES.en = {
     site: {
         name: 'Treasure Box',
         logoBadge: 'BX',
-        description: 'Treasure Box — document conversion, media utilities, and developer tools. PDF to Word, Video to Images, JSON to Java, and more.',
-        keywords: 'productivity tools, PDF converter, JSON to Java, developer utilities, document tools',
+        description: 'Treasure Box — document conversion, media utilities, and everyday tools. PDF to Word, Video to Images, Images to PDF, and more.',
+        keywords: 'productivity tools, PDF converter, image tools, everyday utilities, document tools',
         footer: 'All rights reserved.',
         icpBeian: '闽ICP备2025116294号-2',
         pageTitleSuffix: 'Treasure Box'
@@ -1537,9 +1537,7 @@ window.TB_LOCALES.en = {
             media: 'Media',
             document: 'Document',
             diagram: 'Diagram',
-            android: 'Android',
-            ladder: 'Benchmark Ranks',
-            developer: 'Developer'
+            ladder: 'Benchmark Ranks'
         },
         game: {
             restart: 'Start',
@@ -3826,115 +3824,6 @@ window.TB_LOCALES.en = {
             jsPdfFailed: 'jsPDF failed to load. Please refresh the page.',
             sizeLabel: 'Size: {size}'
         },
-        base64Url: {
-            title: 'Base64 & URL Encode',
-            desc: 'Encode or decode Base64 and URL (encodeURIComponent) text in the browser.',
-            tabB64Enc: 'Base64 encode',
-            tabB64Dec: 'Base64 decode',
-            tabUrlEnc: 'URL encode',
-            tabUrlDec: 'URL decode',
-            inputLabel: 'Input',
-            inputPlaceholder: 'Enter text…',
-            outputLabel: 'Output',
-            convert: 'Convert',
-            clear: 'Clear',
-            copy: 'Copy',
-            needInput: 'Please enter text',
-            convertError: 'Conversion failed: {message}',
-            nothingToCopy: 'Nothing to copy',
-            copyDone: 'Copied',
-            copyFailed: 'Copy failed — please select and copy manually'
-        },
-        regexTester: {
-            title: 'Regex Tester',
-            desc: 'Test a JavaScript regular expression against sample text and inspect matches.',
-            patternLabel: 'Pattern',
-            patternPlaceholder: 'e.g. (\\d+)',
-            flagsLabel: 'Flags',
-            flagsPlaceholder: 'gimuy',
-            testLabel: 'Test string',
-            testPlaceholder: 'Text to test against…',
-            test: 'Test',
-            clear: 'Clear',
-            resultTitle: 'Matches',
-            countLabel: 'Match count',
-            needPattern: 'Please enter a pattern',
-            invalidPattern: 'Invalid pattern: {message}',
-            noMatches: 'No matches',
-            matchIndex: 'Match #{n}',
-            matchText: 'Text',
-            matchAt: 'Range'
-        },
-        jwtDecode: {
-            title: 'JWT Decode',
-            desc: 'Paste a JWT to decode its header and payload as JSON (no signature verification).',
-            note: 'Note:',
-            noteBody: 'Decoding is for inspection only. Never trust unverified token contents.',
-            inputLabel: 'JWT',
-            inputPlaceholder: 'eyJhbGciOiJIUzI1NiIs…',
-            decode: 'Decode',
-            clear: 'Clear',
-            headerTitle: 'Header',
-            payloadTitle: 'Payload',
-            needJwt: 'Please paste a JWT',
-            invalidJwt: 'Invalid JWT format',
-            decodeError: 'Decode failed: {message}'
-        },
-        jsonFormat: {
-            title: 'JSON Format',
-            desc: 'Pretty-print or minify JSON in the browser.',
-            inputLabel: 'JSON input',
-            inputPlaceholder: '{"key":"value"}',
-            format: 'Format',
-            minify: 'Minify',
-            clear: 'Clear',
-            outputLabel: 'Output',
-            copy: 'Copy',
-            needInput: 'Please enter JSON',
-            parseError: 'JSON parse error: {message}',
-            nothingToCopy: 'Nothing to copy',
-            copyDone: 'Copied',
-            copyFailed: 'Copy failed — please select and copy manually'
-        },
-        jsonToJava: {
-            title: 'JSON to Java',
-            desc: 'Generate Java entity classes from JSON data',
-            inputLabel: 'JSON input',
-            inputPlaceholder: 'Paste your JSON here',
-            useInnerClasses: 'Use inner classes',
-            mainClassLabel: 'Main entity class',
-            innerClassesLabel: 'Inner classes',
-            copyMainClass: 'Copy main class',
-            copyInnerClasses: 'Copy inner classes',
-            generate: 'Generate',
-            clear: 'Clear',
-            emptyJson: 'Please enter JSON data',
-            parseError: 'JSON parse error: {message}'
-        },
-        layoutConverter: {
-            title: 'Layout XML to findView',
-            desc: 'Convert Android layout XML to findViewById / ButterKnife / Kotlin'
-        },
-        stringTranslator: {
-            title: 'strings.xml translator',
-            desc: 'Translate Chinese into strings.xml (Baidu Translate)'
-        },
-        folderTranslator: {
-            title: 'Batch file rename',
-            desc: 'Translate and rename local files in bulk'
-        },
-        mvpConverter: {
-            title: 'MVP code generator',
-            desc: 'Generate MVP scaffold code from API info'
-        },
-        adapterGenerator: {
-            title: 'Adapter code generator',
-            desc: 'Generate RecyclerView / list Adapter templates'
-        },
-        refreshPageGenerator: {
-            title: 'Pull-to-refresh page generator',
-            desc: 'Scaffold pull-to-refresh and paging pages'
-        },
         ladderCpu: {
             title: 'Desktop CPU',
             desc: 'Desktop CPU performance ladder (higher is stronger)',
@@ -4146,7 +4035,7 @@ window.TB_LOCALES.en = {
         gamesTitle: 'Casual Games',
         gamesDesc: 'Browser games that work on phone and desktop.',
         developerTitle: 'Developer Tools',
-        developerDesc: 'JSON to Java entities, QR codes, and other day-to-day utilities.',
+        developerDesc: 'QR codes, benchmark rankings, PC builds, and other day-to-day utilities.',
         privacyTitle: 'Privacy-friendly',
         privacyDesc: 'Local tools run in your browser. Upload-based tools process files and discard them afterward.',
         builtTitle: 'Bilingual',

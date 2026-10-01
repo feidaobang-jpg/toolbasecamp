@@ -6,8 +6,8 @@ window.TB_LOCALES['zh-CN'] = {
     site: {
         name: '百宝箱',
         logoBadge: '百',
-        description: '百宝箱 — 文档转换、媒体工具与开发者实用程序。PDF 转 Word、视频转图片、JSON 转 Java 等。',
-        keywords: '效率工具, PDF 转换, JSON 转 Java, 开发者工具, 文档工具',
+        description: '百宝箱 — 文档转换、媒体工具与生活实用工具。PDF 转 Word、视频转图片、图片转 PDF 等。',
+        keywords: '效率工具, PDF 转换, 图片处理, 生活工具, 文档工具',
         footer: '保留所有权利。',
         icpBeian: '闽ICP备2025116294号-2',
         pageTitleSuffix: '百宝箱'
@@ -1536,9 +1536,7 @@ window.TB_LOCALES['zh-CN'] = {
             media: '媒体',
             document: '文档',
             diagram: '图表',
-            android: '安卓',
-            ladder: '性能跑分榜',
-            developer: '开发者'
+            ladder: '性能跑分榜'
         },
         game: {
             restart: '开始',
@@ -3825,115 +3823,6 @@ window.TB_LOCALES['zh-CN'] = {
             jsPdfFailed: 'jsPDF 加载失败，请刷新页面。',
             sizeLabel: '大小：{size}'
         },
-        base64Url: {
-            title: 'Base64 与 URL 编解码',
-            desc: '在浏览器中编码或解码 Base64 与 URL（encodeURIComponent）文本。',
-            tabB64Enc: 'Base64 编码',
-            tabB64Dec: 'Base64 解码',
-            tabUrlEnc: 'URL 编码',
-            tabUrlDec: 'URL 解码',
-            inputLabel: '输入',
-            inputPlaceholder: '请输入文本…',
-            outputLabel: '输出',
-            convert: '转换',
-            clear: '清除',
-            copy: '复制',
-            needInput: '请输入文本',
-            convertError: '转换失败：{message}',
-            nothingToCopy: '没有可复制的内容',
-            copyDone: '复制成功',
-            copyFailed: '复制失败，请手动选择复制'
-        },
-        regexTester: {
-            title: '正则测试',
-            desc: '测试 JavaScript 正则表达式并查看匹配结果与捕获组。',
-            patternLabel: '正则',
-            patternPlaceholder: '例如 (\\d+)',
-            flagsLabel: '标志',
-            flagsPlaceholder: 'gimuy',
-            testLabel: '测试文本',
-            testPlaceholder: '待匹配的文本…',
-            test: '测试',
-            clear: '清除',
-            resultTitle: '匹配结果',
-            countLabel: '匹配数',
-            needPattern: '请输入正则',
-            invalidPattern: '无效正则：{message}',
-            noMatches: '无匹配',
-            matchIndex: '匹配 #{n}',
-            matchText: '文本',
-            matchAt: '范围'
-        },
-        jwtDecode: {
-            title: 'JWT 解码',
-            desc: '粘贴 JWT，解码 Header 与 Payload 为 JSON（不验证签名）。',
-            note: '说明：',
-            noteBody: '仅供查看，切勿信任未验证的 Token 内容。',
-            inputLabel: 'JWT',
-            inputPlaceholder: 'eyJhbGciOiJIUzI1NiIs…',
-            decode: '解码',
-            clear: '清除',
-            headerTitle: 'Header',
-            payloadTitle: 'Payload',
-            needJwt: '请粘贴 JWT',
-            invalidJwt: 'JWT 格式无效',
-            decodeError: '解码失败：{message}'
-        },
-        jsonFormat: {
-            title: 'JSON 格式化',
-            desc: '在浏览器中格式化或压缩 JSON。',
-            inputLabel: 'JSON 输入',
-            inputPlaceholder: '{"key":"value"}',
-            format: '格式化',
-            minify: '压缩',
-            clear: '清除',
-            outputLabel: '输出',
-            copy: '复制',
-            needInput: '请输入 JSON',
-            parseError: 'JSON 解析错误：{message}',
-            nothingToCopy: '没有可复制的内容',
-            copyDone: '复制成功',
-            copyFailed: '复制失败，请手动选择复制'
-        },
-        jsonToJava: {
-            title: 'JSON 转 Java',
-            desc: '根据 JSON 数据生成 Java 实体类',
-            inputLabel: 'JSON 输入',
-            inputPlaceholder: '在此粘贴 JSON',
-            useInnerClasses: '使用内部类',
-            mainClassLabel: '主实体类',
-            innerClassesLabel: '内部类',
-            copyMainClass: '复制主类',
-            copyInnerClasses: '复制内部类',
-            generate: '生成',
-            clear: '清除',
-            emptyJson: '请输入 JSON 数据',
-            parseError: 'JSON 解析错误：{message}'
-        },
-        layoutConverter: {
-            title: '布局 XML 转 findView',
-            desc: 'Android 布局 XML 转 findViewById / ButterKnife / Kotlin'
-        },
-        stringTranslator: {
-            title: 'strings.xml 翻译',
-            desc: '中文翻译成 string.xml（百度翻译）'
-        },
-        folderTranslator: {
-            title: '文件批量翻译重命名',
-            desc: '批量翻译并重命名本地文件'
-        },
-        mvpConverter: {
-            title: 'MVP 代码生成',
-            desc: '按接口信息生成 MVP 脚手架代码'
-        },
-        adapterGenerator: {
-            title: 'Adapter 代码生成',
-            desc: '生成 RecyclerView / 列表 Adapter 模板'
-        },
-        refreshPageGenerator: {
-            title: '下拉刷新分页生成',
-            desc: '生成下拉刷新与分页页面脚手架'
-        },
         ladderCpu: {
             title: '桌面处理器',
             desc: '桌面 CPU 性能天梯图（越高越强）',
@@ -4145,7 +4034,7 @@ window.TB_LOCALES['zh-CN'] = {
         gamesTitle: '休闲游戏',
         gamesDesc: '网页即可玩的小游戏，支持手机与桌面。',
         developerTitle: '开发者工具',
-        developerDesc: 'JSON 转 Java 实体、二维码等日常开发与实用小工具。',
+        developerDesc: '二维码生成、性能跑分榜与装机清单等日常实用小工具。',
         privacyTitle: '注重隐私',
         privacyDesc: '本地工具在浏览器运行；需上传的服务处理完即丢弃，不另存你的文件。',
         builtTitle: '中英双语',
