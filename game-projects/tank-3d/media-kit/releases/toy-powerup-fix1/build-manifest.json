@@ -1,0 +1,36 @@
+{
+  "title": "tank-3d",
+  "slug": "tank-3d",
+  "version": "toy-powerup-fix1",
+  "source": "public/html/game/tank-3d",
+  "source_sha256": {
+    "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
+    "field.js": "4102ae8a0c03fbb7c63465f0bce8473ccecb26aa4fea180b6b1504bcfd728c85",
+    "index.html": "80d0348115f3c2c4a769b2ab76f3b587a15ae6cce46b8b94349d082f1c4e9f3a",
+    "main.js": "6a7f486d4d9ec7118532d204aacee48951f769df139cbf47966cec295cf27a14",
+    "scene.js": "8fbf8c060c4507e653f9c0bdcb5e22833544cd65a37ff15bd809d702bb38609e",
+    "stages.js": "cce1479199bf3d71170a08478cdf38950d1537a6dd50552b299cf92478cacfe6",
+    "style.css": "fa6c07a07f84785f5f2236873952cd4555ad9748d59122eec058b48623536f26",
+    "world.js": "078d8b7aa9bd0419e049ca33b886c694d93fdcaa874c390c2f6a8087b8337635"
+  },
+  "zip_sha256": "263ca1cd581d462dd59882943b4ea01d72e40ddc841736938aa00c140ce9e7ca",
+  "zip_bytes": 314677,
+  "files": {
+    "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
+    "base.css": "94d20a7ea796ba7712bce000dd553a4c855cfca96505929a2b5b9f645b7d7326",
+    "demo-controls.js": "302b1ee1d9aa8abc204977f019a655211c884cc4c9a4e474cf692095e33e5fd5",
+    "favicon.svg": "a6a197711cfa402bf5838aaddb16dd78a973e7f438724b17466e215d61741a07",
+    "field.js": "4102ae8a0c03fbb7c63465f0bce8473ccecb26aa4fea180b6b1504bcfd728c85",
+    "game-demo-en.js": "8e973511df1eccd132a46296d61bd174262090f9563196022daf0a5d1a20a3d6",
+    "game-demo-zh-CN.js": "6e0c33ae2268cf48b9e4a1923129f1b618f54a64b26f5a08aa84e0573acac4c5",
+    "index.html": "ffb2bc472ccc67bfb8a0d0cf6a628ce38211ead46dee34b2c482c7ed06d960bf",
+    "main.js": "32e5c592afb3e40240ae1e2ec362aeb5c5a20841062f624be8bf83d8e7600a4e",
+    "scene.js": "2006ddb2bd8505bfe43c72e3092595d735570e917459d50c93328879b2768c02",
+    "stages.js": "cce1479199bf3d71170a08478cdf38950d1537a6dd50552b299cf92478cacfe6",
+    "style.css": "fa6c07a07f84785f5f2236873952cd4555ad9748d59122eec058b48623536f26",
+    "toy-adapter.js": "81173b682e4bee1894517c6a002c2b5ae3f2648b1bd06f8c8a79312dff05e5f7",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "world.js": "078d8b7aa9bd0419e049ca33b886c694d93fdcaa874c390c2f6a8087b8337635"
+  },
+  "status": "built_not_submitted"
+}

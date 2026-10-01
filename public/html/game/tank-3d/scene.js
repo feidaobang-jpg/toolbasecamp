@@ -49,7 +49,12 @@ const grassTex = () => canvasTex(256, 256, (g, w, h) => { const R = rngFrom(21);
 function iconTex(type) {
   return canvasTex(128, 128, (g, w, h) => {
     g.fillStyle = '#10213acc'; g.strokeStyle = '#ffe27a'; g.lineWidth = 7;
-    g.beginPath(); g.roundRect(6, 6, w - 12, h - 12, 22); g.fill(); g.stroke();
+    // Older embedded browsers lack roundRect. A first drop must not stop the frame loop.
+    g.beginPath(); g.moveTo(28, 6); g.lineTo(w - 28, 6);
+    g.quadraticCurveTo(w - 6, 6, w - 6, 28); g.lineTo(w - 6, h - 28);
+    g.quadraticCurveTo(w - 6, h - 6, w - 28, h - 6); g.lineTo(28, h - 6);
+    g.quadraticCurveTo(6, h - 6, 6, h - 28); g.lineTo(6, 28);
+    g.quadraticCurveTo(6, 6, 28, 6); g.closePath(); g.fill(); g.stroke();
     g.save(); g.translate(64, 66); g.lineJoin = 'round';
     if (type === 'star') { g.fillStyle = '#ffd23f'; g.beginPath(); for (let i = 0; i < 10; i++) { const r = i % 2 ? 17 : 40, a = -Math.PI / 2 + i * Math.PI / 5; g.lineTo(Math.cos(a) * r, Math.sin(a) * r); } g.fill(); }
     if (type === 'grenade') { g.fillStyle = '#5d8a3a'; g.beginPath(); g.ellipse(0, 8, 27, 32, 0, 0, TAU); g.fill(); g.strokeStyle = '#2f4a1c'; g.lineWidth = 4; for (const y of [-6, 8, 22]) { g.beginPath(); g.moveTo(-24, y); g.lineTo(24, y); g.stroke(); } g.fillStyle = '#c9ced4'; g.fillRect(-10, -34, 20, 12); g.strokeStyle = '#c9ced4'; g.lineWidth = 5; g.beginPath(); g.arc(18, -34, 9, 0, TAU); g.stroke(); }
@@ -75,6 +80,8 @@ const RED = new THREE.Color('#d9352b'), RED2 = new THREE.Color('#e84a3a');
 const cylGeo = new THREE.CylinderGeometry(1, 1, 1, 12);
 const icoGeo = new THREE.IcosahedronGeometry(1, 1);
 const lowIco = new THREE.IcosahedronGeometry(1, 0);
+// Effects reuse one geometry instead of leaking a new GPU buffer after every explosion.
+const effectRingGeo = new THREE.RingGeometry(.8, 1, 40);
 const matCache = new Map();
 function mat(color, rough = .6, metal = .1) { const k = color + rough + metal; if (!matCache.has(k)) matCache.set(k, new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal })); return matCache.get(k); }
 function mesh(parent, geo, material, x, y, z, sx, sy, sz, shadow = true) { const m = new THREE.Mesh(geo, material); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.castShadow = shadow; m.receiveShadow = true; parent.add(m); return m; }
@@ -258,7 +265,7 @@ export function createScene(canvas, world) {
     }
   }
   function ring(x, z, radius, color = '#ffd27a') {
-    const m = new THREE.Mesh(new THREE.RingGeometry(.8, 1, 40), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .8, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
+    const m = new THREE.Mesh(effectRingGeo, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .8, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
     m.rotation.x = -Math.PI / 2; m.position.set(x, .06, z); addFx(m, { type: 'ring', life: .5, s0: .3, s1: radius, dispose: true, op: .8 });
   }
   function flashAt(x, y, z, size, life = .12) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: flash, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); s.position.set(x, y, z); addFx(s, { type: 'flash', life, s0: size, s1: size * 1.4, dispose: true }); }
@@ -424,6 +431,8 @@ export function createScene(canvas, world) {
     for (const m of tankModels.values()) { scene.remove(m.group); m.bodyMat.dispose(); m.turretMat.dispose(); m.tread.dispose(); }
     tankModels.clear();
     for (const f of fx) { scene.remove(f.obj); if (f.dispose) f.obj.material.dispose(); }
+    for (const texture of scoreTex.values()) texture.dispose();
+    scoreTex.clear();
     fx.length = 0; shakeT = 0; gridVersion = -1;
   }
   function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }

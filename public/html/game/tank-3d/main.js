@@ -1,7 +1,7 @@
 import {installDemoControls} from '../../../js/game/demo-controls.js?v=single-view1';
 import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=stages1';
 import { TOTAL_STAGES } from './stages.js?v=stages1';
-import { createScene } from './scene.js?v=stages1';
+import { createScene } from './scene.js?v=powerup-fix1';
 import { GameAudio } from './audio.js?v=stages1';
 
 const $ = id => document.getElementById(id);

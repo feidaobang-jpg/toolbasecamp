@@ -1,0 +1,26 @@
+{
+  "perf": {
+    "fps": 168.38492246085733,
+    "median": 5.899999999999636,
+    "p95": 6,
+    "over50": 1,
+    "frames": 1354,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1,
+    "buffer": [
+      1280,
+      720
+    ],
+    "drawCalls": 169,
+    "triangles": 26098,
+    "recording": false
+  },
+  "memory": {
+    "before": 21,
+    "after": 21
+  },
+  "errors": [],
+  "browser": "154.0.4258.48",
+  "capture": "realtime-automation",
+  "audio": "none"
+}

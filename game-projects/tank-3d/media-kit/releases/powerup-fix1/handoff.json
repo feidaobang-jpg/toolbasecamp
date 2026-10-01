@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "powerup-fix1",
+  "base_version": "single-view1",
+  "created_at": "2026-10-01",
+  "build": {
+    "id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "3cbb03fcb06ea2fd05aa23c5e06a9cbbcd1d3741d28d70fd7974c81340d7a6be",
+    "files": {
+      "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
+      "field.js": "4102ae8a0c03fbb7c63465f0bce8473ccecb26aa4fea180b6b1504bcfd728c85",
+      "index.html": "80d0348115f3c2c4a769b2ab76f3b587a15ae6cce46b8b94349d082f1c4e9f3a",
+      "main.js": "6a7f486d4d9ec7118532d204aacee48951f769df139cbf47966cec295cf27a14",
+      "scene.js": "8fbf8c060c4507e653f9c0bdcb5e22833544cd65a37ff15bd809d702bb38609e",
+      "stages.js": "cce1479199bf3d71170a08478cdf38950d1537a6dd50552b299cf92478cacfe6",
+      "style.css": "fa6c07a07f84785f5f2236873952cd4555ad9748d59122eec058b48623536f26",
+      "world.js": "078d8b7aa9bd0419e049ca33b886c694d93fdcaa874c390c2f6a8087b8337635"
+    },
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "powerups",
+      "description": "六种道具及计时效果",
+      "status": "implemented",
+      "evidence_ids": [
+        "powerup-realtime.png"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "canvas-compatibility",
+      "feature_ids": [
+        "powerups"
+      ],
+      "before": "旧内核首次道具调用 roundRect 抛错，帧循环停止",
+      "after": "通用路径绘制图标",
+      "result": "道具出现后持续游玩",
+      "evidence_ids": [
+        "powerup-realtime.png",
+        "powerup-realtime.webm"
+      ],
+      "verification": "pass"
+    },
+    {
+      "id": "gpu-resources",
+      "before": "每次光环新建几何，换关保留计分贴图",
+      "after": "复用光环几何并清理贴图",
+      "verification": "pass"
+    },
+    {
+      "id": "toy-package",
+      "before": "语言依赖越出包目录，缺少切换接口和字典",
+      "after": "自包含双语包",
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "first-drop-freeze",
+      "found_in": "single-view1",
+      "status": "fixed",
+      "cause": "Canvas roundRect 不兼容",
+      "reproduction_steps": [
+        "移除浏览器 roundRect 能力",
+        "第一关生成道具",
+        "观察 TypeError 与游戏时间不再增加"
+      ],
+      "before_media_ids": [],
+      "after_media_ids": [
+        "powerup-realtime.png",
+        "powerup-realtime.webm"
+      ],
+      "retest": "六类道具与生命/关卡流程均通过"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop.png",
+      "file": "releases/powerup-fix1/captures/desktop.png",
+      "sha256": "9e89f0d0a3492673b64e5edd2e0a23e5ac74a1293f10e72120a8a493533fcabf",
+      "kind": "screenshot",
+      "version": "powerup-fix1",
+      "build_id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建的针对性复测；通过 QA 指定道具及状态",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait.png",
+      "file": "releases/powerup-fix1/captures/phone-portrait.png",
+      "sha256": "a8df0b2f7db680a8e3d23d4d1873ddf715427475647505318c218c4fe2e4bb89",
+      "kind": "screenshot",
+      "version": "powerup-fix1",
+      "build_id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建的针对性复测；通过 QA 指定道具及状态",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "powerup-realtime.png",
+      "file": "releases/powerup-fix1/captures/powerup-realtime.png",
+      "sha256": "3415071f403f69e52da266b1815acb90018dca087853debd79c4ce16dd5ecd5b",
+      "kind": "screenshot",
+      "version": "powerup-fix1",
+      "build_id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建的针对性复测；通过 QA 指定道具及状态",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "motion-sheet.jpg",
+      "file": "releases/powerup-fix1/captures/motion-sheet.jpg",
+      "sha256": "dc41c4a976f720eacc275417f8c4813e7965e83724b235aa2704e722404c35b0",
+      "kind": "screenshot",
+      "version": "powerup-fix1",
+      "build_id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建的针对性复测；通过 QA 指定道具及状态",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "toy-preview.png",
+      "file": "releases/powerup-fix1/captures/toy-preview.png",
+      "sha256": "714c5939b9c08007384a5fb631dbcf2d2129596c226467204b70c541c56cfc41",
+      "kind": "screenshot",
+      "version": "powerup-fix1",
+      "build_id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建的针对性复测；通过 QA 指定道具及状态",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "powerup-realtime.webm",
+      "file": "releases/powerup-fix1/captures/powerup-realtime.webm",
+      "sha256": "b990c93bc1696c80097927c4696c347bac376f1b5a8a43975ee4395ad0cad85b",
+      "kind": "video",
+      "version": "powerup-fix1",
+      "build_id": "tank-3d-powerup-fix1-3cbb03fcb06e",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建的针对性复测；通过 QA 指定道具及状态",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "logic": "19 checks passed",
+    "browser": "Microsoft Edge 141 / RTX 4060 Ti D3D11",
+    "regression": "captures/regression.json",
+    "realtime": "captures/realtime.json",
+    "limitations": [
+      "手机视口模拟，未测真机",
+      "没有修复前录像；异常堆栈已实际复现",
+      "短片无声音"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "无修复前原片",
+      "短片无游戏声音",
+      "完整介绍沿用历史材料"
+    ]
+  }
+}

@@ -10,6 +10,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statS
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { runInNewContext } from 'node:vm';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const GAME_DEMO_LOCALES = ['game-demo-zh-CN.js', 'game-demo-en.js'];
@@ -18,6 +19,14 @@ const TOY_ADAPTER = `/* Toy 适配层:i18n 兜底、隐藏站内返回入口;玩
 (function () {
   var lang = (navigator.language || 'zh-CN').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
   window.TB_TOY_LANG = lang;
+  window.tbGetLocale = function () { return lang === 'zh' ? 'zh-CN' : 'en'; };
+  window.tbSetLocale = function (locale) {
+    lang = locale === 'en' ? 'en' : 'zh';
+    window.TB_TOY_LANG = lang;
+    document.documentElement.lang = window.tbGetLocale();
+    apply();
+    document.dispatchEvent(new Event('tb:locale'));
+  };
   function resolve(table, path) {
     var cur = table, ps = path.split('.');
     for (var i = 0; i < ps.length; i++) {
@@ -46,13 +55,14 @@ const TOY_ADAPTER = `/* Toy 适配层:i18n 兜底、隐藏站内返回入口;玩
     return text;
   };
   function apply() {
+    document.documentElement.lang = window.tbGetLocale();
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       el.textContent = window.t(el.getAttribute('data-i18n'));
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
   else apply();
-  window.addEventListener('tb:locale', apply);
+  document.addEventListener('tb:locale', apply);
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('a[href$="games.html"], a[href="./index.html"]').forEach(function (a) { a.hidden = true; });
     var warn = document.getElementById('file-warning');
@@ -168,7 +178,9 @@ function build(slug) {
     if (text !== before) writeFileSync(p, text, 'utf8');
   }
   if (needsDemo) {
-    cpSync(join(ROOT, 'public/js/game/demo-controls.js'), join(package_, 'demo-controls.js'));
+    const demo = readFileSync(join(ROOT, 'public/js/game/demo-controls.js'), 'utf8')
+      .replaceAll('../locales/', './');
+    writeFileSync(join(package_, 'demo-controls.js'), demo, 'utf8');
     for (const name of GAME_DEMO_LOCALES) cpSync(join(ROOT, 'public/js/locales', name), join(package_, name));
     html = html.split('../../../js/game/demo-controls.js').join('./demo-controls.js');
   }
@@ -186,7 +198,19 @@ function build(slug) {
   }
   if (leftovers.length) throw new Error(`${slug}: unresolved site references:\n` + [...new Set(leftovers)].join('\n'));
 
-  writeFileSync(join(package_, 'toy-adapter.js'), TOY_ADAPTER, 'utf8');
+  // Modular tank pages use site dictionaries, rather than an embedded GAME_I18N.
+  let dictionary = '';
+  if (slug === 'tank-3d') {
+    const tables = {};
+    for (const [lang, filename] of [['zh', 'zh-CN'], ['en', 'en']]) {
+      const context = { window: { TB_LOCALES: {} } };
+      runInNewContext(readFileSync(join(ROOT, 'public/js/locales', filename + '.js'), 'utf8'), context);
+      const locale = context.window.TB_LOCALES[filename];
+      tables[lang] = { tank3d: locale.tank3d, common: locale.common };
+    }
+    dictionary = 'window.GAME_I18N = ' + JSON.stringify(tables) + ';\n';
+  }
+  writeFileSync(join(package_, 'toy-adapter.js'), dictionary + TOY_ADAPTER, 'utf8');
   writeFileSync(join(package_, 'index.html'), html, 'utf8');
 
   const archive = join(out, `${slug}.zip`);
