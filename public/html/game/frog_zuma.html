@@ -704,6 +704,7 @@ const Game = {
   },
   startLevel(){
     const cfg = this.levelCfg();
+    const theme = this._theme, plan = this._plan;
     Chain.reset(cfg.total, cfg.colors, cfg.speed);
     Frog.reset(cfg.colors);
     Particles.list = []; Popups.list = [];
