@@ -87,7 +87,7 @@
     {
       "id": "phone-landscape",
       "file": "releases/single-view1/captures/phone-landscape.png",
-      "sha256": "08e1dfad565f1a34abaf0762b79bfbf2a50065d4ad16bf5019bc48c904d40ada",
+      "sha256": "da0a81d01f1aefce0304aa4cf6a8a7e91708229139130d0069fc753eb1eb07e5",
       "kind": "screenshot",
       "version": "single-view1",
       "build_id": "mario-3d-single-view1-e37a8497b6ef",
@@ -131,7 +131,7 @@
   "qa": {
     "method": "Edge headless，桌面 1280x720；手机模拟390x844及844x390，CDP双点触控；无页面异常",
     "results": "captures/verification.json",
-    "limits": "没有真实手机；录像未做逐帧视觉与音轨审核。性能样本与录像同时采集，不能视为真机性能验收。"
+    "limits": "没有真实手机；录像未做逐帧视觉与音轨审核。性能样本与录像同时采集，不能视为真机性能验收。 最终小改为按钮焦点下仍可按 C 与坦克按键间距；末次横屏截图来自最终构建，早期录像为同版前一次构建，需补录后作为成片依据。"
   },
   "readiness": {
     "overview": "partial",
