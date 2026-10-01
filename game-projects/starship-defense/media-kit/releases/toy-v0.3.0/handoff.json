@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "toy-v0.3.0",
+  "base_version": "toy-v0.2.0 (build script label; previous media game.json was stale)",
+  "created_at": "2026-10-01T23:02:47.387459+08:00",
+  "build": {
+    "id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+    "entrypoint": "public/html/game/starship_defense.html"
+  },
+  "feature_inventory": [],
+  "changes": [
+    {
+      "id": "camera",
+      "before": "拖动或Q/E旋转，手机难以操作",
+      "after": "C或视角按钮循环切换四种镜头，移动方向同步相机",
+      "validation": "passed"
+    },
+    {
+      "id": "shop",
+      "before": "购买武器等候关闭商店后空投，缺乏装备入口",
+      "after": "武器立即到账并装备，已购卡片可直接装备，V或换枪循环",
+      "validation": "passed"
+    },
+    {
+      "id": "base-guide",
+      "before": "远离基地后缺少返程方向",
+      "after": "HUD始终显示基地方向和距离",
+      "validation": "passed"
+    },
+    {
+      "id": "touch",
+      "before": "触控全局监听可能阻止菜单滚动，取消后容易卡键",
+      "after": "每个控件独立指针捕获，面板支持滚动，失焦/暂停/旋转清空输入",
+      "validation": "passed"
+    },
+    {
+      "id": "orders",
+      "before": "空投途中重复付款或存档后丢单",
+      "after": "拦截重复订单，存档保存待送达物资，新游戏清空旧空投",
+      "validation": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "camera",
+      "status": "fixed",
+      "fix": "C或视角按钮循环切换四种镜头，移动方向同步相机",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "verification.json"
+    },
+    {
+      "id": "shop",
+      "status": "fixed",
+      "fix": "武器立即到账并装备，已购卡片可直接装备，V或换枪循环",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "verification.json"
+    },
+    {
+      "id": "base-guide",
+      "status": "fixed",
+      "fix": "HUD始终显示基地方向和距离",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "verification.json"
+    },
+    {
+      "id": "touch",
+      "status": "fixed",
+      "fix": "每个控件独立指针捕获，面板支持滚动，失焦/暂停/旋转清空输入",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "verification.json"
+    },
+    {
+      "id": "orders",
+      "status": "fixed",
+      "fix": "拦截重复订单，存档保存待送达物资，新游戏清空旧空投",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "verification.json"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop-shop",
+      "file": "releases/toy-v0.3.0/captures/desktop-shop.png",
+      "sha256": "7515c2e63e5bab35c556499b65f573ee1ab0249c8e0bee63d0a1ff29c09f8181",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "desktop-shop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop",
+      "file": "releases/toy-v0.3.0/captures/desktop.png",
+      "sha256": "2976c7454e3a91b6f183b49728d17c06ddfca04fda68bd84ca56643c170e39bf",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "desktop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop",
+      "file": "releases/toy-v0.3.0/captures/desktop.webm",
+      "sha256": "8a473bd89d814c04685300322ac90cfaf49338a28f170aecce1dad55b1538f56",
+      "kind": "video",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "desktop",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "hardware-desktop",
+      "file": "releases/toy-v0.3.0/captures/hardware-desktop.png",
+      "sha256": "a35ba0e7a96903bea77e7190ab7b60d32b2ee0599d37477c504d38dc08a3c2a0",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "hardware-desktop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "motion-frame-0",
+      "file": "releases/toy-v0.3.0/captures/motion-frame-0.png",
+      "sha256": "d9072f197d6ff7381ddd12e3f69c9c453f8bd692d2b71257e6c4ce6a013b1c6e",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "motion-frame-0",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "motion-frame-1",
+      "file": "releases/toy-v0.3.0/captures/motion-frame-1.png",
+      "sha256": "d3dd643c2502b1455ba00000741456748d60a277724e9cc9b1d8bb19273e713d",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "motion-frame-1",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "motion-frame-2",
+      "file": "releases/toy-v0.3.0/captures/motion-frame-2.png",
+      "sha256": "7fe06c68d3a295a9ba2fe33c891675c242353411d9a7ebfd9958426dde100edc",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "motion-frame-2",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "movement-camera",
+      "file": "releases/toy-v0.3.0/captures/movement-camera.webm",
+      "sha256": "7a058ddf2479b78ca0fc6d5fdc07e7d6fcf81ae85f03e332e3c6834954d2bb3a",
+      "kind": "video",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "movement-camera",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-landscape-shop",
+      "file": "releases/toy-v0.3.0/captures/phone-landscape-shop.png",
+      "sha256": "5ff896eba25cc275d749253d35264ae82fd9130754070504dbc80bc3adba04bb",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "phone-landscape-shop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/toy-v0.3.0/captures/phone-portrait.png",
+      "sha256": "c9098626df90ee3ef4d6bfd3d661e213f831ba799a78783712f4c8455fc01fde",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "phone-portrait",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/toy-v0.3.0/captures/phone-portrait.webm",
+      "sha256": "e717f20a245a5834064c32ad339b66f44cc931f049b38d53e1976b04049616ac",
+      "kind": "video",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "phone-portrait",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-shop",
+      "file": "releases/toy-v0.3.0/captures/phone-shop.png",
+      "sha256": "2a57de5427750fab00b436345162b25de506481284695a86ba07b3b9dfbe28e2",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "phone-shop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "toy-preview-shop",
+      "file": "releases/toy-v0.3.0/captures/toy-preview-shop.png",
+      "sha256": "335f8cffcba5a3030ea3ace21341c77f758ca538c560d2889f8d0942f3b5d676",
+      "kind": "screenshot",
+      "version": "toy-v0.3.0",
+      "build_id": "b1eafc99a2c839fdc56a8a2aec946526e9f0d0a533932611bdd7099ded4b31ef",
+      "capture_mode": "realtime-automation",
+      "description": "toy-preview-shop",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "qa": {
+    "functional": "verification.json",
+    "performance": "hardware-performance.json",
+    "methods": "Edge headless with NVIDIA RTX 4060 Ti; desktop and emulated touch landscape/portrait; real Toy iframe preview checked",
+    "limitations": [
+      "No physical phone tested",
+      "Software-renderer run was slow; final hardware measurements passed",
+      "No pre-fix recording retained; comments are user reports, not fabricated reproductions"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "No narrated/audio update media; no physical phone performance/fullscreen test"
+    ]
+  }
+}

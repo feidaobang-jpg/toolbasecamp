@@ -45,14 +45,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .vbtn.k4{background:radial-gradient(circle at 35% 30%,rgba(190,140,255,.75),rgba(110,40,190,.65));}
 .vbtn.sm{width:40px;height:40px;line-height:36px;font-size:11px;background:radial-gradient(circle at 35% 30%,rgba(200,200,200,.6),rgba(90,90,90,.55));}
 .vbtn:active,.vbtn.on{filter:brightness(1.6);transform:scale(.92);}
-#vJ{right:118px;bottom:32px;}
-#vK{right:52px;bottom:32px;}
-#vU{right:118px;bottom:98px;}
-#vI{right:52px;bottom:98px;}
-#vV{right:32px;bottom:166px;}
-#vP{right:85px;bottom:166px;}
-#vO{right:138px;bottom:166px;}
-#vL{right:191px;bottom:166px;}
+#vJ{right:128px;bottom:24px;}
+#vK{right:52px;bottom:24px;}
+#vU{right:128px;bottom:100px;}
+#vI{right:52px;bottom:100px;}
+#vV{right:16px;bottom:180px;}
+#vP{right:92px;bottom:180px;}
+#vO{right:168px;bottom:180px;}
+#vL{right:244px;bottom:180px;}
+#vC{right:320px;bottom:180px;}
+.vbtn,.vbtn.sm{width:64px;height:64px;line-height:60px;font-size:14px;}
+.panel,.panel *{touch-action:pan-y;}
+.shopItem:focus-visible,.tab:focus-visible,.vbtn:focus-visible{outline:3px solid #ffe066;}
+#baseGuide{margin-top:4px;color:#ffe066;}
 /* ---------- 菜单界面 ---------- */
 .menu{background:radial-gradient(ellipse at center,#123 0%,#010914 75%);color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;}
 .menu h1{font-size:40px;margin-top:26px;letter-spacing:6px;background:linear-gradient(180deg,#9ef,#36c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 24px rgba(80,160,255,.5);}
@@ -99,6 +104,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
       <div id="hpBarWrap"><div id="hpBar"></div></div>
       <div>🏰 基地 <span id="baseTxt"></span></div>
       <div id="baseBarWrap"><div id="baseBar"></div></div>
+      <div id="baseGuide"></div>
     </div>
     <div id="hudRight">
       <div>💰 金币 <span id="goldTxt">0</span></div>
@@ -111,7 +117,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
     <div id="msg" class="hidden"></div>
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
-    <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I医疗包 · L建造 · O商店 · 拖动鼠标或Q/E转视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
+    <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I医疗包 · L建造 · O商店 · C切换视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！</button>
   </div>
 
@@ -126,6 +132,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
     <div class="vbtn sm" id="vL">建造</div>
     <div class="vbtn sm" id="vV">换枪</div>
     <div class="vbtn sm" id="vP">暂停</div>
+    <div class="vbtn sm" id="vC">视角</div>
   </div>
 
   <!-- 开始菜单 -->
@@ -146,7 +153,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
     </div>
     <div class="small" style="margin-top:6px;">
       PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷(无限) · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
-      按住鼠标拖动或Q/E=旋转视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），拖动屏幕转视角<br>
+      C=切换视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），点「视角」切换镜头<br>
       玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目<br>
       精英虫带词缀（迅捷/坚甲/狂暴/剧毒/爆死/巨型），击杀掉落双份金币 · BOSS会冲锋/弹幕/召唤，注意走位！<br>
       基地设施：医疗平台站上去持续回血 · 城门关闭后可从内侧斜梯登上塔楼，越墙瞭望架枪守门
@@ -179,7 +186,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
   <!-- 商店 -->
   <div id="shopPanel" class="panel hidden">
     <div class="closeX" id="shopClose">✕</div>
-    <h3>🛒 军需商店（购买后空投到基地）　💰<span id="shopGold">0</span></h3>
+    <h3>🛒 军需商店（武器即时装备，其他物资空投）　💰<span id="shopGold">0</span></h3>
     <div class="tabRow" id="shopTabs">
       <div class="tab on" data-t="weapon">武器</div>
       <div class="tab" data-t="item">道具</div>
@@ -211,7 +218,7 @@ const clamp=(v,a,b)=>v<a?a:(v>b?b:v);
 const rand=(a,b)=>a+Math.random()*(b-a);
 const TAU=Math.PI*2;
 const BASE_W=960,BASE_H=540;
-let isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+let isTouch=navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches;
 
 /* ---------- 画布缩放 + 手机自动横屏 ---------- */
 const stage=$('stage');
@@ -330,49 +337,50 @@ const Input={
       AudioSys.init();AudioSys.resume();
     });
     window.addEventListener('keyup',e=>{const k=this.mapKey(e.code);if(k)this.keys[k]=false;});
-    // 虚拟摇杆
+    // 每个控件独立捕获指针；菜单滚动不会占用摇杆。
     const jb=$('joyBase'),jk=$('joyKnob');
-    const setKnob=(dx,dy)=>{jk.style.left=(35+dx*35)+'px';jk.style.top=(35+dy*35)+'px';};
-    const joyHandle=e=>{
-      for(const t of e.changedTouches){
-        const p=toStage(t.clientX,t.clientY);
-        if(this.joy.id===-1&&e.type==='touchstart'&&p.x<BASE_W*.45&&p.y>BASE_H*.35){this.joy.id=t.identifier;this.joy.cx=p.x;this.joy.cy=p.y;}
-        else if(this.camDrag.id===-1&&e.type==='touchstart'&&!(e.target.closest&&e.target.closest('.panel,.vbtn,button,.tab,.closeX,.menu'))){this.camDrag.id=t.identifier;this.camDrag.x=p.x;}
-        if(t.identifier===this.joy.id){
-          let dx=(p.x-this.joy.cx)/45,dy=(p.y-this.joy.cy)/45;
-          const m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m;}
-          this.joy.x=dx;this.joy.y=dy;this.joy.active=true;setKnob(dx,dy);
-        }
-        if(t.identifier===this.camDrag.id)camYaw-=(p.x-this.camDrag.x)*.008,this.camDrag.x=p.x;
-      }
-    };
-    const joyEnd=e=>{
-      for(const t of e.changedTouches){
-        if(t.identifier===this.joy.id){this.joy.id=-1;this.joy.active=false;this.joy.x=0;this.joy.y=0;setKnob(0,0);}
-        if(t.identifier===this.camDrag.id)this.camDrag.id=-1;
-      }
-    };
-    document.addEventListener('touchstart',e=>{AudioSys.init();AudioSys.resume();joyHandle(e);},{passive:false});
-    document.addEventListener('touchmove',e=>{joyHandle(e);e.preventDefault();},{passive:false});
-    document.addEventListener('touchend',joyEnd);document.addEventListener('touchcancel',joyEnd);
-    // 虚拟按键
+    jb.addEventListener('pointerdown',e=>{
+      if(this.joy.id!==-1)return;
+      e.preventDefault();jb.setPointerCapture(e.pointerId);
+      const p=toStage(e.clientX,e.clientY);
+      this.joy={id:e.pointerId,active:true,cx:p.x,cy:p.y,x:0,y:0};
+      AudioSys.init();AudioSys.resume();
+    });
+    jb.addEventListener('pointermove',e=>{
+      if(e.pointerId!==this.joy.id)return;
+      const p=toStage(e.clientX,e.clientY);
+      let x=(p.x-this.joy.cx)/45,y=(p.y-this.joy.cy)/45;
+      const m=Math.hypot(x,y);if(m>1){x/=m;y/=m;}
+      this.joy.x=x;this.joy.y=y;
+      jk.style.left=(35+x*35)+'px';jk.style.top=(35+y*35)+'px';
+    });
+    const end=e=>{if(e.pointerId===this.joy.id){this.joy={active:false,id:-1,x:0,y:0};jk.style.left=jk.style.top='35px';}};
+    ['pointerup','pointercancel','lostpointercapture'].forEach(t=>jb.addEventListener(t,end));
     const bind=(id,key)=>{
-      const el=$(id);
-      const dn=e=>{e.preventDefault();e.stopPropagation();if(!this.keys[key])this.pressed[key]=true;this.keys[key]=true;el.classList.add('on');AudioSys.init();AudioSys.resume();};
-      const up=e=>{e.preventDefault();this.keys[key]=false;el.classList.remove('on');};
-      el.addEventListener('touchstart',dn,{passive:false});el.addEventListener('touchend',up);el.addEventListener('touchcancel',up);
-      el.addEventListener('mousedown',dn);el.addEventListener('mouseup',up);
+      const el=$(id);let pointer=null;
+      el.setAttribute('role','button');el.setAttribute('tabindex','0');
+      el.addEventListener('pointerdown',e=>{
+        if(pointer!==null)return;
+        e.preventDefault();pointer=e.pointerId;el._pointer=pointer;el.setPointerCapture(pointer);
+        if(!this.keys[key])this.pressed[key]=true;
+        this.keys[key]=true;el.classList.add('on');AudioSys.init();AudioSys.resume();
+      });
+      const up=e=>{if(e.pointerId!==pointer)return;pointer=null;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
+      ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    bind('vJ','J');bind('vK','K');bind('vU','U');bind('vI','I');bind('vO','O');bind('vL','L');bind('vV','V');bind('vP','P');
-    // PC：按住鼠标拖动转视角
-    let mDrag=false,mLastX=0;
-    $('c3d').addEventListener('mousedown',e=>{mDrag=true;mLastX=e.clientX;});
-    window.addEventListener('mouseup',()=>mDrag=false);
-    window.addEventListener('mousemove',e=>{if(mDrag){camYaw-=(e.clientX-mLastX)*.008;mLastX=e.clientX;}});
+    ['J','K','U','I','O','L','V','P','C'].forEach(k=>bind('v'+k,k));
+    window.addEventListener('blur',()=>this.reset());
+    window.addEventListener('resize',()=>this.reset());
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)this.reset();});
+  },
+  reset(){
+    this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};
+    $('joyKnob').style.left=$('joyKnob').style.top='35px';
+    document.querySelectorAll('.vbtn.on').forEach(el=>{if(el._pointer!=null&&el.hasPointerCapture(el._pointer))el.releasePointerCapture(el._pointer);el.classList.remove('on');});
   },
   mapKey(c){
     const m={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',
-      KeyJ:'J',Enter:'J',KeyK:'K',Space:'K',KeyU:'U',KeyI:'I',KeyL:'L',KeyO:'O',KeyP:'P',KeyB:'P',KeyV:'V',KeyQ:'Q',KeyE:'E'};
+      KeyJ:'J',Enter:'J',KeyK:'K',Space:'K',KeyU:'U',KeyI:'I',KeyL:'L',KeyO:'O',KeyP:'P',KeyB:'P',KeyV:'V',KeyC:'C'};
     return m[c];
   },
   axis(){
@@ -396,7 +404,14 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0a1830);
 scene.fog=new THREE.Fog(0x0a1830,90,260);
 const camera=new THREE.PerspectiveCamera(60,BASE_W/BASE_H,.1,600);
-let camYaw=0,camDist=16,camH=9;
+let camYaw=0,camDist=16,camH=9,camView=0;
+const CAMERA_VIEWS=[{yaw:0,d:16,h:9,name:'正面斜视'},{yaw:Math.PI/2,d:16,h:9,name:'侧面斜视'},{yaw:Math.PI,d:16,h:9,name:'背面斜视'},{yaw:0,d:7,h:24,name:'俯视'}];
+function setCameraView(index,notify=true){
+  camView=index%CAMERA_VIEWS.length;
+  const v=CAMERA_VIEWS[camView];camYaw=v.yaw;camDist=v.d;camH=v.h;
+  if(notify)showMsg('视角：'+v.name,1.2);
+  updCamera(1);
+}
 
 /* 灯光 */
 const hemi=new THREE.HemisphereLight(0x88aaff,0x223311,.75);scene.add(hemi);
@@ -1655,8 +1670,7 @@ function updPlayer(dt){
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
   const ax=Input.axis();
   // 视角旋转
-  if(Input.keys.Q)camYaw+=dt*2;
-  if(Input.keys.E)camYaw-=dt*2;
+  if(Input.pop('C'))setCameraView(camView+1);
   // 移动方向以摄像机为准
   const cs=Math.cos(camYaw),sn=Math.sin(camYaw);
   const f=-ax.y,r=ax.x;
@@ -1800,6 +1814,7 @@ function clearEntities(all){
   for(const b of bullets)scene.remove(b.mesh);bullets.length=0;
   for(const p of pickups)scene.remove(p.mesh);pickups.length=0;
   if(all){
+    for(const a of airdrops)scene.remove(a.mesh);airdrops.length=0;
     for(const bd of buildings)scene.remove(bd.mesh);buildings.length=0;
     for(const v of vehicles)scene.remove(v.mesh);vehicles.length=0;
     for(const s of squad)scene.remove(s.mesh);squad.length=0;
@@ -1942,19 +1957,26 @@ function renderShop(){
     else if(it.type==='item'){const c=ITEMS[it.id];nm=c.name;pr=c.price;desc=c.desc;owned=(it.id==='magnet'&&Game.magnet)||(it.id==='regen'&&Game.regen);}
     else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行(K升U降)':''}`;owned=Game.vehiclesOwned.includes(it.id);}
     else{nm='雇佣兵队友';pr=500+squad.length*300;desc='AI队友,跟随作战(最多4名)';}
-    div.innerHTML=`<div class="nm">${nm}</div><div>${desc}</div><div class="pr">${owned?'✅已拥有':'💰'+pr}</div>`;
+    div.innerHTML=`<div class="nm">${nm}</div><div>${desc}</div><div class="pr">${owned?(it.type==='weapon'?(Game.curWeapon===it.id?'✅使用中':'点击装备'):'✅已拥有'):(airdrops.some(a=>a.it.id===it.id&&a.it.type===it.type)?'📦送达中（关闭商店继续）':'💰'+pr)}</div>`;
     if(owned)div.classList.add('own');
+    div.tabIndex=0;div.setAttribute('role','button');
     div.onclick=()=>buyItem(it,pr,owned);
+    div.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();div.click();}};
     grid.appendChild(div);
   }
 }
 function buyItem(it,pr,owned){
-  if(owned){showMsg('已拥有',1);return;}
+  if(owned){if(it.type==='weapon'){Game.curWeapon=it.id;player.fireCd=0;renderShop();updHUD();showMsg('已装备 '+WEAPONS[it.id].name,1.5);}else showMsg('已拥有',1);return;}
+  if(airdrops.some(a=>a.it.id===it.id&&a.it.type===it.type)){showMsg('物资正在空投，请关闭商店等待送达',2);return;}
   if(!Game.testMode&&Game.gold<pr){showMsg('金币不足！去野外刷怪吧',1.4);AudioSys.sfx('click');return;}
   if(it.type==='squad'&&squad.length>=4){showMsg('队友已满(4名)',1.2);return;}
   if(!Game.testMode)Game.gold-=pr;
   AudioSys.sfx('buy');
-  airdropDeliver(it);
+  if(it.type==='weapon'){
+    Game.weapons.push(it.id);Game.curWeapon=it.id;player.fireCd=0;
+    showMsg('已购买并装备 '+WEAPONS[it.id].name+'；点换枪或按V切换',2.5);
+    updHUD();autoSave();
+  }else airdropDeliver(it);
   renderShop();
 }
 function airdropDeliver(it){
@@ -2036,7 +2058,7 @@ function saveData(){
     weapons:Game.weapons,curWeapon:Game.curWeapon,items:Game.items,hpBonus:Game.hpBonus,
     vehiclesOwned:Game.vehiclesOwned,squadCount:squad.length,
     perks:{magnet:Game.magnet,regen:Game.regen},
-    baseHp:base.hp,
+    baseHp:base.hp,pendingDrops:airdrops.map(a=>a.it),
     buildings:buildings.map(b=>({k:b.kind,x:b.mesh.position.x,z:b.mesh.position.z,r:b.rotY,hp:b.hp})),
     time:Date.now(),
   };
@@ -2057,6 +2079,9 @@ function applySave(d){
   for(const vk of (d.vehiclesOwned||[])){Game.vehiclesOwned.push(vk);spawnVehicle(vk);}
   for(let i=0;i<(d.squadCount||0);i++)spawnSquad();
   Game.squadCount=squad.length;
+  for(const it of (d.pendingDrops||[])){
+    if((it.type==='item'&&ITEMS[it.id])||(it.type==='vehicle'&&VEHICLES[it.id])||it.type==='squad')airdropDeliver(it);
+  }
 }
 function autoSave(){try{localStorage.setItem(SAVE_PREFIX+'auto',JSON.stringify(saveData()));}catch(e){}}
 function slotInfo(key){
@@ -2098,7 +2123,7 @@ function renderSlots(){
 function loadGame(d){
   closePanels();
   $('menuMain').classList.add('hidden');$('menuPause').classList.add('hidden');$('menuOver').classList.add('hidden');
-  camYaw=0;
+  setCameraView(0,false);
   applySave(d);
   showHUD();
   startPrep();
@@ -2121,7 +2146,7 @@ function newGame(test){
   Game.vehiclesOwned=[];
   Game.magnet=false;Game.regen=false;
   clearEntities(true);
-  camYaw=0;
+  setCameraView(0,false);
   player.reset(Game.cls);
   base.hp=base.maxHp;updHPBar(base.bar,base.hp/base.maxHp);
   // 高台正面围墙（城门两侧；±9 空出给城门塔楼）
@@ -2138,6 +2163,7 @@ function newGame(test){
   if(test)showMsg('🧪 测试模式：金币无限/全武器/伤害加成',3);
 }
 function togglePause(){
+  Input.reset();
   if(Game.state==='prep'||Game.state==='battle'){
     Game.pausedFrom=Game.state;Game.state='paused';
     $('menuPause').classList.remove('hidden');
@@ -2157,6 +2183,11 @@ function updHUD(){
   $('hpBar').style.width=clamp(player.hp/player.maxHp*100,0,100)+'%';
   $('baseTxt').textContent=Math.ceil(base.hp)+'/'+base.maxHp;
   $('baseBar').style.width=clamp(base.hp/base.maxHp*100,0,100)+'%';
+  const dx=base.pos.x-player.pos.x,dz=base.pos.z-player.pos.z;
+  const sx=-Math.cos(camYaw)*dx+Math.sin(camYaw)*dz,sy=-Math.sin(camYaw)*dx-Math.cos(camYaw)*dz;
+  const arrows=['→','↘','↓','↙','←','↖','↑','↗'];
+  const distance=Math.hypot(dx,dz);
+  $('baseGuide').textContent=distance<10?'🏰 基地附近':arrows[(Math.round(Math.atan2(sy,sx)/(Math.PI/4))+8)%8]+' 基地 '+Math.round(distance)+'米';
   $('goldTxt').textContent=Game.testMode?'∞':Game.gold;
   $('scoreTxt').textContent=Game.score;
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name;

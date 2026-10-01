@@ -2,15 +2,15 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮前哨：守卫基地",
   "engine": "Three.js r152",
-  "current_version": "toy-v0.1.0",
+  "current_version": "toy-v0.3.0",
   "entrypoint": "dist/toy/chongchao-qianshao/package/index.html",
   "build_command": "python game-projects/starship-defense/build-toy.py",
   "release_intent": "web_demo",
   "development_model": null,
   "toy_id": "38678478981120",
-  "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_3tNRtOgC/index.html",
+  "publication_status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_Z2dVJ49C/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/toy-v0.1.0/notes.md"
+  "qa": "releases/toy-v0.3.0/handoff.json"
 }

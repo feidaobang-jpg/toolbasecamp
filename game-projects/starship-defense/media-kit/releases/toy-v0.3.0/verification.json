@@ -1,0 +1,54 @@
+[
+  {
+    "mobile": false,
+    "checks": {
+      "weapons": [
+        "shotgun",
+        "sniper",
+        "launcher"
+      ],
+      "guide": "↘ 基地 116米",
+      "rotated": false,
+      "isTouch": false
+    },
+    "perf": {
+      "fps": 170.87526105169175,
+      "p95": 6,
+      "longFrames": 0,
+      "renderer": {
+        "frame": 331,
+        "calls": 85,
+        "triangles": 46284,
+        "points": 400,
+        "lines": 0
+      }
+    },
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "checks": {
+      "weapons": [
+        "shotgun",
+        "sniper",
+        "launcher"
+      ],
+      "guide": "↘ 基地 116米",
+      "rotated": true,
+      "isTouch": true
+    },
+    "perf": {
+      "fps": 170.7293939260951,
+      "p95": 6,
+      "longFrames": 0,
+      "renderer": {
+        "frame": 396,
+        "calls": 78,
+        "triangles": 46152,
+        "points": 400,
+        "lines": 0
+      }
+    },
+    "errors": []
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "perf": {
+    "fps": 170.00099532198666,
+    "median": 5.899999999999636,
+    "p95": 6,
+    "longFrames": 0,
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "calls": 47,
+    "triangles": 45274,
+    "viewport": [
+      1280,
+      720
+    ],
+    "drawingBuffer": [
+      960,
+      540
+    ],
+    "dpr": 1,
+    "recording": false
+  },
+  "errors": [],
+  "browser": "154.0.4258.48"
+}
