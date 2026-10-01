@@ -47,7 +47,7 @@ def build():
         z.write(PACKAGE / 'THREE-LICENSE.txt', 'THREE-LICENSE.txt')
     manifest = {
         'title': '虫潮前哨：守卫基地', 'slug': 'chongchao-qianshao',
-        'version': 'toy-v0.1.0', 'source': str(SOURCE.relative_to(ROOT)),
+        'version': 'toy-v0.2.0', 'source': str(SOURCE.relative_to(ROOT)),
         'source_sha256': hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
         'zip_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
         'files': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in PACKAGE.iterdir() if p.is_file()},
