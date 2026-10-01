@@ -258,12 +258,7 @@ const gamesConfig = {
             titleKey: 'games.groups.action',
             items: [
                 { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
-                { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },
-                { titleKey: 'tools.nobitaTown.title', url: 'html/game/nobita-town/index.html?v=1', thumb: 'assets/game/thumbs/nobita-town.jpg?v=1' },
-                { titleKey: 'tools.breachline.title', url: 'html/game/breachline/index.html?v=1', thumb: 'assets/game/thumbs/breachline.jpg?v=1' },
-                { titleKey: 'tools.pvz3d.title', url: 'html/game/pvz-3d/index.html?v=1', thumb: 'assets/game/thumbs/pvz-3d.jpg?v=1' },
-                { titleKey: 'tools.zombieRoad.title', url: 'html/game/zombie-road/index.html?v=1', thumb: 'assets/game/thumbs/zombie-road.jpg?v=1' },
-                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
+                { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
                 { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=7' }
             ]
