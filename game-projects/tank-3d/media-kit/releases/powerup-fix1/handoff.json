@@ -189,6 +189,8 @@
   },
   "publication": {
     "website": "verified_live",
-    "toy": "preview_verified_awaiting_submission_confirmation"
+    "toy": "submitted_auditing",
+    "toy_id": 39043249461248,
+    "toy_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiO8weV/index.html"
   }
 }

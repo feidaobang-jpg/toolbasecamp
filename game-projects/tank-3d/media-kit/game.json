@@ -29,8 +29,9 @@
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "awaiting_submission_confirmation",
+    "review_status": "auditing",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_0jwGaplD/index.html",
-    "verified_at": "2026-10-01"
+    "verified_at": "2026-10-01",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiO8weV/index.html"
   }
 }
