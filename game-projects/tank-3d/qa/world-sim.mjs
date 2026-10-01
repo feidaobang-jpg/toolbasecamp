@@ -2,13 +2,15 @@
 //   node game-projects/tank-3d/qa/world-sim.mjs
 import assert from 'node:assert/strict';
 import * as W from '../../../public/html/game/tank-3d/world.js';
+import { TOTAL_STAGES, stageSpec, layoutFor, qa as SQ } from '../../../public/html/game/tank-3d/stages.js';
 
 const { createWorld, startWorld, stepWorld, cellAt, BRICK, STEEL, BASE, EMPTY, N, HALF, qa } = W;
+const { reach, isFree, parseRows, SUPER } = SQ;
 const idle = { dir: -1, fire: false };
 const results = [];
 function test(name, fn) { fn(); results.push(name); console.log('ok -', name); }
 function run(w, input, seconds, dt = 1 / 60) { for (let t = 0; t < seconds; t += dt) stepWorld(w, typeof input === 'function' ? input(w, t) : input, dt); }
-function freshPlaying(seed = 7) { const w = createWorld(seed); startWorld(w); run(w, idle, 0.9); assert.ok(w.player, 'player spawned'); w.events.length = 0; return w; }
+function freshPlaying(seed = 7, stage = 1, loop = 1) { const w = createWorld(seed, stage, loop); startWorld(w); run(w, idle, 0.9); assert.ok(w.player, 'player spawned'); w.events.length = 0; return w; }
 function count(w, v) { let n = 0; for (const c of w.grid) if (c === v) n++; return n; }
 function noEnemies(w) { w.enemies.length = 0; w.spawning.length = 0; w.rosterIndex = w.roster.length; }
 
@@ -59,13 +61,13 @@ test('normal shots clank on steel; a level-3 shot pierces steel', () => {
   assert.equal(cellAt(w, 0, 13), EMPTY); assert.equal(cellAt(w, 1, 13), EMPTY);
 });
 
-test('enemy roster: 20 tanks, never more than 4 on the field, carriers are #4 #11 #18', () => {
+test('enemy roster: 20 tanks, never more than 4 on the field, three flashing carriers', () => {
   const w = freshPlaying(3);
   const p = w.player; p.shield = 1e9;
   let maxOnField = 0; const carriers = new Set();
   run(w, (world) => { maxOnField = Math.max(maxOnField, world.enemies.length + world.spawning.length); for (const e of world.enemies) if (e.carrier) carriers.add(e.index); return idle; }, 60);
   assert.ok(maxOnField <= 4 && maxOnField >= 3, 'max on field ' + maxOnField);
-  for (const c of carriers) assert.ok(W.CARRIERS.includes(c));
+  for (const c of carriers) assert.ok(w.spec.carriers.includes(c));
   assert.equal(w.roster.length, 20); assert.equal(w.roster.filter(t => t === 'fast').length, 2);
 });
 
@@ -101,16 +103,16 @@ test('power-ups: star, helmet, shovel (reverts), timer, grenade (no points), tan
   function STAGE1() { return W.STAGE1_ROSTER.slice(); }
 });
 
-test('shield absorbs an enemy bullet; without it the player loses a life and respawns shielded', () => {
+test('shield absorbs an enemy bullet; without it the tank is lost and a backup rolls in', () => {
   const w = freshPlaying(); noEnemies(w);
   const p = w.player; p.shield = 5;
   const shooter = { id: 777, team: 'enemy', type: 'basic', x: 9, z: 19, dir: 2, speed: 0, hp: 1, alive: true, fireTimer: 99, aiTimer: 99, travel: 0, recoil: 0, hitFlash: 0 };
   w.enemies.push(shooter);
   // Freeze the shooter's AI but let it fire manually.
   w.freeze = 1e9; W.fire(w, shooter); run(w, idle, 0.6);
-  assert.equal(w.lives, 3); assert.ok(w.player && w.player.alive);
-  p.shield = 0; W.fire(w, shooter); run(w, idle, 0.6);
-  assert.equal(w.lives, 2); assert.equal(w.level, 0);
+  assert.ok(w.player && w.player.alive, 'shielded tank survives');
+  w.player.shield = 0; W.fire(w, shooter); run(w, idle, 0.6);
+  assert.equal(w.level, 0, 'firepower resets with the tank');
   shooter.alive = false; w.enemies.length = 0;
   run(w, idle, 2.2);
   assert.ok(w.player && w.player.shield > 0, 'respawned with shield');
@@ -125,11 +127,11 @@ test('eagle hit by any bullet ends the game after the explosion', () => {
   assert.equal(w.status, 'lost'); assert.equal(w.reason, 'base');
 });
 
-test('losing all three tanks ends the game', () => {
+test('respawns are unlimited: only the eagle can lose a stage', () => {
   const w = freshPlaying(); noEnemies(w);
-  for (let i = 0; i < 3; i++) { run(w, idle, 2.5); assert.ok(w.player, 'player present ' + i); w.player.shield = 0; qa.killPlayer(w); }
+  for (let i = 0; i < 5; i++) { run(w, idle, 2.5); assert.ok(w.player, 'player present ' + i); w.player.shield = 0; qa.killPlayer(w); }
   run(w, idle, 3);
-  assert.equal(w.status, 'lost'); assert.equal(w.reason, 'lives');
+  assert.equal(w.status, 'playing'); assert.ok(w.player, 'still rolling out backups');
 });
 
 test('destroying all 20 enemies clears the stage', () => {
@@ -201,4 +203,77 @@ test('balance probe: a simple line-up-and-shoot bot can clear the stage on some 
   assert.ok(wins >= 1, 'stage never cleared by bot');
 });
 
+// --- The 50-stage campaign and the loop scaling.
+test('all 50 stage layouts are playable: eagle, fort, clear spawns and connected lanes', () => {
+  const themes = new Set();
+  for (let stage = 1; stage <= TOTAL_STAGES; stage++) {
+    const rows = layoutFor(stage), cells = parseRows(rows);
+    assert.equal(rows.length, N); rows.forEach(r => assert.equal(r.length, N, 'row width, stage ' + stage));
+    for (const [x, z] of [[12, 24], [13, 24], [12, 25], [13, 25]]) assert.equal(cells[z * N + x], BASE, 'eagle cell, stage ' + stage);
+    for (const [x, z] of W.BASE_WALL) assert.equal(cells[z * N + x], BRICK, 'fort brick, stage ' + stage);
+    for (const s of [W.PLAYER_SPAWN, ...W.ENEMY_SPAWNS]) for (let dz = -1; dz <= 0; dz++) for (let dx = -1; dx <= 0; dx++) assert.equal(cells[(s.z + dz) * N + s.x + dx], EMPTY, 'spawn clear, stage ' + stage);
+    // Footprint BFS: every spawn can drive to the player and to the file above the fort, and the
+    // player can patrol both halves of the moat. Otherwise a stage would be an unwinnable maze.
+    const seen = reach(cells, [4, 12]);
+    for (const [i, j] of [[0, 0], [6, 0], [12, 0], [6, 10], [0, 11], [12, 11]]) assert.ok(seen[j * SUPER + i], `stage ${stage} unreachable from ${i},${j}`);
+    for (const s of [[0, 0], [6, 0], [12, 0]]) assert.ok(reach(cells, s)[12 * SUPER + 4], 'stage ' + stage + ' player not reachable from spawn');
+    let bricks = 0, steels = 0; for (const c of cells) { if (c === BRICK) bricks++; if (c === STEEL) steels++; }
+    assert.ok(bricks >= 60, 'stage ' + stage + ' only has ' + bricks + ' bricks');
+    themes.add(stageSpec(stage, 1).theme);
+  }
+  assert.ok(themes.size >= 10, 'distinct themes used: ' + themes.size);
+  // No two neighbouring stages may repeat a theme, otherwise the campaign feels copy-pasted.
+  for (let stage = 2; stage <= TOTAL_STAGES; stage++) assert.notEqual(stageSpec(stage, 1).theme, stageSpec(stage - 1, 1).theme, 'theme repeat at ' + stage);
+});
+
+test('difficulty rises with every stage and every loop (never a step backwards)', () => {
+  let prev = null;
+  for (let loop = 1; loop <= 4; loop++) for (let stage = 1; stage <= TOTAL_STAGES; stage++) {
+    const s = stageSpec(stage, loop);
+    if (prev) {
+      assert.ok(s.tier > prev.tier, 'tier, stage ' + stage + ' loop ' + loop);
+      assert.ok(s.speedMult > prev.speedMult && s.bulletMult > prev.bulletMult, 'mults, stage ' + stage);
+      assert.ok(s.fireMult < prev.fireMult, 'enemies fire faster over time');
+      assert.ok(s.spawnInterval < prev.spawnInterval, 'enemies arrive faster over time');
+      assert.ok(s.maxOnField >= prev.maxOnField && s.scoreMult >= prev.scoreMult, 'field size and payout grow');
+      assert.ok(s.roster.length >= 20 && s.roster.length <= 40, 'roster ' + s.roster.length);
+    }
+    if (loop === 1 && stage === 1) assert.deepEqual(s.roster, W.STAGE1_ROSTER, 'stage one keeps the classic mix');
+    if (loop > 1) assert.ok(s.scoreMult > 1 && s.speedMult > stageSpec(stage, 1).speedMult, 'loop ' + loop + ' is harder than loop 1');
+    if (stage > 1) assert.deepEqual(layoutFor(stage), s.rows, 'a stage keeps its layout across loops');
+    prev = s;
+  }
+  const late = stageSpec(TOTAL_STAGES, 6);
+  assert.ok(late.speedMult < 2 && late.fireMult > .4 && late.maxOnField <= 6, 'the curve stays sane at loop 6: ' + JSON.stringify({ sp: late.speedMult, f: late.fireMult, m: late.maxOnField }));
+});
+
+test('late-stage worlds wire the spec into enemy stats', () => {
+  const base = createWorld(5, 1, 1), late = createWorld(5, 40, 3);
+  assert.equal(late.stage, 40); assert.equal(late.loop, 3);
+  assert.equal(late.roster.length, late.spec.roster.length);
+  assert.ok(late.spec.roster.includes('armor') && late.spec.roster.includes('power'), 'armour and power tanks fielded by stage 40');
+  startWorld(base); startWorld(late); run(base, idle, 6); run(late, idle, 6);
+  const b = base.enemies[0], l = late.enemies[0];
+  assert.ok(b && l, 'both spawn');
+  assert.ok(l.speed > b.speed * 1.2, 'loop-3 tanks drive faster: ' + b.speed + ' → ' + l.speed);
+  assert.ok(late.spec.maxOnField >= base.spec.maxOnField);
+  const arm = late.spec.roster.indexOf('armor');
+  if (arm >= 0) assert.equal(stageSpec(40, 3).armorHp >= 4, true);
+});
+
+test('spawn pressure holds on the hardest sampled stages (no stalled rosters, no NaN)', () => {
+  for (const [stage, loop] of [[12, 1], [26, 2], [40, 3], [50, 4]]) {
+    const w = createWorld(1000 + stage, stage, loop); startWorld(w);
+    if (w.player) w.player.shield = 1e9;
+    let maxOnField = 0;
+    run(w, (world) => { if (world.player) world.player.shield = 1e9; maxOnField = Math.max(maxOnField, world.enemies.length + world.spawning.length); return idle; }, 240, 1 / 30);
+    assert.ok(maxOnField <= w.spec.maxOnField, 'stage ' + stage + ' loop ' + loop + ' overflow: ' + maxOnField);
+    assert.ok(w.killed + w.enemies.length + w.spawning.length > 0, 'enemies actually arrived');
+    assert.ok(w.rosterIndex === w.roster.length || !w.baseAlive || w.status !== 'playing', 'the roster gets through the queue, stage ' + stage);
+    assert.ok(['playing', 'won', 'lost'].includes(w.status));
+    console.log(`   stage ${stage} loop ${loop}: ${w.status}/${w.reason || '-'} killed ${w.killed}/${w.roster.length} in ${Math.round(w.time)}s`);
+  }
+});
+
 console.log(`\n${results.length} checks passed`);
+

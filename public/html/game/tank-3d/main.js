@@ -1,7 +1,8 @@
 import {installDemoControls} from '../../../js/game/demo-controls.js?v=1';
-import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=modes1';
-import { createScene } from './scene.js?v=modes1';
-import { GameAudio } from './audio.js?v=1';
+import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=stages1';
+import { TOTAL_STAGES } from './stages.js?v=stages1';
+import { createScene } from './scene.js?v=stages1';
+import { GameAudio } from './audio.js?v=stages1';
 
 const $ = id => document.getElementById(id);
 const tr = (k, p) => (typeof window.t === 'function' ? window.t(k, p) : k);
@@ -14,9 +15,25 @@ const DIR_KEYS = { KeyW: 0, KeyD: 1, KeyS: 2, KeyA: 3 };
 const HOLD_ALIASES = {}; // Menu arrows remain available for navigation.
 let phase = 'title', paused = false, introT = 0, last = performance.now(), orientationBlocked = false, bigTimer = 0;
 const mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
-const HI_KEY = 'tb-game-tank3d-hi';
+const HI_KEY = 'tb-game-tank3d-hi', PROGRESS_KEY = 'tb-game-tank3d-progress';
 let hi = 0; try { hi = Number(localStorage.getItem(HI_KEY)) || 0; } catch (e) { /* storage unavailable */ }
 let stick = { id: null, x: 0, y: 0, axis: -1 };
+// Run state: stage 1..50, loop 1..n (each loop replays all 50 stages a little harder).
+let stage = 1, loop = 1, runScore = 0, lastOutcome = '', pendingBanner = '', continuePoint = false;
+const clampStage = n => Math.min(TOTAL_STAGES, Math.max(1, Math.round(Number(n) || 1)));
+const stageSeed = () => 5000 + stage * 7919 + loop * 6151;
+const stageTag = () => tr('tank3d.stageTag', { n: stage, loop });
+const savedRun = readProgress();
+
+function readProgress() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY); if (!raw) return null;
+    const p = JSON.parse(raw); if (!p || !Number.isFinite(p.stage)) return null;
+    return { stage: clampStage(p.stage), loop: Math.max(1, Math.round(p.loop) || 1), runScore: Math.max(0, Math.round(p.runScore) || 0) };
+  } catch (e) { return null; }
+}
+function writeProgress() { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify({ stage, loop, runScore })); } catch (e) { /* storage unavailable */ } }
+function resetProgress() { try { localStorage.removeItem(PROGRESS_KEY); } catch (e) { /* storage unavailable */ } }
 
 function setText(id, v) { const el = $(id); if (el.textContent !== v) el.textContent = v; }
 function toast(text, ms = 1700) { const e = $('toast'); e.textContent = text; e.classList.add('visible'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('visible'), ms); }
@@ -41,14 +58,23 @@ function requestFull() {
 function refreshSoundLabel() { setText('sound', audio.enabled ? tr('tank3d.soundOn') : tr('tank3d.soundOff')); }
 function refreshPauseLabel() { setText('pause', paused ? tr('tank3d.resume') : tr('tank3d.pause')); }
 
+const TYPE_KEYS = ['basic', 'fast', 'power', 'armor'];
+const scorePer = k => Math.round(ENEMY_TYPES[k].score * world.spec.scoreMult / 10) * 10;
 function buildReserve() {
   const r = $('reserve'); r.innerHTML = '';
-  for (let i = 0; i < world.roster.length; i++) { const icon = document.createElement('i'); if (world.roster[i] === 'fast') icon.className = 'fast'; r.appendChild(icon); }
+  for (let i = 0; i < world.roster.length; i++) { const icon = document.createElement('i'); if (world.roster[i] !== 'basic') icon.className = world.roster[i]; r.appendChild(icon); }
+}
+// Swap the world in place: main.js, scene.js and the QA harness all hold this same object.
+function loadStage() {
+  Object.assign(world, createWorld(stageSeed(), stage, loop));
+  view.reset(); view.relayout();
+  buildReserve();
 }
 function updateHud() {
   modes.sync();
-  setText('score', String(world.score).padStart(6, '0'));
-  setText('hi', String(Math.max(hi, world.score)).padStart(6, '0'));
+  setText('stage-label', stageTag());
+  setText('score', String(runScore + world.score).padStart(6, '0'));
+  setText('hi', String(Math.max(hi, runScore + world.score)).padStart(6, '0'));
   setText('lives', '∞');
   setText('level', '★'.repeat(world.level) + '☆'.repeat(3 - world.level));
   const icons = $('reserve').children, left = world.roster.length - world.rosterIndex;
@@ -57,41 +83,74 @@ function updateHud() {
   if (world.freeze > 0) chips.push(tr('tank3d.chipFreeze') + ' ' + Math.ceil(world.freeze));
   if (world.shovel > 0) chips.push(tr('tank3d.chipFort') + ' ' + Math.ceil(world.shovel));
   if (world.player && world.player.shield > 0 && phase === 'playing') chips.push(tr('tank3d.chipShield') + ' ' + Math.ceil(world.player.shield));
+  if (world.spec.tier > 0) chips.push(tr('tank3d.chipTier') + ' ×' + world.spec.scoreMult.toFixed(1));
   const html = chips.map(c => '<span>' + c + '</span>').join('');
   if ($('chips').innerHTML !== html) $('chips').innerHTML = html;
 }
+// Stage-clear / game-over panel. Purely presentational so a language switch can re-render it.
 function showPanel(kind) {
   $('bigtext').hidden = true; bigTimer = 0;
   $('panel').hidden = false; document.body.classList.remove('playing');
-  const won = kind === 'won';
-  $('panel-kicker').textContent = won ? 'STAGE 1 CLEAR' : 'GAME OVER';
-  $('panel-title').textContent = won ? tr('tank3d.winTitle') : world.reason === 'base' ? (world.baseBy === 'player' ? tr('tank3d.ownGoalTitle') : tr('tank3d.baseTitle')) : tr('tank3d.deadTitle');
-  $('panel-copy').textContent = won ? tr('tank3d.winCopy') : tr('tank3d.deadCopy');
-  const rows = ['basic', 'fast'].map(k => `<div><span>${tr('tank3d.type_' + k)}</span><b>${world.tally[k]} × ${ENEMY_TYPES[k].score}</b></div>`);
+  const cleared = kind === 'clear';
+  lastOutcome = cleared ? 'clear' : 'lost';
+  // commitClear() already moved stage/loop forward, so quote the world for the stage just finished
+  // and the run state for the one coming next — otherwise the panel announces the wrong numbers.
+  const finished = world.stage, next = stage, nextLoop = loop;
+  $('panel-kicker').textContent = cleared ? tr('tank3d.clearKicker', { n: finished }) : tr('tank3d.gameOver');
+  $('panel-title').textContent = cleared ? tr('tank3d.winTitle', { n: finished })
+    : world.reason === 'base' ? (world.baseBy === 'player' ? tr('tank3d.ownGoalTitle') : tr('tank3d.baseTitle')) : tr('tank3d.deadTitle');
+  $('panel-copy').textContent = cleared
+    ? (finished >= TOTAL_STAGES ? tr('tank3d.loopCopy', { loop: nextLoop }) : tr('tank3d.winCopy', { n: next, total: TOTAL_STAGES }))
+    : tr('tank3d.deadCopy', { n: finished });
+  const rows = TYPE_KEYS.filter(k => world.tally[k]).map(k => `<div><span>${tr('tank3d.type_' + k)}</span><b>${world.tally[k]} × ${scorePer(k)}</b></div>`);
   rows.push(`<div><span>${tr('tank3d.bonus')}</span><b>${world.pickups} × 500</b></div>`);
-  rows.push(`<div class="total"><span>${tr('tank3d.total')}</span><b>${world.score}</b></div>`);
+  rows.push(`<div><span>${tr('tank3d.stageScore')}</span><b>${world.score}</b></div>`);
+  rows.push(`<div class="total"><span>${tr('tank3d.total')}</span><b>${runScore + world.score}</b></div>`);
   $('tally').innerHTML = rows.join(''); $('tally').hidden = false;
   $('instructions').hidden = true;
-  $('start').textContent = tr('tank3d.restart');
-  if (world.score > hi) { hi = world.score; try { localStorage.setItem(HI_KEY, String(hi)); } catch (e) { /* ignore */ } }
+  $('start').textContent = cleared
+    ? (finished >= TOTAL_STAGES ? tr('tank3d.nextStageLoop', { n: next, loop: nextLoop }) : tr('tank3d.nextStage', { n: next }))
+    : tr('tank3d.retryStage', { n: finished });
+  const total = runScore + world.score;
+  if (total > hi) { hi = total; try { localStorage.setItem(HI_KEY, String(hi)); } catch (e) { /* ignore */ } }
   $('start').focus({ preventScroll: true });
 }
 function bigText(text, cls, seconds) { const b = $('bigtext'); b.textContent = text; b.className = cls; b.hidden = false; bigTimer = seconds; }
+// Title screen: offer to continue a saved run, plus a way back to stage 1.
+function refreshTitleLabels() {
+  if (phase !== 'title') return;
+  $('start').textContent = continuePoint ? tr('tank3d.continue', { n: stage, loop }) : tr('tank3d.start');
+  $('restart-run').hidden = !continuePoint;
+  setText('stage-label', stageTag());
+}
+
+// Bank the cleared stage and step forward — looping back to stage 1 with a higher loop number.
+function commitClear() {
+  runScore += world.score;
+  const finishedLoop = stage >= TOTAL_STAGES;
+  stage = finishedLoop ? 1 : stage + 1;
+  if (finishedLoop) { loop++; pendingBanner = tr('tank3d.loopBanner', { loop }); }
+  writeProgress();
+}
 
 function startGame() {
   if (phase === 'playing' || phase === 'intro') { if (paused) togglePause(); return; }
-  if (phase === 'over') {  // in-place restart: fresh world, walls rebuild, no page reload (keeps fullscreen)
-    Object.assign(world, createWorld());
-    view.reset();
-  }
   audio.unlock().then(() => audio.effect('start'));
-
-  clearInput(); buildReserve();
+  loadStage();   // cleared → the next stage; lost → the same stage with the walls rebuilt
+  clearInput();
   phase = 'intro'; paused = false; introT = 0;
   $('panel').hidden = true; $('tally').hidden = true; $('instructions').hidden = false; $('bigtext').hidden = true;
+  $('restart-run').hidden = true;
   document.body.classList.add('playing');
+  $('curtain-text').textContent = loop > 1 ? tr('tank3d.curtainLoop', { n: stage, loop }) : tr('tank3d.curtain', { n: stage });
   const c = $('curtain'); c.hidden = false; c.classList.remove('run'); void c.offsetWidth; c.classList.add('run');
   refreshPauseLabel(); orientation(); $('game').focus({ preventScroll: true });
+}
+// Start the whole run again from stage 1, loop 1 (the saved continue point is dropped).
+function restartRun() {
+  stage = 1; loop = 1; runScore = 0; lastOutcome = ''; pendingBanner = ''; continuePoint = false;
+  resetProgress();
+  startGame();
 }
 function togglePause() {
   if (phase !== 'playing' && phase !== 'intro') return;
@@ -108,8 +167,8 @@ function handleEvents() {
       case 'pickup': toast(tr('tank3d.' + PICKUP_KEYS[e.kind]), 2200); break;
       case 'die': if (world.lives > 0) toast(tr('tank3d.lostLife')); break;
       case 'baseboom': toast(e.by === 'player' ? tr('tank3d.ownGoal') : tr('tank3d.baseLost'), 2600); break;
-      case 'win': phase = 'over'; showPanel('won'); break;
-      case 'gameover': phase = 'over'; bigText('GAME OVER', 'over', 2.2); setTimeout(() => { if (phase === 'over') showPanel('lost'); }, 1500); break;
+      case 'win': phase = 'over'; commitClear(); showPanel('clear'); break;
+      case 'gameover': phase = 'over'; lastOutcome = 'lost'; bigText('GAME OVER', 'over', 2.2); setTimeout(() => { if (phase === 'over') showPanel('lost'); }, 1500); break;
     }
   }
   world.events.length = 0;
@@ -123,12 +182,13 @@ function frame(now) {
   }
   const active = !paused && !orientationBlocked;
   const cam = {};
-  // Intro: shutters close on "STAGE 1" (0–0.75 s), then the camera swoops from the eagle up to the overview.
+  // Intro: shutters close on the stage number (0–0.75 s), then the camera swoops from the eagle up to the overview.
   if (phase === 'intro' && active) {
     introT += dt;
     if (introT >= 1.25) $('curtain').hidden = true;
     if (introT >= 2.4) { phase = 'playing'; startWorld(world); }
   }
+  if (phase === 'playing' && pendingBanner) { bigText(pendingBanner, 'loop', 2.8); pendingBanner = ''; }
   if (phase === 'intro') cam.intro = Math.min(1, Math.max(0, (introT - .7) / 2.2));
   else if (phase === 'playing' && introT < 2.9 && active) { introT += dt; cam.intro = Math.min(1, (introT - .7) / 2.2); }
   if (phase === 'title') cam.attract = true;
@@ -164,6 +224,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) { cle
 
 // --- Buttons.
 $('start').onclick = startGame; $('pause').onclick = togglePause; $('full').onclick = requestFull;
+$('restart-run').onclick = restartRun;
 $('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSoundLabel(); };
 $('touch-toggle').onclick = () => { $('touch').hidden = !$('touch').hidden; document.body.classList.toggle('touch-mode', !$('touch').hidden); };
 $('lang').onclick = () => tbSetLocale(tbGetLocale() === 'zh-CN' ? 'en' : 'zh-CN');
@@ -204,11 +265,39 @@ function orientation() {
   else { game.style.width = ''; game.style.height = ''; }
   orientationBlocked = false; $('rotate').hidden = true;
 }
-document.addEventListener('tb:locale', () => { refreshSoundLabel(); refreshPauseLabel(); if (phase === 'over') showPanel(world.status === 'won' ? 'won' : 'lost'); });
+document.addEventListener('tb:locale', () => {
+  refreshSoundLabel(); refreshPauseLabel(); refreshTitleLabels();
+  if (phase === 'over') showPanel(lastOutcome === 'clear' ? 'clear' : 'lost');
+});
 $('touch').hidden = !mobileDevice; document.body.classList.toggle('touch-mode', mobileDevice);
 addEventListener('resize', () => { clearInput(); orientation(); view.resize(); });
 document.addEventListener('fullscreenchange', () => { clearInput(); orientation(); view.resize(); });
 addEventListener('orientationchange', () => setTimeout(() => { view.resize(); orientation(); }, 120));
-buildReserve(); refreshSoundLabel(); refreshPauseLabel(); orientation(); updateHud();
+// Resume where a saved run left off, so 50 stages stay playable across visits.
+if (savedRun) { stage = savedRun.stage; loop = savedRun.loop; runScore = savedRun.runScore; continuePoint = stage > 1 || loop > 1; loadStage(); }
+buildReserve(); refreshSoundLabel(); refreshPauseLabel(); refreshTitleLabels(); orientation(); updateHud();
 $('game').focus({ preventScroll: true });
 requestAnimationFrame(frame);
+
+// --- QA hook: only created when the page is opened with ?qa=1, so normal play exposes nothing new.
+// Lets the browser automation jump between stages, force a clear and read the run state back.
+if (new URLSearchParams(location.search).has('qa')) {
+  import('./world.js?v=stages1').then(W => {
+    window.tankQa = {
+      world, view, W, TOTAL_STAGES,
+      get stage() { return stage; }, get loop() { return loop; }, get runScore() { return runScore; },
+      get phase() { return phase; }, get paused() { return paused; },
+      start: startGame, restart: restartRun,
+      jump(n, l = 1) {
+        stage = clampStage(n); loop = Math.max(1, Math.round(l) || 1); continuePoint = true;
+        lastOutcome = ''; pendingBanner = ''; loadStage(); phase = 'title'; paused = false;
+        document.body.classList.remove('playing'); $('panel').hidden = true; $('curtain').hidden = true;
+        refreshTitleLabels(); updateHud();
+      },
+      clear() {
+        world.rosterIndex = world.roster.length; world.enemies.length = 0; world.spawning.length = 0;
+        world.killed = world.roster.length; W.qa.endGame(world, 'won', 'clear', .1);
+      }
+    };
+  });
+}

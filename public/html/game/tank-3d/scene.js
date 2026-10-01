@@ -1,5 +1,5 @@
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, BRICK, STEEL, BASE_WALL, EMPTY, DIRS } from './world.js?v=modes1';
+import { N, BRICK, STEEL, BASE_WALL, EMPTY, DIRS } from './world.js?v=stages1';
 
 // All art is procedural: primitive meshes + canvas-drawn textures. No sprites or audio from the original game.
 const C = N / 2;
@@ -183,23 +183,21 @@ export function createScene(canvas, world) {
   });
   trunkM.castShadow = leafM.castShadow = true; scene.add(trunkM, leafM);
 
-  // --- Walls: one InstancedMesh per material; cells map to instance slots, hidden via zero scale.
+  // --- Walls: one InstancedMesh per material, sized for the whole field so any of the 50 stage
+  //     layouts can be dropped in without rebuilding buffers. Cell index == instance slot;
+  //     empty cells are scaled to zero and parked under the plate.
   const brickMat = new THREE.MeshStandardMaterial({ map: brickTex(), roughness: .85 });
   const steelMat = new THREE.MeshStandardMaterial({ map: steelTex(), roughness: .35, metalness: .55 });
-  const brickCells = [], steelCells = [];
-  const baseWallSet = new Set(BASE_WALL.map(([x, z]) => z * N + x));
-  for (let i = 0; i < N * N; i++) {
-    if (world.grid[i] === BRICK || baseWallSet.has(i)) brickCells.push(i);
-    if (world.grid[i] === STEEL || baseWallSet.has(i)) steelCells.push(i);
-  }
-  const bricks = new THREE.InstancedMesh(boxGeo, brickMat, brickCells.length), steels = new THREE.InstancedMesh(boxGeo, steelMat, steelCells.length);
+  const CELLS = N * N;
+  const bricks = new THREE.InstancedMesh(boxGeo, brickMat, CELLS), steels = new THREE.InstancedMesh(boxGeo, steelMat, CELLS);
   bricks.castShadow = bricks.receiveShadow = steels.castShadow = steels.receiveShadow = true;
-  const brickSlot = new Map(brickCells.map((c, i) => [c, i])), steelSlot = new Map(steelCells.map((c, i) => [c, i]));
-  const tint = new THREE.Color(), CR = rngFrom(5);
-  brickCells.forEach((c, i) => { tint.setHSL(.04 + CR() * .02, .55, .45 + CR() * .1); bricks.setColorAt(i, tint.lerp(new THREE.Color('#ffffff'), .5)); });
+  bricks.frustumCulled = steels.frustumCulled = false;
+  const tint = new THREE.Color(), CR = rngFrom(5), WHITE = new THREE.Color('#ffffff');
+  for (let c = 0; c < CELLS; c++) { tint.setHSL(.04 + CR() * .02, .55, .45 + CR() * .1); bricks.setColorAt(c, tint.clone().lerp(WHITE, .5)); }
   scene.add(bricks, steels);
+  const baseWallSet = new Set(BASE_WALL.map(([x, z]) => z * N + x));
   const rise = new Map();                                // cell -> appear animation progress (0..1)
-  const shown = new Uint8Array(N * N).fill(255), lastGrid = new Uint8Array(world.grid);
+  const shown = new Uint8Array(CELLS), lastGrid = new Uint8Array(world.grid);
   function writeCell(c, force) {
     const g = world.grid[c];
     if (g !== lastGrid[c]) { if (g !== EMPTY) rise.set(c, 0); lastGrid[c] = g; }
@@ -208,13 +206,12 @@ export function createScene(canvas, world) {
     if (!force && shown[c] === v && !rise.has(c)) return;
     shown[c] = v;
     const x = c % N, z = Math.floor(c / N), a = rise.has(c) ? Math.max(.02, 1 - Math.pow(1 - rise.get(c), 3)) : 1;
-    const put = (im, slot, on, h) => { if (slot === undefined) return; if (on) { tmp.position.set(wx(x + .5), h * a / 2, wz(z + .5)); tmp.scale.set(.999, h * a, .999); } else { tmp.position.set(0, -50, 0); tmp.scale.set(0, 0, 0); } tmp.rotation.set(0, 0, 0); tmp.updateMatrix(); im.setMatrixAt(slot, tmp.matrix); im.instanceMatrix.needsUpdate = true; };
-    put(bricks, brickSlot.get(c), v === BRICK, 1);
-    put(steels, steelSlot.get(c), v === STEEL, 1.12);
+    const put = (im, on, h) => { if (on) { tmp.position.set(wx(x + .5), h * a / 2, wz(z + .5)); tmp.scale.set(.999, h * a, .999); } else { tmp.position.set(0, -50, 0); tmp.scale.set(0, 0, 0); } tmp.rotation.set(0, 0, 0); tmp.updateMatrix(); im.setMatrixAt(c, tmp.matrix); im.instanceMatrix.needsUpdate = true; };
+    put(bricks, v === BRICK, 1);
+    put(steels, v === STEEL, 1.12);
   }
-  for (const c of new Set([...brickCells, ...steelCells])) writeCell(c, true);
+  for (let c = 0; c < CELLS; c++) writeCell(c, true);
   let gridVersion = world.gridVersion;
-  bricks.computeBoundingSphere(); steels.computeBoundingSphere();
 
   const eagle = eagleModel(); eagle.group.position.set(wx(13), 0, wz(25)); eagle.group.rotation.y = Math.PI; scene.add(eagle.group);
 
@@ -334,8 +331,7 @@ export function createScene(canvas, world) {
     // Walls.
     if (world.gridVersion !== gridVersion || rise.size || (world.shovel > 0 && world.shovel < 3.2)) {
       gridVersion = world.gridVersion;
-      for (const c of brickCells) writeCell(c, false);
-      for (const c of steelCells) writeCell(c, false);
+      for (let c = 0; c < CELLS; c++) writeCell(c, false);
       for (const [c, k] of rise) { const n = Math.min(1, k + dt / .35); rise.set(c, n); writeCell(c, true); if (n >= 1) rise.delete(c); }
     }
     // Tanks.
@@ -431,6 +427,14 @@ export function createScene(canvas, world) {
     fx.length = 0; shakeT = 0; gridVersion = -1;
   }
   function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  // New stage: forget every cached cell so the fresh layout is rebuilt from scratch, and let the
+  // walls rise out of the plate the same way they do after a restart.
+  function relayout() {
+    for (let c = 0; c < CELLS; c++) { lastGrid[c] = EMPTY; shown[c] = EMPTY; }
+    rise.clear();
+    for (let c = 0; c < CELLS; c++) if (world.grid[c] !== EMPTY) rise.set(c, 0);
+    gridVersion = -1;
+  }
   resize(); target.set(0, 0, 2.1); update(0, {}, true);
-  return { setCamera(y,p){yaw=y;pitch=p;}, renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get pitch() { return pitch; } };
+  return { setCamera(y,p){yaw=y;pitch=p;}, renderer, scene, camera, update, effect, resize, reset, relayout, get yaw() { return yaw; }, get pitch() { return pitch; } };
 }

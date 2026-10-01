@@ -13,10 +13,12 @@ button,a{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-vi
 .action-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.toolbar .tb-btn{font-size:12px;min-height:40px}
 #side{position:absolute;right:max(24px,env(safe-area-inset-right));top:50%;transform:translateY(-58%);display:grid;justify-items:center;gap:8px;padding:12px 12px 10px;border-radius:14px;background:#1d2530b3;color:#eef3f8;pointer-events:none;z-index:2}
 #side small{font-size:9px;letter-spacing:1.6px;opacity:.85}
-#reserve{display:grid;grid-template-columns:repeat(2,13px);gap:5px 6px}
+#reserve{display:grid;grid-template-columns:repeat(3,13px);gap:5px 6px}
 #reserve i{width:13px;height:13px;border-radius:2px;background:linear-gradient(90deg,#3c4148 0 22%,#c7ccd2 22% 78%,#3c4148 78%);position:relative;transition:opacity .25s,transform .25s}
 #reserve i::after{content:"";position:absolute;left:5px;top:-3px;width:3px;height:7px;background:#3c4148;border-radius:1px}
 #reserve i.fast{background:linear-gradient(90deg,#2e4460 0 22%,#9cc3ee 22% 78%,#2e4460 78%)}
+#reserve i.power{background:linear-gradient(90deg,#3a4a36 0 22%,#a8c49a 22% 78%,#3a4a36 78%)}
+#reserve i.armor{background:linear-gradient(90deg,#2f343a 0 22%,#7f8894 22% 78%,#2f343a 78%)}
 #reserve i.gone{opacity:.12;transform:scale(.7)}
 #chips{display:grid;gap:5px;justify-items:center}#chips span{font-size:10px;font-weight:700;letter-spacing:.5px;padding:3px 8px;border-radius:20px;background:#ffd23f;color:#1d2530;white-space:nowrap}
 .panel{position:absolute;left:6%;top:50%;transform:translateY(-45%);width:min(500px,86%);padding:28px 32px;background:#fffdf3ee;border:1px solid #fff;border-radius:24px;box-shadow:0 24px 70px #1d253033;backdrop-filter:blur(12px);z-index:5}
@@ -43,6 +45,7 @@ kbd{font:700 12px monospace;letter-spacing:1px}
 @keyframes stageText{0%,14%{opacity:0}22%,54%{opacity:1}62%,100%{opacity:0}}
 #bigtext{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font:900 clamp(34px,6vw,70px) "Segoe UI",Arial,sans-serif;letter-spacing:6px;pointer-events:none;z-index:4;white-space:nowrap;text-shadow:0 4px 0 #1d2530,0 10px 30px #1d253088}
 #bigtext.over{color:#ff5a3c;animation:riseUp 1.4s cubic-bezier(.2,.8,.3,1) both}
+#bigtext.loop{color:#8fe6ff;animation:riseUp 1.4s cubic-bezier(.2,.8,.3,1) both}
 #bigtext.pause{color:#ffd23f;font-size:clamp(26px,4vw,44px);animation:blink 1s steps(2,start) infinite}
 @keyframes riseUp{from{transform:translate(-50%,60vh)}to{transform:translate(-50%,-50%)}}@keyframes blink{50%{opacity:.25}}
 /* Touch controls */

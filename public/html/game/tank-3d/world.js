@@ -1,59 +1,12 @@
-// Tank Battle 3D · Stage 1 — deterministic gameplay, no rendering imports (testable in Node).
-// Field: 26×26 cells (one cell = one 8px NES block). Positions are tank centres in cell units;
-// x grows to the right, z grows toward the player's base (row 25). Directions: 0 up, 1 right, 2 down, 3 left.
-export const N = 26;
-export const EMPTY = 0, BRICK = 1, STEEL = 2, BASE = 3;
-export const DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
-export const HALF = 0.98;                      // tank half-size (a hair under one cell so 2-cell lanes fit)
-export const BULLET_R = 0.18;
-export const PLAYER_SPAWN = { x: 9, z: 25 };
-export const ENEMY_SPAWNS = [{ x: 1, z: 1 }, { x: 13, z: 1 }, { x: 25, z: 1 }];
-export const BASE_CENTER = { x: 13, z: 25 };
-export const BASE_WALL = [[11, 23], [12, 23], [13, 23], [14, 23], [11, 24], [14, 24], [11, 25], [14, 25]];
-export const MAX_ON_FIELD = 4;
-export const SPAWN_INTERVAL = 2.6;
+// Tank Battle 3D · gameplay (deterministic, no rendering imports — testable in Node).
+// Field constants live in field.js, the 50-stage layouts and the difficulty curve in stages.js.
+import { N, EMPTY, BRICK, STEEL, BASE, DIRS, HALF, BULLET_R, PLAYER_SPAWN, ENEMY_SPAWNS, BASE_CENTER, BASE_WALL, rngFrom } from './field.js?v=stages1';
+import { STAGE1, STAGE1_ROSTER, ENEMY_TYPES, POWERUPS, stageSpec, TOTAL_STAGES } from './stages.js?v=stages1';
 
-// Original layout written for this demo in the spirit of the classic first stage:
-// brick columns, a steel core, steel edge posts and a brick fort around the eagle.
-export const STAGE1 = [
-  '..........................',
-  '..........................',
-  '..##..##..##..##..##..##..',
-  '..##..##..##..##..##..##..',
-  '..##..##..##@@##..##..##..',
-  '..##..##..##@@##..##..##..',
-  '..##..##..##..##..##..##..',
-  '..##..##..##..##..##..##..',
-  '..##..##..........##..##..',
-  '..##..##..........##..##..',
-  '..........##..##..........',
-  '..........##..##..........',
-  '##..####..........####..##',
-  '@@..####..........####..@@',
-  '..........##..##..........',
-  '..........##..##..........',
-  '..##..##..######..##..##..',
-  '..##..##..##..##..##..##..',
-  '..##..##..##..##..##..##..',
-  '..##..##..##..##..##..##..',
-  '..##..##..........##..##..',
-  '..##..##..........##..##..',
-  '..##..##..........##..##..',
-  '...........####...........',
-  '...........#EE#...........',
-  '...........#EE#...........'
-];
-
-export const ENEMY_TYPES = {
-  basic: { speed: 3.1, bullet: 13, hp: 1, score: 100 },
-  fast: { speed: 6.2, bullet: 13, hp: 1, score: 200 },
-  power: { speed: 3.6, bullet: 24, hp: 1, score: 300 },
-  armor: { speed: 3.1, bullet: 13, hp: 4, score: 400 }
-};
-// Classic stage-one mix: eighteen basic tanks followed by two fast scouts.
-export const STAGE1_ROSTER = [...Array(18).fill('basic'), 'fast', 'fast'];
-export const CARRIERS = [3, 10, 17];              // 4th, 11th and 18th enemies flash and carry a power-up
-export const POWERUPS = ['star', 'grenade', 'helmet', 'shovel', 'timer', 'tank'];
+export { N, EMPTY, BRICK, STEEL, BASE, DIRS, HALF, BULLET_R, PLAYER_SPAWN, ENEMY_SPAWNS, BASE_CENTER, BASE_WALL, rngFrom, STAGE1, POWERUPS, TOTAL_STAGES };
+export const MAX_ON_FIELD = 4;             // stage-1 default; each stage carries its own spec.maxOnField
+export const SPAWN_INTERVAL = 2.6;         // stage-1 default; spec.spawnInterval scales it
+export { ENEMY_TYPES, STAGE1_ROSTER };
 export const PLAYER_LEVELS = [
   { bullet: 16, max: 1, power: false },
   { bullet: 27, max: 1, power: false },
@@ -61,24 +14,22 @@ export const PLAYER_LEVELS = [
   { bullet: 27, max: 2, power: true }
 ];
 
-export function rngFrom(seed = 1) {
-  let a = seed >>> 0;
-  return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-}
 const idx = (x, z) => z * N + x;
 export function cellAt(w, x, z) { return x < 0 || z < 0 || x >= N || z >= N ? STEEL : w.grid[idx(x, z)]; }
 function setCell(w, x, z, v) { if (x < 0 || z < 0 || x >= N || z >= N) return; if (w.grid[idx(x, z)] !== v) { w.grid[idx(x, z)] = v; w.gridVersion++; } }
 export function emit(w, type, data = {}) { w.events.push({ type, ...data }); }
 
-export function createWorld(seed = Date.now() % 100000) {
+export function createWorld(seed = Date.now() % 100000, stage = 1, loop = 1) {
+  const spec = stageSpec(stage, loop);
   const grid = new Uint8Array(N * N);
-  STAGE1.forEach((row, z) => [...row].forEach((ch, x) => { grid[idx(x, z)] = ch === '#' ? BRICK : ch === '@' ? STEEL : ch === 'E' ? BASE : EMPTY; }));
+  spec.rows.forEach((row, z) => [...row].forEach((ch, x) => { grid[idx(x, z)] = ch === '#' ? BRICK : ch === '@' ? STEEL : ch === 'E' ? BASE : EMPTY; }));
   return {
     seed, rng: rngFrom(seed), grid, gridVersion: 0,
     status: 'ready', reason: '', time: 0, score: 0, lives: 3, level: 0,
+    stage: spec.stage, loop: spec.loop, spec,
     player: null, playerSpawn: null, nextId: 1,
     enemies: [], spawning: [], bullets: [], powerup: null, events: [],
-    roster: STAGE1_ROSTER.slice(), rosterIndex: 0, killed: 0,
+    roster: spec.roster, rosterIndex: 0, killed: 0,
     tally: { basic: 0, fast: 0, power: 0, armor: 0 }, pickups: 0,
     spawnTimer: 0.4, spawnSlot: 0, freeze: 0, shovel: 0, baseAlive: true,
     endTimer: -1, pendingStatus: null, shake: 0
@@ -93,8 +44,14 @@ export function startWorld(w) {
 function queuePlayer(w, delay) { w.playerSpawn = { x: PLAYER_SPAWN.x, z: PLAYER_SPAWN.z, t: delay + 0.75 }; emit(w, 'spawn', { x: PLAYER_SPAWN.x, z: PLAYER_SPAWN.z, team: 'player' }); }
 
 function makeTank(w, team, type, x, z, dir) {
-  const t = { id: w.nextId++, team, type, x, z, dir, speed: 0, hp: 1, carrier: false, shield: 0, fireTimer: 0.5, aiTimer: 0.8, alive: true, moving: false, travel: 0, recoil: 0, hitFlash: 0 };
-  if (team === 'enemy') { const spec = ENEMY_TYPES[type]; t.speed = spec.speed; t.hp = spec.hp; }
+  const t = { id: w.nextId++, team, type, x, z, dir, speed: 0, hp: 1, bullet: 13, carrier: false, shield: 0, fireTimer: 0.5, aiTimer: 0.8, alive: true, moving: false, travel: 0, recoil: 0, hitFlash: 0 };
+  if (team === 'enemy') {
+    // Later stages and later loops run the same tanks faster, harder and with hotter guns.
+    const spec = ENEMY_TYPES[type], d = w.spec;
+    t.speed = spec.speed * d.speedMult;
+    t.bullet = spec.bullet * d.bulletMult;
+    t.hp = type === 'armor' ? d.armorHp : spec.hp;
+  }
   return t;
 }
 export function playerSpec(w) { return PLAYER_LEVELS[Math.min(3, w.level)]; }
@@ -145,8 +102,10 @@ export function moveTank(w, t, dist) {
 }
 
 function activeBullets(w, t) { let n = 0; for (const b of w.bullets) if (b.owner === t.id) n++; return n; }
+// `t.bullet` is set when a tank spawns; the fallback keeps hand-built QA targets firing sanely.
+const enemyBulletSpeed = (w, t) => t.bullet || ENEMY_TYPES[t.type].bullet * w.spec.bulletMult;
 export function fire(w, t) {
-  const spec = t.team === 'player' ? playerSpec(w) : { bullet: ENEMY_TYPES[t.type].bullet, max: 1, power: false };
+  const spec = t.team === 'player' ? playerSpec(w) : { bullet: enemyBulletSpeed(w, t), max: 1, power: false };
   if (activeBullets(w, t) >= spec.max) return false;
   const [dx, dz] = DIRS[t.dir];
   w.bullets.push({ owner: t.id, team: t.team, x: t.x + dx * 1.05, z: t.z + dz * 1.05, dir: t.dir, speed: spec.bullet, power: spec.power, alive: true, age: 0 });
@@ -165,7 +124,7 @@ function killPlayer(w) {
 function destroyEnemy(w, e, byGrenade = false) {
   e.alive = false;
   w.killed++; w.tally[e.type]++;
-  const pts = byGrenade ? 0 : ENEMY_TYPES[e.type].score;
+  const pts = byGrenade ? 0 : Math.round(ENEMY_TYPES[e.type].score * w.spec.scoreMult / 10) * 10;
   w.score += pts; w.shake = Math.max(w.shake, .35);
   emit(w, 'boom', { x: e.x, z: e.z, big: true, team: 'enemy' });
   if (pts) emit(w, 'score', { x: e.x, z: e.z, value: pts });
@@ -246,7 +205,8 @@ function enemyThink(w, e, dt) {
     if (r < .58) { const q = w.rng(); dir = q < .2 ? 0 : q < .46 ? 1 : q < .74 ? 2 : 3; }
     else {
       // Early in the stage tanks wander; the longer it runs, the more they hunt the eagle.
-      const hunt = .72 + Math.min(.16, w.time / 600);
+      // Higher stages/loops start out meaner, so a loop-3 stage 4 barely dawdles at all.
+      const hunt = Math.min(.93, .72 + Math.min(.16, w.time / 600) + Math.min(.14, w.spec.tier * .0012));
       const tx = r < hunt || !p ? BASE_CENTER.x : p.x, tz = r < hunt || !p ? BASE_CENTER.z : p.z;
       const ddx = tx - e.x, ddz = tz - e.z;
       dir = Math.abs(ddx) > Math.abs(ddz) + (w.rng() - .5) * 6 ? (ddx > 0 ? 1 : 3) : (ddz > 0 ? 2 : 0);
@@ -256,21 +216,21 @@ function enemyThink(w, e, dt) {
     if (moved < want * .5 && w.rng() < .45) e.fireTimer = Math.min(e.fireTimer, .05);
   }
   e.fireTimer -= dt;
-  if (e.fireTimer <= 0) { e.fireTimer = 1.1 + w.rng() * 2; fire(w, e); }
+  if (e.fireTimer <= 0) { e.fireTimer = (1.1 + w.rng() * 2) * w.spec.fireMult; fire(w, e); }
 }
 
 function spawnSlotFree(w, s) { return !tanks(w).some(t => overlapTanks(t.x, t.z, s.x, s.z)); }
 function updateSpawns(w, dt) {
   w.spawnTimer -= dt;
   const busy = w.enemies.filter(e => e.alive).length + w.spawning.length;
-  if (w.rosterIndex < w.roster.length && busy < MAX_ON_FIELD && w.spawnTimer <= 0) {
+  if (w.rosterIndex < w.roster.length && busy < w.spec.maxOnField && w.spawnTimer <= 0) {
     for (let k = 0; k < 3; k++) {
       const slot = ENEMY_SPAWNS[(w.spawnSlot + k) % 3];
       if (!spawnSlotFree(w, slot) || w.spawning.some(s => s.x === slot.x)) continue;
       const i = w.rosterIndex++;
-      w.spawning.push({ x: slot.x, z: slot.z, t: 1, type: w.roster[i], carrier: CARRIERS.includes(i), index: i });
+      w.spawning.push({ x: slot.x, z: slot.z, t: 1, type: w.roster[i], carrier: w.spec.carriers.includes(i), index: i });
       emit(w, 'spawn', { x: slot.x, z: slot.z, team: 'enemy' });
-      w.spawnSlot = (w.spawnSlot + k + 1) % 3; w.spawnTimer = SPAWN_INTERVAL;
+      w.spawnSlot = (w.spawnSlot + k + 1) % 3; w.spawnTimer = w.spec.spawnInterval;
       break;
     }
   }
@@ -361,4 +321,4 @@ export function stepWorld(w, input, dt) {
 }
 
 // Debug-only helpers used by the QA scripts (not reachable from player controls).
-export const qa = { destroyEnemy, killPlayer, destroyBase, applyPowerup };
+export const qa = { destroyEnemy, killPlayer, destroyBase, applyPowerup, endGame };
