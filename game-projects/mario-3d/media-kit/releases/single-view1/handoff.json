@@ -139,5 +139,14 @@
     "gaps": [
       "录像动态审查、音轨审查和真机性能未测"
     ]
-  }
+  },
+  "capture_builds": [
+    {
+      "id": "mario-3d-single-view1-e37a8497b6ef",
+      "commit": null,
+      "dirty": true,
+      "fingerprint": "e37a8497b6ef0fc7d9c5eef1d5a63cd69276b20c66be15437e8ba8bdc5ca5d2e",
+      "entrypoint": "public/html/game/mario-3d/index.html"
+    }
+  ]
 }
