@@ -261,7 +261,7 @@ const gamesConfig = {
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },
                 { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
-                { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=4' }
+                { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=5' }
             ]
         },
         {

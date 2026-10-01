@@ -145,7 +145,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
     <div class="small" style="margin-top:6px;">
       PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷(无限) · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
       按住鼠标拖动或Q/E=旋转视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），拖动屏幕转视角<br>
-      玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目
+      玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目<br>
+      精英虫带词缀（迅捷/坚甲/狂暴/剧毒/爆死/巨型），击杀掉落双份金币 · BOSS会冲锋/弹幕/召唤，注意走位！
     </div>
   </div>
 
@@ -533,9 +534,15 @@ const WEAPONS={
   smg:{name:'冲锋枪',dmg:6,rate:.11,range:26,speed:55,spread:.06,price:0,color:0xffee88,sfx:'mg',auto:true},
   lmg:{name:'轻机枪',dmg:8,rate:.08,range:30,speed:60,spread:.07,price:0,color:0xffcc44,sfx:'mg',auto:true},
   rifle:{name:'战斗步枪',dmg:26,rate:.38,range:42,speed:80,spread:.015,price:0,color:0x88ffee,sfx:'shoot',auto:true},
+  shotgun:{name:'霰弹枪',dmg:10,rate:.85,range:17,speed:45,spread:.22,pellets:5,price:450,color:0xffaa66,sfx:'shoot',auto:true,desc:'一次5发弹丸，近距离毁灭'},
   sniper:{name:'狙击枪',dmg:110,rate:1.1,range:70,speed:140,spread:.002,price:600,color:0x66aaff,sfx:'sniper',auto:true},
   launcher:{name:'榴弹炮',dmg:70,rate:1.3,range:38,speed:34,spread:.02,price:900,color:0xff8844,sfx:'cannon',auto:true,explode:4,arc:true},
+  flamer:{name:'火焰喷射器',dmg:5,rate:.05,range:13,speed:26,spread:.14,price:1100,color:0xff6622,sfx:'mg',auto:true,flame:true,desc:'持续灼烧，近战群伤'},
+  laser:{name:'激光步枪',dmg:13,rate:.1,range:40,speed:170,spread:.01,price:1500,color:0x44ffff,sfx:'shoot',auto:true},
+  minigun:{name:'加特林',dmg:7,rate:.045,range:28,speed:65,spread:.09,price:1900,color:0xffee88,sfx:'mg',auto:true,desc:'极致射速弹幕压制'},
   plasma:{name:'等离子炮',dmg:45,rate:.22,range:36,speed:50,spread:.03,price:1600,color:0xcc66ff,sfx:'shoot',auto:true,explode:2},
+  missile:{name:'追踪导弹',dmg:55,rate:.55,range:48,speed:30,spread:0,price:2200,color:0x88ff88,sfx:'cannon',auto:true,explode:3.5,homing:true,desc:'自动追踪敌人'},
+  railgun:{name:'电磁轨道炮',dmg:300,rate:2.0,range:95,speed:240,spread:0,price:2800,color:0x88ccff,sfx:'sniper',auto:true,pierce:2,desc:'贯穿最多3个敌人'},
 };
 const CLASSES={
   gunner:{name:'机枪兵',hp:120,speed:9.5,weapon:'lmg',color:0x3a7bd5},
@@ -552,26 +559,41 @@ const BUILDINGS={
   wall:{name:'合金围墙',hp:500,price:100,desc:'阻挡虫群前进'},
   mgTurret:{name:'自动机枪塔',hp:250,price:300,dmg:7,rate:.14,range:26,desc:'自动扫射敌人'},
   cannonTurret:{name:'自动炮台',hp:350,price:700,dmg:60,rate:1.6,range:36,explode:3.5,desc:'范围爆炸伤害'},
+  teslaTurret:{name:'特斯拉塔',hp:300,price:1100,dmg:30,rate:.7,range:20,desc:'电弧连锁，最多跳3个目标'},
+  sniperTurret:{name:'狙击炮台',hp:280,price:1000,dmg:160,rate:1.9,range:55,desc:'超远程精确狙杀'},
   bunker:{name:'重型堡垒',hp:1200,price:1200,dmg:12,rate:.12,range:30,desc:'超高血量+双联机枪'},
 };
 const ITEMS={
   medkit:{name:'医疗包',price:120,desc:'按I回复60生命',heal:60},
   grenade:{name:'手雷×3',price:100,desc:'按U投掷,范围伤害',count:3},
+  shield:{name:'护盾电池',price:300,desc:'获得60点能量护盾(上限150)',shield:60},
+  adren:{name:'肾上腺素',price:250,desc:'20秒内移速+40%、射速+40%',buff:20},
   hpUp:{name:'强化装甲',price:500,desc:'最大生命+30',permanent:true},
+  magnet:{name:'磁力收集器',price:800,desc:'永久：拾取物自动吸附范围大增',permanent:true},
+  regen:{name:'再生背心',price:1000,desc:'永久：每秒回复2生命',permanent:true},
   repair:{name:'基地维修包',price:400,desc:'基地回复500耐久'},
 };
-/* 10章怪物图鉴：颜色/体型/能力递增 */
+/* 精英词缀：战中出现，属性强化+特效 */
+const ELITES={
+  swift:{name:'迅捷',color:0x66ff66,speedMul:1.5,hpMul:1.6},
+  armored:{name:'坚甲',color:0x88aaff,hpMul:3,dmgMul:1.2},
+  savage:{name:'狂暴',color:0xff4488,dmgMul:2.2,speedMul:1.2},
+  venom:{name:'剧毒',color:0xaaff44,ranged:true,dmgMul:1.3},
+  bomber:{name:'爆死',color:0xff8822,explodeOnDie:true,hpMul:1.5},
+  giant:{name:'巨型',color:0xffcc00,scaleMul:1.55,hpMul:2.4,dmgMul:1.5},
+};
+/* 10章怪物图鉴：颜色/体型/能力递增；bs=BOSS技能池（冲锋/弹幕/召唤） */
 const CHAPTERS=[
-  {name:'虫族小兵',color:0xcc6633,boss:'巨颚虫王',bossColor:0xff5522,mob:{hp:30,dmg:8,speed:5,gold:12},legs:4},
-  {name:'酸液虫',color:0x88cc22,boss:'毒雾之母',bossColor:0xaaff22,mob:{hp:55,dmg:12,speed:5.5,gold:16},legs:4,ranged:true},
-  {name:'甲壳战虫',color:0x8866aa,boss:'装甲暴君',bossColor:0xbb66ff,mob:{hp:110,dmg:16,speed:4.5,gold:22},legs:6},
-  {name:'迅猛飞虫',color:0x44bbcc,boss:'风暴翼后',bossColor:0x33eeff,mob:{hp:80,dmg:14,speed:8,gold:26},legs:2,fly:true},
-  {name:'炎爆虫',color:0xdd4422,boss:'熔岩巨兽',bossColor:0xff3300,mob:{hp:150,dmg:22,speed:5,gold:32},legs:4,explodeOnDie:true},
-  {name:'寄生蛛虫',color:0x99aa33,boss:'万蛛之巢',bossColor:0xccdd11,mob:{hp:130,dmg:18,speed:6.5,gold:36},legs:8,split:true},
-  {name:'雷鞭虫',color:0x3366ee,boss:'雷暴主宰',bossColor:0x5588ff,mob:{hp:200,dmg:26,speed:6,gold:42},legs:6,ranged:true},
-  {name:'幽影刺虫',color:0x555577,boss:'虚空猎手',bossColor:0x8888cc,mob:{hp:180,dmg:32,speed:8.5,gold:48},legs:4,stealth:true},
-  {name:'钢铁巨虫',color:0x777777,boss:'泰坦碾压者',bossColor:0xaaaaaa,mob:{hp:400,dmg:36,speed:4,gold:56},legs:6},
-  {name:'虫族亲卫',color:0xaa2255,boss:'虫巢意志',bossColor:0xff0066,mob:{hp:350,dmg:42,speed:7,gold:66},legs:8,ranged:true,fly:false},
+  {name:'虫族小兵',color:0xcc6633,boss:'巨颚虫王',bossColor:0xff5522,mob:{hp:30,dmg:8,speed:5,gold:12},legs:4,bs:['charge']},
+  {name:'酸液虫',color:0x88cc22,boss:'毒雾之母',bossColor:0xaaff22,mob:{hp:55,dmg:12,speed:5.5,gold:16},legs:4,ranged:true,bs:['barrage']},
+  {name:'甲壳战虫',color:0x8866aa,boss:'装甲暴君',bossColor:0xbb66ff,mob:{hp:110,dmg:16,speed:4.5,gold:22},legs:6,bs:['charge']},
+  {name:'迅猛飞虫',color:0x44bbcc,boss:'风暴翼后',bossColor:0x33eeff,mob:{hp:80,dmg:14,speed:8,gold:26},legs:2,fly:true,bs:['barrage']},
+  {name:'炎爆虫',color:0xdd4422,boss:'熔岩巨兽',bossColor:0xff3300,mob:{hp:150,dmg:22,speed:5,gold:32},legs:4,explodeOnDie:true,bs:['charge','barrage']},
+  {name:'寄生蛛虫',color:0x99aa33,boss:'万蛛之巢',bossColor:0xccdd11,mob:{hp:130,dmg:18,speed:6.5,gold:36},legs:8,split:true,bs:['summon','charge']},
+  {name:'雷鞭虫',color:0x3366ee,boss:'雷暴主宰',bossColor:0x5588ff,mob:{hp:200,dmg:26,speed:6,gold:42},legs:6,ranged:true,bs:['barrage','summon']},
+  {name:'幽影刺虫',color:0x555577,boss:'虚空猎手',bossColor:0x8888cc,mob:{hp:180,dmg:32,speed:8.5,gold:48},legs:4,stealth:true,bs:['charge']},
+  {name:'钢铁巨虫',color:0x777777,boss:'泰坦碾压者',bossColor:0xaaaaaa,mob:{hp:400,dmg:36,speed:4,gold:56},legs:6,bs:['charge','summon']},
+  {name:'虫族亲卫',color:0xaa2255,boss:'虫巢意志',bossColor:0xff0066,mob:{hp:350,dmg:42,speed:7,gold:66},legs:8,ranged:true,bs:['barrage','summon','charge']},
 ];
 
 /* ================= 模型构建（纯代码几何体） ================= */
@@ -818,6 +840,18 @@ function makeBuildingMesh(kind){
     const gun=new THREE.Mesh(new THREE.CylinderGeometry(.16,.22,2.4,8),new THREE.MeshLambertMaterial({color:0x332211}));
     gun.rotation.x=Math.PI/2.6;gun.position.set(0,2.4,1);grp.add(gun);
     grp.userData.head=head;grp.userData.gun=gun;
+  }else if(kind==='teslaTurret'){
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(.9,1.2,1,8),new THREE.MeshLambertMaterial({color:0x445566}));base.position.y=.5;base.castShadow=true;grp.add(base);
+    const coil=new THREE.Mesh(new THREE.TorusGeometry(.5,.12,6,12),new THREE.MeshLambertMaterial({color:0x8866cc}));coil.rotation.x=Math.PI/2;coil.position.y=1.5;grp.add(coil);
+    const orb=new THREE.Mesh(new THREE.SphereGeometry(.38,10,8),new THREE.MeshBasicMaterial({color:0xcc88ff}));orb.position.y=2.1;grp.add(orb);grp.userData.head=orb;
+    const tip=new THREE.Mesh(new THREE.ConeGeometry(.15,.5,6),new THREE.MeshLambertMaterial({color:0x8866cc}));tip.position.y=2.6;grp.add(tip);
+  }else if(kind==='sniperTurret'){
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(1,1.3,1,8),new THREE.MeshLambertMaterial({color:0x3d4a5c}));base.position.y=.5;base.castShadow=true;grp.add(base);
+    const head=new THREE.Mesh(new THREE.BoxGeometry(.9,.6,1.4),new THREE.MeshLambertMaterial({color:0x6688aa}));head.position.y=1.5;grp.add(head);
+    const gun=new THREE.Mesh(new THREE.CylinderGeometry(.09,.12,2.8,8),new THREE.MeshLambertMaterial({color:0x223344}));
+    gun.rotation.x=Math.PI/2;gun.position.set(0,1.6,.9);grp.add(gun);
+    const scope=new THREE.Mesh(new THREE.BoxGeometry(.16,.16,.5),new THREE.MeshBasicMaterial({color:0x66ffff}));scope.position.set(0,1.85,.6);grp.add(scope);
+    grp.userData.head=head;grp.userData.gun=gun;
   }else if(kind==='bunker'){
     const m=new THREE.Mesh(new THREE.BoxGeometry(4,2.6,4),new THREE.MeshLambertMaterial({color:0x777f66}));m.position.y=1.3;m.castShadow=true;grp.add(m);
     const top=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.6,1,8),new THREE.MeshLambertMaterial({color:0x99a077}));top.position.y=3.1;grp.add(top);
@@ -836,6 +870,7 @@ const Game={
   items:{medkit:2,grenade:3},
   hpBonus:0,
   vehiclesOwned:[],squadCount:0,
+  magnet:false,regen:false,
   wave:{total:0,spawned:0,killed:0,timer:0,bossSpawned:false},
   pausedFrom:'prep',
   msgTimer:0,shake:0,
@@ -922,17 +957,23 @@ function groundY(x,z){return terrainH(x,z);}
 function dist2(a,b){const dx=a.x-b.x,dz=a.z-b.z;return dx*dx+dz*dz;}
 function showMsg(t,dur=2.2){$('msg').textContent=t;$('msg').classList.remove('hidden');Game.msgTimer=dur;}
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
+function updHUDItem(){
+  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit} 💣 手雷∞`
+    +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
+    +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
+}
 
 /* ---------- 玩家 ---------- */
 const player={
   mesh:null,bar:null,hp:120,maxHp:120,speed:9.5,
   pos:new THREE.Vector3(0,0,-24),vy:0,onGround:true,yaw:0,
   fireCd:0,healTick:0,inVehicle:null,dead:false,anim:0,
-  muzzle:null,
+  muzzle:null,shield:0,buffT:0,
   reset(cls){
     const c=CLASSES[cls];
     this.maxHp=c.hp+Game.hpBonus;this.hp=this.maxHp;this.speed=c.speed;
     this.pos.set(0,0,-20);this.vy=0;this.dead=false;this.inVehicle=null;this.yaw=0;
+    this.shield=0;this.buffT=0;
     if(this.mesh)scene.remove(this.mesh);
     this.mesh=makeSoldier(c.color);
     this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=2.6;this.mesh.add(this.bar);updHPBar(this.bar,1);
@@ -943,6 +984,12 @@ const player={
 function playerDamage(d){
   if(player.dead)return;
   if(Game.testMode)d*=.2;
+  if(player.shield>0){ // 护盾优先吸收
+    const ab=Math.min(player.shield,d);
+    player.shield-=ab;d-=ab;
+    spawnParticles(player.mesh.position.clone().add(new THREE.Vector3(0,1.4,0)),0x66ccff,4,4,.35);
+    if(d<=0){updHUDItem();return;}
+  }
   player.hp-=d;AudioSys.sfx('hurt');Game.shake=Math.min(.5,Game.shake+.15);
   spawnParticles(player.mesh.position.clone().add(new THREE.Vector3(0,1.3,0)),0xff4444,5,4,.4);
   updHPBar(player.bar,player.hp/player.maxHp);
@@ -952,17 +999,23 @@ function playerDamage(d){
 /* ---------- 子弹 ---------- */
 const bulletGeo=new THREE.SphereGeometry(.12,6,5);
 function fireBullet(from,dir,cfg,friendly,srcVehicle){
+  if(cfg.pellets>1){ // 霰弹：一次多颗弹丸
+    for(let i=0;i<cfg.pellets;i++)fireBullet(from,dir,Object.assign({},cfg,{pellets:0}),friendly);
+    return;
+  }
   const color=cfg.color||0xffee88;
   const m=new THREE.Mesh(bulletGeo,new THREE.MeshBasicMaterial({color}));
   m.position.copy(from);
   const spread=cfg.spread||0;
   const d=dir.clone().normalize();
   d.x+=rand(-spread,spread);d.z+=rand(-spread,spread);d.normalize();
-  const b={mesh:m,vel:d.multiplyScalar(cfg.speed),dmg:cfg.dmg,life:cfg.range/cfg.speed,friendly,explode:cfg.explode||0,arc:cfg.arc};
+  const b={mesh:m,vel:d.multiplyScalar(cfg.speed),dmg:cfg.dmg,life:cfg.range/cfg.speed,friendly,explode:cfg.explode||0,arc:cfg.arc,
+    homing:cfg.homing,pierce:cfg.pierce||0,hitSet:cfg.pierce?new Set():null};
   if(cfg.arc){b.vel.y=8;b.gravity=16;m.scale.setScalar(2);}
+  if(cfg.flame){m.scale.setScalar(1.9);b.vel.y=1.2;}
   scene.add(m);bullets.push(b);
   // 曳光
-  if(!cfg.arc){const trail=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.9,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.6}));
+  if(!cfg.arc&&!cfg.flame){const trail=new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.9,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.6}));
     trail.rotation.x=Math.PI/2;m.add(trail);}
 }
 function explode(pos,radius,dmg,friendly){
@@ -981,6 +1034,16 @@ function explode(pos,radius,dmg,friendly){
 function updBullets(dt){
   for(let i=bullets.length-1;i>=0;i--){
     const b=bullets[i];b.life-=dt;
+    // 追踪导弹：向最近敌人转向
+    if(b.homing&&b.friendly){
+      let best=null,bd2=30*30;
+      const p0=b.mesh.position;
+      for(const mo of monsters){if(mo.dead||b.hitSet&&b.hitSet.has(mo))continue;const d2=dist2(p0,mo.mesh.position);if(d2<bd2){bd2=d2;best=mo;}}
+      if(best){
+        const want=new THREE.Vector3(best.mesh.position.x-p0.x,best.mesh.position.y+best.hitH-p0.y,best.mesh.position.z-p0.z).normalize().multiplyScalar(b.vel.length());
+        b.vel.lerp(want,Math.min(1,dt*3.2));
+      }
+    }
     b.mesh.position.addScaledVector(b.vel,dt);
     if(b.gravity)b.vel.y-=b.gravity*dt;
     const p=b.mesh.position;
@@ -990,8 +1053,12 @@ function updBullets(dt){
     if(!hit&&b.friendly){
       for(const mo of monsters){
         if(mo.dead)continue;
+        if(b.hitSet&&b.hitSet.has(mo))continue;
         if(p.distanceTo(mo.mesh.position.clone().setY(mo.mesh.position.y+mo.hitH))<mo.radius+.4||dist2(p,mo.mesh.position)<(mo.radius+.4)**2){
-          if(!b.explode){damageMonster(mo,b.dmg);AudioSys.sfx('hit');spawnParticles(p,0x99ff55,4,3,.3);}
+          if(!b.explode){
+            damageMonster(mo,b.dmg);AudioSys.sfx('hit');spawnParticles(p,0x99ff55,4,3,.3);
+            if(b.pierce>0){b.pierce--;b.hitSet.add(mo);continue;} // 穿透继续飞
+          }
           hit=true;break;
         }
       }
@@ -1017,7 +1084,7 @@ function diffMul(){ // 周目与章节难度倍率
 }
 function spawnMonster(kind,x,z,opts={}){
   const ch=opts.ch||chapterCfg();
-  const mul=diffMul();
+  const mul=diffMul()*(1+(Game.level-1)*.04); // 同章内关卡递增
   let hp,dmg,speed,scale,gold,ranged=ch.ranged,fly=ch.fly;
   if(kind==='mob'){
     hp=ch.mob.hp*mul;dmg=ch.mob.dmg*mul;speed=ch.mob.speed*(1+(Game.loop-1)*.08);scale=rand(.85,1.15);gold=Math.round(ch.mob.gold*(1+(Game.loop-1)*.3));
@@ -1037,13 +1104,37 @@ function spawnMonster(kind,x,z,opts={}){
     atkCd:0,ranged,fly,anim:rand(0,10),wild:opts.wild||false,
     explodeOnDie:ch.explodeOnDie,split:ch.split&&kind==='mob'&&!opts.isSplit,stealth:ch.stealth,
     target:null,spitCd:rand(1,3),chargeCd:5,
+    bs:kind==='boss'?(ch.bs||['summon']):(kind==='miniboss'?(ch.bs||[]).slice(0,1):null),
+    chargeT:0,elite:null,
   };
-  mo.bar=makeHPBar(kind==='mob'?1.8:4.5,kind==='mob'?'#f66':'#f0f');
-  mo.bar.position.y=(fly?2.2:1.6)*scale+.6;mesh.add(mo.bar);updHPBar(mo.bar,1);
+  // 精英词缀
+  if(opts.elite&&kind==='mob'){
+    const keys=Object.keys(ELITES);
+    const picks=[keys[Math.floor(rand(0,keys.length))]];
+    if(Math.random()<.35)picks.push(keys[Math.floor(rand(0,keys.length))]);
+    const affixes=[...new Set(picks)];
+    let hpM=1,dmgM=1,spM=1,scM=1;
+    for(const k of affixes){
+      const a=ELITES[k];
+      hpM*=a.hpMul||1;dmgM*=a.dmgMul||1;spM*=a.speedMul||1;scM*=a.scaleMul||1;
+      if(a.ranged)mo.ranged=true;
+      if(a.explodeOnDie)mo.explodeOnDie=true;
+    }
+    mo.hp=mo.maxHp=hp*hpM;mo.dmg=dmg*dmgM;mo.speed=speed*spM;
+    mo.scaleMul=scM;mesh.scale.multiplyScalar(scM);mo.radius*=scM;mo.hitH*=scM;
+    mo.gold=Math.round(gold*4*affixes.length);mo.elite=affixes;
+    // 头顶词缀水晶标记
+    const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.34,0),new THREE.MeshBasicMaterial({color:0xffdd00}));
+    gem.position.y=(fly?2.2:1.6)*scale*scM+1;mesh.add(gem);mo.gem=gem;
+  }
+  mo.bar=makeHPBar(kind==='mob'?(mo.elite?2.4:1.8):(kind==='boss'?5:4.5),mo.elite?'#ff0':(kind==='mob'?'#f66':'#f0f'));
+  mo.bar.position.y=(fly?2.2:1.6)*scale*(mo.scaleMul||1)+.6;mesh.add(mo.bar);updHPBar(mo.bar,1);
   if(mo.stealth)mesh.traverse(o=>{if(o.material&&!o.material.transparent){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;}});
   monsters.push(mo);
+  if(mo.elite)showMsg('⚠ 精英虫「'+affixNames(mo.elite)+'」出现！',1.6);
   return mo;
 }
+function affixNames(list){return list.map(k=>ELITES[k].name).join('·');}
 function damageMonster(mo,d){
   if(mo.dead)return;
   mo.hp-=d;updHPBar(mo.bar,mo.hp/mo.maxHp);
@@ -1065,7 +1156,12 @@ function killMonster(mo){
   }
   // 掉落
   dropPickup(p,'gold',mo.gold);
-  if(Math.random()<(mo.kind==='mob'?.12:.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
+  if(mo.elite){ // 精英：额外金币+必掉回复
+    Game.score+=50*mo.elite.length;
+    dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'gold',Math.round(mo.gold*.6));
+    dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'hp',40);
+  }
+  if(Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
   if(mo.kind!=='mob')dropPickup(p.clone().add(new THREE.Vector3(rand(-2,2),0,rand(-2,2))),'gold',mo.gold);
   Game.score+=mo.kind==='mob'?10:(mo.kind==='miniboss'?150:500);
   scene.remove(mo.mesh);
@@ -1092,9 +1188,9 @@ function updPickups(dt){
     pk.mesh.position.y=groundY(pk.mesh.position.x,pk.mesh.position.z)+.5+Math.sin(pk.t*4)*.15;
     const pp=player.inVehicle?player.inVehicle.mesh.position:player.mesh.position;
     const d2=dist2(pk.mesh.position,pp);
-    if(d2<25){ // 吸附
+    if(d2<(Game.magnet?70:25)){ // 磁力收集器：吸附范围大增
       const dir=new THREE.Vector3().subVectors(pp,pk.mesh.position);dir.y=0;dir.normalize();
-      pk.mesh.position.addScaledVector(dir,dt*14);
+      pk.mesh.position.addScaledVector(dir,dt*(Game.magnet?22:14));
     }
     if(d2<2.2){
       if(pk.type==='gold'){Game.gold+=pk.val;AudioSys.sfx('coin');}
@@ -1139,6 +1235,7 @@ function updMonsters(dt){
     if(mo.mesh.userData.wingL){mo.mesh.userData.wingL.rotation.z=.3+Math.sin(t*30)*.5;mo.mesh.userData.wingR.rotation.z=-.3-Math.sin(t*30)*.5;}
     const tgt=mo.wild?(dist2(mo.mesh.position,player.inVehicle?player.inVehicle.mesh.position:player.mesh.position)<900?monsterTargets(mo):null):monsterTargets(mo);
     mo.atkCd-=dt;mo.spitCd-=dt;
+    if(mo.gem){mo.gem.rotation.y+=dt*2.5;mo.gem.position.y+=Math.sin(t*3+mo.anim)*.004;}
     if(!tgt){ // 野怪巡逻
       if(!mo.wander||Math.random()<.005){mo.wander=new THREE.Vector3(rand(-1,1),0,rand(-1,1)).normalize();}
       moveMonster(mo,mo.wander,dt,.3);
@@ -1148,8 +1245,36 @@ function updMonsters(dt){
     const dist=Math.sqrt(tgt.d2);
     dir.normalize();
     mo.mesh.rotation.y=Math.atan2(dir.x,dir.z);
+    // BOSS/精英技能：冲锋/弹幕/召唤
+    if(mo.bs&&mo.bs.length&&mo.spitCd<=0&&mo.chargeT<=0){
+      const skill=mo.bs[Math.floor(rand(0,mo.bs.length))];
+      if(skill==='summon'){
+        mo.spitCd=7;
+        const n=2+(Game.loop>2?1:0);
+        for(let k=0;k<n;k++){
+          const s=spawnMonster('mob',mo.mesh.position.x+rand(-3,3),mo.mesh.position.z+rand(-3,3),{wild:mo.wild});
+          if(!mo.wild){Game.wave.total++;Game.wave.spawned++;}
+        }
+        showMsg('⚠ BOSS召唤了虫群！',1.2);
+      }else if(skill==='barrage'&&dist<34){
+        mo.spitCd=5;
+        const from=mo.mesh.position.clone();from.y+=mo.hitH+.6;
+        for(let k=0;k<10;k++){
+          const a=k/10*TAU;
+          fireBullet(from,new THREE.Vector3(Math.sin(a),0,Math.cos(a)),{dmg:mo.dmg*.45,speed:18,range:30,spread:0,color:0xaaff44},false);
+        }
+        AudioSys.sfx('shoot');
+      }else if(skill==='charge'&&dist>8&&dist<28&&!mo.fly){
+        mo.spitCd=6;mo.chargeT=.75;mo.chargeDir=dir.clone();
+        showMsg('⚠ '+(mo.kind==='boss'?chapterCfg().boss:'精英先锋')+' 发起冲锋！',1.2);
+        AudioSys.sfx('wave');
+      }else mo.spitCd=1.5;
+    }
     const atkRange=mo.radius+tgt.r+(mo.ranged?14:1.2);
-    if(dist>atkRange){
+    if(mo.chargeT>0){ // 冲锋中：直线突进
+      mo.chargeT-=dt;
+      moveMonster(mo,mo.chargeDir,dt,3.4);
+    }else if(dist>atkRange){
       let mdir=dir;
       if(!mo.fly){const nd=navDir(mo,tgt.pos);if(nd){mdir=nd;mo.mesh.rotation.y=Math.atan2(nd.x,nd.z);}}
       moveMonster(mo,mdir,dt,(!mo.wild&&mo.mesh.position.z>70)?2.2:1);
@@ -1172,15 +1297,6 @@ function updMonsters(dt){
         else if(tgt.kind==='gate')damageGate(mo.dmg);
         else if(tgt.kind==='base')damageBase(mo.dmg);
       }
-    }
-    // boss技能：召唤小怪
-    if(mo.kind==='boss'&&mo.spitCd<=0){
-      mo.spitCd=6;
-      for(let k=0;k<2;k++){
-        const s=spawnMonster('mob',mo.mesh.position.x+rand(-3,3),mo.mesh.position.z+rand(-3,3),{wild:mo.wild});
-        if(!mo.wild){Game.wave.total++;Game.wave.spawned++;}
-      }
-      showMsg('⚠ BOSS召唤了虫群！',1.2);
     }
   }
 }
@@ -1262,6 +1378,16 @@ function collideWalls(x,z,r){
   if(gateBlocked()&&Math.abs(x-gate.pos.x)<6+r&&Math.abs(z-gate.pos.z)<.9+r)return true;
   return false;
 }
+/* 电弧特效：两点之间画一段发光线束，短暂显示 */
+function zapLine(a,b,color){
+  const dir=new THREE.Vector3().subVectors(b,a);
+  const len=dir.length();
+  const m=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,len,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9}));
+  m.position.copy(a).addScaledVector(dir,.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir.clone().normalize());
+  scene.add(m);
+  setTimeout(()=>scene.remove(m),90);
+}
 /* 炮塔自动索敌 */
 function updBuildings(dt){
   for(const bd of buildings){
@@ -1274,14 +1400,44 @@ function updBuildings(dt){
       const d2=dist2(bd.mesh.position,mo.mesh.position);
       if(d2<bd2){bd2=d2;best=mo;}
     }
-    if(best){
+    if(!best)continue;
+    const mul=Game.testMode?2:1;
+    if(bd.kind==='teslaTurret'){
+      // 电弧连锁：主目标+附近最多2只，伤害递减
       bd.fireCd=bd.rate;
-      const from=bd.mesh.position.clone();from.y+=bd.kind==='bunker'?3.2:(bd.kind==='cannonTurret'?2:1.5);
-      const to=best.mesh.position.clone();to.y+=best.hitH;
-      const dir=new THREE.Vector3().subVectors(to,from);
-      if(bd.mesh.userData.head)bd.mesh.userData.head.rotation.y=Math.atan2(dir.x,dir.z);
-      if(bd.mesh.userData.gun)bd.mesh.userData.gun.rotation.y=Math.atan2(dir.x,dir.z);
-      fireBullet(from,dir,{dmg:bd.dmg*(Game.testMode?2:1),speed:55,range:bd.range+6,spread:.04,explode:bd.explode,color:bd.kind==='cannonTurret'?0xff8844:0xffee88},true);
+      const from=bd.mesh.position.clone();from.y+=2.1;
+      let prev=from,cur=best;
+      const hitList=[cur];
+      for(let k=0;k<2;k++){
+        let nxt=null,nd2=8*8;
+        for(const mo of monsters){
+          if(mo.dead||hitList.includes(mo))continue;
+          const d2=dist2(cur.mesh.position,mo.mesh.position);
+          if(d2<nd2){nd2=d2;nxt=mo;}
+        }
+        if(!nxt)break;
+        hitList.push(nxt);cur=nxt;
+      }
+      hitList.forEach((mo,idx)=>{
+        const to=mo.mesh.position.clone();to.y+=mo.hitH;
+        zapLine(prev,to,0xcc88ff);
+        damageMonster(mo,bd.dmg*mul*Math.pow(.6,idx));
+        prev=to;
+      });
+      AudioSys.sfx('shoot');
+      continue;
+    }
+    bd.fireCd=bd.rate;
+    const from=bd.mesh.position.clone();from.y+=bd.kind==='bunker'?3.2:(bd.kind==='cannonTurret'?2:1.5);
+    const to=best.mesh.position.clone();to.y+=best.hitH;
+    const dir=new THREE.Vector3().subVectors(to,from);
+    if(bd.mesh.userData.head)bd.mesh.userData.head.rotation.y=Math.atan2(dir.x,dir.z);
+    if(bd.mesh.userData.gun)bd.mesh.userData.gun.rotation.y=Math.atan2(dir.x,dir.z);
+    if(bd.kind==='sniperTurret'){
+      fireBullet(from,dir,{dmg:bd.dmg*mul,speed:140,range:bd.range+8,spread:0,color:0xaaffff},true);
+      AudioSys.sfx('sniper');
+    }else{
+      fireBullet(from,dir,{dmg:bd.dmg*mul,speed:55,range:bd.range+6,spread:.04,explode:bd.explode,color:bd.kind==='cannonTurret'?0xff8844:0xffee88},true);
       AudioSys.sfx(bd.kind==='cannonTurret'?'cannon':'mg');
     }
   }
@@ -1403,7 +1559,8 @@ function autoAimDir(from,facing,range){
     const dir=new THREE.Vector3().subVectors(mo.mesh.position,from);dir.y=0;dir.normalize();
     const dot=dir.dot(facing);
     if(dot<.2)continue;
-    const score=dot*2-Math.sqrt(d2)/range;
+    let score=dot*2-Math.sqrt(d2)/range;
+    if(mo.kind==='boss')score+=1.2;else if(mo.kind==='miniboss')score+=.8;else if(mo.elite)score+=.5;
     if(score>bestScore){bestScore=score;best=mo;}
   }
   if(best){
@@ -1461,9 +1618,14 @@ function updPlayer(dt){
     return;
   }
   // 步行
+  if(player.buffT>0)player.buffT-=dt;
+  if(Game.regen&&player.hp<player.maxHp){ // 再生背心
+    player.hp=Math.min(player.maxHp,player.hp+2*dt);
+    updHPBar(player.bar,player.hp/player.maxHp);
+  }
   if(moving){
     player.yaw=Math.atan2(mvx,mvz);
-    const sp=player.speed*(Game.testMode?1.3:1);
+    const sp=player.speed*(Game.testMode?1.3:1)*(player.buffT>0?1.4:1);
     const nx=player.pos.x+mvx*sp*dt,nz=player.pos.z+mvz*sp*dt;
     if(!collideWalls(nx,player.pos.z,.5)&&!tooSteep(nx,player.pos.z))player.pos.x=clamp(nx,WORLD.minX+1,WORLD.maxX-1);
     if(!collideWalls(player.pos.x,nz,.5)&&!tooSteep(player.pos.x,nz))player.pos.z=clamp(nz,WORLD.minZ+1,WORLD.maxZ-1);
@@ -1489,7 +1651,7 @@ function updPlayer(dt){
   player.fireCd-=dt;
   const wp=WEAPONS[Game.curWeapon];
   if(Input.keys.J&&player.fireCd<=0){
-    player.fireCd=wp.rate;
+    player.fireCd=wp.rate*(player.buffT>0?1/1.4:1);
     const facing=new THREE.Vector3(Math.sin(player.yaw),0,Math.cos(player.yaw));
     const from=player.pos.clone();from.y+=1.35;
     const dir=autoAimDir(from,facing,wp.range);
@@ -1561,7 +1723,8 @@ function startPrep(){
   const n=6+Math.min(10,Game.chapter+Game.loop);
   for(let i=0;i<n;i++){
     const x=rand(WORLD.minX+10,WORLD.maxX-10),z=rand(50,WORLD.maxZ-20);
-    spawnMonster('mob',x,z,{wild:true});
+    const ec=Game.loop>1||Game.chapter>3?.12:.05;
+    spawnMonster('mob',x,z,{wild:true,elite:Math.random()<ec?true:undefined});
   }
   if(Math.random()<.5)spawnMonster('miniboss',rand(-30,30),rand(120,170),{wild:true});
   $('readyBtn').classList.remove('hidden');
@@ -1605,9 +1768,10 @@ function updWave(dt){
         showMsg('⚔ 小BOSS '+chapterCfg().boss+'的先锋 杀到！',2.5);
       }else if(!(isBossLevel()&&remaining<=1)){
         w.spawned++;
-        // 从远处边缘出现
+        // 从远处边缘出现；随进度提升精英概率
         const x=rand(WORLD.minX+8,WORLD.maxX-8);
-        spawnMonster('mob',x,WORLD.maxZ-rand(10,30));
+        const ec=Math.min(.28,.04+(Game.loop-1)*.05+(Game.chapter-1)*.012);
+        spawnMonster('mob',x,WORLD.maxZ-rand(10,30),Math.random()<ec?{elite:true}:{});
       }
       w.timer=Math.max(.4,2.2-Game.level*.12-Game.chapter*.06-(Game.loop-1)*.3);
     }
@@ -1668,8 +1832,13 @@ function renderShop(){
   for(const it of SHOP[shopTab]){
     const div=document.createElement('div');div.className='shopItem';
     let nm,pr,desc,owned=false;
-    if(it.type==='weapon'){const w=WEAPONS[it.id];nm=w.name;pr=w.price;desc=`伤害${w.dmg} 射速${(1/w.rate).toFixed(1)}/s 射程${w.range}`;owned=Game.weapons.includes(it.id);}
-    else if(it.type==='item'){const c=ITEMS[it.id];nm=c.name;pr=c.price;desc=c.desc;}
+    if(it.type==='weapon'){
+      const w=WEAPONS[it.id];nm=w.name;pr=w.price;
+      const tags=[w.pellets?'×'+w.pellets+'弹丸':'',w.explode?'范围爆炸':'',w.homing?'追踪':'',w.pierce?'穿透':''].filter(Boolean).join(' ');
+      desc=`伤害${w.dmg} 射速${(1/w.rate).toFixed(1)}/s 射程${w.range}${tags?'<br>'+tags:''}`;
+      owned=Game.weapons.includes(it.id);
+    }
+    else if(it.type==='item'){const c=ITEMS[it.id];nm=c.name;pr=c.price;desc=c.desc;owned=(it.id==='magnet'&&Game.magnet)||(it.id==='regen'&&Game.regen);}
     else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行(K升U降)':''}`;owned=Game.vehiclesOwned.includes(it.id);}
     else{nm='雇佣兵队友';pr=500+squad.length*300;desc='AI队友,跟随作战(最多4名)';}
     div.innerHTML=`<div class="nm">${nm}</div><div>${desc}</div><div class="pr">${owned?'✅已拥有':'💰'+pr}</div>`;
@@ -1716,7 +1885,11 @@ function updAirdrops(dt){
         const c=ITEMS[it.id];
         if(it.id==='medkit')Game.items.medkit++;
         else if(it.id==='grenade')Game.items.grenade+=c.count;
+        else if(it.id==='shield'){player.shield=Math.min(150,player.shield+c.shield);updHUDItem();}
+        else if(it.id==='adren'){player.buffT=Math.max(player.buffT,c.buff);}
         else if(it.id==='hpUp'){Game.hpBonus+=30;player.maxHp+=30;player.hp+=30;updHPBar(player.bar,player.hp/player.maxHp);}
+        else if(it.id==='magnet'){Game.magnet=true;}
+        else if(it.id==='regen'){Game.regen=true;}
         else if(it.id==='repair'){base.hp=Math.min(base.maxHp,base.hp+500);updHPBar(base.bar,base.hp/base.maxHp);}
         showMsg('📦 获得 '+c.name,1.6);
       }
@@ -1761,6 +1934,7 @@ function saveData(){
     gold:Game.gold,score:Game.score,cls:Game.cls,
     weapons:Game.weapons,curWeapon:Game.curWeapon,items:Game.items,hpBonus:Game.hpBonus,
     vehiclesOwned:Game.vehiclesOwned,squadCount:squad.length,
+    perks:{magnet:Game.magnet,regen:Game.regen},
     baseHp:base.hp,
     buildings:buildings.map(b=>({k:b.kind,x:b.mesh.position.x,z:b.mesh.position.z,r:b.rotY,hp:b.hp})),
     time:Date.now(),
@@ -1773,6 +1947,7 @@ function applySave(d){
   Game.curWeapon=d.curWeapon||Game.weapons[0];
   Game.items=d.items||{medkit:2,grenade:3};
   Game.hpBonus=d.hpBonus||0;
+  Game.magnet=!!(d.perks&&d.perks.magnet);Game.regen=!!(d.perks&&d.perks.regen);
   Game.vehiclesOwned=[];
   clearEntities(true);
   player.reset(Game.cls);
@@ -1843,6 +2018,7 @@ function newGame(test){
   Game.curWeapon=CLASSES[Game.cls].weapon;
   Game.items={medkit:test?99:2,grenade:test?99:3};
   Game.vehiclesOwned=[];
+  Game.magnet=false;Game.regen=false;
   clearEntities(true);
   camYaw=0;
   player.reset(Game.cls);
@@ -1884,7 +2060,7 @@ function updHUD(){
   $('scoreTxt').textContent=Game.score;
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name;
   else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name;
-  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit} 💣 手雷∞`;
+  updHUDItem();
   if(Game.state==='prep'){
     const wilds=monsters.filter(m=>!m.dead).length;
     $('waveTxt').textContent=`🌿 野怪剩余 ${wilds}`;
