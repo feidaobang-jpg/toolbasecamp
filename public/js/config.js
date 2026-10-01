@@ -259,7 +259,7 @@ const gamesConfig = {
             items: [
                 { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },
-                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey_west.html?v=3' },
+                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
                 { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=7' }
             ]

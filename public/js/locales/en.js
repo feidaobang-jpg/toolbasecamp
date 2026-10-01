@@ -1751,8 +1751,8 @@ window.TB_LOCALES.en = {
             desc: '3D base defense: farm gold, build turrets, hold insect waves; chapter bosses and endless cycles. Keyboard and touch.'
         },
         journeyWest: {
-            title: 'Westward Demons',
-            desc: 'Top-down demon RPG: unique mobs and bosses each chapter; clear all 12 to start endless harder cycles.'
+            title: 'Westward Demons 3D: Level 1',
+            desc: 'Complete mountain-temple level: four weapons, dodges and abilities, three demon waves and a Stone Warden. Keyboard and mobile touch controls.'
         },
         rmbUppercase: {
             title: 'RMB Uppercase',
