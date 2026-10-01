@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "game_id": "journey-west-3d",
+  "version": "prototype-ghost",
+  "build": {
+    "id": "prototype-ghost",
+    "fingerprint": null,
+    "entrypoint": "public/html/game/journey-west-3d/index.html",
+    "note": "真实修复前采集，未保存源码指纹；不伪造指纹或归到最终构建"
+  },
+  "media": [
+    {
+      "id": "before-ghost-enemies",
+      "file": "releases/v0.1.0/captures/before-ghost-enemies.png",
+      "sha256": "a28f02770c87dd9677c9ef51b3bdfff9fed44a920a8346383778f4677dc72bfd",
+      "kind": "screenshot",
+      "version": "prototype-ghost",
+      "build_id": "prototype-ghost",
+      "capture_mode": "realtime-automation",
+      "description": "修复前妖怪尸身残留的真实实机证据，未记录当时源码指纹",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "before-ghost-playthrough",
+      "file": "releases/v0.1.0/captures/before-ghost-playthrough.webm",
+      "sha256": "f7a3d9be31598738ef9172fa59ff9a4870538fb0ae8f1cb2df3daefce37c3f44",
+      "kind": "video",
+      "version": "prototype-ghost",
+      "build_id": "prototype-ghost",
+      "capture_mode": "realtime-automation",
+      "description": "修复前妖怪尸身残留的真实实机证据，未记录当时源码指纹",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 54.12,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ]
+}

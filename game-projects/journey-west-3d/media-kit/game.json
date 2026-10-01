@@ -8,7 +8,7 @@
   "launch": "从仓库根目录运行 HTTP 服务，打开 /public/html/game/journey-west-3d/index.html",
   "controls": "WASD 相机相对移动；J换武器，K闪避，L护体，U爆气，I丹药，C循环视角，Enter开始/重试，Esc暂停。手机虚拟摇杆及动作按钮。",
   "release_intent": "web_demo",
-  "public_play_url": null,
+  "public_play_url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html",
   "development_model": "GPT-6 Codex",
   "tools": [
     "Three.js",
@@ -17,5 +17,6 @@
     "Playwright + Edge",
     "ffmpeg"
   ],
-  "notes": "由现有西游降魔玩法重做独立3D第一关；保留旧2D源码，不宣称完整100关版。"
+  "notes": "由现有西游降魔玩法重做独立3D第一关；保留旧2D源码，不宣称完整100关版。",
+  "public_play_url_note": "2026-10-01 公网200，Edge实际加载、开始战斗、武器与视角按键、游戏列表入口均验证；运行JS经换行归一化后与本地源码一致。"
 }

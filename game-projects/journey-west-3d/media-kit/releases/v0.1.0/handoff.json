@@ -6,18 +6,11 @@
   "created_at": "2026-10-01T05:22:45.122982+00:00",
   "build": {
     "id": "journey-v0.1.0-703948916a58",
-    "commit": null,
-    "dirty": true,
+    "commit": "1b7aa0aa",
+    "dirty": false,
     "fingerprint": "703948916a582bcb56ced09e10455f7abec804fea885464468cdfdf3ec7c6286",
     "entrypoint": "public/html/game/journey-west-3d/index.html"
   },
-  "capture_builds": [
-    {
-      "id": "prototype-ghost",
-      "fingerprint": null,
-      "note": "修复前真实截图录像；捕获时未记录源码指纹，不归属最终构建"
-    }
-  ],
   "feature_inventory": [
     {
       "id": "combat",
@@ -104,40 +97,6 @@
     }
   ],
   "media": [
-    {
-      "id": "before-ghost-enemies",
-      "file": "releases/v0.1.0/captures/before-ghost-enemies.png",
-      "sha256": "a28f02770c87dd9677c9ef51b3bdfff9fed44a920a8346383778f4677dc72bfd",
-      "kind": "screenshot",
-      "version": "v0.1.0",
-      "build_id": "prototype-ghost",
-      "capture_mode": "realtime-automation",
-      "description": "修复前妖怪尸身残留的真实实机证据，未记录当时源码指纹",
-      "width": 1280,
-      "height": 720,
-      "duration_seconds": null,
-      "audio": "none",
-      "visual_review": "not-run",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
-    {
-      "id": "before-ghost-playthrough",
-      "file": "releases/v0.1.0/captures/before-ghost-playthrough.webm",
-      "sha256": "f7a3d9be31598738ef9172fa59ff9a4870538fb0ae8f1cb2df3daefce37c3f44",
-      "kind": "video",
-      "version": "v0.1.0",
-      "build_id": "prototype-ghost",
-      "capture_mode": "realtime-automation",
-      "description": "修复前妖怪尸身残留的真实实机证据，未记录当时源码指纹",
-      "width": 1280,
-      "height": 720,
-      "duration_seconds": 54.12,
-      "audio": "none",
-      "visual_review": "not-run",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
     {
       "id": "death-en",
       "file": "releases/v0.1.0/captures/death-en.png",
@@ -349,17 +308,37 @@
       "segments": []
     }
   ],
-  "historical_media": [],
-  "qa": {
-    "browser": "Edge 154.0.4258.48 headless / RTX4060Ti",
-    "method": "键盘自动操作完整正常通关；桌面1280x720、手机模拟390x844及844x390，多点触控CDP；性能无录制单独采样",
-    "result": "captures/verification.json",
-    "additional": "英文、3次死亡复活和演示无敌开关通过；死亡测试在QA响应中设置HP=1，非正常玩家过程",
-    "unverified": [
-      "真实手机性能与全屏",
-      "独立音轨听审与音画同步"
-    ]
-  },
+  "historical_media": [
+    {
+      "id": "before-ghost-enemies",
+      "handoff": "releases/prototype-ghost/handoff.json",
+      "media_id": "before-ghost-enemies",
+      "reason": "实际发现的妖怪残留Bug修复前证据，构建源码指纹未采集"
+    },
+    {
+      "id": "before-ghost-playthrough",
+      "handoff": "releases/prototype-ghost/handoff.json",
+      "media_id": "before-ghost-playthrough",
+      "reason": "实际发现的妖怪残留Bug修复前证据，构建源码指纹未采集"
+    }
+  ],
+  "qa": [
+    {
+      "browser": "Edge 154.0.4258.48 headless / RTX4060Ti",
+      "method": "键盘自动操作完整正常通关；桌面1280x720、手机模拟390x844及844x390，多点触控CDP；性能无录制单独采样",
+      "result": "captures/verification.json",
+      "additional": "英文、3次死亡复活和演示无敌开关通过；死亡测试在QA响应中设置HP=1，非正常玩家过程",
+      "unverified": [
+        "真实手机性能与全屏",
+        "独立音轨听审与音画同步"
+      ]
+    },
+    {
+      "environment": "公网主站 + Edge headless",
+      "result": "游戏加载开始、C视角、J武器、游戏中心新入口通过；运行源码仅Git换行归一化差异",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html"
+    }
+  ],
   "readiness": {
     "overview": "partial",
     "update": "not_applicable",
