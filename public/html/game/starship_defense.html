@@ -31,6 +31,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #baseBar{height:100%;width:100%;background:linear-gradient(90deg,#fc0,#f80);}
 #msg{position:absolute;left:50%;top:26%;transform:translateX(-50%);font-size:26px;color:#ffe066;text-shadow:0 0 10px #f80,0 2px 4px #000;text-align:center;white-space:nowrap;}
 #hint{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);font-size:13px;color:#9ef;text-shadow:0 0 4px #000;text-align:center;}
+#interactHint{position:absolute;left:50%;bottom:76px;transform:translateX(-50%);font-size:15px;color:#ffe066;background:rgba(10,25,50,.72);border:1px solid #58a6e8;border-radius:8px;padding:4px 14px;text-shadow:0 1px 2px #000;white-space:nowrap;z-index:15;}
 #keysHint{position:absolute;left:8px;bottom:6px;font-size:10px;color:rgba(200,230,255,.55);text-shadow:0 1px 2px #000;line-height:1.4;}
 #readyBtn{position:absolute;left:50%;top:60px;transform:translateX(-50%);pointer-events:auto;background:linear-gradient(180deg,#2c8,#183);color:#fff;border:2px solid #6fc;border-radius:8px;padding:8px 22px;font-size:17px;cursor:pointer;box-shadow:0 0 12px rgba(60,255,150,.5);}
 #readyBtn:active{transform:translateX(-50%) scale(.95);}
@@ -109,6 +110,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
     </div>
     <div id="msg" class="hidden"></div>
     <div id="hint" class="hidden"></div>
+    <div id="interactHint" class="hidden"></div>
     <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I医疗包 · L建造 · O商店 · 拖动鼠标或Q/E转视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！</button>
   </div>
@@ -1477,13 +1479,15 @@ function enterVehicle(v){
 function exitVehicle(){
   const v=player.inVehicle;if(!v)return;
   player.inVehicle=null;player.mesh.visible=true;
-  const off=new THREE.Vector3(3,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),v.yaw);
+  const off=new THREE.Vector3(3.5,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),v.yaw);
   player.pos.set(v.mesh.position.x+off.x,0,v.mesh.position.z+off.z);
   if(v.cfg.fly)v.landing=true;
+  v.noEnter=1.2; // 下车冷却：防止立刻又上车，也把I键让给城门/医疗包
 }
 function updVehicles(dt){
   for(const v of vehicles){
     if(v.dead)continue;
+    if(v.noEnter>0)v.noEnter-=dt;
     if(v.mesh.userData.rotor)v.mesh.userData.rotor.rotation.y+=dt*(player.inVehicle===v?25:2);
     if(player.inVehicle===v)continue; // 驾驶时在 updPlayer 处理
     if(v.cfg.fly){
@@ -1667,12 +1671,12 @@ function updPlayer(dt){
     fireBullet(from,facing,{dmg:80*(Game.testMode?2:1),speed:16,range:60,spread:0,explode:4.5,arc:true,color:0x88ff44},true);
     AudioSys.sfx('shoot');
   }
-  // 医疗包 / 上载具
+  // 医疗包 / 上载具 / 城门开关
   if(Input.pop('I')){
-    // 先检测载具
+    // 先检测载具（下车冷却中的车不算，避免想开门却反复上下车）
     let nearV=null;
-    for(const vv of vehicles){if(!vv.dead&&dist2(player.pos,vv.mesh.position)<20){nearV=vv;break;}}
-    if(!nearV&&dist2(player.pos,gate.mesh.position)<100){setGate(!gate.open);}
+    for(const vv of vehicles){if(!vv.dead&&!(vv.noEnter>0)&&dist2(player.pos,vv.mesh.position)<20){nearV=vv;break;}}
+    if(!nearV&&dist2(player.pos,gate.mesh.position)<170){setGate(!gate.open);}
     else if(nearV)enterVehicle(nearV);
     else if(Game.testMode||Game.items.medkit>0){
       if(player.hp>=player.maxHp)showMsg('生命值已满',1);
@@ -1684,6 +1688,20 @@ function updPlayer(dt){
         spawnParticles(player.pos.clone().add(new THREE.Vector3(0,1.5,0)),0x66ff99,10,3,.7);
       }
     }else showMsg('没有医疗包！商店可购买',1.4);
+  }
+  // 交互提示：靠近城门/载具时提示 I 键作用
+  {
+    let tip='';
+    if(gate.dead&&dist2(player.pos,gate.mesh.position)<170)tip='🛠 城门损毁，下关自动修复';
+    else if(dist2(player.pos,gate.mesh.position)<170)tip=gate.open?'按「互动/I」关闭城门':'按「互动/I」开启城门';
+    else{
+      let nearV=null;
+      for(const vv of vehicles){if(!vv.dead&&!(vv.noEnter>0)&&dist2(player.pos,vv.mesh.position)<20){nearV=vv;break;}}
+      if(nearV)tip='按「互动/I」驾驶 '+nearV.cfg.name;
+    }
+    const ih=$('interactHint');
+    if(tip){ih.textContent=tip;ih.classList.remove('hidden');}
+    else ih.classList.add('hidden');
   }
   // 切换武器
   if(Input.pop('V')){
@@ -2171,10 +2189,12 @@ function loop(){
     camera.lookAt(0,2,-10);
     AudioSys.bgm(dt,false);
     updParticles(dt);
+    $('interactHint').classList.add('hidden');
     renderer.render(scene,camera);
     Input.clearFrame();
     return;
   }
+  if(!playing)$('interactHint').classList.add('hidden'); // 暂停/面板/结算时隐藏交互提示
   updParticles(dt);
   if(playing)updCamera(dt);
   renderer.render(scene,camera);
