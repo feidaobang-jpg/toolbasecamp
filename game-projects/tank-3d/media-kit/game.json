@@ -10,7 +10,7 @@
   "controls": "电脑 WASD 移动、J 开炮、C 循环斜俯视/俯视、Esc 暂停、Enter 开始/继续；手机左摇杆、右侧 J 和 C 按钮，竖屏自动横屏布局。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
-  "public_play_url_note": "2026-10-01 公网 HTTP 200：加载无页面异常，第 49→50 关推进、第 50 通关后回到第 1 关并进入第 2 周目、存档继续/从头再来、中英切换与结算面板文案均已实测；程序化关卡（如第 30 关）实机渲染正常。",
+  "public_play_url_note": "2026-10-01 powerup-fix1：公网 HTML/main.js/scene.js 已更新；线上桌面与手机视口模拟在缺少 roundRect 的条件下通过六种道具、复活、基地失败、中英切换和第50关进入下一周目回归。",
   "preview_url": "https://claude.ai/artifact/24AYVoSJXaPXLF9KLsKNtp",
   "preview_url_note": "claude.ai 私有预览副本（扁平目录 + 按 ` 显示帧时间浮层），仅所有者可见，不是公开试玩链接。",
   "development_model": "本版：GPT-6 Codex；初版：claude-opus-5-5（保留历史）",
@@ -29,7 +29,7 @@
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "preview_ready_not_submitted",
+    "review_status": "awaiting_submission_confirmation",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_0jwGaplD/index.html",
     "verified_at": "2026-10-01"
   }

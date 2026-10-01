@@ -1,0 +1,45 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "browser": "154.0.4258.48",
+  "missingRoundRect": true,
+  "results": [
+    {
+      "mobile": false,
+      "checks": [
+        "star",
+        "grenade",
+        "helmet",
+        "shovel",
+        "timer",
+        "tank"
+      ],
+      "expiry": true,
+      "respawns": 5,
+      "baseLoss": true,
+      "pause": true,
+      "camera": true,
+      "language": true,
+      "stage50Loop": true,
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "checks": [
+        "star",
+        "grenade",
+        "helmet",
+        "shovel",
+        "timer",
+        "tank"
+      ],
+      "expiry": true,
+      "respawns": 5,
+      "baseLoss": true,
+      "pause": true,
+      "camera": true,
+      "language": true,
+      "stage50Loop": true,
+      "errors": []
+    }
+  ]
+}

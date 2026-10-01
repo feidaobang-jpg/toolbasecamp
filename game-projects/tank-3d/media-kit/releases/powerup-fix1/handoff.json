@@ -6,8 +6,8 @@
   "created_at": "2026-10-01",
   "build": {
     "id": "tank-3d-powerup-fix1-3cbb03fcb06e",
-    "commit": null,
-    "dirty": true,
+    "commit": "1d307786",
+    "dirty": false,
     "fingerprint": "3cbb03fcb06ea2fd05aa23c5e06a9cbbcd1d3741d28d70fd7974c81340d7a6be",
     "files": {
       "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
@@ -174,7 +174,9 @@
       "手机视口模拟，未测真机",
       "没有修复前录像；异常堆栈已实际复现",
       "短片无声音"
-    ]
+    ],
+    "website": "website-captures/regression.json",
+    "toy_preview": "captures/toy-preview.json"
   },
   "readiness": {
     "overview": "partial",
@@ -184,5 +186,9 @@
       "短片无游戏声音",
       "完整介绍沿用历史材料"
     ]
+  },
+  "publication": {
+    "website": "verified_live",
+    "toy": "preview_verified_awaiting_submission_confirmation"
   }
 }
