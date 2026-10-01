@@ -38,19 +38,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #touchUI{pointer-events:none;z-index:20;}
 #joyBase{position:absolute;left:40px;bottom:36px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(120,180,255,.14),rgba(120,180,255,.05));border:2px solid rgba(140,200,255,.4);pointer-events:auto;}
 #joyKnob{position:absolute;left:35px;top:35px;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(200,230,255,.85),rgba(80,140,220,.7));box-shadow:0 0 8px rgba(120,200,255,.7);}
-.vbtn{position:absolute;width:54px;height:54px;border-radius:50%;color:#fff;font-size:17px;font-weight:bold;text-align:center;line-height:50px;pointer-events:auto;border:2px solid rgba(255,255,255,.5);text-shadow:0 1px 2px #000;background:radial-gradient(circle at 35% 30%,rgba(255,120,120,.75),rgba(180,30,30,.65));}
+.vbtn{position:absolute;width:54px;height:54px;border-radius:50%;color:#fff;font-size:15px;font-weight:bold;text-align:center;line-height:50px;pointer-events:auto;border:2px solid rgba(255,255,255,.5);text-shadow:0 1px 2px #000;background:radial-gradient(circle at 35% 30%,rgba(255,120,120,.75),rgba(180,30,30,.65));}
 .vbtn.k2{background:radial-gradient(circle at 35% 30%,rgba(120,200,255,.75),rgba(20,90,180,.65));}
 .vbtn.k3{background:radial-gradient(circle at 35% 30%,rgba(255,220,120,.75),rgba(190,130,10,.65));}
 .vbtn.k4{background:radial-gradient(circle at 35% 30%,rgba(190,140,255,.75),rgba(110,40,190,.65));}
-.vbtn.sm{width:40px;height:40px;line-height:36px;font-size:12px;background:radial-gradient(circle at 35% 30%,rgba(200,200,200,.6),rgba(90,90,90,.55));}
+.vbtn.sm{width:40px;height:40px;line-height:36px;font-size:11px;background:radial-gradient(circle at 35% 30%,rgba(200,200,200,.6),rgba(90,90,90,.55));}
 .vbtn:active,.vbtn.on{filter:brightness(1.6);transform:scale(.92);}
 #vJ{right:118px;bottom:32px;}
 #vK{right:52px;bottom:32px;}
 #vU{right:118px;bottom:98px;}
 #vI{right:52px;bottom:98px;}
+#vV{right:32px;bottom:166px;}
 #vP{right:85px;bottom:166px;}
-#vB{right:32px;bottom:166px;}
-#vV{right:138px;bottom:166px;}
+#vO{right:138px;bottom:166px;}
+#vL{right:191px;bottom:166px;}
 /* ---------- 菜单界面 ---------- */
 .menu{background:radial-gradient(ellipse at center,#123 0%,#010914 75%);color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;}
 .menu h1{font-size:40px;margin-top:26px;letter-spacing:6px;background:linear-gradient(180deg,#9ef,#36c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 24px rgba(80,160,255,.5);}
@@ -108,20 +109,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
     </div>
     <div id="msg" class="hidden"></div>
     <div id="hint" class="hidden"></div>
-    <div id="keysHint">WASD/方向键移动 J/回车攻击 K/空格跳 U手雷 I医疗包 L建造 O商店 Q/E转视角 V换武器 P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
+    <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I医疗包 · L建造 · O商店 · 拖动鼠标或Q/E转视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！</button>
   </div>
 
   <!-- 虚拟触控 -->
   <div id="touchUI" class="overlay hidden">
     <div id="joyBase"><div id="joyKnob"></div></div>
-    <div class="vbtn" id="vJ">J</div>
-    <div class="vbtn k2" id="vK">K</div>
-    <div class="vbtn k3" id="vU">U</div>
-    <div class="vbtn k4" id="vI">I</div>
-    <div class="vbtn sm" id="vP">P</div>
-    <div class="vbtn sm" id="vB">B</div>
-    <div class="vbtn sm" id="vV">V</div>
+    <div class="vbtn" id="vJ">射击</div>
+    <div class="vbtn k2" id="vK">跳</div>
+    <div class="vbtn k3" id="vU">手雷</div>
+    <div class="vbtn k4" id="vI">互动</div>
+    <div class="vbtn sm" id="vO">商店</div>
+    <div class="vbtn sm" id="vL">建造</div>
+    <div class="vbtn sm" id="vV">换枪</div>
+    <div class="vbtn sm" id="vP">暂停</div>
   </div>
 
   <!-- 开始菜单 -->
@@ -141,8 +143,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
       <button class="mbtn red" id="btnTest">🧪 测试模式</button>
     </div>
     <div class="small" style="margin-top:6px;">
-      PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷 · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
-      Q/E=旋转视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键<br>
+      PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷(无限) · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
+      按住鼠标拖动或Q/E=旋转视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），拖动屏幕转视角<br>
       玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目
     </div>
   </div>
@@ -316,6 +318,7 @@ const AudioSys={
 const Input={
   keys:{},pressed:{},
   joy:{active:false,id:-1,x:0,y:0},
+  camDrag:{id:-1,x:0},
   init(){
     window.addEventListener('keydown',e=>{
       const k=this.mapKey(e.code);
@@ -330,15 +333,20 @@ const Input={
       for(const t of e.changedTouches){
         const p=toStage(t.clientX,t.clientY);
         if(this.joy.id===-1&&e.type==='touchstart'&&p.x<BASE_W*.45&&p.y>BASE_H*.35){this.joy.id=t.identifier;this.joy.cx=p.x;this.joy.cy=p.y;}
+        else if(this.camDrag.id===-1&&e.type==='touchstart'&&!(e.target.closest&&e.target.closest('.panel,.vbtn,button,.tab,.closeX,.menu'))){this.camDrag.id=t.identifier;this.camDrag.x=p.x;}
         if(t.identifier===this.joy.id){
           let dx=(p.x-this.joy.cx)/45,dy=(p.y-this.joy.cy)/45;
           const m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m;}
           this.joy.x=dx;this.joy.y=dy;this.joy.active=true;setKnob(dx,dy);
         }
+        if(t.identifier===this.camDrag.id)camYaw-=(p.x-this.camDrag.x)*.008,this.camDrag.x=p.x;
       }
     };
     const joyEnd=e=>{
-      for(const t of e.changedTouches)if(t.identifier===this.joy.id){this.joy.id=-1;this.joy.active=false;this.joy.x=0;this.joy.y=0;setKnob(0,0);}
+      for(const t of e.changedTouches){
+        if(t.identifier===this.joy.id){this.joy.id=-1;this.joy.active=false;this.joy.x=0;this.joy.y=0;setKnob(0,0);}
+        if(t.identifier===this.camDrag.id)this.camDrag.id=-1;
+      }
     };
     document.addEventListener('touchstart',e=>{AudioSys.init();AudioSys.resume();joyHandle(e);},{passive:false});
     document.addEventListener('touchmove',e=>{joyHandle(e);e.preventDefault();},{passive:false});
@@ -351,7 +359,12 @@ const Input={
       el.addEventListener('touchstart',dn,{passive:false});el.addEventListener('touchend',up);el.addEventListener('touchcancel',up);
       el.addEventListener('mousedown',dn);el.addEventListener('mouseup',up);
     };
-    bind('vJ','J');bind('vK','K');bind('vU','U');bind('vI','I');bind('vP','P');bind('vB','P');bind('vV','V');
+    bind('vJ','J');bind('vK','K');bind('vU','U');bind('vI','I');bind('vO','O');bind('vL','L');bind('vV','V');bind('vP','P');
+    // PC：按住鼠标拖动转视角
+    let mDrag=false,mLastX=0;
+    $('c3d').addEventListener('mousedown',e=>{mDrag=true;mLastX=e.clientX;});
+    window.addEventListener('mouseup',()=>mDrag=false);
+    window.addEventListener('mousemove',e=>{if(mDrag){camYaw-=(e.clientX-mLastX)*.008;mLastX=e.clientX;}});
   },
   mapKey(c){
     const m={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',
@@ -1485,15 +1498,12 @@ function updPlayer(dt){
     AudioSys.sfx(wp.sfx);
     player.muzzle.intensity=2;setTimeout(()=>{if(player.muzzle)player.muzzle.intensity=0;},50);
   }
-  // 手雷
+  // 手雷（无限）
   if(Input.pop('U')){
-    if(Game.testMode||Game.items.grenade>0){
-      if(!Game.testMode)Game.items.grenade--;
-      const facing=new THREE.Vector3(Math.sin(player.yaw),0,Math.cos(player.yaw));
-      const from=player.pos.clone();from.y+=1.5;
-      fireBullet(from,facing,{dmg:80*(Game.testMode?2:1),speed:16,range:60,spread:0,explode:4.5,arc:true,color:0x88ff44},true);
-      AudioSys.sfx('shoot');
-    }else showMsg('没有手雷了！商店可购买',1.4);
+    const facing=new THREE.Vector3(Math.sin(player.yaw),0,Math.cos(player.yaw));
+    const from=player.pos.clone();from.y+=1.5;
+    fireBullet(from,facing,{dmg:80*(Game.testMode?2:1),speed:16,range:60,spread:0,explode:4.5,arc:true,color:0x88ff44},true);
+    AudioSys.sfx('shoot');
   }
   // 医疗包 / 上载具
   if(Input.pop('I')){
@@ -1647,7 +1657,7 @@ function restartLevel(){
 /* ================= 商店 & 空投 ================= */
 const SHOP={
   weapon:Object.keys(WEAPONS).filter(k=>WEAPONS[k].price>0).map(k=>({id:k,type:'weapon'})),
-  item:Object.keys(ITEMS).map(k=>({id:k,type:'item'})),
+  item:Object.keys(ITEMS).filter(k=>k!=='grenade').map(k=>({id:k,type:'item'})),
   vehicle:Object.keys(VEHICLES).map(k=>({id:k,type:'vehicle'})),
   squad:[{id:'soldier',type:'squad'}],
 };
@@ -1874,7 +1884,7 @@ function updHUD(){
   $('scoreTxt').textContent=Game.score;
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name;
   else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name;
-  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit} 💣 手雷×${Game.testMode?'∞':Game.items.grenade}`;
+  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit} 💣 手雷∞`;
   if(Game.state==='prep'){
     const wilds=monsters.filter(m=>!m.dead).length;
     $('waveTxt').textContent=`🌿 野怪剩余 ${wilds}`;
