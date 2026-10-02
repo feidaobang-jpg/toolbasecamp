@@ -36,6 +36,20 @@ Host toolbasecamp-cn
 
 运维默认：`ssh toolbasecamp-cn`，查 `systemctl is-active toolbasecamp-api` 与 `curl http://127.0.0.1:8001/health`。
 
+## 部署密钥备份与重装后恢复（**禁止提交进仓库**）
+
+私钥 `toolbasecamp_deploy` **不得**出现在仓库任何路径（含 `deploy/`、`docs/`）：仓库推送到 GitHub，
+`deploy/` 还会被 CI rsync 到服务器，私钥入库等于把生产机交给所有能读仓库的人。GitHub Actions 的
+`DO_SSH_KEY` Secret 已经是 CI 侧的唯一副本，不需要仓库再存一份。
+
+- **本机外的备份位置（重装系统不会丢）**：`D:\备用\toolbasecamp_deploy`（私钥）+ `toolbasecamp_deploy.pub`
+- 服务器侧只存**公钥**：`ubuntu@111.229.172.111:~/.ssh/authorized_keys`（2026-10-02 起含 3 条：新部署 key + 2 条历史 key，历史 key 待确认无其它设备使用后清理）
+- **重装系统后恢复**（3 步，无需找回旧 key）：
+  1. `mkdir -p ~/.ssh`，把 `D:\备用\toolbasecamp_deploy*` 拷回 `~/.ssh/`，按上面模板重建 `~/.ssh/config`
+  2. 自检：`ssh -o BatchMode=yes toolbasecamp-cn "echo SSH_OK; sudo -n true && echo SUDO_OK"`
+  3. 若私钥丢了：`ssh-keygen -t ed25519 -f ~/.ssh/toolbasecamp_deploy -N ""` → 腾讯云轻量 **OrcaTerm/VNC** 登录把新公钥 append 进 `authorized_keys` → **同步更新 GitHub Secret `DO_SSH_KEY`**（否则下次 push 部署失败）
+- Secret 的 Value 要粘贴**私钥文件内容本身**（首行 `-----BEGIN OPENSSH PRIVATE KEY-----`），不是 `cat` 命令。
+
 ## 标准流程
 
 1. 改仓库里 `deploy/` 脚本或配置（如需版本管理）
