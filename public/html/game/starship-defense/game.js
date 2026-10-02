@@ -1836,6 +1836,7 @@ function levelName(){
 }
 function startPrep(){
   Game.state='prep';
+  Object.assign(Game.wave,{total:0,spawned:0,killed:0,done:false,transition:0});
   clearEntities(false);
   // 修复并开启城门
   if(gate.dead)showMsg('🔧 城门已修复',1.5);
@@ -1851,14 +1852,14 @@ function startPrep(){
   if(Math.random()<.5)spawnMonster('miniboss',rand(-30,30),rand(120,170),{wild:true});
   $('readyBtn').classList.remove('hidden');
   showMsg(levelName(),3);
-  showHint(isTouch?'出城打虫赚金币 → 商店升级 / 建造防线 → 准备完毕，开战！':'出城打虫赚金币 → O 商店升级 / L 建造防线 → R 开战；医疗平台可回血');
+  showHint('准备阶段：野怪可选打，不必清完。整备好后点「准备完毕」或按 R 开战；每关结束后都需再次准备。');
   autoSave();
 }
 function startBattle(){
   if(Game.testMode){openSandbox();return;}
   Game.state='battle';
   $('readyBtn').classList.add('hidden');
-  showHint('');
+  showHint('虫潮从远处陆续接近；清完本关后进入下一关准备阶段，再按 R 或点「准备完毕」开战。');
   // 清除剩余野怪标记（它们加入进攻）
   for(const mo of monsters){mo.wild=false;}
   const w=Game.wave;
@@ -1876,6 +1877,13 @@ function startBattle(){
 function updWave(dt){
   if(Game.testMode){updSandboxWave(dt);$('waveTxt').textContent=`🧪 ${sandboxWave.enabled?'持续虫潮':'刷怪暂停'} · ${monsters.length}/48`;return;}
   const w=Game.wave;
+  // 过关等待随游戏时钟推进；暂停、失焦或打开菜单时保留，不丢失一次性回调。
+  if(w.done){
+    w.transition=Math.max(0,(w.transition||0)-dt);
+    $('waveTxt').textContent='✅ 已通关 · 即将进入下一关准备';
+    if(w.transition===0)startPrep();
+    return;
+  }
   // 出怪
   if(w.spawned<w.total && monsters.length<48){
     w.timer-=dt;
@@ -1900,7 +1908,9 @@ function updWave(dt){
       w.timer=Math.max(.4,2.2-Game.level*.12-Game.chapter*.06-(Game.loop-1)*.3);
     }
   }
-  $('waveTxt').textContent=`🐛 击杀 ${w.killed}/${w.total}`;
+  const live=monsters.filter(m=>!m.dead);
+  const nearest=live.length?Math.round(Math.sqrt(Math.min(...live.map(m=>dist2(m.mesh.position,player.pos))))):null;
+  $('waveTxt').textContent=`🐛 场上 ${live.length} · 待增援 ${Math.max(0,w.total-w.spawned)} · 击杀 ${w.killed}/${w.total}`+(nearest===null?'':`\n最近敌人 ${nearest}米`);
   if(!w.done&&w.spawned>=w.total&&monsters.length===0){
     w.done=true;levelWin();
   }
@@ -1908,7 +1918,6 @@ function updWave(dt){
 let runGeneration=0;
 function levelWin(){
   if(Game.testMode)return;
-  const generation=runGeneration;
   AudioSys.sfx('win');
   const bonus=Math.round((80+Game.level*30+Game.chapter*50)*(1+(Game.loop-1)*.3));
   Game.gold+=bonus;Game.score+=100*Game.level;
@@ -1926,7 +1935,7 @@ function levelWin(){
   }
   base.hp=Math.min(base.maxHp,base.hp+300); // 关间维修
   updHPBar(base.bar,base.hp/base.maxHp);
-  setTimeout(()=>{if(!Game.testMode&&generation===runGeneration&&Game.state==='battle')startPrep();},1500);
+  Game.wave.transition=1.5;
 }
 function gameOver(reason){
   if(Game.state==='over')return;
@@ -2226,7 +2235,7 @@ function updHUD(){
   updHUDItem();
   if(Game.state==='prep'){
     const wilds=monsters.filter(m=>!m.dead).length;
-    $('waveTxt').textContent=`🌿 野怪剩余 ${wilds}`;
+    $('waveTxt').textContent=`🛠 准备中 · 野怪 ${wilds}（可选打）`;
   }
   if(Game.msgTimer>0){Game.msgTimer-=1/60;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
 }

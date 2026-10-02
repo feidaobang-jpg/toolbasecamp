@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>普通第一关流程验证</title><style>body{margin:0;font:14px sans-serif;background:#edf4df}iframe{display:block;width:960px;height:540px;border:0}button{padding:10px}pre{white-space:pre-wrap}</style>
+<button id="run">验证第一关与暂停过关</button><button id="view">查看准备阶段</button><button id="record">录制开战10秒</button><a id="download" hidden>下载录像</a><iframe id="game" src="../../public/html/game/starship-defense/index.html?qa=1&build=wave2"></iframe><pre id="result">等待测试</pre>
+<script type="module">
+const f=document.getElementById('game'),out=document.getElementById('result'),wait=ms=>new Promise(r=>setTimeout(r,ms));
+document.getElementById('view').onclick=()=>f.contentWindow.__gameQA.newGame(false);
+document.getElementById('run').onclick=async()=>{
+ const q=f.contentWindow.__gameQA,result={checks:[],observations:[],errors:[]};const ok=(v,n)=>{if(!v)throw Error(n);result.checks.push(n);};
+ try{
+ q.newGame(false);q.Game.state='paused';ok(q.monsters.length>=8&&q.monsters.every(m=>m.wild),'准备阶段只有预设野怪，正式虫潮尚未开始');
+ q.startBattle();q.Game.state='paused';const total=q.Game.wave.total,initial=q.monsters.length;
+ for(let n=0;n<600;n++)q.updWave(.05);
+ ok(q.Game.wave.spawned===total&&q.monsters.length===total,'第一关后续12只均正常生成');result.observations.push({initial,total,after30Seconds:q.monsters.length});
+ for(const m of [...q.monsters])q.damageMonster(m,1e9);q.clearEntities(false);q.Game.state='battle';q.updWave(.01);
+ ok(q.Game.level===2&&q.Game.wave.done,'清场触发通关与第二关');q.Game.state='paused';await wait(1800);ok(q.Game.state==='paused','过关时暂停保留暂停状态');
+ q.Game.state='battle';for(let n=0;n<40&&q.Game.state==='battle';n++)q.updWave(.05);
+ ok(q.Game.state==='prep','暂停恢复后进入第二关准备阶段，不会空场卡死');ok(q.Game.level===2,'恢复未重复奖励或跳关');
+ q.startBattle();q.Game.state='paused';q.clearEntities(false);q.Game.wave.spawned=q.Game.wave.total;q.Game.state='battle';q.updWave(.01);q.newGame(true);for(let i=0;i<80;i++)q.updWave(.05);ok(q.Game.testMode&&q.Game.state==='battle','切到测试模式后旧过关流程不会覆盖新局');
+ q.newGame(false);q.Game.state='paused';out.textContent=JSON.stringify(result,null,2);
+ }catch(e){result.errors.push(e.message);out.textContent=JSON.stringify(result,null,2);}
+};
+document.getElementById('record').onclick=async()=>{const q=f.contentWindow.__gameQA;q.newGame(false);const stream=q.renderer.domElement.captureStream(30),chunks=[],rec=new MediaRecorder(stream,{mimeType:'video/webm'});rec.ondataavailable=e=>chunks.push(e.data);rec.start();await wait(3000);q.startBattle();await wait(7000);await new Promise(r=>{rec.onstop=r;rec.stop();});stream.getTracks().forEach(t=>t.stop());const a=document.getElementById('download');a.href=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(new Blob(chunks,{type:'video/webm'}));});a.hidden=false;a.download='wave-start.webm';};
+</script></html>

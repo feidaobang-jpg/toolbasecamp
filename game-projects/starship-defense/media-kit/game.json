@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮前哨：守卫基地",
   "engine": "Three.js r152",
-  "current_version": "web-endless-squad-v0.8.0",
+  "current_version": "web-wave-flow-v0.8.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "python game-projects/starship-defense/build-toy.py",
   "release_intent": "web_demo",
@@ -12,7 +12,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_qKFs0Wa9/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-endless-squad-v0.8.0/handoff.json",
+  "qa": "releases/web-wave-flow-v0.8.1/handoff.json",
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
@@ -34,5 +34,6 @@
   "visual_style": "User-approved original rounded toy-like 3D",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
-  "extension_review_status": "preview_only"
+  "extension_review_status": "preview_only",
+  "preview_version": "web-endless-squad-v0.8.0"
 }
