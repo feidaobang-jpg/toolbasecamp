@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-wave-flow-v0.8.1",
+  "base_version": "web-endless-squad-v0.8.0",
+  "created_at": "2026-10-02T07:46:34.198024+00:00",
+  "build": {
+    "id": "web-wave-flow-v0.8.1-f0385a81040d",
+    "commit": "1f761c97",
+    "dirty": false,
+    "fingerprint": "f0385a81040d1f5cf7c076b3c6122ef3c6719f32f989481f47d70ae727d0bbeb",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "wave-transition",
+      "description": "通关后等待改为游戏时钟，暂停/失焦后恢复仍进入下一关准备，不重复奖励",
+      "status": "implemented",
+      "evidence_ids": []
+    },
+    {
+      "id": "phase-hud",
+      "description": "区分可选野怪与正式虫潮；显示场上、待增援、击杀及最近距离",
+      "status": "implemented",
+      "evidence_ids": [
+        "prep",
+        "battle"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "wave-transition",
+      "feature_ids": [
+        "wave-transition"
+      ],
+      "before": "一次性setTimeout在暂停时跳过下一关；HUD只显示击杀或野怪数",
+      "after": "通关后等待改为游戏时钟，暂停/失焦后恢复仍进入下一关准备，不重复奖励",
+      "user_visible_result": "通关后等待改为游戏时钟，暂停/失焦后恢复仍进入下一关准备，不重复奖励",
+      "evidence_ids": [],
+      "verification": "before.json复现失败，after.json七项断言通过"
+    },
+    {
+      "id": "phase-hud",
+      "feature_ids": [
+        "phase-hud"
+      ],
+      "before": "一次性setTimeout在暂停时跳过下一关；HUD只显示击杀或野怪数",
+      "after": "区分可选野怪与正式虫潮；显示场上、待增援、击杀及最近距离",
+      "user_visible_result": "区分可选野怪与正式虫潮；显示场上、待增援、击杀及最近距离",
+      "evidence_ids": [
+        "prep",
+        "battle"
+      ],
+      "verification": "before.json复现失败，after.json七项断言通过"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "pause-at-clear",
+      "symptom": "清完本关后立刻暂停，恢复时战斗空场不能进入下一关",
+      "cause": "延迟回调只在Game.state为battle时执行，暂停时被丢弃",
+      "fix": "按游戏dt保留过关倒计时；startPrep重置波次状态",
+      "status": "fixed",
+      "evidence_ids": []
+    }
+  ],
+  "media": [
+    {
+      "id": "prep",
+      "file": "releases/web-wave-flow-v0.8.1/captures/prep.jpg",
+      "sha256": "421d09f940afe84547d761e9cd8dc509568815cfeaa19394a7a02c31405ad0f2",
+      "kind": "screenshot",
+      "version": "web-wave-flow-v0.8.1",
+      "build_id": "web-wave-flow-v0.8.1-f0385a81040d",
+      "capture_mode": "realtime-automation",
+      "description": "准备阶段明确标注野怪可选打、按R开战",
+      "width": 948,
+      "height": 533,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "battle",
+      "file": "releases/web-wave-flow-v0.8.1/captures/battle.jpg",
+      "sha256": "639ba15bb6ea6303df755c2cc8e83954c450023dbb67e5e66717b9ebc13b2b7e",
+      "kind": "screenshot",
+      "version": "web-wave-flow-v0.8.1",
+      "build_id": "web-wave-flow-v0.8.1-f0385a81040d",
+      "capture_mode": "realtime-automation",
+      "description": "正式第一关场上/待增援/击杀/最近敌人距离提示",
+      "width": 948,
+      "height": 533,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "wave-start",
+      "file": "releases/web-wave-flow-v0.8.1/captures/wave-start.webm",
+      "sha256": "ada4f8f976d5a3eb34448b7f2f211efd65f6bcd20007d3b568ee80080e7fc310",
+      "kind": "video",
+      "version": "web-wave-flow-v0.8.1",
+      "build_id": "web-wave-flow-v0.8.1-f0385a81040d",
+      "capture_mode": "realtime-automation",
+      "description": "真实Canvas捕获，测试按钮新开普通游戏，3秒后启动正式虫潮；无DOM HUD和音轨。ffmpeg解码298帧约9.9秒，不作为游戏性能证据。",
+      "width": 1200,
+      "height": 675,
+      "duration_seconds": 9.9,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 9.8,
+          "description": "普通准备阶段到关门开战"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "functional",
+      "status": "pass",
+      "result": "before.json旧版失败、after.json修复版七项通过；第一关8野怪+后续12虫共20正常生成（随机小首领时多1只），正常与测试转换隔离。用户当前公网页面实际处于准备/暂停，未据此断言用户遇到的是暂停Bug。"
+    },
+    {
+      "id": "website",
+      "status": "pass",
+      "result": "公网game.js和HTML在排除CI缓存参数后均匹配本地，已部署。"
+    },
+    {
+      "id": "limits",
+      "status": "not-tested",
+      "result": "本次未改变渲染/寻路/触控，不重跑性能测量；旧v0.8性能数据保持原构建身份。没有完整通关录像；Toy预览仍v0.8，未提交新审核。"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "旧Bug有确定性测试证据，无修复前实机录像",
+      "本次短录像无HUD和音轨，尚需审查及补录完整暂停恢复流程"
+    ]
+  }
+}

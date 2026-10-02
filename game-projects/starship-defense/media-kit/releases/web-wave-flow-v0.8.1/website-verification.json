@@ -1,0 +1,10 @@
+[
+  {
+    "file": "game.js",
+    "content_matches": true
+  },
+  {
+    "file": "index.html",
+    "content_matches": true
+  }
+]
