@@ -122,6 +122,23 @@
           "description": "普通准备阶段到关门开战"
         }
       ]
+    },
+    {
+      "id": "toy-submitted",
+      "file": "releases/web-wave-flow-v0.8.1/captures/toy-submitted.jpg",
+      "sha256": "d7acc1d106dd581a3ec55cad193bda7d05acfec76f52b4821b3ac1b0ee081746",
+      "kind": "screenshot",
+      "version": "web-wave-flow-v0.8.1",
+      "build_id": "web-wave-flow-v0.8.1-f0385a81040d",
+      "capture_mode": "realtime-automation",
+      "description": "提交审核对应Toy预览的普通准备阶段",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
     }
   ],
   "historical_media": [],
@@ -140,6 +157,11 @@
       "id": "limits",
       "status": "not-tested",
       "result": "本次未改变渲染/寻路/触控，不重跑性能测量；旧v0.8性能数据保持原构建身份。没有完整通关录像；Toy预览仍v0.8，未提交新审核。"
+    },
+    {
+      "id": "toy_submission",
+      "status": "auditing",
+      "result": "2026-10-02 用户要求更新到Toy，v0.8.1已提交，CLI与mylist均为auditing；提交预览实际显示wave2和准备阶段新提示。正式版审核通过尚未核实。"
     }
   ],
   "readiness": {

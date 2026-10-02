@@ -9,7 +9,7 @@
   "development_model": null,
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_qKFs0Wa9/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_VQltyymQ/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
   "qa": "releases/web-wave-flow-v0.8.1/handoff.json",
@@ -18,8 +18,8 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
-    "verified_at": "2026-10-02T02:48:02.082417+00:00",
+    "review_status": "auditing",
+    "verified_at": "2026-10-02T09:09:32.681826+00:00",
     "video_bindings": [],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf"
   },
@@ -34,6 +34,7 @@
   "visual_style": "User-approved original rounded toy-like 3D",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
-  "extension_review_status": "preview_only",
-  "preview_version": "web-endless-squad-v0.8.0"
+  "extension_review_status": "auditing",
+  "preview_version": "web-wave-flow-v0.8.1",
+  "submitted_toy_version": "web-wave-flow-v0.8.1"
 }
