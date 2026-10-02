@@ -30,10 +30,10 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "auditing",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_0jwGaplD/index.html",
-    "verified_at": "2026-10-01",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiO8weV/index.html",
-    "pending_version": "collision-fix1",
-    "pending_preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html"
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html",
+    "verified_at": "2026-10-02",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Mv69eLpV/index.html",
+    "submitted_version": "collision-fix1",
+    "submitted_at": "2026-10-02T02:21:08.656Z"
   }
 }

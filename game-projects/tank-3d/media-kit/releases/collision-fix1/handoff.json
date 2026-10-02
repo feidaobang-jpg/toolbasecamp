@@ -197,7 +197,10 @@
   "publication": {
     "website": "verified_live_2026-10-02",
     "toy_preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html",
-    "toy": "preview_verified_not_submitted"
+    "toy": "submitted_auditing",
+    "toy_id": 39043249461248,
+    "toy_submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Mv69eLpV/index.html",
+    "toy_submitted_at": "2026-10-02T02:21:08.656Z"
   },
   "readiness": {
     "overview": "partial",
