@@ -710,3 +710,7 @@ label {
     min-height: 1.2em;
     line-height: 1.2;
 } 
+/* 英文版已下线:隐藏各游戏页内保留的 中文/EN 切换按钮(逻辑保留以免 JS 报错) */
+#lang {
+    display: none !important;
+}

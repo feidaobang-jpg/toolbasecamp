@@ -6,18 +6,14 @@
     'use strict';
 
     var STORAGE_KEY = 'tb-locale';
-    var SUPPORTED = ['en', 'zh-CN'];
+    // 英文版已下线:全站强制中文,不再提供语言切换(旧存档/浏览器语言一律忽略)。
+    var SUPPORTED = ['zh-CN'];
     // Detect immediately so scripts that call t() before DOMContentLoaded
     // (e.g. tool boot) already see the user's language — not the 'en' default.
     var currentLocale = detectLocaleEager();
 
     function detectLocaleEager() {
-        try {
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (saved && SUPPORTED.indexOf(saved) !== -1) return saved;
-        } catch (e) { /* ignore */ }
-        var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-        return nav.indexOf('zh') === 0 ? 'zh-CN' : 'en';
+        return 'zh-CN';
     }
 
     function detectLocale() {
@@ -27,7 +23,7 @@
     function getMessages(locale) {
         var pack = window.TB_LOCALES && window.TB_LOCALES[locale];
         if (pack) return pack;
-        return (window.TB_LOCALES && window.TB_LOCALES.en) || {};
+        return (window.TB_LOCALES && window.TB_LOCALES['zh-CN']) || {};
     }
 
     function resolve(obj, key) {
@@ -50,7 +46,7 @@
 
     function t(key, params) {
         var val = resolve(getMessages(currentLocale), key);
-        if (val == null) val = resolve(getMessages('en'), key);
+        if (val == null) val = resolve(getMessages('zh-CN'), key);
         if (val == null) return key;
         return format(String(val), params);
     }
@@ -254,23 +250,7 @@
 
         injectSiteStats();
 
-        var wrap = document.createElement('div');
-        wrap.id = 'tb-lang-switcher';
-        wrap.setAttribute('role', 'group');
-        wrap.setAttribute('aria-label', t('lang.switcher'));
-        wrap.innerHTML =
-            '<button type="button" data-locale="zh-CN" class="tb-lang-btn">' + t('lang.zh') + '</button>' +
-            '<span class="tb-lang-sep">/</span>' +
-            '<button type="button" data-locale="en" class="tb-lang-btn">' + t('lang.en') + '</button>';
-
-        wrap.addEventListener('click', function (e) {
-            var btn = e.target.closest('[data-locale]');
-            if (!btn) return;
-            setLocale(btn.getAttribute('data-locale'));
-        });
-
-        utils.appendChild(wrap);
-        updateLangSwitcher();
+        // 英文版已下线:仅保留站点统计注入,不再渲染 中文/EN 切换按钮。
     }
 
     function isAdminPrivatePage() {
