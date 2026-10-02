@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-worlds-v0.4.0",
+  "base_version": "toy-v0.3.0",
+  "created_at": "2026-10-02T08:38:56.163783+08:00",
+  "build": {
+    "id": "web-worlds-v0.4.0-436a95352b66",
+    "commit": "c0fb7c25e73afb64a50bd7fcc6e89a584ac48208",
+    "dirty": true,
+    "fingerprint": "436a95352b666df6a5536f55344e8d03a0d6ac6a0b2d377fcbb5e49512e48f6e",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "asset-merge",
+      "description": "Breachline animated roach/elite/queen/soldier/mech, licensed rock diffuse",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-battle",
+        "worlds-variants"
+      ]
+    },
+    {
+      "id": "web-controls",
+      "description": "keyboard and rotated landscape touch controls, four camera presets, quality/audio/fullscreen",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-side",
+        "phone-portrait",
+        "phone-landscape"
+      ]
+    },
+    {
+      "id": "defense-loop",
+      "description": "Existing shop/build/vehicles and waves, player checkpoint respawn, base failure/retry",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-realtime"
+      ]
+    },
+    {
+      "id": "native-full-port",
+      "description": "Godot 50 allies, mouse-only first-person, cave network, native physics and missions",
+      "status": "planned",
+      "evidence_ids": []
+    }
+  ],
+  "changes": [
+    {
+      "id": "worlds-merge",
+      "feature_ids": [
+        "asset-merge",
+        "web-controls",
+        "defense-loop"
+      ],
+      "before": "Procedural low-poly troops and bugs, plain green terrain",
+      "after": "Imported animated rigs, military material/rock texture, closer follow camera, instanced scenery, high/smooth modes and player respawn",
+      "user_visible_result": "More recognizable sci-fi insects and armour in the existing browser defense game",
+      "evidence_ids": [
+        "desktop-battle",
+        "worlds-variants",
+        "desktop-side"
+      ],
+      "verification": "pass on local Edge and simulated phone"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "swarm-overlap",
+      "discovered_version": "web-worlds-v0.4.0",
+      "reproduction_steps": [
+        "QA spawn 14 insects near player and let them pursue"
+      ],
+      "observation": "Large imported limbs visibly overlapped at the same target",
+      "impact": "Reduced combat readability",
+      "cause": "Legacy small procedural bodies used direct pursuit without local spacing",
+      "status": "fixed",
+      "fix": "Bounded local spacing on valid ground movement",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "desktop-realtime"
+      ],
+      "retest": "Reviewed decoded frames of continuous pursuit/firing; some close swarm contact remains; no claim of perfect crowd navigation"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop-battle",
+      "file": "releases/web-worlds-v0.4.0/captures/desktop-battle.png",
+      "sha256": "f63341da05523a31de6c4e5b1baa4a3a8d8b04de8b97da2627b41e13fc12504c",
+      "kind": "screenshot",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "desktop-battle; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "desktop-menu",
+      "file": "releases/web-worlds-v0.4.0/captures/desktop-menu.png",
+      "sha256": "2c94465bbdc4adab8c17da2a1f37af2f22a48110b797bbfb4f1d67aeabf7960f",
+      "kind": "screenshot",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "desktop-menu; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "desktop-realtime",
+      "file": "releases/web-worlds-v0.4.0/captures/desktop-realtime.webm",
+      "sha256": "2ab94d581e3af366b4fe6d495fe927fecf1710e325a6ff7a6cd7a5807b4284f6",
+      "kind": "video",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "desktop-realtime; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 11.16,
+          "description": "Realtime automated gameplay and camera/touch checks; explicit QA positioning; no audio"
+        }
+      ],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 11.16,
+      "frame_rate": "25/1"
+    },
+    {
+      "id": "desktop-side",
+      "file": "releases/web-worlds-v0.4.0/captures/desktop-side.png",
+      "sha256": "a90510db619faa765ef98d0a3c96fe84d408dec7a3a9114b76cdf3821acc2a41",
+      "kind": "screenshot",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "desktop-side; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "phone-landscape",
+      "file": "releases/web-worlds-v0.4.0/captures/phone-landscape.png",
+      "sha256": "28a96ec97d1b147405835b0751a6e005fb5e95dc681aa801b6f66b52b8c61d9a",
+      "kind": "screenshot",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "phone-landscape; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/web-worlds-v0.4.0/captures/phone-portrait.png",
+      "sha256": "a83051421a2ed3c37d5ca6fb1e1b72899b4529e3e1128e648e7055e1d0044350",
+      "kind": "screenshot",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "phone-portrait; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null
+    },
+    {
+      "id": "phone-realtime",
+      "file": "releases/web-worlds-v0.4.0/captures/phone-realtime.webm",
+      "sha256": "af2f56f8c30237432cab0de687eab1b1bb2a96e1285135d47e35ac803ec6463c",
+      "kind": "video",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "phone-realtime; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 4.92,
+          "description": "Realtime automated gameplay and camera/touch checks; explicit QA positioning; no audio"
+        }
+      ],
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 4.92,
+      "frame_rate": "25/1"
+    },
+    {
+      "id": "worlds-variants",
+      "file": "releases/web-worlds-v0.4.0/captures/worlds-variants.png",
+      "sha256": "1b0f3164b94abbdbe2576c7a63feb928c91e9b50b2ae9461e00a499969998dbe",
+      "kind": "screenshot",
+      "version": "web-worlds-v0.4.0",
+      "build_id": "web-worlds-v0.4.0-436a95352b66",
+      "capture_mode": "realtime-automation",
+      "description": "worlds-variants; browser automation, battle and variants use explicit QA spawning/high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Actual headless Edge 154.0.4258.48, ANGLE D3D11 on NVIDIA RTX4060Ti, 1440x810; 48 high-HP insects and 4 allies continuously firing, 30s per quality after warmup; recording disabled during sampling",
+      "result": "high avg 165.80 FPS / P95 7.70ms / >50ms 0; smooth avg 168.98 FPS / P95 6.70ms / >50ms 0",
+      "evidence": "releases/web-worlds-v0.4.0/performance.json"
+    },
+    {
+      "method": "Keyboard start/move/camera/shop/build; three deaths/protection expiry; base failure/retry; CDP multipoint touch on rotated 390x844, resize844x390; pause/resume; scripted wave completion",
+      "result": [
+        "Enter starts normal game",
+        "WASD moves player",
+        "four camera presets switch with C",
+        "keyboard shop/build/pause",
+        "three normal deaths respawn with protection",
+        "protection blocks damage",
+        "normal damage after protection expires",
+        "base destruction fails and Enter restarts",
+        "390×844 rotated touch joystick + firing, release clears",
+        "mobile resize and touch pause/resume",
+        "QA empty-wave completion advances to next level"
+      ],
+      "evidence": "releases/web-worlds-v0.4.0/verification.json"
+    },
+    {
+      "method": "Old URL navigation, imported elite/queen/mech and keyboard mech driving/fire/exit",
+      "result": "pass",
+      "evidence": "releases/web-worlds-v0.4.0/asset-verification.json"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "No audio track or auditory review",
+      "No physical phone performance test or human playtest",
+      "Raw WebM remains local, excluded from Git; no new Toy upload",
+      "Source/native game not fully ported; this is an asset and presentation merge"
+    ]
+  }
+}

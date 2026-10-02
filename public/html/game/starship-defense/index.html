@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>虫潮前哨：守卫基地</title>
+
+<style>
+#assetLoad{position:absolute;inset:0;z-index:100;background:#0c141b;display:grid;place-content:center;color:#a6d7de;font-size:19px;text-align:center;padding:30px}#webTools{position:absolute;right:12px;top:190px;z-index:45;display:flex;gap:8px}#webTools .mbtn{font-size:12px;padding:6px 9px}#btnTest{display:none!important}.menu{background:linear-gradient(90deg,rgba(7,16,23,.97) 0%,rgba(7,16,23,.84) 42%,rgba(7,16,23,.22) 100%);align-items:flex-start;padding-left:55px}.menu h1{font-size:44px;letter-spacing:5px;background:linear-gradient(180deg,#e7f4f0,#8ba5a8);-webkit-background-clip:text}.menu .small{text-align:left;max-width:650px;color:#a8b9c0}.menu .classCard{background:rgba(18,32,41,.85)}.mbtn{border-radius:3px;background:linear-gradient(180deg,#294651,#152833);border-color:#607d85}.menu h2{color:#d3b780}#hudTop,#hudRight{background:rgba(9,19,26,.82);border:1px solid #39535a;border-radius:3px}#keysHint{background:rgba(9,19,26,.85)}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Microsoft YaHei",sans-serif;}
+#stage{position:absolute;left:50%;top:50%;transform-origin:center center;width:960px;height:540px;}
+#c3d{position:absolute;left:0;top:0;width:100%;height:100%;display:block;}
+.overlay{position:absolute;left:0;top:0;width:100%;height:100%;z-index:10;}
+.hidden{display:none!important;}
+/* ---------- HUD ---------- */
+#hud{pointer-events:none;color:#fff;}
+#hudTop{position:absolute;left:8px;top:6px;font-size:13px;text-shadow:0 0 4px #000;line-height:1.5;}
+#hudRight{position:absolute;right:8px;top:6px;text-align:right;font-size:13px;text-shadow:0 0 4px #000;line-height:1.5;}
+#hpBarWrap{width:180px;height:14px;background:rgba(0,0,0,.5);border:1px solid #6cf;border-radius:7px;overflow:hidden;margin-top:2px;}
+#hpBar{height:100%;width:100%;background:linear-gradient(90deg,#f33,#fa0,#3f6);}
+#baseBarWrap{width:180px;height:10px;background:rgba(0,0,0,.5);border:1px solid #fc6;border-radius:5px;overflow:hidden;margin-top:2px;}
+#baseBar{height:100%;width:100%;background:linear-gradient(90deg,#fc0,#f80);}
+#msg{position:absolute;left:50%;top:26%;transform:translateX(-50%);font-size:26px;color:#ffe066;text-shadow:0 0 10px #f80,0 2px 4px #000;text-align:center;white-space:nowrap;}
+#hint{position:absolute;left:50%;bottom:112px;transform:translateX(-50%);font-size:13px;color:#9ef;text-shadow:0 0 4px #000;text-align:center;}
+#interactHint{position:absolute;left:50%;bottom:76px;transform:translateX(-50%);font-size:15px;color:#ffe066;background:rgba(10,25,50,.72);border:1px solid #58a6e8;border-radius:8px;padding:4px 14px;text-shadow:0 1px 2px #000;white-space:nowrap;z-index:15;}
+#keysHint{position:absolute;left:8px;bottom:6px;font-size:10px;color:rgba(200,230,255,.55);text-shadow:0 1px 2px #000;line-height:1.4;}
+#readyBtn{position:absolute;left:50%;top:60px;transform:translateX(-50%);pointer-events:auto;background:linear-gradient(180deg,#2c8,#183);color:#fff;border:2px solid #6fc;border-radius:8px;padding:8px 22px;font-size:17px;cursor:pointer;box-shadow:0 0 12px rgba(60,255,150,.5);}
+#readyBtn:active{transform:translateX(-50%) scale(.95);}
+/* ---------- 虚拟控制 ---------- */
+#touchUI{pointer-events:none;z-index:20;}
+#joyBase{position:absolute;left:40px;bottom:36px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(120,180,255,.14),rgba(120,180,255,.05));border:2px solid rgba(140,200,255,.4);pointer-events:auto;}
+#joyKnob{position:absolute;left:35px;top:35px;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(200,230,255,.85),rgba(80,140,220,.7));box-shadow:0 0 8px rgba(120,200,255,.7);}
+.vbtn{position:absolute;width:54px;height:54px;border-radius:50%;color:#fff;font-size:15px;font-weight:bold;text-align:center;line-height:50px;pointer-events:auto;border:2px solid rgba(255,255,255,.5);text-shadow:0 1px 2px #000;background:radial-gradient(circle at 35% 30%,rgba(255,120,120,.75),rgba(180,30,30,.65));}
+.vbtn.k2{background:radial-gradient(circle at 35% 30%,rgba(120,200,255,.75),rgba(20,90,180,.65));}
+.vbtn.k3{background:radial-gradient(circle at 35% 30%,rgba(255,220,120,.75),rgba(190,130,10,.65));}
+.vbtn.k4{background:radial-gradient(circle at 35% 30%,rgba(190,140,255,.75),rgba(110,40,190,.65));}
+.vbtn.sm{width:40px;height:40px;line-height:36px;font-size:11px;background:radial-gradient(circle at 35% 30%,rgba(200,200,200,.6),rgba(90,90,90,.55));}
+.vbtn:active,.vbtn.on{filter:brightness(1.6);transform:scale(.92);}
+#vJ{right:128px;bottom:24px;}
+#vK{right:52px;bottom:24px;}
+#vU{right:128px;bottom:100px;}
+#vI{right:52px;bottom:100px;}
+#vV{right:16px;bottom:180px;}
+#vP{right:92px;bottom:180px;}
+#vO{right:168px;bottom:180px;}
+#vL{right:244px;bottom:180px;}
+#vC{right:320px;bottom:180px;}
+.vbtn,.vbtn.sm{width:64px;height:64px;line-height:60px;font-size:14px;}
+.panel,.panel *{touch-action:pan-y;}
+.shopItem:focus-visible,.tab:focus-visible,.vbtn:focus-visible{outline:3px solid #ffe066;}
+#baseGuide{margin-top:4px;color:#ffe066;}
+/* ---------- 菜单界面 ---------- */
+.menu{background:radial-gradient(ellipse at center,#123 0%,#010914 75%);color:#fff;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;}
+.menu h1{font-size:40px;margin-top:26px;letter-spacing:6px;background:linear-gradient(180deg,#9ef,#36c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 24px rgba(80,160,255,.5);}
+.menu h2{font-size:24px;margin:16px 0 10px;color:#ffe066;text-shadow:0 0 8px #f80;}
+.btnRow{display:flex;gap:12px;margin:8px 0;flex-wrap:wrap;justify-content:center;}
+.mbtn{background:linear-gradient(180deg,#2a5d9e,#153a6b);border:2px solid #58a6e8;color:#fff;font-size:16px;padding:9px 26px;border-radius:8px;cursor:pointer;box-shadow:0 0 10px rgba(80,170,255,.35);}
+.mbtn:hover{filter:brightness(1.3);}
+.mbtn:active{transform:scale(.95);}
+.mbtn.green{background:linear-gradient(180deg,#2c8a52,#14522d);border-color:#5ce88f;}
+.mbtn.red{background:linear-gradient(180deg,#a33,#611;);border-color:#e87;}
+.mbtn.sel{outline:3px solid #ffe066;filter:brightness(1.35);}
+.small{font-size:12px;color:#9bc;line-height:1.6;text-align:center;}
+.classCard{width:150px;background:rgba(30,60,110,.4);border:2px solid #4a7ab5;border-radius:10px;padding:10px;text-align:center;cursor:pointer;font-size:13px;line-height:1.5;}
+.classCard.sel{border-color:#ffe066;background:rgba(90,110,40,.45);box-shadow:0 0 14px rgba(255,224,102,.5);}
+.classCard b{font-size:16px;color:#9ef;}
+/* ---------- 商店/建造 ---------- */
+.panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:640px;max-height:480px;background:rgba(6,18,38,.95);border:2px solid #58a6e8;border-radius:12px;color:#fff;z-index:40;padding:12px;overflow-y:auto;pointer-events:auto;}
+.panel h3{color:#ffe066;text-align:center;margin-bottom:8px;font-size:19px;}
+.shopGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.shopItem{background:rgba(40,70,120,.4);border:1px solid #4a7ab5;border-radius:8px;padding:8px;font-size:12px;line-height:1.45;cursor:pointer;text-align:center;}
+.shopItem:hover{filter:brightness(1.3);}
+.shopItem .nm{font-size:14px;color:#9ef;font-weight:bold;}
+.shopItem .pr{color:#ffe066;}
+.shopItem.own{border-color:#5ce88f;}
+.closeX{position:absolute;right:10px;top:8px;font-size:20px;color:#f88;cursor:pointer;padding:0 8px;}
+.tabRow{display:flex;gap:6px;justify-content:center;margin-bottom:8px;}
+.tab{padding:4px 14px;border:1px solid #4a7ab5;border-radius:6px;cursor:pointer;font-size:13px;background:rgba(30,50,90,.5);}
+.tab.on{background:#2a5d9e;border-color:#9ef;}
+/* 存档 */
+.saveSlot{display:flex;justify-content:space-between;align-items:center;background:rgba(40,70,120,.35);border:1px solid #4a7ab5;border-radius:8px;padding:8px 12px;margin:6px auto;width:480px;font-size:13px;}
+.saveSlot button{font-size:12px;padding:4px 12px;}
+#pausePanel{text-align:center;}
+</style>
+<style>
+.menu{background:linear-gradient(90deg,rgba(7,16,23,.95),rgba(7,16,23,.86) 52%,rgba(7,16,23,.25));align-items:flex-start;padding:24px 38px;overflow-y:auto}
+.menu h1{font-size:34px;margin:0 0 5px;background:linear-gradient(180deg,#f2f0df,#a6b8b5);-webkit-background-clip:text;letter-spacing:4px;text-shadow:none}
+.menu h2{font-size:18px;color:#c9b88c;margin:12px 0 9px}.menu .small{text-align:left;max-width:620px;color:#a8b9c0;font-size:11px}.menu .classCard{width:132px;background:rgba(18,32,41,.85);border-radius:3px;font-size:11px}.classCard.sel{border-color:#bea26a;box-shadow:none}
+.mbtn,.mbtn.green,.mbtn.red{border-radius:3px;background:linear-gradient(180deg,#294651,#152833);border-color:#607d85;box-shadow:none;font-size:13px}.btnRow{gap:12px}
+#hudTop,#hudRight{font-size:12px;background:rgba(9,19,26,.82);border:1px solid #39535a;border-radius:3px;padding:7px;max-width:210px}
+#webTools{top:116px;right:8px;gap:6px}#webTools .mbtn{font-size:9px;padding:6px}
+#hint{font-size:11px;max-width:550px;bottom:50px;color:#a9c2bd}#keysHint{font-size:9px;background:rgba(9,19,26,.85)}#readyBtn{font-size:14px;top:18px;border:1px solid #9b9674;background:#354644;box-shadow:none;padding:9px 15px}
+.vbtn,.vbtn.sm{font-size:11px;border-radius:8px;width:52px;height:52px;line-height:48px;background:rgba(24,41,49,.78);border:1px solid #71848a}.vbtn::after{content:attr(data-key);font-size:9px;color:#bdd0d0;position:absolute;right:5px;top:-12px}
+#vJ{right:100px;bottom:22px}#vK{right:35px;bottom:22px}#vU{right:100px;bottom:86px}#vI{right:35px;bottom:86px}#vC{right:290px;bottom:18px}#vL{right:230px;bottom:18px}#vO{right:170px;bottom:18px}#vP{right:170px;bottom:80px}#vV{right:230px;bottom:80px}
+#joyBase{left:30px;bottom:24px;width:120px;height:120px}#interactHint{font-size:12px;bottom:170px}
+#menuMain .small{max-width:640px}#menuMain .subtitle{font-size:13px;letter-spacing:4px;color:#bda477;margin-bottom:5px}
+a.gameBack{color:#a7c4c3;font-size:12px;margin-top:10px;text-decoration:none;border-bottom:1px solid #617a7c;padding:6px 0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c3d"></canvas>
+<div id="assetLoad" role="status">正在装载前哨资源… / Loading outpost…</div>
+<div id="webTools"><button id="qualityBtn" class="mbtn">画质 / Quality</button><button id="muteBtn" class="mbtn">声音 / Sound M</button><button id="fullBtn" class="mbtn">全屏 / Fullscreen F</button></div>
+
+  <!-- HUD -->
+  <div id="hud" class="overlay hidden">
+    <div id="hudTop">
+      <div id="statLine">周目1 第1章 第1关</div>
+      <div>❤ 生命 <span id="hpTxt"></span></div>
+      <div id="hpBarWrap"><div id="hpBar"></div></div>
+      <div>🏰 基地 <span id="baseTxt"></span></div>
+      <div id="baseBarWrap"><div id="baseBar"></div></div>
+      <div id="baseGuide"></div>
+    </div>
+    <div id="hudRight">
+      <div>💰 金币 <span id="goldTxt">0</span></div>
+      <div>⭐ 分数 <span id="scoreTxt">0</span></div>
+      <div id="weapTxt">🔫 轻机枪</div>
+      <div id="ammoTxt"></div>
+      <div id="itemTxt"></div>
+      <div id="waveTxt"></div>
+    </div>
+    <div id="msg" class="hidden"></div>
+    <div id="hint" class="hidden"></div>
+    <div id="interactHint" class="hidden"></div>
+    <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I医疗包 · L建造 · O商店 · C切换视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
+    <button id="readyBtn" class="hidden">✅ 准备完毕，开战！</button>
+  </div>
+
+  <!-- 虚拟触控 -->
+  <div id="touchUI" class="overlay hidden">
+    <div id="joyBase"><div id="joyKnob"></div></div>
+    <div class="vbtn" id="vJ">射击</div>
+    <div class="vbtn k2" id="vK">跳</div>
+    <div class="vbtn k3" id="vU">手雷</div>
+    <div class="vbtn k4" id="vI">互动</div>
+    <div class="vbtn sm" id="vO">商店</div>
+    <div class="vbtn sm" id="vL">建造</div>
+    <div class="vbtn sm" id="vV">换枪</div>
+    <div class="vbtn sm" id="vP">暂停</div>
+    <div class="vbtn sm" id="vC">视角</div>
+  </div>
+
+  <!-- 开始菜单 -->
+  <div id="menuMain" class="overlay menu">
+    <a class="gameBack" href="../../../games.html">← 返回游戏列表 / Game list</a>
+    <h1>虫潮前哨</h1>
+    <div style="font-size:16px;color:#8cf;letter-spacing:12px;">裂 隙 防 线 · 网 页 试 玩</div>
+    <h2 style="margin:12px 0 6px;">选择前哨守卫</h2>
+    <div class="btnRow" id="classRow">
+      <div class="classCard sel" data-c="gunner"><b>机枪兵</b><br>轻机枪扫射<br>射速快 弹量足<br>生命 120</div>
+      <div class="classCard" data-c="rifle"><b>火枪兵</b><br>战斗步枪<br>单发高伤 射程远<br>生命 100</div>
+      <div class="classCard" data-c="medic"><b>医疗兵</b><br>冲锋枪+自愈光环<br>持续回血 辅助强<br>生命 90</div>
+    </div>
+    <div class="btnRow">
+      <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
+      <button class="mbtn" id="btnContinue">▶ 继续上次</button>
+      <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
+      <button class="mbtn red" id="btnTest">🧪 测试模式</button>
+    </div>
+    <div class="small" style="margin-top:6px;">
+      PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷(无限) · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
+      C=切换视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），点「视角」切换镜头<br>
+      玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目<br>
+      精英虫带词缀（迅捷/坚甲/狂暴/剧毒/爆死/巨型），击杀掉落双份金币 · BOSS会冲锋/弹幕/召唤，注意走位！<br>
+      基地设施：医疗平台站上去持续回血 · 城门关闭后可从内侧斜梯登上塔楼，越墙瞭望架枪守门
+    </div>
+  </div>
+
+  <!-- 暂停 -->
+  <div id="menuPause" class="overlay menu hidden">
+    <h2 style="margin-top:120px;">⏸ 游戏暂停</h2>
+    <div class="btnRow" style="flex-direction:column;align-items:center;">
+      <button class="mbtn green" id="btnResume">▶ 继续游戏</button>
+      <button class="mbtn" id="btnSaveMenu">💾 存档</button>
+      <button class="mbtn" id="btnLoadMenu2">📂 读档</button>
+      <button class="mbtn" id="btnRestartLv">🔄 重开本关</button>
+      <button class="mbtn red" id="btnQuit">🏠 回主菜单</button>
+    </div>
+  </div>
+
+  <!-- 结束 -->
+  <div id="menuOver" class="overlay menu hidden">
+    <h2 style="margin-top:100px;" id="overTitle">💀 游戏结束</h2>
+    <div class="small" id="overInfo" style="font-size:15px;"></div>
+    <div class="btnRow">
+      <button class="mbtn green" id="btnRetry">🔄 一键重新开始本关</button>
+      <button class="mbtn" id="btnOverLoad">📂 读档</button>
+      <button class="mbtn red" id="btnOverQuit">🏠 回主菜单</button>
+    </div>
+  </div>
+
+  <!-- 商店 -->
+  <div id="shopPanel" class="panel hidden">
+    <div class="closeX" id="shopClose">✕</div>
+    <h3>🛒 军需商店（武器即时装备，其他物资空投）　💰<span id="shopGold">0</span></h3>
+    <div class="tabRow" id="shopTabs">
+      <div class="tab on" data-t="weapon">武器</div>
+      <div class="tab" data-t="item">道具</div>
+      <div class="tab" data-t="vehicle">载具</div>
+      <div class="tab" data-t="squad">队友</div>
+    </div>
+    <div class="shopGrid" id="shopGrid"></div>
+  </div>
+
+  <!-- 建造 -->
+  <div id="buildPanel" class="panel hidden" style="width:520px;">
+    <div class="closeX" id="buildClose">✕</div>
+    <h3>🏗 基地建造（选中后在角色面前放置）　💰<span id="buildGold">0</span></h3>
+    <div class="shopGrid" id="buildGrid" style="grid-template-columns:repeat(2,1fr);"></div>
+  </div>
+
+  <!-- 存档面板 -->
+  <div id="savePanel" class="panel hidden" style="width:540px;">
+    <div class="closeX" id="saveClose">✕</div>
+    <h3 id="saveTitle">💾 存档 / 读档（5个存档位）</h3>
+    <div id="slotList"></div>
+  </div>
+</div>
+<script type="module" src="./game.js?v=worlds1"></script>
+<script src="../../../js/game/thumb-preview.js"></script>
+</body></html>

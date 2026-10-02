@@ -1,0 +1,16 @@
+{
+  "errors": [],
+  "result": {
+    "upgradedURL": "/html/game/starship-defense/index.html",
+    "models": [
+      "soldier",
+      "roach",
+      "elite",
+      "queen",
+      "mech"
+    ],
+    "mechRig": true,
+    "outOfVehicle": true
+  },
+  "method": "QA spawning and keyboard driving/fire/exit; legacy URL navigation"
+}

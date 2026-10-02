@@ -1,0 +1,16 @@
+Sci-fi soldier — Irondust
+Source: https://opengameart.org/content/sci-fi-soldier
+License: CC0 1.0 Universal
+Terms: https://creativecommons.org/publicdomain/zero/1.0/
+
+Selected original ZIP entries were acquired on 2026-09-23 using public HTTP
+range requests and independently verified against ZIP CRCs. Individual file
+SHA-256 hashes and original archive member names are in provenance.json.
+The full archive was not acquired; original selected files are retained.
+
+Breachline adaptation: Body, Head3 and HandSimple meshes; normalized four-weight
+runtime skinning; transform/axis cleanup; albedo and normal material; authored
+Idle, Walk, Run, Hit, Support, Throw and Death clips; weapon attachment bone.
+The character adaptation remains available under CC0 1.0.
+AR-07 prop and role equipment are separate original Breachline assets.
+The flame projector is a separate Lucian Pavel CC0 asset; see its own notice.

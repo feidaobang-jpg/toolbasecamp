@@ -1,34 +1,20 @@
-# 虫潮前哨：守卫基地 — Toy 发布适配
+# 虫潮前哨：守卫基地 — worlds 资产合并网页版
 
-从本站 `public/html/game/starship_defense.html` 构建独立试玩包；不改本站现有入口，不重新开发游戏。
+当前网页版本 web-worlds-v0.4.0。以既有 Three.js 虫潮玩法为主工程，迁入 Breachline 的带动画甲刃虫、重甲精英、虫后、装甲士兵、重装机甲和 Poly Haven 岩石纹理，保留原 Godot 工程。
 
-## 构建与产物
+网站入口：public/html/game/starship-defense/index.html；旧 starship_defense.html 自动进入新版，保留查询参数和本站 sst_save_ 存档键。既有 Toy 已发布版本保持独立，不会因为更新网站自动更新。
 
-使用 Python 3 运行 `python game-projects/starship-defense/build-toy.py`。
-产物位于 `dist/toy/chongchao-qianshao/`，`package/index.html` 为入口，`chongchao-qianshao.zip` 用于上传。
-ZIP 只包含运行 HTML、Three.js、玩法代码、Toy 适配代码及 Three.js MIT 许可，不包含开发文档、凭据和验收记录。
+操作：WASD 移动、J 射击、K 跳、U 手雷、I 互动、O 商店、L 建造、V 换枪、C 循环镜头、R 开战、Enter 开始/重试、Esc/P 暂停、M 声音、F 手动全屏。手机虚拟摇杆与字母动作键；竖屏开始后旋转游戏布局并逆变换触控。玩家死亡回基地复活并保护3秒；基地损毁仍判失败。
 
-适配内容：独立资源路径；拆出原本内联的 Three.js；使用独立存档前缀；首屏说明目标与快速开战；隐藏测试模式按钮；增加静音、手动全屏和键盘开局/开战/重试；窗口失焦释放输入并暂停。
-首发名称为「虫潮前哨：守卫基地」，保留现有程序化低多边形场景与程序合成声音，不添加第三方角色图片或音乐。
+高画质保留近处实时阴影及较高渲染分辨率；流畅档关闭实时阴影并降低绘图尺寸，保留模型纹理和动画。主波次最多48活虫，召唤/分裂也按容量处理，最多160粒子、8具短暂尸体。静态岩石/灌木/山脊/装饰实例化；远处动画24/12Hz，近处60Hz。
 
-## 投稿资料
+本次为资产与表现迁移，并非完整移植 Godot 的50人编制、第一人称鼠标瞄准、地下洞网、全部武器/载具、关卡任务及物理系统。网页版保留自身职业、商店、建造、载具、四名雇佣兵与已有章节流程。机甲已使用迁入模型与动作，坦克、枪械等仍保留网页版程序化模型。
 
-- 名称：虫潮前哨：守卫基地
-- 分类：游戏（GAME）
-- 建议地址：chongchao-qianshao（如账号已有同名作品应更新，不重复创建）
-- 简介：虫群正在逼近前哨！选择兵种，开枪、投掷手雷，购买装备并建造防御，守住基地。电脑和手机浏览器可玩；进度保存在当前浏览器。欢迎反馈哪一波最难、哪些操作需要改进。
-- 封面：使用本次构建的真实实机截图。不要用生成的电影级画面暗示游戏拥有相同画质。
-- AI声明：本项目使用AI辅助开发；美术与声音为现有程序化实现。具体投稿选项以当前管理端为准。
-- 发布路线：网页试玩 / Toy；本次没有确定 Steam 发售计划。
+本地服务：Python -m http.server 8765 --bind 127.0.0.1 --directory public；访问 http://127.0.0.1:8765/html/game/starship-defense/index.html。
+验收：node game-projects/starship-defense/verify-web.cjs（默认使用本机 Edge 与捆绑 Playwright，可设 BROWSER_EXE/GAME_URL）。QA钩子仅在 ?qa=1 存在；自动化安排和高血量压力场景不能当普通玩家实录。
 
-## 官方工具
+资源加工：使用含 Pillow 的 Python 运行 import-worlds-assets.py --worlds D:/project/gpt/worlds/breachline；GLB保留网格/骨骼/动作，仅将嵌入贴图缩至1024并压缩。运行资源来源/授权/哈希在公开 assets/sources.json 与 CREDITS.txt；roach.glb改作继续 CC-BY-SA-3.0，其余角色/岩石 CC0，Three.js MIT。
 
-官方安装资料：https://github.com/bilibili/toy/blob/main/skills/toy/references/installation.md
-每次调用之前读取当前工具 `--help-json`，不要把旧参数当作永久契约。
-首次登录需要用户在已开通 Toy 的 B站账号完成 OAuth；发布先预览验收，按会话授权提交审核，审核中不能称已上线。
-先查 `mylist --json` 避免重复。登录成功后优先由代理继续完成上传、预览与提交，用户无需手动拼装网页依赖。
+独立 Toy 包：python game-projects/starship-defense/build-toy.py，产物 dist/toy/chongchao-qianshao/chongchao-qianshao.zip。只构建，不上传、不提交审核。包内全部模块/模型/纹理/许可为相对路径，沿用 Toy 已有存档命名空间。
 
-## 验收边界
-
-手机视口模拟不等于真机性能测试。网站运行成功不代表 Toy 域名运行成功，上传后必须再验收预览。
-保存具体测试及发布结果到媒体交接记录；未完成项明确标注，不能用静态扫描代替实际试玩。
+本版媒体与性能记录：media-kit/releases/web-worlds-v0.4.0/。录像为实时浏览器自动化，有QA局面安排，无音轨；真机手机、人工试玩及声音听审未完成。

@@ -1,0 +1,161 @@
+[
+  {
+    "id": "roach",
+    "provider": "OpenGameArt",
+    "source": "https://opengameart.org/content/roach-game-ready-and-animated",
+    "author": "Atmostatic (model), Danimal (rigging, animation, retexturing)",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source_sha256": "d8222e45a0d65a3c5a5a757e9e92e0bdf64aaaa0c5c93b7c4181b261397fba50",
+    "output_sha256": "4d7a5235475b9f29dc525c9aaf93875a0bfb76584bca641d9fa8847e90c33b24",
+    "source_bytes": 4684872,
+    "output_bytes": 1166996,
+    "animations": [
+      "Walk",
+      "Attack",
+      "AttackAlternate",
+      "Idle",
+      "Death"
+    ],
+    "runtime_file": "roach.glb",
+    "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\roach\\roach.glb",
+    "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained."
+  },
+  {
+    "id": "scifi_soldier_oga",
+    "author": "Irondust",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://opengameart.org/content/sci-fi-soldier",
+    "download": "https://opengameart.org/sites/default/files/Sci-fi%20Soldiers.zip",
+    "original_archive_bytes": 59609012,
+    "retrieved": "2026-09-23",
+    "status": "integrated; final packaged GPU, action and gameplay increment verified",
+    "runtime": "game/assets/external/scifi_soldier_oga/soldier.glb",
+    "source_sha256": "759e2b2f1fb6e6e445d99f95faaf48a01f46ff8c4ea04283dd5156a6ae3ca4f9",
+    "output_sha256": "de4b3ef223b289856d12e501058db43ad596a2e3213df21c13fc7508e6a82a1c",
+    "source_bytes": 10672844,
+    "output_bytes": 711664,
+    "animations": [
+      "Idle",
+      "Walk",
+      "Run",
+      "Hit",
+      "Support",
+      "Throw",
+      "Death"
+    ],
+    "runtime_file": "soldier.glb",
+    "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\scifi_soldier_oga\\soldier.glb",
+    "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained."
+  },
+  {
+    "id": "elite_roach",
+    "author": "Atmostatic / Danimal; Breachline adaptation",
+    "source": "https://opengameart.org/content/roach-game-ready-and-animated",
+    "license": "CC-BY-SA-3.0",
+    "glb_sha256": "c344507795a8e673cab02801fc85df921264a3391a15f3a973a98e7f1d3fe6af",
+    "status": "integrated; 66 scripted GPU checks and continuous motion reviewed; further art polish remains",
+    "build_id": "v0.8.27-elite-55f74643a618",
+    "vertex_color_export": "ACTIVE, existing authored shading exported as COLOR_0",
+    "source_sha256": "68c905b4378391178386c5b90195e27606702b32b22e0cf1858fc2ff69928104",
+    "output_sha256": "d7ff4262f35da94d531289592387c644f120ca04788756c1d941a8a307b427a5",
+    "source_bytes": 4863688,
+    "output_bytes": 1346176,
+    "animations": [
+      "Walk",
+      "Attack",
+      "AttackAlternate",
+      "Idle",
+      "Death"
+    ],
+    "runtime_file": "elite.glb",
+    "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\elite_roach\\elite.glb",
+    "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained."
+  },
+  {
+    "id": "queen_roach",
+    "author": "Atmostatic / Danimal; Breachline adaptation",
+    "source": "https://opengameart.org/content/roach-game-ready-and-animated",
+    "license": "CC-BY-SA-3.0",
+    "build_id": "v0.8.7-enemies-ba6a0a21d815",
+    "status": "integrated; scripted GPU verification; further art refinement outstanding",
+    "source_sha256": "4856500013ac2a68e4511d3799d2fd1b54336208181d71b79b4e3c592fa6712a",
+    "output_sha256": "a5fae026dde92d1ac5caba747138249fefdd92700574b98eeaf4fee74a40bdb7",
+    "source_bytes": 4960216,
+    "output_bytes": 1442700,
+    "animations": [
+      "Walk",
+      "Attack",
+      "AttackAlternate",
+      "Idle",
+      "Death"
+    ],
+    "runtime_file": "queen.glb",
+    "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\queen_roach\\queen.glb",
+    "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained."
+  },
+  {
+    "id": "mech_skorpio",
+    "author": "Skorpio",
+    "source": "https://opengameart.org/content/mech",
+    "download": "https://opengameart.org/sites/default/files/mech4.zip",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "retrieved": "2026-09-23",
+    "bytes": 20497180,
+    "sha256": "2645e080e3e218b6093d959381b3e7dba2c76b251b58565346d49f6b3a0e67e1",
+    "zip_crc": "all files passed",
+    "status": "integrated; final packaged GPU, movement/gameplay and short performance increment verified",
+    "adaptation": "3.6m scale; bevel edges; original skin/normal/camo3; new runtime foot contact and aim; source legacy clips not loaded",
+    "runtime_files": [
+      {
+        "path": "game/assets/external/mech_skorpio/mech.glb",
+        "sha256": "f88adb46efeebafcb4ac17b1ae28d12ab72a71dae9d016cf8dcac4f6d57b1835"
+      },
+      {
+        "path": "game/assets/external/mech_skorpio/Mech4camo3.png",
+        "sha256": "9ac644b7ffd68cfd075beccb6c536e39d1dce31dfe0682df58ecacc98712047c"
+      },
+      {
+        "path": "game/assets/external/mech_skorpio/Mech4nor.png",
+        "sha256": "f10545c00709a3624a6f1aea2a662f437f3aa4b10b40cf4cd6fc9eebe0c7f16a"
+      },
+      {
+        "path": "game/assets/external/mech_skorpio/mech_Mech4camo3.png",
+        "sha256": "9ac644b7ffd68cfd075beccb6c536e39d1dce31dfe0682df58ecacc98712047c"
+      },
+      {
+        "path": "game/assets/external/mech_skorpio/mech_Mech4nor.png",
+        "sha256": "f10545c00709a3624a6f1aea2a662f437f3aa4b10b40cf4cd6fc9eebe0c7f16a"
+      }
+    ],
+    "build_id": "v0.8.3-mech-394fe8bdbb96",
+    "olive_runtime_variant": {
+      "path": "game/assets/external/mech_skorpio/Mech4camo.png",
+      "sha256": "6b6695b8b92036f3768ad44f9a84e62ea913bafe24c0e6bc2e007c3b46aa9731",
+      "bytes": 3758038,
+      "changes": "Original texture unchanged; runtime tint d3d2bf, metallic .12, roughness .78; mipmaps enabled"
+    },
+    "source_sha256": "f88adb46efeebafcb4ac17b1ae28d12ab72a71dae9d016cf8dcac4f6d57b1835",
+    "output_sha256": "912ae229743fb24f60dbacbc6b506a9794d77807eebb2e074c3f19964ec224d4",
+    "source_bytes": 9596052,
+    "output_bytes": 875616,
+    "animations": [],
+    "runtime_file": "mech.glb",
+    "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\mech_skorpio\\mech.glb",
+    "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained."
+  },
+  {
+    "id": "coast_rocks_02",
+    "provider": "Poly Haven",
+    "source": "https://polyhaven.com/a/coast_rocks_02",
+    "author": {
+      "Rob Tuytel": "Photography, processing",
+      "Rico Cilliers": "cleanup"
+    },
+    "license": "CC0-1.0",
+    "runtime_file": "rock-diffuse.jpg",
+    "processing": "Diffuse texture resized to 1024; applied to original procedural terrain/rocks."
+  }
+]

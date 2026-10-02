@@ -1,0 +1,43 @@
+{
+  "result": {
+    "state": "battle",
+    "models": [
+      "elite",
+      "soldier",
+      "queen",
+      "roach",
+      "mech"
+    ],
+    "saveKeys": [
+      "chongchao-quality",
+      "toy-chongchao-v1-sst_save_auto"
+    ]
+  },
+  "errors": [],
+  "requests": [
+    "http://127.0.0.1:8767/index.html?qa=1",
+    "http://127.0.0.1:8767/game.js?v=worlds1",
+    "http://127.0.0.1:8767/worlds-visuals.js",
+    "http://127.0.0.1:8767/vendor/three.module.js",
+    "http://127.0.0.1:8767/vendor/SkeletonUtils.js",
+    "http://127.0.0.1:8767/vendor/GLTFLoader.js",
+    "http://127.0.0.1:8767/vendor/BufferGeometryUtils.js",
+    "http://127.0.0.1:8767/assets/roach.glb",
+    "http://127.0.0.1:8767/assets/queen.glb",
+    "http://127.0.0.1:8767/assets/soldier.glb",
+    "http://127.0.0.1:8767/assets/elite.glb",
+    "http://127.0.0.1:8767/assets/mech.glb",
+    "blob:http://127.0.0.1:8767/ffb9820f-cea8-4ce7-8f62-4c524dde64e0",
+    "blob:http://127.0.0.1:8767/2e096c57-f3c9-4958-a947-c6b30bde9d73",
+    "blob:http://127.0.0.1:8767/db3ac764-61a5-43c5-aefe-55653ab4bcae",
+    "blob:http://127.0.0.1:8767/af9c85dc-adbf-47e1-8f7e-7c626026c476",
+    "blob:http://127.0.0.1:8767/fbf44fb1-8193-4ce0-b3d6-e2d57098c72d",
+    "blob:http://127.0.0.1:8767/66045342-1a24-47ed-8744-0f8f128b9612",
+    "blob:http://127.0.0.1:8767/a0918be3-c6b6-4ca2-a09c-09689d7cd2f4",
+    "blob:http://127.0.0.1:8767/d54845f1-ca9b-4205-9533-1d6968b2a7cd",
+    "blob:http://127.0.0.1:8767/cc53db6b-c316-48c3-9f83-5989a6dc4a7a",
+    "blob:http://127.0.0.1:8767/dd74f88f-1f3f-4cbc-86ce-d17dd9e64085",
+    "http://127.0.0.1:8767/assets/rock-diffuse.jpg"
+  ],
+  "status": "local_standalone_package_pass_not_uploaded"
+}

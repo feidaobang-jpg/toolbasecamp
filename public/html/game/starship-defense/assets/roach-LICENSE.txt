@@ -1,0 +1,15 @@
+Roach, game-ready and animated
+Original model: Atmostatic https://opengameart.org/users/atmostatic
+Rigging, animation and retexturing: Danimal https://opengameart.org/users/danimal
+Source: https://opengameart.org/content/roach-game-ready-and-animated
+OpenGameArt: https://opengameart.org
+
+License: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+https://creativecommons.org/licenses/by-sa/3.0/
+Full legal code: https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+Breachline adaptation, 2026: subdivision and smoothing, retained skin weights,
+PBR material conversion, animation renaming and resampling, scale/orientation
+and game-specific tint. These adaptations remain under CC BY-SA 3.0.
+The included roach.glb may be reused under that license without additional restrictions.
+The original authors do not endorse this game.

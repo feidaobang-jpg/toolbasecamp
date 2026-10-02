@@ -1,0 +1,27 @@
+{
+  "build_id": "web-worlds-v0.4.0-436a95352b66",
+  "fingerprint": "436a95352b666df6a5536f55344e8d03a0d6ac6a0b2d377fcbb5e49512e48f6e",
+  "files": {
+    "assets/CREDITS.txt": "05edafc25c25920f7b4a3e8963510891cadf9c9b409ef1b486518f2eb616c93f",
+    "assets/elite.glb": "d7ff4262f35da94d531289592387c644f120ca04788756c1d941a8a307b427a5",
+    "assets/elite_roach-LICENSE.txt": "ce365b6b7f139e536fdf29d34ff4c22f1bf3871e2c74a9ceb60529f52ad7de2e",
+    "assets/mech.glb": "912ae229743fb24f60dbacbc6b506a9794d77807eebb2e074c3f19964ec224d4",
+    "assets/mech_skorpio-LICENSE.txt": "4bf7452805de494255babcf67155fb0a8625e623f375b82281e073b4d78ec0e7",
+    "assets/queen.glb": "a5fae026dde92d1ac5caba747138249fefdd92700574b98eeaf4fee74a40bdb7",
+    "assets/queen_roach-LICENSE.txt": "23bf30ba34e7c04dc53f5cd48a4351ac26f3d3959c2ec907d325044f547fe7d0",
+    "assets/roach-LICENSE.txt": "31c0a401ac83dd3146ed12cc1f9fe7d3a0abc15083361a7d4ef3662b7acaa445",
+    "assets/roach.glb": "4d7a5235475b9f29dc525c9aaf93875a0bfb76584bca641d9fa8847e90c33b24",
+    "assets/rock-diffuse.jpg": "e42c243f2f07cd3a42fd789f6fa0cbc5304700fb7d1647ac04bb96cc3b85df16",
+    "assets/scifi_soldier_oga-LICENSE.txt": "0d878ccd4fd2f8d1817bd80e9d5176e5e1b2fd02990f8b4a9b1496dedf094182",
+    "assets/soldier.glb": "de4b3ef223b289856d12e501058db43ad596a2e3213df21c13fc7508e6a82a1c",
+    "assets/sources.json": "e019febb56bdab762929644d1a7cb6ed2c4fa5070019c2f3e21444cb5cee90cc",
+    "game.js": "c5b92357cbf2e05cba0d1cfe391387d637fbd4124f01c157d5b7b1d1be7b5af2",
+    "index.html": "e5bcb7a66c3e83bf3a4e1c1f4ef327a13364e390137d2fdd2eb6b79d3a14dd31",
+    "vendor/BufferGeometryUtils.js": "822e2d1a5a73c60069c8ad5fd140bce215a0606b79e09d6faa164f65f1775d10",
+    "vendor/GLTFLoader.js": "96d519c2cab90cddbded5ada637e64cbff57726e8371bb751a6b23479732cffb",
+    "vendor/LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
+    "vendor/SkeletonUtils.js": "bdf58ab879e232e30e94b0191150a36c4b8ed24a6554aa18e53e049dd248b1c6",
+    "vendor/three.module.js": "f4ced6dfae77168410b5e8415019c5066b47dd712e71dbbbcb0ed25cf9d9f4da",
+    "worlds-visuals.js": "6be9513cf426632f9c637b54b668067134b1f454f31dcbf41de89f5fa083e0bb"
+  }
+}
