@@ -43,6 +43,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .dmgNum.big{font-size:19px;color:#ffd84d}
 #readyBtn{position:absolute;left:50%;top:14px;transform:translateX(-50%);pointer-events:auto;font-size:14px;cursor:pointer;padding:9px 18px;font-weight:bold;z-index:13}
 #readyBtn:active{transform:translateX(-50%) scale(.95);}
+#placeBar{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);pointer-events:auto;z-index:14;padding:8px 14px;border-radius:10px;text-align:center;font-size:13px;min-width:380px}
+#placeBar .small{font-size:10px;max-width:none;margin:2px 0}#placeBar .btnRow{justify-content:center;margin:4px 0 0}#placeBar .mbtn{font-size:12px;padding:6px 12px}
+#placeState{color:#5dff9d;font-weight:bold}#placeState.bad{color:#ff6b6b}
+.touch-mode #placeBar{bottom:250px;left:42%}
+.placing #hint,.placing #interactHint{display:none!important}.touch-mode #placeBar .small{display:none}
 #webTools{position:absolute;right:10px;top:178px;z-index:35;display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:250px}
 #webTools .mbtn{font-size:10px;padding:5px 7px}
 /* 虚拟触控 */
@@ -121,6 +126,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
 .theme-dark #keysHint{color:rgba(205,228,245,.72);background:rgba(7,15,27,.7)}
 .theme-dark .wslot{color:#d9e7f1;background:rgba(10,20,34,.82);border:1px solid rgba(110,170,215,.35)}
 .theme-dark .wslot.on{color:#101820;background:linear-gradient(180deg,#8fe3ff,#4fb6e6);border-color:#bff0ff;box-shadow:0 0 10px rgba(80,190,255,.55)}
+.theme-dark #placeBar{color:#e3edf4;background:rgba(7,15,27,.88);border:1px solid #4f8fbd}
 .theme-dark #readyBtn{color:#fff;background:linear-gradient(180deg,#2bbf74,#13703f);border:1px solid #74f2b0;border-radius:8px;box-shadow:0 0 14px rgba(60,255,150,.45)}
 .theme-dark .mbtn{color:#e8f3fa;background:linear-gradient(180deg,#26425a,#142636);border:1px solid #5b8fb3;border-radius:6px}
 .theme-dark .mbtn:hover{filter:brightness(1.25)}
@@ -160,6 +166,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
 .theme-toy .mbtn.green{background:#4b9f8d;border-color:#35796b;box-shadow:0 3px 0 #35796b}.theme-toy .mbtn.red{background:#b0605a;border-color:#8a443f;box-shadow:0 3px 0 #8a443f}
 .theme-toy #hudTop,.theme-toy #hudRight{color:#294d58;background:rgba(255,248,226,.93);border:2px solid #b1d2c1;border-radius:13px;box-shadow:0 4px 0 rgba(48,92,90,.14)}
 .theme-toy #hpBarWrap,.theme-toy #baseBarWrap{background:#d4e0cb}.theme-toy #hpBar{background:#58b9a1}.theme-toy #baseBar{background:#eab85e}.theme-toy #baseGuide{color:#518679}
+.theme-toy #placeBar{color:#294d58;background:rgba(255,248,226,.95);border:2px solid #b1d2c1}
 .theme-toy #readyBtn{background:#f6c665;border:2px solid #ddaa47;border-radius:14px;color:#66512d;box-shadow:0 4px 0 #c9923f}
 .theme-toy #msg{color:#fff8dd;text-shadow:0 2px 0 #386c73,2px 0 0 #386c73,-2px 0 0 #386c73,0 -2px 0 #386c73}
 .theme-toy #hint{color:#315e64;background:rgba(247,249,230,.87)}
@@ -211,8 +218,13 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · J/鼠标左键射击 · 点画面用鼠标转视角 · K跳 · U手雷 · I互动(门/载具) · H医疗包 · 1-9/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · G小队指令 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · J/鼠标左键射击 · 点画面用鼠标转视角 · K跳 · U手雷 · I互动(门/载具) · H医疗包 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · G小队指令 · O商店 · L建造 · R开战 · P/Esc暂停</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
+    <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
+      <div><b id="placeName"></b> <span id="placeState"></span></div>
+      <div class="small">走动或转视角移动虚影 · J/左键/射击键 放置 · R 旋转 · Esc/L 取消（放下时才扣钱）</div>
+      <div class="btnRow"><button class="mbtn green" id="placeOk">✔ 放置 J</button><button class="mbtn" id="placeRot">↻ 旋转 R</button><button class="mbtn red" id="placeCancel">✖ 取消</button></div>
+    </div>
   </div>
 
   <!-- 虚拟触控 -->
@@ -241,9 +253,9 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="subtitle">守 卫 基 地 · 星 际 虫 潮 防 线</div>
     <h2>选择前哨守卫</h2>
     <div class="btnRow" id="classRow">
-      <div class="classCard sel" data-c="gunner"><b>机枪兵</b><br>轻机枪扫射<br>射速快 弹量足<br>生命 120</div>
-      <div class="classCard" data-c="rifle"><b>火枪兵</b><br>战斗步枪<br>单发高伤 射程远<br>生命 100</div>
-      <div class="classCard" data-c="medic"><b>医疗兵</b><br>冲锋枪+自愈光环<br>持续回血 辅助强<br>生命 90</div>
+      <div class="classCard sel" data-c="gunner"><b>机枪兵</b><br>机枪扫射<br>生命最厚 最稳<br>生命 120</div>
+      <div class="classCard" data-c="rifle"><b>火枪兵</b><br>机枪+霰弹枪<br>贴脸爆发 击退虫群<br>生命 100</div>
+      <div class="classCard" data-c="medic"><b>医疗兵</b><br>机枪+自愈光环<br>持续回血 辅助强<br>生命 90</div>
     </div>
     <div class="btnRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
@@ -254,7 +266,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     </div>
     <div class="small">
       电脑：WASD 移动 · J 或鼠标左键射击 · 点一下画面即可用鼠标自由转视角（Esc 释放）· Q/E 也能转 · V 第一/第三人称 · C 镜头远近/俯视<br>
-      K 跳 · U 手雷（无限，自动抛向目标）· I 互动（开关城门、上下载具）· H 医疗包 · 1-9 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
+      K 跳 · U 手雷（无限，自动抛向目标）· I 互动（开关城门、上下载具）· H 医疗包 · 1-6 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
       玩法：准备阶段去野外打怪攒钱 → 商店买枪/强化（每把武器可强化到 Lv10）、造炮塔、雇队友 → 开战守住基地。虫子从远处虫洞钻出；地图最深处是虫巢，母皇和护卫只守老巢，击杀母皇本章虫潮 -35%<br>
       城门：走过去会自动开门，I 手动开关 · 走远了看小地图和蓝色光柱找家 · 载具被打坏下关自动修好 · 进度自动保存
@@ -308,7 +320,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
   <!-- 建造 -->
   <div id="buildPanel" class="panel hidden" style="width:540px;">
     <button class="closeX" id="buildClose" aria-label="关闭建造">✕</button>
-    <h3>🏗 基地建造（选中后在角色面前放置）　💰<span id="buildGold">0</span></h3>
+    <h3>🏗 基地建造（选中后出现虚影，走动/转视角调整，J 放置，R 旋转）　💰<span id="buildGold">0</span></h3>
     <div class="shopGrid" id="buildGrid" style="grid-template-columns:repeat(2,1fr);"></div>
   </div>
 
@@ -354,6 +366,6 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="btnRow" style="justify-content:center"><button class="mbtn" id="confirmCancel">取消</button><button class="mbtn green" id="confirmOk">确定</button></div>
   </div>
 </div>
-<script type="module" src="./game.js?v=fb9"></script>
+<script type="module" src="./game.js?v=fb91"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

@@ -1,7 +1,7 @@
 // v0.9 player-feedback acceptance: every viewer report is checked through real input where practical.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases/web-feedback-v0.9.0'),captures=path.join(release,'captures');
+const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-arsenal-build-v0.9.1'),captures=path.join(release,'captures');
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html';
 const results={},fail=[];
 const check=(name,ok,detail)=>{results[name]={ok:!!ok,...(detail!==undefined?{detail}:{})};if(!ok)fail.push(name);};
@@ -53,7 +53,7 @@ async function open(b,opts={},query=''){
  check('wrecked vehicle stays owned and is repaired next prep',r.ownedAfterWreck&&r.onFieldAfterWreck===0&&r.repairedNextPrep,r);
  check('enemy blast uses real vehicle position',r.blastSafe&&r.blastHitsVehicle);
  check('chapter 6 split: one weaker child',r.split.kids.length===1&&r.split.kids[0].dmg<r.split.parentDmg*.5,r.split);
- const shopWeapons=['shotgun','sniper','launcher','flamer','laser','minigun','plasma','missile','railgun'];
+ const shopWeapons=['shotgun','launcher','flamer','laser','plasma'];
  check('every shop weapon beats starter DPS',shopWeapons.every(k=>r.dps[k]>r.dps.lmg),r.dps);
 
  // 6. per-weapon damage in places that used to fail (gate tower, behind cover rock, close launcher)
@@ -81,12 +81,12 @@ async function open(b,opts={},query=''){
 
  // 8. weapon switching through real keys / wheel; each owned gun becomes current
  await p.evaluate(()=>{const q=__gameQA;q.Game.state='prep';q.Game.gold=20000;q.clearEntities(false);q.player.pos.set(0,0,20);q.player.mesh.position.copy(q.player.pos);});
- await p.keyboard.press('KeyO');for(const name of ['霰弹枪','狙击枪','火焰喷射器','脉冲激光炮']){await p.locator('#shopGrid .shopItem').filter({hasText:name}).first().click();}
+ await p.keyboard.press('KeyO');for(const name of ['霰弹枪','榴弹炮','火焰喷射器','脉冲激光炮']){await p.locator('#shopGrid .shopItem').filter({hasText:name}).first().click();}
  await p.keyboard.press('Escape');await p.waitForTimeout(100);
  if(await p.evaluate(()=>__gameQA.Game.state==='paused'))await p.keyboard.press('KeyP');
  const sw=[];for(const key of ['Digit1','Digit2','Digit3','Digit4','Digit5','KeyX']){await p.keyboard.press(key);await p.waitForTimeout(60);sw.push(await p.evaluate(()=>__gameQA.Game.curWeapon));}
  await p.mouse.move(640,360);await p.mouse.wheel(0,120);await p.waitForTimeout(60);sw.push(await p.evaluate(()=>__gameQA.Game.curWeapon));
- check('number keys / X / wheel switch between all bought guns',JSON.stringify(sw)===JSON.stringify(['lmg','shotgun','sniper','flamer','laser','lmg','shotgun']),sw);
+ check('number keys / X / wheel switch between all bought guns',JSON.stringify(sw)===JSON.stringify(['lmg','shotgun','launcher','flamer','laser','lmg','shotgun']),sw);
  check('weapon bar lists every owned gun',await p.evaluate(()=>document.querySelectorAll('#weaponBar .wslot').length===__gameQA.Game.weapons.length));
  await p.keyboard.press('KeyO');const up=await p.evaluate(()=>{const q=__gameQA,g=q.Game.gold;document.querySelector('#shopGrid [data-up="lmg"]').click();return{lv:q.Game.weaponLv.lmg,cost:g-q.Game.gold,mul:q.weaponMul('lmg')};});
  await p.keyboard.press('Escape');if(await p.evaluate(()=>__gameQA.Game.state==='paused'))await p.keyboard.press('KeyP');
@@ -219,7 +219,7 @@ async function open(b,opts={},query=''){
  check('no page errors (toy theme)',t.errors.length===0,t.errors);
 
  await b.close();
- const summary={version:'web-feedback-v0.9.0',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
+ const summary={version:process.env.RELEASE||'web-arsenal-build-v0.9.1',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
  fs.writeFileSync(path.join(release,'after.json'),JSON.stringify(summary,null,1));
  console.log(JSON.stringify({passed:summary.passed,failed:fail},null,1));
  if(fail.length)process.exitCode=1;

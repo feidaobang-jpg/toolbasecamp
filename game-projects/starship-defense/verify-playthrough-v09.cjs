@@ -2,14 +2,14 @@
 // Setup hooks only choose chapter/gear to mimic a mid-game player; outcome is recorded as-is.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases/web-feedback-v0.9.0');
+const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-arsenal-build-v0.9.1');
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html';
 const scenarios=[
  {name:'chapter1-level1-starter',chapter:1,level:1,setup:{}},
  {name:'chapter6-level1-midgame',chapter:6,level:1,setup:{weapons:['lmg','shotgun','laser','flamer'],cur:'laser',lv:{laser:3,flamer:2},squad:2,hpBonus:80}},
  {name:'chapter6-level5-midgame',chapter:6,level:5,setup:{weapons:['lmg','shotgun','laser','flamer','launcher'],cur:'laser',lv:{laser:4,flamer:3,launcher:2},squad:3,hpBonus:120}},
  {name:'chapter6-level10-boss-lightgear',chapter:6,level:10,setup:{weapons:['lmg','shotgun','laser'],cur:'laser',lv:{laser:1},squad:0,hpBonus:40}},
- {name:'chapter10-level5-lategear',chapter:10,level:5,setup:{weapons:['lmg','laser','plasma','railgun'],cur:'plasma',lv:{laser:6,plasma:4,railgun:3},squad:4,hpBonus:240}},
+ {name:'chapter10-level5-lategear',chapter:10,level:5,setup:{weapons:['lmg','laser','plasma','launcher'],cur:'plasma',lv:{laser:6,plasma:4,launcher:3},squad:4,hpBonus:240}},
 ];
 (async()=>{
  const b=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--use-angle=d3d11','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
@@ -50,5 +50,5 @@ const scenarios=[
  }
  await b.close();
  const merged=[...prior.filter(r=>!out.some(o=>o.scenario===r.scenario)),...out];
- fs.writeFileSync(path.join(release,'playthrough.json'),JSON.stringify({version:'web-feedback-v0.9.0',method:'Playwright keyboard bot (J held, Q/E turn to nearest bug, H heal, U grenades, stays by the gate); setup hooks only set chapter/gear before R; fight runs in real time without damage hooks',runs:merged},null,1));
+ fs.writeFileSync(path.join(release,'playthrough.json'),JSON.stringify({version:process.env.RELEASE||'web-arsenal-build-v0.9.1',method:'Playwright keyboard bot (J held, Q/E turn to nearest bug, H heal, U grenades, stays by the gate); setup hooks only set chapter/gear before R; fight runs in real time without damage hooks',runs:merged},null,1));
 })().catch(e=>{console.error(e);process.exit(1);});
