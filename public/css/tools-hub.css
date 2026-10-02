@@ -430,9 +430,13 @@
 .hub-kind-block--original {
     padding: 1rem 1rem 1.25rem;
     border: 1px solid #dbeafe;
-    border-left: 4px solid #2563eb;
     border-radius: 12px;
     background: #f8fafc;
+}
+
+.hub-kind-block .hub-group-head {
+    padding-left: 0;
+    border-left: 0;
 }
 
 .hub-kind-head {
