@@ -36,6 +36,12 @@ alwaysApply: true
 <button class="tb-btn my-green-btn">计算</button>
 ```
 
+## Hub 内容区宽度与对齐
+
+- 同一 Hub 页的排行榜、提示卡、筛选栏与主列表必须共用 `.hub-center-inner` 内容容器，保持左右边缘对齐。
+- 宽版游戏 Hub 沿用 `tools-hub.css` 的 `.hub-center-wide .hub-center-inner`（最大宽度 `64rem`）及响应式内边距；不要给排行榜另设视口宽度或复制一份固定宽度。
+- 动态渲染区域可保留独立 ID，但应放在共同内容容器内，避免插到容器外而撑满整屏。
+
 ## 手机左右居中（框架层）
 
 - 工具页外层：`.container` > `.sidebar` + `.content` > `.tool-card`。

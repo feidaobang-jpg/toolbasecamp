@@ -448,3 +448,6 @@
 .gv-sort { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: .875rem; }
 .gv-sort select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #334155; }
 .gv-note { overflow-wrap: anywhere; }
+
+.gv-section-nav { margin-bottom: 1rem; }
+#gv-original-games, #gv-compose, #gv-wish-board { scroll-margin-top: 1rem; }
