@@ -56,6 +56,8 @@ VOTE_WISHLIST = "wishlist"
 # 自研（本站有源码）游戏白名单：key 取游戏页 slug，titleKey 交给前端 i18n 取中文名，
 # 后端不存文案，避免和 public/js/config.js、locales 双份维护。
 ORIGINAL_GAMES: List[Dict[str, str]] = [
+    {"key": "mario-3d", "url": "html/game/mario-3d/index.html", "titleKey": "tools.mario3d.title"},
+    {"key": "fly_bird", "url": "html/game/fly_bird.html", "titleKey": "tools.flyBird.title"},
     {"key": "tank-3d", "url": "html/game/tank-3d/index.html", "titleKey": "tools.tank3d.title"},
     {"key": "journey-west-3d", "url": "html/game/journey-west-3d/index.html", "titleKey": "tools.journeyWest.title"},
     {"key": "worms", "url": "html/game/worms.html", "titleKey": "tools.worms.title"},

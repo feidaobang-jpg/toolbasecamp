@@ -168,10 +168,10 @@
         var label = gameCardLabel(item);
         var thumb = gameThumbSrc(item);
         var external = kind === 'external';
-        var card = document.createElement('a');
-        card.href = item.url || '#';
+        var card = document.createElement(external ? 'a' : 'article');
         card.className = 'hub-tool-card hub-game-card' + (external ? ' hub-game-card--external' : '');
         if (external) {
+            card.href = item.url || '#';
             card.target = '_blank';
             card.rel = 'noopener noreferrer';
             card.title = label + ' · ' + tr('games.externalOpenTip');
@@ -187,6 +187,31 @@
             '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3>' +
                 '<span class="hub-game-kind hub-game-kind--' + kind + '">' + escapeHtml(kindLabel(kind)) + '</span>' +
             '</span>';
+        if (!external) {
+            var mainLink = document.createElement('a');
+            mainLink.className = 'hub-game-main';
+            mainLink.href = item.url;
+            while (card.firstChild) mainLink.appendChild(card.firstChild);
+            card.appendChild(mainLink);
+
+            var actions = document.createElement('div');
+            actions.className = 'hub-game-actions';
+            [{ url: item.url, label: tr('games.playHere'), external: false },
+                { url: item.toyUrl, label: tr('games.playToy'), external: true }].forEach(function (entry) {
+                if (!entry.url) return;
+                var link = document.createElement('a');
+                link.className = 'tb-btn';
+                link.href = entry.url;
+                link.textContent = entry.label;
+                link.setAttribute('aria-label', label + ' · ' + entry.label);
+                if (entry.external) {
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                }
+                actions.appendChild(link);
+            });
+            card.appendChild(actions);
+        }
         return card;
     }
 

@@ -185,20 +185,22 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.action',
             items: [
-                { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
-                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
-                { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
-                { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=7' }
+                { titleKey: 'tools.tank3d.title', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-3d/index.html', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
+                { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' },
+                { titleKey: 'tools.journeyWest.title', toyUrl: 'https://www.bilibili.com/toy/feidao-journey-west/index.html', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
+                { titleKey: 'tools.tankBattle.title', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-battle/index.html', url: 'html/game/tank_battle.html?v=54' },
+                { titleKey: 'tools.starshipDefense.title', toyUrl: 'https://www.bilibili.com/toy/chongchao-qianshao/index.html', url: 'html/game/starship_defense.html?v=7' }
             ]
         },
         {
             titleKey: 'games.groups.puzzle',
             items: [
-                { titleKey: 'tools.gemswap.title', url: 'html/game/gemswap.html?v=10' },
-                { titleKey: 'tools.lianliankan.title', url: 'html/game/lianliankan.html' },
-                { titleKey: 'tools.bubbleDragon.title', url: 'html/game/bubble_dragon.html?v=6' },
-                { titleKey: 'tools.frogZuma.title', url: 'html/game/frog_zuma.html?v=6' },
-                { titleKey: 'tools.worms.title', url: 'html/game/worms.html?v=7' },
+                { titleKey: 'tools.gemswap.title', toyUrl: 'https://www.bilibili.com/toy/feidao-gemswap/index.html', url: 'html/game/gemswap.html?v=10' },
+                { titleKey: 'tools.lianliankan.title', toyUrl: 'https://www.bilibili.com/toy/feidao-lianliankan/index.html', url: 'html/game/lianliankan.html' },
+                { titleKey: 'tools.bubbleDragon.title', toyUrl: 'https://www.bilibili.com/toy/feidao-bubble-dragon/index.html', url: 'html/game/bubble_dragon.html?v=6' },
+                { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html', toyUrl: 'https://www.bilibili.com/toy/feidao-fly-bird/index.html' },
+                { titleKey: 'tools.frogZuma.title', toyUrl: 'https://www.bilibili.com/toy/feidao-frog-zuma/index.html', url: 'html/game/frog_zuma.html?v=6' },
+                { titleKey: 'tools.worms.title', toyUrl: 'https://www.bilibili.com/toy/feidao-worms/index.html', url: 'html/game/worms.html?v=7' },
                 { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=7' },
                 { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=10' }
             ]
