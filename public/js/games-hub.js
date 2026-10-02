@@ -196,11 +196,11 @@
 
             var actions = document.createElement('div');
             actions.className = 'hub-game-actions';
-            [{ url: item.url, label: tr('games.playHere'), external: false },
-                { url: item.toyUrl, label: tr('games.playToy'), external: true }].forEach(function (entry) {
+            [{ url: item.toyUrl, label: tr('games.playToy'), external: true },
+                { url: item.url, label: tr('games.playHere'), external: false }].forEach(function (entry) {
                 if (!entry.url) return;
                 var link = document.createElement('a');
-                link.className = 'tb-btn';
+                link.className = 'tb-btn' + (!entry.external && item.toyUrl ? ' hub-game-play-secondary' : '');
                 link.href = entry.url;
                 link.textContent = entry.label;
                 link.setAttribute('aria-label', label + ' · ' + entry.label);
