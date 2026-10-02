@@ -1,0 +1,8 @@
+{
+  "source": "public/html/game/brick_breaker.html",
+  "files": {
+    "game-progress.js": "18dc292299e7b4e976559d0bf6eeefc76b8a9badf6f71faa4532d514009ce7f2",
+    "touch-ui.js": "d9d98121b88537af61c976e29242513abe24b98e9edeafc2eb5ad91cc64f7ead",
+    "index.html": "43772b93d5b0bd77b9251d18c79be0f2edca16b31b310c3a4601788aebe23460"
+  }
+}

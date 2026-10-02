@@ -1,0 +1,18 @@
+{
+  "title": "叠叠乐",
+  "id": 39586315360256,
+  "slug": "feidao-sheepstack",
+  "status": "auditing",
+  "visibility": "PUBLIC",
+  "submitted_at": "2026-10-02T15:42:59.626Z",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_5IoHRVtC/index.html",
+  "verified_preview_url": "https://www.bilibili.com/toy/preview/preview_GJsAAtxP/index.html",
+  "public_url": "https://www.bilibili.com/toy/feidao-sheepstack/index.html",
+  "package": "game-projects/sheepstack/dist/toy-v1",
+  "poster": "game-projects/sheepstack/media-kit/releases/toy-v1/local-desktop.png",
+  "icon": "public/assets/game/thumbs/sheepstack.jpg",
+  "build_command": "node game-projects/build-canvas-toy.mjs",
+  "adaptation": "Package relative scripts; omit website thumbnail helper; focus canvas on pointerdown for iframe keyboard input.",
+  "validation": "Official doctor: no errors. Real browser desktop and mobile viewport checks: start/play and controls; no page errors. Not a full campaign playthrough.",
+  "warnings": []
+}

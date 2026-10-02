@@ -1,0 +1,12 @@
+[
+  {
+    "mobile": false,
+    "errors": [],
+    "interaction": "start, play, controls verified"
+  },
+  {
+    "mobile": true,
+    "errors": [],
+    "interaction": "start, play, controls verified"
+  }
+]

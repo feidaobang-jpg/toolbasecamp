@@ -1,0 +1,20 @@
+{
+  "title": "打砖块",
+  "id": 39586310916096,
+  "slug": "feidao-brick-breaker",
+  "status": "auditing",
+  "visibility": "PUBLIC",
+  "submitted_at": "2026-10-02T15:42:59.625Z",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_TAulDcGP/index.html",
+  "verified_preview_url": "https://www.bilibili.com/toy/preview/preview_stCMxbBv/index.html",
+  "public_url": "https://www.bilibili.com/toy/feidao-brick-breaker/index.html",
+  "package": "game-projects/brick-breaker/dist/toy-v1",
+  "poster": "game-projects/brick-breaker/media-kit/releases/toy-v1/local-desktop.png",
+  "icon": "public/assets/game/thumbs/brick_breaker.jpg",
+  "build_command": "node game-projects/build-canvas-toy.mjs",
+  "adaptation": "Package relative scripts; omit website thumbnail helper; focus canvas on pointerdown for iframe keyboard input.",
+  "validation": "Official doctor: no errors. Real browser desktop and mobile viewport checks: start/play and controls; no page errors. Not a full campaign playthrough.",
+  "warnings": [
+    "Static scripts use stable filenames; updates re-download small scripts."
+  ]
+}
