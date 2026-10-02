@@ -1,5 +1,6 @@
 (function () {
     let searchQuery = '';
+    let kindFilter = 'all';
 
     function tr(k) {
         return typeof window.t === 'function' ? window.t(k) : k;
@@ -48,6 +49,17 @@
         return item.title || '';
     }
 
+    /** 一组游戏按「全部是外链」判定归属：自研原创 / 精选外链两个大区。 */
+    function groupKind(group) {
+        var items = (group && group.items) || [];
+        if (!items.length) return 'original';
+        return items.every(isExternalGame) ? 'external' : 'original';
+    }
+
+    function kindLabel(kind) {
+        return kind === 'external' ? tr('games.kindExternal') : tr('games.kindOriginal');
+    }
+
     function bindSearch(toolbarEl) {
         var input = toolbarEl.querySelector('#hub-search-input');
         var clearBtn = toolbarEl.querySelector('#hub-search-clear');
@@ -85,6 +97,40 @@
         bindSearch(toolbarEl);
     }
 
+    function applyKindFilter() {
+        var centerEl = document.getElementById('main-content');
+        if (!centerEl) return;
+        centerEl.querySelectorAll('.hub-kind-block').forEach(function (blockEl) {
+            blockEl.classList.toggle('is-hidden', kindFilter !== 'all' && blockEl.dataset.kind !== kindFilter);
+        });
+        centerEl.querySelectorAll('.hub-kind-chip').forEach(function (chip) {
+            chip.classList.toggle('is-active', chip.dataset.kind === kindFilter);
+        });
+    }
+
+    function renderKindChips(containerEl) {
+        var wrap = document.createElement('div');
+        wrap.className = 'hub-kind-chips';
+        [
+            { kind: 'all', label: tr('games.groups.all') },
+            { kind: 'original', label: tr('games.kindOriginal') },
+            { kind: 'external', label: tr('games.kindExternal') }
+        ].forEach(function (opt) {
+            var chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'hub-kind-chip' + (kindFilter === opt.kind ? ' is-active' : '');
+            chip.dataset.kind = opt.kind;
+            chip.textContent = opt.label;
+            chip.addEventListener('click', function () {
+                kindFilter = opt.kind;
+                applyKindFilter();
+                applySearchFilter(searchQuery);
+            });
+            wrap.appendChild(chip);
+        });
+        containerEl.insertBefore(wrap, containerEl.firstChild);
+    }
+
     function applySearchFilter(query) {
         var centerEl = document.getElementById('main-content');
         var emptyEl = document.getElementById('hub-empty-search');
@@ -97,7 +143,8 @@
             var groupVisible = 0;
             groupEl.querySelectorAll('.hub-tool-card').forEach(function (card) {
                 var text = (card.dataset.search || '').toLowerCase();
-                var match = !normalized || text.indexOf(normalized) !== -1;
+                var kindOk = kindFilter === 'all' || card.dataset.kind === kindFilter;
+                var match = kindOk && (!normalized || text.indexOf(normalized) !== -1);
                 card.classList.toggle('is-hidden', !match);
                 if (match) {
                     groupVisible += 1;
@@ -107,55 +154,95 @@
             groupEl.classList.toggle('is-hidden', groupVisible === 0);
         });
 
+        centerEl.querySelectorAll('.hub-kind-block').forEach(function (blockEl) {
+            var anyVisible = blockEl.querySelectorAll('.hub-group:not(.is-hidden)').length > 0;
+            blockEl.classList.toggle('is-hidden', !anyVisible);
+        });
+
         if (emptyEl) {
             emptyEl.classList.toggle('is-visible', normalized.length > 0 && visibleCount === 0);
         }
     }
 
+    function renderGameCard(item, kind) {
+        var label = gameCardLabel(item);
+        var thumb = gameThumbSrc(item);
+        var external = kind === 'external';
+        var card = document.createElement('a');
+        card.href = item.url || '#';
+        card.className = 'hub-tool-card hub-game-card' + (external ? ' hub-game-card--external' : '');
+        if (external) {
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+            card.title = label + ' · ' + tr('games.externalOpenTip');
+        }
+        card.dataset.search = label + ' ' + kindLabel(kind);
+        card.dataset.kind = kind;
+        card.innerHTML =
+            (thumb
+                ? '<span class="hub-game-card-thumb">' +
+                    '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' +
+                  '</span>'
+                : '') +
+            '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3>' +
+                '<span class="hub-game-kind hub-game-kind--' + kind + '">' + escapeHtml(kindLabel(kind)) + '</span>' +
+            '</span>';
+        return card;
+    }
+
     function renderGameGroups(containerEl, groups) {
         if (!containerEl) return;
 
-        groups.forEach(function (group, index) {
-            var sectionEl = document.createElement('section');
-            sectionEl.id = 'section-' + index;
-            sectionEl.className = 'hub-group';
+        var buckets = { original: [], external: [] };
+        groups.forEach(function (group) {
+            buckets[groupKind(group)].push(group);
+        });
 
-            var headerEl = document.createElement('h3');
-            headerEl.className = 'hub-group-head';
-            var groupLabel = group.titleKey ? tr(group.titleKey) : (group.title || '');
-            if (groups.length > 1) {
-                headerEl.textContent = groupLabel;
-                sectionEl.appendChild(headerEl);
-            }
+        ['original', 'external'].forEach(function (kind) {
+            var kindGroups = buckets[kind];
+            if (!kindGroups.length) return;
 
-            var gridEl = document.createElement('div');
-            gridEl.className = 'hub-games-grid';
+            var blockEl = document.createElement('div');
+            blockEl.className = 'hub-kind-block hub-kind-block--' + kind;
+            blockEl.dataset.kind = kind;
 
-            group.items.forEach(function (item) {
-                var label = gameCardLabel(item);
-                var thumb = gameThumbSrc(item);
-                var external = isExternalGame(item);
-                var card = document.createElement('a');
-                card.href = item.url || '#';
-                card.className = 'hub-tool-card hub-game-card' + (external ? ' hub-game-card--external' : '');
-                if (external) {
-                    card.target = '_blank';
-                    card.rel = 'noopener noreferrer';
-                    card.title = label + ' · ' + tr('games.externalOpenTip');
+            var count = kindGroups.reduce(function (sum, g) { return sum + g.items.length; }, 0);
+            var title = kind === 'external' ? tr('games.sectionExternal') : tr('games.sectionOriginal');
+            var desc = kind === 'external'
+                ? tr('games.sectionExternalDesc')
+                : tr('games.sectionOriginalDesc');
+            blockEl.innerHTML =
+                '<div class="hub-kind-head">' +
+                    '<h2 class="hub-kind-title">' + escapeHtml(title) +
+                        '<span class="hub-kind-count">' + count + '</span>' +
+                    '</h2>' +
+                    '<p class="hub-kind-desc">' + escapeHtml(desc) + '</p>' +
+                '</div>';
+
+            kindGroups.forEach(function (group, index) {
+                var sectionEl = document.createElement('section');
+                sectionEl.id = 'section-' + kind + '-' + index;
+                sectionEl.className = 'hub-group';
+
+                var headerEl = document.createElement('h3');
+                headerEl.className = 'hub-group-head';
+                var groupLabel = group.titleKey ? tr(group.titleKey) : (group.title || '');
+                if (kindGroups.length > 1) {
+                    headerEl.textContent = groupLabel;
+                    sectionEl.appendChild(headerEl);
                 }
-                card.dataset.search = groupLabel + ' ' + label;
-                card.innerHTML =
-                    (thumb
-                        ? '<span class="hub-game-card-thumb">' +
-                            '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' +
-                          '</span>'
-                        : '') +
-                    '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3></span>';
-                gridEl.appendChild(card);
+
+                var gridEl = document.createElement('div');
+                gridEl.className = 'hub-games-grid';
+                var kind0 = groupKind(group);
+                group.items.forEach(function (item) {
+                    gridEl.appendChild(renderGameCard(item, kind0));
+                });
+                sectionEl.appendChild(gridEl);
+                blockEl.appendChild(sectionEl);
             });
 
-            sectionEl.appendChild(gridEl);
-            containerEl.appendChild(sectionEl);
+            containerEl.appendChild(blockEl);
         });
 
         var emptyEl = document.createElement('div');
@@ -181,6 +268,8 @@
 
         renderMobileSearch(mobileToolbar);
         renderGameGroups(centerEl, groups);
+        renderKindChips(centerEl);
+        if (kindFilter !== 'all') applyKindFilter();
         if (searchQuery) applySearchFilter(searchQuery);
     }
 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏投票榜 — 百宝箱</title>
+    <meta name="description" content="给你爱玩的自研游戏投票，写下想玩的游戏愿望，榜单决定我们优先优化哪几款。">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link href="vendor/font-awesome/css/all.min.css?v=nosTW1" rel="stylesheet">
+    <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
+    <link rel="stylesheet" href="css/base.css?v=nosTW1">
+    <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
+    <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
+    <link rel="stylesheet" href="css/game-vote.css?v=gamevote1">
+</head>
+<body id="top" class="site-page site-page--hub">
+    <header class="site-header site-header--shrink">
+        <div class="site-header-inner">
+            <a href="index.html" class="site-brand">
+                <div class="site-logo logo-text">TB</div>
+                <h1 class="site-name site-title">百宝箱</h1>
+            </a>
+            <nav data-nav="main" data-base-path="" class="site-nav-main"></nav>
+            <div id="site-header-mobile-slot" class="site-header-mobile-slot"></div>
+        </div>
+    </header>
+
+    <div class="site-hub-layout">
+        <main class="site-main site-main--hub">
+            <div class="gv-wrap">
+                <div class="gv-page-head">
+                    <h2 data-i18n="gameVote.title">游戏投票榜</h2>
+                    <p data-i18n="gameVote.subtitle">自研游戏你最爱玩哪个、想让我们接着做什么，投一票，榜单决定优化顺序。</p>
+                </div>
+
+                <div class="tip-box gv-rules">
+                    <strong data-i18n="gameVote.rulesTitle">投票规则</strong>
+                    <span data-i18n="gameVote.rulesBody">不用登录，本机可投「最爱玩」3 票、「愿望单」5 票，投过还能改。想玩的游戏榜单上没有，可以自己填一条愿望，别人也能给你投票。</span>
+                </div>
+
+                <div id="gv-msg" class="gv-msg"></div>
+                <p id="gv-totals" class="gv-totals"></p>
+
+                <div id="gv-boards">
+                    <section class="gv-card">
+                        <h3 data-i18n="gameVote.boardTitle">热度榜 · 最爱玩哪个</h3>
+                        <p class="gv-desc" data-i18n="gameVote.boardDesc">已上线自研游戏的得票数，右侧括号里是近 7 天新增。</p>
+                        <div id="gv-remaining" class="gv-remaining"></div>
+                        <ul id="gv-favorite" class="gv-list gv-list--favorite"></ul>
+                    </section>
+
+                    <section class="gv-card">
+                        <h3 data-i18n="gameVote.wishBoardTitle">愿望单 · 想玩这些</h3>
+                        <p class="gv-desc" data-i18n="gameVote.wishBoardDesc">网友自己填的愿望，票多的优先安排复刻或新做。</p>
+                        <ul id="gv-wishlist" class="gv-list"></ul>
+
+                        <form id="gv-wish-form" class="gv-wish-form" autocomplete="off">
+                            <label class="gv-field">
+                                <span data-i18n="gameVote.wishNameLabel">想玩的游戏</span>
+                                <input type="text" id="gv-wish-name" maxlength="24"
+                                    placeholder="例如：合金弹头式横版闯关">
+                            </label>
+                            <label class="gv-field">
+                                <span data-i18n="gameVote.wishNoteLabel">想要什么样的玩法</span>
+                                <input type="text" id="gv-wish-note" maxlength="80"
+                                    placeholder="一句话说清爽点，例如：能双人同屏，Boss 会躲子弹">
+                            </label>
+                            <div class="action-row">
+                                <button type="submit" class="tb-btn" data-i18n="gameVote.submitWishBtn">提交愿望</button>
+                            </div>
+                            <p class="gv-tip" data-i18n="gameVote.wishTip">别放链接和联系方式，广告内容会被管理员下架。</p>
+                        </form>
+                    </section>
+                </div>
+
+                <section id="gv-admin" class="gv-card gv-card--admin" hidden>
+                    <h3 data-i18n="gameVote.adminTitle">愿望单管理</h3>
+                    <label class="gv-check">
+                        <input type="checkbox" id="gv-admin-toggle-hidden">
+                        <span data-i18n="gameVote.adminShowHidden">显示已下架</span>
+                    </label>
+                    <ul id="gv-admin-list" class="gv-list"></ul>
+                </section>
+
+                <div class="action-row gv-foot-actions">
+                    <button type="button" id="gv-refresh" class="tb-btn" data-i18n="gameVote.refreshBtn">刷新榜单</button>
+                    <a class="tb-btn" href="games.html" data-i18n="gameVote.backToGames">返回游戏列表</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/locales/zh-CN.js?v=gamevote1"></script>
+    <script src="js/i18n.js?v=nosTW1"></script>
+    <script src="js/astra-games-catalog.js?v=cfb7f37d20"></script>
+    <script src="js/config.js?v=gamevote1"></script>
+    <script src="js/common_ui.js?v=nosTW1"></script>
+    <script src="js/game-vote-client.js?v=gamevote1"></script>
+    <script src="js/game-vote.js?v=gamevote1"></script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+/* 游戏投票：独立投票页 + 游戏页顶部榜单卡 */
+
+.gv-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 2.5rem;
+}
+
+.gv-page-head h2 {
+    margin: 0 0 0.375rem;
+    font-size: 1.5rem;
+    color: #0f172a;
+}
+
+.gv-page-head p {
+    margin: 0 0 1rem;
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+
+.gv-rules {
+    margin: 0 0 1rem;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+}
+
+.gv-rules strong {
+    margin-right: 0.5rem;
+}
+
+.gv-msg {
+    display: none;
+    margin: 0 0 1rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+}
+
+.gv-msg--info,
+.gv-msg--error,
+.gv-msg--ok {
+    display: block;
+}
+
+.gv-msg--info {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.gv-msg--error {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.gv-msg--ok {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.gv-totals {
+    margin: 0 0 1rem;
+    color: #64748b;
+    font-size: 0.8125rem;
+}
+
+.gv-totals b {
+    color: #2563eb;
+}
+
+.gv-card {
+    margin: 0 0 1.25rem;
+    padding: 1.125rem 1rem 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.gv-card h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.0625rem;
+    color: #0f172a;
+}
+
+.gv-desc {
+    margin: 0 0 0.875rem;
+    color: #64748b;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.gv-remaining {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 0 0 0.875rem;
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.gv-remaining b {
+    color: #2563eb;
+}
+
+.gv-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gv-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.gv-row:last-child {
+    border-bottom: none;
+}
+
+.gv-rank {
+    flex: 0 0 auto;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    text-align: center;
+}
+
+.gv-row:nth-child(1) .gv-rank {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.gv-row:nth-child(2) .gv-rank {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.gv-row:nth-child(3) .gv-rank {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.gv-row-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.gv-link,
+.gv-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #0f172a;
+    word-break: break-word;
+}
+
+.gv-link:hover {
+    color: #2563eb;
+}
+
+.gv-note {
+    color: #64748b;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.gv-meta {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+.gv-week {
+    font-style: normal;
+    margin-left: 0.5rem;
+}
+
+.gv-mine {
+    font-style: normal;
+    margin-left: 0.375rem;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.gv-vote-btn {
+    flex: 0 0 auto;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.gv-vote-btn.is-voted {
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.22);
+}
+
+.gv-vote-btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+}
+
+.gv-empty {
+    padding: 0.75rem 0;
+    color: #94a3b8;
+    font-size: 0.8125rem;
+}
+
+.gv-wish-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.gv-field {
+    display: block;
+    margin: 0 0 0.75rem;
+}
+
+.gv-field span {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.gv-field input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.gv-field input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.gv-tip {
+    margin: 0.625rem 0 0;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    line-height: 1.6;
+}
+
+.gv-check {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+.gv-card--admin {
+    border-style: dashed;
+    background: #f8fafc;
+}
+
+.gv-admin-btn {
+    flex: 0 0 auto;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.gv-foot-actions {
+    margin-top: 1.25rem;
+}
+
+/* 游戏页顶部榜单卡 */
+.gvb {
+    margin: 0 0 1.5rem;
+    padding: 1rem;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+}
+
+.gvb-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin-bottom: 0.875rem;
+}
+
+.gvb-title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.gvb-total {
+    margin: 0;
+    flex: 1 1 auto;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.gvb-cta {
+    flex: 0 0 auto;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+}
+
+.gvb-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.gvb-col-title {
+    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.gvb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gvb-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0;
+    border-bottom: 1px solid #eef2f7;
+    font-size: 0.8125rem;
+}
+
+.gvb-row:last-child {
+    border-bottom: none;
+}
+
+.gvb-rank {
+    flex: 0 0 auto;
+    width: 1.125rem;
+    color: #94a3b8;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.gvb-rank--1 {
+    color: #1d4ed8;
+}
+
+.gvb-rank--2 {
+    color: #4338ca;
+}
+
+.gvb-rank--3 {
+    color: #b45309;
+}
+
+.gvb-link {
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.gvb-link:hover {
+    color: #2563eb;
+}
+
+.gvb-name {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gvb-note {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #64748b;
+}
+
+.gvb-votes {
+    flex: 0 0 auto;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.gvb-week {
+    font-style: normal;
+    margin-left: 0.25rem;
+    color: #16a34a;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.gvb-empty {
+    color: #94a3b8;
+    font-size: 0.8125rem;
+    padding: 0.375rem 0;
+}
+
+.gvb--fallback .gvb-cta {
+    margin-left: auto;
+}
+
+@media (min-width: 720px) {
+    .gvb-cols {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .gv-wrap {
+        padding: 1rem 0.875rem 2rem;
+    }
+
+    .gv-vote-btn {
+        padding: 0.3125rem 0.625rem;
+        font-size: 0.75rem;
+    }
+}

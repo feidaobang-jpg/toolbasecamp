@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="css/site-mobile-nav.css?v=nosTW1">
     <link rel="stylesheet" href="css/base.css?v=nosTW1">
   <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
-  <link rel="stylesheet" href="css/tools-hub.css?v=astra1">
+  <link rel="stylesheet" href="css/tools-hub.css?v=gamekind1">
+  <link rel="stylesheet" href="css/game-vote.css?v=gamevote1">
 </head>
 <body id="top" class="site-page site-page--hub">
     <header class="site-header site-header--shrink">
@@ -32,6 +33,7 @@
                 <div class="hub-body">
                     <div class="hub-center hub-center-wide" id="hub-center">
                         <div id="hub-mobile-toolbar" class="hub-mobile-toolbar" aria-hidden="true"></div>
+                        <div id="game-vote-board"></div>
                         <div id="main-content" class="hub-center-inner"></div>
                     </div>
                 </div>
@@ -39,15 +41,20 @@
         </main>
     </div>
 
-    <script src="js/locales/zh-CN.js?v=games-cleanup2"></script>
+    <script src="js/locales/zh-CN.js?v=gamevote1"></script>
     <script src="js/i18n.js?v=nosTW1"></script>
     <script src="js/astra-games-catalog.js?v=cfb7f37d20"></script>
-    <script src="js/config.js?v=hopfox-launch1"></script>
+    <script src="js/config.js?v=gamevote1"></script>
     <script src="js/common_ui.js?v=nosTW1"></script>
-    <script src="js/games-hub.js?v=astra2"></script>
+    <script src="js/game-vote-client.js?v=gamevote1"></script>
+    <script src="js/games-vote-board.js?v=gamevote1"></script>
+    <script src="js/games-hub.js?v=gamekind1"></script>
     <script>
       (function () {
-        function go() { if (typeof renderGamesHub === 'function') renderGamesHub(); }
+        function go() {
+            if (typeof renderGamesVoteBoard === 'function') renderGamesVoteBoard();
+            if (typeof renderGamesHub === 'function') renderGamesHub();
+        }
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
         else go();
       })();

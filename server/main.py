@@ -74,6 +74,9 @@ from game_thumbs import router as game_thumbs_router
 from game_thumbs import wire as wire_game_thumbs
 from nbcheck import router as nbcheck_router
 from nbcheck import wire as wire_nbcheck
+from game_votes import ensure_game_votes_tables
+from game_votes import router as game_votes_router
+from game_votes import wire as wire_game_votes
 
 NBCHECK_API_REV = 5
 NEWS_API_REV = 2
@@ -427,6 +430,7 @@ def ensure_tables():
             ensure_stock_pick_tables(cur)
             ensure_mark_six_tables(cur)
             ensure_downloads_tables(cur)
+            ensure_game_votes_tables(cur)
             from ai_wallet import ensure_wallet_schema
 
             ensure_wallet_schema(cur)
@@ -802,6 +806,15 @@ wire_game_thumbs(get_current_user, require_admin)
 app.include_router(game_thumbs_router)
 wire_nbcheck(get_current_user, require_admin)
 app.include_router(nbcheck_router)
+wire_game_votes(
+    get_conn,
+    require_db,
+    get_current_user,
+    require_admin,
+    is_admin,
+    _client_ip,
+)
+app.include_router(game_votes_router)
 wire_news(get_conn, require_db, get_current_user, require_admin)
 app.include_router(news_router)
 wire_pc_builds(get_conn, require_db, get_current_user, require_admin)
