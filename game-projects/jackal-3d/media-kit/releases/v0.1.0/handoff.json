@@ -1,0 +1,1382 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-3d",
+  "version": "v0.1.0",
+  "base_version": null,
+  "created_at": "2026-10-02T02:57:58.605Z",
+  "build": {
+    "id": "jackal-v0.1.0-0eead38f946e",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "0eead38f946e9b33333b832c3b327266c919e78baebc3f56966b232b55a5b078",
+    "entrypoint": "public/html/game/jackal-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "drive",
+      "description": "吉普驾驶、机枪、榴弹与导弹升级",
+      "status": "implemented",
+      "evidence_ids": [
+        "officer-upgrade",
+        "first-rescue"
+      ]
+    },
+    {
+      "id": "rescue",
+      "description": "四座营房、九人救援、直升机撤离",
+      "status": "implemented",
+      "evidence_ids": [
+        "prison-camp",
+        "helicopter-evacuation",
+        "result"
+      ]
+    },
+    {
+      "id": "boss",
+      "description": "四波重型坦克与预警弹幕",
+      "status": "implemented",
+      "evidence_ids": [
+        "tank-wave-1",
+        "tank-wave-3",
+        "tank-wave-4",
+        "result"
+      ]
+    },
+    {
+      "id": "controls",
+      "description": "键盘、横屏触屏、竖屏自动旋转和单按钮视角",
+      "status": "implemented",
+      "evidence_ids": [
+        "phone-844-multitouch",
+        "phone-390-multitouch"
+      ]
+    },
+    {
+      "id": "loop",
+      "description": "检查点无限复活、结算、重玩与独立最高分",
+      "status": "implemented",
+      "evidence_ids": [
+        "result"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "first-level",
+      "feature_ids": [
+        "drive",
+        "rescue",
+        "boss",
+        "controls",
+        "loop"
+      ],
+      "before": "新建项目",
+      "after": "可完整通关的第一关 3D Demo",
+      "visible_result": "吉普突破、战俘救援与四辆坦克决战",
+      "evidence_ids": [
+        "result",
+        "playthrough"
+      ],
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "mixed-geometry",
+      "status": "fixed",
+      "observed": "混合索引和非索引几何导致合批失败",
+      "fix": "统一为非索引几何",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "first-play"
+      ],
+      "retest": "浏览器正常载入",
+      "gap": "未录故障原片"
+    },
+    {
+      "id": "negative-respawn",
+      "status": "fixed",
+      "observed": "复活倒计时负数被真值判断当成仍在死亡",
+      "fix": "复活显式将 dead 归零",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "functional.json：三次击毁复活、保护到期后扣血",
+      "gap": "只有诊断状态记录，没有故障原片"
+    },
+    {
+      "id": "camera-held-input",
+      "status": "fixed",
+      "observed": "切视角清空正在按住的触控状态",
+      "fix": "相同水平轴视角切换保留按住状态",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "phone-390-multitouch"
+      ],
+      "retest": "移动与射击保持期间切换两次视角"
+    }
+  ],
+  "media": [
+    {
+      "id": "boss-arena",
+      "file": "releases/v0.1.0/captures/boss-arena.png",
+      "sha256": "56b13808927c2a9ead7dc4fc8a9559a843aa669e805dc593e0522789ca0f36c2",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "boss-arena",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "first-play",
+      "file": "releases/v0.1.0/captures/first-play.png",
+      "sha256": "66a59b99daac2df0957b00ea1301032f4df2634d71a545af65437b8c7dd4531e",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "first-play",
+      "width": 1440,
+      "height": 900,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "first-rescue",
+      "file": "releases/v0.1.0/captures/first-rescue.png",
+      "sha256": "ee13a44a8ae3b563bb9a45c32aecd195eabf6aeaf3be8a23c815fc7d9bba3770",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "first-rescue",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "helicopter-evacuation",
+      "file": "releases/v0.1.0/captures/helicopter-evacuation.png",
+      "sha256": "02fb7a39ff970594ee48c2f1d87e6409f38ec415e3104c826aa6c36c2e900753",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "helicopter-evacuation",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "local-site",
+      "file": "releases/v0.1.0/captures/local-site.png",
+      "sha256": "53b11d9b7eb8ed420b0ff385221e3b2a5e861067a4694da92170a6bf235eb48d",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "local-site",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "menu",
+      "file": "releases/v0.1.0/captures/menu.png",
+      "sha256": "ff51582dd5cb1f8c26fd4ee290f01ca0899469faaff85a5eb39301b91209955b",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "menu",
+      "width": 1440,
+      "height": 900,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "motion-sequence",
+      "file": "releases/v0.1.0/captures/motion-sequence.png",
+      "sha256": "0aa2b6917c296a61dfc40152676219e79c8eac9536203b33b5f43fd7398f676a",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "motion-sequence",
+      "width": 1280,
+      "height": 540,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "officer-upgrade",
+      "file": "releases/v0.1.0/captures/officer-upgrade.png",
+      "sha256": "126d0483eb5072f4e157e7feed71e73616595c38a4767fe1d3277e457a4ed7aa",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "officer-upgrade",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "performance-1280",
+      "file": "releases/v0.1.0/captures/performance-1280.png",
+      "sha256": "9faff3715e93ca941f21bb82ab214ae3ef71f128ab1934ca98c0391294e7ef0d",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "性能测试定点营区，含明确测试保护与传送",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "performance-844",
+      "file": "releases/v0.1.0/captures/performance-844.png",
+      "sha256": "014a85d28206be29bf5b0fdfd67ae10394a0cade1b4e58f0744daf30f4a76159",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "性能测试定点营区，含明确测试保护与传送",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-390-fallback",
+      "file": "releases/v0.1.0/captures/phone-390-fallback.png",
+      "sha256": "5c36b07a9059ae9e8fe9d2ef253619c2b028ba5fc067f1cc040c3529478334d1",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-390-fallback；CDP 多点触摸，非物理手机",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-390-menu",
+      "file": "releases/v0.1.0/captures/phone-390-menu.png",
+      "sha256": "13986cbdc55ee28ea7356251ab1076fa34decbe58a8ab8ecf959037d1e99ba76",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-390-menu；CDP 多点触摸，非物理手机",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-390-multitouch",
+      "file": "releases/v0.1.0/captures/phone-390-multitouch.png",
+      "sha256": "49c4c94b225d83d3871b3c3a8c1b8c902991a9107aa74514ad971c618e04a3ce",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-390-multitouch；CDP 多点触摸，非物理手机",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-390",
+      "file": "releases/v0.1.0/captures/phone-390.webm",
+      "sha256": "516ed842f468d5110c4ec1eec1cc1a8c209ac440a2400d7a167117c69b510abb",
+      "kind": "video",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-390；CDP 多点触摸，非物理手机",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 4.6,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 4.6,
+          "description": "桌面 Edge 手机视口模拟：phone-390；CDP 多点触摸，非物理手机"
+        }
+      ]
+    },
+    {
+      "id": "phone-844-fallback",
+      "file": "releases/v0.1.0/captures/phone-844-fallback.png",
+      "sha256": "c3e8b343d79eb8105079ada7ccbdd08fb20c47070f69c167bf48ffc842046463",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-844-fallback；CDP 多点触摸，非物理手机",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-844-menu",
+      "file": "releases/v0.1.0/captures/phone-844-menu.png",
+      "sha256": "1de9bd1abf781a31288b360da6661b6a73fb93347bcd55d2f9dfec90b6baa419",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-844-menu；CDP 多点触摸，非物理手机",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-844-multitouch",
+      "file": "releases/v0.1.0/captures/phone-844-multitouch.png",
+      "sha256": "e82d446a1f312539ff1a775010ab6075351c181ca894395277f191a22e337e84",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-844-multitouch；CDP 多点触摸，非物理手机",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-844",
+      "file": "releases/v0.1.0/captures/phone-844.webm",
+      "sha256": "22b3f8c04eb747a8125937b1c3dcae00e737969f0cf8272ec51f68a8fa0a5452",
+      "kind": "video",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "桌面 Edge 手机视口模拟：phone-844；CDP 多点触摸，非物理手机",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 4.64,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 4.64,
+          "description": "桌面 Edge 手机视口模拟：phone-844；CDP 多点触摸，非物理手机"
+        }
+      ]
+    },
+    {
+      "id": "playthrough-audio",
+      "file": "releases/v0.1.0/captures/playthrough-audio.webm",
+      "sha256": "dd3785bc5edaa0776249fd5dd7c3cdb5afd1679dcac8139c9e2d3060b8874a63",
+      "kind": "audio",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "同一次通关的独立游戏音轨；相对画面开始约后移 0.65 秒，尚需逐事件校准",
+      "width": null,
+      "height": null,
+      "duration_seconds": 73.42,
+      "audio": "game",
+      "visual_review": "not-applicable",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "playthrough",
+      "file": "releases/v0.1.0/captures/playthrough.webm",
+      "sha256": "380a867d0340f63895f80cdf0468f74597e54165cc2d800cdbcb757e3da5ecbb",
+      "kind": "video",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "完整第一关正常键盘输入实机：9 人撤离、四辆坦克、结算；无作弊",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 75.44,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 75,
+          "description": "完整第一关正常键盘输入实机：9 人撤离、四辆坦克、结算；无作弊"
+        }
+      ]
+    },
+    {
+      "id": "prison-camp",
+      "file": "releases/v0.1.0/captures/prison-camp.png",
+      "sha256": "9f8e6b513bfe75366a7c14f096d3bcb680e34c918b182bf5029f5581420b8b3c",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "prison-camp",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "result",
+      "file": "releases/v0.1.0/captures/result.png",
+      "sha256": "f976fbfda62e9f76748c76959315a07d9206c7e6ece7fdfd4d9491a5202241b2",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "result",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "river-bridge",
+      "file": "releases/v0.1.0/captures/river-bridge.png",
+      "sha256": "381360eb6c9803823bbcea29df0c2be64d7f220fdccf4c17f7caf486ba05d518",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "river-bridge",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "tank-wave-1",
+      "file": "releases/v0.1.0/captures/tank-wave-1.png",
+      "sha256": "690b7bda64be6560046f8c17a1c29e7cb047b8f94525ab97f14b53d08d47855b",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "tank-wave-1",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "tank-wave-2",
+      "file": "releases/v0.1.0/captures/tank-wave-2.png",
+      "sha256": "f3f02158efd2c251f299093d2ccbe8f4c8383402bf7c87d161c4f433169dd2fe",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "tank-wave-2",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "tank-wave-3",
+      "file": "releases/v0.1.0/captures/tank-wave-3.png",
+      "sha256": "560e48698b0cb6d97fb3c8f6659e23fa988792995f8285d65e166d1e20926555",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "tank-wave-3",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "tank-wave-4",
+      "file": "releases/v0.1.0/captures/tank-wave-4.png",
+      "sha256": "c0df06d76c4c1d7ad78f306bc0522f8bda75ba3bae667e5cc3428674cbd3b335",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "tank-wave-4",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "functional",
+      "evidence": "releases/v0.1.0/captures/functional.json",
+      "method": "desktop keyboard; targeted state edits for regression; CDP touch viewport simulation, not a physical phone",
+      "checks": [
+        {
+          "name": "Enter starts without requesting fullscreen",
+          "result": "pass"
+        },
+        {
+          "name": "Camera 0 movement and firing use screen axes",
+          "result": "pass"
+        },
+        {
+          "name": "Camera 1 movement and firing use screen axes",
+          "result": "pass"
+        },
+        {
+          "name": "Three consecutive deaths respawn with full armor and protection",
+          "result": "pass"
+        },
+        {
+          "name": "Respawn protection expires and normal damage resumes",
+          "result": "pass"
+        },
+        {
+          "name": "Explicit demo toggle enables and disables invulnerability",
+          "result": "pass"
+        },
+        {
+          "name": "Focus loss pauses and clears held keys",
+          "result": "pass"
+        },
+        {
+          "name": "Sound toggles via keyboard",
+          "result": "pass"
+        },
+        {
+          "name": "River blocks vehicles outside the physical bridge",
+          "result": "pass"
+        },
+        {
+          "name": "Restart resets combat, rescue, upgrade and scoring state",
+          "result": "pass"
+        },
+        {
+          "name": "Touch 844x390 multitouch, inverse rotation, release, camera, pause and fullscreen fallback",
+          "result": "pass"
+        },
+        {
+          "name": "Touch 390x844 multitouch, inverse rotation, release, camera, pause and fullscreen fallback",
+          "result": "pass"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "performance",
+      "evidence": "releases/v0.1.0/captures/performance.json",
+      "mode": "headless Edge with actual NVIDIA GPU; phone viewport simulation, not physical phone",
+      "results": [
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "scenario": "prison compound, continuous driving/firing, two camera switches; diagnostic teleport and protection; no recording",
+          "browser": "154.0.4258.48",
+          "seconds": 9.005399999928475,
+          "frames": 1531,
+          "fps": 170.00910564907275,
+          "median_ms": 5.899999999999636,
+          "p95_ms": 6,
+          "over50ms": 0,
+          "max_ms": 11.800000000000182,
+          "max_draw_calls": 50,
+          "max_triangles": 52601,
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "drawing_size": [
+            1280,
+            720
+          ],
+          "dpr": 1,
+          "pixel_ratio": 1,
+          "resources": {
+            "geometries": 48,
+            "textures": 6
+          },
+          "quality": "high",
+          "errors": []
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "scenario": "prison compound, continuous driving/firing, two camera switches; diagnostic teleport and protection; no recording",
+          "browser": "154.0.4258.48",
+          "seconds": 9.000699999976158,
+          "frames": 1530,
+          "fps": 169.98677880654316,
+          "median_ms": 5.899999999999636,
+          "p95_ms": 6,
+          "over50ms": 0,
+          "max_ms": 11.700000000000273,
+          "max_draw_calls": 50,
+          "max_triangles": 52665,
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "drawing_size": [
+            844,
+            390
+          ],
+          "dpr": 1,
+          "pixel_ratio": 1,
+          "resources": {
+            "geometries": 48,
+            "textures": 6
+          },
+          "quality": "high",
+          "errors": []
+        }
+      ]
+    },
+    {
+      "id": "playthrough",
+      "evidence": "releases/v0.1.0/captures/playthrough.json",
+      "result": "pass",
+      "capture_mode": "realtime-automation",
+      "input": "ordinary keyboard, no game-state edits",
+      "errors": [],
+      "log": [
+        {
+          "name": "officer-upgrade",
+          "p": {
+            "x": 9.715190409498206,
+            "z": -11.624260409498227,
+            "dead": 0,
+            "cargo": 1,
+            "level": 1,
+            "hp": 5
+          },
+          "mode": "playing",
+          "stage": 0,
+          "bossSpawned": 0,
+          "bossKilled": 0,
+          "score": 250,
+          "rescued": 0,
+          "deaths": 0,
+          "elapsed": 5.421199999999954,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": 6
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": false
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": false
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": false
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        },
+        {
+          "name": "first-rescue",
+          "p": {
+            "x": -10.983419133522967,
+            "z": -39.54801995251931,
+            "dead": 0,
+            "cargo": 4,
+            "level": 1,
+            "hp": 4
+          },
+          "mode": "playing",
+          "stage": 0,
+          "bossSpawned": 0,
+          "bossKilled": 0,
+          "score": 2900,
+          "rescued": 0,
+          "deaths": 0,
+          "elapsed": 13.156500000000241,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": 6
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": false
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": false
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        },
+        {
+          "name": "river-bridge",
+          "p": {
+            "x": -9.85630198959288,
+            "z": -63.212426517813014,
+            "dead": 0,
+            "cargo": 4,
+            "level": 1,
+            "hp": 4
+          },
+          "mode": "playing",
+          "stage": 0,
+          "bossSpawned": 0,
+          "bossKilled": 0,
+          "score": 3000,
+          "rescued": 0,
+          "deaths": 0,
+          "elapsed": 18.06230000000038,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": 6
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": false
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": false
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        },
+        {
+          "name": "prison-camp",
+          "p": {
+            "x": -9.85630198959288,
+            "z": -105.62791651781235,
+            "dead": 0,
+            "cargo": 8,
+            "level": 1,
+            "hp": 4
+          },
+          "mode": "playing",
+          "stage": 0,
+          "bossSpawned": 0,
+          "bossKilled": 0,
+          "score": 4600,
+          "rescued": 0,
+          "deaths": 0,
+          "elapsed": 26.01400000000027,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": -10,
+            "z": -87
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": false
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        },
+        {
+          "name": "helicopter-evacuation",
+          "p": {
+            "x": 7.1920599886628915,
+            "z": -143.76740849606864,
+            "dead": 0,
+            "cargo": 0,
+            "level": 1,
+            "hp": 5
+          },
+          "mode": "playing",
+          "stage": 0,
+          "bossSpawned": 0,
+          "bossKilled": 0,
+          "score": 10400,
+          "rescued": 8,
+          "deaths": 0,
+          "elapsed": 37.46100000000112,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -156
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": false
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        },
+        {
+          "name": "boss-arena",
+          "p": {
+            "x": 0.33012087408374574,
+            "z": -178.83844497066684,
+            "dead": 0,
+            "cargo": 0,
+            "level": 2,
+            "hp": 4
+          },
+          "mode": "playing",
+          "stage": 2,
+          "bossSpawned": 0,
+          "bossKilled": 0,
+          "score": 11250,
+          "rescued": 9,
+          "deaths": 0,
+          "elapsed": 54.16090000000361,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -178
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": true
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        },
+        {
+          "name": "tank-wave-1",
+          "p": {
+            "x": -0.014975519406553991,
+            "z": -183.96766136415755,
+            "dead": 0,
+            "cargo": 0,
+            "level": 2,
+            "hp": 4
+          },
+          "mode": "playing",
+          "stage": 2,
+          "bossSpawned": 1,
+          "bossKilled": 0,
+          "score": 11250,
+          "rescued": 9,
+          "deaths": 0,
+          "elapsed": 55.90210000000388,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -178
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": true
+            }
+          ],
+          "boss": [
+            {
+              "x": -6.161750000000012,
+              "z": -199,
+              "hp": 98
+            }
+          ],
+          "waiting": []
+        },
+        {
+          "name": "tank-wave-2",
+          "p": {
+            "x": 0.3647478931584168,
+            "z": -187.13037477672287,
+            "dead": 0,
+            "cargo": 0,
+            "level": 2,
+            "hp": 3
+          },
+          "mode": "playing",
+          "stage": 2,
+          "bossSpawned": 2,
+          "bossKilled": 1,
+          "score": 13250,
+          "rescued": 9,
+          "deaths": 0,
+          "elapsed": 60.937300000004626,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -178
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": true
+            }
+          ],
+          "boss": [
+            {
+              "x": 8.962538476911929,
+              "z": -199,
+              "hp": 98
+            }
+          ],
+          "waiting": []
+        },
+        {
+          "name": "tank-wave-3",
+          "p": {
+            "x": 1.3794092382230507,
+            "z": -190.58901890876842,
+            "dead": 0,
+            "cargo": 0,
+            "level": 2,
+            "hp": 3
+          },
+          "mode": "playing",
+          "stage": 2,
+          "bossSpawned": 3,
+          "bossKilled": 2,
+          "score": 15250,
+          "rescued": 9,
+          "deaths": 0,
+          "elapsed": 66.57850000000576,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -178
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": true
+            }
+          ],
+          "boss": [
+            {
+              "x": -7.602999999999991,
+              "z": -199,
+              "hp": 96
+            }
+          ],
+          "waiting": []
+        },
+        {
+          "name": "tank-wave-4",
+          "p": {
+            "x": -0.16758347525897466,
+            "z": -192.8464884473804,
+            "dead": 0,
+            "cargo": 0,
+            "level": 2,
+            "hp": 2
+          },
+          "mode": "playing",
+          "stage": 2,
+          "bossSpawned": 4,
+          "bossKilled": 3,
+          "score": 17250,
+          "rescued": 9,
+          "deaths": 0,
+          "elapsed": 71.60200000000818,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -178
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": true
+            }
+          ],
+          "boss": [
+            {
+              "x": 7.9115000000000055,
+              "z": -199,
+              "hp": 96
+            }
+          ],
+          "waiting": []
+        },
+        {
+          "name": "result",
+          "p": {
+            "x": 1.9513779870543566,
+            "z": -195.55225990969348,
+            "dead": 0,
+            "cargo": 0,
+            "level": 2,
+            "hp": 1
+          },
+          "mode": "win",
+          "stage": 2,
+          "bossSpawned": 4,
+          "bossKilled": 4,
+          "score": 19250,
+          "rescued": 9,
+          "deaths": 0,
+          "elapsed": 73.78430000000928,
+          "invincible": false,
+          "usedDemo": false,
+          "checkpoint": {
+            "x": 0,
+            "z": -178
+          },
+          "view": 0,
+          "b": [
+            {
+              "x": 10,
+              "z": -16,
+              "dead": true
+            },
+            {
+              "x": -11,
+              "z": -44,
+              "dead": true
+            },
+            {
+              "x": -10,
+              "z": -110,
+              "dead": true
+            },
+            {
+              "x": 11,
+              "z": -117,
+              "dead": true
+            }
+          ],
+          "boss": [],
+          "waiting": []
+        }
+      ],
+      "final": {
+        "p": {
+          "x": 1.9513779870543566,
+          "z": -195.55225990969348,
+          "dead": 0,
+          "cargo": 0,
+          "level": 2,
+          "hp": 1
+        },
+        "mode": "win",
+        "stage": 2,
+        "bossSpawned": 4,
+        "bossKilled": 4,
+        "score": 19250,
+        "rescued": 9,
+        "deaths": 0,
+        "elapsed": 73.78430000000928,
+        "invincible": false,
+        "usedDemo": false,
+        "checkpoint": {
+          "x": 0,
+          "z": -178
+        },
+        "view": 0,
+        "b": [
+          {
+            "x": 10,
+            "z": -16,
+            "dead": true
+          },
+          {
+            "x": -11,
+            "z": -44,
+            "dead": true
+          },
+          {
+            "x": -10,
+            "z": -110,
+            "dead": true
+          },
+          {
+            "x": 11,
+            "z": -117,
+            "dead": true
+          }
+        ],
+        "boss": [],
+        "waiting": []
+      }
+    },
+    {
+      "id": "local-site",
+      "evidence": "releases/v0.1.0/captures/local-site.json",
+      "base": "http://127.0.0.1:8876",
+      "result": "pass",
+      "checks": [
+        "Chinese catalog card",
+        "actual game thumbnail",
+        "catalog link",
+        "3D load",
+        "Enter start",
+        "keyboard driving and shooting",
+        "no public test globals"
+      ],
+      "errors": []
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "not_applicable",
+    "gaps": [
+      "原始录像与单独游戏音轨已留存，但逐事件同步和主观听审待完成。",
+      "连续帧已检查；整段逐秒视频审查未完成。",
+      "手机为视口和触摸模拟，未测试物理手机。",
+      "未提供 ffprobe；实际媒体参数由 FFmpeg 输入探测读取。"
+    ]
+  }
+}

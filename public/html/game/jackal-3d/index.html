@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142b2b"><title>赤色要塞 · 前线营救 3D</title><link rel="stylesheet" href="./style.css?v=1"></head>
+<body>
+<main id="game" aria-label="赤色要塞三维游戏">
+  <canvas id="scene" aria-label="游戏画面"></canvas>
+  <div class="vignette"></div>
+  <div id="hud" hidden>
+    <header class="topline">
+      <div class="identity"><span class="mark">✦</span><div><strong>赤色要塞</strong><small>第一关 · 前线营救</small></div></div>
+      <div class="mission"><span id="sector">01 / 林地前线</span><strong id="objective">炸开营房，营救军官</strong><div class="progress"><i id="progress"></i></div></div>
+      <div class="action-row top-actions"><button class="tb-btn" id="mute" title="M 声音">声音 开</button><button class="tb-btn" id="pause" title="Esc 暂停">暂停</button></div>
+    </header>
+    <div class="left-status"><div class="status-caption">装甲状态</div><div id="health"></div><span id="protection"></span><div class="cargo"><span>车载队员</span><strong id="cargo">0 / 8</strong></div><div class="cargo"><span>安全撤离</span><strong id="rescued">0 / 9</strong></div></div>
+    <div class="right-status"><span>行动得分</span><strong id="score">000000</strong><small id="weapon">K 榴弹 · 初始型</small><small id="lives">无限增援</small></div>
+    <div id="boss" hidden><span id="boss-title">重型坦克</span><div><i id="boss-health"></i></div></div>
+    <div id="toast" role="status"></div>
+    <div id="death" hidden><strong>吉普被击毁</strong><span>增援即将抵达检查点</span></div>
+    <div class="footer-hint"><span><kbd>WASD</kbd> 驾驶　<kbd>J</kbd> 机枪　<kbd>K</kbd> 榴弹 / 导弹　<kbd>L</kbd> 加速</span><span><kbd>C</kbd> <b id="camera-label">斜俯视</b>　<kbd>Esc</kbd> 暂停</span></div>
+    <div id="touch-controls" hidden><div id="stick" aria-label="移动摇杆"><div class="stick-ring"></div><div id="knob"></div><span>移动</span></div><div class="touch-actions"><button class="tb-btn" data-action="boost"><b>L</b><small>加速</small></button><button class="tb-btn" data-action="heavy"><b>K</b><small>重武器</small></button><button class="tb-btn" data-action="fire"><b>J</b><small>机枪</small></button></div><button class="tb-btn touch-camera" id="touch-camera">C 视角</button></div>
+  </div>
+  <section id="menu" class="overlay">
+    <div class="menu-card"><div class="eyebrow"><i></i> 经典重制计划 / 第一关</div><h1>赤色要塞<span>前线营救</span></h1><p class="lead">一辆吉普，深入敌后。<br>把每一个人，带回家。</p>
+    <div class="route"><span>突破前线</span><i>→</i><span>营救战俘</span><i>→</i><span>坦克决战</span></div>
+    <div class="action-row"><button class="tb-btn primary" id="start" disabled>正在集结…</button><button class="tb-btn" id="fullscreen">全屏</button></div>
+    <div class="menu-options"><label><input type="checkbox" id="demo"> 演示无敌（默认关闭）</label><label><input type="checkbox" id="touch-toggle"> 显示触控</label><label>画质 <select id="quality"><option value="high">精致</option><option value="low">流畅</option></select></label></div>
+    <p class="controls-copy">WASD 驾驶 · J 机枪 · K 重武器 · L 加速 · C 切换视角<br>靠近战俘自动接人，在停机坪停留完成撤离。无限命，保留受伤与复活。</p>
+    <div class="menu-bottom"><a href="/games.html">← 返回游戏列表</a><span>原创 3D 美术 · 致敬 FC《赤色要塞》</span></div></div>
+    <div class="mission-stamp"><span>行动代号</span><strong>01</strong><small>前线 / 林地营区</small></div>
+  </section>
+  <section id="pause-menu" class="overlay centered" hidden><div class="panel"><div class="eyebrow">行动暂停</div><h2>稍作整备</h2><p>当前进度已保留。救人升级，注意躲避红色弹道。</p><div class="action-row"><button class="tb-btn" id="resume">继续行动 · Enter</button><button class="tb-btn" id="restart">重新开始</button><button class="tb-btn" id="pause-fullscreen">全屏</button></div><div class="action-row"><button class="tb-btn" id="pause-demo">演示无敌：关</button><button class="tb-btn" id="pause-touch">触控开关</button></div><a href="/games.html">返回游戏列表</a></div></section>
+  <section id="result" class="overlay centered" hidden><div class="panel result-panel"><div class="eyebrow">第一关 · 行动完成</div><h2>欢迎回家。</h2><p>装甲封锁已突破，前线撤离路线畅通。</p><div id="result-stats"></div><p id="record"></p><div class="action-row"><button class="tb-btn" id="replay">再战一次 · Enter</button><a class="tb-btn" href="/games.html">返回游戏列表</a></div></div></section>
+  <div id="load-error" hidden><strong>集结失败</strong><p>三维资源未能载入，请刷新重试。</p><button class="tb-btn" onclick="location.reload()">重新载入</button></div>
+</main>
+<script type="module">import('./main.js?v=1').catch(e=>{console.error(e);document.getElementById('load-error').hidden=false;});</script>
+</body></html>

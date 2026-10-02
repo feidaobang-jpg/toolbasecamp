@@ -1,0 +1,32 @@
+{
+  "game_id": "jackal-3d",
+  "name": "赤色要塞 · 前线营救 3D",
+  "engine": "Three.js r152",
+  "current_version": "v0.1.0",
+  "handoff": "releases/v0.1.0/handoff.json",
+  "entrypoint": "public/html/game/jackal-3d/index.html",
+  "source": "game-projects/jackal-3d/src",
+  "build_command": "node game-projects/jackal-3d/build.mjs",
+  "local_url": "http://127.0.0.1:8876/html/game/jackal-3d/index.html",
+  "website_url": "https://www.zhengxiaohui.cn/html/game/jackal-3d/index.html",
+  "website_verified": false,
+  "release_intent": "web_demo",
+  "development_model": null,
+  "tools": [
+    "Codex",
+    "Three.js",
+    "Playwright",
+    "Web Audio",
+    "FFmpeg"
+  ],
+  "controls": "WASD/J/K/L/C，Enter，Esc，M；手机左摇杆和右动作按钮",
+  "toy": {
+    "id": null,
+    "slug": null,
+    "url": null,
+    "visibility": null,
+    "review_status": "not_submitted",
+    "verified_at": null,
+    "video_bindings": []
+  }
+}

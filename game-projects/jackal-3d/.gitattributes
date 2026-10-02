@@ -1,0 +1,2 @@
+# Preserve the exact bundled upstream dependency bytes used by build fingerprints.
+src/vendor/* -text

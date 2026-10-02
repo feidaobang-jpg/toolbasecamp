@@ -1,0 +1,65 @@
+{
+  "mode": "headless Edge with actual NVIDIA GPU; phone viewport simulation, not physical phone",
+  "results": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "scenario": "prison compound, continuous driving/firing, two camera switches; diagnostic teleport and protection; no recording",
+      "browser": "154.0.4258.48",
+      "seconds": 9.005399999928475,
+      "frames": 1531,
+      "fps": 170.00910564907275,
+      "median_ms": 5.899999999999636,
+      "p95_ms": 6,
+      "over50ms": 0,
+      "max_ms": 11.800000000000182,
+      "max_draw_calls": 50,
+      "max_triangles": 52601,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "drawing_size": [
+        1280,
+        720
+      ],
+      "dpr": 1,
+      "pixel_ratio": 1,
+      "resources": {
+        "geometries": 48,
+        "textures": 6
+      },
+      "quality": "high",
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "scenario": "prison compound, continuous driving/firing, two camera switches; diagnostic teleport and protection; no recording",
+      "browser": "154.0.4258.48",
+      "seconds": 9.000699999976158,
+      "frames": 1530,
+      "fps": 169.98677880654316,
+      "median_ms": 5.899999999999636,
+      "p95_ms": 6,
+      "over50ms": 0,
+      "max_ms": 11.700000000000273,
+      "max_draw_calls": 50,
+      "max_triangles": 52665,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "drawing_size": [
+        844,
+        390
+      ],
+      "dpr": 1,
+      "pixel_ratio": 1,
+      "resources": {
+        "geometries": 48,
+        "textures": 6
+      },
+      "quality": "high",
+      "errors": []
+    }
+  ]
+}

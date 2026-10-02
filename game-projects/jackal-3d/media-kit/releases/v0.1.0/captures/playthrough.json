@@ -1,0 +1,631 @@
+{
+  "result": "pass",
+  "capture_mode": "realtime-automation",
+  "input": "ordinary keyboard, no game-state edits",
+  "errors": [],
+  "log": [
+    {
+      "name": "officer-upgrade",
+      "p": {
+        "x": 9.715190409498206,
+        "z": -11.624260409498227,
+        "dead": 0,
+        "cargo": 1,
+        "level": 1,
+        "hp": 5
+      },
+      "mode": "playing",
+      "stage": 0,
+      "bossSpawned": 0,
+      "bossKilled": 0,
+      "score": 250,
+      "rescued": 0,
+      "deaths": 0,
+      "elapsed": 5.421199999999954,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": 6
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": false
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": false
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": false
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    },
+    {
+      "name": "first-rescue",
+      "p": {
+        "x": -10.983419133522967,
+        "z": -39.54801995251931,
+        "dead": 0,
+        "cargo": 4,
+        "level": 1,
+        "hp": 4
+      },
+      "mode": "playing",
+      "stage": 0,
+      "bossSpawned": 0,
+      "bossKilled": 0,
+      "score": 2900,
+      "rescued": 0,
+      "deaths": 0,
+      "elapsed": 13.156500000000241,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": 6
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": false
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": false
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    },
+    {
+      "name": "river-bridge",
+      "p": {
+        "x": -9.85630198959288,
+        "z": -63.212426517813014,
+        "dead": 0,
+        "cargo": 4,
+        "level": 1,
+        "hp": 4
+      },
+      "mode": "playing",
+      "stage": 0,
+      "bossSpawned": 0,
+      "bossKilled": 0,
+      "score": 3000,
+      "rescued": 0,
+      "deaths": 0,
+      "elapsed": 18.06230000000038,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": 6
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": false
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": false
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    },
+    {
+      "name": "prison-camp",
+      "p": {
+        "x": -9.85630198959288,
+        "z": -105.62791651781235,
+        "dead": 0,
+        "cargo": 8,
+        "level": 1,
+        "hp": 4
+      },
+      "mode": "playing",
+      "stage": 0,
+      "bossSpawned": 0,
+      "bossKilled": 0,
+      "score": 4600,
+      "rescued": 0,
+      "deaths": 0,
+      "elapsed": 26.01400000000027,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": -10,
+        "z": -87
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": false
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    },
+    {
+      "name": "helicopter-evacuation",
+      "p": {
+        "x": 7.1920599886628915,
+        "z": -143.76740849606864,
+        "dead": 0,
+        "cargo": 0,
+        "level": 1,
+        "hp": 5
+      },
+      "mode": "playing",
+      "stage": 0,
+      "bossSpawned": 0,
+      "bossKilled": 0,
+      "score": 10400,
+      "rescued": 8,
+      "deaths": 0,
+      "elapsed": 37.46100000000112,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -156
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": false
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    },
+    {
+      "name": "boss-arena",
+      "p": {
+        "x": 0.33012087408374574,
+        "z": -178.83844497066684,
+        "dead": 0,
+        "cargo": 0,
+        "level": 2,
+        "hp": 4
+      },
+      "mode": "playing",
+      "stage": 2,
+      "bossSpawned": 0,
+      "bossKilled": 0,
+      "score": 11250,
+      "rescued": 9,
+      "deaths": 0,
+      "elapsed": 54.16090000000361,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -178
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": true
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    },
+    {
+      "name": "tank-wave-1",
+      "p": {
+        "x": -0.014975519406553991,
+        "z": -183.96766136415755,
+        "dead": 0,
+        "cargo": 0,
+        "level": 2,
+        "hp": 4
+      },
+      "mode": "playing",
+      "stage": 2,
+      "bossSpawned": 1,
+      "bossKilled": 0,
+      "score": 11250,
+      "rescued": 9,
+      "deaths": 0,
+      "elapsed": 55.90210000000388,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -178
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": true
+        }
+      ],
+      "boss": [
+        {
+          "x": -6.161750000000012,
+          "z": -199,
+          "hp": 98
+        }
+      ],
+      "waiting": []
+    },
+    {
+      "name": "tank-wave-2",
+      "p": {
+        "x": 0.3647478931584168,
+        "z": -187.13037477672287,
+        "dead": 0,
+        "cargo": 0,
+        "level": 2,
+        "hp": 3
+      },
+      "mode": "playing",
+      "stage": 2,
+      "bossSpawned": 2,
+      "bossKilled": 1,
+      "score": 13250,
+      "rescued": 9,
+      "deaths": 0,
+      "elapsed": 60.937300000004626,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -178
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": true
+        }
+      ],
+      "boss": [
+        {
+          "x": 8.962538476911929,
+          "z": -199,
+          "hp": 98
+        }
+      ],
+      "waiting": []
+    },
+    {
+      "name": "tank-wave-3",
+      "p": {
+        "x": 1.3794092382230507,
+        "z": -190.58901890876842,
+        "dead": 0,
+        "cargo": 0,
+        "level": 2,
+        "hp": 3
+      },
+      "mode": "playing",
+      "stage": 2,
+      "bossSpawned": 3,
+      "bossKilled": 2,
+      "score": 15250,
+      "rescued": 9,
+      "deaths": 0,
+      "elapsed": 66.57850000000576,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -178
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": true
+        }
+      ],
+      "boss": [
+        {
+          "x": -7.602999999999991,
+          "z": -199,
+          "hp": 96
+        }
+      ],
+      "waiting": []
+    },
+    {
+      "name": "tank-wave-4",
+      "p": {
+        "x": -0.16758347525897466,
+        "z": -192.8464884473804,
+        "dead": 0,
+        "cargo": 0,
+        "level": 2,
+        "hp": 2
+      },
+      "mode": "playing",
+      "stage": 2,
+      "bossSpawned": 4,
+      "bossKilled": 3,
+      "score": 17250,
+      "rescued": 9,
+      "deaths": 0,
+      "elapsed": 71.60200000000818,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -178
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": true
+        }
+      ],
+      "boss": [
+        {
+          "x": 7.9115000000000055,
+          "z": -199,
+          "hp": 96
+        }
+      ],
+      "waiting": []
+    },
+    {
+      "name": "result",
+      "p": {
+        "x": 1.9513779870543566,
+        "z": -195.55225990969348,
+        "dead": 0,
+        "cargo": 0,
+        "level": 2,
+        "hp": 1
+      },
+      "mode": "win",
+      "stage": 2,
+      "bossSpawned": 4,
+      "bossKilled": 4,
+      "score": 19250,
+      "rescued": 9,
+      "deaths": 0,
+      "elapsed": 73.78430000000928,
+      "invincible": false,
+      "usedDemo": false,
+      "checkpoint": {
+        "x": 0,
+        "z": -178
+      },
+      "view": 0,
+      "b": [
+        {
+          "x": 10,
+          "z": -16,
+          "dead": true
+        },
+        {
+          "x": -11,
+          "z": -44,
+          "dead": true
+        },
+        {
+          "x": -10,
+          "z": -110,
+          "dead": true
+        },
+        {
+          "x": 11,
+          "z": -117,
+          "dead": true
+        }
+      ],
+      "boss": [],
+      "waiting": []
+    }
+  ],
+  "final": {
+    "p": {
+      "x": 1.9513779870543566,
+      "z": -195.55225990969348,
+      "dead": 0,
+      "cargo": 0,
+      "level": 2,
+      "hp": 1
+    },
+    "mode": "win",
+    "stage": 2,
+    "bossSpawned": 4,
+    "bossKilled": 4,
+    "score": 19250,
+    "rescued": 9,
+    "deaths": 0,
+    "elapsed": 73.78430000000928,
+    "invincible": false,
+    "usedDemo": false,
+    "checkpoint": {
+      "x": 0,
+      "z": -178
+    },
+    "view": 0,
+    "b": [
+      {
+        "x": 10,
+        "z": -16,
+        "dead": true
+      },
+      {
+        "x": -11,
+        "z": -44,
+        "dead": true
+      },
+      {
+        "x": -10,
+        "z": -110,
+        "dead": true
+      },
+      {
+        "x": 11,
+        "z": -117,
+        "dead": true
+      }
+    ],
+    "boss": [],
+    "waiting": []
+  }
+}

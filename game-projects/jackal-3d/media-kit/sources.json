@@ -1,0 +1,55 @@
+[
+  {
+    "id": "models",
+    "purpose": "吉普、人物、坦克、炮台、建筑、直升机、植被与残骸",
+    "source_type": "procedural",
+    "original_file": "../src/art.js",
+    "runtime_file": "public/html/game/jackal-3d/art.js",
+    "tool": "Three.js primitives and merged vertex-colored geometry",
+    "model": null,
+    "parameters": "src/art.js，固定地图随机种子 91422",
+    "processing": "共享几何、材质与分块合批；原创参数化建模",
+    "usage_conditions": "项目原创程序化资源，无外部模型或 ROM 提取",
+    "placeholder": false
+  },
+  {
+    "id": "sound",
+    "purpose": "射击、爆炸、营救、升级、胜利与背景节拍",
+    "source_type": "procedural",
+    "original_file": "../src/audio.js",
+    "runtime_file": "public/html/game/jackal-3d/audio.js",
+    "tool": "Web Audio API",
+    "processing": "振荡器与噪声合成，绑定游戏事件",
+    "usage_conditions": "原创合成音色与短节拍；未提取原游戏声音",
+    "placeholder": false
+  },
+  {
+    "id": "three",
+    "purpose": "3D 引擎",
+    "source_type": "licensed",
+    "original_file": "../src/vendor/three.module.js",
+    "runtime_file": "public/html/game/jackal-3d/vendor/three.module.js",
+    "tool": "Three.js r152",
+    "usage_conditions": "MIT，许可证随运行文件提供"
+  },
+  {
+    "id": "rules-reference",
+    "purpose": "核对原版营救和第一关坦克流程",
+    "source_type": "reference",
+    "urls": [
+      "https://www.world-of-nintendo.com/manuals/nes/jackal.shtml",
+      "https://gamefaqs.gamespot.com/nes/563425-jackal/faqs/20059"
+    ],
+    "processing": "规则参考与原创三维改编，不是贴图或音频来源"
+  },
+  {
+    "id": "catalog-thumb",
+    "purpose": "游戏列表封面",
+    "source_type": "procedural",
+    "original_file": "releases/v0.1.0/captures/helicopter-evacuation.png",
+    "runtime_file": "public/assets/game/thumbs/jackal-3d.jpg",
+    "tool": "Playwright capture + sharp resize",
+    "processing": "真实实机截图缩放至 640×360 JPEG",
+    "usage_conditions": "本项目当前游戏截图"
+  }
+]
