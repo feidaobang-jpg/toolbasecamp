@@ -1,4 +1,4 @@
-/* Homepage hub: center tools | right portals */
+/* Homepage hub: single centered tools list */
 
 .hub-shell {
     display: flex;
@@ -13,182 +13,6 @@
     flex: 1;
     min-height: 0;
     overflow: hidden;
-}
-
-.hub-sidebar {
-    display: none;
-    flex-direction: column;
-    flex-shrink: 0;
-    width: 13.5rem;
-    background: #fff;
-    border-color: #f3f4f6;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.hub-sidebar-right {
-    border-left: 1px solid #f3f4f6;
-    width: 21rem;
-}
-
-@media (min-width: 1280px) {
-    .hub-sidebar-right {
-        width: 24rem;
-    }
-}
-
-@media (min-width: 1536px) {
-    .hub-sidebar-right {
-        width: 26rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    .hub-sidebar {
-        display: flex;
-    }
-}
-
-.hub-sidebar-head {
-    padding: 1rem 1rem 0.625rem;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    letter-spacing: 0;
-    text-transform: none;
-    color: #111827;
-}
-
-.hub-sidebar-sub {
-    padding: 0 1rem 0.875rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #374151;
-    line-height: 1.5;
-}
-
-.hub-sidebar-left .hub-sidebar-head {
-    padding-bottom: 0.75rem;
-}
-
-.hub-sidebar-right .hub-sidebar-head {
-    font-size: 1rem;
-}
-
-.hub-sidebar-right .hub-sidebar-sub {
-    font-size: 0.875rem;
-    color: #374151;
-}
-
-.hub-nav-list,
-.hub-portal-list {
-    list-style: none;
-    margin: 0;
-    padding: 0 0.5rem 1rem;
-}
-
-.hub-portal-list li + li {
-    margin-top: 0.5rem;
-}
-
-.hub-sidebar-left .hub-nav-list {
-    padding-top: 1rem;
-}
-
-.hub-sidebar-left .hub-nav-list a {
-    font-size: 1.0625rem;
-    padding: 0.6875rem 0.875rem;
-}
-
-.hub-nav-list a,
-.hub-portal-list a {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: #111827;
-    text-decoration: none;
-    transition: background-color 0.15s, color 0.15s;
-}
-
-.hub-nav-list a {
-    padding: 0.625rem 0.875rem;
-}
-
-.hub-nav-list a:hover {
-    background: #f3f4f6;
-    color: #2563eb;
-}
-
-.hub-nav-list a.is-active {
-    background: #eff6ff;
-    color: #2563eb;
-    font-weight: 700;
-}
-
-.hub-portal-list a {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0.875rem 1rem;
-    gap: 0.5rem;
-    border: 1px solid transparent;
-}
-
-.hub-portal-list a:hover {
-    background: #f9fafb;
-    border-color: #e5e7eb;
-}
-
-.hub-portal-list a:hover .hub-portal-title {
-    color: #2563eb;
-}
-
-.hub-portal-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-}
-
-.hub-portal-icon {
-    flex-shrink: 0;
-    width: 2.375rem;
-    height: 2.375rem;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-}
-
-.hub-portal-title {
-    flex: 1;
-    min-width: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #111827;
-    line-height: 1.4;
-    transition: color 0.15s;
-}
-
-.hub-portal-desc {
-    margin: 0;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: #374151;
-    line-height: 1.55;
-}
-
-.hub-portal-external-inline {
-    font-size: 0.6875rem;
-    color: #9ca3af;
-    margin-left: 0.125rem;
-    vertical-align: 0.05em;
-}
-
-.hub-portal-list a:hover .hub-portal-external-inline {
-    color: #2563eb;
 }
 
 .hub-center {
@@ -312,6 +136,18 @@
 }
 
 .hub-tool-card:hover h3 {
+    color: #2563eb;
+}
+
+/* 站外子站条目（如科技资讯）的 ↗ 标记 */
+.hub-tool-external {
+    font-size: 0.6875rem;
+    color: #9ca3af;
+    margin-left: 0.125rem;
+    vertical-align: 0.05em;
+}
+
+.hub-tool-card:hover .hub-tool-external {
     color: #2563eb;
 }
 
@@ -451,65 +287,6 @@
 .hub-search-clear:hover {
     color: #4b5563;
     background: #f3f4f6;
-}
-
-/* Mobile portals：跟在工具列表滚动内容最下方 */
-.hub-mobile-portals {
-    margin-top: 1.25rem;
-    padding-bottom: 0.5rem;
-    background: transparent;
-    border-top: 1px solid #e5e7eb;
-}
-
-@media (min-width: 1024px) {
-    .hub-mobile-portals {
-        display: none !important;
-    }
-}
-
-.hub-mobile-portals-label {
-    padding: 0.5rem 1rem 0;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #9ca3af;
-}
-
-.hub-mobile-portals-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    overflow: visible;
-    padding: 0.5rem 1rem 0.75rem;
-}
-
-.hub-mobile-portal-chip {
-    flex: 0 1 auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    color: #374151;
-    white-space: nowrap;
-    transition: border-color 0.15s, background 0.15s;
-}
-
-.hub-mobile-portal-chip:hover {
-    border-color: #93c5fd;
-    background: #eff6ff;
-    color: #2563eb;
-}
-
-.hub-mobile-portal-chip i {
-    font-size: 0.75rem;
-    opacity: 0.85;
 }
 
 /* Xianyu / redeem howto on homepage — align with tool groups, not narrow search */

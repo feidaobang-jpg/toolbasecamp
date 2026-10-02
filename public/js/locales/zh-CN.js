@@ -1216,8 +1216,6 @@ window.TB_LOCALES['zh-CN'] = {
         onlyPhoneRegister: '仅允许手机号注册'
     },
     hub: {
-        portalsTitle: '子站入口',
-        portalsSubtitle: '百宝箱托管的扩展工具集合。',
         basecampTools: '主站工具',
         gamesTitle: '休闲游戏',
         lifeTitle: '内容',
@@ -1495,13 +1493,6 @@ window.TB_LOCALES['zh-CN'] = {
             titleAuthor: '可输入标题或作者'
         }
     },
-    portals: {
-        news: {
-            title: '科技资讯',
-            description: '国外科技资讯中文编译 — AI、硬件与数码动态，每日自动更新。',
-            cta: '打开资讯'
-        }
-    },
     tools: {
         groups: {
             calc: '计算',
@@ -1512,7 +1503,11 @@ window.TB_LOCALES['zh-CN'] = {
             media: '媒体',
             document: '文档',
             diagram: '图表',
-            ladder: '性能跑分榜'
+            ladder: '性能跑分榜',
+            info: '资讯'
+        },
+        news: {
+            title: '科技资讯'
         },
         game: {
             restart: '开始',

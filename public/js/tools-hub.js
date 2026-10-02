@@ -1,20 +1,8 @@
 (function () {
-    const portalThemes = {
-        news: {
-            iconWrap: 'bg-indigo-50 text-indigo-600',
-            chip: 'border-indigo-200 text-indigo-900',
-            icon: 'fa-newspaper'
-        }
-    };
-
     let searchQuery = '';
 
     function tr(k) {
         return typeof window.t === 'function' ? window.t(k) : k;
-    }
-
-    function lbl(item) {
-        return typeof window.tbLabel === 'function' ? window.tbLabel(item) : (item.title || '');
     }
 
     function getGroups() {
@@ -28,66 +16,6 @@
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
-    }
-
-    function portalDesc(portal) {
-        if (portal.descriptionKey) return tr(portal.descriptionKey);
-        return portal.description || '';
-    }
-
-    function renderRightPortals(sidebarEl) {
-        if (!sidebarEl || typeof portalsConfig === 'undefined' || !portalsConfig.length) {
-            if (sidebarEl) sidebarEl.innerHTML = '';
-            return;
-        }
-        sidebarEl.innerHTML =
-            '<div class="hub-sidebar-head">' + tr('hub.portalsTitle') + '</div>' +
-            '<p class="hub-sidebar-sub">' + tr('hub.portalsSubtitle') + '</p>' +
-            '<ul class="hub-portal-list"></ul>';
-        const listEl = sidebarEl.querySelector('.hub-portal-list');
-        portalsConfig.forEach(portal => {
-            const theme = portalThemes[portal.theme] || portalThemes.news;
-            const desc = portalDesc(portal);
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = portal.url || '#';
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            a.innerHTML =
-                '<div class="hub-portal-top">' +
-                    '<span class="hub-portal-icon ' + theme.iconWrap + '"><i class="fas ' + theme.icon + '"></i></span>' +
-                    '<strong class="hub-portal-title">' + escapeHtml(lbl(portal)) +
-                        ' <i class="fas fa-arrow-up-right-from-square hub-portal-external-inline" aria-hidden="true"></i>' +
-                    '</strong>' +
-                '</div>' +
-                (desc ? '<p class="hub-portal-desc">' + escapeHtml(desc) + '</p>' : '');
-            li.appendChild(a);
-            listEl.appendChild(li);
-        });
-    }
-
-    function renderMobilePortals(containerEl) {
-        if (!containerEl) return;
-        if (typeof portalsConfig === 'undefined' || !portalsConfig.length) {
-            containerEl.innerHTML = '';
-            containerEl.setAttribute('aria-hidden', 'true');
-            return;
-        }
-        containerEl.setAttribute('aria-hidden', 'false');
-        containerEl.innerHTML =
-            '<div class="hub-mobile-portals-label">' + tr('hub.portalsTitle') + '</div>' +
-            '<div class="hub-mobile-portals-row"></div>';
-        const rowEl = containerEl.querySelector('.hub-mobile-portals-row');
-        portalsConfig.forEach(portal => {
-            const theme = portalThemes[portal.theme] || portalThemes.news;
-            const a = document.createElement('a');
-            a.href = portal.url || '#';
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            a.className = 'hub-mobile-portal-chip ' + theme.chip;
-            a.innerHTML = '<i class="fas ' + theme.icon + '"></i><span>' + lbl(portal) + '</span>';
-            rowEl.appendChild(a);
-        });
     }
 
     function renderMobileSearch(toolbarEl) {
@@ -184,20 +112,31 @@
                 card.href = item.url || '#';
                 card.className = 'hub-tool-card';
                 card.dataset.search = groupLabel + ' ' + label;
+                // 站外子站：新窗口打开并带 ↗ 标记
+                if (item.external) {
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+                }
+                const titleHtml =
+                    '<h3>' + escapeHtml(label) +
+                    (item.external
+                        ? ' <i class="fas fa-arrow-up-right-from-square hub-tool-external" aria-hidden="true"></i>'
+                        : '') +
+                    '</h3>';
                 if (item.paid) {
                     card.innerHTML =
-                        '<h3>' + escapeHtml(label) + '</h3>' +
+                        titleHtml +
                         '<span class="hub-tool-badge hub-tool-badge-paid">' + escapeHtml(tr('hub.paidRequired')) + '</span>';
                 } else if (item.dailyLimit) {
                     card.innerHTML =
-                        '<h3>' + escapeHtml(label) + '</h3>' +
+                        titleHtml +
                         '<span class="hub-tool-badge hub-tool-badge-limit">' + escapeHtml(tr('hub.dailyLimitRequired')) + '</span>';
                 } else if (item.authRequired) {
                     card.innerHTML =
-                        '<h3>' + escapeHtml(label) + '</h3>' +
+                        titleHtml +
                         '<span class="hub-tool-badge">' + escapeHtml(tr('hub.loginRequired')) + '</span>';
                 } else {
-                    card.innerHTML = '<h3>' + escapeHtml(label) + '</h3>';
+                    card.innerHTML = titleHtml;
                 }
                 gridEl.appendChild(card);
             });
@@ -232,7 +171,6 @@
 
     function renderToolsHub() {
         const centerEl = document.getElementById('main-content');
-        const rightEl = document.getElementById('hub-sidebar-right');
         const mobileToolbar = document.getElementById('hub-mobile-toolbar');
 
         if (!centerEl) return;
@@ -242,22 +180,13 @@
 
         if (!groups.length) {
             centerEl.innerHTML = '<div class="text-center text-gray-500 py-12">' + tr('hub.noTools') + '</div>';
-            if (rightEl) rightEl.innerHTML = '';
             if (mobileToolbar) mobileToolbar.innerHTML = '';
             return;
         }
 
-        renderRightPortals(rightEl);
         renderMobileSearch(mobileToolbar);
         renderHowtoBanner(centerEl);
         renderToolGroups(centerEl, groups);
-
-        // 手机端子站入口放在工具列表最下方，不占首屏
-        const mobilePortals = document.createElement('div');
-        mobilePortals.id = 'hub-mobile-portals';
-        mobilePortals.className = 'hub-mobile-portals';
-        centerEl.appendChild(mobilePortals);
-        renderMobilePortals(mobilePortals);
 
         if (searchQuery) applySearchFilter(searchQuery);
     }

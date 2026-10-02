@@ -41,17 +41,6 @@ const siteConfig = {
     ]
 };
 
-/** Self-hosted portals (same brand, separate deploy) */
-const portalsConfig = [
-    {
-        titleKey: 'portals.news.title',
-        descriptionKey: 'portals.news.description',
-        url: 'https://news.zhengxiaohui.cn',
-        ctaKey: 'portals.news.cta',
-        theme: 'news'
-    }
-];
-
 const toolsConfig = {
     sectionTitleKey: 'hub.basecampTools',
     groups: [
@@ -185,6 +174,13 @@ const toolsConfig = {
                 { titleKey: 'tools.ladderNbCpuRank.title', url: 'html/ladder/nb_cpu_rank.html' },
                 { titleKey: 'tools.ladderNbGpuRank.title', url: 'html/ladder/nb_gpu_rank.html' }
             ]
+        },
+        {
+            titleKey: 'tools.groups.info',
+            items: [
+                // 独立部署的自托管子站，作为普通条目挂在工具列表末尾（external → 新窗口 + ↗）
+                { titleKey: 'tools.news.title', url: siteConfig.newsPortalUrl, external: true }
+            ]
         }
     ]
 };
@@ -239,7 +235,6 @@ function sortToolsByAccessBadge(config) {
 sortToolsByAccessBadge(toolsConfig);
 
 window.siteConfig = siteConfig;
-window.portalsConfig = portalsConfig;
 window.toolsConfig = toolsConfig;
 window.gamesConfig = gamesConfig;
 
