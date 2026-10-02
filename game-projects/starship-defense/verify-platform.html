@@ -40,10 +40,10 @@ document.getElementById('run').onclick=async()=>{
  out.textContent=JSON.stringify(report,null,2);
  }catch(e){report.errors.push(e.stack);out.textContent=JSON.stringify(report,null,2);}
 };
-function fortView(){const q=get();q.newGame(true);q.sandboxSpawn('clear');reset(q,-43,74);q.setCameraView(1,false);q.Game.state='battle';return q;}
+function fortView(){const q=get();q.newGame(true);q.sandboxSpawn('clear');reset(q,-43,70);q.setCameraView(0,false);q.Game.state='battle';return q;}
 document.getElementById('fort').onclick=fortView;
 document.getElementById('phone').onclick=()=>{
- frame.style.width='390px';frame.style.height='844px';
+ frame.style.width='390px';frame.style.height='844px';frame.style.transform='scale(.7)';frame.style.transformOrigin='top left';
  const d=frame.contentDocument;if(!d.getElementById('stage').classList.contains('touch-mode'))d.getElementById('touchBtn').click();
  get().newGame(true);
  d.getElementById('vQ').addEventListener('pointerdown',()=>{report.phoneYawBefore=get().getCamYaw();});
@@ -60,6 +60,8 @@ document.getElementById('record').onclick=async()=>{
  const q=fortView(),stream=q.renderer.domElement.captureStream(30),chunks=[];
  const rec=new MediaRecorder(stream,{mimeType:'video/webm'});rec.ondataavailable=e=>chunks.push(e.data);rec.start();q.Input.keys.Q=true;
  await wait(12000);q.Input.reset();await new Promise(resolve=>{rec.onstop=resolve;rec.stop();});stream.getTracks().forEach(t=>t.stop());
- const a=document.getElementById('download');a.href=URL.createObjectURL(new Blob(chunks,{type:'video/webm'}));a.download='hill-forts-realtime.webm';a.hidden=false;out.textContent='录像完成（真实 Canvas 实时捕获，无声音；需补游戏声）';
+ const a=document.getElementById('download'),blob=new Blob(chunks,{type:'video/webm'});
+ a.href=await new Promise(resolve=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.readAsDataURL(blob);});
+ a.download='hill-forts-final-v07.webm';a.hidden=false;out.textContent='录像完成（真实 Canvas 实时捕获，无声音；需补游戏声）';
 };
 </script></html>

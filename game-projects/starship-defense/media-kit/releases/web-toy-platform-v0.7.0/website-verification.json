@@ -1,0 +1,14 @@
+{
+  "verified_at": "2026-10-02T02:53:41.408882+00:00",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "files_match": {
+    "index.html": true,
+    "game.js": true,
+    "fortress-world.js": true,
+    "terrain-controls.js": true,
+    "toy-platform.js": true,
+    "save-validation.js": true,
+    "toy-visuals.js": true
+  },
+  "fallback": "Targeted SSH copy after automatic deployment remained stale"
+}

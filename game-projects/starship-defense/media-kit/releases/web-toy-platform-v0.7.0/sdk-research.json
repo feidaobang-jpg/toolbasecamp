@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-02",
+  "official_sdk_docs": "https://www.bilibili.com/toy/publish/sdk",
+  "official_page_asset": "https://s1.hdslb.com/bfs/static/toy/app/publish/assets/index-B3T-BCTU.js",
+  "sdk_script": "https://s1.hdslb.com/bfs/seed/toy/app/sdk/toy-sdk.js",
+  "official_skill": "https://raw.githubusercontent.com/bilibili/toy/main/skills/toy/SKILL.md",
+  "cli": "toy v0.6.1 --help-json --json",
+  "actual_iframe_origin": "https://www.bilibilitoy.com",
+  "one_click_triple_api": false,
+  "platform_limits": "Shared per Toy; thresholds unpublished; app cooldowns are UX, not quota values"
+}

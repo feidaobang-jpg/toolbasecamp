@@ -15,7 +15,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     nav: {
         tools: '工具',
-        life: '内容',
+        life: '趣文',
         games: '游戏',
         images: '图片',
         music: '音乐',
@@ -1218,7 +1218,7 @@ window.TB_LOCALES['zh-CN'] = {
     hub: {
         basecampTools: '主站工具',
         gamesTitle: '休闲游戏',
-        lifeTitle: '内容',
+        lifeTitle: '趣文',
         categories: '分类',
         noTools: '暂无配置的工具。',
         noGames: '暂无配置的游戏。',
@@ -1547,6 +1547,10 @@ window.TB_LOCALES['zh-CN'] = {
         mario3d: {
             title: '超级玛丽 3D：第一关',
             desc: '经典第一关的程序化 3D 网页演示，键盘与手机横屏都能玩。'
+        },
+        jackal3d: {
+            title: '赤色要塞 3D：前线营救',
+            desc: '驾驶吉普突破林地与河桥，炸开营房救出九名队员，在直升机接应点撤离，并挑战四辆重型坦克。完整第一关，支持键盘与手机触屏。'
         },
         tank3d: {
             title: '坦克大战 3D：50 关无限周目',

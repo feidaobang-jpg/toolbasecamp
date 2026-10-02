@@ -1,0 +1,14 @@
+{
+  "checks": [],
+  "errors": [],
+  "phoneYawBefore": 0,
+  "phone": {
+    "yawBefore": 0,
+    "yawAfter": 0.6599999999999966,
+    "released": true,
+    "viewport": [
+      390,
+      844
+    ]
+  }
+}

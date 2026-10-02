@@ -1,0 +1,12 @@
+{
+  "files": {
+    "index.html": "8de7d4f2949e4cfc5d3ae14e9d2f3e72e2d36ee288dc76b79c429a55bd3bd6d9",
+    "game.js": "8ef52fab2f351ba1bdf3d9a93f112035d81b6f00c501b10a1f9c3dd55b6198f9",
+    "fortress-world.js": "72810b77bf62d7d722d9583746cb93cd4055538ffc0b3b3bf0eee07a82b429f0",
+    "terrain-controls.js": "a191a9d01c84b7ce630bc6a79aacb6929a71183fe03bb65fb9dab6327d2572cd",
+    "toy-platform.js": "f62478581072aca6f302caa3147ab84b471dc63136e06c90d9645d411decc5da",
+    "save-validation.js": "9e16b39d6019dae15d8010d236c7c6896bd7fb4c987db4ffea156c8c93cac479",
+    "toy-visuals.js": "7b314b844e6a892a8c86e9c139cec4640b6a57d5d765672d25d835a926bcd963"
+  },
+  "fingerprint": "b59a9fef6be14143e9b26fd9ae424b07c2381c1b55593645d31bd0edfd434f86"
+}

@@ -261,7 +261,7 @@
     }
 
     function syncLifeConfig() {
-        global.lifeConfig = { sectionTitle: '内容', groups: toHubGroups() };
+        global.lifeConfig = { sectionTitle: '趣文', groups: toHubGroups() };
     }
 
     global.LIFE_CATALOG = catalog;

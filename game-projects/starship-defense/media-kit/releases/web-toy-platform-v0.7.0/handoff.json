@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-toy-platform-v0.7.0",
+  "base_version": "web-fortress-v0.6.0",
+  "created_at": "2026-10-02T02:56:53.345539+00:00",
+  "build": {
+    "id": "web-toy-platform-v0.7.0-b59a9fef6be1",
+    "commit": "a77f8073ca4f65a07aad92fa56ca7efa481244d7",
+    "dirty": false,
+    "fingerprint": "b59a9fef6be14143e9b26fd9ae424b07c2381c1b55593645d31bd0edfd434f86",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "camera",
+      "description": "Q/E连续环绕，C预设；手机左右转动虚拟键与手动显示控件",
+      "status": "implemented",
+      "evidence_ids": [
+        "phone-final"
+      ]
+    },
+    {
+      "id": "hill-forts",
+      "description": "两座缓坡平顶堡垒，射击窗/掩体/入口；地面单位上坡减速下坡加速",
+      "status": "implemented",
+      "evidence_ids": [
+        "hill-fort-final"
+      ]
+    },
+    {
+      "id": "interaction",
+      "description": "I按距离及高度选载具/城门，否则医疗；提示与执行一致",
+      "status": "implemented",
+      "evidence_ids": [
+        "phone-final"
+      ]
+    },
+    {
+      "id": "toy-platform",
+      "description": "可选云档、备份恢复、普通通关榜、作者/视频/分享，非Toy保持本地游玩",
+      "status": "implemented",
+      "evidence_ids": [
+        "toy-platform"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "camera",
+      "feature_ids": [
+        "camera"
+      ],
+      "before": "v0.6：固定预设镜头、统一坡速、无山顶堡垒、I提示优先级不同、纯本地存档",
+      "after": "Q/E连续环绕，C预设；手机左右转动虚拟键与手动显示控件",
+      "user_visible_result": "Q/E连续环绕，C预设；手机左右转动虚拟键与手动显示控件",
+      "evidence_ids": [
+        "phone-final"
+      ],
+      "verification": "25项浏览器回归通过；SDK模拟接口通过，真实Toy预览缺作品ID，正式云端写入/上榜未测"
+    },
+    {
+      "id": "hill-forts",
+      "feature_ids": [
+        "hill-forts"
+      ],
+      "before": "v0.6：固定预设镜头、统一坡速、无山顶堡垒、I提示优先级不同、纯本地存档",
+      "after": "两座缓坡平顶堡垒，射击窗/掩体/入口；地面单位上坡减速下坡加速",
+      "user_visible_result": "两座缓坡平顶堡垒，射击窗/掩体/入口；地面单位上坡减速下坡加速",
+      "evidence_ids": [
+        "hill-fort-final"
+      ],
+      "verification": "25项浏览器回归通过；SDK模拟接口通过，真实Toy预览缺作品ID，正式云端写入/上榜未测"
+    },
+    {
+      "id": "interaction",
+      "feature_ids": [
+        "interaction"
+      ],
+      "before": "v0.6：固定预设镜头、统一坡速、无山顶堡垒、I提示优先级不同、纯本地存档",
+      "after": "I按距离及高度选载具/城门，否则医疗；提示与执行一致",
+      "user_visible_result": "I按距离及高度选载具/城门，否则医疗；提示与执行一致",
+      "evidence_ids": [
+        "phone-final"
+      ],
+      "verification": "25项浏览器回归通过；SDK模拟接口通过，真实Toy预览缺作品ID，正式云端写入/上榜未测"
+    },
+    {
+      "id": "toy-platform",
+      "feature_ids": [
+        "toy-platform"
+      ],
+      "before": "v0.6：固定预设镜头、统一坡速、无山顶堡垒、I提示优先级不同、纯本地存档",
+      "after": "可选云档、备份恢复、普通通关榜、作者/视频/分享，非Toy保持本地游玩",
+      "user_visible_result": "可选云档、备份恢复、普通通关榜、作者/视频/分享，非Toy保持本地游玩",
+      "evidence_ids": [
+        "toy-platform"
+      ],
+      "verification": "25项浏览器回归通过；SDK模拟接口通过，真实Toy预览缺作品ID，正式云端写入/上榜未测"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "i-target-priority",
+      "discovered_version": "web-fortress-v0.6.0",
+      "reproduction_steps": [
+        "载具放到城门附近，靠近两者按I"
+      ],
+      "observation": "旧提示先城门，旧实际行为先载具；满血时只说生命值已满，未解释医疗包用途",
+      "impact": "玩家不清楚I作用，并可能执行不同于提示的操作",
+      "cause": "提示与执行重复了两套不同顺序的目标搜索",
+      "status": "fixed",
+      "fix": "共用interactionTarget，选择最近且高度相近载具，再城门，再医疗；动态按钮标签，满血不扣道具",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "hill-fort-final"
+      ],
+      "retest": "实际updPlayer测试：满血不消耗、受伤恢复60、城门旁驾驶与下车一致；无旧版录像"
+    }
+  ],
+  "media": [
+    {
+      "id": "hill-fort-final",
+      "file": "releases/web-toy-platform-v0.7.0/captures/hill-fort-final.jpg",
+      "sha256": "5ad0058a2d0705c6ad48e654ee2c3df7874e2498c43e7f1e787ad0a60411de63",
+      "kind": "screenshot",
+      "version": "web-toy-platform-v0.7.0",
+      "build_id": "web-toy-platform-v0.7.0-b59a9fef6be1",
+      "capture_mode": "realtime-automation",
+      "description": "最终构建：从金色坡道看山顶堡垒，测试传送、无敌模式截图",
+      "width": 960,
+      "height": 540,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "toy-platform",
+      "file": "releases/web-toy-platform-v0.7.0/captures/toy-platform.jpg",
+      "sha256": "1ba768e2c87afa31cd78ac70070d36ff81d72868060e72c8443415b04c99af76",
+      "kind": "screenshot",
+      "version": "web-toy-platform-v0.7.0",
+      "build_id": "web-toy-platform-v0.7.0-b59a9fef6be1",
+      "capture_mode": "realtime-automation",
+      "description": "最终Toy预览：SDK已加载，预览无作品身份，显示中文回退提示",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "hill-forts-final-v07",
+      "file": "releases/web-toy-platform-v0.7.0/captures/hill-forts-final-v07.webm",
+      "sha256": "ad9f0968b0e86257f9f81a2c51cbed301589266d475e1143bb53ed7a8370a4de",
+      "kind": "video",
+      "version": "web-toy-platform-v0.7.0",
+      "build_id": "web-toy-platform-v0.7.0-b59a9fef6be1",
+      "capture_mode": "realtime-automation",
+      "description": "真实Canvas实时录制；测试传送并按住Q。录制通道只保存约1帧/秒，缺HUD与声音，不适合直接剪成流畅展示。不是性能测量。",
+      "width": 1200,
+      "height": 675,
+      "duration_seconds": 10.85,
+      "audio": "none",
+      "visual_review": "fail",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 10.85,
+          "description": "堡垒环绕，低采集帧率，需补拍"
+        }
+      ]
+    },
+    {
+      "id": "phone-final",
+      "file": "releases/web-toy-platform-v0.7.0/captures/phone-final.jpg",
+      "sha256": "fd8428c5d1680229d47a8a7836c7f12862c61f7590aa27cbe128f5b2f6a50d99",
+      "kind": "screenshot",
+      "version": "web-toy-platform-v0.7.0",
+      "build_id": "web-toy-platform-v0.7.0-b59a9fef6be1",
+      "capture_mode": "realtime-automation",
+      "description": "最终构建390×844 iframe竖屏自动横屏，采集时仅将iframe外层缩放0.7以装入视窗，不代表真机",
+      "width": 273,
+      "height": 591,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "website-platform",
+      "file": "releases/web-toy-platform-v0.7.0/captures/website-platform.jpg",
+      "sha256": "a416f571cac2f216fed68c87082c6f80467372b16b14145d5a5199deebf3937c",
+      "kind": "screenshot",
+      "version": "web-toy-platform-v0.7.0",
+      "build_id": "web-toy-platform-v0.7.0-b59a9fef6be1",
+      "capture_mode": "realtime-automation",
+      "description": "公网部署后的档案站，非Toy环境保留本地玩法",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "functional",
+      "result": "final-checks.json：25项通过，无断言错误",
+      "status": "recorded"
+    },
+    {
+      "id": "platform_unit",
+      "result": "verify-platform-unit.mjs：坏档校验、限流退避、并发去重、缓存、上传前确认、备份恢复、测试隔离、重复成绩、昵称文本渲染",
+      "status": "recorded"
+    },
+    {
+      "id": "performance",
+      "result": "verification.json：48活虫、4队友，30秒持续移动/射击/Q旋转；RTX4060Ti Codex IAB，960×540 CSS、1200×675绘图，163.2 FPS、P95 6.2ms、1帧>50ms；样本在SDK最终文案调整前，地形/玩法相同",
+      "status": "recorded"
+    },
+    {
+      "id": "phone",
+      "result": "phone-verification.json：390×844 iframe视口，强制显示触控；真实鼠标指针长按模拟Q，yaw 0→0.66，松手Input复位；不是手机真机/多指同时触摸",
+      "status": "recorded"
+    },
+    {
+      "id": "toy",
+      "result": "v0.6已在正式公开地址核实；v0.7预览SDK加载成功，getRankList拒绝toy id not available on host，友好降级；真实云档和上榜待正式版身份",
+      "status": "recorded"
+    },
+    {
+      "id": "browser_log_note",
+      "result": "本地测试页观察到未定位来源的MutationObserver.observe非Node异常，运行目录未含此调用，玩法继续正常；Toy预览未见相同错误。未将来源武断归给游戏或工具",
+      "status": "recorded"
+    },
+    {
+      "id": "website",
+      "result": "7个关键运行文件公网SHA256与本地一致；实际浏览器菜单正常",
+      "status": "recorded"
+    },
+    {
+      "id": "not_tested",
+      "result": [
+        "手机真机性能",
+        "正式Toy账号云端写入及排行榜提交",
+        "移动端真实同时多点输入"
+      ],
+      "status": "not-tested"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "最终录像捕获约1fps，未取得流畅实时母版；已有静态截图和帧时间实测不能替代母版",
+      "最终录像没有游戏音轨、DOM HUD，需补拍",
+      "旧版I提示无修复前录像",
+      "真机和正式Toy身份下写入联调未测"
+    ]
+  }
+}

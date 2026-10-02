@@ -1,0 +1,13 @@
+{
+  "published_version": "web-fortress-v0.6.0",
+  "public_runtime": "38678478981120-v21159",
+  "verification": "Actual public browser menu contains free-test mode, mountain fortress, cave and anti-air; script URL ends game.js?v=fortress1",
+  "new_preview": "https://www.bilibili.com/toy/preview/preview_28s5Wjcq/index.html",
+  "preview_only": true,
+  "sdk_loaded_on_real_toy": true,
+  "sdk_real_read_result": "toy id not available on host; translated to Chinese; preview lacks Toy identity",
+  "mock_sdk_passed": true,
+  "live_cloud_write_and_score_submit_tested": false,
+  "video_bindings": [],
+  "video_link": "https://www.bilibili.com/video/BV1Ujad6DEuf"
+}

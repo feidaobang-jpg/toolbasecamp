@@ -1,6 +1,21 @@
 /** 网址导航目录（按用途重排）。 */
 window.COOL_SITES_DATA = [
   {
+    // 本站自己部署的站点放最前面，方便从导航页直达
+    id: 'own',
+    title: '本站资讯',
+    icon: 'fas fa-newspaper',
+    groups: [
+      {
+        // 分组名不要写「国内」：英文语言下渲染器会隐藏「国内」分组
+        name: '自托管',
+        items: [
+          { title: '科技资讯', desc: '国外科技资讯中文编译 — AI、硬件与数码动态，每日自动更新', url: 'https://news.zhengxiaohui.cn', icon: 'fas fa-rss', isFontIcon: true }
+        ]
+      }
+    ]
+  },
+  {
     id: 'tools',
     title: '效率工具',
     icon: 'fas fa-toolbox',
