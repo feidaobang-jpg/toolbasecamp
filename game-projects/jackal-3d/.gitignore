@@ -1,5 +1,0 @@
-media-kit/releases/*/captures/*.webm
-media-kit/releases/*/captures/*.mp4
-media-kit/releases/*/captures/*.wav
-media-kit/releases/*/captures/iteration-*/
-qa/render-results/

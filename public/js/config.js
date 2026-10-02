@@ -185,7 +185,6 @@ const gamesConfig = {
         {
             titleKey: 'games.groups.action',
             items: [
-                { titleKey: 'tools.jackal3d.title', url: 'html/game/jackal-3d/index.html?v=1', thumb: 'assets/game/thumbs/jackal-3d.jpg?v=1' },
                 { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html?v=manual-fullscreen', thumb: 'assets/game/thumbs/mario-3d.jpg?v=1' },                { titleKey: 'tools.journeyWest.title', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
