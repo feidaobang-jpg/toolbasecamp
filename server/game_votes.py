@@ -41,7 +41,7 @@ WISHLIST_LIMIT = 5
 WISH_SUBMIT_LIMIT = 3          # 每 device 最多提交几条愿望
 IP_DEVICE_DAY_LIMIT = 5         # 同 IP 每天最多几个 device 能投票
 NAME_MAX = 24
-NOTE_MAX = 80
+NOTE_MAX = 160
 
 _DEVICE_RE = re.compile(r"^[0-9a-f]{16,32}$")
 # 愿望单不许夹带联系方式/外链（防广告位）
@@ -56,7 +56,6 @@ VOTE_WISHLIST = "wishlist"
 # 自研（本站有源码）游戏白名单：key 取游戏页 slug，titleKey 交给前端 i18n 取中文名，
 # 后端不存文案，避免和 public/js/config.js、locales 双份维护。
 ORIGINAL_GAMES: List[Dict[str, str]] = [
-    {"key": "hop-fox-3d", "url": "html/game/hop-fox-3d/index.html", "titleKey": "tools.hopfox3d.title"},
     {"key": "tank-3d", "url": "html/game/tank-3d/index.html", "titleKey": "tools.tank3d.title"},
     {"key": "journey-west-3d", "url": "html/game/journey-west-3d/index.html", "titleKey": "tools.journeyWest.title"},
     {"key": "worms", "url": "html/game/worms.html", "titleKey": "tools.worms.title"},
@@ -77,7 +76,6 @@ SEED_WISHES: List[Dict[str, str]] = [
     {"name": "塔防守城", "note": "波次防守加英雄技能，单手能玩"},
     {"name": "肉鸽地牢", "note": "每局随机地图和道具组合，死了重开"},
     {"name": "热梗小游戏", "note": "把当下热梗做成 60 秒一局"},
-    {"name": "跳跳狐关卡编辑器", "note": "自己摆关卡，生成链接给朋友挑战"},
     {"name": "星空防守无尽模式", "note": "在现有玩法上加无尽和排行榜"},
     {"name": "四人联机吃豆", "note": "房间码开局，手机也能凑一桌"},
     {"name": "像素牧场经营", "note": "轻量种田加订单，竖屏挂机"},
@@ -134,6 +132,12 @@ def ensure_game_votes_tables(cur) -> None:
             INDEX idx_game_wish_device (device_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """
+    )
+
+    # 已下架的官方预置愿望保留历史记录，但不再展示或接受新票。
+    cur.execute(
+        "UPDATE game_wishes SET status=0 WHERE source='seed' AND name=%s AND status=1",
+        ("跳跳狐关卡编辑器",),
     )
 
 
@@ -226,8 +230,10 @@ def _ip_device_guard(cur, ip_hash: str) -> None:
 
 def _device_count(cur, device_id: str, vote_type: str) -> int:
     cur.execute(
-        "SELECT COUNT(*) AS c FROM game_vote_ballots WHERE device_id=%s AND vote_type=%s",
-        (device_id, vote_type),
+        f"""SELECT COUNT(*) AS c FROM game_vote_ballots b
+        LEFT JOIN game_wishes w ON b.vote_type='wishlist' AND b.target_key=CONCAT('w', w.id)
+        WHERE b.device_id=%s AND b.vote_type=%s AND ({_active_ballots_sql()})""",
+        (device_id, vote_type, *sorted(_ORIGINAL_KEYS)),
     )
     row = cur.fetchone()
     return int(row["c"] or 0) if row else 0
@@ -251,13 +257,17 @@ class WishAdminIn(BaseModel):
 
 
 @router.get("/board")
-def get_board() -> dict:
+def get_board(
+    limit: int = Query(20, ge=1, le=20),
+    offset: int = Query(0, ge=0),
+    sort: str = Query("votes", pattern="^(votes|newest)$"),
+) -> dict:
     """热度榜 + 愿望榜（公开、无鉴权，前端首屏和榜单卡都读它）。"""
     conn = _db()
     try:
         with conn.cursor() as cur:
             fav_rows = _favorite_counts(cur)
-            wish_rows = _wish_counts(cur)
+            wish_rows = _wish_counts(cur, limit=limit, offset=offset, sort=sort)
             totals = _totals(cur)
     finally:
         conn.close()
@@ -295,6 +305,8 @@ def get_board() -> dict:
         "totals": totals,
         "favorite": favorite,
         "wishlist": wishlist,
+        "wishlistTotal": totals["wishes"],
+        "wishlistOffset": offset,
         "updatedAt": _cn_text(_now_utc()),
     }
 
@@ -303,23 +315,25 @@ def _favorite_counts(cur) -> List[dict]:
     """票数 + 近 7 天新增（用来把「最近有人玩」的游戏顶上去）。"""
     week_ago = _now_utc() - timedelta(days=7)
     cur.execute(
-        """
+        f"""
         SELECT target_key,
                COUNT(*) AS votes,
                SUM(CASE WHEN created_at>=%s THEN 1 ELSE 0 END) AS week_votes
         FROM game_vote_ballots
-        WHERE vote_type=%s
+        WHERE vote_type=%s AND target_key IN ({','.join(['%s'] * len(_ORIGINAL_KEYS))})
         GROUP BY target_key
         ORDER BY votes DESC, week_votes DESC, target_key ASC
         """,
-        (week_ago, VOTE_FAVORITE),
+        (week_ago, VOTE_FAVORITE, *sorted(_ORIGINAL_KEYS)),
     )
     return list(cur.fetchall())
 
 
-def _wish_counts(cur, limit: int = 200, include_hidden: bool = False) -> List[dict]:
+def _wish_counts(cur, limit: int = 20, include_hidden: bool = False,
+                 offset: int = 0, sort: str = "votes") -> List[dict]:
     week_ago = _now_utc() - timedelta(days=7)
     where = "1=1" if include_hidden else "w.status=1"
+    order = "w.id DESC" if sort == "newest" else "w.status ASC, votes DESC, week_votes DESC, w.id DESC"
     cur.execute(
         f"""
         SELECT w.id, w.name, w.note, w.source, w.status, w.created_at,
@@ -330,19 +344,28 @@ def _wish_counts(cur, limit: int = 200, include_hidden: bool = False) -> List[di
                ON b.vote_type=%s AND b.target_key=CONCAT('w', w.id)
         WHERE {where}
         GROUP BY w.id
-        ORDER BY w.status ASC, votes DESC, week_votes DESC, w.id DESC
-        LIMIT %s
+        ORDER BY {order}
+        LIMIT %s OFFSET %s
         """,
-        (week_ago, VOTE_WISHLIST, limit),
+        (week_ago, VOTE_WISHLIST, limit, offset),
     )
     return list(cur.fetchall())
 
 
+def _active_ballots_sql() -> str:
+    keys = ','.join(['%s'] * len(_ORIGINAL_KEYS))
+    return (f"(b.vote_type='favorite' AND b.target_key IN ({keys})) "
+            "OR (b.vote_type='wishlist' AND w.status=1)")
+
+
 def _totals(cur) -> dict:
     cur.execute(
-        """
-        SELECT COUNT(*) AS votes, COUNT(DISTINCT device_id) AS voters FROM game_vote_ballots
-        """
+        f"""
+        SELECT COUNT(*) AS votes, COUNT(DISTINCT b.device_id) AS voters FROM game_vote_ballots b
+        LEFT JOIN game_wishes w ON b.vote_type='wishlist' AND b.target_key=CONCAT('w', w.id)
+        WHERE {_active_ballots_sql()}
+        """,
+        tuple(sorted(_ORIGINAL_KEYS)),
     )
     row = cur.fetchone() or {}
     cur.execute("SELECT COUNT(*) AS c FROM game_wishes WHERE status=1")
@@ -404,11 +427,12 @@ def get_my_votes(device_id: str = Query(..., min_length=16, max_length=32)) -> d
     try:
         with conn.cursor() as cur:
             cur.execute(
-                """
-                SELECT vote_type, target_key FROM game_vote_ballots
-                WHERE device_id=%s ORDER BY id ASC
+                f"""
+                SELECT b.vote_type, b.target_key FROM game_vote_ballots b
+                LEFT JOIN game_wishes w ON b.vote_type='wishlist' AND b.target_key=CONCAT('w', w.id)
+                WHERE b.device_id=%s AND ({_active_ballots_sql()}) ORDER BY b.id ASC
                 """,
-                (dev,),
+                (dev, *sorted(_ORIGINAL_KEYS)),
             )
             rows = cur.fetchall()
             cur.execute(

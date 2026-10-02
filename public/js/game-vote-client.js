@@ -122,7 +122,10 @@
         gameName: gameName,
         gameUrl: gameUrl,
         escapeHtml: escapeHtml,
-        getBoard: function () { return request('/game-votes/board'); },
+        getBoard: function (page, sort) {
+            return request('/game-votes/board?limit=20&offset=' + (Math.max(0, (Number(page) || 1) - 1) * 20) +
+                '&sort=' + encodeURIComponent(sort || 'votes'));
+        },
         getOptions: function () { return request('/game-votes/options'); },
         getMyVotes: function () {
             return request('/game-votes/my-votes?device_id=' + encodeURIComponent(deviceId()));

@@ -186,7 +186,6 @@ const gamesConfig = {
             titleKey: 'games.groups.action',
             items: [
                 { titleKey: 'tools.tank3d.title', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
-                { titleKey: 'tools.hopfox3d.title', url: 'html/game/hop-fox-3d/index.html?v=1', thumb: 'assets/game/thumbs/hop-fox-3d.jpg?v=1' },
                 { titleKey: 'tools.journeyWest.title', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
                 { titleKey: 'tools.tankBattle.title', url: 'html/game/tank_battle.html?v=54' },
                 { titleKey: 'tools.starshipDefense.title', url: 'html/game/starship_defense.html?v=7' }

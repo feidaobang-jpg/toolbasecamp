@@ -6,11 +6,11 @@
   "current_version": "v0.1.0",
   "handoff": "releases/v0.1.0/handoff.json",
   "entrypoint": "public/html/game/hop-fox-3d/index.html",
-  "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/hop-fox-3d/index.html；网站游戏中心的动作扮演分类提供入口。",
+  "launch": "本地通过 HTTP 服务打开 /public/html/game/hop-fox-3d/index.html；已从网站游戏中心撤下入口。",
   "controls": "电脑：A/D 移动、K 跳跃（按住跳更高，空格同 K）、J 奔跑（拿到萤火灯笼后按 J 发射火花）、Q/E 旋转视角、R/F 俯仰、C 回正、方向键为镜头备用、Enter 开始/继续/重玩、Esc 暂停；手机：横屏，左摇杆左右移动，右下 K 跳跃与 J 奔跑，右侧 Q/E/R/F/C 视角键。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/index.html",
-  "public_play_url_note": "2026-10-02 用户确认上架网站游戏中心，替换超级玛丽 3D 入口；本次不涉及 Toy 发布。",
+  "public_play_url_note": "2026-10-02 用户决定从网站游戏中心及投票候选中下架；源码保留归档。",
   "comparison_note": "用户原始要求是「FC 超级玛丽 3D 版第一关」。按版权限制不绘制该系列角色与原关卡，改为原创主角、敌人与关卡的同类横版闯关，经用户确认后制作。",
   "development_model": "claude-opus-5-5（Claude Cowork 会话，按 web-game-maker 技能开发）",
   "tools": [

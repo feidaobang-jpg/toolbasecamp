@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/base.css?v=nosTW1">
     <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
     <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
-    <link rel="stylesheet" href="css/game-vote.css?v=gamevote1">
+    <link rel="stylesheet" href="css/game-vote.css?v=gamewish2">
 </head>
 <body id="top" class="site-page site-page--hub">
     <header class="site-header site-header--shrink">
@@ -40,38 +40,47 @@
                     <span data-i18n="gameVote.rulesBody">不用登录，本机可投「最爱玩」3 票、「愿望单」5 票，投过还能改。想玩的游戏榜单上没有，可以自己填一条愿望，别人也能给你投票。</span>
                 </div>
 
-                <div id="gv-msg" class="gv-msg"></div>
+                <div id="gv-msg" class="gv-msg" role="status" aria-live="polite"></div>
                 <p id="gv-totals" class="gv-totals"></p>
 
-                <div id="gv-boards">
-                    <section class="gv-card">
-                        <h3 data-i18n="gameVote.boardTitle">热度榜 · 最爱玩哪个</h3>
-                        <p class="gv-desc" data-i18n="gameVote.boardDesc">已上线自研游戏的得票数，右侧括号里是近 7 天新增。</p>
-                        <div id="gv-remaining" class="gv-remaining"></div>
-                        <ul id="gv-favorite" class="gv-list gv-list--favorite"></ul>
-                    </section>
-
-                    <section class="gv-card">
-                        <h3 data-i18n="gameVote.wishBoardTitle">愿望单 · 想玩这些</h3>
-                        <p class="gv-desc" data-i18n="gameVote.wishBoardDesc">网友自己填的愿望，票多的优先安排复刻或新做。</p>
-                        <ul id="gv-wishlist" class="gv-list"></ul>
-
+                <section class="gv-card gv-card--compose">
+                    <h3 data-i18n="gameVote.submitWishTitle">写下你的游戏愿望</h3>
+                    <p class="gv-desc" data-i18n="gameVote.submitWishDesc">想玩什么游戏、想加什么玩法？提交后会公开展示，其他玩家可以为你的愿望投票。</p>
                         <form id="gv-wish-form" class="gv-wish-form" autocomplete="off">
                             <label class="gv-field">
                                 <span data-i18n="gameVote.wishNameLabel">想玩的游戏</span>
-                                <input type="text" id="gv-wish-name" maxlength="24"
+                                <input type="text" id="gv-wish-name" maxlength="24" minlength="2" required
                                     placeholder="例如：合金弹头式横版闯关">
                             </label>
                             <label class="gv-field">
                                 <span data-i18n="gameVote.wishNoteLabel">想要什么样的玩法</span>
-                                <input type="text" id="gv-wish-note" maxlength="80"
-                                    placeholder="一句话说清爽点，例如：能双人同屏，Boss 会躲子弹">
+                                <textarea id="gv-wish-note" maxlength="160" rows="3"
+                                    placeholder="例如：双人合作守城，能建炮塔，每关结束选择升级"></textarea>
                             </label>
                             <div class="action-row">
                                 <button type="submit" class="tb-btn" data-i18n="gameVote.submitWishBtn">提交愿望</button>
                             </div>
                             <p class="gv-tip" data-i18n="gameVote.wishTip">别放链接和联系方式，广告内容会被管理员下架。</p>
                         </form>
+                    <p id="gv-wish-msg" class="gv-msg" role="status" aria-live="polite"></p>
+                </section>
+
+                <div id="gv-boards">
+                    <section class="gv-card">
+                        <h3 data-i18n="gameVote.wishBoardTitle">愿望单 · 想玩这些</h3>
+                        <p class="gv-desc" data-i18n="gameVote.wishBoardDesc">网友自己填的愿望，票多的优先安排复刻或新做。</p>
+                        <label class="gv-sort"><span data-i18n="gameVote.sortLabel">排序</span> <select id="gv-wish-sort"><option value="votes" data-i18n="gameVote.sortVotes">票数优先</option><option value="newest" data-i18n="gameVote.sortNewest">最新提交</option></select></label>
+                        <ul id="gv-wishlist" class="gv-list"></ul>
+                        <div id="gv-wish-pager"></div>
+
+
+                    </section>
+
+                    <section class="gv-card">
+                        <h3 data-i18n="gameVote.boardTitle">热度榜 · 最爱玩哪个</h3>
+                        <p class="gv-desc" data-i18n="gameVote.boardDesc">已上线自研游戏的得票数，右侧括号里是近 7 天新增。</p>
+                        <div id="gv-remaining" class="gv-remaining"></div>
+                        <ul id="gv-favorite" class="gv-list gv-list--favorite"></ul>
                     </section>
                 </div>
 
@@ -92,12 +101,13 @@
         </main>
     </div>
 
-    <script src="js/locales/zh-CN.js?v=gamevote1"></script>
+    <script src="js/locales/zh-CN.js?v=gamewish2"></script>
     <script src="js/i18n.js?v=nosTW1"></script>
     <script src="js/astra-games-catalog.js?v=cfb7f37d20"></script>
-    <script src="js/config.js?v=gamevote1"></script>
+    <script src="js/config.js?v=gamewish2"></script>
     <script src="js/common_ui.js?v=nosTW1"></script>
-    <script src="js/game-vote-client.js?v=gamevote1"></script>
-    <script src="js/game-vote.js?v=gamevote1"></script>
+    <script src="js/game-vote-client.js?v=gamewish2"></script>
+    <script src="js/tb-pager.js?v=1"></script>
+    <script src="js/game-vote.js?v=gamewish2"></script>
 </body>
 </html>

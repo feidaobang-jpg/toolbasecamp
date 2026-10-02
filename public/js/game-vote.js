@@ -9,7 +9,9 @@
         mine: null,
         busy: false,
         adminItems: null,
-        showHidden: false
+        showHidden: false,
+        wishPage: 1,
+        wishSort: 'votes'
     };
 
     function tr(k) {
@@ -29,6 +31,16 @@
         if (!box) return;
         box.textContent = msg || '';
         box.className = 'gv-msg' + (msg ? ' gv-msg--' + (kind || 'info') : '');
+    }
+
+    function wishSay(msg, kind) {
+        var box = el('gv-wish-msg');
+        box.textContent = msg || '';
+        box.className = 'gv-msg' + (msg ? ' gv-msg--' + (kind || 'info') : '');
+    }
+
+    function getBoard() {
+        return V.getBoard(state.wishPage, state.wishSort);
     }
 
     function votesMeta(row) {
@@ -100,15 +112,24 @@
         var box = el('gv-wishlist');
         if (!box) return;
         var items = (state.board && state.board.wishlist) || [];
+        global.tbRenderPager(el('gv-wish-pager'), {
+            page: state.wishPage, pageSize: 20,
+            total: (state.board && state.board.wishlistTotal) || 0,
+            onChange: function (page) {
+                if (state.busy) return;
+                state.wishPage = page;
+                loadAll();
+            }
+        });
         if (!items.length) {
-            box.innerHTML = '<li class="gv-empty">' + esc(tr('gameVote.emptyBoard')) + '</li>';
+            box.innerHTML = '<li class="gv-empty">' + esc(tr('gameVote.wishEmpty')) + '</li>';
             return;
         }
         var html = '';
         items.forEach(function (item, index) {
             var mine = !!(state.mine && state.mine.myWishes || []).includes(item.id);
             html += '<li class="gv-row">' +
-                '<span class="gv-rank">' + (index + 1) + '</span>' +
+                '<span class="gv-rank">' + ((state.wishPage - 1) * 20 + index + 1) + '</span>' +
                 '<span class="gv-row-main">' +
                     '<span class="gv-name">' + esc(item.name) +
                         (mine ? '<i class="gv-mine">' + esc(tr('gameVote.mySubmittedLabel')) + '</i>' : '') +
@@ -130,7 +151,7 @@
 
     function loadAll() {
         if (!V) return;
-        var pending = [V.getOptions(), V.getBoard(), V.getMyVotes()];
+        var pending = [V.getOptions(), getBoard(), V.getMyVotes()];
         return Promise.all(pending).then(function (res) {
             state.options = res[0];
             state.board = res[1];
@@ -152,7 +173,7 @@
         btn.disabled = true;
         var call = voted ? V.unvote(voteType, target) : V.vote(voteType, target);
         call.then(function () {
-            return Promise.all([V.getBoard(), V.getMyVotes()]);
+            return Promise.all([getBoard(), V.getMyVotes()]);
         }).then(function (res) {
             state.board = res[0];
             state.mine = res[1];
@@ -178,23 +199,36 @@
         var name = (nameInput && nameInput.value || '').trim();
         var note = (noteInput && noteInput.value || '').trim();
         if (name.length < 2) {
-            say(tr('gameVote.wishFailShort'), 'error');
+            wishSay(tr('gameVote.wishFailShort'), 'error');
             return;
         }
         state.busy = true;
+        var submit = evt.target.querySelector('button[type="submit"]');
+        submit.disabled = true;
+        submit.textContent = tr('gameVote.submitting');
+        wishSay('', 'info');
         V.submitWish(name, note).then(function () {
             if (nameInput) nameInput.value = '';
             if (noteInput) noteInput.value = '';
-            say(tr('gameVote.wishOk'), 'ok');
-            return Promise.all([V.getBoard(), V.getMyVotes()]);
+            wishSay(tr('gameVote.wishOk'), 'ok');
+            state.wishPage = 1;
+            state.wishSort = 'newest';
+            el('gv-wish-sort').value = 'newest';
+            return Promise.all([getBoard(), V.getMyVotes()]).catch(function () {
+                say(tr('gameVote.loadFail'), 'error');
+                return null;
+            });
         }).then(function (res) {
+            if (!res) return;
             state.board = res[0];
             state.mine = res[1];
             renderAll();
         }).catch(function (err) {
-            say(tr('gameVote.wishFail') + (err && err.detail ? '（' + err.detail + '）' : ''), 'error');
+            wishSay(tr('gameVote.wishFail') + (err && err.detail ? '（' + err.detail + '）' : ''), 'error');
         }).finally(function () {
             state.busy = false;
+            submit.disabled = false;
+            submit.textContent = tr('gameVote.submitWishBtn');
         });
     }
 
@@ -253,6 +287,11 @@
         if (admin) admin.addEventListener('click', onAdminClick);
         var form = el('gv-wish-form');
         if (form) form.addEventListener('submit', onSubmitWish);
+        el('gv-wish-sort').addEventListener('change', function (evt) {
+            state.wishPage = 1;
+            state.wishSort = evt.target.value;
+            loadAll();
+        });
         var toggle = el('gv-admin-toggle-hidden');
         if (toggle) toggle.addEventListener('change', function () {
             state.showHidden = toggle.checked;

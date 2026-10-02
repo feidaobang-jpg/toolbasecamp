@@ -234,7 +234,8 @@
     color: #475569;
 }
 
-.gv-field input {
+.gv-field input,
+.gv-field textarea {
     width: 100%;
     padding: 0.5rem 0.75rem;
     border: 1px solid #cbd5e1;
@@ -244,7 +245,8 @@
     box-sizing: border-box;
 }
 
-.gv-field input:focus {
+.gv-field input:focus,
+.gv-field textarea:focus {
     outline: none;
     border-color: #2563eb;
 }
@@ -439,3 +441,10 @@
         font-size: 0.75rem;
     }
 }
+
+.gv-card--compose { border-color: #bfdbfe; }
+.gv-card--compose .gv-wish-form { margin-top: 0; padding-top: 0; border-top: 0; }
+.gv-field textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+.gv-sort { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: .875rem; }
+.gv-sort select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #334155; }
+.gv-note { overflow-wrap: anywhere; }
