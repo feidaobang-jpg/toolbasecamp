@@ -201,8 +201,8 @@ const gamesConfig = {
                 { titleKey: 'tools.flyBird.title', url: 'html/game/fly_bird.html', toyUrl: 'https://www.bilibili.com/toy/feidao-fly-bird/index.html' },
                 { titleKey: 'tools.frogZuma.title', toyUrl: 'https://www.bilibili.com/toy/feidao-frog-zuma/index.html', url: 'html/game/frog_zuma.html?v=6' },
                 { titleKey: 'tools.worms.title', toyUrl: 'https://www.bilibili.com/toy/feidao-worms/index.html', url: 'html/game/worms.html?v=7' },
-                { titleKey: 'tools.brickBreaker.title', url: 'html/game/brick_breaker.html?v=7' },
-                { titleKey: 'tools.sheepstack.title', url: 'html/game/sheepstack.html?v=10' }
+                { titleKey: 'tools.brickBreaker.title', toyUrl: 'https://www.bilibili.com/toy/feidao-brick-breaker/index.html', url: 'html/game/brick_breaker.html?v=7' },
+                { titleKey: 'tools.sheepstack.title', toyUrl: 'https://www.bilibili.com/toy/feidao-sheepstack/index.html', url: 'html/game/sheepstack.html?v=10' }
             ]
         }
     ]

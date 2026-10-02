@@ -2,7 +2,7 @@
   "title": "打砖块",
   "id": 39586310916096,
   "slug": "feidao-brick-breaker",
-  "status": "auditing",
+  "status": "published",
   "visibility": "PUBLIC",
   "submitted_at": "2026-10-02T15:42:59.625Z",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_TAulDcGP/index.html",
@@ -16,5 +16,6 @@
   "validation": "Official doctor: no errors. Real browser desktop and mobile viewport checks: start/play and controls; no page errors. Not a full campaign playthrough.",
   "warnings": [
     "Static scripts use stable filenames; updates re-download small scripts."
-  ]
+  ],
+  "publication_verified_at": "2026-10-02T15:47:52.283Z"
 }
