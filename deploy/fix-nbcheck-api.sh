@@ -78,8 +78,8 @@ echo "$HEALTH" | grep -q '"nbcheck_api":true' || {
   ss -lntp 2>/dev/null | grep 8001 || true
   exit 1
 }
-echo "$HEALTH" | grep -q '"nbcheck_api_rev":2' || {
-  echo "FAILED: health missing nbcheck_api_rev=2"
+echo "$HEALTH" | grep -q '"nbcheck_api_rev":5' || {
+  echo "FAILED: health missing nbcheck_api_rev=5"
   exit 1
 }
 # OpenAPI shows /nbcheck/{list_id}, not the concrete /nbcheck/nb_gpu
