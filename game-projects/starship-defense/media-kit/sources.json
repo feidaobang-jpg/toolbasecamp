@@ -177,8 +177,16 @@
     "runtime_file": "public/html/game/starship-defense/toy-visuals.js",
     "tool": "Three.js r152 geometry factories assisted by Codex",
     "description": "Original round helmet troops, beetles, elite crowns, winged insects, enlarged mech, clouds and flowers; no Doraemon character assets used",
-    "parameters": "Shared vertex-colour merged geometry; animated body and left/right legs; original cream/teal/coral palette",
+    "parameters": "Shared vertex-colour merged geometry; animated body and left/right legs; original cream/teal/coral palette; ten species colour palettes preserve elite crowns and boss sizes",
     "processing": "Created directly as 3D runtime geometry; no image-to-model step",
-    "sha256": "3d64ba44b62841bea84103ce94946a88354927b1a4ee8ef71e872f24a668a364"
+    "sha256": "83f2d7234752f4ff92970f084a5fbfc4ba0e2c515af9987cbf9d1938f0ab0047"
+  },
+  {
+    "id": "fortress-procedural",
+    "source_type": "procedural",
+    "runtime_file": "public/html/game/starship-defense/fortress-world.js",
+    "tool": "Three.js r152 merged geometry assisted by Codex",
+    "description": "Original mountain horseshoe, stair treads, traversable short cave and field shelter; gameplay layout inspired by retained native project, no native assets copied",
+    "sha256": "ef1481e291a86c5a78d9af64779dd13c53e78f3a2bd30c6239222900204897ab"
   }
 ]

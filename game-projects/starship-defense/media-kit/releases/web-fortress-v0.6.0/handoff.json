@@ -1,0 +1,480 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-fortress-v0.6.0",
+  "base_version": "web-toylook-v0.5.0",
+  "created_at": "2026-10-02T02:11:34.965835+00:00",
+  "build": {
+    "id": "web-fortress-v0.6.0-8e6bde1c5557",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "8e6bde1c5557364e7087719b19b3d085172b2805cb728041e7b431c4c809620c",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "laser-fix",
+      "description": "Continuous laser and swept fast projectiles",
+      "status": "implemented",
+      "evidence_ids": [
+        "laser-action",
+        "fortress-features-realtime"
+      ]
+    },
+    {
+      "id": "fortress-layout",
+      "description": "Climbable stairs, mountain horseshoe, walk-through cave, healing field shelter, anti-air",
+      "status": "implemented",
+      "evidence_ids": [
+        "fortress-overview",
+        "inside-cave",
+        "walked-up-tower"
+      ]
+    },
+    {
+      "id": "sandbox",
+      "description": "Invincibility, independent saves, all weapons/items/vehicles and ten species plus elites/bosses",
+      "status": "implemented",
+      "evidence_ids": [
+        "test-panel",
+        "phone-test-panel",
+        "mixed-battle"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "laser-fix",
+      "feature_ids": [
+        "laser-fix"
+      ],
+      "before": "Approved Q-style v0.5.0 baseline",
+      "after": "Continuous laser and swept fast projectiles",
+      "user_visible_result": "Continuous laser and swept fast projectiles",
+      "evidence_ids": [
+        "laser-action",
+        "fortress-features-realtime"
+      ],
+      "verification": "verify-web.cjs and verify-fortress.cjs passed; Toy actual preview checked"
+    },
+    {
+      "id": "fortress-layout",
+      "feature_ids": [
+        "fortress-layout"
+      ],
+      "before": "Approved Q-style v0.5.0 baseline",
+      "after": "Climbable stairs, mountain horseshoe, walk-through cave, healing field shelter, anti-air",
+      "user_visible_result": "Climbable stairs, mountain horseshoe, walk-through cave, healing field shelter, anti-air",
+      "evidence_ids": [
+        "fortress-overview",
+        "inside-cave",
+        "walked-up-tower"
+      ],
+      "verification": "verify-web.cjs and verify-fortress.cjs passed; Toy actual preview checked"
+    },
+    {
+      "id": "sandbox",
+      "feature_ids": [
+        "sandbox"
+      ],
+      "before": "Approved Q-style v0.5.0 baseline",
+      "after": "Invincibility, independent saves, all weapons/items/vehicles and ten species plus elites/bosses",
+      "user_visible_result": "Invincibility, independent saves, all weapons/items/vehicles and ten species plus elites/bosses",
+      "evidence_ids": [
+        "test-panel",
+        "phone-test-panel",
+        "mixed-battle"
+      ],
+      "verification": "verify-web.cjs and verify-fortress.cjs passed; Toy actual preview checked"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "laser-tunnelling",
+      "discovered_version": "web-toylook-v0.5.0",
+      "reproduction_steps": [
+        "Shoot a stationary target at 44 distances at 60/30/20 FPS using old point-only collision"
+      ],
+      "observation": "5 / 24 / 33 misses respectively; exact viewer weapon wording not independently verified",
+      "impact": "Expensive fast weapon may appear to fire without damage",
+      "cause": "Only endpoint sampled for collision; laser rendered as a small fast projectile",
+      "status": "fixed",
+      "fix": "Immediate visible laser pulses and swept segment collision for fast projectiles",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "laser-action"
+      ],
+      "retest": "0 / 0 / 0 misses, 130 damage from holding fire for one second. Numerical before evidence in laser-before.json, no pre-fix video."
+    }
+  ],
+  "media": [
+    {
+      "id": "cave-exterior",
+      "file": "releases/web-fortress-v0.6.0/captures/cave-exterior.png",
+      "sha256": "f809b8c22186130370fb7966319a0acc06282af788ee9061bc4059a363bbe43a",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": []
+    },
+    {
+      "id": "desktop-battle",
+      "file": "releases/web-fortress-v0.6.0/captures/desktop-battle.png",
+      "sha256": "75e20374999a870af69845f9205514557ee4232bbeeccd036fdca4e559cfe00c",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "desktop-menu",
+      "file": "releases/web-fortress-v0.6.0/captures/desktop-menu.png",
+      "sha256": "b7c4efe832f04fe979846f86418d8abcc4c174ebdb285a21a9183283d31206ba",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "desktop-realtime",
+      "file": "releases/web-fortress-v0.6.0/captures/desktop-realtime.webm",
+      "sha256": "94fa086e173adc415206ad6736960bf26d7748b133e76d308775dfcacd58936c",
+      "kind": "video",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 10.64,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 10.64,
+          "description": "Realtime gameplay / controls; QA setup explicitly used"
+        }
+      ]
+    },
+    {
+      "id": "desktop-side",
+      "file": "releases/web-fortress-v0.6.0/captures/desktop-side.png",
+      "sha256": "3f0d17be3b0738468d3497465a9a7d81d1debbd05a1081bbf9663638fefb96e5",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "fortress-features-realtime",
+      "file": "releases/web-fortress-v0.6.0/captures/fortress-features-realtime.webm",
+      "sha256": "40111662cb30536031911e2dca7e512f18236c517e23d5599ba3a0956130d14b",
+      "kind": "video",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 15.8,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 15.8,
+          "description": "Realtime gameplay / controls; QA setup explicitly used"
+        }
+      ]
+    },
+    {
+      "id": "fortress-game-audio",
+      "file": "releases/web-fortress-v0.6.0/captures/fortress-game-audio.webm",
+      "sha256": "1072b1f26de0fe6a354ab3f5eea24aafe11b47bbffa77ad28a0e37d1b3c3573b",
+      "kind": "audio",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": null,
+      "height": null,
+      "duration_seconds": 13.74,
+      "audio": "game",
+      "audio_review": "not-run",
+      "visual_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 13.74,
+          "description": "Game-only audio"
+        }
+      ]
+    },
+    {
+      "id": "fortress-overview",
+      "file": "releases/web-fortress-v0.6.0/captures/fortress-overview.png",
+      "sha256": "d1e8f97567873f08799edaebaf52b9dfa90994b3e0da40cba8266152d687e6e7",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": []
+    },
+    {
+      "id": "inside-cave",
+      "file": "releases/web-fortress-v0.6.0/captures/inside-cave.png",
+      "sha256": "22ce347deb30defe06cb5c5555662e90b30f306ecb92cc04892fca66217f1980",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": []
+    },
+    {
+      "id": "laser-action",
+      "file": "releases/web-fortress-v0.6.0/captures/laser-action.png",
+      "sha256": "4b9cf75f519a69ccd8d5229ce30f1086174055dfef593f88dabacf75b2b78e0a",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": []
+    },
+    {
+      "id": "mixed-battle",
+      "file": "releases/web-fortress-v0.6.0/captures/mixed-battle.png",
+      "sha256": "b24b45dc1e8dc0571994d64ee2c33f6da9f5925c8546da6dba78b07ac208d411",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "phone-landscape",
+      "file": "releases/web-fortress-v0.6.0/captures/phone-landscape.png",
+      "sha256": "2e6d80221b72cf3e4bdac824f9611dd8ba47833ba963bc804d1c08c81eb18d5e",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/web-fortress-v0.6.0/captures/phone-portrait.png",
+      "sha256": "92daa58bca6013e2168f5362ba4ecd96c75bf244b974689d02357dec7f8f0e56",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "phone-realtime",
+      "file": "releases/web-fortress-v0.6.0/captures/phone-realtime.webm",
+      "sha256": "35391b448773ca045adab09bfb7940b51852dd33f09bb5a953ec1878ed742ccb",
+      "kind": "video",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 4.24,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 4.24,
+          "description": "Realtime gameplay / controls; QA setup explicitly used"
+        }
+      ]
+    },
+    {
+      "id": "phone-test-panel",
+      "file": "releases/web-fortress-v0.6.0/captures/phone-test-panel.png",
+      "sha256": "0f9c8dcb3bd05e53a68979bc9cf79e6fe1ee7f4c0b35729f843bd5bf0e5db63e",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": []
+    },
+    {
+      "id": "shelter-exterior",
+      "file": "releases/web-fortress-v0.6.0/captures/shelter-exterior.png",
+      "sha256": "f76c3e8812c7b9d693e43c171c525809b5a695986eaae32913f536258fb78183",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "test-panel",
+      "file": "releases/web-fortress-v0.6.0/captures/test-panel.png",
+      "sha256": "0532c30d2372d9942084627335e02c01cb420d6ad28a70aadec9ee35d93bf68b",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "toy-extension-preview",
+      "file": "releases/web-fortress-v0.6.0/captures/toy-extension-preview.png",
+      "sha256": "c448dd17ec56bd47c9a6cdbbb276f5e847c3c2b2a4ffadbcbc36b3fc8968b7cc",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": []
+    },
+    {
+      "id": "walked-up-tower",
+      "file": "releases/web-fortress-v0.6.0/captures/walked-up-tower.png",
+      "sha256": "0f1596b20ece11f1f1d78d22764b20a89d24307c0eecbb059e8d187d50e57870",
+      "kind": "screenshot",
+      "version": "web-fortress-v0.6.0",
+      "build_id": "web-fortress-v0.6.0-8e6bde1c5557",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser capture. QA hooks arrange camera/player/enemy positions; gameplay, UI and movement run in real time. Game audio captured from Web Audio master only; no microphone.",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null,
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "not-run",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Headless Edge ANGLE D3D11, RTX4060Ti, 1440x810, plus simulated 390x844/844x390 touch",
+      "results": "verification.json, performance.json, fortress-verification.json and toy-verification.json",
+      "limitations": [
+        "No physical phone performance measurement",
+        "No human hands-on playtest",
+        "Web Audio track decoded and volume checked, not listened to",
+        "FFmpeg metadata/decoding used; ffprobe not available"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "Game audio listening review outstanding",
+      "Full human visual review of all raw recordings outstanding"
+    ]
+  }
+}

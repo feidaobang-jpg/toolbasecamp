@@ -2,33 +2,35 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮前哨：守卫基地",
   "engine": "Three.js r152",
-  "current_version": "web-toylook-v0.5.0",
+  "current_version": "web-fortress-v0.6.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "python game-projects/starship-defense/build-toy.py",
   "release_intent": "web_demo",
   "development_model": null,
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_Z2dVJ49C/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_vrDVpu2n/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-toylook-v0.5.0/handoff.json",
+  "qa": "releases/web-fortress-v0.6.0/handoff.json",
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-01T15:06:11.229935+00:00"
+    "verified_at": "2026-10-02T02:04:02.272643+00:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "toy-v0.3.0",
+  "published_toy_version": "web-toylook-v0.5.0",
   "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
     "full_native_port": false
   },
-  "visual_style": "Original rounded toy-like procedural 3D; trial pending user review",
-  "skill_updated": false
+  "visual_style": "User-approved original rounded toy-like 3D",
+  "skill_updated": true,
+  "steam_status": "Optional possibility only; Toy/video response determines any future decision",
+  "extension_review_status": "preview_only"
 }

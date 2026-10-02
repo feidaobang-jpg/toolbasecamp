@@ -69,10 +69,11 @@ export class ToyVisuals {
     const gun=this.mesh(data.gun);gun.position.set(.36,1.06,.43);root.add(gun);root.userData.gun=gun;
     return root;
   }
-  bug(scale=1,kind='mob',fly=false){
-    const key=kind+(fly?'fly':'');
+  bug(scale=1,kind='mob',fly=false,species=0){
+    const key=kind+(fly?'fly':'')+species;
     if(!this.cache.has(key)){
-      const b=[],legs=[],shell=kind==='boss'?0xb778d9:kind==='miniboss'||kind==='elite'?0xf4ad49:fly?0x65bed0:0xed8562;
+      const palette=[0xed8562,0xa9cb62,0xa694ce,0x65bed0,0xf39b56,0xb9bd64,0x789cdb,0xa395bd,0x9ab2b7,0xda8ca9];
+      const b=[],legs=[],shell=palette[species]||palette[0];
       const dark=0x553d56,cream=0xffe8b1;
       this.part(b,'sphere',dark,[0,.53,-.1],[.77,.38,.93]);
       // Two glossy shell halves and a contrasting seam make the silhouette legible.

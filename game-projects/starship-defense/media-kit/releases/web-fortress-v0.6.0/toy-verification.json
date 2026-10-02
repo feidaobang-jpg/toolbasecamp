@@ -1,0 +1,24 @@
+{
+  "records": [
+    {
+      "url": "https://www.bilibilitoy.com/toy/preview/preview_vrDVpu2n/index.html?qa=1",
+      "testMode": true,
+      "newFeatures": true,
+      "weapon": "laser",
+      "keys": [
+        "toy-chongchao-v1-sst_save_sandbox_auto"
+      ]
+    },
+    {
+      "url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v21147/index.html?qa=1",
+      "testMode": false,
+      "newFeatures": false,
+      "weapon": "lmg",
+      "keys": [
+        "toy-chongchao-v1-sst_save_sandbox_auto",
+        "toy-chongchao-v1-sst_save_auto"
+      ]
+    }
+  ],
+  "errors": []
+}

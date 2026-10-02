@@ -1,16 +1,30 @@
-# 虫潮前哨：Q版画风试改
+# 虫潮前哨：堡垒与自由测试 v0.6.0
 
-当前网站版本 web-toylook-v0.5.0，待用户确认画风，不将试改结论写入 web-game-maker 技能。
+当前主工程为 Three.js 网页游戏，沿用用户认可的精致 Q 版。定位是 B 站 Toy / 视频驱动的小 Demo；Steam 仅为可能的后续去向，没有确定上架计划，不维护第二套 Godot 实现。
 
-在已有 Three.js 游戏上换成原创程序化圆头装甲兵、彩色甲虫、精英/虫王、飞虫与大型装甲角色。奶白/湖蓝基地、草地与沙色路线、暖色岩石、云朵和花草统一配色。角色采用共享网格及少量部件动画；旧 Godot 模型与来源仍保留，当前网页不再下载这些 GLB 或岩石照片。修正了城门护栏/旗杆将世界坐标再次叠加到父节点造成的悬空。
+## 本版
 
-入口：public/html/game/starship-defense/index.html；旧 starship_defense.html 重定向及 sst_save_ 存档保持兼容。既有 Toy 发布版本仍为 toy-v0.3.0，本次未更新 Toy。
+- 修复激光高速弹丸越过目标：脉冲激光炮按住连续发射即时光束；狙击和轨道炮也采用连续路径命中检测，轨道炮按距离贯穿最多三敌。
+- 岩石具备实体碰撞并阻挡弹丸；飞行单位按高度通过。怪物在障碍旁绕行，出生位置避开实心障碍。
+- 基地两侧与后方山体围合、正面开口；两侧金色台阶可步行登上门楼。保留原城门与城墙规则。
+- 防空激光塔专门攻击飞虫；左前短洞穴两端可穿行，右前野外地堡可进内回血，镜头遇洞壁/屋顶缩近。
+- 暴露自由测试入口 T，游戏内 H / 测试台。玩家、小队、建筑、基地、城门、载具无敌；全武器、无限金币弹药与重复取用道具，四类载具直接驾驶。
+- 测试台可选择十章虫种、六种精英词缀、小首领、大首领和召唤数量；全类型混战、清场、重置与返回普通模式。上限 48 虫 / 4 队友 / 32 建筑，控制负载。普通关卡保留。
+- 普通 sst_save_ 与 sandbox_ 子空间隔离；Toy 又使用 toy-chongchao-v1-sst_save_ 独立前缀。普通存档不会被自由测试覆盖。
 
-WASD 移动、J 射击、K 跳、U 手雷、I 互动、O 商店、L 建造、V 换枪、C 切换四个镜头、R 开战、Enter 开始/重试、Esc/P 暂停、M 声音、F 手动全屏。手机支持横屏和竖屏自动旋转后的摇杆/多点触控。原关卡、商店、基地失败、玩家复活规则不变。
+## 启动与验证
 
-本地 HTTP：Python -m http.server 8765 --bind 127.0.0.1 --directory public。
-验证：node game-projects/starship-defense/verify-web.cjs；node game-projects/starship-defense/verify-toylook.cjs。测试钩子仅 ?qa=1 开启。GAME_URL 可指定线上入口。第一份覆盖11项行为、两档48虫4队友压力及录像；第二份覆盖模型变体、机甲操作和30秒持续移动/射击/切镜头。录像与性能测量分开。
+入口 public/html/game/starship-defense/index.html。旧 starship_defense.html 重定向仍可用。
 
-媒体：media-kit/releases/web-toylook-v0.5.0/。真实浏览器自动化截图/录像；压力与变体展示使用明确记录的测试摆位和高血量。normal-play.png 为普通开局操作。没有真机手机性能测试；录像无音轨。
+使用 HTTP 服务：Python -m http.server 8765 --bind 127.0.0.1 --directory public。
+GAME_URL 指向测试入口，GAME_VERSION=web-fortress-v0.6.0 后运行 verify-web.cjs；verify-fortress.cjs 验证本版激光/碰撞/无敌/存档与混合虫潮移动压力。?qa=1 才暴露自动化钩子。脚本使用本机已安装 Playwright 和 Edge。
 
-原 Godot 工程 D:/project/gpt/worlds/breachline 保留。本次仅网页美术与相关性能/显示修正，并非全量 Godot 移植，也未增加百人队伍。
+WASD 移动，J 射击，K 跳跃，U 手雷（直升机下降），I 互动/上下载具，O 商店，L 建造，V 换枪，C 四种视角，R 开战，Enter 开始/重试，Esc/P 暂停，M 声音，F 全屏。自由模式 T 进入、H 测试台，Tab/回车操作菜单。手机使用对应触控按钮，竖屏自动旋转舞台。
+
+## 迁移范围与交接
+
+沿用网页版已有战车、坦克、机甲、直升机、四人小队、十章虫种/精英/首领，将 Godot 堡垒布局、短洞穴和野外掩体思路重新实现为 Q 版。不是全量移植，不包括百人队友、原生完整洞网、原生所有 NPC 职业和大型地图。原 Godot 工程 D:/project/gpt/worlds/breachline 保留。
+
+媒体入口 media-kit/game.json；本次记录 media-kit/releases/web-fortress-v0.6.0/handoff.json。真实浏览器录制及独立帧时间测试，脚本摆位均明确标记；未做手机真机性能测试。
+
+Toy 的已发布版本、当前扩展预览与网站版本分别记录在 game.json，不能把新预览当作已公开发布。

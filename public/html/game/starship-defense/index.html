@@ -2,11 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>虫潮前哨：守卫基地</title>
 
 <style>
-#assetLoad{position:absolute;inset:0;z-index:100;background:#0c141b;display:grid;place-content:center;color:#a6d7de;font-size:19px;text-align:center;padding:30px}#webTools{position:absolute;right:12px;top:190px;z-index:45;display:flex;gap:8px}#webTools .mbtn{font-size:12px;padding:6px 9px}#btnTest{display:none!important}.menu{background:linear-gradient(90deg,rgba(7,16,23,.97) 0%,rgba(7,16,23,.84) 42%,rgba(7,16,23,.22) 100%);align-items:flex-start;padding-left:55px}.menu h1{font-size:44px;letter-spacing:5px;background:linear-gradient(180deg,#e7f4f0,#8ba5a8);-webkit-background-clip:text}.menu .small{text-align:left;max-width:650px;color:#a8b9c0}.menu .classCard{background:rgba(18,32,41,.85)}.mbtn{border-radius:3px;background:linear-gradient(180deg,#294651,#152833);border-color:#607d85}.menu h2{color:#d3b780}#hudTop,#hudRight{background:rgba(9,19,26,.82);border:1px solid #39535a;border-radius:3px}#keysHint{background:rgba(9,19,26,.85)}
+#assetLoad{position:absolute;inset:0;z-index:100;background:#0c141b;display:grid;place-content:center;color:#a6d7de;font-size:19px;text-align:center;padding:30px}#webTools{position:absolute;right:12px;top:190px;z-index:45;display:flex;gap:8px}#webTools .mbtn{font-size:12px;padding:6px 9px}.menu{background:linear-gradient(90deg,rgba(7,16,23,.97) 0%,rgba(7,16,23,.84) 42%,rgba(7,16,23,.22) 100%);align-items:flex-start;padding-left:55px}.menu h1{font-size:44px;letter-spacing:5px;background:linear-gradient(180deg,#e7f4f0,#8ba5a8);-webkit-background-clip:text}.menu .small{text-align:left;max-width:650px;color:#a8b9c0}.menu .classCard{background:rgba(18,32,41,.85)}.mbtn{border-radius:3px;background:linear-gradient(180deg,#294651,#152833);border-color:#607d85}.menu h2{color:#d3b780}#hudTop,#hudRight{background:rgba(9,19,26,.82);border:1px solid #39535a;border-radius:3px}#keysHint{background:rgba(9,19,26,.85)}
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none;}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Microsoft YaHei",sans-serif;}
@@ -83,6 +84,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .saveSlot{display:flex;justify-content:space-between;align-items:center;background:rgba(40,70,120,.35);border:1px solid #4a7ab5;border-radius:8px;padding:8px 12px;margin:6px auto;width:480px;font-size:13px;}
 .saveSlot button{font-size:12px;padding:4px 12px;}
 #pausePanel{text-align:center;}
+ .testGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.testGrid label{display:flex;gap:8px;align-items:center}.testGrid select{min-width:0;flex:1;padding:8px;border-radius:8px;background:#fff3d7;color:#345c66;border:1px solid #96b8ae}#sandboxPanel p{font-size:12px;line-height:1.5}#sandboxPanel .mbtn{padding:7px;font-size:12px}
 </style>
 <style>
 .menu{background:linear-gradient(90deg,rgba(7,16,23,.95),rgba(7,16,23,.86) 52%,rgba(7,16,23,.25));align-items:flex-start;padding:24px 38px;overflow-y:auto}
@@ -97,6 +99,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #joyBase{left:30px;bottom:24px;width:120px;height:120px}#interactHint{font-size:12px;bottom:170px}
 #menuMain .small{max-width:640px}#menuMain .subtitle{font-size:13px;letter-spacing:4px;color:#bda477;margin-bottom:5px}
 a.gameBack{color:#a7c4c3;font-size:12px;margin-top:10px;text-decoration:none;border-bottom:1px solid #617a7c;padding:6px 0}
+ .testGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.testGrid label{display:flex;gap:8px;align-items:center}.testGrid select{min-width:0;flex:1;padding:8px;border-radius:8px;background:#fff3d7;color:#345c66;border:1px solid #96b8ae}#sandboxPanel p{font-size:12px;line-height:1.5}#sandboxPanel .mbtn{padding:7px;font-size:12px}
 </style>
 <style>
 /* Q版画风试改：奶油白、湖蓝、杏黄，与三维场景共用色彩。 */
@@ -125,13 +128,14 @@ html,body{background:#b5e3e6;font-family:"Microsoft YaHei",sans-serif}
 .panel{background:#edf4df;color:#345c62;border:2px solid #8bbab0;border-radius:18px;box-shadow:0 10px 35px #315c6455}.panel h3{color:#347888}.shopItem,.saveSlot{background:#fff8e4;color:#41666b;border-color:#bbd1b5;border-radius:11px}.shopItem .nm{color:#347d8b}.shopItem .pr{color:#aa7e32}.tab{background:#d1e4cf;color:#437365;border-color:#91baa4}.tab.on{background:#4c948d;color:white;border-color:#34796f}
 a.gameBack{color:#427d7b;border-color:#88b4a2}
 .touch-mode #keysHint{display:none}.touch-mode #hint{bottom:160px;max-width:470px;white-space:nowrap;font-size:10px;padding:5px 9px}.touch-mode #interactHint{bottom:130px}
+ .testGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.testGrid label{display:flex;gap:8px;align-items:center}.testGrid select{min-width:0;flex:1;padding:8px;border-radius:8px;background:#fff3d7;color:#345c66;border:1px solid #96b8ae}#sandboxPanel p{font-size:12px;line-height:1.5}#sandboxPanel .mbtn{padding:7px;font-size:12px}
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在搭建玩具前哨…</div>
-<div id="webTools"><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="webTools"><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 H</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -187,14 +191,14 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
-      <button class="mbtn red" id="btnTest">🧪 测试模式</button>
+      <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
     <div class="small" style="margin-top:6px;">
       PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷(无限) · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
       C=切换视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），点「视角」切换镜头<br>
       玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目<br>
       精英虫带词缀（迅捷/坚甲/狂暴/剧毒/爆死/巨型），击杀掉落双份金币 · BOSS会冲锋/弹幕/召唤，注意走位！<br>
-      基地设施：医疗平台站上去持续回血 · 城门关闭后可从内侧斜梯登上塔楼，越墙瞭望架枪守门
+      基地设施：医疗平台站上去持续回血 · 从城门两侧金色台阶登楼守门 · 左前方短洞穴可穿行 · 右前方野外地堡可回血 · 防空塔专打飞虫
     </div>
   </div>
 
@@ -241,6 +245,23 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div class="shopGrid" id="buildGrid" style="grid-template-columns:repeat(2,1fr);"></div>
   </div>
 
+  <!-- 自由测试：普通模式和存档独立 -->
+  <div id="sandboxPanel" class="panel hidden" style="width:660px;max-height:86%;overflow:auto;z-index:60">
+    <button class="closeX" id="sandboxClose" aria-label="关闭测试台">✕</button>
+    <h3>🧪 自由测试台</h3><p id="testStatus"></p>
+    <p>随时换武器、驾驶载具、召唤虫群。所有十章怪物及对应首领均可选；普通存档不受影响。</p>
+    <div class="testGrid">
+      <label>武器<select id="testWeapon"></select></label><button class="mbtn" data-test-claim="weapon" data-select="testWeapon">装备武器</button>
+      <label>道具<select id="testItem"></select></label><button class="mbtn" data-test-claim="item" data-select="testItem">立即使用 / 领取</button>
+      <label>载具<select id="testVehicle"></select></label><button class="mbtn" data-test-claim="vehicle" data-select="testVehicle">立即驾驶</button>
+      <label>防线<select id="testBuilding"></select></label><button class="mbtn" data-test-claim="building" data-select="testBuilding">前方建造</button>
+      <label>虫族<select id="testSpecies"></select></label><label>级别<select id="testRank"><option value="mob">普通虫</option><option value="elite">精英虫</option><option value="miniboss">小首领</option><option value="boss">大首领</option></select></label>
+      <label>精英词缀<select id="testAffix"></select></label><label>召唤数量<select id="testCount"><option>1</option><option>6</option><option>12</option></select></label>
+    </div>
+    <div class="btnRow"><button id="test-selected" class="mbtn green">召唤所选虫群</button><button id="test-showcase" class="mbtn">全类型混战</button><button id="test-clear" class="mbtn">清理虫群</button><button class="mbtn" data-test-claim="squad">补齐四人小队</button></div>
+    <div class="btnRow"><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
+    <p class="small">同屏最多 48 只虫、4 名队友、32 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。H / Esc 关闭，Tab 与回车操作。</p>
+  </div>
   <!-- 存档面板 -->
   <div id="savePanel" class="panel hidden" style="width:540px;">
     <div class="closeX" id="saveClose">✕</div>
@@ -248,6 +269,6 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div id="slotList"></div>
   </div>
 </div>
-<script type="module" src="./game.js?v=toylook1"></script>
+<script type="module" src="./game.js?v=fortress1"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

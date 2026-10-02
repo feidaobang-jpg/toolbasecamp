@@ -1,0 +1,9 @@
+Input #0, matroska,webm, from 'D:\project\toolbasecamp\game-projects\starship-defense\media-kit\releases\web-fortress-v0.6.0\captures\phone-realtime.webm':
+  Metadata:
+    ENCODER         : Lavf61.1.100
+  Duration: 00:00:04.24, start: 0.000000, bitrate: 675 kb/s
+  Stream #0:0(eng): Video: vp8, yuv420p(progressive), 390x844, SAR 1:1 DAR 195:422, 25 fps, 25 tbr, 1k tbn (default)
+      Metadata:
+        ENCODER         : Lavc61.3.100 libvpx
+        DURATION        : 00:00:04.240000000
+At least one output file must be specified
