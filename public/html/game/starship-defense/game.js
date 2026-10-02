@@ -1854,7 +1854,10 @@ function updWave(dt){
     w.done=true;levelWin();
   }
 }
+let runGeneration=0;
 function levelWin(){
+  if(Game.testMode)return;
+  const generation=runGeneration;
   AudioSys.sfx('win');
   const bonus=Math.round((80+Game.level*30+Game.chapter*50)*(1+(Game.loop-1)*.3));
   Game.gold+=bonus;Game.score+=100*Game.level;
@@ -1871,7 +1874,7 @@ function levelWin(){
   }
   base.hp=Math.min(base.maxHp,base.hp+300); // 关间维修
   updHPBar(base.bar,base.hp/base.maxHp);
-  setTimeout(()=>{if(Game.state==='battle')startPrep();},1500);
+  setTimeout(()=>{if(!Game.testMode&&generation===runGeneration&&Game.state==='battle')startPrep();},1500);
 }
 function gameOver(reason){
   if(Game.state==='over')return;
@@ -1883,6 +1886,7 @@ function gameOver(reason){
   $('hud').classList.add('hidden');$('touchUI').classList.add('hidden');
 }
 function restartLevel(){
+  runGeneration++;
   if(Game.testMode){newGame(true);return;}
   $('menuOver').classList.add('hidden');$('menuPause').classList.add('hidden');
   Game.state='prep';
@@ -2026,6 +2030,7 @@ function saveData(){
   };
 }
 function applySave(d){
+  runGeneration++;
   Game.testMode=d.testMode===true;
   Game.loop=d.loop;Game.chapter=d.chapter;Game.level=d.level;
   Game.gold=d.gold;Game.score=d.score;Game.cls=d.cls;
@@ -2102,6 +2107,7 @@ function showHUD(){
   $('touchUI').classList.toggle('hidden',!isTouch);
 }
 function newGame(test){
+  runGeneration++;
   Game.testMode=!!test;
   Game.loop=1;Game.chapter=1;Game.level=1;
   Game.gold=test?99999:150;Game.score=0;
@@ -2188,7 +2194,8 @@ function updCamera(dt){
   const ray=desired.clone().sub(look),length=ray.length();let obstructed=false;
   for(let step=.5;step<length;step+=.5){
     const point=look.clone().addScaledVector(ray,step/length);
-    if(fortress.shotBlocked(point)){desired.copy(look).addScaledVector(ray,Math.max(.5,step-.7)/length);obstructed=true;break;}
+    const gatePost=Math.abs(Math.abs(point.x)-7)<1.15&&Math.abs(point.z+16)<1.15&&point.y>PLAT.H&&point.y<PLAT.H+5.8;
+    if(gatePost||point.y<groundY(point.x,point.z)+.25||fortress.shotBlocked(point)){desired.copy(look).addScaledVector(ray,Math.max(.35,step-.8)/length);obstructed=true;break;}
   }
   camera.position.lerp(desired,obstructed?1:Math.min(1,dt*6));
   if(Game.shake>0){
@@ -2197,6 +2204,7 @@ function updCamera(dt){
     camera.position.y+=rand(-1,1)*Game.shake;
   }
   camera.lookAt(tp.x,tp.y+2,tp.z);
+  if(!player.dead&&!player.inVehicle)player.mesh.visible=camera.position.distanceTo(look)>1.1;
 }
 
 /* ================= UI事件绑定 ================= */
