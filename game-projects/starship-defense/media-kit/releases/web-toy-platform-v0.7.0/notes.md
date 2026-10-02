@@ -15,3 +15,7 @@ SDK文档页在未登录IAB跳到介绍页。通过官方页面公开静态脚�
 网站自动部署未及时落地，按项目规则仅SSH同步本款六个改动运行文件，七个文件公网校验通过。
 
 媒体：截图可用，Canvas录像虽真实但仅约1fps且无游戏声/HUD，尝试可见窗口仍未解决采集限制，保留原片并标记partial。性能来自独立帧时间测试，不用录像帧率推断游戏性能。
+
+## 共享暂存区记录
+
+核心实现提交 a77f8073 仅本任务文件。记录提交 c6348849 意外包含共享工作区中其他任务已暂存的 public/js/cool-sites-data.js、public/js/life/life-catalog.js、public/js/locales/zh-CN.js、public/life.html；本任务未编辑其内容，不回退其他任务改动，也不重写已推送历史。后续使用 commit --only 限定明确文件。
