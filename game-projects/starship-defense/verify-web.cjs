@@ -3,7 +3,7 @@
 const { chromium } = require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs = require('fs'),path = require('path'),crypto=require('crypto');
 const root=path.resolve(__dirname,'../..');
-const release=path.join(__dirname,'media-kit/releases/web-worlds-v0.4.0');
+const release=path.join(__dirname,'media-kit/releases',process.env.GAME_VERSION||'web-toylook-v0.5.0');
 const captures=path.join(release,'captures');fs.mkdirSync(captures,{recursive:true});
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/html/game/starship-defense/index.html';
 const assert=(condition,message)=>{if(!condition)throw Error(message);};

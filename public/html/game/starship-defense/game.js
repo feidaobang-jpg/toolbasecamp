@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import {WorldsVisuals} from './worlds-visuals.js';
+import {ToyVisuals} from './toy-visuals.js?v=toylook1';
 let visualAssets=false;
 const frameTimes=[];let previousFrame=0,measuring=false;
 
@@ -14,6 +14,7 @@ let isTouch=matchMedia('(pointer:coarse)').matches&&!matchMedia('(hover:hover)')
 
 /* ---------- 画布缩放 + 手机自动横屏 ---------- */
 const stage=$('stage');
+stage.classList.toggle('touch-mode',isTouch);
 let rotated=false;
 function fitStage(){
   let w=window.innerWidth,h=window.innerHeight;
@@ -192,7 +193,7 @@ Input.init();
 const renderer=new THREE.WebGLRenderer({canvas:$('c3d'),antialias:true});
 renderer.setSize(BASE_W,BASE_H,false);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.6));
-renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
+renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
 renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0a1830);
@@ -200,7 +201,7 @@ scene.fog=new THREE.Fog(0x0a1830,90,260);
 const camera=new THREE.PerspectiveCamera(60,BASE_W/BASE_H,.1,600);
 window.addEventListener('resize',()=>{renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();});
 let camYaw=0,camDist=16,camH=9,camView=0;
-const CAMERA_VIEWS=[{yaw:0,d:9,h:4.8,name:'近景跟随'},{yaw:Math.PI/2,d:16,h:9,name:'侧面斜视'},{yaw:Math.PI,d:16,h:9,name:'背面斜视'},{yaw:0,d:7,h:24,name:'俯视'}];
+const CAMERA_VIEWS=[{yaw:0,d:10,h:6.2,name:'玩具跟随'},{yaw:Math.PI/2,d:16,h:11,name:'侧面斜视'},{yaw:Math.PI,d:10,h:5.7,name:'正面近景'},{yaw:0,d:7,h:24,name:'俯视'}];
 function setCameraView(index,notify=true){
   camView=index%CAMERA_VIEWS.length;
   const v=CAMERA_VIEWS[camView];camYaw=v.yaw;camDist=v.d;camH=v.h;
@@ -263,13 +264,17 @@ function tooSteep(x,z){
   g.rotateX(-Math.PI/2);
   const pos=g.attributes.position;
   const colors=[];
-  const c1=new THREE.Color(0x474a3e),c2=new THREE.Color(0x626654),c3=new THREE.Color(0x7c7561);
+  const c1=new THREE.Color(0x4c9a70),c2=new THREE.Color(0x6caf77),c3=new THREE.Color(0x87ac62);
   for(let i=0;i<pos.count;i++){
     const x=pos.getX(i),z=pos.getZ(i)+ (WORLD.maxZ+WORLD.minZ)/2;
     const h=terrainH(x,z);
     pos.setY(i,h);
     const t=clamp(h/8,0,1);
-    const c=c1.clone().lerp(c2,Math.abs(Math.sin(x*.15)*Math.cos(z*.13))*.7).lerp(c3,t);
+    const c=c1.clone().lerp(c2,Math.abs(Math.sin(x*.045)*Math.cos(z*.05))*.7).lerp(c3,t*.5);
+    const lane=1-smooth01((Math.abs(x-Math.sin(z*.022)*3)-6)/5);
+    if(z>-18)c.lerp(new THREE.Color(0xd4bd88),lane*.85);
+    if(z<-13&&Math.abs(x)<35)c.lerp(new THREE.Color(0xb4c8af),.85);
+    if(h>1&&h<4.8&&z<2&&Math.abs(x)>12)c.lerp(new THREE.Color(0xc1a779),.7);
     colors.push(c.r,c.g,c.b);
   }
   g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
@@ -281,7 +286,7 @@ function tooSteep(x,z){
 /* 装饰：岩石与荧光植物 */
 (function deco(){
   const rockG=new THREE.DodecahedronGeometry(1,0);
-  const rockM=new THREE.MeshLambertMaterial({color:0x556066});
+  const rockM=new THREE.MeshLambertMaterial({color:0xc8b996});
   const scatter=(geometry,material,count,plant=false)=>{
     const batch=new THREE.InstancedMesh(geometry,material,count),dummy=new THREE.Object3D();
     for(let i=0;i<count;i++){
@@ -291,14 +296,14 @@ function tooSteep(x,z){
     batch.castShadow=!plant;batch.receiveShadow=true;scene.add(batch);
   };
   scatter(rockG,rockM,65);
-  scatter(new THREE.ConeGeometry(.12,1.2,5),new THREE.MeshLambertMaterial({color:0x77765a}),80,true);
+  scatter(new THREE.ConeGeometry(.2,.8,5),new THREE.MeshLambertMaterial({color:0x5eaa84}),80,true);
   // 星空
   const starG=new THREE.BufferGeometry();
   const sp=[];for(let i=0;i<400;i++){const a=rand(0,TAU),r2=rand(150,400);sp.push(Math.cos(a)*r2,rand(40,240),Math.sin(a)*r2);}
   starG.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));
   scene.add(new THREE.Points(starG,new THREE.PointsMaterial({color:0xaaccff,size:1.6,sizeAttenuation:false})));
   // 远处星球
-  const planet=new THREE.Mesh(new THREE.SphereGeometry(30,24,24),new THREE.MeshBasicMaterial({color:0x8866aa}));
+  const planet=new THREE.Mesh(new THREE.SphereGeometry(30,24,24),new THREE.MeshBasicMaterial({color:0xe5d7ad}));
   planet.position.set(-120,90,320);scene.add(planet);
 })();
 
@@ -306,7 +311,7 @@ function tooSteep(x,z){
 function makeHPBar(w=1.6,color='#3f6'){
   const cv=document.createElement('canvas');cv.width=64;cv.height=10;
   const tex=new THREE.CanvasTexture(cv);
-  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:false}));
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthTest:true,depthWrite:false}));
   sp.scale.set(w,w*10/64,1);
   sp.userData={cv,tex,color,last:-1};
   return sp;
@@ -315,6 +320,7 @@ function updHPBar(sp,ratio){
   ratio=clamp(ratio,0,1);
   if(Math.abs(ratio-sp.userData.last)<.01)return;
   sp.userData.last=ratio;
+  sp.visible=ratio<.995;
   const ctx=sp.userData.cv.getContext('2d');
   ctx.clearRect(0,0,64,10);
   ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(0,0,64,10);
@@ -486,7 +492,7 @@ function makeSoldier(color){
   return visualAssets ? visuals.soldier(color) : createMobileInfantryModel({color});
 }
 function makeBug(color,legs=4,scale=1,fly=false){
-  if(visualAssets&&!fly)return visuals.bug(scale);
+  if(visualAssets)return visuals.bug(scale,'mob',fly);
   const grp=new THREE.Group();
   const mat=new THREE.MeshLambertMaterial({color});
   const dark=new THREE.MeshLambertMaterial({color:new THREE.Color(color).multiplyScalar(.5)});
@@ -641,7 +647,7 @@ function makeVehicleMesh(kind){
     const rotor=new THREE.Mesh(new THREE.BoxGeometry(6,.06,.3),dark);rotor.position.y=2.3;grp.add(rotor);grp.userData.rotor=rotor;
     const gun=new THREE.Mesh(new THREE.BoxGeometry(.15,.15,1.6),dark);gun.position.set(0,.6,1.2);grp.add(gun);grp.userData.gun=gun;
   }
-  return grp;
+  return visualAssets?visuals.restyle(grp):grp;
 }
 function makeBuildingMesh(kind){
   const grp=new THREE.Group();
@@ -679,7 +685,7 @@ function makeBuildingMesh(kind){
     const g2=g1.clone();g2.position.x=.3;grp.add(g2);
     grp.userData.head=top;
   }
-  return grp;
+  return visualAssets?visuals.restyle(grp):grp;
 }
 /* ================= 游戏状态 ================= */
 const Game={
@@ -787,15 +793,15 @@ const gate={open:true,hp:2500,maxHp:2500,mesh:null,door:null,bar:null,pos:new TH
     const cX=8.75*s;
     const par=(w,d,x,z)=>{
       const p=new THREE.Mesh(new THREE.BoxGeometry(w,.9,d),new THREE.MeshLambertMaterial({color:0x7c8aa0}));
-      p.position.set(cX+x,GATE_TOP+.45,z);p.castShadow=true;grp.add(p);
+      p.position.set(cX+x,GATE_TOP+.45-PLAT.H,z+16);p.castShadow=true;grp.add(p);
     };
-    par(3.9,.35,0,-12.6);par(3.9,.35,0,-19.4);par(.35,7.4,1.78*s,0);
+    par(3.9,.35,0,-12.6);par(3.9,.35,0,-19.4);par(.35,7.4,1.78*s,-16);
     const pole=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,3,5),postM);
-    pole.position.set(cX-1.4*s,GATE_TOP+1.5,-18.6);grp.add(pole);
+    pole.position.set(cX-1.4*s,GATE_TOP+1.5-PLAT.H,-2.6);grp.add(pole);
     const flag=new THREE.Mesh(new THREE.PlaneGeometry(1.4,.8),new THREE.MeshBasicMaterial({color:s>0?0xdd3344:0x3366dd,side:THREE.DoubleSide}));
-    flag.position.set(cX-.7*s,GATE_TOP+2.6,-18.6);grp.add(flag);
+    flag.position.set(cX-.7*s,GATE_TOP+2.6-PLAT.H,-2.6);grp.add(flag);
     const lamp=new THREE.Mesh(new THREE.SphereGeometry(.2,6,5),new THREE.MeshBasicMaterial({color:0xffcc44}));
-    lamp.position.set(cX+1.5*s,GATE_TOP+.95,-13);grp.add(lamp);
+    lamp.position.set(cX+1.5*s,GATE_TOP+.95-PLAT.H,3);grp.add(lamp);
   }
   grp.position.set(gate.pos.x,terrainH(gate.pos.x,gate.pos.z),gate.pos.z);
   scene.add(grp);gate.mesh=grp;
@@ -862,7 +868,7 @@ const player={
     this.shield=0;this.buffT=0;this.respawnT=0;this.invulnerable=0;
     if(this.mesh){visuals.release(this.mesh);scene.remove(this.mesh);}
     this.mesh=makeSoldier(c.color);
-    this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=2.6;this.mesh.add(this.bar);updHPBar(this.bar,1);
+    this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=3;this.mesh.add(this.bar);updHPBar(this.bar,1);
     const ml=new THREE.PointLight(0xffaa44,0,6);ml.position.set(.32,1.15,1);this.mesh.add(ml);this.muzzle=ml;
     scene.add(this.mesh);
   }
@@ -981,8 +987,8 @@ function spawnMonster(kind,x,z,opts={}){
   }
   const color=kind==='mob'?ch.color:ch.bossColor;
   const mesh=kind==='mob'
-    ? (visualAssets&&!fly?visuals.bug(scale,opts.elite?'elite':'mob'):makeBug(color,ch.legs,scale,fly))
-    : (visualAssets&&!fly?visuals.bug(scale,kind):createArachnidBugModel({color,legs:ch.legs,fly,scale,boss:kind==='boss'}));
+    ? (visualAssets?visuals.bug(scale,opts.elite?'elite':'mob',fly):makeBug(color,ch.legs,scale,fly))
+    : (visualAssets?visuals.bug(scale,kind,fly):createArachnidBugModel({color,legs:ch.legs,fly,scale,boss:kind==='boss'}));
   const y=fly?groundY(x,z)+4:groundY(x,z);
   mesh.position.set(x,y,z);
   scene.add(mesh);
@@ -1649,7 +1655,7 @@ function startPrep(){
   if(Math.random()<.5)spawnMonster('miniboss',rand(-30,30),rand(120,170),{wild:true});
   $('readyBtn').classList.remove('hidden');
   showMsg(levelName(),3);
-  showHint('准备阶段：出城门下斜坡去野外刷怪赚金币 → O商店购物 L建造防御 → 点上方"准备完毕"开战 · 城门两侧塔楼可从基地内侧斜梯登上去越墙瞭望 · 基地医疗平台可回血');
+  showHint(isTouch?'出城打虫赚金币 → 商店升级 / 建造防线 → 准备完毕，开战！':'出城打虫赚金币 → O 商店升级 / L 建造防线 → R 开战；医疗平台可回血');
   autoSave();
 }
 function startBattle(){
@@ -2121,9 +2127,9 @@ function loop(){
   frameStats(now);renderer.render(scene,camera);
   Input.clearFrame();
 }
-const visuals=new WorldsVisuals(THREE,scene);
+const visuals=new ToyVisuals(THREE,scene);
 await visuals.load().then(()=>{visualAssets=true;}).catch(error=>{
-  console.error('Breachline assets:',error);$('assetLoad').textContent='精细资源加载失败；可重试或使用基础模型。';
+  console.error('Toy visuals:',error);$('assetLoad').textContent='场景准备失败；可重试或使用基础模型。';
   const retry=document.createElement('button');retry.textContent='重试';retry.onclick=()=>location.reload();$('assetLoad').appendChild(retry);
   const basic=document.createElement('button');basic.textContent='使用基础模型继续';basic.onclick=()=>$('assetLoad').remove();$('assetLoad').appendChild(basic);
 });
@@ -2155,11 +2161,11 @@ function setupWebControls(){
     const displayScale=Math.max(innerWidth,rotated?innerHeight:0)/BASE_W;
     renderer.setPixelRatio(value==='high'?Math.min(displayScale*(devicePixelRatio||1),2):Math.min(displayScale,1.2));
     renderer.shadowMap.enabled=value==='high';visuals.quality=value;
-    $('qualityBtn').textContent=value==='high'?'画质：高 / High':'画质：流畅 / Smooth';$('qualityBtn').dataset.quality=value;
+    $('qualityBtn').textContent=value==='high'?'画质：精致':'画质：流畅';$('qualityBtn').dataset.quality=value;
     localStorage.setItem('chongchao-quality',value);
   }
   applyQuality(quality);$('qualityBtn').onclick=()=>applyQuality($('qualityBtn').dataset.quality==='high'?'smooth':'high');
-  $('muteBtn').onclick=()=>{muted=!muted;AudioSys.init();AudioSys.master.gain.value=muted?0:.5;$('muteBtn').textContent=muted?'静音 / Muted M':'声音 / Sound M';};
+  $('muteBtn').onclick=()=>{muted=!muted;AudioSys.init();AudioSys.master.gain.value=muted?0:.5;$('muteBtn').textContent=muted?'静音 M':'声音 M';};
   $('fullBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){showMsg('全屏不可用，可继续窗口游玩',2);}};
   window.addEventListener('keydown',e=>{
     if(e.repeat)return;

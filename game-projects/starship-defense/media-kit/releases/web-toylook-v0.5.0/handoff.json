@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-toylook-v0.5.0",
+  "base_version": "web-worlds-v0.4.0",
+  "created_at": "2026-10-02T01:09:35.203868+00:00",
+  "build": {
+    "id": "web-toylook-v0.5.0-a96313ad0b6e",
+    "commit": "2da6b6eb5d683dfc3e3a91bf34b35f22e911aa13",
+    "dirty": true,
+    "fingerprint": "a96313ad0b6ebad5e8e826331981710f20a61afe887bbcbc3bcb9a4414329893",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "toy-style",
+      "description": "Original rounded troops, insects and unified environment",
+      "status": "implemented",
+      "evidence_ids": [
+        "character",
+        "toy-variants",
+        "after-base"
+      ]
+    },
+    {
+      "id": "defense-loop",
+      "description": "Existing defense loop, shop/build, vehicles, revive and failure/retry",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-realtime",
+        "normal-play"
+      ]
+    },
+    {
+      "id": "web-controls",
+      "description": "Keyboard and landscape/rotated portrait multitouch, four camera views",
+      "status": "implemented",
+      "evidence_ids": [
+        "phone-realtime",
+        "phone-landscape",
+        "phone-portrait"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "qstyle-trial",
+      "feature_ids": [
+        "toy-style"
+      ],
+      "before": "Mixed realistic characters and rock texture with simple base geometry",
+      "after": "Unified cream/teal/coral toy-like geometry and UI, shared procedural models",
+      "user_visible_result": "Cuter readable silhouettes and consistent palette; skill unchanged pending user review",
+      "evidence_ids": [
+        "character",
+        "toy-variants",
+        "after-base"
+      ],
+      "verification": "Passed browser visual and frame-time checks"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "floating-gate-rails",
+      "discovered_version": "web-worlds-v0.4.0",
+      "reproduction_steps": [
+        "Start ordinary game and view upper gate railings"
+      ],
+      "observation": "Railings/flags were offset vertically and in depth",
+      "impact": "Visibly floating geometry",
+      "cause": "World coordinates used inside an already translated gate group",
+      "status": "fixed",
+      "fix": "Convert to gate-local Y/Z coordinates",
+      "before_media_ids": [
+        "previous-style"
+      ],
+      "after_media_ids": [
+        "after-base"
+      ],
+      "retest": "Checked following, side and front camera views"
+    }
+  ],
+  "media": [
+    {
+      "id": "after-base",
+      "file": "releases/web-toylook-v0.5.0/captures/after-base.png",
+      "sha256": "232936ed6d1cddff49020041a1acfd74b3cdd78c15ac2e32485b83ed4ea86e8a",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "character",
+      "file": "releases/web-toylook-v0.5.0/captures/character.png",
+      "sha256": "d52b0b0a4b3de2b7bb19f9bad5691f40d2fd2b78df1b82440d3d30f53b0af304",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "desktop-battle",
+      "file": "releases/web-toylook-v0.5.0/captures/desktop-battle.png",
+      "sha256": "3780a306a37f1dbd013cd5a2119d82a0ecbe0da38ee73699ab3dedc3ec8dc624",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "desktop-menu",
+      "file": "releases/web-toylook-v0.5.0/captures/desktop-menu.png",
+      "sha256": "81551ec1f90e3be4320d23284935e8d8ed1fc8ff1124fbe8f423516749c2501a",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "desktop-realtime",
+      "file": "releases/web-toylook-v0.5.0/captures/desktop-realtime.webm",
+      "sha256": "578e44465d7f6b13fa2804741cdc351d7c201cbf880177e72e41f8e14a065a4a",
+      "kind": "video",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 10.64,
+          "description": "Continuous realtime automated movement/combat/camera or rotated touch operation; no audio"
+        }
+      ],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 10.64,
+      "frame_rate": "25/1"
+    },
+    {
+      "id": "desktop-side",
+      "file": "releases/web-toylook-v0.5.0/captures/desktop-side.png",
+      "sha256": "fb3214f1b5549e79792bc538acbee4d32f8c784958d613d5c6f0a9906c5dd48c",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "normal-play",
+      "file": "releases/web-toylook-v0.5.0/captures/normal-play.png",
+      "sha256": "1e902a3f1d5d9f000717f6a06fdcb7ff7fbd7e4ab41eaf341c75aa1014bd2708",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Normal keyboard start, move and fire without health cheats",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    },
+    {
+      "id": "phone-landscape",
+      "file": "releases/web-toylook-v0.5.0/captures/phone-landscape.png",
+      "sha256": "d5cc88df151893e785e37d21222021b6ab0e69f5a9ce9f839923cb3cd27dd4e1",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/web-toylook-v0.5.0/captures/phone-portrait.png",
+      "sha256": "e5c156a5a6c23ed089701ea1d9ccf32322902af3edf57114c4c3096e2885a9bb",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null
+    },
+    {
+      "id": "phone-realtime",
+      "file": "releases/web-toylook-v0.5.0/captures/phone-realtime.webm",
+      "sha256": "7a2d95f70c7d075301a73cdca1344a75a0cd7b563901ac3e7bf73755c8a6387d",
+      "kind": "video",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 4.28,
+          "description": "Continuous realtime automated movement/combat/camera or rotated touch operation; no audio"
+        }
+      ],
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 4.28,
+      "frame_rate": "25/1"
+    },
+    {
+      "id": "toy-variants",
+      "file": "releases/web-toylook-v0.5.0/captures/toy-variants.png",
+      "sha256": "32d31974c971c1a57fa2506f488c17b2e2dd77ef63f9d804e0b9ef782ea45d5e",
+      "kind": "screenshot",
+      "version": "web-toylook-v0.5.0",
+      "build_id": "web-toylook-v0.5.0-a96313ad0b6e",
+      "capture_mode": "realtime-automation",
+      "description": "Actual browser QA; battle/variants use explicit test spawning and high HP",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "visual_review": "pass",
+      "segments": [],
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": null
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "previous-style",
+      "handoff": "releases/web-worlds-v0.4.0/handoff.json",
+      "media_id": "desktop-side",
+      "reason": "Prior mixed realistic art baseline"
+    }
+  ],
+  "qa": [
+    {
+      "method": "Headless Edge / ANGLE D3D11 RTX4060Ti, 1440x810, separate frame measurement and recording",
+      "results": "verification.json (11 behaviors), performance.json (two 30s pressure scenes), style-verification.json (moving/camera stress and model variants)",
+      "limitations": [
+        "No physical mobile performance test",
+        "No human hands-on playtest",
+        "Realtime video has no audio",
+        "FFmpeg decode/metadata used; ffprobe executable unavailable"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "No game audio capture/listening review",
+      "User art direction review pending"
+    ]
+  }
+}

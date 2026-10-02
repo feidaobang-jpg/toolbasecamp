@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'public/html/game/starship-defense'
 OUT = ROOT / 'dist/toy/chongchao-qianshao'
 PACKAGE = OUT / 'package'
-VERSION = 'web-worlds-v0.4.0'
+VERSION = json.loads((Path(__file__).parent / 'media-kit/game.json').read_text('utf-8'))['current_version']
 
 
 def build():

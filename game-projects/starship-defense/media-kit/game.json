@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮前哨：守卫基地",
   "engine": "Three.js r152",
-  "current_version": "web-worlds-v0.4.0",
+  "current_version": "web-toylook-v0.5.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "python game-projects/starship-defense/build-toy.py",
   "release_intent": "web_demo",
@@ -12,7 +12,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_Z2dVJ49C/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-worlds-v0.4.0/handoff.json",
+  "qa": "releases/web-toylook-v0.5.0/handoff.json",
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
@@ -28,5 +28,7 @@
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
     "full_native_port": false
-  }
+  },
+  "visual_style": "Original rounded toy-like procedural 3D; trial pending user review",
+  "skill_updated": false
 }

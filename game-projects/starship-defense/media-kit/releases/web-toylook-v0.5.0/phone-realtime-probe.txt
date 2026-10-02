@@ -1,0 +1,20 @@
+Input #0, matroska,webm, from 'D:\project\toolbasecamp\game-projects\starship-defense\media-kit\releases\web-toylook-v0.5.0\captures\phone-realtime.webm':
+  Metadata:
+    ENCODER         : Lavf61.1.100
+  Duration: 00:00:04.28, start: 0.000000, bitrate: 654 kb/s
+  Stream #0:0(eng): Video: vp8, yuv420p(progressive), 390x844, SAR 1:1 DAR 195:422, 25 fps, 25 tbr, 1k tbn (default)
+      Metadata:
+        ENCODER         : Lavc61.3.100 libvpx
+        DURATION        : 00:00:04.280000000
+Stream mapping:
+  Stream #0:0 -> #0:0 (vp8 (native) -> wrapped_avframe (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0(eng): Video: wrapped_avframe, yuv420p(tv, bt470bg/unknown/unknown, progressive), 390x844 [SAR 1:1 DAR 195:422], q=2-31, 200 kb/s, 25 fps, 25 tbn (default)
+      Metadata:
+        DURATION        : 00:00:04.280000000
+        encoder         : Lavc61.19.100 wrapped_avframe
+[out#0/null @ 00000248c4405040] video:46KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=  107 fps=0.0 q=-0.0 Lsize=N/A time=00:00:04.28 bitrate=N/A speed= 320x    

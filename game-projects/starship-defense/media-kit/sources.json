@@ -20,7 +20,8 @@
     "runtime_file": "../../../public/html/game/starship-defense/assets/roach.glb",
     "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\roach\\roach.glb",
     "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained.",
-    "source_type": "licensed"
+    "source_type": "licensed",
+    "active_in_web_toylook": false
   },
   {
     "id": "scifi_soldier_oga",
@@ -49,7 +50,8 @@
     "runtime_file": "../../../public/html/game/starship-defense/assets/soldier.glb",
     "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\scifi_soldier_oga\\soldier.glb",
     "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained.",
-    "source_type": "licensed"
+    "source_type": "licensed",
+    "active_in_web_toylook": false
   },
   {
     "id": "elite_roach",
@@ -74,7 +76,8 @@
     "runtime_file": "../../../public/html/game/starship-defense/assets/elite.glb",
     "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\elite_roach\\elite.glb",
     "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained.",
-    "source_type": "licensed"
+    "source_type": "licensed",
+    "active_in_web_toylook": false
   },
   {
     "id": "queen_roach",
@@ -97,7 +100,8 @@
     "runtime_file": "../../../public/html/game/starship-defense/assets/queen.glb",
     "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\queen_roach\\queen.glb",
     "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained.",
-    "source_type": "licensed"
+    "source_type": "licensed",
+    "active_in_web_toylook": false
   },
   {
     "id": "mech_skorpio",
@@ -149,7 +153,8 @@
     "runtime_file": "../../../public/html/game/starship-defense/assets/mech.glb",
     "source_file": "D:\\project\\gpt\\worlds\\breachline\\game\\assets\\external\\mech_skorpio\\mech.glb",
     "processing": "Embedded textures resized to <=1024, JPEG quality 87; original geometry, skinning and clips retained.",
-    "source_type": "licensed"
+    "source_type": "licensed",
+    "active_in_web_toylook": false
   },
   {
     "id": "coast_rocks_02",
@@ -162,6 +167,18 @@
     "license": "CC0-1.0",
     "runtime_file": "../../../public/html/game/starship-defense/assets/rock-diffuse.jpg",
     "processing": "Diffuse texture resized to 1024; applied to original procedural terrain/rocks.",
-    "source_type": "licensed"
+    "source_type": "licensed",
+    "active_in_web_toylook": false
+  },
+  {
+    "id": "toylook-procedural",
+    "source_type": "procedural",
+    "active_in_web_toylook": true,
+    "runtime_file": "public/html/game/starship-defense/toy-visuals.js",
+    "tool": "Three.js r152 geometry factories assisted by Codex",
+    "description": "Original round helmet troops, beetles, elite crowns, winged insects, enlarged mech, clouds and flowers; no Doraemon character assets used",
+    "parameters": "Shared vertex-colour merged geometry; animated body and left/right legs; original cream/teal/coral palette",
+    "processing": "Created directly as 3D runtime geometry; no image-to-model step",
+    "sha256": "3d64ba44b62841bea84103ce94946a88354927b1a4ee8ef71e872f24a668a364"
   }
 ]

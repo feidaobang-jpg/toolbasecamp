@@ -1,0 +1,16 @@
+{
+  "version": "web-toylook-v0.5.0",
+  "fingerprint": "a96313ad0b6ebad5e8e826331981710f20a61afe887bbcbc3bcb9a4414329893",
+  "runtime_files": {
+    "index.html": "f96030254759f2e1e6ef08bc6abdbcf7e9d2db60bd995a9340697c4faa070b06",
+    "game.js": "5c5d4e95a286d52a3061599bdf2de4d2f62a01779a5224ebb18c19b649683788",
+    "toy-visuals.js": "3d64ba44b62841bea84103ce94946a88354927b1a4ee8ef71e872f24a668a364",
+    "vendor/three.module.js": "f4ced6dfae77168410b5e8415019c5066b47dd712e71dbbbcb0ed25cf9d9f4da",
+    "vendor/BufferGeometryUtils.js": "822e2d1a5a73c60069c8ad5fd140bce215a0606b79e09d6faa164f65f1775d10"
+  },
+  "retained_but_not_loaded": [
+    "worlds-visuals.js",
+    "assets/*.glb",
+    "assets/rock-diffuse.jpg"
+  ]
+}
